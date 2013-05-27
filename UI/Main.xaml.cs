@@ -12,17 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NeoEdit.LocalDisk;
 
-namespace NeoEdit
+namespace NeoEdit.UI
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class Main : Window
 	{
-		public MainWindow()
+		public Main()
 		{
 			InitializeComponent();
+			Show();
+			new Browser(new Disk(), null);
 		}
 	}
 }

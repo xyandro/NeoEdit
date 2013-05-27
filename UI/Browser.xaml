@@ -1,0 +1,24 @@
+﻿<Window x:Name="window" x:Class="NeoEdit.UI.Browser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Directory" Height="500" Width="600"
+		Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.ColumnSpan="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<Label Content="_Directory:" Grid.Column="0"/>
+			<TextBox Text="{Binding DirectoryName, ElementName=window}" Grid.Column="1"/>
+		</Grid>
+		<ListView Name="files" Grid.Column="0" Grid.Row="1" KeyDown="files_KeyDown"/>
+	</Grid>
+</Window>
