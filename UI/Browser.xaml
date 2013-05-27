@@ -1,6 +1,7 @@
-﻿<Window x:Name="window" x:Class="NeoEdit.UI.Browser"
+﻿<ns:UIWindow x:Name="window" x:Class="NeoEdit.UI.Browser"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ns="clr-namespace:NeoEdit.UI"
         Title="Directory" Height="500" Width="600"
 		Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}">
 	<Grid>
@@ -21,4 +22,4 @@
 		</Grid>
 		<ListView Name="files" Grid.Column="0" Grid.Row="1" KeyDown="files_KeyDown"/>
 	</Grid>
-</Window>
+</ns:UIWindow>

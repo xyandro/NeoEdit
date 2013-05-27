@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using NeoEdit.LocalDisk;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using NeoEdit.LocalDisk;
 
 namespace NeoEdit.UI
 {
-	/// <summary>
-	/// Interaction logic for Directory.xaml
-	/// </summary>
-	public partial class Browser : Window
+	public partial class Browser : UIWindow
 	{
-		public static readonly DependencyProperty DirectoryNameProperty = DependencyProperty.Register("DirectoryName", typeof(string), typeof(Browser));
-		public string DirectoryName { get { return (string)GetValue(DirectoryNameProperty); } set { SetValue(DirectoryNameProperty, value); } }
+		[DepProp]
+		public string DirectoryName { get { return GetProp<string>(); } set { SetProp(value); } }
+
+		static Browser()
+		{
+			Register<Browser>();
+		}
 
 		Disk Disk;
 		Dir Directory;
