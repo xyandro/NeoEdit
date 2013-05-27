@@ -56,6 +56,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DiskModule\IDir.cs" />
+    <Compile Include="DiskModule\IDisk.cs" />
     <Compile Include="UI\UIWindow.cs" />
     <Page Include="UI\Browser.xaml">
       <SubType>Designer</SubType>
@@ -69,11 +71,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LocalDisk\Dir.cs" />
+    <Compile Include="DiskModule\LocalDisk\Dir.cs" />
     <Compile Include="UI\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LocalDisk\Disk.cs" />
+    <Compile Include="DiskModule\LocalDisk\Disk.cs" />
     <Compile Include="UI\Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
       <SubType>Code</SubType>

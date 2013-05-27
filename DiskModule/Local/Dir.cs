@@ -1,16 +1,12 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NeoEdit.LocalDisk
+namespace NeoEdit.DiskModule.Local
 {
-	public class Dir
+	public class Dir : IDir
 	{
 		public string Name { get; private set; }
-		public bool Root { get; private set; }
 		public List<string> Files { get; private set; }
 
 		public Dir(string name)

@@ -1,4 +1,4 @@
-﻿using NeoEdit.LocalDisk;
+﻿using NeoEdit.DiskModule;
 using System.Windows.Input;
 
 namespace NeoEdit.UI
@@ -13,9 +13,9 @@ namespace NeoEdit.UI
 			Register<Browser>();
 		}
 
-		Disk Disk;
-		Dir Directory;
-		public Browser(Disk disk, string directory)
+		IDisk Disk;
+		IDir Directory;
+		public Browser(IDisk disk, string directory)
 		{
 			InitializeComponent();
 			Disk = disk;

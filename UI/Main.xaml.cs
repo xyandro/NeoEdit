@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using NeoEdit.LocalDisk;
+﻿using System.Windows;
 
 namespace NeoEdit.UI
 {
@@ -25,7 +11,7 @@ namespace NeoEdit.UI
 		{
 			InitializeComponent();
 			Show();
-			new Browser(new Disk(), null);
+			new Browser(new NeoEdit.DiskModule.Local.Disk(), null);
 		}
 	}
 }
