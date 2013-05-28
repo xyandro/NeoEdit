@@ -71,11 +71,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DiskModule\LocalDisk\Dir.cs" />
+    <Compile Include="DiskModule\Local\Dir.cs" />
     <Compile Include="UI\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DiskModule\LocalDisk\Disk.cs" />
+    <Compile Include="DiskModule\Local\Disk.cs" />
     <Compile Include="UI\Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
       <SubType>Code</SubType>
