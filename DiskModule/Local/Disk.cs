@@ -14,5 +14,14 @@ namespace NeoEdit.DiskModule.Local
 			}
 			return new Dir(null);
 		}
+
+		public IFile GetFile(string filename)
+		{
+			if (string.IsNullOrWhiteSpace(filename))
+				return null;
+			if (!File.Exists(filename))
+				return null;
+			return new LocalFile(filename);
+		}
 	}
 }

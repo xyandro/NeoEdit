@@ -58,6 +58,13 @@
     </ApplicationDefinition>
     <Compile Include="DiskModule\IDir.cs" />
     <Compile Include="DiskModule\IDisk.cs" />
+    <Compile Include="DiskModule\IFile.cs" />
+    <Compile Include="DiskModule\Local\LocalFile.cs" />
+    <Compile Include="DiskModule\TextFile.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="UI\TextEditor.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\UIWindow.cs" />
     <Page Include="UI\Browser.xaml">
       <SubType>Designer</SubType>
@@ -80,6 +87,10 @@
       <DependentUpon>Main.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\TextEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
