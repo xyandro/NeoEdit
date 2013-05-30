@@ -55,7 +55,7 @@ namespace NeoEdit.UI
 			textFile = new TextFile(new LocalFile(filename));
 			lines = textFile.numLines;
 			cols = textFile.numCols;
-			fontFamily = new FontFamily("Courier New");
+			fontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./UI/Resources/#Anonymous Pro");
 			fontSize = 16;
 		}
 
