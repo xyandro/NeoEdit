@@ -13,6 +13,17 @@ namespace NeoEdit.Records.Disk
 			{
 				return name =>
 				{
+					while (true)
+					{
+						var oldName = name;
+						name = name.Replace("/", "\\");
+						name = name.Replace("\\\\", "\\");
+						name = name.Trim().TrimEnd('\\');
+						if ((name.StartsWith("\"")) && (name.EndsWith("\"")))
+							name = name.Substring(1, name.Length - 2);
+						if (oldName == name)
+							break;
+					}
 					if (File.Exists(name))
 						name = Path.GetDirectoryName(name);
 					else if (!Directory.Exists(name))
