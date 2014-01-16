@@ -15,6 +15,7 @@ namespace NeoEdit.Records
 			get
 			{
 				yield return new Disk.DiskRoot();
+				yield return new Registry.RegistryRoot();
 			}
 		}
 	}

@@ -1,22 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
 {
 	public class DiskDir : IRecordList
 	{
+		static string FixCasing(string name)
+		{
+			var ret = name;
+			var parts = ret.Split('\\').ToList();
+			ret = parts[0].ToUpper() + @"\";
+			parts.RemoveAt(0);
+
+			foreach (var part in parts)
+			{
+				var next = Directory.GetFileSystemEntries(ret).SingleOrDefault(a => Path.GetFileName(a).Equals(part, StringComparison.OrdinalIgnoreCase));
+				if (next == null)
+					throw new Exception(String.Format("Invalid registry key: {0}", name));
+				ret = next;
+			}
+
+			return ret;
+		}
+
 		static Func<String, IRecordList> Provider
 		{
 			get
 			{
 				return name =>
 				{
+					name = name.Replace("/", "\\");
 					while (true)
 					{
 						var oldName = name;
-						name = name.Replace("/", "\\");
 						name = name.Replace("\\\\", "\\");
 						name = name.Trim().TrimEnd('\\');
 						if ((name.StartsWith("\"")) && (name.EndsWith("\"")))
@@ -29,7 +48,7 @@ namespace NeoEdit.Records.Disk
 					else if (!Directory.Exists(name))
 						return null;
 
-					name = Helpers.GetWindowsPhysicalPath(name);
+					name = FixCasing(name);
 					return new DiskDir(name);
 				};
 			}
@@ -40,7 +59,7 @@ namespace NeoEdit.Records.Disk
 			get
 			{
 				var parent = Path.GetDirectoryName(FullName);
-				if (parent == null)
+				if (String.IsNullOrEmpty(parent))
 					return new DiskRoot();
 				return new DiskDir(parent);
 			}
