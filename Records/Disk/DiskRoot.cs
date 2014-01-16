@@ -6,7 +6,7 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskRoot : IRecordList
 	{
-		static Func<String, IRecordList> Provider { get { return name => (name == "Disks") ? new DiskRoot() : null; } }
+		static Func<String, IRecordList> Provider { get { return name => name.Equals("Disks", StringComparison.OrdinalIgnoreCase) ? new DiskRoot() : null; } }
 
 		public IRecordList Parent { get { return new RootRecordList(); } }
 		public string Name { get { return FullName; } }
@@ -16,7 +16,7 @@ namespace NeoEdit.Records.Disk
 			get
 			{
 				foreach (var drive in DriveInfo.GetDrives())
-					yield return new DiskDir(drive.Name);
+					yield return new DiskDir(drive.Name.ToUpper());
 			}
 		}
 
