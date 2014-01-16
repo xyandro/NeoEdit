@@ -66,6 +66,7 @@
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Records\TextFile.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="UI\IRecordToStringConverter.cs" />
     <Compile Include="UI\TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>

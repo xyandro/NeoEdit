@@ -4,6 +4,9 @@
         xmlns:ns="clr-namespace:NeoEdit.UI"
         Title="Directory" Height="500" Width="600"
 		Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}">
+	<ns:UIWindow.Resources>
+		<ns:IRecordToStringConverter x:Key="IRecordToStringConverter"/>
+	</ns:UIWindow.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -20,6 +23,12 @@
 			<Label Content="_Directory:" Grid.Column="0"/>
 			<TextBox Name="DirectoryDisplay" Text="{Binding Directory.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="DirectoryDisplay_KeyDown" />
 		</Grid>
-		<ListView Name="Files" Grid.Column="0" Grid.Row="1" KeyDown="Files_KeyDown" ItemsSource="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick"/>
+		<ListView Name="Files" Grid.Column="0" Grid.Row="1" KeyDown="Files_KeyDown" ItemsSource="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<ContentPresenter Content="{Binding Converter={StaticResource IRecordToStringConverter}}"/>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
 	</Grid>
 </ns:UIWindow>

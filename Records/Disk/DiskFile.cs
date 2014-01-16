@@ -26,10 +26,5 @@ namespace NeoEdit.Records.Disk
 			file.Read(data, 0, bytes);
 			return data;
 		}
-
-		public override string ToString()
-		{
-			return Name;
-		}
 	}
 }

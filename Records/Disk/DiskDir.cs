@@ -65,10 +65,5 @@ namespace NeoEdit.Records.Disk
 			if (new Regex("^[a-zA-Z]:\\\\$").IsMatch(fullName))
 				Name = FullName;
 		}
-
-		public override string ToString()
-		{
-			return Name;
-		}
 	}
 }

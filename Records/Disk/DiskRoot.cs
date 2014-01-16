@@ -19,10 +19,5 @@ namespace NeoEdit.Records.Disk
 					yield return new DiskDir(drive.Name.ToUpper());
 			}
 		}
-
-		public override string ToString()
-		{
-			return "Disks";
-		}
 	}
 }
