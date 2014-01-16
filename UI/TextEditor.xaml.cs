@@ -12,8 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using NeoEdit.DiskModule;
-using NeoEdit.DiskModule.Local;
+using NeoEdit.Records;
+using NeoEdit.Records.Disk;
 
 namespace NeoEdit.UI
 {
@@ -52,7 +52,7 @@ namespace NeoEdit.UI
 		public TextEditor(string filename)
 		{
 			InitializeComponent();
-			textFile = new TextFile(new LocalFile(filename));
+			textFile = new TextFile(new DiskFile(filename));
 			lines = textFile.numLines;
 			cols = textFile.numCols;
 			fontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./UI/Resources/#Anonymous Pro");

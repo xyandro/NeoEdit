@@ -1,4 +1,4 @@
-﻿using NeoEdit.DiskModule;
+﻿using NeoEdit.Records;
 using System.Windows.Input;
 
 namespace NeoEdit.UI
@@ -13,27 +13,35 @@ namespace NeoEdit.UI
 			Register<Browser>();
 		}
 
-		IDisk Disk;
-		IDir Directory;
-		public Browser(IDisk disk, string directory)
+		IRecordList directory;
+		public Browser(string recordUri)
 		{
 			InitializeComponent();
-			Disk = disk;
-			SetDirectory(directory);
+			SetDirectory(RecordListProvider.GetRecordList(recordUri));
 		}
 
-		public void SetDirectory(string directory)
+		void SetDirectory(IRecordList _directory)
 		{
-			Directory = Disk.GetDirectory(directory);
-			DirectoryName = Directory.Name;
-			files.ItemsSource = Directory.Files;
+			directory = _directory;
+			DirectoryName = directory.FullName;
+			files.ItemsSource = directory.Records;
 		}
 
 		private void files_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Enter)
+			
+			switch (e.Key)
 			{
-				SetDirectory(files.SelectedItem as string);
+				case Key.Enter:
+					{
+						var item = files.SelectedItem as IRecordList;
+						if (item != null)
+							SetDirectory(item);
+					}
+					break;
+				case Key.Back:
+					SetDirectory(directory.Parent);
+					break;
 			}
 		}
 	}

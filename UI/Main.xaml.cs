@@ -11,7 +11,7 @@ namespace NeoEdit.UI
 		{
 			InitializeComponent();
 			Show();
-			new Browser(new NeoEdit.DiskModule.Local.Disk(), null);
+			new Browser("DiskRoot");
 		}
 	}
 }

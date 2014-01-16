@@ -1,0 +1,18 @@
+﻿using System.Collections.Generic;
+
+namespace NeoEdit.Records
+{
+	public class RootRecordList : IRecordList
+	{
+		public IRecordList Parent { get { return this; } }
+		public string Name { get { return "Root"; } }
+		public string FullName { get { return "Root"; } }
+		public IEnumerable<IRecord> Records
+		{
+			get
+			{
+				yield return new Disk.DiskRoot();
+			}
+		}
+	}
+}

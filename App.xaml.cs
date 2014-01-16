@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using NeoEdit.UI;
+using System.Windows;
 
 namespace NeoEdit
 {
@@ -7,5 +8,9 @@ namespace NeoEdit
 	/// </summary>
 	public partial class App : Application
 	{
+		public App()
+		{
+			new Browser("DiskRoot");
+		}
 	}
 }

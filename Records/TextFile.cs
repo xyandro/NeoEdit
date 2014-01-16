@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NeoEdit.DiskModule
+namespace NeoEdit.Records
 {
 	class Line
 	{
@@ -37,7 +37,7 @@ namespace NeoEdit.DiskModule
 			preambles = availableEncodings.Select(a => new { key = a.Key, value = a.Value.GetPreamble() }).Where(a => a.value.Length != 0).OrderByDescending(a => a.value.Length).ToDictionary(a => a.key, a => a.value);
 		}
 
-		IFile file;
+		IRecordItem file;
 		int preambleBytes = 0;
 		List<Line> lines = new List<Line>();
 		string text = "";
@@ -50,7 +50,7 @@ namespace NeoEdit.DiskModule
 			return text.Substring(useLine.start, useLine.end - useLine.start);
 		}
 
-		public TextFile(IFile _file)
+		public TextFile(IRecordItem _file)
 		{
 			file = _file;
 
@@ -89,7 +89,7 @@ namespace NeoEdit.DiskModule
 					encodingType = EncodingType.UTF16BN;
 			}
 
-			var data = file.Read(0, (int)file.length);
+			var data = file.Read(0, (int)file.Size);
 			text = encoding.GetString(data);
 
 			var start = 0;
