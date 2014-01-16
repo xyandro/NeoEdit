@@ -23,7 +23,7 @@ namespace NeoEdit.Records
 			}
 		}
 
-		public static IRecordList GetRecordList(string recordUri)
+		public static IRecordList GetRecordList(string recordUri, IRecordList defaultList = null)
 		{
 			foreach (var provider in providers)
 			{
@@ -31,6 +31,10 @@ namespace NeoEdit.Records
 				if (recordList != null)
 					return recordList;
 			}
+
+			if (defaultList != null)
+				return defaultList;
+
 			return new RootRecordList();
 		}
 	}

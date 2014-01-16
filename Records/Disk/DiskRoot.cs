@@ -6,11 +6,11 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskRoot : IRecordList
 	{
-		static Func<String, IRecordList> Provider { get { return name => (name == "DiskRoot") ? new DiskRoot() : null; } }
+		static Func<String, IRecordList> Provider { get { return name => (name == "Disks") ? new DiskRoot() : null; } }
 
 		public IRecordList Parent { get { return new RootRecordList(); } }
-		public string Name { get { return "DiskRoot"; } }
-		public string FullName { get { return "DiskRoot"; } }
+		public string Name { get { return FullName; } }
+		public string FullName { get { return "Disks"; } }
 		public IEnumerable<IRecord> Records
 		{
 			get
@@ -22,7 +22,7 @@ namespace NeoEdit.Records.Disk
 
 		public override string ToString()
 		{
-			return "DiskRoot";
+			return "Disks";
 		}
 	}
 }

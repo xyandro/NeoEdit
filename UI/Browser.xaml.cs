@@ -6,41 +6,42 @@ namespace NeoEdit.UI
 	public partial class Browser : UIWindow
 	{
 		[DepProp]
-		public string DirectoryName { get { return GetProp<string>(); } set { SetProp(value); } }
+		public IRecordList Directory { get { return GetProp<IRecordList>(); } set { SetProp(value); } }
 
 		static Browser()
 		{
 			Register<Browser>();
 		}
 
-		IRecordList directory;
 		public Browser(string recordUri)
 		{
 			InitializeComponent();
-			SetDirectory(RecordListProvider.GetRecordList(recordUri));
+			Directory = RecordListProvider.GetRecordList(recordUri);
 		}
 
-		void SetDirectory(IRecordList _directory)
+		private void Files_KeyDown(object sender, KeyEventArgs e)
 		{
-			directory = _directory;
-			DirectoryName = directory.FullName;
-			files.ItemsSource = directory.Records;
-		}
-
-		private void files_KeyDown(object sender, KeyEventArgs e)
-		{
-			
 			switch (e.Key)
 			{
 				case Key.Enter:
 					{
-						var item = files.SelectedItem as IRecordList;
+						var item = Files.SelectedItem as IRecordList;
 						if (item != null)
-							SetDirectory(item);
+							Directory = item;
 					}
 					break;
 				case Key.Back:
-					SetDirectory(directory.Parent);
+					Directory = Directory.Parent;
+					break;
+			}
+		}
+
+		private void DirectoryDisplay_KeyDown(object sender, KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.Enter:
+					Directory = RecordListProvider.GetRecordList(DirectoryDisplay.Text, Directory);
 					break;
 			}
 		}
