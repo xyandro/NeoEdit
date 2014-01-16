@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -6,6 +7,23 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskDir : IRecordList
 	{
+		static Func<String, IRecordList> Provider
+		{
+			get
+			{
+				return name =>
+				{
+					if (File.Exists(name))
+						name = Path.GetDirectoryName(name);
+					else if (!Directory.Exists(name))
+						return null;
+
+					name = Helpers.GetWindowsPhysicalPath(name);
+					return new DiskDir(name);
+				};
+			}
+		}
+
 		public IRecordList Parent
 		{
 			get
