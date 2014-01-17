@@ -10,9 +10,9 @@ namespace NeoEdit.Records.Disk
 		public string FullName { get; private set; }
 		public long Size { get; private set; }
 
-		public DiskFile(string fullName)
+		public DiskFile(string uri)
 		{
-			FullName = fullName;
+			FullName = uri;
 			var fileInfo = new FileInfo(FullName);
 			Size = fileInfo.Length;
 		}

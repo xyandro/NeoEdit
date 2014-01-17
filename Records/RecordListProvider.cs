@@ -1,35 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace NeoEdit.Records
 {
 	public static class RecordListProvider
 	{
-		static List<Func<string, IRecordList>> providers = new List<Func<string, IRecordList>>();
-		static RecordListProvider()
+		public static IRecord GetRecord(string uri, IRecordRoot root)
 		{
-			var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(a => (!a.IsInterface) && (typeof(IRecordList).IsAssignableFrom(a))).ToList();
-			foreach (var type in types)
+			var parts = uri.Split('\\').ToList();
+			for (var ctr1 = parts.Count; ctr1 >= 0; --ctr1)
+				for (var ctr2 = ctr1 + 1; ctr2 < parts.Count; ++ctr2)
+					parts[ctr2] = parts[ctr1] + @"\" + parts[ctr2];
+
+			IRecord record = root;
+			while (record != null)
 			{
-				var method = type.GetMethod("get_Provider", BindingFlags.Static | BindingFlags.NonPublic);
-				if (method != null)
-				{
-					var provider = method.Invoke(null, new object[0]) as Func<string, IRecordList>;
-					if (provider != null)
-						providers.Add(provider);
-				}
+				if (uri.Equals(record.FullName, StringComparison.OrdinalIgnoreCase))
+					return record;
+
+				if ((parts.Count == 0) || (!(record is IRecordList)))
+					break;
+				var part = parts[0];
+				parts.RemoveAt(0);
+
+				record = (record as IRecordList).Records.SingleOrDefault(a => a.FullName.Equals(part, StringComparison.OrdinalIgnoreCase));
 			}
+
+			throw new Exception(String.Format("Invalid input: {0}", uri));
 		}
 
-		public static IRecordList GetRecordList(string recordUri, IRecordList defaultList = null)
+		static string SimplifyURI(string name)
 		{
-			foreach (var provider in providers)
+			name = name.Replace("/", "\\");
+			while (true)
 			{
-				var recordList = provider(recordUri);
-				if (recordList != null)
-					return recordList;
+				var oldName = name;
+				name = name.Replace("\\\\", "\\");
+				name = name.Trim().TrimEnd('\\');
+				if ((name.StartsWith("\"")) && (name.EndsWith("\"")))
+					name = name.Substring(1, name.Length - 2);
+				if (oldName == name)
+					break;
+			}
+			return name;
+		}
+
+		public static IRecordList GetRecordList(string uri, IRecordList defaultList = null)
+		{
+			uri = SimplifyURI(uri);
+
+			var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(a => (!a.IsInterface) && (typeof(IRecordRoot).IsAssignableFrom(a))).ToList();
+			foreach (var type in types)
+			{
+				var root = Activator.CreateInstance(type) as IRecordRoot;
+				try
+				{
+					var record = root.GetRecord(uri);
+					if (record == null)
+						continue;
+					if (record is IRecordItem)
+						record = record.Parent;
+					return record as IRecordList;
+				}
+				catch { }
 			}
 
 			if (defaultList != null)

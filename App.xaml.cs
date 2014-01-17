@@ -1,5 +1,5 @@
-﻿using NeoEdit.UI;
-using System.Windows;
+﻿using System.Windows;
+using NeoEdit.UI;
 
 namespace NeoEdit
 {
@@ -10,7 +10,7 @@ namespace NeoEdit
 	{
 		public App()
 		{
-			new Browser(Records.Disk.DiskRoot.RootName);
+			new Browser(new Records.Disk.DiskRoot());
 		}
 	}
 }

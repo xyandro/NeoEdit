@@ -1,38 +1,25 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace NeoEdit.Records.Registry
 {
-	public class RegistryRoot : IRecordList
+	public class RegistryRoot : IRecordRoot
 	{
-		public static Dictionary<string, RegistryKey> RootKeys { get; private set; }
-		static RegistryRoot()
+		public IRecord GetRecord(string uri)
 		{
-			var list = new List<RegistryKey> { 
-				Microsoft.Win32.Registry.ClassesRoot,
-				Microsoft.Win32.Registry.CurrentUser,
-				Microsoft.Win32.Registry.LocalMachine,
-				Microsoft.Win32.Registry.Users,
-				Microsoft.Win32.Registry.CurrentConfig,
-				Microsoft.Win32.Registry.PerformanceData,
-			};
-			RootKeys = list.ToDictionary(a => a.Name, a => a);
+			if ((uri == FullName) || (RegistryHelpers.MayBeRegKey(uri)))
+				return RecordListProvider.GetRecord(uri, this);
+			return null;
 		}
 
-		static Func<String, IRecordList> Provider { get { return name => name.Equals(RootName, StringComparison.OrdinalIgnoreCase) ? new RegistryRoot() : null; } }
-		public static string RootName { get { return "Registry"; } }
-
 		public IRecordList Parent { get { return new RootRecordList(); } }
-		public string Name { get { return RootName; } }
-		public string FullName { get { return RootName; } }
+		public string Name { get { return Name; } }
+		public string FullName { get { return "Registry"; } }
 		public IEnumerable<IRecord> Records
 		{
 			get
 			{
-				foreach (var key in RootKeys)
-					yield return new RegistryDir(key.Key);
+				foreach (var key in RegistryHelpers.RootKeys.Keys)
+					yield return new RegistryDir(key);
 			}
 		}
 	}

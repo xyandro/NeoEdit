@@ -57,10 +57,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Records\IRecordRoot.cs" />
     <Compile Include="Records\IRecord.cs" />
     <Compile Include="Records\IRecordList.cs" />
     <Compile Include="Records\RecordListProvider.cs" />
     <Compile Include="Records\Disk\DiskRoot.cs" />
+    <Compile Include="Records\Registry\RegistryHelpers.cs" />
     <Compile Include="Records\Registry\RegistryFile.cs" />
     <Compile Include="Records\Registry\RegistryDir.cs" />
     <Compile Include="Records\Registry\RegistryRoot.cs" />

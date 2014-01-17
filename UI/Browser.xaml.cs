@@ -1,5 +1,5 @@
-﻿using NeoEdit.Records;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using NeoEdit.Records;
 
 namespace NeoEdit.UI
 {
@@ -13,10 +13,10 @@ namespace NeoEdit.UI
 			Register<Browser>();
 		}
 
-		public Browser(string recordUri)
+		public Browser(IRecordList directory)
 		{
 			InitializeComponent();
-			Directory = RecordListProvider.GetRecordList(recordUri);
+			Directory = directory;
 			Files.Focus();
 		}
 
