@@ -33,6 +33,7 @@ namespace NeoEdit.Records
 			get
 			{
 				yield return new Disk.DiskRoot(this);
+				yield return new Network.NetworkRoot(this);
 				yield return new Registry.RegistryRoot(this);
 			}
 		}
