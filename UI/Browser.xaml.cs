@@ -30,12 +30,15 @@ namespace NeoEdit.UI
 				Directory = recordList;
 		}
 
-		void Files_KeyDown(object sender, KeyEventArgs e)
+		void Window_KeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.Key)
 			{
-				case Key.Enter:
-					ClickOnItem(Files.SelectedItem as Record);
+				case Key.F5:
+					Directory.Refresh();
+					break;
+				case Key.Escape:
+					Files.Focus();
 					break;
 				case Key.Back:
 					Directory = Directory.Parent;
@@ -57,6 +60,16 @@ namespace NeoEdit.UI
 			}
 		}
 
+		void Files_KeyDown(object sender, KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.Enter:
+					ClickOnItem(Files.SelectedItem as Record);
+					break;
+			}
+		}
+
 		RecordList GetDirectory(string uri)
 		{
 			var record = Root.AllRoot.GetRecord(uri);
@@ -71,9 +84,6 @@ namespace NeoEdit.UI
 		{
 			switch (e.Key)
 			{
-				case Key.Escape:
-					Files.Focus();
-					break;
 				case Key.Enter:
 					Directory = GetDirectory(DirectoryDisplay.Text);
 					Files.Focus();
