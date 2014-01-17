@@ -1,5 +1,6 @@
 ﻿using NeoEdit.Records;
 using System.Windows.Input;
+using NeoEdit.Records.List;
 
 namespace NeoEdit.UI
 {
@@ -34,6 +35,25 @@ namespace NeoEdit.UI
 		{
 			switch (e.Key)
 			{
+				case Key.D1:
+				case Key.D2:
+				case Key.D3:
+				case Key.D4:
+				case Key.D5:
+					{
+						var list = Root.AllRoot.GetRecord("List " + e.Key.ToString().Substring(1)) as ListDir;
+						switch (Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift))
+						{
+							case ModifierKeys.Control:
+								Directory = list;
+								break;
+							case ModifierKeys.Control | ModifierKeys.Shift:
+								foreach (var record in Directory.Records)
+									list.Add(record);
+								break;
+						}
+					}
+					break;
 				case Key.F5:
 					Directory.Refresh();
 					break;

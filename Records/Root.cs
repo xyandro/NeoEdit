@@ -34,6 +34,7 @@ namespace NeoEdit.Records
 			{
 				yield return new Disk.DiskRoot(this);
 				yield return new Network.NetworkRoot(this);
+				yield return new List.ListRoot(this);
 				yield return new Registry.RegistryRoot(this);
 			}
 		}

@@ -17,7 +17,7 @@ namespace NeoEdit.Records
 				if (uri.Equals(record.FullName, StringComparison.OrdinalIgnoreCase))
 					return record;
 
-				var match = new Regex(@"^(\\+[^\\]+)(.*)$").Match(remaining);
+				var match = new Regex(@"^(\\*[^\\]+)(.*)$").Match(remaining);
 				if (!match.Success)
 					break;
 				findUri += match.Groups[1].Value;

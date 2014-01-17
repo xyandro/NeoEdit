@@ -28,7 +28,7 @@ namespace NeoEdit.Records
 
 				foreach (var remove in toRemove)
 					records.Remove(remove.Value);
-			}));
+			})).Wait();
 		}
 	}
 }
