@@ -10,7 +10,7 @@ namespace NeoEdit.Records.Disk
 			: base(uri, parent)
 		{
 			if (new Regex("^[a-zA-Z]:$").IsMatch(uri))
-				Name = FullName;
+				this[Property.Name] = FullName;
 		}
 
 		Regex rootRE = new Regex("^[a-zA-Z]:$");

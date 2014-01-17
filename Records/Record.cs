@@ -1,18 +1,47 @@
 ﻿using System.IO;
+using System.Collections.Generic;
 
 namespace NeoEdit.Records
 {
 	public abstract class Record
 	{
-		protected Record(string uri, RecordList parent) { FullName = uri; Parent = parent == null ? this as RecordList : parent; }
+		public enum Property
+		{
+			FullName,
+			Name,
+			Size,
+			WriteTime,
+		};
+		protected Record(string uri, RecordList parent) { this[Property.FullName] = uri; Parent = parent == null ? this as RecordList : parent; }
 		public RecordList Parent { get; private set; }
-		public string FullName { get; private set; }
+		public string FullName { get { return Prop<string>(Property.FullName); } }
 
-		string name;
+		Dictionary<Property, object> properties = new Dictionary<Property, object>();
+
+		public T Prop<T>(Property property)
+		{
+			return (T)this[property];
+		}
+
+		public object this[Property property]
+		{
+			get
+			{
+				if (properties.ContainsKey(property))
+					return properties[property];
+
+				switch (property)
+				{
+					case Property.Name: return Path.GetFileName(FullName);
+					default: return null;
+				}
+			}
+			protected set { properties[property] = value; }
+		}
+
 		public virtual string Name
 		{
-			get { return (name == null) ? Path.GetFileName(FullName) : name; }
-			protected set { name = value; }
+			get { return Prop<string>(Property.Name); }
 		}
 	}
 }
