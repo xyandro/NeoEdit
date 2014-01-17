@@ -28,7 +28,7 @@ namespace NeoEdit.Records
 			if (defaultList != null)
 				return defaultList;
 
-			return new RootRecordList();
+			return RootRecordList.RootRecord;
 		}
 	}
 }

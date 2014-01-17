@@ -5,13 +5,12 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskFile : RecordItem
 	{
-		public DiskFile(string uri) : base(uri)
+		public DiskFile(string uri, RecordList parent)
+			: base(uri, parent)
 		{
 			var fileInfo = new FileInfo(FullName);
 			Size = fileInfo.Length;
 		}
-
-		public override RecordList Parent { get { return new DiskDir(Path.GetDirectoryName(FullName)); } }
 
 		public override byte[] Read(Int64 position, int bytes)
 		{

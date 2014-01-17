@@ -7,22 +7,11 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskDir : RecordList
 	{
-		public DiskDir(string uri)
-			: base(uri)
+		public DiskDir(string uri, RecordList parent)
+			: base(uri, parent)
 		{
 			if (new Regex("^[a-zA-Z]:$").IsMatch(uri))
 				Name = FullName;
-		}
-
-		public override RecordList Parent
-		{
-			get
-			{
-				var parent = Path.GetDirectoryName(FullName);
-				if (String.IsNullOrEmpty(parent))
-					return new DiskRoot();
-				return new DiskDir(parent);
-			}
 		}
 
 		Regex rootRE = new Regex("^[a-zA-Z]:$");
@@ -37,9 +26,9 @@ namespace NeoEdit.Records.Disk
 			{
 				var find = FullName + (IsRoot() ? @"\" : "");
 				foreach (var dir in Directory.EnumerateDirectories(find))
-					yield return new DiskDir(dir);
+					yield return new DiskDir(dir, this);
 				foreach (var file in Directory.EnumerateFiles(find))
-					yield return new DiskFile(file);
+					yield return new DiskFile(file, this);
 			}
 		}
 	}

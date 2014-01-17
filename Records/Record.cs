@@ -4,9 +4,9 @@ namespace NeoEdit.Records
 {
 	public abstract class Record
 	{
-		protected Record(string uri) { FullName = uri; }
-		public abstract RecordList Parent { get; }
-		public virtual string FullName { get; private set; }
+		protected Record(string uri, RecordList parent) { FullName = uri; Parent = parent == null ? this as RecordList : parent; }
+		public RecordList Parent { get; private set; }
+		public string FullName { get; private set; }
 
 		string name;
 		public virtual string Name

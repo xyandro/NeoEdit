@@ -47,16 +47,16 @@ namespace NeoEdit.UI
 		int fontHeight { get { return (int)Math.Ceiling(fontSize * fontFamily.LineSpacing); } }
 		int fontWidth { get { return (int)fontSize; } }
 
-		TextFile textFile;
+		TextFile textFile = null;
 		public TextEditor() : this(@"C:\Docs\Cpp\NeoEdit\UI\Encodings\UTF8.txt") { }
 		public TextEditor(string filename)
 		{
-			InitializeComponent();
-			textFile = new TextFile(new DiskFile(filename));
-			lines = textFile.numLines;
-			cols = textFile.numCols;
-			fontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./UI/Resources/#Anonymous Pro");
-			fontSize = 16;
+			//InitializeComponent();
+			//textFile = new TextFile(new DiskFile(filename));
+			//lines = textFile.numLines;
+			//cols = textFile.numCols;
+			//fontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./UI/Resources/#Anonymous Pro");
+			//fontSize = 16;
 		}
 
 		protected override void OnRender(DrawingContext drawingContext)

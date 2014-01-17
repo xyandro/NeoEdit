@@ -7,18 +7,7 @@ namespace NeoEdit.Records.Registry
 {
 	public class RegistryDir : RecordList
 	{
-		public RegistryDir(string uri) : base(uri) { }
-
-		public override RecordList Parent
-		{
-			get
-			{
-				var parent = Path.GetDirectoryName(FullName);
-				if (String.IsNullOrEmpty(parent))
-					return new RegistryRoot();
-				return new RegistryDir(parent);
-			}
-		}
+		public RegistryDir(string uri, RecordList parent) : base(uri, parent) { }
 
 		public override IEnumerable<Record> Records
 		{
@@ -27,9 +16,9 @@ namespace NeoEdit.Records.Registry
 				using (var subKey = RegistryHelpers.GetKey(FullName))
 				{
 					foreach (var name in subKey.GetSubKeyNames())
-						yield return new RegistryDir(FullName + @"\" + name);
+						yield return new RegistryDir(FullName + @"\" + name, this);
 					foreach (var name in subKey.GetValueNames())
-						yield return new RegistryFile(FullName + @"\" + name);
+						yield return new RegistryFile(FullName + @"\" + name, this);
 				}
 			}
 		}

@@ -6,7 +6,7 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskRoot : RecordRoot
 	{
-		public DiskRoot() : base("Disks") { }
+		public DiskRoot(RecordList parent) : base("Disks", parent) { }
 
 		public override Record GetRecord(string uri)
 		{
@@ -27,7 +27,7 @@ namespace NeoEdit.Records.Disk
 			get
 			{
 				foreach (var drive in DriveInfo.GetDrives())
-					yield return new DiskDir(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper());
+					yield return new DiskDir(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper(), this);
 			}
 		}
 	}
