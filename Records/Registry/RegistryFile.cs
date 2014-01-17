@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace NeoEdit.Records.Registry
+﻿namespace NeoEdit.Records.Registry
 {
 	public class RegistryFile : RecordItem
 	{

@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using NeoEdit.UI;
+﻿using NeoEdit.UI;
+using System.Windows;
 
 namespace NeoEdit
 {

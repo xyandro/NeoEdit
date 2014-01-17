@@ -1,5 +1,5 @@
-﻿using System.Windows.Input;
-using NeoEdit.Records;
+﻿using NeoEdit.Records;
+using System.Windows.Input;
 
 namespace NeoEdit.UI
 {
