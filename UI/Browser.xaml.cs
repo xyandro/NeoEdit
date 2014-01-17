@@ -57,6 +57,16 @@ namespace NeoEdit.UI
 			}
 		}
 
+		RecordList GetDirectory(string uri)
+		{
+			var record = Root.AllRoot.GetRecord(uri);
+			if (record is RecordItem)
+				record = record.Parent;
+			if (record is RecordList)
+				return record as RecordList;
+			return Directory;
+		}
+
 		void DirectoryDisplay_KeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.Key)
@@ -65,7 +75,7 @@ namespace NeoEdit.UI
 					Files.Focus();
 					break;
 				case Key.Enter:
-					Directory = RecordListProvider.GetRecordList(DirectoryDisplay.Text, Directory);
+					Directory = GetDirectory(DirectoryDisplay.Text);
 					Files.Focus();
 					break;
 			}

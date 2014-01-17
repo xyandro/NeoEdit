@@ -10,7 +10,7 @@ namespace NeoEdit
 	{
 		public App()
 		{
-			new Browser(new Records.Disk.DiskRoot(Records.RootRecordList.RootRecord));
+			new Browser(new Records.Disk.DiskRoot(Records.Root.AllRoot));
 		}
 	}
 }
