@@ -1,5 +1,7 @@
-﻿using NeoEdit.Records;
+﻿using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Records;
 using NeoEdit.Records.List;
 
 namespace NeoEdit.UI
@@ -90,14 +92,28 @@ namespace NeoEdit.UI
 			}
 		}
 
-		RecordList GetDirectory(string uri)
+		void SetDirectory(string uri)
 		{
+			string select = null;
 			var record = Root.AllRoot.GetRecord(uri);
 			if (record is RecordItem)
+			{
+				select = record.FullName;
 				record = record.Parent;
-			if (record is RecordList)
-				return record as RecordList;
-			return Directory;
+			}
+			if (!(record is RecordList))
+				return;
+			Directory = record as RecordList;
+			if (select != null)
+			{
+				var sel = Directory.Records.FirstOrDefault(a => a.FullName == select);
+				if (sel != null)
+				{
+					Files.SelectedItem = sel;
+					Files.ScrollIntoView(sel);
+					(Files.ItemContainerGenerator.ContainerFromItem(sel) as ListViewItem).Focus();
+				}
+			}
 		}
 
 		void DirectoryDisplay_KeyDown(object sender, KeyEventArgs e)
@@ -105,8 +121,7 @@ namespace NeoEdit.UI
 			switch (e.Key)
 			{
 				case Key.Enter:
-					Directory = GetDirectory(DirectoryDisplay.Text);
-					Files.Focus();
+					SetDirectory(DirectoryDisplay.Text);
 					break;
 			}
 		}
