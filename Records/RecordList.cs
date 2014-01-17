@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace NeoEdit.Records
 {
@@ -17,12 +19,16 @@ namespace NeoEdit.Records
 			var newList = InternalRecords.ToDictionary(a => a.FullName, a => a);
 
 			var toAdd = newList.Where(a => !existingList.Keys.Contains(a.Key));
-			foreach (var add in toAdd)
-				records.Add(add.Value);
-
 			var toRemove = existingList.Where(a => !newList.Keys.Contains(a.Key));
-			foreach (var remove in toRemove)
-				records.Remove(remove.Value);
+
+			Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+			{
+				foreach (var add in toAdd)
+					records.Add(add.Value);
+
+				foreach (var remove in toRemove)
+					records.Remove(remove.Value);
+			}));
 		}
 	}
 }
