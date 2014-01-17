@@ -103,7 +103,10 @@ namespace NeoEdit.UI
 			}
 			if (!(record is RecordList))
 				return;
+
 			Directory = record as RecordList;
+			Files.Focus();
+
 			if (select != null)
 			{
 				var sel = Directory.Records.FirstOrDefault(a => a.FullName == select);
