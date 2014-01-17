@@ -6,26 +6,26 @@ namespace NeoEdit.UI
 	public partial class Browser : UIWindow
 	{
 		[DepProp]
-		public IRecordList Directory { get { return GetProp<IRecordList>(); } set { SetProp(value); } }
+		public RecordList Directory { get { return GetProp<RecordList>(); } set { SetProp(value); } }
 
 		static Browser()
 		{
 			Register<Browser>();
 		}
 
-		public Browser(IRecordList directory)
+		public Browser(RecordList directory)
 		{
 			InitializeComponent();
 			Directory = directory;
 			Files.Focus();
 		}
 
-		void ClickOnItem(IRecord item)
+		void ClickOnItem(Record item)
 		{
 			if (item == null)
 				return;
 
-			var recordList = item as IRecordList;
+			var recordList = item as RecordList;
 			if (recordList != null)
 				Directory = recordList;
 		}
@@ -35,7 +35,7 @@ namespace NeoEdit.UI
 			switch (e.Key)
 			{
 				case Key.Enter:
-					ClickOnItem(Files.SelectedItem as IRecord);
+					ClickOnItem(Files.SelectedItem as Record);
 					break;
 				case Key.Back:
 					Directory = Directory.Parent;
@@ -73,7 +73,7 @@ namespace NeoEdit.UI
 
 		void Files_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			ClickOnItem(Files.SelectedItem as IRecord);
+			ClickOnItem(Files.SelectedItem as Record);
 		}
 	}
 }

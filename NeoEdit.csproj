@@ -57,9 +57,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Records\IRecordRoot.cs" />
-    <Compile Include="Records\IRecord.cs" />
-    <Compile Include="Records\IRecordList.cs" />
+    <Compile Include="Records\RecordRoot.cs" />
+    <Compile Include="Records\Record.cs" />
+    <Compile Include="Records\RecordList.cs" />
     <Compile Include="Records\RecordListProvider.cs" />
     <Compile Include="Records\Disk\DiskRoot.cs" />
     <Compile Include="Records\Registry\RegistryHelpers.cs" />
@@ -67,7 +67,7 @@
     <Compile Include="Records\Registry\RegistryDir.cs" />
     <Compile Include="Records\Registry\RegistryRoot.cs" />
     <Compile Include="Records\RootRecordList.cs" />
-    <Compile Include="Records\IRecordItem.cs" />
+    <Compile Include="Records\RecordItem.cs" />
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Records\TextFile.cs" />
     <Compile Include="Helpers.cs" />

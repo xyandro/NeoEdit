@@ -3,19 +3,18 @@ using System.IO;
 
 namespace NeoEdit.Records.Disk
 {
-	public class DiskRoot : IRecordRoot
+	public class DiskRoot : RecordRoot
 	{
-		public IRecord GetRecord(string uri)
+		public DiskRoot() : base("Disks") { }
+
+		public override Record GetRecord(string uri)
 		{
-			if ((uri == FullName) || (File.Exists(uri)) || (Directory.Exists(uri)))
-				return RecordListProvider.GetRecord(uri, this);
+			if ((uri.Equals(FullName, System.StringComparison.OrdinalIgnoreCase)) || (File.Exists(uri)) || (Directory.Exists(uri)))
+				return base.GetRecord(uri);
 			return null;
 		}
 
-		public IRecordList Parent { get { return new RootRecordList(); } }
-		public string Name { get { return Name; } }
-		public string FullName { get { return "Disks"; } }
-		public IEnumerable<IRecord> Records
+		public override IEnumerable<Record> Records
 		{
 			get
 			{

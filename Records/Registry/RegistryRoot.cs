@@ -2,19 +2,18 @@
 
 namespace NeoEdit.Records.Registry
 {
-	public class RegistryRoot : IRecordRoot
+	public class RegistryRoot : RecordRoot
 	{
-		public IRecord GetRecord(string uri)
+		public RegistryRoot() : base("Registry") { }
+
+		public override Record GetRecord(string uri)
 		{
-			if ((uri == FullName) || (RegistryHelpers.MayBeRegKey(uri)))
-				return RecordListProvider.GetRecord(uri, this);
+			if ((uri.Equals(FullName, System.StringComparison.OrdinalIgnoreCase)) || (RegistryHelpers.MayBeRegKey(uri)))
+				return base.GetRecord(uri);
 			return null;
 		}
 
-		public IRecordList Parent { get { return new RootRecordList(); } }
-		public string Name { get { return Name; } }
-		public string FullName { get { return "Registry"; } }
-		public IEnumerable<IRecord> Records
+		public override IEnumerable<Record> Records
 		{
 			get
 			{

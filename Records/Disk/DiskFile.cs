@@ -3,21 +3,17 @@ using System.IO;
 
 namespace NeoEdit.Records.Disk
 {
-	public class DiskFile : IRecordItem
+	public class DiskFile : RecordItem
 	{
-		public IRecordList Parent { get { return new DiskDir(Path.GetDirectoryName(FullName)); } }
-		public string Name { get { return Path.GetFileName(FullName); } }
-		public string FullName { get; private set; }
-		public long Size { get; private set; }
-
-		public DiskFile(string uri)
+		public DiskFile(string uri) : base(uri)
 		{
-			FullName = uri;
 			var fileInfo = new FileInfo(FullName);
 			Size = fileInfo.Length;
 		}
 
-		public byte[] Read(Int64 position, int bytes)
+		public override RecordList Parent { get { return new DiskDir(Path.GetDirectoryName(FullName)); } }
+
+		public override byte[] Read(Int64 position, int bytes)
 		{
 			var file = File.OpenRead(FullName);
 			bytes = (int)Math.Max(0, Math.Min(bytes, file.Length - position));

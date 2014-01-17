@@ -5,9 +5,16 @@ using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
 {
-	public class DiskDir : IRecordList
+	public class DiskDir : RecordList
 	{
-		public IRecordList Parent
+		public DiskDir(string uri)
+			: base(uri)
+		{
+			if (new Regex("^[a-zA-Z]:$").IsMatch(uri))
+				Name = FullName;
+		}
+
+		public override RecordList Parent
 		{
 			get
 			{
@@ -24,9 +31,7 @@ namespace NeoEdit.Records.Disk
 			return rootRE.IsMatch(FullName);
 		}
 
-		public string Name { get; private set; }
-		public string FullName { get; private set; }
-		public IEnumerable<IRecord> Records
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
@@ -36,14 +41,6 @@ namespace NeoEdit.Records.Disk
 				foreach (var file in Directory.EnumerateFiles(find))
 					yield return new DiskFile(file);
 			}
-		}
-
-		public DiskDir(string uri)
-		{
-			FullName = uri;
-			Name = Path.GetFileName(FullName);
-			if (new Regex("^[a-zA-Z]:$").IsMatch(uri))
-				Name = FullName;
 		}
 	}
 }

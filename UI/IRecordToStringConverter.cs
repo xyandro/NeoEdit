@@ -9,7 +9,7 @@ namespace NeoEdit.UI
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return (value as IRecord).Name;
+			return (value as Record).Name;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

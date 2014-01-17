@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NeoEdit.Records
 {
@@ -37,7 +36,7 @@ namespace NeoEdit.Records
 			preambles = availableEncodings.Select(a => new { key = a.Key, value = a.Value.GetPreamble() }).Where(a => a.value.Length != 0).OrderByDescending(a => a.value.Length).ToDictionary(a => a.key, a => a.value);
 		}
 
-		IRecordItem file;
+		RecordItem file;
 		int preambleBytes = 0;
 		List<Line> lines = new List<Line>();
 		string text = "";
@@ -50,7 +49,7 @@ namespace NeoEdit.Records
 			return text.Substring(useLine.start, useLine.end - useLine.start);
 		}
 
-		public TextFile(IRecordItem _file)
+		public TextFile(RecordItem _file)
 		{
 			file = _file;
 

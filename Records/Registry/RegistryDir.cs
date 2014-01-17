@@ -5,9 +5,11 @@ using Microsoft.Win32;
 
 namespace NeoEdit.Records.Registry
 {
-	public class RegistryDir : IRecordList
+	public class RegistryDir : RecordList
 	{
-		public IRecordList Parent
+		public RegistryDir(string uri) : base(uri) { }
+
+		public override RecordList Parent
 		{
 			get
 			{
@@ -17,13 +19,12 @@ namespace NeoEdit.Records.Registry
 				return new RegistryDir(parent);
 			}
 		}
-		public string Name { get; private set; }
-		public string FullName { get; private set; }
-		public IEnumerable<IRecord> Records
+
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
-				using (var subKey = GetKey())
+				using (var subKey = RegistryHelpers.GetKey(FullName))
 				{
 					foreach (var name in subKey.GetSubKeyNames())
 						yield return new RegistryDir(FullName + @"\" + name);
@@ -31,17 +32,6 @@ namespace NeoEdit.Records.Registry
 						yield return new RegistryFile(FullName + @"\" + name);
 				}
 			}
-		}
-
-		RegistryKey GetKey()
-		{
-			return RegistryHelpers.GetKey(FullName);
-		}
-
-		public RegistryDir(string key)
-		{
-			FullName = key;
-			Name = Path.GetFileName(key);
 		}
 	}
 }
