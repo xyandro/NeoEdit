@@ -22,6 +22,6 @@ namespace NeoEdit.Records.Network
 			return base.GetRecord(uri);
 		}
 
-		public override IEnumerable<Record> Records { get { return paths.Select(a => new NetworkDir(a, this)); } }
+		protected override IEnumerable<Record> InternalRecords { get { return paths.Select(a => new NetworkDir(a, this)); } }
 	}
 }

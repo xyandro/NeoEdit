@@ -19,7 +19,7 @@ namespace NeoEdit.Records.Disk
 			return rootRE.IsMatch(FullName);
 		}
 
-		public override IEnumerable<Record> Records
+		protected override IEnumerable<Record> InternalRecords
 		{
 			get
 			{

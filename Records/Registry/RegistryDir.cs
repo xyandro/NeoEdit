@@ -6,7 +6,7 @@ namespace NeoEdit.Records.Registry
 	{
 		public RegistryDir(string uri, RecordList parent) : base(uri, parent) { }
 
-		public override IEnumerable<Record> Records
+		protected override IEnumerable<Record> InternalRecords
 		{
 			get
 			{

@@ -22,7 +22,7 @@ namespace NeoEdit.Records.Disk
 			return null;
 		}
 
-		public override IEnumerable<Record> Records
+		protected override IEnumerable<Record> InternalRecords
 		{
 			get
 			{

@@ -28,7 +28,7 @@ namespace NeoEdit.Records
 			return null;
 		}
 
-		public override IEnumerable<Record> Records
+		protected override IEnumerable<Record> InternalRecords
 		{
 			get
 			{
