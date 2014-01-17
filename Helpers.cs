@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeoEdit
 {
@@ -34,6 +35,29 @@ namespace NeoEdit
 				++index;
 			}
 			return -1;
+		}
+
+		public static T ParseEnum<T>(string value)
+		{
+			return (T)Enum.Parse(typeof(T), value);
+		}
+
+		public static bool IsIntegerType(this Type type)
+		{
+			switch (Type.GetTypeCode(type))
+			{
+				case TypeCode.Byte:
+				case TypeCode.SByte:
+				case TypeCode.UInt16:
+				case TypeCode.UInt32:
+				case TypeCode.UInt64:
+				case TypeCode.Int16:
+				case TypeCode.Int32:
+				case TypeCode.Int64:
+					return true;
+				default:
+					return false;
+			}
 		}
 	}
 }

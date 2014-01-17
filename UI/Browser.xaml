@@ -5,7 +5,7 @@
         Title="Directory" Height="500" Width="600"
 		Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}" KeyDown="Window_KeyDown">
 	<ns:UIWindow.Resources>
-		<ns:IRecordToStringConverter x:Key="IRecordToStringConverter"/>
+		<ns:RecordToStringConverter x:Key="RecordToStringConverter"/>
 	</ns:UIWindow.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
@@ -24,11 +24,13 @@
 			<TextBox Name="DirectoryDisplay" Text="{Binding Directory.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="DirectoryDisplay_KeyDown" />
 		</Grid>
 		<ListView Name="Files" Grid.Column="0" Grid.Row="1" KeyDown="Files_KeyDown" ItemsSource="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick">
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<ContentPresenter Content="{Binding Converter={StaticResource IRecordToStringConverter}}"/>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding ConverterParameter=Name, Converter={StaticResource RecordToStringConverter}, Mode=OneWay}"/>
+                    <GridViewColumn Header="Size" DisplayMemberBinding="{Binding ConverterParameter=Size, Converter={StaticResource RecordToStringConverter}, Mode=OneWay}"/>
+                    <GridViewColumn Header="WriteTime" DisplayMemberBinding="{Binding ConverterParameter=WriteTime, Converter={StaticResource RecordToStringConverter}, Mode=OneWay}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
 	</Grid>
 </ns:UIWindow>
