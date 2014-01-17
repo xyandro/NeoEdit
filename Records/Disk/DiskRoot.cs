@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
 {
@@ -9,7 +10,14 @@ namespace NeoEdit.Records.Disk
 
 		public override Record GetRecord(string uri)
 		{
-			if ((uri.Equals(FullName, System.StringComparison.OrdinalIgnoreCase)) || (File.Exists(uri)) || (Directory.Exists(uri)))
+			uri = uri.Replace("/", "\\");
+			uri = uri.Replace("\"", "");
+			uri = uri.Trim();
+			uri = uri.TrimEnd('\\');
+			var netPath = uri.StartsWith(@"\\");
+			uri = new Regex("\\\\+").Replace(uri, "\\");
+
+			if ((File.Exists(uri)) || (Directory.Exists(uri)))
 				return base.GetRecord(uri);
 			return null;
 		}

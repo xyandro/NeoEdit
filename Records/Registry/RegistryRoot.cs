@@ -8,7 +8,7 @@ namespace NeoEdit.Records.Registry
 
 		public override Record GetRecord(string uri)
 		{
-			if ((uri.Equals(FullName, System.StringComparison.OrdinalIgnoreCase)) || (RegistryHelpers.MayBeRegKey(uri)))
+			if (RegistryHelpers.MayBeRegKey(uri))
 				return base.GetRecord(uri);
 			return null;
 		}

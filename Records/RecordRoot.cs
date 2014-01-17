@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Linq;
 
 namespace NeoEdit.Records
@@ -10,23 +11,20 @@ namespace NeoEdit.Records
 
 		public virtual Record GetRecord(string uri)
 		{
-			var parts = uri.Split('\\').ToList();
-			for (var ctr1 = parts.Count; ctr1 >= 0; --ctr1)
-				for (var ctr2 = ctr1 + 1; ctr2 < parts.Count; ++ctr2)
-					parts[ctr2] = parts[ctr1] + @"\" + parts[ctr2];
-
-			Record record = this;
+			string findUri = "", remaining = uri;
+			var record = this as Record;
 			while (record != null)
 			{
 				if (uri.Equals(record.FullName, StringComparison.OrdinalIgnoreCase))
 					return record;
 
-				if ((parts.Count == 0) || (!(record is RecordList)))
+				var match = new Regex(@"^(\\+[^\\]+)(.*)$").Match(remaining);
+				if (!match.Success)
 					break;
-				var part = parts[0];
-				parts.RemoveAt(0);
+				findUri += match.Groups[1].Value;
+				remaining = match.Groups[2].Value;
 
-				record = (record as RecordList).Records.SingleOrDefault(a => a.FullName.Equals(part, StringComparison.OrdinalIgnoreCase));
+				record = (record as RecordList).Records.SingleOrDefault(a => a.FullName.Equals(findUri, StringComparison.OrdinalIgnoreCase));
 			}
 
 			throw new Exception(String.Format("Invalid input: {0}", uri));
