@@ -10,15 +10,12 @@ namespace NeoEdit.UI
 	public partial class Browser : Window
 	{
 		[DepProp]
-		public RecordList Directory { get { return this.GetProp<RecordList>(); } set { this.SetProp(value); } }
+		public RecordList Directory { get { return uiHelper.GetProp<RecordList>(); } set { uiHelper.SetProp(value); } }
 
-		static Browser()
-		{
-			UIHelper.Register<Browser>();
-		}
-
+		readonly UIHelper<Browser> uiHelper;
 		public Browser(RecordList directory)
 		{
+			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
 			Directory = directory;
 			Files.Focus();

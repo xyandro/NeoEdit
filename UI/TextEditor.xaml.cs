@@ -11,35 +11,32 @@ namespace NeoEdit.UI
 	/// </summary>
 	public partial class TextEditor : Window
 	{
-		static TextEditor()
-		{
-			UIHelper.Register<TextEditor>();
-		}
-
 		[DepProp]
-		public FontFamily fontFamily { get { return this.GetProp<FontFamily>(); } set { this.SetProp(value); } }
+		public FontFamily fontFamily { get { return uiHelper.GetProp<FontFamily>(); } set { uiHelper.SetProp(value); } }
 		[DepProp]
-		public double fontSize { get { return this.GetProp<double>(); } set { this.SetProp(value); } }
+		public double fontSize { get { return uiHelper.GetProp<double>(); } set { uiHelper.SetProp(value); } }
 		[DepProp]
-		public int lines { get { return this.GetProp<int>(); } set { this.SetProp(value); } }
+		public int lines { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
 		[DepProp]
-		public int cols { get { return this.GetProp<int>(); } set { this.SetProp(value); } }
+		public int cols { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
 		[DepProp]
-		public int viewportLines { get { return this.GetProp<int>(); } set { this.SetProp(value); } }
+		public int viewportLines { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
 		[DepProp]
-		public int viewportCols { get { return this.GetProp<int>(); } set { this.SetProp(value); } }
+		public int viewportCols { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
 		[DepProp]
-		public int onLine { get { return this.GetProp<int>(); } set { this.SetProp(value); } }
+		public int onLine { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
 		[DepProp]
-		public int onCol { get { return this.GetProp<int>(); } set { this.SetProp(value); } }
+		public int onCol { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
 
 		int fontHeight { get { return (int)Math.Ceiling(fontSize * fontFamily.LineSpacing); } }
 		int fontWidth { get { return (int)fontSize; } }
 
+		readonly UIHelper<TextEditor> uiHelper;
 		TextFile textFile = null;
 		public TextEditor() : this(@"C:\Docs\Cpp\NeoEdit\UI\Encodings\UTF8.txt") { }
 		public TextEditor(string filename)
 		{
+			uiHelper = new UIHelper<TextEditor>(this);
 			//InitializeComponent();
 			//textFile = new TextFile(new DiskFile(filename));
 			//lines = textFile.numLines;
