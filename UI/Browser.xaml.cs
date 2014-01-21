@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Records;
@@ -6,14 +7,14 @@ using NeoEdit.Records.List;
 
 namespace NeoEdit.UI
 {
-	public partial class Browser : UIWindow
+	public partial class Browser : Window
 	{
 		[DepProp]
-		public RecordList Directory { get { return GetProp<RecordList>(); } set { SetProp(value); } }
+		public RecordList Directory { get { return this.GetProp<RecordList>(); } set { this.SetProp(value); } }
 
 		static Browser()
 		{
-			Register<Browser>();
+			UIHelper.Register<Browser>();
 		}
 
 		public Browser(RecordList directory)

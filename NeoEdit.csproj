@@ -79,7 +79,7 @@
     <Compile Include="UI\TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\UIWindow.cs" />
+    <Compile Include="UI\UIHelper.cs" />
     <Page Include="UI\Browser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
