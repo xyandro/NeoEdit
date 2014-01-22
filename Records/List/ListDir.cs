@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NeoEdit.Records.List
 {
@@ -10,6 +11,8 @@ namespace NeoEdit.Records.List
 
 		public void Add(Record record)
 		{
+			if (items.Any(a => a.FullName == record.FullName))
+				return;
 			items.Add(record);
 			Refresh();
 		}
