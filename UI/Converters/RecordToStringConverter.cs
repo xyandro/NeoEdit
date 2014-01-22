@@ -1,12 +1,21 @@
-﻿using NeoEdit.Records;
+﻿using System.Windows.Markup;
+using NeoEdit.Records;
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace NeoEdit.UI
+namespace NeoEdit.UI.Converters
 {
-	class RecordToStringConverter : IMultiValueConverter
+	class RecordToStringConverter : MarkupExtension, IMultiValueConverter
 	{
+		static RecordToStringConverter converter;
+		public override object ProvideValue(IServiceProvider serviceProvider)
+		{
+			if (converter == null)
+				converter = new RecordToStringConverter();
+			return converter;
+		}
+
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var propertyValue = (value[0] as Record)[(Record.Property)value[1]];

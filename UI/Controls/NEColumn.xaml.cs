@@ -1,7 +1,5 @@
-﻿using System.ComponentModel;
+﻿using NeoEdit.Records;
 using System.Windows.Controls;
-using System.Windows.Data;
-using NeoEdit.UI;
 
 namespace NeoEdit.UI.Controls
 {
@@ -10,10 +8,14 @@ namespace NeoEdit.UI.Controls
 	/// </summary>
 	public partial class NEColumn : GridViewColumn
 	{
+		[DepProp]
+		public Record.Property Property { get { return uiHelper.GetPropValue<Record.Property>(); } set { uiHelper.SetPropValue(value); } }
+
+		readonly UIHelper<NEColumn> uiHelper;
 		public NEColumn()
 		{
+			uiHelper = new UIHelper<NEColumn>(this);
 			InitializeComponent();
-			multiBinding.Converter = new RecordToStringConverter();
 			binding.Source = this;
 		}
 	}
