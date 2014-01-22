@@ -37,11 +37,6 @@ namespace NeoEdit
 			return -1;
 		}
 
-		public static T ParseEnum<T>(string value)
-		{
-			return (T)Enum.Parse(typeof(T), value);
-		}
-
 		public static bool IsIntegerType(this Type type)
 		{
 			switch (Type.GetTypeCode(type))

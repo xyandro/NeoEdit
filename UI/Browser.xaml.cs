@@ -13,7 +13,7 @@ namespace NeoEdit.UI
 		[DepProp]
 		public RecordList Directory { get { return uiHelper.GetPropValue<RecordList>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public IEnumerable<string> Properties { get { return uiHelper.GetPropValue<IEnumerable<string>>(); } set { uiHelper.SetPropValue(value); } }
+		public IEnumerable<Record.Property> Properties { get { return uiHelper.GetPropValue<IEnumerable<Record.Property>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<Browser> uiHelper;
 		public Browser(RecordList directory)
@@ -21,7 +21,7 @@ namespace NeoEdit.UI
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
 			Directory = directory;
-			Properties = new List<string> { "Name", "Size", "WriteTime" };
+			Properties = new List<Record.Property> { Record.Property.Name, Record.Property.Size, Record.Property.WriteTime };
 			Files.Focus();
 		}
 

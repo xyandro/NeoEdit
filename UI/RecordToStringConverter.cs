@@ -9,7 +9,7 @@ namespace NeoEdit.UI
 	{
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var propertyValue = (value[0] as Record)[Helpers.ParseEnum<Record.Property>(value[1] as string)];
+			var propertyValue = (value[0] as Record)[(Record.Property)value[1]];
 			if (propertyValue == null)
 				return null;
 

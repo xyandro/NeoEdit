@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NeoEdit.Records;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -12,23 +13,7 @@ namespace NeoEdit.UI.Controls
 	public partial class NEListView : ListView
 	{
 		[DepProp]
-		public IEnumerable<string> Properties
-		{
-			get { return uiHelper.GetPropValue<IEnumerable<string>>(); }
-			set
-			{
-				var observableCollection = Properties as ObservableCollection<string>;
-				if (observableCollection != null)
-					observableCollection.CollectionChanged -= PropertiesListChanged;
-
-				uiHelper.SetPropValue(value);
-
-				observableCollection = Properties as ObservableCollection<string>;
-				if (observableCollection != null)
-					observableCollection.CollectionChanged += PropertiesListChanged;
-				SetupColumns();
-			}
-		}
+		public IEnumerable<Record.Property> Properties { get { return uiHelper.GetPropValue<IEnumerable<Record.Property>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<NEListView> uiHelper;
 		public NEListView()
@@ -40,11 +25,11 @@ namespace NeoEdit.UI.Controls
 
 		void PropertiesChanged(object oldValue, object newValue)
 		{
-			var observableCollection = oldValue as ObservableCollection<string>;
+			var observableCollection = oldValue as ObservableCollection<Record.Property>;
 			if (observableCollection != null)
 				observableCollection.CollectionChanged -= PropertiesListChanged;
 
-			observableCollection = newValue as ObservableCollection<string>;
+			observableCollection = newValue as ObservableCollection<Record.Property>;
 			if (observableCollection != null)
 				observableCollection.CollectionChanged += PropertiesListChanged;
 
