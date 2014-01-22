@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeoEdit.Records.Registry
 {
@@ -13,12 +14,12 @@ namespace NeoEdit.Records.Registry
 			return null;
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
 		{
 			get
 			{
 				foreach (var key in RegistryHelpers.RootKeys.Keys)
-					yield return new RegistryDir(key, this);
+					yield return new Tuple<string, Func<string, Record>>(key, a => new RegistryDir(a, this));
 			}
 		}
 	}

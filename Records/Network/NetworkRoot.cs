@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Network
@@ -22,6 +22,13 @@ namespace NeoEdit.Records.Network
 			return base.GetRecord(uri);
 		}
 
-		protected override IEnumerable<Record> InternalRecords { get { return paths.Select(a => new NetworkDir(a, this)); } }
+		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
+		{
+			get
+			{
+				foreach (var path in paths)
+					yield return new Tuple<string, Func<string, Record>>(path, a => new NetworkDir(a, this));
+			}
+		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeoEdit.Records.Registry
 {
@@ -6,16 +7,16 @@ namespace NeoEdit.Records.Registry
 	{
 		public RegistryDir(string uri, RecordList parent) : base(uri, parent) { }
 
-		protected override IEnumerable<Record> InternalRecords
+		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
 		{
 			get
 			{
 				using (var subKey = RegistryHelpers.GetKey(FullName))
 				{
 					foreach (var name in subKey.GetSubKeyNames())
-						yield return new RegistryDir(FullName + @"\" + name, this);
+						yield return new Tuple<string, Func<string, Record>>(FullName + @"\" + name, a => new RegistryDir(a, this));
 					foreach (var name in subKey.GetValueNames())
-						yield return new RegistryFile(FullName + @"\" + name, this);
+						yield return new Tuple<string, Func<string, Record>>(FullName + @"\" + name, a => new RegistryFile(a, this));
 				}
 			}
 		}

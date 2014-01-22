@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeoEdit.Records
 {
@@ -7,7 +8,17 @@ namespace NeoEdit.Records
 		public static Root AllRoot { get; private set; }
 		static Root() { AllRoot = new Root(null); }
 
-		Root(RecordList parent) : base("Root", null) { }
+		readonly List<Record> RootNodes;
+		Root(RecordList parent)
+			: base("Root", null)
+		{
+			RootNodes = new List<Record> { 
+				new Disk.DiskRoot(this),
+				new Network.NetworkRoot(this),
+				new List.ListRoot(this),
+				new Registry.RegistryRoot(this),
+			};
+		}
 
 		public override Record GetRecord(string uri)
 		{
@@ -28,14 +39,12 @@ namespace NeoEdit.Records
 			return null;
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
 		{
 			get
 			{
-				yield return new Disk.DiskRoot(this);
-				yield return new Network.NetworkRoot(this);
-				yield return new List.ListRoot(this);
-				yield return new Registry.RegistryRoot(this);
+				foreach (var node in RootNodes)
+					yield return new Tuple<string, Func<string, Record>>(node.FullName, a => node);
 			}
 		}
 	}

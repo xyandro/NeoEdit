@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -35,16 +36,16 @@ namespace NeoEdit.Records.Disk
 			watcher.EnableRaisingEvents = true;
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
 		{
 			get
 			{
 				SetupWatcher();
 				var find = FullName + (IsRoot() ? @"\" : "");
 				foreach (var dir in Directory.EnumerateDirectories(find))
-					yield return new DiskDir(dir, this);
+					yield return new Tuple<string, Func<string, Record>>(dir, a => new DiskDir(a, this));
 				foreach (var file in Directory.EnumerateFiles(find))
-					yield return new DiskFile(file, this);
+					yield return new Tuple<string, Func<string, Record>>(file, a => new DiskFile(a, this));
 			}
 		}
 	}

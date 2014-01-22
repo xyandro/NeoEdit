@@ -16,15 +16,12 @@ namespace NeoEdit.Records.List
 			return null;
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
 		{
 			get
 			{
-				yield return new ListDir("List 1", this);
-				yield return new ListDir("List 2", this);
-				yield return new ListDir("List 3", this);
-				yield return new ListDir("List 4", this);
-				yield return new ListDir("List 5", this);
+				for (var ctr = 1; ctr <= 5; ctr++)
+					yield return new Tuple<string, Func<string, Record>>(String.Format("List {0}", ctr), a => new ListDir(a, this));
 			}
 		}
 	}
