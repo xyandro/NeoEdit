@@ -1,26 +1,52 @@
-﻿using NeoEdit.Records;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Data;
+using NeoEdit.Records;
 
 namespace NeoEdit.UI.Controls
 {
-	/// <summary>
-	/// Interaction logic for NEListView.xaml
-	/// </summary>
+	class LambdaComparer<T> : IComparer where T : class
+	{
+		readonly Func<T, T, int> lambda;
+		public LambdaComparer(Func<T, T, int> _lambda)
+		{
+			lambda = _lambda;
+		}
+
+		public int Compare(object o1, object o2)
+		{
+			return lambda(o1 as T, o2 as T);
+		}
+	}
+
 	public partial class NEListView : ListView
 	{
+		[DepProp]
+		public Record.Property SortProperty { get { return uiHelper.GetPropValue<Record.Property>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public IEnumerable<Record> Records { get { return uiHelper.GetPropValue<IEnumerable<Record>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public IEnumerable<Record.Property> Properties { get { return uiHelper.GetPropValue<IEnumerable<Record.Property>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<NEListView> uiHelper;
+		readonly CollectionViewSource collectionView;
 		public NEListView()
 		{
 			uiHelper = new UIHelper<NEListView>(this);
 			uiHelper.AddCallback(a => a.Properties, PropertiesChanged);
 			InitializeComponent();
+
+			collectionView = FindResource("collectionView") as CollectionViewSource;
+			uiHelper.AddCallback(CollectionViewSource.ViewProperty, collectionView, Resort);
+			uiHelper.AddCallback(a => a.SortProperty, (o, n) => { SortAscending = Record.DefaultAscending[SortProperty]; Resort(); });
+			uiHelper.AddCallback(a => a.SortAscending, (o, n) => Resort());
 		}
 
 		void PropertiesChanged(object oldValue, object newValue)
@@ -45,6 +71,33 @@ namespace NeoEdit.UI.Controls
 		{
 			gridView.Columns.Clear();
 			Properties.ToList().ForEach(a => gridView.Columns.Add(new NEColumn { Property = a }));
+			Resort();
+		}
+
+		public int Compare(Record record1, Record record2)
+		{
+			var propertyValue1 = record1[SortProperty];
+			var propertyValue2 = record2[SortProperty];
+			if (propertyValue1 == propertyValue2)
+				return 0;
+			if (propertyValue1 == null)
+				return 1;
+			if (propertyValue2 == null)
+				return -1;
+			return (propertyValue1 as IComparable).CompareTo(propertyValue2) * (SortAscending ? 1 : -1);
+		}
+
+		void Resort()
+		{
+			if ((Properties == null) || (Properties.Count() == 0))
+				return;
+
+			if (!Properties.Contains(SortProperty))
+				SortProperty = Properties.First();
+
+			var view = collectionView.View as ListCollectionView;
+			if (view != null)
+				view.CustomSort = new LambdaComparer<Record>((r1, r2) => Compare(r1, r2));
 		}
 	}
 }

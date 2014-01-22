@@ -19,6 +19,13 @@ namespace NeoEdit.Records
 			{ Property.Size, "Size" },
 			{ Property.WriteTime, "Last Write" },
 		};
+		public static Dictionary<Property, bool> DefaultAscending = new Dictionary<Property, bool>
+		{
+			{ Property.FullName, true },
+			{ Property.Name, true },
+			{ Property.Size, false },
+			{ Property.WriteTime, false },
+		};
 		protected Record(string uri, RecordList parent) { this[Property.FullName] = uri; Parent = parent == null ? this as RecordList : parent; }
 		public RecordList Parent { get; private set; }
 		public string FullName { get { return Prop<string>(Property.FullName); } }

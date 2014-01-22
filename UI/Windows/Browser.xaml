@@ -5,22 +5,22 @@
     Title="Directory" Height="500" Width="600"
     Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}" KeyDown="Window_KeyDown">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Label Content="_Directory:" Grid.Column="0"/>
-            <TextBox Name="DirectoryDisplay" Text="{Binding Directory.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="DirectoryDisplay_KeyDown" />
-        </Grid>
-        <uiControls:NEListView x:Name="Files" Grid.Column="0" Grid.Row="1" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" ItemsSource="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick"/>
-    </Grid>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.ColumnSpan="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<Label Content="_Directory:" Grid.Column="0"/>
+			<TextBox Name="DirectoryDisplay" Text="{Binding Directory.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="DirectoryDisplay_KeyDown" />
+		</Grid>
+		<uiControls:NEListView x:Name="Files" Grid.Column="0" Grid.Row="1" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" Records="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick"/>
+	</Grid>
 </Window>

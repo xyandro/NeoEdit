@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -52,14 +53,20 @@ namespace NeoEdit.UI
 			control = _control;
 		}
 
-		string GetExpressionValue(Expression<Func<HelperType, object>> expression)
+		string GetExpressionValue<T>(Expression<Func<HelperType, T>> expression)
 		{
 			return ((expression.Body as MemberExpression).Member as PropertyInfo).Name;
 		}
 
-		public void AddCallback(Expression<Func<HelperType, object>> expression, Action<object, object> action)
+		public void AddCallback<T>(Expression<Func<HelperType, T>> expression, Action<object, object> action)
 		{
 			callbacks[GetExpressionValue(expression)] = action;
+		}
+
+		public void AddCallback(DependencyProperty prop, DependencyObject obj, Action action)
+		{
+			var dpd = DependencyPropertyDescriptor.FromProperty(prop, obj.GetType());
+			dpd.AddValueChanged(obj, (o, e) => action());
 		}
 
 		public DependencyProperty GetProp(Expression<Func<HelperType, object>> expression)
