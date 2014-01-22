@@ -5,7 +5,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:ns="clr-namespace:NeoEdit.UI"
 	xmlns:neConverters="clr-namespace:NeoEdit.UI.Converters"
-	mc:Ignorable="d" Header="{Binding RelativeSource={RelativeSource Self}, Path=Property}">
+	mc:Ignorable="d" Header="{Binding RelativeSource={RelativeSource Self}, Path=Property, Converter={neConverters:PropertyToNameConverter}}">
 
 	<GridViewColumn.DisplayMemberBinding>
 		<MultiBinding Converter="{neConverters:RecordToStringConverter}">

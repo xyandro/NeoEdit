@@ -1,8 +1,8 @@
-﻿using System.Windows.Markup;
-using NeoEdit.Records;
+﻿using NeoEdit.Records;
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace NeoEdit.UI.Converters
 {

@@ -12,6 +12,13 @@ namespace NeoEdit.Records
 			Size,
 			WriteTime,
 		};
+		public static Dictionary<Property, string> DisplayName = new Dictionary<Property, string>
+		{
+			{ Property.FullName, "Full Name" },
+			{ Property.Name, "Name" },
+			{ Property.Size, "Size" },
+			{ Property.WriteTime, "Last Write" },
+		};
 		protected Record(string uri, RecordList parent) { this[Property.FullName] = uri; Parent = parent == null ? this as RecordList : parent; }
 		public RecordList Parent { get; private set; }
 		public string FullName { get { return Prop<string>(Property.FullName); } }

@@ -81,6 +81,7 @@
     <Compile Include="UI\Controls\NEListView.xaml.cs">
       <DependentUpon>NEListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Converters\PropertyToNameConverter.cs" />
     <Compile Include="UI\Converters\RecordToStringConverter.cs" />
     <Compile Include="UI\TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
