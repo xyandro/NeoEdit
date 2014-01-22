@@ -20,9 +20,42 @@ namespace NeoEdit.UI
 		{
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
-			Directory = directory;
+			SetDirectory(directory);
 			Properties = new List<Record.Property> { Record.Property.Name, Record.Property.Size, Record.Property.WriteTime };
 			Files.Focus();
+		}
+
+		List<RecordList> previousDirectory = new List<RecordList>();
+		List<RecordList> nextDirectory = new List<RecordList>();
+		void SetDirectory(RecordList directory)
+		{
+			if (directory == Directory)
+				return;
+
+			if (Directory != null)
+				previousDirectory.Add(Directory);
+			nextDirectory.Clear();
+			Directory = directory;
+		}
+
+		void SetPreviousDirectory()
+		{
+			if (previousDirectory.Count == 0)
+				return;
+
+			nextDirectory.Add(Directory);
+			Directory = previousDirectory[previousDirectory.Count - 1];
+			previousDirectory.RemoveAt(previousDirectory.Count - 1);
+		}
+
+		void SetNextDirectory()
+		{
+			if (nextDirectory.Count == 0)
+				return;
+
+			previousDirectory.Add(Directory);
+			Directory = nextDirectory[nextDirectory.Count - 1];
+			nextDirectory.RemoveAt(nextDirectory.Count - 1);
 		}
 
 		void ClickOnItem(Record item)
@@ -32,7 +65,7 @@ namespace NeoEdit.UI
 
 			var recordList = item as RecordList;
 			if (recordList != null)
-				Directory = recordList;
+				SetDirectory(recordList);
 		}
 
 		void Window_KeyDown(object sender, KeyEventArgs e)
@@ -49,7 +82,7 @@ namespace NeoEdit.UI
 						switch (Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift))
 						{
 							case ModifierKeys.Control:
-								Directory = list;
+								SetDirectory(list);
 								break;
 							case ModifierKeys.Control | ModifierKeys.Shift:
 								foreach (var record in Directory.Records)
@@ -65,7 +98,7 @@ namespace NeoEdit.UI
 					Files.Focus();
 					break;
 				case Key.Back:
-					Directory = Directory.Parent;
+					SetDirectory(Directory.Parent);
 					break;
 			}
 			switch (e.SystemKey)
@@ -79,7 +112,15 @@ namespace NeoEdit.UI
 					break;
 				case Key.Up:
 					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
-						Directory = Directory.Parent;
+						SetDirectory(Directory.Parent);
+					break;
+				case Key.Left:
+					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+						SetPreviousDirectory();
+					break;
+				case Key.Right:
+					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+						SetNextDirectory();
 					break;
 			}
 		}
@@ -106,7 +147,7 @@ namespace NeoEdit.UI
 			if (!(record is RecordList))
 				return;
 
-			Directory = record as RecordList;
+			SetDirectory(record as RecordList);
 			Files.Focus();
 
 			if (select != null)
