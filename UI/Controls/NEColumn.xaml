@@ -3,12 +3,11 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-	xmlns:ns="clr-namespace:NeoEdit.UI"
-	xmlns:neConverters="clr-namespace:NeoEdit.UI.Converters"
-	mc:Ignorable="d" Header="{Binding RelativeSource={RelativeSource Self}, Path=Property, Converter={neConverters:PropertyToNameConverter}}">
+	xmlns:uiConverters="clr-namespace:NeoEdit.UI.Converters"
+	mc:Ignorable="d" Header="{Binding RelativeSource={RelativeSource Self}, Path=Property, Converter={uiConverters:PropertyToNameConverter}}">
 
 	<GridViewColumn.DisplayMemberBinding>
-		<MultiBinding Converter="{neConverters:RecordToStringConverter}">
+        <MultiBinding Converter="{uiConverters:RecordToStringConverter}">
 			<Binding/>
 			<Binding x:Name="binding" Path="Property"/>
 		</MultiBinding>

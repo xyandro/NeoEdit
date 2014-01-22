@@ -84,7 +84,7 @@
     <Compile Include="UI\Converters\PropertyToNameConverter.cs" />
     <Compile Include="UI\Converters\RecordToStringConverter.cs" />
     <Compile Include="UI\UIHelper.cs" />
-    <Page Include="UI\Browser.xaml">
+    <Page Include="UI\Windows\Browser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -101,7 +101,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Records\Disk\DiskDir.cs" />
-    <Compile Include="UI\Browser.xaml.cs">
+    <Compile Include="UI\Windows\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -123,7 +123,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="UI\Resources\Anonymous Pro.ttf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

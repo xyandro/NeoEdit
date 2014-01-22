@@ -6,7 +6,7 @@ using System.Windows.Input;
 using NeoEdit.Records;
 using NeoEdit.Records.List;
 
-namespace NeoEdit.UI
+namespace NeoEdit.UI.Windows
 {
 	public partial class Browser : Window
 	{
