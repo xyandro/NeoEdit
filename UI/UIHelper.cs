@@ -9,17 +9,17 @@ namespace NeoEdit.UI
 {
 	class DepPropAttribute : Attribute { }
 
-	public class UIHelper<ControlType> where ControlType : Control
+	public class UIHelper<HelperType> where HelperType : DependencyObject
 	{
 		static Dictionary<string, DependencyProperty> dependencyProperty;
-		readonly ControlType control;
+		readonly HelperType control;
 		static UIHelper()
 		{
-			var properties = typeof(ControlType).GetProperties().Where(a => a.CustomAttributes.Any(b => b.AttributeType == typeof(DepPropAttribute))).ToList();
-			dependencyProperty = properties.ToDictionary(a => a.Name, a => DependencyProperty.Register(a.Name, a.PropertyType, typeof(ControlType)));
+			var properties = typeof(HelperType).GetProperties().Where(a => a.CustomAttributes.Any(b => b.AttributeType == typeof(DepPropAttribute))).ToList();
+			dependencyProperty = properties.ToDictionary(a => a.Name, a => DependencyProperty.Register(a.Name, a.PropertyType, typeof(HelperType)));
 		}
 
-		public UIHelper(ControlType _control)
+		public UIHelper(HelperType _control)
 		{
 			control = _control;
 		}
