@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NeoEdit.Records;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using NeoEdit.Records;
 
 namespace NeoEdit.UI
 {
@@ -12,21 +12,21 @@ namespace NeoEdit.UI
 	public partial class TextEditor : Window
 	{
 		[DepProp]
-		public FontFamily fontFamily { get { return uiHelper.GetProp<FontFamily>(); } set { uiHelper.SetProp(value); } }
+		public FontFamily fontFamily { get { return uiHelper.GetPropValue<FontFamily>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public double fontSize { get { return uiHelper.GetProp<double>(); } set { uiHelper.SetProp(value); } }
+		public double fontSize { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int lines { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
+		public int lines { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int cols { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
+		public int cols { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int viewportLines { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
+		public int viewportLines { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int viewportCols { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
+		public int viewportCols { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int onLine { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
+		public int onLine { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int onCol { get { return uiHelper.GetProp<int>(); } set { uiHelper.SetProp(value); } }
+		public int onCol { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 
 		int fontHeight { get { return (int)Math.Ceiling(fontSize * fontFamily.LineSpacing); } }
 		int fontWidth { get { return (int)fontSize; } }

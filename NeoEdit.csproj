@@ -78,6 +78,9 @@
     <Compile Include="UI\Controls\NEColumn.xaml.cs">
       <DependentUpon>NEColumn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Controls\NEListView.xaml.cs">
+      <DependentUpon>NEListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\RecordToStringConverter.cs" />
     <Compile Include="UI\TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
@@ -88,6 +91,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Controls\NEColumn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Controls\NEListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

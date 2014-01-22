@@ -21,14 +21,6 @@
 			<Label Content="_Directory:" Grid.Column="0"/>
 			<TextBox Name="DirectoryDisplay" Text="{Binding Directory.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="DirectoryDisplay_KeyDown" />
 		</Grid>
-		<ListView Name="Files" Grid.Column="0" Grid.Row="1" KeyDown="Files_KeyDown" ItemsSource="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick">
-            <ListView.View>
-                <GridView>
-					<neControls:NEColumn Header="Name"/>
-					<neControls:NEColumn Header="Size"/>
-                    <neControls:NEColumn Header="WriteTime"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+		<neControls:NEListView x:Name="Files" Grid.Column="0" Grid.Row="1" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" ItemsSource="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick"/>
 	</Grid>
 </Window>

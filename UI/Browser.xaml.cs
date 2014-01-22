@@ -1,16 +1,19 @@
-﻿using System.Linq;
+﻿using NeoEdit.Records;
+using NeoEdit.Records.List;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NeoEdit.Records;
-using NeoEdit.Records.List;
 
 namespace NeoEdit.UI
 {
 	public partial class Browser : Window
 	{
 		[DepProp]
-		public RecordList Directory { get { return uiHelper.GetProp<RecordList>(); } set { uiHelper.SetProp(value); } }
+		public RecordList Directory { get { return uiHelper.GetPropValue<RecordList>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public IEnumerable<string> Properties { get { return uiHelper.GetPropValue<IEnumerable<string>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<Browser> uiHelper;
 		public Browser(RecordList directory)
@@ -18,6 +21,7 @@ namespace NeoEdit.UI
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
 			Directory = directory;
+			Properties = new List<string> { "Name", "Size", "WriteTime" };
 			Files.Focus();
 		}
 
