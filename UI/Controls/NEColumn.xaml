@@ -4,12 +4,20 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:uiConverters="clr-namespace:NeoEdit.UI.Converters"
-	mc:Ignorable="d" Header="{Binding RelativeSource={RelativeSource Self}, Path=Property, Converter={uiConverters:PropertyToNameConverter}}">
+	mc:Ignorable="d">
+
+	<GridViewColumnHeader x:Name="header" Click="headerClicked">
+		<MultiBinding Converter="{uiConverters:PropertyToNameConverter}">
+			<Binding Path="Property"/>
+			<Binding Path="SortProperty"/>
+			<Binding Path="SortAscending"/>
+		</MultiBinding>
+	</GridViewColumnHeader>
 
 	<GridViewColumn.DisplayMemberBinding>
-        <MultiBinding Converter="{uiConverters:RecordToStringConverter}">
+		<MultiBinding Converter="{uiConverters:RecordToStringConverter}">
 			<Binding/>
-			<Binding x:Name="binding" Path="Property"/>
+			<Binding x:Name="propertyBinding" Path="Property"/>
 		</MultiBinding>
 	</GridViewColumn.DisplayMemberBinding>
 </GridViewColumn>

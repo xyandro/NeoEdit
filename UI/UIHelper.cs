@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Data;
 
 namespace NeoEdit.UI
 {
@@ -53,7 +54,7 @@ namespace NeoEdit.UI
 			control = _control;
 		}
 
-		string GetExpressionValue<T>(Expression<Func<HelperType, T>> expression)
+		string GetExpressionValue<T1, T2>(Expression<Func<T1, T2>> expression)
 		{
 			return ((expression.Body as MemberExpression).Member as PropertyInfo).Name;
 		}
@@ -69,7 +70,7 @@ namespace NeoEdit.UI
 			dpd.AddValueChanged(obj, (o, e) => action());
 		}
 
-		public DependencyProperty GetProp(Expression<Func<HelperType, object>> expression)
+		public DependencyProperty GetProp<T>(Expression<Func<HelperType, T>> expression)
 		{
 			return dependencyProperty[GetExpressionValue(expression)];
 		}
@@ -82,6 +83,11 @@ namespace NeoEdit.UI
 		public void SetPropValue<T>(T value, [CallerMemberName] string caller = "")
 		{
 			control.SetValue(dependencyProperty[caller], value);
+		}
+
+		public void SetBinding<T, HelperType2>(Expression<Func<HelperType, T>> childExpression, HelperType2 parent, Expression<Func<HelperType2, T>> parentExpression)
+		{
+			BindingOperations.SetBinding(control, GetProp(childExpression), new Binding() { Source = parent, Path = new PropertyPath(GetExpressionValue(parentExpression)), Mode = BindingMode.TwoWay });
 		}
 	}
 }

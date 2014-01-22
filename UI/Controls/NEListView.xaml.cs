@@ -70,7 +70,7 @@ namespace NeoEdit.UI.Controls
 		void SetupColumns()
 		{
 			gridView.Columns.Clear();
-			Properties.ToList().ForEach(a => gridView.Columns.Add(new NEColumn { Property = a }));
+			Properties.ToList().ForEach(a => gridView.Columns.Add(new NEColumn(this) { Property = a }));
 			Resort();
 		}
 
