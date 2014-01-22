@@ -75,12 +75,19 @@
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Records\TextFile.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="UI\Controls\NEColumn.xaml.cs">
+      <DependentUpon>NEColumn.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\RecordToStringConverter.cs" />
     <Compile Include="UI\TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\UIHelper.cs" />
     <Page Include="UI\Browser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Controls\NEColumn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

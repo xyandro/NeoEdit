@@ -1,0 +1,15 @@
+﻿<GridViewColumn x:Class="NeoEdit.UI.Controls.NEColumn"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                xmlns:ns="clr-namespace:NeoEdit.UI"
+                mc:Ignorable="d">
+
+	<GridViewColumn.DisplayMemberBinding>
+		<MultiBinding x:Name="multiBinding">
+			<Binding/>
+			<Binding x:Name="binding" Path="Header"/>
+		</MultiBinding>
+	</GridViewColumn.DisplayMemberBinding>
+</GridViewColumn>

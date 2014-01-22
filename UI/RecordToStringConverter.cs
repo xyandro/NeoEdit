@@ -1,26 +1,26 @@
-﻿using System;
+﻿using NeoEdit.Records;
+using System;
 using System.Globalization;
 using System.Windows.Data;
-using NeoEdit.Records;
 
 namespace NeoEdit.UI
 {
-	class RecordToStringConverter : IValueConverter
+	class RecordToStringConverter : IMultiValueConverter
 	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			value = (value as Record)[Helpers.ParseEnum<Record.Property>(parameter as string)];
-			if (value == null)
+			var propertyValue = (value[0] as Record)[Helpers.ParseEnum<Record.Property>(value[1] as string)];
+			if (propertyValue == null)
 				return null;
 
-			if (value.GetType().IsIntegerType())
-				return String.Format("{0:n0}", value);
-			if (value is DateTime)
-				return ((DateTime)value).ToLocalTime();
-			return value;
+			if (propertyValue.GetType().IsIntegerType())
+				return String.Format("{0:n0}", propertyValue);
+			if (propertyValue is DateTime)
+				return ((DateTime)propertyValue).ToLocalTime().ToString();
+			return propertyValue.ToString();
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
 		{
 			return null;
 		}

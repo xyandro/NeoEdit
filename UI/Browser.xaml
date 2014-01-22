@@ -2,11 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ns="clr-namespace:NeoEdit.UI"
+        xmlns:neControls="clr-namespace:NeoEdit.UI.Controls"
         Title="Directory" Height="500" Width="600"
 		Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}" KeyDown="Window_KeyDown">
-	<Window.Resources>
-		<ns:RecordToStringConverter x:Key="RecordToStringConverter"/>
-	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -26,9 +24,9 @@
 		<ListView Name="Files" Grid.Column="0" Grid.Row="1" KeyDown="Files_KeyDown" ItemsSource="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding ConverterParameter=Name, Converter={StaticResource RecordToStringConverter}, Mode=OneWay}"/>
-                    <GridViewColumn Header="Size" DisplayMemberBinding="{Binding ConverterParameter=Size, Converter={StaticResource RecordToStringConverter}, Mode=OneWay}"/>
-                    <GridViewColumn Header="WriteTime" DisplayMemberBinding="{Binding ConverterParameter=WriteTime, Converter={StaticResource RecordToStringConverter}, Mode=OneWay}"/>
+					<neControls:NEColumn Header="Name"/>
+					<neControls:NEColumn Header="Size"/>
+                    <neControls:NEColumn Header="WriteTime"/>
                 </GridView>
             </ListView.View>
         </ListView>
