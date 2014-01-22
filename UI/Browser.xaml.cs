@@ -1,10 +1,10 @@
-﻿using NeoEdit.Records;
-using NeoEdit.Records.List;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Records;
+using NeoEdit.Records.List;
 
 namespace NeoEdit.UI
 {
@@ -16,6 +16,8 @@ namespace NeoEdit.UI
 		public IEnumerable<Record.Property> Properties { get { return uiHelper.GetPropValue<IEnumerable<Record.Property>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<Browser> uiHelper;
+
+		public Browser() : this(GetCurrentDirectory()) { }
 		public Browser(RecordList directory)
 		{
 			uiHelper = new UIHelper<Browser>(this);
@@ -23,6 +25,11 @@ namespace NeoEdit.UI
 			SetDirectory(directory);
 			Properties = new List<Record.Property> { Record.Property.Name, Record.Property.Size, Record.Property.WriteTime };
 			Files.Focus();
+		}
+
+		static RecordList GetCurrentDirectory()
+		{
+			return Root.AllRoot.GetRecord(System.IO.Directory.GetCurrentDirectory()) as RecordList;
 		}
 
 		List<RecordList> previousDirectory = new List<RecordList>();

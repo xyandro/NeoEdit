@@ -1,6 +1,4 @@
-﻿using NeoEdit.Records;
-using NeoEdit.UI;
-using System.Windows;
+﻿using System.Windows;
 
 namespace NeoEdit
 {
@@ -9,9 +7,5 @@ namespace NeoEdit
 	/// </summary>
 	public partial class App : Application
 	{
-		public App()
-		{
-			new Browser(Root.AllRoot.GetRecord(@"C:\Docs\Cpp\NeoEdit") as RecordList);
-		}
 	}
 }

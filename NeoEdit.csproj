@@ -83,9 +83,6 @@
     </Compile>
     <Compile Include="UI\Converters\PropertyToNameConverter.cs" />
     <Compile Include="UI\Converters\RecordToStringConverter.cs" />
-    <Compile Include="UI\TextEditor.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\UIHelper.cs" />
     <Page Include="UI\Browser.xaml">
       <SubType>Designer</SubType>
@@ -99,10 +96,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Main.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -111,14 +104,6 @@
     <Compile Include="UI\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Main.xaml.cs">
-      <DependentUpon>Main.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="UI\TextEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
