@@ -7,7 +7,7 @@
 	mc:Ignorable="d">
 
 	<GridViewColumnHeader x:Name="header" Click="headerClicked">
-		<MultiBinding Converter="{uiConverters:PropertyToNameConverter}">
+		<MultiBinding Converter="{uiConverters:PropertyToHeader}">
 			<Binding Path="Property"/>
 			<Binding Path="SortProperty"/>
 			<Binding Path="SortAscending"/>
@@ -15,7 +15,7 @@
 	</GridViewColumnHeader>
 
 	<GridViewColumn.DisplayMemberBinding>
-		<MultiBinding Converter="{uiConverters:RecordToStringConverter}">
+		<MultiBinding Converter="{uiConverters:RecordToProperty}">
 			<Binding/>
 			<Binding x:Name="propertyBinding" Path="Property"/>
 		</MultiBinding>

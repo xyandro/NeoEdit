@@ -6,27 +6,26 @@ using NeoEdit.Records;
 
 namespace NeoEdit.UI.Converters
 {
-	class RecordToStringConverter : MarkupExtension, IMultiValueConverter
+	class PropertyToHeader : MarkupExtension, IMultiValueConverter
 	{
-		static RecordToStringConverter converter;
+		static PropertyToHeader converter;
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (converter == null)
-				converter = new RecordToStringConverter();
+				converter = new PropertyToHeader();
 			return converter;
 		}
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var propertyValue = (value[0] as Record)[(Property.PropertyType)value[1]];
-			if (propertyValue == null)
-				return null;
+			var property = (Property.PropertyType)value[0];
+			var sortProperty = (Property.PropertyType)value[1];
+			var sortAscending = (bool)value[2];
 
-			if (propertyValue.GetType().IsIntegerType())
-				return String.Format("{0:n0}", propertyValue);
-			if (propertyValue is DateTime)
-				return ((DateTime)propertyValue).ToLocalTime().ToString();
-			return propertyValue.ToString();
+			string sort = "";
+			if (sortProperty == property)
+				sort = sortAscending ? " \u25b5" : " \u25bf";
+			return String.Format("{0}{1}", Property.Get(property).DisplayName, sort);
 		}
 
 		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)

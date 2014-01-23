@@ -82,8 +82,8 @@
     <Compile Include="UI\Controls\NEListView.xaml.cs">
       <DependentUpon>NEListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Converters\PropertyToNameConverter.cs" />
-    <Compile Include="UI\Converters\RecordToStringConverter.cs" />
+    <Compile Include="UI\Converters\PropertyToHeader.cs" />
+    <Compile Include="UI\Converters\RecordToProperty.cs" />
     <Compile Include="UI\UIHelper.cs" />
     <Page Include="UI\Windows\Browser.xaml">
       <SubType>Designer</SubType>
