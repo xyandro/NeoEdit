@@ -18,7 +18,12 @@ namespace NeoEdit.UI.Converters
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var propertyValue = (value[0] as Record)[(Property.PropertyType)value[1]];
+			var record = value[0] as Record;
+			if (record == null)
+				return null;
+
+			var property = (Property.PropertyType)value[1];
+			var propertyValue = record[property];
 			if (propertyValue == null)
 				return null;
 

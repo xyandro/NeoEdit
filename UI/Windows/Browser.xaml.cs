@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Records;
 using NeoEdit.Records.List;
@@ -24,6 +25,7 @@ namespace NeoEdit.UI.Windows
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
 			SetDirectory(directory);
+			uiHelper.AddObservableCallback(a => a.Properties, () => BindingOperations.GetBindingExpression(columns, MenuItem.ItemsSourceProperty).UpdateTarget());
 			Properties = new ObservableCollection<Property.PropertyType> { Property.PropertyType.Name, Property.PropertyType.Size, Property.PropertyType.WriteTime };
 			Files.Focus();
 		}
@@ -183,6 +185,16 @@ namespace NeoEdit.UI.Windows
 		void Files_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			ClickOnItem(Files.SelectedItem as Record);
+		}
+
+		private void MenuItemColumnClick(object sender, RoutedEventArgs e)
+		{
+			var header = ((System.Windows.Controls.MenuItem)e.OriginalSource).Header.ToString();
+			var property = Property.PropertyFromDisplayName(header);
+			if (Properties.Contains(property))
+				Properties.Remove(property);
+			else
+				Properties.Add(property);
 		}
 	}
 }

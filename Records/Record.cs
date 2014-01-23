@@ -19,6 +19,8 @@ namespace NeoEdit.Records
 
 		Dictionary<Property.PropertyType, object> properties = new Dictionary<Property.PropertyType, object>();
 
+		public IEnumerable<Property.PropertyType> Properties { get { return properties.Keys; } }
+
 		public T Prop<T>(Property.PropertyType property)
 		{
 			return (T)this[property];

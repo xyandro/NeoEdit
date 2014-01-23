@@ -37,5 +37,10 @@ namespace NeoEdit.Records
 		{
 			return properties.Single(a => a.Type == type);
 		}
+
+		public static PropertyType PropertyFromDisplayName(string str)
+		{
+			return properties.Single(a => a.DisplayName == str).Type;
+		}
 	}
 }

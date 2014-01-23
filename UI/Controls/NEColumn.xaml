@@ -7,7 +7,7 @@
 	mc:Ignorable="d">
 
 	<GridViewColumnHeader x:Name="header" Click="headerClicked">
-		<MultiBinding Converter="{uiConverters:PropertyToHeader}">
+		<MultiBinding Converter="{uiConverters:PropertyToSortIndicatorHeader}">
 			<Binding Path="Property"/>
 			<Binding Path="SortProperty"/>
 			<Binding Path="SortAscending"/>
