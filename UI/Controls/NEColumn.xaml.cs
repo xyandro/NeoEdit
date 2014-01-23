@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Data;
 using NeoEdit.Records;
 
 namespace NeoEdit.UI.Controls
@@ -10,9 +9,9 @@ namespace NeoEdit.UI.Controls
 	public partial class NEColumn : GridViewColumn
 	{
 		[DepProp]
-		public Record.Property Property { get { return uiHelper.GetPropValue<Record.Property>(); } set { uiHelper.SetPropValue(value); } }
+		public Property.PropertyType Property { get { return uiHelper.GetPropValue<Property.PropertyType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public Record.Property SortProperty { get { return uiHelper.GetPropValue<Record.Property>(); } set { uiHelper.SetPropValue(value); } }
+		public Property.PropertyType SortProperty { get { return uiHelper.GetPropValue<Property.PropertyType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 

@@ -27,13 +27,13 @@ namespace NeoEdit.UI.Controls
 	public partial class NEListView : ListView
 	{
 		[DepProp]
-		public Record.Property SortProperty { get { return uiHelper.GetPropValue<Record.Property>(); } set { uiHelper.SetPropValue(value); } }
+		public Property.PropertyType SortProperty { get { return uiHelper.GetPropValue<Property.PropertyType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public IEnumerable<Record> Records { get { return uiHelper.GetPropValue<IEnumerable<Record>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public IEnumerable<Record.Property> Properties { get { return uiHelper.GetPropValue<IEnumerable<Record.Property>>(); } set { uiHelper.SetPropValue(value); } }
+		public IEnumerable<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<IEnumerable<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<NEListView> uiHelper;
 		readonly CollectionViewSource collectionView;
@@ -45,17 +45,17 @@ namespace NeoEdit.UI.Controls
 
 			collectionView = FindResource("collectionView") as CollectionViewSource;
 			uiHelper.AddCallback(CollectionViewSource.ViewProperty, collectionView, Resort);
-			uiHelper.AddCallback(a => a.SortProperty, (o, n) => { SortAscending = Record.DefaultAscending[SortProperty]; Resort(); });
+			uiHelper.AddCallback(a => a.SortProperty, (o, n) => { SortAscending = Property.Get(SortProperty).DefaultAscending; Resort(); });
 			uiHelper.AddCallback(a => a.SortAscending, (o, n) => Resort());
 		}
 
 		void PropertiesChanged(object oldValue, object newValue)
 		{
-			var observableCollection = oldValue as ObservableCollection<Record.Property>;
+			var observableCollection = oldValue as ObservableCollection<Property.PropertyType>;
 			if (observableCollection != null)
 				observableCollection.CollectionChanged -= PropertiesListChanged;
 
-			observableCollection = newValue as ObservableCollection<Record.Property>;
+			observableCollection = newValue as ObservableCollection<Property.PropertyType>;
 			if (observableCollection != null)
 				observableCollection.CollectionChanged += PropertiesListChanged;
 

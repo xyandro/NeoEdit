@@ -1,61 +1,44 @@
-﻿using System.IO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace NeoEdit.Records
 {
 	public abstract class Record
 	{
-		public enum Property
+		protected Record(string uri, RecordList parent)
 		{
-			FullName,
-			Name,
-			Size,
-			WriteTime,
-		};
-		public static Dictionary<Property, string> DisplayName = new Dictionary<Property, string>
-		{
-			{ Property.FullName, "Full Name" },
-			{ Property.Name, "Name" },
-			{ Property.Size, "Size" },
-			{ Property.WriteTime, "Last Write" },
-		};
-		public static Dictionary<Property, bool> DefaultAscending = new Dictionary<Property, bool>
-		{
-			{ Property.FullName, true },
-			{ Property.Name, true },
-			{ Property.Size, false },
-			{ Property.WriteTime, false },
-		};
-		protected Record(string uri, RecordList parent) { this[Property.FullName] = uri; Parent = parent == null ? this as RecordList : parent; }
+			this[Property.PropertyType.FullName] = uri;
+			this[Property.PropertyType.Name] = Path.GetFileName(FullName);
+			this[Property.PropertyType.Path] = Path.GetDirectoryName(FullName);
+			this[Property.PropertyType.Extension] = Path.GetExtension(FullName);
+
+			Parent = parent == null ? this as RecordList : parent;
+		}
 		public RecordList Parent { get; private set; }
-		public string FullName { get { return Prop<string>(Property.FullName); } }
+		public string FullName { get { return Prop<string>(Property.PropertyType.FullName); } }
 
-		Dictionary<Property, object> properties = new Dictionary<Property, object>();
+		Dictionary<Property.PropertyType, object> properties = new Dictionary<Property.PropertyType, object>();
 
-		public T Prop<T>(Property property)
+		public T Prop<T>(Property.PropertyType property)
 		{
 			return (T)this[property];
 		}
 
-		public object this[Property property]
+		public object this[Property.PropertyType property]
 		{
 			get
 			{
 				if (properties.ContainsKey(property))
 					return properties[property];
 
-				switch (property)
-				{
-					case Property.Name: return Path.GetFileName(FullName);
-					default: return null;
-				}
+				return null;
 			}
 			protected set { properties[property] = value; }
 		}
 
 		public virtual string Name
 		{
-			get { return Prop<string>(Property.Name); }
+			get { return Prop<string>(Property.PropertyType.Name); }
 		}
 	}
 }

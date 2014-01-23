@@ -9,8 +9,10 @@ namespace NeoEdit.Records.Disk
 			: base(uri, parent)
 		{
 			var fileInfo = new FileInfo(FullName);
-			this[Property.Size] = fileInfo.Length;
-			this[Property.WriteTime] = fileInfo.LastWriteTimeUtc;
+			this[Property.PropertyType.Size] = fileInfo.Length;
+			this[Property.PropertyType.WriteTime] = fileInfo.LastWriteTimeUtc;
+			this[Property.PropertyType.CreateTime] = fileInfo.CreationTimeUtc;
+			this[Property.PropertyType.AccessTime] = fileInfo.LastAccessTimeUtc;
 		}
 
 		public override byte[] Read(Int64 position, int bytes)

@@ -1,8 +1,8 @@
-﻿using NeoEdit.Records;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
+using NeoEdit.Records;
 
 namespace NeoEdit.UI.Converters
 {
@@ -18,7 +18,7 @@ namespace NeoEdit.UI.Converters
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var propertyValue = (value[0] as Record)[(Record.Property)value[1]];
+			var propertyValue = (value[0] as Record)[(Property.PropertyType)value[1]];
 			if (propertyValue == null)
 				return null;
 

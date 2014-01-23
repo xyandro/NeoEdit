@@ -88,7 +88,7 @@ namespace NeoEdit.Records
 					encodingType = EncodingType.UTF16BN;
 			}
 
-			var data = file.Read(0, (int)file[Record.Property.Size]);
+			var data = file.Read(0, (int)file[Property.PropertyType.Size]);
 			text = encoding.GetString(data);
 
 			var start = 0;

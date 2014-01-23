@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Records\Property.cs" />
     <Compile Include="Records\List\ListDir.cs" />
     <Compile Include="Records\List\ListRoot.cs" />
     <Compile Include="Records\Network\NetworkDir.cs" />
