@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -62,6 +64,26 @@ namespace NeoEdit.UI
 		public void AddCallback<T>(Expression<Func<HelperType, T>> expression, Action<object, object> action)
 		{
 			callbacks[GetExpressionValue(expression)] = action;
+		}
+
+		public void AddObservableCallback<T>(Expression<Func<HelperType, ObservableCollection<T>>> expression, Action action)
+		{
+			NotifyCollectionChangedEventHandler func = (o, e) => action();
+
+			AddCallback(expression, (o, n) =>
+			{
+				ObservableCollection<T> value;
+
+				value = o as ObservableCollection<T>;
+				if (value != null)
+					value.CollectionChanged -= func;
+
+				value = n as ObservableCollection<T>;
+				if (value != null)
+					value.CollectionChanged += func;
+
+				action();
+			});
 		}
 
 		public void AddCallback(DependencyProperty prop, DependencyObject obj, Action action)

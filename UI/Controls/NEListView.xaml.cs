@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -31,40 +29,22 @@ namespace NeoEdit.UI.Controls
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public IEnumerable<Record> Records { get { return uiHelper.GetPropValue<IEnumerable<Record>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<Record> Records { get { return uiHelper.GetPropValue<ObservableCollection<Record>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public IEnumerable<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<IEnumerable<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<ObservableCollection<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<NEListView> uiHelper;
 		readonly CollectionViewSource collectionView;
 		public NEListView()
 		{
 			uiHelper = new UIHelper<NEListView>(this);
-			uiHelper.AddCallback(a => a.Properties, PropertiesChanged);
+			uiHelper.AddObservableCallback(a => a.Properties, SetupColumns);
 			InitializeComponent();
 
 			collectionView = FindResource("collectionView") as CollectionViewSource;
 			uiHelper.AddCallback(CollectionViewSource.ViewProperty, collectionView, Resort);
 			uiHelper.AddCallback(a => a.SortProperty, (o, n) => { SortAscending = Property.Get(SortProperty).DefaultAscending; Resort(); });
 			uiHelper.AddCallback(a => a.SortAscending, (o, n) => Resort());
-		}
-
-		void PropertiesChanged(object oldValue, object newValue)
-		{
-			var observableCollection = oldValue as ObservableCollection<Property.PropertyType>;
-			if (observableCollection != null)
-				observableCollection.CollectionChanged -= PropertiesListChanged;
-
-			observableCollection = newValue as ObservableCollection<Property.PropertyType>;
-			if (observableCollection != null)
-				observableCollection.CollectionChanged += PropertiesListChanged;
-
-			SetupColumns();
-		}
-
-		void PropertiesListChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			SetupColumns();
 		}
 
 		void SetupColumns()

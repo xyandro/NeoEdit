@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +14,7 @@ namespace NeoEdit.UI.Windows
 		[DepProp]
 		public RecordList Directory { get { return uiHelper.GetPropValue<RecordList>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public IEnumerable<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<IEnumerable<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<ObservableCollection<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<Browser> uiHelper;
 
@@ -23,7 +24,7 @@ namespace NeoEdit.UI.Windows
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
 			SetDirectory(directory);
-			Properties = new List<Property.PropertyType> { Property.PropertyType.Name, Property.PropertyType.Size, Property.PropertyType.WriteTime };
+			Properties = new ObservableCollection<Property.PropertyType> { Property.PropertyType.Name, Property.PropertyType.Size, Property.PropertyType.WriteTime };
 			Files.Focus();
 		}
 
