@@ -16,7 +16,7 @@
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Menu>
-			<MenuItem Name="columns" Header="_Columns" ItemsSource="{Binding Directory.Records, ElementName=window, Converter={uiConverters:RecordsToMenuItems}}">
+			<MenuItem Name="columns" Header="_Columns" ItemsSource="{Binding Properties, ElementName=window, Converter={uiConverters:PropertiesToMenuItems}}">
 				<MenuItem.ItemContainerStyle>
 					<Style>
 						<EventSetter Event="MenuItem.Click" Handler="MenuItemColumnClick"/>

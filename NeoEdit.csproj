@@ -85,7 +85,7 @@
     <Compile Include="UI\Converters\PropertyToSortCheck.cs" />
     <Compile Include="UI\Converters\PropertyToHeader.cs" />
     <Compile Include="UI\Converters\PropertyToShownCheck.cs" />
-    <Compile Include="UI\Converters\RecordsToMenuItems.cs" />
+    <Compile Include="UI\Converters\PropertiesToMenuItems.cs" />
     <Compile Include="UI\Converters\PropertyToSortIndicatorHeader.cs" />
     <Compile Include="UI\Converters\RecordToProperty.cs" />
     <Compile Include="UI\UIHelper.cs" />

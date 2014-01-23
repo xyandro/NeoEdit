@@ -194,7 +194,7 @@ namespace NeoEdit.UI.Windows
 		private void MenuItemColumnClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
-			var property = Property.PropertyFromDisplayName(header);
+			var property = Property.PropertyFromMenuHeader(header);
 			if (Properties.Contains(property))
 				Properties.Remove(property);
 			else
@@ -204,7 +204,7 @@ namespace NeoEdit.UI.Windows
 		private void MenuItemSortClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
-			var property = Property.PropertyFromDisplayName(header);
+			var property = Property.PropertyFromMenuHeader(header);
 			if (SortProperty != property)
 				SortProperty = property;
 			else

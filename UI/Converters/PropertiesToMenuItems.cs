@@ -8,23 +8,23 @@ using NeoEdit.Records;
 
 namespace NeoEdit.UI.Converters
 {
-	class RecordsToMenuItems : MarkupExtension, IValueConverter
+	class PropertiesToMenuItems : MarkupExtension, IValueConverter
 	{
-		static RecordsToMenuItems converter;
+		static PropertiesToMenuItems converter;
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (converter == null)
-				converter = new RecordsToMenuItems();
+				converter = new PropertiesToMenuItems();
 			return converter;
 		}
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var records = value as IEnumerable<Record>;
-			if (records == null) 
+			var properties = value as IEnumerable<Property.PropertyType>;
+			if (properties == null)
 				return null;
 
-			return records.SelectMany(a => a.Properties).Distinct().OrderBy(a => (int)a);
+			return properties.Concat(Enum.GetValues(typeof(Property.PropertyType)).Cast<Property.PropertyType>().Where(a => !properties.Contains(a)));
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
