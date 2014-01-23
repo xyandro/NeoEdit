@@ -16,15 +16,32 @@
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Menu>
-			<MenuItem Name="columns" Header="_Columns" Click="MenuItemColumnClick" ItemsSource="{Binding Directory.Records, ElementName=window, Converter={uiConverters:RecordsToMenuItems}}">
+			<MenuItem Name="columns" Header="_Columns" ItemsSource="{Binding Directory.Records, ElementName=window, Converter={uiConverters:RecordsToMenuItems}}">
 				<MenuItem.ItemContainerStyle>
 					<Style>
+						<EventSetter Event="MenuItem.Click" Handler="MenuItemColumnClick"/>
 						<Setter Property="MenuItem.Header" Value="{Binding Converter={uiConverters:PropertyToHeader}}"/>
 						<Setter Property="MenuItem.IsChecked">
 							<Setter.Value>
-								<MultiBinding Converter="{uiConverters:PropertyToShown}">
+								<MultiBinding Converter="{uiConverters:PropertyToShownCheck}">
 									<Binding Mode="OneWay"/>
 									<Binding ElementName="window" Path="Properties"/>
+								</MultiBinding>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</MenuItem.ItemContainerStyle>
+			</MenuItem>
+			<MenuItem Header="_Sort" ItemsSource="{Binding Properties, ElementName=window}">
+				<MenuItem.ItemContainerStyle>
+					<Style>
+						<EventSetter Event="MenuItem.Click" Handler="MenuItemSortClick"/>
+						<Setter Property="MenuItem.Header" Value="{Binding Converter={uiConverters:PropertyToHeader}}"/>
+						<Setter Property="MenuItem.IsChecked">
+							<Setter.Value>
+								<MultiBinding Converter="{uiConverters:PropertyToSortCheck}">
+									<Binding Mode="OneWay"/>
+									<Binding ElementName="window" Path="SortProperty"/>
 								</MultiBinding>
 							</Setter.Value>
 						</Setter>
@@ -40,6 +57,6 @@
 			<Label Content="_Directory:"/>
 			<TextBox Name="DirectoryDisplay" Text="{Binding Directory.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="DirectoryDisplay_KeyDown" />
 		</Grid>
-		<uiControls:NEListView x:Name="Files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" Records="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick"/>
+		<uiControls:NEListView x:Name="Files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" Records="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick" SortProperty="{Binding SortProperty, ElementName=window, Mode=TwoWay}" SortAscending="{Binding SortAscending, ElementName=window, Mode=TwoWay}"/>
 	</Grid>
 </Window>

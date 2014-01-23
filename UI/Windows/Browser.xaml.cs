@@ -16,6 +16,10 @@ namespace NeoEdit.UI.Windows
 		public RecordList Directory { get { return uiHelper.GetPropValue<RecordList>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<ObservableCollection<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public Property.PropertyType SortProperty { get { return uiHelper.GetPropValue<Property.PropertyType>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<Browser> uiHelper;
 
@@ -189,12 +193,22 @@ namespace NeoEdit.UI.Windows
 
 		private void MenuItemColumnClick(object sender, RoutedEventArgs e)
 		{
-			var header = ((System.Windows.Controls.MenuItem)e.OriginalSource).Header.ToString();
+			var header = ((MenuItem)sender).Header.ToString();
 			var property = Property.PropertyFromDisplayName(header);
 			if (Properties.Contains(property))
 				Properties.Remove(property);
 			else
 				Properties.Add(property);
+		}
+
+		private void MenuItemSortClick(object sender, RoutedEventArgs e)
+		{
+			var header = ((MenuItem)sender).Header.ToString();
+			var property = Property.PropertyFromDisplayName(header);
+			if (SortProperty != property)
+				SortProperty = property;
+			else
+				SortAscending = !SortAscending;
 		}
 	}
 }

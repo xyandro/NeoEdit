@@ -8,13 +8,13 @@ using NeoEdit.Records;
 
 namespace NeoEdit.UI.Converters
 {
-	class PropertyToShown : MarkupExtension, IMultiValueConverter
+	class PropertyToShownCheck : MarkupExtension, IMultiValueConverter
 	{
-		static PropertyToShown converter;
+		static PropertyToShownCheck converter;
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (converter == null)
-				converter = new PropertyToShown();
+				converter = new PropertyToShownCheck();
 			return converter;
 		}
 
