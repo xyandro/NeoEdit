@@ -27,6 +27,8 @@ namespace NeoEdit.UI.Converters
 			if (propertyValue == null)
 				return null;
 
+			if (propertyValue is Enum)
+				return propertyValue.ToString();
 			if (propertyValue.GetType().IsIntegerType())
 				return String.Format("{0:n0}", propertyValue);
 			if (propertyValue is DateTime)

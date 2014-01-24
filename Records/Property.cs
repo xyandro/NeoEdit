@@ -15,6 +15,8 @@ namespace NeoEdit.Records
 			WriteTime,
 			CreateTime,
 			AccessTime,
+			Type,
+			Data,
 		};
 
 		public PropertyType Type { get; private set; }
@@ -32,6 +34,8 @@ namespace NeoEdit.Records
 			new Property { Type = PropertyType.WriteTime,  DisplayName = "Last Write",  MenuHeader = "Last _Write",  DefaultAscending = false },
 			new Property { Type = PropertyType.CreateTime, DisplayName = "Created",     MenuHeader = "_Created",     DefaultAscending = false },
 			new Property { Type = PropertyType.AccessTime, DisplayName = "Last Access", MenuHeader = "Last _Access", DefaultAscending = false },
+			new Property { Type = PropertyType.Type,       DisplayName = "Type",        MenuHeader = "_Type",        DefaultAscending = true  },
+			new Property { Type = PropertyType.Data,       DisplayName = "Data",        MenuHeader = "_Data",        DefaultAscending = true  },
 		};
 
 		public static Property Get(PropertyType type)
