@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace NeoEdit.Records.List
@@ -17,12 +16,12 @@ namespace NeoEdit.Records.List
 			Refresh();
 		}
 
-		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
+		protected override IEnumerable<Record> InternalRecords
 		{
 			get
 			{
 				foreach (var item in items)
-					yield return new Tuple<string, Func<string, Record>>(item.FullName, a => item);
+					yield return item;
 			}
 		}
 	}

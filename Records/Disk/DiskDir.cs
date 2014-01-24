@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -20,15 +19,15 @@ namespace NeoEdit.Records.Disk
 			return rootRE.IsMatch(FullName);
 		}
 
-		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
+		protected override IEnumerable<Record> InternalRecords
 		{
 			get
 			{
 				var find = FullName + (IsRoot() ? @"\" : "");
 				foreach (var dir in Directory.EnumerateDirectories(find))
-					yield return new Tuple<string, Func<string, Record>>(dir, a => new DiskDir(a, this));
+					yield return new DiskDir(dir, this);
 				foreach (var file in Directory.EnumerateFiles(find))
-					yield return new Tuple<string, Func<string, Record>>(file, a => new DiskFile(a, this));
+					yield return new DiskFile(file, this);
 			}
 		}
 	}

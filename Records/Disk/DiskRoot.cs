@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -23,12 +22,12 @@ namespace NeoEdit.Records.Disk
 			return null;
 		}
 
-		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
+		protected override IEnumerable<Record> InternalRecords
 		{
 			get
 			{
 				foreach (var drive in DriveInfo.GetDrives())
-					yield return new Tuple<string, Func<string, Record>>(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper(), a => new DiskDir(a, this));
+					yield return new DiskDir(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper(), this);
 			}
 		}
 	}
