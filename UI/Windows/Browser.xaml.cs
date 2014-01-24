@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Records;
 using NeoEdit.Records.List;
@@ -13,7 +12,7 @@ namespace NeoEdit.UI.Windows
 	public partial class Browser : Window
 	{
 		[DepProp]
-		public RecordList Directory { get { return uiHelper.GetPropValue<RecordList>(); } set { uiHelper.SetPropValue(value); } }
+		public RecordList Location { get { return uiHelper.GetPropValue<RecordList>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<ObservableCollection<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -23,63 +22,62 @@ namespace NeoEdit.UI.Windows
 
 		readonly UIHelper<Browser> uiHelper;
 
-		public Browser() : this(GetCurrentDirectory()) { }
-		public Browser(RecordList directory)
+		public Browser() : this(GetCurrentLocation()) { }
+		public Browser(RecordList location)
 		{
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
-			SetDirectory(directory);
-			uiHelper.AddObservableCallback(a => a.Properties, () => BindingOperations.GetBindingExpression(columns, MenuItem.ItemsSourceProperty).UpdateTarget());
+			SetLocation(location);
+			uiHelper.AddObservableCallback(a => a.Properties, () => uiHelper.InvalidBinding(columns, MenuItem.ItemsSourceProperty));
 			Properties = new ObservableCollection<Property.PropertyType> { Property.PropertyType.Name, Property.PropertyType.Size, Property.PropertyType.WriteTime };
-			Files.Focus();
 		}
 
-		static RecordList GetCurrentDirectory()
+		static RecordList GetCurrentLocation()
 		{
 			return Root.AllRoot.GetRecord(System.IO.Directory.GetCurrentDirectory()) as RecordList;
 		}
 
-		List<RecordList> previousDirectory = new List<RecordList>();
-		List<RecordList> nextDirectory = new List<RecordList>();
-		void SetDirectory(RecordList directory)
+		List<RecordList> previousLocation = new List<RecordList>();
+		List<RecordList> nextLocation = new List<RecordList>();
+		void SetLocation(RecordList location)
 		{
-			if (directory == Directory)
+			if (location == Location)
 				return;
 
-			if (Directory != null)
-				previousDirectory.Add(Directory);
-			nextDirectory.Clear();
-			Directory = directory;
+			if (Location != null)
+				previousLocation.Add(Location);
+			nextLocation.Clear();
+			Location = location;
 		}
 
-		void SetPreviousDirectory()
+		void SetPreviousLocation()
 		{
-			if (previousDirectory.Count == 0)
+			if (previousLocation.Count == 0)
 				return;
 
-			nextDirectory.Add(Directory);
-			Directory = previousDirectory[previousDirectory.Count - 1];
-			previousDirectory.RemoveAt(previousDirectory.Count - 1);
+			nextLocation.Add(Location);
+			Location = previousLocation[previousLocation.Count - 1];
+			previousLocation.RemoveAt(previousLocation.Count - 1);
 		}
 
-		void SetNextDirectory()
+		void SetNextLocation()
 		{
-			if (nextDirectory.Count == 0)
+			if (nextLocation.Count == 0)
 				return;
 
-			previousDirectory.Add(Directory);
-			Directory = nextDirectory[nextDirectory.Count - 1];
-			nextDirectory.RemoveAt(nextDirectory.Count - 1);
+			previousLocation.Add(Location);
+			Location = nextLocation[nextLocation.Count - 1];
+			nextLocation.RemoveAt(nextLocation.Count - 1);
 		}
 
-		void ClickOnItem(Record item)
+		void ItemClicked(Record item)
 		{
 			if (item == null)
 				return;
 
 			var recordList = item as RecordList;
 			if (recordList != null)
-				SetDirectory(recordList);
+				SetLocation(recordList);
 		}
 
 		void Window_KeyDown(object sender, KeyEventArgs e)
@@ -96,45 +94,48 @@ namespace NeoEdit.UI.Windows
 						switch (Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift))
 						{
 							case ModifierKeys.Control:
-								SetDirectory(list);
+								SetLocation(list);
 								break;
 							case ModifierKeys.Control | ModifierKeys.Shift:
-								foreach (var record in Directory.Records)
+								foreach (var record in Location.Records)
 									list.Add(record);
 								break;
 						}
 					}
 					break;
 				case Key.F5:
-					Directory.Refresh();
+					Location.Refresh();
 					break;
 				case Key.Escape:
-					Files.Focus();
+					uiHelper.InvalidBinding(locationDisplay, TextBox.TextProperty);
+					files.Focus();
 					break;
 				case Key.Back:
-					SetDirectory(Directory.Parent);
+					SetLocation(Location.Parent);
 					break;
-			}
-			switch (e.SystemKey)
-			{
-				case Key.D:
-					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+				case Key.System:
+					switch (e.SystemKey)
 					{
-						DirectoryDisplay.SelectAll();
-						DirectoryDisplay.Focus();
+						case Key.D:
+							if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+							{
+								locationDisplay.SelectAll();
+								locationDisplay.Focus();
+							}
+							break;
+						case Key.Up:
+							if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+								SetLocation(Location.Parent);
+							break;
+						case Key.Left:
+							if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+								SetPreviousLocation();
+							break;
+						case Key.Right:
+							if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+								SetNextLocation();
+							break;
 					}
-					break;
-				case Key.Up:
-					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
-						SetDirectory(Directory.Parent);
-					break;
-				case Key.Left:
-					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
-						SetPreviousDirectory();
-					break;
-				case Key.Right:
-					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
-						SetNextDirectory();
 					break;
 			}
 		}
@@ -144,12 +145,12 @@ namespace NeoEdit.UI.Windows
 			switch (e.Key)
 			{
 				case Key.Enter:
-					ClickOnItem(Files.SelectedItem as Record);
+					ItemClicked(files.SelectedItem as Record);
 					break;
 			}
 		}
 
-		void SetDirectory(string uri)
+		void SetLocation(string uri)
 		{
 			string select = null;
 			var record = Root.AllRoot.GetRecord(uri);
@@ -161,34 +162,34 @@ namespace NeoEdit.UI.Windows
 			if (!(record is RecordList))
 				return;
 
-			SetDirectory(record as RecordList);
-			Files.Focus();
+			SetLocation(record as RecordList);
+			files.Focus();
 
 			if (select != null)
 			{
-				var sel = Directory.Records.FirstOrDefault(a => a.FullName == select);
+				var sel = Location.Records.FirstOrDefault(a => a.FullName == select);
 				if (sel != null)
 				{
-					Files.SelectedItem = sel;
-					Files.ScrollIntoView(sel);
-					(Files.ItemContainerGenerator.ContainerFromItem(sel) as ListViewItem).Focus();
+					files.SelectedItem = sel;
+					files.ScrollIntoView(sel);
+					(files.ItemContainerGenerator.ContainerFromItem(sel) as ListViewItem).Focus();
 				}
 			}
 		}
 
-		void DirectoryDisplay_KeyDown(object sender, KeyEventArgs e)
+		void LocationDisplay_KeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.Key)
 			{
 				case Key.Enter:
-					SetDirectory(DirectoryDisplay.Text);
+					SetLocation(locationDisplay.Text);
 					break;
 			}
 		}
 
 		void Files_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			ClickOnItem(Files.SelectedItem as Record);
+			ItemClicked(files.SelectedItem as Record);
 		}
 
 		private void MenuItemColumnClick(object sender, RoutedEventArgs e)

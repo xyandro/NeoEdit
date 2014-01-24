@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:uiControls="clr-namespace:NeoEdit.UI.Controls"
     xmlns:uiConverters="clr-namespace:NeoEdit.UI.Converters"
-    Title="Directory" Height="500" Width="600"
+    Title="Browser" Height="500" Width="600"
     Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}" KeyDown="Window_KeyDown">
 
 	<Grid>
@@ -49,14 +49,7 @@
 				</MenuItem.ItemContainerStyle>
 			</MenuItem>
 		</Menu>
-		<Grid Grid.Row="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<Label Content="_Directory:"/>
-			<TextBox Name="DirectoryDisplay" Text="{Binding Directory.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="DirectoryDisplay_KeyDown" />
-		</Grid>
-		<uiControls:NEListView x:Name="Files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" Records="{Binding Directory.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick" SortProperty="{Binding SortProperty, ElementName=window, Mode=TwoWay}" SortAscending="{Binding SortAscending, ElementName=window, Mode=TwoWay}"/>
+		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="LocationDisplay_KeyDown" />
+		<uiControls:NEListView x:Name="files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" Records="{Binding Location.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick" SortProperty="{Binding SortProperty, ElementName=window, Mode=TwoWay}" SortAscending="{Binding SortAscending, ElementName=window, Mode=TwoWay}"/>
 	</Grid>
 </Window>

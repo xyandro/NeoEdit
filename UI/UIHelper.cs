@@ -111,5 +111,10 @@ namespace NeoEdit.UI
 		{
 			BindingOperations.SetBinding(control, GetProp(childExpression), new Binding() { Source = parent, Path = new PropertyPath(GetExpressionValue(parentExpression)), Mode = BindingMode.TwoWay });
 		}
+
+		public void InvalidBinding(DependencyObject obj, DependencyProperty prop)
+		{
+			BindingOperations.GetBindingExpression(obj, prop).UpdateTarget();
+		}
 	}
 }
