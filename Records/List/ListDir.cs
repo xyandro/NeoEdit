@@ -24,5 +24,11 @@ namespace NeoEdit.Records.List
 					yield return item;
 			}
 		}
+
+		public override void RemoveChild(string childFullName)
+		{
+			items = items.Where(a => a.FullName != childFullName).ToList();
+			Refresh();
+		}
 	}
 }

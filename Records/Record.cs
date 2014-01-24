@@ -11,15 +11,20 @@ namespace NeoEdit.Records
 	{
 		protected Record(string uri, Record parent)
 		{
-			this[Property.PropertyType.FullName] = uri;
-			this[Property.PropertyType.Name] = Path.GetFileName(FullName);
-			this[Property.PropertyType.Path] = Path.GetDirectoryName(FullName);
-			this[Property.PropertyType.Extension] = Path.GetExtension(FullName);
-
+			FullName = uri;
 			Parent = parent == null ? this : parent;
 		}
 		public Record Parent { get; private set; }
-		public string FullName { get { return Prop<string>(Property.PropertyType.FullName); } }
+		public virtual string FullName
+		{
+			get { return Prop<string>(Property.PropertyType.FullName); }
+			protected set
+			{
+				this[Property.PropertyType.FullName] = value;
+				this[Property.PropertyType.Name] = Path.GetFileName(FullName);
+				this[Property.PropertyType.Path] = Path.GetDirectoryName(FullName);
+			}
+		}
 
 		Dictionary<Property.PropertyType, object> properties = new Dictionary<Property.PropertyType, object>();
 
@@ -52,6 +57,13 @@ namespace NeoEdit.Records
 		protected virtual IEnumerable<Record> InternalRecords { get { return new List<Record>(); } }
 		readonly ObservableCollection<Record> records = new ObservableCollection<Record>();
 		public ObservableCollection<Record> Records { get { Refresh(); return records; } }
+
+		public virtual void RemoveChild(string childFullName)
+		{
+			var child = records.SingleOrDefault(a => a.FullName == childFullName);
+			if (child != null)
+				records.Remove(child);
+		}
 
 		public void Refresh()
 		{
