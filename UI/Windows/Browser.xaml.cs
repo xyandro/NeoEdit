@@ -23,18 +23,18 @@ namespace NeoEdit.UI.Windows
 		readonly UIHelper<Browser> uiHelper;
 
 		public Browser() : this(GetCurrentLocation()) { }
-		public Browser(Record location)
+		public Browser(string uri)
 		{
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
-			SetLocation(location);
+			SetLocation(uri);
 			uiHelper.AddObservableCallback(a => a.Properties, () => uiHelper.InvalidBinding(columns, MenuItem.ItemsSourceProperty));
 			Properties = new ObservableCollection<Property.PropertyType> { Property.PropertyType.Name, Property.PropertyType.Size, Property.PropertyType.WriteTime };
 		}
 
-		static Record GetCurrentLocation()
+		static string GetCurrentLocation()
 		{
-			return Root.AllRoot.GetRecord(System.IO.Directory.GetCurrentDirectory());
+			return System.IO.Directory.GetCurrentDirectory();
 		}
 
 		List<Record> previousLocation = new List<Record>();
