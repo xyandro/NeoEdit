@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NeoEdit.Records.Registry
 {
-	public class RegistryDir : Record
+	public class RegistryDir : RegistryRecord
 	{
 		public RegistryDir(string uri, Record parent) : base(uri, parent) { }
 
@@ -11,7 +11,7 @@ namespace NeoEdit.Records.Registry
 		{
 			get
 			{
-				using (var subKey = RegistryHelpers.GetKey(FullName))
+				using (var subKey = GetKey(FullName))
 				{
 					foreach (var name in subKey.GetSubKeyNames())
 						yield return new Tuple<string, Func<string, Record>>(FullName + @"\" + name, a => new RegistryDir(a, this));

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace NeoEdit.Records.Disk
 {
-	public class DiskFile : Record
+	public class DiskFile : DiskRecord
 	{
 		public DiskFile(string uri, Record parent)
 			: base(uri, parent)

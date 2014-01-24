@@ -9,7 +9,7 @@ namespace NeoEdit.Records.Registry
 
 		public override Record GetRecord(string uri)
 		{
-			if (RegistryHelpers.MayBeRegKey(uri))
+			if (RegistryRecord.MayBeRegKey(uri))
 				return base.GetRecord(uri);
 			return null;
 		}
@@ -18,7 +18,7 @@ namespace NeoEdit.Records.Registry
 		{
 			get
 			{
-				foreach (var key in RegistryHelpers.RootKeys.Keys)
+				foreach (var key in RegistryRecord.RootKeys.Keys)
 					yield return new Tuple<string, Func<string, Record>>(key, a => new RegistryDir(a, this));
 			}
 		}

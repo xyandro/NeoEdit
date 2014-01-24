@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
 {
-	public class DiskDir : Record
+	public class DiskDir : DiskRecord
 	{
 		public DiskDir(string uri, Record parent)
 			: base(uri, parent)
