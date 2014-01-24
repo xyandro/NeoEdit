@@ -3,9 +3,9 @@ using System.IO;
 
 namespace NeoEdit.Records.Registry
 {
-	public class RegistryFile : RecordItem
+	public class RegistryFile : Record
 	{
-		public RegistryFile(string uri, RecordList parent)
+		public RegistryFile(string uri, Record parent)
 			: base(uri, parent)
 		{
 			if (String.IsNullOrEmpty(Name))
@@ -16,5 +16,7 @@ namespace NeoEdit.Records.Registry
 				this[Property.PropertyType.Data] = key.GetValue(Path.GetFileName(FullName));
 			}
 		}
+
+		public override bool IsFile { get { return true; } }
 	}
 }

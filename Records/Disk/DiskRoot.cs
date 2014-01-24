@@ -7,7 +7,7 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskRoot : RecordRoot
 	{
-		public DiskRoot(RecordList parent) : base("Disks", parent) { }
+		public DiskRoot(Record parent) : base("Disks", parent) { }
 
 		public override Record GetRecord(string uri)
 		{

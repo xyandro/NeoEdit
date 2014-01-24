@@ -6,7 +6,7 @@ namespace NeoEdit.Records.List
 {
 	public class ListRoot : RecordRoot
 	{
-		public ListRoot(RecordList parent) : base("Lists", parent) { }
+		public ListRoot(Record parent) : base("Lists", parent) { }
 
 		public override Record GetRecord(string uri)
 		{

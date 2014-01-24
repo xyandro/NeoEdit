@@ -4,9 +4,9 @@ using System.Management;
 
 namespace NeoEdit.Records.Network
 {
-	public class NetworkDir : RecordList
+	public class NetworkDir : Record
 	{
-		public NetworkDir(string uri, RecordList parent) : base(uri, parent) { }
+		public NetworkDir(string uri, Record parent) : base(uri, parent) { }
 
 		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
 		{

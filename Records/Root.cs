@@ -9,7 +9,7 @@ namespace NeoEdit.Records
 		static Root() { AllRoot = new Root(null); }
 
 		readonly List<Record> RootNodes;
-		Root(RecordList parent)
+		Root(Record parent)
 			: base("Root", null)
 		{
 			RootNodes = new List<Record> { 

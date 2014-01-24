@@ -5,7 +5,7 @@ namespace NeoEdit.Records.Registry
 {
 	public class RegistryRoot : RecordRoot
 	{
-		public RegistryRoot(RecordList parent) : base("Registry", parent) { }
+		public RegistryRoot(Record parent) : base("Registry", parent) { }
 
 		public override Record GetRecord(string uri)
 		{

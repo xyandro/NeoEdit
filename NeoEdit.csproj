@@ -65,16 +65,13 @@
     <Compile Include="Records\Network\NetworkRoot.cs" />
     <Compile Include="Records\RecordRoot.cs" />
     <Compile Include="Records\Record.cs" />
-    <Compile Include="Records\RecordList.cs" />
     <Compile Include="Records\Disk\DiskRoot.cs" />
     <Compile Include="Records\Registry\RegistryHelpers.cs" />
     <Compile Include="Records\Registry\RegistryFile.cs" />
     <Compile Include="Records\Registry\RegistryDir.cs" />
     <Compile Include="Records\Registry\RegistryRoot.cs" />
     <Compile Include="Records\Root.cs" />
-    <Compile Include="Records\RecordItem.cs" />
     <Compile Include="Records\Disk\DiskFile.cs" />
-    <Compile Include="Records\TextFile.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="UI\Controls\NEColumn.xaml.cs">
       <DependentUpon>NEColumn.xaml</DependentUpon>

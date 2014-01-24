@@ -6,7 +6,7 @@ namespace NeoEdit.Records.Network
 {
 	public class NetworkRoot : RecordRoot
 	{
-		public NetworkRoot(RecordList parent) : base("Network", parent) { }
+		public NetworkRoot(Record parent) : base("Network", parent) { }
 
 		static Regex networkRE = new Regex(@"^(\\\\[^\\]+)");
 		static List<string> paths = new List<string>();

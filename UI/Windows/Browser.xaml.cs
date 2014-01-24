@@ -12,7 +12,7 @@ namespace NeoEdit.UI.Windows
 	public partial class Browser : Window
 	{
 		[DepProp]
-		public RecordList Location { get { return uiHelper.GetPropValue<RecordList>(); } set { uiHelper.SetPropValue(value); } }
+		public Record Location { get { return uiHelper.GetPropValue<Record>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<ObservableCollection<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -23,7 +23,7 @@ namespace NeoEdit.UI.Windows
 		readonly UIHelper<Browser> uiHelper;
 
 		public Browser() : this(GetCurrentLocation()) { }
-		public Browser(RecordList location)
+		public Browser(Record location)
 		{
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
@@ -32,14 +32,14 @@ namespace NeoEdit.UI.Windows
 			Properties = new ObservableCollection<Property.PropertyType> { Property.PropertyType.Name, Property.PropertyType.Size, Property.PropertyType.WriteTime };
 		}
 
-		static RecordList GetCurrentLocation()
+		static Record GetCurrentLocation()
 		{
-			return Root.AllRoot.GetRecord(System.IO.Directory.GetCurrentDirectory()) as RecordList;
+			return Root.AllRoot.GetRecord(System.IO.Directory.GetCurrentDirectory());
 		}
 
-		List<RecordList> previousLocation = new List<RecordList>();
-		List<RecordList> nextLocation = new List<RecordList>();
-		void SetLocation(RecordList location)
+		List<Record> previousLocation = new List<Record>();
+		List<Record> nextLocation = new List<Record>();
+		void SetLocation(Record location)
 		{
 			if (location == Location)
 				return;
@@ -70,14 +70,13 @@ namespace NeoEdit.UI.Windows
 			nextLocation.RemoveAt(nextLocation.Count - 1);
 		}
 
-		void ItemClicked(Record item)
+		void ItemClicked(Record record)
 		{
-			if (item == null)
+			if (record == null)
 				return;
 
-			var recordList = item as RecordList;
-			if (recordList != null)
-				SetLocation(recordList);
+			if (!record.IsFile)
+				SetLocation(record);
 		}
 
 		void Window_KeyDown(object sender, KeyEventArgs e)
@@ -154,15 +153,15 @@ namespace NeoEdit.UI.Windows
 		{
 			string select = null;
 			var record = Root.AllRoot.GetRecord(uri);
-			if (record is RecordItem)
+			if (record == null)
+				return;
+			if (record.IsFile)
 			{
 				select = record.FullName;
 				record = record.Parent;
 			}
-			if (!(record is RecordList))
-				return;
 
-			SetLocation(record as RecordList);
+			SetLocation(record);
 			files.Focus();
 
 			if (select != null)

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace NeoEdit.Records.Registry
 {
-	public class RegistryDir : RecordList
+	public class RegistryDir : Record
 	{
-		public RegistryDir(string uri, RecordList parent) : base(uri, parent) { }
+		public RegistryDir(string uri, Record parent) : base(uri, parent) { }
 
 		protected override IEnumerable<Tuple<string, Func<string, Record>>> InternalRecords
 		{

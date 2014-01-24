@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records
 {
-	public abstract class RecordRoot : RecordList
+	public abstract class RecordRoot : Record
 	{
-		protected RecordRoot(string uri, RecordList parent) : base(uri, parent) { }
+		protected RecordRoot(string uri, Record parent) : base(uri, parent) { }
 
 		public virtual Record GetRecord(string uri)
 		{
@@ -23,11 +23,7 @@ namespace NeoEdit.Records
 				findUri += match.Groups[1].Value;
 				remaining = match.Groups[2].Value;
 
-				var list = record as RecordList;
-				if (list == null)
-					break;
-
-				record = list.Records.SingleOrDefault(a => a.FullName.Equals(findUri, StringComparison.OrdinalIgnoreCase));
+				record = record.Records.SingleOrDefault(a => a.FullName.Equals(findUri, StringComparison.OrdinalIgnoreCase));
 			}
 
 			throw new Exception(String.Format("Invalid input: {0}", uri));

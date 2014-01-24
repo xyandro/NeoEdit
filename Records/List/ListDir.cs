@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace NeoEdit.Records.List
 {
-	public class ListDir : RecordList
+	public class ListDir : Record
 	{
 		List<Record> items = new List<Record>();
-		public ListDir(string uri, RecordList parent) : base(uri, parent) { }
+		public ListDir(string uri, Record parent) : base(uri, parent) { }
 
 		public void Add(Record record)
 		{

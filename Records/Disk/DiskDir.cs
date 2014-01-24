@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
 {
-	public class DiskDir : RecordList
+	public class DiskDir : Record
 	{
-		public DiskDir(string uri, RecordList parent)
+		public DiskDir(string uri, Record parent)
 			: base(uri, parent)
 		{
 			if (new Regex("^[a-zA-Z]:$").IsMatch(uri))
