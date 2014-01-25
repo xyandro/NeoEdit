@@ -3,9 +3,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Records;
 using NeoEdit.Records.List;
+using NeoEdit.UI.Converters;
 
 namespace NeoEdit.UI.Windows
 {
@@ -27,14 +29,32 @@ namespace NeoEdit.UI.Windows
 		{
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
-			SetLocation(uri);
-			uiHelper.AddObservableCallback(a => a.Properties, () => uiHelper.InvalidBinding(columns, MenuItem.ItemsSourceProperty));
+			uiHelper.AddObservableCallback(a => a.Properties, () =>
+			{
+				uiHelper.InvalidBinding(columns, MenuItem.ItemsSourceProperty);
+				SetupColumns();
+			});
 			Properties = new ObservableCollection<Property.PropertyType> { Property.PropertyType.Name, Property.PropertyType.Size, Property.PropertyType.WriteTime };
+			SetLocation(uri);
 		}
 
 		static string GetCurrentLocation()
 		{
 			return System.IO.Directory.GetCurrentDirectory();
+		}
+
+		void SetupColumns()
+		{
+			files.Columns.Clear();
+			Properties.ToList().ForEach(property =>
+			{
+				var col = new DataGridTextColumn
+				{
+					Header = Property.Get(property).DisplayName,
+					Binding = new Binding(property.ToString()) { Converter = new PropertyDisplay(), Mode = BindingMode.OneWay },
+				};
+				files.Columns.Add(col);
+			});
 		}
 
 		List<Record> previousLocation = new List<Record>();
@@ -83,6 +103,18 @@ namespace NeoEdit.UI.Windows
 		{
 			switch (e.Key)
 			{
+				case Key.Down:
+				case Key.Up:
+					if (FocusManager.GetFocusedElement(this) != files)
+					{
+						files.Focus();
+						if ((files.Items.Count > 0) && (files.Columns.Count > 0))
+						{
+							files.CurrentCell = new DataGridCellInfo(files.Items[0], files.Columns[0]);
+							files.SelectedIndex = 0;
+						}
+					}
+					break;
 				case Key.D1:
 				case Key.D2:
 				case Key.D3:
@@ -145,6 +177,7 @@ namespace NeoEdit.UI.Windows
 			{
 				case Key.Enter:
 					ItemClicked(files.SelectedItem as Record);
+					e.Handled = true;
 					break;
 			}
 		}
@@ -162,7 +195,6 @@ namespace NeoEdit.UI.Windows
 			}
 
 			SetLocation(record);
-			files.Focus();
 
 			if (select != null)
 			{
