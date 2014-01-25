@@ -74,14 +74,28 @@
     <Compile Include="Records\Root.cs" />
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="UI\Controls\NEColumn.xaml.cs">
+      <DependentUpon>NEColumn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\NEListView.xaml.cs">
+      <DependentUpon>NEListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Converters\PropertyToSortCheck.cs" />
     <Compile Include="UI\Converters\PropertyToHeader.cs" />
     <Compile Include="UI\Converters\PropertyToShownCheck.cs" />
     <Compile Include="UI\Converters\PropertiesToMenuItems.cs" />
     <Compile Include="UI\Converters\PropertyToSortIndicatorHeader.cs" />
-    <Compile Include="UI\Converters\PropertyDisplay.cs" />
+    <Compile Include="UI\Converters\RecordToProperty.cs" />
     <Compile Include="UI\UIHelper.cs" />
     <Page Include="UI\Windows\Browser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Controls\NEColumn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Controls\NEListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
