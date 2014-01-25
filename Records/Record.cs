@@ -7,8 +7,15 @@ using System.Windows;
 
 namespace NeoEdit.Records
 {
-	public abstract class Record
+	public abstract class Record : DependencyObject
 	{
+		static Dictionary<Property.PropertyType, DependencyProperty> dependencyProperty;
+		static Record()
+		{
+			var properties = Enum.GetValues(typeof(Property.PropertyType)).Cast<Property.PropertyType>().ToList();
+			dependencyProperty = properties.ToDictionary(a => a, a => DependencyProperty.Register(a.ToString(), Property.Get(a).SystemType, typeof(Record)));
+		}
+
 		protected Record(string uri, Record parent)
 		{
 			FullName = uri;
@@ -26,9 +33,10 @@ namespace NeoEdit.Records
 			}
 		}
 
-		Dictionary<Property.PropertyType, object> properties = new Dictionary<Property.PropertyType, object>();
-
-		public IEnumerable<Property.PropertyType> Properties { get { return properties.Keys; } }
+		public IEnumerable<Property.PropertyType> Properties
+		{
+			get { return dependencyProperty.Where(a => GetValue(a.Value) != null).Select(a => a.Key); }
+		}
 
 		public T Prop<T>(Property.PropertyType property)
 		{
@@ -37,14 +45,8 @@ namespace NeoEdit.Records
 
 		public object this[Property.PropertyType property]
 		{
-			get
-			{
-				if (properties.ContainsKey(property))
-					return properties[property];
-
-				return null;
-			}
-			protected set { properties[property] = value; }
+			get { return GetValue(dependencyProperty[property]); }
+			protected set { SetValue(dependencyProperty[property], value); }
 		}
 
 		public virtual string Name
@@ -73,14 +75,16 @@ namespace NeoEdit.Records
 			var toAdd = newList.Where(a => !existingList.Keys.Contains(a.Key));
 			var toRemove = existingList.Where(a => !newList.Keys.Contains(a.Key));
 
-			Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-			{
-				foreach (var add in toAdd)
-					records.Add(add.Value);
+			foreach (var add in toAdd)
+				records.Add(add.Value);
 
-				foreach (var remove in toRemove)
-					records.Remove(remove.Value);
-			})).Wait();
+			foreach (var remove in toRemove)
+				records.Remove(remove.Value);
+		}
+
+		public override string ToString()
+		{
+			return FullName;
 		}
 	}
 }

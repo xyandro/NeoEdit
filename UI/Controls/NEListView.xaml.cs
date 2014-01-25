@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeoEdit.UI.Converters;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -50,7 +51,16 @@ namespace NeoEdit.UI.Controls
 		void SetupColumns()
 		{
 			gridView.Columns.Clear();
-			Properties.ToList().ForEach(a => gridView.Columns.Add(new NEColumn(this) { Property = a }));
+			foreach (var property in Properties)
+			{
+				var headerBinding = new MultiBinding { Converter = new PropertyToSortIndicatorHeader(property) };
+				headerBinding.Bindings.Add(new Binding("SortProperty") { Source = this });
+				headerBinding.Bindings.Add(new Binding("SortAscending") { Source = this });
+
+				var col = new GridViewColumn { DisplayMemberBinding = new Binding(property.ToString()) { Converter = new PropertyFormatter() } };
+				BindingOperations.SetBinding(col, GridViewColumn.HeaderProperty, headerBinding);
+				gridView.Columns.Add(col);
+			}
 			Resort();
 		}
 
