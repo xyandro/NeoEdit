@@ -32,5 +32,11 @@ namespace NeoEdit.Records.Disk
 				this[RecordProperty.PropertyName.Extension] = Path.GetExtension(FullName);
 			}
 		}
+
+		public override void Delete()
+		{
+			File.Delete(FullName);
+			Parent.RemoveChild(this);
+		}
 	}
 }

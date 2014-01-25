@@ -104,9 +104,8 @@ namespace NeoEdit.UI.Windows
 						}
 					}
 					break;
-				case Key.F2:
-					RunAction(RecordAction.ActionName.Rename);
-					break;
+				case Key.F2: RunAction(RecordAction.ActionName.Rename); break;
+				case Key.Delete: RunAction(RecordAction.ActionName.Delete); break;
 				case Key.F5:
 					Location.Refresh();
 					files.Resort();
@@ -115,9 +114,7 @@ namespace NeoEdit.UI.Windows
 					uiHelper.InvalidBinding(locationDisplay, TextBox.TextProperty);
 					files.Focus();
 					break;
-				case Key.Back:
-					SetLocation(Location.Parent);
-					break;
+				case Key.Back: SetLocation(Location.Parent); break;
 				case Key.System:
 					switch (e.SystemKey)
 					{
@@ -149,9 +146,7 @@ namespace NeoEdit.UI.Windows
 		{
 			switch (e.Key)
 			{
-				case Key.Enter:
-					ItemClicked(files.SelectedItem as Record);
-					break;
+				case Key.Enter: ItemClicked(files.SelectedItem as Record); break;
 			}
 		}
 
@@ -186,9 +181,7 @@ namespace NeoEdit.UI.Windows
 		{
 			switch (e.Key)
 			{
-				case Key.Enter:
-					SetLocation(locationDisplay.Text);
-					break;
+				case Key.Enter: SetLocation(locationDisplay.Text); break;
 			}
 		}
 
@@ -212,6 +205,16 @@ namespace NeoEdit.UI.Windows
 						{
 							try { record.Rename(rename.RecordName, () => MessageBox.Show("File already exists.  Overwrite?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes); }
 							catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+						}
+					}
+					break;
+				case RecordAction.ActionName.Delete:
+					{
+						if (MessageBox.Show("Are you sure you want to delete these items?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.No) == MessageBoxResult.Yes)
+						{
+							var records = files.SelectedItems.Cast<Record>().ToList();
+							foreach (var record in records)
+								record.Delete();
 						}
 					}
 					break;

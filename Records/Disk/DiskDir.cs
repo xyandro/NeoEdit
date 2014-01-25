@@ -30,5 +30,11 @@ namespace NeoEdit.Records.Disk
 					yield return new DiskFile(file, this);
 			}
 		}
+
+		public override void Delete()
+		{
+			Directory.Delete(FullName, true);
+			Parent.RemoveChild(this);
+		}
 	}
 }

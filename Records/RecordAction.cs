@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NeoEdit.Records
@@ -8,6 +9,7 @@ namespace NeoEdit.Records
 		public enum ActionName
 		{
 			Rename,
+			Delete,
 		};
 
 		public ActionName Name { get; private set; }
@@ -19,6 +21,7 @@ namespace NeoEdit.Records
 		static List<RecordAction> actions = new List<RecordAction>
 		{
 			new RecordAction { Name = ActionName.Rename, DisplayName = "Rename", MenuHeader = "_Rename", MinArgs = 1, MaxArgs = 1 },
+			new RecordAction { Name = ActionName.Delete, DisplayName = "Delete", MenuHeader = "_Delete", MinArgs = 1, MaxArgs = Int32.MaxValue },
 		};
 
 		public static RecordAction Get(ActionName name)

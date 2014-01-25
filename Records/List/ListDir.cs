@@ -25,9 +25,9 @@ namespace NeoEdit.Records.List
 			}
 		}
 
-		public override void RemoveChild(string childFullName)
+		public override void RemoveChild(Record record)
 		{
-			items = items.Where(a => a.FullName != childFullName).ToList();
+			items.Remove(record);
 			Refresh();
 		}
 	}

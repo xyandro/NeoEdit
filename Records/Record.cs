@@ -65,11 +65,16 @@ namespace NeoEdit.Records
 		readonly ObservableCollection<Record> records = new ObservableCollection<Record>();
 		public ObservableCollection<Record> Records { get { Refresh(); return records; } }
 
-		public virtual void RemoveChild(string childFullName)
+		public void RemoveChild(string childFullName)
 		{
 			var child = records.SingleOrDefault(a => a.FullName == childFullName);
 			if (child != null)
-				records.Remove(child);
+				RemoveChild(child);
+		}
+
+		public virtual void RemoveChild(Record record)
+		{
+			records.Remove(record);
 		}
 
 		public void Refresh()
@@ -88,6 +93,7 @@ namespace NeoEdit.Records
 		}
 
 		public virtual void Rename(string newName, Func<bool> canOverwrite) { }
+		public virtual void Delete() { }
 
 		public override string ToString()
 		{
