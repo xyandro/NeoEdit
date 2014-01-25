@@ -9,10 +9,10 @@ namespace NeoEdit.Records.Disk
 			: base(uri, parent)
 		{
 			var fileInfo = new FileInfo(FullName);
-			this[Property.PropertyType.Size] = fileInfo.Length;
-			this[Property.PropertyType.WriteTime] = fileInfo.LastWriteTimeUtc;
-			this[Property.PropertyType.CreateTime] = fileInfo.CreationTimeUtc;
-			this[Property.PropertyType.AccessTime] = fileInfo.LastAccessTimeUtc;
+			this[RecordProperty.PropertyName.Size] = fileInfo.Length;
+			this[RecordProperty.PropertyName.WriteTime] = fileInfo.LastWriteTimeUtc;
+			this[RecordProperty.PropertyName.CreateTime] = fileInfo.CreationTimeUtc;
+			this[RecordProperty.PropertyName.AccessTime] = fileInfo.LastAccessTimeUtc;
 		}
 
 		public override bool IsFile { get { return true; } }
@@ -23,7 +23,7 @@ namespace NeoEdit.Records.Disk
 			protected set
 			{
 				base.FullName = value;
-				this[Property.PropertyType.Extension] = Path.GetExtension(FullName);
+				this[RecordProperty.PropertyName.Extension] = Path.GetExtension(FullName);
 			}
 		}
 	}

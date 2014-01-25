@@ -20,8 +20,8 @@ namespace NeoEdit.UI.Converters
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var property = (Property.PropertyType)value[0];
-			var properties = value[1] as IEnumerable<Property.PropertyType>;
+			var property = (RecordProperty.PropertyName)value[0];
+			var properties = value[1] as IEnumerable<RecordProperty.PropertyName>;
 			return properties.Contains(property);
 		}
 

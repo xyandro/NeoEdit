@@ -20,11 +20,11 @@ namespace NeoEdit.UI.Converters
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var properties = value as IEnumerable<Property.PropertyType>;
+			var properties = value as IEnumerable<RecordProperty.PropertyName>;
 			if (properties == null)
 				return null;
 
-			return properties.Concat(Enum.GetValues(typeof(Property.PropertyType)).Cast<Property.PropertyType>().Where(a => !properties.Contains(a)));
+			return properties.Concat(Enum.GetValues(typeof(RecordProperty.PropertyName)).Cast<RecordProperty.PropertyName>().Where(a => !properties.Contains(a)));
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -18,7 +18,7 @@ namespace NeoEdit.UI.Converters
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return Property.Get((Property.PropertyType)value).MenuHeader;
+			return RecordProperty.Get((RecordProperty.PropertyName)value).MenuHeader;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

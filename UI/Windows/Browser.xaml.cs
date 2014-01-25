@@ -14,9 +14,9 @@ namespace NeoEdit.UI.Windows
 		[DepProp]
 		public Record Location { get { return uiHelper.GetPropValue<Record>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public ObservableCollection<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<ObservableCollection<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public Property.PropertyType SortProperty { get { return uiHelper.GetPropValue<Property.PropertyType>(); } set { uiHelper.SetPropValue(value); } }
+		public RecordProperty.PropertyName SortProperty { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -29,7 +29,7 @@ namespace NeoEdit.UI.Windows
 			InitializeComponent();
 			SetLocation(uri);
 			uiHelper.AddObservableCallback(a => a.Properties, () => uiHelper.InvalidBinding(columns, MenuItem.ItemsSourceProperty));
-			Properties = new ObservableCollection<Property.PropertyType> { Property.PropertyType.Name, Property.PropertyType.Size, Property.PropertyType.WriteTime };
+			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
 		}
 
 		static string GetCurrentLocation()
@@ -194,7 +194,7 @@ namespace NeoEdit.UI.Windows
 		private void MenuItemColumnClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
-			var property = Property.PropertyFromMenuHeader(header);
+			var property = RecordProperty.PropertyFromMenuHeader(header);
 			if (Properties.Contains(property))
 				Properties.Remove(property);
 			else
@@ -204,7 +204,7 @@ namespace NeoEdit.UI.Windows
 		private void MenuItemSortClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
-			var property = Property.PropertyFromMenuHeader(header);
+			var property = RecordProperty.PropertyFromMenuHeader(header);
 			if (SortProperty != property)
 				SortProperty = property;
 			else

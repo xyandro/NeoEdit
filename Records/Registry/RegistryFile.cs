@@ -9,11 +9,11 @@ namespace NeoEdit.Records.Registry
 			: base(uri, parent)
 		{
 			if (String.IsNullOrEmpty(Name))
-				this[Property.PropertyType.Name] = "(Default)";
+				this[RecordProperty.PropertyName.Name] = "(Default)";
 			using (var key = GetKey(Path.GetDirectoryName(FullName)))
 			{
-				this[Property.PropertyType.Type] = key.GetValueKind(Path.GetFileName(FullName));
-				this[Property.PropertyType.Data] = key.GetValue(Path.GetFileName(FullName));
+				this[RecordProperty.PropertyName.Type] = key.GetValueKind(Path.GetFileName(FullName));
+				this[RecordProperty.PropertyName.Data] = key.GetValue(Path.GetFileName(FullName));
 			}
 		}
 

@@ -26,13 +26,13 @@ namespace NeoEdit.UI.Controls
 	public partial class NEListView : ListView
 	{
 		[DepProp]
-		public Property.PropertyType SortProperty { get { return uiHelper.GetPropValue<Property.PropertyType>(); } set { uiHelper.SetPropValue(value); } }
+		public RecordProperty.PropertyName SortProperty { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<Record> Records { get { return uiHelper.GetPropValue<ObservableCollection<Record>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public ObservableCollection<Property.PropertyType> Properties { get { return uiHelper.GetPropValue<ObservableCollection<Property.PropertyType>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 
 		readonly UIHelper<NEListView> uiHelper;
 		readonly CollectionViewSource collectionView;
@@ -44,7 +44,7 @@ namespace NeoEdit.UI.Controls
 
 			collectionView = FindResource("collectionView") as CollectionViewSource;
 			uiHelper.AddCallback(CollectionViewSource.ViewProperty, collectionView, Resort);
-			uiHelper.AddCallback(a => a.SortProperty, (o, n) => { SortAscending = Property.Get(SortProperty).DefaultAscending; Resort(); });
+			uiHelper.AddCallback(a => a.SortProperty, (o, n) => { SortAscending = RecordProperty.Get(SortProperty).DefaultAscending; Resort(); });
 			uiHelper.AddCallback(a => a.SortAscending, (o, n) => Resort());
 		}
 

@@ -18,7 +18,7 @@ namespace NeoEdit.UI.Converters
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return (Property.PropertyType)value[0] == (Property.PropertyType)value[1];
+			return (RecordProperty.PropertyName)value[0] == (RecordProperty.PropertyName)value[1];
 		}
 
 		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)

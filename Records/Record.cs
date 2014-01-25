@@ -9,11 +9,11 @@ namespace NeoEdit.Records
 {
 	public abstract class Record : DependencyObject
 	{
-		static Dictionary<Property.PropertyType, DependencyProperty> dependencyProperty;
+		static Dictionary<RecordProperty.PropertyName, DependencyProperty> dependencyProperty;
 		static Record()
 		{
-			var properties = Enum.GetValues(typeof(Property.PropertyType)).Cast<Property.PropertyType>().ToList();
-			dependencyProperty = properties.ToDictionary(a => a, a => DependencyProperty.Register(a.ToString(), Property.Get(a).SystemType, typeof(Record)));
+			var properties = Enum.GetValues(typeof(RecordProperty.PropertyName)).Cast<RecordProperty.PropertyName>().ToList();
+			dependencyProperty = properties.ToDictionary(a => a, a => DependencyProperty.Register(a.ToString(), RecordProperty.Get(a).Type, typeof(Record)));
 		}
 
 		protected Record(string uri, Record parent)
@@ -24,26 +24,26 @@ namespace NeoEdit.Records
 		public Record Parent { get; private set; }
 		public virtual string FullName
 		{
-			get { return Prop<string>(Property.PropertyType.FullName); }
+			get { return Prop<string>(RecordProperty.PropertyName.FullName); }
 			protected set
 			{
-				this[Property.PropertyType.FullName] = value;
-				this[Property.PropertyType.Name] = Path.GetFileName(FullName);
-				this[Property.PropertyType.Path] = Path.GetDirectoryName(FullName);
+				this[RecordProperty.PropertyName.FullName] = value;
+				this[RecordProperty.PropertyName.Name] = Path.GetFileName(FullName);
+				this[RecordProperty.PropertyName.Path] = Path.GetDirectoryName(FullName);
 			}
 		}
 
-		public IEnumerable<Property.PropertyType> Properties
+		public IEnumerable<RecordProperty.PropertyName> Properties
 		{
 			get { return dependencyProperty.Where(a => GetValue(a.Value) != null).Select(a => a.Key); }
 		}
 
-		public T Prop<T>(Property.PropertyType property)
+		public T Prop<T>(RecordProperty.PropertyName property)
 		{
 			return (T)this[property];
 		}
 
-		public object this[Property.PropertyType property]
+		public object this[RecordProperty.PropertyName property]
 		{
 			get { return GetValue(dependencyProperty[property]); }
 			protected set { SetValue(dependencyProperty[property], value); }
@@ -51,7 +51,7 @@ namespace NeoEdit.Records
 
 		public virtual string Name
 		{
-			get { return Prop<string>(Property.PropertyType.Name); }
+			get { return Prop<string>(RecordProperty.PropertyName.Name); }
 		}
 
 		public virtual bool IsFile { get { return false; } }
