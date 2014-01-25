@@ -83,6 +83,13 @@ namespace NeoEdit.UI.Windows
 
 		void Window_KeyDown(object sender, KeyEventArgs e)
 		{
+			var action = RecordAction.ActionFromAccessKey(e.Key, Keyboard.Modifiers);
+			if (action.HasValue)
+			{
+				RunAction(action.Value);
+				return;
+			}
+
 			switch (e.Key)
 			{
 				case Key.D1:
@@ -104,8 +111,6 @@ namespace NeoEdit.UI.Windows
 						}
 					}
 					break;
-				case Key.F2: RunAction(RecordAction.ActionName.Rename); break;
-				case Key.Delete: RunAction(RecordAction.ActionName.Delete); break;
 				case Key.F5:
 					Location.Refresh();
 					files.Resort();
@@ -206,14 +211,14 @@ namespace NeoEdit.UI.Windows
 						var rename = new Rename(record);
 						if (rename.ShowDialog() == true)
 						{
-							try { record.Rename(rename.RecordName, () => MessageBox.Show("File already exists.  Overwrite?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes); }
+							try { record.Rename(rename.RecordName, () => MessageBox.Show("File already exists.  Overwrite?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK); }
 							catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 						}
 					}
 					break;
 				case RecordAction.ActionName.Delete:
 					{
-						if (MessageBox.Show("Are you sure you want to delete these items?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.No) == MessageBoxResult.Yes)
+						if (MessageBox.Show("Are you sure you want to delete these items?", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) == MessageBoxResult.OK)
 						{
 							foreach (var record in records)
 								record.Delete();
