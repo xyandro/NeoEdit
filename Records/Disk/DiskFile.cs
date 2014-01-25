@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace NeoEdit.Records.Disk
 {
@@ -17,11 +15,6 @@ namespace NeoEdit.Records.Disk
 		}
 
 		public override bool IsFile { get { return true; } }
-
-		public override System.Collections.Generic.IEnumerable<RecordAction.ActionName> Actions
-		{
-			get { return new List<RecordAction.ActionName> { RecordAction.ActionName.Rename }.Concat(base.Actions); }
-		}
 
 		public override string FullName
 		{

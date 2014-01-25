@@ -20,13 +20,12 @@ namespace NeoEdit.UI.Converters
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var records = value[0] as IEnumerable<Record>;
-			if (records == null)
+			var objs = value[0] as IEnumerable<object>;
+			if (objs == null)
 				return null;
-
-			var actions = records.SelectMany(a => a.Actions).Distinct().ToList();
-			actions = actions.Where(a => RecordAction.Get(a).ValidNumArgs((int)value[1])).ToList();
-			return actions;
+			var records = objs.Cast<Record>().ToList();
+			var actions = records.SelectMany(a => a.Actions).GroupBy(a => a).ToDictionary(a => a.Key, a => a.Count());
+			return actions.Where(a => RecordAction.Get(a.Key).ValidNumArgs(a.Value)).Select(a => a.Key).ToList();
 		}
 
 		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)

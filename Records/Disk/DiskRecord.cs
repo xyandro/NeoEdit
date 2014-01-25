@@ -1,11 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace NeoEdit.Records.Disk
 {
 	public abstract class DiskRecord : Record
 	{
 		public DiskRecord(string uri, Record parent) : base(uri, parent) { }
+
+		public override IEnumerable<RecordAction.ActionName> Actions
+		{
+			get { return new List<RecordAction.ActionName> { RecordAction.ActionName.Rename, RecordAction.ActionName.Delete }.Concat(base.Actions); }
+		}
 
 		public override void Rename(string newName, System.Func<bool> canOverwrite)
 		{

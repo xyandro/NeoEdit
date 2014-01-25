@@ -192,14 +192,17 @@ namespace NeoEdit.UI.Windows
 
 		void RunAction(RecordAction.ActionName action)
 		{
-			if (!RecordAction.Get(action).ValidNumArgs(files.SelectedItems.Count))
+			var records = files.SelectedItems.Cast<Record>().ToList();
+			records = records.Where(a => a.Actions.Any(b => b == action)).ToList();
+
+			if (!RecordAction.Get(action).ValidNumArgs(records.Count))
 				return;
 
 			switch (action)
 			{
 				case RecordAction.ActionName.Rename:
 					{
-						var record = files.SelectedItem as Record;
+						var record = records.Single();
 						var rename = new Rename(record);
 						if (rename.ShowDialog() == true)
 						{
@@ -212,7 +215,6 @@ namespace NeoEdit.UI.Windows
 					{
 						if (MessageBox.Show("Are you sure you want to delete these items?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.No) == MessageBoxResult.Yes)
 						{
-							var records = files.SelectedItems.Cast<Record>().ToList();
 							foreach (var record in records)
 								record.Delete();
 						}
