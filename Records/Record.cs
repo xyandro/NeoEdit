@@ -38,6 +38,11 @@ namespace NeoEdit.Records
 			get { return dependencyProperty.Where(a => GetValue(a.Value) != null).Select(a => a.Key); }
 		}
 
+		public virtual IEnumerable<RecordAction.ActionName> Actions
+		{
+			get { return new List<RecordAction.ActionName>(); }
+		}
+
 		public T Prop<T>(RecordProperty.PropertyName property)
 		{
 			return (T)this[property];
@@ -81,6 +86,8 @@ namespace NeoEdit.Records
 			foreach (var remove in toRemove)
 				records.Remove(remove.Value);
 		}
+
+		public virtual void Rename(string newName, Func<bool> canOverwrite) { }
 
 		public override string ToString()
 		{

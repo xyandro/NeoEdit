@@ -16,6 +16,20 @@
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Menu>
+			<MenuItem Header="_Actions">
+				<MenuItem.ItemContainerStyle>
+					<Style>
+						<EventSetter Event="MenuItem.Click" Handler="MenuItemActionClick"/>
+						<Setter Property="MenuItem.Header" Value="{Binding Converter={uiConverters:ActionToHeader}}"/>
+					</Style>
+				</MenuItem.ItemContainerStyle>
+				<MenuItem.ItemsSource>
+					<MultiBinding Converter="{uiConverters:RecordsToActionMenuItems}">
+						<Binding ElementName="window" Path="Location.Records"/>
+						<Binding ElementName="files" Path="SelectedItems.Count"/>
+					</MultiBinding>
+				</MenuItem.ItemsSource>
+			</MenuItem>
 			<MenuItem Name="columns" Header="_Columns" ItemsSource="{Binding Properties, ElementName=window, Converter={uiConverters:PropertiesToMenuItems}}">
 				<MenuItem.ItemContainerStyle>
 					<Style>
@@ -49,7 +63,7 @@
 				</MenuItem.ItemContainerStyle>
 			</MenuItem>
 		</Menu>
-		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=window, Mode=OneWay}" Grid.Column="1" KeyDown="LocationDisplay_KeyDown" />
+		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=window, Mode=OneWay}" KeyDown="LocationDisplay_KeyDown"/>
 		<uiControls:NEListView x:Name="files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" Records="{Binding Location.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick" SortProperty="{Binding SortProperty, ElementName=window, Mode=TwoWay}" SortAscending="{Binding SortAscending, ElementName=window, Mode=TwoWay}"/>
 	</Grid>
 </Window>

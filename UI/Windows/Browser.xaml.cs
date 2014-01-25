@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -6,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Records;
 using NeoEdit.Records.List;
+using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI.Windows
 {
@@ -22,7 +24,7 @@ namespace NeoEdit.UI.Windows
 
 		readonly UIHelper<Browser> uiHelper;
 
-		public Browser() : this(GetCurrentLocation()) { }
+		public Browser() : this(StartLocation()) { }
 		public Browser(string uri)
 		{
 			uiHelper = new UIHelper<Browser>(this);
@@ -32,7 +34,7 @@ namespace NeoEdit.UI.Windows
 			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
 		}
 
-		static string GetCurrentLocation()
+		static string StartLocation()
 		{
 			return System.IO.Directory.GetCurrentDirectory();
 		}
@@ -102,8 +104,12 @@ namespace NeoEdit.UI.Windows
 						}
 					}
 					break;
+				case Key.F2:
+					RunAction(RecordAction.ActionName.Rename);
+					break;
 				case Key.F5:
 					Location.Refresh();
+					files.Resort();
 					break;
 				case Key.Escape:
 					uiHelper.InvalidBinding(locationDisplay, TextBox.TextProperty);
@@ -191,7 +197,28 @@ namespace NeoEdit.UI.Windows
 			ItemClicked(files.SelectedItem as Record);
 		}
 
-		private void MenuItemColumnClick(object sender, RoutedEventArgs e)
+		void RunAction(RecordAction.ActionName action)
+		{
+			if (!RecordAction.Get(action).ValidNumArgs(files.SelectedItems.Count))
+				return;
+
+			switch (action)
+			{
+				case RecordAction.ActionName.Rename:
+					{
+						var record = files.SelectedItem as Record;
+						var rename = new Rename(record);
+						if (rename.ShowDialog() == true)
+						{
+							try { record.Rename(rename.RecordName, () => MessageBox.Show("File already exists.  Overwrite?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes); }
+							catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+						}
+					}
+					break;
+			}
+		}
+
+		void MenuItemColumnClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
 			var property = RecordProperty.PropertyFromMenuHeader(header);
@@ -201,7 +228,7 @@ namespace NeoEdit.UI.Windows
 				Properties.Add(property);
 		}
 
-		private void MenuItemSortClick(object sender, RoutedEventArgs e)
+		void MenuItemSortClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
 			var property = RecordProperty.PropertyFromMenuHeader(header);
@@ -209,6 +236,13 @@ namespace NeoEdit.UI.Windows
 				SortProperty = property;
 			else
 				SortAscending = !SortAscending;
+		}
+
+		void MenuItemActionClick(object sender, RoutedEventArgs e)
+		{
+			var header = ((MenuItem)sender).Header.ToString();
+			var action = RecordAction.ActionFromMenuHeader(header);
+			RunAction(action);
 		}
 	}
 }

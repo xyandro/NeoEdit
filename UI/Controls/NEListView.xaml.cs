@@ -1,11 +1,11 @@
-﻿using NeoEdit.UI.Converters;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using NeoEdit.Records;
+using NeoEdit.UI.Converters;
 
 namespace NeoEdit.UI.Controls
 {
@@ -77,7 +77,7 @@ namespace NeoEdit.UI.Controls
 			return (propertyValue1 as IComparable).CompareTo(propertyValue2) * (SortAscending ? 1 : -1);
 		}
 
-		void Resort()
+		public void Resort()
 		{
 			if ((Properties == null) || (Properties.Count() == 0))
 				return;

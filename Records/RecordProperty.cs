@@ -40,9 +40,9 @@ namespace NeoEdit.Records
 			new RecordProperty { Name = PropertyName.Data,       DisplayName = "Data",        MenuHeader = "_Data",        DefaultAscending = true,  Type = typeof(String)    },
 		};
 
-		public static RecordProperty Get(PropertyName type)
+		public static RecordProperty Get(PropertyName name)
 		{
-			return properties.Single(a => a.Name == type);
+			return properties.Single(a => a.Name == name);
 		}
 
 		public static PropertyName PropertyFromMenuHeader(string str)

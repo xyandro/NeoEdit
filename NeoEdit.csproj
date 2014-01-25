@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Records\RecordAction.cs" />
     <Compile Include="Records\Disk\DiskRecord.cs" />
     <Compile Include="Records\RecordProperty.cs" />
     <Compile Include="Records\List\ListDir.cs" />
@@ -77,13 +78,22 @@
     <Compile Include="UI\Controls\NEListView.xaml.cs">
       <DependentUpon>NEListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Converters\ActionToHeader.cs" />
+    <Compile Include="UI\Converters\RecordsToActionMenuItems.cs" />
     <Compile Include="UI\Converters\PropertyToSortCheck.cs" />
     <Compile Include="UI\Converters\PropertyToHeader.cs" />
     <Compile Include="UI\Converters\PropertyToShownCheck.cs" />
     <Compile Include="UI\Converters\PropertiesToMenuItems.cs" />
     <Compile Include="UI\Converters\PropertyToSortIndicatorHeader.cs" />
     <Compile Include="UI\Converters\PropertyFormatter.cs" />
+    <Compile Include="UI\Dialogs\Rename.xaml.cs">
+      <DependentUpon>Rename.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\UIHelper.cs" />
+    <Page Include="UI\Dialogs\Rename.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Windows\Browser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
