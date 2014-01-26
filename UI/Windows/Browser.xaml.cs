@@ -30,7 +30,6 @@ namespace NeoEdit.UI.Windows
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
 			SetLocation(uri);
-			uiHelper.AddObservableCallback(a => a.Properties, () => uiHelper.InvalidBinding(columns, MenuItem.ItemsSourceProperty));
 			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
 		}
 
@@ -228,7 +227,7 @@ namespace NeoEdit.UI.Windows
 			}
 		}
 
-		void MenuItemColumnClick(object sender, RoutedEventArgs e)
+		public void MenuItemColumnClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
 			var property = RecordProperty.PropertyFromMenuHeader(header);
@@ -238,7 +237,7 @@ namespace NeoEdit.UI.Windows
 				Properties.Add(property);
 		}
 
-		void MenuItemSortClick(object sender, RoutedEventArgs e)
+		public void MenuItemSortClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
 			var property = RecordProperty.PropertyFromMenuHeader(header);
@@ -248,7 +247,7 @@ namespace NeoEdit.UI.Windows
 				SortAscending = !SortAscending;
 		}
 
-		void MenuItemActionClick(object sender, RoutedEventArgs e)
+		public void MenuItemActionClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
 			var action = RecordAction.ActionFromMenuHeader(header);

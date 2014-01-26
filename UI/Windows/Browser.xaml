@@ -1,4 +1,4 @@
-﻿<Window x:Name="window" x:Class="NeoEdit.UI.Windows.Browser"
+﻿<Window x:Name="browser" x:Class="NeoEdit.UI.Windows.Browser"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:uiControls="clr-namespace:NeoEdit.UI.Controls"
@@ -17,53 +17,37 @@
 		</Grid.ColumnDefinitions>
 		<Menu>
 			<MenuItem Header="_Actions">
-				<MenuItem.ItemContainerStyle>
-					<Style>
-						<EventSetter Event="MenuItem.Click" Handler="MenuItemActionClick"/>
-						<Setter Property="MenuItem.Header" Value="{Binding Converter={uiConverters:ActionToHeader}}"/>
-					</Style>
-				</MenuItem.ItemContainerStyle>
 				<MenuItem.ItemsSource>
-					<MultiBinding Converter="{uiConverters:RecordsToActionMenuItems}">
+					<MultiBinding Converter="{uiConverters:ActionMenuItems}">
 						<Binding ElementName="files" Path="SelectedItems"/>
-						<Binding ElementName="files" Path="SelectedItems.Count"/> <!--This makes it update-->
+						<Binding ElementName="browser"/>
+						<Binding ElementName="files" Path="SelectedItems.Count"/> <!-- Catch changes -->
 					</MultiBinding>
 				</MenuItem.ItemsSource>
 			</MenuItem>
-			<MenuItem Name="columns" Header="_Columns" ItemsSource="{Binding Properties, ElementName=window, Converter={uiConverters:PropertiesToMenuItems}}">
-				<MenuItem.ItemContainerStyle>
-					<Style>
-						<EventSetter Event="MenuItem.Click" Handler="MenuItemColumnClick"/>
-						<Setter Property="MenuItem.Header" Value="{Binding Converter={uiConverters:PropertyToHeader}}"/>
-						<Setter Property="MenuItem.IsChecked">
-							<Setter.Value>
-								<MultiBinding Converter="{uiConverters:PropertyToShownCheck}">
-									<Binding Mode="OneWay"/>
-									<Binding ElementName="window" Path="Properties"/>
-								</MultiBinding>
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</MenuItem.ItemContainerStyle>
+			<MenuItem Header="_Columns">
+				<MenuItem.ItemsSource>
+					<MultiBinding Converter="{uiConverters:ColumnMenuItems}">
+						<Binding ElementName="browser" Path="Properties"/>
+						<Binding ElementName="browser" Path="Location.Records"/>
+						<Binding ElementName="browser"/>
+						<Binding ElementName="browser" Path="Properties.Count"/> <!-- Catch changes -->
+						<Binding ElementName="browser" Path="Location.Records.Count"/> <!-- Catch changes -->
+					</MultiBinding>
+				</MenuItem.ItemsSource>
 			</MenuItem>
-			<MenuItem Header="_Sort" ItemsSource="{Binding Properties, ElementName=window}">
-				<MenuItem.ItemContainerStyle>
-					<Style>
-						<EventSetter Event="MenuItem.Click" Handler="MenuItemSortClick"/>
-						<Setter Property="MenuItem.Header" Value="{Binding Converter={uiConverters:PropertyToHeader}}"/>
-						<Setter Property="MenuItem.IsChecked">
-							<Setter.Value>
-								<MultiBinding Converter="{uiConverters:PropertyToSortCheck}">
-									<Binding Mode="OneWay"/>
-									<Binding ElementName="window" Path="SortProperty"/>
-								</MultiBinding>
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</MenuItem.ItemContainerStyle>
+			<MenuItem Header="_Sort">
+				<MenuItem.ItemsSource>
+					<MultiBinding Converter="{uiConverters:SortMenuItems}">
+						<Binding ElementName="browser" Path="Properties"/>
+						<Binding ElementName="browser" Path="SortProperty"/>
+						<Binding ElementName="browser"/>
+						<Binding ElementName="browser" Path="Properties.Count"/> <!-- Catch changes -->
+					</MultiBinding>
+				</MenuItem.ItemsSource>
 			</MenuItem>
 		</Menu>
-		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=window, Mode=OneWay}" KeyDown="LocationDisplay_KeyDown"/>
-		<uiControls:NEListView x:Name="files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=window}" Records="{Binding Location.Records, ElementName=window}" MouseDoubleClick="Files_MouseDoubleClick" SortProperty="{Binding SortProperty, ElementName=window, Mode=TwoWay}" SortAscending="{Binding SortAscending, ElementName=window, Mode=TwoWay}"/>
+		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=browser, Mode=OneWay}" KeyDown="LocationDisplay_KeyDown"/>
+		<uiControls:NEListView x:Name="files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=browser}" Records="{Binding Location.Records, ElementName=browser}" MouseDoubleClick="Files_MouseDoubleClick" SortProperty="{Binding SortProperty, ElementName=browser, Mode=TwoWay}" SortAscending="{Binding SortAscending, ElementName=browser, Mode=TwoWay}"/>
 	</Grid>
 </Window>

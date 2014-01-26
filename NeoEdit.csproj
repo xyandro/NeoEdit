@@ -78,12 +78,9 @@
     <Compile Include="UI\Controls\NEListView.xaml.cs">
       <DependentUpon>NEListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Converters\ActionToHeader.cs" />
-    <Compile Include="UI\Converters\RecordsToActionMenuItems.cs" />
-    <Compile Include="UI\Converters\PropertyToSortCheck.cs" />
-    <Compile Include="UI\Converters\PropertyToHeader.cs" />
-    <Compile Include="UI\Converters\PropertyToShownCheck.cs" />
-    <Compile Include="UI\Converters\PropertiesToMenuItems.cs" />
+    <Compile Include="UI\Converters\ColumnMenuItems.cs" />
+    <Compile Include="UI\Converters\SortMenuItems.cs" />
+    <Compile Include="UI\Converters\ActionMenuItems.cs" />
     <Compile Include="UI\Converters\PropertyToSortIndicatorHeader.cs" />
     <Compile Include="UI\Converters\PropertyFormatter.cs" />
     <Compile Include="UI\Dialogs\Rename.xaml.cs">
