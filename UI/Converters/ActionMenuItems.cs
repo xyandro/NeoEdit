@@ -30,7 +30,7 @@ namespace NeoEdit.UI.Converters
 			var records = objs.Cast<Record>().ToList();
 			var actions = records.SelectMany(a => a.Actions).GroupBy(a => a).ToDictionary(a => a.Key, a => a.Count());
 			var actionsList = actions.Where(a => RecordAction.Get(a.Key).ValidNumArgs(a.Value)).Select(a => a.Key).ToList();
-			var ret = actionsList.Select(a => new MenuItem { Header = RecordAction.Get(a).MenuHeader }).ToList();
+			var ret = actionsList.Select(a => RecordAction.Get(a)).Select(a => new MenuItem { Header = a.MenuHeader, InputGestureText = a.GetInputGestureText() }).ToList();
 			ret.ForEach(a => a.Click += browser.MenuItemActionClick);
 			return ret;
 		}

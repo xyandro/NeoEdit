@@ -21,10 +21,16 @@ namespace NeoEdit.Records
 		public Key AccessKey { get; private set; }
 		public ModifierKeys AccessModifiers { get; private set; }
 
+		RecordAction()
+		{
+			MinArgs = 1;
+			MaxArgs = Int32.MaxValue;
+		}
+
 		static List<RecordAction> actions = new List<RecordAction>
 		{
-			new RecordAction { Name = ActionName.Rename, DisplayName = "Rename", MenuHeader = "_Rename", MinArgs = 1, MaxArgs = 1, AccessKey = Key.F2 },
-			new RecordAction { Name = ActionName.Delete, DisplayName = "Delete", MenuHeader = "_Delete", MinArgs = 1, MaxArgs = Int32.MaxValue, AccessKey = Key.Delete },
+			new RecordAction { Name = ActionName.Rename, DisplayName = "Rename", MenuHeader = "_Rename", MaxArgs = 1, AccessKey = Key.F2 },
+			new RecordAction { Name = ActionName.Delete, DisplayName = "Delete", MenuHeader = "_Delete", AccessKey = Key.Delete },
 		};
 
 		public static RecordAction Get(ActionName name)
@@ -48,6 +54,21 @@ namespace NeoEdit.Records
 		public bool ValidNumArgs(int numArgs)
 		{
 			return (numArgs >= MinArgs) && (numArgs <= MaxArgs);
+		}
+
+		public string GetInputGestureText()
+		{
+			if (AccessKey == null)
+				return "";
+
+			var modifier = "";
+			if ((AccessModifiers & ModifierKeys.Control) != 0)
+				modifier += "Ctrl-";
+			if ((AccessModifiers & ModifierKeys.Alt) != 0)
+				modifier += "Alt-";
+			if ((AccessModifiers & ModifierKeys.Shift) != 0)
+				modifier += "Shift-";
+			return modifier + AccessKey.ToString();
 		}
 	}
 }
