@@ -24,13 +24,8 @@ namespace NeoEdit.Records
 		public Record Parent { get; private set; }
 		public virtual string FullName
 		{
-			get { return Prop<string>(RecordProperty.PropertyName.FullName); }
-			protected set
-			{
-				this[RecordProperty.PropertyName.FullName] = value;
-				this[RecordProperty.PropertyName.Name] = Path.GetFileName(FullName);
-				this[RecordProperty.PropertyName.Path] = Path.GetDirectoryName(FullName);
-			}
+			get { return GetProperty<string>(RecordProperty.PropertyName.FullName); }
+			protected set { SetProperty(RecordProperty.PropertyName.FullName, value); }
 		}
 
 		public IEnumerable<RecordProperty.PropertyName> Properties
@@ -43,20 +38,36 @@ namespace NeoEdit.Records
 			get { return new List<RecordAction.ActionName>(); }
 		}
 
-		public T Prop<T>(RecordProperty.PropertyName property)
+		protected T GetProperty<T>(RecordProperty.PropertyName property)
 		{
-			return (T)this[property];
+			return (T)GetValue(dependencyProperty[property]);
+		}
+
+		protected virtual void SetProperty<T>(RecordProperty.PropertyName property, T value)
+		{
+			SetValue(dependencyProperty[property], value);
+			switch (property)
+			{
+				case RecordProperty.PropertyName.FullName:
+					this[RecordProperty.PropertyName.Path] = Path.GetDirectoryName(FullName);
+					this[RecordProperty.PropertyName.Name] = Path.GetFileName(FullName);
+					break;
+				case RecordProperty.PropertyName.Name:
+					this[RecordProperty.PropertyName.NameWoExtension] = value;
+					this[RecordProperty.PropertyName.Extension] = "";
+					break;
+			}
 		}
 
 		public object this[RecordProperty.PropertyName property]
 		{
-			get { return GetValue(dependencyProperty[property]); }
-			protected set { SetValue(dependencyProperty[property], value); }
+			get { return GetProperty<object>(property); }
+			protected set { SetProperty(property, value); }
 		}
 
 		public virtual string Name
 		{
-			get { return Prop<string>(RecordProperty.PropertyName.Name); }
+			get { return GetProperty<string>(RecordProperty.PropertyName.Name); }
 		}
 
 		public virtual bool IsFile { get { return false; } }
