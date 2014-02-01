@@ -11,7 +11,15 @@ namespace NeoEdit.Records.Disk
 
 		public override IEnumerable<RecordAction.ActionName> Actions
 		{
-			get { return new List<RecordAction.ActionName> { RecordAction.ActionName.Rename, RecordAction.ActionName.Delete }.Concat(base.Actions); }
+			get
+			{
+				return new List<RecordAction.ActionName> { 
+					RecordAction.ActionName.Rename,
+					RecordAction.ActionName.Delete,
+					RecordAction.ActionName.Copy,
+					RecordAction.ActionName.Cut,
+				}.Concat(base.Actions);
+			}
 		}
 
 		public override void Rename(string newName, System.Func<bool> canOverwrite)

@@ -105,6 +105,7 @@ namespace NeoEdit.Records
 
 		public virtual void Rename(string newName, Func<bool> canOverwrite) { }
 		public virtual void Delete() { }
+		public virtual void Paste(IEnumerable<Record> children) { }
 
 		public override string ToString()
 		{

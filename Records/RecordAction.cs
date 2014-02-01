@@ -11,26 +11,34 @@ namespace NeoEdit.Records
 		{
 			Rename,
 			Delete,
+			Copy,
+			Cut,
+			Paste,
 		};
 
 		public ActionName Name { get; private set; }
 		public string DisplayName { get; private set; }
 		public string MenuHeader { get; private set; }
-		public int MinArgs { get; private set; }
-		public int MaxArgs { get; private set; }
+		public int MinChildren { get; private set; }
+		public int MaxChildren { get; private set; }
+		public bool ClipboardHasRecords { get; private set; }
+		public bool ParentAction { get; private set; }
 		public Key AccessKey { get; private set; }
 		public ModifierKeys AccessModifiers { get; private set; }
 
 		RecordAction()
 		{
-			MinArgs = 1;
-			MaxArgs = Int32.MaxValue;
+			MinChildren = 1;
+			MaxChildren = Int32.MaxValue;
 		}
 
 		static List<RecordAction> actions = new List<RecordAction>
 		{
-			new RecordAction { Name = ActionName.Rename, DisplayName = "Rename", MenuHeader = "_Rename", MaxArgs = 1, AccessKey = Key.F2 },
+			new RecordAction { Name = ActionName.Rename, DisplayName = "Rename", MenuHeader = "_Rename", MaxChildren = 1, AccessKey = Key.F2 },
 			new RecordAction { Name = ActionName.Delete, DisplayName = "Delete", MenuHeader = "_Delete", AccessKey = Key.Delete },
+			new RecordAction { Name = ActionName.Copy, DisplayName = "Copy", MenuHeader = "_Copy", AccessKey = Key.C, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.Cut, DisplayName = "Cut", MenuHeader = "C_ut", AccessKey = Key.X, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.Paste, DisplayName = "Paste", MenuHeader = "_Paste", MinChildren = 0, ParentAction = true, ClipboardHasRecords = true, AccessKey = Key.V, AccessModifiers = ModifierKeys.Control },
 		};
 
 		public static RecordAction Get(ActionName name)
@@ -51,9 +59,30 @@ namespace NeoEdit.Records
 			return action.Name;
 		}
 
-		public bool ValidNumArgs(int numArgs)
+		public static IEnumerable<ActionName> Actions(Record parent, IEnumerable<Record> children, int clipboardCount)
 		{
-			return (numArgs >= MinArgs) && (numArgs <= MaxArgs);
+			var parentActions = parent.Actions.Where(a => Get(a).ParentAction).ToList();
+			var childActions = children.SelectMany(a => a.Actions).Where(a => !Get(a).ParentAction).ToList();
+			var actions = parentActions.Concat(childActions).ToList();
+			var actionCounts = actions.GroupBy(a => a).ToDictionary(a => a.Key, a => a.Count());
+			actions = Helpers.GetValues<ActionName>().Where(a => actionCounts.ContainsKey(a)).Where(a => Get(a).IsValid(actionCounts[a], clipboardCount > 0)).ToList();
+			return actions;
+		}
+
+		public bool IsValid(int numChildren, bool clipboardHasRecords)
+		{
+			if (ParentAction)
+			{
+				if ((ClipboardHasRecords) && (!clipboardHasRecords))
+					return false;
+			}
+			else
+			{
+				if ((numChildren < MinChildren) || (numChildren > MaxChildren))
+					return false;
+			}
+
+			return true;
 		}
 
 		public string GetInputGestureText()

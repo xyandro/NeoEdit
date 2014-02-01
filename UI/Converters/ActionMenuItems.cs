@@ -22,15 +22,16 @@ namespace NeoEdit.UI.Converters
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var objs = value[0] as IEnumerable<object>;
-			var browser = value[1] as Browser;
-			if (objs == null)
+			if (!(value[1] is IEnumerable<Object>))
 				return null;
 
-			var records = objs.Cast<Record>().ToList();
-			var actions = records.SelectMany(a => a.Actions).GroupBy(a => a).ToDictionary(a => a.Key, a => a.Count());
-			var actionsList = actions.Where(a => RecordAction.Get(a.Key).ValidNumArgs(a.Value)).Select(a => a.Key).ToList();
-			var ret = actionsList.Select(a => RecordAction.Get(a)).Select(a => new MenuItem { Header = a.MenuHeader, InputGestureText = a.GetInputGestureText() }).ToList();
+			var parent = value[0] as Record;
+			var children = (value[1] as IEnumerable<Object>).Cast<Record>().ToList();
+			var clipboardCount = (int)value[2];
+			var browser = value[3] as Browser;
+
+			var actions = RecordAction.Actions(parent, children, clipboardCount);
+			var ret = actions.Select(a => RecordAction.Get(a)).Select(a => new MenuItem { Header = a.MenuHeader, InputGestureText = a.GetInputGestureText() }).ToList();
 			ret.ForEach(a => a.Click += browser.MenuItemActionClick);
 			return ret;
 		}

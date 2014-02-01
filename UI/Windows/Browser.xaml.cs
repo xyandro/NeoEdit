@@ -199,7 +199,7 @@ namespace NeoEdit.UI.Windows
 			var records = files.SelectedItems.Cast<Record>().ToList();
 			records = records.Where(a => a.Actions.Any(b => b == action)).ToList();
 
-			if (!RecordAction.Get(action).ValidNumArgs(records.Count))
+			if (!RecordAction.Get(action).IsValid(records.Count, Clipboard.Current.Objects.Count > 0))
 				return;
 
 			switch (action)
@@ -223,6 +223,12 @@ namespace NeoEdit.UI.Windows
 								record.Delete();
 						}
 					}
+					break;
+				case RecordAction.ActionName.Copy:
+					Clipboard.Current.Set(records);
+					break;
+				case RecordAction.ActionName.Paste:
+					Location.Paste(Clipboard.Current.Get<Record>());
 					break;
 			}
 		}
