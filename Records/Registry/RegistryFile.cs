@@ -12,7 +12,7 @@ namespace NeoEdit.Records.Registry
 				this[RecordProperty.PropertyName.Name] = "(Default)";
 			using (var key = GetKey(Path.GetDirectoryName(FullName)))
 			{
-				this[RecordProperty.PropertyName.Type] = key.GetValueKind(Path.GetFileName(FullName));
+				this[RecordProperty.PropertyName.Type] = key.GetValueKind(Path.GetFileName(FullName)).ToString();
 				this[RecordProperty.PropertyName.Data] = key.GetValue(Path.GetFileName(FullName));
 			}
 		}

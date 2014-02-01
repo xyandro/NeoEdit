@@ -12,14 +12,7 @@ namespace NeoEdit.Records.Registry
 
 		static RegistryRecord()
 		{
-			var list = new List<Microsoft.Win32.RegistryKey> { 
-				Microsoft.Win32.Registry.ClassesRoot,
-				Microsoft.Win32.Registry.CurrentUser,
-				Microsoft.Win32.Registry.LocalMachine,
-				Microsoft.Win32.Registry.Users,
-				Microsoft.Win32.Registry.CurrentConfig,
-				Microsoft.Win32.Registry.PerformanceData,
-			};
+			var list = Helpers.GetValues<Microsoft.Win32.RegistryHive>().Select(a => Microsoft.Win32.RegistryKey.OpenBaseKey(a, Microsoft.Win32.RegistryView.Registry64)).ToList();
 			RootKeys = list.ToDictionary(a => a.Name, a => a);
 			RegistryRE = new Regex(String.Format("^({0})(?:\\\\(.*))?$", String.Join("|", RootKeys.Select(a => a.Key))), RegexOptions.IgnoreCase);
 		}
