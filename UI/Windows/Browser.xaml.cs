@@ -293,5 +293,21 @@ namespace NeoEdit.UI.Windows
 			var action = RecordAction.ActionFromMenuHeader(header);
 			RunAction(action);
 		}
+
+		private void MenuItemViewClick(object sender, RoutedEventArgs e)
+		{
+			var header = ((MenuItem)sender).Header.ToString();
+			switch (header)
+			{
+				case "_Files":
+					Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
+					break;
+				case "_Registry":
+					Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Type, RecordProperty.PropertyName.Data };
+					break;
+			}
+			SortProperty = RecordProperty.PropertyName.Name;
+			SortAscending = RecordProperty.Get(RecordProperty.PropertyName.Name).DefaultAscending;
+		}
 	}
 }

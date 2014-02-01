@@ -28,26 +28,30 @@
 					</MultiBinding>
 				</MenuItem.ItemsSource>
 			</MenuItem>
-			<MenuItem Header="_Columns">
-				<MenuItem.ItemsSource>
-					<MultiBinding Converter="{uiConverters:ColumnMenuItems}">
-						<Binding ElementName="browser" Path="Properties"/>
-						<Binding ElementName="browser" Path="Location.Records"/>
-						<Binding ElementName="browser"/>
-						<Binding ElementName="browser" Path="Properties.Count"/> <!-- Catch changes -->
-						<Binding ElementName="browser" Path="Location.Records.Count"/> <!-- Catch changes -->
-					</MultiBinding>
-				</MenuItem.ItemsSource>
-			</MenuItem>
-			<MenuItem Header="_Sort">
-				<MenuItem.ItemsSource>
-					<MultiBinding Converter="{uiConverters:SortMenuItems}">
-						<Binding ElementName="browser" Path="Properties"/>
-						<Binding ElementName="browser" Path="SortProperty"/>
-						<Binding ElementName="browser"/>
-						<Binding ElementName="browser" Path="Properties.Count"/> <!-- Catch changes -->
-					</MultiBinding>
-				</MenuItem.ItemsSource>
+			<MenuItem Header="_View">
+				<MenuItem Header="_Files" Click="MenuItemViewClick"/>
+				<MenuItem Header="_Registry" Click="MenuItemViewClick"/>
+				<MenuItem Header="_Columns">
+					<MenuItem.ItemsSource>
+						<MultiBinding Converter="{uiConverters:ColumnMenuItems}">
+							<Binding ElementName="browser" Path="Properties"/>
+							<Binding ElementName="browser" Path="Location.Records"/>
+							<Binding ElementName="browser"/>
+							<Binding ElementName="browser" Path="Properties.Count"/> <!-- Catch changes -->
+							<Binding ElementName="browser" Path="Location.Records.Count"/> <!-- Catch changes -->
+						</MultiBinding>
+					</MenuItem.ItemsSource>
+				</MenuItem>
+				<MenuItem Header="_Sort">
+					<MenuItem.ItemsSource>
+						<MultiBinding Converter="{uiConverters:SortMenuItems}">
+							<Binding ElementName="browser" Path="Properties"/>
+							<Binding ElementName="browser" Path="SortProperty"/>
+							<Binding ElementName="browser"/>
+							<Binding ElementName="browser" Path="Properties.Count"/> <!-- Catch changes -->
+						</MultiBinding>
+					</MenuItem.ItemsSource>
+				</MenuItem>
 			</MenuItem>
 		</Menu>
 		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=browser, Mode=OneWay}" KeyDown="LocationDisplay_KeyDown"/>
