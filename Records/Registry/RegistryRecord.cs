@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace NeoEdit.Records.Registry
 {
 	public abstract class RegistryRecord : Record
 	{
 		static Regex RegistryRE;
-		public static Dictionary<string, Microsoft.Win32.RegistryKey> RootKeys { get; private set; }
+		public static Dictionary<string, RegistryKey> RootKeys { get; private set; }
 
 		static RegistryRecord()
 		{
-			var list = Helpers.GetValues<Microsoft.Win32.RegistryHive>().Select(a => Microsoft.Win32.RegistryKey.OpenBaseKey(a, Microsoft.Win32.RegistryView.Registry64)).ToList();
+			var list = Helpers.GetValues<RegistryHive>().Select(a => RegistryKey.OpenBaseKey(a, RegistryView.Registry64)).ToList();
 			RootKeys = list.ToDictionary(a => a.Name, a => a);
 			RegistryRE = new Regex(String.Format("^({0})(?:\\\\(.*))?$", String.Join("|", RootKeys.Select(a => a.Key))), RegexOptions.IgnoreCase);
 		}
@@ -24,7 +25,7 @@ namespace NeoEdit.Records.Registry
 			return RegistryRE.IsMatch(uri);
 		}
 
-		public Microsoft.Win32.RegistryKey GetKey(string key)
+		public RegistryKey GetKey(string key)
 		{
 			var match = RegistryRE.Match(key);
 			if (!match.Success)
