@@ -233,17 +233,34 @@ namespace NeoEdit.UI.Windows
 						Location.Paste();
 						break;
 					case RecordAction.ActionName.MD5:
-						Exception error = null;
-						foreach (var record in records)
 						{
-							try { record.CalcMD5(); }
-							catch (Exception ex) { error = ex; }
-						}
-						if (error != null)
-							throw error;
+							Exception error = null;
+							foreach (var record in records)
+							{
+								try { record.CalcMD5(); }
+								catch (Exception ex) { error = ex; }
+							}
+							if (error != null)
+								throw error;
 
-						if (!Properties.Contains(RecordProperty.PropertyName.MD5))
-							Properties.Add(RecordProperty.PropertyName.MD5);
+							if (!Properties.Contains(RecordProperty.PropertyName.MD5))
+								Properties.Add(RecordProperty.PropertyName.MD5);
+						}
+						break;
+					case RecordAction.ActionName.Identify:
+						{
+							Exception error = null;
+							foreach (var record in records)
+							{
+								try { record.Identify(); }
+								catch (Exception ex) { error = ex; }
+							}
+							if (error != null)
+								throw error;
+
+							if (!Properties.Contains(RecordProperty.PropertyName.Identify))
+								Properties.Add(RecordProperty.PropertyName.Identify);
+						}
 						break;
 				}
 			}

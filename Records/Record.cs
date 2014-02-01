@@ -107,6 +107,7 @@ namespace NeoEdit.Records
 		public virtual void Delete() { }
 		public virtual void Paste() { }
 		public virtual void CalcMD5() { }
+		public virtual void Identify() { }
 
 		public override string ToString()
 		{

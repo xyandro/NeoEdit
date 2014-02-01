@@ -15,6 +15,7 @@ namespace NeoEdit.Records
 			Cut,
 			Paste,
 			MD5,
+			Identify,
 		};
 
 		public ActionName Name { get; private set; }
@@ -40,6 +41,7 @@ namespace NeoEdit.Records
 			new RecordAction { Name = ActionName.Cut, MenuHeader = "C_ut", AccessKey = Key.X, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.Paste, MenuHeader = "_Paste", MinChildren = 0, ParentAction = true, ClipboardHasRecords = true, AccessKey = Key.V, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.MD5, MenuHeader = "_MD5", AccessKey = Key.M, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.Identify, MenuHeader = "_Identify", AccessKey = Key.I, AccessModifiers = ModifierKeys.Control },
 		};
 
 		public static RecordAction Get(ActionName name)

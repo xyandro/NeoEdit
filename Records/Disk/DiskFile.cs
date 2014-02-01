@@ -20,7 +20,13 @@ namespace NeoEdit.Records.Disk
 
 		public override System.Collections.Generic.IEnumerable<RecordAction.ActionName> Actions
 		{
-			get { return new List<RecordAction.ActionName> { RecordAction.ActionName.MD5, }.Concat(base.Actions); }
+			get
+			{
+				return new List<RecordAction.ActionName> { 
+					RecordAction.ActionName.MD5,
+					RecordAction.ActionName.Identify,
+				}.Concat(base.Actions);
+			}
 		}
 
 		public override bool IsFile { get { return true; } }
@@ -48,6 +54,11 @@ namespace NeoEdit.Records.Disk
 			using (var md5 = MD5.Create())
 			using (var stream = File.OpenRead(FullName))
 				this[RecordProperty.PropertyName.MD5] = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+		}
+
+		public override void Identify()
+		{
+			this[RecordProperty.PropertyName.Identify] = Identifier.Identify(FullName);
 		}
 	}
 }

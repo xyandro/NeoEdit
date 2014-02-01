@@ -20,6 +20,7 @@ namespace NeoEdit.Records
 			Type,
 			Data,
 			MD5,
+			Identify,
 		};
 
 		public PropertyName Name { get; private set; }
@@ -42,6 +43,7 @@ namespace NeoEdit.Records
 			new RecordProperty { Name = PropertyName.Type,            MenuHeader = "_Type",        DefaultAscending = true,  Type = typeof(String)    },
 			new RecordProperty { Name = PropertyName.Data,            MenuHeader = "_Data",        DefaultAscending = true,  Type = typeof(String)    },
 			new RecordProperty { Name = PropertyName.MD5,             MenuHeader = "_MD5",         DefaultAscending = true,  Type = typeof(String)    },
+			new RecordProperty { Name = PropertyName.Identify,        MenuHeader = "_Identify",    DefaultAscending = true,  Type = typeof(String)    },
 		};
 
 		public static RecordProperty Get(PropertyName name)
