@@ -16,16 +16,6 @@ namespace NeoEdit.Records.Disk
 
 		public override bool IsFile { get { return true; } }
 
-		public override string FullName
-		{
-			get { return base.FullName; }
-			protected set
-			{
-				base.FullName = value;
-				this[RecordProperty.PropertyName.Extension] = Path.GetExtension(FullName);
-			}
-		}
-
 		public override void Delete()
 		{
 			File.Delete(FullName);

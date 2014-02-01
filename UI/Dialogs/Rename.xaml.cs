@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using NeoEdit.Records;
+using NeoEdit.Records.Disk;
 
 namespace NeoEdit.UI.Dialogs
 {
@@ -19,8 +21,8 @@ namespace NeoEdit.UI.Dialogs
 
 			RecordName = record.Name;
 			var highlightEnd = RecordName.Length;
-			if (record[RecordProperty.PropertyName.Extension] != null)
-				highlightEnd -= record[RecordProperty.PropertyName.Extension].ToString().Length;
+			if (record is DiskRecord)
+				highlightEnd -= Path.GetExtension(record.FullName).Length;
 
 			name.Focus();
 			name.CaretIndex = highlightEnd;
