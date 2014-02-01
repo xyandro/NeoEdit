@@ -2,8 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using NeoEdit.UI;
 
-namespace NeoEdit.UI
+namespace NeoEdit
 {
 	class Clipboard : DependencyObject
 	{
@@ -13,8 +14,15 @@ namespace NeoEdit.UI
 			Current = new Clipboard();
 		}
 
+		public enum ClipboardType
+		{
+			Copy,
+			Cut,
+		}
+
 		[DepProp]
 		public ObservableCollection<object> Objects { get { return uiHelper.GetPropValue<ObservableCollection<object>>(); } set { uiHelper.SetPropValue(value); } }
+		public ClipboardType Type { get; private set; }
 
 		readonly UIHelper<Clipboard> uiHelper;
 		public Clipboard()
@@ -23,9 +31,10 @@ namespace NeoEdit.UI
 			Objects = new ObservableCollection<object>();
 		}
 
-		public void Set(IEnumerable<object> _objects)
+		public void Set(IEnumerable<object> objects, ClipboardType type)
 		{
-			Objects = new ObservableCollection<object>(_objects);
+			Objects = new ObservableCollection<object>(objects);
+			Type = type;
 		}
 
 		public List<T> Get<T>()

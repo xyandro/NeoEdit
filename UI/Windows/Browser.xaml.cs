@@ -202,35 +202,39 @@ namespace NeoEdit.UI.Windows
 			if (!RecordAction.Get(action).IsValid(records.Count, Clipboard.Current.Objects.Count > 0))
 				return;
 
-			switch (action)
+			try
 			{
-				case RecordAction.ActionName.Rename:
-					{
-						var record = records.Single();
-						var rename = new Rename(record);
-						if (rename.ShowDialog() == true)
+				switch (action)
+				{
+					case RecordAction.ActionName.Rename:
 						{
-							try { record.Rename(rename.RecordName, () => Message.Show("File already exists.  Overwrite?", "Warning", Message.Options.YesNo, Message.Options.Yes, Message.Options.No) == Message.Options.Yes); }
-							catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+							var record = records.Single();
+							var rename = new Rename(record);
+							if (rename.ShowDialog() == true)
+								record.Rename(rename.RecordName, () => Message.Show("File already exists.  Overwrite?", "Warning", Message.Options.YesNo, Message.Options.Yes, Message.Options.No) == Message.Options.Yes);
 						}
-					}
-					break;
-				case RecordAction.ActionName.Delete:
-					{
-						if (Message.Show("Are you sure you want to delete these items?", "Confirm", Message.Options.YesNo, Message.Options.Yes, Message.Options.No) == Message.Options.Yes)
+						break;
+					case RecordAction.ActionName.Delete:
 						{
-							foreach (var record in records)
-								record.Delete();
+							if (Message.Show("Are you sure you want to delete these items?", "Confirm", Message.Options.YesNo, Message.Options.Yes, Message.Options.No) == Message.Options.Yes)
+							{
+								foreach (var record in records)
+									record.Delete();
+							}
 						}
-					}
-					break;
-				case RecordAction.ActionName.Copy:
-					Clipboard.Current.Set(records);
-					break;
-				case RecordAction.ActionName.Paste:
-					Location.Paste(Clipboard.Current.Get<Record>());
-					break;
+						break;
+					case RecordAction.ActionName.Copy:
+						Clipboard.Current.Set(records, Clipboard.ClipboardType.Copy);
+						break;
+					case RecordAction.ActionName.Cut:
+						Clipboard.Current.Set(records, Clipboard.ClipboardType.Cut);
+						break;
+					case RecordAction.ActionName.Paste:
+						Location.Paste();
+						break;
+				}
 			}
+			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 		}
 
 		public void MenuItemColumnClick(object sender, RoutedEventArgs e)

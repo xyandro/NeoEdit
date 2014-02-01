@@ -75,7 +75,7 @@
     <Compile Include="Records\Root.cs" />
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="UI\Clipboard.cs" />
+    <Compile Include="Clipboard.cs" />
     <Compile Include="UI\Controls\NEListView.xaml.cs">
       <DependentUpon>NEListView.xaml</DependentUpon>
     </Compile>
