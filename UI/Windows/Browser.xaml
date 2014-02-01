@@ -30,6 +30,7 @@
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Header="_Files" Click="MenuItemViewClick"/>
+				<MenuItem Header="_List" Click="MenuItemViewClick"/>
 				<MenuItem Header="_Registry" Click="MenuItemViewClick"/>
 				<MenuItem Header="_Columns">
 					<MenuItem.ItemsSource>

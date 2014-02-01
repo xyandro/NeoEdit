@@ -6,7 +6,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Records;
+using NeoEdit.Records.Disk;
 using NeoEdit.Records.List;
+using NeoEdit.Records.Network;
+using NeoEdit.Records.Registry;
 using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI.Windows
@@ -14,7 +17,31 @@ namespace NeoEdit.UI.Windows
 	public partial class Browser : Window
 	{
 		[DepProp]
-		public Record Location { get { return uiHelper.GetPropValue<Record>(); } set { uiHelper.SetPropValue(value); } }
+		public Record Location
+		{
+			get { return uiHelper.GetPropValue<Record>(); }
+			set
+			{
+				uiHelper.SetPropValue(value);
+				var root = Location;
+				while (true)
+				{
+					if (root is Root)
+						break;
+					if ((root is RecordRoot) && (root != lastRoot))
+					{
+						if ((root is DiskRoot) || (root is NetworkRoot))
+							SetDiskView();
+						if (root is ListRoot)
+							SetListView();
+						if (root is RegistryRoot)
+							SetRegistryView();
+						lastRoot = root as RecordRoot;
+					}
+					root = root.Parent;
+				}
+			}
+		}
 		[DepProp]
 		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -22,6 +49,7 @@ namespace NeoEdit.UI.Windows
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
+		RecordRoot lastRoot;
 		readonly UIHelper<Browser> uiHelper;
 
 		public Browser() : this(StartLocation()) { }
@@ -30,7 +58,6 @@ namespace NeoEdit.UI.Windows
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
 			SetLocation(uri);
-			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
 		}
 
 		static string StartLocation()
@@ -294,20 +321,35 @@ namespace NeoEdit.UI.Windows
 			RunAction(action);
 		}
 
-		private void MenuItemViewClick(object sender, RoutedEventArgs e)
+		void SetDiskView()
 		{
-			var header = ((MenuItem)sender).Header.ToString();
-			switch (header)
-			{
-				case "_Files":
-					Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
-					break;
-				case "_Registry":
-					Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Type, RecordProperty.PropertyName.Data };
-					break;
-			}
+			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
 			SortProperty = RecordProperty.PropertyName.Name;
 			SortAscending = RecordProperty.Get(RecordProperty.PropertyName.Name).DefaultAscending;
+		}
+
+		void SetListView()
+		{
+			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime, RecordProperty.PropertyName.Path };
+			SortProperty = RecordProperty.PropertyName.Name;
+			SortAscending = RecordProperty.Get(RecordProperty.PropertyName.Name).DefaultAscending;
+		}
+
+		void SetRegistryView()
+		{
+			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Type, RecordProperty.PropertyName.Data };
+			SortProperty = RecordProperty.PropertyName.Name;
+			SortAscending = RecordProperty.Get(RecordProperty.PropertyName.Name).DefaultAscending;
+		}
+
+		private void MenuItemViewClick(object sender, RoutedEventArgs e)
+		{
+			switch (((MenuItem)sender).Header.ToString())
+			{
+				case "_Files": SetDiskView(); break;
+				case "_List": SetListView(); break;
+				case "_Registry": SetRegistryView(); break;
+			}
 		}
 	}
 }
