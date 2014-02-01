@@ -29,18 +29,17 @@ namespace NeoEdit.UI.Converters
 			if ((properties == null) || (records == null))
 				return null;
 
-			var allProperties = Enum.GetValues(typeof(RecordProperty.PropertyName)).Cast<RecordProperty.PropertyName>().ToList();
-			var usedProperties = records.SelectMany(a => a.Properties).Distinct().ToList();
-			var mi = new MenuItem();
-			var bru = mi.Foreground;
-			var ret = allProperties.Select(a => new MenuItem
+			var usedProperties = records.SelectMany(a => a.Properties).Distinct().OrderBy(a => a).ToList();
+			var showProperties = properties.ToList();
+			showProperties = showProperties.Concat(usedProperties.Where(a => !showProperties.Contains(a))).ToList();
+			showProperties = showProperties.Concat(Helpers.GetValues<RecordProperty.PropertyName>().Where(a => !showProperties.Contains(a))).ToList();
+			var ret = showProperties.Select(a => new MenuItem
 			{
 				Header = RecordProperty.Get(a).MenuHeader,
 				IsChecked = properties.Contains(a),
 				Foreground = usedProperties.Contains(a) ? Brushes.Black : Brushes.DarkGray,
 			}).ToList();
 			ret.ForEach(a => a.Click += browser.MenuItemColumnClick);
-			ret = ret.OrderBy(a => !a.IsChecked).ThenBy(a => a.Foreground != Brushes.Black).ToList();
 			return ret;
 		}
 
