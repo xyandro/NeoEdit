@@ -14,10 +14,10 @@ namespace NeoEdit.Records
 			Copy,
 			Cut,
 			Paste,
+			MD5,
 		};
 
 		public ActionName Name { get; private set; }
-		public string DisplayName { get; private set; }
 		public string MenuHeader { get; private set; }
 		public int MinChildren { get; private set; }
 		public int MaxChildren { get; private set; }
@@ -34,11 +34,12 @@ namespace NeoEdit.Records
 
 		static List<RecordAction> actions = new List<RecordAction>
 		{
-			new RecordAction { Name = ActionName.Rename, DisplayName = "Rename", MenuHeader = "_Rename", MaxChildren = 1, AccessKey = Key.F2 },
-			new RecordAction { Name = ActionName.Delete, DisplayName = "Delete", MenuHeader = "_Delete", AccessKey = Key.Delete },
-			new RecordAction { Name = ActionName.Copy, DisplayName = "Copy", MenuHeader = "_Copy", AccessKey = Key.C, AccessModifiers = ModifierKeys.Control },
-			new RecordAction { Name = ActionName.Cut, DisplayName = "Cut", MenuHeader = "C_ut", AccessKey = Key.X, AccessModifiers = ModifierKeys.Control },
-			new RecordAction { Name = ActionName.Paste, DisplayName = "Paste", MenuHeader = "_Paste", MinChildren = 0, ParentAction = true, ClipboardHasRecords = true, AccessKey = Key.V, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.Rename, MenuHeader = "_Rename", MaxChildren = 1, AccessKey = Key.F2 },
+			new RecordAction { Name = ActionName.Delete, MenuHeader = "_Delete", AccessKey = Key.Delete },
+			new RecordAction { Name = ActionName.Copy, MenuHeader = "_Copy", AccessKey = Key.C, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.Cut, MenuHeader = "C_ut", AccessKey = Key.X, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.Paste, MenuHeader = "_Paste", MinChildren = 0, ParentAction = true, ClipboardHasRecords = true, AccessKey = Key.V, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.MD5, MenuHeader = "_MD5", AccessKey = Key.M, AccessModifiers = ModifierKeys.Control },
 		};
 
 		public static RecordAction Get(ActionName name)

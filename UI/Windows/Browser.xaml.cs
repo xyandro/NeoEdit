@@ -232,6 +232,19 @@ namespace NeoEdit.UI.Windows
 					case RecordAction.ActionName.Paste:
 						Location.Paste();
 						break;
+					case RecordAction.ActionName.MD5:
+						Exception error = null;
+						foreach (var record in records)
+						{
+							try { record.CalcMD5(); }
+							catch (Exception ex) { error = ex; }
+						}
+						if (error != null)
+							throw error;
+
+						if (!Properties.Contains(RecordProperty.PropertyName.MD5))
+							Properties.Add(RecordProperty.PropertyName.MD5);
+						break;
 				}
 			}
 			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }

@@ -19,6 +19,7 @@ namespace NeoEdit.Records
 			AccessTime,
 			Type,
 			Data,
+			MD5,
 		};
 
 		public PropertyName Name { get; private set; }
@@ -40,6 +41,7 @@ namespace NeoEdit.Records
 			new RecordProperty { Name = PropertyName.AccessTime,      MenuHeader = "Last _Access", DefaultAscending = false, Type = typeof(DateTime?) },
 			new RecordProperty { Name = PropertyName.Type,            MenuHeader = "_Type",        DefaultAscending = true,  Type = typeof(String)    },
 			new RecordProperty { Name = PropertyName.Data,            MenuHeader = "_Data",        DefaultAscending = true,  Type = typeof(String)    },
+			new RecordProperty { Name = PropertyName.MD5,             MenuHeader = "_MD5",         DefaultAscending = true,  Type = typeof(String)    },
 		};
 
 		public static RecordProperty Get(PropertyName name)
