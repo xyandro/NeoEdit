@@ -210,14 +210,14 @@ namespace NeoEdit.UI.Windows
 						var rename = new Rename(record);
 						if (rename.ShowDialog() == true)
 						{
-							try { record.Rename(rename.RecordName, () => MessageBox.Show("File already exists.  Overwrite?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK); }
+							try { record.Rename(rename.RecordName, () => Message.Show("File already exists.  Overwrite?", "Warning", Message.Options.YesNo, Message.Options.Yes, Message.Options.No) == Message.Options.Yes); }
 							catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 						}
 					}
 					break;
 				case RecordAction.ActionName.Delete:
 					{
-						if (MessageBox.Show("Are you sure you want to delete these items?", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) == MessageBoxResult.OK)
+						if (Message.Show("Are you sure you want to delete these items?", "Confirm", Message.Options.YesNo, Message.Options.Yes, Message.Options.No) == Message.Options.Yes)
 						{
 							foreach (var record in records)
 								record.Delete();

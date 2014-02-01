@@ -58,7 +58,7 @@ namespace NeoEdit.Records
 
 		public string GetInputGestureText()
 		{
-			if (AccessKey == null)
+			if (AccessKey == Key.None)
 				return "";
 
 			var modifier = "";

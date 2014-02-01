@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NeoEdit
 {
@@ -53,6 +54,11 @@ namespace NeoEdit
 				default:
 					return false;
 			}
+		}
+
+		public static IEnumerable<T> GetValues<T>()
+		{
+			return Enum.GetValues(typeof(T)).Cast<T>();
 		}
 	}
 }

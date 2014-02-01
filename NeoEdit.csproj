@@ -83,10 +83,17 @@
     <Compile Include="UI\Converters\ActionMenuItems.cs" />
     <Compile Include="UI\Converters\PropertyToSortIndicatorHeader.cs" />
     <Compile Include="UI\Converters\PropertyFormatter.cs" />
+    <Compile Include="UI\Dialogs\Message.xaml.cs">
+      <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Dialogs\Rename.xaml.cs">
       <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\UIHelper.cs" />
+    <Page Include="UI\Dialogs\Message.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Dialogs\Rename.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
