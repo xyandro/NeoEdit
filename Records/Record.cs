@@ -35,7 +35,7 @@ namespace NeoEdit.Records
 
 		public virtual IEnumerable<RecordAction.ActionName> Actions
 		{
-			get { return new List<RecordAction.ActionName>(); }
+			get { return new List<RecordAction.ActionName> { RecordAction.ActionName.Sync }; }
 		}
 
 		protected T GetProperty<T>(RecordProperty.PropertyName property)
@@ -83,6 +83,11 @@ namespace NeoEdit.Records
 				RemoveChild(child);
 		}
 
+		public void RemoveFromParent()
+		{
+			Parent.RemoveChild(this);
+		}
+
 		public virtual void RemoveChild(Record record)
 		{
 			records.Remove(record);
@@ -108,6 +113,7 @@ namespace NeoEdit.Records
 		public virtual void Paste() { }
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
+		public virtual void Sync(Record source) { }
 
 		public override string ToString()
 		{

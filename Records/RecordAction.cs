@@ -16,6 +16,9 @@ namespace NeoEdit.Records
 			Paste,
 			MD5,
 			Identify,
+			SyncSource,
+			SyncTarget,
+			Sync,
 		};
 
 		public ActionName Name { get; private set; }
@@ -42,6 +45,9 @@ namespace NeoEdit.Records
 			new RecordAction { Name = ActionName.Paste, MenuHeader = "_Paste", MinChildren = 0, ParentAction = true, ClipboardHasRecords = true, AccessKey = Key.V, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.MD5, MenuHeader = "_MD5", AccessKey = Key.M, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.Identify, MenuHeader = "_Identify", AccessKey = Key.I, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.SyncSource, MenuHeader = "Sync S_ource", MaxChildren = 1, AccessKey = Key.S, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.SyncTarget, MenuHeader = "Sync T_arget", MaxChildren = 1, AccessKey = Key.T, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.Sync, MenuHeader = "Sync T_arget", MinChildren = 0, AccessKey = Key.F3 },
 		};
 
 		public static RecordAction Get(ActionName name)

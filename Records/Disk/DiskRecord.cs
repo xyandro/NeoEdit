@@ -18,6 +18,8 @@ namespace NeoEdit.Records.Disk
 					RecordAction.ActionName.Delete,
 					RecordAction.ActionName.Copy,
 					RecordAction.ActionName.Cut,
+					RecordAction.ActionName.SyncSource,
+					RecordAction.ActionName.SyncTarget,
 				}.Concat(base.Actions);
 			}
 		}

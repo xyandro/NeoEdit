@@ -221,6 +221,7 @@ namespace NeoEdit.UI.Windows
 			ItemClicked(files.SelectedItem as Record);
 		}
 
+		Record SyncSource, SyncTarget;
 		void RunAction(RecordAction.ActionName action)
 		{
 			var records = files.SelectedItems.Cast<Record>().ToList();
@@ -288,6 +289,16 @@ namespace NeoEdit.UI.Windows
 							if (!Properties.Contains(RecordProperty.PropertyName.Identify))
 								Properties.Add(RecordProperty.PropertyName.Identify);
 						}
+						break;
+					case RecordAction.ActionName.SyncSource:
+						SyncSource = records.Single();
+						break;
+					case RecordAction.ActionName.SyncTarget:
+						SyncTarget = records.Single();
+						break;
+					case RecordAction.ActionName.Sync:
+						if ((SyncSource != null) && (SyncTarget != null))
+							SyncTarget.Sync(SyncSource);
 						break;
 				}
 			}

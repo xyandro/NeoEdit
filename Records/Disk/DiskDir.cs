@@ -99,5 +99,34 @@ namespace NeoEdit.Records.Disk
 			}
 			Refresh();
 		}
+
+		public override void Sync(Record source)
+		{
+			var destFiles = Records;
+			var sourceFiles = source.Records;
+
+			var recordsToDelete = destFiles.Where(a => !sourceFiles.Any(b => a.Name == b.Name)).ToList();
+			var recordsToCopy = sourceFiles.Where(a => !destFiles.Any(b => a.Name == b.Name)).ToList();
+
+			foreach (var record in recordsToDelete)
+			{
+				record.Delete();
+				record.RemoveFromParent();
+			}
+
+			foreach (var record in recordsToCopy)
+			{
+				if (record is DiskFile)
+					File.Copy(record.FullName, Path.Combine(FullName, record.Name));
+				else if (record is DiskDir)
+					Directory.CreateDirectory(Path.Combine(FullName, record.Name));
+			}
+
+			foreach (var record in Records)
+			{
+				var sourceRecord = sourceFiles.Single(a => a.Name == record.Name);
+				record.Sync(sourceRecord);
+			}
+		}
 	}
 }
