@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using NeoEdit.Records.Zipped;
 
 namespace NeoEdit.Records.Disk
 {
@@ -59,6 +60,16 @@ namespace NeoEdit.Records.Disk
 		public override void Identify()
 		{
 			this[RecordProperty.PropertyName.Identify] = Identifier.Identify(FullName);
+		}
+
+		protected override IEnumerable<Record> InternalRecords
+		{
+			get
+			{
+				if (GetProperty<string>(RecordProperty.PropertyName.Extension).Equals(".zip", StringComparison.OrdinalIgnoreCase))
+					return ZippedRecord.GetFiles(this, FullName, "");
+				return base.InternalRecords;
+			}
 		}
 	}
 }

@@ -72,8 +72,8 @@ namespace NeoEdit.Records
 
 		public virtual bool IsFile { get { return false; } }
 
-		protected virtual IEnumerable<Record> InternalRecords { get { return new List<Record>(); } }
-		readonly ObservableCollection<Record> records = new ObservableCollection<Record>();
+		protected virtual IEnumerable<Record> InternalRecords { get { return null; } }
+		ObservableCollection<Record> records = null;
 		public ObservableCollection<Record> Records { get { Refresh(); return records; } }
 
 		public void RemoveChild(string childFullName)
@@ -95,8 +95,18 @@ namespace NeoEdit.Records
 
 		public void Refresh()
 		{
+			var internalRecords = InternalRecords;
+			if (internalRecords == null)
+			{
+				records = null;
+				return;
+			}
+
+			if (records == null)
+				records = new ObservableCollection<Record>();
+
 			var existingList = records.ToDictionary(a => a.FullName, a => a);
-			var newList = InternalRecords.ToDictionary(a => a.FullName, a => a);
+			var newList = internalRecords.ToDictionary(a => a.FullName, a => a);
 
 			var toAdd = newList.Where(a => !existingList.Keys.Contains(a.Key));
 			var toRemove = existingList.Where(a => !newList.Keys.Contains(a.Key));

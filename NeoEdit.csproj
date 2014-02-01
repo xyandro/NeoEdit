@@ -41,6 +41,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,6 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Records\Zipped\ZippedDir.cs" />
+    <Compile Include="Records\Zipped\ZippedFile.cs" />
+    <Compile Include="Records\Zipped\ZippedRecord.cs" />
     <Compile Include="Records\Disk\Identifier.cs" />
     <Compile Include="Records\RecordAction.cs" />
     <Compile Include="Records\Disk\DiskRecord.cs" />

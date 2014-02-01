@@ -103,7 +103,7 @@ namespace NeoEdit.UI.Windows
 			if (record == null)
 				return;
 
-			if (!record.IsFile)
+			if (record.Records != null)
 				SetLocation(record);
 		}
 
