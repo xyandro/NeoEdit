@@ -177,7 +177,10 @@ namespace NeoEdit.UI.Windows
 		{
 			switch (e.Key)
 			{
-				case Key.Enter: ItemClicked(files.SelectedItem as Record); break;
+				case Key.Enter:
+					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.None)
+						ItemClicked(files.SelectedItem as Record);
+					break;
 			}
 		}
 
