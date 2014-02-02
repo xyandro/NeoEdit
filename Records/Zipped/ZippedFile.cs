@@ -9,7 +9,18 @@ namespace NeoEdit.Records.Zipped
 {
 	class ZippedFile : ZippedRecord
 	{
-		public ZippedFile(string uri, Record parent, string archive) : base(uri, parent, archive) { }
+		public ZippedFile(string uri, Record parent, string archive)
+			: base(uri, parent, archive)
+		{
+			using (var zipFile = ZipFile.OpenRead(archive))
+			{
+				var entry = zipFile.GetEntry(InArchiveName);
+				this[RecordProperty.PropertyName.Size] = entry.Length;
+				this[RecordProperty.PropertyName.CompressedSize] = entry.CompressedLength;
+				this[RecordProperty.PropertyName.WriteTime] = entry.LastWriteTime.UtcDateTime;
+			}
+		}
+
 		public override bool IsFile { get { return true; } }
 
 		public override IEnumerable<RecordAction.ActionName> Actions
