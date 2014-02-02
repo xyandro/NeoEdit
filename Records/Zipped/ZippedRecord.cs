@@ -15,6 +15,8 @@ namespace NeoEdit.Records.Zipped
 			archive = _archive;
 		}
 
+		protected string InArchiveName { get { return FullName.Substring(archive.Length + 1).Replace('\\', '/'); } }
+
 		public static IEnumerable<ZippedRecord> GetFiles(Record parent, string archive, string path)
 		{
 			using (var zipFile = ZipFile.OpenRead(archive))

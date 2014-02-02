@@ -18,12 +18,12 @@ namespace NeoEdit.Records.Zipped
 			{
 				return new List<RecordAction.ActionName> { 
 					RecordAction.ActionName.MD5,
+					RecordAction.ActionName.Delete,
 					RecordAction.ActionName.Open,
 				}.Concat(base.Actions);
 			}
 		}
 
-		private string InArchiveName { get { return FullName.Substring(archive.Length + 1).Replace('\\', '/'); } }
 		public override byte[] Read()
 		{
 			using (var zipFile = ZipFile.OpenRead(archive))
@@ -42,6 +42,16 @@ namespace NeoEdit.Records.Zipped
 		{
 			using (var md5 = MD5.Create())
 				this[RecordProperty.PropertyName.MD5] = BitConverter.ToString(md5.ComputeHash(Read())).Replace("-", "").ToLower();
+		}
+
+		public override void Delete()
+		{
+			using (var zipFile = ZipFile.Open(archive, ZipArchiveMode.Update))
+			{
+				var entry = zipFile.GetEntry(InArchiveName);
+				entry.Delete();
+			}
+			RemoveFromParent();
 		}
 	}
 }
