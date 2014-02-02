@@ -203,7 +203,9 @@ namespace NeoEdit.UI.Windows
 				{
 					files.SelectedItem = sel;
 					files.ScrollIntoView(sel);
-					(files.ItemContainerGenerator.ContainerFromItem(sel) as ListViewItem).Focus();
+					var toFocus = files.ItemContainerGenerator.ContainerFromItem(sel) as ListViewItem;
+					if (toFocus != null)
+						toFocus.Focus();
 				}
 			}
 		}
@@ -299,6 +301,12 @@ namespace NeoEdit.UI.Windows
 					case RecordAction.ActionName.Sync:
 						if ((SyncSource != null) && (SyncTarget != null))
 							SyncTarget.Sync(SyncSource);
+						break;
+					case RecordAction.ActionName.Open:
+						{
+							var data = records.Single().Read();
+							new BinaryEditor(data);
+						}
 						break;
 				}
 			}

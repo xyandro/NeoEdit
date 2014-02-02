@@ -124,6 +124,7 @@ namespace NeoEdit.Records
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
 		public virtual void Sync(Record source) { }
+		public virtual byte[] Read() { throw new Exception("Cannot read file"); }
 
 		public override string ToString()
 		{

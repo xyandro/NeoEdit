@@ -26,6 +26,7 @@ namespace NeoEdit.Records.Disk
 				return new List<RecordAction.ActionName> { 
 					RecordAction.ActionName.MD5,
 					RecordAction.ActionName.Identify,
+					RecordAction.ActionName.Open,
 				}.Concat(base.Actions);
 			}
 		}
@@ -70,6 +71,11 @@ namespace NeoEdit.Records.Disk
 					return ZippedRecord.GetFiles(this, FullName, "");
 				return base.InternalRecords;
 			}
+		}
+
+		public override byte[] Read()
+		{
+			return File.ReadAllBytes(FullName);
 		}
 	}
 }

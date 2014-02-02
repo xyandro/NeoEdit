@@ -83,6 +83,9 @@
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Clipboard.cs" />
+    <Compile Include="UI\Controls\BinaryView.xaml.cs">
+      <DependentUpon>BinaryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Controls\NEListView.xaml.cs">
       <DependentUpon>NEListView.xaml</DependentUpon>
     </Compile>
@@ -98,11 +101,19 @@
       <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\UIHelper.cs" />
+    <Page Include="UI\Controls\BinaryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Dialogs\Rename.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\BinaryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -119,6 +130,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Records\Disk\DiskDir.cs" />
+    <Compile Include="UI\Windows\BinaryEditor.xaml.cs">
+      <DependentUpon>BinaryEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Windows\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
@@ -158,6 +172,7 @@
     <None Include="regex2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Resource Include="UI\Resources\Anonymous Pro.ttf" />
     <None Include="zlib1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
