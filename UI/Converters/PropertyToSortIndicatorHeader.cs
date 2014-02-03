@@ -6,18 +6,21 @@ using NeoEdit.Records;
 
 namespace NeoEdit.UI.Converters
 {
-	class PropertyToSortIndicatorHeader : IMultiValueConverter
+	class PropertyToSortIndicatorHeader : MarkupExtension, IMultiValueConverter
 	{
-		RecordProperty.PropertyName property;
-		public PropertyToSortIndicatorHeader(RecordProperty.PropertyName _property)
+		static PropertyToSortIndicatorHeader converter;
+		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
-			property = _property;
+			if (converter == null)
+				converter = new PropertyToSortIndicatorHeader();
+			return converter;
 		}
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var sortProperty = (RecordProperty.PropertyName)value[0];
-			var sortAscending = (bool)value[1];
+			var property = (RecordProperty.PropertyName)value[0];
+			var sortProperty = (RecordProperty.PropertyName)value[1];
+			var sortAscending = (bool)value[2];
 
 			string sort = "";
 			if (sortProperty == property)
