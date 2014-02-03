@@ -1,14 +1,14 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Data;
 using NeoEdit.Records;
-using NeoEdit.UI.Converters;
+using NeoEdit.UI.BrowserUI.Converters;
 
-namespace NeoEdit.UI.Controls
+namespace NeoEdit.UI.BrowserUI
 {
 	/// <summary>
 	/// Interaction logic for NEList.xaml
 	/// </summary>
-	public partial class NEColumn : GridViewColumn
+	public partial class BrowserColumn : GridViewColumn
 	{
 		[DepProp]
 		public RecordProperty.PropertyName Property { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
@@ -17,10 +17,10 @@ namespace NeoEdit.UI.Controls
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
-		readonly UIHelper<NEColumn> uiHelper;
-		public NEColumn(NEListView parent)
+		readonly UIHelper<BrowserColumn> uiHelper;
+		public BrowserColumn(BrowserListView parent)
 		{
-			uiHelper = new UIHelper<NEColumn>(this);
+			uiHelper = new UIHelper<BrowserColumn>(this);
 			InitializeComponent();
 
 			header.DataContext = this;

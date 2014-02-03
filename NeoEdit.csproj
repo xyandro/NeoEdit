@@ -83,21 +83,21 @@
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Clipboard.cs" />
-    <Compile Include="UI\Controls\NEColumn.xaml.cs">
-      <DependentUpon>NEColumn.xaml</DependentUpon>
+    <Compile Include="UI\BrowserUI\BrowserColumn.xaml.cs">
+      <DependentUpon>BrowserColumn.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Controls\NEListView.xaml.cs">
-      <DependentUpon>NEListView.xaml</DependentUpon>
+    <Compile Include="UI\BrowserUI\BrowserListView.xaml.cs">
+      <DependentUpon>BrowserListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Converters\ColumnMenuItems.cs" />
-    <Compile Include="UI\Converters\SortMenuItems.cs" />
-    <Compile Include="UI\Converters\ActionMenuItems.cs" />
-    <Compile Include="UI\Converters\PropertyToSortIndicatorHeader.cs" />
-    <Compile Include="UI\Converters\PropertyFormatter.cs" />
+    <Compile Include="UI\BrowserUI\Converters\ColumnMenuItems.cs" />
+    <Compile Include="UI\BrowserUI\Converters\SortMenuItems.cs" />
+    <Compile Include="UI\BrowserUI\Converters\ActionMenuItems.cs" />
+    <Compile Include="UI\BrowserUI\Converters\PropertyToSortIndicatorHeader.cs" />
+    <Compile Include="UI\BrowserUI\Converters\PropertyFormatter.cs" />
     <Compile Include="UI\Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Dialogs\Rename.xaml.cs">
+    <Compile Include="UI\BrowserUI\Dialogs\Rename.xaml.cs">
       <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\UIHelper.cs" />
@@ -105,23 +105,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Dialogs\Rename.xaml">
+    <Page Include="UI\BrowserUI\Dialogs\Rename.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Windows\BinaryEditor.xaml">
+    <Page Include="UI\BinaryEditorUI\BinaryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Windows\Browser.xaml">
+    <Page Include="UI\BrowserUI\Browser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Controls\NEColumn.xaml">
+    <Page Include="UI\BrowserUI\BrowserColumn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Controls\NEListView.xaml">
+    <Page Include="UI\BrowserUI\BrowserListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -130,10 +130,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Records\Disk\DiskDir.cs" />
-    <Compile Include="UI\Windows\BinaryEditor.xaml.cs">
+    <Compile Include="UI\BinaryEditorUI\BinaryEditor.xaml.cs">
       <DependentUpon>BinaryEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Windows\Browser.xaml.cs">
+    <Compile Include="UI\BrowserUI\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using NeoEdit.Records;
 
-namespace NeoEdit.UI.Dialogs
+namespace NeoEdit.UI.BrowserUI.Dialogs
 {
 	/// <summary>
 	/// Interaction logic for Rename.xaml

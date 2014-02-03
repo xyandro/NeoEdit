@@ -10,9 +10,11 @@ using NeoEdit.Records.Disk;
 using NeoEdit.Records.List;
 using NeoEdit.Records.Network;
 using NeoEdit.Records.Registry;
+using NeoEdit.UI.BinaryEditorUI;
+using NeoEdit.UI.BrowserUI.Dialogs;
 using NeoEdit.UI.Dialogs;
 
-namespace NeoEdit.UI.Windows
+namespace NeoEdit.UI.BrowserUI
 {
 	public partial class Browser : Window
 	{

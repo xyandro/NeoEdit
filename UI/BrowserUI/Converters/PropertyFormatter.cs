@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace NeoEdit.UI.Converters
+namespace NeoEdit.UI.BrowserUI.Converters
 {
 	class PropertyFormatter : IValueConverter
 	{

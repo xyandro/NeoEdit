@@ -6,9 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 using NeoEdit.Records;
-using NeoEdit.UI.Windows;
 
-namespace NeoEdit.UI.Converters
+namespace NeoEdit.UI.BrowserUI.Converters
 {
 	class ActionMenuItems : MarkupExtension, IMultiValueConverter
 	{

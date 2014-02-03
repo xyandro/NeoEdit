@@ -1,7 +1,6 @@
-﻿<Window Name="binaryEditor" x:Class="NeoEdit.UI.Windows.BinaryEditor"
+﻿<Window Name="binaryEditor" x:Class="NeoEdit.UI.BinaryEditorUI.BinaryEditor"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:uiControls="clr-namespace:NeoEdit.UI.Controls"
 	Title="Binary Editor" Height="400" Width="400">
 
 	<Window.Resources>

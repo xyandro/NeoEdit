@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using NeoEdit.Records;
 
-namespace NeoEdit.UI.Converters
+namespace NeoEdit.UI.BrowserUI.Converters
 {
 	class PropertyToSortIndicatorHeader : MarkupExtension, IMultiValueConverter
 	{

@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
-namespace NeoEdit.UI.Windows
+namespace NeoEdit.UI.BinaryEditorUI
 {
 	public partial class BinaryEditor : Window
 	{

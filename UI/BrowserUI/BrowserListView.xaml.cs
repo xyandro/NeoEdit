@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using NeoEdit.Records;
 
-namespace NeoEdit.UI.Controls
+namespace NeoEdit.UI.BrowserUI
 {
 	class LambdaComparer<T> : IComparer where T : class
 	{
@@ -22,7 +22,7 @@ namespace NeoEdit.UI.Controls
 		}
 	}
 
-	public partial class NEListView : ListView
+	public partial class BrowserListView : ListView
 	{
 		[DepProp]
 		public RecordProperty.PropertyName SortProperty { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
@@ -33,11 +33,11 @@ namespace NeoEdit.UI.Controls
 		[DepProp]
 		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 
-		readonly UIHelper<NEListView> uiHelper;
+		readonly UIHelper<BrowserListView> uiHelper;
 		readonly CollectionViewSource collectionView;
-		public NEListView()
+		public BrowserListView()
 		{
-			uiHelper = new UIHelper<NEListView>(this);
+			uiHelper = new UIHelper<BrowserListView>(this);
 			uiHelper.AddObservableCallback(a => a.Properties, SetupColumns);
 			InitializeComponent();
 
@@ -50,7 +50,7 @@ namespace NeoEdit.UI.Controls
 		void SetupColumns()
 		{
 			gridView.Columns.Clear();
-			Properties.ToList().ForEach(a => gridView.Columns.Add(new NEColumn(this) { Property = a }));
+			Properties.ToList().ForEach(a => gridView.Columns.Add(new BrowserColumn(this) { Property = a }));
 			Resort();
 		}
 
