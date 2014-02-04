@@ -58,10 +58,9 @@ namespace NeoEdit.UI.Resources
 			lock (UIHelpers)
 				UIHelpers[new WeakReference<HelperType>(_control)] = new WeakReference<UIHelper<HelperType>>(this);
 			control = _control;
-			InitializeCommands();
 		}
 
-		void InitializeCommands()
+		public void InitializeCommands()
 		{
 			var window = control as Window;
 			if (window == null)

@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace NeoEdit
+namespace NeoEdit.Test
 {
-	class TestData
+	class UnicodeGenerator
 	{
 		enum Encodings
 		{
@@ -40,14 +40,14 @@ namespace NeoEdit
 			}
 		}
 
-		string GetText(Endings ending)
+		string GetText(Encodings encoding, BOMs bom, Endings ending)
 		{
 			var text = new List<string>
 			{
 				"BEGIN",
-				"Encoding: UTF8",
-				"Byte marker: Yes",
-				"Line endings: CR/LF",
+				"Encoding: <Encoding>",
+				"BOM: <BOM>",
+				"Ending: <Ending>",
 				"",
 				"This is my example text.",
 				"",
@@ -58,17 +58,22 @@ namespace NeoEdit
 				"END",
 			};
 
+			string result;
 			if (ending != Endings.Mixed)
-				return string.Join(GetEnding(ending), text);
-
-			var result = "";
-			ending = 0;
-			foreach (var line in text)
+				result = String.Join(GetEnding(ending), text);
+			else
 			{
-				result += line + GetEnding(ending);
-				if (++ending == Endings.Mixed)
-					ending = 0;
+				result = "";
+				ending = 0;
+				foreach (var line in text)
+				{
+					result += line + GetEnding(ending);
+					if (++ending == Endings.Mixed)
+						ending = 0;
+				}
 			}
+
+			result = result.Replace("<Encoding>", encoding.ToString()).Replace("<BOM>", bom.ToString()).Replace("<Ending>", ending.ToString());
 
 			return result;
 		}
@@ -107,7 +112,7 @@ namespace NeoEdit
 									throw new Exception("No encoder found");
 							}
 							var filename = Path.Combine(dir, String.Format("{0}-{1}-{2}.txt", encoding, bom, ending));
-							File.WriteAllText(filename, GetText(ending), encoder);
+							File.WriteAllText(filename, GetText(encoding, bom, ending), encoder);
 
 							var bytes = File.ReadAllBytes(filename);
 							combined.Write(bytes, 0, bytes.Length);

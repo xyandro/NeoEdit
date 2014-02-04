@@ -88,8 +88,9 @@ namespace NeoEdit.UI.BinaryEditorUI
 		readonly UIHelper<BinaryEditor> uiHelper;
 		public BinaryEditor(byte[] data)
 		{
-			InitializeComponent();
 			uiHelper = new UIHelper<BinaryEditor>(this);
+			InitializeComponent();
+			uiHelper.InitializeCommands();
 
 			Data = data;
 			SelStart = SelEnd = 0;

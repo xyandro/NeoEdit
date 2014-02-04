@@ -83,6 +83,14 @@
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Clipboard.cs" />
+    <Compile Include="Test\UnicodeGenerator.cs" />
+    <Compile Include="UI\BinaryEditorUI\Value.xaml.cs">
+      <DependentUpon>Value.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\BinaryEditorUI\ValueConverter.cs" />
+    <Compile Include="UI\BinaryEditorUI\Values.xaml.cs">
+      <DependentUpon>Values.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\BrowserUI\BrowserColumn.xaml.cs">
       <DependentUpon>BrowserColumn.xaml</DependentUpon>
     </Compile>
@@ -102,6 +110,14 @@
     </Compile>
     <Compile Include="UI\Resources\UICommand.cs" />
     <Compile Include="UI\Resources\UIHelper.cs" />
+    <Page Include="UI\BinaryEditorUI\Value.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\BinaryEditorUI\Values.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
