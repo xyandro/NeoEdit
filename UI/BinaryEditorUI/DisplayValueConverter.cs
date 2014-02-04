@@ -5,13 +5,13 @@ using System.Windows.Markup;
 
 namespace NeoEdit.UI.BinaryEditorUI
 {
-	class ValueConverter : MarkupExtension, IMultiValueConverter
+	class DisplayValueConverter : MarkupExtension, IMultiValueConverter
 	{
-		static ValueConverter converter;
+		static DisplayValueConverter converter;
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (converter == null)
-				converter = new ValueConverter();
+				converter = new DisplayValueConverter();
 			return converter;
 		}
 

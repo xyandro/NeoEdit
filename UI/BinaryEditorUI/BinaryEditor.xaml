@@ -49,7 +49,7 @@
 		/>
 		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}" PreviewMouseWheel="ScrollBar_PreviewMouseWheel"/>
 		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
-		<binaryEditorUI:Values Grid.Row="3" Grid.ColumnSpan="2"
+		<binaryEditorUI:DisplayValues Grid.Row="3" Grid.ColumnSpan="2"
 			Visibility="{Binding ShowValues, ElementName=self, Converter={StaticResource BoolToVis}}"
 			Data="{Binding Data, ElementName=self}"
 			SelStart="{Binding SelStart, ElementName=self}"

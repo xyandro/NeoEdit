@@ -3,7 +3,7 @@ using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BinaryEditorUI
 {
-	public partial class Values : StackPanel
+	public partial class DisplayValues : StackPanel
 	{
 		[DepProp]
 		public byte[] Data { get { return uiHelper.GetPropValue<byte[]>(); } set { uiHelper.SetPropValue(value); } }
@@ -22,12 +22,12 @@ namespace NeoEdit.UI.BinaryEditorUI
 		[DepProp]
 		public bool ShowStr { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
-		static Values() { UIHelper<Values>.Register(); }
+		static DisplayValues() { UIHelper<DisplayValues>.Register(); }
 
-		readonly UIHelper<Values> uiHelper;
-		public Values()
+		readonly UIHelper<DisplayValues> uiHelper;
+		public DisplayValues()
 		{
-			uiHelper = new UIHelper<Values>(this);
+			uiHelper = new UIHelper<DisplayValues>(this);
 			InitializeComponent();
 			ShowLE = ShowInt = true;
 			ShowBE = ShowFloat = ShowStr = false;

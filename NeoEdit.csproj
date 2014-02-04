@@ -89,12 +89,12 @@
     </Compile>
     <Compile Include="UI\BinaryEditorUI\Converter.cs" />
     <Compile Include="UI\BinaryEditorUI\VisibilityConverter.cs" />
-    <Compile Include="UI\BinaryEditorUI\Value.xaml.cs">
-      <DependentUpon>Value.xaml</DependentUpon>
+    <Compile Include="UI\BinaryEditorUI\DisplayValue.xaml.cs">
+      <DependentUpon>DisplayValue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BinaryEditorUI\ValueConverter.cs" />
-    <Compile Include="UI\BinaryEditorUI\Values.xaml.cs">
-      <DependentUpon>Values.xaml</DependentUpon>
+    <Compile Include="UI\BinaryEditorUI\DisplayValueConverter.cs" />
+    <Compile Include="UI\BinaryEditorUI\DisplayValues.xaml.cs">
+      <DependentUpon>DisplayValues.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\BrowserUI\BrowserColumn.xaml.cs">
       <DependentUpon>BrowserColumn.xaml</DependentUpon>
@@ -119,11 +119,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BinaryEditorUI\Value.xaml">
+    <Page Include="UI\BinaryEditorUI\DisplayValue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BinaryEditorUI\Values.xaml">
+    <Page Include="UI\BinaryEditorUI\DisplayValues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

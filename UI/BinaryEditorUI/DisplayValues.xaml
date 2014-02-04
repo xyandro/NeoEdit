@@ -1,4 +1,4 @@
-﻿<StackPanel Name="self" x:Class="NeoEdit.UI.BinaryEditorUI.Values"
+﻿<StackPanel Name="self" x:Class="NeoEdit.UI.BinaryEditorUI.DisplayValues"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,7 +14,7 @@
 				<Style TargetType="Label">
 					<Setter Property="Padding" Value="0,-2,0,0"/>
 				</Style>
-				<Style TargetType="binaryEditorUI:Value">
+				<Style TargetType="binaryEditorUI:DisplayValue">
 					<Setter Property="Data" Value="{Binding Data, ElementName=self}"/>
 					<Setter Property="SelStart" Value="{Binding SelStart, ElementName=self}"/>
 					<Setter Property="SelEnd" Value="{Binding SelEnd, ElementName=self}"/>
@@ -41,10 +41,10 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UnsignedLE:"/>
-		<binaryEditorUI:Value Type="UInt8LE"/>
-		<binaryEditorUI:Value Type="UInt16LE"/>
-		<binaryEditorUI:Value Type="UInt32LE"/>
-		<binaryEditorUI:Value Type="UInt64LE"/>
+		<binaryEditorUI:DisplayValue Type="UInt8LE"/>
+		<binaryEditorUI:DisplayValue Type="UInt16LE"/>
+		<binaryEditorUI:DisplayValue Type="UInt32LE"/>
+		<binaryEditorUI:DisplayValue Type="UInt64LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -56,10 +56,10 @@
 		</StackPanel.Visibility>
 
 		<Label Content="SignedLE:"/>
-		<binaryEditorUI:Value Type="Int8LE"/>
-		<binaryEditorUI:Value Type="Int16LE"/>
-		<binaryEditorUI:Value Type="Int32LE"/>
-		<binaryEditorUI:Value Type="Int64LE"/>
+		<binaryEditorUI:DisplayValue Type="Int8LE"/>
+		<binaryEditorUI:DisplayValue Type="Int16LE"/>
+		<binaryEditorUI:DisplayValue Type="Int32LE"/>
+		<binaryEditorUI:DisplayValue Type="Int64LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -71,10 +71,10 @@
 		</StackPanel.Visibility>
 		
 		<Label Content="UnsignedBE:"/>
-		<binaryEditorUI:Value Type="UInt8BE"/>
-		<binaryEditorUI:Value Type="UInt16BE"/>
-		<binaryEditorUI:Value Type="UInt32BE"/>
-		<binaryEditorUI:Value Type="UInt64BE"/>
+		<binaryEditorUI:DisplayValue Type="UInt8BE"/>
+		<binaryEditorUI:DisplayValue Type="UInt16BE"/>
+		<binaryEditorUI:DisplayValue Type="UInt32BE"/>
+		<binaryEditorUI:DisplayValue Type="UInt64BE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -86,10 +86,10 @@
 		</StackPanel.Visibility>
 
 		<Label Content="SignedBE:"/>
-		<binaryEditorUI:Value Type="Int8BE"/>
-		<binaryEditorUI:Value Type="Int16BE"/>
-		<binaryEditorUI:Value Type="Int32BE"/>
-		<binaryEditorUI:Value Type="Int64BE"/>
+		<binaryEditorUI:DisplayValue Type="Int8BE"/>
+		<binaryEditorUI:DisplayValue Type="Int16BE"/>
+		<binaryEditorUI:DisplayValue Type="Int32BE"/>
+		<binaryEditorUI:DisplayValue Type="Int64BE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -100,8 +100,8 @@
 		</StackPanel.Visibility>
 
 		<Label Content="Float:"/>
-		<binaryEditorUI:Value Type="Single"/>
-		<binaryEditorUI:Value Type="Double"/>
+		<binaryEditorUI:DisplayValue Type="Single"/>
+		<binaryEditorUI:DisplayValue Type="Double"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -112,7 +112,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF7:"/>
-		<binaryEditorUI:Value Type="UTF7"/>
+		<binaryEditorUI:DisplayValue Type="UTF7"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -123,7 +123,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF8:"/>
-		<binaryEditorUI:Value Type="UTF8"/>
+		<binaryEditorUI:DisplayValue Type="UTF8"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -135,7 +135,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF16LE:"/>
-		<binaryEditorUI:Value Type="UTF16LE"/>
+		<binaryEditorUI:DisplayValue Type="UTF16LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -147,7 +147,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF16BE:"/>
-		<binaryEditorUI:Value Type="UTF16BE"/>
+		<binaryEditorUI:DisplayValue Type="UTF16BE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -159,7 +159,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF32LE:"/>
-		<binaryEditorUI:Value Type="UTF32LE"/>
+		<binaryEditorUI:DisplayValue Type="UTF32LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -171,7 +171,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF32BE:"/>
-		<binaryEditorUI:Value Type="UTF32BE"/>
+		<binaryEditorUI:DisplayValue Type="UTF32BE"/>
 	</StackPanel>
 
 </StackPanel>
