@@ -25,7 +25,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 			Data = data;
 			SelStart = SelEnd = 0;
-			PreviewKeyDown += (s, e) => canvas.HandleKeyDown(e);
+			PreviewKeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
 
 			Show();
 		}

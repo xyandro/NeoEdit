@@ -143,5 +143,16 @@ namespace NeoEdit.UI.Resources
 		{
 			BindingOperations.GetBindingExpression(obj, prop).UpdateTarget();
 		}
+
+		HashSet<RoutedEventArgs> eventArgs = new HashSet<RoutedEventArgs>();
+		public void RaiseEvent(UIElement control, RoutedEventArgs args)
+		{
+			if (eventArgs.Contains(args))
+				return;
+
+			eventArgs.Add(args);
+			control.RaiseEvent(args);
+			eventArgs.Remove(args);
+		}
 	}
 }

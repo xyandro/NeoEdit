@@ -248,7 +248,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			}
 		}
 
-		public void HandleKeyDown(KeyEventArgs e)
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
 			e.Handled = true;
 			switch (e.Key)
