@@ -30,7 +30,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 		[DepProp]
 		public double yScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public long SelStart{ get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -206,7 +206,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 				for (var column = 0; column < useColumns; ++column)
 				{
 					var pos = row * columns + column;
-					if ((pos >= SelStart) && (pos <= SelEnd)) 
+					if ((pos >= SelStart) && (pos <= SelEnd))
 						selected[column] = true;
 
 					var b = Data[pos];
@@ -220,16 +220,26 @@ namespace NeoEdit.UI.BinaryEditorUI
 				var hexText = new FormattedText(hex, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 				var textText = new FormattedText(text, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 
-				for (var ctr = 0; ctr < selected.Length; ctr++)
+				for (var first = 0; first < selected.Length; first++)
 				{
-					if (!selected[ctr])
+					if (!selected[first])
 						continue;
 
-					hexText.SetForegroundBrush(Brushes.White, ctr * (xHexSpacing + 2), 2);
-					drawingContext.DrawRectangle(SelHex ? Brushes.Blue : Brushes.Gray, null, new Rect(GetXHexFromColumn(ctr) - xScrollValue, y, charWidth * 2, rowHeight));
+					int last;
+					for (last = first; last < selected.Length; last++)
+					{
+						if (!selected[last])
+							break;
+						selected[last] = false;
+					}
 
-					textText.SetForegroundBrush(Brushes.White, ctr, 1);
-					drawingContext.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Blue, null, new Rect(GetXTextFromColumn(ctr) - xScrollValue, y, charWidth, rowHeight));
+					var count = last - first;
+
+					hexText.SetForegroundBrush(Brushes.White, first * (xHexSpacing + 2), count * (2 + xHexSpacing));
+					drawingContext.DrawRectangle(SelHex ? Brushes.Blue : Brushes.Gray, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
+
+					textText.SetForegroundBrush(Brushes.White, first, count);
+					drawingContext.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Blue, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
 				}
 
 				drawingContext.DrawText(posText, new Point(xPosition - xScrollValue, y));
