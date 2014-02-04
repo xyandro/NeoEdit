@@ -213,7 +213,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 					var c = (char)b;
 
 					hex += String.Format("{0:x2}", b) + new string(' ', xHexSpacing);
-					text += Char.IsControl(c) ? '\u2022' : c;
+					text += Char.IsControl(c) ? '·' : c;
 				}
 
 				var posText = new FormattedText(String.Format("{0:x" + xPosColumns.ToString() + "}", row * columns), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
