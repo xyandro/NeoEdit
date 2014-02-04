@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BinaryEditorUI
@@ -26,6 +28,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			Data = data;
 			SelStart = SelEnd = 0;
 			PreviewKeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
+			PreviewMouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 
 			Show();
 		}
@@ -36,6 +39,13 @@ namespace NeoEdit.UI.BinaryEditorUI
 			{
 				case "View_Values": ShowValues = !ShowValues; break;
 			}
+		}
+
+		void ScrollBar_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+		{
+			var scrollBar = sender as ScrollBar;
+			scrollBar.Value -= e.Delta;
+			e.Handled = true;
 		}
 	}
 }
