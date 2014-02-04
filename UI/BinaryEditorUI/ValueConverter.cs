@@ -31,7 +31,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 				var type = Helpers.ParseEnum<Converter.ConverterType>(value[3] as string);
 
 				var selCount = (selStart == selEnd) ? 0 : selEnd - selStart + 1;
-				return Converter.Convert(data, selStart, selCount, type);
+				return Converter.Convert(type, data, selStart, selCount);
 			}
 			catch { return "Invalid"; }
 		}

@@ -100,8 +100,19 @@
 		</StackPanel.Visibility>
 
 		<Label Content="Float:"/>
-		<binaryEditorUI:Value Type="Float"/>
+		<binaryEditorUI:Value Type="Single"/>
 		<binaryEditorUI:Value Type="Double"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
+		<Label Content="UTF7:"/>
+		<binaryEditorUI:Value Type="UTF7"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
