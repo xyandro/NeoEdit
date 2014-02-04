@@ -60,5 +60,10 @@ namespace NeoEdit
 		{
 			return Enum.GetValues(typeof(T)).Cast<T>();
 		}
+
+		public static T ParseEnum<T>(string str)
+		{
+			return (T)Enum.Parse(typeof(T), str);
+		}
 	}
 }

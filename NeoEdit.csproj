@@ -87,6 +87,7 @@
     <Compile Include="UI\BinaryEditorUI\BinaryCanvas.xaml.cs">
       <DependentUpon>BinaryCanvas.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\BinaryEditorUI\Converter.cs" />
     <Compile Include="UI\BinaryEditorUI\Value.xaml.cs">
       <DependentUpon>Value.xaml</DependentUpon>
     </Compile>
