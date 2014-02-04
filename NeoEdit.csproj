@@ -84,6 +84,9 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="Clipboard.cs" />
     <Compile Include="Test\UnicodeGenerator.cs" />
+    <Compile Include="UI\BinaryEditorUI\BinaryCanvas.xaml.cs">
+      <DependentUpon>BinaryCanvas.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\BinaryEditorUI\Value.xaml.cs">
       <DependentUpon>Value.xaml</DependentUpon>
     </Compile>
@@ -110,6 +113,10 @@
     </Compile>
     <Compile Include="UI\Resources\UICommand.cs" />
     <Compile Include="UI\Resources\UIHelper.cs" />
+    <Page Include="UI\BinaryEditorUI\BinaryCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\BinaryEditorUI\Value.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

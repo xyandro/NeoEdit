@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:binaryEditorUI="clr-namespace:NeoEdit.UI.BinaryEditorUI"
     xmlns:resources="clr-namespace:NeoEdit.UI.Resources"
-	Title="Binary Editor" Height="400" Width="400" KeyDown="KeyDownHandler">
+	Title="Binary Editor" Height="400" Width="400">
 
 	<Window.Resources>
 		<Style TargetType="TextBlock">
@@ -34,9 +34,21 @@
 				<MenuItem Header="_Values" Command="{StaticResource View_Values}" InputGestureText="Ctrl+V" IsChecked="{Binding ShowValues, ElementName=self}"/>
 			</MenuItem>
 		</Menu>
-		<Canvas Grid.Row="1" Name="canvas" MouseDown="ClickHandler" MouseUp="ClickHandler" MouseMove="MoveHandler"  Background="White"/>
-		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1"/>
-		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal"/>
+		<binaryEditorUI:BinaryCanvas x:Name="canvas" Grid.Row="1"
+			Data="{Binding Data, ElementName=self}"
+			SelStart="{Binding SelStart, ElementName=self}"
+			SelEnd="{Binding SelEnd, ElementName=self}"
+			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=TwoWay}"
+			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=TwoWay}"
+			xScrollMaximum="{Binding Maximum, ElementName=xScroll, Mode=TwoWay}"
+			xScrollValue="{Binding Value, ElementName=xScroll, Mode=TwoWay}"
+			yScrollSmallChange="{Binding SmallChange, ElementName=yScroll, Mode=TwoWay}"
+			yScrollLargeChange="{Binding LargeChange, ElementName=yScroll, Mode=TwoWay}"
+			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=TwoWay}"
+			yScrollValue="{Binding Value, ElementName=yScroll, Mode=TwoWay}"
+		/>
+		<ScrollBar x:Name="yScroll" Maximum="10" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
+		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
 		<binaryEditorUI:Values Visibility="{Binding ShowValues, ElementName=self, Converter={StaticResource BoolToVis}}" Grid.Row="3" Grid.ColumnSpan="2" Data="{Binding Data, ElementName=self}" SelStart="{Binding SelStart, ElementName=self}" SelEnd="{Binding SelEnd, ElementName=self}"/>
 	</Grid>
 
