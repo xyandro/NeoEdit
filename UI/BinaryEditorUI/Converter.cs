@@ -26,6 +26,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 			Int16BE,
 			Int32BE,
 			Int64BE,
+			Float,
+			Double,
 			UTF8,
 			UTF16LE,
 			UTF16BE,
@@ -79,6 +81,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 				case ConverterType.Int16BE: return BitConverter.ToInt16(GetBytes(data, index, selSize, 2, false), 0).ToString();
 				case ConverterType.Int32BE: return BitConverter.ToInt32(GetBytes(data, index, selSize, 4, false), 0).ToString();
 				case ConverterType.Int64BE: return BitConverter.ToInt64(GetBytes(data, index, selSize, 8, false), 0).ToString();
+				case ConverterType.Float: return BitConverter.ToSingle(GetBytes(data, index, selSize, 4, false), 0).ToString();
+				case ConverterType.Double: return BitConverter.ToDouble(GetBytes(data, index, selSize, 8, false), 0).ToString();
 				case ConverterType.UTF8: return GetString(Encoding.UTF8, data, index, selSize);
 				case ConverterType.UTF16LE: return GetString(Encoding.Unicode, data, index, selSize);
 				case ConverterType.UTF16BE: return GetString(Encoding.BigEndianUnicode, data, index, selSize);

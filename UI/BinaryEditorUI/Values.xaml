@@ -27,7 +27,8 @@
 		<Label Content="Show:" Margin="0,0,5,0"/>
 		<CheckBox Content="_Little Endian" IsChecked="{Binding ShowLE, ElementName=self}" Margin="0,0,5,0"/>
 		<CheckBox Content="_Big Endian" IsChecked="{Binding ShowBE, ElementName=self}" Margin="0,0,5,0"/>
-		<CheckBox Content="_Numbers" IsChecked="{Binding ShowNum, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Ints" IsChecked="{Binding ShowInt, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Floats" IsChecked="{Binding ShowFloat, ElementName=self}" Margin="0,0,5,0"/>
 		<CheckBox Content="_Strings" IsChecked="{Binding ShowStr, ElementName=self}" Margin="0,0,5,0"/>
 	</StackPanel>
 
@@ -35,7 +36,7 @@
 		<StackPanel.Visibility>
 			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
 				<Binding Path="ShowLE" ElementName="self"/>
-				<Binding Path="ShowNum" ElementName="self"/>
+				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
 		</StackPanel.Visibility>
 
@@ -50,7 +51,7 @@
 		<StackPanel.Visibility>
 			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
 				<Binding Path="ShowLE" ElementName="self"/>
-				<Binding Path="ShowNum" ElementName="self"/>
+				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
 		</StackPanel.Visibility>
 
@@ -65,7 +66,7 @@
 		<StackPanel.Visibility>
 			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
 				<Binding Path="ShowBE" ElementName="self"/>
-				<Binding Path="ShowNum" ElementName="self"/>
+				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
 		</StackPanel.Visibility>
 		
@@ -80,7 +81,7 @@
 		<StackPanel.Visibility>
 			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
 				<Binding Path="ShowBE" ElementName="self"/>
-				<Binding Path="ShowNum" ElementName="self"/>
+				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
 		</StackPanel.Visibility>
 
@@ -89,6 +90,18 @@
 		<binaryEditorUI:Value Type="Int16BE"/>
 		<binaryEditorUI:Value Type="Int32BE"/>
 		<binaryEditorUI:Value Type="Int64BE"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowFloat" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
+		<Label Content="Float:"/>
+		<binaryEditorUI:Value Type="Float"/>
+		<binaryEditorUI:Value Type="Double"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
