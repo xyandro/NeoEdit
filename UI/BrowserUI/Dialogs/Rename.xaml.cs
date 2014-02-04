@@ -12,6 +12,8 @@ namespace NeoEdit.UI.BrowserUI.Dialogs
 		[DepProp]
 		public string RecordName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
+		static Rename() { UIHelper<Rename>.Register(); }
+
 		readonly UIHelper<Rename> uiHelper;
 		public Rename(Record record)
 		{

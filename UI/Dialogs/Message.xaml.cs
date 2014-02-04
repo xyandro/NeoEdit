@@ -43,6 +43,8 @@ namespace NeoEdit.UI.Dialogs
 			return (x & (x - 1)) == 0;
 		}
 
+		static Message() { UIHelper<Message>.Register(); }
+
 		readonly UIHelper<Message> uiHelper;
 		public Message(string text, string title, Options options, Options defaultYes, Options defaultNo = Options.None)
 		{

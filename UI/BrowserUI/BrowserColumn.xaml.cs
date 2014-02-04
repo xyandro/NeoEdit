@@ -18,6 +18,8 @@ namespace NeoEdit.UI.BrowserUI
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
+		static BrowserColumn() { UIHelper<BrowserColumn>.Register(); }
+
 		readonly UIHelper<BrowserColumn> uiHelper;
 		public BrowserColumn(BrowserListView parent)
 		{

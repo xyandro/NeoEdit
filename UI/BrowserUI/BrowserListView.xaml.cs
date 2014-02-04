@@ -34,8 +34,11 @@ namespace NeoEdit.UI.BrowserUI
 		[DepProp]
 		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 
-		readonly UIHelper<BrowserListView> uiHelper;
 		readonly CollectionViewSource collectionView;
+
+		static BrowserListView() { UIHelper<BrowserListView>.Register(); }
+
+		readonly UIHelper<BrowserListView> uiHelper;
 		public BrowserListView()
 		{
 			uiHelper = new UIHelper<BrowserListView>(this);

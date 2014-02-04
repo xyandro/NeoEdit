@@ -20,7 +20,7 @@ namespace NeoEdit.UI.Resources
 	{
 		static Dictionary<string, DependencyProperty> dependencyProperty;
 		readonly HelperType control;
-		static UIHelper()
+		public static void Register()
 		{
 			var properties = typeof(HelperType).GetProperties().Where(a => a.CustomAttributes.Any(b => b.AttributeType == typeof(DepPropAttribute))).ToList();
 			dependencyProperty = properties.ToDictionary(a => a.Name, a => DependencyProperty.Register(a.Name, a.PropertyType, typeof(HelperType), new PropertyMetadata(ValueChangedCallback)));
@@ -53,6 +53,8 @@ namespace NeoEdit.UI.Resources
 		Dictionary<string, Action<object, object>> callbacks = new Dictionary<string, Action<object, object>>();
 		public UIHelper(HelperType _control)
 		{
+			if (dependencyProperty == null)
+				throw new Exception("Register must be called before creating a UIHelper.");
 			lock (UIHelpers)
 				UIHelpers[new WeakReference<HelperType>(_control)] = new WeakReference<UIHelper<HelperType>>(this);
 			control = _control;

@@ -11,6 +11,7 @@ namespace NeoEdit
 		public static Clipboard Current { get; private set; }
 		static Clipboard()
 		{
+			UIHelper<Clipboard>.Register();
 			Current = new Clipboard();
 		}
 

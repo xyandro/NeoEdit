@@ -53,8 +53,10 @@ namespace NeoEdit.UI.BrowserUI
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
 		RecordRoot lastRoot;
-		readonly UIHelper<Browser> uiHelper;
 
+		static Browser() { UIHelper<Browser>.Register(); }
+
+		readonly UIHelper<Browser> uiHelper;
 		public Browser() : this(StartLocation()) { }
 		public Browser(string uri)
 		{

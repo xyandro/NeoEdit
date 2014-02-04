@@ -83,6 +83,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 		double yLinesEnd { get { return yLinesStart + rows * rowHeight; } }
 		double yEnd { get { return yLinesEnd + yEndSpacing; } }
 
+		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
+
 		readonly UIHelper<BinaryEditor> uiHelper;
 		public BinaryEditor(byte[] data)
 		{
