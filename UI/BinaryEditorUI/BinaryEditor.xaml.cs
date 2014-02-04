@@ -340,7 +340,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 		{
 			switch (obj as string)
 			{
-				case "toggleValues": ShowValues = !ShowValues; break;
+				case "View_Values": ShowValues = !ShowValues; break;
 			}
 		}
 	}

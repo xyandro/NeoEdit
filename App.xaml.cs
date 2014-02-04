@@ -7,5 +7,14 @@ namespace NeoEdit
 	/// </summary>
 	public partial class App : Application
 	{
+		App()
+		{
+			//var data = System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\magic.mgc");
+			//var data = System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\NeoEdit.exe.config");
+			var data = System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\TestData\Combined.txt");
+			new NeoEdit.UI.BinaryEditorUI.BinaryEditor(data);
+
+			//new Test.UnicodeGenerator().Generate();
+		}
 	}
 }

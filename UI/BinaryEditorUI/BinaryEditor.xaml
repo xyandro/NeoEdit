@@ -10,8 +10,8 @@
 			<Setter Property="FontFamily" Value="{Binding CustomFontFamily, ElementName=self}"/>
 			<Setter Property="FontSize" Value="{Binding CustomFontSize, ElementName=self}"/>
 		</Style>
-		<resources:UICommand x:Key="find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
-		<resources:UICommand x:Key="toggleValues" Key="V" Modifiers="Control" Executed="CommandCallback"/>
+		<resources:UICommand x:Key="Edit_Find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
+		<resources:UICommand x:Key="View_Values" Key="V" Modifiers="Control" Executed="CommandCallback"/>
 	</Window.Resources>
 
 	<Grid>
@@ -27,10 +27,10 @@
 		</Grid.RowDefinitions>
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_Edit">
-				<MenuItem Header="_Find" Command="{StaticResource find}" InputGestureText="Ctrl+F"/>
+				<MenuItem Header="_Find" Command="{StaticResource Edit_Find}" InputGestureText="Ctrl+F"/>
 			</MenuItem>
 			<MenuItem Header="_View">
-				<MenuItem Header="Toggle _Values" Command="{StaticResource toggleValues}" InputGestureText="Ctrl+V"/>
+				<MenuItem Header="_Values" Command="{StaticResource View_Values}" InputGestureText="Ctrl+V" IsChecked="{Binding ShowValues, ElementName=self}"/>
 			</MenuItem>
 		</Menu>
 		<Canvas Grid.Row="1" Name="canvas" MouseDown="ClickHandler" MouseUp="ClickHandler" MouseMove="MoveHandler"  Background="White"/>
