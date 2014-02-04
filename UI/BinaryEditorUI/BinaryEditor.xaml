@@ -36,8 +36,8 @@
 		</Menu>
 		<binaryEditorUI:BinaryCanvas x:Name="canvas" Grid.Row="1"
 			Data="{Binding Data, ElementName=self}"
-			SelStart="{Binding SelStart, ElementName=self}"
-			SelEnd="{Binding SelEnd, ElementName=self}"
+			SelStart="{Binding SelStart, ElementName=self, Mode=TwoWay}"
+			SelEnd="{Binding SelEnd, ElementName=self, Mode=TwoWay}"
 			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=TwoWay}"
 			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=TwoWay}"
 			xScrollMaximum="{Binding Maximum, ElementName=xScroll, Mode=TwoWay}"
@@ -49,7 +49,12 @@
 		/>
 		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}" PreviewMouseWheel="ScrollBar_PreviewMouseWheel"/>
 		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
-		<binaryEditorUI:Values Visibility="{Binding ShowValues, ElementName=self, Converter={StaticResource BoolToVis}}" Grid.Row="3" Grid.ColumnSpan="2" Data="{Binding Data, ElementName=self}" SelStart="{Binding SelStart, ElementName=self}" SelEnd="{Binding SelEnd, ElementName=self}"/>
+		<binaryEditorUI:Values Grid.Row="3" Grid.ColumnSpan="2"
+			Visibility="{Binding ShowValues, ElementName=self, Converter={StaticResource BoolToVis}}"
+			Data="{Binding Data, ElementName=self}"
+			SelStart="{Binding SelStart, ElementName=self}"
+			SelEnd="{Binding SelEnd, ElementName=self}"
+		/>
 	</Grid>
 
 </Window>
