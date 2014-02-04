@@ -75,6 +75,9 @@ namespace NeoEdit.UI.Resources
 				if (command == null)
 					continue;
 
+				if (command.Parameter == null)
+					command.Parameter = dictEntry.Key;
+
 				if (command.Key != Key.None)
 					window.InputBindings.Add(new InputBinding(command, new KeyGesture(command.Key, command.Modifiers)));
 			}

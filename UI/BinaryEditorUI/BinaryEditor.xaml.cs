@@ -334,7 +334,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			e.Handled = true;
 		}
 
-		void FindCallback(object obj)
+		void CommandCallback(object obj)
 		{
 		}
 	}

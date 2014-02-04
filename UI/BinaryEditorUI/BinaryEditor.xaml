@@ -10,7 +10,7 @@
 			<Setter Property="FontFamily" Value="{Binding CustomFontFamily, ElementName=self}"/>
 			<Setter Property="FontSize" Value="{Binding CustomFontSize, ElementName=self}"/>
 		</Style>
-		<resources:UICommand x:Key="findCommand" Key="F" Modifiers="Control" Parameter="Find" Executed="FindCallback"/>
+		<resources:UICommand x:Key="find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
 	</Window.Resources>
 
 	<Grid>
@@ -26,7 +26,7 @@
 		</Grid.RowDefinitions>
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_Edit">
-				<MenuItem Header="_Find" Command="{StaticResource findCommand}"/>
+				<MenuItem Header="_Find" Command="{StaticResource find}" InputGestureText="Ctrl+F"/>
 			</MenuItem>
 		</Menu>
 		<Canvas Grid.Row="1" Name="canvas" MouseDown="ClickHandler" MouseUp="ClickHandler" MouseMove="MoveHandler"  Background="White"/>
