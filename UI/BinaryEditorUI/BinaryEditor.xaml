@@ -10,6 +10,7 @@
 			<Setter Property="FontFamily" Value="{Binding CustomFontFamily, ElementName=self}"/>
 			<Setter Property="FontSize" Value="{Binding CustomFontSize, ElementName=self}"/>
 		</Style>
+		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
 		<resources:UICommand x:Key="Edit_Find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
 		<resources:UICommand x:Key="View_Values" Key="V" Modifiers="Control" Executed="CommandCallback"/>
 	</Window.Resources>
@@ -36,7 +37,7 @@
 		<Canvas Grid.Row="1" Name="canvas" MouseDown="ClickHandler" MouseUp="ClickHandler" MouseMove="MoveHandler"  Background="White"/>
 		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1"/>
 		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal"/>
-		<binaryEditorUI:Values Visibility="{Binding ShowValues, ElementName=self, Converter={binaryEditorUI:VisibilityConverter}}" Grid.Row="3" Grid.ColumnSpan="2" Data="{Binding Data, ElementName=self}" SelStart="{Binding SelStart, ElementName=self}" SelEnd="{Binding SelEnd, ElementName=self}"/>
+		<binaryEditorUI:Values Visibility="{Binding ShowValues, ElementName=self, Converter={StaticResource BoolToVis}}" Grid.Row="3" Grid.ColumnSpan="2" Data="{Binding Data, ElementName=self}" SelStart="{Binding SelStart, ElementName=self}" SelEnd="{Binding SelEnd, ElementName=self}"/>
 	</Grid>
 
 </Window>
