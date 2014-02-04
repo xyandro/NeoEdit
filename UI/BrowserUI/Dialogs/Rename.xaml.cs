@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using NeoEdit.Records;
+using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BrowserUI.Dialogs
 {

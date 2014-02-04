@@ -1,6 +1,7 @@
 ﻿<Window Name="self" x:Class="NeoEdit.UI.BinaryEditorUI.BinaryEditor"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="clr-namespace:NeoEdit.UI.Resources"
 	Title="Binary Editor" Height="400" Width="400" KeyDown="KeyDownHandler">
 
 	<Window.Resources>
@@ -8,6 +9,7 @@
 			<Setter Property="FontFamily" Value="{Binding CustomFontFamily, ElementName=self}"/>
 			<Setter Property="FontSize" Value="{Binding CustomFontSize, ElementName=self}"/>
 		</Style>
+		<resources:UICommand x:Key="findCommand" Key="F" Modifiers="Control" Parameter="Find" Executed="FindCallback"/>
 	</Window.Resources>
 
 	<Grid>
@@ -16,12 +18,18 @@
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		<Canvas Name="canvas" MouseDown="ClickHandler" MouseUp="ClickHandler" MouseMove="MoveHandler"  Background="White"/>
-		<ScrollBar Name="yScroll" Grid.Column="1"/>
-		<ScrollBar Name="xScroll" Grid.Row="1" Orientation="Horizontal"/>
+		<Menu>
+			<MenuItem Header="_Edit">
+				<MenuItem Header="_Find" Command="{StaticResource findCommand}"/>
+			</MenuItem>
+		</Menu>
+		<Canvas Grid.Row="1" Name="canvas" MouseDown="ClickHandler" MouseUp="ClickHandler" MouseMove="MoveHandler"  Background="White"/>
+		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1"/>
+		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal"/>
 	</Grid>
 
 </Window>

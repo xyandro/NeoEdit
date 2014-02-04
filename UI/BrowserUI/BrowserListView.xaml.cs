@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using NeoEdit.Records;
+using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BrowserUI
 {

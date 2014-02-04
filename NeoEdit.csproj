@@ -100,7 +100,8 @@
     <Compile Include="UI\BrowserUI\Dialogs\Rename.xaml.cs">
       <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\UIHelper.cs" />
+    <Compile Include="UI\Resources\UICommand.cs" />
+    <Compile Include="UI\Resources\UIHelper.cs" />
     <Page Include="UI\Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

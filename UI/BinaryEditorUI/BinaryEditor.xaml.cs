@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BinaryEditorUI
 {
@@ -85,8 +86,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 		readonly UIHelper<BinaryEditor> uiHelper;
 		public BinaryEditor(byte[] data)
 		{
-			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
+			uiHelper = new UIHelper<BinaryEditor>(this);
 
 			Data = data;
 			SelStart = SelEnd = 0;
@@ -328,6 +329,10 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 			MouseHandler(e.GetPosition(canvas));
 			e.Handled = true;
+		}
+
+		void FindCallback(object obj)
+		{
 		}
 	}
 }

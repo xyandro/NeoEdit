@@ -2,6 +2,7 @@
 using System.Windows.Data;
 using NeoEdit.Records;
 using NeoEdit.UI.BrowserUI.Converters;
+using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BrowserUI
 {

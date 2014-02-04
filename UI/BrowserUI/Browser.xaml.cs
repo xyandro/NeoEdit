@@ -13,6 +13,7 @@ using NeoEdit.Records.Registry;
 using NeoEdit.UI.BinaryEditorUI;
 using NeoEdit.UI.BrowserUI.Dialogs;
 using NeoEdit.UI.Dialogs;
+using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BrowserUI
 {
