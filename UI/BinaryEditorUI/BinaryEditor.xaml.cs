@@ -20,6 +20,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 		[DepProp]
 		public double CustomFontSize { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public long SelStart
 		{
 			get { return uiHelper.GetPropValue<long>(); }
@@ -336,6 +338,10 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 		void CommandCallback(object obj)
 		{
+			switch (obj as string)
+			{
+				case "toggleValues": ShowValues = !ShowValues; break;
+			}
 		}
 	}
 }

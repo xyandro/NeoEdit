@@ -84,6 +84,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="Clipboard.cs" />
     <Compile Include="Test\UnicodeGenerator.cs" />
+    <Compile Include="UI\BinaryEditorUI\VisibilityConverter.cs" />
     <Compile Include="UI\BinaryEditorUI\Value.xaml.cs">
       <DependentUpon>Value.xaml</DependentUpon>
     </Compile>
