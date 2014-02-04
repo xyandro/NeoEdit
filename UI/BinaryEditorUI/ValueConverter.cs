@@ -57,22 +57,22 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 			switch (type)
 			{
-				case "LEUInt8": return GetBytes(data, selStart, selEnd, 1, true)[0].ToString();
-				case "LEUInt16": return BitConverter.ToUInt16(GetBytes(data, selStart, selEnd, 2, true), 0).ToString();
-				case "LEUInt32": return BitConverter.ToUInt32(GetBytes(data, selStart, selEnd, 4, true), 0).ToString();
-				case "LEUInt64": return BitConverter.ToUInt64(GetBytes(data, selStart, selEnd, 8, true), 0).ToString();
-				case "LEInt8": return ((sbyte)GetBytes(data, selStart, selEnd, 1, true)[0]).ToString();
-				case "LEInt16": return BitConverter.ToInt16(GetBytes(data, selStart, selEnd, 2, true), 0).ToString();
-				case "LEInt32": return BitConverter.ToInt32(GetBytes(data, selStart, selEnd, 4, true), 0).ToString();
-				case "LEInt64": return BitConverter.ToInt64(GetBytes(data, selStart, selEnd, 8, true), 0).ToString();
-				case "BEUInt8": return GetBytes(data, selStart, selEnd, 1, false)[0].ToString();
-				case "BEUInt16": return BitConverter.ToUInt16(GetBytes(data, selStart, selEnd, 2, false), 0).ToString();
-				case "BEUInt32": return BitConverter.ToUInt32(GetBytes(data, selStart, selEnd, 4, false), 0).ToString();
-				case "BEUInt64": return BitConverter.ToUInt64(GetBytes(data, selStart, selEnd, 8, false), 0).ToString();
-				case "BEInt8": return ((sbyte)GetBytes(data, selStart, selEnd, 1, false)[0]).ToString();
-				case "BEInt16": return BitConverter.ToInt16(GetBytes(data, selStart, selEnd, 2, false), 0).ToString();
-				case "BEInt32": return BitConverter.ToInt32(GetBytes(data, selStart, selEnd, 4, false), 0).ToString();
-				case "BEInt64": return BitConverter.ToInt64(GetBytes(data, selStart, selEnd, 8, false), 0).ToString();
+				case "UInt8LE": return GetBytes(data, selStart, selEnd, 1, true)[0].ToString();
+				case "UInt16LE": return BitConverter.ToUInt16(GetBytes(data, selStart, selEnd, 2, true), 0).ToString();
+				case "UInt32LE": return BitConverter.ToUInt32(GetBytes(data, selStart, selEnd, 4, true), 0).ToString();
+				case "UInt64LE": return BitConverter.ToUInt64(GetBytes(data, selStart, selEnd, 8, true), 0).ToString();
+				case "Int8LE": return ((sbyte)GetBytes(data, selStart, selEnd, 1, true)[0]).ToString();
+				case "Int16LE": return BitConverter.ToInt16(GetBytes(data, selStart, selEnd, 2, true), 0).ToString();
+				case "Int32LE": return BitConverter.ToInt32(GetBytes(data, selStart, selEnd, 4, true), 0).ToString();
+				case "Int64LE": return BitConverter.ToInt64(GetBytes(data, selStart, selEnd, 8, true), 0).ToString();
+				case "UInt8BE": return GetBytes(data, selStart, selEnd, 1, false)[0].ToString();
+				case "UInt16BE": return BitConverter.ToUInt16(GetBytes(data, selStart, selEnd, 2, false), 0).ToString();
+				case "UInt32BE": return BitConverter.ToUInt32(GetBytes(data, selStart, selEnd, 4, false), 0).ToString();
+				case "UInt64BE": return BitConverter.ToUInt64(GetBytes(data, selStart, selEnd, 8, false), 0).ToString();
+				case "Int8BE": return ((sbyte)GetBytes(data, selStart, selEnd, 1, false)[0]).ToString();
+				case "Int16BE": return BitConverter.ToInt16(GetBytes(data, selStart, selEnd, 2, false), 0).ToString();
+				case "Int32BE": return BitConverter.ToInt32(GetBytes(data, selStart, selEnd, 4, false), 0).ToString();
+				case "Int64BE": return BitConverter.ToInt64(GetBytes(data, selStart, selEnd, 8, false), 0).ToString();
 				case "UTF8": return GetString(Encoding.UTF8, data, selStart, selEnd);
 				case "UTF16LE": return GetString(Encoding.Unicode, data, selStart, selEnd);
 				case "UTF16BE": return GetString(Encoding.BigEndianUnicode, data, selStart, selEnd);

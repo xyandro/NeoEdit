@@ -24,35 +24,35 @@
 	</StackPanel.Style>
 
 	<StackPanel Orientation="Horizontal">
-		<Label Content="LEUnsigned:"/>
-		<binaryEditorUI:Value Type="LEUInt8"/>
-		<binaryEditorUI:Value Type="LEUInt16"/>
-		<binaryEditorUI:Value Type="LEUInt32"/>
-		<binaryEditorUI:Value Type="LEUInt64"/>
+		<Label Content="UnsignedLE:"/>
+		<binaryEditorUI:Value Type="UInt8LE"/>
+		<binaryEditorUI:Value Type="UInt16LE"/>
+		<binaryEditorUI:Value Type="UInt32LE"/>
+		<binaryEditorUI:Value Type="UInt64LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
-		<Label Content="LESigned:"/>
-		<binaryEditorUI:Value Type="LEInt8"/>
-		<binaryEditorUI:Value Type="LEInt16"/>
-		<binaryEditorUI:Value Type="LEInt32"/>
-		<binaryEditorUI:Value Type="LEInt64"/>
+		<Label Content="SignedLE:"/>
+		<binaryEditorUI:Value Type="Int8LE"/>
+		<binaryEditorUI:Value Type="Int16LE"/>
+		<binaryEditorUI:Value Type="Int32LE"/>
+		<binaryEditorUI:Value Type="Int64LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
-		<Label Content="BEUnsigned:"/>
-		<binaryEditorUI:Value Type="BEUInt8"/>
-		<binaryEditorUI:Value Type="BEUInt16"/>
-		<binaryEditorUI:Value Type="BEUInt32"/>
-		<binaryEditorUI:Value Type="BEUInt64"/>
+		<Label Content="UnsignedBE:"/>
+		<binaryEditorUI:Value Type="UInt8BE"/>
+		<binaryEditorUI:Value Type="UInt16BE"/>
+		<binaryEditorUI:Value Type="UInt32BE"/>
+		<binaryEditorUI:Value Type="UInt64BE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
-		<Label Content="BESigned:"/>
-		<binaryEditorUI:Value Type="BEInt8"/>
-		<binaryEditorUI:Value Type="BEInt16"/>
-		<binaryEditorUI:Value Type="BEInt32"/>
-		<binaryEditorUI:Value Type="BEInt64"/>
+		<Label Content="SignedBE:"/>
+		<binaryEditorUI:Value Type="Int8BE"/>
+		<binaryEditorUI:Value Type="Int16BE"/>
+		<binaryEditorUI:Value Type="Int32BE"/>
+		<binaryEditorUI:Value Type="Int64BE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
