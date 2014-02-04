@@ -11,6 +11,14 @@ namespace NeoEdit.UI.BinaryEditorUI
 		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool ShowLE { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool ShowBE { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool ShowNum { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool ShowStr { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
 		static Values() { UIHelper<Values>.Register(); }
 
@@ -19,6 +27,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 		{
 			uiHelper = new UIHelper<Values>(this);
 			InitializeComponent();
+			ShowLE = ShowNum = true;
+			ShowBE = ShowStr = false;
 		}
 	}
 }

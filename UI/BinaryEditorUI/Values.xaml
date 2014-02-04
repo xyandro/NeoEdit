@@ -24,6 +24,21 @@
 	</StackPanel.Style>
 
 	<StackPanel Orientation="Horizontal">
+		<Label Content="Show:" Margin="0,0,5,0"/>
+		<CheckBox Content="_Little Endian" IsChecked="{Binding ShowLE, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Big Endian" IsChecked="{Binding ShowBE, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Numbers" IsChecked="{Binding ShowNum, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Strings" IsChecked="{Binding ShowStr, ElementName=self}" Margin="0,0,5,0"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowLE" ElementName="self"/>
+				<Binding Path="ShowNum" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
 		<Label Content="UnsignedLE:"/>
 		<binaryEditorUI:Value Type="UInt8LE"/>
 		<binaryEditorUI:Value Type="UInt16LE"/>
@@ -32,6 +47,13 @@
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowLE" ElementName="self"/>
+				<Binding Path="ShowNum" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
 		<Label Content="SignedLE:"/>
 		<binaryEditorUI:Value Type="Int8LE"/>
 		<binaryEditorUI:Value Type="Int16LE"/>
@@ -40,6 +62,13 @@
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowBE" ElementName="self"/>
+				<Binding Path="ShowNum" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+		
 		<Label Content="UnsignedBE:"/>
 		<binaryEditorUI:Value Type="UInt8BE"/>
 		<binaryEditorUI:Value Type="UInt16BE"/>
@@ -48,6 +77,13 @@
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowBE" ElementName="self"/>
+				<Binding Path="ShowNum" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
 		<Label Content="SignedBE:"/>
 		<binaryEditorUI:Value Type="Int8BE"/>
 		<binaryEditorUI:Value Type="Int16BE"/>
@@ -56,26 +92,60 @@
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
 		<Label Content="UTF8:"/>
 		<binaryEditorUI:Value Type="UTF8"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowLE" ElementName="self"/>
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
 		<Label Content="UTF16LE:"/>
 		<binaryEditorUI:Value Type="UTF16LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowBE" ElementName="self"/>
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
 		<Label Content="UTF16BE:"/>
 		<binaryEditorUI:Value Type="UTF16BE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowLE" ElementName="self"/>
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
 		<Label Content="UTF32LE:"/>
 		<binaryEditorUI:Value Type="UTF32LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+				<Binding Path="ShowBE" ElementName="self"/>
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
 		<Label Content="UTF32BE:"/>
 		<binaryEditorUI:Value Type="UTF32BE"/>
 	</StackPanel>
