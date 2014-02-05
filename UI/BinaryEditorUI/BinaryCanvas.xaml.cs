@@ -36,6 +36,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 		int internalChangeCount = 0;
 		long _pos1, _pos2;
+
 		long Pos1
 		{
 			get { return _pos1; }
@@ -63,7 +64,6 @@ namespace NeoEdit.UI.BinaryEditorUI
 				SelStart = Math.Min(_pos1, _pos2);
 				SelEnd = Math.Max(_pos1, _pos2);
 
-				EnsureVisible();
 				InvalidateVisual();
 			}
 		}
@@ -76,10 +76,11 @@ namespace NeoEdit.UI.BinaryEditorUI
 		const int maxColumns = Int32.MaxValue;
 
 		bool mouseDown;
+		bool overrideSelecting;
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool controlOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Control; } }
-		bool selecting { get { return (mouseDown) || (shiftDown); } }
+		bool selecting { get { return (overrideSelecting) || (mouseDown) || (shiftDown); } }
 
 		int columns, rows;
 
@@ -136,17 +137,29 @@ namespace NeoEdit.UI.BinaryEditorUI
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 
-			uiHelper.AddCallback(a => a.SelStart, (o, n) => { if (internalChangeCount == 0) Pos1 = SelStart; });
-			uiHelper.AddCallback(a => a.SelEnd, (o, n) => { if (internalChangeCount == 0)Pos2 = SelEnd; });
+			uiHelper.AddCallback(a => a.SelStart, (o, n) =>
+			{
+				if (internalChangeCount != 0)
+					return;
+
+				Pos2 = SelStart;
+			});
+			uiHelper.AddCallback(a => a.SelEnd, (o, n) =>
+			{
+				if (internalChangeCount != 0)
+					return;
+
+				overrideSelecting = true;
+				Pos1 = SelEnd;
+				overrideSelecting = false;
+			});
 
 			Loaded += (s, e) => InvalidateVisual();
 		}
 
 		void EnsureVisible()
 		{
-			var y = GetYFromRow(Pos2 / columns);
-			yScrollValue = Math.Min(y, Math.Max(y + rowHeight - ActualHeight, yScrollValue));
-			y = GetYFromRow(Pos1 / columns);
+			var y = GetYFromRow(Pos1 / columns);
 			yScrollValue = Math.Min(y, Math.Max(y + rowHeight - ActualHeight, yScrollValue));
 		}
 
