@@ -18,6 +18,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
+		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
 		readonly UIHelper<BinaryEditor> uiHelper;
@@ -38,18 +40,19 @@ namespace NeoEdit.UI.BinaryEditorUI
 		{
 			switch (e.Key)
 			{
-				case Key.F3: FindNext(); break;
+				case Key.F3: FindNext(!shiftDown); break;
 				default: uiHelper.RaiseEvent(canvas, e); break;
 			}
 		}
 
 		FindResult currentFind;
-		void FindNext()
+		void FindNext(bool forward = true)
 		{
+			var offset = forward ? 1 : -1;
 			if (currentFind == null)
 				return;
 
-			for (var pos = SelStart + 1; pos < Data.Length; pos++)
+			for (var pos = SelStart + offset; (pos >= 0) && (pos < Data.Length); pos += offset)
 			{
 				for (var findPos = 0; findPos < currentFind.FindData.Count; findPos++)
 				{
