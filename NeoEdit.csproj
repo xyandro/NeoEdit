@@ -89,6 +89,10 @@
       <DependentUpon>BinaryCanvas.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\BinaryEditorUI\Converter.cs" />
+    <Compile Include="UI\BinaryEditorUI\ValidValueConverter.cs" />
+    <Compile Include="UI\BinaryEditorUI\Find.xaml.cs">
+      <DependentUpon>Find.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\BinaryEditorUI\ExpressionConverter.cs" />
     <Compile Include="UI\BinaryEditorUI\PipingConverter.cs" />
     <Compile Include="UI\BinaryEditorUI\MultiPipingConverter.cs" />
@@ -119,6 +123,10 @@
     <Compile Include="UI\Resources\UICommand.cs" />
     <Compile Include="UI\Resources\UIHelper.cs" />
     <Page Include="UI\BinaryEditorUI\BinaryCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\BinaryEditorUI\Find.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

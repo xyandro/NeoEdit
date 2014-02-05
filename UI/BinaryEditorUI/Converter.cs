@@ -3,7 +3,7 @@ using System.Text;
 
 namespace NeoEdit.UI.BinaryEditorUI
 {
-	static class Converter
+	public static class Converter
 	{
 		public enum ConverterType
 		{
