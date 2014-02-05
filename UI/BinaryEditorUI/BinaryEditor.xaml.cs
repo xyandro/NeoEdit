@@ -88,7 +88,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 						if ((findData[0] >= 'a') && (findData[0] <= 'z'))
 							usePos = selectFunc(usePos, findFunc(Data, (byte)(findData[0] - 'a' + 'A'), pos));
 						else if ((findData[0] >= 'A') && (findData[0] <= 'Z'))
-							usePos = selectFunc(usePos, findFunc(Data, (byte)(findData[0] - 'A' + 'z'), pos));
+							usePos = selectFunc(usePos, findFunc(Data, (byte)(findData[0] - 'A' + 'a'), pos));
 					}
 				}
 
