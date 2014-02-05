@@ -49,7 +49,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 				SelStart = Math.Min(_pos1, _pos2);
 				SelEnd = Math.Max(_pos1, _pos2);
 
-				EnsureVisible();
+				EnsureVisible(Pos1);
 				InvalidateVisual();
 			}
 		}
@@ -143,6 +143,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 					return;
 
 				Pos2 = SelStart;
+				EnsureVisible(Pos2);
 			});
 			uiHelper.AddCallback(a => a.SelEnd, (o, n) =>
 			{
@@ -157,9 +158,9 @@ namespace NeoEdit.UI.BinaryEditorUI
 			Loaded += (s, e) => InvalidateVisual();
 		}
 
-		void EnsureVisible()
+		void EnsureVisible(long position)
 		{
-			var y = GetYFromRow(Pos1 / columns);
+			var y = GetYFromRow(position / columns);
 			yScrollValue = Math.Min(y, Math.Max(y + rowHeight - ActualHeight, yScrollValue));
 		}
 
