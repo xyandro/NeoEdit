@@ -133,6 +133,9 @@ namespace NeoEdit.UI.BinaryEditorUI
 			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => ScheduleLayout());
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => ScheduleLayout());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => ScheduleLayout());
+
+			uiHelper.AddCallback(a => a.SelStart, (o, n) => Pos1 = SelStart);
+			uiHelper.AddCallback(a => a.SelEnd, (o, n) => Pos2 = SelEnd);
 		}
 
 		void EnsureVisible()

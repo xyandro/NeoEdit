@@ -49,7 +49,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			DialogResult = true;
 		}
 
-		public static IEnumerable<byte[]> RunFind()
+		public static List<byte[]> RunFind()
 		{
 			var find = new Find();
 			if (find.ShowDialog() == false)

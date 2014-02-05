@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Collections.Generic;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using NeoEdit.UI.Resources;
@@ -27,16 +28,58 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 			Data = data;
 			SelStart = SelEnd = 0;
-			PreviewKeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
 			PreviewMouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 
 			Show();
+		}
+
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.F3: FindNext(); break;
+				default: uiHelper.RaiseEvent(canvas, e); break;
+			}
+		}
+
+		List<byte[]> currentFind;
+		void FindNext()
+		{
+			if (currentFind == null)
+				return;
+
+			for (var pos = SelStart + 1; pos < Data.Length; pos++)
+			{
+				foreach (var find in currentFind)
+				{
+					int findIdx;
+					for (findIdx = 0; findIdx < find.Length; ++findIdx)
+						if (Data[pos + findIdx] != find[findIdx])
+							break;
+					if (findIdx == find.Length)
+					{
+						SelStart = pos;
+						SelEnd = pos + find.Length - 1;
+						return;
+					}
+				}
+			}
 		}
 
 		void CommandCallback(object obj)
 		{
 			switch (obj as string)
 			{
+				case "Edit_Find":
+					{
+						var results = Find.RunFind();
+						if (results != null)
+						{
+							currentFind = results;
+							FindNext();
+						}
+					}
+					break;
 				case "View_Values": ShowValues = !ShowValues; break;
 			}
 		}
