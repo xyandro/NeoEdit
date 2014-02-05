@@ -8,6 +8,12 @@
 	d:DesignHeight="300" d:DesignWidth="300"
 	Background="LightGray">
 
+	<StackPanel.Resources>
+		<binaryEditorUI:ExpressionConverter x:Key="ExpConv"/>
+		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
+		<binaryEditorUI:MultiPipingConverter x:Key="ExpToVis" Converter1="{StaticResource ExpConv}" Converter2="{StaticResource BoolToVis}"/>
+	</StackPanel.Resources>
+	
 	<StackPanel.Style>
 		<Style>
 			<Style.Resources>
@@ -34,7 +40,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -49,7 +55,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -64,7 +70,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -79,7 +85,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -92,43 +98,25 @@
 		<binaryEditorUI:DisplayValue Type="Int64BE"/>
 	</StackPanel>
 
-	<StackPanel Orientation="Horizontal">
-		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
-				<Binding Path="ShowFloat" ElementName="self"/>
-			</MultiBinding>
-		</StackPanel.Visibility>
-
+	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowFloat, ElementName=self, Converter={StaticResource BoolToVis}}">
 		<Label Content="Float:"/>
 		<binaryEditorUI:DisplayValue Type="Single"/>
 		<binaryEditorUI:DisplayValue Type="Double"/>
 	</StackPanel>
 
-	<StackPanel Orientation="Horizontal">
-		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
-				<Binding Path="ShowStr" ElementName="self"/>
-			</MultiBinding>
-		</StackPanel.Visibility>
-
+	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={StaticResource BoolToVis}}">
 		<Label Content="UTF7:"/>
 		<binaryEditorUI:DisplayValue Type="UTF7"/>
 	</StackPanel>
 
-	<StackPanel Orientation="Horizontal">
-		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
-				<Binding Path="ShowStr" ElementName="self"/>
-			</MultiBinding>
-		</StackPanel.Visibility>
-
+	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={StaticResource BoolToVis}}">
 		<Label Content="UTF8:"/>
 		<binaryEditorUI:DisplayValue Type="UTF8"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -140,7 +128,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -152,7 +140,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -164,7 +152,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{binaryEditorUI:VisibilityConverter}">
+			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>

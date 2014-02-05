@@ -11,7 +11,7 @@ namespace NeoEdit
 		{
 			//var data = System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\magic.mgc");
 			//var data = System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\NeoEdit.exe.config");
-			var data = System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\TestData\Combined.txt");
+			var data = System.IO.File.ReadAllBytes(@"C:\Docs\Cpp\NeoEdit\bin\Debug\TestData\Combined.txt");
 			new NeoEdit.UI.BinaryEditorUI.BinaryEditor(data);
 
 			//new Test.UnicodeGenerator().Generate();
