@@ -10,6 +10,7 @@ namespace NeoEdit.Test
 	{
 		enum Encodings
 		{
+			UTF7,
 			UTF8,
 			UTF16LE,
 			UTF16BE,
@@ -97,6 +98,9 @@ namespace NeoEdit.Test
 							Encoding encoder = null;
 							switch (encoding)
 							{
+								case Encodings.UTF7:
+									encoder = new UTF7Encoding();
+									break;
 								case Encodings.UTF8:
 									encoder = new UTF8Encoding(bom == BOMs.Yes);
 									break;
