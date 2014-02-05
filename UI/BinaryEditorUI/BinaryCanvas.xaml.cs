@@ -62,6 +62,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 				SelStart = Math.Min(_pos1, _pos2);
 				SelEnd = Math.Max(_pos1, _pos2);
 
+				EnsureVisible();
 				ScheduleLayout();
 			}
 		}
@@ -140,7 +141,9 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 		void EnsureVisible()
 		{
-			var y = GetYFromRow(Pos1 / columns);
+			var y = GetYFromRow(Pos2 / columns);
+			yScrollValue = Math.Min(y, Math.Max(y + rowHeight - ActualHeight, yScrollValue));
+			y = GetYFromRow(Pos1 / columns);
 			yScrollValue = Math.Min(y, Math.Max(y + rowHeight - ActualHeight, yScrollValue));
 		}
 
