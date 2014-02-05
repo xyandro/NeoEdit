@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using NeoEdit.UI.Resources;
@@ -48,12 +49,54 @@ namespace NeoEdit.UI.BinaryEditorUI
 		FindResult currentFind;
 		void FindNext(bool forward = true)
 		{
-			var offset = forward ? 1 : -1;
 			if (currentFind == null)
 				return;
 
-			for (var pos = SelStart + offset; (pos >= 0) && (pos < Data.Length); pos += offset)
+			var offset = forward ? 1 : -1;
+			Func<byte[], byte, long, long> findFunc;
+			if (forward)
 			{
+				findFunc = (_data, _find, _start) =>
+				{
+					var _pos = Array.IndexOf(_data, _find, (int)_start);
+					if (_pos == -1)
+						return long.MaxValue;
+					return _pos;
+				};
+			}
+			else
+			{
+				findFunc = (_data, _find, _start) => Array.LastIndexOf(_data, _find, (int)_start);
+			}
+			var selectFunc = forward ? (Func<long, long, long>)Math.Min : Math.Max;
+			var invalid = forward ? long.MaxValue : -1;
+
+			var pos = SelStart;
+			while (true)
+			{
+				pos += offset;
+
+				var usePos = invalid;
+				for (var findPos = 0; findPos < currentFind.FindData.Count; findPos++)
+				{
+					var caseSensitive = currentFind.CaseSensitive[findPos];
+					var findData = currentFind.FindData[findPos];
+
+					usePos = selectFunc(usePos, findFunc(Data, findData[0], pos));
+					if (!caseSensitive)
+					{
+						if ((findData[0] >= 'a') && (findData[0] <= 'z'))
+							usePos = selectFunc(usePos, findFunc(Data, (byte)(findData[0] - 'a' + 'A'), pos));
+						else if ((findData[0] >= 'A') && (findData[0] <= 'Z'))
+							usePos = selectFunc(usePos, findFunc(Data, (byte)(findData[0] - 'A' + 'z'), pos));
+					}
+				}
+
+				if ((usePos < 0) || (usePos >= Data.Length))
+					break;
+
+				pos = usePos;
+
 				for (var findPos = 0; findPos < currentFind.FindData.Count; findPos++)
 				{
 					var caseSensitive = currentFind.CaseSensitive[findPos];
