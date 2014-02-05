@@ -23,6 +23,7 @@
 					<Setter Property="Data" Value="{Binding Data, ElementName=self}"/>
 					<Setter Property="SelStart" Value="{Binding SelStart, ElementName=self}"/>
 					<Setter Property="SelEnd" Value="{Binding SelEnd, ElementName=self}"/>
+					<Setter Property="FoundText" Value="{Binding FoundText, ElementName=self}"/>
 				</Style>
 			</Style.Resources>
 		</Style>

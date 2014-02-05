@@ -12,6 +12,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 		[DepProp]
 		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public string Type { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
 		static DisplayValue() { UIHelper<DisplayValue>.Register(); }

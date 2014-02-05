@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Windows;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace NeoEdit.UI.BinaryEditorUI
 {
@@ -27,11 +28,11 @@ namespace NeoEdit.UI.BinaryEditorUI
 			var term = "'([^']*)'";
 			var termRE = new Regex("^" + term + "$");
 
-			var binaryOperation = String.Format(@"{0}\s*(AND|OR|==)\s*{0}", term);
+			var binaryOperation = String.Format(@"{0}\s*(AND|OR|==|=i=)\s*{0}", term);
 			var binaryOperationRE = new Regex(binaryOperation);
 
-			var trinaryOperation = String.Format(@"{0}\s*\?\s*{0}\s*:\s*{0}", term);
-			var trinaryOperationRE = new Regex(trinaryOperation);
+			var ternaryOperation = String.Format(@"{0}\s*\?\s*{0}\s*:\s*{0}", term);
+			var ternaryOperationRE = new Regex(ternaryOperation);
 
 			var parens = String.Format(@"\(\s*{0}\s*\)", term);
 			var parensRE = new Regex(parens);
@@ -60,6 +61,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 						case "AND": result = (Boolean.Parse(term1) && Boolean.Parse(term2)).ToString(); break;
 						case "OR": result = (Boolean.Parse(term1) || Boolean.Parse(term2)).ToString(); break;
 						case "==": result = (term1 == term2).ToString(); break;
+						case "=i=": result = (term1.Equals(term2, StringComparison.OrdinalIgnoreCase)).ToString(); break;
 						default: throw new Exception("Invalid op");
 					}
 
@@ -67,7 +69,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 					continue;
 				}
 
-				match = trinaryOperationRE.Match(expression);
+				match = ternaryOperationRE.Match(expression);
 				if (match.Success)
 				{
 					var test = match.Groups[1].Value;
@@ -101,6 +103,9 @@ namespace NeoEdit.UI.BinaryEditorUI
 						return new Thickness(val);
 					return val;
 				}
+
+				if (targetType == typeof(Brush))
+					return typeof(Brushes).GetProperty(expression).GetValue(null);
 
 				return expression;
 			}

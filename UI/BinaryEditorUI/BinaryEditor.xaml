@@ -50,6 +50,7 @@
 			Data="{Binding Data, ElementName=self}"
 			SelStart="{Binding SelStart, ElementName=self}"
 			SelEnd="{Binding SelEnd, ElementName=self}"
+			FoundText="{Binding FoundText, ElementName=self}"
 		/>
 	</Grid>
 

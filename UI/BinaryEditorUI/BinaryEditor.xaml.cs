@@ -15,6 +15,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
@@ -97,6 +99,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 						if (results != null)
 						{
 							currentFind = results;
+							FoundText = currentFind.FindText;
 							FindNext();
 						}
 					}

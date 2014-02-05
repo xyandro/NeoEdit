@@ -6,11 +6,21 @@
     xmlns:binaryEditorUI="clr-namespace:NeoEdit.UI.BinaryEditorUI"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
-	Background="Transparent"
 	Padding="0"
 	BorderThickness="0"
 	IsReadOnly="True">
 
+	<TextBox.Resources>
+		<binaryEditorUI:ExpressionConverter x:Key="ExpConv"/>
+	</TextBox.Resources>
+	
+	<TextBox.Background>
+		<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] =i= [1] ? 'LightBlue' : 'Transparent'">
+			<Binding Path="Text" ElementName="self"/>
+			<Binding Path="FoundText" ElementName="self"/>
+		</MultiBinding>
+	</TextBox.Background>
+	
 	<TextBox.Text>
 		<MultiBinding Converter="{binaryEditorUI:DisplayValueConverter}">
 			<Binding Path="Data" ElementName="self"/>
