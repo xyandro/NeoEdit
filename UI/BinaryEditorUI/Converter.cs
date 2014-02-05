@@ -65,23 +65,22 @@ namespace NeoEdit.UI.BinaryEditorUI
 		{
 			if ((c >= '0') && (c <= '9'))
 				return c - '0';
-			if ((c >= 'A') && (c <= 'F'))
-				return c - 'A' + 10;
-			throw new Exception("Invalid character");
+			return c - 'A' + 10;
 		}
 
 		static char GetHexChar(int val)
 		{
 			if ((val >= 0) && (val < 10))
 				return (char)('0' + val);
-			if ((val >= 10) && (val < 16))
-				return (char)('A' + val - 10);
-			throw new Exception("Invalid character");
+			return (char)('A' + val - 10);
 		}
 
 		static byte[] StringToHex(string str, bool reverse)
 		{
 			str = str.ToUpper().Replace(",", "").Replace(" ", "").Replace("-", "");
+			for (var ctr = 0; ctr < str.Length; ctr++)
+				if (((str[ctr] < '0') || (str[ctr] > '9')) && ((str[ctr] < 'A') || (str[ctr] > 'F')))
+					return null;
 
 			if (str.Length % 2 != 0)
 				str = "0" + str;
@@ -148,28 +147,43 @@ namespace NeoEdit.UI.BinaryEditorUI
 			return data;
 		}
 
+		public delegate bool TryParseHandler<T>(string value, out T result);
+		static byte[] NumToBytes<T>(string str, TryParseHandler<T> tryParse, Func<T, byte[]> converter, bool reverse)
+		{
+			T value;
+			if (!tryParse(str, out value))
+				return null;
+			var data = converter(value);
+			if (reverse)
+				Array.Reverse(data);
+			return data;
+		}
+
 		static public byte[] Convert(ConverterType type, string value)
 		{
+			if (value == null)
+				value = "";
+
 			switch (type)
 			{
-				case ConverterType.UInt8LE: return new byte[] { Byte.Parse(value) };
-				case ConverterType.UInt16LE: return BitConverter.GetBytes(UInt16.Parse(value));
-				case ConverterType.UInt32LE: return BitConverter.GetBytes(UInt32.Parse(value));
-				case ConverterType.UInt64LE: return BitConverter.GetBytes(UInt64.Parse(value));
-				case ConverterType.Int8LE: return new byte[] { (byte)SByte.Parse(value) };
-				case ConverterType.Int16LE: return BitConverter.GetBytes(Int16.Parse(value));
-				case ConverterType.Int32LE: return BitConverter.GetBytes(Int32.Parse(value));
-				case ConverterType.Int64LE: return BitConverter.GetBytes(Int64.Parse(value));
-				case ConverterType.UInt8BE: return new byte[] { Byte.Parse(value) };
-				case ConverterType.UInt16BE: return Reverse(BitConverter.GetBytes(UInt16.Parse(value)));
-				case ConverterType.UInt32BE: return Reverse(BitConverter.GetBytes(UInt32.Parse(value)));
-				case ConverterType.UInt64BE: return Reverse(BitConverter.GetBytes(UInt64.Parse(value)));
-				case ConverterType.Int8BE: return new byte[] { (byte)SByte.Parse(value) };
-				case ConverterType.Int16BE: return Reverse(BitConverter.GetBytes(Int16.Parse(value)));
-				case ConverterType.Int32BE: return Reverse(BitConverter.GetBytes(Int32.Parse(value)));
-				case ConverterType.Int64BE: return Reverse(BitConverter.GetBytes(Int64.Parse(value)));
-				case ConverterType.Single: return BitConverter.GetBytes(Single.Parse(value));
-				case ConverterType.Double: return BitConverter.GetBytes(Double.Parse(value));
+				case ConverterType.UInt8LE: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, false);
+				case ConverterType.UInt16LE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), false);
+				case ConverterType.UInt32LE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), false);
+				case ConverterType.UInt64LE: return NumToBytes<UInt64>(value, UInt64.TryParse, v => BitConverter.GetBytes(v), false);
+				case ConverterType.Int8LE: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, false);
+				case ConverterType.Int16LE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), false);
+				case ConverterType.Int32LE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), false);
+				case ConverterType.Int64LE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), false);
+				case ConverterType.UInt8BE: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, true);
+				case ConverterType.UInt16BE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), true);
+				case ConverterType.UInt32BE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), true);
+				case ConverterType.UInt64BE: return NumToBytes<UInt64>(value, UInt64.TryParse, v => BitConverter.GetBytes(v), true);
+				case ConverterType.Int8BE: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, true);
+				case ConverterType.Int16BE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), true);
+				case ConverterType.Int32BE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), true);
+				case ConverterType.Int64BE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), true);
+				case ConverterType.Single: return NumToBytes<Single>(value, Single.TryParse, v => BitConverter.GetBytes(v), false);
+				case ConverterType.Double: return NumToBytes<Double>(value, Double.TryParse, v => BitConverter.GetBytes(v), false);
 				case ConverterType.UTF7: return Encoding.UTF7.GetBytes(value);
 				case ConverterType.UTF8: return Encoding.UTF8.GetBytes(value);
 				case ConverterType.UTF16LE: return Encoding.Unicode.GetBytes(value);

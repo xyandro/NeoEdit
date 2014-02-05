@@ -7,19 +7,11 @@ namespace NeoEdit.Test
 	{
 		void RunTest(Converter.ConverterType type, string value, byte[] expected)
 		{
-			byte[] result;
-			try
-			{
-				result = Converter.Convert(type, value);
-				if (expected == null)
-					throw new Exception("Success when failure expected");
-			}
-			catch
-			{
-				if (expected == null)
-					return;
-				throw;
-			}
+			var result = Converter.Convert(type, value);
+			if ((result == null) != (expected == null))
+				throw new Exception("Didn't receive expected success status");
+			if (expected == null)
+				return;
 
 			var str = Converter.Convert(type, result, 0, 0);
 			if (str != value)
@@ -200,7 +192,7 @@ namespace NeoEdit.Test
 			RunTest(Converter.ConverterType.Single, "1.134274E+38", new byte[] { 165, 170, 170, 126 });
 			RunTest(Converter.ConverterType.Single, "3.402823E+38", new byte[] { 253, 255, 127, 127 });
 			RunTest(Converter.ConverterType.Single, "", null);
-			RunTest(Converter.ConverterType.Single, "-3.402822E+38", null);
+			RunTest(Converter.ConverterType.Single, "-3.402824E+38", null);
 			RunTest(Converter.ConverterType.Single, "3.402824E+38", null);
 			RunTest(Converter.ConverterType.Single, "Whee", null);
 
