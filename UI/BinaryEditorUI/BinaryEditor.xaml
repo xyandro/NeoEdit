@@ -6,10 +6,6 @@
 	Title="Binary Editor" Height="400" Width="400">
 
 	<Window.Resources>
-		<Style TargetType="TextBlock">
-			<Setter Property="FontFamily" Value="{Binding CustomFontFamily, ElementName=self}"/>
-			<Setter Property="FontSize" Value="{Binding CustomFontSize, ElementName=self}"/>
-		</Style>
 		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
 		<resources:UICommand x:Key="Edit_Find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
 		<resources:UICommand x:Key="View_Values" Key="V" Modifiers="Control" Executed="CommandCallback"/>
