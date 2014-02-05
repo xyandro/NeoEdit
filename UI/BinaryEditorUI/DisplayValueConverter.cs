@@ -29,7 +29,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 					return new Exception();
 				var type = Helpers.ParseEnum<Converter.ConverterType>(value[3] as string);
 
-				var selCount = (selStart == selEnd) ? 0 : selEnd - selStart + 1;
+				var selCount = Math.Min(Converter.PreviewSize(type), (selStart == selEnd) ? Int32.MaxValue : selEnd - selStart + 1);
 				return Converter.Convert(type, data, selStart, selCount);
 			}
 			catch { return "Invalid"; }

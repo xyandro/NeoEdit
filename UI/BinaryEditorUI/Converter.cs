@@ -63,12 +63,24 @@ namespace NeoEdit.UI.BinaryEditorUI
 			}
 		}
 
-		static string GetString(Encoding encoding, byte[] data, long index, long numBytes, long count)
+		public static int PreviewSize(ConverterType converter)
+		{
+			switch (converter)
+			{
+				case ConverterType.UTF16LE: return 200;
+				case ConverterType.UTF16BE: return 200;
+				case ConverterType.UTF32LE: return 400;
+				case ConverterType.UTF32BE: return 400;
+				default: return 100;
+			}
+		}
+
+		static string GetString(Encoding encoding, byte[] data, long index, long numBytes)
 		{
 			try
 			{
 				if (numBytes == 0)
-					numBytes = count;
+					numBytes = data.Length - index;
 				numBytes = Math.Min(numBytes, data.Length - index);
 				var str = encoding.GetString(data, (int)index, (int)numBytes);
 				str = str.Replace("\r", @"\r").Replace("\n", @"\n");
@@ -145,12 +157,12 @@ namespace NeoEdit.UI.BinaryEditorUI
 				case ConverterType.Int64BE: return BitConverter.ToInt64(GetBytes(data, index, numBytes, 8, false), 0).ToString();
 				case ConverterType.Single: return BitConverter.ToSingle(GetBytes(data, index, numBytes, 4, true), 0).ToString();
 				case ConverterType.Double: return BitConverter.ToDouble(GetBytes(data, index, numBytes, 8, true), 0).ToString();
-				case ConverterType.UTF7: return GetString(Encoding.UTF7, data, index, numBytes, 100);
-				case ConverterType.UTF8: return GetString(Encoding.UTF8, data, index, numBytes, 100);
-				case ConverterType.UTF16LE: return GetString(Encoding.Unicode, data, index, numBytes, 200);
-				case ConverterType.UTF16BE: return GetString(Encoding.BigEndianUnicode, data, index, numBytes, 200);
-				case ConverterType.UTF32LE: return GetString(Encoding.UTF32, data, index, numBytes, 400);
-				case ConverterType.UTF32BE: return GetString(new UTF32Encoding(true, false), data, index, numBytes, 400);
+				case ConverterType.UTF7: return GetString(Encoding.UTF7, data, index, numBytes);
+				case ConverterType.UTF8: return GetString(Encoding.UTF8, data, index, numBytes);
+				case ConverterType.UTF16LE: return GetString(Encoding.Unicode, data, index, numBytes);
+				case ConverterType.UTF16BE: return GetString(Encoding.BigEndianUnicode, data, index, numBytes);
+				case ConverterType.UTF32LE: return GetString(Encoding.UTF32, data, index, numBytes);
+				case ConverterType.UTF32BE: return GetString(new UTF32Encoding(true, false), data, index, numBytes);
 				case ConverterType.Hex: return HexToString(data, index, numBytes, false);
 				case ConverterType.HexRev: return HexToString(data, index, numBytes, true);
 			}
