@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Collections.Generic;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using NeoEdit.UI.Resources;
@@ -42,7 +41,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			}
 		}
 
-		List<byte[]> currentFind;
+		FindResult currentFind;
 		void FindNext()
 		{
 			if (currentFind == null)
@@ -50,16 +49,38 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 			for (var pos = SelStart + 1; pos < Data.Length; pos++)
 			{
-				foreach (var find in currentFind)
+				for (var findPos = 0; findPos < currentFind.FindData.Count; findPos++)
 				{
+					var caseSensitive = currentFind.CaseSensitive[findPos];
+					var findData = currentFind.FindData[findPos];
+
 					int findIdx;
-					for (findIdx = 0; findIdx < find.Length; ++findIdx)
-						if (Data[pos + findIdx] != find[findIdx])
+					for (findIdx = 0; findIdx < findData.Length; ++findIdx)
+					{
+						if (pos + findIdx >= Data.Length)
 							break;
-					if (findIdx == find.Length)
+
+						if (Data[pos + findIdx] == findData[findIdx])
+							continue;
+
+						if (caseSensitive)
+							break;
+
+						if ((Data[pos + findIdx] >= 'a') && (Data[pos + findIdx] <= 'z') && (findData[findIdx] >= 'A') && (findData[findIdx] <= 'Z'))
+							if (Data[pos + findIdx] - 'a' + 'A' == findData[findIdx])
+								continue;
+
+						if ((Data[pos + findIdx] >= 'A') && (Data[pos + findIdx] <= 'Z') && (findData[findIdx] >= 'a') && (findData[findIdx] <= 'z'))
+							if (Data[pos + findIdx] - 'A' + 'a' == findData[findIdx])
+								continue;
+
+						break;
+					}
+
+					if (findIdx == findData.Length)
 					{
 						SelStart = pos;
-						SelEnd = pos + find.Length - 1;
+						SelEnd = pos + findData.Length - 1;
 						return;
 					}
 				}

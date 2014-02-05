@@ -133,6 +133,8 @@
 
 				<CheckBox Grid.Row="2" Grid.Column="1" Name="UTF32LE" Content="UTF32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF32LE}"/>
 				<CheckBox Grid.Row="2" Grid.Column="2" Name="UTF32BE" Content="UTF32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF32BE}"/>
+
+				<CheckBox Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Name="MatchCase" Content="Match _Case"/>
 			</Grid>
 		</GroupBox>
 		<GroupBox Header="Hex" Visibility="{Binding ShowHex, ElementName=self, Converter={StaticResource BoolToVis}}">

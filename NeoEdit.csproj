@@ -89,6 +89,7 @@
       <DependentUpon>BinaryCanvas.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\BinaryEditorUI\Converter.cs" />
+    <Compile Include="UI\BinaryEditorUI\FindResult.cs" />
     <Compile Include="UI\BinaryEditorUI\ValidValueConverter.cs" />
     <Compile Include="UI\BinaryEditorUI\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>

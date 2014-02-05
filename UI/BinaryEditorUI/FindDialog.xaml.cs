@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -34,9 +33,10 @@ namespace NeoEdit.UI.BinaryEditorUI
 			InitializeComponent();
 			ShowLE = ShowInt = ShowStr = ShowHex = true;
 			ShowBE = ShowFloat = false;
+			MatchCase.IsChecked = false;
 		}
 
-		List<byte[]> result;
+		FindResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (String.IsNullOrEmpty(FindText))
@@ -44,12 +44,19 @@ namespace NeoEdit.UI.BinaryEditorUI
 
 			var converters = Helpers.GetValues<Converter.ConverterType>().ToDictionary(a => a, a => typeof(FindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic).GetValue(this) as CheckBox);
 			var convertersToUse = converters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
-			result = convertersToUse.Select(a => Converter.Convert(a, FindText)).GroupBy(a => BitConverter.ToString(a)).Select(a => a.First()).ToList();
+			var findData = convertersToUse.Select(a => new { converter = a, bytes = Converter.Convert(a, FindText) }).GroupBy(a => BitConverter.ToString(a.bytes)).Select(a => a.First()).ToDictionary(a => a.converter, a => a.bytes);
+
+			result = new FindResult
+			{
+				FindText = FindText,
+				FindData = findData.Select(a => a.Value).ToList(),
+				CaseSensitive = findData.Select(a => (MatchCase.IsChecked == true) || (!Converter.IsStr(a.Key))).ToList(),
+			};
 
 			DialogResult = true;
 		}
 
-		public static List<byte[]> Run()
+		public static FindResult Run()
 		{
 			var find = new FindDialog();
 			if (find.ShowDialog() == false)

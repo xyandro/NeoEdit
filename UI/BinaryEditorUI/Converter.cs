@@ -47,6 +47,22 @@ namespace NeoEdit.UI.BinaryEditorUI
 			return ret;
 		}
 
+		public static bool IsStr(ConverterType converter)
+		{
+			switch (converter)
+			{
+				case ConverterType.UTF7:
+				case ConverterType.UTF8:
+				case ConverterType.UTF16LE:
+				case ConverterType.UTF16BE:
+				case ConverterType.UTF32LE:
+				case ConverterType.UTF32BE:
+					return true;
+				default:
+					return false;
+			}
+		}
+
 		static string GetString(Encoding encoding, byte[] data, long index, long numBytes, long count)
 		{
 			try
