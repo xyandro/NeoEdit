@@ -72,7 +72,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			{
 				case "Edit_Find":
 					{
-						var results = Find.RunFind();
+						var results = FindDialog.Run();
 						if (results != null)
 						{
 							currentFind = results;

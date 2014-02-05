@@ -90,8 +90,8 @@
     </Compile>
     <Compile Include="UI\BinaryEditorUI\Converter.cs" />
     <Compile Include="UI\BinaryEditorUI\ValidValueConverter.cs" />
-    <Compile Include="UI\BinaryEditorUI\Find.xaml.cs">
-      <DependentUpon>Find.xaml</DependentUpon>
+    <Compile Include="UI\BinaryEditorUI\FindDialog.xaml.cs">
+      <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\BinaryEditorUI\ExpressionConverter.cs" />
     <Compile Include="UI\BinaryEditorUI\PipingConverter.cs" />
@@ -126,7 +126,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BinaryEditorUI\Find.xaml">
+    <Page Include="UI\BinaryEditorUI\FindDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
