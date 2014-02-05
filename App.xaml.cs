@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.IO;
 
 namespace NeoEdit
 {
@@ -9,12 +10,16 @@ namespace NeoEdit
 	{
 		App()
 		{
-			//var data = System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\magic.mgc");
-			//var data = System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\NeoEdit.exe.config");
-			var data = System.IO.File.ReadAllBytes(@"C:\Docs\Cpp\NeoEdit\bin\Debug\TestData\Combined.txt");
+			var dir = Directory.GetCurrentDirectory();
+			//var file = Path.Combine(dir, "magic.mgc");
+			//var file = Path.Combine(dir, "NeoEdit.exe.config");
+			var file = Path.Combine(dir, "TestData", "Combined.txt");
+			if (!File.Exists(file))
+				new Test.UnicodeGenerator().Generate();
+
+			var data = File.ReadAllBytes(file);
 			new NeoEdit.UI.BinaryEditorUI.BinaryEditor(data);
 
-			//new Test.UnicodeGenerator().Generate();
 			//new Test.ConverterTest().Run();
 		}
 	}
