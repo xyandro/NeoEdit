@@ -30,10 +30,11 @@ namespace NeoEdit.UI.BinaryEditorUI
 		[DepProp]
 		public double yScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { ++internalChangeCount; uiHelper.SetPropValue(value); --internalChangeCount; } }
 		[DepProp]
-		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { ++internalChangeCount; uiHelper.SetPropValue(value); --internalChangeCount; } }
 
+		int internalChangeCount = 0;
 		long _pos1, _pos2;
 		long Pos1
 		{
@@ -135,8 +136,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => ScheduleLayout());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => ScheduleLayout());
 
-			uiHelper.AddCallback(a => a.SelStart, (o, n) => Pos1 = SelStart);
-			uiHelper.AddCallback(a => a.SelEnd, (o, n) => Pos2 = SelEnd);
+			uiHelper.AddCallback(a => a.SelStart, (o, n) => { if (internalChangeCount == 0) Pos1 = SelStart; });
+			uiHelper.AddCallback(a => a.SelEnd, (o, n) => { if (internalChangeCount == 0)Pos2 = SelEnd; });
 		}
 
 		void EnsureVisible()
