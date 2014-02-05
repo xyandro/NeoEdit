@@ -15,6 +15,7 @@ namespace NeoEdit
 			new NeoEdit.UI.BinaryEditorUI.BinaryEditor(data);
 
 			//new Test.UnicodeGenerator().Generate();
+			//new Test.ConverterTest().Run();
 		}
 	}
 }

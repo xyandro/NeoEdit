@@ -31,6 +31,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 			UTF16BE,
 			UTF32LE,
 			UTF32BE,
+			Hex,
+			HexRev,
 		};
 
 		static byte[] GetBytes(byte[] data, long index, long numBytes, long count, bool littleEndian)
@@ -57,6 +59,53 @@ namespace NeoEdit.UI.BinaryEditorUI
 				return str;
 			}
 			catch { return "Failed"; }
+		}
+
+		static int GetHexValue(char c)
+		{
+			if ((c >= '0') && (c <= '9'))
+				return c - '0';
+			if ((c >= 'A') && (c <= 'F'))
+				return c - 'A' + 10;
+			throw new Exception("Invalid character");
+		}
+
+		static char GetHexChar(int val)
+		{
+			if ((val >= 0) && (val < 10))
+				return (char)('0' + val);
+			if ((val >= 10) && (val < 16))
+				return (char)('A' + val - 10);
+			throw new Exception("Invalid character");
+		}
+
+		static byte[] StringToHex(string str, bool reverse)
+		{
+			str = str.ToUpper().Replace(",", "").Replace(" ", "").Replace("-", "");
+
+			if (str.Length % 2 != 0)
+				str = "0" + str;
+			var ret = new byte[str.Length / 2];
+			for (var ctr = 0; ctr < str.Length; ctr += 2)
+				ret[ctr / 2] = (byte)(GetHexValue(str[ctr]) * 16 + GetHexValue(str[ctr + 1]));
+			if (reverse)
+				Array.Reverse(ret);
+			return ret;
+		}
+
+		static string HexToString(byte[] data, long index, long numBytes, bool reverse)
+		{
+			if (numBytes == 0)
+				numBytes = data.Length - index;
+			numBytes = Math.Min(data.Length - index, numBytes);
+			var sb = new StringBuilder((int)(numBytes * 2));
+			for (var ctr = 0; ctr < numBytes; ctr++)
+			{
+				var ch = reverse ? data[index + numBytes - ctr - 1] : data[index + ctr];
+				sb.Append(GetHexChar(ch >> 4));
+				sb.Append(GetHexChar(ch & 15));
+			}
+			return sb.ToString();
 		}
 
 		static public string Convert(ConverterType type, byte[] data, long index, long numBytes)
@@ -87,6 +136,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 				case ConverterType.UTF16BE: return GetString(Encoding.BigEndianUnicode, data, index, numBytes, 200);
 				case ConverterType.UTF32LE: return GetString(Encoding.UTF32, data, index, numBytes, 400);
 				case ConverterType.UTF32BE: return GetString(new UTF32Encoding(true, false), data, index, numBytes, 400);
+				case ConverterType.Hex: return HexToString(data, index, numBytes, false);
+				case ConverterType.HexRev: return HexToString(data, index, numBytes, true);
 			}
 			throw new Exception("Invalid conversion");
 		}
@@ -97,7 +148,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			return data;
 		}
 
-		static public byte[] Convert(string value, ConverterType type)
+		static public byte[] Convert(ConverterType type, string value)
 		{
 			switch (type)
 			{
@@ -125,6 +176,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 				case ConverterType.UTF16BE: return Encoding.BigEndianUnicode.GetBytes(value);
 				case ConverterType.UTF32LE: return Encoding.UTF32.GetBytes(value);
 				case ConverterType.UTF32BE: return new UTF32Encoding(true, false).GetBytes(value);
+				case ConverterType.Hex: return StringToHex(value, false);
+				case ConverterType.HexRev: return StringToHex(value, true);
 			}
 			throw new Exception("Invalid conversion");
 		}
