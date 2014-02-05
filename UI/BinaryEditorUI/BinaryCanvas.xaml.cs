@@ -49,7 +49,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 				SelEnd = Math.Max(_pos1, _pos2);
 
 				EnsureVisible();
-				ScheduleLayout();
+				InvalidateVisual();
 			}
 		}
 
@@ -64,7 +64,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 				SelEnd = Math.Max(_pos1, _pos2);
 
 				EnsureVisible();
-				ScheduleLayout();
+				InvalidateVisual();
 			}
 		}
 
@@ -129,15 +129,17 @@ namespace NeoEdit.UI.BinaryEditorUI
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			uiHelper.AddCallback(a => a.Data, (o, n) => ScheduleLayout());
-			uiHelper.AddCallback(a => a.SelHex, (o, n) => ScheduleLayout());
-			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => ScheduleLayout());
-			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => ScheduleLayout());
-			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => ScheduleLayout());
-			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => ScheduleLayout());
+			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(a => a.SelHex, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
+			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => InvalidateVisual());
+			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 
 			uiHelper.AddCallback(a => a.SelStart, (o, n) => { if (internalChangeCount == 0) Pos1 = SelStart; });
 			uiHelper.AddCallback(a => a.SelEnd, (o, n) => { if (internalChangeCount == 0)Pos2 = SelEnd; });
+
+			Loaded += (s, e) => InvalidateVisual();
 		}
 
 		void EnsureVisible()
@@ -176,11 +178,6 @@ namespace NeoEdit.UI.BinaryEditorUI
 		long GetColumnFromXText(double x)
 		{
 			return (long)((x - xTextViewStart) / charWidth);
-		}
-
-		void ScheduleLayout()
-		{
-			InvalidateVisual();
 		}
 
 		protected override void OnRender(DrawingContext drawingContext)
