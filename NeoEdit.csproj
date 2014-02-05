@@ -113,6 +113,7 @@
     <Compile Include="UI\BrowserUI\Converters\ActionMenuItems.cs" />
     <Compile Include="UI\BrowserUI\Converters\PropertyToSortIndicatorHeader.cs" />
     <Compile Include="UI\BrowserUI\Converters\PropertyFormatter.cs" />
+    <Compile Include="UI\BrowserUI\SizingGridView.cs" />
     <Compile Include="UI\Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
