@@ -33,7 +33,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			InitializeComponent();
 			ShowLE = ShowInt = ShowStr = ShowHex = true;
 			ShowBE = ShowFloat = false;
-			MatchCase.IsChecked = false;
+			MatchCase.IsChecked = UTF7.IsChecked = HexRev.IsChecked = false;
 		}
 
 		FindResult result;
