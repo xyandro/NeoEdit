@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
@@ -18,26 +19,35 @@ namespace NeoEdit.UI.BinaryEditorUI
 				if (!match.Success)
 					break;
 
-				var result = value[Int32.Parse(match.Groups[1].Value)].ToString();
-				expression = expression.Substring(0, match.Index) + result + expression.Substring(match.Index + match.Length);
+				var val = value[Int32.Parse(match.Groups[1].Value)];
+				var result = val == null ? "NULL" : val.ToString();
+				expression = expression.Substring(0, match.Index) + "'" + result + "'" + expression.Substring(match.Index + match.Length);
 			}
 
-			var boolTerm = "True|False";
-			var boolTermRE = new Regex(boolTerm);
-
-			var term = "(" + boolTerm + ")";
+			var term = "'([^']*)'";
 			var termRE = new Regex("^" + term + "$");
 
-			var operation = String.Format(@"{0}\s+(AND|OR)\s+{0}", term);
-			var operationRE = new Regex(operation);
+			var binaryOperation = String.Format(@"{0}\s*(AND|OR|==)\s*{0}", term);
+			var binaryOperationRE = new Regex(binaryOperation);
+
+			var trinaryOperation = String.Format(@"{0}\s*\?\s*{0}\s*:\s*{0}", term);
+			var trinaryOperationRE = new Regex(trinaryOperation);
 
 			var parens = String.Format(@"\(\s*{0}\s*\)", term);
 			var parensRE = new Regex(parens);
 			while (true)
 			{
 				Match match;
-				
-				match = operationRE.Match(expression);
+
+				match = parensRE.Match(expression);
+				if (match.Success)
+				{
+					var result = match.Groups[1].Value;
+					expression = expression.Substring(0, match.Index) + "'" + result + "'" + expression.Substring(match.Index + match.Length);
+					continue;
+				}
+
+				match = binaryOperationRE.Match(expression);
 				if (match.Success)
 				{
 					var term1 = match.Groups[1].Value;
@@ -49,26 +59,48 @@ namespace NeoEdit.UI.BinaryEditorUI
 					{
 						case "AND": result = (Boolean.Parse(term1) && Boolean.Parse(term2)).ToString(); break;
 						case "OR": result = (Boolean.Parse(term1) || Boolean.Parse(term2)).ToString(); break;
+						case "==": result = (term1 == term2).ToString(); break;
 						default: throw new Exception("Invalid op");
 					}
 
-					expression = expression.Substring(0, match.Index) + result + expression.Substring(match.Index + match.Length);
+					expression = expression.Substring(0, match.Index) + "'" + result + "'" + expression.Substring(match.Index + match.Length);
 					continue;
 				}
 
-				match = parensRE.Match(expression);
+				match = trinaryOperationRE.Match(expression);
 				if (match.Success)
 				{
-					var result = match.Groups[1].Value;
-					expression = expression.Substring(0, match.Index) + result + expression.Substring(match.Index + match.Length);
+					var test = match.Groups[1].Value;
+					var result = "";
+					if (Boolean.Parse(test))
+						result = match.Groups[2].Value;
+					else
+						result = match.Groups[3].Value;
+
+					expression = expression.Substring(0, match.Index) + "'" + result + "'" + expression.Substring(match.Index + match.Length);
 					continue;
 				}
 
-				if (!termRE.IsMatch(expression))
+				match = termRE.Match(expression);
+				if (!match.Success)
 					throw new Exception("Unable to calculate");
+				expression = match.Groups[1].Value;
 
-				if (boolTermRE.IsMatch(expression))
-					return Boolean.Parse(expression);
+				if (new Regex("^True|False$").IsMatch(expression))
+				{
+					var val = Boolean.Parse(expression);
+					if (targetType == typeof(Visibility))
+						return val ? Visibility.Visible : Visibility.Collapsed;
+					return val;
+				}
+
+				if (new Regex(@"^\d+$").IsMatch(expression))
+				{
+					var val = Int32.Parse(expression);
+					if (targetType == typeof(Thickness))
+						return new Thickness(val);
+					return val;
+				}
 
 				return expression;
 			}

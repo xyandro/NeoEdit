@@ -11,7 +11,6 @@
 	<StackPanel.Resources>
 		<binaryEditorUI:ExpressionConverter x:Key="ExpConv"/>
 		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
-		<binaryEditorUI:MultiPipingConverter x:Key="ExpToVis" Converter1="{StaticResource ExpConv}" Converter2="{StaticResource BoolToVis}"/>
 	</StackPanel.Resources>
 	
 	<StackPanel.Style>
@@ -40,7 +39,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -55,7 +54,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -70,7 +69,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -85,7 +84,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -116,7 +115,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -128,7 +127,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -140,7 +139,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -152,7 +151,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>

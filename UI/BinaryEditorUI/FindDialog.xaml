@@ -7,7 +7,6 @@
 	<Window.Resources>
 		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
 		<binaryEditorUI:ExpressionConverter x:Key="ExpConv"/>
-		<binaryEditorUI:MultiPipingConverter x:Key="ExpToVis" Converter1="{StaticResource ExpConv}" Converter2="{StaticResource BoolToVis}"/>
 		<binaryEditorUI:ValidValueConverter x:Key="ValidConv"/>
 	</Window.Resources>
 	
@@ -45,7 +44,7 @@
 
 		<GroupBox Header="Integers">
 			<GroupBox.Visibility>
-				<MultiBinding Converter="{StaticResource ExpToVis}" ConverterParameter="[0] AND ([1] OR [2])">
+				<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND ([1] OR [2])">
 					<Binding Path="ShowInt" ElementName="self"/>
 					<Binding Path="ShowLE" ElementName="self"/>
 					<Binding Path="ShowBE" ElementName="self"/>
