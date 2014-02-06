@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using NeoEdit.Common;
 
-namespace NeoEdit.BinaryEditorUI
+namespace NeoEdit.BinaryEditorUI.Converters
 {
 	class ValidValueConverter : IValueConverter
 	{

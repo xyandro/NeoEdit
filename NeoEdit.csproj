@@ -61,7 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BinaryEditorUI\IsStrConverter.cs" />
+    <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
     <Compile Include="Common\BinaryData.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
     <Compile Include="Records\Zipped\ZippedFile.cs" />
@@ -91,15 +91,15 @@
       <DependentUpon>BinaryCanvas.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\FindData.cs" />
-    <Compile Include="BinaryEditorUI\ValidValueConverter.cs" />
+    <Compile Include="BinaryEditorUI\Converters\ValidValueConverter.cs" />
     <Compile Include="BinaryEditorUI\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\ExpressionConverter.cs" />
+    <Compile Include="BinaryEditorUI\Converters\ExpressionConverter.cs" />
     <Compile Include="BinaryEditorUI\DisplayValue.xaml.cs">
       <DependentUpon>DisplayValue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\DisplayValueConverter.cs" />
+    <Compile Include="BinaryEditorUI\Converters\DisplayValueConverter.cs" />
     <Compile Include="BinaryEditorUI\DisplayValues.xaml.cs">
       <DependentUpon>DisplayValues.xaml</DependentUpon>
     </Compile>

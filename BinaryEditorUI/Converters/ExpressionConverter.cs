@@ -8,7 +8,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
 
-namespace NeoEdit.BinaryEditorUI
+namespace NeoEdit.BinaryEditorUI.Converters
 {
 	class ExpressionConverter : MarkupExtension, IMultiValueConverter, IValueConverter
 	{
