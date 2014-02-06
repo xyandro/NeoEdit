@@ -460,7 +460,7 @@ namespace NeoEdit.BinaryEditorUI
 						if (results != null)
 						{
 							currentFind = results;
-							FoundText = currentFind.FindText;
+							FoundText = currentFind.Text;
 							DoFind();
 						}
 					}

@@ -48,9 +48,9 @@ namespace NeoEdit.BinaryEditorUI
 
 			result = new FindData
 			{
-				FindText = FindText,
-				FindBinaryData = findData.Select(a => a.Value).ToList(),
-				CaseSensitive = findData.Select(a => (MatchCase.IsChecked == true) || (!BinaryData.IsStr(a.Key))).ToList(),
+				Text = FindText,
+				Data = findData.Select(a => a.Value).ToList(),
+				IgnoreCase = findData.Select(a => (MatchCase.IsChecked != true) && (BinaryData.IsStr(a.Key))).ToList(),
 			};
 
 			DialogResult = true;

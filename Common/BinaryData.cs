@@ -298,13 +298,13 @@ namespace NeoEdit.Common
 					return false;
 
 				var usePos = invalid;
-				for (var findPos = 0; findPos < currentFind.FindBinaryData.Count; findPos++)
+				for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
 				{
-					var caseSensitive = currentFind.CaseSensitive[findPos];
-					var findData = currentFind.FindBinaryData[findPos];
+					var ignoreCase = currentFind.IgnoreCase[findPos];
+					var findData = currentFind.Data[findPos];
 
 					usePos = selectFunc(usePos, findFunc(findData[0], pos));
-					if (!caseSensitive)
+					if (ignoreCase)
 					{
 						if ((findData[0] >= 'a') && (findData[0] <= 'z'))
 							usePos = selectFunc(usePos, findFunc((byte)(findData[0] - 'a' + 'A'), pos));
@@ -317,10 +317,10 @@ namespace NeoEdit.Common
 				if ((usePos < 0) || (usePos >= Length))
 					return false;
 
-				for (var findPos = 0; findPos < currentFind.FindBinaryData.Count; findPos++)
+				for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
 				{
-					var caseSensitive = currentFind.CaseSensitive[findPos];
-					var findData = currentFind.FindBinaryData[findPos];
+					var ignoreCase = currentFind.IgnoreCase[findPos];
+					var findData = currentFind.Data[findPos];
 
 					int findIdx;
 					for (findIdx = 0; findIdx < findData.Length; ++findIdx)
@@ -331,7 +331,7 @@ namespace NeoEdit.Common
 						if (data[pos + findIdx] == findData[findIdx])
 							continue;
 
-						if (caseSensitive)
+						if (!ignoreCase)
 							break;
 
 						if ((data[pos + findIdx] >= 'a') && (data[pos + findIdx] <= 'z') && (findData[findIdx] >= 'A') && (findData[findIdx] <= 'Z'))
