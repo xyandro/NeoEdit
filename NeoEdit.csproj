@@ -86,79 +86,79 @@
     <Compile Include="Clipboard.cs" />
     <Compile Include="Test\ConverterTest.cs" />
     <Compile Include="Test\UnicodeGenerator.cs" />
-    <Compile Include="UI\BinaryEditorUI\BinaryCanvas.xaml.cs">
+    <Compile Include="BinaryEditorUI\BinaryCanvas.xaml.cs">
       <DependentUpon>BinaryCanvas.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\FindData.cs" />
-    <Compile Include="UI\BinaryEditorUI\ValidValueConverter.cs" />
-    <Compile Include="UI\BinaryEditorUI\FindDialog.xaml.cs">
+    <Compile Include="BinaryEditorUI\ValidValueConverter.cs" />
+    <Compile Include="BinaryEditorUI\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BinaryEditorUI\ExpressionConverter.cs" />
-    <Compile Include="UI\BinaryEditorUI\DisplayValue.xaml.cs">
+    <Compile Include="BinaryEditorUI\ExpressionConverter.cs" />
+    <Compile Include="BinaryEditorUI\DisplayValue.xaml.cs">
       <DependentUpon>DisplayValue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BinaryEditorUI\DisplayValueConverter.cs" />
-    <Compile Include="UI\BinaryEditorUI\DisplayValues.xaml.cs">
+    <Compile Include="BinaryEditorUI\DisplayValueConverter.cs" />
+    <Compile Include="BinaryEditorUI\DisplayValues.xaml.cs">
       <DependentUpon>DisplayValues.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BrowserUI\BrowserColumn.xaml.cs">
+    <Compile Include="BrowserUI\BrowserColumn.xaml.cs">
       <DependentUpon>BrowserColumn.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BrowserUI\BrowserListView.xaml.cs">
+    <Compile Include="BrowserUI\BrowserListView.xaml.cs">
       <DependentUpon>BrowserListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BrowserUI\Converters\ColumnMenuItems.cs" />
-    <Compile Include="UI\BrowserUI\Converters\SortMenuItems.cs" />
-    <Compile Include="UI\BrowserUI\Converters\ActionMenuItems.cs" />
-    <Compile Include="UI\BrowserUI\Converters\PropertyToSortIndicatorHeader.cs" />
-    <Compile Include="UI\BrowserUI\Converters\PropertyFormatter.cs" />
-    <Compile Include="UI\BrowserUI\SizingGridView.cs" />
-    <Compile Include="UI\Dialogs\Message.xaml.cs">
+    <Compile Include="BrowserUI\Converters\ColumnMenuItems.cs" />
+    <Compile Include="BrowserUI\Converters\SortMenuItems.cs" />
+    <Compile Include="BrowserUI\Converters\ActionMenuItems.cs" />
+    <Compile Include="BrowserUI\Converters\PropertyToSortIndicatorHeader.cs" />
+    <Compile Include="BrowserUI\Converters\PropertyFormatter.cs" />
+    <Compile Include="BrowserUI\SizingGridView.cs" />
+    <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BrowserUI\Dialogs\Rename.xaml.cs">
+    <Compile Include="BrowserUI\Dialogs\Rename.xaml.cs">
       <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Resources\UICommand.cs" />
-    <Compile Include="UI\Resources\UIHelper.cs" />
-    <Page Include="UI\BinaryEditorUI\BinaryCanvas.xaml">
+    <Compile Include="Common\UICommand.cs" />
+    <Compile Include="Common\UIHelper.cs" />
+    <Page Include="BinaryEditorUI\BinaryCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BinaryEditorUI\FindDialog.xaml">
+    <Page Include="BinaryEditorUI\FindDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BinaryEditorUI\DisplayValue.xaml">
+    <Page Include="BinaryEditorUI\DisplayValue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BinaryEditorUI\DisplayValues.xaml">
+    <Page Include="BinaryEditorUI\DisplayValues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Dialogs\Message.xaml">
+    <Page Include="Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\BrowserUI\Dialogs\Rename.xaml">
+    <Page Include="BrowserUI\Dialogs\Rename.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BinaryEditorUI\BinaryEditor.xaml">
+    <Page Include="BinaryEditorUI\BinaryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BrowserUI\Browser.xaml">
+    <Page Include="BrowserUI\Browser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BrowserUI\BrowserColumn.xaml">
+    <Page Include="BrowserUI\BrowserColumn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BrowserUI\BrowserListView.xaml">
+    <Page Include="BrowserUI\BrowserListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -167,10 +167,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Records\Disk\DiskDir.cs" />
-    <Compile Include="UI\BinaryEditorUI\BinaryEditor.xaml.cs">
+    <Compile Include="BinaryEditorUI\BinaryEditor.xaml.cs">
       <DependentUpon>BinaryEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BrowserUI\Browser.xaml.cs">
+    <Compile Include="BrowserUI\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -209,7 +209,7 @@
     <None Include="regex2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Resource Include="UI\Resources\Anonymous Pro.ttf" />
+    <Resource Include="Resources\Anonymous Pro.ttf" />
     <None Include="zlib1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using NeoEdit.UI.Resources;
+using NeoEdit.Common;
 
 namespace NeoEdit
 {

@@ -1,0 +1,61 @@
+﻿<Window x:Name="self" x:Class="NeoEdit.BrowserUI.Browser"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:neoEdit="clr-namespace:NeoEdit"
+    xmlns:browserUI="clr-namespace:NeoEdit.BrowserUI"
+    xmlns:browserConverters="clr-namespace:NeoEdit.BrowserUI.Converters"
+    Title="Browser" Height="500" Width="600"
+    Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}" KeyDown="Window_KeyDown">
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Menu>
+			<MenuItem Header="_Actions">
+				<MenuItem.ItemsSource>
+					<MultiBinding Converter="{browserConverters:ActionMenuItems}">
+						<Binding ElementName="self" Path="Location"/>
+						<Binding ElementName="files" Path="SelectedItems"/>
+						<Binding Source="{x:Static neoEdit:Clipboard.Current}" Path="Objects.Count"/>
+						<Binding ElementName="self"/>
+						<Binding ElementName="files" Path="SelectedItems.Count"/> <!-- Catch changes -->
+					</MultiBinding>
+				</MenuItem.ItemsSource>
+			</MenuItem>
+			<MenuItem Header="_View">
+				<MenuItem Header="_Files" Click="MenuItemViewClick"/>
+				<MenuItem Header="_List" Click="MenuItemViewClick"/>
+				<MenuItem Header="_Registry" Click="MenuItemViewClick"/>
+				<MenuItem Header="_Columns">
+					<MenuItem.ItemsSource>
+						<MultiBinding Converter="{browserConverters:ColumnMenuItems}">
+							<Binding ElementName="self" Path="Properties"/>
+							<Binding ElementName="self" Path="Location.Records"/>
+							<Binding ElementName="self"/>
+							<Binding ElementName="self" Path="Properties.Count"/> <!-- Catch changes -->
+							<Binding ElementName="self" Path="Location.Records.Count"/> <!-- Catch changes -->
+						</MultiBinding>
+					</MenuItem.ItemsSource>
+				</MenuItem>
+				<MenuItem Header="_Sort">
+					<MenuItem.ItemsSource>
+						<MultiBinding Converter="{browserConverters:SortMenuItems}">
+							<Binding ElementName="self" Path="Properties"/>
+							<Binding ElementName="self" Path="SortProperty"/>
+							<Binding ElementName="self"/>
+							<Binding ElementName="self" Path="Properties.Count"/> <!-- Catch changes -->
+						</MultiBinding>
+					</MenuItem.ItemsSource>
+				</MenuItem>
+			</MenuItem>
+		</Menu>
+		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=self, Mode=OneWay}" KeyDown="LocationDisplay_KeyDown"/>
+		<browserUI:BrowserListView x:Name="files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=self}" Records="{Binding Location.Records, ElementName=self}" MouseDoubleClick="Files_MouseDoubleClick" SortProperty="{Binding SortProperty, ElementName=self, Mode=TwoWay}" SortAscending="{Binding SortAscending, ElementName=self, Mode=TwoWay}"/>
+	</Grid>
+</Window>
