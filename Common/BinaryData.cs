@@ -70,7 +70,7 @@ namespace NeoEdit.Common
 		static BinaryData() { UIHelper<BinaryData>.Register(); }
 
 		readonly UIHelper<BinaryData> uiHelper;
-		readonly byte[] data;
+		byte[] data;
 		public BinaryData(byte[] _data)
 		{
 			uiHelper = new UIHelper<BinaryData>(this);
@@ -106,7 +106,7 @@ namespace NeoEdit.Common
 		BinaryData GetBytes(long index, long numBytes, long count, bool littleEndian)
 		{
 			var ret = new byte[count];
-			count = Math.Min(count, data.Length - index);
+			count = Math.Min(count, Length - index);
 			if (numBytes != 0)
 				count = Math.Min(count, numBytes);
 			Array.Copy(data, index, ret, 0, count);
@@ -120,8 +120,8 @@ namespace NeoEdit.Common
 			try
 			{
 				if (numBytes == 0)
-					numBytes = data.Length - index;
-				numBytes = Math.Min(numBytes, data.Length - index);
+					numBytes = Length - index;
+				numBytes = Math.Min(numBytes, Length - index);
 				var str = encoding.GetString(data, (int)index, (int)numBytes);
 				str = str.Replace("\r", @"\r").Replace("\n", @"\n");
 				return str;
@@ -144,8 +144,8 @@ namespace NeoEdit.Common
 		public string ToHexString(long index, long numBytes, bool reverse)
 		{
 			if (numBytes == 0)
-				numBytes = data.Length - index;
-			numBytes = Math.Min(data.Length - index, numBytes);
+				numBytes = Length - index;
+			numBytes = Math.Min(Length - index, numBytes);
 			var sb = new StringBuilder((int)(numBytes * 2));
 			for (var ctr = 0; ctr < numBytes; ctr++)
 			{
@@ -158,7 +158,7 @@ namespace NeoEdit.Common
 
 		public string ToString(BinaryData.ConverterType type)
 		{
-			return ToString(type, 0, data.Length);
+			return ToString(type, 0, Length);
 		}
 
 		public string ToString(BinaryData.ConverterType type, long index, long numBytes)
@@ -355,9 +355,32 @@ namespace NeoEdit.Common
 
 		public void Replace(long index, BinaryData bytes)
 		{
-			var count = Math.Min(bytes.Length, data.Length - index);
+			var count = Math.Min(bytes.Length, Length - index);
 			for (var ctr = 0; ctr < count; ctr++)
 				data[index + ctr] = bytes[ctr];
+			++ChangeCount;
+		}
+
+		public void Delete(long index, long count)
+		{
+			if (index < 0)
+				return;
+
+			count = Math.Min(count, Length - index);
+			var newData = new byte[Length - count];
+			Array.Copy(data, 0, newData, 0, index);
+			Array.Copy(data, index + count, newData, index, Length - index - count);
+			data = newData;
+			++ChangeCount;
+		}
+
+		public void Insert(long index, BinaryData bytes)
+		{
+			var newData = new byte[Length + bytes.Length];
+			Array.Copy(data, 0, newData, 0, index);
+			Array.Copy(bytes.data, 0, newData, index, bytes.Length);
+			Array.Copy(data, index, newData, index + bytes.Length, Length - index);
+			data = newData;
 			++ChangeCount;
 		}
 	}

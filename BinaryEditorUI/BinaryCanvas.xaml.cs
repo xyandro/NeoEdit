@@ -286,6 +286,24 @@ namespace NeoEdit.BinaryEditorUI
 			e.Handled = true;
 			switch (e.Key)
 			{
+				case Key.Back:
+				case Key.Delete:
+					if (Insert)
+					{
+						overrideSelecting = false;
+						if ((SelStart != SelEnd) || (e.Key == Key.Delete))
+						{
+							Data.Delete(SelStart, SelEnd - SelStart + 1);
+							Pos1 = SelStart;
+						}
+						else if (e.Key == Key.Back)
+						{
+							Data.Delete(SelStart - 1, 1);
+							Pos1 = SelStart - 1;
+						}
+						overrideSelecting = null;
+					}
+					break;
 				case Key.Tab: SelHex = !SelHex; break;
 				case Key.Up:
 				case Key.Down:
@@ -369,13 +387,25 @@ namespace NeoEdit.BinaryEditorUI
 			else
 				bytes = BinaryData.FromString(TypeEncoding, e.Text);
 
-			Data.Replace(SelStart, bytes);
+			if (Insert)
+			{
+				if (SelStart != SelEnd)
+					Data.Delete(SelStart, SelEnd - SelStart + 1);
+				if ((SelHex) && (!inHexEdit))
+					Data.Replace(SelStart, bytes);
+				else
+					Data.Insert(SelStart, bytes);
+			}
+			else
+			{
+				Data.Replace(SelStart, bytes);
+			}
 
 			overrideSelecting = false;
 			if (!SelHex)
-				Pos1 += bytes.Length;
+				Pos1 = SelStart + bytes.Length;
 			else if (!inHexEdit)
-				Pos1++;
+				Pos1 = SelStart + 1;
 			overrideSelecting = null;
 		}
 
