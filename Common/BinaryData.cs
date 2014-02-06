@@ -293,6 +293,8 @@ namespace NeoEdit.Common
 			while (true)
 			{
 				pos += offset;
+				if ((pos < 0) || (pos >= Length))
+					return false;
 
 				var usePos = invalid;
 				for (var findPos = 0; findPos < currentFind.FindBinaryData.Count; findPos++)
@@ -310,10 +312,9 @@ namespace NeoEdit.Common
 					}
 				}
 
+				pos = usePos;
 				if ((usePos < 0) || (usePos >= Length))
 					return false;
-
-				pos = usePos;
 
 				for (var findPos = 0; findPos < currentFind.FindBinaryData.Count; findPos++)
 				{
