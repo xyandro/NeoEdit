@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using NeoEdit.Common;
@@ -17,6 +18,10 @@ namespace NeoEdit.BinaryEditorUI
 		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public BinaryData.ConverterType TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.ConverterType>(); } set { uiHelper.SetPropValue(value); } }
 
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
@@ -32,12 +37,17 @@ namespace NeoEdit.BinaryEditorUI
 			Data = data;
 			SelStart = SelEnd = 0;
 			PreviewMouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
+			TextInput += (s, e) => uiHelper.RaiseEvent(canvas, e);
 
 			Show();
 		}
 
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		protected override void OnKeyDown(KeyEventArgs e)
 		{
+			base.OnKeyDown(e);
+			if (e.Handled)
+				return;
+
 			switch (e.Key)
 			{
 				case Key.F3: FindNext(!shiftDown); break;
@@ -75,6 +85,7 @@ namespace NeoEdit.BinaryEditorUI
 						}
 					}
 					break;
+				case "Edit_Insert": Insert = !Insert; break;
 				case "View_Values": ShowValues = !ShowValues; break;
 			}
 		}
@@ -84,6 +95,11 @@ namespace NeoEdit.BinaryEditorUI
 			var scrollBar = sender as ScrollBar;
 			scrollBar.Value -= e.Delta;
 			e.Handled = true;
+		}
+
+		void TypeEncodingClick(object sender, RoutedEventArgs e)
+		{
+			TypeEncoding = Helpers.ParseEnum<BinaryData.ConverterType>(((MenuItem)e.Source).Header as string);
 		}
 	}
 }

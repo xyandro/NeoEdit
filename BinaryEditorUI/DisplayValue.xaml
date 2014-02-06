@@ -27,6 +27,7 @@
 			<Binding Path="SelStart" ElementName="self"/>
 			<Binding Path="SelEnd" ElementName="self"/>
 			<Binding Path="Type" ElementName="self"/>
+			<Binding Path="ChangeCount" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Text>
 </TextBox>

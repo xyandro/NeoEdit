@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Text;
+using System.Windows;
 
 namespace NeoEdit.Common
 {
-	public class BinaryData
+	public class BinaryData : DependencyObject
 	{
+		[DepProp]
+		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+
 		public enum ConverterType
 		{
 			UInt8LE,
@@ -63,9 +67,13 @@ namespace NeoEdit.Common
 			}
 		}
 
+		static BinaryData() { UIHelper<BinaryData>.Register(); }
+
+		readonly UIHelper<BinaryData> uiHelper;
 		readonly byte[] data;
 		public BinaryData(byte[] _data)
 		{
+			uiHelper = new UIHelper<BinaryData>(this);
 			data = _data;
 		}
 
@@ -77,6 +85,11 @@ namespace NeoEdit.Common
 		public long Length
 		{
 			get { return data.Length; }
+		}
+
+		public static implicit operator BinaryData(byte[] data)
+		{
+			return new BinaryData(data);
 		}
 
 		public override string ToString()
@@ -338,6 +351,14 @@ namespace NeoEdit.Common
 					}
 				}
 			}
+		}
+
+		public void Replace(long index, BinaryData bytes)
+		{
+			var count = Math.Min(bytes.Length, data.Length - index);
+			for (var ctr = 0; ctr < count; ctr++)
+				data[index + ctr] = bytes[ctr];
+			++ChangeCount;
 		}
 	}
 }

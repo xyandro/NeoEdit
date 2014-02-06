@@ -14,6 +14,8 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public double xScrollSmallChange { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
@@ -33,6 +35,10 @@ namespace NeoEdit.BinaryEditorUI
 		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { ++internalChangeCount; uiHelper.SetPropValue(value); --internalChangeCount; } }
 		[DepProp]
 		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { ++internalChangeCount; uiHelper.SetPropValue(value); --internalChangeCount; } }
+		[DepProp]
+		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public BinaryData.ConverterType TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.ConverterType>(); } set { uiHelper.SetPropValue(value); } }
 
 		int internalChangeCount = 0;
 		long _pos1, _pos2;
@@ -45,6 +51,8 @@ namespace NeoEdit.BinaryEditorUI
 				_pos1 = Math.Min(Data.Length - 1, Math.Max(0, value));
 				if (!selecting)
 					_pos2 = _pos1;
+
+				inHexEdit = false;
 
 				SelStart = Math.Min(_pos1, _pos2);
 				SelEnd = Math.Max(_pos1, _pos2);
@@ -76,11 +84,12 @@ namespace NeoEdit.BinaryEditorUI
 		const int maxColumns = Int32.MaxValue;
 
 		bool mouseDown;
-		bool overrideSelecting;
+		bool? overrideSelecting;
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
+		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
 		bool controlOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Control; } }
-		bool selecting { get { return (overrideSelecting) || (mouseDown) || (shiftDown); } }
+		bool selecting { get { return overrideSelecting.HasValue ? overrideSelecting.Value : ((mouseDown) || (shiftDown)); } }
 
 		int columns;
 		long rows;
@@ -132,6 +141,7 @@ namespace NeoEdit.BinaryEditorUI
 			charWidth = formattedText.Width / example.Length;
 
 			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.SelHex, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => { EnsureVisible(Pos1); InvalidateVisual(); });
@@ -153,10 +163,14 @@ namespace NeoEdit.BinaryEditorUI
 
 				overrideSelecting = true;
 				Pos1 = SelEnd;
-				overrideSelecting = false;
+				overrideSelecting = null;
 			});
 
-			Loaded += (s, e) => InvalidateVisual();
+			Loaded += (s, e) =>
+			{
+				InvalidateVisual();
+				TypeEncoding = BinaryData.ConverterType.UTF8;
+			};
 		}
 
 		void EnsureVisible(long position)
@@ -267,7 +281,7 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			e.Handled = true;
 			switch (e.Key)
@@ -320,9 +334,49 @@ namespace NeoEdit.BinaryEditorUI
 						Pos1 = Data.Length;
 						Pos2 = 0;
 					}
+					else
+						e.Handled = false;
 					break;
 				default: e.Handled = false; break;
 			}
+		}
+
+		bool inHexEdit = false;
+		protected override void OnTextInput(TextCompositionEventArgs e)
+		{
+			if (String.IsNullOrEmpty(e.Text))
+				return;
+
+			BinaryData bytes = null;
+
+			if (SelHex)
+			{
+				var let = Char.ToUpper(e.Text[0]);
+				byte val;
+				if ((let >= '0') && (let <= '9'))
+					val = (byte)(let - '0');
+				else if ((let >= 'A') && (let <= 'F'))
+					val = (byte)(let - 'A' + 10);
+				else
+					return;
+
+				if (inHexEdit)
+					bytes = new byte[] { (byte)(Data[SelStart] * 16 + val) };
+				else
+					bytes = new byte[] { val };
+				inHexEdit = !inHexEdit;
+			}
+			else
+				bytes = BinaryData.FromString(TypeEncoding, e.Text);
+
+			Data.Replace(SelStart, bytes);
+
+			overrideSelecting = false;
+			if (!SelHex)
+				Pos1 += bytes.Length;
+			else if (!inHexEdit)
+				Pos1++;
+			overrideSelecting = null;
 		}
 
 		void MouseHandler(Point mousePos)

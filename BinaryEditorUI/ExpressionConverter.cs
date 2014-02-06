@@ -5,12 +5,24 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Markup;
 using System.Windows.Media;
 
 namespace NeoEdit.BinaryEditorUI
 {
-	class ExpressionConverter : IMultiValueConverter
+	class ExpressionConverter : MarkupExtension, IMultiValueConverter, IValueConverter
 	{
+		static ExpressionConverter converter;
+		public override object ProvideValue(IServiceProvider serviceProvider)
+		{
+			if (converter == null)
+				converter = new ExpressionConverter();
+			return converter;
+		}
+
+		static readonly string hexExp = @"#([0-9a-fA-F]{1,2})#";
+		static readonly Regex hexExpRE = new Regex(hexExp);
+
 		static readonly string num = @"\[(\d+)\]";
 		static readonly Regex numRE = new Regex(num);
 
@@ -28,8 +40,18 @@ namespace NeoEdit.BinaryEditorUI
 		static readonly string ternaryOperator = String.Format(@"{0}\s*\?\s*{0}\s*:\s*{0}", term);
 		static readonly Regex ternaryOperatorRE = new Regex(ternaryOperator);
 
-		void ParseParameters(ref string expression, object[] value)
+		string GetExpression(string expression, object[] value)
 		{
+			while (true)
+			{
+				var match = hexExpRE.Match(expression);
+				if (!match.Success)
+					break;
+
+				var result = (char)Byte.Parse(match.Groups[1].Value, NumberStyles.HexNumber);
+				expression = expression.Substring(0, match.Index) + result + expression.Substring(match.Index + match.Length);
+			}
+
 			while (true)
 			{
 				var match = numRE.Match(expression);
@@ -40,6 +62,8 @@ namespace NeoEdit.BinaryEditorUI
 				var result = val == null ? "NULL" : val.ToString();
 				expression = expression.Substring(0, match.Index) + "'" + result.Replace("'", "''") + "'" + expression.Substring(match.Index + match.Length);
 			}
+
+			return expression;
 		}
 
 		string ParseParens(ref string expression)
@@ -151,12 +175,8 @@ namespace NeoEdit.BinaryEditorUI
 			return expression;
 		}
 
-		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
+		public object Evaluate(string expression, Type targetType)
 		{
-			var expression = parameter as string;
-
-			ParseParameters(ref expression, value);
-
 			var expressionStack = new Stack<string>();
 
 			while (true)
@@ -192,7 +212,22 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
+		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return Evaluate(GetExpression(parameter as string, value), targetType);
+		}
+
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return Evaluate(GetExpression(parameter as string, new object[] { value }), targetType);
+		}
+
 		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			throw new NotImplementedException();
 		}
