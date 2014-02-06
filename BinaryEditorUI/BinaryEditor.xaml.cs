@@ -54,11 +54,11 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
-		void CommandCallback(object obj)
+		void CommandCallback(string name, object parameter)
 		{
-			canvas.HandleCommand(obj as string);
+			canvas.HandleCommand(name);
 
-			switch (obj as string)
+			switch (name)
 			{
 				case "View_Values": ShowValues = !ShowValues; break;
 			}

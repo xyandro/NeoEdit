@@ -7,9 +7,10 @@ namespace NeoEdit.Common
 	{
 		public Key Key { get; set; }
 		public ModifierKeys Modifiers { get; set; }
+		public string Name { get; set; }
 		public object Parameter { get; set; }
 
-		public delegate void NECommandExecuteHandler(object parameter);
+		public delegate void NECommandExecuteHandler(string name, object parameter);
 		NECommandExecuteHandler executeHandler;
 		public event NECommandExecuteHandler Executed
 		{
@@ -17,7 +18,7 @@ namespace NeoEdit.Common
 			remove { executeHandler -= value; }
 		}
 
-		public delegate bool NECommandCanRunHandler(object parameter);
+		public delegate bool NECommandCanRunHandler(string name, object parameter);
 		NECommandCanRunHandler canRunHandler;
 		public event NECommandCanRunHandler CanRun
 		{
@@ -31,12 +32,12 @@ namespace NeoEdit.Common
 		{
 			if (canRunHandler == null)
 				return true;
-			return canRunHandler(Parameter);
+			return canRunHandler(Name, Parameter);
 		}
 
 		public void Execute(object obj)
 		{
-			executeHandler(Parameter);
+			executeHandler(Name, Parameter);
 		}
 	}
 }
