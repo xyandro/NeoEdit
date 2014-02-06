@@ -8,7 +8,7 @@
     d:DesignHeight="300" d:DesignWidth="300"
 	Padding="0"
 	BorderThickness="0"
-	IsReadOnly="True">
+	IsReadOnly="{Binding Type, ElementName=self, Converter={binaryEditorUI:IsStrConverter}}">
 
 	<TextBox.Resources>
 		<binaryEditorUI:ExpressionConverter x:Key="ExpConv"/>
@@ -22,7 +22,7 @@
 	</TextBox.Background>
 	
 	<TextBox.Text>
-		<MultiBinding Converter="{binaryEditorUI:DisplayValueConverter}">
+		<MultiBinding Converter="{binaryEditorUI:DisplayValueConverter}" Mode="OneWay">
 			<Binding Path="Data" ElementName="self"/>
 			<Binding Path="SelStart" ElementName="self"/>
 			<Binding Path="SelEnd" ElementName="self"/>

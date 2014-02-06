@@ -63,6 +63,7 @@ namespace NeoEdit.BrowserUI
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
 			SetLocation(uri);
+			locationDisplay.LostFocus += (s, e) => uiHelper.InvalidateBinding(locationDisplay, TextBox.TextProperty);
 		}
 
 		static string StartLocation()
@@ -147,7 +148,6 @@ namespace NeoEdit.BrowserUI
 					files.Resort();
 					break;
 				case Key.Escape:
-					uiHelper.InvalidBinding(locationDisplay, TextBox.TextProperty);
 					files.Focus();
 					break;
 				case Key.Back: SetLocation(Location.Parent); break;

@@ -362,7 +362,7 @@ namespace NeoEdit.BinaryEditorUI
 		bool inHexEdit = false;
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
-			if (String.IsNullOrEmpty(e.Text))
+			if ((String.IsNullOrEmpty(e.Text)) || (e.Text == "\u001B"))
 				return;
 
 			BinaryData bytes = null;

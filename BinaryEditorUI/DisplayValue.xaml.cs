@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Input;
 using NeoEdit.Common;
 
 namespace NeoEdit.BinaryEditorUI
@@ -16,7 +17,7 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public string Type { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData.ConverterType Type { get { return uiHelper.GetPropValue<BinaryData.ConverterType>(); } set { uiHelper.SetPropValue(value); } }
 
 		static DisplayValue() { UIHelper<DisplayValue>.Register(); }
 
@@ -25,6 +26,26 @@ namespace NeoEdit.BinaryEditorUI
 		{
 			uiHelper = new UIHelper<DisplayValue>(this);
 			InitializeComponent();
+			LostFocus += (s, e) => uiHelper.InvalidateBinding(this, TextProperty);
+		}
+
+		protected override void OnKeyDown(KeyEventArgs e)
+		{
+			base.OnKeyDown(e);
+			if (e.Handled)
+				return;
+
+			switch (e.Key)
+			{
+				case Key.Enter:
+					if (!IsReadOnly)
+					{
+						var data = BinaryData.FromString(Type, Text);
+						if (data != null)
+							Data.Replace(SelStart, data);
+					}
+					break;
+			}
 		}
 	}
 }

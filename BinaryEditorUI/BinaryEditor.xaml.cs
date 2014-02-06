@@ -50,6 +50,7 @@ namespace NeoEdit.BinaryEditorUI
 
 			switch (e.Key)
 			{
+				case Key.Escape: canvas.Focus(); break;
 				case Key.F3: FindNext(!shiftDown); break;
 				default: uiHelper.RaiseEvent(canvas, e); break;
 			}

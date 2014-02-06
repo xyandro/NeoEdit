@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BinaryEditorUI\IsStrConverter.cs" />
     <Compile Include="Common\BinaryData.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
     <Compile Include="Records\Zipped\ZippedFile.cs" />
