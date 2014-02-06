@@ -28,10 +28,10 @@ namespace NeoEdit.UI.BinaryEditorUI
 				var selEnd = (long)value[2];
 				if (selStart > selEnd)
 					return new Exception();
-				var type = Helpers.ParseEnum<Converter.ConverterType>(value[3] as string);
+				var type = Helpers.ParseEnum<BinaryData.ConverterType>(value[3] as string);
 
-				var selCount = Math.Min(Converter.PreviewSize(type), (selStart == selEnd) ? Int32.MaxValue : selEnd - selStart + 1);
-				return Converter.Convert(type, data, selStart, selCount);
+				var selCount = Math.Min(BinaryData.PreviewSize(type), (selStart == selEnd) ? Int32.MaxValue : selEnd - selStart + 1);
+				return data.ToString(type, selStart, selCount);
 			}
 			catch { return "Invalid"; }
 		}
