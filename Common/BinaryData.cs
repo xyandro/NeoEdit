@@ -79,16 +79,6 @@ namespace NeoEdit.Common
 			get { return data.Length; }
 		}
 
-		public long IndexOf(byte value, long start)
-		{
-			return Array.IndexOf(data, value, (int)start);
-		}
-
-		public long LastIndexOf(byte value, long start)
-		{
-			return Array.LastIndexOf(data, value, (int)start);
-		}
-
 		public override string ToString()
 		{
 			return BitConverter.ToString(data);
@@ -133,12 +123,12 @@ namespace NeoEdit.Common
 			return (char)('A' + val - 10);
 		}
 
-		string HexToString()
+		public string ToHexString()
 		{
-			return HexToString(0, 0, false);
+			return ToHexString(0, 0, false);
 		}
 
-		string HexToString(long index, long numBytes, bool reverse)
+		public string ToHexString(long index, long numBytes, bool reverse)
 		{
 			if (numBytes == 0)
 				numBytes = data.Length - index;
@@ -186,8 +176,8 @@ namespace NeoEdit.Common
 				case BinaryData.ConverterType.UTF16BE: return GetString(Encoding.BigEndianUnicode, index, numBytes);
 				case BinaryData.ConverterType.UTF32LE: return GetString(Encoding.UTF32, index, numBytes);
 				case BinaryData.ConverterType.UTF32BE: return GetString(new UTF32Encoding(true, false), index, numBytes);
-				case BinaryData.ConverterType.Hex: return HexToString(index, numBytes, false);
-				case BinaryData.ConverterType.HexRev: return HexToString(index, numBytes, true);
+				case BinaryData.ConverterType.Hex: return ToHexString(index, numBytes, false);
+				case BinaryData.ConverterType.HexRev: return ToHexString(index, numBytes, true);
 			}
 			throw new Exception("Invalid conversion");
 		}
@@ -263,6 +253,91 @@ namespace NeoEdit.Common
 				case BinaryData.ConverterType.HexRev: return StringToHex(value, true);
 			}
 			throw new Exception("Invalid conversion");
+		}
+
+		public bool Find(FindData currentFind, ref long SelStart, ref long SelEnd, bool forward = true)
+		{
+			var offset = forward ? 1 : -1;
+			Func<byte, long, long> findFunc;
+			if (forward)
+			{
+				findFunc = (_find, _start) =>
+				{
+					var _pos = Array.IndexOf(data, _find, (int)_start);
+					if (_pos == -1)
+						return long.MaxValue;
+					return _pos;
+				};
+			}
+			else
+			{
+				findFunc = (_find, _start) => Array.LastIndexOf(data, _find, (int)_start);
+			}
+			var selectFunc = forward ? (Func<long, long, long>)Math.Min : Math.Max;
+			var invalid = forward ? long.MaxValue : -1;
+
+			var pos = SelStart;
+			while (true)
+			{
+				pos += offset;
+
+				var usePos = invalid;
+				for (var findPos = 0; findPos < currentFind.FindBinaryData.Count; findPos++)
+				{
+					var caseSensitive = currentFind.CaseSensitive[findPos];
+					var findData = currentFind.FindBinaryData[findPos];
+
+					usePos = selectFunc(usePos, findFunc(findData[0], pos));
+					if (!caseSensitive)
+					{
+						if ((findData[0] >= 'a') && (findData[0] <= 'z'))
+							usePos = selectFunc(usePos, findFunc((byte)(findData[0] - 'a' + 'A'), pos));
+						else if ((findData[0] >= 'A') && (findData[0] <= 'Z'))
+							usePos = selectFunc(usePos, findFunc((byte)(findData[0] - 'A' + 'a'), pos));
+					}
+				}
+
+				if ((usePos < 0) || (usePos >= Length))
+					return false;
+
+				pos = usePos;
+
+				for (var findPos = 0; findPos < currentFind.FindBinaryData.Count; findPos++)
+				{
+					var caseSensitive = currentFind.CaseSensitive[findPos];
+					var findData = currentFind.FindBinaryData[findPos];
+
+					int findIdx;
+					for (findIdx = 0; findIdx < findData.Length; ++findIdx)
+					{
+						if (pos + findIdx >= Length)
+							break;
+
+						if (data[pos + findIdx] == findData[findIdx])
+							continue;
+
+						if (caseSensitive)
+							break;
+
+						if ((data[pos + findIdx] >= 'a') && (data[pos + findIdx] <= 'z') && (findData[findIdx] >= 'A') && (findData[findIdx] <= 'Z'))
+							if (data[pos + findIdx] - 'a' + 'A' == findData[findIdx])
+								continue;
+
+						if ((data[pos + findIdx] >= 'A') && (data[pos + findIdx] <= 'Z') && (findData[findIdx] >= 'a') && (findData[findIdx] <= 'z'))
+							if (data[pos + findIdx] - 'A' + 'a' == findData[findIdx])
+								continue;
+
+						break;
+					}
+
+					if (findIdx == findData.Length)
+					{
+						SelStart = pos;
+						SelEnd = pos + findData.Length - 1;
+						return true;
+					}
+				}
+			}
 		}
 	}
 }

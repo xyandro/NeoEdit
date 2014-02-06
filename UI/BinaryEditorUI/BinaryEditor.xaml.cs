@@ -47,92 +47,18 @@ namespace NeoEdit.UI.BinaryEditorUI
 			}
 		}
 
-		FindResult currentFind;
+		FindData currentFind;
 		void FindNext(bool forward = true)
 		{
 			if (currentFind == null)
 				return;
 
-			var offset = forward ? 1 : -1;
-			Func<BinaryData, byte, long, long> findFunc;
-			if (forward)
+			long start = SelStart;
+			long end = SelEnd;
+			if (Data.Find(currentFind, ref start, ref end, forward))
 			{
-				findFunc = (_data, _find, _start) =>
-				{
-					var _pos = _data.IndexOf(_find, (int)_start);
-					if (_pos == -1)
-						return long.MaxValue;
-					return _pos;
-				};
-			}
-			else
-			{
-				findFunc = (_data, _find, _start) => _data.LastIndexOf(_find, (int)_start);
-			}
-			var selectFunc = forward ? (Func<long, long, long>)Math.Min : Math.Max;
-			var invalid = forward ? long.MaxValue : -1;
-
-			var pos = SelStart;
-			while (true)
-			{
-				pos += offset;
-
-				var usePos = invalid;
-				for (var findPos = 0; findPos < currentFind.FindData.Count; findPos++)
-				{
-					var caseSensitive = currentFind.CaseSensitive[findPos];
-					var findData = currentFind.FindData[findPos];
-
-					usePos = selectFunc(usePos, findFunc(Data, findData[0], pos));
-					if (!caseSensitive)
-					{
-						if ((findData[0] >= 'a') && (findData[0] <= 'z'))
-							usePos = selectFunc(usePos, findFunc(Data, (byte)(findData[0] - 'a' + 'A'), pos));
-						else if ((findData[0] >= 'A') && (findData[0] <= 'Z'))
-							usePos = selectFunc(usePos, findFunc(Data, (byte)(findData[0] - 'A' + 'a'), pos));
-					}
-				}
-
-				if ((usePos < 0) || (usePos >= Data.Length))
-					break;
-
-				pos = usePos;
-
-				for (var findPos = 0; findPos < currentFind.FindData.Count; findPos++)
-				{
-					var caseSensitive = currentFind.CaseSensitive[findPos];
-					var findData = currentFind.FindData[findPos];
-
-					int findIdx;
-					for (findIdx = 0; findIdx < findData.Length; ++findIdx)
-					{
-						if (pos + findIdx >= Data.Length)
-							break;
-
-						if (Data[pos + findIdx] == findData[findIdx])
-							continue;
-
-						if (caseSensitive)
-							break;
-
-						if ((Data[pos + findIdx] >= 'a') && (Data[pos + findIdx] <= 'z') && (findData[findIdx] >= 'A') && (findData[findIdx] <= 'Z'))
-							if (Data[pos + findIdx] - 'a' + 'A' == findData[findIdx])
-								continue;
-
-						if ((Data[pos + findIdx] >= 'A') && (Data[pos + findIdx] <= 'Z') && (findData[findIdx] >= 'a') && (findData[findIdx] <= 'z'))
-							if (Data[pos + findIdx] - 'A' + 'a' == findData[findIdx])
-								continue;
-
-						break;
-					}
-
-					if (findIdx == findData.Length)
-					{
-						SelStart = pos;
-						SelEnd = pos + findData.Length - 1;
-						return;
-					}
-				}
+				SelStart = start;
+				SelEnd = end;
 			}
 		}
 

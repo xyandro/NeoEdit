@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using NeoEdit.Common;
 
-namespace NeoEdit.UI.BinaryEditorUI
+namespace NeoEdit.Common
 {
-	public class FindResult
+	public class FindData
 	{
 		public string FindText;
-		public List<BinaryData> FindData;
+		public List<BinaryData> FindBinaryData;
 		public List<bool> CaseSensitive;
 	}
 }
