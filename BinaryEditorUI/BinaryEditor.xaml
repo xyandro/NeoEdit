@@ -9,6 +9,8 @@
 	<Window.Resources>
 		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
 		<common:UICommand x:Key="Edit_Find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
+		<common:UICommand x:Key="Edit_FindNext" Key="F3" Executed="CommandCallback"/>
+		<common:UICommand x:Key="Edit_FindPrev" Key="F3" Modifiers="Shift" Executed="CommandCallback"/>
 		<common:UICommand x:Key="Edit_Insert" Key="Insert" Executed="CommandCallback"/>
 		<common:UICommand x:Key="View_Values" Key="V" Modifiers="Control" Executed="CommandCallback"/>
 	</Window.Resources>
@@ -27,6 +29,9 @@
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_Edit">
 				<MenuItem Header="_Find" Command="{StaticResource Edit_Find}" InputGestureText="Ctrl+F"/>
+				<MenuItem Header="Find _Next" Command="{StaticResource Edit_FindNext}" InputGestureText="F3"/>
+				<MenuItem Header="Find _Previous" Command="{StaticResource Edit_FindPrev}" InputGestureText="Shift+F3"/>
+				<Separator/>
 				<MenuItem Header="_Insert" Command="{StaticResource Edit_Insert}" IsChecked="{Binding Insert, ElementName=self}"/>
 				<MenuItem Header="_Typing Encoding" Click="TypeEncodingClick">
 					<MenuItem Header="UTF7" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={binaryEditorUIConverters:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
@@ -42,30 +47,31 @@
 			</MenuItem>
 		</Menu>
 		<binaryEditorUI:BinaryCanvas x:Name="canvas" Grid.Row="1"
-			Data="{Binding Data, ElementName=self}"
-			ChangeCount="{Binding Data.ChangeCount, ElementName=self}"
-			SelStart="{Binding SelStart, ElementName=self, Mode=TwoWay}"
-			SelEnd="{Binding SelEnd, ElementName=self, Mode=TwoWay}"
-			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=TwoWay}"
-			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=TwoWay}"
-			xScrollMaximum="{Binding Maximum, ElementName=xScroll, Mode=TwoWay}"
+			Data="{Binding Data, ElementName=self, Mode=OneWay}"
+			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
+			SelStart="{Binding SelStart, ElementName=self, Mode=OneWayToSource}"
+			SelEnd="{Binding SelEnd, ElementName=self, Mode=OneWayToSource}"
+			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"
+			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=OneWayToSource}"
+			xScrollMaximum="{Binding Maximum, ElementName=xScroll, Mode=OneWayToSource}"
 			xScrollValue="{Binding Value, ElementName=xScroll, Mode=TwoWay}"
-			yScrollSmallChange="{Binding SmallChange, ElementName=yScroll, Mode=TwoWay}"
-			yScrollLargeChange="{Binding LargeChange, ElementName=yScroll, Mode=TwoWay}"
-			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=TwoWay}"
+			yScrollSmallChange="{Binding SmallChange, ElementName=yScroll, Mode=OneWayToSource}"
+			yScrollLargeChange="{Binding LargeChange, ElementName=yScroll, Mode=OneWayToSource}"
+			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=OneWayToSource}"
 			yScrollValue="{Binding Value, ElementName=yScroll, Mode=TwoWay}"
-			Insert="{Binding Insert, ElementName=self, Mode=TwoWay}"
-			TypeEncoding="{Binding TypeEncoding, ElementName=self, Mode=TwoWay}"
+			Insert="{Binding Insert, ElementName=self, Mode=OneWayToSource}"
+			TypeEncoding="{Binding TypeEncoding, ElementName=self, Mode=OneWayToSource}"
+			FoundText="{Binding FoundText, ElementName=self, Mode=OneWayToSource}"
 		/>
-		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}" PreviewMouseWheel="ScrollBar_PreviewMouseWheel"/>
+		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
 		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
 		<binaryEditorUI:DisplayValues Grid.Row="3" Grid.ColumnSpan="2"
 			Visibility="{Binding ShowValues, ElementName=self, Converter={StaticResource BoolToVis}}"
-			Data="{Binding Data, ElementName=self}"
-			ChangeCount="{Binding Data.ChangeCount, ElementName=self}"
-			SelStart="{Binding SelStart, ElementName=self}"
-			SelEnd="{Binding SelEnd, ElementName=self}"
-			FoundText="{Binding FoundText, ElementName=self}"
+			Data="{Binding Data, ElementName=self, Mode=OneWay}"
+			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
+			SelStart="{Binding SelStart, ElementName=self, Mode=OneWay}"
+			SelEnd="{Binding SelEnd, ElementName=self, Mode=OneWay}"
+			FoundText="{Binding FoundText, ElementName=self, Mode=OneWay}"
 		/>
 	</Grid>
 

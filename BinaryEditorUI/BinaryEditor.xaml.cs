@@ -23,8 +23,6 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public BinaryData.ConverterType TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.ConverterType>(); } set { uiHelper.SetPropValue(value); } }
 
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
-
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
 		readonly UIHelper<BinaryEditor> uiHelper;
@@ -35,9 +33,10 @@ namespace NeoEdit.BinaryEditorUI
 			uiHelper.InitializeCommands();
 
 			Data = data;
-			SelStart = SelEnd = 0;
-			PreviewMouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
+			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 			TextInput += (s, e) => uiHelper.RaiseEvent(canvas, e);
+
+			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
 
 			Show();
 		}
@@ -51,56 +50,23 @@ namespace NeoEdit.BinaryEditorUI
 			switch (e.Key)
 			{
 				case Key.Escape: canvas.Focus(); break;
-				case Key.F3: FindNext(!shiftDown); break;
 				default: uiHelper.RaiseEvent(canvas, e); break;
-			}
-		}
-
-		FindData currentFind;
-		void FindNext(bool forward = true)
-		{
-			if (currentFind == null)
-				return;
-
-			long start = SelStart;
-			long end = SelEnd;
-			if (Data.Find(currentFind, ref start, ref end, forward))
-			{
-				SelStart = start;
-				SelEnd = end;
 			}
 		}
 
 		void CommandCallback(object obj)
 		{
+			canvas.HandleCommand(obj as string);
+
 			switch (obj as string)
 			{
-				case "Edit_Find":
-					{
-						var results = FindDialog.Run();
-						if (results != null)
-						{
-							currentFind = results;
-							FoundText = currentFind.FindText;
-							FindNext();
-						}
-					}
-					break;
-				case "Edit_Insert": Insert = !Insert; break;
 				case "View_Values": ShowValues = !ShowValues; break;
 			}
 		}
 
-		void ScrollBar_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-		{
-			var scrollBar = sender as ScrollBar;
-			scrollBar.Value -= e.Delta;
-			e.Handled = true;
-		}
-
 		void TypeEncodingClick(object sender, RoutedEventArgs e)
 		{
-			TypeEncoding = Helpers.ParseEnum<BinaryData.ConverterType>(((MenuItem)e.Source).Header as string);
+			canvas.TypeEncoding = Helpers.ParseEnum<BinaryData.ConverterType>(((MenuItem)e.Source).Header as string);
 		}
 	}
 }

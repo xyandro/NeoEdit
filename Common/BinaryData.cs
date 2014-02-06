@@ -268,8 +268,9 @@ namespace NeoEdit.Common
 			throw new Exception("Invalid conversion");
 		}
 
-		public bool Find(FindData currentFind, ref long SelStart, ref long SelEnd, bool forward = true)
+		public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
 		{
+			start = end = -1;
 			var offset = forward ? 1 : -1;
 			Func<byte, long, long> findFunc;
 			if (forward)
@@ -289,7 +290,7 @@ namespace NeoEdit.Common
 			var selectFunc = forward ? (Func<long, long, long>)Math.Min : Math.Max;
 			var invalid = forward ? long.MaxValue : -1;
 
-			var pos = SelStart;
+			var pos = index;
 			while (true)
 			{
 				pos += offset;
@@ -346,8 +347,8 @@ namespace NeoEdit.Common
 
 					if (findIdx == findData.Length)
 					{
-						SelStart = pos;
-						SelEnd = pos + findData.Length - 1;
+						start = pos;
+						end = pos + findData.Length - 1;
 						return true;
 					}
 				}

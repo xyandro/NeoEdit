@@ -39,6 +39,8 @@ namespace NeoEdit.BinaryEditorUI
 		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public BinaryData.ConverterType TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.ConverterType>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
 		int internalChangeCount = 0;
 		long _pos1, _pos2;
@@ -143,33 +145,16 @@ namespace NeoEdit.BinaryEditorUI
 			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.SelHex, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
-			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => { EnsureVisible(Pos1); InvalidateVisual(); });
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
-
-			uiHelper.AddCallback(a => a.SelStart, (o, n) =>
-			{
-				if (internalChangeCount != 0)
-					return;
-
-				Pos2 = SelStart;
-				EnsureVisible(Pos2);
-			});
-			uiHelper.AddCallback(a => a.SelEnd, (o, n) =>
-			{
-				if (internalChangeCount != 0)
-					return;
-
-				overrideSelecting = true;
-				Pos1 = SelEnd;
-				overrideSelecting = null;
-			});
+			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
+			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => { EnsureVisible(Pos1); InvalidateVisual(); });
 
 			Loaded += (s, e) =>
 			{
 				InvalidateVisual();
 				TypeEncoding = BinaryData.ConverterType.UTF8;
+				SelStart = SelEnd = 0;
 			};
 		}
 
@@ -463,6 +448,47 @@ namespace NeoEdit.BinaryEditorUI
 
 			MouseHandler(e.GetPosition(this));
 			e.Handled = true;
+		}
+
+		public void HandleCommand(string command)
+		{
+			switch (command)
+			{
+				case "Edit_Find":
+					{
+						var results = FindDialog.Run();
+						if (results != null)
+						{
+							currentFind = results;
+							FoundText = currentFind.FindText;
+							DoFind();
+						}
+					}
+					break;
+				case "Edit_FindNext":
+				case "Edit_FindPrev":
+					DoFind(command == "Edit_FindNext"); 
+					break;
+				case "Edit_Insert": Insert = !Insert; break;
+			}
+		}
+
+		FindData currentFind;
+		void DoFind(bool forward = true)
+		{
+			if (currentFind == null)
+				return;
+
+			long start = SelStart;
+			long end = SelEnd;
+			if (Data.Find(currentFind, SelStart, out start, out end, forward))
+			{
+				overrideSelecting = true;
+				Pos2 = start;
+				EnsureVisible(Pos2);
+				Pos1 = end;
+				overrideSelecting = null;
+			}
 		}
 	}
 }
