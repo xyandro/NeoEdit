@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using NeoEdit.Common;
 using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BinaryEditorUI
@@ -9,7 +10,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 	public partial class BinaryEditor : Window
 	{
 		[DepProp]
-		public byte[] Data { get { return uiHelper.GetPropValue<byte[]>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -24,7 +25,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
 		readonly UIHelper<BinaryEditor> uiHelper;
-		public BinaryEditor(byte[] data)
+		public BinaryEditor(BinaryData data)
 		{
 			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
@@ -53,12 +54,12 @@ namespace NeoEdit.UI.BinaryEditorUI
 				return;
 
 			var offset = forward ? 1 : -1;
-			Func<byte[], byte, long, long> findFunc;
+			Func<BinaryData, byte, long, long> findFunc;
 			if (forward)
 			{
 				findFunc = (_data, _find, _start) =>
 				{
-					var _pos = Array.IndexOf(_data, _find, (int)_start);
+					var _pos = _data.IndexOf(_find, (int)_start);
 					if (_pos == -1)
 						return long.MaxValue;
 					return _pos;
@@ -66,7 +67,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			}
 			else
 			{
-				findFunc = (_data, _find, _start) => Array.LastIndexOf(_data, _find, (int)_start);
+				findFunc = (_data, _find, _start) => _data.LastIndexOf(_find, (int)_start);
 			}
 			var selectFunc = forward ? (Func<long, long, long>)Math.Min : Math.Max;
 			var invalid = forward ? long.MaxValue : -1;

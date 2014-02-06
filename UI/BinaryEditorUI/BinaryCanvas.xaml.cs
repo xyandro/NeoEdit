@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using NeoEdit.Common;
 using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BinaryEditorUI
@@ -12,7 +13,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 	public partial class BinaryCanvas : Canvas
 	{
 		[DepProp]
-		public byte[] Data { get { return uiHelper.GetPropValue<byte[]>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -82,7 +83,8 @@ namespace NeoEdit.UI.BinaryEditorUI
 		bool controlOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Control; } }
 		bool selecting { get { return (overrideSelecting) || (mouseDown) || (shiftDown); } }
 
-		int columns, rows;
+		int columns;
+		long rows;
 
 		// X spacing
 		const double xStartSpacing = 10;

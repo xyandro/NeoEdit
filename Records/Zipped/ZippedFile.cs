@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
+using NeoEdit.Common;
 
 namespace NeoEdit.Records.Zipped
 {
@@ -35,7 +35,7 @@ namespace NeoEdit.Records.Zipped
 			}
 		}
 
-		public override byte[] Read()
+		public override BinaryData Read()
 		{
 			using (var zipFile = ZipFile.OpenRead(archive))
 			{
@@ -44,7 +44,7 @@ namespace NeoEdit.Records.Zipped
 				using (var ms = new MemoryStream())
 				{
 					stream.CopyTo(ms);
-					return ms.ToArray();
+					return new BinaryData(ms.ToArray());
 				}
 			}
 		}
@@ -52,7 +52,7 @@ namespace NeoEdit.Records.Zipped
 		public override void CalcMD5()
 		{
 			using (var md5 = MD5.Create())
-				this[RecordProperty.PropertyName.MD5] = BitConverter.ToString(md5.ComputeHash(Read())).Replace("-", "").ToLower();
+				this[RecordProperty.PropertyName.MD5] = Read().MD5();
 		}
 
 		public override void Delete()

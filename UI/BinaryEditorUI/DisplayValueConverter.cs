@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
+using NeoEdit.Common;
 
 namespace NeoEdit.UI.BinaryEditorUI
 {
@@ -19,9 +20,9 @@ namespace NeoEdit.UI.BinaryEditorUI
 		{
 			try
 			{
-				var data = value[0] as byte[];
+				var data = value[0] as BinaryData;
 				if (data == null)
-					throw new Exception();
+					return "Invalid";
 
 				var selStart = (long)value[1];
 				var selEnd = (long)value[2];

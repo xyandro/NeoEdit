@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.IO;
+﻿using System.IO;
+using System.Windows;
 
 namespace NeoEdit
 {
@@ -17,7 +17,7 @@ namespace NeoEdit
 			if (!File.Exists(file))
 				new Test.UnicodeGenerator().Generate();
 
-			var data = File.ReadAllBytes(file);
+			var data = new NeoEdit.Common.BinaryData(File.ReadAllBytes(file));
 			new NeoEdit.UI.BinaryEditorUI.BinaryEditor(data);
 
 			//new Test.ConverterTest().Run();

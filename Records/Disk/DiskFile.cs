@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using NeoEdit.Common;
 using NeoEdit.Records.Zipped;
 
 namespace NeoEdit.Records.Disk
@@ -73,9 +74,9 @@ namespace NeoEdit.Records.Disk
 			}
 		}
 
-		public override byte[] Read()
+		public override BinaryData Read()
 		{
-			return File.ReadAllBytes(FullName);
+			return new BinaryData(File.ReadAllBytes(FullName));
 		}
 	}
 }

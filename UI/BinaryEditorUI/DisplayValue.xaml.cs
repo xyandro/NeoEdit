@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using NeoEdit.Common;
 using NeoEdit.UI.Resources;
 
 namespace NeoEdit.UI.BinaryEditorUI
@@ -6,7 +7,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 	public partial class DisplayValue : TextBox
 	{
 		[DepProp]
-		public byte[] Data { get { return uiHelper.GetPropValue<byte[]>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]

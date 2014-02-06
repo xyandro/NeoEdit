@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common;
 
 namespace NeoEdit.Records
 {
@@ -124,7 +125,7 @@ namespace NeoEdit.Records
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
 		public virtual void Sync(Record source) { }
-		public virtual byte[] Read() { throw new Exception("Cannot read file"); }
+		public virtual BinaryData Read() { throw new Exception("Cannot read file"); }
 
 		public override string ToString()
 		{
