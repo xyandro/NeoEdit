@@ -135,7 +135,7 @@ namespace NeoEdit.UI.BinaryEditorUI
 			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.SelHex, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
-			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => InvalidateVisual());
+			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => { EnsureVisible(Pos1); InvalidateVisual(); });
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 
@@ -274,8 +274,21 @@ namespace NeoEdit.UI.BinaryEditorUI
 			switch (e.Key)
 			{
 				case Key.Tab: SelHex = !SelHex; break;
-				case Key.Up: Pos1 -= columns; break;
-				case Key.Down: Pos1 += columns; break;
+				case Key.Up:
+				case Key.Down:
+					{
+						var mult = e.Key == Key.Up ? -1 : 1;
+						if (controlDown)
+						{
+							yScrollValue += rowHeight * mult;
+							var row = Pos1 / columns;
+							var adj = Math.Min(0, row - GetRowFromY(yScrollValue + rowHeight - 1)) + Math.Max(0, row - GetRowFromY(yScrollValue + ActualHeight - rowHeight));
+							Pos1 -= adj * columns;
+						}
+						else
+							Pos1 += columns * mult;
+					}
+					break;
 				case Key.Left: --Pos1; break;
 				case Key.Right: ++Pos1; break;
 				case Key.Home:
