@@ -16,14 +16,14 @@ namespace NeoEdit.Common
 {
 	class DepPropAttribute : Attribute { }
 
-	public class UIHelper<HelperType> where HelperType : DependencyObject
+	public class UIHelper<ControlType> where ControlType : DependencyObject
 	{
 		static Dictionary<string, DependencyProperty> dependencyProperty;
-		readonly HelperType control;
+		readonly ControlType control;
 		public static void Register()
 		{
-			var properties = typeof(HelperType).GetProperties().Where(a => a.CustomAttributes.Any(b => b.AttributeType == typeof(DepPropAttribute))).ToList();
-			dependencyProperty = properties.ToDictionary(a => a.Name, a => DependencyProperty.Register(a.Name, a.PropertyType, typeof(HelperType), new PropertyMetadata(ValueChangedCallback)));
+			var properties = typeof(ControlType).GetProperties().Where(a => a.CustomAttributes.Any(b => b.AttributeType == typeof(DepPropAttribute))).ToList();
+			dependencyProperty = properties.ToDictionary(a => a.Name, a => DependencyProperty.Register(a.Name, a.PropertyType, typeof(ControlType), new PropertyMetadata(ValueChangedCallback)));
 		}
 
 		static T GetTarget<T>(WeakReference<T> myRef) where T : class
@@ -38,7 +38,7 @@ namespace NeoEdit.Common
 
 		static void ValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			UIHelper<HelperType> uiHelper;
+			UIHelper<ControlType> uiHelper;
 			lock (UIHelpers)
 				uiHelper = GetTarget(UIHelpers.Where(a => GetTarget(a.Key) == d).Select(a => a.Value).SingleOrDefault());
 			if (uiHelper == null)
@@ -49,14 +49,14 @@ namespace NeoEdit.Common
 			uiHelper.callbacks[property](e.OldValue, e.NewValue);
 		}
 
-		static Dictionary<WeakReference<HelperType>, WeakReference<UIHelper<HelperType>>> UIHelpers = new Dictionary<WeakReference<HelperType>, WeakReference<UIHelper<HelperType>>>();
+		static Dictionary<WeakReference<ControlType>, WeakReference<UIHelper<ControlType>>> UIHelpers = new Dictionary<WeakReference<ControlType>, WeakReference<UIHelper<ControlType>>>();
 		Dictionary<string, Action<object, object>> callbacks = new Dictionary<string, Action<object, object>>();
-		public UIHelper(HelperType _control)
+		public UIHelper(ControlType _control)
 		{
 			if (dependencyProperty == null)
 				throw new Exception("Register must be called before creating a UIHelper.");
 			lock (UIHelpers)
-				UIHelpers[new WeakReference<HelperType>(_control)] = new WeakReference<UIHelper<HelperType>>(this);
+				UIHelpers[new WeakReference<ControlType>(_control)] = new WeakReference<UIHelper<ControlType>>(this);
 			control = _control;
 		}
 
@@ -88,12 +88,12 @@ namespace NeoEdit.Common
 			return ((expression.Body as MemberExpression).Member as PropertyInfo).Name;
 		}
 
-		public void AddCallback<T>(Expression<Func<HelperType, T>> expression, Action<object, object> action)
+		public void AddCallback<T>(Expression<Func<ControlType, T>> expression, Action<object, object> action)
 		{
 			callbacks[GetExpressionValue(expression)] = action;
 		}
 
-		public void AddObservableCallback<T>(Expression<Func<HelperType, ObservableCollection<T>>> expression, Action action)
+		public void AddObservableCallback<T>(Expression<Func<ControlType, ObservableCollection<T>>> expression, Action action)
 		{
 			NotifyCollectionChangedEventHandler func = (o, e) => action();
 
@@ -119,7 +119,7 @@ namespace NeoEdit.Common
 			dpd.AddValueChanged(obj, (o, e) => action());
 		}
 
-		public DependencyProperty GetProp<T>(Expression<Func<HelperType, T>> expression)
+		public DependencyProperty GetProp<T>(Expression<Func<ControlType, T>> expression)
 		{
 			return dependencyProperty[GetExpressionValue(expression)];
 		}
@@ -134,7 +134,7 @@ namespace NeoEdit.Common
 			control.SetValue(dependencyProperty[caller], value);
 		}
 
-		public void SetBinding<T, HelperType2>(Expression<Func<HelperType, T>> childExpression, HelperType2 parent, Expression<Func<HelperType2, T>> parentExpression)
+		public void SetBinding<T, HelperType2>(Expression<Func<ControlType, T>> childExpression, HelperType2 parent, Expression<Func<HelperType2, T>> parentExpression)
 		{
 			BindingOperations.SetBinding(control, GetProp(childExpression), new Binding() { Source = parent, Path = new PropertyPath(GetExpressionValue(parentExpression)), Mode = BindingMode.TwoWay });
 		}
