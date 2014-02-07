@@ -246,6 +246,23 @@ namespace NeoEdit.Common
 					return null;
 				return result;
 			}
+			if (targetType == typeof(GridLength))
+			{
+				if ((result is string) && ((result as string).Equals("Auto", StringComparison.OrdinalIgnoreCase)))
+					return GridLength.Auto;
+
+				TryStringConversion<bool>(ref result, Boolean.TryParse);
+				if (result is bool)
+					return (bool)result ? GridLength.Auto : new GridLength(0);
+
+				TryStringConversion<double>(ref result, Double.TryParse);
+				try
+				{
+					var val = System.Convert.ToDouble(result);
+					return new GridLength(val);
+				}
+				catch { return null; }
+			}
 
 			return result;
 		}

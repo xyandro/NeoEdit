@@ -5,10 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:common="clr-namespace:NeoEdit.Common"
     xmlns:binaryEditorUIConverters="clr-namespace:NeoEdit.BinaryEditorUI.Converters"
-    mc:Ignorable="d" 
-    d:DesignHeight="300" d:DesignWidth="300"
-	Padding="0"
-	BorderThickness="0"
+    mc:Ignorable="d"
+	d:DesignHeight="300" d:DesignWidth="300" Padding="0" BorderThickness="0" HorizontalAlignment="Right"
 	IsReadOnly="{Binding Type, ElementName=self, Converter={binaryEditorUIConverters:IsStrConverter}}">
 
 	<TextBox.Background>
@@ -17,7 +15,7 @@
 			<Binding Path="FoundText" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Background>
-	
+
 	<TextBox.Text>
 		<MultiBinding Converter="{binaryEditorUIConverters:DisplayValueConverter}" Mode="OneWay">
 			<Binding Path="Data" ElementName="self"/>
