@@ -3,14 +3,13 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:common="clr-namespace:NeoEdit.Common"
     xmlns:binaryEditorUI="clr-namespace:NeoEdit.BinaryEditorUI"
-    xmlns:binaryEditorUIConverters="clr-namespace:NeoEdit.BinaryEditorUI.Converters"
 	mc:Ignorable="d" 
 	d:DesignHeight="300" d:DesignWidth="300"
 	Background="LightGray">
 
 	<StackPanel.Resources>
-		<binaryEditorUIConverters:ExpressionConverter x:Key="ExpConv"/>
 		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
 	</StackPanel.Resources>
 	
@@ -42,7 +41,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -57,7 +56,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -72,7 +71,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -87,7 +86,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowInt" ElementName="self"/>
 			</MultiBinding>
@@ -118,7 +117,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -130,7 +129,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -142,7 +141,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowLE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>
@@ -154,7 +153,7 @@
 
 	<StackPanel Orientation="Horizontal">
 		<StackPanel.Visibility>
-			<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND [1]">
+			<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND [1]">
 				<Binding Path="ShowBE" ElementName="self"/>
 				<Binding Path="ShowStr" ElementName="self"/>
 			</MultiBinding>

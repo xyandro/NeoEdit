@@ -95,7 +95,7 @@
     <Compile Include="BinaryEditorUI\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\Converters\ExpressionConverter.cs" />
+    <Compile Include="Common\ExpressionConverter.cs" />
     <Compile Include="BinaryEditorUI\DisplayValue.xaml.cs">
       <DependentUpon>DisplayValue.xaml</DependentUpon>
     </Compile>

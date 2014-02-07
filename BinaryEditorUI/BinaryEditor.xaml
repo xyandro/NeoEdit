@@ -1,9 +1,8 @@
 ﻿<Window Name="self" x:Class="NeoEdit.BinaryEditorUI.BinaryEditor"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:binaryEditorUI="clr-namespace:NeoEdit.BinaryEditorUI"
-    xmlns:binaryEditorUIConverters="clr-namespace:NeoEdit.BinaryEditorUI.Converters"
     xmlns:common="clr-namespace:NeoEdit.Common"
+    xmlns:binaryEditorUI="clr-namespace:NeoEdit.BinaryEditorUI"
 	Title="Binary Editor" Height="400" Width="400">
 
 	<Window.Resources>
@@ -34,12 +33,12 @@
 				<Separator/>
 				<MenuItem Header="_Insert" Command="{StaticResource Edit_Insert}" IsChecked="{Binding Insert, ElementName=self}"/>
 				<MenuItem Header="_Typing Encoding" Click="TypeEncodingClick">
-					<MenuItem Header="UTF7" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={binaryEditorUIConverters:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
-					<MenuItem Header="UTF8" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={binaryEditorUIConverters:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
-					<MenuItem Header="UTF16LE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={binaryEditorUIConverters:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
-					<MenuItem Header="UTF16BE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={binaryEditorUIConverters:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
-					<MenuItem Header="UTF32LE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={binaryEditorUIConverters:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
-					<MenuItem Header="UTF32BE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={binaryEditorUIConverters:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
+					<MenuItem Header="UTF7" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
+					<MenuItem Header="UTF8" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
+					<MenuItem Header="UTF16LE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
+					<MenuItem Header="UTF16BE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
+					<MenuItem Header="UTF32LE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
+					<MenuItem Header="UTF32BE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_View">

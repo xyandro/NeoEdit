@@ -1,12 +1,12 @@
 ﻿<Window Name="self" x:Class="NeoEdit.BinaryEditorUI.FindDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:NeoEdit.Common"
     xmlns:binaryEditorUIConverters="clr-namespace:NeoEdit.BinaryEditorUI.Converters"
 	Title="Find" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=findText}">
 
 	<Window.Resources>
 		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
-		<binaryEditorUIConverters:ExpressionConverter x:Key="ExpConv"/>
 		<binaryEditorUIConverters:ValidValueConverter x:Key="ValidConv"/>
 	</Window.Resources>
 	
@@ -44,7 +44,7 @@
 
 		<GroupBox Header="Integers">
 			<GroupBox.Visibility>
-				<MultiBinding Converter="{StaticResource ExpConv}" ConverterParameter="[0] AND ([1] OR [2])">
+				<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] AND ([1] OR [2])">
 					<Binding Path="ShowInt" ElementName="self"/>
 					<Binding Path="ShowLE" ElementName="self"/>
 					<Binding Path="ShowBE" ElementName="self"/>
