@@ -6,7 +6,6 @@
 	Title="Find" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=findText}">
 
 	<Window.Resources>
-		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
 		<binaryEditorUIConverters:ValidValueConverter x:Key="ValidConv"/>
 	</Window.Resources>
 	
@@ -66,33 +65,33 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Row="0" Grid.Column="0" Content="Unsigned LE:" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}"/>
+				<Label Grid.Row="0" Grid.Column="0" Content="Unsigned LE:" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}"/>
 
-				<CheckBox Grid.Row="0" Grid.Column="1" Name="UInt8LE" Content="UInt8LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8LE}"/>
-				<CheckBox Grid.Row="0" Grid.Column="2" Name="UInt16LE" Content="UInt16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt16LE}"/>
-				<CheckBox Grid.Row="0" Grid.Column="3" Name="UInt32LE" Content="UInt32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt32LE}"/>
-				<CheckBox Grid.Row="0" Grid.Column="4" Name="UInt64LE" Content="UInt64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt64LE}"/>
+				<CheckBox Grid.Row="0" Grid.Column="1" Name="UInt8LE" Content="UInt8LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8LE}"/>
+				<CheckBox Grid.Row="0" Grid.Column="2" Name="UInt16LE" Content="UInt16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt16LE}"/>
+				<CheckBox Grid.Row="0" Grid.Column="3" Name="UInt32LE" Content="UInt32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt32LE}"/>
+				<CheckBox Grid.Row="0" Grid.Column="4" Name="UInt64LE" Content="UInt64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt64LE}"/>
 
-				<Label Grid.Row="1" Grid.Column="0" Content="Signed LE:" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}"/>
-				<CheckBox Grid.Row="1" Grid.Column="1" Name="Int8LE" Content="Int8LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int8LE}"/>
-				<CheckBox Grid.Row="1" Grid.Column="2" Name="Int16LE" Content="Int16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int16LE}"/>
-				<CheckBox Grid.Row="1" Grid.Column="3" Name="Int32LE" Content="Int32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int32LE}"/>
-				<CheckBox Grid.Row="1" Grid.Column="4" Name="Int64LE" Content="Int64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64LE}"/>
+				<Label Grid.Row="1" Grid.Column="0" Content="Signed LE:" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}"/>
+				<CheckBox Grid.Row="1" Grid.Column="1" Name="Int8LE" Content="Int8LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int8LE}"/>
+				<CheckBox Grid.Row="1" Grid.Column="2" Name="Int16LE" Content="Int16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int16LE}"/>
+				<CheckBox Grid.Row="1" Grid.Column="3" Name="Int32LE" Content="Int32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int32LE}"/>
+				<CheckBox Grid.Row="1" Grid.Column="4" Name="Int64LE" Content="Int64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64LE}"/>
 
-				<Label Grid.Row="2" Grid.Column="0" Content="Unsigned BE:" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}"/>
-				<CheckBox Grid.Row="2" Grid.Column="1" Name="UInt8BE" Content="UInt8BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8BE}"/>
-				<CheckBox Grid.Row="2" Grid.Column="2" Name="UInt16BE" Content="UInt16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8BE}"/>
-				<CheckBox Grid.Row="2" Grid.Column="3" Name="UInt32BE" Content="UInt32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8BE}"/>
-				<CheckBox Grid.Row="2" Grid.Column="4" Name="UInt64BE" Content="UInt64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8BE}"/>
+				<Label Grid.Row="2" Grid.Column="0" Content="Unsigned BE:" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}"/>
+				<CheckBox Grid.Row="2" Grid.Column="1" Name="UInt8BE" Content="UInt8BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8BE}"/>
+				<CheckBox Grid.Row="2" Grid.Column="2" Name="UInt16BE" Content="UInt16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8BE}"/>
+				<CheckBox Grid.Row="2" Grid.Column="3" Name="UInt32BE" Content="UInt32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8BE}"/>
+				<CheckBox Grid.Row="2" Grid.Column="4" Name="UInt64BE" Content="UInt64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8BE}"/>
 
-				<Label Grid.Row="3" Grid.Column="0" Content="Signed BE:" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}"/>
-				<CheckBox Grid.Row="3" Grid.Column="1" Name="Int8BE" Content="Int8BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int8BE}"/>
-				<CheckBox Grid.Row="3" Grid.Column="2" Name="Int16BE" Content="Int16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int16BE}"/>
-				<CheckBox Grid.Row="3" Grid.Column="3" Name="Int32BE" Content="Int32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int32BE}"/>
-				<CheckBox Grid.Row="3" Grid.Column="4" Name="Int64BE" Content="Int64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64BE}"/>
+				<Label Grid.Row="3" Grid.Column="0" Content="Signed BE:" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}"/>
+				<CheckBox Grid.Row="3" Grid.Column="1" Name="Int8BE" Content="Int8BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int8BE}"/>
+				<CheckBox Grid.Row="3" Grid.Column="2" Name="Int16BE" Content="Int16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int16BE}"/>
+				<CheckBox Grid.Row="3" Grid.Column="3" Name="Int32BE" Content="Int32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int32BE}"/>
+				<CheckBox Grid.Row="3" Grid.Column="4" Name="Int64BE" Content="Int64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64BE}"/>
 			</Grid>
 		</GroupBox>
-		<GroupBox Header="Floats" Visibility="{Binding ShowFloat, ElementName=self, Converter={StaticResource BoolToVis}}">
+		<GroupBox Header="Floats" Visibility="{Binding ShowFloat, ElementName=self, Converter={common:ExpressionConverter}}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
@@ -109,7 +108,7 @@
 				<CheckBox Grid.Column="2" Name="Double" Content="Double" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Double}"/>
 			</Grid>
 		</GroupBox>
-		<GroupBox Header="Strings" Visibility="{Binding ShowStr, ElementName=self, Converter={StaticResource BoolToVis}}">
+		<GroupBox Header="Strings" Visibility="{Binding ShowStr, ElementName=self, Converter={common:ExpressionConverter}}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
@@ -127,16 +126,16 @@
 				<CheckBox Grid.Row="0" Grid.Column="1" Name="UTF7" Content="UTF7" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF7}"/>
 				<CheckBox Grid.Row="0" Grid.Column="2" Name="UTF8" Content="UTF8" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF8}"/>
 
-				<CheckBox Grid.Row="1" Grid.Column="1" Name="UTF16LE" Content="UTF16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF16LE}"/>
-				<CheckBox Grid.Row="1" Grid.Column="2" Name="UTF16BE" Content="UTF16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF16BE}"/>
+				<CheckBox Grid.Row="1" Grid.Column="1" Name="UTF16LE" Content="UTF16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF16LE}"/>
+				<CheckBox Grid.Row="1" Grid.Column="2" Name="UTF16BE" Content="UTF16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF16BE}"/>
 
-				<CheckBox Grid.Row="2" Grid.Column="1" Name="UTF32LE" Content="UTF32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF32LE}"/>
-				<CheckBox Grid.Row="2" Grid.Column="2" Name="UTF32BE" Content="UTF32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={StaticResource BoolToVis}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF32BE}"/>
+				<CheckBox Grid.Row="2" Grid.Column="1" Name="UTF32LE" Content="UTF32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF32LE}"/>
+				<CheckBox Grid.Row="2" Grid.Column="2" Name="UTF32BE" Content="UTF32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={common:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF32BE}"/>
 
 				<CheckBox Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Name="MatchCase" Content="Match _Case"/>
 			</Grid>
 		</GroupBox>
-		<GroupBox Header="Hex" Visibility="{Binding ShowHex, ElementName=self, Converter={StaticResource BoolToVis}}">
+		<GroupBox Header="Hex" Visibility="{Binding ShowHex, ElementName=self, Converter={common:ExpressionConverter}}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>

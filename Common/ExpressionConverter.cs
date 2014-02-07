@@ -41,8 +41,11 @@ namespace NeoEdit.Common
 		static readonly string ternaryOperator = String.Format(@"{0}\s*\?\s*{0}\s*:\s*{0}", term);
 		static readonly Regex ternaryOperatorRE = new Regex(ternaryOperator);
 
-		string GetExpression(string expression)
+		string GetExpression(string expression, List<object> value)
 		{
+			if (String.IsNullOrEmpty(expression))
+				expression = "AND";
+
 			while (true)
 			{
 				var match = hexExpRE.Match(expression);
@@ -51,6 +54,9 @@ namespace NeoEdit.Common
 
 				expression = expression.Replace(match.Groups[0].Value, ((char)Byte.Parse(match.Groups[1].Value, NumberStyles.HexNumber)).ToString());
 			}
+
+			if (binaryOperator.Any(a => a.Any(b => b == expression)))
+				expression = String.Join(expression, Enumerable.Range(0, value.Count).Select(a => String.Format("[{0}]", a)));
 
 			return expression;
 		}
@@ -186,35 +192,62 @@ namespace NeoEdit.Common
 			return true;
 		}
 
-		static readonly Regex boolRE = new Regex("^True|False$");
-		static readonly Regex intRE = new Regex(@"^\d+$");
-
-		object GetReturnValue(object result, Type targetType)
+		public delegate bool TryParseHandler<T>(string value, out T result);
+		void TryStringConversion<T>(ref object obj, TryParseHandler<T> tryParse)
 		{
-			if (!(result is string))
-				return result;
+			if (!(obj is string))
+				return;
 
-			var expression = result as string;
-			if (boolRE.IsMatch(expression))
+			T value;
+			if (!tryParse(obj as string, out value))
+				return;
+
+			obj = value;
+		}
+
+		object GetResult(object result, Type targetType)
+		{
+			if (result == null)
+				return null;
+
+			if (targetType == typeof(object))
+				return result;
+			if (targetType == typeof(string))
+				return result.ToString();
+			if ((targetType == typeof(bool)) || (targetType == typeof(Visibility)))
 			{
-				var val = Boolean.Parse(expression);
+				TryStringConversion<bool>(ref result, Boolean.TryParse);
+
+				if (!(result is bool))
+					return null;
+
+				var val = (bool)result;
 				if (targetType == typeof(Visibility))
 					return val ? Visibility.Visible : Visibility.Collapsed;
 				return val;
 			}
-
-			if (intRE.IsMatch(expression))
+			if ((targetType == typeof(double)) || (targetType == typeof(Thickness)))
 			{
-				var val = Int32.Parse(expression);
-				if (targetType == typeof(Thickness))
-					return new Thickness(val);
-				return val;
+				TryStringConversion<double>(ref result, Double.TryParse);
+				try
+				{
+					var val = System.Convert.ToDouble(result);
+					if (targetType == typeof(Thickness))
+						return new Thickness(val);
+					return val;
+				}
+				catch { return null; }
+			}
+			if (targetType == typeof(Brush))
+			{
+				if (result is string)
+					result = typeof(Brushes).GetProperty(result as string).GetValue(null);
+				if (!(result is Brush))
+					return null;
+				return result;
 			}
 
-			if (targetType == typeof(Brush))
-				return typeof(Brushes).GetProperty(expression).GetValue(null);
-
-			return expression;
+			return result;
 		}
 
 		object Evaluate(string expression, List<object> value, Type targetType)
@@ -237,18 +270,20 @@ namespace NeoEdit.Common
 				if (ExitParens(ref expression, expressionStack))
 					continue;
 
-				return GetReturnValue(result, targetType);
+				return GetResult(result, targetType);
 			}
 		}
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return Evaluate(GetExpression(parameter as string), value.ToList(), targetType);
+			var data = value.ToList();
+			return Evaluate(GetExpression(parameter as string, data), data, targetType);
 		}
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return Evaluate(GetExpression(parameter as string), new List<object> { value }, targetType);
+			var data = new List<object> { value };
+			return Evaluate(GetExpression(parameter as string, data), data, targetType);
 		}
 
 		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)

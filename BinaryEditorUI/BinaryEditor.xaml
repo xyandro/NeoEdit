@@ -6,7 +6,6 @@
 	Title="Binary Editor" Height="400" Width="400">
 
 	<Window.Resources>
-		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
 		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
 		<common:UICommand x:Key="Edit_FindNext" Header="Find _Next" Key="F3" Executed="CommandCallback"/>
 		<common:UICommand x:Key="Edit_FindPrev" Header="Find _Previous" Key="F3" Modifiers="Shift" Executed="CommandCallback"/>
@@ -65,7 +64,7 @@
 		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
 		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
 		<binaryEditorUI:DisplayValues Grid.Row="3" Grid.ColumnSpan="2"
-			Visibility="{Binding ShowValues, ElementName=self, Converter={StaticResource BoolToVis}}"
+			Visibility="{Binding ShowValues, ElementName=self, Converter={common:ExpressionConverter}}"
 			Data="{Binding Data, ElementName=self, Mode=OneWay}"
 			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
 			SelStart="{Binding SelStart, ElementName=self, Mode=OneWay}"
