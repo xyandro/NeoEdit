@@ -42,7 +42,7 @@ namespace NeoEdit.BinaryEditorUI
 			if (String.IsNullOrEmpty(FindText))
 				return;
 
-			var converters = Helpers.GetValues<BinaryData.ConverterType>().ToDictionary(a => a, a => typeof(FindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic).GetValue(this) as CheckBox);
+			var converters = Helpers.GetValues<BinaryData.EncodingName>().Where(a => a != BinaryData.EncodingName.None).ToDictionary(a => a, a => typeof(FindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic).GetValue(this) as CheckBox);
 			var convertersToUse = converters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
 			var findData = convertersToUse.Select(a => new { converter = a, binaryData = BinaryData.FromString(a, FindText) }).GroupBy(a => a.binaryData.ToHexString()).Select(a => a.First()).ToDictionary(a => a.converter, a => a.binaryData);
 

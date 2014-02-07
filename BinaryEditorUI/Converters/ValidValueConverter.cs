@@ -9,7 +9,7 @@ namespace NeoEdit.BinaryEditorUI.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return BinaryData.FromString(Helpers.ParseEnum<BinaryData.ConverterType>(parameter as string), value as string) != null;
+			return BinaryData.FromString(Helpers.ParseEnum<BinaryData.EncodingName>(parameter as string), value as string) != null;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

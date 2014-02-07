@@ -38,7 +38,7 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public BinaryData.ConverterType TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.ConverterType>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData.EncodingName TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.EncodingName>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -153,7 +153,7 @@ namespace NeoEdit.BinaryEditorUI
 			Loaded += (s, e) =>
 			{
 				InvalidateVisual();
-				TypeEncoding = BinaryData.ConverterType.UTF8;
+				TypeEncoding = BinaryData.EncodingName.UTF8;
 				SelStart = SelEnd = 0;
 			};
 		}

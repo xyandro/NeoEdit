@@ -17,7 +17,7 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public BinaryData.ConverterType Type { get { return uiHelper.GetPropValue<BinaryData.ConverterType>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData.EncodingName Type { get { return uiHelper.GetPropValue<BinaryData.EncodingName>(); } set { uiHelper.SetPropValue(value); } }
 
 		static DisplayValue() { UIHelper<DisplayValue>.Register(); }
 

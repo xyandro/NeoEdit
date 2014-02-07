@@ -44,7 +44,7 @@ namespace NeoEdit.Records.Zipped
 				using (var ms = new MemoryStream())
 				{
 					stream.CopyTo(ms);
-					return new BinaryData(ms.ToArray());
+					return (BinaryData)ms.ToArray();
 				}
 			}
 		}

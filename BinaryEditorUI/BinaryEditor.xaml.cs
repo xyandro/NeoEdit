@@ -21,7 +21,7 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public BinaryData.ConverterType TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.ConverterType>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData.EncodingName TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.EncodingName>(); } set { uiHelper.SetPropValue(value); } }
 
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
@@ -66,7 +66,7 @@ namespace NeoEdit.BinaryEditorUI
 
 		void TypeEncodingClick(object sender, RoutedEventArgs e)
 		{
-			canvas.TypeEncoding = Helpers.ParseEnum<BinaryData.ConverterType>(((MenuItem)e.Source).Header as string);
+			canvas.TypeEncoding = Helpers.ParseEnum<BinaryData.EncodingName>(((MenuItem)e.Source).Header as string);
 		}
 	}
 }

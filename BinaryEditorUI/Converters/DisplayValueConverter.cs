@@ -28,10 +28,10 @@ namespace NeoEdit.BinaryEditorUI.Converters
 				var selEnd = (long)value[2];
 				if (selStart > selEnd)
 					return new Exception();
-				var type = (BinaryData.ConverterType)value[3];
+				var encoding = (BinaryData.EncodingName)value[3];
 
-				var selCount = Math.Min(BinaryData.PreviewSize(type), (selStart == selEnd) ? Int32.MaxValue : selEnd - selStart + 1);
-				return data.ToString(type, selStart, selCount);
+				var selCount = Math.Min(BinaryData.PreviewSize(encoding), (selStart == selEnd) ? Int32.MaxValue : selEnd - selStart + 1);
+				return data.ToString(encoding, selStart, selCount);
 			}
 			catch { return "Invalid"; }
 		}
