@@ -11,7 +11,7 @@ namespace NeoEdit.Common
 		public string Header { get; set; }
 		public object Parameter { get; set; }
 
-		public delegate void NECommandRunHandler(string name, object parameter);
+		public delegate void NECommandRunHandler(UICommand command, object parameter);
 		NECommandRunHandler runHandler;
 		public event NECommandRunHandler Run
 		{
@@ -19,7 +19,7 @@ namespace NeoEdit.Common
 			remove { runHandler -= value; }
 		}
 
-		public delegate bool NECommandCanRunHandler(string name, object parameter);
+		public delegate bool NECommandCanRunHandler(UICommand command, object parameter);
 		NECommandCanRunHandler canRunHandler;
 		public event NECommandCanRunHandler CanRun
 		{
@@ -50,12 +50,12 @@ namespace NeoEdit.Common
 		{
 			if (canRunHandler == null)
 				return true;
-			return canRunHandler(Name, Parameter);
+			return canRunHandler(this, Parameter);
 		}
 
 		public void Execute(object obj)
 		{
-			runHandler(Name, Parameter);
+			runHandler(this, Parameter);
 		}
 	}
 }

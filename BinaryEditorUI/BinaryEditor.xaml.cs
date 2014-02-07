@@ -54,14 +54,19 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
-		void CommandRun(string name, object parameter)
+		void CommandRun(UICommand command, object parameter)
 		{
-			canvas.HandleCommand(name);
+			canvas.CommandRun(command, parameter);
 
-			switch (name)
+			switch (command.Name)
 			{
 				case "View_Values": ShowValues = !ShowValues; break;
 			}
+		}
+
+		bool CommandCanRun(UICommand command, object parameter)
+		{
+			return canvas.CommandCanRun(command, parameter);
 		}
 
 		void TypeEncodingClick(object sender, RoutedEventArgs e)

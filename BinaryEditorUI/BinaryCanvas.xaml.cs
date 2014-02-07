@@ -450,9 +450,9 @@ namespace NeoEdit.BinaryEditorUI
 			e.Handled = true;
 		}
 
-		public void HandleCommand(string command)
+		public void CommandRun(UICommand command, object parameter)
 		{
-			switch (command)
+			switch (command.Name)
 			{
 				case "Edit_Find":
 					{
@@ -467,10 +467,15 @@ namespace NeoEdit.BinaryEditorUI
 					break;
 				case "Edit_FindNext":
 				case "Edit_FindPrev":
-					DoFind(command == "Edit_FindNext"); 
+					DoFind(command.Name == "Edit_FindNext"); 
 					break;
 				case "Edit_Insert": Insert = !Insert; break;
 			}
+		}
+
+		public bool CommandCanRun(UICommand command, object parameter)
+		{
+			return true;
 		}
 
 		FindData currentFind;
