@@ -8,6 +8,7 @@ namespace NeoEdit.Common
 		public Key Key { get; set; }
 		public ModifierKeys Modifiers { get; set; }
 		public string Name { get; set; }
+		public string Header { get; set; }
 		public object Parameter { get; set; }
 
 		public delegate void NECommandExecuteHandler(string name, object parameter);
@@ -27,6 +28,23 @@ namespace NeoEdit.Common
 		}
 
 		public event EventHandler CanExecuteChanged { add { } remove { } }
+
+		public string InputGestureText
+		{
+			get
+			{
+				if (Key == Key.None)
+					return "";
+				var modifiers = "";
+				if ((Modifiers & ModifierKeys.Control) != ModifierKeys.None)
+					modifiers += "Ctrl+";
+				if ((Modifiers & ModifierKeys.Alt) != ModifierKeys.None)
+					modifiers += "Alt+";
+				if ((Modifiers & ModifierKeys.Shift) != ModifierKeys.None)
+					modifiers += "Shift+";
+				return modifiers + Key.ToString();
+			}
+		}
 
 		public bool CanExecute(object obj)
 		{

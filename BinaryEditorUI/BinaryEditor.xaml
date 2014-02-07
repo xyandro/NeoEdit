@@ -7,11 +7,11 @@
 
 	<Window.Resources>
 		<BooleanToVisibilityConverter x:Key="BoolToVis"/>
-		<common:UICommand x:Key="Edit_Find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
-		<common:UICommand x:Key="Edit_FindNext" Key="F3" Executed="CommandCallback"/>
-		<common:UICommand x:Key="Edit_FindPrev" Key="F3" Modifiers="Shift" Executed="CommandCallback"/>
-		<common:UICommand x:Key="Edit_Insert" Key="Insert" Executed="CommandCallback"/>
-		<common:UICommand x:Key="View_Values" Key="V" Modifiers="Control" Executed="CommandCallback"/>
+		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
+		<common:UICommand x:Key="Edit_FindNext" Header="Find _Next" Key="F3" Executed="CommandCallback"/>
+		<common:UICommand x:Key="Edit_FindPrev" Header="Find _Previous" Key="F3" Modifiers="Shift" Executed="CommandCallback"/>
+		<common:UICommand x:Key="Edit_Insert" Header="_Insert" Key="Insert" Executed="CommandCallback"/>
+		<common:UICommand x:Key="View_Values" Header="_Values" Key="V" Modifiers="Control" Executed="CommandCallback"/>
 	</Window.Resources>
 
 	<Grid>
@@ -27,11 +27,11 @@
 		</Grid.RowDefinitions>
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_Edit">
-				<MenuItem Header="_Find" Command="{StaticResource Edit_Find}" InputGestureText="Ctrl+F"/>
-				<MenuItem Header="Find _Next" Command="{StaticResource Edit_FindNext}" InputGestureText="F3"/>
-				<MenuItem Header="Find _Previous" Command="{StaticResource Edit_FindPrev}" InputGestureText="Shift+F3"/>
+				<MenuItem Command="{StaticResource Edit_Find}"/>
+				<MenuItem Command="{StaticResource Edit_FindNext}"/>
+				<MenuItem Command="{StaticResource Edit_FindPrev}"/>
 				<Separator/>
-				<MenuItem Header="_Insert" Command="{StaticResource Edit_Insert}" IsChecked="{Binding Insert, ElementName=self}"/>
+				<MenuItem Command="{StaticResource Edit_Insert}" IsChecked="{Binding Insert, ElementName=self}"/>
 				<MenuItem Header="_Typing Encoding" Click="TypeEncodingClick">
 					<MenuItem Header="UTF7" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
 					<MenuItem Header="UTF8" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
@@ -42,7 +42,7 @@
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_View">
-				<MenuItem Header="_Values" Command="{StaticResource View_Values}" InputGestureText="Ctrl+V" IsChecked="{Binding ShowValues, ElementName=self}"/>
+				<MenuItem Command="{StaticResource View_Values}" IsChecked="{Binding ShowValues, ElementName=self}"/>
 			</MenuItem>
 		</Menu>
 		<binaryEditorUI:BinaryCanvas x:Name="canvas" Grid.Row="1"
