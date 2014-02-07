@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 
@@ -171,7 +173,7 @@ namespace NeoEdit.Common
 				case EncodingName.UTF16LE: return Encoding.Unicode;
 				case EncodingName.UTF16BE: return Encoding.BigEndianUnicode;
 				case EncodingName.UTF32LE: return Encoding.UTF32;
-				case EncodingName.UTF32BE: return new UTF32Encoding(true, false);
+				case EncodingName.UTF32BE: return new UTF32Encoding(true, true);
 				default: return null;
 			}
 		}
@@ -278,7 +280,7 @@ namespace NeoEdit.Common
 				case EncodingName.UTF16BE:
 				case EncodingName.UTF32LE:
 				case EncodingName.UTF32BE:
-					return GetEncoding(type).GetBytes(value);
+					return new BinaryData(GetEncoding(type).GetBytes(value));
 				case EncodingName.Hex: return StringToHex(value, false);
 				case EncodingName.HexRev: return StringToHex(value, true);
 			}
@@ -401,6 +403,61 @@ namespace NeoEdit.Common
 			Array.Copy(data, index, newData, index + bytes.Length, Length - index);
 			data = newData;
 			++ChangeCount;
+		}
+
+		readonly static Dictionary<EncodingName, byte[]> preambles = Helpers.GetValues<EncodingName>().Where(a => a.IsStr()).Select(a => new { type = a, preamble = GetEncoding(a).GetPreamble() }).Where(a => a.preamble.Length != 0).OrderByDescending(a => a.preamble.Length).ToDictionary(a => a.type, a => a.preamble);
+
+		public void GuessEncoding(out EncodingName encoding, out bool BOM)
+		{
+			encoding = EncodingName.None;
+			BOM = false;
+
+			if (encoding == EncodingName.None)
+			{
+				foreach (var preamble in preambles)
+				{
+					var match = true;
+					if (data.Length < preamble.Value.Length)
+						match = false;
+					if (match)
+						for (var ctr = 0; ctr < preamble.Value.Length; ctr++)
+							if (data[ctr] != preamble.Value[ctr])
+								match = false;
+					if (match)
+					{
+						encoding = preamble.Key;
+						BOM = true;
+						break;
+					}
+				}
+			}
+
+			if (data.Length >= 4)
+			{
+				if ((encoding == EncodingName.None) && (BitConverter.ToUInt32(data, 0) <= 0xffff))
+					encoding = EncodingName.UTF32LE;
+				if ((encoding == EncodingName.None) && (BitConverter.ToUInt32(data.Take(4).Reverse().ToArray(), 0) <= 0xffff))
+					encoding = EncodingName.UTF32BE;
+			}
+
+			if (encoding == EncodingName.None)
+			{
+				var zeroIndex = Array.IndexOf(data, (byte)0);
+				if (zeroIndex == -1)
+					encoding = EncodingName.UTF8;
+				else if ((zeroIndex & 1) == 1)
+					encoding = EncodingName.UTF16LE;
+				else
+					encoding = EncodingName.UTF16BE;
+			}
+		}
+	}
+
+	public static class BinaryDataExtensions
+	{
+		public static bool IsStr(this BinaryData.EncodingName type)
+		{
+			return BinaryData.IsStr(type);
 		}
 	}
 }

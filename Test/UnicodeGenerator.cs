@@ -3,25 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NeoEdit.Common;
 
 namespace NeoEdit.Test
 {
 	class UnicodeGenerator
 	{
-		enum Encodings
-		{
-			UTF7,
-			UTF8,
-			UTF16LE,
-			UTF16BE,
-			UTF32LE,
-			UTF32BE,
-		};
-		enum BOMs
-		{
-			Yes,
-			No,
-		};
 		enum Endings
 		{
 			CRLF,
@@ -41,7 +28,7 @@ namespace NeoEdit.Test
 			}
 		}
 
-		string GetText(Encodings encoding, BOMs bom, Endings ending)
+		string GetText(BinaryData.EncodingName encoding, bool bom, Endings ending)
 		{
 			var text = new List<string>
 			{
@@ -91,26 +78,28 @@ namespace NeoEdit.Test
 
 			using (var combined = File.Create(Path.Combine(dir, "Combined.txt")))
 			{
-				foreach (var encoding in GetValues<Encodings>())
-					foreach (var bom in GetValues<BOMs>())
+				foreach (var encoding in GetValues<BinaryData.EncodingName>().Where(a => a.IsStr()))
+					for (var useBom = 0; useBom < 2; ++useBom)
+					{
+						var bom = useBom == 0;
 						foreach (var ending in GetValues<Endings>())
 						{
 							Encoding encoder = null;
 							switch (encoding)
 							{
-								case Encodings.UTF7:
+								case BinaryData.EncodingName.UTF7:
 									encoder = new UTF7Encoding();
 									break;
-								case Encodings.UTF8:
-									encoder = new UTF8Encoding(bom == BOMs.Yes);
+								case BinaryData.EncodingName.UTF8:
+									encoder = new UTF8Encoding(bom);
 									break;
-								case Encodings.UTF16LE:
-								case Encodings.UTF16BE:
-									encoder = new UnicodeEncoding(encoding == Encodings.UTF16BE, bom == BOMs.Yes);
+								case BinaryData.EncodingName.UTF16LE:
+								case BinaryData.EncodingName.UTF16BE:
+									encoder = new UnicodeEncoding(encoding == BinaryData.EncodingName.UTF16BE, bom);
 									break;
-								case Encodings.UTF32BE:
-								case Encodings.UTF32LE:
-									encoder = new UTF32Encoding(encoding == Encodings.UTF32BE, bom == BOMs.Yes);
+								case BinaryData.EncodingName.UTF32BE:
+								case BinaryData.EncodingName.UTF32LE:
+									encoder = new UTF32Encoding(encoding == BinaryData.EncodingName.UTF32BE, bom);
 									break;
 								default:
 									throw new Exception("No encoder found");
@@ -120,7 +109,25 @@ namespace NeoEdit.Test
 
 							var bytes = File.ReadAllBytes(filename);
 							combined.Write(bytes, 0, bytes.Length);
+
+							BinaryData data = bytes;
+							BinaryData.EncodingName encoding2;
+							bool bom2;
+							data.GuessEncoding(out encoding2, out bom2);
+
+							if ((encoding != encoding2) || (bom != bom2))
+							{
+								// UTF7 in general thinks it's UTF8; ignore it
+								if (encoding == BinaryData.EncodingName.UTF7)
+									continue;
+
+								if (encoding != encoding2)
+									throw new Exception("Failed to guess encoding");
+								if (bom != bom2)
+									throw new Exception("Failed to detect BOM");
+							}
 						}
+					}
 			}
 		}
 	}
