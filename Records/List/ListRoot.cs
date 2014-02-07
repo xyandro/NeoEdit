@@ -6,23 +6,22 @@ namespace NeoEdit.Records.List
 {
 	public class ListRoot : RecordRoot
 	{
-		public ListRoot(Record parent) : base("Lists", parent) { }
+		const int NumLists = 5;
 
-		public override Record GetRecord(string uri)
+		public static ListRoot Static { get; private set; }
+
+		List<ListDir> lists;
+		internal ListRoot(Record parent)
+			: base("Lists", parent)
 		{
-			var record = Records.FirstOrDefault(a => a.FullName.Equals(uri, StringComparison.OrdinalIgnoreCase));
-			if (record != null)
-				return record;
-			return null;
+			if (Static != null)
+				throw new Exception("Can only create root nodes once.");
+			Static = this;
+			lists = Enumerable.Range(1, 5).Select(num => new ListDir(String.Format("List {0}", num), this)).ToList();
 		}
 
-		protected override IEnumerable<Record> InternalRecords
-		{
-			get
-			{
-				for (var ctr = 1; ctr <= 5; ctr++)
-					yield return new ListDir(String.Format("List {0}", ctr), this);
-			}
-		}
+		public ListDir this[int index] { get { return lists[index - 1]; } }
+
+		protected override IEnumerable<Record> InternalRecords { get { return lists; } }
 	}
 }

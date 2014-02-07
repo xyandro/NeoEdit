@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -6,7 +7,15 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskRoot : RecordRoot
 	{
-		public DiskRoot(Record parent) : base("Disks", parent) { }
+		public static DiskRoot Static { get; private set; }
+
+		internal DiskRoot(Record parent)
+			: base("Disks", parent)
+		{
+			if (Static != null)
+				throw new Exception("Can only create root nodes once.");
+			Static = this;
+		}
 
 		public override Record GetRecord(string uri)
 		{

@@ -1,10 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeoEdit.Records.Registry
 {
 	public class RegistryRoot : RecordRoot
 	{
-		public RegistryRoot(Record parent) : base("Registry", parent) { }
+		public static RegistryRoot Static { get; private set; }
+
+		internal RegistryRoot(Record parent)
+			: base("Registry", parent)
+		{
+			if (Static != null)
+				throw new Exception("Can only create root nodes once.");
+			Static = this;
+		}
 
 		public override Record GetRecord(string uri)
 		{

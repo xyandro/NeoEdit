@@ -130,7 +130,7 @@ namespace NeoEdit.BrowserUI
 				case Key.D4:
 				case Key.D5:
 					{
-						var list = Root.AllRoot.GetRecord("List " + e.Key.ToString().Substring(1)) as ListDir;
+						var list = ListRoot.Static[e.Key - Key.D1 + 1];
 						switch (Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift))
 						{
 							case ModifierKeys.Control:
@@ -192,7 +192,7 @@ namespace NeoEdit.BrowserUI
 		void SetLocation(string uri)
 		{
 			string select = null;
-			var record = Root.AllRoot.GetRecord(uri);
+			var record = Root.Static.GetRecord(uri);
 			if (record == null)
 				return;
 			if (record.IsFile)

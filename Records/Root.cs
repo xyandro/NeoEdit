@@ -4,8 +4,8 @@ namespace NeoEdit.Records
 {
 	public class Root : RecordRoot
 	{
-		public static Root AllRoot { get; private set; }
-		static Root() { AllRoot = new Root(null); }
+		public static Root Static { get; private set; }
+		static Root() { Static = new Root(null); }
 
 		readonly List<Record> RootNodes;
 		Root(Record parent)
