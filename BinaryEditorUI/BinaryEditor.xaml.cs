@@ -54,7 +54,7 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
-		void CommandCallback(string name, object parameter)
+		void CommandRun(string name, object parameter)
 		{
 			canvas.HandleCommand(name);
 

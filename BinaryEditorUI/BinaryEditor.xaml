@@ -6,11 +6,11 @@
 	Title="Binary Editor" Height="400" Width="400">
 
 	<Window.Resources>
-		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Executed="CommandCallback"/>
-		<common:UICommand x:Key="Edit_FindNext" Header="Find _Next" Key="F3" Executed="CommandCallback"/>
-		<common:UICommand x:Key="Edit_FindPrev" Header="Find _Previous" Key="F3" Modifiers="Shift" Executed="CommandCallback"/>
-		<common:UICommand x:Key="Edit_Insert" Header="_Insert" Key="Insert" Executed="CommandCallback"/>
-		<common:UICommand x:Key="View_Values" Header="_Values" Key="V" Modifiers="Control" Executed="CommandCallback"/>
+		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun"/>
+		<common:UICommand x:Key="Edit_FindNext" Header="Find _Next" Key="F3" Run="CommandRun"/>
+		<common:UICommand x:Key="Edit_FindPrev" Header="Find _Previous" Key="F3" Modifiers="Shift" Run="CommandRun"/>
+		<common:UICommand x:Key="Edit_Insert" Header="_Insert" Key="Insert" Run="CommandRun"/>
+		<common:UICommand x:Key="View_Values" Header="_Values" Key="V" Modifiers="Control" Run="CommandRun"/>
 	</Window.Resources>
 
 	<Grid>

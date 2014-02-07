@@ -11,12 +11,12 @@ namespace NeoEdit.Common
 		public string Header { get; set; }
 		public object Parameter { get; set; }
 
-		public delegate void NECommandExecuteHandler(string name, object parameter);
-		NECommandExecuteHandler executeHandler;
-		public event NECommandExecuteHandler Executed
+		public delegate void NECommandRunHandler(string name, object parameter);
+		NECommandRunHandler runHandler;
+		public event NECommandRunHandler Run
 		{
-			add { executeHandler += value; }
-			remove { executeHandler -= value; }
+			add { runHandler += value; }
+			remove { runHandler -= value; }
 		}
 
 		public delegate bool NECommandCanRunHandler(string name, object parameter);
@@ -55,7 +55,7 @@ namespace NeoEdit.Common
 
 		public void Execute(object obj)
 		{
-			executeHandler(Name, Parameter);
+			runHandler(Name, Parameter);
 		}
 	}
 }
