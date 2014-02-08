@@ -126,7 +126,6 @@ namespace NeoEdit.Common
 					numBytes = Length - index;
 				numBytes = Math.Min(numBytes, Length - index);
 				var str = encoding.GetString(data, (int)index, (int)numBytes);
-				str = str.Replace("\r", @"\r").Replace("\n", @"\n");
 				return str;
 			}
 			catch { return "Failed"; }
@@ -405,10 +404,10 @@ namespace NeoEdit.Common
 			++ChangeCount;
 		}
 
-		readonly static Dictionary<EncodingName, byte[]> preambles = Helpers.GetValues<EncodingName>().Where(a => a.IsStr()).Select(a => new { type = a, preamble = GetEncoding(a).GetPreamble() }).Where(a => a.preamble.Length != 0).OrderByDescending(a => a.preamble.Length).ToDictionary(a => a.type, a => a.preamble);
-
 		public void GuessEncoding(out EncodingName encoding, out bool BOM)
 		{
+			var preambles = Helpers.GetValues<EncodingName>().Where(a => a.IsStr()).Select(a => new { type = a, preamble = FromString(a, "\ufeff") }).OrderByDescending(a => a.preamble.Length).ToDictionary(a => a.type, a => a.preamble);
+
 			encoding = EncodingName.None;
 			BOM = false;
 

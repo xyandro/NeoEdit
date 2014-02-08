@@ -62,6 +62,8 @@ namespace NeoEdit.Test
 			}
 
 			result = result.Replace("<Encoding>", encoding.ToString()).Replace("<BOM>", bom.ToString()).Replace("<Ending>", ending.ToString());
+			if (bom)
+				result = "\ufeff" + result;
 
 			return result;
 		}
@@ -91,15 +93,15 @@ namespace NeoEdit.Test
 									encoder = new UTF7Encoding();
 									break;
 								case BinaryData.EncodingName.UTF8:
-									encoder = new UTF8Encoding(bom);
+									encoder = new UTF8Encoding(false);
 									break;
 								case BinaryData.EncodingName.UTF16LE:
 								case BinaryData.EncodingName.UTF16BE:
-									encoder = new UnicodeEncoding(encoding == BinaryData.EncodingName.UTF16BE, bom);
+									encoder = new UnicodeEncoding(encoding == BinaryData.EncodingName.UTF16BE, false);
 									break;
 								case BinaryData.EncodingName.UTF32BE:
 								case BinaryData.EncodingName.UTF32LE:
-									encoder = new UTF32Encoding(encoding == BinaryData.EncodingName.UTF32BE, bom);
+									encoder = new UTF32Encoding(encoding == BinaryData.EncodingName.UTF32BE, false);
 									break;
 								default:
 									throw new Exception("No encoder found");
