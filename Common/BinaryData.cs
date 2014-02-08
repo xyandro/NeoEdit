@@ -451,6 +451,13 @@ namespace NeoEdit.Common
 					encoding = EncodingName.UTF16BE;
 			}
 		}
+
+		public BinaryData GetSubset(long index, long count)
+		{
+			index = Math.Max(0, Math.Min(data.Length - 1, index));
+			count = Math.Max(0, Math.Min(data.Length - index, count));
+			return data.Skip((int)index).Take((int)count).ToArray();
+		}
 	}
 
 	public static class BinaryDataExtensions

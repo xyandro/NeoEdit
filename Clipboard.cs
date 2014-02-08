@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.Records;
 using NeoEdit.Records.Disk;
 
@@ -73,6 +75,41 @@ namespace NeoEdit
 				return;
 
 			records = dropList.Cast<string>().ToList().Select(file => DiskRoot.Static.GetRecord(file)).ToList();
+		}
+
+		public void Set(BinaryData bytes, bool hex)
+		{
+			contents = bytes;
+			contentGUID = Guid.NewGuid().ToString();
+
+			var dataObj = new DataObject();
+			dataObj.SetData(bytes.GetType(), contentGUID);
+			var str = "";
+			if (hex)
+				str = bytes.ToHexString();
+			else
+			{
+				var sw = new StringBuilder((int)bytes.Length);
+				for (var ctr = 0; ctr < bytes.Length; ctr++)
+					sw.Append((char)bytes[ctr]);
+				str = sw.ToString();
+			}
+			dataObj.SetText(str);
+			System.Windows.Clipboard.SetDataObject(dataObj);
+		}
+
+		public BinaryData GetBinaryData(BinaryData.EncodingName encoding)
+		{
+			var dataObj = System.Windows.Clipboard.GetDataObject();
+			var guid = dataObj.GetData(typeof(BinaryData));
+			if ((guid is string) && (((string)guid).Equals(contentGUID)))
+				return contents as BinaryData;
+
+			var str = System.Windows.Clipboard.GetText();
+			if (String.IsNullOrEmpty(str))
+				return null;
+
+			return BinaryData.FromString(encoding, str);
 		}
 	}
 }

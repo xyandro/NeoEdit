@@ -289,7 +289,10 @@ namespace NeoEdit.BinaryEditorUI
 						overrideSelecting = null;
 					}
 					break;
-				case Key.Tab: SelHex = !SelHex; break;
+				case Key.Tab:
+					SelHex = !SelHex;
+					inHexEdit = false;
+					break;
 				case Key.Up:
 				case Key.Down:
 					{
@@ -345,6 +348,33 @@ namespace NeoEdit.BinaryEditorUI
 		}
 
 		bool inHexEdit = false;
+		void DoInsert(BinaryData bytes, bool inHex)
+		{
+			if ((bytes == null) || (bytes.Length == 0))
+				return;
+
+			if (Insert)
+			{
+				if (SelStart != SelEnd)
+					Data.Delete(SelStart, SelEnd - SelStart + 1);
+				if ((inHex) && (!inHexEdit))
+					Data.Replace(SelStart, bytes);
+				else
+					Data.Insert(SelStart, bytes);
+			}
+			else
+			{
+				Data.Replace(SelStart, bytes);
+			}
+
+			overrideSelecting = false;
+			if (!inHex)
+				Pos1 = SelStart + bytes.Length;
+			else if (!inHexEdit)
+				Pos1 = SelStart + 1;
+			overrideSelecting = null;
+		}
+
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
 			if ((String.IsNullOrEmpty(e.Text)) || (e.Text == "\u001B"))
@@ -372,26 +402,7 @@ namespace NeoEdit.BinaryEditorUI
 			else
 				bytes = BinaryData.FromString(TypeEncoding, e.Text);
 
-			if (Insert)
-			{
-				if (SelStart != SelEnd)
-					Data.Delete(SelStart, SelEnd - SelStart + 1);
-				if ((SelHex) && (!inHexEdit))
-					Data.Replace(SelStart, bytes);
-				else
-					Data.Insert(SelStart, bytes);
-			}
-			else
-			{
-				Data.Replace(SelStart, bytes);
-			}
-
-			overrideSelecting = false;
-			if (!SelHex)
-				Pos1 = SelStart + bytes.Length;
-			else if (!inHexEdit)
-				Pos1 = SelStart + 1;
-			overrideSelecting = null;
+			DoInsert(bytes, SelHex);
 		}
 
 		void MouseHandler(Point mousePos)
@@ -454,6 +465,18 @@ namespace NeoEdit.BinaryEditorUI
 		{
 			switch (command.Name)
 			{
+				case "Edit_Cut":
+				case "Edit_Copy":
+					{
+						var subset = Data.GetSubset(SelStart, SelEnd - SelStart + 1);
+						Clipboard.Current.Set(subset, SelHex);
+						if ((command.Name == "Edit_Cut") && (Insert))
+							Data.Delete(SelStart, SelEnd - SelStart + 1);
+					}
+					break;
+				case "Edit_Paste":
+					DoInsert(Clipboard.Current.GetBinaryData(TypeEncoding), false);
+					break;
 				case "Edit_Find":
 					{
 						var results = FindDialog.Run();
@@ -467,7 +490,7 @@ namespace NeoEdit.BinaryEditorUI
 					break;
 				case "Edit_FindNext":
 				case "Edit_FindPrev":
-					DoFind(command.Name == "Edit_FindNext"); 
+					DoFind(command.Name == "Edit_FindNext");
 					break;
 				case "Edit_Insert": Insert = !Insert; break;
 			}
