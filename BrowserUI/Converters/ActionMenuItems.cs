@@ -26,10 +26,9 @@ namespace NeoEdit.BrowserUI.Converters
 
 			var parent = value[0] as Record;
 			var children = (value[1] as IEnumerable<Object>).Cast<Record>().ToList();
-			var clipboardCount = (int)value[2];
-			var browser = value[3] as Browser;
+			var browser = value[2] as Browser;
 
-			var actions = RecordAction.Actions(parent, children, clipboardCount);
+			var actions = RecordAction.Actions(parent, children);
 			var ret = actions.Select(a => RecordAction.Get(a)).Select(a => new MenuItem { Header = a.MenuHeader, InputGestureText = a.GetInputGestureText() }).ToList();
 			ret.ForEach(a => a.Click += browser.MenuItemActionClick);
 			return ret;

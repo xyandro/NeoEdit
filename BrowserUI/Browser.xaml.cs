@@ -237,7 +237,7 @@ namespace NeoEdit.BrowserUI
 			var records = files.SelectedItems.Cast<Record>().ToList();
 			records = records.Where(a => a.Actions.Any(b => b == action)).ToList();
 
-			if (!RecordAction.Get(action).IsValid(records.Count, Clipboard.Current.Objects.Count > 0))
+			if (!RecordAction.Get(action).IsValid(records.Count))
 				return;
 
 			try
@@ -262,10 +262,10 @@ namespace NeoEdit.BrowserUI
 						}
 						break;
 					case RecordAction.ActionName.Copy:
-						Clipboard.Current.Set(records, Clipboard.ClipboardType.Copy);
+						Clipboard.Current.Set(records, false);
 						break;
 					case RecordAction.ActionName.Cut:
-						Clipboard.Current.Set(records, Clipboard.ClipboardType.Cut);
+						Clipboard.Current.Set(records, true);
 						break;
 					case RecordAction.ActionName.Paste:
 						Location.Paste();

@@ -26,7 +26,6 @@ namespace NeoEdit.Records
 		public string MenuHeader { get; private set; }
 		public int MinChildren { get; private set; }
 		public int MaxChildren { get; private set; }
-		public bool ClipboardHasRecords { get; private set; }
 		public bool ParentAction { get; private set; }
 		public Key AccessKey { get; private set; }
 		public ModifierKeys AccessModifiers { get; private set; }
@@ -43,7 +42,7 @@ namespace NeoEdit.Records
 			new RecordAction { Name = ActionName.Delete, MenuHeader = "_Delete", AccessKey = Key.Delete },
 			new RecordAction { Name = ActionName.Copy, MenuHeader = "_Copy", AccessKey = Key.C, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.Cut, MenuHeader = "C_ut", AccessKey = Key.X, AccessModifiers = ModifierKeys.Control },
-			new RecordAction { Name = ActionName.Paste, MenuHeader = "_Paste", MinChildren = 0, ParentAction = true, ClipboardHasRecords = true, AccessKey = Key.V, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.Paste, MenuHeader = "_Paste", MinChildren = 0, ParentAction = true, AccessKey = Key.V, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.MD5, MenuHeader = "_MD5", AccessKey = Key.M, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.Identify, MenuHeader = "_Identify", AccessKey = Key.I, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.SyncSource, MenuHeader = "S_ync Source", MaxChildren = 1, AccessKey = Key.S, AccessModifiers = ModifierKeys.Control },
@@ -70,24 +69,19 @@ namespace NeoEdit.Records
 			return action.Name;
 		}
 
-		public static IEnumerable<ActionName> Actions(Record parent, IEnumerable<Record> children, int clipboardCount)
+		public static IEnumerable<ActionName> Actions(Record parent, IEnumerable<Record> children)
 		{
 			var parentActions = parent.Actions.Where(a => Get(a).ParentAction).ToList();
 			var childActions = children.SelectMany(a => a.Actions).Where(a => !Get(a).ParentAction).ToList();
 			var actions = parentActions.Concat(childActions).ToList();
 			var actionCounts = actions.GroupBy(a => a).ToDictionary(a => a.Key, a => a.Count());
-			actions = Helpers.GetValues<ActionName>().Where(a => actionCounts.ContainsKey(a)).Where(a => Get(a).IsValid(actionCounts[a], clipboardCount > 0)).ToList();
+			actions = Helpers.GetValues<ActionName>().Where(a => actionCounts.ContainsKey(a)).Where(a => Get(a).IsValid(actionCounts[a])).ToList();
 			return actions;
 		}
 
-		public bool IsValid(int numChildren, bool clipboardHasRecords)
+		public bool IsValid(int numChildren)
 		{
-			if (ParentAction)
-			{
-				if ((ClipboardHasRecords) && (!clipboardHasRecords))
-					return false;
-			}
-			else
+			if (!ParentAction)
 			{
 				if ((numChildren < MinChildren) || (numChildren > MaxChildren))
 					return false;

@@ -63,8 +63,13 @@ namespace NeoEdit.Records.Disk
 
 		public override void Paste()
 		{
-			var pasteType = Clipboard.Current.Type;
-			foreach (var child in Clipboard.Current.Get<Record>())
+			List<Record> records;
+			bool isCut;
+			Clipboard.Current.GetRecords(out records, out isCut);
+			if (records == null)
+				return;
+
+			foreach (var child in records)
 			{
 				var name = child[RecordProperty.PropertyName.NameWoExtension] as string;
 				var ext = child[RecordProperty.PropertyName.Extension] as string;
@@ -73,28 +78,28 @@ namespace NeoEdit.Records.Disk
 				{
 					var extra = num == 1 ? "" : String.Format(" ({0})", num);
 					newName = Path.Combine(FullName, name + extra + ext);
-					if ((!File.Exists(newName)) && (!Directory.Exists(newName)))
+					if ((File.Exists(newName)) || (Directory.Exists(newName)))
 					{
-						if ((Clipboard.Current.Type == Clipboard.ClipboardType.Cut) && (num != 1))
+						if (isCut)
 							throw new Exception("Destination already exists.");
-						break;
+						continue;
 					}
+					break;
 				}
 
-				switch (pasteType)
+				if (isCut)
 				{
-					case Clipboard.ClipboardType.Copy:
-						if (child is DiskFile)
-							File.Copy(child.FullName, newName);
-						else if (child is DiskDir)
-							CopyDir(child.FullName, newName);
-						break;
-					case Clipboard.ClipboardType.Cut:
-						if (child is DiskFile)
-							File.Move(child.FullName, newName);
-						else if (child is DiskDir)
-							Directory.Move(child.FullName, newName);
-						break;
+					if (child is DiskFile)
+						File.Move(child.FullName, newName);
+					else if (child is DiskDir)
+						Directory.Move(child.FullName, newName);
+				}
+				else
+				{
+					if (child is DiskFile)
+						File.Copy(child.FullName, newName);
+					else if (child is DiskDir)
+						CopyDir(child.FullName, newName);
 				}
 			}
 			Refresh();

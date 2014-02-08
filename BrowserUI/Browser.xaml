@@ -22,7 +22,6 @@
 					<MultiBinding Converter="{browserConverters:ActionMenuItems}">
 						<Binding ElementName="self" Path="Location"/>
 						<Binding ElementName="files" Path="SelectedItems"/>
-						<Binding Source="{x:Static neoEdit:Clipboard.Current}" Path="Objects.Count"/>
 						<Binding ElementName="self"/>
 						<Binding ElementName="files" Path="SelectedItems.Count"/> <!-- Catch changes -->
 					</MultiBinding>
