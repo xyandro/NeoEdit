@@ -1,8 +1,13 @@
 ﻿<Window Name="self" x:Class="NeoEdit.TextEditorUI.TextEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:NeoEdit.Common"
     xmlns:textEditorUI="clr-namespace:NeoEdit.TextEditorUI"
     Title="Text Editor" Height="400" Width="400" WindowState="Maximized">
+
+	<Window.Resources>
+		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+	</Window.Resources>
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -10,11 +15,18 @@
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		
-		<textEditorUI:TextCanvas x:Name="canvas"
+		<Menu>
+			<MenuItem Header="_Edit">
+				<MenuItem Command="{StaticResource Edit_Find}"/>
+			</MenuItem>
+		</Menu>
+		
+		<textEditorUI:TextCanvas x:Name="canvas" Grid.Row="1"
 			Data="{Binding Data, ElementName=self, Mode=OneWay}"
 			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
 			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"
@@ -26,8 +38,8 @@
 			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=OneWayToSource}"
 			yScrollValue="{Binding Value, ElementName=yScroll, Mode=TwoWay}"
 		/>
-		<ScrollBar Name="yScroll" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
-		<ScrollBar Name="xScroll" Grid.Row="1" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
+		<ScrollBar Name="yScroll" Grid.Row="2" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
+		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
 	</Grid>
 
 </Window>

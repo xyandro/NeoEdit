@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -119,7 +120,7 @@ namespace NeoEdit.TextEditorUI
 			charWidth = formattedText.Width / example.Length;
 
 			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => { ResetSearch(); InvalidateVisual(); });
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
@@ -230,6 +231,7 @@ namespace NeoEdit.TextEditorUI
 		}
 
 		Brush selectionBrush = new SolidColorBrush(Color.FromRgb(173, 214, 255));
+		Brush searchBrush = new SolidColorBrush(Color.FromArgb(200, 255, 192, 80));
 		protected override void OnRender(DrawingContext dc)
 		{
 			base.OnRender(dc);
@@ -280,6 +282,17 @@ namespace NeoEdit.TextEditorUI
 					dc.DrawRectangle(selectionBrush, null, new Rect(GetXFromColumn(startColumn) - xScrollValue, y, (endColumn - startColumn) * charWidth, rowHeight));
 				}
 
+				for (var ctr = 0; ctr < searchRow.Count; ++ctr)
+				{
+					if (searchRow[ctr] != row)
+						continue;
+
+					var startColumn = GetColumnFromIndex(line, searchIndex[ctr]);
+					var endColumn = GetColumnFromIndex(line, searchIndex[ctr] + searchLength[ctr]);
+
+					dc.DrawRectangle(searchBrush, null, new Rect(GetXFromColumn(startColumn) - xScrollValue, y, (endColumn - startColumn) * charWidth, rowHeight));
+				}
+
 				foreach (var selection in selections)
 				{
 					if (selection.Pos1Row == row)
@@ -327,6 +340,7 @@ namespace NeoEdit.TextEditorUI
 			e.Handled = true;
 			switch (e.Key)
 			{
+				case Key.Escape: ResetSearch(); break;
 				case Key.Left:
 					foreach (var selection in selections)
 					{
@@ -609,6 +623,91 @@ namespace NeoEdit.TextEditorUI
 
 			MouseHandler(e.GetPosition(this));
 			e.Handled = true;
+		}
+
+		List<int> searchRow = new List<int>();
+		List<int> searchIndex = new List<int>();
+		List<int> searchLength = new List<int>();
+		void ResetSearch()
+		{
+			searchRow.Clear();
+			searchIndex.Clear();
+			searchLength.Clear();
+			InvalidateVisual();
+		}
+
+		void RunSearch(Regex regex, bool selectionOnly)
+		{
+			if (regex == null)
+				return;
+
+			ResetSearch();
+
+			for (var row = 0; row < Data.NumLines; row++)
+			{
+				var line = Data[row];
+				var matches = regex.Matches(line);
+				foreach (Match match in matches)
+				{
+					if (selectionOnly)
+					{
+						var foundMatch = false;
+						foreach (var selection in selections)
+						{
+							int startIndex;
+							if (selection.StartRow < row)
+								startIndex = 0;
+							else if (selection.StartRow == row)
+								startIndex = selection.StartIndex;
+							else
+								continue;
+
+							int endIndex;
+							if (selection.EndRow > row)
+								endIndex = line.Length;
+							else if (selection.EndRow == row)
+								endIndex = selection.EndIndex;
+							else
+								continue;
+
+							if ((match.Index >= startIndex) && (match.Index + match.Length <= endIndex))
+							{
+								foundMatch = true;
+								break;
+							}
+						}
+						if (!foundMatch)
+							continue;
+					}
+
+					searchRow.Add(row);
+					searchIndex.Add(match.Index);
+					searchLength.Add(match.Length);
+				}
+			}
+			InvalidateVisual();
+		}
+
+		public void CommandRun(UICommand command, object parameter)
+		{
+			switch (command.Name)
+			{
+				case "Edit_Find":
+					try
+					{
+						Regex regex;
+						bool selectionOnly;
+						FindDialog.Run(out regex, out selectionOnly);
+						RunSearch(regex, selectionOnly);
+					}
+					catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+					break;
+			}
+		}
+
+		public bool CommandCanRun(UICommand command, object parameter)
+		{
+			return true;
 		}
 	}
 }
