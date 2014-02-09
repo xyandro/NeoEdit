@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace NeoEdit.Common
@@ -9,55 +8,67 @@ namespace NeoEdit.Common
 	public class TextData
 	{
 		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
-		List<string> lines = new List<string>();
-		List<string> endings = new List<string>();
+		string data;
+		List<int> lineIndex;
+		List<int> lineLength;
+		List<int> endingIndex;
+		List<int> endingLength;
 		string defaultEnding = "\r\n";
-		bool bom = false;
-		public TextData(BinaryData data, BinaryData.EncodingName encoding = BinaryData.EncodingName.None)
+
+		public TextData(BinaryData binaryData, BinaryData.EncodingName encoding = BinaryData.EncodingName.None)
 		{
 			if (encoding == BinaryData.EncodingName.None)
-				encoding = data.GuessEncoding();
+				encoding = binaryData.GuessEncoding();
 
-			var str = data.ToString(encoding);
-			bom = (str.Length > 0) && (str[0] == '\ufeff');
-			var matches = RecordsRE.Matches(str, bom ? 1 : 0);
+			data = binaryData.ToString(encoding);
+			RecalculateLines();
+		}
+
+		void RecalculateLines()
+		{
+			lineIndex = new List<int>();
+			lineLength = new List<int>();
+			endingIndex = new List<int>();
+			endingLength = new List<int>();
+
+			var bom = (data.Length > 0) && (data[0] == '\ufeff');
+			var matches = RecordsRE.Matches(data, bom ? 1 : 0);
 
 			foreach (Match match in matches)
 			{
-				if ((String.IsNullOrEmpty(match.Groups[1].Value)) && (String.IsNullOrEmpty(match.Groups[2].Value)))
+				if ((match.Groups[1].Length == 0) && (match.Groups[2].Length == 0))
 					continue;
-				lines.Add(match.Groups[1].Value);
-				endings.Add(match.Groups[1].Value);
+				lineIndex.Add(match.Groups[1].Index);
+				lineLength.Add(match.Groups[1].Length);
+				endingIndex.Add(match.Groups[2].Index);
+				endingLength.Add(match.Groups[2].Length);
 			}
 
 			// Select most popular line ending
-			if (endings.Count != 0)
-				defaultEnding = endings.GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).First();
+			defaultEnding = Enumerable.Range(0, endingIndex.Count).Select(a => GetEnding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).FirstOrDefault() ?? "\r\n";
 		}
 
-		public string this[int index]
+		public string this[int index] { get { return GetLine(index); } }
+
+		public string GetLine(int index)
 		{
-			get
-			{
-				if ((index < 0) || (index >= lines.Count))
-					throw new IndexOutOfRangeException();
-				return lines[index];
-			}
+			if ((index < 0) || (index >= lineIndex.Count))
+				throw new IndexOutOfRangeException();
+			return data.Substring(lineIndex[index], lineLength[index]);
+		}
+
+		public string GetEnding(int index)
+		{
+			if ((index < 0) || (index >= endingIndex.Count))
+				throw new IndexOutOfRangeException();
+			return data.Substring(endingIndex[index], endingLength[index]);
 		}
 
 		public BinaryData GetData(BinaryData.EncodingName encoding)
 		{
-			var sb = new StringBuilder();
-			if (bom)
-				sb.Append("\ufeff");
-			for (var ctr = 0; ctr < lines.Count; ctr++)
-			{
-				sb.Append(lines[ctr]);
-				sb.Append(endings[ctr]);
-			}
-			return BinaryData.FromString(encoding, sb.ToString());
+			return BinaryData.FromString(encoding, data);
 		}
 
-		public int NumLines { get { return lines.Count; } }
+		public int NumLines { get { return lineIndex.Count; } }
 	}
 }
