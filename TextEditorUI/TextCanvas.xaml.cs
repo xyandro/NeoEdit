@@ -142,6 +142,16 @@ namespace NeoEdit.TextEditorUI
 			return xLineStart + column * charWidth;
 		}
 
+		int GetColumnFromX(double x)
+		{
+			return (int)((x - xLineStart) / charWidth);
+		}
+
+		double GetXFromColumn(int column)
+		{
+			return xLineStart + column * charWidth;
+		}
+
 		int GetRowFromY(double y)
 		{
 			return (int)((y - yLinesStart) / rowHeight);
@@ -157,29 +167,66 @@ namespace NeoEdit.TextEditorUI
 			return GetColumnFromIndex(Data[row], index);
 		}
 
-		int GetColumnFromIndex(string line, int index)
+		int GetColumnFromIndex(string line, int findIndex)
 		{
-			if ((index < 0) || (index > line.Length))
+			if ((findIndex < 0) || (findIndex > line.Length))
 				throw new IndexOutOfRangeException();
 
 			var column = 0;
-			var start = 0;
-			while (start < index)
+			var index = 0;
+			while (index < findIndex)
 			{
-				var find = line.IndexOf('\t', start);
-				if ((find == -1) || (find >= index))
+				var find = line.IndexOf('\t', index);
+				if (find == index)
 				{
-					column += index - start;
-					start = index;
-				}
-				else
-				{
-					column += find - start;
 					column = (column / tabStop + 1) * tabStop;
-					start = find + 1;
+					++index;
+					continue;
 				}
+
+				if (find == -1)
+					find = line.Length;
+				find = Math.Min(find, findIndex);
+
+				column += find - index;
+				index = find;
 			}
 			return column;
+		}
+
+		int GetIndexFromColumn(int row, int index)
+		{
+			return GetIndexFromColumn(Data[row], index);
+		}
+
+		int GetIndexFromColumn(string line, int findColumn)
+		{
+			if (findColumn < 0)
+				throw new IndexOutOfRangeException();
+
+			var column = 0;
+			var index = 0;
+			while (index < line.Length)
+			{
+				if (column >= findColumn)
+					break;
+
+				var find = line.IndexOf('\t', index);
+				if (find == index)
+				{
+					column = (column / tabStop + 1) * tabStop;
+					++index;
+					continue;
+				}
+
+				if (find == -1)
+					find = line.Length;
+				find = Math.Min(find, findColumn - column + index);
+
+				column += find - index;
+				index = find;
+			}
+			return index;
 		}
 
 		Brush selectionBrush = new SolidColorBrush(Color.FromRgb(173, 214, 255));
@@ -242,20 +289,22 @@ namespace NeoEdit.TextEditorUI
 					}
 				}
 
-				var start = 0;
+				var index = 0;
 				var sb = new StringBuilder();
-				while (start < line.Length)
+				while (index < line.Length)
 				{
-					var index = line.IndexOf('\t', start);
-					if (index == -1)
-						index = line.Length;
-					sb.Append(line, start, index - start);
-					if (index < line.Length)
+					var find = line.IndexOf('\t', index);
+					if (find == index)
 					{
 						sb.Append(' ', (sb.Length / tabStop + 1) * tabStop - sb.Length);
-						index++;
+						++index;
+						continue;
 					}
-					start = index;
+
+					if (find == -1)
+						find = line.Length;
+					sb.Append(line, index, find - index);
+					index = find;
 				}
 
 				var text = new FormattedText(sb.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
@@ -403,6 +452,50 @@ namespace NeoEdit.TextEditorUI
 		void ConsolidateSelections()
 		{
 			selections = selections.GroupBy(a => a.ToString()).Select(a => a.First()).ToList();
+		}
+
+		void MouseHandler(Point mousePos)
+		{
+			var row = GetRowFromY(mousePos.Y + yScrollValue);
+			var index = GetIndexFromColumn(row, GetColumnFromX(mousePos.X + xScrollValue));
+
+			Selection selection;
+			if (selecting)
+				selection = selections.Last();
+			else
+			{
+				if (!controlDown)
+					selections.Clear();
+
+				selection = new Selection();
+				selections.Add(selection);
+			}
+			SetPos1(selection, row, index);
+		}
+
+		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+		{
+			MouseHandler(e.GetPosition(this));
+			mouseDown = e.ButtonState == MouseButtonState.Pressed;
+			if (mouseDown)
+				CaptureMouse();
+			else
+				ReleaseMouseCapture();
+			e.Handled = true;
+		}
+
+		protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+		{
+			OnMouseLeftButtonDown(e);
+		}
+
+		protected override void OnMouseMove(MouseEventArgs e)
+		{
+			if (!mouseDown)
+				return;
+
+			MouseHandler(e.GetPosition(this));
+			e.Handled = true;
 		}
 	}
 }
