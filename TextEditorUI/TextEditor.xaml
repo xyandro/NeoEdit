@@ -8,6 +8,7 @@
 	<Window.Resources>
 		<common:UICommand x:Key="Edit_Cut" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Copy" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Paste" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_MarkFinds" Header="_Mark finds" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Selection_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -33,6 +34,7 @@
 			<MenuItem Header="_Edit">
 				<MenuItem Command="{StaticResource Edit_Cut}"/>
 				<MenuItem Command="{StaticResource Edit_Copy}"/>
+				<MenuItem Command="{StaticResource Edit_Paste}"/>
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_Find}"/>
 				<MenuItem Command="{StaticResource Edit_MarkFinds}"/>

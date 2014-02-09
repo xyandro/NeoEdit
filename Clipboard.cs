@@ -98,17 +98,6 @@ namespace NeoEdit
 			System.Windows.Clipboard.SetDataObject(dataObj);
 		}
 
-		public void Set(string[] strings)
-		{
-			contents = strings;
-			contentGUID = Guid.NewGuid().ToString();
-
-			var dataObj = new DataObject();
-			dataObj.SetData(strings.GetType(), contentGUID);
-			dataObj.SetText(String.Join(" ", strings));
-			System.Windows.Clipboard.SetDataObject(dataObj);
-		}
-
 		public BinaryData GetBinaryData(BinaryData.EncodingName encoding)
 		{
 			var dataObj = System.Windows.Clipboard.GetDataObject();
@@ -121,6 +110,31 @@ namespace NeoEdit
 				return null;
 
 			return BinaryData.FromString(encoding, str);
+		}
+
+		public void Set(string[] strings)
+		{
+			contents = strings;
+			contentGUID = Guid.NewGuid().ToString();
+
+			var dataObj = new DataObject();
+			dataObj.SetData(strings.GetType(), contentGUID);
+			dataObj.SetText(String.Join(" ", strings));
+			System.Windows.Clipboard.SetDataObject(dataObj);
+		}
+
+		public string[] GetStrings()
+		{
+			var dataObj = System.Windows.Clipboard.GetDataObject();
+			var guid = dataObj.GetData(typeof(string[]));
+			if ((guid is string) && (((string)guid).Equals(contentGUID)))
+				return contents as string[];
+
+			var str = System.Windows.Clipboard.GetText();
+			if (String.IsNullOrEmpty(str))
+				return new string[0];
+
+			return new string[] { str };
 		}
 	}
 }

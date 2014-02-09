@@ -788,6 +788,8 @@ namespace NeoEdit.TextEditorUI
 
 		void Insert(Range range, string text)
 		{
+			if (range.HasSelection())
+				Delete(range);
 			Data.Insert(range.StartRow, range.StartIndex, text);
 			range.Pos1Index += text.Length;
 			range.Pos2Index += text.Length;
@@ -807,6 +809,26 @@ namespace NeoEdit.TextEditorUI
 						if (command.Name == "Edit_Cut")
 							foreach (var selection in GetReverseOrderSelections())
 								Delete(selection);
+					}
+					break;
+				case "Edit_Paste":
+					{
+						var result = Clipboard.Current.GetStrings().ToList();
+						if ((result == null) || (result.Count == 0))
+							break;
+
+						var sels = GetReverseOrderSelections();
+						while (result.Count > sels.Count)
+						{
+							result[result.Count - 2] += " " + result[result.Count - 1];
+							result.RemoveAt(result.Count - 1);
+						}
+						while (result.Count < sels.Count)
+							result.Add(result.Last());
+
+						result.Reverse();
+						for (var ctr = 0; ctr < sels.Count; ++ctr)
+							Insert(sels[ctr], result[ctr]);
 					}
 					break;
 				case "Edit_Find":
@@ -871,11 +893,7 @@ namespace NeoEdit.TextEditorUI
 				return;
 
 			foreach (var selection in GetReverseOrderSelections())
-			{
-				if (selection.HasSelection())
-					Delete(selection);
 				Insert(selection, e.Text);
-			}
 			e.Handled = true;
 		}
 	}
