@@ -330,7 +330,9 @@ namespace NeoEdit.TextEditorUI
 				case Key.Left:
 					foreach (var selection in selections)
 					{
-						if ((selection.Pos1Index == 0) && (selection.Pos1Row != 0))
+						if (controlDown)
+							MovePrevWord(selection);
+						else if ((selection.Pos1Index == 0) && (selection.Pos1Row != 0))
 							SetPos1(selection, selection.Pos1Row - 1, Data[selection.Pos1Row - 1].Length);
 						else
 							SetPos1(selection, selection.Pos1Row, selection.Pos1Index - 1);
@@ -339,7 +341,9 @@ namespace NeoEdit.TextEditorUI
 				case Key.Right:
 					foreach (var selection in selections)
 					{
-						if ((selection.Pos1Index == Data[selection.Pos1Row].Length) && (selection.Pos1Row != Data.NumLines - 1))
+						if (controlDown)
+							MoveNextWord(selection);
+						else if ((selection.Pos1Index == Data[selection.Pos1Row].Length) && (selection.Pos1Row != Data.NumLines - 1))
 							SetPos1(selection, selection.Pos1Row + 1, 0);
 						else
 							SetPos1(selection, selection.Pos1Row, selection.Pos1Index + 1);
@@ -387,8 +391,11 @@ namespace NeoEdit.TextEditorUI
 							SetPos1(selection, selection.Pos1Row, index);
 						}
 						if (!changed)
+						{
 							foreach (var selection in selections)
 								SetPos1(selection, selection.Pos1Row, 0);
+							xScrollValue = 0;
+						}
 					}
 					break;
 				case Key.End:
@@ -428,6 +435,112 @@ namespace NeoEdit.TextEditorUI
 			}
 
 			ConsolidateSelections();
+		}
+
+		enum WordSkipType
+		{
+			None,
+			Char,
+			Symbol,
+			Space,
+		}
+
+		void MoveNextWord(Selection selection)
+		{
+			WordSkipType moveType = WordSkipType.None;
+
+			var row = selection.Pos1Row;
+			var index = selection.Pos1Index - 1;
+			string line = null;
+			int lineIndex = -1;
+			while (true)
+			{
+				if (lineIndex != row)
+				{
+					line = Data[row];
+					lineIndex = row;
+				}
+
+				++index;
+				WordSkipType current;
+				if ((index >= line.Length) || (line[index] == ' ') || (line[index] == '\t'))
+					current = WordSkipType.Space;
+				else if ((Char.IsLetterOrDigit(line[index])) || (line[index] == '_'))
+					current = WordSkipType.Char;
+				else
+					current = WordSkipType.Symbol;
+
+				if ((moveType == WordSkipType.None) || (current == WordSkipType.Space))
+					moveType = current;
+
+				if (index >= line.Length)
+				{
+					index = -1;
+					row++;
+					if (row >= Data.NumLines)
+						return;
+					continue;
+				}
+
+				if ((current != WordSkipType.Space) && (current != moveType))
+				{
+					SetPos1(selection, row, index);
+					return;
+				}
+			}
+		}
+
+		void MovePrevWord(Selection selection)
+		{
+			WordSkipType moveType = WordSkipType.None;
+
+			var row = selection.Pos1Row;
+			var index = selection.Pos1Index;
+			int lastRow = -1, lastIndex = -1;
+			string line = null;
+			int lineIndex = -1;
+			while (true)
+			{
+				if (lineIndex != row)
+				{
+					line = Data[row];
+					lineIndex = row;
+					if (index < 0)
+						index = line.Length;
+				}
+
+				lastRow = row;
+				lastIndex = index;
+
+				--index;
+				WordSkipType current;
+				if ((index < 0) || (line[index] == ' ') || (line[index] == '\t'))
+					current = WordSkipType.Space;
+				else if ((Char.IsLetterOrDigit(line[index])) || (line[index] == '_'))
+					current = WordSkipType.Char;
+				else
+					current = WordSkipType.Symbol;
+
+				if ((moveType == WordSkipType.None) || (moveType == WordSkipType.Space))
+					moveType = current;
+
+				if (index < 0)
+				{
+					--row;
+					if (row < 0)
+					{
+						SetPos1(selection, 0, 0);
+						return;
+					}
+					continue;
+				}
+
+				if (current != moveType)
+				{
+					SetPos1(selection, lastRow, lastIndex);
+					return;
+				}
+			}
 		}
 
 		void SetPos1(Selection selection, int row, int index)

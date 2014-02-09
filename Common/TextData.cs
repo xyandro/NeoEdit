@@ -48,20 +48,20 @@ namespace NeoEdit.Common
 			defaultEnding = Enumerable.Range(0, endingIndex.Count).Select(a => GetEnding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).FirstOrDefault() ?? "\r\n";
 		}
 
-		public string this[int index] { get { return GetLine(index); } }
+		public string this[int line] { get { return GetLine(line); } }
 
-		public string GetLine(int index)
+		public string GetLine(int line)
 		{
-			if ((index < 0) || (index >= lineIndex.Count))
+			if ((line < 0) || (line >= lineIndex.Count))
 				throw new IndexOutOfRangeException();
-			return data.Substring(lineIndex[index], lineLength[index]);
+			return data.Substring(lineIndex[line], lineLength[line]);
 		}
 
-		public string GetEnding(int index)
+		public string GetEnding(int line)
 		{
-			if ((index < 0) || (index >= endingIndex.Count))
+			if ((line < 0) || (line >= endingIndex.Count))
 				throw new IndexOutOfRangeException();
-			return data.Substring(endingIndex[index], endingLength[index]);
+			return data.Substring(endingIndex[line], endingLength[line]);
 		}
 
 		public BinaryData GetData(BinaryData.EncodingName encoding)
