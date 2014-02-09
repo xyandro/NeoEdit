@@ -7,11 +7,12 @@
 
 	<Window.Resources>
 		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_MarkFinds" Header="_Mark finds" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Selection_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Selection_Lines" Header="_Lines" Key="L" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Selection_SearchResults" Header="Search _Results" Key="R" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Selection_Marks" Header="Marks" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Selection_Mark" Header="_Mark" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Selection_Marks" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Selection_Mark" Header="Mark" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Selection_ClearMarks" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
@@ -29,6 +30,7 @@
 		<Menu>
 			<MenuItem Header="_Edit">
 				<MenuItem Command="{StaticResource Edit_Find}"/>
+				<MenuItem Command="{StaticResource Edit_MarkFinds}"/>
 			</MenuItem>
 			<MenuItem Header="_Selection">
 				<MenuItem Command="{StaticResource Selection_Single}"/>
