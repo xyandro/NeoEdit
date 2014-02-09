@@ -404,51 +404,38 @@ namespace NeoEdit.Common
 			++ChangeCount;
 		}
 
-		public void GuessEncoding(out EncodingName encoding, out bool BOM)
+		public EncodingName GuessEncoding()
 		{
 			var preambles = Helpers.GetValues<EncodingName>().Where(a => a.IsStr()).Select(a => new { type = a, preamble = FromString(a, "\ufeff") }).OrderByDescending(a => a.preamble.Length).ToDictionary(a => a.type, a => a.preamble);
 
-			encoding = EncodingName.None;
-			BOM = false;
-
-			if (encoding == EncodingName.None)
+			foreach (var preamble in preambles)
 			{
-				foreach (var preamble in preambles)
-				{
-					var match = true;
-					if (data.Length < preamble.Value.Length)
-						match = false;
-					if (match)
-						for (var ctr = 0; ctr < preamble.Value.Length; ctr++)
-							if (data[ctr] != preamble.Value[ctr])
-								match = false;
-					if (match)
-					{
-						encoding = preamble.Key;
-						BOM = true;
-						break;
-					}
-				}
+				var match = true;
+				if (data.Length < preamble.Value.Length)
+					match = false;
+				if (match)
+					for (var ctr = 0; ctr < preamble.Value.Length; ctr++)
+						if (data[ctr] != preamble.Value[ctr])
+							match = false;
+				if (match)
+					return preamble.Key;
 			}
 
 			if (data.Length >= 4)
 			{
-				if ((encoding == EncodingName.None) && (BitConverter.ToUInt32(data, 0) <= 0xffff))
-					encoding = EncodingName.UTF32LE;
-				if ((encoding == EncodingName.None) && (BitConverter.ToUInt32(data.Take(4).Reverse().ToArray(), 0) <= 0xffff))
-					encoding = EncodingName.UTF32BE;
+				if (BitConverter.ToUInt32(data, 0) <= 0xffff)
+					return EncodingName.UTF32LE;
+				if (BitConverter.ToUInt32(data.Take(4).Reverse().ToArray(), 0) <= 0xffff)
+					return EncodingName.UTF32BE;
 			}
 
-			if (encoding == EncodingName.None)
-			{
-				var zeroIndex = Array.IndexOf(data, (byte)0);
-				if (zeroIndex == -1)
-					encoding = EncodingName.UTF8;
-				else if ((zeroIndex & 1) == 1)
-					encoding = EncodingName.UTF16LE;
-				else
-					encoding = EncodingName.UTF16BE;
-			}
+			var zeroIndex = Array.IndexOf(data, (byte)0);
+			if (zeroIndex == -1)
+				return EncodingName.UTF8;
+			else if ((zeroIndex & 1) == 1)
+				return EncodingName.UTF16LE;
+			else
+				return EncodingName.UTF16BE;
 		}
 
 		public BinaryData GetSubset(long index, long count)

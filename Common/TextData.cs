@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NeoEdit.Common
 {
 	public class TextData
 	{
+		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
 		List<string> lines = new List<string>();
 		List<string> endings = new List<string>();
 		string defaultEnding = "\r\n";
@@ -14,35 +16,18 @@ namespace NeoEdit.Common
 		public TextData(BinaryData data, BinaryData.EncodingName encoding = BinaryData.EncodingName.None)
 		{
 			if (encoding == BinaryData.EncodingName.None)
-			{
-				bool bom;
-				data.GuessEncoding(out encoding, out bom);
-			}
+				encoding = data.GuessEncoding();
 
 			var str = data.ToString(encoding);
-			var endingChars = new char[] { '\r', '\n' };
-			var start = 0;
-			while (start < str.Length)
+			bom = (str.Length > 0) && (str[0] == '\ufeff');
+			var matches = RecordsRE.Matches(str, bom ? 1 : 0);
+
+			foreach (Match match in matches)
 			{
-				if ((start == 0) && (str[0] == '\ufeff'))
-				{
-					bom = true;
-					start++;
-				}
-
-				int ending, endingEnd;
-				ending = endingEnd = str.IndexOfAny(endingChars, start);
-				if (ending == -1)
-					ending = endingEnd = str.Length;
-				else
-					++endingEnd;
-
-				if ((str.Length > endingEnd) && (str[endingEnd - 1] == '\r') && (str[endingEnd] == '\n'))
-					++endingEnd;
-
-				lines.Add(str.Substring(start, ending - start));
-				endings.Add(str.Substring(ending, endingEnd - ending));
-				start = endingEnd;
+				if ((String.IsNullOrEmpty(match.Groups[1].Value)) && (String.IsNullOrEmpty(match.Groups[2].Value)))
+					continue;
+				lines.Add(match.Groups[1].Value);
+				endings.Add(match.Groups[1].Value);
 			}
 
 			// Select most popular line ending

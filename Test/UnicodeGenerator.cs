@@ -113,9 +113,9 @@ namespace NeoEdit.Test
 							combined.Write(bytes, 0, bytes.Length);
 
 							BinaryData data = bytes;
-							BinaryData.EncodingName encoding2;
-							bool bom2;
-							data.GuessEncoding(out encoding2, out bom2);
+							var encoding2 = data.GuessEncoding();
+							var str = data.ToString(encoding2);
+							var bom2 = (str.Length > 0) && (str[0] == '\ufeff');
 
 							if ((encoding != encoding2) || (bom != bom2))
 							{

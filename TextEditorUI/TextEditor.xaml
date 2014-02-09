@@ -16,6 +16,7 @@
 		
 		<textEditorUI:TextCanvas x:Name="canvas"
 			Data="{Binding Data, ElementName=self, Mode=OneWay}"
+			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
 			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"
 			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=OneWayToSource}"
 			xScrollMaximum="{Binding Maximum, ElementName=xScroll, Mode=OneWayToSource}"
