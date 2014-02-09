@@ -8,7 +8,8 @@ namespace NeoEdit.Common
 	public class TextData
 	{
 		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
-		string data;
+		string _data;
+		string data { get { return _data; } set { _data = value; RecalculateLines(); } }
 		List<int> lineIndex;
 		List<int> lineLength;
 		List<int> endingIndex;
@@ -21,7 +22,6 @@ namespace NeoEdit.Common
 				encoding = binaryData.GuessEncoding();
 
 			data = binaryData.ToString(encoding);
-			RecalculateLines();
 		}
 
 		void RecalculateLines()
@@ -69,15 +69,31 @@ namespace NeoEdit.Common
 			return BinaryData.FromString(encoding, data);
 		}
 
+		public int GetOffset(int line, int index)
+		{
+			if ((line < 0) || (line >= endingIndex.Count))
+				throw new IndexOutOfRangeException();
+			return lineIndex[line] + index;
+		}
+
 		public string GetString(int startLine, int startIndex, int endLine, int endIndex)
 		{
-			if ((startLine < 0) || (startLine >= endingIndex.Count))
-				throw new IndexOutOfRangeException();
-			if ((endLine < 0) || (endLine >= endingIndex.Count))
-				throw new IndexOutOfRangeException();
-			var start = lineIndex[startLine] + startIndex;
-			var end = lineIndex[endLine] + endIndex;
+			var start = GetOffset(startLine, startIndex);
+			var end = GetOffset(endLine, endIndex);
 			return data.Substring(start, end - start);
+		}
+
+		public void Delete(int startLine, int startIndex, int endLine, int endIndex)
+		{
+			var start = GetOffset(startLine, startIndex);
+			var end = GetOffset(endLine, endIndex);
+			data = data.Substring(0, start) + data.Substring(end);
+		}
+
+		public void Insert(int line, int index, string text)
+		{
+			var offset = GetOffset(line, index);
+			data = data.Substring(0, offset) + text + data.Substring(offset);
 		}
 
 		public int NumLines { get { return lineIndex.Count; } }

@@ -32,6 +32,15 @@ namespace NeoEdit.TextEditorUI
 			Show();
 		}
 
+		protected override void OnTextInput(System.Windows.Input.TextCompositionEventArgs e)
+		{
+			base.OnTextInput(e);
+			if (e.Handled)
+				return;
+
+			uiHelper.RaiseEvent(canvas, e);
+		}
+
 		void CommandRun(UICommand command, object parameter)
 		{
 			canvas.CommandRun(command, parameter);

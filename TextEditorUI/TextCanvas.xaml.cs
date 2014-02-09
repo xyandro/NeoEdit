@@ -48,9 +48,17 @@ namespace NeoEdit.TextEditorUI
 			}
 		}
 
-		public bool Selection()
+		public bool HasSelection()
 		{
 			return (Pos1Row != Pos2Row) || (Pos1Index != Pos2Index);
+		}
+
+		public void RemoveSelection()
+		{
+			var row = StartRow;
+			var index = StartIndex;
+			Pos1Row = Pos2Row = row;
+			Pos1Index = Pos2Index = index;
 		}
 
 		public bool InRow(int row)
@@ -402,6 +410,42 @@ namespace NeoEdit.TextEditorUI
 			e.Handled = true;
 			switch (e.Key)
 			{
+				case Key.Back:
+				case Key.Delete:
+					foreach (var selection in GetReverseOrderSelections())
+					{
+						if (!selection.HasSelection())
+						{
+							var row = selection.StartRow;
+							var index = selection.StartIndex;
+
+							if (e.Key == Key.Back)
+								--index;
+							else
+								++index;
+
+							if (index < 0)
+							{
+								--row;
+								if (row < 0)
+									continue;
+								index = Data[row].Length;
+							}
+							if (index > Data[row].Length)
+							{
+								++row;
+								if (row >= Data.NumLines)
+									continue;
+								index = 0;
+							}
+
+							selection.Pos1Row = row;
+							selection.Pos1Index = index;
+						}
+
+						Delete(selection);
+					}
+					break;
 				case Key.Escape: ranges[RangeType.Search].Clear(); break;
 				case Key.Left:
 					foreach (var selection in ranges[RangeType.Selection])
@@ -735,15 +779,34 @@ namespace NeoEdit.TextEditorUI
 			return Data.GetString(range.StartRow, range.StartIndex, range.EndRow, range.EndIndex);
 		}
 
+		void Delete(Range range)
+		{
+			Data.Delete(range.StartRow, range.StartIndex, range.EndRow, range.EndIndex);
+			range.RemoveSelection();
+			InvalidateVisual();
+		}
+
+		void Insert(Range range, string text)
+		{
+			Data.Insert(range.StartRow, range.StartIndex, text);
+			range.Pos1Index += text.Length;
+			range.Pos2Index += text.Length;
+			InvalidateVisual();
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			switch (command.Name)
 			{
+				case "Edit_Cut":
 				case "Edit_Copy":
 					{
-						var result = ranges[RangeType.Selection].Where(range => range.Selection()).Select(range => GetString(range)).ToArray();
+						var result = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToArray();
 						if (result.Length != 0)
 							Clipboard.Current.Set(result);
+						if (command.Name == "Edit_Cut")
+							foreach (var selection in GetReverseOrderSelections())
+								Delete(selection);
 					}
 					break;
 				case "Edit_Find":
@@ -791,6 +854,29 @@ namespace NeoEdit.TextEditorUI
 		public bool CommandCanRun(UICommand command, object parameter)
 		{
 			return true;
+		}
+
+		List<Range> GetReverseOrderSelections()
+		{
+			return ranges[RangeType.Selection].OrderByDescending(a => a.ToString()).ToList();
+		}
+
+		protected override void OnTextInput(TextCompositionEventArgs e)
+		{
+			base.OnTextInput(e);
+			if (e.Handled)
+				return;
+
+			if (e.Text.Length == 0)
+				return;
+
+			foreach (var selection in GetReverseOrderSelections())
+			{
+				if (selection.HasSelection())
+					Delete(selection);
+				Insert(selection, e.Text);
+			}
+			e.Handled = true;
 		}
 	}
 }
