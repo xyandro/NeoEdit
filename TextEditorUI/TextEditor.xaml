@@ -7,6 +7,12 @@
 
 	<Window.Resources>
 		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Selection_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Selection_Lines" Header="_Lines" Key="L" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Selection_SearchResults" Header="Search _Results" Key="R" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Selection_Marks" Header="Marks" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Selection_Mark" Header="_Mark" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Selection_ClearMarks" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
@@ -24,6 +30,14 @@
 			<MenuItem Header="_Edit">
 				<MenuItem Command="{StaticResource Edit_Find}"/>
 			</MenuItem>
+			<MenuItem Header="_Selection">
+				<MenuItem Command="{StaticResource Selection_Single}"/>
+				<MenuItem Command="{StaticResource Selection_Lines}"/>
+				<MenuItem Command="{StaticResource Selection_SearchResults}"/>
+				<MenuItem Command="{StaticResource Selection_Marks}"/>
+				<MenuItem Command="{StaticResource Selection_Mark}"/>
+				<MenuItem Command="{StaticResource Selection_ClearMarks}"/>
+			</MenuItem>
 		</Menu>
 		
 		<textEditorUI:TextCanvas x:Name="canvas" Grid.Row="1"
@@ -38,7 +52,7 @@
 			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=OneWayToSource}"
 			yScrollValue="{Binding Value, ElementName=yScroll, Mode=TwoWay}"
 		/>
-		<ScrollBar Name="yScroll" Grid.Row="2" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
+		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
 		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
 	</Grid>
 

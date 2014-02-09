@@ -45,7 +45,7 @@ namespace NeoEdit.TextEditorUI
 
 		public override string ToString()
 		{
-			return String.Format("({0},{1})->({2},{3})", StartRow, StartIndex, EndRow, EndIndex);
+			return String.Format("({0:0000000000},{1:0000000000})->({2:0000000000},{3:0000000000})", StartRow, StartIndex, EndRow, EndIndex);
 		}
 	};
 
@@ -232,6 +232,7 @@ namespace NeoEdit.TextEditorUI
 
 		Brush selectionBrush = new SolidColorBrush(Color.FromRgb(173, 214, 255));
 		Brush searchBrush = new SolidColorBrush(Color.FromArgb(200, 255, 192, 80));
+		Brush markBrush = new SolidColorBrush(Color.FromArgb(200, 192, 255, 80));
 		protected override void OnRender(DrawingContext dc)
 		{
 			base.OnRender(dc);
@@ -291,6 +292,16 @@ namespace NeoEdit.TextEditorUI
 					var endColumn = GetColumnFromIndex(line, searchIndex[ctr] + searchLength[ctr]);
 
 					dc.DrawRectangle(searchBrush, null, new Rect(GetXFromColumn(startColumn) - xScrollValue, y, (endColumn - startColumn) * charWidth, rowHeight));
+				}
+
+				for (var ctr = 0; ctr < markRow.Count; ++ctr)
+				{
+					if (markRow[ctr] != row)
+						continue;
+
+					var column = GetColumnFromIndex(line, markIndex[ctr]);
+
+					dc.DrawRectangle(searchBrush, null, new Rect(GetXFromColumn(column) - xScrollValue, y, charWidth, rowHeight));
 				}
 
 				foreach (var selection in selections)
@@ -578,7 +589,7 @@ namespace NeoEdit.TextEditorUI
 
 		void ConsolidateSelections()
 		{
-			selections = selections.GroupBy(a => a.ToString()).Select(a => a.First()).ToList();
+			selections = selections.GroupBy(a => a.ToString()).OrderBy(a => a.Key).Select(a => a.First()).ToList();
 		}
 
 		void MouseHandler(Point mousePos)
@@ -598,6 +609,7 @@ namespace NeoEdit.TextEditorUI
 				selections.Add(selection);
 			}
 			SetPos1(selection, row, index);
+			ConsolidateSelections();
 		}
 
 		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -702,7 +714,57 @@ namespace NeoEdit.TextEditorUI
 					}
 					catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 					break;
+				case "Selection_Single":
+					selections = new List<Selection> { selections.Last() };
+					InvalidateVisual();
+					break;
+				case "Selection_Lines":
+					var lines = selections.SelectMany(selection => Enumerable.Range(selection.StartRow, selection.EndRow - selection.StartRow + 1)).Distinct().OrderBy(a => a).ToList();
+					lines = lines.Where(line => Data[line].Length != 0).ToList();
+					selections = lines.Select(row => { var sel = new Selection(); SetPos1(sel, row, 0); return sel; }).ToList();
+					InvalidateVisual();
+					break;
+				case "Selection_SearchResults":
+					selections = Enumerable.Range(0, searchRow.Count).Select(ctr =>
+					{
+						var sel = new Selection();
+						SetPos1(sel, searchRow[ctr], searchIndex[ctr] + searchLength[ctr]);
+						SetPos2(sel, searchRow[ctr], searchIndex[ctr]);
+						return sel;
+					}).ToList();
+					ConsolidateSelections();
+					ResetSearch();
+					InvalidateVisual();
+					break;
+				case "Selection_Marks":
+					selections = Enumerable.Range(0, markRow.Count).Select(ctr =>
+					{
+						var sel = new Selection();
+						SetPos1(sel, markRow[ctr], markIndex[ctr]);
+						return sel;
+					}).ToList();
+					ConsolidateSelections();
+					ResetMarks();
+					InvalidateVisual();
+					break;
+				case "Selection_Mark":
+					foreach (var selection in selections)
+					{
+						markRow.Add(selection.EndRow);
+						markIndex.Add(selection.EndIndex);
+					}
+					InvalidateVisual();
+					break;
+				case "Selection_ClearMarks": ResetMarks(); break;
 			}
+		}
+
+		List<int> markRow = new List<int>();
+		List<int> markIndex = new List<int>();
+		void ResetMarks()
+		{
+			markRow.Clear();
+			markIndex.Clear();
 		}
 
 		public bool CommandCanRun(UICommand command, object parameter)
