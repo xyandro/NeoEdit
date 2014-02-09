@@ -14,37 +14,37 @@ namespace NeoEdit.TextEditorUI
 	class Selection
 	{
 		public int Pos1Row { get; set; }
-		public int Pos1Column { get; set; }
+		public int Pos1Index { get; set; }
 		public int Pos2Row { get; set; }
-		public int Pos2Column { get; set; }
+		public int Pos2Index { get; set; }
 		public int StartRow { get { return Math.Min(Pos1Row, Pos2Row); } }
 		public int EndRow { get { return Math.Max(Pos1Row, Pos2Row); } }
-		public int StartCol
+		public int StartIndex
 		{
 			get
 			{
 				if (Pos1Row < Pos2Row)
-					return Pos1Column;
+					return Pos1Index;
 				else if (Pos1Row > Pos2Row)
-					return Pos2Column;
-				return Math.Min(Pos1Column, Pos2Column);
+					return Pos2Index;
+				return Math.Min(Pos1Index, Pos2Index);
 			}
 		}
-		public int EndCol
+		public int EndIndex
 		{
 			get
 			{
 				if (Pos1Row > Pos2Row)
-					return Pos1Column;
+					return Pos1Index;
 				else if (Pos1Row < Pos2Row)
-					return Pos2Column;
-				return Math.Max(Pos1Column, Pos2Column);
+					return Pos2Index;
+				return Math.Max(Pos1Index, Pos2Index);
 			}
 		}
 
 		public override string ToString()
 		{
-			return String.Format("({0},{1})->({2},{3})", StartRow, StartCol, EndRow, EndCol);
+			return String.Format("({0},{1})->({2},{3})", StartRow, StartIndex, EndRow, EndIndex);
 		}
 	};
 
@@ -119,7 +119,7 @@ namespace NeoEdit.TextEditorUI
 			charWidth = formattedText.Width / example.Length;
 
 			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
-			//uiHelper.AddCallback(a => a.ChangeCount, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
@@ -132,13 +132,13 @@ namespace NeoEdit.TextEditorUI
 		{
 			var y = GetYFromRow(selection.Pos1Row);
 			yScrollValue = Math.Min(y, Math.Max(y + rowHeight - ActualHeight, yScrollValue));
-			var x = GetXFromRowCol(selection.Pos1Row, selection.Pos1Column);
+			var x = GetXFromRowIndex(selection.Pos1Row, selection.Pos1Index);
 			xScrollValue = Math.Min(x, Math.Max(x + charWidth - ActualWidth, xScrollValue));
 		}
 
-		double GetXFromRowCol(int row, int column)
+		double GetXFromRowIndex(int row, int index)
 		{
-			column = GetActualColumn(row, column);
+			var column = GetColumnFromIndex(row, index);
 			return xLineStart + column * charWidth;
 		}
 
@@ -152,34 +152,34 @@ namespace NeoEdit.TextEditorUI
 			return yLinesStart + row * rowHeight;
 		}
 
-		int GetActualColumn(int row, int column)
+		int GetColumnFromIndex(int row, int index)
 		{
-			return GetActualColumn(Data[row], column);
+			return GetColumnFromIndex(Data[row], index);
 		}
 
-		int GetActualColumn(string line, int column)
+		int GetColumnFromIndex(string line, int index)
 		{
-			if ((column < 0) || (column > line.Length))
+			if ((index < 0) || (index > line.Length))
 				throw new IndexOutOfRangeException();
 
-			var actualColumn = 0;
+			var column = 0;
 			var start = 0;
-			while (start < column)
+			while (start < index)
 			{
-				var index = line.IndexOf('\t', start);
-				if ((index == -1) || (index >= column))
+				var find = line.IndexOf('\t', start);
+				if ((find == -1) || (find >= index))
 				{
-					actualColumn += column - start;
-					start = column;
+					column += index - start;
+					start = index;
 				}
 				else
 				{
-					actualColumn += index - start;
-					actualColumn = (actualColumn / tabStop + 1) * tabStop;
-					start = index + 1;
+					column += find - start;
+					column = (column / tabStop + 1) * tabStop;
+					start = find + 1;
 				}
 			}
-			return actualColumn;
+			return column;
 		}
 
 		Brush selectionBrush = new SolidColorBrush(Color.FromRgb(173, 214, 255));
@@ -190,7 +190,7 @@ namespace NeoEdit.TextEditorUI
 			if (Data == null)
 				return;
 
-			columns = Enumerable.Range(0, Data.NumLines).Select(a => Data[a]).Select(a => GetActualColumn(a, a.Length)).Max();
+			columns = Enumerable.Range(0, Data.NumLines).Select(a => Data[a]).Select(a => GetColumnFromIndex(a, a.Length)).Max();
 			rows = Data.NumLines;
 
 			xScrollMaximum = xEnd - ActualWidth;
@@ -211,34 +211,34 @@ namespace NeoEdit.TextEditorUI
 
 				foreach (var selection in selections)
 				{
-					int startColumn;
+					int startIndex;
 					if (selection.StartRow < row)
-						startColumn = 0;
+						startIndex = 0;
 					else if (selection.StartRow == row)
-						startColumn = selection.StartCol;
+						startIndex = selection.StartIndex;
 					else
 						continue;
 
-					int endColumn;
+					int endIndex;
 					if (selection.EndRow > row)
-						endColumn = line.Length;
+						endIndex = line.Length;
 					else if (selection.EndRow == row)
-						endColumn = selection.EndCol;
+						endIndex = selection.EndIndex;
 					else
 						continue;
 
-					var startActualCol = GetActualColumn(line, startColumn);
-					var endActualCol = GetActualColumn(line, endColumn);
+					var startColumn = GetColumnFromIndex(line, startIndex);
+					var endColumn = GetColumnFromIndex(line, endIndex);
 
-					dc.DrawRectangle(selectionBrush, null, new Rect(xLineStart - xScrollValue + startActualCol * charWidth, y, (endActualCol - startActualCol) * charWidth, rowHeight));
+					dc.DrawRectangle(selectionBrush, null, new Rect(GetXFromColumn(startColumn) - xScrollValue, y, (endColumn - startColumn) * charWidth, rowHeight));
 				}
 
 				foreach (var selection in selections)
 				{
 					if (selection.Pos1Row == row)
 					{
-						var x = GetActualColumn(line, selection.Pos1Column);
-						dc.DrawRectangle(Brushes.Black, null, new Rect(xLineStart - xScrollValue + x * charWidth, y, 1, rowHeight));
+						var column = GetColumnFromIndex(line, selection.Pos1Index);
+						dc.DrawRectangle(Brushes.Black, null, new Rect(GetXFromColumn(column) - xScrollValue, y, 1, rowHeight));
 					}
 				}
 
@@ -281,19 +281,19 @@ namespace NeoEdit.TextEditorUI
 				case Key.Left:
 					foreach (var selection in selections)
 					{
-						if ((selection.Pos1Column == 0) && (selection.Pos1Row != 0))
+						if ((selection.Pos1Index == 0) && (selection.Pos1Row != 0))
 							SetPos1(selection, selection.Pos1Row - 1, Data[selection.Pos1Row - 1].Length);
 						else
-							SetPos1(selection, selection.Pos1Row, selection.Pos1Column - 1);
+							SetPos1(selection, selection.Pos1Row, selection.Pos1Index - 1);
 					}
 					break;
 				case Key.Right:
 					foreach (var selection in selections)
 					{
-						if ((selection.Pos1Column == Data[selection.Pos1Row].Length) && (selection.Pos1Row != Data.NumLines - 1))
+						if ((selection.Pos1Index == Data[selection.Pos1Row].Length) && (selection.Pos1Row != Data.NumLines - 1))
 							SetPos1(selection, selection.Pos1Row + 1, 0);
 						else
-							SetPos1(selection, selection.Pos1Row, selection.Pos1Column + 1);
+							SetPos1(selection, selection.Pos1Row, selection.Pos1Index + 1);
 					}
 					break;
 				case Key.Up:
@@ -306,13 +306,13 @@ namespace NeoEdit.TextEditorUI
 							if (selections.Count == 1)
 							{
 								var adj = Math.Min(0, selections[0].Pos1Row - GetRowFromY(yScrollValue + rowHeight - 1)) + Math.Max(0, selections[0].Pos1Row - GetRowFromY(yScrollValue + ActualHeight - rowHeight));
-								SetPos1(selections[0], selections[0].Pos1Row - adj, selections[0].Pos1Column);
+								SetPos1(selections[0], selections[0].Pos1Row - adj, selections[0].Pos1Index);
 
 							}
 						}
 						else
 							foreach (var selection in selections)
-								SetPos1(selection, selection.Pos1Row + mult, selection.Pos1Column);
+								SetPos1(selection, selection.Pos1Row + mult, selection.Pos1Index);
 					}
 					break;
 				case Key.Home:
@@ -326,16 +326,16 @@ namespace NeoEdit.TextEditorUI
 						bool changed = false;
 						foreach (var selection in selections)
 						{
-							int column;
+							int index;
 							var line = Data[selection.Pos1Row];
-							for (column = 0; column < line.Length; ++column)
+							for (index = 0; index < line.Length; ++index)
 							{
-								if ((line[column] != ' ') && (line[column] != '\t'))
+								if ((line[index] != ' ') && (line[index] != '\t'))
 									break;
 							}
-							if (column != selection.Pos1Column)
+							if (index != selection.Pos1Index)
 								changed = true;
-							SetPos1(selection, selection.Pos1Row, column);
+							SetPos1(selection, selection.Pos1Row, index);
 						}
 						if (!changed)
 							foreach (var selection in selections)
@@ -352,16 +352,16 @@ namespace NeoEdit.TextEditorUI
 				case Key.PageUp:
 					foreach (var selection in selections)
 						if (controlDown)
-							SetPos1(selection, GetRowFromY(yScrollValue + rowHeight - 1), selection.Pos1Column);
+							SetPos1(selection, GetRowFromY(yScrollValue + rowHeight - 1), selection.Pos1Index);
 						else
-							SetPos1(selection, selection.Pos1Row - (int)(ActualHeight / rowHeight - 1), selection.Pos1Column);
+							SetPos1(selection, selection.Pos1Row - (int)(ActualHeight / rowHeight - 1), selection.Pos1Index);
 					break;
 				case Key.PageDown:
 					foreach (var selection in selections)
 						if (controlDown)
-							SetPos1(selection, GetRowFromY(ActualHeight + yScrollValue - rowHeight), selection.Pos1Column);
+							SetPos1(selection, GetRowFromY(ActualHeight + yScrollValue - rowHeight), selection.Pos1Index);
 						else
-							SetPos1(selection, selection.Pos1Row + (int)(ActualHeight / rowHeight - 1), selection.Pos1Column);
+							SetPos1(selection, selection.Pos1Row + (int)(ActualHeight / rowHeight - 1), selection.Pos1Index);
 					break;
 				case Key.A:
 					if (controlDown)
@@ -381,22 +381,22 @@ namespace NeoEdit.TextEditorUI
 			ConsolidateSelections();
 		}
 
-		void SetPos1(Selection selection, int row, int column)
+		void SetPos1(Selection selection, int row, int index)
 		{
 			selection.Pos1Row = Math.Max(0, Math.Min(row, Data.NumLines - 1));
-			selection.Pos1Column = Math.Max(0, Math.Min(column, Data[selection.Pos1Row].Length));
+			selection.Pos1Index = Math.Max(0, Math.Min(index, Data[selection.Pos1Row].Length));
 
 			if (!selecting)
-				SetPos2(selection, row, column);
+				SetPos2(selection, row, index);
 
 			EnsureVisible(selection);
 			InvalidateVisual();
 		}
 
-		void SetPos2(Selection selection, int row, int column)
+		void SetPos2(Selection selection, int row, int index)
 		{
 			selection.Pos2Row = Math.Max(0, Math.Min(row, Data.NumLines - 1));
-			selection.Pos2Column = Math.Max(0, Math.Min(column, Data[selection.Pos2Row].Length));
+			selection.Pos2Index = Math.Max(0, Math.Min(index, Data[selection.Pos2Row].Length));
 			InvalidateVisual();
 		}
 
