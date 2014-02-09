@@ -63,6 +63,7 @@
     </ApplicationDefinition>
     <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
     <Compile Include="Common\BinaryData.cs" />
+    <Compile Include="Common\TextData.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
     <Compile Include="Records\Zipped\ZippedFile.cs" />
     <Compile Include="Records\Zipped\ZippedRecord.cs" />
@@ -123,6 +124,12 @@
     </Compile>
     <Compile Include="Common\UICommand.cs" />
     <Compile Include="Common\UIHelper.cs" />
+    <Compile Include="TextEditorUI\TextCanvas.xaml.cs">
+      <DependentUpon>TextCanvas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorUI\TextEditor.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
     <Page Include="BinaryEditorUI\BinaryCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -174,6 +181,14 @@
     <Compile Include="BrowserUI\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
+    <Page Include="TextEditorUI\TextCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TextEditorUI\TextEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

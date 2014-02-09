@@ -194,9 +194,9 @@ namespace NeoEdit.BinaryEditorUI
 			return (long)((x - xTextViewStart) / charWidth);
 		}
 
-		protected override void OnRender(DrawingContext drawingContext)
+		protected override void OnRender(DrawingContext dc)
 		{
-			base.OnRender(drawingContext);
+			base.OnRender(dc);
 
 			if (Data == null)
 				return;
@@ -254,15 +254,15 @@ namespace NeoEdit.BinaryEditorUI
 					var count = last - first;
 
 					hexText.SetForegroundBrush(Brushes.White, first * (xHexSpacing + 2), count * (2 + xHexSpacing));
-					drawingContext.DrawRectangle(SelHex ? Brushes.CornflowerBlue : Brushes.Gray, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
+					dc.DrawRectangle(SelHex ? Brushes.CornflowerBlue : Brushes.Gray, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
 
 					textText.SetForegroundBrush(Brushes.White, first, count);
-					drawingContext.DrawRectangle(SelHex ? Brushes.Gray : Brushes.CornflowerBlue, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
+					dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.CornflowerBlue, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
 				}
 
-				drawingContext.DrawText(posText, new Point(xPosition - xScrollValue, y));
-				drawingContext.DrawText(hexText, new Point(xHexViewStart - xScrollValue, y));
-				drawingContext.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
+				dc.DrawText(posText, new Point(xPosition - xScrollValue, y));
+				dc.DrawText(hexText, new Point(xHexViewStart - xScrollValue, y));
+				dc.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
 			}
 		}
 
