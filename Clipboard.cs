@@ -98,6 +98,17 @@ namespace NeoEdit
 			System.Windows.Clipboard.SetDataObject(dataObj);
 		}
 
+		public void Set(string[] strings)
+		{
+			contents = strings;
+			contentGUID = Guid.NewGuid().ToString();
+
+			var dataObj = new DataObject();
+			dataObj.SetData(strings.GetType(), contentGUID);
+			dataObj.SetText(String.Join(" ", strings));
+			System.Windows.Clipboard.SetDataObject(dataObj);
+		}
+
 		public BinaryData GetBinaryData(BinaryData.EncodingName encoding)
 		{
 			var dataObj = System.Windows.Clipboard.GetDataObject();

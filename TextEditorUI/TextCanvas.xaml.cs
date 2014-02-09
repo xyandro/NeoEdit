@@ -730,10 +730,22 @@ namespace NeoEdit.TextEditorUI
 			InvalidateVisual();
 		}
 
+		string GetString(Range range)
+		{
+			return Data.GetString(range.StartRow, range.StartIndex, range.EndRow, range.EndIndex);
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			switch (command.Name)
 			{
+				case "Edit_Copy":
+					{
+						var result = ranges[RangeType.Selection].Where(range => range.Selection()).Select(range => GetString(range)).ToArray();
+						if (result.Length != 0)
+							Clipboard.Current.Set(result);
+					}
+					break;
 				case "Edit_Find":
 					try
 					{

@@ -69,6 +69,17 @@ namespace NeoEdit.Common
 			return BinaryData.FromString(encoding, data);
 		}
 
+		public string GetString(int startLine, int startIndex, int endLine, int endIndex)
+		{
+			if ((startLine < 0) || (startLine >= endingIndex.Count))
+				throw new IndexOutOfRangeException();
+			if ((endLine < 0) || (endLine >= endingIndex.Count))
+				throw new IndexOutOfRangeException();
+			var start = lineIndex[startLine] + startIndex;
+			var end = lineIndex[endLine] + endIndex;
+			return data.Substring(start, end - start);
+		}
+
 		public int NumLines { get { return lineIndex.Count; } }
 	}
 }
