@@ -788,6 +788,22 @@ namespace NeoEdit.TextEditorUI
 			InvalidateVisual();
 		}
 
+		public string ToHex(string str)
+		{
+			long result;
+			if (!Int64.TryParse(str, out result))
+				return null;
+			return result.ToString("X");
+		}
+
+		public string FromHex(string str)
+		{
+			long result;
+			if (!Int64.TryParse(str, NumberStyles.HexNumber, null, out result))
+				return null;
+			return result.ToString().ToLowerInvariant();
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			switch (command.Name)
@@ -847,11 +863,47 @@ namespace NeoEdit.TextEditorUI
 					break;
 				case "Edit_ToUpper":
 					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
+					{
+						var start = selection.Start;
 						Insert(selection, GetString(selection).ToUpperInvariant());
+						selection.Pos1 = start;
+					}
 					break;
 				case "Edit_ToLower":
 					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
+					{
+						var start = selection.Start;
 						Insert(selection, GetString(selection).ToLowerInvariant());
+						selection.Pos1 = start;
+					}
+					break;
+				case "Edit_ToHex":
+					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
+					{
+						var str = GetString(selection);
+						str = ToHex(str);
+						if (str != null)
+						{
+							var start = selection.Start;
+							Insert(selection, str);
+							selection.Pos1 = start + str.Length;
+							selection.Pos2 = start;
+						}
+					}
+					break;
+				case "Edit_FromHex":
+					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
+					{
+						var str = GetString(selection);
+						str = FromHex(str);
+						if (str != null)
+						{
+							var start = selection.Start;
+							Insert(selection, str);
+							selection.Pos1 = start + str.Length;
+							selection.Pos2 = start;
+						}
+					}
 					break;
 				case "Selection_Single":
 					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last() };

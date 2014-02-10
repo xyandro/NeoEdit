@@ -15,6 +15,8 @@
 		<common:UICommand x:Key="Edit_MarkFinds" Header="_Mark finds" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_ToUpper" Header="Upper case" Key="U" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_ToLower" Header="Lower case" Key="U" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_ToHex" Header="To hex" Key="H" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_FromHex" Header="To hex" Key="H" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Selection_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Selection_Lines" Header="_Lines" Key="L" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Selection_SearchResults" Header="Search _Results" Key="R" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -48,6 +50,9 @@
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_ToUpper}"/>
 				<MenuItem Command="{StaticResource Edit_ToLower}"/>
+				<Separator/>
+				<MenuItem Command="{StaticResource Edit_ToHex}"/>
+				<MenuItem Command="{StaticResource Edit_FromHex}"/>
 			</MenuItem>
 			<MenuItem Header="_Selection">
 				<MenuItem Command="{StaticResource Selection_Single}"/>
