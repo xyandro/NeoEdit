@@ -844,7 +844,13 @@ namespace NeoEdit.TextEditorUI
 					ranges[RangeType.Search] = new List<Range>();
 					break;
 				case "Selection_Marks":
-					if (ranges[RangeType.Mark].Count != 0)
+					if (ranges[RangeType.Mark].Count == 0)
+					{
+						ranges[RangeType.Mark] = ranges[RangeType.Selection];
+						ranges[RangeType.Mark].ForEach(range => { if (!range.HasSelection()) range.Pos1++; });
+						ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Mark].Last().Copy() };
+					}
+					else
 					{
 						ranges[RangeType.Selection] = ranges[RangeType.Mark];
 						ranges[RangeType.Mark] = new List<Range>();
