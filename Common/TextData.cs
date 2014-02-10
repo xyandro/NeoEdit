@@ -8,8 +8,9 @@ namespace NeoEdit.Common
 	public class TextData
 	{
 		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
-		string _data;
-		string data { get { return _data; } set { _data = value; RecalculateLines(); } }
+		Stack<string> undoHistory = new Stack<string>();
+		Stack<string> redoHistory = new Stack<string>();
+		string data { get { return undoHistory.First(); } set { undoHistory.Push(value); redoHistory.Clear(); RecalculateLines(); } }
 		List<int> lineIndex;
 		List<int> lineLength;
 		List<int> endingIndex;
@@ -22,6 +23,24 @@ namespace NeoEdit.Common
 				encoding = binaryData.GuessEncoding();
 
 			data = binaryData.ToString(encoding);
+		}
+
+		public void Undo()
+		{
+			if (undoHistory.Count == 1)
+				return;
+
+			redoHistory.Push(undoHistory.Pop());
+			RecalculateLines();
+		}
+
+		public void Redo()
+		{
+			if (redoHistory.Count == 0)
+				return;
+
+			undoHistory.Push(redoHistory.Pop());
+			RecalculateLines();
 		}
 
 		void RecalculateLines()

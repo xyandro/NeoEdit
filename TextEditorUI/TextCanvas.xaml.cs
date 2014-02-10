@@ -100,8 +100,6 @@ namespace NeoEdit.TextEditorUI
 			uiHelper = new UIHelper<TextCanvas>(this);
 			InitializeComponent();
 
-			ranges[RangeType.Selection].Add(new Range { Pos1 = 1, Pos2 = 1 });
-
 			var fontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Anonymous Pro");
 			typeface = fontFamily.GetTypefaces().First();
 			fontSize = 14;
@@ -250,6 +248,13 @@ namespace NeoEdit.TextEditorUI
 
 			ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(range => range.HasSelection()).OrderBy(range => range.Start).ToList();
 			ranges[RangeType.Search] = ranges[RangeType.Search].Where(range => range.HasSelection()).OrderBy(range => range.Start).ToList();
+			if (ranges[RangeType.Selection].Count == 0)
+			{
+				var range = new Range();
+				ranges[RangeType.Selection].Add(range);
+				SetPos1(range, 0, 0, false, false);
+			}
+
 
 			for (var ctr1 = 0; ctr1 < ranges[RangeType.Mark].Count; ++ctr1)
 			{
@@ -787,6 +792,15 @@ namespace NeoEdit.TextEditorUI
 		{
 			switch (command.Name)
 			{
+				case "Edit_Undo":
+					ranges[RangeType.Mark].Clear();
+					ranges[RangeType.Search].Clear();
+					ranges[RangeType.Selection].Clear();
+					Data.Undo();
+					break;
+				case "Edit_Redo":
+					Data.Redo();
+					break;
 				case "Edit_Cut":
 				case "Edit_Copy":
 					{
