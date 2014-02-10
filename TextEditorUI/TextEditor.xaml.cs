@@ -41,6 +41,9 @@ namespace NeoEdit.TextEditorUI
 			if (e.Handled)
 				return;
 
+			if (e.OriginalSource is MenuItem)
+				return;
+
 			uiHelper.RaiseEvent(canvas, e);
 		}
 

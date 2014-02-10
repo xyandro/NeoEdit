@@ -33,12 +33,23 @@ namespace NeoEdit.BinaryEditorUI
 			uiHelper.InitializeCommands();
 
 			Data = data;
-			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
-			TextInput += (s, e) => uiHelper.RaiseEvent(canvas, e);
 
+			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
 
 			Show();
+		}
+
+		protected override void OnTextInput(TextCompositionEventArgs e)
+		{
+			base.OnTextInput(e);
+			if (e.Handled)
+				return;
+
+			if (e.OriginalSource is MenuItem)
+				return;
+
+			uiHelper.RaiseEvent(canvas, e);
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
