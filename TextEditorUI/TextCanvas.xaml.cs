@@ -859,7 +859,19 @@ namespace NeoEdit.TextEditorUI
 						ranges[RangeType.Mark].Add(mark);
 					}
 					break;
-				case "Selection_ClearMarks": ranges[RangeType.Mark].Clear(); break;
+				case "Selection_ClearMarks":
+					var hasSelection = ranges[RangeType.Selection].Any(range => range.HasSelection());
+					if (!hasSelection)
+						ranges[RangeType.Mark].Clear();
+					else
+					{
+						foreach (var selection in ranges[RangeType.Selection])
+						{
+							var toRemove = ranges[RangeType.Mark].Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
+							toRemove.ForEach(mark => ranges[RangeType.Mark].Remove(mark));
+						}
+					}
+					break;
 			}
 			InvalidateVisual();
 		}
