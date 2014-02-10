@@ -41,7 +41,7 @@ namespace NeoEdit
 			}
 
 			dataObj.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(isCut ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
-			System.Windows.Clipboard.SetDataObject(dataObj);
+			System.Windows.Clipboard.SetDataObject(dataObj, true);
 		}
 
 		public void GetRecords(out List<Record> records, out bool isCut)
@@ -95,7 +95,7 @@ namespace NeoEdit
 				str = sw.ToString();
 			}
 			dataObj.SetText(str);
-			System.Windows.Clipboard.SetDataObject(dataObj);
+			System.Windows.Clipboard.SetDataObject(dataObj, true);
 		}
 
 		public BinaryData GetBinaryData(BinaryData.EncodingName encoding)
@@ -120,7 +120,7 @@ namespace NeoEdit
 			var dataObj = new DataObject();
 			dataObj.SetData(strings.GetType(), contentGUID);
 			dataObj.SetText(String.Join(" ", strings));
-			System.Windows.Clipboard.SetDataObject(dataObj);
+			System.Windows.Clipboard.SetDataObject(dataObj, true);
 		}
 
 		public string[] GetStrings()
