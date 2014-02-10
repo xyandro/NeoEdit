@@ -805,7 +805,7 @@ namespace NeoEdit.TextEditorUI
 			long result;
 			if (!Int64.TryParse(str, out result))
 				return null;
-			return result.ToString("X");
+			return result.ToString("X").ToLowerInvariant();
 		}
 
 		public string FromHex(string str)
@@ -813,7 +813,7 @@ namespace NeoEdit.TextEditorUI
 			long result;
 			if (!Int64.TryParse(str, NumberStyles.HexNumber, null, out result))
 				return null;
-			return result.ToString().ToLowerInvariant();
+			return result.ToString();
 		}
 
 		public void CommandRun(UICommand command, object parameter)
