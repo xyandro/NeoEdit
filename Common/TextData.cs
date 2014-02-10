@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace NeoEdit.Common
@@ -112,14 +113,42 @@ namespace NeoEdit.Common
 			return data.Substring(start, end - start);
 		}
 
-		public void Delete(int start, int end)
+		public void Replace(List<int> offsets, List<int> lengths, List<string> text)
 		{
-			data = data.Substring(0, start) + data.Substring(end);
-		}
+			if ((offsets.Count != lengths.Count) || (offsets.Count != text.Count))
+				throw new Exception("Invalid number of arguments");
 
-		public void Insert(int offset, string text)
-		{
-			data = data.Substring(0, offset) + text + data.Substring(offset);
+			int? checkPos = null;
+			for (var ctr = 0; ctr < offsets.Count; ctr++)
+			{
+				if (!checkPos.HasValue)
+					checkPos = offsets[ctr];
+				if (offsets[ctr] < checkPos)
+					throw new Exception("Replace data out of order");
+				checkPos = offsets[ctr] + lengths[ctr];
+			}
+
+			var sb = new StringBuilder();
+			var dataPos = 0;
+			for (var listIndex = 0; listIndex <= text.Count; ++listIndex)
+			{
+				var offset = data.Length;
+				var length = 0;
+				if (listIndex < offsets.Count)
+				{
+					offset = offsets[listIndex];
+					length = lengths[listIndex];
+				}
+
+				sb.Append(data, dataPos, offset - dataPos);
+				dataPos = offset;
+
+				if (listIndex < text.Count)
+					sb.Append(text[listIndex]);
+				dataPos += length;
+			}
+
+			data = sb.ToString();
 		}
 
 		public int NumLines { get { return lineIndex.Count; } }

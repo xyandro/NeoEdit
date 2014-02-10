@@ -18,7 +18,7 @@ namespace NeoEdit.TextEditorUI
 
 		static TextData GetData()
 		{
-			var bytes = new BinaryData(System.IO.File.ReadAllBytes(@"C:\Docs\Cpp\NeoEdit\bin\Debug\Clipboard.cs"));
+			var bytes = new BinaryData(System.IO.File.ReadAllBytes(@"E:\Dev\Misc\NeoEdit\bin\Debug\Clipboard.cs"));
 			return new TextData(bytes);
 		}
 

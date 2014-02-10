@@ -277,7 +277,13 @@ namespace NeoEdit.TextEditorUI
 				}
 			}
 
-			ranges[RangeType.Selection] = ranges[RangeType.Selection].GroupBy(range => range.ToString()).OrderBy(range => range.Key).Select(rangeGroup => rangeGroup.First()).ToList();
+			ranges[RangeType.Selection] = ranges[RangeType.Selection].GroupBy(range => range.ToString()).Select(rangeGroup => rangeGroup.First()).OrderBy(range => range.Start).ToList();
+			// Make sure selections don't overlap
+			for (var ctr = 0; ctr < ranges[RangeType.Selection].Count - 1; ctr++)
+			{
+				ranges[RangeType.Selection][ctr].Pos1 = Math.Min(ranges[RangeType.Selection][ctr].Pos1, ranges[RangeType.Selection][ctr + 1].Start);
+				ranges[RangeType.Selection][ctr].Pos2 = Math.Min(ranges[RangeType.Selection][ctr].Pos2, ranges[RangeType.Selection][ctr + 1].Start);
+			}
 
 			var startLine = Math.Max(0, GetLineFromY(yScrollValue));
 			var endLine = Math.Min(lines, GetLineFromY(ActualHeight + lineHeight + yScrollValue));
@@ -366,36 +372,36 @@ namespace NeoEdit.TextEditorUI
 				case Key.Delete:
 					foreach (var selection in ranges[RangeType.Selection])
 					{
-						if (!selection.HasSelection())
+						if (selection.HasSelection())
+							continue;
+
+						var line = Data.GetOffsetLine(selection.Start);
+						var index = Data.GetOffsetIndex(selection.Start, line);
+
+						if (e.Key == Key.Back)
+							--index;
+						else
+							++index;
+
+						if (index < 0)
 						{
-							var line = Data.GetOffsetLine(selection.Start);
-							var index = Data.GetOffsetIndex(selection.Start, line);
-
-							if (e.Key == Key.Back)
-								--index;
-							else
-								++index;
-
-							if (index < 0)
-							{
-								--line;
-								if (line < 0)
-									continue;
-								index = Data[line].Length;
-							}
-							if (index > Data[line].Length)
-							{
-								++line;
-								if (line >= Data.NumLines)
-									continue;
-								index = 0;
-							}
-
-							selection.Pos1 = Data.GetOffset(line, index);
+							--line;
+							if (line < 0)
+								continue;
+							index = Data[line].Length;
+						}
+						if (index > Data[line].Length)
+						{
+							++line;
+							if (line >= Data.NumLines)
+								continue;
+							index = 0;
 						}
 
-						Delete(selection);
+						selection.Pos1 = Data.GetOffset(line, index);
 					}
+
+					Replace(ranges[RangeType.Selection], null, false);
 					break;
 				case Key.Escape: ranges[RangeType.Search].Clear(); break;
 				case Key.Left:
@@ -747,258 +753,193 @@ namespace NeoEdit.TextEditorUI
 			return Data.GetString(range.Start, range.End);
 		}
 
-		void Delete(Range range)
+		void Replace(List<Range> replaceRanges, List<string> strs, bool leaveHighlighted)
 		{
-			// Store tmp start/end since they will change
-			var start = range.Start;
-			var end = range.End;
+			if (strs == null)
+				strs = replaceRanges.Select(range => "").ToList();
 
-			Data.Delete(start, end);
+			Data.Replace(replaceRanges.Select(range => range.Start).ToList(), replaceRanges.Select(range => range.End - range.Start).ToList(), strs);
 
-			foreach (var rangeEntry in ranges)
-				foreach (var tmpRange in rangeEntry.Value)
+			var numsToMap = ranges.SelectMany(rangePair => rangePair.Value).SelectMany(range => new int[] { range.Start, range.End }).Distinct().OrderBy(num => num).ToList();
+			var oldToNewMap = new Dictionary<int, int>();
+			var replaceRange = 0;
+			var offset = 0;
+			while (numsToMap.Count != 0)
+			{
+				int start = Int32.MaxValue, end = Int32.MaxValue, length = 0;
+				if (replaceRange < replaceRanges.Count)
 				{
-					if (tmpRange.Pos1 > start)
-					{
-						if (tmpRange.Pos1 < end)
-							tmpRange.Pos1 = start;
-						else
-							tmpRange.Pos1 -= end - start;
-					}
-
-					if (tmpRange.Pos2 > start)
-					{
-						if (tmpRange.Pos2 < end)
-							tmpRange.Pos2 = start;
-						else
-							tmpRange.Pos2 -= end - start;
-					}
+					start = replaceRanges[replaceRange].Start;
+					end = replaceRanges[replaceRange].End;
+					length = strs[replaceRange].Length;
 				}
 
-			InvalidateVisual();
-		}
-
-		void Insert(Range range, string text)
-		{
-			if (range.HasSelection())
-				Delete(range);
-
-			// Store tmp start since it will change
-
-			var start = range.Start;
-			Data.Insert(start, text);
-
-			foreach (var entry in ranges)
-				foreach (var tmpRange in entry.Value)
+				if (numsToMap[0] >= end)
 				{
-					if (tmpRange.Pos1 >= start)
-						tmpRange.Pos1 += text.Length;
-					if (tmpRange.Pos2 >= start)
-						tmpRange.Pos2 += text.Length;
+					offset += start - end + length;
+					++replaceRange;
+					continue;
 				}
 
+				var value = numsToMap[0];
+				if ((value > start) && (value < end))
+					value = start + length;
+
+				oldToNewMap[numsToMap[0]] = value + offset;
+				numsToMap.RemoveAt(0);
+			}
+
+			foreach (var range in ranges.SelectMany(rangePair => rangePair.Value))
+			{
+				range.Pos1 = oldToNewMap[range.Pos1];
+				range.Pos2 = oldToNewMap[range.Pos2];
+			}
+
+			if (!leaveHighlighted)
+				replaceRanges.ForEach(range => range.Pos1 = range.Pos2 = range.End);
+
 			InvalidateVisual();
-		}
-
-		public string ToHex(string str)
-		{
-			long result;
-			if (!Int64.TryParse(str, out result))
-				return null;
-			return result.ToString("X").ToLowerInvariant();
-		}
-
-		public string FromHex(string str)
-		{
-			long result;
-			if (!Int64.TryParse(str, NumberStyles.HexNumber, null, out result))
-				return null;
-			return result.ToString();
-		}
-
-		public string ToChar(string str)
-		{
-			UInt16 result;
-			if (!UInt16.TryParse(str, out result))
-				return null;
-			return new string((char)result, 1);
-		}
-
-		public string FromChar(string str)
-		{
-			if ((String.IsNullOrEmpty(str)) || (str.Length != 1))
-				return null;
-			return ((UInt16)str[0]).ToString();
 		}
 
 		public void CommandRun(UICommand command, object parameter)
 		{
-			switch (command.Name)
+			try
 			{
-				case "Edit_Undo":
-					ranges[RangeType.Mark].Clear();
-					ranges[RangeType.Search].Clear();
-					ranges[RangeType.Selection].Clear();
-					Data.Undo();
-					break;
-				case "Edit_Redo":
-					Data.Redo();
-					break;
-				case "Edit_Cut":
-				case "Edit_Copy":
-					{
-						var result = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToArray();
-						if (result.Length != 0)
-							Clipboard.Current.Set(result);
-						if (command.Name == "Edit_Cut")
-							foreach (var selection in ranges[RangeType.Selection])
-								Delete(selection);
-					}
-					break;
-				case "Edit_Paste":
-					{
-						var result = Clipboard.Current.GetStrings().ToList();
-						if ((result == null) || (result.Count == 0))
+				switch (command.Name)
+				{
+					case "Edit_Undo":
+						ranges[RangeType.Mark].Clear();
+						ranges[RangeType.Search].Clear();
+						ranges[RangeType.Selection].Clear();
+						Data.Undo();
+						break;
+					case "Edit_Redo":
+						Data.Redo();
+						break;
+					case "Edit_Cut":
+					case "Edit_Copy":
+						{
+							var result = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToArray();
+							if (result.Length != 0)
+								Clipboard.Current.Set(result);
+							if (command.Name == "Edit_Cut")
+								Replace(ranges[RangeType.Selection], null, false);
+						}
+						break;
+					case "Edit_Paste":
+						{
+							var result = Clipboard.Current.GetStrings().ToList();
+							if ((result == null) || (result.Count == 0))
+								break;
+
+							var sels = ranges[RangeType.Selection];
+							while (result.Count > sels.Count)
+							{
+								result[result.Count - 2] += " " + result[result.Count - 1];
+								result.RemoveAt(result.Count - 1);
+							}
+							while (result.Count < sels.Count)
+								result.Add(result.Last());
+
+							Replace(sels, result, false);
+						}
+						break;
+					case "Edit_Find":
+						{
+							Regex regex;
+							bool selectionOnly;
+							FindDialog.Run(out regex, out selectionOnly);
+							RunSearch(regex, selectionOnly);
+						}
+						break;
+					case "Edit_ToUpper":
+						{
+							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+							var strs = selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
+							Replace(selections, strs, true);
+						}
+						break;
+					case "Edit_ToLower":
+						{
+							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+							var strs = selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
+							Replace(selections, strs, true);
+						}
+						break;
+					case "Edit_ToHex":
+						{
+							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+							var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("X").ToLowerInvariant()).ToList();
+							Replace(selections, strs, true);
+						}
+						break;
+					case "Edit_FromHex":
+						{
+							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+							var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
+							Replace(selections, strs, true);
+						}
+						break;
+					case "Edit_ToChar":
+						{
+							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+							var strs = selections.Select(range => ((char)UInt16.Parse(GetString(range))).ToString()).ToList();
+							Replace(selections, strs, true);
+						}
+						break;
+					case "Edit_FromChar":
+						{
+							var selections = ranges[RangeType.Selection].Where(range => range.End - range.Start == 1).ToList();
+							var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString()).ToList();
+							Replace(selections, strs, true);
+						}
+						break;
+					case "Select_Single":
+						ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last() };
+						break;
+					case "Select_Lines":
+						var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+						ranges[RangeType.Selection] = lines.Select(line => new Range { Pos1 = Data.GetOffset(line, 0), Pos2 = Data.GetOffset(line, 0) }).ToList();
+						break;
+					case "Select_Find":
+						ranges[RangeType.Selection] = ranges[RangeType.Search];
+						ranges[RangeType.Search] = new List<Range>();
+						break;
+					case "Select_Marks":
+						if (ranges[RangeType.Mark].Count == 0)
 							break;
 
-						var sels = ranges[RangeType.Selection];
-						while (result.Count > sels.Count)
-						{
-							result[result.Count - 2] += " " + result[result.Count - 1];
-							result.RemoveAt(result.Count - 1);
-						}
-						while (result.Count < sels.Count)
-							result.Add(result.Last());
-
-						for (var ctr = 0; ctr < sels.Count; ++ctr)
-							Insert(sels[ctr], result[ctr]);
-					}
-					break;
-				case "Edit_Find":
-					try
-					{
-						Regex regex;
-						bool selectionOnly;
-						FindDialog.Run(out regex, out selectionOnly);
-						RunSearch(regex, selectionOnly);
-					}
-					catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
-					break;
-				case "Edit_ToUpper":
-					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
-					{
-						var start = selection.Start;
-						Insert(selection, GetString(selection).ToUpperInvariant());
-						selection.Pos1 = start;
-					}
-					break;
-				case "Edit_ToLower":
-					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
-					{
-						var start = selection.Start;
-						Insert(selection, GetString(selection).ToLowerInvariant());
-						selection.Pos1 = start;
-					}
-					break;
-				case "Edit_ToHex":
-					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
-					{
-						var str = GetString(selection);
-						str = ToHex(str);
-						if (str != null)
-						{
-							var start = selection.Start;
-							Insert(selection, str);
-							selection.Pos1 = start + str.Length;
-							selection.Pos2 = start;
-						}
-					}
-					break;
-				case "Edit_FromHex":
-					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
-					{
-						var str = GetString(selection);
-						str = FromHex(str);
-						if (str != null)
-						{
-							var start = selection.Start;
-							Insert(selection, str);
-							selection.Pos1 = start + str.Length;
-							selection.Pos2 = start;
-						}
-					}
-					break;
-				case "Edit_ToChar":
-					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
-					{
-						var str = GetString(selection);
-						str = ToChar(str);
-						if (str != null)
-						{
-							var start = selection.Start;
-							Insert(selection, str);
-							selection.Pos1 = start + str.Length;
-							selection.Pos2 = start;
-						}
-					}
-					break;
-				case "Edit_FromChar":
-					foreach (var selection in ranges[RangeType.Selection].Where(range => range.End - range.Start == 1))
-					{
-						var str = GetString(selection);
-						str = FromChar(str);
-						if (str != null)
-						{
-							var start = selection.Start;
-							Insert(selection, str);
-							selection.Pos1 = start + str.Length;
-							selection.Pos2 = start;
-						}
-					}
-					break;
-				case "Select_Single":
-					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last() };
-					break;
-				case "Select_Lines":
-					var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-					ranges[RangeType.Selection] = lines.Select(line => new Range { Pos1 = Data.GetOffset(line, 0), Pos2 = Data.GetOffset(line, 0) }).ToList();
-					break;
-				case "Select_Find":
-					ranges[RangeType.Selection] = ranges[RangeType.Search];
-					ranges[RangeType.Search] = new List<Range>();
-					break;
-				case "Select_Marks":
-					if (ranges[RangeType.Mark].Count == 0)
+						ranges[RangeType.Selection] = ranges[RangeType.Mark];
+						ranges[RangeType.Mark] = new List<Range>();
 						break;
-
-					ranges[RangeType.Selection] = ranges[RangeType.Mark];
-					ranges[RangeType.Mark] = new List<Range>();
-					break;
-				case "Mark_Find":
-					ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
-					ranges[RangeType.Search] = new List<Range>();
-					break;
-				case "Mark_Selection":
-					ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection]);
-					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last().Copy() };
-					foreach (var mark in ranges[RangeType.Mark])
-						if (!mark.HasSelection())
-							mark.Pos1++;
-					break;
-				case "Mark_Clear":
-					var hasSelection = ranges[RangeType.Selection].Any(range => range.HasSelection());
-					if (!hasSelection)
-						ranges[RangeType.Mark].Clear();
-					else
-					{
-						foreach (var selection in ranges[RangeType.Selection])
+					case "Mark_Find":
+						ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
+						ranges[RangeType.Search] = new List<Range>();
+						break;
+					case "Mark_Selection":
+						ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection]);
+						ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last().Copy() };
+						foreach (var mark in ranges[RangeType.Mark])
+							if (!mark.HasSelection())
+								mark.Pos1++;
+						break;
+					case "Mark_Clear":
+						var hasSelection = ranges[RangeType.Selection].Any(range => range.HasSelection());
+						if (!hasSelection)
+							ranges[RangeType.Mark].Clear();
+						else
 						{
-							var toRemove = ranges[RangeType.Mark].Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
-							toRemove.ForEach(mark => ranges[RangeType.Mark].Remove(mark));
+							foreach (var selection in ranges[RangeType.Selection])
+							{
+								var toRemove = ranges[RangeType.Mark].Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
+								toRemove.ForEach(mark => ranges[RangeType.Mark].Remove(mark));
+							}
 						}
-					}
-					break;
+						break;
+				}
 			}
+			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+
 			InvalidateVisual();
 		}
 
@@ -1016,8 +957,7 @@ namespace NeoEdit.TextEditorUI
 			if (e.Text.Length == 0)
 				return;
 
-			foreach (var selection in ranges[RangeType.Selection])
-				Insert(selection, e.Text);
+			Replace(ranges[RangeType.Selection], ranges[RangeType.Selection].Select(range => e.Text).ToList(), false);
 			e.Handled = true;
 		}
 	}
