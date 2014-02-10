@@ -76,23 +76,30 @@ namespace NeoEdit.Common
 			return lineIndex[line] + index;
 		}
 
-		public string GetString(int startLine, int startIndex, int endLine, int endIndex)
+		public int GetOffsetLine(int offset)
 		{
-			var start = GetOffset(startLine, startIndex);
-			var end = GetOffset(endLine, endIndex);
+			int line;
+			for (line = 0; (line < lineIndex.Count) && (offset >= lineIndex[line]); line++) ;
+			return --line;
+		}
+
+		public int GetOffsetIndex(int offset, int line)
+		{
+			return offset - lineIndex[line];
+		}
+
+		public string GetString(int start, int end)
+		{
 			return data.Substring(start, end - start);
 		}
 
-		public void Delete(int startLine, int startIndex, int endLine, int endIndex)
+		public void Delete(int start, int end)
 		{
-			var start = GetOffset(startLine, startIndex);
-			var end = GetOffset(endLine, endIndex);
 			data = data.Substring(0, start) + data.Substring(end);
 		}
 
-		public void Insert(int line, int index, string text)
+		public void Insert(int offset, string text)
 		{
-			var offset = GetOffset(line, index);
 			data = data.Substring(0, offset) + text + data.Substring(offset);
 		}
 
