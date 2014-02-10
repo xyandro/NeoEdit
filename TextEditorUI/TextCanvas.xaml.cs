@@ -42,6 +42,8 @@ namespace NeoEdit.TextEditorUI
 		[DepProp]
 		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public double xScrollSmallChange { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
@@ -113,6 +115,7 @@ namespace NeoEdit.TextEditorUI
 			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => { ranges[RangeType.Search].Clear(); InvalidateVisual(); });
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => { EnsureVisible(ranges[RangeType.Selection].First()); InvalidateVisual(); });
 
@@ -279,6 +282,8 @@ namespace NeoEdit.TextEditorUI
 			var startLine = Math.Max(0, GetLineFromY(yScrollValue));
 			var endLine = Math.Min(lines, GetLineFromY(ActualHeight + lineHeight + yScrollValue));
 
+			var highlightDictionary = Highlighting.Get(HighlightType).GetDictionary();
+
 			for (var line = startLine; line < endLine; ++line)
 			{
 				var lineStr = Data[line];
@@ -330,7 +335,14 @@ namespace NeoEdit.TextEditorUI
 					index = find;
 				}
 
-				var text = new FormattedText(sb.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+				var str = sb.ToString();
+				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+				foreach (var entry in highlightDictionary)
+				{
+					var matches = entry.Key.Matches(str);
+					foreach (Match match in matches)
+						text.SetForegroundBrush(entry.Value, match.Index, match.Length);
+				}
 				dc.DrawText(text, new Point(xLineStart - xScrollValue, y));
 			}
 		}

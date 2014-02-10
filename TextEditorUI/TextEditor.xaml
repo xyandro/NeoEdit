@@ -62,11 +62,29 @@
 				<MenuItem Command="{StaticResource Selection_Mark}"/>
 				<MenuItem Command="{StaticResource Selection_ClearMarks}"/>
 			</MenuItem>
+			<MenuItem Header="_View">
+				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={common:ExpressionConverter}, ConverterParameter=Type:NeoEdit.TextEditorUI.Highlighting+HighlightingType}">
+					<MenuItem.ItemContainerStyle>
+						<Style TargetType="MenuItem">
+							<EventSetter Event="Click" Handler="HighlightingClicked"/>
+							<Setter Property="IsChecked">
+								<Setter.Value>
+									<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] == [1]">
+										<Binding Path="Header" RelativeSource="{RelativeSource Self}"/>
+										<Binding Path="HighlightType" ElementName="self"/>
+									</MultiBinding>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</MenuItem.ItemContainerStyle>
+				</MenuItem>
+			</MenuItem>
 		</Menu>
 
 		<textEditorUI:TextCanvas x:Name="canvas" Grid.Row="1"
 			Data="{Binding Data, ElementName=self, Mode=OneWay}"
 			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
+			HighlightType="{Binding HighlightType, ElementName=self, Mode=TwoWay}"
 			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"
 			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=OneWayToSource}"
 			xScrollMaximum="{Binding Maximum, ElementName=xScroll, Mode=OneWayToSource}"

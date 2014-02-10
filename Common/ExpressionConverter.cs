@@ -28,6 +28,9 @@ namespace NeoEdit.Common
 		static readonly string termParts = @"'((?:[^']|'')*)'|\[(NULL)\]|\[(\d+)\]";
 		static readonly Regex termPartsRE = new Regex("^" + termParts + "$");
 
+		static readonly string typeExp = @"Type:([a-zA-z_0-9.+]*)";
+		static readonly Regex typeRE = new Regex(typeExp);
+
 		static readonly List<List<string>> binaryOperator = new List<List<string>>
 		{
 			new List<string>{ "." },
@@ -122,6 +125,25 @@ namespace NeoEdit.Common
 			}
 
 			throw new Exception("Invalid term");
+		}
+
+		bool FindTypes(ref string expression, List<object> value)
+		{
+			var match = typeRE.Match(expression);
+			if (!match.Success)
+				return false;
+
+			var result = "[NULL]";
+
+			var type = Assembly.GetExecutingAssembly().GetType(match.Groups[1].Value);
+			if (type != null)
+			{
+				result = "[" + value.Count + "]";
+				value.Add(type);
+			}
+
+			expression = expression.Substring(0, match.Index) + result + expression.Substring(match.Index + match.Length);
+			return true;
 		}
 
 		bool DoBinaryOperation(ref string expression, List<object> value)
@@ -263,6 +285,15 @@ namespace NeoEdit.Common
 				}
 				catch { return null; }
 			}
+			if (targetType.FullName == "System.Collections.IEnumerable")
+			{
+				if (result is Type)
+				{
+					var type = result as Type;
+					if (typeof(Enum).IsAssignableFrom(type))
+						return Enum.GetValues(type);
+				}
+			}
 
 			return result;
 		}
@@ -274,6 +305,9 @@ namespace NeoEdit.Common
 			while (true)
 			{
 				if (EnterParens(ref expression, expressionStack))
+					continue;
+
+				if (FindTypes(ref expression, value))
 					continue;
 
 				if (DoBinaryOperation(ref expression, value))

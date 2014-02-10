@@ -127,6 +127,7 @@
     <Compile Include="TextEditorUI\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextEditorUI\Highlighting.cs" />
     <Compile Include="TextEditorUI\TextCanvas.xaml.cs">
       <DependentUpon>TextCanvas.xaml</DependentUpon>
     </Compile>
