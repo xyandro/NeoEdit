@@ -12,17 +12,17 @@
 		<common:UICommand x:Key="Edit_Copy" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Paste" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Find" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_MarkFinds" Header="_Mark finds" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_ToUpper" Header="Upper case" Key="U" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_ToLower" Header="Lower case" Key="U" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_ToHex" Header="To hex" Key="H" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_FromHex" Header="To hex" Key="H" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Selection_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Selection_Lines" Header="_Lines" Key="L" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Selection_SearchResults" Header="Search _Results" Key="R" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Selection_Marks" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Selection_Mark" Header="Mark" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Selection_ClearMarks" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Lines" Header="_Lines" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Find" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Marks" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_Find" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_Selection" Header="_Selection" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_Clear" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
@@ -46,7 +46,6 @@
 				<MenuItem Command="{StaticResource Edit_Paste}"/>
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_Find}"/>
-				<MenuItem Command="{StaticResource Edit_MarkFinds}"/>
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_ToUpper}"/>
 				<MenuItem Command="{StaticResource Edit_ToLower}"/>
@@ -54,13 +53,16 @@
 				<MenuItem Command="{StaticResource Edit_ToHex}"/>
 				<MenuItem Command="{StaticResource Edit_FromHex}"/>
 			</MenuItem>
-			<MenuItem Header="_Selection">
-				<MenuItem Command="{StaticResource Selection_Single}"/>
-				<MenuItem Command="{StaticResource Selection_Lines}"/>
-				<MenuItem Command="{StaticResource Selection_SearchResults}"/>
-				<MenuItem Command="{StaticResource Selection_Marks}"/>
-				<MenuItem Command="{StaticResource Selection_Mark}"/>
-				<MenuItem Command="{StaticResource Selection_ClearMarks}"/>
+			<MenuItem Header="_Select">
+				<MenuItem Command="{StaticResource Select_Single}"/>
+				<MenuItem Command="{StaticResource Select_Lines}"/>
+				<MenuItem Command="{StaticResource Select_Find}"/>
+				<MenuItem Command="{StaticResource Select_Marks}"/>
+			</MenuItem>
+			<MenuItem Header="_Mark">
+				<MenuItem Command="{StaticResource Mark_Find}"/>
+				<MenuItem Command="{StaticResource Mark_Selection}"/>
+				<MenuItem Command="{StaticResource Mark_Clear}"/>
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={common:ExpressionConverter}, ConverterParameter=Type:NeoEdit.TextEditorUI.Highlighting+HighlightingType}">

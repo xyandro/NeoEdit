@@ -869,10 +869,6 @@ namespace NeoEdit.TextEditorUI
 					}
 					catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 					break;
-				case "Edit_MarkFinds":
-					ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
-					ranges[RangeType.Search] = new List<Range>();
-					break;
 				case "Edit_ToUpper":
 					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
 					{
@@ -917,41 +913,36 @@ namespace NeoEdit.TextEditorUI
 						}
 					}
 					break;
-				case "Selection_Single":
+				case "Select_Single":
 					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last() };
 					break;
-				case "Selection_Lines":
+				case "Select_Lines":
 					var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-					lines = lines.Where(line => Data[line].Length != 0).ToList();
 					ranges[RangeType.Selection] = lines.Select(line => new Range { Pos1 = Data.GetOffset(line, 0), Pos2 = Data.GetOffset(line, 0) }).ToList();
 					break;
-				case "Selection_SearchResults":
+				case "Select_Find":
 					ranges[RangeType.Selection] = ranges[RangeType.Search];
 					ranges[RangeType.Search] = new List<Range>();
 					break;
-				case "Selection_Marks":
+				case "Select_Marks":
 					if (ranges[RangeType.Mark].Count == 0)
-					{
-						ranges[RangeType.Mark] = ranges[RangeType.Selection];
-						ranges[RangeType.Mark].ForEach(range => { if (!range.HasSelection()) range.Pos1++; });
-						ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Mark].Last().Copy() };
-					}
-					else
-					{
-						ranges[RangeType.Selection] = ranges[RangeType.Mark];
-						ranges[RangeType.Mark] = new List<Range>();
-					}
+						break;
+
+					ranges[RangeType.Selection] = ranges[RangeType.Mark];
+					ranges[RangeType.Mark] = new List<Range>();
 					break;
-				case "Selection_Mark":
-					foreach (var selection in ranges[RangeType.Selection])
-					{
-						var mark = selection.Copy();
+				case "Mark_Find":
+					ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
+					ranges[RangeType.Search] = new List<Range>();
+					break;
+				case "Mark_Selection":
+					ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection]);
+					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last().Copy() };
+					foreach (var mark in ranges[RangeType.Mark])
 						if (!mark.HasSelection())
-							mark.Pos2++;
-						ranges[RangeType.Mark].Add(mark);
-					}
+							mark.Pos1++;
 					break;
-				case "Selection_ClearMarks":
+				case "Mark_Clear":
 					var hasSelection = ranges[RangeType.Selection].Any(range => range.HasSelection());
 					if (!hasSelection)
 						ranges[RangeType.Mark].Clear();
