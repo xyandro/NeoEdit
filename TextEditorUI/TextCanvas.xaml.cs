@@ -818,8 +818,8 @@ namespace NeoEdit.TextEditorUI
 
 		public string ToChar(string str)
 		{
-			short result;
-			if (!Int16.TryParse(str, out result))
+			UInt16 result;
+			if (!UInt16.TryParse(str, out result))
 				return null;
 			return new string((char)result, 1);
 		}
@@ -828,7 +828,7 @@ namespace NeoEdit.TextEditorUI
 		{
 			if ((String.IsNullOrEmpty(str)) || (str.Length != 1))
 				return null;
-			return ((Int16)str[0]).ToString();
+			return ((UInt16)str[0]).ToString();
 		}
 
 		public void CommandRun(UICommand command, object parameter)
