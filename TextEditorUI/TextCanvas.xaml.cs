@@ -403,7 +403,10 @@ namespace NeoEdit.TextEditorUI
 
 					Replace(ranges[RangeType.Selection], null, false);
 					break;
-				case Key.Escape: ranges[RangeType.Search].Clear(); break;
+				case Key.Escape:
+					ranges[RangeType.Search].Clear();
+					InvalidateVisual();
+					break;
 				case Key.Left:
 					foreach (var selection in ranges[RangeType.Selection])
 					{
@@ -801,6 +804,14 @@ namespace NeoEdit.TextEditorUI
 			InvalidateVisual();
 		}
 
+		public string SetWidth(string str, int length, char padChar, bool before)
+		{
+			var pad = new string(padChar, length - str.Length);
+			if (before)
+				return pad + str;
+			return str + pad;
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			try
@@ -891,6 +902,25 @@ namespace NeoEdit.TextEditorUI
 						{
 							var selections = ranges[RangeType.Selection].Where(range => range.End - range.Start == 1).ToList();
 							var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString()).ToList();
+							Replace(selections, strs, true);
+						}
+						break;
+					case "Edit_Width":
+						{
+							var minWidth = ranges[RangeType.Selection].Select(range => range.End - range.Start).Max();
+							var text = String.Join("", ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)));
+							var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
+							int width;
+							char padChar;
+							bool before;
+							if (WidthDialog.Run(minWidth, numeric, out width, out padChar, out before))
+								Replace(ranges[RangeType.Selection], ranges[RangeType.Selection].Select(range => SetWidth(GetString(range), width, padChar, before)).ToList(), true);
+						}
+						break;
+					case "Edit_Trim":
+						{
+							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+							var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
 							Replace(selections, strs, true);
 						}
 						break;

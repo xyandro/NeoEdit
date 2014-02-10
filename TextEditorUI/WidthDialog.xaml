@@ -1,0 +1,51 @@
+﻿<Window Name="self" x:Class="NeoEdit.TextEditorUI.WidthDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:NeoEdit.Common"
+	Title="Width" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=widthBox}">
+
+	<StackPanel Margin="10,5">
+		<Label Content="Set _width to:" Target="{Binding ElementName=widthBox}"/>
+		<StackPanel Orientation="Horizontal">
+			<TextBox Name="widthBox" Margin="0,0,0,10" Width="500" Text="{Binding WidthNum, ElementName=self}"/>
+			<ScrollBar Name="spinner" SmallChange="1" Minimum="{Binding MinWidthNum, ElementName=self}" Maximum="1000" Value="{Binding WidthNum, ElementName=self}">
+				<ScrollBar.RenderTransform>
+					<TransformGroup>
+						<ScaleTransform>
+							<ScaleTransform.ScaleY>
+								<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="'0'-[0]/[1]">
+									<Binding ElementName="widthBox" Path="ActualHeight"/>
+									<Binding ElementName="spinner" Path="ActualHeight"/>
+								</MultiBinding>
+							</ScaleTransform.ScaleY>
+						</ScaleTransform>
+						<TranslateTransform Y="{Binding ActualHeight, ElementName=widthBox}"/>
+					</TransformGroup>
+				</ScrollBar.RenderTransform>
+			</ScrollBar>
+		</StackPanel>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<Label Grid.Column="0" Grid.Row="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" Margin="0,0,20,0"/>
+			<TextBox Grid.Column="0" Grid.Row="1" Name="padChar" HorizontalAlignment="Left" Margin="0,0,0,10" Width="20" Text="{Binding PadChar, ElementName=self}"/>
+
+			<Label Grid.Column="1" Grid.Row="0" Content="Location:"/>
+			<RadioButton Grid.Column="1" Grid.Row="1" GroupName="location" Content="_Before" IsChecked="{Binding Before, ElementName=self}"/>
+			<RadioButton Grid.Column="2" Grid.Row="1" GroupName="location" Content="_After" IsChecked="{Binding Before, ElementName=self, Mode=OneWay, Converter={common:ExpressionConverter}, ConverterParameter=#5b#0#5d##3d##3d##27#False#27#}"/>
+		</Grid>
+
+		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">
+			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
+			<Button IsCancel="True" Content="Cancel"/>
+		</UniformGrid>
+	</StackPanel>
+</Window>

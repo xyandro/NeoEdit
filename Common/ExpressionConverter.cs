@@ -34,12 +34,14 @@ namespace NeoEdit.Common
 		static readonly List<List<string>> binaryOperator = new List<List<string>>
 		{
 			new List<string>{ "." },
+			new List<string>{ "*", "/", "%" },
+			new List<string>{ "+", "-" },
 			new List<string>{ "IS" },
 			new List<string>{ "AND" },
 			new List<string>{ "OR" },
-			new List<string>{ "==", "=i=" },
+			new List<string>{ "==", "=i=", "!=", "!i=" },
 		};
-		static readonly List<Regex> binaryOperatorREs = binaryOperator.Select(a => new Regex(String.Format(@"{0}\s*({1})\s*{0}", term, String.Join("|", a.Select(b => b.Replace(".", @"\.")))))).ToList();
+		static readonly List<Regex> binaryOperatorREs = binaryOperator.Select(a => new Regex(String.Format(@"{0}\s*({1})\s*{0}", term, String.Join("|", a.Select(b => Regex.Escape(b)))))).ToList();
 
 		static readonly string ternaryOperator = String.Format(@"{0}\s*\?\s*{0}\s*:\s*{0}", term);
 		static readonly Regex ternaryOperatorRE = new Regex(ternaryOperator);
@@ -60,6 +62,13 @@ namespace NeoEdit.Common
 
 			if (binaryOperator.Any(a => a.Any(b => b == expression)))
 				expression = String.Join(expression, Enumerable.Range(0, value.Count).Select(a => String.Format("[{0}]", a)));
+
+			if ((expression.Length > 0) && (expression[0] == '!'))
+			{
+				if (System.Diagnostics.Debugger.IsAttached)
+					System.Diagnostics.Debugger.Break();
+				expression = expression.Substring(1);
+			}
 
 			return expression;
 		}
@@ -184,8 +193,15 @@ namespace NeoEdit.Common
 							break;
 						case "AND": result = "'" + (Boolean.Parse(term1Str) && Boolean.Parse(term2Str)).ToString() + "'"; break;
 						case "OR": result = "'" + (Boolean.Parse(term1Str) || Boolean.Parse(term2Str)).ToString() + "'"; break;
+						case "*": result = "'" + (Double.Parse(term1Str) * Double.Parse(term2Str)).ToString() + "'"; break;
+						case "/": result = "'" + (Double.Parse(term1Str) / Double.Parse(term2Str)).ToString() + "'"; break;
+						case "%": result = "'" + (Double.Parse(term1Str) % Double.Parse(term2Str)).ToString() + "'"; break;
+						case "+": result = "'" + (Double.Parse(term1Str) + Double.Parse(term2Str)).ToString() + "'"; break;
+						case "-": result = "'" + (Double.Parse(term1Str) - Double.Parse(term2Str)).ToString() + "'"; break;
 						case "==": result = "'" + (term1Str == term2Str).ToString() + "'"; break;
 						case "=i=": result = "'" + (term1Str.Equals(term2Str, StringComparison.OrdinalIgnoreCase)).ToString() + "'"; break;
+						case "!=": result = "'" + (term1Str != term2Str).ToString() + "'"; break;
+						case "!i=": result = "'" + (!term1Str.Equals(term2Str, StringComparison.OrdinalIgnoreCase)).ToString() + "'"; break;
 						default: throw new Exception("Invalid op");
 					}
 

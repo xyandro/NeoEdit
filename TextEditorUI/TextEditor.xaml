@@ -18,6 +18,8 @@
 		<common:UICommand x:Key="Edit_FromHex" Header="From hex" Key="H" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_ToChar" Header="To char" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_FromChar" Header="From char" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Width" Header="_Width" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Trim" Header="_Trim" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Lines" Header="_Lines" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Find" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -51,12 +53,12 @@
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_ToUpper}"/>
 				<MenuItem Command="{StaticResource Edit_ToLower}"/>
-				<Separator/>
 				<MenuItem Command="{StaticResource Edit_ToHex}"/>
 				<MenuItem Command="{StaticResource Edit_FromHex}"/>
-				<Separator/>
 				<MenuItem Command="{StaticResource Edit_ToChar}"/>
 				<MenuItem Command="{StaticResource Edit_FromChar}"/>
+				<MenuItem Command="{StaticResource Edit_Width}"/>
+				<MenuItem Command="{StaticResource Edit_Trim}"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
 				<MenuItem Command="{StaticResource Select_Single}"/>
