@@ -845,6 +845,14 @@ namespace NeoEdit.TextEditorUI
 					ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
 					ranges[RangeType.Search] = new List<Range>();
 					break;
+				case "Edit_ToUpper":
+					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
+						Insert(selection, GetString(selection).ToUpperInvariant());
+					break;
+				case "Edit_ToLower":
+					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
+						Insert(selection, GetString(selection).ToLowerInvariant());
+					break;
 				case "Selection_Single":
 					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last() };
 					break;
