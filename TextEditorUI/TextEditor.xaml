@@ -15,13 +15,15 @@
 		<common:UICommand x:Key="Edit_ToUpper" Header="Upper case" Key="U" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_ToLower" Header="Lower case" Key="U" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_ToHex" Header="To hex" Key="H" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_FromHex" Header="To hex" Key="H" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_FromHex" Header="From hex" Key="H" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_ToChar" Header="To char" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_FromChar" Header="From char" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Lines" Header="_Lines" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Find" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Marks" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Find" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Mark_Selection" Header="_Selection" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_Selection" Header="_Selection" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Clear" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
@@ -52,6 +54,9 @@
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_ToHex}"/>
 				<MenuItem Command="{StaticResource Edit_FromHex}"/>
+				<Separator/>
+				<MenuItem Command="{StaticResource Edit_ToChar}"/>
+				<MenuItem Command="{StaticResource Edit_FromChar}"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
 				<MenuItem Command="{StaticResource Select_Single}"/>

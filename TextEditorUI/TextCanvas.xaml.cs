@@ -816,6 +816,21 @@ namespace NeoEdit.TextEditorUI
 			return result.ToString();
 		}
 
+		public string ToChar(string str)
+		{
+			short result;
+			if (!Int16.TryParse(str, out result))
+				return null;
+			return new string((char)result, 1);
+		}
+
+		public string FromChar(string str)
+		{
+			if ((String.IsNullOrEmpty(str)) || (str.Length != 1))
+				return null;
+			return ((Int16)str[0]).ToString();
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			switch (command.Name)
@@ -904,6 +919,34 @@ namespace NeoEdit.TextEditorUI
 					{
 						var str = GetString(selection);
 						str = FromHex(str);
+						if (str != null)
+						{
+							var start = selection.Start;
+							Insert(selection, str);
+							selection.Pos1 = start + str.Length;
+							selection.Pos2 = start;
+						}
+					}
+					break;
+				case "Edit_ToChar":
+					foreach (var selection in ranges[RangeType.Selection].Where(range => range.HasSelection()))
+					{
+						var str = GetString(selection);
+						str = ToChar(str);
+						if (str != null)
+						{
+							var start = selection.Start;
+							Insert(selection, str);
+							selection.Pos1 = start + str.Length;
+							selection.Pos2 = start;
+						}
+					}
+					break;
+				case "Edit_FromChar":
+					foreach (var selection in ranges[RangeType.Selection].Where(range => range.End - range.Start == 1))
+					{
+						var str = GetString(selection);
+						str = FromChar(str);
 						if (str != null)
 						{
 							var start = selection.Start;
