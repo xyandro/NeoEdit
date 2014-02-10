@@ -880,7 +880,7 @@ namespace NeoEdit.TextEditorUI
 					case "Edit_ToHex":
 						{
 							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-							var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("X").ToLowerInvariant()).ToList();
+							var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
 							Replace(selections, strs, true);
 						}
 						break;
@@ -894,14 +894,14 @@ namespace NeoEdit.TextEditorUI
 					case "Edit_ToChar":
 						{
 							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-							var strs = selections.Select(range => ((char)UInt16.Parse(GetString(range))).ToString()).ToList();
+							var strs = selections.Select(range => ((char)UInt16.Parse(GetString(range), NumberStyles.HexNumber)).ToString()).ToList();
 							Replace(selections, strs, true);
 						}
 						break;
 					case "Edit_FromChar":
 						{
 							var selections = ranges[RangeType.Selection].Where(range => range.End - range.Start == 1).ToList();
-							var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString()).ToList();
+							var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
 							Replace(selections, strs, true);
 						}
 						break;
