@@ -1079,7 +1079,7 @@ namespace NeoEdit.TextEditorUI
 						InvalidateVisual();
 						break;
 					case "Select_Single":
-						ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last() };
+						ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
 						break;
 					case "Select_Lines":
 						var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
@@ -1120,6 +1120,9 @@ namespace NeoEdit.TextEditorUI
 						foreach (var mark in ranges[RangeType.Mark])
 							if (!mark.HasSelection())
 								mark.Pos1++;
+						break;
+					case "Mark_LimitToSelection":
+						ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
 						break;
 					case "Mark_Clear":
 						var hasSelection = ranges[RangeType.Selection].Any(range => range.HasSelection());
