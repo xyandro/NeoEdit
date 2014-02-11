@@ -547,18 +547,6 @@ namespace NeoEdit.TextEditorUI
 					}
 					InvalidateVisual();
 					break;
-				case Key.A:
-					if (controlDown)
-					{
-						foreach (var selection in ranges[RangeType.Selection])
-						{
-							SetPos1(selection, Int32.MaxValue, Int32.MaxValue, false, false);
-							SetPos2(selection, 0, 0, false, false);
-						}
-					}
-					else
-						e.Handled = false;
-					break;
 				case Key.System:
 					switch (e.SystemKey)
 					{
@@ -1077,6 +1065,13 @@ namespace NeoEdit.TextEditorUI
 							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 							var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
 							Replace(selections, strs, true);
+						}
+						break;
+					case "Select_All":
+						foreach (var selection in ranges[RangeType.Selection])
+						{
+							SetPos1(selection, Int32.MaxValue, Int32.MaxValue, false, false);
+							SetPos2(selection, 0, 0, false, false);
 						}
 						break;
 					case "Select_Unselect":
