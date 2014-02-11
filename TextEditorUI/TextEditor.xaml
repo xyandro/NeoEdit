@@ -127,6 +127,12 @@
 			<StatusBarItem>
 				<TextBlock Text="{Binding Index, ElementName=canvas}"/>
 			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="Selections"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding NumSelections, ElementName=canvas}"/>
+			</StatusBarItem>
 		</StatusBar>
 	</Grid>
 

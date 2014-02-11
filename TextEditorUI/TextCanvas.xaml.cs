@@ -48,6 +48,8 @@ namespace NeoEdit.TextEditorUI
 		[DepProp]
 		public int Index { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public int NumSelections { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public double xScrollSmallChange { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
@@ -292,6 +294,7 @@ namespace NeoEdit.TextEditorUI
 			var pos = ranges[RangeType.Selection].First().Pos1;
 			Line = Data.GetOffsetLine(pos) + 1;
 			Index = Data.GetOffsetIndex(pos, Line - 1) + 1;
+			NumSelections = ranges[RangeType.Selection].Count;
 
 			var startLine = Math.Max(0, GetLineFromY(yScrollValue));
 			var endLine = Math.Min(lines, GetLineFromY(ActualHeight + lineHeight + yScrollValue));
@@ -815,7 +818,7 @@ namespace NeoEdit.TextEditorUI
 				var matches = regex.Matches(lineStr);
 				foreach (Match match in matches)
 				{
-					var searchResult = new Range { Pos1 = Data.GetOffset(line, match.Index), Pos2 = Data.GetOffset(line, match.Index + match.Length) };
+					var searchResult = new Range { Pos1 = Data.GetOffset(line, match.Index + match.Length), Pos2 = Data.GetOffset(line, match.Index) };
 
 					if (selectionOnly)
 					{
