@@ -576,6 +576,18 @@ namespace NeoEdit.TextEditorUI
 					lineIndex = line;
 				}
 
+				if (index >= lineStr.Length)
+				{
+					++line;
+					if (line >= Data.NumLines)
+					{
+						SetPos1(selection, Data.NumLines - 1, Int32.MaxValue, false, false);
+						return;
+					}
+					index = -1;
+					continue;
+				}
+
 				++index;
 				WordSkipType current;
 				if ((index >= lineStr.Length) || (lineStr[index] == ' ') || (lineStr[index] == '\t'))
@@ -585,19 +597,10 @@ namespace NeoEdit.TextEditorUI
 				else
 					current = WordSkipType.Symbol;
 
-				if ((moveType == WordSkipType.None) || (current == WordSkipType.Space))
+				if (moveType == WordSkipType.None)
 					moveType = current;
 
-				if (index >= lineStr.Length)
-				{
-					index = -1;
-					line++;
-					if (line >= Data.NumLines)
-						return;
-					continue;
-				}
-
-				if ((current != WordSkipType.Space) && (current != moveType))
+				if (current != moveType)
 				{
 					SetPos1(selection, line, index, false, false);
 					return;
@@ -624,6 +627,17 @@ namespace NeoEdit.TextEditorUI
 						index = lineStr.Length;
 				}
 
+				if (index < 0)
+				{
+					--line;
+					if (line < 0)
+					{
+						SetPos1(selection, 0, 0, false, false);
+						return;
+					}
+					continue;
+				}
+
 				lastLine = line;
 				lastIndex = index;
 
@@ -636,19 +650,8 @@ namespace NeoEdit.TextEditorUI
 				else
 					current = WordSkipType.Symbol;
 
-				if ((moveType == WordSkipType.None) || (moveType == WordSkipType.Space))
+				if (moveType == WordSkipType.None)
 					moveType = current;
-
-				if (index < 0)
-				{
-					--line;
-					if (line < 0)
-					{
-						SetPos1(selection, 0, 0, false, false);
-						return;
-					}
-					continue;
-				}
 
 				if (current != moveType)
 				{
