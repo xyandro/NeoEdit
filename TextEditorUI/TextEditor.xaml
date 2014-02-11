@@ -28,6 +28,7 @@
 		<common:UICommand x:Key="Select_Find" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Marks" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Reverse" Header="_Reverse selections" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Sort" Header="_Sort selections" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Find" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Selection" Header="_Selection" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Clear" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -73,7 +74,9 @@
 				<MenuItem Command="{StaticResource Select_Lines}"/>
 				<MenuItem Command="{StaticResource Select_Find}"/>
 				<MenuItem Command="{StaticResource Select_Marks}"/>
+				<Separator/>
 				<MenuItem Command="{StaticResource Select_Reverse}"/>
+				<MenuItem Command="{StaticResource Select_Sort}"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
 				<MenuItem Command="{StaticResource Mark_Find}"/>
