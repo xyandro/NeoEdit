@@ -20,6 +20,7 @@
 		<common:UICommand x:Key="Edit_FromChar" Header="From char" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Width" Header="_Width" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Trim" Header="_Trim" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Unselect" Header="_Unselect" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Single" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Lines" Header="_Lines" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Find" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -61,6 +62,7 @@
 				<MenuItem Command="{StaticResource Edit_Trim}"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
+				<MenuItem Command="{StaticResource Select_Unselect}"/>
 				<MenuItem Command="{StaticResource Select_Single}"/>
 				<MenuItem Command="{StaticResource Select_Lines}"/>
 				<MenuItem Command="{StaticResource Select_Find}"/>

@@ -675,7 +675,7 @@ namespace NeoEdit.TextEditorUI
 
 		void MouseHandler(Point mousePos)
 		{
-			var line = GetLineFromY(mousePos.Y + yScrollValue);
+			var line = Math.Min(Data.NumLines - 1, GetLineFromY(mousePos.Y + yScrollValue));
 			var index = GetIndexFromColumn(line, GetColumnFromX(mousePos.X + xScrollValue));
 
 			Range selection;
@@ -925,6 +925,10 @@ namespace NeoEdit.TextEditorUI
 							var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
 							Replace(selections, strs, true);
 						}
+						break;
+					case "Select_Unselect":
+						ranges[RangeType.Selection].ForEach(range => range.Pos1 = range.Pos2 = range.Start);
+						InvalidateVisual();
 						break;
 					case "Select_Single":
 						ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last() };
