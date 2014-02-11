@@ -1020,6 +1020,13 @@ namespace NeoEdit.TextEditorUI
 						ranges[RangeType.Selection] = ranges[RangeType.Mark];
 						ranges[RangeType.Mark] = new List<Range>();
 						break;
+					case "Select_Reverse":
+						{
+							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+							var strs = selections.Select(range => GetString(range)).Reverse().ToList();
+							Replace(selections, strs, true);
+						}
+						break;
 					case "Mark_Find":
 						ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
 						ranges[RangeType.Search] = new List<Range>();
