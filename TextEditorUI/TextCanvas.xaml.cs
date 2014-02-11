@@ -66,28 +66,9 @@ namespace NeoEdit.TextEditorUI
 		[DepProp]
 		public double yScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 
-		int lines, columns;
-
-		// X spacing
 		const int tabStop = 4;
-		const double xStartSpacing = 10;
 		readonly double charWidth;
-		const double xEndSpacing = xStartSpacing;
-
-		double xStart { get { return 0; } }
-		double xLineStart { get { return xStart + xStartSpacing; } }
-		double xLineEnd { get { return xLineStart + columns * charWidth; } }
-		double xEnd { get { return xLineEnd + xEndSpacing; } }
-
-		// Y spacing
-		const double yStartSpacing = 10;
 		readonly double lineHeight;
-		const double yEndSpacing = yStartSpacing;
-
-		double yStart { get { return 0; } }
-		double yLinesStart { get { return yStart + yStartSpacing; } }
-		double yLinesEnd { get { return yLinesStart + lines * lineHeight; } }
-		double yEnd { get { return yLinesEnd + yEndSpacing; } }
 
 		enum RangeType
 		{
@@ -141,27 +122,27 @@ namespace NeoEdit.TextEditorUI
 		double GetXFromLineIndex(int line, int index)
 		{
 			var column = GetColumnFromIndex(line, index);
-			return xLineStart + column * charWidth;
+			return column * charWidth;
 		}
 
 		int GetColumnFromX(double x)
 		{
-			return (int)((x - xLineStart) / charWidth);
+			return (int)(x / charWidth);
 		}
 
 		double GetXFromColumn(int column)
 		{
-			return xLineStart + column * charWidth;
+			return column * charWidth;
 		}
 
 		int GetLineFromY(double y)
 		{
-			return (int)((y - yLinesStart) / lineHeight);
+			return (int)(y / lineHeight);
 		}
 
 		double GetYFromLine(int line)
 		{
-			return yLinesStart + line * lineHeight;
+			return line * lineHeight;
 		}
 
 		int GetColumnFromIndex(int line, int index)
@@ -244,14 +225,13 @@ namespace NeoEdit.TextEditorUI
 			if (Data == null)
 				return;
 
-			columns = Enumerable.Range(0, Data.NumLines).Select(lineNum => Data[lineNum]).Select(line => GetColumnFromIndex(line, line.Length)).Max();
-			lines = Data.NumLines;
+			var columns = Enumerable.Range(0, Data.NumLines).Select(lineNum => Data[lineNum]).Select(line => GetColumnFromIndex(line, line.Length)).Max();
 
-			xScrollMaximum = xEnd - ActualWidth;
+			xScrollMaximum = columns * charWidth - ActualWidth;
 			xScrollSmallChange = charWidth;
 			xScrollLargeChange = ActualWidth - xScrollSmallChange;
 
-			yScrollMaximum = yEnd - ActualHeight;
+			yScrollMaximum = Data.NumLines * lineHeight - ActualHeight;
 			yScrollSmallChange = lineHeight;
 			yScrollLargeChange = ActualHeight - yScrollSmallChange;
 
@@ -297,7 +277,7 @@ namespace NeoEdit.TextEditorUI
 			NumSelections = ranges[RangeType.Selection].Count;
 
 			var startLine = Math.Max(0, GetLineFromY(yScrollValue));
-			var endLine = Math.Min(lines, GetLineFromY(ActualHeight + lineHeight + yScrollValue));
+			var endLine = Math.Min(Data.NumLines, GetLineFromY(ActualHeight + lineHeight + yScrollValue));
 
 			var highlightDictionary = Highlighting.Get(HighlightType).GetDictionary();
 
@@ -305,7 +285,7 @@ namespace NeoEdit.TextEditorUI
 			{
 				var lineStr = Data[line];
 				var lineRange = new Range { Pos1 = Data.GetOffset(line, 0), Pos2 = Data.GetOffset(line, lineStr.Length) };
-				var y = yLinesStart - yScrollValue + line * lineHeight;
+				var y = line * lineHeight - yScrollValue;
 
 				foreach (var entry in ranges)
 				{
@@ -362,7 +342,7 @@ namespace NeoEdit.TextEditorUI
 					foreach (Match match in matches)
 						text.SetForegroundBrush(entry.Value, match.Index, match.Length);
 				}
-				dc.DrawText(text, new Point(xLineStart - xScrollValue, y));
+				dc.DrawText(text, new Point(-xScrollValue, y));
 			}
 		}
 
