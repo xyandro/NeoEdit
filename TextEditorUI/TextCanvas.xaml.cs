@@ -1002,6 +1002,44 @@ namespace NeoEdit.TextEditorUI
 					case "Edit_FindPrev":
 						FindNext(command.Name == "Edit_FindNext");
 						break;
+					case "Edit_GotoLine":
+						{
+							var line = Data.GetOffsetLine(ranges[RangeType.Selection].First().Start);
+							var getNumDialog = new GetNumDialog
+							{
+								Title = "Go to line",
+								Text = String.Format("Go to line: (1 - {0})", Data.NumLines),
+								MinValue = 1,
+								MaxValue = Data.NumLines,
+								Value = line,
+							};
+							if (getNumDialog.ShowDialog() == true)
+							{
+								foreach (var selection in ranges[RangeType.Selection])
+									SetPos1(selection, getNumDialog.Value - 1, 0, false, true);
+							}
+						}
+						break;
+					case "Edit_GotoIndex":
+						{
+							var offset = ranges[RangeType.Selection].First().Start;
+							var line = Data.GetOffsetLine(offset);
+							var index = Data.GetOffsetIndex(offset, line);
+							var getNumDialog = new GetNumDialog
+							{
+								Title = "Go to column",
+								Text = String.Format("Go to column: (1 - {0})", Data[line].Length + 1),
+								MinValue = 1,
+								MaxValue = Data[line].Length + 1,
+								Value = index,
+							};
+							if (getNumDialog.ShowDialog() == true)
+							{
+								foreach (var selection in ranges[RangeType.Selection])
+									SetPos1(selection, 0, getNumDialog.Value - 1, true, false);
+							}
+						}
+						break;
 					case "Edit_ToUpper":
 						{
 							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
