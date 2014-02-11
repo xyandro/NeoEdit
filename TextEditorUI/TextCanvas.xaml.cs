@@ -358,6 +358,7 @@ namespace NeoEdit.TextEditorUI
 		bool mouseDown;
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
+		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt; } }
 		internal bool selecting { get { return (mouseDown) || (shiftDown); } }
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -450,8 +451,10 @@ namespace NeoEdit.TextEditorUI
 							}
 						}
 						else
+						{
 							foreach (var selection in ranges[RangeType.Selection])
 								SetPos1(selection, mult, 0);
+						}
 					}
 					break;
 				case Key.Home:
@@ -518,6 +521,32 @@ namespace NeoEdit.TextEditorUI
 					}
 					else
 						e.Handled = false;
+					break;
+				case Key.System:
+					switch (e.SystemKey)
+					{
+						case Key.Up:
+						case Key.Down:
+						case Key.Left:
+						case Key.Right:
+							var lineMult = 0;
+							var indexMult = 0;
+							switch (e.SystemKey)
+							{
+								case Key.Up: lineMult = -1; break;
+								case Key.Down: lineMult = 1; break;
+								case Key.Left: indexMult = -1; break;
+								case Key.Right: indexMult = 1; break;
+							}
+
+							if (altOnly)
+							{
+								for (var offset = 0; offset < ranges[RangeType.Selection].Count; ++offset)
+									SetPos1(ranges[RangeType.Selection][offset], offset * lineMult, offset * indexMult);
+							}
+							break;
+						default: e.Handled = false; break;
+					}
 					break;
 				default: e.Handled = false; break;
 			}
