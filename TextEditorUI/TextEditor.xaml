@@ -42,9 +42,10 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Menu>
+		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_Edit">
 				<MenuItem Command="{StaticResource Edit_Undo}"/>
 				<MenuItem Command="{StaticResource Edit_Redo}"/>
@@ -113,6 +114,20 @@
 		/>
 		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
 		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
+		<StatusBar Grid.ColumnSpan="2" Grid.Row="3">
+			<StatusBarItem>
+				<TextBlock Text="Line"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Line, ElementName=canvas}"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="Col"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Index, ElementName=canvas}"/>
+			</StatusBarItem>
+		</StatusBar>
 	</Grid>
 
 </Window>

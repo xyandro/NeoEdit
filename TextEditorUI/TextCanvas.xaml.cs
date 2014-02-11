@@ -44,6 +44,10 @@ namespace NeoEdit.TextEditorUI
 		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public int Line { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public int Index { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public double xScrollSmallChange { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
@@ -284,6 +288,10 @@ namespace NeoEdit.TextEditorUI
 				ranges[RangeType.Selection][ctr].Pos1 = Math.Min(ranges[RangeType.Selection][ctr].Pos1, ranges[RangeType.Selection][ctr + 1].Start);
 				ranges[RangeType.Selection][ctr].Pos2 = Math.Min(ranges[RangeType.Selection][ctr].Pos2, ranges[RangeType.Selection][ctr + 1].Start);
 			}
+
+			var pos = ranges[RangeType.Selection].First().Pos1;
+			Line = Data.GetOffsetLine(pos) + 1;
+			Index = Data.GetOffsetIndex(pos, Line - 1) + 1;
 
 			var startLine = Math.Max(0, GetLineFromY(yScrollValue));
 			var endLine = Math.Min(lines, GetLineFromY(ActualHeight + lineHeight + yScrollValue));
