@@ -151,6 +151,49 @@ namespace NeoEdit.Common
 			data = sb.ToString();
 		}
 
+		public int GetOppositeBracket(int offset)
+		{
+			if ((offset < 1) || (offset >= data.Length))
+				return -1;
+
+			var dict = new Dictionary<char, char>
+			{
+				{ '(', ')' },
+				{ '{', '}' },
+				{ '[', ']' },
+			};
+
+			int direction = 1;
+
+			var found = dict.FirstOrDefault(entry => entry.Key == data[offset]);
+			if (found.Key == 0)
+			{
+				--offset;
+				found = dict.FirstOrDefault(entry => entry.Key == data[offset]);
+			}
+			if (found.Key == 0)
+			{
+				direction = -1;
+				found = dict.FirstOrDefault(entry => entry.Value == data[offset]);
+			}
+			if (found.Key == 0)
+				return -1;
+
+			var num = 0;
+			for (; offset < data.Length; offset += direction)
+			{
+				if (data[offset] == found.Key)
+					++num;
+				if (data[offset] == found.Value)
+					--num;
+
+				if (num == 0)
+					return offset + Math.Max(0, direction);
+			}
+
+			return -1;
+		}
+
 		public int NumLines { get { return lineIndex.Count; } }
 	}
 }

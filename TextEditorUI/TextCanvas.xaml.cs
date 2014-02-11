@@ -524,6 +524,19 @@ namespace NeoEdit.TextEditorUI
 				case Key.Enter:
 					AddText(Data.DefaultEnding);
 					break;
+				case Key.OemCloseBrackets:
+					foreach (var selection in ranges[RangeType.Selection])
+					{
+						var newPos = Data.GetOppositeBracket(selection.Pos1);
+						if (newPos != -1)
+						{
+							var line = Data.GetOffsetLine(newPos);
+							var index = Data.GetOffsetIndex(newPos, line);
+							SetPos1(selection, line, index, false, false);
+						}
+					}
+					InvalidateVisual();
+					break;
 				case Key.A:
 					if (controlDown)
 					{
