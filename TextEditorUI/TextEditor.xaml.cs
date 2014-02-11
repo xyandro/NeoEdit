@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using NeoEdit.Common;
 
 namespace NeoEdit.TextEditorUI
@@ -18,7 +19,7 @@ namespace NeoEdit.TextEditorUI
 
 		static TextData GetData()
 		{
-			var bytes = new BinaryData(System.IO.File.ReadAllBytes(@"C:\Docs\Cpp\NeoEdit\bin\Debug\Clipboard.cs"));
+			var bytes = new BinaryData(System.IO.File.ReadAllBytes(@"E:\Dev\index\dts_lib-trunk\target\dependency\dtSearch\include\dtsfc.h"));
 			return new TextData(bytes);
 		}
 
@@ -31,6 +32,8 @@ namespace NeoEdit.TextEditorUI
 			Data = data;
 
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
+			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
+			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
 
 			Show();
 		}
