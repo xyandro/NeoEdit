@@ -935,7 +935,8 @@ namespace NeoEdit.TextEditorUI
 							RunSearch(findDialog.Regex, findDialog.SelectionOnly);
 							if (findDialog.SelectAll)
 							{
-								ranges[RangeType.Selection] = ranges[RangeType.Search];
+								if (ranges[RangeType.Search].Count != 0)
+									ranges[RangeType.Selection] = ranges[RangeType.Search];
 								ranges[RangeType.Search] = new List<Range>();
 								break;
 							}
@@ -1015,7 +1016,8 @@ namespace NeoEdit.TextEditorUI
 						break;
 					case "Select_Lines":
 						var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-						ranges[RangeType.Selection] = lines.Select(line => new Range { Pos1 = Data.GetOffset(line, 0), Pos2 = Data.GetOffset(line, 0) }).ToList();
+						var lengths = lines.ToDictionary(line => line, line => Data[line].Length);
+						ranges[RangeType.Selection] = lengths.Select(line => new Range { Pos1 = Data.GetOffset(line.Key, line.Value), Pos2 = Data.GetOffset(line.Key, 0) }).ToList();
 						break;
 					case "Select_Find":
 						ranges[RangeType.Selection] = ranges[RangeType.Search];
@@ -1040,8 +1042,7 @@ namespace NeoEdit.TextEditorUI
 						ranges[RangeType.Search] = new List<Range>();
 						break;
 					case "Mark_Selection":
-						ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection]);
-						ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].Last().Copy() };
+						ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
 						foreach (var mark in ranges[RangeType.Mark])
 							if (!mark.HasSelection())
 								mark.Pos1++;
