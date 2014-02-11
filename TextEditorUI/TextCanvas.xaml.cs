@@ -309,6 +309,8 @@ namespace NeoEdit.TextEditorUI
 						end = Data.GetOffsetIndex(end, line);
 						start = GetColumnFromIndex(lineStr, start);
 						end = GetColumnFromIndex(lineStr, end);
+						if (range.End > lineRange.End)
+							end++;
 
 						dc.DrawRectangle(brushes[entry.Key], null, new Rect(GetXFromColumn(start) - xScrollValue, y, (end - start) * charWidth, lineHeight));
 					}
