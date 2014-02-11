@@ -519,7 +519,34 @@ namespace NeoEdit.TextEditorUI
 							SetPos1(selection, (int)(ActualHeight / lineHeight - 1), 0);
 					break;
 				case Key.Tab:
-					AddText("\t");
+					{
+						if (!ranges[RangeType.Selection].Any(range => range.HasSelection()))
+						{
+							AddText("\t");
+							break;
+						}
+
+						var lines = ranges[RangeType.Selection].Where(a => a.HasSelection()).ToDictionary(a => Data.GetOffsetLine(a.Start), a => Data.GetOffsetLine(a.End - 1));
+						lines = lines.SelectMany(selection => Enumerable.Range(selection.Key, selection.Value - selection.Key + 1)).Distinct().OrderBy(lineNum => lineNum).ToDictionary(line => line, line => Data.GetOffset(line, 0));
+						int offset;
+						string replace;
+						if (shiftDown)
+						{
+							offset = 1;
+							replace = "";
+							lines = lines.Where(entry => Data[entry.Key].StartsWith("\t")).ToDictionary(entry => entry.Key, entry => entry.Value);
+						}
+						else
+						{
+							offset = 0;
+							replace = "\t";
+							lines = lines.Where(entry => !String.IsNullOrWhiteSpace(Data[entry.Key])).ToDictionary(entry => entry.Key, entry => entry.Value);
+						}
+
+						var sels = lines.Select(line => new Range { Pos1 = line.Value + offset, Pos2 = line.Value }).ToList();
+						var insert = sels.Select(range => replace).ToList();
+						Replace(sels, insert, false);
+					}
 					break;
 				case Key.Enter:
 					AddText(Data.DefaultEnding);
