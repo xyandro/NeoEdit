@@ -15,6 +15,8 @@ namespace NeoEdit.TextEditorUI
 		public Regex Regex { get; private set; }
 		public bool SelectAll { get; private set; }
 
+		static bool wholeWordsVal, matchCaseVal, regularExpressionVal;
+
 		static FindDialog() { UIHelper<FindDialog>.Register(); }
 
 		readonly UIHelper<FindDialog> uiHelper;
@@ -22,12 +24,19 @@ namespace NeoEdit.TextEditorUI
 		{
 			uiHelper = new UIHelper<FindDialog>(this);
 			InitializeComponent();
+			wholeWords.IsChecked = wholeWordsVal;
+			matchCase.IsChecked = matchCaseVal;
+			regularExpression.IsChecked = regularExpressionVal;
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (String.IsNullOrEmpty(Text))
 				return;
+
+			wholeWordsVal = wholeWords.IsChecked == true;
+			matchCaseVal = matchCase.IsChecked == true;
+			regularExpressionVal = regularExpression.IsChecked == true;
 
 			var text = Text;
 			if (regularExpression.IsChecked == false)
