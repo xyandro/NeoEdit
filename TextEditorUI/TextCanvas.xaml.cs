@@ -518,6 +518,12 @@ namespace NeoEdit.TextEditorUI
 						else
 							SetPos1(selection, (int)(ActualHeight / lineHeight - 1), 0);
 					break;
+				case Key.Tab:
+					AddText("\t");
+					break;
+				case Key.Enter:
+					AddText(Data.DefaultEnding);
+					break;
 				case Key.A:
 					if (controlDown)
 					{
@@ -1072,16 +1078,21 @@ namespace NeoEdit.TextEditorUI
 			return true;
 		}
 
+		void AddText(string text)
+		{
+			if (text.Length == 0)
+				return;
+
+			Replace(ranges[RangeType.Selection], ranges[RangeType.Selection].Select(range => text).ToList(), false);
+		}
+
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
 			base.OnTextInput(e);
 			if (e.Handled)
 				return;
 
-			if (e.Text.Length == 0)
-				return;
-
-			Replace(ranges[RangeType.Selection], ranges[RangeType.Selection].Select(range => e.Text).ToList(), false);
+			AddText(e.Text);
 			e.Handled = true;
 		}
 	}

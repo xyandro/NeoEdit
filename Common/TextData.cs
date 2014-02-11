@@ -16,7 +16,7 @@ namespace NeoEdit.Common
 		List<int> lineLength;
 		List<int> endingIndex;
 		List<int> endingLength;
-		string defaultEnding = "\r\n";
+		public string DefaultEnding { get; private set; }
 
 		public TextData(BinaryData binaryData, BinaryData.EncodingName encoding = BinaryData.EncodingName.None)
 		{
@@ -65,7 +65,7 @@ namespace NeoEdit.Common
 			}
 
 			// Select most popular line ending
-			defaultEnding = Enumerable.Range(0, endingIndex.Count).Select(a => GetEnding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).FirstOrDefault() ?? "\r\n";
+			DefaultEnding = Enumerable.Range(0, endingIndex.Count).Select(a => GetEnding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).FirstOrDefault() ?? "\r\n";
 		}
 
 		public string this[int line] { get { return GetLine(line); } }
