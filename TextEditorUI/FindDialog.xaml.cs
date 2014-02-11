@@ -7,10 +7,18 @@ namespace NeoEdit.TextEditorUI
 {
 	public partial class FindDialog : Window
 	{
+		[DepProp]
+		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool SelectionOnly { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+
+		public Regex Regex { get; private set; }
+		public bool SelectAll { get; private set; }
+
 		static FindDialog() { UIHelper<FindDialog>.Register(); }
 
 		readonly UIHelper<FindDialog> uiHelper;
-		FindDialog()
+		public FindDialog()
 		{
 			uiHelper = new UIHelper<FindDialog>(this);
 			InitializeComponent();
@@ -18,31 +26,21 @@ namespace NeoEdit.TextEditorUI
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrEmpty(findText.Text))
+			if (String.IsNullOrEmpty(Text))
 				return;
+
+			var text = Text;
+			if (regularExpression.IsChecked == false)
+				text = Regex.Escape(text);
+			if (wholeWords.IsChecked == true)
+				text = @"\b" + text + @"\b";
+			var options = RegexOptions.None;
+			if (matchCase.IsChecked == false)
+				options = RegexOptions.IgnoreCase;
+			Regex = new Regex(text, options);
+			SelectAll = sender == selectAll;
 
 			DialogResult = true;
-		}
-
-		public static void Run(out Regex regex, out bool selectionOnly)
-		{
-			regex = null;
-			selectionOnly = false;
-
-			var find = new FindDialog();
-			if (find.ShowDialog() == false)
-				return;
-
-			var findText = find.findText.Text;
-			if (find.regularExpression.IsChecked == false)
-				findText = Regex.Escape(findText);
-			if (find.wholeWords.IsChecked == true)
-				findText = @"\b" + findText + @"\b";
-			var options = RegexOptions.None;
-			if (find.matchCase.IsChecked == false)
-				options = RegexOptions.IgnoreCase;
-			regex = new Regex(findText, options);
-			selectionOnly = find.selectionOnly.IsChecked == true;
 		}
 	}
 }

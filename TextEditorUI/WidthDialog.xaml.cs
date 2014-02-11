@@ -19,7 +19,7 @@ namespace NeoEdit.TextEditorUI
 		static WidthDialog() { UIHelper<WidthDialog>.Register(); }
 
 		readonly UIHelper<WidthDialog> uiHelper;
-		WidthDialog()
+		public WidthDialog()
 		{
 			uiHelper = new UIHelper<WidthDialog>(this);
 			InitializeComponent();
@@ -44,22 +44,6 @@ namespace NeoEdit.TextEditorUI
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			DialogResult = true;
-		}
-
-		public static bool Run(int min, bool numeric, out int width, out char padChar, out bool before)
-		{
-			width = min;
-			padChar = numeric ? '0' : ' ';
-			before = true;
-
-			var widthDialog = new WidthDialog { MinWidthNum = min, PadChar = padChar, Before = numeric };
-			if (widthDialog.ShowDialog() == false)
-				return false;
-
-			width = widthDialog.WidthNum;
-			padChar = widthDialog.PadChar;
-			before = widthDialog.Before;
-			return true;
 		}
 	}
 }

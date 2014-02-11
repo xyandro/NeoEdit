@@ -356,10 +356,9 @@ namespace NeoEdit.TextEditorUI
 		}
 
 		bool mouseDown;
-		bool? overrideSelecting;
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
-		internal bool selecting { get { return overrideSelecting.HasValue ? overrideSelecting.Value : ((mouseDown) || (shiftDown)); } }
+		internal bool selecting { get { return (mouseDown) || (shiftDown); } }
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
@@ -806,6 +805,35 @@ namespace NeoEdit.TextEditorUI
 			InvalidateVisual();
 		}
 
+		void FindNext(bool forward)
+		{
+			if (ranges[RangeType.Search].Count == 0)
+				return;
+
+			foreach (var selection in ranges[RangeType.Selection])
+			{
+				int index;
+				if (forward)
+				{
+					index = ranges[RangeType.Search].FindIndex(range => range.Start > selection.Start);
+					if (index == -1)
+						index = 0;
+				}
+				else
+				{
+					index = ranges[RangeType.Search].FindLastIndex(range => range.Start < selection.Start);
+					if (index == -1)
+						index = ranges[RangeType.Search].Count - 1;
+				}
+
+				selection.Pos1 = ranges[RangeType.Search][index].End;
+				selection.Pos2 = ranges[RangeType.Search][index].Start;
+
+				EnsureVisible(selection);
+			}
+			InvalidateVisual();
+		}
+
 		public string SetWidth(string str, int length, char padChar, bool before)
 		{
 			var pad = new string(padChar, length - str.Length);
@@ -859,11 +887,25 @@ namespace NeoEdit.TextEditorUI
 						break;
 					case "Edit_Find":
 						{
-							Regex regex;
-							bool selectionOnly;
-							FindDialog.Run(out regex, out selectionOnly);
-							RunSearch(regex, selectionOnly);
+							var selectionOnly = ranges[RangeType.Selection].Any(range => range.HasSelection());
+							var findDialog = new FindDialog { SelectionOnly = selectionOnly };
+							if (findDialog.ShowDialog() != true)
+								break;
+
+							RunSearch(findDialog.Regex, findDialog.SelectionOnly);
+							if (findDialog.SelectAll)
+							{
+								ranges[RangeType.Selection] = ranges[RangeType.Search];
+								ranges[RangeType.Search] = new List<Range>();
+								break;
+							}
+
+							FindNext(true);
 						}
+						break;
+					case "Edit_FindNext":
+					case "Edit_FindPrev":
+						FindNext(command.Name == "Edit_FindNext");
 						break;
 					case "Edit_ToUpper":
 						{
@@ -912,11 +954,9 @@ namespace NeoEdit.TextEditorUI
 							var minWidth = ranges[RangeType.Selection].Select(range => range.End - range.Start).Max();
 							var text = String.Join("", ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)));
 							var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
-							int width;
-							char padChar;
-							bool before;
-							if (WidthDialog.Run(minWidth, numeric, out width, out padChar, out before))
-								Replace(ranges[RangeType.Selection], ranges[RangeType.Selection].Select(range => SetWidth(GetString(range), width, padChar, before)).ToList(), true);
+							var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
+							if (widthDialog.ShowDialog() == true)
+								Replace(ranges[RangeType.Selection], ranges[RangeType.Selection].Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
 						}
 						break;
 					case "Edit_Trim":

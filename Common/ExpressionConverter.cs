@@ -28,8 +28,9 @@ namespace NeoEdit.Common
 		static readonly string termParts = @"'((?:[^']|'')*)'|\[(NULL)\]|\[(\d+)\]";
 		static readonly Regex termPartsRE = new Regex("^" + termParts + "$");
 
-		static readonly string typeExp = @"Type:([a-zA-z_0-9.+]*)";
-		static readonly Regex typeRE = new Regex(typeExp);
+		static readonly List<string> functions = new List<string> { "Type", "ValidRE" };
+		static readonly string functionExp = String.Format(@"\b({0}):({1})", String.Join("|", functions), term);
+		static readonly Regex functionRE = new Regex(functionExp);
 
 		static readonly List<List<string>> binaryOperator = new List<List<string>>
 		{
@@ -136,19 +137,32 @@ namespace NeoEdit.Common
 			throw new Exception("Invalid term");
 		}
 
-		bool FindTypes(ref string expression, List<object> value)
+		bool EvalFunctions(ref string expression, List<object> value)
 		{
-			var match = typeRE.Match(expression);
+			var match = functionRE.Match(expression);
 			if (!match.Success)
 				return false;
 
+			var function = match.Groups[1].Value;
+			var term = GetTerm(match.Groups[2].Value, value);
+			var termStr = (term ?? "").ToString();
+
 			var result = "[NULL]";
 
-			var type = Assembly.GetExecutingAssembly().GetType(match.Groups[1].Value);
-			if (type != null)
+			switch (function)
 			{
-				result = "[" + value.Count + "]";
-				value.Add(type);
+				case "Type":
+					var type = Assembly.GetExecutingAssembly().GetType(termStr);
+					if (type != null)
+					{
+						result = "[" + value.Count + "]";
+						value.Add(type);
+					}
+					break;
+				case "ValidRE":
+					try { new Regex(termStr); result = "'True'"; }
+					catch { result = "'False'"; }
+					break;
 			}
 
 			expression = expression.Substring(0, match.Index) + result + expression.Substring(match.Index + match.Length);
@@ -323,7 +337,7 @@ namespace NeoEdit.Common
 				if (EnterParens(ref expression, expressionStack))
 					continue;
 
-				if (FindTypes(ref expression, value))
+				if (EvalFunctions(ref expression, value))
 					continue;
 
 				if (DoBinaryOperation(ref expression, value))

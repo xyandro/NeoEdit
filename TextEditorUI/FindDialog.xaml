@@ -21,19 +21,30 @@
 				</Style.Resources>
 			</Style>
 		</StackPanel.Style>
-		
+
 		<Label Content="Search for:"/>
-		<TextBox Name="findText" Margin="0,0,0,10" Width="500"/>
+		<TextBox Name="findText" Margin="0,0,0,10" Width="500" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}"/>
 
 		<StackPanel>
 			<CheckBox Name="wholeWords" Content="_Whole words only"/>
 			<CheckBox Name="matchCase" Content="Match _case"/>
-			<CheckBox Name="regularExpression" Content="Regular _expression"/>
-			<CheckBox Name="selectionOnly" Content="_Selection only"/>
+			<CheckBox Name="regularExpression" Content="Regular _expression" IsEnabled="{Binding Text, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=ValidRE:[0]}"/>
+			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}"/>
 		</StackPanel>
-		
-		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">
-			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
+
+		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Columns="3">
+			<UniformGrid.Style>
+				<Style>
+					<Style.Resources>
+						<Style TargetType="Button">
+							<Setter Property="Margin" Value="5,0,0,0"/>
+						</Style>
+					</Style.Resources>
+				</Style>
+			</UniformGrid.Style>
+
+			<Button Click="OkClick" IsDefault="True" Content="Find _next"/>
+			<Button Name="selectAll" Click="OkClick" Content="Select _all"/>
 			<Button IsCancel="True" Content="Cancel"/>
 		</UniformGrid>
 	</StackPanel>
