@@ -923,12 +923,17 @@ namespace NeoEdit.TextEditorUI
 			InvalidateVisual();
 		}
 
-		public string SetWidth(string str, int length, char padChar, bool before)
+		string SetWidth(string str, int length, char padChar, bool before)
 		{
 			var pad = new string(padChar, length - str.Length);
 			if (before)
 				return pad + str;
 			return str + pad;
+		}
+
+		string SortStr(string str)
+		{
+			return Regex.Replace(str, @"\d+", match => new string('0', 12 - match.Value.Length) + match.Value);
 		}
 
 		public void CommandRun(UICommand command, object parameter)
@@ -1089,7 +1094,7 @@ namespace NeoEdit.TextEditorUI
 					case "Select_Sort":
 						{
 							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-							var strs = selections.Select(range => GetString(range)).OrderBy(str => str).ToList();
+							var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
 							Replace(selections, strs, true);
 						}
 						break;
