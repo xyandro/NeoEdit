@@ -63,11 +63,11 @@
     </ApplicationDefinition>
     <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
     <Compile Include="BinaryEditorUI\Crypto.cs" />
-    <Compile Include="BinaryEditorUI\Dialogs\AESKeyDialog.xaml.cs">
-      <DependentUpon>AESKeyDialog.xaml</DependentUpon>
+    <Compile Include="BinaryEditorUI\Dialogs\SymmetricKeyDialog.xaml.cs">
+      <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\Dialogs\RSAKeyDialog.xaml.cs">
-      <DependentUpon>RSAKeyDialog.xaml</DependentUpon>
+    <Compile Include="BinaryEditorUI\Dialogs\AsymmetricKeyDialog.xaml.cs">
+      <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\BinaryData.cs" />
     <Compile Include="Common\TextData.cs" />
@@ -151,11 +151,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditorUI\Dialogs\AESKeyDialog.xaml">
+    <Page Include="BinaryEditorUI\Dialogs\SymmetricKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="BinaryEditorUI\Dialogs\RSAKeyDialog.xaml">
+    <Page Include="BinaryEditorUI\Dialogs\AsymmetricKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

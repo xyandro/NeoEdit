@@ -569,81 +569,60 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Decompress_Inflate: Inflate(); break;
 					case BinaryEditor.Encrypt_AES:
 						{
-							var key = AESKeyDialog.Run();
-							if (!string.IsNullOrEmpty(key))
-								Data = Crypto.EncryptAES(Data.Data, key);
+							var type = Crypto.CryptoType.AES;
+							var keyDialog = new SymmetricKeyDialog();
+							if (keyDialog.ShowDialog() == true)
+								Data = Crypto.Encrypt(type, Data.Data, keyDialog.Key);
 						}
 						break;
 					case BinaryEditor.Decrypt_AES:
 						{
-							var key = AESKeyDialog.Run();
-							if (!string.IsNullOrEmpty(key))
-								Data = Crypto.DecryptAES(Data.Data, key);
+							var type = Crypto.CryptoType.AES;
+							var keyDialog = new SymmetricKeyDialog();
+							if (keyDialog.ShowDialog() == true)
+								Data = Crypto.Decrypt(type, Data.Data, keyDialog.Key);
 						}
 						break;
 					case BinaryEditor.Encrypt_RSA:
 						{
-							var rsaKeyDialog = new RSAKeyDialog { Public = true, CanGenerate = true };
-							if (rsaKeyDialog.ShowDialog() == true)
-								Data = Crypto.EncryptRSA(Data.Data, rsaKeyDialog.Key);
+							var type = Crypto.CryptoType.RSA;
+							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, CanGenerate = true };
+							if (keyDialog.ShowDialog() == true)
+								Data = Crypto.Encrypt(type, Data.Data, keyDialog.Key);
 						}
 						break;
 					case BinaryEditor.Decrypt_RSA:
 						{
-							var rsaKeyDialog = new RSAKeyDialog { Public = false };
-							if (rsaKeyDialog.ShowDialog() == true)
-								Data = Crypto.DecryptRSA(Data.Data, rsaKeyDialog.Key);
+							var type = Crypto.CryptoType.RSA;
+							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = false };
+							if (keyDialog.ShowDialog() == true)
+								Data = Crypto.Decrypt(type, Data.Data, keyDialog.Key);
 						}
 						break;
 					case BinaryEditor.Sign_RSA:
+					case BinaryEditor.Sign_DSA:
 						{
-							var rsaKeyDialog = new RSAKeyDialog { Public = false, GetHash = true, CanGenerate = true };
-							if (rsaKeyDialog.ShowDialog() == true)
+							var type = command.Name == BinaryEditor.Sign_RSA ? Crypto.CryptoType.RSA : Crypto.CryptoType.DSA;
+							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = false, GetHash = Crypto.UseSigningHash(type), CanGenerate = true };
+							if (keyDialog.ShowDialog() == true)
 							{
 								new Message
 								{
 									Title = "Signature:",
-									Text = Crypto.SignRSA(Data.Data, rsaKeyDialog.Key, rsaKeyDialog.Hash),
+									Text = Crypto.Sign(type, Data.Data, keyDialog.Key, keyDialog.Hash),
 									Options = Message.OptionsEnum.Ok,
 								}.Show();
 							}
 						}
 						break;
 					case BinaryEditor.Verify_RSA:
-						{
-							var rsaKeyDialog = new RSAKeyDialog { Public = true, GetHash = true, GetSignature = true };
-							if (rsaKeyDialog.ShowDialog() == true)
-							{
-								var result = Crypto.VerifyRSA(Data.Data, rsaKeyDialog.Key, rsaKeyDialog.Hash, rsaKeyDialog.Signature);
-								new Message
-								{
-									Title = "Signature:",
-									Text = result ? "Matched." : "ERROR: Signature DOES NOT match.",
-									Options = Message.OptionsEnum.Ok,
-								}.Show();
-							}
-						}
-						break;
-					case BinaryEditor.Sign_DSA:
-						{
-							var dsaKeyDialog = new RSAKeyDialog { RSA = false, Public = false, CanGenerate = true };
-							if (dsaKeyDialog.ShowDialog() == true)
-							{
-								new Message
-								{
-									Title = "Signature:",
-									Text = Crypto.SignDSA(Data.Data, dsaKeyDialog.Key),
-									Options = Message.OptionsEnum.Ok,
-								}.Show();
-							}
-						}
-						break;
 					case BinaryEditor.Verify_DSA:
 						{
-							var dsaKeyDialog = new RSAKeyDialog { RSA = false, Public = true, GetSignature = true };
-							if (dsaKeyDialog.ShowDialog() == true)
+							var type = command.Name == BinaryEditor.Verify_RSA ? Crypto.CryptoType.RSA : Crypto.CryptoType.DSA;
+							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, GetHash = Crypto.UseSigningHash(type), GetSignature = true };
+							if (keyDialog.ShowDialog() == true)
 							{
-								var result = Crypto.VerifyDSA(Data.Data, dsaKeyDialog.Key, dsaKeyDialog.Signature);
+								var result = Crypto.Verify(type, Data.Data, keyDialog.Key, keyDialog.Hash, keyDialog.Signature);
 								new Message
 								{
 									Title = "Signature:",

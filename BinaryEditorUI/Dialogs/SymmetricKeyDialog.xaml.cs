@@ -4,11 +4,11 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.BinaryEditorUI.Dialogs
 {
-	public partial class AESKeyDialog : Window
+	public partial class SymmetricKeyDialog : Window
 	{
 		public string Key { get; private set; }
 
-		AESKeyDialog()
+		public SymmetricKeyDialog()
 		{
 			InitializeComponent();
 			salt.Text = "AWdSJ9hs72TXUUqaKpYIbU2v/YONdOxf";
@@ -52,14 +52,6 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		void GenerateKey(object sender, RoutedEventArgs e)
 		{
 			Generate();
-		}
-
-		public static string Run()
-		{
-			var aesKeyDialog = new AESKeyDialog();
-			if (aesKeyDialog.ShowDialog() == false)
-				return null;
-			return aesKeyDialog.Key;
 		}
 	}
 }
