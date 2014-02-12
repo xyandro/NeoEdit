@@ -23,8 +23,6 @@ namespace NeoEdit.BinaryEditorUI
 		public const string Decompress_GZip = "Decompress_GZip";
 		public const string Compress_Deflate = "Compress_Deflate";
 		public const string Decompress_Inflate = "Decompress_Inflate";
-		public const string Encrypt_RSAAES = "Encrypt_RSAAES";
-		public const string Decrypt_RSAAES = "Decrypt_RSAAES";
 		public const string Encrypt_AES = "Encrypt_AES";
 		public const string Decrypt_AES = "Decrypt_AES";
 		public const string Encrypt_DES = "Encrypt_DES";
@@ -33,6 +31,8 @@ namespace NeoEdit.BinaryEditorUI
 		public const string Decrypt_DES3 = "Decrypt_DES3";
 		public const string Encrypt_RSA = "Encrypt_RSA";
 		public const string Decrypt_RSA = "Decrypt_RSA";
+		public const string Encrypt_RSAAES = "Encrypt_RSAAES";
+		public const string Decrypt_RSAAES = "Decrypt_RSAAES";
 		public const string Sign_RSA = "Sign_RSA";
 		public const string Verify_RSA = "Verify_RSA";
 		public const string Sign_DSA = "Sign_DSA";
