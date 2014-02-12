@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace NeoEdit.BinaryEditorUI.Dialogs
@@ -13,6 +14,16 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 			pub = _pub;
 			InitializeComponent();
 			keyLabel.Content = String.Format("{0} key (XML):", _pub ? "Public" : "Private");
+
+			IEnumerable<int> keySizes;
+			int defaultSize;
+			Crypto.GetRSAKeySizeInfo(out keySizes, out defaultSize);
+			foreach (var size in keySizes)
+			{
+				if (size == defaultSize)
+					keySize.SelectedIndex = keySize.Items.Count;
+				keySize.Items.Add(size);
+			}
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)

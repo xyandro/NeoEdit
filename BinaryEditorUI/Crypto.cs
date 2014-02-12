@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace NeoEdit.BinaryEditorUI
@@ -42,8 +44,7 @@ namespace NeoEdit.BinaryEditorUI
 
 		public static string CreateRSAPrivateKey(int keySize)
 		{
-			var rsa = new RSACryptoServiceProvider(keySize);
-			return rsa.ToXmlString(true);
+			return new RSACryptoServiceProvider(keySize).ToXmlString(true);
 		}
 
 		public static string GetRSAPublicKey(string privKey)
@@ -51,6 +52,20 @@ namespace NeoEdit.BinaryEditorUI
 			var rsa = new RSACryptoServiceProvider();
 			rsa.FromXmlString(privKey);
 			return rsa.ToXmlString(false);
+		}
+
+		public static void GetRSAKeySizeInfo(out IEnumerable<int> keySizes, out int defaultKeySize)
+		{
+			var keySet = new HashSet<int>();
+			var rsa = new RSACryptoServiceProvider();
+			defaultKeySize = rsa.KeySize;
+			foreach (var keySize in rsa.LegalKeySizes)
+			{
+				for (var size = 1; size <= keySize.MaxSize; size <<= 1)
+					if (size >= keySize.MinSize)
+						keySet.Add(size);
+			}
+			keySizes = keySet.OrderBy(size => size).ToList();
 		}
 
 		public static byte[] EncryptRSA(byte[] data, string pubKey)

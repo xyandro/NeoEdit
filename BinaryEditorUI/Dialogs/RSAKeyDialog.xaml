@@ -18,11 +18,7 @@
 				<Label Content="If you don't have a key, you may generate one."/>
 
 				<Label Content="Key _size:" Target="{Binding ElementName=keySize}"/>
-				<ComboBox IsEditable="True" HorizontalAlignment="Left" Name="keySize" Width="60" SelectedIndex="2">
-					<ComboBoxItem Content="1024"/>
-					<ComboBoxItem Content="2048"/>
-					<ComboBoxItem Content="4096"/>
-				</ComboBox>
+				<ComboBox IsEditable="True" HorizontalAlignment="Left" Name="keySize" Width="60"/>
 
 				<Label Content="_Private key:" Target="{Binding ElementName=privateKey}"/>
 				<TextBox Name="privateKey" Width="350"/>
