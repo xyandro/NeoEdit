@@ -98,12 +98,12 @@ namespace NeoEdit.BinaryEditorUI
 
 		void EncodeClick(object sender, RoutedEventArgs e)
 		{
-			var header = (e.OriginalSource as MenuItem).Header as string;
-			var encoding = BinaryData.EncodingName.None;
-			if (header != "Auto")
-				encoding = Helpers.ParseEnum<BinaryData.EncodingName>(header);
 			try
 			{
+				var header = (e.OriginalSource as MenuItem).Header as string;
+				var encoding = BinaryData.EncodingName.None;
+				if (header != "Auto")
+					encoding = Helpers.ParseEnum<BinaryData.EncodingName>(header);
 				var data = new TextData(Data, encoding);
 				new TextEditorUI.TextEditor(data);
 				this.Close();

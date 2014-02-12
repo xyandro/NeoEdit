@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using NeoEdit.Common;
@@ -100,11 +101,15 @@ namespace NeoEdit.TextEditorUI
 
 		void EncodeClick(object sender, RoutedEventArgs e)
 		{
-			var header = (e.OriginalSource as MenuItem).Header as string;
-			var encoding = Helpers.ParseEnum<BinaryData.EncodingName>(header);
-			var data = Data.GetBinaryData(encoding);
-			new BinaryEditorUI.BinaryEditor(data);
-			this.Close();
+			try
+			{
+				var header = (e.OriginalSource as MenuItem).Header as string;
+				var encoding = Helpers.ParseEnum<BinaryData.EncodingName>(header);
+				var data = Data.GetBinaryData(encoding);
+				new BinaryEditorUI.BinaryEditor(data);
+				this.Close();
+			}
+			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 		}
 	}
 }

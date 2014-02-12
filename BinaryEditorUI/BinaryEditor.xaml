@@ -46,6 +46,7 @@
 					<MenuItem Header="UTF16BE"/>
 					<MenuItem Header="UTF32LE"/>
 					<MenuItem Header="UTF32BE"/>
+					<MenuItem Header="Base64"/>
 				</MenuItem>
 				<MenuItem Header="_Typing Encoding" Click="TypeEncodingClick">
 					<MenuItem Header="UTF7" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>

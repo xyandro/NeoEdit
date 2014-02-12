@@ -74,6 +74,7 @@
 					<MenuItem Header="UTF16BE"/>
 					<MenuItem Header="UTF32LE"/>
 					<MenuItem Header="UTF32BE"/>
+					<MenuItem Header="Base64"/>
 				</MenuItem>
 				<MenuItem Command="{StaticResource Edit_BOM}" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
 			</MenuItem>
