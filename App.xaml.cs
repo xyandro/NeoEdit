@@ -27,7 +27,6 @@ namespace NeoEdit
 				}
 				Application.Current.Shutdown();
 			}
-
 		}
 	}
 }

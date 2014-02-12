@@ -38,6 +38,7 @@ namespace NeoEdit.Common
 			UTF16BE,
 			UTF32LE,
 			UTF32BE,
+			Base64,
 			Hex,
 			HexRev,
 		};
@@ -206,6 +207,7 @@ namespace NeoEdit.Common
 				case EncodingName.UTF32LE:
 				case EncodingName.UTF32BE:
 					return GetString(GetEncoding(type), index, numBytes);
+				case EncodingName.Base64: return Convert.ToBase64String(data);
 				case EncodingName.Hex: return ToHexString(index, numBytes, false);
 				case EncodingName.HexRev: return ToHexString(index, numBytes, true);
 			}
@@ -280,6 +282,7 @@ namespace NeoEdit.Common
 				case EncodingName.UTF32LE:
 				case EncodingName.UTF32BE:
 					return new BinaryData(GetEncoding(type).GetBytes(value));
+				case EncodingName.Base64: return new BinaryData(Convert.FromBase64String(value));
 				case EncodingName.Hex: return StringToHex(value, false);
 				case EncodingName.HexRev: return StringToHex(value, true);
 			}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using NeoEdit.Common;
 
 namespace NeoEdit.Test
@@ -219,6 +220,10 @@ namespace NeoEdit.Test
 			RunTest(BinaryData.EncodingName.UTF32LE, "This is my string", new byte[] { 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103, 0, 0, 0 });
 			RunTest(BinaryData.EncodingName.UTF32BE, "", new byte[] { });
 			RunTest(BinaryData.EncodingName.UTF32BE, "This is my string", new byte[] { 0, 0, 0, 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103 });
+
+			// Base64
+			RunTest(BinaryData.EncodingName.Base64, "", Encoding.UTF8.GetBytes(""));
+			RunTest(BinaryData.EncodingName.Base64, "VGhpcyBpcyBteSBzdHJpbmc=", Encoding.UTF8.GetBytes("This is my string"));
 
 			// Hex
 			RunTest(BinaryData.EncodingName.Hex, "DEADBEEF", new byte[] { 222, 173, 190, 239 });
