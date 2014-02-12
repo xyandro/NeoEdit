@@ -25,6 +25,8 @@ namespace NeoEdit.BinaryEditorUI
 		public const string Decompress_Inflate = "Decompress_Inflate";
 		public const string Encrypt_AES = "Encrypt_AES";
 		public const string Decrypt_AES = "Decrypt_AES";
+		public const string Encrypt_RSA = "Encrypt_RSA";
+		public const string Decrypt_RSA = "Decrypt_RSA";
 		public const string View_Values = "View_Values";
 
 		[DepProp]

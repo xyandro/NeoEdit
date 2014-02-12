@@ -575,6 +575,20 @@ namespace NeoEdit.BinaryEditorUI
 								Data = Crypto.DecryptAES(Data.Data, key);
 						}
 						break;
+					case BinaryEditor.Encrypt_RSA:
+						{
+							var pubKey = RSAKeyDialog.Run(true);
+							if (!string.IsNullOrEmpty(pubKey))
+								Data = Crypto.EncryptRSA(Data.Data, pubKey);
+						}
+						break;
+					case BinaryEditor.Decrypt_RSA:
+						{
+							var privKey = RSAKeyDialog.Run(false);
+							if (!string.IsNullOrEmpty(privKey))
+								Data = Crypto.DecryptRSA(Data.Data, privKey);
+						}
+						break;
 				}
 			}
 			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }

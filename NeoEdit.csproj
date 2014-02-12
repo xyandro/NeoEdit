@@ -66,6 +66,9 @@
     <Compile Include="BinaryEditorUI\Dialogs\AESKeyDialog.xaml.cs">
       <DependentUpon>AESKeyDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BinaryEditorUI\Dialogs\RSAKeyDialog.xaml.cs">
+      <DependentUpon>RSAKeyDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\BinaryData.cs" />
     <Compile Include="Common\TextData.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
@@ -149,6 +152,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="BinaryEditorUI\Dialogs\AESKeyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BinaryEditorUI\Dialogs\RSAKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

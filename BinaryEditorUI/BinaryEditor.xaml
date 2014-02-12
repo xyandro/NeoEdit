@@ -23,6 +23,8 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_Inflate}" Header="_Inflate" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
@@ -85,9 +87,11 @@
 				</MenuItem>
 				<MenuItem Header="_Encrypt">
 					<MenuItem Command="{StaticResource Encrypt_AES}"/>
+					<MenuItem Command="{StaticResource Encrypt_RSA}"/>
 				</MenuItem>
 				<MenuItem Header="Dec_rypt">
 					<MenuItem Command="{StaticResource Decrypt_AES}"/>
+					<MenuItem Command="{StaticResource Decrypt_RSA}"/>
 				</MenuItem>
 			</MenuItem>
 		</Menu>
