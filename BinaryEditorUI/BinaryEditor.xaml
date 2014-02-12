@@ -92,7 +92,7 @@
 			</MenuItem>
 		</Menu>
 		<binaryEditorUI:BinaryCanvas x:Name="canvas" Grid.Row="1"
-			Data="{Binding Data, ElementName=self, Mode=OneWay}"
+			Data="{Binding Data, ElementName=self, Mode=TwoWay}"
 			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
 			SelStart="{Binding SelStart, ElementName=self, Mode=OneWayToSource}"
 			SelEnd="{Binding SelEnd, ElementName=self, Mode=OneWayToSource}"
