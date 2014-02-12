@@ -62,6 +62,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
+    <Compile Include="BinaryEditorUI\AESKeyDialog.xaml.cs">
+      <DependentUpon>AESKeyDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\BinaryData.cs" />
     <Compile Include="Common\TextData.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
@@ -143,6 +146,10 @@
     <Page Include="BinaryEditorUI\BinaryCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BinaryEditorUI\AESKeyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="BinaryEditorUI\FindDialog.xaml">
       <SubType>Designer</SubType>

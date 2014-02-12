@@ -21,6 +21,8 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_GZip}" Header="_GZip" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Compress_Deflate}" Header="_Deflate" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_Inflate}" Header="_Inflate" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
@@ -80,6 +82,12 @@
 				<MenuItem Header="_Decompress">
 					<MenuItem Command="{StaticResource Decompress_GZip}"/>
 					<MenuItem Command="{StaticResource Decompress_Inflate}"/>
+				</MenuItem>
+				<MenuItem Header="_Encrypt">
+					<MenuItem Command="{StaticResource Encrypt_AES}"/>
+				</MenuItem>
+				<MenuItem Header="_Decrypt">
+					<MenuItem Command="{StaticResource Decrypt_AES}"/>
 				</MenuItem>
 			</MenuItem>
 		</Menu>

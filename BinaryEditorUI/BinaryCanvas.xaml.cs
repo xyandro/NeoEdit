@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -504,6 +505,30 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
+		public void EncryptAES(string key)
+		{
+			using (var aesAlg = new RijndaelManaged { Key = Convert.FromBase64String(key) })
+			using (var encryptor = aesAlg.CreateEncryptor())
+			using (var ms = new MemoryStream())
+			{
+				ms.Write(BitConverter.GetBytes(aesAlg.IV.Length), 0, sizeof(int));
+				ms.Write(aesAlg.IV, 0, aesAlg.IV.Length);
+				var encrypted = encryptor.TransformFinalBlock(Data.Data, 0, Data.Data.Length);
+				ms.Write(encrypted, 0, encrypted.Length);
+				Data = ms.ToArray();
+			}
+		}
+
+		public void DecryptAES(string key)
+		{
+			var iv = new byte[BitConverter.ToInt32(Data.Data, 0)];
+			Array.Copy(Data.Data, 4, iv, 0, iv.Length);
+
+			using (var aesAlg = new RijndaelManaged { Key = Convert.FromBase64String(key), IV = iv })
+			using (var decryptor = aesAlg.CreateDecryptor())
+				Data = decryptor.TransformFinalBlock(Data.Data, iv.Length + 4, Data.Data.Length - iv.Length - 4);
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			try
@@ -560,6 +585,20 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Decompress_GZip: GUnzip(); break;
 					case BinaryEditor.Compress_Deflate: Deflate(); break;
 					case BinaryEditor.Decompress_Inflate: Inflate(); break;
+					case BinaryEditor.Encrypt_AES:
+						{
+							var key = AESKeyDialog.Run();
+							if (!string.IsNullOrEmpty(key))
+								EncryptAES(key);
+						}
+						break;
+					case BinaryEditor.Decrypt_AES:
+						{
+							var key = AESKeyDialog.Run();
+							if (!string.IsNullOrEmpty(key))
+								DecryptAES(key);
+						}
+						break;
 				}
 			}
 			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
