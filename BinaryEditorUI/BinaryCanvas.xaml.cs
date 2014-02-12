@@ -464,7 +464,7 @@ namespace NeoEdit.BinaryEditorUI
 			e.Handled = true;
 		}
 
-		void Zip()
+		void GZip()
 		{
 			using (var ms = new MemoryStream())
 			{
@@ -474,7 +474,7 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
-		void Unzip()
+		void GUnzip()
 		{
 			using (var gz = new GZipStream(new MemoryStream(Data.Data), CompressionMode.Decompress))
 			using (var ms = new MemoryStream())
@@ -486,57 +486,61 @@ namespace NeoEdit.BinaryEditorUI
 
 		public void CommandRun(UICommand command, object parameter)
 		{
-			switch (command.Name)
+			try
 			{
-				case BinaryEditor.Edit_Cut:
-				case BinaryEditor.Edit_Copy:
-					{
-						var subset = Data.GetSubset(SelStart, SelEnd - SelStart + 1);
-						Clipboard.Current.Set(subset, SelHex);
-						if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
-							Data.Delete(SelStart, SelEnd - SelStart + 1);
-					}
-					break;
-				case BinaryEditor.Edit_Paste:
-					DoInsert(Clipboard.Current.GetBinaryData(TypeEncoding), false);
-					break;
-				case BinaryEditor.Edit_Find:
-					{
-						var results = FindDialog.Run();
-						if (results != null)
+				switch (command.Name)
+				{
+					case BinaryEditor.Edit_Cut:
+					case BinaryEditor.Edit_Copy:
 						{
-							currentFind = results;
-							FoundText = currentFind.Text;
-							DoFind();
+							var subset = Data.GetSubset(SelStart, SelEnd - SelStart + 1);
+							Clipboard.Current.Set(subset, SelHex);
+							if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
+								Data.Delete(SelStart, SelEnd - SelStart + 1);
 						}
-					}
-					break;
-				case BinaryEditor.Edit_FindNext:
-				case BinaryEditor.Edit_FindPrev:
-					DoFind(command.Name == BinaryEditor.Edit_FindNext);
-					break;
-				case BinaryEditor.Edit_Insert: Insert = !Insert; break;
-				case BinaryEditor.Checksum_MD5: new Message
-				{
-					Title = "Result",
-					Text = Data.MD5(),
-					Options = Message.OptionsEnum.Ok
-				}.Show(); break;
-				case BinaryEditor.Checksum_SHA1: new Message
-				{
-					Title = "Result",
-					Text = Data.SHA1(),
-					Options = Message.OptionsEnum.Ok
-				}.Show(); break;
-				case BinaryEditor.Checksum_SHA256: new Message
-				{
-					Title = "Result",
-					Text = Data.SHA256(),
-					Options = Message.OptionsEnum.Ok
-				}.Show(); break;
-				case BinaryEditor.Compress_Zip: Zip(); break;
-				case BinaryEditor.Decompress_Zip: Unzip(); break;
+						break;
+					case BinaryEditor.Edit_Paste:
+						DoInsert(Clipboard.Current.GetBinaryData(TypeEncoding), false);
+						break;
+					case BinaryEditor.Edit_Find:
+						{
+							var results = FindDialog.Run();
+							if (results != null)
+							{
+								currentFind = results;
+								FoundText = currentFind.Text;
+								DoFind();
+							}
+						}
+						break;
+					case BinaryEditor.Edit_FindNext:
+					case BinaryEditor.Edit_FindPrev:
+						DoFind(command.Name == BinaryEditor.Edit_FindNext);
+						break;
+					case BinaryEditor.Edit_Insert: Insert = !Insert; break;
+					case BinaryEditor.Checksum_MD5: new Message
+					{
+						Title = "Result",
+						Text = Data.MD5(),
+						Options = Message.OptionsEnum.Ok
+					}.Show(); break;
+					case BinaryEditor.Checksum_SHA1: new Message
+					{
+						Title = "Result",
+						Text = Data.SHA1(),
+						Options = Message.OptionsEnum.Ok
+					}.Show(); break;
+					case BinaryEditor.Checksum_SHA256: new Message
+					{
+						Title = "Result",
+						Text = Data.SHA256(),
+						Options = Message.OptionsEnum.Ok
+					}.Show(); break;
+					case BinaryEditor.Compress_GZip: GZip(); break;
+					case BinaryEditor.Decompress_GZip: GUnzip(); break;
+				}
 			}
+			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 		}
 
 		public bool CommandCanRun(UICommand command, object parameter)
