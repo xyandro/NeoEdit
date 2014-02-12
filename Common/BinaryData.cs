@@ -282,7 +282,7 @@ namespace NeoEdit.Common
 				case EncodingName.UTF32LE:
 				case EncodingName.UTF32BE:
 					return new BinaryData(GetEncoding(type).GetBytes(value));
-				case EncodingName.Base64: return new BinaryData(Convert.FromBase64String(value));
+				case EncodingName.Base64: return new BinaryData(Convert.FromBase64String(value.TrimStart('\ufeff')));
 				case EncodingName.Hex: return StringToHex(value, false);
 				case EncodingName.HexRev: return StringToHex(value, true);
 			}

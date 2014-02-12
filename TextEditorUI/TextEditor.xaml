@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:NeoEdit.Common"
     xmlns:textEditorUI="clr-namespace:NeoEdit.TextEditorUI"
-    Title="Text Editor" Height="400" Width="400" WindowState="Maximized">
+    Title="NeoEdit Text Editor" Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Resources>
 		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_Undo}"  Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>

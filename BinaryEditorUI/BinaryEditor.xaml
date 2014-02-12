@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:NeoEdit.Common"
     xmlns:binaryEditorUI="clr-namespace:NeoEdit.BinaryEditorUI"
-	Title="Binary Editor" Height="400" Width="400" WindowState="Maximized">
+	Title="NeoEdit Binary Editor" Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Resources>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Cut}" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>

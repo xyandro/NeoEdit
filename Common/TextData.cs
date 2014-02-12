@@ -74,7 +74,9 @@ namespace NeoEdit.Common
 			}
 
 			// Select most popular line ending
-			DefaultEnding = Enumerable.Range(0, endingIndex.Count).Select(a => GetEnding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).FirstOrDefault() ?? "\r\n";
+			DefaultEnding = Enumerable.Range(0, endingIndex.Count).Select(a => GetEnding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).FirstOrDefault();
+			if (String.IsNullOrEmpty(DefaultEnding))
+				DefaultEnding = "\r\n";
 		}
 
 		public string this[int line] { get { return GetLine(line); } }
