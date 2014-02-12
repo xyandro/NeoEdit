@@ -97,12 +97,13 @@ namespace NeoEdit.BinaryEditorUI
 						using (var alg = GetSymmetricAlgorithm(type))
 						{
 							alg.Key = Convert.FromBase64String(key);
-							var ivLen = BitConverter.ToInt32(data, 0);
-							alg.IV = new byte[ivLen];
-							Array.Copy(data, sizeof(int), alg.IV, 0, alg.IV.Length);
+
+							var iv = new byte[BitConverter.ToInt32(data, 0)];
+							Array.Copy(data, sizeof(int), iv, 0, iv.Length);
+							alg.IV = iv;
 
 							using (var decryptor = alg.CreateDecryptor())
-								return decryptor.TransformFinalBlock(data, sizeof(int) + alg.IV.Length, data.Length - sizeof(int) - alg.IV.Length);
+								return decryptor.TransformFinalBlock(data, sizeof(int) + iv.Length, data.Length - sizeof(int) - iv.Length);
 						}
 					case CryptoType.RSA: return DecryptRSA(data, key);
 				}
