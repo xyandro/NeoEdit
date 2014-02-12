@@ -568,17 +568,37 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Compress_Deflate: Deflate(); break;
 					case BinaryEditor.Decompress_Inflate: Inflate(); break;
 					case BinaryEditor.Encrypt_AES:
+					case BinaryEditor.Encrypt_DES:
+					case BinaryEditor.Encrypt_DES3:
 						{
-							var type = Crypto.CryptoType.AES;
-							var keyDialog = new SymmetricKeyDialog();
+							Crypto.CryptoType type;
+							switch (command.Name)
+							{
+								case BinaryEditor.Encrypt_AES: type = Crypto.CryptoType.AES; break;
+								case BinaryEditor.Encrypt_DES: type = Crypto.CryptoType.DES; break;
+								case BinaryEditor.Encrypt_DES3: type = Crypto.CryptoType.DES3; break;
+								default: throw new Exception();
+							}
+
+							var keyDialog = new SymmetricKeyDialog { Type = type };
 							if (keyDialog.ShowDialog() == true)
 								Data = Crypto.Encrypt(type, Data.Data, keyDialog.Key);
 						}
 						break;
 					case BinaryEditor.Decrypt_AES:
+					case BinaryEditor.Decrypt_DES:
+					case BinaryEditor.Decrypt_DES3:
 						{
-							var type = Crypto.CryptoType.AES;
-							var keyDialog = new SymmetricKeyDialog();
+							Crypto.CryptoType type;
+							switch (command.Name)
+							{
+								case BinaryEditor.Decrypt_AES: type = Crypto.CryptoType.AES; break;
+								case BinaryEditor.Decrypt_DES: type = Crypto.CryptoType.DES; break;
+								case BinaryEditor.Decrypt_DES3: type = Crypto.CryptoType.DES3; break;
+								default: throw new Exception();
+							}
+
+							var keyDialog = new SymmetricKeyDialog { Type = type }; ;
 							if (keyDialog.ShowDialog() == true)
 								Data = Crypto.Decrypt(type, Data.Data, keyDialog.Key);
 						}

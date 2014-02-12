@@ -11,6 +11,8 @@ namespace NeoEdit.BinaryEditorUI
 		public enum CryptoType
 		{
 			AES,
+			DES,
+			DES3,
 			RSA,
 			DSA,
 		}
@@ -20,6 +22,8 @@ namespace NeoEdit.BinaryEditorUI
 			switch (type)
 			{
 				case CryptoType.AES: return new AesCryptoServiceProvider();
+				case CryptoType.DES: return new DESCryptoServiceProvider();
+				case CryptoType.DES3: return new TripleDESCryptoServiceProvider();
 				default: throw new Exception("Not a symmetric type");
 			}
 		}
@@ -45,6 +49,8 @@ namespace NeoEdit.BinaryEditorUI
 			switch (type)
 			{
 				case CryptoType.AES:
+				case CryptoType.DES:
+				case CryptoType.DES3:
 					using (var alg = GetSymmetricAlgorithm(type))
 					{
 						alg.Key = Convert.FromBase64String(key);
@@ -52,7 +58,7 @@ namespace NeoEdit.BinaryEditorUI
 						using (var encryptor = alg.CreateEncryptor())
 						using (var ms = new MemoryStream())
 						{
-							ms.WriteByte((byte)alg.IV.Length);
+							ms.Write(BitConverter.GetBytes(alg.IV.Length), 0, sizeof(int));
 							ms.Write(alg.IV, 0, alg.IV.Length);
 							var encrypted = encryptor.TransformFinalBlock(data, 0, data.Length);
 							ms.Write(encrypted, 0, encrypted.Length);
@@ -71,14 +77,17 @@ namespace NeoEdit.BinaryEditorUI
 				switch (type)
 				{
 					case CryptoType.AES:
+					case CryptoType.DES:
+					case CryptoType.DES3:
 						using (var alg = GetSymmetricAlgorithm(type))
 						{
 							alg.Key = Convert.FromBase64String(key);
-							alg.IV = new byte[data[0]];
-							Array.Copy(data, 1, alg.IV, 0, alg.IV.Length);
+							var ivLen = BitConverter.ToInt32(data, 0);
+							alg.IV = new byte[ivLen];
+							Array.Copy(data, sizeof(int), alg.IV, 0, alg.IV.Length);
 
 							using (var decryptor = alg.CreateDecryptor())
-								return decryptor.TransformFinalBlock(data, alg.IV.Length + 1, data.Length - alg.IV.Length - 1);
+								return decryptor.TransformFinalBlock(data, sizeof(int) + alg.IV.Length, data.Length - sizeof(int) - alg.IV.Length);
 						}
 					case CryptoType.RSA: return DecryptRSA(data, key);
 				}
@@ -101,7 +110,21 @@ namespace NeoEdit.BinaryEditorUI
 			return alg.ToXmlString(false);
 		}
 
-		public static void GetKeySizeInfo(CryptoType type, out IEnumerable<int> keySizes, out int defaultKeySize)
+		public static void GetSymmetricKeySizeInfo(CryptoType type, out IEnumerable<int> keySizes, out int defaultKeySize)
+		{
+			var alg = GetSymmetricAlgorithm(type);
+			var keySet = new HashSet<int>();
+			defaultKeySize = alg.KeySize;
+			foreach (var keySize in alg.LegalKeySizes)
+			{
+				var skip = Math.Max(keySize.SkipSize, 1);
+				for (var size = keySize.MinSize; size <= keySize.MaxSize; size += skip)
+					keySet.Add(size);
+			}
+			keySizes = keySet.OrderBy(size => size).ToList();
+		}
+
+		public static void GetAsymmetricKeySizeInfo(CryptoType type, out IEnumerable<int> keySizes, out int defaultKeySize)
 		{
 			var alg = GetAsymmetricAlgorithm(type);
 			var keySet = new HashSet<int>();

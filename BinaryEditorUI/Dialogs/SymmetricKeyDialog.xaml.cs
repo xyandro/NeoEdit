@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Dialogs;
 
@@ -6,11 +7,33 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 {
 	public partial class SymmetricKeyDialog : Window
 	{
+		Crypto.CryptoType type;
+		public Crypto.CryptoType Type
+		{
+			get { return type; }
+			set
+			{
+				type = value;
+				keySize.Items.Clear();
+				IEnumerable<int> keySizes;
+				int defaultSize;
+				Crypto.GetSymmetricKeySizeInfo(type, out keySizes, out defaultSize);
+				foreach (var size in keySizes)
+				{
+					if (size == defaultSize)
+						keySize.SelectedIndex = keySize.Items.Count;
+					keySize.Items.Add(size);
+				}
+			}
+		}
+
 		public string Key { get; private set; }
 
 		public SymmetricKeyDialog()
 		{
 			InitializeComponent();
+
+			Type = Crypto.CryptoType.AES;
 			salt.Text = "AWdSJ9hs72TXUUqaKpYIbU2v/YONdOxf";
 		}
 

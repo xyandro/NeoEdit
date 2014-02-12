@@ -39,7 +39,7 @@
 
 		<GroupBox Header="Formatting note">
 			<TextBlock HorizontalAlignment="Left" Width="350" TextWrapping="Wrap">
-			The IV will be placed or read from the start of the data, preceeded by a one-byte byte count, which should always be 16 (128 bits).
+			The IV will be at the start of the data, preceeded by an int byte count.
 			</TextBlock>
 		</GroupBox>
 

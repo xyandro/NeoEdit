@@ -23,6 +23,10 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_Inflate}" Header="_Inflate" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_DES}" Header="_DES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_DES}" Header="_DES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_DES3}" Header="_3DES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_DES3}" Header="_3DES" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Sign_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -91,10 +95,14 @@
 				</MenuItem>
 				<MenuItem Header="_Encrypt">
 					<MenuItem Command="{StaticResource Encrypt_AES}"/>
+					<MenuItem Command="{StaticResource Encrypt_DES}"/>
+					<MenuItem Command="{StaticResource Encrypt_DES3}"/>
 					<MenuItem Command="{StaticResource Encrypt_RSA}"/>
 				</MenuItem>
 				<MenuItem Header="Dec_rypt">
 					<MenuItem Command="{StaticResource Decrypt_AES}"/>
+					<MenuItem Command="{StaticResource Decrypt_DES}"/>
+					<MenuItem Command="{StaticResource Decrypt_DES3}"/>
 					<MenuItem Command="{StaticResource Decrypt_RSA}"/>
 				</MenuItem>
 				<MenuItem Header="_Sign">

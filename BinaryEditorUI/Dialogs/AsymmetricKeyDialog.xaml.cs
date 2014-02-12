@@ -16,7 +16,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 				keySize.Items.Clear();
 				IEnumerable<int> keySizes;
 				int defaultSize;
-				Crypto.GetKeySizeInfo(type, out keySizes, out defaultSize);
+				Crypto.GetAsymmetricKeySizeInfo(type, out keySizes, out defaultSize);
 				foreach (var size in keySizes)
 				{
 					if (size == defaultSize)
