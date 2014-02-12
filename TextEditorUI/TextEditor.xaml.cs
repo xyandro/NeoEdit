@@ -97,5 +97,14 @@ namespace NeoEdit.TextEditorUI
 			var header = (sender as MenuItem).Header.ToString();
 			HighlightType = Helpers.ParseEnum<Highlighting.HighlightingType>(header);
 		}
+
+		void EncodeClick(object sender, RoutedEventArgs e)
+		{
+			var header = (e.OriginalSource as MenuItem).Header as string;
+			var encoding = Helpers.ParseEnum<BinaryData.EncodingName>(header);
+			var data = Data.GetBinaryData(encoding);
+			new BinaryEditorUI.BinaryEditor(data);
+			this.Close();
+		}
 	}
 }

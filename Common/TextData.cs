@@ -30,6 +30,11 @@ namespace NeoEdit.Common
 			data = binaryData.ToString(encoding);
 		}
 
+		public BinaryData GetBinaryData(BinaryData.EncodingName encoding = BinaryData.EncodingName.UTF8)
+		{
+			return BinaryData.FromString(encoding, data);
+		}
+
 		public void Undo()
 		{
 			if (undoHistory.Count == 1)

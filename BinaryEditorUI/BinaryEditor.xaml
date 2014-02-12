@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:NeoEdit.Common"
     xmlns:binaryEditorUI="clr-namespace:NeoEdit.BinaryEditorUI"
-	Title="Binary Editor" Height="400" Width="400">
+	Title="Binary Editor" Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Resources>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Cut}" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -38,6 +38,15 @@
 				<MenuItem Command="{StaticResource Edit_FindPrev}"/>
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_Insert}" IsChecked="{Binding Insert, ElementName=self}"/>
+				<MenuItem Header="_Encode" Click="EncodeClick">
+					<MenuItem Header="Auto"/>
+					<MenuItem Header="UTF8"/>
+					<MenuItem Header="UTF7"/>
+					<MenuItem Header="UTF16LE"/>
+					<MenuItem Header="UTF16BE"/>
+					<MenuItem Header="UTF32LE"/>
+					<MenuItem Header="UTF32BE"/>
+				</MenuItem>
 				<MenuItem Header="_Typing Encoding" Click="TypeEncodingClick">
 					<MenuItem Header="UTF7" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
 					<MenuItem Header="UTF8" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>

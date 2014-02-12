@@ -67,6 +67,14 @@
 				<MenuItem Command="{StaticResource Edit_GotoLine}"/>
 				<MenuItem Command="{StaticResource Edit_GotoIndex}"/>
 				<Separator/>
+				<MenuItem Header="_Encode" Click="EncodeClick">
+					<MenuItem Header="UTF8"/>
+					<MenuItem Header="UTF7"/>
+					<MenuItem Header="UTF16LE"/>
+					<MenuItem Header="UTF16BE"/>
+					<MenuItem Header="UTF32LE"/>
+					<MenuItem Header="UTF32BE"/>
+				</MenuItem>
 				<MenuItem Command="{StaticResource Edit_BOM}" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
