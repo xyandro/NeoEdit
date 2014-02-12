@@ -48,14 +48,6 @@ namespace NeoEdit.TextEditorUI
 		static TextEditor() { UIHelper<TextEditor>.Register(); }
 
 		readonly UIHelper<TextEditor> uiHelper;
-		public TextEditor() : this(GetData()) { }
-
-		static TextData GetData()
-		{
-			var bytes = new BinaryData(System.IO.File.ReadAllBytes(@"C:\Docs\Cpp\NeoEdit\bin\Debug\Clipboard.cs"));
-			return new TextData(bytes);
-		}
-
 		public TextEditor(TextData data)
 		{
 			uiHelper = new UIHelper<TextEditor>(this);
