@@ -21,6 +21,8 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_GZip}" Header="_GZip" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Compress_Deflate}" Header="_Deflate" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_Inflate}" Header="_Inflate" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_RSAAES}" Header="RSA/AES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_RSAAES}" Header="RSA/AES" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_DES}" Header="_DES" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -94,12 +96,14 @@
 					<MenuItem Command="{StaticResource Decompress_Inflate}"/>
 				</MenuItem>
 				<MenuItem Header="_Encrypt">
+					<MenuItem Command="{StaticResource Encrypt_RSAAES}"/>
 					<MenuItem Command="{StaticResource Encrypt_AES}"/>
 					<MenuItem Command="{StaticResource Encrypt_DES}"/>
 					<MenuItem Command="{StaticResource Encrypt_DES3}"/>
 					<MenuItem Command="{StaticResource Encrypt_RSA}"/>
 				</MenuItem>
 				<MenuItem Header="Dec_rypt">
+					<MenuItem Command="{StaticResource Decrypt_RSAAES}"/>
 					<MenuItem Command="{StaticResource Decrypt_AES}"/>
 					<MenuItem Command="{StaticResource Decrypt_DES}"/>
 					<MenuItem Command="{StaticResource Decrypt_DES3}"/>

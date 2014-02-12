@@ -96,7 +96,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		void GenerateKey(object sender, RoutedEventArgs e)
 		{
 			if (String.IsNullOrEmpty(privateKey.Text))
-				privateKey.Text = Crypto.GeneratePrivateKey(Type, Int32.Parse(keySize.Text));
+				privateKey.Text = Crypto.GenerateKey(Type, Int32.Parse(keySize.Text));
 			publicKey.Text = Crypto.GetPublicKey(Type, privateKey.Text);
 			key.Text = isPublic ? publicKey.Text : privateKey.Text;
 		}

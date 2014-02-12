@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -567,6 +568,39 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Decompress_GZip: GUnzip(); break;
 					case BinaryEditor.Compress_Deflate: Deflate(); break;
 					case BinaryEditor.Decompress_Inflate: Inflate(); break;
+					case BinaryEditor.Encrypt_RSAAES:
+						{
+							var keyDialog = new AsymmetricKeyDialog { Type = Crypto.CryptoType.RSA, Public = true, CanGenerate = true };
+							if (keyDialog.ShowDialog() == true)
+							{
+								var aesKey = Crypto.GenerateKey(Crypto.CryptoType.AES, 0);
+								using (var ms = new MemoryStream())
+								{
+									var encryptedAesKey = Crypto.Encrypt(Crypto.CryptoType.RSA, Encoding.UTF8.GetBytes(aesKey), keyDialog.Key);
+									ms.Write(BitConverter.GetBytes(encryptedAesKey.Length), 0, sizeof(int));
+									ms.Write(encryptedAesKey, 0, encryptedAesKey.Length);
+
+									var encryptedData = Crypto.Encrypt(Crypto.CryptoType.AES, Data.Data, aesKey);
+									ms.Write(encryptedData, 0, encryptedData.Length);
+
+									Data = ms.ToArray();
+								}
+							}
+						}
+						break;
+					case BinaryEditor.Decrypt_RSAAES:
+						{
+							var keyDialog = new AsymmetricKeyDialog { Type = Crypto.CryptoType.RSA, Public = false };
+							if (keyDialog.ShowDialog() == true)
+							{
+								var encryptedAesKey = new byte[BitConverter.ToInt32(Data.Data, 0)];
+								Array.Copy(Data.Data, sizeof(int), encryptedAesKey, 0, encryptedAesKey.Length);
+								var aesKey = Encoding.UTF8.GetString(Crypto.Decrypt(Crypto.CryptoType.RSA, encryptedAesKey, keyDialog.Key));
+								var data = Data.Data.Skip(sizeof(int) + encryptedAesKey.Length).ToArray();
+								Data = Crypto.Decrypt(Crypto.CryptoType.AES, data, aesKey);
+							}
+						}
+						break;
 					case BinaryEditor.Encrypt_AES:
 					case BinaryEditor.Encrypt_DES:
 					case BinaryEditor.Encrypt_DES3:

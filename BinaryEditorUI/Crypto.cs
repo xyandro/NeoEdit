@@ -17,6 +17,21 @@ namespace NeoEdit.BinaryEditorUI
 			DSA,
 		}
 
+		static bool IsSymmetric(CryptoType type)
+		{
+			switch (type)
+			{
+				case CryptoType.AES:
+				case CryptoType.DES:
+				case CryptoType.DES3:
+					return true;
+				case CryptoType.RSA:
+				case CryptoType.DSA:
+					return false;
+			}
+			throw new Exception("Invalid query");
+		}
+
 		static SymmetricAlgorithm GetSymmetricAlgorithm(CryptoType type)
 		{
 			switch (type)
@@ -96,11 +111,22 @@ namespace NeoEdit.BinaryEditorUI
 			catch (Exception ex) { throw new Exception(String.Format("Decryption failed: {0}", ex.Message), ex); }
 		}
 
-		public static string GeneratePrivateKey(CryptoType type, int keySize)
+		public static string GenerateKey(CryptoType type, int keySize)
 		{
-			var alg = GetAsymmetricAlgorithm(type);
-			alg.KeySize = keySize;
-			return alg.ToXmlString(true);
+			if (IsSymmetric(type))
+			{
+				var alg = GetSymmetricAlgorithm(type);
+				if (keySize != 0)
+					alg.KeySize = keySize;
+				return Convert.ToBase64String(alg.Key);
+			}
+			else
+			{
+				var alg = GetAsymmetricAlgorithm(type);
+				if (keySize != 0)
+					alg.KeySize = keySize;
+				return alg.ToXmlString(true);
+			}
 		}
 
 		public static string GetPublicKey(CryptoType type, string privKey)
