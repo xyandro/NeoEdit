@@ -7,7 +7,16 @@ namespace NeoEdit.Dialogs
 {
 	public partial class Message : Window
 	{
-		public enum Options
+		[DepProp]
+		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public OptionsEnum Options { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public OptionsEnum DefaultYes { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public OptionsEnum DefaultNo { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
+
+		public enum OptionsEnum
 		{
 			None = 0,
 			Yes = 1,
@@ -18,25 +27,26 @@ namespace NeoEdit.Dialogs
 			NoToAll = 8,
 			YesNoNoAll = 11,
 			YesNoYesAllNoAll = 15,
+			Ok = 16,
 		}
 
-		static Dictionary<Options, string> buttonContent = new Dictionary<Options, string>()
+		static Dictionary<OptionsEnum, string> buttonContent = new Dictionary<OptionsEnum, string>()
 		{
-			{ Options.Yes, "_Yes" },
-			{ Options.No, "_No" },
-			{ Options.YesToAll, "Yes to _all" },
-			{ Options.NoToAll, "No to all" },
+			{ OptionsEnum.Yes, "_Yes" },
+			{ OptionsEnum.No, "_No" },
+			{ OptionsEnum.YesToAll, "Yes to _all" },
+			{ OptionsEnum.NoToAll, "No to all" },
+			{ OptionsEnum.Ok, "Ok" },
 		};
 
-		public static Options Show(string text, string title, Options options, Options defaultYes, Options defaultNo = Options.None)
+		public new OptionsEnum Show()
 		{
-			var message = new Message(text, title, options, defaultYes, defaultNo);
-			message.ShowDialog();
-			return message.Answer;
+			ShowDialog();
+			return Answer;
 		}
 
-		Dictionary<Button, Options> buttonActions = new Dictionary<Button, Options>();
-		public Options Answer { get; private set; }
+		Dictionary<Button, OptionsEnum> buttonActions = new Dictionary<Button, OptionsEnum>();
+		public OptionsEnum Answer { get; private set; }
 
 		static bool IsPowerOfTwo(int x)
 		{
@@ -46,32 +56,40 @@ namespace NeoEdit.Dialogs
 		static Message() { UIHelper<Message>.Register(); }
 
 		readonly UIHelper<Message> uiHelper;
-		public Message(string text, string title, Options options, Options defaultYes, Options defaultNo = Options.None)
+		public Message()
 		{
 			uiHelper = new UIHelper<Message>(this);
 			InitializeComponent();
 
-			Title = title;
-			label.Content = text;
-			Answer = defaultNo;
+			Answer = DefaultNo;
 
-			foreach (var option in Helpers.GetValues<Options>())
+			Loaded += (s, e) => SetupButtons();
+			uiHelper.AddCallback(a => a.Options, (o, n) => SetupButtons());
+			uiHelper.AddCallback(a => a.DefaultYes, (o, n) => SetupButtons());
+			uiHelper.AddCallback(a => a.DefaultNo, (o, n) => SetupButtons());
+		}
+
+		void SetupButtons()
+		{
+			buttons.Children.Clear();
+			foreach (var option in Helpers.GetValues<OptionsEnum>())
 			{
-				if ((!IsPowerOfTwo((int)option)) || ((options & option) == 0))
+				if ((!IsPowerOfTwo((int)option)) || ((Options & option) == 0))
 					continue;
 
 				var button = new Button
 				{
 					Content = buttonContent[option],
-					IsDefault = option == defaultYes,
-					IsCancel = option == defaultNo,
+					IsDefault = option == DefaultYes,
+					IsCancel = option == DefaultNo,
 				};
 				buttonActions[button] = option;
 				buttons.Children.Add(button);
 			}
+
 		}
 
-		void buttonHandler(object sender, RoutedEventArgs e)
+		void ButtonHandler(object sender, RoutedEventArgs e)
 		{
 			Answer = buttonActions[sender as Button];
 			DialogResult = true;

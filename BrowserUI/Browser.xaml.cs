@@ -249,12 +249,26 @@ namespace NeoEdit.BrowserUI
 							var record = records.Single();
 							var rename = new Rename(record);
 							if (rename.ShowDialog() == true)
-								record.Rename(rename.RecordName, () => Message.Show("File already exists.  Overwrite?", "Warning", Message.Options.YesNo, Message.Options.Yes, Message.Options.No) == Message.Options.Yes);
+								record.Rename(rename.RecordName, () => new Message
+								{
+									Title = "Warning",
+									Text = "File already exists.  Overwrite?",
+									Options = Message.OptionsEnum.YesNo,
+									DefaultYes = Message.OptionsEnum.Yes,
+									DefaultNo = Message.OptionsEnum.No,
+								}.Show() == Message.OptionsEnum.Yes);
 						}
 						break;
 					case RecordAction.ActionName.Delete:
 						{
-							if (Message.Show("Are you sure you want to delete these items?", "Confirm", Message.Options.YesNo, Message.Options.Yes, Message.Options.No) == Message.Options.Yes)
+							if (new Message
+							{
+								Title = "Confirm",
+								Text = "Are you sure you want to delete these items?",
+								Options = Message.OptionsEnum.YesNo,
+								DefaultYes = Message.OptionsEnum.Yes,
+								DefaultNo = Message.OptionsEnum.No,
+							}.Show() == Message.OptionsEnum.Yes)
 							{
 								foreach (var record in records)
 									record.Delete();
