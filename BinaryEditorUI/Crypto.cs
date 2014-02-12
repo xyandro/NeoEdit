@@ -110,12 +110,10 @@ namespace NeoEdit.BinaryEditorUI
 			return alg.ToXmlString(false);
 		}
 
-		public static void GetSymmetricKeySizeInfo(CryptoType type, out IEnumerable<int> keySizes, out int defaultKeySize)
+		public static void GetKeySizeInfo(KeySizes[] legalKeySizes, out IEnumerable<int> keySizes)
 		{
-			var alg = GetSymmetricAlgorithm(type);
 			var keySet = new HashSet<int>();
-			defaultKeySize = alg.KeySize;
-			foreach (var keySize in alg.LegalKeySizes)
+			foreach (var keySize in legalKeySizes)
 			{
 				var skip = Math.Max(keySize.SkipSize, 1);
 				for (var size = keySize.MinSize; size <= keySize.MaxSize; size += skip)
@@ -124,18 +122,18 @@ namespace NeoEdit.BinaryEditorUI
 			keySizes = keySet.OrderBy(size => size).ToList();
 		}
 
+		public static void GetSymmetricKeySizeInfo(CryptoType type, out IEnumerable<int> keySizes, out int defaultKeySize)
+		{
+			var alg = GetSymmetricAlgorithm(type);
+			GetKeySizeInfo(alg.LegalKeySizes, out keySizes);
+			defaultKeySize = alg.KeySize;
+		}
+
 		public static void GetAsymmetricKeySizeInfo(CryptoType type, out IEnumerable<int> keySizes, out int defaultKeySize)
 		{
 			var alg = GetAsymmetricAlgorithm(type);
-			var keySet = new HashSet<int>();
+			GetKeySizeInfo(alg.LegalKeySizes, out keySizes);
 			defaultKeySize = alg.KeySize;
-			foreach (var keySize in alg.LegalKeySizes)
-			{
-				for (var size = 1; size <= keySize.MaxSize; size <<= 1)
-					if (size >= keySize.MinSize)
-						keySet.Add(size);
-			}
-			keySizes = keySet.OrderBy(size => size).ToList();
 		}
 
 		static byte[] EncryptRSA(byte[] data, string pubKey)
