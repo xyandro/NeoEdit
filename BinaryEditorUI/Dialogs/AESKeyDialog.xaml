@@ -28,7 +28,10 @@
 				<TextBox Name="password" Width="350"/>
 
 				<Label Content="S_alt:" Target="{Binding ElementName=salt}"/>
-				<TextBox Name="salt" Width="350"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBox Name="salt" Width="285"/>
+					<Button Click="RandomizeSalt"  Content="Randomize" Width="65"/>
+				</StackPanel>
 
 				<Button HorizontalAlignment="Right" Click="GenerateKey" Content="_Generate"/>
 			</StackPanel>

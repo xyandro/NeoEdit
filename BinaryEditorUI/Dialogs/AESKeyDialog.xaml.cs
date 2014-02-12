@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Security.Cryptography;
-using System.Text;
 using System.Windows;
+using NeoEdit.Dialogs;
 
 namespace NeoEdit.BinaryEditorUI.Dialogs
 {
@@ -12,7 +11,24 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		AESKeyDialog()
 		{
 			InitializeComponent();
-			salt.Text = "j8g+rM6ouNIvQptlGiDnXo9KvEI89WLXre+FbaRHzp0=";
+			salt.Text = "AWdSJ9hs72TXUUqaKpYIbU2v/YONdOxf";
+		}
+
+		void RandomizeSalt(object sender, RoutedEventArgs e)
+		{
+			if (new Message
+			{
+				Title = "Please confirm",
+				Text = "This value and the password together are required to generate the key.  Are you sure you want to change it?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultYes = Message.OptionsEnum.Yes,
+				DefaultNo = Message.OptionsEnum.No,
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			var bytes = new byte[24];
+			new Random().NextBytes(bytes);
+			salt.Text = Convert.ToBase64String(bytes);
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)
@@ -30,9 +46,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 			if ((String.IsNullOrEmpty(password.Text)) || (String.IsNullOrEmpty(salt.Text)))
 				return;
 
-			using (var byteGenerator = new Rfc2898DeriveBytes(password.Text, Encoding.ASCII.GetBytes(salt.Text)))
-			using (var aesAlg = new RijndaelManaged { KeySize = Int32.Parse(keySize.Text) })
-				key.Text = Convert.ToBase64String(byteGenerator.GetBytes(aesAlg.KeySize / 8));
+			key.Text = Crypto.GetRfc2898Key(password.Text, salt.Text, Int32.Parse(keySize.Text));
 		}
 
 		void GenerateKey(object sender, RoutedEventArgs e)

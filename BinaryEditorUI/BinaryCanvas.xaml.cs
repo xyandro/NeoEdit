@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -506,34 +505,6 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
-		public void EncryptAES(string key)
-		{
-			using (var aesAlg = new RijndaelManaged { Key = Convert.FromBase64String(key) })
-			using (var encryptor = aesAlg.CreateEncryptor())
-			using (var ms = new MemoryStream())
-			{
-				ms.WriteByte((byte)aesAlg.IV.Length);
-				ms.Write(aesAlg.IV, 0, aesAlg.IV.Length);
-				var encrypted = encryptor.TransformFinalBlock(Data.Data, 0, Data.Data.Length);
-				ms.Write(encrypted, 0, encrypted.Length);
-				Data = ms.ToArray();
-			}
-		}
-
-		public void DecryptAES(string key)
-		{
-			try
-			{
-				var iv = new byte[Data.Data[0]];
-				Array.Copy(Data.Data, 1, iv, 0, iv.Length);
-
-				using (var aesAlg = new RijndaelManaged { Key = Convert.FromBase64String(key), IV = iv })
-				using (var decryptor = aesAlg.CreateDecryptor())
-					Data = decryptor.TransformFinalBlock(Data.Data, iv.Length + 1, Data.Data.Length - iv.Length - 1);
-			}
-			catch (Exception ex) { throw new Exception(String.Format("Decryption failed: {0}", ex.Message), ex); }
-		}
-
 		public void CommandRun(UICommand command, object parameter)
 		{
 			try
@@ -594,14 +565,14 @@ namespace NeoEdit.BinaryEditorUI
 						{
 							var key = AESKeyDialog.Run();
 							if (!string.IsNullOrEmpty(key))
-								EncryptAES(key);
+								Data = Crypto.EncryptAES(Data.Data, key);
 						}
 						break;
 					case BinaryEditor.Decrypt_AES:
 						{
 							var key = AESKeyDialog.Run();
 							if (!string.IsNullOrEmpty(key))
-								DecryptAES(key);
+								Data = Crypto.DecryptAES(Data.Data, key);
 						}
 						break;
 				}

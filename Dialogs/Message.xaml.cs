@@ -72,6 +72,7 @@ namespace NeoEdit.Dialogs
 		void SetupButtons()
 		{
 			buttons.Children.Clear();
+
 			foreach (var option in Helpers.GetValues<OptionsEnum>())
 			{
 				if ((!IsPowerOfTwo((int)option)) || ((Options & option) == 0))
@@ -87,6 +88,7 @@ namespace NeoEdit.Dialogs
 				buttons.Children.Add(button);
 			}
 
+			buttons.Columns = buttons.Children.Count;
 		}
 
 		void ButtonHandler(object sender, RoutedEventArgs e)
