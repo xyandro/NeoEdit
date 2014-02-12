@@ -1071,12 +1071,13 @@ namespace NeoEdit.TextEditorUI
 						break;
 					case TextEditor.Data_Width:
 						{
-							var minWidth = ranges[RangeType.Selection].Select(range => range.End - range.Start).Max();
-							var text = String.Join("", ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)));
+							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+							var minWidth = selections.Select(range => range.End - range.Start).Max();
+							var text = String.Join("", selections.Select(range => GetString(range)));
 							var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
 							var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
 							if (widthDialog.ShowDialog() == true)
-								Replace(ranges[RangeType.Selection], ranges[RangeType.Selection].Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
+								Replace(selections, selections.Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
 						}
 						break;
 					case TextEditor.Data_Trim:
