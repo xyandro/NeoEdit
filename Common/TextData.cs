@@ -8,6 +8,7 @@ namespace NeoEdit.Common
 {
 	public class TextData
 	{
+		const char BOMChar = '\ufeff';
 		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
 		Stack<string> undoHistory = new Stack<string>();
 		Stack<string> redoHistory = new Stack<string>();
@@ -17,6 +18,9 @@ namespace NeoEdit.Common
 		List<int> endingIndex;
 		List<int> endingLength;
 		public string DefaultEnding { get; private set; }
+
+		public int NumLines { get { return lineIndex.Count; } }
+		public bool BOM { get; private set; }
 
 		public TextData(BinaryData binaryData, BinaryData.EncodingName encoding = BinaryData.EncodingName.None)
 		{
@@ -51,8 +55,8 @@ namespace NeoEdit.Common
 			endingIndex = new List<int>();
 			endingLength = new List<int>();
 
-			var bom = (data.Length > 0) && (data[0] == '\ufeff');
-			var matches = RecordsRE.Matches(data, bom ? 1 : 0);
+			BOM = (data.Length > 0) && (data[0] == BOMChar);
+			var matches = RecordsRE.Matches(data, BOM ? 1 : 0);
 
 			foreach (Match match in matches)
 			{
@@ -153,7 +157,7 @@ namespace NeoEdit.Common
 
 		public int GetOppositeBracket(int offset)
 		{
-			if ((offset < 1) || (offset >= data.Length))
+			if ((offset < 0) || (offset > data.Length))
 				return -1;
 
 			var dict = new Dictionary<char, char>
@@ -163,21 +167,19 @@ namespace NeoEdit.Common
 				{ '[', ']' },
 			};
 
-			int direction = 1;
-
-			var found = dict.FirstOrDefault(entry => entry.Key == data[offset]);
+			var found = default(KeyValuePair<char, char>);
+			if ((found.Key == 0) && (offset < data.Length))
+				found = dict.FirstOrDefault(entry => (entry.Key == data[offset]) || (entry.Value == data[offset]));
 			if (found.Key == 0)
 			{
-				--offset;
-				found = dict.FirstOrDefault(entry => entry.Key == data[offset]);
-			}
-			if (found.Key == 0)
-			{
-				direction = -1;
-				found = dict.FirstOrDefault(entry => entry.Value == data[offset]);
+				if (--offset < 0)
+					return -1;
+				found = dict.FirstOrDefault(entry => (entry.Key == data[offset]) || (entry.Value == data[offset]));
 			}
 			if (found.Key == 0)
 				return -1;
+
+			var direction = found.Key == data[offset] ? 1 : -1;
 
 			var num = 0;
 			for (; offset < data.Length; offset += direction)
@@ -194,6 +196,21 @@ namespace NeoEdit.Common
 			return -1;
 		}
 
-		public int NumLines { get { return lineIndex.Count; } }
+		public int SetBOM(bool bom)
+		{
+			if (BOM == bom)
+				return 0;
+
+			if (bom)
+			{
+				data = BOMChar + data;
+				return 1;
+			}
+			else
+			{
+				data = data.Substring(1);
+				return -1;
+			}
+		}
 	}
 }

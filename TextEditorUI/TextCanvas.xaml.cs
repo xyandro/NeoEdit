@@ -44,6 +44,8 @@ namespace NeoEdit.TextEditorUI
 		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public bool HasBOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public int Line { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public int Index { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
@@ -225,6 +227,7 @@ namespace NeoEdit.TextEditorUI
 			if (Data == null)
 				return;
 
+			HasBOM = Data.BOM;
 			var columns = Enumerable.Range(0, Data.NumLines).Select(lineNum => Data[lineNum]).Select(line => GetColumnFromIndex(line, line.Length)).Max();
 
 			xScrollMaximum = columns * charWidth - ActualWidth;
@@ -535,17 +538,22 @@ namespace NeoEdit.TextEditorUI
 					AddText(Data.DefaultEnding);
 					break;
 				case Key.OemCloseBrackets:
-					foreach (var selection in ranges[RangeType.Selection])
+					if (controlDown)
 					{
-						var newPos = Data.GetOppositeBracket(selection.Pos1);
-						if (newPos != -1)
+						foreach (var selection in ranges[RangeType.Selection])
 						{
-							var line = Data.GetOffsetLine(newPos);
-							var index = Data.GetOffsetIndex(newPos, line);
-							SetPos1(selection, line, index, false, false);
+							var newPos = Data.GetOppositeBracket(selection.Pos1);
+							if (newPos != -1)
+							{
+								var line = Data.GetOffsetLine(newPos);
+								var index = Data.GetOffsetIndex(newPos, line);
+								SetPos1(selection, line, index, false, false);
+							}
 						}
+						InvalidateVisual();
 					}
-					InvalidateVisual();
+					else
+						e.Handled = false;
 					break;
 				case Key.System:
 					switch (e.SystemKey)
@@ -1065,6 +1073,17 @@ namespace NeoEdit.TextEditorUI
 							var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 							var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
 							Replace(selections, strs, true);
+						}
+						break;
+					case "Edit_BOM":
+						{
+							var offset = Data.SetBOM(!Data.BOM);
+							foreach (var rangeEntry in ranges)
+								foreach (var range in rangeEntry.Value)
+								{
+									range.Pos1 += offset;
+									range.Pos2 += offset;
+								}
 						}
 						break;
 					case "Select_All":
