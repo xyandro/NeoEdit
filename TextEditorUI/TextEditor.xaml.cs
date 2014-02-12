@@ -7,6 +7,38 @@ namespace NeoEdit.TextEditorUI
 {
 	public partial class TextEditor : Window
 	{
+		public const string Edit_Undo = "Edit_Undo";
+		public const string Edit_Redo = "Edit_Redo";
+		public const string Edit_Cut = "Edit_Cut";
+		public const string Edit_Copy = "Edit_Copy";
+		public const string Edit_Paste = "Edit_Paste";
+		public const string Edit_Find = "Edit_Find";
+		public const string Edit_FindNext = "Edit_FindNext";
+		public const string Edit_FindPrev = "Edit_FindPrev";
+		public const string Edit_GotoLine = "Edit_GotoLine";
+		public const string Edit_GotoIndex = "Edit_GotoIndex";
+		public const string Edit_BOM = "Edit_BOM";
+		public const string Data_ToUpper = "Data_ToUpper";
+		public const string Data_ToLower = "Data_ToLower";
+		public const string Data_ToHex = "Data_ToHex";
+		public const string Data_FromHex = "Data_FromHex";
+		public const string Data_ToChar = "Data_ToChar";
+		public const string Data_FromChar = "Data_FromChar";
+		public const string Data_Width = "Data_Width";
+		public const string Data_Trim = "Data_Trim";
+		public const string Select_All = "Select_All";
+		public const string Select_Unselect = "Select_Unselect";
+		public const string Select_Single = "Select_Single";
+		public const string Select_Lines = "Select_Lines";
+		public const string Select_Marks = "Select_Marks";
+		public const string Select_Find = "Select_Find";
+		public const string Select_Reverse = "Select_Reverse";
+		public const string Select_Sort = "Select_Sort";
+		public const string Mark_Selection = "Mark_Selection";
+		public const string Mark_Find = "Mark_Find";
+		public const string Mark_Clear = "Mark_Clear";
+		public const string Mark_LimitToSelection = "Mark_LimitToSelection";
+
 		[DepProp]
 		public TextData Data { get { return uiHelper.GetPropValue<TextData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
