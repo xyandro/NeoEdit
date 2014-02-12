@@ -465,19 +465,19 @@ namespace NeoEdit.BinaryEditorUI
 		{
 			switch (command.Name)
 			{
-				case "Edit_Cut":
-				case "Edit_Copy":
+				case BinaryEditor.Edit_Cut:
+				case BinaryEditor.Edit_Copy:
 					{
 						var subset = Data.GetSubset(SelStart, SelEnd - SelStart + 1);
 						Clipboard.Current.Set(subset, SelHex);
-						if ((command.Name == "Edit_Cut") && (Insert))
+						if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
 							Data.Delete(SelStart, SelEnd - SelStart + 1);
 					}
 					break;
-				case "Edit_Paste":
+				case BinaryEditor.Edit_Paste:
 					DoInsert(Clipboard.Current.GetBinaryData(TypeEncoding), false);
 					break;
-				case "Edit_Find":
+				case BinaryEditor.Edit_Find:
 					{
 						var results = FindDialog.Run();
 						if (results != null)
@@ -488,11 +488,11 @@ namespace NeoEdit.BinaryEditorUI
 						}
 					}
 					break;
-				case "Edit_FindNext":
-				case "Edit_FindPrev":
-					DoFind(command.Name == "Edit_FindNext");
+				case BinaryEditor.Edit_FindNext:
+				case BinaryEditor.Edit_FindPrev:
+					DoFind(command.Name == BinaryEditor.Edit_FindNext);
 					break;
-				case "Edit_Insert": Insert = !Insert; break;
+				case BinaryEditor.Edit_Insert: Insert = !Insert; break;
 			}
 		}
 

@@ -8,6 +8,15 @@ namespace NeoEdit.BinaryEditorUI
 {
 	public partial class BinaryEditor : Window
 	{
+		public const string Edit_Cut = "Edit_Cut";
+		public const string Edit_Copy = "Edit_Copy";
+		public const string Edit_Paste = "Edit_Paste";
+		public const string Edit_Find = "Edit_Find";
+		public const string Edit_FindNext = "Edit_FindNext";
+		public const string Edit_FindPrev = "Edit_FindPrev";
+		public const string Edit_Insert = "Edit_Insert";
+		public const string View_Values = "View_Values";
+
 		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -71,7 +80,7 @@ namespace NeoEdit.BinaryEditorUI
 
 			switch (command.Name)
 			{
-				case "View_Values": ShowValues = !ShowValues; break;
+				case View_Values: ShowValues = !ShowValues; break;
 			}
 		}
 
