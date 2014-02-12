@@ -21,6 +21,8 @@ namespace NeoEdit.BinaryEditorUI
 		public const string Checksum_SHA256 = "Checksum_SHA256";
 		public const string Compress_GZip = "Compress_GZip";
 		public const string Decompress_GZip = "Decompress_GZip";
+		public const string Compress_Deflate = "Compress_Deflate";
+		public const string Decompress_Inflate = "Decompress_Inflate";
 		public const string View_Values = "View_Values";
 
 		[DepProp]

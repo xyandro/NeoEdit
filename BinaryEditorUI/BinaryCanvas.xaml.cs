@@ -484,6 +484,26 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
+		void Deflate()
+		{
+			using (var ms = new MemoryStream())
+			{
+				using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, true))
+					deflate.Write(Data.Data, 0, Data.Data.Length);
+				Data = ms.ToArray();
+			}
+		}
+
+		void Inflate()
+		{
+			using (var inflate = new DeflateStream(new MemoryStream(Data.Data), CompressionMode.Decompress))
+			using (var ms = new MemoryStream())
+			{
+				inflate.CopyTo(ms);
+				Data = ms.ToArray();
+			}
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			try
@@ -538,6 +558,8 @@ namespace NeoEdit.BinaryEditorUI
 					}.Show(); break;
 					case BinaryEditor.Compress_GZip: GZip(); break;
 					case BinaryEditor.Decompress_GZip: GUnzip(); break;
+					case BinaryEditor.Compress_Deflate: Deflate(); break;
+					case BinaryEditor.Decompress_Inflate: Inflate(); break;
 				}
 			}
 			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }

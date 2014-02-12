@@ -19,6 +19,8 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Checksum_SHA256}" Header="SHA_256" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Compress_GZip}" Header="_GZip" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_GZip}" Header="_GZip" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Compress_Deflate}" Header="_Deflate" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_Inflate}" Header="_Inflate" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
@@ -73,9 +75,11 @@
 				</MenuItem>
 				<MenuItem Header="_Compress">
 					<MenuItem Command="{StaticResource Compress_GZip}"/>
+					<MenuItem Command="{StaticResource Compress_Deflate}"/>
 				</MenuItem>
 				<MenuItem Header="_Decompress">
 					<MenuItem Command="{StaticResource Decompress_GZip}"/>
+					<MenuItem Command="{StaticResource Decompress_Inflate}"/>
 				</MenuItem>
 			</MenuItem>
 		</Menu>
