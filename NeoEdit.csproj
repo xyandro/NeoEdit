@@ -62,7 +62,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
-    <Compile Include="BinaryEditorUI\AESKeyDialog.xaml.cs">
+    <Compile Include="BinaryEditorUI\Dialogs\AESKeyDialog.xaml.cs">
       <DependentUpon>AESKeyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\BinaryData.cs" />
@@ -96,7 +96,7 @@
     </Compile>
     <Compile Include="Common\FindData.cs" />
     <Compile Include="BinaryEditorUI\Converters\ValidValueConverter.cs" />
-    <Compile Include="BinaryEditorUI\FindDialog.xaml.cs">
+    <Compile Include="BinaryEditorUI\Dialogs\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\ExpressionConverter.cs" />
@@ -127,13 +127,13 @@
     </Compile>
     <Compile Include="Common\UICommand.cs" />
     <Compile Include="Common\UIHelper.cs" />
-    <Compile Include="TextEditorUI\GetNumDialog.xaml.cs">
+    <Compile Include="TextEditorUI\Dialogs\GetNumDialog.xaml.cs">
       <DependentUpon>GetNumDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditorUI\WidthDialog.xaml.cs">
+    <Compile Include="TextEditorUI\Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditorUI\FindDialog.xaml.cs">
+    <Compile Include="TextEditorUI\Dialogs\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditorUI\Highlighting.cs" />
@@ -147,11 +147,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditorUI\AESKeyDialog.xaml">
+    <Page Include="BinaryEditorUI\Dialogs\AESKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="BinaryEditorUI\FindDialog.xaml">
+    <Page Include="BinaryEditorUI\Dialogs\FindDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -198,15 +198,15 @@
     <Compile Include="BrowserUI\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
-    <Page Include="TextEditorUI\GetNumDialog.xaml">
+    <Page Include="TextEditorUI\Dialogs\GetNumDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TextEditorUI\WidthDialog.xaml">
+    <Page Include="TextEditorUI\Dialogs\WidthDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TextEditorUI\FindDialog.xaml">
+    <Page Include="TextEditorUI\Dialogs\FindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

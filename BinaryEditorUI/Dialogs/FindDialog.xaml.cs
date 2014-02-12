@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Common;
 
-namespace NeoEdit.BinaryEditorUI
+namespace NeoEdit.BinaryEditorUI.Dialogs
 {
 	public partial class FindDialog : Window
 	{

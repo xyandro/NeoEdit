@@ -86,7 +86,7 @@
 				<MenuItem Header="_Encrypt">
 					<MenuItem Command="{StaticResource Encrypt_AES}"/>
 				</MenuItem>
-				<MenuItem Header="_Decrypt">
+				<MenuItem Header="Dec_rypt">
 					<MenuItem Command="{StaticResource Decrypt_AES}"/>
 				</MenuItem>
 			</MenuItem>

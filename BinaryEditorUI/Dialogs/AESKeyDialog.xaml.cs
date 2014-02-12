@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 
-namespace NeoEdit.BinaryEditorUI
+namespace NeoEdit.BinaryEditorUI.Dialogs
 {
 	public partial class AESKeyDialog : Window
 	{
