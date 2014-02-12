@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -462,6 +464,26 @@ namespace NeoEdit.BinaryEditorUI
 			e.Handled = true;
 		}
 
+		void Zip()
+		{
+			using (var ms = new MemoryStream())
+			{
+				using (var gz = new GZipStream(ms, CompressionLevel.Optimal, true))
+					gz.Write(Data.Data, 0, Data.Data.Length);
+				Data = ms.ToArray();
+			}
+		}
+
+		void Unzip()
+		{
+			using (var gz = new GZipStream(new MemoryStream(Data.Data), CompressionMode.Decompress))
+			using (var ms = new MemoryStream())
+			{
+				gz.CopyTo(ms);
+				Data = ms.ToArray();
+			}
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			switch (command.Name)
@@ -512,6 +534,8 @@ namespace NeoEdit.BinaryEditorUI
 					Text = Data.SHA256(),
 					Options = Message.OptionsEnum.Ok
 				}.Show(); break;
+				case BinaryEditor.Compress_Zip: Zip(); break;
+				case BinaryEditor.Decompress_Zip: Unzip(); break;
 			}
 		}
 

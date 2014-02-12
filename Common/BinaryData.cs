@@ -95,6 +95,8 @@ namespace NeoEdit.Common
 			return new BinaryData(data);
 		}
 
+		public byte[] Data { get { return data; } }
+
 		public override string ToString()
 		{
 			return BitConverter.ToString(data);
