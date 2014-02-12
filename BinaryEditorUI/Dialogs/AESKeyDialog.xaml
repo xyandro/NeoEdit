@@ -34,6 +34,12 @@
 			</StackPanel>
 		</GroupBox>
 
+		<GroupBox Header="Formatting note">
+			<TextBlock HorizontalAlignment="Left" Width="350" TextWrapping="Wrap">
+			The IV will be placed or read from the start of the data, preceeded by a one-byte byte count, which should always be 16 (128 bits).
+			</TextBlock>
+		</GroupBox>
+
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Columns="2">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Margin="0,0,10,0"/>
 			<Button IsCancel="True" Content="Cancel"/>
