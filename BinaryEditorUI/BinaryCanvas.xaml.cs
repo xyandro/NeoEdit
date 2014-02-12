@@ -583,21 +583,21 @@ namespace NeoEdit.BinaryEditorUI
 						break;
 					case BinaryEditor.Encrypt_RSA:
 						{
-							var rsaKeyDialog = new RSAKeyDialog(true) { CanGenerate = true };
+							var rsaKeyDialog = new RSAKeyDialog { Public = true, CanGenerate = true };
 							if (rsaKeyDialog.ShowDialog() == true)
 								Data = Crypto.EncryptRSA(Data.Data, rsaKeyDialog.Key);
 						}
 						break;
 					case BinaryEditor.Decrypt_RSA:
 						{
-							var rsaKeyDialog = new RSAKeyDialog(false);
+							var rsaKeyDialog = new RSAKeyDialog { Public = false };
 							if (rsaKeyDialog.ShowDialog() == true)
 								Data = Crypto.DecryptRSA(Data.Data, rsaKeyDialog.Key);
 						}
 						break;
 					case BinaryEditor.Sign_RSA:
 						{
-							var rsaKeyDialog = new RSAKeyDialog(false) { GetHash = true, CanGenerate = true };
+							var rsaKeyDialog = new RSAKeyDialog { Public = false, GetHash = true, CanGenerate = true };
 							if (rsaKeyDialog.ShowDialog() == true)
 							{
 								new Message
@@ -611,10 +611,39 @@ namespace NeoEdit.BinaryEditorUI
 						break;
 					case BinaryEditor.Verify_RSA:
 						{
-							var rsaKeyDialog = new RSAKeyDialog(true) { GetHash = true, GetSignature = true };
+							var rsaKeyDialog = new RSAKeyDialog { Public = true, GetHash = true, GetSignature = true };
 							if (rsaKeyDialog.ShowDialog() == true)
 							{
 								var result = Crypto.VerifyRSA(Data.Data, rsaKeyDialog.Key, rsaKeyDialog.Hash, rsaKeyDialog.Signature);
+								new Message
+								{
+									Title = "Signature:",
+									Text = result ? "Matched." : "ERROR: Signature DOES NOT match.",
+									Options = Message.OptionsEnum.Ok,
+								}.Show();
+							}
+						}
+						break;
+					case BinaryEditor.Sign_DSA:
+						{
+							var dsaKeyDialog = new RSAKeyDialog { RSA = false, Public = false, CanGenerate = true };
+							if (dsaKeyDialog.ShowDialog() == true)
+							{
+								new Message
+								{
+									Title = "Signature:",
+									Text = Crypto.SignDSA(Data.Data, dsaKeyDialog.Key),
+									Options = Message.OptionsEnum.Ok,
+								}.Show();
+							}
+						}
+						break;
+					case BinaryEditor.Verify_DSA:
+						{
+							var dsaKeyDialog = new RSAKeyDialog { RSA = false, Public = true, GetSignature = true };
+							if (dsaKeyDialog.ShowDialog() == true)
+							{
+								var result = Crypto.VerifyDSA(Data.Data, dsaKeyDialog.Key, dsaKeyDialog.Signature);
 								new Message
 								{
 									Title = "Signature:",

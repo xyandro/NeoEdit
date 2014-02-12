@@ -6,6 +6,28 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 {
 	public partial class RSAKeyDialog : Window
 	{
+		bool rsa;
+		public bool RSA
+		{
+			get { return rsa; }
+			set
+			{
+				rsa = value;
+				keySize.Items.Clear();
+				IEnumerable<int> keySizes;
+				int defaultSize;
+				if (rsa)
+					Crypto.GetRSAKeySizeInfo(out keySizes, out defaultSize);
+				else
+					Crypto.GetDSAKeySizeInfo(out keySizes, out defaultSize);
+				foreach (var size in keySizes)
+				{
+					if (size == defaultSize)
+						keySize.SelectedIndex = keySize.Items.Count;
+					keySize.Items.Add(size);
+				}
+			}
+		}
 		bool isPublic;
 		public bool Public
 		{
@@ -51,22 +73,12 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		public string Hash { get; private set; }
 		public string Signature { get; private set; }
 
-		public RSAKeyDialog(bool _public)
+		public RSAKeyDialog()
 		{
 			InitializeComponent();
 
-			Public = _public;
+			RSA = Public = true;
 			GetHash = GetSignature = CanGenerate = false;
-
-			IEnumerable<int> keySizes;
-			int defaultSize;
-			Crypto.GetRSAKeySizeInfo(out keySizes, out defaultSize);
-			foreach (var size in keySizes)
-			{
-				if (size == defaultSize)
-					keySize.SelectedIndex = keySize.Items.Count;
-				keySize.Items.Add(size);
-			}
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)
@@ -86,8 +98,8 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		void GenerateKey(object sender, RoutedEventArgs e)
 		{
 			if (String.IsNullOrEmpty(privateKey.Text))
-				privateKey.Text = Crypto.CreateRSAPrivateKey(Int32.Parse(keySize.Text));
-			publicKey.Text = Crypto.GetRSAPublicKey(privateKey.Text);
+				privateKey.Text = RSA ? Crypto.CreateRSAPrivateKey(Int32.Parse(keySize.Text)) : Crypto.CreateDSAPrivateKey(Int32.Parse(keySize.Text));
+			publicKey.Text = RSA ? Crypto.GetRSAPublicKey(privateKey.Text) : Crypto.GetDSAPublicKey(privateKey.Text);
 			key.Text = isPublic ? publicKey.Text : privateKey.Text;
 		}
 	}

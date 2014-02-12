@@ -27,6 +27,8 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Sign_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Verify_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Sign_DSA}" Header="_DSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Verify_DSA}" Header="_DSA" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
@@ -97,9 +99,11 @@
 				</MenuItem>
 				<MenuItem Header="_Sign">
 					<MenuItem Command="{StaticResource Sign_RSA}"/>
+					<MenuItem Command="{StaticResource Sign_DSA}"/>
 				</MenuItem>
 				<MenuItem Header="_Verify">
 					<MenuItem Command="{StaticResource Verify_RSA}"/>
+					<MenuItem Command="{StaticResource Verify_DSA}"/>
 				</MenuItem>
 			</MenuItem>
 		</Menu>

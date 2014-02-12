@@ -29,6 +29,8 @@ namespace NeoEdit.BinaryEditorUI
 		public const string Decrypt_RSA = "Decrypt_RSA";
 		public const string Sign_RSA = "Sign_RSA";
 		public const string Verify_RSA = "Verify_RSA";
+		public const string Sign_DSA = "Sign_DSA";
+		public const string Verify_DSA = "Verify_DSA";
 		public const string View_Values = "View_Values";
 
 		[DepProp]

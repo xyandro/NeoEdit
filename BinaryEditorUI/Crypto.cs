@@ -95,5 +95,45 @@ namespace NeoEdit.BinaryEditorUI
 			rsa.FromXmlString(pubKey);
 			return rsa.VerifyData(data, hash, Convert.FromBase64String(signature));
 		}
+
+		public static string CreateDSAPrivateKey(int keySize)
+		{
+			return new DSACryptoServiceProvider(keySize).ToXmlString(true);
+		}
+
+		public static string GetDSAPublicKey(string privKey)
+		{
+			var dsa = new DSACryptoServiceProvider();
+			dsa.FromXmlString(privKey);
+			return dsa.ToXmlString(false);
+		}
+
+		public static void GetDSAKeySizeInfo(out IEnumerable<int> keySizes, out int defaultKeySize)
+		{
+			var keySet = new HashSet<int>();
+			var dsa = new DSACryptoServiceProvider();
+			defaultKeySize = dsa.KeySize;
+			foreach (var keySize in dsa.LegalKeySizes)
+			{
+				for (var size = 1; size <= keySize.MaxSize; size <<= 1)
+					if (size >= keySize.MinSize)
+						keySet.Add(size);
+			}
+			keySizes = keySet.OrderBy(size => size).ToList();
+		}
+
+		public static string SignDSA(byte[] data, string privKey)
+		{
+			var dsa = new DSACryptoServiceProvider();
+			dsa.FromXmlString(privKey);
+			return Convert.ToBase64String(dsa.SignData(data));
+		}
+
+		public static bool VerifyDSA(byte[] data, string pubKey, string signature)
+		{
+			var dsa = new DSACryptoServiceProvider();
+			dsa.FromXmlString(pubKey);
+			return dsa.VerifyData(data, Convert.FromBase64String(signature));
+		}
 	}
 }
