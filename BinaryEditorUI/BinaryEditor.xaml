@@ -13,7 +13,10 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_FindNext}" Header="Find _Next" Key="F3" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_FindPrev}" Header="Find _Previous" Key="F3" Modifiers="Shift" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Insert}" Header="_Insert" Key="Insert" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.View_Values}" Header="_Values" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.View_Values}" Header="_Values" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Checksum_MD5}" Header="_MD5" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Checksum_SHA1}" Header="SHA_1" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Checksum_SHA256}" Header="SHA_256" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
@@ -59,6 +62,13 @@
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Command="{StaticResource View_Values}" IsChecked="{Binding ShowValues, ElementName=self}"/>
+			</MenuItem>
+			<MenuItem Header="_Data">
+				<MenuItem Header="C_hecksum">
+					<MenuItem Command="{StaticResource Checksum_MD5}"/>
+					<MenuItem Command="{StaticResource Checksum_SHA1}"/>
+					<MenuItem Command="{StaticResource Checksum_SHA256}"/>
+				</MenuItem>
 			</MenuItem>
 		</Menu>
 		<binaryEditorUI:BinaryCanvas x:Name="canvas" Grid.Row="1"

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
+using NeoEdit.Dialogs;
 
 namespace NeoEdit.BinaryEditorUI
 {
@@ -493,6 +494,24 @@ namespace NeoEdit.BinaryEditorUI
 					DoFind(command.Name == BinaryEditor.Edit_FindNext);
 					break;
 				case BinaryEditor.Edit_Insert: Insert = !Insert; break;
+				case BinaryEditor.Checksum_MD5: new Message
+				{
+					Title = "Result",
+					Text = Data.MD5(),
+					Options = Message.OptionsEnum.Ok
+				}.Show(); break;
+				case BinaryEditor.Checksum_SHA1: new Message
+				{
+					Title = "Result",
+					Text = Data.SHA1(),
+					Options = Message.OptionsEnum.Ok
+				}.Show(); break;
+				case BinaryEditor.Checksum_SHA256: new Message
+				{
+					Title = "Result",
+					Text = Data.SHA256(),
+					Options = Message.OptionsEnum.Ok
+				}.Show(); break;
 			}
 		}
 

@@ -16,6 +16,9 @@ namespace NeoEdit.BinaryEditorUI
 		public const string Edit_FindNext = "Edit_FindNext";
 		public const string Edit_FindPrev = "Edit_FindPrev";
 		public const string Edit_Insert = "Edit_Insert";
+		public const string Checksum_MD5 = "Checksum_MD5";
+		public const string Checksum_SHA1 = "Checksum_SHA1";
+		public const string Checksum_SHA256 = "Checksum_SHA256";
 		public const string View_Values = "View_Values";
 
 		[DepProp]

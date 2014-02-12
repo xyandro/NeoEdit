@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -105,6 +104,18 @@ namespace NeoEdit.Common
 		{
 			using (var md5 = System.Security.Cryptography.MD5.Create())
 				return BitConverter.ToString(md5.ComputeHash(data)).Replace("-", "").ToLower();
+		}
+
+		public string SHA1()
+		{
+			using (var sha1 = System.Security.Cryptography.SHA1.Create())
+				return BitConverter.ToString(sha1.ComputeHash(data)).Replace("-", "").ToLower();
+		}
+
+		public string SHA256()
+		{
+			using (var sha256 = System.Security.Cryptography.SHA256.Create())
+				return BitConverter.ToString(sha256.ComputeHash(data)).Replace("-", "").ToLower();
 		}
 
 		BinaryData GetBytes(long index, long numBytes, long count, bool littleEndian)
