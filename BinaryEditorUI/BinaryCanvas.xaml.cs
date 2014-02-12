@@ -539,24 +539,30 @@ namespace NeoEdit.BinaryEditorUI
 						DoFind(command.Name == BinaryEditor.Edit_FindNext);
 						break;
 					case BinaryEditor.Edit_Insert: Insert = !Insert; break;
-					case BinaryEditor.Checksum_MD5: new Message
-					{
-						Title = "Result",
-						Text = Data.MD5(),
-						Options = Message.OptionsEnum.Ok
-					}.Show(); break;
-					case BinaryEditor.Checksum_SHA1: new Message
-					{
-						Title = "Result",
-						Text = Data.SHA1(),
-						Options = Message.OptionsEnum.Ok
-					}.Show(); break;
-					case BinaryEditor.Checksum_SHA256: new Message
-					{
-						Title = "Result",
-						Text = Data.SHA256(),
-						Options = Message.OptionsEnum.Ok
-					}.Show(); break;
+					case BinaryEditor.Checksum_MD5:
+						new Message
+						{
+							Title = "Result",
+							Text = Data.MD5(),
+							Options = Message.OptionsEnum.Ok
+						}.Show();
+						break;
+					case BinaryEditor.Checksum_SHA1:
+						new Message
+						{
+							Title = "Result",
+							Text = Data.SHA1(),
+							Options = Message.OptionsEnum.Ok
+						}.Show();
+						break;
+					case BinaryEditor.Checksum_SHA256:
+						new Message
+						{
+							Title = "Result",
+							Text = Data.SHA256(),
+							Options = Message.OptionsEnum.Ok
+						}.Show();
+						break;
 					case BinaryEditor.Compress_GZip: GZip(); break;
 					case BinaryEditor.Decompress_GZip: GUnzip(); break;
 					case BinaryEditor.Compress_Deflate: Deflate(); break;
@@ -577,16 +583,45 @@ namespace NeoEdit.BinaryEditorUI
 						break;
 					case BinaryEditor.Encrypt_RSA:
 						{
-							var pubKey = RSAKeyDialog.Run(true);
-							if (!string.IsNullOrEmpty(pubKey))
-								Data = Crypto.EncryptRSA(Data.Data, pubKey);
+							var rsaKeyDialog = new RSAKeyDialog(true) { CanGenerate = true };
+							if (rsaKeyDialog.ShowDialog() == true)
+								Data = Crypto.EncryptRSA(Data.Data, rsaKeyDialog.Key);
 						}
 						break;
 					case BinaryEditor.Decrypt_RSA:
 						{
-							var privKey = RSAKeyDialog.Run(false);
-							if (!string.IsNullOrEmpty(privKey))
-								Data = Crypto.DecryptRSA(Data.Data, privKey);
+							var rsaKeyDialog = new RSAKeyDialog(false);
+							if (rsaKeyDialog.ShowDialog() == true)
+								Data = Crypto.DecryptRSA(Data.Data, rsaKeyDialog.Key);
+						}
+						break;
+					case BinaryEditor.Sign_RSA:
+						{
+							var rsaKeyDialog = new RSAKeyDialog(false) { GetHash = true, CanGenerate = true };
+							if (rsaKeyDialog.ShowDialog() == true)
+							{
+								new Message
+								{
+									Title = "Signature:",
+									Text = Crypto.SignRSA(Data.Data, rsaKeyDialog.Key, rsaKeyDialog.Hash),
+									Options = Message.OptionsEnum.Ok,
+								}.Show();
+							}
+						}
+						break;
+					case BinaryEditor.Verify_RSA:
+						{
+							var rsaKeyDialog = new RSAKeyDialog(true) { GetHash = true, GetSignature = true };
+							if (rsaKeyDialog.ShowDialog() == true)
+							{
+								var result = Crypto.VerifyRSA(Data.Data, rsaKeyDialog.Key, rsaKeyDialog.Hash, rsaKeyDialog.Signature);
+								new Message
+								{
+									Title = "Signature:",
+									Text = result ? "Matched." : "ERROR: Signature DOES NOT match.",
+									Options = Message.OptionsEnum.Ok,
+								}.Show();
+							}
 						}
 						break;
 				}

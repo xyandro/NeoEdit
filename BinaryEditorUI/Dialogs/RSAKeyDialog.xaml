@@ -10,10 +10,26 @@
 			<StackPanel>
 				<Label Name="keyLabel" Content="_Key to encrypt/decrypt data (XML):" Target="{Binding ElementName=key}"/>
 				<TextBox Name="key" Width="350"/>
+
+				<StackPanel Name="hashPanel">
+					<Label Content="_Hash to use:" Target="{Binding ElementName=hash}"/>
+					<ComboBox HorizontalAlignment="Left" Name="hash" Width="90" SelectedIndex="0">
+						<ComboBoxItem Content="SHA1"/>
+						<ComboBoxItem Content="SHA256"/>
+						<ComboBoxItem Content="SHA386"/>
+						<ComboBoxItem Content="SHA512"/>
+						<ComboBoxItem Content="MD5"/>
+					</ComboBox>
+				</StackPanel>
+
+				<StackPanel Name="signaturePanel">
+					<Label Content="_Signature:" Target="{Binding ElementName=signature}"/>
+					<TextBox HorizontalAlignment="Left" Name="signature" Width="350"/>
+				</StackPanel>
 			</StackPanel>
 		</GroupBox>
 
-		<GroupBox Header="Generate Key">
+		<GroupBox Name="generateBox" Header="Generate Key">
 			<StackPanel>
 				<Label Content="If you don't have a key, you may generate one."/>
 

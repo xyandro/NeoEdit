@@ -81,5 +81,19 @@ namespace NeoEdit.BinaryEditorUI
 			rsa.FromXmlString(privKey);
 			return rsa.Decrypt(data, false);
 		}
+
+		public static string SignRSA(byte[] data, string privKey, string hash)
+		{
+			var rsa = new RSACryptoServiceProvider();
+			rsa.FromXmlString(privKey);
+			return Convert.ToBase64String(rsa.SignData(data, hash));
+		}
+
+		public static bool VerifyRSA(byte[] data, string pubKey, string hash, string signature)
+		{
+			var rsa = new RSACryptoServiceProvider();
+			rsa.FromXmlString(pubKey);
+			return rsa.VerifyData(data, hash, Convert.FromBase64String(signature));
+		}
 	}
 }

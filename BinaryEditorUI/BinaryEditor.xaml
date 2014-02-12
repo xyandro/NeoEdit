@@ -25,6 +25,8 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Sign_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Verify_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
@@ -92,6 +94,12 @@
 				<MenuItem Header="Dec_rypt">
 					<MenuItem Command="{StaticResource Decrypt_AES}"/>
 					<MenuItem Command="{StaticResource Decrypt_RSA}"/>
+				</MenuItem>
+				<MenuItem Header="_Sign">
+					<MenuItem Command="{StaticResource Sign_RSA}"/>
+				</MenuItem>
+				<MenuItem Header="_Verify">
+					<MenuItem Command="{StaticResource Verify_RSA}"/>
 				</MenuItem>
 			</MenuItem>
 		</Menu>
