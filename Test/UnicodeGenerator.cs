@@ -17,7 +17,7 @@ namespace NeoEdit.Test
 			Mixed,
 		};
 
-		string GetEnding(Endings ending)
+		static string GetEnding(Endings ending)
 		{
 			switch (ending)
 			{
@@ -28,7 +28,7 @@ namespace NeoEdit.Test
 			}
 		}
 
-		string GetText(BinaryData.EncodingName encoding, bool bom, Endings ending)
+		static string GetText(BinaryData.EncodingName encoding, bool bom, Endings ending)
 		{
 			var text = new List<string>
 			{
@@ -68,12 +68,12 @@ namespace NeoEdit.Test
 			return result;
 		}
 
-		List<T> GetValues<T>()
+		static List<T> GetValues<T>()
 		{
 			return Enum.GetValues(typeof(T)).Cast<T>().ToList();
 		}
 
-		public void Generate()
+		static public void Run()
 		{
 			var dir = Path.Combine(Directory.GetCurrentDirectory(), "TestData");
 			Directory.CreateDirectory(dir);

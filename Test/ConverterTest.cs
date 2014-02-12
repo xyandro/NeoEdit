@@ -5,7 +5,7 @@ namespace NeoEdit.Test
 {
 	class ConverterTest
 	{
-		void RunTest(BinaryData.EncodingName type, string value, byte[] expected)
+		static void RunTest(BinaryData.EncodingName type, string value, byte[] expected)
 		{
 			var result = BinaryData.FromString(type, value);
 			if ((result == null) != (expected == null))
@@ -24,7 +24,7 @@ namespace NeoEdit.Test
 					throw new Exception("Expected result not returned");
 		}
 
-		public void Run()
+		static public void Run()
 		{
 			// UInt8LE
 			RunTest(BinaryData.EncodingName.UInt8LE, "0", new byte[] { 0 });
