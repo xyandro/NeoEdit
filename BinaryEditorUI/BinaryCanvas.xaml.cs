@@ -284,12 +284,12 @@ namespace NeoEdit.BinaryEditorUI
 						overrideSelecting = false;
 						if ((SelStart != SelEnd) || (e.Key == Key.Delete))
 						{
-							Data.Delete(SelStart, SelEnd - SelStart + 1);
+							Data.Replace(SelStart, SelEnd - SelStart + 1, new byte[0]);
 							Pos1 = SelStart;
 						}
 						else if (e.Key == Key.Back)
 						{
-							Data.Delete(SelStart - 1, 1);
+							Data.Replace(SelStart - 1, 1, new byte[0]);
 							Pos1 = SelStart - 1;
 						}
 						overrideSelecting = null;
@@ -362,15 +362,15 @@ namespace NeoEdit.BinaryEditorUI
 			if (Insert)
 			{
 				if (SelStart != SelEnd)
-					Data.Delete(SelStart, SelEnd - SelStart + 1);
+					Data.Replace(SelStart, SelEnd - SelStart + 1, new byte[0]);
 				if ((inHex) && (!inHexEdit))
-					Data.Replace(SelStart, bytes);
+					Data.Replace(SelStart, bytes.Length, bytes.Data);
 				else
-					Data.Insert(SelStart, bytes);
+					Data.Replace(SelStart, 0, bytes.Data);
 			}
 			else
 			{
-				Data.Replace(SelStart, bytes);
+				Data.Replace(SelStart, bytes.Length, bytes.Data);
 			}
 
 			overrideSelecting = false;
@@ -519,7 +519,7 @@ namespace NeoEdit.BinaryEditorUI
 							var subset = Data.GetSubset(SelStart, SelEnd - SelStart + 1);
 							Clipboard.Current.Set(subset, SelHex);
 							if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
-								Data.Delete(SelStart, SelEnd - SelStart + 1);
+								Data.Replace(SelStart, SelEnd - SelStart + 1, new byte[0]);
 						}
 						break;
 					case BinaryEditor.Edit_Paste:

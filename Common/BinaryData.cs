@@ -128,33 +128,17 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public void Replace(long index, BinaryData bytes)
+		public void Replace(long offset, long length, byte[] bytes)
 		{
-			var count = Math.Min(bytes.Length, Length - index);
-			for (var ctr = 0; ctr < count; ctr++)
-				data[index + ctr] = bytes[ctr];
-			++ChangeCount;
-		}
+			if ((offset < 0) || (offset > data.Length))
+				throw new ArgumentOutOfRangeException("offset");
+			if ((length < 0) || (offset + length > data.Length))
+				throw new ArgumentOutOfRangeException("length");
 
-		public void Delete(long index, long count)
-		{
-			if (index < 0)
-				return;
-
-			count = Math.Min(count, Length - index);
-			var newData = new byte[Length - count];
-			Array.Copy(data, 0, newData, 0, index);
-			Array.Copy(data, index + count, newData, index, Length - index - count);
-			data = newData;
-			++ChangeCount;
-		}
-
-		public void Insert(long index, BinaryData bytes)
-		{
-			var newData = new byte[Length + bytes.Length];
-			Array.Copy(data, 0, newData, 0, index);
-			Array.Copy(bytes.data, 0, newData, index, bytes.Length);
-			Array.Copy(data, index, newData, index + bytes.Length, Length - index);
+			var newData = new byte[data.Length - length + bytes.Length];
+			Array.Copy(data, 0, newData, 0, offset);
+			Array.Copy(bytes, 0, newData, offset, bytes.Length);
+			Array.Copy(data, offset + length, newData, offset + bytes.Length, data.Length - offset - length);
 			data = newData;
 			++ChangeCount;
 		}
