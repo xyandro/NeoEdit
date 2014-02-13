@@ -542,28 +542,23 @@ namespace NeoEdit.BinaryEditorUI
 						break;
 					case BinaryEditor.Edit_Insert: Insert = !Insert; break;
 					case BinaryEditor.Checksum_MD5:
-						new Message
-						{
-							Title = "Result",
-							Text = Data.MD5(),
-							Options = Message.OptionsEnum.Ok
-						}.Show();
-						break;
 					case BinaryEditor.Checksum_SHA1:
-						new Message
-						{
-							Title = "Result",
-							Text = Data.SHA1(),
-							Options = Message.OptionsEnum.Ok
-						}.Show();
-						break;
 					case BinaryEditor.Checksum_SHA256:
-						new Message
 						{
-							Title = "Result",
-							Text = Data.SHA256(),
-							Options = Message.OptionsEnum.Ok
-						}.Show();
+							Checksums.Type checksumType = Checksums.Type.None;
+							switch (command.Name)
+							{
+								case BinaryEditor.Checksum_MD5: checksumType = Checksums.Type.MD5; break;
+								case BinaryEditor.Checksum_SHA1: checksumType = Checksums.Type.SHA1; break;
+								case BinaryEditor.Checksum_SHA256: checksumType = Checksums.Type.SHA256; break;
+							}
+							new Message
+							{
+								Title = "Result",
+								Text = Checksums.Get(checksumType, Data.Data),
+								Options = Message.OptionsEnum.Ok
+							}.Show();
+						}
 						break;
 					case BinaryEditor.Compress_GZip: GZip(); break;
 					case BinaryEditor.Decompress_GZip: GUnzip(); break;

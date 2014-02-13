@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using NeoEdit.Common;
+using NeoEdit.Data;
 
 namespace NeoEdit.Records.Zipped
 {
@@ -52,7 +53,7 @@ namespace NeoEdit.Records.Zipped
 		public override void CalcMD5()
 		{
 			using (var md5 = MD5.Create())
-				this[RecordProperty.PropertyName.MD5] = Read().MD5();
+				this[RecordProperty.PropertyName.MD5] = Checksums.Get(Checksums.Type.MD5, Read().Data);
 		}
 
 		public override void Delete()
