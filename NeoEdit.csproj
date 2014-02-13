@@ -62,7 +62,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
-    <Compile Include="BinaryEditorUI\Crypto.cs" />
+    <Compile Include="Data\Crypto.cs" />
     <Compile Include="BinaryEditorUI\Dialogs\SymmetricKeyDialog.xaml.cs">
       <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>

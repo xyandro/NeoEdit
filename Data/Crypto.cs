@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace NeoEdit.BinaryEditorUI
+namespace NeoEdit.Data
 {
 	public static class Crypto
 	{

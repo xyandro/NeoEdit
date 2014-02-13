@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using NeoEdit.Data;
 
 namespace NeoEdit.BinaryEditorUI.Dialogs
 {
