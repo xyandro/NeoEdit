@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Data;
 
 namespace NeoEdit.BinaryEditorUI
 {
@@ -52,7 +53,7 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public BinaryData.EncodingName TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.EncodingName>(); } set { uiHelper.SetPropValue(value); } }
+		public Coder.Type InputCoderType { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
@@ -111,20 +112,19 @@ namespace NeoEdit.BinaryEditorUI
 			return canvas.CommandCanRun(command, parameter);
 		}
 
-		void TypeEncodingClick(object sender, RoutedEventArgs e)
+		void InputEncodingClick(object sender, RoutedEventArgs e)
 		{
-			canvas.TypeEncoding = Helpers.ParseEnum<BinaryData.EncodingName>(((MenuItem)e.Source).Header as string);
+			canvas.InputCoderType = Helpers.ParseEnum<Coder.Type>(((MenuItem)e.Source).Header as string);
 		}
-
 
 		void EncodeClick(object sender, RoutedEventArgs e)
 		{
 			try
 			{
 				var header = (e.OriginalSource as MenuItem).Header as string;
-				var encoding = BinaryData.EncodingName.None;
+				var encoding = Coder.Type.None;
 				if (header != "Auto")
-					encoding = Helpers.ParseEnum<BinaryData.EncodingName>(header);
+					encoding = Helpers.ParseEnum<Coder.Type>(header);
 				var data = new TextData(Data, encoding);
 				new TextEditorUI.TextEditor(data);
 				this.Close();

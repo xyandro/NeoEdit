@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
+using NeoEdit.Data;
 
 namespace NeoEdit.Test
 {
@@ -28,7 +29,7 @@ namespace NeoEdit.Test
 			}
 		}
 
-		static string GetText(BinaryData.EncodingName encoding, bool bom, Endings ending)
+		static string GetText(Coder.Type encoding, bool bom, Endings ending)
 		{
 			var text = new List<string>
 			{
@@ -80,7 +81,7 @@ namespace NeoEdit.Test
 
 			using (var combined = File.Create(Path.Combine(dir, "Combined.txt")))
 			{
-				foreach (var encoding in GetValues<BinaryData.EncodingName>().Where(a => a.IsStr()))
+				foreach (var encoding in GetValues<Coder.Type>().Where(a => a.IsStr()))
 					for (var useBom = 0; useBom < 2; ++useBom)
 					{
 						var bom = useBom == 0;
@@ -89,19 +90,19 @@ namespace NeoEdit.Test
 							Encoding encoder = null;
 							switch (encoding)
 							{
-								case BinaryData.EncodingName.UTF7:
+								case Coder.Type.UTF7:
 									encoder = new UTF7Encoding();
 									break;
-								case BinaryData.EncodingName.UTF8:
+								case Coder.Type.UTF8:
 									encoder = new UTF8Encoding(false);
 									break;
-								case BinaryData.EncodingName.UTF16LE:
-								case BinaryData.EncodingName.UTF16BE:
-									encoder = new UnicodeEncoding(encoding == BinaryData.EncodingName.UTF16BE, false);
+								case Coder.Type.UTF16LE:
+								case Coder.Type.UTF16BE:
+									encoder = new UnicodeEncoding(encoding == Coder.Type.UTF16BE, false);
 									break;
-								case BinaryData.EncodingName.UTF32BE:
-								case BinaryData.EncodingName.UTF32LE:
-									encoder = new UTF32Encoding(encoding == BinaryData.EncodingName.UTF32BE, false);
+								case Coder.Type.UTF32BE:
+								case Coder.Type.UTF32LE:
+									encoder = new UTF32Encoding(encoding == Coder.Type.UTF32BE, false);
 									break;
 								default:
 									throw new Exception("No encoder found");
@@ -113,14 +114,14 @@ namespace NeoEdit.Test
 							combined.Write(bytes, 0, bytes.Length);
 
 							BinaryData data = bytes;
-							var encoding2 = data.GuessEncoding();
-							var str = data.ToString(encoding2);
+							var encoding2 = Coder.GuessEncoding(data.Data);
+							var str = Coder.BytesToString(data.Data, encoding2);
 							var bom2 = (str.Length > 0) && (str[0] == '\ufeff');
 
 							if ((encoding != encoding2) || (bom != bom2))
 							{
 								// UTF7 in general thinks it's UTF8; ignore it
-								if (encoding == BinaryData.EncodingName.UTF7)
+								if (encoding == Coder.Type.UTF7)
 									continue;
 
 								if (encoding != encoding2)

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.Common;
+using NeoEdit.Data;
 
 namespace NeoEdit.BinaryEditorUI.Converters
 {
@@ -18,7 +18,7 @@ namespace NeoEdit.BinaryEditorUI.Converters
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return BinaryData.IsStr((BinaryData.EncodingName)value);
+			return ((Coder.Type)value).IsStr();
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

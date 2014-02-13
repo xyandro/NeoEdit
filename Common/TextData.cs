@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using NeoEdit.Data;
 
 namespace NeoEdit.Common
 {
@@ -22,17 +23,17 @@ namespace NeoEdit.Common
 		public int NumLines { get { return lineIndex.Count; } }
 		public bool BOM { get; private set; }
 
-		public TextData(BinaryData binaryData, BinaryData.EncodingName encoding = BinaryData.EncodingName.None)
+		public TextData(BinaryData binaryData, Coder.Type encoding = Coder.Type.None)
 		{
-			if (encoding == BinaryData.EncodingName.None)
-				encoding = binaryData.GuessEncoding();
+			if (encoding == Coder.Type.None)
+				encoding = Coder.GuessEncoding(binaryData.Data);
 
-			data = binaryData.ToString(encoding);
+			data = Coder.BytesToString(binaryData.Data, encoding);
 		}
 
-		public BinaryData GetBinaryData(BinaryData.EncodingName encoding = BinaryData.EncodingName.UTF8)
+		public BinaryData GetBinaryData(Coder.Type encoding = Coder.Type.UTF8)
 		{
-			return BinaryData.FromString(encoding, data);
+			return Coder.StringToBytes(data, encoding);
 		}
 
 		public void Undo()
@@ -95,9 +96,9 @@ namespace NeoEdit.Common
 			return data.Substring(endingIndex[line], endingLength[line]);
 		}
 
-		public BinaryData GetData(BinaryData.EncodingName encoding)
+		public BinaryData GetData(Coder.Type encoding)
 		{
-			return BinaryData.FromString(encoding, data);
+			return Coder.StringToBytes(data, encoding);
 		}
 
 		public int GetOffset(int line, int index)

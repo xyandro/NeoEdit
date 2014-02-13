@@ -69,13 +69,13 @@
 					<MenuItem Header="UTF32BE"/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
-				<MenuItem Header="_Typing Encoding" Click="TypeEncodingClick">
-					<MenuItem Header="UTF7" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
-					<MenuItem Header="UTF8" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
-					<MenuItem Header="UTF16LE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
-					<MenuItem Header="UTF16BE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
-					<MenuItem Header="UTF32LE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
-					<MenuItem Header="UTF32BE" IsChecked="{Binding TypeEncoding, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
+				<MenuItem Header="Input Encoding" Click="InputEncodingClick">
+					<MenuItem Header="UTF7" IsChecked="{Binding InputCoderType, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
+					<MenuItem Header="UTF8" IsChecked="{Binding InputCoderType, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
+					<MenuItem Header="UTF16LE" IsChecked="{Binding InputCoderType, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
+					<MenuItem Header="UTF16BE" IsChecked="{Binding InputCoderType, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
+					<MenuItem Header="UTF32LE" IsChecked="{Binding InputCoderType, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
+					<MenuItem Header="UTF32BE" IsChecked="{Binding InputCoderType, ElementName=self, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_View">
@@ -133,7 +133,7 @@
 			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=OneWayToSource}"
 			yScrollValue="{Binding Value, ElementName=yScroll, Mode=TwoWay}"
 			Insert="{Binding Insert, ElementName=self, Mode=OneWayToSource}"
-			TypeEncoding="{Binding TypeEncoding, ElementName=self, Mode=OneWayToSource}"
+			InputCoderType="{Binding InputCoderType, ElementName=self, Mode=OneWayToSource}"
 			FoundText="{Binding FoundText, ElementName=self, Mode=OneWayToSource}"
 		/>
 		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>

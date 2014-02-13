@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using NeoEdit.Common;
+using NeoEdit.Data;
 
 namespace NeoEdit.TextEditorUI
 {
@@ -96,7 +97,7 @@ namespace NeoEdit.TextEditorUI
 			try
 			{
 				var header = (e.OriginalSource as MenuItem).Header as string;
-				var encoding = Helpers.ParseEnum<BinaryData.EncodingName>(header);
+				var encoding = Helpers.ParseEnum<Coder.Type>(header);
 				var data = Data.GetBinaryData(encoding);
 				new BinaryEditorUI.BinaryEditor(data);
 				this.Close();

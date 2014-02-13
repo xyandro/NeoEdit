@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Data;
 
 namespace NeoEdit.BinaryEditorUI
 {
@@ -17,7 +18,7 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public BinaryData.EncodingName Type { get { return uiHelper.GetPropValue<BinaryData.EncodingName>(); } set { uiHelper.SetPropValue(value); } }
+		public Coder.Type Type { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 
 		static DisplayValue() { UIHelper<DisplayValue>.Register(); }
 
@@ -40,7 +41,7 @@ namespace NeoEdit.BinaryEditorUI
 				case Key.Enter:
 					if (!IsReadOnly)
 					{
-						var data = BinaryData.FromString(Type, Text);
+						var data = Coder.StringToBytes(Text, Type);
 						if (data != null)
 							Data.Replace(SelStart, data);
 					}

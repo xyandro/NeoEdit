@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Text;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.BinaryEditorUI.Dialogs;
 using NeoEdit.Common;
+using NeoEdit.Data;
 using NeoEdit.Dialogs;
 
 namespace NeoEdit.BinaryEditorUI
@@ -43,7 +44,7 @@ namespace NeoEdit.BinaryEditorUI
 		[DepProp]
 		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public BinaryData.EncodingName TypeEncoding { get { return uiHelper.GetPropValue<BinaryData.EncodingName>(); } set { uiHelper.SetPropValue(value); } }
+		public Coder.Type InputCoderType { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -158,7 +159,7 @@ namespace NeoEdit.BinaryEditorUI
 			Loaded += (s, e) =>
 			{
 				InvalidateVisual();
-				TypeEncoding = BinaryData.EncodingName.UTF8;
+				InputCoderType = Coder.Type.UTF8;
 				SelStart = SelEnd = 0;
 			};
 		}
@@ -405,7 +406,7 @@ namespace NeoEdit.BinaryEditorUI
 				inHexEdit = !inHexEdit;
 			}
 			else
-				bytes = BinaryData.FromString(TypeEncoding, e.Text);
+				bytes = Coder.StringToBytes(e.Text, InputCoderType);
 
 			DoInsert(bytes, SelHex);
 		}
@@ -522,7 +523,7 @@ namespace NeoEdit.BinaryEditorUI
 						}
 						break;
 					case BinaryEditor.Edit_Paste:
-						DoInsert(Clipboard.Current.GetBinaryData(TypeEncoding), false);
+						DoInsert(Clipboard.Current.GetBinaryData(InputCoderType), false);
 						break;
 					case BinaryEditor.Edit_Find:
 						{

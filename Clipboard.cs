@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using NeoEdit.Common;
+using NeoEdit.Data;
 using NeoEdit.Records;
 using NeoEdit.Records.Disk;
 
@@ -86,7 +87,7 @@ namespace NeoEdit
 			dataObj.SetData(bytes.GetType(), contentGUID);
 			var str = "";
 			if (hex)
-				str = bytes.ToHexString();
+				str = Coder.BytesToString(bytes.Data, Coder.Type.Hex);
 			else
 			{
 				var sw = new StringBuilder((int)bytes.Length);
@@ -98,7 +99,7 @@ namespace NeoEdit
 			System.Windows.Clipboard.SetDataObject(dataObj, true);
 		}
 
-		public BinaryData GetBinaryData(BinaryData.EncodingName encoding)
+		public BinaryData GetBinaryData(Coder.Type encoding)
 		{
 			var dataObj = System.Windows.Clipboard.GetDataObject();
 			var guid = dataObj.GetData(typeof(BinaryData));
@@ -109,7 +110,7 @@ namespace NeoEdit
 			if (String.IsNullOrEmpty(str))
 				return null;
 
-			return BinaryData.FromString(encoding, str);
+			return Coder.StringToBytes(str, encoding);
 		}
 
 		public void Set(string[] strings)

@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="Common\BinaryData.cs" />
     <Compile Include="Common\TextData.cs" />
+    <Compile Include="Data\Coder.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
     <Compile Include="Records\Zipped\ZippedFile.cs" />
     <Compile Include="Records\Zipped\ZippedRecord.cs" />

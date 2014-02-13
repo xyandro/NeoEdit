@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 using NeoEdit.Common;
+using NeoEdit.Data;
 
 namespace NeoEdit.BinaryEditorUI.Converters
 {
@@ -28,10 +29,10 @@ namespace NeoEdit.BinaryEditorUI.Converters
 				var selEnd = (long)value[2];
 				if (selStart > selEnd)
 					return new Exception();
-				var encoding = (BinaryData.EncodingName)value[3];
+				var encoding = (Coder.Type)value[3];
 
-				var selCount = Math.Min(BinaryData.PreviewSize(encoding), (selStart == selEnd) ? Int32.MaxValue : selEnd - selStart + 1);
-				var str = data.ToString(encoding, selStart, selCount);
+				var selCount = Math.Min(encoding.PreviewSize(), (selStart == selEnd) ? Int32.MaxValue : selEnd - selStart + 1);
+				var str = Coder.BytesToString(data.Data, selStart, selCount, encoding);
 				if (encoding.IsStr())
 					str = str.Replace("\r", @"\r").Replace("\n", @"\n");
 				return str;

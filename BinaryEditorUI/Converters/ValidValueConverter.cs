@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using NeoEdit.Common;
+using NeoEdit.Data;
 
 namespace NeoEdit.BinaryEditorUI.Converters
 {
@@ -9,7 +9,7 @@ namespace NeoEdit.BinaryEditorUI.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return BinaryData.FromString(Helpers.ParseEnum<BinaryData.EncodingName>(parameter as string), value as string) != null;
+			return Coder.StringToBytes(value as string, Helpers.ParseEnum<Coder.Type>(parameter as string)) != null;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
