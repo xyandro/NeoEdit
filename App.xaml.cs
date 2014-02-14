@@ -9,6 +9,7 @@ namespace NeoEdit
 	{
 		App()
 		{
+			DispatcherUnhandledException += (s, e) => { MessageBox.Show(e.Exception.Message, "Error"); e.Handled = true; };
 			foreach (var arg in Environment.GetCommandLineArgs().Skip(1))
 			{
 				if (arg.StartsWith("test"))

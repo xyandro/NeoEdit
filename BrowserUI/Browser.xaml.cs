@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -240,99 +239,83 @@ namespace NeoEdit.BrowserUI
 			if (!RecordAction.Get(action).IsValid(records.Count))
 				return;
 
-			try
+			switch (action)
 			{
-				switch (action)
-				{
-					case RecordAction.ActionName.Rename:
-						{
-							var record = records.Single();
-							var rename = new Rename(record);
-							if (rename.ShowDialog() == true)
-								record.Rename(rename.RecordName, () => new Message
-								{
-									Title = "Warning",
-									Text = "File already exists.  Overwrite?",
-									Options = Message.OptionsEnum.YesNo,
-									DefaultYes = Message.OptionsEnum.Yes,
-									DefaultNo = Message.OptionsEnum.No,
-								}.Show() == Message.OptionsEnum.Yes);
-						}
-						break;
-					case RecordAction.ActionName.Delete:
-						{
-							if (new Message
+				case RecordAction.ActionName.Rename:
+					{
+						var record = records.Single();
+						var rename = new Rename(record);
+						if (rename.ShowDialog() == true)
+							record.Rename(rename.RecordName, () => new Message
 							{
-								Title = "Confirm",
-								Text = "Are you sure you want to delete these items?",
+								Title = "Warning",
+								Text = "File already exists.  Overwrite?",
 								Options = Message.OptionsEnum.YesNo,
 								DefaultYes = Message.OptionsEnum.Yes,
 								DefaultNo = Message.OptionsEnum.No,
-							}.Show() == Message.OptionsEnum.Yes)
-							{
-								foreach (var record in records)
-									record.Delete();
-							}
-						}
-						break;
-					case RecordAction.ActionName.Copy:
-						Clipboard.Current.Set(records, false);
-						break;
-					case RecordAction.ActionName.Cut:
-						Clipboard.Current.Set(records, true);
-						break;
-					case RecordAction.ActionName.Paste:
-						Location.Paste();
-						break;
-					case RecordAction.ActionName.MD5:
+							}.Show() == Message.OptionsEnum.Yes);
+					}
+					break;
+				case RecordAction.ActionName.Delete:
+					{
+						if (new Message
 						{
-							Exception error = null;
+							Title = "Confirm",
+							Text = "Are you sure you want to delete these items?",
+							Options = Message.OptionsEnum.YesNo,
+							DefaultYes = Message.OptionsEnum.Yes,
+							DefaultNo = Message.OptionsEnum.No,
+						}.Show() == Message.OptionsEnum.Yes)
+						{
 							foreach (var record in records)
-							{
-								try { record.CalcMD5(); }
-								catch (Exception ex) { error = ex; }
-							}
-							if (error != null)
-								throw error;
+								record.Delete();
+						}
+					}
+					break;
+				case RecordAction.ActionName.Copy:
+					Clipboard.Current.Set(records, false);
+					break;
+				case RecordAction.ActionName.Cut:
+					Clipboard.Current.Set(records, true);
+					break;
+				case RecordAction.ActionName.Paste:
+					Location.Paste();
+					break;
+				case RecordAction.ActionName.MD5:
+					{
+						foreach (var record in records)
+							record.CalcMD5();
 
-							if (!Properties.Contains(RecordProperty.PropertyName.MD5))
-								Properties.Add(RecordProperty.PropertyName.MD5);
-						}
-						break;
-					case RecordAction.ActionName.Identify:
-						{
-							Exception error = null;
-							foreach (var record in records)
-							{
-								try { record.Identify(); }
-								catch (Exception ex) { error = ex; }
-							}
-							if (error != null)
-								throw error;
+						if (!Properties.Contains(RecordProperty.PropertyName.MD5))
+							Properties.Add(RecordProperty.PropertyName.MD5);
+					}
+					break;
+				case RecordAction.ActionName.Identify:
+					{
+						foreach (var record in records)
+							record.Identify();
 
-							if (!Properties.Contains(RecordProperty.PropertyName.Identify))
-								Properties.Add(RecordProperty.PropertyName.Identify);
-						}
-						break;
-					case RecordAction.ActionName.SyncSource:
-						SyncSource = records.Single();
-						break;
-					case RecordAction.ActionName.SyncTarget:
-						SyncTarget = records.Single();
-						break;
-					case RecordAction.ActionName.Sync:
-						if ((SyncSource != null) && (SyncTarget != null))
-							SyncTarget.Sync(SyncSource);
-						break;
-					case RecordAction.ActionName.Open:
-						{
-							var data = records.Single().Read();
-							new BinaryEditor(data);
-						}
-						break;
-				}
+						if (!Properties.Contains(RecordProperty.PropertyName.Identify))
+							Properties.Add(RecordProperty.PropertyName.Identify);
+					}
+					break;
+				case RecordAction.ActionName.SyncSource:
+					SyncSource = records.Single();
+					break;
+				case RecordAction.ActionName.SyncTarget:
+					SyncTarget = records.Single();
+					break;
+				case RecordAction.ActionName.Sync:
+					if ((SyncSource != null) && (SyncTarget != null))
+						SyncTarget.Sync(SyncSource);
+					break;
+				case RecordAction.ActionName.Open:
+					{
+						var data = records.Single().Read();
+						new BinaryEditor(data);
+					}
+					break;
 			}
-			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 		}
 
 		public void MenuItemColumnClick(object sender, RoutedEventArgs e)

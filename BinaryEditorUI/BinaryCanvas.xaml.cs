@@ -758,74 +758,70 @@ namespace NeoEdit.BinaryEditorUI
 
 		public void CommandRun(UICommand command, object parameter)
 		{
-			try
+			if (HandleChecksum(command.Name))
+				return;
+			if (HandleCompress(command.Name))
+				return;
+			if (HandleEncrypt(command.Name))
+				return;
+			if (HandleSign(command.Name))
+				return;
+
+			switch (command.Name)
 			{
-				if (HandleChecksum(command.Name))
-					return;
-				if (HandleCompress(command.Name))
-					return;
-				if (HandleEncrypt(command.Name))
-					return;
-				if (HandleSign(command.Name))
-					return;
+				case BinaryEditor.Edit_Undo: Undo(); break;
+				case BinaryEditor.Edit_Cut:
+				case BinaryEditor.Edit_Copy:
+					{
+						if (SelStart == SelEnd)
+							break;
 
-				switch (command.Name)
-				{
-					case BinaryEditor.Edit_Undo: Undo(); break;
-					case BinaryEditor.Edit_Cut:
-					case BinaryEditor.Edit_Copy:
+						var bytes = Data.GetSubset(SelStart, SelEnd - SelStart);
+						string str;
+						if (SelHex)
+							str = Coder.BytesToString(bytes, Coder.Type.Hex);
+						else
 						{
-							if (SelStart == SelEnd)
-								break;
-
-							var bytes = Data.GetSubset(SelStart, SelEnd - SelStart);
-							string str;
-							if (SelHex)
-								str = Coder.BytesToString(bytes, Coder.Type.Hex);
-							else
-							{
-								var sb = new StringBuilder(bytes.Length);
-								for (var ctr = 0; ctr < bytes.Length; ctr++)
-									sb.Append((char)bytes[ctr]);
-								str = sb.ToString();
-							}
-							Clipboard.Current.Set(bytes, str);
-							if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
-								Replace(null);
+							var sb = new StringBuilder(bytes.Length);
+							for (var ctr = 0; ctr < bytes.Length; ctr++)
+								sb.Append((char)bytes[ctr]);
+							str = sb.ToString();
 						}
-						break;
-					case BinaryEditor.Edit_Paste:
+						Clipboard.Current.Set(bytes, str);
+						if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
+							Replace(null);
+					}
+					break;
+				case BinaryEditor.Edit_Paste:
+					{
+						var bytes = Clipboard.Current.GetBytes();
+						if (bytes == null)
 						{
-							var bytes = Clipboard.Current.GetBytes();
-							if (bytes == null)
-							{
-								var str = Clipboard.Current.GetString();
-								if (str != null)
-									bytes = Coder.StringToBytes(str, InputCoderType);
-							}
-							if ((bytes != null) && (bytes.Length != 0))
-								Replace(bytes);
+							var str = Clipboard.Current.GetString();
+							if (str != null)
+								bytes = Coder.StringToBytes(str, InputCoderType);
 						}
-						break;
-					case BinaryEditor.Edit_Find:
+						if ((bytes != null) && (bytes.Length != 0))
+							Replace(bytes);
+					}
+					break;
+				case BinaryEditor.Edit_Find:
+					{
+						var results = FindDialog.Run();
+						if (results != null)
 						{
-							var results = FindDialog.Run();
-							if (results != null)
-							{
-								currentFind = results;
-								FoundText = currentFind.Text;
-								DoFind();
-							}
+							currentFind = results;
+							FoundText = currentFind.Text;
+							DoFind();
 						}
-						break;
-					case BinaryEditor.Edit_FindNext:
-					case BinaryEditor.Edit_FindPrev:
-						DoFind(command.Name == BinaryEditor.Edit_FindNext);
-						break;
-					case BinaryEditor.Edit_Insert: Insert = !Insert; break;
-				}
+					}
+					break;
+				case BinaryEditor.Edit_FindNext:
+				case BinaryEditor.Edit_FindPrev:
+					DoFind(command.Name == BinaryEditor.Edit_FindNext);
+					break;
+				case BinaryEditor.Edit_Insert: Insert = !Insert; break;
 			}
-			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
 		}
 
 		public bool CommandCanRun(UICommand command, object parameter)

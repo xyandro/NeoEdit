@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -123,17 +122,13 @@ namespace NeoEdit.BinaryEditorUI
 
 		void EncodeClick(object sender, RoutedEventArgs e)
 		{
-			try
-			{
-				var header = (e.OriginalSource as MenuItem).Header as string;
-				var encoding = Coder.Type.None;
-				if (header != "Auto")
-					encoding = Helpers.ParseEnum<Coder.Type>(header);
-				var data = new TextData(Data.GetAllBytes(), encoding);
-				new TextEditorUI.TextEditor(data);
-				this.Close();
-			}
-			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+			var header = (e.OriginalSource as MenuItem).Header as string;
+			var encoding = Coder.Type.None;
+			if (header != "Auto")
+				encoding = Helpers.ParseEnum<Coder.Type>(header);
+			var data = new TextData(Data.GetAllBytes(), encoding);
+			new TextEditorUI.TextEditor(data);
+			this.Close();
 		}
 	}
 }
