@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace NeoEdit.Data
 {
-	public static class Checksums
+	public static class Checksum
 	{
 		public enum Type
 		{

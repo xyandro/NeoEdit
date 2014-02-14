@@ -569,17 +569,17 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Checksum_SHA1:
 					case BinaryEditor.Checksum_SHA256:
 						{
-							Checksums.Type checksumType = Checksums.Type.None;
+							Checksum.Type checksumType = Checksum.Type.None;
 							switch (command.Name)
 							{
-								case BinaryEditor.Checksum_MD5: checksumType = Checksums.Type.MD5; break;
-								case BinaryEditor.Checksum_SHA1: checksumType = Checksums.Type.SHA1; break;
-								case BinaryEditor.Checksum_SHA256: checksumType = Checksums.Type.SHA256; break;
+								case BinaryEditor.Checksum_MD5: checksumType = Checksum.Type.MD5; break;
+								case BinaryEditor.Checksum_SHA1: checksumType = Checksum.Type.SHA1; break;
+								case BinaryEditor.Checksum_SHA256: checksumType = Checksum.Type.SHA256; break;
 							}
 							new Message
 							{
 								Title = "Result",
-								Text = Checksums.Get(checksumType, Data.GetAllBytes()),
+								Text = Checksum.Get(checksumType, Data.GetAllBytes()),
 								Options = Message.OptionsEnum.Ok
 							}.Show();
 						}

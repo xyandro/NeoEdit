@@ -53,7 +53,7 @@ namespace NeoEdit.Records.Zipped
 		public override void CalcMD5()
 		{
 			using (var md5 = MD5.Create())
-				this[RecordProperty.PropertyName.MD5] = Checksums.Get(Checksums.Type.MD5, Read().GetAllBytes());
+				this[RecordProperty.PropertyName.MD5] = Checksum.Get(Checksum.Type.MD5, Read().GetAllBytes());
 		}
 
 		public override void Delete()
