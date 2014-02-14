@@ -121,11 +121,6 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public void Replace(byte[] bytes)
-		{
-			Replace(0, data.Length, bytes);
-		}
-
 		public void Replace(long offset, long length, byte[] bytes)
 		{
 			if ((offset < 0) || (offset > data.Length))

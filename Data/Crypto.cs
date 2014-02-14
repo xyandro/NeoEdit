@@ -27,7 +27,7 @@ namespace NeoEdit.Data
 			return type;
 		}
 
-		static bool IsSymmetric(Type type)
+		public static bool IsSymmetric(this Type type)
 		{
 			switch (BaseType(type))
 			{

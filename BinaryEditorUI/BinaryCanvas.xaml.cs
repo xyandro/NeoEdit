@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -283,7 +284,7 @@ namespace NeoEdit.BinaryEditorUI
 			{
 				case Key.Back:
 				case Key.Delete:
-					if (Insert)
+					if (VerifyInsert())
 					{
 						if (SelStart != SelEnd)
 						{
@@ -366,11 +367,12 @@ namespace NeoEdit.BinaryEditorUI
 		{
 			Pos1 = 0;
 			Pos2 = Data.Length;
-			Replace(bytes);
+			Replace(bytes, true);
+			Pos1 = Pos2 = 0;
 		}
 
 		bool inHexEdit = false;
-		void Replace(byte[] bytes)
+		void Replace(byte[] bytes, bool useAllBytes = false)
 		{
 			if (bytes == null)
 				bytes = new byte[0];
@@ -380,6 +382,8 @@ namespace NeoEdit.BinaryEditorUI
 				len = SelEnd - SelStart;
 			else
 			{
+				if ((useAllBytes) && (bytes.Length < Data.Length - SelStart))
+					throw new InvalidOperationException("Unable to do this operation in insert mode.");
 				Array.Resize(ref bytes, (int)Math.Min(bytes.Length, Data.Length - SelStart));
 				len = bytes.Length;
 			}
@@ -481,10 +485,197 @@ namespace NeoEdit.BinaryEditorUI
 			e.Handled = true;
 		}
 
+		bool VerifyInsert()
+		{
+			if (Insert)
+				return true;
+
+			new Message
+			{
+				Title = "Error",
+				Text = "This operation can only be performed in insert mode.",
+				Options = Message.OptionsEnum.Ok
+			}.Show();
+
+			return false;
+		}
+
+		static Dictionary<string, Checksum.Type> ChecksumType= new Dictionary<string,Checksum.Type>
+		{
+			{ BinaryEditor.Checksum_MD5, Checksum.Type.MD5 },
+			{ BinaryEditor.Checksum_SHA1, Checksum.Type.SHA1 },
+			{ BinaryEditor.Checksum_SHA256, Checksum.Type.SHA256 },
+		};
+
+		bool HandleChecksum(string command)
+		{
+			if (!ChecksumType.ContainsKey(command))
+				return false;
+
+			new Message
+			{
+				Title = "Result",
+				Text = Checksum.Get(ChecksumType[command], Data.GetAllBytes()),
+				Options = Message.OptionsEnum.Ok
+			}.Show();
+
+			return true;
+		}
+
+		static Dictionary<string, Compression.Type> CompressType = new Dictionary<string, Compression.Type>
+		{
+			{ BinaryEditor.Compress_GZip, Compression.Type.GZip },
+			{ BinaryEditor.Decompress_GZip, Compression.Type.GZip },
+			{ BinaryEditor.Compress_Deflate, Compression.Type.Deflate },
+			{ BinaryEditor.Decompress_Inflate, Compression.Type.Deflate },
+		};
+
+		static Dictionary<string, bool> IsCompress = new Dictionary<string, bool>
+		{
+			{ BinaryEditor.Compress_GZip, true },
+			{ BinaryEditor.Decompress_GZip, false },
+			{ BinaryEditor.Compress_Deflate, true },
+			{ BinaryEditor.Decompress_Inflate, false },
+		};
+
+		bool HandleCompress(string command)
+		{
+			if (!CompressType.ContainsKey(command))
+				return false;
+
+			if (!VerifyInsert())
+				return true;
+
+			if (IsCompress[command])
+				ReplaceAll(Compression.Compress(CompressType[command], Data.GetAllBytes()));
+			else
+				ReplaceAll(Compression.Decompress(CompressType[command], Data.GetAllBytes()));
+
+			return true;
+		}
+
+		static Dictionary<string, Crypto.Type> EncryptType = new Dictionary<string, Crypto.Type>
+		{
+			{ BinaryEditor.Encrypt_AES, Crypto.Type.AES },
+			{ BinaryEditor.Decrypt_AES, Crypto.Type.AES },
+			{ BinaryEditor.Encrypt_DES, Crypto.Type.DES },
+			{ BinaryEditor.Decrypt_DES, Crypto.Type.DES },
+			{ BinaryEditor.Encrypt_DES3, Crypto.Type.DES3 },
+			{ BinaryEditor.Decrypt_DES3, Crypto.Type.DES3 },
+			{ BinaryEditor.Encrypt_RSA, Crypto.Type.RSA },
+			{ BinaryEditor.Decrypt_RSA, Crypto.Type.RSA },
+			{ BinaryEditor.Encrypt_RSAAES, Crypto.Type.RSAAES },
+			{ BinaryEditor.Decrypt_RSAAES, Crypto.Type.RSAAES },
+		};
+
+		static Dictionary<string, bool> IsEncrypt = new Dictionary<string, bool>
+		{
+			{ BinaryEditor.Encrypt_AES, true },
+			{ BinaryEditor.Decrypt_AES, false },
+			{ BinaryEditor.Encrypt_DES, true },
+			{ BinaryEditor.Decrypt_DES, false },
+			{ BinaryEditor.Encrypt_DES3, true },
+			{ BinaryEditor.Decrypt_DES3, false },
+			{ BinaryEditor.Encrypt_RSA, true },
+			{ BinaryEditor.Decrypt_RSA, false },
+			{ BinaryEditor.Encrypt_RSAAES, true },
+			{ BinaryEditor.Decrypt_RSAAES, false },
+		};
+
+		bool HandleEncrypt(string command)
+		{
+			if (!EncryptType.ContainsKey(command))
+				return false;
+
+			if (!VerifyInsert())
+				return true;
+
+			string key;
+			var type = EncryptType[command];
+			var isEncrypt = IsEncrypt[command];
+			if (type.IsSymmetric())
+			{
+				var keyDialog = new SymmetricKeyDialog { Type = type };
+				if (keyDialog.ShowDialog() != true)
+					return true;
+				key = keyDialog.Key;
+			}
+			else
+			{
+				var keyDialog = new AsymmetricKeyDialog { Type = type, Public = isEncrypt, CanGenerate = isEncrypt };
+				if (keyDialog.ShowDialog() != true)
+					return true;
+				key = keyDialog.Key;
+			}
+
+			if (isEncrypt)
+				ReplaceAll(Crypto.Encrypt(type, Data.GetAllBytes(), key));
+			else
+				ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), key));
+
+			return true;
+		}
+
+
+		static Dictionary<string, Crypto.Type> SignType = new Dictionary<string, Crypto.Type>
+		{
+			{ BinaryEditor.Sign_RSA, Crypto.Type.RSA },
+			{ BinaryEditor.Verify_RSA, Crypto.Type.RSA },
+			{ BinaryEditor.Sign_DSA, Crypto.Type.DSA },
+			{ BinaryEditor.Verify_DSA, Crypto.Type.DSA },
+		};
+
+		static Dictionary<string, bool> IsSign = new Dictionary<string, bool>
+		{
+			{ BinaryEditor.Sign_RSA, true },
+			{ BinaryEditor.Verify_RSA, false },
+			{ BinaryEditor.Sign_DSA, true },
+			{ BinaryEditor.Verify_DSA, false },
+		};
+
+		bool HandleSign(string command)
+		{
+			if (!SignType.ContainsKey(command))
+				return false;
+
+			var type = SignType[command];
+			var sign = IsSign[command];
+
+			var keyDialog = new AsymmetricKeyDialog { Type = type, Public = !sign, GetHash = Crypto.UseSigningHash(type), CanGenerate = sign, GetSignature = !sign };
+			if (keyDialog.ShowDialog() != true)
+				return true;
+
+			string text;
+			if (IsSign[command])
+				text = Crypto.Sign(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash);
+			else if (Crypto.Verify(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash, keyDialog.Signature))
+				text = "Matched.";
+			else
+				text = "ERROR: Signature DOES NOT match.";
+
+			new Message
+			{
+				Title = "Signature:",
+				Text = text,
+				Options = Message.OptionsEnum.Ok,
+			}.Show();
+
+			return true;
+		}
+
 		public void CommandRun(UICommand command, object parameter)
 		{
 			try
 			{
+				if (HandleChecksum(command.Name))
+					return;
+				if (HandleCompress(command.Name))
+					return;
+				if (HandleEncrypt(command.Name))
+					return;
+				if (HandleSign(command.Name))
+					return;
+
 				switch (command.Name)
 				{
 					case BinaryEditor.Edit_Cut:
@@ -523,116 +714,6 @@ namespace NeoEdit.BinaryEditorUI
 						DoFind(command.Name == BinaryEditor.Edit_FindNext);
 						break;
 					case BinaryEditor.Edit_Insert: Insert = !Insert; break;
-					case BinaryEditor.Checksum_MD5:
-					case BinaryEditor.Checksum_SHA1:
-					case BinaryEditor.Checksum_SHA256:
-						{
-							Checksum.Type checksumType = Checksum.Type.None;
-							switch (command.Name)
-							{
-								case BinaryEditor.Checksum_MD5: checksumType = Checksum.Type.MD5; break;
-								case BinaryEditor.Checksum_SHA1: checksumType = Checksum.Type.SHA1; break;
-								case BinaryEditor.Checksum_SHA256: checksumType = Checksum.Type.SHA256; break;
-							}
-							new Message
-							{
-								Title = "Result",
-								Text = Checksum.Get(checksumType, Data.GetAllBytes()),
-								Options = Message.OptionsEnum.Ok
-							}.Show();
-						}
-						break;
-					case BinaryEditor.Compress_GZip: Data.Replace(Compression.Compress(Compression.Type.GZip, Data.GetAllBytes())); break;
-					case BinaryEditor.Decompress_GZip: Data.Replace(Compression.Decompress(Compression.Type.GZip, Data.GetAllBytes())); break;
-					case BinaryEditor.Compress_Deflate: Data.Replace(Compression.Compress(Compression.Type.Deflate, Data.GetAllBytes())); break;
-					case BinaryEditor.Decompress_Inflate: Data.Replace(Compression.Decompress(Compression.Type.Deflate, Data.GetAllBytes())); break;
-					case BinaryEditor.Encrypt_AES:
-					case BinaryEditor.Encrypt_DES:
-					case BinaryEditor.Encrypt_DES3:
-						{
-							Crypto.Type type;
-							switch (command.Name)
-							{
-								case BinaryEditor.Encrypt_AES: type = Crypto.Type.AES; break;
-								case BinaryEditor.Encrypt_DES: type = Crypto.Type.DES; break;
-								case BinaryEditor.Encrypt_DES3: type = Crypto.Type.DES3; break;
-								default: throw new Exception();
-							}
-
-							var keyDialog = new SymmetricKeyDialog { Type = type };
-							if (keyDialog.ShowDialog() == true)
-								ReplaceAll(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
-						}
-						break;
-					case BinaryEditor.Decrypt_AES:
-					case BinaryEditor.Decrypt_DES:
-					case BinaryEditor.Decrypt_DES3:
-						{
-							Crypto.Type type;
-							switch (command.Name)
-							{
-								case BinaryEditor.Decrypt_AES: type = Crypto.Type.AES; break;
-								case BinaryEditor.Decrypt_DES: type = Crypto.Type.DES; break;
-								case BinaryEditor.Decrypt_DES3: type = Crypto.Type.DES3; break;
-								default: throw new Exception();
-							}
-
-							var keyDialog = new SymmetricKeyDialog { Type = type }; ;
-							if (keyDialog.ShowDialog() == true)
-								ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
-						}
-						break;
-					case BinaryEditor.Encrypt_RSA:
-					case BinaryEditor.Encrypt_RSAAES:
-						{
-							var type = command.Name == BinaryEditor.Encrypt_AES ? Crypto.Type.RSA : Crypto.Type.RSAAES;
-							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, CanGenerate = true };
-							if (keyDialog.ShowDialog() == true)
-								ReplaceAll(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
-						}
-						break;
-					case BinaryEditor.Decrypt_RSA:
-					case BinaryEditor.Decrypt_RSAAES:
-						{
-							var type = command.Name == BinaryEditor.Decrypt_RSA ? Crypto.Type.RSA : Crypto.Type.RSAAES;
-							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = false };
-							if (keyDialog.ShowDialog() == true)
-								ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
-						}
-						break;
-					case BinaryEditor.Sign_RSA:
-					case BinaryEditor.Sign_DSA:
-						{
-							var type = command.Name == BinaryEditor.Sign_RSA ? Crypto.Type.RSA : Crypto.Type.DSA;
-							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = false, GetHash = Crypto.UseSigningHash(type), CanGenerate = true };
-							if (keyDialog.ShowDialog() == true)
-							{
-								new Message
-								{
-									Title = "Signature:",
-									Text = Crypto.Sign(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash),
-									Options = Message.OptionsEnum.Ok,
-								}.Show();
-							}
-						}
-						break;
-					case BinaryEditor.Verify_RSA:
-					case BinaryEditor.Verify_DSA:
-						{
-							var type = command.Name == BinaryEditor.Verify_RSA ? Crypto.Type.RSA : Crypto.Type.DSA;
-							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, GetHash = Crypto.UseSigningHash(type), GetSignature = true };
-							if (keyDialog.ShowDialog() == true)
-							{
-								var result = Crypto.Verify(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash, keyDialog.Signature);
-								new Message
-								{
-									Title = "Signature:",
-									Text = result ? "Matched." : "ERROR: Signature DOES NOT match.",
-									Options = Message.OptionsEnum.Ok,
-								}.Show();
-							}
-						}
-						break;
 				}
 			}
 			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
