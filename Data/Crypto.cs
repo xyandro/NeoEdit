@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace NeoEdit.Data
 {
@@ -146,6 +146,9 @@ namespace NeoEdit.Data
 
 		public static string GetPublicKey(Type type, string privKey)
 		{
+			if (type.IsSymmetric())
+				return privKey;
+
 			type = BaseType(type);
 			var alg = GetAsymmetricAlgorithm(type);
 			alg.FromXmlString(privKey);
@@ -220,15 +223,14 @@ namespace NeoEdit.Data
 			return Decrypt(Type.AES, encryptedData, aesKey);
 		}
 
-		public static bool UseSigningHash(Type type)
+		public static IEnumerable<string> SigningHashes(this Type type)
 		{
 			switch (type)
 			{
-				case Type.RSA: return true;
-				case Type.DSA: return false;
+				case Type.RSA: return new List<string> { "SHA1", "SHA256", "SHA512", "MD5" };
+				case Type.DSA: return new List<string> { "SHA1" };
+				default: throw new ArgumentException(type.ToString());
 			}
-
-			throw new Exception("Invalid UseHash query");
 		}
 
 		public static string Sign(Type type, byte[] data, string privKey, string hash)

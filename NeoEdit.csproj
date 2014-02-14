@@ -97,7 +97,10 @@
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Clipboard.cs" />
+    <Compile Include="UnitTest\ChecksumTest.cs" />
     <Compile Include="UnitTest\CoderTest.cs" />
+    <Compile Include="UnitTest\CompressionTest.cs" />
+    <Compile Include="UnitTest\CryptoTest.cs" />
     <Compile Include="UnitTest\UnitTest.cs" />
     <Compile Include="UnitTest\UnicodeTest.cs" />
     <Compile Include="BinaryEditorUI\BinaryCanvas.xaml.cs">

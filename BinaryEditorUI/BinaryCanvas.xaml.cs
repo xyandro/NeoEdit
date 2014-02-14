@@ -734,7 +734,7 @@ namespace NeoEdit.BinaryEditorUI
 			var type = SignType[command];
 			var sign = IsSign[command];
 
-			var keyDialog = new AsymmetricKeyDialog { Type = type, Public = !sign, GetHash = Crypto.UseSigningHash(type), CanGenerate = sign, GetSignature = !sign };
+			var keyDialog = new AsymmetricKeyDialog { Type = type, Public = !sign, GetHash = true, CanGenerate = sign, GetSignature = !sign };
 			if (keyDialog.ShowDialog() != true)
 				return true;
 

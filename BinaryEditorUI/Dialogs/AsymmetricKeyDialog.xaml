@@ -13,13 +13,7 @@
 
 				<StackPanel Name="hashPanel">
 					<Label Content="_Hash to use:" Target="{Binding ElementName=hash}"/>
-					<ComboBox HorizontalAlignment="Left" Name="hash" Width="90" SelectedIndex="0">
-						<ComboBoxItem Content="SHA1"/>
-						<ComboBoxItem Content="SHA256"/>
-						<ComboBoxItem Content="SHA386"/>
-						<ComboBoxItem Content="SHA512"/>
-						<ComboBoxItem Content="MD5"/>
-					</ComboBox>
+					<ComboBox HorizontalAlignment="Left" Name="hash" Width="90" SelectedIndex="0"/>
 				</StackPanel>
 
 				<StackPanel Name="signaturePanel">

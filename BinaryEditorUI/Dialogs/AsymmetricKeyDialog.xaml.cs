@@ -14,16 +14,23 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 			set
 			{
 				type = value;
-				keySize.Items.Clear();
+
 				IEnumerable<int> keySizes;
 				int defaultSize;
 				Crypto.GetKeySizeInfo(type, out keySizes, out defaultSize);
+				keySize.Items.Clear();
 				foreach (var size in keySizes)
 				{
 					if (size == defaultSize)
 						keySize.SelectedIndex = keySize.Items.Count;
 					keySize.Items.Add(size);
 				}
+
+				hash.Items.Clear();
+				var hashes = type.SigningHashes();
+				foreach (var item in hashes)
+					hash.Items.Add(item);
+				hash.SelectedIndex = 0;
 			}
 		}
 		bool isPublic;
