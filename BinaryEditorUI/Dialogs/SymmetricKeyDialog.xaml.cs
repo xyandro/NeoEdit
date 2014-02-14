@@ -8,8 +8,8 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 {
 	public partial class SymmetricKeyDialog : Window
 	{
-		Crypto.CryptoType type;
-		public Crypto.CryptoType Type
+		Crypto.Type type;
+		public Crypto.Type Type
 		{
 			get { return type; }
 			set
@@ -18,7 +18,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 				keySize.Items.Clear();
 				IEnumerable<int> keySizes;
 				int defaultSize;
-				Crypto.GetSymmetricKeySizeInfo(type, out keySizes, out defaultSize);
+				Crypto.GetKeySizeInfo(type, out keySizes, out defaultSize);
 				foreach (var size in keySizes)
 				{
 					if (size == defaultSize)
@@ -34,7 +34,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		{
 			InitializeComponent();
 
-			Type = Crypto.CryptoType.AES;
+			Type = Crypto.Type.AES;
 			salt.Text = "AWdSJ9hs72TXUUqaKpYIbU2v/YONdOxf";
 		}
 

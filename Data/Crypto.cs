@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,48 +9,57 @@ namespace NeoEdit.Data
 {
 	public static class Crypto
 	{
-		public enum CryptoType
+		public enum Type
 		{
+			None,
 			AES,
 			DES,
 			DES3,
 			RSA,
 			DSA,
+			RSAAES,
 		}
 
-		static bool IsSymmetric(CryptoType type)
+		static Type BaseType(Type type)
 		{
-			switch (type)
+			if (type == Type.RSAAES)
+				return Type.RSA;
+			return type;
+		}
+
+		static bool IsSymmetric(Type type)
+		{
+			switch (BaseType(type))
 			{
-				case CryptoType.AES:
-				case CryptoType.DES:
-				case CryptoType.DES3:
+				case Type.AES:
+				case Type.DES:
+				case Type.DES3:
 					return true;
-				case CryptoType.RSA:
-				case CryptoType.DSA:
+				case Type.RSA:
+				case Type.DSA:
 					return false;
 			}
 			throw new Exception("Invalid query");
 		}
 
-		static SymmetricAlgorithm GetSymmetricAlgorithm(CryptoType type)
+		static SymmetricAlgorithm GetSymmetricAlgorithm(Type type)
 		{
 			switch (type)
 			{
-				case CryptoType.AES: return new AesCryptoServiceProvider();
-				case CryptoType.DES: return new DESCryptoServiceProvider();
-				case CryptoType.DES3: return new TripleDESCryptoServiceProvider();
+				case Type.AES: return new AesCryptoServiceProvider();
+				case Type.DES: return new DESCryptoServiceProvider();
+				case Type.DES3: return new TripleDESCryptoServiceProvider();
 				default: throw new Exception("Not a symmetric type");
 			}
 		}
 
-		static AsymmetricAlgorithm GetAsymmetricAlgorithm(CryptoType type)
+		static AsymmetricAlgorithm GetAsymmetricAlgorithm(Type type)
 		{
 			switch (type)
 			{
-				case CryptoType.RSA: return new RSACryptoServiceProvider();
-				case CryptoType.DSA: return new DSACryptoServiceProvider();
-				default: throw new Exception("Not a symmetric type");
+				case Type.RSA: return new RSACryptoServiceProvider();
+				case Type.DSA: return new DSACryptoServiceProvider();
+				default: throw new Exception("Not an asymmetric type");
 			}
 		}
 
@@ -59,13 +69,13 @@ namespace NeoEdit.Data
 				return Convert.ToBase64String(byteGenerator.GetBytes(keySize / 8));
 		}
 
-		public static byte[] Encrypt(CryptoType type, byte[] data, string key)
+		public static byte[] Encrypt(Type type, byte[] data, string key)
 		{
 			switch (type)
 			{
-				case CryptoType.AES:
-				case CryptoType.DES:
-				case CryptoType.DES3:
+				case Type.AES:
+				case Type.DES:
+				case Type.DES3:
 					using (var alg = GetSymmetricAlgorithm(type))
 					{
 						alg.Key = Convert.FromBase64String(key);
@@ -80,20 +90,21 @@ namespace NeoEdit.Data
 							return ms.ToArray();
 						}
 					}
-				case CryptoType.RSA: return EncryptRSA(data, key);
+				case Type.RSA: return EncryptRSA(data, key);
+				case Type.RSAAES: return EncryptRSAAES(data, key);
 			}
 			throw new Exception("Failed to encrypt");
 		}
 
-		public static byte[] Decrypt(CryptoType type, byte[] data, string key)
+		public static byte[] Decrypt(Type type, byte[] data, string key)
 		{
 			try
 			{
 				switch (type)
 				{
-					case CryptoType.AES:
-					case CryptoType.DES:
-					case CryptoType.DES3:
+					case Type.AES:
+					case Type.DES:
+					case Type.DES3:
 						using (var alg = GetSymmetricAlgorithm(type))
 						{
 							alg.Key = Convert.FromBase64String(key);
@@ -105,15 +116,18 @@ namespace NeoEdit.Data
 							using (var decryptor = alg.CreateDecryptor())
 								return decryptor.TransformFinalBlock(data, sizeof(int) + iv.Length, data.Length - sizeof(int) - iv.Length);
 						}
-					case CryptoType.RSA: return DecryptRSA(data, key);
+					case Type.RSA: return DecryptRSA(data, key);
+					case Type.RSAAES: return DecryptRSAAES(data, key);
 				}
 				throw new Exception("Failed to decrypt");
 			}
 			catch (Exception ex) { throw new Exception(String.Format("Decryption failed: {0}", ex.Message), ex); }
 		}
 
-		public static string GenerateKey(CryptoType type, int keySize)
+		public static string GenerateKey(Type type, int keySize)
 		{
+			type = BaseType(type);
+
 			if (IsSymmetric(type))
 			{
 				var alg = GetSymmetricAlgorithm(type);
@@ -130,15 +144,33 @@ namespace NeoEdit.Data
 			}
 		}
 
-		public static string GetPublicKey(CryptoType type, string privKey)
+		public static string GetPublicKey(Type type, string privKey)
 		{
+			type = BaseType(type);
 			var alg = GetAsymmetricAlgorithm(type);
 			alg.FromXmlString(privKey);
 			return alg.ToXmlString(false);
 		}
 
-		public static void GetKeySizeInfo(KeySizes[] legalKeySizes, out IEnumerable<int> keySizes)
+		public static void GetKeySizeInfo(Type type, out IEnumerable<int> keySizes, out int defaultKeySize)
 		{
+			type = BaseType(type);
+			KeySizes[] legalKeySizes;
+			if (IsSymmetric(type))
+			{
+				type = BaseType(type);
+				var alg = GetSymmetricAlgorithm(type);
+				defaultKeySize = alg.KeySize;
+				legalKeySizes = alg.LegalKeySizes;
+			}
+			else
+			{
+				type = BaseType(type);
+				var alg = GetAsymmetricAlgorithm(type);
+				defaultKeySize = alg.KeySize;
+				legalKeySizes = alg.LegalKeySizes;
+			}
+
 			var keySet = new HashSet<int>();
 			foreach (var keySize in legalKeySizes)
 			{
@@ -147,20 +179,6 @@ namespace NeoEdit.Data
 					keySet.Add(size);
 			}
 			keySizes = keySet.OrderBy(size => size).ToList();
-		}
-
-		public static void GetSymmetricKeySizeInfo(CryptoType type, out IEnumerable<int> keySizes, out int defaultKeySize)
-		{
-			var alg = GetSymmetricAlgorithm(type);
-			GetKeySizeInfo(alg.LegalKeySizes, out keySizes);
-			defaultKeySize = alg.KeySize;
-		}
-
-		public static void GetAsymmetricKeySizeInfo(CryptoType type, out IEnumerable<int> keySizes, out int defaultKeySize)
-		{
-			var alg = GetAsymmetricAlgorithm(type);
-			GetKeySizeInfo(alg.LegalKeySizes, out keySizes);
-			defaultKeySize = alg.KeySize;
 		}
 
 		static byte[] EncryptRSA(byte[] data, string pubKey)
@@ -177,40 +195,65 @@ namespace NeoEdit.Data
 			return rsa.Decrypt(data, false);
 		}
 
-		public static bool UseSigningHash(CryptoType type)
+		static byte[] EncryptRSAAES(byte[] data, string pubKey)
+		{
+			var aesKey = GenerateKey(Type.AES, 0);
+			using (var ms = new MemoryStream())
+			{
+				var encryptedAesKey = Encrypt(Type.RSA, Encoding.UTF8.GetBytes(aesKey), pubKey);
+				var encryptedData = Encrypt(Type.AES, data, aesKey);
+
+				ms.Write(BitConverter.GetBytes(encryptedAesKey.Length), 0, sizeof(int));
+				ms.Write(encryptedAesKey, 0, encryptedAesKey.Length);
+				ms.Write(encryptedData, 0, encryptedData.Length);
+
+				return ms.ToArray();
+			}
+		}
+
+		static byte[] DecryptRSAAES(byte[] data, string privKey)
+		{
+			var encryptedAesKey = new byte[BitConverter.ToInt32(data, 0)];
+			Array.Copy(data, sizeof(int), encryptedAesKey, 0, encryptedAesKey.Length);
+			var aesKey = Encoding.UTF8.GetString(Decrypt(Type.RSA, encryptedAesKey, privKey));
+			var encryptedData = data.Skip(sizeof(int) + encryptedAesKey.Length).ToArray();
+			return Decrypt(Type.AES, encryptedData, aesKey);
+		}
+
+		public static bool UseSigningHash(Type type)
 		{
 			switch (type)
 			{
-				case CryptoType.RSA: return true;
-				case CryptoType.DSA: return false;
+				case Type.RSA: return true;
+				case Type.DSA: return false;
 			}
 
 			throw new Exception("Invalid UseHash query");
 		}
 
-		public static string Sign(CryptoType type, byte[] data, string privKey, string hash)
+		public static string Sign(Type type, byte[] data, string privKey, string hash)
 		{
 			var alg = GetAsymmetricAlgorithm(type);
 			alg.FromXmlString(privKey);
 
 			switch (type)
 			{
-				case CryptoType.RSA: return Convert.ToBase64String((alg as RSACryptoServiceProvider).SignData(data, hash));
-				case CryptoType.DSA: return Convert.ToBase64String((alg as DSACryptoServiceProvider).SignData(data));
+				case Type.RSA: return Convert.ToBase64String((alg as RSACryptoServiceProvider).SignData(data, hash));
+				case Type.DSA: return Convert.ToBase64String((alg as DSACryptoServiceProvider).SignData(data));
 			}
 
 			throw new Exception("Unable to sign");
 		}
 
-		public static bool Verify(CryptoType type, byte[] data, string pubKey, string hash, string signature)
+		public static bool Verify(Type type, byte[] data, string pubKey, string hash, string signature)
 		{
 			var alg = GetAsymmetricAlgorithm(type);
 			alg.FromXmlString(pubKey);
 
 			switch (type)
 			{
-				case CryptoType.RSA: return (alg as RSACryptoServiceProvider).VerifyData(data, hash, Convert.FromBase64String(signature));
-				case CryptoType.DSA: return (alg as DSACryptoServiceProvider).VerifyData(data, Convert.FromBase64String(signature));
+				case Type.RSA: return (alg as RSACryptoServiceProvider).VerifyData(data, hash, Convert.FromBase64String(signature));
+				case Type.DSA: return (alg as DSACryptoServiceProvider).VerifyData(data, Convert.FromBase64String(signature));
 			}
 
 			throw new Exception("Unable to verify");

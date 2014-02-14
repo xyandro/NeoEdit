@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -547,48 +546,16 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Decompress_GZip: Data.Replace(Compression.Decompress(Compression.Type.GZip, Data.GetAllBytes())); break;
 					case BinaryEditor.Compress_Deflate: Data.Replace(Compression.Compress(Compression.Type.Deflate, Data.GetAllBytes())); break;
 					case BinaryEditor.Decompress_Inflate: Data.Replace(Compression.Decompress(Compression.Type.Deflate, Data.GetAllBytes())); break;
-					case BinaryEditor.Encrypt_RSAAES:
-						{
-							var keyDialog = new AsymmetricKeyDialog { Type = Crypto.CryptoType.RSA, Public = true, CanGenerate = true };
-							if (keyDialog.ShowDialog() == true)
-							{
-								var aesKey = Crypto.GenerateKey(Crypto.CryptoType.AES, 0);
-								using (var ms = new MemoryStream())
-								{
-									var encryptedAesKey = Crypto.Encrypt(Crypto.CryptoType.RSA, Encoding.UTF8.GetBytes(aesKey), keyDialog.Key);
-									ms.Write(BitConverter.GetBytes(encryptedAesKey.Length), 0, sizeof(int));
-									ms.Write(encryptedAesKey, 0, encryptedAesKey.Length);
-
-									var encryptedData = Crypto.Encrypt(Crypto.CryptoType.AES, Data.GetAllBytes(), aesKey);
-									ms.Write(encryptedData, 0, encryptedData.Length);
-
-									ReplaceAll(ms.ToArray());
-								}
-							}
-						}
-						break;
-					case BinaryEditor.Decrypt_RSAAES:
-						{
-							var keyDialog = new AsymmetricKeyDialog { Type = Crypto.CryptoType.RSA, Public = false };
-							if (keyDialog.ShowDialog() == true)
-							{
-								var encryptedAesKey = Data.GetSubset(sizeof(int), BitConverter.ToInt32(Data.GetSubset(0, sizeof(int)), 0));
-								var aesKey = Encoding.UTF8.GetString(Crypto.Decrypt(Crypto.CryptoType.RSA, encryptedAesKey, keyDialog.Key));
-								var skip = sizeof(int) + encryptedAesKey.Length;
-								ReplaceAll(Crypto.Decrypt(Crypto.CryptoType.AES, Data.GetSubset(skip, Data.Length - skip).ToArray(), aesKey));
-							}
-						}
-						break;
 					case BinaryEditor.Encrypt_AES:
 					case BinaryEditor.Encrypt_DES:
 					case BinaryEditor.Encrypt_DES3:
 						{
-							Crypto.CryptoType type;
+							Crypto.Type type;
 							switch (command.Name)
 							{
-								case BinaryEditor.Encrypt_AES: type = Crypto.CryptoType.AES; break;
-								case BinaryEditor.Encrypt_DES: type = Crypto.CryptoType.DES; break;
-								case BinaryEditor.Encrypt_DES3: type = Crypto.CryptoType.DES3; break;
+								case BinaryEditor.Encrypt_AES: type = Crypto.Type.AES; break;
+								case BinaryEditor.Encrypt_DES: type = Crypto.Type.DES; break;
+								case BinaryEditor.Encrypt_DES3: type = Crypto.Type.DES3; break;
 								default: throw new Exception();
 							}
 
@@ -601,12 +568,12 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Decrypt_DES:
 					case BinaryEditor.Decrypt_DES3:
 						{
-							Crypto.CryptoType type;
+							Crypto.Type type;
 							switch (command.Name)
 							{
-								case BinaryEditor.Decrypt_AES: type = Crypto.CryptoType.AES; break;
-								case BinaryEditor.Decrypt_DES: type = Crypto.CryptoType.DES; break;
-								case BinaryEditor.Decrypt_DES3: type = Crypto.CryptoType.DES3; break;
+								case BinaryEditor.Decrypt_AES: type = Crypto.Type.AES; break;
+								case BinaryEditor.Decrypt_DES: type = Crypto.Type.DES; break;
+								case BinaryEditor.Decrypt_DES3: type = Crypto.Type.DES3; break;
 								default: throw new Exception();
 							}
 
@@ -616,16 +583,18 @@ namespace NeoEdit.BinaryEditorUI
 						}
 						break;
 					case BinaryEditor.Encrypt_RSA:
+					case BinaryEditor.Encrypt_RSAAES:
 						{
-							var type = Crypto.CryptoType.RSA;
+							var type = command.Name == BinaryEditor.Encrypt_AES ? Crypto.Type.RSA : Crypto.Type.RSAAES;
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, CanGenerate = true };
 							if (keyDialog.ShowDialog() == true)
 								ReplaceAll(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Decrypt_RSA:
+					case BinaryEditor.Decrypt_RSAAES:
 						{
-							var type = Crypto.CryptoType.RSA;
+							var type = command.Name == BinaryEditor.Decrypt_RSA ? Crypto.Type.RSA : Crypto.Type.RSAAES;
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = false };
 							if (keyDialog.ShowDialog() == true)
 								ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
@@ -634,7 +603,7 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Sign_RSA:
 					case BinaryEditor.Sign_DSA:
 						{
-							var type = command.Name == BinaryEditor.Sign_RSA ? Crypto.CryptoType.RSA : Crypto.CryptoType.DSA;
+							var type = command.Name == BinaryEditor.Sign_RSA ? Crypto.Type.RSA : Crypto.Type.DSA;
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = false, GetHash = Crypto.UseSigningHash(type), CanGenerate = true };
 							if (keyDialog.ShowDialog() == true)
 							{
@@ -650,7 +619,7 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Verify_RSA:
 					case BinaryEditor.Verify_DSA:
 						{
-							var type = command.Name == BinaryEditor.Verify_RSA ? Crypto.CryptoType.RSA : Crypto.CryptoType.DSA;
+							var type = command.Name == BinaryEditor.Verify_RSA ? Crypto.Type.RSA : Crypto.Type.DSA;
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, GetHash = Crypto.UseSigningHash(type), GetSignature = true };
 							if (keyDialog.ShowDialog() == true)
 							{

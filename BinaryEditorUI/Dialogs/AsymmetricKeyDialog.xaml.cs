@@ -7,8 +7,8 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 {
 	public partial class AsymmetricKeyDialog : Window
 	{
-		Crypto.CryptoType type;
-		public Crypto.CryptoType Type
+		Crypto.Type type;
+		public Crypto.Type Type
 		{
 			get { return type; }
 			set
@@ -17,7 +17,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 				keySize.Items.Clear();
 				IEnumerable<int> keySizes;
 				int defaultSize;
-				Crypto.GetAsymmetricKeySizeInfo(type, out keySizes, out defaultSize);
+				Crypto.GetKeySizeInfo(type, out keySizes, out defaultSize);
 				foreach (var size in keySizes)
 				{
 					if (size == defaultSize)
@@ -75,7 +75,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		{
 			InitializeComponent();
 
-			Type = Crypto.CryptoType.RSA;
+			Type = Crypto.Type.RSA;
 			Public = true;
 			GetHash = GetSignature = CanGenerate = false;
 		}
