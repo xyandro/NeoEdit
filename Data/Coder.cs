@@ -206,48 +206,57 @@ namespace NeoEdit.Data
 		}
 
 		static Regex base64Quick = new Regex("^[\ufeff0-9a-zA-Z+/\\s=]*$");
-		static Regex base64Correct = new Regex(@"^((\s*[0-9a-zA-Z+/]){4})*((\s*[0-9a-zA-Z+/]){2}\s*=\s*=|(\s*[0-9a-zA-Z+/]){3}\s*=)?\s*$");
+		static Regex base64Correct = new Regex(@"^\ufeff?((\s*[0-9a-zA-Z+/]){4})*((\s*[0-9a-zA-Z+/]){2}\s*=\s*=|(\s*[0-9a-zA-Z+/]){3}\s*=)?\s*$");
 		public static byte[] StringToBytes(string value, Type type)
 		{
 			if (value == null)
 				value = "";
 
-			switch (type)
+			try
 			{
-				case Type.UInt8LE: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, false);
-				case Type.UInt16LE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), false);
-				case Type.UInt32LE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), false);
-				case Type.UInt64LE: return NumToBytes<UInt64>(value, UInt64.TryParse, v => BitConverter.GetBytes(v), false);
-				case Type.Int8LE: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, false);
-				case Type.Int16LE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), false);
-				case Type.Int32LE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), false);
-				case Type.Int64LE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), false);
-				case Type.UInt8BE: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, true);
-				case Type.UInt16BE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), true);
-				case Type.UInt32BE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), true);
-				case Type.UInt64BE: return NumToBytes<UInt64>(value, UInt64.TryParse, v => BitConverter.GetBytes(v), true);
-				case Type.Int8BE: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, true);
-				case Type.Int16BE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), true);
-				case Type.Int32BE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), true);
-				case Type.Int64BE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), true);
-				case Type.Single: return NumToBytes<Single>(value, Single.TryParse, v => BitConverter.GetBytes(v), false);
-				case Type.Double: return NumToBytes<Double>(value, Double.TryParse, v => BitConverter.GetBytes(v), false);
-				case Type.UTF7:
-				case Type.UTF8:
-				case Type.UTF16LE:
-				case Type.UTF16BE:
-				case Type.UTF32LE:
-				case Type.UTF32BE:
-					return GetEncoding(type).GetBytes(value);
-				case Type.Base64:
-					// Quick match to throw out most invalid stuff
-					if (!base64Quick.IsMatch(value))
-						return null;
-					if (!base64Correct.IsMatch(value))
-						return null;
-					return Convert.FromBase64String(value.TrimStart('\ufeff'));
-				case Type.Hex: return StringToHex(value, false);
-				case Type.HexRev: return StringToHex(value, true);
+				switch (type)
+				{
+					case Type.UInt8LE: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, false);
+					case Type.UInt16LE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), false);
+					case Type.UInt32LE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), false);
+					case Type.UInt64LE: return NumToBytes<UInt64>(value, UInt64.TryParse, v => BitConverter.GetBytes(v), false);
+					case Type.Int8LE: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, false);
+					case Type.Int16LE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), false);
+					case Type.Int32LE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), false);
+					case Type.Int64LE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), false);
+					case Type.UInt8BE: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, true);
+					case Type.UInt16BE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), true);
+					case Type.UInt32BE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), true);
+					case Type.UInt64BE: return NumToBytes<UInt64>(value, UInt64.TryParse, v => BitConverter.GetBytes(v), true);
+					case Type.Int8BE: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, true);
+					case Type.Int16BE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), true);
+					case Type.Int32BE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), true);
+					case Type.Int64BE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), true);
+					case Type.Single: return NumToBytes<Single>(value, Single.TryParse, v => BitConverter.GetBytes(v), false);
+					case Type.Double: return NumToBytes<Double>(value, Double.TryParse, v => BitConverter.GetBytes(v), false);
+					case Type.UTF7:
+					case Type.UTF8:
+					case Type.UTF16LE:
+					case Type.UTF16BE:
+					case Type.UTF32LE:
+					case Type.UTF32BE:
+						return GetEncoding(type).GetBytes(value);
+					case Type.Base64:
+						// Quick match to throw out most invalid stuff; checks only that the string contains the proper characters
+						if (!base64Quick.IsMatch(value))
+							return null;
+						// More expensive one for true correctness
+						if (!base64Correct.IsMatch(value))
+							return null;
+						return Convert.FromBase64String(value.TrimStart('\ufeff'));
+					case Type.Hex: return StringToHex(value, false);
+					case Type.HexRev: return StringToHex(value, true);
+				}
+			}
+			catch
+			{
+				// Don't let it get here.  .NET exceptions are expensive.
+				return null;
 			}
 			throw new Exception("Invalid conversion");
 		}
