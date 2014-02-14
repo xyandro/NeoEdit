@@ -175,24 +175,24 @@ namespace NeoEdit.BinaryEditorUI
 			return row * rowHeight;
 		}
 
-		double GetXHexFromColumn(long column)
+		double GetXHexFromColumn(int column)
 		{
 			return xHexViewStart + (column * (2 + xHexSpacing) + (inHexEdit ? 1 : 0)) * charWidth;
 		}
 
-		long GetColumnFromXHex(double x)
+		int GetColumnFromXHex(double x)
 		{
-			return (long)((x - xHexViewStart) / (2 + xHexSpacing) / charWidth);
+			return (int)((x - xHexViewStart) / (2 + xHexSpacing) / charWidth);
 		}
 
-		double GetXTextFromColumn(long column)
+		double GetXTextFromColumn(int column)
 		{
 			return xTextViewStart + column * charWidth;
 		}
 
-		long GetColumnFromXText(double x)
+		int GetColumnFromXText(double x)
 		{
-			return (long)((x - xTextViewStart) / charWidth);
+			return (int)((x - xTextViewStart) / charWidth);
 		}
 
 		protected override void OnRender(DrawingContext dc)
@@ -266,7 +266,7 @@ namespace NeoEdit.BinaryEditorUI
 				var selRow = Pos1 / columns;
 				if (selRow == row)
 				{
-					var selCol = Pos1 % columns;
+					var selCol = (int)(Pos1 % columns);
 					dc.DrawRectangle(SelHex ? Brushes.Black : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
 					dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Black, null, new Rect(GetXTextFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
 				}
@@ -430,7 +430,7 @@ namespace NeoEdit.BinaryEditorUI
 		{
 			var x = mousePos.X + xScrollValue;
 			var row = GetRowFromY(mousePos.Y + yScrollValue);
-			long column;
+			int column;
 			bool isHex;
 
 			if ((x >= xHexViewStart) && (x <= xHexViewEnd))
