@@ -47,7 +47,7 @@ namespace NeoEdit.BinaryEditorUI.Converters
 
 		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
 		{
-			return null;
+			throw new NotImplementedException();
 		}
 	}
 }
