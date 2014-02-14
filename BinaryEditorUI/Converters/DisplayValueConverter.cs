@@ -35,7 +35,7 @@ namespace NeoEdit.BinaryEditorUI.Converters
 				if (count == -1)
 					count = encoding.PreviewSize();
 				if (selStart != selEnd)
-					count = Math.Min(count, selEnd - selStart + 1);
+					count = Math.Min(count, selEnd - selStart);
 				count = Math.Min(count, data.Length - selStart);
 				var str = Coder.BytesToString(data.GetSubset(selStart, count), encoding);
 				if (encoding.IsStr())

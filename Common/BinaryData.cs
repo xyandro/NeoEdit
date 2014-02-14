@@ -114,7 +114,7 @@ namespace NeoEdit.Common
 					if (findIdx == findData.Length)
 					{
 						start = pos;
-						end = pos + findData.Length - 1;
+						end = pos + findData.Length;
 						return true;
 					}
 				}

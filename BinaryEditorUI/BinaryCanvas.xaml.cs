@@ -56,7 +56,7 @@ namespace NeoEdit.BinaryEditorUI
 			get { return _pos1; }
 			set
 			{
-				_pos1 = Math.Min(Data.Length - 1, Math.Max(0, value));
+				_pos1 = Math.Min(Data.Length, Math.Max(0, value));
 				if (!selecting)
 					_pos2 = _pos1;
 
@@ -75,7 +75,7 @@ namespace NeoEdit.BinaryEditorUI
 			get { return _pos2; }
 			set
 			{
-				_pos2 = Math.Min(Data.Length - 1, Math.Max(0, value));
+				_pos2 = Math.Min(Data.Length, Math.Max(0, value));
 
 				SelStart = Math.Min(_pos1, _pos2);
 				SelEnd = Math.Max(_pos1, _pos2);
@@ -83,21 +83,28 @@ namespace NeoEdit.BinaryEditorUI
 				InvalidateVisual();
 			}
 		}
-
-		[DepProp]
-		public bool SelHex { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		bool sexHex;
+		bool SelHex
+		{
+			get { return sexHex; }
+			set
+			{
+				InvalidateVisual();
+				inHexEdit = false;
+				sexHex = value;
+			}
+		}
 
 		readonly double charWidth;
 		const int minColumns = 4;
 		const int maxColumns = Int32.MaxValue;
 
 		bool mouseDown;
-		bool? overrideSelecting;
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
 		bool controlOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Control; } }
-		bool selecting { get { return overrideSelecting.HasValue ? overrideSelecting.Value : ((mouseDown) || (shiftDown)); } }
+		bool selecting { get { return (mouseDown) || (shiftDown); } }
 
 		int columns;
 		long rows;
@@ -140,7 +147,6 @@ namespace NeoEdit.BinaryEditorUI
 
 			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(a => a.SelHex, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
@@ -150,7 +156,7 @@ namespace NeoEdit.BinaryEditorUI
 			{
 				InvalidateVisual();
 				InputCoderType = Coder.Type.UTF8;
-				SelStart = SelEnd = 0;
+				Pos1 = Pos2 = 0;
 			};
 		}
 
@@ -172,7 +178,7 @@ namespace NeoEdit.BinaryEditorUI
 
 		double GetXHexFromColumn(long column)
 		{
-			return xHexViewStart + column * (2 + xHexSpacing) * charWidth;
+			return xHexViewStart + (column * (2 + xHexSpacing) + (inHexEdit ? 1 : 0)) * charWidth;
 		}
 
 		long GetColumnFromXHex(double x)
@@ -198,7 +204,7 @@ namespace NeoEdit.BinaryEditorUI
 				return;
 
 			columns = Math.Min(maxColumns, Math.Max(minColumns, ((int)(ActualWidth / charWidth) - xPosColumns - xPosGap - xHexGap + xHexSpacing) / (3 + xHexSpacing)));
-			rows = (Data.Length + columns - 1) / columns;
+			rows = Data.Length / columns + 1;
 
 			xScrollMaximum = xEnd - ActualWidth;
 			xScrollSmallChange = charWidth;
@@ -209,30 +215,32 @@ namespace NeoEdit.BinaryEditorUI
 			yScrollLargeChange = ActualHeight - yScrollSmallChange;
 
 			var startRow = Math.Max(0, GetRowFromY(yScrollValue));
-			var endRow = Math.Min(rows, GetRowFromY(ActualHeight + rowHeight + yScrollValue));
+			var endRow = Math.Min(rows - 1, GetRowFromY(yScrollValue + ActualHeight));
 
-			for (var row = startRow; row < endRow; ++row)
+			for (var row = startRow; row <= endRow; ++row)
 			{
 				var y = row * rowHeight - yScrollValue;
 				var selected = new bool[columns];
-				string hex = "", text = "";
+				var hex = new StringBuilder();
+				var text = new StringBuilder();
 				var useColumns = Math.Min(columns, Data.Length - row * columns);
 				for (var column = 0; column < useColumns; ++column)
 				{
 					var pos = row * columns + column;
-					if ((pos >= SelStart) && (pos <= SelEnd))
+					if ((pos >= SelStart) && (pos < SelEnd))
 						selected[column] = true;
 
 					var b = Data[pos];
 					var c = (char)b;
 
-					hex += String.Format("{0:x2}", b) + new string(' ', xHexSpacing);
-					text += Char.IsControl(c) ? '·' : c;
+					hex.Append(b.ToString("x2"));
+					hex.Append(' ', xHexSpacing);
+					text.Append(Char.IsControl(c) ? '·' : c);
 				}
 
 				var posText = new FormattedText(String.Format("{0:x" + xPosColumns.ToString() + "}", row * columns), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-				var hexText = new FormattedText(hex, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-				var textText = new FormattedText(text, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+				var hexText = new FormattedText(hex.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+				var textText = new FormattedText(text.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 
 				for (var first = 0; first < selected.Length; first++)
 				{
@@ -256,6 +264,14 @@ namespace NeoEdit.BinaryEditorUI
 					dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.CornflowerBlue, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
 				}
 
+				var selRow = Pos1 / columns;
+				if (selRow == row)
+				{
+					var selCol = Pos1 % columns;
+					dc.DrawRectangle(SelHex ? Brushes.Black : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
+					dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Black, null, new Rect(GetXTextFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
+				}
+
 				dc.DrawText(posText, new Point(xPosition - xScrollValue, y));
 				dc.DrawText(hexText, new Point(xHexViewStart - xScrollValue, y));
 				dc.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
@@ -271,23 +287,28 @@ namespace NeoEdit.BinaryEditorUI
 				case Key.Delete:
 					if (Insert)
 					{
-						overrideSelecting = false;
-						if ((SelStart != SelEnd) || (e.Key == Key.Delete))
+						if (SelStart != SelEnd)
 						{
-							Data.Replace(SelStart, SelEnd - SelStart + 1, null);
-							Pos1 = SelStart;
+							Replace(null);
+							break;
 						}
-						else if (e.Key == Key.Back)
+
+						if (e.Key == Key.Back)
 						{
-							Data.Replace(SelStart - 1, 1, null);
+							if (SelStart <= 0)
+								break;
 							Pos1 = SelStart - 1;
 						}
-						overrideSelecting = null;
+						if (SelStart >= Data.Length)
+							break;
+						Pos2 = Pos1 + 1;
+						Replace(null);
 					}
 					break;
 				case Key.Tab:
+					if (inHexEdit)
+						Pos1++;
 					SelHex = !SelHex;
-					inHexEdit = false;
 					break;
 				case Key.Up:
 				case Key.Down:
@@ -343,32 +364,31 @@ namespace NeoEdit.BinaryEditorUI
 			}
 		}
 
-		bool inHexEdit = false;
-		void DoInsert(byte[] bytes, bool inHex)
+		void ReplaceAll(byte[] bytes)
 		{
-			if ((bytes == null) || (bytes.Length == 0))
-				return;
+			Pos1 = 0;
+			Pos2 = Data.Length;
+			Replace(bytes);
+		}
 
+		bool inHexEdit = false;
+		void Replace(byte[] bytes)
+		{
+			if (bytes == null)
+				bytes = new byte[0];
+
+			long len;
 			if (Insert)
-			{
-				if (SelStart != SelEnd)
-					Data.Replace(SelStart, SelEnd - SelStart + 1, null);
-				if ((inHex) && (!inHexEdit))
-					Data.Replace(SelStart, bytes.Length, bytes);
-				else
-					Data.Replace(SelStart, 0, bytes);
-			}
+				len = SelEnd - SelStart;
 			else
 			{
-				Data.Replace(SelStart, bytes.Length, bytes);
+				Array.Resize(ref bytes, (int)Math.Min(bytes.Length, Data.Length - SelStart));
+				len = bytes.Length;
 			}
 
-			overrideSelecting = false;
-			if (!inHex)
-				Pos1 = SelStart + bytes.Length;
-			else if (!inHexEdit)
-				Pos1 = SelStart + 1;
-			overrideSelecting = null;
+			Data.Replace(SelStart, len, bytes);
+
+			Pos1 = Pos2 = SelStart + bytes.Length;
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -376,29 +396,35 @@ namespace NeoEdit.BinaryEditorUI
 			if ((String.IsNullOrEmpty(e.Text)) || (e.Text == "\u001B"))
 				return;
 
-			byte[] bytes = null;
-
-			if (SelHex)
+			if (!SelHex)
 			{
-				var let = Char.ToUpper(e.Text[0]);
-				byte val;
-				if ((let >= '0') && (let <= '9'))
-					val = (byte)(let - '0');
-				else if ((let >= 'A') && (let <= 'F'))
-					val = (byte)(let - 'A' + 10);
-				else
-					return;
-
-				if (inHexEdit)
-					bytes = new byte[] { (byte)(Data[SelStart] * 16 + val) };
-				else
-					bytes = new byte[] { val };
-				inHexEdit = !inHexEdit;
+				Replace(Coder.StringToBytes(e.Text, InputCoderType));
+				return;
 			}
-			else
-				bytes = Coder.StringToBytes(e.Text, InputCoderType);
 
-			DoInsert(bytes, SelHex);
+			var let = Char.ToUpper(e.Text[0]);
+			byte val;
+			if ((let >= '0') && (let <= '9'))
+				val = (byte)(let - '0');
+			else if ((let >= 'A') && (let <= 'F'))
+				val = (byte)(let - 'A' + 10);
+			else
+				return;
+
+			var saveInHexEdit = inHexEdit;
+			if (saveInHexEdit)
+			{
+				val = (byte)(Data[SelStart] * 16 + val);
+				++Pos2;
+			}
+
+			Replace(new byte[] { val });
+
+			if (!saveInHexEdit)
+			{
+				Pos1 = Pos2 = SelStart - 1;
+				inHexEdit = true;
+			}
 		}
 
 		void MouseHandler(Point mousePos)
@@ -463,7 +489,7 @@ namespace NeoEdit.BinaryEditorUI
 			{
 				using (var gz = new GZipStream(ms, CompressionLevel.Optimal, true))
 					gz.Write(Data.GetAllBytes(), 0, (int)Data.Length);
-				Data.Replace(ms.ToArray());
+				ReplaceAll(ms.ToArray());
 			}
 		}
 
@@ -473,7 +499,7 @@ namespace NeoEdit.BinaryEditorUI
 			using (var ms = new MemoryStream())
 			{
 				gz.CopyTo(ms);
-				Data.Replace(ms.ToArray());
+				ReplaceAll(ms.ToArray());
 			}
 		}
 
@@ -483,7 +509,7 @@ namespace NeoEdit.BinaryEditorUI
 			{
 				using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, true))
 					deflate.Write(Data.GetAllBytes(), 0, (int)Data.Length);
-				Data.Replace(ms.ToArray());
+				ReplaceAll(ms.ToArray());
 			}
 		}
 
@@ -493,7 +519,7 @@ namespace NeoEdit.BinaryEditorUI
 			using (var ms = new MemoryStream())
 			{
 				inflate.CopyTo(ms);
-				Data.Replace(ms.ToArray());
+				ReplaceAll(ms.ToArray());
 			}
 		}
 
@@ -506,14 +532,22 @@ namespace NeoEdit.BinaryEditorUI
 					case BinaryEditor.Edit_Cut:
 					case BinaryEditor.Edit_Copy:
 						{
-							var subset = Data.GetSubset(SelStart, SelEnd - SelStart + 1);
+							if (SelStart == SelEnd)
+								break;
+
+							var subset = Data.GetSubset(SelStart, SelEnd - SelStart);
 							Clipboard.Current.Set(subset, SelHex);
 							if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
-								Data.Replace(SelStart, SelEnd - SelStart + 1, null);
+								Replace(null);
 						}
 						break;
 					case BinaryEditor.Edit_Paste:
-						DoInsert(Clipboard.Current.GetBytes(InputCoderType), false);
+						{
+							var bytes = Clipboard.Current.GetBytes(InputCoderType);
+							if ((bytes == null) || (bytes.Length == 0))
+								break;
+							Replace(bytes);
+						}
 						break;
 					case BinaryEditor.Edit_Find:
 						{
@@ -569,7 +603,7 @@ namespace NeoEdit.BinaryEditorUI
 									var encryptedData = Crypto.Encrypt(Crypto.CryptoType.AES, Data.GetAllBytes(), aesKey);
 									ms.Write(encryptedData, 0, encryptedData.Length);
 
-									Data.Replace(ms.ToArray());
+									ReplaceAll(ms.ToArray());
 								}
 							}
 						}
@@ -582,7 +616,7 @@ namespace NeoEdit.BinaryEditorUI
 								var encryptedAesKey = Data.GetSubset(sizeof(int), BitConverter.ToInt32(Data.GetSubset(0, sizeof(int)), 0));
 								var aesKey = Encoding.UTF8.GetString(Crypto.Decrypt(Crypto.CryptoType.RSA, encryptedAesKey, keyDialog.Key));
 								var skip = sizeof(int) + encryptedAesKey.Length;
-								Data.Replace(Crypto.Decrypt(Crypto.CryptoType.AES, Data.GetSubset(skip, Data.Length - skip).ToArray(), aesKey));
+								ReplaceAll(Crypto.Decrypt(Crypto.CryptoType.AES, Data.GetSubset(skip, Data.Length - skip).ToArray(), aesKey));
 							}
 						}
 						break;
@@ -601,7 +635,7 @@ namespace NeoEdit.BinaryEditorUI
 
 							var keyDialog = new SymmetricKeyDialog { Type = type };
 							if (keyDialog.ShowDialog() == true)
-								Data.Replace(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
+								ReplaceAll(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Decrypt_AES:
@@ -619,7 +653,7 @@ namespace NeoEdit.BinaryEditorUI
 
 							var keyDialog = new SymmetricKeyDialog { Type = type }; ;
 							if (keyDialog.ShowDialog() == true)
-								Data.Replace(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
+								ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Encrypt_RSA:
@@ -627,7 +661,7 @@ namespace NeoEdit.BinaryEditorUI
 							var type = Crypto.CryptoType.RSA;
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, CanGenerate = true };
 							if (keyDialog.ShowDialog() == true)
-								Data.Replace(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
+								ReplaceAll(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Decrypt_RSA:
@@ -635,7 +669,7 @@ namespace NeoEdit.BinaryEditorUI
 							var type = Crypto.CryptoType.RSA;
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = false };
 							if (keyDialog.ShowDialog() == true)
-								Data.Replace(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
+								ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Sign_RSA:
@@ -691,11 +725,9 @@ namespace NeoEdit.BinaryEditorUI
 			long end = SelEnd;
 			if (Data.Find(currentFind, SelStart, out start, out end, forward))
 			{
-				overrideSelecting = true;
-				Pos2 = start;
-				EnsureVisible(Pos2);
+				EnsureVisible(start);
 				Pos1 = end;
-				overrideSelecting = null;
+				Pos2 = start;
 			}
 		}
 	}
