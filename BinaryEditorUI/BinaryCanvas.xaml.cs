@@ -195,6 +195,8 @@ namespace NeoEdit.BinaryEditorUI
 			return (int)((x - xTextViewStart) / charWidth);
 		}
 
+		static Brush selectionActiveBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
+		static Brush selectionInactiveBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
 		protected override void OnRender(DrawingContext dc)
 		{
 			base.OnRender(dc);
@@ -256,11 +258,8 @@ namespace NeoEdit.BinaryEditorUI
 
 					var count = last - first;
 
-					hexText.SetForegroundBrush(Brushes.White, first * (xHexSpacing + 2), count * (2 + xHexSpacing));
-					dc.DrawRectangle(SelHex ? Brushes.CornflowerBlue : Brushes.Gray, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
-
-					textText.SetForegroundBrush(Brushes.White, first, count);
-					dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.CornflowerBlue, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
+					dc.DrawRectangle(SelHex ? selectionActiveBrush : selectionInactiveBrush, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
+					dc.DrawRectangle(SelHex ? selectionInactiveBrush : selectionActiveBrush, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
 				}
 
 				var selRow = Pos1 / columns;
