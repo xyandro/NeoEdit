@@ -195,15 +195,8 @@ namespace NeoEdit.BinaryEditorUI
 			return (int)((x - xTextViewStart) / charWidth);
 		}
 
-		static Brush selectionActiveBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
-		static Brush selectionInactiveBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
-		protected override void OnRender(DrawingContext dc)
+		void SetBounds()
 		{
-			base.OnRender(dc);
-
-			if (Data == null)
-				return;
-
 			columns = Math.Min(maxColumns, Math.Max(minColumns, ((int)(ActualWidth / charWidth) - xPosColumns - xPosGap - xHexGap + xHexSpacing) / (3 + xHexSpacing)));
 			rows = Data.Length / columns + 1;
 
@@ -214,65 +207,107 @@ namespace NeoEdit.BinaryEditorUI
 			yScrollMaximum = rows * rowHeight - ActualHeight;
 			yScrollSmallChange = rowHeight;
 			yScrollLargeChange = ActualHeight - yScrollSmallChange;
+		}
+
+		static Brush selectionActiveBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
+		static Brush selectionInactiveBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
+		void HighlightSelection(DrawingContext dc, long row)
+		{
+			var y = row * rowHeight - yScrollValue;
+			var selected = new bool[columns];
+			var useColumns = Math.Min(columns, Data.Length - row * columns);
+			for (var column = 0; column < useColumns; ++column)
+			{
+				var pos = row * columns + column;
+				if ((pos >= SelStart) && (pos < SelEnd))
+					selected[column] = true;
+			}
+
+			for (var first = 0; first < selected.Length; first++)
+			{
+				if (!selected[first])
+					continue;
+
+				int last;
+				for (last = first; last < selected.Length; last++)
+				{
+					if (!selected[last])
+						break;
+					selected[last] = false;
+				}
+
+				var count = last - first;
+
+				dc.DrawRectangle(SelHex ? selectionActiveBrush : selectionInactiveBrush, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
+				dc.DrawRectangle(SelHex ? selectionInactiveBrush : selectionActiveBrush, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
+			}
+
+			var selRow = Pos1 / columns;
+			if (selRow == row)
+			{
+				var selCol = (int)(Pos1 % columns);
+				dc.DrawRectangle(SelHex ? Brushes.Black : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
+				dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Black, null, new Rect(GetXTextFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
+			}
+		}
+
+		void DrawPos(DrawingContext dc, long row)
+		{
+			var y = row * rowHeight - yScrollValue;
+			var posText = new FormattedText(String.Format("{0:x" + xPosColumns.ToString() + "}", row * columns), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+			dc.DrawText(posText, new Point(xPosition - xScrollValue, y));
+		}
+
+		void DrawHex(DrawingContext dc, long row)
+		{
+			var y = row * rowHeight - yScrollValue;
+			var hex = new StringBuilder();
+			var useColumns = Math.Min(columns, Data.Length - row * columns);
+			for (var column = 0; column < useColumns; ++column)
+			{
+				var b = Data[row * columns + column];
+
+				hex.Append(b.ToString("x2"));
+				hex.Append(' ', xHexSpacing);
+			}
+
+			var hexText = new FormattedText(hex.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+			dc.DrawText(hexText, new Point(xHexViewStart - xScrollValue, y));
+		}
+
+		void DrawText(DrawingContext dc, long row)
+		{
+			var y = row * rowHeight - yScrollValue;
+			var text = new StringBuilder();
+			var useColumns = Math.Min(columns, Data.Length - row * columns);
+			for (var column = 0; column < useColumns; ++column)
+			{
+				var c = (char)Data[row * columns + column];
+				text.Append(Char.IsControl(c) ? '·' : c);
+			}
+
+			var textText = new FormattedText(text.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+			dc.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
+		}
+
+		protected override void OnRender(DrawingContext dc)
+		{
+			base.OnRender(dc);
+
+			if (Data == null)
+				return;
+
+			SetBounds();
 
 			var startRow = Math.Max(0, GetRowFromY(yScrollValue));
 			var endRow = Math.Min(rows - 1, GetRowFromY(yScrollValue + ActualHeight));
 
 			for (var row = startRow; row <= endRow; ++row)
 			{
-				var y = row * rowHeight - yScrollValue;
-				var selected = new bool[columns];
-				var hex = new StringBuilder();
-				var text = new StringBuilder();
-				var useColumns = Math.Min(columns, Data.Length - row * columns);
-				for (var column = 0; column < useColumns; ++column)
-				{
-					var pos = row * columns + column;
-					if ((pos >= SelStart) && (pos < SelEnd))
-						selected[column] = true;
-
-					var b = Data[pos];
-					var c = (char)b;
-
-					hex.Append(b.ToString("x2"));
-					hex.Append(' ', xHexSpacing);
-					text.Append(Char.IsControl(c) ? '·' : c);
-				}
-
-				var posText = new FormattedText(String.Format("{0:x" + xPosColumns.ToString() + "}", row * columns), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-				var hexText = new FormattedText(hex.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-				var textText = new FormattedText(text.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-
-				for (var first = 0; first < selected.Length; first++)
-				{
-					if (!selected[first])
-						continue;
-
-					int last;
-					for (last = first; last < selected.Length; last++)
-					{
-						if (!selected[last])
-							break;
-						selected[last] = false;
-					}
-
-					var count = last - first;
-
-					dc.DrawRectangle(SelHex ? selectionActiveBrush : selectionInactiveBrush, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
-					dc.DrawRectangle(SelHex ? selectionInactiveBrush : selectionActiveBrush, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
-				}
-
-				var selRow = Pos1 / columns;
-				if (selRow == row)
-				{
-					var selCol = (int)(Pos1 % columns);
-					dc.DrawRectangle(SelHex ? Brushes.Black : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
-					dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Black, null, new Rect(GetXTextFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
-				}
-
-				dc.DrawText(posText, new Point(xPosition - xScrollValue, y));
-				dc.DrawText(hexText, new Point(xHexViewStart - xScrollValue, y));
-				dc.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
+				HighlightSelection(dc, row);
+				DrawPos(dc, row);
+				DrawHex(dc, row);
+				DrawText(dc, row);
 			}
 		}
 
@@ -499,7 +534,7 @@ namespace NeoEdit.BinaryEditorUI
 			return false;
 		}
 
-		static Dictionary<string, Checksum.Type> ChecksumType= new Dictionary<string,Checksum.Type>
+		static Dictionary<string, Checksum.Type> ChecksumType = new Dictionary<string, Checksum.Type>
 		{
 			{ BinaryEditor.Checksum_MD5, Checksum.Type.MD5 },
 			{ BinaryEditor.Checksum_SHA1, Checksum.Type.SHA1 },
