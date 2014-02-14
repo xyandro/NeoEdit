@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -483,46 +482,6 @@ namespace NeoEdit.BinaryEditorUI
 			e.Handled = true;
 		}
 
-		void GZip()
-		{
-			using (var ms = new MemoryStream())
-			{
-				using (var gz = new GZipStream(ms, CompressionLevel.Optimal, true))
-					gz.Write(Data.GetAllBytes(), 0, (int)Data.Length);
-				ReplaceAll(ms.ToArray());
-			}
-		}
-
-		void GUnzip()
-		{
-			using (var gz = new GZipStream(new MemoryStream(Data.GetAllBytes()), CompressionMode.Decompress))
-			using (var ms = new MemoryStream())
-			{
-				gz.CopyTo(ms);
-				ReplaceAll(ms.ToArray());
-			}
-		}
-
-		void Deflate()
-		{
-			using (var ms = new MemoryStream())
-			{
-				using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, true))
-					deflate.Write(Data.GetAllBytes(), 0, (int)Data.Length);
-				ReplaceAll(ms.ToArray());
-			}
-		}
-
-		void Inflate()
-		{
-			using (var inflate = new DeflateStream(new MemoryStream(Data.GetAllBytes()), CompressionMode.Decompress))
-			using (var ms = new MemoryStream())
-			{
-				inflate.CopyTo(ms);
-				ReplaceAll(ms.ToArray());
-			}
-		}
-
 		public void CommandRun(UICommand command, object parameter)
 		{
 			try
@@ -584,10 +543,10 @@ namespace NeoEdit.BinaryEditorUI
 							}.Show();
 						}
 						break;
-					case BinaryEditor.Compress_GZip: GZip(); break;
-					case BinaryEditor.Decompress_GZip: GUnzip(); break;
-					case BinaryEditor.Compress_Deflate: Deflate(); break;
-					case BinaryEditor.Decompress_Inflate: Inflate(); break;
+					case BinaryEditor.Compress_GZip: Data.Replace(Compression.Compress(Compression.Type.GZip, Data.GetAllBytes())); break;
+					case BinaryEditor.Decompress_GZip: Data.Replace(Compression.Decompress(Compression.Type.GZip, Data.GetAllBytes())); break;
+					case BinaryEditor.Compress_Deflate: Data.Replace(Compression.Compress(Compression.Type.Deflate, Data.GetAllBytes())); break;
+					case BinaryEditor.Decompress_Inflate: Data.Replace(Compression.Decompress(Compression.Type.Deflate, Data.GetAllBytes())); break;
 					case BinaryEditor.Encrypt_RSAAES:
 						{
 							var keyDialog = new AsymmetricKeyDialog { Type = Crypto.CryptoType.RSA, Public = true, CanGenerate = true };
