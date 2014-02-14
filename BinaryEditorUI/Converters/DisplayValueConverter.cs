@@ -31,8 +31,13 @@ namespace NeoEdit.BinaryEditorUI.Converters
 					return new Exception();
 				var encoding = (Coder.Type)value[3];
 
-				var selCount = Math.Min(encoding.PreviewSize(), (selStart == selEnd) ? Int32.MaxValue : selEnd - selStart + 1);
-				var str = Coder.BytesToString(data.Data, selStart, selCount, encoding);
+				long count = encoding.BytesRequired();
+				if (count == -1)
+					count = encoding.PreviewSize();
+				if (selStart != selEnd)
+					count = Math.Min(count, selEnd - selStart + 1);
+				count = Math.Min(count, data.Length - selStart);
+				var str = Coder.BytesToString(data.GetSubset(selStart, count), encoding);
 				if (encoding.IsStr())
 					str = str.Replace("\r", @"\r").Replace("\n", @"\n");
 				return str;

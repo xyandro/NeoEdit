@@ -284,12 +284,12 @@ namespace NeoEdit.BinaryEditorUI
 						overrideSelecting = false;
 						if ((SelStart != SelEnd) || (e.Key == Key.Delete))
 						{
-							Data.Replace(SelStart, SelEnd - SelStart + 1, new byte[0]);
+							Data.Replace(SelStart, SelEnd - SelStart + 1, null);
 							Pos1 = SelStart;
 						}
 						else if (e.Key == Key.Back)
 						{
-							Data.Replace(SelStart - 1, 1, new byte[0]);
+							Data.Replace(SelStart - 1, 1, null);
 							Pos1 = SelStart - 1;
 						}
 						overrideSelecting = null;
@@ -354,7 +354,7 @@ namespace NeoEdit.BinaryEditorUI
 		}
 
 		bool inHexEdit = false;
-		void DoInsert(BinaryData bytes, bool inHex)
+		void DoInsert(byte[] bytes, bool inHex)
 		{
 			if ((bytes == null) || (bytes.Length == 0))
 				return;
@@ -362,15 +362,15 @@ namespace NeoEdit.BinaryEditorUI
 			if (Insert)
 			{
 				if (SelStart != SelEnd)
-					Data.Replace(SelStart, SelEnd - SelStart + 1, new byte[0]);
+					Data.Replace(SelStart, SelEnd - SelStart + 1, null);
 				if ((inHex) && (!inHexEdit))
-					Data.Replace(SelStart, bytes.Length, bytes.Data);
+					Data.Replace(SelStart, bytes.Length, bytes);
 				else
-					Data.Replace(SelStart, 0, bytes.Data);
+					Data.Replace(SelStart, 0, bytes);
 			}
 			else
 			{
-				Data.Replace(SelStart, bytes.Length, bytes.Data);
+				Data.Replace(SelStart, bytes.Length, bytes);
 			}
 
 			overrideSelecting = false;
@@ -386,7 +386,7 @@ namespace NeoEdit.BinaryEditorUI
 			if ((String.IsNullOrEmpty(e.Text)) || (e.Text == "\u001B"))
 				return;
 
-			BinaryData bytes = null;
+			byte[] bytes = null;
 
 			if (SelHex)
 			{
@@ -472,18 +472,18 @@ namespace NeoEdit.BinaryEditorUI
 			using (var ms = new MemoryStream())
 			{
 				using (var gz = new GZipStream(ms, CompressionLevel.Optimal, true))
-					gz.Write(Data.Data, 0, Data.Data.Length);
-				Data = ms.ToArray();
+					gz.Write(Data.GetAllBytes(), 0, (int)Data.Length);
+				Data.Replace(ms.ToArray());
 			}
 		}
 
 		void GUnzip()
 		{
-			using (var gz = new GZipStream(new MemoryStream(Data.Data), CompressionMode.Decompress))
+			using (var gz = new GZipStream(new MemoryStream(Data.GetAllBytes()), CompressionMode.Decompress))
 			using (var ms = new MemoryStream())
 			{
 				gz.CopyTo(ms);
-				Data = ms.ToArray();
+				Data.Replace(ms.ToArray());
 			}
 		}
 
@@ -492,18 +492,18 @@ namespace NeoEdit.BinaryEditorUI
 			using (var ms = new MemoryStream())
 			{
 				using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, true))
-					deflate.Write(Data.Data, 0, Data.Data.Length);
-				Data = ms.ToArray();
+					deflate.Write(Data.GetAllBytes(), 0, (int)Data.Length);
+				Data.Replace(ms.ToArray());
 			}
 		}
 
 		void Inflate()
 		{
-			using (var inflate = new DeflateStream(new MemoryStream(Data.Data), CompressionMode.Decompress))
+			using (var inflate = new DeflateStream(new MemoryStream(Data.GetAllBytes()), CompressionMode.Decompress))
 			using (var ms = new MemoryStream())
 			{
 				inflate.CopyTo(ms);
-				Data = ms.ToArray();
+				Data.Replace(ms.ToArray());
 			}
 		}
 
@@ -519,11 +519,11 @@ namespace NeoEdit.BinaryEditorUI
 							var subset = Data.GetSubset(SelStart, SelEnd - SelStart + 1);
 							Clipboard.Current.Set(subset, SelHex);
 							if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
-								Data.Replace(SelStart, SelEnd - SelStart + 1, new byte[0]);
+								Data.Replace(SelStart, SelEnd - SelStart + 1, null);
 						}
 						break;
 					case BinaryEditor.Edit_Paste:
-						DoInsert(Clipboard.Current.GetBinaryData(InputCoderType), false);
+						DoInsert(Clipboard.Current.GetBytes(InputCoderType), false);
 						break;
 					case BinaryEditor.Edit_Find:
 						{
@@ -555,7 +555,7 @@ namespace NeoEdit.BinaryEditorUI
 							new Message
 							{
 								Title = "Result",
-								Text = Checksums.Get(checksumType, Data.Data),
+								Text = Checksums.Get(checksumType, Data.GetAllBytes()),
 								Options = Message.OptionsEnum.Ok
 							}.Show();
 						}
@@ -576,10 +576,10 @@ namespace NeoEdit.BinaryEditorUI
 									ms.Write(BitConverter.GetBytes(encryptedAesKey.Length), 0, sizeof(int));
 									ms.Write(encryptedAesKey, 0, encryptedAesKey.Length);
 
-									var encryptedData = Crypto.Encrypt(Crypto.CryptoType.AES, Data.Data, aesKey);
+									var encryptedData = Crypto.Encrypt(Crypto.CryptoType.AES, Data.GetAllBytes(), aesKey);
 									ms.Write(encryptedData, 0, encryptedData.Length);
 
-									Data = ms.ToArray();
+									Data.Replace(ms.ToArray());
 								}
 							}
 						}
@@ -589,11 +589,10 @@ namespace NeoEdit.BinaryEditorUI
 							var keyDialog = new AsymmetricKeyDialog { Type = Crypto.CryptoType.RSA, Public = false };
 							if (keyDialog.ShowDialog() == true)
 							{
-								var encryptedAesKey = new byte[BitConverter.ToInt32(Data.Data, 0)];
-								Array.Copy(Data.Data, sizeof(int), encryptedAesKey, 0, encryptedAesKey.Length);
+								var encryptedAesKey = Data.GetSubset(sizeof(int), BitConverter.ToInt32(Data.GetSubset(0, sizeof(int)), 0));
 								var aesKey = Encoding.UTF8.GetString(Crypto.Decrypt(Crypto.CryptoType.RSA, encryptedAesKey, keyDialog.Key));
-								var data = Data.Data.Skip(sizeof(int) + encryptedAesKey.Length).ToArray();
-								Data = Crypto.Decrypt(Crypto.CryptoType.AES, data, aesKey);
+								var skip = sizeof(int) + encryptedAesKey.Length;
+								Data.Replace(Crypto.Decrypt(Crypto.CryptoType.AES, Data.GetSubset(skip, Data.Length - skip).ToArray(), aesKey));
 							}
 						}
 						break;
@@ -612,7 +611,7 @@ namespace NeoEdit.BinaryEditorUI
 
 							var keyDialog = new SymmetricKeyDialog { Type = type };
 							if (keyDialog.ShowDialog() == true)
-								Data = Crypto.Encrypt(type, Data.Data, keyDialog.Key);
+								Data.Replace(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Decrypt_AES:
@@ -630,7 +629,7 @@ namespace NeoEdit.BinaryEditorUI
 
 							var keyDialog = new SymmetricKeyDialog { Type = type }; ;
 							if (keyDialog.ShowDialog() == true)
-								Data = Crypto.Decrypt(type, Data.Data, keyDialog.Key);
+								Data.Replace(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Encrypt_RSA:
@@ -638,7 +637,7 @@ namespace NeoEdit.BinaryEditorUI
 							var type = Crypto.CryptoType.RSA;
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, CanGenerate = true };
 							if (keyDialog.ShowDialog() == true)
-								Data = Crypto.Encrypt(type, Data.Data, keyDialog.Key);
+								Data.Replace(Crypto.Encrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Decrypt_RSA:
@@ -646,7 +645,7 @@ namespace NeoEdit.BinaryEditorUI
 							var type = Crypto.CryptoType.RSA;
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = false };
 							if (keyDialog.ShowDialog() == true)
-								Data = Crypto.Decrypt(type, Data.Data, keyDialog.Key);
+								Data.Replace(Crypto.Decrypt(type, Data.GetAllBytes(), keyDialog.Key));
 						}
 						break;
 					case BinaryEditor.Sign_RSA:
@@ -659,7 +658,7 @@ namespace NeoEdit.BinaryEditorUI
 								new Message
 								{
 									Title = "Signature:",
-									Text = Crypto.Sign(type, Data.Data, keyDialog.Key, keyDialog.Hash),
+									Text = Crypto.Sign(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash),
 									Options = Message.OptionsEnum.Ok,
 								}.Show();
 							}
@@ -672,7 +671,7 @@ namespace NeoEdit.BinaryEditorUI
 							var keyDialog = new AsymmetricKeyDialog { Type = type, Public = true, GetHash = Crypto.UseSigningHash(type), GetSignature = true };
 							if (keyDialog.ShowDialog() == true)
 							{
-								var result = Crypto.Verify(type, Data.Data, keyDialog.Key, keyDialog.Hash, keyDialog.Signature);
+								var result = Crypto.Verify(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash, keyDialog.Signature);
 								new Message
 								{
 									Title = "Signature:",

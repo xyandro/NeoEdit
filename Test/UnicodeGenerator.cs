@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NeoEdit.Common;
 using NeoEdit.Data;
 
 namespace NeoEdit.Test
@@ -113,9 +112,8 @@ namespace NeoEdit.Test
 							var bytes = File.ReadAllBytes(filename);
 							combined.Write(bytes, 0, bytes.Length);
 
-							BinaryData data = bytes;
-							var encoding2 = Coder.GuessEncoding(data.Data);
-							var str = Coder.BytesToString(data.Data, encoding2);
+							var encoding2 = Coder.GuessEncoding(bytes);
+							var str = Coder.BytesToString(bytes, encoding2);
 							var bom2 = (str.Length > 0) && (str[0] == '\ufeff');
 
 							if ((encoding != encoding2) || (bom != bom2))

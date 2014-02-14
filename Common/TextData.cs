@@ -23,15 +23,15 @@ namespace NeoEdit.Common
 		public int NumLines { get { return lineIndex.Count; } }
 		public bool BOM { get; private set; }
 
-		public TextData(BinaryData binaryData, Coder.Type encoding = Coder.Type.None)
+		public TextData(byte[] bytes, Coder.Type encoding = Coder.Type.None)
 		{
 			if (encoding == Coder.Type.None)
-				encoding = Coder.GuessEncoding(binaryData.Data);
+				encoding = Coder.GuessEncoding(bytes);
 
-			data = Coder.BytesToString(binaryData.Data, encoding);
+			data = Coder.BytesToString(bytes, encoding);
 		}
 
-		public BinaryData GetBinaryData(Coder.Type encoding = Coder.Type.UTF8)
+		public byte[] GetBytes(Coder.Type encoding = Coder.Type.UTF8)
 		{
 			return Coder.StringToBytes(data, encoding);
 		}
@@ -94,11 +94,6 @@ namespace NeoEdit.Common
 			if ((line < 0) || (line >= endingIndex.Count))
 				throw new IndexOutOfRangeException();
 			return data.Substring(endingIndex[line], endingLength[line]);
-		}
-
-		public BinaryData GetData(Coder.Type encoding)
-		{
-			return Coder.StringToBytes(data, encoding);
 		}
 
 		public int GetOffset(int line, int index)

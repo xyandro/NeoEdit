@@ -39,9 +39,9 @@ namespace NeoEdit.Data
 			HexRev,
 		};
 
-		public static bool IsStr(this Type converter)
+		public static bool IsStr(this Type type)
 		{
-			switch (converter)
+			switch (type)
 			{
 				case Type.UTF7:
 				case Type.UTF8:
@@ -55,9 +55,9 @@ namespace NeoEdit.Data
 			}
 		}
 
-		public static int PreviewSize(this Type converter)
+		public static int PreviewSize(this Type type)
 		{
-			switch (converter)
+			switch (type)
 			{
 				case Type.UTF16LE: return 200;
 				case Type.UTF16BE: return 200;
@@ -67,26 +67,47 @@ namespace NeoEdit.Data
 			}
 		}
 
-		static string GetString(Encoding encoding, byte[] data, long index, long numBytes)
+		public static int BytesRequired(this Type type)
 		{
-			try
+			switch (type)
 			{
-				if (numBytes == 0)
-					numBytes = data.Length - index;
-				numBytes = Math.Min(numBytes, data.Length - index);
-				var str = encoding.GetString(data, (int)index, (int)numBytes);
-				return str;
+				case Type.UInt8LE: return 1;
+				case Type.UInt16LE: return 2;
+				case Type.UInt32LE: return 4;
+				case Type.UInt64LE: return 8;
+				case Type.Int8LE: return 1;
+				case Type.Int16LE: return 2;
+				case Type.Int32LE: return 4;
+				case Type.Int64LE: return 8;
+				case Type.UInt8BE: return 1;
+				case Type.UInt16BE: return 2;
+				case Type.UInt32BE: return 4;
+				case Type.UInt64BE: return 8;
+				case Type.Int8BE: return 1;
+				case Type.Int16BE: return 2;
+				case Type.Int32BE: return 4;
+				case Type.Int64BE: return 8;
+				case Type.Single: return 4;
+				case Type.Double: return 8;
+				case Type.UTF7:
+				case Type.UTF8:
+				case Type.UTF16LE:
+				case Type.UTF16BE:
+				case Type.UTF32LE:
+				case Type.UTF32BE:
+				case Type.Base64:
+				case Type.Hex:
+				case Type.HexRev:
+					return -1;
 			}
-			catch { return "Failed"; }
+			throw new Exception("Invalid type");
 		}
 
-		static byte[] GetBytes(byte[] data, long index, long numBytes, long count, bool littleEndian)
+		static byte[] Resize(byte[] data, long count, bool littleEndian)
 		{
 			var ret = new byte[count];
-			count = Math.Min(count, data.Length - index);
-			if (numBytes != 0)
-				count = Math.Min(count, numBytes);
-			Array.Copy(data, index, ret, 0, count);
+			count = Math.Min(count, data.Length);
+			Array.Copy(data, 0, ret, 0, count);
 			if (!littleEndian)
 				Array.Reverse(ret, 0, (int)count);
 			return ret;
@@ -99,14 +120,12 @@ namespace NeoEdit.Data
 			return (char)('A' + val - 10);
 		}
 
-		static string ToHexString(byte[] data, long index, long numBytes, bool reverse)
+		static string ToHexString(byte[] data, bool reverse)
 		{
-			if (numBytes > data.Length - index)
-				throw new ArgumentOutOfRangeException("numBytes");
-			var sb = new StringBuilder((int)(numBytes * 2));
-			for (var ctr = 0; ctr < numBytes; ctr++)
+			var sb = new StringBuilder(data.Length * 2);
+			for (var ctr = 0; ctr < data.Length; ctr++)
 			{
-				var ch = reverse ? data[index + numBytes - ctr - 1] : data[index + ctr];
+				var ch = reverse ? data[data.Length - ctr - 1] : data[ctr];
 				sb.Append(GetHexChar(ch >> 4));
 				sb.Append(GetHexChar(ch & 15));
 			}
@@ -129,42 +148,37 @@ namespace NeoEdit.Data
 
 		public static string BytesToString(byte[] data, Type type)
 		{
-			return BytesToString(data, 0, data.Length, type);
-		}
-
-		public static string BytesToString(byte[] data, long index, long numBytes, Type type)
-		{
 			switch (type)
 			{
-				case Type.UInt8LE: return GetBytes(data, index, numBytes, 1, true)[0].ToString();
-				case Type.UInt16LE: return BitConverter.ToUInt16(GetBytes(data, index, numBytes, 2, true), 0).ToString();
-				case Type.UInt32LE: return BitConverter.ToUInt32(GetBytes(data, index, numBytes, 4, true), 0).ToString();
-				case Type.UInt64LE: return BitConverter.ToUInt64(GetBytes(data, index, numBytes, 8, true), 0).ToString();
-				case Type.Int8LE: return ((sbyte)GetBytes(data, index, numBytes, 1, true)[0]).ToString();
-				case Type.Int16LE: return BitConverter.ToInt16(GetBytes(data, index, numBytes, 2, true), 0).ToString();
-				case Type.Int32LE: return BitConverter.ToInt32(GetBytes(data, index, numBytes, 4, true), 0).ToString();
-				case Type.Int64LE: return BitConverter.ToInt64(GetBytes(data, index, numBytes, 8, true), 0).ToString();
-				case Type.UInt8BE: return GetBytes(data, index, numBytes, 1, false)[0].ToString();
-				case Type.UInt16BE: return BitConverter.ToUInt16(GetBytes(data, index, numBytes, 2, false), 0).ToString();
-				case Type.UInt32BE: return BitConverter.ToUInt32(GetBytes(data, index, numBytes, 4, false), 0).ToString();
-				case Type.UInt64BE: return BitConverter.ToUInt64(GetBytes(data, index, numBytes, 8, false), 0).ToString();
-				case Type.Int8BE: return ((sbyte)GetBytes(data, index, numBytes, 1, false)[0]).ToString();
-				case Type.Int16BE: return BitConverter.ToInt16(GetBytes(data, index, numBytes, 2, false), 0).ToString();
-				case Type.Int32BE: return BitConverter.ToInt32(GetBytes(data, index, numBytes, 4, false), 0).ToString();
-				case Type.Int64BE: return BitConverter.ToInt64(GetBytes(data, index, numBytes, 8, false), 0).ToString();
-				case Type.Single: return BitConverter.ToSingle(GetBytes(data, index, numBytes, 4, true), 0).ToString();
-				case Type.Double: return BitConverter.ToDouble(GetBytes(data, index, numBytes, 8, true), 0).ToString();
+				case Type.UInt8LE: return Resize(data, 1, true)[0].ToString();
+				case Type.UInt16LE: return BitConverter.ToUInt16(Resize(data, 2, true), 0).ToString();
+				case Type.UInt32LE: return BitConverter.ToUInt32(Resize(data, 4, true), 0).ToString();
+				case Type.UInt64LE: return BitConverter.ToUInt64(Resize(data, 8, true), 0).ToString();
+				case Type.Int8LE: return ((sbyte)Resize(data, 1, true)[0]).ToString();
+				case Type.Int16LE: return BitConverter.ToInt16(Resize(data, 2, true), 0).ToString();
+				case Type.Int32LE: return BitConverter.ToInt32(Resize(data, 4, true), 0).ToString();
+				case Type.Int64LE: return BitConverter.ToInt64(Resize(data, 8, true), 0).ToString();
+				case Type.UInt8BE: return Resize(data, 1, false)[0].ToString();
+				case Type.UInt16BE: return BitConverter.ToUInt16(Resize(data, 2, false), 0).ToString();
+				case Type.UInt32BE: return BitConverter.ToUInt32(Resize(data, 4, false), 0).ToString();
+				case Type.UInt64BE: return BitConverter.ToUInt64(Resize(data, 8, false), 0).ToString();
+				case Type.Int8BE: return ((sbyte)Resize(data, 1, false)[0]).ToString();
+				case Type.Int16BE: return BitConverter.ToInt16(Resize(data, 2, false), 0).ToString();
+				case Type.Int32BE: return BitConverter.ToInt32(Resize(data, 4, false), 0).ToString();
+				case Type.Int64BE: return BitConverter.ToInt64(Resize(data, 8, false), 0).ToString();
+				case Type.Single: return BitConverter.ToSingle(Resize(data, 4, true), 0).ToString();
+				case Type.Double: return BitConverter.ToDouble(Resize(data, 8, true), 0).ToString();
 				case Type.UTF7:
 				case Type.UTF8:
 				case Type.UTF16LE:
 				case Type.UTF16BE:
 				case Type.UTF32LE:
 				case Type.UTF32BE:
-					return GetString(GetEncoding(type), data, index, numBytes);
+					return GetEncoding(type).GetString(data);
 				case Type.Base64: return Convert.ToBase64String(data);
 				case Type.Hex:
 				case Type.HexRev:
-					return ToHexString(data, index, numBytes, type == Type.HexRev);
+					return ToHexString(data, type == Type.HexRev);
 			}
 			throw new Exception("Invalid conversion");
 		}

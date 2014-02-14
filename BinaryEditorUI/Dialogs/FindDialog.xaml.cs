@@ -47,7 +47,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 			var convertersToUse = converters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
 			if (convertersToUse.Count == 0)
 				return;
-			var findData = convertersToUse.Select(a => new { converter = a, binaryData = new BinaryData(Coder.StringToBytes(FindText, a)) }).GroupBy(a => Coder.BytesToString(a.binaryData.Data, Coder.Type.Hex)).Select(a => a.First()).ToDictionary(a => a.converter, a => a.binaryData);
+			var findData = convertersToUse.Select(converter => new { converter = converter, bytes = Coder.StringToBytes(FindText, converter) }).GroupBy(obj => Coder.BytesToString(obj.bytes, Coder.Type.Hex)).Select(group => group.First()).ToDictionary(obj => obj.converter, obj => obj.bytes);
 
 			result = new FindData
 			{

@@ -45,7 +45,7 @@ namespace NeoEdit.Records.Zipped
 				using (var ms = new MemoryStream())
 				{
 					stream.CopyTo(ms);
-					return new BinaryData(ms.ToArray());
+					return ms.ToArray();
 				}
 			}
 		}
@@ -53,7 +53,7 @@ namespace NeoEdit.Records.Zipped
 		public override void CalcMD5()
 		{
 			using (var md5 = MD5.Create())
-				this[RecordProperty.PropertyName.MD5] = Checksums.Get(Checksums.Type.MD5, Read().Data);
+				this[RecordProperty.PropertyName.MD5] = Checksums.Get(Checksums.Type.MD5, Read().GetAllBytes());
 		}
 
 		public override void Delete()

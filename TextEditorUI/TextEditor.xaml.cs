@@ -98,7 +98,7 @@ namespace NeoEdit.TextEditorUI
 			{
 				var header = (e.OriginalSource as MenuItem).Header as string;
 				var encoding = Helpers.ParseEnum<Coder.Type>(header);
-				var data = Data.GetBinaryData(encoding);
+				var data = Data.GetBytes(encoding);
 				new BinaryEditorUI.BinaryEditor(data);
 				this.Close();
 			}

@@ -78,7 +78,7 @@ namespace NeoEdit
 			records = dropList.Cast<string>().ToList().Select(file => DiskRoot.Static.GetRecord(file)).ToList();
 		}
 
-		public void Set(BinaryData bytes, bool hex)
+		public void Set(byte[] bytes, bool hex)
 		{
 			contents = bytes;
 			contentGUID = Guid.NewGuid().ToString();
@@ -87,7 +87,7 @@ namespace NeoEdit
 			dataObj.SetData(bytes.GetType(), contentGUID);
 			var str = "";
 			if (hex)
-				str = Coder.BytesToString(bytes.Data, Coder.Type.Hex);
+				str = Coder.BytesToString(bytes, Coder.Type.Hex);
 			else
 			{
 				var sw = new StringBuilder((int)bytes.Length);
@@ -99,12 +99,12 @@ namespace NeoEdit
 			System.Windows.Clipboard.SetDataObject(dataObj, true);
 		}
 
-		public BinaryData GetBinaryData(Coder.Type encoding)
+		public byte[] GetBytes(Coder.Type encoding)
 		{
 			var dataObj = System.Windows.Clipboard.GetDataObject();
 			var guid = dataObj.GetData(typeof(BinaryData));
 			if ((guid is string) && (((string)guid).Equals(contentGUID)))
-				return contents as BinaryData;
+				return contents as byte[];
 
 			var str = System.Windows.Clipboard.GetText();
 			if (String.IsNullOrEmpty(str))

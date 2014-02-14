@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Windows;
 
 namespace NeoEdit.Common
 {
@@ -33,13 +32,6 @@ namespace NeoEdit.Common
 		public static implicit operator BinaryData(byte[] data)
 		{
 			return new BinaryData(data);
-		}
-
-		public byte[] Data { get { return data; } }
-
-		public override string ToString()
-		{
-			return BitConverter.ToString(data);
 		}
 
 		public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
@@ -129,12 +121,20 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public void Replace(byte[] bytes)
+		{
+			Replace(0, data.Length, bytes);
+		}
+
 		public void Replace(long offset, long length, byte[] bytes)
 		{
 			if ((offset < 0) || (offset > data.Length))
 				throw new ArgumentOutOfRangeException("offset");
 			if ((length < 0) || (offset + length > data.Length))
 				throw new ArgumentOutOfRangeException("length");
+
+			if (bytes == null)
+				bytes = new byte[0];
 
 			var newData = new byte[data.Length - length + bytes.Length];
 			Array.Copy(data, 0, newData, 0, offset);
@@ -144,7 +144,12 @@ namespace NeoEdit.Common
 			changed();
 		}
 
-		public BinaryData GetSubset(long index, long count)
+		public byte[] GetAllBytes()
+		{
+			return data;
+		}
+
+		public byte[] GetSubset(long index, long count)
 		{
 			index = Math.Max(0, Math.Min(data.Length - 1, index));
 			count = Math.Max(0, Math.Min(data.Length - index, count));
