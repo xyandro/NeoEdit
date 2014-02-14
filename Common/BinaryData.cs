@@ -18,9 +18,6 @@ namespace NeoEdit.Common
 		public BinaryData(byte[] _data)
 		{
 			data = _data;
-			var t = new System.Timers.Timer(1000);
-			t.Elapsed += (s, e) => { ++data[0]; changed(); };
-			t.Start();
 		}
 
 		public byte this[long index]
