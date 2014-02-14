@@ -778,18 +778,33 @@ namespace NeoEdit.BinaryEditorUI
 							if (SelStart == SelEnd)
 								break;
 
-							var subset = Data.GetSubset(SelStart, SelEnd - SelStart);
-							Clipboard.Current.Set(subset, SelHex);
+							var bytes = Data.GetSubset(SelStart, SelEnd - SelStart);
+							string str;
+							if (SelHex)
+								str = Coder.BytesToString(bytes, Coder.Type.Hex);
+							else
+							{
+								var sb = new StringBuilder(bytes.Length);
+								for (var ctr = 0; ctr < bytes.Length; ctr++)
+									sb.Append((char)bytes[ctr]);
+								str = sb.ToString();
+							}
+							Clipboard.Current.Set(bytes, str);
 							if ((command.Name == BinaryEditor.Edit_Cut) && (Insert))
 								Replace(null);
 						}
 						break;
 					case BinaryEditor.Edit_Paste:
 						{
-							var bytes = Clipboard.Current.GetBytes(InputCoderType);
-							if ((bytes == null) || (bytes.Length == 0))
-								break;
-							Replace(bytes);
+							var bytes = Clipboard.Current.GetBytes();
+							if (bytes == null)
+							{
+								var str = Clipboard.Current.GetString();
+								if (str != null)
+									bytes = Coder.StringToBytes(str, InputCoderType);
+							}
+							if ((bytes != null) && (bytes.Length != 0))
+								Replace(bytes);
 						}
 						break;
 					case BinaryEditor.Edit_Find:

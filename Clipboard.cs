@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using NeoEdit.Common;
-using NeoEdit.Data;
 using NeoEdit.Records;
 using NeoEdit.Records.Disk;
 
@@ -78,39 +75,25 @@ namespace NeoEdit
 			records = dropList.Cast<string>().ToList().Select(file => DiskRoot.Static.GetRecord(file)).ToList();
 		}
 
-		public void Set(byte[] bytes, bool hex)
+		public void Set(byte[] bytes, string text)
 		{
 			contents = bytes;
 			contentGUID = Guid.NewGuid().ToString();
 
 			var dataObj = new DataObject();
 			dataObj.SetData(bytes.GetType(), contentGUID);
-			var str = "";
-			if (hex)
-				str = Coder.BytesToString(bytes, Coder.Type.Hex);
-			else
-			{
-				var sw = new StringBuilder((int)bytes.Length);
-				for (var ctr = 0; ctr < bytes.Length; ctr++)
-					sw.Append((char)bytes[ctr]);
-				str = sw.ToString();
-			}
-			dataObj.SetText(str);
+			dataObj.SetText(text);
 			System.Windows.Clipboard.SetDataObject(dataObj, true);
 		}
 
-		public byte[] GetBytes(Coder.Type encoding)
+		public byte[] GetBytes()
 		{
 			var dataObj = System.Windows.Clipboard.GetDataObject();
-			var guid = dataObj.GetData(typeof(BinaryData));
+			var guid = dataObj.GetData(typeof(byte[]));
 			if ((guid is string) && (((string)guid).Equals(contentGUID)))
 				return contents as byte[];
 
-			var str = System.Windows.Clipboard.GetText();
-			if (String.IsNullOrEmpty(str))
-				return null;
-
-			return Coder.StringToBytes(str, encoding);
+			return null;
 		}
 
 		public void Set(string[] strings)
@@ -136,6 +119,14 @@ namespace NeoEdit
 				return new string[0];
 
 			return new string[] { str };
+		}
+
+		public string GetString()
+		{
+			var str = System.Windows.Clipboard.GetText();
+			if (String.IsNullOrEmpty(str))
+				return null;
+			return str;
 		}
 	}
 }
