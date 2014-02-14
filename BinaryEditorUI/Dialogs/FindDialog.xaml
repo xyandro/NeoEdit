@@ -38,7 +38,7 @@
 			<CheckBox Content="_Integers" IsChecked="{Binding ShowInt, ElementName=self}"/>
 			<CheckBox Content="_Floats" IsChecked="{Binding ShowFloat, ElementName=self}"/>
 			<CheckBox Content="_Strings" IsChecked="{Binding ShowStr, ElementName=self}"/>
-			<CheckBox Content="_Hex" IsChecked="{Binding ShowHex, ElementName=self}"/>
+			<CheckBox Content="_Other" IsChecked="{Binding ShowOther, ElementName=self}"/>
 		</StackPanel>
 
 		<GroupBox Header="Integers">
@@ -135,7 +135,7 @@
 				<CheckBox Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Name="MatchCase" Content="Match _Case"/>
 			</Grid>
 		</GroupBox>
-		<GroupBox Header="Hex" Visibility="{Binding ShowHex, ElementName=self, Converter={common:ExpressionConverter}}">
+		<GroupBox Header="Other" Visibility="{Binding ShowOther, ElementName=self, Converter={common:ExpressionConverter}}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
@@ -150,6 +150,7 @@
 
 				<CheckBox Grid.Column="1" Name="Hex" Content="Hex" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Hex}"/>
 				<CheckBox Grid.Column="2" Name="HexRev" Content="HexRev" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=HexRev}"/>
+				<CheckBox Grid.Column="3" Name="Base64" Content="Base64" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Base64}"/>
 			</Grid>
 		</GroupBox>
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">

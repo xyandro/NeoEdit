@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NeoEdit.Data
 {
@@ -204,6 +205,8 @@ namespace NeoEdit.Data
 			return ret;
 		}
 
+		static Regex base64Quick = new Regex("^[\ufeff0-9a-zA-Z+/\\s=]*$");
+		static Regex base64Correct = new Regex(@"^((\s*[0-9a-zA-Z+/]){4})*((\s*[0-9a-zA-Z+/]){2}\s*=\s*=|(\s*[0-9a-zA-Z+/]){3}\s*=)?\s*$");
 		public static byte[] StringToBytes(string value, Type type)
 		{
 			if (value == null)
@@ -236,7 +239,13 @@ namespace NeoEdit.Data
 				case Type.UTF32LE:
 				case Type.UTF32BE:
 					return GetEncoding(type).GetBytes(value);
-				case Type.Base64: return Convert.FromBase64String(value.TrimStart('\ufeff'));
+				case Type.Base64:
+					// Quick match to throw out most invalid stuff
+					if (!base64Quick.IsMatch(value))
+						return null;
+					if (!base64Correct.IsMatch(value))
+						return null;
+					return Convert.FromBase64String(value.TrimStart('\ufeff'));
 				case Type.Hex: return StringToHex(value, false);
 				case Type.HexRev: return StringToHex(value, true);
 			}

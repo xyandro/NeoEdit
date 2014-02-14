@@ -6,8 +6,11 @@ namespace NeoEdit.Test
 {
 	class ConverterTest
 	{
-		static void RunTest(Coder.Type type, string value, byte[] expected)
+		static void RunTest(Coder.Type type, string value, byte[] expected, string reverse = null)
 		{
+			if (reverse == null)
+				reverse = value;
+
 			var result = Coder.StringToBytes(value, type);
 			if ((result == null) != (expected == null))
 				throw new Exception("Didn't receive expected success status");
@@ -15,7 +18,7 @@ namespace NeoEdit.Test
 				return;
 
 			var str = Coder.BytesToString(result, type);
-			if (str != value)
+			if (str != reverse)
 				throw new Exception("Reverse conversion failed");
 
 			if (expected.Length != result.Length)
@@ -223,7 +226,10 @@ namespace NeoEdit.Test
 
 			// Base64
 			RunTest(Coder.Type.Base64, "", Encoding.UTF8.GetBytes(""));
-			RunTest(Coder.Type.Base64, "VGhpcyBpcyBteSBzdHJpbmc=", Encoding.UTF8.GetBytes("This is my string"));
+			RunTest(Coder.Type.Base64, " V G h p c y B p c y \r B t e S B z \n d H J p b m c = ", Encoding.UTF8.GetBytes("This is my string"), "VGhpcyBpcyBteSBzdHJpbmc=");
+			RunTest(Coder.Type.Base64, "(INVALID STRING)", null);
+			RunTest(Coder.Type.Base64, "VGhpcyBpcyBteSBzdHJpbmc", null); // Missing ending padding
+			RunTest(Coder.Type.Base64, "V=GhpcyBpcyBteSBzdHJpbmc=", null);
 
 			// Hex
 			RunTest(Coder.Type.Hex, "DEADBEEF", new byte[] { 222, 173, 190, 239 });

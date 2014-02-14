@@ -23,7 +23,7 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		[DepProp]
 		public bool ShowStr { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public bool ShowHex { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool ShowOther { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
 		static FindDialog() { UIHelper<FindDialog>.Register(); }
 
@@ -32,9 +32,9 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 		{
 			uiHelper = new UIHelper<FindDialog>(this);
 			InitializeComponent();
-			ShowLE = ShowInt = ShowStr = ShowHex = true;
+			ShowLE = ShowInt = ShowStr = ShowOther = true;
 			ShowBE = ShowFloat = false;
-			MatchCase.IsChecked = UTF7.IsChecked = HexRev.IsChecked = false;
+			MatchCase.IsChecked = UTF7.IsChecked = HexRev.IsChecked = Base64.IsChecked = false;
 		}
 
 		FindData result;
@@ -45,6 +45,8 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 
 			var converters = Helpers.GetValues<Coder.Type>().Where(a => a != Coder.Type.None).ToDictionary(a => a, a => typeof(FindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic).GetValue(this) as CheckBox);
 			var convertersToUse = converters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
+			if (convertersToUse.Count == 0)
+				return;
 			var findData = convertersToUse.Select(a => new { converter = a, binaryData = new BinaryData(Coder.StringToBytes(FindText, a)) }).GroupBy(a => Coder.BytesToString(a.binaryData.Data, Coder.Type.Hex)).Select(a => a.First()).ToDictionary(a => a.converter, a => a.binaryData);
 
 			result = new FindData
