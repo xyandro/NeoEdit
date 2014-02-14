@@ -4,19 +4,23 @@ using System.Windows;
 
 namespace NeoEdit.Common
 {
-	public class BinaryData : DependencyObject
+	public class BinaryData
 	{
-		[DepProp]
-		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		public delegate void ChangedDelegate();
+		ChangedDelegate changed;
+		public event ChangedDelegate Changed
+		{
+			add { changed += value; }
+			remove { changed -= value; }
+		}
 
-		static BinaryData() { UIHelper<BinaryData>.Register(); }
-
-		readonly UIHelper<BinaryData> uiHelper;
 		byte[] data;
 		public BinaryData(byte[] _data)
 		{
-			uiHelper = new UIHelper<BinaryData>(this);
 			data = _data;
+			var t = new System.Timers.Timer(1000);
+			t.Elapsed += (s, e) => { ++data[0]; changed(); };
+			t.Start();
 		}
 
 		public byte this[long index]
@@ -140,7 +144,7 @@ namespace NeoEdit.Common
 			Array.Copy(bytes, 0, newData, offset, bytes.Length);
 			Array.Copy(data, offset + length, newData, offset + bytes.Length, data.Length - offset - length);
 			data = newData;
-			++ChangeCount;
+			changed();
 		}
 
 		public BinaryData GetSubset(long index, long count)

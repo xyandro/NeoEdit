@@ -121,7 +121,7 @@
 		</Menu>
 		<binaryEditorUI:BinaryCanvas x:Name="canvas" Grid.Row="1"
 			Data="{Binding Data, ElementName=self, Mode=TwoWay}"
-			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
+			ChangeCount="{Binding ChangeCount, ElementName=self, Mode=OneWay}"
 			SelStart="{Binding SelStart, ElementName=self, Mode=OneWayToSource}"
 			SelEnd="{Binding SelEnd, ElementName=self, Mode=OneWayToSource}"
 			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"
@@ -141,7 +141,7 @@
 		<binaryEditorUI:DisplayValues Grid.Row="3" Grid.ColumnSpan="2"
 			Visibility="{Binding ShowValues, ElementName=self, Converter={common:ExpressionConverter}}"
 			Data="{Binding Data, ElementName=self, Mode=OneWay}"
-			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
+			ChangeCount="{Binding ChangeCount, ElementName=self, Mode=OneWay}"
 			SelStart="{Binding SelStart, ElementName=self, Mode=OneWay}"
 			SelEnd="{Binding SelEnd, ElementName=self, Mode=OneWay}"
 			FoundText="{Binding FoundText, ElementName=self, Mode=OneWay}"
