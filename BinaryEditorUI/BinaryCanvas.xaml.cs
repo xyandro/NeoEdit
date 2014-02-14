@@ -103,30 +103,20 @@ namespace NeoEdit.BinaryEditorUI
 		long rows;
 
 		// X spacing
-		const double xStartSpacing = 10;
 		const int xPosColumns = 8;
 		const int xPosGap = 2;
 		const int xHexSpacing = 1;
 		const int xHexGap = 2;
-		const double xEndSpacing = xStartSpacing;
 
-		double xStart { get { return 0; } }
-		double xPosition { get { return xStart + xStartSpacing; } }
+		double xPosition { get { return 0; } }
 		double xHexViewStart { get { return xPosition + (xPosColumns + xPosGap) * charWidth; } }
 		double xHexViewEnd { get { return xHexViewStart + (columns * (2 + xHexSpacing) - xHexSpacing) * charWidth; } }
 		double xTextViewStart { get { return xHexViewEnd + xHexGap * charWidth; } }
 		double xTextViewEnd { get { return xTextViewStart + columns * charWidth; } }
-		double xEnd { get { return xTextViewEnd + xEndSpacing; } }
+		double xEnd { get { return xTextViewEnd; } }
 
 		// Y spacing
-		const double yStartSpacing = 10;
 		readonly double rowHeight;
-		const double yEndSpacing = yStartSpacing;
-
-		double yStart { get { return 0; } }
-		double yLinesStart { get { return yStart + yStartSpacing; } }
-		double yLinesEnd { get { return yLinesStart + rows * rowHeight; } }
-		double yEnd { get { return yLinesEnd + yEndSpacing; } }
 
 		readonly Typeface typeface;
 		readonly double fontSize;
@@ -172,12 +162,12 @@ namespace NeoEdit.BinaryEditorUI
 
 		long GetRowFromY(double y)
 		{
-			return (long)((y - yLinesStart) / rowHeight);
+			return (long)(y / rowHeight);
 		}
 
 		double GetYFromRow(long row)
 		{
-			return yLinesStart + row * rowHeight;
+			return row * rowHeight;
 		}
 
 		double GetXHexFromColumn(long column)
@@ -207,14 +197,14 @@ namespace NeoEdit.BinaryEditorUI
 			if (Data == null)
 				return;
 
-			columns = Math.Min(maxColumns, Math.Max(minColumns, ((int)((ActualWidth - xStartSpacing - xEndSpacing) / charWidth) - xPosColumns - xPosGap - xHexGap + xHexSpacing) / (3 + xHexSpacing)));
+			columns = Math.Min(maxColumns, Math.Max(minColumns, ((int)(ActualWidth / charWidth) - xPosColumns - xPosGap - xHexGap + xHexSpacing) / (3 + xHexSpacing)));
 			rows = (Data.Length + columns - 1) / columns;
 
 			xScrollMaximum = xEnd - ActualWidth;
 			xScrollSmallChange = charWidth;
 			xScrollLargeChange = ActualWidth - xScrollSmallChange;
 
-			yScrollMaximum = yEnd - ActualHeight;
+			yScrollMaximum = rows * rowHeight - ActualHeight;
 			yScrollSmallChange = rowHeight;
 			yScrollLargeChange = ActualHeight - yScrollSmallChange;
 
@@ -223,7 +213,7 @@ namespace NeoEdit.BinaryEditorUI
 
 			for (var row = startRow; row < endRow; ++row)
 			{
-				var y = yLinesStart - yScrollValue + row * rowHeight;
+				var y = row * rowHeight - yScrollValue;
 				var selected = new bool[columns];
 				string hex = "", text = "";
 				var useColumns = Math.Min(columns, Data.Length - row * columns);
