@@ -55,6 +55,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -96,8 +97,9 @@
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Clipboard.cs" />
-    <Compile Include="Test\ConverterTest.cs" />
-    <Compile Include="Test\UnicodeGenerator.cs" />
+    <Compile Include="UnitTest\CoderTest.cs" />
+    <Compile Include="UnitTest\UnitTest.cs" />
+    <Compile Include="UnitTest\UnicodeTest.cs" />
     <Compile Include="BinaryEditorUI\BinaryCanvas.xaml.cs">
       <DependentUpon>BinaryCanvas.xaml</DependentUpon>
     </Compile>

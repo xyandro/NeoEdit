@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Data;
 
-namespace NeoEdit.Test
+namespace NeoEdit.UnitTest
 {
-	class UnicodeGenerator
+	public partial class UnitTest
 	{
 		enum Endings
 		{
@@ -17,7 +18,7 @@ namespace NeoEdit.Test
 			Mixed,
 		};
 
-		static string GetEnding(Endings ending)
+		string GetEnding(Endings ending)
 		{
 			switch (ending)
 			{
@@ -28,7 +29,7 @@ namespace NeoEdit.Test
 			}
 		}
 
-		static string GetText(Coder.Type encoding, bool bom, Endings ending)
+		string GetText(Coder.Type encoding, bool bom, Endings ending)
 		{
 			var text = new List<string>
 			{
@@ -68,12 +69,13 @@ namespace NeoEdit.Test
 			return result;
 		}
 
-		static List<T> GetValues<T>()
+		List<T> GetValues<T>()
 		{
 			return Enum.GetValues(typeof(T)).Cast<T>().ToList();
 		}
 
-		static public void Run()
+		[TestMethod]
+		public void TestUnicode()
 		{
 			var dir = Path.Combine(Directory.GetCurrentDirectory(), "TestData");
 			Directory.CreateDirectory(dir);
@@ -112,21 +114,16 @@ namespace NeoEdit.Test
 							var bytes = File.ReadAllBytes(filename);
 							combined.Write(bytes, 0, bytes.Length);
 
+							// UTF7 in general thinks it's UTF8; ignore it
+							if (encoding == Coder.Type.UTF7)
+								continue;
+
 							var encoding2 = Coder.GuessEncoding(bytes);
 							var str = Coder.BytesToString(bytes, encoding2);
 							var bom2 = (str.Length > 0) && (str[0] == '\ufeff');
 
-							if ((encoding != encoding2) || (bom != bom2))
-							{
-								// UTF7 in general thinks it's UTF8; ignore it
-								if (encoding == Coder.Type.UTF7)
-									continue;
-
-								if (encoding != encoding2)
-									throw new Exception("Failed to guess encoding");
-								if (bom != bom2)
-									throw new Exception("Failed to detect BOM");
-							}
+							Assert.AreEqual(encoding, encoding2);
+							Assert.AreEqual(bom, bom2);
 						}
 					}
 			}
