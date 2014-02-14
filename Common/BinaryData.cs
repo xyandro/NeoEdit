@@ -121,20 +121,20 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public void Replace(long offset, long length, byte[] bytes)
+		public void Replace(long index, long count, byte[] bytes)
 		{
-			if ((offset < 0) || (offset > data.Length))
+			if ((index < 0) || (index > data.Length))
 				throw new ArgumentOutOfRangeException("offset");
-			if ((length < 0) || (offset + length > data.Length))
+			if ((count < 0) || (index + count > data.Length))
 				throw new ArgumentOutOfRangeException("length");
 
 			if (bytes == null)
 				bytes = new byte[0];
 
-			var newData = new byte[data.Length - length + bytes.Length];
-			Array.Copy(data, 0, newData, 0, offset);
-			Array.Copy(bytes, 0, newData, offset, bytes.Length);
-			Array.Copy(data, offset + length, newData, offset + bytes.Length, data.Length - offset - length);
+			var newData = new byte[data.Length - count + bytes.Length];
+			Array.Copy(data, 0, newData, 0, index);
+			Array.Copy(bytes, 0, newData, index, bytes.Length);
+			Array.Copy(data, index + count, newData, index + bytes.Length, data.Length - index - count);
 			data = newData;
 			changed();
 		}

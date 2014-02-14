@@ -10,6 +10,7 @@ namespace NeoEdit.BinaryEditorUI
 {
 	public partial class BinaryEditor : Window
 	{
+		public const string Edit_Undo = "Edit_Undo";
 		public const string Edit_Cut = "Edit_Cut";
 		public const string Edit_Copy = "Edit_Copy";
 		public const string Edit_Paste = "Edit_Paste";

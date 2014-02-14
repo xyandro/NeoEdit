@@ -14,6 +14,19 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.BinaryEditorUI
 {
+	class BinaryCanvasUndo
+	{
+		public long index, count;
+		public byte[] bytes;
+
+		public BinaryCanvasUndo(long _position, long _length, byte[] _bytes)
+		{
+			index = _position;
+			count = _length;
+			bytes = _bytes;
+		}
+	}
+
 	public partial class BinaryCanvas : Canvas
 	{
 		[DepProp]
@@ -126,6 +139,8 @@ namespace NeoEdit.BinaryEditorUI
 
 		readonly Typeface typeface;
 		readonly double fontSize;
+
+		List<BinaryCanvasUndo> undo = new List<BinaryCanvasUndo>(MaxUndoSteps);
 
 		static BinaryCanvas() { UIHelper<BinaryCanvas>.Register(); }
 
@@ -405,24 +420,68 @@ namespace NeoEdit.BinaryEditorUI
 			Pos1 = Pos2 = 0;
 		}
 
+		const int MaxUndoSteps = 50;
+		const int MaxUndoBytes = 1048576 * 5;
+		void AddUndo(long index, long count, int bytesLen)
+		{
+			var bytes = Data.GetSubset(index, count);
+			if (undo.Count != 0)
+			{
+				var last = undo.Last();
+				if (last.index + last.count == index)
+				{
+					last.count += bytesLen;
+					last.bytes = last.bytes.Concat(bytes).ToArray();
+					count = bytesLen = 0;
+				}
+			}
+
+			if ((count != 0) || (bytesLen != 0))
+				undo.Add(new BinaryCanvasUndo(index, bytesLen, bytes));
+
+			while (undo.Count >= MaxUndoSteps)
+				undo.RemoveAt(0);
+			while (true)
+			{
+				var bytesSum = undo.Select(a => a.bytes.Length).Sum();
+				if (bytesSum < MaxUndoBytes)
+					break;
+				undo.RemoveAt(0);
+			}
+		}
+
+		void Undo()
+		{
+			if (undo.Count == 0)
+				return;
+
+			var step = undo.Last();
+			undo.Remove(step);
+			Data.Replace(step.index, step.count, step.bytes);
+
+			Pos1 = step.index;
+			Pos2 = Pos1 + step.bytes.Length;
+		}
+
 		bool inHexEdit = false;
 		void Replace(byte[] bytes, bool useAllBytes = false)
 		{
 			if (bytes == null)
 				bytes = new byte[0];
 
-			long len;
+			long count;
 			if (Insert)
-				len = SelEnd - SelStart;
+				count = SelEnd - SelStart;
 			else
 			{
 				if ((useAllBytes) && (bytes.Length < Data.Length - SelStart))
 					throw new InvalidOperationException("Unable to do this operation in insert mode.");
 				Array.Resize(ref bytes, (int)Math.Min(bytes.Length, Data.Length - SelStart));
-				len = bytes.Length;
+				count = bytes.Length;
 			}
 
-			Data.Replace(SelStart, len, bytes);
+			AddUndo(SelStart, count, bytes.Length);
+			Data.Replace(SelStart, count, bytes);
 
 			Pos1 = Pos2 = SelStart + bytes.Length;
 		}
@@ -712,6 +771,7 @@ namespace NeoEdit.BinaryEditorUI
 
 				switch (command.Name)
 				{
+					case BinaryEditor.Edit_Undo: Undo(); break;
 					case BinaryEditor.Edit_Cut:
 					case BinaryEditor.Edit_Copy:
 						{
