@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NeoEdit.Records.Registry
 {
 	public class RegistryRoot : RecordRoot
 	{
-		public static RegistryRoot Static { get; private set; }
-
-		internal RegistryRoot(Record parent)
-			: base("Registry", parent)
-		{
-			if (Static != null)
-				throw new Exception("Can only create root nodes once.");
-			Static = this;
-		}
+		public RegistryRoot() : base("Registry") { }
 
 		public override Record GetRecord(string uri)
 		{
@@ -22,12 +13,12 @@ namespace NeoEdit.Records.Registry
 			return null;
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
 				foreach (var key in RegistryRecord.RootKeys.Keys)
-					yield return new RegistryDir(key, this);
+					yield return new RegistryDir(key);
 			}
 		}
 	}

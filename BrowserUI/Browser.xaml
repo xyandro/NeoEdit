@@ -23,7 +23,8 @@
 						<Binding ElementName="self" Path="Location"/>
 						<Binding ElementName="files" Path="SelectedItems"/>
 						<Binding ElementName="self"/>
-						<Binding ElementName="files" Path="SelectedItems.Count"/> <!-- Catch changes -->
+						<!-- Catch changes -->
+						<Binding ElementName="files" Path="SelectedItems.Count"/>
 					</MultiBinding>
 				</MenuItem.ItemsSource>
 			</MenuItem>
@@ -35,10 +36,10 @@
 					<MenuItem.ItemsSource>
 						<MultiBinding Converter="{browserConverters:ColumnMenuItems}">
 							<Binding ElementName="self" Path="Properties"/>
-							<Binding ElementName="self" Path="Location.Records"/>
+							<Binding ElementName="self" Path="Records"/>
 							<Binding ElementName="self"/>
-							<Binding ElementName="self" Path="Properties.Count"/> <!-- Catch changes -->
-							<Binding ElementName="self" Path="Location.Records.Count"/> <!-- Catch changes -->
+							<!-- Catch changes -->
+							<Binding ElementName="self" Path="Properties.Count"/>
 						</MultiBinding>
 					</MenuItem.ItemsSource>
 				</MenuItem>
@@ -48,13 +49,19 @@
 							<Binding ElementName="self" Path="Properties"/>
 							<Binding ElementName="self" Path="SortProperty"/>
 							<Binding ElementName="self"/>
-							<Binding ElementName="self" Path="Properties.Count"/> <!-- Catch changes -->
+							<!-- Catch changes -->
+							<Binding ElementName="self" Path="Properties.Count"/>
 						</MultiBinding>
 					</MenuItem.ItemsSource>
 				</MenuItem>
 			</MenuItem>
 		</Menu>
 		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=self, Mode=OneWay}" KeyDown="LocationDisplay_KeyDown"/>
-		<browserUI:BrowserListView x:Name="files" Grid.Row="2" KeyDown="Files_KeyDown" Properties="{Binding Properties, ElementName=self}" Records="{Binding Location.Records, ElementName=self}" MouseDoubleClick="Files_MouseDoubleClick" SortProperty="{Binding SortProperty, ElementName=self, Mode=TwoWay}" SortAscending="{Binding SortAscending, ElementName=self, Mode=TwoWay}"/>
+		<browserUI:BrowserListView x:Name="files" Grid.Row="2" KeyDown="Files_KeyDown" MouseDoubleClick="Files_MouseDoubleClick"
+			Records="{Binding Records, ElementName=self, Mode=OneWay}"
+			Properties="{Binding Properties, ElementName=self, Mode=OneWay}"
+			SortProperty="{Binding SortProperty, ElementName=self, Mode=TwoWay}"
+			SortAscending="{Binding SortAscending, ElementName=self, Mode=TwoWay}"
+		/>
 	</Grid>
 </Window>

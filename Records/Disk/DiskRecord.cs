@@ -7,7 +7,26 @@ namespace NeoEdit.Records.Disk
 {
 	public abstract class DiskRecord : Record
 	{
-		public DiskRecord(string uri, Record parent) : base(uri, parent) { }
+		public DiskRecord(string uri) : base(uri) { }
+
+		public override Record Parent
+		{
+			get
+			{
+				var parent = Path.GetDirectoryName(FullName);
+				if ((parent == null) && (FullName.StartsWith(@"\\")))
+				{
+					var idx = FullName.IndexOf('\\', 2);
+					if (idx != -1)
+						return new Network.NetworkDir(FullName.Substring(0, idx));
+				}
+				if (parent == null)
+					return new DiskRoot();
+				if ((!parent.StartsWith(@"\\")) && (Path.GetDirectoryName(parent) == null))
+					parent = parent.Substring(0, 2);
+				return new DiskDir(parent);
+			}
+		}
 
 		public override IEnumerable<RecordAction.ActionName> Actions
 		{
@@ -36,7 +55,6 @@ namespace NeoEdit.Records.Disk
 					return;
 
 				File.Delete(newName);
-				Parent.RemoveChild(newName);
 			}
 
 			if (this is DiskDir)

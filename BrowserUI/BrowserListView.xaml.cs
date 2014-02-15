@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -30,7 +31,7 @@ namespace NeoEdit.BrowserUI
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public ObservableCollection<Record> Records { get { return uiHelper.GetPropValue<ObservableCollection<Record>>(); } set { uiHelper.SetPropValue(value); } }
+		public List<Record> Records { get { return uiHelper.GetPropValue<List<Record>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -47,7 +48,7 @@ namespace NeoEdit.BrowserUI
 
 			collectionView = FindResource("collectionView") as CollectionViewSource;
 			uiHelper.AddCallback(CollectionViewSource.ViewProperty, collectionView, Resort);
-			uiHelper.AddCallback(a => a.SortProperty, (o, n) => { SortAscending = RecordProperty.Get(SortProperty).DefaultAscending; Resort(); });
+			uiHelper.AddCallback(a => a.SortProperty, (o, n) => Resort());
 			uiHelper.AddCallback(a => a.SortAscending, (o, n) => Resort());
 		}
 
@@ -62,12 +63,20 @@ namespace NeoEdit.BrowserUI
 		{
 			var propertyValue1 = record1[SortProperty];
 			var propertyValue2 = record2[SortProperty];
-			if (propertyValue1 == propertyValue2)
-				return 0;
+			if ((propertyValue1 == null) && (propertyValue2 == null))
+			{
+				propertyValue1 = record1.FullName;
+				propertyValue2 = record2.FullName;
+			}
 			if (propertyValue1 == null)
 				return 1;
 			if (propertyValue2 == null)
 				return -1;
+			if ((propertyValue1 as IComparable).CompareTo(propertyValue2) == 0)
+			{
+				propertyValue1 = record1.FullName;
+				propertyValue2 = record2.FullName;
+			}
 			return (propertyValue1 as IComparable).CompareTo(propertyValue2) * (SortAscending ? 1 : -1);
 		}
 

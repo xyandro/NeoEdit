@@ -21,6 +21,8 @@ namespace NeoEdit.BrowserUI.Converters
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
+			if (value[0] == null)
+				return null;
 			if (!(value[1] is IEnumerable<Object>))
 				return null;
 

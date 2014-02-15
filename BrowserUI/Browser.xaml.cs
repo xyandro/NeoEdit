@@ -18,6 +18,7 @@ namespace NeoEdit.BrowserUI
 {
 	public partial class Browser : Window
 	{
+		RecordRoot lastRoot;
 		[DepProp]
 		public Record Location
 		{
@@ -25,6 +26,7 @@ namespace NeoEdit.BrowserUI
 			set
 			{
 				uiHelper.SetPropValue(value);
+
 				var root = Location;
 				while (true)
 				{
@@ -42,16 +44,18 @@ namespace NeoEdit.BrowserUI
 					}
 					root = root.Parent;
 				}
+
+				Refresh();
 			}
 		}
+		[DepProp]
+		public List<Record> Records { get { return uiHelper.GetPropValue<List<Record>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public RecordProperty.PropertyName SortProperty { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
-
-		RecordRoot lastRoot;
 
 		static Browser() { UIHelper<Browser>.Register(); }
 
@@ -61,8 +65,11 @@ namespace NeoEdit.BrowserUI
 		{
 			uiHelper = new UIHelper<Browser>(this);
 			InitializeComponent();
-			SetLocation(uri);
+
 			locationDisplay.LostFocus += (s, e) => uiHelper.InvalidateBinding(locationDisplay, TextBox.TextProperty);
+			uiHelper.AddCallback(a => a.SortProperty, (o, n) => SortAscending = RecordProperty.Get(SortProperty).DefaultAscending);
+
+			Loaded += (s, e) => SetLocation(uri);
 		}
 
 		static string StartLocation()
@@ -112,6 +119,13 @@ namespace NeoEdit.BrowserUI
 				SetLocation(record);
 		}
 
+		void Refresh()
+		{
+			Records = Location.Records.ToList();
+		}
+
+		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Alt; } }
+
 		void Window_KeyDown(object sender, KeyEventArgs e)
 		{
 			var action = RecordAction.ActionFromAccessKey(e.Key, Keyboard.Modifiers);
@@ -129,7 +143,7 @@ namespace NeoEdit.BrowserUI
 				case Key.D4:
 				case Key.D5:
 					{
-						var list = ListRoot.Static[e.Key - Key.D1 + 1];
+						var list = new ListRoot()[e.Key - Key.D1 + 1];
 						switch (Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift))
 						{
 							case ModifierKeys.Control:
@@ -143,8 +157,7 @@ namespace NeoEdit.BrowserUI
 					}
 					break;
 				case Key.F5:
-					Location.Refresh();
-					files.Resort();
+					Refresh();
 					break;
 				case Key.Escape:
 					files.Focus();
@@ -154,22 +167,22 @@ namespace NeoEdit.BrowserUI
 					switch (e.SystemKey)
 					{
 						case Key.D:
-							if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+							if (altOnly)
 							{
 								locationDisplay.SelectAll();
 								locationDisplay.Focus();
 							}
 							break;
 						case Key.Up:
-							if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+							if (altOnly)
 								SetLocation(Location.Parent);
 							break;
 						case Key.Left:
-							if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+							if (altOnly)
 								SetPreviousLocation();
 							break;
 						case Key.Right:
-							if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.Alt)
+							if (altOnly)
 								SetNextLocation();
 							break;
 					}
@@ -191,7 +204,7 @@ namespace NeoEdit.BrowserUI
 		void SetLocation(string uri)
 		{
 			string select = null;
-			var record = Root.Static.GetRecord(uri);
+			var record = new Root().GetRecord(uri);
 			if (record == null)
 				return;
 			if (record.IsFile)
@@ -349,24 +362,21 @@ namespace NeoEdit.BrowserUI
 		{
 			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
 			SortProperty = RecordProperty.PropertyName.Name;
-			SortAscending = RecordProperty.Get(RecordProperty.PropertyName.Name).DefaultAscending;
 		}
 
 		void SetListView()
 		{
 			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime, RecordProperty.PropertyName.Path };
 			SortProperty = RecordProperty.PropertyName.Name;
-			SortAscending = RecordProperty.Get(RecordProperty.PropertyName.Name).DefaultAscending;
 		}
 
 		void SetRegistryView()
 		{
 			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Type, RecordProperty.PropertyName.Data };
 			SortProperty = RecordProperty.PropertyName.Name;
-			SortAscending = RecordProperty.Get(RecordProperty.PropertyName.Name).DefaultAscending;
 		}
 
-		private void MenuItemViewClick(object sender, RoutedEventArgs e)
+		void MenuItemViewClick(object sender, RoutedEventArgs e)
 		{
 			switch (((MenuItem)sender).Header.ToString())
 			{

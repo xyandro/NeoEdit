@@ -6,7 +6,7 @@ namespace NeoEdit.Records
 {
 	public abstract class RecordRoot : Record
 	{
-		protected RecordRoot(string uri, Record parent) : base(uri, parent) { }
+		protected RecordRoot(string uri) : base(uri) { }
 
 		public virtual Record GetRecord(string uri)
 		{

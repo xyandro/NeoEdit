@@ -5,15 +5,17 @@ namespace NeoEdit.Records.Network
 {
 	public class NetworkDir : Record
 	{
-		public NetworkDir(string uri, Record parent) : base(uri, parent) { }
+		public NetworkDir(string uri) : base(uri) { }
 
-		protected override IEnumerable<Record> InternalRecords
+		public override Record Parent { get { return new NetworkRoot(); } }
+
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
 				using (var shares = new ManagementClass(FullName + @"\root\cimv2", "Win32_Share", new ObjectGetOptions()))
 					foreach (var share in shares.GetInstances())
-						yield return new Disk.DiskDir(FullName + @"\" + share["Name"], this);
+						yield return new Disk.DiskDir(FullName + @"\" + share["Name"]);
 			}
 		}
 	}

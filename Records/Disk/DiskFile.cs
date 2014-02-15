@@ -10,8 +10,8 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskFile : DiskRecord
 	{
-		public DiskFile(string uri, Record parent)
-			: base(uri, parent)
+		public DiskFile(string uri)
+			: base(uri)
 		{
 			var fileInfo = new FileInfo(FullName);
 			this[RecordProperty.PropertyName.Size] = fileInfo.Length;
@@ -49,7 +49,6 @@ namespace NeoEdit.Records.Disk
 		public override void Delete()
 		{
 			File.Delete(FullName);
-			Parent.RemoveChild(this);
 		}
 
 		public override void CalcMD5()
@@ -64,13 +63,13 @@ namespace NeoEdit.Records.Disk
 			this[RecordProperty.PropertyName.Identify] = Identifier.Identify(FullName);
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
 				if (GetProperty<string>(RecordProperty.PropertyName.Extension).Equals(".zip", StringComparison.OrdinalIgnoreCase))
-					return ZippedRecord.GetFiles(this, FullName, "");
-				return base.InternalRecords;
+					return ZippedRecord.GetFiles(FullName, FullName, "");
+				return base.Records;
 			}
 		}
 

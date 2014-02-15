@@ -4,20 +4,7 @@ namespace NeoEdit.Records
 {
 	public class Root : RecordRoot
 	{
-		public static Root Static { get; private set; }
-		static Root() { Static = new Root(null); }
-
-		readonly List<Record> RootNodes;
-		Root(Record parent)
-			: base("Root", null)
-		{
-			RootNodes = new List<Record> { 
-				new Disk.DiskRoot(this),
-				new Network.NetworkRoot(this),
-				new List.ListRoot(this),
-				new Registry.RegistryRoot(this),
-			};
-		}
+		public Root() : base("Root") { }
 
 		public override Record GetRecord(string uri)
 		{
@@ -38,12 +25,14 @@ namespace NeoEdit.Records
 			return null;
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
-				foreach (var node in RootNodes)
-					yield return node;
+				yield return new Disk.DiskRoot();
+				yield return new Network.NetworkRoot();
+				yield return new List.ListRoot();
+				yield return new Registry.RegistryRoot();
 			}
 		}
 	}

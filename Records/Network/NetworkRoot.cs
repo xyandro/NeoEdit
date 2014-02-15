@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Network
 {
 	public class NetworkRoot : RecordRoot
 	{
-		public static NetworkRoot Static { get; private set; }
-
-		internal NetworkRoot(Record parent)
-			: base("Network", parent)
-		{
-			if (Static != null)
-				throw new Exception("Can only create root nodes once.");
-			Static = this;
-		}
+		public NetworkRoot() : base("Network") { }
 
 		static Regex networkRE = new Regex(@"^(\\\\[^\\]+)");
 		static List<string> paths = new List<string>();
@@ -30,12 +21,12 @@ namespace NeoEdit.Records.Network
 			return base.GetRecord(uri);
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
 				foreach (var path in paths)
-					yield return new NetworkDir(path, this);
+					yield return new NetworkDir(path);
 			}
 		}
 	}

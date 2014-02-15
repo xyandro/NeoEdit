@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -7,15 +6,7 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskRoot : RecordRoot
 	{
-		public static DiskRoot Static { get; private set; }
-
-		internal DiskRoot(Record parent)
-			: base("Disks", parent)
-		{
-			if (Static != null)
-				throw new Exception("Can only create root nodes once.");
-			Static = this;
-		}
+		public DiskRoot() : base("Disks") { }
 
 		public override Record GetRecord(string uri)
 		{
@@ -31,12 +22,12 @@ namespace NeoEdit.Records.Disk
 			return null;
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
 				foreach (var drive in DriveInfo.GetDrives())
-					yield return new DiskDir(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper(), this);
+					yield return new DiskDir(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper());
 			}
 		}
 	}

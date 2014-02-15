@@ -5,8 +5,8 @@ namespace NeoEdit.Records.Registry
 {
 	public class RegistryFile : RegistryRecord
 	{
-		public RegistryFile(string uri, Record parent)
-			: base(uri, parent)
+		public RegistryFile(string uri)
+			: base(uri)
 		{
 			if (String.IsNullOrEmpty(Name))
 				this[RecordProperty.PropertyName.Name] = "(Default)";

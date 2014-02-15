@@ -6,7 +6,7 @@ namespace NeoEdit.Records.Zipped
 {
 	class ZippedDir : ZippedRecord
 	{
-		public ZippedDir(string uri, Record parent, string archive) : base(uri, parent, archive) { }
+		public ZippedDir(string uri, string archive) : base(uri, archive) { }
 
 		public override IEnumerable<RecordAction.ActionName> Actions
 		{
@@ -18,12 +18,12 @@ namespace NeoEdit.Records.Zipped
 			}
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
 				var path = FullName.Substring(archive.Length + 1).Replace(@"\", "/") + "/";
-				return GetFiles(this, archive, path);
+				return GetFiles(FullName, archive, path);
 			}
 		}
 
@@ -35,7 +35,6 @@ namespace NeoEdit.Records.Zipped
 				var entries = zipFile.Entries.Where(a => a.FullName.StartsWith(name)).ToList();
 				entries.ForEach(a => a.Delete());
 			}
-			RemoveFromParent();
 		}
 	}
 }

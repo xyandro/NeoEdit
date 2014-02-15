@@ -72,7 +72,7 @@ namespace NeoEdit
 			if ((dropList == null) || (dropList.Count == 0))
 				return;
 
-			records = dropList.Cast<string>().ToList().Select(file => DiskRoot.Static.GetRecord(file)).ToList();
+			records = dropList.Cast<string>().ToList().Select(file => new DiskRoot().GetRecord(file)).ToList();
 		}
 
 		public void Set(byte[] bytes, string text)

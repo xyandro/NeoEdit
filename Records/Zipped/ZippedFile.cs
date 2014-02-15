@@ -10,8 +10,8 @@ namespace NeoEdit.Records.Zipped
 {
 	class ZippedFile : ZippedRecord
 	{
-		public ZippedFile(string uri, Record parent, string archive)
-			: base(uri, parent, archive)
+		public ZippedFile(string uri, string archive)
+			: base(uri, archive)
 		{
 			using (var zipFile = ZipFile.OpenRead(archive))
 			{
@@ -63,7 +63,6 @@ namespace NeoEdit.Records.Zipped
 				var entry = zipFile.GetEntry(InArchiveName);
 				entry.Delete();
 			}
-			RemoveFromParent();
 		}
 	}
 }

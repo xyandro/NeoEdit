@@ -4,18 +4,18 @@ namespace NeoEdit.Records.Registry
 {
 	public class RegistryDir : RegistryRecord
 	{
-		public RegistryDir(string uri, Record parent) : base(uri, parent) { }
+		public RegistryDir(string uri) : base(uri) { }
 
-		protected override IEnumerable<Record> InternalRecords
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
 				using (var subKey = GetKey(FullName))
 				{
 					foreach (var name in subKey.GetSubKeyNames())
-						yield return new RegistryDir(FullName + @"\" + name, this);
+						yield return new RegistryDir(FullName + @"\" + name);
 					foreach (var name in subKey.GetValueNames())
-						yield return new RegistryFile(FullName + @"\" + name, this);
+						yield return new RegistryFile(FullName + @"\" + name);
 				}
 			}
 		}

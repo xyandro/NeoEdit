@@ -9,15 +9,15 @@ namespace NeoEdit.Records.Zipped
 	public class ZippedRecord : Record
 	{
 		readonly protected string archive;
-		public ZippedRecord(string uri, Record parent, string _archive)
-			: base(uri, parent)
+		public ZippedRecord(string uri, string _archive)
+			: base(uri)
 		{
 			archive = _archive;
 		}
 
 		protected string InArchiveName { get { return FullName.Substring(archive.Length + 1).Replace('\\', '/'); } }
 
-		public static IEnumerable<ZippedRecord> GetFiles(Record parent, string archive, string path)
+		public static IEnumerable<ZippedRecord> GetFiles(string parentFullName, string archive, string path)
 		{
 			using (var zipFile = ZipFile.OpenRead(archive))
 			{
@@ -40,12 +40,12 @@ namespace NeoEdit.Records.Zipped
 					if (found.ContainsKey(name))
 						continue;
 
-					var fullName = Path.Combine(parent.FullName, name);
+					var fullName = Path.Combine(parentFullName, name);
 
 					if (isDir)
-						found[name] = new ZippedDir(fullName, parent, archive);
+						found[name] = new ZippedDir(fullName, archive);
 					else
-						found[name] = new ZippedFile(fullName, parent, archive);
+						found[name] = new ZippedFile(fullName, archive);
 				}
 				return found.Values.OrderBy(a => a.FullName);
 			}

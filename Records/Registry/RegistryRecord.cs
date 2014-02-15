@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
@@ -11,6 +12,17 @@ namespace NeoEdit.Records.Registry
 		static Regex RegistryRE;
 		public static Dictionary<string, RegistryKey> RootKeys { get; private set; }
 
+		public override Record Parent
+		{
+			get
+			{
+				var parent = Path.GetDirectoryName(FullName);
+				if (String.IsNullOrEmpty(parent))
+					return new RegistryRoot();
+				return new RegistryDir(parent);
+			}
+		}
+
 		static RegistryRecord()
 		{
 			var list = Helpers.GetValues<RegistryHive>().Select(a => RegistryKey.OpenBaseKey(a, RegistryView.Registry64)).ToList();
@@ -18,7 +30,7 @@ namespace NeoEdit.Records.Registry
 			RegistryRE = new Regex(String.Format("^({0})(?:\\\\(.*))?$", String.Join("|", RootKeys.Select(a => a.Key))), RegexOptions.IgnoreCase);
 		}
 
-		public RegistryRecord(string uri, Record parent) : base(uri, parent) { }
+		public RegistryRecord(string uri) : base(uri) { }
 
 		public static bool MayBeRegKey(string uri)
 		{

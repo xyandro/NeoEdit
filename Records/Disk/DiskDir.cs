@@ -8,8 +8,8 @@ namespace NeoEdit.Records.Disk
 {
 	public class DiskDir : DiskRecord
 	{
-		public DiskDir(string uri, Record parent)
-			: base(uri, parent)
+		public DiskDir(string uri)
+			: base(uri)
 		{
 			if (new Regex("^[a-zA-Z]:$").IsMatch(uri))
 				this[RecordProperty.PropertyName.Name] = FullName;
@@ -21,15 +21,15 @@ namespace NeoEdit.Records.Disk
 			return rootRE.IsMatch(FullName);
 		}
 
-		protected override IEnumerable<Record> InternalRecords
+		public override IEnumerable<Record> Records
 		{
 			get
 			{
 				var find = FullName + (IsRoot() ? @"\" : "");
 				foreach (var dir in Directory.EnumerateDirectories(find))
-					yield return new DiskDir(dir, this);
+					yield return new DiskDir(dir);
 				foreach (var file in Directory.EnumerateFiles(find))
-					yield return new DiskFile(file, this);
+					yield return new DiskFile(file);
 			}
 		}
 
@@ -41,7 +41,6 @@ namespace NeoEdit.Records.Disk
 		public override void Delete()
 		{
 			Directory.Delete(FullName, true);
-			Parent.RemoveChild(this);
 		}
 
 		void CopyDir(string oldName, string newName)
@@ -102,7 +101,6 @@ namespace NeoEdit.Records.Disk
 						CopyDir(child.FullName, newName);
 				}
 			}
-			Refresh();
 		}
 
 		public override void Sync(Record source)
@@ -114,10 +112,7 @@ namespace NeoEdit.Records.Disk
 			var recordsToCopy = sourceFiles.Where(a => !destFiles.Any(b => a.Name == b.Name)).ToList();
 
 			foreach (var record in recordsToDelete)
-			{
 				record.Delete();
-				record.RemoveFromParent();
-			}
 
 			foreach (var record in recordsToCopy)
 			{
