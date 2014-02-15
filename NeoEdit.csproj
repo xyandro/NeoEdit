@@ -76,7 +76,6 @@
     <Compile Include="Common\TextData.cs" />
     <Compile Include="Data\Coder.cs" />
     <Compile Include="Records\List\ListRecord.cs" />
-    <Compile Include="Records\Network\NetworkRecord.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
     <Compile Include="Records\Zipped\ZippedFile.cs" />
     <Compile Include="Records\Zipped\ZippedRecord.cs" />
@@ -86,8 +85,7 @@
     <Compile Include="Records\RecordProperty.cs" />
     <Compile Include="Records\List\ListDir.cs" />
     <Compile Include="Records\List\ListRoot.cs" />
-    <Compile Include="Records\Network\NetworkDir.cs" />
-    <Compile Include="Records\Network\NetworkRoot.cs" />
+    <Compile Include="Records\Disk\NetworkShare.cs" />
     <Compile Include="Records\Record.cs" />
     <Compile Include="Records\Disk\DiskRoot.cs" />
     <Compile Include="Records\Registry\RegistryRecord.cs" />

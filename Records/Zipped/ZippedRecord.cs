@@ -15,6 +15,17 @@ namespace NeoEdit.Records.Zipped
 			archive = _archive;
 		}
 
+		public override Record Parent
+		{
+			get
+			{
+				var parent = Path.GetDirectoryName(FullName);
+				if (parent == archive)
+					return new Disk.DiskFile(parent);
+				return new ZippedDir(parent, archive);
+			}
+		}
+
 		protected string InArchiveName { get { return FullName.Substring(archive.Length + 1).Replace('\\', '/'); } }
 
 		public static IEnumerable<ZippedRecord> GetFiles(string parentFullName, string archive, string path)

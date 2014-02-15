@@ -26,7 +26,6 @@ namespace NeoEdit.Records
 			get
 			{
 				yield return new Disk.DiskRoot();
-				yield return new Network.NetworkRoot();
 				yield return new List.ListRoot();
 				yield return new Registry.RegistryRoot();
 			}

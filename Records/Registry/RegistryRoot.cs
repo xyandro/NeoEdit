@@ -6,13 +6,6 @@ namespace NeoEdit.Records.Registry
 	{
 		public RegistryRoot() : base("Registry") { }
 
-		public override Record GetRecord(string uri)
-		{
-			if (RegistryRecord.MayBeRegKey(uri))
-				return base.GetRecord(uri);
-			return null;
-		}
-
 		public override IEnumerable<Record> Records
 		{
 			get

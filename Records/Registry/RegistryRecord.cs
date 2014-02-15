@@ -17,10 +17,20 @@ namespace NeoEdit.Records.Registry
 			return typeof(RegistryRecord);
 		}
 
+		public override Record GetRecord(string uri)
+		{
+			if (RegistryRE.IsMatch(uri))
+				return base.GetRecord(uri);
+			return null;
+		}
+
 		public override Record Parent
 		{
 			get
 			{
+				if (this is RegistryRoot)
+					return new Root();
+
 				var parent = Path.GetDirectoryName(FullName);
 				if (String.IsNullOrEmpty(parent))
 					return new RegistryRoot();
@@ -37,12 +47,7 @@ namespace NeoEdit.Records.Registry
 
 		public RegistryRecord(string uri) : base(uri) { }
 
-		public static bool MayBeRegKey(string uri)
-		{
-			return RegistryRE.IsMatch(uri);
-		}
-
-		public RegistryKey GetKey(string key)
+		protected RegistryKey GetKey(string key)
 		{
 			var match = RegistryRE.Match(key);
 			if (!match.Success)

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -12,7 +12,6 @@ using NeoEdit.Dialogs;
 using NeoEdit.Records;
 using NeoEdit.Records.Disk;
 using NeoEdit.Records.List;
-using NeoEdit.Records.Network;
 using NeoEdit.Records.Registry;
 
 namespace NeoEdit.BrowserUI
@@ -31,7 +30,7 @@ namespace NeoEdit.BrowserUI
 				if (value.GetRootType() != lastRootType)
 				{
 					lastRootType = value.GetRootType();
-					if ((lastRootType == typeof(DiskRecord)) || (lastRootType == typeof(NetworkRecord)))
+					if (lastRootType == typeof(DiskRecord))
 						SetDiskView();
 					if (lastRootType == typeof(ListRecord))
 						SetListView();

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Common;
 
@@ -77,7 +77,7 @@ namespace NeoEdit.Records
 				if (uri.Equals(record.FullName, StringComparison.OrdinalIgnoreCase))
 					return record;
 
-				var match = new Regex(@"^(\\*[^\\]+)(.*)$").Match(remaining);
+				var match = Regex.Match(remaining, @"^(\\*[^\\]+)(.*)$");
 				if (!match.Success)
 					break;
 				findUri += match.Groups[1].Value;

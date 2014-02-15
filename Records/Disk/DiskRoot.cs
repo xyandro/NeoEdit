@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
 {
@@ -8,18 +7,11 @@ namespace NeoEdit.Records.Disk
 	{
 		public DiskRoot() : base("Disks") { }
 
-		public override Record GetRecord(string uri)
-		{
-			uri = uri.Replace("/", "\\");
-			uri = uri.Replace("\"", "");
-			uri = uri.Trim();
-			uri = uri.TrimEnd('\\');
-			var netPath = uri.StartsWith(@"\\");
-			uri = new Regex("\\\\+").Replace(uri, "\\");
+		static HashSet<string> paths = new HashSet<string>();
 
-			if ((File.Exists(uri)) || (Directory.Exists(uri)))
-				return base.GetRecord(uri);
-			return null;
+		public static void EnsureShareExists(string uri)
+		{
+			paths.Add(uri.ToLowerInvariant());
 		}
 
 		public override IEnumerable<Record> Records
@@ -28,6 +20,8 @@ namespace NeoEdit.Records.Disk
 			{
 				foreach (var drive in DriveInfo.GetDrives())
 					yield return new DiskDir(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper());
+				foreach (var path in paths)
+					yield return new NetworkShare(path);
 			}
 		}
 	}

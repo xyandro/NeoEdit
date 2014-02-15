@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Management;
 
-namespace NeoEdit.Records.Network
+namespace NeoEdit.Records.Disk
 {
-	public class NetworkDir : NetworkRecord
+	public class NetworkShare : DiskRecord
 	{
-		public NetworkDir(string uri) : base(uri) { }
-
-		public override Record Parent { get { return new NetworkRoot(); } }
+		public NetworkShare(string uri) : base(uri) { }
 
 		public override IEnumerable<Record> Records
 		{
