@@ -3,7 +3,7 @@ using System.Management;
 
 namespace NeoEdit.Records.Network
 {
-	public class NetworkDir : Record
+	public class NetworkDir : NetworkRecord
 	{
 		public NetworkDir(string uri) : base(uri) { }
 

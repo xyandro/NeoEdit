@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Network
 {
-	public class NetworkRoot : RecordRoot
+	public class NetworkRoot : NetworkRecord
 	{
 		public NetworkRoot() : base("Network") { }
 

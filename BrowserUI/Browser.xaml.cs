@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -18,7 +19,7 @@ namespace NeoEdit.BrowserUI
 {
 	public partial class Browser : Window
 	{
-		RecordRoot lastRoot;
+		Type lastRootType;
 		[DepProp]
 		public Record Location
 		{
@@ -27,22 +28,15 @@ namespace NeoEdit.BrowserUI
 			{
 				uiHelper.SetPropValue(value);
 
-				var root = Location;
-				while (true)
+				if (value.GetRootType() != lastRootType)
 				{
-					if (root is Root)
-						break;
-					if ((root is RecordRoot) && (root != lastRoot))
-					{
-						if ((root is DiskRoot) || (root is NetworkRoot))
-							SetDiskView();
-						if (root is ListRoot)
-							SetListView();
-						if (root is RegistryRoot)
-							SetRegistryView();
-						lastRoot = root as RecordRoot;
-					}
-					root = root.Parent;
+					lastRootType = value.GetRootType();
+					if ((lastRootType == typeof(DiskRecord)) || (lastRootType == typeof(NetworkRecord)))
+						SetDiskView();
+					if (lastRootType == typeof(ListRecord))
+						SetListView();
+					if (lastRootType == typeof(RegistryRecord))
+						SetRegistryView();
 				}
 
 				Refresh();

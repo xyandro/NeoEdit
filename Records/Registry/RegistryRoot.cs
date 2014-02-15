@@ -2,7 +2,7 @@
 
 namespace NeoEdit.Records.Registry
 {
-	public class RegistryRoot : RecordRoot
+	public class RegistryRoot : RegistryRecord
 	{
 		public RegistryRoot() : base("Registry") { }
 

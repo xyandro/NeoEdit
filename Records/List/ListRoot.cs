@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.Records.List
 {
-	public class ListRoot : RecordRoot
+	public class ListRoot : ListRecord
 	{
 		const int NumLists = 5;
 

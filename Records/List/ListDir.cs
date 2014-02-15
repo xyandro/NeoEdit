@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NeoEdit.Records.List
 {
-	public class ListDir : Record
+	public class ListDir : ListRecord
 	{
 		List<Record> items = new List<Record>();
 		public ListDir(string uri) : base(uri) { }

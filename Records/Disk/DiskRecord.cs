@@ -9,21 +9,31 @@ namespace NeoEdit.Records.Disk
 	{
 		public DiskRecord(string uri) : base(uri) { }
 
+		public override Type GetRootType() { return typeof(DiskRecord); }
+
 		public override Record Parent
 		{
 			get
 			{
+				if (this is DiskRoot)
+					return new Root();
+
 				var parent = Path.GetDirectoryName(FullName);
-				if ((parent == null) && (FullName.StartsWith(@"\\")))
-				{
-					var idx = FullName.IndexOf('\\', 2);
-					if (idx != -1)
-						return new Network.NetworkDir(FullName.Substring(0, idx));
-				}
 				if (parent == null)
+				{
+					if (FullName.StartsWith(@"\\"))
+					{
+						var idx = FullName.IndexOf('\\', 2);
+						if (idx != -1)
+							return new Network.NetworkDir(FullName.Substring(0, idx));
+					}
+
 					return new DiskRoot();
+				}
+
 				if ((!parent.StartsWith(@"\\")) && (Path.GetDirectoryName(parent) == null))
 					parent = parent.Substring(0, 2);
+
 				return new DiskDir(parent);
 			}
 		}

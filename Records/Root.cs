@@ -2,7 +2,7 @@
 
 namespace NeoEdit.Records
 {
-	public class Root : RecordRoot
+	public class Root : Record
 	{
 		public Root() : base("Root") { }
 
@@ -10,17 +10,13 @@ namespace NeoEdit.Records
 		{
 			foreach (var record in Records)
 			{
-				var root = record as RecordRoot;
-				if (root != null)
+				try
 				{
-					try
-					{
-						var tempRecord = root.GetRecord(uri);
-						if (tempRecord != null)
-							return tempRecord;
-					}
-					catch { }
+					var tempRecord = record.GetRecord(uri);
+					if (tempRecord != null)
+						return tempRecord;
 				}
+				catch { }
 			}
 			return null;
 		}

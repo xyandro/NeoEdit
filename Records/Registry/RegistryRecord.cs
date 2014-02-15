@@ -12,6 +12,11 @@ namespace NeoEdit.Records.Registry
 		static Regex RegistryRE;
 		public static Dictionary<string, RegistryKey> RootKeys { get; private set; }
 
+		public override Type GetRootType()
+		{
+			return typeof(RegistryRecord);
+		}
+
 		public override Record Parent
 		{
 			get

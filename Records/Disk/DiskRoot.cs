@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
 {
-	public class DiskRoot : RecordRoot
+	public class DiskRoot : DiskRecord
 	{
 		public DiskRoot() : base("Disks") { }
 
