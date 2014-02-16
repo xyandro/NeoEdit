@@ -68,7 +68,9 @@ namespace NeoEdit.BinaryEditorUI
 			uiHelper.InitializeCommands();
 
 			Data = data;
-			Data.Changed += () => ++ChangeCount;
+			BinaryData.ChangedDelegate changed = () => ++ChangeCount;
+			Data.Changed += changed;
+			Closed += (s, e) => Data.Changed -= changed;
 
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;

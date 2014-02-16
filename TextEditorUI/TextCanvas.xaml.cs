@@ -1018,7 +1018,8 @@ namespace NeoEdit.TextEditorUI
 					break;
 				case TextEditor.Edit_BOM:
 					{
-						var offset = Data.SetBOM(!Data.BOM);
+						Data.SetBOM(!Data.BOM);
+						var offset = Data.BOM ? 1 : -1;
 						foreach (var rangeEntry in ranges)
 							foreach (var range in rangeEntry.Value)
 							{

@@ -9,6 +9,14 @@ namespace NeoEdit.Common
 {
 	public class TextData
 	{
+		public delegate void ChangedDelegate();
+		ChangedDelegate changed;
+		public event ChangedDelegate Changed
+		{
+			add { changed += value; }
+			remove { changed -= value; }
+		}
+
 		const char BOMChar = '\ufeff';
 		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
 		Stack<string> undoHistory = new Stack<string>();
@@ -156,6 +164,8 @@ namespace NeoEdit.Common
 			}
 
 			data = sb.ToString();
+
+			NotifyChanged();
 		}
 
 		public int GetOppositeBracket(int offset)
@@ -199,21 +209,23 @@ namespace NeoEdit.Common
 			return -1;
 		}
 
-		public int SetBOM(bool bom)
+		public void SetBOM(bool bom)
 		{
 			if (BOM == bom)
-				return 0;
+				return;
 
 			if (bom)
-			{
 				data = BOMChar + data;
-				return 1;
-			}
 			else
-			{
 				data = data.Substring(1);
-				return -1;
-			}
+
+			NotifyChanged();
+		}
+
+		void NotifyChanged()
+		{
+			if (changed != null)
+				changed();
 		}
 	}
 }

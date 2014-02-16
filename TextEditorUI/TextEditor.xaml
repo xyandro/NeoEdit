@@ -129,7 +129,7 @@
 
 		<textEditorUI:TextCanvas x:Name="canvas" Grid.Row="1"
 			Data="{Binding Data, ElementName=self, Mode=TwoWay}"
-			ChangeCount="{Binding Data.ChangeCount, ElementName=self, Mode=OneWay}"
+			ChangeCount="{Binding ChangeCount, ElementName=self, Mode=OneWay}"
 			HighlightType="{Binding HighlightType, ElementName=self, Mode=TwoWay}"
 			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"
 			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=OneWayToSource}"

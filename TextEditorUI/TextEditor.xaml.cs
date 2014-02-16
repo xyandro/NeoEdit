@@ -43,6 +43,8 @@ namespace NeoEdit.TextEditorUI
 		[DepProp]
 		public TextData Data { get { return uiHelper.GetPropValue<TextData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 
 		static TextEditor() { UIHelper<TextEditor>.Register(); }
@@ -55,6 +57,9 @@ namespace NeoEdit.TextEditorUI
 			uiHelper.InitializeCommands();
 
 			Data = data;
+			TextData.ChangedDelegate changed = () => ++ChangeCount;
+			Data.Changed += changed;
+			Closed += (s, e) => Data.Changed -= changed;
 
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
