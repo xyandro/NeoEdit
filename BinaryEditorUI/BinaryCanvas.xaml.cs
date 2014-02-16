@@ -820,6 +820,20 @@ namespace NeoEdit.BinaryEditorUI
 				case BinaryEditor.Edit_FindPrev:
 					DoFind(command.Name == BinaryEditor.Edit_FindNext);
 					break;
+				case BinaryEditor.Edit_Goto:
+					{
+						var getNumDialog = new GetNumDialog
+						{
+							Title = "Go to position",
+							Text = String.Format("Go to position: (0 - {0})", Data.Length),
+							MinValue = 0,
+							MaxValue = Data.Length,
+							Value = Pos1,
+						};
+						if (getNumDialog.ShowDialog() == true)
+							Pos1 = Pos2 = getNumDialog.Value;
+					}
+					break;
 				case BinaryEditor.Edit_Insert: Insert = !Insert; break;
 			}
 		}

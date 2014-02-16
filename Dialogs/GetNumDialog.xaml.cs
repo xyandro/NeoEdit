@@ -4,26 +4,18 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common;
 
-namespace NeoEdit.TextEditorUI.Dialogs
+namespace NeoEdit.Dialogs
 {
 	public partial class GetNumDialog : Window
 	{
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int? MinValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public long? MinValue { get { return uiHelper.GetPropValue<long?>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int? MaxValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public long? MaxValue { get { return uiHelper.GetPropValue<long?>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int Value
-		{
-			get { return uiHelper.GetPropValue<int>(); }
-			set
-			{
-				value = Math.Max(MinValue.HasValue ? MinValue.Value : int.MinValue, Math.Min(value, MaxValue.HasValue ? MaxValue.Value : int.MaxValue));
-				uiHelper.SetPropValue(value);
-			}
-		}
+		public long Value { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 
 		static GetNumDialog() { UIHelper<GetNumDialog>.Register(); }
 
@@ -34,6 +26,8 @@ namespace NeoEdit.TextEditorUI.Dialogs
 			InitializeComponent();
 
 			Loaded += (s, e) => value.SelectAll();
+
+			uiHelper.AddCallback(a => a.Value, (o, n) => Value = Math.Max(MinValue.HasValue ? MinValue.Value : long.MinValue, Math.Min(Value, MaxValue.HasValue ? MaxValue.Value : long.MaxValue)));
 
 			okClick.Click += (s, e) =>
 			{

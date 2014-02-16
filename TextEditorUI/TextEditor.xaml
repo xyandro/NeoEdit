@@ -149,12 +149,14 @@
 			<StatusBarItem>
 				<TextBlock Text="{Binding Line, ElementName=canvas}"/>
 			</StatusBarItem>
+			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Col"/>
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock Text="{Binding Index, ElementName=canvas}"/>
 			</StatusBarItem>
+			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Selections"/>
 			</StatusBarItem>

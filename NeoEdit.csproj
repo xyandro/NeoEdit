@@ -138,7 +138,7 @@
     </Compile>
     <Compile Include="Common\UICommand.cs" />
     <Compile Include="Common\UIHelper.cs" />
-    <Compile Include="TextEditorUI\Dialogs\GetNumDialog.xaml.cs">
+    <Compile Include="Dialogs\GetNumDialog.xaml.cs">
       <DependentUpon>GetNumDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditorUI\Dialogs\WidthDialog.xaml.cs">
@@ -213,7 +213,7 @@
     <Compile Include="BrowserUI\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
-    <Page Include="TextEditorUI\Dialogs\GetNumDialog.xaml">
+    <Page Include="Dialogs\GetNumDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

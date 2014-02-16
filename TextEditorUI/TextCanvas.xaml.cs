@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
+using NeoEdit.Dialogs;
 using NeoEdit.TextEditorUI.Dialogs;
 
 namespace NeoEdit.TextEditorUI
@@ -991,7 +992,7 @@ namespace NeoEdit.TextEditorUI
 						if (getNumDialog.ShowDialog() == true)
 						{
 							foreach (var selection in ranges[RangeType.Selection])
-								SetPos1(selection, getNumDialog.Value - 1, 0, false, true);
+								SetPos1(selection, (int)getNumDialog.Value - 1, 0, false, true);
 						}
 					}
 					break;
@@ -1011,7 +1012,7 @@ namespace NeoEdit.TextEditorUI
 						if (getNumDialog.ShowDialog() == true)
 						{
 							foreach (var selection in ranges[RangeType.Selection])
-								SetPos1(selection, 0, getNumDialog.Value - 1, true, false);
+								SetPos1(selection, 0, (int)getNumDialog.Value - 1, true, false);
 						}
 					}
 					break;

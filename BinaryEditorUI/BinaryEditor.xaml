@@ -13,6 +13,7 @@
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Find}" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_FindNext}" Header="Find _Next" Key="F3" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_FindPrev}" Header="Find _Previous" Key="F3" Modifiers="Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Goto}" Header="_Goto" Key="G" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Insert}" Header="_Insert" Key="Insert" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.View_Values}" Header="_Values" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Checksum_MD5}" Header="_MD5" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -48,6 +49,7 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_Edit">
@@ -59,6 +61,7 @@
 				<MenuItem Command="{StaticResource Edit_Find}"/>
 				<MenuItem Command="{StaticResource Edit_FindNext}"/>
 				<MenuItem Command="{StaticResource Edit_FindPrev}"/>
+				<MenuItem Command="{StaticResource Edit_Goto}"/>
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_Insert}" IsChecked="{Binding Insert, ElementName=self}"/>
 				<MenuItem Header="_Encode" Click="EncodeClick">
@@ -148,6 +151,34 @@
 			SelEnd="{Binding SelEnd, ElementName=self, Mode=OneWay}"
 			FoundText="{Binding FoundText, ElementName=self, Mode=OneWay}"
 		/>
+		<StatusBar Grid.ColumnSpan="2" Grid.Row="4">
+			<StatusBarItem>
+				<TextBlock Text="Position"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock>
+					<TextBlock.Text>
+						<MultiBinding StringFormat="{}{0} - {1} ({0:x8} - {1:x8})">
+							<Binding Path="SelStart" ElementName="self"/>
+							<Binding Path="SelEnd" ElementName="self"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Insert"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock>
+					<TextBlock.Text>
+						<MultiBinding StringFormat="{}{0}">
+							<Binding Path="Insert" ElementName="self"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+			</StatusBarItem>
+		</StatusBar>
 	</Grid>
 
 </Window>
