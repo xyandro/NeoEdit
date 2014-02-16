@@ -9,37 +9,40 @@ namespace NeoEdit.BinaryEditorUI
 {
 	public partial class BinaryEditor : Window
 	{
-		public const string Edit_Undo = "Edit_Undo";
-		public const string Edit_Cut = "Edit_Cut";
-		public const string Edit_Copy = "Edit_Copy";
-		public const string Edit_Paste = "Edit_Paste";
-		public const string Edit_Find = "Edit_Find";
-		public const string Edit_FindNext = "Edit_FindNext";
-		public const string Edit_FindPrev = "Edit_FindPrev";
-		public const string Edit_Goto = "Edit_Goto";
-		public const string Edit_Insert = "Edit_Insert";
-		public const string Checksum_MD5 = "Checksum_MD5";
-		public const string Checksum_SHA1 = "Checksum_SHA1";
-		public const string Checksum_SHA256 = "Checksum_SHA256";
-		public const string Compress_GZip = "Compress_GZip";
-		public const string Decompress_GZip = "Decompress_GZip";
-		public const string Compress_Deflate = "Compress_Deflate";
-		public const string Decompress_Inflate = "Decompress_Inflate";
-		public const string Encrypt_AES = "Encrypt_AES";
-		public const string Decrypt_AES = "Decrypt_AES";
-		public const string Encrypt_DES = "Encrypt_DES";
-		public const string Decrypt_DES = "Decrypt_DES";
-		public const string Encrypt_DES3 = "Encrypt_DES3";
-		public const string Decrypt_DES3 = "Decrypt_DES3";
-		public const string Encrypt_RSA = "Encrypt_RSA";
-		public const string Decrypt_RSA = "Decrypt_RSA";
-		public const string Encrypt_RSAAES = "Encrypt_RSAAES";
-		public const string Decrypt_RSAAES = "Decrypt_RSAAES";
-		public const string Sign_RSA = "Sign_RSA";
-		public const string Verify_RSA = "Verify_RSA";
-		public const string Sign_DSA = "Sign_DSA";
-		public const string Verify_DSA = "Verify_DSA";
-		public const string View_Values = "View_Values";
+		public enum Commands
+		{
+			Edit_Undo,
+			Edit_Cut,
+			Edit_Copy,
+			Edit_Paste,
+			Edit_Find,
+			Edit_FindNext,
+			Edit_FindPrev,
+			Edit_Goto,
+			Edit_Insert,
+			Checksum_MD5,
+			Checksum_SHA1,
+			Checksum_SHA256,
+			Compress_GZip,
+			Decompress_GZip,
+			Compress_Deflate,
+			Decompress_Inflate,
+			Encrypt_AES,
+			Decrypt_AES,
+			Encrypt_DES,
+			Decrypt_DES,
+			Encrypt_DES3,
+			Decrypt_DES3,
+			Encrypt_RSA,
+			Decrypt_RSA,
+			Encrypt_RSAAES,
+			Decrypt_RSAAES,
+			Sign_RSA,
+			Verify_RSA,
+			Sign_DSA,
+			Verify_DSA,
+			View_Values,
+		}
 
 		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
@@ -107,9 +110,9 @@ namespace NeoEdit.BinaryEditorUI
 		{
 			canvas.CommandRun(command, parameter);
 
-			switch (command.Name)
+			switch ((Commands)command.Enum)
 			{
-				case View_Values: ShowValues = !ShowValues; break;
+				case Commands.View_Values: ShowValues = !ShowValues; break;
 			}
 		}
 

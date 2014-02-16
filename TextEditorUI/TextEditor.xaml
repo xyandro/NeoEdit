@@ -6,37 +6,37 @@
     Title="NeoEdit Text Editor" Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Resources>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_Undo}"  Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_Redo}" Header="_Redo" Key="Z" Modifiers="Control+Shift"  Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_Cut}" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_Copy}" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_Paste}" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_Find}" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_FindNext}" Header="Find _Next" Key="F3" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_FindPrev}" Header="Find _Prev" Key="F3" Modifiers="Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_GotoLine}" Header="Goto _line" Key="G" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_GotoIndex}" Header="Goto c_olumn" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Edit_BOM}" Header="_BOM" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Data_ToUpper}" Header="Upper case" Key="U" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Data_ToLower}" Header="Lower case" Key="U" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Data_ToHex}" Header="To hex" Key="H" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Data_FromHex}" Header="From hex" Key="H" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Data_ToChar}" Header="To char" Key="D3" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Data_FromChar}" Header="From char" Key="D3" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Data_Width}" Header="_Width" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Data_Trim}" Header="_Trim" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Select_All}" Header="_All" Key="A" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Select_Unselect}" Header="_Unselect" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Select_Single}" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Select_Lines}" Header="_Lines" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Select_Marks}" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Select_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Select_Reverse}" Header="_Reverse selections" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Select_Sort}" Header="_Sort selections" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Mark_Selection}" Header="_Selection" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Mark_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Mark_Clear}" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=textEditorUI:TextEditor.Mark_LimitToSelection}" Header="_Limit to selection" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Undo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Copy}"  Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Redo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Redo}" Header="_Redo" Key="Z" Modifiers="Control+Shift"  Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Cut" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Cut}" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Copy" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Copy}" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Paste" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Paste}" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Find}" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_FindNext" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_FindNext}" Header="Find _Next" Key="F3" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_FindPrev" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_FindPrev}" Header="Find _Prev" Key="F3" Modifiers="Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_GotoLine" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_GotoLine}" Header="Goto _line" Key="G" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_GotoIndex" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_GotoIndex}" Header="Goto c_olumn" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_BOM" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_BOM}" Header="_BOM" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Data_ToUpper" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_ToUpper}" Header="Upper case" Key="U" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Data_ToLower" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_ToLower}" Header="Lower case" Key="U" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Data_ToHex" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_ToHex}" Header="To hex" Key="H" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Data_FromHex" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_FromHex}" Header="From hex" Key="H" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Data_ToChar" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_ToChar}" Header="To char" Key="D3" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Data_FromChar" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_FromChar}" Header="From char" Key="D3" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Data_Width" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_Width}" Header="_Width" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Data_Trim" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_Trim}" Header="_Trim" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_All" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_All}" Header="_All" Key="A" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Unselect" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Unselect}" Header="_Unselect" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Single" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Single}" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Lines" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Lines}" Header="_Lines" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Marks" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Marks}" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Reverse" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Reverse}" Header="_Reverse selections" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Sort" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Sort}" Header="_Sort selections" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_Selection" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Selection}" Header="_Selection" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_Clear" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Clear}" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_LimitToSelection" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_LimitToSelection}" Header="_Limit to selection" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>

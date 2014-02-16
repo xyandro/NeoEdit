@@ -7,7 +7,7 @@ namespace NeoEdit.Common
 	{
 		public Key Key { get; set; }
 		public ModifierKeys Modifiers { get; set; }
-		public string Name { get; set; }
+		public Enum Enum { get; set; }
 		public string Header { get; set; }
 		public object Parameter { get; set; }
 

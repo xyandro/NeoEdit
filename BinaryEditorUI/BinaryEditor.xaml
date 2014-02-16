@@ -6,37 +6,37 @@
 	Title="NeoEdit Binary Editor" Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Resources>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Undo}" Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Cut}" Header="Cu_t" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Copy}" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Paste}" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Find}" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_FindNext}" Header="Find _Next" Key="F3" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_FindPrev}" Header="Find _Previous" Key="F3" Modifiers="Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Goto}" Header="_Goto" Key="G" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Edit_Insert}" Header="_Insert" Key="Insert" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.View_Values}" Header="_Values" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Checksum_MD5}" Header="_MD5" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Checksum_SHA1}" Header="SHA_1" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Checksum_SHA256}" Header="SHA_256" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Compress_GZip}" Header="_GZip" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_GZip}" Header="_GZip" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Compress_Deflate}" Header="_Deflate" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decompress_Inflate}" Header="_Inflate" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_DES}" Header="_DES" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_DES}" Header="_DES" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_DES3}" Header="_3DES" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_DES3}" Header="_3DES" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Encrypt_RSAAES}" Header="RSA/AES" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Decrypt_RSAAES}" Header="RSA/AES" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Sign_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Verify_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Sign_DSA}" Header="_DSA" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="{x:Static Member=binaryEditorUI:BinaryEditor.Verify_DSA}" Header="_DSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Undo" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Undo}" Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Cut" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Cut}" Header="Cu_t" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Copy" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Copy}" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Paste" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Paste}" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Find" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Find}" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_FindNext" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_FindNext}" Header="Find _Next" Key="F3" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_FindPrev" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_FindPrev}" Header="Find _Previous" Key="F3" Modifiers="Shift" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Goto" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Goto}" Header="_Goto" Key="G" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Insert" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Insert}" Header="_Insert" Key="Insert" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="View_Values" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.View_Values}" Header="_Values" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Checksum_MD5" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Checksum_MD5}" Header="_MD5" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Checksum_SHA1" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Checksum_SHA1}" Header="SHA_1" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Checksum_SHA256" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Checksum_SHA256}" Header="SHA_256" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Compress_GZip" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Compress_GZip}" Header="_GZip" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Decompress_GZip" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Decompress_GZip}" Header="_GZip" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Compress_Deflate" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Compress_Deflate}" Header="_Deflate" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Decompress_Inflate" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Decompress_Inflate}" Header="_Inflate" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Encrypt_AES" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Encrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Decrypt_AES" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Decrypt_AES}" Header="_AES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Encrypt_DES" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Encrypt_DES}" Header="_DES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Decrypt_DES" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Decrypt_DES}" Header="_DES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Encrypt_DES3" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Encrypt_DES3}" Header="_3DES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Decrypt_DES3" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Decrypt_DES3}" Header="_3DES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Encrypt_RSA" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Encrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Decrypt_RSA" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Decrypt_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Encrypt_RSAAES" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Encrypt_RSAAES}" Header="RSA/AES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Decrypt_RSAAES" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Decrypt_RSAAES}" Header="RSA/AES" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Sign_RSA" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Sign_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Verify_RSA" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Verify_RSA}" Header="_RSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Sign_DSA" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Sign_DSA}" Header="_DSA" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Verify_DSA" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Verify_DSA}" Header="_DSA" Run="CommandRun" CanRun="CommandCanRun"/>
 	</Window.Resources>
 
 	<Grid>
