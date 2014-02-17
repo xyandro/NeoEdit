@@ -30,5 +30,11 @@ namespace NeoEdit.Records.Zipped
 				entries.ForEach(a => a.Delete());
 			}
 		}
+
+		public override void SyncFrom(Record source, string newName = null)
+		{
+			if (!ZippedRecord.SyncFrom(archive, source, InArchiveName + "/" + newName))
+				base.SyncFrom(source, newName);
+		}
 	}
 }

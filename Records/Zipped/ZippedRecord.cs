@@ -74,5 +74,17 @@ namespace NeoEdit.Records.Zipped
 				return found.Values.OrderBy(a => a.FullName);
 			}
 		}
+
+		public static bool SyncFrom(ZippedArchive archive, Record source, string path)
+		{
+			if (source is Disk.DiskFile)
+			{
+				using (var zipFile = ZipFile.Open(archive.FullName, ZipArchiveMode.Update))
+					zipFile.CreateEntryFromFile(source.FullName, path);
+				return true;
+			}
+
+			return false;
+		}
 	}
 }
