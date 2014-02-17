@@ -8,11 +8,24 @@ namespace NeoEdit.Records.Zipped
 {
 	public class ZippedRecord : Record
 	{
-		readonly protected string archive;
-		public ZippedRecord(string uri, string _archive)
+		readonly protected ZippedArchive archive;
+		public ZippedRecord(string uri, ZippedArchive _archive)
 			: base(uri)
 		{
 			archive = _archive;
+		}
+
+		public override IEnumerable<RecordAction.ActionName> Actions
+		{
+			get
+			{
+				return new List<RecordAction.ActionName> { 
+					RecordAction.ActionName.Delete,
+					RecordAction.ActionName.Rename,
+					RecordAction.ActionName.Copy,
+					RecordAction.ActionName.Cut,
+				}.Concat(base.Actions);
+			}
 		}
 
 		public override Record Parent
@@ -20,17 +33,17 @@ namespace NeoEdit.Records.Zipped
 			get
 			{
 				var parent = GetProperty<string>(RecordProperty.PropertyName.Path);
-				if (parent == archive)
-					return new Disk.DiskFile(parent);
+				if (parent == archive.FullName)
+					return archive;
 				return new ZippedDir(parent, archive);
 			}
 		}
 
-		protected string InArchiveName { get { return FullName.Substring(archive.Length + 1).Replace('\\', '/'); } }
+		protected string InArchiveName { get { return FullName.Substring(archive.FullName.Length + 1).Replace('\\', '/'); } }
 
-		public static IEnumerable<ZippedRecord> GetFiles(string parentFullName, string archive, string path)
+		public static IEnumerable<ZippedRecord> GetFiles(string parentFullName, ZippedArchive archive, string path)
 		{
-			using (var zipFile = ZipFile.OpenRead(archive))
+			using (var zipFile = ZipFile.OpenRead(archive.FullName))
 			{
 				var found = new Dictionary<string, ZippedRecord>();
 				foreach (var file in zipFile.Entries)

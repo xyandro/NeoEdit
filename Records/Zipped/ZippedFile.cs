@@ -10,15 +10,30 @@ namespace NeoEdit.Records.Zipped
 {
 	class ZippedFile : ZippedRecord
 	{
-		public ZippedFile(string uri, string archive)
+		public ZippedFile(string uri, ZippedArchive archive)
 			: base(uri, archive)
 		{
-			using (var zipFile = ZipFile.OpenRead(archive))
+			using (var zipFile = ZipFile.OpenRead(archive.FullName))
 			{
 				var entry = zipFile.GetEntry(InArchiveName);
-				this[RecordProperty.PropertyName.Size] = entry.Length;
-				this[RecordProperty.PropertyName.CompressedSize] = entry.CompressedLength;
-				this[RecordProperty.PropertyName.WriteTime] = entry.LastWriteTime.UtcDateTime;
+				if (entry != null)
+				{
+					this[RecordProperty.PropertyName.Size] = entry.Length;
+					this[RecordProperty.PropertyName.CompressedSize] = entry.CompressedLength;
+					this[RecordProperty.PropertyName.WriteTime] = entry.LastWriteTime.UtcDateTime;
+				}
+			}
+		}
+
+		protected override void SetProperty<T>(RecordProperty.PropertyName property, T value)
+		{
+			base.SetProperty<T>(property, value);
+			switch (property)
+			{
+				case RecordProperty.PropertyName.Name:
+					this[RecordProperty.PropertyName.NameWoExtension] = Path.GetFileNameWithoutExtension(value as string);
+					this[RecordProperty.PropertyName.Extension] = Path.GetExtension(value as string);
+					break;
 			}
 		}
 
@@ -30,7 +45,6 @@ namespace NeoEdit.Records.Zipped
 			{
 				return new List<RecordAction.ActionName> { 
 					RecordAction.ActionName.MD5,
-					RecordAction.ActionName.Delete,
 					RecordAction.ActionName.Open,
 				}.Concat(base.Actions);
 			}
@@ -38,7 +52,7 @@ namespace NeoEdit.Records.Zipped
 
 		public override BinaryData Read()
 		{
-			using (var zipFile = ZipFile.OpenRead(archive))
+			using (var zipFile = ZipFile.OpenRead(archive.FullName))
 			{
 				var entry = zipFile.GetEntry(InArchiveName);
 				using (var stream = entry.Open())
@@ -46,6 +60,19 @@ namespace NeoEdit.Records.Zipped
 				{
 					stream.CopyTo(ms);
 					return ms.ToArray();
+				}
+			}
+		}
+
+		public override void Write(BinaryData data)
+		{
+			using (var zipFile = ZipFile.Open(archive.FullName, ZipArchiveMode.Update))
+			{
+				var entry = zipFile.CreateEntry(InArchiveName);
+				using (var stream = entry.Open())
+				{
+					var bytes = data.GetAllBytes();
+					stream.Write(bytes, 0, bytes.Length);
 				}
 			}
 		}
@@ -58,7 +85,7 @@ namespace NeoEdit.Records.Zipped
 
 		public override void Delete()
 		{
-			using (var zipFile = ZipFile.Open(archive, ZipArchiveMode.Update))
+			using (var zipFile = ZipFile.Open(archive.FullName, ZipArchiveMode.Update))
 			{
 				var entry = zipFile.GetEntry(InArchiveName);
 				entry.Delete();

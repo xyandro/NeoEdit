@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NeoEdit.Records.Zipped;
 
 namespace NeoEdit.Records.Disk
 {
@@ -18,7 +19,12 @@ namespace NeoEdit.Records.Disk
 				foreach (var dir in Directory.EnumerateDirectories(find))
 					yield return new DiskDir(dir);
 				foreach (var file in Directory.EnumerateFiles(find))
-					yield return new DiskFile(file);
+				{
+					if (Path.GetExtension(file).Equals(".zip", System.StringComparison.OrdinalIgnoreCase))
+						yield return new ZippedArchive(file);
+					else
+						yield return new DiskFile(file);
+				}
 			}
 		}
 

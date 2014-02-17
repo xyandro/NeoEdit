@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -117,8 +116,8 @@ namespace NeoEdit.Records
 				record.Sync(dir);
 		}
 
-		public virtual BinaryData Read() { throw new Exception("Cannot read file"); }
-		public virtual void Write(BinaryData data) { throw new Exception("Cannot write file"); }
+		public virtual BinaryData Read() { throw new NotImplementedException(); }
+		public virtual void Write(BinaryData data) { throw new NotImplementedException(); }
 
 		public virtual Type GetRootType() { return typeof(Record); }
 

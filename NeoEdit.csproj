@@ -76,6 +76,7 @@
     <Compile Include="Common\TextData.cs" />
     <Compile Include="Data\Coder.cs" />
     <Compile Include="Records\List\ListRecord.cs" />
+    <Compile Include="Records\Zipped\ZippedArchive.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
     <Compile Include="Records\Zipped\ZippedFile.cs" />
     <Compile Include="Records\Zipped\ZippedRecord.cs" />
