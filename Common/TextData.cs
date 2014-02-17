@@ -26,6 +26,7 @@ namespace NeoEdit.Common
 		List<int> endingIndex;
 		List<int> endingLength;
 		public string DefaultEnding { get; private set; }
+		public Coder.Type CoderUsed { get; private set; }
 
 		public int NumLines { get { return lineIndex.Count; } }
 		public bool BOM { get; private set; }
@@ -36,6 +37,7 @@ namespace NeoEdit.Common
 				encoding = Coder.GuessEncoding(bytes);
 
 			data = Coder.BytesToString(bytes, encoding);
+			CoderUsed = encoding;
 		}
 
 		public byte[] GetBytes(Coder.Type encoding = Coder.Type.UTF8)

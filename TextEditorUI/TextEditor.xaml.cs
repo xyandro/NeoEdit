@@ -50,6 +50,8 @@ namespace NeoEdit.TextEditorUI
 		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 
 		static TextEditor() { UIHelper<TextEditor>.Register(); }
 
@@ -61,6 +63,7 @@ namespace NeoEdit.TextEditorUI
 			uiHelper.InitializeCommands();
 
 			Data = data;
+			CoderUsed = Data.CoderUsed;
 			TextData.ChangedDelegate changed = () => ++ChangeCount;
 			Data.Changed += changed;
 			Closed += (s, e) => Data.Changed -= changed;
@@ -103,7 +106,11 @@ namespace NeoEdit.TextEditorUI
 		void EncodeClick(object sender, RoutedEventArgs e)
 		{
 			var header = (e.OriginalSource as MenuItem).Header as string;
-			var encoding = Helpers.ParseEnum<Coder.Type>(header);
+			Coder.Type encoding;
+			if (header == "Current")
+				encoding = Data.CoderUsed;
+			else
+				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = Data.GetBytes(encoding);
 			new BinaryEditorUI.BinaryEditor(data);
 			this.Close();

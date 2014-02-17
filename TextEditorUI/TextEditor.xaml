@@ -68,12 +68,28 @@
 				<MenuItem Command="{StaticResource Edit_GotoIndex}"/>
 				<Separator/>
 				<MenuItem Header="_Encode" Click="EncodeClick">
+					<MenuItem.ItemContainerStyle>
+						<Style TargetType="MenuItem">
+							<Setter Property="IsChecked">
+								<Setter.Value>
+									<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] == [1]">
+										<Binding Path="Header" RelativeSource="{RelativeSource Self}"/>
+										<Binding Path="CoderUsed" ElementName="self"/>
+									</MultiBinding>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</MenuItem.ItemContainerStyle>
+
+					<MenuItem Header="Current"/>
+					<Separator/>
 					<MenuItem Header="UTF8"/>
 					<MenuItem Header="UTF7"/>
 					<MenuItem Header="UTF16LE"/>
 					<MenuItem Header="UTF16BE"/>
 					<MenuItem Header="UTF32LE"/>
 					<MenuItem Header="UTF32BE"/>
+					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
 				<MenuItem Command="{StaticResource Edit_BOM}" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
