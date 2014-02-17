@@ -77,19 +77,9 @@ namespace NeoEdit.Records.Disk
 			}
 		}
 
-		public override void Rename(string newName, System.Func<bool> canOverwrite)
+		public override void Rename(string newName)
 		{
-			newName = Path.Combine(Path.GetDirectoryName(FullName), newName);
-			if (Directory.Exists(newName))
-				throw new Exception("A directory already exists at the specified location.");
-
-			if (File.Exists(newName))
-			{
-				if (!canOverwrite())
-					return;
-
-				File.Delete(newName);
-			}
+			newName = Path.Combine(GetProperty<string>(RecordProperty.PropertyName.Path), newName);
 
 			if (this is DiskDir)
 				Directory.Move(FullName, newName);

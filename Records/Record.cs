@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -68,13 +69,29 @@ namespace NeoEdit.Records
 
 		public virtual IEnumerable<Record> Records { get { return null; } }
 
-		public virtual void Rename(string newName, Func<bool> canOverwrite) { }
+		public virtual void Rename(string newName)
+		{
+			var data = Read();
+
+			var oldName = FullName;
+			newName = Path.Combine(GetProperty<string>(RecordProperty.PropertyName.Path), newName);
+
+			FullName = newName;
+			Write(data);
+
+			FullName = oldName;
+			Delete();
+
+			FullName = newName;
+		}
+
 		public virtual void Delete() { }
 		public virtual void Paste() { }
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
 		public virtual void Sync(Record source) { }
 		public virtual BinaryData Read() { throw new Exception("Cannot read file"); }
+		public virtual void Write(BinaryData data) { throw new Exception("Cannot write file"); }
 
 		public virtual Type GetRootType() { return typeof(Record); }
 

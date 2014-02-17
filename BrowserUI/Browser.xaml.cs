@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -252,14 +253,23 @@ namespace NeoEdit.BrowserUI
 						var record = records.Single();
 						var rename = new Rename(record);
 						if (rename.ShowDialog() == true)
-							record.Rename(rename.RecordName, () => new Message
+						{
+							var existingRecord = new Root().GetRecord(Path.Combine((string)record[RecordProperty.PropertyName.Path], rename.RecordName));
+							if (existingRecord != null)
 							{
-								Title = "Warning",
-								Text = "File already exists.  Overwrite?",
-								Options = Message.OptionsEnum.YesNo,
-								DefaultYes = Message.OptionsEnum.Yes,
-								DefaultNo = Message.OptionsEnum.No,
-							}.Show() == Message.OptionsEnum.Yes);
+								if (new Message
+								{
+									Title = "Warning",
+									Text = "File already exists.  Overwrite?",
+									Options = Message.OptionsEnum.YesNo,
+									DefaultYes = Message.OptionsEnum.Yes,
+									DefaultNo = Message.OptionsEnum.No,
+								}.Show() != Message.OptionsEnum.Yes)
+									break;
+								existingRecord.Delete();
+							}
+							record.Rename(rename.RecordName);
+						}
 					}
 					break;
 				case RecordAction.ActionName.Delete:

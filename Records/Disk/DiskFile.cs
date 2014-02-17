@@ -77,5 +77,10 @@ namespace NeoEdit.Records.Disk
 		{
 			return File.ReadAllBytes(FullName);
 		}
+
+		public override void Write(BinaryData data)
+		{
+			File.WriteAllBytes(FullName, data.GetAllBytes());
+		}
 	}
 }
