@@ -239,7 +239,8 @@ namespace NeoEdit.BrowserUI
 			ItemClicked(files.SelectedItem as Record);
 		}
 
-		Record SyncSource, SyncTarget;
+		Record syncSource, syncTarget;
+		SyncParams syncParams = new SyncParams();
 		void RunAction(RecordAction.ActionName action)
 		{
 			var records = files.SelectedItems.Cast<Record>().ToList();
@@ -360,17 +361,20 @@ namespace NeoEdit.BrowserUI
 					}
 					break;
 				case RecordAction.ActionName.SyncSource:
-					SyncSource = records.Single();
+					syncSource = records.Single();
 					break;
 				case RecordAction.ActionName.SyncTarget:
-					SyncTarget = records.Single();
+					syncTarget = records.Single();
 					break;
 				case RecordAction.ActionName.Sync:
-					if ((SyncSource != null) && (SyncTarget != null))
-					{
-						SyncTarget.SyncFrom(SyncSource);
-						Refresh();
-					}
+					if ((syncSource == null) || (syncTarget == null))
+						break;
+
+					if (new EditSyncParams(syncParams).ShowDialog() != true)
+						break;
+
+					syncTarget.SyncFrom(syncSource, syncParams);
+					Refresh();
 					break;
 				case RecordAction.ActionName.Open:
 					{

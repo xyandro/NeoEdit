@@ -104,7 +104,7 @@ namespace NeoEdit.Records
 				dest = CreateFile(newName ?? source.Name);
 			else
 				dest = CreateDirectory(newName ?? source.Name);
-			dest.SyncFrom(source);
+			dest.SyncFrom(source, new SyncParams());
 		}
 
 		protected virtual void CopyFrom(Record source)
@@ -126,38 +126,44 @@ namespace NeoEdit.Records
 			}
 		}
 
-		string GetKey(Record record)
+		string GetKey(Record record, SyncParams syncParams)
 		{
-			long ticks = 0;
-			var time = record[RecordProperty.PropertyName.WriteTime];
-			if (time is DateTime)
-				ticks = ((DateTime)time).Ticks;
-			return String.Format("{0}-{1}-{2}-{3}", record.IsFile, record.Name, record[RecordProperty.PropertyName.Size], ticks);
+			switch (syncParams.Type)
+			{
+				case SyncParams.SyncType.NameSizeLength:
+					long ticks = 0;
+					var time = record[RecordProperty.PropertyName.WriteTime];
+					if (time is DateTime)
+						ticks = ((DateTime)time).Ticks;
+					return String.Format("{0}-{1}-{2}-{3}", record.IsFile, record.Name, record[RecordProperty.PropertyName.Size], ticks);
+				default: throw new NotImplementedException();
+			}
 		}
 
-		public void SyncFrom(Record source)
+		public void SyncFrom(Record source, SyncParams syncParams)
 		{
 			if ((IsFile) && (source.IsFile))
 				return;
 
 			var sourceRecords = new Dictionary<string, Record>();
 			foreach (var record in source.Records)
-				sourceRecords[GetKey(record)] = record;
+				sourceRecords[GetKey(record, syncParams)] = record;
 
 			var destRecords = new Dictionary<string, Record>();
 			foreach (var record in Records)
-				destRecords[GetKey(record)] = record;
+				destRecords[GetKey(record, syncParams)] = record;
 
 			var dups = sourceRecords.Keys.Where(key => destRecords.Keys.Contains(key)).ToList();
 			foreach (var dup in dups)
 			{
-				destRecords[dup].SyncFrom(sourceRecords[dup]);
+				destRecords[dup].SyncFrom(sourceRecords[dup], syncParams);
 				sourceRecords.Remove(dup);
 				destRecords.Remove(dup);
 			}
 
 			foreach (var dest in destRecords)
-				dest.Value.Delete();
+				try { dest.Value.Delete(); }
+				catch { if (syncParams.StopOnError) throw; }
 
 			foreach (var record in sourceRecords.Values)
 			{
@@ -166,7 +172,9 @@ namespace NeoEdit.Records
 					dest = CreateFile(record.Name);
 				else
 					dest = CreateDirectory(record.Name);
-				dest.CopyFrom(record);
+
+				try { dest.CopyFrom(record); }
+				catch { if (syncParams.StopOnError) throw; }
 			}
 		}
 
