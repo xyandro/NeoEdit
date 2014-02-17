@@ -911,7 +911,7 @@ namespace NeoEdit.TextEditorUI
 
 		string SortStr(string str)
 		{
-			return Regex.Replace(str, @"\d+", match => new string('0', 12 - match.Value.Length) + match.Value);
+			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
 		public void CommandRun(UICommand command, object parameter)
