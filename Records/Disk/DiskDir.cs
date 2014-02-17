@@ -50,17 +50,32 @@ namespace NeoEdit.Records.Disk
 			return new DiskDir(name);
 		}
 
-		public override void Move(Record destination, string newName = null)
+		public override void MoveFrom(Record source, string newName = null)
 		{
-			if (destination is DiskDir)
+			if (source is DiskDir)
 			{
-				newName = Path.Combine(destination.FullName, newName ?? Name);
-				Directory.Move(FullName, newName);
-				FullName = newName;
+				Directory.Move(source.FullName, Path.Combine(FullName, newName ?? source.Name));
 				return;
 			}
 
-			base.Move(destination);
+			if (source is DiskFile)
+			{
+				File.Move(source.FullName, Path.Combine(FullName, newName ?? source.Name));
+				return;
+			}
+
+			base.MoveFrom(source, newName);
+		}
+
+		public override void SyncFrom(Record source, string newName = null)
+		{
+			if (source is DiskFile)
+			{
+				File.Copy(source.FullName, Path.Combine(FullName, newName ?? source.Name));
+				return;
+			}
+
+			base.SyncFrom(source, newName);
 		}
 	}
 }

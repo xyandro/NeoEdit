@@ -268,7 +268,7 @@ namespace NeoEdit.BrowserUI
 									break;
 								existingRecord.Delete();
 							}
-							record.Move(Location, rename.RecordName);
+							Location.MoveFrom(record, rename.RecordName);
 						}
 						Refresh();
 					}
@@ -317,7 +317,7 @@ namespace NeoEdit.BrowserUI
 						{
 							if (isCut)
 							{
-								child.Move(Location);
+								Location.MoveFrom(child);
 								continue;
 							}
 
@@ -333,7 +333,7 @@ namespace NeoEdit.BrowserUI
 								break;
 							}
 
-							child.Sync(Location, newName);
+							Location.SyncFrom(child, newName);
 						}
 
 						Refresh();
@@ -365,7 +365,7 @@ namespace NeoEdit.BrowserUI
 					break;
 				case RecordAction.ActionName.Sync:
 					if ((SyncSource != null) && (SyncTarget != null))
-						SyncSource.Sync(SyncTarget);
+						SyncTarget.SyncFrom(SyncSource);
 					break;
 				case RecordAction.ActionName.Open:
 					{

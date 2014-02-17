@@ -74,30 +74,5 @@ namespace NeoEdit.Records.Disk
 		{
 			File.WriteAllBytes(FullName, data.GetAllBytes());
 		}
-
-		public override void Sync(Record destination, string newName = null)
-		{
-			if (destination is DiskDir)
-			{
-				newName = Path.Combine(destination.FullName, newName ?? Name);
-				File.Copy(FullName, newName);
-				return;
-			}
-
-			base.Sync(destination, newName);
-		}
-
-		public override void Move(Record destination, string newName = null)
-		{
-			if (destination is DiskDir)
-			{
-				newName = Path.Combine(destination.FullName, newName ?? Name);
-				File.Move(FullName, newName);
-				FullName = newName;
-				return;
-			}
-
-			base.Move(destination);
-		}
 	}
 }

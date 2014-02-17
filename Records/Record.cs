@@ -71,49 +71,49 @@ namespace NeoEdit.Records
 		public virtual Record CreateFile(string name) { throw new NotImplementedException(); }
 		public virtual Record CreateDirectory(string name) { throw new NotImplementedException(); }
 
-		public virtual void Move(Record destination, string newName = null)
+		public virtual void MoveFrom(Record source, string newName = null)
 		{
 			if (newName == null)
-				newName = Name;
+				newName = source.Name;
 
-			if (IsFile)
+			if (source.IsFile)
 			{
-				var data = Read();
+				var data = source.Read();
 
-				var newFile = destination.CreateFile(newName);
+				var newFile = CreateFile(newName);
 				newFile.Write(data);
 
-				Delete();
+				source.Delete();
 				return;
 			}
 
-			var dir = destination.CreateDirectory(newName);
-			foreach (var record in Records)
-				record.Move(dir);
-			Delete();
+			var dir = CreateDirectory(newName);
+			foreach (var record in source.Records)
+				dir.MoveFrom(record);
+			source.Delete();
 		}
 
 		public virtual void Delete() { }
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
 
-		public virtual void Sync(Record destination, string newName = null)
+		public virtual void SyncFrom(Record source, string newName = null)
 		{
 			if (newName == null)
-				newName = Name;
+				newName = source.Name;
 
-			if (IsFile)
+			if (source.IsFile)
 			{
-				var data = Read();
+				var data = source.Read();
 
-				var newFile = destination.CreateFile(newName);
+				var newFile = CreateFile(newName);
 				newFile.Write(data);
 				return;
 			}
 
-			var dir = destination.CreateDirectory(newName);
-			foreach (var record in Records)
-				record.Sync(dir);
+			var dir = CreateDirectory(newName);
+			foreach (var record in source.Records)
+				dir.SyncFrom(record);
 		}
 
 		public virtual BinaryData Read() { throw new NotImplementedException(); }
