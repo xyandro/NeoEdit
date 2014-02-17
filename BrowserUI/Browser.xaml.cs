@@ -115,7 +115,9 @@ namespace NeoEdit.BrowserUI
 
 		void Refresh()
 		{
+			var selected = files.SelectedItems.Cast<Record>().Select(record => record.FullName).ToList();
 			Records = Location.Records.ToList();
+			files.Items.Cast<Record>().Where(record => selected.Contains(record.FullName)).ToList().ForEach(record => files.SelectedItems.Add(record));
 		}
 
 		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Alt; } }
