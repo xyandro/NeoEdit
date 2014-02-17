@@ -32,21 +32,9 @@ namespace NeoEdit.Records.Disk
 			Directory.Delete(FullName, true);
 		}
 
-		void CopyDir(string oldName, string newName)
+		public override Record CreateFile(string name)
 		{
-			Directory.CreateDirectory(newName);
-
-			foreach (var file in Directory.EnumerateFiles(oldName))
-			{
-				var name = Path.GetFileName(file);
-				File.Copy(Path.Combine(oldName, name), Path.Combine(newName, name));
-			}
-
-			foreach (var dir in Directory.EnumerateDirectories(oldName))
-			{
-				var name = Path.GetFileName(dir);
-				CopyDir(Path.Combine(oldName, name), Path.Combine(newName, name));
-			}
+			return new DiskFile(Path.Combine(FullName, name));
 		}
 
 		public override Record CreateDirectory(string name)

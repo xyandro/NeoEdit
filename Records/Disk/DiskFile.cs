@@ -14,10 +14,13 @@ namespace NeoEdit.Records.Disk
 			: base(uri)
 		{
 			var fileInfo = new FileInfo(FullName);
-			this[RecordProperty.PropertyName.Size] = fileInfo.Length;
-			this[RecordProperty.PropertyName.WriteTime] = fileInfo.LastWriteTimeUtc;
-			this[RecordProperty.PropertyName.CreateTime] = fileInfo.CreationTimeUtc;
-			this[RecordProperty.PropertyName.AccessTime] = fileInfo.LastAccessTimeUtc;
+			if (fileInfo.Exists)
+			{
+				this[RecordProperty.PropertyName.Size] = fileInfo.Length;
+				this[RecordProperty.PropertyName.WriteTime] = fileInfo.LastWriteTimeUtc;
+				this[RecordProperty.PropertyName.CreateTime] = fileInfo.CreationTimeUtc;
+				this[RecordProperty.PropertyName.AccessTime] = fileInfo.LastAccessTimeUtc;
+			}
 		}
 
 		public override System.Collections.Generic.IEnumerable<RecordAction.ActionName> Actions

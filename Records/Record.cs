@@ -69,6 +69,7 @@ namespace NeoEdit.Records
 
 		public virtual IEnumerable<Record> Records { get { return null; } }
 
+		public virtual Record CreateFile(string name) { throw new NotImplementedException(); }
 		public virtual Record CreateDirectory(string name) { throw new NotImplementedException(); }
 
 		public virtual void Move(Record destination, string newName = null)
@@ -78,18 +79,12 @@ namespace NeoEdit.Records
 
 			if (IsFile)
 			{
-				var oldName = FullName;
-				newName = Path.Combine(destination.FullName, newName);
-
 				var data = Read();
 
-				FullName = newName;
-				Write(data);
+				var newFile = destination.CreateFile(newName);
+				newFile.Write(data);
 
-				FullName = oldName;
 				Delete();
-
-				FullName = newName;
 				return;
 			}
 
@@ -112,10 +107,8 @@ namespace NeoEdit.Records
 			{
 				var data = Read();
 
-				var oldName = FullName;
-				FullName = Path.Combine(destination.FullName, newName);
-				Write(data);
-				FullName = oldName;
+				var newFile = destination.CreateFile(newName);
+				newFile.Write(data);
 				return;
 			}
 
