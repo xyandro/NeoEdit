@@ -6,7 +6,7 @@
     Title="NeoEdit Text Editor" Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Resources>
-		<common:UICommand x:Key="Edit_Undo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Copy}"  Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Undo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Undo}"  Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Redo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Redo}" Header="_Redo" Key="Z" Modifiers="Control+Shift"  Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Cut" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Cut}" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Copy" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Copy}" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
