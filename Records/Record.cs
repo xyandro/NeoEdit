@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -40,8 +39,19 @@ namespace NeoEdit.Records
 			switch (property)
 			{
 				case RecordProperty.PropertyName.FullName:
-					this[RecordProperty.PropertyName.Path] = Path.GetDirectoryName(FullName);
-					this[RecordProperty.PropertyName.Name] = Path.GetFileName(FullName);
+					{
+						var idx = FullName.LastIndexOf('\\');
+						if (idx == -1)
+						{
+							this[RecordProperty.PropertyName.Path] = "";
+							this[RecordProperty.PropertyName.Name] = FullName;
+						}
+						else
+						{
+							this[RecordProperty.PropertyName.Path] = FullName.Substring(0, idx);
+							this[RecordProperty.PropertyName.Name] = FullName.Substring(idx + 1);
+						}
+					}
 					break;
 				case RecordProperty.PropertyName.Name:
 					this[RecordProperty.PropertyName.NameWoExtension] = value;

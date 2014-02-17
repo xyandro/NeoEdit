@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
@@ -31,7 +30,7 @@ namespace NeoEdit.Records.Registry
 				if (this is RegistryRoot)
 					return new Root();
 
-				var parent = Path.GetDirectoryName(FullName);
+				var parent = GetProperty<string>(RecordProperty.PropertyName.Path);
 				if (String.IsNullOrEmpty(parent))
 					return new RegistryRoot();
 				return new RegistryDir(parent);

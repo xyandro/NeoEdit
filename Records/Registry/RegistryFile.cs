@@ -1,19 +1,22 @@
 ﻿using System;
-using System.IO;
 
 namespace NeoEdit.Records.Registry
 {
 	public class RegistryFile : RegistryRecord
 	{
+		const string defaultStr = "(Default)";
 		public RegistryFile(string uri)
 			: base(uri)
 		{
 			if (String.IsNullOrEmpty(Name))
-				this[RecordProperty.PropertyName.Name] = "(Default)";
-			using (var key = GetKey(Path.GetDirectoryName(FullName)))
+				this[RecordProperty.PropertyName.Name] = defaultStr;
+			using (var key = GetKey(GetProperty<string>(RecordProperty.PropertyName.Path)))
 			{
-				this[RecordProperty.PropertyName.Type] = key.GetValueKind(Path.GetFileName(FullName)).ToString();
-				var value = key.GetValue(Path.GetFileName(FullName));
+				var name = Name;
+				if (name == defaultStr)
+					name = "";
+				this[RecordProperty.PropertyName.Type] = key.GetValueKind(name).ToString();
+				var value = key.GetValue(name);
 				if (value is byte[])
 					value = BitConverter.ToString(value as byte[]).Replace("-", " ").ToLower();
 				else if (value is string[])

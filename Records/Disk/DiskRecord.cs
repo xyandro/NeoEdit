@@ -51,21 +51,12 @@ namespace NeoEdit.Records.Disk
 				if (this is NetworkShare)
 					return new DiskRoot();
 
-				var parent = Path.GetDirectoryName(FullName);
-				if (parent == null)
-				{
-					if (FullName.StartsWith(@"\\"))
-					{
-						var idx = FullName.IndexOf('\\', 2);
-						if (idx != -1)
-							return new NetworkShare(FullName.Substring(0, idx));
-					}
+				var parent = GetProperty<string>(RecordProperty.PropertyName.Path);
+				if ((parent.StartsWith(@"\\")) && (parent.IndexOf('\\', 2) == -1))
+					return new NetworkShare(parent);
 
+				if (parent.Length == 0)
 					return new DiskRoot();
-				}
-
-				if ((!parent.StartsWith(@"\\")) && (Path.GetDirectoryName(parent) == null))
-					parent = parent.Substring(0, 2);
 
 				return new DiskDir(parent);
 			}

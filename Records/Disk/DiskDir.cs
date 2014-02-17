@@ -2,30 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
 {
 	public class DiskDir : DiskRecord
 	{
-		public DiskDir(string uri)
-			: base(uri)
-		{
-			if (new Regex("^[a-zA-Z]:$").IsMatch(uri))
-				this[RecordProperty.PropertyName.Name] = FullName;
-		}
-
-		Regex rootRE = new Regex("^[a-zA-Z]:$");
-		bool IsRoot()
-		{
-			return rootRE.IsMatch(FullName);
-		}
+		public DiskDir(string uri) : base(uri) { }
 
 		public override IEnumerable<Record> Records
 		{
 			get
 			{
-				var find = FullName + (IsRoot() ? @"\" : "");
+				var find = FullName;
+				if (find.Length == 2)
+					find += @"\";
 				foreach (var dir in Directory.EnumerateDirectories(find))
 					yield return new DiskDir(dir);
 				foreach (var file in Directory.EnumerateFiles(find))

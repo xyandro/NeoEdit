@@ -19,7 +19,7 @@ namespace NeoEdit.Records.Zipped
 		{
 			get
 			{
-				var parent = Path.GetDirectoryName(FullName);
+				var parent = GetProperty<string>(RecordProperty.PropertyName.Path);
 				if (parent == archive)
 					return new Disk.DiskFile(parent);
 				return new ZippedDir(parent, archive);
