@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 
 namespace NeoEdit.Records.Zipped
@@ -24,11 +23,9 @@ namespace NeoEdit.Records.Zipped
 		public override void Delete()
 		{
 			var name = InArchiveName + "/";
-			using (var zipFile = ZipFile.Open(archive.FullName, ZipArchiveMode.Update))
-			{
-				var entries = zipFile.Entries.Where(a => a.FullName.StartsWith(name)).ToList();
-				entries.ForEach(a => a.Delete());
-			}
+			var zipFile = archive.Open(true);
+			var entries = zipFile.Entries.Where(a => a.FullName.StartsWith(name)).ToList();
+			entries.ForEach(a => a.Delete());
 		}
 	}
 }

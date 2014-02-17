@@ -107,7 +107,7 @@ namespace NeoEdit.Records
 			dest.SyncFrom(source);
 		}
 
-		protected virtual void SyncCopy(Record source)
+		protected virtual void CopyFrom(Record source)
 		{
 			if (source.IsFile)
 			{
@@ -122,13 +122,17 @@ namespace NeoEdit.Records
 					dest = CreateFile(record.Name);
 				else
 					dest = CreateDirectory(record.Name);
-				dest.SyncCopy(record);
+				dest.CopyFrom(record);
 			}
 		}
 
 		string GetKey(Record record)
 		{
-			return String.Format("{0}-{1}-{2}-{3}", record.IsFile, record.Name, record[RecordProperty.PropertyName.Size], record[RecordProperty.PropertyName.WriteTime]);
+			long ticks = 0;
+			var time = record[RecordProperty.PropertyName.WriteTime];
+			if (time is DateTime)
+				ticks = ((DateTime)time).Ticks;
+			return String.Format("{0}-{1}-{2}-{3}", record.IsFile, record.Name, record[RecordProperty.PropertyName.Size], ticks);
 		}
 
 		public void SyncFrom(Record source)
@@ -162,7 +166,7 @@ namespace NeoEdit.Records
 					dest = CreateFile(record.Name);
 				else
 					dest = CreateDirectory(record.Name);
-				dest.SyncCopy(record);
+				dest.CopyFrom(record);
 			}
 		}
 

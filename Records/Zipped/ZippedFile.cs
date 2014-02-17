@@ -13,15 +13,13 @@ namespace NeoEdit.Records.Zipped
 		public ZippedFile(string uri, ZippedArchive archive)
 			: base(uri, archive)
 		{
-			using (var zipFile = ZipFile.OpenRead(archive.FullName))
+			var zipFile = archive.Open();
+			var entry = zipFile.GetEntry(InArchiveName);
+			if (entry != null)
 			{
-				var entry = zipFile.GetEntry(InArchiveName);
-				if (entry != null)
-				{
-					this[RecordProperty.PropertyName.Size] = entry.Length;
-					this[RecordProperty.PropertyName.CompressedSize] = entry.CompressedLength;
-					this[RecordProperty.PropertyName.WriteTime] = entry.LastWriteTime.UtcDateTime;
-				}
+				this[RecordProperty.PropertyName.Size] = entry.Length;
+				this[RecordProperty.PropertyName.CompressedSize] = entry.CompressedLength;
+				this[RecordProperty.PropertyName.WriteTime] = entry.LastWriteTime.UtcDateTime;
 			}
 		}
 
@@ -52,28 +50,24 @@ namespace NeoEdit.Records.Zipped
 
 		public override BinaryData Read()
 		{
-			using (var zipFile = ZipFile.OpenRead(archive.FullName))
+			var zipFile = archive.Open();
+			var entry = zipFile.GetEntry(InArchiveName);
+			using (var stream = entry.Open())
+			using (var ms = new MemoryStream())
 			{
-				var entry = zipFile.GetEntry(InArchiveName);
-				using (var stream = entry.Open())
-				using (var ms = new MemoryStream())
-				{
-					stream.CopyTo(ms);
-					return ms.ToArray();
-				}
+				stream.CopyTo(ms);
+				return ms.ToArray();
 			}
 		}
 
 		public override void Write(BinaryData data)
 		{
-			using (var zipFile = ZipFile.Open(archive.FullName, ZipArchiveMode.Update))
+			var zipFile = archive.Open(true);
+			var entry = zipFile.CreateEntry(InArchiveName);
+			using (var stream = entry.Open())
 			{
-				var entry = zipFile.CreateEntry(InArchiveName);
-				using (var stream = entry.Open())
-				{
-					var bytes = data.GetAllBytes();
-					stream.Write(bytes, 0, bytes.Length);
-				}
+				var bytes = data.GetAllBytes();
+				stream.Write(bytes, 0, bytes.Length);
 			}
 		}
 
@@ -85,23 +79,21 @@ namespace NeoEdit.Records.Zipped
 
 		public override void Delete()
 		{
-			using (var zipFile = ZipFile.Open(archive.FullName, ZipArchiveMode.Update))
-			{
-				var entry = zipFile.GetEntry(InArchiveName);
-				entry.Delete();
-			}
+			var zipFile = archive.Open(true);
+			var entry = zipFile.GetEntry(InArchiveName);
+			entry.Delete();
 		}
 
-		protected override void SyncCopy(Record source)
+		protected override void CopyFrom(Record source)
 		{
 			if (source is Disk.DiskFile)
 			{
-				using (var zipFile = ZipFile.Open(archive.FullName, ZipArchiveMode.Update))
-					zipFile.CreateEntryFromFile(source.FullName, InArchiveName);
+				var zipFile = archive.Open(true);
+				zipFile.CreateEntryFromFile(source.FullName, InArchiveName);
 				return;
 			}
 
-			base.SyncCopy(source);
+			base.CopyFrom(source);
 		}
 	}
 }

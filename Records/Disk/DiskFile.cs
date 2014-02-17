@@ -75,7 +75,7 @@ namespace NeoEdit.Records.Disk
 			File.WriteAllBytes(FullName, data.GetAllBytes());
 		}
 
-		protected override void SyncCopy(Record source)
+		protected override void CopyFrom(Record source)
 		{
 			if (source is DiskFile)
 			{
@@ -83,7 +83,13 @@ namespace NeoEdit.Records.Disk
 				return;
 			}
 
-			base.SyncCopy(source);
+			base.CopyFrom(source);
+			var writeTime = (DateTime?)source[RecordProperty.PropertyName.WriteTime];
+			if (writeTime.HasValue)
+			{
+				var fileInfo = new FileInfo(FullName);
+				fileInfo.LastWriteTimeUtc = writeTime.Value;
+			}
 		}
 	}
 }
