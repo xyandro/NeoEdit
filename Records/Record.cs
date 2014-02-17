@@ -115,7 +115,28 @@ namespace NeoEdit.Records
 		public virtual void Delete() { }
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
-		public virtual void Sync(Record source) { }
+
+		public virtual void Sync(Record destination, string newName = null)
+		{
+			if (newName == null)
+				newName = Name;
+
+			if (IsFile)
+			{
+				var data = Read();
+
+				var oldName = FullName;
+				FullName = Path.Combine(destination.FullName, newName);
+				Write(data);
+				FullName = oldName;
+				return;
+			}
+
+			var dir = destination.CreateDirectory(newName);
+			foreach (var record in Records)
+				record.Sync(dir);
+		}
+
 		public virtual BinaryData Read() { throw new Exception("Cannot read file"); }
 		public virtual void Write(BinaryData data) { throw new Exception("Cannot write file"); }
 

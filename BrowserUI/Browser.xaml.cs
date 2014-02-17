@@ -286,6 +286,7 @@ namespace NeoEdit.BrowserUI
 							foreach (var record in records)
 								record.Delete();
 						}
+						Refresh();
 					}
 					break;
 				case RecordAction.ActionName.Copy:
@@ -300,10 +301,13 @@ namespace NeoEdit.BrowserUI
 						if (!Clipboard.Current.GetRecords(out records, out isCut))
 							break;
 
-						if (isCut)
+						var locationFiles = Location.Records.Select(record => record.Name).ToList();
+						var paths = records.Select(record => record[RecordProperty.PropertyName.Path] as string).GroupBy(path => path).Select(path => path.Key).ToList();
+						var canRename = (paths.Count == 1) && (paths[0] == Location.FullName);
+						if ((isCut) || (!canRename))
 						{
 							var names = records.Select(record => record.Name).ToList();
-							var exists = Location.Records.Any(record => names.Contains(record.Name));
+							var exists = locationFiles.Any(name => names.Contains(name));
 							if (exists)
 								throw new Exception("Destination already exists.");
 						}
@@ -313,38 +317,22 @@ namespace NeoEdit.BrowserUI
 							if (isCut)
 							{
 								child.Move(Location);
+								continue;
 							}
 
-							//var name = child[RecordProperty.PropertyName.NameWoExtension] as string;
-							//var ext = child[RecordProperty.PropertyName.Extension] as string;
-							//string newName;
-							//for (var num = 1; ; ++num)
-							//{
-							//	var extra = num == 1 ? "" : String.Format(" ({0})", num);
-							//	newName = Path.Combine(child.FullName, name + extra + ext);
-							//	if ((File.Exists(newName)) || (Directory.Exists(newName)))
-							//	{
-							//		if (isCut)
-							//			throw new Exception("Destination already exists.");
-							//		continue;
-							//	}
-							//	break;
-							//}
+							var name = child[RecordProperty.PropertyName.NameWoExtension] as string;
+							var ext = child[RecordProperty.PropertyName.Extension] as string;
+							string newName;
+							for (var num = 1; ; ++num)
+							{
+								var extra = num == 1 ? "" : String.Format(" ({0})", num);
+								newName = name + extra + ext;
+								if (locationFiles.Contains(newName))
+									continue;
+								break;
+							}
 
-							//if (isCut)
-							//{
-							//	if (child is DiskFile)
-							//		File.Move(child.FullName, newName);
-							//	else if (child is DiskDir)
-							//		Directory.Move(child.FullName, newName);
-							//}
-							//else
-							//{
-							//	if (child is DiskFile)
-							//		File.Copy(child.FullName, newName);
-							//	else if (child is DiskDir)
-							//		CopyDir(child.FullName, newName);
-							//}
+							child.Sync(Location, newName);
 						}
 
 						Refresh();
@@ -376,7 +364,7 @@ namespace NeoEdit.BrowserUI
 					break;
 				case RecordAction.ActionName.Sync:
 					if ((SyncSource != null) && (SyncTarget != null))
-						SyncTarget.Sync(SyncSource);
+						SyncSource.Sync(SyncTarget);
 					break;
 				case RecordAction.ActionName.Open:
 					{
