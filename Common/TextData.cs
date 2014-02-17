@@ -18,7 +18,6 @@ namespace NeoEdit.Common
 		}
 
 		const char BOMChar = '\ufeff';
-		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
 		Stack<string> undoHistory = new Stack<string>();
 		Stack<string> redoHistory = new Stack<string>();
 		string data { get { return undoHistory.First(); } set { undoHistory.Push(value); redoHistory.Clear(); RecalculateLines(); } }
@@ -62,6 +61,7 @@ namespace NeoEdit.Common
 			RecalculateLines();
 		}
 
+		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
 		void RecalculateLines()
 		{
 			lineIndex = new List<int>();
@@ -80,6 +80,15 @@ namespace NeoEdit.Common
 				lineLength.Add(match.Groups[1].Length);
 				endingIndex.Add(match.Groups[2].Index);
 				endingLength.Add(match.Groups[2].Length);
+			}
+
+			// Always have an ending line
+			if ((endingLength.Count == 0) || (endingLength[endingLength.Count - 1] != 0))
+			{
+				lineIndex.Add(data.Length);
+				lineLength.Add(0);
+				endingIndex.Add(data.Length);
+				endingLength.Add(0);
 			}
 
 			// Select most popular line ending
