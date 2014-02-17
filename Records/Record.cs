@@ -69,30 +69,17 @@ namespace NeoEdit.Records
 
 		public virtual IEnumerable<Record> Records { get { return null; } }
 
-		public virtual void Rename(string newName)
-		{
-			var data = Read();
-
-			var oldName = FullName;
-			newName = Path.Combine(GetProperty<string>(RecordProperty.PropertyName.Path), newName);
-
-			FullName = newName;
-			Write(data);
-
-			FullName = oldName;
-			Delete();
-
-			FullName = newName;
-		}
-
 		public virtual Record CreateDirectory(string name) { throw new NotImplementedException(); }
 
-		public virtual void Move(Record destination)
+		public virtual void Move(Record destination, string newName = null)
 		{
+			if (newName == null)
+				newName = Name;
+
 			if (IsFile)
 			{
 				var oldName = FullName;
-				var newName = Path.Combine(destination.FullName, Name);
+				newName = Path.Combine(destination.FullName, newName);
 
 				var data = Read();
 
@@ -106,7 +93,7 @@ namespace NeoEdit.Records
 				return;
 			}
 
-			var dir = destination.CreateDirectory(Name);
+			var dir = destination.CreateDirectory(newName);
 			foreach (var record in Records)
 				record.Move(dir);
 			Delete();

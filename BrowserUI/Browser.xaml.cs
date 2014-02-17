@@ -268,8 +268,9 @@ namespace NeoEdit.BrowserUI
 									break;
 								existingRecord.Delete();
 							}
-							record.Rename(rename.RecordName);
+							record.Move(Location, rename.RecordName);
 						}
+						Refresh();
 					}
 					break;
 				case RecordAction.ActionName.Delete:

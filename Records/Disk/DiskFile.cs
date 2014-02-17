@@ -95,18 +95,11 @@ namespace NeoEdit.Records.Disk
 			base.Sync(destination, newName);
 		}
 
-		public override void Rename(string newName)
-		{
-			newName = Path.Combine(GetProperty<string>(RecordProperty.PropertyName.Path), newName);
-			File.Move(FullName, newName);
-			FullName = newName;
-		}
-
-		public override void Move(Record destination)
+		public override void Move(Record destination, string newName = null)
 		{
 			if (destination is DiskDir)
 			{
-				var newName = Path.Combine(destination.FullName, Name);
+				newName = Path.Combine(destination.FullName, newName ?? Name);
 				File.Move(FullName, newName);
 				FullName = newName;
 				return;

@@ -56,18 +56,11 @@ namespace NeoEdit.Records.Disk
 			return new DiskDir(name);
 		}
 
-		public override void Rename(string newName)
-		{
-			newName = Path.Combine(GetProperty<string>(RecordProperty.PropertyName.Path), newName);
-			Directory.Move(FullName, newName);
-			FullName = newName;
-		}
-
-		public override void Move(Record destination)
+		public override void Move(Record destination, string newName = null)
 		{
 			if (destination is DiskDir)
 			{
-				var newName = Path.Combine(destination.FullName, Name);
+				newName = Path.Combine(destination.FullName, newName ?? Name);
 				Directory.Move(FullName, newName);
 				FullName = newName;
 				return;
