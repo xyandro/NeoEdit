@@ -37,6 +37,7 @@ namespace NeoEdit.TextEditorUI
 			Select_Find,
 			Select_Reverse,
 			Select_Sort,
+			Select_Evaluate,
 			Mark_Selection,
 			Mark_Find,
 			Mark_Clear,

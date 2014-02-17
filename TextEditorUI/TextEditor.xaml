@@ -33,6 +33,7 @@
 		<common:UICommand x:Key="Select_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Reverse" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Reverse}" Header="_Reverse selections" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Sort" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Sort}" Header="_Sort selections" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Evaluate" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Evaluate}" Header="_Evaluate selections" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Selection" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Selection}" Header="_Selection" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Clear" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Clear}" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -117,6 +118,7 @@
 				<Separator/>
 				<MenuItem Command="{StaticResource Select_Reverse}"/>
 				<MenuItem Command="{StaticResource Select_Sort}"/>
+				<MenuItem Command="{StaticResource Select_Evaluate}"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
 				<MenuItem Command="{StaticResource Mark_Selection}"/>

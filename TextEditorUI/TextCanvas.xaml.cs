@@ -1133,6 +1133,13 @@ namespace NeoEdit.TextEditorUI
 						Replace(selections, strs, true);
 					}
 					break;
+				case TextEditor.Commands.Select_Evaluate:
+					{
+						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+						var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.Common.Expression(expr).Evaluate().ToString()).ToList();
+						Replace(selections, strs, true);
+					}
+					break;
 				case TextEditor.Commands.Mark_Find:
 					ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
 					ranges[RangeType.Search] = new List<Range>();
