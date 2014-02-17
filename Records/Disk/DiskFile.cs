@@ -75,15 +75,15 @@ namespace NeoEdit.Records.Disk
 			File.WriteAllBytes(FullName, data.GetAllBytes());
 		}
 
-		public override void SyncFrom(Record source)
+		protected override void SyncCopy(Record source)
 		{
 			if (source is DiskFile)
 			{
-				File.Copy(source.FullName, FullName);
+				File.Copy(source.FullName, FullName, true);
 				return;
 			}
 
-			base.SyncFrom(source);
+			base.SyncCopy(source);
 		}
 	}
 }

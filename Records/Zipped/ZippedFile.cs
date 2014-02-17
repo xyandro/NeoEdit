@@ -92,7 +92,7 @@ namespace NeoEdit.Records.Zipped
 			}
 		}
 
-		public override void SyncFrom(Record source)
+		protected override void SyncCopy(Record source)
 		{
 			if (source is Disk.DiskFile)
 			{
@@ -101,7 +101,7 @@ namespace NeoEdit.Records.Zipped
 				return;
 			}
 
-			base.SyncFrom(source);
+			base.SyncCopy(source);
 		}
 	}
 }

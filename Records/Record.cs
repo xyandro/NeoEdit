@@ -107,7 +107,7 @@ namespace NeoEdit.Records
 			dest.SyncFrom(source);
 		}
 
-		public virtual void SyncFrom(Record source)
+		protected virtual void SyncCopy(Record source)
 		{
 			if (source.IsFile)
 			{
@@ -122,7 +122,47 @@ namespace NeoEdit.Records
 					dest = CreateFile(record.Name);
 				else
 					dest = CreateDirectory(record.Name);
-				dest.SyncFrom(record);
+				dest.SyncCopy(record);
+			}
+		}
+
+		string GetKey(Record record)
+		{
+			return String.Format("{0}-{1}-{2}-{3}", record.IsFile, record.Name, record[RecordProperty.PropertyName.Size], record[RecordProperty.PropertyName.WriteTime]);
+		}
+
+		public void SyncFrom(Record source)
+		{
+			if ((IsFile) && (source.IsFile))
+				return;
+
+			var sourceRecords = new Dictionary<string, Record>();
+			foreach (var record in source.Records)
+				sourceRecords[GetKey(record)] = record;
+
+			var destRecords = new Dictionary<string, Record>();
+			foreach (var record in Records)
+				destRecords[GetKey(record)] = record;
+
+			var dups = sourceRecords.Keys.Where(key => destRecords.Keys.Contains(key)).ToList();
+			foreach (var dup in dups)
+			{
+				destRecords[dup].SyncFrom(sourceRecords[dup]);
+				sourceRecords.Remove(dup);
+				destRecords.Remove(dup);
+			}
+
+			foreach (var dest in destRecords)
+				dest.Value.Delete();
+
+			foreach (var record in sourceRecords.Values)
+			{
+				Record dest;
+				if (record.IsFile)
+					dest = CreateFile(record.Name);
+				else
+					dest = CreateDirectory(record.Name);
+				dest.SyncCopy(record);
 			}
 		}
 
