@@ -91,5 +91,17 @@ namespace NeoEdit.Records.Zipped
 				entry.Delete();
 			}
 		}
+
+		public override void SyncFrom(Record source)
+		{
+			if (source is Disk.DiskFile)
+			{
+				using (var zipFile = ZipFile.Open(archive.FullName, ZipArchiveMode.Update))
+					zipFile.CreateEntryFromFile(source.FullName, InArchiveName);
+				return;
+			}
+
+			base.SyncFrom(source);
+		}
 	}
 }

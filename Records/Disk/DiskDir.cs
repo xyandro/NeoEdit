@@ -67,15 +67,5 @@ namespace NeoEdit.Records.Disk
 			base.MoveFrom(source, newName);
 		}
 
-		public override void SyncFrom(Record source, string newName = null)
-		{
-			if (source is DiskFile)
-			{
-				File.Copy(source.FullName, Path.Combine(FullName, newName ?? source.Name));
-				return;
-			}
-
-			base.SyncFrom(source, newName);
-		}
 	}
 }

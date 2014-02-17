@@ -97,23 +97,33 @@ namespace NeoEdit.Records
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
 
-		public virtual void SyncFrom(Record source, string newName = null)
+		public void CopyFrom(Record source, string newName = null)
 		{
-			if (newName == null)
-				newName = source.Name;
+			Record dest;
+			if (source.IsFile)
+				dest = CreateFile(newName ?? source.Name);
+			else
+				dest = CreateDirectory(newName ?? source.Name);
+			dest.SyncFrom(source);
+		}
 
+		public virtual void SyncFrom(Record source)
+		{
 			if (source.IsFile)
 			{
-				var data = source.Read();
-
-				var newFile = CreateFile(newName);
-				newFile.Write(data);
+				Write(source.Read());
 				return;
 			}
 
-			var dir = CreateDirectory(newName);
 			foreach (var record in source.Records)
-				dir.SyncFrom(record);
+			{
+				Record dest;
+				if (record.IsFile)
+					dest = CreateFile(record.Name);
+				else
+					dest = CreateDirectory(record.Name);
+				dest.SyncFrom(record);
+			}
 		}
 
 		public virtual BinaryData Read() { throw new NotImplementedException(); }

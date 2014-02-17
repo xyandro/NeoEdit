@@ -333,7 +333,7 @@ namespace NeoEdit.BrowserUI
 								break;
 							}
 
-							Location.SyncFrom(child, newName);
+							Location.CopyFrom(child, newName);
 						}
 
 						Refresh();
@@ -365,7 +365,10 @@ namespace NeoEdit.BrowserUI
 					break;
 				case RecordAction.ActionName.Sync:
 					if ((SyncSource != null) && (SyncTarget != null))
+					{
 						SyncTarget.SyncFrom(SyncSource);
+						Refresh();
+					}
 					break;
 				case RecordAction.ActionName.Open:
 					{

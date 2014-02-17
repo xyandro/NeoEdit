@@ -12,10 +12,5 @@ namespace NeoEdit.Records.Zipped
 
 		public override Record CreateFile(string name) { return new ZippedFile(Path.Combine(FullName, name), this); }
 		public override Record CreateDirectory(string name) { return new ZippedDir(Path.Combine(FullName, name), this); }
-		public override void SyncFrom(Record source, string newName = null)
-		{
-			if (!ZippedRecord.SyncFrom(this, source, newName))
-				base.SyncFrom(source, newName);
-		}
 	}
 }
