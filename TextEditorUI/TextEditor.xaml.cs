@@ -11,7 +11,6 @@ namespace NeoEdit.TextEditorUI
 		public enum Commands
 		{
 			Edit_Undo,
-			Edit_Redo,
 			Edit_Cut,
 			Edit_Copy,
 			Edit_Paste,

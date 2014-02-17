@@ -17,10 +17,17 @@ namespace NeoEdit.Common
 			remove { changed -= value; }
 		}
 
+		public delegate void UndoDelegate(List<int> offsets, List<int> lengths, List<string> text);
+		UndoDelegate undo;
+		public event UndoDelegate Undo
+		{
+			add { undo += value; }
+			remove { undo -= value; }
+		}
+
 		const char BOMChar = '\ufeff';
-		Stack<string> undoHistory = new Stack<string>();
-		Stack<string> redoHistory = new Stack<string>();
-		string data { get { return undoHistory.First(); } set { undoHistory.Push(value); redoHistory.Clear(); RecalculateLines(); } }
+		string _data;
+		string data { get { return _data; } set { _data = value; RecalculateLines(); } }
 		List<int> lineIndex;
 		List<int> lineLength;
 		List<int> endingIndex;
@@ -43,24 +50,6 @@ namespace NeoEdit.Common
 		public byte[] GetBytes(Coder.Type encoding = Coder.Type.UTF8)
 		{
 			return Coder.StringToBytes(data, encoding);
-		}
-
-		public void Undo()
-		{
-			if (undoHistory.Count == 1)
-				return;
-
-			redoHistory.Push(undoHistory.Pop());
-			RecalculateLines();
-		}
-
-		public void Redo()
-		{
-			if (redoHistory.Count == 0)
-				return;
-
-			undoHistory.Push(redoHistory.Pop());
-			RecalculateLines();
 		}
 
 		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
@@ -154,6 +143,19 @@ namespace NeoEdit.Common
 				checkPos = offsets[ctr] + lengths[ctr];
 			}
 
+			var undoOffsets = new List<int>();
+			var undoLengths = new List<int>();
+			var undoText = new List<string>();
+
+			var change = 0;
+			for (var ctr = 0; ctr < offsets.Count; ++ctr)
+			{
+				undoOffsets.Add(offsets[ctr] + change);
+				undoLengths.Add(text[ctr].Length);
+				undoText.Add(GetString(offsets[ctr], offsets[ctr] + lengths[ctr]));
+				change += text[ctr].Length - lengths[ctr];
+			}
+
 			var sb = new StringBuilder();
 			var dataPos = 0;
 			for (var listIndex = 0; listIndex <= text.Count; ++listIndex)
@@ -174,9 +176,13 @@ namespace NeoEdit.Common
 				dataPos += length;
 			}
 
+			if (undo != null)
+				undo(undoOffsets, undoLengths, undoText);
+
 			data = sb.ToString();
 
-			NotifyChanged();
+			if (changed != null)
+				changed();
 		}
 
 		public int GetOppositeBracket(int offset)
@@ -226,17 +232,9 @@ namespace NeoEdit.Common
 				return;
 
 			if (bom)
-				data = BOMChar + data;
+				Replace(new List<int> { 0 }, new List<int> { 0 }, new List<string> { BOMChar.ToString() });
 			else
-				data = data.Substring(1);
-
-			NotifyChanged();
-		}
-
-		void NotifyChanged()
-		{
-			if (changed != null)
-				changed();
+				Replace(new List<int> { 0 }, new List<int> { 1 }, new List<string> { "" });
 		}
 	}
 }

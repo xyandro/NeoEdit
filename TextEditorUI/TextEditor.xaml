@@ -7,7 +7,6 @@
 
 	<Window.Resources>
 		<common:UICommand x:Key="Edit_Undo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Undo}"  Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_Redo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Redo}" Header="_Redo" Key="Z" Modifiers="Control+Shift"  Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Cut" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Cut}" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Copy" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Copy}" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Paste" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Paste}" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -55,7 +54,6 @@
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_Edit">
 				<MenuItem Command="{StaticResource Edit_Undo}"/>
-				<MenuItem Command="{StaticResource Edit_Redo}"/>
 				<Separator/>
 				<MenuItem Command="{StaticResource Edit_Cut}"/>
 				<MenuItem Command="{StaticResource Edit_Copy}"/>

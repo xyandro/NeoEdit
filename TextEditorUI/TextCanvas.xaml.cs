@@ -37,6 +37,19 @@ namespace NeoEdit.TextEditorUI
 		}
 	};
 
+	class TextCanvasUndo
+	{
+		public List<int> offsets, lengths;
+		public List<string> text;
+
+		public TextCanvasUndo(List<int> _offsets, List<int> _lengths, List<string> _text)
+		{
+			offsets = _offsets;
+			lengths = _lengths;
+			text = _text;
+		}
+	}
+
 	public partial class TextCanvas : Canvas
 	{
 		[DepProp]
@@ -85,6 +98,8 @@ namespace NeoEdit.TextEditorUI
 		readonly Typeface typeface;
 		readonly double fontSize;
 
+		List<TextCanvasUndo> undo = new List<TextCanvasUndo>();
+
 		static TextCanvas() { UIHelper<TextCanvas>.Register(); }
 
 		readonly UIHelper<TextCanvas> uiHelper;
@@ -110,7 +125,20 @@ namespace NeoEdit.TextEditorUI
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => { EnsureVisible(ranges[RangeType.Selection].First()); InvalidateVisual(); });
 
-			Loaded += (s, e) => InvalidateVisual();
+			Loaded += (s, e) =>
+			{
+				InvalidateVisual();
+				Data.Undo += Data_Undo;
+			};
+		}
+
+		bool saveUndo = true;
+		void Data_Undo(List<int> offsets, List<int> lengths, List<string> text)
+		{
+			if (!saveUndo)
+				return;
+
+			undo.Add(new TextCanvasUndo(offsets, lengths, text));
 		}
 
 		internal void EnsureVisible(Range selection)
@@ -920,13 +948,20 @@ namespace NeoEdit.TextEditorUI
 			switch (com)
 			{
 				case TextEditor.Commands.Edit_Undo:
-					ranges[RangeType.Mark].Clear();
-					ranges[RangeType.Search].Clear();
-					ranges[RangeType.Selection].Clear();
-					Data.Undo();
-					break;
-				case TextEditor.Commands.Edit_Redo:
-					Data.Redo();
+					{
+						if (undo.Count == 0)
+							break;
+
+						ranges[RangeType.Mark].Clear();
+						ranges[RangeType.Search].Clear();
+						ranges[RangeType.Selection].Clear();
+
+						var undoStep = undo.Last();
+						undo.Remove(undoStep);
+						saveUndo = false;
+						Data.Replace(undoStep.offsets, undoStep.lengths, undoStep.text);
+						saveUndo = true;
+					}
 					break;
 				case TextEditor.Commands.Edit_Cut:
 				case TextEditor.Commands.Edit_Copy:

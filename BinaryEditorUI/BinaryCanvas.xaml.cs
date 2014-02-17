@@ -140,7 +140,7 @@ namespace NeoEdit.BinaryEditorUI
 		readonly Typeface typeface;
 		readonly double fontSize;
 
-		List<BinaryCanvasUndo> undo = new List<BinaryCanvasUndo>(MaxUndoSteps);
+		List<BinaryCanvasUndo> undo = new List<BinaryCanvasUndo>();
 
 		static BinaryCanvas() { UIHelper<BinaryCanvas>.Register(); }
 
