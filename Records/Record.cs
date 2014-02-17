@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -85,8 +85,34 @@ namespace NeoEdit.Records
 			FullName = newName;
 		}
 
+		public virtual Record CreateDirectory(string name) { throw new NotImplementedException(); }
+
+		public virtual void Move(Record destination)
+		{
+			if (IsFile)
+			{
+				var oldName = FullName;
+				var newName = Path.Combine(destination.FullName, Name);
+
+				var data = Read();
+
+				FullName = newName;
+				Write(data);
+
+				FullName = oldName;
+				Delete();
+
+				FullName = newName;
+				return;
+			}
+
+			var dir = destination.CreateDirectory(Name);
+			foreach (var record in Records)
+				record.Move(dir);
+			Delete();
+		}
+
 		public virtual void Delete() { }
-		public virtual void Paste() { }
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
 		public virtual void Sync(Record source) { }

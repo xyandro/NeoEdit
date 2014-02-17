@@ -42,7 +42,7 @@ namespace NeoEdit
 			System.Windows.Clipboard.SetDataObject(dataObj, true);
 		}
 
-		public void GetRecords(out List<Record> records, out bool isCut)
+		public bool GetRecords(out List<Record> records, out bool isCut)
 		{
 			records = null;
 			isCut = false;
@@ -65,14 +65,15 @@ namespace NeoEdit
 			if ((guid is string) && (((string)guid).Equals(contentGUID)))
 			{
 				records = contents as List<Record>;
-				return;
+				return records.Count != 0;
 			}
 
 			var dropList = System.Windows.Clipboard.GetFileDropList();
 			if ((dropList == null) || (dropList.Count == 0))
-				return;
+				return false;
 
 			records = dropList.Cast<string>().ToList().Select(file => new DiskRoot().GetRecord(file)).ToList();
+			return true;
 		}
 
 		public void Set(byte[] bytes, string text)

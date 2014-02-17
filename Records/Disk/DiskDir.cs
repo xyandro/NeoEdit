@@ -50,15 +50,15 @@ namespace NeoEdit.Records.Disk
 			}
 		}
 
-		public override void Paste()
+		void Paste()
 		{
-			List<Record> records;
+			List<Record> myRecords;
 			bool isCut;
-			Clipboard.Current.GetRecords(out records, out isCut);
-			if (records == null)
+			Clipboard.Current.GetRecords(out myRecords, out isCut);
+			if (myRecords == null)
 				return;
 
-			foreach (var child in records)
+			foreach (var child in myRecords)
 			{
 				var name = child[RecordProperty.PropertyName.NameWoExtension] as string;
 				var ext = child[RecordProperty.PropertyName.Extension] as string;
@@ -117,6 +117,13 @@ namespace NeoEdit.Records.Disk
 				var sourceRecord = sourceFiles.Single(a => a.Name == record.Name);
 				record.Sync(sourceRecord);
 			}
+		}
+
+		public override Record CreateDirectory(string name)
+		{
+			name = Path.Combine(FullName, name);
+			Directory.CreateDirectory(name);
+			return new DiskDir(name);
 		}
 	}
 }

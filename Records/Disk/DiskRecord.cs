@@ -87,5 +87,29 @@ namespace NeoEdit.Records.Disk
 				File.Move(FullName, newName);
 			FullName = newName;
 		}
+
+		public override void Move(Record destination)
+		{
+			if (destination is DiskDir)
+			{
+				var newName = Path.Combine(destination.FullName, Name);
+
+				if (this is DiskFile)
+				{
+					File.Move(FullName, newName);
+					FullName = newName;
+					return;
+				}
+
+				if (this is DiskDir)
+				{
+					Directory.Move(FullName, newName);
+					FullName = newName;
+					return;
+				}
+			}
+
+			base.Move(destination);
+		}
 	}
 }

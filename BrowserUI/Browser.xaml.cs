@@ -295,7 +295,60 @@ namespace NeoEdit.BrowserUI
 					Clipboard.Current.Set(records, true);
 					break;
 				case RecordAction.ActionName.Paste:
-					Location.Paste();
+					{
+						bool isCut;
+						if (!Clipboard.Current.GetRecords(out records, out isCut))
+							break;
+
+						if (isCut)
+						{
+							var names = records.Select(record => record.Name).ToList();
+							var exists = Location.Records.Any(record => names.Contains(record.Name));
+							if (exists)
+								throw new Exception("Destination already exists.");
+						}
+
+						foreach (var child in records)
+						{
+							if (isCut)
+							{
+								child.Move(Location);
+							}
+
+							//var name = child[RecordProperty.PropertyName.NameWoExtension] as string;
+							//var ext = child[RecordProperty.PropertyName.Extension] as string;
+							//string newName;
+							//for (var num = 1; ; ++num)
+							//{
+							//	var extra = num == 1 ? "" : String.Format(" ({0})", num);
+							//	newName = Path.Combine(child.FullName, name + extra + ext);
+							//	if ((File.Exists(newName)) || (Directory.Exists(newName)))
+							//	{
+							//		if (isCut)
+							//			throw new Exception("Destination already exists.");
+							//		continue;
+							//	}
+							//	break;
+							//}
+
+							//if (isCut)
+							//{
+							//	if (child is DiskFile)
+							//		File.Move(child.FullName, newName);
+							//	else if (child is DiskDir)
+							//		Directory.Move(child.FullName, newName);
+							//}
+							//else
+							//{
+							//	if (child is DiskFile)
+							//		File.Copy(child.FullName, newName);
+							//	else if (child is DiskDir)
+							//		CopyDir(child.FullName, newName);
+							//}
+						}
+
+						Refresh();
+					}
 					break;
 				case RecordAction.ActionName.MD5:
 					{
