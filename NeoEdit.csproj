@@ -66,6 +66,7 @@
     <Compile Include="BrowserUI\Dialogs\EditSyncParams.xaml.cs">
       <DependentUpon>EditSyncParams.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\Expression.cs" />
     <Compile Include="Common\SyncParams.cs" />
     <Compile Include="Data\Checksum.cs" />
     <Compile Include="Data\Compression.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="UnitTest\ChecksumTest.cs" />
     <Compile Include="UnitTest\CoderTest.cs" />
     <Compile Include="UnitTest\CompressionTest.cs" />
+    <Compile Include="UnitTest\ExpressionTest.cs" />
     <Compile Include="UnitTest\CryptoTest.cs" />
     <Compile Include="UnitTest\UnitTest.cs" />
     <Compile Include="UnitTest\UnicodeTest.cs" />
