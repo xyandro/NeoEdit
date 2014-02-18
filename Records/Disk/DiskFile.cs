@@ -79,12 +79,12 @@ namespace NeoEdit.Records.Disk
 			this[RecordProperty.PropertyName.Identify] = Identifier.Identify(FullName);
 		}
 
-		public override BinaryData Read()
+		public override IBinaryData Read()
 		{
-			return File.ReadAllBytes(FullName);
+			return new BinaryData(File.ReadAllBytes(FullName));
 		}
 
-		public override void Write(BinaryData data)
+		public override void Write(IBinaryData data)
 		{
 			File.WriteAllBytes(FullName, data.GetAllBytes());
 		}

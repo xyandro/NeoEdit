@@ -45,7 +45,7 @@ namespace NeoEdit.BinaryEditorUI
 		}
 
 		[DepProp]
-		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
+		public IBinaryData Data { get { return uiHelper.GetPropValue<IBinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -64,14 +64,14 @@ namespace NeoEdit.BinaryEditorUI
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
 		readonly UIHelper<BinaryEditor> uiHelper;
-		public BinaryEditor(BinaryData data)
+		public BinaryEditor(IBinaryData data)
 		{
 			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
 			uiHelper.InitializeCommands();
 
 			Data = data;
-			BinaryData.ChangedDelegate changed = () => ++ChangeCount;
+			IBinaryDataChangedDelegate changed = () => ++ChangeCount;
 			Data.Changed += changed;
 			Closed += (s, e) => Data.Changed -= changed;
 

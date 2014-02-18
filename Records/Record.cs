@@ -232,8 +232,8 @@ namespace NeoEdit.Records
 			}
 		}
 
-		public virtual BinaryData Read() { throw new NotImplementedException(); }
-		public virtual void Write(BinaryData data) { throw new NotImplementedException(); }
+		public virtual IBinaryData Read() { throw new NotImplementedException(); }
+		public virtual void Write(IBinaryData data) { throw new NotImplementedException(); }
 
 		public virtual Type GetRootType() { return typeof(Record); }
 

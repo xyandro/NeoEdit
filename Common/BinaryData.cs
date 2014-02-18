@@ -3,11 +3,10 @@ using System.Linq;
 
 namespace NeoEdit.Common
 {
-	public class BinaryData
+	public class BinaryData : IBinaryData
 	{
-		public delegate void ChangedDelegate();
-		ChangedDelegate changed;
-		public event ChangedDelegate Changed
+		IBinaryDataChangedDelegate changed;
+		public event IBinaryDataChangedDelegate Changed
 		{
 			add { changed += value; }
 			remove { changed -= value; }
@@ -27,11 +26,6 @@ namespace NeoEdit.Common
 		public long Length
 		{
 			get { return data.Length; }
-		}
-
-		public static implicit operator BinaryData(byte[] data)
-		{
-			return new BinaryData(data);
 		}
 
 		public long IndexOf(byte value, long start)

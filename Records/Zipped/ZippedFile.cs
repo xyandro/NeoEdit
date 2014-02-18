@@ -48,7 +48,7 @@ namespace NeoEdit.Records.Zipped
 			}
 		}
 
-		public override BinaryData Read()
+		public override IBinaryData Read()
 		{
 			var zipFile = archive.Open();
 			var entry = zipFile.GetEntry(InArchiveName);
@@ -56,11 +56,11 @@ namespace NeoEdit.Records.Zipped
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);
-				return ms.ToArray();
+				return new BinaryData(ms.ToArray());
 			}
 		}
 
-		public override void Write(BinaryData data)
+		public override void Write(IBinaryData data)
 		{
 			var zipFile = archive.Open(true);
 			var entry = zipFile.CreateEntry(InArchiveName);
