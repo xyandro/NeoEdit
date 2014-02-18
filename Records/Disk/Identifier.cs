@@ -1,30 +1,48 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace NeoEdit.Records.Disk
 {
 	class Identifier
 	{
-		[DllImport("magic1.dll", CallingConvention = CallingConvention.Cdecl)]
-		private extern static IntPtr magic_open(int type);
-		[DllImport("magic1.dll", CallingConvention = CallingConvention.Cdecl)]
-		private extern static int magic_load(IntPtr handle, string file);
-		[DllImport("magic1.dll", CallingConvention = CallingConvention.Cdecl)]
-		private extern static IntPtr magic_file(IntPtr handle, string file);
-
-		static IntPtr handle;
+		static string magicPath = Path.Combine(Path.GetDirectoryName(typeof(Identifier).Assembly.Location), "Magic");
 		static Identifier()
 		{
-			handle = magic_open(0);
-			var location = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "magic.mgc");
-			magic_load(handle, location);
+			string Header = "NeoEdit.Magic.";
+
+			Directory.CreateDirectory(magicPath);
+			foreach (var file in typeof(Identifier).Assembly.GetManifestResourceNames())
+			{
+				if (!file.StartsWith(Header))
+					continue;
+
+				using (var output = File.OpenWrite(Path.Combine(magicPath, file.Substring(Header.Length))))
+				using (var stream = typeof(Identifier).Assembly.GetManifestResourceStream(file))
+					stream.CopyTo(output);
+			}
 		}
 
 		public static string Identify(string fileName)
 		{
-			return Marshal.PtrToStringAnsi(magic_file(handle, fileName));
+			var process = new Process
+			{
+				StartInfo = new ProcessStartInfo(Path.Combine(magicPath, "file.exe"), String.Format("-m \"{0}\" -0 \"{1}\"", Path.Combine(magicPath, "magic.mgc"), fileName))
+				{
+					UseShellExecute = false,
+					RedirectStandardOutput = true,
+					CreateNoWindow = true,
+				},
+			};
+			process.Start();
+			string result = process.StandardOutput.ReadToEnd();
+			process.WaitForExit();
+
+			var idx = result.IndexOf((char)0);
+			if (idx == -1)
+				throw new Exception("Failed to identify file");
+
+			return result.Substring(idx + 1).Trim();
 		}
 	}
 }
