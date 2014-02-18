@@ -844,6 +844,93 @@ namespace NeoEdit.BinaryEditorUI
 			return true;
 		}
 
+		bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
+		{
+			start = end = -1;
+			var offset = forward ? 1 : -1;
+			Func<byte, long, long> findFunc;
+			if (forward)
+			{
+				findFunc = (_find, _start) =>
+				{
+					var _pos = Data.IndexOf(_find, _start);
+					if (_pos == -1)
+						return long.MaxValue;
+					return _pos;
+				};
+			}
+			else
+			{
+				findFunc = (_find, _start) => Data.LastIndexOf(_find, _start);
+			}
+			var selectFunc = forward ? (Func<long, long, long>)Math.Min : Math.Max;
+			var invalid = forward ? long.MaxValue : -1;
+
+			var pos = index;
+			while (true)
+			{
+				pos += offset;
+				if ((pos < 0) || (pos >= Data.Length))
+					return false;
+
+				var usePos = invalid;
+				for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
+				{
+					var ignoreCase = currentFind.IgnoreCase[findPos];
+					var findData = currentFind.Data[findPos];
+
+					usePos = selectFunc(usePos, findFunc(findData[0], pos));
+					if (ignoreCase)
+					{
+						if ((findData[0] >= 'a') && (findData[0] <= 'z'))
+							usePos = selectFunc(usePos, findFunc((byte)(findData[0] - 'a' + 'A'), pos));
+						else if ((findData[0] >= 'A') && (findData[0] <= 'Z'))
+							usePos = selectFunc(usePos, findFunc((byte)(findData[0] - 'A' + 'a'), pos));
+					}
+				}
+
+				pos = usePos;
+				if ((usePos < 0) || (usePos >= Data.Length))
+					return false;
+
+				for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
+				{
+					var ignoreCase = currentFind.IgnoreCase[findPos];
+					var findData = currentFind.Data[findPos];
+
+					int findIdx;
+					for (findIdx = 0; findIdx < findData.Length; ++findIdx)
+					{
+						if (pos + findIdx >= Data.Length)
+							break;
+
+						if (Data[pos + findIdx] == findData[findIdx])
+							continue;
+
+						if (!ignoreCase)
+							break;
+
+						if ((Data[pos + findIdx] >= 'a') && (Data[pos + findIdx] <= 'z') && (findData[findIdx] >= 'A') && (findData[findIdx] <= 'Z'))
+							if (Data[pos + findIdx] - 'a' + 'A' == findData[findIdx])
+								continue;
+
+						if ((Data[pos + findIdx] >= 'A') && (Data[pos + findIdx] <= 'Z') && (findData[findIdx] >= 'a') && (findData[findIdx] <= 'z'))
+							if (Data[pos + findIdx] - 'A' + 'a' == findData[findIdx])
+								continue;
+
+						break;
+					}
+
+					if (findIdx == findData.Length)
+					{
+						start = pos;
+						end = pos + findData.Length;
+						return true;
+					}
+				}
+			}
+		}
+
 		FindData currentFind;
 		void DoFind(bool forward = true)
 		{
@@ -852,7 +939,7 @@ namespace NeoEdit.BinaryEditorUI
 
 			long start = SelStart;
 			long end = SelEnd;
-			if (Data.Find(currentFind, SelStart, out start, out end, forward))
+			if (Find(currentFind, SelStart, out start, out end, forward))
 			{
 				EnsureVisible(start);
 				Pos1 = end;
