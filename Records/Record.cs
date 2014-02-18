@@ -212,7 +212,7 @@ namespace NeoEdit.Records
 			if (logger == null)
 				logger = str => { };
 
-			logger(String.Format("Beginning sync from {0} to {1}", FullName, source.FullName));
+			logger(String.Format("Beginning sync from {0} to {1}", source.FullName, FullName));
 			try
 			{
 				bool hasErrors = false;
