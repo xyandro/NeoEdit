@@ -377,7 +377,7 @@ namespace NeoEdit.BrowserUI
 						break;
 
 					var log = new Log();
-					syncTarget.SyncFrom(syncSource, syncParams, msg => log.Messages.Add(msg));
+					syncTarget.SyncFrom(syncSource, syncParams, msg => log.AddMessage(msg));
 					Refresh();
 					break;
 				case RecordAction.ActionName.Open:

@@ -140,10 +140,11 @@ namespace NeoEdit.Records
 			}
 		}
 
-		void DoSyncFrom(Record source, SyncParams syncParams, Action<string> logger)
+		bool DoSyncFrom(Record source, SyncParams syncParams, Action<string> logger)
 		{
+			var hasErrors = false;
 			if ((IsFile) && (source.IsFile))
-				return;
+				return hasErrors;
 
 			var sourceRecords = new Dictionary<string, Record>();
 			foreach (var record in source.Records)
@@ -156,7 +157,8 @@ namespace NeoEdit.Records
 			var dups = sourceRecords.Keys.Where(key => destRecords.Keys.Contains(key)).ToList();
 			foreach (var dup in dups)
 			{
-				destRecords[dup].DoSyncFrom(sourceRecords[dup], syncParams, logger);
+				if (destRecords[dup].DoSyncFrom(sourceRecords[dup], syncParams, logger))
+					hasErrors = true;
 				sourceRecords.Remove(dup);
 				destRecords.Remove(dup);
 			}
@@ -165,12 +167,14 @@ namespace NeoEdit.Records
 				try
 				{
 					logger(String.Format("Deleting {0}", dest.Value.FullName));
+					hasErrors = true;
 					if (!syncParams.LogOnly)
 						dest.Value.Delete();
 				}
 				catch (Exception ex)
 				{
 					logger(ex.Message);
+					hasErrors = true;
 					if (syncParams.StopOnError)
 						throw;
 				}
@@ -192,10 +196,13 @@ namespace NeoEdit.Records
 				catch (Exception ex)
 				{
 					logger(ex.Message);
+					hasErrors = true;
 					if (syncParams.StopOnError)
 						throw;
 				}
 			}
+
+			return hasErrors;
 		}
 
 		public void SyncFrom(Record source, SyncParams syncParams = null, Action<string> logger = null)
@@ -208,11 +215,16 @@ namespace NeoEdit.Records
 			logger(String.Format("Beginning sync from {0} to {1}", FullName, source.FullName));
 			try
 			{
+				bool hasErrors = false;
 				if ((source.IsFile) && (IsFile))
 					CopyFrom(source);
 				else
-					DoSyncFrom(source, syncParams, logger);
-				logger("Finished.");
+					if (DoSyncFrom(source, syncParams, logger))
+						hasErrors = true;
+				if (hasErrors)
+					logger("Finished with errors.");
+				else
+					logger("Finished.");
 			}
 			catch
 			{

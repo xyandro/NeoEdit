@@ -8,7 +8,7 @@ namespace NeoEdit.BrowserUI.Dialogs
 	public partial class Log : Window
 	{
 		[DepProp]
-		public ObservableCollection<string> Messages { get { return uiHelper.GetPropValue<ObservableCollection<string>>(); } set { uiHelper.SetPropValue(value); } }
+		public string Messages { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
 		static Log() { UIHelper<Log>.Register(); }
 
@@ -17,9 +17,14 @@ namespace NeoEdit.BrowserUI.Dialogs
 		{
 			uiHelper = new UIHelper<Log>(this);
 			InitializeComponent();
-			uiHelper.AddObservableCallback(self => self.Messages, () => messages.ScrollIntoView(Messages.LastOrDefault()));
-			Messages = new ObservableCollection<string>();
+			uiHelper.AddCallback(self => self.Messages, (o, n) => messages.ScrollToEnd());
+			Messages = "";
 			Show();
+		}
+
+		public void AddMessage(string message)
+		{
+			Messages += message + "\n";
 		}
 
 		private void okClick(object sender, RoutedEventArgs e)
