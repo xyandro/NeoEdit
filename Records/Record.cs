@@ -104,7 +104,7 @@ namespace NeoEdit.Records
 				dest = CreateFile(newName ?? source.Name);
 			else
 				dest = CreateDirectory(newName ?? source.Name);
-			dest.SyncFrom(source, new SyncParams());
+			dest.SyncFrom(source);
 		}
 
 		protected virtual void CopyFrom(Record source)
@@ -140,7 +140,7 @@ namespace NeoEdit.Records
 			}
 		}
 
-		public void SyncFrom(Record source, SyncParams syncParams)
+		void DoSyncFrom(Record source, SyncParams syncParams, Action<string> logger)
 		{
 			if ((IsFile) && (source.IsFile))
 				return;
@@ -156,14 +156,24 @@ namespace NeoEdit.Records
 			var dups = sourceRecords.Keys.Where(key => destRecords.Keys.Contains(key)).ToList();
 			foreach (var dup in dups)
 			{
-				destRecords[dup].SyncFrom(sourceRecords[dup], syncParams);
+				destRecords[dup].DoSyncFrom(sourceRecords[dup], syncParams, logger);
 				sourceRecords.Remove(dup);
 				destRecords.Remove(dup);
 			}
 
 			foreach (var dest in destRecords)
-				try { dest.Value.Delete(); }
-				catch { if (syncParams.StopOnError) throw; }
+				try
+				{
+					logger(String.Format("Deleting {0}", dest.Value.FullName));
+					if (!syncParams.LogOnly)
+						dest.Value.Delete();
+				}
+				catch (Exception ex)
+				{
+					logger(ex.Message);
+					if (syncParams.StopOnError)
+						throw;
+				}
 
 			foreach (var record in sourceRecords.Values)
 			{
@@ -173,8 +183,37 @@ namespace NeoEdit.Records
 				else
 					dest = CreateDirectory(record.Name);
 
-				try { dest.CopyFrom(record); }
-				catch { if (syncParams.StopOnError) throw; }
+				try
+				{
+					logger(String.Format("Copying {0} to {1}", record.FullName, dest.FullName));
+					if (!syncParams.LogOnly)
+						dest.CopyFrom(record);
+				}
+				catch (Exception ex)
+				{
+					logger(ex.Message);
+					if (syncParams.StopOnError)
+						throw;
+				}
+			}
+		}
+
+		public void SyncFrom(Record source, SyncParams syncParams = null, Action<string> logger = null)
+		{
+			if (syncParams == null)
+				syncParams = new SyncParams();
+			if (logger == null)
+				logger = str => { };
+
+			logger(String.Format("Beginning sync from {0} to {1}", FullName, source.FullName));
+			try
+			{
+				DoSyncFrom(source, syncParams, logger);
+				logger("Finished.");
+			}
+			catch
+			{
+				logger("Error.");
 			}
 		}
 

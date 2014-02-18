@@ -14,15 +14,17 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		
 		<Label Content="_Type" Target="{Binding ElementName=type}"/>
 		<ComboBox Grid.Column="1" Name="type"/>
 
 		<CheckBox Grid.Row="1" Grid.ColumnSpan="3" Name="eraseExtra" Content="_Delete extra files"/>
-		<CheckBox Grid.Row="2" Grid.ColumnSpan="3" Name="stopOnError" Content="_Stop on errors"/>
+		<CheckBox Grid.Row="2" Grid.ColumnSpan="3" Name="stopOnError" Content="Stop on _errors"/>
+		<CheckBox Grid.Row="3" Grid.ColumnSpan="3" Name="logOnly" Content="_Log Only"/>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" Columns="2">
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Columns="2">
 			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
 			<Button IsCancel="True" Content="Cancel"/>
 		</UniformGrid>

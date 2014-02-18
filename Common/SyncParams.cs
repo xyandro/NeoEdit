@@ -15,5 +15,6 @@
 		public SyncType Type { get; set; }
 		public bool EraseExtra { get; set; }
 		public bool StopOnError { get; set; }
+		public bool LogOnly { get; set; }
 	}
 }

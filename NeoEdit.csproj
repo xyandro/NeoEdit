@@ -63,6 +63,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
+    <Compile Include="BrowserUI\Dialogs\Log.xaml.cs">
+      <DependentUpon>Log.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BrowserUI\Dialogs\EditSyncParams.xaml.cs">
       <DependentUpon>EditSyncParams.xaml</DependentUpon>
     </Compile>
@@ -184,6 +187,10 @@
     <Page Include="BinaryEditorUI\DisplayValues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BrowserUI\Dialogs\Log.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="BrowserUI\Dialogs\EditSyncParams.xaml">
       <Generator>MSBuild:Compile</Generator>

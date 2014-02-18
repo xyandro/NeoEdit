@@ -16,6 +16,7 @@ namespace NeoEdit.BrowserUI.Dialogs
 			type.SelectedItem = syncParams.Type;
 			eraseExtra.IsChecked = syncParams.EraseExtra;
 			stopOnError.IsChecked = syncParams.StopOnError;
+			logOnly.IsChecked = syncParams.LogOnly;
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)
@@ -23,6 +24,7 @@ namespace NeoEdit.BrowserUI.Dialogs
 			syncParams.Type = (SyncParams.SyncType)type.SelectedItem;
 			syncParams.EraseExtra = eraseExtra.IsChecked == true;
 			syncParams.StopOnError = stopOnError.IsChecked == true;
+			syncParams.LogOnly = logOnly.IsChecked == true;
 			DialogResult = true;
 		}
 	}

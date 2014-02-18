@@ -373,7 +373,8 @@ namespace NeoEdit.BrowserUI
 					if (new EditSyncParams(syncParams).ShowDialog() != true)
 						break;
 
-					syncTarget.SyncFrom(syncSource, syncParams);
+					var log = new Log();
+					syncTarget.SyncFrom(syncSource, syncParams, msg => log.Messages.Add(msg));
 					Refresh();
 					break;
 				case RecordAction.ActionName.Open:
