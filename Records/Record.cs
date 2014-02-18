@@ -208,7 +208,10 @@ namespace NeoEdit.Records
 			logger(String.Format("Beginning sync from {0} to {1}", FullName, source.FullName));
 			try
 			{
-				DoSyncFrom(source, syncParams, logger);
+				if ((source.IsFile) && (IsFile))
+					CopyFrom(source);
+				else
+					DoSyncFrom(source, syncParams, logger);
 				logger("Finished.");
 			}
 			catch
