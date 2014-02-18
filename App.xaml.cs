@@ -8,6 +8,7 @@ namespace NeoEdit
 		App()
 		{
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
+			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NeoEdit.Records.Processes.ProcessRecord).TypeHandle);
 		}
 
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

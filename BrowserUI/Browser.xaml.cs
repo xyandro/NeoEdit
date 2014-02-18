@@ -440,7 +440,7 @@ namespace NeoEdit.BrowserUI
 
 		void SetProcessView()
 		{
-			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.ID, RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Data };
+			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.ID, RecordProperty.PropertyName.Name, RecordProperty.PropertyName.CPU, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.Data };
 			SortProperty = RecordProperty.PropertyName.Name;
 		}
 

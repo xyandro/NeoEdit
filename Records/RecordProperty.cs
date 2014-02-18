@@ -23,6 +23,7 @@ namespace NeoEdit.Records
 			Identify,
 			CompressedSize,
 			ID,
+			CPU,
 		};
 
 		public PropertyName Name { get; private set; }
@@ -48,6 +49,7 @@ namespace NeoEdit.Records
 			new RecordProperty { Name = PropertyName.Identify, MenuHeader = "_Identify", DefaultAscending = true, Type = typeof(String) },
 			new RecordProperty { Name = PropertyName.CompressedSize, MenuHeader = "Compressed Size", DefaultAscending = true, Type = typeof(Int64?) },
 			new RecordProperty { Name = PropertyName.ID, MenuHeader = "ID", DefaultAscending = true, Type = typeof(Int32?) },
+			new RecordProperty { Name = PropertyName.CPU, MenuHeader = "CPU", DefaultAscending = false, Type = typeof(double?) },
 		};
 
 		public static RecordProperty Get(PropertyName name)

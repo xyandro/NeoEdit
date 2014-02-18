@@ -16,6 +16,8 @@
 				try { data = process.MainModule.FileVersionInfo.FileDescription; }
 				catch { }
 			this[RecordProperty.PropertyName.Data] = data;
+			this[RecordProperty.PropertyName.Size] = process.WorkingSet64;
+			this[RecordProperty.PropertyName.CPU] = GetProcessUsage(process.Id);
 		}
 	}
 }
