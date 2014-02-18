@@ -440,7 +440,7 @@ namespace NeoEdit.BrowserUI
 
 		void SetProcessView()
 		{
-			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.ProcessName };
+			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.ID, RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Data };
 			SortProperty = RecordProperty.PropertyName.Name;
 		}
 
@@ -448,9 +448,10 @@ namespace NeoEdit.BrowserUI
 		{
 			switch (((MenuItem)sender).Header.ToString())
 			{
-				case "_Files": SetDiskView(); break;
-				case "_List": SetListView(); break;
-				case "_Registry": SetRegistryView(); break;
+				case "_Files": SetLocation(new DiskRoot()); break;
+				case "_List": SetLocation(new ListRoot()); break;
+				case "_Registry": SetLocation(new RegistryRoot()); break;
+				case "_Processes": SetLocation(new ProcessRoot()); break;
 			}
 		}
 	}
