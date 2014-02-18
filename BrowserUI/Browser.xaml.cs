@@ -383,6 +383,10 @@ namespace NeoEdit.BrowserUI
 						new BinaryEditor(data);
 					}
 					break;
+				case RecordAction.ActionName.View:
+					foreach (var record in records)
+						new ViewImage { FileName = record.FullName };
+					break;
 			}
 		}
 

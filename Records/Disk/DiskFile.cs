@@ -26,11 +26,25 @@ namespace NeoEdit.Records.Disk
 		{
 			get
 			{
-				return new List<RecordAction.ActionName> { 
+				var actions = new List<RecordAction.ActionName> { 
 					RecordAction.ActionName.MD5,
 					RecordAction.ActionName.Identify,
 					RecordAction.ActionName.Open,
-				}.Concat(base.Actions);
+				};
+				switch (GetProperty<string>(RecordProperty.PropertyName.Extension).ToLowerInvariant())
+				{
+					case ".bmp":
+					case ".gif":
+					case ".ico":
+					case ".jpg":
+					case ".jpeg":
+					case ".png":
+					case ".tif":
+					case ".tiff":
+						actions.Add(RecordAction.ActionName.View);
+						break;
+				}
+				return actions.Concat(base.Actions);
 			}
 		}
 

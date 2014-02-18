@@ -20,6 +20,7 @@ namespace NeoEdit.Records
 			SyncTarget,
 			Sync,
 			Open,
+			View,
 		};
 
 		public ActionName Name { get; private set; }
@@ -49,6 +50,7 @@ namespace NeoEdit.Records
 			new RecordAction { Name = ActionName.SyncTarget, MenuHeader = "Sync T_arget", MaxChildren = 1, AccessKey = Key.T, AccessModifiers = ModifierKeys.Control },
 			new RecordAction { Name = ActionName.Sync, MenuHeader = "_Sync", MinChildren = 0, AccessKey = Key.F3 },
 			new RecordAction { Name = ActionName.Open, MenuHeader = "_Open", MaxChildren = 1, AccessKey = Key.Return, AccessModifiers = ModifierKeys.Control },
+			new RecordAction { Name = ActionName.View, MenuHeader = "_View" },
 		};
 
 		public static RecordAction Get(ActionName name)
