@@ -22,6 +22,7 @@ namespace NeoEdit.Records
 			MD5,
 			Identify,
 			CompressedSize,
+			ProcessName,
 		};
 
 		public PropertyName Name { get; private set; }
@@ -46,6 +47,7 @@ namespace NeoEdit.Records
 			new RecordProperty { Name = PropertyName.MD5,             MenuHeader = "_MD5",            DefaultAscending = true,  Type = typeof(String)    },
 			new RecordProperty { Name = PropertyName.Identify,        MenuHeader = "_Identify",       DefaultAscending = true,  Type = typeof(String)    },
 			new RecordProperty { Name = PropertyName.CompressedSize,  MenuHeader = "Compressed Size", DefaultAscending = true,  Type = typeof(Int64?)    },
+			new RecordProperty { Name = PropertyName.ProcessName,     MenuHeader = "_Process Name",   DefaultAscending = true,  Type = typeof(String)    },
 		};
 
 		public static RecordProperty Get(PropertyName name)

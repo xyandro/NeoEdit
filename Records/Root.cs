@@ -28,6 +28,7 @@ namespace NeoEdit.Records
 				yield return new Disk.DiskRoot();
 				yield return new List.ListRoot();
 				yield return new Registry.RegistryRoot();
+				yield return new Processes.ProcessRoot();
 			}
 		}
 	}

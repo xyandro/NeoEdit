@@ -13,6 +13,7 @@ using NeoEdit.Dialogs;
 using NeoEdit.Records;
 using NeoEdit.Records.Disk;
 using NeoEdit.Records.List;
+using NeoEdit.Records.Processes;
 using NeoEdit.Records.Registry;
 
 namespace NeoEdit.BrowserUI
@@ -37,6 +38,8 @@ namespace NeoEdit.BrowserUI
 						SetListView();
 					if (lastRootType == typeof(RegistryRecord))
 						SetRegistryView();
+					if (lastRootType == typeof(ProcessRecord))
+						SetProcessView();
 				}
 
 				Refresh();
@@ -432,6 +435,12 @@ namespace NeoEdit.BrowserUI
 		void SetRegistryView()
 		{
 			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Type, RecordProperty.PropertyName.Data };
+			SortProperty = RecordProperty.PropertyName.Name;
+		}
+
+		void SetProcessView()
+		{
+			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.ProcessName };
 			SortProperty = RecordProperty.PropertyName.Name;
 		}
 
