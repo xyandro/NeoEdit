@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using NeoEdit.Data;
 
 namespace NeoEdit.Records.Disk
 {
@@ -17,9 +18,17 @@ namespace NeoEdit.Records.Disk
 				if (!file.StartsWith(Header))
 					continue;
 
-				using (var output = File.OpenWrite(Path.Combine(magicPath, file.Substring(Header.Length))))
 				using (var stream = typeof(Identifier).Assembly.GetManifestResourceStream(file))
-					stream.CopyTo(output);
+				{
+					byte[] data;
+					using (var ms = new MemoryStream())
+					{
+						stream.CopyTo(ms);
+						data = ms.ToArray();
+					}
+					data = Compression.Decompress(Compression.Type.GZip, data);
+					File.WriteAllBytes(Path.Combine(magicPath, file.Substring(Header.Length)), data);
+				}
 			}
 		}
 
