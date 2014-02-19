@@ -268,8 +268,8 @@ namespace NeoEdit.BrowserUI
 									Title = "Warning",
 									Text = "File already exists.  Overwrite?",
 									Options = Message.OptionsEnum.YesNo,
-									DefaultYes = Message.OptionsEnum.Yes,
-									DefaultNo = Message.OptionsEnum.No,
+									DefaultAccept = Message.OptionsEnum.Yes,
+									DefaultCancel = Message.OptionsEnum.No,
 								}.Show() != Message.OptionsEnum.Yes)
 									break;
 								existingRecord.Delete();
@@ -286,8 +286,8 @@ namespace NeoEdit.BrowserUI
 							Title = "Confirm",
 							Text = "Are you sure you want to delete these items?",
 							Options = Message.OptionsEnum.YesNo,
-							DefaultYes = Message.OptionsEnum.Yes,
-							DefaultNo = Message.OptionsEnum.No,
+							DefaultAccept = Message.OptionsEnum.Yes,
+							DefaultCancel = Message.OptionsEnum.No,
 						}.Show() == Message.OptionsEnum.Yes)
 						{
 							foreach (var record in records)

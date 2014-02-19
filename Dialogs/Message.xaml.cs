@@ -12,9 +12,9 @@ namespace NeoEdit.Dialogs
 		[DepProp]
 		public OptionsEnum Options { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public OptionsEnum DefaultYes { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
+		public OptionsEnum DefaultAccept { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public OptionsEnum DefaultNo { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
+		public OptionsEnum DefaultCancel { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
 
 		public enum OptionsEnum
 		{
@@ -61,12 +61,12 @@ namespace NeoEdit.Dialogs
 			uiHelper = new UIHelper<Message>(this);
 			InitializeComponent();
 
-			Answer = DefaultNo;
+			Answer = DefaultCancel;
 
 			Loaded += (s, e) => SetupButtons();
 			uiHelper.AddCallback(a => a.Options, (o, n) => SetupButtons());
-			uiHelper.AddCallback(a => a.DefaultYes, (o, n) => SetupButtons());
-			uiHelper.AddCallback(a => a.DefaultNo, (o, n) => SetupButtons());
+			uiHelper.AddCallback(a => a.DefaultAccept, (o, n) => SetupButtons());
+			uiHelper.AddCallback(a => a.DefaultCancel, (o, n) => SetupButtons());
 		}
 
 		void SetupButtons()
@@ -78,11 +78,16 @@ namespace NeoEdit.Dialogs
 				if ((!IsPowerOfTwo((int)option)) || ((Options & option) == 0))
 					continue;
 
+				if (DefaultAccept == OptionsEnum.None)
+					DefaultAccept = option;
+				if (DefaultCancel == OptionsEnum.None)
+					DefaultCancel = option;
+
 				var button = new Button
 				{
 					Content = buttonContent[option],
-					IsDefault = option == DefaultYes,
-					IsCancel = option == DefaultNo,
+					IsDefault = option == DefaultAccept,
+					IsCancel = option == DefaultCancel,
 				};
 				buttonActions[button] = option;
 				buttons.Children.Add(button);

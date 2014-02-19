@@ -45,8 +45,8 @@ namespace NeoEdit.BinaryEditorUI.Dialogs
 				Title = "Please confirm",
 				Text = "This value and the password together are required to generate the key.  Are you sure you want to change it?",
 				Options = Message.OptionsEnum.YesNo,
-				DefaultYes = Message.OptionsEnum.Yes,
-				DefaultNo = Message.OptionsEnum.No,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 

@@ -875,8 +875,6 @@ namespace NeoEdit.BinaryEditorUI
 						Title = "Info",
 						Text = "Not found.",
 						Options = Message.OptionsEnum.Ok,
-						DefaultYes = Message.OptionsEnum.Ok,
-						DefaultNo = Message.OptionsEnum.Ok,
 					}.Show();
 					return;
 				}
@@ -888,8 +886,8 @@ namespace NeoEdit.BinaryEditorUI
 						Title = "Info",
 						Text = "Not found.  Search from beginning?",
 						Options = Message.OptionsEnum.YesNo,
-						DefaultYes = Message.OptionsEnum.Yes,
-						DefaultNo = Message.OptionsEnum.No,
+						DefaultAccept = Message.OptionsEnum.Yes,
+						DefaultCancel = Message.OptionsEnum.No,
 					}.Show() == Message.OptionsEnum.Yes)
 					{
 						index = -1;
@@ -903,8 +901,8 @@ namespace NeoEdit.BinaryEditorUI
 						Title = "Info",
 						Text = "Not found.  Search from end?",
 						Options = Message.OptionsEnum.YesNo,
-						DefaultYes = Message.OptionsEnum.Yes,
-						DefaultNo = Message.OptionsEnum.No,
+						DefaultAccept = Message.OptionsEnum.Yes,
+						DefaultCancel = Message.OptionsEnum.No,
 					}.Show() == Message.OptionsEnum.Yes)
 					{
 						index = Data.Length;
