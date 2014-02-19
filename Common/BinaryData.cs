@@ -28,16 +28,36 @@ namespace NeoEdit.Common
 			get { return data.Length; }
 		}
 
-		public long IndexOf(byte[] value, long start)
+		public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
 		{
-			var min = value.Select(val => Array.IndexOf(data, val, (int)start)).Where(val => val != -1).Cast<int?>().Min();
-			return min.HasValue ? min.Value : -1;
-		}
+			start = end = -1;
 
-		public long LastIndexOf(byte[] value, long start)
-		{
-			var max = value.Select(val => Array.LastIndexOf(data, val, (int)start)).Where(val => val != -1).Cast<int?>().Max();
-			return max.HasValue ? max.Value : -1;
+			Func<byte[], long, byte[], bool, long> findFunc;
+			Func<long, long, bool> compareFunc;
+			if (forward)
+			{
+				++index;
+				findFunc = Helpers.ForwardArraySearch;
+				compareFunc = (a, b) => a < b;
+			}
+			else
+			{
+				--index;
+				findFunc = Helpers.BackwardArraySearch;
+				compareFunc = (a, b) => a > b;
+			}
+
+			for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
+			{
+				var found = findFunc(data, index, currentFind.Data[findPos], currentFind.IgnoreCase[findPos]);
+				if ((found != -1) && ((start == -1) || (compareFunc(found, start))))
+				{
+					start = found;
+					end = start + currentFind.Data[findPos].Length;
+				}
+			}
+
+			return start != -1;
 		}
 
 		public void Replace(long index, long count, byte[] bytes)
