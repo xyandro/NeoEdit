@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 
@@ -19,6 +20,8 @@ namespace NeoEdit.Records.Processes
 			else
 				try { data = process.MainModule.FileVersionInfo.FileDescription; }
 				catch { }
+			if (!String.IsNullOrWhiteSpace(process.MainWindowTitle))
+				data += " (" + process.MainWindowTitle + ")";
 			this[RecordProperty.PropertyName.Data] = data;
 			this[RecordProperty.PropertyName.Size] = process.WorkingSet64;
 			this[RecordProperty.PropertyName.CPU] = GetProcessUsage(process.Id);
@@ -30,6 +33,7 @@ namespace NeoEdit.Records.Processes
 			{
 				return new List<RecordAction.ActionName> { 
 					RecordAction.ActionName.Open,
+					RecordAction.ActionName.Delete,
 				}.Concat(base.Actions);
 			}
 		}
@@ -39,6 +43,12 @@ namespace NeoEdit.Records.Processes
 		public override Common.IBinaryData Read()
 		{
 			return new ProcessBinaryData(GetProperty<int>(RecordProperty.PropertyName.ID));
+		}
+
+		public override void Delete()
+		{
+			var process = System.Diagnostics.Process.GetProcessById(GetProperty<int>(RecordProperty.PropertyName.ID));
+			process.Kill();
 		}
 	}
 }
