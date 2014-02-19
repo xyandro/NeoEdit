@@ -219,21 +219,10 @@ namespace NeoEdit.Records.Processes
 		public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
 		{
 			start = end = -1;
+			if (!forward)
+				return false;
 
-			Func<byte[], long, byte[], bool, long> findFunc;
-			Func<long, long, bool> compareFunc;
-			if (forward)
-			{
-				++index;
-				findFunc = Helpers.ForwardArraySearch;
-				compareFunc = (a, b) => a < b;
-			}
-			else
-			{
-				--index;
-				findFunc = Helpers.BackwardArraySearch;
-				compareFunc = (a, b) => a > b;
-			}
+			++index;
 			if ((index < 0) || (index >= Length))
 				return false;
 
@@ -249,8 +238,8 @@ namespace NeoEdit.Records.Processes
 					{
 						for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
 						{
-							var found = findFunc(cache, index - cacheStart, currentFind.Data[findPos], currentFind.IgnoreCase[findPos]);
-							if ((found != -1) && ((start == -1) || (compareFunc(found, start))))
+							var found = Helpers.ForwardArraySearch(cache, index - cacheStart, currentFind.Data[findPos], currentFind.IgnoreCase[findPos]);
+							if ((found != -1) && ((start == -1) || (found < start)))
 							{
 								start = found + cacheStart;
 								end = start + currentFind.Data[findPos].Length;
