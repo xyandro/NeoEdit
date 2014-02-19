@@ -856,13 +856,63 @@ namespace NeoEdit.BinaryEditorUI
 			if (currentFind == null)
 				return;
 
-			long start = SelStart;
-			long end = SelEnd;
-			if (Data.Find(currentFind, SelStart, out start, out end, forward))
+			long index = SelStart, start, end;
+
+			while (true)
 			{
-				EnsureVisible(start);
-				Pos1 = end;
-				Pos2 = start;
+				if (Data.Find(currentFind, index, out start, out end, forward))
+				{
+					EnsureVisible(start);
+					Pos1 = end;
+					Pos2 = start;
+					return;
+				}
+
+				if (((forward) && (index <= 0)) || ((!forward) && (index >= Data.Length)))
+				{
+					new Message
+					{
+						Title = "Info",
+						Text = "Not found.",
+						Options = Message.OptionsEnum.Ok,
+						DefaultYes = Message.OptionsEnum.Ok,
+						DefaultNo = Message.OptionsEnum.Ok,
+					}.Show();
+					return;
+				}
+
+				if (forward)
+				{
+					if (new Message
+					{
+						Title = "Info",
+						Text = "Not found.  Search from beginning?",
+						Options = Message.OptionsEnum.YesNo,
+						DefaultYes = Message.OptionsEnum.Yes,
+						DefaultNo = Message.OptionsEnum.No,
+					}.Show() == Message.OptionsEnum.Yes)
+					{
+						index = -1;
+						continue;
+					}
+				}
+				else
+				{
+					if (new Message
+					{
+						Title = "Info",
+						Text = "Not found.  Search from end?",
+						Options = Message.OptionsEnum.YesNo,
+						DefaultYes = Message.OptionsEnum.Yes,
+						DefaultNo = Message.OptionsEnum.No,
+					}.Show() == Message.OptionsEnum.Yes)
+					{
+						index = Data.Length;
+						continue;
+					}
+				}
+
+				return;
 			}
 		}
 	}
