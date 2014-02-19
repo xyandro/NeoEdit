@@ -42,6 +42,7 @@ namespace NeoEdit.BinaryEditorUI
 			Sign_DSA,
 			Verify_DSA,
 			View_Values,
+			View_Refresh,
 		}
 
 		[DepProp]

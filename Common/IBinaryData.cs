@@ -4,6 +4,8 @@
 
 	public interface IBinaryData
 	{
+		bool CanInsert();
+		void Refresh();
 		event IBinaryDataChangedDelegate Changed;
 		byte[] GetAllBytes();
 		byte[] GetSubset(long index, long count);

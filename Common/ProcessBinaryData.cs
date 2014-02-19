@@ -48,13 +48,20 @@ namespace NeoEdit.Common
 			return new Opener(this);
 		}
 
-		public event IBinaryDataChangedDelegate Changed { add { } remove { } }
+		IBinaryDataChangedDelegate changed;
+		public event IBinaryDataChangedDelegate Changed
+		{
+			add { changed += value; }
+			remove { changed -= value; }
+		}
 
 		readonly int pid;
 		public ProcessBinaryData(int PID)
 		{
 			pid = PID;
 		}
+
+		public bool CanInsert() { return false; }
 
 		int pauseCount = 0;
 		void PauseProcess()
@@ -94,7 +101,7 @@ namespace NeoEdit.Common
 			if (openCount++ != 0)
 				return;
 
-			handle = Interop.OpenProcess(Interop.ProcessAccessFlags.QueryInformation | Interop.ProcessAccessFlags.VMRead | Interop.ProcessAccessFlags.VMOperation, false, pid);
+			handle = Interop.OpenProcess(Interop.ProcessAccessFlags.QueryInformation | Interop.ProcessAccessFlags.VMRead | Interop.ProcessAccessFlags.VMWrite | Interop.ProcessAccessFlags.VMOperation, false, pid);
 			if (handle == IntPtr.Zero)
 				throw new Win32Exception();
 		}
@@ -111,25 +118,25 @@ namespace NeoEdit.Common
 		long cacheStart, cacheEnd;
 		bool cacheHasData;
 		byte[] cache = new byte[65536];
-		void SetCache(long address, int minBytes)
+		void SetCache(long index, int count)
 		{
-			if ((address >= cacheStart) && (address + minBytes <= cacheEnd))
+			if ((index >= cacheStart) && (index + count <= cacheEnd))
 				return;
 
-			if (minBytes > cache.Length)
-				throw new ArgumentException("minBytes");
+			if (count > cache.Length)
+				throw new ArgumentException("count");
 
 			using (GetPauser())
 			using (GetOpener())
 			{
-				cacheStart = cacheEnd = address;
+				cacheStart = cacheEnd = index;
 				cacheHasData = false;
 
-				while (cacheEnd - cacheStart < minBytes)
+				while (cacheEnd - cacheStart < count)
 				{
 					bool hasData;
 					Interop.MEMORY_BASIC_INFORMATION memInfo;
-					if (Interop.VirtualQueryEx(handle, new IntPtr(address), out memInfo, Marshal.SizeOf(typeof(Interop.MEMORY_BASIC_INFORMATION))))
+					if (Interop.VirtualQueryEx(handle, new IntPtr(index), out memInfo, Marshal.SizeOf(typeof(Interop.MEMORY_BASIC_INFORMATION))))
 					{
 						hasData = (memInfo.State & Interop.MEMORY_BASIC_INFORMATION_STATE.MEM_COMMIT) != 0;
 						cacheEnd = memInfo.BaseAddress.ToInt64() + memInfo.RegionSize.ToInt64();
@@ -143,23 +150,23 @@ namespace NeoEdit.Common
 						cacheEnd = long.MaxValue;
 					}
 
-					if ((!hasData) && (!cacheHasData) && (cacheEnd - cacheStart >= minBytes))
+					if ((!hasData) && (!cacheHasData) && (cacheEnd - cacheStart >= count))
 						return;
 
 					cacheHasData = true;
 					cacheEnd = Math.Min(cacheEnd, cacheStart + cache.Length);
 
 					if (!hasData)
-						Array.Clear(cache, (int)(address - cacheStart), (int)(cacheEnd - address));
+						Array.Clear(cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 					else
 						using (Interop.RemoveGuard(handle, memInfo))
 						{
 							var pin = GCHandle.Alloc(cache, GCHandleType.Pinned);
 							try
 							{
-								var ptr = new IntPtr(pin.AddrOfPinnedObject().ToInt64() + address - cacheStart);
+								var ptr = new IntPtr(pin.AddrOfPinnedObject().ToInt64() + index - cacheStart);
 								IntPtr read;
-								if (!Interop.ReadProcessMemory(handle, new IntPtr(address), ptr, (int)(cacheEnd - address), out read))
+								if (!Interop.ReadProcessMemory(handle, new IntPtr(index), ptr, (int)(cacheEnd - index), out read))
 									throw new Win32Exception();
 							}
 							finally
@@ -168,7 +175,7 @@ namespace NeoEdit.Common
 							}
 						}
 
-					address = cacheEnd;
+					index = cacheEnd;
 				}
 			}
 		}
@@ -245,7 +252,51 @@ namespace NeoEdit.Common
 
 		public void Replace(long index, long count, byte[] bytes)
 		{
-			throw new NotImplementedException();
+			if (count != bytes.Length)
+				throw new Exception("Cannot change byte count.");
+
+			using (GetPauser())
+			using (GetOpener())
+			{
+				while (bytes.Length > 0)
+				{
+					Interop.MEMORY_BASIC_INFORMATION memInfo;
+					if (Interop.VirtualQueryEx(handle, new IntPtr(index), out memInfo, Marshal.SizeOf(typeof(Interop.MEMORY_BASIC_INFORMATION))))
+					{
+						if ((memInfo.State & Interop.MEMORY_BASIC_INFORMATION_STATE.MEM_COMMIT) == 0)
+							throw new Exception("Cannot write to this memory");
+					}
+					else
+					{
+						if (Marshal.GetLastWin32Error() != 87)
+							throw new Win32Exception();
+
+						throw new Exception("Cannot write to this memory");
+					}
+
+					var end = memInfo.BaseAddress.ToInt64() + memInfo.RegionSize.ToInt64();
+					var numBytes = (int)Math.Min(bytes.Length, end - index);
+
+					using (Interop.RemoveGuard(handle, memInfo))
+					{
+						IntPtr written;
+						if (!Interop.WriteProcessMemory(handle, new IntPtr(index), bytes, numBytes, out written))
+							throw new Win32Exception();
+					}
+
+					index += numBytes;
+					bytes = bytes.Skip(numBytes).ToArray();
+				}
+			}
+
+			Refresh();
+			changed();
+		}
+
+		public void Refresh()
+		{
+			cacheStart = cacheEnd = 0;
+			changed();
 		}
 
 		public byte[] GetAllBytes()
@@ -258,18 +309,9 @@ namespace NeoEdit.Common
 			using (GetPauser())
 			{
 				var result = new byte[count];
-				while (count > 0)
-				{
-					SetCache(index, 1);
-					var len = Math.Min(count, cacheEnd - index);
-
-					if (cache != null)
-						Array.Copy(cache, index - cacheStart, result, result.Length - count, len);
-
-					index += len;
-					count -= len;
-				}
-
+				SetCache(index, (int)count);
+				if (cacheHasData)
+					Array.Copy(cache, index - cacheStart, result, 0, count);
 				return result;
 			}
 		}
@@ -351,7 +393,6 @@ namespace NeoEdit.Common
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
 		[DllImport("kernel32.dll", SetLastError = true)]
-		//[return: MarshalAs(UnmanagedType.Bool)]
 		public static extern bool CloseHandle(IntPtr hObject);
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern bool VirtualQueryEx(IntPtr hProcess, IntPtr lpAddress, out MEMORY_BASIC_INFORMATION lpBuffer, int dwLength);
@@ -359,6 +400,8 @@ namespace NeoEdit.Common
 		public static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, PageProtectEnum flNewProtect, out PageProtectEnum lpflOldProtect);
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int dwSize, out IntPtr lpNumberOfBytesRead);
+		[DllImport("kernel32.dll", SetLastError = true)]
+		public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out IntPtr lpNumberOfBytesWritten);
 
 		public class OnCloseAction : IDisposable
 		{

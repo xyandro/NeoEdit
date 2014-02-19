@@ -16,6 +16,7 @@
 		<common:UICommand x:Key="Edit_Goto" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Goto}" Header="_Goto" Key="G" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Insert" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Edit_Insert}" Header="_Insert" Key="Insert" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="View_Values" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.View_Values}" Header="_Values" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="View_Refresh" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.View_Refresh}" Header="_Refresh" Key="F5" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Checksum_MD5" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Checksum_MD5}" Header="_MD5" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Checksum_SHA1" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Checksum_SHA1}" Header="SHA_1" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Checksum_SHA256" Enum="{x:Static Member=binaryEditorUI:BinaryEditor+Commands.Checksum_SHA256}" Header="SHA_256" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -85,6 +86,7 @@
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Command="{StaticResource View_Values}" IsChecked="{Binding ShowValues, ElementName=self}"/>
+				<MenuItem Command="{StaticResource View_Refresh}"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="C_hecksum">

@@ -18,6 +18,9 @@ namespace NeoEdit.Common
 			data = _data;
 		}
 
+		public bool CanInsert() { return true; }
+		public void Refresh() { }
+
 		public byte this[long index]
 		{
 			get { return data[index]; }

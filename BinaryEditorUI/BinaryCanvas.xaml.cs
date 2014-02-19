@@ -835,7 +835,13 @@ namespace NeoEdit.BinaryEditorUI
 							Pos1 = Pos2 = getNumDialog.Value;
 					}
 					break;
-				case BinaryEditor.Commands.Edit_Insert: Insert = !Insert; break;
+				case BinaryEditor.Commands.Edit_Insert:
+					if (Data.CanInsert())
+						Insert = !Insert;
+					break;
+				case BinaryEditor.Commands.View_Refresh:
+					Data.Refresh();
+					break;
 			}
 		}
 
