@@ -41,7 +41,7 @@ namespace NeoEdit.Records.Processes
 			var protect = memInfo.Protect;
 			if ((protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD) != 0)
 				protect ^= ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD;
-			var extra = protect & (ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD - 1);
+			var extra = protect & ~(ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD - 1);
 			if (write)
 			{
 				if ((protect & (ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE | ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE_READ | ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE_WRITECOPY)) != 0)
@@ -154,7 +154,7 @@ namespace NeoEdit.Records.Processes
 					if (ProcessRecord.ProcessInterop.VirtualQueryEx(handle, new IntPtr(index), out memInfo, Marshal.SizeOf(typeof(ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION))))
 					{
 						hasData = (memInfo.State & ProcessRecord.ProcessInterop.MemoryState.MEM_COMMIT) != 0;
-						if ((hasData) && ((memInfo.Type & ProcessRecord.ProcessInterop.MemType.MEM_MAPPED) == 0))
+						if ((hasData) && ((memInfo.Type & ProcessRecord.ProcessInterop.MemType.MEM_MAPPED) != 0))
 						{
 							if ((memInfo.Protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_NOACCESS) != 0)
 								hasData = false;
