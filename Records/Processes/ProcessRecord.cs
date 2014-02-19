@@ -142,6 +142,14 @@ namespace NeoEdit.Records.Processes
 			}
 
 			[Flags]
+			public enum MemType : uint
+			{
+				MEM_IMAGE = 0x1000000,
+				MEM_MAPPED = 0x40000,
+				MEM_PRIVATE = 0x20000
+			}
+
+			[Flags]
 			public enum MemoryState : uint
 			{
 				MEM_COMMIT = 0x1000,
@@ -158,7 +166,7 @@ namespace NeoEdit.Records.Processes
 				public IntPtr RegionSize;
 				public MemoryState State;
 				public PageProtect Protect;
-				public uint Type;
+				public MemType Type;
 			}
 
 			[DllImport("kernel32.dll", SetLastError = true)]
@@ -175,6 +183,8 @@ namespace NeoEdit.Records.Processes
 			public static extern bool VirtualQueryEx(IntPtr hProcess, IntPtr lpAddress, out MEMORY_BASIC_INFORMATION lpBuffer, int dwLength);
 			[DllImport("kernel32.dll", SetLastError = true)]
 			public static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, PageProtect flNewProtect, out PageProtect lpflOldProtect);
+			[DllImport("kernel32.dll", SetLastError = true)]
+			public static extern bool FlushInstructionCache(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr dwSize);
 			[DllImport("kernel32.dll", SetLastError = true)]
 			public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int dwSize, out IntPtr lpNumberOfBytesRead);
 			[DllImport("kernel32.dll", SetLastError = true)]

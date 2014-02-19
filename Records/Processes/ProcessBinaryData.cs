@@ -22,28 +22,56 @@ namespace NeoEdit.Records.Processes
 			}
 		}
 
-		OnCloseAction GetSuspender()
+		OnCloseAction Suspend()
 		{
 			SuspendProcess();
 			return new OnCloseAction(() => ResumeProcess());
 		}
 
-		OnCloseAction GetOpener()
+		OnCloseAction Open()
 		{
 			OpenProcess();
 			return new OnCloseAction(() => CloseProcess());
 		}
 
-		OnCloseAction GetSetReadWrite(ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION memInfo)
+		OnCloseAction SetProtect(ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION memInfo, bool write)
 		{
 			Action action = () => { };
 
-			if ((memInfo.Protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD) != 0)
+			var protect = memInfo.Protect;
+			if ((protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD) != 0)
+				protect ^= ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD;
+			var extra = protect & (ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD - 1);
+			if (write)
+			{
+				if ((protect & (ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE | ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE_READ | ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE_WRITECOPY)) != 0)
+					protect = ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE_READWRITE;
+				if ((protect & (ProcessRecord.ProcessInterop.PageProtect.PAGE_NOACCESS | ProcessRecord.ProcessInterop.PageProtect.PAGE_READONLY | ProcessRecord.ProcessInterop.PageProtect.PAGE_WRITECOPY)) != 0)
+					protect = ProcessRecord.ProcessInterop.PageProtect.PAGE_READWRITE;
+			}
+			else
+			{
+				if ((protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_NOACCESS) != 0)
+					protect = ProcessRecord.ProcessInterop.PageProtect.PAGE_READONLY;
+			}
+			protect |= extra;
+
+			// Can't change protection on mapped memory
+			if ((memInfo.Type & ProcessRecord.ProcessInterop.MemType.MEM_MAPPED) != 0)
+				protect = memInfo.Protect;
+
+			if (memInfo.Protect != protect)
 			{
 				ProcessRecord.ProcessInterop.PageProtect oldProtect;
-				if (!ProcessRecord.ProcessInterop.VirtualProtectEx(handle, memInfo.BaseAddress, memInfo.RegionSize, ProcessRecord.ProcessInterop.PageProtect.PAGE_READWRITE, out oldProtect))
+				if (!ProcessRecord.ProcessInterop.VirtualProtectEx(handle, memInfo.BaseAddress, memInfo.RegionSize, protect, out oldProtect))
 					throw new Win32Exception();
-				action = () => ProcessRecord.ProcessInterop.VirtualProtectEx(handle, memInfo.BaseAddress, memInfo.RegionSize, memInfo.Protect, out oldProtect);
+				action = () =>
+				{
+					if (!ProcessRecord.ProcessInterop.VirtualProtectEx(handle, memInfo.BaseAddress, memInfo.RegionSize, memInfo.Protect, out oldProtect))
+						throw new Win32Exception();
+					if (!ProcessRecord.ProcessInterop.FlushInstructionCache(handle, memInfo.BaseAddress, memInfo.RegionSize))
+						throw new Win32Exception();
+				};
 			}
 
 			return new OnCloseAction(action);
@@ -113,8 +141,8 @@ namespace NeoEdit.Records.Processes
 			if (count > cache.Length)
 				throw new ArgumentException("count");
 
-			using (GetSuspender())
-			using (GetOpener())
+			using (Suspend())
+			using (Open())
 			{
 				cacheStart = cacheEnd = index;
 				cacheHasData = false;
@@ -126,6 +154,11 @@ namespace NeoEdit.Records.Processes
 					if (ProcessRecord.ProcessInterop.VirtualQueryEx(handle, new IntPtr(index), out memInfo, Marshal.SizeOf(typeof(ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION))))
 					{
 						hasData = (memInfo.State & ProcessRecord.ProcessInterop.MemoryState.MEM_COMMIT) != 0;
+						if ((hasData) && ((memInfo.Type & ProcessRecord.ProcessInterop.MemType.MEM_MAPPED) == 0))
+						{
+							if ((memInfo.Protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_NOACCESS) != 0)
+								hasData = false;
+						}
 						cacheEnd = memInfo.BaseAddress.ToInt64() + memInfo.RegionSize.ToInt64();
 					}
 					else
@@ -146,7 +179,7 @@ namespace NeoEdit.Records.Processes
 					if (!hasData)
 						Array.Clear(cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 					else
-						using (GetSetReadWrite(memInfo))
+						using (SetProtect(memInfo, false))
 						{
 							var pin = GCHandle.Alloc(cache, GCHandleType.Pinned);
 							try
@@ -206,8 +239,8 @@ namespace NeoEdit.Records.Processes
 
 			var findLen = currentFind.Data.Select(bytes => bytes.Length).Max();
 
-			using (GetSuspender())
-			using (GetOpener())
+			using (Suspend())
+			using (Open())
 			{
 				while (index < Length)
 				{
@@ -242,8 +275,8 @@ namespace NeoEdit.Records.Processes
 			if (count != bytes.Length)
 				throw new Exception("Cannot change byte count.");
 
-			using (GetSuspender())
-			using (GetOpener())
+			using (Suspend())
+			using (Open())
 			{
 				while (bytes.Length > 0)
 				{
@@ -264,7 +297,7 @@ namespace NeoEdit.Records.Processes
 					var end = memInfo.BaseAddress.ToInt64() + memInfo.RegionSize.ToInt64();
 					var numBytes = (int)Math.Min(bytes.Length, end - index);
 
-					using (GetSetReadWrite(memInfo))
+					using (SetProtect(memInfo, true))
 					{
 						IntPtr written;
 						if (!ProcessRecord.ProcessInterop.WriteProcessMemory(handle, new IntPtr(index), bytes, numBytes, out written))
@@ -293,7 +326,7 @@ namespace NeoEdit.Records.Processes
 
 		public byte[] GetSubset(long index, long count)
 		{
-			using (GetSuspender())
+			using (Suspend())
 			{
 				var result = new byte[count];
 				SetCache(index, (int)count);
