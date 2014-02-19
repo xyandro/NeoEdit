@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Timers;
 
 namespace NeoEdit.Records.Processes
@@ -22,7 +21,17 @@ namespace NeoEdit.Records.Processes
 					lastTicks = curTicks;
 					lastUsage = curUsage;
 					curTicks = DateTime.Now.Ticks;
-					curUsage = System.Diagnostics.Process.GetProcesses().Where(process => process.Id != 0).ToDictionary(process => process.Id, process => process.TotalProcessorTime.Ticks);
+					curUsage = new Dictionary<int, long>();
+					foreach (var process in System.Diagnostics.Process.GetProcesses())
+					{
+						try
+						{
+							if (process.Id == 0)
+								continue;
+							curUsage[process.Id] = process.TotalProcessorTime.Ticks;
+						}
+						catch { }
+					}
 				}
 			};
 			timer.Start();
@@ -37,7 +46,7 @@ namespace NeoEdit.Records.Processes
 				if ((!lastUsage.ContainsKey(PID)) || (!curUsage.ContainsKey(PID)))
 					return 0;
 
-				return (double)(curUsage[PID] - lastUsage[PID]) / (curTicks - lastTicks) * 100;
+				return Math.Round((double)(curUsage[PID] - lastUsage[PID]) / (curTicks - lastTicks) * 100, 1);
 			}
 		}
 
