@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Common;
 
 namespace NeoEdit.Records.Processes
 {
@@ -34,11 +33,23 @@ namespace NeoEdit.Records.Processes
 				return new List<RecordAction.ActionName> { 
 					RecordAction.ActionName.Open,
 					RecordAction.ActionName.Delete,
+					RecordAction.ActionName.Suspend,
+					RecordAction.ActionName.Resume,
 				}.Concat(base.Actions);
 			}
 		}
 
 		public override bool IsFile { get { return true; } }
+
+		public override void Suspend()
+		{
+			ProcessRecord.SuspendProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
+		}
+
+		public override void Resume()
+		{
+			ProcessRecord.ResumeProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
+		}
 
 		public override Common.IBinaryData Read()
 		{

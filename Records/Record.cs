@@ -94,6 +94,8 @@ namespace NeoEdit.Records
 		}
 
 		public virtual void Delete() { }
+		public virtual void Suspend() { }
+		public virtual void Resume() { }
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
 

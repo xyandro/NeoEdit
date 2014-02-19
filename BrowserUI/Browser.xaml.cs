@@ -296,6 +296,14 @@ namespace NeoEdit.BrowserUI
 						Refresh();
 					}
 					break;
+				case RecordAction.ActionName.Suspend:
+					foreach (var record in records)
+						record.Suspend();
+					break;
+				case RecordAction.ActionName.Resume:
+					foreach (var record in records)
+						record.Resume();
+					break;
 				case RecordAction.ActionName.Copy:
 					Clipboard.Current.Set(records, false);
 					break;
