@@ -44,6 +44,13 @@ namespace NeoEdit.Common
 		const string placeHolder = "##MATCH##";
 		string GetExpression(string expression, List<object> value)
 		{
+			if ((expression.Length > 0) && (expression[0] == '!'))
+			{
+				if (System.Diagnostics.Debugger.IsAttached)
+					System.Diagnostics.Debugger.Break();
+				expression = expression.Substring(1);
+			}
+
 			var matches = termRE.Matches(expression).Cast<Match>().Select(match => match.Groups[1].Value).ToList();
 			expression = termRE.Replace(expression, placeHolder);
 			expression = numRE.Replace(expression, match => "'" + match.Value + "'");
@@ -62,13 +69,6 @@ namespace NeoEdit.Common
 
 			if (binaryOperator.Any(a => a.Any(b => b == expression)))
 				expression = String.Join(expression, Enumerable.Range(0, value.Count).Select(a => String.Format("[{0}]", a)));
-
-			if ((expression.Length > 0) && (expression[0] == '!'))
-			{
-				if (System.Diagnostics.Debugger.IsAttached)
-					System.Diagnostics.Debugger.Break();
-				expression = expression.Substring(1);
-			}
 
 			return expression;
 		}

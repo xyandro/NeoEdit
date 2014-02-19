@@ -108,6 +108,18 @@ namespace NeoEdit.Common
 						return Enum.GetValues(type);
 				}
 			}
+			if (targetType == typeof(Int64))
+			{
+				TryStringConversion<Int64>(ref result, Int64.TryParse);
+				if ((result is string) && ((result as string).StartsWith("0x")))
+				{
+					Int64 value;
+					if (Int64.TryParse((result as string).Substring(2), NumberStyles.HexNumber, null, out value))
+						result = value;
+				}
+				try { return System.Convert.ToInt64(result); }
+				catch { return null; }
+			}
 
 			return result;
 		}
