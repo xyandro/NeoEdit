@@ -848,23 +848,11 @@ namespace NeoEdit.BinaryEditorUI
 		{
 			start = end = -1;
 			var offset = forward ? 1 : -1;
-			Func<byte, long, long> findFunc;
+			Func<byte[], long, long> findFunc;
 			if (forward)
-			{
-				findFunc = (_find, _start) =>
-				{
-					var _pos = Data.IndexOf(_find, _start);
-					if (_pos == -1)
-						return long.MaxValue;
-					return _pos;
-				};
-			}
+				findFunc = (_find, _start) => Data.IndexOf(_find, _start);
 			else
-			{
 				findFunc = (_find, _start) => Data.LastIndexOf(_find, _start);
-			}
-			var selectFunc = forward ? (Func<long, long, long>)Math.Min : Math.Max;
-			var invalid = forward ? long.MaxValue : -1;
 
 			var pos = index;
 			while (true)
@@ -873,24 +861,22 @@ namespace NeoEdit.BinaryEditorUI
 				if ((pos < 0) || (pos >= Data.Length))
 					return false;
 
-				var usePos = invalid;
+				var find = new List<byte>();
 				for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
 				{
-					var ignoreCase = currentFind.IgnoreCase[findPos];
-					var findData = currentFind.Data[findPos];
-
-					usePos = selectFunc(usePos, findFunc(findData[0], pos));
-					if (ignoreCase)
+					find.Add(currentFind.Data[findPos][0]);
+					if (currentFind.IgnoreCase[findPos])
 					{
-						if ((findData[0] >= 'a') && (findData[0] <= 'z'))
-							usePos = selectFunc(usePos, findFunc((byte)(findData[0] - 'a' + 'A'), pos));
-						else if ((findData[0] >= 'A') && (findData[0] <= 'Z'))
-							usePos = selectFunc(usePos, findFunc((byte)(findData[0] - 'A' + 'a'), pos));
+						if ((currentFind.Data[findPos][0] >= 'a') && (currentFind.Data[findPos][0] <= 'z'))
+							find.Add((byte)(currentFind.Data[findPos][0] - 'a' + 'A'));
+						else if ((currentFind.Data[findPos][0] >= 'A') && (currentFind.Data[findPos][0] <= 'Z'))
+							find.Add((byte)(currentFind.Data[findPos][0] - 'A' + 'a'));
 					}
 				}
 
-				pos = usePos;
-				if ((usePos < 0) || (usePos >= Data.Length))
+				var findArray = find.Distinct().ToArray();
+				pos = findFunc(findArray, pos);
+				if (pos == -1)
 					return false;
 
 				for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)

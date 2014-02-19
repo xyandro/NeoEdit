@@ -28,14 +28,16 @@ namespace NeoEdit.Common
 			get { return data.Length; }
 		}
 
-		public long IndexOf(byte value, long start)
+		public long IndexOf(byte[] value, long start)
 		{
-			return Array.IndexOf(data, value, (int)start);
+			var min = value.Select(val => Array.IndexOf(data, val, (int)start)).Where(val => val != -1).Cast<int?>().Min();
+			return min.HasValue ? min.Value : -1;
 		}
 
-		public long LastIndexOf(byte value, long start)
+		public long LastIndexOf(byte[] value, long start)
 		{
-			return Array.LastIndexOf(data, value, (int)start);
+			var max = value.Select(val => Array.LastIndexOf(data, val, (int)start)).Where(val => val != -1).Cast<int?>().Max();
+			return max.HasValue ? max.Value : -1;
 		}
 
 		public void Replace(long index, long count, byte[] bytes)
