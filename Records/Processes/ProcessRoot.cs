@@ -11,7 +11,7 @@ namespace NeoEdit.Records.Processes
 			get
 			{
 				foreach (var process in System.Diagnostics.Process.GetProcesses())
-					yield return new Process(process);
+					yield return new Process(process.Id);
 			}
 		}
 	}

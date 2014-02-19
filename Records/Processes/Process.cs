@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management;
 
 namespace NeoEdit.Records.Processes
 {
 	public class Process : ProcessRecord
 	{
-		public Process(System.Diagnostics.Process process)
-			: base(process.Id.ToString())
+		readonly Process parent;
+		public Process(int pid, Process _parent = null)
+			: base("Process/" + pid.ToString())
 		{
-			this[RecordProperty.PropertyName.ID] = process.Id;
+			parent = _parent;
+			var process = System.Diagnostics.Process.GetProcessById(pid);
+			this[RecordProperty.PropertyName.ID] = pid;
 			this[RecordProperty.PropertyName.Name] = process.ProcessName;
 			var data = "";
 			if (process.Id == 0)
@@ -24,6 +28,27 @@ namespace NeoEdit.Records.Processes
 			this[RecordProperty.PropertyName.Data] = data;
 			this[RecordProperty.PropertyName.Size] = process.WorkingSet64;
 			this[RecordProperty.PropertyName.CPU] = GetProcessUsage(process.Id);
+		}
+
+		public override Record Parent
+		{
+			get
+			{
+				if (parent != null)
+					return parent;
+				return base.Parent;
+			}
+		}
+
+		public override IEnumerable<Record> Records
+		{
+			get
+			{
+				using (var mos = new ManagementObjectSearcher("SELECT * From Win32_Process WHERE ParentProcessID=" + GetProperty<int>(RecordProperty.PropertyName.ID)))
+				using (var moc = mos.Get())
+					foreach (var mo in moc)
+						yield return new Process(Convert.ToInt32(mo["ProcessID"]), this);
+			}
 		}
 
 		public override System.Collections.Generic.IEnumerable<RecordAction.ActionName> Actions
