@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace NeoEdit.Common
 {
@@ -90,7 +89,9 @@ namespace NeoEdit.Common
 		{
 			index = Math.Max(0, Math.Min(data.Length - 1, index));
 			count = Math.Max(0, Math.Min(data.Length - index, count));
-			return data.Skip((int)index).Take((int)count).ToArray();
+			var ret = new byte[count];
+			Array.Copy(data, index, ret, 0, ret.Length);
+			return ret;
 		}
 	}
 }

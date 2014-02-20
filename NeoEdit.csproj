@@ -74,6 +74,7 @@
     <Compile Include="BrowserUI\Dialogs\EditSyncParams.xaml.cs">
       <DependentUpon>EditSyncParams.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\DumpBinaryData.cs" />
     <Compile Include="Records\Processes\ProcessBinaryData.cs" />
     <Compile Include="Common\Expression.cs" />
     <Compile Include="Common\IBinaryData.cs" />

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using NeoEdit.Common;
@@ -322,6 +324,59 @@ namespace NeoEdit.Records.Processes
 				if (cacheHasData)
 					Array.Copy(cache, index - cacheStart, result, 0, count);
 				return result;
+			}
+		}
+
+		public void Save(string fileName)
+		{
+			using (Suspend())
+			using (Open())
+			using (var output = File.Create(fileName))
+			{
+				long startBlock = -1, endBlock = -1;
+				var start = new List<long>();
+				var end = new List<long>();
+
+				cacheStart = cacheEnd = 0;
+				long index = 0;
+				while (true)
+				{
+					var hasData = false;
+					if (index < Length)
+					{
+						SetCache(index, 1);
+						hasData = cacheHasData;
+					}
+
+					if (hasData)
+					{
+						if (startBlock == -1)
+							startBlock = cacheStart;
+						endBlock = cacheEnd;
+						output.Write(cache, 0, (int)(cacheEnd - cacheStart));
+					}
+					else if (startBlock != -1)
+					{
+						start.Add(startBlock);
+						end.Add(endBlock);
+						startBlock = endBlock = -1;
+					}
+					else if (index >= Length)
+					{
+						for (var ctr = 0; ctr < start.Count; ++ctr)
+						{
+							var startBytes = BitConverter.GetBytes(start[ctr]);
+							output.Write(startBytes, 0, startBytes.Length);
+							var endBytes = BitConverter.GetBytes(end[ctr]);
+							output.Write(endBytes, 0, endBytes.Length);
+						}
+						var countBytes = BitConverter.GetBytes(start.Count);
+						output.Write(countBytes, 0, countBytes.Length);
+						break;
+					}
+
+					index = cacheEnd;
+				}
 			}
 		}
 	}
