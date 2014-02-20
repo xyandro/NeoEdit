@@ -34,6 +34,8 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public override long Length { get { return 0x80000000000; } }
+
 		protected override void SetCache(long index, int count)
 		{
 			if ((index >= cacheStart) && (index + count <= cacheEnd))
@@ -54,7 +56,7 @@ namespace NeoEdit.Common
 				else if (hasData)
 					cacheEnd = end[idx];
 				else if (idx + 1 >= start.Count)
-					cacheEnd = long.MaxValue;
+					cacheEnd = Length;
 				else
 					cacheEnd = start[idx + 1];
 

@@ -122,7 +122,7 @@ namespace NeoEdit.BinaryEditorUI
 		long rows;
 
 		// X spacing
-		const int xPosColumns = 8;
+		const int xPosColumns = 12;
 		const int xPosGap = 2;
 		const int xHexSpacing = 1;
 		const int xHexGap = 2;

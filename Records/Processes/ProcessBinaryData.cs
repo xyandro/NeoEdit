@@ -122,6 +122,8 @@ namespace NeoEdit.Records.Processes
 				throw new Win32Exception();
 		}
 
+		public override long Length { get { return 0x80000000000; } }
+
 		protected override void SetCache(long index, int count)
 		{
 			if ((index >= cacheStart) && (index + count <= cacheEnd))
@@ -156,7 +158,7 @@ namespace NeoEdit.Records.Processes
 							throw new Win32Exception();
 
 						hasData = false;
-						cacheEnd = long.MaxValue;
+						cacheEnd = Length;
 					}
 
 					if ((!hasData) && (!cacheHasData) && (cacheEnd - cacheStart >= count))

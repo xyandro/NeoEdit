@@ -32,10 +32,7 @@ namespace NeoEdit.Common
 			}
 		}
 
-		virtual public long Length
-		{
-			get { return long.MaxValue; }
-		}
+		abstract public long Length { get; }
 
 		virtual public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
 		{
