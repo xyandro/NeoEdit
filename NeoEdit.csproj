@@ -77,7 +77,7 @@
     <Compile Include="Common\DumpBinaryData.cs" />
     <Compile Include="Records\Processes\ProcessBinaryData.cs" />
     <Compile Include="Common\Expression.cs" />
-    <Compile Include="Common\IBinaryData.cs" />
+    <Compile Include="Common\BinaryData.cs" />
     <Compile Include="Common\SyncParams.cs" />
     <Compile Include="Data\Checksum.cs" />
     <Compile Include="Data\Compression.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="BinaryEditorUI\Dialogs\AsymmetricKeyDialog.xaml.cs">
       <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\BinaryData.cs" />
+    <Compile Include="Common\MemoryBinaryData.cs" />
     <Compile Include="Common\TextData.cs" />
     <Compile Include="Data\Coder.cs" />
     <Compile Include="Records\List\ListRecord.cs" />

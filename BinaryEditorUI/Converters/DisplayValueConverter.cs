@@ -21,7 +21,7 @@ namespace NeoEdit.BinaryEditorUI.Converters
 		{
 			try
 			{
-				var data = value[0] as IBinaryData;
+				var data = value[0] as BinaryData;
 				if (data == null)
 					return "Invalid";
 

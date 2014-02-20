@@ -76,7 +76,7 @@ namespace NeoEdit.Records.Processes
 			ProcessRecord.ResumeProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
 		}
 
-		public override Common.IBinaryData Read()
+		public override Common.BinaryData Read()
 		{
 			return new ProcessBinaryData(GetProperty<int>(RecordProperty.PropertyName.ID));
 		}

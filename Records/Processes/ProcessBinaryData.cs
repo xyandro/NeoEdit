@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using NeoEdit.Common;
 
 namespace NeoEdit.Records.Processes
 {
-	public class ProcessBinaryData : IBinaryData
+	public class ProcessBinaryData : BinaryData
 	{
 		class OnCloseAction : IDisposable
 		{
@@ -79,20 +78,11 @@ namespace NeoEdit.Records.Processes
 			return new OnCloseAction(action);
 		}
 
-		IBinaryDataChangedDelegate changed;
-		public event IBinaryDataChangedDelegate Changed
-		{
-			add { changed += value; }
-			remove { changed -= value; }
-		}
-
 		readonly int pid;
 		public ProcessBinaryData(int PID)
 		{
 			pid = PID;
 		}
-
-		public bool CanInsert() { return false; }
 
 		int suspendCount = 0;
 		void SuspendProcess()
@@ -132,10 +122,7 @@ namespace NeoEdit.Records.Processes
 				throw new Win32Exception();
 		}
 
-		long cacheStart, cacheEnd;
-		bool cacheHasData;
-		byte[] cache = new byte[65536];
-		void SetCache(long index, int count)
+		protected override void SetCache(long index, int count)
 		{
 			if ((index >= cacheStart) && (index + count <= cacheEnd))
 				return;
@@ -202,66 +189,14 @@ namespace NeoEdit.Records.Processes
 			}
 		}
 
-		public byte this[long index]
+		public override bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
 		{
-			get
-			{
-				SetCache(index, 1);
-				if (!cacheHasData)
-					return 0;
-				return cache[index - cacheStart];
-			}
-		}
-
-		public long Length
-		{
-			get { return long.MaxValue; }
-		}
-
-		public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
-		{
-			start = end = -1;
-			if (!forward)
-				return false;
-
-			++index;
-			if ((index < 0) || (index >= Length))
-				return false;
-
-			var findLen = currentFind.Data.Select(bytes => bytes.Length).Max();
-
 			using (Suspend())
 			using (Open())
-			{
-				while (index < Length)
-				{
-					SetCache(index, findLen);
-					if (cacheHasData)
-					{
-						for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
-						{
-							var found = Helpers.ForwardArraySearch(cache, index - cacheStart, currentFind.Data[findPos], currentFind.IgnoreCase[findPos]);
-							if ((found != -1) && ((start == -1) || (found < start)))
-							{
-								start = found + cacheStart;
-								end = start + currentFind.Data[findPos].Length;
-							}
-						}
-
-						if (start != -1)
-							return true;
-					}
-
-					index = cacheEnd;
-					if (index != long.MaxValue)
-						index -= findLen - 1;
-				}
-
-				return false;
-			}
+				return base.Find(currentFind, index, out start, out end, forward);
 		}
 
-		public void Replace(long index, long count, byte[] bytes)
+		public override void Replace(long index, long count, byte[] bytes)
 		{
 			if (count != bytes.Length)
 				throw new Exception("Cannot change byte count.");
@@ -296,7 +231,8 @@ namespace NeoEdit.Records.Processes
 					}
 
 					index += numBytes;
-					bytes = bytes.Skip(numBytes).ToArray();
+					Array.Copy(bytes, numBytes, bytes, 0, bytes.Length - numBytes);
+					Array.Resize(ref bytes, bytes.Length - numBytes);
 				}
 			}
 
@@ -304,27 +240,10 @@ namespace NeoEdit.Records.Processes
 			changed();
 		}
 
-		public void Refresh()
+		public override void Refresh()
 		{
 			cacheStart = cacheEnd = 0;
-			changed();
-		}
-
-		public byte[] GetAllBytes()
-		{
-			throw new NotImplementedException();
-		}
-
-		public byte[] GetSubset(long index, long count)
-		{
-			using (Suspend())
-			{
-				var result = new byte[count];
-				SetCache(index, (int)count);
-				if (cacheHasData)
-					Array.Copy(cache, index - cacheStart, result, 0, count);
-				return result;
-			}
+			base.Refresh();
 		}
 
 		public void Save(string fileName)

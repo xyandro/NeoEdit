@@ -1,97 +1,103 @@
 ﻿using System;
+using System.Linq;
 
 namespace NeoEdit.Common
 {
-	public class BinaryData : IBinaryData
+	abstract public class BinaryData
 	{
-		IBinaryDataChangedDelegate changed;
-		public event IBinaryDataChangedDelegate Changed
+		public delegate void BinaryDataChangedDelegate();
+
+		protected BinaryDataChangedDelegate changed;
+		public event BinaryDataChangedDelegate Changed
 		{
 			add { changed += value; }
 			remove { changed -= value; }
 		}
 
-		byte[] data;
-		public BinaryData(byte[] _data)
-		{
-			data = _data;
-		}
+		virtual public bool CanInsert() { return false; }
 
-		public bool CanInsert() { return true; }
-		public void Refresh() { }
+		protected long cacheStart, cacheEnd;
+		protected bool cacheHasData;
+		protected byte[] cache = new byte[65536];
+		virtual protected void SetCache(long index, int count) { }
 
 		public byte this[long index]
 		{
-			get { return data[index]; }
+			get
+			{
+				SetCache(index, 1);
+				if (!cacheHasData)
+					return 0;
+				return cache[index - cacheStart];
+			}
 		}
 
-		public long Length
+		virtual public long Length
 		{
-			get { return data.Length; }
+			get { return long.MaxValue; }
 		}
 
-		public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
+		virtual public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
 		{
 			start = end = -1;
+			if (!forward)
+				return false;
 
-			Func<byte[], long, byte[], bool, long> findFunc;
-			Func<long, long, bool> compareFunc;
-			if (forward)
-			{
-				++index;
-				findFunc = Helpers.ForwardArraySearch;
-				compareFunc = (a, b) => a < b;
-			}
-			else
-			{
-				--index;
-				findFunc = Helpers.BackwardArraySearch;
-				compareFunc = (a, b) => a > b;
-			}
+			++index;
+			if ((index < 0) || (index >= Length))
+				return false;
 
-			for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
+			var findLen = currentFind.Data.Select(bytes => bytes.Length).Max();
+
+			while (index < Length)
 			{
-				var found = findFunc(data, index, currentFind.Data[findPos], currentFind.IgnoreCase[findPos]);
-				if ((found != -1) && ((start == -1) || (compareFunc(found, start))))
+				SetCache(index, findLen);
+				if (cacheHasData)
 				{
-					start = found;
-					end = start + currentFind.Data[findPos].Length;
+					for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
+					{
+						var found = Helpers.ForwardArraySearch(cache, index - cacheStart, currentFind.Data[findPos], currentFind.IgnoreCase[findPos]);
+						if ((found != -1) && ((start == -1) || (found < start)))
+						{
+							start = found + cacheStart;
+							end = start + currentFind.Data[findPos].Length;
+						}
+					}
+
+					if (start != -1)
+						return true;
 				}
+
+				index = cacheEnd;
+				if (index != Length)
+					index -= findLen - 1;
 			}
 
-			return start != -1;
+			return false;
 		}
 
-		public void Replace(long index, long count, byte[] bytes)
+		virtual public void Replace(long index, long count, byte[] bytes)
 		{
-			if ((index < 0) || (index > data.Length))
-				throw new ArgumentOutOfRangeException("offset");
-			if ((count < 0) || (index + count > data.Length))
-				throw new ArgumentOutOfRangeException("length");
+			throw new NotImplementedException();
+		}
 
-			if (bytes == null)
-				bytes = new byte[0];
-
-			var newData = new byte[data.Length - count + bytes.Length];
-			Array.Copy(data, 0, newData, 0, index);
-			Array.Copy(bytes, 0, newData, index, bytes.Length);
-			Array.Copy(data, index + count, newData, index + bytes.Length, data.Length - index - count);
-			data = newData;
+		virtual public void Refresh()
+		{
 			changed();
 		}
 
-		public byte[] GetAllBytes()
+		virtual public byte[] GetAllBytes()
 		{
-			return data;
+			throw new NotImplementedException();
 		}
 
-		public byte[] GetSubset(long index, long count)
+		virtual public byte[] GetSubset(long index, long count)
 		{
-			index = Math.Max(0, Math.Min(data.Length - 1, index));
-			count = Math.Max(0, Math.Min(data.Length - index, count));
-			var ret = new byte[count];
-			Array.Copy(data, index, ret, 0, ret.Length);
-			return ret;
+			var result = new byte[count];
+			SetCache(index, (int)count);
+			if (cacheHasData)
+				Array.Copy(cache, index - cacheStart, result, 0, count);
+			return result;
 		}
 	}
 }

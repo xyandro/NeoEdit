@@ -112,7 +112,7 @@ namespace NeoEdit.TextEditorUI
 			else
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = Data.GetBytes(encoding);
-			new BinaryEditorUI.BinaryEditor(new BinaryData(data));
+			new BinaryEditorUI.BinaryEditor(new MemoryBinaryData(data));
 			this.Close();
 		}
 	}

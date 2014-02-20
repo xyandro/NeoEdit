@@ -8,7 +8,7 @@ namespace NeoEdit.BinaryEditorUI
 	public partial class DisplayValue : TextBox
 	{
 		[DepProp]
-		public IBinaryData Data { get { return uiHelper.GetPropValue<IBinaryData>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
