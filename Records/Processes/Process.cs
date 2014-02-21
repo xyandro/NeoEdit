@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using NeoEdit.Interop;
 
 namespace NeoEdit.Records.Processes
 {
@@ -68,12 +69,12 @@ namespace NeoEdit.Records.Processes
 
 		public override void Suspend()
 		{
-			ProcessRecord.SuspendProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
+			NEInterop.SuspendProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
 		}
 
 		public override void Resume()
 		{
-			ProcessRecord.ResumeProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
+			NEInterop.ResumeProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
 		}
 
 		public override Common.BinaryData Read()

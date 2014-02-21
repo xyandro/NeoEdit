@@ -70,30 +70,6 @@ namespace NeoEdit.Records.Processes
 			return typeof(ProcessRecord);
 		}
 
-		public static void SuspendProcess(int pid)
-		{
-			var process = System.Diagnostics.Process.GetProcessById(pid);
-			foreach (System.Diagnostics.ProcessThread thread in process.Threads)
-			{
-				var threadHandle = ProcessInterop.OpenThread(ProcessInterop.ThreadAccess.SUSPEND_RESUME, false, thread.Id);
-				if (threadHandle == IntPtr.Zero)
-					continue;
-				ProcessInterop.SuspendThread(threadHandle);
-			}
-		}
-
-		public static void ResumeProcess(int pid)
-		{
-			var process = System.Diagnostics.Process.GetProcessById(pid);
-			foreach (System.Diagnostics.ProcessThread thread in process.Threads)
-			{
-				var threadHandle = ProcessInterop.OpenThread(ProcessInterop.ThreadAccess.SUSPEND_RESUME, false, thread.Id);
-				if (threadHandle == IntPtr.Zero)
-					continue;
-				ProcessInterop.ResumeThread(threadHandle);
-			}
-		}
-
 		internal static class ProcessInterop
 		{
 			[Flags]
@@ -109,20 +85,6 @@ namespace NeoEdit.Records.Processes
 				PROCESS_SET_INFORMATION = 0x00000200,
 				PROCESS_QUERY_INFORMATION = 0x00000400,
 				SYNCHRONIZE = 0x00100000
-			}
-
-			[Flags]
-			public enum ThreadAccess : int
-			{
-				TERMINATE = 0x0001,
-				SUSPEND_RESUME = 0x0002,
-				GET_CONTEXT = 0x0008,
-				SET_CONTEXT = 0x0010,
-				SET_INFORMATION = 0x0020,
-				QUERY_INFORMATION = 0x0040,
-				SET_THREAD_TOKEN = 0x0080,
-				IMPERSONATE = 0x0100,
-				DIRECT_IMPERSONATION = 0x0200
 			}
 
 			[Flags]
@@ -169,12 +131,6 @@ namespace NeoEdit.Records.Processes
 				public MemType Type;
 			}
 
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, int dwThreadId);
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern int SuspendThread(IntPtr hThread);
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern uint ResumeThread(IntPtr hThread);
 			[DllImport("kernel32.dll", SetLastError = true)]
 			public static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
 			[DllImport("kernel32.dll", SetLastError = true)]

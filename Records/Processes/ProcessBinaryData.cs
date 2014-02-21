@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using NeoEdit.Common;
+using NeoEdit.Interop;
 
 namespace NeoEdit.Records.Processes
 {
@@ -90,7 +91,7 @@ namespace NeoEdit.Records.Processes
 			if (suspendCount++ != 0)
 				return;
 
-			ProcessRecord.SuspendProcess(pid);
+			NEInterop.SuspendProcess(pid);
 		}
 
 		void ResumeProcess()
@@ -98,7 +99,7 @@ namespace NeoEdit.Records.Processes
 			if (--suspendCount != 0)
 				return;
 
-			ProcessRecord.ResumeProcess(pid);
+			NEInterop.ResumeProcess(pid);
 		}
 
 		IntPtr handle;
