@@ -7,6 +7,12 @@
     <Filter Include="stdafx">
       <UniqueIdentifier>{2b0ecfc8-7c69-44ae-aa53-3aabd89321e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protect">
+      <UniqueIdentifier>{eeedbedb-8295-441a-8f2f-f88a55b93f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Handle">
+      <UniqueIdentifier>{a85cb97b-ef22-4375-8bb9-ea101c9fdc8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interop.cpp">
@@ -14,6 +20,12 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>stdafx</Filter>
+    </ClCompile>
+    <ClCompile Include="Protect.cpp">
+      <Filter>Protect</Filter>
+    </ClCompile>
+    <ClCompile Include="Handle.cpp">
+      <Filter>Handle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -23,5 +35,12 @@
     <ClInclude Include="stdafx.h">
       <Filter>stdafx</Filter>
     </ClInclude>
+    <ClInclude Include="Handle.h">
+      <Filter>Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Protect.h">
+      <Filter>Protect</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Timers;
 
 namespace NeoEdit.Records.Processes
@@ -68,83 +67,6 @@ namespace NeoEdit.Records.Processes
 		public override Type GetRootType()
 		{
 			return typeof(ProcessRecord);
-		}
-
-		internal static class ProcessInterop
-		{
-			[Flags]
-			public enum ProcessAccessFlags : uint
-			{
-				PROCESS_ALL_ACCESS = 0x001F0FFF,
-				PROCESS_TERMINATE = 0x00000001,
-				PROCESS_CREATE_THREAD = 0x00000002,
-				PROCESS_VM_OPERATION = 0x00000008,
-				PROCESS_VM_READ = 0x00000010,
-				PROCESS_VM_WRITE = 0x00000020,
-				PROCESS_DUP_HANDLE = 0x00000040,
-				PROCESS_SET_INFORMATION = 0x00000200,
-				PROCESS_QUERY_INFORMATION = 0x00000400,
-				SYNCHRONIZE = 0x00100000
-			}
-
-			[Flags]
-			public enum PageProtect : uint
-			{
-				PAGE_EXECUTE = 0x10,
-				PAGE_EXECUTE_READ = 0x20,
-				PAGE_EXECUTE_READWRITE = 0x40,
-				PAGE_EXECUTE_WRITECOPY = 0x80,
-				PAGE_NOACCESS = 0x01,
-				PAGE_READONLY = 0x02,
-				PAGE_READWRITE = 0x04,
-				PAGE_WRITECOPY = 0x08,
-				PAGE_GUARD = 0x100,
-				PAGE_NOCACHE = 0x200,
-				PAGE_WRITECOMBINE = 0x400
-			}
-
-			[Flags]
-			public enum MemType : uint
-			{
-				MEM_IMAGE = 0x1000000,
-				MEM_MAPPED = 0x40000,
-				MEM_PRIVATE = 0x20000
-			}
-
-			[Flags]
-			public enum MemoryState : uint
-			{
-				MEM_COMMIT = 0x1000,
-				MEM_FREE = 0x10000,
-				MEM_RESERVE = 0x2000
-			}
-
-			[StructLayout(LayoutKind.Sequential)]
-			public struct MEMORY_BASIC_INFORMATION
-			{
-				public IntPtr BaseAddress;
-				public IntPtr AllocationBase;
-				public PageProtect AllocationProtect;
-				public IntPtr RegionSize;
-				public MemoryState State;
-				public PageProtect Protect;
-				public MemType Type;
-			}
-
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern bool CloseHandle(IntPtr hObject);
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern bool VirtualQueryEx(IntPtr hProcess, IntPtr lpAddress, out MEMORY_BASIC_INFORMATION lpBuffer, int dwLength);
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, PageProtect flNewProtect, out PageProtect lpflOldProtect);
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern bool FlushInstructionCache(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr dwSize);
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int dwSize, out IntPtr lpNumberOfBytesRead);
-			[DllImport("kernel32.dll", SetLastError = true)]
-			public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out IntPtr lpNumberOfBytesWritten);
 		}
 	}
 }

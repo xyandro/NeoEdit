@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.InteropServices;
 using NeoEdit.Common;
 using NeoEdit.Interop;
 
@@ -36,49 +34,6 @@ namespace NeoEdit.Records.Processes
 			return new OnCloseAction(() => CloseProcess());
 		}
 
-		OnCloseAction SetProtect(ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION memInfo, bool write)
-		{
-			Action action = () => { };
-
-			var protect = memInfo.Protect;
-			if ((protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD) != 0)
-				protect ^= ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD;
-			var extra = protect & ~(ProcessRecord.ProcessInterop.PageProtect.PAGE_GUARD - 1);
-			if (write)
-			{
-				if ((protect & (ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE | ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE_READ | ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE_WRITECOPY)) != 0)
-					protect = ProcessRecord.ProcessInterop.PageProtect.PAGE_EXECUTE_READWRITE;
-				if ((protect & (ProcessRecord.ProcessInterop.PageProtect.PAGE_NOACCESS | ProcessRecord.ProcessInterop.PageProtect.PAGE_READONLY | ProcessRecord.ProcessInterop.PageProtect.PAGE_WRITECOPY)) != 0)
-					protect = ProcessRecord.ProcessInterop.PageProtect.PAGE_READWRITE;
-			}
-			else
-			{
-				if ((protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_NOACCESS) != 0)
-					protect = ProcessRecord.ProcessInterop.PageProtect.PAGE_READONLY;
-			}
-			protect |= extra;
-
-			// Can't change protection on mapped memory
-			if ((memInfo.Type & ProcessRecord.ProcessInterop.MemType.MEM_MAPPED) != 0)
-				protect = memInfo.Protect;
-
-			if (memInfo.Protect != protect)
-			{
-				ProcessRecord.ProcessInterop.PageProtect oldProtect;
-				if (!ProcessRecord.ProcessInterop.VirtualProtectEx(handle, memInfo.BaseAddress, memInfo.RegionSize, protect, out oldProtect))
-					throw new Win32Exception();
-				action = () =>
-				{
-					if (!ProcessRecord.ProcessInterop.VirtualProtectEx(handle, memInfo.BaseAddress, memInfo.RegionSize, memInfo.Protect, out oldProtect))
-						throw new Win32Exception();
-					if (!ProcessRecord.ProcessInterop.FlushInstructionCache(handle, memInfo.BaseAddress, memInfo.RegionSize))
-						throw new Win32Exception();
-				};
-			}
-
-			return new OnCloseAction(action);
-		}
-
 		readonly int pid;
 		public ProcessBinaryData(int PID)
 		{
@@ -102,16 +57,14 @@ namespace NeoEdit.Records.Processes
 			NEInterop.ResumeProcess(pid);
 		}
 
-		IntPtr handle;
+		Handle handle;
 		int openCount = 0;
 		void OpenProcess()
 		{
 			if (openCount++ != 0)
 				return;
 
-			handle = ProcessRecord.ProcessInterop.OpenProcess(ProcessRecord.ProcessInterop.ProcessAccessFlags.PROCESS_QUERY_INFORMATION | ProcessRecord.ProcessInterop.ProcessAccessFlags.PROCESS_VM_READ | ProcessRecord.ProcessInterop.ProcessAccessFlags.PROCESS_VM_WRITE | ProcessRecord.ProcessInterop.ProcessAccessFlags.PROCESS_VM_OPERATION, false, pid);
-			if (handle == IntPtr.Zero)
-				throw new Win32Exception();
+			handle = NEInterop.OpenReadMemoryProcess(pid);
 		}
 
 		void CloseProcess()
@@ -119,8 +72,7 @@ namespace NeoEdit.Records.Processes
 			if (--openCount != 0)
 				return;
 
-			if (!ProcessRecord.ProcessInterop.CloseHandle(handle))
-				throw new Win32Exception();
+			handle.Dispose();
 		}
 
 		public override long Length { get { return 0x80000000000; } }
@@ -142,22 +94,20 @@ namespace NeoEdit.Records.Processes
 				while (cacheEnd - cacheStart < count)
 				{
 					bool hasData;
-					ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION memInfo;
-					if (ProcessRecord.ProcessInterop.VirtualQueryEx(handle, new IntPtr(index), out memInfo, Marshal.SizeOf(typeof(ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION))))
+
+					var queryInfo = NEInterop.VirtualQuery(handle, (IntPtr)index);
+					if (queryInfo != null)
 					{
-						hasData = (memInfo.State & ProcessRecord.ProcessInterop.MemoryState.MEM_COMMIT) != 0;
-						if ((hasData) && ((memInfo.Type & ProcessRecord.ProcessInterop.MemType.MEM_MAPPED) != 0))
+						hasData = queryInfo.Committed;
+						if ((hasData) && (queryInfo.Mapped))
 						{
-							if ((memInfo.Protect & ProcessRecord.ProcessInterop.PageProtect.PAGE_NOACCESS) != 0)
+							if (queryInfo.NoAccess)
 								hasData = false;
 						}
-						cacheEnd = memInfo.BaseAddress.ToInt64() + memInfo.RegionSize.ToInt64();
+						cacheEnd = queryInfo.EndAddress.ToInt64();
 					}
 					else
 					{
-						if (Marshal.GetLastWin32Error() != 87)
-							throw new Win32Exception();
-
 						hasData = false;
 						cacheEnd = Length;
 					}
@@ -171,21 +121,8 @@ namespace NeoEdit.Records.Processes
 					if (!hasData)
 						Array.Clear(cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 					else
-						using (SetProtect(memInfo, false))
-						{
-							var pin = GCHandle.Alloc(cache, GCHandleType.Pinned);
-							try
-							{
-								var ptr = new IntPtr(pin.AddrOfPinnedObject().ToInt64() + index - cacheStart);
-								IntPtr read;
-								if (!ProcessRecord.ProcessInterop.ReadProcessMemory(handle, new IntPtr(index), ptr, (int)(cacheEnd - index), out read))
-									throw new Win32Exception();
-							}
-							finally
-							{
-								pin.Free();
-							}
-						}
+						using (NEInterop.SetProtect(handle, queryInfo, false))
+							NEInterop.ReadProcessMemory(handle, (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 
 					index = cacheEnd;
 				}
@@ -209,29 +146,15 @@ namespace NeoEdit.Records.Processes
 			{
 				while (bytes.Length > 0)
 				{
-					ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION memInfo;
-					if (ProcessRecord.ProcessInterop.VirtualQueryEx(handle, new IntPtr(index), out memInfo, Marshal.SizeOf(typeof(ProcessRecord.ProcessInterop.MEMORY_BASIC_INFORMATION))))
-					{
-						if ((memInfo.State & ProcessRecord.ProcessInterop.MemoryState.MEM_COMMIT) == 0)
-							throw new Exception("Cannot write to this memory");
-					}
-					else
-					{
-						if (Marshal.GetLastWin32Error() != 87)
-							throw new Win32Exception();
-
+					var queryInfo = NEInterop.VirtualQuery(handle, (IntPtr)index);
+					if ((queryInfo == null) || (!queryInfo.Committed))
 						throw new Exception("Cannot write to this memory");
-					}
 
-					var end = memInfo.BaseAddress.ToInt64() + memInfo.RegionSize.ToInt64();
+					var end = queryInfo.EndAddress.ToInt64();
 					var numBytes = (int)Math.Min(bytes.Length, end - index);
 
-					using (SetProtect(memInfo, true))
-					{
-						IntPtr written;
-						if (!ProcessRecord.ProcessInterop.WriteProcessMemory(handle, new IntPtr(index), bytes, numBytes, out written))
-							throw new Win32Exception();
-					}
+					using (NEInterop.SetProtect(handle, queryInfo, true))
+						NEInterop.WriteProcessMemory(handle, (IntPtr)index, bytes, numBytes);
 
 					index += numBytes;
 					Array.Copy(bytes, numBytes, bytes, 0, bytes.Length - numBytes);
