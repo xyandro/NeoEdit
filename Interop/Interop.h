@@ -18,6 +18,8 @@ namespace NeoEdit
 			static Protect ^SetProtect(Handle ^handle, VirtualQueryInfo ^info, bool write);
 			static void ReadProcessMemory(Handle ^handle, System::IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes);
 			static void WriteProcessMemory(Handle ^handle, System::IntPtr index, array<byte> ^bytes, int numBytes);
+			static System::Collections::Generic::List<int> ^GetPIDsWithFileLock(System::String ^fileName);
+			static System::Collections::Generic::List<HandleInfo^> ^NEInterop::GetProcessHandleInfo(int pid);
 		};
 	}
 }

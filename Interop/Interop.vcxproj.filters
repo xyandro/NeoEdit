@@ -13,6 +13,9 @@
     <Filter Include="Handle">
       <UniqueIdentifier>{a85cb97b-ef22-4375-8bb9-ea101c9fdc8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{743ae5e2-3dfc-4840-80fe-5bfa196392e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interop.cpp">
@@ -26,6 +29,9 @@
     </ClCompile>
     <ClCompile Include="Handle.cpp">
       <Filter>Handle</Filter>
+    </ClCompile>
+    <ClCompile Include="Types.cpp">
+      <Filter>Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +47,8 @@
     <ClInclude Include="Protect.h">
       <Filter>Protect</Filter>
     </ClInclude>
-    <ClInclude Include="Types.h" />
+    <ClInclude Include="Types.h">
+      <Filter>Types</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

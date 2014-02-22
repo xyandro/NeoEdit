@@ -4,3 +4,7 @@
 #include <TlHelp32.h>
 #include <hash_set>
 #include <memory>
+#include <map>
+#include <string>
+#include <algorithm>
+#include <SubAuth.h>
