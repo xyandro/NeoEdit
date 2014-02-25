@@ -8,3 +8,4 @@
 #include <string>
 #include <algorithm>
 #include <SubAuth.h>
+#include <msclr\marshal_cppstd.h>

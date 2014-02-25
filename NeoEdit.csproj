@@ -118,6 +118,10 @@
     <Compile Include="Records\Processes\ProcessRecord.cs" />
     <Compile Include="Records\Processes\Process.cs" />
     <Compile Include="Records\Processes\ProcessRoot.cs" />
+    <Compile Include="Records\SharedMemory\SharedMemoryBinaryData.cs" />
+    <Compile Include="Records\SharedMemory\SharedMemoryItem.cs" />
+    <Compile Include="Records\SharedMemory\SharedMemoryRecord.cs" />
+    <Compile Include="Records\SharedMemory\SharedMemoryRoot.cs" />
     <Compile Include="Records\Zipped\ZippedArchive.cs" />
     <Compile Include="Records\Zipped\ZippedDir.cs" />
     <Compile Include="Records\Zipped\ZippedFile.cs" />

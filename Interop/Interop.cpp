@@ -5,6 +5,7 @@ using namespace std;
 using namespace System;
 using namespace System::ComponentModel;
 using namespace System::Collections::Generic;
+using namespace msclr::interop;
 
 namespace
 {
@@ -409,7 +410,7 @@ namespace NeoEdit
 			info->NoAccess = (memInfo.Protect & PAGE_NOACCESS) != 0;
 			info->StartAddress = (IntPtr)memInfo.BaseAddress;
 			info->RegionSize = (IntPtr)(void*)memInfo.RegionSize;
-			info->EndAddress = (IntPtr)((char*)memInfo.BaseAddress + memInfo.RegionSize);
+			info->EndAddress = (IntPtr)((byte*)memInfo.BaseAddress + memInfo.RegionSize);
 			info->Protect = memInfo.Protect;
 			return info;
 		}
@@ -474,6 +475,70 @@ namespace NeoEdit
 			auto handles = HandleHelper::GetAllHandles();
 			handles = HandleHelper::GetProcessHandles(handles, (DWORD)pid);
 			return HandleHelper::GetHandleInfo(handles);
+		}
+
+		List<String^> ^NEInterop::GetSharedMemoryNames()
+		{
+			auto handles = HandleHelper::GetAllHandles();
+			handles = HandleHelper::GetTypeHandles(handles, L"Section");
+			auto handleInfo = HandleHelper::GetHandleInfo(handles);
+			auto result = gcnew List<String^>();
+			for each (HandleInfo ^handle in handleInfo)
+				if (!result->Contains(handle->Name))
+					result->Add(handle->Name);
+			return result;
+		}
+
+		Int64 NEInterop::GetSharedMemorySize(String ^name)
+		{
+			auto wname = marshal_as<std::wstring>(name);
+			auto handle = OpenFileMapping(FILE_MAP_READ, FALSE, wname.c_str());
+			if (handle == NULL)
+				throw gcnew Win32Exception();
+			shared_ptr<void> handleDeleter(handle, CloseHandle);
+
+			auto ptr = MapViewOfFile(handle, FILE_MAP_READ, 0, 0, 0);
+			if (ptr == NULL)
+				throw gcnew Win32Exception();
+			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
+
+			MEMORY_BASIC_INFORMATION mbi;
+			::VirtualQuery(ptr, &mbi, sizeof(mbi));
+			return mbi.RegionSize;
+		}
+
+		void NEInterop::ReadSharedMemory(String ^name, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
+		{
+			auto wname = marshal_as<std::wstring>(name);
+			auto handle = OpenFileMapping(FILE_MAP_READ, FALSE, wname.c_str());
+			if (handle == NULL)
+				throw gcnew Win32Exception();
+			shared_ptr<void> handleDeleter(handle, CloseHandle);
+
+			auto ptr = MapViewOfFile(handle, FILE_MAP_READ, 0, 0, 0);
+			if (ptr == NULL)
+				throw gcnew Win32Exception();
+			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
+
+			pin_ptr<byte> bytesPtr = &bytes[0];
+			memcpy((byte*)bytesPtr + bytesIndex, (byte*)ptr + (intptr_t)index, numBytes);
+		}
+
+		void NEInterop::WriteSharedMemory(String ^name, IntPtr index, array<byte> ^bytes)
+		{
+			auto wname = marshal_as<std::wstring>(name);
+			auto handle = OpenFileMapping(FILE_MAP_WRITE, FALSE, wname.c_str());
+			if (handle == NULL)
+				throw gcnew Win32Exception();
+			shared_ptr<void> handleDeleter(handle, CloseHandle);
+
+			auto ptr = MapViewOfFile(handle, FILE_MAP_WRITE, 0, 0, 0);
+			if (ptr == NULL)
+				throw gcnew Win32Exception();
+			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
+
+			pin_ptr<byte> bytesPtr = &bytes[0];
+			memcpy((byte*)ptr + (intptr_t)index, bytesPtr, bytes->Length);
 		}
 	}
 }
