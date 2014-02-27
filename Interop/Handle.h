@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef __cplusplus_cli
+
 namespace NeoEdit
 {
 	namespace Interop
@@ -17,3 +19,5 @@ namespace NeoEdit
 		};
 	}
 }
+
+#endif

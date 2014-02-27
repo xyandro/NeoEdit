@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef __cplusplus_cli
+
 #include "Types.h"
 #include "Handle.h"
 
@@ -19,3 +21,5 @@ namespace NeoEdit
 		};
 	}
 }
+
+#endif

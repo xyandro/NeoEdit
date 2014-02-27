@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Handle.h"
 
+#ifdef __cplusplus_cli
+
 namespace NeoEdit
 {
 	namespace Interop
@@ -26,3 +28,5 @@ namespace NeoEdit
 		}
 	}
 }
+
+#endif

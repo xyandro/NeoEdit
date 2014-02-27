@@ -2,16 +2,21 @@
 #include "Interop.h"
 
 using namespace std;
+
+#ifdef __cplusplus_cli
 using namespace System;
 using namespace System::ComponentModel;
 using namespace System::Collections::Generic;
 using namespace msclr::interop;
+#endif
 
 namespace
 {
 	// Helper stuff
 
+#ifdef __cplusplus_cli
 	using namespace NeoEdit::Interop;
+#endif
 
 	enum OBJECT_INFORMATION_CLASS
 	{
@@ -94,8 +99,8 @@ namespace
 
 	HMODULE ntdll;
 	typedef NTSTATUS (WINAPI *_NtQuerySystemInformation)(ULONG SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength OPTIONAL);
-	typedef NTSTATUS (*_NtQueryObject)(HANDLE ObjectHandle, OBJECT_INFORMATION_CLASS ObjectInformationClass, PVOID ObjectInformation, ULONG Length, PULONG ResultLength);
-	typedef NTSTATUS (*_NtQuerySemaphore)(HANDLE SemaphoreHandle, SEMAPHORE_INFORMATION_CLASS SemaphoreInformationClass, PVOID SemaphoreInformation, ULONG SemaphoreInformationLength, PULONG ReturnLength);
+	typedef NTSTATUS (WINAPI *_NtQueryObject)(HANDLE ObjectHandle, OBJECT_INFORMATION_CLASS ObjectInformationClass, PVOID ObjectInformation, ULONG Length, PULONG ResultLength);
+	typedef NTSTATUS (WINAPI *_NtQuerySemaphore)(HANDLE SemaphoreHandle, SEMAPHORE_INFORMATION_CLASS SemaphoreInformationClass, PVOID SemaphoreInformation, ULONG SemaphoreInformationLength, PULONG ReturnLength);
 
 	_NtQuerySystemInformation NtQuerySystemInformation;
 	_NtQueryObject NtQueryObject;
@@ -104,29 +109,38 @@ namespace
 	vector<wstring> typeNames;
 	map<wstring, wstring> dosToLogical;
 
+	void ThrowWin32Exception()
+	{
+#ifdef __cplusplus_cli
+		throw gcnew Win32Exception();
+#else
+		throw "Error!";
+#endif
+	}
+
 	static void SetDebug()
 	{
 		HANDLE token;
 		if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token))
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 		shared_ptr<void> tokenDeleter(token, CloseHandle);
 
 		LUID luid;
 		if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid))
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 
 		TOKEN_PRIVILEGES tp;
 		tp.PrivilegeCount = 1;
 		tp.Privileges[0].Luid = luid;
 		tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
 		if (!AdjustTokenPrivileges(token, false, &tp, sizeof(tp), NULL, NULL))
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 	}
 
 	static void GetTypeNames()
 	{
 		shared_ptr<OBJECT_ALL_TYPES_INFORMATION> types;
-		ULONG size = 0;
+		ULONG size = 1048576;
 		while (true)
 		{
 			types = shared_ptr<OBJECT_ALL_TYPES_INFORMATION>((OBJECT_ALL_TYPES_INFORMATION*)malloc(size), free);
@@ -135,7 +149,7 @@ namespace
 				break;
 			if (result == STATUS_INFO_LENGTH_MISMATCH)
 				continue;
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 		}
 
 		typeNames.push_back(L"Unknown");
@@ -146,8 +160,11 @@ namespace
 		{
 			typeNames.push_back(wstring((wchar_t*)typeInfo->TypeName.Buffer, typeInfo->TypeName.Length / 2));
 			auto pos = (intptr_t)typeInfo + sizeof(OBJECT_TYPE_INFORMATION) + typeInfo->TypeName.MaximumLength;
-			// DWORD align
-			pos += 7 - (pos - 1) % 8;
+#ifdef _WIN64
+			pos += 7 - (pos - 1) % 8; // DWORD align
+#else
+			pos += 3 - (pos - 1) % 4; // WORD align
+#endif
 			typeInfo = (OBJECT_TYPE_INFORMATION*)pos;
 		}
 	}
@@ -156,14 +173,14 @@ namespace
 	{
 		wchar_t drivesBuf[2048];
 		if (!GetLogicalDriveStrings(sizeof(drivesBuf) / sizeof(*drivesBuf), drivesBuf))
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 
 		for (wchar_t *ptr = drivesBuf; *ptr != 0; ptr += wcslen(ptr) + 1)
 		{
 			wstring drive(ptr, 2);
 			wchar_t device[8192];
 			if (!QueryDosDevice(drive.c_str(), device, sizeof(device) / sizeof(*device)))
-				throw gcnew Win32Exception();
+				ThrowWin32Exception();
 			dosToLogical[wstring(device) + L"\\"] = drive + L"\\";
 		}
 	}
@@ -207,11 +224,11 @@ namespace
 			if (NT_SUCCESS(ret))
 				break;
 
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 		}
 
 		handleVectorPtr result(new handleVector);
-		for (auto ctr = 0; ctr < handleInfo->NumberOfHandles; ++ctr)
+		for (unsigned int ctr = 0; ctr < handleInfo->NumberOfHandles; ++ctr)
 			result->push_back(handleInfo->Handles[ctr]);
 
 		sort(result->begin(), result->end(), sortPred);
@@ -247,7 +264,7 @@ namespace
 		shared_ptr<UNICODE_STRING> str((UNICODE_STRING*)malloc(size), free);
 		auto result = NtQueryObject(handle, ObjectNameInformation, str.get(), size, NULL);
 		if (!NT_SUCCESS(result))
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 
 		wstring name(str->Buffer, str->Length / 2);
 
@@ -256,7 +273,7 @@ namespace
 			HKEY key;
 			LONG err;
 			if ((err = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Hardware\\DeviceMap\\SerialComm", 0, KEY_QUERY_VALUE, &key)) != ERROR_SUCCESS)
-				throw gcnew Win32Exception(err);
+				ThrowWin32Exception();
 			shared_ptr<void> keyDeleter(key, RegCloseKey);
 
 			WCHAR port[50];
@@ -280,7 +297,7 @@ namespace
 	{
 		auto ptr = MapViewOfFile(handle, FILE_MAP_READ, 0, 0, 0);
 		if (ptr == NULL)
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 		shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
 
 		MEMORY_BASIC_INFORMATION mbi;
@@ -294,7 +311,7 @@ namespace
 		{
 			SEMAPHORE_BASIC_INFORMATION info;
 			if (!NT_SUCCESS(NtQuerySemaphore(handle, SemaphoreBasicInformation, &info, sizeof(info), NULL)))
-				throw gcnew Win32Exception();
+				ThrowWin32Exception();
 
 			return to_wstring(info.CurrentCount) + L" (Max " + to_wstring(info.MaximumCount) + L")";
 		}
@@ -314,6 +331,7 @@ namespace
 		return L"";
 	}
 
+#ifdef __cplusplus_cli
 	static List<HandleInfo^> ^GetHandleInfo(handleVectorPtr handles)
 	{
 		map<DWORD, handleVector> handlesByProcess;
@@ -347,6 +365,7 @@ namespace
 
 		return result;
 	}
+#endif
 
 	shared_ptr<hash_set<int>> GetThreadIDs(int pid)
 	{
@@ -354,7 +373,7 @@ namespace
 
 		HANDLE toolHelp = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
 		if (toolHelp == INVALID_HANDLE_VALUE)
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 		shared_ptr<void> toolHelpDeleter(toolHelp, CloseHandle);
 
 		THREADENTRY32 te;
@@ -378,15 +397,15 @@ namespace
 	{
 		auto handle = ::OpenProcess(PROCESS_DUP_HANDLE, false, (DWORD)pid);
 		if (handle == NULL)
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 		return shared_ptr<void>(handle, CloseHandle);
 	}
 
-	shared_ptr<void> DupHandle(shared_ptr<void> process, IntPtr handle)
+	shared_ptr<void> DupHandle(shared_ptr<void> process, intptr_t handle)
 	{
 		HANDLE dupHandle;
 		if (!DuplicateHandle(process.get(), (HANDLE)handle, GetCurrentProcess(), &dupHandle, 0, false, DUPLICATE_SAME_ACCESS))
-			throw gcnew Win32Exception();
+			ThrowWin32Exception();
 		return shared_ptr<void>(dupHandle, CloseHandle);
 	}
 
@@ -411,6 +430,8 @@ namespace
 	HandleHelper HandleHelper::handleHelper;
 }
 
+#ifdef __cplusplus_cli
+
 namespace NeoEdit
 {
 	namespace Interop
@@ -434,11 +455,11 @@ namespace NeoEdit
 
 						auto threadHandle = OpenThread(THREAD_SUSPEND_RESUME, FALSE, threadId);
 						if (threadHandle == NULL)
-							throw gcnew Win32Exception();
+							ThrowWin32Exception();
 						shared_ptr<void> threadHandleDeleter(threadHandle, CloseHandle);
 
 						if (SuspendThread(threadHandle) == -1)
-							throw gcnew Win32Exception();
+							ThrowWin32Exception();
 					}
 				}
 
@@ -454,11 +475,11 @@ namespace NeoEdit
 			{
 				auto threadHandle = OpenThread(THREAD_SUSPEND_RESUME, FALSE, threadId);
 				if (threadHandle == NULL)
-					throw gcnew Win32Exception();
+					ThrowWin32Exception();
 				shared_ptr<void> threadHandleDeleter(threadHandle, CloseHandle);
 
 				if (ResumeThread(threadHandle) == -1)
-					throw gcnew Win32Exception();
+					ThrowWin32Exception();
 			}
 		}
 
@@ -466,7 +487,7 @@ namespace NeoEdit
 		{
 			auto handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION, false, pid);
 			if (handle == NULL)
-				throw gcnew Win32Exception();
+				ThrowWin32Exception();
 
 			return gcnew Handle(shared_ptr<void>(handle, CloseHandle));
 		}
@@ -477,7 +498,7 @@ namespace NeoEdit
 			if (VirtualQueryEx(handle->Get(), (void*)index, &memInfo, sizeof(memInfo)) == 0)
 			{
 				if (GetLastError() != ERROR_INVALID_PARAMETER)
-					throw gcnew Win32Exception();
+					ThrowWin32Exception();
 				return nullptr;
 			}
 
@@ -524,7 +545,7 @@ namespace NeoEdit
 			pin_ptr<byte> ptr = &bytes[0];
 			SIZE_T read;
 			if (!::ReadProcessMemory(handle->Get(), (void*)index, (byte*)ptr + bytesIndex, numBytes, &read))
-				throw gcnew Win32Exception();
+				ThrowWin32Exception();
 		}
 
 		void NEInterop::WriteProcessMemory(Handle ^handle, IntPtr index, array<byte> ^bytes, int numBytes)
@@ -532,7 +553,7 @@ namespace NeoEdit
 			pin_ptr<byte> ptr = &bytes[0];
 			SIZE_T written;
 			if (!::WriteProcessMemory(handle->Get(), (void*)index, (byte*)ptr, numBytes, &written))
-				throw gcnew Win32Exception();
+				ThrowWin32Exception();
 		}
 
 		List<int> ^NEInterop::GetPIDsWithFileLock(String ^fileName)
@@ -562,18 +583,18 @@ namespace NeoEdit
 		Int64 NEInterop::GetSharedMemorySize(int pid, IntPtr intHandle)
 		{
 			auto process = OpenProcess(pid);
-			auto handle = DupHandle(process, intHandle);
+			auto handle = DupHandle(process, (intptr_t)intHandle);
 			return GetSizeOfMap(handle);
 		}
 
 		void NEInterop::ReadSharedMemory(int pid, IntPtr intHandle, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
 		{
 			auto process = OpenProcess(pid);
-			auto handle = DupHandle(process, intHandle);
+			auto handle = DupHandle(process, (intptr_t)intHandle);
 
 			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_READ, 0, 0, 0);
 			if (ptr == NULL)
-				throw gcnew Win32Exception();
+				ThrowWin32Exception();
 			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
 
 			pin_ptr<byte> bytesPtr = &bytes[0];
@@ -583,11 +604,11 @@ namespace NeoEdit
 		void NEInterop::WriteSharedMemory(int pid, IntPtr intHandle, IntPtr index, array<byte> ^bytes)
 		{
 			auto process = OpenProcess(pid);
-			auto handle = DupHandle(process, intHandle);
+			auto handle = DupHandle(process, (intptr_t)intHandle);
 
 			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_WRITE, 0, 0, 0);
 			if (ptr == NULL)
-				throw gcnew Win32Exception();
+				ThrowWin32Exception();
 			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
 
 			pin_ptr<byte> bytesPtr = &bytes[0];
@@ -595,3 +616,11 @@ namespace NeoEdit
 		}
 	}
 }
+
+#else
+
+void main()
+{
+}
+
+#endif

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Protect.h"
 
+#ifdef __cplusplus_cli
+
 namespace NeoEdit
 {
 	namespace Interop
@@ -32,3 +34,5 @@ namespace NeoEdit
 		}
 	}
 }
+
+#endif

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Types.h"
 
+#ifdef __cplusplus_cli
+
 using namespace System;
 
 namespace NeoEdit
@@ -22,3 +24,5 @@ namespace NeoEdit
 		}
 	}
 }
+
+#endif
