@@ -29,7 +29,7 @@ namespace NeoEdit.Records
 				yield return new List.ListRoot();
 				yield return new Registry.RegistryRoot();
 				yield return new Processes.ProcessRoot();
-				yield return new SharedMemory.SharedMemoryRoot();
+				yield return new Handles.HandleRoot();
 			}
 		}
 	}

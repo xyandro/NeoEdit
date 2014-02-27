@@ -2,7 +2,7 @@
 using NeoEdit.Common;
 using NeoEdit.Interop;
 
-namespace NeoEdit.Records.SharedMemory
+namespace NeoEdit.Records.Handles
 {
 	public class SharedMemoryBinaryData : BinaryData
 	{

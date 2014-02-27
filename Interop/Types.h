@@ -14,9 +14,10 @@ namespace NeoEdit
 		public ref struct HandleInfo
 		{
 			int PID;
+			System::IntPtr Handle;
 			System::String ^Type, ^Name;
 
-			HandleInfo(int PID, System::String ^Type, System::String ^Name);
+			HandleInfo(int PID, System::IntPtr Handle, System::String ^Type, System::String ^Name);
 			System::String ^ToString() override;
 		};
 	}

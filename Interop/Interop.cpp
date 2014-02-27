@@ -304,7 +304,7 @@ namespace
 					auto type = typeNames[handle.ObjectTypeIndex];
 					auto name = (type == L"File") && (GetFileType(dupHandle) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle);
 
-					result->Add(gcnew HandleInfo((int)handle.UniqueProcessId, gcnew String(type.c_str()), gcnew String(name.c_str())));
+					result->Add(gcnew HandleInfo((int)handle.UniqueProcessId, IntPtr(handle.HandleValue), gcnew String(type.c_str()), gcnew String(name.c_str())));
 				}
 			}
 
@@ -336,6 +336,24 @@ namespace
 		while (Thread32Next(toolHelp, &te));
 
 		return threadSet;
+	}
+
+	shared_ptr<void> OpenProcess(String ^name)
+	{
+		auto PID = (DWORD)Convert::ToInt32(name->Substring(0, name->IndexOf("/")));
+		auto handle = ::OpenProcess(PROCESS_DUP_HANDLE, false, PID);
+		if (handle == NULL)
+			throw gcnew Win32Exception();
+		return shared_ptr<void>(handle, CloseHandle);
+	}
+
+	shared_ptr<void> DupHandle(shared_ptr<void> process, String ^name)
+	{
+		auto handle = (HANDLE)Convert::ToInt32(name->Substring(name->IndexOf("/") + 1));
+		HANDLE dupHandle;
+		if (!DuplicateHandle(process.get(), handle, GetCurrentProcess(), &dupHandle, 0, false, DUPLICATE_SAME_ACCESS))
+			throw gcnew Win32Exception();
+		return shared_ptr<void>(dupHandle, CloseHandle);
 	}
 }
 
@@ -475,40 +493,24 @@ namespace NeoEdit
 			return result;
 		}
 
-		List<HandleInfo^> ^NEInterop::GetProcessHandleInfo(int pid)
+		List<HandleInfo^> ^NEInterop::GetProcessHandles(int pid)
 		{
 			auto handles = HandleHelper::GetAllHandles();
 			handles = HandleHelper::GetProcessHandles(handles, (DWORD)pid);
 			return HandleHelper::GetHandleInfo(handles);
 		}
 
-		List<String^> ^NEInterop::GetSharedMemoryNames()
+		List<HandleInfo^> ^NEInterop::GetHandles()
 		{
-			auto handles = HandleHelper::GetAllHandles();
-			handles = HandleHelper::GetTypeHandles(handles, L"Section");
-			auto handleInfo = HandleHelper::GetHandleInfo(handles);
-			auto result = gcnew List<String^>();
-			for each (HandleInfo ^handle in handleInfo)
-				if (!result->Contains(handle->Name))
-					result->Add(handle->Name);
-			return result;
-		}
-
-		wstring InterpretSharedName(String ^name)
-		{
-			auto global = name->StartsWith("\\BaseNamedObjects\\");
-			return (global ? L"Global\\" : L"") + marshal_as<wstring>(name->Substring(name->LastIndexOf("\\") + 1));
+			return HandleHelper::GetHandleInfo(HandleHelper::GetAllHandles());
 		}
 
 		Int64 NEInterop::GetSharedMemorySize(String ^name)
 		{
-			auto wname = InterpretSharedName(name);
-			auto handle = OpenFileMapping(FILE_MAP_READ, FALSE, wname.c_str());
-			if (handle == NULL)
-				throw gcnew Win32Exception();
-			shared_ptr<void> handleDeleter(handle, CloseHandle);
+			auto process = OpenProcess(name);
+			auto handle = DupHandle(process, name);
 
-			auto ptr = MapViewOfFile(handle, FILE_MAP_READ, 0, 0, 0);
+			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_READ, 0, 0, 0);
 			if (ptr == NULL)
 				throw gcnew Win32Exception();
 			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
@@ -520,13 +522,10 @@ namespace NeoEdit
 
 		void NEInterop::ReadSharedMemory(String ^name, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
 		{
-			auto wname = InterpretSharedName(name);
-			auto handle = OpenFileMapping(FILE_MAP_READ, FALSE, wname.c_str());
-			if (handle == NULL)
-				throw gcnew Win32Exception();
-			shared_ptr<void> handleDeleter(handle, CloseHandle);
+			auto process = OpenProcess(name);
+			auto handle = DupHandle(process, name);
 
-			auto ptr = MapViewOfFile(handle, FILE_MAP_READ, 0, 0, 0);
+			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_READ, 0, 0, 0);
 			if (ptr == NULL)
 				throw gcnew Win32Exception();
 			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
@@ -537,13 +536,10 @@ namespace NeoEdit
 
 		void NEInterop::WriteSharedMemory(String ^name, IntPtr index, array<byte> ^bytes)
 		{
-			auto wname = InterpretSharedName(name);
-			auto handle = OpenFileMapping(FILE_MAP_WRITE, FALSE, wname.c_str());
-			if (handle == NULL)
-				throw gcnew Win32Exception();
-			shared_ptr<void> handleDeleter(handle, CloseHandle);
+			auto process = OpenProcess(name);
+			auto handle = DupHandle(process, name);
 
-			auto ptr = MapViewOfFile(handle, FILE_MAP_WRITE, 0, 0, 0);
+			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_WRITE, 0, 0, 0);
 			if (ptr == NULL)
 				throw gcnew Win32Exception();
 			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);

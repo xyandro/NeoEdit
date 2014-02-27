@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using NeoEdit.Interop;
+using NeoEdit.Records.Handles;
 
 namespace NeoEdit.Records.Processes
 {
@@ -49,6 +50,9 @@ namespace NeoEdit.Records.Processes
 				using (var moc = mos.Get())
 					foreach (var mo in moc)
 						yield return new Process(Convert.ToInt32(mo["ProcessID"]), this);
+				var handles = NEInterop.GetProcessHandles(GetProperty<int>(RecordProperty.PropertyName.ID));
+				foreach (var handle in handles)
+					yield return new HandleItem(handle);
 			}
 		}
 
