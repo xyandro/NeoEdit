@@ -494,9 +494,15 @@ namespace NeoEdit
 			return result;
 		}
 
+		wstring InterpretSharedName(String ^name)
+		{
+			auto global = name->StartsWith("\\BaseNamedObjects\\");
+			return (global ? L"Global\\" : L"") + marshal_as<wstring>(name->Substring(name->LastIndexOf("\\") + 1));
+		}
+
 		Int64 NEInterop::GetSharedMemorySize(String ^name)
 		{
-			auto wname = marshal_as<std::wstring>(name);
+			auto wname = InterpretSharedName(name);
 			auto handle = OpenFileMapping(FILE_MAP_READ, FALSE, wname.c_str());
 			if (handle == NULL)
 				throw gcnew Win32Exception();
@@ -514,7 +520,7 @@ namespace NeoEdit
 
 		void NEInterop::ReadSharedMemory(String ^name, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
 		{
-			auto wname = marshal_as<std::wstring>(name);
+			auto wname = InterpretSharedName(name);
 			auto handle = OpenFileMapping(FILE_MAP_READ, FALSE, wname.c_str());
 			if (handle == NULL)
 				throw gcnew Win32Exception();
@@ -531,7 +537,7 @@ namespace NeoEdit
 
 		void NEInterop::WriteSharedMemory(String ^name, IntPtr index, array<byte> ^bytes)
 		{
-			auto wname = marshal_as<std::wstring>(name);
+			auto wname = InterpretSharedName(name);
 			auto handle = OpenFileMapping(FILE_MAP_WRITE, FALSE, wname.c_str());
 			if (handle == NULL)
 				throw gcnew Win32Exception();
