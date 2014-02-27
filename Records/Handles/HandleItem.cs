@@ -12,6 +12,7 @@ namespace NeoEdit.Records.Handles
 		{
 			SetProperty(RecordProperty.PropertyName.Type, handle.Type);
 			SetProperty(RecordProperty.PropertyName.Name, handle.Name);
+			SetProperty(RecordProperty.PropertyName.Data, handle.Data);
 		}
 
 		public override IEnumerable<RecordAction.ActionName> Actions

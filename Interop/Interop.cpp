@@ -78,11 +78,25 @@ namespace
 		OBJECT_TYPE_INFORMATION TypeInformation[1];
 	};
 
+	enum SEMAPHORE_INFORMATION_CLASS
+	{
+		SemaphoreBasicInformation
+	};
+
+	struct SEMAPHORE_BASIC_INFORMATION
+	{
+		ULONG CurrentCount;
+		ULONG MaximumCount;
+	};
+
 	HMODULE ntdll;
 	typedef NTSTATUS (WINAPI *_NtQuerySystemInformation)(ULONG SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength OPTIONAL);
-	_NtQuerySystemInformation NtQuerySystemInformation;
 	typedef NTSTATUS (*_NtQueryObject)(HANDLE ObjectHandle, OBJECT_INFORMATION_CLASS ObjectInformationClass, PVOID ObjectInformation, ULONG Length, PULONG ResultLength);
+	typedef NTSTATUS (*_NtQuerySemaphore)(HANDLE SemaphoreHandle, SEMAPHORE_INFORMATION_CLASS SemaphoreInformationClass, PVOID SemaphoreInformation, ULONG SemaphoreInformationLength, PULONG ReturnLength);
+
+	_NtQuerySystemInformation NtQuerySystemInformation;
 	_NtQueryObject NtQueryObject;
+	_NtQuerySemaphore NtQuerySemaphore;
 
 	vector<wstring> typeNames;
 	map<wstring, wstring> dosToLogical;
@@ -94,7 +108,8 @@ namespace
 		{
 			ntdll = GetModuleHandle(L"ntdll.dll");
 			NtQuerySystemInformation = (_NtQuerySystemInformation)GetProcAddress(ntdll, "NtQuerySystemInformation");
-			NtQueryObject= (_NtQueryObject)GetProcAddress(ntdll, "NtQueryObject");
+			NtQueryObject = (_NtQueryObject)GetProcAddress(ntdll, "NtQueryObject");
+			NtQuerySemaphore = (_NtQuerySemaphore)GetProcAddress(ntdll, "NtQuerySemaphore");
 
 			SetDebug();
 
@@ -278,6 +293,30 @@ namespace
 			return name;
 		}
 
+		static wstring GetData(wstring type, HANDLE handle)
+		{
+			if (type == L"Semaphore")
+			{
+				SEMAPHORE_BASIC_INFORMATION info;
+				if (!NT_SUCCESS(NtQuerySemaphore(handle, SemaphoreBasicInformation, &info, sizeof(info), NULL)))
+					throw gcnew Win32Exception();
+
+				return to_wstring(info.CurrentCount) + L" (Max " + to_wstring(info.MaximumCount) + L")";
+			}
+			if (type == L"Mutant")
+			{
+				auto result = WaitForSingleObject(handle, 0);
+				if ((result == WAIT_OBJECT_0) || (result == WAIT_ABANDONED))
+				{
+					ReleaseMutex(handle);
+					return L"Unlocked";
+				}
+				return L"Locked";
+			}
+
+			return L"";
+		}
+
 		static List<HandleInfo^> ^GetHandleInfo(handleVectorPtr handles)
 		{
 			map<DWORD, handleVector> handlesByProcess;
@@ -303,8 +342,9 @@ namespace
 
 					auto type = typeNames[handle.ObjectTypeIndex];
 					auto name = (type == L"File") && (GetFileType(dupHandle) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle);
+					auto data = GetData(type, dupHandle);
 
-					result->Add(gcnew HandleInfo((int)handle.UniqueProcessId, IntPtr(handle.HandleValue), gcnew String(type.c_str()), gcnew String(name.c_str())));
+					result->Add(gcnew HandleInfo((int)handle.UniqueProcessId, IntPtr(handle.HandleValue), gcnew String(type.c_str()), gcnew String(name.c_str()), gcnew String(data.c_str())));
 				}
 			}
 

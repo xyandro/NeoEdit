@@ -15,9 +15,9 @@ namespace NeoEdit
 		{
 			int PID;
 			System::IntPtr Handle;
-			System::String ^Type, ^Name;
+			System::String ^Type, ^Name, ^Data;
 
-			HandleInfo(int PID, System::IntPtr Handle, System::String ^Type, System::String ^Name);
+			HandleInfo(int PID, System::IntPtr Handle, System::String ^Type, System::String ^Name, System::String ^Data);
 			System::String ^ToString() override;
 		};
 	}
