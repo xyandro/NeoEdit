@@ -378,20 +378,18 @@ namespace
 		return threadSet;
 	}
 
-	shared_ptr<void> OpenProcess(String ^name)
+	shared_ptr<void> OpenProcess(int pid)
 	{
-		auto PID = (DWORD)Convert::ToInt32(name->Substring(0, name->IndexOf("/")));
-		auto handle = ::OpenProcess(PROCESS_DUP_HANDLE, false, PID);
+		auto handle = ::OpenProcess(PROCESS_DUP_HANDLE, false, (DWORD)pid);
 		if (handle == NULL)
 			throw gcnew Win32Exception();
 		return shared_ptr<void>(handle, CloseHandle);
 	}
 
-	shared_ptr<void> DupHandle(shared_ptr<void> process, String ^name)
+	shared_ptr<void> DupHandle(shared_ptr<void> process, IntPtr handle)
 	{
-		auto handle = (HANDLE)Convert::ToInt32(name->Substring(name->IndexOf("/") + 1));
 		HANDLE dupHandle;
-		if (!DuplicateHandle(process.get(), handle, GetCurrentProcess(), &dupHandle, 0, false, DUPLICATE_SAME_ACCESS))
+		if (!DuplicateHandle(process.get(), (HANDLE)handle, GetCurrentProcess(), &dupHandle, 0, false, DUPLICATE_SAME_ACCESS))
 			throw gcnew Win32Exception();
 		return shared_ptr<void>(dupHandle, CloseHandle);
 	}
@@ -545,10 +543,10 @@ namespace NeoEdit
 			return HandleHelper::GetHandleInfo(HandleHelper::GetAllHandles());
 		}
 
-		Int64 NEInterop::GetSharedMemorySize(String ^name)
+		Int64 NEInterop::GetSharedMemorySize(int pid, IntPtr intHandle)
 		{
-			auto process = OpenProcess(name);
-			auto handle = DupHandle(process, name);
+			auto process = OpenProcess(pid);
+			auto handle = DupHandle(process, intHandle);
 
 			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_READ, 0, 0, 0);
 			if (ptr == NULL)
@@ -560,10 +558,10 @@ namespace NeoEdit
 			return mbi.RegionSize;
 		}
 
-		void NEInterop::ReadSharedMemory(String ^name, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
+		void NEInterop::ReadSharedMemory(int pid, IntPtr intHandle, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
 		{
-			auto process = OpenProcess(name);
-			auto handle = DupHandle(process, name);
+			auto process = OpenProcess(pid);
+			auto handle = DupHandle(process, intHandle);
 
 			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_READ, 0, 0, 0);
 			if (ptr == NULL)
@@ -574,10 +572,10 @@ namespace NeoEdit
 			memcpy((byte*)bytesPtr + bytesIndex, (byte*)ptr + (intptr_t)index, numBytes);
 		}
 
-		void NEInterop::WriteSharedMemory(String ^name, IntPtr index, array<byte> ^bytes)
+		void NEInterop::WriteSharedMemory(int pid, IntPtr intHandle, IntPtr index, array<byte> ^bytes)
 		{
-			auto process = OpenProcess(name);
-			auto handle = DupHandle(process, name);
+			auto process = OpenProcess(pid);
+			auto handle = DupHandle(process, intHandle);
 
 			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_WRITE, 0, 0, 0);
 			if (ptr == NULL)
