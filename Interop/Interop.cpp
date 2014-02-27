@@ -313,6 +313,17 @@ namespace
 				}
 				return L"Locked";
 			}
+			if (type == L"Section")
+			{
+				auto ptr = MapViewOfFile(handle, FILE_MAP_READ, 0, 0, 0);
+				if (ptr == NULL)
+					throw gcnew Win32Exception();
+				shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
+
+				MEMORY_BASIC_INFORMATION mbi;
+				::VirtualQuery(ptr, &mbi, sizeof(mbi));
+				return to_wstring(mbi.RegionSize) + L" bytes";
+			}
 
 			return L"";
 		}
