@@ -356,8 +356,9 @@ namespace
 				shared_ptr<void> dupHandleDeleter(dupHandle, CloseHandle);
 
 				auto type = typeNames[handle.ObjectTypeIndex];
-				auto name = (type == L"File") && (GetFileType(dupHandle) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle);
-				auto data = GetData(type, dupHandle);
+				wstring name, data;
+				try { name = (type == L"File") && (GetFileType(dupHandle) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle); } catch (...) { }
+				try { data = GetData(type, dupHandle); } catch (...) { }
 
 				result->Add(gcnew HandleInfo((int)handle.UniqueProcessId, IntPtr(handle.HandleValue), gcnew String(type.c_str()), gcnew String(name.c_str()), gcnew String(data.c_str())));
 			}
