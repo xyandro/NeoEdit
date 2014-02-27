@@ -584,7 +584,7 @@ namespace NeoEdit
 		{
 			auto process = OpenProcess(pid);
 			auto handle = DupHandle(process, (intptr_t)intHandle);
-			return GetSizeOfMap(handle);
+			return GetSizeOfMap(handle.get());
 		}
 
 		void NEInterop::ReadSharedMemory(int pid, IntPtr intHandle, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
