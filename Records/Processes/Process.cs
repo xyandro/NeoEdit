@@ -11,7 +11,7 @@ namespace NeoEdit.Records.Processes
 	{
 		readonly Process parent;
 		public Process(int pid, Process _parent = null)
-			: base("Process/" + pid.ToString())
+			: base(@"Process\" + pid.ToString())
 		{
 			parent = _parent;
 			var process = System.Diagnostics.Process.GetProcessById(pid);

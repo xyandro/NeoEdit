@@ -1,10 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeoEdit.Records.Processes
 {
 	public class ProcessRoot : ProcessRecord
 	{
 		public ProcessRoot() : base("Processes") { }
+
+		public override Record GetRecord(string uri)
+		{
+			if (!uri.StartsWith(@"Process\"))
+				return null;
+			return new Process(Convert.ToInt32(uri.Substring(8)));
+		}
 
 		public override IEnumerable<Record> Records
 		{

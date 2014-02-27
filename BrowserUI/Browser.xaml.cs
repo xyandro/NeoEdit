@@ -217,7 +217,7 @@ namespace NeoEdit.BrowserUI
 
 			if (select != null)
 			{
-				var sel = Location.Records.FirstOrDefault(a => a.FullName == select);
+				var sel = files.Items.Cast<Record>().FirstOrDefault(a => a.FullName == select);
 				if (sel != null)
 				{
 					files.SelectedItem = sel;
