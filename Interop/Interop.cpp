@@ -89,6 +89,9 @@ namespace
 		ULONG MaximumCount;
 	};
 
+	typedef vector<SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX> handleVector;
+	typedef shared_ptr<handleVector> handleVectorPtr;
+
 	HMODULE ntdll;
 	typedef NTSTATUS (WINAPI *_NtQuerySystemInformation)(ULONG SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength OPTIONAL);
 	typedef NTSTATUS (*_NtQueryObject)(HANDLE ObjectHandle, OBJECT_INFORMATION_CLASS ObjectInformationClass, PVOID ObjectInformation, ULONG Length, PULONG ResultLength);
@@ -101,267 +104,249 @@ namespace
 	vector<wstring> typeNames;
 	map<wstring, wstring> dosToLogical;
 
-	ref class HandleHelper
+	static void SetDebug()
 	{
-	private:
-		static HandleHelper()
+		HANDLE token;
+		if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token))
+			throw gcnew Win32Exception();
+		shared_ptr<void> tokenDeleter(token, CloseHandle);
+
+		LUID luid;
+		if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid))
+			throw gcnew Win32Exception();
+
+		TOKEN_PRIVILEGES tp;
+		tp.PrivilegeCount = 1;
+		tp.Privileges[0].Luid = luid;
+		tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+		if (!AdjustTokenPrivileges(token, false, &tp, sizeof(tp), NULL, NULL))
+			throw gcnew Win32Exception();
+	}
+
+	static void GetTypeNames()
+	{
+		shared_ptr<OBJECT_ALL_TYPES_INFORMATION> types;
+		ULONG size = 0;
+		while (true)
 		{
-			ntdll = GetModuleHandle(L"ntdll.dll");
-			NtQuerySystemInformation = (_NtQuerySystemInformation)GetProcAddress(ntdll, "NtQuerySystemInformation");
-			NtQueryObject = (_NtQueryObject)GetProcAddress(ntdll, "NtQueryObject");
-			NtQuerySemaphore = (_NtQuerySemaphore)GetProcAddress(ntdll, "NtQuerySemaphore");
-
-			SetDebug();
-
-			GetTypeNames();
-			GetDosToLogicalMap();
+			types = shared_ptr<OBJECT_ALL_TYPES_INFORMATION>((OBJECT_ALL_TYPES_INFORMATION*)malloc(size), free);
+			auto result = NtQueryObject(NULL, ObjectAllTypesInformation, types.get(), size, &size);
+			if (NT_SUCCESS(result))
+				break;
+			if (result == STATUS_INFO_LENGTH_MISMATCH)
+				continue;
+			throw gcnew Win32Exception();
 		}
 
-		static void SetDebug()
+		typeNames.push_back(L"Unknown");
+		typeNames.push_back(L"Unknown");
+
+		auto typeInfo = (OBJECT_TYPE_INFORMATION*)&types->TypeInformation;
+		for (ULONG ctr = 0; ctr < types->NumberOfTypes; ctr++)
 		{
-			HANDLE token;
-			if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token))
-				throw gcnew Win32Exception();
-			shared_ptr<void> tokenDeleter(token, CloseHandle);
-
-			LUID luid;
-			if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid))
-				throw gcnew Win32Exception();
-
-			TOKEN_PRIVILEGES tp;
-			tp.PrivilegeCount = 1;
-			tp.Privileges[0].Luid = luid;
-			tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-			if (!AdjustTokenPrivileges(token, false, &tp, sizeof(tp), NULL, NULL))
-				throw gcnew Win32Exception();
+			typeNames.push_back(wstring((wchar_t*)typeInfo->TypeName.Buffer, typeInfo->TypeName.Length / 2));
+			auto pos = (intptr_t)typeInfo + sizeof(OBJECT_TYPE_INFORMATION) + typeInfo->TypeName.MaximumLength;
+			// DWORD align
+			pos += 7 - (pos - 1) % 8;
+			typeInfo = (OBJECT_TYPE_INFORMATION*)pos;
 		}
+	}
 
-		static void GetTypeNames()
+	static void GetDosToLogicalMap()
+	{
+		wchar_t drivesBuf[2048];
+		if (!GetLogicalDriveStrings(sizeof(drivesBuf) / sizeof(*drivesBuf), drivesBuf))
+			throw gcnew Win32Exception();
+
+		for (wchar_t *ptr = drivesBuf; *ptr != 0; ptr += wcslen(ptr) + 1)
 		{
-			shared_ptr<OBJECT_ALL_TYPES_INFORMATION> types;
-			ULONG size = 0;
-			while (true)
-			{
-				types = shared_ptr<OBJECT_ALL_TYPES_INFORMATION>((OBJECT_ALL_TYPES_INFORMATION*)malloc(size), free);
-				auto result = NtQueryObject(NULL, ObjectAllTypesInformation, types.get(), size, &size);
-				if (NT_SUCCESS(result))
-					break;
-				if (result == STATUS_INFO_LENGTH_MISMATCH)
-					continue;
+			wstring drive(ptr, 2);
+			wchar_t device[8192];
+			if (!QueryDosDevice(drive.c_str(), device, sizeof(device) / sizeof(*device)))
 				throw gcnew Win32Exception();
-			}
-
-			typeNames.push_back(L"Unknown");
-			typeNames.push_back(L"Unknown");
-
-			auto typeInfo = (OBJECT_TYPE_INFORMATION*)&types->TypeInformation;
-			for (ULONG ctr = 0; ctr < types->NumberOfTypes; ctr++)
-			{
-				typeNames.push_back(wstring((wchar_t*)typeInfo->TypeName.Buffer, typeInfo->TypeName.Length / 2));
-				auto pos = (intptr_t)typeInfo + sizeof(OBJECT_TYPE_INFORMATION) + typeInfo->TypeName.MaximumLength;
-				// DWORD align
-				pos += 7 - (pos - 1) % 8;
-				typeInfo = (OBJECT_TYPE_INFORMATION*)pos;
-			}
+			dosToLogical[wstring(device) + L"\\"] = drive + L"\\";
 		}
+	}
 
-		static void GetDosToLogicalMap()
-		{
-			wchar_t drivesBuf[2048];
-			if (!GetLogicalDriveStrings(sizeof(drivesBuf) / sizeof(*drivesBuf), drivesBuf))
-				throw gcnew Win32Exception();
-
-			for (wchar_t *ptr = drivesBuf; *ptr != 0; ptr += wcslen(ptr) + 1)
-			{
-				wstring drive(ptr, 2);
-				wchar_t device[8192];
-				if (!QueryDosDevice(drive.c_str(), device, sizeof(device) / sizeof(*device)))
-					throw gcnew Win32Exception();
-				dosToLogical[wstring(device) + L"\\"] = drive + L"\\";
-			}
-		}
-
-	public:
-		typedef vector<SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX> handleVector;
-		typedef shared_ptr<handleVector> handleVectorPtr;
-
-		static bool sortPred(SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX handle1, SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX handle2)
-		{
-			if (handle1.UniqueProcessId < handle2.UniqueProcessId)
-				return true;
-			if (handle1.UniqueProcessId > handle2.UniqueProcessId)
-				return false;
-
-			if (handle1.ObjectTypeIndex < handle2.ObjectTypeIndex)
-				return true;
-			if (handle1.ObjectTypeIndex > handle2.ObjectTypeIndex)
-				return false;
-
-			if (handle1.HandleValue < handle2.HandleValue)
-				return true;
-			if (handle1.HandleValue > handle2.HandleValue)
-				return false;
-
+	static bool sortPred(SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX handle1, SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX handle2)
+	{
+		if (handle1.UniqueProcessId < handle2.UniqueProcessId)
+			return true;
+		if (handle1.UniqueProcessId > handle2.UniqueProcessId)
 			return false;
-		}
 
-		static handleVectorPtr GetAllHandles()
+		if (handle1.ObjectTypeIndex < handle2.ObjectTypeIndex)
+			return true;
+		if (handle1.ObjectTypeIndex > handle2.ObjectTypeIndex)
+			return false;
+
+		if (handle1.HandleValue < handle2.HandleValue)
+			return true;
+		if (handle1.HandleValue > handle2.HandleValue)
+			return false;
+
+		return false;
+	}
+
+	static handleVectorPtr GetAllHandles()
+	{
+		shared_ptr<SYSTEM_HANDLE_INFORMATION_EX> handleInfo;
+		ULONG size = 4096;
+		while (true)
 		{
-			shared_ptr<SYSTEM_HANDLE_INFORMATION_EX> handleInfo;
-			ULONG size = 4096;
-			while (true)
+			handleInfo = shared_ptr<SYSTEM_HANDLE_INFORMATION_EX>((SYSTEM_HANDLE_INFORMATION_EX*)malloc(size), free);
+			auto ret = NtQuerySystemInformation(SystemExtendedHandleInformation, handleInfo.get(), size, NULL);
+
+			auto sizeRequired = sizeof(SYSTEM_HANDLE_INFORMATION_EX) + sizeof(SYSTEM_HANDLE_INFORMATION_EX) * (handleInfo->NumberOfHandles - 1); // The -1 is because SYSTEM_HANDLE_INFORMATION_EX has one.
+			if (size < sizeRequired)
 			{
-				handleInfo = shared_ptr<SYSTEM_HANDLE_INFORMATION_EX>((SYSTEM_HANDLE_INFORMATION_EX*)malloc(size), free);
-				auto ret = NtQuerySystemInformation(SystemExtendedHandleInformation, handleInfo.get(), size, NULL);
-
-				auto sizeRequired = sizeof(SYSTEM_HANDLE_INFORMATION_EX) + sizeof(SYSTEM_HANDLE_INFORMATION_EX) * (handleInfo->NumberOfHandles - 1); // The -1 is because SYSTEM_HANDLE_INFORMATION_EX has one.
-				if (size < sizeRequired)
-				{
-					size = (ULONG)(sizeRequired + sizeof(SYSTEM_HANDLE_INFORMATION_EX) * 10);
-					continue;
-				}
-
-				if (NT_SUCCESS(ret))
-					break;
-
-				throw gcnew Win32Exception();
+				size = (ULONG)(sizeRequired + sizeof(SYSTEM_HANDLE_INFORMATION_EX) * 10);
+				continue;
 			}
 
-			handleVectorPtr result(new handleVector);
-			for (auto ctr = 0; ctr < handleInfo->NumberOfHandles; ++ctr)
-				result->push_back(handleInfo->Handles[ctr]);
+			if (NT_SUCCESS(ret))
+				break;
 
-			sort(result->begin(), result->end(), sortPred);
-			return result;
+			throw gcnew Win32Exception();
 		}
 
-		static handleVectorPtr GetProcessHandles(handleVectorPtr handles, DWORD pid)
-		{
-			handleVectorPtr result(new handleVector);
-			for each (auto handle in *handles)
-				if ((DWORD)handle.UniqueProcessId == pid)
-					result->push_back(handle);
+		handleVectorPtr result(new handleVector);
+		for (auto ctr = 0; ctr < handleInfo->NumberOfHandles; ++ctr)
+			result->push_back(handleInfo->Handles[ctr]);
+
+		sort(result->begin(), result->end(), sortPred);
+		return result;
+	}
+
+	static handleVectorPtr GetProcessHandles(handleVectorPtr handles, DWORD pid)
+	{
+		handleVectorPtr result(new handleVector);
+		for each (auto handle in *handles)
+			if ((DWORD)handle.UniqueProcessId == pid)
+				result->push_back(handle);
+		return result;
+	}
+
+	static handleVectorPtr GetTypeHandles(handleVectorPtr handles, wstring type)
+	{
+		handleVectorPtr result(new handleVector);
+		auto itr = find(typeNames.begin(), typeNames.end(), type);
+		if (itr == typeNames.end())
 			return result;
-		}
 
-		static handleVectorPtr GetTypeHandles(handleVectorPtr handles, wstring type)
+		auto index = itr - typeNames.begin();
+		for each (auto handle in *handles)
+			if (handle.ObjectTypeIndex == index)
+				result->push_back(handle);
+		return result;
+	}
+
+	static wstring GetLogicalName(HANDLE handle)
+	{
+		auto size = 2048;
+		shared_ptr<UNICODE_STRING> str((UNICODE_STRING*)malloc(size), free);
+		auto result = NtQueryObject(handle, ObjectNameInformation, str.get(), size, NULL);
+		if (!NT_SUCCESS(result))
+			throw gcnew Win32Exception();
+
+		wstring name(str->Buffer, str->Length / 2);
+
+		if ((_wcsnicmp(name.c_str(), L"\\Device\\Serial", 14)) == 0 || (_wcsnicmp(name.c_str(), L"\\Device\\UsbSer", 14) == 0))
 		{
-			handleVectorPtr result(new handleVector);
-			auto itr = find(typeNames.begin(), typeNames.end(), type);
-			if (itr == typeNames.end())
-				return result;
+			HKEY key;
+			LONG err;
+			if ((err = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Hardware\\DeviceMap\\SerialComm", 0, KEY_QUERY_VALUE, &key)) != ERROR_SUCCESS)
+				throw gcnew Win32Exception(err);
+			shared_ptr<void> keyDeleter(key, RegCloseKey);
 
-			auto index = itr - typeNames.begin();
-			for each (auto handle in *handles)
-				if (handle.ObjectTypeIndex == index)
-					result->push_back(handle);
-			return result;
-		}
-
-		static wstring GetLogicalName(HANDLE handle)
-		{
-			auto size = 2048;
-			shared_ptr<UNICODE_STRING> str((UNICODE_STRING*)malloc(size), free);
-			auto result = NtQueryObject(handle, ObjectNameInformation, str.get(), size, NULL);
-			if (!NT_SUCCESS(result))
-				throw gcnew Win32Exception();
-
-			wstring name(str->Buffer, str->Length / 2);
-
-			if ((_wcsnicmp(name.c_str(), L"\\Device\\Serial", 14)) == 0 || (_wcsnicmp(name.c_str(), L"\\Device\\UsbSer", 14) == 0))
-			{
-				HKEY key;
-				LONG err;
-				if ((err = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Hardware\\DeviceMap\\SerialComm", 0, KEY_QUERY_VALUE, &key)) != ERROR_SUCCESS)
-					throw gcnew Win32Exception(err);
-				shared_ptr<void> keyDeleter(key, RegCloseKey);
-
-				WCHAR port[50];
-				DWORD size = sizeof(port); 
-				if ((err = RegQueryValueEx(key, name.c_str(), NULL, NULL, (BYTE*)port, &size)) == ERROR_SUCCESS)
-					name = port;
-				else
-					name += L" UNKNOWN PORT";
-			}
+			WCHAR port[50];
+			DWORD size = sizeof(port); 
+			if ((err = RegQueryValueEx(key, name.c_str(), NULL, NULL, (BYTE*)port, &size)) == ERROR_SUCCESS)
+				name = port;
 			else
-			{
-				for each (auto entry in dosToLogical)
-					if (name.compare(0, entry.first.size(), entry.first) == 0)
-						name = entry.second + name.substr(entry.first.size());
-			}
-
-			return name;
+				name += L" UNKNOWN PORT";
+		}
+		else
+		{
+			for each (auto entry in dosToLogical)
+				if (name.compare(0, entry.first.size(), entry.first) == 0)
+					name = entry.second + name.substr(entry.first.size());
 		}
 
-		static wstring GetData(wstring type, HANDLE handle)
+		return name;
+	}
+
+	static intptr_t GetSizeOfMap(HANDLE handle)
+	{
+		auto ptr = MapViewOfFile(handle, FILE_MAP_READ, 0, 0, 0);
+		if (ptr == NULL)
+			throw gcnew Win32Exception();
+		shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
+
+		MEMORY_BASIC_INFORMATION mbi;
+		::VirtualQuery(ptr, &mbi, sizeof(mbi));
+		return mbi.RegionSize;
+	}
+
+	static wstring GetData(wstring type, HANDLE handle)
+	{
+		if (type == L"Semaphore")
 		{
-			if (type == L"Semaphore")
-			{
-				SEMAPHORE_BASIC_INFORMATION info;
-				if (!NT_SUCCESS(NtQuerySemaphore(handle, SemaphoreBasicInformation, &info, sizeof(info), NULL)))
-					throw gcnew Win32Exception();
+			SEMAPHORE_BASIC_INFORMATION info;
+			if (!NT_SUCCESS(NtQuerySemaphore(handle, SemaphoreBasicInformation, &info, sizeof(info), NULL)))
+				throw gcnew Win32Exception();
 
-				return to_wstring(info.CurrentCount) + L" (Max " + to_wstring(info.MaximumCount) + L")";
-			}
-			if (type == L"Mutant")
-			{
-				auto result = WaitForSingleObject(handle, 0);
-				if ((result == WAIT_OBJECT_0) || (result == WAIT_ABANDONED))
-				{
-					ReleaseMutex(handle);
-					return L"Unlocked";
-				}
-				return L"Locked";
-			}
-			if (type == L"Section")
-			{
-				auto ptr = MapViewOfFile(handle, FILE_MAP_READ, 0, 0, 0);
-				if (ptr == NULL)
-					throw gcnew Win32Exception();
-				shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
-
-				MEMORY_BASIC_INFORMATION mbi;
-				::VirtualQuery(ptr, &mbi, sizeof(mbi));
-				return to_wstring(mbi.RegionSize) + L" bytes";
-			}
-
-			return L"";
+			return to_wstring(info.CurrentCount) + L" (Max " + to_wstring(info.MaximumCount) + L")";
 		}
-
-		static List<HandleInfo^> ^GetHandleInfo(handleVectorPtr handles)
+		if (type == L"Mutant")
 		{
-			map<DWORD, handleVector> handlesByProcess;
-			for each (auto handle in *handles)
-				handlesByProcess[(DWORD)handle.UniqueProcessId].push_back(handle);
-
-			auto result = gcnew List<HandleInfo^>();
-
-			auto currentProcess = GetCurrentProcess();
-			for each (auto entry in handlesByProcess)
+			auto result = WaitForSingleObject(handle, 0);
+			if ((result == WAIT_OBJECT_0) || (result == WAIT_ABANDONED))
 			{
-				auto processHandle = OpenProcess(PROCESS_DUP_HANDLE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, entry.first);
-				if (processHandle == NULL)
+				ReleaseMutex(handle);
+				return L"Unlocked";
+			}
+			return L"Locked";
+		}
+		if (type == L"Section")
+			return to_wstring(GetSizeOfMap(handle)) + L" bytes";
+
+		return L"";
+	}
+
+	static List<HandleInfo^> ^GetHandleInfo(handleVectorPtr handles)
+	{
+		map<DWORD, handleVector> handlesByProcess;
+		for each (auto handle in *handles)
+			handlesByProcess[(DWORD)handle.UniqueProcessId].push_back(handle);
+
+		auto result = gcnew List<HandleInfo^>();
+
+		auto currentProcess = GetCurrentProcess();
+		for each (auto entry in handlesByProcess)
+		{
+			auto processHandle = OpenProcess(PROCESS_DUP_HANDLE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, entry.first);
+			if (processHandle == NULL)
+				continue;
+			shared_ptr<void> processHandleDeleter(processHandle, CloseHandle);
+
+			for each (auto handle in entry.second)
+			{
+				HANDLE dupHandle;
+				if (!DuplicateHandle(processHandle, handle.HandleValue, currentProcess, &dupHandle, 0, false, DUPLICATE_SAME_ACCESS))
 					continue;
-				shared_ptr<void> processHandleDeleter(processHandle, CloseHandle);
+				shared_ptr<void> dupHandleDeleter(dupHandle, CloseHandle);
 
-				for each (auto handle in entry.second)
-				{
-					HANDLE dupHandle;
-					if (!DuplicateHandle(processHandle, handle.HandleValue, currentProcess, &dupHandle, 0, false, DUPLICATE_SAME_ACCESS))
-						continue;
-					shared_ptr<void> dupHandleDeleter(dupHandle, CloseHandle);
+				auto type = typeNames[handle.ObjectTypeIndex];
+				auto name = (type == L"File") && (GetFileType(dupHandle) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle);
+				auto data = GetData(type, dupHandle);
 
-					auto type = typeNames[handle.ObjectTypeIndex];
-					auto name = (type == L"File") && (GetFileType(dupHandle) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle);
-					auto data = GetData(type, dupHandle);
-
-					result->Add(gcnew HandleInfo((int)handle.UniqueProcessId, IntPtr(handle.HandleValue), gcnew String(type.c_str()), gcnew String(name.c_str()), gcnew String(data.c_str())));
-				}
+				result->Add(gcnew HandleInfo((int)handle.UniqueProcessId, IntPtr(handle.HandleValue), gcnew String(type.c_str()), gcnew String(name.c_str()), gcnew String(data.c_str())));
 			}
-
-			return result;
 		}
-	};
+
+		return result;
+	}
 
 	shared_ptr<hash_set<int>> GetThreadIDs(int pid)
 	{
@@ -404,6 +389,26 @@ namespace
 			throw gcnew Win32Exception();
 		return shared_ptr<void>(dupHandle, CloseHandle);
 	}
+
+	class HandleHelper
+	{
+		static HandleHelper handleHelper;
+	public:
+		HandleHelper()
+		{
+			ntdll = GetModuleHandle(L"ntdll.dll");
+			NtQuerySystemInformation = (_NtQuerySystemInformation)GetProcAddress(ntdll, "NtQuerySystemInformation");
+			NtQueryObject = (_NtQueryObject)GetProcAddress(ntdll, "NtQueryObject");
+			NtQuerySemaphore = (_NtQuerySemaphore)GetProcAddress(ntdll, "NtQuerySemaphore");
+
+			SetDebug();
+
+			GetTypeNames();
+			GetDosToLogicalMap();
+		}
+	};
+
+	HandleHelper HandleHelper::handleHelper;
 }
 
 namespace NeoEdit
@@ -532,9 +537,9 @@ namespace NeoEdit
 
 		List<int> ^NEInterop::GetPIDsWithFileLock(String ^fileName)
 		{
-			auto handles = HandleHelper::GetAllHandles();
-			handles = HandleHelper::GetTypeHandles(handles, L"File");
-			auto handleInfo = HandleHelper::GetHandleInfo(handles);
+			auto handles = GetAllHandles();
+			handles = GetTypeHandles(handles, L"File");
+			auto handleInfo = GetHandleInfo(handles);
 			auto result = gcnew List<int>();
 			for each (HandleInfo ^handle in handleInfo)
 				if (handle->Name->Equals(fileName, StringComparison::OrdinalIgnoreCase))
@@ -544,29 +549,21 @@ namespace NeoEdit
 
 		List<HandleInfo^> ^NEInterop::GetProcessHandles(int pid)
 		{
-			auto handles = HandleHelper::GetAllHandles();
-			handles = HandleHelper::GetProcessHandles(handles, (DWORD)pid);
-			return HandleHelper::GetHandleInfo(handles);
+			auto handles = GetAllHandles();
+			handles = ::GetProcessHandles(handles, (DWORD)pid);
+			return GetHandleInfo(handles);
 		}
 
 		List<HandleInfo^> ^NEInterop::GetHandles()
 		{
-			return HandleHelper::GetHandleInfo(HandleHelper::GetAllHandles());
+			return GetHandleInfo(GetAllHandles());
 		}
 
 		Int64 NEInterop::GetSharedMemorySize(int pid, IntPtr intHandle)
 		{
 			auto process = OpenProcess(pid);
 			auto handle = DupHandle(process, intHandle);
-
-			auto ptr = MapViewOfFile(handle.get(), FILE_MAP_READ, 0, 0, 0);
-			if (ptr == NULL)
-				throw gcnew Win32Exception();
-			shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
-
-			MEMORY_BASIC_INFORMATION mbi;
-			::VirtualQuery(ptr, &mbi, sizeof(mbi));
-			return mbi.RegionSize;
+			return GetSizeOfMap(handle);
 		}
 
 		void NEInterop::ReadSharedMemory(int pid, IntPtr intHandle, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
