@@ -26,11 +26,11 @@ namespace
 		PVOID Object;
 		HANDLE UniqueProcessId;
 		HANDLE HandleValue;
-		ACCESS_MASK GrantedAccess;
+		ULONG GrantedAccess;
 		USHORT CreatorBackTraceIndex;
 		USHORT ObjectTypeIndex;
 		ULONG HandleAttributes;
-		PVOID Reserved;
+		ULONG Reserved;
 	};
 
 	struct SYSTEM_HANDLE_INFORMATION_EX
@@ -180,6 +180,11 @@ namespace
 			if (handle1.ObjectTypeIndex < handle2.ObjectTypeIndex)
 				return true;
 			if (handle1.ObjectTypeIndex > handle2.ObjectTypeIndex)
+				return false;
+
+			if (handle1.HandleValue < handle2.HandleValue)
+				return true;
+			if (handle1.HandleValue > handle2.HandleValue)
 				return false;
 
 			return false;
