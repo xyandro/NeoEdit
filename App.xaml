@@ -1,8 +1,7 @@
 ﻿<Application x:Class="NeoEdit.GUI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:common="clr-namespace:NeoEdit.GUI.Common"
-	StartupUri="BrowserUI/Browser.xaml">
+    xmlns:common="clr-namespace:NeoEdit.GUI.Common">
 
 	<Application.Resources>
 		<Style TargetType="MenuItem">

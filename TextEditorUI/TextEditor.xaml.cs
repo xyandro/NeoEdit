@@ -56,6 +56,8 @@ namespace NeoEdit.GUI.TextEditorUI
 		static TextEditor() { UIHelper<TextEditor>.Register(); }
 
 		readonly UIHelper<TextEditor> uiHelper;
+		public TextEditor() : this(new TextData(new byte[0])) { }
+
 		public TextEditor(TextData data)
 		{
 			uiHelper = new UIHelper<TextEditor>(this);

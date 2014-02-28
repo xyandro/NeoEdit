@@ -65,6 +65,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
 		readonly UIHelper<BinaryEditor> uiHelper;
+		public BinaryEditor() : this(new MemoryBinaryData(new byte[0])) { }
 		public BinaryEditor(BinaryData data)
 		{
 			uiHelper = new UIHelper<BinaryEditor>(this);
