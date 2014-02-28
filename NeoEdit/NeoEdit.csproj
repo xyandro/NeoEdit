@@ -67,10 +67,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\bin\$(Configuration).$(Platform)\GUI">
+    <EmbeddedResource Include="$(SolutionDir)bin\$(Configuration).$(Platform)\GUI">
       <Link>GUI</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\bin\$(Configuration).$(Platform)\Interop">
+    <EmbeddedResource Include="$(SolutionDir)bin\$(Configuration).$(Platform)\Interop">
       <Link>Interop</Link>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
