@@ -229,7 +229,7 @@ namespace NeoEdit.GUI.Data
 			{
 				case Type.RSA: return new List<string> { "SHA1", "SHA256", "SHA512", "MD5" };
 				case Type.DSA: return new List<string> { "SHA1" };
-				default: throw new ArgumentException(type.ToString());
+				default: return new List<string>();
 			}
 		}
 
