@@ -59,7 +59,7 @@ namespace NeoEdit.GUI
 			var guid = System.Windows.Clipboard.GetDataObject().GetData(typeof(T));
 			if (!(guid is string))
 				return null;
-			var found = clipboard.First(data => data.GUID == (string)guid);
+			var found = clipboard.FirstOrDefault(data => data.GUID == (string)guid);
 			if (found == null)
 				return null;
 			return found.Contents as T;
@@ -163,7 +163,7 @@ namespace NeoEdit.GUI
 			var guid = System.Windows.Clipboard.GetDataObject().GetData("GUID");
 			if (!(guid is string))
 				return null;
-			return clipboard.First(data => data.GUID == (string)guid);
+			return clipboard.FirstOrDefault(data => data.GUID == (string)guid);
 		}
 
 		static Clipboard() { UIHelper<Clipboard>.Register(); }
