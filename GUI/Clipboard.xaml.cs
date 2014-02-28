@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Records;
@@ -181,11 +182,25 @@ namespace NeoEdit.GUI
 
 			Records = clipboard;
 
+			Loaded += (s, e) =>
+			{
+				var item = items.ItemContainerGenerator.ContainerFromItem(items.SelectedItem) as ListBoxItem;
+				if (item != null)
+					item.Focus();
+			};
+			KeyDown += (s, e) =>
+			{
+				if (e.Key == Key.Escape)
+					Close();
+			};
 			items.MouseDoubleClick += (s, e) => ItemClicked();
 			items.PreviewKeyDown += (s, e) =>
 			{
 				if (e.Key == Key.Enter)
+				{
+					e.Handled = true;
 					ItemClicked();
+				}
 			};
 
 			base.Show();
@@ -195,6 +210,7 @@ namespace NeoEdit.GUI
 		{
 			var item = items.SelectedItem as ClipboardData;
 			Set(item);
+			Close();
 		}
 
 		protected override void OnClosed(EventArgs e)
