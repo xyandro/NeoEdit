@@ -6,23 +6,14 @@ namespace NeoEdit.Records.Handles
 {
 	public class SharedMemoryBinaryData : BinaryData
 	{
-		string name;
+		int pid;
+		IntPtr handle;
 		long length;
-
-		int GetPID()
+		public SharedMemoryBinaryData(int _pid, IntPtr _handle)
 		{
-			return Convert.ToInt32(name.Substring(0, name.IndexOf("/")));
-		}
-
-		IntPtr GetHandle()
-		{
-			return (IntPtr)Convert.ToInt64(name.Substring(name.IndexOf("/") + 1));
-		}
-
-		public SharedMemoryBinaryData(string _name)
-		{
-			name = _name;
-			length = NEInterop.GetSharedMemorySize(GetPID(), GetHandle());
+			pid = _pid;
+			handle = _handle;
+			length = NEInterop.GetSharedMemorySize(pid, handle);
 		}
 
 		public override long Length { get { return length; } }
@@ -38,7 +29,7 @@ namespace NeoEdit.Records.Handles
 			cacheStart = index;
 			cacheEnd = Math.Min(cacheStart + cache.Length, Length);
 			cacheHasData = true;
-			NEInterop.ReadSharedMemory(GetPID(), GetHandle(), (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
+			NEInterop.ReadSharedMemory(pid, handle, (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 		}
 
 		public override void Replace(long index, long count, byte[] bytes)
@@ -47,7 +38,7 @@ namespace NeoEdit.Records.Handles
 				throw new Exception("Cannot change size.");
 
 			var length = bytes.Length;
-			NEInterop.WriteSharedMemory(GetPID(), GetHandle(), (IntPtr)index, bytes);
+			NEInterop.WriteSharedMemory(pid, handle, (IntPtr)index, bytes);
 
 			Refresh();
 			changed();

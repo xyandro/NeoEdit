@@ -560,7 +560,7 @@ namespace NeoEdit
 		List<int> ^NEInterop::GetPIDsWithFileLock(String ^fileName)
 		{
 			auto handles = GetAllHandles();
-			handles = GetTypeHandles(handles, L"File");
+			handles = ::GetTypeHandles(handles, L"File");
 			auto handleInfo = GetHandleInfo(handles);
 			auto result = gcnew List<int>();
 			for each (HandleInfo ^handle in handleInfo)
@@ -576,9 +576,19 @@ namespace NeoEdit
 			return GetHandleInfo(handles);
 		}
 
-		List<HandleInfo^> ^NEInterop::GetHandles()
+		List<String^> ^NEInterop::GetHandleTypes()
 		{
-			return GetHandleInfo(GetAllHandles());
+			auto result = gcnew List<String^>;
+			for each (auto name in typeNames)
+				result->Add(gcnew String(name.c_str()));
+			return result;
+		}
+
+		List<HandleInfo^> ^NEInterop::GetTypeHandles(String ^type)
+		{
+			auto handles = GetAllHandles();
+			handles = ::GetTypeHandles(handles, marshal_as<wstring>(type));
+			return GetHandleInfo(handles);
 		}
 
 		Int64 NEInterop::GetSharedMemorySize(int pid, IntPtr intHandle)

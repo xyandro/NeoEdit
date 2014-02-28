@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using NeoEdit.Interop;
 
 namespace NeoEdit.Records.Handles
@@ -8,6 +7,13 @@ namespace NeoEdit.Records.Handles
 	{
 		public HandleRoot() : base("Handles") { }
 
-		public override IEnumerable<Record> Records { get { return NEInterop.GetHandles().Select(handle => new HandleItem(handle)); } }
+		public override IEnumerable<Record> Records
+		{
+			get
+			{
+				foreach (var type in NEInterop.GetHandleTypes())
+					yield return new HandleType(type);
+			}
+		}
 	}
 }

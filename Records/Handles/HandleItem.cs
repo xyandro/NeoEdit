@@ -8,11 +8,21 @@ namespace NeoEdit.Records.Handles
 	public class HandleItem : HandleRecord
 	{
 		public HandleItem(HandleInfo handle)
-			: base(String.Format("{0}/{1}", handle.PID, handle.Handle))
+			: base(String.Format(@"Handles\{0}\{1}\{2}", handle.Type, handle.PID, handle.Handle))
 		{
 			SetProperty(RecordProperty.PropertyName.Type, handle.Type);
 			SetProperty(RecordProperty.PropertyName.Name, handle.Name);
 			SetProperty(RecordProperty.PropertyName.Data, handle.Data);
+		}
+
+		int GetPID()
+		{
+			return Convert.ToInt32(FullName.Split('\\')[2]);
+		}
+
+		IntPtr GetHandle()
+		{
+			return (IntPtr)Convert.ToInt64(FullName.Split('\\')[3]);
 		}
 
 		public override IEnumerable<RecordAction.ActionName> Actions
@@ -28,7 +38,7 @@ namespace NeoEdit.Records.Handles
 
 		public override BinaryData Read()
 		{
-			return new SharedMemoryBinaryData(FullName);
+			return new SharedMemoryBinaryData(GetPID(), GetHandle());
 		}
 	}
 }
