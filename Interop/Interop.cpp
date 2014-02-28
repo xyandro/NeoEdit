@@ -159,13 +159,7 @@ namespace
 		for (ULONG ctr = 0; ctr < types->NumberOfTypes; ctr++)
 		{
 			typeNames.push_back(wstring((wchar_t*)typeInfo->TypeName.Buffer, typeInfo->TypeName.Length / 2));
-			auto pos = (intptr_t)typeInfo + sizeof(OBJECT_TYPE_INFORMATION) + typeInfo->TypeName.MaximumLength;
-#ifdef _WIN64
-			pos += 7 - (pos - 1) % 8; // DWORD align
-#else
-			pos += 3 - (pos - 1) % 4; // WORD align
-#endif
-			typeInfo = (OBJECT_TYPE_INFORMATION*)pos;
+			typeInfo = (OBJECT_TYPE_INFORMATION*)(((intptr_t)typeInfo + sizeof(OBJECT_TYPE_INFORMATION) + typeInfo->TypeName.MaximumLength + sizeof(void*) - 1) & ~(sizeof(void*) - 1));
 		}
 	}
 
