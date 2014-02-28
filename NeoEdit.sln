@@ -5,6 +5,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{5
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interop", "Interop\Interop.vcxproj", "{95A660DC-FBFE-4560-A433-0B024494B213}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit", "NeoEdit\NeoEdit.csproj", "{FA951C00-4C1C-44AC-A09F-33352D9A1854}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53DA8D50-6F45-4663-8101-9DD4BF99096E} = {53DA8D50-6F45-4663-8101-9DD4BF99096E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -37,6 +42,16 @@ Global
 		{95A660DC-FBFE-4560-A433-0B024494B213}.Test|x64.Build.0 = Test|x64
 		{95A660DC-FBFE-4560-A433-0B024494B213}.Test|x86.ActiveCfg = Test|Win32
 		{95A660DC-FBFE-4560-A433-0B024494B213}.Test|x86.Build.0 = Test|Win32
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Debug|x64.ActiveCfg = Debug|x64
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Debug|x64.Build.0 = Debug|x64
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Debug|x86.ActiveCfg = Debug|x86
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Debug|x86.Build.0 = Debug|x86
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Release|x64.ActiveCfg = Release|x64
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Release|x64.Build.0 = Release|x64
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Release|x86.ActiveCfg = Release|x86
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Release|x86.Build.0 = Release|x86
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Test|x64.ActiveCfg = Debug|x64
+		{FA951C00-4C1C-44AC-A09F-33352D9A1854}.Test|x86.ActiveCfg = Debug|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

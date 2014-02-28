@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using NeoEdit.GUI.Data;
 
 namespace NeoEdit.GUI.Records.Disk
 {
 	class Identifier
 	{
-		static string magicPath = Path.Combine(Path.GetDirectoryName(typeof(Identifier).Assembly.Location), "Magic");
+		static string magicPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Magic");
 		static Identifier()
 		{
-			string Header = "NeoEdit.Magic.";
+			string Header = "NeoEdit.GUI.Magic.";
 
 			Directory.CreateDirectory(magicPath);
 			foreach (var file in typeof(Identifier).Assembly.GetManifestResourceNames())
