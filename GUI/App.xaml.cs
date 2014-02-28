@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 using NeoEdit.GUI.Data;
@@ -11,30 +12,44 @@ namespace NeoEdit.GUI
 		{
 			base.OnStartup(e);
 
-			if (e.Args.Length > 0)
-				switch (e.Args[0])
+			try
+			{
+				var run = true;
+				if (e.Args.Length > 0)
 				{
-					case "text": new TextEditorUI.TextEditor(); return;
-					case "binary": new BinaryEditorUI.BinaryEditor(); return;
-					case "gzip":
-						{
-							var data = File.ReadAllBytes(e.Args[1]);
-							data = Compression.Compress(Compression.Type.GZip, data);
-							File.WriteAllBytes(e.Args[2], data);
-							Application.Current.Shutdown();
-						}
-						return;
-					case "gunzip":
-						{
-							var data = File.ReadAllBytes(e.Args[1]);
-							data = Compression.Decompress(Compression.Type.GZip, data);
-							File.WriteAllBytes(e.Args[2], data);
-							Application.Current.Shutdown();
-						}
-						return;
+					run = false;
+					switch (e.Args[0])
+					{
+						case "text": new TextEditorUI.TextEditor(); break;
+						case "binary": new BinaryEditorUI.BinaryEditor(); break;
+						case "gzip":
+							{
+								var data = File.ReadAllBytes(e.Args[1]);
+								data = Compression.Compress(Compression.Type.GZip, data);
+								File.WriteAllBytes(e.Args[2], data);
+							}
+							break;
+						case "gunzip":
+							{
+								var data = File.ReadAllBytes(e.Args[1]);
+								data = Compression.Decompress(Compression.Type.GZip, data);
+								File.WriteAllBytes(e.Args[2], data);
+							}
+							break;
+						default: run = true; break;
+					}
 				}
 
-			new BrowserUI.Browser();
+				if (run)
+					new BrowserUI.Browser();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Error");
+			}
+
+			if (Application.Current.Windows.Count == 0)
+				Application.Current.Shutdown();
 		}
 
 		App()

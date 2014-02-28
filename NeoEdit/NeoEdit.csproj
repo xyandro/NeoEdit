@@ -81,7 +81,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(TargetDir)..\GUI.exe" gzip "$(TargetDir)..\GUI.exe" "$(TargetDir)..\GUI"
+    <PreBuildEvent>echo Compressing GUI...
+"$(TargetDir)..\GUI.exe" gzip "$(TargetDir)..\GUI.exe" "$(TargetDir)..\GUI"
+echo Compressing Interop...
 "$(TargetDir)..\GUI.exe" gzip "$(TargetDir)..\Interop.dll" "$(TargetDir)..\Interop"
 </PreBuildEvent>
   </PropertyGroup>
