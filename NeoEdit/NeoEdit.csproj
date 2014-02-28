@@ -80,6 +80,11 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(TargetDir)..\GUI.exe" gzip "$(TargetDir)..\GUI.exe" "$(TargetDir)..\GUI"
+"$(TargetDir)..\GUI.exe" gzip "$(TargetDir)..\Interop.dll" "$(TargetDir)..\Interop"
+</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

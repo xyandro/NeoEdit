@@ -308,11 +308,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>"$(TargetPath)" gzip "$(TargetDir)GUI.exe" "$(TargetDir)GUI"
-"$(TargetPath)" gzip "$(TargetDir)Interop.dll" "$(TargetDir)Interop"
-</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
