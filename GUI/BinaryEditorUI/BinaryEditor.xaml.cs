@@ -15,6 +15,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			Edit_Cut,
 			Edit_Copy,
 			Edit_Paste,
+			Edit_ShowClipboard,
 			Edit_Find,
 			Edit_FindNext,
 			Edit_FindPrev,
@@ -115,6 +116,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			switch ((Commands)command.Enum)
 			{
 				case Commands.View_Values: ShowValues = !ShowValues; break;
+				case Commands.Edit_ShowClipboard: Clipboard.Show(); break;
 			}
 		}
 

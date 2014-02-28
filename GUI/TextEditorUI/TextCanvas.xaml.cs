@@ -968,14 +968,14 @@ namespace NeoEdit.GUI.TextEditorUI
 					{
 						var result = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToArray();
 						if (result.Length != 0)
-							Clipboard.Current.Set(result);
+							Clipboard.Set(result);
 						if (com == TextEditor.Commands.Edit_Cut)
 							Replace(ranges[RangeType.Selection], null, false);
 					}
 					break;
 				case TextEditor.Commands.Edit_Paste:
 					{
-						var result = Clipboard.Current.GetStrings().ToList();
+						var result = Clipboard.GetStrings().ToList();
 						if ((result == null) || (result.Count == 0))
 							break;
 

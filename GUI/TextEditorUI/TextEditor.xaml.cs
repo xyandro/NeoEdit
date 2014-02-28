@@ -14,6 +14,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			Edit_Cut,
 			Edit_Copy,
 			Edit_Paste,
+			Edit_ShowClipboad,
 			Edit_Find,
 			Edit_FindNext,
 			Edit_FindPrev,
@@ -92,6 +93,11 @@ namespace NeoEdit.GUI.TextEditorUI
 		void CommandRun(UICommand command, object parameter)
 		{
 			canvas.CommandRun(command, parameter);
+
+			switch ((Commands)command.Enum)
+			{
+				case TextEditor.Commands.Edit_ShowClipboad: Clipboard.Show(); break;
+			}
 		}
 
 		bool CommandCanRun(UICommand command, object parameter)

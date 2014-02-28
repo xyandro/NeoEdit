@@ -70,6 +70,9 @@
     <Compile Include="BrowserUI\Dialogs\EditSyncParams.xaml.cs">
       <DependentUpon>EditSyncParams.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Clipboard.xaml.cs">
+      <DependentUpon>Clipboard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\DumpBinaryData.cs" />
     <Compile Include="Records\Handles\HandleType.cs" />
     <Compile Include="Records\Processes\ProcessBinaryData.cs" />
@@ -116,7 +119,6 @@
     <Compile Include="Records\Root.cs" />
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="Clipboard.cs" />
     <Compile Include="UnitTest\ChecksumTest.cs" />
     <Compile Include="UnitTest\CoderTest.cs" />
     <Compile Include="UnitTest\CompressionTest.cs" />
@@ -211,6 +213,10 @@
     <Page Include="BrowserUI\Dialogs\EditSyncParams.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Clipboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>

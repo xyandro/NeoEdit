@@ -22,7 +22,7 @@ namespace NeoEdit.GUI.Common
 		readonly ControlType control;
 		public static void Register()
 		{
-			var properties = typeof(ControlType).GetProperties().Where(a => a.CustomAttributes.Any(b => b.AttributeType == typeof(DepPropAttribute))).ToList();
+			var properties = typeof(ControlType).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(a => a.CustomAttributes.Any(b => b.AttributeType == typeof(DepPropAttribute))).ToList();
 			dependencyProperty = properties.ToDictionary(a => a.Name, a => DependencyProperty.Register(a.Name, a.PropertyType, typeof(ControlType), new PropertyMetadata(ValueChangedCallback)));
 		}
 
