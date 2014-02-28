@@ -150,7 +150,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			uiHelper = new UIHelper<BinaryCanvas>(this);
 			InitializeComponent();
 
-			var fontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Anonymous Pro");
+			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#Anonymous Pro");
 			typeface = fontFamily.GetTypefaces().First();
 			fontSize = 14;
 			rowHeight = fontSize;

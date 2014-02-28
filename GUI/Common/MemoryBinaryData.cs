@@ -29,6 +29,7 @@ namespace NeoEdit.GUI.Common
 			Array.Copy(bytes, 0, newData, index, bytes.Length);
 			Array.Copy(cache, index + count, newData, index + bytes.Length, cache.Length - index - count);
 			cache = newData;
+			length = cache.Length;
 			changed();
 		}
 

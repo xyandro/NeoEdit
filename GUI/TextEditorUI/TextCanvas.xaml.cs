@@ -108,7 +108,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			uiHelper = new UIHelper<TextCanvas>(this);
 			InitializeComponent();
 
-			var fontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#Anonymous Pro");
+			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#Anonymous Pro");
 			typeface = fontFamily.GetTypefaces().First();
 			fontSize = 14;
 			lineHeight = fontSize;
