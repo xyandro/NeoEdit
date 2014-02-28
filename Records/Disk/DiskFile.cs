@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using NeoEdit.Common;
 
@@ -22,33 +20,31 @@ namespace NeoEdit.Records.Disk
 			}
 		}
 
-		public override System.Collections.Generic.IEnumerable<RecordAction.ActionName> Actions
+		public override bool IsFile { get { return true; } }
+		public override bool CanRename() { return true; }
+		public override bool CanDelete() { return true; }
+		public override bool CanCopy() { return true; }
+		public override bool CanCut() { return true; }
+		public override bool CanMD5() { return true; }
+		public override bool CanIdentify() { return true; }
+		public override bool CanOpen() { return true; }
+		public override bool CanView()
 		{
-			get
+			switch (GetProperty<string>(RecordProperty.PropertyName.Extension).ToLowerInvariant())
 			{
-				var actions = new List<RecordAction.ActionName> { 
-					RecordAction.ActionName.MD5,
-					RecordAction.ActionName.Identify,
-					RecordAction.ActionName.Open,
-				};
-				switch (GetProperty<string>(RecordProperty.PropertyName.Extension).ToLowerInvariant())
-				{
-					case ".bmp":
-					case ".gif":
-					case ".ico":
-					case ".jpg":
-					case ".jpeg":
-					case ".png":
-					case ".tif":
-					case ".tiff":
-						actions.Add(RecordAction.ActionName.View);
-						break;
-				}
-				return actions.Concat(base.Actions);
+				case ".bmp":
+				case ".gif":
+				case ".ico":
+				case ".jpg":
+				case ".jpeg":
+				case ".png":
+				case ".tif":
+				case ".tiff":
+					return true;
+				default:
+					return false;
 			}
 		}
-
-		public override bool IsFile { get { return true; } }
 
 		protected override void SetProperty<T>(RecordProperty.PropertyName property, T value)
 		{

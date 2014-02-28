@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using NeoEdit.Common;
 using NeoEdit.Interop;
 
@@ -25,15 +24,9 @@ namespace NeoEdit.Records.Handles
 			return (IntPtr)Convert.ToInt64(FullName.Split('\\')[3]);
 		}
 
-		public override IEnumerable<RecordAction.ActionName> Actions
+		public override bool CanOpen()
 		{
-			get
-			{
-				var actions = new List<RecordAction.ActionName>(base.Actions);
-				if (GetProperty<string>(RecordProperty.PropertyName.Type) == "Section")
-					actions.Add(RecordAction.ActionName.Open);
-				return actions;
-			}
+			return GetProperty<string>(RecordProperty.PropertyName.Type) == "Section";
 		}
 
 		public override BinaryData Read()

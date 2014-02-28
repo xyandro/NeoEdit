@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NeoEdit.Records.Disk
@@ -59,21 +57,6 @@ namespace NeoEdit.Records.Disk
 					return new DiskRoot();
 
 				return new DiskDir(parent);
-			}
-		}
-
-		public override IEnumerable<RecordAction.ActionName> Actions
-		{
-			get
-			{
-				return new List<RecordAction.ActionName> { 
-					RecordAction.ActionName.Rename,
-					RecordAction.ActionName.Delete,
-					RecordAction.ActionName.Copy,
-					RecordAction.ActionName.Cut,
-					RecordAction.ActionName.SyncSource,
-					RecordAction.ActionName.SyncTarget,
-				}.Concat(base.Actions);
 			}
 		}
 	}

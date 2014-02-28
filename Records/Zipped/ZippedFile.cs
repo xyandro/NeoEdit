@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Security.Cryptography;
 using NeoEdit.Common;
 using NeoEdit.Data;
@@ -36,17 +34,8 @@ namespace NeoEdit.Records.Zipped
 		}
 
 		public override bool IsFile { get { return true; } }
-
-		public override IEnumerable<RecordAction.ActionName> Actions
-		{
-			get
-			{
-				return new List<RecordAction.ActionName> { 
-					RecordAction.ActionName.MD5,
-					RecordAction.ActionName.Open,
-				}.Concat(base.Actions);
-			}
-		}
+		public override bool CanMD5() { return true; }
+		public override bool CanOpen() { return true; }
 
 		public override BinaryData Read()
 		{

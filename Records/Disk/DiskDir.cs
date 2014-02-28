@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using NeoEdit.Records.Zipped;
 
 namespace NeoEdit.Records.Disk
@@ -28,10 +27,13 @@ namespace NeoEdit.Records.Disk
 			}
 		}
 
-		public override IEnumerable<RecordAction.ActionName> Actions
-		{
-			get { return new List<RecordAction.ActionName> { RecordAction.ActionName.Paste, }.Concat(base.Actions); }
-		}
+		public override bool CanPaste() { return true; }
+		public override bool CanRename() { return true; }
+		public override bool CanDelete() { return true; }
+		public override bool CanCopy() { return true; }
+		public override bool CanCut() { return true; }
+		public override bool CanSyncSource() { return true; }
+		public override bool CanSyncTarget() { return true; }
 
 		public override void Delete()
 		{

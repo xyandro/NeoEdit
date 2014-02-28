@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management;
 using NeoEdit.Interop;
 using NeoEdit.Records.Handles;
@@ -56,20 +55,11 @@ namespace NeoEdit.Records.Processes
 			}
 		}
 
-		public override System.Collections.Generic.IEnumerable<RecordAction.ActionName> Actions
-		{
-			get
-			{
-				return new List<RecordAction.ActionName> { 
-					RecordAction.ActionName.Open,
-					RecordAction.ActionName.Delete,
-					RecordAction.ActionName.Suspend,
-					RecordAction.ActionName.Resume,
-				}.Concat(base.Actions);
-			}
-		}
-
 		public override bool IsFile { get { return true; } }
+		public override bool CanOpen() { return true; }
+		public override bool CanDelete() { return true; }
+		public override bool CanSuspend() { return true; }
+		public override bool CanResume() { return true; }
 
 		public override void Suspend()
 		{

@@ -30,7 +30,26 @@ namespace NeoEdit.Records
 		public virtual bool IsFile { get { return false; } }
 
 		public IEnumerable<RecordProperty.PropertyName> Properties { get { return dependencyProperty.Where(a => GetValue(a.Value) != null).Select(a => a.Key); } }
-		public virtual IEnumerable<RecordAction.ActionName> Actions { get { return new List<RecordAction.ActionName> { RecordAction.ActionName.Sync }; } }
+		public IEnumerable<RecordAction.ActionName> Actions
+		{
+			get
+			{
+				var actions = new List<RecordAction.ActionName>();
+				actions.Add(RecordAction.ActionName.Sync);
+				if (CanCopy()) actions.Add(RecordAction.ActionName.Copy);
+				if (CanCut()) actions.Add(RecordAction.ActionName.Cut);
+				if (CanPaste()) actions.Add(RecordAction.ActionName.Paste);
+				if (CanMD5()) actions.Add(RecordAction.ActionName.MD5);
+				if (CanIdentify()) actions.Add(RecordAction.ActionName.Identify);
+				if (CanSyncSource()) actions.Add(RecordAction.ActionName.SyncSource);
+				if (CanSyncTarget()) actions.Add(RecordAction.ActionName.SyncTarget);
+				if (CanOpen()) actions.Add(RecordAction.ActionName.Open);
+				if (CanView()) actions.Add(RecordAction.ActionName.View);
+				if (CanSuspend()) actions.Add(RecordAction.ActionName.Suspend);
+				if (CanResume()) actions.Add(RecordAction.ActionName.Resume);
+				return actions;
+			}
+		}
 		protected T GetProperty<T>(RecordProperty.PropertyName property) { return (T)GetValue(dependencyProperty[property]); }
 
 		protected virtual void SetProperty<T>(RecordProperty.PropertyName property, T value)
@@ -92,6 +111,20 @@ namespace NeoEdit.Records
 				dir.MoveFrom(record);
 			source.Delete();
 		}
+
+		public virtual bool CanRename() { return false; }
+		public virtual bool CanDelete() { return false; }
+		public virtual bool CanCopy() { return false; }
+		public virtual bool CanCut() { return false; }
+		public virtual bool CanPaste() { return false; }
+		public virtual bool CanMD5() { return false; }
+		public virtual bool CanIdentify() { return false; }
+		public virtual bool CanSyncSource() { return false; }
+		public virtual bool CanSyncTarget() { return false; }
+		public virtual bool CanOpen() { return false; }
+		public virtual bool CanView() { return false; }
+		public virtual bool CanSuspend() { return false; }
+		public virtual bool CanResume() { return false; }
 
 		public virtual void Delete() { }
 		public virtual void Suspend() { }

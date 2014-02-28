@@ -14,20 +14,12 @@ namespace NeoEdit.Records.Zipped
 			archive = _archive;
 		}
 
-		public override IEnumerable<RecordAction.ActionName> Actions
-		{
-			get
-			{
-				return new List<RecordAction.ActionName> { 
-					RecordAction.ActionName.Delete,
-					RecordAction.ActionName.Rename,
-					RecordAction.ActionName.Copy,
-					RecordAction.ActionName.Cut,
-					RecordAction.ActionName.SyncSource,
-					RecordAction.ActionName.SyncTarget,
-				}.Concat(base.Actions);
-			}
-		}
+		public override bool CanDelete() { return true; }
+		public override bool CanRename() { return true; }
+		public override bool CanCopy() { return true; }
+		public override bool CanCut() { return true; }
+		public override bool CanSyncSource() { return true; }
+		public override bool CanSyncTarget() { return true; }
 
 		public override Record Parent
 		{
