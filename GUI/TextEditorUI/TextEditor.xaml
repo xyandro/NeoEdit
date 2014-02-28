@@ -1,12 +1,12 @@
 ﻿<Window Name="self" x:Class="NeoEdit.GUI.TextEditorUI.TextEditor"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:common="clr-namespace:NeoEdit.GUI.Common"
-    xmlns:textEditorUI="clr-namespace:NeoEdit.GUI.TextEditorUI"
-    Title="NeoEdit Text Editor" Height="400" Width="400" WindowState="Maximized">
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:common="clr-namespace:NeoEdit.GUI.Common"
+	xmlns:textEditorUI="clr-namespace:NeoEdit.GUI.TextEditorUI"
+	Title="NeoEdit Text Editor" Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Resources>
-		<common:UICommand x:Key="Edit_Undo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Undo}"  Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Edit_Undo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Undo}" Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Cut" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Cut}" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Copy" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Copy}" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Edit_Paste" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Paste}" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -25,6 +25,7 @@
 		<common:UICommand x:Key="Data_FromChar" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_FromChar}" Header="From char" Key="D3" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Data_Width" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_Width}" Header="_Width" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Data_Trim" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_Trim}" Header="_Trim" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="SelectMark_Toggle" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.SelectMark_Toggle}" Header="Toggle marks/selection" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_All" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_All}" Header="_All" Key="A" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Unselect" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Unselect}" Header="_Unselect" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Single" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Single}" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -32,9 +33,9 @@
 		<common:UICommand x:Key="Select_Marks" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Marks}" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Reverse" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Reverse}" Header="_Reverse selections" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Sort" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Sort}" Header="_Sort selections" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Select_Sort" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Sort}" Header="S_ort selections" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Select_Evaluate" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Evaluate}" Header="_Evaluate selections" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Mark_Selection" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Selection}" Header="_Selection" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
+		<common:UICommand x:Key="Mark_Selection" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Selection}" Header="_Selection" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_Clear" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Clear}" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
 		<common:UICommand x:Key="Mark_LimitToSelection" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_LimitToSelection}" Header="_Limit to selection" Run="CommandRun" CanRun="CommandCanRun"/>
@@ -109,6 +110,8 @@
 				<MenuItem Command="{StaticResource Data_Trim}"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
+				<MenuItem Command="{StaticResource SelectMark_Toggle}"/>
+				<Separator/>
 				<MenuItem Command="{StaticResource Select_All}"/>
 				<MenuItem Command="{StaticResource Select_Unselect}"/>
 				<MenuItem Command="{StaticResource Select_Single}"/>
@@ -121,6 +124,8 @@
 				<MenuItem Command="{StaticResource Select_Evaluate}"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
+				<MenuItem Command="{StaticResource SelectMark_Toggle}"/>
+				<Separator/>
 				<MenuItem Command="{StaticResource Mark_Selection}"/>
 				<MenuItem Command="{StaticResource Mark_Find}"/>
 				<MenuItem Command="{StaticResource Mark_Clear}"/>

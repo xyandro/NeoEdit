@@ -501,6 +501,8 @@ namespace NeoEdit.GUI.TextEditorUI
 								if ((lineStr[tmpIndex] != ' ') && (lineStr[tmpIndex] != '\t'))
 									break;
 							}
+							if (tmpIndex == lineStr.Length)
+								tmpIndex = 0;
 							if (tmpIndex != index)
 								changed = true;
 							SetPos1(selection, 0, tmpIndex, indexRel: false);
@@ -1124,6 +1126,26 @@ namespace NeoEdit.GUI.TextEditorUI
 						Replace(selections, strs, true);
 					}
 					break;
+				case TextEditor.Commands.SelectMark_Toggle:
+					{
+						if (ranges[RangeType.Selection].Count == 1)
+						{
+							// Select marks
+							ranges[RangeType.Selection] = ranges[RangeType.Mark];
+							ranges[RangeType.Mark] = new List<Range>();
+						}
+						else
+						{
+							// Mark selections
+							ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
+							foreach (var mark in ranges[RangeType.Mark])
+								if (!mark.HasSelection())
+									mark.Pos1++;
+							// Move to first selection
+							ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
+						}
+					}
+					break;
 				case TextEditor.Commands.Select_All:
 					foreach (var selection in ranges[RangeType.Selection])
 					{
@@ -1139,7 +1161,7 @@ namespace NeoEdit.GUI.TextEditorUI
 					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
 					break;
 				case TextEditor.Commands.Select_Lines:
-					var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+					var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
 					var lengths = lines.ToDictionary(line => line, line => Data[line].Length);
 					ranges[RangeType.Selection] = lengths.Select(line => new Range { Pos1 = Data.GetOffset(line.Key, line.Value), Pos2 = Data.GetOffset(line.Key, 0) }).ToList();
 					break;

@@ -29,6 +29,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			Data_FromChar,
 			Data_Width,
 			Data_Trim,
+			SelectMark_Toggle,
 			Select_All,
 			Select_Unselect,
 			Select_Single,
