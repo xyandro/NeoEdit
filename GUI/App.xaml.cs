@@ -11,7 +11,7 @@ namespace NeoEdit.GUI
 		{
 			base.OnStartup(e);
 
-			if (e.Args.Length >= 0)
+			if (e.Args.Length > 0)
 				switch (e.Args[0])
 				{
 					case "text": new TextEditorUI.TextEditor(); return;

@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug.x86\</OutputPath>
+    <OutputPath>..\bin\Debug.x86\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,7 +30,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release.x86\</OutputPath>
+    <OutputPath>..\bin\Release.x86\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -42,7 +42,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug.x64\</OutputPath>
+    <OutputPath>..\bin\Debug.x64\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -53,7 +53,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release.x64\</OutputPath>
+    <OutputPath>..\bin\Release.x64\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -329,7 +329,7 @@
     <EmbeddedResource Include="Magic\zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Interop\Interop.vcxproj">
+    <ProjectReference Include="..\Interop\Interop.vcxproj">
       <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
       <Name>Interop</Name>
     </ProjectReference>
