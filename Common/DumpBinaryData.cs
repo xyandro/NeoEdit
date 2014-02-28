@@ -13,6 +13,8 @@ namespace NeoEdit.Common
 		List<long> pos = new List<long>();
 		public DumpBinaryData(string filename)
 		{
+			length = 0x80000000000;
+
 			input = File.OpenRead(filename);
 
 			var countBytes = new byte[sizeof(int)];
@@ -33,8 +35,6 @@ namespace NeoEdit.Common
 				curPos += end.Last() - start.Last();
 			}
 		}
-
-		public override long Length { get { return 0x80000000000; } }
 
 		protected override void SetCache(long index, int count)
 		{

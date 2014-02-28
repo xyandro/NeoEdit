@@ -38,6 +38,7 @@ namespace NeoEdit.Records.Processes
 		public ProcessBinaryData(int PID)
 		{
 			pid = PID;
+			length = 0x80000000000;
 		}
 
 		int suspendCount = 0;
@@ -74,8 +75,6 @@ namespace NeoEdit.Records.Processes
 
 			handle.Dispose();
 		}
-
-		public override long Length { get { return 0x80000000000; } }
 
 		protected override void SetCache(long index, int count)
 		{

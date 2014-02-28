@@ -16,8 +16,8 @@ namespace NeoEdit.Common
 
 		virtual public bool CanInsert() { return false; }
 
-		protected long cacheStart, cacheEnd;
-		protected bool cacheHasData;
+		protected long length = 0, cacheStart = 0, cacheEnd = 0;
+		protected bool cacheHasData = false;
 		protected byte[] cache = new byte[65536];
 		virtual protected void SetCache(long index, int count) { }
 
@@ -32,7 +32,7 @@ namespace NeoEdit.Common
 			}
 		}
 
-		abstract public long Length { get; }
+		public long Length { get { return length; } }
 
 		virtual public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
 		{

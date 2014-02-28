@@ -8,15 +8,12 @@ namespace NeoEdit.Records.Handles
 	{
 		int pid;
 		IntPtr handle;
-		long length;
 		public SharedMemoryBinaryData(int _pid, IntPtr _handle)
 		{
 			pid = _pid;
 			handle = _handle;
 			length = NEInterop.GetSharedMemorySize(pid, handle);
 		}
-
-		public override long Length { get { return length; } }
 
 		protected override void SetCache(long index, int count)
 		{

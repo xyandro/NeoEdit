@@ -8,13 +8,11 @@ namespace NeoEdit.Common
 		{
 			cache = data;
 			cacheStart = 0;
-			cacheEnd = data.Length;
+			cacheEnd = length = data.Length;
 			cacheHasData = true;
 		}
 
 		public override bool CanInsert() { return true; }
-
-		public override long Length { get { return cache.Length; } }
 
 		public override void Replace(long index, long count, byte[] bytes)
 		{
