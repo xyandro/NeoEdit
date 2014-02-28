@@ -2,8 +2,8 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
-using NeoEdit.GUI.Data;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Data;
 
 namespace NeoEdit.GUI
 {
@@ -31,7 +31,15 @@ namespace NeoEdit.GUI
 								new TextEditorUI.TextEditor(data);
 							}
 							break;
-						case "binary": new BinaryEditorUI.BinaryEditor(); break;
+						case "binary":
+							if (e.Args.Length == 1)
+								new BinaryEditorUI.BinaryEditor();
+							else
+							{
+								var bytes = File.ReadAllBytes(e.Args[1]);
+								new BinaryEditorUI.BinaryEditor(new MemoryBinaryData(bytes));
+							}
+							break;
 						case "gzip":
 							{
 								var data = File.ReadAllBytes(e.Args[1]);
