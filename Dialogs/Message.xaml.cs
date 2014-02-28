@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.GUI.Dialogs
 {
 	public partial class Message : Window
 	{

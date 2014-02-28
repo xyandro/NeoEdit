@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 using NeoEdit.Interop;
 
-namespace NeoEdit.Records.Processes
+namespace NeoEdit.GUI.Records.Processes
 {
 	public class ProcessBinaryData : BinaryData
 	{

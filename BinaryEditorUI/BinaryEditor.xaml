@@ -1,8 +1,8 @@
-﻿<Window Name="self" x:Class="NeoEdit.BinaryEditorUI.BinaryEditor"
+﻿<Window Name="self" x:Class="NeoEdit.GUI.BinaryEditorUI.BinaryEditor"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:common="clr-namespace:NeoEdit.Common"
-    xmlns:binaryEditorUI="clr-namespace:NeoEdit.BinaryEditorUI"
+    xmlns:common="clr-namespace:NeoEdit.GUI.Common"
+    xmlns:binaryEditorUI="clr-namespace:NeoEdit.GUI.BinaryEditorUI"
 	Title="NeoEdit Binary Editor" Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Resources>

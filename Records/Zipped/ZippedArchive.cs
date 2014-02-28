@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using NeoEdit.Records.Disk;
+using NeoEdit.GUI.Records.Disk;
 
-namespace NeoEdit.Records.Zipped
+namespace NeoEdit.GUI.Records.Zipped
 {
 	public class ZippedArchive : DiskFile
 	{

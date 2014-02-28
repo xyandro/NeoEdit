@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace NeoEdit.Records.Disk
+namespace NeoEdit.GUI.Records.Disk
 {
 	public class DiskRoot : DiskRecord
 	{

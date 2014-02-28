@@ -3,10 +3,10 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Common;
-using NeoEdit.Data;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.BinaryEditorUI.Dialogs
+namespace NeoEdit.GUI.BinaryEditorUI.Dialogs
 {
 	public partial class FindDialog : Window
 	{

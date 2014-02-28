@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 
-namespace NeoEdit.Records.Disk
+namespace NeoEdit.GUI.Records.Disk
 {
 	public class DiskFile : DiskRecord
 	{

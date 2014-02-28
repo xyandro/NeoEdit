@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.Data;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.BinaryEditorUI.Dialogs
+namespace NeoEdit.GUI.BinaryEditorUI.Dialogs
 {
 	public partial class AsymmetricKeyDialog : Window
 	{

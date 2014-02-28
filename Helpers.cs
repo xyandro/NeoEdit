@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit
+namespace NeoEdit.GUI
 {
 	static class Helpers
 	{

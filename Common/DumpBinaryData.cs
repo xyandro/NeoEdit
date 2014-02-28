@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace NeoEdit.Common
+namespace NeoEdit.GUI.Common
 {
 	public class DumpBinaryData : BinaryData
 	{

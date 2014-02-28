@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 
-namespace NeoEdit.TextEditorUI.Dialogs
+namespace NeoEdit.GUI.TextEditorUI.Dialogs
 {
 	public partial class FindDialog : Window
 	{

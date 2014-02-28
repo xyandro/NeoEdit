@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.Records.Registry
+namespace NeoEdit.GUI.Records.Registry
 {
 	public class RegistryFile : RegistryRecord
 	{

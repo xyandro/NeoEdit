@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Interop;
 
-namespace NeoEdit.Records.Handles
+namespace NeoEdit.GUI.Records.Handles
 {
 	public class HandleType : HandleRecord
 	{

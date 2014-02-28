@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace NeoEdit.Records.Zipped
+namespace NeoEdit.GUI.Records.Zipped
 {
 	class ZippedDir : ZippedRecord
 	{

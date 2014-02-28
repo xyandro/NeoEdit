@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace NeoEdit.Common
+namespace NeoEdit.GUI.Common
 {
 	class Expression
 	{

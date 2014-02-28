@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.Records.List
+namespace NeoEdit.GUI.Records.List
 {
 	public class ListRoot : ListRecord
 	{

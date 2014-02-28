@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace NeoEdit.Common
+namespace NeoEdit.GUI.Common
 {
 	class DepPropAttribute : Attribute { }
 

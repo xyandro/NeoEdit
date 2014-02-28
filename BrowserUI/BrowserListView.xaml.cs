@@ -5,10 +5,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
-using NeoEdit.Common;
-using NeoEdit.Records;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Records;
 
-namespace NeoEdit.BrowserUI
+namespace NeoEdit.GUI.BrowserUI
 {
 	class LambdaComparer<T> : IComparer where T : class
 	{

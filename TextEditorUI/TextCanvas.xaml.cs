@@ -8,11 +8,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using NeoEdit.Common;
-using NeoEdit.Dialogs;
-using NeoEdit.TextEditorUI.Dialogs;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
+using NeoEdit.GUI.TextEditorUI.Dialogs;
 
-namespace NeoEdit.TextEditorUI
+namespace NeoEdit.GUI.TextEditorUI
 {
 	class Range
 	{
@@ -1171,7 +1171,7 @@ namespace NeoEdit.TextEditorUI
 				case TextEditor.Commands.Select_Evaluate:
 					{
 						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.Common.Expression(expr).Evaluate().ToString()).ToList();
+						var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.GUI.Common.Expression(expr).Evaluate().ToString()).ToList();
 						Replace(selections, strs, true);
 					}
 					break;

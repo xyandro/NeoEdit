@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using NeoEdit.Common;
-using NeoEdit.Data;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.TextEditorUI
+namespace NeoEdit.GUI.TextEditorUI
 {
 	public partial class TextEditor : Window
 	{

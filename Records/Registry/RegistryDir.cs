@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.Records.Registry
+namespace NeoEdit.GUI.Records.Registry
 {
 	public class RegistryDir : RegistryRecord
 	{

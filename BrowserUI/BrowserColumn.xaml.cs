@@ -1,10 +1,10 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Data;
-using NeoEdit.BrowserUI.Converters;
-using NeoEdit.Common;
-using NeoEdit.Records;
+using NeoEdit.GUI.BrowserUI.Converters;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Records;
 
-namespace NeoEdit.BrowserUI
+namespace NeoEdit.GUI.BrowserUI
 {
 	/// <summary>
 	/// Interaction logic for NEList.xaml

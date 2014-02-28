@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace NeoEdit.Data
+namespace NeoEdit.GUI.Data
 {
 	public static class Crypto
 	{

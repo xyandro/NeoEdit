@@ -1,8 +1,8 @@
 ﻿using System;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 using NeoEdit.Interop;
 
-namespace NeoEdit.Records.Handles
+namespace NeoEdit.GUI.Records.Handles
 {
 	public class HandleItem : HandleRecord
 	{

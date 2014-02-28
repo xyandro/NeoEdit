@@ -6,17 +6,17 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NeoEdit.BinaryEditorUI;
-using NeoEdit.BrowserUI.Dialogs;
-using NeoEdit.Common;
-using NeoEdit.Dialogs;
-using NeoEdit.Records;
-using NeoEdit.Records.Disk;
-using NeoEdit.Records.List;
-using NeoEdit.Records.Processes;
-using NeoEdit.Records.Registry;
+using NeoEdit.GUI.BinaryEditorUI;
+using NeoEdit.GUI.BrowserUI.Dialogs;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
+using NeoEdit.GUI.Records;
+using NeoEdit.GUI.Records.Disk;
+using NeoEdit.GUI.Records.List;
+using NeoEdit.GUI.Records.Processes;
+using NeoEdit.GUI.Records.Registry;
 
-namespace NeoEdit.BrowserUI
+namespace NeoEdit.GUI.BrowserUI
 {
 	public partial class Browser : Window
 	{

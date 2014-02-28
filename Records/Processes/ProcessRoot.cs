@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NeoEdit.Records.Processes
+namespace NeoEdit.GUI.Records.Processes
 {
 	public class ProcessRoot : ProcessRecord
 	{

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 
-namespace NeoEdit.Records
+namespace NeoEdit.GUI.Records
 {
 	public abstract class Record : DependencyObject
 	{

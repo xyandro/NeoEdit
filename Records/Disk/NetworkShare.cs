@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Management;
 
-namespace NeoEdit.Records.Disk
+namespace NeoEdit.GUI.Records.Disk
 {
 	public class NetworkShare : DiskRecord
 	{

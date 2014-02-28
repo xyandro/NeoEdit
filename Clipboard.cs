@@ -4,10 +4,10 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Records;
-using NeoEdit.Records.Disk;
+using NeoEdit.GUI.Records;
+using NeoEdit.GUI.Records.Disk;
 
-namespace NeoEdit
+namespace NeoEdit.GUI
 {
 	class Clipboard
 	{

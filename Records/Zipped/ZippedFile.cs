@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
-using NeoEdit.Common;
-using NeoEdit.Data;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.Records.Zipped
+namespace NeoEdit.GUI.Records.Zipped
 {
 	class ZippedFile : ZippedRecord
 	{

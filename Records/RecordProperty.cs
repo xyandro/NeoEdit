@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.Records
+namespace NeoEdit.GUI.Records
 {
 	public class RecordProperty
 	{

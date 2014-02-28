@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
-namespace NeoEdit.Records.Registry
+namespace NeoEdit.GUI.Records.Registry
 {
 	public abstract class RegistryRecord : Record
 	{

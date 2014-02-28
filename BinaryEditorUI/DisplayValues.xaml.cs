@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 
-namespace NeoEdit.BinaryEditorUI
+namespace NeoEdit.GUI.BinaryEditorUI
 {
 	public partial class DisplayValues : StackPanel
 	{

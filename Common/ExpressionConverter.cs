@@ -6,7 +6,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
 
-namespace NeoEdit.Common
+namespace NeoEdit.GUI.Common
 {
 	class ExpressionConverter : MarkupExtension, IMultiValueConverter, IValueConverter
 	{

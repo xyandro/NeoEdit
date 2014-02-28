@@ -7,12 +7,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using NeoEdit.BinaryEditorUI.Dialogs;
-using NeoEdit.Common;
-using NeoEdit.Data;
-using NeoEdit.Dialogs;
+using NeoEdit.GUI.BinaryEditorUI.Dialogs;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Data;
+using NeoEdit.GUI.Dialogs;
 
-namespace NeoEdit.BinaryEditorUI
+namespace NeoEdit.GUI.BinaryEditorUI
 {
 	class BinaryCanvasUndo
 	{

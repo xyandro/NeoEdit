@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-namespace NeoEdit.Records
+namespace NeoEdit.GUI.Records
 {
 	public class RecordAction
 	{

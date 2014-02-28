@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit.Data;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.UnitTest
+namespace NeoEdit.GUI.UnitTest
 {
 	public partial class UnitTest
 	{

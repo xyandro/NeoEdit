@@ -2,10 +2,10 @@
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using NeoEdit.Common;
-using NeoEdit.Data;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.BinaryEditorUI
+namespace NeoEdit.GUI.BinaryEditorUI
 {
 	public partial class BinaryEditor : Window
 	{

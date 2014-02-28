@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using NeoEdit.Records.Zipped;
+using NeoEdit.GUI.Records.Zipped;
 
-namespace NeoEdit.Records.Disk
+namespace NeoEdit.GUI.Records.Disk
 {
 	public class DiskDir : DiskRecord
 	{

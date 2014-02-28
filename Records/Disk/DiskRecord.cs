@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace NeoEdit.Records.Disk
+namespace NeoEdit.GUI.Records.Disk
 {
 	public abstract class DiskRecord : Record
 	{

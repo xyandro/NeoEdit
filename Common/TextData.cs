@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NeoEdit.Data;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.Common
+namespace NeoEdit.GUI.Common
 {
 	public class TextData
 	{

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Management;
+using NeoEdit.GUI.Records.Handles;
 using NeoEdit.Interop;
-using NeoEdit.Records.Handles;
 
-namespace NeoEdit.Records.Processes
+namespace NeoEdit.GUI.Records.Processes
 {
 	public class Process : ProcessRecord
 	{

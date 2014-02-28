@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.Records
+namespace NeoEdit.GUI.Records
 {
 	public class Root : Record
 	{

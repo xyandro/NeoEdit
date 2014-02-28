@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Timers;
 
-namespace NeoEdit.Records.Processes
+namespace NeoEdit.GUI.Records.Processes
 {
 	public class ProcessRecord : Record
 	{

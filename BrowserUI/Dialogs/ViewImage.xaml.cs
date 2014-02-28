@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 
-namespace NeoEdit.BrowserUI.Dialogs
+namespace NeoEdit.GUI.BrowserUI.Dialogs
 {
 	public partial class ViewImage : Window
 	{

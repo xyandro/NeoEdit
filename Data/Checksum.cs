@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace NeoEdit.Data
+namespace NeoEdit.GUI.Data
 {
 	public static class Checksum
 	{

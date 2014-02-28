@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 
-namespace NeoEdit.TextEditorUI.Dialogs
+namespace NeoEdit.GUI.TextEditorUI.Dialogs
 {
 	public partial class WidthDialog : Window
 	{

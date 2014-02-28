@@ -1,4 +1,4 @@
-﻿namespace NeoEdit.Records.Handles
+﻿namespace NeoEdit.GUI.Records.Handles
 {
 	public abstract class HandleRecord : Record
 	{

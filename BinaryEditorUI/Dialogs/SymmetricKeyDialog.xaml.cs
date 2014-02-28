@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.Data;
-using NeoEdit.Dialogs;
+using NeoEdit.GUI.Data;
+using NeoEdit.GUI.Dialogs;
 
-namespace NeoEdit.BinaryEditorUI.Dialogs
+namespace NeoEdit.GUI.BinaryEditorUI.Dialogs
 {
 	public partial class SymmetricKeyDialog : Window
 	{

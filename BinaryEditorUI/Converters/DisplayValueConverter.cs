@@ -2,10 +2,10 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.Common;
-using NeoEdit.Data;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.BinaryEditorUI.Converters
+namespace NeoEdit.GUI.BinaryEditorUI.Converters
 {
 	class DisplayValueConverter : MarkupExtension, IMultiValueConverter
 	{

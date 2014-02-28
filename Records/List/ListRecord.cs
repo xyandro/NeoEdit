@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.Records.List
+namespace NeoEdit.GUI.Records.List
 {
 	public abstract class ListRecord : Record
 	{

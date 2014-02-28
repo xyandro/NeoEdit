@@ -1,9 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using NeoEdit.Common;
+﻿using System.Windows;
+using NeoEdit.GUI.Common;
 
-namespace NeoEdit.BrowserUI.Dialogs
+namespace NeoEdit.GUI.BrowserUI.Dialogs
 {
 	public partial class Log : Window
 	{

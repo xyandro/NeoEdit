@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.Data;
+using NeoEdit.GUI.Data;
 
-namespace NeoEdit.BinaryEditorUI.Converters
+namespace NeoEdit.GUI.BinaryEditorUI.Converters
 {
 	class IsStrConverter : MarkupExtension, IValueConverter
 	{

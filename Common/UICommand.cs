@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace NeoEdit.Common
+namespace NeoEdit.GUI.Common
 {
 	public class UICommand : ICommand
 	{

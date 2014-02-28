@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NeoEdit.Interop;
 
-namespace NeoEdit.Records.Handles
+namespace NeoEdit.GUI.Records.Handles
 {
 	public class HandleRoot : HandleRecord
 	{
