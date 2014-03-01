@@ -268,40 +268,24 @@ namespace NeoEdit.GUI.TextEditorUI
 			yScrollSmallChange = lineHeight;
 			yScrollLargeChange = ActualHeight - yScrollSmallChange;
 
-			ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(range => range.HasSelection()).OrderBy(range => range.Start).ToList();
-			ranges[RangeType.Search] = ranges[RangeType.Search].Where(range => range.HasSelection()).OrderBy(range => range.Start).ToList();
 			if (ranges[RangeType.Selection].Count == 0)
 			{
 				var range = new Range();
 				ranges[RangeType.Selection].Add(range);
 				SetPos1(range, 0, 0, false, false);
 			}
+			ranges[RangeType.Search] = ranges[RangeType.Search].Where(range => range.HasSelection()).ToList();
 
-
-			for (var ctr1 = 0; ctr1 < ranges[RangeType.Mark].Count; ++ctr1)
+			var keys = ranges.Keys.ToList();
+			foreach (var key in keys)
 			{
-				var mark1 = ranges[RangeType.Mark][ctr1];
-				var ctr2 = ctr1 + 1;
-				while (ctr2 < ranges[RangeType.Mark].Count)
+				ranges[key] = ranges[key].GroupBy(range => range.ToString()).Select(rangeGroup => rangeGroup.First()).OrderBy(range => range.Start).ToList();
+				// Make sure ranges don't overlap
+				for (var ctr = 0; ctr < ranges[key].Count - 1; ctr++)
 				{
-					var mark2 = ranges[RangeType.Mark][ctr2];
-					if ((mark1.Start < mark2.End) && (mark1.End > mark2.Start))
-					{
-						mark1.Pos1 = Math.Min(mark1.Start, mark2.Start);
-						mark1.Pos2 = Math.Max(mark1.End, mark2.End);
-						ranges[RangeType.Mark].RemoveAt(ctr2);
-					}
-					else
-						++ctr2;
+					ranges[key][ctr].Pos1 = Math.Min(ranges[key][ctr].Pos1, ranges[key][ctr + 1].Start);
+					ranges[key][ctr].Pos2 = Math.Min(ranges[key][ctr].Pos2, ranges[key][ctr + 1].Start);
 				}
-			}
-
-			ranges[RangeType.Selection] = ranges[RangeType.Selection].GroupBy(range => range.ToString()).Select(rangeGroup => rangeGroup.First()).OrderBy(range => range.Start).ToList();
-			// Make sure selections don't overlap
-			for (var ctr = 0; ctr < ranges[RangeType.Selection].Count - 1; ctr++)
-			{
-				ranges[RangeType.Selection][ctr].Pos1 = Math.Min(ranges[RangeType.Selection][ctr].Pos1, ranges[RangeType.Selection][ctr + 1].Start);
-				ranges[RangeType.Selection][ctr].Pos2 = Math.Min(ranges[RangeType.Selection][ctr].Pos2, ranges[RangeType.Selection][ctr + 1].Start);
 			}
 
 			var pos = ranges[RangeType.Selection].First().Pos1;
@@ -324,7 +308,7 @@ namespace NeoEdit.GUI.TextEditorUI
 				{
 					foreach (var range in entry.Value)
 					{
-						if ((!range.HasSelection()) || (range.End < lineRange.Start) || (range.Start > lineRange.End))
+						if ((range.End < lineRange.Start) || (range.Start > lineRange.End))
 							continue;
 
 						var start = Math.Max(lineRange.Start, range.Start);
@@ -336,7 +320,7 @@ namespace NeoEdit.GUI.TextEditorUI
 						if (range.End > lineRange.End)
 							end++;
 
-						dc.DrawRectangle(brushes[entry.Key], null, new Rect(GetXFromColumn(start) - xScrollValue, y, (end - start) * charWidth, lineHeight));
+						dc.DrawRectangle(brushes[entry.Key], null, new Rect(GetXFromColumn(start) - xScrollValue, y, (end - start) * charWidth + 1, lineHeight));
 					}
 				}
 
@@ -1128,21 +1112,15 @@ namespace NeoEdit.GUI.TextEditorUI
 					break;
 				case TextEditor.Commands.SelectMark_Toggle:
 					{
-						if (ranges[RangeType.Selection].Count == 1)
+						if (ranges[RangeType.Selection].Count > 1)
 						{
-							// Select marks
+							ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
+							ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
+						}
+						else if (ranges[RangeType.Mark].Count != 0)
+						{
 							ranges[RangeType.Selection] = ranges[RangeType.Mark];
 							ranges[RangeType.Mark] = new List<Range>();
-						}
-						else
-						{
-							// Mark selections
-							ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
-							foreach (var mark in ranges[RangeType.Mark])
-								if (!mark.HasSelection())
-									mark.Pos1++;
-							// Move to first selection
-							ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
 						}
 					}
 					break;
@@ -1203,9 +1181,6 @@ namespace NeoEdit.GUI.TextEditorUI
 					break;
 				case TextEditor.Commands.Mark_Selection:
 					ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
-					foreach (var mark in ranges[RangeType.Mark])
-						if (!mark.HasSelection())
-							mark.Pos1++;
 					break;
 				case TextEditor.Commands.Mark_LimitToSelection:
 					ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
