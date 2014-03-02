@@ -4,6 +4,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Data;
+using NeoEdit.GUI.Records;
 
 namespace NeoEdit.GUI.BinaryEditorUI
 {
@@ -11,6 +12,11 @@ namespace NeoEdit.GUI.BinaryEditorUI
 	{
 		public enum Commands
 		{
+			File_New,
+			File_Open,
+			File_Save,
+			File_SaveAs,
+			File_Exit,
 			Edit_Undo,
 			Edit_Cut,
 			Edit_Copy,
@@ -66,13 +72,21 @@ namespace NeoEdit.GUI.BinaryEditorUI
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 
 		readonly UIHelper<BinaryEditor> uiHelper;
-		public BinaryEditor() : this(new MemoryBinaryData(new byte[0])) { }
-		public BinaryEditor(BinaryData data)
+		Record record;
+		public BinaryEditor(Record _record = null, BinaryData data = null)
 		{
 			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
 			uiHelper.InitializeCommands();
 
+			record = _record;
+			if (data == null)
+			{
+				if (record == null)
+					data = new MemoryBinaryData();
+				else
+					data = record.Read();
+			}
 			Data = data;
 			BinaryData.BinaryDataChangedDelegate changed = () => ++ChangeCount;
 			Data.Changed += changed;
@@ -115,6 +129,17 @@ namespace NeoEdit.GUI.BinaryEditorUI
 
 			switch ((Commands)command.Enum)
 			{
+				case Commands.File_New:
+					record = null;
+					Data = new MemoryBinaryData();
+					break;
+				case Commands.File_Open: break;
+				case Commands.File_Save:
+					if (record != null)
+						record.Write(Data);
+					break;
+				case Commands.File_SaveAs: break;
+				case Commands.File_Exit: Close(); break;
 				case Commands.View_Values: ShowValues = !ShowValues; break;
 				case Commands.Edit_ShowClipboard: Clipboard.Show(); break;
 			}
@@ -137,7 +162,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			if (header != "Auto")
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = new TextData(Data.GetAllBytes(), encoding);
-			new TextEditorUI.TextEditor(data);
+			new TextEditorUI.TextEditor(record, data);
 			this.Close();
 		}
 	}

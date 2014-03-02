@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Data;
+using NeoEdit.GUI.Records;
 
 namespace NeoEdit.GUI.TextEditorUI
 {
@@ -10,6 +11,11 @@ namespace NeoEdit.GUI.TextEditorUI
 	{
 		public enum Commands
 		{
+			File_New,
+			File_Open,
+			File_Save,
+			File_SaveAs,
+			File_Exit,
 			Edit_Undo,
 			Edit_Cut,
 			Edit_Copy,
@@ -57,14 +63,21 @@ namespace NeoEdit.GUI.TextEditorUI
 		static TextEditor() { UIHelper<TextEditor>.Register(); }
 
 		readonly UIHelper<TextEditor> uiHelper;
-		public TextEditor() : this(new TextData(new byte[0])) { }
-
-		public TextEditor(TextData data)
+		Record record;
+		public TextEditor(Record _record = null, TextData data = null)
 		{
 			uiHelper = new UIHelper<TextEditor>(this);
 			InitializeComponent();
 			uiHelper.InitializeCommands();
 
+			record = _record;
+			if (data == null)
+			{
+				if (record == null)
+					data = new TextData();
+				else
+					data = new TextData(record.Read().GetAllBytes());
+			}
 			Data = data;
 			CoderUsed = Data.CoderUsed;
 			TextData.ChangedDelegate changed = () => ++ChangeCount;
@@ -96,7 +109,18 @@ namespace NeoEdit.GUI.TextEditorUI
 
 			switch ((Commands)command.Enum)
 			{
-				case TextEditor.Commands.Edit_ShowClipboad: Clipboard.Show(); break;
+				case Commands.File_New:
+					record = null;
+					Data = new TextData();
+					break;
+				case Commands.File_Open: break;
+				case Commands.File_Save:
+					if (record != null)
+						record.Write(new MemoryBinaryData(Data.GetBytes(Data.CoderUsed)));
+					break;
+				case Commands.File_SaveAs: break;
+				case Commands.File_Exit: Close(); break;
+				case Commands.Edit_ShowClipboad: Clipboard.Show(); break;
 			}
 		}
 
@@ -120,7 +144,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			else
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = Data.GetBytes(encoding);
-			new BinaryEditorUI.BinaryEditor(new MemoryBinaryData(data));
+			new BinaryEditorUI.BinaryEditor(record, new MemoryBinaryData(data));
 			this.Close();
 		}
 	}

@@ -389,10 +389,7 @@ namespace NeoEdit.GUI.BrowserUI
 					Refresh();
 					break;
 				case RecordAction.ActionName.Open:
-					{
-						var data = records.Single().Read();
-						new BinaryEditor(data);
-					}
+					new BinaryEditor(records.Single());
 					break;
 				case RecordAction.ActionName.View:
 					foreach (var record in records)

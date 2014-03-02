@@ -38,8 +38,10 @@ namespace NeoEdit.GUI.Common
 		public int NumLines { get { return lineIndex.Count; } }
 		public bool BOM { get; private set; }
 
-		public TextData(byte[] bytes, Coder.Type encoding = Coder.Type.None)
+		public TextData(byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
 		{
+			if (bytes == null)
+				bytes = new byte[0];
 			if (encoding == Coder.Type.None)
 				encoding = Coder.GuessEncoding(bytes);
 

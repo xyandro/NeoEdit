@@ -4,8 +4,10 @@ namespace NeoEdit.GUI.Common
 {
 	public class MemoryBinaryData : BinaryData
 	{
-		public MemoryBinaryData(byte[] data)
+		public MemoryBinaryData(byte[] data = null)
 		{
+			if (data == null)
+				data = new byte[0];
 			cache = data;
 			cacheStart = 0;
 			cacheEnd = length = data.Length;
