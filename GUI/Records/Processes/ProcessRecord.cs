@@ -37,10 +37,11 @@ namespace NeoEdit.GUI.Records.Processes
 			timer.Start();
 		}
 
-		protected double GetProcessUsage(int PID)
+		protected double GetProcessUsage()
 		{
 			lock (lockObj)
 			{
+				var PID = GetProperty<int>(RecordProperty.PropertyName.ID);
 				if ((lastTicks == 0) || (curTicks == 0))
 					return 0;
 				if ((!lastUsage.ContainsKey(PID)) || (!curUsage.ContainsKey(PID)))

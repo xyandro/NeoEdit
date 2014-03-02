@@ -28,7 +28,7 @@ namespace NeoEdit.GUI.Records.Processes
 				data += " (" + process.MainWindowTitle + ")";
 			this[RecordProperty.PropertyName.Data] = data;
 			this[RecordProperty.PropertyName.Size] = process.WorkingSet64;
-			this[RecordProperty.PropertyName.CPU] = GetProcessUsage(process.Id);
+			this[RecordProperty.PropertyName.CPU] = GetProcessUsage();
 		}
 
 		public override Record Parent
@@ -45,7 +45,7 @@ namespace NeoEdit.GUI.Records.Processes
 		{
 			get
 			{
-				using (var mos = new ManagementObjectSearcher("SELECT * From Win32_Process WHERE ParentProcessID=" + GetProperty<int>(RecordProperty.PropertyName.ID)))
+				using (var mos = new ManagementObjectSearcher("SELECT ProcessID From Win32_Process WHERE ParentProcessID=" + GetProperty<int>(RecordProperty.PropertyName.ID)))
 				using (var moc = mos.Get())
 					foreach (var mo in moc)
 						yield return new Process(Convert.ToInt32(mo["ProcessID"]), this);
