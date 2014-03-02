@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Timers;
 
 namespace NeoEdit.GUI.Records.Processes
@@ -7,10 +9,8 @@ namespace NeoEdit.GUI.Records.Processes
 	public class ProcessRecord : Record
 	{
 		static object lockObj = new object();
-		static long lastTicks;
-		static long curTicks;
-		static Dictionary<int, long> lastUsage;
-		static Dictionary<int, long> curUsage;
+		static Dictionary<int, PerformanceCounter> counter = new Dictionary<int, PerformanceCounter>();
+		static Dictionary<int, double> usage = new Dictionary<int, double>();
 		static ProcessRecord()
 		{
 			var timer = new Timer(1000);
@@ -18,19 +18,14 @@ namespace NeoEdit.GUI.Records.Processes
 			{
 				lock (lockObj)
 				{
-					lastTicks = curTicks;
-					lastUsage = curUsage;
-					curTicks = DateTime.Now.Ticks;
-					curUsage = new Dictionary<int, long>();
-					foreach (var process in System.Diagnostics.Process.GetProcesses())
+					var processes = System.Diagnostics.Process.GetProcesses();
+					counter.Where(ctr => !processes.Any(process => process.Id == ctr.Key)).ToList().ForEach(ctr => counter.Remove(ctr.Key));
+					usage.Where(ctr => !processes.Any(process => process.Id == ctr.Key)).ToList().ForEach(ctr => usage.Remove(ctr.Key));
+					foreach (var process in processes)
 					{
-						try
-						{
-							if (process.Id == 0)
-								continue;
-							curUsage[process.Id] = process.TotalProcessorTime.Ticks;
-						}
-						catch { }
+						if (!counter.ContainsKey(process.Id))
+							counter[process.Id] = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
+						usage[process.Id] = counter[process.Id].NextValue();
 					}
 				}
 			};
@@ -41,13 +36,10 @@ namespace NeoEdit.GUI.Records.Processes
 		{
 			lock (lockObj)
 			{
-				var PID = GetProperty<int>(RecordProperty.PropertyName.ID);
-				if ((lastTicks == 0) || (curTicks == 0))
+				var pid = GetProperty<int>(RecordProperty.PropertyName.ID);
+				if (!usage.ContainsKey(pid))
 					return 0;
-				if ((!lastUsage.ContainsKey(PID)) || (!curUsage.ContainsKey(PID)))
-					return 0;
-
-				return Math.Round((double)(curUsage[PID] - lastUsage[PID]) / (curTicks - lastTicks) * 100, 1);
+				return Math.Round(usage[pid], 1);
 			}
 		}
 
