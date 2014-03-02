@@ -144,7 +144,7 @@
 				<MenuItem Command="{StaticResource Mark_LimitToSelection}"/>
 			</MenuItem>
 			<MenuItem Header="_View">
-				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={common:ExpressionConverter}, ConverterParameter=Type:#27#NeoEdit.TextEditorUI.Highlighting+HighlightingType#27#}">
+				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={common:ExpressionConverter}, ConverterParameter=Type:#27#NeoEdit.GUI.TextEditorUI.Highlighting+HighlightingType#27#}">
 					<MenuItem.ItemContainerStyle>
 						<Style TargetType="MenuItem">
 							<EventSetter Event="Click" Handler="HighlightingClicked"/>

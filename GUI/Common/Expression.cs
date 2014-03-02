@@ -151,7 +151,7 @@ namespace NeoEdit.GUI.Common
 			switch (function)
 			{
 				case "Type":
-					var type = Assembly.GetExecutingAssembly().GetType(termStr);
+					var type = typeof(Expression).Assembly.GetType(termStr);
 					if (type != null)
 					{
 						result = "[" + value.Count + "]";
