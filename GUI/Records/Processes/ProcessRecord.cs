@@ -23,9 +23,13 @@ namespace NeoEdit.GUI.Records.Processes
 					usage.Where(ctr => !processes.Any(process => process.Id == ctr.Key)).ToList().ForEach(ctr => usage.Remove(ctr.Key));
 					foreach (var process in processes)
 					{
-						if (!counter.ContainsKey(process.Id))
-							counter[process.Id] = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
-						usage[process.Id] = counter[process.Id].NextValue();
+						try
+						{
+							if (!counter.ContainsKey(process.Id))
+								counter[process.Id] = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
+							usage[process.Id] = counter[process.Id].NextValue();
+						}
+						catch { }
 					}
 				}
 			};
