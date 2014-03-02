@@ -43,7 +43,6 @@ namespace NeoEdit.GUI.TextEditorUI
 			Mark_Find,
 			Mark_Clear,
 			Mark_LimitToSelection,
-
 		}
 
 		[DepProp]
