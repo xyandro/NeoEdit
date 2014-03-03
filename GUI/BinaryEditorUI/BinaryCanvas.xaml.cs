@@ -756,19 +756,18 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			return true;
 		}
 
-		public void CommandRun(UICommand command, object parameter)
+		public void CommandRun(BinaryEditor.Commands command)
 		{
-			var value = (BinaryEditor.Commands)command.Enum;
-			if (HandleChecksum(value))
+			if (HandleChecksum(command))
 				return;
-			if (HandleCompress(value))
+			if (HandleCompress(command))
 				return;
-			if (HandleEncrypt(value))
+			if (HandleEncrypt(command))
 				return;
-			if (HandleSign(value))
+			if (HandleSign(command))
 				return;
 
-			switch (value)
+			switch (command)
 			{
 				case BinaryEditor.Commands.Edit_Undo: Undo(); break;
 				case BinaryEditor.Commands.Edit_Cut:
@@ -789,7 +788,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 							str = sb.ToString();
 						}
 						Clipboard.Set(bytes, str);
-						if ((value == BinaryEditor.Commands.Edit_Cut) && (Insert))
+						if ((command == BinaryEditor.Commands.Edit_Cut) && (Insert))
 							Replace(null);
 					}
 					break;
@@ -819,7 +818,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 					break;
 				case BinaryEditor.Commands.Edit_FindNext:
 				case BinaryEditor.Commands.Edit_FindPrev:
-					DoFind(value == BinaryEditor.Commands.Edit_FindNext);
+					DoFind(command == BinaryEditor.Commands.Edit_FindNext);
 					break;
 				case BinaryEditor.Commands.Edit_Goto:
 					{

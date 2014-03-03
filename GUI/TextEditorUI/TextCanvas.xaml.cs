@@ -117,7 +117,12 @@ namespace NeoEdit.GUI.TextEditorUI
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(a => a.Data, (o, n) =>
+			{
+				foreach (var entry in ranges)
+					ranges[entry.Key].Clear();
+				InvalidateVisual();
+			});
 			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => { ranges[RangeType.Search].Clear(); InvalidateVisual(); });
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
@@ -928,10 +933,9 @@ namespace NeoEdit.GUI.TextEditorUI
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
-		public void CommandRun(UICommand command, object parameter)
+		public void CommandRun(TextEditor.Commands command)
 		{
-			var com = (TextEditor.Commands)command.Enum;
-			switch (com)
+			switch (command)
 			{
 				case TextEditor.Commands.Edit_Undo:
 					{
@@ -955,7 +959,7 @@ namespace NeoEdit.GUI.TextEditorUI
 						var result = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToArray();
 						if (result.Length != 0)
 							Clipboard.Set(result);
-						if (com == TextEditor.Commands.Edit_Cut)
+						if (command == TextEditor.Commands.Edit_Cut)
 							Replace(ranges[RangeType.Selection], null, false);
 					}
 					break;
@@ -998,7 +1002,7 @@ namespace NeoEdit.GUI.TextEditorUI
 					break;
 				case TextEditor.Commands.Edit_FindNext:
 				case TextEditor.Commands.Edit_FindPrev:
-					FindNext(com == TextEditor.Commands.Edit_FindNext);
+					FindNext(command == TextEditor.Commands.Edit_FindNext);
 					break;
 				case TextEditor.Commands.Edit_GotoLine:
 					{

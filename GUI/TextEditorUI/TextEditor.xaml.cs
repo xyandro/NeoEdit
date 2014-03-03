@@ -1,6 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using Microsoft.Win32;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Data;
 using NeoEdit.GUI.Records;
@@ -105,20 +108,50 @@ namespace NeoEdit.GUI.TextEditorUI
 
 		void CommandRun(UICommand command, object parameter)
 		{
-			canvas.CommandRun(command, parameter);
+			CommandRun((Commands)command.Enum);
+		}
 
-			switch ((Commands)command.Enum)
+		void CommandRun(Commands command)
+		{
+			canvas.CommandRun(command);
+
+			switch (command)
 			{
 				case Commands.File_New:
 					record = null;
 					Data = new TextData();
 					break;
-				case Commands.File_Open: break;
+				case Commands.File_Open:
+					{
+						var dialog = new OpenFileDialog();
+						if (dialog.ShowDialog() == true)
+						{
+							record = new Root().GetRecord(dialog.FileName);
+							Data = new TextData(record.Read().GetAllBytes());
+						}
+					}
+					break;
 				case Commands.File_Save:
-					if (record != null)
+					if (record == null)
+						CommandRun(Commands.File_SaveAs);
+					else
 						record.Write(new MemoryBinaryData(Data.GetBytes(Data.CoderUsed)));
 					break;
-				case Commands.File_SaveAs: break;
+				case Commands.File_SaveAs:
+					{
+						var dialog = new SaveFileDialog();
+						if (dialog.ShowDialog() == true)
+						{
+							if (Directory.Exists(dialog.FileName))
+								throw new Exception("A directory by that name already exists.");
+							if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+								throw new Exception("Directory doesn't exist.");
+							var dir = new Root().GetRecord(Path.GetDirectoryName(dialog.FileName));
+							record = dir.CreateFile(Path.GetFileName(dialog.FileName));
+							CommandRun(Commands.File_Save);
+						}
+					}
+					break;
 				case Commands.File_Exit: Close(); break;
 				case Commands.Edit_ShowClipboad: Clipboard.Show(); break;
 			}
