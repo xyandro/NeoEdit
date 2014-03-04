@@ -13,47 +13,44 @@ namespace NeoEdit.GUI.BinaryEditorUI
 {
 	public partial class BinaryEditor : Window
 	{
-		public enum Commands
-		{
-			File_New,
-			File_Open,
-			File_Save,
-			File_SaveAs,
-			File_Exit,
-			Edit_Undo,
-			Edit_Cut,
-			Edit_Copy,
-			Edit_Paste,
-			Edit_ShowClipboard,
-			Edit_Find,
-			Edit_FindNext,
-			Edit_FindPrev,
-			Edit_Goto,
-			Edit_Insert,
-			Checksum_MD5,
-			Checksum_SHA1,
-			Checksum_SHA256,
-			Compress_GZip,
-			Decompress_GZip,
-			Compress_Deflate,
-			Decompress_Inflate,
-			Encrypt_AES,
-			Decrypt_AES,
-			Encrypt_DES,
-			Decrypt_DES,
-			Encrypt_DES3,
-			Decrypt_DES3,
-			Encrypt_RSA,
-			Decrypt_RSA,
-			Encrypt_RSAAES,
-			Decrypt_RSAAES,
-			Sign_RSA,
-			Verify_RSA,
-			Sign_DSA,
-			Verify_DSA,
-			View_Values,
-			View_Refresh,
-		}
+		public static RoutedUICommand Command_File_New = new RoutedUICommand { Text = "_New" };
+		public static RoutedUICommand Command_File_Open = new RoutedUICommand { Text = "_Open" };
+		public static RoutedUICommand Command_File_Save = new RoutedUICommand { Text = "_Save" };
+		public static RoutedUICommand Command_File_SaveAs = new RoutedUICommand { Text = "Save _As" };
+		public static RoutedUICommand Command_File_Exit = new RoutedUICommand { Text = "_Exit" };
+		public static RoutedUICommand Command_Edit_Undo = new RoutedUICommand { Text = "_Undo" };
+		public static RoutedUICommand Command_Edit_Cut = new RoutedUICommand { Text = "Cu_t" };
+		public static RoutedUICommand Command_Edit_Copy = new RoutedUICommand { Text = "_Copy" };
+		public static RoutedUICommand Command_Edit_Paste = new RoutedUICommand { Text = "_Paste" };
+		public static RoutedUICommand Command_Edit_ShowClipboard = new RoutedUICommand { Text = "_Show Clipboard" };
+		public static RoutedUICommand Command_Edit_Find = new RoutedUICommand { Text = "_Find" };
+		public static RoutedUICommand Command_Edit_FindNext = new RoutedUICommand { Text = "Find _Next" };
+		public static RoutedUICommand Command_Edit_FindPrev = new RoutedUICommand { Text = "Find _Previous" };
+		public static RoutedUICommand Command_Edit_Goto = new RoutedUICommand { Text = "_Goto" };
+		public static RoutedUICommand Command_Edit_Insert = new RoutedUICommand { Text = "_Insert" };
+		public static RoutedUICommand Command_View_Values = new RoutedUICommand { Text = "_Values" };
+		public static RoutedUICommand Command_View_Refresh = new RoutedUICommand { Text = "_Refresh" };
+		public static RoutedUICommand Command_Checksum_MD5 = new RoutedUICommand { Text = "_MD5" };
+		public static RoutedUICommand Command_Checksum_SHA1 = new RoutedUICommand { Text = "SHA_1" };
+		public static RoutedUICommand Command_Checksum_SHA256 = new RoutedUICommand { Text = "SHA_256" };
+		public static RoutedUICommand Command_Compress_GZip = new RoutedUICommand { Text = "_GZip" };
+		public static RoutedUICommand Command_Decompress_GZip = new RoutedUICommand { Text = "_GZip" };
+		public static RoutedUICommand Command_Compress_Deflate = new RoutedUICommand { Text = "_Deflate" };
+		public static RoutedUICommand Command_Decompress_Inflate = new RoutedUICommand { Text = "_Inflate" };
+		public static RoutedUICommand Command_Encrypt_AES = new RoutedUICommand { Text = "_AES" };
+		public static RoutedUICommand Command_Decrypt_AES = new RoutedUICommand { Text = "_AES" };
+		public static RoutedUICommand Command_Encrypt_DES = new RoutedUICommand { Text = "_DES" };
+		public static RoutedUICommand Command_Decrypt_DES = new RoutedUICommand { Text = "_DES" };
+		public static RoutedUICommand Command_Encrypt_DES3 = new RoutedUICommand { Text = "_3DES" };
+		public static RoutedUICommand Command_Decrypt_DES3 = new RoutedUICommand { Text = "_3DES" };
+		public static RoutedUICommand Command_Encrypt_RSA = new RoutedUICommand { Text = "_RSA" };
+		public static RoutedUICommand Command_Decrypt_RSA = new RoutedUICommand { Text = "_RSA" };
+		public static RoutedUICommand Command_Encrypt_RSAAES = new RoutedUICommand { Text = "RSA/AES" };
+		public static RoutedUICommand Command_Decrypt_RSAAES = new RoutedUICommand { Text = "RSA/AES" };
+		public static RoutedUICommand Command_Sign_RSA = new RoutedUICommand { Text = "_RSA" };
+		public static RoutedUICommand Command_Verify_RSA = new RoutedUICommand { Text = "_RSA" };
+		public static RoutedUICommand Command_Sign_DSA = new RoutedUICommand { Text = "_DSA" };
+		public static RoutedUICommand Command_Verify_DSA = new RoutedUICommand { Text = "_DSA" };
 
 		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
@@ -80,7 +77,6 @@ namespace NeoEdit.GUI.BinaryEditorUI
 		{
 			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
-			uiHelper.InitializeCommands();
 
 			record = _record;
 			if (data == null)
@@ -126,61 +122,57 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			}
 		}
 
-		void CommandRun(UICommand command, object parameter)
+		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
-			CommandRun((Commands)command.Enum);
+			RunCommand(e.Command);
 		}
 
-		void CommandRun(Commands command)
+		void RunCommand(ICommand command)
 		{
-			canvas.CommandRun(command);
+			canvas.RunCommand(command);
 
-			switch (command)
+			if (command == Command_File_New)
 			{
-				case Commands.File_New:
-					record = null;
-					Data = new MemoryBinaryData();
-					break;
-				case Commands.File_Open:
-					{
-						var dialog = new OpenFileDialog();
-						if (dialog.ShowDialog() == true)
-						{
-							record = new Root().GetRecord(dialog.FileName);
-							Data = record.Read();
-						}
-					}
-					break;
-				case Commands.File_Save:
-					if (record == null)
-						CommandRun(Commands.File_SaveAs);
-					else
-						record.Write(Data);
-					break;
-				case Commands.File_SaveAs:
-					{
-						var dialog = new SaveFileDialog();
-						if (dialog.ShowDialog() == true)
-						{
-							if (Directory.Exists(dialog.FileName))
-								throw new Exception("A directory by that name already exists.");
-							if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
-								throw new Exception("Directory doesn't exist.");
-							var dir = new Root().GetRecord(Path.GetDirectoryName(dialog.FileName));
-							record = dir.CreateFile(Path.GetFileName(dialog.FileName));
-							CommandRun(Commands.File_Save);
-						}
-					}
-					break;
-				case Commands.File_Exit: Close(); break;
-				case Commands.View_Values: ShowValues = !ShowValues; break;
-				case Commands.Edit_ShowClipboard: Clipboard.Show(); break;
+				record = null;
+				Data = new MemoryBinaryData();
 			}
-		}
-
-		bool CommandCanRun(UICommand command, object parameter)
-		{
-			return canvas.CommandCanRun(command, parameter);
+			else if (command == Command_File_Open)
+			{
+				{
+					var dialog = new OpenFileDialog();
+					if (dialog.ShowDialog() == true)
+					{
+						record = new Root().GetRecord(dialog.FileName);
+						Data = record.Read();
+					}
+				}
+			}
+			else if (command == Command_File_Save)
+			{
+				if (record == null)
+					RunCommand(Command_File_SaveAs);
+				else
+					record.Write(Data);
+			}
+			else if (command == Command_File_SaveAs)
+			{
+				{
+					var dialog = new SaveFileDialog();
+					if (dialog.ShowDialog() == true)
+					{
+						if (Directory.Exists(dialog.FileName))
+							throw new Exception("A directory by that name already exists.");
+						if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+							throw new Exception("Directory doesn't exist.");
+						var dir = new Root().GetRecord(Path.GetDirectoryName(dialog.FileName));
+						record = dir.CreateFile(Path.GetFileName(dialog.FileName));
+						RunCommand(Command_File_Save);
+					}
+				}
+			}
+			else if (command == Command_File_Exit) { Close(); }
+			else if (command == Command_View_Values) { ShowValues = !ShowValues; }
+			else if (command == Command_Edit_ShowClipboard) { Clipboard.Show(); }
 		}
 
 		void InputEncodingClick(object sender, RoutedEventArgs e)

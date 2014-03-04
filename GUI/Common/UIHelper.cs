@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -10,7 +9,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
 
 namespace NeoEdit.GUI.Common
 {
@@ -58,26 +56,6 @@ namespace NeoEdit.GUI.Common
 			lock (UIHelpers)
 				UIHelpers[new WeakReference<ControlType>(_control)] = new WeakReference<UIHelper<ControlType>>(this);
 			control = _control;
-		}
-
-		public void InitializeCommands()
-		{
-			var window = control as Window;
-			if (window == null)
-				return;
-
-			foreach (var resource in window.Resources)
-			{
-				if (!(resource is DictionaryEntry))
-					continue;
-				var dictEntry = (DictionaryEntry)resource;
-				var command = dictEntry.Value as UICommand;
-				if (command == null)
-					continue;
-
-				if (command.Key != Key.None)
-					window.InputBindings.Add(new InputBinding(command, new KeyGesture(command.Key, command.Modifiers)));
-			}
 		}
 
 		string GetExpressionValue<T1, T2>(Expression<Func<T1, T2>> expression)

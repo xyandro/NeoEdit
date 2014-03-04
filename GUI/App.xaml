@@ -3,13 +3,4 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:NeoEdit.GUI.Common">
 
-	<Application.Resources>
-		<Style TargetType="MenuItem">
-			<Setter Property="Header" Value="{Binding RelativeSource={RelativeSource Self}, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##2E##27#Command#27##2E##27#Header#27#}"/>
-			<Setter Property="InputGestureText" Value="{Binding RelativeSource={RelativeSource Self}, Converter={common:ExpressionConverter}, ConverterParameter=#5B#0#5D##2E##27#Command#27##2E##27#InputGestureText#27#}"/>
-		</Style>
-		<!--Due to a bug in WPF, a single resource isn't loaded.-->
-		<Style x:Key="unused" />
-	</Application.Resources>
-
 </Application>

@@ -933,283 +933,260 @@ namespace NeoEdit.GUI.TextEditorUI
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
-		public void CommandRun(TextEditor.Commands command)
+		public void RunCommand(ICommand command)
 		{
-			switch (command)
+			InvalidateVisual();
+
+			if (command == TextEditor.Command_Edit_Undo)
 			{
-				case TextEditor.Commands.Edit_Undo:
-					{
-						if (undo.Count == 0)
-							break;
+				if (undo.Count == 0)
+					return;
 
-						ranges[RangeType.Mark].Clear();
-						ranges[RangeType.Search].Clear();
-						ranges[RangeType.Selection].Clear();
+				ranges[RangeType.Mark].Clear();
+				ranges[RangeType.Search].Clear();
+				ranges[RangeType.Selection].Clear();
 
-						var undoStep = undo.Last();
-						undo.Remove(undoStep);
-						saveUndo = false;
-						Data.Replace(undoStep.offsets, undoStep.lengths, undoStep.text);
-						saveUndo = true;
-					}
-					break;
-				case TextEditor.Commands.Edit_Cut:
-				case TextEditor.Commands.Edit_Copy:
-					{
-						var result = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToArray();
-						if (result.Length != 0)
-							Clipboard.Set(result);
-						if (command == TextEditor.Commands.Edit_Cut)
-							Replace(ranges[RangeType.Selection], null, false);
-					}
-					break;
-				case TextEditor.Commands.Edit_Paste:
-					{
-						var result = Clipboard.GetStrings().ToList();
-						if ((result == null) || (result.Count == 0))
-							break;
+				var undoStep = undo.Last();
+				undo.Remove(undoStep);
+				saveUndo = false;
+				Data.Replace(undoStep.offsets, undoStep.lengths, undoStep.text);
+				saveUndo = true;
+			}
+			else if ((command == TextEditor.Command_Edit_Cut) || (command == TextEditor.Command_Edit_Copy))
+			{
+				var result = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToArray();
+				if (result.Length != 0)
+					Clipboard.Set(result);
+				if (command == TextEditor.Command_Edit_Cut)
+					Replace(ranges[RangeType.Selection], null, false);
+			}
+			else if (command == TextEditor.Command_Edit_Paste)
+			{
+				var result = Clipboard.GetStrings().ToList();
+				if ((result == null) || (result.Count == 0))
+					return;
 
-						var sels = ranges[RangeType.Selection];
-						while (result.Count > sels.Count)
-						{
-							result[result.Count - 2] += " " + result[result.Count - 1];
-							result.RemoveAt(result.Count - 1);
-						}
-						while (result.Count < sels.Count)
-							result.Add(result.Last());
+				var sels = ranges[RangeType.Selection];
+				while (result.Count > sels.Count)
+				{
+					result[result.Count - 2] += " " + result[result.Count - 1];
+					result.RemoveAt(result.Count - 1);
+				}
+				while (result.Count < sels.Count)
+					result.Add(result.Last());
 
-						Replace(sels, result, false);
-					}
-					break;
-				case TextEditor.Commands.Edit_Find:
-					{
-						var selectionOnly = ranges[RangeType.Selection].Any(range => range.HasSelection());
-						var findDialog = new FindDialog { SelectionOnly = selectionOnly };
-						if (findDialog.ShowDialog() != true)
-							break;
+				Replace(sels, result, false);
+			}
+			else if (command == TextEditor.Command_Edit_Find)
+			{
+				var selectionOnly = ranges[RangeType.Selection].Any(range => range.HasSelection());
+				var findDialog = new FindDialog { SelectionOnly = selectionOnly };
+				if (findDialog.ShowDialog() != true)
+					return;
 
-						RunSearch(findDialog.Regex, findDialog.SelectionOnly);
-						if (findDialog.SelectAll)
-						{
-							if (ranges[RangeType.Search].Count != 0)
-								ranges[RangeType.Selection] = ranges[RangeType.Search];
-							ranges[RangeType.Search] = new List<Range>();
-							break;
-						}
-
-						FindNext(true);
-					}
-					break;
-				case TextEditor.Commands.Edit_FindNext:
-				case TextEditor.Commands.Edit_FindPrev:
-					FindNext(command == TextEditor.Commands.Edit_FindNext);
-					break;
-				case TextEditor.Commands.Edit_GotoLine:
-					{
-						var line = Data.GetOffsetLine(ranges[RangeType.Selection].First().Start);
-						var getNumDialog = new GetNumDialog
-						{
-							Title = "Go to line",
-							Text = String.Format("Go to line: (1 - {0})", Data.NumLines),
-							MinValue = 1,
-							MaxValue = Data.NumLines,
-							Value = line,
-						};
-						if (getNumDialog.ShowDialog() == true)
-						{
-							foreach (var selection in ranges[RangeType.Selection])
-								SetPos1(selection, (int)getNumDialog.Value - 1, 0, false, true);
-						}
-					}
-					break;
-				case TextEditor.Commands.Edit_GotoIndex:
-					{
-						var offset = ranges[RangeType.Selection].First().Start;
-						var line = Data.GetOffsetLine(offset);
-						var index = Data.GetOffsetIndex(offset, line);
-						var getNumDialog = new GetNumDialog
-						{
-							Title = "Go to column",
-							Text = String.Format("Go to column: (1 - {0})", Data[line].Length + 1),
-							MinValue = 1,
-							MaxValue = Data[line].Length + 1,
-							Value = index,
-						};
-						if (getNumDialog.ShowDialog() == true)
-						{
-							foreach (var selection in ranges[RangeType.Selection])
-								SetPos1(selection, 0, (int)getNumDialog.Value - 1, true, false);
-						}
-					}
-					break;
-				case TextEditor.Commands.Edit_BOM:
-					{
-						Data.SetBOM(!Data.BOM);
-						var offset = Data.BOM ? 1 : -1;
-						foreach (var rangeEntry in ranges)
-							foreach (var range in rangeEntry.Value)
-							{
-								range.Pos1 += offset;
-								range.Pos2 += offset;
-							}
-					}
-					break;
-				case TextEditor.Commands.Data_ToUpper:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Data_ToLower:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Data_ToHex:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Data_FromHex:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Data_ToChar:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => ((char)UInt16.Parse(GetString(range), NumberStyles.HexNumber)).ToString()).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Data_FromChar:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.End - range.Start == 1).ToList();
-						var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Data_Width:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var minWidth = selections.Select(range => range.End - range.Start).Max();
-						var text = String.Join("", selections.Select(range => GetString(range)));
-						var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
-						var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
-						if (widthDialog.ShowDialog() == true)
-							Replace(selections, selections.Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
-					}
-					break;
-				case TextEditor.Commands.Data_Trim:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.SelectMark_Toggle:
-					{
-						if (ranges[RangeType.Selection].Count > 1)
-						{
-							ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
-							ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
-						}
-						else if (ranges[RangeType.Mark].Count != 0)
-						{
-							ranges[RangeType.Selection] = ranges[RangeType.Mark];
-							ranges[RangeType.Mark] = new List<Range>();
-						}
-					}
-					break;
-				case TextEditor.Commands.Select_All:
-					foreach (var selection in ranges[RangeType.Selection])
-					{
-						SetPos1(selection, Int32.MaxValue, Int32.MaxValue, false, false);
-						SetPos2(selection, 0, 0, false, false);
-					}
-					break;
-				case TextEditor.Commands.Select_Unselect:
-					ranges[RangeType.Selection].ForEach(range => range.Pos1 = range.Pos2 = range.Start);
-					InvalidateVisual();
-					break;
-				case TextEditor.Commands.Select_Single:
-					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
-					break;
-				case TextEditor.Commands.Select_Lines:
-					var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-					var lengths = lines.ToDictionary(line => line, line => Data[line].Length);
-					ranges[RangeType.Selection] = lengths.Select(line => new Range { Pos1 = Data.GetOffset(line.Key, line.Value), Pos2 = Data.GetOffset(line.Key, 0) }).ToList();
-					break;
-				case TextEditor.Commands.Select_Find:
-					ranges[RangeType.Selection] = ranges[RangeType.Search];
+				RunSearch(findDialog.Regex, findDialog.SelectionOnly);
+				if (findDialog.SelectAll)
+				{
+					if (ranges[RangeType.Search].Count != 0)
+						ranges[RangeType.Selection] = ranges[RangeType.Search];
 					ranges[RangeType.Search] = new List<Range>();
-					break;
-				case TextEditor.Commands.Select_Marks:
-					if (ranges[RangeType.Mark].Count == 0)
-						break;
+				}
 
+				FindNext(true);
+			}
+			else if ((command == TextEditor.Command_Edit_FindNext) || (command == TextEditor.Command_Edit_FindPrev))
+				FindNext(command == TextEditor.Command_Edit_FindNext);
+			else if (command == TextEditor.Command_Edit_GotoLine)
+			{
+				var line = Data.GetOffsetLine(ranges[RangeType.Selection].First().Start);
+				var getNumDialog = new GetNumDialog
+				{
+					Title = "Go to line",
+					Text = String.Format("Go to line: (1 - {0})", Data.NumLines),
+					MinValue = 1,
+					MaxValue = Data.NumLines,
+					Value = line,
+				};
+				if (getNumDialog.ShowDialog() == true)
+				{
+					foreach (var selection in ranges[RangeType.Selection])
+						SetPos1(selection, (int)getNumDialog.Value - 1, 0, false, true);
+				}
+			}
+			else if (command == TextEditor.Command_Edit_GotoIndex)
+			{
+				var offset = ranges[RangeType.Selection].First().Start;
+				var line = Data.GetOffsetLine(offset);
+				var index = Data.GetOffsetIndex(offset, line);
+				var getNumDialog = new GetNumDialog
+				{
+					Title = "Go to column",
+					Text = String.Format("Go to column: (1 - {0})", Data[line].Length + 1),
+					MinValue = 1,
+					MaxValue = Data[line].Length + 1,
+					Value = index,
+				};
+				if (getNumDialog.ShowDialog() == true)
+				{
+					foreach (var selection in ranges[RangeType.Selection])
+						SetPos1(selection, 0, (int)getNumDialog.Value - 1, true, false);
+				}
+			}
+			else if (command == TextEditor.Command_Edit_BOM)
+			{
+				Data.SetBOM(!Data.BOM);
+				var offset = Data.BOM ? 1 : -1;
+				foreach (var rangeEntry in ranges)
+					foreach (var range in rangeEntry.Value)
+					{
+						range.Pos1 += offset;
+						range.Pos2 += offset;
+					}
+			}
+			else if (command == TextEditor.Command_Data_ToUpper)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_ToLower)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_ToHex)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_FromHex)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_ToChar)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => ((char)UInt16.Parse(GetString(range), NumberStyles.HexNumber)).ToString()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_FromChar)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.End - range.Start == 1).ToList();
+				var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_Width)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var minWidth = selections.Select(range => range.End - range.Start).Max();
+				var text = String.Join("", selections.Select(range => GetString(range)));
+				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
+				var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
+				if (widthDialog.ShowDialog() == true)
+					Replace(selections, selections.Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
+			}
+			else if (command == TextEditor.Command_Data_Trim)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_SelectMark_Toggle)
+			{
+				if (ranges[RangeType.Selection].Count > 1)
+				{
+					ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
+					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
+				}
+				else if (ranges[RangeType.Mark].Count != 0)
+				{
 					ranges[RangeType.Selection] = ranges[RangeType.Mark];
 					ranges[RangeType.Mark] = new List<Range>();
-					break;
-				case TextEditor.Commands.Select_Reverse:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => GetString(range)).Reverse().ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Select_Sort:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Select_Evaluate:
-					{
-						var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-						var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.GUI.Common.Expression(expr).Evaluate().ToString()).ToList();
-						Replace(selections, strs, true);
-					}
-					break;
-				case TextEditor.Commands.Mark_Find:
-					ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
-					ranges[RangeType.Search] = new List<Range>();
-					break;
-				case TextEditor.Commands.Mark_Selection:
-					ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
-					break;
-				case TextEditor.Commands.Mark_LimitToSelection:
-					ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
-					break;
-				case TextEditor.Commands.Mark_Clear:
-					var hasSelection = ranges[RangeType.Selection].Any(range => range.HasSelection());
-					if (!hasSelection)
-						ranges[RangeType.Mark].Clear();
-					else
-					{
-						foreach (var selection in ranges[RangeType.Selection])
-						{
-							var toRemove = ranges[RangeType.Mark].Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
-							toRemove.ForEach(mark => ranges[RangeType.Mark].Remove(mark));
-						}
-					}
-					break;
+				}
 			}
+			else if (command == TextEditor.Command_Select_All)
+			{
+				foreach (var selection in ranges[RangeType.Selection])
+				{
+					SetPos1(selection, Int32.MaxValue, Int32.MaxValue, false, false);
+					SetPos2(selection, 0, 0, false, false);
+				}
+			}
+			else if (command == TextEditor.Command_Select_Unselect)
+			{
+				ranges[RangeType.Selection].ForEach(range => range.Pos1 = range.Pos2 = range.Start);
+				InvalidateVisual();
+			}
+			else if (command == TextEditor.Command_Select_Single)
+				ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
+			else if (command == TextEditor.Command_Select_Lines)
+			{
+				var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+				var lengths = lines.ToDictionary(line => line, line => Data[line].Length);
+				ranges[RangeType.Selection] = lengths.Select(line => new Range { Pos1 = Data.GetOffset(line.Key, line.Value), Pos2 = Data.GetOffset(line.Key, 0) }).ToList();
+			}
+			else if (command == TextEditor.Command_Select_Find)
+			{
+				ranges[RangeType.Selection] = ranges[RangeType.Search];
+				ranges[RangeType.Search] = new List<Range>();
+			}
+			else if (command == TextEditor.Command_Select_Marks)
+			{
+				if (ranges[RangeType.Mark].Count == 0)
+					return;
 
-			InvalidateVisual();
-		}
-
-		public bool CommandCanRun(UICommand command, object parameter)
-		{
-			return true;
+				ranges[RangeType.Selection] = ranges[RangeType.Mark];
+				ranges[RangeType.Mark] = new List<Range>();
+			}
+			else if (command == TextEditor.Command_Select_Reverse)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range)).Reverse().ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Select_Sort)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Select_Evaluate)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.GUI.Common.Expression(expr).Evaluate().ToString()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Mark_Find)
+			{
+				ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
+				ranges[RangeType.Search] = new List<Range>();
+			}
+			else if (command == TextEditor.Command_Mark_Selection)
+			{
+				ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
+			}
+			else if (command == TextEditor.Command_Mark_LimitToSelection)
+			{
+				ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
+			}
+			else if (command == TextEditor.Command_Mark_Clear)
+			{
+				var hasSelection = ranges[RangeType.Selection].Any(range => range.HasSelection());
+				if (!hasSelection)
+					ranges[RangeType.Mark].Clear();
+				else
+				{
+					foreach (var selection in ranges[RangeType.Selection])
+					{
+						var toRemove = ranges[RangeType.Mark].Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
+						toRemove.ForEach(mark => ranges[RangeType.Mark].Remove(mark));
+					}
+				}
+			}
 		}
 
 		void AddText(string text)

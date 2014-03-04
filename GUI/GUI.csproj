@@ -160,7 +160,6 @@
     <Compile Include="BrowserUI\Dialogs\Rename.xaml.cs">
       <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\UICommand.cs" />
     <Compile Include="Common\UIHelper.cs" />
     <Compile Include="Dialogs\GetNumDialog.xaml.cs">
       <DependentUpon>GetNumDialog.xaml</DependentUpon>

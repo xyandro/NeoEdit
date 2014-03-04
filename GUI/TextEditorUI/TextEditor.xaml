@@ -5,46 +5,69 @@
 	xmlns:textEditorUI="clr-namespace:NeoEdit.GUI.TextEditorUI"
 	Title="NeoEdit Text Editor" Height="400" Width="400" WindowState="Maximized">
 
-	<Window.Resources>
-		<common:UICommand x:Key="File_New" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.File_New}" Header="_New" Key="N" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="File_Open" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.File_Open}" Header="_Open" Key="O" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="File_Save" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.File_Save}" Header="_Save" Key="S" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="File_SaveAs" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.File_SaveAs}" Header="Save _As" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="File_Exit" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.File_Exit}" Header="_Exit" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_Undo" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Undo}" Header="_Undo" Key="Z" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_Cut" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Cut}" Header="C_ut" Key="X" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_Copy" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Copy}" Header="_Copy" Key="C" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_Paste" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Paste}" Header="_Paste" Key="V" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_ShowClipboad" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_ShowClipboad}" Header="_Show Clipboard" Key="C" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_Find}" Header="_Find" Key="F" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_FindNext" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_FindNext}" Header="Find _Next" Key="F3" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_FindPrev" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_FindPrev}" Header="Find _Prev" Key="F3" Modifiers="Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_GotoLine" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_GotoLine}" Header="Goto _line" Key="G" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_GotoIndex" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_GotoIndex}" Header="Goto c_olumn" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Edit_BOM" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Edit_BOM}" Header="_BOM" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Data_ToUpper" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_ToUpper}" Header="Upper case" Key="U" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Data_ToLower" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_ToLower}" Header="Lower case" Key="U" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Data_ToHex" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_ToHex}" Header="To hex" Key="H" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Data_FromHex" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_FromHex}" Header="From hex" Key="H" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Data_ToChar" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_ToChar}" Header="To char" Key="D3" Modifiers="Control+Shift" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Data_FromChar" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_FromChar}" Header="From char" Key="D3" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Data_Width" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_Width}" Header="_Width" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Data_Trim" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Data_Trim}" Header="_Trim" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="SelectMark_Toggle" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.SelectMark_Toggle}" Header="Toggle marks/selection" Key="M" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_All" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_All}" Header="_All" Key="A" Modifiers="Control" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Unselect" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Unselect}" Header="_Unselect" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Single" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Single}" Header="_Single" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Lines" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Lines}" Header="_Lines" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Marks" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Marks}" Header="_Marks" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Reverse" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Reverse}" Header="_Reverse selections" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Sort" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Sort}" Header="S_ort selections" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Select_Evaluate" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Select_Evaluate}" Header="_Evaluate selections" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Mark_Selection" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Selection}" Header="_Selection" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Mark_Find" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Find}" Header="_Find results" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Mark_Clear" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_Clear}" Header="_Clear marks" Run="CommandRun" CanRun="CommandCanRun"/>
-		<common:UICommand x:Key="Mark_LimitToSelection" Enum="{x:Static Member=textEditorUI:TextEditor+Commands.Mark_LimitToSelection}" Header="_Limit to selection" Run="CommandRun" CanRun="CommandCanRun"/>
-	</Window.Resources>
+	<Window.CommandBindings>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_File_New" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_File_Open" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_File_Save" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_File_SaveAs" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_File_Exit" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Undo" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Cut" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Copy" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Paste" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_ShowClipboard" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Find" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_FindNext" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_FindPrev" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_GotoLine" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_GotoIndex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_BOM" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_ToUpper" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_ToLower" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_ToHex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_FromHex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_ToChar" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_FromChar" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Width" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Trim" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_SelectMark_Toggle" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_All" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Unselect" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Single" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Lines" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Marks" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Find" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Reverse" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Sort" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Evaluate" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Selection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Find" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Clear" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_LimitToSelection" Executed="Command_Executed"/>
+	</Window.CommandBindings>
+	
+	<Window.InputBindings>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_File_New" Key="N" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_File_Open" Key="O" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_File_Save" Key="S" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Undo" Key="Z" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Cut" Key="X" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Copy" Key="C" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Paste" Key="V" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_ShowClipboard" Key="C" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Find" Key="F" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_FindNext" Key="F3"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_ToUpper" Key="U" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_ToLower" Key="U" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_ToHex" Key="H" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_FromHex" Key="H" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_ToChar" Key="D3" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_FromChar" Key="D3" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_SelectMark_Toggle" Key="M" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Select_All" Key="A" Modifiers="Control"/>
+	</Window.InputBindings>
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -60,26 +83,26 @@
 
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_File">
-				<MenuItem Command="{StaticResource File_New}"/>
-				<MenuItem Command="{StaticResource File_Open}"/>
-				<MenuItem Command="{StaticResource File_Save}"/>
-				<MenuItem Command="{StaticResource File_SaveAs}"/>
-				<MenuItem Command="{StaticResource File_Exit}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_File_New"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_File_Open"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_File_Save"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_File_SaveAs"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_File_Exit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
-				<MenuItem Command="{StaticResource Edit_Undo}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Undo"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Edit_Cut}"/>
-				<MenuItem Command="{StaticResource Edit_Copy}"/>
-				<MenuItem Command="{StaticResource Edit_Paste}"/>
-				<MenuItem Command="{StaticResource Edit_ShowClipboad}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Cut"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Copy"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Paste"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_ShowClipboard"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Edit_Find}"/>
-				<MenuItem Command="{StaticResource Edit_FindNext}"/>
-				<MenuItem Command="{StaticResource Edit_FindPrev}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Find"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_FindNext"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_FindPrev"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Edit_GotoLine}"/>
-				<MenuItem Command="{StaticResource Edit_GotoIndex}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_GotoLine"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_GotoIndex"/>
 				<Separator/>
 				<MenuItem Header="_Encode" Click="EncodeClick">
 					<MenuItem.ItemContainerStyle>
@@ -106,42 +129,42 @@
 					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
-				<MenuItem Command="{StaticResource Edit_BOM}" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_BOM" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
-				<MenuItem Command="{StaticResource Data_ToUpper}"/>
-				<MenuItem Command="{StaticResource Data_ToLower}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_ToUpper"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_ToLower"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Data_ToHex}"/>
-				<MenuItem Command="{StaticResource Data_FromHex}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_ToHex"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_FromHex"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Data_ToChar}"/>
-				<MenuItem Command="{StaticResource Data_FromChar}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_ToChar"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_FromChar"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Data_Width}"/>
-				<MenuItem Command="{StaticResource Data_Trim}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Width"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Trim"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
-				<MenuItem Command="{StaticResource SelectMark_Toggle}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_SelectMark_Toggle"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Select_All}"/>
-				<MenuItem Command="{StaticResource Select_Unselect}"/>
-				<MenuItem Command="{StaticResource Select_Single}"/>
-				<MenuItem Command="{StaticResource Select_Lines}"/>
-				<MenuItem Command="{StaticResource Select_Marks}"/>
-				<MenuItem Command="{StaticResource Select_Find}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_All"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Unselect"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Single"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Lines"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Marks"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Find"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Select_Reverse}"/>
-				<MenuItem Command="{StaticResource Select_Sort}"/>
-				<MenuItem Command="{StaticResource Select_Evaluate}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Reverse"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Sort"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Evaluate"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
-				<MenuItem Command="{StaticResource SelectMark_Toggle}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_SelectMark_Toggle"/>
 				<Separator/>
-				<MenuItem Command="{StaticResource Mark_Selection}"/>
-				<MenuItem Command="{StaticResource Mark_Find}"/>
-				<MenuItem Command="{StaticResource Mark_Clear}"/>
-				<MenuItem Command="{StaticResource Mark_LimitToSelection}"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Mark_Selection"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Mark_Find"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Mark_Clear"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Mark_LimitToSelection"/>
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={common:ExpressionConverter}, ConverterParameter=Type:#27#NeoEdit.GUI.TextEditorUI.Highlighting+HighlightingType#27#}">
