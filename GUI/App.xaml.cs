@@ -26,7 +26,7 @@ namespace NeoEdit.GUI
 		protected override void OnStartupNextInstance(Microsoft.VisualBasic.ApplicationServices.StartupNextInstanceEventArgs e)
 		{
 			base.OnStartupNextInstance(e);
-			app.HandleArgs(e.CommandLine.ToArray());
+			app.GetWindowFromArgs(e.CommandLine.ToArray()).Activate();
 		}
 	}
 
@@ -35,21 +35,16 @@ namespace NeoEdit.GUI
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
-			HandleArgs(e.Args);
-
-			if (Application.Current.Windows.Count == 0)
+			if (GetWindowFromArgs(e.Args) == null)
 				Application.Current.Shutdown();
 		}
 
-		public void HandleArgs(string[] args)
+		public Window GetWindowFromArgs(string[] args)
 		{
 			try
 			{
 				if (args.Length == 0)
-				{
-					new BrowserUI.Browser();
-					return;
-				}
+					return new BrowserUI.Browser();
 
 				switch (args[0])
 				{
@@ -71,9 +66,8 @@ namespace NeoEdit.GUI
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							new TextEditorUI.TextEditor(record, line: line, column: column);
+							return new TextEditorUI.TextEditor(record, line: line, column: column);
 						}
-						break;
 					case "binary":
 						{
 							Record record = null;
@@ -84,9 +78,8 @@ namespace NeoEdit.GUI
 									throw new ArgumentException("Invalid file.");
 							}
 
-							new BinaryEditorUI.BinaryEditor(record);
+							return new BinaryEditorUI.BinaryEditor(record);
 						}
-						break;
 					case "gzip":
 						{
 							var data = File.ReadAllBytes(args[1]);
@@ -103,10 +96,9 @@ namespace NeoEdit.GUI
 						break;
 				}
 			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "Error");
-			}
+			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+
+			return null;
 		}
 
 		public App()
