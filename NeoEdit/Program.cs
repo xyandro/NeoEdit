@@ -8,10 +8,10 @@ namespace NeoEdit
 	class Program
 	{
 		[STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-			AppDomain.CurrentDomain.ExecuteAssemblyByName("GUI");
+			AppDomain.CurrentDomain.ExecuteAssemblyByName("GUI", args);
 		}
 
 		static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
