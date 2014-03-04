@@ -62,6 +62,7 @@
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_FindNext" Key="F3"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_ToUpper" Key="U" Modifiers="Control"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_ToLower" Key="U" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Data_ToHex" Key="H" Modifiers="Control"/>

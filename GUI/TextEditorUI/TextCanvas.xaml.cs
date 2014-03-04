@@ -370,7 +370,8 @@ namespace NeoEdit.GUI.TextEditorUI
 		}
 
 		bool mouseDown;
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+		bool? shiftOverride;
+		bool shiftDown { get { return shiftOverride.HasValue ? shiftOverride.Value : (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt; } }
 		internal bool selecting { get { return (mouseDown) || (shiftDown); } }
@@ -999,6 +1000,7 @@ namespace NeoEdit.GUI.TextEditorUI
 				FindNext(command == TextEditor.Command_Edit_FindNext);
 			else if (command == TextEditor.Command_Edit_GotoLine)
 			{
+				var shift = shiftDown;
 				var line = Data.GetOffsetLine(ranges[RangeType.Selection].First().Start);
 				var getNumDialog = new GetNumDialog
 				{
@@ -1010,8 +1012,10 @@ namespace NeoEdit.GUI.TextEditorUI
 				};
 				if (getNumDialog.ShowDialog() == true)
 				{
+					shiftOverride = shift;
 					foreach (var selection in ranges[RangeType.Selection])
 						SetPos1(selection, (int)getNumDialog.Value - 1, 0, false, true);
+					shiftOverride = null;
 				}
 			}
 			else if (command == TextEditor.Command_Edit_GotoIndex)
