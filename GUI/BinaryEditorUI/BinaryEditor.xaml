@@ -77,25 +77,25 @@
 		</Grid.RowDefinitions>
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_File">
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_New"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_Open"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_Save"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_SaveAs"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_Exit"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_New" Header="_New" InputGestureText="Ctrl+N"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_Open" Header="_Open" InputGestureText="Ctrl+O"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_Save" Header="_Save" InputGestureText="Ctrl+S"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_SaveAs" Header="Save _As"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_Exit" Header="_Exit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Copy"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Paste"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_ShowClipboard"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut" Header="Cu_t" InputGestureText="Ctrl+X"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut" Header="Cu_t" InputGestureText="Ctrl+X"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Copy" Header="_Copy" InputGestureText="Ctrl+C"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Paste" Header="_Paste" InputGestureText="Ctrl+V"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_ShowClipboard" Header="_Show Clipboard" InputGestureText="Ctrl+Shift+C"/>
 				<Separator/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Find"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_FindNext"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_FindPrev"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Goto"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Find" Header="_Find" InputGestureText="Ctrl+F"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_FindNext" Header="Find _Next" InputGestureText="F3"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_FindPrev" Header="Find _Previous" InputGestureText="Shift+F3"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Goto" Header="_Goto" InputGestureText="Ctrl+G"/>
 				<Separator/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Insert" IsChecked="{Binding Insert, ElementName=self}"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Insert" Header="_Insert" InputGestureText="Insert" IsChecked="{Binding Insert, ElementName=self}"/>
 				<MenuItem Header="_Encode" Click="EncodeClick">
 					<MenuItem Header="Auto"/>
 					<MenuItem Header="UTF8"/>
@@ -116,44 +116,44 @@
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_View">
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_View_Values" IsChecked="{Binding ShowValues, ElementName=self}"/>
-				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_View_Refresh"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_View_Values" Header="_Values" IsChecked="{Binding ShowValues, ElementName=self}"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_View_Refresh" Header="_Refresh" InputGestureText="F5"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="C_hecksum">
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Checksum_MD5"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Checksum_SHA1"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Checksum_SHA256"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Checksum_MD5" Header="_MD5"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Checksum_SHA1" Header="SHA_1"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Checksum_SHA256" Header="SHA_256"/>
 				</MenuItem>
 				<MenuItem Header="_Compress">
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Compress_GZip"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Compress_Deflate"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Compress_GZip" Header="_GZip"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Compress_Deflate" Header="_Deflate"/>
 				</MenuItem>
 				<MenuItem Header="_Decompress">
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decompress_GZip"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decompress_Inflate"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decompress_GZip" Header="_GZip"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decompress_Inflate" Header="_Inflate"/>
 				</MenuItem>
 				<MenuItem Header="_Encrypt">
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_AES"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_DES"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_DES3"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_RSA"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_RSAAES"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_AES" Header="_AES"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_DES" Header="_DES"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_DES3" Header="_3DES"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_RSA" Header="_RSA"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Encrypt_RSAAES" Header="RSA/AES"/>
 				</MenuItem>
 				<MenuItem Header="Dec_rypt">
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_AES"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_DES"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_DES3"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_RSA"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_RSAAES"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_AES" Header="_AES"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_DES" Header="_DES"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_DES3" Header="_3DES"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_RSA" Header="_RSA"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Decrypt_RSAAES" Header="RSA/AES"/>
 				</MenuItem>
 				<MenuItem Header="_Sign">
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Sign_RSA"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Sign_DSA"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Sign_RSA" Header="_RSA"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Sign_DSA" Header="_DSA"/>
 				</MenuItem>
 				<MenuItem Header="_Verify">
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Verify_RSA"/>
-					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Verify_DSA"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Verify_RSA" Header="_RSA"/>
+					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Verify_DSA" Header="_DSA"/>
 				</MenuItem>
 			</MenuItem>
 		</Menu>
