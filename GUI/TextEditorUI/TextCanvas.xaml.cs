@@ -94,6 +94,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			Selection,
 		}
 		Dictionary<RangeType, List<Range>> ranges = Helpers.GetValues<RangeType>().ToDictionary(rangeType => rangeType, rangeType => new List<Range>());
+		Dictionary<string, string> keysToValues = new Dictionary<string, string>();
 
 		readonly Typeface typeface;
 		readonly double fontSize;
@@ -1093,6 +1094,27 @@ namespace NeoEdit.GUI.TextEditorUI
 			{
 				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_SetKeys)
+			{
+				var keys = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToList();
+				if (keys.Distinct().Count() != keys.Count)
+					throw new ArgumentException("Cannot have duplicate keys.");
+				keysToValues = keys.ToDictionary(key => key, key => key);
+			}
+			else if (command == TextEditor.Command_Data_SetValues)
+			{
+				var keys = keysToValues.Keys.ToList();
+				var values = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToList();
+				if (values.Count() != keys.Count)
+					throw new ArgumentException("Key count must match value count.");
+				keysToValues = Enumerable.Range(0, keys.Count).ToDictionary(num => keys[num], num => values[num]);
+			}
+			else if (command == TextEditor.Command_Data_KeysToValues)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range)).Select(sel => keysToValues.ContainsKey(sel) ? keysToValues[sel] : sel).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == TextEditor.Command_SelectMark_Toggle)

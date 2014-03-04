@@ -37,6 +37,9 @@ namespace NeoEdit.GUI.TextEditorUI
 		public static RoutedUICommand Command_Data_FromChar = new RoutedUICommand { Text = "From char" };
 		public static RoutedUICommand Command_Data_Width = new RoutedUICommand { Text = "_Width" };
 		public static RoutedUICommand Command_Data_Trim = new RoutedUICommand { Text = "_Trim" };
+		public static RoutedUICommand Command_Data_SetKeys = new RoutedUICommand { Text = "Set _keys" };
+		public static RoutedUICommand Command_Data_SetValues = new RoutedUICommand { Text = "Set _values" };
+		public static RoutedUICommand Command_Data_KeysToValues = new RoutedUICommand { Text = "Keys to values" };
 		public static RoutedUICommand Command_SelectMark_Toggle = new RoutedUICommand { Text = "Toggle marks/selection" };
 		public static RoutedUICommand Command_Select_All = new RoutedUICommand { Text = "_All" };
 		public static RoutedUICommand Command_Select_Unselect = new RoutedUICommand { Text = "_Unselect" };
