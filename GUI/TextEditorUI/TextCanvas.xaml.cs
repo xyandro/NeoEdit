@@ -94,7 +94,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			Selection,
 		}
 		Dictionary<RangeType, List<Range>> ranges = Helpers.GetValues<RangeType>().ToDictionary(rangeType => rangeType, rangeType => new List<Range>());
-		Dictionary<string, string> keysToValues = new Dictionary<string, string>();
+		static Dictionary<string, string> keysToValues = new Dictionary<string, string>();
 
 		readonly Typeface typeface;
 		readonly double fontSize;
