@@ -123,19 +123,29 @@ namespace NeoEdit.GUI.TextEditorUI
 				foreach (var entry in ranges)
 					ranges[entry.Key].Clear();
 				InvalidateVisual();
+				undo = new List<TextCanvasUndo>();
+				Data.Undo += Data_Undo;
 			});
 			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => { ranges[RangeType.Search].Clear(); InvalidateVisual(); });
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
-			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => { EnsureVisible(ranges[RangeType.Selection].First()); InvalidateVisual(); });
+			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => InvalidateVisual());
 
 			Loaded += (s, e) =>
 			{
+				Line = 0;
 				InvalidateVisual();
-				Data.Undo += Data_Undo;
 			};
+		}
+
+		public void GotoPos(int line, int column)
+		{
+			var range = new Range();
+			ranges[RangeType.Selection].Clear();
+			ranges[RangeType.Selection].Add(range);
+			SetPos1(range, line - 1, column - 1, false, false);
 		}
 
 		bool saveUndo = true;
@@ -281,6 +291,8 @@ namespace NeoEdit.GUI.TextEditorUI
 				SetPos1(range, 0, 0, false, false);
 			}
 			ranges[RangeType.Search] = ranges[RangeType.Search].Where(range => range.HasSelection()).ToList();
+
+			EnsureVisible(ranges[RangeType.Selection].First());
 
 			var keys = ranges.Keys.ToList();
 			foreach (var key in keys)
@@ -737,7 +749,6 @@ namespace NeoEdit.GUI.TextEditorUI
 			if (!selecting)
 				SetPos2(selection, line, index, false, false);
 
-			EnsureVisible(selection);
 			InvalidateVisual();
 		}
 
@@ -916,8 +927,6 @@ namespace NeoEdit.GUI.TextEditorUI
 
 				selection.Pos1 = ranges[RangeType.Search][index].End;
 				selection.Pos2 = ranges[RangeType.Search][index].Start;
-
-				EnsureVisible(selection);
 			}
 			InvalidateVisual();
 		}

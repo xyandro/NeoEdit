@@ -16,17 +16,17 @@ namespace NeoEdit.GUI
 		App app;
 
 		public InstanceManager() { IsSingleInstance = true; }
-		protected override bool OnStartup(Microsoft.VisualBasic.ApplicationServices.StartupEventArgs eventArgs)
+		protected override bool OnStartup(Microsoft.VisualBasic.ApplicationServices.StartupEventArgs e)
 		{
 			app = new App();
 			app.Run();
 			return false;
 		}
 
-		protected override void OnStartupNextInstance(Microsoft.VisualBasic.ApplicationServices.StartupNextInstanceEventArgs eventArgs)
+		protected override void OnStartupNextInstance(Microsoft.VisualBasic.ApplicationServices.StartupNextInstanceEventArgs e)
 		{
-			base.OnStartupNextInstance(eventArgs);
-			app.HandleParams(eventArgs.CommandLine.ToArray());
+			base.OnStartupNextInstance(e);
+			app.HandleArgs(e.CommandLine.ToArray());
 		}
 	}
 
@@ -35,13 +35,13 @@ namespace NeoEdit.GUI
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
-			HandleParams(e.Args);
+			HandleArgs(e.Args);
 
 			if (Application.Current.Windows.Count == 0)
 				Application.Current.Shutdown();
 		}
 
-		public void HandleParams(string[] args)
+		public void HandleArgs(string[] args)
 		{
 			try
 			{
@@ -54,23 +54,37 @@ namespace NeoEdit.GUI
 				switch (args[0])
 				{
 					case "text":
-						if (args.Length == 1)
-							new TextEditorUI.TextEditor();
-						else
 						{
-							var record = new Root().GetRecord(args[1]);
-							if (record != null)
-								new TextEditorUI.TextEditor(record);
+							Record record = null;
+							if (args.Length > 1)
+							{
+								record = new Root().GetRecord(args[1]);
+								if (record == null)
+									throw new ArgumentException("Invalid file.");
+							}
+
+							int? line = null;
+							if (args.Length > 2)
+								line = Convert.ToInt32(args[2]);
+
+							int? column = null;
+							if (args.Length > 3)
+								column = Convert.ToInt32(args[3]);
+
+							new TextEditorUI.TextEditor(record, line: line, column: column);
 						}
 						break;
 					case "binary":
-						if (args.Length == 1)
-							new BinaryEditorUI.BinaryEditor();
-						else
 						{
-							var record = new Root().GetRecord(args[1]);
-							if (record != null)
-								new BinaryEditorUI.BinaryEditor(record);
+							Record record = null;
+							if (args.Length > 1)
+							{
+								record = new Root().GetRecord(args[1]);
+								if (record == null)
+									throw new ArgumentException("Invalid file.");
+							}
+
+							new BinaryEditorUI.BinaryEditor(record);
 						}
 						break;
 					case "gzip":

@@ -68,7 +68,7 @@ namespace NeoEdit.GUI.TextEditorUI
 
 		readonly UIHelper<TextEditor> uiHelper;
 		Record record;
-		public TextEditor(Record _record = null, TextData data = null)
+		public TextEditor(Record _record = null, TextData data = null, int? line = null, int? column = null)
 		{
 			uiHelper = new UIHelper<TextEditor>(this);
 			InitializeComponent();
@@ -82,6 +82,7 @@ namespace NeoEdit.GUI.TextEditorUI
 					data = new TextData(record.Read().GetAllBytes());
 			}
 			Data = data;
+			canvas.GotoPos(line.HasValue ? line.Value : 1, column.HasValue ? column.Value : 1);
 			CoderUsed = Data.CoderUsed;
 			TextData.ChangedDelegate changed = () => ++ChangeCount;
 			Data.Changed += changed;
