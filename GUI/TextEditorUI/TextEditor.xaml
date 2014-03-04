@@ -221,6 +221,13 @@
 				<TextBlock Text="Col"/>
 			</StatusBarItem>
 			<StatusBarItem>
+				<TextBlock Text="{Binding Column, ElementName=canvas}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Ch"/>
+			</StatusBarItem>
+			<StatusBarItem>
 				<TextBlock Text="{Binding Index, ElementName=canvas}"/>
 			</StatusBarItem>
 			<Separator/>

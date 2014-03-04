@@ -63,6 +63,8 @@ namespace NeoEdit.GUI.TextEditorUI
 		[DepProp]
 		public int Line { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public int Column { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public int Index { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public int NumSelections { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
@@ -142,10 +144,15 @@ namespace NeoEdit.GUI.TextEditorUI
 
 		public void GotoPos(int line, int column)
 		{
-			var range = new Range();
-			ranges[RangeType.Selection].Clear();
-			ranges[RangeType.Selection].Add(range);
-			SetPos1(range, line - 1, column - 1, false, false);
+			try
+			{
+				var index = GetIndexFromColumn(line - 1, column - 1);
+				var range = new Range();
+				ranges[RangeType.Selection].Clear();
+				ranges[RangeType.Selection].Add(range);
+				SetPos1(range, line - 1, index, false, false);
+			}
+			catch { }
 		}
 
 		bool saveUndo = true;
@@ -225,9 +232,9 @@ namespace NeoEdit.GUI.TextEditorUI
 			return column;
 		}
 
-		int GetIndexFromColumn(int line, int index)
+		int GetIndexFromColumn(int line, int column)
 		{
-			return GetIndexFromColumn(Data[line], index);
+			return GetIndexFromColumn(Data[line], column);
 		}
 
 		int GetIndexFromColumn(string lineStr, int findColumn)
@@ -309,6 +316,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			var pos = ranges[RangeType.Selection].First().Pos1;
 			Line = Data.GetOffsetLine(pos) + 1;
 			Index = Data.GetOffsetIndex(pos, Line - 1) + 1;
+			Column = GetColumnFromIndex(Line - 1, Index - 1) + 1;
 			NumSelections = ranges[RangeType.Selection].Count;
 
 			var startLine = Math.Max(0, GetLineFromY(yScrollValue));
