@@ -95,6 +95,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 				InvalidateVisual();
 			}
 		}
+		long Length { get { return SelEnd - SelStart; } }
 		bool sexHex;
 		bool SelHex
 		{
@@ -420,31 +421,30 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			Pos1 = Pos2 = 0;
 		}
 
-		const int MaxUndoSteps = 50;
-		const int MaxUndoBytes = 1048576 * 5;
-		void AddUndo(long index, long count, int bytesLen)
+		const int maxUndoBytes = 1048576 * 10;
+		void AddUndo(BinaryCanvasUndo current)
 		{
-			var bytes = Data.GetSubset(index, count);
+			var done = false;
 			if (undo.Count != 0)
 			{
 				var last = undo.Last();
-				if (last.index + last.count == index)
+				if (last.index + last.count == current.index)
 				{
-					last.count += bytesLen;
-					last.bytes = last.bytes.Concat(bytes).ToArray();
-					count = bytesLen = 0;
+					last.count += current.count;
+					var oldSize = last.bytes.LongLength;
+					Array.Resize(ref last.bytes, (int)(last.bytes.LongLength + current.bytes.LongLength));
+					Array.Copy(current.bytes, 0, last.bytes, oldSize, current.bytes.LongLength);
+					done = true;
 				}
 			}
 
-			if ((count != 0) || (bytesLen != 0))
-				undo.Add(new BinaryCanvasUndo(index, bytesLen, bytes));
+			if (!done)
+				undo.Add(current);
 
-			while (undo.Count >= MaxUndoSteps)
-				undo.RemoveAt(0);
 			while (true)
 			{
-				var bytesSum = undo.Select(a => a.bytes.Length).Sum();
-				if (bytesSum < MaxUndoBytes)
+				var totalChars = undo.Sum(undoItem => undoItem.bytes.LongLength);
+				if (totalChars <= maxUndoBytes)
 					break;
 				undo.RemoveAt(0);
 			}
@@ -471,16 +471,16 @@ namespace NeoEdit.GUI.BinaryEditorUI
 
 			long count;
 			if (Insert)
-				count = SelEnd - SelStart;
+				count = Length;
 			else
 			{
 				if ((useAllBytes) && (bytes.Length < Data.Length - SelStart))
-					throw new InvalidOperationException("Unable to do this operation in insert mode.");
+					throw new InvalidOperationException("This operation can only be done in insert mode.");
 				Array.Resize(ref bytes, (int)Math.Min(bytes.Length, Data.Length - SelStart));
 				count = bytes.Length;
 			}
 
-			AddUndo(SelStart, count, bytes.Length);
+			AddUndo(new BinaryCanvasUndo(SelStart, bytes.Length, Data.GetSubset(SelStart, count)));
 			Data.Replace(SelStart, count, bytes);
 
 			Pos1 = Pos2 = SelStart + bytes.Length;
@@ -774,7 +774,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 				if (SelStart == SelEnd)
 					return;
 
-				var bytes = Data.GetSubset(SelStart, SelEnd - SelStart);
+				var bytes = Data.GetSubset(SelStart, Length);
 				string str;
 				if (SelHex)
 					str = Coder.BytesToString(bytes, Coder.Type.Hex);

@@ -913,8 +913,8 @@ namespace NeoEdit.GUI.TextEditorUI
 					// Limit undo buffer
 					while (true)
 					{
-						var bytesSum = undo.Sum(undoItem => undoItem.text.Sum(textItem => textItem.Length));
-						if (bytesSum <= maxUndoChars)
+						var totalChars = undo.Sum(undoItem => undoItem.text.Sum(textItem => textItem.Length));
+						if (totalChars <= maxUndoChars)
 							break;
 						undo.RemoveAt(0);
 					}
