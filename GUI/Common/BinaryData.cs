@@ -5,15 +5,6 @@ namespace NeoEdit.GUI.Common
 {
 	abstract public class BinaryData
 	{
-		public delegate void BinaryDataChangedDelegate();
-
-		protected BinaryDataChangedDelegate changed;
-		public event BinaryDataChangedDelegate Changed
-		{
-			add { changed += value; }
-			remove { changed -= value; }
-		}
-
 		virtual public bool CanInsert() { return false; }
 
 		protected long length = 0, cacheStart = 0, cacheEnd = 0;
@@ -78,10 +69,7 @@ namespace NeoEdit.GUI.Common
 			throw new NotImplementedException();
 		}
 
-		virtual public void Refresh()
-		{
-			changed();
-		}
+		virtual public void Refresh() { }
 
 		virtual public byte[] GetAllBytes()
 		{

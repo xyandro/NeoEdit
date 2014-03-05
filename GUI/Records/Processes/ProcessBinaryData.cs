@@ -162,7 +162,6 @@ namespace NeoEdit.GUI.Records.Processes
 			}
 
 			Refresh();
-			changed();
 		}
 
 		public override void Refresh()

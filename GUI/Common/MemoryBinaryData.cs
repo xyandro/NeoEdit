@@ -32,7 +32,6 @@ namespace NeoEdit.GUI.Common
 			Array.Copy(cache, index + count, newData, index + bytes.Length, cache.Length - index - count);
 			cache = newData;
 			length = cache.Length;
-			changed();
 		}
 
 		public override byte[] GetAllBytes()

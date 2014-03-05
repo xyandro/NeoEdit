@@ -56,17 +56,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
 		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public Coder.Type InputCoderType { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -88,9 +78,6 @@ namespace NeoEdit.GUI.BinaryEditorUI
 					data = record.Read();
 			}
 			Data = data;
-			BinaryData.BinaryDataChangedDelegate changed = () => ++ChangeCount;
-			Data.Changed += changed;
-			Closed += (s, e) => Data.Changed -= changed;
 
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;

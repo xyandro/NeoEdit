@@ -38,7 +38,6 @@ namespace NeoEdit.GUI.Records.Handles
 			NEInterop.WriteSharedMemory(pid, handle, (IntPtr)index, bytes);
 
 			Refresh();
-			changed();
 		}
 
 		public override void Refresh()

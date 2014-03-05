@@ -503,6 +503,7 @@ namespace NeoEdit.GUI.BinaryEditorUI
 		{
 			AddUndoRedo(new BinaryCanvasUndoRedo(index, bytes.Length, Data.GetSubset(index, count)), replaceType);
 			Data.Replace(index, count, bytes);
+			++ChangeCount;
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -872,7 +873,10 @@ namespace NeoEdit.GUI.BinaryEditorUI
 					Insert = !Insert;
 			}
 			else if (command == BinaryEditor.Command_View_Refresh)
+			{
 				Data.Refresh();
+				++ChangeCount;
+			}
 		}
 
 		FindData currentFind;

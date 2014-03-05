@@ -81,7 +81,6 @@ namespace NeoEdit.GUI.Common
 		public override void Refresh()
 		{
 			cacheStart = cacheEnd = 0;
-			changed();
 		}
 	}
 }
