@@ -87,19 +87,20 @@ namespace NeoEdit.GUI.TextEditorUI
 		readonly Typeface typeface;
 		readonly double fontSize;
 
-		class TextCanvasUndo
+		class TextCanvasUndoRedo
 		{
 			public List<Range> ranges;
 			public List<string> text;
 
-			public TextCanvasUndo(List<Range> _ranges, List<string> _text)
+			public TextCanvasUndoRedo(List<Range> _ranges, List<string> _text)
 			{
 				ranges = _ranges;
 				text = _text;
 			}
 		}
 
-		List<TextCanvasUndo> undo = new List<TextCanvasUndo>();
+		List<TextCanvasUndoRedo> undo = new List<TextCanvasUndoRedo>();
+		List<TextCanvasUndoRedo> redo = new List<TextCanvasUndoRedo>();
 
 		static TextCanvas() { UIHelper<TextCanvas>.Register(); }
 
@@ -123,7 +124,8 @@ namespace NeoEdit.GUI.TextEditorUI
 				foreach (var entry in ranges)
 					ranges[entry.Key].Clear();
 				InvalidateVisual();
-				undo = new List<TextCanvasUndo>();
+				undo.Clear();
+				redo.Clear();
 			});
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
@@ -851,26 +853,38 @@ namespace NeoEdit.GUI.TextEditorUI
 			return Data.GetString(range.Start, range.End);
 		}
 
-		void Replace(List<Range> replaceRanges, List<string> strs, bool leaveHighlighted, bool saveUndo = true)
+		enum ReplaceType
+		{
+			Normal,
+			Undo,
+			Redo,
+		}
+
+		void Replace(List<Range> replaceRanges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
 		{
 			if (strs == null)
 				strs = replaceRanges.Select(range => "").ToList();
 
-			if (saveUndo)
+			var undoRanges = new List<Range>();
+			var undoText = new List<string>();
+
+			var change = 0;
+			for (var ctr = 0; ctr < replaceRanges.Count; ++ctr)
 			{
-				var undoRanges = new List<Range>();
-				var undoText = new List<string>();
+				var undoRange = new Range { Pos1 = replaceRanges[ctr].Start + change, Pos2 = replaceRanges[ctr].Start + strs[ctr].Length + change };
+				undoRanges.Add(undoRange);
+				undoText.Add(GetString(replaceRanges[ctr]));
+				change = undoRange.Pos2 - replaceRanges[ctr].End;
+			}
 
-				var change = 0;
-				for (var ctr = 0; ctr < replaceRanges.Count; ++ctr)
-				{
-					var undoRange = new Range { Pos1 = replaceRanges[ctr].Start + change, Pos2 = replaceRanges[ctr].Start + strs[ctr].Length + change };
-					undoRanges.Add(undoRange);
-					undoText.Add(GetString(replaceRanges[ctr]));
-					change = undoRange.Pos2 - replaceRanges[ctr].End;
-				}
-
-				undo.Add(new TextCanvasUndo(undoRanges, undoText));
+			var textCanvasUndo = new TextCanvasUndoRedo(undoRanges, undoText);
+			if (replaceType == ReplaceType.Undo)
+				redo.Add(textCanvasUndo);
+			else
+			{
+				if (replaceType == ReplaceType.Normal)
+					redo.Clear();
+				undo.Add(textCanvasUndo);
 			}
 
 			Data.Replace(replaceRanges.Select(range => range.Start).ToList(), replaceRanges.Select(range => range.End - range.Start).ToList(), strs);
@@ -969,7 +983,16 @@ namespace NeoEdit.GUI.TextEditorUI
 
 				var undoStep = undo.Last();
 				undo.Remove(undoStep);
-				Replace(undoStep.ranges, undoStep.text, true, false);
+				Replace(undoStep.ranges, undoStep.text, true, ReplaceType.Undo);
+			}
+			else if (command == TextEditor.Command_Edit_Redo)
+			{
+				if (redo.Count == 0)
+					return;
+
+				var redoStep = redo.Last();
+				redo.Remove(redoStep);
+				Replace(redoStep.ranges, redoStep.text, true, ReplaceType.Redo);
 			}
 			else if ((command == TextEditor.Command_Edit_Cut) || (command == TextEditor.Command_Edit_Copy))
 			{

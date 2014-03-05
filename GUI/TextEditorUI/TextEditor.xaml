@@ -12,6 +12,7 @@
 		<CommandBinding Command="textEditorUI:TextEditor.Command_File_SaveAs" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_File_Exit" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Undo" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Redo" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Cut" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Copy" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Edit_Paste" Executed="Command_Executed"/>
@@ -57,6 +58,7 @@
 		<KeyBinding Command="textEditorUI:TextEditor.Command_File_Open" Key="O" Modifiers="Control"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_File_Save" Key="S" Modifiers="Control"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Undo" Key="Z" Modifiers="Control"/>
+		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Redo" Key="Z" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Cut" Key="X" Modifiers="Control"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Copy" Key="C" Modifiers="Control"/>
 		<KeyBinding Command="textEditorUI:TextEditor.Command_Edit_Paste" Key="V" Modifiers="Control"/>
@@ -99,6 +101,7 @@
 			</MenuItem>
 			<MenuItem Header="_Edit">
 				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Undo" Header="_Undo" InputGestureText="Ctrl+Z"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Redo" Header="_Redo" InputGestureText="Ctrl+Shift+Z"/>
 				<Separator/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Cut" Header="C_ut" InputGestureText="Ctrl+X"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Edit_Copy" Header="_Copy" InputGestureText="Ctrl+C"/>

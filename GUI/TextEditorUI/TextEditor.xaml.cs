@@ -19,6 +19,7 @@ namespace NeoEdit.GUI.TextEditorUI
 		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
 		public static RoutedCommand Command_File_Exit = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Undo = new RoutedCommand();
+		public static RoutedCommand Command_Edit_Redo = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Cut = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Copy = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Paste = new RoutedCommand();
