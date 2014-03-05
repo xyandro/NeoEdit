@@ -7,12 +7,23 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+
+// Repository: $WCURL$
+// Revision(s): $WCRANGE$
+// Last repository commit: $WCDATE$
+
+#if (!DEBUG)
+$WCMIXED?#error Has:// No$ mixed revisions
+$WCMODS?#error Has:// No$ local modifications
+$WCUNVER?#error Has:// No$ unversioned items
+#endif
+
 [assembly: AssemblyTitle("NeoEdit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NeoEdit")]
-[assembly: AssemblyCopyright("© Randon Spackman 2014")]
+[assembly: AssemblyCopyright("© Randon Spackman 2013-$WCDATE=%Y$")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
