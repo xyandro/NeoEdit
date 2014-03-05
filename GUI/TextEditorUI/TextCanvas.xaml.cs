@@ -69,6 +69,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			public int Pos2 { get; set; }
 			public int Start { get { return Math.Min(Pos1, Pos2); } }
 			public int End { get { return Math.Max(Pos1, Pos2); } }
+			public int Length { get { return Math.Abs(Pos1 - Pos2); } }
 
 			public bool HasSelection()
 			{
@@ -860,6 +861,54 @@ namespace NeoEdit.GUI.TextEditorUI
 			Redo,
 		}
 
+		void AddUndoRedo(TextCanvasUndoRedo textCanvasUndoRedo, ReplaceType replaceType)
+		{
+			switch (replaceType)
+			{
+				case ReplaceType.Undo:
+					redo.Add(textCanvasUndoRedo);
+					break;
+				case ReplaceType.Redo:
+					undo.Add(textCanvasUndoRedo);
+					break;
+				case ReplaceType.Normal:
+					redo.Clear();
+					bool done = false;
+					if (undo.Count != 0)
+					{
+						var last = undo.Last();
+						if (last.ranges.Count == textCanvasUndoRedo.ranges.Count)
+						{
+							var change = 0;
+							done = true;
+							for (var num = 0; num < last.ranges.Count; ++num)
+							{
+								if (last.ranges[num].End + change != textCanvasUndoRedo.ranges[num].Start)
+								{
+									done = false;
+									break;
+								}
+								change += textCanvasUndoRedo.ranges[num].Length - textCanvasUndoRedo.text[num].Length;
+							}
+
+							if (done)
+							{
+								change = 0;
+								for (var num = 0; num < last.ranges.Count; ++num)
+								{
+									last.ranges[num] = new Range { Pos1 = last.ranges[num].Start + change, Pos2 = last.ranges[num].End + textCanvasUndoRedo.ranges[num].Length + change };
+									last.text[num] += textCanvasUndoRedo.text[num];
+									change += textCanvasUndoRedo.ranges[num].Length - textCanvasUndoRedo.text[num].Length;
+								}
+							}
+						}
+					}
+					if (!done)
+						undo.Add(textCanvasUndoRedo);
+					break;
+			}
+		}
+
 		void Replace(List<Range> replaceRanges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
 		{
 			if (strs == null)
@@ -877,17 +926,9 @@ namespace NeoEdit.GUI.TextEditorUI
 				change = undoRange.Pos2 - replaceRanges[ctr].End;
 			}
 
-			var textCanvasUndo = new TextCanvasUndoRedo(undoRanges, undoText);
-			if (replaceType == ReplaceType.Undo)
-				redo.Add(textCanvasUndo);
-			else
-			{
-				if (replaceType == ReplaceType.Normal)
-					redo.Clear();
-				undo.Add(textCanvasUndo);
-			}
+			AddUndoRedo(new TextCanvasUndoRedo(undoRanges, undoText), replaceType);
 
-			Data.Replace(replaceRanges.Select(range => range.Start).ToList(), replaceRanges.Select(range => range.End - range.Start).ToList(), strs);
+			Data.Replace(replaceRanges.Select(range => range.Start).ToList(), replaceRanges.Select(range => range.Length).ToList(), strs);
 
 			ranges[RangeType.Search].Clear();
 
@@ -1116,14 +1157,14 @@ namespace NeoEdit.GUI.TextEditorUI
 			}
 			else if (command == TextEditor.Command_Data_FromChar)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.End - range.Start == 1).ToList();
+				var selections = ranges[RangeType.Selection].Where(range => range.Length == 1).ToList();
 				var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == TextEditor.Command_Data_Width)
 			{
 				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-				var minWidth = selections.Select(range => range.End - range.Start).Max();
+				var minWidth = selections.Select(range => range.Length).Max();
 				var text = String.Join("", selections.Select(range => GetString(range)));
 				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
 				var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
