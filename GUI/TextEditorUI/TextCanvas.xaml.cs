@@ -14,42 +14,6 @@ using NeoEdit.GUI.TextEditorUI.Dialogs;
 
 namespace NeoEdit.GUI.TextEditorUI
 {
-	class Range
-	{
-		public Range Copy()
-		{
-			return new Range { Pos1 = Pos1, Pos2 = Pos2 };
-		}
-
-		public int Pos1 { get; set; }
-		public int Pos2 { get; set; }
-		public int Start { get { return Math.Min(Pos1, Pos2); } }
-		public int End { get { return Math.Max(Pos1, Pos2); } }
-
-		public bool HasSelection()
-		{
-			return Pos1 != Pos2;
-		}
-
-		public override string ToString()
-		{
-			return String.Format("({0:0000000000})->({1:0000000000})", Start, End);
-		}
-	};
-
-	class TextCanvasUndo
-	{
-		public List<int> offsets, lengths;
-		public List<string> text;
-
-		public TextCanvasUndo(List<int> _offsets, List<int> _lengths, List<string> _text)
-		{
-			offsets = _offsets;
-			lengths = _lengths;
-			text = _text;
-		}
-	}
-
 	public partial class TextCanvas : Canvas
 	{
 		[DepProp]
@@ -93,11 +57,47 @@ namespace NeoEdit.GUI.TextEditorUI
 			Mark,
 			Selection,
 		}
+
+		class Range
+		{
+			public Range Copy()
+			{
+				return new Range { Pos1 = Pos1, Pos2 = Pos2 };
+			}
+
+			public int Pos1 { get; set; }
+			public int Pos2 { get; set; }
+			public int Start { get { return Math.Min(Pos1, Pos2); } }
+			public int End { get { return Math.Max(Pos1, Pos2); } }
+
+			public bool HasSelection()
+			{
+				return Pos1 != Pos2;
+			}
+
+			public override string ToString()
+			{
+				return String.Format("({0:0000000000})->({1:0000000000})", Start, End);
+			}
+		}
+
 		Dictionary<RangeType, List<Range>> ranges = Helpers.GetValues<RangeType>().ToDictionary(rangeType => rangeType, rangeType => new List<Range>());
 		static Dictionary<string, string> keysToValues = new Dictionary<string, string>();
 
 		readonly Typeface typeface;
 		readonly double fontSize;
+
+		class TextCanvasUndo
+		{
+			public List<Range> ranges;
+			public List<string> text;
+
+			public TextCanvasUndo(List<Range> _ranges, List<string> _text)
+			{
+				ranges = _ranges;
+				text = _text;
+			}
+		}
 
 		List<TextCanvasUndo> undo = new List<TextCanvasUndo>();
 
@@ -151,7 +151,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			catch { }
 		}
 
-		internal void EnsureVisible(Range selection)
+		void EnsureVisible(Range selection)
 		{
 			var line = Data.GetOffsetLine(selection.Pos1);
 			var index = Data.GetOffsetIndex(selection.Pos1, line);
@@ -853,31 +853,27 @@ namespace NeoEdit.GUI.TextEditorUI
 
 		void Replace(List<Range> replaceRanges, List<string> strs, bool leaveHighlighted, bool saveUndo = true)
 		{
-			var offsets = replaceRanges.Select(range => range.Start).ToList();
-			var lengths = replaceRanges.Select(range => range.End - range.Start).ToList();
-
-			if (saveUndo)
-			{
-				var undoOffsets = new List<int>();
-				var undoLengths = new List<int>();
-				var undoText = new List<string>();
-
-				var change = 0;
-				for (var ctr = 0; ctr < offsets.Count; ++ctr)
-				{
-					undoOffsets.Add(offsets[ctr] + change);
-					undoLengths.Add(strs[ctr].Length);
-					undoText.Add(Data.GetString(offsets[ctr], offsets[ctr] + lengths[ctr]));
-					change += strs[ctr].Length - lengths[ctr];
-				}
-
-				undo.Add(new TextCanvasUndo(undoOffsets, undoLengths, undoText));
-			}
-
 			if (strs == null)
 				strs = replaceRanges.Select(range => "").ToList();
 
-			Data.Replace(offsets, lengths, strs);
+			if (saveUndo)
+			{
+				var undoRanges = new List<Range>();
+				var undoText = new List<string>();
+
+				var change = 0;
+				for (var ctr = 0; ctr < replaceRanges.Count; ++ctr)
+				{
+					var undoRange = new Range { Pos1 = replaceRanges[ctr].Start + change, Pos2 = replaceRanges[ctr].Start + strs[ctr].Length + change };
+					undoRanges.Add(undoRange);
+					undoText.Add(GetString(replaceRanges[ctr]));
+					change = undoRange.Pos2 - replaceRanges[ctr].End;
+				}
+
+				undo.Add(new TextCanvasUndo(undoRanges, undoText));
+			}
+
+			Data.Replace(replaceRanges.Select(range => range.Start).ToList(), replaceRanges.Select(range => range.End - range.Start).ToList(), strs);
 
 			ranges[RangeType.Search].Clear();
 
@@ -973,8 +969,7 @@ namespace NeoEdit.GUI.TextEditorUI
 
 				var undoStep = undo.Last();
 				undo.Remove(undoStep);
-				var rangeList = Enumerable.Range(0, undoStep.offsets.Count).Select(num => new Range { Pos1 = undoStep.offsets[num], Pos2 = undoStep.offsets[num] + undoStep.lengths[num] }).ToList();
-				Replace(rangeList, undoStep.text, true, false);
+				Replace(undoStep.ranges, undoStep.text, true, false);
 			}
 			else if ((command == TextEditor.Command_Edit_Cut) || (command == TextEditor.Command_Edit_Copy))
 			{
