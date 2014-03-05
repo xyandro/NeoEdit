@@ -13,7 +13,11 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Image Source="/GUI;component/AboutUI/NeoEdit.png" Stretch="None"/>
+		<Image Margin="10" Source="/GUI;component/AboutUI/NeoEdit.png" Stretch="None">
+			<Image.Effect>
+				<DropShadowEffect BlurRadius="15" ShadowDepth="10"/>
+			</Image.Effect>
+		</Image>
 		<Label Grid.Row="1">
 			<Label.Content>
 				<TextBlock>
