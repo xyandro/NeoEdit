@@ -1169,6 +1169,11 @@ namespace NeoEdit.GUI.TextEditorUI
 				var strs = ranges[RangeType.Selection].Select(range => GetString(range)).OrderBy(range => rng.Next()).ToList();
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
+			else if (command == TextEditor.Command_Data_Series)
+			{
+				var strs = Enumerable.Range(1, ranges[RangeType.Selection].Count).Select(num => num.ToString()).ToList();
+				Replace(ranges[RangeType.Selection], strs, true);
+			}
 			else if (command == TextEditor.Command_SelectMark_Toggle)
 			{
 				if (ranges[RangeType.Selection].Count > 1)

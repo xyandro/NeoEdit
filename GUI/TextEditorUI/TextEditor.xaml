@@ -38,6 +38,7 @@
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Evaluate" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Duplicates" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Randomize" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Series" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_SelectMark_Toggle" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_All" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Unselect" Executed="Command_Executed"/>
@@ -160,6 +161,7 @@
 				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Evaluate" Header="_Evaluate selections"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Duplicates" Header="_Duplicates"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Randomize" Header="R_andomize"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Series" Header="Ser_ies"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
 				<MenuItem Command="textEditorUI:TextEditor.Command_SelectMark_Toggle" Header="Toggle marks/selection" InputGestureText="Ctrl+M"/>
