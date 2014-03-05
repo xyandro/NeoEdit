@@ -156,6 +156,7 @@
 					<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Verify_DSA" Header="_DSA"/>
 				</MenuItem>
 			</MenuItem>
+			<common:WindowMenu/>
 			<common:HelpMenu/>
 		</Menu>
 		<binaryEditorUI:BinaryCanvas x:Name="canvas" Grid.Row="1"

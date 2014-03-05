@@ -81,6 +81,9 @@
     <Compile Include="Common\HelpMenu.xaml.cs">
       <DependentUpon>HelpMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\WindowMenu.xaml.cs">
+      <DependentUpon>WindowMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Handles\HandleType.cs" />
     <Compile Include="Records\Processes\ProcessBinaryData.cs" />
     <Compile Include="Common\Expression.cs" />
@@ -229,6 +232,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\HelpMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\WindowMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

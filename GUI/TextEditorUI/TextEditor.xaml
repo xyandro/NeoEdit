@@ -198,6 +198,7 @@
 					</MenuItem.ItemContainerStyle>
 				</MenuItem>
 			</MenuItem>
+			<common:WindowMenu/>
 			<common:HelpMenu/>
 		</Menu>
 
