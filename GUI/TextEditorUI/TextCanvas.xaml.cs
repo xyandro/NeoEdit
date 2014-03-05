@@ -961,14 +961,11 @@ namespace NeoEdit.GUI.TextEditorUI
 				if (undo.Count == 0)
 					return;
 
-				ranges[RangeType.Mark].Clear();
-				ranges[RangeType.Search].Clear();
-				ranges[RangeType.Selection].Clear();
-
 				var undoStep = undo.Last();
 				undo.Remove(undoStep);
+				var rangeList = Enumerable.Range(0, undoStep.offsets.Count).Select(num => new Range { Pos1 = undoStep.offsets[num], Pos2 = undoStep.offsets[num] + undoStep.lengths[num] }).ToList();
 				saveUndo = false;
-				Data.Replace(undoStep.offsets, undoStep.lengths, undoStep.text);
+				Replace(rangeList, undoStep.text, true);
 				saveUndo = true;
 			}
 			else if ((command == TextEditor.Command_Edit_Cut) || (command == TextEditor.Command_Edit_Copy))
