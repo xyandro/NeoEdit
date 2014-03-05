@@ -321,6 +321,8 @@ namespace
 		}
 		if (type == L"Section")
 			return to_wstring(GetSizeOfMap(handle)) + L" bytes";
+		if (type == L"Thread")
+			return L"ThreadID: " + to_wstring(GetThreadId(handle));
 
 		return L"";
 	}

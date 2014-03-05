@@ -9,6 +9,7 @@ namespace NeoEdit.GUI.Records.Handles
 		public HandleItem(HandleInfo handle)
 			: base(String.Format(@"Handles\{0}\{1}\{2}", handle.Type, handle.PID, handle.Handle))
 		{
+			SetProperty(RecordProperty.PropertyName.Handle, handle.Handle);
 			SetProperty(RecordProperty.PropertyName.Type, handle.Type);
 			SetProperty(RecordProperty.PropertyName.Name, handle.Name);
 			SetProperty(RecordProperty.PropertyName.Data, handle.Data);
