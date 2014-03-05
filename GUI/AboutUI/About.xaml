@@ -10,6 +10,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
 		</Grid.RowDefinitions>
 
 		<Image Source="/GUI;component/AboutUI/NeoEdit.png" Stretch="None"/>
@@ -26,6 +27,8 @@
 				</TextBlock>
 			</Label.Content>
 		</Label>
+
+		<Button Grid.Row="2" Width="50" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" Content="Ok"/>
 	</Grid>
 
 </Window>
