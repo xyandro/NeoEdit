@@ -1138,6 +1138,37 @@ namespace NeoEdit.GUI.TextEditorUI
 				var strs = selections.Select(range => GetString(range)).Select(sel => keysToValues.ContainsKey(sel) ? keysToValues[sel] : sel).ToList();
 				Replace(selections, strs, true);
 			}
+			else if (command == TextEditor.Command_Data_Reverse)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range)).Reverse().ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_Sort)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_Evaluate)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.GUI.Common.Expression(expr).Evaluate().ToString()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditor.Command_Data_Duplicates)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var dups = selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList();
+				if (dups.Count != 0)
+					ranges[RangeType.Selection] = dups;
+			}
+			else if (command == TextEditor.Command_Data_Randomize)
+			{
+				var rng = new Random();
+				var strs = ranges[RangeType.Selection].Select(range => GetString(range)).OrderBy(range => rng.Next()).ToList();
+				Replace(ranges[RangeType.Selection], strs, true);
+			}
 			else if (command == TextEditor.Command_SelectMark_Toggle)
 			{
 				if (ranges[RangeType.Selection].Count > 1)
@@ -1184,37 +1215,6 @@ namespace NeoEdit.GUI.TextEditorUI
 
 				ranges[RangeType.Selection] = ranges[RangeType.Mark];
 				ranges[RangeType.Mark] = new List<Range>();
-			}
-			else if (command == TextEditor.Command_Select_Reverse)
-			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range)).Reverse().ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditor.Command_Select_Sort)
-			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditor.Command_Select_Evaluate)
-			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.GUI.Common.Expression(expr).Evaluate().ToString()).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditor.Command_Select_Duplicates)
-			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-				var dups = selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList();
-				if (dups.Count != 0)
-					ranges[RangeType.Selection] = dups;
-			}
-			else if (command == TextEditor.Command_Select_Randomize)
-			{
-				var rng = new Random();
-				var strs = ranges[RangeType.Selection].Select(range => GetString(range)).OrderBy(range => rng.Next()).ToList();
-				Replace(ranges[RangeType.Selection], strs, true);
 			}
 			else if (command == TextEditor.Command_Mark_Find)
 			{

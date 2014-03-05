@@ -33,6 +33,11 @@
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_SetKeys" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_SetValues" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_KeysToValues" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Reverse" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Sort" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Evaluate" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Duplicates" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Data_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_SelectMark_Toggle" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_All" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Unselect" Executed="Command_Executed"/>
@@ -40,11 +45,6 @@
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Lines" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Marks" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Find" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Reverse" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Sort" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Evaluate" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Duplicates" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Selection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Clear" Executed="Command_Executed"/>
@@ -154,6 +154,12 @@
 				<MenuItem Command="textEditorUI:TextEditor.Command_Data_SetKeys" Header="Set _keys"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Data_SetValues" Header="Set _values"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Data_KeysToValues" Header="Keys to values" InputGestureText="Ctrl+K"/>
+				<Separator/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Reverse" Header="_Reverse selections"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Sort" Header="_Sort selections"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Evaluate" Header="_Evaluate selections"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Duplicates" Header="_Duplicates"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Data_Randomize" Header="R_andomize"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
 				<MenuItem Command="textEditorUI:TextEditor.Command_SelectMark_Toggle" Header="Toggle marks/selection" InputGestureText="Ctrl+M"/>
@@ -164,12 +170,6 @@
 				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Lines" Header="_Lines"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Marks" Header="_Marks"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Find" Header="_Find results"/>
-				<Separator/>
-				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Reverse" Header="_Reverse selections"/>
-				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Sort" Header="S_ort selections"/>
-				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Evaluate" Header="_Evaluate selections"/>
-				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Duplicates" Header="_Duplicates"/>
-				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Randomize" Header="Ra_ndomize"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
 				<MenuItem Command="textEditorUI:TextEditor.Command_SelectMark_Toggle" Header="Toggle marks/selection" InputGestureText="Ctrl+M"/>
