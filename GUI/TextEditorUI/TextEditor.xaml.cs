@@ -50,6 +50,8 @@ namespace NeoEdit.GUI.TextEditorUI
 		public static RoutedCommand Command_Select_Reverse = new RoutedCommand();
 		public static RoutedCommand Command_Select_Sort = new RoutedCommand();
 		public static RoutedCommand Command_Select_Evaluate = new RoutedCommand();
+		public static RoutedCommand Command_Select_Duplicates = new RoutedCommand();
+		public static RoutedCommand Command_Select_Randomize = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Selection = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Find = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Clear = new RoutedCommand();

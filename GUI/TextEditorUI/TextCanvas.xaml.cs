@@ -1203,6 +1203,19 @@ namespace NeoEdit.GUI.TextEditorUI
 				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.GUI.Common.Expression(expr).Evaluate().ToString()).ToList();
 				Replace(selections, strs, true);
 			}
+			else if (command == TextEditor.Command_Select_Duplicates)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var dups = selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList();
+				if (dups.Count != 0)
+					ranges[RangeType.Selection] = dups;
+			}
+			else if (command == TextEditor.Command_Select_Randomize)
+			{
+				var rng = new Random();
+				var strs = ranges[RangeType.Selection].Select(range => GetString(range)).OrderBy(range => rng.Next()).ToList();
+				Replace(ranges[RangeType.Selection], strs, true);
+			}
 			else if (command == TextEditor.Command_Mark_Find)
 			{
 				ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);

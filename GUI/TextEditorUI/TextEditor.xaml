@@ -43,6 +43,8 @@
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Reverse" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Sort" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Evaluate" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Duplicates" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditorUI:TextEditor.Command_Select_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Selection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditorUI:TextEditor.Command_Mark_Clear" Executed="Command_Executed"/>
@@ -166,6 +168,8 @@
 				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Reverse" Header="_Reverse selections"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Sort" Header="S_ort selections"/>
 				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Evaluate" Header="_Evaluate selections"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Duplicates" Header="_Duplicates"/>
+				<MenuItem Command="textEditorUI:TextEditor.Command_Select_Randomize" Header="Ra_ndomize"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
 				<MenuItem Command="textEditorUI:TextEditor.Command_SelectMark_Toggle" Header="Toggle marks/selection" InputGestureText="Ctrl+M"/>
