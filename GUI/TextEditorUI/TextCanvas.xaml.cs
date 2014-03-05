@@ -55,8 +55,6 @@ namespace NeoEdit.GUI.TextEditorUI
 		[DepProp]
 		public TextData Data { get { return uiHelper.GetPropValue<TextData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool HasBOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
@@ -126,9 +124,7 @@ namespace NeoEdit.GUI.TextEditorUI
 					ranges[entry.Key].Clear();
 				InvalidateVisual();
 				undo = new List<TextCanvasUndo>();
-				Data.Undo += Data_Undo;
 			});
-			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => { ranges[RangeType.Search].Clear(); InvalidateVisual(); });
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateVisual());
@@ -153,15 +149,6 @@ namespace NeoEdit.GUI.TextEditorUI
 				SetPos1(range, line - 1, index, false, false);
 			}
 			catch { }
-		}
-
-		bool saveUndo = true;
-		void Data_Undo(List<int> offsets, List<int> lengths, List<string> text)
-		{
-			if (!saveUndo)
-				return;
-
-			undo.Add(new TextCanvasUndo(offsets, lengths, text));
 		}
 
 		internal void EnsureVisible(Range selection)
@@ -864,12 +851,35 @@ namespace NeoEdit.GUI.TextEditorUI
 			return Data.GetString(range.Start, range.End);
 		}
 
-		void Replace(List<Range> replaceRanges, List<string> strs, bool leaveHighlighted)
+		void Replace(List<Range> replaceRanges, List<string> strs, bool leaveHighlighted, bool saveUndo = true)
 		{
+			var offsets = replaceRanges.Select(range => range.Start).ToList();
+			var lengths = replaceRanges.Select(range => range.End - range.Start).ToList();
+
+			if (saveUndo)
+			{
+				var undoOffsets = new List<int>();
+				var undoLengths = new List<int>();
+				var undoText = new List<string>();
+
+				var change = 0;
+				for (var ctr = 0; ctr < offsets.Count; ++ctr)
+				{
+					undoOffsets.Add(offsets[ctr] + change);
+					undoLengths.Add(strs[ctr].Length);
+					undoText.Add(Data.GetString(offsets[ctr], offsets[ctr] + lengths[ctr]));
+					change += strs[ctr].Length - lengths[ctr];
+				}
+
+				undo.Add(new TextCanvasUndo(undoOffsets, undoLengths, undoText));
+			}
+
 			if (strs == null)
 				strs = replaceRanges.Select(range => "").ToList();
 
-			Data.Replace(replaceRanges.Select(range => range.Start).ToList(), replaceRanges.Select(range => range.End - range.Start).ToList(), strs);
+			Data.Replace(offsets, lengths, strs);
+
+			ranges[RangeType.Search].Clear();
 
 			var numsToMap = ranges.SelectMany(rangePair => rangePair.Value).SelectMany(range => new int[] { range.Start, range.End }).Distinct().OrderBy(num => num).ToList();
 			var oldToNewMap = new Dictionary<int, int>();
@@ -964,9 +974,7 @@ namespace NeoEdit.GUI.TextEditorUI
 				var undoStep = undo.Last();
 				undo.Remove(undoStep);
 				var rangeList = Enumerable.Range(0, undoStep.offsets.Count).Select(num => new Range { Pos1 = undoStep.offsets[num], Pos2 = undoStep.offsets[num] + undoStep.lengths[num] }).ToList();
-				saveUndo = false;
-				Replace(rangeList, undoStep.text, true);
-				saveUndo = true;
+				Replace(rangeList, undoStep.text, true, false);
 			}
 			else if ((command == TextEditor.Command_Edit_Cut) || (command == TextEditor.Command_Edit_Copy))
 			{
@@ -1053,14 +1061,10 @@ namespace NeoEdit.GUI.TextEditorUI
 			}
 			else if (command == TextEditor.Command_Edit_BOM)
 			{
-				Data.SetBOM(!Data.BOM);
-				var offset = Data.BOM ? 1 : -1;
-				foreach (var rangeEntry in ranges)
-					foreach (var range in rangeEntry.Value)
-					{
-						range.Pos1 += offset;
-						range.Pos2 += offset;
-					}
+				if (Data.BOM)
+					Replace(new List<Range> { new Range { Pos1 = 0, Pos2 = 1 } }, new List<string> { "" }, true);
+				else
+					Replace(new List<Range> { new Range { Pos1 = 0, Pos2 = 0 } }, new List<string> { "\ufeff" }, true);
 			}
 			else if (command == TextEditor.Command_Data_ToUpper)
 			{

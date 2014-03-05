@@ -61,8 +61,6 @@ namespace NeoEdit.GUI.TextEditorUI
 		[DepProp]
 		public TextData Data { get { return uiHelper.GetPropValue<TextData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
@@ -87,9 +85,6 @@ namespace NeoEdit.GUI.TextEditorUI
 			Data = data;
 			canvas.GotoPos(line.HasValue ? line.Value : 1, column.HasValue ? column.Value : 1);
 			CoderUsed = Data.CoderUsed;
-			TextData.ChangedDelegate changed = () => ++ChangeCount;
-			Data.Changed += changed;
-			Closed += (s, e) => Data.Changed -= changed;
 
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);

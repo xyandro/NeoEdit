@@ -9,23 +9,6 @@ namespace NeoEdit.GUI.Common
 {
 	public class TextData
 	{
-		public delegate void ChangedDelegate();
-		ChangedDelegate changed;
-		public event ChangedDelegate Changed
-		{
-			add { changed += value; }
-			remove { changed -= value; }
-		}
-
-		public delegate void UndoDelegate(List<int> offsets, List<int> lengths, List<string> text);
-		UndoDelegate undo;
-		public event UndoDelegate Undo
-		{
-			add { undo += value; }
-			remove { undo -= value; }
-		}
-
-		const char BOMChar = '\ufeff';
 		string _data;
 		string data { get { return _data; } set { _data = value; RecalculateLines(); } }
 		List<int> lineIndex;
@@ -62,7 +45,7 @@ namespace NeoEdit.GUI.Common
 			endingIndex = new List<int>();
 			endingLength = new List<int>();
 
-			BOM = (data.Length > 0) && (data[0] == BOMChar);
+			BOM = (data.Length > 0) && (data[0] == '\ufeff');
 			var matches = RecordsRE.Matches(data, BOM ? 1 : 0);
 
 			foreach (Match match in matches)
@@ -145,19 +128,6 @@ namespace NeoEdit.GUI.Common
 				checkPos = offsets[ctr] + lengths[ctr];
 			}
 
-			var undoOffsets = new List<int>();
-			var undoLengths = new List<int>();
-			var undoText = new List<string>();
-
-			var change = 0;
-			for (var ctr = 0; ctr < offsets.Count; ++ctr)
-			{
-				undoOffsets.Add(offsets[ctr] + change);
-				undoLengths.Add(text[ctr].Length);
-				undoText.Add(GetString(offsets[ctr], offsets[ctr] + lengths[ctr]));
-				change += text[ctr].Length - lengths[ctr];
-			}
-
 			var sb = new StringBuilder();
 			var dataPos = 0;
 			for (var listIndex = 0; listIndex <= text.Count; ++listIndex)
@@ -178,13 +148,7 @@ namespace NeoEdit.GUI.Common
 				dataPos += length;
 			}
 
-			if (undo != null)
-				undo(undoOffsets, undoLengths, undoText);
-
 			data = sb.ToString();
-
-			if (changed != null)
-				changed();
 		}
 
 		public int GetOppositeBracket(int offset)
@@ -226,17 +190,6 @@ namespace NeoEdit.GUI.Common
 			}
 
 			return -1;
-		}
-
-		public void SetBOM(bool bom)
-		{
-			if (BOM == bom)
-				return;
-
-			if (bom)
-				Replace(new List<int> { 0 }, new List<int> { 0 }, new List<string> { BOMChar.ToString() });
-			else
-				Replace(new List<int> { 0 }, new List<int> { 1 }, new List<string> { "" });
 		}
 	}
 }
