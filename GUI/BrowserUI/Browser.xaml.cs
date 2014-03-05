@@ -459,10 +459,5 @@ namespace NeoEdit.GUI.BrowserUI
 				case "_Processes": SetLocation(new ProcessRoot()); break;
 			}
 		}
-
-		void HelpAbout(object sender, RoutedEventArgs e)
-		{
-			new AboutUI.About().ShowDialog();
-		}
 	}
 }

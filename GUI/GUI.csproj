@@ -78,6 +78,9 @@
       <DependentUpon>Clipboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\DumpBinaryData.cs" />
+    <Compile Include="Common\HelpMenu.xaml.cs">
+      <DependentUpon>HelpMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Handles\HandleType.cs" />
     <Compile Include="Records\Processes\ProcessBinaryData.cs" />
     <Compile Include="Common\Expression.cs" />
@@ -222,6 +225,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Clipboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\HelpMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

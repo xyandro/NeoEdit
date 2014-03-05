@@ -198,6 +198,7 @@
 					</MenuItem.ItemContainerStyle>
 				</MenuItem>
 			</MenuItem>
+			<common:HelpMenu/>
 		</Menu>
 
 		<textEditorUI:TextCanvas x:Name="canvas" Grid.Row="1"
