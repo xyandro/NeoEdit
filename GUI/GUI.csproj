@@ -61,6 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutUI\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
     <Compile Include="BrowserUI\Dialogs\ViewImage.xaml.cs">
       <DependentUpon>ViewImage.xaml</DependentUpon>
@@ -178,6 +181,10 @@
     <Compile Include="TextEditorUI\TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
+    <Page Include="AboutUI\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="BinaryEditorUI\BinaryCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -312,6 +319,9 @@
       <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
       <Name>Interop</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AboutUI\NeoEdit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

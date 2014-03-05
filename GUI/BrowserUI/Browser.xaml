@@ -55,6 +55,9 @@
 					</MenuItem.ItemsSource>
 				</MenuItem>
 			</MenuItem>
+			<MenuItem Header="_Help">
+				<MenuItem Header="_About" Click="HelpAbout"/>
+			</MenuItem>
 		</Menu>
 		<TextBox Grid.Row="1" Name="locationDisplay" Text="{Binding Location.FullName, ElementName=self, Mode=OneWay}" KeyDown="LocationDisplay_KeyDown"/>
 		<browserUI:BrowserListView x:Name="files" Grid.Row="2" KeyDown="Files_KeyDown" MouseDoubleClick="Files_MouseDoubleClick"
