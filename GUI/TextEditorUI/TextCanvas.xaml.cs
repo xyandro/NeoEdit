@@ -861,8 +861,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			Redo,
 		}
 
-		const int maxUndoSteps = 50;
-		const int maxUndoChars = 1048576 * 5;
+		const int maxUndoChars = 1048576 * 10;
 		void AddUndoRedo(TextCanvasUndoRedo textCanvasUndoRedo, ReplaceType replaceType)
 		{
 			switch (replaceType)
@@ -912,8 +911,6 @@ namespace NeoEdit.GUI.TextEditorUI
 						undo.Add(textCanvasUndoRedo);
 
 					// Limit undo buffer
-					while (undo.Count > maxUndoSteps)
-						undo.RemoveAt(0);
 					while (true)
 					{
 						var bytesSum = undo.Sum(undoItem => undoItem.text.Sum(textItem => textItem.Length));
