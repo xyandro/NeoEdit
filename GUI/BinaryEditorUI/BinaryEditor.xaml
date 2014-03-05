@@ -12,6 +12,7 @@
 		<CommandBinding Command="binaryEditorUI:BinaryEditor.Command_File_SaveAs" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditorUI:BinaryEditor.Command_File_Exit" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Undo" Executed="Command_Executed"/>
+		<CommandBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Redo" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Copy" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Paste" Executed="Command_Executed"/>
@@ -50,8 +51,9 @@
 		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_File_New" Key="N" Modifiers="Control"/>
  		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_File_Open" Key="O" Modifiers="Control"/>
  		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_File_Save" Key="S" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Undo" Key="Z" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut" Key="X" Modifiers="Control"/>
+		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Undo" Key="Z" Modifiers="Control"/>
+		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Redo" Key="Z" Modifiers="Control+Shift"/>
+		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut" Key="X" Modifiers="Control"/>
  		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Copy" Key="C" Modifiers="Control"/>
  		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_Paste" Key="V" Modifiers="Control"/>
  		<KeyBinding Command="binaryEditorUI:BinaryEditor.Command_Edit_ShowClipboard" Key="C" Modifiers="Control+Shift"/>
@@ -84,6 +86,9 @@
 				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_File_Exit" Header="_Exit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Undo" Header="_Undo" InputGestureText="Ctrl+Z"/>
+				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Redo" Header="_Redo" InputGestureText="Ctrl+Shift+Z"/>
+				<Separator/>
 				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut" Header="Cu_t" InputGestureText="Ctrl+X"/>
 				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Cut" Header="Cu_t" InputGestureText="Ctrl+X"/>
 				<MenuItem Command="binaryEditorUI:BinaryEditor.Command_Edit_Copy" Header="_Copy" InputGestureText="Ctrl+C"/>

@@ -14,19 +14,6 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.BinaryEditorUI
 {
-	class BinaryCanvasUndo
-	{
-		public long index, count;
-		public byte[] bytes;
-
-		public BinaryCanvasUndo(long _position, long _length, byte[] _bytes)
-		{
-			index = _position;
-			count = _length;
-			bytes = _bytes;
-		}
-	}
-
 	public partial class BinaryCanvas : Canvas
 	{
 		[DepProp]
@@ -141,7 +128,21 @@ namespace NeoEdit.GUI.BinaryEditorUI
 		readonly Typeface typeface;
 		readonly double fontSize;
 
-		List<BinaryCanvasUndo> undo = new List<BinaryCanvasUndo>();
+		class BinaryCanvasUndoRedo
+		{
+			public long index, count;
+			public byte[] bytes;
+
+			public BinaryCanvasUndoRedo(long _position, long _length, byte[] _bytes)
+			{
+				index = _position;
+				count = _length;
+				bytes = _bytes;
+			}
+		}
+
+		List<BinaryCanvasUndoRedo> undo = new List<BinaryCanvasUndoRedo>();
+		List<BinaryCanvasUndoRedo> redo = new List<BinaryCanvasUndoRedo>();
 
 		static BinaryCanvas() { UIHelper<BinaryCanvas>.Register(); }
 
@@ -160,7 +161,12 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			uiHelper.AddCallback(a => a.Data, (o, n) => InvalidateVisual());
+			uiHelper.AddCallback(a => a.Data, (o, n) =>
+			{
+				InvalidateVisual();
+				undo.Clear();
+				redo.Clear();
+			});
 			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
@@ -421,46 +427,54 @@ namespace NeoEdit.GUI.BinaryEditorUI
 			Pos1 = Pos2 = 0;
 		}
 
-		const int maxUndoBytes = 1048576 * 10;
-		void AddUndo(BinaryCanvasUndo current)
+		enum ReplaceType
 		{
-			var done = false;
-			if (undo.Count != 0)
-			{
-				var last = undo.Last();
-				if (last.index + last.count == current.index)
-				{
-					last.count += current.count;
-					var oldSize = last.bytes.LongLength;
-					Array.Resize(ref last.bytes, (int)(last.bytes.LongLength + current.bytes.LongLength));
-					Array.Copy(current.bytes, 0, last.bytes, oldSize, current.bytes.LongLength);
-					done = true;
-				}
-			}
-
-			if (!done)
-				undo.Add(current);
-
-			while (true)
-			{
-				var totalChars = undo.Sum(undoItem => undoItem.bytes.LongLength);
-				if (totalChars <= maxUndoBytes)
-					break;
-				undo.RemoveAt(0);
-			}
+			Normal,
+			Undo,
+			Redo,
 		}
 
-		void Undo()
+		const int maxUndoBytes = 1048576 * 10;
+		void AddUndoRedo(BinaryCanvasUndoRedo current, ReplaceType replaceType)
 		{
-			if (undo.Count == 0)
-				return;
+			switch (replaceType)
+			{
+				case ReplaceType.Undo:
+					redo.Add(current);
+					break;
+				case ReplaceType.Redo:
+					undo.Add(current);
+					break;
+				case ReplaceType.Normal:
+					redo.Clear();
 
-			var step = undo.Last();
-			undo.Remove(step);
-			Data.Replace(step.index, step.count, step.bytes);
+					// See if we can add this one to the last one
+					var done = false;
+					if (undo.Count != 0)
+					{
+						var last = undo.Last();
+						if (last.index + last.count == current.index)
+						{
+							last.count += current.count;
+							var oldSize = last.bytes.LongLength;
+							Array.Resize(ref last.bytes, (int)(last.bytes.LongLength + current.bytes.LongLength));
+							Array.Copy(current.bytes, 0, last.bytes, oldSize, current.bytes.LongLength);
+							done = true;
+						}
+					}
 
-			Pos1 = step.index;
-			Pos2 = Pos1 + step.bytes.Length;
+					if (!done)
+						undo.Add(current);
+
+					while (true)
+					{
+						var totalChars = undo.Sum(undoItem => undoItem.bytes.LongLength);
+						if (totalChars <= maxUndoBytes)
+							break;
+						undo.RemoveAt(0);
+					}
+					break;
+			}
 		}
 
 		bool inHexEdit = false;
@@ -480,10 +494,15 @@ namespace NeoEdit.GUI.BinaryEditorUI
 				count = bytes.Length;
 			}
 
-			AddUndo(new BinaryCanvasUndo(SelStart, bytes.Length, Data.GetSubset(SelStart, count)));
-			Data.Replace(SelStart, count, bytes);
+			Replace(SelStart, count, bytes);
 
 			Pos1 = Pos2 = SelStart + bytes.Length;
+		}
+
+		void Replace(long index, long count, byte[] bytes, ReplaceType replaceType = ReplaceType.Normal)
+		{
+			AddUndoRedo(new BinaryCanvasUndoRedo(index, bytes.Length, Data.GetSubset(index, count)), replaceType);
+			Data.Replace(index, count, bytes);
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -768,7 +787,28 @@ namespace NeoEdit.GUI.BinaryEditorUI
 				return;
 
 			if (command == BinaryEditor.Command_Edit_Undo)
-				Undo();
+			{
+				if (undo.Count == 0)
+					return;
+
+				var step = undo.Last();
+				undo.Remove(step);
+				Replace(step.index, step.count, step.bytes, ReplaceType.Undo);
+
+				Pos1 = step.index;
+				Pos2 = Pos1 + step.bytes.Length;
+			}
+			else if (command == BinaryEditor.Command_Edit_Redo)
+			{
+				if (redo.Count == 0)
+					return;
+
+				var step = redo.Last();
+				redo.Remove(step);
+				Replace(step.index, step.count, step.bytes, ReplaceType.Redo);
+
+				Pos1 = Pos2 = step.index + step.bytes.Length;
+			}
 			else if ((command == BinaryEditor.Command_Edit_Cut) || (command == BinaryEditor.Command_Edit_Copy))
 			{
 				if (SelStart == SelEnd)

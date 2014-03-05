@@ -862,15 +862,15 @@ namespace NeoEdit.GUI.TextEditorUI
 		}
 
 		const int maxUndoChars = 1048576 * 10;
-		void AddUndoRedo(TextCanvasUndoRedo textCanvasUndoRedo, ReplaceType replaceType)
+		void AddUndoRedo(TextCanvasUndoRedo current, ReplaceType replaceType)
 		{
 			switch (replaceType)
 			{
 				case ReplaceType.Undo:
-					redo.Add(textCanvasUndoRedo);
+					redo.Add(current);
 					break;
 				case ReplaceType.Redo:
-					undo.Add(textCanvasUndoRedo);
+					undo.Add(current);
 					break;
 				case ReplaceType.Normal:
 					redo.Clear();
@@ -880,18 +880,18 @@ namespace NeoEdit.GUI.TextEditorUI
 					if (undo.Count != 0)
 					{
 						var last = undo.Last();
-						if (last.ranges.Count == textCanvasUndoRedo.ranges.Count)
+						if (last.ranges.Count == current.ranges.Count)
 						{
 							var change = 0;
 							done = true;
 							for (var num = 0; num < last.ranges.Count; ++num)
 							{
-								if (last.ranges[num].End + change != textCanvasUndoRedo.ranges[num].Start)
+								if (last.ranges[num].End + change != current.ranges[num].Start)
 								{
 									done = false;
 									break;
 								}
-								change += textCanvasUndoRedo.ranges[num].Length - textCanvasUndoRedo.text[num].Length;
+								change += current.ranges[num].Length - current.text[num].Length;
 							}
 
 							if (done)
@@ -899,16 +899,16 @@ namespace NeoEdit.GUI.TextEditorUI
 								change = 0;
 								for (var num = 0; num < last.ranges.Count; ++num)
 								{
-									last.ranges[num] = new Range { Pos1 = last.ranges[num].Start + change, Pos2 = last.ranges[num].End + textCanvasUndoRedo.ranges[num].Length + change };
-									last.text[num] += textCanvasUndoRedo.text[num];
-									change += textCanvasUndoRedo.ranges[num].Length - textCanvasUndoRedo.text[num].Length;
+									last.ranges[num] = new Range { Pos1 = last.ranges[num].Start + change, Pos2 = last.ranges[num].End + current.ranges[num].Length + change };
+									last.text[num] += current.text[num];
+									change += current.ranges[num].Length - current.text[num].Length;
 								}
 							}
 						}
 					}
 
 					if (!done)
-						undo.Add(textCanvasUndoRedo);
+						undo.Add(current);
 
 					// Limit undo buffer
 					while (true)
