@@ -94,8 +94,34 @@ namespace
 		ULONG MaximumCount;
 	};
 
-	typedef vector<SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX> handleVector;
-	typedef shared_ptr<handleVector> handleVectorPtr;
+	struct HandleData
+	{
+		int PID;
+		intptr_t Handle;
+		wstring Type, Name, Data;
+
+		HandleData(int PID, intptr_t Handle, wstring Type, wstring Name, wstring Data)
+		{
+			this->PID = PID;
+			this->Handle = Handle;
+			this->Type = Type;
+			this->Name = Name;
+			this->Data = Data;
+		}
+
+#ifdef __cplusplus_cli
+		HandleInfo ^GetHandleInfo()
+		{
+			return gcnew HandleInfo(PID, (IntPtr)Handle, gcnew String(Type.c_str()), gcnew String(Name.c_str()), gcnew String(Data.c_str()));
+		}
+#endif
+	};
+
+	typedef vector<SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX> HandleVector;
+	typedef shared_ptr<HandleVector> HandleVectorPtr;
+	typedef shared_ptr<HandleData> HandleDataPtr;
+	typedef vector<HandleDataPtr> HandleDataVector;
+	typedef shared_ptr<HandleDataVector> HandleDataVectorPtr;
 
 	HMODULE ntdll;
 	typedef NTSTATUS (WINAPI *_NtQuerySystemInformation)(ULONG SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength OPTIONAL);
@@ -114,7 +140,9 @@ namespace
 #ifdef __cplusplus_cli
 		throw gcnew Win32Exception();
 #else
-		throw "Error!";
+		wchar_t message[4096];
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(message), sizeof(message), NULL);
+		throw L"Error: " + to_wstring(GetLastError()) + L" : " + message;
 #endif
 	}
 
@@ -199,7 +227,7 @@ namespace
 		return false;
 	}
 
-	static handleVectorPtr GetAllHandles()
+	static HandleVectorPtr GetAllHandles()
 	{
 		shared_ptr<SYSTEM_HANDLE_INFORMATION_EX> handleInfo;
 		ULONG size = 4096;
@@ -221,7 +249,7 @@ namespace
 			ThrowWin32Exception();
 		}
 
-		handleVectorPtr result(new handleVector);
+		HandleVectorPtr result(new HandleVector);
 		for (unsigned int ctr = 0; ctr < handleInfo->NumberOfHandles; ++ctr)
 			result->push_back(handleInfo->Handles[ctr]);
 
@@ -229,18 +257,18 @@ namespace
 		return result;
 	}
 
-	static handleVectorPtr GetProcessHandles(handleVectorPtr handles, DWORD pid)
+	static HandleVectorPtr GetProcessHandles(HandleVectorPtr handles, DWORD pid)
 	{
-		handleVectorPtr result(new handleVector);
+		HandleVectorPtr result(new HandleVector);
 		for each (auto handle in *handles)
 			if ((DWORD)handle.UniqueProcessId == pid)
 				result->push_back(handle);
 		return result;
 	}
 
-	static handleVectorPtr GetTypeHandles(handleVectorPtr handles, wstring type)
+	static HandleVectorPtr GetTypeHandles(HandleVectorPtr handles, wstring type)
 	{
-		handleVectorPtr result(new handleVector);
+		HandleVectorPtr result(new HandleVector);
 		auto itr = find(typeNames.begin(), typeNames.end(), type);
 		if (itr == typeNames.end())
 			return result;
@@ -327,14 +355,13 @@ namespace
 		return L"";
 	}
 
-#ifdef __cplusplus_cli
-	static List<HandleInfo^> ^GetHandleInfo(handleVectorPtr handles)
+	static HandleDataVectorPtr GetHandleData(HandleVectorPtr handles)
 	{
-		map<DWORD, handleVector> handlesByProcess;
+		map<DWORD, HandleVector> handlesByProcess;
 		for each (auto handle in *handles)
 			handlesByProcess[(DWORD)handle.UniqueProcessId].push_back(handle);
 
-		auto result = gcnew List<HandleInfo^>();
+		auto result = HandleDataVectorPtr(new HandleDataVector());
 
 		auto currentProcess = GetCurrentProcess();
 		for each (auto entry in handlesByProcess)
@@ -356,11 +383,25 @@ namespace
 				try { name = (type == L"File") && (GetFileType(dupHandle) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle); } catch (...) { }
 				try { data = GetData(type, dupHandle); } catch (...) { }
 
-				result->Add(gcnew HandleInfo((int)handle.UniqueProcessId, IntPtr(handle.HandleValue), gcnew String(type.c_str()), gcnew String(name.c_str()), gcnew String(data.c_str())));
+				result->push_back(HandleDataPtr(new HandleData((int)handle.UniqueProcessId, (intptr_t)handle.HandleValue, type, name, data)));
 			}
 		}
 
 		return result;
+	}
+
+#ifdef __cplusplus_cli
+	static List<HandleInfo^> ^GetHandleInfo(HandleDataVectorPtr handles)
+	{
+		auto result = gcnew List<HandleInfo^>();
+		for each (auto handle in *handles)
+			result->Add(handle->GetHandleInfo());
+		return result;
+	}
+
+	static List<HandleInfo^> ^GetHandleInfo(HandleVectorPtr handles)
+	{
+		return GetHandleInfo(GetHandleData(handles));
 	}
 #endif
 
@@ -626,8 +667,57 @@ namespace NeoEdit
 
 #else
 
-void main()
+void wmain(int argc, wchar_t *argv[])
 {
+	try
+	{
+		vector<wstring> params;
+		for (auto ctr = 1; ctr < argc; ++ctr)
+			params.push_back(argv[ctr]);
+
+		if (params.size() == 0)
+			params.push_back(L"-handleinfo");
+
+		if (params[0] == L"-handleinfo")
+		{
+			auto handles = GetAllHandles();
+			params.erase(params.begin());
+			while (params.size() != 0)
+			{
+				if ((params[0] == L"-pid") && (params.size() >= 2))
+				{
+					handles = GetProcessHandles(handles, stoul(params[1]));
+					params.erase(params.begin(), params.begin() + 2);
+				}
+				else if ((params[0] == L"-type") && (params.size() >= 2))
+				{
+					handles = GetTypeHandles(handles, params[1]);
+					params.erase(params.begin(), params.begin() + 2);
+				}
+				else 
+					throw L"Invalid arguments";
+			}
+
+			auto handleInfo = GetHandleInfo(handles);
+			for each (auto handle in *handleInfo)
+				printf("PID: %i, Handle: %i, Type: %S, Name: %S, Data %S\n", handle->PID, handle->Handle, handle->Type.c_str(), handle->Name.c_str(), handle->Data.c_str());
+		}
+		else if (params[0] == L"-types")
+		{
+			for (auto ctr = 0; ctr < typeNames.size(); ++ctr)
+				printf("%i: %S\n", ctr, typeNames[ctr].c_str());
+		}
+		else
+			throw L"Invalid arguments";
+	}
+	catch (const wchar_t *message)
+	{
+		printf("Error: %S.\n", message);
+	}
+	catch (...)
+	{
+		printf("Error occured.\n");
+	}
 }
 
 #endif
