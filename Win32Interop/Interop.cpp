@@ -13,99 +13,174 @@ namespace NeoEdit
 	{
 		void Interop::SuspendProcess(int pid)
 		{
-			return Win32Lib::SuspendProcess(pid);
+			try
+			{
+				return Win32Lib::SuspendProcess(pid);
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		void Interop::ResumeProcess(int pid)
 		{
-			return Win32Lib::ResumeProcess(pid);
+			try
+			{
+				return Win32Lib::ResumeProcess(pid);
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		Handle ^Interop::OpenReadMemoryProcess(int pid)
 		{
-			return gcnew Handle(Win32Lib::OpenReadMemoryProcess(pid));
+			try
+			{
+				return gcnew Handle(Win32Lib::OpenReadMemoryProcess(pid));
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		VirtualQueryInfo ^Interop::VirtualQuery(Handle ^handle, IntPtr index)
 		{
-			return gcnew VirtualQueryInfo(Win32Lib::VirtualQuery(handle->Get(), (byte*)(intptr_t)index));
+			try
+			{
+				return gcnew VirtualQueryInfo(Win32Lib::VirtualQuery(handle->Get(), (byte*)(intptr_t)index));
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		Protect ^Interop::SetProtect(Handle ^handle, VirtualQueryInfo ^info, bool write)
 		{
-			return gcnew Protect(Win32Lib::SetProtect(handle->Get(), info->Get(), write));
+			try
+			{
+				return gcnew Protect(Win32Lib::SetProtect(handle->Get(), info->Get(), write));
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		void Interop::ReadProcessMemory(Handle ^handle, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
 		{
-			pin_ptr<byte> ptr = &bytes[0];
-			return Win32Lib::ReadProcessMemory(handle->Get(), (byte*)(intptr_t)index, ptr + bytesIndex, numBytes);
+			try
+			{
+				pin_ptr<byte> ptr = &bytes[0];
+				return Win32Lib::ReadProcessMemory(handle->Get(), (byte*)(intptr_t)index, ptr + bytesIndex, numBytes);
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		void Interop::WriteProcessMemory(Handle ^handle, IntPtr index, array<byte> ^bytes, int numBytes)
 		{
-			pin_ptr<byte> ptr = &bytes[0];
-			return Win32Lib::WriteProcessMemory(handle->Get(), (byte*)(intptr_t)index, ptr, numBytes);
+			try
+			{
+				pin_ptr<byte> ptr = &bytes[0];
+				return Win32Lib::WriteProcessMemory(handle->Get(), (byte*)(intptr_t)index, ptr, numBytes);
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		List<int> ^Interop::GetPIDsWithFileLock(String ^fileName)
 		{
-			auto handles = Win32Lib::GetAllHandles();
-			handles = Win32Lib::GetTypeHandles(handles, L"File");
-			auto handleInfo = Win32Lib::GetHandleInfo(handles);
-			auto result = gcnew List<int>();
-			for each (auto handle in *handleInfo)
-				if (fileName->Equals(gcnew String(handle->Name.c_str()), StringComparison::OrdinalIgnoreCase))
-					result->Add(handle->PID);
-			return result;
+			try
+			{
+				auto handles = Win32Lib::GetAllHandles();
+				handles = Win32Lib::GetTypeHandles(handles, L"File");
+				auto handleInfo = Win32Lib::GetHandleInfo(handles);
+				auto result = gcnew List<int>();
+				for each (auto handle in *handleInfo)
+					if (fileName->Equals(gcnew String(handle->Name.c_str()), StringComparison::OrdinalIgnoreCase))
+						result->Add(handle->PID);
+				return result;
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		List<HandleInfo^> ^Interop::GetProcessHandles(int pid)
 		{
-			auto handles = Win32Lib::GetAllHandles();
-			handles = Win32Lib::GetProcessHandles(handles, (DWORD)pid);
-			return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
+			try
+			{
+				auto handles = Win32Lib::GetAllHandles();
+				handles = Win32Lib::GetProcessHandles(handles, (DWORD)pid);
+				return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		List<String^> ^Interop::GetHandleTypes()
 		{
-			auto types = Win32Lib::GetHandleTypes();
-			auto result = gcnew List<String^>;
-			for each (auto name in *types)
-				result->Add(gcnew String(name.c_str()));
-			return result;
+			try
+			{
+				auto types = Win32Lib::GetHandleTypes();
+				auto result = gcnew List<String^>;
+				for each (auto name in *types)
+					result->Add(gcnew String(name.c_str()));
+				return result;
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		List<HandleInfo^> ^Interop::GetTypeHandles(String ^type)
 		{
-			auto handles = Win32Lib::GetAllHandles();
-			handles = Win32Lib::GetTypeHandles(handles, marshal_as<wstring>(type));
-			return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
+			try
+			{
+				auto handles = Win32Lib::GetAllHandles();
+				handles = Win32Lib::GetTypeHandles(handles, marshal_as<wstring>(type));
+				return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		IntPtr Interop::GetSharedMemorySize(int pid, IntPtr handle)
 		{
-			return (IntPtr)(intptr_t)Win32Lib::GetSharedMemorySize(pid, (HANDLE)handle);
+			try
+			{
+				return (IntPtr)(intptr_t)Win32Lib::GetSharedMemorySize(pid, (HANDLE)handle);
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		void Interop::ReadSharedMemory(int pid, IntPtr handle, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
 		{
-			pin_ptr<byte> bytesPtr = &bytes[0];
-			return Win32Lib::ReadSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (byte*)bytesPtr + bytesIndex, numBytes);
+			try
+			{
+				pin_ptr<byte> bytesPtr = &bytes[0];
+				return Win32Lib::ReadSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (byte*)bytesPtr + bytesIndex, numBytes);
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		void Interop::WriteSharedMemory(int pid, IntPtr handle, IntPtr index, array<byte> ^bytes)
 		{
-			pin_ptr<byte> bytesPtr = &bytes[0];
-			return Win32Lib::WriteSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (byte*)bytesPtr, bytes->Length);
+			try
+			{
+				pin_ptr<byte> bytesPtr = &bytes[0];
+				return Win32Lib::WriteSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (byte*)bytesPtr, bytes->Length);
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 
 		List<HandleInfo^> ^Interop::GetHandleInfo(shared_ptr<vector<shared_ptr<Win32Lib::HandleInfo>>> handles)
 		{
-			auto result = gcnew List<HandleInfo^>();
-			for each (auto handle in *handles)
-				result->Add(gcnew HandleInfo(handle));
-			return result;
+			try
+			{
+				auto result = gcnew List<HandleInfo^>();
+				for each (auto handle in *handles)
+					result->Add(gcnew HandleInfo(handle));
+				return result;
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
 	}
 }
