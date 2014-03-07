@@ -12,7 +12,7 @@ namespace NeoEdit.GUI.Records.Handles
 		{
 			pid = _pid;
 			handle = _handle;
-			length = NEInterop.GetSharedMemorySize(pid, handle);
+			length = NEInterop.GetSharedMemorySize(pid, handle).ToInt32();
 		}
 
 		protected override void SetCache(long index, int count)

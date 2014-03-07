@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef __cplusplus_cli
-
 namespace NeoEdit
 {
 	namespace Interop
@@ -13,11 +11,9 @@ namespace NeoEdit
 			Handle(std::shared_ptr<void> ptr);
 			~Handle();
 		internal:
-			HANDLE Get();
+			std::shared_ptr<void> Get();
 		private:
 			std::shared_ptr<void> *ptr;
 		};
 	}
 }
-
-#endif

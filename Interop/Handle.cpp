@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Handle.h"
 
-#ifdef __cplusplus_cli
+using namespace std;
 
 namespace NeoEdit
 {
@@ -9,12 +9,12 @@ namespace NeoEdit
 	{
 		Handle::Handle()
 		{
-			this->ptr = new std::shared_ptr<void>();
+			this->ptr = new shared_ptr<void>();
 		}
 
-		Handle::Handle(std::shared_ptr<void> ptr)
+		Handle::Handle(shared_ptr<void> ptr)
 		{
-			this->ptr = new std::shared_ptr<void>(ptr);
+			this->ptr = new shared_ptr<void>(ptr);
 		}
 
 		Handle::~Handle()
@@ -22,11 +22,9 @@ namespace NeoEdit
 			delete ptr;
 		}
 
-		HANDLE Handle::Get()
+		shared_ptr<void> Handle::Get()
 		{
-			return ptr->get();
+			return *ptr;
 		}
 	}
 }
-
-#endif

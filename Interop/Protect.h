@@ -1,10 +1,5 @@
 #pragma once
 
-#ifdef __cplusplus_cli
-
-#include "Types.h"
-#include "Handle.h"
-
 namespace NeoEdit
 {
 	namespace Interop
@@ -12,14 +7,11 @@ namespace NeoEdit
 		public ref class Protect
 		{
 		public:
-			Protect(Handle ^handle, VirtualQueryInfo ^info, int protect);
 			~Protect();
+		internal:
+			Protect(std::shared_ptr<Win32Lib::Protect> ptr);
 		private:
-			Handle ^handle;
-			VirtualQueryInfo ^info;
-			int protect;
+			std::shared_ptr<Win32Lib::Protect> *ptr;
 		};
 	}
 }
-
-#endif

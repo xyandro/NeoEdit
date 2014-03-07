@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="stdafx">
+      <UniqueIdentifier>{2b0ecfc8-7c69-44ae-aa53-3aabd89321e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32Exception">
+      <UniqueIdentifier>{048fe441-a479-40d4-9cd1-fa0ec31c4f8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Processes">
+      <UniqueIdentifier>{0aaa6501-1a48-4ae3-9e62-1ff0d759d63e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Processes\Process">
+      <UniqueIdentifier>{51b12b2f-23e0-41e3-86ea-e6af7f6f9ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32Lib">
+      <UniqueIdentifier>{2de01261-bf74-4cc0-b915-d11ff5153876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Processes\Protect">
+      <UniqueIdentifier>{868c38a4-638b-4d39-899d-586e90671b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Handles">
+      <UniqueIdentifier>{5f5b78a5-eca1-4ffe-a9ba-92704f84d0b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Handles\Handle">
+      <UniqueIdentifier>{b6f414dd-d17b-4d12-bdb2-9ed4e8793ab4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Handles\HandleInfo">
+      <UniqueIdentifier>{8df91e1a-5adf-450a-9941-839fad45a604}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>stdafx</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Exception.cpp">
+      <Filter>Win32Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="Process.cpp">
+      <Filter>Processes\Process</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Lib.cpp">
+      <Filter>Win32Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Protect.cpp">
+      <Filter>Processes\Protect</Filter>
+    </ClCompile>
+    <ClCompile Include="Handle.cpp">
+      <Filter>Handles\Handle</Filter>
+    </ClCompile>
+    <ClCompile Include="HandleInfo.cpp">
+      <Filter>Handles\HandleInfo</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Exception.h">
+      <Filter>Win32Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Process.h">
+      <Filter>Processes\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Lib.h">
+      <Filter>Win32Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Protect.h">
+      <Filter>Processes\Protect</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualQueryInfo.h">
+      <Filter>Processes</Filter>
+    </ClInclude>
+    <ClInclude Include="Handle.h">
+      <Filter>Handles\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="HandleInfo.h">
+      <Filter>Handles\HandleInfo</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
