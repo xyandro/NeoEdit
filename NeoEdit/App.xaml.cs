@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
-using NeoEdit.GUI.Data;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Records;
 
 namespace NeoEdit

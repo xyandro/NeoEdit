@@ -1,4 +1,4 @@
-﻿namespace NeoEdit.GUI.Common
+﻿namespace NeoEdit.Common
 {
 	public class SyncParams
 	{

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace NeoEdit.GUI.Data
+namespace NeoEdit.Common.Transform
 {
 	public static class Coder
 	{

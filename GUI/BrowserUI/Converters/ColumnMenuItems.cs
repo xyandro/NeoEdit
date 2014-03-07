@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
+using NeoEdit.Common;
 using NeoEdit.GUI.Records;
 
 namespace NeoEdit.GUI.BrowserUI.Converters

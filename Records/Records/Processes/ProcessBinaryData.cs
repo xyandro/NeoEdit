@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using NeoEdit.GUI.Common;
+using NeoEdit.Common.Data;
 using NeoEdit.Win32Interop;
 
 namespace NeoEdit.GUI.Records.Processes

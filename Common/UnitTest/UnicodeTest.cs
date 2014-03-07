@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit.GUI.Data;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit.GUI.UnitTest
+namespace NeoEdit.Common.UnitTest
 {
 	public partial class UnitTest
 	{

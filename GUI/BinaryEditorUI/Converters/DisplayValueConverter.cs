@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Data;
+using NeoEdit.Common.Data;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.GUI.BinaryEditorUI.Converters
 {

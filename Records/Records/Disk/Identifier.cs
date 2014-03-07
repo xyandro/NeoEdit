@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using NeoEdit.GUI.Data;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.GUI.Records.Disk
 {

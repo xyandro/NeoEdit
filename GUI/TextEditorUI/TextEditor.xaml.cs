@@ -5,8 +5,10 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Microsoft.Win32;
+using NeoEdit.Common;
+using NeoEdit.Common.Data;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Data;
 using NeoEdit.GUI.Records;
 
 namespace NeoEdit.GUI.TextEditorUI

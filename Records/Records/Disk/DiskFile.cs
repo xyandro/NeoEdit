@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-using NeoEdit.GUI.Common;
+using NeoEdit.Common.Data;
 
 namespace NeoEdit.GUI.Records.Disk
 {

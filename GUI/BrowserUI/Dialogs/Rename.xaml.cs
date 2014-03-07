@@ -4,9 +4,6 @@ using NeoEdit.GUI.Records;
 
 namespace NeoEdit.GUI.BrowserUI.Dialogs
 {
-	/// <summary>
-	/// Interaction logic for Rename.xaml
-	/// </summary>
 	public partial class Rename : Window
 	{
 		[DepProp]

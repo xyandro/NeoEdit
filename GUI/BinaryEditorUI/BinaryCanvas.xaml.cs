@@ -7,9 +7,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using NeoEdit.Common.Data;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.BinaryEditorUI.Dialogs;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Data;
 using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.BinaryEditorUI

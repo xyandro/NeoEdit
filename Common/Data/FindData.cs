@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.GUI.Common
+namespace NeoEdit.Common.Data
 {
 	public class FindData
 	{

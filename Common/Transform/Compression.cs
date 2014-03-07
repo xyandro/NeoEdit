@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace NeoEdit.GUI.Data
+namespace NeoEdit.Common.Transform
 {
 	public static class Compression
 	{

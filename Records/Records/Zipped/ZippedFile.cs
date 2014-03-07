@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
-using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Data;
+using NeoEdit.Common.Data;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.GUI.Records.Zipped
 {

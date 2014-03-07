@@ -87,6 +87,7 @@
     <Compile Include="Records\Root.cs" />
     <Compile Include="Records\Disk\DiskFile.cs" />
     <Compile Include="Records\Disk\DiskDir.cs" />
+    <Compile Include="SyncParams.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

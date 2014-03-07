@@ -126,13 +126,13 @@ namespace NeoEdit.GUI.Common
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var result = new Expression(GetExpression(parameter as string)).Evaluate(value);
+			var result = new NeoEdit.Common.Expression(GetExpression(parameter as string)).Evaluate(value);
 			return GetResult(result, targetType);
 		}
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var result = new Expression(GetExpression(parameter as string)).Evaluate(new object[] { value });
+			var result = new NeoEdit.Common.Expression(GetExpression(parameter as string)).Evaluate(new object[] { value });
 			return GetResult(result, targetType);
 		}
 

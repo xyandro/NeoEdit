@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.GUI.Common
+namespace NeoEdit.Common.Data
 {
 	public class MemoryBinaryData : BinaryData
 	{

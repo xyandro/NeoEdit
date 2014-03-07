@@ -6,9 +6,6 @@ using NeoEdit.GUI.Records;
 
 namespace NeoEdit.GUI.BrowserUI
 {
-	/// <summary>
-	/// Interaction logic for NEList.xaml
-	/// </summary>
 	public partial class BrowserColumn : GridViewColumn
 	{
 		[DepProp]

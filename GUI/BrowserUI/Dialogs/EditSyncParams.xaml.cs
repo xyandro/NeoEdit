@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Windows;
-using NeoEdit.GUI.Common;
+using NeoEdit.Common;
 
 namespace NeoEdit.GUI.BrowserUI.Dialogs
 {

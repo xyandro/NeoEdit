@@ -1,5 +1,5 @@
 ﻿using System;
-using NeoEdit.GUI.Common;
+using NeoEdit.Common.Data;
 using NeoEdit.Win32Interop;
 
 namespace NeoEdit.GUI.Records.Handles

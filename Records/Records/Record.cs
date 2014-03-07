@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.GUI.Common;
+using NeoEdit.Common;
+using NeoEdit.Common.Data;
 
 namespace NeoEdit.GUI.Records
 {

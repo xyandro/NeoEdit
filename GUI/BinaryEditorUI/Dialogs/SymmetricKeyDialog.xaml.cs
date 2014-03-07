@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.GUI.Data;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.BinaryEditorUI.Dialogs

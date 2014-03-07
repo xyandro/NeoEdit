@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Common;
 using NeoEdit.GUI.BinaryEditorUI;
 using NeoEdit.GUI.BrowserUI.Dialogs;
 using NeoEdit.GUI.Common;

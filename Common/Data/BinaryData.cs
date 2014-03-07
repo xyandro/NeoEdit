@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace NeoEdit.GUI.Common
+namespace NeoEdit.Common.Data
 {
 	abstract public class BinaryData
 	{

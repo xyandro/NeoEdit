@@ -1,7 +1,8 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Common.Data;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Data;
 
 namespace NeoEdit.GUI.BinaryEditorUI
 {
