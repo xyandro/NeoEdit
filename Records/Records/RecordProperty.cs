@@ -51,7 +51,7 @@ namespace NeoEdit.GUI.Records
 			new RecordProperty { Name = PropertyName.CompressedSize, MenuHeader = "Compressed Size", DefaultAscending = true, Type = typeof(Int64?) },
 			new RecordProperty { Name = PropertyName.ID, MenuHeader = "ID", DefaultAscending = true, Type = typeof(Int32?) },
 			new RecordProperty { Name = PropertyName.CPU, MenuHeader = "CPU", DefaultAscending = false, Type = typeof(double?) },
-			new RecordProperty { Name = PropertyName.Handle, MenuHeader = "_Handle", DefaultAscending = false, Type = typeof(IntPtr) },
+			new RecordProperty { Name = PropertyName.Handle, MenuHeader = "_Handle", DefaultAscending = false, Type = typeof(IntPtr?) },
 		};
 
 		public static RecordProperty Get(PropertyName name)

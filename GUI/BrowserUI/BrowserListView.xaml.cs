@@ -31,7 +31,7 @@ namespace NeoEdit.GUI.BrowserUI
 		[DepProp]
 		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public List<Record> Records { get { return uiHelper.GetPropValue<List<Record>>(); } set { uiHelper.SetPropValue(value); } }
+		public List<GUIRecord> Records { get { return uiHelper.GetPropValue<List<GUIRecord>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -90,7 +90,7 @@ namespace NeoEdit.GUI.BrowserUI
 
 			var view = collectionView.View as ListCollectionView;
 			if (view != null)
-				view.CustomSort = new LambdaComparer<Record>((r1, r2) => Compare(r1, r2));
+				view.CustomSort = new LambdaComparer<GUIRecord>((r1, r2) => Compare(r1.record, r2.record));
 		}
 	}
 }

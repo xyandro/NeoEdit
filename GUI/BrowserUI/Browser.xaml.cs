@@ -47,7 +47,7 @@ namespace NeoEdit.GUI.BrowserUI
 			}
 		}
 		[DepProp]
-		public List<Record> Records { get { return uiHelper.GetPropValue<List<Record>>(); } set { uiHelper.SetPropValue(value); } }
+		public List<GUIRecord> Records { get { return uiHelper.GetPropValue<List<GUIRecord>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -119,9 +119,9 @@ namespace NeoEdit.GUI.BrowserUI
 
 		void Refresh()
 		{
-			var selected = files.SelectedItems.Cast<Record>().Select(record => record.FullName).ToList();
-			Records = Location.Records.ToList();
-			files.Items.Cast<Record>().Where(record => selected.Contains(record.FullName)).ToList().ForEach(record => files.SelectedItems.Add(record));
+			var selected = files.SelectedItems.Cast<GUIRecord>().Select(guiRecord => guiRecord.record.FullName).ToList();
+			Records = Location.Records.Select(record => new GUIRecord(record)).ToList();
+			Records.Where(guiRecord => selected.Contains(guiRecord.record.FullName)).ToList().ForEach(record => files.SelectedItems.Add(record));
 		}
 
 		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Alt; } }
@@ -196,7 +196,7 @@ namespace NeoEdit.GUI.BrowserUI
 			{
 				case Key.Enter:
 					if ((Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.None)
-						ItemClicked(files.SelectedItem as Record);
+						ItemClicked((files.SelectedItem as GUIRecord).record);
 					break;
 			}
 		}
@@ -218,7 +218,7 @@ namespace NeoEdit.GUI.BrowserUI
 
 			if (select != null)
 			{
-				var sel = files.Items.Cast<Record>().FirstOrDefault(a => a.FullName == select);
+				var sel = Records.FirstOrDefault(guiRecord => guiRecord.record.FullName == select);
 				if (sel != null)
 				{
 					files.SelectedItem = sel;
@@ -240,14 +240,14 @@ namespace NeoEdit.GUI.BrowserUI
 
 		void Files_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			ItemClicked(files.SelectedItem as Record);
+			ItemClicked((files.SelectedItem as GUIRecord).record);
 		}
 
 		Record syncSource, syncTarget;
 		SyncParams syncParams = new SyncParams();
 		void RunAction(RecordAction.ActionName action)
 		{
-			var records = files.SelectedItems.Cast<Record>().ToList();
+			var records = files.SelectedItems.Cast<GUIRecord>().Select(guiRecord => guiRecord.record).ToList();
 			records = records.Where(a => a.Actions.Any(b => b == action)).ToList();
 
 			if (!RecordAction.Get(action).IsValid(records.Count))

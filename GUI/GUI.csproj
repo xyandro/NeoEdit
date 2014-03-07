@@ -122,6 +122,7 @@
     <Compile Include="Dialogs\GetNumDialog.xaml.cs">
       <DependentUpon>GetNumDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUIRecord.cs" />
     <Compile Include="TextEditorUI\Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>

@@ -2,20 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.Common.Data;
 
 namespace NeoEdit.GUI.Records
 {
-	public abstract class Record : DependencyObject
+	public abstract class Record
 	{
-		static Dictionary<RecordProperty.PropertyName, DependencyProperty> dependencyProperty;
-		static Record()
-		{
-			var properties = Enum.GetValues(typeof(RecordProperty.PropertyName)).Cast<RecordProperty.PropertyName>().ToList();
-			dependencyProperty = properties.ToDictionary(a => a, a => DependencyProperty.Register(a.ToString(), RecordProperty.Get(a).Type, typeof(Record)));
-		}
+		public delegate void PropertyChangedDelegate(RecordProperty.PropertyName property, object value);
+		public event PropertyChangedDelegate PropertyChanged = delegate { };
+
+		Dictionary<RecordProperty.PropertyName, object> properties = new Dictionary<RecordProperty.PropertyName, object>();
 
 		protected Record(string uri)
 		{
@@ -30,7 +27,7 @@ namespace NeoEdit.GUI.Records
 		public virtual string Name { get { return GetProperty<string>(RecordProperty.PropertyName.Name); } }
 		public virtual bool IsFile { get { return false; } }
 
-		public IEnumerable<RecordProperty.PropertyName> Properties { get { return dependencyProperty.Where(a => GetValue(a.Value) != null).Select(a => a.Key); } }
+		public IEnumerable<RecordProperty.PropertyName> Properties { get { return properties.Keys; } }
 		public IEnumerable<RecordAction.ActionName> Actions
 		{
 			get
@@ -51,11 +48,16 @@ namespace NeoEdit.GUI.Records
 				return actions;
 			}
 		}
-		protected T GetProperty<T>(RecordProperty.PropertyName property) { return (T)GetValue(dependencyProperty[property]); }
+		protected T GetProperty<T>(RecordProperty.PropertyName property) { return properties.ContainsKey(property) ? (T)properties[property] : default(T); }
 
 		protected virtual void SetProperty<T>(RecordProperty.PropertyName property, T value)
 		{
-			SetValue(dependencyProperty[property], value);
+			if (value == null)
+				properties.Remove(property);
+			else
+				properties[property] = value;
+			PropertyChanged(property, value);
+
 			switch (property)
 			{
 				case RecordProperty.PropertyName.FullName:
