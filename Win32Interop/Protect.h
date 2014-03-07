@@ -6,11 +6,10 @@ namespace NeoEdit
 	{
 		public ref class Protect
 		{
-		public:
-			~Protect();
 		internal:
 			Protect(std::shared_ptr<Win32Lib::Protect> ptr);
 		private:
+			~Protect();
 			std::shared_ptr<Win32Lib::Protect> *ptr;
 		};
 	}

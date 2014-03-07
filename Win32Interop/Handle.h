@@ -6,13 +6,12 @@ namespace NeoEdit
 	{
 		public ref class Handle
 		{
-		public:
+		internal:
 			Handle();
 			Handle(std::shared_ptr<void> ptr);
-			~Handle();
-		internal:
 			std::shared_ptr<void> Get();
 		private:
+			~Handle();
 			std::shared_ptr<void> *ptr;
 		};
 	}
