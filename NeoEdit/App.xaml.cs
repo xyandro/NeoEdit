@@ -6,7 +6,7 @@ using System.Windows.Threading;
 using NeoEdit.GUI.Data;
 using NeoEdit.GUI.Records;
 
-namespace NeoEdit.GUI
+namespace NeoEdit
 {
 	class InstanceManager : Microsoft.VisualBasic.ApplicationServices.WindowsFormsApplicationBase
 	{
@@ -51,7 +51,7 @@ namespace NeoEdit.GUI
 			try
 			{
 				if (args.Length == 0)
-					return new BrowserUI.Browser();
+					return new GUI.BrowserUI.Browser();
 
 				switch (args[0])
 				{
@@ -73,7 +73,7 @@ namespace NeoEdit.GUI
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							return new TextEditorUI.TextEditor(record, line: line, column: column);
+							return new GUI.TextEditorUI.TextEditor(record, line: line, column: column);
 						}
 					case "binary":
 						{
@@ -85,7 +85,7 @@ namespace NeoEdit.GUI
 									throw new ArgumentException("Invalid file.");
 							}
 
-							return new BinaryEditorUI.BinaryEditor(record);
+							return new GUI.BinaryEditorUI.BinaryEditor(record);
 						}
 					case "gzip":
 						{
