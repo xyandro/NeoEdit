@@ -20,7 +20,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-
 		void Interop::ResumeProcess(int pid)
 		{
 			try
@@ -29,7 +28,6 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
-
 
 		Handle ^Interop::OpenReadMemoryProcess(int pid)
 		{
@@ -40,7 +38,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-
 		VirtualQueryInfo ^Interop::VirtualQuery(Handle ^handle, IntPtr index)
 		{
 			try
@@ -50,7 +47,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-
 		Protect ^Interop::SetProtect(Handle ^handle, VirtualQueryInfo ^info, bool write)
 		{
 			try
@@ -59,7 +55,6 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
-
 
 		void Interop::ReadProcessMemory(Handle ^handle, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
 		{
@@ -71,7 +66,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-
 		void Interop::WriteProcessMemory(Handle ^handle, IntPtr index, array<byte> ^bytes, int numBytes)
 		{
 			try
@@ -81,7 +75,6 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
-
 
 		List<int> ^Interop::GetPIDsWithFileLock(String ^fileName)
 		{
@@ -99,7 +92,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-
 		List<HandleInfo^> ^Interop::GetProcessHandles(int pid)
 		{
 			try
@@ -110,7 +102,6 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
-
 
 		List<String^> ^Interop::GetHandleTypes()
 		{
@@ -125,7 +116,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-
 		List<HandleInfo^> ^Interop::GetTypeHandles(String ^type)
 		{
 			try
@@ -137,7 +127,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-
 		IntPtr Interop::GetSharedMemorySize(int pid, IntPtr handle)
 		{
 			try
@@ -146,7 +135,6 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
-
 
 		void Interop::ReadSharedMemory(int pid, IntPtr handle, IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes)
 		{
@@ -158,7 +146,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-
 		void Interop::WriteSharedMemory(int pid, IntPtr handle, IntPtr index, array<byte> ^bytes)
 		{
 			try
@@ -168,7 +155,6 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
-
 
 		List<HandleInfo^> ^Interop::GetHandleInfo(shared_ptr<vector<shared_ptr<Win32Lib::HandleInfo>>> handles)
 		{
@@ -181,6 +167,5 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
-
 	}
 }

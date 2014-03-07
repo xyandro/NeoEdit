@@ -1052,7 +1052,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			}
 			else if ((command == TextEditor.Command_Edit_Cut) || (command == TextEditor.Command_Edit_Copy))
 			{
-				var result = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToArray();
+				var result = ranges[RangeType.Selection].Select(range => GetString(range)).ToArray();
 				if (result.Length != 0)
 					Clipboard.Set(result);
 				if (command == TextEditor.Command_Edit_Cut)
@@ -1142,13 +1142,13 @@ namespace NeoEdit.GUI.TextEditorUI
 			}
 			else if (command == TextEditor.Command_Data_ToUpper)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == TextEditor.Command_Data_ToLower)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
 				Replace(selections, strs, true);
 			}
@@ -1178,7 +1178,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			}
 			else if (command == TextEditor.Command_Data_Width)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = ranges[RangeType.Selection];
 				var minWidth = selections.Select(range => range.Length).Max();
 				var text = String.Join("", selections.Select(range => GetString(range)));
 				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
@@ -1194,7 +1194,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			}
 			else if (command == TextEditor.Command_Data_SetKeys)
 			{
-				var keys = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToList();
+				var keys = ranges[RangeType.Selection].Select(range => GetString(range)).ToList();
 				if (keys.Distinct().Count() != keys.Count)
 					throw new ArgumentException("Cannot have duplicate keys.");
 				keysToValues = keys.ToDictionary(key => key, key => key);
@@ -1202,26 +1202,26 @@ namespace NeoEdit.GUI.TextEditorUI
 			else if (command == TextEditor.Command_Data_SetValues)
 			{
 				var keys = keysToValues.Keys.ToList();
-				var values = ranges[RangeType.Selection].Where(range => range.HasSelection()).Select(range => GetString(range)).ToList();
+				var values = ranges[RangeType.Selection].Select(range => GetString(range)).ToList();
 				if (values.Count() != keys.Count)
 					throw new ArgumentException("Key count must match value count.");
 				keysToValues = Enumerable.Range(0, keys.Count).ToDictionary(num => keys[num], num => values[num]);
 			}
 			else if (command == TextEditor.Command_Data_KeysToValues)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range)).Select(sel => keysToValues.ContainsKey(sel) ? keysToValues[sel] : sel).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == TextEditor.Command_Data_Reverse)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range)).Reverse().ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == TextEditor.Command_Data_Sort)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
 				Replace(selections, strs, true);
 			}
@@ -1233,7 +1233,7 @@ namespace NeoEdit.GUI.TextEditorUI
 			}
 			else if (command == TextEditor.Command_Data_Duplicates)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = ranges[RangeType.Selection];
 				var dups = selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList();
 				if (dups.Count != 0)
 					ranges[RangeType.Selection] = dups;
