@@ -46,6 +46,14 @@ namespace NeoEdit
 				Application.Current.Shutdown();
 		}
 
+		void ShowExceptionMessage(Exception ex)
+		{
+			var message = "";
+			for (; ex != null; ex = ex.InnerException)
+				message += ex.Message + "\n";
+			MessageBox.Show(message, "Error");
+		}
+
 		public Window GetWindowFromArgs(string[] args)
 		{
 			try
@@ -103,7 +111,7 @@ namespace NeoEdit
 						break;
 				}
 			}
-			catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
+			catch (Exception ex) { ShowExceptionMessage(ex); }
 
 			return null;
 		}
@@ -116,7 +124,7 @@ namespace NeoEdit
 
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			MessageBox.Show(e.Exception.Message, "Error");
+			ShowExceptionMessage(e.Exception);
 			e.Handled = true;
 		}
 	}
