@@ -16,22 +16,22 @@ using NeoEdit.GUI.TextEditorUI.Dialogs;
 
 namespace NeoEdit.GUI.TextEditorUI
 {
-	public partial class TextCanvas : Canvas
+	partial class TextCanvas : Canvas
 	{
 		[DepProp]
 		public TextData Data { get { return uiHelper.GetPropValue<TextData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
+		internal Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public bool HasBOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		bool HasBOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int Line { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int Line { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int Column { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int Column { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int Index { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int Index { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int NumSelections { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int NumSelections { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -92,8 +92,8 @@ namespace NeoEdit.GUI.TextEditorUI
 
 		class TextCanvasUndoRedo
 		{
-			public List<Range> ranges;
-			public List<string> text;
+			public List<Range> ranges { get; private set; }
+			public List<string> text { get; private set; }
 
 			public TextCanvasUndoRedo(List<Range> _ranges, List<string> _text)
 			{
@@ -386,7 +386,7 @@ namespace NeoEdit.GUI.TextEditorUI
 		bool shiftDown { get { return shiftOverride.HasValue ? shiftOverride.Value : (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt; } }
-		internal bool selecting { get { return (mouseDown) || (shiftDown); } }
+		bool selecting { get { return (mouseDown) || (shiftDown); } }
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{

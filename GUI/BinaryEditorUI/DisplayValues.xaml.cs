@@ -4,7 +4,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.BinaryEditorUI
 {
-	public partial class DisplayValues : StackPanel
+	partial class DisplayValues : StackPanel
 	{
 		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }

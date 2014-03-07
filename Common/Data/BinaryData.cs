@@ -3,14 +3,14 @@ using System.Linq;
 
 namespace NeoEdit.Common.Data
 {
-	abstract public class BinaryData
+	public abstract class BinaryData
 	{
-		virtual public bool CanInsert() { return false; }
+		public virtual bool CanInsert() { return false; }
 
 		protected long length = 0, cacheStart = 0, cacheEnd = 0;
 		protected bool cacheHasData = false;
 		protected byte[] cache = new byte[65536];
-		virtual protected void SetCache(long index, int count) { }
+		protected virtual void SetCache(long index, int count) { }
 
 		public byte this[long index]
 		{
@@ -25,7 +25,7 @@ namespace NeoEdit.Common.Data
 
 		public long Length { get { return length; } }
 
-		virtual public bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
+		public virtual bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
 		{
 			start = end = -1;
 			if (!forward)
@@ -64,19 +64,19 @@ namespace NeoEdit.Common.Data
 			return false;
 		}
 
-		virtual public void Replace(long index, long count, byte[] bytes)
+		public virtual void Replace(long index, long count, byte[] bytes)
 		{
 			throw new NotImplementedException();
 		}
 
-		virtual public void Refresh() { }
+		public virtual void Refresh() { }
 
-		virtual public byte[] GetAllBytes()
+		public virtual byte[] GetAllBytes()
 		{
 			throw new NotImplementedException();
 		}
 
-		virtual public byte[] GetSubset(long index, long count)
+		public virtual byte[] GetSubset(long index, long count)
 		{
 			var result = new byte[count];
 			SetCache(index, (int)count);

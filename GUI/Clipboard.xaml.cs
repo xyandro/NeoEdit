@@ -66,7 +66,7 @@ namespace NeoEdit.GUI
 			return found.Contents as T;
 		}
 
-		static public void Set(IEnumerable<Record> records, bool isCut)
+		public static void Set(IEnumerable<Record> records, bool isCut)
 		{
 			var objs = new List<Record>(records);
 
@@ -83,17 +83,17 @@ namespace NeoEdit.GUI
 			Add(data);
 		}
 
-		static public void Set(byte[] bytes, string text)
+		public static void Set(byte[] bytes, string text)
 		{
 			Add(new ClipboardData(bytes, text));
 		}
 
-		static public void Set(string[] strings)
+		public static void Set(string[] strings)
 		{
 			Add(new ClipboardData(strings, String.Join(" ", strings)));
 		}
 
-		static public bool GetRecords(out List<Record> records, out bool isCut)
+		public static bool GetRecords(out List<Record> records, out bool isCut)
 		{
 			records = null;
 			isCut = false;
@@ -125,12 +125,12 @@ namespace NeoEdit.GUI
 			return true;
 		}
 
-		static public byte[] GetBytes()
+		public static byte[] GetBytes()
 		{
 			return GetContents<byte[]>();
 		}
 
-		static public string[] GetStrings()
+		public static string[] GetStrings()
 		{
 			var contents = GetContents<string[]>();
 			if (contents != null)
@@ -143,7 +143,7 @@ namespace NeoEdit.GUI
 			return new string[] { str };
 		}
 
-		static public string GetString()
+		public static string GetString()
 		{
 			var str = System.Windows.Clipboard.GetText();
 			if (String.IsNullOrEmpty(str))
@@ -152,7 +152,7 @@ namespace NeoEdit.GUI
 		}
 
 		static Clipboard current;
-		static public new void Show()
+		public static new void Show()
 		{
 			if (current == null)
 				current = new Clipboard();

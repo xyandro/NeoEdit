@@ -7,11 +7,11 @@ namespace NeoEdit.GUI.AboutUI
 	public partial class About : Window
 	{
 		[DepProp]
-		public string Product { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Product { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public string Version { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Version { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public string Copyright { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Copyright { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
 		static About() { UIHelper<About>.Register(); }
 

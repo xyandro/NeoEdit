@@ -18,7 +18,7 @@ namespace NeoEdit.GUI.BrowserUI.Dialogs
 			Show();
 		}
 
-		private void okClick(object sender, RoutedEventArgs e)
+		void okClick(object sender, RoutedEventArgs e)
 		{
 			Close();
 		}

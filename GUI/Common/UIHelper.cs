@@ -14,7 +14,7 @@ namespace NeoEdit.GUI.Common
 {
 	class DepPropAttribute : Attribute { }
 
-	public class UIHelper<ControlType> where ControlType : DependencyObject
+	class UIHelper<ControlType> where ControlType : DependencyObject
 	{
 		static Dictionary<string, DependencyProperty> dependencyProperty;
 		readonly ControlType control;
@@ -94,7 +94,7 @@ namespace NeoEdit.GUI.Common
 			dpd.AddValueChanged(obj, (o, e) => action());
 		}
 
-		public DependencyProperty GetProp<T>(Expression<Func<ControlType, T>> expression)
+		DependencyProperty GetProp<T>(Expression<Func<ControlType, T>> expression)
 		{
 			return dependencyProperty[GetExpressionValue(expression)];
 		}

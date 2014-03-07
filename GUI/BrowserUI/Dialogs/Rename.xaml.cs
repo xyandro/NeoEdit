@@ -7,7 +7,7 @@ namespace NeoEdit.GUI.BrowserUI.Dialogs
 	public partial class Rename : Window
 	{
 		[DepProp]
-		public string RecordName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string RecordName { get { return uiHelper.GetPropValue<string>(); } private set { uiHelper.SetPropValue(value); } }
 
 		static Rename() { UIHelper<Rename>.Register(); }
 

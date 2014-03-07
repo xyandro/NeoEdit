@@ -15,7 +15,7 @@ namespace NeoEdit
 
 		App app;
 
-		public InstanceManager() { IsSingleInstance = true; }
+		InstanceManager() { IsSingleInstance = true; }
 		protected override bool OnStartup(Microsoft.VisualBasic.ApplicationServices.StartupEventArgs e)
 		{
 			app = new App();
@@ -37,7 +37,7 @@ namespace NeoEdit
 		}
 	}
 
-	public partial class App : Application
+	partial class App : Application
 	{
 		protected override void OnStartup(StartupEventArgs e)
 		{

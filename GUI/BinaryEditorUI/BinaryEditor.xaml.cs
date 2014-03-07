@@ -56,11 +56,11 @@ namespace NeoEdit.GUI.BinaryEditorUI
 		public static RoutedCommand Command_Verify_DSA = new RoutedCommand();
 
 		[DepProp]
-		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
+		BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public Coder.Type InputCoderType { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
+		Coder.Type InputCoderType { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 
 		static BinaryEditor() { UIHelper<BinaryEditor>.Register(); }
 

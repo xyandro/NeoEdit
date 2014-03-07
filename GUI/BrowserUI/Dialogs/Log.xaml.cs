@@ -6,7 +6,7 @@ namespace NeoEdit.GUI.BrowserUI.Dialogs
 	public partial class Log : Window
 	{
 		[DepProp]
-		public string Messages { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Messages { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
 		static Log() { UIHelper<Log>.Register(); }
 
@@ -25,7 +25,7 @@ namespace NeoEdit.GUI.BrowserUI.Dialogs
 			Messages += message + "\n";
 		}
 
-		private void okClick(object sender, RoutedEventArgs e)
+		void okClick(object sender, RoutedEventArgs e)
 		{
 			Close();
 		}

@@ -47,9 +47,9 @@ namespace NeoEdit.GUI.BrowserUI
 			}
 		}
 		[DepProp]
-		public List<GUIRecord> Records { get { return uiHelper.GetPropValue<List<GUIRecord>>(); } set { uiHelper.SetPropValue(value); } }
+		List<GUIRecord> Records { get { return uiHelper.GetPropValue<List<GUIRecord>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
+		ObservableCollection<RecordProperty.PropertyName> Properties { get { return uiHelper.GetPropValue<ObservableCollection<RecordProperty.PropertyName>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public RecordProperty.PropertyName SortProperty { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -399,7 +399,7 @@ namespace NeoEdit.GUI.BrowserUI
 			}
 		}
 
-		public void MenuItemColumnClick(object sender, RoutedEventArgs e)
+		internal void MenuItemColumnClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
 			var property = RecordProperty.PropertyFromMenuHeader(header);
@@ -409,7 +409,7 @@ namespace NeoEdit.GUI.BrowserUI
 				Properties.Add(property);
 		}
 
-		public void MenuItemSortClick(object sender, RoutedEventArgs e)
+		internal void MenuItemSortClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
 			var property = RecordProperty.PropertyFromMenuHeader(header);
@@ -419,7 +419,7 @@ namespace NeoEdit.GUI.BrowserUI
 				SortAscending = !SortAscending;
 		}
 
-		public void MenuItemActionClick(object sender, RoutedEventArgs e)
+		internal void MenuItemActionClick(object sender, RoutedEventArgs e)
 		{
 			var header = ((MenuItem)sender).Header.ToString();
 			var action = RecordAction.ActionFromMenuHeader(header);

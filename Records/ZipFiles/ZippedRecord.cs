@@ -7,7 +7,7 @@ namespace NeoEdit.Records.ZipFiles
 {
 	public class ZippedRecord : Record
 	{
-		readonly protected ZippedArchive archive;
+		protected readonly ZippedArchive archive;
 		public ZippedRecord(string uri, ZippedArchive _archive)
 			: base(uri)
 		{

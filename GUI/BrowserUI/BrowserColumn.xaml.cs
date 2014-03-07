@@ -6,14 +6,14 @@ using NeoEdit.Records;
 
 namespace NeoEdit.GUI.BrowserUI
 {
-	public partial class BrowserColumn : GridViewColumn
+	partial class BrowserColumn : GridViewColumn
 	{
 		[DepProp]
 		public RecordProperty.PropertyName Property { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public RecordProperty.PropertyName SortProperty { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
+		RecordProperty.PropertyName SortProperty { get { return uiHelper.GetPropValue<RecordProperty.PropertyName>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		bool SortAscending { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
 		static BrowserColumn() { UIHelper<BrowserColumn>.Register(); }
 

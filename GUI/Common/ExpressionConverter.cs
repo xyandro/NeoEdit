@@ -28,7 +28,7 @@ namespace NeoEdit.GUI.Common
 			return hexExpRE.Replace(expression, match => ((char)(Byte.Parse(match.Groups[1].Value, NumberStyles.HexNumber))).ToString());
 		}
 
-		public delegate bool TryParseHandler<T>(string value, out T result);
+		delegate bool TryParseHandler<T>(string value, out T result);
 		void TryStringConversion<T>(ref object obj, TryParseHandler<T> tryParse)
 		{
 			if (!(obj is string))

@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace NeoEdit.GUI.Common
 {
-	public partial class HelpMenu : MenuItem
+	partial class HelpMenu : MenuItem
 	{
 		public HelpMenu()
 		{

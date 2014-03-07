@@ -47,7 +47,7 @@ namespace NeoEdit.GUI.Dialogs
 		}
 
 		Dictionary<Button, OptionsEnum> buttonActions = new Dictionary<Button, OptionsEnum>();
-		public OptionsEnum Answer { get; private set; }
+		OptionsEnum Answer { get; set; }
 
 		static bool IsPowerOfTwo(int x)
 		{

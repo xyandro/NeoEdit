@@ -6,7 +6,7 @@ using NeoEdit.Records;
 
 namespace NeoEdit.GUI
 {
-	public class GUIRecord : DependencyObject
+	class GUIRecord : DependencyObject
 	{
 		static Dictionary<RecordProperty.PropertyName, DependencyProperty> dependencyProperty;
 		static GUIRecord()

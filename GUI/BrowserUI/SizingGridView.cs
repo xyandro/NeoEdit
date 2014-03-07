@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace NeoEdit.GUI.BrowserUI
 {
-	public class SizingGridView : GridView
+	class SizingGridView : GridView
 	{
 		protected override void PrepareItem(ListViewItem item)
 		{

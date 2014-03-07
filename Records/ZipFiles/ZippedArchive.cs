@@ -47,7 +47,7 @@ namespace NeoEdit.Records.ZipFiles
 			return archive;
 		}
 
-		internal void Release()
+		void Release()
 		{
 			if (!zipArchiveCache.ContainsKey(FullName))
 				return;

@@ -15,7 +15,7 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.BinaryEditorUI
 {
-	public partial class BinaryCanvas : Canvas
+	partial class BinaryCanvas : Canvas
 	{
 		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
