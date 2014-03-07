@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.GUI
 {
-	static class Helpers
+	public static class Helpers
 	{
 		public static bool IsIntegerType(this Type type)
 		{

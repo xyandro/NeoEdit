@@ -73,69 +73,21 @@
     <Compile Include="Clipboard.xaml.cs">
       <DependentUpon>Clipboard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\DumpBinaryData.cs" />
     <Compile Include="Common\HelpMenu.xaml.cs">
       <DependentUpon>HelpMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\WindowMenu.xaml.cs">
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Handles\HandleType.cs" />
-    <Compile Include="Records\Processes\ProcessBinaryData.cs" />
-    <Compile Include="Common\Expression.cs" />
-    <Compile Include="Common\BinaryData.cs" />
-    <Compile Include="Common\SyncParams.cs" />
-    <Compile Include="Data\Checksum.cs" />
-    <Compile Include="Data\Compression.cs" />
-    <Compile Include="Data\Crypto.cs" />
     <Compile Include="BinaryEditorUI\Dialogs\SymmetricKeyDialog.xaml.cs">
       <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="BinaryEditorUI\Dialogs\AsymmetricKeyDialog.xaml.cs">
       <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\MemoryBinaryData.cs" />
-    <Compile Include="Common\TextData.cs" />
-    <Compile Include="Data\Coder.cs" />
-    <Compile Include="Records\List\ListRecord.cs" />
-    <Compile Include="Records\Processes\ProcessRecord.cs" />
-    <Compile Include="Records\Processes\Process.cs" />
-    <Compile Include="Records\Processes\ProcessRoot.cs" />
-    <Compile Include="Records\Handles\SharedMemoryBinaryData.cs" />
-    <Compile Include="Records\Handles\HandleItem.cs" />
-    <Compile Include="Records\Handles\HandleRecord.cs" />
-    <Compile Include="Records\Handles\HandleRoot.cs" />
-    <Compile Include="Records\Zipped\ZippedArchive.cs" />
-    <Compile Include="Records\Zipped\ZippedDir.cs" />
-    <Compile Include="Records\Zipped\ZippedFile.cs" />
-    <Compile Include="Records\Zipped\ZippedRecord.cs" />
-    <Compile Include="Records\Disk\Identifier.cs" />
-    <Compile Include="Records\RecordAction.cs" />
-    <Compile Include="Records\Disk\DiskRecord.cs" />
-    <Compile Include="Records\RecordProperty.cs" />
-    <Compile Include="Records\List\ListDir.cs" />
-    <Compile Include="Records\List\ListRoot.cs" />
-    <Compile Include="Records\Disk\NetworkShare.cs" />
-    <Compile Include="Records\Record.cs" />
-    <Compile Include="Records\Disk\DiskRoot.cs" />
-    <Compile Include="Records\Registry\RegistryRecord.cs" />
-    <Compile Include="Records\Registry\RegistryFile.cs" />
-    <Compile Include="Records\Registry\RegistryDir.cs" />
-    <Compile Include="Records\Registry\RegistryRoot.cs" />
-    <Compile Include="Records\Root.cs" />
-    <Compile Include="Records\Disk\DiskFile.cs" />
-    <Compile Include="Helpers.cs" />
-    <Compile Include="UnitTest\ChecksumTest.cs" />
-    <Compile Include="UnitTest\CoderTest.cs" />
-    <Compile Include="UnitTest\CompressionTest.cs" />
-    <Compile Include="UnitTest\ExpressionTest.cs" />
-    <Compile Include="UnitTest\CryptoTest.cs" />
-    <Compile Include="UnitTest\UnitTest.cs" />
-    <Compile Include="UnitTest\UnicodeTest.cs" />
     <Compile Include="BinaryEditorUI\BinaryCanvas.xaml.cs">
       <DependentUpon>BinaryCanvas.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\FindData.cs" />
     <Compile Include="BinaryEditorUI\Converters\ValidValueConverter.cs" />
     <Compile Include="BinaryEditorUI\Dialogs\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
@@ -259,7 +211,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Records\Disk\DiskDir.cs" />
     <Compile Include="BinaryEditorUI\BinaryEditor.xaml.cs">
       <DependentUpon>BinaryEditor.xaml</DependentUpon>
     </Compile>
@@ -305,7 +256,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Magic\magic.mgc" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -314,25 +264,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Anonymous Pro.ttf" />
-    <EmbeddedResource Include="Magic\file.exe" />
-    <EmbeddedResource Include="Magic\magic1.dll" />
-    <EmbeddedResource Include="Magic\regex2.dll" />
-    <EmbeddedResource Include="Magic\zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="AboutUI\NeoEdit.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Win32Interop\Win32Interop.vcxproj">
-      <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
-      <Name>Interop</Name>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Records\Records.csproj">
+      <Project>{b0131301-7379-4eda-9a35-8c8e715429b1}</Project>
+      <Name>Records</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>echo Erase NeoEdit.exe to force new build...
-IF EXIST "$(TargetDir)NeoEdit\NeoEdit.exe" DEL "$(TargetDir)NeoEdit\NeoEdit.exe"</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

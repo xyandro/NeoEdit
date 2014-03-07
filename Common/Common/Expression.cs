@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace NeoEdit.GUI.Common
 {
-	class Expression
+	public class Expression
 	{
 		static readonly string num = @"\d+(\.\d*)?([eE]\d+)?";
 		static readonly Regex numRE = new Regex(num);
