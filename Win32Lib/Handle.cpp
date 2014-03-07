@@ -264,8 +264,7 @@ namespace
 
 	class HandleHelper
 	{
-		static HandleHelper handleHelper;
-	public:
+	private:
 		HandleHelper()
 		{
 			ntdll = GetModuleHandle(L"ntdll.dll");
@@ -277,6 +276,7 @@ namespace
 			GetTypeNames();
 			GetDosToLogicalMap();
 		}
+		static HandleHelper handleHelper;
 	};
 
 	HandleHelper HandleHelper::handleHelper;
