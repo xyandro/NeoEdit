@@ -27,7 +27,7 @@ namespace NeoEdit.GUI.BrowserUI.Converters
 				return null;
 
 			var parent = value[0] as Record;
-			var children = (value[1] as IEnumerable<Object>).Cast<Record>().ToList();
+			var children = (value[1] as IEnumerable<Object>).Cast<GUIRecord>().Select(record => record.record).ToList();
 			var browser = value[2] as Browser;
 
 			var actions = RecordAction.Actions(parent, children);
