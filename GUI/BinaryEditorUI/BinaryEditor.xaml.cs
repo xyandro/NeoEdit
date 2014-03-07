@@ -9,7 +9,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Records;
+using NeoEdit.Records;
 
 namespace NeoEdit.GUI.BinaryEditorUI
 {

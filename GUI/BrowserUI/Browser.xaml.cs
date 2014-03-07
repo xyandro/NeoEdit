@@ -11,11 +11,11 @@ using NeoEdit.GUI.BinaryEditorUI;
 using NeoEdit.GUI.BrowserUI.Dialogs;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
-using NeoEdit.GUI.Records;
-using NeoEdit.GUI.Records.Disk;
-using NeoEdit.GUI.Records.List;
-using NeoEdit.GUI.Records.Processes;
-using NeoEdit.GUI.Records.Registry;
+using NeoEdit.Records;
+using NeoEdit.Records.Disks;
+using NeoEdit.Records.Lists;
+using NeoEdit.Records.Processes;
+using NeoEdit.Records.Registries;
 
 namespace NeoEdit.GUI.BrowserUI
 {

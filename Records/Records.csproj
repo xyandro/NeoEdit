@@ -7,25 +7,18 @@
     <ProjectGuid>{B0131301-7379-4EDA-9A35-8C8E715429B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NeoEdit.GUI</RootNamespace>
+    <RootNamespace>NeoEdit.Records</RootNamespace>
     <AssemblyName>Records</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
     <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
     <PlatformTarget>$(Platform)</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <StartupObject>
-    </StartupObject>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -48,73 +41,44 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Records\Handles\HandleType.cs" />
-    <Compile Include="Records\Processes\ProcessBinaryData.cs" />
-    <Compile Include="Records\List\ListRecord.cs" />
-    <Compile Include="Records\Processes\ProcessRecord.cs" />
-    <Compile Include="Records\Processes\Process.cs" />
-    <Compile Include="Records\Processes\ProcessRoot.cs" />
-    <Compile Include="Records\Handles\SharedMemoryBinaryData.cs" />
-    <Compile Include="Records\Handles\HandleItem.cs" />
-    <Compile Include="Records\Handles\HandleRecord.cs" />
-    <Compile Include="Records\Handles\HandleRoot.cs" />
-    <Compile Include="Records\Zipped\ZippedArchive.cs" />
-    <Compile Include="Records\Zipped\ZippedDir.cs" />
-    <Compile Include="Records\Zipped\ZippedFile.cs" />
-    <Compile Include="Records\Zipped\ZippedRecord.cs" />
-    <Compile Include="Records\Disk\Identifier.cs" />
-    <Compile Include="Records\RecordAction.cs" />
-    <Compile Include="Records\Disk\DiskRecord.cs" />
-    <Compile Include="Records\RecordProperty.cs" />
-    <Compile Include="Records\List\ListDir.cs" />
-    <Compile Include="Records\List\ListRoot.cs" />
-    <Compile Include="Records\Disk\NetworkShare.cs" />
-    <Compile Include="Records\Record.cs" />
-    <Compile Include="Records\Disk\DiskRoot.cs" />
-    <Compile Include="Records\Registry\RegistryRecord.cs" />
-    <Compile Include="Records\Registry\RegistryFile.cs" />
-    <Compile Include="Records\Registry\RegistryDir.cs" />
-    <Compile Include="Records\Registry\RegistryRoot.cs" />
-    <Compile Include="Records\Root.cs" />
-    <Compile Include="Records\Disk\DiskFile.cs" />
-    <Compile Include="Records\Disk\DiskDir.cs" />
+    <Compile Include="Handles\HandleType.cs" />
+    <Compile Include="Processes\ProcessBinaryData.cs" />
+    <Compile Include="Lists\ListRecord.cs" />
+    <Compile Include="Processes\ProcessRecord.cs" />
+    <Compile Include="Processes\ProcessItem.cs" />
+    <Compile Include="Processes\ProcessRoot.cs" />
+    <Compile Include="Handles\SharedMemoryBinaryData.cs" />
+    <Compile Include="Handles\HandleItem.cs" />
+    <Compile Include="Handles\HandleRecord.cs" />
+    <Compile Include="Handles\HandleRoot.cs" />
+    <Compile Include="ZipFiles\ZippedArchive.cs" />
+    <Compile Include="ZipFiles\ZippedDir.cs" />
+    <Compile Include="ZipFiles\ZippedFile.cs" />
+    <Compile Include="ZipFiles\ZippedRecord.cs" />
+    <Compile Include="Disks\Identifier.cs" />
+    <Compile Include="RecordAction.cs" />
+    <Compile Include="Disks\DiskRecord.cs" />
+    <Compile Include="RecordProperty.cs" />
+    <Compile Include="Lists\ListDir.cs" />
+    <Compile Include="Lists\ListRoot.cs" />
+    <Compile Include="Disks\NetworkShare.cs" />
+    <Compile Include="Record.cs" />
+    <Compile Include="Disks\DiskRoot.cs" />
+    <Compile Include="Registries\RegistryRecord.cs" />
+    <Compile Include="Registries\RegistryFile.cs" />
+    <Compile Include="Registries\RegistryDir.cs" />
+    <Compile Include="Registries\RegistryRoot.cs" />
+    <Compile Include="Root.cs" />
+    <Compile Include="Disks\DiskFile.cs" />
+    <Compile Include="Disks\DiskDir.cs" />
     <Compile Include="SyncParams.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Magic\magic.mgc" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Magic\file.exe" />
     <EmbeddedResource Include="Magic\magic1.dll" />
     <EmbeddedResource Include="Magic\regex2.dll" />

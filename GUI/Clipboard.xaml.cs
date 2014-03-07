@@ -8,8 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Records;
-using NeoEdit.GUI.Records.Disk;
+using NeoEdit.Records;
+using NeoEdit.Records.Disks;
 
 namespace NeoEdit.GUI
 {

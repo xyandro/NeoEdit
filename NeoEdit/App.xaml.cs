@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Records;
+using NeoEdit.Records;
 
 namespace NeoEdit
 {
@@ -111,7 +111,7 @@ namespace NeoEdit
 		public App()
 		{
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
-			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NeoEdit.GUI.Records.Processes.ProcessRecord).TypeHandle);
+			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NeoEdit.Records.Processes.ProcessRecord).TypeHandle);
 		}
 
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

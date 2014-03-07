@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.GUI.Records;
+using NeoEdit.Records;
 
 namespace NeoEdit.GUI.BrowserUI.Converters
 {
