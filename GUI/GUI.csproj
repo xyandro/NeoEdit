@@ -332,7 +332,7 @@
     <Resource Include="AboutUI\NeoEdit.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Interop\Interop.vcxproj">
+    <ProjectReference Include="..\Win32Interop\Win32Interop.vcxproj">
       <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
       <Name>Interop</Name>
     </ProjectReference>

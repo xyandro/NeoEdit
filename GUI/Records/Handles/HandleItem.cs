@@ -1,6 +1,6 @@
 ﻿using System;
 using NeoEdit.GUI.Common;
-using NeoEdit.Interop;
+using NeoEdit.Win32Interop;
 
 namespace NeoEdit.GUI.Records.Handles
 {

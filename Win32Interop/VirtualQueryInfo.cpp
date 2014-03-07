@@ -6,7 +6,7 @@ using namespace System;
 
 namespace NeoEdit
 {
-	namespace Interop
+	namespace Win32Interop
 	{
 		bool VirtualQueryInfo::Committed::get() { return (*ptr)->Committed; }
 		bool VirtualQueryInfo::Mapped::get() { return (*ptr)->Mapped; }

@@ -1,6 +1,6 @@
 ﻿using System;
 using NeoEdit.GUI.Common;
-using NeoEdit.Interop;
+using NeoEdit.Win32Interop;
 
 namespace NeoEdit.GUI.Records.Handles
 {
@@ -12,7 +12,7 @@ namespace NeoEdit.GUI.Records.Handles
 		{
 			pid = _pid;
 			handle = _handle;
-			length = NEInterop.GetSharedMemorySize(pid, handle).ToInt32();
+			length = Interop.GetSharedMemorySize(pid, handle).ToInt32();
 		}
 
 		protected override void SetCache(long index, int count)
@@ -26,7 +26,7 @@ namespace NeoEdit.GUI.Records.Handles
 			cacheStart = index;
 			cacheEnd = Math.Min(cacheStart + cache.Length, Length);
 			cacheHasData = true;
-			NEInterop.ReadSharedMemory(pid, handle, (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
+			Interop.ReadSharedMemory(pid, handle, (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 		}
 
 		public override void Replace(long index, long count, byte[] bytes)
@@ -35,7 +35,7 @@ namespace NeoEdit.GUI.Records.Handles
 				throw new Exception("Cannot change size.");
 
 			var length = bytes.Length;
-			NEInterop.WriteSharedMemory(pid, handle, (IntPtr)index, bytes);
+			Interop.WriteSharedMemory(pid, handle, (IntPtr)index, bytes);
 
 			Refresh();
 		}

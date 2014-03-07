@@ -74,8 +74,8 @@
     <EmbeddedResource Include="$(SolutionDir)bin\$(Configuration).$(Platform)\GUI">
       <Link>GUI</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="$(SolutionDir)bin\$(Configuration).$(Platform)\Interop">
-      <Link>Interop</Link>
+    <EmbeddedResource Include="$(SolutionDir)bin\$(Configuration).$(Platform)\Win32Interop">
+      <Link>Win32Interop</Link>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -90,8 +90,8 @@
   <PropertyGroup>
     <PreBuildEvent>echo Compressing GUI...
 "$(TargetDir)..\GUI.exe" gzip "$(TargetDir)..\GUI.exe" "$(TargetDir)..\GUI"
-echo Compressing Interop...
-"$(TargetDir)..\GUI.exe" gzip "$(TargetDir)..\Interop.dll" "$(TargetDir)..\Interop"
+echo Compressing Win32Interop...
+"$(TargetDir)..\GUI.exe" gzip "$(TargetDir)..\Win32Interop.dll" "$(TargetDir)..\Win32Interop"
 SubWCRev "$(SolutionDir)." "$(ProjectDir)Properties\AssemblyInfo.Template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -q</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

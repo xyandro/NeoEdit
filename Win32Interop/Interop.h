@@ -7,9 +7,9 @@
 
 namespace NeoEdit
 {
-	namespace Interop
+	namespace Win32Interop
 	{
-		public ref class NEInterop
+		public ref class Interop
 		{
 		public:
 			static void SuspendProcess(int pid);

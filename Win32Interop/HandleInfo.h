@@ -2,7 +2,7 @@
 
 namespace NeoEdit
 {
-	namespace Interop
+	namespace Win32Interop
 	{
 		public ref struct HandleInfo
 		{

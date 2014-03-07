@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NeoEdit.Interop;
+using NeoEdit.Win32Interop;
 
 namespace NeoEdit.GUI.Records.Handles
 {
@@ -11,7 +11,7 @@ namespace NeoEdit.GUI.Records.Handles
 		{
 			get
 			{
-				foreach (var type in NEInterop.GetHandleTypes())
+				foreach (var type in Interop.GetHandleTypes())
 					yield return new HandleType(type);
 			}
 		}

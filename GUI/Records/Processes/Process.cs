@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Management;
 using NeoEdit.GUI.Records.Handles;
-using NeoEdit.Interop;
+using NeoEdit.Win32Interop;
 
 namespace NeoEdit.GUI.Records.Processes
 {
@@ -49,7 +49,7 @@ namespace NeoEdit.GUI.Records.Processes
 				using (var moc = mos.Get())
 					foreach (var mo in moc)
 						yield return new Process(Convert.ToInt32(mo["ProcessID"]), this);
-				var handles = NEInterop.GetProcessHandles(GetProperty<int>(RecordProperty.PropertyName.ID));
+				var handles = Interop.GetProcessHandles(GetProperty<int>(RecordProperty.PropertyName.ID));
 				foreach (var handle in handles)
 					yield return new HandleItem(handle);
 			}
@@ -63,12 +63,12 @@ namespace NeoEdit.GUI.Records.Processes
 
 		public override void Suspend()
 		{
-			NEInterop.SuspendProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
+			Interop.SuspendProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
 		}
 
 		public override void Resume()
 		{
-			NEInterop.ResumeProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
+			Interop.ResumeProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
 		}
 
 		public override Common.BinaryData Read()

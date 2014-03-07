@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NeoEdit.GUI.Common;
-using NeoEdit.Interop;
+using NeoEdit.Win32Interop;
 
 namespace NeoEdit.GUI.Records.Processes
 {
@@ -47,7 +47,7 @@ namespace NeoEdit.GUI.Records.Processes
 			if (suspendCount++ != 0)
 				return;
 
-			NEInterop.SuspendProcess(pid);
+			Interop.SuspendProcess(pid);
 		}
 
 		void ResumeProcess()
@@ -55,7 +55,7 @@ namespace NeoEdit.GUI.Records.Processes
 			if (--suspendCount != 0)
 				return;
 
-			NEInterop.ResumeProcess(pid);
+			Interop.ResumeProcess(pid);
 		}
 
 		Handle handle;
@@ -65,7 +65,7 @@ namespace NeoEdit.GUI.Records.Processes
 			if (openCount++ != 0)
 				return;
 
-			handle = NEInterop.OpenReadMemoryProcess(pid);
+			handle = Interop.OpenReadMemoryProcess(pid);
 		}
 
 		void CloseProcess()
@@ -94,7 +94,7 @@ namespace NeoEdit.GUI.Records.Processes
 				{
 					bool hasData;
 
-					var queryInfo = NEInterop.VirtualQuery(handle, (IntPtr)index);
+					var queryInfo = Interop.VirtualQuery(handle, (IntPtr)index);
 					if (queryInfo != null)
 					{
 						hasData = queryInfo.Committed;
@@ -120,8 +120,8 @@ namespace NeoEdit.GUI.Records.Processes
 					if (!hasData)
 						Array.Clear(cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 					else
-						using (NEInterop.SetProtect(handle, queryInfo, false))
-							NEInterop.ReadProcessMemory(handle, (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
+						using (Interop.SetProtect(handle, queryInfo, false))
+							Interop.ReadProcessMemory(handle, (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 
 					index = cacheEnd;
 				}
@@ -145,15 +145,15 @@ namespace NeoEdit.GUI.Records.Processes
 			{
 				while (bytes.Length > 0)
 				{
-					var queryInfo = NEInterop.VirtualQuery(handle, (IntPtr)index);
+					var queryInfo = Interop.VirtualQuery(handle, (IntPtr)index);
 					if ((queryInfo == null) || (!queryInfo.Committed))
 						throw new Exception("Cannot write to this memory");
 
 					var end = queryInfo.EndAddress.ToInt64();
 					var numBytes = (int)Math.Min(bytes.Length, end - index);
 
-					using (NEInterop.SetProtect(handle, queryInfo, true))
-						NEInterop.WriteProcessMemory(handle, (IntPtr)index, bytes, numBytes);
+					using (Interop.SetProtect(handle, queryInfo, true))
+						Interop.WriteProcessMemory(handle, (IntPtr)index, bytes, numBytes);
 
 					index += numBytes;
 					Array.Copy(bytes, numBytes, bytes, 0, bytes.Length - numBytes);
