@@ -306,10 +306,10 @@ namespace NeoEdit.Browser
 						record.Resume();
 					break;
 				case RecordAction.ActionName.Copy:
-					ClipboardWindow.Set(records, false);
+					ClipboardWindow.SetRecords(records, false);
 					break;
 				case RecordAction.ActionName.Cut:
-					ClipboardWindow.Set(records, true);
+					ClipboardWindow.SetRecords(records, true);
 					break;
 				case RecordAction.ActionName.Paste:
 					{
@@ -390,7 +390,7 @@ namespace NeoEdit.Browser
 					Refresh();
 					break;
 				case RecordAction.ActionName.Open:
-					Launcher.Static.LaunchBinaryEditor(records.Single());
+					Launcher.Static.LaunchBinaryEditor(records.Single().FullName);
 					break;
 				case RecordAction.ActionName.View:
 					foreach (var record in records)

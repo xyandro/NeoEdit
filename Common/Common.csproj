@@ -49,7 +49,6 @@
     <Compile Include="Transform\Compression.cs" />
     <Compile Include="Transform\Crypto.cs" />
     <Compile Include="Data\MemoryBinaryData.cs" />
-    <Compile Include="Data\TextData.cs" />
     <Compile Include="Transform\Coder.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="UnitTest\ChecksumTest.cs" />

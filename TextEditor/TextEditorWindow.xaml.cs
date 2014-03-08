@@ -10,7 +10,6 @@ using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
-using NeoEdit.Records;
 
 namespace NeoEdit.TextEditor
 {
@@ -72,21 +71,21 @@ namespace NeoEdit.TextEditor
 		static TextEditorWindow() { UIHelper<TextEditorWindow>.Register(); }
 
 		readonly UIHelper<TextEditorWindow> uiHelper;
-		Record record;
-		public TextEditorWindow(Record _record = null, TextData data = null, int? line = null, int? column = null)
+		string filename;
+		public TextEditorWindow(string _filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int? line = null, int? column = null)
 		{
 			uiHelper = new UIHelper<TextEditorWindow>(this);
 			InitializeComponent();
 
-			record = _record;
-			if (data == null)
+			filename = _filename;
+			if (bytes == null)
 			{
-				if (record == null)
-					data = new TextData();
+				if (filename == null)
+					bytes = new byte[0];
 				else
-					data = new TextData(record.Read().GetAllBytes());
+					bytes = File.ReadAllBytes(filename);
 			}
-			Data = data;
+			Data = new TextData(bytes, encoding);
 			canvas.GotoPos(line.HasValue ? line.Value : 1, column.HasValue ? column.Value : 1);
 			CoderUsed = Data.CoderUsed;
 
@@ -120,7 +119,7 @@ namespace NeoEdit.TextEditor
 
 			if (command == Command_File_New)
 			{
-				record = null;
+				filename = null;
 				Data = new TextData();
 			}
 			else if (command == Command_File_Open)
@@ -128,16 +127,16 @@ namespace NeoEdit.TextEditor
 				var dialog = new OpenFileDialog();
 				if (dialog.ShowDialog() == true)
 				{
-					record = new Root().GetRecord(dialog.FileName);
-					Data = new TextData(record.Read().GetAllBytes());
+					filename = dialog.FileName;
+					Data = new TextData(File.ReadAllBytes(filename));
 				}
 			}
 			else if (command == Command_File_Save)
 			{
-				if (record == null)
+				if (filename == null)
 					RunCommand(Command_File_SaveAs);
 				else
-					record.Write(new MemoryBinaryData(Data.GetBytes(Data.CoderUsed)));
+					File.WriteAllBytes(filename, Data.GetBytes(Data.CoderUsed));
 			}
 			else if (command == Command_File_SaveAs)
 			{
@@ -148,8 +147,7 @@ namespace NeoEdit.TextEditor
 						throw new Exception("A directory by that name already exists.");
 					if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
 						throw new Exception("Directory doesn't exist.");
-					var dir = new Root().GetRecord(Path.GetDirectoryName(dialog.FileName));
-					record = dir.CreateFile(Path.GetFileName(dialog.FileName));
+					filename = dialog.FileName;
 					RunCommand(Command_File_Save);
 				}
 			}
@@ -172,7 +170,7 @@ namespace NeoEdit.TextEditor
 			else
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = Data.GetBytes(encoding);
-			Launcher.Static.LaunchBinaryEditor(record, new MemoryBinaryData(data));
+			Launcher.Static.LaunchBinaryEditor(filename, new MemoryBinaryData(data));
 			this.Close();
 		}
 	}

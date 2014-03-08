@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Common.Data
+namespace NeoEdit.TextEditor
 {
 	public class TextData
 	{

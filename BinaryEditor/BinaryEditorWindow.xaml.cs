@@ -10,7 +10,6 @@ using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
-using NeoEdit.Records;
 
 namespace NeoEdit.BinaryEditor
 {
@@ -66,19 +65,19 @@ namespace NeoEdit.BinaryEditor
 		static BinaryEditorWindow() { UIHelper<BinaryEditorWindow>.Register(); }
 
 		readonly UIHelper<BinaryEditorWindow> uiHelper;
-		Record record;
-		public BinaryEditorWindow(Record _record = null, BinaryData data = null)
+		string filename;
+		public BinaryEditorWindow(string _filename = null, BinaryData data = null)
 		{
 			uiHelper = new UIHelper<BinaryEditorWindow>(this);
 			InitializeComponent();
 
-			record = _record;
+			filename = _filename;
 			if (data == null)
 			{
-				if (record == null)
+				if (filename == null)
 					data = new MemoryBinaryData();
 				else
-					data = record.Read();
+					data = new MemoryBinaryData(File.ReadAllBytes(filename));
 			}
 			Data = data;
 
@@ -124,7 +123,7 @@ namespace NeoEdit.BinaryEditor
 
 			if (command == Command_File_New)
 			{
-				record = null;
+				filename = null;
 				Data = new MemoryBinaryData();
 			}
 			else if (command == Command_File_Open)
@@ -133,17 +132,17 @@ namespace NeoEdit.BinaryEditor
 					var dialog = new OpenFileDialog();
 					if (dialog.ShowDialog() == true)
 					{
-						record = new Root().GetRecord(dialog.FileName);
-						Data = record.Read();
+						filename = dialog.FileName;
+						Data = new MemoryBinaryData(File.ReadAllBytes(filename));
 					}
 				}
 			}
 			else if (command == Command_File_Save)
 			{
-				if (record == null)
+				if (filename == null)
 					RunCommand(Command_File_SaveAs);
 				else
-					record.Write(Data);
+					File.WriteAllBytes(filename, Data.GetAllBytes());
 			}
 			else if (command == Command_File_SaveAs)
 			{
@@ -155,8 +154,7 @@ namespace NeoEdit.BinaryEditor
 							throw new Exception("A directory by that name already exists.");
 						if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
 							throw new Exception("Directory doesn't exist.");
-						var dir = new Root().GetRecord(Path.GetDirectoryName(dialog.FileName));
-						record = dir.CreateFile(Path.GetFileName(dialog.FileName));
+						filename = dialog.FileName;
 						RunCommand(Command_File_Save);
 					}
 				}
@@ -177,8 +175,7 @@ namespace NeoEdit.BinaryEditor
 			var encoding = Coder.Type.None;
 			if (header != "Auto")
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
-			var data = new TextData(Data.GetAllBytes(), encoding);
-			Launcher.Static.LaunchTextEditor(record, data);
+			Launcher.Static.LaunchTextEditor(filename, Data.GetAllBytes(), encoding);
 			this.Close();
 		}
 	}

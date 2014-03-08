@@ -6,7 +6,6 @@ using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
 using NeoEdit.Browser;
 using NeoEdit.Common.Transform;
-using NeoEdit.Records;
 using NeoEdit.TextEditor;
 
 namespace NeoEdit
@@ -68,11 +67,11 @@ namespace NeoEdit
 				{
 					case "text":
 						{
-							Record record = null;
+							string filename = null;
 							if (args.Length > 1)
 							{
-								record = new Root().GetRecord(args[1]);
-								if (record == null)
+								filename = args[1];
+								if (!File.Exists(filename))
 									throw new ArgumentException("Invalid file.");
 							}
 
@@ -84,19 +83,19 @@ namespace NeoEdit
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							return new TextEditorWindow(record, line: line, column: column);
+							return new TextEditorWindow(filename, line: line, column: column);
 						}
 					case "binary":
 						{
-							Record record = null;
+							string filename = null;
 							if (args.Length > 1)
 							{
-								record = new Root().GetRecord(args[1]);
-								if (record == null)
+								filename = args[1];
+								if (!File.Exists(filename))
 									throw new ArgumentException("Invalid file.");
 							}
 
-							return new BinaryEditorWindow(record);
+							return new BinaryEditorWindow(filename);
 						}
 					case "gzip":
 						{
@@ -122,8 +121,8 @@ namespace NeoEdit
 		public App()
 		{
 			NeoEdit.GUI.Launcher.Initialize(
-				_textEditorLauncher: (record, textdata) => new TextEditorWindow(record, textdata),
-				_binaryEditorLauncher: (record, binarydata) => new BinaryEditorWindow(record, binarydata),
+				_textEditorLauncher: (filename, bytes, encoding) => new TextEditorWindow(filename, bytes, encoding),
+				_binaryEditorLauncher: (filename, binarydata) => new BinaryEditorWindow(filename, binarydata),
 				_browserLauncher: () => new BrowserWindow()
 			);
 

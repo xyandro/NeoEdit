@@ -58,6 +58,7 @@
     <Compile Include="TextCanvas.xaml.cs">
       <DependentUpon>TextCanvas.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextData.cs" />
     <Compile Include="TextEditorWindow.xaml.cs">
       <DependentUpon>TextEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -111,10 +112,6 @@
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Records\Records.csproj">
-      <Project>{b0131301-7379-4eda-9a35-8c8e715429b1}</Project>
-      <Name>Records</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

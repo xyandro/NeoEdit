@@ -66,7 +66,7 @@ namespace NeoEdit.GUI
 			return found.Contents as T;
 		}
 
-		public static void Set(IEnumerable<Record> records, bool isCut)
+		public static void SetRecords(IEnumerable<Record> records, bool isCut)
 		{
 			var objs = new List<Record>(records);
 
