@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.Common.Data;
+using NeoEdit.BinaryEditor.Data;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.BinaryEditor.Converters

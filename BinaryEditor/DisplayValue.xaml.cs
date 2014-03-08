@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.BinaryEditor.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 

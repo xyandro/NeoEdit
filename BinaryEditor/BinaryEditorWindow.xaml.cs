@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Microsoft.Win32;
+using NeoEdit.BinaryEditor.Data;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
@@ -17,6 +18,7 @@ namespace NeoEdit.BinaryEditor
 	{
 		public static RoutedCommand Command_File_New = new RoutedCommand();
 		public static RoutedCommand Command_File_Open = new RoutedCommand();
+		public static RoutedCommand Command_File_OpenDump = new RoutedCommand();
 		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
 		public static RoutedCommand Command_File_Exit = new RoutedCommand();
@@ -94,6 +96,11 @@ namespace NeoEdit.BinaryEditor
 			return new BinaryEditorWindow(new MemoryBinaryData(bytes)) { FileName = filename };
 		}
 
+		public static BinaryEditorWindow CreateFromDump(string filename)
+		{
+			return new BinaryEditorWindow(new DumpBinaryData(filename)) { FileTitle = "Dump: ", FileName = filename };
+		}
+
 		public static BinaryEditorWindow CreateFromProcess(int pid)
 		{
 			var process = Process.GetProcessById(pid);
@@ -150,6 +157,18 @@ namespace NeoEdit.BinaryEditor
 						FileTitle = null;
 						FileName = dialog.FileName;
 						Data = new MemoryBinaryData(File.ReadAllBytes(FileName));
+					}
+				}
+			}
+			else if (command == Command_File_OpenDump)
+			{
+				{
+					var dialog = new OpenFileDialog();
+					if (dialog.ShowDialog() == true)
+					{
+						FileTitle = "Dump: ";
+						FileName = dialog.FileName;
+						Data = new DumpBinaryData(FileName);
 					}
 				}
 			}

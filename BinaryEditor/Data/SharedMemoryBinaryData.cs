@@ -1,7 +1,7 @@
 ﻿using System;
 using NeoEdit.Win32Interop;
 
-namespace NeoEdit.BinaryEditor
+namespace NeoEdit.BinaryEditor.Data
 {
 	class SharedMemoryBinaryData : BinaryData
 	{

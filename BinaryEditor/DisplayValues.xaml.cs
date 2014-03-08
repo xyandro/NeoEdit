@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using NeoEdit.BinaryEditor.Data;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor

@@ -15,6 +15,7 @@
 	<Window.CommandBindings>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_New" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Executed="Command_Executed"/>
+		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_OpenDump" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
@@ -88,6 +89,7 @@
 			<MenuItem Header="_File">
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_New" Header="_New" InputGestureText="Ctrl+N"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Header="_Open" InputGestureText="Ctrl+O"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_OpenDump" Header="Open _Dump"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Header="_Save" InputGestureText="Ctrl+S"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Header="Save _As"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Header="_Exit"/>

@@ -104,6 +104,13 @@ namespace NeoEdit
 
 							return BinaryEditorWindow.CreateFromProcess(Convert.ToInt32(args[1]));
 						}
+					case "binarydump":
+						{
+							if (args.Length < 2)
+								throw new ArgumentException("Not enough parameters.");
+
+							return BinaryEditorWindow.CreateFromDump(args[1]);
+						}
 					case "gzip":
 						{
 							var data = File.ReadAllBytes(args[1]);

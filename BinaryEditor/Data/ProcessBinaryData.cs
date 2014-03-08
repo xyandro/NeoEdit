@@ -4,7 +4,7 @@ using System.IO;
 using NeoEdit.Common.Data;
 using NeoEdit.Win32Interop;
 
-namespace NeoEdit.BinaryEditor
+namespace NeoEdit.BinaryEditor.Data
 {
 	class ProcessBinaryData : BinaryData
 	{
