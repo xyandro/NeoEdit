@@ -269,7 +269,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="About\NeoEdit.png" />
+    <Resource Include="..\Photoshop\NeoEdit.png">
+      <Link>About\NeoEdit.png</Link>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
