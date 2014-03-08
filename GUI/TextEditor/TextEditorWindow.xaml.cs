@@ -153,7 +153,7 @@ namespace NeoEdit.GUI.TextEditor
 				}
 			}
 			else if (command == Command_File_Exit) Close();
-			else if (command == Command_Edit_ShowClipboard) Clipboard.Show();
+			else if (command == Command_Edit_ShowClipboard) ClipboardWindow.Show();
 		}
 
 		void HighlightingClicked(object sender, RoutedEventArgs e)

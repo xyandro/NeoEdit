@@ -13,7 +13,7 @@ using NeoEdit.Records.Disks;
 
 namespace NeoEdit.GUI
 {
-	public partial class Clipboard : Window
+	public partial class ClipboardWindow : Window
 	{
 		class ClipboardData
 		{
@@ -151,11 +151,11 @@ namespace NeoEdit.GUI
 			return str;
 		}
 
-		static Clipboard current;
+		static ClipboardWindow current;
 		public static new void Show()
 		{
 			if (current == null)
-				current = new Clipboard();
+				current = new ClipboardWindow();
 			current.Focus();
 		}
 
@@ -167,15 +167,15 @@ namespace NeoEdit.GUI
 			return clipboard.FirstOrDefault(data => data.GUID == (string)guid);
 		}
 
-		static Clipboard() { UIHelper<Clipboard>.Register(); }
+		static ClipboardWindow() { UIHelper<ClipboardWindow>.Register(); }
 
 		[DepProp]
 		ObservableCollection<ClipboardData> Records { get { return uiHelper.GetPropValue<ObservableCollection<ClipboardData>>(); } set { uiHelper.SetPropValue(value); } }
 
-		readonly UIHelper<Clipboard> uiHelper;
-		Clipboard()
+		readonly UIHelper<ClipboardWindow> uiHelper;
+		ClipboardWindow()
 		{
-			uiHelper = new UIHelper<Clipboard>(this);
+			uiHelper = new UIHelper<ClipboardWindow>(this);
 			InitializeComponent();
 
 			uiHelper.AddObservableCallback(a => a.Records, () => items.SelectedItem = Current());

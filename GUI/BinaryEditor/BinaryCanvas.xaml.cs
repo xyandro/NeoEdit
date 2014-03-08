@@ -827,16 +827,16 @@ namespace NeoEdit.GUI.BinaryEditor
 						sb.Append((char)bytes[ctr]);
 					str = sb.ToString();
 				}
-				Clipboard.Set(bytes, str);
+				ClipboardWindow.Set(bytes, str);
 				if ((command == BinaryEditorWindow.Command_Edit_Cut) && (Insert))
 					Replace(null);
 			}
 			else if (command == BinaryEditorWindow.Command_Edit_Paste)
 			{
-				var bytes = Clipboard.GetBytes();
+				var bytes = ClipboardWindow.GetBytes();
 				if (bytes == null)
 				{
-					var str = Clipboard.GetString();
+					var str = ClipboardWindow.GetString();
 					if (str != null)
 						bytes = Coder.StringToBytes(str, InputCoderType);
 				}

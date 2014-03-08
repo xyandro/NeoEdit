@@ -1054,13 +1054,13 @@ namespace NeoEdit.GUI.TextEditor
 			{
 				var result = ranges[RangeType.Selection].Select(range => GetString(range)).ToArray();
 				if (result.Length != 0)
-					Clipboard.Set(result);
+					ClipboardWindow.Set(result);
 				if (command == TextEditorWindow.Command_Edit_Cut)
 					Replace(ranges[RangeType.Selection], null, false);
 			}
 			else if (command == TextEditorWindow.Command_Edit_Paste)
 			{
-				var result = Clipboard.GetStrings().ToList();
+				var result = ClipboardWindow.GetStrings().ToList();
 				if ((result == null) || (result.Count == 0))
 					return;
 

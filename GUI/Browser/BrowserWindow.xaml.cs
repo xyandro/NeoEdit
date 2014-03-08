@@ -306,15 +306,15 @@ namespace NeoEdit.GUI.Browser
 						record.Resume();
 					break;
 				case RecordAction.ActionName.Copy:
-					Clipboard.Set(records, false);
+					ClipboardWindow.Set(records, false);
 					break;
 				case RecordAction.ActionName.Cut:
-					Clipboard.Set(records, true);
+					ClipboardWindow.Set(records, true);
 					break;
 				case RecordAction.ActionName.Paste:
 					{
 						bool isCut;
-						if (!Clipboard.GetRecords(out records, out isCut))
+						if (!ClipboardWindow.GetRecords(out records, out isCut))
 							break;
 
 						var locationFiles = Location.Records.Select(record => record.Name).ToList();

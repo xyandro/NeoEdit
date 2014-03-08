@@ -61,8 +61,8 @@
     <Compile Include="Browser\Dialogs\EditSyncParams.xaml.cs">
       <DependentUpon>EditSyncParams.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Clipboard.xaml.cs">
-      <DependentUpon>Clipboard.xaml</DependentUpon>
+    <Compile Include="ClipboardWindow.xaml.cs">
+      <DependentUpon>ClipboardWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\HelpMenu.xaml.cs">
       <DependentUpon>HelpMenu.xaml</DependentUpon>
@@ -167,7 +167,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Clipboard.xaml">
+    <Page Include="ClipboardWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

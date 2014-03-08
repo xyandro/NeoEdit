@@ -162,7 +162,7 @@ namespace NeoEdit.GUI.BinaryEditor
 			}
 			else if (command == Command_File_Exit) { Close(); }
 			else if (command == Command_View_Values) { ShowValues = !ShowValues; }
-			else if (command == Command_Edit_ShowClipboard) { Clipboard.Show(); }
+			else if (command == Command_Edit_ShowClipboard) { ClipboardWindow.Show(); }
 		}
 
 		void InputEncodingClick(object sender, RoutedEventArgs e)
