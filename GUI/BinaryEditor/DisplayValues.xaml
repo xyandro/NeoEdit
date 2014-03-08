@@ -1,0 +1,174 @@
+﻿<StackPanel Name="self" x:Class="NeoEdit.GUI.BinaryEditor.DisplayValues"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:common="clr-namespace:NeoEdit.GUI.Common"
+    xmlns:binaryEditor="clr-namespace:NeoEdit.GUI.BinaryEditor"
+	mc:Ignorable="d"
+	d:DesignHeight="300" d:DesignWidth="300"
+	Background="LightGray">
+
+	<StackPanel.Style>
+		<Style>
+			<Style.Resources>
+				<Style TargetType="Label">
+					<Setter Property="Padding" Value="0,-2,0,0"/>
+				</Style>
+				<Style TargetType="binaryEditor:DisplayValue">
+					<Setter Property="Data" Value="{Binding Data, ElementName=self}"/>
+					<Setter Property="ChangeCount" Value="{Binding ChangeCount, ElementName=self}"/>
+					<Setter Property="SelStart" Value="{Binding SelStart, ElementName=self}"/>
+					<Setter Property="SelEnd" Value="{Binding SelEnd, ElementName=self}"/>
+					<Setter Property="FoundText" Value="{Binding FoundText, ElementName=self}"/>
+				</Style>
+			</Style.Resources>
+		</Style>
+	</StackPanel.Style>
+
+	<StackPanel Orientation="Horizontal">
+		<Label Content="Show:" Margin="0,0,5,0"/>
+		<CheckBox Content="_Little Endian" IsChecked="{Binding ShowLE, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Big Endian" IsChecked="{Binding ShowBE, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Ints" IsChecked="{Binding ShowInt, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Floats" IsChecked="{Binding ShowFloat, ElementName=self}" Margin="0,0,5,0"/>
+		<CheckBox Content="_Strings" IsChecked="{Binding ShowStr, ElementName=self}" Margin="0,0,5,0"/>
+	</StackPanel>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<!--UnsignedLE-->
+			<RowDefinition>
+				<RowDefinition.Height>
+					<MultiBinding Converter="{common:ExpressionConverter}">
+						<Binding Path="ShowLE" ElementName="self"/>
+						<Binding Path="ShowInt" ElementName="self"/>
+					</MultiBinding>
+				</RowDefinition.Height>
+			</RowDefinition>
+			<!--SignedLE-->
+			<RowDefinition>
+				<RowDefinition.Height>
+					<MultiBinding Converter="{common:ExpressionConverter}">
+						<Binding Path="ShowLE" ElementName="self"/>
+						<Binding Path="ShowInt" ElementName="self"/>
+					</MultiBinding>
+				</RowDefinition.Height>
+			</RowDefinition>
+			<!--UnsignedBE-->
+			<RowDefinition>
+				<RowDefinition.Height>
+					<MultiBinding Converter="{common:ExpressionConverter}">
+						<Binding Path="ShowBE" ElementName="self"/>
+						<Binding Path="ShowInt" ElementName="self"/>
+					</MultiBinding>
+				</RowDefinition.Height>
+			</RowDefinition>
+			<!--SignedBE-->
+			<RowDefinition>
+				<RowDefinition.Height>
+					<MultiBinding Converter="{common:ExpressionConverter}">
+						<Binding Path="ShowBE" ElementName="self"/>
+						<Binding Path="ShowInt" ElementName="self"/>
+					</MultiBinding>
+				</RowDefinition.Height>
+			</RowDefinition>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="UnsignedLE:"/>
+		<binaryEditor:DisplayValue Grid.Row="0" Grid.Column="1" Type="UInt8LE"/>
+		<binaryEditor:DisplayValue Grid.Row="0" Grid.Column="2" Type="UInt16LE"/>
+		<binaryEditor:DisplayValue Grid.Row="0" Grid.Column="3" Type="UInt32LE"/>
+		<binaryEditor:DisplayValue Grid.Row="0" Grid.Column="4" Type="UInt64LE"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="SignedLE:"/>
+		<binaryEditor:DisplayValue Grid.Row="1" Grid.Column="1" Type="Int8LE"/>
+		<binaryEditor:DisplayValue Grid.Row="1" Grid.Column="2" Type="Int16LE"/>
+		<binaryEditor:DisplayValue Grid.Row="1" Grid.Column="3" Type="Int32LE"/>
+		<binaryEditor:DisplayValue Grid.Row="1" Grid.Column="4" Type="Int64LE"/>
+
+		<Label Grid.Row="2" Grid.Column="0" Content="UnsignedBE:"/>
+		<binaryEditor:DisplayValue Grid.Row="2" Grid.Column="1" Type="UInt8BE"/>
+		<binaryEditor:DisplayValue Grid.Row="2" Grid.Column="2" Type="UInt16BE"/>
+		<binaryEditor:DisplayValue Grid.Row="2" Grid.Column="3" Type="UInt32BE"/>
+		<binaryEditor:DisplayValue Grid.Row="2" Grid.Column="4" Type="UInt64BE"/>
+
+		<Label Grid.Row="3" Grid.Column="0" Content="SignedBE:"/>
+		<binaryEditor:DisplayValue Grid.Row="3" Grid.Column="1" Type="Int8BE"/>
+		<binaryEditor:DisplayValue Grid.Row="3" Grid.Column="2" Type="Int16BE"/>
+		<binaryEditor:DisplayValue Grid.Row="3" Grid.Column="3" Type="Int32BE"/>
+		<binaryEditor:DisplayValue Grid.Row="3" Grid.Column="4" Type="Int64BE"/>
+	</Grid>
+
+	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowFloat, ElementName=self, Converter={common:ExpressionConverter}}">
+		<Label Content="Float:"/>
+		<binaryEditor:DisplayValue Type="Single"/>
+		<binaryEditor:DisplayValue Type="Double"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={common:ExpressionConverter}}">
+		<Label Content="UTF7:"/>
+		<binaryEditor:DisplayValue Type="UTF7"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={common:ExpressionConverter}}">
+		<Label Content="UTF8:"/>
+		<binaryEditor:DisplayValue Type="UTF8"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{common:ExpressionConverter}">
+				<Binding Path="ShowLE" ElementName="self"/>
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
+		<Label Content="UTF16LE:"/>
+		<binaryEditor:DisplayValue Type="UTF16LE"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{common:ExpressionConverter}">
+				<Binding Path="ShowBE" ElementName="self"/>
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
+		<Label Content="UTF16BE:"/>
+		<binaryEditor:DisplayValue Type="UTF16BE"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{common:ExpressionConverter}">
+				<Binding Path="ShowLE" ElementName="self"/>
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
+		<Label Content="UTF32LE:"/>
+		<binaryEditor:DisplayValue Type="UTF32LE"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal">
+		<StackPanel.Visibility>
+			<MultiBinding Converter="{common:ExpressionConverter}">
+				<Binding Path="ShowBE" ElementName="self"/>
+				<Binding Path="ShowStr" ElementName="self"/>
+			</MultiBinding>
+		</StackPanel.Visibility>
+
+		<Label Content="UTF32BE:"/>
+		<binaryEditor:DisplayValue Type="UTF32BE"/>
+	</StackPanel>
+
+</StackPanel>

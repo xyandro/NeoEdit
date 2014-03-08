@@ -1,0 +1,253 @@
+﻿<Window Name="self" x:Class="NeoEdit.GUI.TextEditor.TextEditorWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:common="clr-namespace:NeoEdit.GUI.Common"
+	xmlns:textEditor="clr-namespace:NeoEdit.GUI.TextEditor"
+	Title="NeoEdit Text Editor" Height="400" Width="400" WindowState="Maximized">
+
+	<Window.CommandBindings>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_New" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Open" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Save" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Undo" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Redo" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Cut" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Copy" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Paste" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_BOM" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToUpper" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToLower" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToHex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_FromHex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToChar" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_FromChar" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Width" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Trim" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SetKeys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SetValues" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_KeysToValues" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Reverse" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Randomize" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_All" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Unselect" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Lines" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Marks" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Find" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Selection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Find" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Clear" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_LimitToSelection" Executed="Command_Executed"/>
+	</Window.CommandBindings>
+	
+	<Window.InputBindings>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_File_New" Key="N" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_File_Open" Key="O" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_File_Save" Key="S" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Undo" Key="Z" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Redo" Key="Z" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Cut" Key="X" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Copy" Key="C" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Paste" Key="V" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Key="C" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Key="F" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Key="F3"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_ToUpper" Key="U" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_ToLower" Key="U" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_ToHex" Key="H" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_FromHex" Key="H" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_ToChar" Key="D3" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_FromChar" Key="D3" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_KeysToValues" Key="K" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Key="M" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_All" Key="A" Modifiers="Control"/>
+	</Window.InputBindings>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Menu Grid.ColumnSpan="2">
+			<MenuItem Header="_File">
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_New" Header="_New" InputGestureText="Ctrl+N"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Open" Header="_Open" InputGestureText="Ctrl+O"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save" InputGestureText="Ctrl+S"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_SaveAs" Header="Save _As"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="_Exit"/>
+			</MenuItem>
+			<MenuItem Header="_Edit">
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Undo" Header="_Undo" InputGestureText="Ctrl+Z"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Redo" Header="_Redo" InputGestureText="Ctrl+Shift+Z"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Cut" Header="C_ut" InputGestureText="Ctrl+X"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Copy" Header="_Copy" InputGestureText="Ctrl+C"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Paste" Header="_Paste" InputGestureText="Ctrl+V"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard" InputGestureText="Ctrl+Shift+C"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find" InputGestureText="Ctrl+F"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next" InputGestureText="F3"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Header="Find _Prev" InputGestureText="Shift+F3"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line" InputGestureText="Ctrl+G"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto c_olumn"/>
+				<Separator/>
+				<MenuItem Header="_Encode" Click="EncodeClick">
+					<MenuItem.ItemContainerStyle>
+						<Style TargetType="MenuItem">
+							<Setter Property="IsChecked">
+								<Setter.Value>
+									<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] == [1]">
+										<Binding Path="Header" RelativeSource="{RelativeSource Self}"/>
+										<Binding Path="CoderUsed" ElementName="self"/>
+									</MultiBinding>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</MenuItem.ItemContainerStyle>
+
+					<MenuItem Header="Current"/>
+					<Separator/>
+					<MenuItem Header="UTF8"/>
+					<MenuItem Header="UTF7"/>
+					<MenuItem Header="UTF16LE"/>
+					<MenuItem Header="UTF16BE"/>
+					<MenuItem Header="UTF32LE"/>
+					<MenuItem Header="UTF32BE"/>
+					<Separator/>
+					<MenuItem Header="Base64"/>
+				</MenuItem>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
+			</MenuItem>
+			<MenuItem Header="_Data">
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToUpper" Header="Upper case" InputGestureText="Ctrl+U"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToLower" Header="Lower case" InputGestureText="Ctrl+Shift+U"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToHex" Header="To hex" InputGestureText="Ctrl+H"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromHex" Header="From hex" InputGestureText="Ctrl+Shift+H"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToChar" Header="To char" InputGestureText="Ctrl+Shift+D3"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromChar" Header="From char" InputGestureText="Ctrl+D3"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Width" Header="_Width"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Trim" Header="_Trim"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SetKeys" Header="Set _keys"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SetValues" Header="Set _values"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_KeysToValues" Header="Keys to values" InputGestureText="Ctrl+K"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Reverse" Header="_Reverse selections"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort" Header="_Sort selections"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Header="_Evaluate selections"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Header="_Duplicates"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Randomize" Header="R_andomize"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>
+			</MenuItem>
+			<MenuItem Header="_Select">
+				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection" InputGestureText="Ctrl+M"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All" InputGestureText="Ctrl+A"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unselect" Header="_Unselect"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="_Single"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Marks" Header="_Marks"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find results"/>
+			</MenuItem>
+			<MenuItem Header="_Mark">
+				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection" InputGestureText="Ctrl+M"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Selection" Header="_Selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Find" Header="_Find results"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Clear" Header="_Clear marks"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_LimitToSelection" Header="_Limit to selection"/>
+			</MenuItem>
+			<MenuItem Header="_View">
+				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={common:ExpressionConverter}, ConverterParameter=Type:#27#NeoEdit.GUI.TextEditor.Highlighting+HighlightingType#27#}">
+					<MenuItem.ItemContainerStyle>
+						<Style TargetType="MenuItem">
+							<EventSetter Event="Click" Handler="HighlightingClicked"/>
+							<Setter Property="IsChecked">
+								<Setter.Value>
+									<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] == [1]">
+										<Binding Path="Header" RelativeSource="{RelativeSource Self}"/>
+										<Binding Path="HighlightType" ElementName="self"/>
+									</MultiBinding>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</MenuItem.ItemContainerStyle>
+				</MenuItem>
+			</MenuItem>
+			<common:WindowMenu/>
+			<common:HelpMenu/>
+		</Menu>
+
+		<textEditor:TextCanvas x:Name="canvas" Grid.Row="1"
+			Data="{Binding Data, ElementName=self, Mode=TwoWay}"
+			HighlightType="{Binding HighlightType, ElementName=self, Mode=TwoWay}"
+			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"
+			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=OneWayToSource}"
+			xScrollMaximum="{Binding Maximum, ElementName=xScroll, Mode=OneWayToSource}"
+			xScrollValue="{Binding Value, ElementName=xScroll, Mode=TwoWay}"
+			yScrollSmallChange="{Binding SmallChange, ElementName=yScroll, Mode=OneWayToSource}"
+			yScrollLargeChange="{Binding LargeChange, ElementName=yScroll, Mode=OneWayToSource}"
+			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=OneWayToSource}"
+			yScrollValue="{Binding Value, ElementName=yScroll, Mode=TwoWay}"
+		/>
+		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
+		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
+		<StatusBar Grid.ColumnSpan="2" Grid.Row="3">
+			<StatusBarItem>
+				<TextBlock Text="Line"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Line, ElementName=canvas}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Col"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Column, ElementName=canvas}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Ch"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Index, ElementName=canvas}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Selections"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding NumSelections, ElementName=canvas}"/>
+			</StatusBarItem>
+		</StatusBar>
+	</Grid>
+
+</Window>

@@ -59,7 +59,7 @@ namespace NeoEdit
 			try
 			{
 				if (args.Length == 0)
-					return new GUI.BrowserUI.Browser();
+					return new GUI.Browser.BrowserWindow();
 
 				switch (args[0])
 				{
@@ -81,7 +81,7 @@ namespace NeoEdit
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							return new GUI.TextEditorUI.TextEditor(record, line: line, column: column);
+							return new GUI.TextEditor.TextEditorWindow(record, line: line, column: column);
 						}
 					case "binary":
 						{
@@ -93,7 +93,7 @@ namespace NeoEdit
 									throw new ArgumentException("Invalid file.");
 							}
 
-							return new GUI.BinaryEditorUI.BinaryEditor(record);
+							return new GUI.BinaryEditor.BinaryEditorWindow(record);
 						}
 					case "gzip":
 						{

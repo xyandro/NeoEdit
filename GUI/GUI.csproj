@@ -48,17 +48,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutUI\About.xaml.cs">
-      <DependentUpon>About.xaml</DependentUpon>
+    <Compile Include="About\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\Converters\IsStrConverter.cs" />
-    <Compile Include="BrowserUI\Dialogs\ViewImage.xaml.cs">
+    <Compile Include="BinaryEditor\Converters\IsStrConverter.cs" />
+    <Compile Include="Browser\Dialogs\ViewImage.xaml.cs">
       <DependentUpon>ViewImage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BrowserUI\Dialogs\Log.xaml.cs">
+    <Compile Include="Browser\Dialogs\Log.xaml.cs">
       <DependentUpon>Log.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BrowserUI\Dialogs\EditSyncParams.xaml.cs">
+    <Compile Include="Browser\Dialogs\EditSyncParams.xaml.cs">
       <DependentUpon>EditSyncParams.xaml</DependentUpon>
     </Compile>
     <Compile Include="Clipboard.xaml.cs">
@@ -70,43 +70,43 @@
     <Compile Include="Common\WindowMenu.xaml.cs">
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\Dialogs\SymmetricKeyDialog.xaml.cs">
+    <Compile Include="BinaryEditor\Dialogs\SymmetricKeyDialog.xaml.cs">
       <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\Dialogs\AsymmetricKeyDialog.xaml.cs">
+    <Compile Include="BinaryEditor\Dialogs\AsymmetricKeyDialog.xaml.cs">
       <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\BinaryCanvas.xaml.cs">
+    <Compile Include="BinaryEditor\BinaryCanvas.xaml.cs">
       <DependentUpon>BinaryCanvas.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\Converters\ValidValueConverter.cs" />
-    <Compile Include="BinaryEditorUI\Dialogs\FindDialog.xaml.cs">
+    <Compile Include="BinaryEditor\Converters\ValidValueConverter.cs" />
+    <Compile Include="BinaryEditor\Dialogs\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\ExpressionConverter.cs" />
-    <Compile Include="BinaryEditorUI\DisplayValue.xaml.cs">
+    <Compile Include="BinaryEditor\DisplayValue.xaml.cs">
       <DependentUpon>DisplayValue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditorUI\Converters\DisplayValueConverter.cs" />
-    <Compile Include="BinaryEditorUI\DisplayValues.xaml.cs">
+    <Compile Include="BinaryEditor\Converters\DisplayValueConverter.cs" />
+    <Compile Include="BinaryEditor\DisplayValues.xaml.cs">
       <DependentUpon>DisplayValues.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BrowserUI\BrowserColumn.xaml.cs">
+    <Compile Include="Browser\BrowserColumn.xaml.cs">
       <DependentUpon>BrowserColumn.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BrowserUI\BrowserListView.xaml.cs">
+    <Compile Include="Browser\BrowserListView.xaml.cs">
       <DependentUpon>BrowserListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BrowserUI\Converters\ColumnMenuItems.cs" />
-    <Compile Include="BrowserUI\Converters\SortMenuItems.cs" />
-    <Compile Include="BrowserUI\Converters\ActionMenuItems.cs" />
-    <Compile Include="BrowserUI\Converters\PropertyToSortIndicatorHeader.cs" />
-    <Compile Include="BrowserUI\Converters\PropertyFormatter.cs" />
-    <Compile Include="BrowserUI\SizingGridView.cs" />
+    <Compile Include="Browser\Converters\ColumnMenuItems.cs" />
+    <Compile Include="Browser\Converters\SortMenuItems.cs" />
+    <Compile Include="Browser\Converters\ActionMenuItems.cs" />
+    <Compile Include="Browser\Converters\PropertyToSortIndicatorHeader.cs" />
+    <Compile Include="Browser\Converters\PropertyFormatter.cs" />
+    <Compile Include="Browser\SizingGridView.cs" />
     <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BrowserUI\Dialogs\Rename.xaml.cs">
+    <Compile Include="Browser\Dialogs\Rename.xaml.cs">
       <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\UIHelper.cs" />
@@ -114,56 +114,56 @@
       <DependentUpon>GetNumDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUIRecord.cs" />
-    <Compile Include="TextEditorUI\Dialogs\WidthDialog.xaml.cs">
+    <Compile Include="TextEditor\Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditorUI\Dialogs\FindDialog.xaml.cs">
+    <Compile Include="TextEditor\Dialogs\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditorUI\Highlighting.cs" />
-    <Compile Include="TextEditorUI\TextCanvas.xaml.cs">
+    <Compile Include="TextEditor\Highlighting.cs" />
+    <Compile Include="TextEditor\TextCanvas.xaml.cs">
       <DependentUpon>TextCanvas.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditorUI\TextEditor.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
+    <Compile Include="TextEditor\TextEditorWindow.xaml.cs">
+      <DependentUpon>TextEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="AboutUI\About.xaml">
+    <Page Include="About\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditorUI\BinaryCanvas.xaml">
+    <Page Include="BinaryEditor\BinaryCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditorUI\Dialogs\SymmetricKeyDialog.xaml">
+    <Page Include="BinaryEditor\Dialogs\SymmetricKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="BinaryEditorUI\Dialogs\AsymmetricKeyDialog.xaml">
+    <Page Include="BinaryEditor\Dialogs\AsymmetricKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="BinaryEditorUI\Dialogs\FindDialog.xaml">
+    <Page Include="BinaryEditor\Dialogs\FindDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditorUI\DisplayValue.xaml">
+    <Page Include="BinaryEditor\DisplayValue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditorUI\DisplayValues.xaml">
+    <Page Include="BinaryEditor\DisplayValues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BrowserUI\Dialogs\ViewImage.xaml">
+    <Page Include="Browser\Dialogs\ViewImage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="BrowserUI\Dialogs\Log.xaml">
+    <Page Include="Browser\Dialogs\Log.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="BrowserUI\Dialogs\EditSyncParams.xaml">
+    <Page Include="Browser\Dialogs\EditSyncParams.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -183,49 +183,49 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="BrowserUI\Dialogs\Rename.xaml">
+    <Page Include="Browser\Dialogs\Rename.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditorUI\BinaryEditor.xaml">
+    <Page Include="BinaryEditor\BinaryEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BrowserUI\Browser.xaml">
+    <Page Include="Browser\BrowserWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BrowserUI\BrowserColumn.xaml">
+    <Page Include="Browser\BrowserColumn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BrowserUI\BrowserListView.xaml">
+    <Page Include="Browser\BrowserListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="BinaryEditorUI\BinaryEditor.xaml.cs">
-      <DependentUpon>BinaryEditor.xaml</DependentUpon>
+    <Compile Include="BinaryEditor\BinaryEditorWindow.xaml.cs">
+      <DependentUpon>BinaryEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BrowserUI\Browser.xaml.cs">
-      <DependentUpon>Browser.xaml</DependentUpon>
+    <Compile Include="Browser\BrowserWindow.xaml.cs">
+      <DependentUpon>BrowserWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\GetNumDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TextEditorUI\Dialogs\WidthDialog.xaml">
+    <Page Include="TextEditor\Dialogs\WidthDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TextEditorUI\Dialogs\FindDialog.xaml">
+    <Page Include="TextEditor\Dialogs\FindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TextEditorUI\TextCanvas.xaml">
+    <Page Include="TextEditor\TextCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TextEditorUI\TextEditor.xaml">
+    <Page Include="TextEditor\TextEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -259,9 +259,6 @@
     <Resource Include="Resources\Anonymous Pro.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="AboutUI\NeoEdit.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>
@@ -270,6 +267,9 @@
       <Project>{b0131301-7379-4eda-9a35-8c8e715429b1}</Project>
       <Name>Records</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="About\NeoEdit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
