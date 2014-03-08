@@ -16,7 +16,7 @@ $WCMODS?#error Has:// No$ local modifications
 $WCUNVER?#error Has:// No$ unversioned items
 #endif
 
-[assembly: AssemblyTitle("GUI")]
+[assembly: AssemblyTitle("TextEditor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Randon Spackman")]
