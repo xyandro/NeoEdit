@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.GUI.Common;
 
-namespace NeoEdit.GUI.TextEditor.Dialogs
+namespace NeoEdit.TextEditor.Dialogs
 {
 	public partial class FindDialog : Window
 	{

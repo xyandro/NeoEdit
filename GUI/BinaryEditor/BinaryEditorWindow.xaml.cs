@@ -177,7 +177,7 @@ namespace NeoEdit.GUI.BinaryEditor
 			if (header != "Auto")
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = new TextData(Data.GetAllBytes(), encoding);
-			new TextEditor.TextEditorWindow(record, data);
+			Launcher.Static.LauncherTextEditor(record, data);
 			this.Close();
 		}
 	}

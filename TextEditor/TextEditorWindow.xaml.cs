@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NeoEdit.GUI;
+using NeoEdit.GUI.BinaryEditor;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +13,7 @@ using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 using NeoEdit.Records;
 
-namespace NeoEdit.GUI.TextEditor
+namespace NeoEdit.TextEditor
 {
 	public partial class TextEditorWindow : Window
 	{
@@ -171,7 +173,7 @@ namespace NeoEdit.GUI.TextEditor
 			else
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = Data.GetBytes(encoding);
-			new BinaryEditor.BinaryEditorWindow(record, new MemoryBinaryData(data));
+			new BinaryEditorWindow(record, new MemoryBinaryData(data));
 			this.Close();
 		}
 	}

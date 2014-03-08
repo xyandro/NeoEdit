@@ -114,19 +114,6 @@
       <DependentUpon>GetNumDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUIRecord.cs" />
-    <Compile Include="TextEditor\Dialogs\WidthDialog.xaml.cs">
-      <DependentUpon>WidthDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor\Dialogs\FindDialog.xaml.cs">
-      <DependentUpon>FindDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor\Highlighting.cs" />
-    <Compile Include="TextEditor\TextCanvas.xaml.cs">
-      <DependentUpon>TextCanvas.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor\TextEditorWindow.xaml.cs">
-      <DependentUpon>TextEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Page Include="About\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -213,24 +200,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TextEditor\Dialogs\WidthDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TextEditor\Dialogs\FindDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TextEditor\TextCanvas.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TextEditor\TextEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

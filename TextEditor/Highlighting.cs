@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
 
-namespace NeoEdit.GUI.TextEditor
+namespace NeoEdit.TextEditor
 {
 	class Highlighting
 	{

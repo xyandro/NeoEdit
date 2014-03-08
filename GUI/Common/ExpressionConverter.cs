@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace NeoEdit.GUI.Common
 {
-	class ExpressionConverter : MarkupExtension, IMultiValueConverter, IValueConverter
+	public class ExpressionConverter : MarkupExtension, IMultiValueConverter, IValueConverter
 	{
 		static ExpressionConverter converter;
 		public override object ProvideValue(IServiceProvider serviceProvider)

@@ -1,4 +1,5 @@
 ﻿using System;
+using NeoEdit.GUI;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,9 +13,9 @@ using NeoEdit.Common;
 using NeoEdit.Common.Data;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
-using NeoEdit.GUI.TextEditor.Dialogs;
+using NeoEdit.TextEditor.Dialogs;
 
-namespace NeoEdit.GUI.TextEditor
+namespace NeoEdit.TextEditor
 {
 	partial class TextCanvas : Canvas
 	{

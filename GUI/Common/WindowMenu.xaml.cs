@@ -22,7 +22,7 @@ namespace NeoEdit.GUI.Common
 
 		void WindowTextEditor(object sender, RoutedEventArgs e)
 		{
-			new TextEditor.TextEditorWindow();
+			Launcher.Static.LauncherTextEditor();
 		}
 	}
 }

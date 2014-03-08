@@ -12,9 +12,9 @@ using System.Windows.Data;
 
 namespace NeoEdit.GUI.Common
 {
-	class DepPropAttribute : Attribute { }
+	public class DepPropAttribute : Attribute { }
 
-	class UIHelper<ControlType> where ControlType : DependencyObject
+	public class UIHelper<ControlType> where ControlType : DependencyObject
 	{
 		static Dictionary<string, DependencyProperty> dependencyProperty;
 		readonly ControlType control;

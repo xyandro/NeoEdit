@@ -81,7 +81,7 @@ namespace NeoEdit
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							return new GUI.TextEditor.TextEditorWindow(record, line: line, column: column);
+							return new TextEditor.TextEditorWindow(record, line: line, column: column);
 						}
 					case "binary":
 						{
@@ -118,6 +118,10 @@ namespace NeoEdit
 
 		public App()
 		{
+			NeoEdit.GUI.Launcher.Initialize(
+				_textEditorLauncher: (record, textdata) => new TextEditor.TextEditorWindow(record, textdata)
+			);
+
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
 			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NeoEdit.Records.Processes.ProcessRecord).TypeHandle);
 		}

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using NeoEdit.GUI.Common;
 
-namespace NeoEdit.GUI.TextEditor.Dialogs
+namespace NeoEdit.TextEditor.Dialogs
 {
 	public partial class WidthDialog : Window
 	{
