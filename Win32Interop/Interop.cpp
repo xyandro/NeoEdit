@@ -42,7 +42,10 @@ namespace NeoEdit
 		{
 			try
 			{
-				return gcnew VirtualQueryInfo(Win32Lib::VirtualQuery(handle->Get(), (byte*)(intptr_t)index));
+				auto result = Win32Lib::VirtualQuery(handle->Get(), (byte*)(intptr_t)index);
+				if (result == nullptr)
+					return nullptr;
+				return gcnew VirtualQueryInfo(result);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}

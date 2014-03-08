@@ -108,7 +108,7 @@ namespace
 	{
 		auto size = 2048;
 		shared_ptr<UNICODE_STRING> str((UNICODE_STRING*)malloc(size), free);
-		auto result = NtQueryObject(handle.get(), ObjectNameInformation, str.get(), size, NULL);
+		auto result = NtQueryObject(handle.get(), ObjectNameInformation, str.get(), size, nullptr);
 		if (!NT_SUCCESS(result))
 			Win32Exception::Throw();
 
@@ -124,7 +124,7 @@ namespace
 
 			WCHAR port[50];
 			DWORD size = sizeof(port); 
-			if ((err = RegQueryValueEx(key, name.c_str(), NULL, NULL, (BYTE*)port, &size)) == ERROR_SUCCESS)
+			if ((err = RegQueryValueEx(key, name.c_str(), nullptr, nullptr, (BYTE*)port, &size)) == ERROR_SUCCESS)
 				name = port;
 			else
 				name += L" UNKNOWN PORT";
@@ -142,7 +142,7 @@ namespace
 	SIZE_T GetSizeOfMap(shared_ptr<void> handle)
 	{
 		auto ptr = MapViewOfFile(handle.get(), FILE_MAP_READ, 0, 0, 0);
-		if (ptr == NULL)
+		if (ptr == nullptr)
 			Win32Exception::Throw();
 		shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
 
@@ -156,7 +156,7 @@ namespace
 		if (type == L"Semaphore")
 		{
 			SEMAPHORE_BASIC_INFORMATION info;
-			if (!NT_SUCCESS(NtQuerySemaphore(handle.get(), SemaphoreBasicInformation, &info, sizeof(info), NULL)))
+			if (!NT_SUCCESS(NtQuerySemaphore(handle.get(), SemaphoreBasicInformation, &info, sizeof(info), nullptr)))
 				Win32Exception::Throw();
 
 			return to_wstring(info.CurrentCount) + L" (Max " + to_wstring(info.MaximumCount) + L")";
@@ -182,7 +182,7 @@ namespace
 	shared_ptr<void> OpenProcess(DWORD pid, bool throwOnFail = true)
 	{
 		auto handle = ::OpenProcess(PROCESS_DUP_HANDLE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, pid);
-		if (handle == NULL)
+		if (handle == nullptr)
 			if (throwOnFail)
 				Win32Exception::Throw();
 			else
@@ -209,14 +209,14 @@ namespace
 		shared_ptr<void> tokenDeleter(token, CloseHandle);
 
 		LUID luid;
-		if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid))
+		if (!LookupPrivilegeValue(nullptr, SE_DEBUG_NAME, &luid))
 			Win32Exception::Throw();
 
 		TOKEN_PRIVILEGES tp;
 		tp.PrivilegeCount = 1;
 		tp.Privileges[0].Luid = luid;
 		tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-		if (!AdjustTokenPrivileges(token, false, &tp, sizeof(tp), NULL, NULL))
+		if (!AdjustTokenPrivileges(token, false, &tp, sizeof(tp), nullptr, nullptr))
 			Win32Exception::Throw();
 	}
 
@@ -227,7 +227,7 @@ namespace
 		while (true)
 		{
 			types = shared_ptr<OBJECT_ALL_TYPES_INFORMATION>((OBJECT_ALL_TYPES_INFORMATION*)malloc(size), free);
-			auto result = NtQueryObject(NULL, ObjectAllTypesInformation, types.get(), size, &size);
+			auto result = NtQueryObject(nullptr, ObjectAllTypesInformation, types.get(), size, &size);
 			if (NT_SUCCESS(result))
 				break;
 			if (result == STATUS_INFO_LENGTH_MISMATCH)
@@ -318,7 +318,7 @@ namespace NeoEdit
 				while (true)
 				{
 					handleInfo = shared_ptr<SYSTEM_HANDLE_INFORMATION_EX>((SYSTEM_HANDLE_INFORMATION_EX*)malloc(size), free);
-					auto ret = NtQuerySystemInformation(SystemExtendedHandleInformation, handleInfo.get(), size, NULL);
+					auto ret = NtQuerySystemInformation(SystemExtendedHandleInformation, handleInfo.get(), size, nullptr);
 
 					auto sizeRequired = sizeof(SYSTEM_HANDLE_INFORMATION_EX) + sizeof(SYSTEM_HANDLE_INFORMATION_EX) * (handleInfo->NumberOfHandles - 1); // The -1 is because SYSTEM_HANDLE_INFORMATION_EX has one.
 					if (size < sizeRequired)
@@ -418,7 +418,7 @@ namespace NeoEdit
 				auto dupHandle = DuplicateHandle(process, handle);
 
 				auto ptr = (byte*)MapViewOfFile(dupHandle.get(), FILE_MAP_READ, 0, 0, 0);
-				if (ptr == NULL)
+				if (ptr == nullptr)
 					Win32Exception::Throw();
 				shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
 
@@ -431,7 +431,7 @@ namespace NeoEdit
 				auto dupHandle = DuplicateHandle(process, handle);
 
 				auto ptr = (byte*)MapViewOfFile(dupHandle.get(), FILE_MAP_WRITE, 0, 0, 0);
-				if (ptr == NULL)
+				if (ptr == nullptr)
 					Win32Exception::Throw();
 				shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
 

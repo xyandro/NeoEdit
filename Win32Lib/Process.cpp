@@ -29,7 +29,7 @@ namespace NeoEdit
 							suspended.insert(threadId);
 
 							auto threadHandle = OpenThread(THREAD_SUSPEND_RESUME, FALSE, threadId);
-							if (threadHandle == NULL)
+							if (threadHandle == nullptr)
 								Win32Exception::Throw();
 							shared_ptr<void> threadHandleDeleter(threadHandle, CloseHandle);
 
@@ -49,7 +49,7 @@ namespace NeoEdit
 				for each (auto threadId in *threadSet)
 				{
 					auto threadHandle = OpenThread(THREAD_SUSPEND_RESUME, FALSE, threadId);
-					if (threadHandle == NULL)
+					if (threadHandle == nullptr)
 						Win32Exception::Throw();
 					shared_ptr<void> threadHandleDeleter(threadHandle, CloseHandle);
 
@@ -87,7 +87,7 @@ namespace NeoEdit
 			shared_ptr<void> Process::OpenReadMemoryProcess(DWORD pid)
 			{
 				auto handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION, false, pid);
-				if (handle == NULL)
+				if (handle == nullptr)
 					Win32Exception::Throw();
 
 				return shared_ptr<void>(handle, CloseHandle);

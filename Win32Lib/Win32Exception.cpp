@@ -22,7 +22,7 @@ namespace NeoEdit
 		void Win32Exception::Throw()
 		{
 			wchar_t message[4096];
-			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(message), sizeof(message), NULL);
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(message), sizeof(message), nullptr);
 			throw Win32Exception(L"Error: " + to_wstring(GetLastError()) + L" : " + message);
 		}
 	}
