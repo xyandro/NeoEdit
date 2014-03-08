@@ -3,7 +3,13 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:common="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:textEditor="clr-namespace:NeoEdit.TextEditor"
-	Title="NeoEdit Text Editor" Height="400" Width="400" WindowState="Maximized">
+	Height="400" Width="400" WindowState="Maximized">
+
+	<Window.Title>
+		<MultiBinding StringFormat="{}{0} - NeoEdit Text Editor">
+			<Binding ElementName="self" Path="FileName"/>
+		</MultiBinding>
+	</Window.Title>
 
 	<Window.CommandBindings>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_New" Executed="Command_Executed"/>

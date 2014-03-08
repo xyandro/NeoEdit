@@ -7,7 +7,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.TextEditor
 {
-	public class TextData
+	class TextData
 	{
 		string _data;
 		string data { get { return _data; } set { _data = value; RecalculateLines(); } }

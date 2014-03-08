@@ -56,6 +56,8 @@ namespace NeoEdit.BinaryEditor
 		public static RoutedCommand Command_Verify_DSA = new RoutedCommand();
 
 		[DepProp]
+		string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
@@ -65,19 +67,18 @@ namespace NeoEdit.BinaryEditor
 		static BinaryEditorWindow() { UIHelper<BinaryEditorWindow>.Register(); }
 
 		readonly UIHelper<BinaryEditorWindow> uiHelper;
-		string filename;
-		public BinaryEditorWindow(string _filename = null, BinaryData data = null)
+		public BinaryEditorWindow(string filename = null, BinaryData data = null)
 		{
 			uiHelper = new UIHelper<BinaryEditorWindow>(this);
 			InitializeComponent();
 
-			filename = _filename;
+			FileName = filename;
 			if (data == null)
 			{
-				if (filename == null)
+				if (FileName == null)
 					data = new MemoryBinaryData();
 				else
-					data = new MemoryBinaryData(File.ReadAllBytes(filename));
+					data = new MemoryBinaryData(File.ReadAllBytes(FileName));
 			}
 			Data = data;
 
@@ -123,7 +124,7 @@ namespace NeoEdit.BinaryEditor
 
 			if (command == Command_File_New)
 			{
-				filename = null;
+				FileName = null;
 				Data = new MemoryBinaryData();
 			}
 			else if (command == Command_File_Open)
@@ -132,17 +133,17 @@ namespace NeoEdit.BinaryEditor
 					var dialog = new OpenFileDialog();
 					if (dialog.ShowDialog() == true)
 					{
-						filename = dialog.FileName;
-						Data = new MemoryBinaryData(File.ReadAllBytes(filename));
+						FileName = dialog.FileName;
+						Data = new MemoryBinaryData(File.ReadAllBytes(FileName));
 					}
 				}
 			}
 			else if (command == Command_File_Save)
 			{
-				if (filename == null)
+				if (FileName == null)
 					RunCommand(Command_File_SaveAs);
 				else
-					File.WriteAllBytes(filename, Data.GetAllBytes());
+					File.WriteAllBytes(FileName, Data.GetAllBytes());
 			}
 			else if (command == Command_File_SaveAs)
 			{
@@ -154,7 +155,7 @@ namespace NeoEdit.BinaryEditor
 							throw new Exception("A directory by that name already exists.");
 						if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
 							throw new Exception("Directory doesn't exist.");
-						filename = dialog.FileName;
+						FileName = dialog.FileName;
 						RunCommand(Command_File_Save);
 					}
 				}
@@ -175,7 +176,7 @@ namespace NeoEdit.BinaryEditor
 			var encoding = Coder.Type.None;
 			if (header != "Auto")
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
-			Launcher.Static.LaunchTextEditor(filename, Data.GetAllBytes(), encoding);
+			Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), encoding);
 			this.Close();
 		}
 	}

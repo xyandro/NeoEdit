@@ -20,7 +20,7 @@ namespace NeoEdit.TextEditor
 	partial class TextCanvas : Canvas
 	{
 		[DepProp]
-		public TextData Data { get { return uiHelper.GetPropValue<TextData>(); } set { uiHelper.SetPropValue(value); } }
+		internal TextData Data { get { return uiHelper.GetPropValue<TextData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		internal Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
