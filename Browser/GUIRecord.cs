@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Records;
 
-namespace NeoEdit.GUI
+namespace NeoEdit.Browser
 {
 	class GUIRecord : DependencyObject
 	{

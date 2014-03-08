@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using NeoEdit.GUI.Common;
 
-namespace NeoEdit.GUI.Browser.Dialogs
+namespace NeoEdit.Browser.Dialogs
 {
 	public partial class Log : Window
 	{

@@ -97,6 +97,10 @@
       <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
       <Name>BinaryEditor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Browser\Browser.csproj">
+      <Project>{92e424cf-af27-4378-805c-bd0b4ffd0222}</Project>
+      <Name>Browser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>

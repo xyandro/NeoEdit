@@ -2,7 +2,7 @@
 using NeoEdit.GUI.Common;
 using NeoEdit.Records;
 
-namespace NeoEdit.GUI.Browser.Dialogs
+namespace NeoEdit.Browser.Dialogs
 {
 	public partial class Rename : Window
 	{

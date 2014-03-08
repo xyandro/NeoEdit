@@ -8,7 +8,7 @@ using System.Windows.Data;
 using NeoEdit.GUI.Common;
 using NeoEdit.Records;
 
-namespace NeoEdit.GUI.Browser
+namespace NeoEdit.Browser
 {
 	partial class BrowserListView : ListView
 	{

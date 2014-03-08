@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEditor", "TextEditor\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryEditor", "BinaryEditor\BinaryEditor.csproj", "{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Browser", "Browser\Browser.csproj", "{92E424CF-AF27-4378-805C-BD0B4FFD0222}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -99,6 +101,14 @@ Global
 		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Release|x64.Build.0 = Release|x64
 		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Release|x86.ActiveCfg = Release|x86
 		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Release|x86.Build.0 = Release|x86
+		{92E424CF-AF27-4378-805C-BD0B4FFD0222}.Debug|x64.ActiveCfg = Debug|x64
+		{92E424CF-AF27-4378-805C-BD0B4FFD0222}.Debug|x64.Build.0 = Debug|x64
+		{92E424CF-AF27-4378-805C-BD0B4FFD0222}.Debug|x86.ActiveCfg = Debug|x86
+		{92E424CF-AF27-4378-805C-BD0B4FFD0222}.Debug|x86.Build.0 = Debug|x86
+		{92E424CF-AF27-4378-805C-BD0B4FFD0222}.Release|x64.ActiveCfg = Release|x64
+		{92E424CF-AF27-4378-805C-BD0B4FFD0222}.Release|x64.Build.0 = Release|x64
+		{92E424CF-AF27-4378-805C-BD0B4FFD0222}.Release|x86.ActiveCfg = Release|x86
+		{92E424CF-AF27-4378-805C-BD0B4FFD0222}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

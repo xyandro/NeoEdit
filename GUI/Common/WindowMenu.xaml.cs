@@ -12,7 +12,7 @@ namespace NeoEdit.GUI.Common
 
 		void WindowBrowser(object sender, RoutedEventArgs e)
 		{
-			new Browser.BrowserWindow();
+			Launcher.Static.LaunchBrowser();
 		}
 
 		void WindowBinaryEditor(object sender, RoutedEventArgs e)

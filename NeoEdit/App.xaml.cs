@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
+using NeoEdit.Browser;
 using NeoEdit.Common.Transform;
 using NeoEdit.Records;
 using NeoEdit.TextEditor;
@@ -61,7 +62,7 @@ namespace NeoEdit
 			try
 			{
 				if (args.Length == 0)
-					return new GUI.Browser.BrowserWindow();
+					return new BrowserWindow();
 
 				switch (args[0])
 				{
@@ -122,7 +123,8 @@ namespace NeoEdit
 		{
 			NeoEdit.GUI.Launcher.Initialize(
 				_textEditorLauncher: (record, textdata) => new TextEditorWindow(record, textdata),
-				_binaryEditorLauncher: (record, binarydata) => new BinaryEditorWindow(record, binarydata)
+				_binaryEditorLauncher: (record, binarydata) => new BinaryEditorWindow(record, binarydata),
+				_browserLauncher: () => new BrowserWindow()
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

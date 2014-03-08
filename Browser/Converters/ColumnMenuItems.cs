@@ -9,7 +9,7 @@ using System.Windows.Media;
 using NeoEdit.Common;
 using NeoEdit.Records;
 
-namespace NeoEdit.GUI.Browser.Converters
+namespace NeoEdit.Browser.Converters
 {
 	class ColumnMenuItems : MarkupExtension, IMultiValueConverter
 	{

@@ -2,7 +2,7 @@
 using System.Windows;
 using NeoEdit.Common;
 
-namespace NeoEdit.GUI.Browser.Dialogs
+namespace NeoEdit.Browser.Dialogs
 {
 	public partial class EditSyncParams : Window
 	{

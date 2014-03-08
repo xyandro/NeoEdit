@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{53DA8D50-6F45-4663-8101-9DD4BF99096E}</ProjectGuid>
+    <ProjectGuid>{92E424CF-AF27-4378-805C-BD0B4FFD0222}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NeoEdit.GUI</RootNamespace>
-    <AssemblyName>GUI</AssemblyName>
+    <RootNamespace>NeoEdit.Browser</RootNamespace>
+    <AssemblyName>Browser</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -48,53 +48,64 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="About\AboutWindow.xaml.cs">
-      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    <Compile Include="Dialogs\ViewImage.xaml.cs">
+      <DependentUpon>ViewImage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ClipboardWindow.xaml.cs">
-      <DependentUpon>ClipboardWindow.xaml</DependentUpon>
+    <Compile Include="Dialogs\Log.xaml.cs">
+      <DependentUpon>Log.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\HelpMenu.xaml.cs">
-      <DependentUpon>HelpMenu.xaml</DependentUpon>
+    <Compile Include="Dialogs\EditSyncParams.xaml.cs">
+      <DependentUpon>EditSyncParams.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\WindowMenu.xaml.cs">
-      <DependentUpon>WindowMenu.xaml</DependentUpon>
+    <Compile Include="BrowserColumn.xaml.cs">
+      <DependentUpon>BrowserColumn.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\ExpressionConverter.cs" />
-    <Compile Include="Dialogs\Message.xaml.cs">
-      <DependentUpon>Message.xaml</DependentUpon>
+    <Compile Include="BrowserListView.xaml.cs">
+      <DependentUpon>BrowserListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\UIHelper.cs" />
-    <Compile Include="Dialogs\GetNumDialog.xaml.cs">
-      <DependentUpon>GetNumDialog.xaml</DependentUpon>
+    <Compile Include="Converters\ColumnMenuItems.cs" />
+    <Compile Include="Converters\SortMenuItems.cs" />
+    <Compile Include="Converters\ActionMenuItems.cs" />
+    <Compile Include="Converters\PropertyToSortIndicatorHeader.cs" />
+    <Compile Include="Converters\PropertyFormatter.cs" />
+    <Compile Include="GUIRecord.cs" />
+    <Compile Include="SizingGridView.cs" />
+    <Compile Include="Dialogs\Rename.xaml.cs">
+      <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
-    <Page Include="About\AboutWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ClipboardWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Common\HelpMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Common\WindowMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\Message.xaml">
+    <Page Include="Dialogs\ViewImage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\GetNumDialog.xaml">
+    <Page Include="Dialogs\Log.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\EditSyncParams.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Rename.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BrowserWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BrowserColumn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BrowserListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="BrowserWindow.xaml.cs">
+      <DependentUpon>BrowserWindow.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -120,22 +131,18 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Anonymous Pro.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GUI\GUI.csproj">
+      <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
+      <Name>GUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Records\Records.csproj">
       <Project>{b0131301-7379-4eda-9a35-8c8e715429b1}</Project>
       <Name>Records</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\Photoshop\NeoEdit.png">
-      <Link>About\NeoEdit.png</Link>
-    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

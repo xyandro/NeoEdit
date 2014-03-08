@@ -6,8 +6,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Browser.Dialogs;
 using NeoEdit.Common;
-using NeoEdit.GUI.Browser.Dialogs;
+using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Records;
@@ -16,7 +17,7 @@ using NeoEdit.Records.Lists;
 using NeoEdit.Records.Processes;
 using NeoEdit.Records.Registries;
 
-namespace NeoEdit.GUI.Browser
+namespace NeoEdit.Browser
 {
 	public partial class BrowserWindow : Window
 	{

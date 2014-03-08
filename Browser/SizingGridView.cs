@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace NeoEdit.GUI.Browser
+namespace NeoEdit.Browser
 {
 	class SizingGridView : GridView
 	{

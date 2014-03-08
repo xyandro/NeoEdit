@@ -1,10 +1,10 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Data;
-using NeoEdit.GUI.Browser.Converters;
+using NeoEdit.Browser.Converters;
 using NeoEdit.GUI.Common;
 using NeoEdit.Records;
 
-namespace NeoEdit.GUI.Browser
+namespace NeoEdit.Browser
 {
 	partial class BrowserColumn : GridViewColumn
 	{
