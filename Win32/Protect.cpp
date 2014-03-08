@@ -3,7 +3,7 @@
 
 namespace NeoEdit
 {
-	namespace Win32Interop
+	namespace Win32
 	{
 		Protect::Protect(std::shared_ptr<Win32Lib::Protect> _ptr)
 		{

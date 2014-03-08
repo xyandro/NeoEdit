@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
 using NeoEdit.Records.Handles;
-using NeoEdit.Win32Interop;
+using NeoEdit.Win32;
 
 namespace NeoEdit.Records.Processes
 {

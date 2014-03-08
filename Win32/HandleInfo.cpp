@@ -5,7 +5,7 @@ using namespace System;
 
 namespace NeoEdit
 {
-	namespace Win32Interop
+	namespace Win32
 	{
 		int HandleInfo::PID::get() { return (*ptr)->PID; }
 		IntPtr HandleInfo::Handle::get() { return (IntPtr)(*ptr)->Handle; }

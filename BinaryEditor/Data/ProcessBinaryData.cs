@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NeoEdit.Common.Data;
-using NeoEdit.Win32Interop;
+using NeoEdit.Win32;
 
 namespace NeoEdit.BinaryEditor.Data
 {

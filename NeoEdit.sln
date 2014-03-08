@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{53DA8D50-6F45-4663-8101-9DD4BF99096E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Interop", "Win32Interop\Win32Interop.vcxproj", "{95A660DC-FBFE-4560-A433-0B024494B213}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32", "Win32\Win32.vcxproj", "{95A660DC-FBFE-4560-A433-0B024494B213}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Lib", "Win32Lib\Win32Lib.vcxproj", "{785C1014-852F-4EC1-A2D6-CDB52880B7AD}"
 EndProject

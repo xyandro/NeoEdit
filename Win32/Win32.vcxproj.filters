@@ -68,13 +68,13 @@
     <ClInclude Include="SVNInfo.h">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="SVNInfo.Template.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
       <Filter>Resource</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="SVNInfo.Template.h" />
   </ItemGroup>
 </Project>

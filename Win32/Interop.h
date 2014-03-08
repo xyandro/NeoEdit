@@ -7,7 +7,7 @@
 
 namespace NeoEdit
 {
-	namespace Win32Interop
+	namespace Win32
 	{
 		public ref class Interop
 		{

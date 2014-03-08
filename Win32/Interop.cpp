@@ -9,7 +9,7 @@ using namespace msclr::interop;
 
 namespace NeoEdit
 {
-	namespace Win32Interop
+	namespace Win32
 	{
 		void Interop::SuspendProcess(int pid)
 		{

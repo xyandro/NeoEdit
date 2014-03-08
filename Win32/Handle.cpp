@@ -5,7 +5,7 @@ using namespace std;
 
 namespace NeoEdit
 {
-	namespace Win32Interop
+	namespace Win32
 	{
 		Handle::Handle()
 		{
