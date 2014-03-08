@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace NeoEdit.BinaryEditor
 {
@@ -37,6 +38,11 @@ namespace NeoEdit.BinaryEditor
 		public override byte[] GetAllBytes()
 		{
 			return cache;
+		}
+
+		public override void Save(string filename)
+		{
+			File.WriteAllBytes(filename, cache);
 		}
 	}
 }

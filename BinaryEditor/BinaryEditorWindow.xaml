@@ -6,7 +6,8 @@
 	Height="400" Width="400" WindowState="Maximized">
 
 	<Window.Title>
-		<MultiBinding StringFormat="{}{0} - NeoEdit Binary Editor">
+		<MultiBinding StringFormat="{}{0}{1} - NeoEdit Binary Editor">
+			<Binding ElementName="self" Path="FileTitle"/>
 			<Binding ElementName="self" Path="FileName"/>
 		</MultiBinding>
 	</Window.Title>

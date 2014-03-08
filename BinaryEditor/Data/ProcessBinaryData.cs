@@ -170,7 +170,7 @@ namespace NeoEdit.BinaryEditor
 			base.Refresh();
 		}
 
-		public void Save(string fileName)
+		public override void Save(string fileName)
 		{
 			using (Suspend())
 			using (Open())

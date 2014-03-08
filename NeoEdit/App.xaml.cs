@@ -95,7 +95,14 @@ namespace NeoEdit
 									throw new ArgumentException("Invalid file.");
 							}
 
-							return new BinaryEditorWindow(filename);
+							return BinaryEditorWindow.CreateFromFile(filename);
+						}
+					case "binarypid":
+						{
+							if (args.Length < 2)
+								throw new ArgumentException("Not enough parameters.");
+
+							return BinaryEditorWindow.CreateFromProcess(Convert.ToInt32(args[1]));
 						}
 					case "gzip":
 						{
@@ -121,9 +128,9 @@ namespace NeoEdit
 		public App()
 		{
 			NeoEdit.GUI.Launcher.Initialize(
-				_textEditorLauncher: (filename, bytes, encoding) => new TextEditorWindow(filename, bytes, encoding),
-				_binaryEditorLauncher: (filename, binarydata) => new BinaryEditorWindow(filename, binarydata),
-				_browserLauncher: () => new BrowserWindow()
+				textEditor: (filename, bytes, encoding) => new TextEditorWindow(filename, bytes, encoding),
+				fileBinaryEditor: (filename, binarydata) => BinaryEditorWindow.CreateFromFile(filename, binarydata),
+				browser: () => new BrowserWindow()
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

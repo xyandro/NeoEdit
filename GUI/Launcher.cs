@@ -9,15 +9,19 @@ namespace NeoEdit.GUI
 		public static Launcher Static { get { return launcher; } }
 
 		protected Action<string, byte[], Coder.Type> textEditorLauncher;
-		protected Action<string, byte[]> binaryEditorLauncher;
+		protected Action<string, byte[]> fileBinaryEditorLauncher;
 		protected Action browserLauncher;
-		public static void Initialize(Action<string, byte[], Coder.Type> _textEditorLauncher, Action<string, byte[]> _binaryEditorLauncher, Action _browserLauncher)
+		public static void Initialize(
+			Action<string, byte[], Coder.Type> textEditor,
+			Action<string, byte[]> fileBinaryEditor,
+			Action browser
+		)
 		{
 			launcher = new Launcher
 			{
-				textEditorLauncher = _textEditorLauncher,
-				binaryEditorLauncher = _binaryEditorLauncher,
-				browserLauncher = _browserLauncher,
+				textEditorLauncher = textEditor,
+				fileBinaryEditorLauncher = fileBinaryEditor,
+				browserLauncher = browser,
 			};
 		}
 
@@ -28,7 +32,7 @@ namespace NeoEdit.GUI
 
 		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null)
 		{
-			binaryEditorLauncher(filename, bytes);
+			fileBinaryEditorLauncher(filename, bytes);
 		}
 
 		public void LaunchBrowser()

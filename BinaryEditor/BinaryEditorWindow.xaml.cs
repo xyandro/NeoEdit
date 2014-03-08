@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -55,6 +56,8 @@ namespace NeoEdit.BinaryEditor
 		public static RoutedCommand Command_Verify_DSA = new RoutedCommand();
 
 		[DepProp]
+		string FileTitle { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
@@ -66,25 +69,37 @@ namespace NeoEdit.BinaryEditor
 		static BinaryEditorWindow() { UIHelper<BinaryEditorWindow>.Register(); }
 
 		readonly UIHelper<BinaryEditorWindow> uiHelper;
-		public BinaryEditorWindow(string filename = null, byte[] bytes = null)
+		BinaryEditorWindow(BinaryData data)
 		{
 			uiHelper = new UIHelper<BinaryEditorWindow>(this);
 			InitializeComponent();
 
-			FileName = filename;
-			if (bytes == null)
-			{
-				if (FileName == null)
-					bytes = new byte[0];
-				else
-					bytes = File.ReadAllBytes(FileName);
-			}
-			Data = new MemoryBinaryData(bytes);
+			Data = data;
 
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
 
 			Show();
+		}
+
+		public static BinaryEditorWindow CreateFromFile(string filename = null, byte[] bytes = null)
+		{
+			if (bytes == null)
+			{
+				if (filename == null)
+					bytes = new byte[0];
+				else
+					bytes = File.ReadAllBytes(filename);
+			}
+			return new BinaryEditorWindow(new MemoryBinaryData(bytes)) { FileName = filename };
+		}
+
+		public static BinaryEditorWindow CreateFromProcess(int pid)
+		{
+			var process = Process.GetProcessById(pid);
+			if (process == null)
+				throw new ArgumentException("Process doesn't exist.");
+			return new BinaryEditorWindow(new ProcessBinaryData(pid)) { FileTitle = String.Format("Process {0} ({1}) - ", pid, process.ProcessName) };
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -123,7 +138,7 @@ namespace NeoEdit.BinaryEditor
 
 			if (command == Command_File_New)
 			{
-				FileName = null;
+				FileTitle = FileName = null;
 				Data = new MemoryBinaryData();
 			}
 			else if (command == Command_File_Open)
@@ -132,6 +147,7 @@ namespace NeoEdit.BinaryEditor
 					var dialog = new OpenFileDialog();
 					if (dialog.ShowDialog() == true)
 					{
+						FileTitle = null;
 						FileName = dialog.FileName;
 						Data = new MemoryBinaryData(File.ReadAllBytes(FileName));
 					}
@@ -142,7 +158,7 @@ namespace NeoEdit.BinaryEditor
 				if (FileName == null)
 					RunCommand(Command_File_SaveAs);
 				else
-					File.WriteAllBytes(FileName, Data.GetAllBytes());
+					Data.Save(FileName);
 			}
 			else if (command == Command_File_SaveAs)
 			{

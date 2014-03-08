@@ -86,5 +86,10 @@ namespace NeoEdit.BinaryEditor
 				Array.Copy(cache, index - cacheStart, result, 0, count);
 			return result;
 		}
+
+		public virtual void Save(string filename)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
