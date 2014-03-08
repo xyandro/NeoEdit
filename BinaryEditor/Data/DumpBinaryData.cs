@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace NeoEdit.Common.Data
+namespace NeoEdit.BinaryEditor
 {
-	public class DumpBinaryData : BinaryData
+	class DumpBinaryData : BinaryData
 	{
 		Stream input;
 		List<long> start = new List<long>();

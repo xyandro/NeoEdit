@@ -42,13 +42,10 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\DumpBinaryData.cs" />
     <Compile Include="Expression.cs" />
-    <Compile Include="Data\BinaryData.cs" />
     <Compile Include="Transform\Checksum.cs" />
     <Compile Include="Transform\Compression.cs" />
     <Compile Include="Transform\Crypto.cs" />
-    <Compile Include="Data\MemoryBinaryData.cs" />
     <Compile Include="Transform\Coder.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="UnitTest\ChecksumTest.cs" />

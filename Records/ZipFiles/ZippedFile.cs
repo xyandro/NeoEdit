@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
-using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Records.ZipFiles
@@ -37,7 +36,7 @@ namespace NeoEdit.Records.ZipFiles
 		public override bool CanMD5() { return true; }
 		public override bool CanOpen() { return true; }
 
-		public override BinaryData Read()
+		public override byte[] Read()
 		{
 			var zipFile = archive.Open();
 			var entry = zipFile.GetEntry(InArchiveName);
@@ -45,25 +44,22 @@ namespace NeoEdit.Records.ZipFiles
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);
-				return new MemoryBinaryData(ms.ToArray());
+				return ms.ToArray();
 			}
 		}
 
-		public override void Write(BinaryData data)
+		public override void Write(byte[] bytes)
 		{
 			var zipFile = archive.Open(true);
 			var entry = zipFile.CreateEntry(InArchiveName);
 			using (var stream = entry.Open())
-			{
-				var bytes = data.GetAllBytes();
 				stream.Write(bytes, 0, bytes.Length);
-			}
 		}
 
 		public override void CalcMD5()
 		{
 			using (var md5 = MD5.Create())
-				this[RecordProperty.PropertyName.MD5] = Checksum.Get(Checksum.Type.MD5, Read().GetAllBytes());
+				this[RecordProperty.PropertyName.MD5] = Checksum.Get(Checksum.Type.MD5, Read());
 		}
 
 		public override void Delete()

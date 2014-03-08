@@ -6,7 +6,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.Common;
-using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
@@ -67,20 +66,20 @@ namespace NeoEdit.BinaryEditor
 		static BinaryEditorWindow() { UIHelper<BinaryEditorWindow>.Register(); }
 
 		readonly UIHelper<BinaryEditorWindow> uiHelper;
-		public BinaryEditorWindow(string filename = null, BinaryData data = null)
+		public BinaryEditorWindow(string filename = null, byte[] bytes = null)
 		{
 			uiHelper = new UIHelper<BinaryEditorWindow>(this);
 			InitializeComponent();
 
 			FileName = filename;
-			if (data == null)
+			if (bytes == null)
 			{
 				if (FileName == null)
-					data = new MemoryBinaryData();
+					bytes = new byte[0];
 				else
-					data = new MemoryBinaryData(File.ReadAllBytes(FileName));
+					bytes = File.ReadAllBytes(FileName);
 			}
-			Data = data;
+			Data = new MemoryBinaryData(bytes);
 
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;

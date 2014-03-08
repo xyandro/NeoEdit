@@ -1,5 +1,4 @@
 ﻿using System;
-using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.GUI
@@ -10,9 +9,9 @@ namespace NeoEdit.GUI
 		public static Launcher Static { get { return launcher; } }
 
 		protected Action<string, byte[], Coder.Type> textEditorLauncher;
-		protected Action<string, BinaryData> binaryEditorLauncher;
+		protected Action<string, byte[]> binaryEditorLauncher;
 		protected Action browserLauncher;
-		public static void Initialize(Action<string, byte[], Coder.Type> _textEditorLauncher, Action<string, BinaryData> _binaryEditorLauncher, Action _browserLauncher)
+		public static void Initialize(Action<string, byte[], Coder.Type> _textEditorLauncher, Action<string, byte[]> _binaryEditorLauncher, Action _browserLauncher)
 		{
 			launcher = new Launcher
 			{
@@ -27,9 +26,9 @@ namespace NeoEdit.GUI
 			textEditorLauncher(filename, bytes, encoding);
 		}
 
-		public void LaunchBinaryEditor(string filename = null, BinaryData binarydata = null)
+		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null)
 		{
-			binaryEditorLauncher(filename, binarydata);
+			binaryEditorLauncher(filename, bytes);
 		}
 
 		public void LaunchBrowser()

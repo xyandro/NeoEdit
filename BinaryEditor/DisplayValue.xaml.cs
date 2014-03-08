@@ -1,6 +1,5 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
-using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
@@ -9,7 +8,7 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayValue : TextBox
 	{
 		[DepProp]
-		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
+		internal BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]

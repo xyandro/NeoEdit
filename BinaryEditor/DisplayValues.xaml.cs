@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using NeoEdit.Common.Data;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor
@@ -7,7 +6,7 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayValues : StackPanel
 	{
 		[DepProp]
-		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
+		internal BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-using NeoEdit.Common.Data;
 
 namespace NeoEdit.Records.Disks
 {
@@ -75,14 +74,14 @@ namespace NeoEdit.Records.Disks
 			this[RecordProperty.PropertyName.Identify] = Identifier.Identify(FullName);
 		}
 
-		public override BinaryData Read()
+		public override byte[] Read()
 		{
-			return new MemoryBinaryData(File.ReadAllBytes(FullName));
+			return File.ReadAllBytes(FullName);
 		}
 
-		public override void Write(BinaryData data)
+		public override void Write(byte[] bytes)
 		{
-			File.WriteAllBytes(FullName, data.GetAllBytes());
+			File.WriteAllBytes(FullName, bytes);
 		}
 
 		protected override void CopyFrom(Record source)

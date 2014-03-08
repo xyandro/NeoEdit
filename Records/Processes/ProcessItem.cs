@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
-using NeoEdit.Common.Data;
 using NeoEdit.Records.Handles;
 using NeoEdit.Win32Interop;
 
@@ -73,10 +72,10 @@ namespace NeoEdit.Records.Processes
 			Interop.ResumeProcess(GetProperty<int>(RecordProperty.PropertyName.ID));
 		}
 
-		public override BinaryData Read()
-		{
-			return new ProcessBinaryData(GetProperty<int>(RecordProperty.PropertyName.ID));
-		}
+		//public override BinaryData Read()
+		//{
+		//	return new ProcessBinaryData(GetProperty<int>(RecordProperty.PropertyName.ID));
+		//}
 
 		public override void Delete()
 		{

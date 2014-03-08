@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using NeoEdit.Common;
+using NeoEdit.Common.Data;
 
-namespace NeoEdit.Common.Data
+namespace NeoEdit.BinaryEditor
 {
-	public abstract class BinaryData
+	abstract class BinaryData
 	{
 		public virtual bool CanInsert() { return false; }
 

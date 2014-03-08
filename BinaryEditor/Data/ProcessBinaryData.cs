@@ -4,9 +4,9 @@ using System.IO;
 using NeoEdit.Common.Data;
 using NeoEdit.Win32Interop;
 
-namespace NeoEdit.Records.Processes
+namespace NeoEdit.BinaryEditor
 {
-	public class ProcessBinaryData : BinaryData
+	class ProcessBinaryData : BinaryData
 	{
 		class OnCloseAction : IDisposable
 		{

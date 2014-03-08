@@ -45,12 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handles\HandleType.cs" />
-    <Compile Include="Processes\ProcessBinaryData.cs" />
     <Compile Include="Lists\ListRecord.cs" />
     <Compile Include="Processes\ProcessRecord.cs" />
     <Compile Include="Processes\ProcessItem.cs" />
     <Compile Include="Processes\ProcessRoot.cs" />
-    <Compile Include="Handles\SharedMemoryBinaryData.cs" />
     <Compile Include="Handles\HandleItem.cs" />
     <Compile Include="Handles\HandleRecord.cs" />
     <Compile Include="Handles\HandleRoot.cs" />

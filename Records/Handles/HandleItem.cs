@@ -1,5 +1,4 @@
 ﻿using System;
-using NeoEdit.Common.Data;
 using NeoEdit.Win32Interop;
 
 namespace NeoEdit.Records.Handles
@@ -30,9 +29,9 @@ namespace NeoEdit.Records.Handles
 			return GetProperty<string>(RecordProperty.PropertyName.Type) == "Section";
 		}
 
-		public override BinaryData Read()
-		{
-			return new SharedMemoryBinaryData(GetPID(), GetHandle());
-		}
+		//public override BinaryData Read()
+		//{
+		//	return new SharedMemoryBinaryData(GetPID(), GetHandle());
+		//}
 	}
 }

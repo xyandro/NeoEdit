@@ -49,6 +49,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\IsStrConverter.cs" />
+    <Compile Include="Data\BinaryData.cs" />
+    <Compile Include="Data\DumpBinaryData.cs" />
+    <Compile Include="Data\MemoryBinaryData.cs" />
+    <Compile Include="Data\ProcessBinaryData.cs" />
+    <Compile Include="Data\SharedMemoryBinaryData.cs" />
     <Compile Include="Dialogs\SymmetricKeyDialog.xaml.cs">
       <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
@@ -134,6 +139,10 @@
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Win32Interop\Win32Interop.vcxproj">
+      <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
+      <Name>Win32Interop</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

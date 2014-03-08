@@ -1,10 +1,9 @@
 ﻿using System;
-using NeoEdit.Common.Data;
 using NeoEdit.Win32Interop;
 
-namespace NeoEdit.Records.Handles
+namespace NeoEdit.BinaryEditor
 {
-	public class SharedMemoryBinaryData : BinaryData
+	class SharedMemoryBinaryData : BinaryData
 	{
 		int pid;
 		IntPtr handle;

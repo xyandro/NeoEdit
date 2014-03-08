@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
-using NeoEdit.Common.Data;
 
 namespace NeoEdit.Records
 {
@@ -270,8 +269,8 @@ namespace NeoEdit.Records
 			}
 		}
 
-		public virtual BinaryData Read() { throw new NotImplementedException(); }
-		public virtual void Write(BinaryData data) { throw new NotImplementedException(); }
+		public virtual byte[] Read() { throw new NotImplementedException(); }
+		public virtual void Write(byte[] data) { throw new NotImplementedException(); }
 
 		public virtual Type GetRootType() { return typeof(Record); }
 

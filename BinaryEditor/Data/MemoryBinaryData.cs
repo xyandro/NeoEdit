@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace NeoEdit.Common.Data
+namespace NeoEdit.BinaryEditor
 {
-	public class MemoryBinaryData : BinaryData
+	class MemoryBinaryData : BinaryData
 	{
 		public MemoryBinaryData(byte[] data = null)
 		{
