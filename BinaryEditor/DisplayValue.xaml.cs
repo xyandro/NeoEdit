@@ -4,7 +4,7 @@ using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
-namespace NeoEdit.GUI.BinaryEditor
+namespace NeoEdit.BinaryEditor
 {
 	partial class DisplayValue : TextBox
 	{

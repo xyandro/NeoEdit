@@ -51,7 +51,6 @@
     <Compile Include="About\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditor\Converters\IsStrConverter.cs" />
     <Compile Include="Browser\Dialogs\ViewImage.xaml.cs">
       <DependentUpon>ViewImage.xaml</DependentUpon>
     </Compile>
@@ -70,27 +69,7 @@
     <Compile Include="Common\WindowMenu.xaml.cs">
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryEditor\Dialogs\SymmetricKeyDialog.xaml.cs">
-      <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BinaryEditor\Dialogs\AsymmetricKeyDialog.xaml.cs">
-      <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BinaryEditor\BinaryCanvas.xaml.cs">
-      <DependentUpon>BinaryCanvas.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BinaryEditor\Converters\ValidValueConverter.cs" />
-    <Compile Include="BinaryEditor\Dialogs\FindDialog.xaml.cs">
-      <DependentUpon>FindDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Common\ExpressionConverter.cs" />
-    <Compile Include="BinaryEditor\DisplayValue.xaml.cs">
-      <DependentUpon>DisplayValue.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BinaryEditor\Converters\DisplayValueConverter.cs" />
-    <Compile Include="BinaryEditor\DisplayValues.xaml.cs">
-      <DependentUpon>DisplayValues.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Browser\BrowserColumn.xaml.cs">
       <DependentUpon>BrowserColumn.xaml</DependentUpon>
     </Compile>
@@ -115,30 +94,6 @@
     </Compile>
     <Compile Include="GUIRecord.cs" />
     <Page Include="About\AboutWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BinaryEditor\BinaryCanvas.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BinaryEditor\Dialogs\SymmetricKeyDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="BinaryEditor\Dialogs\AsymmetricKeyDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="BinaryEditor\Dialogs\FindDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BinaryEditor\DisplayValue.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BinaryEditor\DisplayValues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -174,10 +129,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditor\BinaryEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Browser\BrowserWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -190,9 +141,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="BinaryEditor\BinaryEditorWindow.xaml.cs">
-      <DependentUpon>BinaryEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Browser\BrowserWindow.xaml.cs">
       <DependentUpon>BrowserWindow.xaml</DependentUpon>
     </Compile>

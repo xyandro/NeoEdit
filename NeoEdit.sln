@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Records", "Records\Records.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEditor", "TextEditor\TextEditor.csproj", "{9A35AB82-2481-4C44-B51E-66DF7D248EAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryEditor", "BinaryEditor\BinaryEditor.csproj", "{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -89,6 +91,14 @@ Global
 		{9A35AB82-2481-4C44-B51E-66DF7D248EAD}.Release|x64.Build.0 = Release|x64
 		{9A35AB82-2481-4C44-B51E-66DF7D248EAD}.Release|x86.ActiveCfg = Release|x86
 		{9A35AB82-2481-4C44-B51E-66DF7D248EAD}.Release|x86.Build.0 = Release|x86
+		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Debug|x64.ActiveCfg = Debug|x64
+		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Debug|x64.Build.0 = Debug|x64
+		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Debug|x86.ActiveCfg = Debug|x86
+		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Debug|x86.Build.0 = Debug|x86
+		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Release|x64.ActiveCfg = Release|x64
+		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Release|x64.Build.0 = Release|x64
+		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Release|x86.ActiveCfg = Release|x86
+		{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

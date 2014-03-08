@@ -1,8 +1,8 @@
-﻿<Window Name="self" x:Class="NeoEdit.GUI.BinaryEditor.Dialogs.FindDialog"
+﻿<Window Name="self" x:Class="NeoEdit.BinaryEditor.Dialogs.FindDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:common="clr-namespace:NeoEdit.GUI.Common"
-    xmlns:binaryEditorConverters="clr-namespace:NeoEdit.GUI.BinaryEditor.Converters"
+    xmlns:common="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
+    xmlns:binaryEditorConverters="clr-namespace:NeoEdit.BinaryEditor.Converters"
 	Title="Find" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=findText}">
 
 	<Window.Resources>

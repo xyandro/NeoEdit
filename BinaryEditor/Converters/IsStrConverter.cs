@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.GUI.BinaryEditor.Converters
+namespace NeoEdit.BinaryEditor.Converters
 {
 	class IsStrConverter : MarkupExtension, IValueConverter
 	{

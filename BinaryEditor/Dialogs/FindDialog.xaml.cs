@@ -8,7 +8,7 @@ using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
-namespace NeoEdit.GUI.BinaryEditor.Dialogs
+namespace NeoEdit.BinaryEditor.Dialogs
 {
 	public partial class FindDialog : Window
 	{

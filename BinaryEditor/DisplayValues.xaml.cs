@@ -2,7 +2,7 @@
 using NeoEdit.Common.Data;
 using NeoEdit.GUI.Common;
 
-namespace NeoEdit.GUI.BinaryEditor
+namespace NeoEdit.BinaryEditor
 {
 	partial class DisplayValues : StackPanel
 	{

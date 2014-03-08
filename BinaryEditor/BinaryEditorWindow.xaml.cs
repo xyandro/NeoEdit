@@ -8,10 +8,11 @@ using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.Records;
 
-namespace NeoEdit.GUI.BinaryEditor
+namespace NeoEdit.BinaryEditor
 {
 	public partial class BinaryEditorWindow : Window
 	{
@@ -177,7 +178,7 @@ namespace NeoEdit.GUI.BinaryEditor
 			if (header != "Auto")
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = new TextData(Data.GetAllBytes(), encoding);
-			Launcher.Static.LauncherTextEditor(record, data);
+			Launcher.Static.LaunchTextEditor(record, data);
 			this.Close();
 		}
 	}

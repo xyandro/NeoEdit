@@ -3,8 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using NeoEdit.BinaryEditor;
 using NeoEdit.Common.Transform;
 using NeoEdit.Records;
+using NeoEdit.TextEditor;
 
 namespace NeoEdit
 {
@@ -81,7 +83,7 @@ namespace NeoEdit
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							return new TextEditor.TextEditorWindow(record, line: line, column: column);
+							return new TextEditorWindow(record, line: line, column: column);
 						}
 					case "binary":
 						{
@@ -93,7 +95,7 @@ namespace NeoEdit
 									throw new ArgumentException("Invalid file.");
 							}
 
-							return new GUI.BinaryEditor.BinaryEditorWindow(record);
+							return new BinaryEditorWindow(record);
 						}
 					case "gzip":
 						{
@@ -119,7 +121,8 @@ namespace NeoEdit
 		public App()
 		{
 			NeoEdit.GUI.Launcher.Initialize(
-				_textEditorLauncher: (record, textdata) => new TextEditor.TextEditorWindow(record, textdata)
+				_textEditorLauncher: (record, textdata) => new TextEditorWindow(record, textdata),
+				_binaryEditorLauncher: (record, binarydata) => new BinaryEditorWindow(record, binarydata)
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

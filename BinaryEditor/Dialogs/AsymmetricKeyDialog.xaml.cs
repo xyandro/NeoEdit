@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.GUI.BinaryEditor.Dialogs
+namespace NeoEdit.BinaryEditor.Dialogs
 {
 	public partial class AsymmetricKeyDialog : Window
 	{

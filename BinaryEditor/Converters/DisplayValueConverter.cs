@@ -5,7 +5,7 @@ using System.Windows.Markup;
 using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.GUI.BinaryEditor.Converters
+namespace NeoEdit.BinaryEditor.Converters
 {
 	class DisplayValueConverter : MarkupExtension, IMultiValueConverter
 	{

@@ -10,17 +10,24 @@ namespace NeoEdit.GUI
 		public static Launcher Static { get { return launcher; } }
 
 		protected Action<Record, TextData> textEditorLauncher;
-		public static void Initialize(Action<Record, TextData> _textEditorLauncher)
+		protected Action<Record, BinaryData> binaryEditorLauncher;
+		public static void Initialize(Action<Record, TextData> _textEditorLauncher, Action<Record, BinaryData> _binaryEditorLauncher)
 		{
 			launcher = new Launcher
 			{
 				textEditorLauncher = _textEditorLauncher,
+				binaryEditorLauncher = _binaryEditorLauncher,
 			};
 		}
 
-		public void LauncherTextEditor(Record record = null, TextData textdata = null)
+		public void LaunchTextEditor(Record record = null, TextData textdata = null)
 		{
 			textEditorLauncher(record, textdata);
+		}
+
+		public void LaunchBinaryEditor(Record record = null, BinaryData binarydata = null)
+		{
+			binaryEditorLauncher(record, binarydata);
 		}
 	}
 }

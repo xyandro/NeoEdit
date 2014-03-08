@@ -4,7 +4,7 @@ using System.Windows;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Dialogs;
 
-namespace NeoEdit.GUI.BinaryEditor.Dialogs
+namespace NeoEdit.BinaryEditor.Dialogs
 {
 	public partial class SymmetricKeyDialog : Window
 	{

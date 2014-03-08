@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common;
-using NeoEdit.GUI.BinaryEditor;
 using NeoEdit.GUI.Browser.Dialogs;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
@@ -390,7 +389,7 @@ namespace NeoEdit.GUI.Browser
 					Refresh();
 					break;
 				case RecordAction.ActionName.Open:
-					new BinaryEditorWindow(records.Single());
+					Launcher.Static.LaunchBinaryEditor(records.Single());
 					break;
 				case RecordAction.ActionName.View:
 					foreach (var record in records)

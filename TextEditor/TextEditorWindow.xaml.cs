@@ -9,7 +9,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
-using NeoEdit.GUI.BinaryEditor;
 using NeoEdit.GUI.Common;
 using NeoEdit.Records;
 
@@ -173,7 +172,7 @@ namespace NeoEdit.TextEditor
 			else
 				encoding = Helpers.ParseEnum<Coder.Type>(header);
 			var data = Data.GetBytes(encoding);
-			new BinaryEditorWindow(record, new MemoryBinaryData(data));
+			Launcher.Static.LaunchBinaryEditor(record, new MemoryBinaryData(data));
 			this.Close();
 		}
 	}

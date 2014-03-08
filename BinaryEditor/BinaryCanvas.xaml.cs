@@ -7,13 +7,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using NeoEdit.BinaryEditor.Dialogs;
 using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.BinaryEditor.Dialogs;
+using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 
-namespace NeoEdit.GUI.BinaryEditor
+namespace NeoEdit.BinaryEditor
 {
 	partial class BinaryCanvas : Canvas
 	{

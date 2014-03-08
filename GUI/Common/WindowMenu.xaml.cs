@@ -17,12 +17,12 @@ namespace NeoEdit.GUI.Common
 
 		void WindowBinaryEditor(object sender, RoutedEventArgs e)
 		{
-			new BinaryEditor.BinaryEditorWindow();
+			Launcher.Static.LaunchBinaryEditor();
 		}
 
 		void WindowTextEditor(object sender, RoutedEventArgs e)
 		{
-			Launcher.Static.LauncherTextEditor();
+			Launcher.Static.LaunchTextEditor();
 		}
 	}
 }
