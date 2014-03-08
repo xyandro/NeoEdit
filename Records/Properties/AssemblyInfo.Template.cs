@@ -18,7 +18,7 @@ $WCUNVER?#error Has:// No$ unversioned items
 [assembly: AssemblyTitle("Records")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Randon Spackman")]
 [assembly: AssemblyProduct("NeoEdit")]
 [assembly: AssemblyCopyright("© Randon Spackman 2013-$WCDATE=%Y$")]
 [assembly: AssemblyTrademark("")]

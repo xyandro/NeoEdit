@@ -4,10 +4,19 @@
     <Filter Include="stdafx">
       <UniqueIdentifier>{cf25d169-558b-4468-bc71-ce31d064ef82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{e83e986d-e737-4efd-a656-ecf34ce4e41c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="SVNInfo.h">
+      <Filter>Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -15,5 +24,18 @@
       <Filter>stdafx</Filter>
     </ClCompile>
     <ClCompile Include="Win32.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Photoshop\NeoEdit.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="SVNInfo.Template.h">
+      <Filter>Resource</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

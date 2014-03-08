@@ -33,7 +33,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <PropertyGroup>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\Photoshop\NeoEdit.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>NeoEdit.InstanceManager</StartupObject>
@@ -90,7 +90,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icon.ico" />
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +105,11 @@
       <Project>{b0131301-7379-4eda-9a35-8c8e715429b1}</Project>
       <Name>Records</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\Photoshop\NeoEdit.ico">
+      <Link>NeoEdit.ico</Link>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -161,7 +161,23 @@
     <ClInclude Include="HandleInfo.h" />
     <ClInclude Include="Interop.h" />
     <ClInclude Include="Protect.h" />
+    <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SVNInfo.h" />
+    <CustomBuild Include="SVNInfo.Template.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SubWCRev "$(SolutionDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SubWCRev "$(SolutionDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SubWCRev "$(SolutionDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SubWCRev "$(SolutionDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Getting SVN info...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Getting SVN info...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Getting SVN info...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Getting SVN info...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)SVNInfo.h</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)SVNInfo.h</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)SVNInfo.h</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)SVNInfo.h</Outputs>
+    </CustomBuild>
     <ClInclude Include="VirtualQueryInfo.h" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +187,14 @@
     <ProjectReference Include="..\Win32Lib\Win32Lib.vcxproj">
       <Project>{785c1014-852f-4ec1-a2d6-cdb52880b7ad}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_DEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_DEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NDEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NDEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
