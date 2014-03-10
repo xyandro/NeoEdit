@@ -43,7 +43,7 @@ namespace NeoEdit.GUI
 
 		static void Set(ClipboardData data)
 		{
-			System.Windows.Clipboard.SetDataObject(data.Data, true);
+			Clipboard.SetDataObject(data.Data, true);
 		}
 
 		const int maxClipboard = 20;
@@ -57,7 +57,7 @@ namespace NeoEdit.GUI
 
 		static T GetContents<T>() where T : class
 		{
-			var guid = System.Windows.Clipboard.GetDataObject().GetData(typeof(T));
+			var guid = Clipboard.GetDataObject().GetData(typeof(T));
 			if (!(guid is string))
 				return null;
 			var found = clipboard.FirstOrDefault(data => data.GUID == (string)guid);
@@ -98,7 +98,7 @@ namespace NeoEdit.GUI
 			records = null;
 			isCut = false;
 
-			var dropEffectStream = System.Windows.Clipboard.GetDataObject().GetData("Preferred DropEffect");
+			var dropEffectStream = Clipboard.GetDataObject().GetData("Preferred DropEffect");
 			if (dropEffectStream is MemoryStream)
 			{
 				try
@@ -117,11 +117,11 @@ namespace NeoEdit.GUI
 				return records.Count != 0;
 			}
 
-			var dropList = System.Windows.Clipboard.GetFileDropList();
+			var dropList = Clipboard.GetFileDropList();
 			if ((dropList == null) || (dropList.Count == 0))
 				return false;
 
-			records = dropList.Cast<string>().ToList().Select(file => new DiskRoot().GetRecord(file)).ToList();
+			records = dropList.Cast<string>().Select(file => new DiskRoot().GetRecord(file)).ToList();
 			return true;
 		}
 
@@ -136,16 +136,20 @@ namespace NeoEdit.GUI
 			if (contents != null)
 				return contents;
 
-			var str = System.Windows.Clipboard.GetText();
-			if (String.IsNullOrEmpty(str))
-				return new string[0];
+			var str = Clipboard.GetText();
+			if (!String.IsNullOrEmpty(str))
+				return new string[] { str };
 
-			return new string[] { str };
+			var dropList = Clipboard.GetFileDropList();
+			if ((dropList != null) && (dropList.Count != 0))
+				return dropList.Cast<string>().ToArray();
+
+			return new string[0];
 		}
 
 		public static string GetString()
 		{
-			var str = System.Windows.Clipboard.GetText();
+			var str = Clipboard.GetText();
 			if (String.IsNullOrEmpty(str))
 				return null;
 			return str;
@@ -161,7 +165,7 @@ namespace NeoEdit.GUI
 
 		static ClipboardData Current()
 		{
-			var guid = System.Windows.Clipboard.GetDataObject().GetData("GUID");
+			var guid = Clipboard.GetDataObject().GetData("GUID");
 			if (!(guid is string))
 				return null;
 			return clipboard.FirstOrDefault(data => data.GUID == (string)guid);

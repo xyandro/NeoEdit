@@ -1066,9 +1066,10 @@ namespace NeoEdit.TextEditor
 					return;
 
 				var sels = ranges[RangeType.Selection];
+				var separator = sels.Count == 1 ? "\n" : " ";
 				while (result.Count > sels.Count)
 				{
-					result[result.Count - 2] += " " + result[result.Count - 1];
+					result[result.Count - 2] += separator + result[result.Count - 1];
 					result.RemoveAt(result.Count - 1);
 				}
 				while (result.Count < sels.Count)
