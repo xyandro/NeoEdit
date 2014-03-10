@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
-using NeoEdit.Common.Data;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
@@ -1066,7 +1065,7 @@ namespace NeoEdit.TextEditor
 					return;
 
 				var sels = ranges[RangeType.Selection];
-				var separator = sels.Count == 1 ? "\n" : " ";
+				var separator = sels.Count == 1 ? Data.DefaultEnding : " ";
 				while (result.Count > sels.Count)
 				{
 					result[result.Count - 2] += separator + result[result.Count - 1];
