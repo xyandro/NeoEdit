@@ -20,21 +20,17 @@ namespace NeoEdit.GUI.ItemGridControl
 	{
 		public delegate void AcceptEvent();
 		AcceptEvent accept = () => { };
-		public event AcceptEvent Accept
-		{
-			add { accept += value; }
-			remove { accept -= value; }
-		}
+		public event AcceptEvent Accept { add { accept += value; } remove { accept -= value; } }
 
-		public static DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IEnumerable<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).ItemsCollectionChanged(e.OldValue)));
-		public static DependencyProperty SortedItemsProperty = DependencyProperty.Register("SortedItems", typeof(ListCollectionView), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).SortedItemsCollectionChanged(e.OldValue)));
-		public static DependencyProperty ColumnsProperty = DependencyProperty.Register("Columns", typeof(ObservableHashSet<ItemGridColumn>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).ColumnsCollectionChanged(e.OldValue)));
-		public static DependencyProperty SortColumnProperty = DependencyProperty.Register("SortColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).SortColumnChanged()));
-		public static DependencyProperty SortAscendingProperty = DependencyProperty.Register("SortAscending", typeof(bool), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).SortAscendingChanged()));
-		public static DependencyProperty FocusedProperty = DependencyProperty.Register("Focused", typeof(DependencyObject), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).FocusedChanged()));
-		public static DependencyProperty FocusColumnsProperty = DependencyProperty.Register("FocusColumns", typeof(bool), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).FocusColumnsChanged()));
-		public static DependencyProperty FocusedColumnProperty = DependencyProperty.Register("FocusedColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).FocusedColumnChanged()));
-		public static DependencyProperty SelectedProperty = DependencyProperty.Register("Selected", typeof(ObservableCollection<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).SelectedCollectionChanged(e.OldValue)));
+		public static DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IEnumerable<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnItemsCollectionChanged(e.OldValue)));
+		public static DependencyProperty SortedItemsProperty = DependencyProperty.Register("SortedItems", typeof(ListCollectionView), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortedItemsCollectionChanged(e.OldValue)));
+		public static DependencyProperty ColumnsProperty = DependencyProperty.Register("Columns", typeof(ObservableHashSet<ItemGridColumn>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnColumnsCollectionChanged(e.OldValue)));
+		public static DependencyProperty SortColumnProperty = DependencyProperty.Register("SortColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortColumnChanged()));
+		public static DependencyProperty SortAscendingProperty = DependencyProperty.Register("SortAscending", typeof(bool), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortAscendingChanged()));
+		public static DependencyProperty FocusedProperty = DependencyProperty.Register("Focused", typeof(DependencyObject), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusedChanged()));
+		public static DependencyProperty FocusColumnsProperty = DependencyProperty.Register("FocusColumns", typeof(bool), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusColumnsChanged()));
+		public static DependencyProperty FocusedColumnProperty = DependencyProperty.Register("FocusedColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusedColumnChanged()));
+		public static DependencyProperty SelectedProperty = DependencyProperty.Register("Selected", typeof(ObservableCollection<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSelectedCollectionChanged(e.OldValue)));
 		public static DependencyProperty TextInputColumnProperty = DependencyProperty.Register("TextInputColumn", typeof(ItemGridColumn), typeof(ItemGrid));
 		public static DependencyProperty TextInputDelayProperty = DependencyProperty.Register("TextInputDelay", typeof(int), typeof(ItemGrid), new PropertyMetadata(500));
 
@@ -76,84 +72,84 @@ namespace NeoEdit.GUI.ItemGridControl
 			InvalidateDraw();
 		}
 
-		void ItemsCollectionChanged(object _oldValue)
+		void OnItemsCollectionChanged(object _oldValue)
 		{
 			var oldValue = _oldValue as INotifyCollectionChanged;
 			if (oldValue != null)
-				oldValue.CollectionChanged -= ItemsChanged;
+				oldValue.CollectionChanged -= OnItemsChanged;
 
 			var newValue = SortedItems as INotifyCollectionChanged;
 			if (newValue != null)
-				newValue.CollectionChanged += ItemsChanged;
+				newValue.CollectionChanged += OnItemsChanged;
 
-			ItemsChanged(null, null);
+			OnItemsChanged(null, null);
 		}
 
-		void SortedItemsCollectionChanged(object _oldValue)
+		void OnSortedItemsCollectionChanged(object _oldValue)
 		{
 			var oldValue = _oldValue as INotifyCollectionChanged;
 			if (oldValue != null)
-				oldValue.CollectionChanged -= SortedItemsChanged;
+				oldValue.CollectionChanged -= OnSortedItemsChanged;
 
 			var newValue = SortedItems as INotifyCollectionChanged;
 			if (newValue != null)
-				newValue.CollectionChanged += SortedItemsChanged;
+				newValue.CollectionChanged += OnSortedItemsChanged;
 
-			SortedItemsChanged(null, null);
+			OnSortedItemsChanged(null, null);
 		}
 
-		void ColumnsCollectionChanged(object _oldValue)
+		void OnColumnsCollectionChanged(object _oldValue)
 		{
 			var oldValue = _oldValue as INotifyCollectionChanged;
 			if (oldValue != null)
-				oldValue.CollectionChanged -= ColumnsChanged;
+				oldValue.CollectionChanged -= OnColumnsChanged;
 
 			var newValue = Columns as INotifyCollectionChanged;
 			if (newValue != null)
-				newValue.CollectionChanged += ColumnsChanged;
+				newValue.CollectionChanged += OnColumnsChanged;
 
-			ColumnsChanged(null, null);
+			OnColumnsChanged(null, null);
 		}
 
-		void SelectedCollectionChanged(object _oldValue)
+		void OnSelectedCollectionChanged(object _oldValue)
 		{
 			var oldValue = _oldValue as INotifyCollectionChanged;
 			if (oldValue != null)
-				oldValue.CollectionChanged -= SelectedChanged;
+				oldValue.CollectionChanged -= OnSelectedChanged;
 
 			var newValue = Selected as INotifyCollectionChanged;
 			if (newValue != null)
-				newValue.CollectionChanged += SelectedChanged;
+				newValue.CollectionChanged += OnSelectedChanged;
 
-			SelectedChanged(null, null);
+			OnSelectedChanged(null, null);
 		}
 
-		void ItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+		void OnItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			InvalidateSort();
 		}
 
-		void SortedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+		void OnSortedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			FocusedChanged(false);
-			SelectedChanged(null, null);
+			OnFocusedChanged(false);
+			OnSelectedChanged(null, null);
 			InvalidateDraw();
 		}
 
-		void ColumnsChanged(object sender, NotifyCollectionChangedEventArgs e)
+		void OnColumnsChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			SortColumnChanged();
-			FocusedColumnChanged();
+			OnSortColumnChanged();
+			OnFocusedColumnChanged();
 			InvalidateDraw();
 		}
 
-		void SelectedChanged(object sender, NotifyCollectionChangedEventArgs e)
+		void OnSelectedChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			Selected.Where(item => !SortedItems.Contains(item)).ToList().ForEach(item => Selected.Remove(item));
 			InvalidateDraw();
 		}
 
-		void SortColumnChanged()
+		void OnSortColumnChanged()
 		{
 			if (Columns.Count == 0)
 				return;
@@ -165,15 +161,15 @@ namespace NeoEdit.GUI.ItemGridControl
 			}
 
 			SortAscending = SortColumn.SortAscending;
-			SortAscendingChanged();
+			OnSortAscendingChanged();
 		}
 
-		void SortAscendingChanged()
+		void OnSortAscendingChanged()
 		{
 			InvalidateSort();
 		}
 
-		void FocusedChanged(bool show = true)
+		void OnFocusedChanged(bool show = true)
 		{
 			if (SortedItems.Count == 0)
 				return;
@@ -191,12 +187,12 @@ namespace NeoEdit.GUI.ItemGridControl
 			}
 		}
 
-		void FocusColumnsChanged()
+		void OnFocusColumnsChanged()
 		{
 			InvalidateDraw();
 		}
 
-		void FocusedColumnChanged()
+		void OnFocusedColumnChanged()
 		{
 			if (Columns.Count == 0)
 				return;

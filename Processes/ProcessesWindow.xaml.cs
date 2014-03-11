@@ -1,10 +1,10 @@
-﻿using NeoEdit.GUI;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.ItemGridControl;
@@ -33,13 +33,9 @@ namespace NeoEdit.Processes
 
 			foreach (ProcessItem.Property prop in Enum.GetValues(typeof(ProcessItem.Property)))
 			{
-				processes.Columns.Add(new ItemGridColumn
+				processes.Columns.Add(new ItemGridColumn(ProcessItem.GetDepProp(prop))
 				{
-					Header = prop.ToString(),
-					DepProp = ProcessItem.GetDepProp(prop),
-					HorizontalAlignment = (ProcessItem.PropertyType(prop) == typeof(int?)) || (ProcessItem.PropertyType(prop) == typeof(long?)) || (ProcessItem.PropertyType(prop) == typeof(DateTime?)) ? HorizontalAlignment.Right : HorizontalAlignment.Left,
-					StringFormat = ProcessItem.PropertyType(prop) == typeof(long?) ? "n0" : ProcessItem.PropertyType(prop) == typeof(DateTime?) ? "yyyy/MM/dd HH:mm:ss 'GMT'" : null,
-					SortAscending = (ProcessItem.PropertyType(prop) != typeof(int?)) && (ProcessItem.PropertyType(prop) != typeof(long?)),
+					SortAscending = (prop != ProcessItem.Property.CPU) && (prop != ProcessItem.Property.Size),
 				});
 			}
 			processes.SortColumn = processes.TextInputColumn = processes.Columns.First(col => col.Header == "Name");
