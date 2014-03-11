@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Header="_Window">
 	<MenuItem Header="_Browser" Click="WindowBrowser"/>
+	<MenuItem Header="_Processes" Click="WindowProcesses"/>
 	<MenuItem Header="B_inary Editor" Click="WindowBinaryEditor"/>
 	<MenuItem Header="_Text Editor" Click="WindowTextEditor"/>
 </MenuItem>

@@ -14,7 +14,6 @@ using NeoEdit.GUI.Dialogs;
 using NeoEdit.Records;
 using NeoEdit.Records.Disks;
 using NeoEdit.Records.Lists;
-using NeoEdit.Records.Processes;
 using NeoEdit.Records.Registries;
 
 namespace NeoEdit.Browser
@@ -39,8 +38,6 @@ namespace NeoEdit.Browser
 						SetListView();
 					if (lastRootType == typeof(RegistryRecord))
 						SetRegistryView();
-					if (lastRootType == typeof(ProcessRecord))
-						SetProcessView();
 				}
 
 				Refresh();
@@ -297,14 +294,6 @@ namespace NeoEdit.Browser
 						Refresh();
 					}
 					break;
-				case RecordAction.ActionName.Suspend:
-					foreach (var record in records)
-						record.Suspend();
-					break;
-				case RecordAction.ActionName.Resume:
-					foreach (var record in records)
-						record.Resume();
-					break;
 				case RecordAction.ActionName.Copy:
 					ClipboardWindow.SetRecords(records, false);
 					break;
@@ -444,12 +433,6 @@ namespace NeoEdit.Browser
 			SortProperty = RecordProperty.PropertyName.Name;
 		}
 
-		void SetProcessView()
-		{
-			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.ID, RecordProperty.PropertyName.Name, RecordProperty.PropertyName.CPU, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.Data };
-			SortProperty = RecordProperty.PropertyName.Name;
-		}
-
 		void MenuItemViewClick(object sender, RoutedEventArgs e)
 		{
 			switch (((MenuItem)sender).Header.ToString())
@@ -457,7 +440,6 @@ namespace NeoEdit.Browser
 				case "_Files": SetLocation(new DiskRoot()); break;
 				case "_List": SetLocation(new ListRoot()); break;
 				case "_Registry": SetLocation(new RegistryRoot()); break;
-				case "_Processes": SetLocation(new ProcessRoot()); break;
 			}
 		}
 	}

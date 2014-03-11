@@ -26,7 +26,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			remove { accept -= value; }
 		}
 
-		public static DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IEnumerable<DependencyObject>), typeof(ItemGrid));
+		public static DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IEnumerable<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).ItemsCollectionChanged(e.OldValue)));
 		public static DependencyProperty SortedItemsProperty = DependencyProperty.Register("SortedItems", typeof(ListCollectionView), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).SortedItemsCollectionChanged(e.OldValue)));
 		public static DependencyProperty ColumnsProperty = DependencyProperty.Register("Columns", typeof(ObservableHashSet<ItemGridColumn>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).ColumnsCollectionChanged(e.OldValue)));
 		public static DependencyProperty SortColumnProperty = DependencyProperty.Register("SortColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).SortColumnChanged()));
@@ -76,6 +76,19 @@ namespace NeoEdit.GUI.ItemGridControl
 			InvalidateDraw();
 		}
 
+		void ItemsCollectionChanged(object _oldValue)
+		{
+			var oldValue = _oldValue as INotifyCollectionChanged;
+			if (oldValue != null)
+				oldValue.CollectionChanged -= ItemsChanged;
+
+			var newValue = SortedItems as INotifyCollectionChanged;
+			if (newValue != null)
+				newValue.CollectionChanged += ItemsChanged;
+
+			ItemsChanged(null, null);
+		}
+
 		void SortedItemsCollectionChanged(object _oldValue)
 		{
 			var oldValue = _oldValue as INotifyCollectionChanged;
@@ -115,11 +128,15 @@ namespace NeoEdit.GUI.ItemGridControl
 			SelectedChanged(null, null);
 		}
 
+		void ItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			InvalidateSort();
+		}
+
 		void SortedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			FocusedChanged(false);
 			SelectedChanged(null, null);
-			InvalidateSort();
 			InvalidateDraw();
 		}
 
@@ -244,7 +261,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			}
 		}
 
-		void Resort()
+		public void Sort()
 		{
 			if ((Columns.Contains(SortColumn)) && (SortedItems != null))
 				SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, SortColumn.NumericStrings);
@@ -287,7 +304,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			{
 				sortTimer.Stop();
 				sortTimer = null;
-				Resort();
+				Sort();
 			};
 			sortTimer.Start();
 		}

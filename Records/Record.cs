@@ -42,8 +42,6 @@ namespace NeoEdit.Records
 				if (CanSyncTarget()) actions.Add(RecordAction.ActionName.SyncTarget);
 				if (CanOpen()) actions.Add(RecordAction.ActionName.Open);
 				if (CanView()) actions.Add(RecordAction.ActionName.View);
-				if (CanSuspend()) actions.Add(RecordAction.ActionName.Suspend);
-				if (CanResume()) actions.Add(RecordAction.ActionName.Resume);
 				return actions;
 			}
 		}
@@ -125,12 +123,8 @@ namespace NeoEdit.Records
 		public virtual bool CanSyncTarget() { return false; }
 		public virtual bool CanOpen() { return false; }
 		public virtual bool CanView() { return false; }
-		public virtual bool CanSuspend() { return false; }
-		public virtual bool CanResume() { return false; }
 
 		public virtual void Delete() { }
-		public virtual void Suspend() { }
-		public virtual void Resume() { }
 		public virtual void CalcMD5() { }
 		public virtual void Identify() { }
 

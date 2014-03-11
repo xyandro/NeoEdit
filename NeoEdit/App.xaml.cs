@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
+using NeoEdit.Processes;
 using NeoEdit.Browser;
 using NeoEdit.Common.Transform;
 using NeoEdit.TextEditor;
@@ -111,6 +112,9 @@ namespace NeoEdit
 
 							return BinaryEditorWindow.CreateFromDump(args[1]);
 						}
+					case "process":
+					case "processes":
+						return new ProcessesWindow();
 					case "gzip":
 						{
 							var data = File.ReadAllBytes(args[1]);
@@ -137,11 +141,13 @@ namespace NeoEdit
 			NeoEdit.GUI.Launcher.Initialize(
 				textEditor: (filename, bytes, encoding) => new TextEditorWindow(filename, bytes, encoding),
 				fileBinaryEditor: (filename, binarydata) => BinaryEditorWindow.CreateFromFile(filename, binarydata),
-				browser: () => new BrowserWindow()
+				processBinaryEditor: (pid) => BinaryEditorWindow.CreateFromProcess(pid),
+				browser: () => new BrowserWindow(),
+				processes: () => new ProcessesWindow()
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
-			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NeoEdit.Records.Processes.ProcessRecord).TypeHandle);
+			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NeoEdit.Processes.ProcessItem).TypeHandle);
 		}
 
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

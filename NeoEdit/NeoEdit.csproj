@@ -109,6 +109,10 @@
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Processes\Processes.csproj">
+      <Project>{c65dd007-a448-49f5-b813-372c53d374c3}</Project>
+      <Name>Processes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Records\Records.csproj">
       <Project>{b0131301-7379-4eda-9a35-8c8e715429b1}</Project>
       <Name>Records</Name>

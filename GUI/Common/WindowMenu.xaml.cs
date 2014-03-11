@@ -15,6 +15,11 @@ namespace NeoEdit.GUI.Common
 			Launcher.Static.LaunchBrowser();
 		}
 
+		void WindowProcesses(object sender, RoutedEventArgs e)
+		{
+			Launcher.Static.LaunchProcesses();
+		}
+
 		void WindowBinaryEditor(object sender, RoutedEventArgs e)
 		{
 			Launcher.Static.LaunchBinaryEditor();
