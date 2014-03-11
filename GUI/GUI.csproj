@@ -92,8 +92,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ItemGridControl\ItemGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ItemGridControl\ItemGrid.xaml.cs">
+      <DependentUpon>ItemGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ItemGridControl\ItemGridColumn.cs" />
+    <Compile Include="ItemGridControl\ObservableHashSet.cs" />
+    <Compile Include="ItemGridControl\StringFormatConverter.cs" />
     <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
