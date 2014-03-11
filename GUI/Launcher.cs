@@ -13,12 +13,14 @@ namespace NeoEdit.GUI
 		protected Action<int> processBinaryEditorLauncher;
 		protected Action browserLauncher;
 		protected Action<int?> processesLauncher;
+		protected Action<int?> handlesLauncher;
 		public static void Initialize(
 			Action<string, byte[], Coder.Type> textEditor,
 			Action<string, byte[]> fileBinaryEditor,
 			Action<int> processBinaryEditor,
 			Action browser,
-			Action<int?> processes
+			Action<int?> processes,
+			Action<int?> handles
 		)
 		{
 			launcher = new Launcher
@@ -28,6 +30,7 @@ namespace NeoEdit.GUI
 				processBinaryEditorLauncher = processBinaryEditor,
 				browserLauncher = browser,
 				processesLauncher = processes,
+				handlesLauncher = handles,
 			};
 		}
 
@@ -54,6 +57,11 @@ namespace NeoEdit.GUI
 		public void LaunchProcesses(int? pid = null)
 		{
 			processesLauncher(pid);
+		}
+
+		public void LaunchHandles(int? pid = null)
+		{
+			handlesLauncher(pid);
 		}
 	}
 }

@@ -8,6 +8,7 @@
 
 	<Window.CommandBindings>
 		<CommandBinding Command="processes:ProcessesWindow.Command_View_Refresh" Executed="Command_Executed"/>
+		<CommandBinding Command="processes:ProcessesWindow.Command_View_Handles" Executed="Command_Executed"/>
 		<CommandBinding Command="processes:ProcessesWindow.Command_Process_Open" Executed="Command_Executed"/>
 		<CommandBinding Command="processes:ProcessesWindow.Command_Process_Suspend" Executed="Command_Executed"/>
 		<CommandBinding Command="processes:ProcessesWindow.Command_Process_Resume" Executed="Command_Executed"/>
@@ -16,6 +17,7 @@
 
 	<Window.InputBindings>
 		<KeyBinding Command="processes:ProcessesWindow.Command_View_Refresh" Key="F5"/>
+		<KeyBinding Command="processes:ProcessesWindow.Command_View_Handles" Key="H" Modifiers="Control"/>
 		<KeyBinding Command="processes:ProcessesWindow.Command_Process_Open" Key="O" Modifiers="Control"/>
 		<KeyBinding Command="processes:ProcessesWindow.Command_Process_Suspend" Key="S" Modifiers="Control"/>
 		<KeyBinding Command="processes:ProcessesWindow.Command_Process_Resume" Key="R" Modifiers="Control"/>
@@ -34,6 +36,7 @@
 		<Menu Focusable="False">
 			<MenuItem Header="_View">
 				<MenuItem Command="processes:ProcessesWindow.Command_View_Refresh" Header="_Refresh" InputGestureText="F5"/>
+				<MenuItem Command="processes:ProcessesWindow.Command_View_Handles" Header="_Handles" InputGestureText="Ctrl-H"/>
 			</MenuItem>
 			<MenuItem Header="_Process">
 				<MenuItem Command="processes:ProcessesWindow.Command_Process_Open" Header="_Open" InputGestureText="Ctrl-O"/>

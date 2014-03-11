@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{20CB32E5-9B1D-4C78-8126-20367398001C}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NeoEdit</RootNamespace>
-    <AssemblyName>NeoEdit</AssemblyName>
+    <RootNamespace>NeoEdit.Handles</RootNamespace>
+    <AssemblyName>Handles</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -32,16 +32,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
-  <PropertyGroup>
-    <ApplicationIcon>..\Photoshop\NeoEdit.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>NeoEdit.InstanceManager</StartupObject>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,16 +49,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    <Compile Include="HandlesWindow.xaml.cs">
+      <DependentUpon>HandlesWindow.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="HandleItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -90,17 +78,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BinaryEditor\BinaryEditor.csproj">
-      <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
-      <Name>BinaryEditor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Browser\Browser.csproj">
-      <Project>{92e424cf-af27-4378-805c-bd0b4ffd0222}</Project>
-      <Name>Browser</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>
@@ -109,27 +86,16 @@
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Handles\Handles.csproj">
-      <Project>{20cb32e5-9b1d-4c78-8126-20367398001c}</Project>
-      <Name>Handles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Processes\Processes.csproj">
-      <Project>{c65dd007-a448-49f5-b813-372c53d374c3}</Project>
-      <Name>Processes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Records\Records.csproj">
-      <Project>{b0131301-7379-4eda-9a35-8c8e715429b1}</Project>
-      <Name>Records</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TextEditor\TextEditor.csproj">
-      <Project>{9a35ab82-2481-4c44-b51e-66df7d248ead}</Project>
-      <Name>TextEditor</Name>
+    <ProjectReference Include="..\Win32\Win32.vcxproj">
+      <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
+      <Name>Win32</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\Photoshop\NeoEdit.ico">
-      <Link>NeoEdit.ico</Link>
-    </Resource>
+    <Page Include="HandlesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

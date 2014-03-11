@@ -20,6 +20,7 @@ namespace NeoEdit
 			static void ReadProcessMemory(Handle ^handle, System::IntPtr index, array<byte> ^bytes, int bytesIndex, int numBytes);
 			static void WriteProcessMemory(Handle ^handle, System::IntPtr index, array<byte> ^bytes, int numBytes);
 			static System::Collections::Generic::List<int> ^GetPIDsWithFileLock(System::String ^fileName);
+			static System::Collections::Generic::List<HandleInfo^> ^GetHandles();
 			static System::Collections::Generic::List<HandleInfo^> ^GetProcessHandles(int pid);
 			static System::Collections::Generic::List<System::String^> ^GetHandleTypes();
 			static System::Collections::Generic::List<HandleInfo^> ^GetTypeHandles(System::String ^type);

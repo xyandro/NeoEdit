@@ -15,6 +15,7 @@ namespace NeoEdit.Processes
 	public partial class ProcessesWindow : Window
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
+		public static RoutedCommand Command_View_Handles = new RoutedCommand();
 		public static RoutedCommand Command_Process_Open = new RoutedCommand();
 		public static RoutedCommand Command_Process_Suspend = new RoutedCommand();
 		public static RoutedCommand Command_Process_Resume = new RoutedCommand();
@@ -64,6 +65,11 @@ namespace NeoEdit.Processes
 		{
 			if (e.Command == Command_View_Refresh)
 				Refresh();
+			else if (e.Command == Command_View_Handles)
+			{
+				foreach (ProcessItem selected in processes.Selected)
+					Launcher.Static.LaunchHandles(selected.PID);
+			}
 			else if (e.Command == Command_Process_Open)
 			{
 				foreach (ProcessItem selected in processes.Selected)

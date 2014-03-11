@@ -20,6 +20,11 @@ namespace NeoEdit.GUI.Common
 			Launcher.Static.LaunchProcesses();
 		}
 
+		void WindowHandles(object sender, RoutedEventArgs e)
+		{
+			Launcher.Static.LaunchHandles();
+		}
+
 		void WindowBinaryEditor(object sender, RoutedEventArgs e)
 		{
 			Launcher.Static.LaunchBinaryEditor();

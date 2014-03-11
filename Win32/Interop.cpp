@@ -95,6 +95,16 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
+		List<HandleInfo^> ^Interop::GetHandles()
+		{
+			try
+			{
+				auto handles = Win32Lib::GetAllHandles();
+				return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+		}
+
 		List<HandleInfo^> ^Interop::GetProcessHandles(int pid)
 		{
 			try

@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Browser", "Browser\Browser.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Processes", "Processes\Processes.csproj", "{C65DD007-A448-49F5-B813-372C53D374C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handles", "Handles\Handles.csproj", "{20CB32E5-9B1D-4C78-8126-20367398001C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -119,6 +121,14 @@ Global
 		{C65DD007-A448-49F5-B813-372C53D374C3}.Release|x64.Build.0 = Release|x64
 		{C65DD007-A448-49F5-B813-372C53D374C3}.Release|x86.ActiveCfg = Release|x86
 		{C65DD007-A448-49F5-B813-372C53D374C3}.Release|x86.Build.0 = Release|x86
+		{20CB32E5-9B1D-4C78-8126-20367398001C}.Debug|x64.ActiveCfg = Debug|x64
+		{20CB32E5-9B1D-4C78-8126-20367398001C}.Debug|x64.Build.0 = Debug|x64
+		{20CB32E5-9B1D-4C78-8126-20367398001C}.Debug|x86.ActiveCfg = Debug|x86
+		{20CB32E5-9B1D-4C78-8126-20367398001C}.Debug|x86.Build.0 = Debug|x86
+		{20CB32E5-9B1D-4C78-8126-20367398001C}.Release|x64.ActiveCfg = Release|x64
+		{20CB32E5-9B1D-4C78-8126-20367398001C}.Release|x64.Build.0 = Release|x64
+		{20CB32E5-9B1D-4C78-8126-20367398001C}.Release|x86.ActiveCfg = Release|x86
+		{20CB32E5-9B1D-4C78-8126-20367398001C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

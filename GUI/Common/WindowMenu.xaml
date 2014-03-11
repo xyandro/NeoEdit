@@ -4,6 +4,7 @@
 	Header="_Window">
 	<MenuItem Header="_Browser" Click="WindowBrowser"/>
 	<MenuItem Header="_Processes" Click="WindowProcesses"/>
+	<MenuItem Header="_Handles" Click="WindowHandles"/>
 	<MenuItem Header="B_inary Editor" Click="WindowBinaryEditor"/>
 	<MenuItem Header="_Text Editor" Click="WindowTextEditor"/>
 </MenuItem>
