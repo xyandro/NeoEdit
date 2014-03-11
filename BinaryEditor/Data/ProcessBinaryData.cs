@@ -35,9 +35,9 @@ namespace NeoEdit.BinaryEditor.Data
 		}
 
 		readonly int pid;
-		public ProcessBinaryData(int PID)
+		public ProcessBinaryData(int pid)
 		{
-			pid = PID;
+			this.pid = pid;
 			length = 0x80000000000;
 		}
 

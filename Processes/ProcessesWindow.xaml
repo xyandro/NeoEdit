@@ -4,7 +4,7 @@
 	xmlns:processes="clr-namespace:NeoEdit.Processes"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=GUI"
-	Title="Processes" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=processes}">
+	Title="NeoEdit Process Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=processes}">
 
 	<Window.CommandBindings>
 		<CommandBinding Command="processes:ProcessesWindow.Command_View_Refresh" Executed="Command_Executed"/>

@@ -26,7 +26,7 @@ namespace NeoEdit.Processes
 		static ProcessesWindow() { UIHelper<ProcessesWindow>.Register(); }
 
 		readonly UIHelper<ProcessesWindow> uiHelper;
-		public ProcessesWindow()
+		public ProcessesWindow(int? pid = null)
 		{
 			uiHelper = new UIHelper<ProcessesWindow>(this);
 			InitializeComponent();
@@ -42,7 +42,17 @@ namespace NeoEdit.Processes
 			Processes = new ObservableCollection<ProcessItem>();
 			Refresh();
 			processes.Sort();
-			processes.Focused = null;
+			if (pid.HasValue)
+			{
+				processes.Focused = Processes.FirstOrDefault(proc => proc.PID == pid.Value);
+				if (processes.Focused != null)
+				{
+					processes.Selected.Clear();
+					processes.Selected.Add(processes.Focused);
+				}
+			}
+			else
+				processes.Focused = null;
 		}
 
 		void Refresh()
