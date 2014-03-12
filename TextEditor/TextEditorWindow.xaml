@@ -99,26 +99,26 @@
 
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_File">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_New" Header="_New" InputGestureText="Ctrl+N"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Open" Header="_Open" InputGestureText="Ctrl+O"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save" InputGestureText="Ctrl+S"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_New" Header="_New"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Open" Header="_Open"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_SaveAs" Header="Save _As"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="_Exit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Undo" Header="_Undo" InputGestureText="Ctrl+Z"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Redo" Header="_Redo" InputGestureText="Ctrl+Shift+Z"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Undo" Header="_Undo"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Redo" Header="_Redo"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Cut" Header="C_ut" InputGestureText="Ctrl+X"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Copy" Header="_Copy" InputGestureText="Ctrl+C"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Paste" Header="_Paste" InputGestureText="Ctrl+V"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard" InputGestureText="Ctrl+Shift+C"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Cut" Header="C_ut"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Copy" Header="_Copy"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Paste" Header="_Paste"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find" InputGestureText="Ctrl+F"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next" InputGestureText="F3"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Header="Find _Prev" InputGestureText="Shift+F3"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Header="Find _Prev"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line" InputGestureText="Ctrl+G"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto c_olumn"/>
 				<Separator/>
 				<MenuItem Header="_Encode" Click="EncodeClick">
@@ -149,21 +149,21 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToUpper" Header="Upper case" InputGestureText="Ctrl+U"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToLower" Header="Lower case" InputGestureText="Ctrl+Shift+U"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToUpper" Header="Upper case"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToLower" Header="Lower case"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToHex" Header="To hex" InputGestureText="Ctrl+H"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromHex" Header="From hex" InputGestureText="Ctrl+Shift+H"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToHex" Header="To hex"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromHex" Header="From hex"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToChar" Header="To char" InputGestureText="Ctrl+Shift+D3"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromChar" Header="From char" InputGestureText="Ctrl+D3"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToChar" Header="To char"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromChar" Header="From char"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Width" Header="_Width"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Trim" Header="_Trim"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SetKeys" Header="Set _keys"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SetValues" Header="Set _values"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_KeysToValues" Header="Keys to values" InputGestureText="Ctrl+K"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_KeysToValues" Header="Keys to values"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Reverse" Header="_Reverse selections"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort" Header="_Sort selections"/>
@@ -173,9 +173,9 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection" InputGestureText="Ctrl+M"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All" InputGestureText="Ctrl+A"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unselect" Header="_Unselect"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="_Single"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
@@ -183,7 +183,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find results"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection" InputGestureText="Ctrl+M"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Selection" Header="_Selection"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Find" Header="_Find results"/>

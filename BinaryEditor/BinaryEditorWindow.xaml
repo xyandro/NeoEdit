@@ -87,29 +87,29 @@
 		</Grid.RowDefinitions>
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_File">
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_New" Header="_New" InputGestureText="Ctrl+N"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Header="_Open" InputGestureText="Ctrl+O"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_New" Header="_New"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Header="_Open"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_OpenDump" Header="Open _Dump"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Header="_Save" InputGestureText="Ctrl+S"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Header="Save _As"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Header="_Exit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Undo" Header="_Undo" InputGestureText="Ctrl+Z"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Redo" Header="_Redo" InputGestureText="Ctrl+Shift+Z"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Undo" Header="_Undo"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Redo" Header="_Redo"/>
 				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Header="Cu_t" InputGestureText="Ctrl+X"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Header="Cu_t" InputGestureText="Ctrl+X"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Copy" Header="_Copy" InputGestureText="Ctrl+C"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Paste" Header="_Paste" InputGestureText="Ctrl+V"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard" InputGestureText="Ctrl+Shift+C"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Header="Cu_t"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Header="Cu_t"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Copy" Header="_Copy"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Paste" Header="_Paste"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard"/>
 				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Find" Header="_Find" InputGestureText="Ctrl+F"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindNext" Header="Find _Next" InputGestureText="F3"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindPrev" Header="Find _Previous" InputGestureText="Shift+F3"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Goto" Header="_Goto" InputGestureText="Ctrl+G"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Find" Header="_Find"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindPrev" Header="Find _Previous"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Goto" Header="_Goto"/>
 				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Insert" Header="_Insert" InputGestureText="Insert" IsChecked="{Binding Insert, ElementName=canvas}"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Insert" Header="_Insert" IsChecked="{Binding Insert, ElementName=canvas}"/>
 				<MenuItem Header="_Encode" Click="EncodeClick">
 					<MenuItem Header="Auto"/>
 					<MenuItem Header="UTF8"/>
@@ -131,7 +131,7 @@
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_View_Values" Header="_Values" IsChecked="{Binding ShowValues, ElementName=self}"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_View_Refresh" Header="_Refresh" InputGestureText="F5"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_View_Refresh" Header="_Refresh"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="C_hecksum">

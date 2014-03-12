@@ -35,14 +35,14 @@
 
 		<Menu Focusable="False">
 			<MenuItem Header="_View">
-				<MenuItem Command="processes:ProcessesWindow.Command_View_Refresh" Header="_Refresh" InputGestureText="F5"/>
-				<MenuItem Command="processes:ProcessesWindow.Command_View_Handles" Header="_Handles" InputGestureText="Ctrl-H"/>
+				<MenuItem Command="processes:ProcessesWindow.Command_View_Refresh" Header="_Refresh"/>
+				<MenuItem Command="processes:ProcessesWindow.Command_View_Handles" Header="_Handles"/>
 			</MenuItem>
 			<MenuItem Header="_Process">
-				<MenuItem Command="processes:ProcessesWindow.Command_Process_Open" Header="_Open" InputGestureText="Ctrl-O"/>
-				<MenuItem Command="processes:ProcessesWindow.Command_Process_Suspend" Header="_Suspend" InputGestureText="Ctrl-S"/>
-				<MenuItem Command="processes:ProcessesWindow.Command_Process_Resume" Header="_Resume" InputGestureText="Ctrl-R"/>
-				<MenuItem Command="processes:ProcessesWindow.Command_Process_Kill" Header="_Kill" InputGestureText="Del"/>
+				<MenuItem Command="processes:ProcessesWindow.Command_Process_Open" Header="_Open"/>
+				<MenuItem Command="processes:ProcessesWindow.Command_Process_Suspend" Header="_Suspend"/>
+				<MenuItem Command="processes:ProcessesWindow.Command_Process_Resume" Header="_Resume"/>
+				<MenuItem Command="processes:ProcessesWindow.Command_Process_Kill" Header="_Kill"/>
 			</MenuItem>
 			<guiCommon:WindowMenu/>
 			<guiCommon:HelpMenu/>

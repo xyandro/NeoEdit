@@ -33,8 +33,8 @@
 
 		<Menu Focusable="False">
 			<MenuItem Header="_View">
-				<MenuItem Command="handles:HandlesWindow.Command_View_Refresh" Header="_Refresh" InputGestureText="F5"/>
-				<MenuItem Command="handles:HandlesWindow.Command_View_GotoProcess" Header="Goto _process" InputGestureText="Ctrl-P"/>
+				<MenuItem Command="handles:HandlesWindow.Command_View_Refresh" Header="_Refresh"/>
+				<MenuItem Command="handles:HandlesWindow.Command_View_GotoProcess" Header="Goto _process"/>
 			</MenuItem>
 			<guiCommon:WindowMenu/>
 			<guiCommon:HelpMenu/>

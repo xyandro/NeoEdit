@@ -152,6 +152,8 @@ namespace NeoEdit
 
 		public App()
 		{
+			InitializeComponent();
+
 			NeoEdit.GUI.Launcher.Initialize(
 				textEditor: (filename, bytes, encoding) => new TextEditorWindow(filename, bytes, encoding),
 				fileBinaryEditor: (filename, binarydata) => BinaryEditorWindow.CreateFromFile(filename, binarydata),
