@@ -16,7 +16,7 @@ namespace NeoEdit.Processes
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 		public static RoutedCommand Command_View_Handles = new RoutedCommand();
-		public static RoutedCommand Command_Process_Open = new RoutedCommand();
+		public static RoutedCommand Command_View_Memory = new RoutedCommand();
 		public static RoutedCommand Command_Process_Suspend = new RoutedCommand();
 		public static RoutedCommand Command_Process_Resume = new RoutedCommand();
 		public static RoutedCommand Command_Process_Kill = new RoutedCommand();
@@ -70,7 +70,7 @@ namespace NeoEdit.Processes
 				foreach (ProcessItem selected in processes.Selected)
 					Launcher.Static.LaunchHandles(selected.PID);
 			}
-			else if (e.Command == Command_Process_Open)
+			else if (e.Command == Command_View_Memory)
 			{
 				foreach (ProcessItem selected in processes.Selected)
 					Launcher.Static.LaunchBinaryEditor(selected.PID);

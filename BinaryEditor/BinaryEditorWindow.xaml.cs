@@ -106,6 +106,8 @@ namespace NeoEdit.BinaryEditor
 			var process = Process.GetProcessById(pid);
 			if (process == null)
 				throw new ArgumentException("Process doesn't exist.");
+			if (process.Id == Process.GetCurrentProcess().Id)
+				throw new ArgumentException("Can't open current process.");
 			return new BinaryEditorWindow(new ProcessBinaryData(pid)) { FileTitle = String.Format("Process {0} ({1}) - ", pid, process.ProcessName) };
 		}
 
