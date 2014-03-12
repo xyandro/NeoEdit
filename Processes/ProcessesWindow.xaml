@@ -44,7 +44,7 @@
 				<MenuItem Command="processes:ProcessesWindow.Command_Process_Resume" Header="_Resume"/>
 				<MenuItem Command="processes:ProcessesWindow.Command_Process_Kill" Header="_Kill"/>
 			</MenuItem>
-			<guiCommon:WindowMenu/>
+			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 			<guiCommon:HelpMenu/>
 		</Menu>
 		<ig:ItemGrid x:Name="processes" Grid.Row="1" Items="{Binding Processes, ElementName=self}"/>
