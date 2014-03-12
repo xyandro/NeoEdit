@@ -55,7 +55,6 @@
     <Compile Include="UnitTest\CryptoTest.cs" />
     <Compile Include="UnitTest\UnitTest.cs" />
     <Compile Include="UnitTest\UnicodeTest.cs" />
-    <Compile Include="Data\FindData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
