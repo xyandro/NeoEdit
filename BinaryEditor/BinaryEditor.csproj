@@ -51,6 +51,7 @@
     <Compile Include="Converters\IsStrConverter.cs" />
     <Compile Include="Data\BinaryData.cs" />
     <Compile Include="Data\DumpBinaryData.cs" />
+    <Compile Include="Data\FindData.cs" />
     <Compile Include="Data\MemoryBinaryData.cs" />
     <Compile Include="Data\ProcessBinaryData.cs" />
     <Compile Include="Data\SharedMemoryBinaryData.cs" />

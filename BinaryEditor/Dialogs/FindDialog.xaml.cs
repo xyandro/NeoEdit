@@ -3,8 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using NeoEdit.BinaryEditor.Data;
 using NeoEdit.Common;
-using NeoEdit.Common.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 

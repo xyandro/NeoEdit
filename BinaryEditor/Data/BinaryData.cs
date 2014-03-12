@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using NeoEdit.Common;
-using NeoEdit.Common.Data;
 
 namespace NeoEdit.BinaryEditor.Data
 {
