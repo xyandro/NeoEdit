@@ -17,7 +17,6 @@ namespace NeoEdit.Browser.Dialogs
 			InitializeComponent();
 			uiHelper.AddCallback(self => self.Messages, (o, n) => messages.ScrollToEnd());
 			Messages = "";
-			Show();
 		}
 
 		public void AddMessage(string message)

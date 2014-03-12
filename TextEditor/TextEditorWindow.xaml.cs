@@ -92,8 +92,6 @@ namespace NeoEdit.TextEditor
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
-
-			Show();
 		}
 
 		protected override void OnTextInput(System.Windows.Input.TextCompositionEventArgs e)

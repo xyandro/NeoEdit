@@ -80,8 +80,6 @@ namespace NeoEdit.BinaryEditor
 
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
 			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
-
-			Show();
 		}
 
 		public static BinaryEditorWindow CreateFromFile(string filename = null, byte[] bytes = null)

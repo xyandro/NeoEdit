@@ -15,7 +15,6 @@ namespace NeoEdit.Browser.Dialogs
 		{
 			uiHelper = new UIHelper<ViewImage>(this);
 			InitializeComponent();
-			Show();
 		}
 
 		void okClick(object sender, RoutedEventArgs e)

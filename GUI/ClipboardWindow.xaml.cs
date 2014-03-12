@@ -206,8 +206,6 @@ namespace NeoEdit.GUI
 					ItemClicked();
 				}
 			};
-
-			base.Show();
 		}
 
 		void ItemClicked()
