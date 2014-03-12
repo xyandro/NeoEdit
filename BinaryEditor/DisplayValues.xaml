@@ -6,7 +6,7 @@
     xmlns:common="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
     xmlns:binaryEditor="clr-namespace:NeoEdit.BinaryEditor"
 	mc:Ignorable="d"
-	d:DesignHeight="300" d:DesignWidth="300"
+	d:DesignWidth="300" d:DesignHeight="300"
 	Background="LightGray">
 
 	<StackPanel.Style>

@@ -6,7 +6,7 @@
 	xmlns:common="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:binaryEditorConverters="clr-namespace:NeoEdit.BinaryEditor.Converters"
 	mc:Ignorable="d"
-	d:DesignHeight="300" d:DesignWidth="300" Padding="0" BorderThickness="0" HorizontalAlignment="Right"
+	d:DesignWidth="300" d:DesignHeight="300" Padding="0" BorderThickness="0" HorizontalAlignment="Right"
 	IsReadOnly="{Binding Type, ElementName=self, Converter={binaryEditorConverters:IsStrConverter}}">
 
 	<TextBox.Background>

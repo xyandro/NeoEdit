@@ -4,7 +4,7 @@
     xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
     xmlns:browser="clr-namespace:NeoEdit.Browser"
     xmlns:browserConverters="clr-namespace:NeoEdit.Browser.Converters"
-    Title="Browser" Height="500" Width="600"
+    Title="Browser" Width="600" Height="500"
     Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}" KeyDown="Window_KeyDown">
 
 	<Grid>

@@ -4,7 +4,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl"
-    mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Focusable="True" FocusVisualStyle="{x:Null}">
+    mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300" Focusable="True" FocusVisualStyle="{x:Null}">
 
 	<Grid.Resources>
 		<Style TargetType="Button">
