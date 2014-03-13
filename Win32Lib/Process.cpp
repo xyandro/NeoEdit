@@ -93,6 +93,26 @@ namespace NeoEdit
 				return shared_ptr<void>(handle, CloseHandle);
 			}
 
+			SIZE_T Process::GetProcessMemoryLength(shared_ptr<void> handle)
+			{
+				byte *index = nullptr;
+				while (true)
+				{
+					MEMORY_BASIC_INFORMATION memInfo;
+					if (VirtualQueryEx(handle.get(), index, &memInfo, sizeof(memInfo)) == 0)
+					{
+						if (GetLastError() != ERROR_INVALID_PARAMETER)
+							Win32Exception::Throw();
+						return (SIZE_T)index;
+					}
+					auto size = min(memInfo.RegionSize - (index - (byte*)memInfo.BaseAddress), SIZE_T((byte*)-1 - index));
+					if (size == 0)
+						return (SIZE_T)index;
+					index += size;
+				}
+				return 0;
+			}
+
 			shared_ptr<VirtualQueryInfo> Process::VirtualQuery(shared_ptr<void> handle, byte *index)
 			{
 				MEMORY_BASIC_INFORMATION memInfo;

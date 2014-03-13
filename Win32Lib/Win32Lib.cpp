@@ -9,6 +9,7 @@ namespace NeoEdit
 	void (*Win32Lib::SuspendProcess)(DWORD pid) = Win32LibNS::Processes::Process::SuspendProcess;
 	void (*Win32Lib::ResumeProcess)(DWORD pid) = Win32LibNS::Processes::Process::ResumeProcess;
 	std::shared_ptr<void> (*Win32Lib::OpenReadMemoryProcess)(DWORD pid) = Win32LibNS::Processes::Process::OpenReadMemoryProcess;
+	SIZE_T (*Win32Lib::GetProcessMemoryLength)(std::shared_ptr<void>) = Win32LibNS::Processes::Process::GetProcessMemoryLength;
 	std::shared_ptr<Win32Lib::VirtualQueryInfo> (*Win32Lib::VirtualQuery)(std::shared_ptr<void> handle, byte *index) = Win32LibNS::Processes::Process::VirtualQuery;
 	std::shared_ptr<Win32Lib::Protect> (*Win32Lib::SetProtect)(std::shared_ptr<void> handle, std::shared_ptr<VirtualQueryInfo> info, bool write) = Win32LibNS::Processes::Process::SetProtect;
 	void (*Win32Lib::ReadProcessMemory)(std::shared_ptr<void> handle, byte *index, byte *bytes, int numBytes) = Win32LibNS::Processes::Process::ReadProcessMemory;

@@ -37,7 +37,10 @@ namespace NeoEdit.BinaryEditor.Data
 		public ProcessBinaryData(int pid)
 		{
 			this.pid = pid;
-			length = 0x80000000000;
+
+			using (Suspend())
+			using (Open())
+				length = (long)Interop.GetProcessMemoryLength(handle);
 		}
 
 		int suspendCount = 0;

@@ -18,6 +18,7 @@ namespace NeoEdit
 		static void (*SuspendProcess)(DWORD pid);
 		static void (*ResumeProcess)(DWORD pid);
 		static std::shared_ptr<void> (*OpenReadMemoryProcess)(DWORD pid);
+		static SIZE_T (*GetProcessMemoryLength)(std::shared_ptr<void>);
 		static std::shared_ptr<VirtualQueryInfo> (*VirtualQuery)(std::shared_ptr<void> handle, byte *index);
 		static std::shared_ptr<Protect> (*SetProtect)(std::shared_ptr<void> handle, std::shared_ptr<VirtualQueryInfo> info, bool write);
 		static void (*ReadProcessMemory)(std::shared_ptr<void> handle, byte *index, byte *bytes, int numBytes);

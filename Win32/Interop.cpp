@@ -38,6 +38,15 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
+		UIntPtr Interop::GetProcessMemoryLength(Handle ^handle)
+		{
+			try
+			{
+				return (UIntPtr)(uintptr_t)Win32Lib::GetProcessMemoryLength(handle->Get());
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+		}
+
 		VirtualQueryInfo ^Interop::VirtualQuery(Handle ^handle, IntPtr index)
 		{
 			try
