@@ -11,6 +11,14 @@ namespace NeoEdit.Records.Handles
 
 		public override Record Parent { get { return new HandleRoot(); } }
 
-		public override IEnumerable<Record> Records { get { return Interop.GetTypeHandles(Name).Select(handle => new HandleItem(handle)); } }
+		public override IEnumerable<Record> Records
+		{
+			get
+			{
+				var handles = Interop.GetAllHandles();
+				Interop.GetTypeHandles(handles, Name);
+				return Interop.GetHandleInfo(handles).Select(handle => new HandleItem(handle));
+			}
+		}
 	}
 }

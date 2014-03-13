@@ -90,39 +90,44 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		List<int> ^Interop::GetPIDsWithFileLock(String ^fileName)
+		HandleList ^Interop::GetAllHandles()
 		{
 			try
 			{
-				auto handles = Win32Lib::GetAllHandles();
-				handles = Win32Lib::GetTypeHandles(handles, L"File");
-				auto handleInfo = Win32Lib::GetHandleInfo(handles);
-				auto result = gcnew List<int>();
+				return gcnew HandleList(Win32Lib::GetAllHandles());
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+		}
+
+		void Interop::GetTypeHandles(HandleList ^handles, System::String ^type)
+		{
+			try
+			{
+				handles->Set(Win32Lib::GetTypeHandles(handles->Get(), marshal_as<wstring>(type)));
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+		}
+
+		void Interop::GetProcessHandles(HandleList ^handles, int pid)
+		{
+			try
+			{
+				handles->Set(Win32Lib::GetProcessHandles(handles->Get(), pid));
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+		}
+
+		List<HandleInfo^> ^Interop::GetHandleInfo(HandleList ^handles)
+		{
+			try
+			{
+				auto handleInfo = Win32Lib::GetHandleInfo(handles->Get());
+				handles->Set(nullptr);
+
+				auto result = gcnew List<HandleInfo^>();
 				for each (auto handle in *handleInfo)
-					if (fileName->Equals(gcnew String(handle->Name.c_str()), StringComparison::OrdinalIgnoreCase))
-						result->Add(handle->PID);
+					result->Add(gcnew HandleInfo(handle));
 				return result;
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		List<HandleInfo^> ^Interop::GetHandles()
-		{
-			try
-			{
-				auto handles = Win32Lib::GetAllHandles();
-				return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		List<HandleInfo^> ^Interop::GetProcessHandles(int pid)
-		{
-			try
-			{
-				auto handles = Win32Lib::GetAllHandles();
-				handles = Win32Lib::GetProcessHandles(handles, pid);
-				return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
@@ -136,17 +141,6 @@ namespace NeoEdit
 				for each (auto name in *types)
 					result->Add(gcnew String(name.c_str()));
 				return result;
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		List<HandleInfo^> ^Interop::GetTypeHandles(String ^type)
-		{
-			try
-			{
-				auto handles = Win32Lib::GetAllHandles();
-				handles = Win32Lib::GetTypeHandles(handles, marshal_as<wstring>(type));
-				return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
@@ -176,18 +170,6 @@ namespace NeoEdit
 			{
 				pin_ptr<uint8_t> bytesPtr = &bytes[0];
 				return Win32Lib::WriteSharedMemory(pid, (HANDLE)handle, (uintptr_t)index, bytesPtr, bytes->Length);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		List<HandleInfo^> ^Interop::GetHandleInfo(shared_ptr<const vector<shared_ptr<const Win32Lib::HandleInfo>>> handles)
-		{
-			try
-			{
-				auto result = gcnew List<HandleInfo^>();
-				for each (auto handle in *handles)
-					result->Add(gcnew HandleInfo(handle));
-				return result;
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}

@@ -50,13 +50,12 @@ namespace NeoEdit.Handles
 
 		void Refresh()
 		{
-			List<HandleInfo> handles;
+			var handles = Interop.GetAllHandles();
 			if (pid.HasValue)
-				handles = Interop.GetProcessHandles(pid.Value);
-			else
-				handles = Interop.GetHandles();
+				Interop.GetProcessHandles(handles, pid.Value);
 
-			Handles = new ObservableCollection<HandleItem>(handles.Select(info => new HandleItem(info)));
+			var handleInfo = Interop.GetHandleInfo(handles);
+			Handles = new ObservableCollection<HandleItem>(handleInfo.Select(info => new HandleItem(info)));
 		}
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)

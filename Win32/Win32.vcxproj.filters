@@ -22,6 +22,9 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{fd3c58d5-5ec3-4cba-b3dd-3c6b9071ed26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HandleList">
+      <UniqueIdentifier>{36c7837a-144b-493f-92a8-7868661ca961}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interop.cpp">
@@ -41,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="HandleInfo.cpp">
       <Filter>HandleInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="HandleList.cpp">
+      <Filter>HandleList</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="SVNInfo.h">
       <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="HandleList.h">
+      <Filter>HandleList</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

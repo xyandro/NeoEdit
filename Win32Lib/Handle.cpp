@@ -316,7 +316,7 @@ namespace NeoEdit
 	{
 		namespace Handles
 		{
-			shared_ptr<const vector<shared_ptr<const void>>> Handle::GetAllHandles()
+			std::shared_ptr<const HandleList> Handle::GetAllHandles()
 			{
 				shared_ptr<SYSTEM_HANDLE_INFORMATION_EX> handleInfo;
 				ULONG size = 4096;
@@ -343,19 +343,19 @@ namespace NeoEdit
 					result->push_back(shared_ptr<const void>(new SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX(handleInfo->Handles[ctr])));
 
 				sort(result->begin(), result->end(), sortPred);
-				return result;
+				return std::shared_ptr<const HandleList>(new HandleList(result));
 			}
 
-			shared_ptr<const vector<shared_ptr<const void>>> Handle::GetProcessHandles(shared_ptr<const vector<shared_ptr<const void>>> handles, int32_t pid)
+			std::shared_ptr<const HandleList> Handle::GetProcessHandles(std::shared_ptr<const HandleList> handles, int32_t pid)
 			{
 				shared_ptr<vector<shared_ptr<const void>>> result(new vector<shared_ptr<const void>>);
-				for each (auto handle in *handles)
+				for each (auto handle in *handles->Get())
 					if ((int32_t)GetHandle(handle)->UniqueProcessId == pid)
 						result->push_back(handle);
-				return result;
+				return std::shared_ptr<const HandleList>(new HandleList(result));
 			}
 
-			shared_ptr<const vector<shared_ptr<const void>>> Handle::GetTypeHandles(shared_ptr<const vector<shared_ptr<const void>>> handles, wstring type)
+			std::shared_ptr<const HandleList> Handle::GetTypeHandles(std::shared_ptr<const HandleList> handles, wstring type)
 			{
 				shared_ptr<vector<shared_ptr<const void>>> result(new vector<shared_ptr<const void>>);
 				auto itr = find(typeNames.begin(), typeNames.end(), type);
@@ -363,16 +363,16 @@ namespace NeoEdit
 					throw Win32Exception(L"Invalid type");
 
 				auto index = itr - typeNames.begin();
-				for each (auto handle in *handles)
+				for each (auto handle in *handles->Get())
 					if (GetHandle(handle)->ObjectTypeIndex == index)
 						result->push_back(handle);
-				return result;
+				return std::shared_ptr<const HandleList>(new HandleList(result));
 			}
 
-			shared_ptr<const vector<shared_ptr<const HandleInfo>>> Handle::GetHandleInfo(shared_ptr<const vector<shared_ptr<const void>>> handles)
+			shared_ptr<const vector<shared_ptr<const HandleInfo>>> Handle::GetHandleInfo(std::shared_ptr<const HandleList> handles)
 			{
 				map<DWORD, vector<SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX*>> handlesByProcess;
-				for each (auto handle in *handles)
+				for each (auto handle in *handles->Get())
 					handlesByProcess[(DWORD)GetHandle(handle)->UniqueProcessId].push_back(GetHandle(handle));
 
 				shared_ptr<vector<shared_ptr<const HandleInfo>>> result(new vector<shared_ptr<const HandleInfo>>());

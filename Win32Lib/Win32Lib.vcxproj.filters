@@ -28,6 +28,9 @@
     <Filter Include="Handles\HandleInfo">
       <UniqueIdentifier>{8df91e1a-5adf-450a-9941-839fad45a604}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Handles\HandleList">
+      <UniqueIdentifier>{478b8bd6-fe3c-431a-851f-95c91255c77e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -50,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="HandleInfo.cpp">
       <Filter>Handles\HandleInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="HandleList.cpp">
+      <Filter>Handles\HandleList</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="HandleInfo.h">
       <Filter>Handles\HandleInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="HandleList.h">
+      <Filter>Handles\HandleList</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

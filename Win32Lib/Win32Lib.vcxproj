@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Handle.cpp" />
     <ClCompile Include="HandleInfo.cpp" />
+    <ClCompile Include="HandleList.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="Protect.cpp" />
     <ClCompile Include="Win32Exception.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="Win32Lib.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HandleList.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Handle.h" />
     <ClInclude Include="HandleInfo.h" />
