@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "Process.h"
 
+#include <Windows.h>
+#include <TlHelp32.h>
+#include <hash_set>
+
 #include "Win32Exception.h"
 
 using namespace std;

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Interop.h"
 
+#include <msclr\marshal_cppstd.h>
+
 using namespace std;
 using namespace System;
 using namespace System::ComponentModel;
@@ -51,7 +53,7 @@ namespace NeoEdit
 		{
 			try
 			{
-				auto result = Win32Lib::VirtualQuery(handle->Get(), (byte*)(intptr_t)index);
+				auto result = Win32Lib::VirtualQuery(handle->Get(), (uint8_t*)(intptr_t)index);
 				if (result == nullptr)
 					return nullptr;
 				return gcnew VirtualQueryInfo(result);
@@ -68,22 +70,22 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		void Interop::ReadProcessMemory(Handle ^handle, int64_t index, array<byte> ^bytes, int bytesIndex, int numBytes)
+		void Interop::ReadProcessMemory(Handle ^handle, int64_t index, array<uint8_t> ^bytes, int bytesIndex, int numBytes)
 		{
 			try
 			{
-				pin_ptr<byte> ptr = &bytes[0];
-				return Win32Lib::ReadProcessMemory(handle->Get(), (byte*)(intptr_t)index, ptr + bytesIndex, numBytes);
+				pin_ptr<uint8_t> ptr = &bytes[0];
+				return Win32Lib::ReadProcessMemory(handle->Get(), (uint8_t*)(intptr_t)index, ptr + bytesIndex, numBytes);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		void Interop::WriteProcessMemory(Handle ^handle, int64_t index, array<byte> ^bytes, int numBytes)
+		void Interop::WriteProcessMemory(Handle ^handle, int64_t index, array<uint8_t> ^bytes, int numBytes)
 		{
 			try
 			{
-				pin_ptr<byte> ptr = &bytes[0];
-				return Win32Lib::WriteProcessMemory(handle->Get(), (byte*)(intptr_t)index, ptr, numBytes);
+				pin_ptr<uint8_t> ptr = &bytes[0];
+				return Win32Lib::WriteProcessMemory(handle->Get(), (uint8_t*)(intptr_t)index, ptr, numBytes);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
@@ -119,7 +121,7 @@ namespace NeoEdit
 			try
 			{
 				auto handles = Win32Lib::GetAllHandles();
-				handles = Win32Lib::GetProcessHandles(handles, (DWORD)pid);
+				handles = Win32Lib::GetProcessHandles(handles, pid);
 				return GetHandleInfo(Win32Lib::GetHandleInfo(handles));
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
@@ -158,22 +160,22 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		void Interop::ReadSharedMemory(int pid, IntPtr handle, int64_t index, array<byte> ^bytes, int bytesIndex, int numBytes)
+		void Interop::ReadSharedMemory(int pid, IntPtr handle, int64_t index, array<uint8_t> ^bytes, int bytesIndex, int numBytes)
 		{
 			try
 			{
-				pin_ptr<byte> bytesPtr = &bytes[0];
-				return Win32Lib::ReadSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (byte*)bytesPtr + bytesIndex, numBytes);
+				pin_ptr<uint8_t> bytesPtr = &bytes[0];
+				return Win32Lib::ReadSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (uint8_t*)bytesPtr + bytesIndex, numBytes);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		void Interop::WriteSharedMemory(int pid, IntPtr handle, int64_t index, array<byte> ^bytes)
+		void Interop::WriteSharedMemory(int pid, IntPtr handle, int64_t index, array<uint8_t> ^bytes)
 		{
 			try
 			{
-				pin_ptr<byte> bytesPtr = &bytes[0];
-				return Win32Lib::WriteSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (byte*)bytesPtr, bytes->Length);
+				pin_ptr<uint8_t> bytesPtr = &bytes[0];
+				return Win32Lib::WriteSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (uint8_t*)bytesPtr, bytes->Length);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}

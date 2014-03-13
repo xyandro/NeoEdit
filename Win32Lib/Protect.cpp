@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Protect.h"
 
+#include <Windows.h>
+
 #include "Win32Exception.h"
 
 using namespace std;

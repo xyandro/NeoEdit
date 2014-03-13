@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "Handle.h"
 
+#include <Windows.h>
+#include <map>
+#include <algorithm>
+#include <SubAuth.h>
+
 #include "Win32Exception.h"
 
 using namespace std;

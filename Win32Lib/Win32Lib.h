@@ -1,8 +1,9 @@
 #pragma once
 
+#include <vector>
+
 #include "HandleInfo.h"
 #include "Protect.h"
-#include "VirtualQueryInfo.h"
 #include "Win32Exception.h"
 
 namespace NeoEdit

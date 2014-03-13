@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Win32Exception.h"
 
+#include <Windows.h>
+
 #include "Win32Lib.h"
 
 using namespace std;

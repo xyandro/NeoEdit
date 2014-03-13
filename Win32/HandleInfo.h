@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Win32Lib/Win32Lib.h"
+
 namespace NeoEdit
 {
 	namespace Win32

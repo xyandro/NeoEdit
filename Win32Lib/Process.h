@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Protect.h"
-#include "VirtualQueryInfo.h"
 
 namespace NeoEdit
 {
