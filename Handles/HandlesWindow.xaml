@@ -5,21 +5,23 @@
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=GUI"
 	Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=handles}">
-	
+
 	<Window.Title>
 		<MultiBinding StringFormat="{}{0} - NeoEdit Handle Viewer">
-			<Binding ElementName="self" Path="ProcessName"/>
+			<Binding ElementName="self" Path="SubTitle"/>
 		</MultiBinding>
 	</Window.Title>
 
 	<Window.CommandBindings>
 		<CommandBinding Command="handles:HandlesWindow.Command_View_Refresh" Executed="Command_Executed"/>
 		<CommandBinding Command="handles:HandlesWindow.Command_View_GotoProcess" Executed="Command_Executed"/>
+		<CommandBinding Command="handles:HandlesWindow.Command_View_FilterByType" Executed="Command_Executed"/>
 	</Window.CommandBindings>
 
 	<Window.InputBindings>
 		<KeyBinding Command="handles:HandlesWindow.Command_View_Refresh" Key="F5"/>
 		<KeyBinding Command="handles:HandlesWindow.Command_View_GotoProcess" Key="P" Modifiers="Control"/>
+		<KeyBinding Command="handles:HandlesWindow.Command_View_FilterByType" Key="F" Modifiers="Control"/>
 	</Window.InputBindings>
 
 	<Grid>
@@ -29,17 +31,23 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Menu Focusable="False">
 			<MenuItem Header="_View">
 				<MenuItem Command="handles:HandlesWindow.Command_View_Refresh" Header="_Refresh"/>
 				<MenuItem Command="handles:HandlesWindow.Command_View_GotoProcess" Header="Goto _process"/>
+				<MenuItem Command="handles:HandlesWindow.Command_View_FilterByType" Header="Goto _process"/>
 			</MenuItem>
 			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 			<guiCommon:HelpMenu/>
 		</Menu>
 		<ig:ItemGrid x:Name="handles" Grid.Row="1" Items="{Binding Handles, ElementName=self}"/>
+		<StackPanel Grid.Row="2" Orientation="Horizontal">
+			<Label Content="_Filter" Target="{Binding ElementName=filter}"/>
+			<ComboBox Name="filter" ItemsSource="{Binding HandleTypes, ElementName=self}" SelectedItem="{Binding HandleType, ElementName=self}" Width="200" Focusable="False"/>
+		</StackPanel>
 	</Grid>
 
 </Window>

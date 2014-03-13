@@ -240,8 +240,8 @@ namespace
 			Win32Exception::Throw();
 		}
 
-		typeNames.push_back(L"Unknown");
-		typeNames.push_back(L"Unknown");
+		typeNames.push_back(L"");
+		typeNames.push_back(L"");
 
 		auto typeInfo = (OBJECT_TYPE_INFORMATION*)&types->TypeInformation;
 		for (ULONG ctr = 0; ctr < types->NumberOfTypes; ctr++)

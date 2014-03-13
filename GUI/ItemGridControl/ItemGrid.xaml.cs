@@ -405,6 +405,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
 			base.OnTextInput(e);
+			e.Handled = true;
 
 			if ((Columns.Count == 0) || (SortedItems.Count == 0))
 				return;
