@@ -46,8 +46,6 @@ namespace NeoEdit.Handles
 			handles.SortColumn = handles.TextInputColumn = handles.Columns.First(col => col.Header == "Type");
 			Handles = new ObservableCollection<HandleItem>();
 			Refresh();
-			handles.Sort();
-			handles.Focused = null;
 		}
 
 		void Refresh()

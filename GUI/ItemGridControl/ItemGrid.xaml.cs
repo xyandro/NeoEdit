@@ -171,12 +171,9 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void OnFocusedChanged(bool show = true)
 		{
-			if (SortedItems.Count == 0)
-				return;
-
-			if (!SortedItems.Contains(Focused))
+			if ((Focused != null) && (!SortedItems.Contains(Focused)))
 			{
-				MoveFocus(0, false, true);
+				Focused = null;
 				return; // Recursive
 			}
 
@@ -257,7 +254,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			}
 		}
 
-		public void Sort()
+		void Sort()
 		{
 			if ((Columns.Contains(SortColumn)) && (SortedItems != null))
 				SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, SortColumn.NumericStrings);
@@ -269,8 +266,8 @@ namespace NeoEdit.GUI.ItemGridControl
 				return;
 
 			var index = FocusedIndex;
-			scroll.Value = Math.Min(index, Math.Max(scroll.Value, index - scroll.LargeChange));
-			scroll.Value = Math.Max(Math.Min(index, scroll.Value), index - scroll.LargeChange);
+			if (index != -1)
+				scroll.Value = Math.Max(Math.Min(index, scroll.Value), index - scroll.LargeChange);
 		}
 
 		DispatcherTimer drawTimer = null;
@@ -314,7 +311,11 @@ namespace NeoEdit.GUI.ItemGridControl
 		void MoveFocus(int offset, bool relative, bool select = false)
 		{
 			if (relative)
-				offset += FocusedIndex;
+				if (FocusedIndex == -1)
+					offset = 0;
+				else
+					offset += FocusedIndex;
+
 			offset = Math.Max(0, Math.Min(offset, SortedItems.Count - 1));
 			Focused = SortedItems.GetItemAt(offset) as DependencyObject;
 
@@ -339,7 +340,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			{
 				if (Selected.Contains(Focused))
 					Selected.Remove(Focused);
-				else
+				else if (Focused != null)
 				{
 					Selected.Add(Focused);
 					lastShiftSel = new WeakReference<DependencyObject>(Focused);

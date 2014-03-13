@@ -42,18 +42,12 @@ namespace NeoEdit.Processes
 			processes.SortColumn = processes.TextInputColumn = processes.Columns.First(col => col.Header == "Name");
 			Processes = new ObservableCollection<ProcessItem>();
 			Refresh();
-			processes.Sort();
 			if (pid.HasValue)
 			{
 				processes.Focused = Processes.FirstOrDefault(proc => proc.PID == pid.Value);
 				if (processes.Focused != null)
-				{
-					processes.Selected.Clear();
 					processes.Selected.Add(processes.Focused);
-				}
 			}
-			else
-				processes.Focused = null;
 		}
 
 		void Refresh()
