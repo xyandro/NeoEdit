@@ -53,7 +53,7 @@ namespace NeoEdit
 		{
 			try
 			{
-				auto result = Win32Lib::VirtualQuery(handle->Get(), (uint8_t*)(intptr_t)index);
+				auto result = Win32Lib::VirtualQuery(handle->Get(), (uint8_t*)index);
 				if (result == nullptr)
 					return nullptr;
 				return gcnew VirtualQueryInfo(result);
@@ -74,8 +74,8 @@ namespace NeoEdit
 		{
 			try
 			{
-				pin_ptr<uint8_t> ptr = &bytes[0];
-				return Win32Lib::ReadProcessMemory(handle->Get(), (uint8_t*)(intptr_t)index, ptr + bytesIndex, numBytes);
+				pin_ptr<uint8_t> ptr = &bytes[bytesIndex];
+				return Win32Lib::ReadProcessMemory(handle->Get(), (uint8_t*)index, ptr, numBytes);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
@@ -85,7 +85,7 @@ namespace NeoEdit
 			try
 			{
 				pin_ptr<uint8_t> ptr = &bytes[0];
-				return Win32Lib::WriteProcessMemory(handle->Get(), (uint8_t*)(intptr_t)index, ptr, numBytes);
+				return Win32Lib::WriteProcessMemory(handle->Get(), (uint8_t*)index, ptr, numBytes);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
@@ -164,8 +164,8 @@ namespace NeoEdit
 		{
 			try
 			{
-				pin_ptr<uint8_t> bytesPtr = &bytes[0];
-				return Win32Lib::ReadSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (uint8_t*)bytesPtr + bytesIndex, numBytes);
+				pin_ptr<uint8_t> bytesPtr = &bytes[bytesIndex];
+				return Win32Lib::ReadSharedMemory(pid, (HANDLE)handle, (uintptr_t)index, bytesPtr, numBytes);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
@@ -175,7 +175,7 @@ namespace NeoEdit
 			try
 			{
 				pin_ptr<uint8_t> bytesPtr = &bytes[0];
-				return Win32Lib::WriteSharedMemory(pid, (HANDLE)handle, (intptr_t)index, (uint8_t*)bytesPtr, bytes->Length);
+				return Win32Lib::WriteSharedMemory(pid, (HANDLE)handle, (uintptr_t)index, bytesPtr, bytes->Length);
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
