@@ -96,7 +96,7 @@ namespace NeoEdit.BinaryEditor.Data
 				{
 					bool hasData;
 
-					var queryInfo = Interop.VirtualQuery(handle, (IntPtr)index);
+					var queryInfo = Interop.VirtualQuery(handle, index);
 					if (queryInfo != null)
 					{
 						hasData = queryInfo.Committed;
@@ -123,7 +123,7 @@ namespace NeoEdit.BinaryEditor.Data
 						Array.Clear(cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 					else
 						using (Interop.SetProtect(handle, queryInfo, false))
-							Interop.ReadProcessMemory(handle, (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
+							Interop.ReadProcessMemory(handle, index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 
 					index = cacheEnd;
 				}
@@ -147,7 +147,7 @@ namespace NeoEdit.BinaryEditor.Data
 			{
 				while (bytes.Length > 0)
 				{
-					var queryInfo = Interop.VirtualQuery(handle, (IntPtr)index);
+					var queryInfo = Interop.VirtualQuery(handle, index);
 					if ((queryInfo == null) || (!queryInfo.Committed))
 						throw new Exception("Cannot write to this memory");
 
@@ -155,7 +155,7 @@ namespace NeoEdit.BinaryEditor.Data
 					var numBytes = (int)Math.Min(bytes.Length, end - index);
 
 					using (Interop.SetProtect(handle, queryInfo, true))
-						Interop.WriteProcessMemory(handle, (IntPtr)index, bytes, numBytes);
+						Interop.WriteProcessMemory(handle, index, bytes, numBytes);
 
 					index += numBytes;
 					Array.Copy(bytes, numBytes, bytes, 0, bytes.Length - numBytes);

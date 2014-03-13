@@ -11,12 +11,12 @@ namespace NeoEdit
 			class Protect
 			{
 			public:
-				Protect(std::shared_ptr<void> handle, std::shared_ptr<VirtualQueryInfo> info, DWORD protect);
+				Protect(std::shared_ptr<void> handle, std::shared_ptr<const VirtualQueryInfo> info, uint32_t protect);
 				~Protect();
 			private:
 				std::shared_ptr<void> handle;
-				std::shared_ptr<VirtualQueryInfo> info;
-				int protect;
+				std::shared_ptr<const VirtualQueryInfo> info;
+				uint32_t protect;
 			};
 		}
 	}

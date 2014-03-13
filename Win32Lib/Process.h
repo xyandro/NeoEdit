@@ -12,16 +12,14 @@ namespace NeoEdit
 			class Process
 			{
 			public:
-				static void SuspendProcess(DWORD pid);
-				static void ResumeProcess(DWORD pid);
-				static std::shared_ptr<void> OpenReadMemoryProcess(DWORD pid);
-				static SIZE_T GetProcessMemoryLength(std::shared_ptr<void> handle);
-				static std::shared_ptr<VirtualQueryInfo> VirtualQuery(std::shared_ptr<void> handle, byte *index);
-				static std::shared_ptr<Protect> Process::SetProtect(std::shared_ptr<void> handle, std::shared_ptr<VirtualQueryInfo> info, bool write);
-				static void ReadProcessMemory(std::shared_ptr<void> handle, byte *index, byte *bytes, int numBytes);
-				static void WriteProcessMemory(std::shared_ptr<void> handle, byte *index, byte *bytes, int numBytes);
-			private:
-				static std::shared_ptr<std::hash_set<DWORD>> GetThreadIDs(DWORD pid);
+				static void SuspendProcess(int32_t pid);
+				static void ResumeProcess(int32_t pid);
+				static std::shared_ptr<void> OpenReadMemoryProcess(int32_t pid);
+				static uintptr_t GetProcessMemoryLength(std::shared_ptr<void> handle);
+				static std::shared_ptr<const VirtualQueryInfo> VirtualQuery(std::shared_ptr<void> handle, const uint8_t *index);
+				static std::shared_ptr<const Protect> Process::SetProtect(std::shared_ptr<void> handle, std::shared_ptr<const VirtualQueryInfo> info, bool write);
+				static void ReadProcessMemory(std::shared_ptr<void> handle, const uint8_t *index, uint8_t *bytes, uint32_t numBytes);
+				static void WriteProcessMemory(std::shared_ptr<void> handle, uint8_t *index, const uint8_t *bytes, uint32_t numBytes);
 			};
 		}
 	}

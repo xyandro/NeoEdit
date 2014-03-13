@@ -11,9 +11,9 @@ namespace NeoEdit
 			struct VirtualQueryInfo
 			{
 				bool Committed, Mapped, NoAccess;
-				int Protect;
-				PVOID StartAddress, EndAddress;
-				intptr_t RegionSize;
+				uint32_t Protect;
+				uint8_t *StartAddress, *EndAddress;
+				uintptr_t RegionSize;
 			};
 		}
 	}

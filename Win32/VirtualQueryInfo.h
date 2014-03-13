@@ -16,11 +16,11 @@ namespace NeoEdit
 			property System::IntPtr RegionSize { System::IntPtr get(); }
 
 		internal:
-			VirtualQueryInfo(std::shared_ptr<Win32Lib::VirtualQueryInfo> ptr);
-			std::shared_ptr<Win32Lib::VirtualQueryInfo> Get();
+			VirtualQueryInfo(std::shared_ptr<const Win32Lib::VirtualQueryInfo> ptr);
+			std::shared_ptr<const Win32Lib::VirtualQueryInfo> Get();
 		private:
 			~VirtualQueryInfo();
-			std::shared_ptr<Win32Lib::VirtualQueryInfo> *ptr;
+			std::shared_ptr<const Win32Lib::VirtualQueryInfo> *ptr;
 		};
 	}
 }

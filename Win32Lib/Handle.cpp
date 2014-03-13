@@ -99,7 +99,7 @@ namespace
 	vector<wstring> typeNames;
 	map<wstring, wstring> dosToLogical;
 
-	SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX *GetHandle(shared_ptr<void> ptr)
+	SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX *GetHandle(shared_ptr<const void> ptr)
 	{
 		return (SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX*)ptr.get();
 	}
@@ -120,7 +120,7 @@ namespace
 			LONG err;
 			if ((err = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Hardware\\DeviceMap\\SerialComm", 0, KEY_QUERY_VALUE, &key)) != ERROR_SUCCESS)
 				Win32Exception::Throw();
-			shared_ptr<void> keyDeleter(key, RegCloseKey);
+			shared_ptr<const void> keyDeleter(key, RegCloseKey);
 
 			WCHAR port[50];
 			DWORD size = sizeof(port); 
@@ -144,7 +144,7 @@ namespace
 		auto ptr = MapViewOfFile(handle.get(), FILE_MAP_READ, 0, 0, 0);
 		if (ptr == nullptr)
 			Win32Exception::Throw();
-		shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
+		shared_ptr<const void> ptrDeleter(ptr, UnmapViewOfFile);
 
 		MEMORY_BASIC_INFORMATION mbi;
 		VirtualQuery(ptr, &mbi, sizeof(mbi));
@@ -179,14 +179,14 @@ namespace
 		return L"";
 	}
 
-	shared_ptr<void> OpenProcess(DWORD pid, bool throwOnFail = true)
+	shared_ptr<void> OpenProcess(int32_t pid, bool throwOnFail = true)
 	{
 		auto handle = ::OpenProcess(PROCESS_DUP_HANDLE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, pid);
 		if (handle == nullptr)
 			if (throwOnFail)
 				Win32Exception::Throw();
 			else
-				return shared_ptr<void>();
+				return nullptr;
 		return shared_ptr<void>(handle, CloseHandle);
 	}
 
@@ -197,16 +197,16 @@ namespace
 			if (throwOnFail)
 				Win32Exception::Throw();
 			else
-				return shared_ptr<void>();
+				return nullptr;
 		return shared_ptr<void>(dupHandle, CloseHandle);
 	}
 
-	static void SetDebug()
+	void SetDebug()
 	{
 		HANDLE token;
 		if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token))
 			Win32Exception::Throw();
-		shared_ptr<void> tokenDeleter(token, CloseHandle);
+		shared_ptr<const void> tokenDeleter(token, CloseHandle);
 
 		LUID luid;
 		if (!LookupPrivilegeValue(nullptr, SE_DEBUG_NAME, &luid))
@@ -220,13 +220,13 @@ namespace
 			Win32Exception::Throw();
 	}
 
-	static void GetTypeNames()
+	void GetTypeNames()
 	{
 		shared_ptr<OBJECT_ALL_TYPES_INFORMATION> types;
 		ULONG size = 1048576;
 		while (true)
 		{
-			types = shared_ptr<OBJECT_ALL_TYPES_INFORMATION>((OBJECT_ALL_TYPES_INFORMATION*)malloc(size), free);
+			types.reset((OBJECT_ALL_TYPES_INFORMATION*)malloc(size), free);
 			auto result = NtQueryObject(nullptr, ObjectAllTypesInformation, types.get(), size, &size);
 			if (NT_SUCCESS(result))
 				break;
@@ -246,7 +246,7 @@ namespace
 		}
 	}
 
-	static void GetDosToLogicalMap()
+	void GetDosToLogicalMap()
 	{
 		wchar_t drivesBuf[2048];
 		if (!GetLogicalDriveStrings(sizeof(drivesBuf) / sizeof(*drivesBuf), drivesBuf))
@@ -260,6 +260,29 @@ namespace
 				Win32Exception::Throw();
 			dosToLogical[wstring(device) + L"\\"] = drive + L"\\";
 		}
+	}
+
+	bool sortPred(shared_ptr<const void> ptr1, shared_ptr<const void> ptr2)
+	{
+		auto handle1 = GetHandle(ptr1);
+		auto handle2 = GetHandle(ptr2);
+
+		if (handle1->UniqueProcessId < handle2->UniqueProcessId)
+			return true;
+		if (handle1->UniqueProcessId > handle2->UniqueProcessId)
+			return false;
+
+		if (handle1->ObjectTypeIndex < handle2->ObjectTypeIndex)
+			return true;
+		if (handle1->ObjectTypeIndex > handle2->ObjectTypeIndex)
+			return false;
+
+		if (handle1->HandleValue < handle2->HandleValue)
+			return true;
+		if (handle1->HandleValue > handle2->HandleValue)
+			return false;
+
+		return false;
 	}
 
 	class HandleHelper
@@ -288,36 +311,13 @@ namespace NeoEdit
 	{
 		namespace Handles
 		{
-			bool sortPred(shared_ptr<void> ptr1, shared_ptr<void> ptr2)
-			{
-				auto handle1 = GetHandle(ptr1);
-				auto handle2 = GetHandle(ptr2);
-
-				if (handle1->UniqueProcessId < handle2->UniqueProcessId)
-					return true;
-				if (handle1->UniqueProcessId > handle2->UniqueProcessId)
-					return false;
-
-				if (handle1->ObjectTypeIndex < handle2->ObjectTypeIndex)
-					return true;
-				if (handle1->ObjectTypeIndex > handle2->ObjectTypeIndex)
-					return false;
-
-				if (handle1->HandleValue < handle2->HandleValue)
-					return true;
-				if (handle1->HandleValue > handle2->HandleValue)
-					return false;
-
-				return false;
-			}
-
-			shared_ptr<vector<shared_ptr<void>>> Handle::GetAllHandles()
+			shared_ptr<const vector<shared_ptr<const void>>> Handle::GetAllHandles()
 			{
 				shared_ptr<SYSTEM_HANDLE_INFORMATION_EX> handleInfo;
 				ULONG size = 4096;
 				while (true)
 				{
-					handleInfo = shared_ptr<SYSTEM_HANDLE_INFORMATION_EX>((SYSTEM_HANDLE_INFORMATION_EX*)malloc(size), free);
+					handleInfo.reset((SYSTEM_HANDLE_INFORMATION_EX*)malloc(size), free);
 					auto ret = NtQuerySystemInformation(SystemExtendedHandleInformation, handleInfo.get(), size, nullptr);
 
 					auto sizeRequired = sizeof(SYSTEM_HANDLE_INFORMATION_EX) + sizeof(SYSTEM_HANDLE_INFORMATION_EX) * (handleInfo->NumberOfHandles - 1); // The -1 is because SYSTEM_HANDLE_INFORMATION_EX has one.
@@ -333,29 +333,29 @@ namespace NeoEdit
 					Win32Exception::Throw();
 				}
 
-				auto result = shared_ptr<vector<shared_ptr<void>>>(new vector<shared_ptr<void>>);
-				for (unsigned int ctr = 0; ctr < handleInfo->NumberOfHandles; ++ctr)
-					result->push_back(shared_ptr<void>(new SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX(handleInfo->Handles[ctr])));
+				shared_ptr<vector<shared_ptr<const void>>> result(new vector<shared_ptr<const void>>);
+				for (ULONG_PTR ctr = 0; ctr < handleInfo->NumberOfHandles; ++ctr)
+					result->push_back(shared_ptr<const void>(new SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX(handleInfo->Handles[ctr])));
 
 				sort(result->begin(), result->end(), sortPred);
 				return result;
 			}
 
-			shared_ptr<vector<shared_ptr<void>>> Handle::GetProcessHandles(shared_ptr<vector<shared_ptr<void>>> handles, DWORD pid)
+			shared_ptr<const vector<shared_ptr<const void>>> Handle::GetProcessHandles(shared_ptr<const vector<shared_ptr<const void>>> handles, int32_t pid)
 			{
-				auto result = shared_ptr<vector<shared_ptr<void>>>(new vector<shared_ptr<void>>);
+				shared_ptr<vector<shared_ptr<const void>>> result(new vector<shared_ptr<const void>>);
 				for each (auto handle in *handles)
-					if ((DWORD)GetHandle(handle)->UniqueProcessId == pid)
+					if ((int32_t)GetHandle(handle)->UniqueProcessId == pid)
 						result->push_back(handle);
 				return result;
 			}
 
-			shared_ptr<vector<shared_ptr<void>>> Handle::GetTypeHandles(shared_ptr<vector<shared_ptr<void>>> handles, wstring type)
+			shared_ptr<const vector<shared_ptr<const void>>> Handle::GetTypeHandles(shared_ptr<const vector<shared_ptr<const void>>> handles, wstring type)
 			{
-				auto result = shared_ptr<vector<shared_ptr<void>>>(new vector<shared_ptr<void>>);
+				shared_ptr<vector<shared_ptr<const void>>> result(new vector<shared_ptr<const void>>);
 				auto itr = find(typeNames.begin(), typeNames.end(), type);
 				if (itr == typeNames.end())
-					return result;
+					throw Win32Exception(L"Invalid type");
 
 				auto index = itr - typeNames.begin();
 				for each (auto handle in *handles)
@@ -364,15 +364,14 @@ namespace NeoEdit
 				return result;
 			}
 
-			shared_ptr<vector<shared_ptr<HandleInfo>>> Handle::GetHandleInfo(shared_ptr<vector<shared_ptr<void>>> handles)
+			shared_ptr<const vector<shared_ptr<const HandleInfo>>> Handle::GetHandleInfo(shared_ptr<const vector<shared_ptr<const void>>> handles)
 			{
 				map<DWORD, vector<SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX*>> handlesByProcess;
 				for each (auto handle in *handles)
 					handlesByProcess[(DWORD)GetHandle(handle)->UniqueProcessId].push_back(GetHandle(handle));
 
-				auto result = shared_ptr<vector<shared_ptr<HandleInfo>>>(new vector<shared_ptr<HandleInfo>>());
+				shared_ptr<vector<shared_ptr<const HandleInfo>>> result(new vector<shared_ptr<const HandleInfo>>());
 
-				auto currentProcess = GetCurrentProcess();
 				for each (auto entry in handlesByProcess)
 				{
 					auto processHandle = OpenProcess(entry.first, false);
@@ -390,50 +389,50 @@ namespace NeoEdit
 						try { name = (type == L"File") && (GetFileType(dupHandle.get()) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle); } catch (...) { }
 						try { data = GetData(type, dupHandle); } catch (...) { }
 
-						result->push_back(shared_ptr<HandleInfo>(new HandleInfo((DWORD)handle->UniqueProcessId, handle->HandleValue, type, name, data)));
+						result->push_back(shared_ptr<const HandleInfo>(new HandleInfo((DWORD)handle->UniqueProcessId, handle->HandleValue, type, name, data)));
 					}
 				}
 
 				return result;
 			}
 
-			shared_ptr<vector<wstring>> Handle::GetHandleTypes()
+			shared_ptr<const vector<wstring>> Handle::GetHandleTypes()
 			{
-				auto result = shared_ptr<vector<wstring>>(new vector<wstring>);
+				shared_ptr<vector<wstring>> result(new vector<wstring>);
 				for each (auto name in typeNames)
 					result->push_back(name);
 				return result;
 			}
 
-			SIZE_T Handle::GetSharedMemorySize(DWORD pid, HANDLE handle)
+			uintptr_t Handle::GetSharedMemorySize(int32_t pid, void *handle)
 			{
 				auto process = OpenProcess(pid);
 				auto dupHandle = DuplicateHandle(process, handle);
 				return GetSizeOfMap(dupHandle);
 			}
 
-			void Handle::ReadSharedMemory(DWORD pid, HANDLE handle, intptr_t index, byte *bytes, int numBytes)
+			void Handle::ReadSharedMemory(int32_t pid, void *handle, uintptr_t index, uint8_t *bytes, uint32_t numBytes)
 			{
 				auto process = OpenProcess(pid);
 				auto dupHandle = DuplicateHandle(process, handle);
 
-				auto ptr = (byte*)MapViewOfFile(dupHandle.get(), FILE_MAP_READ, 0, 0, 0);
+				auto ptr = (uint8_t*)MapViewOfFile(dupHandle.get(), FILE_MAP_READ, 0, 0, 0);
 				if (ptr == nullptr)
 					Win32Exception::Throw();
-				shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
+				shared_ptr<const void> ptrDeleter(ptr, UnmapViewOfFile);
 
 				memcpy(bytes, ptr + index, numBytes);
 			}
 
-			void Handle::WriteSharedMemory(DWORD pid, HANDLE handle, intptr_t index, byte *bytes, int numBytes)
+			void Handle::WriteSharedMemory(int32_t pid, void *handle, uintptr_t index, const uint8_t *bytes, uint32_t numBytes)
 			{
 				auto process = OpenProcess(pid);
 				auto dupHandle = DuplicateHandle(process, handle);
 
-				auto ptr = (byte*)MapViewOfFile(dupHandle.get(), FILE_MAP_WRITE, 0, 0, 0);
+				auto ptr = (uint8_t*)MapViewOfFile(dupHandle.get(), FILE_MAP_WRITE, 0, 0, 0);
 				if (ptr == nullptr)
 					Win32Exception::Throw();
-				shared_ptr<void> ptrDeleter(ptr, UnmapViewOfFile);
+				shared_ptr<const void> ptrDeleter(ptr, UnmapViewOfFile);
 
 				memcpy(ptr + index, bytes, numBytes);
 			}

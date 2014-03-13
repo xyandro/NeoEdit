@@ -11,7 +11,7 @@ namespace NeoEdit
 	{
 		namespace Processes
 		{
-			Protect::Protect(shared_ptr<void> handle, shared_ptr<VirtualQueryInfo> info, DWORD protect) :
+			Protect::Protect(shared_ptr<void> handle, shared_ptr<const VirtualQueryInfo> info, uint32_t protect) :
 				handle(handle),
 				info(info),
 				protect(protect)
@@ -20,7 +20,7 @@ namespace NeoEdit
 					return;
 
 				DWORD oldProtect;
-				if (!VirtualProtectEx(handle.get(), info->StartAddress, info->RegionSize, protect, &oldProtect))
+				if (!VirtualProtectEx((HANDLE)handle.get(), info->StartAddress, info->RegionSize, protect, &oldProtect))
 					Win32Exception::Throw();
 			}
 
@@ -30,9 +30,9 @@ namespace NeoEdit
 					return;
 
 				DWORD oldProtect;
-				if (!VirtualProtectEx(handle.get(), info->StartAddress, info->RegionSize, info->Protect, &oldProtect))
+				if (!VirtualProtectEx((HANDLE)handle.get(), info->StartAddress, info->RegionSize, info->Protect, &oldProtect))
 					return;
-				if (!FlushInstructionCache(handle.get(), info->StartAddress, info->RegionSize))
+				if (!FlushInstructionCache((HANDLE)handle.get(), info->StartAddress, info->RegionSize))
 					return;
 			}
 		}

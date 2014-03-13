@@ -13,9 +13,9 @@ namespace NeoEdit
 		String ^HandleInfo::Name::get() { return gcnew String((*ptr)->Name.c_str()); }
 		String ^HandleInfo::Data::get() { return gcnew String((*ptr)->Data.c_str()); }
 
-		HandleInfo::HandleInfo(std::shared_ptr<Win32Lib::HandleInfo> _ptr)
+		HandleInfo::HandleInfo(std::shared_ptr<const Win32Lib::HandleInfo> _ptr)
 		{
-			ptr = new std::shared_ptr<Win32Lib::HandleInfo>(_ptr);
+			ptr = new std::shared_ptr<const Win32Lib::HandleInfo>(_ptr);
 		}
 
 		HandleInfo::~HandleInfo()

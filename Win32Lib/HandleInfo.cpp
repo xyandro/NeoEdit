@@ -9,7 +9,7 @@ namespace NeoEdit
 	{
 		namespace Handles
 		{
-			HandleInfo::HandleInfo(DWORD PID, HANDLE Handle, wstring Type, wstring Name, wstring Data) :
+			HandleInfo::HandleInfo(int32_t PID, void *Handle, wstring Type, wstring Name, wstring Data) :
 				PID(PID),
 				Handle(Handle),
 				Type(Type),

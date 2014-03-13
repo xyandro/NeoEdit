@@ -11,7 +11,7 @@ namespace NeoEdit.BinaryEditor.Data
 		{
 			pid = _pid;
 			handle = _handle;
-			length = Interop.GetSharedMemorySize(pid, handle).ToInt32();
+			length = Interop.GetSharedMemorySize(pid, handle);
 		}
 
 		protected override void SetCache(long index, int count)
@@ -25,7 +25,7 @@ namespace NeoEdit.BinaryEditor.Data
 			cacheStart = index;
 			cacheEnd = Math.Min(cacheStart + cache.Length, Length);
 			cacheHasData = true;
-			Interop.ReadSharedMemory(pid, handle, (IntPtr)index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
+			Interop.ReadSharedMemory(pid, handle, index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
 		}
 
 		public override void Replace(long index, long count, byte[] bytes)
@@ -34,7 +34,7 @@ namespace NeoEdit.BinaryEditor.Data
 				throw new Exception("Cannot change size.");
 
 			var length = bytes.Length;
-			Interop.WriteSharedMemory(pid, handle, (IntPtr)index, bytes);
+			Interop.WriteSharedMemory(pid, handle, index, bytes);
 
 			Refresh();
 		}

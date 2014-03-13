@@ -11,14 +11,14 @@ namespace NeoEdit
 			class Handle
 			{
 			public:
-				static std::shared_ptr<std::vector<std::shared_ptr<void>>> GetAllHandles();
-				static std::shared_ptr<std::vector<std::shared_ptr<void>>> GetTypeHandles(std::shared_ptr<std::vector<std::shared_ptr<void>>> handles, std::wstring type);
-				static std::shared_ptr<std::vector<std::shared_ptr<void>>> GetProcessHandles(std::shared_ptr<std::vector<std::shared_ptr<void>>> handles, DWORD pid);
-				static std::shared_ptr<std::vector<std::shared_ptr<HandleInfo>>> GetHandleInfo(std::shared_ptr<std::vector<std::shared_ptr<void>>> handles);
-				static std::shared_ptr<std::vector<std::wstring>> GetHandleTypes();
-				static SIZE_T GetSharedMemorySize(DWORD pid, HANDLE handle);
-				static void ReadSharedMemory(DWORD pid, HANDLE handle, intptr_t index, byte *bytes, int numBytes);
-				static void WriteSharedMemory(DWORD pid, HANDLE handle, intptr_t index, byte *bytes, int numBytes);
+				static std::shared_ptr<const std::vector<std::shared_ptr<const void>>> GetAllHandles();
+				static std::shared_ptr<const std::vector<std::shared_ptr<const void>>> GetTypeHandles(std::shared_ptr<const std::vector<std::shared_ptr<const void>>> handles, std::wstring type);
+				static std::shared_ptr<const std::vector<std::shared_ptr<const void>>> GetProcessHandles(std::shared_ptr<const std::vector<std::shared_ptr<const void>>> handles, int32_t pid);
+				static std::shared_ptr<const std::vector<std::shared_ptr<const HandleInfo>>> GetHandleInfo(std::shared_ptr<const std::vector<std::shared_ptr<const void>>> handles);
+				static std::shared_ptr<const std::vector<std::wstring>> GetHandleTypes();
+				static uintptr_t GetSharedMemorySize(int32_t pid, void *handle);
+				static void ReadSharedMemory(int32_t pid, void *handle, uintptr_t index, uint8_t *bytes, uint32_t numBytes);
+				static void WriteSharedMemory(int32_t pid, void *handle, uintptr_t index, const uint8_t *bytes, uint32_t numBytes);
 			};
 		}
 	}

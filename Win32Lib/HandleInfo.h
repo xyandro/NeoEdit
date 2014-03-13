@@ -10,11 +10,11 @@ namespace NeoEdit
 		{
 			struct HandleInfo
 			{
-				DWORD PID;
-				HANDLE Handle;
+				int32_t PID;
+				void *Handle;
 				std::wstring Type, Name, Data;
 
-				HandleInfo(DWORD PID, HANDLE Handle, std::wstring Type, std::wstring Name, std::wstring Data);
+				HandleInfo(int32_t PID, void *Handle, std::wstring Type, std::wstring Name, std::wstring Data);
 			};
 		}
 	}

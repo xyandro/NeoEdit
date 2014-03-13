@@ -15,10 +15,10 @@ namespace NeoEdit
 
 			System::String ^ToString() override;
 		internal:
-			HandleInfo(std::shared_ptr<Win32Lib::HandleInfo> ptr);
+			HandleInfo(std::shared_ptr<const Win32Lib::HandleInfo> ptr);
 		private:
 			~HandleInfo();
-			std::shared_ptr<Win32Lib::HandleInfo> *ptr;
+			std::shared_ptr<const Win32Lib::HandleInfo> *ptr;
 		};
 	}
 }
