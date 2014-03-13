@@ -87,7 +87,7 @@
     </ProjectReference>
     <ProjectReference Include="..\Win32\Win32.vcxproj">
       <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
-      <Name>Win32Interop</Name>
+      <Name>Win32</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
