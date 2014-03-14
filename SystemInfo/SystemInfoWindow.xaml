@@ -3,7 +3,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:systemInfo="clr-namespace:NeoEdit.SystemInfo"
-	Title="NeoEdit System Information" Width="800" Height="600" Visibility="Visible">
+	Title="NeoEdit System Information" Width="800" Height="600" Visibility="Visible"
+	FocusManager.FocusedElement="{Binding ElementName=textBox}">
 
 	<Window.CommandBindings>
 		<CommandBinding Command="systemInfo:SystemInfoWindow.Command_File_Save" Executed="Command_Executed"/>
@@ -23,7 +24,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Menu>
+		<Menu KeyboardNavigation.TabNavigation="None">
 			<MenuItem Header="_File">
 				<MenuItem Command="systemInfo:SystemInfoWindow.Command_File_Save" Header="_Save"/>
 			</MenuItem>
@@ -34,8 +35,8 @@
 			<guiCommon:HelpMenu/>
 		</Menu>
 
-		<TextBox Grid.Row="1" IsReadOnly="True" Text="{Binding Text, ElementName=self}" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-		
+		<TextBox Name="textBox" Grid.Row="1" IsReadOnly="True" IsReadOnlyCaretVisible="True" Text="{Binding Text, ElementName=self}" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+
 	</Grid>
 
 </Window>
