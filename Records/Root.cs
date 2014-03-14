@@ -26,7 +26,6 @@ namespace NeoEdit.Records
 			get
 			{
 				yield return new Disks.DiskRoot();
-				yield return new Lists.ListRoot();
 			}
 		}
 	}

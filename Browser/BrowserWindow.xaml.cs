@@ -12,14 +12,11 @@ using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Records;
-using NeoEdit.Records.Disks;
-using NeoEdit.Records.Lists;
 
 namespace NeoEdit.Browser
 {
 	public partial class BrowserWindow : Window
 	{
-		Type lastRootType;
 		[DepProp]
 		public Record Location
 		{
@@ -27,16 +24,6 @@ namespace NeoEdit.Browser
 			set
 			{
 				uiHelper.SetPropValue(value);
-
-				if (value.GetRootType() != lastRootType)
-				{
-					lastRootType = value.GetRootType();
-					if (lastRootType == typeof(DiskRecord))
-						SetDiskView();
-					if (lastRootType == typeof(ListRecord))
-						SetListView();
-				}
-
 				Refresh();
 			}
 		}
@@ -60,6 +47,9 @@ namespace NeoEdit.Browser
 
 			locationDisplay.LostFocus += (s, e) => uiHelper.InvalidateBinding(locationDisplay, TextBox.TextProperty);
 			uiHelper.AddCallback(a => a.SortProperty, (o, n) => SortAscending = RecordProperty.Get(SortProperty).DefaultAscending);
+
+			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
+			SortProperty = RecordProperty.PropertyName.Name;
 
 			Loaded += (s, e) => SetLocation(uri);
 		}
@@ -131,25 +121,6 @@ namespace NeoEdit.Browser
 
 			switch (e.Key)
 			{
-				case Key.D1:
-				case Key.D2:
-				case Key.D3:
-				case Key.D4:
-				case Key.D5:
-					{
-						var list = new ListRoot()[e.Key - Key.D1 + 1];
-						switch (Keyboard.Modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift))
-						{
-							case ModifierKeys.Control:
-								SetLocation(list);
-								break;
-							case ModifierKeys.Control | ModifierKeys.Shift:
-								foreach (var record in Location.Records)
-									list.Add(record);
-								break;
-						}
-					}
-					break;
 				case Key.F5:
 					Refresh();
 					break;
@@ -410,27 +381,6 @@ namespace NeoEdit.Browser
 			var header = ((MenuItem)sender).Header.ToString();
 			var action = RecordAction.ActionFromMenuHeader(header);
 			RunAction(action);
-		}
-
-		void SetDiskView()
-		{
-			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime };
-			SortProperty = RecordProperty.PropertyName.Name;
-		}
-
-		void SetListView()
-		{
-			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Size, RecordProperty.PropertyName.WriteTime, RecordProperty.PropertyName.Path };
-			SortProperty = RecordProperty.PropertyName.Name;
-		}
-
-		void MenuItemViewClick(object sender, RoutedEventArgs e)
-		{
-			switch (((MenuItem)sender).Header.ToString())
-			{
-				case "_Files": SetLocation(new DiskRoot()); break;
-				case "_List": SetLocation(new ListRoot()); break;
-			}
 		}
 	}
 }

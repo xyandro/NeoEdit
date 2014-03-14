@@ -44,7 +44,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lists\ListRecord.cs" />
     <Compile Include="ZipFiles\ZippedArchive.cs" />
     <Compile Include="ZipFiles\ZippedDir.cs" />
     <Compile Include="ZipFiles\ZippedFile.cs" />
@@ -53,8 +52,6 @@
     <Compile Include="RecordAction.cs" />
     <Compile Include="Disks\DiskRecord.cs" />
     <Compile Include="RecordProperty.cs" />
-    <Compile Include="Lists\ListDir.cs" />
-    <Compile Include="Lists\ListRoot.cs" />
     <Compile Include="Disks\NetworkShare.cs" />
     <Compile Include="Record.cs" />
     <Compile Include="Disks\DiskRoot.cs" />
