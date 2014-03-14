@@ -24,8 +24,8 @@ namespace NeoEdit
 		void ShowExceptionMessage(Exception ex)
 		{
 			var message = "";
-			for (; ex != null; ex = ex.InnerException)
-				message += ex.Message + "\n";
+			for (var ex2 = ex; ex2 != null; ex2 = ex2.InnerException)
+				message += ex2.Message + "\n";
 			MessageBox.Show(message, "Error");
 		}
 
