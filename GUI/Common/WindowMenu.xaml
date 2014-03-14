@@ -10,6 +10,7 @@
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_BinaryEditor" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_TextEditor" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Executed="CommandBinding_Executed"/>
 	</MenuItem.CommandBindings>
 	
 	<MenuItem.InputBindings>
@@ -18,6 +19,7 @@
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Key="H" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_BinaryEditor" Key="B" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_TextEditor" Key="T" Modifiers="Control+Shift"/>
+		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Key="S" Modifiers="Control+Shift"/>
 	</MenuItem.InputBindings>
 	
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Browser" Header="_Browser"/>
@@ -25,5 +27,6 @@
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Handles" Header="_Handles"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_BinaryEditor" Header="B_inary Editor"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextEditor" Header="_Text Editor"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Header="_Text Editor"/>
 
 </MenuItem>

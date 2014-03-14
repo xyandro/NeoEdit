@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
 using NeoEdit.Browser;
 using NeoEdit.Common.Transform;
 using NeoEdit.Handles;
 using NeoEdit.Processes;
+using NeoEdit.SystemInfo;
 using NeoEdit.TextEditor;
 
 namespace NeoEdit
@@ -38,6 +38,9 @@ namespace NeoEdit
 
 				switch (args[0])
 				{
+					case "system":
+					case "systeminfo":
+						return new SystemInfoWindow();
 					case "text":
 						{
 							string filename = null;
@@ -126,6 +129,7 @@ namespace NeoEdit
 			InitializeComponent();
 
 			NeoEdit.GUI.Launcher.Initialize(
+				systemInfo: () => new SystemInfoWindow(),
 				textEditor: (filename, bytes, encoding) => new TextEditorWindow(filename, bytes, encoding),
 				fileBinaryEditor: (filename, binarydata) => BinaryEditorWindow.CreateFromFile(filename, binarydata),
 				processBinaryEditor: (pid) => BinaryEditorWindow.CreateFromProcess(pid),
