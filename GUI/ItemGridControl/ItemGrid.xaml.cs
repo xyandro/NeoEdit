@@ -279,6 +279,12 @@ namespace NeoEdit.GUI.ItemGridControl
 				scroll.Value = Math.Max(Math.Min(index.Value, scroll.Value), index.Value - scroll.LargeChange);
 		}
 
+		public void ResetScroll()
+		{
+			scroll.Value = 0;
+			lastFocusedIndex = 0;
+		}
+
 		DispatcherTimer drawTimer = null;
 		void InvalidateDraw()
 		{

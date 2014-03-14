@@ -14,7 +14,6 @@ using NeoEdit.GUI.Dialogs;
 using NeoEdit.Records;
 using NeoEdit.Records.Disks;
 using NeoEdit.Records.Lists;
-using NeoEdit.Records.Registries;
 
 namespace NeoEdit.Browser
 {
@@ -36,8 +35,6 @@ namespace NeoEdit.Browser
 						SetDiskView();
 					if (lastRootType == typeof(ListRecord))
 						SetListView();
-					if (lastRootType == typeof(RegistryRecord))
-						SetRegistryView();
 				}
 
 				Refresh();
@@ -427,19 +424,12 @@ namespace NeoEdit.Browser
 			SortProperty = RecordProperty.PropertyName.Name;
 		}
 
-		void SetRegistryView()
-		{
-			Properties = new ObservableCollection<RecordProperty.PropertyName> { RecordProperty.PropertyName.Name, RecordProperty.PropertyName.Type, RecordProperty.PropertyName.Data };
-			SortProperty = RecordProperty.PropertyName.Name;
-		}
-
 		void MenuItemViewClick(object sender, RoutedEventArgs e)
 		{
 			switch (((MenuItem)sender).Header.ToString())
 			{
 				case "_Files": SetLocation(new DiskRoot()); break;
 				case "_List": SetLocation(new ListRoot()); break;
-				case "_Registry": SetLocation(new RegistryRoot()); break;
 			}
 		}
 	}

@@ -9,6 +9,7 @@ namespace NeoEdit.GUI.Common
 		public static RoutedCommand Command_Window_Browser = new RoutedCommand();
 		public static RoutedCommand Command_Window_Processes = new RoutedCommand();
 		public static RoutedCommand Command_Window_Handles = new RoutedCommand();
+		public static RoutedCommand Command_Window_Registry = new RoutedCommand();
 		public static RoutedCommand Command_Window_BinaryEditor = new RoutedCommand();
 		public static RoutedCommand Command_Window_TextEditor = new RoutedCommand();
 		public static RoutedCommand Command_Window_SystemInfo = new RoutedCommand();
@@ -38,6 +39,8 @@ namespace NeoEdit.GUI.Common
 				Launcher.Static.LaunchProcesses();
 			else if (e.Command == Command_Window_Handles)
 				Launcher.Static.LaunchHandles();
+			else if (e.Command == Command_Window_Registry)
+				Launcher.Static.LaunchRegistry();
 			else if (e.Command == Command_Window_BinaryEditor)
 				Launcher.Static.LaunchBinaryEditor();
 			else if (e.Command == Command_Window_TextEditor)
