@@ -43,12 +43,14 @@ namespace NeoEdit.SystemInfo
 		class InstalledProgram
 		{
 			public string Name { get; set; }
+			public string BitDepth { get; set; }
 			public string Version { get; set; }
 			public string Publisher { get; set; }
 
-			public InstalledProgram(RegistryKey key)
+			public InstalledProgram(RegistryKey key, string bitDepth)
 			{
 				Name = GetValue(key, "DisplayName");
+				BitDepth = bitDepth;
 				Version = GetValue(key, "Version");
 				Publisher = GetValue(key, "Publisher");
 			}
@@ -69,6 +71,8 @@ namespace NeoEdit.SystemInfo
 			public override string ToString()
 			{
 				var result = Name;
+				if (!String.IsNullOrWhiteSpace(BitDepth))
+					result += String.Format(" {0}", BitDepth);
 				if (!String.IsNullOrWhiteSpace(Version))
 					result += String.Format(" (Version: {0})", Version);
 				if (!String.IsNullOrWhiteSpace(Publisher))
@@ -80,10 +84,16 @@ namespace NeoEdit.SystemInfo
 		void ListInstalledPrograms()
 		{
 			var programs = new List<InstalledProgram>();
-			using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"))
-				foreach (var subKeyName in key.GetSubKeyNames())
-					using (var subkey = key.OpenSubKey(subKeyName))
-						programs.Add(new InstalledProgram(subkey));
+			var keys = new Dictionary<string, string>
+			{
+				{ @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", "64-bit" },
+				{ @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", "32-bit" },
+			};
+			foreach (var bitDepth in keys)
+				using (var key = Registry.LocalMachine.OpenSubKey(bitDepth.Key))
+					foreach (var subKeyName in key.GetSubKeyNames())
+						using (var subkey = key.OpenSubKey(subKeyName))
+							programs.Add(new InstalledProgram(subkey, bitDepth.Value));
 			Text = String.Join("", programs.Where(prog => prog.HasData()).OrderBy(prog => prog.Name).Select(prog => prog.ToString() + "\r\n"));
 		}
 	}
