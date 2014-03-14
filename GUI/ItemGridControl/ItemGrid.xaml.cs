@@ -147,6 +147,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			OnFocusedChanged(false);
 			OnSelectedChanged(null, null);
 			InvalidateDraw();
+			lastTextInputTime = null;
 		}
 
 		void OnColumnsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -263,7 +264,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		{
 			if ((Columns.Contains(SortColumn)) && (SortedItems != null))
 			{
-				SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, SortColumn.NumericStrings);
+				SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, (SortedItems.Count <= 500) && (SortColumn.NumericStrings));
 				SetLastFocusedIndex();
 			}
 		}
