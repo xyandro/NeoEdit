@@ -6,8 +6,13 @@
 	Title="NeoEdit System Information" Width="800" Height="600" Visibility="Visible">
 
 	<Window.CommandBindings>
+		<CommandBinding Command="systemInfo:SystemInfoWindow.Command_File_Save" Executed="Command_Executed"/>
 		<CommandBinding Command="systemInfo:SystemInfoWindow.Command_View_InstalledPrograms" Executed="Command_Executed"/>
 	</Window.CommandBindings>
+
+	<Window.InputBindings>
+		<KeyBinding Command="systemInfo:SystemInfoWindow.Command_File_Save" Key="S" Modifiers="Control"/>
+	</Window.InputBindings>
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -19,6 +24,9 @@
 		</Grid.RowDefinitions>
 
 		<Menu>
+			<MenuItem Header="_File">
+				<MenuItem Command="systemInfo:SystemInfoWindow.Command_File_Save" Header="_Save"/>
+			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Command="systemInfo:SystemInfoWindow.Command_View_InstalledPrograms" Header="Installed _Programs"/>
 			</MenuItem>

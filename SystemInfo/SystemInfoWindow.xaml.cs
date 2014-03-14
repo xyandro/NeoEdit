@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -10,6 +11,7 @@ namespace NeoEdit.SystemInfo
 {
 	public partial class SystemInfoWindow : Window
 	{
+		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_View_InstalledPrograms = new RoutedCommand();
 
 		[DepProp]
@@ -28,7 +30,13 @@ namespace NeoEdit.SystemInfo
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
-			if (e.Command == Command_View_InstalledPrograms)
+			if (e.Command == Command_File_Save)
+			{
+				var dialog = new SaveFileDialog { Filter = "Text files|*.txt" };
+				if (dialog.ShowDialog() == true)
+					File.WriteAllText(dialog.FileName, Text);
+			}
+			else if (e.Command == Command_View_InstalledPrograms)
 				ListInstalledPrograms();
 		}
 
