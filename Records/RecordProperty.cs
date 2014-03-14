@@ -17,14 +17,9 @@ namespace NeoEdit.Records
 			WriteTime,
 			CreateTime,
 			AccessTime,
-			Type,
-			Data,
 			MD5,
 			Identify,
 			CompressedSize,
-			ID,
-			CPU,
-			Handle,
 		};
 
 		public PropertyName Name { get; private set; }
@@ -44,14 +39,9 @@ namespace NeoEdit.Records
 			new RecordProperty { Name = PropertyName.WriteTime, MenuHeader = "Last _Write", DefaultAscending = false, Type = typeof(DateTime?) },
 			new RecordProperty { Name = PropertyName.CreateTime, MenuHeader = "_Created", DefaultAscending = false, Type = typeof(DateTime?) },
 			new RecordProperty { Name = PropertyName.AccessTime, MenuHeader = "Last _Access", DefaultAscending = false, Type = typeof(DateTime?) },
-			new RecordProperty { Name = PropertyName.Type, MenuHeader = "_Type", DefaultAscending = true, Type = typeof(String) },
-			new RecordProperty { Name = PropertyName.Data, MenuHeader = "_Data", DefaultAscending = true, Type = typeof(String) },
 			new RecordProperty { Name = PropertyName.MD5, MenuHeader = "_MD5", DefaultAscending = true, Type = typeof(String) },
 			new RecordProperty { Name = PropertyName.Identify, MenuHeader = "_Identify", DefaultAscending = true, Type = typeof(String) },
 			new RecordProperty { Name = PropertyName.CompressedSize, MenuHeader = "Compressed Size", DefaultAscending = true, Type = typeof(Int64?) },
-			new RecordProperty { Name = PropertyName.ID, MenuHeader = "ID", DefaultAscending = true, Type = typeof(Int32?) },
-			new RecordProperty { Name = PropertyName.CPU, MenuHeader = "CPU", DefaultAscending = false, Type = typeof(double?) },
-			new RecordProperty { Name = PropertyName.Handle, MenuHeader = "_Handle", DefaultAscending = false, Type = typeof(IntPtr?) },
 		};
 
 		public static RecordProperty Get(PropertyName name)
