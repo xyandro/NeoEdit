@@ -99,6 +99,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\KeySet.cs" />
     <Compile Include="ItemGridControl\ItemGrid.xaml.cs">
       <DependentUpon>ItemGrid.xaml</DependentUpon>
     </Compile>

@@ -13,14 +13,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.ItemGridControl
 {
 	public partial class ItemGrid : Grid
 	{
-		public delegate void AcceptEvent();
-		AcceptEvent accept = () => { };
-		public event AcceptEvent Accept { add { accept += value; } remove { accept -= value; } }
+		RoutedEventHandler accept = (s, e) => { };
+		public event RoutedEventHandler Accept { add { accept += value; } remove { accept -= value; } }
 
 		public static DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IEnumerable<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnItemsCollectionChanged(e.OldValue)));
 		public static DependencyProperty SortedItemsProperty = DependencyProperty.Register("SortedItems", typeof(ListCollectionView), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortedItemsCollectionChanged(e.OldValue)));
@@ -46,8 +46,28 @@ namespace NeoEdit.GUI.ItemGridControl
 		public ItemGridColumn TextInputColumn { get { return (ItemGridColumn)GetValue(TextInputColumnProperty); } set { SetValue(TextInputColumnProperty, value); } }
 		public int TextInputDelay { get { return (int)GetValue(TextInputDelayProperty); } set { SetValue(TextInputDelayProperty, value); } }
 
-		public int FocusedIndex { get { return SortedItems.IndexOf(Focused); } }
+		public int? FocusedIndex
+		{
+			get
+			{
+				var idx = SortedItems.IndexOf(Focused);
+				if (idx == -1)
+					return null;
+				return idx;
+			}
+		}
 		public int FocusedColumnIndex { get { return Columns.IndexOf(FocusedColumn); } }
+
+		int lastFocusedIndex = -1;
+		void SetLastFocusedIndex()
+		{
+			if (Focused == null)
+				return;
+			var idx = SortedItems.IndexOf(Focused);
+			if (idx == -1)
+				return;
+			lastFocusedIndex = idx;
+		}
 
 		public ItemGridColumn this[string column] { get { return Columns.FirstOrDefault(col => col.Header == column); } }
 		const double headerHeight = 21.96;
@@ -56,20 +76,13 @@ namespace NeoEdit.GUI.ItemGridControl
 		public ItemGrid()
 		{
 			InitializeComponent();
+
 			Columns = new ObservableHashSet<ItemGridColumn>();
 			Selected = new ObservableCollection<DependencyObject>();
-			DependencyPropertyDescriptor.FromProperty(ScrollViewer.ViewportHeightProperty, typeof(ScrollViewer)).AddValueChanged(scroller, (o, e) => OnSizeChanged());
+
+			DependencyPropertyDescriptor.FromProperty(ScrollViewer.ViewportHeightProperty, typeof(ScrollViewer)).AddValueChanged(scroller, (o, e) => InvalidateDraw());
 			scroll.ValueChanged += (s, e) => InvalidateDraw();
 			PreviewMouseWheel += (s, e) => scroll.Value -= e.Delta / 10;
-		}
-
-		void OnSizeChanged()
-		{
-			scroll.ViewportSize = Math.Max(0, Math.Ceiling((scroller.ViewportHeight - headerHeight) / rowHeight));
-			scroll.LargeChange = Math.Max(0, Math.Floor((scroller.ViewportHeight - headerHeight) / rowHeight) - 1);
-			scroll.Minimum = 0;
-			scroll.Maximum = SortedItems.Count - scroll.ViewportSize + 1;
-			InvalidateDraw();
 		}
 
 		void OnItemsCollectionChanged(object _oldValue)
@@ -78,7 +91,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			if (oldValue != null)
 				oldValue.CollectionChanged -= OnItemsChanged;
 
-			var newValue = SortedItems as INotifyCollectionChanged;
+			var newValue = Items as INotifyCollectionChanged;
 			if (newValue != null)
 				newValue.CollectionChanged += OnItemsChanged;
 
@@ -177,6 +190,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				return; // Recursive
 			}
 
+			SetLastFocusedIndex();
 			if (show)
 			{
 				ShowFocus();
@@ -236,19 +250,10 @@ namespace NeoEdit.GUI.ItemGridControl
 
 				var mult = ascending ? 1 : -1;
 
-				if (val1.GetType() == typeof(int))
-					return mult * ((int)val1).CompareTo((int)val2);
-				if (val1.GetType() == typeof(long))
-					return mult * ((long)val1).CompareTo((long)val2);
-				if (val1.GetType() == typeof(double))
-					return mult * ((double)val1).CompareTo((double)val2);
-				if (val1.GetType() == typeof(DateTime))
-					return mult * ((DateTime)val1).CompareTo((DateTime)val2);
-				if (val1.GetType() == typeof(string))
-					if (numericStrings)
-						return mult * SortStr((string)val1).CompareTo(SortStr((string)val2));
-					else
-						return mult * ((string)val1).CompareTo((string)val2);
+				if ((val1.GetType() == typeof(string)) && (numericStrings))
+					return mult * SortStr((string)val1).CompareTo(SortStr((string)val2));
+				if (val1 is IComparable)
+					return mult * (val1 as IComparable).CompareTo(val2);
 
 				throw new Exception("Unable to compare");
 			}
@@ -257,7 +262,10 @@ namespace NeoEdit.GUI.ItemGridControl
 		void Sort()
 		{
 			if ((Columns.Contains(SortColumn)) && (SortedItems != null))
+			{
 				SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, SortColumn.NumericStrings);
+				SetLastFocusedIndex();
+			}
 		}
 
 		void ShowFocus()
@@ -266,8 +274,8 @@ namespace NeoEdit.GUI.ItemGridControl
 				return;
 
 			var index = FocusedIndex;
-			if (index != -1)
-				scroll.Value = Math.Max(Math.Min(index, scroll.Value), index - scroll.LargeChange);
+			if (index.HasValue)
+				scroll.Value = Math.Max(Math.Min(index.Value, scroll.Value), index.Value - scroll.LargeChange);
 		}
 
 		DispatcherTimer drawTimer = null;
@@ -305,16 +313,14 @@ namespace NeoEdit.GUI.ItemGridControl
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
-		bool controlOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Control; } }
-
 		WeakReference<DependencyObject> lastShiftSel;
 		void MoveFocus(int offset, bool relative, bool select = false)
 		{
 			if (relative)
-				if (FocusedIndex == -1)
-					offset = 0;
+				if (!FocusedIndex.HasValue)
+					offset = lastFocusedIndex;
 				else
-					offset += FocusedIndex;
+					offset += FocusedIndex.Value;
 
 			offset = Math.Max(0, Math.Min(offset, SortedItems.Count - 1));
 			Focused = SortedItems.GetItemAt(offset) as DependencyObject;
@@ -352,9 +358,10 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
 		{
+			Focus();
 			base.OnMouseLeftButtonDown(e);
 			if (e.ClickCount == 2)
-				accept();
+				accept(this, new RoutedEventArgs());
 			else
 			{
 				MoveFocus((int)((e.GetPosition(contents).Y - headerHeight) / rowHeight + scroll.Value), false, true);
@@ -366,38 +373,34 @@ namespace NeoEdit.GUI.ItemGridControl
 		{
 			base.OnKeyDown(e);
 
-			e.Handled = true;
-			switch (e.Key)
+			var keys = new KeySet
 			{
-				case Key.Left: FocusedColumn = Columns[Math.Max(0, FocusedColumnIndex - 1)]; break;
-				case Key.Right: FocusedColumn = Columns[Math.Min(Columns.Count - 1, FocusedColumnIndex + 1)]; break;
-				case Key.Up: MoveFocus(-1, true); break;
-				case Key.Down: MoveFocus(1, true); break;
-				case Key.Home: MoveFocus(0, false); break;
-				case Key.End: MoveFocus(SortedItems.Count - 1, false); break;
-				case Key.PageUp:
+				{ ModifierKeys.Control, Key.A, () => SortedItems.Cast<DependencyObject>().ToList().ForEach(item => Selected.Add(item)) },
+				{ Key.Left, () => FocusedColumn = Columns[Math.Max(0, FocusedColumnIndex - 1)] },
+				{ Key.Right, () => FocusedColumn = Columns[Math.Min(Columns.Count - 1, FocusedColumnIndex + 1)] },
+				{ Key.Up, () => MoveFocus(-1, true) },
+				{ Key.Down, () => MoveFocus(1, true) },
+				{ Key.Home, () => MoveFocus(0, false) },
+				{ Key.End, () => MoveFocus(SortedItems.Count - 1, false) },
+				{ Key.PageUp, () => {
 					if (scroll.Value == FocusedIndex)
 						MoveFocus((int)-scroll.LargeChange, true);
 					else
 						MoveFocus((int)scroll.Value, false);
-					break;
-				case Key.PageDown:
+				}},
+				{ Key.PageDown, () => {
 					if (scroll.Value + scroll.LargeChange == FocusedIndex)
 						MoveFocus((int)scroll.LargeChange, true);
 					else
 						MoveFocus((int)(scroll.Value + scroll.LargeChange), false);
-					break;
-				case Key.Space: MoveFocus(0, true, true); break;
-				case Key.A:
-					if (controlOnly)
-						SortedItems.Cast<DependencyObject>().ToList().ForEach(item => Selected.Add(item));
-					else
-						e.Handled = false;
-					break;
-				case Key.Escape: lastTextInputTime = null; break;
-				case Key.Enter: accept(); break;
-				default: e.Handled = false; break;
-			}
+				}},
+				{ Key.Space, () => MoveFocus(0, true, true) },
+				{ Key.Escape, () => lastTextInputTime = null },
+				{ Key.Enter, () => accept(this, new RoutedEventArgs()) },
+			};
+
+			if (keys.Run(e))
+				e.Handled = true;
 		}
 
 		DateTime? lastTextInputTime;
@@ -420,7 +423,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				lastTextInput = e.Text;
 			lastTextInputTime = now;
 
-			var start = FocusedIndex;
+			var start = FocusedIndex ?? 0;
 			var index = start;
 			while (true)
 			{
@@ -439,6 +442,11 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void Redraw()
 		{
+			scroll.ViewportSize = Math.Max(0, Math.Ceiling((scroller.ViewportHeight - headerHeight) / rowHeight));
+			scroll.LargeChange = Math.Max(0, Math.Floor((scroller.ViewportHeight - headerHeight) / rowHeight) - 1);
+			scroll.Minimum = 0;
+			scroll.Maximum = SortedItems.Count - scroll.ViewportSize + 1;
+
 			contents.Children.Clear();
 			contents.ColumnDefinitions.Clear();
 			contents.RowDefinitions.Clear();
@@ -494,11 +502,11 @@ namespace NeoEdit.GUI.ItemGridControl
 				var col = 0;
 				foreach (var column in Columns)
 				{
-					var label = new Label { Padding = new Thickness(10, 2, 10, 2), HorizontalAlignment = column.HorizontalAlignment };
-					label.SetBinding(Label.ContentProperty, new Binding(column.DepProp.Name) { Source = item, Converter = StringFormatConverter.Converter, ConverterParameter = column.StringFormat });
-					Grid.SetRow(label, contents.RowDefinitions.Count);
-					Grid.SetColumn(label, col++);
-					contents.Children.Add(label);
+					var textBlock = new TextBlock { Padding = new Thickness(10, 2, 10, 2), HorizontalAlignment = column.HorizontalAlignment };
+					textBlock.SetBinding(TextBlock.TextProperty, new Binding(column.DepProp.Name) { Source = item, Converter = StringFormatConverter.Converter, ConverterParameter = column.StringFormat });
+					Grid.SetRow(textBlock, contents.RowDefinitions.Count);
+					Grid.SetColumn(textBlock, col++);
+					contents.Children.Add(textBlock);
 				}
 				contents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 			}
