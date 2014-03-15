@@ -9,12 +9,6 @@ using System.Runtime.InteropServices;
 // Revision(s): $WCRANGE$
 // Last repository commit: $WCDATE$
 
-#if (!DEBUG)
-$WCMIXED?#error Has:// No$ mixed revisions
-$WCMODS?#error Has:// No$ local modifications
-$WCUNVER?#error Has:// No$ unversioned items
-#endif
-
 [assembly: AssemblyTitle("Records")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]

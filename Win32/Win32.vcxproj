@@ -167,10 +167,10 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVNInfo.h" />
     <CustomBuild Include="SVNInfo.Template.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SubWCRev "$(SolutionDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SubWCRev "$(SolutionDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SubWCRev "$(SolutionDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SubWCRev "$(SolutionDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -nNmq</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -nNmq</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Getting SVN info...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Getting SVN info...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Getting SVN info...</Message>
@@ -191,12 +191,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_DEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_DEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NDEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NDEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ResourceCompile>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
