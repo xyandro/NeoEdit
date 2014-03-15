@@ -1250,6 +1250,23 @@ namespace NeoEdit.TextEditor
 				var strs = Enumerable.Range(1, ranges[RangeType.Selection].Count).Select(num => num.ToString()).ToList();
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
+			else if (command == TextEditorWindow.Command_Data_SortLineBySelection)
+			{
+				if (ranges[RangeType.Selection].Any(selection => Data.GetOffsetLine(selection.Start) != Data.GetOffsetLine(selection.End - 1)))
+					throw new Exception("Selections must stay on the same line");
+				if (ranges[RangeType.Selection].Select(selection => Data.GetOffsetLine(selection.Start)).GroupBy(line => line).Any(group => group.Count() != 1))
+					throw new Exception("Only one selections per line");
+
+				var sortStrAndLine = ranges[RangeType.Selection].Select(selection => new { sortStr = GetString(selection), line = Data.GetOffsetLine(selection.Start) }).ToList();
+				var sortStrAndOffsetAndLen = sortStrAndLine.Select(data => new { sortStr = data.sortStr, offset = Data.GetOffset(data.line, 0), length = Data[data.line].Length }).ToList();
+				var sortStrAndRange = sortStrAndOffsetAndLen.Select(data => new { sortStr = data.sortStr, range = new Range { Pos1 = data.offset, Pos2 = data.offset + data.length } }).ToList();
+				var sortStrAndRangeAndLine = sortStrAndRange.Select(data => new { sortStr = data.sortStr, range = data.range, line = GetString(data.range) }).ToList();
+
+				var lineRanges = sortStrAndRangeAndLine.Select(data => data.range).ToList();
+				var replaceStrs = sortStrAndRangeAndLine.OrderBy(data => data.sortStr).Select(data => data.line).ToList();
+
+				Replace(lineRanges, replaceStrs, true);
+			}
 			else if (command == TextEditorWindow.Command_SelectMark_Toggle)
 			{
 				if (ranges[RangeType.Selection].Count > 1)
@@ -1289,6 +1306,8 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Selection] = ranges[RangeType.Search];
 				ranges[RangeType.Search] = new List<Range>();
 			}
+			else if (command == TextEditorWindow.Command_Select_RemoveEmpty)
+				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 			else if (command == TextEditorWindow.Command_Select_Marks)
 			{
 				if (ranges[RangeType.Mark].Count == 0)

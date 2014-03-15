@@ -48,6 +48,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Duplicates = new RoutedCommand();
 		public static RoutedCommand Command_Data_Randomize = new RoutedCommand();
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
+		public static RoutedCommand Command_Data_SortLineBySelection = new RoutedCommand();
 		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();
 		public static RoutedCommand Command_Select_All = new RoutedCommand();
 		public static RoutedCommand Command_Select_Unselect = new RoutedCommand();
@@ -55,6 +56,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Select_Lines = new RoutedCommand();
 		public static RoutedCommand Command_Select_Marks = new RoutedCommand();
 		public static RoutedCommand Command_Select_Find = new RoutedCommand();
+		public static RoutedCommand Command_Select_RemoveEmpty = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Selection = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Find = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Clear = new RoutedCommand();
