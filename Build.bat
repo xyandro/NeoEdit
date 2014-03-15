@@ -26,5 +26,8 @@ DEL %BUILDDIR%\*.pdb
 DEL %BUILDDIR%\*.metagen
 DEL %BUILDDIR%\*.config
 DEL %BUILDDIR%\*.ilk
+ECHO.
+ECHO.
+ECHO Success!
 
 :EXIT
