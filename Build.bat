@@ -6,7 +6,7 @@ SET PLATFORM="Release|x64"
 
 svn up --non-interactive
 %DEVENV% %SOLUTION% /clean %PLATFORM%
-%DEVENV% %SOLUTION% /build %PLATFORM%
+%DEVENV% %SOLUTION% /build %PLATFORM% /out Build.log
 
 IF %ERRORLEVEL% EQ 0 GOTO SUCCESS
 
