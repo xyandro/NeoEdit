@@ -1,43 +1,35 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using System.Windows;
 using System.Timers;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Processes
 {
-	public class ProcessItem : DependencyObject
+	public class ProcessItem : ItemGridItem<ProcessItem>
 	{
-		public int PID { get { return GetProperty<int>(Property.PID); } }
-		public enum Property
-		{
-			PID,
-			Name,
-			Title,
-			Size,
-			CPU,
-			ParentPID,
-		}
+		[DepProp]
+		public int PID { get { return GetValue<int>(); } private set { SetValue(value); } }
+		[DepProp]
+		public string Name { get { return GetValue<string>(); } private set { SetValue(value); } }
+		[DepProp]
+		public string Title { get { return GetValue<string>(); } private set { SetValue(value); } }
+		[DepProp]
+		public long Size { get { return GetValue<long>(); } private set { SetValue(value); } }
+		[DepProp]
+		public double CPU { get { return GetValue<double>(); } private set { SetValue(value); } }
+		[DepProp]
+		public int ParentPID { get { return GetValue<int>(); } private set { SetValue(value); } }
 
-		static Dictionary<Property, Type> propertyType = new Dictionary<Property, Type>
-		{
-			{ Property.PID, typeof(int?) },
-			{ Property.Name, typeof(string) },
-			{ Property.Title, typeof(string) },
-			{ Property.Size, typeof(long?) },
-			{ Property.CPU, typeof(double?) },
-			{ Property.ParentPID, typeof(int?) },
-		};
-		static Dictionary<Property, DependencyProperty> dependencyProperty;
 		static object lockObj = new object();
 		static Dictionary<int, double> usage = new Dictionary<int, double>();
 		static Dictionary<int, PerformanceCounter> counter = new Dictionary<int, PerformanceCounter>();
 		static ProcessItem()
 		{
-			dependencyProperty = propertyType.ToDictionary(a => a.Key, a => DependencyProperty.Register(a.Key.ToString(), a.Value, typeof(ProcessItem)));
 			var timer = new Timer(1000);
 			timer.Elapsed += (s, e) =>
 			{
@@ -61,19 +53,9 @@ namespace NeoEdit.Processes
 			timer.Start();
 		}
 
-		public static Type PropertyType(Property property)
+		ProcessItem(int pid)
 		{
-			return propertyType[property];
-		}
-
-		public static DependencyProperty GetDepProp(Property property)
-		{
-			return dependencyProperty[property];
-		}
-
-		ProcessItem(int PID)
-		{
-			SetProperty(Property.PID, PID);
+			PID = pid;
 		}
 
 		public static void UpdateProcesses(ObservableCollection<ProcessItem> processes)
@@ -92,10 +74,10 @@ namespace NeoEdit.Processes
 						processes.Add(processesByPID[PID] = new ProcessItem(PID));
 					var process = processesByPID[PID];
 
-					process.SetProperty(Property.Name, mo["Name"]);
-					process.SetProperty(Property.Size, Convert.ToInt64(mo["WorkingSetSize"]));
-					process.SetProperty(Property.ParentPID, Convert.ToInt32(mo["ParentProcessID"]));
-					if (netProcess.ContainsKey(PID)) process.SetProperty(Property.Title, netProcess[PID].MainWindowTitle);
+					process.Name = mo["Name"].ToString();
+					process.Size = Convert.ToInt64(mo["WorkingSetSize"]);
+					process.ParentPID = Convert.ToInt32(mo["ParentProcessID"]);
+					if (netProcess.ContainsKey(PID)) process.Title = netProcess[PID].MainWindowTitle;
 				}
 
 			var extra = processes.Where(process => !found.Contains(process.PID)).ToList();
@@ -103,19 +85,7 @@ namespace NeoEdit.Processes
 
 			lock (lockObj)
 				foreach (var process in processes)
-					process.SetProperty(Property.CPU, usage.ContainsKey(process.PID) ? Math.Round(usage[process.PID], 1) : 0);
-		}
-
-		void SetProperty(Property property, object value)
-		{
-			if ((value is string) && (((string)value).Length == 0))
-				value = null;
-			SetValue(dependencyProperty[property], value);
-		}
-
-		public T GetProperty<T>(Property property)
-		{
-			return (T)GetValue(dependencyProperty[property]);
+					process.CPU = usage.ContainsKey(process.PID) ? Math.Round(usage[process.PID], 1) : 0;
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -32,11 +31,11 @@ namespace NeoEdit.Processes
 			uiHelper = new UIHelper<ProcessesWindow>(this);
 			InitializeComponent();
 
-			foreach (ProcessItem.Property prop in Enum.GetValues(typeof(ProcessItem.Property)))
+			foreach (var prop in ProcessItem.GetDepProps())
 			{
-				processes.Columns.Add(new ItemGridColumn(ProcessItem.GetDepProp(prop))
+				processes.Columns.Add(new ItemGridColumn(prop)
 				{
-					SortAscending = (prop != ProcessItem.Property.CPU) && (prop != ProcessItem.Property.Size),
+					SortAscending = (prop.Name != "CPU") && (prop.Name != "Size"),
 				});
 			}
 			processes.SortColumn = processes.TextInputColumn = processes.Columns.First(col => col.Header == "Name");

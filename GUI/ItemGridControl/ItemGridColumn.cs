@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using NeoEdit.Common;
 
 namespace NeoEdit.GUI.ItemGridControl
 {
@@ -14,11 +15,18 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		public ItemGridColumn(DependencyProperty depProp)
 		{
+			var isDateType = (depProp.PropertyType == typeof(DateTime?)) || (depProp.PropertyType == typeof(DateTime));
+
 			Header = depProp.Name;
 			DepProp = depProp;
-			HorizontalAlignment = (depProp.PropertyType == typeof(int?)) || (depProp.PropertyType == typeof(long?)) || (depProp.PropertyType == typeof(DateTime?)) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-			StringFormat = depProp.PropertyType == typeof(long?) ? "n0" : depProp.PropertyType == typeof(DateTime?) ? "yyyy/MM/dd HH:mm:ss" : null;
+			HorizontalAlignment = (depProp.PropertyType.IsIntegerType()) || (isDateType) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+			StringFormat = depProp.PropertyType.IsIntegerType() ? "n0" : isDateType ? "yyyy/MM/dd HH:mm:ss" : null;
 			SortAscending = NumericStrings = true;
+		}
+
+		public override string ToString()
+		{
+			return Header + ": " + DepProp.Name;
 		}
 	}
 }

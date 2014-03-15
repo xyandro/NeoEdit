@@ -2,40 +2,22 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Windows;
 using Microsoft.Win32;
 using NeoEdit.Common;
+using NeoEdit.GUI.Common;
+using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Registry
 {
-	class MyDepPropAttribute : Attribute { }
-
-	public class RegistryItem : DependencyObject
+	public class RegistryItem : ItemGridItem<RegistryItem>
 	{
-		static Dictionary<string, DependencyProperty> dependencyProperty;
-		static RegistryItem()
-		{
-			var properties = typeof(RegistryItem).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(itr1 => itr1.CustomAttributes.Any(itr2 => itr2.AttributeType == typeof(MyDepPropAttribute))).ToList();
-			dependencyProperty = properties.ToDictionary(itr => itr.Name, itr => DependencyProperty.Register(itr.Name, itr.PropertyType, typeof(RegistryItem)));
-		}
-
-		public static IEnumerable<DependencyProperty> GetDepProps()
-		{
-			return dependencyProperty.Values;
-		}
-
-		T GetValue<T>([CallerMemberName] string caller = "") { return (T)GetValue(dependencyProperty[caller]); }
-		void SetValue<T>(T value, [CallerMemberName] string caller = "") { SetValue(dependencyProperty[caller], value); }
-
-		[MyDepProp]
+		[DepProp]
 		public string Name { get { return GetValue<string>(); } private set { SetValue(value); } }
-		[MyDepProp]
+		[DepProp]
 		public string Type { get { return GetValue<string>(); } private set { SetValue(value); } }
-		[MyDepProp]
+		[DepProp]
 		public string Data { get { return GetValue<string>(); } private set { SetValue(value); } }
-		[MyDepProp]
+		[DepProp]
 		public string FullName { get { return GetValue<string>(); } private set { SetValue(value); } }
 		public bool IsKey { get { return Type == "Key"; } set { if (value)Type = "Key"; } }
 

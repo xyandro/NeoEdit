@@ -41,8 +41,8 @@ namespace NeoEdit.Handles
 			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy(type => type).ToList();
 			HandleTypes.Insert(0, "");
 
-			foreach (HandleItem.Property prop in Enum.GetValues(typeof(HandleItem.Property)))
-				handles.Columns.Add(new ItemGridColumn(HandleItem.GetDepProp(prop)));
+			foreach (var prop in HandleItem.GetDepProps())
+				handles.Columns.Add(new ItemGridColumn(prop));
 			handles.SortColumn = handles.TextInputColumn = handles.Columns.First(col => col.Header == "Type");
 			Handles = new ObservableCollection<HandleItem>();
 
@@ -76,12 +76,12 @@ namespace NeoEdit.Handles
 			else if (e.Command == Command_View_GotoProcess)
 			{
 				if (handles.Selected.Count == 1)
-					Launcher.Static.LaunchProcesses((handles.Selected.First() as HandleItem).GetProperty<int>(HandleItem.Property.PID));
+					Launcher.Static.LaunchProcesses((handles.Selected.First() as HandleItem).PID);
 			}
 			else if (e.Command == Command_View_FilterByType)
 			{
 				if (handles.Selected.Count == 1)
-					HandleType = (handles.Selected.First() as HandleItem).GetProperty<string>(HandleItem.Property.Type);
+					HandleType = (handles.Selected.First() as HandleItem).Type;
 			}
 		}
 	}
