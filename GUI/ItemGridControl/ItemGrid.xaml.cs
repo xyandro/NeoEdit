@@ -266,17 +266,15 @@ namespace NeoEdit.GUI.ItemGridControl
 			{
 				SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, (SortedItems.Count <= 500) && (SortColumn.NumericStrings));
 				SetLastFocusedIndex();
+				InvalidateDraw();
 			}
 		}
 
-		void ShowFocus()
+		bool showFocus = false;
+		public void ShowFocus()
 		{
-			if (Items.Count() == 0)
-				return;
-
-			var index = FocusedIndex;
-			if (index.HasValue)
-				scroll.Value = Math.Max(Math.Min(index.Value, scroll.Value), index.Value - scroll.LargeChange);
+			showFocus = true;
+			InvalidateDraw();
 		}
 
 		public void ResetScroll()
@@ -293,7 +291,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				focused = Focused.GetValue(prop) as IComparable;
 			var selected = Selected.Select(item => item.GetValue(prop) as IComparable).ToList();
 
-			Items = items;
+			Items = new ObservableCollection<IItemGridItem>(items);
 			var itemsByKey = Items.ToDictionary(item => item.GetValue(prop), item => item);
 			if ((focused != null) && (itemsByKey.ContainsKey(focused)))
 				Focused = itemsByKey[focused];
@@ -313,6 +311,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			{
 				drawTimer.Stop();
 				drawTimer = null;
+
 				Redraw();
 			};
 			drawTimer.Start();
@@ -329,6 +328,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			{
 				sortTimer.Stop();
 				sortTimer = null;
+
 				Sort();
 			};
 			sortTimer.Start();
@@ -486,6 +486,17 @@ namespace NeoEdit.GUI.ItemGridControl
 			scroll.LargeChange = Math.Max(0, Math.Floor((scroller.ViewportHeight - headerHeight) / rowHeight) - 1);
 			scroll.Minimum = 0;
 			scroll.Maximum = SortedItems.Count - scroll.ViewportSize + 1;
+
+			if (showFocus)
+			{
+				var index = FocusedIndex;
+				if (index.HasValue)
+					scroll.Value = Math.Max(Math.Min(index.Value, scroll.Value), index.Value - scroll.LargeChange);
+				showFocus = false;
+			}
+
+			if (drawTimer != null)
+				return;
 
 			contents.Children.Clear();
 			contents.ColumnDefinitions.Clear();
