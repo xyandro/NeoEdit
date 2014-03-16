@@ -1,17 +1,9 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NeoEdit.Common;
-using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
-using System.Diagnostics;
 using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Registry
@@ -32,18 +24,9 @@ namespace NeoEdit.Registry
 		{
 			uiHelper = new UIHelper<RegistryWindow>(this);
 			InitializeComponent();
-			uiHelper.AddCallback(a => a.Location, (o, n) => Refresh());
+			uiHelper.AddCallback(ItemGridTree.LocationProperty, keys, () => Location = keys.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => uiHelper.InvalidateBinding(location, TextBox.TextProperty);
-			keys.Accept += (s, e) =>
-			{
-				if (keys.Selected.Count != 1)
-					return;
-
-				var item = keys.Selected[0] as RegistryItem;
-				if (item.IsKey)
-					SetLocation(item.FullName);
-			};
 
 			foreach (var prop in RegistryItem.GetDepProps())
 			{
@@ -61,30 +44,22 @@ namespace NeoEdit.Registry
 
 		bool SetLocation(string location)
 		{
-			location = RegistryItem.GetProperKey(location);
-			if (location == null)
+			location = RegistryItem.GetProper(location);
+			var regItem = new RegistryItem().GetChild(location);
+			if (regItem == null)
 			{
 				MessageBox.Show("Invalid key.", "Error");
 				return false;
 			}
 
-			var oldLocation = Location;
-			Location = location;
-			keys.ResetScroll();
-			keys.Focused = keys.Items.FirstOrDefault(item => (item as RegistryItem).FullName == oldLocation);
-			keys.Selected.Add(keys.Focused);
+			keys.Location = regItem;
 			return true;
-		}
-
-		void Refresh()
-		{
-			keys.SyncItems(RegistryItem.GetKeys(Location), RegistryItem.StaticGetDepProp("FullName"));
 		}
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (e.Command == Command_View_Refresh)
-				Refresh();
+				keys.Refresh();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -93,7 +68,6 @@ namespace NeoEdit.Registry
 
 			var keySet = new KeySet
 			{
-				{ ModifierKeys.Alt, Key.Up, () => SetLocation(RegistryItem.GetParent(Location)) },
 				{ Key.Escape, () => keys.Focus() },
 			};
 

@@ -100,6 +100,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\KeySet.cs" />
+    <Compile Include="ItemGridControl\ItemGridTreeItem.cs" />
+    <Compile Include="ItemGridControl\ItemGridTree.cs" />
     <Compile Include="ItemGridControl\ItemGrid.xaml.cs">
       <DependentUpon>ItemGrid.xaml</DependentUpon>
     </Compile>
