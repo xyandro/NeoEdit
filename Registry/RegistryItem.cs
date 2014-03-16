@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.GUI.Common;
@@ -86,13 +85,6 @@ namespace NeoEdit.Registry
 				foreach (var child in key.GetValueNames())
 					yield return new RegistryItem(key, child, false);
 			}
-		}
-
-		public static string GetProper(string key)
-		{
-			if ((key.Length >= 2) && (key.StartsWith("\"")) && (key.EndsWith("\"")))
-				key = key.Substring(1, key.Length - 2);
-			return Regex.Replace(key.Trim(), @"[\\/]+", @"\");
 		}
 
 		public override string ToString()

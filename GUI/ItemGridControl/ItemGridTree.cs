@@ -82,6 +82,14 @@ namespace NeoEdit.GUI.ItemGridControl
 				nextLocation.Clear();
 			}
 
+			if (!Location.CanGetChildren())
+			{
+				isInternal = true;
+				Location = Location.GetParent();
+				isInternal = false;
+				return;
+			}
+
 			var oldLocation = last == null ? null : last.FullName;
 			Items = new ObservableCollection<IItemGridTreeItem>(Location.GetChildren());
 			ResetScroll();

@@ -479,7 +479,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void Redraw()
 		{
-			if (SortedItems == null)
+			if ((sortTimer != null) || (SortedItems == null))
 				return;
 
 			scroll.ViewportSize = Math.Max(0, Math.Ceiling((scroller.ViewportHeight - headerHeight) / rowHeight));

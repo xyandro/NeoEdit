@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -44,7 +45,9 @@ namespace NeoEdit.Registry
 
 		bool SetLocation(string location)
 		{
-			location = RegistryItem.GetProper(location);
+			if ((location.Length >= 2) && (location.StartsWith("\"")) && (location.EndsWith("\"")))
+				location = location.Substring(1, location.Length - 2);
+			location = Regex.Replace(location.Trim(), @"[\\/]+", @"\");
 			var regItem = new RegistryItem().GetChild(location);
 			if (regItem == null)
 			{
