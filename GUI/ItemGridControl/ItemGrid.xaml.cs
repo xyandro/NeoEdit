@@ -335,6 +335,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
+		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
 		WeakReference<IItemGridItem> lastShiftSel;
@@ -400,31 +401,43 @@ namespace NeoEdit.GUI.ItemGridControl
 			var keys = new KeySet
 			{
 				{ ModifierKeys.Control, Key.A, () => SortedItems.Cast<IItemGridItem>().ToList().ForEach(item => Selected.Add(item)) },
-				{ Key.Left, () => FocusedColumn = Columns[Math.Max(0, FocusedColumnIndex - 1)] },
-				{ Key.Right, () => FocusedColumn = Columns[Math.Min(Columns.Count - 1, FocusedColumnIndex + 1)] },
-				{ Key.Up, () => MoveFocus(-1, true) },
-				{ Key.Down, () => MoveFocus(1, true) },
-				{ Key.Home, () => MoveFocus(0, false) },
-				{ Key.End, () => MoveFocus(SortedItems.Count - 1, false) },
-				{ Key.PageUp, () => {
-					if (scroll.Value == FocusedIndex)
-						MoveFocus((int)-scroll.LargeChange, true);
-					else
-						MoveFocus((int)scroll.Value, false);
-				}},
-				{ Key.PageDown, () => {
-					if (scroll.Value + scroll.LargeChange == FocusedIndex)
-						MoveFocus((int)scroll.LargeChange, true);
-					else
-						MoveFocus((int)(scroll.Value + scroll.LargeChange), false);
-				}},
-				{ Key.Space, () => MoveFocus(0, true, true) },
 				{ Key.Escape, () => lastTextInputTime = null },
 				{ Key.Enter, () => accept(this, new RoutedEventArgs()) },
 			};
 
 			if (keys.Run(e))
+			{
 				e.Handled = true;
+				return;
+			}
+
+			if (altDown)
+				return;
+
+			e.Handled = true;
+			switch (e.Key)
+			{
+				case Key.Left: FocusedColumn = Columns[Math.Max(0, FocusedColumnIndex - 1)]; break;
+				case Key.Right: FocusedColumn = Columns[Math.Min(Columns.Count - 1, FocusedColumnIndex + 1)]; break;
+				case Key.Up: MoveFocus(-1, true); break;
+				case Key.Down: MoveFocus(1, true); break;
+				case Key.Home: MoveFocus(0, false); break;
+				case Key.End: MoveFocus(SortedItems.Count - 1, false); break;
+				case Key.PageUp:
+					if (scroll.Value == FocusedIndex)
+						MoveFocus((int)-scroll.LargeChange, true);
+					else
+						MoveFocus((int)scroll.Value, false);
+					break;
+				case Key.PageDown:
+					if (scroll.Value + scroll.LargeChange == FocusedIndex)
+						MoveFocus((int)scroll.LargeChange, true);
+					else
+						MoveFocus((int)(scroll.Value + scroll.LargeChange), false);
+					break;
+				case Key.Space: MoveFocus(0, true, true); break;
+				default: e.Handled = false; break;
+			}
 		}
 
 		DateTime? lastTextInputTime;
