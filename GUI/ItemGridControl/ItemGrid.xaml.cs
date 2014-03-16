@@ -285,6 +285,23 @@ namespace NeoEdit.GUI.ItemGridControl
 			lastFocusedIndex = 0;
 		}
 
+		public void SyncItems(IEnumerable<IItemGridItem> items, DependencyProperty prop)
+		{
+			var scrollPos = scroll.Value;
+			IComparable focused = null;
+			if (Focused != null)
+				focused = Focused.GetValue(prop) as IComparable;
+			var selected = Selected.Select(item => item.GetValue(prop) as IComparable).ToList();
+
+			Items = items;
+			var itemsByKey = Items.ToDictionary(item => item.GetValue(prop), item => item);
+			if ((focused != null) && (itemsByKey.ContainsKey(focused)))
+				Focused = itemsByKey[focused];
+			Selected = new ObservableCollection<IItemGridItem>(itemsByKey.Where(item => selected.Contains(item.Key)).Select(item => item.Value));
+
+			scroll.Value = scrollPos;
+		}
+
 		DispatcherTimer drawTimer = null;
 		void InvalidateDraw()
 		{

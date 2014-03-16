@@ -78,7 +78,7 @@ namespace NeoEdit.Registry
 
 		void Refresh()
 		{
-			RegistryItem.UpdateKeys(Location, Keys);
+			keys.SyncItems(RegistryItem.GetKeys(Location), RegistryItem.GetDepProp("FullName"));
 		}
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)

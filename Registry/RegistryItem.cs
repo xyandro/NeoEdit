@@ -28,6 +28,11 @@ namespace NeoEdit.Registry
 			Name = String.IsNullOrEmpty(name) ? "(Default)" : name;
 		}
 
+		public override string ToString()
+		{
+			return FullName;
+		}
+
 		public static string GetProperKey(string key)
 		{
 			var parts = key.Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -89,13 +94,6 @@ namespace NeoEdit.Registry
 			}
 
 			return result;
-		}
-
-		public static void UpdateKeys(string keyStr, ObservableCollection<RegistryItem> keys)
-		{
-			keys.Clear();
-			foreach (var key in GetKeys(keyStr))
-				keys.Add(key);
 		}
 	}
 }

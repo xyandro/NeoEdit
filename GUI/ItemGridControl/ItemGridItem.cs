@@ -23,6 +23,11 @@ namespace NeoEdit.GUI.ItemGridControl
 			dependencyProperty = properties.ToDictionary(itr => itr.Name, itr => DependencyProperty.Register(itr.Name, itr.PropertyType, typeof(ItemType)));
 		}
 
+		public static DependencyProperty GetDepProp(string name)
+		{
+			return dependencyProperty[name];
+		}
+
 		public static IEnumerable<DependencyProperty> GetDepProps()
 		{
 			return dependencyProperty.Values;

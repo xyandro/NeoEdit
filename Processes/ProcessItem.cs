@@ -53,39 +53,31 @@ namespace NeoEdit.Processes
 			timer.Start();
 		}
 
-		ProcessItem(int pid)
-		{
-			PID = pid;
-		}
+		ProcessItem() { }
 
-		public static void UpdateProcesses(ObservableCollection<ProcessItem> processes)
+		public static List<ProcessItem> GetProcesses()
 		{
 			var netProcess = Process.GetProcesses().ToDictionary(process => process.Id, process => process);
-			var processesByPID = processes.ToDictionary(process => process.PID, process => process);
-			var found = new HashSet<int>();
 
+			var processes = new List<ProcessItem>();
 			using (var mos = new ManagementObjectSearcher("SELECT ProcessId, Name, WorkingSetSize, ParentProcessID From Win32_Process"))
 			using (var moc = mos.Get())
-				foreach (var mo in moc)
-				{
-					var PID = Convert.ToInt32(mo["ProcessID"]);
-					found.Add(PID);
-					if (!processesByPID.ContainsKey(PID))
-						processes.Add(processesByPID[PID] = new ProcessItem(PID));
-					var process = processesByPID[PID];
+				lock (lockObj)
+					foreach (var mo in moc)
+					{
+						var PID = Convert.ToInt32(mo["ProcessID"]);
+						processes.Add(new ProcessItem
+						{
+							PID = PID,
+							Name = mo["Name"].ToString(),
+							Size = Convert.ToInt64(mo["WorkingSetSize"]),
+							ParentPID = Convert.ToInt32(mo["ParentProcessID"]),
+							CPU = usage.ContainsKey(PID) ? Math.Round(usage[PID], 1) : 0,
+							Title = netProcess.ContainsKey(PID) ? netProcess[PID].MainWindowTitle : null,
+						});
+					}
 
-					process.Name = mo["Name"].ToString();
-					process.Size = Convert.ToInt64(mo["WorkingSetSize"]);
-					process.ParentPID = Convert.ToInt32(mo["ParentProcessID"]);
-					if (netProcess.ContainsKey(PID)) process.Title = netProcess[PID].MainWindowTitle;
-				}
-
-			var extra = processes.Where(process => !found.Contains(process.PID)).ToList();
-			extra.ForEach(process => processes.Remove(process));
-
-			lock (lockObj)
-				foreach (var process in processes)
-					process.CPU = usage.ContainsKey(process.PID) ? Math.Round(usage[process.PID], 1) : 0;
+			return processes;
 		}
 	}
 }

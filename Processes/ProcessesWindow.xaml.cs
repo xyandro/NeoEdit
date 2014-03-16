@@ -51,7 +51,7 @@ namespace NeoEdit.Processes
 
 		void Refresh()
 		{
-			ProcessItem.UpdateProcesses(Processes);
+			processes.SyncItems(ProcessItem.GetProcesses(), ProcessItem.GetDepProp("PID"));
 		}
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
