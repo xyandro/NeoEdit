@@ -12,6 +12,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		object GetValue(DependencyProperty prop);
 		T GetValue<T>(string propName);
 		void SetValue<T>(T value, string propName);
+		DependencyProperty GetDepProp(string propName);
 	}
 
 	public class ItemGridItem<ItemType> : DependencyObject, IItemGridItem
@@ -23,7 +24,12 @@ namespace NeoEdit.GUI.ItemGridControl
 			dependencyProperty = properties.ToDictionary(itr => itr.Name, itr => DependencyProperty.Register(itr.Name, itr.PropertyType, typeof(ItemType)));
 		}
 
-		public static DependencyProperty GetDepProp(string name)
+		public DependencyProperty GetDepProp(string name)
+		{
+			return StaticGetDepProp(name);
+		}
+
+		public static DependencyProperty StaticGetDepProp(string name)
 		{
 			return dependencyProperty[name];
 		}
