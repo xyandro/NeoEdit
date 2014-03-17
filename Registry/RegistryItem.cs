@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.GUI.Common;
@@ -43,6 +44,11 @@ namespace NeoEdit.Registry
 				Type = key.GetValueKind(name).ToString();
 				Data = value.ToString();
 			}
+		}
+
+		public static string Simplify(string location)
+		{
+			return Regex.Replace(location.Trim().Trim('"'), @"[\\/]+", @"\");
 		}
 
 		public override IItemGridTreeItem GetParent()
