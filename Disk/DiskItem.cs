@@ -35,12 +35,28 @@ namespace NeoEdit.Disk
 
 		public bool IsDir { get; private set; }
 		public bool IsZip { get { return Extension == ".zip"; } }
-		readonly DiskSource source;
-		DiskItem(DiskSource _source, string fullName, bool isDir)
+
+		public enum DiskItemType
+		{
+			None,
+			Disk,
+			ZipArchive,
+		}
+
+		readonly DiskItem parent, contentItem;
+		readonly DiskItemType type;
+
+		DiskItem(string fullName, bool isDir, DiskItem _parent, DiskItemType _type = DiskItemType.None)
 			: base(fullName)
 		{
-			source = _source;
 			IsDir = isDir;
+			parent = _parent;
+			type = _type;
+
+			for (contentItem = this; contentItem != null; contentItem = contentItem.parent)
+				if (contentItem.type != DiskItemType.None)
+					break;
+
 			var idx = FullName.LastIndexOf('\\');
 			Path = idx == -1 ? "" : FullName.Substring(0, idx);
 			Name = idx == -1 ? FullName : FullName.Substring(idx + 1);
@@ -49,9 +65,21 @@ namespace NeoEdit.Disk
 			Extension = idx == -1 ? "" : Name.Substring(idx).ToLowerInvariant();
 		}
 
+		string GetRelativeName(DiskItem item)
+		{
+			var name = item == null ? "" : item.FullName;
+			if (name == FullName)
+				return "";
+			if (name != "")
+				name += @"\";
+			if (!FullName.StartsWith(name))
+				throw new ArgumentException();
+			return FullName.Substring(name.Length);
+		}
+
 		public static DiskItem GetRoot()
 		{
-			return new DiskItem(new DiskSource(null, "", DiskSource.DiskSourceType.Disk), "", true);
+			return new DiskItem("", true, null, DiskItemType.Disk);
 		}
 
 		static bool IsChildOf(string path, string parent)
@@ -66,25 +94,26 @@ namespace NeoEdit.Disk
 			return Regex.Replace(path.Trim().Trim('"'), @"[\\/]+", @"\");
 		}
 
-		string GetRemaining(string first)
+		public Stream GetContentStream()
 		{
-			if (!IsChildOf(FullName, first))
-				throw new ArgumentException();
-			var remaining = FullName.Substring(first.Length);
-			if (remaining.StartsWith(@"\"))
-				remaining = remaining.Substring(1);
-			return remaining;
+			var name = contentItem.GetRelativeName(contentItem.parent.contentItem);
+			switch (contentItem.parent.contentItem.type)
+			{
+				case DiskItemType.Disk: return File.OpenRead(name);
+				case DiskItemType.ZipArchive:
+					{
+						var zip = new ZipArchive(contentItem.parent.GetContentStream(), ZipArchiveMode.Read);
+						var entry = zip.GetEntry(name.Replace(@"\", "/"));
+						var stream = entry.Open();
+						return stream;
+					}
+				default: throw new NotImplementedException();
+			}
 		}
 
 		public override IItemGridTreeItem GetParent()
 		{
-			if (FullName == "")
-				return null;
-
-			var useSource = source;
-			while (!IsChildOf(Path, useSource.Path))
-				useSource = useSource.Parent;
-			return new DiskItem(useSource, Path, true);
+			return parent;
 		}
 
 		public override bool CanGetChildren()
@@ -98,58 +127,57 @@ namespace NeoEdit.Disk
 				return GetDirChildren();
 
 			if (IsZip)
-				return GetZipChildren(new DiskSource(source, FullName, DiskSource.DiskSourceType.ZipArchive));
+			{
+				var item = new DiskItem(FullName, true, parent, DiskItemType.ZipArchive);
+				return item.GetChildren();
+			}
 
 			throw new Exception("Can't get children");
 		}
 
 		IEnumerable<IItemGridTreeItem> GetDirChildren()
 		{
-			switch (source.Type)
+			switch (contentItem.type)
 			{
-				case DiskSource.DiskSourceType.Disk: return GetDiskChildren();
-				case DiskSource.DiskSourceType.ZipArchive: return GetZipChildren();
+				case DiskItemType.Disk: return GetDiskChildren();
+				case DiskItemType.ZipArchive: return GetZipChildren();
 			}
 			throw new Exception("Can't get children");
 		}
 
 		IEnumerable<IItemGridTreeItem> GetDiskChildren()
 		{
-			if ((source.Type == DiskSource.DiskSourceType.Disk) && (FullName == ""))
+			if (FullName == "")
 			{
 				foreach (var drive in DriveInfo.GetDrives())
-					yield return new DiskItem(source, drive.Name.Substring(0, drive.Name.Length - 1).ToUpper(), true);
+					yield return new DiskItem(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper(), true, this);
 			}
-			else if (source.Type == DiskSource.DiskSourceType.Disk)
+			else
 			{
 				var find = FullName;
 				if (find.Length == 2)
 					find += @"\";
 				foreach (var dir in Directory.EnumerateDirectories(find))
-					yield return new DiskItem(source, dir, true);
+					yield return new DiskItem(dir, true, this);
 				foreach (var file in Directory.EnumerateFiles(find))
-					yield return new DiskItem(source, file, false);
+					yield return new DiskItem(file, false, this);
 			}
 		}
 
-		IEnumerable<IItemGridTreeItem> GetZipChildren(DiskSource source = null)
+		IEnumerable<IItemGridTreeItem> GetZipChildren()
 		{
-			if (source == null)
-				source = this.source;
-
-			var path = GetRemaining(source.Path);
-			if (path.Length != 0)
-				path += @"\";
-
-			var stream = source.GetStream();
+			var stream = GetContentStream();
 			var archive = new ZipArchive(stream, ZipArchiveMode.Read);
 			var found = new HashSet<string>();
+			var contentName = GetRelativeName(contentItem);
+			if (contentName != "")
+				contentName += @"\";
 			foreach (var entry in archive.Entries)
 			{
 				var name = entry.FullName.Replace("/", @"\");
-				if (!name.StartsWith(path))
+				if (!name.StartsWith(contentName))
 					continue;
-				name = name.Substring(path.Length);
+				name = name.Substring(contentName.Length);
 				var idx = name.IndexOf('\\');
 				var isDir = false;
 				if (idx != -1)
@@ -161,8 +189,10 @@ namespace NeoEdit.Disk
 					isDir = true;
 				}
 
-				yield return new DiskItem(source, FullName + @"\" + name, isDir);
+				yield return new DiskItem(FullName + @"\" + name, isDir, this);
 			}
 		}
+
+		public override string ToString() { return type.ToString() + ": " + FullName; }
 	}
 }

@@ -49,7 +49,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiskSource.cs" />
     <Compile Include="DiskWindow.xaml.cs">
       <DependentUpon>DiskWindow.xaml</DependentUpon>
     </Compile>
