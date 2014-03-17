@@ -13,6 +13,7 @@ namespace NeoEdit.GUI
 		protected Action<string, byte[]> fileBinaryEditorLauncher;
 		protected Action<int> processBinaryEditorLauncher;
 		protected Action browserLauncher;
+		protected Action diskLauncher;
 		protected Action<int?> processesLauncher;
 		protected Action<int?> handlesLauncher;
 		protected Action<string> registryLauncher;
@@ -22,6 +23,7 @@ namespace NeoEdit.GUI
 			Action<string, byte[]> fileBinaryEditor,
 			Action<int> processBinaryEditor,
 			Action browser,
+			Action disk,
 			Action<int?> processes,
 			Action<int?> handles,
 			Action<string> registry
@@ -34,6 +36,7 @@ namespace NeoEdit.GUI
 				fileBinaryEditorLauncher = fileBinaryEditor,
 				processBinaryEditorLauncher = processBinaryEditor,
 				browserLauncher = browser,
+				diskLauncher = disk,
 				processesLauncher = processes,
 				handlesLauncher = handles,
 				registryLauncher = registry,
@@ -63,6 +66,11 @@ namespace NeoEdit.GUI
 		public void LaunchBrowser()
 		{
 			browserLauncher();
+		}
+
+		public void LaunchDisk()
+		{
+			diskLauncher();
 		}
 
 		public void LaunchProcesses(int? pid = null)

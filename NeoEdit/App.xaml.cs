@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
 using NeoEdit.Browser;
 using NeoEdit.Common.Transform;
+using NeoEdit.Disk;
 using NeoEdit.Handles;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
@@ -42,6 +43,14 @@ namespace NeoEdit
 					case "system":
 					case "systeminfo":
 						return new SystemInfoWindow();
+					case "disk":
+					case "disks":
+						{
+							string location = null;
+							if (args.Length > 1)
+								location = args[1];
+							return new DiskWindow(location);
+						}
 					case "text":
 						{
 							string filename = null;
@@ -142,6 +151,7 @@ namespace NeoEdit
 				fileBinaryEditor: (filename, binarydata) => BinaryEditorWindow.CreateFromFile(filename, binarydata),
 				processBinaryEditor: (pid) => BinaryEditorWindow.CreateFromProcess(pid),
 				browser: () => new BrowserWindow(),
+				disk: () => new DiskWindow(),
 				processes: (pid) => new ProcessesWindow(pid),
 				handles: (pid) => new HandlesWindow(pid),
 				registry: (key) => new RegistryWindow(key)

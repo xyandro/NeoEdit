@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemInfo", "SystemInfo\Sy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Registry", "Registry\Registry.csproj", "{0193411F-E627-4418-8942-F669C19B90F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disk", "Disk\Disk.csproj", "{839C668B-921C-4A33-91CD-0D8131FFACFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -149,6 +151,14 @@ Global
 		{0193411F-E627-4418-8942-F669C19B90F4}.Release|x64.Build.0 = Release|x64
 		{0193411F-E627-4418-8942-F669C19B90F4}.Release|x86.ActiveCfg = Release|x86
 		{0193411F-E627-4418-8942-F669C19B90F4}.Release|x86.Build.0 = Release|x86
+		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Debug|x64.ActiveCfg = Debug|x64
+		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Debug|x64.Build.0 = Debug|x64
+		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Debug|x86.ActiveCfg = Debug|x86
+		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Debug|x86.Build.0 = Debug|x86
+		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Release|x64.ActiveCfg = Release|x64
+		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Release|x64.Build.0 = Release|x64
+		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Release|x86.ActiveCfg = Release|x86
+		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
