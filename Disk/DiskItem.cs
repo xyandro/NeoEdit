@@ -42,6 +42,7 @@ namespace NeoEdit.Disk
 			None,
 			Disk,
 			ZipArchive,
+			GZipArchive,
 		}
 
 		readonly DiskItem parent, contentItem;
@@ -69,6 +70,9 @@ namespace NeoEdit.Disk
 			{
 				case ".zip":
 					type = DiskItemType.ZipArchive;
+					break;
+				case ".gz":
+					type = DiskItemType.GZipArchive;
 					break;
 			}
 
@@ -151,6 +155,8 @@ namespace NeoEdit.Disk
 						var stream = entry.Open();
 						return stream;
 					}
+				case DiskItemType.GZipArchive:
+					return new GZipStream(parent.contentItem.GetStream(), CompressionMode.Decompress);
 				default: throw new NotImplementedException();
 			}
 		}
@@ -180,6 +186,7 @@ namespace NeoEdit.Disk
 			{
 				case DiskItemType.Disk: return GetDiskChildren();
 				case DiskItemType.ZipArchive: return GetZipChildren();
+				case DiskItemType.GZipArchive: return new List<IItemGridTreeItem> { new DiskItem(FullName + @"\" + Name.Substring(0, Name.Length - 3), false, this) };
 				default: throw new Exception("Can't get children");
 			}
 		}
