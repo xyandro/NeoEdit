@@ -29,12 +29,17 @@ namespace NeoEdit.GUI.ItemGridControl
 			return StaticGetDepProp(name);
 		}
 
+		public IEnumerable<DependencyProperty> GetDepProps()
+		{
+			return StaticGetDepProps();
+		}
+
 		public static DependencyProperty StaticGetDepProp(string name)
 		{
 			return dependencyProperty[name];
 		}
 
-		public static IEnumerable<DependencyProperty> GetDepProps()
+		public static IEnumerable<DependencyProperty> StaticGetDepProps()
 		{
 			return dependencyProperty.Values;
 		}

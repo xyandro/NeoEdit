@@ -31,7 +31,7 @@ namespace NeoEdit.Processes
 			uiHelper = new UIHelper<ProcessesWindow>(this);
 			InitializeComponent();
 
-			foreach (var prop in ProcessItem.GetDepProps())
+			foreach (var prop in ProcessItem.StaticGetDepProps())
 			{
 				processes.Columns.Add(new ItemGridColumn(prop)
 				{

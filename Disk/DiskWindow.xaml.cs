@@ -34,7 +34,7 @@ namespace NeoEdit.Disk
 			location.LostFocus += (s, e) => uiHelper.InvalidateBinding(location, TextBox.TextProperty);
 
 			var keep = new List<string> { "Name", "Size", "WriteTime" };
-			foreach (var prop in DiskItem.GetDepProps())
+			foreach (var prop in DiskItem.StaticGetDepProps())
 			{
 				if (!keep.Contains(prop.Name))
 					continue;
