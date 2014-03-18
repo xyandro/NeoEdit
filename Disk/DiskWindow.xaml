@@ -48,7 +48,7 @@
 			<TextBox Name="location" Text="{Binding Location, ElementName=self, Mode=OneWay}" HorizontalAlignment="Stretch" KeyDown="location_KeyDown"/>
 		</DockPanel>
 
-		<ig:ItemGridTree x:Name="files" Grid.Row="2" Items="{Binding Files, ElementName=self}"/>
+		<ig:ItemGridTree x:Name="files" Grid.Row="2"/>
 	</Grid>
 
 </Window>

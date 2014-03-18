@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -19,8 +18,6 @@ namespace NeoEdit.Disk
 
 		[DepProp]
 		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		ObservableCollection<DiskItem> Files { get { return uiHelper.GetPropValue<ObservableCollection<DiskItem>>(); } set { uiHelper.SetPropValue(value); } }
 
 		static DiskWindow() { UIHelper<DiskWindow>.Register(); }
 
@@ -44,7 +41,6 @@ namespace NeoEdit.Disk
 				files.Columns.Add(new ItemGridColumn(prop));
 			}
 			files.SortColumn = files.TextInputColumn = files.Columns.First(col => col.Header == "Name");
-			Files = new ObservableCollection<DiskItem>();
 			SetLocation(path ?? "");
 		}
 
