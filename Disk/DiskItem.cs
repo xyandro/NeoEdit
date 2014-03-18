@@ -34,8 +34,8 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public long? CompressedSize { get { return GetValue<long?>(); } private set { SetValue(value); } }
 
-		public bool IsDir { get; private set; }
-		public bool IsZip { get { return Extension == ".zip"; } }
+		public bool HasChildren { get; private set; }
+		public bool HasData { get; private set; }
 
 		public enum DiskItemType
 		{
@@ -47,16 +47,15 @@ namespace NeoEdit.Disk
 		readonly DiskItem parent, contentItem;
 		readonly DiskItemType type;
 
-		DiskItem(string fullName, bool isDir, DiskItem _parent, DiskItemType _type = DiskItemType.None)
+		DiskItem(string fullName, bool isDir, DiskItem _parent)
 			: base(fullName)
 		{
-			IsDir = isDir;
+			HasChildren = isDir;
+			HasData = !isDir;
 			parent = _parent;
-			type = _type;
-
-			for (contentItem = this; contentItem != null; contentItem = contentItem.parent)
-				if (contentItem.type != DiskItemType.None)
-					break;
+			type = DiskItemType.None;
+			if (fullName == "")
+				type = DiskItemType.Disk;
 
 			Path = GetPath(FullName);
 			Name = fullName.Substring(Path.Length);
@@ -65,6 +64,20 @@ namespace NeoEdit.Disk
 			var idx = Name.LastIndexOf('.');
 			NameWoExtension = idx == -1 ? Name : "";
 			Extension = idx == -1 ? "" : Name.Substring(idx).ToLowerInvariant();
+
+			switch (Extension)
+			{
+				case ".zip":
+					type = DiskItemType.ZipArchive;
+					break;
+			}
+
+			if (type != DiskItemType.None)
+				HasChildren = true;
+
+			for (contentItem = this; contentItem != null; contentItem = contentItem.parent)
+				if (contentItem.type != DiskItemType.None)
+					break;
 		}
 
 		protected override string GetPath(string fullName)
@@ -103,7 +116,7 @@ namespace NeoEdit.Disk
 
 		public static DiskItem GetRoot()
 		{
-			return new DiskItem("", true, null, DiskItemType.Disk);
+			return new DiskItem("", true, null);
 		}
 
 		static bool IsChildOf(string path, string parent)
@@ -158,28 +171,17 @@ namespace NeoEdit.Disk
 
 		public override bool CanGetChildren()
 		{
-			return (IsDir) || (IsZip);
+			return HasChildren;
 		}
 
 		public override IEnumerable<IItemGridTreeItem> GetChildren()
 		{
-			if (IsDir)
+			switch (contentItem.type)
 			{
-				switch (contentItem.type)
-				{
-					case DiskItemType.Disk: return GetDiskChildren();
-					case DiskItemType.ZipArchive: return GetZipChildren();
-					default: throw new Exception("Can't get children");
-				}
+				case DiskItemType.Disk: return GetDiskChildren();
+				case DiskItemType.ZipArchive: return GetZipChildren();
+				default: throw new Exception("Can't get children");
 			}
-
-			if (IsZip)
-			{
-				var item = new DiskItem(FullName, true, parent, DiskItemType.ZipArchive);
-				return item.GetChildren();
-			}
-
-			throw new Exception("Can't get children");
 		}
 
 		IEnumerable<IItemGridTreeItem> GetDiskChildren()
@@ -240,7 +242,7 @@ namespace NeoEdit.Disk
 
 		public void Identify()
 		{
-			if (IsDir)
+			if (!HasData)
 				return;
 
 			using (var name = GetFileName())
