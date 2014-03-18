@@ -15,12 +15,10 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		public ItemGridColumn(DependencyProperty depProp)
 		{
-			var isDateType = (depProp.PropertyType == typeof(DateTime?)) || (depProp.PropertyType == typeof(DateTime));
-
 			Header = depProp.Name;
 			DepProp = depProp;
-			HorizontalAlignment = (depProp.PropertyType.IsIntegerType()) || (isDateType) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-			StringFormat = depProp.PropertyType.IsIntegerType() ? "n0" : isDateType ? "yyyy/MM/dd HH:mm:ss" : null;
+			HorizontalAlignment = (depProp.PropertyType.IsIntegerType()) || (depProp.PropertyType.IsDateType()) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+			StringFormat = depProp.PropertyType.IsIntegerType() ? "n0" : depProp.PropertyType.IsDateType() ? "yyyy/MM/dd HH:mm:ss" : null;
 			SortAscending = NumericStrings = true;
 		}
 

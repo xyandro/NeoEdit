@@ -8,6 +8,9 @@ namespace NeoEdit.Common
 	{
 		public static bool IsIntegerType(this Type type)
 		{
+			if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
+				type = Nullable.GetUnderlyingType(type);
+
 			switch (Type.GetTypeCode(type))
 			{
 				case TypeCode.Byte:
@@ -22,6 +25,14 @@ namespace NeoEdit.Common
 				default:
 					return false;
 			}
+		}
+
+		public static bool IsDateType(this Type type)
+		{
+			if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
+				type = Nullable.GetUnderlyingType(type);
+
+			return Type.GetTypeCode(type) == TypeCode.DateTime;
 		}
 
 		public static IEnumerable<T> GetValues<T>()
