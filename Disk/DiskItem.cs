@@ -62,7 +62,7 @@ namespace NeoEdit.Disk
 					data = ms.ToArray();
 				}
 				data = Compression.Decompress(Compression.Type.GZip, data);
-				File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "7z.dll"), data);
+				File.WriteAllBytes(System.IO.Path.GetFullPath(System.IO.Path.Combine(typeof(DiskItem).Assembly.Location, "..", "7z.dll")), data);
 			}
 		}
 
@@ -142,8 +142,11 @@ namespace NeoEdit.Disk
 			{
 				case ".7z":
 				case ".xz":
+				case ".txz":
 				case ".bz":
+				case ".bz2":
 				case ".bzip2":
+				case ".tbz":
 				case ".tar":
 				case ".zip":
 				case ".wim":
@@ -248,7 +251,7 @@ namespace NeoEdit.Disk
 						var stream = new FileStream(System.IO.Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.Delete, 512, FileOptions.DeleteOnClose);
 						using (var zip = new SevenZipExtractor(parent.contentItem.GetStream()))
 						{
-							if (zip.IsSolid)
+							if (parent.contentItem.IsSevenZipNoName())
 								zip.ExtractFile(0, stream);
 							else
 								zip.ExtractFile(name, stream);
@@ -319,6 +322,24 @@ namespace NeoEdit.Disk
 			}
 		}
 
+		bool IsSevenZipNoName()
+		{
+			switch (Extension)
+			{
+				case ".xz":
+				case ".txz":
+				case ".bz":
+				case ".bz2":
+				case ".bzip2":
+				case ".tbz":
+				case ".gz":
+				case ".gzip":
+				case ".tgz":
+					return true;
+				default: return false;
+			}
+		}
+
 		IEnumerable<IItemGridTreeItem> GetSevenZipChildren()
 		{
 			using (var stream = contentItem.GetStream())
@@ -328,28 +349,29 @@ namespace NeoEdit.Disk
 				var contentName = GetRelativeName(contentItem);
 				if (contentName != "")
 					contentName += @"\";
+				var noName = IsSevenZipNoName();
 				foreach (var entry in zip.ArchiveFileData)
 				{
 					var name = entry.FileName;
-					if (zip.IsSolid)
+					if (noName)
 					{
 						name = NameWoExtension;
-						if ((Extension == ".tgz") || (Extension == ".bgz"))
+						if ((Extension == ".tgz") || (Extension == ".tbz") || (Extension == ".txz"))
 							name += ".tar";
 					}
 					if (!name.StartsWith(contentName))
 						continue;
 					name = name.Substring(contentName.Length);
 					var idx = name.IndexOf('\\');
-					var isDir = false;
+					var isDir = entry.IsDirectory;
 					if (idx != -1)
 					{
 						name = name.Substring(0, idx);
-						if (found.Contains(name))
-							continue;
-						found.Add(name);
 						isDir = true;
 					}
+					if (found.Contains(name))
+						continue;
+					found.Add(name);
 
 					yield return FromSevenZip(FullName + @"\" + name, isDir, this, entry);
 				}

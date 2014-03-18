@@ -51,6 +51,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FilePath.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UnitTest.cs" />
     <EmbeddedResource Include="Magic\magic.mgc" />
     <None Include="Properties\AssemblyInfo.Template.cs" />
     <AppDesigner Include="Properties\" />
