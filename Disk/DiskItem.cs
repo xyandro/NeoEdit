@@ -11,27 +11,27 @@ namespace NeoEdit.Disk
 	public class DiskItem : ItemGridTreeItem<DiskItem>
 	{
 		[DepProp]
-		public string Path { get { return GetValue<string>(); } protected set { SetValue(value); } }
+		public string Path { get { return GetValue<string>(); } private set { SetValue(value); } }
 		[DepProp]
-		public string Name { get { return GetValue<string>(); } protected set { SetValue(value); } }
+		public string Name { get { return GetValue<string>(); } private set { SetValue(value); } }
 		[DepProp]
-		public string NameWoExtension { get { return GetValue<string>(); } protected set { SetValue(value); } }
+		public string NameWoExtension { get { return GetValue<string>(); } private set { SetValue(value); } }
 		[DepProp]
-		public string Extension { get { return GetValue<string>(); } protected set { SetValue(value); } }
+		public string Extension { get { return GetValue<string>(); } private set { SetValue(value); } }
 		[DepProp]
-		public long? Size { get { return GetValue<long?>(); } protected set { SetValue(value); } }
+		public long? Size { get { return GetValue<long?>(); } private set { SetValue(value); } }
 		[DepProp]
-		public DateTime? WriteTime { get { return GetValue<DateTime?>(); } protected set { SetValue(value); } }
+		public DateTime? WriteTime { get { return GetValue<DateTime?>(); } private set { SetValue(value); } }
 		[DepProp]
-		public DateTime? CreateTime { get { return GetValue<DateTime?>(); } protected set { SetValue(value); } }
+		public DateTime? CreateTime { get { return GetValue<DateTime?>(); } private set { SetValue(value); } }
 		[DepProp]
-		public DateTime? AccessTime { get { return GetValue<DateTime?>(); } protected set { SetValue(value); } }
+		public DateTime? AccessTime { get { return GetValue<DateTime?>(); } private set { SetValue(value); } }
 		[DepProp]
-		public string MD5 { get { return GetValue<string>(); } protected set { SetValue(value); } }
+		public string MD5 { get { return GetValue<string>(); } private set { SetValue(value); } }
 		[DepProp]
-		public string Identity { get { return GetValue<string>(); } protected set { SetValue(value); } }
+		public string Identity { get { return GetValue<string>(); } private set { SetValue(value); } }
 		[DepProp]
-		public long? CompressedSize { get { return GetValue<long?>(); } protected set { SetValue(value); } }
+		public long? CompressedSize { get { return GetValue<long?>(); } private set { SetValue(value); } }
 
 		public bool IsDir { get; private set; }
 		public bool IsZip { get { return Extension == ".zip"; } }
@@ -96,13 +96,13 @@ namespace NeoEdit.Disk
 
 		public Stream GetStream()
 		{
-			var name = GetRelativeName(contentItem.parent.contentItem);
-			switch (contentItem.parent.contentItem.type)
+			var name = GetRelativeName(parent.contentItem);
+			switch (parent.contentItem.type)
 			{
 				case DiskItemType.Disk: return File.OpenRead(name);
 				case DiskItemType.ZipArchive:
 					{
-						var zip = new ZipArchive(contentItem.parent.contentItem.GetStream(), ZipArchiveMode.Read);
+						var zip = new ZipArchive(parent.contentItem.GetStream(), ZipArchiveMode.Read);
 						var entry = zip.GetEntry(name.Replace(@"\", "/"));
 						var stream = entry.Open();
 						return stream;
