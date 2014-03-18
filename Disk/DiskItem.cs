@@ -127,6 +127,7 @@ namespace NeoEdit.Disk
 			var item = new DiskItem(fullName, isDir, parent);
 			if (!isDir)
 			{
+				item.CompressedSize = (long)info.PackedSize;
 				item.Size = (long)info.Size;
 				item.AccessTime = info.LastAccessTime;
 				item.WriteTime = info.LastWriteTime;
