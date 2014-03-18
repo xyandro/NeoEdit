@@ -94,15 +94,15 @@ namespace NeoEdit.Disk
 			return Regex.Replace(path.Trim().Trim('"'), @"[\\/]+", @"\");
 		}
 
-		public Stream GetContentStream()
+		public Stream GetStream()
 		{
-			var name = contentItem.GetRelativeName(contentItem.parent.contentItem);
+			var name = GetRelativeName(contentItem.parent.contentItem);
 			switch (contentItem.parent.contentItem.type)
 			{
 				case DiskItemType.Disk: return File.OpenRead(name);
 				case DiskItemType.ZipArchive:
 					{
-						var zip = new ZipArchive(contentItem.parent.GetContentStream(), ZipArchiveMode.Read);
+						var zip = new ZipArchive(contentItem.parent.contentItem.GetStream(), ZipArchiveMode.Read);
 						var entry = zip.GetEntry(name.Replace(@"\", "/"));
 						var stream = entry.Open();
 						return stream;
@@ -166,7 +166,7 @@ namespace NeoEdit.Disk
 
 		IEnumerable<IItemGridTreeItem> GetZipChildren()
 		{
-			var stream = GetContentStream();
+			var stream = contentItem.GetStream();
 			var archive = new ZipArchive(stream, ZipArchiveMode.Read);
 			var found = new HashSet<string>();
 			var contentName = GetRelativeName(contentItem);
