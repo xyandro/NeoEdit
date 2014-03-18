@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Management;
 using System.Text.RegularExpressions;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.ItemGridControl;
@@ -57,12 +58,25 @@ namespace NeoEdit.Disk
 				if (contentItem.type != DiskItemType.None)
 					break;
 
-			var idx = FullName.LastIndexOf('\\');
-			Path = idx == -1 ? "" : FullName.Substring(0, idx);
-			Name = idx == -1 ? FullName : FullName.Substring(idx + 1);
-			idx = Name.LastIndexOf('.');
+			Path = GetPath(FullName);
+			Name = fullName.Substring(Path.Length);
+			if ((Name.StartsWith(@"\")) && (Path != ""))
+				Name = Name.Substring(1);
+			var idx = Name.LastIndexOf('.');
 			NameWoExtension = idx == -1 ? Name : "";
 			Extension = idx == -1 ? "" : Name.Substring(idx).ToLowerInvariant();
+		}
+
+		protected override string GetPath(string fullName)
+		{
+			if (fullName == "")
+				return "";
+
+			var idx = fullName.LastIndexOf('\\');
+			if ((idx == -1) || ((fullName.StartsWith(@"\\")) && (idx < 2)))
+				return "";
+
+			return fullName.Substring(0, idx);
 		}
 
 		string GetRelativeName(DiskItem item)
@@ -75,6 +89,16 @@ namespace NeoEdit.Disk
 			if (!FullName.StartsWith(name))
 				throw new ArgumentException();
 			return FullName.Substring(name.Length);
+		}
+
+		static HashSet<string> shares = new HashSet<string>();
+		static void EnsureShareExists(string path)
+		{
+			var idx = path.IndexOf('\\', 2);
+			if (idx == -1)
+				idx = path.Length;
+			var share = path.Substring(0, idx).ToLowerInvariant();
+			shares.Add(share);
 		}
 
 		public static DiskItem GetRoot()
@@ -91,7 +115,14 @@ namespace NeoEdit.Disk
 
 		public static string Simplify(string path)
 		{
-			return Regex.Replace(path.Trim().Trim('"'), @"[\\/]+", @"\");
+			var network = path.StartsWith(@"\\");
+			path = Regex.Replace(path.Trim().Trim('"'), @"[\\/]+", @"\");
+			if (network)
+			{
+				path = @"\" + path;
+				EnsureShareExists(path);
+			}
+			return path;
 		}
 
 		public Stream GetStream()
@@ -133,7 +164,14 @@ namespace NeoEdit.Disk
 		public override IEnumerable<IItemGridTreeItem> GetChildren()
 		{
 			if (IsDir)
-				return GetDirChildren();
+			{
+				switch (contentItem.type)
+				{
+					case DiskItemType.Disk: return GetDiskChildren();
+					case DiskItemType.ZipArchive: return GetZipChildren();
+					default: throw new Exception("Can't get children");
+				}
+			}
 
 			if (IsZip)
 			{
@@ -144,22 +182,20 @@ namespace NeoEdit.Disk
 			throw new Exception("Can't get children");
 		}
 
-		IEnumerable<IItemGridTreeItem> GetDirChildren()
-		{
-			switch (contentItem.type)
-			{
-				case DiskItemType.Disk: return GetDiskChildren();
-				case DiskItemType.ZipArchive: return GetZipChildren();
-			}
-			throw new Exception("Can't get children");
-		}
-
 		IEnumerable<IItemGridTreeItem> GetDiskChildren()
 		{
 			if (FullName == "")
 			{
 				foreach (var drive in DriveInfo.GetDrives())
 					yield return new DiskItem(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper(), true, this);
+				foreach (var share in shares)
+					yield return new DiskItem(share, true, this);
+			}
+			else if ((FullName.StartsWith(@"\\")) && (Path == ""))
+			{
+				using (var shares = new ManagementClass(FullName + @"\root\cimv2", "Win32_Share", new ObjectGetOptions()))
+					foreach (var share in shares.GetInstances())
+						yield return new DiskItem(FullName + @"\" + share["Name"], true, this);
 			}
 			else
 			{

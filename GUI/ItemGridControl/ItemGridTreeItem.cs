@@ -27,14 +27,29 @@ namespace NeoEdit.GUI.ItemGridControl
 			this.FullName = FullName;
 		}
 
+		protected virtual string GetPath(string fullName)
+		{
+			if (fullName == "")
+				return "";
+
+			var idx = fullName.LastIndexOf('\\');
+			if (idx == -1)
+				return "";
+
+			return fullName.Substring(0, idx);
+		}
+
 		public ItemGridTreeItem<ItemType> GetChild(string fullName)
 		{
 			if (fullName == "")
 				return this;
 
-			var parts = fullName.Split('\\').ToList();
-			for (var ctr1 = 0; ctr1 < parts.Count - 1; ++ctr1)
-				parts[ctr1 + 1] = parts[ctr1] + @"\" + parts[ctr1 + 1];
+			var parts = new List<string>();
+			while (fullName != "")
+			{
+				parts.Insert(0, fullName);
+				fullName = GetPath(fullName);
+			}
 
 			var result = this;
 			foreach (var part in parts)
