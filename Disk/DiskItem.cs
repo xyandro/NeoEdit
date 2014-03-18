@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Management;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.ItemGridControl;
+using SevenZip;
 
 namespace NeoEdit.Disk
 {
@@ -41,12 +43,26 @@ namespace NeoEdit.Disk
 		{
 			None,
 			Disk,
-			ZipArchive,
-			GZipArchive,
+			SevenZipArchive,
 		}
 
 		readonly DiskItem parent, contentItem;
 		readonly DiskItemType type;
+
+		static DiskItem()
+		{
+			using (var input = typeof(DiskItem).Assembly.GetManifestResourceStream("NeoEdit.Disk.7z.dll"))
+			{
+				byte[] data;
+				using (var ms = new MemoryStream())
+				{
+					input.CopyTo(ms);
+					data = ms.ToArray();
+				}
+				data = Compression.Decompress(Compression.Type.GZip, data);
+				File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "7z.dll"), data);
+			}
+		}
 
 		DiskItem(string fullName, bool isDir, DiskItem _parent)
 			: base(fullName)
@@ -63,18 +79,11 @@ namespace NeoEdit.Disk
 			if ((Name.StartsWith(@"\")) && (Path != ""))
 				Name = Name.Substring(1);
 			var idx = Name.LastIndexOf('.');
-			NameWoExtension = idx == -1 ? Name : "";
+			NameWoExtension = idx == -1 ? Name : Name.Substring(0, idx);
 			Extension = idx == -1 ? "" : Name.Substring(idx).ToLowerInvariant();
 
-			switch (Extension)
-			{
-				case ".zip":
-					type = DiskItemType.ZipArchive;
-					break;
-				case ".gz":
-					type = DiskItemType.GZipArchive;
-					break;
-			}
+			if (IsSevenZipArchiveType())
+				type = DiskItemType.SevenZipArchive;
 
 			if (type != DiskItemType.None)
 				HasChildren = true;
@@ -82,6 +91,49 @@ namespace NeoEdit.Disk
 			for (contentItem = this; contentItem != null; contentItem = contentItem.parent)
 				if (contentItem.type != DiskItemType.None)
 					break;
+		}
+
+		bool IsSevenZipArchiveType()
+		{
+			switch (Extension)
+			{
+				case ".7z":
+				case ".xz":
+				case ".bz":
+				case ".bzip2":
+				case ".tar":
+				case ".zip":
+				case ".wim":
+				case ".arj":
+				case ".cab":
+				case ".chm":
+				case ".cpio":
+				case ".cramfs":
+				case ".deb":
+				case ".dmg":
+				case ".fat":
+				case ".hfs":
+				case ".iso":
+				case ".lzh":
+				case ".lzma":
+				case ".mbr":
+				case ".msi":
+				case ".nsis":
+				case ".ntfs":
+				case ".rar":
+				case ".rpm":
+				case ".squashfs":
+				case ".udf":
+				case ".vhd":
+				case ".xar":
+				case ".z":
+				case ".gz":
+				case ".gzip":
+				case ".tgz":
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		protected override string GetPath(string fullName)
@@ -148,15 +200,20 @@ namespace NeoEdit.Disk
 			switch (parent.contentItem.type)
 			{
 				case DiskItemType.Disk: return File.OpenRead(name);
-				case DiskItemType.ZipArchive:
+				case DiskItemType.SevenZipArchive:
 					{
-						var zip = new ZipArchive(parent.contentItem.GetStream(), ZipArchiveMode.Read);
-						var entry = zip.GetEntry(name.Replace(@"\", "/"));
-						var stream = entry.Open();
-						return stream;
+						var stream = new FileStream(System.IO.Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.Delete, 512, FileOptions.DeleteOnClose);
+						using (var zip = new SevenZipExtractor(parent.contentItem.GetStream()))
+						{
+							if (zip.IsSolid)
+								zip.ExtractFile(0, stream);
+							else
+								zip.ExtractFile(name, stream);
+
+							stream.Position = 0;
+							return stream;
+						}
 					}
-				case DiskItemType.GZipArchive:
-					return new GZipStream(parent.contentItem.GetStream(), CompressionMode.Decompress);
 				default: throw new NotImplementedException();
 			}
 		}
@@ -166,7 +223,9 @@ namespace NeoEdit.Disk
 			switch (contentItem.type)
 			{
 				case DiskItemType.Disk: return new FilePath(FullName);
-				default: return new FilePath(GetStream());
+				default:
+					using (var stream = GetStream())
+						return new FilePath(stream);
 			}
 		}
 
@@ -185,8 +244,7 @@ namespace NeoEdit.Disk
 			switch (contentItem.type)
 			{
 				case DiskItemType.Disk: return GetDiskChildren();
-				case DiskItemType.ZipArchive: return GetZipChildren();
-				case DiskItemType.GZipArchive: return new List<IItemGridTreeItem> { new DiskItem(FullName + @"\" + Name.Substring(0, Name.Length - 3), false, this) };
+				case DiskItemType.SevenZipArchive: return GetSevenZipChildren();
 				default: throw new Exception("Can't get children");
 			}
 		}
@@ -218,32 +276,40 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		IEnumerable<IItemGridTreeItem> GetZipChildren()
+		IEnumerable<IItemGridTreeItem> GetSevenZipChildren()
 		{
-			var stream = contentItem.GetStream();
-			var archive = new ZipArchive(stream, ZipArchiveMode.Read);
-			var found = new HashSet<string>();
-			var contentName = GetRelativeName(contentItem);
-			if (contentName != "")
-				contentName += @"\";
-			foreach (var entry in archive.Entries)
+			using (var stream = contentItem.GetStream())
+			using (var zip = new SevenZipExtractor(stream))
 			{
-				var name = entry.FullName.Replace("/", @"\");
-				if (!name.StartsWith(contentName))
-					continue;
-				name = name.Substring(contentName.Length);
-				var idx = name.IndexOf('\\');
-				var isDir = false;
-				if (idx != -1)
+				var found = new HashSet<string>();
+				var contentName = GetRelativeName(contentItem);
+				if (contentName != "")
+					contentName += @"\";
+				foreach (var entry in zip.ArchiveFileData)
 				{
-					name = name.Substring(0, idx);
-					if (found.Contains(name))
+					var name = entry.FileName;
+					if (zip.IsSolid)
+					{
+						name = NameWoExtension;
+						if ((Extension == ".tgz") || (Extension == ".bgz"))
+							name += ".tar";
+					}
+					if (!name.StartsWith(contentName))
 						continue;
-					found.Add(name);
-					isDir = true;
-				}
+					name = name.Substring(contentName.Length);
+					var idx = name.IndexOf('\\');
+					var isDir = false;
+					if (idx != -1)
+					{
+						name = name.Substring(0, idx);
+						if (found.Contains(name))
+							continue;
+						found.Add(name);
+						isDir = true;
+					}
 
-				yield return new DiskItem(FullName + @"\" + name, isDir, this);
+					yield return new DiskItem(FullName + @"\" + name, isDir, this);
+				}
 			}
 		}
 
