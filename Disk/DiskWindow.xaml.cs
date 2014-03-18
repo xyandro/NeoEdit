@@ -13,6 +13,8 @@ namespace NeoEdit.Disk
 	public partial class DiskWindow : Window
 	{
 		public static RoutedCommand Command_File_Identify = new RoutedCommand();
+		public static RoutedCommand Command_File_MD5 = new RoutedCommand();
+		public static RoutedCommand Command_File_SHA1 = new RoutedCommand();
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 
 		[DepProp]
@@ -71,6 +73,22 @@ namespace NeoEdit.Disk
 
 				foreach (DiskItem selected in files.Selected)
 					selected.Identify();
+			}
+			else if (e.Command == Command_File_MD5)
+			{
+				if (!files.Columns.Any(column => column.Header == "MD5"))
+					files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("MD5")));
+
+				foreach (DiskItem selected in files.Selected)
+					selected.CalcMD5();
+			}
+			else if (e.Command == Command_File_SHA1)
+			{
+				if (!files.Columns.Any(column => column.Header == "SHA1"))
+					files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("SHA1")));
+
+				foreach (DiskItem selected in files.Selected)
+					selected.CalcSHA1();
 			}
 			else if (e.Command == Command_View_Refresh)
 				files.Refresh();

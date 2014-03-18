@@ -8,11 +8,15 @@
 
 	<Window.CommandBindings>
 		<CommandBinding Command="disk:DiskWindow.Command_File_Identify" Executed="Command_Executed"/>
+		<CommandBinding Command="disk:DiskWindow.Command_File_MD5" Executed="Command_Executed"/>
+		<CommandBinding Command="disk:DiskWindow.Command_File_SHA1" Executed="Command_Executed"/>
 		<CommandBinding Command="disk:DiskWindow.Command_View_Refresh" Executed="Command_Executed"/>
 	</Window.CommandBindings>
 
 	<Window.InputBindings>
 		<KeyBinding Command="disk:DiskWindow.Command_File_Identify" Modifiers="Control" Key="I"/>
+		<KeyBinding Command="disk:DiskWindow.Command_File_MD5" Modifiers="Control" Key="M"/>
+		<KeyBinding Command="disk:DiskWindow.Command_File_SHA1" Modifiers="Control" Key="S"/>
 		<KeyBinding Command="disk:DiskWindow.Command_View_Refresh" Key="F5"/>
 	</Window.InputBindings>
 
@@ -29,6 +33,8 @@
 		<Menu KeyboardNavigation.TabNavigation="None">
 			<MenuItem Header="_File">
 				<MenuItem Command="disk:DiskWindow.Command_File_Identify" Header="_Identify"/>
+				<MenuItem Command="disk:DiskWindow.Command_File_MD5" Header="_MD5"/>
+				<MenuItem Command="disk:DiskWindow.Command_File_SHA1" Header="_SHA1"/>
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Command="disk:DiskWindow.Command_View_Refresh" Header="_Refresh"/>

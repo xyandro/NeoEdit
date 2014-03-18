@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 
 namespace NeoEdit.Common.Transform
@@ -27,6 +28,11 @@ namespace NeoEdit.Common.Transform
 		public static string Get(Type type, byte[] data)
 		{
 			return BitConverter.ToString(GetHashAlgorithm(type).ComputeHash(data)).Replace("-", "").ToLower();
+		}
+
+		public static string Get(Type type, Stream stream)
+		{
+			return BitConverter.ToString(GetHashAlgorithm(type).ComputeHash(stream)).Replace("-", "").ToLower();
 		}
 	}
 }

@@ -32,6 +32,8 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public string MD5 { get { return GetValue<string>(); } private set { SetValue(value); } }
 		[DepProp]
+		public string SHA1 { get { return GetValue<string>(); } private set { SetValue(value); } }
+		[DepProp]
 		public string Identity { get { return GetValue<string>(); } private set { SetValue(value); } }
 		[DepProp]
 		public long? CompressedSize { get { return GetValue<long?>(); } private set { SetValue(value); } }
@@ -320,6 +322,22 @@ namespace NeoEdit.Disk
 
 			using (var name = GetFileName())
 				Identity = Identifier.Identify(name.Path);
+		}
+
+		public void CalcMD5()
+		{
+			if (!HasData)
+				return;
+
+			MD5 = Checksum.Get(Checksum.Type.MD5, GetStream());
+		}
+
+		public void CalcSHA1()
+		{
+			if (!HasData)
+				return;
+
+			SHA1 = Checksum.Get(Checksum.Type.SHA1, GetStream());
 		}
 
 		public override string ToString() { return type.ToString() + ": " + FullName; }
