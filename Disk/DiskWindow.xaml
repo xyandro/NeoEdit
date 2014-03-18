@@ -7,6 +7,7 @@
 	Title="NeoEdit Disk Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}">
 
 	<Window.CommandBindings>
+		<CommandBinding Command="disk:DiskWindow.Command_File_Rename" Executed="Command_Executed"/>
 		<CommandBinding Command="disk:DiskWindow.Command_File_Identify" Executed="Command_Executed"/>
 		<CommandBinding Command="disk:DiskWindow.Command_File_MD5" Executed="Command_Executed"/>
 		<CommandBinding Command="disk:DiskWindow.Command_File_SHA1" Executed="Command_Executed"/>
@@ -14,6 +15,7 @@
 	</Window.CommandBindings>
 
 	<Window.InputBindings>
+		<KeyBinding Command="disk:DiskWindow.Command_File_Rename" Key="F2"/>
 		<KeyBinding Command="disk:DiskWindow.Command_File_Identify" Modifiers="Control" Key="I"/>
 		<KeyBinding Command="disk:DiskWindow.Command_File_MD5" Modifiers="Control" Key="M"/>
 		<KeyBinding Command="disk:DiskWindow.Command_File_SHA1" Modifiers="Control" Key="S"/>
@@ -32,6 +34,7 @@
 
 		<Menu KeyboardNavigation.TabNavigation="None">
 			<MenuItem Header="_File">
+				<MenuItem Command="disk:DiskWindow.Command_File_Rename" Header="_Rename"/>
 				<MenuItem Command="disk:DiskWindow.Command_File_Identify" Header="_Identify"/>
 				<MenuItem Command="disk:DiskWindow.Command_File_MD5" Header="_MD5"/>
 				<MenuItem Command="disk:DiskWindow.Command_File_SHA1" Header="_SHA1"/>

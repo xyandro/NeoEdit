@@ -38,6 +38,7 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public long? CompressedSize { get { return GetValue<long?>(); } private set { SetValue(value); } }
 
+		public bool IsDiskItem { get { return contentItem.type == DiskItemType.Disk; } }
 		public bool HasChildren { get; private set; }
 		public bool HasData { get; private set; }
 

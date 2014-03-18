@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Disk.Dialogs;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Disk
 {
 	public partial class DiskWindow : Window
 	{
+		public static RoutedCommand Command_File_Rename = new RoutedCommand();
 		public static RoutedCommand Command_File_Identify = new RoutedCommand();
 		public static RoutedCommand Command_File_MD5 = new RoutedCommand();
 		public static RoutedCommand Command_File_SHA1 = new RoutedCommand();
@@ -65,9 +69,57 @@ namespace NeoEdit.Disk
 			files.Refresh();
 		}
 
+		void DoRename(DiskItem item)
+		{
+			if (!item.IsDiskItem)
+				throw new ArgumentException("Can only rename disk files.");
+
+			while (true)
+			{
+				var newName = Rename.Run(item);
+				if (newName == null)
+					break;
+
+				newName = item.Path + @"\" + newName;
+				if (Directory.Exists(newName))
+				{
+					new Message
+					{
+						Title = "Error",
+						Text = "A directory already exists with that name."
+					}.Show();
+					continue;
+				}
+				if (File.Exists(newName))
+				{
+					if (new Message
+					{
+						Title = "Warning",
+						Text = "File already exists.  Overwrite?",
+						Options = Message.OptionsEnum.YesNo,
+						DefaultAccept = Message.OptionsEnum.Yes,
+						DefaultCancel = Message.OptionsEnum.No,
+					}.Show() != Message.OptionsEnum.Yes)
+						continue;
+					File.Delete(newName);
+				}
+				if (item.HasData)
+					File.Move(item.FullName, newName);
+				else
+					Directory.Move(item.FullName, newName);
+				Refresh();
+				files.Focused = files.Items.Cast<DiskItem>().Where(file => file.FullName == newName).FirstOrDefault();
+				if (files.Focused != null)
+					files.Selected.Add(files.Focused);
+				break;
+			}
+		}
+
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
-			if (e.Command == Command_File_Identify)
+			if (e.Command == Command_File_Rename)
+				DoRename(files.Selected.Single() as DiskItem);
+			else if (e.Command == Command_File_Identify)
 			{
 				if (!files.Columns.Any(column => column.Header == "Identity"))
 					files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("Identity")));

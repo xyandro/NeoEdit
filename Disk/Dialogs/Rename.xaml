@@ -1,0 +1,32 @@
+﻿<Window Name="self" x:Class="NeoEdit.Disk.Dialogs.Rename"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Rename" Width="500" Height="110">
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Label>
+			<Label.Content>
+				<TextBlock>
+					<TextBlock.Text>
+						<MultiBinding StringFormat="{}Please enter new name for {0}:">
+							<Binding ElementName="self" Path="ItemName"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+			</Label.Content>
+		</Label>
+		<TextBox Name="name" Grid.Row="1" Text="{Binding ItemName, ElementName=self}"/>
+		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">
+			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
+			<Button IsCancel="True" Content="Cancel"/>
+		</UniformGrid>
+	</Grid>
+</Window>
