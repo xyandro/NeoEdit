@@ -95,6 +95,46 @@ namespace NeoEdit.Disk
 					break;
 		}
 
+		static DiskItem FromFile(string fullName, DiskItem parent)
+		{
+			var item = new DiskItem(fullName, false, parent);
+			var fileInfo = new FileInfo(item.FullName);
+			if (fileInfo.Exists)
+			{
+				item.Size = fileInfo.Length;
+				item.WriteTime = fileInfo.LastWriteTimeUtc;
+				item.CreateTime = fileInfo.CreationTimeUtc;
+				item.AccessTime = fileInfo.LastAccessTimeUtc;
+			}
+			return item;
+		}
+
+		static DiskItem FromDirectory(string fullName, DiskItem parent)
+		{
+			var item = new DiskItem(fullName, true, parent);
+			var dirInfo = new DirectoryInfo(item.FullName);
+			if (dirInfo.Exists)
+			{
+				item.WriteTime = dirInfo.LastWriteTimeUtc;
+				item.CreateTime = dirInfo.CreationTimeUtc;
+				item.AccessTime = dirInfo.LastAccessTimeUtc;
+			}
+			return item;
+		}
+
+		static DiskItem FromSevenZip(string fullName, bool isDir, DiskItem parent, ArchiveFileInfo info)
+		{
+			var item = new DiskItem(fullName, isDir, parent);
+			if (!isDir)
+			{
+				item.Size = (long)info.Size;
+				item.AccessTime = info.LastAccessTime;
+				item.WriteTime = info.LastWriteTime;
+				item.CreateTime = info.CreationTime;
+			}
+			return item;
+		}
+
 		bool IsSevenZipArchiveType()
 		{
 			switch (Extension)
@@ -272,9 +312,9 @@ namespace NeoEdit.Disk
 				if (find.Length == 2)
 					find += @"\";
 				foreach (var dir in Directory.EnumerateDirectories(find))
-					yield return new DiskItem(dir, true, this);
+					yield return FromDirectory(dir, this);
 				foreach (var file in Directory.EnumerateFiles(find))
-					yield return new DiskItem(file, false, this);
+					yield return FromFile(file, this);
 			}
 		}
 
@@ -310,7 +350,7 @@ namespace NeoEdit.Disk
 						isDir = true;
 					}
 
-					yield return new DiskItem(FullName + @"\" + name, isDir, this);
+					yield return FromSevenZip(FullName + @"\" + name, isDir, this, entry);
 				}
 			}
 		}
