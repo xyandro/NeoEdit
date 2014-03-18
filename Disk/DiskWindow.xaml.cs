@@ -60,6 +60,11 @@ namespace NeoEdit.Disk
 			return true;
 		}
 
+		void Refresh()
+		{
+			files.Refresh();
+		}
+
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (e.Command == Command_File_Identify)
@@ -87,7 +92,7 @@ namespace NeoEdit.Disk
 					selected.CalcSHA1();
 			}
 			else if (e.Command == Command_View_Refresh)
-				files.Refresh();
+				Refresh();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
