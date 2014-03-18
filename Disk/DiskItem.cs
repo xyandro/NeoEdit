@@ -404,6 +404,20 @@ namespace NeoEdit.Disk
 			SHA1 = Checksum.Get(Checksum.Type.SHA1, GetStream());
 		}
 
+		public void Rename(string newFullName)
+		{
+			if (contentItem.type != DiskItemType.Disk)
+				throw new Exception("Can only rename disk files.");
+
+			if ((File.Exists(newFullName)) || (Directory.Exists(newFullName)))
+				throw new Exception("A file or directory with that name already exists.");
+
+			if (HasData)
+				File.Move(FullName, newFullName);
+			else
+				Directory.Move(FullName, newFullName);
+		}
+
 		public override string ToString() { return type.ToString() + ": " + FullName; }
 	}
 }

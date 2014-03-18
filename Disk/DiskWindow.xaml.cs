@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Disk.Dialogs;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Disk
@@ -74,45 +73,15 @@ namespace NeoEdit.Disk
 			if (!item.IsDiskItem)
 				throw new ArgumentException("Can only rename disk files.");
 
-			while (true)
-			{
-				var newName = Rename.Run(item);
-				if (newName == null)
-					break;
+			var newName = Rename.Run(item);
+			if (newName == null)
+				return;
 
-				newName = item.Path + @"\" + newName;
-				if (Directory.Exists(newName))
-				{
-					new Message
-					{
-						Title = "Error",
-						Text = "A directory already exists with that name."
-					}.Show();
-					continue;
-				}
-				if (File.Exists(newName))
-				{
-					if (new Message
-					{
-						Title = "Warning",
-						Text = "File already exists.  Overwrite?",
-						Options = Message.OptionsEnum.YesNo,
-						DefaultAccept = Message.OptionsEnum.Yes,
-						DefaultCancel = Message.OptionsEnum.No,
-					}.Show() != Message.OptionsEnum.Yes)
-						continue;
-					File.Delete(newName);
-				}
-				if (item.HasData)
-					File.Move(item.FullName, newName);
-				else
-					Directory.Move(item.FullName, newName);
-				Refresh();
-				files.Focused = files.Items.Cast<DiskItem>().Where(file => file.FullName == newName).FirstOrDefault();
-				if (files.Focused != null)
-					files.Selected.Add(files.Focused);
-				break;
-			}
+			item.Rename(newName);
+			Refresh();
+			files.Focused = files.Items.Cast<DiskItem>().Where(file => file.FullName == newName).FirstOrDefault();
+			if (files.Focused != null)
+				files.Selected.Add(files.Focused);
 		}
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)

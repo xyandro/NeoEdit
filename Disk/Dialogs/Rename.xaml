@@ -12,18 +12,8 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		<Label>
-			<Label.Content>
-				<TextBlock>
-					<TextBlock.Text>
-						<MultiBinding StringFormat="{}Please enter new name for {0}:">
-							<Binding ElementName="self" Path="ItemName"/>
-						</MultiBinding>
-					</TextBlock.Text>
-				</TextBlock>
-			</Label.Content>
-		</Label>
-		<TextBox Name="name" Grid.Row="1" Text="{Binding ItemName, ElementName=self}"/>
+		<Label Name="label"/>
+		<TextBox Name="name" Grid.Row="1" Text="{Binding ItemName, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">
 			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
 			<Button IsCancel="True" Content="Cancel"/>

@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.Disk.Dialogs
@@ -7,16 +9,21 @@ namespace NeoEdit.Disk.Dialogs
 	{
 		[DepProp]
 		public string ItemName { get { return uiHelper.GetPropValue<string>(); } private set { uiHelper.SetPropValue(value); } }
+		public string FullName { get { return path + @"\" + ItemName; } }
 
 		static Rename() { UIHelper<Rename>.Register(); }
 
 		readonly UIHelper<Rename> uiHelper;
+		readonly string path;
 		Rename(DiskItem item)
 		{
 			uiHelper = new UIHelper<Rename>(this);
 			InitializeComponent();
 
+			label.Content = String.Format("Please enter new name for {0}:", item.Name);
+
 			ItemName = item.Name;
+			path = item.Path;
 
 			name.Focus();
 			name.CaretIndex = item.NameWoExtension.Length;
@@ -25,6 +32,12 @@ namespace NeoEdit.Disk.Dialogs
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
+			if ((File.Exists(FullName)) || (Directory.Exists(FullName)))
+			{
+				MessageBox.Show("A file or directory already exists at that location.");
+				return;
+			}
+
 			DialogResult = true;
 		}
 
@@ -32,7 +45,7 @@ namespace NeoEdit.Disk.Dialogs
 		{
 			var rename = new Rename(item);
 			if (rename.ShowDialog() == true)
-				return rename.ItemName;
+				return rename.FullName;
 			return null;
 		}
 	}
