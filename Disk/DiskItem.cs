@@ -111,6 +111,15 @@ namespace NeoEdit.Disk
 			}
 		}
 
+		FilePath GetFileName()
+		{
+			switch (contentItem.type)
+			{
+				case DiskItemType.Disk: return new FilePath(FullName);
+				default: return new FilePath(GetStream());
+			}
+		}
+
 		public override IItemGridTreeItem GetParent()
 		{
 			return parent;
@@ -191,6 +200,15 @@ namespace NeoEdit.Disk
 
 				yield return new DiskItem(FullName + @"\" + name, isDir, this);
 			}
+		}
+
+		public void Identify()
+		{
+			if (IsDir)
+				return;
+
+			using (var name = GetFileName())
+				Identity = Identifier.Identify(name.Path);
 		}
 
 		public override string ToString() { return type.ToString() + ": " + FullName; }

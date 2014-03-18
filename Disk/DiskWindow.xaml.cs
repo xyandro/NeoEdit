@@ -12,6 +12,7 @@ namespace NeoEdit.Disk
 {
 	public partial class DiskWindow : Window
 	{
+		public static RoutedCommand Command_File_Identify = new RoutedCommand();
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 
 		[DepProp]
@@ -63,7 +64,15 @@ namespace NeoEdit.Disk
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
-			if (e.Command == Command_View_Refresh)
+			if (e.Command == Command_File_Identify)
+			{
+				if (!files.Columns.Any(column => column.Header == "Identity"))
+					files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("Identity")));
+
+				foreach (DiskItem selected in files.Selected)
+					selected.Identify();
+			}
+			else if (e.Command == Command_View_Refresh)
 				files.Refresh();
 		}
 

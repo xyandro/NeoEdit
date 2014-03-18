@@ -7,10 +7,12 @@
 	Title="NeoEdit Disk Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}">
 
 	<Window.CommandBindings>
+		<CommandBinding Command="disk:DiskWindow.Command_File_Identify" Executed="Command_Executed"/>
 		<CommandBinding Command="disk:DiskWindow.Command_View_Refresh" Executed="Command_Executed"/>
 	</Window.CommandBindings>
 
 	<Window.InputBindings>
+		<KeyBinding Command="disk:DiskWindow.Command_File_Identify" Modifiers="Control" Key="I"/>
 		<KeyBinding Command="disk:DiskWindow.Command_View_Refresh" Key="F5"/>
 	</Window.InputBindings>
 
@@ -25,6 +27,9 @@
 		</Grid.RowDefinitions>
 
 		<Menu KeyboardNavigation.TabNavigation="None">
+			<MenuItem Header="_File">
+				<MenuItem Command="disk:DiskWindow.Command_File_Identify" Header="_Identify"/>
+			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Command="disk:DiskWindow.Command_View_Refresh" Header="_Refresh"/>
 			</MenuItem>

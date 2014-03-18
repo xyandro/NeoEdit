@@ -49,13 +49,16 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilePath.cs" />
     <Compile Include="DiskWindow.xaml.cs">
       <DependentUpon>DiskWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DiskItem.cs" />
+    <Compile Include="Identifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="Magic\magic.mgc" />
     <None Include="Properties\AssemblyInfo.Template.cs" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
@@ -74,6 +77,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Magic\file.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Magic\magic1.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Magic\regex2.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Magic\zlib1.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
