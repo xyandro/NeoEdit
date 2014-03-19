@@ -124,10 +124,6 @@
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Records\Records.csproj">
-      <Project>{b0131301-7379-4eda-9a35-8c8e715429b1}</Project>
-      <Name>Records</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\Photoshop\NeoEdit.png">

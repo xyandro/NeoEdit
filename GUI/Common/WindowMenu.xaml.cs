@@ -6,7 +6,6 @@ namespace NeoEdit.GUI.Common
 {
 	partial class WindowMenu : MenuItem
 	{
-		public static RoutedCommand Command_Window_Browser = new RoutedCommand();
 		public static RoutedCommand Command_Window_Disk = new RoutedCommand();
 		public static RoutedCommand Command_Window_Processes = new RoutedCommand();
 		public static RoutedCommand Command_Window_Handles = new RoutedCommand();
@@ -34,9 +33,7 @@ namespace NeoEdit.GUI.Common
 
 		void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
-			if (e.Command == Command_Window_Browser)
-				Launcher.Static.LaunchBrowser();
-			else if (e.Command == Command_Window_Disk)
+			if (e.Command == Command_Window_Disk)
 				Launcher.Static.LaunchDisk();
 			else if (e.Command == Command_Window_Processes)
 				Launcher.Static.LaunchProcesses();

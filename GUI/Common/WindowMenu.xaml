@@ -5,7 +5,6 @@
 	Header="_Window">
 
 	<MenuItem.CommandBindings>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Browser" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Disk" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Processes" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Executed="CommandBinding_Executed"/>
@@ -16,7 +15,6 @@
 	</MenuItem.CommandBindings>
 	
 	<MenuItem.InputBindings>
-		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Browser" Key="B" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Disk" Key="D" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Processes" Key="P" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Key="H" Modifiers="Control+Shift"/>
@@ -26,12 +24,11 @@
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Key="S" Modifiers="Control+Shift"/>
 	</MenuItem.InputBindings>
 
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Browser" Header="_Browser"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Disk" Header="_Disk"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Processes" Header="_Processes"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Handles" Header="_Handles"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Registry" Header="_Registry"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_BinaryEditor" Header="B_inary Editor"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_BinaryEditor" Header="_Binary Editor"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextEditor" Header="_Text Editor"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Header="_System Info"/>
 

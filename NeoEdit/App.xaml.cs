@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
-using NeoEdit.Browser;
 using NeoEdit.Common.Transform;
 using NeoEdit.Disk;
 using NeoEdit.Handles;
@@ -36,7 +35,7 @@ namespace NeoEdit
 			try
 			{
 				if (args.Length == 0)
-					return new BrowserWindow();
+					return new DiskWindow();
 
 				switch (args[0])
 				{
@@ -150,7 +149,6 @@ namespace NeoEdit
 				textEditor: (filename, bytes, encoding) => new TextEditorWindow(filename, bytes, encoding),
 				fileBinaryEditor: (filename, binarydata) => BinaryEditorWindow.CreateFromFile(filename, binarydata),
 				processBinaryEditor: (pid) => BinaryEditorWindow.CreateFromProcess(pid),
-				browser: () => new BrowserWindow(),
 				disk: () => new DiskWindow(),
 				processes: (pid) => new ProcessesWindow(pid),
 				handles: (pid) => new HandlesWindow(pid),

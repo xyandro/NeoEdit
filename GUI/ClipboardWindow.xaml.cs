@@ -8,8 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.GUI.Common;
-using NeoEdit.Records;
-using NeoEdit.Records.Disks;
 
 namespace NeoEdit.GUI
 {
@@ -66,23 +64,6 @@ namespace NeoEdit.GUI
 			return found.Contents as T;
 		}
 
-		public static void SetRecords(IEnumerable<Record> records, bool isCut)
-		{
-			var objs = new List<Record>(records);
-
-			var data = new ClipboardData(objs, String.Join(" ", objs.Select(record => String.Format("\"{0}\"", record.FullName))));
-
-			if (objs.Any(a => a is DiskRecord))
-			{
-				var dropList = new StringCollection();
-				objs.ForEach(record => dropList.Add(record.FullName));
-				data.Data.SetFileDropList(dropList);
-			}
-
-			data.Data.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(isCut ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
-			Add(data);
-		}
-
 		public static void SetFiles(IEnumerable<string> files, bool isCut)
 		{
 			var objs = new List<string>(files);
@@ -105,38 +86,6 @@ namespace NeoEdit.GUI
 		public static void Set(string[] strings)
 		{
 			Add(new ClipboardData(strings, String.Join(" ", strings)));
-		}
-
-		public static bool GetRecords(out List<Record> records, out bool isCut)
-		{
-			records = null;
-			isCut = false;
-
-			var dropEffectStream = Clipboard.GetDataObject().GetData("Preferred DropEffect");
-			if (dropEffectStream is MemoryStream)
-			{
-				try
-				{
-					var dropEffect = (DragDropEffects)BitConverter.ToInt32(((MemoryStream)dropEffectStream).ToArray(), 0);
-					if ((dropEffect & DragDropEffects.Move) != DragDropEffects.None)
-						isCut = true;
-				}
-				catch { }
-			}
-
-			var contents = GetContents<List<Record>>();
-			if (contents != null)
-			{
-				records = contents;
-				return records.Count != 0;
-			}
-
-			var dropList = Clipboard.GetFileDropList();
-			if ((dropList == null) || (dropList.Count == 0))
-				return false;
-
-			records = dropList.Cast<string>().Select(file => new DiskRoot().GetRecord(file)).ToList();
-			return true;
 		}
 
 		public static bool GetFiles(out List<string> files, out bool isCut)
