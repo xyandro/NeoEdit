@@ -75,6 +75,7 @@ namespace NeoEdit.BinaryEditor
 		{
 			uiHelper = new UIHelper<BinaryEditorWindow>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			Data = data;
 

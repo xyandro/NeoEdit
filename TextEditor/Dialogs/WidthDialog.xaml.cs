@@ -23,6 +23,8 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			uiHelper = new UIHelper<WidthDialog>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
+
 			widthBox.SelectAll();
 
 			Loaded += (s, e) => WidthNum = MinWidthNum;

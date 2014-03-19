@@ -24,6 +24,7 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			uiHelper = new UIHelper<GetNumDialog>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			Loaded += (s, e) => value.SelectAll();
 

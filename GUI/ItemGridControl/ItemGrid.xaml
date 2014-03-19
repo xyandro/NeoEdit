@@ -7,12 +7,12 @@
     mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300" Focusable="True" KeyboardNavigation.IsTabStop="True" FocusVisualStyle="{x:Null}">
 
 	<Grid.Resources>
-		<Style TargetType="Button">
+		<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
 			<Setter Property="Focusable" Value="False"/>
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="Button">
-						<Border Background="#d0d0d0" Padding="2" BorderThickness="1" BorderBrush="Black">
+						<Border Background="#40ffffff" Padding="2" BorderThickness="1" BorderBrush="Black" CornerRadius="2">
 							<ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
 						</Border>
 					</ControlTemplate>

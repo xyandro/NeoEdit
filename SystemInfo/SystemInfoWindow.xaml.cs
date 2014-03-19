@@ -24,6 +24,7 @@ namespace NeoEdit.SystemInfo
 		{
 			uiHelper = new UIHelper<SystemInfoWindow>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			Text = "Please select an item from the menu.";
 		}

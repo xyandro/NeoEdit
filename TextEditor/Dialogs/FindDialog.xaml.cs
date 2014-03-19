@@ -24,6 +24,8 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			uiHelper = new UIHelper<FindDialog>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
+
 			wholeWords.IsChecked = wholeWordsVal;
 			matchCase.IsChecked = matchCaseVal;
 			regularExpression.IsChecked = regularExpressionVal;

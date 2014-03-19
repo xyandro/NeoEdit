@@ -34,6 +34,8 @@ namespace NeoEdit.BinaryEditor.Dialogs
 		{
 			uiHelper = new UIHelper<FindDialog>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
+
 			ShowLE = ShowInt = ShowStr = ShowOther = true;
 			ShowBE = ShowFloat = false;
 			MatchCase.IsChecked = UTF7.IsChecked = HexRev.IsChecked = Base64.IsChecked = false;

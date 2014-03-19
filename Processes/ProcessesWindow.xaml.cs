@@ -30,6 +30,7 @@ namespace NeoEdit.Processes
 		{
 			uiHelper = new UIHelper<ProcessesWindow>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			foreach (var prop in ProcessItem.StaticGetDepProps())
 			{

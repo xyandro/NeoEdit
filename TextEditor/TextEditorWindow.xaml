@@ -125,7 +125,7 @@
 				<Separator/>
 				<MenuItem Header="_Encode" Click="EncodeClick">
 					<MenuItem.ItemContainerStyle>
-						<Style TargetType="MenuItem">
+						<Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
 							<Setter Property="IsChecked">
 								<Setter.Value>
 									<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] == [1]">
@@ -198,7 +198,7 @@
 			<MenuItem Header="_View">
 				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={guiCommon:ExpressionConverter}, ConverterParameter=Type:#27#NeoEdit.TextEditor.Highlighting+HighlightingType#27#}">
 					<MenuItem.ItemContainerStyle>
-						<Style TargetType="MenuItem">
+						<Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
 							<EventSetter Event="Click" Handler="HighlightingClicked"/>
 							<Setter Property="IsChecked">
 								<Setter.Value>

@@ -13,15 +13,15 @@
 		<StackPanel.Style>
 			<Style>
 				<Style.Resources>
-					<Style TargetType="Label">
+					<Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
 						<Setter Property="Padding" Value="0,0,10,0"/>
 					</Style>
-					<Style TargetType="CheckBox">
+					<Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
 						<Setter Property="Margin" Value="0,0,10,0"/>
 						<Setter Property="IsChecked" Value="True"/>
 						<Setter Property="Focusable" Value="False"/>
 					</Style>
-					<Style TargetType="Button">
+					<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
 						<Setter Property="Focusable" Value="False"/>
 					</Style>
 				</Style.Resources>

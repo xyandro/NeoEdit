@@ -1,6 +1,8 @@
 ﻿<MenuItem x:Class="NeoEdit.GUI.Common.HelpMenu"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Header="_Help">
+	Header="_Help" Style="{StaticResource {x:Type MenuItem}}">
+	
 	<MenuItem Header="_About" Click="HelpAbout"/>
+	
 </MenuItem>

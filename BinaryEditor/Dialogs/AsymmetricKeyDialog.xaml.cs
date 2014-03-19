@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor.Dialogs
 {
@@ -81,6 +82,7 @@ namespace NeoEdit.BinaryEditor.Dialogs
 		public AsymmetricKeyDialog()
 		{
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			Type = Crypto.Type.RSA;
 			Public = true;

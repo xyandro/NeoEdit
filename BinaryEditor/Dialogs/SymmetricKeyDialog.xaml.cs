@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.BinaryEditor.Dialogs
@@ -33,6 +34,7 @@ namespace NeoEdit.BinaryEditor.Dialogs
 		public SymmetricKeyDialog()
 		{
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			Type = Crypto.Type.AES;
 			salt.Text = "AWdSJ9hs72TXUUqaKpYIbU2v/YONdOxf";

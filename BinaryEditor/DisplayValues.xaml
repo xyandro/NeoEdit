@@ -7,15 +7,15 @@
     xmlns:binaryEditor="clr-namespace:NeoEdit.BinaryEditor"
 	mc:Ignorable="d"
 	d:DesignWidth="300" d:DesignHeight="300"
-	Background="LightGray">
+	Background="#40ffffff">
 
 	<StackPanel.Style>
 		<Style>
 			<Style.Resources>
-				<Style TargetType="Label">
+				<Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
 					<Setter Property="Padding" Value="0,-2,0,0"/>
 				</Style>
-				<Style TargetType="binaryEditor:DisplayValue">
+				<Style TargetType="binaryEditor:DisplayValue" BasedOn="{StaticResource {x:Type TextBox}}">
 					<Setter Property="Data" Value="{Binding Data, ElementName=self}"/>
 					<Setter Property="ChangeCount" Value="{Binding ChangeCount, ElementName=self}"/>
 					<Setter Property="SelStart" Value="{Binding SelStart, ElementName=self}"/>

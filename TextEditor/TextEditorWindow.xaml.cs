@@ -78,6 +78,7 @@ namespace NeoEdit.TextEditor
 		{
 			uiHelper = new UIHelper<TextEditorWindow>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			FileName = filename;
 			if (bytes == null)

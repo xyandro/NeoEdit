@@ -119,7 +119,7 @@ namespace NeoEdit.TextEditor
 			lineHeight = fontSize;
 
 			var example = "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()";
-			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
 			charWidth = formattedText.Width / example.Length;
 
 			uiHelper.AddCallback(a => a.Data, (o, n) =>
@@ -348,7 +348,7 @@ namespace NeoEdit.TextEditor
 						continue;
 
 					var column = GetColumnFromIndex(lineStr, Data.GetOffsetIndex(selection.Pos1, line));
-					dc.DrawRectangle(Brushes.Black, null, new Rect(GetXFromColumn(column) - xScrollValue, y, 1, lineHeight));
+					dc.DrawRectangle(Brushes.White, null, new Rect(GetXFromColumn(column) - xScrollValue, y, 1, lineHeight));
 				}
 
 				var index = 0;
@@ -370,7 +370,7 @@ namespace NeoEdit.TextEditor
 				}
 
 				var str = sb.ToString();
-				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
 				foreach (var entry in highlightDictionary)
 				{
 					var matches = entry.Key.Matches(str);

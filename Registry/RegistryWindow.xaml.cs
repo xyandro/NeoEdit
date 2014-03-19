@@ -24,6 +24,8 @@ namespace NeoEdit.Registry
 		{
 			uiHelper = new UIHelper<RegistryWindow>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
+
 			uiHelper.AddCallback(ItemGridTree.LocationProperty, keys, () => Location = keys.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => uiHelper.InvalidateBinding(location, TextBox.TextProperty);

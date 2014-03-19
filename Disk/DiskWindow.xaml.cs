@@ -36,6 +36,7 @@ namespace NeoEdit.Disk
 			if (path == null)
 				path = Directory.GetCurrentDirectory();
 
+			Transparency.MakeTransparent(this);
 			uiHelper = new UIHelper<DiskWindow>(this);
 			InitializeComponent();
 			uiHelper.AddCallback(ItemGridTree.LocationProperty, files, () => Location = files.Location.FullName);

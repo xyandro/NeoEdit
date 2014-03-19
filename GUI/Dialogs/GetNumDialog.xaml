@@ -8,14 +8,14 @@
 		<StackPanel.Style>
 			<Style>
 				<Style.Resources>
-					<Style TargetType="Label">
+					<Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
 						<Setter Property="Padding" Value="0,0,10,0"/>
 					</Style>
-					<Style TargetType="Button">
+					<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
 						<Setter Property="Focusable" Value="False"/>
 						<Setter Property="Margin" Value="5,0,0,0"/>
 					</Style>
-					<Style TargetType="TextBox">
+					<Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
 						<Setter Property="Margin" Value="0,0,0,10"/>
 					</Style>
 				</Style.Resources>

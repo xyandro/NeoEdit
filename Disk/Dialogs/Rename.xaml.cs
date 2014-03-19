@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Disk.Dialogs
 {
@@ -19,6 +20,7 @@ namespace NeoEdit.Disk.Dialogs
 		{
 			uiHelper = new UIHelper<Rename>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			label.Content = String.Format("Please enter new name for {0}:", item.Name);
 
@@ -34,7 +36,7 @@ namespace NeoEdit.Disk.Dialogs
 		{
 			if ((File.Exists(FullName)) || (Directory.Exists(FullName)))
 			{
-				MessageBox.Show("A file or directory already exists at that location.");
+				Message.Show("A file or directory already exists at that location.");
 				return;
 			}
 

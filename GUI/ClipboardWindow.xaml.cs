@@ -176,6 +176,7 @@ namespace NeoEdit.GUI
 		{
 			uiHelper = new UIHelper<ClipboardWindow>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			uiHelper.AddObservableCallback(a => a.Records, () => items.SelectedItem = Current());
 

@@ -37,6 +37,8 @@ namespace NeoEdit.Handles
 
 			uiHelper = new UIHelper<HandlesWindow>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
+
 			uiHelper.AddCallback(a => a.HandleType, (o, n) => Refresh());
 			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy(type => type).ToList();
 			HandleTypes.Insert(0, "");

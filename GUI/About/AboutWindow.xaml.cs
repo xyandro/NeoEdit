@@ -20,6 +20,7 @@ namespace NeoEdit.GUI.About
 		{
 			uiHelper = new UIHelper<AboutWindow>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			Product = ((AssemblyProductAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
 			Version = ((AssemblyFileVersionAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;

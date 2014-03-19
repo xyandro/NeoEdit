@@ -5,6 +5,6 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	mc:Ignorable="d" ClipToBounds="True"
 	d:DesignWidth="300" d:DesignHeight="300" Margin="10"
-	Background="White" Focusable="True" FocusVisualStyle="{x:Null}">
+	Background="#00ffffff" Focusable="True" FocusVisualStyle="{x:Null}">
 
 </Canvas>

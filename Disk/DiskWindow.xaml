@@ -4,7 +4,7 @@
 	xmlns:disk="clr-namespace:NeoEdit.Disk"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=GUI"
-	Title="NeoEdit Disk Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}">
+	Title="NeoEdit Disk Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}" Background="Transparent">
 
 	<Window.CommandBindings>
 		<CommandBinding Command="disk:DiskWindow.Command_File_Rename" Executed="Command_Executed"/>

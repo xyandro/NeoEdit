@@ -46,6 +46,18 @@ namespace NeoEdit.GUI.Dialogs
 			return Answer;
 		}
 
+		public static void Show(string text, string title = null)
+		{
+			new Message
+			{
+				Text = text,
+				Title = title ?? "Info",
+				Options = OptionsEnum.Ok,
+				DefaultAccept = OptionsEnum.Ok,
+				DefaultCancel = OptionsEnum.Ok,
+			}.Show();
+		}
+
 		Dictionary<Button, OptionsEnum> buttonActions = new Dictionary<Button, OptionsEnum>();
 		OptionsEnum Answer { get; set; }
 
@@ -61,6 +73,7 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			uiHelper = new UIHelper<Message>(this);
 			InitializeComponent();
+			Transparency.MakeTransparent(this);
 
 			Answer = DefaultCancel;
 
