@@ -1,11 +1,11 @@
 ﻿using System;
-using NeoEdit.GUI.About;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
 using NeoEdit.Common.Transform;
 using NeoEdit.Disk;
+using NeoEdit.GUI.About;
 using NeoEdit.Handles;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
