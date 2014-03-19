@@ -45,7 +45,7 @@ namespace NeoEdit.Disk.Dialogs
 		{
 			var rename = new Rename(item);
 			if (rename.ShowDialog() == true)
-				return rename.FullName;
+				return rename.ItemName;
 			return null;
 		}
 	}

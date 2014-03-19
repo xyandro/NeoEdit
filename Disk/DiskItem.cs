@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Management;
@@ -38,7 +39,7 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public long? CompressedSize { get { return GetValue<long?>(); } private set { SetValue(value); } }
 
-		public bool IsDiskItem { get { return contentItem.type == DiskItemType.Disk; } }
+		public bool IsDiskItem { get { return parent.contentItem.type == DiskItemType.Disk; } }
 		public bool HasChildren { get; private set; }
 		public bool HasData { get; private set; }
 
@@ -404,18 +405,95 @@ namespace NeoEdit.Disk
 			SHA1 = Checksum.Get(Checksum.Type.SHA1, GetStream());
 		}
 
-		public void Rename(string newFullName)
+		public void MoveFrom(DiskItem item, string newName = null)
 		{
-			if (contentItem.type != DiskItemType.Disk)
-				throw new Exception("Can only rename disk files.");
+			if ((!IsDiskItem) || (!item.IsDiskItem) || (HasData))
+				throw new Exception("Can only move disk between disk locations.");
+
+			var newFullName = System.IO.Path.Combine(FullName, newName ?? item.Name);
 
 			if ((File.Exists(newFullName)) || (Directory.Exists(newFullName)))
 				throw new Exception("A file or directory with that name already exists.");
 
-			if (HasData)
-				File.Move(FullName, newFullName);
+			if (item.HasData)
+				File.Move(item.FullName, newFullName);
 			else
-				Directory.Move(FullName, newFullName);
+				Directory.Move(item.FullName, newFullName);
+		}
+
+		public void CopyFrom(DiskItem item, string newName = null)
+		{
+			newName = newName ?? item.Name;
+			if (!item.HasData)
+			{
+				var dest = CreateDirectory(newName);
+				dest.SyncFrom(item);
+				return;
+			}
+
+			var newFullName = System.IO.Path.Combine(FullName, newName);
+			if ((File.Exists(newFullName)) || (Directory.Exists(newFullName)))
+				throw new Exception("A file or directory with that name already exists.");
+			if (item.IsDiskItem)
+			{
+				System.IO.File.Copy(item.FullName, newFullName);
+				return;
+			}
+
+			using (var input = item.GetStream())
+			using (var output = File.Create(newFullName))
+				input.CopyTo(output);
+		}
+
+		public DiskItem CreateFile(string name)
+		{
+			return new DiskItem(System.IO.Path.Combine(FullName, name), false, this);
+		}
+
+		public DiskItem CreateDirectory(string name)
+		{
+			name = System.IO.Path.Combine(FullName, name);
+			Directory.CreateDirectory(name);
+			return new DiskItem(name, true, this);
+		}
+
+		string GetKey()
+		{
+			long ticks = 0;
+			var time = WriteTime;
+			if (time.HasValue)
+				ticks = time.Value.Ticks;
+			return String.Format("{0}-{1}-{2}-{3}", HasData, Name, Size, ticks);
+		}
+
+		void SyncFrom(DiskItem source)
+		{
+			if (HasData != source.HasData)
+				throw new Exception("Can't sync files to directories.");
+			if (HasData)
+				return;
+
+			var sourceRecords = new Dictionary<string, DiskItem>();
+			foreach (DiskItem child in source.GetChildren())
+				sourceRecords[child.GetKey()] = child;
+
+			var destRecords = new Dictionary<string, DiskItem>();
+			foreach (DiskItem child in GetChildren())
+				destRecords[child.GetKey()] = child;
+
+			var dups = sourceRecords.Keys.Where(key => destRecords.Keys.Contains(key)).ToList();
+			foreach (var item in dups)
+			{
+				destRecords[item].SyncFrom(sourceRecords[item]);
+				sourceRecords.Remove(item);
+				destRecords.Remove(item);
+			}
+
+			foreach (var item in destRecords)
+				item.Value.Delete();
+
+			foreach (var item in sourceRecords.Values)
+				CopyFrom(item);
 		}
 
 		public void Delete()

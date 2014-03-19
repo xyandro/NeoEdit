@@ -83,6 +83,20 @@ namespace NeoEdit.GUI
 			Add(data);
 		}
 
+		public static void SetFiles(IEnumerable<string> files, bool isCut)
+		{
+			var objs = new List<string>(files);
+
+			var data = new ClipboardData(objs, String.Join(" ", objs.Select(file => String.Format("\"{0}\"", file))));
+
+			var dropList = new StringCollection();
+			objs.ForEach(file => dropList.Add(file));
+			data.Data.SetFileDropList(dropList);
+
+			data.Data.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(isCut ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
+			Add(data);
+		}
+
 		public static void Set(byte[] bytes, string text)
 		{
 			Add(new ClipboardData(bytes, text));
@@ -122,6 +136,38 @@ namespace NeoEdit.GUI
 				return false;
 
 			records = dropList.Cast<string>().Select(file => new DiskRoot().GetRecord(file)).ToList();
+			return true;
+		}
+
+		public static bool GetFiles(out List<string> files, out bool isCut)
+		{
+			files = null;
+			isCut = false;
+
+			var dropEffectStream = Clipboard.GetDataObject().GetData("Preferred DropEffect");
+			if (dropEffectStream is MemoryStream)
+			{
+				try
+				{
+					var dropEffect = (DragDropEffects)BitConverter.ToInt32(((MemoryStream)dropEffectStream).ToArray(), 0);
+					if ((dropEffect & DragDropEffects.Move) != DragDropEffects.None)
+						isCut = true;
+				}
+				catch { }
+			}
+
+			var contents = GetContents<List<string>>();
+			if (contents != null)
+			{
+				files = contents;
+				return files.Count != 0;
+			}
+
+			var dropList = Clipboard.GetFileDropList();
+			if ((dropList == null) || (dropList.Count == 0))
+				return false;
+
+			files = dropList.Cast<string>().ToList();
 			return true;
 		}
 
