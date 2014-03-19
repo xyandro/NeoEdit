@@ -13,7 +13,7 @@ using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Disk
 {
-	public partial class DiskWindow : Window
+	public partial class DiskWindow : TransparentWindow
 	{
 		public static RoutedCommand Command_File_Rename = new RoutedCommand();
 		public static RoutedCommand Command_File_Identify = new RoutedCommand();
@@ -36,7 +36,6 @@ namespace NeoEdit.Disk
 			if (path == null)
 				path = Directory.GetCurrentDirectory();
 
-			Transparency.MakeTransparent(this);
 			uiHelper = new UIHelper<DiskWindow>(this);
 			InitializeComponent();
 			uiHelper.AddCallback(ItemGridTree.LocationProperty, files, () => Location = files.Location.FullName);

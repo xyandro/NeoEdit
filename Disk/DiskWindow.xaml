@@ -1,4 +1,4 @@
-﻿<Window Name="self" x:Class="NeoEdit.Disk.DiskWindow"
+﻿<guiCommon:TransparentWindow Name="self" x:Class="NeoEdit.Disk.DiskWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:disk="clr-namespace:NeoEdit.Disk"
@@ -66,4 +66,4 @@
 		<ig:ItemGridTree x:Name="files" Grid.Row="2"/>
 	</Grid>
 
-</Window>
+</guiCommon:TransparentWindow>

@@ -11,7 +11,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI
 {
-	public partial class ClipboardWindow : Window
+	public partial class ClipboardWindow : TransparentWindow
 	{
 		class ClipboardData
 		{
@@ -176,7 +176,6 @@ namespace NeoEdit.GUI
 		{
 			uiHelper = new UIHelper<ClipboardWindow>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			uiHelper.AddObservableCallback(a => a.Records, () => items.SelectedItem = Current());
 

@@ -12,7 +12,7 @@ using NeoEdit.Win32;
 
 namespace NeoEdit.Handles
 {
-	public partial class HandlesWindow : Window
+	public partial class HandlesWindow : TransparentWindow
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 		public static RoutedCommand Command_View_GotoProcess = new RoutedCommand();
@@ -37,7 +37,6 @@ namespace NeoEdit.Handles
 
 			uiHelper = new UIHelper<HandlesWindow>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			uiHelper.AddCallback(a => a.HandleType, (o, n) => Refresh());
 			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy(type => type).ToList();

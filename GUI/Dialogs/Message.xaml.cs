@@ -6,7 +6,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	public partial class Message : Window
+	public partial class Message : TransparentWindow
 	{
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -73,7 +73,6 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			uiHelper = new UIHelper<Message>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			Answer = DefaultCancel;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using NeoEdit.GUI.About;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
@@ -39,6 +40,8 @@ namespace NeoEdit
 
 				switch (args[0])
 				{
+					case "about":
+						return new AboutWindow();
 					case "system":
 					case "systeminfo":
 						return new SystemInfoWindow();

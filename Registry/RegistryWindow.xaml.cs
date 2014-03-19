@@ -8,7 +8,7 @@ using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Registry
 {
-	public partial class RegistryWindow : Window
+	public partial class RegistryWindow : TransparentWindow
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 
@@ -24,7 +24,6 @@ namespace NeoEdit.Registry
 		{
 			uiHelper = new UIHelper<RegistryWindow>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			uiHelper.AddCallback(ItemGridTree.LocationProperty, keys, () => Location = keys.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();

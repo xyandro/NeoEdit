@@ -6,7 +6,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor.Dialogs
 {
-	public partial class AsymmetricKeyDialog : Window
+	public partial class AsymmetricKeyDialog : TransparentWindow
 	{
 		Crypto.Type type;
 		public Crypto.Type Type
@@ -82,7 +82,6 @@ namespace NeoEdit.BinaryEditor.Dialogs
 		public AsymmetricKeyDialog()
 		{
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			Type = Crypto.Type.RSA;
 			Public = true;

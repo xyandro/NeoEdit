@@ -6,7 +6,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	public partial class GetNumDialog : Window
+	public partial class GetNumDialog : TransparentWindow
 	{
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -24,7 +24,6 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			uiHelper = new UIHelper<GetNumDialog>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			Loaded += (s, e) => value.SelectAll();
 

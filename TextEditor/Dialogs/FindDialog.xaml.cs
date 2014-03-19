@@ -5,7 +5,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class FindDialog : Window
+	public partial class FindDialog : TransparentWindow
 	{
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -24,7 +24,6 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			uiHelper = new UIHelper<FindDialog>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			wholeWords.IsChecked = wholeWordsVal;
 			matchCase.IsChecked = matchCaseVal;

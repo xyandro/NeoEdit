@@ -1,0 +1,130 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<LinearGradientBrush x:Key="Flat3DBorderBrush" StartPoint="0.499,0" EndPoint="0.501,1">
+		<GradientStop Color="#FFF" Offset="0" />
+		<GradientStop Color="#DDD" Offset="0.01" />
+		<GradientStop Color="#AAA" Offset="0.99" />
+		<GradientStop Color="#888" Offset="1" />
+	</LinearGradientBrush>
+
+	<Style x:Key="WindowButtonStyle" TargetType="{x:Type Button}">
+		<Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+		<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Padding" Value="1"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Grid Background="{TemplateBinding Background}">
+						<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"/>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="Background" Value="#40FFFFFF"/>
+						</Trigger>
+						<Trigger Property="IsPressed" Value="True">
+							<Setter Property="Background" Value="#FF007ACC"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="TransparentWindowStyle" TargetType="{x:Type Window}">
+		<Setter Property="WindowStyle" Value="None"/>
+		<Setter Property="AllowsTransparency" Value="True"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+		<Setter Property="UseLayoutRounding" Value="True"/>
+		<Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+		<Setter Property="WindowChrome.WindowChrome">
+			<Setter.Value>
+				<WindowChrome/>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Window">
+					<Grid>
+						<Border Name="TemplateBorder" BorderBrush="{StaticResource Flat3DBorderBrush}" BorderThickness="2" Background="#90000000" CornerRadius="10" Margin="0,0,10,10">
+							<Border.Effect>
+								<DropShadowEffect BlurRadius="10" ShadowDepth="5"/>
+							</Border.Effect>
+
+							<Grid Margin="5">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition/>
+								</Grid.RowDefinitions>
+
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition/>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+
+								<Image Grid.Row="0" Grid.Column="0" Source="{TemplateBinding Icon}" VerticalAlignment="Center" Stretch="None"/>
+
+								<TextBlock Grid.Row="0" Grid.Column="1" Text="{TemplateBinding Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontSize="12" Margin="10,0,0,0"/>
+
+								<Button Grid.Row="0" Grid.Column="2" Command="{Binding Source={x:Static SystemCommands.MinimizeWindowCommand}}" ToolTip="Minimize" Style="{StaticResource WindowButtonStyle}">
+									<Button.Content>
+										<Grid Width="20" Height="15" RenderTransform="1,0,0,1,0,1">
+											<Path Data="M0,6 L8,6 Z" Width="8" Height="7" VerticalAlignment="Center" HorizontalAlignment="Center" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="2"/>
+										</Grid>
+									</Button.Content>
+								</Button>
+								<Button Grid.Row="0" Grid.Column="3" x:Name="Restore" Command="{Binding Source={x:Static SystemCommands.RestoreWindowCommand}}" ToolTip="Restore" Visibility="Collapsed" Style="{StaticResource WindowButtonStyle}">
+									<Button.Content>
+										<Grid Width="20" Height="15" UseLayoutRounding="True" RenderTransform="1,0,0,1,.5,.5">
+											<Path Data="M2,0 L8,0 L8,6 M0,3 L6,3 M0,2 L6,2 L6,8 L0,8 Z" Width="8" Height="8" VerticalAlignment="Center" HorizontalAlignment="Center" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="1"/>
+										</Grid>
+									</Button.Content>
+								</Button>
+								<Button Grid.Row="0" Grid.Column="3" x:Name="Maximize" Command="{Binding Source={x:Static SystemCommands.MaximizeWindowCommand}}" ToolTip="Maximize" Style="{StaticResource WindowButtonStyle}">
+									<Button.Content>
+										<Grid Width="20" Height="15">
+											<Path Data="M0,1 L9,1 L9,8 L0,8 Z" Width="9" Height="8" VerticalAlignment="Center" HorizontalAlignment="Center" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="2"/>
+										</Grid>
+									</Button.Content>
+								</Button>
+								<Button Grid.Row="0" Grid.Column="4" Command="{Binding Source={x:Static SystemCommands.CloseWindowCommand}}" ToolTip="Close" Style="{StaticResource WindowButtonStyle}">
+									<Button.Content>
+										<Grid Width="20" Height="15" RenderTransform="1,0,0,1,0,1">
+											<Path Data="M0,0 L8,7 M8,0 L0,7 Z" Width="8" Height="7" VerticalAlignment="Center" HorizontalAlignment="Center" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="1.5"/>
+										</Grid>
+									</Button.Content>
+								</Button>
+
+								<ContentPresenter Grid.Row="1" Grid.ColumnSpan="5"/>
+							</Grid>
+						</Border>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="WindowState" Value="Maximized">
+							<Setter TargetName="Maximize" Property="Visibility" Value="Collapsed"/>
+							<Setter TargetName="Restore" Property="Visibility" Value="Visible"/>
+							<Setter TargetName="TemplateBorder" Property="Margin" Value="0"/>
+						</Trigger>
+						<Trigger Property="WindowState" Value="Normal">
+							<Setter TargetName="Maximize" Property="Visibility" Value="Visible"/>
+							<Setter TargetName="Restore" Property="Visibility" Value="Collapsed"/>
+						</Trigger>
+						<Trigger Property="Window.IsActive" Value="False">
+							<Setter Property="Opacity" Value=".8"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>

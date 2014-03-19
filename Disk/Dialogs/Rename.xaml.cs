@@ -6,7 +6,7 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Disk.Dialogs
 {
-	public partial class Rename : Window
+	public partial class Rename : TransparentWindow
 	{
 		[DepProp]
 		public string ItemName { get { return uiHelper.GetPropValue<string>(); } private set { uiHelper.SetPropValue(value); } }
@@ -20,7 +20,6 @@ namespace NeoEdit.Disk.Dialogs
 		{
 			uiHelper = new UIHelper<Rename>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			label.Content = String.Format("Please enter new name for {0}:", item.Name);
 

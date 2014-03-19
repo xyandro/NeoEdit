@@ -7,7 +7,7 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.BinaryEditor.Dialogs
 {
-	public partial class SymmetricKeyDialog : Window
+	public partial class SymmetricKeyDialog : TransparentWindow
 	{
 		Crypto.Type type;
 		public Crypto.Type Type
@@ -34,7 +34,6 @@ namespace NeoEdit.BinaryEditor.Dialogs
 		public SymmetricKeyDialog()
 		{
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			Type = Crypto.Type.AES;
 			salt.Text = "AWdSJ9hs72TXUUqaKpYIbU2v/YONdOxf";

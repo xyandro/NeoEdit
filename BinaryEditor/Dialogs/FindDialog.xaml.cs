@@ -10,7 +10,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor.Dialogs
 {
-	public partial class FindDialog : Window
+	public partial class FindDialog : TransparentWindow
 	{
 		[DepProp]
 		public string FindText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -34,7 +34,6 @@ namespace NeoEdit.BinaryEditor.Dialogs
 		{
 			uiHelper = new UIHelper<FindDialog>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			ShowLE = ShowInt = ShowStr = ShowOther = true;
 			ShowBE = ShowFloat = false;

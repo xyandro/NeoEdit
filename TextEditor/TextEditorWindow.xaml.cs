@@ -12,7 +12,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	public partial class TextEditorWindow : Window
+	public partial class TextEditorWindow : TransparentWindow
 	{
 		public static RoutedCommand Command_File_New = new RoutedCommand();
 		public static RoutedCommand Command_File_Open = new RoutedCommand();
@@ -78,7 +78,6 @@ namespace NeoEdit.TextEditor
 		{
 			uiHelper = new UIHelper<TextEditorWindow>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			FileName = filename;
 			if (bytes == null)

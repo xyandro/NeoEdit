@@ -4,7 +4,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.About
 {
-	public partial class AboutWindow : Window
+	public partial class AboutWindow : TransparentWindow
 	{
 		[DepProp]
 		string Product { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -20,11 +20,15 @@ namespace NeoEdit.GUI.About
 		{
 			uiHelper = new UIHelper<AboutWindow>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			Product = ((AssemblyProductAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
 			Version = ((AssemblyFileVersionAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
 			Copyright = ((AssemblyCopyrightAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyCopyrightAttribute))).Copyright;
+		}
+
+		void OKClick(object sender, RoutedEventArgs e)
+		{
+			DialogResult = true;
 		}
 	}
 }

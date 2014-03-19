@@ -9,7 +9,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.SystemInfo
 {
-	public partial class SystemInfoWindow : Window
+	public partial class SystemInfoWindow : TransparentWindow
 	{
 		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_View_InstalledPrograms = new RoutedCommand();
@@ -24,7 +24,6 @@ namespace NeoEdit.SystemInfo
 		{
 			uiHelper = new UIHelper<SystemInfoWindow>(this);
 			InitializeComponent();
-			Transparency.MakeTransparent(this);
 
 			Text = "Please select an item from the menu.";
 		}
