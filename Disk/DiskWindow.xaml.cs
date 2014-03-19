@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Disk.Dialogs;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Disk
@@ -17,6 +18,7 @@ namespace NeoEdit.Disk
 		public static RoutedCommand Command_File_Identify = new RoutedCommand();
 		public static RoutedCommand Command_File_MD5 = new RoutedCommand();
 		public static RoutedCommand Command_File_SHA1 = new RoutedCommand();
+		public static RoutedCommand Command_File_Delete = new RoutedCommand();
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 
 		[DepProp]
@@ -111,6 +113,25 @@ namespace NeoEdit.Disk
 
 				foreach (DiskItem selected in files.Selected)
 					selected.CalcSHA1();
+			}
+			else if (e.Command == Command_File_Delete)
+			{
+				if (files.Selected.Count == 0)
+					return;
+
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = "Are you sure you want to delete these items?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() == Message.OptionsEnum.Yes)
+				{
+					foreach (DiskItem file in files.Selected)
+						file.Delete();
+				}
+				Refresh();
 			}
 			else if (e.Command == Command_View_Refresh)
 				Refresh();

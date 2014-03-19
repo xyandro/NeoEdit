@@ -418,6 +418,14 @@ namespace NeoEdit.Disk
 				Directory.Move(FullName, newFullName);
 		}
 
+		public void Delete()
+		{
+			if (HasData)
+				File.Delete(FullName);
+			else
+				Directory.Delete(FullName, true);
+		}
+
 		public override string ToString() { return type.ToString() + ": " + FullName; }
 	}
 }
