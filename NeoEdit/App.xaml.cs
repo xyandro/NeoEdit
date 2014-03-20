@@ -54,6 +54,8 @@ namespace NeoEdit
 							return new DiskWindow(location);
 						}
 					case "text":
+					case "textedit":
+					case "texteditor":
 						{
 							string filename = null;
 							if (args.Length > 1)
@@ -74,6 +76,8 @@ namespace NeoEdit
 							return new TextEditorWindow(filename, line: line, column: column);
 						}
 					case "binary":
+					case "binaryedit":
+					case "binaryeditor":
 						{
 							string filename = null;
 							if (args.Length > 1)
