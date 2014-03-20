@@ -1,21 +1,9 @@
 ﻿<Application x:Class="NeoEdit.App"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI">
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 	<Application.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="ExpressionDark.xaml" />
- 				<ResourceDictionary>
-					<Style x:Key="MenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-						<Setter Property="InputGestureText" Value="{Binding RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={guiCommon:InputGestureTextConverter}}" />
-					</Style>
-				</ResourceDictionary>
-			</ResourceDictionary.MergedDictionaries>
-			
-			<Style TargetType="MenuItem" BasedOn="{StaticResource MenuItemStyle}"/>
-		</ResourceDictionary>
+		<ResourceDictionary Source="Theme.xaml" />
 	</Application.Resources>
 
 </Application>

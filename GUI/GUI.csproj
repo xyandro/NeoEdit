@@ -59,10 +59,6 @@
       <DependentUpon>HelpMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\InputGestureTextConverter.cs" />
-    <Page Include="Common\TransparentWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Compile Include="Common\WindowMenu.xaml.cs">
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>

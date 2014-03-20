@@ -119,7 +119,7 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ExpressionDark.xaml">
+    <Page Include="Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

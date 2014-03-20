@@ -8,12 +8,6 @@ namespace NeoEdit.GUI.Common
 {
 	public class TransparentWindow : Window
 	{
-		public static Style GetStyle()
-		{
-			var resourceDict = new ResourceDictionary { Source = new Uri("/GUI;component/Common/TransparentWindow.xaml", UriKind.RelativeOrAbsolute) };
-			return resourceDict["TransparentWindowStyle"] as Style;
-		}
-
 		public static BitmapFrame GetAppIcon(int size)
 		{
 			var decoder = BitmapDecoder.Create(new Uri("pack://application:,,,/NeoEdit.ico"), BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
@@ -25,7 +19,7 @@ namespace NeoEdit.GUI.Common
 
 		public TransparentWindow()
 		{
-			Style = GetStyle();
+			Style = Application.Current.Resources["WindowStyle"] as Style;
 			Icon = GetAppIcon(16);
 
 			this.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, this.OnCloseWindow));
