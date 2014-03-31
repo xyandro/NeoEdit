@@ -10,7 +10,7 @@ using System.Windows;
 // Revision(s): $WCRANGE$
 // Last repository commit: $WCDATE$
 
-[assembly: AssemblyTitle("GUI")]
+[assembly: AssemblyTitle("BinaryEditor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Randon Spackman")]
