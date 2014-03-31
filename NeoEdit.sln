@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Registry", "Registry\Regist
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disk", "Disk\Disk.csproj", "{839C668B-921C-4A33-91CD-0D8131FFACFC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBViewer", "DBViewer\DBViewer.csproj", "{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -139,6 +141,14 @@ Global
 		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Release|x64.Build.0 = Release|x64
 		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Release|x86.ActiveCfg = Release|x86
 		{839C668B-921C-4A33-91CD-0D8131FFACFC}.Release|x86.Build.0 = Release|x86
+		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Debug|x64.ActiveCfg = Debug|x64
+		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Debug|x64.Build.0 = Debug|x64
+		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Debug|x86.ActiveCfg = Debug|x86
+		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Debug|x86.Build.0 = Debug|x86
+		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Release|x64.ActiveCfg = Release|x64
+		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Release|x64.Build.0 = Release|x64
+		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Release|x86.ActiveCfg = Release|x86
+		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

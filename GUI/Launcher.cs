@@ -16,6 +16,7 @@ namespace NeoEdit.GUI
 		protected Action<int?> processesLauncher;
 		protected Action<int?> handlesLauncher;
 		protected Action<string> registryLauncher;
+		protected Action dbViewerLauncher;
 		public static void Initialize(
 			Action systemInfo,
 			Action<string, byte[], Coder.Type> textEditor,
@@ -24,7 +25,8 @@ namespace NeoEdit.GUI
 			Action disk,
 			Action<int?> processes,
 			Action<int?> handles,
-			Action<string> registry
+			Action<string> registry,
+			Action dbViewer
 		)
 		{
 			launcher = new Launcher
@@ -37,6 +39,7 @@ namespace NeoEdit.GUI
 				processesLauncher = processes,
 				handlesLauncher = handles,
 				registryLauncher = registry,
+				dbViewerLauncher = dbViewer,
 			};
 		}
 
@@ -78,6 +81,11 @@ namespace NeoEdit.GUI
 		public void LaunchRegistry(string key = null)
 		{
 			registryLauncher(key);
+		}
+
+		public void LaunchDBViewer()
+		{
+			dbViewerLauncher();
 		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
 using NeoEdit.Common.Transform;
+using NeoEdit.DBViewer;
 using NeoEdit.Disk;
 using NeoEdit.GUI.About;
 using NeoEdit.Handles;
@@ -126,6 +127,10 @@ namespace NeoEdit
 								key = args[1];
 							return new RegistryWindow(key);
 						}
+					case "db":
+					case "dbview":
+					case "dbviewer":
+						return new DBViewerWindow();
 					case "gzip":
 						{
 							var data = File.ReadAllBytes(args[1]);
@@ -159,7 +164,8 @@ namespace NeoEdit
 				disk: () => new DiskWindow(),
 				processes: (pid) => new ProcessesWindow(pid),
 				handles: (pid) => new HandlesWindow(pid),
-				registry: (key) => new RegistryWindow(key)
+				registry: (key) => new RegistryWindow(key),
+				dbViewer: () => new DBViewerWindow()
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
