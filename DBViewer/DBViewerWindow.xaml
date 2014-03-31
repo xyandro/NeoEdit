@@ -9,16 +9,22 @@
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
-		<TextBox Name="query" Grid.Column="0" Grid.Row="0" Text="This is my query"/>
+		<Menu Grid.Column="0" Grid.Row="0">
+			<guiCommon:WindowMenu/>
+			<guiCommon:HelpMenu/>
+		</Menu>
+		
+		<TextBox Name="query" Grid.Column="0" Grid.Row="1" Text="This is my query"/>
 
-		<GridSplitter Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Background="Black" ResizeDirection="Rows" Height="5"/>
+		<GridSplitter Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" Background="Black" ResizeDirection="Rows" Height="2"/>
 
-		<ScrollViewer Grid.Column="0" Grid.Row="2" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+		<ScrollViewer Grid.Column="0" Grid.Row="3" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
 			<Grid Name="results">
 				<Grid.Resources>
 					<Style TargetType="{x:Type Label}">
