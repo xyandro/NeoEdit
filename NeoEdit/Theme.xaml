@@ -1505,8 +1505,9 @@
 		<Setter Property="AllowDrop" Value="true" />
 		<Setter Property="Template" Value="{DynamicResource TextBoxTemplate}" />
 		<Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-		<Setter Property="Background" Value="#30FFFFFF"/>
+		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderBrush" Value="#FF000000"/>
+		<Setter Property="CaretBrush" Value="White"/>
 	</Style>
 
 	<ControlTemplate x:Key="TextBoxTemplate" TargetType="{x:Type TextBox}">
@@ -3601,7 +3602,7 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="Window">
 					<Grid>
-						<Border Name="TemplateBorder" BorderBrush="{StaticResource Flat3DBorderBrush}" BorderThickness="2" Background="#90000000" CornerRadius="10" Margin="0,0,10,10">
+						<Border Name="TemplateBorder" BorderBrush="{StaticResource Flat3DBorderBrush}" BorderThickness="2" Background="#C0000000" CornerRadius="10" Margin="0,0,10,10">
 							<Border.Effect>
 								<DropShadowEffect BlurRadius="10" ShadowDepth="5"/>
 							</Border.Effect>
@@ -3668,7 +3669,7 @@
 							<Setter TargetName="Restore" Property="Visibility" Value="Collapsed"/>
 						</Trigger>
 						<Trigger Property="Window.IsActive" Value="False">
-							<Setter Property="Opacity" Value=".8"/>
+							<Setter Property="Opacity" Value=".9"/>
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
