@@ -47,6 +47,8 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortLineBySelection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_All" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Unselect" Executed="Command_Executed"/>
@@ -174,6 +176,9 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Randomize" Header="R_andomize"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortLineBySelection" Header="Sort _by selection"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5" Header="MD5"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1" Header="SHA1"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>

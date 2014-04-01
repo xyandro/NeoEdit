@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
@@ -1266,6 +1267,16 @@ namespace NeoEdit.TextEditor
 				var replaceStrs = sortStrAndRangeAndLine.OrderBy(data => data.sortStr).Select(data => data.line).ToList();
 
 				Replace(lineRanges, replaceStrs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_MD5)
+			{
+				var strs = ranges[RangeType.Selection].Select(range => Checksum.Get(Checksum.Type.MD5, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
+				Replace(ranges[RangeType.Selection], strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_SHA1)
+			{
+				var strs = ranges[RangeType.Selection].Select(range => Checksum.Get(Checksum.Type.SHA1, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
+				Replace(ranges[RangeType.Selection], strs, true);
 			}
 			else if (command == TextEditorWindow.Command_SelectMark_Toggle)
 			{
