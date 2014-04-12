@@ -35,6 +35,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_FromHex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToChar" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_FromChar" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Length" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Width" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Trim" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SetKeys" Executed="Command_Executed"/>
@@ -47,6 +48,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortLineBySelection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortByLength" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Executed="Command_Executed"/>
@@ -162,6 +164,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToChar" Header="To char"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromChar" Header="From char"/>
 				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Length" Header="_Length"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Width" Header="_Width"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Trim" Header="_Trim"/>
 				<Separator/>
@@ -176,6 +179,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Randomize" Header="R_andomize"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortLineBySelection" Header="Sort _by selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortByLength" Header="Sort by length"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5" Header="MD5"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1" Header="SHA1"/>

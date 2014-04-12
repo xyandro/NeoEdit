@@ -37,6 +37,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_FromHex = new RoutedCommand();
 		public static RoutedCommand Command_Data_ToChar = new RoutedCommand();
 		public static RoutedCommand Command_Data_FromChar = new RoutedCommand();
+		public static RoutedCommand Command_Data_Length = new RoutedCommand();
 		public static RoutedCommand Command_Data_Width = new RoutedCommand();
 		public static RoutedCommand Command_Data_Trim = new RoutedCommand();
 		public static RoutedCommand Command_Data_SetKeys = new RoutedCommand();
@@ -49,6 +50,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Randomize = new RoutedCommand();
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
 		public static RoutedCommand Command_Data_SortLineBySelection = new RoutedCommand();
+		public static RoutedCommand Command_Data_SortByLength = new RoutedCommand();
 		public static RoutedCommand Command_Data_MD5 = new RoutedCommand();
 		public static RoutedCommand Command_Data_SHA1 = new RoutedCommand();
 		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();

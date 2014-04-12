@@ -1178,6 +1178,12 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
 				Replace(selections, strs, true);
 			}
+			else if (command == TextEditorWindow.Command_Data_Length)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range).Length.ToString()).ToList();
+				Replace(selections, strs, true);
+			}
 			else if (command == TextEditorWindow.Command_Data_Width)
 			{
 				var selections = ranges[RangeType.Selection];
@@ -1267,6 +1273,12 @@ namespace NeoEdit.TextEditor
 				var replaceStrs = sortStrAndRangeAndLine.OrderBy(data => data.sortStr).Select(data => data.line).ToList();
 
 				Replace(lineRanges, replaceStrs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_SortByLength)
+			{
+				var selections = ranges[RangeType.Selection];
+				var strs = selections.Select(range => GetString(range)).OrderBy(str => str.Length).ToList();
+				Replace(selections, strs, true);
 			}
 			else if (command == TextEditorWindow.Command_Data_MD5)
 			{
