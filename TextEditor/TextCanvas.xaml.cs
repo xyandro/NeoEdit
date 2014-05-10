@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
@@ -239,6 +240,23 @@ namespace NeoEdit.TextEditor
 				index = find;
 			}
 			return index;
+		}
+
+		DispatcherTimer drawTimer = null;
+		new void InvalidateVisual()
+		{
+			if (drawTimer != null)
+				return;
+
+			drawTimer = new DispatcherTimer();
+			drawTimer.Tick += (s, e) =>
+			{
+				drawTimer.Stop();
+				drawTimer = null;
+
+				base.InvalidateVisual();
+			};
+			drawTimer.Start();
 		}
 
 		static Dictionary<RangeType, Brush> brushes = new Dictionary<RangeType, Brush>
