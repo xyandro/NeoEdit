@@ -385,13 +385,29 @@ namespace NeoEdit.TextEditor
 				if (str.Length <= startChar)
 					continue;
 
-				str = str.Substring(startChar, Math.Min(endChar, str.Length) - startChar);
-				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
+				var highlight = new List<Tuple<Brush, int, int>>();
 				foreach (var entry in highlightDictionary)
 				{
 					var matches = entry.Key.Matches(str);
 					foreach (Match match in matches)
-						text.SetForegroundBrush(entry.Value, match.Index, match.Length);
+						highlight.Add(new Tuple<Brush, int, int>(entry.Value, match.Index, match.Length));
+				}
+
+				str = str.Substring(startChar, Math.Min(endChar, str.Length) - startChar);
+				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
+				foreach (var entry in highlight)
+				{
+					var start = entry.Item2 - startChar;
+					var count = entry.Item3;
+					if (start < 0)
+					{
+						count += start;
+						start = 0;
+					}
+					count = Math.Min(count, str.Length - start);
+					if (count <= 0)
+						continue;
+					text.SetForegroundBrush(entry.Item1, start, count);
 				}
 				dc.DrawText(text, new Point(0, y));
 			}
