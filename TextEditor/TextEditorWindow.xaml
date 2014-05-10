@@ -44,6 +44,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Reverse" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unique" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
@@ -175,6 +176,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Reverse" Header="_Reverse selections"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort" Header="_Sort selections"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Header="_Evaluate selections"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unique" Header="_Unique"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Header="_Duplicates"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Randomize" Header="R_andomize"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>

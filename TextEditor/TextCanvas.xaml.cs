@@ -1259,6 +1259,12 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.Common.Expression(expr).Evaluate().ToString()).ToList();
 				Replace(selections, strs, true);
 			}
+			else if (command == TextEditorWindow.Command_Data_Unique)
+			{
+				var selections = ranges[RangeType.Selection];
+				var dups = selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList();
+				ranges[RangeType.Selection] = dups;
+			}
 			else if (command == TextEditorWindow.Command_Data_Duplicates)
 			{
 				var selections = ranges[RangeType.Selection];

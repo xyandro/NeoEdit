@@ -46,6 +46,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Reverse = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort = new RoutedCommand();
 		public static RoutedCommand Command_Data_Evaluate = new RoutedCommand();
+		public static RoutedCommand Command_Data_Unique = new RoutedCommand();
 		public static RoutedCommand Command_Data_Duplicates = new RoutedCommand();
 		public static RoutedCommand Command_Data_Randomize = new RoutedCommand();
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
