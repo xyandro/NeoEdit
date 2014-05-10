@@ -12,7 +12,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	public partial class TextEditorWindow : TransparentWindow
+	public partial class TextEditorWindow : Window
 	{
 		public static RoutedCommand Command_File_New = new RoutedCommand();
 		public static RoutedCommand Command_File_Open = new RoutedCommand();

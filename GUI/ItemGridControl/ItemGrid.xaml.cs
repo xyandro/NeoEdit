@@ -533,7 +533,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 				if (Selected.Contains(item))
 				{
-					var rect = new Rectangle { Fill = new SolidColorBrush(Color.FromArgb(100, 208, 227, 252)) };
+					var rect = new Rectangle { Fill = new SolidColorBrush(Color.FromRgb(208, 227, 252)) };
 					Grid.SetRow(rect, contents.RowDefinitions.Count);
 					Grid.SetColumnSpan(rect, Columns.Count);
 					contents.Children.Add(rect);

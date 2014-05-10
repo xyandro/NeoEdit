@@ -6,7 +6,7 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Disk.Dialogs
 {
-	public partial class Rename : TransparentWindow
+	public partial class Rename : Window
 	{
 		[DepProp]
 		public string ItemName { get { return uiHelper.GetPropValue<string>(); } private set { uiHelper.SetPropValue(value); } }

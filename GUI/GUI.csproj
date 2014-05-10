@@ -54,7 +54,6 @@
     <Compile Include="ClipboardWindow.xaml.cs">
       <DependentUpon>ClipboardWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\TransparentWindow.cs" />
     <Compile Include="Common\HelpMenu.xaml.cs">
       <DependentUpon>HelpMenu.xaml</DependentUpon>
     </Compile>

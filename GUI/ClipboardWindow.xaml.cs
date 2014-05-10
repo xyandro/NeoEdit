@@ -11,7 +11,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI
 {
-	public partial class ClipboardWindow : TransparentWindow
+	public partial class ClipboardWindow : Window
 	{
 		class ClipboardData
 		{

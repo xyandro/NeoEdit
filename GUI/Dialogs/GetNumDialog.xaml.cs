@@ -6,7 +6,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	public partial class GetNumDialog : TransparentWindow
+	public partial class GetNumDialog : Window
 	{
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }

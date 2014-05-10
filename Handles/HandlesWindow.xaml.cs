@@ -12,7 +12,7 @@ using NeoEdit.Win32;
 
 namespace NeoEdit.Handles
 {
-	public partial class HandlesWindow : TransparentWindow
+	public partial class HandlesWindow : Window
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 		public static RoutedCommand Command_View_GotoProcess = new RoutedCommand();

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor.Dialogs
 {
-	public partial class AsymmetricKeyDialog : TransparentWindow
+	public partial class AsymmetricKeyDialog : Window
 	{
 		Crypto.Type type;
 		public Crypto.Type Type

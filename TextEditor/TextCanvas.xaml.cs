@@ -124,7 +124,7 @@ namespace NeoEdit.TextEditor
 			lineHeight = fontSize;
 
 			var example = "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()";
-			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
+			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
 			uiHelper.AddCallback(a => a.Data, (o, n) =>
@@ -360,7 +360,7 @@ namespace NeoEdit.TextEditor
 					var column = GetColumnFromIndex(lineStr, Data.GetOffsetIndex(selection.Pos1, line));
 					if ((column < startChar) || (column > endChar))
 						continue;
-					dc.DrawRectangle(Brushes.White, null, new Rect((column - startChar) * charWidth, y, 1, lineHeight));
+					dc.DrawRectangle(Brushes.Black, null, new Rect((column - startChar) * charWidth, y, 1, lineHeight));
 				}
 
 				var index = 0;
@@ -394,7 +394,7 @@ namespace NeoEdit.TextEditor
 				}
 
 				str = str.Substring(startChar, Math.Min(endChar, str.Length) - startChar);
-				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
+				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 				foreach (var entry in highlight)
 				{
 					var start = entry.Item2 - startChar;

@@ -160,7 +160,7 @@ namespace NeoEdit.BinaryEditor
 			rowHeight = fontSize;
 
 			var example = "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()";
-			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
+			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
 			uiHelper.AddCallback(a => a.Data, (o, n) =>
@@ -270,15 +270,15 @@ namespace NeoEdit.BinaryEditor
 			if (selRow == row)
 			{
 				var selCol = (int)(Pos1 % columns);
-				dc.DrawRectangle(SelHex ? Brushes.White : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
-				dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.White, null, new Rect(GetXTextFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
+				dc.DrawRectangle(SelHex ? Brushes.Black : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
+				dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Black, null, new Rect(GetXTextFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
 			}
 		}
 
 		void DrawPos(DrawingContext dc, long row)
 		{
 			var y = row * rowHeight - yScrollValue;
-			var posText = new FormattedText(String.Format("{0:x" + xPosColumns.ToString() + "}", row * columns), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
+			var posText = new FormattedText(String.Format("{0:x" + xPosColumns.ToString() + "}", row * columns), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			dc.DrawText(posText, new Point(xPosition - xScrollValue, y));
 		}
 
@@ -295,7 +295,7 @@ namespace NeoEdit.BinaryEditor
 				hex.Append(' ', xHexSpacing);
 			}
 
-			var hexText = new FormattedText(hex.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
+			var hexText = new FormattedText(hex.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			dc.DrawText(hexText, new Point(xHexViewStart - xScrollValue, y));
 		}
 
@@ -310,7 +310,7 @@ namespace NeoEdit.BinaryEditor
 				text.Append(Char.IsControl(c) ? '·' : c);
 			}
 
-			var textText = new FormattedText(text.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
+			var textText = new FormattedText(text.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			dc.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
 		}
 

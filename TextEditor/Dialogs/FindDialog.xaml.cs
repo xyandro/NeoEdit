@@ -5,7 +5,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class FindDialog : TransparentWindow
+	public partial class FindDialog : Window
 	{
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }

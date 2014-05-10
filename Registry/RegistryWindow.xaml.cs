@@ -8,7 +8,7 @@ using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Registry
 {
-	public partial class RegistryWindow : TransparentWindow
+	public partial class RegistryWindow : Window
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 

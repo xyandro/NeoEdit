@@ -5,7 +5,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class SelectLinesDialog : TransparentWindow
+	public partial class SelectLinesDialog : Window
 	{
 		[DepProp]
 		public int LineMult { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }

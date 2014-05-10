@@ -4,7 +4,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.About
 {
-	public partial class AboutWindow : TransparentWindow
+	public partial class AboutWindow : Window
 	{
 		[DepProp]
 		string Product { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }

@@ -2,14 +2,13 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NeoEdit.GUI.Common;
 
 namespace NeoEdit.DBViewer
 {
 	/// <summary>
 	/// Interaction logic for DBViewerWindow.xaml
 	/// </summary>
-	public partial class DBViewerWindow : TransparentWindow
+	public partial class DBViewerWindow : Window
 	{
 		public DBViewerWindow()
 		{

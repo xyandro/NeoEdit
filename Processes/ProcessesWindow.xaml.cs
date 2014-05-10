@@ -11,7 +11,7 @@ using NeoEdit.Win32;
 
 namespace NeoEdit.Processes
 {
-	public partial class ProcessesWindow : TransparentWindow
+	public partial class ProcessesWindow : Window
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 		public static RoutedCommand Command_View_Handles = new RoutedCommand();

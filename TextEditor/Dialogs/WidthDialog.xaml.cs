@@ -5,7 +5,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class WidthDialog : TransparentWindow
+	public partial class WidthDialog : Window
 	{
 		[DepProp]
 		public int WidthNum { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }

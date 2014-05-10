@@ -4,5 +4,4 @@
 	Header="_Help" Style="{StaticResource {x:Type MenuItem}}">
 	
 	<MenuItem Header="_About" Click="HelpAbout"/>
-	
 </MenuItem>

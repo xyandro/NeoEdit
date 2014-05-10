@@ -13,7 +13,7 @@ using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Disk
 {
-	public partial class DiskWindow : TransparentWindow
+	public partial class DiskWindow : Window
 	{
 		public static RoutedCommand Command_File_Rename = new RoutedCommand();
 		public static RoutedCommand Command_File_Identify = new RoutedCommand();

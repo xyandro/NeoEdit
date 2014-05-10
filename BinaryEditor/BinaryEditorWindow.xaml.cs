@@ -14,7 +14,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor
 {
-	public partial class BinaryEditorWindow : TransparentWindow
+	public partial class BinaryEditorWindow : Window
 	{
 		public static RoutedCommand Command_File_New = new RoutedCommand();
 		public static RoutedCommand Command_File_Open = new RoutedCommand();
