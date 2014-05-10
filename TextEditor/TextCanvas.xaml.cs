@@ -1320,9 +1320,18 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
 			else if (command == TextEditorWindow.Command_Select_Lines)
 			{
+				var selectLinesDialog = new SelectLinesDialog();
+				if (selectLinesDialog.ShowDialog() != true)
+					return;
+
 				var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-				var lengths = lines.ToDictionary(line => line, line => Data[line].Length);
-				ranges[RangeType.Selection] = lengths.Select(line => new Range { Pos1 = Data.GetOffset(line.Key, line.Value), Pos2 = Data.GetOffset(line.Key, 0) }).ToList();
+				var sels = lines.Select(line => new Range { Pos1 = Data.GetOffset(line, Data[line].Length), Pos2 = Data.GetOffset(line, 0) }).ToList();
+				if (selectLinesDialog.IgnoreBlankLines)
+					sels = sels.Where(sel => sel.Pos1 != sel.Pos2).ToList();
+				if (selectLinesDialog.LineMult > 1)
+					sels = sels.Where((sel, index) => index % selectLinesDialog.LineMult == 0).ToList();
+				ranges[RangeType.Selection] = sels;
+				InvalidateVisual();
 			}
 			else if (command == TextEditorWindow.Command_Select_Find)
 			{
