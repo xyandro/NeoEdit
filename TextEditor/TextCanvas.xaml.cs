@@ -314,6 +314,9 @@ namespace NeoEdit.TextEditor
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + numLines + 1);
 
+			var startChar = xScrollValue;
+			var endChar = Math.Min(columns, startChar + numColumns + 1);
+
 			var highlightDictionary = Highlighting.Get(HighlightType).GetDictionary();
 
 			for (var line = startLine; line < endLine; ++line)
@@ -338,7 +341,14 @@ namespace NeoEdit.TextEditor
 						if (range.End > lineRange.End)
 							end++;
 
-						dc.DrawRectangle(brushes[entry.Key], null, new Rect((start - xScrollValue) * charWidth, y, (end - start) * charWidth + 1, lineHeight));
+						if ((start >= endChar) || (end < startChar))
+							continue;
+
+						start = Math.Max(0, start - startChar);
+						end = Math.Min(endChar, end) - startChar;
+						var width = end - start;
+
+						dc.DrawRectangle(brushes[entry.Key], null, new Rect(start * charWidth, y, width * charWidth + 1, lineHeight));
 					}
 				}
 
@@ -348,7 +358,9 @@ namespace NeoEdit.TextEditor
 						continue;
 
 					var column = GetColumnFromIndex(lineStr, Data.GetOffsetIndex(selection.Pos1, line));
-					dc.DrawRectangle(Brushes.White, null, new Rect((column - xScrollValue) * charWidth, y, 1, lineHeight));
+					if ((column < startChar) || (column > endChar))
+						continue;
+					dc.DrawRectangle(Brushes.White, null, new Rect((column - startChar) * charWidth, y, 1, lineHeight));
 				}
 
 				var index = 0;
@@ -370,6 +382,10 @@ namespace NeoEdit.TextEditor
 				}
 
 				var str = sb.ToString();
+				if (str.Length <= startChar)
+					continue;
+
+				str = str.Substring(startChar, Math.Min(endChar, str.Length) - startChar);
 				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.White);
 				foreach (var entry in highlightDictionary)
 				{
@@ -377,7 +393,7 @@ namespace NeoEdit.TextEditor
 					foreach (Match match in matches)
 						text.SetForegroundBrush(entry.Value, match.Index, match.Length);
 				}
-				dc.DrawText(text, new Point(-xScrollValue * charWidth, y));
+				dc.DrawText(text, new Point(0, y));
 			}
 		}
 
