@@ -37,7 +37,6 @@ namespace NeoEdit.TextEditor
 			return Coder.StringToBytes(data, encoding);
 		}
 
-		static Regex RecordsRE = new Regex("(.*?)(\r\n|\n\r|\n|\r|$)");
 		void RecalculateLines()
 		{
 			lineIndex = new List<int>();
@@ -46,16 +45,24 @@ namespace NeoEdit.TextEditor
 			endingLength = new List<int>();
 
 			BOM = (data.Length > 0) && (data[0] == '\ufeff');
-			var matches = RecordsRE.Matches(data, BOM ? 1 : 0);
-
-			foreach (Match match in matches)
+			var index = BOM ? 1 : 0;
+			var lineEndChars = new char[] { '\r', '\n' };
+			while (index < data.Length)
 			{
-				if ((match.Groups[1].Length == 0) && (match.Groups[2].Length == 0))
-					continue;
-				lineIndex.Add(match.Groups[1].Index);
-				lineLength.Add(match.Groups[1].Length);
-				endingIndex.Add(match.Groups[2].Index);
-				endingLength.Add(match.Groups[2].Length);
+				var endLine = data.IndexOfAny(lineEndChars, index);
+				var endLineLen = 1;
+				if (endLine == -1)
+				{
+					endLine = data.Length;
+					endLineLen = 0;
+				}
+				else if ((endLine + 1 < data.Length) && (((data[endLine] == '\n') && (data[endLine + 1] == '\r')) || ((data[endLine] == '\r') && (data[endLine + 1] == '\n'))))
+					++endLineLen;
+				lineIndex.Add(index);
+				lineLength.Add(endLine - index);
+				endingIndex.Add(endLine);
+				endingLength.Add(endLineLen);
+				index = endLine + endLineLen;
 			}
 
 			// Always have an ending line
