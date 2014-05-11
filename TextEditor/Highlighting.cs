@@ -17,6 +17,8 @@ namespace NeoEdit.TextEditor
 
 		public static HighlightingType Get(string filename)
 		{
+			if (String.IsNullOrEmpty(filename))
+				return HighlightingType.None;
 			switch (Path.GetExtension(filename).ToLowerInvariant())
 			{
 				case ".cs": return HighlightingType.CSharp;
