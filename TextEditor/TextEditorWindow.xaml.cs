@@ -53,6 +53,8 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_SortLineBySelection = new RoutedCommand();
 		public static RoutedCommand Command_Data_SortByLength = new RoutedCommand();
 		public static RoutedCommand Command_Data_SortLinesByKeys = new RoutedCommand();
+		public static RoutedCommand Command_Data_SortRegionBySelection = new RoutedCommand();
+		public static RoutedCommand Command_Data_SortRegionByKeys = new RoutedCommand();
 		public static RoutedCommand Command_Data_MD5 = new RoutedCommand();
 		public static RoutedCommand Command_Data_SHA1 = new RoutedCommand();
 		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();

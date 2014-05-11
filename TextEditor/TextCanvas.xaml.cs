@@ -1077,8 +1077,8 @@ namespace NeoEdit.TextEditor
 			for (var ctr = 0; ctr < selections.Count; ++ctr)
 			{
 				var orderCtr = ordering[ctr];
-				selections[orderCtr].Pos1 = selections[orderCtr].Pos1 - regions[orderCtr].Pos1 + regions[ctr].Pos1 + add;
-				selections[orderCtr].Pos2 = selections[orderCtr].Pos2 - regions[orderCtr].Pos1 + regions[ctr].Pos1 + add;
+				selections[orderCtr].Pos1 = selections[orderCtr].Pos1 - regions[orderCtr].Start + regions[ctr].Start + add;
+				selections[orderCtr].Pos2 = selections[orderCtr].Pos2 - regions[orderCtr].Start + regions[ctr].Start + add;
 				add += replaceStrs[ctr].Length - regions[ctr].Length;
 			}
 			selections = ordering.Select(num => selections[num]).ToList();
@@ -1340,6 +1340,47 @@ namespace NeoEdit.TextEditor
 				var sort = keysToValues.Keys.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
 				var ordering = ranges[RangeType.Selection].Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
 
+				SortRegions(regions, ordering);
+			}
+			else if (command == TextEditorWindow.Command_Data_SortRegionBySelection)
+			{
+				var regions = new List<Range>();
+				foreach (var selection in ranges[RangeType.Selection])
+				{
+					var region = ranges[RangeType.Mark].Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
+					if (region.Count == 0)
+						throw new Exception("No region found.  All selection must be inside a marked region.");
+					if (region.Count != 1)
+						throw new Exception("Multiple regions found.  All selection must be inside a single marked region.");
+					regions.Add(region.Single());
+				}
+
+				if (ranges[RangeType.Mark].Count != regions.Count)
+					throw new Exception("Extra regions found.");
+
+				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
+				ranges[RangeType.Mark].Clear();
+				SortRegions(regions, ordering);
+			}
+			else if (command == TextEditorWindow.Command_Data_SortRegionByKeys)
+			{
+				var regions = new List<Range>();
+				foreach (var selection in ranges[RangeType.Selection])
+				{
+					var region = ranges[RangeType.Mark].Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
+					if (region.Count == 0)
+						throw new Exception("No region found.  All selection must be inside a marked region.");
+					if (region.Count != 1)
+						throw new Exception("Multiple regions found.  All selection must be inside a single marked region.");
+					regions.Add(region.Single());
+				}
+
+				if (ranges[RangeType.Mark].Count != regions.Count)
+					throw new Exception("Extra regions found.");
+
+				var sort = keysToValues.Keys.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
+				var ordering = ranges[RangeType.Selection].Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
+				ranges[RangeType.Mark].Clear();
 				SortRegions(regions, ordering);
 			}
 			else if (command == TextEditorWindow.Command_Data_MD5)
