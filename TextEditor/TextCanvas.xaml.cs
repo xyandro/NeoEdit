@@ -1237,9 +1237,7 @@ namespace NeoEdit.TextEditor
 				FindNext(true);
 			}
 			else if ((command == TextEditorWindow.Command_Edit_FindNext) || (command == TextEditorWindow.Command_Edit_FindPrev))
-			{
 				FindNext(command == TextEditorWindow.Command_Edit_FindNext);
-			}
 			else if (command == TextEditorWindow.Command_Edit_GotoLine)
 			{
 				var shift = shiftDown;
@@ -1442,9 +1440,7 @@ namespace NeoEdit.TextEditor
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
 			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_CopyValues1)
-			{
 				ClipboardWindow.Set(keysAndValues[GetKeysValuesIndex(command)].ToArray());
-			}
 			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_HitsValues1)
 			{
 				var index = GetKeysValuesIndex(command);
@@ -1547,9 +1543,7 @@ namespace NeoEdit.TextEditor
 				InvalidateVisual();
 			}
 			else if (command == TextEditorWindow.Command_Select_Single)
-			{
 				ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
-			}
 			else if (command == TextEditorWindow.Command_Select_Lines)
 			{
 				var selectLinesDialog = new SelectLinesDialog();
@@ -1579,13 +1573,9 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Search] = new List<Range>();
 			}
 			else if (command == TextEditorWindow.Command_Select_RemoveEmpty)
-			{
 				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-			}
 			else if (command == TextEditorWindow.Command_Mark_Selection)
-			{
 				ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
-			}
 			else if (command == TextEditorWindow.Command_Mark_Find)
 			{
 				ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
@@ -1606,9 +1596,7 @@ namespace NeoEdit.TextEditor
 				}
 			}
 			else if (command == TextEditorWindow.Command_Mark_LimitToSelection)
-			{
 				ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
-			}
 		}
 
 		void AddText(string text)
