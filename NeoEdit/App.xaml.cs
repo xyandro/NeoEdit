@@ -7,6 +7,7 @@ using NeoEdit.Common.Transform;
 using NeoEdit.DBViewer;
 using NeoEdit.Disk;
 using NeoEdit.GUI.About;
+using NeoEdit.GUI.Dialogs;
 using NeoEdit.Handles;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
@@ -29,7 +30,7 @@ namespace NeoEdit
 			var message = "";
 			for (var ex2 = ex; ex2 != null; ex2 = ex2.InnerException)
 				message += ex2.Message + "\n";
-			MessageBox.Show(message, "Error");
+			Message.Show(message, "Error");
 		}
 
 		public Window GetWindowFromArgs(string[] args)
