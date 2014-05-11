@@ -327,8 +327,8 @@ namespace NeoEdit.TextEditor
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + numLines + 1);
 
-			var startChar = xScrollValue;
-			var endChar = Math.Min(columns, startChar + numColumns + 1);
+			var startColumn = xScrollValue;
+			var endColumn = Math.Min(columns, startColumn + numColumns + 1);
 
 			var highlightDictionary = Highlighting.Get(HighlightType).GetDictionary();
 
@@ -337,6 +337,8 @@ namespace NeoEdit.TextEditor
 				var lineStr = Data[line];
 				var lineRange = new Range { Pos1 = Data.GetOffset(line, 0), Pos2 = Data.GetOffset(line, lineStr.Length) };
 				var y = (line - startLine) * lineHeight;
+				var startIndex = GetIndexFromColumn(lineStr, startColumn);
+				var endIndex = GetIndexFromColumn(lineStr, endColumn);
 
 				foreach (var entry in ranges)
 				{
@@ -349,16 +351,17 @@ namespace NeoEdit.TextEditor
 						var end = Math.Min(lineRange.End, range.End);
 						start = Data.GetOffsetIndex(start, line);
 						end = Data.GetOffsetIndex(end, line);
+
+						if ((start >= endIndex) || (end < startIndex))
+							continue;
+
 						start = GetColumnFromIndex(lineStr, start);
 						end = GetColumnFromIndex(lineStr, end);
 						if (range.End > lineRange.End)
 							end++;
 
-						if ((start >= endChar) || (end < startChar))
-							continue;
-
-						start = Math.Max(0, start - startChar);
-						end = Math.Min(endChar, end) - startChar;
+						start = Math.Max(0, start - startColumn);
+						end = Math.Min(endColumn, end) - startColumn;
 						var width = end - start;
 
 						dc.DrawRectangle(brushes[entry.Key], null, new Rect(start * charWidth, y, width * charWidth + 1, lineHeight));
@@ -370,10 +373,11 @@ namespace NeoEdit.TextEditor
 					if ((selection.Pos1 < lineRange.Start) || (selection.Pos1 > lineRange.End))
 						continue;
 
-					var column = GetColumnFromIndex(lineStr, Data.GetOffsetIndex(selection.Pos1, line));
-					if ((column < startChar) || (column > endChar))
+					var selIndex = Data.GetOffsetIndex(selection.Pos1, line);
+					if ((selIndex < startIndex) || (selIndex > endIndex))
 						continue;
-					dc.DrawRectangle(Brushes.Black, null, new Rect((column - startChar) * charWidth, y, 1, lineHeight));
+					var column = GetColumnFromIndex(lineStr, selIndex);
+					dc.DrawRectangle(Brushes.Black, null, new Rect((column - startColumn) * charWidth, y, 1, lineHeight));
 				}
 
 				var index = 0;
@@ -395,7 +399,7 @@ namespace NeoEdit.TextEditor
 				}
 
 				var str = sb.ToString();
-				if (str.Length <= startChar)
+				if (str.Length <= startColumn)
 					continue;
 
 				var highlight = new List<Tuple<Brush, int, int>>();
@@ -406,11 +410,11 @@ namespace NeoEdit.TextEditor
 						highlight.Add(new Tuple<Brush, int, int>(entry.Value, match.Index, match.Length));
 				}
 
-				str = str.Substring(startChar, Math.Min(endChar, str.Length) - startChar);
+				str = str.Substring(startColumn, Math.Min(endColumn, str.Length) - startColumn);
 				var text = new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 				foreach (var entry in highlight)
 				{
-					var start = entry.Item2 - startChar;
+					var start = entry.Item2 - startColumn;
 					var count = entry.Item3;
 					if (start < 0)
 					{
