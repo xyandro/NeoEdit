@@ -1092,6 +1092,36 @@ namespace NeoEdit.TextEditor
 			ranges[RangeType.Selection] = selections;
 		}
 
+		string ProperCase(string input)
+		{
+			var sb = new StringBuilder(input.Length);
+			for (var ctr = 0; ctr < input.Length; ++ctr)
+			{
+				if (!Char.IsLetter(input[ctr]))
+					sb.Append(input[ctr]);
+				else if ((ctr == 0) || (!Char.IsLetterOrDigit(input[ctr - 1])))
+					sb.Append(Char.ToUpperInvariant(input[ctr]));
+				else
+					sb.Append(Char.ToLowerInvariant(input[ctr]));
+			}
+			return sb.ToString();
+		}
+
+		string ToggleCase(string input)
+		{
+			var sb = new StringBuilder(input.Length);
+			for (var ctr = 0; ctr < input.Length; ++ctr)
+			{
+				if (!Char.IsLetter(input[ctr]))
+					sb.Append(input[ctr]);
+				else if (Char.IsLower(input[ctr]))
+					sb.Append(Char.ToUpperInvariant(input[ctr]));
+				else
+					sb.Append(Char.ToLowerInvariant(input[ctr]));
+			}
+			return sb.ToString();
+		}
+
 		public void RunCommand(ICommand command)
 		{
 			InvalidateVisual();
@@ -1205,16 +1235,28 @@ namespace NeoEdit.TextEditor
 				else
 					Replace(new List<Range> { new Range { Pos1 = 0, Pos2 = 0 } }, new List<string> { "\ufeff" }, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_Char_ToUpper)
+			else if (command == TextEditorWindow.Command_Data_Char_Upper)
 			{
 				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_Char_ToLower)
+			else if (command == TextEditorWindow.Command_Data_Char_Lower)
 			{
 				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Char_Proper)
+			{
+				var selections = ranges[RangeType.Selection];
+				var strs = selections.Select(range => ProperCase(GetString(range))).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Char_Toggle)
+			{
+				var selections = ranges[RangeType.Selection];
+				var strs = selections.Select(range => ToggleCase(GetString(range))).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == TextEditorWindow.Command_Data_Hex_ToHex)

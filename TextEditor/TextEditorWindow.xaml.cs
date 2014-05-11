@@ -31,8 +31,10 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Edit_GotoLine = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoIndex = new RoutedCommand();
 		public static RoutedCommand Command_Edit_BOM = new RoutedCommand();
-		public static RoutedCommand Command_Data_Char_ToUpper = new RoutedCommand();
-		public static RoutedCommand Command_Data_Char_ToLower = new RoutedCommand();
+		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
+		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
+		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
+		public static RoutedCommand Command_Data_Char_Toggle = new RoutedCommand();
 		public static RoutedCommand Command_Data_Hex_ToHex = new RoutedCommand();
 		public static RoutedCommand Command_Data_Hex_FromHex = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_ToChar = new RoutedCommand();

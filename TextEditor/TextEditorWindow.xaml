@@ -29,8 +29,10 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_BOM" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToUpper" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToLower" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Toggle" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Executed="Command_Executed"/>
@@ -84,8 +86,8 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToUpper" Key="U" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToLower" Key="U" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Key="U" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Key="U" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Key="H" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Key="D3" Modifiers="Control+Shift"/>
@@ -160,16 +162,18 @@
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToUpper" Header="Upper case"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToLower" Header="Lower case"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Header="_Upper"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Header="_Lower"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Header="_Proper"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_Toggle" Header="_Toggle"/>
 				</MenuItem>
 				<MenuItem Header="_Hex">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Header="To hex"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Header="From hex"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Header="_To hex"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Header="_From hex"/>
 				</MenuItem>
 				<MenuItem Header="Ch_ar">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Header="To char"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Header="From char"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Header="_To char"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Header="_From char"/>
 				</MenuItem>
 				<Separator/>
 				<MenuItem Header="_Sort">
