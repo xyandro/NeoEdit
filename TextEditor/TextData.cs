@@ -98,9 +98,10 @@ namespace NeoEdit.TextEditor
 
 		public int GetOffsetLine(int offset)
 		{
-			int line;
-			for (line = 0; (line < lineIndex.Count) && (offset >= lineIndex[line]); line++) ;
-			return --line;
+			var line = lineIndex.BinarySearch(offset);
+			if (line < 0)
+				line = ~line - 1;
+			return line;
 		}
 
 		public int GetOffsetIndex(int offset, int line)
