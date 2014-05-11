@@ -1237,7 +1237,9 @@ namespace NeoEdit.TextEditor
 				FindNext(true);
 			}
 			else if ((command == TextEditorWindow.Command_Edit_FindNext) || (command == TextEditorWindow.Command_Edit_FindPrev))
+			{
 				FindNext(command == TextEditorWindow.Command_Edit_FindNext);
+			}
 			else if (command == TextEditorWindow.Command_Edit_GotoLine)
 			{
 				var shift = shiftDown;
@@ -1332,66 +1334,11 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_Length)
-			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range).Length.ToString()).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditorWindow.Command_Data_Width)
+			else if (command == TextEditorWindow.Command_Data_Sort)
 			{
 				var selections = ranges[RangeType.Selection];
-				var minWidth = selections.Select(range => range.Length).Max();
-				var text = String.Join("", selections.Select(range => GetString(range)));
-				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
-				var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
-				if (widthDialog.ShowDialog() == true)
-					Replace(selections, selections.Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
-			}
-			else if (command == TextEditorWindow.Command_Data_Trim)
-			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
+				var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
 				Replace(selections, strs, true);
-			}
-			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_SetValues1)
-			{
-				// Handles keys as well as values
-				var index = GetKeysValuesIndex(command);
-				var values = ranges[RangeType.Selection].Select(range => GetString(range)).ToList();
-				if ((index == 0) && (values.Distinct().Count() != values.Count))
-					throw new ArgumentException("Cannot have duplicate keys.");
-				keysAndValues[index] = values;
-			}
-			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_KeysToValues1)
-			{
-				var index = GetKeysValuesIndex(command);
-				if (keysAndValues[0].Count != keysAndValues[index].Count)
-					throw new Exception("Keys and values count must match.");
-
-				var strs = new List<string>();
-				foreach (var range in ranges[RangeType.Selection])
-				{
-					var str = GetString(range);
-					var found = keysAndValues[0].IndexOf(str);
-					if (found == -1)
-						strs.Add(str);
-					else
-						strs.Add(keysAndValues[index][found]);
-				}
-				Replace(ranges[RangeType.Selection], strs, true);
-			}
-			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_CopyValues1)
-				ClipboardWindow.Set(keysAndValues[GetKeysValuesIndex(command)].ToArray());
-			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_HitsValues1)
-			{
-				var index = GetKeysValuesIndex(command);
-				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => keysAndValues[index].Contains(GetString(range))).ToList();
-			}
-			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_MissesValues1)
-			{
-				var index = GetKeysValuesIndex(command);
-				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => !keysAndValues[index].Contains(GetString(range))).ToList();
 			}
 			else if (command == TextEditorWindow.Command_Data_Reverse)
 			{
@@ -1399,62 +1346,23 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => GetString(range)).Reverse().ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_Sort)
-			{
-				var selections = ranges[RangeType.Selection];
-				var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditorWindow.Command_Data_Evaluate)
-			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.Common.Expression(expr).Evaluate().ToString()).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditorWindow.Command_Data_Unique)
-			{
-				var selections = ranges[RangeType.Selection];
-				var dups = selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList();
-				ranges[RangeType.Selection] = dups;
-			}
-			else if (command == TextEditorWindow.Command_Data_Duplicates)
-			{
-				var selections = ranges[RangeType.Selection];
-				var dups = selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList();
-				if (dups.Count != 0)
-					ranges[RangeType.Selection] = dups;
-			}
 			else if (command == TextEditorWindow.Command_Data_Randomize)
 			{
 				var rng = new Random();
 				var strs = ranges[RangeType.Selection].Select(range => GetString(range)).OrderBy(range => rng.Next()).ToList();
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_Series)
+			else if (command == TextEditorWindow.Command_Data_SortByLength)
 			{
-				var strs = Enumerable.Range(1, ranges[RangeType.Selection].Count).Select(num => num.ToString()).ToList();
-				Replace(ranges[RangeType.Selection], strs, true);
-			}
-			else if (command == TextEditorWindow.Command_Data_Duplicate)
-			{
-				var duplicateDialog = new DuplicateDialog();
-				if (duplicateDialog.ShowDialog() != true)
-					return;
-
-				var strs = ranges[RangeType.Selection].Select(range => RepeatString(GetString(range), duplicateDialog.DupCount + 1)).ToList();
-				Replace(ranges[RangeType.Selection], strs, true);
+				var selections = ranges[RangeType.Selection];
+				var strs = selections.Select(range => GetString(range)).OrderBy(str => str.Length).ToList();
+				Replace(selections, strs, true);
 			}
 			else if (command == TextEditorWindow.Command_Data_Sort_Lines_BySelection)
 			{
 				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
 				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
 				SortRegions(regions, ordering);
-			}
-			else if (command == TextEditorWindow.Command_Data_SortByLength)
-			{
-				var selections = ranges[RangeType.Selection];
-				var strs = selections.Select(range => GetString(range)).OrderBy(str => str.Length).ToList();
-				Replace(selections, strs, true);
 			}
 			else if (command == TextEditorWindow.Command_Data_Sort_Lines_ByKeys)
 			{
@@ -1506,6 +1414,102 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Mark].Clear();
 				SortRegions(regions, ordering);
 			}
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_SetValues1)
+			{
+				// Handles keys as well as values
+				var index = GetKeysValuesIndex(command);
+				var values = ranges[RangeType.Selection].Select(range => GetString(range)).ToList();
+				if ((index == 0) && (values.Distinct().Count() != values.Count))
+					throw new ArgumentException("Cannot have duplicate keys.");
+				keysAndValues[index] = values;
+			}
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_KeysToValues1)
+			{
+				var index = GetKeysValuesIndex(command);
+				if (keysAndValues[0].Count != keysAndValues[index].Count)
+					throw new Exception("Keys and values count must match.");
+
+				var strs = new List<string>();
+				foreach (var range in ranges[RangeType.Selection])
+				{
+					var str = GetString(range);
+					var found = keysAndValues[0].IndexOf(str);
+					if (found == -1)
+						strs.Add(str);
+					else
+						strs.Add(keysAndValues[index][found]);
+				}
+				Replace(ranges[RangeType.Selection], strs, true);
+			}
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_CopyValues1)
+			{
+				ClipboardWindow.Set(keysAndValues[GetKeysValuesIndex(command)].ToArray());
+			}
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_HitsValues1)
+			{
+				var index = GetKeysValuesIndex(command);
+				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => keysAndValues[index].Contains(GetString(range))).ToList();
+			}
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_MissesValues1)
+			{
+				var index = GetKeysValuesIndex(command);
+				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => !keysAndValues[index].Contains(GetString(range))).ToList();
+			}
+			else if (command == TextEditorWindow.Command_Data_Length)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range).Length.ToString()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Width)
+			{
+				var selections = ranges[RangeType.Selection];
+				var minWidth = selections.Select(range => range.Length).Max();
+				var text = String.Join("", selections.Select(range => GetString(range)));
+				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
+				var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
+				if (widthDialog.ShowDialog() == true)
+					Replace(selections, selections.Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Trim)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Evaluate)
+			{
+				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.Common.Expression(expr).Evaluate().ToString()).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Series)
+			{
+				var strs = Enumerable.Range(1, ranges[RangeType.Selection].Count).Select(num => num.ToString()).ToList();
+				Replace(ranges[RangeType.Selection], strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Duplicate)
+			{
+				var duplicateDialog = new DuplicateDialog();
+				if (duplicateDialog.ShowDialog() != true)
+					return;
+
+				var strs = ranges[RangeType.Selection].Select(range => RepeatString(GetString(range), duplicateDialog.DupCount + 1)).ToList();
+				Replace(ranges[RangeType.Selection], strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Unique)
+			{
+				var selections = ranges[RangeType.Selection];
+				var dups = selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList();
+				ranges[RangeType.Selection] = dups;
+			}
+			else if (command == TextEditorWindow.Command_Data_Duplicates)
+			{
+				var selections = ranges[RangeType.Selection];
+				var dups = selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList();
+				if (dups.Count != 0)
+					ranges[RangeType.Selection] = dups;
+			}
 			else if (command == TextEditorWindow.Command_Data_MD5)
 			{
 				var strs = ranges[RangeType.Selection].Select(range => Checksum.Get(Checksum.Type.MD5, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
@@ -1543,7 +1547,9 @@ namespace NeoEdit.TextEditor
 				InvalidateVisual();
 			}
 			else if (command == TextEditorWindow.Command_Select_Single)
+			{
 				ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
+			}
 			else if (command == TextEditorWindow.Command_Select_Lines)
 			{
 				var selectLinesDialog = new SelectLinesDialog();
@@ -1559,13 +1565,6 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Selection] = sels;
 				InvalidateVisual();
 			}
-			else if (command == TextEditorWindow.Command_Select_Find)
-			{
-				ranges[RangeType.Selection] = ranges[RangeType.Search];
-				ranges[RangeType.Search] = new List<Range>();
-			}
-			else if (command == TextEditorWindow.Command_Select_RemoveEmpty)
-				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 			else if (command == TextEditorWindow.Command_Select_Marks)
 			{
 				if (ranges[RangeType.Mark].Count == 0)
@@ -1574,18 +1573,23 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Selection] = ranges[RangeType.Mark];
 				ranges[RangeType.Mark] = new List<Range>();
 			}
-			else if (command == TextEditorWindow.Command_Mark_Find)
+			else if (command == TextEditorWindow.Command_Select_Find)
 			{
-				ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
+				ranges[RangeType.Selection] = ranges[RangeType.Search];
 				ranges[RangeType.Search] = new List<Range>();
+			}
+			else if (command == TextEditorWindow.Command_Select_RemoveEmpty)
+			{
+				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 			}
 			else if (command == TextEditorWindow.Command_Mark_Selection)
 			{
 				ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
 			}
-			else if (command == TextEditorWindow.Command_Mark_LimitToSelection)
+			else if (command == TextEditorWindow.Command_Mark_Find)
 			{
-				ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
+				ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
+				ranges[RangeType.Search] = new List<Range>();
 			}
 			else if (command == TextEditorWindow.Command_Mark_Clear)
 			{
@@ -1600,6 +1604,10 @@ namespace NeoEdit.TextEditor
 						toRemove.ForEach(mark => ranges[RangeType.Mark].Remove(mark));
 					}
 				}
+			}
+			else if (command == TextEditorWindow.Command_Mark_LimitToSelection)
+			{
+				ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
 			}
 		}
 
