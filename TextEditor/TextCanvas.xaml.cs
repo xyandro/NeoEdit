@@ -1049,6 +1049,44 @@ namespace NeoEdit.TextEditor
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
+		void SortRegions(List<Range> regions, List<int> ordering)
+		{
+			var selections = ranges[RangeType.Selection].Select(range => range.Copy()).ToList();
+			if ((selections.Count != regions.Count) || (regions.Count != ordering.Count))
+				throw new Exception("Selections, regions, and ordering must match");
+
+			var orderedRegions = regions.OrderBy(range => range.Start).ToList();
+			var pos = 0;
+			foreach (var range in orderedRegions)
+			{
+				if (range.Start < pos)
+					throw new Exception("Regions cannot overlap");
+				pos = range.End;
+			}
+
+			for (var ctr = 0; ctr < selections.Count; ++ctr)
+			{
+				if ((selections[ctr].Start < regions[ctr].Start) || (selections[ctr].End > regions[ctr].End))
+					throw new Exception("Selection must be in region");
+			}
+
+			orderedRegions = ordering.Select(index => regions[index]).ToList();
+			var replaceStrs = orderedRegions.Select(range => GetString(range)).ToList();
+
+			var add = 0;
+			for (var ctr = 0; ctr < selections.Count; ++ctr)
+			{
+				var orderCtr = ordering[ctr];
+				selections[orderCtr].Pos1 = selections[orderCtr].Pos1 - regions[orderCtr].Pos1 + regions[ctr].Pos1 + add;
+				selections[orderCtr].Pos2 = selections[orderCtr].Pos2 - regions[orderCtr].Pos1 + regions[ctr].Pos1 + add;
+				add += replaceStrs[ctr].Length - regions[ctr].Length;
+			}
+			selections = ordering.Select(num => selections[num]).ToList();
+
+			Replace(regions, replaceStrs, false);
+			ranges[RangeType.Selection] = selections;
+		}
+
 		public void RunCommand(ICommand command)
 		{
 			InvalidateVisual();
@@ -1285,20 +1323,9 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == TextEditorWindow.Command_Data_SortLineBySelection)
 			{
-				if (ranges[RangeType.Selection].Any(selection => Data.GetOffsetLine(selection.Start) != Data.GetOffsetLine(selection.End - 1)))
-					throw new Exception("Selections must stay on the same line");
-				if (ranges[RangeType.Selection].Select(selection => Data.GetOffsetLine(selection.Start)).GroupBy(line => line).Any(group => group.Count() != 1))
-					throw new Exception("Only one selections per line");
-
-				var sortStrAndLine = ranges[RangeType.Selection].Select(selection => new { sortStr = GetString(selection), line = Data.GetOffsetLine(selection.Start) }).ToList();
-				var sortStrAndOffsetAndLen = sortStrAndLine.Select(data => new { sortStr = data.sortStr, offset = Data.GetOffset(data.line, 0), length = Data[data.line].Length }).ToList();
-				var sortStrAndRange = sortStrAndOffsetAndLen.Select(data => new { sortStr = data.sortStr, range = new Range { Pos1 = data.offset, Pos2 = data.offset + data.length } }).ToList();
-				var sortStrAndRangeAndLine = sortStrAndRange.Select(data => new { sortStr = data.sortStr, range = data.range, line = GetString(data.range) }).ToList();
-
-				var lineRanges = sortStrAndRangeAndLine.Select(data => data.range).ToList();
-				var replaceStrs = sortStrAndRangeAndLine.OrderBy(data => data.sortStr).Select(data => data.line).ToList();
-
-				Replace(lineRanges, replaceStrs, true);
+				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
+				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
+				SortRegions(regions, ordering);
 			}
 			else if (command == TextEditorWindow.Command_Data_SortByLength)
 			{
