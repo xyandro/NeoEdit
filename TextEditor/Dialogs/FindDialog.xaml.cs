@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
@@ -35,7 +36,14 @@ namespace NeoEdit.TextEditor.Dialogs
 			matchCase.IsChecked = matchCaseVal;
 			regularExpression.IsChecked = regularExpressionVal;
 
-			Loaded += (s, e) => { if ((Text == null) && (History.Count != 0)) findText.SelectedIndex = 0; };
+			Loaded += (s, e) =>
+			{
+				if ((Text == null) && (History.Count != 0))
+					findText.SelectedIndex = 0;
+				var textbox = findText.Template.FindName("PART_EditableTextBox", findText) as TextBox;
+				textbox.AcceptsTab = true;
+			};
+
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)
