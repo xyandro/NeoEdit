@@ -21,7 +21,6 @@ namespace NeoEdit.TextEditor.Dialogs
 			InitializeComponent();
 
 			LineMult = 1;
-			IgnoreBlankLines = true;
 
 			lineMult.SelectAll();
 		}
