@@ -161,8 +161,13 @@ namespace NeoEdit.TextEditor
 			catch { }
 		}
 
+		Range visibleSelection;
 		void EnsureVisible(Range selection)
 		{
+			if ((visibleSelection != null) && (visibleSelection.Pos1 == selection.Pos1) && (visibleSelection.Pos2 == selection.Pos2))
+				return;
+
+			visibleSelection = selection.Copy();
 			var line = Data.GetOffsetLine(selection.Pos1);
 			var index = Data.GetOffsetIndex(selection.Pos1, line);
 			yScrollValue = Math.Min(line, Math.Max(line - numLines + 1, yScrollValue));
