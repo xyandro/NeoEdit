@@ -223,7 +223,7 @@
 					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
@@ -374,46 +374,42 @@
 		</Menu>
 
 		<textEditor:TextCanvas x:Name="canvas" Grid.Row="1"
-			Data="{Binding Data, ElementName=self, Mode=TwoWay}"
-			HighlightType="{Binding HighlightType, ElementName=self, Mode=TwoWay}"
-			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"
-			xScrollLargeChange="{Binding LargeChange, ElementName=xScroll, Mode=OneWayToSource}"
-			xScrollMaximum="{Binding Maximum, ElementName=xScroll, Mode=OneWayToSource}"
-			xScrollValue="{Binding Value, ElementName=xScroll, Mode=TwoWay}"
-			yScrollSmallChange="{Binding SmallChange, ElementName=yScroll, Mode=OneWayToSource}"
-			yScrollLargeChange="{Binding LargeChange, ElementName=yScroll, Mode=OneWayToSource}"
-			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=OneWayToSource}"
-			yScrollValue="{Binding Value, ElementName=yScroll, Mode=TwoWay}"
+			TextInput="OnCanvasTextInput"
+			KeyDown="OnCanvasKeyDown"
+			MouseLeftButtonDown="OnCanvasMouseLeftButtonDown"
+			MouseLeftButtonUp="OnCanvasMouseLeftButtonUp"
+			MouseMove="OnCanvasMouseMove"
 		/>
-		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
-		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>
+
+		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1" Value="{Binding yScrollValue, ElementName=self, Mode=TwoWay}"/>
+		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self, Mode=TwoWay}"/>
 		<StatusBar Grid.ColumnSpan="2" Grid.Row="3">
 			<StatusBarItem>
 				<TextBlock Text="Line"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Line, ElementName=canvas}"/>
+				<TextBlock Text="{Binding Line, ElementName=self}"/>
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Col"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Column, ElementName=canvas}"/>
+				<TextBlock Text="{Binding Column, ElementName=self}"/>
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Ch"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Index, ElementName=canvas}"/>
+				<TextBlock Text="{Binding Index, ElementName=self}"/>
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Selections"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding NumSelections, ElementName=canvas}"/>
+				<TextBlock Text="{Binding NumSelections, ElementName=self}"/>
 			</StatusBarItem>
 		</StatusBar>
 	</Grid>
