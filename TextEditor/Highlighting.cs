@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
@@ -12,6 +13,15 @@ namespace NeoEdit.TextEditor
 		{
 			None,
 			CSharp,
+		}
+
+		public static HighlightingType Get(string filename)
+		{
+			switch (Path.GetExtension(filename).ToLowerInvariant())
+			{
+				case ".cs": return HighlightingType.CSharp;
+				default: return HighlightingType.None;
+			}
 		}
 
 		public static Highlighting Get(HighlightingType type)

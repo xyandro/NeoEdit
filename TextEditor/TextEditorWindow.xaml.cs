@@ -136,6 +136,18 @@ namespace NeoEdit.TextEditor
 			uiHelper = new UIHelper<TextEditorWindow>(this);
 			InitializeComponent();
 
+			OpenFile(filename, bytes, encoding);
+
+			canvas.GotoPos(line.HasValue ? line.Value : 1, column.HasValue ? column.Value : 1);
+			CoderUsed = Data.CoderUsed;
+
+			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
+			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
+			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
+		}
+
+		void OpenFile(string filename, byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
+		{
 			FileName = filename;
 			if (bytes == null)
 			{
@@ -145,12 +157,7 @@ namespace NeoEdit.TextEditor
 					bytes = File.ReadAllBytes(FileName);
 			}
 			Data = new TextData(bytes, encoding);
-			canvas.GotoPos(line.HasValue ? line.Value : 1, column.HasValue ? column.Value : 1);
-			CoderUsed = Data.CoderUsed;
-
-			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
-			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
-			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
+			HighlightType = Highlighting.Get(FileName);
 		}
 
 		protected override void OnTextInput(System.Windows.Input.TextCompositionEventArgs e)
@@ -183,10 +190,7 @@ namespace NeoEdit.TextEditor
 			{
 				var dialog = new OpenFileDialog();
 				if (dialog.ShowDialog() == true)
-				{
-					FileName = dialog.FileName;
-					Data = new TextData(File.ReadAllBytes(FileName));
-				}
+					OpenFile(dialog.FileName);
 			}
 			else if (command == Command_File_Save)
 			{
