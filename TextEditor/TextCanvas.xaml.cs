@@ -72,11 +72,19 @@ namespace NeoEdit.TextEditor
 				return new Range { Pos1 = Pos1, Pos2 = Pos2 };
 			}
 
-			public int Pos1 { get; set; }
-			public int Pos2 { get; set; }
-			public int Start { get { return Math.Min(Pos1, Pos2); } }
-			public int End { get { return Math.Max(Pos1, Pos2); } }
-			public int Length { get { return Math.Abs(Pos1 - Pos2); } }
+			void CalcParams()
+			{
+				Start = Math.Min(Pos1, Pos2);
+				End = Math.Max(Pos1, Pos2);
+				Length = Math.Abs(Pos1 - Pos2);
+			}
+
+			int pos1, pos2;
+			public int Pos1 { get { return pos1; } set { pos1 = value; CalcParams(); } }
+			public int Pos2 { get { return pos2; } set { pos2 = value; CalcParams(); } }
+			public int Start { get; private set; }
+			public int End { get; private set; }
+			public int Length { get; private set; }
 
 			public bool HasSelection()
 			{
@@ -977,7 +985,8 @@ namespace NeoEdit.TextEditor
 			var oldToNewMap = new Dictionary<int, int>();
 			var replaceRange = 0;
 			var offset = 0;
-			while (numsToMap.Count != 0)
+			var current = 0;
+			while (current < numsToMap.Count)
 			{
 				int start = Int32.MaxValue, end = Int32.MaxValue, length = 0;
 				if (replaceRange < replaceRanges.Count)
@@ -987,19 +996,19 @@ namespace NeoEdit.TextEditor
 					length = strs[replaceRange].Length;
 				}
 
-				if (numsToMap[0] >= end)
+				if (numsToMap[current] >= end)
 				{
 					offset += start - end + length;
 					++replaceRange;
 					continue;
 				}
 
-				var value = numsToMap[0];
+				var value = numsToMap[current];
 				if ((value > start) && (value < end))
 					value = start + length;
 
-				oldToNewMap[numsToMap[0]] = value + offset;
-				numsToMap.RemoveAt(0);
+				oldToNewMap[numsToMap[current]] = value + offset;
+				++current;
 			}
 
 			foreach (var range in ranges.SelectMany(rangePair => rangePair.Value))
