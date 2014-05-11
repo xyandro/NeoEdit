@@ -59,6 +59,36 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues7" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues8" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues9" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyKeys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues1" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues2" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues3" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues4" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues5" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues6" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues7" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues8" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues9" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsKeys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues1" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues2" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues3" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues4" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues5" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues6" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues7" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues8" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues9" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesKeys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues1" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues2" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues3" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues4" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues5" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues6" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues7" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues8" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues9" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Reverse" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Executed="Command_Executed"/>
@@ -227,27 +257,63 @@
 				<Separator/>
 				<MenuItem Header="_Keys">
 					<MenuItem Header="_Set">
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetKeys" Header="Set _keys"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues1" Header="Set values _1"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues2" Header="Set values _2"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues3" Header="Set values _3"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues4" Header="Set values _4"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues5" Header="Set values _5"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues6" Header="Set values _6"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues7" Header="Set values _7"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues8" Header="Set values _8"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues9" Header="Set values _9"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetKeys" Header="_Keys"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues1" Header="Values _1"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues2" Header="Values _2"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues3" Header="Values _3"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues4" Header="Values _4"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues5" Header="Values _5"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues6" Header="Values _6"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues7" Header="Values _7"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues8" Header="Values _8"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues9" Header="Values _9"/>
 					</MenuItem>
-					<MenuItem Header="_To values">
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues1" Header="Keys to values _1"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues2" Header="Keys to values _2"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues3" Header="Keys to values _3"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues4" Header="Keys to values _4"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues5" Header="Keys to values _5"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues6" Header="Keys to values _6"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues7" Header="Keys to values _7"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues8" Header="Keys to values _8"/>
-						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues9" Header="Keys to values _9"/>
+					<MenuItem Header="_Transform to">
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues1" Header="Values _1"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues2" Header="Values _2"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues3" Header="Values _3"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues4" Header="Values _4"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues5" Header="Values _5"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues6" Header="Values _6"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues7" Header="Values _7"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues8" Header="Values _8"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_KeysToValues9" Header="Values _9"/>
+					</MenuItem>
+					<MenuItem Header="_Copy">
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyKeys" Header="_Keys"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues1" Header="Values _1"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues2" Header="Values _2"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues3" Header="Values _3"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues4" Header="Values _4"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues5" Header="Values _5"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues6" Header="Values _6"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues7" Header="Values _7"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues8" Header="Values _8"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_CopyValues9" Header="Values _9"/>
+					</MenuItem>
+					<MenuItem Header="_Hits">
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsKeys" Header="_Keys"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues1" Header="Values _1"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues2" Header="Values _2"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues3" Header="Values _3"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues4" Header="Values _4"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues5" Header="Values _5"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues6" Header="Values _6"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues7" Header="Values _7"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues8" Header="Values _8"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_HitsValues9" Header="Values _9"/>
+					</MenuItem>
+					<MenuItem Header="_Misses">
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesKeys" Header="_Keys"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues1" Header="Values _1"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues2" Header="Values _2"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues3" Header="Values _3"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues4" Header="Values _4"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues5" Header="Values _5"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues6" Header="Values _6"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues7" Header="Values _7"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues8" Header="Values _8"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Keys_MissesValues9" Header="Values _9"/>
 					</MenuItem>
 				</MenuItem>
 				<Separator/>

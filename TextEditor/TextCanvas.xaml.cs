@@ -1126,34 +1126,39 @@ namespace NeoEdit.TextEditor
 		{
 			if ((command == TextEditorWindow.Command_Data_Keys_SetKeys) || (command == TextEditorWindow.Command_Data_Keys_SetValues1) || (command == TextEditorWindow.Command_Data_Keys_SetValues2) || (command == TextEditorWindow.Command_Data_Keys_SetValues3) || (command == TextEditorWindow.Command_Data_Keys_SetValues4) || (command == TextEditorWindow.Command_Data_Keys_SetValues5) || (command == TextEditorWindow.Command_Data_Keys_SetValues6) || (command == TextEditorWindow.Command_Data_Keys_SetValues7) || (command == TextEditorWindow.Command_Data_Keys_SetValues8) || (command == TextEditorWindow.Command_Data_Keys_SetValues9))
 				return TextEditorWindow.Command_Data_Keys_SetValues1;
-
 			if ((command == TextEditorWindow.Command_Data_Keys_KeysToValues1) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues2) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues3) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues4) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues5) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues6) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues7) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues8) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues9))
 				return TextEditorWindow.Command_Data_Keys_KeysToValues1;
+			if ((command == TextEditorWindow.Command_Data_Keys_CopyKeys) || (command == TextEditorWindow.Command_Data_Keys_CopyValues1) || (command == TextEditorWindow.Command_Data_Keys_CopyValues2) || (command == TextEditorWindow.Command_Data_Keys_CopyValues3) || (command == TextEditorWindow.Command_Data_Keys_CopyValues4) || (command == TextEditorWindow.Command_Data_Keys_CopyValues5) || (command == TextEditorWindow.Command_Data_Keys_CopyValues6) || (command == TextEditorWindow.Command_Data_Keys_CopyValues7) || (command == TextEditorWindow.Command_Data_Keys_CopyValues8) || (command == TextEditorWindow.Command_Data_Keys_CopyValues9))
+				return TextEditorWindow.Command_Data_Keys_CopyValues1;
+			if ((command == TextEditorWindow.Command_Data_Keys_HitsKeys) || (command == TextEditorWindow.Command_Data_Keys_HitsValues1) || (command == TextEditorWindow.Command_Data_Keys_HitsValues2) || (command == TextEditorWindow.Command_Data_Keys_HitsValues3) || (command == TextEditorWindow.Command_Data_Keys_HitsValues4) || (command == TextEditorWindow.Command_Data_Keys_HitsValues5) || (command == TextEditorWindow.Command_Data_Keys_HitsValues6) || (command == TextEditorWindow.Command_Data_Keys_HitsValues7) || (command == TextEditorWindow.Command_Data_Keys_HitsValues8) || (command == TextEditorWindow.Command_Data_Keys_HitsValues9))
+				return TextEditorWindow.Command_Data_Keys_HitsValues1;
+			if ((command == TextEditorWindow.Command_Data_Keys_MissesKeys) || (command == TextEditorWindow.Command_Data_Keys_MissesValues1) || (command == TextEditorWindow.Command_Data_Keys_MissesValues2) || (command == TextEditorWindow.Command_Data_Keys_MissesValues3) || (command == TextEditorWindow.Command_Data_Keys_MissesValues4) || (command == TextEditorWindow.Command_Data_Keys_MissesValues5) || (command == TextEditorWindow.Command_Data_Keys_MissesValues6) || (command == TextEditorWindow.Command_Data_Keys_MissesValues7) || (command == TextEditorWindow.Command_Data_Keys_MissesValues8) || (command == TextEditorWindow.Command_Data_Keys_MissesValues9))
+				return TextEditorWindow.Command_Data_Keys_MissesValues1;
 
 			return null;
 		}
 
 		int GetKeysValuesIndex(ICommand command)
 		{
-			if (command == TextEditorWindow.Command_Data_Keys_SetKeys)
+			if ((command == TextEditorWindow.Command_Data_Keys_SetKeys) || (command == TextEditorWindow.Command_Data_Keys_CopyKeys) || (command == TextEditorWindow.Command_Data_Keys_HitsKeys) || (command == TextEditorWindow.Command_Data_Keys_MissesKeys))
 				return 0;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues1) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues1))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues1) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues1) || (command == TextEditorWindow.Command_Data_Keys_CopyValues1) || (command == TextEditorWindow.Command_Data_Keys_HitsValues1) || (command == TextEditorWindow.Command_Data_Keys_MissesValues1))
 				return 1;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues2) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues2))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues2) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues2) || (command == TextEditorWindow.Command_Data_Keys_CopyValues2) || (command == TextEditorWindow.Command_Data_Keys_HitsValues2) || (command == TextEditorWindow.Command_Data_Keys_MissesValues2))
 				return 2;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues3) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues3))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues3) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues3) || (command == TextEditorWindow.Command_Data_Keys_CopyValues3) || (command == TextEditorWindow.Command_Data_Keys_HitsValues3) || (command == TextEditorWindow.Command_Data_Keys_MissesValues3))
 				return 3;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues4) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues4))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues4) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues4) || (command == TextEditorWindow.Command_Data_Keys_CopyValues4) || (command == TextEditorWindow.Command_Data_Keys_HitsValues4) || (command == TextEditorWindow.Command_Data_Keys_MissesValues4))
 				return 4;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues5) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues5))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues5) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues5) || (command == TextEditorWindow.Command_Data_Keys_CopyValues5) || (command == TextEditorWindow.Command_Data_Keys_HitsValues5) || (command == TextEditorWindow.Command_Data_Keys_MissesValues5))
 				return 5;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues6) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues6))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues6) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues6) || (command == TextEditorWindow.Command_Data_Keys_CopyValues6) || (command == TextEditorWindow.Command_Data_Keys_HitsValues6) || (command == TextEditorWindow.Command_Data_Keys_MissesValues6))
 				return 6;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues7) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues7))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues7) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues7) || (command == TextEditorWindow.Command_Data_Keys_CopyValues7) || (command == TextEditorWindow.Command_Data_Keys_HitsValues7) || (command == TextEditorWindow.Command_Data_Keys_MissesValues7))
 				return 7;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues8) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues8))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues8) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues8) || (command == TextEditorWindow.Command_Data_Keys_CopyValues8) || (command == TextEditorWindow.Command_Data_Keys_HitsValues8) || (command == TextEditorWindow.Command_Data_Keys_MissesValues8))
 				return 8;
-			if ((command == TextEditorWindow.Command_Data_Keys_SetValues9) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues9))
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues9) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues9) || (command == TextEditorWindow.Command_Data_Keys_CopyValues9) || (command == TextEditorWindow.Command_Data_Keys_HitsValues9) || (command == TextEditorWindow.Command_Data_Keys_MissesValues9))
 				return 9;
 			throw new Exception("Invalid keys/values command");
 		}
@@ -1367,6 +1372,18 @@ namespace NeoEdit.TextEditor
 						strs.Add(keysAndValues[index][found]);
 				}
 				Replace(ranges[RangeType.Selection], strs, true);
+			}
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_CopyValues1)
+				ClipboardWindow.Set(keysAndValues[GetKeysValuesIndex(command)].ToArray());
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_HitsValues1)
+			{
+				var index = GetKeysValuesIndex(command);
+				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => keysAndValues[index].Contains(GetString(range))).ToList();
+			}
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_MissesValues1)
+			{
+				var index = GetKeysValuesIndex(command);
+				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => !keysAndValues[index].Contains(GetString(range))).ToList();
 			}
 			else if (command == TextEditorWindow.Command_Data_Reverse)
 			{
