@@ -1163,6 +1163,14 @@ namespace NeoEdit.TextEditor
 			throw new Exception("Invalid keys/values command");
 		}
 
+		public string RepeatString(string input, int count)
+		{
+			var builder = new StringBuilder(input.Length * count);
+			for (int ctr = 0; ctr < count; ++ctr)
+				builder.Append(input);
+			return builder.ToString();
+		}
+
 		public void RunCommand(ICommand command)
 		{
 			InvalidateVisual();
@@ -1425,6 +1433,15 @@ namespace NeoEdit.TextEditor
 			else if (command == TextEditorWindow.Command_Data_Series)
 			{
 				var strs = Enumerable.Range(1, ranges[RangeType.Selection].Count).Select(num => num.ToString()).ToList();
+				Replace(ranges[RangeType.Selection], strs, true);
+			}
+			else if (command == TextEditorWindow.Command_Data_Duplicate)
+			{
+				var duplicateDialog = new DuplicateDialog();
+				if (duplicateDialog.ShowDialog() != true)
+					return;
+
+				var strs = ranges[RangeType.Selection].Select(range => RepeatString(GetString(range), duplicateDialog.DupCount + 1)).ToList();
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
 			else if (command == TextEditorWindow.Command_Data_Sort_Lines_BySelection)

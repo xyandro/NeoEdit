@@ -96,6 +96,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Duplicate" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_BySelection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortByLength" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_ByKeys" Executed="Command_Executed"/>
@@ -323,6 +324,7 @@
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Header="_Evaluate selections"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Duplicate" Header="Du_plicate"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unique" Header="_Unique"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Header="_Duplicates"/>

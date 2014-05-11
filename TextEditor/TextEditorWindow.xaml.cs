@@ -98,6 +98,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Duplicates = new RoutedCommand();
 		public static RoutedCommand Command_Data_Randomize = new RoutedCommand();
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
+		public static RoutedCommand Command_Data_Duplicate = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Lines_BySelection = new RoutedCommand();
 		public static RoutedCommand Command_Data_SortByLength = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Lines_ByKeys = new RoutedCommand();
