@@ -42,6 +42,7 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LinqHelper.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="Transform\Checksum.cs" />
     <Compile Include="Transform\Compression.cs" />

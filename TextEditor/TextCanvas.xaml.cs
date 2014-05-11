@@ -1333,6 +1333,15 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => GetString(range)).OrderBy(str => str.Length).ToList();
 				Replace(selections, strs, true);
 			}
+			else if (command == TextEditorWindow.Command_Data_SortLinesByKeys)
+			{
+				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
+
+				var sort = keysToValues.Keys.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
+				var ordering = ranges[RangeType.Selection].Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
+
+				SortRegions(regions, ordering);
+			}
 			else if (command == TextEditorWindow.Command_Data_MD5)
 			{
 				var strs = ranges[RangeType.Selection].Select(range => Checksum.Get(Checksum.Type.MD5, Encoding.UTF8.GetBytes(GetString(range)))).ToList();

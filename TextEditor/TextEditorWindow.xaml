@@ -50,6 +50,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortLineBySelection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortByLength" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortLinesByKeys" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Executed="Command_Executed"/>
@@ -182,6 +183,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortLineBySelection" Header="Sort _by selection"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortByLength" Header="Sort by length"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortLinesByKeys" Header="Sort by keys"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5" Header="MD5"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1" Header="SHA1"/>
