@@ -195,7 +195,7 @@ namespace NeoEdit.TextEditor
 
 		int GetColumnFromIndex(string lineStr, int findIndex)
 		{
-			if ((findIndex < 0) || (findIndex > lineStr.Length))
+			if (findIndex < 0)
 				throw new IndexOutOfRangeException();
 
 			var column = 0;
@@ -211,8 +211,9 @@ namespace NeoEdit.TextEditor
 				}
 
 				if (find == -1)
-					find = lineStr.Length;
-				find = Math.Min(find, findIndex);
+					find = findIndex;
+				else
+					find = Math.Min(find, findIndex);
 
 				column += find - index;
 				index = find;
@@ -232,11 +233,8 @@ namespace NeoEdit.TextEditor
 
 			var column = 0;
 			var index = 0;
-			while (index < lineStr.Length)
+			while (column < findColumn)
 			{
-				if (column >= findColumn)
-					break;
-
 				var find = lineStr.IndexOf('\t', index);
 				if (find == index)
 				{
@@ -244,10 +242,10 @@ namespace NeoEdit.TextEditor
 					++index;
 					continue;
 				}
-
 				if (find == -1)
-					find = lineStr.Length;
-				find = Math.Min(find, findColumn - column + index);
+					find = findColumn - column + index;
+				else
+					find = Math.Min(find, findColumn - column + index);
 
 				column += find - index;
 				index = find;
@@ -328,7 +326,7 @@ namespace NeoEdit.TextEditor
 			var endLine = Math.Min(Data.NumLines, startLine + numLines + 1);
 
 			var startColumn = xScrollValue;
-			var endColumn = Math.Min(columns, startColumn + numColumns + 1);
+			var endColumn = Math.Min(columns + 1, startColumn + numColumns + 1);
 
 			var highlightDictionary = Highlighting.Get(HighlightType).GetDictionary();
 
