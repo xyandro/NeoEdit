@@ -23,7 +23,7 @@
 		</StackPanel.Style>
 
 		<Label Content="Search for:"/>
-		<TextBox Name="findText" Margin="0,0,0,10" Width="500" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}"/>
+		<ComboBox Name="findText" Margin="0,0,0,10" Width="500" IsEditable="True" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}" ItemsSource="{Binding History, ElementName=self}"/>
 
 		<StackPanel>
 			<CheckBox Name="wholeWords" Content="_Whole words only"/>

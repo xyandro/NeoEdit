@@ -1221,8 +1221,20 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == TextEditorWindow.Command_Edit_Find)
 			{
+				string text = null;
 				var selectionOnly = ranges[RangeType.Selection].Any(range => range.HasSelection());
-				var findDialog = new FindDialog { SelectionOnly = selectionOnly };
+
+				if (ranges[RangeType.Selection].Count == 1)
+				{
+					var sel = ranges[RangeType.Selection].First();
+					if ((sel.HasSelection()) && (Data.GetOffsetLine(sel.Pos1) == Data.GetOffsetLine(sel.Pos2)))
+					{
+						selectionOnly = false;
+						text = GetString(sel);
+					}
+				}
+
+				var findDialog = new FindDialog { Text = text, SelectionOnly = selectionOnly };
 				if (findDialog.ShowDialog() != true)
 					return;
 
