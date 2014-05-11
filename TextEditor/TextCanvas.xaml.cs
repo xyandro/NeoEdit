@@ -90,7 +90,7 @@ namespace NeoEdit.TextEditor
 		}
 
 		Dictionary<RangeType, List<Range>> ranges = Helpers.GetValues<RangeType>().ToDictionary(rangeType => rangeType, rangeType => new List<Range>());
-		static Dictionary<string, string> keysToValues = new Dictionary<string, string>();
+		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
 
 		readonly Typeface typeface;
 		readonly double fontSize;
@@ -1122,6 +1122,42 @@ namespace NeoEdit.TextEditor
 			return sb.ToString();
 		}
 
+		ICommand GetKeysValuesCommand(ICommand command)
+		{
+			if ((command == TextEditorWindow.Command_Data_Keys_SetKeys) || (command == TextEditorWindow.Command_Data_Keys_SetValues1) || (command == TextEditorWindow.Command_Data_Keys_SetValues2) || (command == TextEditorWindow.Command_Data_Keys_SetValues3) || (command == TextEditorWindow.Command_Data_Keys_SetValues4) || (command == TextEditorWindow.Command_Data_Keys_SetValues5) || (command == TextEditorWindow.Command_Data_Keys_SetValues6) || (command == TextEditorWindow.Command_Data_Keys_SetValues7) || (command == TextEditorWindow.Command_Data_Keys_SetValues8) || (command == TextEditorWindow.Command_Data_Keys_SetValues9))
+				return TextEditorWindow.Command_Data_Keys_SetValues1;
+
+			if ((command == TextEditorWindow.Command_Data_Keys_KeysToValues1) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues2) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues3) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues4) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues5) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues6) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues7) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues8) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues9))
+				return TextEditorWindow.Command_Data_Keys_KeysToValues1;
+
+			return null;
+		}
+
+		int GetKeysValuesIndex(ICommand command)
+		{
+			if (command == TextEditorWindow.Command_Data_Keys_SetKeys)
+				return 0;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues1) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues1))
+				return 1;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues2) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues2))
+				return 2;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues3) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues3))
+				return 3;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues4) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues4))
+				return 4;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues5) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues5))
+				return 5;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues6) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues6))
+				return 6;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues7) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues7))
+				return 7;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues8) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues8))
+				return 8;
+			if ((command == TextEditorWindow.Command_Data_Keys_SetValues9) || (command == TextEditorWindow.Command_Data_Keys_KeysToValues9))
+				return 9;
+			throw new Exception("Invalid keys/values command");
+		}
+
 		public void RunCommand(ICommand command)
 		{
 			InvalidateVisual();
@@ -1305,26 +1341,32 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_SetKeys)
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_SetValues1)
 			{
-				var keys = ranges[RangeType.Selection].Select(range => GetString(range)).ToList();
-				if (keys.Distinct().Count() != keys.Count)
-					throw new ArgumentException("Cannot have duplicate keys.");
-				keysToValues = keys.ToDictionary(key => key, key => key);
-			}
-			else if (command == TextEditorWindow.Command_Data_SetValues)
-			{
-				var keys = keysToValues.Keys.ToList();
+				// Handles keys as well as values
+				var index = GetKeysValuesIndex(command);
 				var values = ranges[RangeType.Selection].Select(range => GetString(range)).ToList();
-				if (values.Count() != keys.Count)
-					throw new ArgumentException("Key count must match value count.");
-				keysToValues = Enumerable.Range(0, keys.Count).ToDictionary(num => keys[num], num => values[num]);
+				if ((index == 0) && (values.Distinct().Count() != values.Count))
+					throw new ArgumentException("Cannot have duplicate keys.");
+				keysAndValues[index] = values;
 			}
-			else if (command == TextEditorWindow.Command_Data_KeysToValues)
+			else if (GetKeysValuesCommand(command) == TextEditorWindow.Command_Data_Keys_KeysToValues1)
 			{
-				var selections = ranges[RangeType.Selection];
-				var strs = selections.Select(range => GetString(range)).Select(sel => keysToValues.ContainsKey(sel) ? keysToValues[sel] : sel).ToList();
-				Replace(selections, strs, true);
+				var index = GetKeysValuesIndex(command);
+				if (keysAndValues[0].Count != keysAndValues[index].Count)
+					throw new Exception("Keys and values count must match.");
+
+				var strs = new List<string>();
+				foreach (var range in ranges[RangeType.Selection])
+				{
+					var str = GetString(range);
+					var found = keysAndValues[0].IndexOf(str);
+					if (found == -1)
+						strs.Add(str);
+					else
+						strs.Add(keysAndValues[index][found]);
+				}
+				Replace(ranges[RangeType.Selection], strs, true);
 			}
 			else if (command == TextEditorWindow.Command_Data_Reverse)
 			{
@@ -1384,7 +1426,7 @@ namespace NeoEdit.TextEditor
 			{
 				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
 
-				var sort = keysToValues.Keys.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
+				var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
 				var ordering = ranges[RangeType.Selection].Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
 
 				SortRegions(regions, ordering);
@@ -1425,7 +1467,7 @@ namespace NeoEdit.TextEditor
 				if (ranges[RangeType.Mark].Count != regions.Count)
 					throw new Exception("Extra regions found.");
 
-				var sort = keysToValues.Keys.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
+				var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
 				var ordering = ranges[RangeType.Selection].Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
 				ranges[RangeType.Mark].Clear();
 				SortRegions(regions, ordering);
