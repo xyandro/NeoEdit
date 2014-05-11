@@ -29,12 +29,12 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_BOM" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToUpper" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToLower" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToHex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_FromHex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_ToChar" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_FromChar" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToUpper" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToLower" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Length" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Width" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Trim" Executed="Command_Executed"/>
@@ -48,11 +48,11 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortLineBySelection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_BySelection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortByLength" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortLinesByKeys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortRegionBySelection" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SortRegionByKeys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_ByKeys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_BySelection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_ByKeys" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Executed="Command_Executed"/>
@@ -68,7 +68,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Clear" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_LimitToSelection" Executed="Command_Executed"/>
 	</Window.CommandBindings>
-	
+
 	<Window.InputBindings>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_File_New" Key="N" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_File_Open" Key="O" Modifiers="Control"/>
@@ -84,12 +84,12 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_ToUpper" Key="U" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_ToLower" Key="U" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_ToHex" Key="H" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_FromHex" Key="H" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_ToChar" Key="D3" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_FromChar" Key="D3" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToUpper" Key="U" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToLower" Key="U" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Key="H" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Key="D3" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Key="D3" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_KeysToValues" Key="K" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Key="M" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_All" Key="A" Modifiers="Control"/>
@@ -159,35 +159,49 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=canvas}"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToUpper" Header="Upper case"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToLower" Header="Lower case"/>
+				<MenuItem Header="_Case">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToUpper" Header="Upper case"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToLower" Header="Lower case"/>
+				</MenuItem>
+				<MenuItem Header="_Hex">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Header="To hex"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Header="From hex"/>
+				</MenuItem>
+				<MenuItem Header="Ch_ar">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Header="To char"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Header="From char"/>
+				</MenuItem>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToHex" Header="To hex"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromHex" Header="From hex"/>
+				<MenuItem Header="_Sort">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort" Header="_Sort selections"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Reverse" Header="R_everse selections"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Randomize" Header="R_andomize"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortByLength" Header="Sort by le_ngth"/>
+					<MenuItem Header="_Lines">
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_BySelection" Header="By _selection"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_ByKeys" Header="By _keys"/>
+					</MenuItem>
+					<MenuItem Header="_Regions">
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_BySelection" Header="By _selection"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_ByKeys" Header="By _keys"/>
+					</MenuItem>
+				</MenuItem>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_ToChar" Header="To char"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_FromChar" Header="From char"/>
+				<MenuItem Header="_Keys">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SetKeys" Header="Set _keys"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SetValues" Header="Set _values"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_KeysToValues" Header="Keys _to values"/>
+				</MenuItem>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Length" Header="_Length"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Width" Header="_Width"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Trim" Header="_Trim"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SetKeys" Header="Set _keys"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SetValues" Header="Set _values"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_KeysToValues" Header="Keys to values"/>
-				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Reverse" Header="_Reverse selections"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort" Header="_Sort selections"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Header="_Evaluate selections"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>
+				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unique" Header="_Unique"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Header="_Duplicates"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Randomize" Header="R_andomize"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="Ser_ies"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortLineBySelection" Header="Sort _by selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortByLength" Header="Sort by length"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortLinesByKeys" Header="Sort by keys"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortRegionBySelection" Header="Sort region by selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SortRegionByKeys" Header="Sort region by keys"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5" Header="MD5"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1" Header="SHA1"/>

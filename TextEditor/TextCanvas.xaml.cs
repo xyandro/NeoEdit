@@ -1205,37 +1205,37 @@ namespace NeoEdit.TextEditor
 				else
 					Replace(new List<Range> { new Range { Pos1 = 0, Pos2 = 0 } }, new List<string> { "\ufeff" }, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_ToUpper)
+			else if (command == TextEditorWindow.Command_Data_Char_ToUpper)
 			{
 				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_ToLower)
+			else if (command == TextEditorWindow.Command_Data_Char_ToLower)
 			{
 				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_ToHex)
+			else if (command == TextEditorWindow.Command_Data_Hex_ToHex)
 			{
 				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_FromHex)
+			else if (command == TextEditorWindow.Command_Data_Hex_FromHex)
 			{
 				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_ToChar)
+			else if (command == TextEditorWindow.Command_Data_Char_ToChar)
 			{
 				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => ((char)UInt16.Parse(GetString(range), NumberStyles.HexNumber)).ToString()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_FromChar)
+			else if (command == TextEditorWindow.Command_Data_Char_FromChar)
 			{
 				var selections = ranges[RangeType.Selection].Where(range => range.Length == 1).ToList();
 				var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
@@ -1326,7 +1326,7 @@ namespace NeoEdit.TextEditor
 				var strs = Enumerable.Range(1, ranges[RangeType.Selection].Count).Select(num => num.ToString()).ToList();
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_SortLineBySelection)
+			else if (command == TextEditorWindow.Command_Data_Sort_Lines_BySelection)
 			{
 				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
 				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
@@ -1338,7 +1338,7 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => GetString(range)).OrderBy(str => str.Length).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == TextEditorWindow.Command_Data_SortLinesByKeys)
+			else if (command == TextEditorWindow.Command_Data_Sort_Lines_ByKeys)
 			{
 				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
 
@@ -1347,7 +1347,7 @@ namespace NeoEdit.TextEditor
 
 				SortRegions(regions, ordering);
 			}
-			else if (command == TextEditorWindow.Command_Data_SortRegionBySelection)
+			else if (command == TextEditorWindow.Command_Data_Sort_Regions_BySelection)
 			{
 				var regions = new List<Range>();
 				foreach (var selection in ranges[RangeType.Selection])
@@ -1367,7 +1367,7 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Mark].Clear();
 				SortRegions(regions, ordering);
 			}
-			else if (command == TextEditorWindow.Command_Data_SortRegionByKeys)
+			else if (command == TextEditorWindow.Command_Data_Sort_Regions_ByKeys)
 			{
 				var regions = new List<Range>();
 				foreach (var selection in ranges[RangeType.Selection])
