@@ -137,8 +137,6 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Key="U" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Key="H" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Key="D3" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Key="D3" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_SetKeys" Key="K" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues1" Key="D1" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues2" Key="D2" Modifiers="Control+Shift"/>
