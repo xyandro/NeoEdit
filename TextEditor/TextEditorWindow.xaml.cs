@@ -273,9 +273,7 @@ namespace NeoEdit.TextEditor
 				}
 			}
 			else if (command == Command_File_Exit)
-			{
 				Close();
-			}
 			else if (command == Command_Edit_Undo)
 			{
 				if (undo.Count == 0)
@@ -321,9 +319,7 @@ namespace NeoEdit.TextEditor
 				Replace(sels, result, false);
 			}
 			else if (command == Command_Edit_ShowClipboard)
-			{
 				ClipboardWindow.Show();
-			}
 			else if (command == Command_Edit_Find)
 			{
 				string text = null;
@@ -354,9 +350,7 @@ namespace NeoEdit.TextEditor
 				FindNext(true);
 			}
 			else if ((command == Command_Edit_FindNext) || (command == Command_Edit_FindPrev))
-			{
 				FindNext(command == Command_Edit_FindNext);
-			}
 			else if (command == Command_Edit_GotoLine)
 			{
 				var shift = shiftDown;
@@ -508,7 +502,7 @@ namespace NeoEdit.TextEditor
 
 				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
 				ranges[RangeType.Mark].Clear();
-				SortRegions(regions, ordering);
+				SortRegions(regions, ordering, true);
 			}
 			else if (command == Command_Data_Sort_Regions_ByKeys)
 			{
@@ -529,7 +523,7 @@ namespace NeoEdit.TextEditor
 				var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
 				var ordering = ranges[RangeType.Selection].Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
 				ranges[RangeType.Mark].Clear();
-				SortRegions(regions, ordering);
+				SortRegions(regions, ordering, true);
 			}
 			else if (GetKeysValuesCommand(command) == Command_Data_Keys_SetValues1)
 			{
@@ -559,9 +553,7 @@ namespace NeoEdit.TextEditor
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
 			else if (GetKeysValuesCommand(command) == Command_Data_Keys_CopyValues1)
-			{
 				ClipboardWindow.Set(keysAndValues[GetKeysValuesIndex(command)].ToArray());
-			}
 			else if (GetKeysValuesCommand(command) == Command_Data_Keys_HitsValues1)
 			{
 				var index = GetKeysValuesIndex(command);
@@ -664,9 +656,7 @@ namespace NeoEdit.TextEditor
 				InvalidateVisual();
 			}
 			else if (command == Command_Select_Single)
-			{
 				ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
-			}
 			else if (command == Command_Select_Lines)
 			{
 				var selectLinesDialog = new SelectLinesDialog();
@@ -696,13 +686,9 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Search] = new List<Range>();
 			}
 			else if (command == Command_Select_RemoveEmpty)
-			{
 				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
-			}
 			else if (command == Command_Mark_Selection)
-			{
 				ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
-			}
 			else if (command == Command_Mark_Find)
 			{
 				ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
@@ -723,9 +709,7 @@ namespace NeoEdit.TextEditor
 				}
 			}
 			else if (command == Command_Mark_LimitToSelection)
-			{
 				ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
-			}
 		}
 
 		void HighlightingClicked(object sender, RoutedEventArgs e)
@@ -1718,9 +1702,10 @@ namespace NeoEdit.TextEditor
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
-		void SortRegions(List<Range> regions, List<int> ordering)
+		void SortRegions(List<Range> regions, List<int> ordering, bool updateRegions = false)
 		{
 			var selections = ranges[RangeType.Selection].Select(range => range.Copy()).ToList();
+			var newRegions = regions.Select(range => range.Copy()).ToList();
 			if ((selections.Count != regions.Count) || (regions.Count != ordering.Count))
 				throw new Exception("Selections, regions, and ordering must match");
 
@@ -1748,12 +1733,18 @@ namespace NeoEdit.TextEditor
 				var orderCtr = ordering[ctr];
 				selections[orderCtr].Pos1 = selections[orderCtr].Pos1 - regions[orderCtr].Start + regions[ctr].Start + add;
 				selections[orderCtr].Pos2 = selections[orderCtr].Pos2 - regions[orderCtr].Start + regions[ctr].Start + add;
+
+				newRegions[orderCtr].Pos1 = newRegions[orderCtr].Pos1 - regions[orderCtr].Start + regions[ctr].Start + add;
+				newRegions[orderCtr].Pos2 = newRegions[orderCtr].Pos2 - regions[orderCtr].Start + regions[ctr].Start + add;
+
 				add += replaceStrs[ctr].Length - regions[ctr].Length;
 			}
 			selections = ordering.Select(num => selections[num]).ToList();
 
 			Replace(regions, replaceStrs, false);
 			ranges[RangeType.Selection] = selections;
+			if (updateRegions)
+				ranges[RangeType.Mark] = newRegions;
 		}
 
 		string ProperCase(string input)
