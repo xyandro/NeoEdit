@@ -1240,17 +1240,17 @@ namespace NeoEdit.TextEditor
 							SetPos1(selection, 0, Int32.MaxValue, indexRel: false);
 					break;
 				case Key.PageUp:
-					foreach (var selection in ranges[RangeType.Selection])
-						if (controlDown)
-							yScrollValue -= numLines / 2;
-						else
+					if (controlDown)
+						yScrollValue -= numLines / 2;
+					else
+						foreach (var selection in ranges[RangeType.Selection])
 							SetPos1(selection, 1 - numLines, 0);
 					break;
 				case Key.PageDown:
-					foreach (var selection in ranges[RangeType.Selection])
-						if (controlDown)
-							yScrollValue += numLines / 2;
-						else
+					if (controlDown)
+						yScrollValue += numLines / 2;
+					else
+						foreach (var selection in ranges[RangeType.Selection])
 							SetPos1(selection, numLines - 1, 0);
 					break;
 				case Key.Tab:
