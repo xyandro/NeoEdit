@@ -152,9 +152,13 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		public int NumSelections { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int xScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int xScrollValue { get { return uiHelper.GetPropValue<int>(); } set { value = (int)Math.Max(xScroll.Minimum, Math.Min(value, xScroll.Maximum)); uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int yScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int yScrollValue { get { return uiHelper.GetPropValue<int>(); } set { value = (int)Math.Max(yScroll.Minimum, Math.Min(value, yScroll.Maximum)); uiHelper.SetPropValue(value); } }
+
+		readonly RangeList Selections = new RangeList();
+		readonly RangeList Searches = new RangeList();
+		readonly RangeList Marks = new RangeList();
 
 		static TextEditorWindow() { UIHelper<TextEditorWindow>.Register(); }
 
@@ -168,7 +172,11 @@ namespace NeoEdit.TextEditor
 
 			OpenFile(filename, bytes, encoding);
 
-			GotoPos(line.HasValue ? line.Value : 1, column.HasValue ? column.Value : 1);
+			if (!line.HasValue)
+				line = column = 1;
+			if (!column.HasValue)
+				column = 1;
+			Selections.Add(new Range(Data.GetOffset(line.Value - 1, column.Value - 1)));
 			CoderUsed = Data.CoderUsed;
 
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
@@ -186,8 +194,9 @@ namespace NeoEdit.TextEditor
 
 			uiHelper.AddCallback(a => a.Data, (o, n) =>
 			{
-				foreach (var entry in ranges)
-					ranges[entry.Key].Clear();
+				Selections.Clear();
+				Marks.Clear();
+				Searches.Clear();
 				InvalidateVisual();
 				undo.Clear();
 				redo.Clear();
@@ -197,6 +206,9 @@ namespace NeoEdit.TextEditor
 			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => InvalidateVisual());
+			Selections.CollectionChanged += () => InvalidateVisual();
+			Searches.CollectionChanged += () => InvalidateVisual();
+			Marks.CollectionChanged += () => InvalidateVisual();
 
 			Loaded += (s, e) =>
 			{
@@ -240,6 +252,16 @@ namespace NeoEdit.TextEditor
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
 			RunCommand(e.Command);
+		}
+
+		int BeginOffset()
+		{
+			return Data.GetOffset(0, 0);
+		}
+
+		int EndOffset()
+		{
+			return Data.GetOffset(Data.NumLines - 1, Data[Data.NumLines - 1].Length);
 		}
 
 		void RunCommand(ICommand command)
@@ -299,11 +321,11 @@ namespace NeoEdit.TextEditor
 			}
 			else if ((command == Command_Edit_Cut) || (command == Command_Edit_Copy))
 			{
-				var result = ranges[RangeType.Selection].Select(range => GetString(range)).ToArray();
+				var result = Selections.Select(range => GetString(range)).ToArray();
 				if (result.Length != 0)
 					ClipboardWindow.Set(result);
 				if (command == Command_Edit_Cut)
-					Replace(ranges[RangeType.Selection], null, false);
+					Replace(Selections, null, false);
 			}
 			else if (command == Command_Edit_Paste)
 			{
@@ -311,7 +333,7 @@ namespace NeoEdit.TextEditor
 				if ((result == null) || (result.Count == 0))
 					return;
 
-				var sels = ranges[RangeType.Selection];
+				var sels = Selections;
 				var separator = sels.Count == 1 ? Data.DefaultEnding : " ";
 				while (result.Count > sels.Count)
 				{
@@ -332,12 +354,12 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Edit_Find)
 			{
 				string text = null;
-				var selectionOnly = ranges[RangeType.Selection].Any(range => range.HasSelection());
+				var selectionOnly = Selections.Any(range => range.HasSelection());
 
-				if (ranges[RangeType.Selection].Count == 1)
+				if (Selections.Count == 1)
 				{
-					var sel = ranges[RangeType.Selection].First();
-					if ((sel.HasSelection()) && (Data.GetOffsetLine(sel.Pos1) == Data.GetOffsetLine(sel.Pos2)))
+					var sel = Selections.First();
+					if ((sel.HasSelection()) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)))
 					{
 						selectionOnly = false;
 						text = GetString(sel);
@@ -351,9 +373,9 @@ namespace NeoEdit.TextEditor
 				RunSearch(findDialog.Regex, findDialog.SelectionOnly);
 				if (findDialog.SelectAll)
 				{
-					if (ranges[RangeType.Search].Count != 0)
-						ranges[RangeType.Selection] = ranges[RangeType.Search];
-					ranges[RangeType.Search] = new List<Range>();
+					if (Searches.Count != 0)
+						Selections.Replace(Searches);
+					Searches.Clear();
 				}
 
 				FindNext(true);
@@ -363,7 +385,7 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Edit_GotoLine)
 			{
 				var shift = shiftDown;
-				var line = Data.GetOffsetLine(ranges[RangeType.Selection].First().Start);
+				var line = Data.GetOffsetLine(Selections.First().Start);
 				var getNumDialog = new GetNumDialog
 				{
 					Title = "Go to line",
@@ -375,14 +397,14 @@ namespace NeoEdit.TextEditor
 				if (getNumDialog.ShowDialog() == true)
 				{
 					shiftOverride = shift;
-					foreach (var selection in ranges[RangeType.Selection])
-						SetPos1(selection, (int)getNumDialog.Value - 1, 0, false, true);
+					Selections.Replace(Selections.Select(range => MoveCursor(range, (int)getNumDialog.Value - 1, 0, false, true)).ToList());
 					shiftOverride = null;
 				}
 			}
 			else if (command == Command_Edit_GotoIndex)
 			{
-				var offset = ranges[RangeType.Selection].First().Start;
+				var shift = shiftDown;
+				var offset = Selections.First().Start;
 				var line = Data.GetOffsetLine(offset);
 				var index = Data.GetOffsetIndex(offset, line);
 				var getNumDialog = new GetNumDialog
@@ -395,122 +417,123 @@ namespace NeoEdit.TextEditor
 				};
 				if (getNumDialog.ShowDialog() == true)
 				{
-					foreach (var selection in ranges[RangeType.Selection])
-						SetPos1(selection, 0, (int)getNumDialog.Value - 1, true, false);
+					shiftOverride = shift;
+					Selections.Replace(Selections.Select(range => MoveCursor(range, 0, (int)getNumDialog.Value - 1, true, false)).ToList());
+					shiftOverride = null;
 				}
 			}
 			else if (command == Command_Edit_BOM)
 			{
 				if (Data.BOM)
-					Replace(new List<Range> { new Range { Pos1 = 0, Pos2 = 1 } }, new List<string> { "" }, true);
+					Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
 				else
-					Replace(new List<Range> { new Range { Pos1 = 0, Pos2 = 0 } }, new List<string> { "\ufeff" }, true);
+					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
 			}
 			else if (command == Command_Data_Char_Upper)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var strs = selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Lower)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var strs = selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Proper)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var strs = selections.Select(range => ProperCase(GetString(range))).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Toggle)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var strs = selections.Select(range => ToggleCase(GetString(range))).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Hex_ToHex)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Hex_FromHex)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Char_ToChar)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => ((char)UInt16.Parse(GetString(range), NumberStyles.HexNumber)).ToString()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Char_FromChar)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.Length == 1).ToList();
+				var selections = Selections.Where(range => range.Length == 1).ToList();
 				var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Sort_String)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var strs = selections.Select(range => GetString(range)).OrderBy(str => str).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Sort_Numeric)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Sort_Reverse)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var strs = selections.Select(range => GetString(range)).Reverse().ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Sort_Randomize)
 			{
 				var rng = new Random();
-				var strs = ranges[RangeType.Selection].Select(range => GetString(range)).OrderBy(range => rng.Next()).ToList();
-				Replace(ranges[RangeType.Selection], strs, true);
+				var strs = Selections.Select(range => GetString(range)).OrderBy(range => rng.Next()).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Sort_Length)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var strs = selections.Select(range => GetString(range)).OrderBy(str => str.Length).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Sort_Lines_String)
 			{
-				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
-				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
+				var regions = Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data[line].Length)).ToList();
+				var ordering = Selections.Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
 				SortRegions(regions, ordering);
 			}
 			else if (command == Command_Data_Sort_Lines_Numeric)
 			{
-				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
-				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => SortStr(entry.str)).Select(entry => entry.index).ToList();
+				var regions = Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data[line].Length)).ToList();
+				var ordering = Selections.Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => SortStr(entry.str)).Select(entry => entry.index).ToList();
 				SortRegions(regions, ordering);
 			}
 			else if (command == Command_Data_Sort_Lines_Keys)
 			{
-				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
+				var regions = Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data[line].Length)).ToList();
 
 				var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
-				var ordering = ranges[RangeType.Selection].Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
+				var ordering = Selections.Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
 
 				SortRegions(regions, ordering);
 			}
 			else if (command == Command_Data_Sort_Regions_String)
 			{
-				var regions = new List<Range>();
-				foreach (var selection in ranges[RangeType.Selection])
+				var regions = new RangeList();
+				foreach (var selection in Selections)
 				{
-					var region = ranges[RangeType.Mark].Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
+					var region = Marks.Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
 					if (region.Count == 0)
 						throw new Exception("No region found.  All selection must be inside a marked region.");
 					if (region.Count != 1)
@@ -518,19 +541,19 @@ namespace NeoEdit.TextEditor
 					regions.Add(region.Single());
 				}
 
-				if (ranges[RangeType.Mark].Count != regions.Count)
+				if (Marks.Count != regions.Count)
 					throw new Exception("Extra regions found.");
 
-				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
-				ranges[RangeType.Mark].Clear();
+				var ordering = Selections.Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
+				Marks.Clear();
 				SortRegions(regions, ordering, true);
 			}
 			else if (command == Command_Data_Sort_Regions_Numeric)
 			{
-				var regions = new List<Range>();
-				foreach (var selection in ranges[RangeType.Selection])
+				var regions = new RangeList();
+				foreach (var selection in Selections)
 				{
-					var region = ranges[RangeType.Mark].Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
+					var region = Marks.Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
 					if (region.Count == 0)
 						throw new Exception("No region found.  All selection must be inside a marked region.");
 					if (region.Count != 1)
@@ -538,19 +561,19 @@ namespace NeoEdit.TextEditor
 					regions.Add(region.Single());
 				}
 
-				if (ranges[RangeType.Mark].Count != regions.Count)
+				if (Marks.Count != regions.Count)
 					throw new Exception("Extra regions found.");
 
-				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => SortStr(entry.str)).Select(entry => entry.index).ToList();
-				ranges[RangeType.Mark].Clear();
+				var ordering = Selections.Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => SortStr(entry.str)).Select(entry => entry.index).ToList();
+				Marks.Clear();
 				SortRegions(regions, ordering, true);
 			}
 			else if (command == Command_Data_Sort_Regions_Keys)
 			{
-				var regions = new List<Range>();
-				foreach (var selection in ranges[RangeType.Selection])
+				var regions = new RangeList();
+				foreach (var selection in Selections)
 				{
-					var region = ranges[RangeType.Mark].Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
+					var region = Marks.Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
 					if (region.Count == 0)
 						throw new Exception("No region found.  All selection must be inside a marked region.");
 					if (region.Count != 1)
@@ -558,19 +581,19 @@ namespace NeoEdit.TextEditor
 					regions.Add(region.Single());
 				}
 
-				if (ranges[RangeType.Mark].Count != regions.Count)
+				if (Marks.Count != regions.Count)
 					throw new Exception("Extra regions found.");
 
 				var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
-				var ordering = ranges[RangeType.Selection].Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
-				ranges[RangeType.Mark].Clear();
+				var ordering = Selections.Select((range, index) => new { key = GetString(range), index = index }).OrderBy(key => key.key, (key1, key2) => (sort.ContainsKey(key1) ? sort[key1] : int.MaxValue).CompareTo(sort.ContainsKey(key2) ? sort[key2] : int.MaxValue)).Select(obj => obj.index).ToList();
+				Marks.Clear();
 				SortRegions(regions, ordering, true);
 			}
 			else if (GetKeysValuesCommand(command) == Command_Data_Keys_SetValues1)
 			{
 				// Handles keys as well as values
 				var index = GetKeysValuesIndex(command);
-				var values = ranges[RangeType.Selection].Select(range => GetString(range)).ToList();
+				var values = Selections.Select(range => GetString(range)).ToList();
 				if ((index == 0) && (values.Distinct().Count() != values.Count))
 					throw new ArgumentException("Cannot have duplicate keys.");
 				keysAndValues[index] = values;
@@ -582,7 +605,7 @@ namespace NeoEdit.TextEditor
 					throw new Exception("Keys and values count must match.");
 
 				var strs = new List<string>();
-				foreach (var range in ranges[RangeType.Selection])
+				foreach (var range in Selections)
 				{
 					var str = GetString(range);
 					var found = keysAndValues[0].IndexOf(str);
@@ -591,29 +614,29 @@ namespace NeoEdit.TextEditor
 					else
 						strs.Add(keysAndValues[index][found]);
 				}
-				Replace(ranges[RangeType.Selection], strs, true);
+				Replace(Selections, strs, true);
 			}
 			else if (GetKeysValuesCommand(command) == Command_Data_Keys_CopyValues1)
 				ClipboardWindow.Set(keysAndValues[GetKeysValuesIndex(command)].ToArray());
 			else if (GetKeysValuesCommand(command) == Command_Data_Keys_HitsValues1)
 			{
 				var index = GetKeysValuesIndex(command);
-				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => keysAndValues[index].Contains(GetString(range))).ToList();
+				Selections.Replace(Selections.Where(range => keysAndValues[index].Contains(GetString(range))).ToList());
 			}
 			else if (GetKeysValuesCommand(command) == Command_Data_Keys_MissesValues1)
 			{
 				var index = GetKeysValuesIndex(command);
-				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => !keysAndValues[index].Contains(GetString(range))).ToList();
+				Selections.Replace(Selections.Where(range => !keysAndValues[index].Contains(GetString(range))).ToList());
 			}
 			else if (command == Command_Data_Length)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range).Length.ToString()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Width)
 			{
-				var selections = ranges[RangeType.Selection];
+				var selections = Selections;
 				var minWidth = selections.Select(range => range.Length).Max();
 				var text = String.Join("", selections.Select(range => GetString(range)));
 				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
@@ -623,20 +646,20 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Data_Trim)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Evaluate)
 			{
-				var selections = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.Common.Expression(expr).Evaluate().ToString()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Series)
 			{
-				var strs = Enumerable.Range(1, ranges[RangeType.Selection].Count).Select(num => num.ToString()).ToList();
-				Replace(ranges[RangeType.Selection], strs, true);
+				var strs = Enumerable.Range(1, Selections.Count).Select(num => num.ToString()).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Repeat)
 			{
@@ -644,113 +667,94 @@ namespace NeoEdit.TextEditor
 				if (repeatDialog.ShowDialog() != true)
 					return;
 
-				var strs = ranges[RangeType.Selection].Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount)).ToList();
-				Replace(ranges[RangeType.Selection], strs, true);
+				var strs = Selections.Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount + 1)).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Unique)
-			{
-				var selections = ranges[RangeType.Selection];
-				var dups = selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList();
-				ranges[RangeType.Selection] = dups;
-			}
+				Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
 			else if (command == Command_Data_Duplicates)
-			{
-				var selections = ranges[RangeType.Selection];
-				var dups = selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList();
-				if (dups.Count != 0)
-					ranges[RangeType.Selection] = dups;
-			}
+				Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
 			else if (command == Command_Data_MD5)
 			{
-				var strs = ranges[RangeType.Selection].Select(range => Checksum.Get(Checksum.Type.MD5, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
-				Replace(ranges[RangeType.Selection], strs, true);
+				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.MD5, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_SHA1)
 			{
-				var strs = ranges[RangeType.Selection].Select(range => Checksum.Get(Checksum.Type.SHA1, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
-				Replace(ranges[RangeType.Selection], strs, true);
+				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.SHA1, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_SelectMark_Toggle)
 			{
-				if (ranges[RangeType.Selection].Count > 1)
+				if (Selections.Count > 1)
 				{
-					ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
-					ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
+					Marks.AddRange(Selections);
+					Selections.Replace(Selections.First());
 				}
-				else if (ranges[RangeType.Mark].Count != 0)
+				else if (Marks.Count != 0)
 				{
-					ranges[RangeType.Selection] = ranges[RangeType.Mark];
-					ranges[RangeType.Mark] = new List<Range>();
+					Selections.Replace(Marks);
+					Marks.Clear();
 				}
 			}
 			else if (command == Command_Select_All)
-			{
-				foreach (var selection in ranges[RangeType.Selection])
-				{
-					SetPos1(selection, Int32.MaxValue, Int32.MaxValue, false, false);
-					SetPos2(selection, 0, 0, false, false);
-				}
-			}
+				Selections.Replace(new Range(EndOffset(), BeginOffset()));
 			else if (command == Command_Select_Unselect)
-			{
-				ranges[RangeType.Selection].ForEach(range => range.Pos1 = range.Pos2 = range.Start);
-				InvalidateVisual();
-			}
+				Selections.Replace(Selections.Select(range => new Range(range.Start)).ToList());
 			else if (command == Command_Select_Single)
-				ranges[RangeType.Selection] = new List<Range> { ranges[RangeType.Selection].First() };
+				Selections.Replace(Selections.First());
 			else if (command == Command_Select_Lines)
 			{
 				var selectLinesDialog = new SelectLinesDialog();
 				if (selectLinesDialog.ShowDialog() != true)
 					return;
 
-				var lines = ranges[RangeType.Selection].SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-				var sels = lines.Select(line => new Range { Pos1 = Data.GetOffset(line, Data[line].Length), Pos2 = Data.GetOffset(line, 0) }).ToList();
+				var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+				var sels = lines.Select(line => new Range(Data.GetOffset(line, Data[line].Length), Data.GetOffset(line, 0))).ToList();
 				if (selectLinesDialog.IgnoreBlankLines)
-					sels = sels.Where(sel => sel.Pos1 != sel.Pos2).ToList();
+					sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
 				if (selectLinesDialog.LineMult > 1)
 					sels = sels.Where((sel, index) => index % selectLinesDialog.LineMult == 0).ToList();
-				ranges[RangeType.Selection] = sels;
-				InvalidateVisual();
+				Selections.Replace(sels);
 			}
 			else if (command == Command_Select_Marks)
 			{
-				if (ranges[RangeType.Mark].Count == 0)
+				if (Marks.Count == 0)
 					return;
 
-				ranges[RangeType.Selection] = ranges[RangeType.Mark];
-				ranges[RangeType.Mark] = new List<Range>();
+				Selections.Replace(Marks);
+				Marks.Clear();
 			}
 			else if (command == Command_Select_Find)
 			{
-				ranges[RangeType.Selection] = ranges[RangeType.Search];
-				ranges[RangeType.Search] = new List<Range>();
+				Selections.Replace(Searches);
+				Searches.Clear();
 			}
 			else if (command == Command_Select_RemoveEmpty)
-				ranges[RangeType.Selection] = ranges[RangeType.Selection].Where(range => range.HasSelection()).ToList();
+				Selections.Replace(Selections.Where(range => range.HasSelection()).ToList());
 			else if (command == Command_Mark_Selection)
-				ranges[RangeType.Mark].AddRange(ranges[RangeType.Selection].Select(range => range.Copy()));
+				Marks.AddRange(Selections);
 			else if (command == Command_Mark_Find)
 			{
-				ranges[RangeType.Mark].AddRange(ranges[RangeType.Search]);
-				ranges[RangeType.Search] = new List<Range>();
+				Marks.AddRange(Searches);
+				Searches.Clear();
 			}
 			else if (command == Command_Mark_Clear)
 			{
-				var hasSelection = ranges[RangeType.Selection].Any(range => range.HasSelection());
+				var hasSelection = Selections.Any(range => range.HasSelection());
 				if (!hasSelection)
-					ranges[RangeType.Mark].Clear();
+					Marks.Clear();
 				else
 				{
-					foreach (var selection in ranges[RangeType.Selection])
+					foreach (var selection in Selections)
 					{
-						var toRemove = ranges[RangeType.Mark].Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
-						toRemove.ForEach(mark => ranges[RangeType.Mark].Remove(mark));
+						var toRemove = Marks.Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
+						toRemove.ForEach(mark => Marks.Remove(mark));
 					}
 				}
 			}
 			else if (command == Command_Mark_LimitToSelection)
-				ranges[RangeType.Mark] = ranges[RangeType.Mark].Where(mark => ranges[RangeType.Selection].Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList();
+				Marks.Replace(Marks.Where(mark => Selections.Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList());
 		}
 
 		void HighlightingClicked(object sender, RoutedEventArgs e)
@@ -778,46 +782,6 @@ namespace NeoEdit.TextEditor
 		int numLines { get { return (int)(canvas.ActualHeight / lineHeight); } }
 		int numColumns { get { return (int)(canvas.ActualWidth / charWidth); } }
 
-		enum RangeType
-		{
-			Search,
-			Mark,
-			Selection,
-		}
-
-		class Range
-		{
-			public Range Copy()
-			{
-				return new Range { Pos1 = Pos1, Pos2 = Pos2 };
-			}
-
-			void CalcParams()
-			{
-				Start = Math.Min(Pos1, Pos2);
-				End = Math.Max(Pos1, Pos2);
-				Length = Math.Abs(Pos1 - Pos2);
-			}
-
-			int pos1, pos2;
-			public int Pos1 { get { return pos1; } set { pos1 = value; CalcParams(); } }
-			public int Pos2 { get { return pos2; } set { pos2 = value; CalcParams(); } }
-			public int Start { get; private set; }
-			public int End { get; private set; }
-			public int Length { get; private set; }
-
-			public bool HasSelection()
-			{
-				return Pos1 != Pos2;
-			}
-
-			public override string ToString()
-			{
-				return String.Format("({0:0000000000})->({1:0000000000})", Start, End);
-			}
-		}
-
-		Dictionary<RangeType, List<Range>> ranges = Helpers.GetValues<RangeType>().ToDictionary(rangeType => rangeType, rangeType => new List<Range>());
 		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
 
 		readonly Typeface typeface;
@@ -825,10 +789,10 @@ namespace NeoEdit.TextEditor
 
 		class TextCanvasUndoRedo
 		{
-			public List<Range> ranges { get; private set; }
+			public RangeList ranges { get; private set; }
 			public List<string> text { get; private set; }
 
-			public TextCanvasUndoRedo(List<Range> _ranges, List<string> _text)
+			public TextCanvasUndoRedo(RangeList _ranges, List<string> _text)
 			{
 				ranges = _ranges;
 				text = _text;
@@ -838,28 +802,15 @@ namespace NeoEdit.TextEditor
 		List<TextCanvasUndoRedo> undo = new List<TextCanvasUndoRedo>();
 		List<TextCanvasUndoRedo> redo = new List<TextCanvasUndoRedo>();
 
-		public void GotoPos(int line, int column)
+		Range visibleRange;
+		void EnsureVisible(Range range)
 		{
-			try
-			{
-				var index = GetIndexFromColumn(line - 1, column - 1);
-				var range = new Range();
-				ranges[RangeType.Selection].Clear();
-				ranges[RangeType.Selection].Add(range);
-				SetPos1(range, line - 1, index, false, false);
-			}
-			catch { }
-		}
-
-		Range visibleSelection;
-		void EnsureVisible(Range selection)
-		{
-			if ((visibleSelection != null) && (visibleSelection.Pos1 == selection.Pos1) && (visibleSelection.Pos2 == selection.Pos2))
+			if ((visibleRange != null) && (visibleRange.Cursor == range.Cursor) && (visibleRange.Highlight == range.Highlight))
 				return;
 
-			visibleSelection = selection.Copy();
-			var line = Data.GetOffsetLine(selection.Pos1);
-			var index = Data.GetOffsetIndex(selection.Pos1, line);
+			visibleRange = range;
+			var line = Data.GetOffsetLine(range.Cursor);
+			var index = Data.GetOffsetIndex(range.Cursor, line);
 			yScrollValue = Math.Min(line, Math.Max(line - numLines + 1, yScrollValue));
 			var x = GetXFromLineIndex(line, index);
 			xScrollValue = Math.Min(x, Math.Max(x - numColumns + 1, xScrollValue));
@@ -952,16 +903,17 @@ namespace NeoEdit.TextEditor
 			drawTimer.Start();
 		}
 
-		static Dictionary<RangeType, Brush> brushes = new Dictionary<RangeType, Brush>
-		{
-			{ RangeType.Selection, new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)) }, //9cc7e6
-			{ RangeType.Search, new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)) }, //e2e6d6
-			{ RangeType.Mark, new SolidColorBrush(Color.FromArgb(178, 242, 155, 0)) }, //f6b94d
-		};
 		void OnCanvasRender(DrawingContext dc)
 		{
 			if (Data == null)
 				return;
+
+			var brushes = new Dictionary<Brush, RangeList>
+			{
+				{ new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)), Selections}, //9cc7e6
+				{ new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)), Searches }, //e2e6d6
+				{ new SolidColorBrush(Color.FromArgb(178, 242, 155, 0)), Marks }, //f6b94d
+			};
 
 			HasBOM = Data.BOM;
 			var columns = Enumerable.Range(0, Data.NumLines).Select(lineNum => Data[lineNum]).Select(line => GetColumnFromIndex(line, line.Length)).Max();
@@ -976,33 +928,22 @@ namespace NeoEdit.TextEditor
 			yScroll.SmallChange = 1;
 			yScroll.LargeChange = numLines - 1;
 
-			if (ranges[RangeType.Selection].Count == 0)
-			{
-				var range = new Range();
-				ranges[RangeType.Selection].Add(range);
-				SetPos1(range, 0, 0, false, false);
-			}
-			ranges[RangeType.Search] = ranges[RangeType.Search].Where(range => range.HasSelection()).ToList();
+			if (Selections.Count == 0)
+				Selections.Add(new Range(BeginOffset()));
+			Searches.Replace(Searches.Where(range => range.HasSelection()).ToList());
 
-			EnsureVisible(ranges[RangeType.Selection].First());
+			EnsureVisible(Selections.First());
 
-			var keys = ranges.Keys.ToList();
-			foreach (var key in keys)
-			{
-				ranges[key] = ranges[key].GroupBy(range => range.ToString()).Select(rangeGroup => rangeGroup.First()).OrderBy(range => range.Start).ToList();
-				// Make sure ranges don't overlap
-				for (var ctr = 0; ctr < ranges[key].Count - 1; ctr++)
-				{
-					ranges[key][ctr].Pos1 = Math.Min(ranges[key][ctr].Pos1, ranges[key][ctr + 1].Start);
-					ranges[key][ctr].Pos2 = Math.Min(ranges[key][ctr].Pos2, ranges[key][ctr + 1].Start);
-				}
-			}
+			// Make sure ranges don't overlap
+			Selections.DeOverlap();
+			Searches.DeOverlap();
+			Marks.DeOverlap();
 
-			var pos = ranges[RangeType.Selection].First().Pos1;
+			var pos = Selections.First().Cursor;
 			Line = Data.GetOffsetLine(pos) + 1;
 			Index = Data.GetOffsetIndex(pos, Line - 1) + 1;
 			Column = GetColumnFromIndex(Line - 1, Index - 1) + 1;
-			NumSelections = ranges[RangeType.Selection].Count;
+			NumSelections = Selections.Count;
 
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + numLines + 1);
@@ -1015,12 +956,12 @@ namespace NeoEdit.TextEditor
 			for (var line = startLine; line < endLine; ++line)
 			{
 				var lineStr = Data[line];
-				var lineRange = new Range { Pos1 = Data.GetOffset(line, 0), Pos2 = Data.GetOffset(line, lineStr.Length) };
+				var lineRange = new Range(Data.GetOffset(line, 0), Data.GetOffset(line, lineStr.Length));
 				var y = (line - startLine) * lineHeight;
 				var startIndex = GetIndexFromColumn(lineStr, startColumn);
 				var endIndex = GetIndexFromColumn(lineStr, endColumn);
 
-				foreach (var entry in ranges)
+				foreach (var entry in brushes)
 				{
 					foreach (var range in entry.Value)
 					{
@@ -1044,16 +985,16 @@ namespace NeoEdit.TextEditor
 						end = Math.Min(endColumn, end) - startColumn;
 						var width = end - start;
 
-						dc.DrawRectangle(brushes[entry.Key], null, new Rect(start * charWidth, y, width * charWidth + 1, lineHeight));
+						dc.DrawRectangle(entry.Key, null, new Rect(start * charWidth, y, width * charWidth + 1, lineHeight));
 					}
 				}
 
-				foreach (var selection in ranges[RangeType.Selection])
+				foreach (var selection in Selections)
 				{
-					if ((selection.Pos1 < lineRange.Start) || (selection.Pos1 > lineRange.End))
+					if ((selection.Cursor < lineRange.Start) || (selection.Cursor > lineRange.End))
 						continue;
 
-					var selIndex = Data.GetOffsetIndex(selection.Pos1, line);
+					var selIndex = Data.GetOffsetIndex(selection.Cursor, line);
 					if ((selIndex < startIndex) || (selIndex > endIndex))
 						continue;
 					var column = GetColumnFromIndex(lineStr, selIndex);
@@ -1124,67 +1065,80 @@ namespace NeoEdit.TextEditor
 			{
 				case Key.Back:
 				case Key.Delete:
-					foreach (var selection in ranges[RangeType.Selection])
 					{
-						if (selection.HasSelection())
-							continue;
-
-						var line = Data.GetOffsetLine(selection.Start);
-						var index = Data.GetOffsetIndex(selection.Start, line);
-
-						if (e.Key == Key.Back)
-							--index;
-						else
-							++index;
-
-						if (index < 0)
+						var selections = Selections;
+						Selections.Clear();
+						foreach (var selection in selections)
 						{
-							--line;
-							if (line < 0)
-								continue;
-							index = Data[line].Length;
-						}
-						if (index > Data[line].Length)
-						{
-							++line;
-							if (line >= Data.NumLines)
-								continue;
-							index = 0;
+							var range = selection;
+							if (!range.HasSelection())
+							{
+								var line = Data.GetOffsetLine(range.Start);
+								var index = Data.GetOffsetIndex(range.Start, line);
+
+								if (e.Key == Key.Back)
+									--index;
+								else
+									++index;
+
+								if (index < 0)
+								{
+									--line;
+									if (line < 0)
+										continue;
+									index = Data[line].Length;
+								}
+								if (index > Data[line].Length)
+								{
+									++line;
+									if (line >= Data.NumLines)
+										continue;
+									index = 0;
+								}
+
+								range = new Range(Data.GetOffset(line, index), range.Highlight);
+							}
+							Selections.Add(selection);
 						}
 
-						selection.Pos1 = Data.GetOffset(line, index);
+						Replace(Selections, null, false);
 					}
-
-					Replace(ranges[RangeType.Selection], null, false);
 					break;
 				case Key.Escape:
-					ranges[RangeType.Search].Clear();
-					InvalidateVisual();
+					Searches.Clear();
 					break;
 				case Key.Left:
-					foreach (var selection in ranges[RangeType.Selection])
 					{
-						var line = Data.GetOffsetLine(selection.Pos1);
-						var index = Data.GetOffsetIndex(selection.Pos1, line);
-						if (controlDown)
-							MovePrevWord(selection);
-						else if ((index == 0) && (line != 0))
-							SetPos1(selection, -1, Int32.MaxValue, indexRel: false);
-						else
-							SetPos1(selection, 0, -1);
+						var newSelections = new RangeList();
+						foreach (var selection in Selections)
+						{
+							var line = Data.GetOffsetLine(selection.Cursor);
+							var index = Data.GetOffsetIndex(selection.Cursor, line);
+							if (controlDown)
+								newSelections.Add(MovePrevWord(selection));
+							else if ((index == 0) && (line != 0))
+								newSelections.Add(MoveCursor(selection, -1, Int32.MaxValue, indexRel: false));
+							else
+								newSelections.Add(MoveCursor(selection, 0, -1));
+						}
+						Selections.Replace(newSelections);
 					}
 					break;
 				case Key.Right:
-					foreach (var selection in ranges[RangeType.Selection])
 					{
-						var line = Data.GetOffsetLine(selection.Pos1);
-						var index = Data.GetOffsetIndex(selection.Pos1, line);
-						if (controlDown)
-							MoveNextWord(selection);
-						else if ((index == Data[line].Length) && (line != Data.NumLines - 1))
-							SetPos1(selection, 1, 0, indexRel: false);
-						else
-							SetPos1(selection, 0, 1);
+						var newSelections = new RangeList();
+						foreach (var selection in Selections)
+						{
+							var line = Data.GetOffsetLine(selection.Cursor);
+							var index = Data.GetOffsetIndex(selection.Cursor, line);
+							if (controlDown)
+								newSelections.Add(MoveNextWord(selection));
+							else if ((index == Data[line].Length) && (line != Data.NumLines - 1))
+								newSelections.Add(MoveCursor(selection, 1, 0, indexRel: false));
+							else
+								newSelections.Add(MoveCursor(selection, 0, 1));
+						}
+						Selections.Replace(newSelections);
 					}
 					break;
 				case Key.Up:
@@ -1194,23 +1148,20 @@ namespace NeoEdit.TextEditor
 						if (controlDown)
 							yScrollValue += mult;
 						else
-							foreach (var selection in ranges[RangeType.Selection])
-								SetPos1(selection, mult, 0);
+							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
 					}
 					break;
 				case Key.Home:
 					if (controlDown)
-					{
-						foreach (var selection in ranges[RangeType.Selection])
-							SetPos1(selection, 0, 0, false, false);
-					}
+						Selections.Replace(new Range(BeginOffset()));
 					else
 					{
+						var newSelections = new RangeList();
 						bool changed = false;
-						foreach (var selection in ranges[RangeType.Selection])
+						foreach (var selection in Selections)
 						{
-							var line = Data.GetOffsetLine(selection.Pos1);
-							var index = Data.GetOffsetIndex(selection.Pos1, line);
+							var line = Data.GetOffsetLine(selection.Cursor);
+							var index = Data.GetOffsetIndex(selection.Cursor, line);
 							int tmpIndex;
 							var lineStr = Data[line];
 							for (tmpIndex = 0; tmpIndex < lineStr.Length; ++tmpIndex)
@@ -1222,46 +1173,43 @@ namespace NeoEdit.TextEditor
 								tmpIndex = 0;
 							if (tmpIndex != index)
 								changed = true;
-							SetPos1(selection, 0, tmpIndex, indexRel: false);
+							newSelections.Add(MoveCursor(selection, 0, tmpIndex, indexRel: false));
 						}
 						if (!changed)
 						{
-							foreach (var selection in ranges[RangeType.Selection])
-								SetPos1(selection, 0, 0, indexRel: false);
+							newSelections.Replace(newSelections.Select(range => MoveCursor(range, 0, 0, indexRel: false)).ToList());
 							xScrollValue = 0;
 						}
+						Selections.Replace(newSelections);
 					}
 					break;
 				case Key.End:
-					foreach (var selection in ranges[RangeType.Selection])
-						if (controlDown)
-							SetPos1(selection, Data.NumLines - 1, Int32.MaxValue, false, false);
-						else
-							SetPos1(selection, 0, Int32.MaxValue, indexRel: false);
+					if (controlDown)
+						Selections.Replace(new Range(EndOffset()));
+					else
+						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, indexRel: false)).ToList());
 					break;
 				case Key.PageUp:
 					if (controlDown)
 						yScrollValue -= numLines / 2;
 					else
-						foreach (var selection in ranges[RangeType.Selection])
-							SetPos1(selection, 1 - numLines, 0);
+						Selections.Replace(Selections.Select(range => MoveCursor(range, 1 - numLines, 0)).ToList());
 					break;
 				case Key.PageDown:
 					if (controlDown)
 						yScrollValue += numLines / 2;
 					else
-						foreach (var selection in ranges[RangeType.Selection])
-							SetPos1(selection, numLines - 1, 0);
+						Selections.Replace(Selections.Select(range => MoveCursor(range, numLines - 1, 0)).ToList());
 					break;
 				case Key.Tab:
 					{
-						if (!ranges[RangeType.Selection].Any(range => range.HasSelection()))
+						if (!Selections.Any(range => range.HasSelection()))
 						{
 							AddCanvasText("\t");
 							break;
 						}
 
-						var lines = ranges[RangeType.Selection].Where(a => a.HasSelection()).ToDictionary(a => Data.GetOffsetLine(a.Start), a => Data.GetOffsetLine(a.End - 1));
+						var lines = Selections.Where(a => a.HasSelection()).ToDictionary(a => Data.GetOffsetLine(a.Start), a => Data.GetOffsetLine(a.End - 1));
 						lines = lines.SelectMany(selection => Enumerable.Range(selection.Key, selection.Value - selection.Key + 1)).Distinct().OrderBy(lineNum => lineNum).ToDictionary(line => line, line => Data.GetOffset(line, 0));
 						int offset;
 						string replace;
@@ -1278,7 +1226,7 @@ namespace NeoEdit.TextEditor
 							lines = lines.Where(entry => !String.IsNullOrWhiteSpace(Data[entry.Key])).ToDictionary(entry => entry.Key, entry => entry.Value);
 						}
 
-						var sels = lines.Select(line => new Range { Pos1 = line.Value + offset, Pos2 = line.Value }).ToList();
+						var sels = lines.Select(line => new Range(line.Value + offset, line.Value)).ToList();
 						var insert = sels.Select(range => replace).ToList();
 						Replace(sels, insert, false);
 					}
@@ -1289,46 +1237,21 @@ namespace NeoEdit.TextEditor
 				case Key.OemCloseBrackets:
 					if (controlDown)
 					{
-						foreach (var selection in ranges[RangeType.Selection])
+						var newSelections = new RangeList();
+						foreach (var selection in Selections)
 						{
-							var newPos = Data.GetOppositeBracket(selection.Pos1);
+							var newPos = Data.GetOppositeBracket(selection.Cursor);
 							if (newPos != -1)
 							{
 								var line = Data.GetOffsetLine(newPos);
 								var index = Data.GetOffsetIndex(newPos, line);
-								SetPos1(selection, line, index, false, false);
+								newSelections.Add(MoveCursor(selection, line, index, false, false));
 							}
 						}
-						InvalidateVisual();
+						Selections.Replace(newSelections);
 					}
 					else
 						e.Handled = false;
-					break;
-				case Key.System:
-					switch (e.SystemKey)
-					{
-						case Key.Up:
-						case Key.Down:
-						case Key.Left:
-						case Key.Right:
-							var lineMult = 0;
-							var indexMult = 0;
-							switch (e.SystemKey)
-							{
-								case Key.Up: lineMult = -1; break;
-								case Key.Down: lineMult = 1; break;
-								case Key.Left: indexMult = -1; break;
-								case Key.Right: indexMult = 1; break;
-							}
-
-							if (altOnly)
-							{
-								for (var offset = 0; offset < ranges[RangeType.Selection].Count; ++offset)
-									SetPos1(ranges[RangeType.Selection][offset], offset * lineMult, offset * indexMult);
-							}
-							break;
-						default: e.Handled = false; break;
-					}
 					break;
 				default: e.Handled = false; break;
 			}
@@ -1342,12 +1265,12 @@ namespace NeoEdit.TextEditor
 			Space,
 		}
 
-		void MoveNextWord(Range selection)
+		Range MoveNextWord(Range selection)
 		{
 			WordSkipType moveType = WordSkipType.None;
 
-			var line = Data.GetOffsetLine(selection.Pos1);
-			var index = Data.GetOffsetIndex(selection.Pos1, line) - 1;
+			var line = Data.GetOffsetLine(selection.Cursor);
+			var index = Data.GetOffsetIndex(selection.Cursor, line) - 1;
 			string lineStr = null;
 			int lineIndex = -1;
 			while (true)
@@ -1362,10 +1285,7 @@ namespace NeoEdit.TextEditor
 				{
 					++line;
 					if (line >= Data.NumLines)
-					{
-						SetPos1(selection, Data.NumLines - 1, Int32.MaxValue, false, false);
-						return;
-					}
+						return MoveCursor(selection, Data.NumLines - 1, Int32.MaxValue, false, false);
 					index = -1;
 					continue;
 				}
@@ -1383,19 +1303,16 @@ namespace NeoEdit.TextEditor
 					moveType = current;
 
 				if (current != moveType)
-				{
-					SetPos1(selection, line, index, false, false);
-					return;
-				}
+					return MoveCursor(selection, line, index, false, false);
 			}
 		}
 
-		void MovePrevWord(Range selection)
+		Range MovePrevWord(Range selection)
 		{
 			WordSkipType moveType = WordSkipType.None;
 
-			var line = Data.GetOffsetLine(selection.Pos1);
-			var index = Data.GetOffsetIndex(selection.Pos1, line);
+			var line = Data.GetOffsetLine(selection.Cursor);
+			var index = Data.GetOffsetIndex(selection.Cursor, line);
 			int lastLine = -1, lastIndex = -1;
 			string lineStr = null;
 			int lineIndex = -1;
@@ -1413,10 +1330,7 @@ namespace NeoEdit.TextEditor
 				{
 					--line;
 					if (line < 0)
-					{
-						SetPos1(selection, 0, 0, false, false);
-						return;
-					}
+						return MoveCursor(selection, 0, 0, false, false);
 					continue;
 				}
 
@@ -1436,19 +1350,16 @@ namespace NeoEdit.TextEditor
 					moveType = current;
 
 				if (current != moveType)
-				{
-					SetPos1(selection, lastLine, lastIndex, false, false);
-					return;
-				}
+					return MoveCursor(selection, lastLine, lastIndex, false, false);
 			}
 		}
 
-		void SetPos1(Range selection, int line, int index, bool lineRel = true, bool indexRel = true)
+		Range MoveCursor(Range range, int line, int index, bool lineRel = true, bool indexRel = true)
 		{
 			if ((lineRel) || (indexRel))
 			{
-				var startLine = Data.GetOffsetLine(selection.Pos1);
-				var startIndex = Data.GetOffsetIndex(selection.Pos1, startLine);
+				var startLine = Data.GetOffsetLine(range.Cursor);
+				var startIndex = Data.GetOffsetIndex(range.Cursor, startLine);
 
 				if (lineRel)
 					line += startLine;
@@ -1458,31 +1369,11 @@ namespace NeoEdit.TextEditor
 
 			line = Math.Max(0, Math.Min(line, Data.NumLines - 1));
 			index = Math.Max(0, Math.Min(index, Data[line].Length));
-			selection.Pos1 = Data.GetOffset(line, index);
+			var cursor = Data.GetOffset(line, index);
+			var highlight = selecting ? range.Highlight : cursor;
+			range = new Range(cursor, highlight);
 
-			if (!selecting)
-				SetPos2(selection, line, index, false, false);
-
-			InvalidateVisual();
-		}
-
-		void SetPos2(Range selection, int line, int index, bool lineRel = false, bool indexRel = false)
-		{
-			if ((lineRel) || (indexRel))
-			{
-				var startLine = Data.GetOffsetLine(selection.Pos2);
-				var startIndex = Data.GetOffsetIndex(selection.Pos2, startLine);
-
-				if (lineRel)
-					line += startLine;
-				if (indexRel)
-					index += startIndex;
-			}
-
-			line = Math.Max(0, Math.Min(line, Data.NumLines - 1));
-			index = Math.Max(0, Math.Min(index, Data[line].Length));
-			selection.Pos2 = Data.GetOffset(line, index);
-			InvalidateVisual();
+			return range;
 		}
 
 		void MouseHandler(Point mousePos)
@@ -1492,16 +1383,19 @@ namespace NeoEdit.TextEditor
 
 			Range selection;
 			if (selecting)
-				selection = ranges[RangeType.Selection].Last();
+			{
+				selection = Selections.Last();
+				Selections.Remove(selection);
+			}
 			else
 			{
 				if (!controlDown)
-					ranges[RangeType.Selection].Clear();
+					Selections.Clear();
 
 				selection = new Range();
-				ranges[RangeType.Selection].Add(selection);
 			}
-			SetPos1(selection, line, index, false, false);
+			selection = MoveCursor(selection, line, index, false, false);
+			Selections.Add(selection);
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1534,7 +1428,7 @@ namespace NeoEdit.TextEditor
 			if (regex == null)
 				return;
 
-			ranges[RangeType.Search].Clear();
+			Searches.Clear();
 
 			for (var line = 0; line < Data.NumLines; line++)
 			{
@@ -1542,12 +1436,12 @@ namespace NeoEdit.TextEditor
 				var matches = regex.Matches(lineStr);
 				foreach (Match match in matches)
 				{
-					var searchResult = new Range { Pos1 = Data.GetOffset(line, match.Index + match.Length), Pos2 = Data.GetOffset(line, match.Index) };
+					var searchResult = new Range(Data.GetOffset(line, match.Index + match.Length), Data.GetOffset(line, match.Index));
 
 					if (selectionOnly)
 					{
 						var foundMatch = false;
-						foreach (var selection in ranges[RangeType.Selection])
+						foreach (var selection in Selections)
 						{
 							if ((searchResult.Start < selection.Start) || (searchResult.End > selection.End))
 								continue;
@@ -1559,10 +1453,9 @@ namespace NeoEdit.TextEditor
 							continue;
 					}
 
-					ranges[RangeType.Search].Add(searchResult);
+					Searches.Add(searchResult);
 				}
 			}
-			InvalidateVisual();
 		}
 
 		string GetString(Range range)
@@ -1615,7 +1508,7 @@ namespace NeoEdit.TextEditor
 								change = 0;
 								for (var num = 0; num < last.ranges.Count; ++num)
 								{
-									last.ranges[num] = new Range { Pos1 = last.ranges[num].Start + change, Pos2 = last.ranges[num].End + current.ranges[num].Length + change };
+									last.ranges[num] = new Range(last.ranges[num].Start + change, last.ranges[num].End + current.ranges[num].Length + change);
 									last.text[num] += current.text[num];
 									change += current.ranges[num].Length - current.text[num].Length;
 								}
@@ -1638,96 +1531,66 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		void Replace(List<Range> replaceRanges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
+		void Replace(RangeList replaceRanges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
 		{
 			if (strs == null)
 				strs = replaceRanges.Select(range => "").ToList();
 
-			var undoRanges = new List<Range>();
+			var undoRanges = new RangeList();
 			var undoText = new List<string>();
 
 			var change = 0;
 			for (var ctr = 0; ctr < replaceRanges.Count; ++ctr)
 			{
-				var undoRange = new Range { Pos1 = replaceRanges[ctr].Start + change, Pos2 = replaceRanges[ctr].Start + strs[ctr].Length + change };
+				var undoRange = new Range(replaceRanges[ctr].Start + change, replaceRanges[ctr].Start + strs[ctr].Length + change);
 				undoRanges.Add(undoRange);
 				undoText.Add(GetString(replaceRanges[ctr]));
-				change = undoRange.Pos2 - replaceRanges[ctr].End;
+				change = undoRange.Highlight - replaceRanges[ctr].End;
 			}
 
 			AddUndoRedo(new TextCanvasUndoRedo(undoRanges, undoText), replaceType);
 
 			Data.Replace(replaceRanges.Select(range => range.Start).ToList(), replaceRanges.Select(range => range.Length).ToList(), strs);
 
-			ranges[RangeType.Search].Clear();
+			Searches.Clear();
 
-			var numsToMap = ranges.SelectMany(rangePair => rangePair.Value).SelectMany(range => new int[] { range.Start, range.End }).Distinct().OrderBy(num => num).ToList();
-			var oldToNewMap = new Dictionary<int, int>();
-			var replaceRange = 0;
-			var offset = 0;
-			var current = 0;
-			while (current < numsToMap.Count)
-			{
-				int start = Int32.MaxValue, end = Int32.MaxValue, length = 0;
-				if (replaceRange < replaceRanges.Count)
-				{
-					start = replaceRanges[replaceRange].Start;
-					end = replaceRanges[replaceRange].End;
-					length = strs[replaceRange].Length;
-				}
-
-				if (numsToMap[current] >= end)
-				{
-					offset += start - end + length;
-					++replaceRange;
-					continue;
-				}
-
-				var value = numsToMap[current];
-				if ((value > start) && (value < end))
-					value = start + length;
-
-				oldToNewMap[numsToMap[current]] = value + offset;
-				++current;
-			}
-
-			foreach (var range in ranges.SelectMany(rangePair => rangePair.Value))
-			{
-				range.Pos1 = oldToNewMap[range.Pos1];
-				range.Pos2 = oldToNewMap[range.Pos2];
-			}
+			var translateNums = RangeExtensions.GetTranslateNums(Selections, Marks, Searches);
+			var translateMap = RangeExtensions.GetTranslateMap(translateNums, replaceRanges, strs);
+			Selections.Translate(translateMap);
+			Marks.Translate(translateMap);
+			Searches.Translate(translateMap);
 
 			if (!leaveHighlighted)
-				replaceRanges.ForEach(range => range.Pos1 = range.Pos2 = range.End);
+				replaceRanges = replaceRanges.Select(range => new Range(range.End)).ToList();
 
 			InvalidateVisual();
 		}
 
 		void FindNext(bool forward)
 		{
-			if (ranges[RangeType.Search].Count == 0)
+			if (Searches.Count == 0)
 				return;
 
-			foreach (var selection in ranges[RangeType.Selection])
+			for (var ctr = 0; ctr < Selections.Count; ++ctr)
 			{
 				int index;
 				if (forward)
 				{
-					index = ranges[RangeType.Search].FindIndex(range => range.Start > selection.Start);
+					var a = new RangeList();
+					a.FindIndex(range => range.Start > Selections[ctr].Start);
+					index = Searches.FindIndex(range => range.Start > Selections[ctr].Start);
 					if (index == -1)
 						index = 0;
 				}
 				else
 				{
-					index = ranges[RangeType.Search].FindLastIndex(range => range.Start < selection.Start);
+					index = Searches.FindLastIndex(range => range.Start < Selections[ctr].Start);
 					if (index == -1)
-						index = ranges[RangeType.Search].Count - 1;
+						index = Searches.Count - 1;
 				}
 
-				selection.Pos1 = ranges[RangeType.Search][index].End;
-				selection.Pos2 = ranges[RangeType.Search][index].Start;
+				Selections[ctr] = new Range(Searches[index].End, Searches[index].Start);
 			}
-			InvalidateVisual();
 		}
 
 		string SetWidth(string str, int length, char padChar, bool before)
@@ -1743,10 +1606,9 @@ namespace NeoEdit.TextEditor
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
-		void SortRegions(List<Range> regions, List<int> ordering, bool updateRegions = false)
+		void SortRegions(RangeList regions, List<int> ordering, bool updateRegions = false)
 		{
-			var selections = ranges[RangeType.Selection].Select(range => range.Copy()).ToList();
-			var newRegions = regions.Select(range => range.Copy()).ToList();
+			var selections = Selections;
 			if ((selections.Count != regions.Count) || (regions.Count != ordering.Count))
 				throw new Exception("Selections, regions, and ordering must match");
 
@@ -1772,20 +1634,18 @@ namespace NeoEdit.TextEditor
 			for (var ctr = 0; ctr < selections.Count; ++ctr)
 			{
 				var orderCtr = ordering[ctr];
-				selections[orderCtr].Pos1 = selections[orderCtr].Pos1 - regions[orderCtr].Start + regions[ctr].Start + add;
-				selections[orderCtr].Pos2 = selections[orderCtr].Pos2 - regions[orderCtr].Start + regions[ctr].Start + add;
+				selections[orderCtr] = new Range(selections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, selections[orderCtr].Highlight - regions[orderCtr].Start + regions[ctr].Start + add);
 
-				newRegions[orderCtr].Pos1 = newRegions[orderCtr].Pos1 - regions[orderCtr].Start + regions[ctr].Start + add;
-				newRegions[orderCtr].Pos2 = newRegions[orderCtr].Pos2 - regions[orderCtr].Start + regions[ctr].Start + add;
+				regions[orderCtr] = new Range(regions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, regions[orderCtr].Highlight - regions[orderCtr].Start + regions[ctr].Start + add);
 
 				add += replaceStrs[ctr].Length - regions[ctr].Length;
 			}
 			selections = ordering.Select(num => selections[num]).ToList();
 
 			Replace(regions, replaceStrs, false);
-			ranges[RangeType.Selection] = selections;
+			Selections.Replace(selections);
 			if (updateRegions)
-				ranges[RangeType.Mark] = newRegions;
+				Marks.Replace(regions);
 		}
 
 		string ProperCase(string input)
@@ -1872,7 +1732,7 @@ namespace NeoEdit.TextEditor
 			if (text.Length == 0)
 				return;
 
-			Replace(ranges[RangeType.Selection], ranges[RangeType.Selection].Select(range => text).ToList(), false);
+			Replace(Selections, Selections.Select(range => text).ToList(), false);
 		}
 	}
 }
