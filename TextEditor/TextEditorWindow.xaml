@@ -23,6 +23,8 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Copy" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Paste" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_CopyName" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_CopyPath" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
@@ -191,6 +193,9 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Copy" Header="_Copy"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Paste" Header="_Paste"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyName" Header="Copy name"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyPath" Header="Copy full path"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>

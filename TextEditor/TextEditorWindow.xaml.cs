@@ -34,6 +34,8 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Edit_Copy = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Paste = new RoutedCommand();
 		public static RoutedCommand Command_Edit_ShowClipboard = new RoutedCommand();
+		public static RoutedCommand Command_Edit_CopyName = new RoutedCommand();
+		public static RoutedCommand Command_Edit_CopyPath = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Find = new RoutedCommand();
 		public static RoutedCommand Command_Edit_FindNext = new RoutedCommand();
 		public static RoutedCommand Command_Edit_FindPrev = new RoutedCommand();
@@ -323,6 +325,10 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Edit_ShowClipboard)
 				ClipboardWindow.Show();
+			else if (command == Command_Edit_CopyName)
+				Clipboard.SetText(Path.GetFileName(FileName));
+			else if (command == Command_Edit_CopyPath)
+				Clipboard.SetText(FileName);
 			else if (command == Command_Edit_Find)
 			{
 				string text = null;
