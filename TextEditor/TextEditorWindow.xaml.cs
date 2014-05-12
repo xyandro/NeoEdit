@@ -115,7 +115,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Trim = new RoutedCommand();
 		public static RoutedCommand Command_Data_Evaluate = new RoutedCommand();
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
-		public static RoutedCommand Command_Data_Duplicate = new RoutedCommand();
+		public static RoutedCommand Command_Data_Repeat = new RoutedCommand();
 		public static RoutedCommand Command_Data_Unique = new RoutedCommand();
 		public static RoutedCommand Command_Data_Duplicates = new RoutedCommand();
 		public static RoutedCommand Command_Data_MD5 = new RoutedCommand();
@@ -638,13 +638,13 @@ namespace NeoEdit.TextEditor
 				var strs = Enumerable.Range(1, ranges[RangeType.Selection].Count).Select(num => num.ToString()).ToList();
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
-			else if (command == Command_Data_Duplicate)
+			else if (command == Command_Data_Repeat)
 			{
-				var duplicateDialog = new DuplicateDialog();
-				if (duplicateDialog.ShowDialog() != true)
+				var repeatDialog = new RepeatDialog();
+				if (repeatDialog.ShowDialog() != true)
 					return;
 
-				var strs = ranges[RangeType.Selection].Select(range => RepeatString(GetString(range), duplicateDialog.DupCount + 1)).ToList();
+				var strs = ranges[RangeType.Selection].Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount)).ToList();
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
 			else if (command == Command_Data_Unique)

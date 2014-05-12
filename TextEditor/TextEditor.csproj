@@ -48,8 +48,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dialogs\DuplicateDialog.xaml.cs">
-      <DependentUpon>DuplicateDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\RepeatDialog.xaml.cs">
+      <DependentUpon>RepeatDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SelectLinesDialog.xaml.cs">
       <DependentUpon>SelectLinesDialog.xaml</DependentUpon>
@@ -68,7 +68,7 @@
     <Compile Include="TextEditorWindow.xaml.cs">
       <DependentUpon>TextEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\DuplicateDialog.xaml">
+    <Page Include="Dialogs\RepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
