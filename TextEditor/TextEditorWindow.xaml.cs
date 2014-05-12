@@ -48,14 +48,17 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Hex_FromHex = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_ToChar = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_FromChar = new RoutedCommand();
-		public static RoutedCommand Command_Data_Sort = new RoutedCommand();
-		public static RoutedCommand Command_Data_Reverse = new RoutedCommand();
-		public static RoutedCommand Command_Data_Randomize = new RoutedCommand();
-		public static RoutedCommand Command_Data_SortByLength = new RoutedCommand();
-		public static RoutedCommand Command_Data_Sort_Lines_BySelection = new RoutedCommand();
-		public static RoutedCommand Command_Data_Sort_Lines_ByKeys = new RoutedCommand();
-		public static RoutedCommand Command_Data_Sort_Regions_BySelection = new RoutedCommand();
-		public static RoutedCommand Command_Data_Sort_Regions_ByKeys = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_String = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Numeric = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Reverse = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Randomize = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Length = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Lines_String = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Lines_Numeric = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Lines_Keys = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Regions_String = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Regions_Numeric = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Regions_Keys = new RoutedCommand();
 		public static RoutedCommand Command_Data_Keys_SetKeys = new RoutedCommand();
 		public static RoutedCommand Command_Data_Keys_SetValues1 = new RoutedCommand();
 		public static RoutedCommand Command_Data_Keys_SetValues2 = new RoutedCommand();
@@ -445,37 +448,49 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Sort)
+			else if (command == Command_Data_Sort_String)
+			{
+				var selections = ranges[RangeType.Selection];
+				var strs = selections.Select(range => GetString(range)).OrderBy(str => str).ToList();
+				Replace(selections, strs, true);
+			}
+			else if (command == Command_Data_Sort_Numeric)
 			{
 				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range)).OrderBy(str => SortStr(str)).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Reverse)
+			else if (command == Command_Data_Sort_Reverse)
 			{
 				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range)).Reverse().ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Randomize)
+			else if (command == Command_Data_Sort_Randomize)
 			{
 				var rng = new Random();
 				var strs = ranges[RangeType.Selection].Select(range => GetString(range)).OrderBy(range => rng.Next()).ToList();
 				Replace(ranges[RangeType.Selection], strs, true);
 			}
-			else if (command == Command_Data_SortByLength)
+			else if (command == Command_Data_Sort_Length)
 			{
 				var selections = ranges[RangeType.Selection];
 				var strs = selections.Select(range => GetString(range)).OrderBy(str => str.Length).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Sort_Lines_BySelection)
+			else if (command == Command_Data_Sort_Lines_String)
 			{
 				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
 				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => entry.str).Select(entry => entry.index).ToList();
 				SortRegions(regions, ordering);
 			}
-			else if (command == Command_Data_Sort_Lines_ByKeys)
+			else if (command == Command_Data_Sort_Lines_Numeric)
+			{
+				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
+				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => SortStr(entry.str)).Select(entry => entry.index).ToList();
+				SortRegions(regions, ordering);
+			}
+			else if (command == Command_Data_Sort_Lines_Keys)
 			{
 				var regions = ranges[RangeType.Selection].Select(range => Data.GetOffsetLine(range.Start)).Select(line => new { index = Data.GetOffset(line, 0), length = Data[line].Length }).Select(entry => new Range { Pos1 = entry.index, Pos2 = entry.index + entry.length }).ToList();
 
@@ -484,7 +499,7 @@ namespace NeoEdit.TextEditor
 
 				SortRegions(regions, ordering);
 			}
-			else if (command == Command_Data_Sort_Regions_BySelection)
+			else if (command == Command_Data_Sort_Regions_String)
 			{
 				var regions = new List<Range>();
 				foreach (var selection in ranges[RangeType.Selection])
@@ -504,7 +519,27 @@ namespace NeoEdit.TextEditor
 				ranges[RangeType.Mark].Clear();
 				SortRegions(regions, ordering, true);
 			}
-			else if (command == Command_Data_Sort_Regions_ByKeys)
+			else if (command == Command_Data_Sort_Regions_Numeric)
+			{
+				var regions = new List<Range>();
+				foreach (var selection in ranges[RangeType.Selection])
+				{
+					var region = ranges[RangeType.Mark].Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
+					if (region.Count == 0)
+						throw new Exception("No region found.  All selection must be inside a marked region.");
+					if (region.Count != 1)
+						throw new Exception("Multiple regions found.  All selection must be inside a single marked region.");
+					regions.Add(region.Single());
+				}
+
+				if (ranges[RangeType.Mark].Count != regions.Count)
+					throw new Exception("Extra regions found.");
+
+				var ordering = ranges[RangeType.Selection].Select((range, index) => new { str = GetString(range), index = index }).OrderBy(entry => SortStr(entry.str)).Select(entry => entry.index).ToList();
+				ranges[RangeType.Mark].Clear();
+				SortRegions(regions, ordering, true);
+			}
+			else if (command == Command_Data_Sort_Regions_Keys)
 			{
 				var regions = new List<Range>();
 				foreach (var selection in ranges[RangeType.Selection])
