@@ -33,13 +33,30 @@ namespace NeoEdit.TextEditor
 		{
 			return String.Format("({0:0000000000})->({1:0000000000})", Start, End);
 		}
+
+		public bool Equals(Range range)
+		{
+			return (Start == range.Start) && (End == range.End);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is Range)
+				return Equals(obj as Range);
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
 	}
 
 	static class RangeExtensions
 	{
 		public static void DeOverlap(this RangeList ranges)
 		{
-			var newRanges = ranges.GroupBy(range => range.ToString()).Select(rangeGroup => rangeGroup.First()).OrderBy(range => range.Start).ToList();
+			var newRanges = ranges.Distinct().OrderBy(range => range.Start).ToList();
 			for (var ctr = 0; ctr < newRanges.Count - 1; ++ctr)
 				newRanges[ctr] = new Range(Math.Min(newRanges[ctr].Cursor, newRanges[ctr + 1].Start), Math.Min(newRanges[ctr].Highlight, newRanges[ctr + 1].Start));
 			ranges.Replace(newRanges);
