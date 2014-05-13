@@ -635,6 +635,7 @@ namespace NeoEdit.TextEditor
 				if (Selections.Count == 0)
 					Selections.Add(new Range(BeginOffset()));
 				Selections.DeOverlap();
+				EnsureVisible(Selections.First());
 
 				selectionsTimer = null;
 				InvalidateVisual();
@@ -702,8 +703,6 @@ namespace NeoEdit.TextEditor
 			yScroll.Maximum = Data.NumLines - numLines;
 			yScroll.SmallChange = 1;
 			yScroll.LargeChange = numLines - 1;
-
-			EnsureVisible(Selections.First());
 
 			var pos = Selections.First().Cursor;
 			Line = Data.GetOffsetLine(pos) + 1;
