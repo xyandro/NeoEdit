@@ -17,6 +17,7 @@ namespace NeoEdit.TextEditor
 		List<int> endingLength;
 		public string DefaultEnding { get; private set; }
 		public Coder.Type CoderUsed { get; private set; }
+		const int tabStop = 4;
 
 		public int NumLines { get { return lineIndex.Count; } }
 		public bool BOM { get; private set; }
@@ -89,6 +90,34 @@ namespace NeoEdit.TextEditor
 			return data.Substring(lineIndex[line], lineLength[line]);
 		}
 
+		public string GetColumnsLine(int line)
+		{
+			var index = lineIndex[line];
+			var len = lineLength[line];
+			var sb = new StringBuilder();
+			while (len > 0)
+			{
+				var find = data.IndexOf('\t', index, len);
+				if (find == index)
+				{
+					sb.Append(' ', (sb.Length / tabStop + 1) * tabStop - sb.Length);
+					++index;
+					--len;
+					continue;
+				}
+
+				if (find == -1)
+					find = len;
+				else
+					find -= index;
+				sb.Append(data, index, find);
+				index += find;
+				len -= find;
+			}
+
+			return sb.ToString();
+		}
+
 		public string GetEnding(int line)
 		{
 			if ((line < 0) || (line >= endingIndex.Count))
@@ -114,6 +143,73 @@ namespace NeoEdit.TextEditor
 		public int GetOffsetIndex(int offset, int line)
 		{
 			return offset - lineIndex[line];
+		}
+
+		public int GetColumnFromIndex(int line, int index)
+		{
+			if (index < 0)
+				throw new IndexOutOfRangeException();
+
+			var column = 0;
+			var tmpIndex = lineIndex[line];
+			var len = lineLength[line];
+			while (index > 0)
+			{
+				var find = data.IndexOf('\t', tmpIndex, len);
+				if (find == tmpIndex)
+				{
+					column = (column / tabStop + 1) * tabStop;
+					++tmpIndex;
+					--len;
+					--index;
+					continue;
+				}
+
+				if (find == -1)
+					find = index;
+				else
+					find = Math.Min(find - tmpIndex, index);
+
+				column += find;
+				tmpIndex += find;
+				len -= find;
+				index -= find;
+			}
+			return column;
+		}
+
+		public int GetIndexFromColumn(int line, int column)
+		{
+			if (column < 0)
+				throw new IndexOutOfRangeException();
+
+			var tmpColumn = 0;
+			var index = 0;
+			var tmpIndex = lineIndex[line];
+			var len = lineLength[line];
+			while (tmpColumn < column)
+			{
+				var find = data.IndexOf('\t', tmpIndex, len);
+				if (find == tmpIndex)
+				{
+					tmpColumn = (tmpColumn / tabStop + 1) * tabStop;
+					++tmpIndex;
+					--len;
+					++index;
+					continue;
+				}
+
+				if (find == -1)
+					find = column - tmpColumn;
+				else
+					find = Math.Min(find - tmpIndex, column - tmpColumn);
+
+				tmpColumn += find;
+				tmpIndex += find;
+				len -= find;
+				index += find;
+			}
+			return index;
 		}
 
 		public string GetString(int start, int end)

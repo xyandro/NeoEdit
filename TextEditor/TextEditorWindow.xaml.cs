@@ -562,7 +562,6 @@ namespace NeoEdit.TextEditor
 			this.Close();
 		}
 
-		const int tabStop = 4;
 		readonly double charWidth;
 		readonly double lineHeight;
 
@@ -597,78 +596,8 @@ namespace NeoEdit.TextEditor
 			var line = Data.GetOffsetLine(range.Cursor);
 			var index = Data.GetOffsetIndex(range.Cursor, line);
 			yScrollValue = Math.Min(line, Math.Max(line - numLines + 1, yScrollValue));
-			var x = GetXFromLineIndex(line, index);
+			var x = Data.GetColumnFromIndex(line, index);
 			xScrollValue = Math.Min(x, Math.Max(x - numColumns + 1, xScrollValue));
-		}
-
-		int GetXFromLineIndex(int line, int index)
-		{
-			return GetColumnFromIndex(line, index);
-		}
-
-		int GetColumnFromIndex(int line, int index)
-		{
-			return GetColumnFromIndex(Data[line], index);
-		}
-
-		int GetColumnFromIndex(string lineStr, int findIndex)
-		{
-			if (findIndex < 0)
-				throw new IndexOutOfRangeException();
-
-			var column = 0;
-			var index = 0;
-			while (index < findIndex)
-			{
-				var find = lineStr.IndexOf('\t', index);
-				if (find == index)
-				{
-					column = (column / tabStop + 1) * tabStop;
-					++index;
-					continue;
-				}
-
-				if (find == -1)
-					find = findIndex;
-				else
-					find = Math.Min(find, findIndex);
-
-				column += find - index;
-				index = find;
-			}
-			return column;
-		}
-
-		int GetIndexFromColumn(int line, int column)
-		{
-			return GetIndexFromColumn(Data[line], column);
-		}
-
-		int GetIndexFromColumn(string lineStr, int findColumn)
-		{
-			if (findColumn < 0)
-				throw new IndexOutOfRangeException();
-
-			var column = 0;
-			var index = 0;
-			while (column < findColumn)
-			{
-				var find = lineStr.IndexOf('\t', index);
-				if (find == index)
-				{
-					column = (column / tabStop + 1) * tabStop;
-					++index;
-					continue;
-				}
-				if (find == -1)
-					find = findColumn - column + index;
-				else
-					find = Math.Min(find, findColumn - column + index);
-
-				column += find - index;
-				index = find;
-			}
-			return index;
 		}
 
 		DispatcherTimer visualTimer = null;
@@ -764,7 +693,7 @@ namespace NeoEdit.TextEditor
 				var lineStr = Data[line];
 				if (lineStr.Length < columns)
 					continue;
-				columns = Math.Max(columns, GetColumnFromIndex(lineStr, lineStr.Length));
+				columns = Math.Max(columns, Data.GetColumnFromIndex(line, lineStr.Length));
 			}
 
 			xScroll.ViewportSize = numColumns;
@@ -782,7 +711,7 @@ namespace NeoEdit.TextEditor
 			var pos = Selections.First().Cursor;
 			Line = Data.GetOffsetLine(pos) + 1;
 			Index = Data.GetOffsetIndex(pos, Line - 1) + 1;
-			Column = GetColumnFromIndex(Line - 1, Index - 1) + 1;
+			Column = Data.GetColumnFromIndex(Line - 1, Index - 1) + 1;
 			NumSelections = Selections.Count;
 
 			var startLine = yScrollValue;
@@ -791,12 +720,11 @@ namespace NeoEdit.TextEditor
 			var endColumn = Math.Min(columns + 1, startColumn + numColumns + 1);
 
 			var lines = Enumerable.Range(startLine, endLine - startLine).ToList();
-			var lineStrs = lines.ToDictionary(line => line, line => Data[line]);
-			var lineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, lineStrs[line].Length)));
+			var lineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data[line].Length)));
 			var screenStart = lineRanges.First().Value.Start;
 			var screenEnd = lineRanges.Last().Value.End + 1;
-			var startIndexes = lines.ToDictionary(line => line, line => GetIndexFromColumn(lineStrs[line], startColumn));
-			var endIndexes = lines.ToDictionary(line => line, line => GetIndexFromColumn(lineStrs[line], endColumn));
+			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn));
+			var endIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, endColumn));
 			var y = lines.ToDictionary(line => line, line => (line - startLine) * lineHeight);
 
 			foreach (var entry in brushes)
@@ -817,7 +745,7 @@ namespace NeoEdit.TextEditor
 						var cursor = Data.GetOffsetIndex(range.Cursor, cursorLine);
 						if ((cursor >= startIndexes[cursorLine]) && (cursor <= endIndexes[cursorLine]))
 						{
-							cursor = GetColumnFromIndex(lineStrs[cursorLine], cursor);
+							cursor = Data.GetColumnFromIndex(cursorLine, cursor);
 							dc.DrawRectangle(Brushes.Black, null, new Rect((cursor - startColumn) * charWidth, y[cursorLine], 1, lineHeight));
 						}
 					}
@@ -832,8 +760,8 @@ namespace NeoEdit.TextEditor
 						if ((start >= endIndexes[line]) || (end < startIndexes[line]))
 							continue;
 
-						start = GetColumnFromIndex(lineStrs[line], start);
-						end = GetColumnFromIndex(lineStrs[line], end);
+						start = Data.GetColumnFromIndex(line, start);
+						end = Data.GetColumnFromIndex(line, end);
 						if (range.End > lineRanges[line].End)
 							end++;
 
@@ -850,25 +778,7 @@ namespace NeoEdit.TextEditor
 
 			for (var line = startLine; line < endLine; ++line)
 			{
-				var index = 0;
-				var sb = new StringBuilder();
-				while (index < lineStrs[line].Length)
-				{
-					var find = lineStrs[line].IndexOf('\t', index);
-					if (find == index)
-					{
-						sb.Append(' ', (sb.Length / tabStop + 1) * tabStop - sb.Length);
-						++index;
-						continue;
-					}
-
-					if (find == -1)
-						find = lineStrs[line].Length;
-					sb.Append(lineStrs[line], index, find - index);
-					index = find;
-				}
-
-				var str = sb.ToString();
+				var str = Data.GetColumnsLine(line);
 				if (str.Length <= startColumn)
 					continue;
 
@@ -1228,7 +1138,7 @@ namespace NeoEdit.TextEditor
 		void MouseHandler(Point mousePos)
 		{
 			var line = Math.Min(Data.NumLines - 1, (int)(mousePos.Y / lineHeight) + yScrollValue);
-			var index = GetIndexFromColumn(line, (int)(mousePos.X / charWidth) + xScrollValue);
+			var index = Data.GetIndexFromColumn(line, (int)(mousePos.X / charWidth) + xScrollValue);
 
 			Range selection;
 			if (selecting)
