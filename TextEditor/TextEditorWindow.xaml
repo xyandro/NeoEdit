@@ -41,15 +41,22 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_String" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Numeric" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Keys" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Reverse" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Randomize" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Length" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_String" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Numeric" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Keys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Reverse" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Randomize" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Length" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_String" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Numeric" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Keys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Reverse" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Randomize" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Length" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_SetKeys" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Keys_SetValues2" Executed="Command_Executed"/>
@@ -250,6 +257,7 @@
 				<MenuItem Header="_Sort">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_String" Header="_String"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Numeric" Header="_Numeric"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Keys" Header="_Keys"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Reverse" Header="R_everse"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Randomize" Header="R_andomize"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Length" Header="Sort by len_gth"/>
@@ -257,11 +265,17 @@
 						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_String" Header="_String"/>
 						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Numeric" Header="_Numeric"/>
 						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Keys" Header="_Keys"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Reverse" Header="R_everse"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Randomize" Header="R_andomize"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Lines_Length" Header="Sort by len_gth"/>
 					</MenuItem>
 					<MenuItem Header="_Regions">
 						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_String" Header="_String"/>
 						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Numeric" Header="_Numeric"/>
 						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Keys" Header="_Keys"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Reverse" Header="R_everse"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Randomize" Header="R_andomize"/>
+						<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Sort_Regions_Length" Header="Sort by len_gth"/>
 					</MenuItem>
 				</MenuItem>
 				<Separator/>

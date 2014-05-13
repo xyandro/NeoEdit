@@ -11,15 +11,22 @@ namespace NeoEdit.TextEditor
 	{
 		public static RoutedCommand Command_Data_Sort_String = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Numeric = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Keys = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Reverse = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Randomize = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Length = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Lines_String = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Lines_Numeric = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Lines_Keys = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Lines_Reverse = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Lines_Randomize = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Lines_Length = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Regions_String = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Regions_Numeric = new RoutedCommand();
 		public static RoutedCommand Command_Data_Sort_Regions_Keys = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Regions_Reverse = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Regions_Randomize = new RoutedCommand();
+		public static RoutedCommand Command_Data_Sort_Regions_Length = new RoutedCommand();
 
 		enum SortScope { Selections, Lines, Regions }
 		enum SortType { String, Numeric, Keys, Reverse, Randomize, Length }
@@ -149,6 +156,8 @@ namespace NeoEdit.TextEditor
 				Sort(SortScope.Selections, SortType.String);
 			else if (command == Command_Data_Sort_Numeric)
 				Sort(SortScope.Selections, SortType.Numeric);
+			else if (command == Command_Data_Sort_Keys)
+				Sort(SortScope.Selections, SortType.Keys);
 			else if (command == Command_Data_Sort_Reverse)
 				Sort(SortScope.Selections, SortType.Reverse);
 			else if (command == Command_Data_Sort_Randomize)
@@ -161,12 +170,24 @@ namespace NeoEdit.TextEditor
 				Sort(SortScope.Lines, SortType.Numeric);
 			else if (command == Command_Data_Sort_Lines_Keys)
 				Sort(SortScope.Lines, SortType.Keys);
+			else if (command == Command_Data_Sort_Lines_Reverse)
+				Sort(SortScope.Lines, SortType.Reverse);
+			else if (command == Command_Data_Sort_Lines_Randomize)
+				Sort(SortScope.Lines, SortType.Randomize);
+			else if (command == Command_Data_Sort_Lines_Length)
+				Sort(SortScope.Lines, SortType.Length);
 			else if (command == Command_Data_Sort_Regions_String)
 				Sort(SortScope.Regions, SortType.String);
 			else if (command == Command_Data_Sort_Regions_Numeric)
 				Sort(SortScope.Regions, SortType.Numeric);
 			else if (command == Command_Data_Sort_Regions_Keys)
 				Sort(SortScope.Regions, SortType.Keys);
+			else if (command == Command_Data_Sort_Regions_Reverse)
+				Sort(SortScope.Regions, SortType.Reverse);
+			else if (command == Command_Data_Sort_Regions_Randomize)
+				Sort(SortScope.Regions, SortType.Randomize);
+			else if (command == Command_Data_Sort_Regions_Length)
+				Sort(SortScope.Regions, SortType.Length);
 			else
 				result = false;
 
