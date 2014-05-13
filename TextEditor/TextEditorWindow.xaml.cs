@@ -906,7 +906,7 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.Home:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, 0, false, false)).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset())).ToList());
 					else
 					{
 						bool changed = false;
@@ -936,7 +936,7 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.End:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => MoveCursor(range, Int32.MaxValue, Int32.MaxValue, false, false)).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, EndOffset())).ToList());
 					else
 						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, indexRel: false)).ToList());
 					break;
@@ -994,9 +994,7 @@ namespace NeoEdit.TextEditor
 							if (newPos == -1)
 								continue;
 
-							var line = Data.GetOffsetLine(newPos);
-							var index = Data.GetOffsetIndex(newPos, line);
-							Selections[ctr] = MoveCursor(Selections[ctr], line, index, false, false);
+							Selections[ctr] = MoveCursor(Selections[ctr], newPos);
 						}
 					}
 					else
@@ -1035,7 +1033,7 @@ namespace NeoEdit.TextEditor
 				{
 					++line;
 					if (line >= Data.NumLines)
-						return MoveCursor(selection, Data.NumLines - 1, Int32.MaxValue, false, false);
+						return MoveCursor(selection, EndOffset());
 					index = -1;
 					continue;
 				}
@@ -1080,7 +1078,7 @@ namespace NeoEdit.TextEditor
 				{
 					--line;
 					if (line < 0)
-						return MoveCursor(selection, 0, 0, false, false);
+						return MoveCursor(selection, BeginOffset());
 					continue;
 				}
 
@@ -1104,6 +1102,12 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
+		Range MoveCursor(Range range, int cursor)
+		{
+			var highlight = selecting ? range.Highlight : cursor;
+			return new Range(cursor, highlight);
+		}
+
 		Range MoveCursor(Range range, int line, int index, bool lineRel = true, bool indexRel = true)
 		{
 			if ((lineRel) || (indexRel))
@@ -1119,11 +1123,7 @@ namespace NeoEdit.TextEditor
 
 			line = Math.Max(0, Math.Min(line, Data.NumLines - 1));
 			index = Math.Max(0, Math.Min(index, Data.GetLineLength(line)));
-			var cursor = Data.GetOffset(line, index);
-			var highlight = selecting ? range.Highlight : cursor;
-			range = new Range(cursor, highlight);
-
-			return range;
+			return MoveCursor(range, Data.GetOffset(line, index));
 		}
 
 		void MouseHandler(Point mousePos)
