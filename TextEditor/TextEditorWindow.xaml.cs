@@ -73,10 +73,10 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Mark_Clear = new RoutedCommand();
 		public static RoutedCommand Command_Mark_LimitToSelection = new RoutedCommand();
 
+		TextData Data { get; set; }
+
 		[DepProp]
 		string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		TextData Data { get { return uiHelper.GetPropValue<TextData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -701,7 +701,14 @@ namespace NeoEdit.TextEditor
 			};
 
 			HasBOM = Data.BOM;
-			var columns = Enumerable.Range(0, Data.NumLines).Select(lineNum => Data[lineNum]).Select(line => GetColumnFromIndex(line, line.Length)).Max();
+			var columns = 0;
+			for (var line = 0; line < Data.NumLines; ++line)
+			{
+				var lineStr = Data[line];
+				if (lineStr.Length < columns)
+					continue;
+				columns = Math.Max(columns, GetColumnFromIndex(lineStr, lineStr.Length));
+			}
 
 			xScroll.ViewportSize = numColumns;
 			xScroll.Maximum = columns - numColumns;
