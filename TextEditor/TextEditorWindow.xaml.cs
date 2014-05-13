@@ -157,7 +157,8 @@ namespace NeoEdit.TextEditor
 
 			Loaded += (s, e) =>
 			{
-				Line = 0;
+				Line = 0; // Line doesn't display properly if this isn't here...  Don't know why.
+				EnsureVisible();
 				InvalidateVisual();
 			};
 		}
@@ -547,6 +548,9 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Mark_LimitToSelection)
 				Marks.Replace(Marks.Where(mark => Selections.Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList());
+
+			if (SelectionsInvalidated())
+				EnsureVisible();
 		}
 
 		void HighlightingClicked(object sender, RoutedEventArgs e)
@@ -591,13 +595,12 @@ namespace NeoEdit.TextEditor
 		List<TextCanvasUndoRedo> undo = new List<TextCanvasUndoRedo>();
 		List<TextCanvasUndoRedo> redo = new List<TextCanvasUndoRedo>();
 
-		Range visibleRange;
-		void EnsureVisible(Range range)
+		void EnsureVisible()
 		{
-			if ((visibleRange != null) && (visibleRange.Start == range.Start) && (visibleRange.End == range.End))
+			if (Selections.Count == 0)
 				return;
 
-			visibleRange = range;
+			var range = Selections.First();
 			var line = Data.GetOffsetLine(range.Cursor);
 			var index = Data.GetOffsetIndex(range.Cursor, line);
 			yScrollValue = Math.Min(line, Math.Max(line - numLines + 1, yScrollValue));
@@ -623,9 +626,14 @@ namespace NeoEdit.TextEditor
 		}
 
 		DispatcherTimer selectionsTimer = null;
+		bool SelectionsInvalidated()
+		{
+			return selectionsTimer != null;
+		}
+
 		void InvalidateSelections()
 		{
-			if (selectionsTimer != null)
+			if (SelectionsInvalidated())
 				return;
 
 			selectionsTimer = new DispatcherTimer();
@@ -633,9 +641,11 @@ namespace NeoEdit.TextEditor
 			{
 				selectionsTimer.Stop();
 				if (Selections.Count == 0)
+				{
 					Selections.Add(new Range(BeginOffset()));
+					EnsureVisible();
+				}
 				Selections.DeOverlap();
-				EnsureVisible(Selections.First());
 
 				selectionsTimer = null;
 				InvalidateVisual();
@@ -1003,6 +1013,9 @@ namespace NeoEdit.TextEditor
 				default: e.Handled = false; break;
 			}
 			shiftOverride = null;
+
+			if (SelectionsInvalidated())
+				EnsureVisible();
 		}
 
 		enum WordSkipType
