@@ -48,6 +48,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TextEditorWindow-Keys.cs" />
     <Compile Include="TextEditorWindow-Sort.cs" />
     <Compile Include="RangeList.cs" />
     <Compile Include="Range.cs" />
