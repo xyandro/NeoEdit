@@ -64,9 +64,9 @@ namespace NeoEdit.TextEditor.Dialogs
 				text = Regex.Escape(text);
 			if (wholeWords.IsChecked == true)
 				text = @"\b" + text + @"\b";
-			var options = RegexOptions.None;
+			var options = RegexOptions.Compiled;
 			if (matchCase.IsChecked == false)
-				options = RegexOptions.IgnoreCase;
+				options |= RegexOptions.IgnoreCase;
 			Regex = new Regex(text, options);
 			SelectAll = sender == selectAll;
 

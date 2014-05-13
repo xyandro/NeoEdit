@@ -1186,34 +1186,13 @@ namespace NeoEdit.TextEditor
 			if (regex == null)
 				return;
 
-			Searches.Clear();
+			var searches = new RangeList();
 
-			for (var line = 0; line < Data.NumLines; line++)
-			{
-				var lineStr = Data[line];
-				var matches = regex.Matches(lineStr);
-				foreach (Match match in matches)
-				{
-					var searchResult = new Range(Data.GetOffset(line, match.Index + match.Length), Data.GetOffset(line, match.Index));
+			var regions = selectionOnly ? Selections : new RangeList { new Range(EndOffset(), BeginOffset()) };
+			foreach (var region in regions)
+				searches.AddRange(Data.RegexMatches(regex, region.Start, region.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 
-					if (selectionOnly)
-					{
-						var foundMatch = false;
-						foreach (var selection in Selections)
-						{
-							if ((searchResult.Start < selection.Start) || (searchResult.End > selection.End))
-								continue;
-
-							foundMatch = true;
-							break;
-						}
-						if (!foundMatch)
-							continue;
-					}
-
-					Searches.Add(searchResult);
-				}
-			}
+			Searches.Replace(searches);
 		}
 
 		string GetString(Range range)

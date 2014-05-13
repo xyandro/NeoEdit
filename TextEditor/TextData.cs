@@ -344,5 +344,21 @@ namespace NeoEdit.TextEditor
 
 			return -1;
 		}
+
+		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length)
+		{
+			var result = new List<Tuple<int, int>>();
+			while (true)
+			{
+				var match = regex.Match(data, offset, length);
+				if (!match.Success)
+					break;
+
+				result.Add(new Tuple<int, int>(match.Index, match.Length));
+				length -= match.Index - offset + match.Length;
+				offset = match.Index + match.Length;
+			}
+			return result;
+		}
 	}
 }
