@@ -33,45 +33,35 @@ namespace NeoEdit.TextEditor
 		{
 			return String.Format("({0:0000000000})->({1:0000000000})", Start, End);
 		}
-
-		public static bool operator ==(Range r1, Range r2)
-		{
-			if (Object.ReferenceEquals(r1, r2))
-				return true;
-			if ((Object.ReferenceEquals(r1, null)) || (Object.ReferenceEquals(r2, null)))
-				return false;
-
-			return (r1.Start == r2.Start) && (r1.End == r2.End);
-		}
-
-		public static bool operator !=(Range r1, Range r2)
-		{
-			return !(r1 == r2);
-		}
-
-		public bool Equals(Range range)
-		{
-			return this == range;
-		}
-
-		public override bool Equals(object obj)
-		{
-			return this == obj as Range;
-		}
-
-		public override int GetHashCode()
-		{
-			return Cursor ^ Highlight;
-		}
 	}
 
 	static class RangeExtensions
 	{
 		public static void DeOverlap(this RangeList ranges)
 		{
-			var newRanges = ranges.Distinct().OrderBy(range => range.Start).ToList();
-			for (var ctr = 0; ctr < newRanges.Count - 1; ++ctr)
-				newRanges[ctr] = new Range(Math.Min(newRanges[ctr].Cursor, newRanges[ctr + 1].Start), Math.Min(newRanges[ctr].Highlight, newRanges[ctr + 1].Start));
+			var rangeList = ranges.OrderBy(range => range.End).OrderBy(range => range.Start).ToList();
+			Range last = null;
+			var newRanges = new RangeList();
+			var ctr2 = 0;
+			while (true)
+			{
+				var range = ctr2 < rangeList.Count ? rangeList[ctr2++] : null;
+				if (last != null)
+				{
+					if (range != null)
+					{
+						if ((last.Start == range.Start) && (last.End == range.End))
+							continue;
+						last = new Range(Math.Min(last.Cursor, range.Start), Math.Min(last.Highlight, range.Start));
+					}
+
+					newRanges.Add(last);
+				}
+				last = range;
+				if (last == null)
+					break;
+			}
+
 			ranges.Replace(newRanges);
 		}
 

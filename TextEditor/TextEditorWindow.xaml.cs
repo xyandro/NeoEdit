@@ -109,6 +109,9 @@ namespace NeoEdit.TextEditor
 			InitializeComponent();
 
 			canvas.Initialize(OnCanvasRender);
+			Selections.CollectionChanged += () => InvalidateSelections();
+			Searches.CollectionChanged += () => InvalidateSearches();
+			Marks.CollectionChanged += () => InvalidateMarks();
 
 			OpenFile(filename, bytes, encoding);
 
@@ -146,9 +149,6 @@ namespace NeoEdit.TextEditor
 			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
 			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => InvalidateVisual());
-			Selections.CollectionChanged += () => InvalidateVisual();
-			Searches.CollectionChanged += () => InvalidateVisual();
-			Marks.CollectionChanged += () => InvalidateVisual();
 
 			Loaded += (s, e) =>
 			{
@@ -590,7 +590,7 @@ namespace NeoEdit.TextEditor
 		Range visibleRange;
 		void EnsureVisible(Range range)
 		{
-			if (visibleRange == range)
+			if ((visibleRange != null) && (visibleRange.Start == range.Start) && (visibleRange.End == range.End))
 				return;
 
 			visibleRange = range;
@@ -671,21 +671,78 @@ namespace NeoEdit.TextEditor
 			return index;
 		}
 
-		DispatcherTimer drawTimer = null;
+		DispatcherTimer visualTimer = null;
 		new void InvalidateVisual()
 		{
-			if (drawTimer != null)
+			if (visualTimer != null)
 				return;
 
-			drawTimer = new DispatcherTimer();
-			drawTimer.Tick += (s, e) =>
+			visualTimer = new DispatcherTimer();
+			visualTimer.Tick += (s, e) =>
 			{
-				drawTimer.Stop();
-				drawTimer = null;
+				visualTimer.Stop();
+				visualTimer = null;
 
 				canvas.InvalidateVisual();
 			};
-			drawTimer.Start();
+			visualTimer.Start();
+		}
+
+		DispatcherTimer selectionsTimer = null;
+		void InvalidateSelections()
+		{
+			if (selectionsTimer != null)
+				return;
+
+			selectionsTimer = new DispatcherTimer();
+			selectionsTimer.Tick += (s, e) =>
+			{
+				selectionsTimer.Stop();
+				if (Selections.Count == 0)
+					Selections.Add(new Range(BeginOffset()));
+				Selections.DeOverlap();
+
+				selectionsTimer = null;
+				InvalidateVisual();
+			};
+			selectionsTimer.Start();
+		}
+
+		DispatcherTimer searchesTimer = null;
+		void InvalidateSearches()
+		{
+			if (searchesTimer != null)
+				return;
+
+			searchesTimer = new DispatcherTimer();
+			searchesTimer.Tick += (s, e) =>
+			{
+				searchesTimer.Stop();
+				Searches.Replace(Searches.Where(range => range.HasSelection()).ToList());
+				Searches.DeOverlap();
+
+				searchesTimer = null;
+				InvalidateVisual();
+			};
+			searchesTimer.Start();
+		}
+
+		DispatcherTimer marksTimer = null;
+		void InvalidateMarks()
+		{
+			if (marksTimer != null)
+				return;
+
+			marksTimer = new DispatcherTimer();
+			marksTimer.Tick += (s, e) =>
+			{
+				marksTimer.Stop();
+				Marks.DeOverlap();
+
+				marksTimer = null;
+				InvalidateVisual();
+			};
+			marksTimer.Start();
 		}
 
 		void OnCanvasRender(DrawingContext dc)
@@ -720,16 +777,7 @@ namespace NeoEdit.TextEditor
 			yScroll.SmallChange = 1;
 			yScroll.LargeChange = numLines - 1;
 
-			if (Selections.Count == 0)
-				Selections.Add(new Range(BeginOffset()));
-			Searches.Replace(Searches.Where(range => range.HasSelection()).ToList());
-
 			EnsureVisible(Selections.First());
-
-			// Make sure ranges don't overlap
-			Selections.DeOverlap();
-			Searches.DeOverlap();
-			Marks.DeOverlap();
 
 			var pos = Selections.First().Cursor;
 			Line = Data.GetOffsetLine(pos) + 1;
