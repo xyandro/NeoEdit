@@ -333,17 +333,16 @@ namespace NeoEdit.TextEditor
 				if ((result == null) || (result.Count == 0))
 					return;
 
-				var sels = Selections;
-				var separator = sels.Count == 1 ? Data.DefaultEnding : " ";
-				while (result.Count > sels.Count)
+				var separator = Selections.Count == 1 ? Data.DefaultEnding : " ";
+				while (result.Count > Selections.Count)
 				{
 					result[result.Count - 2] += separator + result[result.Count - 1];
 					result.RemoveAt(result.Count - 1);
 				}
-				while (result.Count < sels.Count)
+				while (result.Count < Selections.Count)
 					result.Add(result.Last());
 
-				Replace(sels, result, false);
+				Replace(Selections, result, false);
 			}
 			else if (command == Command_Edit_ShowClipboard)
 				ClipboardWindow.Show();
@@ -431,27 +430,23 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Data_Char_Upper)
 			{
-				var selections = Selections;
-				var strs = selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
-				Replace(selections, strs, true);
+				var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Lower)
 			{
-				var selections = Selections;
-				var strs = selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
-				Replace(selections, strs, true);
+				var strs = Selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Proper)
 			{
-				var selections = Selections;
-				var strs = selections.Select(range => ProperCase(GetString(range))).ToList();
-				Replace(selections, strs, true);
+				var strs = Selections.Select(range => ProperCase(GetString(range))).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Toggle)
 			{
-				var selections = Selections;
-				var strs = selections.Select(range => ToggleCase(GetString(range))).ToList();
-				Replace(selections, strs, true);
+				var strs = Selections.Select(range => ToggleCase(GetString(range))).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Hex_ToHex)
 			{
@@ -636,13 +631,12 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Data_Width)
 			{
-				var selections = Selections;
-				var minWidth = selections.Select(range => range.Length).Max();
-				var text = String.Join("", selections.Select(range => GetString(range)));
+				var minWidth = Selections.Select(range => range.Length).Max();
+				var text = String.Join("", Selections.Select(range => GetString(range)));
 				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
 				var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
 				if (widthDialog.ShowDialog() == true)
-					Replace(selections, selections.Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
+					Replace(Selections, Selections.Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
 			}
 			else if (command == Command_Data_Trim)
 			{
@@ -1531,37 +1525,37 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		void Replace(RangeList replaceRanges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
+		void Replace(RangeList ranges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
 		{
 			if (strs == null)
-				strs = replaceRanges.Select(range => "").ToList();
+				strs = ranges.Select(range => "").ToList();
 
 			var undoRanges = new RangeList();
 			var undoText = new List<string>();
 
 			var change = 0;
-			for (var ctr = 0; ctr < replaceRanges.Count; ++ctr)
+			for (var ctr = 0; ctr < ranges.Count; ++ctr)
 			{
-				var undoRange = new Range(replaceRanges[ctr].Start + change, replaceRanges[ctr].Start + strs[ctr].Length + change);
+				var undoRange = new Range(ranges[ctr].Start + change, ranges[ctr].Start + strs[ctr].Length + change);
 				undoRanges.Add(undoRange);
-				undoText.Add(GetString(replaceRanges[ctr]));
-				change = undoRange.Highlight - replaceRanges[ctr].End;
+				undoText.Add(GetString(ranges[ctr]));
+				change = undoRange.Highlight - ranges[ctr].End;
 			}
 
 			AddUndoRedo(new TextCanvasUndoRedo(undoRanges, undoText), replaceType);
 
-			Data.Replace(replaceRanges.Select(range => range.Start).ToList(), replaceRanges.Select(range => range.Length).ToList(), strs);
+			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
 
 			Searches.Clear();
 
 			var translateNums = RangeExtensions.GetTranslateNums(Selections, Marks, Searches);
-			var translateMap = RangeExtensions.GetTranslateMap(translateNums, replaceRanges, strs);
+			var translateMap = RangeExtensions.GetTranslateMap(translateNums, ranges, strs);
 			Selections.Translate(translateMap);
 			Marks.Translate(translateMap);
 			Searches.Translate(translateMap);
 
 			if (!leaveHighlighted)
-				replaceRanges = replaceRanges.Select(range => new Range(range.End)).ToList();
+				Selections.Replace(Selections.Select(range => new Range(range.End)).ToList());
 
 			InvalidateVisual();
 		}
