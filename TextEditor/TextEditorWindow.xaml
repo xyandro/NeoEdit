@@ -30,6 +30,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_BinaryEditor" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_BOM" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Executed="Command_Executed"/>
@@ -219,7 +220,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto c_olumn"/>
 				<Separator/>
-				<MenuItem Header="_Encode" Click="EncodeClick">
+				<MenuItem Header="_Encoding" Click="EncodingClick">
 					<MenuItem.ItemContainerStyle>
 						<Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
 							<Setter Property="IsChecked">
@@ -233,8 +234,6 @@
 						</Style>
 					</MenuItem.ItemContainerStyle>
 
-					<MenuItem Header="Current"/>
-					<Separator/>
 					<MenuItem Header="UTF8"/>
 					<MenuItem Header="UTF7"/>
 					<MenuItem Header="UTF16LE"/>
@@ -244,6 +243,7 @@
 					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BinaryEditor" Header="Binary editor"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Header="First selection"/>

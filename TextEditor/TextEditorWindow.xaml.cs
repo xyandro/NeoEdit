@@ -41,6 +41,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Edit_FindPrev = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoLine = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoIndex = new RoutedCommand();
+		public static RoutedCommand Command_Edit_BinaryEditor = new RoutedCommand();
 		public static RoutedCommand Command_Edit_BOM = new RoutedCommand();
 		public static RoutedCommand Command_Edit_ShowFirst = new RoutedCommand();
 		public static RoutedCommand Command_Edit_ShowCurrent = new RoutedCommand();
@@ -138,7 +139,6 @@ namespace NeoEdit.TextEditor
 			if (!column.HasValue)
 				column = 1;
 			Selections.Add(new Range(Data.GetOffset(line.Value - 1, column.Value - 1)));
-			CoderUsed = Data.CoderUsed;
 
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
@@ -178,6 +178,7 @@ namespace NeoEdit.TextEditor
 					bytes = File.ReadAllBytes(FileName);
 			}
 			Data = new TextData(bytes, encoding);
+			CoderUsed = Data.CoderUsed;
 			HighlightType = Highlighting.Get(FileName);
 		}
 
@@ -234,7 +235,7 @@ namespace NeoEdit.TextEditor
 				if (FileName == null)
 					RunCommand(Command_File_SaveAs);
 				else
-					File.WriteAllBytes(FileName, Data.GetBytes(Data.CoderUsed));
+					File.WriteAllBytes(FileName, Data.GetBytes(CoderUsed));
 			}
 			else if (command == Command_File_SaveAs)
 			{
@@ -370,6 +371,11 @@ namespace NeoEdit.TextEditor
 					Selections.Replace(Selections.Select(range => MoveCursor(range, 0, (int)getNumDialog.Value - 1, true, false)).ToList());
 					shiftOverride = null;
 				}
+			}
+			else if (command == Command_Edit_BinaryEditor)
+			{
+				Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed));
+				this.Close();
 			}
 			else if (command == Command_Edit_BOM)
 			{
@@ -584,16 +590,10 @@ namespace NeoEdit.TextEditor
 			HighlightType = Helpers.ParseEnum<Highlighting.HighlightingType>(header);
 		}
 
-		void EncodeClick(object sender, RoutedEventArgs e)
+		void EncodingClick(object sender, RoutedEventArgs e)
 		{
 			var header = (e.OriginalSource as MenuItem).Header as string;
-			Coder.Type encoding;
-			if (header == "Current")
-				encoding = Data.CoderUsed;
-			else
-				encoding = Helpers.ParseEnum<Coder.Type>(header);
-			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(encoding));
-			this.Close();
+			CoderUsed = Helpers.ParseEnum<Coder.Type>(header);
 		}
 
 		readonly double charWidth;
@@ -1412,6 +1412,8 @@ namespace NeoEdit.TextEditor
 				return;
 
 			Replace(Selections, Selections.Select(range => text).ToList(), false);
+			if (SelectionsInvalidated())
+				EnsureVisible();
 		}
 	}
 }
