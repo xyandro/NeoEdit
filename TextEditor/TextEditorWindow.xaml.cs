@@ -1313,15 +1313,13 @@ namespace NeoEdit.TextEditor
 				int index;
 				if (forward)
 				{
-					var a = new RangeList();
-					a.FindIndex(range => range.Start > Selections[ctr].Start);
-					index = Searches.FindIndex(range => range.Start > Selections[ctr].Start);
+					index = Searches.BinaryFindFirst(range => range.Start > Selections[ctr].Start);
 					if (index == -1)
 						index = 0;
 				}
 				else
 				{
-					index = Searches.FindLastIndex(range => range.Start < Selections[ctr].Start);
+					index = Searches.BinaryFindLast(range => range.Start < Selections[ctr].Start);
 					if (index == -1)
 						index = Searches.Count - 1;
 				}

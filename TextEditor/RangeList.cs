@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeoEdit.TextEditor
 {
@@ -47,6 +48,34 @@ namespace NeoEdit.TextEditor
 		{
 			base.AddRange(items);
 			collectionChanged();
+		}
+
+		public int BinaryFindFirst(Predicate<Range> predicate)
+		{
+			int min = 0, max = Count;
+			while (min < max)
+			{
+				int mid = (min + max) / 2;
+				if (predicate(this[mid]))
+					max = mid;
+				else
+					min = mid + 1;
+			}
+			return min == Count ? -1 : min;
+		}
+
+		public int BinaryFindLast(Predicate<Range> predicate)
+		{
+			int min = -1, max = Count - 1;
+			while (min < max)
+			{
+				int mid = (min + max + 1) / 2;
+				if (predicate(this[mid]))
+					min = mid;
+				else
+					max = mid - 1;
+			}
+			return min;
 		}
 	}
 
