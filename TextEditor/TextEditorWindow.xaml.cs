@@ -590,7 +590,7 @@ namespace NeoEdit.TextEditor
 		Range visibleRange;
 		void EnsureVisible(Range range)
 		{
-			if ((visibleRange != null) && (visibleRange.Cursor == range.Cursor) && (visibleRange.Highlight == range.Highlight))
+			if (visibleRange == range)
 				return;
 
 			visibleRange = range;
@@ -938,7 +938,7 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.Home:
 					if (controlDown)
-						Selections.Replace(new Range(BeginOffset()));
+						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, 0, false, false)).ToList());
 					else
 					{
 						var newSelections = new RangeList();
@@ -970,7 +970,7 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.End:
 					if (controlDown)
-						Selections.Replace(new Range(EndOffset()));
+						Selections.Replace(Selections.Select(range => MoveCursor(range, Int32.MaxValue, Int32.MaxValue, false, false)).ToList());
 					else
 						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, indexRel: false)).ToList());
 					break;

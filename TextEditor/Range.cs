@@ -34,21 +34,34 @@ namespace NeoEdit.TextEditor
 			return String.Format("({0:0000000000})->({1:0000000000})", Start, End);
 		}
 
+		public static bool operator ==(Range r1, Range r2)
+		{
+			if (Object.ReferenceEquals(r1, r2))
+				return true;
+			if ((Object.ReferenceEquals(r1, null)) || (Object.ReferenceEquals(r2, null)))
+				return false;
+
+			return (r1.Start == r2.Start) && (r1.End == r2.End);
+		}
+
+		public static bool operator !=(Range r1, Range r2)
+		{
+			return !(r1 == r2);
+		}
+
 		public bool Equals(Range range)
 		{
-			return (Start == range.Start) && (End == range.End);
+			return this == range;
 		}
 
 		public override bool Equals(object obj)
 		{
-			if (obj is Range)
-				return Equals(obj as Range);
-			return base.Equals(obj);
+			return this == obj as Range;
 		}
 
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+			return Cursor ^ Highlight;
 		}
 	}
 

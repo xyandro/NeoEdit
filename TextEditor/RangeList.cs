@@ -29,8 +29,21 @@ namespace NeoEdit.TextEditor
 			collectionChanged();
 		}
 
+		bool IsSame(RangeList items)
+		{
+			if (Count != items.Count)
+				return false;
+			for (var ctr = 0; ctr < Count; ++ctr)
+				if (this[ctr] != items[ctr])
+					return false;
+			return true;
+		}
+
 		public void Replace(RangeList items)
 		{
+			if (IsSame(items))
+				return;
+
 			base.Clear();
 			base.AddRange(items);
 			collectionChanged();
@@ -38,9 +51,7 @@ namespace NeoEdit.TextEditor
 
 		public void Replace(Range item)
 		{
-			base.Clear();
-			base.Add(item);
-			collectionChanged();
+			Replace(new RangeList { item });
 		}
 
 		public new void AddRange(IEnumerable<Range> items)
