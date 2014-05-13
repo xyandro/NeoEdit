@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
@@ -37,6 +38,7 @@ namespace NeoEdit
 		{
 			try
 			{
+				args = args.Where(arg => arg != "multi").ToArray();
 				if (args.Length == 0)
 					return new DiskWindow();
 
@@ -146,6 +148,7 @@ namespace NeoEdit
 							File.WriteAllBytes(args[2], data);
 						}
 						break;
+					default: throw new Exception("Invalid argument");
 				}
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }

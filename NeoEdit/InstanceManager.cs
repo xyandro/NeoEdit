@@ -6,7 +6,13 @@ namespace NeoEdit
 	class InstanceManager : Microsoft.VisualBasic.ApplicationServices.WindowsFormsApplicationBase
 	{
 		[STAThread]
-		static void Main(string[] args) { new InstanceManager().Run(args); }
+		static void Main(string[] args)
+		{
+			if (args.Any(arg => arg == "multi"))
+				new App().Run();
+			else
+				new InstanceManager().Run(args);
+		}
 
 		App app;
 
