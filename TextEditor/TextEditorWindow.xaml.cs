@@ -915,42 +915,42 @@ namespace NeoEdit.TextEditor
 				case Key.Back:
 				case Key.Delete:
 					{
-						var selections = Selections;
-						Selections.Clear();
-						foreach (var selection in selections)
+						var selections = new RangeList();
+						foreach (var range in Selections)
 						{
-							var range = selection;
-							if (!range.HasSelection())
+							if (range.HasSelection())
 							{
-								var line = Data.GetOffsetLine(range.Start);
-								var index = Data.GetOffsetIndex(range.Start, line);
-
-								if (e.Key == Key.Back)
-									--index;
-								else
-									++index;
-
-								if (index < 0)
-								{
-									--line;
-									if (line < 0)
-										continue;
-									index = Data[line].Length;
-								}
-								if (index > Data[line].Length)
-								{
-									++line;
-									if (line >= Data.NumLines)
-										continue;
-									index = 0;
-								}
-
-								range = new Range(Data.GetOffset(line, index), range.Highlight);
+								selections.Add(range);
+								continue;
 							}
-							Selections.Add(selection);
+
+							var line = Data.GetOffsetLine(range.Start);
+							var index = Data.GetOffsetIndex(range.Start, line);
+
+							if (e.Key == Key.Back)
+								--index;
+							else
+								++index;
+
+							if (index < 0)
+							{
+								--line;
+								if (line < 0)
+									continue;
+								index = Data[line].Length;
+							}
+							if (index > Data[line].Length)
+							{
+								++line;
+								if (line >= Data.NumLines)
+									continue;
+								index = 0;
+							}
+
+							selections.Add(new Range(Data.GetOffset(line, index), range.Highlight));
 						}
 
-						Replace(Selections, null, false);
+						Replace(selections, null, false);
 					}
 					break;
 				case Key.Escape:
