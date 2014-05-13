@@ -73,7 +73,21 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Mark_Clear = new RoutedCommand();
 		public static RoutedCommand Command_Mark_LimitToSelection = new RoutedCommand();
 
-		TextData Data { get; set; }
+		TextData _data = new TextData();
+		TextData Data
+		{
+			get { return _data; }
+			set
+			{
+				_data = value;
+				Selections.Clear();
+				Marks.Clear();
+				Searches.Clear();
+				undo.Clear();
+				redo.Clear();
+				InvalidateVisual();
+			}
+		}
 
 		[DepProp]
 		string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -135,15 +149,6 @@ namespace NeoEdit.TextEditor
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			uiHelper.AddCallback(a => a.Data, (o, n) =>
-			{
-				Selections.Clear();
-				Marks.Clear();
-				Searches.Clear();
-				InvalidateVisual();
-				undo.Clear();
-				redo.Clear();
-			});
 			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
 			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateVisual());
