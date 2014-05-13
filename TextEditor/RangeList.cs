@@ -78,7 +78,7 @@ namespace NeoEdit.TextEditor
 			return min;
 		}
 
-		public Range this[int index]
+		public new Range this[int index]
 		{
 			get { return base[index]; }
 			set { base[index] = value; collectionChanged(); }
