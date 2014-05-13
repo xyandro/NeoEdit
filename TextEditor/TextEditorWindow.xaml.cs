@@ -948,23 +948,29 @@ namespace NeoEdit.TextEditor
 						Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset())).ToList());
 					else
 					{
+						var firstChar = new Dictionary<int, int>();
 						bool changed = false;
 						for (var ctr = 0; ctr < Selections.Count; ++ctr)
 						{
 							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
 							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
-							int tmpIndex;
-							var lineStr = Data[line];
-							for (tmpIndex = 0; tmpIndex < lineStr.Length; ++tmpIndex)
+							if (!firstChar.ContainsKey(line))
 							{
-								if ((lineStr[tmpIndex] != ' ') && (lineStr[tmpIndex] != '\t'))
-									break;
+								int tmpIndex;
+								var lineStr = Data[line];
+								for (tmpIndex = 0; tmpIndex < lineStr.Length; ++tmpIndex)
+								{
+									if ((lineStr[tmpIndex] != ' ') && (lineStr[tmpIndex] != '\t'))
+										break;
+								}
+								if (tmpIndex == lineStr.Length)
+									tmpIndex = 0;
+								firstChar[line] = tmpIndex;
 							}
-							if (tmpIndex == lineStr.Length)
-								tmpIndex = 0;
-							if (tmpIndex != index)
+							var first = firstChar[line];
+							if (first != index)
 								changed = true;
-							Selections[ctr] = MoveCursor(Selections[ctr], 0, tmpIndex, indexRel: false);
+							Selections[ctr] = MoveCursor(Selections[ctr], 0, first, indexRel: false);
 						}
 						if (!changed)
 						{
