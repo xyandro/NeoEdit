@@ -42,6 +42,10 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Edit_GotoLine = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoIndex = new RoutedCommand();
 		public static RoutedCommand Command_Edit_BOM = new RoutedCommand();
+		public static RoutedCommand Command_Edit_ShowFirst = new RoutedCommand();
+		public static RoutedCommand Command_Edit_ShowCurrent = new RoutedCommand();
+		public static RoutedCommand Command_Edit_NextSelection = new RoutedCommand();
+		public static RoutedCommand Command_Edit_PrevSelection = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
@@ -374,6 +378,27 @@ namespace NeoEdit.TextEditor
 				else
 					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
 			}
+			else if (command == Command_Edit_ShowFirst)
+			{
+				visibleIndex = 0;
+				EnsureVisible(true);
+			}
+			else if (command == Command_Edit_ShowCurrent)
+				EnsureVisible(true);
+			else if (command == Command_Edit_NextSelection)
+			{
+				++visibleIndex;
+				if (visibleIndex >= Selections.Count)
+					visibleIndex = 0;
+				EnsureVisible(true);
+			}
+			else if (command == Command_Edit_PrevSelection)
+			{
+				--visibleIndex;
+				if (visibleIndex < 0)
+					visibleIndex = Selections.Count;
+				EnsureVisible(true);
+			}
 			else if (command == Command_Data_Char_Upper)
 			{
 				var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
@@ -595,14 +620,22 @@ namespace NeoEdit.TextEditor
 		List<TextCanvasUndoRedo> undo = new List<TextCanvasUndoRedo>();
 		List<TextCanvasUndoRedo> redo = new List<TextCanvasUndoRedo>();
 
-		void EnsureVisible()
+		int visibleIndex;
+		void EnsureVisible(bool highlight = false)
 		{
 			if (Selections.Count == 0)
 				return;
 
-			var range = Selections.First();
+			visibleIndex = Math.Min(visibleIndex, Selections.Count - 1);
+
+			var range = Selections[visibleIndex];
 			var line = Data.GetOffsetLine(range.Cursor);
 			var index = Data.GetOffsetIndex(range.Cursor, line);
+			Line = line + 1;
+			Index = index + 1;
+			Column = Data.GetColumnFromIndex(line, index) + 1;
+			if (highlight)
+				yScrollValue = line - numLines / 2;
 			yScrollValue = Math.Min(line, Math.Max(line - numLines + 1, yScrollValue));
 			var x = Data.GetColumnFromIndex(line, index);
 			xScrollValue = Math.Min(x, Math.Max(x - numColumns + 1, xScrollValue));
@@ -714,10 +747,6 @@ namespace NeoEdit.TextEditor
 			yScroll.SmallChange = 1;
 			yScroll.LargeChange = numLines - 1;
 
-			var pos = Selections.First().Cursor;
-			Line = Data.GetOffsetLine(pos) + 1;
-			Index = Data.GetOffsetIndex(pos, Line - 1) + 1;
-			Column = Data.GetColumnFromIndex(Line - 1, Index - 1) + 1;
 			NumSelections = Selections.Count;
 
 			var startLine = yScrollValue;

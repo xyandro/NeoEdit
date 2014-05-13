@@ -31,6 +31,10 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_BOM" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_NextSelection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_PrevSelection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
@@ -145,6 +149,10 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Key="F" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Key="Space" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_NextSelection" Key="Down" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_PrevSelection" Key="Up" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Key="U" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Key="U" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
@@ -237,6 +245,11 @@
 					<MenuItem Header="Base64"/>
 				</MenuItem>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Header="First selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Header="Show current"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_NextSelection" Header="Next selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_PrevSelection" Header="Prev selection"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
