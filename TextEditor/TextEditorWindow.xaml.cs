@@ -687,17 +687,9 @@ namespace NeoEdit.TextEditor
 			};
 
 			HasBOM = Data.BOM;
-			var columns = 0;
-			for (var line = 0; line < Data.NumLines; ++line)
-			{
-				var lineStr = Data[line];
-				if (lineStr.Length < columns)
-					continue;
-				columns = Math.Max(columns, Data.GetColumnFromIndex(line, lineStr.Length));
-			}
 
 			xScroll.ViewportSize = numColumns;
-			xScroll.Maximum = columns - numColumns;
+			xScroll.Maximum = Data.MaxColumn - numColumns;
 			xScroll.SmallChange = 1;
 			xScroll.LargeChange = numColumns - 1;
 
@@ -717,7 +709,7 @@ namespace NeoEdit.TextEditor
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + numLines + 1);
 			var startColumn = xScrollValue;
-			var endColumn = Math.Min(columns + 1, startColumn + numColumns + 1);
+			var endColumn = Math.Min(Data.MaxColumn + 1, startColumn + numColumns + 1);
 
 			var lines = Enumerable.Range(startLine, endLine - startLine).ToList();
 			var lineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data[line].Length)));

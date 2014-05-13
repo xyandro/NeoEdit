@@ -20,6 +20,8 @@ namespace NeoEdit.TextEditor
 		const int tabStop = 4;
 
 		public int NumLines { get { return lineIndex.Count; } }
+		public int MaxIndex { get; private set; }
+		public int MaxColumn { get; private set; }
 		public bool BOM { get; private set; }
 
 		public TextData(byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
@@ -79,9 +81,53 @@ namespace NeoEdit.TextEditor
 			DefaultEnding = Enumerable.Range(0, endingIndex.Count).Select(a => GetEnding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).FirstOrDefault();
 			if (String.IsNullOrEmpty(DefaultEnding))
 				DefaultEnding = "\r\n";
+
+			// Calculate max index/columns
+			MaxIndex = lineLength.Max();
+			MaxColumn = 0;
+			for (var line = 0; line < lineIndex.Count; ++line)
+				MaxColumn = Math.Max(MaxColumn, GetColumnFromIndex(line, GetLineColumnsLength(line)));
 		}
 
 		public string this[int line] { get { return GetLine(line); } }
+
+		public int GetLineLength(int line)
+		{
+			if ((line < 0) || (line >= lineIndex.Count))
+				throw new IndexOutOfRangeException();
+			return lineLength[line];
+		}
+
+		public int GetLineColumnsLength(int line)
+		{
+			if ((line < 0) || (line >= lineIndex.Count))
+				throw new IndexOutOfRangeException();
+
+			var index = lineIndex[line];
+			var len = lineLength[line];
+			var columns = 0;
+			while (len > 0)
+			{
+				var find = data.IndexOf('\t', index, len);
+				if (find == index)
+				{
+					columns = (columns / tabStop + 1) * tabStop;
+					++index;
+					--len;
+					continue;
+				}
+
+				if (find == -1)
+					find = len;
+				else
+					find -= index;
+				columns += find;
+				index += find;
+				len -= find;
+			}
+
+			return columns;
+		}
 
 		public string GetLine(int line)
 		{
@@ -92,6 +138,9 @@ namespace NeoEdit.TextEditor
 
 		public string GetColumnsLine(int line)
 		{
+			if ((line < 0) || (line >= lineIndex.Count))
+				throw new IndexOutOfRangeException();
+
 			var index = lineIndex[line];
 			var len = lineLength[line];
 			var sb = new StringBuilder();
