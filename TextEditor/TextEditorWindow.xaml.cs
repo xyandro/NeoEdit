@@ -201,7 +201,7 @@ namespace NeoEdit.TextEditor
 
 		int EndOffset()
 		{
-			return Data.GetOffset(Data.NumLines - 1, Data[Data.NumLines - 1].Length);
+			return Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
 		}
 
 		void RunCommand(ICommand command)
@@ -349,9 +349,9 @@ namespace NeoEdit.TextEditor
 				var getNumDialog = new GetNumDialog
 				{
 					Title = "Go to column",
-					Text = String.Format("Go to column: (1 - {0})", Data[line].Length + 1),
+					Text = String.Format("Go to column: (1 - {0})", Data.GetLineLength(line) + 1),
 					MinValue = 1,
-					MaxValue = Data[line].Length + 1,
+					MaxValue = Data.GetLineLength(line) + 1,
 					Value = index,
 				};
 				if (getNumDialog.ShowDialog() == true)
@@ -497,7 +497,7 @@ namespace NeoEdit.TextEditor
 					return;
 
 				var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-				var sels = lines.Select(line => new Range(Data.GetOffset(line, Data[line].Length), Data.GetOffset(line, 0))).ToList();
+				var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
 				if (selectLinesDialog.IgnoreBlankLines)
 					sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
 				if (selectLinesDialog.LineMult > 1)
@@ -712,7 +712,7 @@ namespace NeoEdit.TextEditor
 			var endColumn = Math.Min(Data.MaxColumn + 1, startColumn + numColumns + 1);
 
 			var lines = Enumerable.Range(startLine, endLine - startLine).ToList();
-			var lineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data[line].Length)));
+			var lineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data.GetLineLength(line))));
 			var screenStart = lineRanges.First().Value.Start;
 			var screenEnd = lineRanges.Last().Value.End + 1;
 			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn));
@@ -812,6 +812,8 @@ namespace NeoEdit.TextEditor
 		void OnCanvasKeyDown(object sender, KeyEventArgs e)
 		{
 			e.Handled = true;
+			var controlDown = this.controlDown;
+			shiftOverride = shiftDown;
 			switch (e.Key)
 			{
 				case Key.Back:
@@ -839,9 +841,9 @@ namespace NeoEdit.TextEditor
 								--line;
 								if (line < 0)
 									continue;
-								index = Data[line].Length;
+								index = Data.GetLineLength(line);
 							}
-							if (index > Data[line].Length)
+							if (index > Data.GetLineLength(line))
 							{
 								++line;
 								if (line >= Data.NumLines)
@@ -884,7 +886,7 @@ namespace NeoEdit.TextEditor
 							var index = Data.GetOffsetIndex(selection.Cursor, line);
 							if (controlDown)
 								newSelections.Add(MoveNextWord(selection));
-							else if ((index == Data[line].Length) && (line != Data.NumLines - 1))
+							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
 								newSelections.Add(MoveCursor(selection, 1, 0, indexRel: false));
 							else
 								newSelections.Add(MoveCursor(selection, 0, 1));
@@ -1006,6 +1008,7 @@ namespace NeoEdit.TextEditor
 					break;
 				default: e.Handled = false; break;
 			}
+			shiftOverride = null;
 		}
 
 		enum WordSkipType
@@ -1119,7 +1122,7 @@ namespace NeoEdit.TextEditor
 			}
 
 			line = Math.Max(0, Math.Min(line, Data.NumLines - 1));
-			index = Math.Max(0, Math.Min(index, Data[line].Length));
+			index = Math.Max(0, Math.Min(index, Data.GetLineLength(line)));
 			var cursor = Data.GetOffset(line, index);
 			var highlight = selecting ? range.Highlight : cursor;
 			range = new Range(cursor, highlight);
