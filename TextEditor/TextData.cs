@@ -86,35 +86,34 @@ namespace NeoEdit.TextEditor
 			MaxIndex = lineLength.Max();
 			MaxColumn = 0;
 			for (var line = 0; line < lineOffset.Count; ++line)
-				MaxColumn = Math.Max(MaxColumn, GetColumnFromIndex(line, GetLineColumnsLength(line)));
+				MaxColumn = Math.Max(MaxColumn, GetLineColumnsLength(line));
 		}
 
 		public string this[int line] { get { return GetLine(line); } }
+		public char this[int line, int index] { get { return data[GetOffset(line, index)]; } }
 
-		public char this[int line, int index]
+		void Verify(int line)
 		{
-			get
-			{
-				if ((line < 0) || (line >= lineOffset.Count))
-					throw new IndexOutOfRangeException();
-				if ((index < 0) || (index >= lineLength[line]))
-					throw new IndexOutOfRangeException();
+			if ((line < 0) || (line >= lineOffset.Count))
+				throw new IndexOutOfRangeException();
+		}
 
-				return data[lineOffset[line] + index];
-			}
+		void Verify(int line, int index)
+		{
+			Verify(line);
+			if ((index < 0) || (index > lineLength[line]))
+				throw new IndexOutOfRangeException();
 		}
 
 		public int GetLineLength(int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
-				throw new IndexOutOfRangeException();
+			Verify(line);
 			return lineLength[line];
 		}
 
 		public int GetLineColumnsLength(int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
-				throw new IndexOutOfRangeException();
+			Verify(line);
 
 			var index = lineOffset[line];
 			var len = lineLength[line];
@@ -144,15 +143,13 @@ namespace NeoEdit.TextEditor
 
 		public string GetLine(int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
-				throw new IndexOutOfRangeException();
+			Verify(line);
 			return data.Substring(lineOffset[line], lineLength[line]);
 		}
 
 		public string GetLineColumns(int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
-				throw new IndexOutOfRangeException();
+			Verify(line);
 
 			var index = lineOffset[line];
 			var len = lineLength[line];
@@ -189,8 +186,7 @@ namespace NeoEdit.TextEditor
 
 		public int GetOffset(int line, int index)
 		{
-			if ((line < 0) || (line >= endingIndex.Count))
-				throw new IndexOutOfRangeException();
+			Verify(line, index);
 			return lineOffset[line] + index;
 		}
 
@@ -209,8 +205,7 @@ namespace NeoEdit.TextEditor
 
 		public int GetColumnFromIndex(int line, int index)
 		{
-			if (index < 0)
-				throw new IndexOutOfRangeException();
+			Verify(line, index);
 
 			var column = 0;
 			var tmpIndex = lineOffset[line];
