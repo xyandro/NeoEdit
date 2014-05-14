@@ -931,9 +931,9 @@ namespace NeoEdit.TextEditor
 							if (controlDown)
 								Selections[ctr] = MovePrevWord(Selections[ctr]);
 							else if ((index == 0) && (line != 0))
-								Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, indexRel: false);
+								Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, indexRel: false, checkSelection: true);
 							else
-								Selections[ctr] = MoveCursor(Selections[ctr], 0, -1);
+								Selections[ctr] = MoveCursor(Selections[ctr], 0, -1, checkSelection: true);
 						}
 					}
 					break;
@@ -946,9 +946,9 @@ namespace NeoEdit.TextEditor
 							if (controlDown)
 								Selections[ctr] = MoveNextWord(Selections[ctr]);
 							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
-								Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, indexRel: false);
+								Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, indexRel: false, checkSelection: true);
 							else
-								Selections[ctr] = MoveCursor(Selections[ctr], 0, 1);
+								Selections[ctr] = MoveCursor(Selections[ctr], 0, 1, checkSelection: true);
 						}
 					}
 					break;
@@ -964,7 +964,7 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.Home:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset())).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset())).ToList()); // Have to use MoveCursor for selection
 					else
 					{
 						var firstChar = new Dictionary<int, int>();
@@ -1000,7 +1000,7 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.End:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => MoveCursor(range, EndOffset())).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, EndOffset())).ToList()); // Have to use MoveCursor for selection
 					else
 						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, indexRel: false)).ToList());
 					break;
@@ -1169,18 +1169,18 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		Range MoveCursor(Range range, int cursor)
+		Range MoveCursor(Range range, int cursor, bool checkSelection = false)
 		{
 			if (selecting)
 				return new Range(cursor, range.Highlight);
 
-			if (range.HasSelection())
+			if ((checkSelection) && (range.HasSelection()))
 				return new Range(cursor < range.End ? range.Start : range.End);
 
 			return new Range(cursor);
 		}
 
-		Range MoveCursor(Range range, int line, int index, bool lineRel = true, bool indexRel = true)
+		Range MoveCursor(Range range, int line, int index, bool lineRel = true, bool indexRel = true, bool checkSelection = false)
 		{
 			if ((lineRel) || (indexRel))
 			{
@@ -1195,7 +1195,7 @@ namespace NeoEdit.TextEditor
 
 			line = Math.Max(0, Math.Min(line, Data.NumLines - 1));
 			index = Math.Max(0, Math.Min(index, Data.GetLineLength(line)));
-			return MoveCursor(range, Data.GetOffset(line, index));
+			return MoveCursor(range, Data.GetOffset(line, index), checkSelection);
 		}
 
 		void MouseHandler(Point mousePos)
