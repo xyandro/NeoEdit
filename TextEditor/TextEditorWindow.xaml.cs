@@ -1161,8 +1161,13 @@ namespace NeoEdit.TextEditor
 
 		Range MoveCursor(Range range, int cursor)
 		{
-			var highlight = selecting ? range.Highlight : cursor;
-			return new Range(cursor, highlight);
+			if (selecting)
+				return new Range(cursor, range.Highlight);
+
+			if (range.HasSelection())
+				return new Range(cursor < range.End ? range.Start : range.End);
+
+			return new Range(cursor);
 		}
 
 		Range MoveCursor(Range range, int line, int index, bool lineRel = true, bool indexRel = true)
