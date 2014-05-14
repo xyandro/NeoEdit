@@ -52,6 +52,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unique" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_GUID" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_String" Executed="Command_Executed"/>
@@ -277,6 +278,8 @@
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unique" Header="_Unique"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Header="_Duplicates"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_GUID" Header="Insert _GUID"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5" Header="MD_5"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1" Header="SHA_1"/>

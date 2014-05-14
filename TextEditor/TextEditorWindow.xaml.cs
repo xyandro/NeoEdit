@@ -63,6 +63,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Repeat = new RoutedCommand();
 		public static RoutedCommand Command_Data_Unique = new RoutedCommand();
 		public static RoutedCommand Command_Data_Duplicates = new RoutedCommand();
+		public static RoutedCommand Command_Data_GUID = new RoutedCommand();
 		public static RoutedCommand Command_Data_MD5 = new RoutedCommand();
 		public static RoutedCommand Command_Data_SHA1 = new RoutedCommand();
 		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();
@@ -501,6 +502,11 @@ namespace NeoEdit.TextEditor
 				Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
 			else if (command == Command_Data_Duplicates)
 				Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
+			else if (command == Command_Data_GUID)
+			{
+				var strs = Selections.Select(range => Guid.NewGuid().ToString()).ToList();
+				Replace(Selections, strs, true);
+			}
 			else if (command == Command_Data_MD5)
 			{
 				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.MD5, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
