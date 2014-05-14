@@ -240,6 +240,9 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_File_SaveAs)
 			{
 				var dialog = new SaveFileDialog();
+				dialog.DefaultExt = "txt";
+				dialog.Filter = "Text files|*.txt|All files|*.*";
+				dialog.FilterIndex = 2;
 				if (dialog.ShowDialog() == true)
 				{
 					if (Directory.Exists(dialog.FileName))
