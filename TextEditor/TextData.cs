@@ -149,7 +149,7 @@ namespace NeoEdit.TextEditor
 			return data.Substring(lineIndex[line], lineLength[line]);
 		}
 
-		public string GetColumnsLine(int line)
+		public string GetLineColumns(int line)
 		{
 			if ((line < 0) || (line >= lineIndex.Count))
 				throw new IndexOutOfRangeException();

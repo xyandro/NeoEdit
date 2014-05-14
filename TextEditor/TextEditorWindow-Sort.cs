@@ -33,7 +33,7 @@ namespace NeoEdit.TextEditor
 
 		RangeList GetSortLines()
 		{
-			return Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data[line].Length)).ToList();
+			return Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 		}
 
 		RangeList GetSortRegions()

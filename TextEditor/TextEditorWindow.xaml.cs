@@ -832,7 +832,7 @@ namespace NeoEdit.TextEditor
 
 			for (var line = startLine; line < endLine; ++line)
 			{
-				var str = Data.GetColumnsLine(line);
+				var str = Data.GetLineColumns(line);
 				if (str.Length <= startColumn)
 					continue;
 
