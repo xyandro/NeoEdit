@@ -91,6 +91,19 @@ namespace NeoEdit.TextEditor
 
 		public string this[int line] { get { return GetLine(line); } }
 
+		public char this[int line, int index]
+		{
+			get
+			{
+				if ((line < 0) || (line >= lineIndex.Count))
+					throw new IndexOutOfRangeException();
+				if ((index < 0) || (index >= lineLength[line]))
+					throw new IndexOutOfRangeException();
+
+				return data[lineIndex[line] + index];
+			}
+		}
+
 		public int GetLineLength(int line)
 		{
 			if ((line < 0) || (line >= lineIndex.Count))
@@ -359,18 +372,6 @@ namespace NeoEdit.TextEditor
 				offset = match.Index + match.Length;
 			}
 			return result;
-		}
-
-		public int GetLineFirstNonWhitespaceIndex(int line)
-		{
-			var start = lineIndex[line];
-			var end = start + lineLength[line];
-			for (var ctr = start; ctr < end; ++ctr)
-			{
-				if ((data[ctr] != ' ') && (data[ctr] != '\t'))
-					return ctr - start;
-			}
-			return -1;
 		}
 	}
 }

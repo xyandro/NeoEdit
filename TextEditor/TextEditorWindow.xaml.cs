@@ -736,7 +736,7 @@ namespace NeoEdit.TextEditor
 		}
 
 		DispatcherTimer canvasRenderTimer = null;
-		new void InvalidateCanvas()
+		void InvalidateCanvas()
 		{
 			if (canvasRenderTimer != null)
 				return;
@@ -972,9 +972,17 @@ namespace NeoEdit.TextEditor
 						{
 							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
 							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
-							var first = Data.GetLineFirstNonWhitespaceIndex(line);
-							if (first == -1)
+
+							int first;
+							var end = Data.GetLineLength(line);
+							for (first = 0; first < end; ++first)
+							{
+								if (!Char.IsWhiteSpace(Data[line, first]))
+									break;
+							}
+							if (first == end)
 								first = 0;
+
 							if (first != index)
 								changed = true;
 							Selections[ctr] = MoveCursor(Selections[ctr], 0, first, indexRel: false);
