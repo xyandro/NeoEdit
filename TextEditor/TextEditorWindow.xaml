@@ -135,6 +135,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_All" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Unselect" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Limit" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Lines" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Marks" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Find" Executed="Command_Executed"/>
@@ -395,6 +396,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unselect" Header="_Unselect"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="_Single"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Limit" Header="Limit"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Marks" Header="_Marks"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find results"/>

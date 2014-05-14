@@ -69,6 +69,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Select_All = new RoutedCommand();
 		public static RoutedCommand Command_Select_Unselect = new RoutedCommand();
 		public static RoutedCommand Command_Select_Single = new RoutedCommand();
+		public static RoutedCommand Command_Select_Limit = new RoutedCommand();
 		public static RoutedCommand Command_Select_Lines = new RoutedCommand();
 		public static RoutedCommand Command_Select_Marks = new RoutedCommand();
 		public static RoutedCommand Command_Select_Find = new RoutedCommand();
@@ -535,6 +536,14 @@ namespace NeoEdit.TextEditor
 				Selections.Replace(Selections.Select(range => new Range(range.Start)).ToList());
 			else if (command == Command_Select_Single)
 				Selections.Replace(Selections.First());
+			else if (command == Command_Select_Limit)
+			{
+				var limitDialog = new LimitDialog { MaxSels = Selections.Count };
+				if (limitDialog.ShowDialog() != true)
+					return;
+
+				Selections.RemoveRange(limitDialog.MaxSels, Selections.Count - limitDialog.MaxSels);
+			}
 			else if (command == Command_Select_Lines)
 			{
 				var selectLinesDialog = new SelectLinesDialog();

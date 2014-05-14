@@ -48,6 +48,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\LimitDialog.xaml.cs">
+      <DependentUpon>LimitDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextEditorWindow-Keys.cs" />
     <Compile Include="TextEditorWindow-Sort.cs" />
     <Compile Include="RangeList.cs" />
@@ -72,6 +75,10 @@
     <Compile Include="TextEditorWindow.xaml.cs">
       <DependentUpon>TextEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\LimitDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\RepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

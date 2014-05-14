@@ -30,6 +30,12 @@ namespace NeoEdit.TextEditor
 			collectionChanged();
 		}
 
+		public new void RemoveRange(int index, int count)
+		{
+			base.RemoveRange(index, count);
+			collectionChanged();
+		}
+
 		public void Replace(RangeList items)
 		{
 			base.Clear();
