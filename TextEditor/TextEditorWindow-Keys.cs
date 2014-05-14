@@ -146,8 +146,6 @@ namespace NeoEdit.TextEditor
 			}
 			else if (GetKeysValuesCommand(command) == Command_Keys_GlobalReplace1)
 			{
-				keysAndValues[0] = new List<string> { "<FIRSTNAME>", "<LASTNAME>" };
-				keysAndValues[1] = new List<string> { "Randon", "Spackman" };
 				var index = GetKeysValuesIndex(command);
 				if (keysAndValues[0].Count != keysAndValues[index].Count)
 					throw new Exception("Keys and values count must match.");
