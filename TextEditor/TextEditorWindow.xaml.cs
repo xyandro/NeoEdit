@@ -890,30 +890,44 @@ namespace NeoEdit.TextEditor
 								continue;
 							}
 
-							var line = Data.GetOffsetLine(range.Start);
-							var index = Data.GetOffsetIndex(range.Start, line);
+							var offset = range.Start;
 
-							if (e.Key == Key.Back)
-								--index;
+							if (controlDown)
+							{
+								if (e.Key == Key.Back)
+									offset = GetPrevWord(offset);
+								else
+									offset = GetNextWord(offset);
+							}
 							else
-								++index;
-
-							if (index < 0)
 							{
-								--line;
-								if (line < 0)
-									continue;
-								index = Data.GetLineLength(line);
-							}
-							if (index > Data.GetLineLength(line))
-							{
-								++line;
-								if (line >= Data.NumLines)
-									continue;
-								index = 0;
+								var line = Data.GetOffsetLine(offset);
+								var index = Data.GetOffsetIndex(offset, line);
+
+								if (e.Key == Key.Back)
+									--index;
+								else
+									++index;
+
+								if (index < 0)
+								{
+									--line;
+									if (line < 0)
+										continue;
+									index = Data.GetLineLength(line);
+								}
+								if (index > Data.GetLineLength(line))
+								{
+									++line;
+									if (line >= Data.NumLines)
+										continue;
+									index = 0;
+								}
+
+								offset = Data.GetOffset(line, index);
 							}
 
-							selections.Add(new Range(Data.GetOffset(line, index), range.Highlight));
+							selections.Add(new Range(offset, range.Highlight));
 						}
 
 						Replace(selections, null, false);
