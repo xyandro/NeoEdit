@@ -1020,26 +1020,26 @@ namespace NeoEdit.TextEditor
 							break;
 						}
 
-						var lines = Selections.Where(a => a.HasSelection()).ToDictionary(a => Data.GetOffsetLine(a.Start), a => Data.GetOffsetLine(a.End - 1));
-						lines = lines.SelectMany(selection => Enumerable.Range(selection.Key, selection.Value - selection.Key + 1)).Distinct().OrderBy(lineNum => lineNum).ToDictionary(line => line, line => Data.GetOffset(line, 0));
+						var selLines = Selections.Where(a => a.HasSelection()).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
+						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy(line => line).ToDictionary(line => line, line => Data.GetOffset(line, 0));
 						int offset;
 						string replace;
 						if (shiftDown)
 						{
 							offset = 1;
 							replace = "";
-							lines = lines.Where(entry => Data[entry.Key].StartsWith("\t")).ToDictionary(entry => entry.Key, entry => entry.Value);
+							lines = lines.Where(entry => (Data.GetLineLength(entry.Key) != 0) && (Data[entry.Key, 0] == '\t')).ToDictionary(entry => entry.Key, entry => entry.Value);
 						}
 						else
 						{
 							offset = 0;
 							replace = "\t";
-							lines = lines.Where(entry => !String.IsNullOrWhiteSpace(Data[entry.Key])).ToDictionary(entry => entry.Key, entry => entry.Value);
+							lines = lines.Where(entry => Data.GetLineLength(entry.Key) != 0).ToDictionary(entry => entry.Key, entry => entry.Value);
 						}
 
-						var sels = lines.Select(line => new Range(line.Value + offset, line.Value)).ToList();
+						var sels = lines.Select(line => Range.FromIndex(line.Value, offset)).ToList();
 						var insert = sels.Select(range => replace).ToList();
-						Replace(sels, insert, false);
+						Replace(sels, insert, true);
 					}
 					break;
 				case Key.Enter:
