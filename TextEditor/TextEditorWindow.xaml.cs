@@ -1386,7 +1386,7 @@ namespace NeoEdit.TextEditor
 				int index;
 				if (forward)
 				{
-					index = Searches.BinaryFindFirst(range => range.Start > Selections[ctr].Start);
+					index = Searches.BinaryFindFirst(range => range.Start >= Selections[ctr].End);
 					if (index == -1)
 						index = 0;
 				}
