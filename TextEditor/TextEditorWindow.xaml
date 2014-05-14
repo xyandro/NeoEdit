@@ -199,7 +199,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Open" Header="_Open"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_SaveAs" Header="Save _As"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="_Exit"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="E_xit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Undo" Header="_Undo"/>
