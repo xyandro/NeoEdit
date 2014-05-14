@@ -83,15 +83,24 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues7" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues8" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues9" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues1" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues2" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues3" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues4" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues6" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues9" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace1" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace2" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace3" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace4" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace5" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace6" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace7" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace1" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace2" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace3" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace4" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace5" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace6" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace7" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace8" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace9" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyKeys" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues2" Executed="Command_Executed"/>
@@ -169,15 +178,15 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues7" Key="D7" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues8" Key="D8" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues9" Key="D9" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues1" Key="D1" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues2" Key="D2" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues3" Key="D3" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues4" Key="D4" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues5" Key="D5" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues6" Key="D6" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues7" Key="D7" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues8" Key="D8" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues9" Key="D9" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace1" Key="D1" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace2" Key="D2" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace3" Key="D3" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace4" Key="D4" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace5" Key="D5" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace6" Key="D6" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace7" Key="D7" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Key="D8" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Key="D9" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Key="M" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_All" Key="A" Modifiers="Control"/>
 	</Window.InputBindings>
@@ -321,16 +330,27 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues8" Header="Values _8"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues9" Header="Values _9"/>
 				</MenuItem>
-				<MenuItem Header="_Transform to">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues1" Header="Values _1"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues2" Header="Values _2"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues3" Header="Values _3"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues4" Header="Values _4"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues5" Header="Values _5"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues6" Header="Values _6"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues7" Header="Values _7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues8" Header="Values _8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_KeysToValues9" Header="Values _9"/>
+				<MenuItem Header="Selection _Replace">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace1" Header="Values _1"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace2" Header="Values _2"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace3" Header="Values _3"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace4" Header="Values _4"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace5" Header="Values _5"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace6" Header="Values _6"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace7" Header="Values _7"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Header="Values _8"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Header="Values _9"/>
+				</MenuItem>
+				<MenuItem Header="_Global replace">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace1" Header="Values _1"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace2" Header="Values _2"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace3" Header="Values _3"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace4" Header="Values _4"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace5" Header="Values _5"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace6" Header="Values _6"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace7" Header="Values _7"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace8" Header="Values _8"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace9" Header="Values _9"/>
 				</MenuItem>
 				<MenuItem Header="_Copy">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyKeys" Header="_Keys"/>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using NeoEdit.GUI;
 
@@ -18,15 +19,24 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Keys_SetValues7 = new RoutedCommand();
 		public static RoutedCommand Command_Keys_SetValues8 = new RoutedCommand();
 		public static RoutedCommand Command_Keys_SetValues9 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues1 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues2 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues3 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues4 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues5 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues6 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues7 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues8 = new RoutedCommand();
-		public static RoutedCommand Command_Keys_KeysToValues9 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace1 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace2 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace3 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace4 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace5 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace6 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace7 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace8 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_SelectionReplace9 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace1 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace2 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace3 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace4 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace5 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace6 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace7 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace8 = new RoutedCommand();
+		public static RoutedCommand Command_Keys_GlobalReplace9 = new RoutedCommand();
 		public static RoutedCommand Command_Keys_CopyKeys = new RoutedCommand();
 		public static RoutedCommand Command_Keys_CopyValues1 = new RoutedCommand();
 		public static RoutedCommand Command_Keys_CopyValues2 = new RoutedCommand();
@@ -64,8 +74,10 @@ namespace NeoEdit.TextEditor
 		{
 			if ((command == Command_Keys_SetKeys) || (command == Command_Keys_SetValues1) || (command == Command_Keys_SetValues2) || (command == Command_Keys_SetValues3) || (command == Command_Keys_SetValues4) || (command == Command_Keys_SetValues5) || (command == Command_Keys_SetValues6) || (command == Command_Keys_SetValues7) || (command == Command_Keys_SetValues8) || (command == Command_Keys_SetValues9))
 				return Command_Keys_SetValues1;
-			if ((command == Command_Keys_KeysToValues1) || (command == Command_Keys_KeysToValues2) || (command == Command_Keys_KeysToValues3) || (command == Command_Keys_KeysToValues4) || (command == Command_Keys_KeysToValues5) || (command == Command_Keys_KeysToValues6) || (command == Command_Keys_KeysToValues7) || (command == Command_Keys_KeysToValues8) || (command == Command_Keys_KeysToValues9))
-				return Command_Keys_KeysToValues1;
+			if ((command == Command_Keys_SelectionReplace1) || (command == Command_Keys_SelectionReplace2) || (command == Command_Keys_SelectionReplace3) || (command == Command_Keys_SelectionReplace4) || (command == Command_Keys_SelectionReplace5) || (command == Command_Keys_SelectionReplace6) || (command == Command_Keys_SelectionReplace7) || (command == Command_Keys_SelectionReplace8) || (command == Command_Keys_SelectionReplace9))
+				return Command_Keys_SelectionReplace1;
+			if ((command == Command_Keys_GlobalReplace1) || (command == Command_Keys_GlobalReplace2) || (command == Command_Keys_GlobalReplace3) || (command == Command_Keys_GlobalReplace4) || (command == Command_Keys_GlobalReplace5) || (command == Command_Keys_GlobalReplace6) || (command == Command_Keys_GlobalReplace7) || (command == Command_Keys_GlobalReplace8) || (command == Command_Keys_GlobalReplace9))
+				return Command_Keys_GlobalReplace1;
 			if ((command == Command_Keys_CopyKeys) || (command == Command_Keys_CopyValues1) || (command == Command_Keys_CopyValues2) || (command == Command_Keys_CopyValues3) || (command == Command_Keys_CopyValues4) || (command == Command_Keys_CopyValues5) || (command == Command_Keys_CopyValues6) || (command == Command_Keys_CopyValues7) || (command == Command_Keys_CopyValues8) || (command == Command_Keys_CopyValues9))
 				return Command_Keys_CopyValues1;
 			if ((command == Command_Keys_HitsKeys) || (command == Command_Keys_HitsValues1) || (command == Command_Keys_HitsValues2) || (command == Command_Keys_HitsValues3) || (command == Command_Keys_HitsValues4) || (command == Command_Keys_HitsValues5) || (command == Command_Keys_HitsValues6) || (command == Command_Keys_HitsValues7) || (command == Command_Keys_HitsValues8) || (command == Command_Keys_HitsValues9))
@@ -80,23 +92,23 @@ namespace NeoEdit.TextEditor
 		{
 			if ((command == Command_Keys_SetKeys) || (command == Command_Keys_CopyKeys) || (command == Command_Keys_HitsKeys) || (command == Command_Keys_MissesKeys))
 				return 0;
-			if ((command == Command_Keys_SetValues1) || (command == Command_Keys_KeysToValues1) || (command == Command_Keys_CopyValues1) || (command == Command_Keys_HitsValues1) || (command == Command_Keys_MissesValues1))
+			if ((command == Command_Keys_SetValues1) || (command == Command_Keys_SelectionReplace1) || (command == Command_Keys_GlobalReplace1) || (command == Command_Keys_CopyValues1) || (command == Command_Keys_HitsValues1) || (command == Command_Keys_MissesValues1))
 				return 1;
-			if ((command == Command_Keys_SetValues2) || (command == Command_Keys_KeysToValues2) || (command == Command_Keys_CopyValues2) || (command == Command_Keys_HitsValues2) || (command == Command_Keys_MissesValues2))
+			if ((command == Command_Keys_SetValues2) || (command == Command_Keys_SelectionReplace2) || (command == Command_Keys_GlobalReplace2) || (command == Command_Keys_CopyValues2) || (command == Command_Keys_HitsValues2) || (command == Command_Keys_MissesValues2))
 				return 2;
-			if ((command == Command_Keys_SetValues3) || (command == Command_Keys_KeysToValues3) || (command == Command_Keys_CopyValues3) || (command == Command_Keys_HitsValues3) || (command == Command_Keys_MissesValues3))
+			if ((command == Command_Keys_SetValues3) || (command == Command_Keys_SelectionReplace3) || (command == Command_Keys_GlobalReplace3) || (command == Command_Keys_CopyValues3) || (command == Command_Keys_HitsValues3) || (command == Command_Keys_MissesValues3))
 				return 3;
-			if ((command == Command_Keys_SetValues4) || (command == Command_Keys_KeysToValues4) || (command == Command_Keys_CopyValues4) || (command == Command_Keys_HitsValues4) || (command == Command_Keys_MissesValues4))
+			if ((command == Command_Keys_SetValues4) || (command == Command_Keys_SelectionReplace4) || (command == Command_Keys_GlobalReplace4) || (command == Command_Keys_CopyValues4) || (command == Command_Keys_HitsValues4) || (command == Command_Keys_MissesValues4))
 				return 4;
-			if ((command == Command_Keys_SetValues5) || (command == Command_Keys_KeysToValues5) || (command == Command_Keys_CopyValues5) || (command == Command_Keys_HitsValues5) || (command == Command_Keys_MissesValues5))
+			if ((command == Command_Keys_SetValues5) || (command == Command_Keys_SelectionReplace5) || (command == Command_Keys_GlobalReplace5) || (command == Command_Keys_CopyValues5) || (command == Command_Keys_HitsValues5) || (command == Command_Keys_MissesValues5))
 				return 5;
-			if ((command == Command_Keys_SetValues6) || (command == Command_Keys_KeysToValues6) || (command == Command_Keys_CopyValues6) || (command == Command_Keys_HitsValues6) || (command == Command_Keys_MissesValues6))
+			if ((command == Command_Keys_SetValues6) || (command == Command_Keys_SelectionReplace6) || (command == Command_Keys_GlobalReplace6) || (command == Command_Keys_CopyValues6) || (command == Command_Keys_HitsValues6) || (command == Command_Keys_MissesValues6))
 				return 6;
-			if ((command == Command_Keys_SetValues7) || (command == Command_Keys_KeysToValues7) || (command == Command_Keys_CopyValues7) || (command == Command_Keys_HitsValues7) || (command == Command_Keys_MissesValues7))
+			if ((command == Command_Keys_SetValues7) || (command == Command_Keys_SelectionReplace7) || (command == Command_Keys_GlobalReplace7) || (command == Command_Keys_CopyValues7) || (command == Command_Keys_HitsValues7) || (command == Command_Keys_MissesValues7))
 				return 7;
-			if ((command == Command_Keys_SetValues8) || (command == Command_Keys_KeysToValues8) || (command == Command_Keys_CopyValues8) || (command == Command_Keys_HitsValues8) || (command == Command_Keys_MissesValues8))
+			if ((command == Command_Keys_SetValues8) || (command == Command_Keys_SelectionReplace8) || (command == Command_Keys_GlobalReplace8) || (command == Command_Keys_CopyValues8) || (command == Command_Keys_HitsValues8) || (command == Command_Keys_MissesValues8))
 				return 8;
-			if ((command == Command_Keys_SetValues9) || (command == Command_Keys_KeysToValues9) || (command == Command_Keys_CopyValues9) || (command == Command_Keys_HitsValues9) || (command == Command_Keys_MissesValues9))
+			if ((command == Command_Keys_SetValues9) || (command == Command_Keys_SelectionReplace9) || (command == Command_Keys_GlobalReplace9) || (command == Command_Keys_CopyValues9) || (command == Command_Keys_HitsValues9) || (command == Command_Keys_MissesValues9))
 				return 9;
 			throw new Exception("Invalid keys/values command");
 		}
@@ -114,7 +126,7 @@ namespace NeoEdit.TextEditor
 					throw new ArgumentException("Cannot have duplicate keys.");
 				keysAndValues[index] = values;
 			}
-			else if (GetKeysValuesCommand(command) == Command_Keys_KeysToValues1)
+			else if (GetKeysValuesCommand(command) == Command_Keys_SelectionReplace1)
 			{
 				var index = GetKeysValuesIndex(command);
 				if (keysAndValues[0].Count != keysAndValues[index].Count)
@@ -131,6 +143,34 @@ namespace NeoEdit.TextEditor
 						strs.Add(keysAndValues[index][found]);
 				}
 				Replace(Selections, strs, true);
+			}
+			else if (GetKeysValuesCommand(command) == Command_Keys_GlobalReplace1)
+			{
+				keysAndValues[0] = new List<string> { "<FIRSTNAME>", "<LASTNAME>" };
+				keysAndValues[1] = new List<string> { "Randon", "Spackman" };
+				var index = GetKeysValuesIndex(command);
+				if (keysAndValues[0].Count != keysAndValues[index].Count)
+					throw new Exception("Keys and values count must match.");
+
+				var regex = new Regex(String.Join("|", keysAndValues[0].Select(str => Regex.Escape(str))), RegexOptions.Compiled);
+				var ranges = new RangeList();
+				var selections = Selections;
+				if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
+					selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
+				foreach (var selection in selections)
+					ranges.AddRange(Data.RegexMatches(regex, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+
+				var strs = new List<string>();
+				foreach (var range in ranges)
+				{
+					var str = GetString(range);
+					var found = keysAndValues[0].IndexOf(str);
+					if (found == -1)
+						strs.Add(str);
+					else
+						strs.Add(keysAndValues[index][found]);
+				}
+				Replace(ranges, strs, true);
 			}
 			else if (GetKeysValuesCommand(command) == Command_Keys_CopyValues1)
 				ClipboardWindow.Set(keysAndValues[GetKeysValuesIndex(command)].ToArray());
