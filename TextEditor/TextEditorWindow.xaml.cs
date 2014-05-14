@@ -91,7 +91,7 @@ namespace NeoEdit.TextEditor
 				Searches.Clear();
 				undo.Clear();
 				redo.Clear();
-				InvalidateVisual();
+				InvalidateScrollBars();
 			}
 		}
 
@@ -154,17 +154,17 @@ namespace NeoEdit.TextEditor
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
-			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => InvalidateVisual());
+			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateCanvas());
+			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateCanvas());
+			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateCanvas());
+			uiHelper.AddCallback(Canvas.ActualWidthProperty, canvas, () => InvalidateScrollBars());
+			uiHelper.AddCallback(Canvas.ActualHeightProperty, canvas, () => InvalidateScrollBars());
 
 			Loaded += (s, e) =>
 			{
 				Line = 0; // Line doesn't display properly if this isn't here...  Don't know why.
 				EnsureVisible();
-				InvalidateVisual();
+				InvalidateCanvas();
 			};
 		}
 
@@ -218,7 +218,7 @@ namespace NeoEdit.TextEditor
 
 		void RunCommand(ICommand command)
 		{
-			InvalidateVisual();
+			InvalidateCanvas();
 
 			if (command == Command_File_New)
 			{
@@ -650,23 +650,6 @@ namespace NeoEdit.TextEditor
 			xScrollValue = Math.Min(x, Math.Max(x - numColumns + 1, xScrollValue));
 		}
 
-		DispatcherTimer visualTimer = null;
-		new void InvalidateVisual()
-		{
-			if (visualTimer != null)
-				return;
-
-			visualTimer = new DispatcherTimer();
-			visualTimer.Tick += (s, e) =>
-			{
-				visualTimer.Stop();
-				visualTimer = null;
-
-				canvas.InvalidateVisual();
-			};
-			visualTimer.Start();
-		}
-
 		DispatcherTimer selectionsTimer = null;
 		bool SelectionsInvalidated()
 		{
@@ -690,7 +673,7 @@ namespace NeoEdit.TextEditor
 				Selections.DeOverlap();
 
 				selectionsTimer = null;
-				InvalidateVisual();
+				InvalidateCanvas();
 			};
 			selectionsTimer.Start();
 		}
@@ -709,7 +692,7 @@ namespace NeoEdit.TextEditor
 				Searches.DeOverlap();
 
 				searchesTimer = null;
-				InvalidateVisual();
+				InvalidateCanvas();
 			};
 			searchesTimer.Start();
 		}
@@ -727,9 +710,46 @@ namespace NeoEdit.TextEditor
 				Marks.DeOverlap();
 
 				marksTimer = null;
-				InvalidateVisual();
+				InvalidateCanvas();
 			};
 			marksTimer.Start();
+		}
+
+		void InvalidateScrollBars()
+		{
+			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
+				return;
+
+			xScroll.ViewportSize = numColumns;
+			xScroll.Maximum = Data.MaxColumn - numColumns;
+			xScroll.SmallChange = 1;
+			xScroll.LargeChange = numColumns - 1;
+			xScrollValue = (int)Math.Max(xScroll.Minimum, Math.Min(xScrollValue, xScroll.Maximum));
+
+			yScroll.ViewportSize = numLines;
+			yScroll.Maximum = Data.NumLines - numLines;
+			yScroll.SmallChange = 1;
+			yScroll.LargeChange = numLines - 1;
+			yScrollValue = (int)Math.Max(yScroll.Minimum, Math.Min(yScrollValue, yScroll.Maximum));
+
+			InvalidateCanvas();
+		}
+
+		DispatcherTimer canvasRenderTimer = null;
+		new void InvalidateCanvas()
+		{
+			if (canvasRenderTimer != null)
+				return;
+
+			canvasRenderTimer = new DispatcherTimer();
+			canvasRenderTimer.Tick += (s, e) =>
+			{
+				canvasRenderTimer.Stop();
+				canvasRenderTimer = null;
+
+				canvas.InvalidateVisual();
+			};
+			canvasRenderTimer.Start();
 		}
 
 		void OnCanvasRender(DrawingContext dc)
@@ -745,16 +765,6 @@ namespace NeoEdit.TextEditor
 			};
 
 			HasBOM = Data.BOM;
-
-			xScroll.ViewportSize = numColumns;
-			xScroll.Maximum = Data.MaxColumn - numColumns;
-			xScroll.SmallChange = 1;
-			xScroll.LargeChange = numColumns - 1;
-
-			yScroll.ViewportSize = numLines;
-			yScroll.Maximum = Data.NumLines - numLines;
-			yScroll.SmallChange = 1;
-			yScroll.LargeChange = numLines - 1;
 
 			NumSelections = Selections.Count;
 
@@ -1352,7 +1362,7 @@ namespace NeoEdit.TextEditor
 			if (!leaveHighlighted)
 				Selections.Replace(Selections.Select(range => new Range(range.End)).ToList());
 
-			InvalidateVisual();
+			InvalidateScrollBars();
 		}
 
 		void FindNext(bool forward)
