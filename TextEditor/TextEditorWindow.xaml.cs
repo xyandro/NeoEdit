@@ -1082,17 +1082,9 @@ namespace NeoEdit.TextEditor
 
 			var line = Data.GetOffsetLine(selection.Cursor);
 			var index = Data.GetOffsetIndex(selection.Cursor, line) - 1;
-			string lineStr = null;
-			int lineIndex = -1;
 			while (true)
 			{
-				if (lineIndex != line)
-				{
-					lineStr = Data[line];
-					lineIndex = line;
-				}
-
-				if (index >= lineStr.Length)
+				if (index >= Data.GetLineLength(line))
 				{
 					++line;
 					if (line >= Data.NumLines)
@@ -1103,12 +1095,18 @@ namespace NeoEdit.TextEditor
 
 				++index;
 				WordSkipType current;
-				if ((index >= lineStr.Length) || (lineStr[index] == ' ') || (lineStr[index] == '\t'))
+				if (index >= Data.GetLineLength(line))
 					current = WordSkipType.Space;
-				else if ((Char.IsLetterOrDigit(lineStr[index])) || (lineStr[index] == '_'))
-					current = WordSkipType.Char;
 				else
-					current = WordSkipType.Symbol;
+				{
+					var c = Data[line, index];
+					if (Char.IsWhiteSpace(c))
+						current = WordSkipType.Space;
+					else if ((Char.IsLetterOrDigit(c)) || (c == '_'))
+						current = WordSkipType.Char;
+					else
+						current = WordSkipType.Symbol;
+				}
 
 				if (moveType == WordSkipType.None)
 					moveType = current;
@@ -1125,23 +1123,14 @@ namespace NeoEdit.TextEditor
 			var line = Data.GetOffsetLine(selection.Cursor);
 			var index = Data.GetOffsetIndex(selection.Cursor, line);
 			int lastLine = -1, lastIndex = -1;
-			string lineStr = null;
-			int lineIndex = -1;
 			while (true)
 			{
-				if (lineIndex != line)
-				{
-					lineStr = Data[line];
-					lineIndex = line;
-					if (index < 0)
-						index = lineStr.Length;
-				}
-
 				if (index < 0)
 				{
 					--line;
 					if (line < 0)
 						return MoveCursor(selection, BeginOffset());
+					index = Data.GetLineLength(line);
 					continue;
 				}
 
@@ -1150,12 +1139,18 @@ namespace NeoEdit.TextEditor
 
 				--index;
 				WordSkipType current;
-				if ((index < 0) || (lineStr[index] == ' ') || (lineStr[index] == '\t'))
+				if (index < 0)
 					current = WordSkipType.Space;
-				else if ((Char.IsLetterOrDigit(lineStr[index])) || (lineStr[index] == '_'))
-					current = WordSkipType.Char;
 				else
-					current = WordSkipType.Symbol;
+				{
+					var c = Data[line, index];
+					if (Char.IsWhiteSpace(c))
+						current = WordSkipType.Space;
+					else if ((Char.IsLetterOrDigit(c)) || (Data[line, index] == '_'))
+						current = WordSkipType.Char;
+					else
+						current = WordSkipType.Symbol;
+				}
 
 				if (moveType == WordSkipType.None)
 					moveType = current;
