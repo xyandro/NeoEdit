@@ -495,7 +495,7 @@ namespace NeoEdit.TextEditor
 				if (repeatDialog.ShowDialog() != true)
 					return;
 
-				var strs = Selections.Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount + 1)).ToList();
+				var strs = Selections.Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount)).ToList();
 				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Unique)
