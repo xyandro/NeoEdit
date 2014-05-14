@@ -360,5 +360,17 @@ namespace NeoEdit.TextEditor
 			}
 			return result;
 		}
+
+		public int GetLineFirstNonWhitespaceIndex(int line)
+		{
+			var start = lineIndex[line];
+			var end = start + lineLength[line];
+			for (var ctr = start; ctr < end; ++ctr)
+			{
+				if ((data[ctr] != ' ') && (data[ctr] != '\t'))
+					return ctr - start;
+			}
+			return -1;
+		}
 	}
 }
