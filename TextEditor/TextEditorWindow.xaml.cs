@@ -864,12 +864,10 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		bool mouseDown;
 		bool? shiftOverride;
 		bool shiftDown { get { return shiftOverride.HasValue ? shiftOverride.Value : (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt; } }
-		bool selecting { get { return (mouseDown) || (shiftDown); } }
 
 		void OnCanvasKeyDown(object sender, KeyEventArgs e)
 		{
@@ -1175,7 +1173,7 @@ namespace NeoEdit.TextEditor
 
 		Range MoveCursor(Range range, int cursor, bool checkSelection = false)
 		{
-			if (selecting)
+			if (shiftDown)
 				return new Range(cursor, range.Highlight);
 
 			if ((checkSelection) && (range.HasSelection()))
@@ -1202,50 +1200,58 @@ namespace NeoEdit.TextEditor
 			return MoveCursor(range, Data.GetOffset(line, index), checkSelection);
 		}
 
-		void MouseHandler(Point mousePos)
+		int mouseCursor = -1;
+		void MouseHandler(Point mousePos, int clickCount)
 		{
 			var line = Math.Min(Data.NumLines - 1, (int)(mousePos.Y / lineHeight) + yScrollValue);
-			var index = Data.GetIndexFromColumn(line, (int)(mousePos.X / charWidth) + xScrollValue);
+			var index = Math.Min(Data.GetLineLength(line), Data.GetIndexFromColumn(line, (int)(mousePos.X / charWidth) + xScrollValue));
+			var mouseRange = Selections.FirstOrDefault(range => range.Cursor == mouseCursor);
+			mouseCursor = Data.GetOffset(line, index);
 
-			Range selection;
-			if (selecting)
+			if (shiftDown)
 			{
-				selection = Selections.Last();
-				Selections.Remove(selection);
+				if (mouseRange != null)
+				{
+					Selections.Remove(mouseRange);
+					Selections.Add(MoveCursor(mouseRange, mouseCursor));
+				}
+				return;
 			}
+
+			if (!controlDown)
+				Selections.Clear();
+
+			if (clickCount == 1)
+				Selections.Add(new Range(mouseCursor));
 			else
 			{
-				if (!controlDown)
-					Selections.Clear();
-
-				selection = new Range();
+				if (mouseRange != null)
+					Selections.Remove(mouseRange);
+				Selections.Add(new Range(GetNextWord(mouseCursor), GetPrevWord(mouseCursor + 1)));
 			}
-			selection = MoveCursor(selection, line, index, false, false);
-			Selections.Add(selection);
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			MouseHandler(e.GetPosition(canvas));
-			mouseDown = e.ButtonState == MouseButtonState.Pressed;
-			if (mouseDown)
-				canvas.CaptureMouse();
-			else
-				canvas.ReleaseMouseCapture();
+			MouseHandler(e.GetPosition(canvas), e.ClickCount);
+			canvas.CaptureMouse();
 			e.Handled = true;
 		}
 
 		void OnCanvasMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			OnCanvasMouseLeftButtonDown(sender, e);
+			canvas.ReleaseMouseCapture();
+			e.Handled = true;
 		}
 
 		void OnCanvasMouseMove(object sender, MouseEventArgs e)
 		{
-			if (!mouseDown)
+			if (!canvas.IsMouseCaptured)
 				return;
 
-			MouseHandler(e.GetPosition(canvas));
+			shiftOverride = true;
+			MouseHandler(e.GetPosition(canvas), 0);
+			shiftOverride = null;
 			e.Handled = true;
 		}
 
@@ -1367,6 +1373,7 @@ namespace NeoEdit.TextEditor
 				Selections.Replace(Selections.Select(range => new Range(range.End)).ToList());
 
 			InvalidateScrollBars();
+			mouseCursor = -1;
 		}
 
 		void FindNext(bool forward)
