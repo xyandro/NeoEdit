@@ -929,7 +929,7 @@ namespace NeoEdit.TextEditor
 							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
 							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
 							if (controlDown)
-								Selections[ctr] = MovePrevWord(Selections[ctr]);
+								Selections[ctr] = MoveCursor(Selections[ctr], GetPrevWord(Selections[ctr].Cursor));
 							else if ((index == 0) && (line != 0))
 								Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, indexRel: false, checkSelection: true);
 							else
@@ -944,7 +944,7 @@ namespace NeoEdit.TextEditor
 							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
 							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
 							if (controlDown)
-								Selections[ctr] = MoveNextWord(Selections[ctr]);
+								Selections[ctr] = MoveCursor(Selections[ctr], GetNextWord(Selections[ctr].Cursor));
 							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
 								Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, indexRel: false, checkSelection: true);
 							else
@@ -1076,21 +1076,20 @@ namespace NeoEdit.TextEditor
 			Space,
 		}
 
-		Range MoveNextWord(Range selection)
+		int GetNextWord(int offset)
 		{
 			WordSkipType moveType = WordSkipType.None;
 
-			var line = Data.GetOffsetLine(selection.Cursor);
-			var index = Data.GetOffsetIndex(selection.Cursor, line) - 1;
+			var line = Data.GetOffsetLine(offset);
+			var index = Data.GetOffsetIndex(offset, line) - 1;
 			while (true)
 			{
 				if (index >= Data.GetLineLength(line))
 				{
 					++line;
 					if (line >= Data.NumLines)
-						return MoveCursor(selection, EndOffset());
+						return EndOffset();
 					index = -1;
-					continue;
 				}
 
 				++index;
@@ -1112,16 +1111,16 @@ namespace NeoEdit.TextEditor
 					moveType = current;
 
 				if (current != moveType)
-					return MoveCursor(selection, line, index, false, false);
+					return Data.GetOffset(line, index);
 			}
 		}
 
-		Range MovePrevWord(Range selection)
+		int GetPrevWord(int offset)
 		{
 			WordSkipType moveType = WordSkipType.None;
 
-			var line = Data.GetOffsetLine(selection.Cursor);
-			var index = Data.GetOffsetIndex(selection.Cursor, line);
+			var line = Data.GetOffsetLine(offset);
+			var index = Data.GetOffsetIndex(offset, line);
 			int lastLine = -1, lastIndex = -1;
 			while (true)
 			{
@@ -1129,7 +1128,7 @@ namespace NeoEdit.TextEditor
 				{
 					--line;
 					if (line < 0)
-						return MoveCursor(selection, BeginOffset());
+						return BeginOffset();
 					index = Data.GetLineLength(line);
 					continue;
 				}
@@ -1156,7 +1155,7 @@ namespace NeoEdit.TextEditor
 					moveType = current;
 
 				if (current != moveType)
-					return MoveCursor(selection, lastLine, lastIndex, false, false);
+					return Data.GetOffset(lastLine, lastIndex);
 			}
 		}
 
