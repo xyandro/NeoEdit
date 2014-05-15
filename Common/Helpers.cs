@@ -112,7 +112,7 @@ namespace NeoEdit.Common
 
 		public static unsafe string ToProper(this string input)
 		{
-			var output = new String('\0', input.Length);
+			var output = new char[input.Length];
 			fixed (char* inputFixed = input)
 			fixed (char* outputFixed = output)
 			{
@@ -146,12 +146,12 @@ namespace NeoEdit.Common
 					doUpper = nextDoUpper;
 				}
 			}
-			return output;
+			return new String(output);
 		}
 
 		public static unsafe string ToToggled(this string input)
 		{
-			var output = new String('\0', input.Length);
+			var output = new char[input.Length];
 			fixed (char* inputFixed = input)
 			fixed (char* outputFixed = output)
 			{
@@ -168,7 +168,7 @@ namespace NeoEdit.Common
 						*outputPtr = c;
 				}
 			}
-			return output;
+			return new String(output);
 		}
 	}
 }
