@@ -16,7 +16,7 @@ namespace NeoEdit.TextEditor
 			End = Math.Max(Cursor, Highlight);
 			Length = Math.Abs(Cursor - Highlight);
 		}
-		public static Range FromIndex(int index, int length) { return new Range(index, index + length); }
+		public static Range FromIndex(int index, int length) { return new Range(index + length, index); }
 
 		public int Cursor { get; private set; }
 		public int Highlight { get; private set; }
