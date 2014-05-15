@@ -226,7 +226,7 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_File_Open)
 			{
-				var dialog = new OpenFileDialog();
+				var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
 				if (dialog.ShowDialog() == true)
 					OpenFile(dialog.FileName);
 			}
@@ -239,10 +239,7 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_File_SaveAs)
 			{
-				var dialog = new SaveFileDialog();
-				dialog.DefaultExt = "txt";
-				dialog.Filter = "Text files|*.txt|All files|*.*";
-				dialog.FilterIndex = 2;
+				var dialog = new SaveFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
 				if (dialog.ShowDialog() == true)
 				{
 					if (Directory.Exists(dialog.FileName))
