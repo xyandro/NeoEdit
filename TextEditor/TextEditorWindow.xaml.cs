@@ -328,7 +328,7 @@ namespace NeoEdit.TextEditor
 				if (Selections.Count == 1)
 				{
 					var sel = Selections.First();
-					if ((sel.HasSelection()) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)))
+					if ((sel.HasSelection()) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
 					{
 						selectionOnly = false;
 						text = GetString(sel);
