@@ -346,7 +346,7 @@ namespace NeoEdit.TextEditor
 					Text = String.Format("Go to line: (1 - {0})", Data.NumLines),
 					MinValue = 1,
 					MaxValue = Data.NumLines,
-					Value = line,
+					Value = line + 1,
 				};
 				if (getNumDialog.ShowDialog() == true)
 				{
