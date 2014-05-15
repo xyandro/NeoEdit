@@ -139,6 +139,10 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Unique" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_String_Min" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_String_Max" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Numeric_Min" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Numeric_Max" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Selection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Clear" Executed="Command_Executed"/>
@@ -391,7 +395,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="_Single"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="S_ingle"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Limit" Header="Limit"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Marks" Header="_Marks"/>
@@ -401,6 +405,15 @@
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unique" Header="_Unique"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Header="_Duplicates"/>
+				<Separator/>
+				<MenuItem Header="_String">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_String_Min" Header="Mi_n"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_String_Max" Header="Ma_x"/>
+				</MenuItem>
+				<MenuItem Header="_Numeric">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Numeric_Min" Header="Mi_n"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Numeric_Max" Header="Ma_x"/>
+				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Mark">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>

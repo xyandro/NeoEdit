@@ -55,7 +55,7 @@ namespace NeoEdit.TextEditor
 			return regions;
 		}
 
-		string SortStr(string str)
+		string NumericSort(string str)
 		{
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
@@ -93,7 +93,7 @@ namespace NeoEdit.TextEditor
 			switch (type)
 			{
 				case SortType.String: entries = entries.OrderBy(entry => entry.value).ToList(); break;
-				case SortType.Numeric: entries = entries.OrderBy(entry => SortStr(entry.value)).ToList(); break;
+				case SortType.Numeric: entries = entries.OrderBy(entry => NumericSort(entry.value)).ToList(); break;
 				case SortType.Keys:
 					{
 						var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
