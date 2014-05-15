@@ -50,8 +50,6 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unique" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_GUID" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1" Executed="Command_Executed"/>
@@ -133,13 +131,14 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues9" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_All" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Unselect" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Limit" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Lines" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Marks" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Unique" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Selection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Clear" Executed="Command_Executed"/>
@@ -287,9 +286,6 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="_Series"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Repeat" Header="_Repeat"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unique" Header="_Unique"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Duplicates" Header="_Duplicates"/>
-				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_GUID" Header="Insert _GUID"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5" Header="MD_5"/>
@@ -395,7 +391,6 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unselect" Header="_Unselect"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="_Single"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Limit" Header="Limit"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
@@ -403,6 +398,9 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find results"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Header="Remove _empty selections"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unique" Header="_Unique"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Header="_Duplicates"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>

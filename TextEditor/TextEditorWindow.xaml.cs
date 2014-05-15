@@ -60,20 +60,19 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Evaluate = new RoutedCommand();
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
 		public static RoutedCommand Command_Data_Repeat = new RoutedCommand();
-		public static RoutedCommand Command_Data_Unique = new RoutedCommand();
-		public static RoutedCommand Command_Data_Duplicates = new RoutedCommand();
 		public static RoutedCommand Command_Data_GUID = new RoutedCommand();
 		public static RoutedCommand Command_Data_MD5 = new RoutedCommand();
 		public static RoutedCommand Command_Data_SHA1 = new RoutedCommand();
 		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();
 		public static RoutedCommand Command_Select_All = new RoutedCommand();
-		public static RoutedCommand Command_Select_Unselect = new RoutedCommand();
 		public static RoutedCommand Command_Select_Single = new RoutedCommand();
 		public static RoutedCommand Command_Select_Limit = new RoutedCommand();
 		public static RoutedCommand Command_Select_Lines = new RoutedCommand();
 		public static RoutedCommand Command_Select_Marks = new RoutedCommand();
 		public static RoutedCommand Command_Select_Find = new RoutedCommand();
 		public static RoutedCommand Command_Select_RemoveEmpty = new RoutedCommand();
+		public static RoutedCommand Command_Select_Unique = new RoutedCommand();
+		public static RoutedCommand Command_Select_Duplicates = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Selection = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Find = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Clear = new RoutedCommand();
@@ -498,10 +497,6 @@ namespace NeoEdit.TextEditor
 				var strs = Selections.Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount)).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Unique)
-				Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
-			else if (command == Command_Data_Duplicates)
-				Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
 			else if (command == Command_Data_GUID)
 			{
 				var strs = Selections.Select(range => Guid.NewGuid().ToString()).ToList();
@@ -532,8 +527,6 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Select_All)
 				Selections.Replace(new Range(EndOffset(), BeginOffset()));
-			else if (command == Command_Select_Unselect)
-				Selections.Replace(Selections.Select(range => new Range(range.Start)).ToList());
 			else if (command == Command_Select_Single)
 				Selections.Replace(Selections.First());
 			else if (command == Command_Select_Limit)
@@ -573,6 +566,10 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Select_RemoveEmpty)
 				Selections.Replace(Selections.Where(range => range.HasSelection()).ToList());
+			else if (command == Command_Select_Unique)
+				Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
+			else if (command == Command_Select_Duplicates)
+				Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
 			else if (command == Command_Mark_Selection)
 				Marks.AddRange(Selections);
 			else if (command == Command_Mark_Find)
