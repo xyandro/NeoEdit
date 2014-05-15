@@ -223,6 +223,9 @@ namespace NeoEdit.TextEditor
 		{
 			InvalidateCanvas();
 
+			var shiftDown = this.shiftDown;
+			shiftOverride = shiftDown;
+
 			if (command == Command_File_New)
 			{
 				FileName = null;
@@ -258,21 +261,21 @@ namespace NeoEdit.TextEditor
 				Close();
 			else if (command == Command_Edit_Undo)
 			{
-				if (undo.Count == 0)
-					return;
-
-				var undoStep = undo.Last();
-				undo.Remove(undoStep);
-				Replace(undoStep.ranges, undoStep.text, true, ReplaceType.Undo);
+				if (undo.Count != 0)
+				{
+					var undoStep = undo.Last();
+					undo.Remove(undoStep);
+					Replace(undoStep.ranges, undoStep.text, true, ReplaceType.Undo);
+				}
 			}
 			else if (command == Command_Edit_Redo)
 			{
-				if (redo.Count == 0)
-					return;
-
-				var redoStep = redo.Last();
-				redo.Remove(redoStep);
-				Replace(redoStep.ranges, redoStep.text, true, ReplaceType.Redo);
+				if (redo.Count != 0)
+				{
+					var redoStep = redo.Last();
+					redo.Remove(redoStep);
+					Replace(redoStep.ranges, redoStep.text, true, ReplaceType.Redo);
+				}
 			}
 			else if ((command == Command_Edit_Cut) || (command == Command_Edit_Copy))
 			{
@@ -285,19 +288,19 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Edit_Paste)
 			{
 				var result = ClipboardWindow.GetStrings().ToList();
-				if ((result == null) || (result.Count == 0))
-					return;
-
-				var separator = Selections.Count == 1 ? Data.DefaultEnding : " ";
-				while (result.Count > Selections.Count)
+				if ((result != null) && (result.Count != 0))
 				{
-					result[result.Count - 2] += separator + result[result.Count - 1];
-					result.RemoveAt(result.Count - 1);
-				}
-				while (result.Count < Selections.Count)
-					result.Add(result.Last());
+					var separator = Selections.Count == 1 ? Data.DefaultEnding : " ";
+					while (result.Count > Selections.Count)
+					{
+						result[result.Count - 2] += separator + result[result.Count - 1];
+						result.RemoveAt(result.Count - 1);
+					}
+					while (result.Count < Selections.Count)
+						result.Add(result.Last());
 
-				Replace(Selections, result, false);
+					Replace(Selections, result, false);
+				}
 			}
 			else if (command == Command_Edit_ShowClipboard)
 				ClipboardWindow.Show();
@@ -321,18 +324,18 @@ namespace NeoEdit.TextEditor
 				}
 
 				var findDialog = new FindDialog { Text = text, SelectionOnly = selectionOnly };
-				if (findDialog.ShowDialog() != true)
-					return;
-
-				RunSearch(findDialog.Regex, findDialog.SelectionOnly);
-				if (findDialog.SelectAll)
+				if (findDialog.ShowDialog() == true)
 				{
-					if (Searches.Count != 0)
-						Selections.Replace(Searches);
-					Searches.Clear();
-				}
+					RunSearch(findDialog.Regex, findDialog.SelectionOnly);
+					if (findDialog.SelectAll)
+					{
+						if (Searches.Count != 0)
+							Selections.Replace(Searches);
+						Searches.Clear();
+					}
 
-				FindNext(true);
+					FindNext(true);
+				}
 			}
 			else if ((command == Command_Edit_FindNext) || (command == Command_Edit_FindPrev))
 				FindNext(command == Command_Edit_FindNext);
@@ -492,11 +495,11 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Data_Repeat)
 			{
 				var repeatDialog = new RepeatDialog();
-				if (repeatDialog.ShowDialog() != true)
-					return;
-
-				var strs = Selections.Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount)).ToList();
-				Replace(Selections, strs, true);
+				if (repeatDialog.ShowDialog() == true)
+				{
+					var strs = Selections.Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount)).ToList();
+					Replace(Selections, strs, true);
+				}
 			}
 			else if (command == Command_Data_GUID)
 			{
@@ -533,32 +536,30 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Select_Limit)
 			{
 				var limitDialog = new LimitDialog { MaxSels = Selections.Count };
-				if (limitDialog.ShowDialog() != true)
-					return;
-
-				Selections.RemoveRange(limitDialog.MaxSels, Selections.Count - limitDialog.MaxSels);
+				if (limitDialog.ShowDialog() == true)
+					Selections.RemoveRange(limitDialog.MaxSels, Selections.Count - limitDialog.MaxSels);
 			}
 			else if (command == Command_Select_Lines)
 			{
 				var selectLinesDialog = new SelectLinesDialog();
-				if (selectLinesDialog.ShowDialog() != true)
-					return;
-
-				var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-				var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
-				if (selectLinesDialog.IgnoreBlankLines)
-					sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
-				if (selectLinesDialog.LineMult > 1)
-					sels = sels.Where((sel, index) => index % selectLinesDialog.LineMult == 0).ToList();
-				Selections.Replace(sels);
+				if (selectLinesDialog.ShowDialog() == true)
+				{
+					var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+					var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
+					if (selectLinesDialog.IgnoreBlankLines)
+						sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
+					if (selectLinesDialog.LineMult > 1)
+						sels = sels.Where((sel, index) => index % selectLinesDialog.LineMult == 0).ToList();
+					Selections.Replace(sels);
+				}
 			}
 			else if (command == Command_Select_Marks)
 			{
-				if (Marks.Count == 0)
-					return;
-
-				Selections.Replace(Marks);
-				Marks.Clear();
+				if (Marks.Count != 0)
+				{
+					Selections.Replace(Marks);
+					Marks.Clear();
+				}
 			}
 			else if (command == Command_Select_Find)
 			{
@@ -618,6 +619,8 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Mark_LimitToSelection)
 				Marks.Replace(Marks.Where(mark => Selections.Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList());
+
+			shiftOverride = null;
 
 			if (SelectionsInvalidated())
 				EnsureVisible();
@@ -1442,7 +1445,12 @@ namespace NeoEdit.TextEditor
 						index = Searches.Count - 1;
 				}
 
-				Selections[ctr] = new Range(Searches[index].End, Searches[index].Start);
+				if (!shiftDown)
+					Selections[ctr] = new Range(Searches[index].End, Searches[index].Start);
+				else if (forward)
+					Selections[ctr] = new Range(Searches[index].End, Selections[ctr].Start);
+				else
+					Selections[ctr] = new Range(Searches[index].Start, Selections[ctr].End);
 			}
 		}
 

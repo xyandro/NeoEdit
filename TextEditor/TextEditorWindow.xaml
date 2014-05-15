@@ -160,15 +160,17 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Paste" Key="V" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Key="C" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Key="F" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Key="F" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Key="F3"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Key="F3" Modifiers="Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Key="F" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Key="Space" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Key="Space" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_NextSelection" Key="Down" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_PrevSelection" Key="Up" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Key="F" Modifiers="Control+Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Key="Space" Modifiers="Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_NextSelection" Key="Down" Modifiers="Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_PrevSelection" Key="Up" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Key="U" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Key="U" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
