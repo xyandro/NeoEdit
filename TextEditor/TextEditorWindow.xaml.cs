@@ -771,6 +771,8 @@ namespace NeoEdit.TextEditor
 				{ new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)), Searches }, //e2e6d6
 				{ new SolidColorBrush(Color.FromArgb(178, 242, 155, 0)), Marks }, //f6b94d
 			};
+			var cursorBrush = new SolidColorBrush(Color.FromRgb(230, 230, 230));
+			var cursorPen = new Pen(new SolidColorBrush(Color.FromRgb(200, 200, 200)), 1);
 
 			HasBOM = Data.BOM;
 
@@ -804,11 +806,12 @@ namespace NeoEdit.TextEditor
 
 					if ((entry.Value == Selections) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
+						dc.DrawRectangle(cursorBrush, cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
 						var cursor = Data.GetOffsetIndex(range.Cursor, cursorLine);
 						if ((cursor >= startIndexes[cursorLine]) && (cursor <= endIndexes[cursorLine]))
 						{
 							cursor = Data.GetColumnFromIndex(cursorLine, cursor);
-							dc.DrawRectangle(Brushes.Black, null, new Rect((cursor - startColumn) * charWidth, y[cursorLine], 1, lineHeight));
+							dc.DrawRectangle(Brushes.Black, null, new Rect((cursor - startColumn) * charWidth - 1, y[cursorLine], 2, lineHeight));
 						}
 					}
 
