@@ -668,6 +668,7 @@ namespace NeoEdit.TextEditor
 			if (Selections.Count == 0)
 				return;
 
+			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
 			var range = Selections[visibleIndex];
 			var line = Data.GetOffsetLine(range.Cursor);
 			var index = Data.GetOffsetIndex(range.Cursor, line);
@@ -702,7 +703,6 @@ namespace NeoEdit.TextEditor
 					EnsureVisible();
 				}
 				Selections.DeOverlap();
-				visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
 
 				selectionsTimer = null;
 				InvalidateCanvas();
