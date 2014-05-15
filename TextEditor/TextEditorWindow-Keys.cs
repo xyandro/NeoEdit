@@ -68,6 +68,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Keys_MissesValues9 = new RoutedCommand();
 
 		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
+		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
 
 		ICommand GetKeysValuesCommand(ICommand command)
 		{
@@ -124,6 +125,8 @@ namespace NeoEdit.TextEditor
 				if ((index == 0) && (values.Distinct().Count() != values.Count))
 					throw new ArgumentException("Cannot have duplicate keys.");
 				keysAndValues[index] = values;
+				if (index == 0)
+					keysHash = values.Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
 			}
 			else if (GetKeysValuesCommand(command) == Command_Keys_SelectionReplace1)
 			{
@@ -135,11 +138,10 @@ namespace NeoEdit.TextEditor
 				foreach (var range in Selections)
 				{
 					var str = GetString(range);
-					var found = keysAndValues[0].IndexOf(str);
-					if (found == -1)
+					if (!keysHash.ContainsKey(str))
 						strs.Add(str);
 					else
-						strs.Add(keysAndValues[index][found]);
+						strs.Add(keysAndValues[index][keysHash[str]]);
 				}
 				Replace(Selections, strs, true);
 			}
@@ -163,11 +165,10 @@ namespace NeoEdit.TextEditor
 				foreach (var range in ranges)
 				{
 					var str = GetString(range);
-					var found = keysAndValues[0].IndexOf(str);
-					if (found == -1)
+					if (!keysHash.ContainsKey(str))
 						strs.Add(str);
 					else
-						strs.Add(keysAndValues[index][found]);
+						strs.Add(keysAndValues[index][keysHash[str]]);
 				}
 				Replace(ranges, strs, true);
 			}
