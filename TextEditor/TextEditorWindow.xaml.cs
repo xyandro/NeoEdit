@@ -146,7 +146,7 @@ namespace NeoEdit.TextEditor
 
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
-			yScroll.MouseWheel += (s, e) => yScrollValue -= e.Delta;
+			yScroll.MouseWheel += (s, e) => yScrollValue -= e.Delta * numLines / 480;
 
 			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#Anonymous Pro");
 			typeface = fontFamily.GetTypefaces().First();
