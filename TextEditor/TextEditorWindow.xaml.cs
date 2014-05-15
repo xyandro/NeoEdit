@@ -421,12 +421,12 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Data_Char_Proper)
 			{
-				var strs = Selections.Select(range => ProperCase(GetString(range))).ToList();
+				var strs = Selections.Select(range => GetString(range).ToProper()).ToList();
 				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Toggle)
 			{
-				var strs = Selections.Select(range => ToggleCase(GetString(range))).ToList();
+				var strs = Selections.Select(range => GetString(range).ToToggled()).ToList();
 				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Hex_ToHex)
@@ -1430,36 +1430,6 @@ namespace NeoEdit.TextEditor
 			if (before)
 				return pad + str;
 			return str + pad;
-		}
-
-		string ProperCase(string input)
-		{
-			var sb = new StringBuilder(input.Length);
-			for (var ctr = 0; ctr < input.Length; ++ctr)
-			{
-				if (!Char.IsLetter(input[ctr]))
-					sb.Append(input[ctr]);
-				else if ((ctr == 0) || (!Char.IsLetterOrDigit(input[ctr - 1])))
-					sb.Append(Char.ToUpperInvariant(input[ctr]));
-				else
-					sb.Append(Char.ToLowerInvariant(input[ctr]));
-			}
-			return sb.ToString();
-		}
-
-		string ToggleCase(string input)
-		{
-			var sb = new StringBuilder(input.Length);
-			for (var ctr = 0; ctr < input.Length; ++ctr)
-			{
-				if (!Char.IsLetter(input[ctr]))
-					sb.Append(input[ctr]);
-				else if (Char.IsLower(input[ctr]))
-					sb.Append(Char.ToUpperInvariant(input[ctr]));
-				else
-					sb.Append(Char.ToLowerInvariant(input[ctr]));
-			}
-			return sb.ToString();
 		}
 
 		public string RepeatString(string input, int count)

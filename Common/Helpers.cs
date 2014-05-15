@@ -109,5 +109,66 @@ namespace NeoEdit.Common
 				return -1;
 			}
 		}
+
+		public static unsafe string ToProper(this string input)
+		{
+			var output = new String('\0', input.Length);
+			fixed (char* inputFixed = input)
+			fixed (char* outputFixed = output)
+			{
+				var len = inputFixed + input.Length;
+				bool doUpper = true;
+				char* outputPtr, inputPtr;
+				for (inputPtr = inputFixed, outputPtr = outputFixed; inputPtr < len; ++inputPtr, ++outputPtr)
+				{
+					var c = *inputPtr;
+					var nextDoUpper = false;
+					if ((c >= 'a') && (c <= 'z'))
+					{
+						if (doUpper)
+							*outputPtr = (char)(c - 'a' + 'A');
+						else
+							*outputPtr = c;
+					}
+					else if ((c >= 'A') && (c <= 'Z'))
+					{
+						if (doUpper)
+							*outputPtr = c;
+						else
+							*outputPtr = (char)(c - 'A' + 'a');
+					}
+					else
+					{
+						*outputPtr = c;
+						nextDoUpper = true;
+					}
+
+					doUpper = nextDoUpper;
+				}
+			}
+			return output;
+		}
+
+		public static unsafe string ToToggled(this string input)
+		{
+			var output = new String('\0', input.Length);
+			fixed (char* inputFixed = input)
+			fixed (char* outputFixed = output)
+			{
+				var len = inputFixed + input.Length;
+				char* outputPtr, inputPtr;
+				for (inputPtr = inputFixed, outputPtr = outputFixed; inputPtr < len; ++inputPtr, ++outputPtr)
+				{
+					var c = *inputPtr;
+					if ((c >= 'a') && (c <= 'z'))
+						*outputPtr = (char)(c - 'a' + 'A');
+					else if ((c >= 'A') && (c <= 'Z'))
+						*outputPtr = (char)(c - 'A' + 'a');
+					else
+						*outputPtr = c;
+				}
+			}
+			return output;
+		}
 	}
 }
