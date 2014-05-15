@@ -440,13 +440,13 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Data_Char_ToChar)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => ((char)UInt16.Parse(GetString(range), NumberStyles.HexNumber)).ToString()).ToList();
+				var strs = selections.Select(range => GetString(range).FromUTF8HexString()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (command == Command_Data_Char_FromChar)
 			{
-				var selections = Selections.Where(range => range.Length == 1).ToList();
-				var strs = selections.Select(range => ((UInt16)GetString(range)[0]).ToString("x2")).ToList();
+				var selections = Selections.Where(range => range.HasSelection()).ToList();
+				var strs = selections.Select(range => GetString(range).ToUTF8HexString()).ToList();
 				Replace(selections, strs, true);
 			}
 			else if (RunSortCommand(command))
