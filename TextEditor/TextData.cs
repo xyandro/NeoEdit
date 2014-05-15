@@ -380,5 +380,27 @@ namespace NeoEdit.TextEditor
 			}
 			return result;
 		}
+
+		public List<Tuple<int, int>> StringMatches(FindStrings findStrings, int offset, int length)
+		{
+			var result = new List<Tuple<int, int>>();
+
+			var endOffset = offset + length;
+			var line = GetOffsetLine(offset);
+			var index = GetOffsetIndex(offset, line);
+			while (true)
+			{
+				var matchOffset = lineOffset[line] + index;
+				if (matchOffset >= endOffset)
+					break;
+
+				var matchLength = Math.Min(lineOffset[line] + lineLength[line], endOffset) - matchOffset;
+				result.AddRange(findStrings.Find(data, matchOffset, matchLength));
+				++line;
+				index = 0;
+				continue;
+			}
+			return result;
+		}
 	}
 }

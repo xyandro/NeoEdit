@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 using NeoEdit.GUI;
 
@@ -150,13 +149,15 @@ namespace NeoEdit.TextEditor
 				if (keysAndValues[0].Count != keysAndValues[index].Count)
 					throw new Exception("Keys and values count must match.");
 
-				var regex = new Regex(String.Join("|", keysAndValues[0].Select(str => Regex.Escape(str))), RegexOptions.Compiled);
+				var findStrings = FindStrings.Create(keysAndValues[0]);
 				var ranges = new RangeList();
 				var selections = Selections;
 				if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
 					selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
 				foreach (var selection in selections)
-					ranges.AddRange(Data.RegexMatches(regex, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+					ranges.AddRange(Data.StringMatches(findStrings, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+
+				ranges = ranges.OrderBy(range => range.Start).ToList();
 
 				var strs = new List<string>();
 				foreach (var range in ranges)
