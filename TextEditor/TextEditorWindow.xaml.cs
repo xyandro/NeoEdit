@@ -406,7 +406,7 @@ namespace NeoEdit.TextEditor
 			{
 				--visibleIndex;
 				if (visibleIndex < 0)
-					visibleIndex = Selections.Count;
+					visibleIndex = Selections.Count - 1;
 				EnsureVisible(true);
 			}
 			else if (command == Command_Data_Char_Upper)
@@ -637,13 +637,11 @@ namespace NeoEdit.TextEditor
 		List<TextCanvasUndoRedo> undo = new List<TextCanvasUndoRedo>();
 		List<TextCanvasUndoRedo> redo = new List<TextCanvasUndoRedo>();
 
-		int visibleIndex;
+		int visibleIndex = 0;
 		void EnsureVisible(bool highlight = false)
 		{
 			if (Selections.Count == 0)
 				return;
-
-			visibleIndex = Math.Min(visibleIndex, Selections.Count - 1);
 
 			var range = Selections[visibleIndex];
 			var line = Data.GetOffsetLine(range.Cursor);
@@ -679,6 +677,7 @@ namespace NeoEdit.TextEditor
 					EnsureVisible();
 				}
 				Selections.DeOverlap();
+				visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
 
 				selectionsTimer = null;
 				InvalidateCanvas();
@@ -771,8 +770,9 @@ namespace NeoEdit.TextEditor
 				{ new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)), Searches }, //e2e6d6
 				{ new SolidColorBrush(Color.FromArgb(178, 242, 155, 0)), Marks }, //f6b94d
 			};
-			var cursorBrush = new SolidColorBrush(Color.FromRgb(230, 230, 230));
-			var cursorPen = new Pen(new SolidColorBrush(Color.FromRgb(200, 200, 200)), 1);
+			var visibleCursorBrush = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
+			var cursorBrush = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0));
+			var cursorPen = new Pen(new SolidColorBrush(Color.FromArgb(20, 0, 0, 0)), 1);
 
 			HasBOM = Data.BOM;
 
@@ -790,6 +790,8 @@ namespace NeoEdit.TextEditor
 			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn));
 			var endIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, endColumn));
 			var y = lines.ToDictionary(line => line, line => (line - startLine) * lineHeight);
+			var cursorLineDone = new HashSet<int>();
+			var visibleCursor = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
 
 			foreach (var entry in brushes)
 			{
@@ -806,7 +808,15 @@ namespace NeoEdit.TextEditor
 
 					if ((entry.Value == Selections) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
-						dc.DrawRectangle(cursorBrush, cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
+						if (range == visibleCursor)
+							dc.DrawRectangle(visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
+
+						if (!cursorLineDone.Contains(cursorLine))
+						{
+							dc.DrawRectangle(cursorBrush, cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
+							cursorLineDone.Add(cursorLine);
+						}
+
 						var cursor = Data.GetOffsetIndex(range.Cursor, cursorLine);
 						if ((cursor >= startIndexes[cursorLine]) && (cursor <= endIndexes[cursorLine]))
 						{
@@ -884,6 +894,7 @@ namespace NeoEdit.TextEditor
 		{
 			e.Handled = true;
 			var controlDown = this.controlDown;
+			var shiftDown = this.shiftDown;
 			shiftOverride = shiftDown;
 			switch (e.Key)
 			{
