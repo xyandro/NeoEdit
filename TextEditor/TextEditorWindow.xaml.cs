@@ -367,7 +367,7 @@ namespace NeoEdit.TextEditor
 					Text = String.Format("Go to column: (1 - {0})", Data.GetLineLength(line) + 1),
 					MinValue = 1,
 					MaxValue = Data.GetLineLength(line) + 1,
-					Value = index,
+					Value = index + 1,
 				};
 				if (getNumDialog.ShowDialog() == true)
 				{
