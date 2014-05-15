@@ -27,6 +27,8 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
 		public static RoutedCommand Command_File_Exit = new RoutedCommand();
+		public static RoutedCommand Command_File_BinaryEditor = new RoutedCommand();
+		public static RoutedCommand Command_File_BOM = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Undo = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Redo = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Cut = new RoutedCommand();
@@ -40,12 +42,6 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Edit_FindPrev = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoLine = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoIndex = new RoutedCommand();
-		public static RoutedCommand Command_Edit_BinaryEditor = new RoutedCommand();
-		public static RoutedCommand Command_Edit_BOM = new RoutedCommand();
-		public static RoutedCommand Command_Edit_ShowFirst = new RoutedCommand();
-		public static RoutedCommand Command_Edit_ShowCurrent = new RoutedCommand();
-		public static RoutedCommand Command_Edit_NextSelection = new RoutedCommand();
-		public static RoutedCommand Command_Edit_PrevSelection = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
@@ -77,6 +73,10 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Select_String_Max = new RoutedCommand();
 		public static RoutedCommand Command_Select_Numeric_Min = new RoutedCommand();
 		public static RoutedCommand Command_Select_Numeric_Max = new RoutedCommand();
+		public static RoutedCommand Command_Select_ShowFirst = new RoutedCommand();
+		public static RoutedCommand Command_Select_ShowCurrent = new RoutedCommand();
+		public static RoutedCommand Command_Select_NextSelection = new RoutedCommand();
+		public static RoutedCommand Command_Select_PrevSelection = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Selection = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Find = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Clear = new RoutedCommand();
@@ -259,6 +259,18 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_File_Exit)
 				Close();
+			else if (command == Command_File_BinaryEditor)
+			{
+				Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed));
+				this.Close();
+			}
+			else if (command == Command_File_BOM)
+			{
+				if (Data.BOM)
+					Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
+				else
+					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
+			}
 			else if (command == Command_Edit_Undo)
 			{
 				if (undo.Count != 0)
@@ -379,39 +391,6 @@ namespace NeoEdit.TextEditor
 					shiftOverride = null;
 				}
 			}
-			else if (command == Command_Edit_BinaryEditor)
-			{
-				Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed));
-				this.Close();
-			}
-			else if (command == Command_Edit_BOM)
-			{
-				if (Data.BOM)
-					Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
-				else
-					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
-			}
-			else if (command == Command_Edit_ShowFirst)
-			{
-				visibleIndex = 0;
-				EnsureVisible(true);
-			}
-			else if (command == Command_Edit_ShowCurrent)
-				EnsureVisible(true);
-			else if (command == Command_Edit_NextSelection)
-			{
-				++visibleIndex;
-				if (visibleIndex >= Selections.Count)
-					visibleIndex = 0;
-				EnsureVisible(true);
-			}
-			else if (command == Command_Edit_PrevSelection)
-			{
-				--visibleIndex;
-				if (visibleIndex < 0)
-					visibleIndex = Selections.Count - 1;
-				EnsureVisible(true);
-			}
 			else if (command == Command_Data_Char_Upper)
 			{
 				var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
@@ -456,10 +435,6 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => GetString(range).ToUTF8HexString()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (RunSortCommand(command))
-			{ }
-			else if (RunKeysCommand(command))
-			{ }
 			else if (command == Command_Data_Length)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
@@ -596,6 +571,27 @@ namespace NeoEdit.TextEditor
 				var first = selections.Last().str;
 				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 			}
+			else if (command == Command_Select_ShowFirst)
+			{
+				visibleIndex = 0;
+				EnsureVisible(true);
+			}
+			else if (command == Command_Select_ShowCurrent)
+				EnsureVisible(true);
+			else if (command == Command_Select_NextSelection)
+			{
+				++visibleIndex;
+				if (visibleIndex >= Selections.Count)
+					visibleIndex = 0;
+				EnsureVisible(true);
+			}
+			else if (command == Command_Select_PrevSelection)
+			{
+				--visibleIndex;
+				if (visibleIndex < 0)
+					visibleIndex = Selections.Count - 1;
+				EnsureVisible(true);
+			}
 			else if (command == Command_Mark_Selection)
 				Marks.AddRange(Selections);
 			else if (command == Command_Mark_Find)
@@ -619,6 +615,10 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Mark_LimitToSelection)
 				Marks.Replace(Marks.Where(mark => Selections.Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList());
+			else if (RunSortCommand(command))
+			{ }
+			else if (RunKeysCommand(command))
+			{ }
 
 			shiftOverride = null;
 

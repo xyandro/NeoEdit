@@ -17,6 +17,8 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Save" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BOM" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Undo" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Redo" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Cut" Executed="Command_Executed"/>
@@ -30,12 +32,6 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_BinaryEditor" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_BOM" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_NextSelection" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_PrevSelection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
@@ -143,6 +139,10 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_String_Max" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Numeric_Min" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Numeric_Max" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Selection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Clear" Executed="Command_Executed"/>
@@ -167,10 +167,6 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Key="F" Modifiers="Control+Alt"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Key="Space" Modifiers="Alt"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_NextSelection" Key="Down" Modifiers="Alt"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_PrevSelection" Key="Up" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Key="U" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Key="U" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
@@ -197,6 +193,10 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Key="D9" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Key="M" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_All" Key="A" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Key="F" Modifiers="Control+Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Key="Down" Modifiers="Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Key="Up" Modifiers="Alt"/>
 	</Window.InputBindings>
 
 	<Grid>
@@ -218,25 +218,6 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_SaveAs" Header="Save _As"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="E_xit"/>
-			</MenuItem>
-			<MenuItem Header="_Edit">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Undo" Header="_Undo"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Redo" Header="_Redo"/>
-				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Cut" Header="C_ut"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Copy" Header="_Copy"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Paste" Header="_Paste"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard"/>
-				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyName" Header="Copy name"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyPath" Header="Copy full path"/>
-				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Header="Find _Prev"/>
-				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto c_olumn"/>
 				<Separator/>
 				<MenuItem Header="_Encoding" Click="EncodingClick">
 					<MenuItem.ItemContainerStyle>
@@ -261,13 +242,27 @@
 					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BinaryEditor" Header="Binary editor"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Header="Binary editor"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
+			</MenuItem>
+			<MenuItem Header="_Edit">
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Undo" Header="_Undo"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Redo" Header="_Redo"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowFirst" Header="First selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowCurrent" Header="Show current"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_NextSelection" Header="Next selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_PrevSelection" Header="Prev selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Cut" Header="C_ut"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Copy" Header="_Copy"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Paste" Header="_Paste"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyName" Header="Copy name"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyPath" Header="Copy full path"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Header="Find _Prev"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto c_olumn"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
@@ -417,6 +412,11 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Numeric_Min" Header="Mi_n"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Numeric_Max" Header="Ma_x"/>
 				</MenuItem>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Header="First selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Header="Show current"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Header="Next selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Header="Prev selection"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
