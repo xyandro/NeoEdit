@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common.Transform;
-using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeoEdit.TextEditor.UnitTest
 {
