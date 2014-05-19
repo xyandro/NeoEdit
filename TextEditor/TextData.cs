@@ -205,7 +205,7 @@ namespace NeoEdit.TextEditor
 
 		public int GetOffsetLine(int offset)
 		{
-			if ((offset < 0) || (offset >= data.Length))
+			if ((offset < 0) || (offset > data.Length))
 				throw new IndexOutOfRangeException();
 			var line = lineOffset.BinarySearch(offset);
 			if (line < 0)
@@ -217,8 +217,10 @@ namespace NeoEdit.TextEditor
 		{
 			if ((line < 0) || (line >= lineOffset.Count))
 				throw new IndexOutOfRangeException();
-			if ((offset < lineOffset[line]) || (offset >= endingOffset[line] + endingLength[line]))
+			if ((offset < lineOffset[line]) || (offset > endingOffset[line] + endingLength[line]))
 				throw new IndexOutOfRangeException();
+			if (offset > endingOffset[line])
+				return lineLength[line] + 1;
 			return offset - lineOffset[line];
 		}
 
@@ -291,11 +293,11 @@ namespace NeoEdit.TextEditor
 			return offset - lineOffset[line];
 		}
 
-		public string GetString(int start, int end)
+		public string GetString(int start, int length)
 		{
-			if ((start < 0) || (end < 0) || (start + end > data.Length))
+			if ((start < 0) || (length < 0) || (start + length > data.Length))
 				throw new IndexOutOfRangeException();
-			return data.Substring(start, end - start);
+			return data.Substring(start, length);
 		}
 
 		public void Replace(List<int> offsets, List<int> lengths, List<string> text)

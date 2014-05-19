@@ -101,7 +101,7 @@ namespace NeoEdit.TextEditor.UnitTest
 			Assert.AreEqual(textData.GetOffsetLine(36), 4);
 			Assert.AreEqual(textData.GetOffsetLine(37), 4);
 			Assert.AreEqual(textData.GetOffsetLine(38), 5);
-			try { var test = textData.GetOffsetLine(TestString.Length); Assert.Fail(); }
+			try { var test = textData.GetOffsetLine(TestString.Length + 1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 
 			try { var test = textData.GetOffsetIndex(0, -1); Assert.Fail(); }
@@ -113,7 +113,8 @@ namespace NeoEdit.TextEditor.UnitTest
 			Assert.AreEqual(textData.GetOffsetIndex(30, 4), 0);
 			Assert.AreEqual(textData.GetOffsetIndex(36, 4), 6);
 			Assert.AreEqual(textData.GetOffsetIndex(37, 4), 7);
-			try { var test = textData.GetOffsetIndex(38, 4); Assert.Fail(); }
+			Assert.AreEqual(textData.GetOffsetIndex(38, 4), 7);
+			try { var test = textData.GetOffsetIndex(39, 4); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 			Assert.AreEqual(textData.GetOffsetIndex(38, 5), 0);
 

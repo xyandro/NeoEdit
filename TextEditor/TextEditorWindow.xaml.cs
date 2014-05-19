@@ -809,7 +809,7 @@ namespace NeoEdit.TextEditor
 			var endColumn = Math.Min(Data.MaxColumn + 1, startColumn + numColumns + 1);
 
 			var lines = Enumerable.Range(startLine, endLine - startLine).ToList();
-			var lineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data.GetLineLength(line))));
+			var lineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data.GetLineLength(line) + 1)));
 			var screenStart = lineRanges.First().Value.Start;
 			var screenEnd = lineRanges.Last().Value.End + 1;
 			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn));
@@ -857,13 +857,11 @@ namespace NeoEdit.TextEditor
 						start = Data.GetOffsetIndex(start, line);
 						end = Data.GetOffsetIndex(end, line);
 
-						if ((start >= endIndexes[line]) || (end < startIndexes[line]))
+						if ((start > endIndexes[line]) || (end < startIndexes[line]))
 							continue;
 
 						start = Data.GetColumnFromIndex(line, start);
 						end = Data.GetColumnFromIndex(line, end);
-						if (range.End > lineRanges[line].End)
-							end++;
 
 						start = Math.Max(0, start - startColumn);
 						end = Math.Min(endColumn, end) - startColumn;
@@ -1317,7 +1315,7 @@ namespace NeoEdit.TextEditor
 
 		string GetString(Range range)
 		{
-			return Data.GetString(range.Start, range.End);
+			return Data.GetString(range.Start, range.Length);
 		}
 
 		enum ReplaceType
