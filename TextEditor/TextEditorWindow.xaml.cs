@@ -813,7 +813,7 @@ namespace NeoEdit.TextEditor
 			var screenStart = lineRanges.First().Value.Start;
 			var screenEnd = lineRanges.Last().Value.End + 1;
 			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn));
-			var endIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, endColumn));
+			var endIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, endColumn, true));
 			var y = lines.ToDictionary(line => line, line => (line - startLine) * lineHeight);
 			var cursorLineDone = new HashSet<int>();
 			var visibleCursor = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
