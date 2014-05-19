@@ -1250,7 +1250,7 @@ namespace NeoEdit.TextEditor
 		void MouseHandler(Point mousePos, int clickCount)
 		{
 			var line = Math.Min(Data.NumLines - 1, (int)(mousePos.Y / lineHeight) + yScrollValue);
-			var index = Math.Min(Data.GetLineLength(line), Data.GetIndexFromColumn(line, (int)(mousePos.X / charWidth) + xScrollValue));
+			var index = Math.Min(Data.GetLineLength(line), Data.GetIndexFromColumn(line, (int)(mousePos.X / charWidth) + xScrollValue, true));
 			var mouseRange = Selections.FirstOrDefault(range => range.Cursor == mouseCursor);
 			mouseCursor = Data.GetOffset(line, index);
 
