@@ -30,6 +30,7 @@
 			<CheckBox Name="matchCase" Content="Match _case"/>
 			<CheckBox Name="regularExpression" Content="Regular _expression" IsEnabled="{Binding Text, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=ValidRE:[0]}"/>
 			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}"/>
+			<CheckBox Name="includeEndings" Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Columns="3">

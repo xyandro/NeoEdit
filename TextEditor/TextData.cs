@@ -379,7 +379,24 @@ namespace NeoEdit.TextEditor
 			return -1;
 		}
 
-		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length)
+		List<Tuple<int, int>> RegexMatchesAll(Regex regex, int offset, int length)
+		{
+			var result = new List<Tuple<int, int>>();
+
+			var endOffset = offset + length;
+			while (offset < endOffset)
+			{
+				var match = regex.Match(data, offset, endOffset - offset);
+				if ((!match.Success) || (match.Length == 0))
+					break;
+
+				result.Add(new Tuple<int, int>(match.Index, match.Length));
+				offset = match.Index + match.Length;
+			}
+			return result;
+		}
+
+		List<Tuple<int, int>> RegexMatchesByLine(Regex regex, int offset, int length)
 		{
 			var result = new List<Tuple<int, int>>();
 
@@ -407,6 +424,14 @@ namespace NeoEdit.TextEditor
 				index += match.Index + match.Length - matchOffset;
 			}
 			return result;
+		}
+
+		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool includeEndings)
+		{
+			if (includeEndings)
+				return RegexMatchesAll(regex, offset, length);
+			else
+				return RegexMatchesByLine(regex, offset, length);
 		}
 
 		public List<Tuple<int, int>> StringMatches(FindStrings findStrings, int offset, int length)

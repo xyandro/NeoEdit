@@ -9,19 +9,20 @@ namespace NeoEdit.TextEditor.Dialogs
 {
 	public partial class FindDialog : Window
 	{
-		static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
-
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool SelectionOnly { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool IncludeEndings { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ObservableCollection<string> History { get { return uiHelper.GetPropValue<ObservableCollection<string>>(); } set { uiHelper.SetPropValue(value); } }
 
 		public Regex Regex { get; private set; }
 		public bool SelectAll { get; private set; }
 
-		static bool wholeWordsVal, matchCaseVal, regularExpressionVal;
+		static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
+		static bool wholeWordsVal, matchCaseVal, regularExpressionVal, includeEndingsVal;
 
 		static FindDialog() { UIHelper<FindDialog>.Register(); }
 
@@ -35,6 +36,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			wholeWords.IsChecked = wholeWordsVal;
 			matchCase.IsChecked = matchCaseVal;
 			regularExpression.IsChecked = regularExpressionVal;
+			includeEndings.IsChecked = includeEndingsVal;
 
 			Loaded += (s, e) =>
 			{
@@ -54,6 +56,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			wholeWordsVal = wholeWords.IsChecked == true;
 			matchCaseVal = matchCase.IsChecked == true;
 			regularExpressionVal = regularExpression.IsChecked == true;
+			includeEndingsVal = includeEndings.IsChecked == true;
 
 			var text = Text;
 			History.Remove(text);
@@ -64,7 +67,7 @@ namespace NeoEdit.TextEditor.Dialogs
 				text = Regex.Escape(text);
 			if (wholeWords.IsChecked == true)
 				text = @"\b" + text + @"\b";
-			var options = RegexOptions.Compiled;
+			var options = RegexOptions.Compiled | RegexOptions.Singleline;
 			if (matchCase.IsChecked == false)
 				options |= RegexOptions.IgnoreCase;
 			Regex = new Regex(text, options);

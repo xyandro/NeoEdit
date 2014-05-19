@@ -338,7 +338,7 @@ namespace NeoEdit.TextEditor
 				var findDialog = new FindDialog { Text = text, SelectionOnly = selectionOnly };
 				if (findDialog.ShowDialog() == true)
 				{
-					RunSearch(findDialog.Regex, findDialog.SelectionOnly);
+					RunSearch(findDialog.Regex, findDialog.SelectionOnly, findDialog.IncludeEndings);
 					if (findDialog.SelectAll)
 					{
 						if (Searches.Count != 0)
@@ -1301,7 +1301,7 @@ namespace NeoEdit.TextEditor
 			e.Handled = true;
 		}
 
-		void RunSearch(Regex regex, bool selectionOnly)
+		void RunSearch(Regex regex, bool selectionOnly, bool includeEndings)
 		{
 			if (regex == null)
 				return;
@@ -1310,7 +1310,7 @@ namespace NeoEdit.TextEditor
 
 			var regions = selectionOnly ? Selections : new RangeList { new Range(EndOffset(), BeginOffset()) };
 			foreach (var region in regions)
-				Searches.AddRange(Data.RegexMatches(regex, region.Start, region.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+				Searches.AddRange(Data.RegexMatches(regex, region.Start, region.Length, includeEndings).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 		}
 
 		string GetString(Range range)
