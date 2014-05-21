@@ -195,6 +195,7 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_All" Key="A" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Key="F" Modifiers="Control+Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Key="Down" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Key="Up" Modifiers="Alt"/>
 	</Window.InputBindings>

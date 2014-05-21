@@ -507,7 +507,11 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Select_All)
 				Selections.Replace(new Range(EndOffset(), BeginOffset()));
 			else if (command == Command_Select_Single)
-				Selections.Replace(Selections.First());
+			{
+				visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
+				Selections.Replace(Selections[visibleIndex]);
+				visibleIndex = 0;
+			}
 			else if (command == Command_Select_Limit)
 			{
 				var limitDialog = new LimitDialog { MaxSels = Selections.Count };
