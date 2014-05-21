@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.TextEditor
@@ -434,7 +435,7 @@ namespace NeoEdit.TextEditor
 				return RegexMatchesByLine(regex, offset, length);
 		}
 
-		public List<Tuple<int, int>> StringMatches(FindStrings findStrings, int offset, int length)
+		public List<Tuple<int, int>> StringMatches(Searcher searcher, int offset, int length)
 		{
 			var result = new List<Tuple<int, int>>();
 
@@ -448,7 +449,7 @@ namespace NeoEdit.TextEditor
 					break;
 
 				var matchLength = Math.Min(lineOffset[line] + lineLength[line], endOffset) - matchOffset;
-				result.AddRange(findStrings.Find(data, matchOffset, matchLength));
+				result.AddRange(searcher.Find(data, matchOffset, matchLength));
 				++line;
 				index = 0;
 				continue;

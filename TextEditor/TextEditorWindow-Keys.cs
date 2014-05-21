@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using NeoEdit.Common;
 using NeoEdit.GUI;
 
 namespace NeoEdit.TextEditor
@@ -151,13 +152,13 @@ namespace NeoEdit.TextEditor
 				if (keysAndValues[0].Count != keysAndValues[index].Count)
 					throw new Exception("Keys and values count must match.");
 
-				var findStrings = FindStrings.Create(keysAndValues[0]);
+				var searcher = Searcher.Create(keysAndValues[0]);
 				var ranges = new RangeList();
 				var selections = Selections;
 				if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
 					selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
 				foreach (var selection in selections)
-					ranges.AddRange(Data.StringMatches(findStrings, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+					ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 
 				ranges = ranges.OrderBy(range => range.Start).ToList();
 
