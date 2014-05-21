@@ -9,26 +9,26 @@ namespace NeoEdit.Common.UnitTest
 	public partial class UnitTest
 	{
 		const string searchText = "This is my test.";
-		readonly string[] findStrings = new string[] { "th", "is", "est" };
-		readonly int[] sensitiveResultPos = new int[] { 2, 5, 12 };
-		readonly int[] sensitiveResultLen = new int[] { 2, 2, 3 };
-		readonly int[] insensitiveResultPos = new int[] { 0, 2, 5, 12 };
-		readonly int[] insensitiveResultLen = new int[] { 2, 2, 2, 3 };
+		readonly List<string> findStrings = new List<string> { "th", "is", "est" };
+		readonly List<int> caseResultPos = new List<int> { 2, 5, 12 };
+		readonly List<int> caseResultLen = new List<int> { 2, 2, 3 };
+		readonly List<int> ignoreCaseResultPos = new List<int> { 0, 2, 5, 12 };
+		readonly List<int> ignoreCaseResultLen = new List<int> { 2, 2, 2, 3 };
 
-		void VerifyResults(List<Tuple<int, int>> sensitiveResults, List<Tuple<int, int>> insensitiveResults)
+		void VerifyResults(List<Tuple<int, int>> caseResults, List<Tuple<int, int>> ignoreCaseResults)
 		{
-			Assert.AreEqual(sensitiveResults.Count, sensitiveResultPos.Length);
-			for (var ctr = 0; ctr < sensitiveResults.Count; ++ctr)
+			Assert.AreEqual(caseResults.Count, caseResultPos.Count);
+			for (var ctr = 0; ctr < caseResults.Count; ++ctr)
 			{
-				Assert.AreEqual(sensitiveResults[ctr].Item1, sensitiveResultPos[ctr]);
-				Assert.AreEqual(sensitiveResults[ctr].Item2, sensitiveResultLen[ctr]);
+				Assert.AreEqual(caseResults[ctr].Item1, caseResultPos[ctr]);
+				Assert.AreEqual(caseResults[ctr].Item2, caseResultLen[ctr]);
 			}
 
-			Assert.AreEqual(insensitiveResults.Count, insensitiveResultPos.Length);
-			for (var ctr = 0; ctr < insensitiveResults.Count; ++ctr)
+			Assert.AreEqual(ignoreCaseResults.Count, ignoreCaseResultPos.Count);
+			for (var ctr = 0; ctr < ignoreCaseResults.Count; ++ctr)
 			{
-				Assert.AreEqual(insensitiveResults[ctr].Item1, insensitiveResultPos[ctr]);
-				Assert.AreEqual(insensitiveResults[ctr].Item2, insensitiveResultLen[ctr]);
+				Assert.AreEqual(ignoreCaseResults[ctr].Item1, ignoreCaseResultPos[ctr]);
+				Assert.AreEqual(ignoreCaseResults[ctr].Item2, ignoreCaseResultLen[ctr]);
 			}
 		}
 
@@ -37,35 +37,41 @@ namespace NeoEdit.Common.UnitTest
 		{
 			var testData = searchText;
 			var findStrs = findStrings;
-			var sensitiveSearcher = Searcher.Create(findStrs);
-			var insensitiveSearcher = Searcher.Create(findStrs, false);
-			var sensitiveResults = sensitiveSearcher.Find(testData);
-			var insensitiveResults = insensitiveSearcher.Find(testData);
-			VerifyResults(sensitiveResults, insensitiveResults);
+			var caseSearcher = Searcher.Create(findStrs);
+			var ignoreCaseSearcher = Searcher.Create(findStrs, findStrs.Select(str => false).ToList());
+			Assert.AreEqual(caseSearcher.MaxLen, 3);
+			Assert.AreEqual(ignoreCaseSearcher.MaxLen, 3);
+			var caseResults = caseSearcher.Find(testData);
+			var ignoreCaseResults = ignoreCaseSearcher.Find(testData);
+			VerifyResults(caseResults, ignoreCaseResults);
 		}
 
 		[TestMethod]
 		public void SearcherCharArrayTest()
 		{
 			var testData = searchText.ToCharArray();
-			var findStrs = findStrings.Select(str => str.ToCharArray()).ToArray();
-			var sensitiveSearcher = Searcher.Create(findStrs);
-			var insensitiveSearcher = Searcher.Create(findStrs, false);
-			var sensitiveResults = sensitiveSearcher.Find(testData);
-			var insensitiveResults = insensitiveSearcher.Find(testData);
-			VerifyResults(sensitiveResults, insensitiveResults);
+			var findStrs = findStrings.Select(str => str.ToCharArray()).ToList();
+			var caseSearcher = Searcher.Create(findStrs);
+			var ignoreCaseSearcher = Searcher.Create(findStrs, findStrs.Select(str => false).ToList());
+			Assert.AreEqual(caseSearcher.MaxLen, 3);
+			Assert.AreEqual(ignoreCaseSearcher.MaxLen, 3);
+			var caseResults = caseSearcher.Find(testData);
+			var ignoreCaseResults = ignoreCaseSearcher.Find(testData);
+			VerifyResults(caseResults, ignoreCaseResults);
 		}
 
 		[TestMethod]
 		public void SearcherByteTest()
 		{
 			var testData = Encoding.UTF8.GetBytes(searchText);
-			var findStrs = findStrings.Select(str => Encoding.UTF8.GetBytes(str)).ToArray();
-			var sensitiveSearcher = Searcher.Create(findStrs);
-			var insensitiveSearcher = Searcher.Create(findStrs, false);
-			var sensitiveResults = sensitiveSearcher.Find(testData);
-			var insensitiveResults = insensitiveSearcher.Find(testData);
-			VerifyResults(sensitiveResults, insensitiveResults);
+			var findStrs = findStrings.Select(str => Encoding.UTF8.GetBytes(str)).ToList();
+			var caseSearcher = Searcher.Create(findStrs);
+			var ignoreCaseSearcher = Searcher.Create(findStrs, findStrs.Select(str => false).ToList());
+			Assert.AreEqual(caseSearcher.MaxLen, 3);
+			Assert.AreEqual(ignoreCaseSearcher.MaxLen, 3);
+			var caseResults = caseSearcher.Find(testData);
+			var ignoreCaseResults = ignoreCaseSearcher.Find(testData);
+			VerifyResults(caseResults, ignoreCaseResults);
 		}
 	}
 }

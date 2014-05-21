@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using NeoEdit.Common;
 
 namespace NeoEdit.BinaryEditor.Data
 {
@@ -36,25 +34,20 @@ namespace NeoEdit.BinaryEditor.Data
 			if ((index < 0) || (index >= Length))
 				return false;
 
-			var findLen = currentFind.Data.Select(bytes => bytes.Length).Max();
+			var findLen = currentFind.Searcher.MaxLen;
 
 			while (index < Length)
 			{
 				SetCache(index, findLen);
 				if (cacheHasData)
 				{
-					for (var findPos = 0; findPos < currentFind.Data.Count; findPos++)
+					var result = currentFind.Searcher.Find(cache, (int)index, (int)(cache.LongLength - index), true);
+					if (result.Count != 0)
 					{
-						var found = Helpers.ForwardArraySearch(cache, index - cacheStart, currentFind.Data[findPos], currentFind.IgnoreCase[findPos]);
-						if ((found != -1) && ((start == -1) || (found < start)))
-						{
-							start = found + cacheStart;
-							end = start + currentFind.Data[findPos].Length;
-						}
-					}
-
-					if (start != -1)
+						start = result[0].Item1 + cacheStart;
+						end = start + result[0].Item2;
 						return true;
+					}
 				}
 
 				index = cacheEnd;

@@ -15,9 +15,10 @@ namespace NeoEdit.Common
 		{
 			public int[] CharMap { get; private set; }
 			public int NumChars { get; private set; }
+			public int MaxLen { get; private set; }
 <# for (var ctr = 0; ctr < types.Length; ++ctr) { #>
 
-			public FindData(IEnumerable<<#= types[ctr].Name #>> strs)
+			public FindData(List<<#= types[ctr].Name #>> strs)
 			{
 				CharMap = new int[<#= bases[ctr].Name #>.MaxValue];
 				for (var ctr = 0; ctr < CharMap.Length; ++ctr) CharMap[ctr] = -1;
@@ -28,6 +29,7 @@ namespace NeoEdit.Common
 							CharMap[Char.ToLowerInvariant((char)c)] = NumChars++;
 						if (CharMap[Char.ToUpperInvariant((char)c)] == -1)
 							CharMap[Char.ToUpperInvariant((char)c)] = NumChars++;
+						MaxLen = Math.Max(MaxLen, str.Length);
 					}
 			}
 <# } #>
@@ -37,6 +39,7 @@ namespace NeoEdit.Common
 		bool done;
 		int length;
 		FindData findData;
+		public int MaxLen { get { return findData.MaxLen; } }
 
 		Searcher(FindData findData)
 		{
@@ -51,18 +54,18 @@ namespace NeoEdit.Common
 		}
 <# for (var ctr = 0; ctr < types.Length; ++ctr) { #>
 
-		public static Searcher Create(IEnumerable<<#= types[ctr].Name #>> strs, bool caseSensitive = true)
+		public static Searcher Create(List<<#= types[ctr].Name #>> strs, List<bool> ignoreCase = null)
 		{
 			var findData = new FindData(strs);
 			var result = new Searcher(findData);
-			foreach (var str in strs)
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
 			{
 				var node = result;
-				foreach (var c in str)
+				foreach (var c in strs[ctr])
 				{
 					var mappedIndex = findData.CharMap[c];
 					var mappedIndex2 = mappedIndex;
-					if (!caseSensitive)
+					if ((ignoreCase != null) && (ctr < ignoreCase.Count) && (ignoreCase[ctr]))
 						if (Char.IsUpper((char)c))
 							mappedIndex2 = findData.CharMap[Char.ToLowerInvariant((char)c)];
 						else if (Char.IsLower((char)c))
@@ -72,7 +75,7 @@ namespace NeoEdit.Common
 					node = node[mappedIndex];
 				}
 				node.done = true;
-				node.length = str<#= length[ctr] #>;
+				node.length = strs[ctr]<#= length[ctr] #>;
 			}
 			return result;
 		}
@@ -86,7 +89,7 @@ namespace NeoEdit.Common
 <# } #>
 <# for (var ctr = 0; ctr < types.Length; ++ctr) { #>
 
-		public List<Tuple<int, int>> Find(<#= types[ctr].Name #> input, int index, int length)
+		public List<Tuple<int, int>> Find(<#= types[ctr].Name #> input, int index, int length, bool firstOnly = false)
 		{
 			var result = new List<Tuple<int, int>>();
 			length += index;
@@ -113,6 +116,8 @@ namespace NeoEdit.Common
 					if (working[ctr].done)
 					{
 						result.Add(new Tuple<int, int>(inputPos - working[ctr].length + 1, working[ctr].length));
+						if (firstOnly)
+							return result;
 						working.Clear();
 						continue;
 					}
