@@ -86,6 +86,16 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace7" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFindKeys" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind1" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind2" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind3" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind4" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind5" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind6" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind7" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind8" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind9" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace2" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace3" Executed="Command_Executed"/>
@@ -331,7 +341,7 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues8" Header="Values _8"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues9" Header="Values _9"/>
 				</MenuItem>
-				<MenuItem Header="Selection _Replace">
+				<MenuItem Header="Selection _replace">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace1" Header="Values _1"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace2" Header="Values _2"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace3" Header="Values _3"/>
@@ -341,6 +351,18 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace7" Header="Values _7"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Header="Values _8"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Header="Values _9"/>
+				</MenuItem>
+				<MenuItem Header="Global _find">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFindKeys" Header="_Keys"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind1" Header="Values _1"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind2" Header="Values _2"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind3" Header="Values _3"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind4" Header="Values _4"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind5" Header="Values _5"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind6" Header="Values _6"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind7" Header="Values _7"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind8" Header="Values _8"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind9" Header="Values _9"/>
 				</MenuItem>
 				<MenuItem Header="_Global replace">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace1" Header="Values _1"/>
