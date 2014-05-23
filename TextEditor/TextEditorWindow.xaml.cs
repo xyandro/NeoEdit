@@ -816,7 +816,7 @@ namespace NeoEdit.TextEditor
 			var lineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data.GetLineLength(line) + 1)));
 			var screenStart = lineRanges.First().Value.Start;
 			var screenEnd = lineRanges.Last().Value.End + 1;
-			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn));
+			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn, true));
 			var endIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, endColumn, true));
 			var y = lines.ToDictionary(line => line, line => (line - startLine) * lineHeight);
 			var cursorLineDone = new HashSet<int>();
@@ -835,7 +835,7 @@ namespace NeoEdit.TextEditor
 					entryStartLine = Math.Max(startLine, entryStartLine);
 					entryEndLine = Math.Min(endLine, entryEndLine + 1);
 
-					if ((entry.Value == Selections) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
+					if ((entry.Value == Selections) && (!range.HasSelection()) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
 						if (range == visibleCursor)
 							dc.DrawRectangle(visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));

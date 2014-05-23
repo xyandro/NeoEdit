@@ -203,7 +203,7 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Key="D9" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Key="M" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_All" Key="A" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Key="F" Modifiers="Control+Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Key="D0" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Key="Down" Modifiers="Alt"/>
