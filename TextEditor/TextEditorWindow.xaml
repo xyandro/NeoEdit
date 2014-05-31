@@ -139,6 +139,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_All" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Limit" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_AllLines" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Lines" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Marks" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Find" Executed="Command_Executed"/>
@@ -203,6 +204,7 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Key="D9" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Key="M" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_All" Key="A" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_AllLines" Key="L" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Key="D0" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Control"/>
@@ -418,6 +420,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="S_ingle"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Limit" Header="Limit"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_AllLines" Header="All lines"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Marks" Header="_Marks"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find results"/>
