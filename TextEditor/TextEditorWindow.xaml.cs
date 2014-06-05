@@ -1155,7 +1155,7 @@ namespace NeoEdit.TextEditor
 			WordSkipType moveType = WordSkipType.None;
 
 			var line = Data.GetOffsetLine(offset);
-			var index = Data.GetOffsetIndex(offset, line) - 1;
+			var index = Math.Min(Data.GetLineLength(line), Data.GetOffsetIndex(offset, line) - 1);
 			while (true)
 			{
 				if (index >= Data.GetLineLength(line))
@@ -1194,7 +1194,7 @@ namespace NeoEdit.TextEditor
 			WordSkipType moveType = WordSkipType.None;
 
 			var line = Data.GetOffsetLine(offset);
-			var index = Data.GetOffsetIndex(offset, line);
+			var index = Math.Min(Data.GetLineLength(line), Data.GetOffsetIndex(offset, line));
 			int lastLine = -1, lastIndex = -1;
 			while (true)
 			{
