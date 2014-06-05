@@ -24,7 +24,6 @@ namespace NeoEdit.TextEditor
 		List<int> endingOffset;
 		List<int> endingLength;
 		public string DefaultEnding { get; private set; }
-		public Coder.Type CoderUsed { get; private set; }
 		const int tabStop = 4;
 
 		public int NumLines { get { return lineOffset.Count; } }
@@ -32,15 +31,15 @@ namespace NeoEdit.TextEditor
 		public int MaxColumn { get; private set; }
 		public bool BOM { get; private set; }
 
-		public TextData(byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
+		public TextData() : this(null, Coder.Type.UTF8) { }
+		public TextData(byte[] bytes, Coder.Type encoding)
 		{
 			if (bytes == null)
 				bytes = new byte[0];
 			if (encoding == Coder.Type.None)
-				encoding = Coder.GuessEncoding(bytes);
+				throw new Exception("No encoder specified");
 
 			data = Coder.BytesToString(bytes, encoding);
-			CoderUsed = encoding;
 		}
 
 		public byte[] GetBytes(Coder.Type encoding = Coder.Type.UTF8)

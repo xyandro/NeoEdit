@@ -182,8 +182,10 @@ namespace NeoEdit.TextEditor
 				else
 					bytes = File.ReadAllBytes(FileName);
 			}
+			if (encoding == Coder.Type.None)
+				encoding = Coder.GuessEncoding(bytes);
 			Data = new TextData(bytes, encoding);
-			CoderUsed = Data.CoderUsed;
+			CoderUsed = encoding;
 			HighlightType = Highlighting.Get(FileName);
 		}
 
