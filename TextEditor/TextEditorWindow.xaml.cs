@@ -877,7 +877,7 @@ namespace NeoEdit.TextEditor
 						end = Data.GetColumnFromIndex(line, end);
 
 						start = Math.Max(0, start - startColumn);
-						end = Math.Min(endColumn, end) - startColumn;
+						end = Math.Max(0, Math.Min(endColumn, end) - startColumn);
 						var width = end - start;
 
 						dc.DrawRectangle(entry.Key, null, new Rect(start * charWidth, y[line], width * charWidth + 1, lineHeight));
