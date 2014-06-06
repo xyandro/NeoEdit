@@ -47,7 +47,7 @@ namespace NeoEdit.GUI.Dialogs
 
 		void SetRelative()
 		{
-			Line -= MinLine;
+			var line = Line - MinLine;
 			if (Relative)
 			{
 				MinLine = -startLine + 1;
@@ -58,7 +58,7 @@ namespace NeoEdit.GUI.Dialogs
 				MinLine = 1;
 				MaxLine = numLines;
 			}
-			Line += MinLine;
+			Line = line + MinLine;
 		}
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)

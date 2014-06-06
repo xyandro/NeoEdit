@@ -372,18 +372,11 @@ namespace NeoEdit.TextEditor
 				var offset = Selections.First().Start;
 				var line = Data.GetOffsetLine(offset);
 				var index = Data.GetOffsetIndex(offset, line);
-				var getNumDialog = new GetNumDialog
-				{
-					Title = "Go to column",
-					Text = String.Format("Go to column: (1 - {0})", Data.GetLineLength(line) + 1),
-					MinValue = 1,
-					MaxValue = Data.GetLineLength(line) + 1,
-					Value = index + 1,
-				};
-				if (getNumDialog.ShowDialog() == true)
+				var newIndex = GotoIndexDialog.Run(Data.GetLineLength(line) + 1, index);
+				if (newIndex.HasValue)
 				{
 					shiftOverride = shift;
-					Selections.Replace(Selections.Select(range => MoveCursor(range, 0, (int)getNumDialog.Value - 1, true, false)).ToList());
+					Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false)).ToList());
 					shiftOverride = null;
 				}
 			}
