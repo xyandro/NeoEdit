@@ -57,6 +57,10 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
 		public static RoutedCommand Command_Data_Repeat = new RoutedCommand();
 		public static RoutedCommand Command_Data_GUID = new RoutedCommand();
+		public static RoutedCommand Command_Data_Escape_XML = new RoutedCommand();
+		public static RoutedCommand Command_Data_Escape_Regex = new RoutedCommand();
+		public static RoutedCommand Command_Data_Unescape_XML = new RoutedCommand();
+		public static RoutedCommand Command_Data_Unescape_Regex = new RoutedCommand();
 		public static RoutedCommand Command_Data_MD5 = new RoutedCommand();
 		public static RoutedCommand Command_Data_SHA1 = new RoutedCommand();
 		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();
@@ -220,6 +224,26 @@ namespace NeoEdit.TextEditor
 		int EndOffset()
 		{
 			return Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
+		}
+
+		string EscapeXML(string str)
+		{
+			return str.Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;");
+		}
+
+		string UnescapeXML(string str)
+		{
+			return str.Replace("&apos;", "'").Replace("&quot;", "\"").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">");
+		}
+
+		string EscapeRegex(string str)
+		{
+			return Regex.Escape(str);
+		}
+
+		string UnescapeRegex(string str)
+		{
+			return Regex.Unescape(str);
 		}
 
 		void RunCommand(ICommand command)
@@ -468,6 +492,26 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Data_GUID)
 			{
 				var strs = Selections.Select(range => Guid.NewGuid().ToString()).ToList();
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Data_Escape_XML)
+			{
+				var strs = Selections.Select(range => EscapeXML(GetString(range))).ToList();
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Data_Escape_Regex)
+			{
+				var strs = Selections.Select(range => EscapeRegex(GetString(range))).ToList();
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Data_Unescape_XML)
+			{
+				var strs = Selections.Select(range => UnescapeXML(GetString(range))).ToList();
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Data_Unescape_Regex)
+			{
+				var strs = Selections.Select(range => UnescapeRegex(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_MD5)

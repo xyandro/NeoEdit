@@ -47,6 +47,10 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_GUID" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Escape_XML" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Escape_Regex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unescape_XML" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unescape_Regex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_String" Executed="Command_Executed"/>
@@ -302,6 +306,15 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Repeat" Header="_Repeat"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_GUID" Header="Insert _GUID"/>
+				<Separator/>
+				<MenuItem Header="Escape">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Escape_XML" Header="XML"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Escape_Regex" Header="Regex"/>
+				</MenuItem>
+				<MenuItem Header="Unescape">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unescape_XML" Header="XML"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unescape_Regex" Header="Regex"/>
+				</MenuItem>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5" Header="MD_5"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1" Header="SHA_1"/>
