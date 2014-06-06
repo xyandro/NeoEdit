@@ -49,6 +49,9 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\GotoLineDialog.xaml.cs">
+      <DependentUpon>GotoLineDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\LimitDialog.xaml.cs">
       <DependentUpon>LimitDialog.xaml</DependentUpon>
     </Compile>
@@ -77,6 +80,10 @@
       <DependentUpon>TextEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UnitTest\TextDataTest.cs" />
+    <Page Include="Dialogs\GotoLineDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\LimitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

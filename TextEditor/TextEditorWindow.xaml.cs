@@ -358,18 +358,11 @@ namespace NeoEdit.TextEditor
 			{
 				var shift = shiftDown;
 				var line = Data.GetOffsetLine(Selections.First().Start);
-				var getNumDialog = new GetNumDialog
-				{
-					Title = "Go to line",
-					Text = String.Format("Go to line: (1 - {0})", Data.NumLines),
-					MinValue = 1,
-					MaxValue = Data.NumLines,
-					Value = line + 1,
-				};
-				if (getNumDialog.ShowDialog() == true)
+				var newLine = GotoLineDialog.Run(Data.NumLines, line);
+				if (newLine.HasValue)
 				{
 					shiftOverride = shift;
-					Selections.Replace(Selections.Select(range => MoveCursor(range, (int)getNumDialog.Value - 1, 0, false, true)).ToList());
+					Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true)).ToList());
 					shiftOverride = null;
 				}
 			}
