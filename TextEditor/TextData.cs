@@ -348,6 +348,7 @@ namespace NeoEdit.TextEditor
 				{ '(', ')' },
 				{ '{', '}' },
 				{ '[', ']' },
+				{ '<', '>' },
 			};
 
 			var found = default(KeyValuePair<char, char>);
