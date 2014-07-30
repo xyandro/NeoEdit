@@ -753,7 +753,14 @@ namespace NeoEdit.TextEditor
 					Selections.Add(new Range(BeginOffset()));
 					EnsureVisible();
 				}
+				var visible = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
 				Selections.DeOverlap();
+				if (visible != null)
+				{
+					visibleIndex = Selections.FindIndex(range => (range.Start == visible.Start) && (range.End == visible.End));
+					if (visibleIndex < 0)
+						visibleIndex = 0;
+				}
 
 				selectionsTimer = null;
 				InvalidateCanvas();
@@ -1297,21 +1304,18 @@ namespace NeoEdit.TextEditor
 			return MoveCursor(range, Data.GetOffset(line, index));
 		}
 
-		int mouseCursor = -1;
 		void MouseHandler(Point mousePos, int clickCount)
 		{
 			var line = Math.Min(Data.NumLines - 1, (int)(mousePos.Y / lineHeight) + yScrollValue);
 			var index = Math.Min(Data.GetLineLength(line), Data.GetIndexFromColumn(line, (int)(mousePos.X / charWidth) + xScrollValue, true));
-			var mouseRange = Selections.FirstOrDefault(range => range.Cursor == mouseCursor);
-			mouseCursor = Data.GetOffset(line, index);
+			var offset = Data.GetOffset(line, index);
+			var mouseRange = Selections[visibleIndex];
 
 			if (shiftDown)
 			{
-				if (mouseRange != null)
-				{
-					Selections.Remove(mouseRange);
-					Selections.Add(MoveCursor(mouseRange, mouseCursor));
-				}
+				Selections.Remove(mouseRange);
+				Selections.Add(MoveCursor(mouseRange, offset));
+				visibleIndex = Selections.Count - 1;
 				return;
 			}
 
@@ -1319,13 +1323,14 @@ namespace NeoEdit.TextEditor
 				Selections.Clear();
 
 			if (clickCount == 1)
-				Selections.Add(new Range(mouseCursor));
+				Selections.Add(new Range(offset));
 			else
 			{
 				if (mouseRange != null)
 					Selections.Remove(mouseRange);
-				Selections.Add(new Range(GetNextWord(mouseCursor), GetPrevWord(mouseCursor + 1)));
+				Selections.Add(new Range(GetNextWord(offset), GetPrevWord(offset + 1)));
 			}
+			visibleIndex = Selections.Count - 1;
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1470,7 +1475,6 @@ namespace NeoEdit.TextEditor
 				Selections.Replace(Selections.Select(range => new Range(range.End)).ToList());
 
 			InvalidateScrollBars();
-			mouseCursor = -1;
 		}
 
 		void FindNext(bool forward)
