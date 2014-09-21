@@ -49,6 +49,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProcessManager.cs" />
     <Compile Include="ProcessesWindow.xaml.cs">
       <DependentUpon>ProcessesWindow.xaml</DependentUpon>
     </Compile>

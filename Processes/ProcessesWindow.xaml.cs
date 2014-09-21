@@ -28,6 +28,7 @@ namespace NeoEdit.Processes
 		readonly UIHelper<ProcessesWindow> uiHelper;
 		public ProcessesWindow(int? pid = null)
 		{
+			ProcessManager.WindowCreated();
 			uiHelper = new UIHelper<ProcessesWindow>(this);
 			InitializeComponent();
 
@@ -49,9 +50,14 @@ namespace NeoEdit.Processes
 			}
 		}
 
+		~ProcessesWindow()
+		{
+			ProcessManager.WindowDestroyed();
+		}
+
 		void Refresh()
 		{
-			processes.SyncItems(ProcessItem.GetProcesses(), ProcessItem.StaticGetDepProp("PID"));
+			processes.SyncItems(ProcessManager.GetProcesses(), ProcessItem.StaticGetDepProp("PID"));
 		}
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
