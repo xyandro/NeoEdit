@@ -60,9 +60,9 @@ namespace NeoEdit.Processes
 				{
 					try
 					{
-						//if (!counter.ContainsKey(process.Id))
-						//	counter[process.Id] = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
-						//usage[process.Id] = counter[process.Id].NextValue();
+						if (!counter.ContainsKey(process.Id))
+							counter[process.Id] = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
+						usage[process.Id] = counter[process.Id].NextValue();
 					}
 					catch { }
 				}
