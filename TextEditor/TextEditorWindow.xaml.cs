@@ -382,8 +382,9 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Edit_Paste)
 			{
-				var separator = Selections.Count == 1 ? Data.DefaultEnding : "";
-				var result = ClipboardWindow.GetStrings().Select(str => str + separator).ToList();
+				var result = ClipboardWindow.GetStrings().ToList();
+				if ((Selections.Count == 1) && (result.Count != 1))
+					result = result.Select(str => str + Data.DefaultEnding).ToList();
 				if ((result != null) && (result.Count != 0))
 				{
 					while (result.Count > Selections.Count)
