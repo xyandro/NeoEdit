@@ -235,7 +235,7 @@ namespace NeoEdit.Common
 
 			var test = GetTerm(match.Groups[1].Value, value);
 			var result = "";
-			if ((test is string) && (Boolean.Parse(test as string)))
+			if (((test is string) && (Boolean.Parse(test as string))) || ((test is bool) && ((bool)test)))
 				result = match.Groups[2].Value;
 			else
 				result = match.Groups[3].Value;
