@@ -61,10 +61,10 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Files_Information_CreateTime = new RoutedCommand();
 		public static RoutedCommand Command_Files_Information_Attributes = new RoutedCommand();
 		public static RoutedCommand Command_Files_Information_ReadOnly = new RoutedCommand();
-		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
-		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
-		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
-		public static RoutedCommand Command_Data_Char_Toggle = new RoutedCommand();
+		public static RoutedCommand Command_Data_Case_Upper = new RoutedCommand();
+		public static RoutedCommand Command_Data_Case_Lower = new RoutedCommand();
+		public static RoutedCommand Command_Data_Case_Proper = new RoutedCommand();
+		public static RoutedCommand Command_Data_Case_Toggle = new RoutedCommand();
 		public static RoutedCommand Command_Data_Hex_ToHex = new RoutedCommand();
 		public static RoutedCommand Command_Data_Hex_FromHex = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_ToChar = new RoutedCommand();
@@ -684,22 +684,22 @@ namespace NeoEdit.TextEditor
 				}
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Char_Upper)
+			else if (command == Command_Data_Case_Upper)
 			{
 				var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Char_Lower)
+			else if (command == Command_Data_Case_Lower)
 			{
 				var strs = Selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Char_Proper)
+			else if (command == Command_Data_Case_Proper)
 			{
 				var strs = Selections.Select(range => GetString(range).ToProper()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Char_Toggle)
+			else if (command == Command_Data_Case_Toggle)
 			{
 				var strs = Selections.Select(range => GetString(range).ToToggled()).ToList();
 				Replace(Selections, strs, true);

@@ -52,10 +52,10 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_CreateTime" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_Attributes" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_ReadOnly" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Toggle" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Upper" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Lower" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Proper" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Toggle" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Executed="Command_Executed"/>
@@ -202,8 +202,8 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Key="U" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Key="U" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Upper" Key="U" Modifiers="Control"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Lower" Key="U" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Key="H" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Key="R" Modifiers="Control"/>
@@ -330,10 +330,10 @@
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Header="_Upper"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Header="_Lower"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Header="_Proper"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_Toggle" Header="_Toggle"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Upper" Header="_Upper"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Lower" Header="_Lower"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Proper" Header="_Proper"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Toggle" Header="_Toggle"/>
 				</MenuItem>
 				<MenuItem Header="_Hex">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Header="_To hex"/>
