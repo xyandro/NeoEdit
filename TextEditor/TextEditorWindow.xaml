@@ -45,6 +45,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileNameWoExtension" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_CreateDirectory" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
@@ -311,6 +312,7 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Header="_Directory name"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Header="_Extension"/>
 				</MenuItem>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_CreateDirectory" Header="Create directory"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">

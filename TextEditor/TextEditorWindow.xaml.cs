@@ -54,6 +54,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Files_Path_GetFileNameWoExtension = new RoutedCommand();
 		public static RoutedCommand Command_Files_Path_GetDirectory = new RoutedCommand();
 		public static RoutedCommand Command_Files_Path_GetExtension = new RoutedCommand();
+		public static RoutedCommand Command_Files_CreateDirectory = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
@@ -537,6 +538,12 @@ namespace NeoEdit.TextEditor
 			{
 				var strs = Selections.Select(range => Path.GetExtension(GetString(range))).ToList();
 				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_CreateDirectory)
+			{
+				var files = Selections.Select(range => GetString(range)).ToArray();
+				foreach (var file in files)
+					Directory.CreateDirectory(file);
 			}
 			else if (command == Command_Data_Char_Upper)
 			{
