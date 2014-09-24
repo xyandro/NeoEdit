@@ -829,7 +829,7 @@ namespace NeoEdit.TextEditor
 			{
 				var limitDialog = new LimitDialog { MaxSels = Selections.Count };
 				if (limitDialog.ShowDialog() == true)
-					Selections.RemoveRange(limitDialog.MaxSels, Selections.Count - limitDialog.MaxSels);
+					Selections.RemoveRange(limitDialog.NumSels, Selections.Count - limitDialog.NumSels);
 			}
 			else if (command == Command_Select_AllLines)
 			{

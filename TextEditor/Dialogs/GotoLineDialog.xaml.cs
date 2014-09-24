@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
@@ -29,9 +27,6 @@ namespace NeoEdit.GUI.Dialogs
 			uiHelper = new UIHelper<GotoLineDialog>(this);
 			InitializeComponent();
 
-			Loaded += (s, e) => line.SelectAll();
-
-			uiHelper.AddCallback(a => a.Line, (o, n) => Line = Math.Max(MinLine, Math.Min(Line, MaxLine)));
 			uiHelper.AddCallback(a => a.Relative, (o, n) => SetRelative());
 
 			okClick.Click += (s, e) =>
@@ -59,21 +54,6 @@ namespace NeoEdit.GUI.Dialogs
 				MaxLine = numLines;
 			}
 			Line = line + MinLine;
-		}
-
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
-		{
-			base.OnKeyDown(e);
-			if (e.Handled)
-				return;
-
-			e.Handled = true;
-			switch (e.Key)
-			{
-				case Key.Up: ++Line; break;
-				case Key.Down: --Line; break;
-				default: e.Handled = false; break;
-			}
 		}
 
 		public static int? Run(int numLines, int line)

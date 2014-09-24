@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
@@ -21,21 +19,6 @@ namespace NeoEdit.TextEditor.Dialogs
 			InitializeComponent();
 
 			LineMult = 1;
-
-			lineMult.SelectAll();
-		}
-
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
-		{
-			base.OnKeyDown(e);
-			if (e.Handled)
-				return;
-
-			switch (e.Key)
-			{
-				case Key.Up: LineMult++; break;
-				case Key.Down: LineMult = Math.Max(1, LineMult - 1); break;
-			}
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)

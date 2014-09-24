@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
@@ -29,9 +27,6 @@ namespace NeoEdit.GUI.Dialogs
 			uiHelper = new UIHelper<GotoIndexDialog>(this);
 			InitializeComponent();
 
-			Loaded += (s, e) => index.SelectAll();
-
-			uiHelper.AddCallback(a => a.Index, (o, n) => Index = Math.Max(MinIndex, Math.Min(Index, MaxIndex)));
 			uiHelper.AddCallback(a => a.Relative, (o, n) => SetRelative());
 
 			okClick.Click += (s, e) =>
@@ -59,21 +54,6 @@ namespace NeoEdit.GUI.Dialogs
 				MaxIndex = numIndexes;
 			}
 			Index = index + MinIndex;
-		}
-
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
-		{
-			base.OnKeyDown(e);
-			if (e.Handled)
-				return;
-
-			e.Handled = true;
-			switch (e.Key)
-			{
-				case Key.Up: ++Index; break;
-				case Key.Down: --Index; break;
-				default: e.Handled = false; break;
-			}
 		}
 
 		public static int? Run(int numIndexes, int index)
