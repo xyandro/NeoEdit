@@ -372,13 +372,13 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Edit_Paste)
 			{
-				var result = ClipboardWindow.GetStrings().ToList();
+				var separator = Selections.Count == 1 ? Data.DefaultEnding : "";
+				var result = ClipboardWindow.GetStrings().Select(str => str + separator).ToList();
 				if ((result != null) && (result.Count != 0))
 				{
-					var separator = Selections.Count == 1 ? Data.DefaultEnding : " ";
 					while (result.Count > Selections.Count)
 					{
-						result[result.Count - 2] += separator + result[result.Count - 1];
+						result[result.Count - 2] += result[result.Count - 1];
 						result.RemoveAt(result.Count - 1);
 					}
 					while (result.Count < Selections.Count)
