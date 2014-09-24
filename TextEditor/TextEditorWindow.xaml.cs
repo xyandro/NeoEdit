@@ -55,6 +55,12 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Files_Path_GetDirectory = new RoutedCommand();
 		public static RoutedCommand Command_Files_Path_GetExtension = new RoutedCommand();
 		public static RoutedCommand Command_Files_CreateDirectory = new RoutedCommand();
+		public static RoutedCommand Command_Files_Information_Size = new RoutedCommand();
+		public static RoutedCommand Command_Files_Information_WriteTime = new RoutedCommand();
+		public static RoutedCommand Command_Files_Information_AccessTime = new RoutedCommand();
+		public static RoutedCommand Command_Files_Information_CreateTime = new RoutedCommand();
+		public static RoutedCommand Command_Files_Information_Attributes = new RoutedCommand();
+		public static RoutedCommand Command_Files_Information_ReadOnly = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
@@ -544,6 +550,126 @@ namespace NeoEdit.TextEditor
 				var files = Selections.Select(range => GetString(range)).ToArray();
 				foreach (var file in files)
 					Directory.CreateDirectory(file);
+			}
+			else if (command == Command_Files_Information_Size)
+			{
+				var files = Selections.Select(range => GetString(range)).ToList();
+				var strs = new List<string>();
+				foreach (var file in files)
+				{
+					if (File.Exists(file))
+					{
+						var fileinfo = new FileInfo(file);
+						strs.Add(fileinfo.Length.ToString());
+					}
+					else if (Directory.Exists(file))
+						strs.Add("Directory");
+					else
+						strs.Add("INVALID");
+				}
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_Information_WriteTime)
+			{
+				var files = Selections.Select(range => GetString(range)).ToList();
+				var strs = new List<string>();
+				foreach (var file in files)
+				{
+					if (File.Exists(file))
+					{
+						var fileinfo = new FileInfo(file);
+						strs.Add(fileinfo.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+					}
+					else if (Directory.Exists(file))
+					{
+						var dirinfo = new DirectoryInfo(file);
+						strs.Add(dirinfo.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+					}
+					else
+						strs.Add("INVALID");
+				}
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_Information_AccessTime)
+			{
+				var files = Selections.Select(range => GetString(range)).ToList();
+				var strs = new List<string>();
+				foreach (var file in files)
+				{
+					if (File.Exists(file))
+					{
+						var fileinfo = new FileInfo(file);
+						strs.Add(fileinfo.LastAccessTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+					}
+					else if (Directory.Exists(file))
+					{
+						var dirinfo = new DirectoryInfo(file);
+						strs.Add(dirinfo.LastAccessTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+					}
+					else
+						strs.Add("INVALID");
+				}
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_Information_CreateTime)
+			{
+				var files = Selections.Select(range => GetString(range)).ToList();
+				var strs = new List<string>();
+				foreach (var file in files)
+				{
+					if (File.Exists(file))
+					{
+						var fileinfo = new FileInfo(file);
+						strs.Add(fileinfo.CreationTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+					}
+					else if (Directory.Exists(file))
+					{
+						var dirinfo = new DirectoryInfo(file);
+						strs.Add(dirinfo.CreationTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+					}
+					else
+						strs.Add("INVALID");
+				}
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_Information_Attributes)
+			{
+				var files = Selections.Select(range => GetString(range)).ToList();
+				var strs = new List<string>();
+				foreach (var file in files)
+				{
+					if (File.Exists(file))
+					{
+						var fileinfo = new FileInfo(file);
+						strs.Add(fileinfo.Attributes.ToString());
+					}
+					else if (Directory.Exists(file))
+					{
+						var dirinfo = new DirectoryInfo(file);
+						strs.Add(dirinfo.Attributes.ToString());
+					}
+					else
+						strs.Add("INVALID");
+				}
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_Information_ReadOnly)
+			{
+				var files = Selections.Select(range => GetString(range)).ToList();
+				var strs = new List<string>();
+				foreach (var file in files)
+				{
+					if (File.Exists(file))
+					{
+						var fileinfo = new FileInfo(file);
+						strs.Add(fileinfo.IsReadOnly.ToString());
+					}
+					else if (Directory.Exists(file))
+						strs.Add("Directory");
+					else
+						strs.Add("INVALID");
+				}
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Upper)
 			{

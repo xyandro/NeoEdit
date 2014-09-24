@@ -46,6 +46,12 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_CreateDirectory" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_Size" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_WriteTime" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_AccessTime" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_CreateTime" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_Attributes" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_ReadOnly" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
@@ -313,6 +319,14 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Header="_Extension"/>
 				</MenuItem>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_CreateDirectory" Header="Create directory"/>
+				<MenuItem Header="_Information">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_Size" Header="_Size"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_WriteTime" Header="_Write time"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_AccessTime" Header="_Access time"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_CreateTime" Header="_Create time"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_Attributes" Header="A_ttributes"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_ReadOnly" Header="_Read only"/>
+				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
