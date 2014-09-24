@@ -6,8 +6,9 @@
 	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
 
 	<Window.Title>
-		<MultiBinding StringFormat="{}{0} - NeoEdit Text Editor">
+		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0]t+(([1]!=0)?'*':'')t+' - NeoEdit Text Editor'">
 			<Binding ElementName="self" Path="FileName"/>
+			<Binding ElementName="self" Path="ModifiedSteps"/>
 		</MultiBinding>
 	</Window.Title>
 

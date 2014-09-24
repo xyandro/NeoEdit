@@ -108,6 +108,8 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		int ModifiedSteps { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
@@ -246,6 +248,31 @@ namespace NeoEdit.TextEditor
 			return Regex.Unescape(str);
 		}
 
+		bool ConfirmModified()
+		{
+			if (ModifiedSteps == 0)
+				return true;
+			var result = new Message
+			{
+				Title = "Error",
+				Text = "The file you are viewing has been edited.  Are you sure you want to continue?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show();
+			return result == Message.OptionsEnum.Yes;
+		}
+
+		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+		{
+			if (!ConfirmModified())
+			{
+				e.Cancel = true;
+				return;
+			}
+
+			base.OnClosing(e);
+		}
+
 		void RunCommand(ICommand command)
 		{
 			InvalidateCanvas();
@@ -255,21 +282,34 @@ namespace NeoEdit.TextEditor
 
 			if (command == Command_File_New)
 			{
-				FileName = null;
-				Data = new TextData();
+				if (ConfirmModified())
+				{
+					FileName = null;
+					Data = new TextData();
+					ModifiedSteps = 0;
+				}
 			}
 			else if (command == Command_File_Open)
 			{
-				var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
-				if (dialog.ShowDialog() == true)
-					OpenFile(dialog.FileName);
+				if (ConfirmModified())
+				{
+					var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
+					if (dialog.ShowDialog() == true)
+					{
+						OpenFile(dialog.FileName);
+						ModifiedSteps = 0;
+					}
+				}
 			}
 			else if (command == Command_File_Save)
 			{
 				if (FileName == null)
 					RunCommand(Command_File_SaveAs);
 				else
+				{
 					File.WriteAllBytes(FileName, Data.GetBytes(CoderUsed));
+					ModifiedSteps = 0;
+				}
 			}
 			else if (command == Command_File_SaveAs)
 			{
@@ -1386,16 +1426,21 @@ namespace NeoEdit.TextEditor
 			{
 				case ReplaceType.Undo:
 					redo.Add(current);
+					--ModifiedSteps;
 					break;
 				case ReplaceType.Redo:
 					undo.Add(current);
+					++ModifiedSteps;
 					break;
 				case ReplaceType.Normal:
+					if (ModifiedSteps < 0)
+						ModifiedSteps = Int32.MinValue / 2; // Should never reach 0 again
+
 					redo.Clear();
 
 					// See if we can add this one to the last one
 					bool done = false;
-					if (undo.Count != 0)
+					if ((ModifiedSteps != 0) && (undo.Count != 0))
 					{
 						var last = undo.Last();
 						if (last.ranges.Count == current.ranges.Count)
@@ -1426,7 +1471,10 @@ namespace NeoEdit.TextEditor
 					}
 
 					if (!done)
+					{
 						undo.Add(current);
+						++ModifiedSteps;
+					}
 
 					// Limit undo buffer
 					while (true)
