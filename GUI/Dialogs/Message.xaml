@@ -12,13 +12,14 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<TextBox BorderBrush="Transparent" TextWrapping="Wrap" Name="textBox" Text="{Binding Text, ElementName=self}" IsReadOnly="True"/>
-		<UniformGrid Name="buttons" Grid.Row="1" MaxWidth="100">
-			<UniformGrid.Resources>
+		<StackPanel Name="buttons" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+			<StackPanel.Resources>
 				<Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
 					<EventSetter Event="Click" Handler="ButtonHandler"/>
 					<Setter Property="Margin" Value="3,0"/>
+					<Setter Property="Padding" Value="10,1"/>
 				</Style>
-			</UniformGrid.Resources>
-		</UniformGrid>
+			</StackPanel.Resources>
+		</StackPanel>
 	</Grid>
 </Window>

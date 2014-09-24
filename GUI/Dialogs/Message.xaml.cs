@@ -22,13 +22,15 @@ namespace NeoEdit.GUI.Dialogs
 			None = 0,
 			Yes = 1,
 			No = 2,
-			YesNo = 3,
+			YesNo = Yes | No,
 			YesToAll = 4,
-			YesNoYesAll = 7,
+			YesNoYesAll = Yes | No | YesToAll,
 			NoToAll = 8,
-			YesNoNoAll = 11,
-			YesNoYesAllNoAll = 15,
+			YesNoNoAll = Yes | No | NoToAll,
+			YesNoYesAllNoAll = Yes | No | YesToAll | NoToAll,
 			Ok = 16,
+			Cancel = 32,
+			YesNoCancel = Yes | No | Cancel,
 		}
 
 		static Dictionary<OptionsEnum, string> buttonContent = new Dictionary<OptionsEnum, string>()
@@ -38,6 +40,7 @@ namespace NeoEdit.GUI.Dialogs
 			{ OptionsEnum.YesToAll, "Yes to _all" },
 			{ OptionsEnum.NoToAll, "No to all" },
 			{ OptionsEnum.Ok, "Ok" },
+			{ OptionsEnum.Cancel, "_Cancel" },
 		};
 
 		public new OptionsEnum Show()
@@ -105,8 +108,6 @@ namespace NeoEdit.GUI.Dialogs
 				buttonActions[button] = option;
 				buttons.Children.Add(button);
 			}
-
-			buttons.Columns = buttons.Children.Count;
 		}
 
 		void ButtonHandler(object sender, RoutedEventArgs e)

@@ -269,13 +269,22 @@ namespace NeoEdit.TextEditor
 		{
 			if (ModifiedSteps == 0)
 				return true;
-			return new Message
+
+			switch (new Message
 			{
-				Title = "Error",
-				Text = "The file you are viewing has been edited.  Are you sure you want to continue?",
-				Options = Message.OptionsEnum.YesNo,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() == Message.OptionsEnum.Yes;
+				Title = "Confirm",
+				Text = "Do you want to save changes?",
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show())
+			{
+				case Message.OptionsEnum.Cancel: return false;
+				case Message.OptionsEnum.No: return true;
+				case Message.OptionsEnum.Yes:
+					RunCommand(Command_File_Save);
+					return ModifiedSteps == 0;
+			}
+			return false;
 		}
 
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
