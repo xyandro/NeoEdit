@@ -49,11 +49,11 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Files_Timestamp_Access = new RoutedCommand();
 		public static RoutedCommand Command_Files_Timestamp_Create = new RoutedCommand();
 		public static RoutedCommand Command_Files_Timestamp_All = new RoutedCommand();
-		public static RoutedCommand Command_Files_SimplifyPath = new RoutedCommand();
-		public static RoutedCommand Command_Files_GetFileName = new RoutedCommand();
-		public static RoutedCommand Command_Files_GetFileNameWoExtension = new RoutedCommand();
-		public static RoutedCommand Command_Files_GetDirectory = new RoutedCommand();
-		public static RoutedCommand Command_Files_GetExtension = new RoutedCommand();
+		public static RoutedCommand Command_Files_Path_Simplify = new RoutedCommand();
+		public static RoutedCommand Command_Files_Path_GetFileName = new RoutedCommand();
+		public static RoutedCommand Command_Files_Path_GetFileNameWoExtension = new RoutedCommand();
+		public static RoutedCommand Command_Files_Path_GetDirectory = new RoutedCommand();
+		public static RoutedCommand Command_Files_Path_GetExtension = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
@@ -513,27 +513,27 @@ namespace NeoEdit.TextEditor
 					}
 				}
 			}
-			else if (command == Command_Files_SimplifyPath)
+			else if (command == Command_Files_Path_Simplify)
 			{
 				var strs = Selections.Select(range => Path.GetFullPath(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_GetFileName)
+			else if (command == Command_Files_Path_GetFileName)
 			{
 				var strs = Selections.Select(range => Path.GetFileName(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_GetFileNameWoExtension)
+			else if (command == Command_Files_Path_GetFileNameWoExtension)
 			{
 				var strs = Selections.Select(range => Path.GetFileNameWithoutExtension(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_GetDirectory)
+			else if (command == Command_Files_Path_GetDirectory)
 			{
 				var strs = Selections.Select(range => Path.GetDirectoryName(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_GetExtension)
+			else if (command == Command_Files_Path_GetExtension)
 			{
 				var strs = Selections.Select(range => Path.GetExtension(GetString(range))).ToList();
 				Replace(Selections, strs, true);

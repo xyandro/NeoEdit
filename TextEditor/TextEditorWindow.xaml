@@ -40,11 +40,11 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Access" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Create" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_All" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_SimplifyPath" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_GetFileName" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_GetFileNameWoExtension" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_GetDirectory" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_GetExtension" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_Simplify" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileName" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileNameWoExtension" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
@@ -304,11 +304,13 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Create" Header="_Create"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_All" Header="A_ll"/>
 				</MenuItem>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_SimplifyPath" Header="_Simplify path"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_GetFileName" Header="_File name"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_GetFileNameWoExtension" Header="File name w/o extension"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_GetDirectory" Header="_Directory name"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_GetExtension" Header="_Extension"/>
+				<MenuItem Header="_Path">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_Simplify" Header="_Simplify"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileName" Header="_File name"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileNameWoExtension" Header="File name w/o extension"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Header="_Directory name"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Header="_Extension"/>
+				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
