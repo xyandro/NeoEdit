@@ -289,6 +289,27 @@ namespace NeoEdit.TextEditor
 			base.OnClosing(e);
 		}
 
+		Range TranslateFileNameDirectoryExtensionRange(ICommand command, Range range)
+		{
+			var path = GetString(range);
+			var dirLength = Math.Max(0, path.LastIndexOf('\\'));
+			if ((path.StartsWith(@"\\")) && (dirLength == 1))
+				dirLength = 0;
+			var dirTotal = dirLength == 0 ? 0 : dirLength + 1;
+			var extLen = Path.GetExtension(path).Length;
+
+			if (command == Command_Files_Path_GetFileName)
+				return new Range(range.Start + dirTotal, range.End);
+			if (command == Command_Files_Path_GetFileNameWoExtension)
+				return new Range(range.Start + dirTotal, range.End - extLen);
+			if (command == Command_Files_Path_GetDirectory)
+				return new Range(range.Start, range.Start + dirLength);
+			else if (command == Command_Files_Path_GetExtension)
+				return new Range(range.End - extLen, range.End);
+
+			throw new ArgumentException();
+		}
+
 		void RunCommand(ICommand command)
 		{
 			InvalidateCanvas();
@@ -526,26 +547,8 @@ namespace NeoEdit.TextEditor
 				var strs = Selections.Select(range => Path.GetFullPath(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_Path_GetFileName)
-			{
-				var strs = Selections.Select(range => Path.GetFileName(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == Command_Files_Path_GetFileNameWoExtension)
-			{
-				var strs = Selections.Select(range => Path.GetFileNameWithoutExtension(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == Command_Files_Path_GetDirectory)
-			{
-				var strs = Selections.Select(range => Path.GetDirectoryName(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == Command_Files_Path_GetExtension)
-			{
-				var strs = Selections.Select(range => Path.GetExtension(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
+			else if ((command == Command_Files_Path_GetFileName) || (command == Command_Files_Path_GetFileNameWoExtension) || (command == Command_Files_Path_GetDirectory) || (command == Command_Files_Path_GetExtension) || (command == Command_Files_CreateDirectory))
+				Selections.Replace(Selections.Select(range => TranslateFileNameDirectoryExtensionRange(command, range)).ToList());
 			else if (command == Command_Files_CreateDirectory)
 			{
 				var files = Selections.Select(range => GetString(range)).ToArray();
