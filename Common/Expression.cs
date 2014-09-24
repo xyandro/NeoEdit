@@ -24,7 +24,7 @@ namespace NeoEdit.Common
 		{
 			new List<string>{ "." },
 			new List<string>{ "*", "/", "%" },
-			new List<string>{ "+", "-" },
+			new List<string>{ "+", "-", "t+" },
 			new List<string>{ "IS" },
 			new List<string>{ "AND" },
 			new List<string>{ "OR" },
@@ -211,6 +211,7 @@ namespace NeoEdit.Common
 						case "%": result = "'" + (Double.Parse(term1Str) % Double.Parse(term2Str)).ToString() + "'"; break;
 						case "+": result = "'" + (Double.Parse(term1Str) + Double.Parse(term2Str)).ToString() + "'"; break;
 						case "-": result = "'" + (Double.Parse(term1Str) - Double.Parse(term2Str)).ToString() + "'"; break;
+						case "t+": result = "'" + term1Str + term2Str + "'"; break;
 						case "==": result = "'" + (term1Str == term2Str).ToString() + "'"; break;
 						case "=i=": result = "'" + (term1Str.Equals(term2Str, StringComparison.OrdinalIgnoreCase)).ToString() + "'"; break;
 						case "!=": result = "'" + (term1Str != term2Str).ToString() + "'"; break;
