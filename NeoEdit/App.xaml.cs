@@ -69,11 +69,11 @@ namespace NeoEdit
 									throw new ArgumentException("Invalid file.");
 							}
 
-							int? line = null;
+							int line = 1;
 							if (args.Length > 2)
 								line = Convert.ToInt32(args[2]);
 
-							int? column = null;
+							int column = 1;
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 

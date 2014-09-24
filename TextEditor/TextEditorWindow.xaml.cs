@@ -133,7 +133,7 @@ namespace NeoEdit.TextEditor
 		static TextEditorWindow() { UIHelper<TextEditorWindow>.Register(); }
 
 		readonly UIHelper<TextEditorWindow> uiHelper;
-		public TextEditorWindow(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int? line = null, int? column = null)
+		public TextEditorWindow(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
 		{
 			uiHelper = new UIHelper<TextEditorWindow>(this);
 			InitializeComponent();
@@ -145,11 +145,9 @@ namespace NeoEdit.TextEditor
 
 			OpenFile(filename, bytes, encoding);
 
-			if (!line.HasValue)
-				line = column = 1;
-			if (!column.HasValue)
-				column = 1;
-			Selections.Add(new Range(Data.GetOffset(line.Value - 1, column.Value - 1)));
+			line = Math.Max(0, Math.Min(line, Data.NumLines) - 1);
+			var index = Data.GetIndexFromColumn(line, Math.Max(0, column - 1), true);
+			Selections.Add(new Range(Data.GetOffset(line, index)));
 
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
 			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
