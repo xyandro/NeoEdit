@@ -45,7 +45,7 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new Expression("([0] OR [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString(), "5");
 
-			Assert.AreEqual(new Expression("t+").Evaluate("I", "Can", "Join", "Strings").ToString(), "ICanJoinStrings");
+			Assert.AreEqual(new Expression("t+").Evaluate("I", "Can", null, "Join", "Strings").ToString(), "ICanJoinStrings");
 		}
 	}
 }
