@@ -13,8 +13,9 @@ namespace NeoEdit.Processes
 
 		static int windowCount = 0;
 		static Timer timer;
+		static Dictionary<int, long> lastTicks;
 		static Dictionary<int, double> usage;
-		static Dictionary<int, PerformanceCounter> counter;
+		static DateTime lastCollectionTime;
 
 		static public void WindowCreated()
 		{
@@ -22,8 +23,9 @@ namespace NeoEdit.Processes
 			{
 				if (windowCount == 0)
 				{
+					lastTicks = new Dictionary<int, long>();
 					usage = new Dictionary<int, double>();
-					counter = new Dictionary<int, PerformanceCounter>();
+					lastCollectionTime = DateTime.UtcNow;
 
 					timer = new Timer(1000);
 					timer.Elapsed += CollectProcesses;
@@ -43,8 +45,9 @@ namespace NeoEdit.Processes
 					timer.Stop();
 					timer.Dispose();
 					timer = null;
+					lastTicks = null;
 					usage = null;
-					counter = null;
+					lastCollectionTime = default(DateTime);
 				}
 			}
 		}
@@ -53,19 +56,17 @@ namespace NeoEdit.Processes
 		{
 			lock (lockObj)
 			{
+				var currentCollectionTime = DateTime.UtcNow;
+				var totalTicks = currentCollectionTime.Ticks - lastCollectionTime.Ticks;
+				lastCollectionTime = currentCollectionTime;
+
 				var processes = Process.GetProcesses();
-				counter.Where(ctr => !processes.Any(process => process.Id == ctr.Key)).ToList().ForEach(ctr => counter.Remove(ctr.Key));
-				usage.Where(ctr => !processes.Any(process => process.Id == ctr.Key)).ToList().ForEach(ctr => usage.Remove(ctr.Key));
+				var currentTicks = new Dictionary<int, long>();
 				foreach (var process in processes)
-				{
-					try
-					{
-						if (!counter.ContainsKey(process.Id))
-							counter[process.Id] = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
-						usage[process.Id] = counter[process.Id].NextValue();
-					}
+					try { currentTicks[process.Id] = process.TotalProcessorTime.Ticks; }
 					catch { }
-				}
+				usage = currentTicks.Where(pair => lastTicks.ContainsKey(pair.Key)).ToDictionary(pair => pair.Key, pair => (double)(pair.Value - lastTicks[pair.Key]) / totalTicks);
+				lastTicks = currentTicks;
 			}
 		}
 
