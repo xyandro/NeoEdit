@@ -42,13 +42,18 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Edit_FindPrev = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoLine = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoIndex = new RoutedCommand();
-		public static RoutedCommand Command_FileList_Copy = new RoutedCommand();
-		public static RoutedCommand Command_FileList_Cut = new RoutedCommand();
-		public static RoutedCommand Command_FileList_Delete = new RoutedCommand();
-		public static RoutedCommand Command_FileList_Timestamp_Write = new RoutedCommand();
-		public static RoutedCommand Command_FileList_Timestamp_Access = new RoutedCommand();
-		public static RoutedCommand Command_FileList_Timestamp_Create = new RoutedCommand();
-		public static RoutedCommand Command_FileList_Timestamp_All = new RoutedCommand();
+		public static RoutedCommand Command_Files_Copy = new RoutedCommand();
+		public static RoutedCommand Command_Files_Cut = new RoutedCommand();
+		public static RoutedCommand Command_Files_Delete = new RoutedCommand();
+		public static RoutedCommand Command_Files_Timestamp_Write = new RoutedCommand();
+		public static RoutedCommand Command_Files_Timestamp_Access = new RoutedCommand();
+		public static RoutedCommand Command_Files_Timestamp_Create = new RoutedCommand();
+		public static RoutedCommand Command_Files_Timestamp_All = new RoutedCommand();
+		public static RoutedCommand Command_Files_SimplifyPath = new RoutedCommand();
+		public static RoutedCommand Command_Files_GetFileName = new RoutedCommand();
+		public static RoutedCommand Command_Files_GetFileNameWoExtension = new RoutedCommand();
+		public static RoutedCommand Command_Files_GetDirectory = new RoutedCommand();
+		public static RoutedCommand Command_Files_GetExtension = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
@@ -448,13 +453,13 @@ namespace NeoEdit.TextEditor
 					shiftOverride = null;
 				}
 			}
-			else if ((command == Command_FileList_Copy) || (command == Command_FileList_Cut))
+			else if ((command == Command_Files_Copy) || (command == Command_Files_Cut))
 			{
 				var result = Selections.Select(range => GetString(range)).ToArray();
 				if (result.Length != 0)
-					ClipboardWindow.SetFiles(result, command == Command_FileList_Cut);
+					ClipboardWindow.SetFiles(result, command == Command_Files_Cut);
 			}
-			else if (command == Command_FileList_Delete)
+			else if (command == Command_Files_Delete)
 			{
 				if (new Message
 				{
@@ -474,7 +479,7 @@ namespace NeoEdit.TextEditor
 					}
 				}
 			}
-			else if ((command == Command_FileList_Timestamp_Write) || (command == Command_FileList_Timestamp_Access) || (command == Command_FileList_Timestamp_Create) || (command == Command_FileList_Timestamp_All))
+			else if ((command == Command_Files_Timestamp_Write) || (command == Command_Files_Timestamp_Access) || (command == Command_Files_Timestamp_Create) || (command == Command_Files_Timestamp_All))
 			{
 				var result = ChooseDateTime.Run(DateTime.Now);
 				if (result != null)
@@ -488,25 +493,50 @@ namespace NeoEdit.TextEditor
 						if (File.Exists(file))
 						{
 							var info = new FileInfo(file);
-							if ((command == Command_FileList_Timestamp_Write) || (command == Command_FileList_Timestamp_All))
+							if ((command == Command_Files_Timestamp_Write) || (command == Command_Files_Timestamp_All))
 								info.LastWriteTime = result.Value;
-							if ((command == Command_FileList_Timestamp_Access) || (command == Command_FileList_Timestamp_All))
+							if ((command == Command_Files_Timestamp_Access) || (command == Command_Files_Timestamp_All))
 								info.LastAccessTime = result.Value;
-							if ((command == Command_FileList_Timestamp_Create) || (command == Command_FileList_Timestamp_All))
+							if ((command == Command_Files_Timestamp_Create) || (command == Command_Files_Timestamp_All))
 								info.CreationTime = result.Value;
 						}
 						else if (Directory.Exists(file))
 						{
 							var info = new DirectoryInfo(file);
-							if ((command == Command_FileList_Timestamp_Write) || (command == Command_FileList_Timestamp_All))
+							if ((command == Command_Files_Timestamp_Write) || (command == Command_Files_Timestamp_All))
 								info.LastWriteTime = result.Value;
-							if ((command == Command_FileList_Timestamp_Access) || (command == Command_FileList_Timestamp_All))
+							if ((command == Command_Files_Timestamp_Access) || (command == Command_Files_Timestamp_All))
 								info.LastAccessTime = result.Value;
-							if ((command == Command_FileList_Timestamp_Create) || (command == Command_FileList_Timestamp_All))
+							if ((command == Command_Files_Timestamp_Create) || (command == Command_Files_Timestamp_All))
 								info.CreationTime = result.Value;
 						}
 					}
 				}
+			}
+			else if (command == Command_Files_SimplifyPath)
+			{
+				var strs = Selections.Select(range => Path.GetFullPath(GetString(range))).ToList();
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_GetFileName)
+			{
+				var strs = Selections.Select(range => Path.GetFileName(GetString(range))).ToList();
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_GetFileNameWoExtension)
+			{
+				var strs = Selections.Select(range => Path.GetFileNameWithoutExtension(GetString(range))).ToList();
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_GetDirectory)
+			{
+				var strs = Selections.Select(range => Path.GetDirectoryName(GetString(range))).ToList();
+				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Files_GetExtension)
+			{
+				var strs = Selections.Select(range => Path.GetExtension(GetString(range))).ToList();
+				Replace(Selections, strs, true);
 			}
 			else if (command == Command_Data_Char_Upper)
 			{

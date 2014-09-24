@@ -33,13 +33,18 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Copy" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Cut" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Delete" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Write" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Access" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Create" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_All" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Copy" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Cut" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Delete" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Write" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Access" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Create" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_All" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_SimplifyPath" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_GetFileName" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_GetFileNameWoExtension" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_GetDirectory" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_GetExtension" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
@@ -289,16 +294,21 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto c_olumn"/>
 			</MenuItem>
-			<MenuItem Header="File _List">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Copy" Header="_Copy"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Cut" Header="C_ut"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Delete" Header="_Delete"/>
+			<MenuItem Header="F_iles">
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Copy" Header="_Copy"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Cut" Header="C_ut"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Delete" Header="_Delete"/>
 				<MenuItem Header="_Timestamp">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Write" Header="_Write"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Access" Header="_Access"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Create" Header="_Create"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_All" Header="A_ll"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Write" Header="_Write"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Access" Header="_Access"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Create" Header="_Create"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_All" Header="A_ll"/>
 				</MenuItem>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_SimplifyPath" Header="_Simplify path"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_GetFileName" Header="_File name"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_GetFileNameWoExtension" Header="File name w/o extension"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_GetDirectory" Header="_Directory name"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_GetExtension" Header="_Extension"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
