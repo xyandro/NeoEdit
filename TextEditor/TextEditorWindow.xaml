@@ -28,13 +28,18 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_CopyName" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_CopyPath" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_CutFileNames" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_CopyFileNames" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Copy" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Cut" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Delete" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Write" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Access" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Create" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_All" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Upper" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Lower" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_Proper" Executed="Command_Executed"/>
@@ -276,8 +281,6 @@
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyName" Header="Copy name"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyPath" Header="Copy full path"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CutFileNames" Header="Cut File Names"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyFileNames" Header="Copy F_ile Names"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
@@ -285,6 +288,17 @@
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto c_olumn"/>
+			</MenuItem>
+			<MenuItem Header="File _List">
+				<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Copy" Header="_Copy"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Cut" Header="C_ut"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Delete" Header="_Delete"/>
+				<MenuItem Header="_Timestamp">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Write" Header="_Write"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Access" Header="_Access"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_Create" Header="_Create"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_FileList_Timestamp_All" Header="A_ll"/>
+				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">

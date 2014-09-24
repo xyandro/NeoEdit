@@ -37,13 +37,18 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Edit_ShowClipboard = new RoutedCommand();
 		public static RoutedCommand Command_Edit_CopyName = new RoutedCommand();
 		public static RoutedCommand Command_Edit_CopyPath = new RoutedCommand();
-		public static RoutedCommand Command_Edit_CutFileNames = new RoutedCommand();
-		public static RoutedCommand Command_Edit_CopyFileNames = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Find = new RoutedCommand();
 		public static RoutedCommand Command_Edit_FindNext = new RoutedCommand();
 		public static RoutedCommand Command_Edit_FindPrev = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoLine = new RoutedCommand();
 		public static RoutedCommand Command_Edit_GotoIndex = new RoutedCommand();
+		public static RoutedCommand Command_FileList_Copy = new RoutedCommand();
+		public static RoutedCommand Command_FileList_Cut = new RoutedCommand();
+		public static RoutedCommand Command_FileList_Delete = new RoutedCommand();
+		public static RoutedCommand Command_FileList_Timestamp_Write = new RoutedCommand();
+		public static RoutedCommand Command_FileList_Timestamp_Access = new RoutedCommand();
+		public static RoutedCommand Command_FileList_Timestamp_Create = new RoutedCommand();
+		public static RoutedCommand Command_FileList_Timestamp_All = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Upper = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Lower = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_Proper = new RoutedCommand();
@@ -252,14 +257,13 @@ namespace NeoEdit.TextEditor
 		{
 			if (ModifiedSteps == 0)
 				return true;
-			var result = new Message
+			return new Message
 			{
 				Title = "Error",
 				Text = "The file you are viewing has been edited.  Are you sure you want to continue?",
 				Options = Message.OptionsEnum.YesNo,
 				DefaultCancel = Message.OptionsEnum.No,
-			}.Show();
-			return result == Message.OptionsEnum.Yes;
+			}.Show() == Message.OptionsEnum.Yes;
 		}
 
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -364,12 +368,6 @@ namespace NeoEdit.TextEditor
 				if (command == Command_Edit_Cut)
 					Replace(Selections, null, false);
 			}
-			else if ((command == Command_Edit_CutFileNames) || (command == Command_Edit_CopyFileNames))
-			{
-				var result = Selections.Select(range => GetString(range)).ToArray();
-				if (result.Length != 0)
-					ClipboardWindow.SetFiles(result, command == Command_Edit_CutFileNames);
-			}
 			else if (command == Command_Edit_Paste)
 			{
 				var separator = Selections.Count == 1 ? Data.DefaultEnding : "";
@@ -448,6 +446,66 @@ namespace NeoEdit.TextEditor
 					shiftOverride = shift;
 					Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false)).ToList());
 					shiftOverride = null;
+				}
+			}
+			else if ((command == Command_FileList_Copy) || (command == Command_FileList_Cut))
+			{
+				var result = Selections.Select(range => GetString(range)).ToArray();
+				if (result.Length != 0)
+					ClipboardWindow.SetFiles(result, command == Command_FileList_Cut);
+			}
+			else if (command == Command_FileList_Delete)
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = "Are you sure you want to delete these files/directories?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() == Message.OptionsEnum.Yes)
+				{
+					var files = Selections.Select(range => GetString(range)).ToArray();
+					foreach (var file in files)
+					{
+						if (File.Exists(file))
+							File.Delete(file);
+						if (Directory.Exists(file))
+							Directory.Delete(file, true);
+					}
+				}
+			}
+			else if ((command == Command_FileList_Timestamp_Write) || (command == Command_FileList_Timestamp_Access) || (command == Command_FileList_Timestamp_Create) || (command == Command_FileList_Timestamp_All))
+			{
+				var result = ChooseDateTime.Run(DateTime.Now);
+				if (result != null)
+				{
+					var files = Selections.Select(range => GetString(range)).ToArray();
+					foreach (var file in files)
+					{
+						if ((!File.Exists(file)) && (!Directory.Exists(file)))
+							File.WriteAllBytes(file, new byte[0]);
+
+						if (File.Exists(file))
+						{
+							var info = new FileInfo(file);
+							if ((command == Command_FileList_Timestamp_Write) || (command == Command_FileList_Timestamp_All))
+								info.LastWriteTime = result.Value;
+							if ((command == Command_FileList_Timestamp_Access) || (command == Command_FileList_Timestamp_All))
+								info.LastAccessTime = result.Value;
+							if ((command == Command_FileList_Timestamp_Create) || (command == Command_FileList_Timestamp_All))
+								info.CreationTime = result.Value;
+						}
+						else if (Directory.Exists(file))
+						{
+							var info = new DirectoryInfo(file);
+							if ((command == Command_FileList_Timestamp_Write) || (command == Command_FileList_Timestamp_All))
+								info.LastWriteTime = result.Value;
+							if ((command == Command_FileList_Timestamp_Access) || (command == Command_FileList_Timestamp_All))
+								info.LastAccessTime = result.Value;
+							if ((command == Command_FileList_Timestamp_Create) || (command == Command_FileList_Timestamp_All))
+								info.CreationTime = result.Value;
+						}
+					}
 				}
 			}
 			else if (command == Command_Data_Char_Upper)
