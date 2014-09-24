@@ -5,7 +5,7 @@
 	Title="Select Date/Time" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=maxSels}">
 
 	<StackPanel Margin="10,5">
-		<xctk:DateTimePicker Value="{Binding Value, ElementName=self}" Width="400" TextAlignment="Left"/>
+		<xctk:DateTimePicker Value="{Binding Value, ElementName=self}" Width="300" TextAlignment="Left" Format="Custom" FormatString="yyyy-MM-dd HH:mm:ss.fff"/>
 
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">
 			<Button Click="OkClick" IsDefault="True" Content="Ok"/>

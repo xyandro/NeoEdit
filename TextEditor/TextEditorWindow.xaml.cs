@@ -579,12 +579,12 @@ namespace NeoEdit.TextEditor
 					if (File.Exists(file))
 					{
 						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+						strs.Add(fileinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 					}
 					else if (Directory.Exists(file))
 					{
 						var dirinfo = new DirectoryInfo(file);
-						strs.Add(dirinfo.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+						strs.Add(dirinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 					}
 					else
 						strs.Add("INVALID");
@@ -600,12 +600,12 @@ namespace NeoEdit.TextEditor
 					if (File.Exists(file))
 					{
 						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.LastAccessTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+						strs.Add(fileinfo.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 					}
 					else if (Directory.Exists(file))
 					{
 						var dirinfo = new DirectoryInfo(file);
-						strs.Add(dirinfo.LastAccessTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+						strs.Add(dirinfo.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 					}
 					else
 						strs.Add("INVALID");
@@ -621,12 +621,12 @@ namespace NeoEdit.TextEditor
 					if (File.Exists(file))
 					{
 						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.CreationTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+						strs.Add(fileinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 					}
 					else if (Directory.Exists(file))
 					{
 						var dirinfo = new DirectoryInfo(file);
-						strs.Add(dirinfo.CreationTime.ToString("yyyy/MM/dd HH:mm:ss.fff"));
+						strs.Add(dirinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 					}
 					else
 						strs.Add("INVALID");
