@@ -1,0 +1,43 @@
+All:
+Control-N should bring up new version of current window
+Starting 2nd instance pops up in background
+Move File->Exit to bottom
+
+Disk:
+Paste filename (Address of disk viewer)
+Search in multiple files
+
+Text:
+Bookmarks
+Highlight clauses (if/else)
+Flag selections that DON'T match regex
+Text edit multiple files
+Comment/uncomment C#/C++/XML/etc.
+Format JSON/XML
+Reload current file (perhaps automatically?)
+Select () in regex find
+Select every nth line gives error when beyond EOF
+Add function to count matches on select unique/duplicates
+Set line endings (\r\n / \n / \r)
+Can't select all blank lines
+HTML/XML: Match closing tag
+Make confirm modified save file
+Rename files
+Select parts of path without modifying document (select only file name, etc.)
+Select 2 lines every 5 lines
+Relative goto line/index should work for all selections
+Append document
+
+Binary:
+Fix binary editor backwards search
+Add selection length
+Modifying binary value doesn't release cursor
+Remember search history
+Search with no results never returns
+Backspace in middle of character deletes previous character instead
+Add copy path/filename
+Cursor hard to see
+Fill selection (eg with 0s)
+Checksum (and possibly others) should work only on selected text
+Reload current file (perhaps automatically?)
+Keep track of whether file is edited; object on close
