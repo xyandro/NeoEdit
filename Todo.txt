@@ -13,7 +13,7 @@ Flag selections that DON'T match regex
 Text edit multiple files
 Comment/uncomment C#/C++/XML/etc.
 Format JSON/XML
-Reload current file (perhaps automatically?)
+Reload current file (perhaps automatically?/can check a menu item to determine automatically)
 Select () in regex find
 Select every nth line gives error when beyond EOF
 Add function to count matches on select unique/duplicates
@@ -25,6 +25,8 @@ Rename files
 Select parts of path without modifying document (select only file name, etc.)
 Select 2 lines every 5 lines
 Relative goto line/index should work for all selections
+C#: Comments don't syntax-highlight
+Move copy filename to file menu
 
 Binary:
 Fix binary editor backwards search
