@@ -17,9 +17,9 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Open" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Save" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BOM" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Undo" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Redo" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Cut" Executed="Command_Executed"/>
@@ -256,7 +256,6 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Open" Header="_Open"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_SaveAs" Header="Save _As"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="E_xit"/>
 				<Separator/>
 				<MenuItem Header="_Encoding" Click="EncodingClick">
 					<MenuItem.ItemContainerStyle>
@@ -283,6 +282,8 @@
 				</MenuItem>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Header="Binary editor"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="E_xit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Undo" Header="_Undo"/>

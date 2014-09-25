@@ -26,9 +26,9 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_File_Open = new RoutedCommand();
 		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
-		public static RoutedCommand Command_File_Exit = new RoutedCommand();
 		public static RoutedCommand Command_File_BinaryEditor = new RoutedCommand();
 		public static RoutedCommand Command_File_BOM = new RoutedCommand();
+		public static RoutedCommand Command_File_Exit = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Undo = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Redo = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Cut = new RoutedCommand();
@@ -372,8 +372,6 @@ namespace NeoEdit.TextEditor
 					RunCommand(Command_File_Save);
 				}
 			}
-			else if (command == Command_File_Exit)
-				Close();
 			else if (command == Command_File_BinaryEditor)
 			{
 				Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed));
@@ -386,6 +384,8 @@ namespace NeoEdit.TextEditor
 				else
 					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
 			}
+			else if (command == Command_File_Exit)
+				Close();
 			else if (command == Command_Edit_Undo)
 			{
 				if (undo.Count != 0)

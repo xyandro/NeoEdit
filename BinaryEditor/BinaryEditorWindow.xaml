@@ -92,6 +92,7 @@
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_OpenDump" Header="Open _Dump"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Header="Save _As"/>
+				<Separator/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Header="_Exit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
