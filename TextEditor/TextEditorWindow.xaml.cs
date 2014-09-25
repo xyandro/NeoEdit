@@ -69,6 +69,8 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Hex_FromHex = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_ToChar = new RoutedCommand();
 		public static RoutedCommand Command_Data_Char_FromChar = new RoutedCommand();
+		public static RoutedCommand Command_Data_Time_Insert = new RoutedCommand();
+		public static RoutedCommand Command_Data_Time_Convert = new RoutedCommand();
 		public static RoutedCommand Command_Data_Length = new RoutedCommand();
 		public static RoutedCommand Command_Data_Width = new RoutedCommand();
 		public static RoutedCommand Command_Data_Trim = new RoutedCommand();
@@ -727,6 +729,26 @@ namespace NeoEdit.TextEditor
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range).ToUTF8HexString()).ToList();
 				Replace(selections, strs, true);
+			}
+			else if (command == Command_Data_Time_Insert)
+			{
+				var now = DateTime.Now.ToString("O");
+				Replace(Selections, Selections.Select(range => now).ToList(), true);
+			}
+			else if (command == Command_Data_Time_Convert)
+			{
+				var strs = Selections.Select(range => GetString(range)).ToList();
+				if (strs.Count >= 1)
+				{
+					string inputFormat, outputFormat;
+					bool inputUTC, outputUTC;
+					if (ConvertTime.Run(strs.First(), out inputFormat, out inputUTC, out outputFormat, out outputUTC))
+					{
+						strs = strs.Select(str => ConvertTime.ConvertFormat(str, inputFormat, inputUTC, outputFormat, outputUTC)).ToList();
+						Replace(Selections, strs, true);
+					}
+				}
+
 			}
 			else if (command == Command_Data_Length)
 			{

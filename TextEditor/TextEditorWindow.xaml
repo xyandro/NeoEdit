@@ -60,6 +60,8 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Time_Insert" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Time_Convert" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Length" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Width" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Trim" Executed="Command_Executed"/>
@@ -342,6 +344,10 @@
 				<MenuItem Header="Ch_ar">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Header="_To char"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Header="_From char"/>
+				</MenuItem>
+				<MenuItem Header="T_ime">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Time_Insert" Header="_Insert"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Time_Convert" Header="_Convert"/>
 				</MenuItem>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Length" Header="_Length"/>

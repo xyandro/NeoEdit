@@ -70,6 +70,9 @@
     <Compile Include="Dialogs\ChooseDateTime.xaml.cs">
       <DependentUpon>ChooseDateTime.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ConvertTime.xaml.cs">
+      <DependentUpon>ConvertTime.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\GotoIndexDialog.xaml.cs">
       <DependentUpon>GotoIndexDialog.xaml</DependentUpon>
     </Compile>
@@ -105,6 +108,10 @@
     </Compile>
     <Compile Include="UnitTest\TextDataTest.cs" />
     <Page Include="Dialogs\ChooseDateTime.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\ConvertTime.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
