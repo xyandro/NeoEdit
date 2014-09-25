@@ -237,6 +237,7 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Key="Down" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Key="Up" Modifiers="Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Key="Enter" Modifiers="Alt"/>
 	</Window.InputBindings>
 
 	<Grid>
