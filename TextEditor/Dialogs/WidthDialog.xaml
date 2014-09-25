@@ -7,9 +7,7 @@
 
 	<StackPanel Margin="10,5">
 		<Label Content="Set _width to:" Target="{Binding ElementName=widthBox}"/>
-		<StackPanel Orientation="Horizontal">
-			<xctk:IntegerUpDown Name="widthBox" Width="500" Value="{Binding WidthNum, ElementName=self}" Minimum="{Binding MinWidthNum, ElementName=self}"/>
-		</StackPanel>
+		<xctk:IntegerUpDown Name="widthBox" Width="500" Value="{Binding Value, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}"/>
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>

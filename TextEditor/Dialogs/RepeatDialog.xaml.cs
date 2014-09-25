@@ -11,7 +11,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		static RepeatDialog() { UIHelper<RepeatDialog>.Register(); }
 
 		readonly UIHelper<RepeatDialog> uiHelper;
-		public RepeatDialog()
+		RepeatDialog()
 		{
 			uiHelper = new UIHelper<RepeatDialog>(this);
 			InitializeComponent();
@@ -22,6 +22,14 @@ namespace NeoEdit.TextEditor.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			DialogResult = true;
+		}
+
+		static public int? Run()
+		{
+			var dialog = new RepeatDialog();
+			if (dialog.ShowDialog() != true)
+				return null;
+			return dialog.RepeatCount;
 		}
 	}
 }

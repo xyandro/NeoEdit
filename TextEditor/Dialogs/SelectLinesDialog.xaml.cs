@@ -13,7 +13,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		static SelectLinesDialog() { UIHelper<SelectLinesDialog>.Register(); }
 
 		readonly UIHelper<SelectLinesDialog> uiHelper;
-		public SelectLinesDialog()
+		SelectLinesDialog()
 		{
 			uiHelper = new UIHelper<SelectLinesDialog>(this);
 			InitializeComponent();
@@ -24,6 +24,20 @@ namespace NeoEdit.TextEditor.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			DialogResult = true;
+		}
+
+		static public bool Run(out int lineMult, out bool ignoreBlankLines)
+		{
+			lineMult = 1;
+			ignoreBlankLines = false;
+
+			var dialog = new SelectLinesDialog();
+			if (dialog.ShowDialog() != true)
+				return false;
+
+			lineMult = dialog.LineMult;
+			ignoreBlankLines = dialog.IgnoreBlankLines;
+			return true;
 		}
 	}
 }

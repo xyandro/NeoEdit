@@ -6,9 +6,9 @@ namespace NeoEdit.TextEditor.Dialogs
 	public partial class WidthDialog : Window
 	{
 		[DepProp]
-		public int WidthNum { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int Value { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int MinWidthNum { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int MinValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public char PadChar { get { return uiHelper.GetPropValue<char>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -17,12 +17,14 @@ namespace NeoEdit.TextEditor.Dialogs
 		static WidthDialog() { UIHelper<WidthDialog>.Register(); }
 
 		readonly UIHelper<WidthDialog> uiHelper;
-		public WidthDialog()
+		public WidthDialog(int minValue, char padChar, bool before)
 		{
 			uiHelper = new UIHelper<WidthDialog>(this);
 			InitializeComponent();
 
-			Loaded += (s, e) => WidthNum = MinWidthNum;
+			Value = MinValue = minValue;
+			PadChar = padChar;
+			Before = before;
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)

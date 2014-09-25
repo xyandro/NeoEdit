@@ -761,9 +761,9 @@ namespace NeoEdit.TextEditor
 				var minWidth = Selections.Select(range => range.Length).Max();
 				var text = String.Join("", Selections.Select(range => GetString(range)));
 				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
-				var widthDialog = new WidthDialog { MinWidthNum = minWidth, PadChar = numeric ? '0' : ' ', Before = numeric };
+				var widthDialog = new WidthDialog(minWidth, numeric ? '0' : ' ', numeric);
 				if (widthDialog.ShowDialog() == true)
-					Replace(Selections, Selections.Select(range => SetWidth(GetString(range), widthDialog.WidthNum, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
+					Replace(Selections, Selections.Select(range => SetWidth(GetString(range), widthDialog.Value, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
 			}
 			else if (command == Command_Data_Trim)
 			{
@@ -784,10 +784,10 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Data_Repeat)
 			{
-				var repeatDialog = new RepeatDialog();
-				if (repeatDialog.ShowDialog() == true)
+				var repeatCount = RepeatDialog.Run();
+				if (repeatCount.HasValue)
 				{
-					var strs = Selections.Select(range => RepeatString(GetString(range), repeatDialog.RepeatCount)).ToList();
+					var strs = Selections.Select(range => RepeatString(GetString(range), repeatCount.Value)).ToList();
 					Replace(Selections, strs, true);
 				}
 			}
@@ -849,9 +849,9 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Select_Limit)
 			{
-				var limitDialog = new LimitDialog { MaxSels = Selections.Count };
-				if (limitDialog.ShowDialog() == true)
-					Selections.RemoveRange(limitDialog.NumSels, Selections.Count - limitDialog.NumSels);
+				var numSels = LimitDialog.Run(Selections.Count);
+				if (numSels.HasValue)
+					Selections.RemoveRange(numSels.Value, Selections.Count - numSels.Value);
 			}
 			else if (command == Command_Select_AllLines)
 			{
@@ -861,15 +861,16 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Select_Lines)
 			{
-				var selectLinesDialog = new SelectLinesDialog();
-				if (selectLinesDialog.ShowDialog() == true)
+				int lineMult;
+				bool ignoreBlankLines;
+				if (SelectLinesDialog.Run(out lineMult, out ignoreBlankLines))
 				{
 					var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
 					var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
-					if (selectLinesDialog.IgnoreBlankLines)
+					if (ignoreBlankLines)
 						sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
-					if (selectLinesDialog.LineMult > 1)
-						sels = sels.Where((sel, index) => index % selectLinesDialog.LineMult == 0).ToList();
+					if (lineMult > 1)
+						sels = sels.Where((sel, index) => index % lineMult == 0).ToList();
 					Selections.Replace(sels);
 				}
 			}
