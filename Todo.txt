@@ -25,7 +25,6 @@ Rename files
 Select parts of path without modifying document (select only file name, etc.)
 Select 2 lines every 5 lines
 Relative goto line/index should work for all selections
-Append document
 
 Binary:
 Fix binary editor backwards search

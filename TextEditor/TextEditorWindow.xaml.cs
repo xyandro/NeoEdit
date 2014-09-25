@@ -26,6 +26,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_File_Open = new RoutedCommand();
 		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
+		public static RoutedCommand Command_File_InsertFiles = new RoutedCommand();
 		public static RoutedCommand Command_File_BinaryEditor = new RoutedCommand();
 		public static RoutedCommand Command_File_BOM = new RoutedCommand();
 		public static RoutedCommand Command_File_Exit = new RoutedCommand();
@@ -370,6 +371,41 @@ namespace NeoEdit.TextEditor
 						throw new Exception("Directory doesn't exist.");
 					FileName = dialog.FileName;
 					RunCommand(Command_File_Save);
+				}
+			}
+			else if (command == Command_File_InsertFiles)
+			{
+				var run = true;
+
+				if (Selections.Count != 1)
+				{
+					new Message
+					{
+						Title = "Error",
+						Text = "You have more than one selection.",
+						Options = Message.OptionsEnum.Ok,
+					}.Show();
+					run = false;
+				}
+
+				if (run)
+				{
+					var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
+					if (dialog.ShowDialog() == true)
+					{
+						var str = "";
+						foreach (var filename in dialog.FileNames)
+						{
+							var bytes = File.ReadAllBytes(filename);
+							var data = new TextData(bytes, Coder.GuessEncoding(bytes));
+
+							var beginOffset = data.GetOffset(0, 0);
+							var endOffset = data.GetOffset(data.NumLines - 1, data.GetLineLength(data.NumLines - 1));
+							str += data.GetString(beginOffset, endOffset - beginOffset);
+						}
+
+						Replace(Selections, new List<string> { str }, true);
+					}
 				}
 			}
 			else if (command == Command_File_BinaryEditor)

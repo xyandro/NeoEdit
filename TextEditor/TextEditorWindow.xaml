@@ -17,6 +17,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Open" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Save" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BOM" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
@@ -256,6 +257,8 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Open" Header="_Open"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_SaveAs" Header="Save _As"/>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Header="_Insert File(s)"/>
 				<Separator/>
 				<MenuItem Header="_Encoding" Click="EncodingClick">
 					<MenuItem.ItemContainerStyle>
