@@ -18,11 +18,8 @@ Select () in regex find
 Select every nth line gives error when beyond EOF
 Add function to count matches on select unique/duplicates
 Set line endings (\r\n / \n / \r)
-Can't select all blank lines
 HTML/XML: Match closing tag
-Make confirm modified save file
 Rename files
-Select parts of path without modifying document (select only file name, etc.)
 Select 2 lines every 5 lines
 Relative goto line/index should work for all selections
 C#: Comments don't syntax-highlight

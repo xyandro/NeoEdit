@@ -409,12 +409,14 @@ namespace NeoEdit.TextEditor
 				if (line >= lineOffset.Count)
 					break;
 				var matchOffset = lineOffset[line] + index;
-				if (matchOffset >= endOffset)
+				if (matchOffset > endOffset)
 					break;
 
 				var matchLength = Math.Min(lineOffset[line] + lineLength[line], endOffset) - matchOffset;
-				var match = regex.Match(data, matchOffset, matchLength);
-				if ((!match.Success) || (match.Length == 0))
+				Match match = null;
+				if (matchLength >= 0)
+					match = regex.Match(data, matchOffset, matchLength);
+				if ((match == null) || (!match.Success))
 				{
 					++line;
 					index = 0;
@@ -422,7 +424,7 @@ namespace NeoEdit.TextEditor
 				}
 
 				result.Add(new Tuple<int, int>(match.Index, match.Length));
-				index += match.Index + match.Length - matchOffset;
+				index += Math.Max(match.Index + match.Length - matchOffset, 1);
 			}
 			return result;
 		}
