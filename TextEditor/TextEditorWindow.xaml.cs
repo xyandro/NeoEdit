@@ -925,11 +925,22 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Data_Repeat)
 			{
-				var repeatCount = RepeatDialog.Run();
-				if (repeatCount.HasValue)
+				var repeat = RepeatDialog.Run(Selections.Count == 1);
+				if (repeat != null)
 				{
-					var strs = Selections.Select(range => RepeatString(GetString(range), repeatCount.Value)).ToList();
+					var strs = Selections.Select(range => RepeatString(GetString(range), repeat.RepeatCount)).ToList();
 					Replace(Selections, strs, true);
+					if (repeat.SelectAll)
+					{
+						var newSelections = new RangeList();
+						foreach (var selection in Selections)
+						{
+							var len = selection.Length / repeat.RepeatCount;
+							for (var index = selection.Start; index < selection.End; index += len)
+								newSelections.Add(new Range(index + len, index));
+						}
+						Selections.Replace(newSelections);
+					}
 				}
 			}
 			else if (command == Command_Data_GUID)
