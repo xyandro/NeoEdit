@@ -51,7 +51,7 @@ namespace NeoEdit.TextEditor
 		static Brush keywordsBrush = new SolidColorBrush(Color.FromRgb(0, 0, 255));
 
 		static string stringEsc = @"@""([^""]|"""")*""";
-		static string stringReg = @"""([^\\""]*|\\.)*""";
+		static string stringReg = @"""([^\\""]|\\.)*""";
 		static Regex stringRE = new Regex(stringEsc + "|" + stringReg);
 		static Brush stringBrush = new SolidColorBrush(Color.FromRgb(163, 21, 21));
 
