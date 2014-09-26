@@ -13,7 +13,6 @@ Flag selections that DON'T match regex
 Text edit multiple files
 Comment/uncomment C#/C++/XML/etc.
 Format JSON/XML
-Reload current file (perhaps automatically?/can check a menu item to determine automatically)
 Select () in regex find
 Select every nth line gives error when beyond EOF
 Add function to count matches on select unique/duplicates

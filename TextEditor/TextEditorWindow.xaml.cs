@@ -26,6 +26,8 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_File_Open = new RoutedCommand();
 		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
+		public static RoutedCommand Command_File_Revert = new RoutedCommand();
+		public static RoutedCommand Command_File_CheckUpdates = new RoutedCommand();
 		public static RoutedCommand Command_File_InsertFiles = new RoutedCommand();
 		public static RoutedCommand Command_File_CopyPath = new RoutedCommand();
 		public static RoutedCommand Command_File_CopyName = new RoutedCommand();
@@ -138,6 +140,8 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		bool HasBOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		bool CheckUpdates { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public int Line { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public int Column { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
@@ -172,6 +176,10 @@ namespace NeoEdit.TextEditor
 		{
 			uiHelper = new UIHelper<TextEditorWindow>(this);
 			InitializeComponent();
+
+			CheckUpdates = true;
+
+			uiHelper.AddCallback(a => a.FileName, (o, n) => FilenameChanged());
 
 			canvas.Initialize(OnCanvasRender);
 			Selections.CollectionChanged += () => InvalidateSelections();
@@ -211,9 +219,68 @@ namespace NeoEdit.TextEditor
 			};
 		}
 
+		FileSystemWatcher watcher;
+		DateTime fileLastWrite;
+		bool checkWatcher = false; // Make sure we only create dialog once
+		void FilenameChanged()
+		{
+			if (watcher != null)
+			{
+				watcher.EnableRaisingEvents = false;
+				watcher.Dispose();
+				watcher = null;
+			}
+
+			if (String.IsNullOrEmpty(FileName))
+				return;
+
+			watcher = new FileSystemWatcher(Path.GetDirectoryName(FileName), Path.GetFileName(FileName));
+			watcher.NotifyFilter = NotifyFilters.LastWrite;
+			var dispatcher = Dispatcher.CurrentDispatcher;
+			watcher.Changed += (s, e) =>
+			{
+				var watcherTimer = new DispatcherTimer(DispatcherPriority.Normal, dispatcher);
+				watcherTimer.Tick += (s2, e2) =>
+				{
+					watcherTimer.Stop();
+					watcherTimer = null;
+
+					if ((!CheckUpdates) || (checkWatcher))
+						return;
+
+					checkWatcher = true;
+					try
+					{
+						var lastWrite = new FileInfo(FileName).LastWriteTime;
+						if (fileLastWrite != lastWrite)
+						{
+							if (new Message
+							{
+								Title = "Confirm",
+								Text = "This file has been updated on disk.  Reload?",
+								Options = Message.OptionsEnum.YesNo,
+								DefaultAccept = Message.OptionsEnum.Yes,
+								DefaultCancel = Message.OptionsEnum.No,
+							}.Show() == Message.OptionsEnum.Yes)
+								RunCommand(Command_File_Revert);
+						}
+						fileLastWrite = lastWrite;
+					}
+					finally
+					{
+						checkWatcher = false;
+					}
+				};
+				watcherTimer.Start();
+			};
+			watcher.EnableRaisingEvents = true;
+		}
+
 		void OpenFile(string filename, byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
 		{
 			FileName = filename;
+			if (File.Exists(FileName))
+				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 			if (bytes == null)
 			{
 				if (FileName == null)
@@ -226,6 +293,7 @@ namespace NeoEdit.TextEditor
 			Data = new TextData(bytes, encoding);
 			CoderUsed = encoding;
 			HighlightType = Highlighting.Get(FileName);
+			ModifiedSteps = 0;
 		}
 
 		protected override void OnTextInput(System.Windows.Input.TextCompositionEventArgs e)
@@ -357,10 +425,7 @@ namespace NeoEdit.TextEditor
 				{
 					var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
 					if (dialog.ShowDialog() == true)
-					{
 						OpenFile(dialog.FileName);
-						ModifiedSteps = 0;
-					}
 				}
 			}
 			else if (command == Command_File_Save)
@@ -370,6 +435,7 @@ namespace NeoEdit.TextEditor
 				else
 				{
 					File.WriteAllBytes(FileName, Data.GetBytes(CoderUsed));
+					fileLastWrite = new FileInfo(FileName).LastWriteTime;
 					ModifiedSteps = 0;
 				}
 			}
@@ -386,6 +452,27 @@ namespace NeoEdit.TextEditor
 					RunCommand(Command_File_Save);
 				}
 			}
+			else if (command == Command_File_Revert)
+			{
+				var run = true;
+
+				if ((run) && (ModifiedSteps != 0))
+				{
+					run = new Message
+					{
+						Title = "Confirm",
+						Text = "You have unsaved changes.  Are you sure you want to reload?",
+						Options = Message.OptionsEnum.YesNo,
+						DefaultAccept = Message.OptionsEnum.Yes,
+						DefaultCancel = Message.OptionsEnum.No,
+					}.Show() == Message.OptionsEnum.Yes;
+				}
+
+				if (run)
+					OpenFile(FileName);
+			}
+			else if (command == Command_File_CheckUpdates)
+				CheckUpdates = !CheckUpdates;
 			else if (command == Command_File_InsertFiles)
 			{
 				var run = true;

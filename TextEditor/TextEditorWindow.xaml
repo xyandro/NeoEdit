@@ -17,6 +17,8 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Open" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Save" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Revert" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_CheckUpdates" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_CopyPath" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_CopyName" Executed="Command_Executed"/>
@@ -261,6 +263,8 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Open" Header="_Open"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_SaveAs" Header="Save _As"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Revert" Header="Re_vert"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CheckUpdates" Header="Check _Updates" IsChecked="{Binding CheckUpdates, ElementName=self}"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Header="_Insert File(s)"/>
 				<Separator/>
