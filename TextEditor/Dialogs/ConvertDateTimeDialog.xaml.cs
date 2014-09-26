@@ -74,26 +74,18 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			ParsedExample = OutputExample = "";
 
-			var bindingExpressionBase = inputFormat.GetBindingExpression(ComboBox.TextProperty);
 			var result = InterpretFormat(Example, InputFormat, InputUTC);
+			uiHelper.SetValidation(inputFormat, ComboBox.TextProperty, result != null);
 			if (result == null)
-			{
-				Validation.MarkInvalid(bindingExpressionBase, new ValidationError(new ExceptionValidationRule(), bindingExpressionBase));
 				return;
-			}
 
-			Validation.ClearInvalid(bindingExpressionBase);
 			ParsedExample = result.Value.ToString("O");
 
-			bindingExpressionBase = outputFormat.GetBindingExpression(ComboBox.TextProperty);
 			var resultStr = InterpretFormat(result.Value, OutputFormat, OutputUTC);
+			uiHelper.SetValidation(outputFormat, ComboBox.TextProperty, result != null);
 			if (resultStr == null)
-			{
-				Validation.MarkInvalid(bindingExpressionBase, new ValidationError(new ExceptionValidationRule(), bindingExpressionBase));
 				return;
-			}
 
-			Validation.ClearInvalid(bindingExpressionBase);
 			OutputExample = resultStr;
 		}
 

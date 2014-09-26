@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace NeoEdit.GUI.Common
@@ -128,6 +129,15 @@ namespace NeoEdit.GUI.Common
 			eventArgs.Add(args);
 			control.RaiseEvent(args);
 			eventArgs.Remove(args);
+		}
+
+		public void SetValidation(FrameworkElement control, DependencyProperty dp, bool valid = true)
+		{
+			var bindingExpression = control.GetBindingExpression(dp);
+			if (valid)
+				Validation.ClearInvalid(bindingExpression);
+			else
+				Validation.MarkInvalid(bindingExpression, new ValidationError(new ExceptionValidationRule(), bindingExpression));
 		}
 	}
 }
