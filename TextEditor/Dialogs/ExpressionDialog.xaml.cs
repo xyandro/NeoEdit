@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
@@ -83,30 +84,39 @@ namespace NeoEdit.TextEditor.Dialogs
 
 		void EvaluateExamples()
 		{
-			Example1Value = Example2Value = Example3Value = Example4Value = Example5Value = Example6Value = Example7Value = Example8Value = Example9Value = Example10Value = null;
+			bool valid = true;
 			var expression = new NeoEdit.Common.Expression(Expression);
-			try { Example1Value = expression.Evaluate(Example1); }
-			catch { }
-			try { Example2Value = expression.Evaluate(Example2); }
-			catch { }
-			try { Example3Value = expression.Evaluate(Example3); }
-			catch { }
-			try { Example4Value = expression.Evaluate(Example4); }
-			catch { }
-			try { Example5Value = expression.Evaluate(Example5); }
-			catch { }
-			try { Example6Value = expression.Evaluate(Example6); }
-			catch { }
-			try { Example7Value = expression.Evaluate(Example7); }
-			catch { }
-			try { Example8Value = expression.Evaluate(Example8); }
-			catch { }
-			try { Example9Value = expression.Evaluate(Example9); }
-			catch { }
-			try { Example10Value = expression.Evaluate(Example10); }
-			catch { }
-		}
+			try
+			{
+				Example1Value = expression.Evaluate(Example1);
+				Example2Value = expression.Evaluate(Example2);
+				Example3Value = expression.Evaluate(Example3);
+				Example4Value = expression.Evaluate(Example4);
+				Example5Value = expression.Evaluate(Example5);
+				Example6Value = expression.Evaluate(Example6);
+				Example7Value = expression.Evaluate(Example7);
+				Example8Value = expression.Evaluate(Example8);
+				Example9Value = expression.Evaluate(Example9);
+				Example10Value = expression.Evaluate(Example10);
+				valid = true;
+			}
+			catch
+			{
+				Example1Value = Example2Value = Example3Value = Example4Value = Example5Value = Example6Value = Example7Value = Example8Value = Example9Value = Example10Value = null;
+				valid = false;
+			}
 
+			uiHelper.SetValidation(example1Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example2Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example3Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example4Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example5Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example6Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example7Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example8Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example9Value, TextBox.TextProperty, valid);
+			uiHelper.SetValidation(example10Value, TextBox.TextProperty, valid);
+		}
 		static public string Run(List<string> examples)
 		{
 			var dialog = new ExpressionDialog(examples);
