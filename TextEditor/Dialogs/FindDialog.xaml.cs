@@ -12,6 +12,12 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public bool WholeWords { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool MatchCase { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool RegularExpression { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public bool SelectionOnly { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool IncludeEndings { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
@@ -33,10 +39,10 @@ namespace NeoEdit.TextEditor.Dialogs
 			History = StaticHistory;
 			InitializeComponent();
 
-			wholeWords.IsChecked = wholeWordsVal;
-			matchCase.IsChecked = matchCaseVal;
-			regularExpression.IsChecked = regularExpressionVal;
-			includeEndings.IsChecked = includeEndingsVal;
+			WholeWords = wholeWordsVal;
+			MatchCase = matchCaseVal;
+			RegularExpression = regularExpressionVal;
+			IncludeEndings = includeEndingsVal;
 
 			Loaded += (s, e) =>
 			{
@@ -53,22 +59,22 @@ namespace NeoEdit.TextEditor.Dialogs
 			if (String.IsNullOrEmpty(Text))
 				return;
 
-			wholeWordsVal = wholeWords.IsChecked == true;
-			matchCaseVal = matchCase.IsChecked == true;
-			regularExpressionVal = regularExpression.IsChecked == true;
-			includeEndingsVal = includeEndings.IsChecked == true;
+			wholeWordsVal = WholeWords == true;
+			matchCaseVal = MatchCase == true;
+			regularExpressionVal = RegularExpression == true;
+			includeEndingsVal = IncludeEndings == true;
 
 			var text = Text;
 			History.Remove(text);
 			History.Insert(0, text);
 			Text = text;
 
-			if (regularExpression.IsChecked == false)
+			if (RegularExpression == false)
 				text = Regex.Escape(text);
-			if (wholeWords.IsChecked == true)
+			if (WholeWords == true)
 				text = @"\b" + text + @"\b";
 			var options = RegexOptions.Compiled | RegexOptions.Singleline;
-			if (matchCase.IsChecked == false)
+			if (MatchCase == false)
 				options |= RegexOptions.IgnoreCase;
 			Regex = new Regex(text, options);
 			SelectAll = sender == selectAll;
