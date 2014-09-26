@@ -40,10 +40,10 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new Expression("ValidRE:[0]").Evaluate(@"[").ToString(), "False");
 
 			Assert.AreEqual(new Expression("+").Evaluate(1, 2, 3, 4, 5.5).ToString(), "15.5");
-			Assert.AreEqual(new Expression("OR").Evaluate(false, false, true, false).ToString(), "True");
+			Assert.AreEqual(new Expression("||").Evaluate(false, false, true, false).ToString(), "True");
 			Assert.AreEqual(new Expression("*").Evaluate(4, 5, 6).ToString(), "120");
 
-			Assert.AreEqual(new Expression("([0] OR [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString(), "5");
+			Assert.AreEqual(new Expression("([0] || [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString(), "5");
 
 			Assert.AreEqual(new Expression("t+").Evaluate("I", "Can", null, "Join", "Strings").ToString(), "ICanJoinStrings");
 		}

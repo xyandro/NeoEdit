@@ -73,6 +73,9 @@
     <Compile Include="Dialogs\ConvertDateTimeDialog.xaml.cs">
       <DependentUpon>ConvertDateTimeDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ExpressionDialog.xaml.cs">
+      <DependentUpon>ExpressionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\RandomNumberDialog.xaml.cs">
       <DependentUpon>RandomNumberDialog.xaml</DependentUpon>
     </Compile>
@@ -118,7 +121,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-   <Page Include="Dialogs\RandomNumberDialog.xaml">
+    <Page Include="Dialogs\ExpressionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\RandomNumberDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

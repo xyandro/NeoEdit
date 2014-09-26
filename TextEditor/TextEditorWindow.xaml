@@ -66,7 +66,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Length" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Width" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Trim" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_EvaluateExpression" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_GUID" Executed="Command_Executed"/>
@@ -362,7 +362,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Width" Header="_Width"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Trim" Header="_Trim"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Evaluate" Header="_Evaluate selections"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_EvaluateExpression" Header="Evaluate _Expression"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="_Series"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Repeat" Header="_Repeat"/>
 				<Separator/>

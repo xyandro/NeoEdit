@@ -8,7 +8,9 @@ namespace NeoEdit.Common
 {
 	public class Expression
 	{
-		static readonly Regex evalTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)");
+		static readonly Regex expressionRE = new Regex(@"\[!(\d+)\]");
+
+		static readonly Regex evalTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|(true|false)", RegexOptions.IgnoreCase);
 
 		static readonly List<string> functions = new List<string> { "Type", "ValidRE" };
 		static readonly Regex functionRE = new Regex(String.Format(@"\b({0}):(\[\d+\])", String.Join("|", functions)));
@@ -19,8 +21,8 @@ namespace NeoEdit.Common
 			new List<string>{ "*", "/", "%" },
 			new List<string>{ "+", "-", "t+" },
 			new List<string>{ "IS" },
-			new List<string>{ "AND" },
-			new List<string>{ "OR" },
+			new List<string>{ "&&" },
+			new List<string>{ "||" },
 			new List<string>{ "==", "=i=", "!=", "!i=" },
 		};
 		static readonly List<Regex> binaryOperatorREs = binaryOperators.Select(a => new Regex(String.Format(@"(\[\d+\])\s*({0})\s*(\[\d+\])", String.Join("|", a.Select(b => Regex.Escape(b)))))).ToList();
@@ -45,6 +47,23 @@ namespace NeoEdit.Common
 			var result = "";
 			while (true)
 			{
+				var match = expressionRE.Match(expression);
+				if (!match.Success)
+				{
+					result += expression;
+					break;
+				}
+
+				result += expression.Substring(0, match.Index);
+				expression = expression.Substring(match.Index + match.Length);
+
+				result += value[Int32.Parse(match.Groups[1].Value)];
+			}
+			expression = result;
+
+			result = "";
+			while (true)
+			{
 				var match = evalTermRE.Match(expression);
 				if (!match.Success)
 				{
@@ -65,13 +84,18 @@ namespace NeoEdit.Common
 				else if (match.Groups[3].Success)
 				{
 					result += "[" + value.Count + "]";
-					value.Add(match.Groups[3].Value);
+					value.Add(Double.Parse(match.Groups[3].Value));
+				}
+				else if (match.Groups[4].Success)
+				{
+					result += "[" + value.Count + "]";
+					value.Add(Boolean.Parse(match.Groups[4].Value));
 				}
 			}
 			expression = result;
 
 			if (String.IsNullOrWhiteSpace(expression))
-				expression = "AND";
+				expression = "&&";
 
 			if (binaryOperators.Any(a => a.Any(b => b == expression)))
 				expression = String.Join(expression, Enumerable.Range(0, value.Count).Select(a => String.Format("[{0}]", a)));
@@ -188,8 +212,8 @@ namespace NeoEdit.Common
 								break;
 							}
 						case "IS": result = (term1 != null) && (term1.GetType().Name == term2Str); break;
-						case "AND": result = Boolean.Parse(term1Str) && Boolean.Parse(term2Str); break;
-						case "OR": result = Boolean.Parse(term1Str) || Boolean.Parse(term2Str); break;
+						case "&&": result = Boolean.Parse(term1Str) && Boolean.Parse(term2Str); break;
+						case "||": result = Boolean.Parse(term1Str) || Boolean.Parse(term2Str); break;
 						case "*": result = Double.Parse(term1Str) * Double.Parse(term2Str); break;
 						case "/": result = Double.Parse(term1Str) / Double.Parse(term2Str); break;
 						case "%": result = Double.Parse(term1Str) % Double.Parse(term2Str); break;
@@ -250,6 +274,8 @@ namespace NeoEdit.Common
 			var expressionStack = new Stack<string>();
 			while (true)
 			{
+				expression = expression.Trim();
+
 				if (EnterParens(ref expression, expressionStack))
 					continue;
 

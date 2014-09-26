@@ -75,7 +75,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Length = new RoutedCommand();
 		public static RoutedCommand Command_Data_Width = new RoutedCommand();
 		public static RoutedCommand Command_Data_Trim = new RoutedCommand();
-		public static RoutedCommand Command_Data_Evaluate = new RoutedCommand();
+		public static RoutedCommand Command_Data_EvaluateExpression = new RoutedCommand();
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
 		public static RoutedCommand Command_Data_Repeat = new RoutedCommand();
 		public static RoutedCommand Command_Data_GUID = new RoutedCommand();
@@ -820,11 +820,16 @@ namespace NeoEdit.TextEditor
 				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Evaluate)
+			else if (command == Command_Data_EvaluateExpression)
 			{
-				var selections = Selections.Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range)).Select(expr => new NeoEdit.Common.Expression(expr).Evaluate().ToString()).ToList();
-				Replace(selections, strs, true);
+				var strs = Selections.Select(range => GetString(range)).ToList();
+				var expression = ExpressionDialog.Run(strs);
+				if (expression != null)
+				{
+					var exp = new NeoEdit.Common.Expression(expression);
+					strs = strs.Select(str => exp.Evaluate(str).ToString()).ToList();
+					Replace(Selections, strs, true);
+				}
 			}
 			else if (command == Command_Data_Series)
 			{

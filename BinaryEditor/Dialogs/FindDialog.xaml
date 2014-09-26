@@ -43,7 +43,7 @@
 
 		<GroupBox Header="Integers">
 			<GroupBox.Visibility>
-				<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] AND ([1] OR [2])">
+				<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] &amp;&amp; ([1] || [2])">
 					<Binding Path="ShowInt" ElementName="self"/>
 					<Binding Path="ShowLE" ElementName="self"/>
 					<Binding Path="ShowBE" ElementName="self"/>
