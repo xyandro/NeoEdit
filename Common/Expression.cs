@@ -21,9 +21,10 @@ namespace NeoEdit.Common
 			new List<string>{ "*", "/", "%" },
 			new List<string>{ "+", "-", "t+" },
 			new List<string>{ "IS" },
+			new List<string>{ "<", "<=", ">", ">=", "t<", "t<=", "t>", "t>=", "ti<", "ti<=", "ti>", "ti>=" },
+			new List<string>{ "==", "!=", "t==", "t!=", "ti==", "ti!=" },
 			new List<string>{ "&&" },
 			new List<string>{ "||" },
-			new List<string>{ "==", "=i=", "!=", "!i=" },
 		};
 		static readonly List<Regex> binaryOperatorREs = binaryOperators.Select(a => new Regex(String.Format(@"(\[\d+\])\s*({0})\s*(\[\d+\])", String.Join("|", a.Select(b => Regex.Escape(b)))))).ToList();
 
@@ -219,11 +220,25 @@ namespace NeoEdit.Common
 						case "%": result = Double.Parse(term1Str) % Double.Parse(term2Str); break;
 						case "+": result = Double.Parse(term1Str) + Double.Parse(term2Str); break;
 						case "-": result = Double.Parse(term1Str) - Double.Parse(term2Str); break;
+						case "<": result = Double.Parse(term1Str) < Double.Parse(term2Str); break;
+						case "<=": result = Double.Parse(term1Str) <= Double.Parse(term2Str); break;
+						case ">": result = Double.Parse(term1Str) > Double.Parse(term2Str); break;
+						case ">=": result = Double.Parse(term1Str) >= Double.Parse(term2Str); break;
+						case "t<": result = term1Str.CompareTo(term2Str) < 0; break;
+						case "t<=": result = term1Str.CompareTo(term2Str) <= 0; break;
+						case "t>": result = term1Str.CompareTo(term2Str) > 0; break;
+						case "t>=": result = term1Str.CompareTo(term2Str) >= 0; break;
+						case "ti<": result = term1Str.ToLower().CompareTo(term2Str.ToLower()) < 0; break;
+						case "ti<=": result = term1Str.ToLower().CompareTo(term2Str.ToLower()) <= 0; break;
+						case "ti>": result = term1Str.ToLower().CompareTo(term2Str.ToLower()) > 0; break;
+						case "ti>=": result = term1Str.ToLower().CompareTo(term2Str.ToLower()) >= 0; break;
 						case "t+": result = term1Str + term2Str; break;
-						case "==": result = term1Str == term2Str; break;
-						case "=i=": result = term1Str.Equals(term2Str, StringComparison.OrdinalIgnoreCase); break;
-						case "!=": result = term1Str != term2Str; break;
-						case "!i=": result = !term1Str.Equals(term2Str, StringComparison.OrdinalIgnoreCase); break;
+						case "==":
+						case "t==": result = term1Str == term2Str; break;
+						case "ti==": result = term1Str.Equals(term2Str, StringComparison.OrdinalIgnoreCase); break;
+						case "!=":
+						case "t!=": result = term1Str != term2Str; break;
+						case "ti!=": result = !term1Str.Equals(term2Str, StringComparison.OrdinalIgnoreCase); break;
 						default: throw new Exception("Invalid op");
 					}
 

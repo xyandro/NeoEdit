@@ -23,14 +23,14 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new Expression("[0] IS 'Int32'").Evaluate((object)5).ToString(), "True");
 
-			Assert.AreEqual(new Expression("'5a' == '5a'").Evaluate((object)5).ToString(), "True");
-			Assert.AreEqual(new Expression("'5a' == '5A'").Evaluate((object)5).ToString(), "False");
-			Assert.AreEqual(new Expression("'5a' =i= '5a'").Evaluate((object)5).ToString(), "True");
-			Assert.AreEqual(new Expression("'5a' =i= '5A'").Evaluate((object)5).ToString(), "True");
-			Assert.AreEqual(new Expression("'5a' != '5a'").Evaluate((object)5).ToString(), "False");
-			Assert.AreEqual(new Expression("'5a' != '5A'").Evaluate((object)5).ToString(), "True");
-			Assert.AreEqual(new Expression("'5a' !i= '5a'").Evaluate((object)5).ToString(), "False");
-			Assert.AreEqual(new Expression("'5a' !i= '5A'").Evaluate((object)5).ToString(), "False");
+			Assert.AreEqual(new Expression("'5a' t== '5a'").Evaluate((object)5).ToString(), "True");
+			Assert.AreEqual(new Expression("'5a' t== '5A'").Evaluate((object)5).ToString(), "False");
+			Assert.AreEqual(new Expression("'5a' ti== '5a'").Evaluate((object)5).ToString(), "True");
+			Assert.AreEqual(new Expression("'5a' ti== '5A'").Evaluate((object)5).ToString(), "True");
+			Assert.AreEqual(new Expression("'5a' t!= '5a'").Evaluate((object)5).ToString(), "False");
+			Assert.AreEqual(new Expression("'5a' t!= '5A'").Evaluate((object)5).ToString(), "True");
+			Assert.AreEqual(new Expression("'5a' ti!= '5a'").Evaluate((object)5).ToString(), "False");
+			Assert.AreEqual(new Expression("'5a' ti!= '5A'").Evaluate((object)5).ToString(), "False");
 
 			Assert.AreEqual(new Expression("[0].'value'").Evaluate(new ExpressionDotTest(5)).ToString(), "5");
 

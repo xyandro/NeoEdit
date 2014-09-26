@@ -95,13 +95,15 @@
 		<Separator Grid.Row="14" Grid.ColumnSpan="4" Height="10"/>
 
 		<TextBlock Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="4">
-			<Bold>Help</Bold><LineBreak/>
+			<Bold>Help</Bold> <Italic>(t = text, i = case-insensitive)</Italic><LineBreak/>
 			<Italic>Parameter:</Italic> [0]<LineBreak/>
 			<Italic>Evaluate parameter as expression:</Italic> [!0]<LineBreak/>
 			<Italic>Grouping operator:</Italic> ()<LineBreak/>
 			<Italic>Mathematical operators:</Italic> * / % + -<LineBreak/>
 			<Italic>Text operators:</Italic> t+<LineBreak/>
-			<Italic>Comparison operators:</Italic> &amp;&amp; || == =i= != !i= (i means case-insensitive)<LineBreak/>
+			<Italic>Comparison operators:</Italic> &lt; &lt;= &gt; &gt;= t&lt; t&lt;= t&gt; t&gt;= ti&lt; ti&lt;= ti&gt; ti&gt;=<LineBreak/>
+			<Italic>Equality operators:</Italic> == != t== t!= ti== ti!=<LineBreak/>
+			<Italic>Boolean operators:</Italic> &amp;&amp; ||<LineBreak/>
 			<Italic>Ternary operator:</Italic> ? :<LineBreak/>
 		</TextBlock>
 	</Grid>

@@ -10,7 +10,7 @@
 	IsReadOnly="{Binding Type, ElementName=self, Converter={binaryEditorConverters:IsStrConverter}}">
 
 	<TextBox.Background>
-		<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] =i= [1] ? 'LightBlue' : 'Transparent'">
+		<MultiBinding Converter="{common:ExpressionConverter}" ConverterParameter="[0] ti== [1] ? 'LightBlue' : 'Transparent'">
 			<Binding Path="Text" ElementName="self"/>
 			<Binding Path="FoundText" ElementName="self"/>
 		</MultiBinding>
