@@ -67,11 +67,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dialogs\ChooseDateTime.xaml.cs">
-      <DependentUpon>ChooseDateTime.xaml</DependentUpon>
+    <Compile Include="Dialogs\ChooseDateTimeDialog.xaml.cs">
+      <DependentUpon>ChooseDateTimeDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ConvertDateTime.xaml.cs">
-      <DependentUpon>ConvertDateTime.xaml</DependentUpon>
+    <Compile Include="Dialogs\ConvertDateTimeDialog.xaml.cs">
+      <DependentUpon>ConvertDateTimeDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\RandomNumberDialog.xaml.cs">
       <DependentUpon>RandomNumberDialog.xaml</DependentUpon>
@@ -110,15 +110,15 @@
       <DependentUpon>TextEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UnitTest\TextDataTest.cs" />
-    <Page Include="Dialogs\ChooseDateTime.xaml">
+    <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\ConvertDateTime.xaml">
+    <Page Include="Dialogs\ConvertDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\RandomNumberDialog.xaml">
+   <Page Include="Dialogs\RandomNumberDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

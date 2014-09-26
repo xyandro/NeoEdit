@@ -8,7 +8,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class ConvertDateTime : Window
+	public partial class ConvertDateTimeDialog : Window
 	{
 		[DepProp]
 		public string InputFormat { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -25,7 +25,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public string OutputExample { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
-		static ConvertDateTime() { UIHelper<ConvertDateTime>.Register(); }
+		static ConvertDateTimeDialog() { UIHelper<ConvertDateTimeDialog>.Register(); }
 
 		const string Unix = "Unix";
 		const string FileTime = "FileTime";
@@ -39,10 +39,10 @@ namespace NeoEdit.TextEditor.Dialogs
 			"d", "D", "f", "F", "g", "G", "M", "R", "s", "t", "T", "u", "U", "Y",
 		};
 
-		readonly UIHelper<ConvertDateTime> uiHelper;
-		ConvertDateTime(string _example)
+		readonly UIHelper<ConvertDateTimeDialog> uiHelper;
+		ConvertDateTimeDialog(string _example)
 		{
-			uiHelper = new UIHelper<ConvertDateTime>(this);
+			uiHelper = new UIHelper<ConvertDateTimeDialog>(this);
 			InitializeComponent();
 
 			Example = _example;
@@ -185,7 +185,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			inputFormat = outputFormat = null;
 			inputUTC = outputUTC = false;
-			var dialog = new ConvertDateTime(example);
+			var dialog = new ConvertDateTimeDialog(example);
 			if (dialog.ShowDialog() != true)
 				return false;
 

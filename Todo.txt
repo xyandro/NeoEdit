@@ -22,6 +22,7 @@ HTML/XML: Match closing tag
 Rename files
 Relative goto line/index should work for all selections
 Make MD5/SHA1 work for other than UTF8
+Evaluate equation given in dialog
 
 Binary:
 Fix binary editor backwards search

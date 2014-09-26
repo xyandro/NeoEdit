@@ -569,7 +569,7 @@ namespace NeoEdit.TextEditor
 			}
 			else if ((command == Command_Files_Timestamp_Write) || (command == Command_Files_Timestamp_Access) || (command == Command_Files_Timestamp_Create) || (command == Command_Files_Timestamp_All))
 			{
-				var result = ChooseDateTime.Run(DateTime.Now);
+				var result = ChooseDateTimeDialog.Run(DateTime.Now);
 				if (result != null)
 				{
 					var files = Selections.Select(range => GetString(range)).ToArray();
@@ -790,9 +790,9 @@ namespace NeoEdit.TextEditor
 				{
 					string inputFormat, outputFormat;
 					bool inputUTC, outputUTC;
-					if (ConvertDateTime.Run(strs.First(), out inputFormat, out inputUTC, out outputFormat, out outputUTC))
+					if (ConvertDateTimeDialog.Run(strs.First(), out inputFormat, out inputUTC, out outputFormat, out outputUTC))
 					{
-						strs = strs.Select(str => ConvertDateTime.ConvertFormat(str, inputFormat, inputUTC, outputFormat, outputUTC)).ToList();
+						strs = strs.Select(str => ConvertDateTimeDialog.ConvertFormat(str, inputFormat, inputUTC, outputFormat, outputUTC)).ToList();
 						Replace(Selections, strs, true);
 					}
 				}
