@@ -16,13 +16,13 @@
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="500"/>
 			<ColumnDefinition/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		
 		<Label Grid.Row="0" Grid.Column="0" Content="_Input format:" Target="{Binding ElementName=inputFormat}"/>
-		<ComboBox Grid.Row="0" Grid.Column="1" Name="inputFormat" IsEditable="True" Width="500" Text="{Binding InputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<ComboBox Grid.Row="0" Grid.Column="1" Name="inputFormat" IsEditable="True" Text="{Binding InputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<Label Grid.Row="0" Grid.Column="2" Content="_UTC" Target="{Binding ElementName=inputUTC}"/>
 		<CheckBox Grid.Row="0" Grid.Column="3" Name="inputUTC" IsChecked="{Binding InputUTC, ElementName=self}" VerticalAlignment="Center"/>
 
@@ -32,7 +32,7 @@
 		<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ParsedExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="_Output format:" Target="{Binding ElementName=outputFormat}"/>
-		<ComboBox Grid.Row="3" Grid.Column="1" Name="outputFormat" IsEditable="True" Width="500" Text="{Binding OutputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<ComboBox Grid.Row="3" Grid.Column="1" Name="outputFormat" IsEditable="True" Text="{Binding OutputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<Label Grid.Row="3" Grid.Column="2" Content="U_TC" Target="{Binding ElementName=outputUTC}"/>
 		<CheckBox Grid.Row="3" Grid.Column="3" Name="outputUTC" IsChecked="{Binding OutputUTC, ElementName=self}" VerticalAlignment="Center"/>
 

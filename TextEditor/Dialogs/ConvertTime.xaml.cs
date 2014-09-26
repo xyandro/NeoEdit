@@ -106,49 +106,53 @@ namespace NeoEdit.TextEditor.Dialogs
 		static DateTime excelBase = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Local).AddDays(-2);
 		static DateTime? InterpretFormat(string value, string format, bool inputUTC, bool generic = true)
 		{
-			DateTime? result = null;
-			if ((!result.HasValue) && (format == Unix))
+			try
 			{
-				double seconds;
-				if (!Double.TryParse(value, out seconds))
-					return null;
-				return epoch.AddSeconds(seconds);
+				DateTime? result = null;
+				if ((!result.HasValue) && (format == Unix))
+				{
+					double seconds;
+					if (!Double.TryParse(value, out seconds))
+						return null;
+					return epoch.AddSeconds(seconds);
+				}
+
+				if ((!result.HasValue) && (format == FileTime))
+				{
+					long fileTimeLong;
+					if (!Int64.TryParse(value, out fileTimeLong))
+						return null;
+					return DateTime.FromFileTimeUtc(fileTimeLong);
+				}
+
+				if ((!result.HasValue) && (format == Excel))
+				{
+					double days;
+					if (!Double.TryParse(value, out days))
+						return null;
+					return excelBase.AddDays(days);
+				}
+
+				if (!result.HasValue)
+				{
+					DateTime dateTimeValue;
+					if (DateTime.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.RoundtripKind, out dateTimeValue))
+						result = dateTimeValue;
+				}
+
+				if ((!result.HasValue) && (generic))
+				{
+					DateTime dateTimeValue;
+					if (DateTime.TryParse(value, out dateTimeValue))
+						result = dateTimeValue;
+				}
+
+				if ((result.HasValue) && (result.Value.Kind == DateTimeKind.Unspecified))
+					result = DateTime.SpecifyKind(result.Value, inputUTC ? DateTimeKind.Utc : DateTimeKind.Local);
+
+				return result;
 			}
-
-			if ((!result.HasValue) && (format == FileTime))
-			{
-				long fileTimeLong;
-				if (!Int64.TryParse(value, out fileTimeLong))
-					return null;
-				return DateTime.FromFileTimeUtc(fileTimeLong);
-			}
-
-			if ((!result.HasValue) && (format == Excel))
-			{
-				double days;
-				if (!Double.TryParse(value, out days))
-					return null;
-				return excelBase.AddDays(days);
-			}
-
-			if (!result.HasValue)
-			{
-				DateTime dateTimeValue;
-				if (DateTime.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.RoundtripKind, out dateTimeValue))
-					result = dateTimeValue;
-			}
-
-			if ((!result.HasValue) && (generic))
-			{
-				DateTime dateTimeValue;
-				if (DateTime.TryParse(value, out dateTimeValue))
-					result = dateTimeValue;
-			}
-
-			if ((result.HasValue) && (result.Value.Kind == DateTimeKind.Unspecified))
-				result = DateTime.SpecifyKind(result.Value, inputUTC ? DateTimeKind.Utc : DateTimeKind.Local);
-
-			return result;
+			catch { return null; }
 		}
 
 		static string InterpretFormat(DateTime value, string format, bool toUTC)
