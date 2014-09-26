@@ -18,6 +18,8 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Save" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_CopyPath" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_CopyName" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BOM" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
@@ -27,8 +29,6 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Copy" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Paste" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_CopyName" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_CopyPath" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
@@ -261,6 +261,9 @@
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Header="_Insert File(s)"/>
 				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CopyPath" Header="Copy _path"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CopyName" Header="Copy name"/>
+				<Separator/>
 				<MenuItem Header="_Encoding" Click="EncodingClick">
 					<MenuItem.ItemContainerStyle>
 						<Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
@@ -297,9 +300,6 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Copy" Header="_Copy"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Paste" Header="_Paste"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard"/>
-				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyName" Header="Copy name"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_CopyPath" Header="Copy full path"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
