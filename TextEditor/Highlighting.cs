@@ -55,12 +55,16 @@ namespace NeoEdit.TextEditor
 		static Regex stringRE = new Regex(stringEsc + "|" + stringReg);
 		static Brush stringBrush = new SolidColorBrush(Color.FromRgb(163, 21, 21));
 
+		static Regex commentRE = new Regex("//.*?$");
+		static Brush commentBrush = new SolidColorBrush(Color.FromRgb(96, 139, 78));
+
 		public override Dictionary<Regex, Brush> GetDictionary()
 		{
 			return new Dictionary<Regex, Brush>
 			{
 				{ keyWordsRE, keywordsBrush },
 				{ stringRE, stringBrush },
+				{ commentRE, commentBrush },
 			};
 		}
 	}
@@ -78,6 +82,9 @@ namespace NeoEdit.TextEditor
 		static Regex stringRE = new Regex(@"""([^\\""]*|\\.)*""");
 		static Brush stringBrush = new SolidColorBrush(Color.FromRgb(163, 21, 21));
 
+		static Regex commentRE = new Regex("//.*?$");
+		static Brush commentBrush = new SolidColorBrush(Color.FromRgb(96, 139, 78));
+
 		public override Dictionary<Regex, Brush> GetDictionary()
 		{
 			return new Dictionary<Regex, Brush>
@@ -85,6 +92,7 @@ namespace NeoEdit.TextEditor
 				{ keyWordsRE, keywordsBrush },
 				{ directivesRE, directivesBrush },
 				{ stringRE, stringBrush },
+				{ commentRE, commentBrush },
 			};
 		}
 	}

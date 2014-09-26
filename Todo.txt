@@ -22,7 +22,6 @@ HTML/XML: Match closing tag
 Rename files
 Select 2 lines every 5 lines
 Relative goto line/index should work for all selections
-C#: Comments don't syntax-highlight
 
 Binary:
 Fix binary editor backwards search
