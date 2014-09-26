@@ -23,6 +23,7 @@ Rename files
 Relative goto line/index should work for all selections
 Make MD5/SHA1 work for other than UTF8
 Evaluate equation given in dialog
+Select stuff after repeating
 
 Binary:
 Fix binary editor backwards search

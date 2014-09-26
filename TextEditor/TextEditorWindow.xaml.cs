@@ -88,7 +88,6 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_SHA1 = new RoutedCommand();
 		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();
 		public static RoutedCommand Command_Select_All = new RoutedCommand();
-		public static RoutedCommand Command_Select_Single = new RoutedCommand();
 		public static RoutedCommand Command_Select_Limit = new RoutedCommand();
 		public static RoutedCommand Command_Select_AllLines = new RoutedCommand();
 		public static RoutedCommand Command_Select_Lines = new RoutedCommand();
@@ -105,6 +104,8 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Select_ShowCurrent = new RoutedCommand();
 		public static RoutedCommand Command_Select_NextSelection = new RoutedCommand();
 		public static RoutedCommand Command_Select_PrevSelection = new RoutedCommand();
+		public static RoutedCommand Command_Select_Single = new RoutedCommand();
+		public static RoutedCommand Command_Select_Remove = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Selection = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Find = new RoutedCommand();
 		public static RoutedCommand Command_Mark_Clear = new RoutedCommand();
@@ -898,12 +899,6 @@ namespace NeoEdit.TextEditor
 			}
 			else if (command == Command_Select_All)
 				Selections.Replace(new Range(EndOffset(), BeginOffset()));
-			else if (command == Command_Select_Single)
-			{
-				visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
-				Selections.Replace(Selections[visibleIndex]);
-				visibleIndex = 0;
-			}
 			else if (command == Command_Select_Limit)
 			{
 				var numSels = LimitDialog.Run(Selections.Count);
@@ -998,6 +993,14 @@ namespace NeoEdit.TextEditor
 					visibleIndex = Selections.Count - 1;
 				EnsureVisible(true);
 			}
+			else if (command == Command_Select_Single)
+			{
+				visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
+				Selections.Replace(Selections[visibleIndex]);
+				visibleIndex = 0;
+			}
+			else if (command == Command_Select_Remove)
+				Selections.RemoveAt(visibleIndex);
 			else if (command == Command_Mark_Selection)
 				Marks.AddRange(Selections);
 			else if (command == Command_Mark_Find)

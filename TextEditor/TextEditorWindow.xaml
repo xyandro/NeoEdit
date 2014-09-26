@@ -165,7 +165,6 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues9" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_All" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Limit" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_AllLines" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Lines" Executed="Command_Executed"/>
@@ -182,6 +181,8 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Remove" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Selection" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Find" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Clear" Executed="Command_Executed"/>
@@ -239,6 +240,7 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Key="Down" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Key="Up" Modifiers="Alt"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Key="Enter" Modifiers="Alt"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_Remove" Key="OemMinus" Modifiers="Alt"/>
 	</Window.InputBindings>
 
 	<Grid>
@@ -491,7 +493,6 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="S_ingle"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Limit" Header="Limit"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_AllLines" Header="All lines"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
@@ -516,6 +517,8 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Header="Show current"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Header="Next selection"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Header="Prev selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="S_ingle"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Remove" Header="S_ingle"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
