@@ -70,6 +70,7 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_GUID" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Random" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Escape_XML" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Escape_Regex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unescape_XML" Executed="Command_Executed"/>
@@ -364,6 +365,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Repeat" Header="_Repeat"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_GUID" Header="Insert _GUID"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Random" Header="Insert Random Number"/>
 				<Separator/>
 				<MenuItem Header="Escape">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Escape_XML" Header="XML"/>

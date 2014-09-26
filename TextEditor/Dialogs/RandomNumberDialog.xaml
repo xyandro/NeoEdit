@@ -1,0 +1,29 @@
+﻿<Window Name="self" x:Class="NeoEdit.TextEditor.Dialogs.RandomNumberDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	Title="Random number" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=minValue}">
+
+	<Grid Margin="10,5">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="Minimum:" Target="{Binding ElementName=repeatCount}"/>
+		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="minValue" Margin="0,0,0,10" Width="500" Value="{Binding MinValue, ElementName=self}" Maximum="{Binding MaxValue, ElementName=self}"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="Maximum:" Target="{Binding ElementName=maxValue}"/>
+		<xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Name="maxValue" Margin="0,0,0,10" Width="500" Value="{Binding MaxValue, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
+			<Button IsCancel="True" Content="Cancel"/>
+		</UniformGrid>
+	</Grid>
+</Window>

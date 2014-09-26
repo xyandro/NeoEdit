@@ -79,6 +79,7 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Series = new RoutedCommand();
 		public static RoutedCommand Command_Data_Repeat = new RoutedCommand();
 		public static RoutedCommand Command_Data_GUID = new RoutedCommand();
+		public static RoutedCommand Command_Data_Random = new RoutedCommand();
 		public static RoutedCommand Command_Data_Escape_XML = new RoutedCommand();
 		public static RoutedCommand Command_Data_Escape_Regex = new RoutedCommand();
 		public static RoutedCommand Command_Data_Unescape_XML = new RoutedCommand();
@@ -151,6 +152,8 @@ namespace NeoEdit.TextEditor
 		readonly RangeList Selections = new RangeList();
 		readonly RangeList Searches = new RangeList();
 		readonly RangeList Marks = new RangeList();
+
+		Random random = new Random();
 
 		static TextEditorWindow() { UIHelper<TextEditorWindow>.Register(); }
 
@@ -831,6 +834,15 @@ namespace NeoEdit.TextEditor
 			{
 				var strs = Selections.Select(range => Guid.NewGuid().ToString()).ToList();
 				Replace(Selections, strs, true);
+			}
+			else if (command == Command_Data_Random)
+			{
+				int minValue, maxValue;
+				if (RandomNumberDialog.Run(out minValue, out maxValue))
+				{
+					var strs = Selections.Select(range => random.Next(minValue, maxValue + 1).ToString()).ToList();
+					Replace(Selections, strs, true);
+				}
 			}
 			else if (command == Command_Data_Escape_XML)
 			{

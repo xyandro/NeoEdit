@@ -73,6 +73,9 @@
     <Compile Include="Dialogs\ConvertDateTime.xaml.cs">
       <DependentUpon>ConvertDateTime.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\RandomNumberDialog.xaml.cs">
+      <DependentUpon>RandomNumberDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\GotoIndexDialog.xaml.cs">
       <DependentUpon>GotoIndexDialog.xaml</DependentUpon>
     </Compile>
@@ -112,6 +115,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\ConvertDateTime.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\RandomNumberDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
