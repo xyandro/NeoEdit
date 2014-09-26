@@ -20,7 +20,6 @@ Add function to count matches on select unique/duplicates
 Set line endings (\r\n / \n / \r)
 HTML/XML: Match closing tag
 Rename files
-Select 2 lines every 5 lines
 Relative goto line/index should work for all selections
 
 Binary:

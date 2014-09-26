@@ -901,7 +901,10 @@ namespace NeoEdit.TextEditor
 				bool ignoreBlankLines;
 				if (SelectLinesDialog.Run(out lineMult, out ignoreBlankLines))
 				{
-					var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+					var selections = Selections;
+					if ((selections.Count == 1) && (!selections[0].HasSelection()))
+						selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
+					var lines = selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
 					var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
 					if (ignoreBlankLines)
 						sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
