@@ -1389,7 +1389,9 @@ namespace NeoEdit.TextEditor
 						end = Math.Max(0, Math.Min(endColumn, end) - startColumn);
 						var width = end - start;
 
-						dc.DrawRectangle(entry.Key, null, new Rect(start * charWidth, y[line], width * charWidth + 1, lineHeight));
+						var steps = range == visibleCursor ? 2 : 1;
+						for (var ctr = 0; ctr < steps; ++ctr)
+							dc.DrawRectangle(entry.Key, null, new Rect(start * charWidth, y[line], width * charWidth + 1, lineHeight));
 					}
 				}
 			}
