@@ -15,10 +15,10 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Repeat count:" Target="{Binding ElementName=repeatCount}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Repeat _count:" Target="{Binding ElementName=repeatCount}"/>
 		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="repeatCount" Width="100" Value="{Binding RepeatCount, ElementName=self}" Minimum="1"/>
 
-		<CheckBox Grid.Row="1" Grid.ColumnSpan="2" Content="_Select All" IsChecked="{Binding SelectAll, ElementName=self}"/>
+		<CheckBox Grid.Row="1" Grid.ColumnSpan="2" Content="Select _all" IsChecked="{Binding SelectAll, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right">
 			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
