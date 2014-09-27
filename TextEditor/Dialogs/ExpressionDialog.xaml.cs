@@ -85,9 +85,9 @@ namespace NeoEdit.TextEditor.Dialogs
 		void EvaluateExamples()
 		{
 			bool valid = true;
-			var expression = new NeoEdit.Common.Expression(Expression);
 			try
 			{
+				var expression = new NeoEdit.Common.Expression(Expression);
 				Example1Value = expression.Evaluate(Example1);
 				Example2Value = expression.Evaluate(Example2);
 				Example3Value = expression.Evaluate(Example3);

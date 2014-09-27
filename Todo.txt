@@ -21,7 +21,6 @@ HTML/XML: Match closing tag
 Rename files
 Relative goto line/index should work for all selections
 Make MD5/SHA1 work for other than UTF8
-Speed up expressions
 
 Binary:
 Fix binary editor backwards search
