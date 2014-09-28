@@ -98,10 +98,10 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Select_RemoveEmpty = new RoutedCommand();
 		public static RoutedCommand Command_Select_Unique = new RoutedCommand();
 		public static RoutedCommand Command_Select_Duplicates = new RoutedCommand();
-		public static RoutedCommand Command_Select_String_Min = new RoutedCommand();
-		public static RoutedCommand Command_Select_String_Max = new RoutedCommand();
-		public static RoutedCommand Command_Select_Numeric_Min = new RoutedCommand();
-		public static RoutedCommand Command_Select_Numeric_Max = new RoutedCommand();
+		public static RoutedCommand Command_Select_Min_String = new RoutedCommand();
+		public static RoutedCommand Command_Select_Min_Numeric = new RoutedCommand();
+		public static RoutedCommand Command_Select_Max_String = new RoutedCommand();
+		public static RoutedCommand Command_Select_Max_Numeric = new RoutedCommand();
 		public static RoutedCommand Command_Select_ShowFirst = new RoutedCommand();
 		public static RoutedCommand Command_Select_ShowCurrent = new RoutedCommand();
 		public static RoutedCommand Command_Select_NextSelection = new RoutedCommand();
@@ -1051,25 +1051,25 @@ namespace NeoEdit.TextEditor
 				Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
 			else if (command == Command_Select_Duplicates)
 				Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
-			else if (command == Command_Select_String_Min)
+			else if (command == Command_Select_Min_String)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
 				var first = selections.First().str;
 				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 			}
-			else if (command == Command_Select_String_Max)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
-				var first = selections.Last().str;
-				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
-			}
-			else if (command == Command_Select_Numeric_Min)
+			else if (command == Command_Select_Min_Numeric)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
 				var first = selections.First().str;
 				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 			}
-			else if (command == Command_Select_Numeric_Max)
+			else if (command == Command_Select_Max_String)
+			{
+				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
+				var first = selections.Last().str;
+				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
+			}
+			else if (command == Command_Select_Max_Numeric)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
 				var first = selections.Last().str;

@@ -175,10 +175,10 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Unique" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_String_Min" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_String_Max" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Numeric_Min" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Numeric_Max" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Min_String" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Min_Numeric" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Max_String" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Max_Numeric" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Executed="Command_Executed"/>
@@ -508,13 +508,13 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unique" Header="_Unique"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Header="_Duplicates"/>
 				<Separator/>
-				<MenuItem Header="_String">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_String_Min" Header="Mi_n"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_String_Max" Header="Ma_x"/>
+				<MenuItem Header="Min">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Min_String" Header="_String"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Min_Numeric" Header="_Numeric"/>
 				</MenuItem>
-				<MenuItem Header="_Numeric">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Numeric_Min" Header="Mi_n"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Numeric_Max" Header="Ma_x"/>
+				<MenuItem Header="Max">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Max_String" Header="_String"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Max_Numeric" Header="_Numeric"/>
 				</MenuItem>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Header="First selection"/>
