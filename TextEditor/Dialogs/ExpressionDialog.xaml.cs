@@ -115,13 +115,14 @@ namespace NeoEdit.TextEditor.Dialogs
 			uiHelper.SetValidation(example9Value, TextBox.TextProperty, valid);
 			uiHelper.SetValidation(example10Value, TextBox.TextProperty, valid);
 		}
-		static public string Run(List<string> examples)
+
+		static public NeoEdit.Common.Expression Run(List<string> examples)
 		{
 			var dialog = new ExpressionDialog(examples);
 			if (dialog.ShowDialog() != true)
 				return null;
 
-			return dialog.Expression;
+			return new NeoEdit.Common.Expression(dialog.Expression);
 		}
 	}
 }

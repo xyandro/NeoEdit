@@ -913,8 +913,7 @@ namespace NeoEdit.TextEditor
 				var expression = ExpressionDialog.Run(strs);
 				if (expression != null)
 				{
-					var exp = new NeoEdit.Common.Expression(expression);
-					strs = strs.Select((str, pos) => exp.Evaluate(str, pos + 1).ToString()).ToList();
+					strs = strs.Select((str, pos) => expression.Evaluate(str, pos + 1).ToString()).ToList();
 					Replace(Selections, strs, true);
 				}
 			}
