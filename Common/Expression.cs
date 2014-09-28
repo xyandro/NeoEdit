@@ -77,6 +77,13 @@ namespace NeoEdit.Common
 
 		void SimplifyAndPopulateInternals(ref string expression, out List<object> internals)
 		{
+			if (expression.StartsWith("!"))
+			{
+				if (System.Diagnostics.Debugger.IsAttached)
+					System.Diagnostics.Debugger.Break();
+				expression = expression.Substring(1);
+			}
+
 			internals = new List<object>();
 
 			var result = "";
