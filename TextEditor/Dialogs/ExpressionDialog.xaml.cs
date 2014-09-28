@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.GUI.Common;
@@ -61,7 +60,6 @@ namespace NeoEdit.TextEditor.Dialogs
 
 			uiHelper.AddCallback(a => a.Expression, (o, n) => EvaluateExamples());
 
-			examples = examples.Distinct().ToList();
 			Example1 = examples.Count >= 1 ? examples[0] : null;
 			Example2 = examples.Count >= 2 ? examples[1] : null;
 			Example3 = examples.Count >= 3 ? examples[2] : null;
@@ -73,7 +71,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			Example9 = examples.Count >= 9 ? examples[8] : null;
 			Example10 = examples.Count >= 10 ? examples[9] : null;
 
-			Expression = "[0]";
+			Expression = "x";
 			expression.CaretIndex = expression.Text.Length;
 		}
 
@@ -88,16 +86,16 @@ namespace NeoEdit.TextEditor.Dialogs
 			try
 			{
 				var expression = new NeoEdit.Common.Expression(Expression);
-				Example1Value = expression.Evaluate(Example1);
-				Example2Value = expression.Evaluate(Example2);
-				Example3Value = expression.Evaluate(Example3);
-				Example4Value = expression.Evaluate(Example4);
-				Example5Value = expression.Evaluate(Example5);
-				Example6Value = expression.Evaluate(Example6);
-				Example7Value = expression.Evaluate(Example7);
-				Example8Value = expression.Evaluate(Example8);
-				Example9Value = expression.Evaluate(Example9);
-				Example10Value = expression.Evaluate(Example10);
+				Example1Value = expression.Evaluate(Example1, 1);
+				Example2Value = expression.Evaluate(Example2, 2);
+				Example3Value = expression.Evaluate(Example3, 3);
+				Example4Value = expression.Evaluate(Example4, 4);
+				Example5Value = expression.Evaluate(Example5, 5);
+				Example6Value = expression.Evaluate(Example6, 6);
+				Example7Value = expression.Evaluate(Example7, 7);
+				Example8Value = expression.Evaluate(Example8, 8);
+				Example9Value = expression.Evaluate(Example9, 9);
+				Example10Value = expression.Evaluate(Example10, 10);
 				valid = true;
 			}
 			catch

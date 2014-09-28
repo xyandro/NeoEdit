@@ -914,7 +914,7 @@ namespace NeoEdit.TextEditor
 				if (expression != null)
 				{
 					var exp = new NeoEdit.Common.Expression(expression);
-					strs = strs.Select(str => exp.Evaluate(str).ToString()).ToList();
+					strs = strs.Select((str, pos) => exp.Evaluate(str, pos + 1).ToString()).ToList();
 					Replace(Selections, strs, true);
 				}
 			}
