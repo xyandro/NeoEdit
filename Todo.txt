@@ -9,18 +9,17 @@ Search in multiple files
 Text:
 Bookmarks
 Highlight clauses (if/else)
-Flag selections that DON'T match regex
 Text edit multiple files
 Comment/uncomment C#/C++/XML/etc.
 Format JSON/XML
 Select () in regex find
-Select every nth line gives error when beyond EOF
 Add function to count matches on select unique/duplicates
 Set line endings (\r\n / \n / \r)
 HTML/XML: Match closing tag
 Rename files
 Relative goto line/index should work for all selections
 Make MD5/SHA1 work for other than UTF8
+Regex find: ^ anchors after any find (^. selects everything)
 
 Binary:
 Fix binary editor backwards search

@@ -271,8 +271,8 @@
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Header="_Insert File(s)"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CopyPath" Header="Copy _path"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CopyName" Header="Copy name"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CopyPath" Header="Copy _Path"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CopyName" Header="Copy Name"/>
 				<Separator/>
 				<MenuItem Header="_Encoding" Click="EncodingClick">
 					<MenuItem.ItemContainerStyle>
@@ -297,7 +297,7 @@
 					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Header="Binary editor"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Header="Binary Editor"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="E_xit"/>
@@ -315,8 +315,8 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Header="Find _Prev"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _line"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto c_olumn"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _Line"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto C_olumn"/>
 			</MenuItem>
 			<MenuItem Header="F_iles">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Copy" Header="_Copy"/>
@@ -330,19 +330,19 @@
 				</MenuItem>
 				<MenuItem Header="_Path">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_Simplify" Header="_Simplify"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileName" Header="_File name"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileNameWoExtension" Header="File name w/o extension"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Header="_Directory name"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileName" Header="_File Name"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileNameWoExtension" Header="File Name w/o Extension"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Header="_Directory Name"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Header="_Extension"/>
 				</MenuItem>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_CreateDirectory" Header="Create directory"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_CreateDirectory" Header="Create Directory"/>
 				<MenuItem Header="_Information">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_Size" Header="_Size"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_WriteTime" Header="_Write time"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_AccessTime" Header="_Access time"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_CreateTime" Header="_Create time"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_WriteTime" Header="_Write Time"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_AccessTime" Header="_Access Time"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_CreateTime" Header="_Create Time"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_Attributes" Header="A_ttributes"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_ReadOnly" Header="_Read only"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_ReadOnly" Header="_Read Only"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Data">
@@ -353,12 +353,12 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Toggle" Header="_Toggle"/>
 				</MenuItem>
 				<MenuItem Header="_Hex">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Header="_To hex"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Header="_From hex"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Header="_To Hex"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Header="_From Hex"/>
 				</MenuItem>
 				<MenuItem Header="Ch_ar">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Header="_To char"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Header="_From char"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Header="_To Char"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Header="_From Char"/>
 				</MenuItem>
 				<MenuItem Header="_Date/Time">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_DateTime_Insert" Header="_Insert"/>
@@ -394,14 +394,14 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Keys" Header="_Keys"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Reverse" Header="R_everse"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Randomize" Header="R_andomize"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Length" Header="Sort by len_gth"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Length" Header="Sort By Len_gth"/>
 				<MenuItem Header="_Lines">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_String" Header="_String"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Numeric" Header="_Numeric"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Keys" Header="_Keys"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Reverse" Header="R_everse"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Randomize" Header="R_andomize"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Length" Header="Sort by len_gth"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Length" Header="Sort By Len_gth"/>
 				</MenuItem>
 				<MenuItem Header="_Regions">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_String" Header="_String"/>
@@ -409,7 +409,7 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Keys" Header="_Keys"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Reverse" Header="R_everse"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Randomize" Header="R_andomize"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Length" Header="Sort by len_gth"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Length" Header="Sort By Len_gth"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Keys">
@@ -425,7 +425,7 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues8" Header="Values _8"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues9" Header="Values _9"/>
 				</MenuItem>
-				<MenuItem Header="Selection _replace">
+				<MenuItem Header="Selection _Replace">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace1" Header="Values _1"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace2" Header="Values _2"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace3" Header="Values _3"/>
@@ -436,7 +436,7 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Header="Values _8"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Header="Values _9"/>
 				</MenuItem>
-				<MenuItem Header="Global _find">
+				<MenuItem Header="Global _Find">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFindKeys" Header="_Keys"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind1" Header="Values _1"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind2" Header="Values _2"/>
@@ -448,7 +448,7 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind8" Header="Values _8"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind9" Header="Values _9"/>
 				</MenuItem>
-				<MenuItem Header="_Global replace">
+				<MenuItem Header="_Global Replace">
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace1" Header="Values _1"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace2" Header="Values _2"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace3" Header="Values _3"/>
@@ -497,16 +497,16 @@
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Select">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle Marks/Selection"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Limit" Header="Limit"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_AllLines" Header="All lines"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_AllLines" Header="All Lines"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Marks" Header="_Marks"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find results"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find Results"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Header="Remove empty selections"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Header="Remove Empty Selections"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unique" Header="_Unique"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Header="_Duplicates"/>
@@ -524,20 +524,20 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RegExMatches" Header="_RegEx Matches"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RegExNonMatches" Header="RegEx Non-Matches"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Header="First selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Header="Show current"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Header="Next selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Header="Prev selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Header="First Selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Header="Show Current"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Header="Next Selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Header="Prev Selection"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="S_ingle"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Remove" Header="S_ingle"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle marks/selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle Marks/Selection"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Selection" Header="_Selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Find" Header="_Find results"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Clear" Header="_Clear marks"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_LimitToSelection" Header="_Limit to selection"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Find" Header="_Find Results"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Clear" Header="_Clear Marks"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_LimitToSelection" Header="_Limit To Selection"/>
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={guiCommon:ExpressionConverter}, ConverterParameter=Type:#27#NeoEdit.TextEditor.Highlighting+HighlightingType#27#}">
