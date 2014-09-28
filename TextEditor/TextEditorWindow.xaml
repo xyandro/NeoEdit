@@ -179,6 +179,9 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Min_Numeric" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Max_String" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Max_Numeric" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ExpressionMatches" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_RegExMatches" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_RegExNonMatches" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Executed="Command_Executed"/>
@@ -503,7 +506,7 @@
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Marks" Header="_Marks"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find results"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Header="Remove _empty selections"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Header="Remove empty selections"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unique" Header="_Unique"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Header="_Duplicates"/>
@@ -516,6 +519,10 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Max_String" Header="_String"/>
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Max_Numeric" Header="_Numeric"/>
 				</MenuItem>
+				<Separator/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ExpressionMatches" Header="_Expression Matches"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RegExMatches" Header="_RegEx Matches"/>
+				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RegExNonMatches" Header="RegEx Non-Matches"/>
 				<Separator/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Header="First selection"/>
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Header="Show current"/>

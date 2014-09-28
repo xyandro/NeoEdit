@@ -102,6 +102,9 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Select_Min_Numeric = new RoutedCommand();
 		public static RoutedCommand Command_Select_Max_String = new RoutedCommand();
 		public static RoutedCommand Command_Select_Max_Numeric = new RoutedCommand();
+		public static RoutedCommand Command_Select_ExpressionMatches = new RoutedCommand();
+		public static RoutedCommand Command_Select_RegExMatches = new RoutedCommand();
+		public static RoutedCommand Command_Select_RegExNonMatches = new RoutedCommand();
 		public static RoutedCommand Command_Select_ShowFirst = new RoutedCommand();
 		public static RoutedCommand Command_Select_ShowCurrent = new RoutedCommand();
 		public static RoutedCommand Command_Select_NextSelection = new RoutedCommand();
@@ -910,7 +913,7 @@ namespace NeoEdit.TextEditor
 			else if (command == Command_Data_EvaluateExpression)
 			{
 				var strs = Selections.Select(range => GetString(range)).ToList();
-				var expression = ExpressionDialog.Run(strs);
+				var expression = ExpressionDialog.GetExpression(strs);
 				if (expression != null)
 				{
 					strs = strs.Select((str, pos) => expression.Evaluate(str, pos + 1).ToString()).ToList();
@@ -1073,6 +1076,45 @@ namespace NeoEdit.TextEditor
 				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
 				var first = selections.Last().str;
 				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
+			}
+			else if (command == Command_Select_ExpressionMatches)
+			{
+				var strs = Selections.Select(range => GetString(range)).ToList();
+				var expression = ExpressionDialog.GetExpression(strs);
+				if (expression != null)
+				{
+					var sels = new RangeList();
+					for (var ctr = 0; ctr < strs.Count; ++ctr)
+						if ((bool)expression.Evaluate(strs[ctr], ctr + 1))
+							sels.Add(Selections[ctr]);
+					Selections.Replace(sels);
+				}
+			}
+			else if (command == Command_Select_RegExMatches)
+			{
+				var strs = Selections.Select(range => GetString(range)).ToList();
+				var expression = ExpressionDialog.GetRegEx(strs);
+				if (expression != null)
+				{
+					var sels = new RangeList();
+					for (var ctr = 0; ctr < strs.Count; ++ctr)
+						if (expression.IsMatch(strs[ctr]))
+							sels.Add(Selections[ctr]);
+					Selections.Replace(sels);
+				}
+			}
+			else if (command == Command_Select_RegExNonMatches)
+			{
+				var strs = Selections.Select(range => GetString(range)).ToList();
+				var expression = ExpressionDialog.GetRegEx(strs);
+				if (expression != null)
+				{
+					var sels = new RangeList();
+					for (var ctr = 0; ctr < strs.Count; ++ctr)
+						if (!expression.IsMatch(strs[ctr]))
+							sels.Add(Selections[ctr]);
+					Selections.Replace(sels);
+				}
 			}
 			else if (command == Command_Select_ShowFirst)
 			{
