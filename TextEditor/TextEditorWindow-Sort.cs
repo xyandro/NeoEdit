@@ -51,10 +51,10 @@ namespace NeoEdit.TextEditor
 				default: throw new Exception("Invalid sort type");
 			}
 
+			// Sanity check; soundn't happen
 			if (Selections.Count != regions.Count)
 				throw new Exception("Selections and regions counts must match");
 
-			// Sanity check; soundn't happen
 			var orderedRegions = regions.OrderBy(range => range.Start).ToList();
 			var pos = 0;
 			foreach (var range in orderedRegions)
