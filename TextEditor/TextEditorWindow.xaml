@@ -12,253 +12,6 @@
 		</MultiBinding>
 	</Window.Title>
 
-	<Window.CommandBindings>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_New" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Open" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Save" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Revert" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_CheckUpdates" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_CopyPath" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_CopyName" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_BOM" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Undo" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Redo" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Cut" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Copy" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Paste" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Copy" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Cut" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Delete" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Write" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Access" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Create" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Timestamp_All" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_Simplify" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileName" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileNameWoExtension" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_CreateDirectory" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_Size" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_WriteTime" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_AccessTime" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_CreateTime" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_Attributes" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Files_Information_ReadOnly" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Upper" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Lower" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Proper" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Toggle" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_DateTime_Insert" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_DateTime_Convert" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Length" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Width" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Trim" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_EvaluateExpression" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Series" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_GUID" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Random" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Escape_XML" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Escape_Regex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unescape_XML" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unescape_Regex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF16LE" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF16BE" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF32LE" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF32BE" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF16LE" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF16BE" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF32LE" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF32BE" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_String" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Numeric" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Keys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Reverse" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Randomize" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Length" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Lines_String" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Lines_Numeric" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Lines_Keys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Lines_Reverse" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Lines_Randomize" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Lines_Length" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Regions_String" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Regions_Numeric" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Regions_Keys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Regions_Reverse" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Regions_Randomize" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Regions_Length" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetKeys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues1" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues2" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues3" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues4" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues6" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues9" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace1" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace2" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace3" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace4" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace6" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFindKeys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind1" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind2" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind3" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind4" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind6" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind9" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace1" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace2" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace3" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace4" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace6" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace9" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyKeys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues1" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues2" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues3" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues4" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues6" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_CopyValues9" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsKeys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues1" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues2" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues3" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues4" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues6" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_HitsValues9" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesKeys" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues1" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues2" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues3" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues4" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues6" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues7" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues8" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Keys_MissesValues9" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_All" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Limit" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_AllLines" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Lines" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Marks" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Find" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Unique" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Min_String" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Min_Numeric" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Max_String" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Max_Numeric" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ExpressionMatches" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_RegExMatches" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_RegExNonMatches" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Select_Remove" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Selection" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Find" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_Clear" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Mark_LimitToSelection" Executed="Command_Executed"/>
-	</Window.CommandBindings>
-
-	<Window.InputBindings>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_File_New" Key="N" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_File_Open" Key="O" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_File_Save" Key="S" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Undo" Key="Z" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Redo" Key="Z" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Cut" Key="X" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Copy" Key="C" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Paste" Key="V" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Key="C" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Key="F" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_Find" Key="F" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Key="F3"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Key="F3" Modifiers="Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Key="G" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Upper" Key="U" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Lower" Key="U" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Key="H" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_EvaluateExpression" Key="E" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Key="R" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetKeys" Key="K" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues1" Key="D1" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues2" Key="D2" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues3" Key="D3" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues4" Key="D4" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues5" Key="D5" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues6" Key="D6" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues7" Key="D7" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues8" Key="D8" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues9" Key="D9" Modifiers="Control+Shift"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace1" Key="D1" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace2" Key="D2" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace3" Key="D3" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace4" Key="D4" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace5" Key="D5" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace6" Key="D6" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace7" Key="D7" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Key="D8" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Key="D9" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Key="M" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_All" Key="A" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_AllLines" Key="L" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Key="D0" Modifiers="Alt"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Alt"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Key="Space" Modifiers="Control"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Key="Down" Modifiers="Alt"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Key="Up" Modifiers="Alt"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_Single" Key="Enter" Modifiers="Alt"/>
-		<KeyBinding Command="textEditor:TextEditorWindow.Command_Select_Remove" Key="OemMinus" Modifiers="Alt"/>
-	</Window.InputBindings>
-
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
@@ -273,17 +26,17 @@
 
 		<Menu Grid.ColumnSpan="2">
 			<MenuItem Header="_File">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_New" Header="_New"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Open" Header="_Open"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Save" Header="_Save"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_SaveAs" Header="Save _As"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Revert" Header="Re_vert"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CheckUpdates" Header="Check _Updates" IsChecked="{Binding CheckUpdates, ElementName=self}"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_New"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_Open"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_Save"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_SaveAs"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_Revert"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_CheckUpdates" IsChecked="{Binding CheckUpdates, ElementName=self}"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_InsertFiles" Header="_Insert File(s)"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_InsertFiles"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CopyPath" Header="Copy _Path"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_CopyName" Header="Copy Name"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_CopyPath"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_CopyName"/>
 				<Separator/>
 				<MenuItem Header="_Encoding" Click="EncodingClick">
 					<MenuItem.ItemContainerStyle>
@@ -308,261 +61,261 @@
 					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BinaryEditor" Header="Binary Editor"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_BOM" Header="_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_BinaryEditor"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_File_Exit" Header="E_xit"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_Exit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Undo" Header="_Undo"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Redo" Header="_Redo"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_Undo"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_Redo"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Cut" Header="C_ut"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Copy" Header="_Copy"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Paste" Header="_Paste"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_Cut"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_Copy"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_Paste"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_ShowClipboard"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_Find" Header="_Find"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_FindPrev" Header="Find _Prev"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_Find"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_FindNext"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_FindPrev"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoLine" Header="Goto _Line"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Edit_GotoIndex" Header="Goto C_olumn"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_GotoLine"/>
+				<textEditor:TextEditMenuItem CommandEnum="Edit_GotoIndex"/>
 			</MenuItem>
 			<MenuItem Header="F_iles">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Copy" Header="_Copy"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Cut" Header="C_ut"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Delete" Header="_Delete"/>
+				<textEditor:TextEditMenuItem CommandEnum="Files_Copy"/>
+				<textEditor:TextEditMenuItem CommandEnum="Files_Cut"/>
+				<textEditor:TextEditMenuItem CommandEnum="Files_Delete"/>
 				<MenuItem Header="_Timestamp">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Write" Header="_Write"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Access" Header="_Access"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_Create" Header="_Create"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Timestamp_All" Header="A_ll"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Timestamp_Write"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Timestamp_Access"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Timestamp_Create"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Timestamp_All"/>
 				</MenuItem>
 				<MenuItem Header="_Path">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_Simplify" Header="_Simplify"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileName" Header="_File Name"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetFileNameWoExtension" Header="File Name w/o Extension"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetDirectory" Header="_Directory Name"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Path_GetExtension" Header="_Extension"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Path_Simplify"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Path_GetFileName"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Path_GetFileNameWoExtension"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Path_GetDirectory"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Path_GetExtension"/>
 				</MenuItem>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Files_CreateDirectory" Header="Create Directory"/>
+				<textEditor:TextEditMenuItem CommandEnum="Files_CreateDirectory"/>
 				<MenuItem Header="_Information">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_Size" Header="_Size"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_WriteTime" Header="_Write Time"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_AccessTime" Header="_Access Time"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_CreateTime" Header="_Create Time"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_Attributes" Header="A_ttributes"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Files_Information_ReadOnly" Header="_Read Only"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Information_Size"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Information_WriteTime"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Information_AccessTime"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Information_CreateTime"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Information_Attributes"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Information_ReadOnly"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Upper" Header="_Upper"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Lower" Header="_Lower"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Proper" Header="_Proper"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Case_Toggle" Header="_Toggle"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Case_Upper"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Case_Lower"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Case_Proper"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Case_Toggle"/>
 				</MenuItem>
 				<MenuItem Header="_Hex">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Header="_To Hex"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Header="_From Hex"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Hex_ToHex"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Hex_FromHex"/>
 				</MenuItem>
 				<MenuItem Header="Ch_ar">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_ToChar" Header="_To Char"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Char_FromChar" Header="_From Char"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Char_ToChar"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Char_FromChar"/>
 				</MenuItem>
 				<MenuItem Header="_Date/Time">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_DateTime_Insert" Header="_Insert"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_DateTime_Convert" Header="_Convert"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_DateTime_Insert"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_DateTime_Convert"/>
 				</MenuItem>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Length" Header="_Length"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Width" Header="_Width"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Trim" Header="_Trim"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Length"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Width"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Trim"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_EvaluateExpression" Header="Evaluate _Expression"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Series" Header="_Series"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Repeat" Header="_Repeat"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_EvaluateExpression"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Series"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Repeat"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_GUID" Header="Insert _GUID"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Random" Header="Insert Random Number"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_GUID"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Random"/>
 				<Separator/>
 				<MenuItem Header="Escape">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Escape_XML" Header="XML"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Escape_Regex" Header="Regex"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Escape_XML"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Escape_Regex"/>
 				</MenuItem>
 				<MenuItem Header="Unescape">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unescape_XML" Header="XML"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unescape_Regex" Header="Regex"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Unescape_XML"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Unescape_Regex"/>
 				</MenuItem>
 				<Separator/>
 				<MenuItem Header="MD_5">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF8" Header="UTF8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF7" Header="UTF7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF16LE" Header="UTF16LE"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF16BE" Header="UTF16BE"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF32LE" Header="UTF32LE"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF32BE" Header="UTF32BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_MD5_UTF8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_MD5_UTF7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_MD5_UTF16LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_MD5_UTF16BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_MD5_UTF32LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_MD5_UTF32BE"/>
 				</MenuItem>
 				<MenuItem Header="SHA_1">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF8" Header="UTF8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF7" Header="UTF7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF16LE" Header="UTF16LE"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF16BE" Header="UTF16BE"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF32LE" Header="UTF32LE"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF32BE" Header="UTF32BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_SHA1_UTF8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_SHA1_UTF7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_SHA1_UTF16LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_SHA1_UTF16BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_SHA1_UTF32LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_SHA1_UTF32BE"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="S_ort">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_String" Header="_String"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Numeric" Header="_Numeric"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Keys" Header="_Keys"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Reverse" Header="R_everse"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Randomize" Header="R_andomize"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Length" Header="Sort By Len_gth"/>
+				<textEditor:TextEditMenuItem CommandEnum="Sort_String"/>
+				<textEditor:TextEditMenuItem CommandEnum="Sort_Numeric"/>
+				<textEditor:TextEditMenuItem CommandEnum="Sort_Keys"/>
+				<textEditor:TextEditMenuItem CommandEnum="Sort_Reverse"/>
+				<textEditor:TextEditMenuItem CommandEnum="Sort_Randomize"/>
+				<textEditor:TextEditMenuItem CommandEnum="Sort_Length"/>
 				<MenuItem Header="_Lines">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_String" Header="_String"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Numeric" Header="_Numeric"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Keys" Header="_Keys"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Reverse" Header="R_everse"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Randomize" Header="R_andomize"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Lines_Length" Header="Sort By Len_gth"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Lines_String"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Lines_Numeric"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Lines_Keys"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Lines_Reverse"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Lines_Randomize"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Lines_Length"/>
 				</MenuItem>
 				<MenuItem Header="_Regions">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_String" Header="_String"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Numeric" Header="_Numeric"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Keys" Header="_Keys"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Reverse" Header="R_everse"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Randomize" Header="R_andomize"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_Regions_Length" Header="Sort By Len_gth"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Regions_String"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Regions_Numeric"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Regions_Keys"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Regions_Reverse"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Regions_Randomize"/>
+					<textEditor:TextEditMenuItem CommandEnum="Sort_Regions_Length"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Keys">
 				<MenuItem Header="_Set">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetKeys" Header="_Keys"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues1" Header="Values _1"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues2" Header="Values _2"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues3" Header="Values _3"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues4" Header="Values _4"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues5" Header="Values _5"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues6" Header="Values _6"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues7" Header="Values _7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues8" Header="Values _8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SetValues9" Header="Values _9"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetKeys"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues1"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues2"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues3"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues4"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues5"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues6"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SetValues9"/>
 				</MenuItem>
 				<MenuItem Header="Selection _Replace">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace1" Header="Values _1"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace2" Header="Values _2"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace3" Header="Values _3"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace4" Header="Values _4"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace5" Header="Values _5"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace6" Header="Values _6"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace7" Header="Values _7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace8" Header="Values _8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_SelectionReplace9" Header="Values _9"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace1"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace2"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace3"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace4"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace5"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace6"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_SelectionReplace9"/>
 				</MenuItem>
 				<MenuItem Header="Global _Find">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFindKeys" Header="_Keys"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind1" Header="Values _1"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind2" Header="Values _2"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind3" Header="Values _3"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind4" Header="Values _4"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind5" Header="Values _5"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind6" Header="Values _6"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind7" Header="Values _7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind8" Header="Values _8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalFind9" Header="Values _9"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFindKeys"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind1"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind2"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind3"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind4"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind5"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind6"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalFind9"/>
 				</MenuItem>
 				<MenuItem Header="_Global Replace">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace1" Header="Values _1"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace2" Header="Values _2"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace3" Header="Values _3"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace4" Header="Values _4"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace5" Header="Values _5"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace6" Header="Values _6"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace7" Header="Values _7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace8" Header="Values _8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_GlobalReplace9" Header="Values _9"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace1"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace2"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace3"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace4"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace5"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace6"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_GlobalReplace9"/>
 				</MenuItem>
 				<MenuItem Header="_Copy">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyKeys" Header="_Keys"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues1" Header="Values _1"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues2" Header="Values _2"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues3" Header="Values _3"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues4" Header="Values _4"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues5" Header="Values _5"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues6" Header="Values _6"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues7" Header="Values _7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues8" Header="Values _8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_CopyValues9" Header="Values _9"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyKeys"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues1"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues2"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues3"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues4"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues5"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues6"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_CopyValues9"/>
 				</MenuItem>
 				<MenuItem Header="_Hits">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsKeys" Header="_Keys"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues1" Header="Values _1"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues2" Header="Values _2"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues3" Header="Values _3"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues4" Header="Values _4"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues5" Header="Values _5"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues6" Header="Values _6"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues7" Header="Values _7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues8" Header="Values _8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_HitsValues9" Header="Values _9"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsKeys"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues1"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues2"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues3"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues4"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues5"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues6"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_HitsValues9"/>
 				</MenuItem>
 				<MenuItem Header="_Misses">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesKeys" Header="_Keys"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues1" Header="Values _1"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues2" Header="Values _2"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues3" Header="Values _3"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues4" Header="Values _4"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues5" Header="Values _5"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues6" Header="Values _6"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues7" Header="Values _7"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues8" Header="Values _8"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Keys_MissesValues9" Header="Values _9"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesKeys"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues1"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues2"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues3"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues4"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues5"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues6"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues9"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Select">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle Marks/Selection"/>
+				<textEditor:TextEditMenuItem CommandEnum="SelectMark_Toggle"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_All" Header="_All"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Limit" Header="Limit"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_AllLines" Header="All Lines"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Lines" Header="_Lines"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Marks" Header="_Marks"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Find" Header="_Find Results"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_All"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_Limit"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_AllLines"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_Lines"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_Marks"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_Find"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RemoveEmpty" Header="Remove Empty Selections"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_RemoveEmpty"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Unique" Header="_Unique"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Duplicates" Header="_Duplicates"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_Unique"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_Duplicates"/>
 				<Separator/>
 				<MenuItem Header="Min">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Min_String" Header="_String"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Min_Numeric" Header="_Numeric"/>
+					<textEditor:TextEditMenuItem CommandEnum="Select_Min_String"/>
+					<textEditor:TextEditMenuItem CommandEnum="Select_Min_Numeric"/>
 				</MenuItem>
 				<MenuItem Header="Max">
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Max_String" Header="_String"/>
-					<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Max_Numeric" Header="_Numeric"/>
+					<textEditor:TextEditMenuItem CommandEnum="Select_Max_String"/>
+					<textEditor:TextEditMenuItem CommandEnum="Select_Max_Numeric"/>
 				</MenuItem>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ExpressionMatches" Header="_Expression Matches"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RegExMatches" Header="_RegEx Matches"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_RegExNonMatches" Header="RegEx Non-Matches"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_ExpressionMatches"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_RegExMatches"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_RegExNonMatches"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowFirst" Header="First Selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_ShowCurrent" Header="Show Current"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_NextSelection" Header="Next Selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_PrevSelection" Header="Prev Selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Single" Header="S_ingle"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Select_Remove" Header="S_ingle"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_ShowFirst"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_ShowCurrent"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_NextSelection"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_PrevSelection"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_Single"/>
+				<textEditor:TextEditMenuItem CommandEnum="Select_Remove"/>
 			</MenuItem>
 			<MenuItem Header="_Mark">
-				<MenuItem Command="textEditor:TextEditorWindow.Command_SelectMark_Toggle" Header="Toggle Marks/Selection"/>
+				<textEditor:TextEditMenuItem CommandEnum="SelectMark_Toggle"/>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Selection" Header="_Selection"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Find" Header="_Find Results"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_Clear" Header="_Clear Marks"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Mark_LimitToSelection" Header="_Limit To Selection"/>
+				<textEditor:TextEditMenuItem CommandEnum="Mark_Selection"/>
+				<textEditor:TextEditMenuItem CommandEnum="Mark_Find"/>
+				<textEditor:TextEditMenuItem CommandEnum="Mark_Clear"/>
+				<textEditor:TextEditMenuItem CommandEnum="Mark_LimitToSelection"/>
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Header="_Highlighting" ItemsSource="{Binding Converter={guiCommon:ExpressionConverter}, ConverterParameter=Type:#27#NeoEdit.TextEditor.Highlighting+HighlightingType#27#}">

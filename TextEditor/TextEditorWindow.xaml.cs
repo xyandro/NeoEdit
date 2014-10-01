@@ -22,110 +22,6 @@ namespace NeoEdit.TextEditor
 {
 	public partial class TextEditorWindow
 	{
-		public static RoutedCommand Command_File_New = new RoutedCommand();
-		public static RoutedCommand Command_File_Open = new RoutedCommand();
-		public static RoutedCommand Command_File_Save = new RoutedCommand();
-		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
-		public static RoutedCommand Command_File_Revert = new RoutedCommand();
-		public static RoutedCommand Command_File_CheckUpdates = new RoutedCommand();
-		public static RoutedCommand Command_File_InsertFiles = new RoutedCommand();
-		public static RoutedCommand Command_File_CopyPath = new RoutedCommand();
-		public static RoutedCommand Command_File_CopyName = new RoutedCommand();
-		public static RoutedCommand Command_File_BinaryEditor = new RoutedCommand();
-		public static RoutedCommand Command_File_BOM = new RoutedCommand();
-		public static RoutedCommand Command_File_Exit = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Undo = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Redo = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Cut = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Copy = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Paste = new RoutedCommand();
-		public static RoutedCommand Command_Edit_ShowClipboard = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Find = new RoutedCommand();
-		public static RoutedCommand Command_Edit_FindNext = new RoutedCommand();
-		public static RoutedCommand Command_Edit_FindPrev = new RoutedCommand();
-		public static RoutedCommand Command_Edit_GotoLine = new RoutedCommand();
-		public static RoutedCommand Command_Edit_GotoIndex = new RoutedCommand();
-		public static RoutedCommand Command_Files_Copy = new RoutedCommand();
-		public static RoutedCommand Command_Files_Cut = new RoutedCommand();
-		public static RoutedCommand Command_Files_Delete = new RoutedCommand();
-		public static RoutedCommand Command_Files_Timestamp_Write = new RoutedCommand();
-		public static RoutedCommand Command_Files_Timestamp_Access = new RoutedCommand();
-		public static RoutedCommand Command_Files_Timestamp_Create = new RoutedCommand();
-		public static RoutedCommand Command_Files_Timestamp_All = new RoutedCommand();
-		public static RoutedCommand Command_Files_Path_Simplify = new RoutedCommand();
-		public static RoutedCommand Command_Files_Path_GetFileName = new RoutedCommand();
-		public static RoutedCommand Command_Files_Path_GetFileNameWoExtension = new RoutedCommand();
-		public static RoutedCommand Command_Files_Path_GetDirectory = new RoutedCommand();
-		public static RoutedCommand Command_Files_Path_GetExtension = new RoutedCommand();
-		public static RoutedCommand Command_Files_CreateDirectory = new RoutedCommand();
-		public static RoutedCommand Command_Files_Information_Size = new RoutedCommand();
-		public static RoutedCommand Command_Files_Information_WriteTime = new RoutedCommand();
-		public static RoutedCommand Command_Files_Information_AccessTime = new RoutedCommand();
-		public static RoutedCommand Command_Files_Information_CreateTime = new RoutedCommand();
-		public static RoutedCommand Command_Files_Information_Attributes = new RoutedCommand();
-		public static RoutedCommand Command_Files_Information_ReadOnly = new RoutedCommand();
-		public static RoutedCommand Command_Data_Case_Upper = new RoutedCommand();
-		public static RoutedCommand Command_Data_Case_Lower = new RoutedCommand();
-		public static RoutedCommand Command_Data_Case_Proper = new RoutedCommand();
-		public static RoutedCommand Command_Data_Case_Toggle = new RoutedCommand();
-		public static RoutedCommand Command_Data_Hex_ToHex = new RoutedCommand();
-		public static RoutedCommand Command_Data_Hex_FromHex = new RoutedCommand();
-		public static RoutedCommand Command_Data_Char_ToChar = new RoutedCommand();
-		public static RoutedCommand Command_Data_Char_FromChar = new RoutedCommand();
-		public static RoutedCommand Command_Data_DateTime_Insert = new RoutedCommand();
-		public static RoutedCommand Command_Data_DateTime_Convert = new RoutedCommand();
-		public static RoutedCommand Command_Data_Length = new RoutedCommand();
-		public static RoutedCommand Command_Data_Width = new RoutedCommand();
-		public static RoutedCommand Command_Data_Trim = new RoutedCommand();
-		public static RoutedCommand Command_Data_EvaluateExpression = new RoutedCommand();
-		public static RoutedCommand Command_Data_Series = new RoutedCommand();
-		public static RoutedCommand Command_Data_Repeat = new RoutedCommand();
-		public static RoutedCommand Command_Data_GUID = new RoutedCommand();
-		public static RoutedCommand Command_Data_Random = new RoutedCommand();
-		public static RoutedCommand Command_Data_Escape_XML = new RoutedCommand();
-		public static RoutedCommand Command_Data_Escape_Regex = new RoutedCommand();
-		public static RoutedCommand Command_Data_Unescape_XML = new RoutedCommand();
-		public static RoutedCommand Command_Data_Unescape_Regex = new RoutedCommand();
-		public static RoutedCommand Command_Data_MD5_UTF8 = new RoutedCommand();
-		public static RoutedCommand Command_Data_MD5_UTF7 = new RoutedCommand();
-		public static RoutedCommand Command_Data_MD5_UTF16LE = new RoutedCommand();
-		public static RoutedCommand Command_Data_MD5_UTF16BE = new RoutedCommand();
-		public static RoutedCommand Command_Data_MD5_UTF32LE = new RoutedCommand();
-		public static RoutedCommand Command_Data_MD5_UTF32BE = new RoutedCommand();
-		public static RoutedCommand Command_Data_SHA1_UTF8 = new RoutedCommand();
-		public static RoutedCommand Command_Data_SHA1_UTF7 = new RoutedCommand();
-		public static RoutedCommand Command_Data_SHA1_UTF16LE = new RoutedCommand();
-		public static RoutedCommand Command_Data_SHA1_UTF16BE = new RoutedCommand();
-		public static RoutedCommand Command_Data_SHA1_UTF32LE = new RoutedCommand();
-		public static RoutedCommand Command_Data_SHA1_UTF32BE = new RoutedCommand();
-		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();
-		public static RoutedCommand Command_Select_All = new RoutedCommand();
-		public static RoutedCommand Command_Select_Limit = new RoutedCommand();
-		public static RoutedCommand Command_Select_AllLines = new RoutedCommand();
-		public static RoutedCommand Command_Select_Lines = new RoutedCommand();
-		public static RoutedCommand Command_Select_Marks = new RoutedCommand();
-		public static RoutedCommand Command_Select_Find = new RoutedCommand();
-		public static RoutedCommand Command_Select_RemoveEmpty = new RoutedCommand();
-		public static RoutedCommand Command_Select_Unique = new RoutedCommand();
-		public static RoutedCommand Command_Select_Duplicates = new RoutedCommand();
-		public static RoutedCommand Command_Select_Min_String = new RoutedCommand();
-		public static RoutedCommand Command_Select_Min_Numeric = new RoutedCommand();
-		public static RoutedCommand Command_Select_Max_String = new RoutedCommand();
-		public static RoutedCommand Command_Select_Max_Numeric = new RoutedCommand();
-		public static RoutedCommand Command_Select_ExpressionMatches = new RoutedCommand();
-		public static RoutedCommand Command_Select_RegExMatches = new RoutedCommand();
-		public static RoutedCommand Command_Select_RegExNonMatches = new RoutedCommand();
-		public static RoutedCommand Command_Select_ShowFirst = new RoutedCommand();
-		public static RoutedCommand Command_Select_ShowCurrent = new RoutedCommand();
-		public static RoutedCommand Command_Select_NextSelection = new RoutedCommand();
-		public static RoutedCommand Command_Select_PrevSelection = new RoutedCommand();
-		public static RoutedCommand Command_Select_Single = new RoutedCommand();
-		public static RoutedCommand Command_Select_Remove = new RoutedCommand();
-		public static RoutedCommand Command_Mark_Selection = new RoutedCommand();
-		public static RoutedCommand Command_Mark_Find = new RoutedCommand();
-		public static RoutedCommand Command_Mark_Clear = new RoutedCommand();
-		public static RoutedCommand Command_Mark_LimitToSelection = new RoutedCommand();
-
 		TextData _data = new TextData();
 		TextData Data
 		{
@@ -188,6 +84,7 @@ namespace NeoEdit.TextEditor
 		public TextEditorWindow(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
 		{
 			uiHelper = new UIHelper<TextEditorWindow>(this);
+			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 
 			CheckUpdates = true;
@@ -275,7 +172,7 @@ namespace NeoEdit.TextEditor
 								DefaultAccept = Message.OptionsEnum.Yes,
 								DefaultCancel = Message.OptionsEnum.No,
 							}.Show() == Message.OptionsEnum.Yes)
-								RunCommand(Command_File_Revert);
+								RunCommand(TextEditCommand.File_Revert);
 						}
 						fileLastWrite = lastWrite;
 					}
@@ -327,11 +224,6 @@ namespace NeoEdit.TextEditor
 			e.Handled = true;
 		}
 
-		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
-		{
-			RunCommand(e.Command);
-		}
-
 		int BeginOffset()
 		{
 			return Data.GetOffset(0, 0);
@@ -378,7 +270,7 @@ namespace NeoEdit.TextEditor
 				case Message.OptionsEnum.Cancel: return false;
 				case Message.OptionsEnum.No: return true;
 				case Message.OptionsEnum.Yes:
-					RunCommand(Command_File_Save);
+					RunCommand(TextEditCommand.File_Save);
 					return ModifiedSteps == 0;
 			}
 			return false;
@@ -395,7 +287,7 @@ namespace NeoEdit.TextEditor
 			base.OnClosing(e);
 		}
 
-		Range TranslateFileNameDirectoryExtensionRange(ICommand command, Range range)
+		Range TranslateFileNameDirectoryExtensionRange(TextEditCommand command, Range range)
 		{
 			var path = GetString(range);
 			var dirLength = Math.Max(0, path.LastIndexOf('\\'));
@@ -404,43 +296,43 @@ namespace NeoEdit.TextEditor
 			var dirTotal = dirLength == 0 ? 0 : dirLength + 1;
 			var extLen = Path.GetExtension(path).Length;
 
-			if (command == Command_Files_Path_GetFileName)
+			if (command == TextEditCommand.Files_Path_GetFileName)
 				return new Range(range.Start + dirTotal, range.End);
-			if (command == Command_Files_Path_GetFileNameWoExtension)
+			if (command == TextEditCommand.Files_Path_GetFileNameWoExtension)
 				return new Range(range.Start + dirTotal, range.End - extLen);
-			if (command == Command_Files_Path_GetDirectory)
+			if (command == TextEditCommand.Files_Path_GetDirectory)
 				return new Range(range.Start, range.Start + dirLength);
-			else if (command == Command_Files_Path_GetExtension)
+			else if (command == TextEditCommand.Files_Path_GetExtension)
 				return new Range(range.End - extLen, range.End);
 
 			throw new ArgumentException();
 		}
 
-		Coder.Type GetChecksumCoder(ICommand command)
+		Coder.Type GetChecksumCoder(TextEditCommand command)
 		{
-			if ((command == Command_Data_MD5_UTF8) || (command == Command_Data_SHA1_UTF8))
+			if ((command == TextEditCommand.Data_MD5_UTF8) || (command == TextEditCommand.Data_SHA1_UTF8))
 				return Coder.Type.UTF8;
-			if ((command == Command_Data_MD5_UTF7) || (command == Command_Data_SHA1_UTF7))
+			if ((command == TextEditCommand.Data_MD5_UTF7) || (command == TextEditCommand.Data_SHA1_UTF7))
 				return Coder.Type.UTF7;
-			if ((command == Command_Data_MD5_UTF16LE) || (command == Command_Data_SHA1_UTF16LE))
+			if ((command == TextEditCommand.Data_MD5_UTF16LE) || (command == TextEditCommand.Data_SHA1_UTF16LE))
 				return Coder.Type.UTF16LE;
-			if ((command == Command_Data_MD5_UTF16BE) || (command == Command_Data_SHA1_UTF16BE))
+			if ((command == TextEditCommand.Data_MD5_UTF16BE) || (command == TextEditCommand.Data_SHA1_UTF16BE))
 				return Coder.Type.UTF16BE;
-			if ((command == Command_Data_MD5_UTF32LE) || (command == Command_Data_SHA1_UTF32LE))
+			if ((command == TextEditCommand.Data_MD5_UTF32LE) || (command == TextEditCommand.Data_SHA1_UTF32LE))
 				return Coder.Type.UTF32LE;
-			if ((command == Command_Data_MD5_UTF32BE) || (command == Command_Data_SHA1_UTF32BE))
+			if ((command == TextEditCommand.Data_MD5_UTF32BE) || (command == TextEditCommand.Data_SHA1_UTF32BE))
 				return Coder.Type.UTF32BE;
 			throw new Exception("No checksum coder available");
 		}
 
-		void RunCommand(ICommand command)
+		void RunCommand(TextEditCommand command)
 		{
 			InvalidateCanvas();
 
 			var shiftDown = this.shiftDown;
 			shiftOverride = shiftDown;
 
-			if (command == Command_File_New)
+			if (command == TextEditCommand.File_New)
 			{
 				if (ConfirmModified())
 				{
@@ -449,7 +341,7 @@ namespace NeoEdit.TextEditor
 					ModifiedSteps = 0;
 				}
 			}
-			else if (command == Command_File_Open)
+			else if (command == TextEditCommand.File_Open)
 			{
 				if (ConfirmModified())
 				{
@@ -458,10 +350,10 @@ namespace NeoEdit.TextEditor
 						OpenFile(dialog.FileName);
 				}
 			}
-			else if (command == Command_File_Save)
+			else if (command == TextEditCommand.File_Save)
 			{
 				if (FileName == null)
-					RunCommand(Command_File_SaveAs);
+					RunCommand(TextEditCommand.File_SaveAs);
 				else
 				{
 					File.WriteAllBytes(FileName, Data.GetBytes(CoderUsed));
@@ -469,7 +361,7 @@ namespace NeoEdit.TextEditor
 					ModifiedSteps = 0;
 				}
 			}
-			else if (command == Command_File_SaveAs)
+			else if (command == TextEditCommand.File_SaveAs)
 			{
 				var dialog = new SaveFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
 				if (dialog.ShowDialog() == true)
@@ -479,10 +371,10 @@ namespace NeoEdit.TextEditor
 					if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
 						throw new Exception("Directory doesn't exist.");
 					FileName = dialog.FileName;
-					RunCommand(Command_File_Save);
+					RunCommand(TextEditCommand.File_Save);
 				}
 			}
-			else if (command == Command_File_Revert)
+			else if (command == TextEditCommand.File_Revert)
 			{
 				var run = true;
 
@@ -501,9 +393,9 @@ namespace NeoEdit.TextEditor
 				if (run)
 					OpenFile(FileName);
 			}
-			else if (command == Command_File_CheckUpdates)
+			else if (command == TextEditCommand.File_CheckUpdates)
 				CheckUpdates = !CheckUpdates;
-			else if (command == Command_File_InsertFiles)
+			else if (command == TextEditCommand.File_InsertFiles)
 			{
 				var run = true;
 
@@ -538,25 +430,25 @@ namespace NeoEdit.TextEditor
 					}
 				}
 			}
-			else if (command == Command_File_CopyPath)
+			else if (command == TextEditCommand.File_CopyPath)
 				Clipboard.SetText(FileName);
-			else if (command == Command_File_CopyName)
+			else if (command == TextEditCommand.File_CopyName)
 				Clipboard.SetText(Path.GetFileName(FileName));
-			else if (command == Command_File_BinaryEditor)
+			else if (command == TextEditCommand.File_BinaryEditor)
 			{
 				Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed));
 				this.Close();
 			}
-			else if (command == Command_File_BOM)
+			else if (command == TextEditCommand.File_BOM)
 			{
 				if (Data.BOM)
 					Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
 				else
 					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
 			}
-			else if (command == Command_File_Exit)
+			else if (command == TextEditCommand.File_Exit)
 				Close();
-			else if (command == Command_Edit_Undo)
+			else if (command == TextEditCommand.Edit_Undo)
 			{
 				if (undo.Count != 0)
 				{
@@ -565,7 +457,7 @@ namespace NeoEdit.TextEditor
 					Replace(undoStep.ranges, undoStep.text, true, ReplaceType.Undo);
 				}
 			}
-			else if (command == Command_Edit_Redo)
+			else if (command == TextEditCommand.Edit_Redo)
 			{
 				if (redo.Count != 0)
 				{
@@ -574,15 +466,15 @@ namespace NeoEdit.TextEditor
 					Replace(redoStep.ranges, redoStep.text, true, ReplaceType.Redo);
 				}
 			}
-			else if ((command == Command_Edit_Cut) || (command == Command_Edit_Copy))
+			else if ((command == TextEditCommand.Edit_Cut) || (command == TextEditCommand.Edit_Copy))
 			{
 				var result = Selections.Select(range => GetString(range)).ToArray();
 				if (result.Length != 0)
 					ClipboardWindow.Set(result);
-				if (command == Command_Edit_Cut)
+				if (command == TextEditCommand.Edit_Cut)
 					Replace(Selections, null, false);
 			}
-			else if (command == Command_Edit_Paste)
+			else if (command == TextEditCommand.Edit_Paste)
 			{
 				var result = ClipboardWindow.GetStrings().ToList();
 				if ((Selections.Count == 1) && (result.Count != 1))
@@ -600,9 +492,9 @@ namespace NeoEdit.TextEditor
 					Replace(Selections, result, false);
 				}
 			}
-			else if (command == Command_Edit_ShowClipboard)
+			else if (command == TextEditCommand.Edit_ShowClipboard)
 				ClipboardWindow.Show();
-			else if (command == Command_Edit_Find)
+			else if (command == TextEditCommand.Edit_Find)
 			{
 				string text = null;
 				var selectionOnly = Selections.Any(range => range.HasSelection());
@@ -631,9 +523,9 @@ namespace NeoEdit.TextEditor
 					FindNext(true);
 				}
 			}
-			else if ((command == Command_Edit_FindNext) || (command == Command_Edit_FindPrev))
-				FindNext(command == Command_Edit_FindNext);
-			else if (command == Command_Edit_GotoLine)
+			else if ((command == TextEditCommand.Edit_FindNext) || (command == TextEditCommand.Edit_FindPrev))
+				FindNext(command == TextEditCommand.Edit_FindNext);
+			else if (command == TextEditCommand.Edit_GotoLine)
 			{
 				var shift = shiftDown;
 				var line = Data.GetOffsetLine(Selections.First().Start);
@@ -645,7 +537,7 @@ namespace NeoEdit.TextEditor
 					shiftOverride = null;
 				}
 			}
-			else if (command == Command_Edit_GotoIndex)
+			else if (command == TextEditCommand.Edit_GotoIndex)
 			{
 				var shift = shiftDown;
 				var offset = Selections.First().Start;
@@ -659,13 +551,13 @@ namespace NeoEdit.TextEditor
 					shiftOverride = null;
 				}
 			}
-			else if ((command == Command_Files_Copy) || (command == Command_Files_Cut))
+			else if ((command == TextEditCommand.Files_Copy) || (command == TextEditCommand.Files_Cut))
 			{
 				var result = Selections.Select(range => GetString(range)).ToArray();
 				if (result.Length != 0)
-					ClipboardWindow.SetFiles(result, command == Command_Files_Cut);
+					ClipboardWindow.SetFiles(result, command == TextEditCommand.Files_Cut);
 			}
-			else if (command == Command_Files_Delete)
+			else if (command == TextEditCommand.Files_Delete)
 			{
 				if (new Message
 				{
@@ -685,7 +577,7 @@ namespace NeoEdit.TextEditor
 					}
 				}
 			}
-			else if ((command == Command_Files_Timestamp_Write) || (command == Command_Files_Timestamp_Access) || (command == Command_Files_Timestamp_Create) || (command == Command_Files_Timestamp_All))
+			else if ((command == TextEditCommand.Files_Timestamp_Write) || (command == TextEditCommand.Files_Timestamp_Access) || (command == TextEditCommand.Files_Timestamp_Create) || (command == TextEditCommand.Files_Timestamp_All))
 			{
 				var result = ChooseDateTimeDialog.Run(DateTime.Now);
 				if (result != null)
@@ -699,40 +591,40 @@ namespace NeoEdit.TextEditor
 						if (File.Exists(file))
 						{
 							var info = new FileInfo(file);
-							if ((command == Command_Files_Timestamp_Write) || (command == Command_Files_Timestamp_All))
+							if ((command == TextEditCommand.Files_Timestamp_Write) || (command == TextEditCommand.Files_Timestamp_All))
 								info.LastWriteTime = result.Value;
-							if ((command == Command_Files_Timestamp_Access) || (command == Command_Files_Timestamp_All))
+							if ((command == TextEditCommand.Files_Timestamp_Access) || (command == TextEditCommand.Files_Timestamp_All))
 								info.LastAccessTime = result.Value;
-							if ((command == Command_Files_Timestamp_Create) || (command == Command_Files_Timestamp_All))
+							if ((command == TextEditCommand.Files_Timestamp_Create) || (command == TextEditCommand.Files_Timestamp_All))
 								info.CreationTime = result.Value;
 						}
 						else if (Directory.Exists(file))
 						{
 							var info = new DirectoryInfo(file);
-							if ((command == Command_Files_Timestamp_Write) || (command == Command_Files_Timestamp_All))
+							if ((command == TextEditCommand.Files_Timestamp_Write) || (command == TextEditCommand.Files_Timestamp_All))
 								info.LastWriteTime = result.Value;
-							if ((command == Command_Files_Timestamp_Access) || (command == Command_Files_Timestamp_All))
+							if ((command == TextEditCommand.Files_Timestamp_Access) || (command == TextEditCommand.Files_Timestamp_All))
 								info.LastAccessTime = result.Value;
-							if ((command == Command_Files_Timestamp_Create) || (command == Command_Files_Timestamp_All))
+							if ((command == TextEditCommand.Files_Timestamp_Create) || (command == TextEditCommand.Files_Timestamp_All))
 								info.CreationTime = result.Value;
 						}
 					}
 				}
 			}
-			else if (command == Command_Files_Path_Simplify)
+			else if (command == TextEditCommand.Files_Path_Simplify)
 			{
 				var strs = Selections.Select(range => Path.GetFullPath(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if ((command == Command_Files_Path_GetFileName) || (command == Command_Files_Path_GetFileNameWoExtension) || (command == Command_Files_Path_GetDirectory) || (command == Command_Files_Path_GetExtension) || (command == Command_Files_CreateDirectory))
+			else if ((command == TextEditCommand.Files_Path_GetFileName) || (command == TextEditCommand.Files_Path_GetFileNameWoExtension) || (command == TextEditCommand.Files_Path_GetDirectory) || (command == TextEditCommand.Files_Path_GetExtension) || (command == TextEditCommand.Files_CreateDirectory))
 				Selections.Replace(Selections.Select(range => TranslateFileNameDirectoryExtensionRange(command, range)).ToList());
-			else if (command == Command_Files_CreateDirectory)
+			else if (command == TextEditCommand.Files_CreateDirectory)
 			{
 				var files = Selections.Select(range => GetString(range)).ToArray();
 				foreach (var file in files)
 					Directory.CreateDirectory(file);
 			}
-			else if (command == Command_Files_Information_Size)
+			else if (command == TextEditCommand.Files_Information_Size)
 			{
 				var files = Selections.Select(range => GetString(range)).ToList();
 				var strs = new List<string>();
@@ -750,7 +642,7 @@ namespace NeoEdit.TextEditor
 				}
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_Information_WriteTime)
+			else if (command == TextEditCommand.Files_Information_WriteTime)
 			{
 				var files = Selections.Select(range => GetString(range)).ToList();
 				var strs = new List<string>();
@@ -771,7 +663,7 @@ namespace NeoEdit.TextEditor
 				}
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_Information_AccessTime)
+			else if (command == TextEditCommand.Files_Information_AccessTime)
 			{
 				var files = Selections.Select(range => GetString(range)).ToList();
 				var strs = new List<string>();
@@ -792,7 +684,7 @@ namespace NeoEdit.TextEditor
 				}
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_Information_CreateTime)
+			else if (command == TextEditCommand.Files_Information_CreateTime)
 			{
 				var files = Selections.Select(range => GetString(range)).ToList();
 				var strs = new List<string>();
@@ -813,7 +705,7 @@ namespace NeoEdit.TextEditor
 				}
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_Information_Attributes)
+			else if (command == TextEditCommand.Files_Information_Attributes)
 			{
 				var files = Selections.Select(range => GetString(range)).ToList();
 				var strs = new List<string>();
@@ -834,7 +726,7 @@ namespace NeoEdit.TextEditor
 				}
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Files_Information_ReadOnly)
+			else if (command == TextEditCommand.Files_Information_ReadOnly)
 			{
 				var files = Selections.Select(range => GetString(range)).ToList();
 				var strs = new List<string>();
@@ -852,56 +744,56 @@ namespace NeoEdit.TextEditor
 				}
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Case_Upper)
+			else if (command == TextEditCommand.Data_Case_Upper)
 			{
 				var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Case_Lower)
+			else if (command == TextEditCommand.Data_Case_Lower)
 			{
 				var strs = Selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Case_Proper)
+			else if (command == TextEditCommand.Data_Case_Proper)
 			{
 				var strs = Selections.Select(range => GetString(range).ToProper()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Case_Toggle)
+			else if (command == TextEditCommand.Data_Case_Toggle)
 			{
 				var strs = Selections.Select(range => GetString(range).ToToggled()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Hex_ToHex)
+			else if (command == TextEditCommand.Data_Hex_ToHex)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Hex_FromHex)
+			else if (command == TextEditCommand.Data_Hex_FromHex)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Char_ToChar)
+			else if (command == TextEditCommand.Data_Char_ToChar)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range).FromUTF8HexString()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Char_FromChar)
+			else if (command == TextEditCommand.Data_Char_FromChar)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range).ToUTF8HexString()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_DateTime_Insert)
+			else if (command == TextEditCommand.Data_DateTime_Insert)
 			{
 				var now = DateTime.Now.ToString("O");
 				Replace(Selections, Selections.Select(range => now).ToList(), true);
 			}
-			else if (command == Command_Data_DateTime_Convert)
+			else if (command == TextEditCommand.Data_DateTime_Convert)
 			{
 				var strs = Selections.Select(range => GetString(range)).ToList();
 				if (strs.Count >= 1)
@@ -916,13 +808,13 @@ namespace NeoEdit.TextEditor
 				}
 
 			}
-			else if (command == Command_Data_Length)
+			else if (command == TextEditCommand.Data_Length)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range).Length.ToString()).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_Width)
+			else if (command == TextEditCommand.Data_Width)
 			{
 				var minWidth = Selections.Select(range => range.Length).Max();
 				var text = String.Join("", Selections.Select(range => GetString(range)));
@@ -931,13 +823,13 @@ namespace NeoEdit.TextEditor
 				if (widthDialog.ShowDialog() == true)
 					Replace(Selections, Selections.Select(range => SetWidth(GetString(range), widthDialog.Value, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
 			}
-			else if (command == Command_Data_Trim)
+			else if (command == TextEditCommand.Data_Trim)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).ToList();
 				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
 				Replace(selections, strs, true);
 			}
-			else if (command == Command_Data_EvaluateExpression)
+			else if (command == TextEditCommand.Data_EvaluateExpression)
 			{
 				var strs = Selections.Select(range => GetString(range)).ToList();
 				var expression = ExpressionDialog.GetExpression(strs);
@@ -947,12 +839,12 @@ namespace NeoEdit.TextEditor
 					Replace(Selections, strs, true);
 				}
 			}
-			else if (command == Command_Data_Series)
+			else if (command == TextEditCommand.Data_Series)
 			{
 				var strs = Enumerable.Range(1, Selections.Count).Select(num => num.ToString()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Repeat)
+			else if (command == TextEditCommand.Data_Repeat)
 			{
 				var repeat = RepeatDialog.Run(Selections.Count == 1);
 				if (repeat != null)
@@ -972,12 +864,12 @@ namespace NeoEdit.TextEditor
 					}
 				}
 			}
-			else if (command == Command_Data_GUID)
+			else if (command == TextEditCommand.Data_GUID)
 			{
 				var strs = Selections.Select(range => Guid.NewGuid().ToString()).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Random)
+			else if (command == TextEditCommand.Data_Random)
 			{
 				int minValue, maxValue;
 				if (RandomNumberDialog.Run(out minValue, out maxValue))
@@ -986,39 +878,39 @@ namespace NeoEdit.TextEditor
 					Replace(Selections, strs, true);
 				}
 			}
-			else if (command == Command_Data_Escape_XML)
+			else if (command == TextEditCommand.Data_Escape_XML)
 			{
 				var strs = Selections.Select(range => EscapeXML(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Escape_Regex)
+			else if (command == TextEditCommand.Data_Escape_Regex)
 			{
 				var strs = Selections.Select(range => EscapeRegex(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Unescape_XML)
+			else if (command == TextEditCommand.Data_Unescape_XML)
 			{
 				var strs = Selections.Select(range => UnescapeXML(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_Unescape_Regex)
+			else if (command == TextEditCommand.Data_Unescape_Regex)
 			{
 				var strs = Selections.Select(range => UnescapeRegex(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if ((command == Command_Data_MD5_UTF8) || (command == Command_Data_MD5_UTF7) || (command == Command_Data_MD5_UTF16LE) || (command == Command_Data_MD5_UTF16BE) || (command == Command_Data_MD5_UTF32LE) || (command == Command_Data_MD5_UTF32BE))
+			else if ((command == TextEditCommand.Data_MD5_UTF8) || (command == TextEditCommand.Data_MD5_UTF7) || (command == TextEditCommand.Data_MD5_UTF16LE) || (command == TextEditCommand.Data_MD5_UTF16BE) || (command == TextEditCommand.Data_MD5_UTF32LE) || (command == TextEditCommand.Data_MD5_UTF32BE))
 			{
 				var coder = GetChecksumCoder(command);
 				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.MD5, Coder.StringToBytes(GetString(range), coder))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if ((command == Command_Data_SHA1_UTF8) || (command == Command_Data_SHA1_UTF7) || (command == Command_Data_SHA1_UTF16LE) || (command == Command_Data_SHA1_UTF16BE) || (command == Command_Data_SHA1_UTF32LE) || (command == Command_Data_SHA1_UTF32BE))
+			else if ((command == TextEditCommand.Data_SHA1_UTF8) || (command == TextEditCommand.Data_SHA1_UTF7) || (command == TextEditCommand.Data_SHA1_UTF16LE) || (command == TextEditCommand.Data_SHA1_UTF16BE) || (command == TextEditCommand.Data_SHA1_UTF32LE) || (command == TextEditCommand.Data_SHA1_UTF32BE))
 			{
 				var coder = GetChecksumCoder(command);
 				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.SHA1, Coder.StringToBytes(GetString(range), coder))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_SelectMark_Toggle)
+			else if (command == TextEditCommand.SelectMark_Toggle)
 			{
 				if (Selections.Count > 1)
 				{
@@ -1031,21 +923,21 @@ namespace NeoEdit.TextEditor
 					Marks.Clear();
 				}
 			}
-			else if (command == Command_Select_All)
+			else if (command == TextEditCommand.Select_All)
 				Selections.Replace(new Range(EndOffset(), BeginOffset()));
-			else if (command == Command_Select_Limit)
+			else if (command == TextEditCommand.Select_Limit)
 			{
 				var numSels = LimitDialog.Run(Selections.Count);
 				if (numSels.HasValue)
 					Selections.RemoveRange(numSels.Value, Selections.Count - numSels.Value);
 			}
-			else if (command == Command_Select_AllLines)
+			else if (command == TextEditCommand.Select_AllLines)
 			{
 				var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
 				var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
 				Selections.Replace(sels);
 			}
-			else if (command == Command_Select_Lines)
+			else if (command == TextEditCommand.Select_Lines)
 			{
 				int lineMult;
 				bool ignoreBlankLines;
@@ -1063,7 +955,7 @@ namespace NeoEdit.TextEditor
 					Selections.Replace(sels);
 				}
 			}
-			else if (command == Command_Select_Marks)
+			else if (command == TextEditCommand.Select_Marks)
 			{
 				if (Marks.Count != 0)
 				{
@@ -1071,42 +963,42 @@ namespace NeoEdit.TextEditor
 					Marks.Clear();
 				}
 			}
-			else if (command == Command_Select_Find)
+			else if (command == TextEditCommand.Select_Find)
 			{
 				Selections.Replace(Searches);
 				Searches.Clear();
 			}
-			else if (command == Command_Select_RemoveEmpty)
+			else if (command == TextEditCommand.Select_RemoveEmpty)
 				Selections.Replace(Selections.Where(range => range.HasSelection()).ToList());
-			else if (command == Command_Select_Unique)
+			else if (command == TextEditCommand.Select_Unique)
 				Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
-			else if (command == Command_Select_Duplicates)
+			else if (command == TextEditCommand.Select_Duplicates)
 				Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
-			else if (command == Command_Select_Min_String)
+			else if (command == TextEditCommand.Select_Min_String)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
 				var first = selections.First().str;
 				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 			}
-			else if (command == Command_Select_Min_Numeric)
+			else if (command == TextEditCommand.Select_Min_Numeric)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
 				var first = selections.First().str;
 				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 			}
-			else if (command == Command_Select_Max_String)
+			else if (command == TextEditCommand.Select_Max_String)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
 				var first = selections.Last().str;
 				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 			}
-			else if (command == Command_Select_Max_Numeric)
+			else if (command == TextEditCommand.Select_Max_Numeric)
 			{
 				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
 				var first = selections.Last().str;
 				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 			}
-			else if (command == Command_Select_ExpressionMatches)
+			else if (command == TextEditCommand.Select_ExpressionMatches)
 			{
 				var strs = Selections.Select(range => GetString(range)).ToList();
 				var expression = ExpressionDialog.GetExpression(strs);
@@ -1119,7 +1011,7 @@ namespace NeoEdit.TextEditor
 					Selections.Replace(sels);
 				}
 			}
-			else if (command == Command_Select_RegExMatches)
+			else if (command == TextEditCommand.Select_RegExMatches)
 			{
 				var strs = Selections.Select(range => GetString(range)).ToList();
 				var expression = ExpressionDialog.GetRegEx(strs);
@@ -1132,7 +1024,7 @@ namespace NeoEdit.TextEditor
 					Selections.Replace(sels);
 				}
 			}
-			else if (command == Command_Select_RegExNonMatches)
+			else if (command == TextEditCommand.Select_RegExNonMatches)
 			{
 				var strs = Selections.Select(range => GetString(range)).ToList();
 				var expression = ExpressionDialog.GetRegEx(strs);
@@ -1145,43 +1037,43 @@ namespace NeoEdit.TextEditor
 					Selections.Replace(sels);
 				}
 			}
-			else if (command == Command_Select_ShowFirst)
+			else if (command == TextEditCommand.Select_ShowFirst)
 			{
 				visibleIndex = 0;
 				EnsureVisible(true);
 			}
-			else if (command == Command_Select_ShowCurrent)
+			else if (command == TextEditCommand.Select_ShowCurrent)
 				EnsureVisible(true);
-			else if (command == Command_Select_NextSelection)
+			else if (command == TextEditCommand.Select_NextSelection)
 			{
 				++visibleIndex;
 				if (visibleIndex >= Selections.Count)
 					visibleIndex = 0;
 				EnsureVisible(true);
 			}
-			else if (command == Command_Select_PrevSelection)
+			else if (command == TextEditCommand.Select_PrevSelection)
 			{
 				--visibleIndex;
 				if (visibleIndex < 0)
 					visibleIndex = Selections.Count - 1;
 				EnsureVisible(true);
 			}
-			else if (command == Command_Select_Single)
+			else if (command == TextEditCommand.Select_Single)
 			{
 				visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
 				Selections.Replace(Selections[visibleIndex]);
 				visibleIndex = 0;
 			}
-			else if (command == Command_Select_Remove)
+			else if (command == TextEditCommand.Select_Remove)
 				Selections.RemoveAt(visibleIndex);
-			else if (command == Command_Mark_Selection)
+			else if (command == TextEditCommand.Mark_Selection)
 				Marks.AddRange(Selections);
-			else if (command == Command_Mark_Find)
+			else if (command == TextEditCommand.Mark_Find)
 			{
 				Marks.AddRange(Searches);
 				Searches.Clear();
 			}
-			else if (command == Command_Mark_Clear)
+			else if (command == TextEditCommand.Mark_Clear)
 			{
 				var hasSelection = Selections.Any(range => range.HasSelection());
 				if (!hasSelection)
@@ -1195,7 +1087,7 @@ namespace NeoEdit.TextEditor
 					}
 				}
 			}
-			else if (command == Command_Mark_LimitToSelection)
+			else if (command == TextEditCommand.Mark_LimitToSelection)
 				Marks.Replace(Marks.Where(mark => Selections.Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList());
 			else if (RunSortCommand(command))
 			{ }
