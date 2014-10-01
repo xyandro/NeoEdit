@@ -380,73 +380,35 @@ namespace NeoEdit.TextEditor
 			return -1;
 		}
 
-		List<Tuple<int, int>> RegexMatchesAll(Regex regex, int offset, int length, bool regexGroups)
+		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool includeEndings, bool regexGroups)
 		{
 			var result = new List<Tuple<int, int>>();
-
 			var endOffset = offset + length;
 			while (offset < endOffset)
 			{
-				var match = regex.Match(data, offset, endOffset - offset);
-				if ((!match.Success) || (match.Length == 0))
-					break;
-
-				if (!regexGroups)
-					result.Add(new Tuple<int, int>(match.Index, match.Length));
-				else
+				var nextOffset = endOffset;
+				if (!includeEndings)
 				{
-					for (var ctr = 1; ctr < match.Groups.Count; ++ctr)
-						result.Add(new Tuple<int, int>(match.Groups[ctr].Index, match.Groups[ctr].Length));
+					var line = GetOffsetLine(offset);
+					length = Math.Min(lineOffset[line] + lineLength[line], endOffset) - offset;
+					nextOffset = Math.Min(endOffset, offset + length + endingLength[line]);
 				}
-				offset = match.Index + match.Length;
+
+				var matches = regex.Matches(data.Substring(offset, length)).Cast<Match>();
+				foreach (var match in matches)
+				{
+					if (!regexGroups)
+						result.Add(new Tuple<int, int>(offset + match.Index, match.Length));
+					else
+					{
+						for (var ctr = 1; ctr < match.Groups.Count; ++ctr)
+							result.Add(new Tuple<int, int>(offset + match.Groups[ctr].Index, match.Groups[ctr].Length));
+					}
+				}
+				offset = nextOffset;
 			}
+
 			return result;
-		}
-
-		List<Tuple<int, int>> RegexMatchesByLine(Regex regex, int offset, int length, bool regexGroups)
-		{
-			var result = new List<Tuple<int, int>>();
-
-			var endOffset = offset + length;
-			var line = GetOffsetLine(offset);
-			var index = GetOffsetIndex(offset, line);
-			while (true)
-			{
-				if (line >= lineOffset.Count)
-					break;
-				var matchOffset = lineOffset[line] + index;
-				if (matchOffset > endOffset)
-					break;
-
-				var matchLength = Math.Min(lineOffset[line] + lineLength[line], endOffset) - matchOffset;
-				Match match = null;
-				if (matchLength >= 0)
-					match = regex.Match(data, matchOffset, matchLength);
-				if ((match == null) || (!match.Success))
-				{
-					++line;
-					index = 0;
-					continue;
-				}
-
-				if (!regexGroups)
-					result.Add(new Tuple<int, int>(match.Index, match.Length));
-				else
-				{
-					for (var ctr = 1; ctr < match.Groups.Count; ++ctr)
-						result.Add(new Tuple<int, int>(match.Groups[ctr].Index, match.Groups[ctr].Length));
-				}
-				index += Math.Max(match.Index + match.Length - matchOffset, 1);
-			}
-			return result;
-		}
-
-		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool includeEndings, bool regexGroups)
-		{
-			if (includeEndings)
-				return RegexMatchesAll(regex, offset, length, regexGroups);
-			else
-				return RegexMatchesByLine(regex, offset, length, regexGroups);
 		}
 
 		public List<Tuple<int, int>> StringMatches(Searcher searcher, int offset, int length)

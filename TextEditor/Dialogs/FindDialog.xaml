@@ -22,7 +22,7 @@
 			</Style>
 		</StackPanel.Style>
 
-		<Label Content="_Search for:" Target="{Binding ElementName=findText}"/>
+		<Label Content="_Find:" Target="{Binding ElementName=findText}"/>
 		<ComboBox Name="findText" Margin="0,0,0,10" Width="500" IsEditable="True" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}" ItemsSource="{Binding History, ElementName=self}"/>
 
 		<StackPanel>

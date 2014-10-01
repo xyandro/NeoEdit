@@ -87,7 +87,7 @@ namespace NeoEdit.TextEditor.Dialogs
 				text = Regex.Escape(text);
 			if (WholeWords)
 				text = @"\b" + text + @"\b";
-			var options = RegexOptions.Compiled | RegexOptions.Singleline;
+			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
 			result = new Result(new Regex(text, options), sender == selectAll, SelectionOnly, IncludeEndings, RegexGroups);
@@ -98,9 +98,9 @@ namespace NeoEdit.TextEditor.Dialogs
 			regexGroupsVal = RegexGroups;
 			includeEndingsVal = IncludeEndings;
 
+			text = Text;
 			History.Remove(text);
 			History.Insert(0, text);
-			Text = text;
 
 			DialogResult = true;
 		}
