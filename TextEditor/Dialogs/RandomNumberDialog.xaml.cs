@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
@@ -34,8 +35,8 @@ namespace NeoEdit.TextEditor.Dialogs
 			if (dialog.ShowDialog() != true)
 				return false;
 
-			minValue = dialog.MinValue;
-			maxValue = dialog.MaxValue;
+			minValue = Math.Min(dialog.MinValue, dialog.MaxValue);
+			maxValue = Math.Max(dialog.MinValue, dialog.MaxValue);
 			return true;
 		}
 	}

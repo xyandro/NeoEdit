@@ -16,10 +16,10 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Minimum:" Target="{Binding ElementName=repeatCount}"/>
-		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="minValue" Margin="0,0,0,10" Width="500" Value="{Binding MinValue, ElementName=self}" Maximum="{Binding MaxValue, ElementName=self}"/>
+		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="minValue" Margin="0,0,0,10" Width="500" Value="{Binding MinValue, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Maximum:" Target="{Binding ElementName=maxValue}"/>
-		<xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Name="maxValue" Margin="0,0,0,10" Width="500" Value="{Binding MaxValue, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}"/>
+		<xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Name="maxValue" Margin="0,0,0,10" Width="500" Value="{Binding MaxValue, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right">
 			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
