@@ -77,8 +77,18 @@
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Escape_Regex" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unescape_XML" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_Unescape_Regex" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5" Executed="Command_Executed"/>
-		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF8" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF7" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF16LE" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF16BE" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF32LE" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF32BE" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF8" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF7" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF16LE" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF16BE" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF32LE" Executed="Command_Executed"/>
+		<CommandBinding Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF32BE" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_String" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Numeric" Executed="Command_Executed"/>
 		<CommandBinding Command="textEditor:TextEditorWindow.Command_Sort_Keys" Executed="Command_Executed"/>
@@ -386,8 +396,22 @@
 					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_Unescape_Regex" Header="Regex"/>
 				</MenuItem>
 				<Separator/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5" Header="MD_5"/>
-				<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1" Header="SHA_1"/>
+				<MenuItem Header="MD_5">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF8" Header="UTF8"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF7" Header="UTF7"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF16LE" Header="UTF16LE"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF16BE" Header="UTF16BE"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF32LE" Header="UTF32LE"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_MD5_UTF32BE" Header="UTF32BE"/>
+				</MenuItem>
+				<MenuItem Header="SHA_1">
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF8" Header="UTF8"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF7" Header="UTF7"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF16LE" Header="UTF16LE"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF16BE" Header="UTF16BE"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF32LE" Header="UTF32LE"/>
+					<MenuItem Command="textEditor:TextEditorWindow.Command_Data_SHA1_UTF32BE" Header="UTF32BE"/>
+				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="S_ort">
 				<MenuItem Command="textEditor:TextEditorWindow.Command_Sort_String" Header="_String"/>

@@ -86,8 +86,18 @@ namespace NeoEdit.TextEditor
 		public static RoutedCommand Command_Data_Escape_Regex = new RoutedCommand();
 		public static RoutedCommand Command_Data_Unescape_XML = new RoutedCommand();
 		public static RoutedCommand Command_Data_Unescape_Regex = new RoutedCommand();
-		public static RoutedCommand Command_Data_MD5 = new RoutedCommand();
-		public static RoutedCommand Command_Data_SHA1 = new RoutedCommand();
+		public static RoutedCommand Command_Data_MD5_UTF8 = new RoutedCommand();
+		public static RoutedCommand Command_Data_MD5_UTF7 = new RoutedCommand();
+		public static RoutedCommand Command_Data_MD5_UTF16LE = new RoutedCommand();
+		public static RoutedCommand Command_Data_MD5_UTF16BE = new RoutedCommand();
+		public static RoutedCommand Command_Data_MD5_UTF32LE = new RoutedCommand();
+		public static RoutedCommand Command_Data_MD5_UTF32BE = new RoutedCommand();
+		public static RoutedCommand Command_Data_SHA1_UTF8 = new RoutedCommand();
+		public static RoutedCommand Command_Data_SHA1_UTF7 = new RoutedCommand();
+		public static RoutedCommand Command_Data_SHA1_UTF16LE = new RoutedCommand();
+		public static RoutedCommand Command_Data_SHA1_UTF16BE = new RoutedCommand();
+		public static RoutedCommand Command_Data_SHA1_UTF32LE = new RoutedCommand();
+		public static RoutedCommand Command_Data_SHA1_UTF32BE = new RoutedCommand();
 		public static RoutedCommand Command_SelectMark_Toggle = new RoutedCommand();
 		public static RoutedCommand Command_Select_All = new RoutedCommand();
 		public static RoutedCommand Command_Select_Limit = new RoutedCommand();
@@ -404,6 +414,23 @@ namespace NeoEdit.TextEditor
 				return new Range(range.End - extLen, range.End);
 
 			throw new ArgumentException();
+		}
+
+		Coder.Type GetChecksumCoder(ICommand command)
+		{
+			if ((command == Command_Data_MD5_UTF8) || (command == Command_Data_SHA1_UTF8))
+				return Coder.Type.UTF8;
+			if ((command == Command_Data_MD5_UTF7) || (command == Command_Data_SHA1_UTF7))
+				return Coder.Type.UTF7;
+			if ((command == Command_Data_MD5_UTF16LE) || (command == Command_Data_SHA1_UTF16LE))
+				return Coder.Type.UTF16LE;
+			if ((command == Command_Data_MD5_UTF16BE) || (command == Command_Data_SHA1_UTF16BE))
+				return Coder.Type.UTF16BE;
+			if ((command == Command_Data_MD5_UTF32LE) || (command == Command_Data_SHA1_UTF32LE))
+				return Coder.Type.UTF32LE;
+			if ((command == Command_Data_MD5_UTF32BE) || (command == Command_Data_SHA1_UTF32BE))
+				return Coder.Type.UTF32BE;
+			throw new Exception("No checksum coder available");
 		}
 
 		void RunCommand(ICommand command)
@@ -979,14 +1006,16 @@ namespace NeoEdit.TextEditor
 				var strs = Selections.Select(range => UnescapeRegex(GetString(range))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_MD5)
+			else if ((command == Command_Data_MD5_UTF8) || (command == Command_Data_MD5_UTF7) || (command == Command_Data_MD5_UTF16LE) || (command == Command_Data_MD5_UTF16BE) || (command == Command_Data_MD5_UTF32LE) || (command == Command_Data_MD5_UTF32BE))
 			{
-				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.MD5, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
+				var coder = GetChecksumCoder(command);
+				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.MD5, Coder.StringToBytes(GetString(range), coder))).ToList();
 				Replace(Selections, strs, true);
 			}
-			else if (command == Command_Data_SHA1)
+			else if ((command == Command_Data_SHA1_UTF8) || (command == Command_Data_SHA1_UTF7) || (command == Command_Data_SHA1_UTF16LE) || (command == Command_Data_SHA1_UTF16BE) || (command == Command_Data_SHA1_UTF32LE) || (command == Command_Data_SHA1_UTF32BE))
 			{
-				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.SHA1, Encoding.UTF8.GetBytes(GetString(range)))).ToList();
+				var coder = GetChecksumCoder(command);
+				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.SHA1, Coder.StringToBytes(GetString(range), coder))).ToList();
 				Replace(Selections, strs, true);
 			}
 			else if (command == Command_SelectMark_Toggle)
