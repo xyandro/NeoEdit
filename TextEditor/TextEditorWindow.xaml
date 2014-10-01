@@ -216,6 +216,7 @@
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Case_Lower" Key="U" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_ToHex" Key="H" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Hex_FromHex" Key="H" Modifiers="Control+Shift"/>
+		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_EvaluateExpression" Key="E" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Data_Repeat" Key="R" Modifiers="Control"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetKeys" Key="K" Modifiers="Control+Shift"/>
 		<KeyBinding Command="textEditor:TextEditorWindow.Command_Keys_SetValues1" Key="D1" Modifiers="Control+Shift"/>
