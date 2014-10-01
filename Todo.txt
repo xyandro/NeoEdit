@@ -17,6 +17,8 @@ Set line endings (\r\n / \n / \r)
 HTML/XML: Match closing tag
 Rename files
 Relative goto line/index should work for all selections
+Select every nth selection (make it for current selection instead of selecting lines)
+Closed files ask to confirm updates
 
 Binary:
 Fix binary editor backwards search
