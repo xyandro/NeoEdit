@@ -22,13 +22,16 @@
 			</Style>
 		</StackPanel.Style>
 
-		<Label Content="Search for:"/>
+		<Label Content="_Search for:" Target="{Binding ElementName=findText}"/>
 		<ComboBox Name="findText" Margin="0,0,0,10" Width="500" IsEditable="True" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}" ItemsSource="{Binding History, ElementName=self}"/>
 
 		<StackPanel>
 			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}"/>
 			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}"/>
-			<CheckBox Content="Regular _expression" IsEnabled="{Binding Text, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=ValidRE:[0]}" IsChecked="{Binding RegularExpression, ElementName=self}"/>
+			<StackPanel Orientation="Horizontal">
+				<CheckBox Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}"/>
+				<CheckBox Content="by _Group" IsChecked="{Binding RegexGroups, ElementName=self}"/>
+			</StackPanel>
 			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}"/>
 			<CheckBox Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}"/>
 		</StackPanel>

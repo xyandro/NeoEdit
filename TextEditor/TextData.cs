@@ -380,7 +380,7 @@ namespace NeoEdit.TextEditor
 			return -1;
 		}
 
-		List<Tuple<int, int>> RegexMatchesAll(Regex regex, int offset, int length)
+		List<Tuple<int, int>> RegexMatchesAll(Regex regex, int offset, int length, bool regexGroups)
 		{
 			var result = new List<Tuple<int, int>>();
 
@@ -391,13 +391,19 @@ namespace NeoEdit.TextEditor
 				if ((!match.Success) || (match.Length == 0))
 					break;
 
-				result.Add(new Tuple<int, int>(match.Index, match.Length));
+				if (!regexGroups)
+					result.Add(new Tuple<int, int>(match.Index, match.Length));
+				else
+				{
+					for (var ctr = 1; ctr < match.Groups.Count; ++ctr)
+						result.Add(new Tuple<int, int>(match.Groups[ctr].Index, match.Groups[ctr].Length));
+				}
 				offset = match.Index + match.Length;
 			}
 			return result;
 		}
 
-		List<Tuple<int, int>> RegexMatchesByLine(Regex regex, int offset, int length)
+		List<Tuple<int, int>> RegexMatchesByLine(Regex regex, int offset, int length, bool regexGroups)
 		{
 			var result = new List<Tuple<int, int>>();
 
@@ -423,18 +429,24 @@ namespace NeoEdit.TextEditor
 					continue;
 				}
 
-				result.Add(new Tuple<int, int>(match.Index, match.Length));
+				if (!regexGroups)
+					result.Add(new Tuple<int, int>(match.Index, match.Length));
+				else
+				{
+					for (var ctr = 1; ctr < match.Groups.Count; ++ctr)
+						result.Add(new Tuple<int, int>(match.Groups[ctr].Index, match.Groups[ctr].Length));
+				}
 				index += Math.Max(match.Index + match.Length - matchOffset, 1);
 			}
 			return result;
 		}
 
-		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool includeEndings)
+		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool includeEndings, bool regexGroups)
 		{
 			if (includeEndings)
-				return RegexMatchesAll(regex, offset, length);
+				return RegexMatchesAll(regex, offset, length, regexGroups);
 			else
-				return RegexMatchesByLine(regex, offset, length);
+				return RegexMatchesByLine(regex, offset, length, regexGroups);
 		}
 
 		public List<Tuple<int, int>> StringMatches(Searcher searcher, int offset, int length)

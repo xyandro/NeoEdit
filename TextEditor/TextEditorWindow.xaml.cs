@@ -590,11 +590,11 @@ namespace NeoEdit.TextEditor
 					}
 				}
 
-				var findDialog = new FindDialog { Text = text, SelectionOnly = selectionOnly };
-				if (findDialog.ShowDialog() == true)
+				var findResult = FindDialog.Run(text, selectionOnly);
+				if (findResult != null)
 				{
-					RunSearch(findDialog.Regex, findDialog.SelectionOnly, findDialog.IncludeEndings);
-					if (findDialog.SelectAll)
+					RunSearch(findResult);
+					if (findResult.SelectAll)
 					{
 						if (Searches.Count != 0)
 							Selections.Replace(Searches);
@@ -1864,16 +1864,16 @@ namespace NeoEdit.TextEditor
 			e.Handled = true;
 		}
 
-		void RunSearch(Regex regex, bool selectionOnly, bool includeEndings)
+		void RunSearch(FindDialog.Result result)
 		{
-			if (regex == null)
+			if ((result == null) || (result.Regex == null))
 				return;
 
 			Searches.Clear();
 
-			var regions = selectionOnly ? Selections : new RangeList { new Range(EndOffset(), BeginOffset()) };
+			var regions = result.SelectionOnly ? Selections : new RangeList { new Range(EndOffset(), BeginOffset()) };
 			foreach (var region in regions)
-				Searches.AddRange(Data.RegexMatches(regex, region.Start, region.Length, includeEndings).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.IncludeEndings, result.RegexGroups).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 		}
 
 		string GetString(Range range)

@@ -12,7 +12,6 @@ Highlight clauses (if/else)
 Text edit multiple files
 Comment/uncomment C#/C++/XML/etc.
 Format JSON/XML
-Select () in regex find
 Add function to count matches on select unique/duplicates
 Set line endings (\r\n / \n / \r)
 HTML/XML: Match closing tag

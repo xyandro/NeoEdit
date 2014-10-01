@@ -9,6 +9,24 @@ namespace NeoEdit.TextEditor.Dialogs
 {
 	public partial class FindDialog : Window
 	{
+		public class Result
+		{
+			public Regex Regex { get; private set; }
+			public bool SelectAll { get; private set; }
+			public bool SelectionOnly { get; private set; }
+			public bool IncludeEndings { get; private set; }
+			public bool RegexGroups { get; private set; }
+
+			public Result(Regex regex, bool selectAll, bool selectionOnly, bool includeEndings, bool regexGroups)
+			{
+				Regex = regex;
+				SelectAll = selectAll;
+				SelectionOnly = selectionOnly;
+				IncludeEndings = includeEndings;
+				RegexGroups = regexGroups;
+			}
+		}
+
 		[DepProp]
 		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -16,7 +34,9 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public bool MatchCase { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public bool RegularExpression { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool IsRegex { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool RegexGroups { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool SelectionOnly { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -24,24 +44,27 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public ObservableCollection<string> History { get { return uiHelper.GetPropValue<ObservableCollection<string>>(); } set { uiHelper.SetPropValue(value); } }
 
-		public Regex Regex { get; private set; }
-		public bool SelectAll { get; private set; }
+		public Result result { get; private set; }
 
 		static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
-		static bool wholeWordsVal, matchCaseVal, regularExpressionVal, includeEndingsVal;
+		static bool wholeWordsVal, matchCaseVal, isRegexVal, regexGroupsVal, includeEndingsVal;
 
 		static FindDialog() { UIHelper<FindDialog>.Register(); }
 
 		readonly UIHelper<FindDialog> uiHelper;
-		public FindDialog()
+		FindDialog()
 		{
 			uiHelper = new UIHelper<FindDialog>(this);
 			History = StaticHistory;
 			InitializeComponent();
 
+			uiHelper.AddCallback(a => a.IsRegex, (o, n) => { if (!IsRegex) RegexGroups = false; });
+			uiHelper.AddCallback(a => a.RegexGroups, (o, n) => { if (RegexGroups) IsRegex = true; });
+
 			WholeWords = wholeWordsVal;
 			MatchCase = matchCaseVal;
-			RegularExpression = regularExpressionVal;
+			RegexGroups = regexGroupsVal;
+			IsRegex = isRegexVal;
 			IncludeEndings = includeEndingsVal;
 
 			Loaded += (s, e) =>
@@ -59,27 +82,35 @@ namespace NeoEdit.TextEditor.Dialogs
 			if (String.IsNullOrEmpty(Text))
 				return;
 
-			wholeWordsVal = WholeWords == true;
-			matchCaseVal = MatchCase == true;
-			regularExpressionVal = RegularExpression == true;
-			includeEndingsVal = IncludeEndings == true;
-
 			var text = Text;
+			if (!IsRegex)
+				text = Regex.Escape(text);
+			if (WholeWords)
+				text = @"\b" + text + @"\b";
+			var options = RegexOptions.Compiled | RegexOptions.Singleline;
+			if (!MatchCase)
+				options |= RegexOptions.IgnoreCase;
+			result = new Result(new Regex(text, options), sender == selectAll, SelectionOnly, IncludeEndings, RegexGroups);
+
+			wholeWordsVal = WholeWords;
+			matchCaseVal = MatchCase;
+			isRegexVal = IsRegex;
+			regexGroupsVal = RegexGroups;
+			includeEndingsVal = IncludeEndings;
+
 			History.Remove(text);
 			History.Insert(0, text);
 			Text = text;
 
-			if (RegularExpression == false)
-				text = Regex.Escape(text);
-			if (WholeWords == true)
-				text = @"\b" + text + @"\b";
-			var options = RegexOptions.Compiled | RegexOptions.Singleline;
-			if (MatchCase == false)
-				options |= RegexOptions.IgnoreCase;
-			Regex = new Regex(text, options);
-			SelectAll = sender == selectAll;
-
 			DialogResult = true;
+		}
+
+		static public Result Run(string text, bool selectionOnly)
+		{
+			var dialog = new FindDialog { Text = text, SelectionOnly = selectionOnly };
+			if (dialog.ShowDialog() != true)
+				return null;
+			return dialog.result;
 		}
 	}
 }
