@@ -260,7 +260,8 @@ namespace NeoEdit.TextEditor
 			if (e.OriginalSource is MenuItem)
 				return;
 
-			uiHelper.RaiseEvent(this, e);
+			canvas.AddTextInput(e.Text);
+			e.Handled = true;
 		}
 
 		internal bool? shiftOverride;

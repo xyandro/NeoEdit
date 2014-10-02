@@ -1685,7 +1685,7 @@ namespace NeoEdit.TextEditor
 						{
 							if (!Selections.Any(range => range.HasSelection()))
 							{
-								AddCanvasText("\t");
+								AddTextInput("\t");
 								break;
 							}
 
@@ -1712,7 +1712,7 @@ namespace NeoEdit.TextEditor
 						}
 						break;
 					case Key.Enter:
-						AddCanvasText(Data.DefaultEnding);
+						AddTextInput(Data.DefaultEnding);
 						break;
 					case Key.OemCloseBrackets:
 						if (controlDown)
@@ -2084,7 +2084,7 @@ namespace NeoEdit.TextEditor
 			return builder.ToString();
 		}
 
-		internal void AddCanvasText(string text)
+		internal void AddTextInput(string text)
 		{
 			if (text.Length == 0)
 				return;
