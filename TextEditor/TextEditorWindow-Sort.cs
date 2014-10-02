@@ -93,7 +93,7 @@ namespace NeoEdit.TextEditor
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		void Sort(SortScope scope, SortType type)
+		void Command_Sort(SortScope scope, SortType type)
 		{
 			var regions = GetRegions(scope);
 			var ordering = GetOrdering(type);
