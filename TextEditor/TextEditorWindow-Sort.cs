@@ -127,51 +127,5 @@ namespace NeoEdit.TextEditor
 			if (scope == SortScope.Regions)
 				Marks.Replace(newRegions);
 		}
-
-		bool RunSortCommand(TextEditCommand command)
-		{
-			var result = true;
-
-			if (command == TextEditCommand.Sort_String)
-				Sort(SortScope.Selections, SortType.String);
-			else if (command == TextEditCommand.Sort_Numeric)
-				Sort(SortScope.Selections, SortType.Numeric);
-			else if (command == TextEditCommand.Sort_Keys)
-				Sort(SortScope.Selections, SortType.Keys);
-			else if (command == TextEditCommand.Sort_Reverse)
-				Sort(SortScope.Selections, SortType.Reverse);
-			else if (command == TextEditCommand.Sort_Randomize)
-				Sort(SortScope.Selections, SortType.Randomize);
-			else if (command == TextEditCommand.Sort_Length)
-				Sort(SortScope.Selections, SortType.Length);
-			else if (command == TextEditCommand.Sort_Lines_String)
-				Sort(SortScope.Lines, SortType.String);
-			else if (command == TextEditCommand.Sort_Lines_Numeric)
-				Sort(SortScope.Lines, SortType.Numeric);
-			else if (command == TextEditCommand.Sort_Lines_Keys)
-				Sort(SortScope.Lines, SortType.Keys);
-			else if (command == TextEditCommand.Sort_Lines_Reverse)
-				Sort(SortScope.Lines, SortType.Reverse);
-			else if (command == TextEditCommand.Sort_Lines_Randomize)
-				Sort(SortScope.Lines, SortType.Randomize);
-			else if (command == TextEditCommand.Sort_Lines_Length)
-				Sort(SortScope.Lines, SortType.Length);
-			else if (command == TextEditCommand.Sort_Regions_String)
-				Sort(SortScope.Regions, SortType.String);
-			else if (command == TextEditCommand.Sort_Regions_Numeric)
-				Sort(SortScope.Regions, SortType.Numeric);
-			else if (command == TextEditCommand.Sort_Regions_Keys)
-				Sort(SortScope.Regions, SortType.Keys);
-			else if (command == TextEditCommand.Sort_Regions_Reverse)
-				Sort(SortScope.Regions, SortType.Reverse);
-			else if (command == TextEditCommand.Sort_Regions_Randomize)
-				Sort(SortScope.Regions, SortType.Randomize);
-			else if (command == TextEditCommand.Sort_Regions_Length)
-				Sort(SortScope.Regions, SortType.Length);
-			else
-				result = false;
-
-			return result;
-		}
 	}
 }

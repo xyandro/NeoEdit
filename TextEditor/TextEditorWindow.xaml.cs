@@ -172,7 +172,7 @@ namespace NeoEdit.TextEditor
 								DefaultAccept = Message.OptionsEnum.Yes,
 								DefaultCancel = Message.OptionsEnum.No,
 							}.Show() == Message.OptionsEnum.Yes)
-								RunCommand(TextEditCommand.File_Revert);
+								Command_File_Revert();
 						}
 						fileLastWrite = lastWrite;
 					}
@@ -270,7 +270,7 @@ namespace NeoEdit.TextEditor
 				case Message.OptionsEnum.Cancel: return false;
 				case Message.OptionsEnum.No: return true;
 				case Message.OptionsEnum.Yes:
-					RunCommand(TextEditCommand.File_Save);
+					Command_File_Save();
 					return ModifiedSteps == 0;
 			}
 			return false;
@@ -287,7 +287,15 @@ namespace NeoEdit.TextEditor
 			base.OnClosing(e);
 		}
 
-		Range TranslateFileNameDirectoryExtensionRange(TextEditCommand command, Range range)
+		enum GetPathType
+		{
+			FileName,
+			FileNameWoExtension,
+			Directory,
+			Extension,
+		}
+
+		Range GetPathRange(GetPathType type, Range range)
 		{
 			var path = GetString(range);
 			var dirLength = Math.Max(0, path.LastIndexOf('\\'));
@@ -296,33 +304,976 @@ namespace NeoEdit.TextEditor
 			var dirTotal = dirLength == 0 ? 0 : dirLength + 1;
 			var extLen = Path.GetExtension(path).Length;
 
-			if (command == TextEditCommand.Files_Path_GetFileName)
-				return new Range(range.End, range.Start + dirTotal);
-			if (command == TextEditCommand.Files_Path_GetFileNameWoExtension)
-				return new Range(range.End - extLen, range.Start + dirTotal);
-			if (command == TextEditCommand.Files_Path_GetDirectory)
-				return new Range(range.Start + dirLength, range.Start);
-			else if (command == TextEditCommand.Files_Path_GetExtension)
-				return new Range(range.End, range.End - extLen);
-
-			throw new ArgumentException();
+			switch (type)
+			{
+				case GetPathType.FileName: return new Range(range.End, range.Start + dirTotal);
+				case GetPathType.FileNameWoExtension: return new Range(range.End - extLen, range.Start + dirTotal);
+				case GetPathType.Directory: return new Range(range.Start + dirLength, range.Start);
+				case GetPathType.Extension: return new Range(range.End, range.End - extLen);
+				default: throw new ArgumentException();
+			}
 		}
 
-		Coder.Type GetChecksumCoder(TextEditCommand command)
+		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
+		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
+
+		void Command_File_New()
 		{
-			if ((command == TextEditCommand.Data_MD5_UTF8) || (command == TextEditCommand.Data_SHA1_UTF8))
-				return Coder.Type.UTF8;
-			if ((command == TextEditCommand.Data_MD5_UTF7) || (command == TextEditCommand.Data_SHA1_UTF7))
-				return Coder.Type.UTF7;
-			if ((command == TextEditCommand.Data_MD5_UTF16LE) || (command == TextEditCommand.Data_SHA1_UTF16LE))
-				return Coder.Type.UTF16LE;
-			if ((command == TextEditCommand.Data_MD5_UTF16BE) || (command == TextEditCommand.Data_SHA1_UTF16BE))
-				return Coder.Type.UTF16BE;
-			if ((command == TextEditCommand.Data_MD5_UTF32LE) || (command == TextEditCommand.Data_SHA1_UTF32LE))
-				return Coder.Type.UTF32LE;
-			if ((command == TextEditCommand.Data_MD5_UTF32BE) || (command == TextEditCommand.Data_SHA1_UTF32BE))
-				return Coder.Type.UTF32BE;
-			throw new Exception("No checksum coder available");
+			if (ConfirmModified())
+			{
+				FileName = null;
+				Data = new TextData();
+				ModifiedSteps = 0;
+			}
+		}
+
+		void Command_File_Open()
+		{
+			if (ConfirmModified())
+			{
+				var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
+				if (dialog.ShowDialog() == true)
+					OpenFile(dialog.FileName);
+			}
+		}
+
+		void Command_File_Save()
+		{
+			if (FileName == null)
+				Command_File_SaveAs();
+			else
+			{
+				File.WriteAllBytes(FileName, Data.GetBytes(CoderUsed));
+				fileLastWrite = new FileInfo(FileName).LastWriteTime;
+				ModifiedSteps = 0;
+			}
+		}
+
+		void Command_File_SaveAs()
+		{
+			var dialog = new SaveFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
+			if (dialog.ShowDialog() == true)
+			{
+				if (Directory.Exists(dialog.FileName))
+					throw new Exception("A directory by that name already exists.");
+				if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+					throw new Exception("Directory doesn't exist.");
+				FileName = dialog.FileName;
+				Command_File_Save();
+			}
+		}
+
+		void Command_File_Revert()
+		{
+			var run = true;
+
+			if ((run) && (ModifiedSteps != 0))
+			{
+				run = new Message
+				{
+					Title = "Confirm",
+					Text = "You have unsaved changes.  Are you sure you want to reload?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() == Message.OptionsEnum.Yes;
+			}
+
+			if (run)
+				OpenFile(FileName);
+		}
+
+		void Command_File_CheckUpdates()
+		{
+			CheckUpdates = !CheckUpdates;
+		}
+
+		void Command_File_InsertFiles()
+		{
+			var run = true;
+
+			if (Selections.Count != 1)
+			{
+				new Message
+				{
+					Title = "Error",
+					Text = "You have more than one selection.",
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
+				run = false;
+			}
+
+			if (run)
+			{
+				var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
+				if (dialog.ShowDialog() == true)
+				{
+					var str = "";
+					foreach (var filename in dialog.FileNames)
+					{
+						var bytes = File.ReadAllBytes(filename);
+						var data = new TextData(bytes, Coder.GuessEncoding(bytes));
+
+						var beginOffset = data.GetOffset(0, 0);
+						var endOffset = data.GetOffset(data.NumLines - 1, data.GetLineLength(data.NumLines - 1));
+						str += data.GetString(beginOffset, endOffset - beginOffset);
+					}
+
+					Replace(Selections, new List<string> { str }, true);
+				}
+			}
+		}
+
+		void Command_File_CopyPath()
+		{
+			Clipboard.SetText(FileName);
+		}
+
+		void Command_File_CopyName()
+		{
+			Clipboard.SetText(Path.GetFileName(FileName));
+		}
+
+		void Command_File_BinaryEditor()
+		{
+			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed));
+			this.Close();
+		}
+
+		void Command_File_BOM()
+		{
+			if (Data.BOM)
+				Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
+			else
+				Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
+		}
+
+		void Command_File_Exit()
+		{
+			Close();
+		}
+
+		void Command_Edit_Undo()
+		{
+			if (undo.Count != 0)
+			{
+				var undoStep = undo.Last();
+				undo.Remove(undoStep);
+				Replace(undoStep.ranges, undoStep.text, true, ReplaceType.Undo);
+			}
+		}
+
+		void Command_Edit_Redo()
+		{
+			if (redo.Count != 0)
+			{
+				var redoStep = redo.Last();
+				redo.Remove(redoStep);
+				Replace(redoStep.ranges, redoStep.text, true, ReplaceType.Redo);
+			}
+		}
+
+		void Command_Edit_CutCopy(bool isCut)
+		{
+			var result = Selections.Select(range => GetString(range)).ToArray();
+			if (result.Length != 0)
+				ClipboardWindow.Set(result);
+			if (isCut)
+				Replace(Selections, null, false);
+		}
+
+		void Command_Edit_Paste()
+		{
+			var result = ClipboardWindow.GetStrings().ToList();
+			if ((Selections.Count == 1) && (result.Count != 1))
+				result = result.Select(str => str + Data.DefaultEnding).ToList();
+			if ((result != null) && (result.Count != 0))
+			{
+				while (result.Count > Selections.Count)
+				{
+					result[result.Count - 2] += result[result.Count - 1];
+					result.RemoveAt(result.Count - 1);
+				}
+				while (result.Count < Selections.Count)
+					result.Add(result.Last());
+
+				Replace(Selections, result, false);
+			}
+		}
+
+		void Command_Edit_ShowClipboard()
+		{
+			ClipboardWindow.Show();
+		}
+
+		void Command_Edit_Find()
+		{
+			string text = null;
+			var selectionOnly = Selections.Any(range => range.HasSelection());
+
+			if (Selections.Count == 1)
+			{
+				var sel = Selections.First();
+				if ((sel.HasSelection()) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
+				{
+					selectionOnly = false;
+					text = GetString(sel);
+				}
+			}
+
+			var findResult = FindDialog.Run(text, selectionOnly);
+			if (findResult != null)
+			{
+				RunSearch(findResult);
+				if (findResult.SelectAll)
+				{
+					if (Searches.Count != 0)
+						Selections.Replace(Searches);
+					Searches.Clear();
+				}
+
+				FindNext(true);
+			}
+		}
+
+		void Command_Edit_FindNextPrev(bool next)
+		{
+			FindNext(next);
+		}
+
+		void Command_Edit_GotoLine()
+		{
+			var shift = shiftDown;
+			var line = Data.GetOffsetLine(Selections.First().Start);
+			var newLine = GotoLineDialog.Run(Data.NumLines, line);
+			if (newLine.HasValue)
+			{
+				shiftOverride = shift;
+				Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true)).ToList());
+				shiftOverride = null;
+			}
+		}
+
+		void Command_Edit_GotoIndex()
+		{
+			var shift = shiftDown;
+			var offset = Selections.First().Start;
+			var line = Data.GetOffsetLine(offset);
+			var index = Data.GetOffsetIndex(offset, line);
+			var newIndex = GotoIndexDialog.Run(Data.GetLineLength(line) + 1, index);
+			if (newIndex.HasValue)
+			{
+				shiftOverride = shift;
+				Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false)).ToList());
+				shiftOverride = null;
+			}
+		}
+
+		void Command_Files_CutCopy(bool isCut)
+		{
+			var result = Selections.Select(range => GetString(range)).ToArray();
+			if (result.Length != 0)
+				ClipboardWindow.SetFiles(result, isCut);
+		}
+
+		void Command_Files_Delete()
+		{
+			if (new Message
+			{
+				Title = "Confirm",
+				Text = "Are you sure you want to delete these files/directories?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show() == Message.OptionsEnum.Yes)
+			{
+				var files = Selections.Select(range => GetString(range)).ToArray();
+				foreach (var file in files)
+				{
+					if (File.Exists(file))
+						File.Delete(file);
+					if (Directory.Exists(file))
+						Directory.Delete(file, true);
+				}
+			}
+		}
+
+		[Flags]
+		enum TimestampType
+		{
+			Write = 1,
+			Access = 2,
+			Create = 4,
+			All = Write | Access | Create,
+		}
+
+		void Command_Files_Timestamp(TimestampType type)
+		{
+			var result = ChooseDateTimeDialog.Run(DateTime.Now);
+			if (result != null)
+			{
+				var files = Selections.Select(range => GetString(range)).ToArray();
+				foreach (var file in files)
+				{
+					if ((!File.Exists(file)) && (!Directory.Exists(file)))
+						File.WriteAllBytes(file, new byte[0]);
+
+					if (File.Exists(file))
+					{
+						var info = new FileInfo(file);
+						if (type.HasFlag(TimestampType.Write))
+							info.LastWriteTime = result.Value;
+						if (type.HasFlag(TimestampType.Access))
+							info.LastAccessTime = result.Value;
+						if (type.HasFlag(TimestampType.Create))
+							info.CreationTime = result.Value;
+					}
+					else if (Directory.Exists(file))
+					{
+						var info = new DirectoryInfo(file);
+						if (type.HasFlag(TimestampType.Write))
+							info.LastWriteTime = result.Value;
+						if (type.HasFlag(TimestampType.Access))
+							info.LastAccessTime = result.Value;
+						if (type.HasFlag(TimestampType.Create))
+							info.CreationTime = result.Value;
+					}
+				}
+			}
+		}
+
+		void Command_Files_Path_Simplify()
+		{
+			var strs = Selections.Select(range => Path.GetFullPath(GetString(range))).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Files_Path_GetFilePath(GetPathType type)
+		{
+			Selections.Replace(Selections.Select(range => GetPathRange(type, range)).ToList());
+		}
+
+		void Command_Files_CreateDirectory()
+		{
+			var files = Selections.Select(range => GetString(range)).ToArray();
+			foreach (var file in files)
+				Directory.CreateDirectory(file);
+		}
+
+		void Command_Files_Information_Size()
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			var strs = new List<string>();
+			foreach (var file in files)
+			{
+				if (File.Exists(file))
+				{
+					var fileinfo = new FileInfo(file);
+					strs.Add(fileinfo.Length.ToString());
+				}
+				else if (Directory.Exists(file))
+					strs.Add("Directory");
+				else
+					strs.Add("INVALID");
+			}
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Files_Information_WriteTime()
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			var strs = new List<string>();
+			foreach (var file in files)
+			{
+				if (File.Exists(file))
+				{
+					var fileinfo = new FileInfo(file);
+					strs.Add(fileinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+				}
+				else if (Directory.Exists(file))
+				{
+					var dirinfo = new DirectoryInfo(file);
+					strs.Add(dirinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+				}
+				else
+					strs.Add("INVALID");
+			}
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Files_Information_AccessTime()
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			var strs = new List<string>();
+			foreach (var file in files)
+			{
+				if (File.Exists(file))
+				{
+					var fileinfo = new FileInfo(file);
+					strs.Add(fileinfo.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+				}
+				else if (Directory.Exists(file))
+				{
+					var dirinfo = new DirectoryInfo(file);
+					strs.Add(dirinfo.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+				}
+				else
+					strs.Add("INVALID");
+			}
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Files_Information_CreateTime()
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			var strs = new List<string>();
+			foreach (var file in files)
+			{
+				if (File.Exists(file))
+				{
+					var fileinfo = new FileInfo(file);
+					strs.Add(fileinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+				}
+				else if (Directory.Exists(file))
+				{
+					var dirinfo = new DirectoryInfo(file);
+					strs.Add(dirinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+				}
+				else
+					strs.Add("INVALID");
+			}
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Files_Information_Attributes()
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			var strs = new List<string>();
+			foreach (var file in files)
+			{
+				if (File.Exists(file))
+				{
+					var fileinfo = new FileInfo(file);
+					strs.Add(fileinfo.Attributes.ToString());
+				}
+				else if (Directory.Exists(file))
+				{
+					var dirinfo = new DirectoryInfo(file);
+					strs.Add(dirinfo.Attributes.ToString());
+				}
+				else
+					strs.Add("INVALID");
+			}
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Files_Information_ReadOnly()
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			var strs = new List<string>();
+			foreach (var file in files)
+			{
+				if (File.Exists(file))
+				{
+					var fileinfo = new FileInfo(file);
+					strs.Add(fileinfo.IsReadOnly.ToString());
+				}
+				else if (Directory.Exists(file))
+					strs.Add("Directory");
+				else
+					strs.Add("INVALID");
+			}
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Case_Upper()
+		{
+			var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Case_Lower()
+		{
+			var strs = Selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Case_Proper()
+		{
+			var strs = Selections.Select(range => GetString(range).ToProper()).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Case_Toggle()
+		{
+			var strs = Selections.Select(range => GetString(range).ToToggled()).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Hex_ToHex()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).ToList();
+			var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
+			Replace(selections, strs, true);
+		}
+
+		void Command_Data_Hex_FromHex()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).ToList();
+			var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
+			Replace(selections, strs, true);
+		}
+
+		void Command_Data_Char_ToChar()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).ToList();
+			var strs = selections.Select(range => GetString(range).FromUTF8HexString()).ToList();
+			Replace(selections, strs, true);
+		}
+
+		void Command_Data_Char_FromChar()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).ToList();
+			var strs = selections.Select(range => GetString(range).ToUTF8HexString()).ToList();
+			Replace(selections, strs, true);
+		}
+
+		void Command_Data_DateTime_Insert()
+		{
+			var now = DateTime.Now.ToString("O");
+			Replace(Selections, Selections.Select(range => now).ToList(), true);
+		}
+
+		void Command_Data_DateTime_Convert()
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			if (strs.Count >= 1)
+			{
+				string inputFormat, outputFormat;
+				bool inputUTC, outputUTC;
+				if (ConvertDateTimeDialog.Run(strs.First(), out inputFormat, out inputUTC, out outputFormat, out outputUTC))
+				{
+					strs = strs.Select(str => ConvertDateTimeDialog.ConvertFormat(str, inputFormat, inputUTC, outputFormat, outputUTC)).ToList();
+					Replace(Selections, strs, true);
+				}
+			}
+
+		}
+
+		void Command_Data_Length()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).ToList();
+			var strs = selections.Select(range => GetString(range).Length.ToString()).ToList();
+			Replace(selections, strs, true);
+		}
+
+		void Command_Data_Width()
+		{
+			var minWidth = Selections.Select(range => range.Length).Max();
+			var text = String.Join("", Selections.Select(range => GetString(range)));
+			var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
+			var widthDialog = new WidthDialog(minWidth, numeric ? '0' : ' ', numeric);
+			if (widthDialog.ShowDialog() == true)
+				Replace(Selections, Selections.Select(range => SetWidth(GetString(range), widthDialog.Value, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
+		}
+
+		void Command_Data_Trim()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).ToList();
+			var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
+			Replace(selections, strs, true);
+		}
+
+		void Command_Data_EvaluateExpression()
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			var expression = ExpressionDialog.GetExpression(strs);
+			if (expression != null)
+			{
+				strs = strs.Select((str, pos) => expression.Evaluate(str, pos + 1).ToString()).ToList();
+				Replace(Selections, strs, true);
+			}
+		}
+
+		void Command_Data_Series()
+		{
+			var strs = Enumerable.Range(1, Selections.Count).Select(num => num.ToString()).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Repeat()
+		{
+			var repeat = RepeatDialog.Run(Selections.Count == 1);
+			if (repeat != null)
+			{
+				var strs = Selections.Select(range => RepeatString(GetString(range), repeat.RepeatCount)).ToList();
+				Replace(Selections, strs, true);
+				if (repeat.SelectAll)
+				{
+					var newSelections = new RangeList();
+					foreach (var selection in Selections)
+					{
+						var len = selection.Length / repeat.RepeatCount;
+						for (var index = selection.Start; index < selection.End; index += len)
+							newSelections.Add(new Range(index + len, index));
+					}
+					Selections.Replace(newSelections);
+				}
+			}
+		}
+
+		void Command_Data_GUID()
+		{
+			var strs = Selections.Select(range => Guid.NewGuid().ToString()).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Random()
+		{
+			int minValue, maxValue;
+			if (RandomNumberDialog.Run(out minValue, out maxValue))
+			{
+				var strs = Selections.Select(range => random.Next(minValue, maxValue + 1).ToString()).ToList();
+				Replace(Selections, strs, true);
+			}
+		}
+
+		void Command_Data_Escape_XML()
+		{
+			var strs = Selections.Select(range => EscapeXML(GetString(range))).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Escape_Regex()
+		{
+			var strs = Selections.Select(range => EscapeRegex(GetString(range))).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Unescape_XML()
+		{
+			var strs = Selections.Select(range => UnescapeXML(GetString(range))).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Unescape_Regex()
+		{
+			var strs = Selections.Select(range => UnescapeRegex(GetString(range))).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Data_Checksum(Checksum.Type type, Coder.Type coder)
+		{
+			var strs = Selections.Select(range => Checksum.Get(type, Coder.StringToBytes(GetString(range), coder))).ToList();
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Keys_SetValues(int index)
+		{
+			// Handles keys as well as values
+			var values = Selections.Select(range => GetString(range)).ToList();
+			if ((index == 0) && (values.Distinct().Count() != values.Count))
+				throw new ArgumentException("Cannot have duplicate keys.");
+			keysAndValues[index] = values;
+			if (index == 0)
+				keysHash = values.Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
+		}
+
+		void Command_Keys_SelectionReplace(int index)
+		{
+			if (keysAndValues[0].Count != keysAndValues[index].Count)
+				throw new Exception("Keys and values count must match.");
+
+			var strs = new List<string>();
+			foreach (var range in Selections)
+			{
+				var str = GetString(range);
+				if (!keysHash.ContainsKey(str))
+					strs.Add(str);
+				else
+					strs.Add(keysAndValues[index][keysHash[str]]);
+			}
+			Replace(Selections, strs, true);
+		}
+
+		void Command_Keys_GlobalFind(int index)
+		{
+			if (keysAndValues[0].Count != keysAndValues[index].Count)
+				throw new Exception("Keys and values count must match.");
+
+			var searcher = Searcher.Create(keysAndValues[0]);
+			var ranges = new RangeList();
+			var selections = Selections;
+			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
+				selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
+			foreach (var selection in selections)
+				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+
+			ranges = ranges.OrderBy(range => range.Start).ToList();
+			Selections.Replace(ranges);
+		}
+
+		void Command_Keys_GlobalReplace(int index)
+		{
+			if (keysAndValues[0].Count != keysAndValues[index].Count)
+				throw new Exception("Keys and values count must match.");
+
+			var searcher = Searcher.Create(keysAndValues[0]);
+			var ranges = new RangeList();
+			var selections = Selections;
+			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
+				selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
+			foreach (var selection in selections)
+				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+
+			ranges = ranges.OrderBy(range => range.Start).ToList();
+
+			var strs = new List<string>();
+			foreach (var range in ranges)
+			{
+				var str = GetString(range);
+				if (!keysHash.ContainsKey(str))
+					strs.Add(str);
+				else
+					strs.Add(keysAndValues[index][keysHash[str]]);
+			}
+			Replace(ranges, strs, true);
+		}
+
+		void Command_Keys_CopyValues(int index)
+		{
+			ClipboardWindow.Set(keysAndValues[index].ToArray());
+		}
+
+		void Command_Keys_HitsValues(int index)
+		{
+			Selections.Replace(Selections.Where(range => keysAndValues[index].Contains(GetString(range))).ToList());
+		}
+
+		void Command_Keys_MissesValues(int index)
+		{
+			Selections.Replace(Selections.Where(range => !keysAndValues[index].Contains(GetString(range))).ToList());
+		}
+
+		void Command_SelectMark_Toggle()
+		{
+			if (Selections.Count > 1)
+			{
+				Marks.AddRange(Selections);
+				Selections.Replace(Selections.First());
+			}
+			else if (Marks.Count != 0)
+			{
+				Selections.Replace(Marks);
+				Marks.Clear();
+			}
+		}
+
+		void Command_Select_All()
+		{
+			Selections.Replace(new Range(EndOffset(), BeginOffset()));
+		}
+
+		void Command_Select_Limit()
+		{
+			var numSels = LimitDialog.Run(Selections.Count);
+			if (numSels.HasValue)
+				Selections.RemoveRange(numSels.Value, Selections.Count - numSels.Value);
+		}
+
+		void Command_Select_AllLines()
+		{
+			var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+			var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
+			Selections.Replace(sels);
+		}
+
+		void Command_Select_Lines()
+		{
+			int lineMult;
+			bool ignoreBlankLines;
+			if (SelectLinesDialog.Run(out lineMult, out ignoreBlankLines))
+			{
+				var selections = Selections;
+				if ((selections.Count == 1) && (!selections[0].HasSelection()))
+					selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
+				var lines = selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+				var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
+				if (ignoreBlankLines)
+					sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
+				if (lineMult > 1)
+					sels = sels.Where((sel, index) => index % lineMult == 0).ToList();
+				Selections.Replace(sels);
+			}
+		}
+
+		void Command_Select_Marks()
+		{
+			if (Marks.Count != 0)
+			{
+				Selections.Replace(Marks);
+				Marks.Clear();
+			}
+		}
+
+		void Command_Select_Find()
+		{
+			Selections.Replace(Searches);
+			Searches.Clear();
+		}
+
+		void Command_Select_RemoveEmpty()
+		{
+			Selections.Replace(Selections.Where(range => range.HasSelection()).ToList());
+		}
+
+		void Command_Select_Unique()
+		{
+			Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
+		}
+
+		void Command_Select_Duplicates()
+		{
+			Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
+		}
+
+		void Command_Select_Min_String()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
+			var first = selections.First().str;
+			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
+		}
+
+		void Command_Select_Min_Numeric()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
+			var first = selections.First().str;
+			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
+		}
+
+		void Command_Select_Max_String()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
+			var first = selections.Last().str;
+			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
+		}
+
+		void Command_Select_Max_Numeric()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
+			var first = selections.Last().str;
+			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
+		}
+
+		void Command_Select_ExpressionMatches()
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			var expression = ExpressionDialog.GetExpression(strs);
+			if (expression != null)
+			{
+				var sels = new RangeList();
+				for (var ctr = 0; ctr < strs.Count; ++ctr)
+					if ((bool)expression.Evaluate(strs[ctr], ctr + 1))
+						sels.Add(Selections[ctr]);
+				Selections.Replace(sels);
+			}
+		}
+
+		void Command_Select_RegExMatches()
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			var expression = ExpressionDialog.GetRegEx(strs);
+			if (expression != null)
+			{
+				var sels = new RangeList();
+				for (var ctr = 0; ctr < strs.Count; ++ctr)
+					if (expression.IsMatch(strs[ctr]))
+						sels.Add(Selections[ctr]);
+				Selections.Replace(sels);
+			}
+		}
+
+		void Command_Select_RegExNonMatches()
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			var expression = ExpressionDialog.GetRegEx(strs);
+			if (expression != null)
+			{
+				var sels = new RangeList();
+				for (var ctr = 0; ctr < strs.Count; ++ctr)
+					if (!expression.IsMatch(strs[ctr]))
+						sels.Add(Selections[ctr]);
+				Selections.Replace(sels);
+			}
+		}
+
+		void Command_Select_ShowFirst()
+		{
+			visibleIndex = 0;
+			EnsureVisible(true);
+		}
+
+		void Command_Select_ShowCurrent()
+		{
+			EnsureVisible(true);
+		}
+
+		void Command_Select_NextSelection()
+		{
+			++visibleIndex;
+			if (visibleIndex >= Selections.Count)
+				visibleIndex = 0;
+			EnsureVisible(true);
+		}
+
+		void Command_Select_PrevSelection()
+		{
+			--visibleIndex;
+			if (visibleIndex < 0)
+				visibleIndex = Selections.Count - 1;
+			EnsureVisible(true);
+		}
+
+		void Command_Select_Single()
+		{
+			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
+			Selections.Replace(Selections[visibleIndex]);
+			visibleIndex = 0;
+		}
+
+		void Command_Select_Remove()
+		{
+			Selections.RemoveAt(visibleIndex);
+		}
+
+		void Command_Mark_Selection()
+		{
+			Marks.AddRange(Selections);
+		}
+
+		void Command_Mark_Find()
+		{
+			Marks.AddRange(Searches);
+			Searches.Clear();
+		}
+
+		void Command_Mark_Clear()
+		{
+			var hasSelection = Selections.Any(range => range.HasSelection());
+			if (!hasSelection)
+				Marks.Clear();
+			else
+			{
+				foreach (var selection in Selections)
+				{
+					var toRemove = Marks.Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
+					toRemove.ForEach(mark => Marks.Remove(mark));
+				}
+			}
+		}
+
+		void Command_Mark_LimitToSelection()
+		{
+			Marks.Replace(Marks.Where(mark => Selections.Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList());
 		}
 
 		void RunCommand(TextEditCommand command)
@@ -332,767 +1283,198 @@ namespace NeoEdit.TextEditor
 			var shiftDown = this.shiftDown;
 			shiftOverride = shiftDown;
 
-			if (command == TextEditCommand.File_New)
-			{
-				if (ConfirmModified())
-				{
-					FileName = null;
-					Data = new TextData();
-					ModifiedSteps = 0;
-				}
-			}
-			else if (command == TextEditCommand.File_Open)
-			{
-				if (ConfirmModified())
-				{
-					var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
-					if (dialog.ShowDialog() == true)
-						OpenFile(dialog.FileName);
-				}
-			}
-			else if (command == TextEditCommand.File_Save)
-			{
-				if (FileName == null)
-					RunCommand(TextEditCommand.File_SaveAs);
-				else
-				{
-					File.WriteAllBytes(FileName, Data.GetBytes(CoderUsed));
-					fileLastWrite = new FileInfo(FileName).LastWriteTime;
-					ModifiedSteps = 0;
-				}
-			}
-			else if (command == TextEditCommand.File_SaveAs)
-			{
-				var dialog = new SaveFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
-				if (dialog.ShowDialog() == true)
-				{
-					if (Directory.Exists(dialog.FileName))
-						throw new Exception("A directory by that name already exists.");
-					if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
-						throw new Exception("Directory doesn't exist.");
-					FileName = dialog.FileName;
-					RunCommand(TextEditCommand.File_Save);
-				}
-			}
-			else if (command == TextEditCommand.File_Revert)
-			{
-				var run = true;
-
-				if ((run) && (ModifiedSteps != 0))
-				{
-					run = new Message
-					{
-						Title = "Confirm",
-						Text = "You have unsaved changes.  Are you sure you want to reload?",
-						Options = Message.OptionsEnum.YesNo,
-						DefaultAccept = Message.OptionsEnum.Yes,
-						DefaultCancel = Message.OptionsEnum.No,
-					}.Show() == Message.OptionsEnum.Yes;
-				}
-
-				if (run)
-					OpenFile(FileName);
-			}
-			else if (command == TextEditCommand.File_CheckUpdates)
-				CheckUpdates = !CheckUpdates;
-			else if (command == TextEditCommand.File_InsertFiles)
-			{
-				var run = true;
-
-				if (Selections.Count != 1)
-				{
-					new Message
-					{
-						Title = "Error",
-						Text = "You have more than one selection.",
-						Options = Message.OptionsEnum.Ok,
-					}.Show();
-					run = false;
-				}
-
-				if (run)
-				{
-					var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
-					if (dialog.ShowDialog() == true)
-					{
-						var str = "";
-						foreach (var filename in dialog.FileNames)
-						{
-							var bytes = File.ReadAllBytes(filename);
-							var data = new TextData(bytes, Coder.GuessEncoding(bytes));
-
-							var beginOffset = data.GetOffset(0, 0);
-							var endOffset = data.GetOffset(data.NumLines - 1, data.GetLineLength(data.NumLines - 1));
-							str += data.GetString(beginOffset, endOffset - beginOffset);
-						}
-
-						Replace(Selections, new List<string> { str }, true);
-					}
-				}
-			}
-			else if (command == TextEditCommand.File_CopyPath)
-				Clipboard.SetText(FileName);
-			else if (command == TextEditCommand.File_CopyName)
-				Clipboard.SetText(Path.GetFileName(FileName));
-			else if (command == TextEditCommand.File_BinaryEditor)
-			{
-				Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed));
-				this.Close();
-			}
-			else if (command == TextEditCommand.File_BOM)
-			{
-				if (Data.BOM)
-					Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
-				else
-					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
-			}
-			else if (command == TextEditCommand.File_Exit)
-				Close();
-			else if (command == TextEditCommand.Edit_Undo)
-			{
-				if (undo.Count != 0)
-				{
-					var undoStep = undo.Last();
-					undo.Remove(undoStep);
-					Replace(undoStep.ranges, undoStep.text, true, ReplaceType.Undo);
-				}
-			}
-			else if (command == TextEditCommand.Edit_Redo)
-			{
-				if (redo.Count != 0)
-				{
-					var redoStep = redo.Last();
-					redo.Remove(redoStep);
-					Replace(redoStep.ranges, redoStep.text, true, ReplaceType.Redo);
-				}
-			}
-			else if ((command == TextEditCommand.Edit_Cut) || (command == TextEditCommand.Edit_Copy))
-			{
-				var result = Selections.Select(range => GetString(range)).ToArray();
-				if (result.Length != 0)
-					ClipboardWindow.Set(result);
-				if (command == TextEditCommand.Edit_Cut)
-					Replace(Selections, null, false);
-			}
-			else if (command == TextEditCommand.Edit_Paste)
-			{
-				var result = ClipboardWindow.GetStrings().ToList();
-				if ((Selections.Count == 1) && (result.Count != 1))
-					result = result.Select(str => str + Data.DefaultEnding).ToList();
-				if ((result != null) && (result.Count != 0))
-				{
-					while (result.Count > Selections.Count)
-					{
-						result[result.Count - 2] += result[result.Count - 1];
-						result.RemoveAt(result.Count - 1);
-					}
-					while (result.Count < Selections.Count)
-						result.Add(result.Last());
-
-					Replace(Selections, result, false);
-				}
-			}
-			else if (command == TextEditCommand.Edit_ShowClipboard)
-				ClipboardWindow.Show();
-			else if (command == TextEditCommand.Edit_Find)
-			{
-				string text = null;
-				var selectionOnly = Selections.Any(range => range.HasSelection());
-
-				if (Selections.Count == 1)
-				{
-					var sel = Selections.First();
-					if ((sel.HasSelection()) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
-					{
-						selectionOnly = false;
-						text = GetString(sel);
-					}
-				}
-
-				var findResult = FindDialog.Run(text, selectionOnly);
-				if (findResult != null)
-				{
-					RunSearch(findResult);
-					if (findResult.SelectAll)
-					{
-						if (Searches.Count != 0)
-							Selections.Replace(Searches);
-						Searches.Clear();
-					}
-
-					FindNext(true);
-				}
-			}
-			else if ((command == TextEditCommand.Edit_FindNext) || (command == TextEditCommand.Edit_FindPrev))
-				FindNext(command == TextEditCommand.Edit_FindNext);
-			else if (command == TextEditCommand.Edit_GotoLine)
-			{
-				var shift = shiftDown;
-				var line = Data.GetOffsetLine(Selections.First().Start);
-				var newLine = GotoLineDialog.Run(Data.NumLines, line);
-				if (newLine.HasValue)
-				{
-					shiftOverride = shift;
-					Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true)).ToList());
-					shiftOverride = null;
-				}
-			}
-			else if (command == TextEditCommand.Edit_GotoIndex)
-			{
-				var shift = shiftDown;
-				var offset = Selections.First().Start;
-				var line = Data.GetOffsetLine(offset);
-				var index = Data.GetOffsetIndex(offset, line);
-				var newIndex = GotoIndexDialog.Run(Data.GetLineLength(line) + 1, index);
-				if (newIndex.HasValue)
-				{
-					shiftOverride = shift;
-					Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false)).ToList());
-					shiftOverride = null;
-				}
-			}
-			else if ((command == TextEditCommand.Files_Copy) || (command == TextEditCommand.Files_Cut))
-			{
-				var result = Selections.Select(range => GetString(range)).ToArray();
-				if (result.Length != 0)
-					ClipboardWindow.SetFiles(result, command == TextEditCommand.Files_Cut);
-			}
-			else if (command == TextEditCommand.Files_Delete)
-			{
-				if (new Message
-				{
-					Title = "Confirm",
-					Text = "Are you sure you want to delete these files/directories?",
-					Options = Message.OptionsEnum.YesNo,
-					DefaultCancel = Message.OptionsEnum.No,
-				}.Show() == Message.OptionsEnum.Yes)
-				{
-					var files = Selections.Select(range => GetString(range)).ToArray();
-					foreach (var file in files)
-					{
-						if (File.Exists(file))
-							File.Delete(file);
-						if (Directory.Exists(file))
-							Directory.Delete(file, true);
-					}
-				}
-			}
-			else if ((command == TextEditCommand.Files_Timestamp_Write) || (command == TextEditCommand.Files_Timestamp_Access) || (command == TextEditCommand.Files_Timestamp_Create) || (command == TextEditCommand.Files_Timestamp_All))
-			{
-				var result = ChooseDateTimeDialog.Run(DateTime.Now);
-				if (result != null)
-				{
-					var files = Selections.Select(range => GetString(range)).ToArray();
-					foreach (var file in files)
-					{
-						if ((!File.Exists(file)) && (!Directory.Exists(file)))
-							File.WriteAllBytes(file, new byte[0]);
-
-						if (File.Exists(file))
-						{
-							var info = new FileInfo(file);
-							if ((command == TextEditCommand.Files_Timestamp_Write) || (command == TextEditCommand.Files_Timestamp_All))
-								info.LastWriteTime = result.Value;
-							if ((command == TextEditCommand.Files_Timestamp_Access) || (command == TextEditCommand.Files_Timestamp_All))
-								info.LastAccessTime = result.Value;
-							if ((command == TextEditCommand.Files_Timestamp_Create) || (command == TextEditCommand.Files_Timestamp_All))
-								info.CreationTime = result.Value;
-						}
-						else if (Directory.Exists(file))
-						{
-							var info = new DirectoryInfo(file);
-							if ((command == TextEditCommand.Files_Timestamp_Write) || (command == TextEditCommand.Files_Timestamp_All))
-								info.LastWriteTime = result.Value;
-							if ((command == TextEditCommand.Files_Timestamp_Access) || (command == TextEditCommand.Files_Timestamp_All))
-								info.LastAccessTime = result.Value;
-							if ((command == TextEditCommand.Files_Timestamp_Create) || (command == TextEditCommand.Files_Timestamp_All))
-								info.CreationTime = result.Value;
-						}
-					}
-				}
-			}
-			else if (command == TextEditCommand.Files_Path_Simplify)
-			{
-				var strs = Selections.Select(range => Path.GetFullPath(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if ((command == TextEditCommand.Files_Path_GetFileName) || (command == TextEditCommand.Files_Path_GetFileNameWoExtension) || (command == TextEditCommand.Files_Path_GetDirectory) || (command == TextEditCommand.Files_Path_GetExtension) || (command == TextEditCommand.Files_CreateDirectory))
-				Selections.Replace(Selections.Select(range => TranslateFileNameDirectoryExtensionRange(command, range)).ToList());
-			else if (command == TextEditCommand.Files_CreateDirectory)
-			{
-				var files = Selections.Select(range => GetString(range)).ToArray();
-				foreach (var file in files)
-					Directory.CreateDirectory(file);
-			}
-			else if (command == TextEditCommand.Files_Information_Size)
-			{
-				var files = Selections.Select(range => GetString(range)).ToList();
-				var strs = new List<string>();
-				foreach (var file in files)
-				{
-					if (File.Exists(file))
-					{
-						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.Length.ToString());
-					}
-					else if (Directory.Exists(file))
-						strs.Add("Directory");
-					else
-						strs.Add("INVALID");
-				}
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Files_Information_WriteTime)
-			{
-				var files = Selections.Select(range => GetString(range)).ToList();
-				var strs = new List<string>();
-				foreach (var file in files)
-				{
-					if (File.Exists(file))
-					{
-						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-					}
-					else if (Directory.Exists(file))
-					{
-						var dirinfo = new DirectoryInfo(file);
-						strs.Add(dirinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-					}
-					else
-						strs.Add("INVALID");
-				}
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Files_Information_AccessTime)
-			{
-				var files = Selections.Select(range => GetString(range)).ToList();
-				var strs = new List<string>();
-				foreach (var file in files)
-				{
-					if (File.Exists(file))
-					{
-						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-					}
-					else if (Directory.Exists(file))
-					{
-						var dirinfo = new DirectoryInfo(file);
-						strs.Add(dirinfo.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-					}
-					else
-						strs.Add("INVALID");
-				}
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Files_Information_CreateTime)
-			{
-				var files = Selections.Select(range => GetString(range)).ToList();
-				var strs = new List<string>();
-				foreach (var file in files)
-				{
-					if (File.Exists(file))
-					{
-						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-					}
-					else if (Directory.Exists(file))
-					{
-						var dirinfo = new DirectoryInfo(file);
-						strs.Add(dirinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-					}
-					else
-						strs.Add("INVALID");
-				}
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Files_Information_Attributes)
-			{
-				var files = Selections.Select(range => GetString(range)).ToList();
-				var strs = new List<string>();
-				foreach (var file in files)
-				{
-					if (File.Exists(file))
-					{
-						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.Attributes.ToString());
-					}
-					else if (Directory.Exists(file))
-					{
-						var dirinfo = new DirectoryInfo(file);
-						strs.Add(dirinfo.Attributes.ToString());
-					}
-					else
-						strs.Add("INVALID");
-				}
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Files_Information_ReadOnly)
-			{
-				var files = Selections.Select(range => GetString(range)).ToList();
-				var strs = new List<string>();
-				foreach (var file in files)
-				{
-					if (File.Exists(file))
-					{
-						var fileinfo = new FileInfo(file);
-						strs.Add(fileinfo.IsReadOnly.ToString());
-					}
-					else if (Directory.Exists(file))
-						strs.Add("Directory");
-					else
-						strs.Add("INVALID");
-				}
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Case_Upper)
-			{
-				var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Case_Lower)
-			{
-				var strs = Selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Case_Proper)
-			{
-				var strs = Selections.Select(range => GetString(range).ToProper()).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Case_Toggle)
-			{
-				var strs = Selections.Select(range => GetString(range).ToToggled()).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Hex_ToHex)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Hex_FromHex)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Char_ToChar)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range).FromUTF8HexString()).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Char_FromChar)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range).ToUTF8HexString()).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_DateTime_Insert)
-			{
-				var now = DateTime.Now.ToString("O");
-				Replace(Selections, Selections.Select(range => now).ToList(), true);
-			}
-			else if (command == TextEditCommand.Data_DateTime_Convert)
-			{
-				var strs = Selections.Select(range => GetString(range)).ToList();
-				if (strs.Count >= 1)
-				{
-					string inputFormat, outputFormat;
-					bool inputUTC, outputUTC;
-					if (ConvertDateTimeDialog.Run(strs.First(), out inputFormat, out inputUTC, out outputFormat, out outputUTC))
-					{
-						strs = strs.Select(str => ConvertDateTimeDialog.ConvertFormat(str, inputFormat, inputUTC, outputFormat, outputUTC)).ToList();
-						Replace(Selections, strs, true);
-					}
-				}
-
-			}
-			else if (command == TextEditCommand.Data_Length)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range).Length.ToString()).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Width)
-			{
-				var minWidth = Selections.Select(range => range.Length).Max();
-				var text = String.Join("", Selections.Select(range => GetString(range)));
-				var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
-				var widthDialog = new WidthDialog(minWidth, numeric ? '0' : ' ', numeric);
-				if (widthDialog.ShowDialog() == true)
-					Replace(Selections, Selections.Select(range => SetWidth(GetString(range), widthDialog.Value, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
-			}
-			else if (command == TextEditCommand.Data_Trim)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).ToList();
-				var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
-				Replace(selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_EvaluateExpression)
-			{
-				var strs = Selections.Select(range => GetString(range)).ToList();
-				var expression = ExpressionDialog.GetExpression(strs);
-				if (expression != null)
-				{
-					strs = strs.Select((str, pos) => expression.Evaluate(str, pos + 1).ToString()).ToList();
-					Replace(Selections, strs, true);
-				}
-			}
-			else if (command == TextEditCommand.Data_Series)
-			{
-				var strs = Enumerable.Range(1, Selections.Count).Select(num => num.ToString()).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Repeat)
-			{
-				var repeat = RepeatDialog.Run(Selections.Count == 1);
-				if (repeat != null)
-				{
-					var strs = Selections.Select(range => RepeatString(GetString(range), repeat.RepeatCount)).ToList();
-					Replace(Selections, strs, true);
-					if (repeat.SelectAll)
-					{
-						var newSelections = new RangeList();
-						foreach (var selection in Selections)
-						{
-							var len = selection.Length / repeat.RepeatCount;
-							for (var index = selection.Start; index < selection.End; index += len)
-								newSelections.Add(new Range(index + len, index));
-						}
-						Selections.Replace(newSelections);
-					}
-				}
-			}
-			else if (command == TextEditCommand.Data_GUID)
-			{
-				var strs = Selections.Select(range => Guid.NewGuid().ToString()).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Random)
-			{
-				int minValue, maxValue;
-				if (RandomNumberDialog.Run(out minValue, out maxValue))
-				{
-					var strs = Selections.Select(range => random.Next(minValue, maxValue + 1).ToString()).ToList();
-					Replace(Selections, strs, true);
-				}
-			}
-			else if (command == TextEditCommand.Data_Escape_XML)
-			{
-				var strs = Selections.Select(range => EscapeXML(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Escape_Regex)
-			{
-				var strs = Selections.Select(range => EscapeRegex(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Unescape_XML)
-			{
-				var strs = Selections.Select(range => UnescapeXML(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.Data_Unescape_Regex)
-			{
-				var strs = Selections.Select(range => UnescapeRegex(GetString(range))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if ((command == TextEditCommand.Data_MD5_UTF8) || (command == TextEditCommand.Data_MD5_UTF7) || (command == TextEditCommand.Data_MD5_UTF16LE) || (command == TextEditCommand.Data_MD5_UTF16BE) || (command == TextEditCommand.Data_MD5_UTF32LE) || (command == TextEditCommand.Data_MD5_UTF32BE))
-			{
-				var coder = GetChecksumCoder(command);
-				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.MD5, Coder.StringToBytes(GetString(range), coder))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if ((command == TextEditCommand.Data_SHA1_UTF8) || (command == TextEditCommand.Data_SHA1_UTF7) || (command == TextEditCommand.Data_SHA1_UTF16LE) || (command == TextEditCommand.Data_SHA1_UTF16BE) || (command == TextEditCommand.Data_SHA1_UTF32LE) || (command == TextEditCommand.Data_SHA1_UTF32BE))
-			{
-				var coder = GetChecksumCoder(command);
-				var strs = Selections.Select(range => Checksum.Get(Checksum.Type.SHA1, Coder.StringToBytes(GetString(range), coder))).ToList();
-				Replace(Selections, strs, true);
-			}
-			else if (command == TextEditCommand.SelectMark_Toggle)
-			{
-				if (Selections.Count > 1)
-				{
-					Marks.AddRange(Selections);
-					Selections.Replace(Selections.First());
-				}
-				else if (Marks.Count != 0)
-				{
-					Selections.Replace(Marks);
-					Marks.Clear();
-				}
-			}
-			else if (command == TextEditCommand.Select_All)
-				Selections.Replace(new Range(EndOffset(), BeginOffset()));
-			else if (command == TextEditCommand.Select_Limit)
-			{
-				var numSels = LimitDialog.Run(Selections.Count);
-				if (numSels.HasValue)
-					Selections.RemoveRange(numSels.Value, Selections.Count - numSels.Value);
-			}
-			else if (command == TextEditCommand.Select_AllLines)
-			{
-				var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-				var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
-				Selections.Replace(sels);
-			}
-			else if (command == TextEditCommand.Select_Lines)
-			{
-				int lineMult;
-				bool ignoreBlankLines;
-				if (SelectLinesDialog.Run(out lineMult, out ignoreBlankLines))
-				{
-					var selections = Selections;
-					if ((selections.Count == 1) && (!selections[0].HasSelection()))
-						selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
-					var lines = selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-					var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
-					if (ignoreBlankLines)
-						sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
-					if (lineMult > 1)
-						sels = sels.Where((sel, index) => index % lineMult == 0).ToList();
-					Selections.Replace(sels);
-				}
-			}
-			else if (command == TextEditCommand.Select_Marks)
-			{
-				if (Marks.Count != 0)
-				{
-					Selections.Replace(Marks);
-					Marks.Clear();
-				}
-			}
-			else if (command == TextEditCommand.Select_Find)
-			{
-				Selections.Replace(Searches);
-				Searches.Clear();
-			}
-			else if (command == TextEditCommand.Select_RemoveEmpty)
-				Selections.Replace(Selections.Where(range => range.HasSelection()).ToList());
-			else if (command == TextEditCommand.Select_Unique)
-				Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
-			else if (command == TextEditCommand.Select_Duplicates)
-				Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
-			else if (command == TextEditCommand.Select_Min_String)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
-				var first = selections.First().str;
-				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
-			}
-			else if (command == TextEditCommand.Select_Min_Numeric)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
-				var first = selections.First().str;
-				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
-			}
-			else if (command == TextEditCommand.Select_Max_String)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
-				var first = selections.Last().str;
-				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
-			}
-			else if (command == TextEditCommand.Select_Max_Numeric)
-			{
-				var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
-				var first = selections.Last().str;
-				Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
-			}
-			else if (command == TextEditCommand.Select_ExpressionMatches)
-			{
-				var strs = Selections.Select(range => GetString(range)).ToList();
-				var expression = ExpressionDialog.GetExpression(strs);
-				if (expression != null)
-				{
-					var sels = new RangeList();
-					for (var ctr = 0; ctr < strs.Count; ++ctr)
-						if ((bool)expression.Evaluate(strs[ctr], ctr + 1))
-							sels.Add(Selections[ctr]);
-					Selections.Replace(sels);
-				}
-			}
-			else if (command == TextEditCommand.Select_RegExMatches)
-			{
-				var strs = Selections.Select(range => GetString(range)).ToList();
-				var expression = ExpressionDialog.GetRegEx(strs);
-				if (expression != null)
-				{
-					var sels = new RangeList();
-					for (var ctr = 0; ctr < strs.Count; ++ctr)
-						if (expression.IsMatch(strs[ctr]))
-							sels.Add(Selections[ctr]);
-					Selections.Replace(sels);
-				}
-			}
-			else if (command == TextEditCommand.Select_RegExNonMatches)
-			{
-				var strs = Selections.Select(range => GetString(range)).ToList();
-				var expression = ExpressionDialog.GetRegEx(strs);
-				if (expression != null)
-				{
-					var sels = new RangeList();
-					for (var ctr = 0; ctr < strs.Count; ++ctr)
-						if (!expression.IsMatch(strs[ctr]))
-							sels.Add(Selections[ctr]);
-					Selections.Replace(sels);
-				}
-			}
-			else if (command == TextEditCommand.Select_ShowFirst)
-			{
-				visibleIndex = 0;
-				EnsureVisible(true);
-			}
-			else if (command == TextEditCommand.Select_ShowCurrent)
-				EnsureVisible(true);
-			else if (command == TextEditCommand.Select_NextSelection)
-			{
-				++visibleIndex;
-				if (visibleIndex >= Selections.Count)
-					visibleIndex = 0;
-				EnsureVisible(true);
-			}
-			else if (command == TextEditCommand.Select_PrevSelection)
-			{
-				--visibleIndex;
-				if (visibleIndex < 0)
-					visibleIndex = Selections.Count - 1;
-				EnsureVisible(true);
-			}
-			else if (command == TextEditCommand.Select_Single)
-			{
-				visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
-				Selections.Replace(Selections[visibleIndex]);
-				visibleIndex = 0;
-			}
-			else if (command == TextEditCommand.Select_Remove)
-				Selections.RemoveAt(visibleIndex);
-			else if (command == TextEditCommand.Mark_Selection)
-				Marks.AddRange(Selections);
-			else if (command == TextEditCommand.Mark_Find)
-			{
-				Marks.AddRange(Searches);
-				Searches.Clear();
-			}
-			else if (command == TextEditCommand.Mark_Clear)
-			{
-				var hasSelection = Selections.Any(range => range.HasSelection());
-				if (!hasSelection)
-					Marks.Clear();
-				else
-				{
-					foreach (var selection in Selections)
-					{
-						var toRemove = Marks.Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
-						toRemove.ForEach(mark => Marks.Remove(mark));
-					}
-				}
+			switch (command)
+			{
+				case TextEditCommand.File_New: Command_File_New(); break;
+				case TextEditCommand.File_Open: Command_File_Open(); break;
+				case TextEditCommand.File_Save: Command_File_Save(); break;
+				case TextEditCommand.File_SaveAs: Command_File_SaveAs(); break;
+				case TextEditCommand.File_Revert: Command_File_Revert(); break;
+				case TextEditCommand.File_CheckUpdates: Command_File_CheckUpdates(); break;
+				case TextEditCommand.File_InsertFiles: Command_File_InsertFiles(); break;
+				case TextEditCommand.File_CopyPath: Command_File_CopyPath(); break;
+				case TextEditCommand.File_CopyName: Command_File_CopyName(); break;
+				case TextEditCommand.File_BinaryEditor: Command_File_BinaryEditor(); break;
+				case TextEditCommand.File_BOM: Command_File_BOM(); break;
+				case TextEditCommand.File_Exit: Command_File_Exit(); break;
+				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
+				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
+				case TextEditCommand.Edit_Cut: Command_Edit_CutCopy(true); break;
+				case TextEditCommand.Edit_Copy: Command_Edit_CutCopy(false); break;
+				case TextEditCommand.Edit_Paste: Command_Edit_Paste(); break;
+				case TextEditCommand.Edit_ShowClipboard: Command_Edit_ShowClipboard(); break;
+				case TextEditCommand.Edit_Find: Command_Edit_Find(); break;
+				case TextEditCommand.Edit_FindNext: Command_Edit_FindNextPrev(true); break;
+				case TextEditCommand.Edit_FindPrev: Command_Edit_FindNextPrev(false); break;
+				case TextEditCommand.Edit_GotoLine: Command_Edit_GotoLine(); break;
+				case TextEditCommand.Edit_GotoIndex: Command_Edit_GotoIndex(); break;
+				case TextEditCommand.Files_Copy: Command_Files_CutCopy(false); break;
+				case TextEditCommand.Files_Cut: Command_Files_CutCopy(true); break;
+				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
+				case TextEditCommand.Files_Timestamp_Write: Command_Files_Timestamp(TimestampType.Write); break;
+				case TextEditCommand.Files_Timestamp_Access: Command_Files_Timestamp(TimestampType.Access); break;
+				case TextEditCommand.Files_Timestamp_Create: Command_Files_Timestamp(TimestampType.Create); break;
+				case TextEditCommand.Files_Timestamp_All: Command_Files_Timestamp(TimestampType.All); break;
+				case TextEditCommand.Files_Path_Simplify: Command_Files_Path_Simplify(); break;
+				case TextEditCommand.Files_Path_GetFileName: Command_Files_Path_GetFilePath(GetPathType.FileName); break;
+				case TextEditCommand.Files_Path_GetFileNameWoExtension: Command_Files_Path_GetFilePath(GetPathType.FileNameWoExtension); break;
+				case TextEditCommand.Files_Path_GetDirectory: Command_Files_Path_GetFilePath(GetPathType.Directory); break;
+				case TextEditCommand.Files_Path_GetExtension: Command_Files_Path_GetFilePath(GetPathType.Extension); break;
+				case TextEditCommand.Files_CreateDirectory: Command_Files_CreateDirectory(); break;
+				case TextEditCommand.Files_Information_Size: Command_Files_Information_Size(); break;
+				case TextEditCommand.Files_Information_WriteTime: Command_Files_Information_WriteTime(); break;
+				case TextEditCommand.Files_Information_AccessTime: Command_Files_Information_AccessTime(); break;
+				case TextEditCommand.Files_Information_CreateTime: Command_Files_Information_CreateTime(); break;
+				case TextEditCommand.Files_Information_Attributes: Command_Files_Information_Attributes(); break;
+				case TextEditCommand.Files_Information_ReadOnly: Command_Files_Information_ReadOnly(); break;
+				case TextEditCommand.Data_Case_Upper: Command_Data_Case_Upper(); break;
+				case TextEditCommand.Data_Case_Lower: Command_Data_Case_Lower(); break;
+				case TextEditCommand.Data_Case_Proper: Command_Data_Case_Proper(); break;
+				case TextEditCommand.Data_Case_Toggle: Command_Data_Case_Toggle(); break;
+				case TextEditCommand.Data_Hex_ToHex: Command_Data_Hex_ToHex(); break;
+				case TextEditCommand.Data_Hex_FromHex: Command_Data_Hex_FromHex(); break;
+				case TextEditCommand.Data_Char_ToChar: Command_Data_Char_ToChar(); break;
+				case TextEditCommand.Data_Char_FromChar: Command_Data_Char_FromChar(); break;
+				case TextEditCommand.Data_DateTime_Insert: Command_Data_DateTime_Insert(); break;
+				case TextEditCommand.Data_DateTime_Convert: Command_Data_DateTime_Convert(); break;
+				case TextEditCommand.Data_Length: Command_Data_Length(); break;
+				case TextEditCommand.Data_Width: Command_Data_Width(); break;
+				case TextEditCommand.Data_Trim: Command_Data_Trim(); break;
+				case TextEditCommand.Data_EvaluateExpression: Command_Data_EvaluateExpression(); break;
+				case TextEditCommand.Data_Series: Command_Data_Series(); break;
+				case TextEditCommand.Data_Repeat: Command_Data_Repeat(); break;
+				case TextEditCommand.Data_GUID: Command_Data_GUID(); break;
+				case TextEditCommand.Data_Random: Command_Data_Random(); break;
+				case TextEditCommand.Data_Escape_XML: Command_Data_Escape_XML(); break;
+				case TextEditCommand.Data_Escape_Regex: Command_Data_Escape_Regex(); break;
+				case TextEditCommand.Data_Unescape_XML: Command_Data_Unescape_XML(); break;
+				case TextEditCommand.Data_Unescape_Regex: Command_Data_Unescape_Regex(); break;
+				case TextEditCommand.Data_MD5_UTF8: Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF8); break;
+				case TextEditCommand.Data_MD5_UTF7: Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF7); break;
+				case TextEditCommand.Data_MD5_UTF16LE: Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF16LE); break;
+				case TextEditCommand.Data_MD5_UTF16BE: Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF16BE); break;
+				case TextEditCommand.Data_MD5_UTF32LE: Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF32LE); break;
+				case TextEditCommand.Data_MD5_UTF32BE: Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF32BE); break;
+				case TextEditCommand.Data_SHA1_UTF8: Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF8); break;
+				case TextEditCommand.Data_SHA1_UTF7: Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF7); break;
+				case TextEditCommand.Data_SHA1_UTF16LE: Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF16LE); break;
+				case TextEditCommand.Data_SHA1_UTF16BE: Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF16BE); break;
+				case TextEditCommand.Data_SHA1_UTF32LE: Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF32LE); break;
+				case TextEditCommand.Data_SHA1_UTF32BE: Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF32BE); break;
+				case TextEditCommand.Sort_String: Sort(SortScope.Selections, SortType.String); break;
+				case TextEditCommand.Sort_Numeric: Sort(SortScope.Selections, SortType.Numeric); break;
+				case TextEditCommand.Sort_Keys: Sort(SortScope.Selections, SortType.Keys); break;
+				case TextEditCommand.Sort_Reverse: Sort(SortScope.Selections, SortType.Reverse); break;
+				case TextEditCommand.Sort_Randomize: Sort(SortScope.Selections, SortType.Randomize); break;
+				case TextEditCommand.Sort_Length: Sort(SortScope.Selections, SortType.Length); break;
+				case TextEditCommand.Sort_Lines_String: Sort(SortScope.Lines, SortType.String); break;
+				case TextEditCommand.Sort_Lines_Numeric: Sort(SortScope.Lines, SortType.Numeric); break;
+				case TextEditCommand.Sort_Lines_Keys: Sort(SortScope.Lines, SortType.Keys); break;
+				case TextEditCommand.Sort_Lines_Reverse: Sort(SortScope.Lines, SortType.Reverse); break;
+				case TextEditCommand.Sort_Lines_Randomize: Sort(SortScope.Lines, SortType.Randomize); break;
+				case TextEditCommand.Sort_Lines_Length: Sort(SortScope.Lines, SortType.Length); break;
+				case TextEditCommand.Sort_Regions_String: Sort(SortScope.Regions, SortType.String); break;
+				case TextEditCommand.Sort_Regions_Numeric: Sort(SortScope.Regions, SortType.Numeric); break;
+				case TextEditCommand.Sort_Regions_Keys: Sort(SortScope.Regions, SortType.Keys); break;
+				case TextEditCommand.Sort_Regions_Reverse: Sort(SortScope.Regions, SortType.Reverse); break;
+				case TextEditCommand.Sort_Regions_Randomize: Sort(SortScope.Regions, SortType.Randomize); break;
+				case TextEditCommand.Sort_Regions_Length: Sort(SortScope.Regions, SortType.Length); break;
+				case TextEditCommand.Keys_SetKeys: Command_Keys_SetValues(0); break;
+				case TextEditCommand.Keys_SetValues1: Command_Keys_SetValues(1); break;
+				case TextEditCommand.Keys_SetValues2: Command_Keys_SetValues(2); break;
+				case TextEditCommand.Keys_SetValues3: Command_Keys_SetValues(3); break;
+				case TextEditCommand.Keys_SetValues4: Command_Keys_SetValues(4); break;
+				case TextEditCommand.Keys_SetValues5: Command_Keys_SetValues(5); break;
+				case TextEditCommand.Keys_SetValues6: Command_Keys_SetValues(6); break;
+				case TextEditCommand.Keys_SetValues7: Command_Keys_SetValues(7); break;
+				case TextEditCommand.Keys_SetValues8: Command_Keys_SetValues(8); break;
+				case TextEditCommand.Keys_SetValues9: Command_Keys_SetValues(9); break;
+				case TextEditCommand.Keys_SelectionReplace1: Command_Keys_SelectionReplace(1); break;
+				case TextEditCommand.Keys_SelectionReplace2: Command_Keys_SelectionReplace(2); break;
+				case TextEditCommand.Keys_SelectionReplace3: Command_Keys_SelectionReplace(3); break;
+				case TextEditCommand.Keys_SelectionReplace4: Command_Keys_SelectionReplace(4); break;
+				case TextEditCommand.Keys_SelectionReplace5: Command_Keys_SelectionReplace(5); break;
+				case TextEditCommand.Keys_SelectionReplace6: Command_Keys_SelectionReplace(6); break;
+				case TextEditCommand.Keys_SelectionReplace7: Command_Keys_SelectionReplace(7); break;
+				case TextEditCommand.Keys_SelectionReplace8: Command_Keys_SelectionReplace(8); break;
+				case TextEditCommand.Keys_SelectionReplace9: Command_Keys_SelectionReplace(9); break;
+				case TextEditCommand.Keys_GlobalFindKeys: Command_Keys_GlobalFind(0); break;
+				case TextEditCommand.Keys_GlobalFind1: Command_Keys_GlobalFind(1); break;
+				case TextEditCommand.Keys_GlobalFind2: Command_Keys_GlobalFind(2); break;
+				case TextEditCommand.Keys_GlobalFind3: Command_Keys_GlobalFind(3); break;
+				case TextEditCommand.Keys_GlobalFind4: Command_Keys_GlobalFind(4); break;
+				case TextEditCommand.Keys_GlobalFind5: Command_Keys_GlobalFind(5); break;
+				case TextEditCommand.Keys_GlobalFind6: Command_Keys_GlobalFind(6); break;
+				case TextEditCommand.Keys_GlobalFind7: Command_Keys_GlobalFind(7); break;
+				case TextEditCommand.Keys_GlobalFind8: Command_Keys_GlobalFind(8); break;
+				case TextEditCommand.Keys_GlobalFind9: Command_Keys_GlobalFind(9); break;
+				case TextEditCommand.Keys_GlobalReplace1: Command_Keys_GlobalReplace(1); break;
+				case TextEditCommand.Keys_GlobalReplace2: Command_Keys_GlobalReplace(2); break;
+				case TextEditCommand.Keys_GlobalReplace3: Command_Keys_GlobalReplace(3); break;
+				case TextEditCommand.Keys_GlobalReplace4: Command_Keys_GlobalReplace(4); break;
+				case TextEditCommand.Keys_GlobalReplace5: Command_Keys_GlobalReplace(5); break;
+				case TextEditCommand.Keys_GlobalReplace6: Command_Keys_GlobalReplace(6); break;
+				case TextEditCommand.Keys_GlobalReplace7: Command_Keys_GlobalReplace(7); break;
+				case TextEditCommand.Keys_GlobalReplace8: Command_Keys_GlobalReplace(8); break;
+				case TextEditCommand.Keys_GlobalReplace9: Command_Keys_GlobalReplace(9); break;
+				case TextEditCommand.Keys_CopyKeys: Command_Keys_CopyValues(0); break;
+				case TextEditCommand.Keys_CopyValues1: Command_Keys_CopyValues(1); break;
+				case TextEditCommand.Keys_CopyValues2: Command_Keys_CopyValues(2); break;
+				case TextEditCommand.Keys_CopyValues3: Command_Keys_CopyValues(3); break;
+				case TextEditCommand.Keys_CopyValues4: Command_Keys_CopyValues(4); break;
+				case TextEditCommand.Keys_CopyValues5: Command_Keys_CopyValues(5); break;
+				case TextEditCommand.Keys_CopyValues6: Command_Keys_CopyValues(6); break;
+				case TextEditCommand.Keys_CopyValues7: Command_Keys_CopyValues(7); break;
+				case TextEditCommand.Keys_CopyValues8: Command_Keys_CopyValues(8); break;
+				case TextEditCommand.Keys_CopyValues9: Command_Keys_CopyValues(9); break;
+				case TextEditCommand.Keys_HitsKeys: Command_Keys_HitsValues(0); break;
+				case TextEditCommand.Keys_HitsValues1: Command_Keys_HitsValues(1); break;
+				case TextEditCommand.Keys_HitsValues2: Command_Keys_HitsValues(2); break;
+				case TextEditCommand.Keys_HitsValues3: Command_Keys_HitsValues(3); break;
+				case TextEditCommand.Keys_HitsValues4: Command_Keys_HitsValues(4); break;
+				case TextEditCommand.Keys_HitsValues5: Command_Keys_HitsValues(5); break;
+				case TextEditCommand.Keys_HitsValues6: Command_Keys_HitsValues(6); break;
+				case TextEditCommand.Keys_HitsValues7: Command_Keys_HitsValues(7); break;
+				case TextEditCommand.Keys_HitsValues8: Command_Keys_HitsValues(8); break;
+				case TextEditCommand.Keys_HitsValues9: Command_Keys_HitsValues(9); break;
+				case TextEditCommand.Keys_MissesKeys: Command_Keys_MissesValues(0); break;
+				case TextEditCommand.Keys_MissesValues1: Command_Keys_MissesValues(1); break;
+				case TextEditCommand.Keys_MissesValues2: Command_Keys_MissesValues(2); break;
+				case TextEditCommand.Keys_MissesValues3: Command_Keys_MissesValues(3); break;
+				case TextEditCommand.Keys_MissesValues4: Command_Keys_MissesValues(4); break;
+				case TextEditCommand.Keys_MissesValues5: Command_Keys_MissesValues(5); break;
+				case TextEditCommand.Keys_MissesValues6: Command_Keys_MissesValues(6); break;
+				case TextEditCommand.Keys_MissesValues7: Command_Keys_MissesValues(7); break;
+				case TextEditCommand.Keys_MissesValues8: Command_Keys_MissesValues(8); break;
+				case TextEditCommand.Keys_MissesValues9: Command_Keys_MissesValues(9); break;
+				case TextEditCommand.SelectMark_Toggle: Command_SelectMark_Toggle(); break;
+				case TextEditCommand.Select_All: Command_Select_All(); break;
+				case TextEditCommand.Select_Limit: Command_Select_Limit(); break;
+				case TextEditCommand.Select_AllLines: Command_Select_AllLines(); break;
+				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
+				case TextEditCommand.Select_Marks: Command_Select_Marks(); break;
+				case TextEditCommand.Select_Find: Command_Select_Find(); break;
+				case TextEditCommand.Select_RemoveEmpty: Command_Select_RemoveEmpty(); break;
+				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
+				case TextEditCommand.Select_Duplicates: Command_Select_Duplicates(); break;
+				case TextEditCommand.Select_Min_String: Command_Select_Min_String(); break;
+				case TextEditCommand.Select_Min_Numeric: Command_Select_Min_Numeric(); break;
+				case TextEditCommand.Select_Max_String: Command_Select_Max_String(); break;
+				case TextEditCommand.Select_Max_Numeric: Command_Select_Max_Numeric(); break;
+				case TextEditCommand.Select_ExpressionMatches: Command_Select_ExpressionMatches(); break;
+				case TextEditCommand.Select_RegExMatches: Command_Select_RegExMatches(); break;
+				case TextEditCommand.Select_RegExNonMatches: Command_Select_RegExNonMatches(); break;
+				case TextEditCommand.Select_ShowFirst: Command_Select_ShowFirst(); break;
+				case TextEditCommand.Select_ShowCurrent: Command_Select_ShowCurrent(); break;
+				case TextEditCommand.Select_NextSelection: Command_Select_NextSelection(); break;
+				case TextEditCommand.Select_PrevSelection: Command_Select_PrevSelection(); break;
+				case TextEditCommand.Select_Single: Command_Select_Single(); break;
+				case TextEditCommand.Select_Remove: Command_Select_Remove(); break;
+				case TextEditCommand.Mark_Selection: Command_Mark_Selection(); break;
+				case TextEditCommand.Mark_Find: Command_Mark_Find(); break;
+				case TextEditCommand.Mark_Clear: Command_Mark_Clear(); break;
+				case TextEditCommand.Mark_LimitToSelection: Command_Mark_LimitToSelection(); break;
 			}
-			else if (command == TextEditCommand.Mark_LimitToSelection)
-				Marks.Replace(Marks.Where(mark => Selections.Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList());
-			else if (RunSortCommand(command))
-			{ }
-			else if (RunKeysCommand(command))
-			{ }
 
 			shiftOverride = null;
 
