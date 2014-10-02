@@ -69,16 +69,7 @@ namespace NeoEdit.TextEditor
 
 		Random random = new Random();
 
-		static TextEditorWindow()
-		{
-			UIHelper<TextEditorWindow>.Register();
-			selectionBrush.Freeze();
-			searchBrush.Freeze();
-			markBrush.Freeze();
-			visibleCursorBrush.Freeze();
-			cursorBrush.Freeze();
-			cursorPen.Freeze();
-		}
+		static TextEditorWindow() { UIHelper<TextEditorWindow>.Register(); }
 
 		readonly UIHelper<TextEditorWindow> uiHelper;
 		public TextEditorWindow(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
@@ -1647,12 +1638,6 @@ namespace NeoEdit.TextEditor
 			canvasRenderTimer.Start();
 		}
 
-		static Brush selectionBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
-		static Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
-		static Brush markBrush = new SolidColorBrush(Color.FromArgb(178, 242, 155, 0)); //f6b94d
-		static Brush visibleCursorBrush = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
-		static Brush cursorBrush = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0));
-		static Pen cursorPen = new Pen(new SolidColorBrush(Color.FromArgb(20, 0, 0, 0)), 1);
 		void OnCanvasRender(DrawingContext dc)
 		{
 			if (Data == null)
@@ -1660,9 +1645,9 @@ namespace NeoEdit.TextEditor
 
 			var brushes = new Dictionary<Brush, RangeList>
 			{
-				{ selectionBrush, Selections}, //9cc7e6
-				{ searchBrush, Searches }, //e2e6d6
-				{ markBrush, Marks }, //f6b94d
+				{ Misc.selectionBrush, Selections}, //9cc7e6
+				{ Misc.searchBrush, Searches }, //e2e6d6
+				{ Misc.markBrush, Marks }, //f6b94d
 			};
 
 			HasBOM = Data.BOM;
@@ -1700,11 +1685,11 @@ namespace NeoEdit.TextEditor
 					if ((entry.Value == Selections) && (!range.HasSelection()) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
 						if (range == visibleCursor)
-							dc.DrawRectangle(visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
+							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
 
 						if (!cursorLineDone.Contains(cursorLine))
 						{
-							dc.DrawRectangle(cursorBrush, cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
+							dc.DrawRectangle(Misc.cursorBrush, Misc.cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
 							cursorLineDone.Add(cursorLine);
 						}
 
