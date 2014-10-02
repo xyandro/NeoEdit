@@ -24,7 +24,6 @@ Ctrl+M should move to "current" selection
 Select regex match/non match: option for case-insensitive
 Show number of items on clipboard on status bar
 "Tile" all windows
-Ctrl+E makes "invalid" marks when given less than 10 examples
 
 Binary:
 Fix binary editor backwards search

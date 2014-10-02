@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -92,30 +93,30 @@ namespace NeoEdit.TextEditor.Dialogs
 				if (IsExpression)
 				{
 					var expression = new NeoEdit.Common.Expression(Expression);
-					Example1Value = expression.Evaluate(Example1, 1);
-					Example2Value = expression.Evaluate(Example2, 2);
-					Example3Value = expression.Evaluate(Example3, 3);
-					Example4Value = expression.Evaluate(Example4, 4);
-					Example5Value = expression.Evaluate(Example5, 5);
-					Example6Value = expression.Evaluate(Example6, 6);
-					Example7Value = expression.Evaluate(Example7, 7);
-					Example8Value = expression.Evaluate(Example8, 8);
-					Example9Value = expression.Evaluate(Example9, 9);
-					Example10Value = expression.Evaluate(Example10, 10);
+					if (!String.IsNullOrEmpty(Example1)) Example1Value = expression.Evaluate(Example1, 1);
+					if (!String.IsNullOrEmpty(Example2)) Example2Value = expression.Evaluate(Example2, 2);
+					if (!String.IsNullOrEmpty(Example3)) Example3Value = expression.Evaluate(Example3, 3);
+					if (!String.IsNullOrEmpty(Example4)) Example4Value = expression.Evaluate(Example4, 4);
+					if (!String.IsNullOrEmpty(Example5)) Example5Value = expression.Evaluate(Example5, 5);
+					if (!String.IsNullOrEmpty(Example6)) Example6Value = expression.Evaluate(Example6, 6);
+					if (!String.IsNullOrEmpty(Example7)) Example7Value = expression.Evaluate(Example7, 7);
+					if (!String.IsNullOrEmpty(Example8)) Example8Value = expression.Evaluate(Example8, 8);
+					if (!String.IsNullOrEmpty(Example9)) Example9Value = expression.Evaluate(Example9, 9);
+					if (!String.IsNullOrEmpty(Example10)) Example10Value = expression.Evaluate(Example10, 10);
 				}
 				else
 				{
 					var expression = new Regex(Expression);
-					Example1Value = expression.IsMatch(Example1);
-					Example2Value = expression.IsMatch(Example2);
-					Example3Value = expression.IsMatch(Example3);
-					Example4Value = expression.IsMatch(Example4);
-					Example5Value = expression.IsMatch(Example5);
-					Example6Value = expression.IsMatch(Example6);
-					Example7Value = expression.IsMatch(Example7);
-					Example8Value = expression.IsMatch(Example8);
-					Example9Value = expression.IsMatch(Example9);
-					Example10Value = expression.IsMatch(Example10);
+					if (!String.IsNullOrEmpty(Example1)) Example1Value = expression.IsMatch(Example1);
+					if (!String.IsNullOrEmpty(Example2)) Example2Value = expression.IsMatch(Example2);
+					if (!String.IsNullOrEmpty(Example3)) Example3Value = expression.IsMatch(Example3);
+					if (!String.IsNullOrEmpty(Example4)) Example4Value = expression.IsMatch(Example4);
+					if (!String.IsNullOrEmpty(Example5)) Example5Value = expression.IsMatch(Example5);
+					if (!String.IsNullOrEmpty(Example6)) Example6Value = expression.IsMatch(Example6);
+					if (!String.IsNullOrEmpty(Example7)) Example7Value = expression.IsMatch(Example7);
+					if (!String.IsNullOrEmpty(Example8)) Example8Value = expression.IsMatch(Example8);
+					if (!String.IsNullOrEmpty(Example9)) Example9Value = expression.IsMatch(Example9);
+					if (!String.IsNullOrEmpty(Example10)) Example10Value = expression.IsMatch(Example10);
 				}
 				valid = true;
 			}
