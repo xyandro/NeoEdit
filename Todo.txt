@@ -21,7 +21,6 @@ Select every nth selection (make it for current selection instead of selecting l
 Closed files ask to confirm updates
 Ctrl+M should move to "current" selection
 "Selection Mode": If any cursors have selections, treat non-selecting cursors differently: delete wouldn't delete the current character, it would do nothing.
-Select file name highlights back to front instead of front to back (can't move to . in extension)
 
 Binary:
 Fix binary editor backwards search

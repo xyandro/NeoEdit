@@ -297,13 +297,13 @@ namespace NeoEdit.TextEditor
 			var extLen = Path.GetExtension(path).Length;
 
 			if (command == TextEditCommand.Files_Path_GetFileName)
-				return new Range(range.Start + dirTotal, range.End);
+				return new Range(range.End, range.Start + dirTotal);
 			if (command == TextEditCommand.Files_Path_GetFileNameWoExtension)
-				return new Range(range.Start + dirTotal, range.End - extLen);
+				return new Range(range.End - extLen, range.Start + dirTotal);
 			if (command == TextEditCommand.Files_Path_GetDirectory)
-				return new Range(range.Start, range.Start + dirLength);
+				return new Range(range.Start + dirLength, range.Start);
 			else if (command == TextEditCommand.Files_Path_GetExtension)
-				return new Range(range.End - extLen, range.End);
+				return new Range(range.End, range.End - extLen);
 
 			throw new ArgumentException();
 		}
