@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -50,7 +51,7 @@ namespace NeoEdit.Common
 
 		static readonly Regex simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|(true|false)|\b([xy])\b", RegexOptions.IgnoreCase);
 
-		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int" };
+		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int", "FileName" };
 		static readonly Regex functionRE = new Regex(String.Format(@"\b({0}):(\[[vir]\d+\])", String.Join("|", functions)));
 
 		static readonly List<List<string>> binaryOperators = new List<List<string>>
@@ -381,6 +382,7 @@ namespace NeoEdit.Common
 					case "ValidRE": results.Add(ValidRE(GetString(term1))); break;
 					case "Eval": results.Add(Eval(GetString(term1))); break;
 					case "Int": results.Add(Math.Floor(GetDouble(term1))); break;
+					case "FileName": results.Add(Path.GetFileName(GetString(term1))); break;
 					case ".": results.Add(GetDotOp(term1, GetString(term2))); break;
 					case "*": results.Add(GetDouble(term1) * GetDouble(term2)); break;
 					case "/": results.Add(GetDouble(term1) / GetDouble(term2)); break;

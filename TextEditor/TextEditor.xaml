@@ -14,14 +14,24 @@
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10"/>
+		<Label Grid.Row="0" Grid.ColumnSpan="2" Background="LightBlue" Padding="10,0">
+			<Label.Content>
+				<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="FileName:[0]t+([1]!=0?'*':'')">
+					<Binding Path="FileName" ElementName="self"/>
+					<Binding Path="ModifiedSteps" ElementName="self"/>
+				</MultiBinding>
+			</Label.Content>
+		</Label>
 
-		<ScrollBar Name="yScroll" Grid.Row="0" Grid.Column="1"
+		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="1" Grid.Column="0" Background="Transparent" Margin="10"/>
+
+		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1"
 			Value="{Binding yScrollValue, ElementName=self}"
 			Minimum="0"
 			Maximum="{Binding yScrollMax, ElementName=self}"
@@ -29,7 +39,7 @@
 			SmallChange="1"
 			LargeChange="{Binding yScrollViewport, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
 		/>
-		<ScrollBar Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal"
+		<ScrollBar Name="xScroll" Grid.Row="2" Grid.Column="0" Orientation="Horizontal"
 			Value="{Binding xScrollValue, ElementName=self}"
 			Minimum="0"
 			Maximum="{Binding xScrollMax, ElementName=self}"
@@ -38,7 +48,7 @@
 			LargeChange="{Binding xScrollViewport, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
 		/>
 
-		<StatusBar Grid.ColumnSpan="2" Grid.Row="2">
+		<StatusBar Grid.ColumnSpan="2" Grid.Row="3">
 			<StatusBarItem>
 				<TextBlock Text="Line"/>
 			</StatusBarItem>

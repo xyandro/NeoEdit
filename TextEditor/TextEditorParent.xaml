@@ -3,14 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:textEditor="clr-namespace:NeoEdit.TextEditor"
-	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
-
-	<Window.Title>
-		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0]t+(([1]!=0)?'*':'')t+' - NeoEdit Text Editor'">
-			<Binding ElementName="self" Path="FileName"/>
-			<Binding ElementName="self" Path="ModifiedSteps"/>
-		</MultiBinding>
-	</Window.Title>
+	Width="800" Height="600" Visibility="Visible" WindowState="Maximized" Title="NeoEdit Text Editor">
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -336,8 +329,6 @@
 		</Menu>
 
 		<textEditor:TextEditor x:Name="canvas" Grid.Row="1" Parent="{Binding ElementName=self}"
-			FileName="{Binding FileName, ElementName=self, Mode=TwoWay}"
-			ModifiedSteps="{Binding ModifiedSteps, ElementName=self, Mode=TwoWay}"
 			HighlightType="{Binding HighlightType, ElementName=self, Mode=TwoWay}"
 			CoderUsed="{Binding CoderUsed, ElementName=self, Mode=TwoWay}"
 			HasBOM="{Binding HasBOM, ElementName=self, Mode=TwoWay}"
