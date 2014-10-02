@@ -15,13 +15,10 @@
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Menu Grid.ColumnSpan="2">
@@ -345,60 +342,7 @@
 			CoderUsed="{Binding CoderUsed, ElementName=self, Mode=TwoWay}"
 			HasBOM="{Binding HasBOM, ElementName=self, Mode=TwoWay}"
 			CheckUpdates="{Binding CheckUpdates, ElementName=self, Mode=TwoWay}"
-			Line="{Binding Line, ElementName=self, Mode=TwoWay}"
-			Column="{Binding Column, ElementName=self, Mode=TwoWay}"
-			Index="{Binding Index, ElementName=self, Mode=TwoWay}"
-			NumSelections="{Binding NumSelections, ElementName=self, Mode=TwoWay}"
 		/>
-
-		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1"
-			DataContext="{Binding ElementName=canvas}"
-			Value="{Binding yScrollValue}"
-			Minimum="0"
-			Maximum="{Binding yScrollMax}"
-			ViewportSize="{Binding yScrollViewport}"
-			SmallChange="1"
-			LargeChange="{Binding yScrollViewport, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
-		/>
-		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal"
-			DataContext="{Binding DataContext, ElementName=yScroll}"
-			Value="{Binding xScrollValue}"
-			Minimum="0"
-			Maximum="{Binding xScrollMax}"
-			ViewportSize="{Binding xScrollViewport}"
-			SmallChange="1"
-			LargeChange="{Binding xScrollViewport, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
-		/>
-		
-		<StatusBar Grid.ColumnSpan="2" Grid.Row="3">
-			<StatusBarItem>
-				<TextBlock Text="Line"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding Line, ElementName=self}"/>
-			</StatusBarItem>
-			<Separator/>
-			<StatusBarItem>
-				<TextBlock Text="Col"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding Column, ElementName=self}"/>
-			</StatusBarItem>
-			<Separator/>
-			<StatusBarItem>
-				<TextBlock Text="Ch"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding Index, ElementName=self}"/>
-			</StatusBarItem>
-			<Separator/>
-			<StatusBarItem>
-				<TextBlock Text="Selections"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding NumSelections, ElementName=self}"/>
-			</StatusBarItem>
-		</StatusBar>
 	</Grid>
 
 </Window>

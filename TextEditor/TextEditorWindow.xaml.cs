@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common;
@@ -22,14 +21,6 @@ namespace NeoEdit.TextEditor
 		bool HasBOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		bool CheckUpdates { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public int Line { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public int Column { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public int Index { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public int NumSelections { get { return uiHelper.GetPropValue<int>(); } private set { uiHelper.SetPropValue(value); } }
 
 		static TextEditorWindow() { UIHelper<TextEditorWindow>.Register(); }
 
@@ -43,8 +34,7 @@ namespace NeoEdit.TextEditor
 			canvas.OpenFile(filename, bytes, encoding);
 
 			KeyDown += (s, e) => uiHelper.RaiseEvent(canvas, e);
-			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
-			yScroll.MouseWheel += (s, e) => yScroll.Value -= (int)(e.Delta * yScroll.ViewportSize / 480);
+			MouseWheel += (s, e) => uiHelper.RaiseEvent(canvas, e);
 		}
 
 		void RunCommand(TextEditCommand command)

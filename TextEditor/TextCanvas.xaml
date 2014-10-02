@@ -1,9 +1,72 @@
-﻿<Canvas x:Class="NeoEdit.TextEditor.TextCanvas"
+﻿<UserControl Name="self" x:Class="NeoEdit.TextEditor.TextCanvas"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    mc:Ignorable="d" Background="Transparent" ClipToBounds="True"
-    d:DesignWidth="300" d:DesignHeight="300" Margin="10">
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
+	xmlns:textEditor="clr-namespace:NeoEdit.TextEditor"
+    mc:Ignorable="d" ClipToBounds="True"
+    d:DesignWidth="300" d:DesignHeight="300">
 
-</Canvas>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<textEditor:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10"/>
+
+		<ScrollBar Name="yScroll" Grid.Row="0" Grid.Column="1"
+			Value="{Binding yScrollValue, ElementName=self}"
+			Minimum="0"
+			Maximum="{Binding yScrollMax, ElementName=self}"
+			ViewportSize="{Binding yScrollViewport, ElementName=self}"
+			SmallChange="1"
+			LargeChange="{Binding yScrollViewport, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
+		/>
+		<ScrollBar Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal"
+			Value="{Binding xScrollValue, ElementName=self}"
+			Minimum="0"
+			Maximum="{Binding xScrollMax, ElementName=self}"
+			ViewportSize="{Binding xScrollViewport, ElementName=self}"
+			SmallChange="1"
+			LargeChange="{Binding xScrollViewport, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
+		/>
+
+		<StatusBar Grid.ColumnSpan="2" Grid.Row="2">
+			<StatusBarItem>
+				<TextBlock Text="Line"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Line, ElementName=self}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Col"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Column, ElementName=self}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Ch"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Index, ElementName=self}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Selections"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding NumSelections, ElementName=self}"/>
+			</StatusBarItem>
+		</StatusBar>
+	</Grid>
+
+</UserControl>

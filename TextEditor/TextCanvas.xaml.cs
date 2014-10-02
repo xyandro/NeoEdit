@@ -96,6 +96,9 @@ namespace NeoEdit.TextEditor
 
 			uiHelper.AddCallback(a => a.FileName, (o, n) => FilenameChanged());
 
+			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
+			yScroll.MouseWheel += (s, e) => yScrollValue -= e.Delta * yScrollViewportFloor / 480;
+
 			Selections.CollectionChanged += () => InvalidateSelections();
 			Searches.CollectionChanged += () => InvalidateSearches();
 			Marks.CollectionChanged += () => InvalidateMarks();
@@ -117,6 +120,11 @@ namespace NeoEdit.TextEditor
 			uiHelper.AddCallback(a => a.xScrollViewport, (o, n) => InvalidateRender());
 			uiHelper.AddCallback(a => a.yScrollViewport, (o, n) => InvalidateRender());
 			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateRender());
+
+			canvas.MouseLeftButtonDown += OnCanvasMouseLeftButtonDown;
+			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonUp;
+			canvas.MouseMove += OnCanvasMouseMove;
+			canvas.Render += OnCanvasRender;
 
 			Loaded += (s, e) =>
 			{
@@ -1385,15 +1393,13 @@ namespace NeoEdit.TextEditor
 				renderTimer.Stop();
 				renderTimer = null;
 
-				InvalidateVisual();
+				canvas.InvalidateVisual();
 			};
 			renderTimer.Start();
 		}
 
-		protected override void OnRender(DrawingContext dc)
+		void OnCanvasRender(DrawingContext dc)
 		{
-			base.OnRender(dc);
-
 			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0))
 				return;
 
@@ -1439,11 +1445,11 @@ namespace NeoEdit.TextEditor
 					if ((entry.Item1 == Selections) && (!range.HasSelection()) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
 						if (range == visibleCursor)
-							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], ActualWidth, lineHeight));
+							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
 
 						if (!cursorLineDone.Contains(cursorLine))
 						{
-							dc.DrawRectangle(Misc.cursorBrush, Misc.cursorPen, new Rect(0, y[cursorLine], ActualWidth, lineHeight));
+							dc.DrawRectangle(Misc.cursorBrush, Misc.cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
 							cursorLineDone.Add(cursorLine);
 						}
 
@@ -1880,26 +1886,26 @@ namespace NeoEdit.TextEditor
 			visibleIndex = Selections.Count - 1;
 		}
 
-		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			MouseHandler(e.GetPosition(this), e.ClickCount);
-			CaptureMouse();
+			MouseHandler(e.GetPosition(canvas), e.ClickCount);
+			canvas.CaptureMouse();
 			e.Handled = true;
 		}
 
-		protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+		void OnCanvasMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			ReleaseMouseCapture();
+			canvas.ReleaseMouseCapture();
 			e.Handled = true;
 		}
 
-		protected override void OnMouseMove(MouseEventArgs e)
+		void OnCanvasMouseMove(object sender, MouseEventArgs e)
 		{
-			if (!IsMouseCaptured)
+			if (!canvas.IsMouseCaptured)
 				return;
 
 			shiftOverride = true;
-			MouseHandler(e.GetPosition(this), 0);
+			MouseHandler(e.GetPosition(canvas), 0);
 			shiftOverride = null;
 			e.Handled = true;
 		}
@@ -2090,18 +2096,30 @@ namespace NeoEdit.TextEditor
 
 		void CalculateBoundaries()
 		{
-			if ((ActualWidth <= 0) || (ActualHeight <= 0))
+			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
 				return;
 
-			xScrollViewport = ActualWidth / charWidth;
+			xScrollViewport = canvas.ActualWidth / charWidth;
 			xScrollMax = Data.MaxColumn - xScrollViewportFloor;
 			xScrollValue = xScrollValue;
 
-			yScrollViewport = ActualHeight / lineHeight;
+			yScrollViewport = canvas.ActualHeight / lineHeight;
 			yScrollMax = Data.NumLines - yScrollViewportFloor;
 			yScrollValue = yScrollValue;
 
 			InvalidateRender();
+		}
+	}
+
+	internal class RenderCanvas : Canvas
+	{
+		public delegate void RenderDelegate(DrawingContext dc);
+		RenderDelegate renderDelegate = dc => { };
+		public event RenderDelegate Render { add { renderDelegate += value; } remove { renderDelegate -= value; } }
+		protected override void OnRender(DrawingContext dc)
+		{
+			base.OnRender(dc);
+			renderDelegate(dc);
 		}
 	}
 }
