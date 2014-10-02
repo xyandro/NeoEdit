@@ -338,16 +338,38 @@
 			<guiCommon:HelpMenu/>
 		</Menu>
 
-		<textEditor:TextCanvas x:Name="canvas" Grid.Row="1"
-			TextInput="OnCanvasTextInput"
-			KeyDown="OnCanvasKeyDown"
-			MouseLeftButtonDown="OnCanvasMouseLeftButtonDown"
-			MouseLeftButtonUp="OnCanvasMouseLeftButtonUp"
-			MouseMove="OnCanvasMouseMove"
+		<textEditor:TextCanvas x:Name="canvas" Grid.Row="1" Parent="{Binding ElementName=self}"
+			FileName="{Binding FileName, ElementName=self, Mode=TwoWay}"
+			ModifiedSteps="{Binding ModifiedSteps, ElementName=self, Mode=TwoWay}"
+			HighlightType="{Binding HighlightType, ElementName=self, Mode=TwoWay}"
+			CoderUsed="{Binding CoderUsed, ElementName=self, Mode=TwoWay}"
+			HasBOM="{Binding HasBOM, ElementName=self, Mode=TwoWay}"
+			CheckUpdates="{Binding CheckUpdates, ElementName=self, Mode=TwoWay}"
+			Line="{Binding Line, ElementName=self, Mode=TwoWay}"
+			Column="{Binding Column, ElementName=self, Mode=TwoWay}"
+			Index="{Binding Index, ElementName=self, Mode=TwoWay}"
+			NumSelections="{Binding NumSelections, ElementName=self, Mode=TwoWay}"
 		/>
 
-		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1" Value="{Binding yScrollValue, ElementName=self, Mode=TwoWay}"/>
-		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self, Mode=TwoWay}"/>
+		<ScrollBar Name="yScroll" Grid.Row="1" Grid.Column="1"
+			DataContext="{Binding ElementName=canvas}"
+			Value="{Binding yScrollValue}"
+			Minimum="0"
+			Maximum="{Binding yScrollMax}"
+			ViewportSize="{Binding yScrollViewport}"
+			SmallChange="1"
+			LargeChange="{Binding yScrollViewport, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
+		/>
+		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal"
+			DataContext="{Binding DataContext, ElementName=yScroll}"
+			Value="{Binding xScrollValue}"
+			Minimum="0"
+			Maximum="{Binding xScrollMax}"
+			ViewportSize="{Binding xScrollViewport}"
+			SmallChange="1"
+			LargeChange="{Binding xScrollViewport, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
+		/>
+		
 		<StatusBar Grid.ColumnSpan="2" Grid.Row="3">
 			<StatusBarItem>
 				<TextBlock Text="Line"/>

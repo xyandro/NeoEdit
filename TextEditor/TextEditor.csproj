@@ -90,7 +90,7 @@
     <Compile Include="Dialogs\LimitDialog.xaml.cs">
       <DependentUpon>LimitDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditorWindow-Sort.cs" />
+    <Compile Include="TextCanvas-Sort.cs" />
     <Compile Include="RangeList.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="Dialogs\RepeatDialog.xaml.cs">

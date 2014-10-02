@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace NeoEdit.TextEditor
 {
-	class Highlighting
+	public class Highlighting
 	{
 		public enum HighlightingType
 		{

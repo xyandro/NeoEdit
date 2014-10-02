@@ -6,10 +6,10 @@ using NeoEdit.Common;
 
 namespace NeoEdit.TextEditor
 {
-	public partial class TextEditorWindow
+	public partial class TextCanvas
 	{
-		enum SortScope { Selections, Lines, Regions }
-		enum SortType { String, Numeric, Keys, Reverse, Randomize, Length }
+		internal enum SortScope { Selections, Lines, Regions }
+		internal enum SortType { String, Numeric, Keys, Reverse, Randomize, Length }
 
 		RangeList GetSortLines()
 		{
@@ -93,7 +93,7 @@ namespace NeoEdit.TextEditor
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		void Command_Sort(SortScope scope, SortType type)
+		internal void Command_Sort(SortScope scope, SortType type)
 		{
 			var regions = GetRegions(scope);
 			var ordering = GetOrdering(type);
