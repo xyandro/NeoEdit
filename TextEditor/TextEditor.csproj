@@ -90,7 +90,7 @@
     <Compile Include="Dialogs\LimitDialog.xaml.cs">
       <DependentUpon>LimitDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextCanvas-Sort.cs" />
+    <Compile Include="TextEditor-Sort.cs" />
     <Compile Include="RangeList.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="Dialogs\RepeatDialog.xaml.cs">
@@ -106,12 +106,12 @@
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Highlighting.cs" />
-    <Compile Include="TextCanvas.xaml.cs">
-      <DependentUpon>TextCanvas.xaml</DependentUpon>
+    <Compile Include="TextEditor.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextData.cs" />
-    <Compile Include="TextEditorWindow.xaml.cs">
-      <DependentUpon>TextEditorWindow.xaml</DependentUpon>
+    <Compile Include="TextEditorParent.xaml.cs">
+      <DependentUpon>TextEditorParent.xaml</DependentUpon>
     </Compile>
     <Compile Include="UnitTest\TextDataTest.cs" />
     <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
@@ -158,11 +158,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TextCanvas.xaml">
+    <Page Include="TextEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TextEditorWindow.xaml">
+    <Page Include="TextEditorParent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,7 +6,7 @@ using NeoEdit.Common;
 
 namespace NeoEdit.TextEditor
 {
-	public partial class TextCanvas
+	public partial class TextEditor
 	{
 		internal enum SortScope { Selections, Lines, Regions }
 		internal enum SortType { String, Numeric, Keys, Reverse, Randomize, Length }

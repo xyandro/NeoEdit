@@ -1,4 +1,4 @@
-﻿<UserControl Name="self" x:Class="NeoEdit.TextEditor.TextCanvas"
+﻿<UserControl Name="self" x:Class="NeoEdit.TextEditor.TextEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -19,7 +19,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<textEditor:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10"/>
+		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10"/>
 
 		<ScrollBar Name="yScroll" Grid.Row="0" Grid.Column="1"
 			Value="{Binding yScrollValue, ElementName=self}"

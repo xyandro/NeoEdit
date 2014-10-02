@@ -7,7 +7,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	public partial class TextEditorWindow
+	public partial class TextEditorParent
 	{
 		[DepProp]
 		string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -22,12 +22,12 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		bool CheckUpdates { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
-		static TextEditorWindow() { UIHelper<TextEditorWindow>.Register(); }
+		static TextEditorParent() { UIHelper<TextEditorParent>.Register(); }
 
-		readonly UIHelper<TextEditorWindow> uiHelper;
-		public TextEditorWindow(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
+		readonly UIHelper<TextEditorParent> uiHelper;
+		public TextEditorParent(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
 		{
-			uiHelper = new UIHelper<TextEditorWindow>(this);
+			uiHelper = new UIHelper<TextEditorParent>(this);
 			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 
@@ -72,15 +72,15 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Copy: canvas.Command_Files_CutCopy(false); break;
 				case TextEditCommand.Files_Cut: canvas.Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Delete: canvas.Command_Files_Delete(); break;
-				case TextEditCommand.Files_Timestamp_Write: canvas.Command_Files_Timestamp(TextCanvas.TimestampType.Write); break;
-				case TextEditCommand.Files_Timestamp_Access: canvas.Command_Files_Timestamp(TextCanvas.TimestampType.Access); break;
-				case TextEditCommand.Files_Timestamp_Create: canvas.Command_Files_Timestamp(TextCanvas.TimestampType.Create); break;
-				case TextEditCommand.Files_Timestamp_All: canvas.Command_Files_Timestamp(TextCanvas.TimestampType.All); break;
+				case TextEditCommand.Files_Timestamp_Write: canvas.Command_Files_Timestamp(TextEditor.TimestampType.Write); break;
+				case TextEditCommand.Files_Timestamp_Access: canvas.Command_Files_Timestamp(TextEditor.TimestampType.Access); break;
+				case TextEditCommand.Files_Timestamp_Create: canvas.Command_Files_Timestamp(TextEditor.TimestampType.Create); break;
+				case TextEditCommand.Files_Timestamp_All: canvas.Command_Files_Timestamp(TextEditor.TimestampType.All); break;
 				case TextEditCommand.Files_Path_Simplify: canvas.Command_Files_Path_Simplify(); break;
-				case TextEditCommand.Files_Path_GetFileName: canvas.Command_Files_Path_GetFilePath(TextCanvas.GetPathType.FileName); break;
-				case TextEditCommand.Files_Path_GetFileNameWoExtension: canvas.Command_Files_Path_GetFilePath(TextCanvas.GetPathType.FileNameWoExtension); break;
-				case TextEditCommand.Files_Path_GetDirectory: canvas.Command_Files_Path_GetFilePath(TextCanvas.GetPathType.Directory); break;
-				case TextEditCommand.Files_Path_GetExtension: canvas.Command_Files_Path_GetFilePath(TextCanvas.GetPathType.Extension); break;
+				case TextEditCommand.Files_Path_GetFileName: canvas.Command_Files_Path_GetFilePath(TextEditor.GetPathType.FileName); break;
+				case TextEditCommand.Files_Path_GetFileNameWoExtension: canvas.Command_Files_Path_GetFilePath(TextEditor.GetPathType.FileNameWoExtension); break;
+				case TextEditCommand.Files_Path_GetDirectory: canvas.Command_Files_Path_GetFilePath(TextEditor.GetPathType.Directory); break;
+				case TextEditCommand.Files_Path_GetExtension: canvas.Command_Files_Path_GetFilePath(TextEditor.GetPathType.Extension); break;
 				case TextEditCommand.Files_CreateDirectory: canvas.Command_Files_CreateDirectory(); break;
 				case TextEditCommand.Files_Information_Size: canvas.Command_Files_Information_Size(); break;
 				case TextEditCommand.Files_Information_WriteTime: canvas.Command_Files_Information_WriteTime(); break;
@@ -122,24 +122,24 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_SHA1_UTF16BE: canvas.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF16BE); break;
 				case TextEditCommand.Data_SHA1_UTF32LE: canvas.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF32LE); break;
 				case TextEditCommand.Data_SHA1_UTF32BE: canvas.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF32BE); break;
-				case TextEditCommand.Sort_String: canvas.Command_Sort(TextCanvas.SortScope.Selections, TextCanvas.SortType.String); break;
-				case TextEditCommand.Sort_Numeric: canvas.Command_Sort(TextCanvas.SortScope.Selections, TextCanvas.SortType.Numeric); break;
-				case TextEditCommand.Sort_Keys: canvas.Command_Sort(TextCanvas.SortScope.Selections, TextCanvas.SortType.Keys); break;
-				case TextEditCommand.Sort_Reverse: canvas.Command_Sort(TextCanvas.SortScope.Selections, TextCanvas.SortType.Reverse); break;
-				case TextEditCommand.Sort_Randomize: canvas.Command_Sort(TextCanvas.SortScope.Selections, TextCanvas.SortType.Randomize); break;
-				case TextEditCommand.Sort_Length: canvas.Command_Sort(TextCanvas.SortScope.Selections, TextCanvas.SortType.Length); break;
-				case TextEditCommand.Sort_Lines_String: canvas.Command_Sort(TextCanvas.SortScope.Lines, TextCanvas.SortType.String); break;
-				case TextEditCommand.Sort_Lines_Numeric: canvas.Command_Sort(TextCanvas.SortScope.Lines, TextCanvas.SortType.Numeric); break;
-				case TextEditCommand.Sort_Lines_Keys: canvas.Command_Sort(TextCanvas.SortScope.Lines, TextCanvas.SortType.Keys); break;
-				case TextEditCommand.Sort_Lines_Reverse: canvas.Command_Sort(TextCanvas.SortScope.Lines, TextCanvas.SortType.Reverse); break;
-				case TextEditCommand.Sort_Lines_Randomize: canvas.Command_Sort(TextCanvas.SortScope.Lines, TextCanvas.SortType.Randomize); break;
-				case TextEditCommand.Sort_Lines_Length: canvas.Command_Sort(TextCanvas.SortScope.Lines, TextCanvas.SortType.Length); break;
-				case TextEditCommand.Sort_Regions_String: canvas.Command_Sort(TextCanvas.SortScope.Regions, TextCanvas.SortType.String); break;
-				case TextEditCommand.Sort_Regions_Numeric: canvas.Command_Sort(TextCanvas.SortScope.Regions, TextCanvas.SortType.Numeric); break;
-				case TextEditCommand.Sort_Regions_Keys: canvas.Command_Sort(TextCanvas.SortScope.Regions, TextCanvas.SortType.Keys); break;
-				case TextEditCommand.Sort_Regions_Reverse: canvas.Command_Sort(TextCanvas.SortScope.Regions, TextCanvas.SortType.Reverse); break;
-				case TextEditCommand.Sort_Regions_Randomize: canvas.Command_Sort(TextCanvas.SortScope.Regions, TextCanvas.SortType.Randomize); break;
-				case TextEditCommand.Sort_Regions_Length: canvas.Command_Sort(TextCanvas.SortScope.Regions, TextCanvas.SortType.Length); break;
+				case TextEditCommand.Sort_String: canvas.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.String); break;
+				case TextEditCommand.Sort_Numeric: canvas.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Numeric); break;
+				case TextEditCommand.Sort_Keys: canvas.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Keys); break;
+				case TextEditCommand.Sort_Reverse: canvas.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Reverse); break;
+				case TextEditCommand.Sort_Randomize: canvas.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Randomize); break;
+				case TextEditCommand.Sort_Length: canvas.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Length); break;
+				case TextEditCommand.Sort_Lines_String: canvas.Command_Sort(TextEditor.SortScope.Lines, TextEditor.SortType.String); break;
+				case TextEditCommand.Sort_Lines_Numeric: canvas.Command_Sort(TextEditor.SortScope.Lines, TextEditor.SortType.Numeric); break;
+				case TextEditCommand.Sort_Lines_Keys: canvas.Command_Sort(TextEditor.SortScope.Lines, TextEditor.SortType.Keys); break;
+				case TextEditCommand.Sort_Lines_Reverse: canvas.Command_Sort(TextEditor.SortScope.Lines, TextEditor.SortType.Reverse); break;
+				case TextEditCommand.Sort_Lines_Randomize: canvas.Command_Sort(TextEditor.SortScope.Lines, TextEditor.SortType.Randomize); break;
+				case TextEditCommand.Sort_Lines_Length: canvas.Command_Sort(TextEditor.SortScope.Lines, TextEditor.SortType.Length); break;
+				case TextEditCommand.Sort_Regions_String: canvas.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.String); break;
+				case TextEditCommand.Sort_Regions_Numeric: canvas.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.Numeric); break;
+				case TextEditCommand.Sort_Regions_Keys: canvas.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.Keys); break;
+				case TextEditCommand.Sort_Regions_Reverse: canvas.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.Reverse); break;
+				case TextEditCommand.Sort_Regions_Randomize: canvas.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.Randomize); break;
+				case TextEditCommand.Sort_Regions_Length: canvas.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.Length); break;
 				case TextEditCommand.Keys_SetKeys: canvas.Command_Keys_SetValues(0); break;
 				case TextEditCommand.Keys_SetValues1: canvas.Command_Keys_SetValues(1); break;
 				case TextEditCommand.Keys_SetValues2: canvas.Command_Keys_SetValues(2); break;

@@ -20,7 +20,7 @@ using NeoEdit.TextEditor.Dialogs;
 
 namespace NeoEdit.TextEditor
 {
-	public partial class TextCanvas
+	public partial class TextEditor
 	{
 		TextData _data = new TextData();
 		TextData Data
@@ -71,7 +71,7 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		public int yScrollMax { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		new public TextEditorWindow Parent { get { return uiHelper.GetPropValue<TextEditorWindow>(); } set { uiHelper.SetPropValue(value); } }
+		new public TextEditorParent Parent { get { return uiHelper.GetPropValue<TextEditorParent>(); } set { uiHelper.SetPropValue(value); } }
 
 		int xScrollViewportFloor { get { return (int)Math.Floor(xScrollViewport); } }
 		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScrollViewport); } }
@@ -84,12 +84,12 @@ namespace NeoEdit.TextEditor
 
 		Random random = new Random();
 
-		static TextCanvas() { UIHelper<TextCanvas>.Register(); }
+		static TextEditor() { UIHelper<TextEditor>.Register(); }
 
-		readonly UIHelper<TextCanvas> uiHelper;
-		public TextCanvas()
+		readonly UIHelper<TextEditor> uiHelper;
+		public TextEditor()
 		{
-			uiHelper = new UIHelper<TextCanvas>(this);
+			uiHelper = new UIHelper<TextEditor>(this);
 			InitializeComponent();
 
 			CheckUpdates = true;
@@ -2108,18 +2108,6 @@ namespace NeoEdit.TextEditor
 			yScrollValue = yScrollValue;
 
 			InvalidateRender();
-		}
-	}
-
-	internal class RenderCanvas : Canvas
-	{
-		public delegate void RenderDelegate(DrawingContext dc);
-		RenderDelegate renderDelegate = dc => { };
-		public event RenderDelegate Render { add { renderDelegate += value; } remove { renderDelegate -= value; } }
-		protected override void OnRender(DrawingContext dc)
-		{
-			base.OnRender(dc);
-			renderDelegate(dc);
 		}
 	}
 }
