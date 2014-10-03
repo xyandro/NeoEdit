@@ -463,10 +463,11 @@ namespace NeoEdit.TextEditor
 				result = result.Select(str => str + Data.DefaultEnding).ToList();
 			if ((result != null) && (result.Count != 0))
 			{
-				while (result.Count > Selections.Count)
+				if (result.Count > Selections.Count)
 				{
-					result[result.Count - 2] += result[result.Count - 1];
-					result.RemoveAt(result.Count - 1);
+					var res = String.Join("", result.Skip(Selections.Count - 1));
+					result[Selections.Count - 1] = res;
+					result.RemoveRange(Selections.Count, result.Count - Selections.Count);
 				}
 				while (result.Count < Selections.Count)
 					result.Add(result.Last());

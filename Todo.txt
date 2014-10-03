@@ -24,12 +24,12 @@ Ctrl+M should move to "current" selection
 Select regex match/non match: option for case-insensitive
 Show number of items on clipboard on status bar
 "Tile" all windows
-28,000 line -> Set Keys -> Keys/Copy/Keys -> Paste SLOW!!!
 Bind HighlightType CoderUsed HasBOM CheckUpdates in Active
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Error: Open file, move to bottom, new file, repeat "asdf" for 100 lines, layout dies
 Open more than one file at startup
 Files: Remove files/dirs under other selected dirs
+Paste probably shouldn't work unless # selections is 1 or # copied
 
 Binary:
 Fix binary editor backwards search
