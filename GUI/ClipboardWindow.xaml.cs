@@ -166,7 +166,11 @@ namespace NeoEdit.GUI
 			return clipboard.FirstOrDefault(data => data.GUID == (string)guid);
 		}
 
-		static ClipboardWindow() { UIHelper<ClipboardWindow>.Register(); }
+		static ClipboardWindow()
+		{
+			UIHelper<ClipboardWindow>.Register();
+			UIHelper<ClipboardWindow>.AddObservableCallback(a => a.Records, obj => obj.items.SelectedItem = Current());
+		}
 
 		[DepProp]
 		ObservableCollection<ClipboardData> Records { get { return uiHelper.GetPropValue<ObservableCollection<ClipboardData>>(); } set { uiHelper.SetPropValue(value); } }
@@ -176,8 +180,6 @@ namespace NeoEdit.GUI
 		{
 			uiHelper = new UIHelper<ClipboardWindow>(this);
 			InitializeComponent();
-
-			uiHelper.AddObservableCallback(a => a.Records, () => items.SelectedItem = Current());
 
 			Records = clipboard;
 

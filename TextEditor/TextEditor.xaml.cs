@@ -83,7 +83,16 @@ namespace NeoEdit.TextEditor
 
 		Random random = new Random();
 
-		static TextEditor() { UIHelper<TextEditor>.Register(); }
+		static TextEditor()
+		{
+			UIHelper<TextEditor>.Register();
+			UIHelper<TextEditor>.AddCallback(a => a.FileName, (obj, o, n) => obj.FilenameChanged());
+			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.InvalidateRender());
+			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.InvalidateRender());
+			UIHelper<TextEditor>.AddCallback(a => a.xScrollViewport, (obj, o, n) => obj.InvalidateRender());
+			UIHelper<TextEditor>.AddCallback(a => a.yScrollViewport, (obj, o, n) => obj.InvalidateRender());
+			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.InvalidateRender());
+		}
 
 		readonly UIHelper<TextEditor> uiHelper;
 		public TextEditor(TextEditorParent _parent, string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
@@ -96,11 +105,6 @@ namespace NeoEdit.TextEditor
 			Goto(line, column);
 
 			CheckUpdates = true;
-
-			uiHelper.AddCallback(a => a.FileName, (o, n) => FilenameChanged());
-
-			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
-			yScroll.MouseWheel += (s, e) => yScrollValue -= e.Delta * yScrollViewportFloor / 480;
 
 			Selections.CollectionChanged += () => InvalidateSelections();
 			Searches.CollectionChanged += () => InvalidateSearches();
@@ -115,14 +119,8 @@ namespace NeoEdit.TextEditor
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => CalculateBoundaries());
-			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => CalculateBoundaries());
-
-			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateRender());
-			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateRender());
-			uiHelper.AddCallback(a => a.xScrollViewport, (o, n) => InvalidateRender());
-			uiHelper.AddCallback(a => a.yScrollViewport, (o, n) => InvalidateRender());
-			uiHelper.AddCallback(a => a.HighlightType, (o, n) => InvalidateRender());
+			UIHelper<TextEditor>.AddCallback(this, Canvas.ActualWidthProperty, () => CalculateBoundaries());
+			UIHelper<TextEditor>.AddCallback(this, Canvas.ActualHeightProperty, () => CalculateBoundaries());
 
 			canvas.MouseLeftButtonDown += OnCanvasMouseLeftButtonDown;
 			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonUp;
@@ -142,6 +140,11 @@ namespace NeoEdit.TextEditor
 			var index = Data.GetIndexFromColumn(line, Math.Max(0, column - 1), true);
 			Selections.Add(new Range(Data.GetOffset(line, index)));
 
+		}
+
+		internal void HandleMouseWheel(int delta)
+		{
+			yScrollValue -= delta * yScrollViewportFloor / 480;
 		}
 
 		FileSystemWatcher watcher;

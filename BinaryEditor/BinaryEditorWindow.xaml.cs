@@ -78,8 +78,7 @@ namespace NeoEdit.BinaryEditor
 
 			Data = data;
 
-			MouseWheel += (s, e) => uiHelper.RaiseEvent(yScroll, e);
-			yScroll.MouseWheel += (s, e) => (s as ScrollBar).Value -= e.Delta;
+			MouseWheel += (s, e) => yScroll.Value -= e.Delta;
 		}
 
 		public static BinaryEditorWindow CreateFromFile(string filename = null, byte[] bytes = null)
@@ -118,7 +117,7 @@ namespace NeoEdit.BinaryEditor
 			if (e.OriginalSource is MenuItem)
 				return;
 
-			uiHelper.RaiseEvent(canvas, e);
+			canvas.HandleText(e.Text);
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -129,8 +128,8 @@ namespace NeoEdit.BinaryEditor
 
 			switch (e.Key)
 			{
-				case Key.Escape: canvas.Focus(); break;
-				default: uiHelper.RaiseEvent(canvas, e); break;
+				case Key.Escape: canvas.Focus(); e.Handled = true; break;
+				default: e.Handled = canvas.HandleKey(e.Key); break;
 			}
 		}
 

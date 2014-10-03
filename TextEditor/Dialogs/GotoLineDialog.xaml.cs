@@ -15,7 +15,11 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		public bool Relative { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
-		static GotoLineDialog() { UIHelper<GotoLineDialog>.Register(); }
+		static GotoLineDialog()
+		{
+			UIHelper<GotoLineDialog>.Register();
+			UIHelper<GotoLineDialog>.AddCallback(a => a.Relative, (obj, o, n) => obj.SetRelative());
+		}
 
 		readonly UIHelper<GotoLineDialog> uiHelper;
 		readonly int numLines, startLine;
@@ -26,8 +30,6 @@ namespace NeoEdit.GUI.Dialogs
 
 			uiHelper = new UIHelper<GotoLineDialog>(this);
 			InitializeComponent();
-
-			uiHelper.AddCallback(a => a.Relative, (o, n) => SetRelative());
 
 			okClick.Click += (s, e) =>
 			{

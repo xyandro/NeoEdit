@@ -15,7 +15,11 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		public bool Relative { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
-		static GotoIndexDialog() { UIHelper<GotoIndexDialog>.Register(); }
+		static GotoIndexDialog()
+		{
+			UIHelper<GotoIndexDialog>.Register();
+			UIHelper<GotoIndexDialog>.AddCallback(a => a.Relative, (obj, o, n) => obj.SetRelative());
+		}
 
 		readonly UIHelper<GotoIndexDialog> uiHelper;
 		readonly int numIndexes, startIndex;
@@ -26,8 +30,6 @@ namespace NeoEdit.GUI.Dialogs
 
 			uiHelper = new UIHelper<GotoIndexDialog>(this);
 			InitializeComponent();
-
-			uiHelper.AddCallback(a => a.Relative, (o, n) => SetRelative());
 
 			okClick.Click += (s, e) =>
 			{

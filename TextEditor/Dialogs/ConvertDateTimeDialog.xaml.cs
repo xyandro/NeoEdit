@@ -25,7 +25,14 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public string OutputExample { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
-		static ConvertDateTimeDialog() { UIHelper<ConvertDateTimeDialog>.Register(); }
+		static ConvertDateTimeDialog()
+		{
+			UIHelper<ConvertDateTimeDialog>.Register();
+			UIHelper<ConvertDateTimeDialog>.AddCallback(a => a.InputFormat, (obj, o, n) => obj.CheckValidInput());
+			UIHelper<ConvertDateTimeDialog>.AddCallback(a => a.InputUTC, (obj, o, n) => { obj.CheckValidInput(); obj.OutputUTC = obj.InputUTC; });
+			UIHelper<ConvertDateTimeDialog>.AddCallback(a => a.OutputFormat, (obj, o, n) => obj.CheckValidInput());
+			UIHelper<ConvertDateTimeDialog>.AddCallback(a => a.OutputUTC, (obj, o, n) => obj.CheckValidInput());
+		}
 
 		const string Unix = "Unix";
 		const string FileTime = "FileTime";
@@ -46,11 +53,6 @@ namespace NeoEdit.TextEditor.Dialogs
 			InitializeComponent();
 
 			Example = _example;
-
-			uiHelper.AddCallback(a => a.InputFormat, (s, e) => CheckValidInput());
-			uiHelper.AddCallback(a => a.InputUTC, (s, e) => { CheckValidInput(); OutputUTC = InputUTC; });
-			uiHelper.AddCallback(a => a.OutputFormat, (s, e) => CheckValidInput());
-			uiHelper.AddCallback(a => a.OutputUTC, (s, e) => CheckValidInput());
 
 			foreach (var format in formats)
 			{
@@ -75,14 +77,14 @@ namespace NeoEdit.TextEditor.Dialogs
 			ParsedExample = OutputExample = "";
 
 			var result = InterpretFormat(Example, InputFormat, InputUTC);
-			uiHelper.SetValidation(inputFormat, ComboBox.TextProperty, result != null);
+			UIHelper<ConvertDateTimeDialog>.SetValidation(inputFormat, ComboBox.TextProperty, result != null);
 			if (result == null)
 				return;
 
 			ParsedExample = result.Value.ToString("O");
 
 			var resultStr = InterpretFormat(result.Value, OutputFormat, OutputUTC);
-			uiHelper.SetValidation(outputFormat, ComboBox.TextProperty, result != null);
+			UIHelper<ConvertDateTimeDialog>.SetValidation(outputFormat, ComboBox.TextProperty, result != null);
 			if (resultStr == null)
 				return;
 

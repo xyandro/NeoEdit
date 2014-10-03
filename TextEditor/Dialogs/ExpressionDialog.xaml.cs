@@ -54,15 +54,17 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public object Example10Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
-		static ExpressionDialog() { UIHelper<ExpressionDialog>.Register(); }
+		static ExpressionDialog()
+		{
+			UIHelper<ExpressionDialog>.Register();
+			UIHelper<ExpressionDialog>.AddCallback(a => a.Expression, (obj, o, n) => obj.EvaluateExamples());
+		}
 
 		readonly UIHelper<ExpressionDialog> uiHelper;
 		ExpressionDialog(List<string> examples, bool isExpression)
 		{
 			uiHelper = new UIHelper<ExpressionDialog>(this);
 			InitializeComponent();
-
-			uiHelper.AddCallback(a => a.Expression, (o, n) => EvaluateExamples());
 
 			Example1 = examples.Count >= 1 ? examples[0] : null;
 			Example2 = examples.Count >= 2 ? examples[1] : null;
@@ -126,16 +128,16 @@ namespace NeoEdit.TextEditor.Dialogs
 				valid = false;
 			}
 
-			uiHelper.SetValidation(example1Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example2Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example3Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example4Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example5Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example6Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example7Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example8Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example9Value, TextBox.TextProperty, valid);
-			uiHelper.SetValidation(example10Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example1Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example2Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example3Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example4Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example5Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example6Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example7Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example8Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example9Value, TextBox.TextProperty, valid);
+			UIHelper<ExpressionDialog>.SetValidation(example10Value, TextBox.TextProperty, valid);
 		}
 
 		static public NeoEdit.Common.Expression GetExpression(List<string> examples)

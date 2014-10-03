@@ -35,8 +35,7 @@ namespace NeoEdit.TextEditor
 
 			TextEditors = new ObservableCollection<TextEditor> { new TextEditor(this, filename, bytes, encoding, line, column) };
 
-			KeyDown += (s, e) => uiHelper.RaiseEvent(Active, e);
-			MouseWheel += (s, e) => uiHelper.RaiseEvent(Active, e);
+			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
 		}
 
 		void Command_File_Open()

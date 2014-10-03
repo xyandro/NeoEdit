@@ -28,7 +28,7 @@ namespace NeoEdit.BinaryEditor
 		{
 			uiHelper = new UIHelper<DisplayValue>(this);
 			InitializeComponent();
-			LostFocus += (s, e) => uiHelper.InvalidateBinding(this, TextProperty);
+			LostFocus += (s, e) => UIHelper<DisplayValue>.InvalidateBinding(this, TextProperty);
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

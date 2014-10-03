@@ -146,7 +146,19 @@ namespace NeoEdit.BinaryEditor
 		List<BinaryCanvasUndoRedo> undo = new List<BinaryCanvasUndoRedo>();
 		List<BinaryCanvasUndoRedo> redo = new List<BinaryCanvasUndoRedo>();
 
-		static BinaryCanvas() { UIHelper<BinaryCanvas>.Register(); }
+		static BinaryCanvas()
+		{
+			UIHelper<BinaryCanvas>.Register();
+			UIHelper<BinaryCanvas>.AddCallback(a => a.Data, (obj, o, n) =>
+			{
+				obj.InvalidateVisual();
+				obj.undo.Clear();
+				obj.redo.Clear();
+			});
+			UIHelper<BinaryCanvas>.AddCallback(a => a.ChangeCount, (obj, o, n) => obj.InvalidateVisual());
+			UIHelper<BinaryCanvas>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.InvalidateVisual());
+			UIHelper<BinaryCanvas>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.InvalidateVisual());
+		}
 
 		readonly UIHelper<BinaryCanvas> uiHelper;
 		public BinaryCanvas()
@@ -163,17 +175,8 @@ namespace NeoEdit.BinaryEditor
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			uiHelper.AddCallback(a => a.Data, (o, n) =>
-			{
-				InvalidateVisual();
-				undo.Clear();
-				redo.Clear();
-			});
-			uiHelper.AddCallback(a => a.ChangeCount, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(a => a.xScrollValue, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(a => a.yScrollValue, (o, n) => InvalidateVisual());
-			uiHelper.AddCallback(Canvas.ActualWidthProperty, this, () => InvalidateVisual());
-			uiHelper.AddCallback(Canvas.ActualHeightProperty, this, () => { EnsureVisible(Pos1); InvalidateVisual(); });
+			UIHelper<BinaryCanvas>.AddCallback(this, Canvas.ActualWidthProperty, () => InvalidateVisual());
+			UIHelper<BinaryCanvas>.AddCallback(this, Canvas.ActualHeightProperty, () => { EnsureVisible(Pos1); InvalidateVisual(); });
 
 			Loaded += (s, e) =>
 			{
@@ -335,10 +338,10 @@ namespace NeoEdit.BinaryEditor
 			}
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		public bool HandleKey(Key key)
 		{
-			e.Handled = true;
-			switch (e.Key)
+			var ret = true;
+			switch (key)
 			{
 				case Key.Back:
 				case Key.Delete:
@@ -350,7 +353,7 @@ namespace NeoEdit.BinaryEditor
 							break;
 						}
 
-						if (e.Key == Key.Back)
+						if (key == Key.Back)
 						{
 							if (SelStart <= 0)
 								break;
@@ -370,7 +373,7 @@ namespace NeoEdit.BinaryEditor
 				case Key.Up:
 				case Key.Down:
 					{
-						var mult = e.Key == Key.Up ? -1 : 1;
+						var mult = key == Key.Up ? -1 : 1;
 						if (controlDown)
 						{
 							yScrollValue += rowHeight * mult;
@@ -415,10 +418,11 @@ namespace NeoEdit.BinaryEditor
 						Pos2 = 0;
 					}
 					else
-						e.Handled = false;
+						ret = false;
 					break;
-				default: e.Handled = false; break;
+				default: ret = false; break;
 			}
+			return ret;
 		}
 
 		void ReplaceAll(byte[] bytes)
@@ -508,18 +512,18 @@ namespace NeoEdit.BinaryEditor
 			++ChangeCount;
 		}
 
-		protected override void OnTextInput(TextCompositionEventArgs e)
+		public void HandleText(string str)
 		{
-			if ((String.IsNullOrEmpty(e.Text)) || (e.Text == "\u001B"))
+			if ((String.IsNullOrEmpty(str)) || (str == "\u001B"))
 				return;
 
 			if (!SelHex)
 			{
-				Replace(Coder.StringToBytes(e.Text, InputCoderType));
+				Replace(Coder.StringToBytes(str, InputCoderType));
 				return;
 			}
 
-			var let = Char.ToUpper(e.Text[0]);
+			var let = Char.ToUpper(str[0]);
 			byte val;
 			if ((let >= '0') && (let <= '9'))
 				val = (byte)(let - '0');

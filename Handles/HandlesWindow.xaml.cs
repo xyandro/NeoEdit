@@ -27,7 +27,11 @@ namespace NeoEdit.Handles
 		[DepProp]
 		List<string> HandleTypes { get { return uiHelper.GetPropValue<List<string>>(); } set { uiHelper.SetPropValue(value); } }
 
-		static HandlesWindow() { UIHelper<HandlesWindow>.Register(); }
+		static HandlesWindow()
+		{
+			UIHelper<HandlesWindow>.Register();
+			UIHelper<HandlesWindow>.AddCallback(a => a.HandleType, (obj, o, n) => obj.Refresh());
+		}
 
 		readonly UIHelper<HandlesWindow> uiHelper;
 		readonly int? pid;
@@ -38,7 +42,6 @@ namespace NeoEdit.Handles
 			uiHelper = new UIHelper<HandlesWindow>(this);
 			InitializeComponent();
 
-			uiHelper.AddCallback(a => a.HandleType, (o, n) => Refresh());
 			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy(type => type).ToList();
 			HandleTypes.Insert(0, "");
 

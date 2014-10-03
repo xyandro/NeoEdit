@@ -17,7 +17,11 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		public long Value { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
 
-		static GetNumDialog() { UIHelper<GetNumDialog>.Register(); }
+		static GetNumDialog()
+		{
+			UIHelper<GetNumDialog>.Register();
+			UIHelper<GetNumDialog>.AddCallback(a => a.Value, (obj, o, n) => obj.Value = Math.Max(obj.MinValue.HasValue ? obj.MinValue.Value : long.MinValue, Math.Min(obj.Value, obj.MaxValue.HasValue ? obj.MaxValue.Value : long.MaxValue)));
+		}
 
 		readonly UIHelper<GetNumDialog> uiHelper;
 		public GetNumDialog()
@@ -26,8 +30,6 @@ namespace NeoEdit.GUI.Dialogs
 			InitializeComponent();
 
 			Loaded += (s, e) => value.SelectAll();
-
-			uiHelper.AddCallback(a => a.Value, (o, n) => Value = Math.Max(MinValue.HasValue ? MinValue.Value : long.MinValue, Math.Min(Value, MaxValue.HasValue ? MaxValue.Value : long.MaxValue)));
 
 			okClick.Click += (s, e) =>
 			{

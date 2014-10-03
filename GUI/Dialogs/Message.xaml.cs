@@ -69,7 +69,13 @@ namespace NeoEdit.GUI.Dialogs
 			return (x & (x - 1)) == 0;
 		}
 
-		static Message() { UIHelper<Message>.Register(); }
+		static Message()
+		{
+			UIHelper<Message>.Register();
+			UIHelper<Message>.AddCallback(a => a.Options, (obj, o, n) => obj.SetupButtons());
+			UIHelper<Message>.AddCallback(a => a.DefaultAccept, (obj, o, n) => obj.SetupButtons());
+			UIHelper<Message>.AddCallback(a => a.DefaultCancel, (obj, o, n) => obj.SetupButtons());
+		}
 
 		readonly UIHelper<Message> uiHelper;
 		public Message()
@@ -80,9 +86,6 @@ namespace NeoEdit.GUI.Dialogs
 			Answer = DefaultCancel;
 
 			Loaded += (s, e) => SetupButtons();
-			uiHelper.AddCallback(a => a.Options, (o, n) => SetupButtons());
-			uiHelper.AddCallback(a => a.DefaultAccept, (o, n) => SetupButtons());
-			uiHelper.AddCallback(a => a.DefaultCancel, (o, n) => SetupButtons());
 		}
 
 		void SetupButtons()

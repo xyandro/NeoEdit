@@ -38,9 +38,9 @@ namespace NeoEdit.Disk
 
 			uiHelper = new UIHelper<DiskWindow>(this);
 			InitializeComponent();
-			uiHelper.AddCallback(ItemGridTree.LocationProperty, files, () => Location = files.Location.FullName);
+			UIHelper<DiskWindow>.AddCallback(files, ItemGridTree.LocationProperty, () => Location = files.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();
-			location.LostFocus += (s, e) => uiHelper.InvalidateBinding(location, TextBox.TextProperty);
+			location.LostFocus += (s, e) => UIHelper<DiskWindow>.InvalidateBinding(location, TextBox.TextProperty);
 
 			var keep = new List<string> { "Name", "Size", "WriteTime" };
 			foreach (var prop in DiskItem.StaticGetDepProps())

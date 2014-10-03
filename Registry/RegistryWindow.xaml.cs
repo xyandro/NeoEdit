@@ -25,9 +25,9 @@ namespace NeoEdit.Registry
 			uiHelper = new UIHelper<RegistryWindow>(this);
 			InitializeComponent();
 
-			uiHelper.AddCallback(ItemGridTree.LocationProperty, keys, () => Location = keys.Location.FullName);
+			UIHelper<RegistryWindow>.AddCallback(keys, ItemGridTree.LocationProperty, () => Location = keys.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();
-			location.LostFocus += (s, e) => uiHelper.InvalidateBinding(location, TextBox.TextProperty);
+			location.LostFocus += (s, e) => UIHelper<RegistryWindow>.InvalidateBinding(location, TextBox.TextProperty);
 
 			foreach (var prop in RegistryItem.StaticGetDepProps())
 			{

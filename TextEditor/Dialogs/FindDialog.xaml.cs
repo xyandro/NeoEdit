@@ -49,7 +49,12 @@ namespace NeoEdit.TextEditor.Dialogs
 		static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
 		static bool wholeWordsVal, matchCaseVal, isRegexVal, regexGroupsVal, includeEndingsVal;
 
-		static FindDialog() { UIHelper<FindDialog>.Register(); }
+		static FindDialog()
+		{
+			UIHelper<FindDialog>.Register();
+			UIHelper<FindDialog>.AddCallback(a => a.IsRegex, (obj, o, n) => { if (!obj.IsRegex) obj.RegexGroups = false; });
+			UIHelper<FindDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) => { if (obj.RegexGroups) obj.IsRegex = true; });
+		}
 
 		readonly UIHelper<FindDialog> uiHelper;
 		FindDialog()
@@ -57,9 +62,6 @@ namespace NeoEdit.TextEditor.Dialogs
 			uiHelper = new UIHelper<FindDialog>(this);
 			History = StaticHistory;
 			InitializeComponent();
-
-			uiHelper.AddCallback(a => a.IsRegex, (o, n) => { if (!IsRegex) RegexGroups = false; });
-			uiHelper.AddCallback(a => a.RegexGroups, (o, n) => { if (RegexGroups) IsRegex = true; });
 
 			WholeWords = wholeWordsVal;
 			MatchCase = matchCaseVal;
