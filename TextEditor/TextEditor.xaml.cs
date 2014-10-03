@@ -70,14 +70,13 @@ namespace NeoEdit.TextEditor
 		public int xScrollMax { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public int yScrollMax { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		new public TextEditorParent Parent { get { return uiHelper.GetPropValue<TextEditorParent>(); } set { uiHelper.SetPropValue(value); } }
 
 		int xScrollViewportFloor { get { return (int)Math.Floor(xScrollViewport); } }
 		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScrollViewport); } }
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScrollViewport); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScrollViewport); } }
 
+		new readonly TextEditorParent Parent;
 		readonly RangeList Selections = new RangeList();
 		readonly RangeList Searches = new RangeList();
 		readonly RangeList Marks = new RangeList();
@@ -87,10 +86,14 @@ namespace NeoEdit.TextEditor
 		static TextEditor() { UIHelper<TextEditor>.Register(); }
 
 		readonly UIHelper<TextEditor> uiHelper;
-		public TextEditor()
+		public TextEditor(TextEditorParent _parent, string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
 		{
+			Parent = _parent;
 			uiHelper = new UIHelper<TextEditor>(this);
 			InitializeComponent();
+
+			OpenFile(filename, bytes, encoding);
+			Goto(line, column);
 
 			CheckUpdates = true;
 
@@ -310,26 +313,6 @@ namespace NeoEdit.TextEditor
 
 		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
 		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
-
-		internal void Command_File_New()
-		{
-			if (ConfirmModified())
-			{
-				FileName = null;
-				Data = new TextData();
-				ModifiedSteps = 0;
-			}
-		}
-
-		internal void Command_File_Open()
-		{
-			if (ConfirmModified())
-			{
-				var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
-				if (dialog.ShowDialog() == true)
-					OpenFile(dialog.FileName);
-			}
-		}
 
 		internal void Command_File_Save()
 		{
@@ -1521,7 +1504,7 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		internal bool OnKeyDown(Key key)
+		internal bool HandleKey(Key key)
 		{
 			shiftOverride = shiftDown;
 			try
@@ -1685,7 +1668,7 @@ namespace NeoEdit.TextEditor
 						{
 							if (!Selections.Any(range => range.HasSelection()))
 							{
-								AddTextInput("\t");
+								HandleText("\t");
 								break;
 							}
 
@@ -1712,7 +1695,7 @@ namespace NeoEdit.TextEditor
 						}
 						break;
 					case Key.Enter:
-						AddTextInput(Data.DefaultEnding);
+						HandleText(Data.DefaultEnding);
 						break;
 					case Key.OemCloseBrackets:
 						if (controlDown)
@@ -2084,7 +2067,7 @@ namespace NeoEdit.TextEditor
 			return builder.ToString();
 		}
 
-		internal void AddTextInput(string text)
+		internal void HandleText(string text)
 		{
 			if (text.Length == 0)
 				return;

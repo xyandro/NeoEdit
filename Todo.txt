@@ -24,6 +24,8 @@ Ctrl+M should move to "current" selection
 Select regex match/non match: option for case-insensitive
 Show number of items on clipboard on status bar
 "Tile" all windows
+28,000 line -> Set Keys -> Keys/Copy/Keys -> Paste SLOW!!!
+Bind HighlightType CoderUsed HasBOM CheckUpdates in Active
 
 Binary:
 Fix binary editor backwards search

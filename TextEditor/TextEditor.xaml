@@ -14,7 +14,7 @@
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="0"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
@@ -22,7 +22,7 @@
 
 		<Label Grid.Row="0" Grid.ColumnSpan="2" Background="LightBlue" Padding="10,0">
 			<Label.Content>
-				<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="FileName:[0]t+([1]!=0?'*':'')">
+				<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="([0]==''?'[Untitled]':FileName:[0])t+([1]!=0?'*':'')">
 					<Binding Path="FileName" ElementName="self"/>
 					<Binding Path="ModifiedSteps" ElementName="self"/>
 				</MultiBinding>

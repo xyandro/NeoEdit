@@ -12,6 +12,7 @@ namespace NeoEdit.TextEditor
 		[Header("_Open")] [KeyGesture(Key.O, ModifierKeys.Control)] File_Open,
 		[Header("_Save")] [KeyGesture(Key.S, ModifierKeys.Control)] File_Save,
 		[Header("Save _As")] File_SaveAs,
+		[Header("_Close")] [KeyGesture(Key.W, ModifierKeys.Control)] [KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[Header("Re_vert")] File_Revert,
 		[Header("Check _Updates")] File_CheckUpdates,
 		[Header("_Insert File(s)")] File_InsertFiles,

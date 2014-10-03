@@ -20,6 +20,7 @@
 				<textEditor:TextEditMenuItem CommandEnum="File_Open"/>
 				<textEditor:TextEditMenuItem CommandEnum="File_Save"/>
 				<textEditor:TextEditMenuItem CommandEnum="File_SaveAs"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_Close"/>
 				<textEditor:TextEditMenuItem CommandEnum="File_Revert"/>
 				<textEditor:TextEditMenuItem CommandEnum="File_CheckUpdates" IsChecked="{Binding CheckUpdates, ElementName=self}"/>
 				<Separator/>
@@ -328,12 +329,7 @@
 			<guiCommon:HelpMenu/>
 		</Menu>
 
-		<textEditor:TextEditor x:Name="canvas" Grid.Row="1" Parent="{Binding ElementName=self}"
-			HighlightType="{Binding HighlightType, ElementName=self, Mode=TwoWay}"
-			CoderUsed="{Binding CoderUsed, ElementName=self, Mode=TwoWay}"
-			HasBOM="{Binding HasBOM, ElementName=self, Mode=TwoWay}"
-			CheckUpdates="{Binding CheckUpdates, ElementName=self, Mode=TwoWay}"
-		/>
+		<textEditor:TextEditorTabs Grid.Row="1" ItemsSource="{Binding TextEditors, ElementName=self}" SelectedItem="{Binding Active, ElementName=self}"/>
 	</Grid>
 
 </Window>
