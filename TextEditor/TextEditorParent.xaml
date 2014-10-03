@@ -324,12 +324,19 @@
 						</Style>
 					</MenuItem.ItemContainerStyle>
 				</MenuItem>
+				<Separator/>
+				<textEditor:TextEditMenuItem CommandEnum="View_Tabs" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=[0]#3d##3d##27#Tabs#27#}"/>
+				<textEditor:TextEditMenuItem CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=[0]#3d##3d##27#Tiles#27#}"/>
 			</MenuItem>
 			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 			<guiCommon:HelpMenu/>
 		</Menu>
 
-		<textEditor:TextEditorTabs Grid.Row="1" TextEditors="{Binding TextEditors, ElementName=self, Mode=TwoWay}" Active="{Binding Active, ElementName=self, Mode=TwoWay}"/>
+		<textEditor:TextEditorTabs x:Name="tabs" Grid.Row="1"
+			TextEditors="{Binding TextEditors, ElementName=self, Mode=TwoWay}"
+			Active="{Binding Active, ElementName=self, Mode=TwoWay}"
+			View="{Binding View, ElementName=self, Mode=TwoWay}"
+		/>
 	</Grid>
 
 </Window>

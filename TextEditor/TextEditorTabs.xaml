@@ -8,19 +8,30 @@
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300">
 
-	<textEditor:NoFocusTabControl ItemsSource="{Binding TextEditors, ElementName=self}" SelectedItem="{Binding Active, ElementName=self}">
-		<TabControl.Resources>
-			<Style TargetType="TabItem">
-				<Setter Property="Header">
-					<Setter.Value>
-						<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="([0]==''?'[Untitled]':FileName:[0])t+([1]!=0?'*':'')">
-							<Binding Path="FileName"/>
-							<Binding Path="ModifiedSteps"/>
-						</MultiBinding>
-					</Setter.Value>
-				</Setter>
-			</Style>
-		</TabControl.Resources>
-	</textEditor:NoFocusTabControl>
+	<Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<textEditor:NoFocusTabControl ItemsSource="{Binding TextEditors, ElementName=self}" SelectedItem="{Binding Active, ElementName=self}" Visibility="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=[0]#3d##3d##27#Tabs#27#}">
+			<TabControl.Resources>
+				<Style TargetType="TabItem">
+					<Setter Property="Header">
+						<Setter.Value>
+							<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="([0]==''?'[Untitled]':FileName:[0])t+([1]!=0?'*':'')">
+								<Binding Path="FileName"/>
+								<Binding Path="ModifiedSteps"/>
+							</MultiBinding>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</TabControl.Resources>
+		</textEditor:NoFocusTabControl>
+
+		<textEditor:TabsPanel x:Name="tabsPanel" Background="Gray" ItemsSource="{Binding TextEditors, ElementName=self}" Visibility="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=[0]#3d##3d##27#Tiles#27#}"/>
+	</Grid>
 
 </UserControl>

@@ -89,8 +89,8 @@ namespace NeoEdit.GUI.Common
 				coerceValueCallbacks[prop] += _callback;
 		}
 
-		static ConditionalWeakTable<Action<ControlType>, ConditionalWeakTable<ControlType, NotifyCollectionChangedEventHandler>> observableCallbacks = new ConditionalWeakTable<Action<ControlType>, ConditionalWeakTable<ControlType, NotifyCollectionChangedEventHandler>>();
-		public static void AddObservableCallback<T>(Expression<Func<ControlType, ObservableCollection<T>>> expression, Action<ControlType> action)
+		static ConditionalWeakTable<Action<ControlType, object, NotifyCollectionChangedEventArgs>, ConditionalWeakTable<ControlType, NotifyCollectionChangedEventHandler>> observableCallbacks = new ConditionalWeakTable<Action<ControlType, object, NotifyCollectionChangedEventArgs>, ConditionalWeakTable<ControlType, NotifyCollectionChangedEventHandler>>();
+		public static void AddObservableCallback<T>(Expression<Func<ControlType, ObservableCollection<T>>> expression, Action<ControlType, object, NotifyCollectionChangedEventArgs> action)
 		{
 			AddCallback(expression, (obj, o, n) =>
 			{
@@ -105,12 +105,12 @@ namespace NeoEdit.GUI.Common
 				value = n as ObservableCollection<T>;
 				if (value != null)
 				{
-					handler = (s, e) => action(obj);
+					handler = (s, e) => action(obj, s, e);
 					value.CollectionChanged += handler;
 					subTable.Add(obj, handler);
 				}
 
-				action(obj);
+				action(obj, null, null);
 			});
 		}
 

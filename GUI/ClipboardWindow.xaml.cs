@@ -169,7 +169,7 @@ namespace NeoEdit.GUI
 		static ClipboardWindow()
 		{
 			UIHelper<ClipboardWindow>.Register();
-			UIHelper<ClipboardWindow>.AddObservableCallback(a => a.Records, obj => obj.items.SelectedItem = Current());
+			UIHelper<ClipboardWindow>.AddObservableCallback(a => a.Records, (obj, s, e) => obj.items.SelectedItem = Current());
 		}
 
 		[DepProp]

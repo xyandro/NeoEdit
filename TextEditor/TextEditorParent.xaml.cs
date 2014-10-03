@@ -16,6 +16,8 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		public TextEditor Active { get { return uiHelper.GetPropValue<TextEditor>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public TextEditorTabs.ViewType View { get { return uiHelper.GetPropValue<TextEditorTabs.ViewType>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
@@ -36,6 +38,8 @@ namespace NeoEdit.TextEditor
 			TextEditors = new ObservableCollection<TextEditor> { new TextEditor(this, filename, bytes, encoding, line, column) };
 
 			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
+
+			View = TextEditorTabs.ViewType.Tiles;
 		}
 
 		void Command_File_Open()
@@ -55,15 +59,20 @@ namespace NeoEdit.TextEditor
 
 		void RunCommand(TextEditCommand command)
 		{
-			Active.InvalidateRender();
+			switch (command)
+			{
+				case TextEditCommand.File_New: Add(new TextEditor(this)); break;
+				case TextEditCommand.File_Open: Command_File_Open(); break;
+			}
+
+			if (Active == null)
+				return;
 
 			var shiftDown = this.shiftDown;
 			shiftOverride = shiftDown;
 
 			switch (command)
 			{
-				case TextEditCommand.File_New: Add(new TextEditor(this)); break;
-				case TextEditCommand.File_Open: Command_File_Open(); break;
 				case TextEditCommand.File_Save: Active.Command_File_Save(); break;
 				case TextEditCommand.File_SaveAs: Active.Command_File_SaveAs(); break;
 				case TextEditCommand.File_Close: TextEditors.Remove(Active); break;
@@ -252,15 +261,19 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Mark_Find: Active.Command_Mark_Find(); break;
 				case TextEditCommand.Mark_Clear: Active.Command_Mark_Clear(); break;
 				case TextEditCommand.Mark_LimitToSelection: Active.Command_Mark_LimitToSelection(); break;
+				case TextEditCommand.View_Tabs: View = TextEditorTabs.ViewType.Tabs; break;
+				case TextEditCommand.View_Tiles: View = TextEditorTabs.ViewType.Tiles; break;
 			}
 
 			shiftOverride = null;
 
-			if (TextEditors.Count == 0)
-				Add(new TextEditor(this));
+			if (Active == null)
+				return;
 
 			if (Active.SelectionsInvalidated())
 				Active.EnsureVisible();
+
+			Active.InvalidateRender();
 		}
 
 		void EncodingClick(object sender, RoutedEventArgs e)
@@ -284,7 +297,8 @@ namespace NeoEdit.TextEditor
 			if (e.OriginalSource is MenuItem)
 				return;
 
-			Active.HandleText(e.Text);
+			if (Active != null)
+				Active.HandleText(e.Text);
 			e.Handled = true;
 		}
 
@@ -297,33 +311,20 @@ namespace NeoEdit.TextEditor
 			var ret = true;
 			switch (key)
 			{
-				case Key.PageUp:
-				case Key.PageDown:
-					if (controlDown)
-						Move(key == Key.PageDown);
-					else
-						ret = false;
-					break;
+				case Key.PageUp: if (controlDown) tabs.MovePrev(); else ret = false; break;
+				case Key.PageDown: if (controlDown) tabs.MoveNext(); else ret = false; break;
 				default: ret = false; break;
 			}
 			return ret;
-		}
-
-		public void Move(bool next)
-		{
-			if (TextEditors.Count == 0)
-				return;
-
-			var index = TextEditors.IndexOf(Active) + (next ? 1 : -1);
-			if (index < 0) index = TextEditors.Count - 1;
-			if (index >= TextEditors.Count) index = 0;
-			Active = TextEditors[index];
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			e.Handled = HandleKey(e.Key);
 			if (e.Handled)
+				return;
+
+			if (Active == null)
 				return;
 
 			shiftOverride = shiftDown;

@@ -198,5 +198,7 @@ namespace NeoEdit.TextEditor
 		[Header("_Find Results")] Mark_Find,
 		[Header("_Clear Marks")] Mark_Clear,
 		[Header("_Limit To Selection")] Mark_LimitToSelection,
+		[Header("_Tabs")] View_Tabs,
+		[Header("T_iles")] View_Tiles,
 	}
 }
