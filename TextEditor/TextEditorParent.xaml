@@ -329,7 +329,7 @@
 			<guiCommon:HelpMenu/>
 		</Menu>
 
-		<textEditor:TextEditorTabs Grid.Row="1" ItemsSource="{Binding TextEditors, ElementName=self}" SelectedItem="{Binding Active, ElementName=self}"/>
+		<textEditor:TextEditorTabs Grid.Row="1" TextEditors="{Binding TextEditors, ElementName=self, Mode=TwoWay}" Active="{Binding Active, ElementName=self, Mode=TwoWay}"/>
 	</Grid>
 
 </Window>
