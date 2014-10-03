@@ -27,7 +27,6 @@ Show number of items on clipboard on status bar
 28,000 line -> Set Keys -> Keys/Copy/Keys -> Paste SLOW!!!
 Bind HighlightType CoderUsed HasBOM CheckUpdates in Active
 Activate clicked file
-Open multiple files
 
 Binary:
 Fix binary editor backwards search

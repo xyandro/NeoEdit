@@ -44,11 +44,12 @@ namespace NeoEdit.TextEditor
 
 		void Command_File_Open()
 		{
-			var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
+			var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
 			if (dialog.ShowDialog() != true)
 				return;
 
-			Add(new TextEditor(this, dialog.FileName));
+			foreach (var filename in dialog.FileNames)
+				Add(new TextEditor(this, filename));
 		}
 
 		void Add(TextEditor textEditor)
