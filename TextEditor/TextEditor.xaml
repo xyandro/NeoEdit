@@ -76,6 +76,9 @@
 			<StatusBarItem>
 				<TextBlock Text="{Binding NumSelections, ElementName=self}"/>
 			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock/>
+			</StatusBarItem>
 		</StatusBar>
 	</Grid>
 
