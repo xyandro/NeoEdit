@@ -91,6 +91,15 @@ namespace NeoEdit.TextEditor
 			else
 				Active = TextEditors[index];
 		}
+
+		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+		{
+			foreach (var editor in TextEditors)
+				if (editor.IsMouseOver)
+					Active = editor;
+
+			base.OnPreviewMouseLeftButtonDown(e);
+		}
 	}
 
 	public class NoFocusTabControl : TabControl

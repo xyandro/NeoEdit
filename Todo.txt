@@ -26,7 +26,8 @@ Show number of items on clipboard on status bar
 "Tile" all windows
 28,000 line -> Set Keys -> Keys/Copy/Keys -> Paste SLOW!!!
 Bind HighlightType CoderUsed HasBOM CheckUpdates in Active
-Activate clicked file
+Continue after error deleting files (perhaps with dialog Yes/No/All)
+Error: Open file, move to bottom, new file, repeat "asdf" for 100 lines, layout dies
 
 Binary:
 Fix binary editor backwards search
