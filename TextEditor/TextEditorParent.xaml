@@ -77,6 +77,7 @@
 				<textEditor:TextEditMenuItem CommandEnum="Files_Copy"/>
 				<textEditor:TextEditMenuItem CommandEnum="Files_Cut"/>
 				<textEditor:TextEditMenuItem CommandEnum="Files_Delete"/>
+				<Separator/>
 				<MenuItem Header="_Timestamp">
 					<textEditor:TextEditMenuItem CommandEnum="Files_Timestamp_Write"/>
 					<textEditor:TextEditMenuItem CommandEnum="Files_Timestamp_Access"/>
@@ -98,6 +99,14 @@
 					<textEditor:TextEditMenuItem CommandEnum="Files_Information_CreateTime"/>
 					<textEditor:TextEditMenuItem CommandEnum="Files_Information_Attributes"/>
 					<textEditor:TextEditMenuItem CommandEnum="Files_Information_ReadOnly"/>
+				</MenuItem>
+				<MenuItem Header="_Select">
+					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Existing"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Select_NonExisting"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Files"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Directories"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Roots"/>
+					<textEditor:TextEditMenuItem CommandEnum="Files_Select_NonRoots"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Data">

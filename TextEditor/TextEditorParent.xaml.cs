@@ -115,6 +115,12 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Information_CreateTime: Active.Command_Files_Information_CreateTime(); break;
 				case TextEditCommand.Files_Information_Attributes: Active.Command_Files_Information_Attributes(); break;
 				case TextEditCommand.Files_Information_ReadOnly: Active.Command_Files_Information_ReadOnly(); break;
+				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(true); break;
+				case TextEditCommand.Files_Select_NonExisting: Active.Command_Files_Select_Existing(false); break;
+				case TextEditCommand.Files_Select_Files: Active.Command_Files_Select_Files(); break;
+				case TextEditCommand.Files_Select_Directories: Active.Command_Files_Select_Directories(); break;
+				case TextEditCommand.Files_Select_Roots: Active.Command_Files_Select_Roots(true); break;
+				case TextEditCommand.Files_Select_NonRoots: Active.Command_Files_Select_Roots(false); break;
 				case TextEditCommand.Data_Case_Upper: Active.Command_Data_Case_Upper(); break;
 				case TextEditCommand.Data_Case_Lower: Active.Command_Data_Case_Lower(); break;
 				case TextEditCommand.Data_Case_Proper: Active.Command_Data_Case_Proper(); break;

@@ -764,6 +764,53 @@ namespace NeoEdit.TextEditor
 			Replace(Selections, strs, true);
 		}
 
+		static bool FileOrDirectoryExists(string name)
+		{
+			return (Directory.Exists(name)) || (File.Exists(name));
+		}
+
+		internal void Command_Files_Select_Existing(bool existing)
+		{
+			var sels = Selections.Where(range => FileOrDirectoryExists(GetString(range)) == existing).ToList();
+			Selections.Replace(sels);
+		}
+
+		internal void Command_Files_Select_Files()
+		{
+			var sels = Selections.Where(range => File.Exists(GetString(range))).ToList();
+			Selections.Replace(sels);
+		}
+
+		internal void Command_Files_Select_Directories()
+		{
+			var sels = Selections.Where(range => Directory.Exists(GetString(range))).ToList();
+			Selections.Replace(sels);
+		}
+
+		internal void Command_Files_Select_Roots(bool include)
+		{
+			var sels = Selections.Select(range => new { range = range, str = GetString(range).ToLower().Replace(@"\\", @"\").TrimEnd('\\') }).ToList();
+			var files = sels.Select(obj => obj.str).Distinct().OrderBy(str => str).ToList();
+			var roots = new HashSet<string>();
+			string root = null;
+			foreach (var file in files)
+			{
+				if ((root != null) && (file.StartsWith(root)))
+				{
+					if (!include)
+						roots.Add(file);
+					continue;
+				}
+
+				if (include)
+					roots.Add(file);
+				root = file + @"\";
+			}
+
+			var result = sels.Where(sel => roots.Contains(sel.str)).Select(sel => sel.range).ToList();
+			Selections.Replace(result);
+		}
+
 		internal void Command_Data_Case_Upper()
 		{
 			var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
