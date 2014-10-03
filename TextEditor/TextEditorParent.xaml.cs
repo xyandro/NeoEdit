@@ -35,7 +35,8 @@ namespace NeoEdit.TextEditor
 			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 
-			TextEditors = new ObservableCollection<TextEditor> { new TextEditor(this, filename, bytes, encoding, line, column) };
+			TextEditors = new ObservableCollection<TextEditor>();
+			TextEditors.Add(new TextEditor(this, filename, bytes, encoding, line, column));
 
 			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
 
