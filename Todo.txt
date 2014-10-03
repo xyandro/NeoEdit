@@ -28,6 +28,8 @@ Show number of items on clipboard on status bar
 Bind HighlightType CoderUsed HasBOM CheckUpdates in Active
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Error: Open file, move to bottom, new file, repeat "asdf" for 100 lines, layout dies
+Open more than one file at startup
+Files: Remove files/dirs under other selected dirs
 
 Binary:
 Fix binary editor backwards search

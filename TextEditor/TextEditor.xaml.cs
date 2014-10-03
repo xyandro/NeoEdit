@@ -1022,14 +1022,10 @@ namespace NeoEdit.TextEditor
 			ClipboardWindow.Set(keysAndValues[index].ToArray());
 		}
 
-		internal void Command_Keys_HitsValues(int index)
+		internal void Command_Keys_HitsMisses(int index, bool hits)
 		{
-			Selections.Replace(Selections.Where(range => keysAndValues[index].Contains(GetString(range))).ToList());
-		}
-
-		internal void Command_Keys_MissesValues(int index)
-		{
-			Selections.Replace(Selections.Where(range => !keysAndValues[index].Contains(GetString(range))).ToList());
+			var set = new HashSet<string>(keysAndValues[index]);
+			Selections.Replace(Selections.Where(range => set.Contains(GetString(range)) == hits).ToList());
 		}
 
 		internal void Command_SelectMark_Toggle()
