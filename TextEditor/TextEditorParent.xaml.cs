@@ -240,6 +240,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Keys_MissesValues7: Active.Command_Keys_HitsMisses(7, false); break;
 				case TextEditCommand.Keys_MissesValues8: Active.Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_MissesValues9: Active.Command_Keys_HitsMisses(9, false); break;
+				case TextEditCommand.Keys_Counts: Active.Command_Keys_Counts(); break;
 				case TextEditCommand.SelectMark_Toggle: Active.Command_SelectMark_Toggle(); break;
 				case TextEditCommand.Select_All: Active.Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Active.Command_Select_Limit(); break;

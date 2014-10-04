@@ -1071,6 +1071,15 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(Selections.Where(range => set.Contains(GetString(range)) == hits).ToList());
 		}
 
+		internal void Command_Keys_Counts()
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			var group = strs.GroupBy(a => a).Select(a => new { key = a.Key, count = a.Count() }).OrderBy(a => a.count).ToList();
+			keysAndValues[0] = group.Select(a => a.key).ToList();
+			keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
+			keysAndValues[1] = group.Select(a => a.count.ToString()).ToList();
+		}
+
 		internal void Command_SelectMark_Toggle()
 		{
 			if (Selections.Count > 1)

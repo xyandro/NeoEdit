@@ -271,6 +271,7 @@
 					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues8"/>
 					<textEditor:TextEditMenuItem CommandEnum="Keys_MissesValues9"/>
 				</MenuItem>
+				<textEditor:TextEditMenuItem CommandEnum="Keys_Counts"/>
 			</MenuItem>
 			<MenuItem Header="_Select">
 				<textEditor:TextEditMenuItem CommandEnum="SelectMark_Toggle"/>

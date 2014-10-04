@@ -201,6 +201,7 @@ namespace NeoEdit.TextEditor
 		[Header("Values _7")] Keys_MissesValues7,
 		[Header("Values _8")] Keys_MissesValues8,
 		[Header("Values _9")] Keys_MissesValues9,
+		[Header("Counts to Keys/Values 1")] Keys_Counts,
 		[Header("Toggle Marks/Selection")] [KeyGesture(Key.M, ModifierKeys.Control)] SelectMark_Toggle,
 		[Header("_All")] [KeyGesture(Key.A, ModifierKeys.Control)] Select_All,
 		[Header("Limit")] Select_Limit,
