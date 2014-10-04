@@ -1,4 +1,5 @@
 ﻿using System;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.BinaryEditor.Data
 {
@@ -77,6 +78,11 @@ namespace NeoEdit.BinaryEditor.Data
 			if (cacheHasData)
 				Array.Copy(cache, index - cacheStart, result, 0, count);
 			return result;
+		}
+
+		public Coder.Type GuessEncoding()
+		{
+			return Coder.GuessEncoding(GetSubset(0, Math.Min(50, length)));
 		}
 
 		public virtual void Save(string filename)

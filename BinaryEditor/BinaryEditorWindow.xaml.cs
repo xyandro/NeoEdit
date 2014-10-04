@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.BinaryEditor.Data;
@@ -21,6 +20,7 @@ namespace NeoEdit.BinaryEditor
 		public static RoutedCommand Command_File_OpenDump = new RoutedCommand();
 		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
+		public static RoutedCommand Command_File_TextEditor = new RoutedCommand();
 		public static RoutedCommand Command_File_Exit = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Undo = new RoutedCommand();
 		public static RoutedCommand Command_Edit_Redo = new RoutedCommand();
@@ -66,22 +66,25 @@ namespace NeoEdit.BinaryEditor
 		[DepProp]
 		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		Coder.Type InputCoderType { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
+		Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 
 		static BinaryEditorWindow() { UIHelper<BinaryEditorWindow>.Register(); }
 
 		readonly UIHelper<BinaryEditorWindow> uiHelper;
-		BinaryEditorWindow(BinaryData data)
+		BinaryEditorWindow(BinaryData data, Coder.Type encoder = Coder.Type.None)
 		{
 			uiHelper = new UIHelper<BinaryEditorWindow>(this);
 			InitializeComponent();
 
 			Data = data;
+			CoderUsed = encoder;
+			if (CoderUsed == Coder.Type.None)
+				CoderUsed = Data.GuessEncoding();
 
 			MouseWheel += (s, e) => yScroll.Value -= e.Delta;
 		}
 
-		public static BinaryEditorWindow CreateFromFile(string filename = null, byte[] bytes = null)
+		public static BinaryEditorWindow CreateFromFile(string filename = null, byte[] bytes = null, Coder.Type encoder = Coder.Type.None)
 		{
 			if (bytes == null)
 			{
@@ -90,7 +93,7 @@ namespace NeoEdit.BinaryEditor
 				else
 					bytes = File.ReadAllBytes(filename);
 			}
-			return new BinaryEditorWindow(new MemoryBinaryData(bytes)) { FileName = filename };
+			return new BinaryEditorWindow(new MemoryBinaryData(bytes), encoder) { FileName = filename };
 		}
 
 		public static BinaryEditorWindow CreateFromDump(string filename)
@@ -193,24 +196,24 @@ namespace NeoEdit.BinaryEditor
 					}
 				}
 			}
+			else if (command == Command_File_TextEditor)
+			{
+				Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), CoderUsed);
+				Close();
+			}
 			else if (command == Command_File_Exit) { Close(); }
 			else if (command == Command_View_Values) { ShowValues = !ShowValues; }
 			else if (command == Command_Edit_ShowClipboard) { ClipboardWindow.Show(); }
 		}
 
-		void InputEncodingClick(object sender, RoutedEventArgs e)
-		{
-			canvas.InputCoderType = Helpers.ParseEnum<Coder.Type>(((MenuItem)e.Source).Header as string);
-		}
-
-		void EncodeClick(object sender, RoutedEventArgs e)
+		void EncodingClick(object sender, RoutedEventArgs e)
 		{
 			var header = (e.OriginalSource as MenuItem).Header as string;
-			var encoding = Coder.Type.None;
-			if (header != "Auto")
-				encoding = Helpers.ParseEnum<Coder.Type>(header);
-			Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), encoding);
-			this.Close();
+			CoderUsed = Coder.Type.None;
+			if (header == "Auto")
+				CoderUsed = Data.GuessEncoding();
+			else
+				CoderUsed = Helpers.ParseEnum<Coder.Type>(header);
 		}
 	}
 }

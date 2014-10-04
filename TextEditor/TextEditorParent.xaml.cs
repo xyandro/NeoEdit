@@ -103,6 +103,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.File_InsertFiles: Active.Command_File_InsertFiles(); break;
 				case TextEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
+				case TextEditCommand.File_BinaryEditor: Active.Command_File_BinaryEditor(); Active.Close(); TextEditors.Remove(Active); if (TextEditors.Count == 0) Close(); break;
 				case TextEditCommand.File_BOM: Active.Command_File_BOM(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;

@@ -45,7 +45,7 @@ namespace NeoEdit.BinaryEditor
 		[DepProp]
 		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public Coder.Type InputCoderType { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
+		public Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -181,7 +181,6 @@ namespace NeoEdit.BinaryEditor
 			Loaded += (s, e) =>
 			{
 				InvalidateVisual();
-				InputCoderType = Coder.Type.UTF8;
 				Pos1 = Pos2 = 0;
 			};
 		}
@@ -519,7 +518,7 @@ namespace NeoEdit.BinaryEditor
 
 			if (!SelHex)
 			{
-				Replace(Coder.StringToBytes(str, InputCoderType));
+				Replace(Coder.StringToBytes(str, CoderUsed));
 				return;
 			}
 
@@ -843,7 +842,7 @@ namespace NeoEdit.BinaryEditor
 				{
 					var str = ClipboardWindow.GetString();
 					if (str != null)
-						bytes = Coder.StringToBytes(str, InputCoderType);
+						bytes = Coder.StringToBytes(str, CoderUsed);
 				}
 				if ((bytes != null) && (bytes.Length != 0))
 					Replace(bytes);

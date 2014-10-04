@@ -18,6 +18,7 @@
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_OpenDump" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
+		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_TextEditor" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Undo" Executed="Command_Executed"/>
 		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Redo" Executed="Command_Executed"/>
@@ -57,22 +58,22 @@
 
 	<Window.InputBindings>
 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_File_New" Key="N" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Key="O" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Key="S" Modifiers="Control"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Key="O" Modifiers="Control"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Key="S" Modifiers="Control"/>
 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Undo" Key="Z" Modifiers="Control"/>
 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Redo" Key="Z" Modifiers="Control+Shift"/>
 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Key="X" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Copy" Key="C" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Paste" Key="V" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_ShowClipboard" Key="C" Modifiers="Control+Shift"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Find" Key="F" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindNext" Key="F3"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Goto" Key="G" Modifiers="Control"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Insert" Key="Insert"/>
- 		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_View_Refresh" Key="F5"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Copy" Key="C" Modifiers="Control"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Paste" Key="V" Modifiers="Control"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_ShowClipboard" Key="C" Modifiers="Control+Shift"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Find" Key="F" Modifiers="Control"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindNext" Key="F3"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Goto" Key="G" Modifiers="Control"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Insert" Key="Insert"/>
+		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_View_Refresh" Key="F5"/>
 	</Window.InputBindings>
-	
+
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
@@ -93,7 +94,21 @@
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Header="Save _As"/>
 				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Header="_Exit"/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_TextEditor" Header="Text Editor"/>
+				<MenuItem Header="_Encoding" Click="EncodingClick">
+					<MenuItem Header="Auto"/>
+					<Separator/>
+					<MenuItem Header="UTF7" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
+					<MenuItem Header="UTF8" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
+					<MenuItem Header="UTF16LE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
+					<MenuItem Header="UTF16BE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
+					<MenuItem Header="UTF32LE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
+					<MenuItem Header="UTF32BE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
+					<Separator/>
+					<MenuItem Header="Base64" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#Base64#27#}"/>
+				</MenuItem>
+				<Separator/>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Header="E_xit"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Undo" Header="_Undo"/>
@@ -111,24 +126,6 @@
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Goto" Header="_Goto"/>
 				<Separator/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Insert" Header="_Insert" IsChecked="{Binding Insert, ElementName=canvas}"/>
-				<MenuItem Header="_Encode" Click="EncodeClick">
-					<MenuItem Header="Auto"/>
-					<MenuItem Header="UTF8"/>
-					<MenuItem Header="UTF7"/>
-					<MenuItem Header="UTF16LE"/>
-					<MenuItem Header="UTF16BE"/>
-					<MenuItem Header="UTF32LE"/>
-					<MenuItem Header="UTF32BE"/>
-					<MenuItem Header="Base64"/>
-				</MenuItem>
-				<MenuItem Header="Input Encoding" Click="InputEncodingClick">
-					<MenuItem Header="UTF7" IsChecked="{Binding InputCoderType, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
-					<MenuItem Header="UTF8" IsChecked="{Binding InputCoderType, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
-					<MenuItem Header="UTF16LE" IsChecked="{Binding InputCoderType, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
-					<MenuItem Header="UTF16BE" IsChecked="{Binding InputCoderType, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
-					<MenuItem Header="UTF32LE" IsChecked="{Binding InputCoderType, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
-					<MenuItem Header="UTF32BE" IsChecked="{Binding InputCoderType, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
-				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_View_Values" Header="_Values" IsChecked="{Binding ShowValues, ElementName=self}"/>
@@ -184,7 +181,7 @@
 			yScrollLargeChange="{Binding LargeChange, ElementName=yScroll, Mode=OneWayToSource}"
 			yScrollMaximum="{Binding Maximum, ElementName=yScroll, Mode=OneWayToSource}"
 			yScrollValue="{Binding Value, ElementName=yScroll, Mode=TwoWay}"
-			InputCoderType="{Binding InputCoderType, ElementName=self, Mode=OneWayToSource}"
+			CoderUsed="{Binding CoderUsed, ElementName=self, Mode=OneWay}"
 		/>
 		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="1" Grid.Column="1" ViewportSize="{Binding ActualWidth, ElementName=canvas}"/>
 		<ScrollBar Name="xScroll" Grid.Row="2" Orientation="Horizontal" ViewportSize="{Binding ActualHeight, ElementName=canvas}"/>

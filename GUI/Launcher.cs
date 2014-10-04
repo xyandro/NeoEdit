@@ -10,7 +10,7 @@ namespace NeoEdit.GUI
 
 		protected Action systemInfoLauncher;
 		protected Action<string, byte[], Coder.Type> textEditorLauncher;
-		protected Action<string, byte[]> fileBinaryEditorLauncher;
+		protected Action<string, byte[], Coder.Type> fileBinaryEditorLauncher;
 		protected Action<int> processBinaryEditorLauncher;
 		protected Action diskLauncher;
 		protected Action<int?> processesLauncher;
@@ -20,7 +20,7 @@ namespace NeoEdit.GUI
 		public static void Initialize(
 			Action systemInfo,
 			Action<string, byte[], Coder.Type> textEditor,
-			Action<string, byte[]> fileBinaryEditor,
+			Action<string, byte[], Coder.Type> fileBinaryEditor,
 			Action<int> processBinaryEditor,
 			Action disk,
 			Action<int?> processes,
@@ -53,9 +53,9 @@ namespace NeoEdit.GUI
 			textEditorLauncher(filename, bytes, encoding);
 		}
 
-		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null)
+		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
 		{
-			fileBinaryEditorLauncher(filename, bytes);
+			fileBinaryEditorLauncher(filename, bytes, encoding);
 		}
 
 		public void LaunchBinaryEditor(int pid)

@@ -209,10 +209,11 @@ namespace NeoEdit.TextEditor
 			FileName = filename;
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
+			ModifiedSteps = bytes == null ? 0 : -1;
 			if (bytes == null)
 			{
 				if (FileName == null)
-					bytes = new byte[0];
+					bytes = Encoding.UTF8.GetPreamble();
 				else
 					bytes = File.ReadAllBytes(FileName);
 			}
@@ -221,7 +222,6 @@ namespace NeoEdit.TextEditor
 			Data = new TextData(bytes, encoding);
 			CoderUsed = encoding;
 			HighlightType = Highlighting.Get(FileName);
-			ModifiedSteps = 0;
 		}
 
 		int BeginOffset()
@@ -413,6 +413,11 @@ namespace NeoEdit.TextEditor
 		internal void Command_File_CopyName()
 		{
 			Clipboard.SetText(Path.GetFileName(FileName));
+		}
+
+		internal void Command_File_BinaryEditor()
+		{
+			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed), CoderUsed);
 		}
 
 		internal void Command_File_BOM()

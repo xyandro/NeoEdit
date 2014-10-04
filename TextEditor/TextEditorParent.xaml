@@ -52,6 +52,7 @@
 					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
+				<textEditor:TextEditMenuItem CommandEnum="File_BinaryEditor"/>
 				<textEditor:TextEditMenuItem CommandEnum="File_BOM" IsChecked="{Binding Active.HasBOM, ElementName=self}"/>
 				<Separator/>
 				<textEditor:TextEditMenuItem CommandEnum="File_Exit"/>

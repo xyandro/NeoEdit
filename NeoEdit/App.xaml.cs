@@ -163,7 +163,7 @@ namespace NeoEdit
 			NeoEdit.GUI.Launcher.Initialize(
 				systemInfo: () => new SystemInfoWindow(),
 				textEditor: (filename, bytes, encoding) => new TextEditorParent(filename, bytes, encoding),
-				fileBinaryEditor: (filename, binarydata) => BinaryEditorWindow.CreateFromFile(filename, binarydata),
+				fileBinaryEditor: (filename, binarydata, encoder) => BinaryEditorWindow.CreateFromFile(filename, binarydata, encoder),
 				processBinaryEditor: (pid) => BinaryEditorWindow.CreateFromProcess(pid),
 				disk: () => new DiskWindow(),
 				processes: (pid) => new ProcessesWindow(pid),
