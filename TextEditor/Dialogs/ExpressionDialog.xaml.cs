@@ -14,6 +14,8 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public bool IsExpression { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public bool MatchCase { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public string Example1 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public object Example1Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -155,7 +157,10 @@ namespace NeoEdit.TextEditor.Dialogs
 			if (dialog.ShowDialog() != true)
 				return null;
 
-			return new Regex(dialog.Expression);
+			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
+			if (!dialog.MatchCase)
+				options |= RegexOptions.IgnoreCase;
+			return new Regex(dialog.Expression, options);
 		}
 	}
 }

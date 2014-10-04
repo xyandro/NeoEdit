@@ -19,7 +19,6 @@ Select every nth selection (make it for current selection instead of selecting l
 Closed files ask to confirm updates
 Ctrl+M should move to "current" selection
 "Selection Mode": If any cursors have selections, treat non-selecting cursors differently: delete wouldn't delete the current character, it would do nothing.
-Select regex match/non match: option for case-insensitive
 Show number of items on clipboard on status bar
 "Tile" all windows
 Bind HighlightType CoderUsed HasBOM CheckUpdates in Active
