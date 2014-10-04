@@ -40,7 +40,7 @@ namespace NeoEdit.TextEditor
 
 			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
 
-			View = TextEditorTabs.ViewType.Tiles;
+			View = TextEditorTabs.ViewType.Tabs;
 		}
 
 		void Command_File_Open()
@@ -266,8 +266,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Mark_Find: Active.Command_Mark_Find(); break;
 				case TextEditCommand.Mark_Clear: Active.Command_Mark_Clear(); break;
 				case TextEditCommand.Mark_LimitToSelection: Active.Command_Mark_LimitToSelection(); break;
-				case TextEditCommand.View_Tabs: View = TextEditorTabs.ViewType.Tabs; break;
-				case TextEditCommand.View_Tiles: View = TextEditorTabs.ViewType.Tiles; break;
+				case TextEditCommand.View_Tiles: View = View == TextEditorTabs.ViewType.Tiles ? TextEditorTabs.ViewType.Tabs : TextEditorTabs.ViewType.Tiles; break;
 			}
 
 			shiftOverride = null;

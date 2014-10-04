@@ -2,14 +2,16 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	public class TextEditorTabs : Canvas
+	public class TextEditorTabs : Grid
 	{
 		public enum ViewType
 		{
@@ -27,6 +29,8 @@ namespace NeoEdit.TextEditor
 		static TextEditorTabs()
 		{
 			UIHelper<TextEditorTabs>.Register();
+			UIHelper<TextEditorTabs>.AddCallback(a => a.View, (obj, o, n) => obj.Layout());
+			UIHelper<TextEditorTabs>.AddCallback(a => a.Active, (obj, o, n) => obj.Layout());
 			UIHelper<TextEditorTabs>.AddObservableCallback(a => a.TextEditors, (obj, s, e) => obj.SetActive(e));
 			UIHelper<TextEditorTabs>.AddObservableCallback(a => a.TextEditors, (obj, s, e) => obj.Layout());
 			UIHelper<TextEditorTabs>.AddCoerce(a => a.Active, (obj, value) => (value == null) || ((obj.TextEditors != null) && (obj.TextEditors.Contains(value))) ? value : null);
@@ -37,8 +41,6 @@ namespace NeoEdit.TextEditor
 		{
 			uiHelper = new UIHelper<TextEditorTabs>(this);
 			Background = Brushes.Gray;
-			UIHelper<TextEditorTabs>.AddCallback(this, ActualWidthProperty, () => Layout());
-			UIHelper<TextEditorTabs>.AddCallback(this, ActualHeightProperty, () => Layout());
 		}
 
 		public void MovePrev()
@@ -107,29 +109,90 @@ namespace NeoEdit.TextEditor
 		void Layout()
 		{
 			Children.Clear();
+			RowDefinitions.Clear();
+			ColumnDefinitions.Clear();
 
-			if ((TextEditors.Count == 0) || (ActualWidth <= 0) || (ActualHeight <= 0))
+			if (TextEditors.Count == 0)
 				return;
 
+			if (View == ViewType.Tiles)
+				LayoutTiles();
+			else
+				LayoutTabs();
+		}
+
+		Label GetLabel(TextEditor textEditor, int left, int right)
+		{
+			var label = new Label
+			{
+				Background = textEditor == Active ? Brushes.LightBlue : Brushes.LightGray,
+				Padding = new Thickness(10, 2, 10, 2),
+				Margin = new Thickness(left, 0, right, 1),
+				Target = textEditor,
+			};
+			label.MouseLeftButtonUp += (s, e) => Active = label.Target as TextEditor;
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName:[0])t+([1]!=0?'*':'')" };
+			multiBinding.Bindings.Add(new Binding("FileName") { Source = textEditor });
+			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = textEditor });
+			label.SetBinding(Label.ContentProperty, multiBinding);
+			return label;
+		}
+
+		void LayoutTiles()
+		{
 			const double border = 2;
+
 			var columns = (int)Math.Ceiling(Math.Sqrt(TextEditors.Count));
 			var rows = (TextEditors.Count + columns - 1) / columns;
 
-			var xPosMult = (ActualWidth + border) / columns;
-			var yPosMult = (ActualHeight + border) / rows;
-			var xSize = Math.Max(0, xPosMult - border);
-			var ySize = Math.Max(0, yPosMult - border);
-
-			for (var count = 0; count < TextEditors.Count; ++count)
+			for (var ctr = 0; ctr < columns; ++ctr)
 			{
-				var textEditor = TextEditors[count];
-				textEditor.Width = xSize;
-				textEditor.Height = ySize;
-
-				Canvas.SetLeft(textEditor, xPosMult * (count % columns));
-				Canvas.SetTop(textEditor, yPosMult * (count / columns));
-				Children.Add(textEditor);
+				if (ctr != 0)
+					ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(border) });
+				ColumnDefinitions.Add(new ColumnDefinition());
 			}
+
+			for (var ctr = 0; ctr < rows; ++ctr)
+			{
+				if (ctr != 0)
+					RowDefinitions.Add(new RowDefinition { Height = new GridLength(border) });
+				RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+				RowDefinitions.Add(new RowDefinition());
+			}
+
+			int count = 0;
+			foreach (var textEditor in TextEditors)
+			{
+				var column = count % columns * 2;
+				var row = count / columns * 3;
+
+				var label = GetLabel(textEditor, 0, 0);
+				Grid.SetColumn(label, column);
+				Grid.SetRow(label, row);
+				Children.Add(label);
+
+				Grid.SetColumn(textEditor, column);
+				Grid.SetRow(textEditor, row + 1);
+				Children.Add(textEditor);
+
+				++count;
+			}
+		}
+
+		void LayoutTabs()
+		{
+			ColumnDefinitions.Add(new ColumnDefinition());
+			RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+			RowDefinitions.Add(new RowDefinition());
+
+			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+			foreach (var textEditor in TextEditors)
+				stackPanel.Children.Add(GetLabel(textEditor, 0, 2));
+			Children.Add(stackPanel);
+
+			Grid.SetRow(Active, 1);
+			Grid.SetColumn(Active, 0);
+			Children.Add(Active);
 		}
 	}
 }
