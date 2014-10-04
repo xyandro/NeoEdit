@@ -23,9 +23,7 @@ Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Paste probably shouldn't work unless # selections is 1 or # copied
 Files: Select/etc on svn status (ignore/modified)
-Do something more intuitive for Base64
 Set selection to what was redone/undone on redo/undo
-Filename removed if you cancel save
 
 Binary:
 Fix binary editor backwards search

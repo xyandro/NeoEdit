@@ -1197,9 +1197,9 @@ namespace NeoEdit.TextEditor
 			Searches.Clear();
 		}
 
-		internal void Command_Select_RemoveEmpty()
+		internal void Command_Select_RemoveEmpty(bool include)
 		{
-			Selections.Replace(Selections.Where(range => range.HasSelection()).ToList());
+			Selections.Replace(Selections.Where(range => range.HasSelection() == include).ToList());
 		}
 
 		internal void Command_Select_Unique()
