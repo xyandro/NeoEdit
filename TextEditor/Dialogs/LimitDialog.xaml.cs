@@ -10,14 +10,12 @@ namespace NeoEdit.TextEditor.Dialogs
 			public int SelMult { get; private set; }
 			public bool IgnoreBlank { get; private set; }
 			public int NumSels { get; private set; }
-			public int MaxSels { get; private set; }
 
-			public Response(int selMult, bool ignoreBlank, int numSels, int maxSels)
+			public Response(int selMult, bool ignoreBlank, int numSels)
 			{
 				SelMult = selMult;
 				IgnoreBlank = ignoreBlank;
 				NumSels = numSels;
-				MaxSels = maxSels;
 			}
 		}
 
@@ -43,8 +41,10 @@ namespace NeoEdit.TextEditor.Dialogs
 			IgnoreBlank = false;
 		}
 
+		Response response = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
+			response = new Response(SelMult, IgnoreBlank, NumSels);
 			DialogResult = true;
 		}
 
@@ -54,7 +54,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			if (dialog.ShowDialog() != true)
 				return null;
 
-			return new Response(dialog.SelMult, dialog.IgnoreBlank, dialog.NumSels, dialog.MaxSels);
+			return dialog.response;
 		}
 	}
 }

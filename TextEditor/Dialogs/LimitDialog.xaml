@@ -6,7 +6,7 @@
 
 	<StackPanel Margin="10,5">
 		<Label Content="Select _every nth selection:" Target="{Binding ElementName=selMult}"/>
-		<xctk:IntegerUpDown Name="selMult" Margin="0,0,0,10" Width="500" Minimum="1" Maximum="1000000" Value="{Binding SelMult, ElementName=self}"/>
+		<xctk:IntegerUpDown Name="selMult" Margin="0,0,0,10" Width="500" Minimum="1" Maximum="{Binding MaxSels, ElementName=self}" Value="{Binding SelMult, ElementName=self}"/>
 
 		<CheckBox Content="Ignore _blank selections" Margin="0,0,0,10" IsChecked="{Binding IgnoreBlank, ElementName=self}"/>
 

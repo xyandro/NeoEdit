@@ -1159,7 +1159,8 @@ namespace NeoEdit.TextEditor
 				Selections.Replace(Selections.Where(sel => sel.HasSelection()).ToList());
 			if (result.SelMult > 1)
 				Selections.Replace(Selections.Where((sel, index) => index % result.SelMult == 0).ToList());
-			Selections.RemoveRange(result.NumSels, Selections.Count - result.NumSels);
+			var sels = Math.Min(Selections.Count, result.NumSels);
+			Selections.RemoveRange(sels, Selections.Count - sels);
 		}
 
 		internal void Command_Select_Lines()
