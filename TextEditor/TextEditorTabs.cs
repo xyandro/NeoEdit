@@ -2,14 +2,14 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	public partial class TextEditorTabs
+	public class TextEditorTabs : Canvas
 	{
 		public enum ViewType
 		{
@@ -28,14 +28,17 @@ namespace NeoEdit.TextEditor
 		{
 			UIHelper<TextEditorTabs>.Register();
 			UIHelper<TextEditorTabs>.AddObservableCallback(a => a.TextEditors, (obj, s, e) => obj.SetActive(e));
+			UIHelper<TextEditorTabs>.AddObservableCallback(a => a.TextEditors, (obj, s, e) => obj.Layout());
 			UIHelper<TextEditorTabs>.AddCoerce(a => a.Active, (obj, value) => (value == null) || ((obj.TextEditors != null) && (obj.TextEditors.Contains(value))) ? value : null);
 		}
 
 		readonly UIHelper<TextEditorTabs> uiHelper;
 		public TextEditorTabs()
 		{
-			InitializeComponent();
 			uiHelper = new UIHelper<TextEditorTabs>(this);
+			Background = Brushes.Gray;
+			UIHelper<TextEditorTabs>.AddCallback(this, ActualWidthProperty, () => Layout());
+			UIHelper<TextEditorTabs>.AddCallback(this, ActualHeightProperty, () => Layout());
 		}
 
 		public void MovePrev()
@@ -100,48 +103,33 @@ namespace NeoEdit.TextEditor
 
 			base.OnPreviewMouseLeftButtonDown(e);
 		}
-	}
 
-	public class NoFocusTabControl : TabControl
-	{
-		protected override void OnKeyDown(KeyEventArgs e) { }
-	}
-
-	public class TabsPanel : ItemsControl
-	{
-		public TabsPanel()
+		void Layout()
 		{
-			HorizontalAlignment = HorizontalAlignment.Left;
-			VerticalAlignment = VerticalAlignment.Top;
-		}
+			Children.Clear();
 
-		protected override Size MeasureOverride(Size availableSize)
-		{
-			var infiniteSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
-			base.MeasureOverride(infiniteSize);
-			return availableSize;
-		}
-
-		protected override Size ArrangeOverride(Size arrangeBounds)
-		{
-			base.ArrangeOverride(arrangeBounds);
+			if ((TextEditors.Count == 0) || (ActualWidth <= 0) || (ActualHeight <= 0))
+				return;
 
 			const double border = 2;
-			if (Items.Count == 0)
-				return arrangeBounds;
+			var columns = (int)Math.Ceiling(Math.Sqrt(TextEditors.Count));
+			var rows = (TextEditors.Count + columns - 1) / columns;
 
-			var columns = (int)Math.Ceiling(Math.Sqrt(Items.Count));
-			var rows = (Items.Count + columns - 1) / columns;
+			var xPosMult = (ActualWidth + border) / columns;
+			var yPosMult = (ActualHeight + border) / rows;
+			var xSize = Math.Max(0, xPosMult - border);
+			var ySize = Math.Max(0, yPosMult - border);
 
-			var xPosMult = (arrangeBounds.Width + border) / columns;
-			var yPosMult = (arrangeBounds.Height + border) / rows;
-			var xSize = xPosMult - border;
-			var ySize = yPosMult - border;
+			for (var count = 0; count < TextEditors.Count; ++count)
+			{
+				var textEditor = TextEditors[count];
+				textEditor.Width = xSize;
+				textEditor.Height = ySize;
 
-			for (var count = 0; count < Items.Count; ++count)
-				(Items[count] as UIElement).Arrange(new Rect(xPosMult * (count % columns), yPosMult * (count / columns), xSize, ySize));
-
-			return arrangeBounds;
+				Canvas.SetLeft(textEditor, xPosMult * (count % columns));
+				Canvas.SetTop(textEditor, yPosMult * (count / columns));
+				Children.Add(textEditor);
+			}
 		}
 	}
 }

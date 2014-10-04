@@ -26,7 +26,6 @@ Show number of items on clipboard on status bar
 "Tile" all windows
 Bind HighlightType CoderUsed HasBOM CheckUpdates in Active
 Continue after error deleting files (perhaps with dialog Yes/No/All)
-Error: Open file, move to bottom, new file, repeat "asdf" for 100 lines, layout dies
 Open more than one file at startup
 Paste probably shouldn't work unless # selections is 1 or # copied
 Files: Select/etc on svn status (ignore/modified)
