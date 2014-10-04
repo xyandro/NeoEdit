@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Misc.cs" />
-    <Compile Include="TextEditCommands.cs" />
+    <Compile Include="Commands.cs" />
     <Compile Include="Dialogs\ChooseDateTimeDialog.xaml.cs">
       <DependentUpon>ChooseDateTimeDialog.xaml</DependentUpon>
     </Compile>
