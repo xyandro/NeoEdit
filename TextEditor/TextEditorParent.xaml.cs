@@ -20,14 +20,6 @@ namespace NeoEdit.TextEditor
 		public TextEditor Active { get { return uiHelper.GetPropValue<TextEditor>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public TextEditorTabs.ViewType View { get { return uiHelper.GetPropValue<TextEditorTabs.ViewType>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		bool HasBOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		bool CheckUpdates { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
 		static TextEditorParent() { UIHelper<TextEditorParent>.Register(); }
 
@@ -111,7 +103,6 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.File_InsertFiles: Active.Command_File_InsertFiles(); break;
 				case TextEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
-				case TextEditCommand.File_BinaryEditor: Active.Command_File_BinaryEditor(); Close(); break;
 				case TextEditCommand.File_BOM: Active.Command_File_BOM(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
@@ -312,14 +303,18 @@ namespace NeoEdit.TextEditor
 
 		void EncodingClick(object sender, RoutedEventArgs e)
 		{
+			if (Active == null)
+				return;
 			var header = (e.OriginalSource as MenuItem).Header as string;
-			CoderUsed = Helpers.ParseEnum<Coder.Type>(header);
+			Active.CoderUsed = Helpers.ParseEnum<Coder.Type>(header);
 		}
 
 		void HighlightingClicked(object sender, RoutedEventArgs e)
 		{
+			if (Active == null)
+				return;
 			var header = (sender as MenuItem).Header.ToString();
-			HighlightType = Helpers.ParseEnum<Highlighting.HighlightingType>(header);
+			Active.HighlightType = Helpers.ParseEnum<Highlighting.HighlightingType>(header);
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)

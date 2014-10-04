@@ -44,7 +44,6 @@ namespace NeoEdit.TextEditor
 		[Header("_Insert File(s)")] File_InsertFiles,
 		[Header("Copy _Path")] File_CopyPath,
 		[Header("Copy Name")] File_CopyName,
-		[Header("Binary Editor")] File_BinaryEditor,
 		[Header("_BOM")] File_BOM,
 		[Header("E_xit")] File_Exit,
 		[Header("_Undo")] [KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,

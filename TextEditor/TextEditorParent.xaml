@@ -22,7 +22,7 @@
 				<textEditor:TextEditMenuItem CommandEnum="File_SaveAs"/>
 				<textEditor:TextEditMenuItem CommandEnum="File_Close"/>
 				<textEditor:TextEditMenuItem CommandEnum="File_Revert"/>
-				<textEditor:TextEditMenuItem CommandEnum="File_CheckUpdates" IsChecked="{Binding CheckUpdates, ElementName=self}"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_CheckUpdates" IsChecked="{Binding Active.CheckUpdates, ElementName=self}"/>
 				<Separator/>
 				<textEditor:TextEditMenuItem CommandEnum="File_InsertFiles"/>
 				<Separator/>
@@ -36,7 +36,7 @@
 								<Setter.Value>
 									<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] == [1]">
 										<Binding Path="Header" RelativeSource="{RelativeSource Self}"/>
-										<Binding Path="CoderUsed" ElementName="self"/>
+										<Binding Path="Active.CoderUsed" ElementName="self"/>
 									</MultiBinding>
 								</Setter.Value>
 							</Setter>
@@ -52,8 +52,7 @@
 					<Separator/>
 					<MenuItem Header="Base64"/>
 				</MenuItem>
-				<textEditor:TextEditMenuItem CommandEnum="File_BinaryEditor"/>
-				<textEditor:TextEditMenuItem CommandEnum="File_BOM" IsChecked="{Binding HasBOM, ElementName=self}"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_BOM" IsChecked="{Binding Active.HasBOM, ElementName=self}"/>
 				<Separator/>
 				<textEditor:TextEditMenuItem CommandEnum="File_Exit"/>
 			</MenuItem>
@@ -325,7 +324,7 @@
 								<Setter.Value>
 									<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] == [1]">
 										<Binding Path="Header" RelativeSource="{RelativeSource Self}"/>
-										<Binding Path="HighlightType" ElementName="self"/>
+										<Binding Path="Active.HighlightType" ElementName="self"/>
 									</MultiBinding>
 								</Setter.Value>
 							</Setter>

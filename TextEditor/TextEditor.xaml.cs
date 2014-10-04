@@ -415,11 +415,6 @@ namespace NeoEdit.TextEditor
 			Clipboard.SetText(Path.GetFileName(FileName));
 		}
 
-		internal void Command_File_BinaryEditor()
-		{
-			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed));
-		}
-
 		internal void Command_File_BOM()
 		{
 			if (Data.BOM)
