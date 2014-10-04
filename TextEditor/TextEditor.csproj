@@ -96,9 +96,6 @@
     <Compile Include="Dialogs\RepeatDialog.xaml.cs">
       <DependentUpon>RepeatDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SelectLinesDialog.xaml.cs">
-      <DependentUpon>SelectLinesDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
@@ -147,10 +144,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\RepeatDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\SelectLinesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

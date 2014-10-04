@@ -269,7 +269,6 @@
 			<Separator/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_All"/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_Limit"/>
-			<textEditor:TextEditMenuItem CommandEnum="Select_AllLines"/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_Lines"/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_Marks"/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_Find"/>

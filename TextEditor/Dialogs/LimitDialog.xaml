@@ -2,11 +2,17 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-	Title="Limit selections" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=numSels}">
+	Title="Limit Selections" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=selMult}">
 
 	<StackPanel Margin="10,5">
-		<Label Content="Maximum number of selections:" Target="{Binding ElementName=numSels}"/>
+		<Label Content="Select _every nth selection:" Target="{Binding ElementName=selMult}"/>
+		<xctk:IntegerUpDown Name="selMult" Margin="0,0,0,10" Width="500" Minimum="1" Maximum="1000000" Value="{Binding SelMult, ElementName=self}"/>
+
+		<CheckBox Content="Ignore _blank selections" Margin="0,0,0,10" IsChecked="{Binding IgnoreBlank, ElementName=self}"/>
+
+		<Label Content="_Number of selections:" Target="{Binding ElementName=numSels}"/>
 		<xctk:IntegerUpDown Name="numSels" Margin="0,0,0,10" Width="500" Value="{Binding NumSels, ElementName=self}" Minimum="1" Maximum="{Binding MaxSels, ElementName=self}"/>
+
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">
 			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
 			<Button IsCancel="True" Content="Cancel"/>

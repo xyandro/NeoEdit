@@ -289,7 +289,6 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.SelectMark_Toggle: Active.Command_SelectMark_Toggle(); break;
 				case TextEditCommand.Select_All: Active.Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Active.Command_Select_Limit(); break;
-				case TextEditCommand.Select_AllLines: Active.Command_Select_AllLines(); break;
 				case TextEditCommand.Select_Lines: Active.Command_Select_Lines(); break;
 				case TextEditCommand.Select_Marks: Active.Command_Select_Marks(); break;
 				case TextEditCommand.Select_Find: Active.Command_Select_Find(); break;

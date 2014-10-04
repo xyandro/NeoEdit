@@ -1151,35 +1151,22 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Select_Limit()
 		{
-			var numSels = LimitDialog.Run(Selections.Count);
-			if (numSels.HasValue)
-				Selections.RemoveRange(numSels.Value, Selections.Count - numSels.Value);
-		}
+			var result = LimitDialog.Run(Selections.Count);
+			if (result == null)
+				return;
 
-		internal void Command_Select_AllLines()
-		{
-			var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-			var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
-			Selections.Replace(sels);
+			if (result.IgnoreBlank)
+				Selections.Replace(Selections.Where(sel => sel.HasSelection()).ToList());
+			if (result.SelMult > 1)
+				Selections.Replace(Selections.Where((sel, index) => index % result.SelMult == 0).ToList());
+			Selections.RemoveRange(result.NumSels, Selections.Count - result.NumSels);
 		}
 
 		internal void Command_Select_Lines()
 		{
-			int lineMult;
-			bool ignoreBlankLines;
-			if (SelectLinesDialog.Run(out lineMult, out ignoreBlankLines))
-			{
-				var selections = Selections;
-				if ((selections.Count == 1) && (!selections[0].HasSelection()))
-					selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
-				var lines = selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-				var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
-				if (ignoreBlankLines)
-					sels = sels.Where(sel => sel.Cursor != sel.Highlight).ToList();
-				if (lineMult > 1)
-					sels = sels.Where((sel, index) => index % lineMult == 0).ToList();
-				Selections.Replace(sels);
-			}
+			var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+			var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
+			Selections.Replace(sels);
 		}
 
 		internal void Command_Select_Marks()
