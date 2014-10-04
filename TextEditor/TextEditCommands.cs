@@ -81,6 +81,7 @@ namespace NeoEdit.TextEditor
 		[Header("_Files")] Files_Select_Files,
 		[Header("_Directories")] Files_Select_Directories,
 		[Header("_Roots")] Files_Select_Roots,
+		[Header("_Rename Keys To Selections")] Files_RenameKeysToSelections,
 		[Header("_Upper")] [KeyGesture(Key.U, ModifierKeys.Control)] Data_Case_Upper,
 		[Header("_Lower")] [KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift)] Data_Case_Lower,
 		[Header("_Proper")] Data_Case_Proper,

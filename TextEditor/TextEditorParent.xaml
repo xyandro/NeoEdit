@@ -106,6 +106,7 @@
 					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Directories"/>
 					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Roots"/>
 				</MenuItem>
+				<textEditor:TextEditMenuItem CommandEnum="Files_RenameKeysToSelections"/>
 			</MenuItem>
 			<MenuItem Header="_Data">
 				<MenuItem Header="_Case">

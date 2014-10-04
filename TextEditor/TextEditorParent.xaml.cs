@@ -120,6 +120,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Select_Files: Active.Command_Files_Select_Files(); break;
 				case TextEditCommand.Files_Select_Directories: Active.Command_Files_Select_Directories(); break;
 				case TextEditCommand.Files_Select_Roots: Active.Command_Files_Select_Roots(TextEditMenuItem.LastClick == MouseButton.Left); break;
+				case TextEditCommand.Files_RenameKeysToSelections: Active.Command_Files_RenameKeysToSelections(); break;
 				case TextEditCommand.Data_Case_Upper: Active.Command_Data_Case_Upper(); break;
 				case TextEditCommand.Data_Case_Lower: Active.Command_Data_Case_Lower(); break;
 				case TextEditCommand.Data_Case_Proper: Active.Command_Data_Case_Proper(); break;

@@ -335,9 +335,9 @@ namespace NeoEdit.TextEditor
 			if (dialog.ShowDialog() == true)
 			{
 				if (Directory.Exists(dialog.FileName))
-					throw new Exception("A directory by that name already exists.");
+					throw new Exception("A directory by that name already exists");
 				if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
-					throw new Exception("Directory doesn't exist.");
+					throw new Exception("Directory doesn't exist");
 				FileName = dialog.FileName;
 				Command_File_Save();
 			}
@@ -593,7 +593,7 @@ namespace NeoEdit.TextEditor
 				var files = Selections.Select(range => GetString(range)).ToArray();
 				foreach (var file in files)
 				{
-					if ((!File.Exists(file)) && (!Directory.Exists(file)))
+					if (!FileOrDirectoryExists(file))
 						File.WriteAllBytes(file, new byte[0]);
 
 					if (File.Exists(file))
@@ -806,6 +806,55 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(result);
 		}
 
+		internal void Command_Files_RenameKeysToSelections()
+		{
+			if ((keysAndValues[0].Count == 0) || (Selections.Count == 0))
+				throw new Exception("Keys and selections must be set");
+
+			if (keysAndValues[0].Count != Selections.Count)
+				throw new Exception("Keys and selections count must match");
+
+			var sels = Selections.Select(range => GetString(range)).ToList();
+
+			if ((keysAndValues[0].Any(a => String.IsNullOrEmpty(a))) || (sels.Any(a => String.IsNullOrEmpty(a))))
+				throw new Exception("Can't have empty items in list");
+
+			var invalid = keysAndValues[0].FirstOrDefault(file => !FileOrDirectoryExists(file));
+			if (invalid != null)
+				throw new Exception(String.Format("File/directory doesn't exist: {0}", invalid));
+
+			invalid = sels.FirstOrDefault(file => FileOrDirectoryExists(file));
+			if (invalid != null)
+				throw new Exception(String.Format("File/directory already exists: {0}", invalid));
+
+			var paths = sels.Select(path => Path.GetDirectoryName(path)).Distinct().ToList();
+			invalid = paths.FirstOrDefault(dir => !Directory.Exists(dir));
+			if (invalid != null)
+				throw new Exception(String.Format("Directory doesn't exist: {0}", invalid));
+
+			const int numExamples = 10;
+			var examples = String.Join("", Enumerable.Range(0, Math.Min(numExamples, sels.Count)).Select(num => keysAndValues[0][num] + " => " + sels[num] + "\n"));
+			if (sels.Count > numExamples)
+				examples += String.Format(" + {0} more\n", sels.Count - numExamples);
+
+			if (new Message
+			{
+				Title = "Confirm",
+				Text = "Are you sure you want to rename these files?\n" + examples,
+				Options = Message.OptionsEnum.YesNo,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.No,
+				Width = 900,
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			for (var ctr = 0; ctr < sels.Count; ++ctr)
+				if (Directory.Exists(keysAndValues[0][ctr]))
+					Directory.Move(keysAndValues[0][ctr], sels[ctr]);
+				else
+					File.Move(keysAndValues[0][ctr], sels[ctr]);
+		}
+
 		internal void Command_Data_Case_Upper()
 		{
 			var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
@@ -993,7 +1042,7 @@ namespace NeoEdit.TextEditor
 			// Handles keys as well as values
 			var values = Selections.Select(range => GetString(range)).ToList();
 			if ((index == 0) && (values.Distinct().Count() != values.Count))
-				throw new ArgumentException("Cannot have duplicate keys.");
+				throw new ArgumentException("Cannot have duplicate keys");
 			keysAndValues[index] = values;
 			if (index == 0)
 				keysHash = values.Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
@@ -1002,7 +1051,7 @@ namespace NeoEdit.TextEditor
 		internal void Command_Keys_SelectionReplace(int index)
 		{
 			if (keysAndValues[0].Count != keysAndValues[index].Count)
-				throw new Exception("Keys and values count must match.");
+				throw new Exception("Keys and values count must match");
 
 			var strs = new List<string>();
 			foreach (var range in Selections)
@@ -1019,7 +1068,7 @@ namespace NeoEdit.TextEditor
 		internal void Command_Keys_GlobalFind(int index)
 		{
 			if (keysAndValues[0].Count != keysAndValues[index].Count)
-				throw new Exception("Keys and values count must match.");
+				throw new Exception("Keys and values count must match");
 
 			var searcher = Searcher.Create(keysAndValues[0]);
 			var ranges = new RangeList();
@@ -1036,7 +1085,7 @@ namespace NeoEdit.TextEditor
 		internal void Command_Keys_GlobalReplace(int index)
 		{
 			if (keysAndValues[0].Count != keysAndValues[index].Count)
-				throw new Exception("Keys and values count must match.");
+				throw new Exception("Keys and values count must match");
 
 			var searcher = Searcher.Create(keysAndValues[0]);
 			var ranges = new RangeList();
