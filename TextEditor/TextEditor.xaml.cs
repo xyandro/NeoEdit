@@ -76,7 +76,7 @@ namespace NeoEdit.TextEditor
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScrollViewport); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScrollViewport); } }
 
-		new readonly TextEditorParent Parent;
+		new readonly TextEditorTabs Parent;
 		readonly RangeList Selections = new RangeList();
 		readonly RangeList Searches = new RangeList();
 		readonly RangeList Marks = new RangeList();
@@ -95,7 +95,7 @@ namespace NeoEdit.TextEditor
 		}
 
 		readonly UIHelper<TextEditor> uiHelper;
-		public TextEditor(TextEditorParent _parent, string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
+		public TextEditor(TextEditorTabs _parent, string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
 		{
 			Parent = _parent;
 			uiHelper = new UIHelper<TextEditor>(this);

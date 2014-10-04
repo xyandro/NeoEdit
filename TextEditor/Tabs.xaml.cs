@@ -1,32 +1,49 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Win32;
-using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	public partial class TextEditorParent
+	public partial class TextEditorTabs
 	{
+		public enum ViewType
+		{
+			Tabs,
+			Tiles,
+		}
+
 		[DepProp]
 		public ObservableCollection<TextEditor> TextEditors { get { return uiHelper.GetPropValue<ObservableCollection<TextEditor>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public TextEditor Active { get { return uiHelper.GetPropValue<TextEditor>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public TextEditorTabs.ViewType View { get { return uiHelper.GetPropValue<TextEditorTabs.ViewType>(); } set { uiHelper.SetPropValue(value); } }
+		public ViewType View { get { return uiHelper.GetPropValue<ViewType>(); } set { uiHelper.SetPropValue(value); } }
 
-		static TextEditorParent() { UIHelper<TextEditorParent>.Register(); }
-
-		readonly UIHelper<TextEditorParent> uiHelper;
-		public TextEditorParent(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
+		static TextEditorTabs()
 		{
-			uiHelper = new UIHelper<TextEditorParent>(this);
+			UIHelper<TextEditorTabs>.Register();
+			UIHelper<TextEditorTabs>.AddCallback(a => a.View, (obj, o, n) => obj.Layout());
+			UIHelper<TextEditorTabs>.AddCallback(a => a.Active, (obj, o, n) => obj.Layout());
+			UIHelper<TextEditorTabs>.AddObservableCallback(a => a.TextEditors, (obj, s, e) => obj.SetActive(e));
+			UIHelper<TextEditorTabs>.AddObservableCallback(a => a.TextEditors, (obj, s, e) => obj.Layout());
+			UIHelper<TextEditorTabs>.AddCoerce(a => a.Active, (obj, value) => (value == null) || ((obj.TextEditors != null) && (obj.TextEditors.Contains(value))) ? value : null);
+		}
+
+		readonly UIHelper<TextEditorTabs> uiHelper;
+		public TextEditorTabs(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
+		{
+			uiHelper = new UIHelper<TextEditorTabs>(this);
 			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 
@@ -35,7 +52,7 @@ namespace NeoEdit.TextEditor
 
 			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
 
-			View = TextEditorTabs.ViewType.Tabs;
+			View = ViewType.Tabs;
 		}
 
 		void Command_File_Open()
@@ -298,7 +315,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.View_Highlighting_None: Active.HighlightType = Highlighting.HighlightingType.None; break;
 				case TextEditCommand.View_Highlighting_CSharp: Active.HighlightType = Highlighting.HighlightingType.CSharp; break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: Active.HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
-				case TextEditCommand.View_Tiles: View = View == TextEditorTabs.ViewType.Tiles ? TextEditorTabs.ViewType.Tabs : TextEditorTabs.ViewType.Tiles; break;
+				case TextEditCommand.View_Tiles: View = View == ViewType.Tiles ? ViewType.Tabs : ViewType.Tiles; break;
 			}
 
 			shiftOverride = null;
@@ -310,22 +327,6 @@ namespace NeoEdit.TextEditor
 				Active.EnsureVisible();
 
 			Active.InvalidateRender();
-		}
-
-		void EncodingClick(object sender, RoutedEventArgs e)
-		{
-			if (Active == null)
-				return;
-			var header = (e.OriginalSource as MenuItem).Header as string;
-			Active.CoderUsed = Helpers.ParseEnum<Coder.Type>(header);
-		}
-
-		void HighlightingClicked(object sender, RoutedEventArgs e)
-		{
-			if (Active == null)
-				return;
-			var header = (sender as MenuItem).Header.ToString();
-			Active.HighlightType = Helpers.ParseEnum<Highlighting.HighlightingType>(header);
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -346,13 +347,13 @@ namespace NeoEdit.TextEditor
 		internal bool shiftDown { get { return shiftOverride.HasValue ? shiftOverride.Value : (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		internal bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
-		bool HandleKey(Key key)
+		bool HandleTabKeys(Key key)
 		{
 			var ret = true;
 			switch (key)
 			{
-				case Key.PageUp: if (controlDown) tabs.MovePrev(); else ret = false; break;
-				case Key.PageDown: if (controlDown) tabs.MoveNext(); else ret = false; break;
+				case Key.PageUp: if (controlDown) MovePrev(); else ret = false; break;
+				case Key.PageDown: if (controlDown) MoveNext(); else ret = false; break;
 				default: ret = false; break;
 			}
 			return ret;
@@ -360,7 +361,7 @@ namespace NeoEdit.TextEditor
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			e.Handled = HandleKey(e.Key);
+			e.Handled = HandleTabKeys(e.Key);
 			if (e.Handled)
 				return;
 
@@ -370,6 +371,183 @@ namespace NeoEdit.TextEditor
 			shiftOverride = shiftDown;
 			e.Handled = Active.HandleKey(e.Key);
 			shiftOverride = null;
+		}
+
+		public void MovePrev()
+		{
+			var index = TextEditors.IndexOf(Active) - 1;
+			if (index < 0)
+				index = TextEditors.Count - 1;
+			if (index >= 0)
+				Active = TextEditors[index];
+		}
+
+		public void MoveNext()
+		{
+			var index = TextEditors.IndexOf(Active) + 1;
+			if (index >= TextEditors.Count)
+				index = 0;
+			if (index < TextEditors.Count)
+				Active = TextEditors[index];
+		}
+
+		void SetActive(NotifyCollectionChangedEventArgs e)
+		{
+			if (e == null)
+			{
+				Active = TextEditors.FirstOrDefault();
+				return;
+			}
+
+			if (Active == null)
+			{
+				Active = TextEditors.FirstOrDefault();
+				return;
+			}
+
+			if (e.Action == NotifyCollectionChangedAction.Move)
+				return;
+			if (e.Action == NotifyCollectionChangedAction.Reset)
+			{
+				Active = null;
+				return;
+			}
+
+			if (e.OldItems == null)
+				return;
+			int index = e.OldItems.IndexOf(Active);
+			if (index == -1)
+				return;
+
+			index += e.OldStartingIndex;
+			index = Math.Min(index, TextEditors.Count - 1);
+			if (index < 0)
+				Active = null;
+			else
+				Active = TextEditors[index];
+		}
+
+		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+		{
+			foreach (var editor in TextEditors)
+				if (editor.IsMouseOver)
+					Active = editor;
+
+			base.OnPreviewMouseLeftButtonDown(e);
+		}
+
+		void Layout()
+		{
+			grid.Children.Clear();
+			grid.RowDefinitions.Clear();
+			grid.ColumnDefinitions.Clear();
+
+			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+
+			if (TextEditors.Count == 0)
+				return;
+
+			if (View == ViewType.Tiles)
+				LayoutTiles();
+			else
+				LayoutTabs();
+
+			var menu = Resources.MergedDictionaries.Select(res => res["TextEditorMenu"] as Menu).First(res => res != null);
+			Grid.SetColumnSpan(menu, grid.ColumnDefinitions.Count);
+			grid.Children.Add(menu);
+		}
+
+		Label GetLabel(TextEditor textEditor, bool tile)
+		{
+			var label = new Label
+			{
+				Background = textEditor == Active ? Brushes.LightBlue : Brushes.LightGray,
+				Padding = new Thickness(10, 2, 10, 2),
+				Margin = new Thickness(0, 0, tile ? 0 : 2, 1),
+				Target = textEditor,
+				AllowDrop = true,
+			};
+			label.MouseLeftButtonDown += (s, e) => Active = label.Target as TextEditor;
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName:[0])t+([1]!=0?'*':'')" };
+			multiBinding.Bindings.Add(new Binding("FileName") { Source = textEditor });
+			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = textEditor });
+			label.SetBinding(Label.ContentProperty, multiBinding);
+
+			label.MouseMove += (s, e) =>
+			{
+				if (e.LeftButton == MouseButtonState.Pressed)
+					DragDrop.DoDragDrop(label, new DataObject(typeof(TextEditorTabs), label), DragDropEffects.Move);
+			};
+
+			label.Drop += (s, e) =>
+			{
+				var editor = (e.Data.GetData(typeof(TextEditorTabs)) as Label).Target as TextEditor;
+				var fromIndex = TextEditors.IndexOf(editor);
+				var toIndex = TextEditors.IndexOf((s as Label).Target as TextEditor);
+				TextEditors.RemoveAt(fromIndex);
+				TextEditors.Insert(toIndex, editor);
+				Active = editor;
+			};
+
+			return label;
+		}
+
+		void LayoutTiles()
+		{
+			const double border = 2;
+
+			var columns = (int)Math.Ceiling(Math.Sqrt(TextEditors.Count));
+			var rows = (TextEditors.Count + columns - 1) / columns;
+
+			for (var ctr = 0; ctr < columns; ++ctr)
+			{
+				if (ctr != 0)
+					grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(border) });
+				grid.ColumnDefinitions.Add(new ColumnDefinition());
+			}
+
+			for (var ctr = 0; ctr < rows; ++ctr)
+			{
+				if (ctr != 0)
+					grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(border) });
+				grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+				grid.RowDefinitions.Add(new RowDefinition());
+			}
+
+			int count = 0;
+			foreach (var textEditor in TextEditors)
+			{
+				var column = count % columns * 2;
+				var row = count / columns * 3 + 1;
+
+				var label = GetLabel(textEditor, true);
+				Grid.SetColumn(label, column);
+				Grid.SetRow(label, row);
+				grid.Children.Add(label);
+
+				Grid.SetColumn(textEditor, column);
+				Grid.SetRow(textEditor, row + 1);
+				grid.Children.Add(textEditor);
+
+				++count;
+			}
+		}
+
+		void LayoutTabs()
+		{
+			grid.ColumnDefinitions.Add(new ColumnDefinition());
+			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+			grid.RowDefinitions.Add(new RowDefinition());
+
+			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+			foreach (var textEditor in TextEditors)
+				stackPanel.Children.Add(GetLabel(textEditor, false));
+			Grid.SetRow(stackPanel, 1);
+			grid.Children.Add(stackPanel);
+
+			Grid.SetRow(Active, 2);
+			Grid.SetColumn(Active, 0);
+			grid.Children.Add(Active);
 		}
 	}
 }
