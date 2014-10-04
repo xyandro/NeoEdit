@@ -270,13 +270,13 @@
 			<textEditor:TextEditMenuItem CommandEnum="Select_All"/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_Limit"/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_Lines"/>
-			<textEditor:TextEditMenuItem CommandEnum="Select_Marks"/>
-			<textEditor:TextEditMenuItem CommandEnum="Select_Find"/>
-			<Separator/>
-			<textEditor:TextEditMenuItem CommandEnum="Select_RemoveEmpty"/>
+			<textEditor:TextEditMenuItem CommandEnum="Select_NonEmpty"/>
 			<Separator/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_Unique"/>
 			<textEditor:TextEditMenuItem CommandEnum="Select_Duplicates"/>
+			<Separator/>
+			<textEditor:TextEditMenuItem CommandEnum="Select_Marks"/>
+			<textEditor:TextEditMenuItem CommandEnum="Select_Find"/>
 			<Separator/>
 			<MenuItem Header="Min">
 				<textEditor:TextEditMenuItem CommandEnum="Select_Min_String"/>

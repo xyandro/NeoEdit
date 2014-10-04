@@ -290,11 +290,11 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_All: Active.Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Active.Command_Select_Limit(); break;
 				case TextEditCommand.Select_Lines: Active.Command_Select_Lines(); break;
-				case TextEditCommand.Select_Marks: Active.Command_Select_Marks(); break;
-				case TextEditCommand.Select_Find: Active.Command_Select_Find(); break;
-				case TextEditCommand.Select_RemoveEmpty: Active.Command_Select_RemoveEmpty(TextEditMenuItem.LastClick == MouseButton.Left); break;
+				case TextEditCommand.Select_NonEmpty: Active.Command_Select_NonEmpty(TextEditMenuItem.LastClick == MouseButton.Left); break;
 				case TextEditCommand.Select_Unique: Active.Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Active.Command_Select_Duplicates(); break;
+				case TextEditCommand.Select_Marks: Active.Command_Select_Marks(); break;
+				case TextEditCommand.Select_Find: Active.Command_Select_Find(); break;
 				case TextEditCommand.Select_Min_String: Active.Command_Select_Min_String(); break;
 				case TextEditCommand.Select_Min_Numeric: Active.Command_Select_Min_Numeric(); break;
 				case TextEditCommand.Select_Max_String: Active.Command_Select_Max_String(); break;

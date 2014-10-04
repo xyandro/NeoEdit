@@ -415,17 +415,17 @@ namespace NeoEdit.TextEditor
 			Clipboard.SetText(Path.GetFileName(FileName));
 		}
 
-		internal void Command_File_BinaryEditor()
-		{
-			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed), CoderUsed);
-		}
-
 		internal void Command_File_BOM()
 		{
 			if (Data.BOM)
 				Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
 			else
 				Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
+		}
+
+		internal void Command_File_BinaryEditor()
+		{
+			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed), CoderUsed);
 		}
 
 		internal void Command_Edit_Undo()
@@ -1169,6 +1169,21 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(sels);
 		}
 
+		internal void Command_Select_NonEmpty(bool include)
+		{
+			Selections.Replace(Selections.Where(range => range.HasSelection() == include).ToList());
+		}
+
+		internal void Command_Select_Unique()
+		{
+			Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
+		}
+
+		internal void Command_Select_Duplicates()
+		{
+			Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
+		}
+
 		internal void Command_Select_Marks()
 		{
 			if (Marks.Count != 0)
@@ -1182,21 +1197,6 @@ namespace NeoEdit.TextEditor
 		{
 			Selections.Replace(Searches);
 			Searches.Clear();
-		}
-
-		internal void Command_Select_RemoveEmpty(bool include)
-		{
-			Selections.Replace(Selections.Where(range => range.HasSelection() == include).ToList());
-		}
-
-		internal void Command_Select_Unique()
-		{
-			Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
-		}
-
-		internal void Command_Select_Duplicates()
-		{
-			Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
 		}
 
 		internal void Command_Select_Min_String()
