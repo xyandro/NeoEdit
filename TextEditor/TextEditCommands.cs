@@ -44,6 +44,13 @@ namespace NeoEdit.TextEditor
 		[Header("_Insert File(s)")] File_InsertFiles,
 		[Header("Copy _Path")] File_CopyPath,
 		[Header("Copy Name")] File_CopyName,
+		[Header("UTF8")] File_Encoding_UTF8,
+		[Header("UTF7")] File_Encoding_UTF7,
+		[Header("UTF16LE")] File_Encoding_UTF16LE,
+		[Header("UTF16BE")] File_Encoding_UTF16BE,
+		[Header("UTF32LE")] File_Encoding_UTF32LE,
+		[Header("UTF32BE")] File_Encoding_UTF32BE,
+		[Header("Base64")] File_Encoding_Base64,
 		[Header("Binary Editor")] File_BinaryEditor,
 		[Header("_BOM")] File_BOM,
 		[Header("E_xit")] File_Exit,
@@ -229,6 +236,9 @@ namespace NeoEdit.TextEditor
 		[Header("_Find Results")] Mark_Find,
 		[Header("_Clear Marks")] Mark_Clear,
 		[Header("_Limit To Selection")] Mark_LimitToSelection,
+		[Header("None")] View_Highlighting_None,
+		[Header("C#")] View_Highlighting_CSharp,
+		[Header("C++")] View_Highlighting_CPlusPlus,
 		[Header("_Tiles")] [KeyGesture(Key.T, ModifierKeys.Control)] View_Tiles,
 	}
 }

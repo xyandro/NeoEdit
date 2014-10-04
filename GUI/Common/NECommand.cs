@@ -35,21 +35,21 @@ namespace NeoEdit.GUI.Common
 	{
 		class NECommand : RoutedCommand
 		{
+			public CommandEnumT Command { get; private set; }
 			public string Header { get; private set; }
 			public string InputGestureText { get; private set; }
 
-			readonly CommandEnumT commandEnum;
 			readonly List<KeyGesture> keyGestures = new List<KeyGesture>();
-			public NECommand(CommandEnumT commandEnum)
+			public NECommand(CommandEnumT command)
 			{
-				this.commandEnum = commandEnum;
+				Command = command;
 
-				var memberInfo = typeof(CommandEnumT).GetMember(commandEnum.ToString()).First();
+				var memberInfo = typeof(CommandEnumT).GetMember(command.ToString()).First();
 				var headerAttr = memberInfo.GetCustomAttributes(typeof(HeaderAttribute), false).FirstOrDefault() as HeaderAttribute;
 				if (headerAttr != null)
 					Header = headerAttr.Header;
 				if (String.IsNullOrEmpty(Header))
-					Header = commandEnum.ToString();
+					Header = command.ToString();
 				var keyGestureAttrs = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false);
 				foreach (KeyGestureAttribute key in keyGestureAttrs)
 					keyGestures.Add(new KeyGesture(key.Key, key.Modifiers));
@@ -59,7 +59,7 @@ namespace NeoEdit.GUI.Common
 
 			public void RegisterCommand(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
 			{
-				window.CommandBindings.Add(new CommandBinding(this, (s, e) => handler(s, e, commandEnum)));
+				window.CommandBindings.Add(new CommandBinding(this, (s, e) => handler(s, e, Command)));
 				foreach (var attr in keyGestures)
 					window.InputBindings.Add(new KeyBinding(this, attr));
 			}
@@ -67,6 +67,7 @@ namespace NeoEdit.GUI.Common
 
 		public CommandEnumT CommandEnum
 		{
+			get { return (Command as NECommand).Command; }
 			set
 			{
 				var neCommand = commands[value];

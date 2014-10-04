@@ -103,6 +103,13 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.File_InsertFiles: Active.Command_File_InsertFiles(); break;
 				case TextEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
+				case TextEditCommand.File_Encoding_UTF8: Active.CoderUsed = Coder.Type.UTF8; break;
+				case TextEditCommand.File_Encoding_UTF7: Active.CoderUsed = Coder.Type.UTF7; break;
+				case TextEditCommand.File_Encoding_UTF16LE: Active.CoderUsed = Coder.Type.UTF16LE; break;
+				case TextEditCommand.File_Encoding_UTF16BE: Active.CoderUsed = Coder.Type.UTF16BE; break;
+				case TextEditCommand.File_Encoding_UTF32LE: Active.CoderUsed = Coder.Type.UTF32LE; break;
+				case TextEditCommand.File_Encoding_UTF32BE: Active.CoderUsed = Coder.Type.UTF32BE; break;
+				case TextEditCommand.File_Encoding_Base64: Active.CoderUsed = Coder.Type.Base64; break;
 				case TextEditCommand.File_BinaryEditor: Active.Command_File_BinaryEditor(); Active.Close(); TextEditors.Remove(Active); if (TextEditors.Count == 0) Close(); break;
 				case TextEditCommand.File_BOM: Active.Command_File_BOM(); break;
 				case TextEditCommand.File_Exit: Close(); break;
@@ -288,6 +295,9 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Mark_Find: Active.Command_Mark_Find(); break;
 				case TextEditCommand.Mark_Clear: Active.Command_Mark_Clear(); break;
 				case TextEditCommand.Mark_LimitToSelection: Active.Command_Mark_LimitToSelection(); break;
+				case TextEditCommand.View_Highlighting_None: Active.HighlightType = Highlighting.HighlightingType.None; break;
+				case TextEditCommand.View_Highlighting_CSharp: Active.HighlightType = Highlighting.HighlightingType.CSharp; break;
+				case TextEditCommand.View_Highlighting_CPlusPlus: Active.HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
 				case TextEditCommand.View_Tiles: View = View == TextEditorTabs.ViewType.Tiles ? TextEditorTabs.ViewType.Tabs : TextEditorTabs.ViewType.Tiles; break;
 			}
 

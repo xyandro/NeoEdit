@@ -115,6 +115,10 @@
       <DependentUpon>TextEditorParent.xaml</DependentUpon>
     </Compile>
     <Compile Include="UnitTest\TextDataTest.cs" />
+    <Page Include="Menu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
