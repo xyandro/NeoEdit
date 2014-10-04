@@ -121,20 +121,40 @@ namespace NeoEdit.TextEditor
 				LayoutTabs();
 		}
 
-		Label GetLabel(TextEditor textEditor, int left, int right)
+		Label GetLabel(TextEditor textEditor, bool tile)
 		{
 			var label = new Label
 			{
 				Background = textEditor == Active ? Brushes.LightBlue : Brushes.LightGray,
 				Padding = new Thickness(10, 2, 10, 2),
-				Margin = new Thickness(left, 0, right, 1),
+				Margin = new Thickness(0, 0, tile ? 0 : 2, 1),
 				Target = textEditor,
+				AllowDrop = true,
 			};
-			label.MouseLeftButtonUp += (s, e) => Active = label.Target as TextEditor;
+			label.MouseLeftButtonDown += (s, e) => Active = label.Target as TextEditor;
 			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName:[0])t+([1]!=0?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = textEditor });
 			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = textEditor });
 			label.SetBinding(Label.ContentProperty, multiBinding);
+
+			label.MouseMove += (s, e) =>
+			{
+				if (e.LeftButton == MouseButtonState.Pressed)
+				{
+					DragDrop.DoDragDrop(this, new DataObject(typeof(TextEditorTabs), label), DragDropEffects.Move);
+				}
+			};
+
+			label.Drop += (s, e) =>
+			{
+				var editor = (e.Data.GetData(typeof(TextEditorTabs)) as Label).Target as TextEditor;
+				var fromIndex = TextEditors.IndexOf(editor);
+				var toIndex = TextEditors.IndexOf((s as Label).Target as TextEditor);
+				TextEditors.RemoveAt(fromIndex);
+				TextEditors.Insert(toIndex, editor);
+				Active = editor;
+			};
+
 			return label;
 		}
 
@@ -166,7 +186,7 @@ namespace NeoEdit.TextEditor
 				var column = count % columns * 2;
 				var row = count / columns * 3;
 
-				var label = GetLabel(textEditor, 0, 0);
+				var label = GetLabel(textEditor, true);
 				Grid.SetColumn(label, column);
 				Grid.SetRow(label, row);
 				Children.Add(label);
@@ -187,7 +207,7 @@ namespace NeoEdit.TextEditor
 
 			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 			foreach (var textEditor in TextEditors)
-				stackPanel.Children.Add(GetLabel(textEditor, 0, 2));
+				stackPanel.Children.Add(GetLabel(textEditor, false));
 			Children.Add(stackPanel);
 
 			Grid.SetRow(Active, 1);
