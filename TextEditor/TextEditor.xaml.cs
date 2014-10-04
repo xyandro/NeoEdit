@@ -254,7 +254,7 @@ namespace NeoEdit.TextEditor
 			return Regex.Unescape(str);
 		}
 
-		bool ConfirmModified()
+		internal bool CanClose()
 		{
 			if (ModifiedSteps == 0)
 				return true;
@@ -276,16 +276,10 @@ namespace NeoEdit.TextEditor
 			return false;
 		}
 
-		//protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-		//{
-		//	if (!ConfirmModified())
-		//	{
-		//		e.Cancel = true;
-		//		return;
-		//	}
-
-		//	base.OnClosing(e);
-		//}
+		internal void Close()
+		{
+			FileName = null; // Cancel filesystem watch
+		}
 
 		internal enum GetPathType
 		{
@@ -331,7 +325,14 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_File_SaveAs()
 		{
-			var dialog = new SaveFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2 };
+			var dialog = new SaveFileDialog
+			{
+				DefaultExt = "txt",
+				Filter = "Text files|*.txt|All files|*.*",
+				FilterIndex = 2,
+				FileName = Path.GetFileName(FileName),
+				InitialDirectory = Path.GetDirectoryName(FileName),
+			};
 			if (dialog.ShowDialog() == true)
 			{
 				if (Directory.Exists(dialog.FileName))

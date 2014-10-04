@@ -1,4 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -45,7 +48,15 @@ namespace NeoEdit.TextEditor
 
 		void Command_File_Open()
 		{
-			var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
+			var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
+			var dialog = new OpenFileDialog
+			{
+				DefaultExt = "txt",
+				Filter = "Text files|*.txt|All files|*.*",
+				FilterIndex = 2,
+				Multiselect = true,
+				InitialDirectory = dir,
+			};
 			if (dialog.ShowDialog() != true)
 				return;
 
@@ -57,6 +68,23 @@ namespace NeoEdit.TextEditor
 		{
 			TextEditors.Add(textEditor);
 			Active = textEditor;
+		}
+
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			var active = Active;
+			foreach (var textEditor in TextEditors)
+			{
+				Active = textEditor;
+				if (!textEditor.CanClose())
+				{
+					e.Cancel = true;
+					break;
+				}
+			}
+			Active = active;
+			TextEditors.ToList().ForEach(textEditor => textEditor.Close());
+			base.OnClosing(e);
 		}
 
 		void RunCommand(TextEditCommand command)
@@ -77,7 +105,7 @@ namespace NeoEdit.TextEditor
 			{
 				case TextEditCommand.File_Save: Active.Command_File_Save(); break;
 				case TextEditCommand.File_SaveAs: Active.Command_File_SaveAs(); break;
-				case TextEditCommand.File_Close: TextEditors.Remove(Active); break;
+				case TextEditCommand.File_Close: if (Active.CanClose()) { Active.Close(); TextEditors.Remove(Active); } break;
 				case TextEditCommand.File_Revert: Active.Command_File_Revert(); break;
 				case TextEditCommand.File_CheckUpdates: Active.Command_File_CheckUpdates(); break;
 				case TextEditCommand.File_InsertFiles: Active.Command_File_InsertFiles(); break;
