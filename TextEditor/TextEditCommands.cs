@@ -1,9 +1,35 @@
-﻿using System.Windows.Input;
+﻿using System.Reflection;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	class TextEditMenuItem : NEMenuItem<TextEditCommand> { }
+	class TextEditMenuItem : NEMenuItem<TextEditCommand>
+	{
+		public TextEditMenuItem()
+		{
+			// Allow right-click
+			SetValue(typeof(MenuItem).GetField("InsideContextMenuProperty", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null) as DependencyProperty, true);
+		}
+
+		MouseButton last = MouseButton.Left;
+		static public MouseButton LastClick { get; private set; }
+
+		protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+		{
+			last = MouseButton.Right;
+			base.OnMouseRightButtonUp(e);
+			last = MouseButton.Left;
+		}
+
+		protected override void OnClick()
+		{
+			LastClick = last;
+			base.OnClick();
+		}
+	}
 
 	enum TextEditCommand
 	{
@@ -52,11 +78,9 @@ namespace NeoEdit.TextEditor
 		[Header("A_ttributes")] Files_Information_Attributes,
 		[Header("_Read Only")] Files_Information_ReadOnly,
 		[Header("_Existing")] Files_Select_Existing,
-		[Header("_Non-Existing")] Files_Select_NonExisting,
 		[Header("_Files")] Files_Select_Files,
 		[Header("_Directories")] Files_Select_Directories,
 		[Header("_Roots")] Files_Select_Roots,
-		[Header("Non-Roots")] Files_Select_NonRoots,
 		[Header("_Upper")] [KeyGesture(Key.U, ModifierKeys.Control)] Data_Case_Upper,
 		[Header("_Lower")] [KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift)] Data_Case_Lower,
 		[Header("_Proper")] Data_Case_Proper,
@@ -193,7 +217,6 @@ namespace NeoEdit.TextEditor
 		[Header("_Numeric")] Select_Max_Numeric,
 		[Header("_Expression Matches")] Select_ExpressionMatches,
 		[Header("_RegEx Matches")] Select_RegExMatches,
-		[Header("RegEx Non-Matches")] Select_RegExNonMatches,
 		[Header("First Selection")] [KeyGesture(Key.D0, ModifierKeys.Alt)] Select_ShowFirst,
 		[Header("Show Current")] [KeyGesture(Key.Space, ModifierKeys.Alt)]  [KeyGesture(Key.Space, ModifierKeys.Control)] Select_ShowCurrent,
 		[Header("Next Selection")] [KeyGesture(Key.Down, ModifierKeys.Alt)] Select_NextSelection,

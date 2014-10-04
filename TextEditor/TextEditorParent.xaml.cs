@@ -116,12 +116,10 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Information_CreateTime: Active.Command_Files_Information_CreateTime(); break;
 				case TextEditCommand.Files_Information_Attributes: Active.Command_Files_Information_Attributes(); break;
 				case TextEditCommand.Files_Information_ReadOnly: Active.Command_Files_Information_ReadOnly(); break;
-				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(true); break;
-				case TextEditCommand.Files_Select_NonExisting: Active.Command_Files_Select_Existing(false); break;
+				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(TextEditMenuItem.LastClick == MouseButton.Left); break;
 				case TextEditCommand.Files_Select_Files: Active.Command_Files_Select_Files(); break;
 				case TextEditCommand.Files_Select_Directories: Active.Command_Files_Select_Directories(); break;
-				case TextEditCommand.Files_Select_Roots: Active.Command_Files_Select_Roots(true); break;
-				case TextEditCommand.Files_Select_NonRoots: Active.Command_Files_Select_Roots(false); break;
+				case TextEditCommand.Files_Select_Roots: Active.Command_Files_Select_Roots(TextEditMenuItem.LastClick == MouseButton.Left); break;
 				case TextEditCommand.Data_Case_Upper: Active.Command_Data_Case_Upper(); break;
 				case TextEditCommand.Data_Case_Lower: Active.Command_Data_Case_Lower(); break;
 				case TextEditCommand.Data_Case_Proper: Active.Command_Data_Case_Proper(); break;
@@ -256,9 +254,8 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_Min_Numeric: Active.Command_Select_Min_Numeric(); break;
 				case TextEditCommand.Select_Max_String: Active.Command_Select_Max_String(); break;
 				case TextEditCommand.Select_Max_Numeric: Active.Command_Select_Max_Numeric(); break;
-				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(); break;
-				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(); break;
-				case TextEditCommand.Select_RegExNonMatches: Active.Command_Select_RegExNonMatches(); break;
+				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(TextEditMenuItem.LastClick == MouseButton.Left); break;
+				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(TextEditMenuItem.LastClick == MouseButton.Left); break;
 				case TextEditCommand.Select_ShowFirst: Active.Command_Select_ShowFirst(); break;
 				case TextEditCommand.Select_ShowCurrent: Active.Command_Select_ShowCurrent(); break;
 				case TextEditCommand.Select_NextSelection: Active.Command_Select_NextSelection(); break;

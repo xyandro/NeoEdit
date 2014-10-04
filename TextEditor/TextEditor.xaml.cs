@@ -796,18 +796,13 @@ namespace NeoEdit.TextEditor
 			foreach (var file in files)
 			{
 				if ((root != null) && (file.StartsWith(root)))
-				{
-					if (!include)
-						roots.Add(file);
 					continue;
-				}
 
-				if (include)
-					roots.Add(file);
+				roots.Add(file);
 				root = file + @"\";
 			}
 
-			var result = sels.Where(sel => roots.Contains(sel.str)).Select(sel => sel.range).ToList();
+			var result = sels.Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
 			Selections.Replace(result);
 		}
 
@@ -1186,7 +1181,7 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 		}
 
-		internal void Command_Select_ExpressionMatches()
+		internal void Command_Select_ExpressionMatches(bool include)
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			var expression = ExpressionDialog.GetExpression(strs);
@@ -1194,13 +1189,13 @@ namespace NeoEdit.TextEditor
 			{
 				var sels = new RangeList();
 				for (var ctr = 0; ctr < strs.Count; ++ctr)
-					if ((bool)expression.Evaluate(strs[ctr], ctr + 1))
+					if ((bool)expression.Evaluate(strs[ctr], ctr + 1) == include)
 						sels.Add(Selections[ctr]);
 				Selections.Replace(sels);
 			}
 		}
 
-		internal void Command_Select_RegExMatches()
+		internal void Command_Select_RegExMatches(bool include)
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			var expression = ExpressionDialog.GetRegEx(strs);
@@ -1208,21 +1203,7 @@ namespace NeoEdit.TextEditor
 			{
 				var sels = new RangeList();
 				for (var ctr = 0; ctr < strs.Count; ++ctr)
-					if (expression.IsMatch(strs[ctr]))
-						sels.Add(Selections[ctr]);
-				Selections.Replace(sels);
-			}
-		}
-
-		internal void Command_Select_RegExNonMatches()
-		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			var expression = ExpressionDialog.GetRegEx(strs);
-			if (expression != null)
-			{
-				var sels = new RangeList();
-				for (var ctr = 0; ctr < strs.Count; ++ctr)
-					if (!expression.IsMatch(strs[ctr]))
+					if (expression.IsMatch(strs[ctr]) == include)
 						sels.Add(Selections[ctr]);
 				Selections.Replace(sels);
 			}

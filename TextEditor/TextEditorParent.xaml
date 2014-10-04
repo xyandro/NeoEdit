@@ -102,11 +102,9 @@
 				</MenuItem>
 				<MenuItem Header="_Select">
 					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Existing"/>
-					<textEditor:TextEditMenuItem CommandEnum="Files_Select_NonExisting"/>
 					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Files"/>
 					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Directories"/>
 					<textEditor:TextEditMenuItem CommandEnum="Files_Select_Roots"/>
-					<textEditor:TextEditMenuItem CommandEnum="Files_Select_NonRoots"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Data">
@@ -300,7 +298,6 @@
 				<Separator/>
 				<textEditor:TextEditMenuItem CommandEnum="Select_ExpressionMatches"/>
 				<textEditor:TextEditMenuItem CommandEnum="Select_RegExMatches"/>
-				<textEditor:TextEditMenuItem CommandEnum="Select_RegExNonMatches"/>
 				<Separator/>
 				<textEditor:TextEditMenuItem CommandEnum="Select_ShowFirst"/>
 				<textEditor:TextEditMenuItem CommandEnum="Select_ShowCurrent"/>
