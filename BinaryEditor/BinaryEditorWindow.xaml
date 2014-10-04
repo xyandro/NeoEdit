@@ -94,7 +94,6 @@
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Header="_Save"/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Header="Save _As"/>
 				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_TextEditor" Header="Text Editor"/>
 				<MenuItem Header="_Encoding" Click="EncodingClick">
 					<MenuItem Header="Auto"/>
 					<Separator/>
@@ -107,6 +106,7 @@
 					<Separator/>
 					<MenuItem Header="Base64" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#Base64#27#}"/>
 				</MenuItem>
+				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_TextEditor" Header="Text Editor"/>
 				<Separator/>
 				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Header="E_xit"/>
 			</MenuItem>
