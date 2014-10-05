@@ -15,7 +15,6 @@ Format JSON/XML
 Set line endings (\r\n / \n / \r)
 HTML/XML: Match closing tag
 Relative goto line/index should work for all selections
-Select every nth selection (make it for current selection instead of selecting lines)
 Ctrl+M should move to "current" selection
 "Selection Mode": If any cursors have selections, treat non-selecting cursors differently: delete wouldn't delete the current character, it would do nothing.
 Show number of items on clipboard on status bar
@@ -24,8 +23,6 @@ Open more than one file at startup
 Paste probably shouldn't work unless # selections is 1 or # copied
 Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
-In choose what to paste dialog don't allow newlines
-Close without save removes filename
 
 Binary:
 Fix binary editor backwards search

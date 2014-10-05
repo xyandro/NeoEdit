@@ -88,7 +88,7 @@ namespace NeoEdit.TextEditor
 				if (!textEditor.CanClose())
 				{
 					e.Cancel = true;
-					break;
+					return;
 				}
 			}
 			Active = active;
