@@ -24,6 +24,7 @@ Paste probably shouldn't work unless # selections is 1 (leave selections) or # c
 Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
 Ctrl-Tab for tab navigation
+Files->Open (open all listed files)
 
 Binary:
 Fix binary editor backwards search

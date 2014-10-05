@@ -54,6 +54,7 @@
     <Compile Include="ClipboardWindow.xaml.cs">
       <DependentUpon>ClipboardWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\Tabs.cs" />
     <Compile Include="Common\RenderCanvas.cs" />
     <Compile Include="Common\NECommand.cs" />
     <Compile Include="Common\HelpMenu.xaml.cs">
