@@ -40,3 +40,4 @@ Reload current file (perhaps automatically?)
 Keep track of whether file is edited; object on close
 Move open in text edit to File menu, rename from "Encode"
 Rename windows to match TextEdit
+Values catch cursor, never release it

@@ -24,7 +24,7 @@
 		<binaryEditor:DisplayValues Grid.Row="2" Grid.ColumnSpan="2"
 			Visibility="{Binding ShowValues, ElementName=self, Converter={guiCommon:ExpressionConverter}}"
 			Data="{Binding Data, ElementName=self, Mode=OneWay}"
-			ChangeCount="{Binding ChangeCount, ElementName=self, Mode=OneWay}"
+			ChangeCount="{Binding ChangeCount, ElementName=self, Mode=TwoWay}"
 			SelStart="{Binding SelStart, ElementName=self, Mode=OneWay}"
 			SelEnd="{Binding SelEnd, ElementName=self, Mode=OneWay}"
 			FoundText="{Binding FoundText, ElementName=self, Mode=OneWay}"

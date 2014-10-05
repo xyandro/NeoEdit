@@ -44,7 +44,10 @@ namespace NeoEdit.BinaryEditor
 					{
 						var data = Coder.StringToBytes(Text, Type);
 						if (data != null)
+						{
 							Data.Replace(SelStart, data.Length, data);
+							++ChangeCount;
+						}
 					}
 					break;
 			}
