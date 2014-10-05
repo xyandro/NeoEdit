@@ -1455,7 +1455,7 @@ namespace NeoEdit.TextEditor
 			renderTimer.Start();
 		}
 
-		void OnCanvasRender(DrawingContext dc)
+		void OnCanvasRender(object sender, DrawingContext dc)
 		{
 			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0))
 				return;

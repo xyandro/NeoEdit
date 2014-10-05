@@ -16,7 +16,7 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.BinaryEditor
 {
-	partial class BinaryCanvas : Canvas
+	partial class BinaryCanvas
 	{
 		[DepProp]
 		internal BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
@@ -67,7 +67,7 @@ namespace NeoEdit.BinaryEditor
 				SelEnd = Math.Max(_pos1, _pos2);
 
 				EnsureVisible(Pos1);
-				InvalidateVisual();
+				canvas.InvalidateVisual();
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace NeoEdit.BinaryEditor
 				SelStart = Math.Min(_pos1, _pos2);
 				SelEnd = Math.Max(_pos1, _pos2);
 
-				InvalidateVisual();
+				canvas.InvalidateVisual();
 			}
 		}
 		long Length { get { return SelEnd - SelStart; } }
@@ -91,7 +91,7 @@ namespace NeoEdit.BinaryEditor
 			get { return sexHex; }
 			set
 			{
-				InvalidateVisual();
+				canvas.InvalidateVisual();
 				inHexEdit = false;
 				sexHex = value;
 			}
@@ -151,13 +151,13 @@ namespace NeoEdit.BinaryEditor
 			UIHelper<BinaryCanvas>.Register();
 			UIHelper<BinaryCanvas>.AddCallback(a => a.Data, (obj, o, n) =>
 			{
-				obj.InvalidateVisual();
+				obj.canvas.InvalidateVisual();
 				obj.undo.Clear();
 				obj.redo.Clear();
 			});
-			UIHelper<BinaryCanvas>.AddCallback(a => a.ChangeCount, (obj, o, n) => obj.InvalidateVisual());
-			UIHelper<BinaryCanvas>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.InvalidateVisual());
-			UIHelper<BinaryCanvas>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.InvalidateVisual());
+			UIHelper<BinaryCanvas>.AddCallback(a => a.ChangeCount, (obj, o, n) => obj.canvas.InvalidateVisual());
+			UIHelper<BinaryCanvas>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
+			UIHelper<BinaryCanvas>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
 		}
 
 		readonly UIHelper<BinaryCanvas> uiHelper;
@@ -175,12 +175,17 @@ namespace NeoEdit.BinaryEditor
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			UIHelper<BinaryCanvas>.AddCallback(this, Canvas.ActualWidthProperty, () => InvalidateVisual());
-			UIHelper<BinaryCanvas>.AddCallback(this, Canvas.ActualHeightProperty, () => { EnsureVisible(Pos1); InvalidateVisual(); });
+			UIHelper<BinaryCanvas>.AddCallback(canvas, Canvas.ActualWidthProperty, () => canvas.InvalidateVisual());
+			UIHelper<BinaryCanvas>.AddCallback(canvas, Canvas.ActualHeightProperty, () => { EnsureVisible(Pos1); canvas.InvalidateVisual(); });
+
+			canvas.MouseLeftButtonDown += OnCanvasMouseLeftButtonDown;
+			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonDown;
+			canvas.MouseMove += OnCanvasMouseMove;
+			canvas.Render += OnCanvasRender;
 
 			Loaded += (s, e) =>
 			{
-				InvalidateVisual();
+				canvas.InvalidateVisual();
 				Pos1 = Pos2 = 0;
 			};
 		}
@@ -188,7 +193,7 @@ namespace NeoEdit.BinaryEditor
 		void EnsureVisible(long position)
 		{
 			var y = GetYFromRow(position / columns);
-			yScrollValue = Math.Min(y, Math.Max(y + rowHeight - ActualHeight, yScrollValue));
+			yScrollValue = Math.Min(y, Math.Max(y + rowHeight - canvas.ActualHeight, yScrollValue));
 		}
 
 		long GetRowFromY(double y)
@@ -223,16 +228,16 @@ namespace NeoEdit.BinaryEditor
 
 		void SetBounds()
 		{
-			columns = Math.Min(maxColumns, Math.Max(minColumns, ((int)(ActualWidth / charWidth) - xPosColumns - xPosGap - xHexGap + xHexSpacing) / (3 + xHexSpacing)));
+			columns = Math.Min(maxColumns, Math.Max(minColumns, ((int)(canvas.ActualWidth / charWidth) - xPosColumns - xPosGap - xHexGap + xHexSpacing) / (3 + xHexSpacing)));
 			rows = Data.Length / columns + 1;
 
-			xScrollMaximum = xEnd - ActualWidth;
+			xScrollMaximum = xEnd - canvas.ActualWidth;
 			xScrollSmallChange = charWidth;
-			xScrollLargeChange = ActualWidth - xScrollSmallChange;
+			xScrollLargeChange = canvas.ActualWidth - xScrollSmallChange;
 
-			yScrollMaximum = rows * rowHeight - ActualHeight;
+			yScrollMaximum = rows * rowHeight - canvas.ActualHeight;
 			yScrollSmallChange = rowHeight;
-			yScrollLargeChange = ActualHeight - yScrollSmallChange;
+			yScrollLargeChange = canvas.ActualHeight - yScrollSmallChange;
 		}
 
 		static Brush selectionActiveBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
@@ -316,17 +321,15 @@ namespace NeoEdit.BinaryEditor
 			dc.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
 		}
 
-		protected override void OnRender(DrawingContext dc)
+		void OnCanvasRender(object sender, DrawingContext dc)
 		{
-			base.OnRender(dc);
-
 			if (Data == null)
 				return;
 
 			SetBounds();
 
 			var startRow = Math.Max(0, GetRowFromY(yScrollValue));
-			var endRow = Math.Min(rows - 1, GetRowFromY(yScrollValue + ActualHeight));
+			var endRow = Math.Min(rows - 1, GetRowFromY(yScrollValue + canvas.ActualHeight));
 
 			for (var row = startRow; row <= endRow; ++row)
 			{
@@ -377,7 +380,7 @@ namespace NeoEdit.BinaryEditor
 						{
 							yScrollValue += rowHeight * mult;
 							var row = Pos1 / columns;
-							var adj = Math.Min(0, row - GetRowFromY(yScrollValue + rowHeight - 1)) + Math.Max(0, row - GetRowFromY(yScrollValue + ActualHeight - rowHeight));
+							var adj = Math.Min(0, row - GetRowFromY(yScrollValue + rowHeight - 1)) + Math.Max(0, row - GetRowFromY(yScrollValue + canvas.ActualHeight - rowHeight));
 							Pos1 -= adj * columns;
 						}
 						else
@@ -402,13 +405,13 @@ namespace NeoEdit.BinaryEditor
 					if (controlDown)
 						Pos1 -= (Pos1 / columns - GetRowFromY(yScrollValue + rowHeight - 1)) * columns;
 					else
-						Pos1 -= (long)(ActualHeight / rowHeight - 1) * columns;
+						Pos1 -= (long)(canvas.ActualHeight / rowHeight - 1) * columns;
 					break;
 				case Key.PageDown:
 					if (controlDown)
-						Pos1 += (GetRowFromY(ActualHeight + yScrollValue - rowHeight) - Pos1 / columns) * columns;
+						Pos1 += (GetRowFromY(canvas.ActualHeight + yScrollValue - rowHeight) - Pos1 / columns) * columns;
 					else
-						Pos1 += (long)(ActualHeight / rowHeight - 1) * columns;
+						Pos1 += (long)(canvas.ActualHeight / rowHeight - 1) * columns;
 					break;
 				case Key.A:
 					if (controlOnly)
@@ -578,28 +581,23 @@ namespace NeoEdit.BinaryEditor
 			Pos1 = pos;
 		}
 
-		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			MouseHandler(e.GetPosition(this));
+			MouseHandler(e.GetPosition(canvas));
 			mouseDown = e.ButtonState == MouseButtonState.Pressed;
 			if (mouseDown)
-				CaptureMouse();
+				canvas.CaptureMouse();
 			else
-				ReleaseMouseCapture();
+				canvas.ReleaseMouseCapture();
 			e.Handled = true;
 		}
 
-		protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-		{
-			OnMouseLeftButtonDown(e);
-		}
-
-		protected override void OnMouseMove(MouseEventArgs e)
+		void OnCanvasMouseMove(object sender, MouseEventArgs e)
 		{
 			if (!mouseDown)
 				return;
 
-			MouseHandler(e.GetPosition(this));
+			MouseHandler(e.GetPosition(canvas));
 			e.Handled = true;
 		}
 
