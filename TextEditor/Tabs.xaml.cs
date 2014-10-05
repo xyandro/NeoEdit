@@ -443,6 +443,9 @@ namespace NeoEdit.TextEditor
 
 			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
 
+			var menu = Resources.MergedDictionaries.Select(res => res["TextEditorMenu"] as Menu).First(res => res != null);
+			grid.Children.Add(menu);
+
 			if (TextEditors.Count == 0)
 				return;
 
@@ -451,9 +454,7 @@ namespace NeoEdit.TextEditor
 			else
 				LayoutTabs();
 
-			var menu = Resources.MergedDictionaries.Select(res => res["TextEditorMenu"] as Menu).First(res => res != null);
 			Grid.SetColumnSpan(menu, grid.ColumnDefinitions.Count);
-			grid.Children.Add(menu);
 		}
 
 		Label GetLabel(TextEditor textEditor, bool tile)
