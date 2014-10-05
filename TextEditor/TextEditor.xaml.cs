@@ -407,7 +407,7 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_File_CopyPath()
 		{
-			Clipboard.SetText(FileName);
+			ClipboardWindow.SetFiles(new List<string> { FileName }, false);
 		}
 
 		internal void Command_File_CopyName()

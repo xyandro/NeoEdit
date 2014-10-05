@@ -10,6 +10,7 @@ namespace NeoEdit.TextEditor
 		None,
 		[Header("_New")] [KeyGesture(Key.N, ModifierKeys.Control)] File_New,
 		[Header("_Open")] [KeyGesture(Key.O, ModifierKeys.Control)] File_Open,
+		[Header("Open Copied/Cut Files")] File_OpenCopied,
 		[Header("_Save")] [KeyGesture(Key.S, ModifierKeys.Control)] File_Save,
 		[Header("Save _As")] File_SaveAs,
 		[Header("_Close")] [KeyGesture(Key.W, ModifierKeys.Control)] [KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor
 {
@@ -60,6 +63,26 @@ namespace NeoEdit.TextEditor
 				Add(new TextEditor(this, filename));
 		}
 
+		void Command_File_OpenCopied()
+		{
+			var files = ClipboardWindow.GetFiles();
+			if ((files == null) || (files.Count < 0))
+				return;
+
+			if (new Message
+			{
+				Title = "Confirm",
+				Text = String.Format("Are you sure you want to open these {0} files?", files.Count),
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			foreach (var file in files)
+				Add(new TextEditor(this, file));
+		}
+
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			var active = Active;
@@ -83,6 +106,7 @@ namespace NeoEdit.TextEditor
 			{
 				case TextEditCommand.File_New: Add(new TextEditor(this)); break;
 				case TextEditCommand.File_Open: Command_File_Open(); break;
+				case TextEditCommand.File_OpenCopied: Command_File_OpenCopied(); break;
 			}
 
 			if (Active == null)

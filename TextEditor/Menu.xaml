@@ -8,6 +8,7 @@
 		<MenuItem Header="_File">
 			<textEditor:TextEditMenuItem CommandEnum="File_New"/>
 			<textEditor:TextEditMenuItem CommandEnum="File_Open"/>
+			<textEditor:TextEditMenuItem CommandEnum="File_OpenCopied"/>
 			<textEditor:TextEditMenuItem CommandEnum="File_Save"/>
 			<textEditor:TextEditMenuItem CommandEnum="File_SaveAs"/>
 			<textEditor:TextEditMenuItem CommandEnum="File_Close"/>

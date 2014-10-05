@@ -88,6 +88,15 @@ namespace NeoEdit.GUI
 			Add(new ClipboardData(strings, String.Join(" ", strings)));
 		}
 
+		public static List<string> GetFiles()
+		{
+			var files = new List<string> ();
+			bool isCut;
+			if (!GetFiles(out files, out isCut))
+				return null;
+			return files;
+		}
+
 		public static bool GetFiles(out List<string> files, out bool isCut)
 		{
 			files = null;
