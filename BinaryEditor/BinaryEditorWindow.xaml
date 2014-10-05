@@ -5,74 +5,20 @@
     xmlns:binaryEditor="clr-namespace:NeoEdit.BinaryEditor"
 	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
 
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Menu.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+
 	<Window.Title>
 		<MultiBinding StringFormat="{}{0}{1} - NeoEdit Binary Editor">
 			<Binding ElementName="self" Path="FileTitle"/>
 			<Binding ElementName="self" Path="FileName"/>
 		</MultiBinding>
 	</Window.Title>
-
-	<Window.CommandBindings>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_New" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_OpenDump" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_TextEditor" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Undo" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Redo" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Copy" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Paste" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_ShowClipboard" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Find" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindNext" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindPrev" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Goto" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Insert" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_View_Values" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_View_Refresh" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Checksum_MD5" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Checksum_SHA1" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Checksum_SHA256" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Compress_GZip" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Decompress_GZip" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Compress_Deflate" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Decompress_Inflate" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_AES" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_AES" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_DES" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_DES" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_DES3" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_DES3" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_RSA" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_RSA" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_RSAAES" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_RSAAES" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Sign_RSA" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Verify_RSA" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Sign_DSA" Executed="Command_Executed"/>
-		<CommandBinding Command="binaryEditor:BinaryEditorWindow.Command_Verify_DSA" Executed="Command_Executed"/>
-	</Window.CommandBindings>
-
-	<Window.InputBindings>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_File_New" Key="N" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Key="O" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Key="S" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Undo" Key="Z" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Redo" Key="Z" Modifiers="Control+Shift"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Key="X" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Copy" Key="C" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Paste" Key="V" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_ShowClipboard" Key="C" Modifiers="Control+Shift"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Find" Key="F" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindNext" Key="F3"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindPrev" Key="F3" Modifiers="Shift"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Goto" Key="G" Modifiers="Control"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_Edit_Insert" Key="Insert"/>
-		<KeyBinding Command="binaryEditor:BinaryEditorWindow.Command_View_Refresh" Key="F5"/>
-	</Window.InputBindings>
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -86,91 +32,9 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		<Menu Grid.ColumnSpan="2">
-			<MenuItem Header="_File">
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_New" Header="_New"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Open" Header="_Open"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_OpenDump" Header="Open _Dump"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Save" Header="_Save"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_SaveAs" Header="Save _As"/>
-				<Separator/>
-				<MenuItem Header="_Encoding" Click="EncodingClick">
-					<MenuItem Header="Auto"/>
-					<Separator/>
-					<MenuItem Header="UTF7" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
-					<MenuItem Header="UTF8" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
-					<MenuItem Header="UTF16LE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
-					<MenuItem Header="UTF16BE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
-					<MenuItem Header="UTF32LE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
-					<MenuItem Header="UTF32BE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
-					<Separator/>
-					<MenuItem Header="Base64" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#Base64#27#}"/>
-				</MenuItem>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_TextEditor" Header="Text Editor"/>
-				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_File_Exit" Header="E_xit"/>
-			</MenuItem>
-			<MenuItem Header="_Edit">
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Undo" Header="_Undo"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Redo" Header="_Redo"/>
-				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Header="Cu_t"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Cut" Header="Cu_t"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Copy" Header="_Copy"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Paste" Header="_Paste"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_ShowClipboard" Header="_Show Clipboard"/>
-				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Find" Header="_Find"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindNext" Header="Find _Next"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_FindPrev" Header="Find _Previous"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Goto" Header="_Goto"/>
-				<Separator/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Edit_Insert" Header="_Insert" IsChecked="{Binding Insert, ElementName=canvas}"/>
-			</MenuItem>
-			<MenuItem Header="_View">
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_View_Values" Header="_Values" IsChecked="{Binding ShowValues, ElementName=self}"/>
-				<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_View_Refresh" Header="_Refresh"/>
-			</MenuItem>
-			<MenuItem Header="_Data">
-				<MenuItem Header="C_hecksum">
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Checksum_MD5" Header="_MD5"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Checksum_SHA1" Header="SHA_1"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Checksum_SHA256" Header="SHA_256"/>
-				</MenuItem>
-				<MenuItem Header="_Compress">
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Compress_GZip" Header="_GZip"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Compress_Deflate" Header="_Deflate"/>
-				</MenuItem>
-				<MenuItem Header="_Decompress">
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Decompress_GZip" Header="_GZip"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Decompress_Inflate" Header="_Inflate"/>
-				</MenuItem>
-				<MenuItem Header="_Encrypt">
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_AES" Header="_AES"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_DES" Header="_DES"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_DES3" Header="_3DES"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_RSA" Header="_RSA"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Encrypt_RSAAES" Header="RSA/AES"/>
-				</MenuItem>
-				<MenuItem Header="Dec_rypt">
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_AES" Header="_AES"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_DES" Header="_DES"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_DES3" Header="_3DES"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_RSA" Header="_RSA"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Decrypt_RSAAES" Header="RSA/AES"/>
-				</MenuItem>
-				<MenuItem Header="_Sign">
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Sign_RSA" Header="_RSA"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Sign_DSA" Header="_DSA"/>
-				</MenuItem>
-				<MenuItem Header="_Verify">
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Verify_RSA" Header="_RSA"/>
-					<MenuItem Command="binaryEditor:BinaryEditorWindow.Command_Verify_DSA" Header="_DSA"/>
-				</MenuItem>
-			</MenuItem>
-			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
-			<guiCommon:HelpMenu/>
-		</Menu>
+
+		<StaticResource ResourceKey="BinaryEditorMenu"/>
+		
 		<binaryEditor:BinaryCanvas x:Name="canvas" Grid.Row="1"
 			Data="{Binding Data, ElementName=self, Mode=OneWay}"
 			xScrollSmallChange="{Binding SmallChange, ElementName=xScroll, Mode=OneWayToSource}"

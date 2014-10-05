@@ -1,0 +1,92 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
+    xmlns:binaryEditor="clr-namespace:NeoEdit.BinaryEditor">
+
+	<Menu x:Key="BinaryEditorMenu" Grid.ColumnSpan="2">
+		<MenuItem Header="_File">
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_New"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Open"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_OpenDump"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Save"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_SaveAs"/>
+			<Separator/>
+			<MenuItem Header="_Encoding">
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Auto"/>
+				<Separator/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF8" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF7" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF16LE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF16BE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32LE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32BE" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
+				<Separator/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Base64" IsChecked="{Binding CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#Base64#27#}"/>
+			</MenuItem>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_TextEditor"/>
+			<Separator/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Exit"/>
+		</MenuItem>
+		<MenuItem Header="_Edit">
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Undo"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Redo"/>
+			<Separator/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Cut"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Copy"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Paste"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_ShowClipboard"/>
+			<Separator/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Find"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_FindNext"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_FindPrev"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Goto"/>
+			<Separator/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Insert" IsChecked="{Binding Insert, ElementName=canvas}"/>
+		</MenuItem>
+		<MenuItem Header="_View">
+			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Values" IsChecked="{Binding ShowValues, ElementName=self}"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Refresh"/>
+		</MenuItem>
+		<MenuItem Header="_Data">
+			<MenuItem Header="C_hecksum">
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Checksum_MD5"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Checksum_SHA1"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Checksum_SHA256"/>
+			</MenuItem>
+			<MenuItem Header="_Compress">
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Compress_GZip"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Compress_Deflate"/>
+			</MenuItem>
+			<MenuItem Header="_Decompress">
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Decompress_GZip"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Decompress_Inflate"/>
+			</MenuItem>
+			<MenuItem Header="_Encrypt">
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_AES"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_DES"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_DES3"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_RSA"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_RSAAES"/>
+			</MenuItem>
+			<MenuItem Header="Dec_rypt">
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_AES"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_DES"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_DES3"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_RSA"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_RSAAES"/>
+			</MenuItem>
+			<MenuItem Header="_Sign">
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Sign_RSA"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Sign_DSA"/>
+			</MenuItem>
+			<MenuItem Header="_Verify">
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Verify_RSA"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="Verify_DSA"/>
+			</MenuItem>
+		</MenuItem>
+		<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
+		<guiCommon:HelpMenu/>
+	</Menu>
+
+</ResourceDictionary>

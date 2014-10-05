@@ -48,7 +48,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands.cs" />
     <Compile Include="Converters\IsStrConverter.cs" />
+    <Page Include="Menu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Compile Include="Data\BinaryData.cs" />
     <Compile Include="Data\DumpBinaryData.cs" />
     <Compile Include="Data\FindData.cs" />

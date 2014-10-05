@@ -618,111 +618,147 @@ namespace NeoEdit.BinaryEditor
 			return false;
 		}
 
-		static Dictionary<ICommand, Checksum.Type> ChecksumType = new Dictionary<ICommand, Checksum.Type>
+		internal void Command_Edit_Undo()
 		{
-			{ BinaryEditorWindow.Command_Checksum_MD5, Checksum.Type.MD5 },
-			{ BinaryEditorWindow.Command_Checksum_SHA1, Checksum.Type.SHA1 },
-			{ BinaryEditorWindow.Command_Checksum_SHA256, Checksum.Type.SHA256 },
-		};
+			if (undo.Count == 0)
+				return;
 
-		bool HandleChecksum(ICommand command)
+			var step = undo.Last();
+			undo.Remove(step);
+			Replace(step.index, step.count, step.bytes, ReplaceType.Undo);
+
+			Pos1 = step.index;
+			Pos2 = Pos1 + step.bytes.Length;
+		}
+
+		internal void Command_Edit_Redo()
 		{
-			if (!ChecksumType.ContainsKey(command))
-				return false;
+			if (redo.Count == 0)
+				return;
 
+			var step = redo.Last();
+			redo.Remove(step);
+			Replace(step.index, step.count, step.bytes, ReplaceType.Redo);
+
+			Pos1 = Pos2 = step.index + step.bytes.Length;
+		}
+
+		internal void Command_Edit_Copy(BinaryEditCommand command)
+		{
+			if (SelStart == SelEnd)
+				return;
+
+			var bytes = Data.GetSubset(SelStart, Length);
+			string str;
+			if (SelHex)
+				str = Coder.BytesToString(bytes, Coder.Type.Hex);
+			else
+			{
+				var sb = new StringBuilder(bytes.Length);
+				for (var ctr = 0; ctr < bytes.Length; ctr++)
+					sb.Append((char)bytes[ctr]);
+				str = sb.ToString();
+			}
+			ClipboardWindow.Set(bytes, str);
+			if ((command == BinaryEditCommand.Edit_Cut) && (Insert))
+				Replace(null);
+		}
+
+
+		internal void Command_Edit_Paste()
+		{
+			var bytes = ClipboardWindow.GetBytes();
+			if (bytes == null)
+			{
+				var str = ClipboardWindow.GetString();
+				if (str != null)
+					bytes = Coder.StringToBytes(str, CoderUsed);
+			}
+			if ((bytes != null) && (bytes.Length != 0))
+				Replace(bytes);
+		}
+
+		internal void Command_Edit_Find()
+		{
+			var results = FindDialog.Run();
+			if (results != null)
+			{
+				currentFind = results;
+				FoundText = currentFind.Text;
+				DoFind();
+			}
+		}
+
+		internal void Command_Edit_FindPrev(BinaryEditCommand command)
+		{
+			DoFind(command == BinaryEditCommand.Edit_FindNext);
+		}
+
+		internal void Command_Edit_Goto()
+		{
+			var getNumDialog = new GetNumDialog
+			{
+				Title = "Go to position",
+				Text = String.Format("Go to position: (0 - {0})", Data.Length),
+				MinValue = 0,
+				MaxValue = Data.Length,
+				Value = Pos1,
+			};
+			if (getNumDialog.ShowDialog() == true)
+				Pos1 = Pos2 = getNumDialog.Value;
+		}
+
+		internal void Command_Edit_Insert()
+		{
+			if (Data.CanInsert())
+				Insert = !Insert;
+		}
+
+		internal void Command_View_Refresh()
+		{
+			Data.Refresh();
+			++ChangeCount;
+		}
+
+		internal void Command_Checksum(Checksum.Type type)
+		{
 			new Message
 			{
 				Title = "Result",
-				Text = Checksum.Get(ChecksumType[command], Data.GetAllBytes()),
+				Text = Checksum.Get(type, Data.GetAllBytes()),
 				Options = Message.OptionsEnum.Ok
 			}.Show();
-
-			return true;
 		}
 
-		static Dictionary<ICommand, Compression.Type> CompressType = new Dictionary<ICommand, Compression.Type>
+		internal void Command_Compress(bool compress, Compression.Type type)
 		{
-			{ BinaryEditorWindow.Command_Compress_GZip, Compression.Type.GZip },
-			{ BinaryEditorWindow.Command_Decompress_GZip, Compression.Type.GZip },
-			{ BinaryEditorWindow.Command_Compress_Deflate, Compression.Type.Deflate },
-			{ BinaryEditorWindow.Command_Decompress_Inflate, Compression.Type.Deflate },
-		};
-
-		static Dictionary<ICommand, bool> IsCompress = new Dictionary<ICommand, bool>
-		{
-			{ BinaryEditorWindow.Command_Compress_GZip, true },
-			{ BinaryEditorWindow.Command_Decompress_GZip, false },
-			{ BinaryEditorWindow.Command_Compress_Deflate, true },
-			{ BinaryEditorWindow.Command_Decompress_Inflate, false },
-		};
-
-		bool HandleCompress(ICommand command)
-		{
-			if (!CompressType.ContainsKey(command))
-				return false;
-
 			if (!VerifyInsert())
-				return true;
+				return;
 
-			if (IsCompress[command])
-				ReplaceAll(Compression.Compress(CompressType[command], Data.GetAllBytes()));
+			if (compress)
+				ReplaceAll(Compression.Compress(type, Data.GetAllBytes()));
 			else
-				ReplaceAll(Compression.Decompress(CompressType[command], Data.GetAllBytes()));
-
-			return true;
+				ReplaceAll(Compression.Decompress(type, Data.GetAllBytes()));
 		}
 
-		static Dictionary<ICommand, Crypto.Type> EncryptType = new Dictionary<ICommand, Crypto.Type>
+		internal void Command_Encrypt(bool isEncrypt, Crypto.Type type)
 		{
-			{ BinaryEditorWindow.Command_Encrypt_AES, Crypto.Type.AES },
-			{ BinaryEditorWindow.Command_Decrypt_AES, Crypto.Type.AES },
-			{ BinaryEditorWindow.Command_Encrypt_DES, Crypto.Type.DES },
-			{ BinaryEditorWindow.Command_Decrypt_DES, Crypto.Type.DES },
-			{ BinaryEditorWindow.Command_Encrypt_DES3, Crypto.Type.DES3 },
-			{ BinaryEditorWindow.Command_Decrypt_DES3, Crypto.Type.DES3 },
-			{ BinaryEditorWindow.Command_Encrypt_RSA, Crypto.Type.RSA },
-			{ BinaryEditorWindow.Command_Decrypt_RSA, Crypto.Type.RSA },
-			{ BinaryEditorWindow.Command_Encrypt_RSAAES, Crypto.Type.RSAAES },
-			{ BinaryEditorWindow.Command_Decrypt_RSAAES, Crypto.Type.RSAAES },
-		};
-
-		static Dictionary<ICommand, bool> IsEncrypt = new Dictionary<ICommand, bool>
-		{
-			{ BinaryEditorWindow.Command_Encrypt_AES, true },
-			{ BinaryEditorWindow.Command_Decrypt_AES, false },
-			{ BinaryEditorWindow.Command_Encrypt_DES, true },
-			{ BinaryEditorWindow.Command_Decrypt_DES, false },
-			{ BinaryEditorWindow.Command_Encrypt_DES3, true },
-			{ BinaryEditorWindow.Command_Decrypt_DES3, false },
-			{ BinaryEditorWindow.Command_Encrypt_RSA, true },
-			{ BinaryEditorWindow.Command_Decrypt_RSA, false },
-			{ BinaryEditorWindow.Command_Encrypt_RSAAES, true },
-			{ BinaryEditorWindow.Command_Decrypt_RSAAES, false },
-		};
-
-		bool HandleEncrypt(ICommand command)
-		{
-			if (!EncryptType.ContainsKey(command))
-				return false;
-
 			if (!VerifyInsert())
-				return true;
+				return;
 
 			string key;
-			var type = EncryptType[command];
-			var isEncrypt = IsEncrypt[command];
 			if (type.IsSymmetric())
 			{
 				var keyDialog = new SymmetricKeyDialog { Type = type };
 				if (keyDialog.ShowDialog() != true)
-					return true;
+					return;
 				key = keyDialog.Key;
 			}
 			else
 			{
 				var keyDialog = new AsymmetricKeyDialog { Type = type, Public = isEncrypt, CanGenerate = isEncrypt };
 				if (keyDialog.ShowDialog() != true)
-					return true;
+					return;
 				key = keyDialog.Key;
 			}
 
@@ -730,41 +766,16 @@ namespace NeoEdit.BinaryEditor
 				ReplaceAll(Crypto.Encrypt(type, Data.GetAllBytes(), key));
 			else
 				ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), key));
-
-			return true;
 		}
 
-
-		static Dictionary<ICommand, Crypto.Type> SignType = new Dictionary<ICommand, Crypto.Type>
+		internal void Command_Sign(bool sign, Crypto.Type type)
 		{
-			{ BinaryEditorWindow.Command_Sign_RSA, Crypto.Type.RSA },
-			{ BinaryEditorWindow.Command_Verify_RSA, Crypto.Type.RSA },
-			{ BinaryEditorWindow.Command_Sign_DSA, Crypto.Type.DSA },
-			{ BinaryEditorWindow.Command_Verify_DSA, Crypto.Type.DSA },
-		};
-
-		static Dictionary<ICommand, bool> IsSign = new Dictionary<ICommand, bool>
-		{
-			{ BinaryEditorWindow.Command_Sign_RSA, true },
-			{ BinaryEditorWindow.Command_Verify_RSA, false },
-			{ BinaryEditorWindow.Command_Sign_DSA, true },
-			{ BinaryEditorWindow.Command_Verify_DSA, false },
-		};
-
-		bool HandleSign(ICommand command)
-		{
-			if (!SignType.ContainsKey(command))
-				return false;
-
-			var type = SignType[command];
-			var sign = IsSign[command];
-
 			var keyDialog = new AsymmetricKeyDialog { Type = type, Public = !sign, GetHash = true, CanGenerate = sign, GetSignature = !sign };
 			if (keyDialog.ShowDialog() != true)
-				return true;
+				return;
 
 			string text;
-			if (IsSign[command])
+			if (sign)
 				text = Crypto.Sign(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash);
 			else if (Crypto.Verify(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash, keyDialog.Signature))
 				text = "Matched.";
@@ -777,111 +788,6 @@ namespace NeoEdit.BinaryEditor
 				Text = text,
 				Options = Message.OptionsEnum.Ok,
 			}.Show();
-
-			return true;
-		}
-
-		public void RunCommand(ICommand command)
-		{
-			if (HandleChecksum(command))
-				return;
-			if (HandleCompress(command))
-				return;
-			if (HandleEncrypt(command))
-				return;
-			if (HandleSign(command))
-				return;
-
-			if (command == BinaryEditorWindow.Command_Edit_Undo)
-			{
-				if (undo.Count == 0)
-					return;
-
-				var step = undo.Last();
-				undo.Remove(step);
-				Replace(step.index, step.count, step.bytes, ReplaceType.Undo);
-
-				Pos1 = step.index;
-				Pos2 = Pos1 + step.bytes.Length;
-			}
-			else if (command == BinaryEditorWindow.Command_Edit_Redo)
-			{
-				if (redo.Count == 0)
-					return;
-
-				var step = redo.Last();
-				redo.Remove(step);
-				Replace(step.index, step.count, step.bytes, ReplaceType.Redo);
-
-				Pos1 = Pos2 = step.index + step.bytes.Length;
-			}
-			else if ((command == BinaryEditorWindow.Command_Edit_Cut) || (command == BinaryEditorWindow.Command_Edit_Copy))
-			{
-				if (SelStart == SelEnd)
-					return;
-
-				var bytes = Data.GetSubset(SelStart, Length);
-				string str;
-				if (SelHex)
-					str = Coder.BytesToString(bytes, Coder.Type.Hex);
-				else
-				{
-					var sb = new StringBuilder(bytes.Length);
-					for (var ctr = 0; ctr < bytes.Length; ctr++)
-						sb.Append((char)bytes[ctr]);
-					str = sb.ToString();
-				}
-				ClipboardWindow.Set(bytes, str);
-				if ((command == BinaryEditorWindow.Command_Edit_Cut) && (Insert))
-					Replace(null);
-			}
-			else if (command == BinaryEditorWindow.Command_Edit_Paste)
-			{
-				var bytes = ClipboardWindow.GetBytes();
-				if (bytes == null)
-				{
-					var str = ClipboardWindow.GetString();
-					if (str != null)
-						bytes = Coder.StringToBytes(str, CoderUsed);
-				}
-				if ((bytes != null) && (bytes.Length != 0))
-					Replace(bytes);
-			}
-			else if (command == BinaryEditorWindow.Command_Edit_Find)
-			{
-				var results = FindDialog.Run();
-				if (results != null)
-				{
-					currentFind = results;
-					FoundText = currentFind.Text;
-					DoFind();
-				}
-			}
-			else if ((command == BinaryEditorWindow.Command_Edit_FindNext) || (command == BinaryEditorWindow.Command_Edit_FindPrev))
-				DoFind(command == BinaryEditorWindow.Command_Edit_FindNext);
-			else if (command == BinaryEditorWindow.Command_Edit_Goto)
-			{
-				var getNumDialog = new GetNumDialog
-				{
-					Title = "Go to position",
-					Text = String.Format("Go to position: (0 - {0})", Data.Length),
-					MinValue = 0,
-					MaxValue = Data.Length,
-					Value = Pos1,
-				};
-				if (getNumDialog.ShowDialog() == true)
-					Pos1 = Pos2 = getNumDialog.Value;
-			}
-			else if (command == BinaryEditorWindow.Command_Edit_Insert)
-			{
-				if (Data.CanInsert())
-					Insert = !Insert;
-			}
-			else if (command == BinaryEditorWindow.Command_View_Refresh)
-			{
-				Data.Refresh();
-				++ChangeCount;
-			}
 		}
 
 		FindData currentFind;

@@ -1,62 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.BinaryEditor.Data;
-using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor
 {
-	public partial class BinaryEditorWindow : Window
+	public partial class BinaryEditorWindow
 	{
-		public static RoutedCommand Command_File_New = new RoutedCommand();
-		public static RoutedCommand Command_File_Open = new RoutedCommand();
-		public static RoutedCommand Command_File_OpenDump = new RoutedCommand();
-		public static RoutedCommand Command_File_Save = new RoutedCommand();
-		public static RoutedCommand Command_File_SaveAs = new RoutedCommand();
-		public static RoutedCommand Command_File_TextEditor = new RoutedCommand();
-		public static RoutedCommand Command_File_Exit = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Undo = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Redo = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Cut = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Copy = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Paste = new RoutedCommand();
-		public static RoutedCommand Command_Edit_ShowClipboard = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Find = new RoutedCommand();
-		public static RoutedCommand Command_Edit_FindNext = new RoutedCommand();
-		public static RoutedCommand Command_Edit_FindPrev = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Goto = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Insert = new RoutedCommand();
-		public static RoutedCommand Command_View_Values = new RoutedCommand();
-		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
-		public static RoutedCommand Command_Checksum_MD5 = new RoutedCommand();
-		public static RoutedCommand Command_Checksum_SHA1 = new RoutedCommand();
-		public static RoutedCommand Command_Checksum_SHA256 = new RoutedCommand();
-		public static RoutedCommand Command_Compress_GZip = new RoutedCommand();
-		public static RoutedCommand Command_Decompress_GZip = new RoutedCommand();
-		public static RoutedCommand Command_Compress_Deflate = new RoutedCommand();
-		public static RoutedCommand Command_Decompress_Inflate = new RoutedCommand();
-		public static RoutedCommand Command_Encrypt_AES = new RoutedCommand();
-		public static RoutedCommand Command_Decrypt_AES = new RoutedCommand();
-		public static RoutedCommand Command_Encrypt_DES = new RoutedCommand();
-		public static RoutedCommand Command_Decrypt_DES = new RoutedCommand();
-		public static RoutedCommand Command_Encrypt_DES3 = new RoutedCommand();
-		public static RoutedCommand Command_Decrypt_DES3 = new RoutedCommand();
-		public static RoutedCommand Command_Encrypt_RSA = new RoutedCommand();
-		public static RoutedCommand Command_Decrypt_RSA = new RoutedCommand();
-		public static RoutedCommand Command_Encrypt_RSAAES = new RoutedCommand();
-		public static RoutedCommand Command_Decrypt_RSAAES = new RoutedCommand();
-		public static RoutedCommand Command_Sign_RSA = new RoutedCommand();
-		public static RoutedCommand Command_Verify_RSA = new RoutedCommand();
-		public static RoutedCommand Command_Sign_DSA = new RoutedCommand();
-		public static RoutedCommand Command_Verify_DSA = new RoutedCommand();
-
 		[DepProp]
 		string FileTitle { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -74,6 +30,7 @@ namespace NeoEdit.BinaryEditor
 		BinaryEditorWindow(BinaryData data, Coder.Type encoder = Coder.Type.None)
 		{
 			uiHelper = new UIHelper<BinaryEditorWindow>(this);
+			BinaryEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 
 			Data = data;
@@ -136,84 +93,108 @@ namespace NeoEdit.BinaryEditor
 			}
 		}
 
-		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
+		void Command_File_New()
 		{
-			RunCommand(e.Command);
+			FileTitle = FileName = null;
+			Data = new MemoryBinaryData();
 		}
 
-		void RunCommand(ICommand command)
+		void Command_File_Open()
 		{
-			canvas.RunCommand(command);
+			var dialog = new OpenFileDialog();
+			if (dialog.ShowDialog() != true)
+				return;
 
-			if (command == Command_File_New)
-			{
-				FileTitle = FileName = null;
-				Data = new MemoryBinaryData();
-			}
-			else if (command == Command_File_Open)
-			{
-				{
-					var dialog = new OpenFileDialog();
-					if (dialog.ShowDialog() == true)
-					{
-						FileTitle = null;
-						FileName = dialog.FileName;
-						Data = new MemoryBinaryData(File.ReadAllBytes(FileName));
-					}
-				}
-			}
-			else if (command == Command_File_OpenDump)
-			{
-				{
-					var dialog = new OpenFileDialog();
-					if (dialog.ShowDialog() == true)
-					{
-						FileTitle = "Dump: ";
-						FileName = dialog.FileName;
-						Data = new DumpBinaryData(FileName);
-					}
-				}
-			}
-			else if (command == Command_File_Save)
-			{
-				if (FileName == null)
-					RunCommand(Command_File_SaveAs);
-				else
-					Data.Save(FileName);
-			}
-			else if (command == Command_File_SaveAs)
-			{
-				{
-					var dialog = new SaveFileDialog();
-					if (dialog.ShowDialog() == true)
-					{
-						if (Directory.Exists(dialog.FileName))
-							throw new Exception("A directory by that name already exists.");
-						if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
-							throw new Exception("Directory doesn't exist.");
-						FileName = dialog.FileName;
-						RunCommand(Command_File_Save);
-					}
-				}
-			}
-			else if (command == Command_File_TextEditor)
-			{
-				Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), CoderUsed);
-				Close();
-			}
-			else if (command == Command_File_Exit) { Close(); }
-			else if (command == Command_View_Values) { ShowValues = !ShowValues; }
-			else if (command == Command_Edit_ShowClipboard) { ClipboardWindow.Show(); }
+			FileTitle = null;
+			FileName = dialog.FileName;
+			Data = new MemoryBinaryData(File.ReadAllBytes(FileName));
 		}
 
-		void EncodingClick(object sender, RoutedEventArgs e)
+		void Command_File_OpenDump()
 		{
-			var header = (e.OriginalSource as MenuItem).Header as string;
-			CoderUsed = Coder.Type.None;
-			if (header == "Auto")
-				CoderUsed = Data.GuessEncoding();
+			var dialog = new OpenFileDialog();
+			if (dialog.ShowDialog() != true)
+				return;
+
+			FileTitle = "Dump: ";
+			FileName = dialog.FileName;
+			Data = new DumpBinaryData(FileName);
+		}
+
+		void Command_File_Save()
+		{
+			if (FileName == null)
+				Command_File_SaveAs();
 			else
-				CoderUsed = Helpers.ParseEnum<Coder.Type>(header);
+				Data.Save(FileName);
+		}
+
+		void Command_File_SaveAs()
+		{
+			var dialog = new SaveFileDialog();
+			if (dialog.ShowDialog() != true)
+				return;
+
+			if (Directory.Exists(dialog.FileName))
+				throw new Exception("A directory by that name already exists.");
+			if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+				throw new Exception("Directory doesn't exist.");
+			FileName = dialog.FileName;
+			Command_File_Save();
+		}
+
+		void RunCommand(BinaryEditCommand command)
+		{
+			switch (command)
+			{
+				case BinaryEditCommand.File_New: Command_File_New(); break;
+				case BinaryEditCommand.File_Open: Command_File_Open(); break;
+				case BinaryEditCommand.File_OpenDump: Command_File_OpenDump(); break;
+				case BinaryEditCommand.File_Save: Command_File_Save(); break;
+				case BinaryEditCommand.File_SaveAs: Command_File_SaveAs(); break;
+				case BinaryEditCommand.File_Encode_Auto: CoderUsed = Data.GuessEncoding(); break;
+				case BinaryEditCommand.File_Encode_UTF8: CoderUsed = Coder.Type.UTF8; break;
+				case BinaryEditCommand.File_Encode_UTF7: CoderUsed = Coder.Type.UTF7; break;
+				case BinaryEditCommand.File_Encode_UTF16LE: CoderUsed = Coder.Type.UTF16LE; break;
+				case BinaryEditCommand.File_Encode_UTF16BE: CoderUsed = Coder.Type.UTF16BE; break;
+				case BinaryEditCommand.File_Encode_UTF32LE: CoderUsed = Coder.Type.UTF32LE; break;
+				case BinaryEditCommand.File_Encode_UTF32BE: CoderUsed = Coder.Type.UTF32BE; break;
+				case BinaryEditCommand.File_Encode_Base64: CoderUsed = Coder.Type.Base64; break;
+				case BinaryEditCommand.File_TextEditor: Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), CoderUsed); Close(); break;
+				case BinaryEditCommand.File_Exit: Close(); break;
+				case BinaryEditCommand.Edit_Undo: canvas.Command_Edit_Undo(); break;
+				case BinaryEditCommand.Edit_Redo: canvas.Command_Edit_Redo(); break;
+				case BinaryEditCommand.Edit_Copy: canvas.Command_Edit_Copy(command); break;
+				case BinaryEditCommand.Edit_Paste: canvas.Command_Edit_Paste(); break;
+				case BinaryEditCommand.Edit_ShowClipboard: ClipboardWindow.Show(); break;
+				case BinaryEditCommand.Edit_Find: canvas.Command_Edit_Find(); break;
+				case BinaryEditCommand.Edit_FindPrev: canvas.Command_Edit_FindPrev(command); break;
+				case BinaryEditCommand.Edit_Goto: canvas.Command_Edit_Goto(); break;
+				case BinaryEditCommand.Edit_Insert: canvas.Command_Edit_Insert(); break;
+				case BinaryEditCommand.View_Values: ShowValues = !ShowValues; break;
+				case BinaryEditCommand.View_Refresh: canvas.Command_View_Refresh(); break;
+				case BinaryEditCommand.Checksum_MD5: canvas.Command_Checksum(Checksum.Type.MD5); break;
+				case BinaryEditCommand.Checksum_SHA1: canvas.Command_Checksum(Checksum.Type.SHA1); break;
+				case BinaryEditCommand.Checksum_SHA256: canvas.Command_Checksum(Checksum.Type.SHA256); break;
+				case BinaryEditCommand.Compress_GZip: canvas.Command_Compress(true, Compression.Type.GZip); break;
+				case BinaryEditCommand.Compress_Deflate: canvas.Command_Compress(true, Compression.Type.Deflate); break;
+				case BinaryEditCommand.Decompress_GZip: canvas.Command_Compress(false, Compression.Type.GZip); break;
+				case BinaryEditCommand.Decompress_Inflate: canvas.Command_Compress(false, Compression.Type.Deflate); break;
+				case BinaryEditCommand.Encrypt_AES: canvas.Command_Encrypt(true, Crypto.Type.AES); break;
+				case BinaryEditCommand.Encrypt_DES: canvas.Command_Encrypt(true, Crypto.Type.DES); break;
+				case BinaryEditCommand.Encrypt_DES3: canvas.Command_Encrypt(true, Crypto.Type.DES3); break;
+				case BinaryEditCommand.Encrypt_RSA: canvas.Command_Encrypt(true, Crypto.Type.RSA); break;
+				case BinaryEditCommand.Encrypt_RSAAES: canvas.Command_Encrypt(true, Crypto.Type.RSAAES); break;
+				case BinaryEditCommand.Decrypt_AES: canvas.Command_Encrypt(false, Crypto.Type.AES); break;
+				case BinaryEditCommand.Decrypt_DES: canvas.Command_Encrypt(false, Crypto.Type.DES); break;
+				case BinaryEditCommand.Decrypt_DES3: canvas.Command_Encrypt(false, Crypto.Type.DES3); break;
+				case BinaryEditCommand.Decrypt_RSA: canvas.Command_Encrypt(false, Crypto.Type.RSA); break;
+				case BinaryEditCommand.Decrypt_RSAAES: canvas.Command_Encrypt(false, Crypto.Type.RSAAES); break;
+				case BinaryEditCommand.Sign_RSA: canvas.Command_Sign(true, Crypto.Type.RSA); break;
+				case BinaryEditCommand.Sign_DSA: canvas.Command_Sign(true, Crypto.Type.DSA); break;
+				case BinaryEditCommand.Verify_RSA: canvas.Command_Sign(false, Crypto.Type.RSA); break;
+				case BinaryEditCommand.Verify_DSA: canvas.Command_Sign(false, Crypto.Type.DSA); break;
+			}
 		}
 	}
 }

@@ -20,9 +20,10 @@ Ctrl+M should move to "current" selection
 Show number of items on clipboard on status bar
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
-Paste probably shouldn't work unless # selections is 1 or # copied
+Paste probably shouldn't work unless # selections is 1 (leave selections) or # copied
 Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
+Ctrl-Tab for tab navigation
 
 Binary:
 Fix binary editor backwards search
@@ -38,3 +39,6 @@ Checksum (and possibly others) should work only on selected text
 Reload current file (perhaps automatically?)
 Keep track of whether file is edited; object on close
 Move open in text edit to File menu, rename from "Encode"
+Move scrollbars/show values/status bar to canvas
+Move FileTitle/FileName/Data/ShowValues/CoderUsed properties to only canvas
+Rename windows to match TextEdit
