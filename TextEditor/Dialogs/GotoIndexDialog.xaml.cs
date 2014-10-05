@@ -1,10 +1,9 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	public partial class GotoIndexDialog : Window
+	internal partial class GotoIndexDialog
 	{
 		[DepProp]
 		public int Index { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
@@ -31,13 +30,6 @@ namespace NeoEdit.GUI.Dialogs
 			uiHelper = new UIHelper<GotoIndexDialog>(this);
 			InitializeComponent();
 
-			okClick.Click += (s, e) =>
-			{
-				if (Validation.GetHasError(index))
-					return;
-				DialogResult = true;
-			};
-
 			SetRelative();
 			Index = startIndex;
 		}
@@ -58,15 +50,19 @@ namespace NeoEdit.GUI.Dialogs
 			Index = index + MinIndex;
 		}
 
+		int result;
+		void OkClick(object sender, RoutedEventArgs e)
+		{
+			result = Index - 1;
+			if (Relative)
+				result += startIndex;
+			DialogResult = true;
+		}
+
 		public static int? Run(int numIndexes, int index)
 		{
-			var d = new GotoIndexDialog(numIndexes, index);
-			if (d.ShowDialog() != true)
-				return null;
-			index = d.Index - 1;
-			if (d.Relative)
-				index += d.startIndex;
-			return index;
+			var dialog = new GotoIndexDialog(numIndexes, index);
+			return dialog.ShowDialog() == true ? (int?)dialog.result : null;
 		}
 	}
 }

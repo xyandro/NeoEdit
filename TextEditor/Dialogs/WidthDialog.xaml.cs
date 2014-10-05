@@ -3,8 +3,15 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class WidthDialog : Window
+	internal partial class WidthDialog
 	{
+		internal class Result
+		{
+			public int Value { get; set; }
+			public char PadChar { get; set; }
+			public bool Before { get; set; }
+		}
+
 		[DepProp]
 		public int Value { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -17,7 +24,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		static WidthDialog() { UIHelper<WidthDialog>.Register(); }
 
 		readonly UIHelper<WidthDialog> uiHelper;
-		public WidthDialog(int minValue, char padChar, bool before)
+		WidthDialog(int minValue, char padChar, bool before)
 		{
 			uiHelper = new UIHelper<WidthDialog>(this);
 			InitializeComponent();
@@ -27,9 +34,17 @@ namespace NeoEdit.TextEditor.Dialogs
 			Before = before;
 		}
 
+		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
+			result = new Result { Value = Value, PadChar = PadChar, Before = Before };
 			DialogResult = true;
+		}
+
+		public static Result Run(int minValue, char padChar, bool before)
+		{
+			var dialog = new WidthDialog(minValue, padChar, before);
+			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}
 }

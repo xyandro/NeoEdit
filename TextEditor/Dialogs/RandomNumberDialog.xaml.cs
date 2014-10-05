@@ -4,8 +4,14 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class RandomNumberDialog : Window
+	internal partial class RandomNumberDialog
 	{
+		internal class Result
+		{
+			public int MinValue { get; set; }
+			public int MaxValue { get; set; }
+		}
+
 		[DepProp]
 		public int MinValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -23,21 +29,17 @@ namespace NeoEdit.TextEditor.Dialogs
 			MaxValue = 1000;
 		}
 
+		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
+			result = new Result { MinValue = Math.Min(MinValue, MaxValue), MaxValue = Math.Max(MinValue, MaxValue) };
 			DialogResult = true;
 		}
 
-		static public bool Run(out int minValue, out int maxValue)
+		static public Result Run()
 		{
-			minValue = maxValue = 0;
 			var dialog = new RandomNumberDialog();
-			if (dialog.ShowDialog() != true)
-				return false;
-
-			minValue = Math.Min(dialog.MinValue, dialog.MaxValue);
-			maxValue = Math.Max(dialog.MinValue, dialog.MaxValue);
-			return true;
+			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}
 }

@@ -25,6 +25,7 @@ Paste probably shouldn't work unless # selections is 1 or # copied
 Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
 In choose what to paste dialog don't allow newlines
+Close without save removes filename
 
 Binary:
 Fix binary editor backwards search

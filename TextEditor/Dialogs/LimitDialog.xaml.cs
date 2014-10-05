@@ -3,20 +3,13 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class LimitDialog : Window
+	internal partial class LimitDialog
 	{
-		public class Response
+		internal class Response
 		{
-			public int SelMult { get; private set; }
-			public bool IgnoreBlank { get; private set; }
-			public int NumSels { get; private set; }
-
-			public Response(int selMult, bool ignoreBlank, int numSels)
-			{
-				SelMult = selMult;
-				IgnoreBlank = ignoreBlank;
-				NumSels = numSels;
-			}
+			public int SelMult { get; set; }
+			public bool IgnoreBlank { get; set; }
+			public int NumSels { get; set; }
 		}
 
 		[DepProp]
@@ -44,7 +37,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		Response response = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			response = new Response(SelMult, IgnoreBlank, NumSels);
+			response = new Response { SelMult = SelMult, IgnoreBlank = IgnoreBlank, NumSels = NumSels };
 			DialogResult = true;
 		}
 

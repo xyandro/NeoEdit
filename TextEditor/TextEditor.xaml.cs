@@ -917,16 +917,15 @@ namespace NeoEdit.TextEditor
 		internal void Command_Data_DateTime_Convert()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
-			if (strs.Count >= 1)
-			{
-				string inputFormat, outputFormat;
-				bool inputUTC, outputUTC;
-				if (ConvertDateTimeDialog.Run(strs.First(), out inputFormat, out inputUTC, out outputFormat, out outputUTC))
-				{
-					strs = strs.Select(str => ConvertDateTimeDialog.ConvertFormat(str, inputFormat, inputUTC, outputFormat, outputUTC)).ToList();
-					Replace(Selections, strs, true);
-				}
-			}
+			if (strs.Count < 1)
+				return;
+
+			var result = ConvertDateTimeDialog.Run(strs.First());
+			if (result == null)
+				return;
+
+			strs = strs.Select(str => ConvertDateTimeDialog.ConvertFormat(str, result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList();
+			Replace(Selections, strs, true);
 
 		}
 
@@ -942,9 +941,9 @@ namespace NeoEdit.TextEditor
 			var minWidth = Selections.Select(range => range.Length).Max();
 			var text = String.Join("", Selections.Select(range => GetString(range)));
 			var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
-			var widthDialog = new WidthDialog(minWidth, numeric ? '0' : ' ', numeric);
-			if (widthDialog.ShowDialog() == true)
-				Replace(Selections, Selections.Select(range => SetWidth(GetString(range), widthDialog.Value, widthDialog.PadChar, widthDialog.Before)).ToList(), true);
+			var result = WidthDialog.Run(minWidth, numeric ? '0' : ' ', numeric);
+			if (result != null)
+				Replace(Selections, Selections.Select(range => SetWidth(GetString(range), result.Value, result.PadChar, result.Before)).ToList(), true);
 		}
 
 		internal void Command_Data_Trim()
@@ -1000,12 +999,12 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Data_Random()
 		{
-			int minValue, maxValue;
-			if (RandomNumberDialog.Run(out minValue, out maxValue))
-			{
-				var strs = Selections.Select(range => random.Next(minValue, maxValue + 1).ToString()).ToList();
-				Replace(Selections, strs, true);
-			}
+			var result = RandomNumberDialog.Run();
+			if (result == null)
+				return;
+
+			var strs = Selections.Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList();
+			Replace(Selections, strs, true);
 		}
 
 		internal void Command_Data_Escape_XML()

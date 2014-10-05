@@ -1,10 +1,9 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	public partial class GotoLineDialog : Window
+	internal partial class GotoLineDialog
 	{
 		[DepProp]
 		public int Line { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
@@ -31,13 +30,6 @@ namespace NeoEdit.GUI.Dialogs
 			uiHelper = new UIHelper<GotoLineDialog>(this);
 			InitializeComponent();
 
-			okClick.Click += (s, e) =>
-			{
-				if (Validation.GetHasError(line))
-					return;
-				DialogResult = true;
-			};
-
 			SetRelative();
 			Line = startLine;
 		}
@@ -58,15 +50,19 @@ namespace NeoEdit.GUI.Dialogs
 			Line = line + MinLine;
 		}
 
-		public static int? Run(int numLines, int line)
+		int result;
+		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var d = new GotoLineDialog(numLines, line);
-			if (d.ShowDialog() != true)
-				return null;
-			line = d.Line - 1;
-			if (d.Relative)
-				line += d.startLine;
-			return line;
+			result = Line - 1;
+			if (Relative)
+				result += startLine;
+			DialogResult = true;
+		}
+
+		public static int? Run(int numLines, int result)
+		{
+			var dialog = new GotoLineDialog(numLines, result);
+			return dialog.ShowDialog() == true ? (int?)dialog.result : null;
 		}
 	}
 }

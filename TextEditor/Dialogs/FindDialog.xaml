@@ -1,18 +1,13 @@
-﻿<Window Name="self" x:Class="NeoEdit.TextEditor.Dialogs.FindDialog"
+﻿<Window Name="self" x:Class="NeoEdit.TextEditor.Dialogs.FindDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	Title="Find" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=findText}">
 
-	<StackPanel Margin="10,5">
+	<StackPanel Margin="10">
 		<StackPanel.Style>
 			<Style>
 				<Style.Resources>
-					<Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
-						<Setter Property="Padding" Value="0,0,10,0"/>
-					</Style>
 					<Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-						<Setter Property="Margin" Value="0,0,10,10"/>
 						<Setter Property="Focusable" Value="False"/>
 					</Style>
 					<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
@@ -22,34 +17,26 @@
 			</Style>
 		</StackPanel.Style>
 
-		<Label Content="_Find:" Target="{Binding ElementName=findText}"/>
-		<ComboBox Name="findText" Margin="0,0,0,10" Width="500" IsEditable="True" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}" ItemsSource="{Binding History, ElementName=self}"/>
+		<StackPanel Orientation="Horizontal">
+			<Label Content="_Find:" Target="{Binding ElementName=findText}"/>
+			<ComboBox Name="findText" Width="500" IsEditable="True" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}" ItemsSource="{Binding History, ElementName=self}"/>
+		</StackPanel>
 
 		<StackPanel>
 			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}"/>
 			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}"/>
 			<StackPanel Orientation="Horizontal">
-				<CheckBox Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}"/>
-				<CheckBox Content="by _Group" IsChecked="{Binding RegexGroups, ElementName=self}"/>
+				<CheckBox Content="_Regex " IsChecked="{Binding IsRegex, ElementName=self}"/>
+				<CheckBox Content="by _group" IsChecked="{Binding RegexGroups, ElementName=self}"/>
 			</StackPanel>
 			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}"/>
 			<CheckBox Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Columns="3">
-			<UniformGrid.Style>
-				<Style>
-					<Style.Resources>
-						<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-							<Setter Property="Margin" Value="5,0,0,0"/>
-						</Style>
-					</Style.Resources>
-				</Style>
-			</UniformGrid.Style>
-
-			<Button Click="OkClick" IsDefault="True" Content="Find _next"/>
-			<Button Name="selectAll" Click="OkClick" Content="Select _all"/>
-			<Button IsCancel="True" Content="Cancel"/>
+		<UniformGrid HorizontalAlignment="Right" Columns="3">
+			<Button Click="OkClick" IsDefault="True" Content="Find _Next" Padding="10,1"/>
+			<Button Click="OkClick" Name="selectAll" Content="Select _All" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</StackPanel>
 </Window>

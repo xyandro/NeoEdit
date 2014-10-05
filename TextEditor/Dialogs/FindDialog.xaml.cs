@@ -7,24 +7,15 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class FindDialog : Window
+	internal partial class FindDialog
 	{
-		public class Result
+		internal class Result
 		{
-			public Regex Regex { get; private set; }
-			public bool SelectAll { get; private set; }
-			public bool SelectionOnly { get; private set; }
-			public bool IncludeEndings { get; private set; }
-			public bool RegexGroups { get; private set; }
-
-			public Result(Regex regex, bool selectAll, bool selectionOnly, bool includeEndings, bool regexGroups)
-			{
-				Regex = regex;
-				SelectAll = selectAll;
-				SelectionOnly = selectionOnly;
-				IncludeEndings = includeEndings;
-				RegexGroups = regexGroups;
-			}
+			public Regex Regex { get; set; }
+			public bool SelectAll { get; set; }
+			public bool SelectionOnly { get; set; }
+			public bool IncludeEndings { get; set; }
+			public bool RegexGroups { get; set; }
 		}
 
 		[DepProp]
@@ -92,7 +83,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
-			result = new Result(new Regex(text, options), sender == selectAll, SelectionOnly, IncludeEndings, RegexGroups);
+			result = new Result { Regex = new Regex(text, options), SelectAll = sender == selectAll, SelectionOnly = SelectionOnly, IncludeEndings = IncludeEndings, RegexGroups = RegexGroups };
 
 			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
@@ -110,9 +101,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		static public Result Run(string text, bool selectionOnly)
 		{
 			var dialog = new FindDialog { Text = text, SelectionOnly = selectionOnly };
-			if (dialog.ShowDialog() != true)
-				return null;
-			return dialog.result;
+			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}
 }

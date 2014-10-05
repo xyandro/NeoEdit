@@ -7,7 +7,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class ExpressionDialog : Window
+	internal partial class ExpressionDialog
 	{
 		[DepProp]
 		public string Expression { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -84,11 +84,6 @@ namespace NeoEdit.TextEditor.Dialogs
 			expression.CaretIndex = 1;
 		}
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			DialogResult = true;
-		}
-
 		void EvaluateExamples()
 		{
 			bool valid = true;
@@ -142,25 +137,32 @@ namespace NeoEdit.TextEditor.Dialogs
 			UIHelper<ExpressionDialog>.SetValidation(example10Value, TextBox.TextProperty, valid);
 		}
 
+		NeoEdit.Common.Expression expressionResult;
+		Regex regexResult;
+		void OkClick(object sender, RoutedEventArgs e)
+		{
+			if (IsExpression)
+				expressionResult = new NeoEdit.Common.Expression(Expression);
+			else
+			{
+				var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
+				if (!MatchCase)
+					options |= RegexOptions.IgnoreCase;
+				regexResult = new Regex(Expression, options);
+			}
+			DialogResult = true;
+		}
+
 		static public NeoEdit.Common.Expression GetExpression(List<string> examples)
 		{
 			var dialog = new ExpressionDialog(examples, true);
-			if (dialog.ShowDialog() != true)
-				return null;
-
-			return new NeoEdit.Common.Expression(dialog.Expression);
+			return dialog.ShowDialog() == true ? dialog.expressionResult : null;
 		}
 
 		static public Regex GetRegEx(List<string> examples)
 		{
 			var dialog = new ExpressionDialog(examples, false);
-			if (dialog.ShowDialog() != true)
-				return null;
-
-			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
-			if (!dialog.MatchCase)
-				options |= RegexOptions.IgnoreCase;
-			return new Regex(dialog.Expression, options);
+			return dialog.ShowDialog() == true ? dialog.regexResult : null;
 		}
 	}
 }

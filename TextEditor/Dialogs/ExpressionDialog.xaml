@@ -1,10 +1,10 @@
-﻿<Window Name="self" x:Class="NeoEdit.TextEditor.Dialogs.ExpressionDialog"
+﻿<Window Name="self" x:Class="NeoEdit.TextEditor.Dialogs.ExpressionDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	Title="Expression" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=expression}">
 
-	<Grid Margin="10,5">
+	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="*"/>
@@ -14,6 +14,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition Height="10"/>
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
@@ -24,10 +25,9 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition Height="10"/>
 			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition Height="{Binding IsExpression, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5b##30##5d##3f##27##41##75##74##6f##27##3a##30#}"/>
+			<RowDefinition Height="{Binding IsExpression, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5b##30##5d##3f##27##41##75##74##6f##27##3a##31##30#}"/>
 			<RowDefinition Height="{Binding IsExpression, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5b##30##5d##3f##27##41##75##74##6f##27##3a##30#}"/>
 		</Grid.RowDefinitions>
 
@@ -40,66 +40,51 @@
 
 		<CheckBox Grid.Row="1" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Visibility="{Binding IsExpression, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=[0]#3d##3d#false}" Focusable="False"/>
 
-		<Separator Grid.Row="2" Grid.ColumnSpan="4" Height="10"/>
-
-		<Label Grid.Row="3" Grid.Column="0" Content="Example 1:"/>
+		<Label Grid.Row="3" Grid.Column="0" Content="Examples:"/>
 		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Example1, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="3" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="3" Grid.Column="3" Name="example1Value" Text="{Binding Example1Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="4" Grid.Column="0" Content="Example 2:"/>
 		<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Example2, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="4" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="4" Grid.Column="3" Name="example2Value" Text="{Binding Example2Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="5" Grid.Column="0" Content="Example 3:"/>
 		<TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Example3, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="5" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="5" Grid.Column="3" Name="example3Value" Text="{Binding Example3Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="6" Grid.Column="0" Content="Example 4:"/>
 		<TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Example4, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="6" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="6" Grid.Column="3" Name="example4Value" Text="{Binding Example4Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="7" Grid.Column="0" Content="Example 5:"/>
 		<TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Example5, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="7" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="7" Grid.Column="3" Name="example5Value" Text="{Binding Example5Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="8" Grid.Column="0" Content="Example 6:"/>
 		<TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Example6, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="8" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="8" Grid.Column="3" Name="example6Value" Text="{Binding Example6Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="9" Grid.Column="0" Content="Example 7:"/>
 		<TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Example7, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="9" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="9" Grid.Column="3" Name="example7Value" Text="{Binding Example7Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="10" Grid.Column="0" Content="Example 8:"/>
 		<TextBox Grid.Row="10" Grid.Column="1" Text="{Binding Example8, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="10" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="10" Grid.Column="3" Name="example8Value" Text="{Binding Example8Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="11" Grid.Column="0" Content="Example 9:"/>
 		<TextBox Grid.Row="11" Grid.Column="1" Text="{Binding Example9, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="11" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="11" Grid.Column="3" Name="example9Value" Text="{Binding Example9Value, ElementName=self}" IsEnabled="False"/>
 
-		<Label Grid.Row="12" Grid.Column="0" Content="Example 10:"/>
 		<TextBox Grid.Row="12" Grid.Column="1" Text="{Binding Example10, ElementName=self}" IsEnabled="False"/>
 		<Label Grid.Row="12" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="12" Grid.Column="3" Name="example10Value" Text="{Binding Example10Value, ElementName=self}" IsEnabled="False"/>
 
-		<Separator Grid.Row="13" Grid.ColumnSpan="4" Height="10"/>
-
-		<UniformGrid Grid.Row="14" Grid.ColumnSpan="4" HorizontalAlignment="Right">
-			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
-			<Button IsCancel="True" Content="Cancel"/>
+		<UniformGrid Grid.Row="14" Grid.ColumnSpan="4" HorizontalAlignment="Right" Columns="2">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
-
-		<Separator Grid.Row="15" Grid.ColumnSpan="4" Height="10"/>
 
 		<TextBlock Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="4">
 			<Bold>Help</Bold> <Italic>(t = text, i = case-insensitive)</Italic><LineBreak/>

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Input;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class ChooseDateTimeDialog : Window
+	internal partial class ChooseDateTimeDialog
 	{
 		[DepProp]
 		public DateTime Value { get { return uiHelper.GetPropValue<DateTime>(); } set { uiHelper.SetPropValue(value); } }
@@ -29,9 +28,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		static public DateTime? Run(DateTime datetime)
 		{
 			var dialog = new ChooseDateTimeDialog(datetime);
-			if (dialog.ShowDialog() != true)
-				return null;
-			return dialog.Value;
+			return dialog.ShowDialog() == true ? (DateTime?)dialog.Value : null;
 		}
 	}
 }

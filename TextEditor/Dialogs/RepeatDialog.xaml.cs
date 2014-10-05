@@ -3,18 +3,12 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	internal partial class RepeatDialog : Window
+	internal partial class RepeatDialog
 	{
-		public class Response
+		internal class Result
 		{
-			public int RepeatCount { get; private set; }
-			public bool SelectAll { get; private set; }
-
-			public Response(int repeatCount, bool selectAll)
-			{
-				RepeatCount = repeatCount;
-				SelectAll = selectAll;
-			}
+			public int RepeatCount { get; set; }
+			public bool SelectAll { get; set; }
 		}
 
 		[DepProp]
@@ -34,18 +28,17 @@ namespace NeoEdit.TextEditor.Dialogs
 			SelectAll = selectAll;
 		}
 
+		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
+			result = new Result { RepeatCount = RepeatCount, SelectAll = SelectAll };
 			DialogResult = true;
 		}
 
-		static public Response Run(bool selectAll)
+		static public Result Run(bool selectAll)
 		{
 			var dialog = new RepeatDialog(selectAll);
-			if (dialog.ShowDialog() != true)
-				return null;
-
-			return new Response(dialog.RepeatCount, dialog.SelectAll);
+			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}
 }

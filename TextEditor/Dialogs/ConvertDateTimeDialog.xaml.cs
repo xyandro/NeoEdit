@@ -8,8 +8,16 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
-	public partial class ConvertDateTimeDialog : Window
+	internal partial class ConvertDateTimeDialog
 	{
+		internal class Result
+		{
+			public string InputFormat { get; set; }
+			public bool InputUTC { get; set; }
+			public string OutputFormat { get; set; }
+			public bool OutputUTC { get; set; }
+		}
+
 		[DepProp]
 		public string InputFormat { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -91,11 +99,6 @@ namespace NeoEdit.TextEditor.Dialogs
 			OutputExample = resultStr;
 		}
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			DialogResult = true;
-		}
-
 		static DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 		static DateTime excelBase = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Local).AddDays(-2);
 		static DateTime? InterpretFormat(string value, string format, bool inputUTC, bool generic = true)
@@ -175,20 +178,17 @@ namespace NeoEdit.TextEditor.Dialogs
 			return InterpretFormat(value.Value, outputFormat, outputUTC);
 		}
 
-		static public bool Run(string example, out string inputFormat, out bool inputUTC, out string outputFormat, out bool outputUTC)
+		Result result;
+		void OkClick(object sender, RoutedEventArgs e)
 		{
-			inputFormat = outputFormat = null;
-			inputUTC = outputUTC = false;
+			result = new Result { InputFormat = InputFormat, InputUTC = InputUTC, OutputFormat = OutputFormat, OutputUTC = OutputUTC };
+			DialogResult = true;
+		}
+
+		public static Result Run(string example)
+		{
 			var dialog = new ConvertDateTimeDialog(example);
-			if (dialog.ShowDialog() != true)
-				return false;
-
-			inputFormat = dialog.InputFormat;
-			inputUTC = dialog.InputUTC;
-			outputFormat = dialog.OutputFormat;
-			outputUTC = dialog.OutputUTC;
-
-			return true;
+			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}
 }
