@@ -1,35 +1,9 @@
-﻿using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor
 {
-	class BinaryEditMenuItem : NEMenuItem<BinaryEditCommand>
-	{
-		public BinaryEditMenuItem()
-		{
-			// Allow right-click
-			SetValue(typeof(MenuItem).GetField("InsideContextMenuProperty", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null) as DependencyProperty, true);
-		}
-
-		MouseButton last = MouseButton.Left;
-		static public MouseButton LastClick { get; private set; }
-
-		protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
-		{
-			last = MouseButton.Right;
-			base.OnMouseRightButtonUp(e);
-			last = MouseButton.Left;
-		}
-
-		protected override void OnClick()
-		{
-			LastClick = last;
-			base.OnClick();
-		}
-	}
+	class BinaryEditMenuItem : NEMenuItem<BinaryEditCommand> { }
 
 	enum BinaryEditCommand
 	{

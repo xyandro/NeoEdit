@@ -1,35 +1,9 @@
-﻿using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	class TextEditMenuItem : NEMenuItem<TextEditCommand>
-	{
-		public TextEditMenuItem()
-		{
-			// Allow right-click
-			SetValue(typeof(MenuItem).GetField("InsideContextMenuProperty", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null) as DependencyProperty, true);
-		}
-
-		MouseButton last = MouseButton.Left;
-		static public MouseButton LastClick { get; private set; }
-
-		protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
-		{
-			last = MouseButton.Right;
-			base.OnMouseRightButtonUp(e);
-			last = MouseButton.Left;
-		}
-
-		protected override void OnClick()
-		{
-			LastClick = last;
-			base.OnClick();
-		}
-	}
+	class TextEditMenuItem : NEMenuItem<TextEditCommand> { }
 
 	enum TextEditCommand
 	{

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -63,6 +64,28 @@ namespace NeoEdit.GUI.Common
 				foreach (var attr in keyGestures)
 					window.InputBindings.Add(new KeyBinding(this, attr));
 			}
+		}
+
+		public NEMenuItem()
+		{
+			// Allow right-click
+			SetValue(typeof(MenuItem).GetField("InsideContextMenuProperty", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null) as DependencyProperty, true);
+		}
+
+		MouseButton last = MouseButton.Left;
+		static public MouseButton LastClick { get; private set; }
+
+		protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+		{
+			last = MouseButton.Right;
+			base.OnMouseRightButtonUp(e);
+			last = MouseButton.Left;
+		}
+
+		protected override void OnClick()
+		{
+			LastClick = last;
+			base.OnClick();
 		}
 
 		public CommandEnumT CommandEnum
