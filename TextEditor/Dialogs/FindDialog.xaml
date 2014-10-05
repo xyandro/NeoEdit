@@ -3,40 +3,36 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Find" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=findText}">
 
-	<StackPanel Margin="10">
-		<StackPanel.Style>
-			<Style>
-				<Style.Resources>
-					<Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-						<Setter Property="Focusable" Value="False"/>
-					</Style>
-					<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-						<Setter Property="Focusable" Value="False"/>
-					</Style>
-				</Style.Resources>
-			</Style>
-		</StackPanel.Style>
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
 
-		<StackPanel Orientation="Horizontal">
-			<Label Content="_Find:" Target="{Binding ElementName=findText}"/>
-			<ComboBox Name="findText" Width="500" IsEditable="True" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}" ItemsSource="{Binding History, ElementName=self}"/>
-		</StackPanel>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=findText}"/>
+		<ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="findText" Width="500" IsEditable="True" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, ElementName=self}" ItemsSource="{Binding History, ElementName=self}"/>
 
-		<StackPanel>
-			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}"/>
-			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}"/>
-			<StackPanel Orientation="Horizontal">
-				<CheckBox Content="_Regex " IsChecked="{Binding IsRegex, ElementName=self}"/>
-				<CheckBox Content="by _group" IsChecked="{Binding RegexGroups, ElementName=self}"/>
-			</StackPanel>
-			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}"/>
-			<CheckBox Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}"/>
-		</StackPanel>
+		<CheckBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Regex " IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="3" Grid.Column="2" Content="by _group" IsChecked="{Binding RegexGroups, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}" Focusable="False"/>
 
-		<UniformGrid HorizontalAlignment="Right" Columns="3">
+		<UniformGrid Grid.Row="6" Grid.ColumnSpan="3" HorizontalAlignment="Right" Columns="3">
 			<Button Click="OkClick" IsDefault="True" Content="Find _Next" Padding="10,1"/>
 			<Button Click="OkClick" Name="selectAll" Content="Select _All" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
-	</StackPanel>
+	</Grid>
 </Window>
