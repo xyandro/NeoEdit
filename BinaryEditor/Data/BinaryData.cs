@@ -3,7 +3,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.BinaryEditor.Data
 {
-	abstract class BinaryData
+	public abstract class BinaryData
 	{
 		public virtual bool CanInsert() { return false; }
 

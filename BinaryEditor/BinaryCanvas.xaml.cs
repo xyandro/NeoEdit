@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.Win32;
 using NeoEdit.BinaryEditor.Data;
 using NeoEdit.BinaryEditor.Dialogs;
 using NeoEdit.Common.Transform;
@@ -19,25 +21,15 @@ namespace NeoEdit.BinaryEditor
 	partial class BinaryCanvas
 	{
 		[DepProp]
-		internal BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
+		public string FileTitle { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double xScrollSmallChange { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double xScrollLargeChange { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double xScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double yScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double yScrollSmallChange { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double yScrollLargeChange { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double yScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { ++internalChangeCount; uiHelper.SetPropValue(value); --internalChangeCount; } }
 		[DepProp]
@@ -48,6 +40,17 @@ namespace NeoEdit.BinaryEditor
 		public Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public double xScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public double yScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
+
+		//double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
+		//double yScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
+		//int xScrollViewportFloor;// { get { return (int)Math.Floor(xScrollViewport); } }
+		//int xScrollViewportCeiling;//{ get { return (int)Math.Ceiling(xScrollViewport); } }
+		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
+		//int yScrollViewportCeiling;//{ get { return (int)Math.Ceiling(yScrollViewport); } }
 
 		int internalChangeCount = 0;
 		long _pos1, _pos2;
@@ -190,6 +193,16 @@ namespace NeoEdit.BinaryEditor
 			};
 		}
 
+		internal void SetData(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null)
+		{
+			Data = data;
+			CoderUsed = encoder;
+			if (CoderUsed == Coder.Type.None)
+				CoderUsed = Data.GuessEncoding();
+			FileName = filename;
+			FileTitle = filetitle;
+		}
+
 		void EnsureVisible(long position)
 		{
 			var y = GetYFromRow(position / columns);
@@ -231,13 +244,15 @@ namespace NeoEdit.BinaryEditor
 			columns = Math.Min(maxColumns, Math.Max(minColumns, ((int)(canvas.ActualWidth / charWidth) - xPosColumns - xPosGap - xHexGap + xHexSpacing) / (3 + xHexSpacing)));
 			rows = Data.Length / columns + 1;
 
-			xScrollMaximum = xEnd - canvas.ActualWidth;
-			xScrollSmallChange = charWidth;
-			xScrollLargeChange = canvas.ActualWidth - xScrollSmallChange;
+			xScroll.Maximum = xEnd - canvas.ActualWidth;
+			xScroll.SmallChange = charWidth;
+			xScroll.LargeChange = canvas.ActualWidth - xScroll.SmallChange;
+			xScroll.ViewportSize = canvas.ActualWidth;
 
-			yScrollMaximum = rows * rowHeight - canvas.ActualHeight;
-			yScrollSmallChange = rowHeight;
-			yScrollLargeChange = canvas.ActualHeight - yScrollSmallChange;
+			yScroll.Maximum = rows * rowHeight - canvas.ActualHeight;
+			yScroll.SmallChange = rowHeight;
+			yScroll.LargeChange = canvas.ActualHeight - yScroll.SmallChange;
+			yScroll.ViewportSize = canvas.ActualHeight;
 		}
 
 		static Brush selectionActiveBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
@@ -319,6 +334,11 @@ namespace NeoEdit.BinaryEditor
 
 			var textText = new FormattedText(text.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			dc.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
+		}
+
+		internal void HandleMouseWheel(int delta)
+		{
+			yScrollValue -= delta * yScrollViewportFloor / 480;
 		}
 
 		void OnCanvasRender(object sender, DrawingContext dc)
@@ -616,6 +636,35 @@ namespace NeoEdit.BinaryEditor
 			return false;
 		}
 
+		internal void Command_File_Save()
+		{
+			if (FileName == null)
+				Command_File_SaveAs();
+			else
+				Data.Save(FileName);
+		}
+
+		internal void Command_File_SaveAs()
+		{
+			var dialog = new SaveFileDialog();
+			if (dialog.ShowDialog() != true)
+				return;
+
+			if (Directory.Exists(dialog.FileName))
+				throw new Exception("A directory by that name already exists.");
+			if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+				throw new Exception("Directory doesn't exist.");
+			FileName = dialog.FileName;
+			Command_File_Save();
+		}
+
+		internal void Command_File_Encode(Coder.Type type)
+		{
+			CoderUsed = type;
+			if (CoderUsed == Coder.Type.None)
+				CoderUsed = Data.GuessEncoding();
+		}
+
 		internal void Command_Edit_Undo()
 		{
 			if (undo.Count == 0)
@@ -710,6 +759,11 @@ namespace NeoEdit.BinaryEditor
 		{
 			if (Data.CanInsert())
 				Insert = !Insert;
+		}
+
+		internal void Command_View_Values()
+		{
+			ShowValues = !ShowValues;
 		}
 
 		internal void Command_View_Refresh()

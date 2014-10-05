@@ -39,6 +39,4 @@ Checksum (and possibly others) should work only on selected text
 Reload current file (perhaps automatically?)
 Keep track of whether file is edited; object on close
 Move open in text edit to File menu, rename from "Encode"
-Move scrollbars/show values/status bar to canvas
-Move FileTitle/FileName/Data/ShowValues/CoderUsed properties to only canvas
 Rename windows to match TextEdit
