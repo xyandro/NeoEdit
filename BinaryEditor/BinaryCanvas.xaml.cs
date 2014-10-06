@@ -354,6 +354,12 @@ namespace NeoEdit.BinaryEditor
 							break;
 						}
 
+						if (inHexEdit)
+						{
+							++SelStart;
+							inHexEdit = false;
+						}
+
 						if (key == Key.Back)
 						{
 							if (SelStart <= 0)
