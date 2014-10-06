@@ -13,15 +13,13 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10,5" ClipToBounds="True"/>
 
 		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="0" Grid.Column="1"/>
-		<ScrollBar Name="xScroll" Grid.Row="1" Orientation="Horizontal"/>
 
-		<binaryEditor:DisplayValues Grid.Row="2" Grid.ColumnSpan="2"
+		<binaryEditor:DisplayValues Grid.Row="1" Grid.ColumnSpan="2"
 			Visibility="{Binding ShowValues, ElementName=self, Converter={guiCommon:ExpressionConverter}}"
 			Data="{Binding Data, ElementName=self, Mode=OneWay}"
 			ChangeCount="{Binding ChangeCount, ElementName=self, Mode=TwoWay}"
@@ -30,7 +28,7 @@
 			FoundText="{Binding FoundText, ElementName=self, Mode=OneWay}"
 		/>
 
-		<StatusBar Grid.Row="3" Grid.ColumnSpan="2">
+		<StatusBar Grid.Row="2" Grid.ColumnSpan="2">
 			<StatusBarItem>
 				<TextBlock Text="Position"/>
 			</StatusBarItem>

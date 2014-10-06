@@ -41,14 +41,9 @@ namespace NeoEdit.BinaryEditor
 		[DepProp]
 		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public double xScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
 		public double yScrollValue { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 
-		//double xScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
 		//double yScrollMaximum { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		//int xScrollViewportFloor;// { get { return (int)Math.Floor(xScrollViewport); } }
-		//int xScrollViewportCeiling;//{ get { return (int)Math.Ceiling(xScrollViewport); } }
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		//int yScrollViewportCeiling;//{ get { return (int)Math.Ceiling(yScrollViewport); } }
 
@@ -159,7 +154,6 @@ namespace NeoEdit.BinaryEditor
 				obj.redo.Clear();
 			});
 			UIHelper<BinaryCanvas>.AddCallback(a => a.ChangeCount, (obj, o, n) => obj.canvas.InvalidateVisual());
-			UIHelper<BinaryCanvas>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
 			UIHelper<BinaryCanvas>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
 		}
 
@@ -244,11 +238,6 @@ namespace NeoEdit.BinaryEditor
 			columns = Math.Min(maxColumns, Math.Max(minColumns, ((int)(canvas.ActualWidth / charWidth) - xPosColumns - xPosGap - xHexGap + xHexSpacing) / (3 + xHexSpacing)));
 			rows = Data.Length / columns + 1;
 
-			xScroll.Maximum = xEnd - canvas.ActualWidth;
-			xScroll.SmallChange = charWidth;
-			xScroll.LargeChange = canvas.ActualWidth - xScroll.SmallChange;
-			xScroll.ViewportSize = canvas.ActualWidth;
-
 			yScroll.Maximum = rows * rowHeight - canvas.ActualHeight;
 			yScroll.SmallChange = rowHeight;
 			yScroll.LargeChange = canvas.ActualHeight - yScroll.SmallChange;
@@ -282,16 +271,16 @@ namespace NeoEdit.BinaryEditor
 
 				var count = last - first;
 
-				dc.DrawRectangle(SelHex ? Misc.selectionActiveBrush : Misc.selectionInactiveBrush, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
-				dc.DrawRectangle(SelHex ? Misc.selectionInactiveBrush : Misc.selectionActiveBrush, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
+				dc.DrawRectangle(SelHex ? Misc.selectionActiveBrush : Misc.selectionInactiveBrush, null, new Rect(GetXHexFromColumn(first), y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
+				dc.DrawRectangle(SelHex ? Misc.selectionInactiveBrush : Misc.selectionActiveBrush, null, new Rect(GetXTextFromColumn(first), y, count * charWidth, rowHeight));
 			}
 
 			var selRow = Pos1 / columns;
 			if (selRow == row)
 			{
 				var selCol = (int)(Pos1 % columns);
-				dc.DrawRectangle(SelHex ? Brushes.Black : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
-				dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Black, null, new Rect(GetXTextFromColumn(selCol) - xScrollValue, y, 1, rowHeight));
+				dc.DrawRectangle(SelHex ? Brushes.Black : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol), y, 1, rowHeight));
+				dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Black, null, new Rect(GetXTextFromColumn(selCol), y, 1, rowHeight));
 			}
 		}
 
@@ -299,7 +288,7 @@ namespace NeoEdit.BinaryEditor
 		{
 			var y = row * rowHeight - yScrollValue;
 			var posText = new FormattedText(String.Format("{0:x" + xPosColumns.ToString() + "}", row * columns), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-			dc.DrawText(posText, new Point(xPosition - xScrollValue, y));
+			dc.DrawText(posText, new Point(xPosition, y));
 		}
 
 		void DrawHex(DrawingContext dc, long row)
@@ -316,7 +305,7 @@ namespace NeoEdit.BinaryEditor
 			}
 
 			var hexText = new FormattedText(hex.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-			dc.DrawText(hexText, new Point(xHexViewStart - xScrollValue, y));
+			dc.DrawText(hexText, new Point(xHexViewStart, y));
 		}
 
 		void DrawText(DrawingContext dc, long row)
@@ -331,7 +320,7 @@ namespace NeoEdit.BinaryEditor
 			}
 
 			var textText = new FormattedText(text.ToString(), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-			dc.DrawText(textText, new Point(xTextViewStart - xScrollValue, y));
+			dc.DrawText(textText, new Point(xTextViewStart, y));
 		}
 
 		internal void HandleMouseWheel(int delta)
@@ -570,7 +559,7 @@ namespace NeoEdit.BinaryEditor
 
 		void MouseHandler(Point mousePos)
 		{
-			var x = mousePos.X + xScrollValue;
+			var x = mousePos.X;
 			var row = GetRowFromY(mousePos.Y + yScrollValue);
 			int column;
 			bool isHex;
