@@ -16,6 +16,9 @@ namespace NeoEdit.Common.UnitTest
 		[TestMethod]
 		public void ExpressionTest()
 		{
+			Assert.AreEqual(new Expression("TRUE").Evaluate().ToString(), "True");
+			Assert.AreEqual(new Expression("FaLsE").Evaluate().ToString(), "False");
+
 			Assert.AreEqual(new Expression("5.0 + 2.1").Evaluate().ToString(), "7.1");
 			Assert.AreEqual(new Expression("3.6 + 2.1 * 5.0").Evaluate().ToString(), "14.1");
 			Assert.AreEqual(new Expression("(3.6 + 2.1) * 5.0").Evaluate().ToString(), "28.5");
@@ -34,10 +37,10 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new Expression("[0].'value'").Evaluate(new ExpressionDotTest(5)).ToString(), "5");
 
-			Assert.AreEqual(new Expression("Type:[0].'FullName'").Evaluate(new ExpressionDotTest(5)).ToString(), typeof(ExpressionDotTest).FullName);
+			Assert.AreEqual(new Expression("Type([0]).'FullName'").Evaluate(new ExpressionDotTest(5)).ToString(), typeof(ExpressionDotTest).FullName);
 
-			Assert.AreEqual(new Expression("ValidRE:[0]").Evaluate(@"\d+").ToString(), "True");
-			Assert.AreEqual(new Expression("ValidRE:[0]").Evaluate(@"[").ToString(), "False");
+			Assert.AreEqual(new Expression("ValidRE([0])").Evaluate(@"\d+").ToString(), "True");
+			Assert.AreEqual(new Expression("ValidRE([0])").Evaluate(@"[").ToString(), "False");
 
 			Assert.AreEqual(new Expression("+").Evaluate(1, 2, 3, 4, 5.5).ToString(), "15.5");
 			Assert.AreEqual(new Expression("||").Evaluate(false, false, true, false).ToString(), "True");
@@ -46,6 +49,8 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new Expression("([0] || [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString(), "5");
 
 			Assert.AreEqual(new Expression("t+").Evaluate("I", "Can", null, "Join", "Strings").ToString(), "ICanJoinStrings");
+
+			Assert.AreEqual(new Expression("StrFormat('[0]{0}+{1} is {2}', [0], [1], ([0]+[1]))").Evaluate(5, 7).ToString(), "[0]5+7 is 12");
 		}
 	}
 }

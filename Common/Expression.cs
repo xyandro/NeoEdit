@@ -24,24 +24,45 @@ namespace NeoEdit.Common
 				public int index;
 				public object term;
 
+				public object GetTerm(object[] values, List<object> results)
+				{
+					switch (type)
+					{
+						case Term.TermType.Term: return term;
+						case Term.TermType.Value: return values[index];
+						case Term.TermType.Result: return results[index];
+					}
+
+					throw new Exception("Invalid term");
+				}
+
 				public override string ToString()
 				{
 					return String.Format("{0}: {1}", type, type == TermType.Term ? term : index);
 				}
 			}
 
-			public string operation;
-			public Term term1, term2, term3;
+			public string operation { get; private set; }
+			public Term[] terms { get; private set; }
+
+			public Operation(string _operation, params Term[] _terms)
+			{
+				operation = _operation;
+				terms = _terms;
+			}
+
+			public object GetTerm(int index, object[] values, List<object> results)
+			{
+				if ((terms.Length <= index) || (terms[index] == null))
+					return null;
+				return terms[index].GetTerm(values, results);
+			}
 
 			public override string ToString()
 			{
 				var str = operation;
-				if (term1 != null)
-					str += ", " + term1.ToString();
-				if (term2 != null)
-					str += ", " + term2.ToString();
-				if (term3 != null)
-					str += ", " + term3.ToString();
+				foreach (var term in terms)
+					str += ", " + term.ToString();
 				return str;
 			}
 		}
@@ -51,8 +72,11 @@ namespace NeoEdit.Common
 
 		static readonly Regex simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|(true|false)|\b([xy])\b", RegexOptions.IgnoreCase);
 
-		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int", "FileName" };
-		static readonly Regex functionRE = new Regex(String.Format(@"\b({0}):(\[[vir]\d+\])", String.Join("|", functions)));
+		static readonly string parenPlaceholder = "#PARENS#";
+
+		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int", "FileName", "StrFormat" };
+		static readonly Regex functionRE = new Regex(String.Format(@"\b({0})\s*{1}", String.Join("|", functions), parenPlaceholder));
+		static readonly Regex functionArgsRE = new Regex(@"(\[[vir]\d+\])\s*($|,)");
 
 		static readonly List<List<string>> binaryOperators = new List<List<string>>
 		{
@@ -61,7 +85,7 @@ namespace NeoEdit.Common
 			new List<string>{ "+", "-", "t+" },
 			new List<string>{ "IS" },
 			new List<string>{ "<", "<=", ">", ">=", "t<", "t<=", "t>", "t>=", "ti<", "ti<=", "ti>", "ti>=" },
-			new List<string>{ "==", "!=", "t==", "t!=", "ti==", "ti!=" },
+			new List<string>{ "=", "==", "!=", "t==", "t!=", "ti==", "ti!=" },
 			new List<string>{ "&&" },
 			new List<string>{ "||" },
 		};
@@ -156,7 +180,7 @@ namespace NeoEdit.Common
 							if (--numParens == 0)
 							{
 								var subQuery = expression.Substring(expressionStart + 1, ctr - expressionStart - 1);
-								expression = expression.Substring(0, expressionStart) + "#VALUE#" + expression.Substring(ctr + 1);
+								expression = expression.Substring(0, expressionStart) + parenPlaceholder + expression.Substring(ctr + 1);
 								expressionStack.Push(expression);
 								expression = subQuery;
 								return true;
@@ -168,12 +192,33 @@ namespace NeoEdit.Common
 			return false;
 		}
 
-		bool ExitParens(ref string expression, Stack<string> expressionStack)
+		bool ExitParensAndEvalFunctions(ref string expression, Stack<string> expressionStack, List<object> internals, ref int results)
 		{
 			if (expressionStack.Count == 0)
 				return false;
 
-			expression = expressionStack.Pop().Replace("#VALUE#", expression);
+			var enclosing = expressionStack.Pop();
+			var match = functionRE.Match(enclosing);
+			if (!match.Success)
+			{
+				expression = enclosing.Replace(parenPlaceholder, expression);
+				return true;
+			}
+
+			var function = match.Groups[1].Value;
+			var args = new List<string>();
+			while (expression.Length != 0)
+			{
+				var argsMatch = functionArgsRE.Match(expression);
+				if (!argsMatch.Success)
+					throw new Exception("Failed to get function arguments");
+
+				args.Add(argsMatch.Groups[1].Value);
+				expression = expression.Substring(argsMatch.Index + argsMatch.Length).Trim();
+			}
+
+			operations.Add(new Operation(function, args.Select(arg => GetTerm(arg, internals)).ToArray()));
+			expression = enclosing.Substring(0, match.Index) + "[r" + results++ + "]" + enclosing.Substring(match.Index + match.Length);
 			return true;
 		}
 
@@ -193,18 +238,6 @@ namespace NeoEdit.Common
 			throw new Exception("Invalid expression");
 		}
 
-		bool EvalFunctions(ref string expression, List<object> internals, ref int results)
-		{
-			var match = functionRE.Match(expression);
-			if (!match.Success)
-				return false;
-
-			var term1 = GetTerm(match.Groups[2].Value, internals);
-			operations.Add(new Operation { operation = match.Groups[1].Value, term1 = term1 });
-			expression = expression.Substring(0, match.Index) + "[r" + results++ + "]" + expression.Substring(match.Index + match.Length);
-			return true;
-		}
-
 		bool DoBinaryOperation(ref string expression, List<object> internals, ref int results)
 		{
 			foreach (var binaryOperatorRE in binaryOperatorREs)
@@ -214,7 +247,7 @@ namespace NeoEdit.Common
 				{
 					var term1 = GetTerm(match.Groups[1].Value, internals);
 					var term2 = GetTerm(match.Groups[3].Value, internals);
-					operations.Add(new Operation { operation = match.Groups[2].Value, term1 = term1, term2 = term2 });
+					operations.Add(new Operation(match.Groups[2].Value, term1, term2));
 					expression = expression.Substring(0, match.Index) + "[r" + results++ + "]" + expression.Substring(match.Index + match.Length);
 					return true;
 				}
@@ -229,10 +262,10 @@ namespace NeoEdit.Common
 			if (!match.Success)
 				return false;
 
-			var term1 = GetTerm(match.Groups[1].Value, internals);
-			var term2 = GetTerm(match.Groups[2].Value, internals);
-			var term3 = GetTerm(match.Groups[3].Value, internals);
-			operations.Add(new Operation { operation = "?:", term1 = term1, term2 = term2, term3 = term3 });
+			var condition = GetTerm(match.Groups[1].Value, internals);
+			var trueValue = GetTerm(match.Groups[2].Value, internals);
+			var falseValue = GetTerm(match.Groups[3].Value, internals);
+			operations.Add(new Operation("?:", condition, trueValue, falseValue));
 			expression = expression.Substring(0, match.Index) + "[r" + results++ + "]" + expression.Substring(match.Index + match.Length);
 			return true;
 		}
@@ -264,33 +297,18 @@ namespace NeoEdit.Common
 				if (EnterParens(ref expression, expressionStack))
 					continue;
 
-				if (EvalFunctions(ref expression, internals, ref results))
-					continue;
-
 				if (DoBinaryOperation(ref expression, internals, ref results))
 					continue;
 
 				if (DoTernaryOperation(ref expression, internals, ref results))
 					continue;
 
-				if (ExitParens(ref expression, expressionStack))
+				if (ExitParensAndEvalFunctions(ref expression, expressionStack, internals, ref results))
 					continue;
 
-				operations.Add(new Operation { operation = "=", term1 = GetTerm(expression, internals) });
+				operations.Add(new Operation("RETURN", GetTerm(expression, internals)));
 				break;
 			}
-		}
-
-		object GetObject(Operation.Term term, object[] values, List<object> results)
-		{
-			switch (term.type)
-			{
-				case Operation.Term.TermType.Term: return term.term;
-				case Operation.Term.TermType.Value: return values[term.index];
-				case Operation.Term.TermType.Result: return results[term.index];
-			}
-
-			throw new Exception("Invalid term");
 		}
 
 		double GetDouble(object value)
@@ -372,52 +390,50 @@ namespace NeoEdit.Common
 			var results = new List<object>();
 			foreach (var op in operations)
 			{
-				var term1 = op.term1 == null ? null : GetObject(op.term1, values, results);
-				var term2 = op.term2 == null ? null : GetObject(op.term2, values, results);
-				var term3 = op.term3 == null ? null : GetObject(op.term3, values, results);
-
 				switch (op.operation)
 				{
-					case "Type": results.Add(AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(GetString(term1))).FirstOrDefault(find => find != null)); break;
-					case "ValidRE": results.Add(ValidRE(GetString(term1))); break;
-					case "Eval": results.Add(Eval(GetString(term1))); break;
-					case "Int": results.Add(Math.Floor(GetDouble(term1))); break;
-					case "FileName": results.Add(Path.GetFileName(GetString(term1))); break;
-					case ".": results.Add(GetDotOp(term1, GetString(term2))); break;
-					case "*": results.Add(GetDouble(term1) * GetDouble(term2)); break;
-					case "/": results.Add(GetDouble(term1) / GetDouble(term2)); break;
-					case "%": results.Add(GetDouble(term1) % GetDouble(term2)); break;
-					case "+": results.Add(GetDouble(term1) + GetDouble(term2)); break;
-					case "-": results.Add(GetDouble(term1) - GetDouble(term2)); break;
-					case "t+": results.Add(GetString(term1) + GetString(term2)); break;
-					case "IS": results.Add(IsType(term1, GetString(term2))); break;
-					case "<": results.Add(GetDouble(term1) < GetDouble(term2)); break;
-					case "<=": results.Add(GetDouble(term1) <= GetDouble(term2)); break;
-					case ">": results.Add(GetDouble(term1) > GetDouble(term2)); break;
-					case ">=": results.Add(GetDouble(term1) >= GetDouble(term2)); break;
-					case "t<": results.Add(GetString(term1).CompareTo(GetString(term2)) < 0); break;
-					case "t<=": results.Add(GetString(term1).CompareTo(GetString(term2)) <= 0); break;
-					case "t>": results.Add(GetString(term1).CompareTo(GetString(term2)) > 0); break;
-					case "t>=": results.Add(GetString(term1).CompareTo(GetString(term2)) >= 0); break;
-					case "ti<": results.Add(GetString(term1).ToLower().CompareTo(GetString(term2).ToLower()) < 0); break;
-					case "ti<=": results.Add(GetString(term1).ToLower().CompareTo(GetString(term2).ToLower()) <= 0); break;
-					case "ti>": results.Add(GetString(term1).ToLower().CompareTo(GetString(term2).ToLower()) > 0); break;
-					case "ti>=": results.Add(GetString(term1).ToLower().CompareTo(GetString(term2).ToLower()) >= 0); break;
+					case "Type": results.Add(AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(GetString(op.GetTerm(0, values, results)))).FirstOrDefault(find => find != null)); break;
+					case "ValidRE": results.Add(ValidRE(GetString(op.GetTerm(0, values, results)))); break;
+					case "Eval": results.Add(Eval(GetString(op.GetTerm(0, values, results)))); break;
+					case "Int": results.Add(Math.Floor(GetDouble(op.GetTerm(0, values, results)))); break;
+					case "FileName": results.Add(Path.GetFileName(GetString(op.GetTerm(0, values, results)))); break;
+					case "StrFormat": results.Add(String.Format(GetString(op.GetTerm(0, values, results)), Enumerable.Range(1, op.terms.Length - 1).Select(arg => op.GetTerm(arg, values, results)).ToArray())); break;
+					case ".": results.Add(GetDotOp(op.GetTerm(0, values, results), GetString(op.GetTerm(1, values, results)))); break;
+					case "*": results.Add(GetDouble(op.GetTerm(0, values, results)) * GetDouble(op.GetTerm(1, values, results))); break;
+					case "/": results.Add(GetDouble(op.GetTerm(0, values, results)) / GetDouble(op.GetTerm(1, values, results))); break;
+					case "%": results.Add(GetDouble(op.GetTerm(0, values, results)) % GetDouble(op.GetTerm(1, values, results))); break;
+					case "+": results.Add(GetDouble(op.GetTerm(0, values, results)) + GetDouble(op.GetTerm(1, values, results))); break;
+					case "-": results.Add(GetDouble(op.GetTerm(0, values, results)) - GetDouble(op.GetTerm(1, values, results))); break;
+					case "t+": results.Add(GetString(op.GetTerm(0, values, results)) + GetString(op.GetTerm(1, values, results))); break;
+					case "IS": results.Add(IsType(op.GetTerm(0, values, results), GetString(op.GetTerm(1, values, results)))); break;
+					case "<": results.Add(GetDouble(op.GetTerm(0, values, results)) < GetDouble(op.GetTerm(1, values, results))); break;
+					case "<=": results.Add(GetDouble(op.GetTerm(0, values, results)) <= GetDouble(op.GetTerm(1, values, results))); break;
+					case ">": results.Add(GetDouble(op.GetTerm(0, values, results)) > GetDouble(op.GetTerm(1, values, results))); break;
+					case ">=": results.Add(GetDouble(op.GetTerm(0, values, results)) >= GetDouble(op.GetTerm(1, values, results))); break;
+					case "t<": results.Add(GetString(op.GetTerm(0, values, results)).CompareTo(GetString(op.GetTerm(1, values, results))) < 0); break;
+					case "t<=": results.Add(GetString(op.GetTerm(0, values, results)).CompareTo(GetString(op.GetTerm(1, values, results))) <= 0); break;
+					case "t>": results.Add(GetString(op.GetTerm(0, values, results)).CompareTo(GetString(op.GetTerm(1, values, results))) > 0); break;
+					case "t>=": results.Add(GetString(op.GetTerm(0, values, results)).CompareTo(GetString(op.GetTerm(1, values, results))) >= 0); break;
+					case "ti<": results.Add(GetString(op.GetTerm(0, values, results)).ToLower().CompareTo(GetString(op.GetTerm(1, values, results)).ToLower()) < 0); break;
+					case "ti<=": results.Add(GetString(op.GetTerm(0, values, results)).ToLower().CompareTo(GetString(op.GetTerm(1, values, results)).ToLower()) <= 0); break;
+					case "ti>": results.Add(GetString(op.GetTerm(0, values, results)).ToLower().CompareTo(GetString(op.GetTerm(1, values, results)).ToLower()) > 0); break;
+					case "ti>=": results.Add(GetString(op.GetTerm(0, values, results)).ToLower().CompareTo(GetString(op.GetTerm(1, values, results)).ToLower()) >= 0); break;
+					case "=":
 					case "==":
-					case "t==": results.Add(GetString(term1) == GetString(term2)); break;
+					case "t==": results.Add(GetString(op.GetTerm(0, values, results)) == GetString(op.GetTerm(1, values, results))); break;
 					case "!=":
-					case "t!=": results.Add(GetString(term1) != GetString(term2)); break;
-					case "ti==": results.Add(GetString(term1).Equals(GetString(term2), StringComparison.OrdinalIgnoreCase)); break;
-					case "ti!=": results.Add(!GetString(term1).Equals(GetString(term2), StringComparison.OrdinalIgnoreCase)); break;
-					case "&&": results.Add(GetBoolean(term1) && GetBoolean(term2)); break;
-					case "||": results.Add(GetBoolean(term1) || GetBoolean(term2)); break;
-					case "?:": results.Add(GetBoolean(term1) ? term2 : term3); break;
-					case "=": return term1;
+					case "t!=": results.Add(GetString(op.GetTerm(0, values, results)) != GetString(op.GetTerm(1, values, results))); break;
+					case "ti==": results.Add(GetString(op.GetTerm(0, values, results)).Equals(GetString(op.GetTerm(1, values, results)), StringComparison.OrdinalIgnoreCase)); break;
+					case "ti!=": results.Add(!GetString(op.GetTerm(0, values, results)).Equals(GetString(op.GetTerm(1, values, results)), StringComparison.OrdinalIgnoreCase)); break;
+					case "&&": results.Add(GetBoolean(op.GetTerm(0, values, results)) && GetBoolean(op.GetTerm(1, values, results))); break;
+					case "||": results.Add(GetBoolean(op.GetTerm(0, values, results)) || GetBoolean(op.GetTerm(1, values, results))); break;
+					case "?:": results.Add(GetBoolean(op.GetTerm(0, values, results)) ? op.GetTerm(1, values, results) : op.GetTerm(2, values, results)); break;
+					case "RETURN": results.Add(op.GetTerm(0, values, results)); break;
 					default:
 						throw new Exception(String.Format("Invalid operation: {0}", op.operation));
 				}
 			}
-			throw new Exception("Error: No value returned");
+			return results.Last();
 		}
 	}
 }

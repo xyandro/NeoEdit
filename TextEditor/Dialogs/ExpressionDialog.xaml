@@ -88,8 +88,8 @@
 
 		<TextBlock Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="4">
 			<Bold>Help</Bold> <Italic>(t = text, i = case-insensitive)</Italic><LineBreak/>
-			<Italic>Evaluate parameter as expression:</Italic> Eval:x<LineBreak/>
-			<Italic>Force to integer:</Italic> Int:(x/2)<LineBreak/>
+			<Italic>Evaluate parameter as expression:</Italic> Eval(x)<LineBreak/>
+			<Italic>Force to integer:</Italic> Int(x/2)<LineBreak/>
 			<Italic>Grouping operator:</Italic> ()<LineBreak/>
 			<Italic>Mathematical operators:</Italic> * / % + -<LineBreak/>
 			<Italic>Text operators:</Italic> t+<LineBreak/>

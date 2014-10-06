@@ -386,7 +386,7 @@ namespace NeoEdit.TextEditor
 				AllowDrop = true,
 			};
 			label.MouseLeftButtonDown += (s, e) => Active = label.Target as TextEditor;
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName:[0])t+([1]!=0?'*':'')" };
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]!=0?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = textEditor });
 			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = textEditor });
 			label.SetBinding(Label.ContentProperty, multiBinding);
