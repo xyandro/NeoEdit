@@ -31,7 +31,6 @@ Files->Open (open all listed files)
 
 Binary:
 Fix binary editor backwards search
-Add selection length
 Modifying binary value doesn't release cursor
 Remember search history
 Search with no results never returns

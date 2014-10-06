@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -21,11 +22,17 @@ namespace NeoEdit.GUI.Common
 		static readonly string hexExp = @"#([0-9a-fA-F]{1,2})#";
 		static readonly Regex hexExpRE = new Regex(hexExp);
 
-		string GetExpression(string expression)
+		static Dictionary<string, NeoEdit.Common.Expression> expressionUsed = new Dictionary<string, NeoEdit.Common.Expression>();
+		NeoEdit.Common.Expression GetExpression(string expression)
 		{
 			if (expression == null)
 				expression = "";
-			return hexExpRE.Replace(expression, match => ((char)(Byte.Parse(match.Groups[1].Value, NumberStyles.HexNumber))).ToString());
+			if (!expressionUsed.ContainsKey(expression))
+			{
+				var nonHexExp = hexExpRE.Replace(expression, match => ((char)(Byte.Parse(match.Groups[1].Value, NumberStyles.HexNumber))).ToString());
+				expressionUsed[expression] = new NeoEdit.Common.Expression(nonHexExp);
+			}
+			return expressionUsed[expression];
 		}
 
 		delegate bool TryParseHandler<T>(string value, out T result);
@@ -126,13 +133,13 @@ namespace NeoEdit.GUI.Common
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var result = new NeoEdit.Common.Expression(GetExpression(parameter as string)).Evaluate(value);
+			var result = GetExpression(parameter as string).Evaluate(value);
 			return GetResult(result, targetType);
 		}
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var result = new NeoEdit.Common.Expression(GetExpression(parameter as string)).Evaluate(new object[] { value });
+			var result = GetExpression(parameter as string).Evaluate(new object[] { value });
 			return GetResult(result, targetType);
 		}
 
