@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -69,6 +70,8 @@ namespace NeoEdit.Common
 
 		List<Operation> operations = new List<Operation>();
 		string liveExp = null;
+		readonly string expression;
+		bool debug = false;
 
 		static readonly Regex simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|(true|false)|\b([xy])\b", RegexOptions.IgnoreCase);
 
@@ -95,6 +98,7 @@ namespace NeoEdit.Common
 
 		public Expression(string expression)
 		{
+			this.expression = expression;
 			List<object> internals;
 			SimplifyAndPopulateInternals(ref expression, out internals);
 			GetEvaluation(expression, internals);
@@ -104,8 +108,9 @@ namespace NeoEdit.Common
 		{
 			if (expression.StartsWith("!"))
 			{
-				if (System.Diagnostics.Debugger.IsAttached)
-					System.Diagnostics.Debugger.Break();
+				debug = true;
+				if (Debugger.IsAttached)
+					Debugger.Break();
 				expression = expression.Substring(1);
 			}
 
@@ -392,6 +397,9 @@ namespace NeoEdit.Common
 
 		public object Evaluate(params object[] values)
 		{
+			if ((debug) && (Debugger.IsAttached))
+				Debugger.Break();
+
 			if (liveExp != null)
 				return LiveValue(values);
 
