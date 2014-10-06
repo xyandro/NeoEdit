@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
 using NeoEdit.Common.Transform;
@@ -32,6 +34,11 @@ namespace NeoEdit
 			for (var ex2 = ex; ex2 != null; ex2 = ex2.InnerException)
 				message += ex2.Message + "\n";
 			Message.Show(message, "Error");
+#if DEBUG
+			if ((Debugger.IsAttached) && ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None))
+				System.Diagnostics.Debugger.Break();
+#endif
+
 		}
 
 		public Window GetWindowFromArgs(string[] args)
