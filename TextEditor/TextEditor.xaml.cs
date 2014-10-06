@@ -59,22 +59,14 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		public int NumSelections { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int xScrollValue { get { return uiHelper.GetPropValue<int>(); } set { value = Math.Max(0, Math.Min(xScrollMax, value)); uiHelper.SetPropValue(value); } }
+		public int xScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int yScrollValue { get { return uiHelper.GetPropValue<int>(); } set { value = Math.Max(0, Math.Min(yScrollMax, value)); uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double xScrollViewport { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public double yScrollViewport { get { return uiHelper.GetPropValue<double>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public int xScrollMax { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public int yScrollMax { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int yScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 
-		int xScrollViewportFloor { get { return (int)Math.Floor(xScrollViewport); } }
-		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScrollViewport); } }
-		int yScrollViewportFloor { get { return (int)Math.Floor(yScrollViewport); } }
-		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScrollViewport); } }
+		int xScrollViewportFloor { get { return (int)Math.Floor(xScroll.ViewportSize); } }
+		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScroll.ViewportSize); } }
+		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
+		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
 
 		new readonly TextEditorTabs Parent;
 		readonly RangeList Selections = new RangeList();
@@ -89,9 +81,9 @@ namespace NeoEdit.TextEditor
 			UIHelper<TextEditor>.AddCallback(a => a.FileName, (obj, o, n) => obj.FilenameChanged());
 			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.InvalidateRender());
 			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.InvalidateRender());
-			UIHelper<TextEditor>.AddCallback(a => a.xScrollViewport, (obj, o, n) => obj.InvalidateRender());
-			UIHelper<TextEditor>.AddCallback(a => a.yScrollViewport, (obj, o, n) => obj.InvalidateRender());
 			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.InvalidateRender());
+			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
+			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
 		readonly UIHelper<TextEditor> uiHelper;
@@ -2156,12 +2148,18 @@ namespace NeoEdit.TextEditor
 			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
 				return;
 
-			xScrollViewport = canvas.ActualWidth / charWidth;
-			xScrollMax = Data.MaxColumn - xScrollViewportFloor;
+			xScroll.ViewportSize = canvas.ActualWidth / charWidth;
+			xScroll.Minimum = 0;
+			xScroll.Maximum = Data.MaxColumn - xScrollViewportFloor;
+			xScroll.SmallChange = 1;
+			xScroll.LargeChange = Math.Max(0, xScroll.ViewportSize - 1);
 			xScrollValue = xScrollValue;
 
-			yScrollViewport = canvas.ActualHeight / lineHeight;
-			yScrollMax = Data.NumLines - yScrollViewportFloor;
+			yScroll.ViewportSize = canvas.ActualHeight / lineHeight;
+			yScroll.Minimum = 0;
+			yScroll.Maximum = Data.NumLines - yScrollViewportFloor;
+			yScroll.SmallChange = 1;
+			yScroll.LargeChange = Math.Max(0, yScroll.ViewportSize - 1);
 			yScrollValue = yScrollValue;
 
 			InvalidateRender();

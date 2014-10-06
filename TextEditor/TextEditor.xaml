@@ -21,22 +21,8 @@
 
 		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10,5" ClipToBounds="True"/>
 
-		<ScrollBar Name="yScroll" Grid.Row="0" Grid.Column="1"
-			Value="{Binding yScrollValue, ElementName=self}"
-			Minimum="0"
-			Maximum="{Binding yScrollMax, ElementName=self}"
-			ViewportSize="{Binding yScrollViewport, ElementName=self}"
-			SmallChange="1"
-			LargeChange="{Binding yScrollViewport, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
-		/>
-		<ScrollBar Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal"
-			Value="{Binding xScrollValue, ElementName=self}"
-			Minimum="0"
-			Maximum="{Binding xScrollMax, ElementName=self}"
-			ViewportSize="{Binding xScrollViewport, ElementName=self}"
-			SmallChange="1"
-			LargeChange="{Binding xScrollViewport, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=Int:x-1}"
-		/>
+		<ScrollBar Name="yScroll" Grid.Row="0" Grid.Column="1" Value="{Binding yScrollValue, ElementName=self}"/>
+		<ScrollBar Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
 
 		<StatusBar Grid.ColumnSpan="2" Grid.Row="2">
 			<StatusBarItem>
