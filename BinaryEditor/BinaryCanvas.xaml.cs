@@ -328,7 +328,7 @@ namespace NeoEdit.BinaryEditor
 			CalculateBoundaries();
 
 			var startRow = yScrollValue;
-			var endRow = startRow + yScrollViewportCeiling - 1;
+			var endRow = Math.Min(rows - 1, startRow + yScrollViewportCeiling - 1);
 
 			for (var row = startRow; row <= endRow; ++row)
 			{

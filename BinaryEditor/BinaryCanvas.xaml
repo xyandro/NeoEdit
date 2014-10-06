@@ -44,12 +44,9 @@
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
-				<TextBlock Text="Insert"/>
-			</StatusBarItem>
-			<StatusBarItem>
 				<TextBlock>
 					<TextBlock.Text>
-						<MultiBinding StringFormat="{}{0}">
+						<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] ? 'INS' : 'OVR'">
 							<Binding Path="Insert" ElementName="self"/>
 						</MultiBinding>
 					</TextBlock.Text>
