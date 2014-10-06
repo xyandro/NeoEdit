@@ -693,7 +693,7 @@ namespace NeoEdit.BinaryEditor
 			{
 				var str = ClipboardWindow.GetString();
 				if (str != null)
-					bytes = Coder.StringToBytes(str, CoderUsed);
+					bytes = Coder.TryStringToBytes(str, CoderUsed);
 			}
 			if ((bytes != null) && (bytes.Length != 0))
 				Replace(bytes);

@@ -10,7 +10,7 @@ namespace NeoEdit.BinaryEditor.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return Coder.StringToBytes(value as string, Helpers.ParseEnum<Coder.Type>(parameter as string)) != null;
+			return Coder.TryStringToBytes(value as string, Helpers.ParseEnum<Coder.Type>(parameter as string)) != null;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

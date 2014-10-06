@@ -221,7 +221,7 @@ namespace NeoEdit.Common.Transform
 
 		static Regex base64Quick = new Regex("^[\ufeff0-9a-zA-Z+/\\s=]*$");
 		static Regex base64Correct = new Regex(@"^\ufeff?((\s*[0-9a-zA-Z+/]){4})*((\s*[0-9a-zA-Z+/]){2}\s*=\s*=|(\s*[0-9a-zA-Z+/]){3}\s*=)?\s*$");
-		public static byte[] StringToBytes(string value, Type type)
+		public static byte[] TryStringToBytes(string value, Type type)
 		{
 			if (value == null)
 				value = "";
@@ -273,6 +273,14 @@ namespace NeoEdit.Common.Transform
 				return null;
 			}
 			throw new Exception("Invalid conversion");
+		}
+
+		public static byte[] StringToBytes(string value, Type type)
+		{
+			var result = TryStringToBytes(value, type);
+			if (result == null)
+				throw new Exception("Invalid conversion");
+			return result;
 		}
 
 		public static Type GuessEncoding(byte[] data)

@@ -42,7 +42,7 @@ namespace NeoEdit.BinaryEditor
 				case Key.Enter:
 					if (!IsReadOnly)
 					{
-						var data = Coder.StringToBytes(Text, Type);
+						var data = Coder.TryStringToBytes(Text, Type);
 						if (data != null)
 						{
 							Data.Replace(SelStart, data.Length, data);

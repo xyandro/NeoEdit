@@ -11,7 +11,7 @@ namespace NeoEdit.Common.UnitTest
 			if (reverse == null)
 				reverse = value;
 
-			var result = Coder.StringToBytes(value, type);
+			var result = Coder.TryStringToBytes(value, type);
 			Assert.AreEqual(result != null, expected != null);
 			if (expected == null)
 				return;
