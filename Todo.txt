@@ -31,7 +31,6 @@ Files->Open (open all listed files)
 
 Binary:
 Fix binary editor backwards search
-Modifying binary value doesn't release cursor
 Remember search history
 Search with no results never returns
 Cursor hard to see
@@ -40,3 +39,4 @@ Checksum (and possibly others) should work only on selected text
 Reload current file (perhaps automatically?)
 Keep track of whether file is edited; object on close
 Rename windows to match TextEdit
+Can't undo changes from "values" window

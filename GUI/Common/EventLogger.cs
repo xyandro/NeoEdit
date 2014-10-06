@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace NeoEdit.GUI.Common
 {
-	public static class EventLogger
+	public static class EventLogger<T>
 	{
 		static bool enabled = false, hideCanExecute;
 		public static void LogEvents(bool _hideCanExecute = true)
@@ -13,7 +13,7 @@ namespace NeoEdit.GUI.Common
 			hideCanExecute = _hideCanExecute;
 
 			foreach (var routedEvent in EventManager.GetRoutedEvents())
-				EventManager.RegisterClassHandler(typeof(EventLogger), routedEvent, new RoutedEventHandler(handler));
+				EventManager.RegisterClassHandler(typeof(T), routedEvent, new RoutedEventHandler(handler));
 		}
 
 		internal static void handler(object sender, RoutedEventArgs e)

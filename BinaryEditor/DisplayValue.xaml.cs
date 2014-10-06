@@ -40,15 +40,16 @@ namespace NeoEdit.BinaryEditor
 			switch (e.Key)
 			{
 				case Key.Enter:
-					if (!IsReadOnly)
-					{
-						var data = Coder.TryStringToBytes(Text, Type);
-						if (data != null)
-						{
-							Data.Replace(SelStart, data.Length, data);
-							++ChangeCount;
-						}
-					}
+					e.Handled = true;
+					if (IsReadOnly)
+						break;
+
+					var data = Coder.TryStringToBytes(Text, Type);
+					if (data == null)
+						break;
+
+					Data.Replace(SelStart, data.Length, data);
+					++ChangeCount;
 					break;
 			}
 		}

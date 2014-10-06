@@ -153,7 +153,7 @@ namespace NeoEdit.BinaryEditor
 				obj.undo.Clear();
 				obj.redo.Clear();
 			});
-			UIHelper<BinaryCanvas>.AddCallback(a => a.ChangeCount, (obj, o, n) => obj.canvas.InvalidateVisual());
+			UIHelper<BinaryCanvas>.AddCallback(a => a.ChangeCount, (obj, o, n) => { obj.Focus(); obj.canvas.InvalidateVisual(); });
 			UIHelper<BinaryCanvas>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
 			UIHelper<BinaryCanvas>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
@@ -346,8 +346,10 @@ namespace NeoEdit.BinaryEditor
 			{
 				case Key.Back:
 				case Key.Delete:
-					if (VerifyInsert())
 					{
+						if (!VerifyInsert())
+							break;
+
 						if (SelStart != SelEnd)
 						{
 							Replace(null);
@@ -583,6 +585,7 @@ namespace NeoEdit.BinaryEditor
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
+			Focus();
 			MouseHandler(e.GetPosition(canvas));
 			mouseDown = e.ButtonState == MouseButtonState.Pressed;
 			if (mouseDown)
