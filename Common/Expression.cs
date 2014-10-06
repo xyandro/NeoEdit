@@ -74,7 +74,7 @@ namespace NeoEdit.Common
 
 		static readonly string parenPlaceholder = "#PARENS#";
 
-		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int", "FileName", "StrFormat" };
+		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int", "Long", "FileName", "StrFormat" };
 		static readonly Regex functionRE = new Regex(String.Format(@"\b({0})\s*{1}", String.Join("|", functions), parenPlaceholder));
 		static readonly Regex functionArgsRE = new Regex(@"(\[[vir]\d+\])\s*($|,)");
 
@@ -326,7 +326,7 @@ namespace NeoEdit.Common
 			if (value is short)
 				return (double)(short)value;
 			if (value is long)
-				return (double)(int)value;
+				return (double)(long)value;
 			return double.Parse(value.ToString());
 		}
 
@@ -376,6 +376,14 @@ namespace NeoEdit.Common
 			return new Expression(expression).Evaluate();
 		}
 
+		string StrFormat(Operation.Term[] terms, object[] values, List<object> results)
+		{
+			var termVals = terms.Select(term => term.GetTerm(values, results)).ToList();
+			var format = GetString(termVals[0]);
+			var args = termVals.Skip(1).ToArray();
+			return String.Format(format, args);
+		}
+
 		object LiveValue(object[] values)
 		{
 			var expression = String.Join(liveExp, Enumerable.Range(0, values.Length).Select(a => String.Format("[{0}]", a)));
@@ -395,9 +403,10 @@ namespace NeoEdit.Common
 					case "Type": results.Add(AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(GetString(op.GetTerm(0, values, results)))).FirstOrDefault(find => find != null)); break;
 					case "ValidRE": results.Add(ValidRE(GetString(op.GetTerm(0, values, results)))); break;
 					case "Eval": results.Add(Eval(GetString(op.GetTerm(0, values, results)))); break;
-					case "Int": results.Add(Math.Floor(GetDouble(op.GetTerm(0, values, results)))); break;
+					case "Int": results.Add((int)GetDouble(op.GetTerm(0, values, results))); break;
+					case "Long": results.Add((long)GetDouble(op.GetTerm(0, values, results))); break;
 					case "FileName": results.Add(Path.GetFileName(GetString(op.GetTerm(0, values, results)))); break;
-					case "StrFormat": results.Add(String.Format(GetString(op.GetTerm(0, values, results)), Enumerable.Range(1, op.terms.Length - 1).Select(arg => op.GetTerm(arg, values, results)).ToArray())); break;
+					case "StrFormat": results.Add(StrFormat(op.terms, values, results)); break;
 					case ".": results.Add(GetDotOp(op.GetTerm(0, values, results), GetString(op.GetTerm(1, values, results)))); break;
 					case "*": results.Add(GetDouble(op.GetTerm(0, values, results)) * GetDouble(op.GetTerm(1, values, results))); break;
 					case "/": results.Add(GetDouble(op.GetTerm(0, values, results)) / GetDouble(op.GetTerm(1, values, results))); break;

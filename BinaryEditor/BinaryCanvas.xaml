@@ -35,7 +35,7 @@
 			<StatusBarItem>
 				<TextBlock>
 					<TextBlock.Text>
-						<MultiBinding StringFormat="{}{0} - {1} ({0:x8} - {1:x8})">
+						<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="{}StrFormat('{0} - {1} ({2}), {0:x8} - {1:x8} ({2:x8})', [0], [1], Long([1] - [0]))">
 							<Binding Path="SelStart" ElementName="self"/>
 							<Binding Path="SelEnd" ElementName="self"/>
 						</MultiBinding>
