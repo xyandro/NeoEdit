@@ -255,8 +255,6 @@ namespace NeoEdit.BinaryEditor
 			yScroll.ViewportSize = canvas.ActualHeight;
 		}
 
-		static Brush selectionActiveBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
-		static Brush selectionInactiveBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
 		void HighlightSelection(DrawingContext dc, long row)
 		{
 			var y = row * rowHeight - yScrollValue;
@@ -284,8 +282,8 @@ namespace NeoEdit.BinaryEditor
 
 				var count = last - first;
 
-				dc.DrawRectangle(SelHex ? selectionActiveBrush : selectionInactiveBrush, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
-				dc.DrawRectangle(SelHex ? selectionInactiveBrush : selectionActiveBrush, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
+				dc.DrawRectangle(SelHex ? Misc.selectionActiveBrush : Misc.selectionInactiveBrush, null, new Rect(GetXHexFromColumn(first) - xScrollValue, y, (count * (2 + xHexSpacing) - xHexSpacing) * charWidth, rowHeight));
+				dc.DrawRectangle(SelHex ? Misc.selectionInactiveBrush : Misc.selectionActiveBrush, null, new Rect(GetXTextFromColumn(first) - xScrollValue, y, count * charWidth, rowHeight));
 			}
 
 			var selRow = Pos1 / columns;

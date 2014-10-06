@@ -14,11 +14,11 @@ namespace NeoEdit.TextEditor
 			cursorPen.Freeze();
 		}
 
-		static public readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
-		static public readonly Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
-		static public readonly Brush markBrush = new SolidColorBrush(Color.FromArgb(178, 242, 155, 0)); //f6b94d
-		static public readonly Brush visibleCursorBrush = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
-		static public readonly Brush cursorBrush = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0));
-		static public readonly Pen cursorPen = new Pen(new SolidColorBrush(Color.FromArgb(20, 0, 0, 0)), 1);
+		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
+		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
+		static internal readonly Brush markBrush = new SolidColorBrush(Color.FromArgb(178, 242, 155, 0)); //f6b94d
+		static internal readonly Brush visibleCursorBrush = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
+		static internal readonly Brush cursorBrush = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0));
+		static internal readonly Pen cursorPen = new Pen(new SolidColorBrush(Color.FromArgb(20, 0, 0, 0)), 1);
 	}
 }
