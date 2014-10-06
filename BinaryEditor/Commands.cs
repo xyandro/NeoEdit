@@ -13,6 +13,8 @@ namespace NeoEdit.BinaryEditor
 		[Header("Open _Dump")] File_OpenDump,
 		[Header("_Save")] [KeyGesture(Key.S, ModifierKeys.Control)] File_Save,
 		[Header("Save _As")] File_SaveAs,
+		[Header("Copy _Path")] File_CopyPath,
+		[Header("Copy Name")] File_CopyName,
 		[Header("Auto")] File_Encode_Auto,
 		[Header("UTF8")] File_Encode_UTF8,
 		[Header("UTF7")] File_Encode_UTF7,

@@ -111,6 +111,8 @@ namespace NeoEdit.BinaryEditor
 				case BinaryEditCommand.File_OpenDump: Command_File_OpenDump(); break;
 				case BinaryEditCommand.File_Save: active.Command_File_Save(); break;
 				case BinaryEditCommand.File_SaveAs: active.Command_File_SaveAs(); break;
+				case BinaryEditCommand.File_CopyPath: active.Command_File_CopyPath(); break;
+				case BinaryEditCommand.File_CopyName: active.Command_File_CopyName(); break;
 				case BinaryEditCommand.File_Encode_Auto: active.Command_File_Encode(Coder.Type.None); break;
 				case BinaryEditCommand.File_Encode_UTF8: active.Command_File_Encode(Coder.Type.UTF8); break;
 				case BinaryEditCommand.File_Encode_UTF7: active.Command_File_Encode(Coder.Type.UTF7); break;

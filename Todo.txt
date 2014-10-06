@@ -35,7 +35,6 @@ Modifying binary value doesn't release cursor
 Remember search history
 Search with no results never returns
 Backspace in middle of character deletes previous character instead
-Add copy path/filename
 Cursor hard to see
 Fill selection (eg with 0s)
 Checksum (and possibly others) should work only on selected text

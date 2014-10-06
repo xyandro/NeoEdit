@@ -12,6 +12,9 @@
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Save"/>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_SaveAs"/>
 			<Separator/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_CopyPath"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_CopyName"/>
+			<Separator/>
 			<MenuItem Header="_Encoding">
 				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Auto"/>
 				<Separator/>

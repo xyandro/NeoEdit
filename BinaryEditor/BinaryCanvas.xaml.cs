@@ -632,6 +632,16 @@ namespace NeoEdit.BinaryEditor
 			Command_File_Save();
 		}
 
+		internal void Command_File_CopyPath()
+		{
+			ClipboardWindow.SetFiles(new List<string> { FileName }, false);
+		}
+
+		internal void Command_File_CopyName()
+		{
+			Clipboard.SetText(Path.GetFileName(FileName));
+		}
+
 		internal void Command_File_Encode(Coder.Type type)
 		{
 			CoderUsed = type;
