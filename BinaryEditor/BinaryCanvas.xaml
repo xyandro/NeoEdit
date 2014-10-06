@@ -17,7 +17,7 @@
 
 		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10,5" ClipToBounds="True"/>
 
-		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="0" Grid.Column="1"/>
+		<ScrollBar Name="yScroll" Maximum="10" Grid.Row="0" Grid.Column="1" Value="{Binding yScrollValue, ElementName=self}"/>
 
 		<binaryEditor:DisplayValues Grid.Row="1" Grid.ColumnSpan="2"
 			Visibility="{Binding ShowValues, ElementName=self, Converter={guiCommon:ExpressionConverter}}"
