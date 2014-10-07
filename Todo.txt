@@ -2,6 +2,7 @@ All:
 Control-N should bring up new version of current window
 Starting 2nd instance pops up in background
 Combine undo/redo logic
+Tabs: Ctrl-Tab to switch, Ctrl-T for new
 
 Disk:
 Paste filename (Address of disk viewer)
@@ -21,7 +22,6 @@ Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
-Ctrl-Tab for tab navigation
 
 Binary:
 Fix binary editor backwards search

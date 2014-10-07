@@ -57,7 +57,7 @@ namespace NeoEdit.TextEditor
 				return;
 
 			foreach (var filename in dialog.FileNames)
-				Add(new TextEditor());
+				Add(new TextEditor(filename));
 		}
 
 		void Command_File_OpenCopied()
