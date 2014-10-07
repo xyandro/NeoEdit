@@ -9,6 +9,7 @@
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_New"/>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Open"/>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_OpenDump"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="File_OpenCopied"/>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Save"/>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_SaveAs"/>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Close"/>

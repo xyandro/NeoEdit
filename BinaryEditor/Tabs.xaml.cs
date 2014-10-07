@@ -11,6 +11,7 @@ using NeoEdit.BinaryEditor.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.BinaryEditor
 {
@@ -142,6 +143,26 @@ namespace NeoEdit.BinaryEditor
 			Add(new BinaryEditor(new DumpBinaryData(dialog.FileName), filetitle: "Dump: ", filename: dialog.FileName));
 		}
 
+		void Command_File_OpenCopied()
+		{
+			var files = ClipboardWindow.GetFiles();
+			if ((files == null) || (files.Count < 0))
+				return;
+
+			if (new Message
+			{
+				Title = "Confirm",
+				Text = String.Format("Are you sure you want to open these {0} files?", files.Count),
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			foreach (var file in files)
+				Add(new BinaryEditor(new MemoryBinaryData(File.ReadAllBytes(file)), filename: file));
+		}
+
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			var active = Active;
@@ -166,6 +187,7 @@ namespace NeoEdit.BinaryEditor
 				case BinaryEditCommand.File_New: Command_File_New(); break;
 				case BinaryEditCommand.File_Open: Command_File_Open(); break;
 				case BinaryEditCommand.File_OpenDump: Command_File_OpenDump(); break;
+				case BinaryEditCommand.File_OpenCopied: Command_File_OpenCopied(); break;
 				case BinaryEditCommand.File_Exit: Close(); break;
 				case BinaryEditCommand.Edit_ShowClipboard: ClipboardWindow.Show(); break;
 				case BinaryEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
