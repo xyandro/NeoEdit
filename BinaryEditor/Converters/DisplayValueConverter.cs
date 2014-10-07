@@ -28,7 +28,7 @@ namespace NeoEdit.BinaryEditor.Converters
 				var selStart = (long)value[1];
 				var selEnd = (long)value[2];
 				if (selStart > selEnd)
-					return new Exception();
+					return "Invalid";
 				var encoding = (Coder.Type)value[4];
 
 				long count = encoding.BytesRequired();
