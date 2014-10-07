@@ -202,6 +202,12 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_SHA1_UTF16BE: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF16BE); break;
 				case TextEditCommand.Data_SHA1_UTF32LE: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF32LE); break;
 				case TextEditCommand.Data_SHA1_UTF32BE: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF32BE); break;
+				case TextEditCommand.Data_SHA256_UTF8: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF8); break;
+				case TextEditCommand.Data_SHA256_UTF7: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF7); break;
+				case TextEditCommand.Data_SHA256_UTF16LE: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF16LE); break;
+				case TextEditCommand.Data_SHA256_UTF16BE: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF16BE); break;
+				case TextEditCommand.Data_SHA256_UTF32LE: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF32LE); break;
+				case TextEditCommand.Data_SHA256_UTF32BE: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF32BE); break;
 				case TextEditCommand.Sort_String: Active.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.String); break;
 				case TextEditCommand.Sort_Numeric: Active.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Numeric); break;
 				case TextEditCommand.Sort_Keys: Active.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Keys); break;

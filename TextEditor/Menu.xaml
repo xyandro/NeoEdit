@@ -155,6 +155,14 @@
 				<textEditor:TextEditMenuItem CommandEnum="Data_SHA1_UTF32LE"/>
 				<textEditor:TextEditMenuItem CommandEnum="Data_SHA1_UTF32BE"/>
 			</MenuItem>
+			<MenuItem Header="SHA_256">
+				<textEditor:TextEditMenuItem CommandEnum="Data_SHA256_UTF8"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_SHA256_UTF7"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_SHA256_UTF16LE"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_SHA256_UTF16BE"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_SHA256_UTF32LE"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_SHA256_UTF32BE"/>
+			</MenuItem>
 		</MenuItem>
 		<MenuItem Header="S_ort">
 			<textEditor:TextEditMenuItem CommandEnum="Sort_String"/>
