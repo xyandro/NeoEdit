@@ -26,12 +26,12 @@ Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
 Ctrl-Tab for tab navigation
 Files->Open (open all listed files)
+Add SHA256 (Binary has it)
 
 Binary:
 Fix binary editor backwards search
 Remember search history
 Cursor hard to see
 Fill selection (eg with 0s)
-Checksum (and possibly others) should work only on selected text
 Reload current file (perhaps automatically?)
 Keep track of whether file is edited; object on close

@@ -785,10 +785,15 @@ namespace NeoEdit.BinaryEditor
 
 		internal void Command_Checksum(Checksum.Type type)
 		{
+			byte[] data;
+			if (Length == 0)
+				data = Data.GetAllBytes();
+			else
+				data = Data.GetSubset(SelStart, Length);
 			new Message
 			{
 				Title = "Result",
-				Text = Checksum.Get(type, Data.GetAllBytes()),
+				Text = Checksum.Get(type, data),
 				Options = Message.OptionsEnum.Ok
 			}.Show();
 		}
