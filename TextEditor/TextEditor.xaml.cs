@@ -137,7 +137,7 @@ namespace NeoEdit.TextEditor
 
 		internal void HandleMouseWheel(int delta)
 		{
-			yScrollValue -= delta * yScrollViewportFloor / 480;
+			yScrollValue -= delta / 40;
 		}
 
 		internal Label GetLabel()
