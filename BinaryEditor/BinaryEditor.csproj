@@ -66,8 +66,8 @@
     <Compile Include="Dialogs\AsymmetricKeyDialog.xaml.cs">
       <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BinaryCanvas.xaml.cs">
-      <DependentUpon>BinaryCanvas.xaml</DependentUpon>
+    <Compile Include="BinaryEditor.xaml.cs">
+      <DependentUpon>BinaryEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ValidValueConverter.cs" />
     <Compile Include="Dialogs\FindDialog.xaml.cs">
@@ -80,7 +80,7 @@
     <Compile Include="DisplayValues.xaml.cs">
       <DependentUpon>DisplayValues.xaml</DependentUpon>
     </Compile>
-    <Page Include="BinaryCanvas.xaml">
+    <Page Include="BinaryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -104,12 +104,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BinaryEditorWindow.xaml">
+    <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="BinaryEditorWindow.xaml.cs">
-      <DependentUpon>BinaryEditorWindow.xaml</DependentUpon>
+    <Compile Include="Tabs.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

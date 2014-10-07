@@ -11,14 +11,14 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor
 {
-	public partial class BinaryEditorWindow
+	public partial class BinaryEditorTabs
 	{
-		static BinaryEditorWindow() { UIHelper<BinaryEditorWindow>.Register(); }
+		static BinaryEditorTabs() { UIHelper<BinaryEditorTabs>.Register(); }
 
-		readonly UIHelper<BinaryEditorWindow> uiHelper;
-		BinaryEditorWindow(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null)
+		readonly UIHelper<BinaryEditorTabs> uiHelper;
+		BinaryEditorTabs(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null)
 		{
-			uiHelper = new UIHelper<BinaryEditorWindow>(this);
+			uiHelper = new UIHelper<BinaryEditorTabs>(this);
 			BinaryEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 
@@ -27,7 +27,7 @@ namespace NeoEdit.BinaryEditor
 			MouseWheel += (s, e) => active.HandleMouseWheel(e.Delta);
 		}
 
-		public static BinaryEditorWindow CreateFromFile(string filename = null, byte[] bytes = null, Coder.Type encoder = Coder.Type.None)
+		public static BinaryEditorTabs CreateFromFile(string filename = null, byte[] bytes = null, Coder.Type encoder = Coder.Type.None)
 		{
 			if (bytes == null)
 			{
@@ -36,22 +36,22 @@ namespace NeoEdit.BinaryEditor
 				else
 					bytes = File.ReadAllBytes(filename);
 			}
-			return new BinaryEditorWindow(new MemoryBinaryData(bytes), encoder, filename);
+			return new BinaryEditorTabs(new MemoryBinaryData(bytes), encoder, filename);
 		}
 
-		public static BinaryEditorWindow CreateFromDump(string filename)
+		public static BinaryEditorTabs CreateFromDump(string filename)
 		{
-			return new BinaryEditorWindow(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ");
+			return new BinaryEditorTabs(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ");
 		}
 
-		public static BinaryEditorWindow CreateFromProcess(int pid)
+		public static BinaryEditorTabs CreateFromProcess(int pid)
 		{
 			var process = Process.GetProcessById(pid);
 			if (process == null)
 				throw new ArgumentException("Process doesn't exist.");
 			if (process.Id == Process.GetCurrentProcess().Id)
 				throw new ArgumentException("Can't open current process.");
-			return new BinaryEditorWindow(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName));
+			return new BinaryEditorTabs(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName));
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)

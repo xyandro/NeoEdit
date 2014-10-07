@@ -1,4 +1,4 @@
-﻿<Window Name="self" x:Class="NeoEdit.BinaryEditor.BinaryEditorWindow"
+﻿<Window Name="self" x:Class="NeoEdit.BinaryEditor.BinaryEditorTabs"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:binaryEditor="clr-namespace:NeoEdit.BinaryEditor"
@@ -30,7 +30,7 @@
 
 		<StaticResource ResourceKey="BinaryEditorMenu"/>
 
-		<binaryEditor:BinaryCanvas x:Name="active" Grid.Row="1"/>
+		<binaryEditor:BinaryEditor x:Name="active" Grid.Row="1"/>
 	</Grid>
 
 </Window>

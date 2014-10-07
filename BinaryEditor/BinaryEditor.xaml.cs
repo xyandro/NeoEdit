@@ -18,7 +18,7 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.BinaryEditor
 {
-	partial class BinaryCanvas
+	partial class BinaryEditor
 	{
 		[DepProp]
 		public string FileTitle { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -128,12 +128,12 @@ namespace NeoEdit.BinaryEditor
 		readonly Typeface typeface;
 		readonly double fontSize;
 
-		class BinaryCanvasUndoRedo
+		class BinaryEditorUndoRedo
 		{
 			public long index, count;
 			public byte[] bytes;
 
-			public BinaryCanvasUndoRedo(long _position, long _length, byte[] _bytes)
+			public BinaryEditorUndoRedo(long _position, long _length, byte[] _bytes)
 			{
 				index = _position;
 				count = _length;
@@ -141,27 +141,27 @@ namespace NeoEdit.BinaryEditor
 			}
 		}
 
-		List<BinaryCanvasUndoRedo> undo = new List<BinaryCanvasUndoRedo>();
-		List<BinaryCanvasUndoRedo> redo = new List<BinaryCanvasUndoRedo>();
+		List<BinaryEditorUndoRedo> undo = new List<BinaryEditorUndoRedo>();
+		List<BinaryEditorUndoRedo> redo = new List<BinaryEditorUndoRedo>();
 
-		static BinaryCanvas()
+		static BinaryEditor()
 		{
-			UIHelper<BinaryCanvas>.Register();
-			UIHelper<BinaryCanvas>.AddCallback(a => a.Data, (obj, o, n) =>
+			UIHelper<BinaryEditor>.Register();
+			UIHelper<BinaryEditor>.AddCallback(a => a.Data, (obj, o, n) =>
 			{
 				obj.canvas.InvalidateVisual();
 				obj.undo.Clear();
 				obj.redo.Clear();
 			});
-			UIHelper<BinaryCanvas>.AddCallback(a => a.ChangeCount, (obj, o, n) => { obj.Focus(); obj.canvas.InvalidateVisual(); });
-			UIHelper<BinaryCanvas>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
-			UIHelper<BinaryCanvas>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
+			UIHelper<BinaryEditor>.AddCallback(a => a.ChangeCount, (obj, o, n) => { obj.Focus(); obj.canvas.InvalidateVisual(); });
+			UIHelper<BinaryEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
+			UIHelper<BinaryEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		readonly UIHelper<BinaryCanvas> uiHelper;
-		public BinaryCanvas()
+		readonly UIHelper<BinaryEditor> uiHelper;
+		public BinaryEditor()
 		{
-			uiHelper = new UIHelper<BinaryCanvas>(this);
+			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
 
 			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#Anonymous Pro");
@@ -173,8 +173,8 @@ namespace NeoEdit.BinaryEditor
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 
-			UIHelper<BinaryCanvas>.AddCallback(canvas, Canvas.ActualWidthProperty, () => canvas.InvalidateVisual());
-			UIHelper<BinaryCanvas>.AddCallback(canvas, Canvas.ActualHeightProperty, () => { EnsureVisible(Pos1); canvas.InvalidateVisual(); });
+			UIHelper<BinaryEditor>.AddCallback(canvas, Canvas.ActualWidthProperty, () => canvas.InvalidateVisual());
+			UIHelper<BinaryEditor>.AddCallback(canvas, Canvas.ActualHeightProperty, () => { EnsureVisible(Pos1); canvas.InvalidateVisual(); });
 
 			canvas.MouseLeftButtonDown += OnCanvasMouseLeftButtonDown;
 			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonDown;
@@ -445,7 +445,7 @@ namespace NeoEdit.BinaryEditor
 		}
 
 		const int maxUndoBytes = 1048576 * 10;
-		void AddUndoRedo(BinaryCanvasUndoRedo current, ReplaceType replaceType)
+		void AddUndoRedo(BinaryEditorUndoRedo current, ReplaceType replaceType)
 		{
 			switch (replaceType)
 			{
@@ -511,7 +511,7 @@ namespace NeoEdit.BinaryEditor
 
 		void Replace(long index, long count, byte[] bytes, ReplaceType replaceType = ReplaceType.Normal)
 		{
-			AddUndoRedo(new BinaryCanvasUndoRedo(index, bytes.Length, Data.GetSubset(index, count)), replaceType);
+			AddUndoRedo(new BinaryEditorUndoRedo(index, bytes.Length, Data.GetSubset(index, count)), replaceType);
 			Data.Replace(index, count, bytes);
 			++ChangeCount;
 		}

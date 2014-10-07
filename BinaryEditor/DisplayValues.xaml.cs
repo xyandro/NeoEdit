@@ -7,7 +7,7 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayValues : StackPanel
 	{
 		[DepProp]
-		public BinaryCanvas ParentWindow { get { return uiHelper.GetPropValue<BinaryCanvas>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryEditor ParentWindow { get { return uiHelper.GetPropValue<BinaryEditor>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool ShowLE { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]

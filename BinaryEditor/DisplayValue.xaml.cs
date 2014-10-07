@@ -9,7 +9,7 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayValue : TextBox
 	{
 		[DepProp]
-		public BinaryCanvas ParentWindow { get { return uiHelper.GetPropValue<BinaryCanvas>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryEditor ParentWindow { get { return uiHelper.GetPropValue<BinaryEditor>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public Coder.Type Type { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 

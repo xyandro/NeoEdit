@@ -98,21 +98,21 @@ namespace NeoEdit
 									throw new ArgumentException("Invalid file.");
 							}
 
-							return BinaryEditorWindow.CreateFromFile(filename);
+							return BinaryEditorTabs.CreateFromFile(filename);
 						}
 					case "binarypid":
 						{
 							if (args.Length < 2)
 								throw new ArgumentException("Not enough parameters.");
 
-							return BinaryEditorWindow.CreateFromProcess(Convert.ToInt32(args[1]));
+							return BinaryEditorTabs.CreateFromProcess(Convert.ToInt32(args[1]));
 						}
 					case "binarydump":
 						{
 							if (args.Length < 2)
 								throw new ArgumentException("Not enough parameters.");
 
-							return BinaryEditorWindow.CreateFromDump(args[1]);
+							return BinaryEditorTabs.CreateFromDump(args[1]);
 						}
 					case "process":
 					case "processes":
@@ -170,8 +170,8 @@ namespace NeoEdit
 			NeoEdit.GUI.Launcher.Initialize(
 				systemInfo: () => new SystemInfoWindow(),
 				textEditor: (filename, bytes, encoding) => new TextEditorTabs(filename, bytes, encoding),
-				fileBinaryEditor: (filename, binarydata, encoder) => BinaryEditorWindow.CreateFromFile(filename, binarydata, encoder),
-				processBinaryEditor: (pid) => BinaryEditorWindow.CreateFromProcess(pid),
+				fileBinaryEditor: (filename, binarydata, encoder) => BinaryEditorTabs.CreateFromFile(filename, binarydata, encoder),
+				processBinaryEditor: (pid) => BinaryEditorTabs.CreateFromProcess(pid),
 				disk: () => new DiskWindow(),
 				processes: (pid) => new ProcessesWindow(pid),
 				handles: (pid) => new HandlesWindow(pid),

@@ -35,4 +35,3 @@ Fill selection (eg with 0s)
 Checksum (and possibly others) should work only on selected text
 Reload current file (perhaps automatically?)
 Keep track of whether file is edited; object on close
-Rename windows to match TextEdit
