@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
@@ -375,37 +374,17 @@ namespace NeoEdit.TextEditor
 			shiftOverride = null;
 		}
 
-		Label GetLabel(TextEditor textEditor, bool tile)
+		Label GetLabel(TextEditor textEditor)
 		{
 			var label = new Label
 			{
-				Background = textEditor == Active ? Brushes.LightBlue : Brushes.LightGray,
 				Padding = new Thickness(10, 2, 10, 2),
-				Margin = new Thickness(0, 0, tile ? 0 : 2, 1),
 				Target = textEditor,
-				AllowDrop = true,
 			};
-			label.MouseLeftButtonDown += (s, e) => Active = label.Target as TextEditor;
 			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]!=0?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = textEditor });
 			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = textEditor });
 			label.SetBinding(Label.ContentProperty, multiBinding);
-
-			label.MouseMove += (s, e) =>
-			{
-				if (e.LeftButton == MouseButtonState.Pressed)
-					DragDrop.DoDragDrop(label, new DataObject(typeof(TextEditorTabs), label), DragDropEffects.Move);
-			};
-
-			label.Drop += (s, e) =>
-			{
-				var editor = (e.Data.GetData(typeof(TextEditorTabs)) as Label).Target as TextEditor;
-				var fromIndex = TextEditors.IndexOf(editor);
-				var toIndex = TextEditors.IndexOf((s as Label).Target as TextEditor);
-				TextEditors.RemoveAt(fromIndex);
-				TextEditors.Insert(toIndex, editor);
-				Active = editor;
-			};
 
 			return label;
 		}

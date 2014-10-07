@@ -24,7 +24,7 @@ namespace NeoEdit.GUI.Common
 		[DepProp]
 		public ViewType View { get { return uiHelper.GetPropValue<ViewType>(); } set { uiHelper.SetPropValue(value); } }
 
-		public Func<ItemType, bool, Label> GetLabel { get; set; }
+		public Func<ItemType, Label> GetLabel { get; set; }
 
 		static Tabs()
 		{
@@ -46,7 +46,7 @@ namespace NeoEdit.GUI.Common
 			Background = Brushes.Gray;
 		}
 
-		protected virtual Label DefaultGetLabel(ItemType item, bool tile)
+		protected virtual Label DefaultGetLabel(ItemType item)
 		{
 			return new Label { Content = "Title" };
 		}
@@ -134,6 +134,33 @@ namespace NeoEdit.GUI.Common
 			base.OnPreviewMouseLeftButtonDown(e);
 		}
 
+		Label GetMovableLabel(ItemType item, bool tiled)
+		{
+			var label = GetLabel(item);
+			label.Margin = new Thickness(0, 0, tiled ? 0 : 2, 1);
+			label.Background = item == Active ? Brushes.LightBlue : Brushes.LightGray;
+			label.AllowDrop = true;
+			label.MouseLeftButtonDown += (s, e) => Active = label.Target as ItemType;
+
+			label.MouseMove += (s, e) =>
+			{
+				if (e.LeftButton == MouseButtonState.Pressed)
+					DragDrop.DoDragDrop(label, new DataObject(typeof(ItemType), label), DragDropEffects.Move);
+			};
+
+			label.Drop += (s, e) =>
+			{
+				var editor = (e.Data.GetData(typeof(ItemType)) as Label).Target as ItemType;
+				var fromIndex = Items.IndexOf(editor);
+				var toIndex = Items.IndexOf((s as Label).Target as ItemType);
+				Items.RemoveAt(fromIndex);
+				Items.Insert(toIndex, editor);
+				Active = editor;
+			};
+
+			return label;
+		}
+
 		void Layout()
 		{
 			Children.Clear();
@@ -177,7 +204,7 @@ namespace NeoEdit.GUI.Common
 				var column = count % columns * 2;
 				var row = count / columns * 3;
 
-				var label = GetLabel(item, true);
+				var label = GetMovableLabel(item, true);
 				SetColumn(label, column);
 				SetRow(label, row);
 				Children.Add(label);
@@ -198,7 +225,7 @@ namespace NeoEdit.GUI.Common
 
 			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 			foreach (var item in Items)
-				stackPanel.Children.Add(GetLabel(item, false));
+				stackPanel.Children.Add(GetMovableLabel(item, false));
 			SetRow(stackPanel, 0);
 			Children.Add(stackPanel);
 
