@@ -743,7 +743,7 @@ namespace NeoEdit.BinaryEditor
 			Pos1 = Pos2 = step.index + step.bytes.Length;
 		}
 
-		internal void Command_Edit_Copy(BinaryEditCommand command)
+		internal void Command_Edit_Copy(bool isCut)
 		{
 			if (SelStart == SelEnd)
 				return;
@@ -760,7 +760,7 @@ namespace NeoEdit.BinaryEditor
 				str = sb.ToString();
 			}
 			ClipboardWindow.Set(bytes, str);
-			if ((command == BinaryEditCommand.Edit_Cut) && (Insert))
+			if ((isCut) && (Insert))
 				Replace(null);
 		}
 
@@ -789,9 +789,9 @@ namespace NeoEdit.BinaryEditor
 			}
 		}
 
-		internal void Command_Edit_FindPrev(BinaryEditCommand command)
+		internal void Command_Edit_FindNextPrev(bool forward)
 		{
-			DoFind(command == BinaryEditCommand.Edit_FindNext);
+			DoFind(forward);
 		}
 
 		internal void Command_Edit_Goto()

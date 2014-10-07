@@ -192,10 +192,12 @@ namespace NeoEdit.BinaryEditor
 				case BinaryEditCommand.File_TextEditor: Launcher.Static.LaunchTextEditor(Active.FileName, Active.Data.GetAllBytes(), Active.CoderUsed); Close(); break;
 				case BinaryEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
 				case BinaryEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;
-				case BinaryEditCommand.Edit_Copy: Active.Command_Edit_Copy(command); break;
+				case BinaryEditCommand.Edit_Cut: Active.Command_Edit_Copy(true); break;
+				case BinaryEditCommand.Edit_Copy: Active.Command_Edit_Copy(false); break;
 				case BinaryEditCommand.Edit_Paste: Active.Command_Edit_Paste(); break;
 				case BinaryEditCommand.Edit_Find: Active.Command_Edit_Find(); break;
-				case BinaryEditCommand.Edit_FindPrev: Active.Command_Edit_FindPrev(command); break;
+				case BinaryEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true); break;
+				case BinaryEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false); break;
 				case BinaryEditCommand.Edit_Goto: Active.Command_Edit_Goto(); break;
 				case BinaryEditCommand.Edit_Insert: Active.Command_Edit_Insert(); break;
 				case BinaryEditCommand.View_Values: Active.Command_View_Values(); break;
