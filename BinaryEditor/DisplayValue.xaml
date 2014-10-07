@@ -9,17 +9,17 @@
 	<TextBox.Background>
 		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] ti== [1] ? 'LightBlue' : 'Transparent'">
 			<Binding Path="Text" ElementName="self"/>
-			<Binding Path="FoundText" ElementName="self"/>
+			<Binding Path="ParentWindow.FoundText" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Background>
 
 	<TextBox.Text>
 		<MultiBinding Converter="{binaryEditorConverters:DisplayValueConverter}" Mode="OneWay">
-			<Binding Path="Data" ElementName="self"/>
-			<Binding Path="SelStart" ElementName="self"/>
-			<Binding Path="SelEnd" ElementName="self"/>
+			<Binding Path="ParentWindow.Data" ElementName="self"/>
+			<Binding Path="ParentWindow.SelStart" ElementName="self"/>
+			<Binding Path="ParentWindow.SelEnd" ElementName="self"/>
+			<Binding Path="ParentWindow.ChangeCount" ElementName="self"/>
 			<Binding Path="Type" ElementName="self"/>
-			<Binding Path="ChangeCount" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Text>
 </TextBox>

@@ -7,13 +7,7 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayValues : StackPanel
 	{
 		[DepProp]
-		internal BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryCanvas ParentWindow { get { return uiHelper.GetPropValue<BinaryCanvas>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool ShowLE { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -24,8 +18,6 @@ namespace NeoEdit.BinaryEditor
 		public bool ShowFloat { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool ShowStr { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
 		static DisplayValues() { UIHelper<DisplayValues>.Register(); }
 

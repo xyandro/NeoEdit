@@ -516,6 +516,15 @@ namespace NeoEdit.BinaryEditor
 			++ChangeCount;
 		}
 
+		internal void DisplayValuesReplace(byte[] bytes)
+		{
+			var useLen = (int)Math.Min(bytes.Length, Data.Length - SelStart);
+			if (Length > 0)
+				useLen = (int)Math.Min(Length, useLen);
+			Array.Resize(ref bytes, useLen);
+			Replace(SelStart, useLen, bytes);
+		}
+
 		public void HandleText(string str)
 		{
 			if ((String.IsNullOrEmpty(str)) || (str == "\u001B"))

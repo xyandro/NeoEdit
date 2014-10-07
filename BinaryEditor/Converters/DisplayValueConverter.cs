@@ -29,7 +29,7 @@ namespace NeoEdit.BinaryEditor.Converters
 				var selEnd = (long)value[2];
 				if (selStart > selEnd)
 					return new Exception();
-				var encoding = (Coder.Type)value[3];
+				var encoding = (Coder.Type)value[4];
 
 				long count = encoding.BytesRequired();
 				if (count == -1)

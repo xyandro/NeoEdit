@@ -1,9 +1,7 @@
 All:
 Control-N should bring up new version of current window
 Starting 2nd instance pops up in background
-Coder: Add try (return bool), normal (throws on failure)
 Combine undo/redo logic
-Make functions support multiple parameters (standard func(a,b,c))
 
 Disk:
 Paste filename (Address of disk viewer)
@@ -39,4 +37,3 @@ Checksum (and possibly others) should work only on selected text
 Reload current file (perhaps automatically?)
 Keep track of whether file is edited; object on close
 Rename windows to match TextEdit
-Can't undo changes from "values" window

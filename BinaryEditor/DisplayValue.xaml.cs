@@ -9,15 +9,7 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayValue : TextBox
 	{
 		[DepProp]
-		internal BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
-		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryCanvas ParentWindow { get { return uiHelper.GetPropValue<BinaryCanvas>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public Coder.Type Type { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -40,16 +32,17 @@ namespace NeoEdit.BinaryEditor
 			switch (e.Key)
 			{
 				case Key.Enter:
-					e.Handled = true;
-					if (IsReadOnly)
-						break;
+					{
+						e.Handled = true;
+						if (IsReadOnly)
+							break;
 
-					var data = Coder.TryStringToBytes(Text, Type);
-					if (data == null)
-						break;
+						var data = Coder.TryStringToBytes(Text, Type);
+						if (data == null)
+							break;
 
-					Data.Replace(SelStart, data.Length, data);
-					++ChangeCount;
+						ParentWindow.DisplayValuesReplace(data);
+					}
 					break;
 			}
 		}
