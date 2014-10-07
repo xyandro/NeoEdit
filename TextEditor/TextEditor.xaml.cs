@@ -498,7 +498,7 @@ namespace NeoEdit.TextEditor
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.First();
-				if ((sel.HasSelection()) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = GetString(sel);
@@ -939,9 +939,8 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Data_Length()
 		{
-			var selections = Selections.Where(range => range.HasSelection()).ToList();
-			var strs = selections.Select(range => GetString(range).Length.ToString()).ToList();
-			Replace(selections, strs, true);
+			var strs = Selections.Select(range => GetString(range).Length.ToString()).ToList();
+			Replace(Selections, strs, true);
 		}
 
 		internal void Command_Data_Width()
@@ -1496,6 +1495,8 @@ namespace NeoEdit.TextEditor
 
 			foreach (var entry in brushes)
 			{
+				var hasSelection = entry.Item1.Any(range => range.HasSelection());
+
 				foreach (var range in entry.Item1)
 				{
 					if ((range.End < screenStart) || (range.Start > screenEnd))
@@ -1507,7 +1508,7 @@ namespace NeoEdit.TextEditor
 					entryStartLine = Math.Max(startLine, entryStartLine);
 					entryEndLine = Math.Min(endLine, entryEndLine + 1);
 
-					if ((entry.Item1 == Selections) && (!range.HasSelection()) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
+					if ((entry.Item1 == Selections) && (!hasSelection) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
 						if (range == visibleCursor)
 							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, lineHeight));
@@ -1597,15 +1598,15 @@ namespace NeoEdit.TextEditor
 					case Key.Back:
 					case Key.Delete:
 						{
+							if (Selections.Any(range => range.HasSelection()))
+							{
+								Replace(Selections, null, false);
+								break;
+							}
+
 							var selections = new RangeList();
 							foreach (var range in Selections)
 							{
-								if (range.HasSelection())
-								{
-									selections.Add(range);
-									continue;
-								}
-
 								var offset = range.Start;
 
 								if (controlDown)
@@ -1654,13 +1655,14 @@ namespace NeoEdit.TextEditor
 						break;
 					case Key.Left:
 						{
+							var hasSelection = Selections.Any(range => range.HasSelection());
 							for (var ctr = 0; ctr < Selections.Count; ++ctr)
 							{
 								var line = Data.GetOffsetLine(Selections[ctr].Cursor);
 								var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
 								if (controlDown)
 									Selections[ctr] = MoveCursor(Selections[ctr], GetPrevWord(Selections[ctr].Cursor));
-								else if ((!shiftDown) && (Selections[ctr].HasSelection()))
+								else if ((!shiftDown) && (hasSelection))
 									Selections[ctr] = new Range(Selections[ctr].Start);
 								else if ((index == 0) && (line != 0))
 									Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, indexRel: false);
@@ -1671,13 +1673,14 @@ namespace NeoEdit.TextEditor
 						break;
 					case Key.Right:
 						{
+							var hasSelection = Selections.Any(range => range.HasSelection());
 							for (var ctr = 0; ctr < Selections.Count; ++ctr)
 							{
 								var line = Data.GetOffsetLine(Selections[ctr].Cursor);
 								var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
 								if (controlDown)
 									Selections[ctr] = MoveCursor(Selections[ctr], GetNextWord(Selections[ctr].Cursor));
-								else if ((!shiftDown) && (Selections[ctr].HasSelection()))
+								else if ((!shiftDown) && (hasSelection))
 									Selections[ctr] = new Range(Selections[ctr].End);
 								else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
 									Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, indexRel: false);
