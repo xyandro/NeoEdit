@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
     xmlns:binaryEditor="clr-namespace:NeoEdit.BinaryEditor"
-	Focusable="True" FocusVisualStyle="{x:Null}" FocusManager.FocusedElement="{Binding ElementName=self}">
+	Focusable="True" FocusVisualStyle="{x:Null}" FocusManager.FocusedElement="{Binding ElementName=self}" Background="White">
 
 	<Grid>
 		<Grid.ColumnDefinitions>

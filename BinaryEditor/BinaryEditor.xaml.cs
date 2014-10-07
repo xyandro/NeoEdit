@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
@@ -159,7 +160,7 @@ namespace NeoEdit.BinaryEditor
 		}
 
 		readonly UIHelper<BinaryEditor> uiHelper;
-		public BinaryEditor()
+		public BinaryEditor(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null)
 		{
 			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
@@ -181,6 +182,13 @@ namespace NeoEdit.BinaryEditor
 			canvas.MouseMove += OnCanvasMouseMove;
 			canvas.Render += OnCanvasRender;
 
+			Data = data;
+			CoderUsed = encoder;
+			if (CoderUsed == Coder.Type.None)
+				CoderUsed = Data.GuessEncoding();
+			FileName = filename;
+			FileTitle = filetitle;
+
 			Loaded += (s, e) =>
 			{
 				canvas.InvalidateVisual();
@@ -188,14 +196,15 @@ namespace NeoEdit.BinaryEditor
 			};
 		}
 
-		internal void SetData(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null)
+		internal Label GetLabel()
 		{
-			Data = data;
-			CoderUsed = encoder;
-			if (CoderUsed == Coder.Type.None)
-				CoderUsed = Data.GuessEncoding();
-			FileName = filename;
-			FileTitle = filetitle;
+			var label = new Label
+			{
+				Padding = new Thickness(10, 2, 10, 2),
+				Target = this,
+			};
+			label.SetBinding(Label.ContentProperty, new Binding("FileName") { Source = this, Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))" });
+			return label;
 		}
 
 		void EnsureVisible(long position)

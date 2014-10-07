@@ -3,9 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.Common.Transform;
@@ -39,7 +37,7 @@ namespace NeoEdit.TextEditor
 			InitializeComponent();
 
 			TextEditors = new ObservableCollection<TextEditor>();
-			TextEditors.Add(new TextEditor(this, filename, bytes, encoding, line, column));
+			Add(new TextEditor(this, filename, bytes, encoding, line, column));
 
 			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
 		}
@@ -106,6 +104,8 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.File_New: Add(new TextEditor(this)); break;
 				case TextEditCommand.File_Open: Command_File_Open(); break;
 				case TextEditCommand.File_OpenCopied: Command_File_OpenCopied(); break;
+				case TextEditCommand.File_Exit: Close(); break;
+				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
 
 			if (Active == null)
@@ -133,7 +133,6 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.File_Encoding_Base64: Active.CoderUsed = Coder.Type.Base64; break;
 				case TextEditCommand.File_BOM: Active.Command_File_BOM(); break;
 				case TextEditCommand.File_BinaryEditor: Active.Command_File_BinaryEditor(); Active.Close(); TextEditors.Remove(Active); if (TextEditors.Count == 0) Close(); break;
-				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;
 				case TextEditCommand.Edit_Cut: Active.Command_Edit_CutCopy(true); break;
@@ -318,7 +317,6 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.View_Highlighting_None: Active.HighlightType = Highlighting.HighlightingType.None; break;
 				case TextEditCommand.View_Highlighting_CSharp: Active.HighlightType = Highlighting.HighlightingType.CSharp; break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: Active.HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
-				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
 
 			shiftOverride = null;
@@ -376,17 +374,7 @@ namespace NeoEdit.TextEditor
 
 		Label GetLabel(TextEditor textEditor)
 		{
-			var label = new Label
-			{
-				Padding = new Thickness(10, 2, 10, 2),
-				Target = textEditor,
-			};
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]!=0?'*':'')" };
-			multiBinding.Bindings.Add(new Binding("FileName") { Source = textEditor });
-			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = textEditor });
-			label.SetBinding(Label.ContentProperty, multiBinding);
-
-			return label;
+			return textEditor.GetLabel();
 		}
 	}
 }

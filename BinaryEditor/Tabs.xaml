@@ -14,8 +14,8 @@
 
 	<Window.Title>
 		<MultiBinding StringFormat="{}{0}{1} - NeoEdit Binary Editor">
-			<Binding Path="FileTitle" ElementName="active"/>
-			<Binding Path="FileName" ElementName="active"/>
+			<Binding Path="Active.FileTitle" ElementName="self"/>
+			<Binding Path="Active.FileName" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>
 
@@ -30,7 +30,11 @@
 
 		<StaticResource ResourceKey="BinaryEditorMenu"/>
 
-		<binaryEditor:BinaryEditor x:Name="active" Grid.Row="1"/>
+		<binaryEditor:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" GetLabel="GetLabel" VerticalAlignment="Stretch"
+			Items="{Binding BinaryEditors, ElementName=self, Mode=TwoWay}"
+			Active="{Binding Active, ElementName=self, Mode=TwoWay}"
+			View="{Binding View, ElementName=self, Mode=TwoWay}"
+		/>
 	</Grid>
 
 </Window>

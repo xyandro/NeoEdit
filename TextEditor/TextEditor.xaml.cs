@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -137,6 +138,21 @@ namespace NeoEdit.TextEditor
 		internal void HandleMouseWheel(int delta)
 		{
 			yScrollValue -= delta * yScrollViewportFloor / 480;
+		}
+
+		internal Label GetLabel()
+		{
+			var label = new Label
+			{
+				Padding = new Thickness(10, 2, 10, 2),
+				Target = this,
+			};
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]!=0?'*':'')" };
+			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
+			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = this });
+			label.SetBinding(Label.ContentProperty, multiBinding);
+
+			return label;
 		}
 
 		FileSystemWatcher watcher;
