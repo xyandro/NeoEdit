@@ -471,15 +471,21 @@ namespace NeoEdit.TextEditor
 			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
 				return;
 
-			var multiPaste = (Selections.Count == 1) && (clipboardStrings.Count != 1);
-			if ((!multiPaste) && (Selections.Count != clipboardStrings.Count))
-				throw new Exception("You may have either 1 or the number copied selections.");
-
-			if (!multiPaste)
+			if (Selections.Count == clipboardStrings.Count)
 			{
 				Replace(Selections, clipboardStrings, false);
 				return;
 			}
+
+			if (clipboardStrings.Count == 1)
+			{
+				clipboardStrings = Selections.Select(str => clipboardStrings[0]).ToList();
+				Replace(Selections, clipboardStrings, false);
+				return;
+			}
+
+			if (Selections.Count != 1)
+				throw new Exception("You may have either 1 or the number copied selections.");
 
 			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n') + Data.DefaultEnding).ToList();
 			var replace = new List<string> { String.Join("", clipboardStrings) };
