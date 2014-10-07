@@ -467,21 +467,30 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Edit_Paste()
 		{
-			var result = ClipboardWindow.GetStrings().ToList();
-			if ((Selections.Count == 1) && (result.Count != 1))
-				result = result.Select(str => str + Data.DefaultEnding).ToList();
-			if ((result != null) && (result.Count != 0))
-			{
-				if (result.Count > Selections.Count)
-				{
-					var res = String.Join("", result.Skip(Selections.Count - 1));
-					result[Selections.Count - 1] = res;
-					result.RemoveRange(Selections.Count, result.Count - Selections.Count);
-				}
-				while (result.Count < Selections.Count)
-					result.Add(result.Last());
+			var clipboardStrings = ClipboardWindow.GetStrings().ToList();
+			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
+				return;
 
-				Replace(Selections, result, false);
+			var multiPaste = (Selections.Count == 1) && (clipboardStrings.Count != 1);
+			if ((!multiPaste) && (Selections.Count != clipboardStrings.Count))
+				throw new Exception("You may have either 1 or the number copied selections.");
+
+			if (!multiPaste)
+			{
+				Replace(Selections, clipboardStrings, false);
+				return;
+			}
+
+			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n') + Data.DefaultEnding).ToList();
+			var replace = new List<string> { String.Join("", clipboardStrings) };
+
+			var offset = Selections.First().Start;
+			Replace(Selections, replace, false);
+			Selections.Clear();
+			foreach (var str in clipboardStrings)
+			{
+				Selections.Add(Range.FromIndex(offset, str.Length - Data.DefaultEnding.Length));
+				offset += str.Length;
 			}
 		}
 

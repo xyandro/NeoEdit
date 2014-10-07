@@ -20,7 +20,6 @@ Ctrl+M should move to "current" selection
 Show number of items on clipboard on status bar
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
-Paste probably shouldn't work unless # selections is 1 (leave selections) or # copied
 Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
 Ctrl-Tab for tab navigation
