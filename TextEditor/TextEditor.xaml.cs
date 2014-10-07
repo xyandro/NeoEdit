@@ -471,15 +471,11 @@ namespace NeoEdit.TextEditor
 			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
 				return;
 
+			if (clipboardStrings.Count == 1)
+				clipboardStrings = Selections.Select(str => clipboardStrings[0]).ToList();
+
 			if (Selections.Count == clipboardStrings.Count)
 			{
-				Replace(Selections, clipboardStrings, false);
-				return;
-			}
-
-			if (clipboardStrings.Count == 1)
-			{
-				clipboardStrings = Selections.Select(str => clipboardStrings[0]).ToList();
 				Replace(Selections, clipboardStrings, false);
 				return;
 			}
