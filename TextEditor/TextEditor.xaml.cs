@@ -63,6 +63,8 @@ namespace NeoEdit.TextEditor
 		public int xScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public int yScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		public string LineEnding { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
 		int xScrollViewportFloor { get { return (int)Math.Floor(xScroll.ViewportSize); } }
 		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScroll.ViewportSize); } }
@@ -429,6 +431,21 @@ namespace NeoEdit.TextEditor
 				Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
 			else
 				Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
+		}
+
+		internal void Command_File_SetEndings(string ending)
+		{
+			var lines = Data.NumLines;
+			var sel = new RangeList();
+			for (var line = 0; line < lines; ++line)
+			{
+				var current = Data.GetEnding(line);
+				if ((current.Length == 0) || (current == ending))
+					continue;
+				var start = Data.GetOffset(line, Data.GetLineLength(line));
+				sel.Add(Range.FromIndex(start, current.Length));
+			}
+			Replace(sel, sel.Select(str => ending).ToList(), false);
 		}
 
 		internal void Command_File_BinaryEditor()
@@ -2191,6 +2208,8 @@ namespace NeoEdit.TextEditor
 			yScroll.SmallChange = 1;
 			yScroll.LargeChange = Math.Max(0, yScroll.ViewportSize - 1);
 			yScrollValue = yScrollValue;
+
+			LineEnding = Data.OnlyEnding;
 
 			InvalidateRender();
 		}

@@ -13,7 +13,6 @@ Highlight clauses (if/else)
 Text edit multiple files
 Comment/uncomment C#/C++/XML/etc. (ANTLR?)
 Format JSON/XML
-Set line endings (\r\n / \n / \r)
 HTML/XML: Match closing tag
 Relative goto line/index should work for all selections
 Ctrl+M should move to "current" selection

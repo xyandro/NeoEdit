@@ -44,6 +44,11 @@
 				<textEditor:TextEditMenuItem CommandEnum="File_Encoding_Base64"/>
 			</MenuItem>
 			<textEditor:TextEditMenuItem CommandEnum="File_BOM" IsChecked="{Binding Active.HasBOM, ElementName=self}"/>
+			<MenuItem Header="_Line Endings">
+				<textEditor:TextEditMenuItem CommandEnum="File_Ending_CRLF" IsChecked="{Binding Active.LineEnding, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5b##30##5d##20##3d##3d##20##27##0d##0a##27#}"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_Ending_LF" IsChecked="{Binding Active.LineEnding, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5b##30##5d##20##3d##3d##20##27##0a##27#}"/>
+				<textEditor:TextEditMenuItem CommandEnum="File_Ending_CR" IsChecked="{Binding Active.LineEnding, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5b##30##5d##20##3d##3d##20##27##0d##27#}"/>
+			</MenuItem>
 			<textEditor:TextEditMenuItem CommandEnum="File_BinaryEditor"/>
 			<Separator/>
 			<textEditor:TextEditMenuItem CommandEnum="File_Exit"/>

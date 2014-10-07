@@ -132,6 +132,9 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.File_Encoding_UTF32BE: Active.CoderUsed = Coder.Type.UTF32BE; break;
 				case TextEditCommand.File_Encoding_Base64: Active.CoderUsed = Coder.Type.Base64; break;
 				case TextEditCommand.File_BOM: Active.Command_File_BOM(); break;
+				case TextEditCommand.File_Ending_CRLF: Active.Command_File_SetEndings("\r\n"); break;
+				case TextEditCommand.File_Ending_LF: Active.Command_File_SetEndings("\n"); break;
+				case TextEditCommand.File_Ending_CR: Active.Command_File_SetEndings("\r"); break;
 				case TextEditCommand.File_BinaryEditor: Active.Command_File_BinaryEditor(); Active.Close(); TextEditors.Remove(Active); if (TextEditors.Count == 0) Close(); break;
 				case TextEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;

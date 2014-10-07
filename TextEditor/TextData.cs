@@ -23,6 +23,7 @@ namespace NeoEdit.TextEditor
 		List<int> lineLength;
 		List<int> endingOffset;
 		List<int> endingLength;
+		public string OnlyEnding { get; private set; }
 		public string DefaultEnding { get; private set; }
 		const int tabStop = 4;
 
@@ -84,10 +85,12 @@ namespace NeoEdit.TextEditor
 				endingLength.Add(0);
 			}
 
-			// Select most popular line ending
-			DefaultEnding = Enumerable.Range(0, endingOffset.Count).Select(a => GetEnding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).FirstOrDefault();
+			// Analyze line endings
+			var endingInfo = Enumerable.Range(0, endingOffset.Count).Select(a => GetEnding(a)).Where(a => a.Length != 0).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).ToList();
+			DefaultEnding = endingInfo.FirstOrDefault();
 			if (String.IsNullOrEmpty(DefaultEnding))
 				DefaultEnding = "\r\n";
+			OnlyEnding = endingInfo.Count == 1 ? DefaultEnding : null;
 
 			// Calculate max index/columns
 			MaxIndex = lineLength.Max();

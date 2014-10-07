@@ -109,9 +109,9 @@ namespace NeoEdit.Common
 			if (expression.StartsWith("!"))
 			{
 				debug = true;
+				expression = expression.Substring(1);
 				if (Debugger.IsAttached)
 					Debugger.Break();
-				expression = expression.Substring(1);
 			}
 
 			internals = new List<object>();
