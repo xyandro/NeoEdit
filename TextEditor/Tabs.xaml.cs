@@ -37,7 +37,7 @@ namespace NeoEdit.TextEditor
 			InitializeComponent();
 
 			TextEditors = new ObservableCollection<TextEditor>();
-			Add(new TextEditor(this, filename, bytes, encoding, line, column));
+			Add(new TextEditor(filename, bytes, encoding, line, column));
 
 			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
 		}
@@ -57,7 +57,7 @@ namespace NeoEdit.TextEditor
 				return;
 
 			foreach (var filename in dialog.FileNames)
-				Add(new TextEditor(this, filename));
+				Add(new TextEditor());
 		}
 
 		void Command_File_OpenCopied()
@@ -77,7 +77,7 @@ namespace NeoEdit.TextEditor
 				return;
 
 			foreach (var file in files)
-				Add(new TextEditor(this, file));
+				Add(new TextEditor(file));
 		}
 
 		protected override void OnClosing(CancelEventArgs e)
@@ -101,7 +101,7 @@ namespace NeoEdit.TextEditor
 		{
 			switch (command)
 			{
-				case TextEditCommand.File_New: Add(new TextEditor(this)); break;
+				case TextEditCommand.File_New: Add(new TextEditor()); break;
 				case TextEditCommand.File_Open: Command_File_Open(); break;
 				case TextEditCommand.File_OpenCopied: Command_File_OpenCopied(); break;
 				case TextEditCommand.File_Exit: Close(); break;
@@ -110,9 +110,6 @@ namespace NeoEdit.TextEditor
 
 			if (Active == null)
 				return;
-
-			var shiftDown = this.shiftDown;
-			shiftOverride = shiftDown;
 
 			switch (command)
 			{
@@ -328,8 +325,6 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.View_Highlighting_CPlusPlus: Active.HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
 			}
 
-			shiftOverride = null;
-
 			if (Active == null)
 				return;
 
@@ -359,10 +354,6 @@ namespace NeoEdit.TextEditor
 			Active = textEditor;
 		}
 
-		internal bool? shiftOverride;
-		internal bool shiftDown { get { return shiftOverride.HasValue ? shiftOverride.Value : (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
-		internal bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
-
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
@@ -376,9 +367,7 @@ namespace NeoEdit.TextEditor
 			if (Active == null)
 				return;
 
-			shiftOverride = shiftDown;
 			e.Handled = Active.HandleKey(e.Key);
-			shiftOverride = null;
 		}
 
 		Label GetLabel(TextEditor textEditor)

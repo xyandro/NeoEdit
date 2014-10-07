@@ -71,7 +71,6 @@ namespace NeoEdit.TextEditor
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
 
-		new readonly TextEditorTabs Parent;
 		readonly RangeList Selections = new RangeList();
 		readonly RangeList Searches = new RangeList();
 		readonly RangeList Marks = new RangeList();
@@ -90,9 +89,8 @@ namespace NeoEdit.TextEditor
 		}
 
 		readonly UIHelper<TextEditor> uiHelper;
-		public TextEditor(TextEditorTabs _parent, string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
+		public TextEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
 		{
-			Parent = _parent;
 			uiHelper = new UIHelper<TextEditor>(this);
 			InitializeComponent();
 
@@ -520,32 +518,37 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Edit_Find()
 		{
-			string text = null;
-			var selectionOnly = Selections.Any(range => range.HasSelection());
-
-			if (Selections.Count == 1)
+			shiftOverride = shiftDown;
+			try
 			{
-				var sel = Selections.First();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
-				{
-					selectionOnly = false;
-					text = GetString(sel);
-				}
-			}
+				string text = null;
+				var selectionOnly = Selections.Any(range => range.HasSelection());
 
-			var findResult = FindDialog.Run(text, selectionOnly);
-			if (findResult != null)
-			{
-				RunSearch(findResult);
-				if (findResult.SelectAll)
+				if (Selections.Count == 1)
 				{
-					if (Searches.Count != 0)
-						Selections.Replace(Searches);
-					Searches.Clear();
+					var sel = Selections.First();
+					if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
+					{
+						selectionOnly = false;
+						text = GetString(sel);
+					}
 				}
 
-				FindNext(true);
+				var findResult = FindDialog.Run(text, selectionOnly);
+				if (findResult != null)
+				{
+					RunSearch(findResult);
+					if (findResult.SelectAll)
+					{
+						if (Searches.Count != 0)
+							Selections.Replace(Searches);
+						Searches.Clear();
+					}
+
+					FindNext(true);
+				}
 			}
+			finally { shiftOverride = null; }
 		}
 
 		internal void Command_Edit_FindNextPrev(bool next)
@@ -553,36 +556,36 @@ namespace NeoEdit.TextEditor
 			FindNext(next);
 		}
 
-		bool shiftDown { get { return Parent.shiftDown; } }
-		bool? shiftOverride { get { return Parent.shiftOverride; } set { Parent.shiftOverride = value; } }
-		bool controlDown { get { return Parent.controlDown; } }
+		bool? shiftOverride;
+		bool shiftDown { get { return shiftOverride.HasValue ? shiftOverride.Value : (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
 		internal void Command_Edit_GotoLine()
 		{
-			var shift = shiftDown;
-			var line = Data.GetOffsetLine(Selections.First().Start);
-			var newLine = GotoLineDialog.Run(Data.NumLines, line);
-			if (newLine.HasValue)
+			shiftOverride = shiftDown;
+			try
 			{
-				shiftOverride = shift;
-				Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true)).ToList());
-				shiftOverride = null;
+				var line = Data.GetOffsetLine(Selections.First().Start);
+				var newLine = GotoLineDialog.Run(Data.NumLines, line);
+				if (newLine.HasValue)
+					Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true)).ToList());
 			}
+			finally { shiftOverride = null; }
 		}
 
 		internal void Command_Edit_GotoIndex()
 		{
-			var shift = shiftDown;
-			var offset = Selections.First().Start;
-			var line = Data.GetOffsetLine(offset);
-			var index = Data.GetOffsetIndex(offset, line);
-			var newIndex = GotoIndexDialog.Run(Data.GetLineLength(line) + 1, index);
-			if (newIndex.HasValue)
+			shiftOverride = shiftDown;
+			try
 			{
-				shiftOverride = shift;
-				Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false)).ToList());
-				shiftOverride = null;
+				var offset = Selections.First().Start;
+				var line = Data.GetOffsetLine(offset);
+				var index = Data.GetOffsetIndex(offset, line);
+				var newIndex = GotoIndexDialog.Run(Data.GetLineLength(line) + 1, index);
+				if (newIndex.HasValue)
+					Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false)).ToList());
 			}
+			finally { shiftOverride = null; }
 		}
 
 		internal void Command_Files_CutCopy(bool isCut)
@@ -1617,223 +1620,218 @@ namespace NeoEdit.TextEditor
 
 		internal bool HandleKey(Key key)
 		{
-			shiftOverride = shiftDown;
-			try
+			var ret = true;
+			switch (key)
 			{
-				var ret = true;
-				switch (key)
-				{
-					case Key.Back:
-					case Key.Delete:
+				case Key.Back:
+				case Key.Delete:
+					{
+						if (Selections.Any(range => range.HasSelection()))
 						{
-							if (Selections.Any(range => range.HasSelection()))
-							{
-								Replace(Selections, null, false);
-								break;
-							}
-
-							var selections = new RangeList();
-							foreach (var range in Selections)
-							{
-								var offset = range.Start;
-
-								if (controlDown)
-								{
-									if (key == Key.Back)
-										offset = GetPrevWord(offset);
-									else
-										offset = GetNextWord(offset);
-								}
-								else
-								{
-									var line = Data.GetOffsetLine(offset);
-									var index = Data.GetOffsetIndex(offset, line);
-
-									if (key == Key.Back)
-										--index;
-									else
-										++index;
-
-									if (index < 0)
-									{
-										--line;
-										if (line < 0)
-											continue;
-										index = Data.GetLineLength(line);
-									}
-									if (index > Data.GetLineLength(line))
-									{
-										++line;
-										if (line >= Data.NumLines)
-											continue;
-										index = 0;
-									}
-
-									offset = Data.GetOffset(line, index);
-								}
-
-								selections.Add(new Range(offset, range.Highlight));
-							}
-
-							Replace(selections, null, false);
+							Replace(Selections, null, false);
+							break;
 						}
-						break;
-					case Key.Escape:
-						Searches.Clear();
-						break;
-					case Key.Left:
+
+						var selections = new RangeList();
+						foreach (var range in Selections)
 						{
-							var hasSelection = Selections.Any(range => range.HasSelection());
-							for (var ctr = 0; ctr < Selections.Count; ++ctr)
-							{
-								var line = Data.GetOffsetLine(Selections[ctr].Cursor);
-								var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
-								if (controlDown)
-									Selections[ctr] = MoveCursor(Selections[ctr], GetPrevWord(Selections[ctr].Cursor));
-								else if ((!shiftDown) && (hasSelection))
-									Selections[ctr] = new Range(Selections[ctr].Start);
-								else if ((index == 0) && (line != 0))
-									Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, indexRel: false);
-								else
-									Selections[ctr] = MoveCursor(Selections[ctr], 0, -1);
-							}
-						}
-						break;
-					case Key.Right:
-						{
-							var hasSelection = Selections.Any(range => range.HasSelection());
-							for (var ctr = 0; ctr < Selections.Count; ++ctr)
-							{
-								var line = Data.GetOffsetLine(Selections[ctr].Cursor);
-								var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
-								if (controlDown)
-									Selections[ctr] = MoveCursor(Selections[ctr], GetNextWord(Selections[ctr].Cursor));
-								else if ((!shiftDown) && (hasSelection))
-									Selections[ctr] = new Range(Selections[ctr].End);
-								else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
-									Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, indexRel: false);
-								else
-									Selections[ctr] = MoveCursor(Selections[ctr], 0, 1);
-							}
-						}
-						break;
-					case Key.Up:
-					case Key.Down:
-						{
-							var mult = key == Key.Up ? -1 : 1;
+							var offset = range.Start;
+
 							if (controlDown)
-								yScrollValue += mult;
-							else
-								Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
-						}
-						break;
-					case Key.Home:
-						if (controlDown)
-							Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset())).ToList()); // Have to use MoveCursor for selection
-						else
-						{
-							bool changed = false;
-							for (var ctr = 0; ctr < Selections.Count; ++ctr)
 							{
-								var line = Data.GetOffsetLine(Selections[ctr].Cursor);
-								var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
+								if (key == Key.Back)
+									offset = GetPrevWord(offset);
+								else
+									offset = GetNextWord(offset);
+							}
+							else
+							{
+								var line = Data.GetOffsetLine(offset);
+								var index = Data.GetOffsetIndex(offset, line);
 
-								int first;
-								var end = Data.GetLineLength(line);
-								for (first = 0; first < end; ++first)
+								if (key == Key.Back)
+									--index;
+								else
+									++index;
+
+								if (index < 0)
 								{
-									if (!Char.IsWhiteSpace(Data[line, first]))
-										break;
+									--line;
+									if (line < 0)
+										continue;
+									index = Data.GetLineLength(line);
 								}
-								if (first == end)
-									first = 0;
+								if (index > Data.GetLineLength(line))
+								{
+									++line;
+									if (line >= Data.NumLines)
+										continue;
+									index = 0;
+								}
 
-								if (first != index)
-									changed = true;
-								Selections[ctr] = MoveCursor(Selections[ctr], 0, first, indexRel: false);
+								offset = Data.GetOffset(line, index);
 							}
-							if (!changed)
-							{
-								Selections.Replace(Selections.Select(range => MoveCursor(range, 0, 0, indexRel: false)).ToList());
-								xScrollValue = 0;
-							}
+
+							selections.Add(new Range(offset, range.Highlight));
 						}
-						break;
-					case Key.End:
-						if (controlDown)
-							Selections.Replace(Selections.Select(range => MoveCursor(range, EndOffset())).ToList()); // Have to use MoveCursor for selection
-						else
-							Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, indexRel: false)).ToList());
-						break;
-					case Key.PageUp:
-						if (controlDown)
-							yScrollValue -= yScrollViewportFloor / 2;
-						else
-							Selections.Replace(Selections.Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0)).ToList());
-						break;
-					case Key.PageDown:
-						if (controlDown)
-							yScrollValue += yScrollViewportFloor / 2;
-						else
-							Selections.Replace(Selections.Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0)).ToList());
-						break;
-					case Key.Tab:
-						{
-							if (!Selections.Any(range => range.HasSelection()))
-							{
-								HandleText("\t");
-								break;
-							}
 
-							var selLines = Selections.Where(a => a.HasSelection()).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
-							var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy(line => line).ToDictionary(line => line, line => Data.GetOffset(line, 0));
-							int offset;
-							string replace;
-							if (shiftDown)
-							{
-								offset = 1;
-								replace = "";
-								lines = lines.Where(entry => (Data.GetLineLength(entry.Key) != 0) && (Data[entry.Key, 0] == '\t')).ToDictionary(entry => entry.Key, entry => entry.Value);
-							}
+						Replace(selections, null, false);
+					}
+					break;
+				case Key.Escape:
+					Searches.Clear();
+					break;
+				case Key.Left:
+					{
+						var hasSelection = Selections.Any(range => range.HasSelection());
+						for (var ctr = 0; ctr < Selections.Count; ++ctr)
+						{
+							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
+							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
+							if (controlDown)
+								Selections[ctr] = MoveCursor(Selections[ctr], GetPrevWord(Selections[ctr].Cursor));
+							else if ((!shiftDown) && (hasSelection))
+								Selections[ctr] = new Range(Selections[ctr].Start);
+							else if ((index == 0) && (line != 0))
+								Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, indexRel: false);
 							else
-							{
-								offset = 0;
-								replace = "\t";
-								lines = lines.Where(entry => Data.GetLineLength(entry.Key) != 0).ToDictionary(entry => entry.Key, entry => entry.Value);
-							}
-
-							var sels = lines.Select(line => Range.FromIndex(line.Value, offset)).ToList();
-							var insert = sels.Select(range => replace).ToList();
-							Replace(sels, insert, true);
+								Selections[ctr] = MoveCursor(Selections[ctr], 0, -1);
 						}
-						break;
-					case Key.Enter:
-						HandleText(Data.DefaultEnding);
-						break;
-					case Key.OemCloseBrackets:
-						if (controlDown)
+					}
+					break;
+				case Key.Right:
+					{
+						var hasSelection = Selections.Any(range => range.HasSelection());
+						for (var ctr = 0; ctr < Selections.Count; ++ctr)
 						{
-							for (var ctr = 0; ctr < Selections.Count; ++ctr)
-							{
-								var newPos = Data.GetOppositeBracket(Selections[ctr].Cursor);
-								if (newPos == -1)
-									continue;
+							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
+							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
+							if (controlDown)
+								Selections[ctr] = MoveCursor(Selections[ctr], GetNextWord(Selections[ctr].Cursor));
+							else if ((!shiftDown) && (hasSelection))
+								Selections[ctr] = new Range(Selections[ctr].End);
+							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
+								Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, indexRel: false);
+							else
+								Selections[ctr] = MoveCursor(Selections[ctr], 0, 1);
+						}
+					}
+					break;
+				case Key.Up:
+				case Key.Down:
+					{
+						var mult = key == Key.Up ? -1 : 1;
+						if (controlDown)
+							yScrollValue += mult;
+						else
+							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
+					}
+					break;
+				case Key.Home:
+					if (controlDown)
+						Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset())).ToList()); // Have to use MoveCursor for selection
+					else
+					{
+						bool changed = false;
+						for (var ctr = 0; ctr < Selections.Count; ++ctr)
+						{
+							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
+							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
 
-								Selections[ctr] = MoveCursor(Selections[ctr], newPos);
+							int first;
+							var end = Data.GetLineLength(line);
+							for (first = 0; first < end; ++first)
+							{
+								if (!Char.IsWhiteSpace(Data[line, first]))
+									break;
 							}
+							if (first == end)
+								first = 0;
+
+							if (first != index)
+								changed = true;
+							Selections[ctr] = MoveCursor(Selections[ctr], 0, first, indexRel: false);
+						}
+						if (!changed)
+						{
+							Selections.Replace(Selections.Select(range => MoveCursor(range, 0, 0, indexRel: false)).ToList());
+							xScrollValue = 0;
+						}
+					}
+					break;
+				case Key.End:
+					if (controlDown)
+						Selections.Replace(Selections.Select(range => MoveCursor(range, EndOffset())).ToList()); // Have to use MoveCursor for selection
+					else
+						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, indexRel: false)).ToList());
+					break;
+				case Key.PageUp:
+					if (controlDown)
+						yScrollValue -= yScrollViewportFloor / 2;
+					else
+						Selections.Replace(Selections.Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0)).ToList());
+					break;
+				case Key.PageDown:
+					if (controlDown)
+						yScrollValue += yScrollViewportFloor / 2;
+					else
+						Selections.Replace(Selections.Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0)).ToList());
+					break;
+				case Key.Tab:
+					{
+						if (!Selections.Any(range => range.HasSelection()))
+						{
+							HandleText("\t");
+							break;
+						}
+
+						var selLines = Selections.Where(a => a.HasSelection()).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
+						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy(line => line).ToDictionary(line => line, line => Data.GetOffset(line, 0));
+						int offset;
+						string replace;
+						if (shiftDown)
+						{
+							offset = 1;
+							replace = "";
+							lines = lines.Where(entry => (Data.GetLineLength(entry.Key) != 0) && (Data[entry.Key, 0] == '\t')).ToDictionary(entry => entry.Key, entry => entry.Value);
 						}
 						else
-							ret = false;
-						break;
-					default: ret = false; break;
-				}
+						{
+							offset = 0;
+							replace = "\t";
+							lines = lines.Where(entry => Data.GetLineLength(entry.Key) != 0).ToDictionary(entry => entry.Key, entry => entry.Value);
+						}
 
-				if (SelectionsInvalidated())
-					EnsureVisible();
+						var sels = lines.Select(line => Range.FromIndex(line.Value, offset)).ToList();
+						var insert = sels.Select(range => replace).ToList();
+						Replace(sels, insert, true);
+					}
+					break;
+				case Key.Enter:
+					HandleText(Data.DefaultEnding);
+					break;
+				case Key.OemCloseBrackets:
+					if (controlDown)
+					{
+						for (var ctr = 0; ctr < Selections.Count; ++ctr)
+						{
+							var newPos = Data.GetOppositeBracket(Selections[ctr].Cursor);
+							if (newPos == -1)
+								continue;
 
-				return ret;
+							Selections[ctr] = MoveCursor(Selections[ctr], newPos);
+						}
+					}
+					else
+						ret = false;
+					break;
+				default: ret = false; break;
 			}
-			finally { shiftOverride = null; }
+
+			if (SelectionsInvalidated())
+				EnsureVisible();
+
+			return ret;
 		}
 
 		enum WordSkipType
