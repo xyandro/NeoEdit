@@ -37,8 +37,8 @@ namespace NeoEdit.Common.UnitTest
 		{
 			var testData = searchText;
 			var findStrs = findStrings;
-			var caseSearcher = Searcher.Create(findStrs);
-			var ignoreCaseSearcher = Searcher.Create(findStrs, findStrs.Select(str => false).ToList());
+			var caseSearcher = new Searcher(findStrs, true);
+			var ignoreCaseSearcher = new Searcher(findStrs);
 			Assert.AreEqual(caseSearcher.MaxLen, 3);
 			Assert.AreEqual(ignoreCaseSearcher.MaxLen, 3);
 			var caseResults = caseSearcher.Find(testData);
@@ -51,8 +51,8 @@ namespace NeoEdit.Common.UnitTest
 		{
 			var testData = searchText.ToCharArray();
 			var findStrs = findStrings.Select(str => str.ToCharArray()).ToList();
-			var caseSearcher = Searcher.Create(findStrs);
-			var ignoreCaseSearcher = Searcher.Create(findStrs, findStrs.Select(str => false).ToList());
+			var caseSearcher = new Searcher(findStrs, true);
+			var ignoreCaseSearcher = new Searcher(findStrs);
 			Assert.AreEqual(caseSearcher.MaxLen, 3);
 			Assert.AreEqual(ignoreCaseSearcher.MaxLen, 3);
 			var caseResults = caseSearcher.Find(testData);
@@ -65,8 +65,8 @@ namespace NeoEdit.Common.UnitTest
 		{
 			var testData = Encoding.UTF8.GetBytes(searchText);
 			var findStrs = findStrings.Select(str => Encoding.UTF8.GetBytes(str)).ToList();
-			var caseSearcher = Searcher.Create(findStrs);
-			var ignoreCaseSearcher = Searcher.Create(findStrs, findStrs.Select(str => false).ToList());
+			var caseSearcher = new Searcher(findStrs, true);
+			var ignoreCaseSearcher = new Searcher(findStrs);
 			Assert.AreEqual(caseSearcher.MaxLen, 3);
 			Assert.AreEqual(ignoreCaseSearcher.MaxLen, 3);
 			var caseResults = caseSearcher.Find(testData);

@@ -4,154 +4,237 @@ using System.Linq;
 
 namespace NeoEdit.Common
 {
+	static class SearcherExtensions
+	{
+		public static Char ToggleCase(this Char c)
+		{
+			if ((c >= 'a') && (c <= 'z'))
+				return (Char)(c - 'a' + 'A');
+			if ((c >= 'A') && (c <= 'Z'))
+				return (Char)(c - 'A' + 'a');
+			return c;
+		}
+		public static Byte ToggleCase(this Byte c)
+		{
+			if ((c >= 'a') && (c <= 'z'))
+				return (Byte)(c - 'a' + 'A');
+			if ((c >= 'A') && (c <= 'Z'))
+				return (Byte)(c - 'A' + 'a');
+			return c;
+		}
+	}
+
 	public class Searcher
 	{
 		class FindData
 		{
 			public int[] CharMap { get; private set; }
 			public int NumChars { get; private set; }
-			public int MaxLen { get; private set; }
+			readonly bool matchCase;
 
-			public FindData(List<String> strs)
+			public FindData(String str, bool matchCase)
 			{
-				CharMap = new int[Char.MaxValue];
-				for (var ctr = 0; ctr < CharMap.Length; ++ctr) CharMap[ctr] = -1;
-				foreach (var str in strs)
-					foreach (var c in str)
-					{
-						if (CharMap[Char.ToLowerInvariant((char)c)] == -1)
-							CharMap[Char.ToLowerInvariant((char)c)] = NumChars++;
-						if (CharMap[Char.ToUpperInvariant((char)c)] == -1)
-							CharMap[Char.ToUpperInvariant((char)c)] = NumChars++;
-						MaxLen = Math.Max(MaxLen, str.Length);
-					}
+				this.matchCase = matchCase;
+				CharMap = new int[Char.MaxValue + 1];
+				for (var ctr = 0; ctr < CharMap.Length; ++ctr)
+					CharMap[ctr] = -1;
 			}
 
-			public FindData(List<Char[]> strs)
+			public FindData(Char[] str, bool matchCase)
 			{
-				CharMap = new int[Char.MaxValue];
-				for (var ctr = 0; ctr < CharMap.Length; ++ctr) CharMap[ctr] = -1;
-				foreach (var str in strs)
-					foreach (var c in str)
-					{
-						if (CharMap[Char.ToLowerInvariant((char)c)] == -1)
-							CharMap[Char.ToLowerInvariant((char)c)] = NumChars++;
-						if (CharMap[Char.ToUpperInvariant((char)c)] == -1)
-							CharMap[Char.ToUpperInvariant((char)c)] = NumChars++;
-						MaxLen = Math.Max(MaxLen, str.Length);
-					}
+				this.matchCase = matchCase;
+				CharMap = new int[Char.MaxValue + 1];
+				for (var ctr = 0; ctr < CharMap.Length; ++ctr)
+					CharMap[ctr] = -1;
 			}
 
-			public FindData(List<Byte[]> strs)
+			public FindData(Byte[] str, bool matchCase)
 			{
-				CharMap = new int[Byte.MaxValue];
-				for (var ctr = 0; ctr < CharMap.Length; ++ctr) CharMap[ctr] = -1;
-				foreach (var str in strs)
-					foreach (var c in str)
-					{
-						if (CharMap[Char.ToLowerInvariant((char)c)] == -1)
-							CharMap[Char.ToLowerInvariant((char)c)] = NumChars++;
-						if (CharMap[Char.ToUpperInvariant((char)c)] == -1)
-							CharMap[Char.ToUpperInvariant((char)c)] = NumChars++;
-						MaxLen = Math.Max(MaxLen, str.Length);
-					}
+				this.matchCase = matchCase;
+				CharMap = new int[Byte.MaxValue + 1];
+				for (var ctr = 0; ctr < CharMap.Length; ++ctr)
+					CharMap[ctr] = -1;
+			}
+
+			public void Add(String str)
+			{
+				foreach (var c1 in str)
+				{
+					if (CharMap[c1] != -1)
+						continue;
+
+					var c2 = matchCase ? c1 : c1.ToggleCase();
+					CharMap[c1] = CharMap[c2] = NumChars++;
+				}
+			}
+
+			public void Add(Char[] str)
+			{
+				foreach (var c1 in str)
+				{
+					if (CharMap[c1] != -1)
+						continue;
+
+					var c2 = matchCase ? c1 : c1.ToggleCase();
+					CharMap[c1] = CharMap[c2] = NumChars++;
+				}
+			}
+
+			public void Add(Byte[] str)
+			{
+				foreach (var c1 in str)
+				{
+					if (CharMap[c1] != -1)
+						continue;
+
+					var c2 = matchCase ? c1 : c1.ToggleCase();
+					CharMap[c1] = CharMap[c2] = NumChars++;
+				}
 			}
 		}
 
-		Searcher[] data;
-		bool done;
-		int length;
-		FindData findData;
-		public int MaxLen { get { return findData.MaxLen; } }
-
-		Searcher(FindData findData)
+		class SearchData
 		{
-			data = new Searcher[findData.NumChars];
-			this.findData = findData;
-		}
+			public readonly SearchData[] data;
+			public bool done { get; private set; }
+			public int length { get; private set; }
+			public readonly FindData findData;
+			readonly int maxChars;
 
-		Searcher this[int mappedIndex]
-		{
-			get { return data[mappedIndex]; }
-			set { data[mappedIndex] = value; }
-		}
-
-		public static Searcher Create(List<String> strs, List<bool> ignoreCase = null)
-		{
-			var findData = new FindData(strs);
-			var result = new Searcher(findData);
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			public SearchData(FindData findData, int maxChars)
 			{
-				var node = result;
-				foreach (var c in strs[ctr])
+				data = new SearchData[maxChars];
+				this.findData = findData;
+				this.maxChars = maxChars;
+			}
+
+			public void Add(String str)
+			{
+				var node = this;
+				foreach (var c in str)
 				{
 					var mappedIndex = findData.CharMap[c];
-					var mappedIndex2 = mappedIndex;
-					if ((ignoreCase != null) && (ctr < ignoreCase.Count) && (ignoreCase[ctr]))
-						if (Char.IsUpper((char)c))
-							mappedIndex2 = findData.CharMap[Char.ToLowerInvariant((char)c)];
-						else if (Char.IsLower((char)c))
-							mappedIndex2 = findData.CharMap[Char.ToUpperInvariant((char)c)];
-					if (node[mappedIndex] == null)
-						node[mappedIndex] = node[mappedIndex2] = new Searcher(findData);
-					node = node[mappedIndex];
+					if (node.data[mappedIndex] == null)
+						node.data[mappedIndex] = new SearchData(findData, maxChars);
+					node = node.data[mappedIndex];
 				}
 				node.done = true;
-				node.length = strs[ctr].Length;
+				node.length = str.Length;
 			}
-			return result;
-		}
 
-		public static Searcher Create(List<Char[]> strs, List<bool> ignoreCase = null)
-		{
-			var findData = new FindData(strs);
-			var result = new Searcher(findData);
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			public void Add(Char[] str)
 			{
-				var node = result;
-				foreach (var c in strs[ctr])
+				var node = this;
+				foreach (var c in str)
 				{
 					var mappedIndex = findData.CharMap[c];
-					var mappedIndex2 = mappedIndex;
-					if ((ignoreCase != null) && (ctr < ignoreCase.Count) && (ignoreCase[ctr]))
-						if (Char.IsUpper((char)c))
-							mappedIndex2 = findData.CharMap[Char.ToLowerInvariant((char)c)];
-						else if (Char.IsLower((char)c))
-							mappedIndex2 = findData.CharMap[Char.ToUpperInvariant((char)c)];
-					if (node[mappedIndex] == null)
-						node[mappedIndex] = node[mappedIndex2] = new Searcher(findData);
-					node = node[mappedIndex];
+					if (node.data[mappedIndex] == null)
+						node.data[mappedIndex] = new SearchData(findData, maxChars);
+					node = node.data[mappedIndex];
 				}
 				node.done = true;
-				node.length = strs[ctr].Count();
+				node.length = str.Length;
 			}
-			return result;
-		}
 
-		public static Searcher Create(List<Byte[]> strs, List<bool> ignoreCase = null)
-		{
-			var findData = new FindData(strs);
-			var result = new Searcher(findData);
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			public void Add(Byte[] str)
 			{
-				var node = result;
-				foreach (var c in strs[ctr])
+				var node = this;
+				foreach (var c in str)
 				{
 					var mappedIndex = findData.CharMap[c];
-					var mappedIndex2 = mappedIndex;
-					if ((ignoreCase != null) && (ctr < ignoreCase.Count) && (ignoreCase[ctr]))
-						if (Char.IsUpper((char)c))
-							mappedIndex2 = findData.CharMap[Char.ToLowerInvariant((char)c)];
-						else if (Char.IsLower((char)c))
-							mappedIndex2 = findData.CharMap[Char.ToUpperInvariant((char)c)];
-					if (node[mappedIndex] == null)
-						node[mappedIndex] = node[mappedIndex2] = new Searcher(findData);
-					node = node[mappedIndex];
+					if (node.data[mappedIndex] == null)
+						node.data[mappedIndex] = new SearchData(findData, maxChars);
+					node = node.data[mappedIndex];
 				}
 				node.done = true;
-				node.length = strs[ctr].Count();
+				node.length = str.Length;
 			}
-			return result;
+		}
+
+		readonly SearchData matchCaseSearcher;
+		readonly SearchData ignoreCaseSearcher;
+		public readonly int MaxLen = 0;
+
+		public Searcher(List<String> strs, bool matchCase = false) : this(strs, strs.Select(a => matchCase).ToList()) { }
+		public Searcher(List<Char[]> strs, bool matchCase = false) : this(strs, strs.Select(a => matchCase).ToList()) { }
+		public Searcher(List<Byte[]> strs, bool matchCase = false) : this(strs, strs.Select(a => matchCase).ToList()) { }
+
+		public Searcher(List<String> strs, List<bool> matchCase)
+		{
+			if (strs.Count != matchCase.Count)
+				throw new Exception("Count mismatch.");
+
+			var matchCaseFindData = new FindData((String)null, true);
+			var ignoreCaseFindData = new FindData((String)null, false);
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			{
+				var node = matchCase[ctr] ? matchCaseFindData : ignoreCaseFindData;
+				node.Add(strs[ctr]);
+				MaxLen = Math.Max(MaxLen, strs[ctr].Length);
+			}
+
+			var maxChars = Math.Max(matchCaseFindData.NumChars, ignoreCaseFindData.NumChars);
+
+			matchCaseSearcher = new SearchData(matchCaseFindData, maxChars);
+			ignoreCaseSearcher = new SearchData(ignoreCaseFindData, maxChars);
+
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			{
+				var node = matchCase[ctr] ? matchCaseSearcher : ignoreCaseSearcher;
+				node.Add(strs[ctr]);
+			}
+		}
+
+		public Searcher(List<Char[]> strs, List<bool> matchCase)
+		{
+			if (strs.Count != matchCase.Count)
+				throw new Exception("Count mismatch.");
+
+			var matchCaseFindData = new FindData((Char[])null, true);
+			var ignoreCaseFindData = new FindData((Char[])null, false);
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			{
+				var node = matchCase[ctr] ? matchCaseFindData : ignoreCaseFindData;
+				node.Add(strs[ctr]);
+				MaxLen = Math.Max(MaxLen, strs[ctr].Length);
+			}
+
+			var maxChars = Math.Max(matchCaseFindData.NumChars, ignoreCaseFindData.NumChars);
+
+			matchCaseSearcher = new SearchData(matchCaseFindData, maxChars);
+			ignoreCaseSearcher = new SearchData(ignoreCaseFindData, maxChars);
+
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			{
+				var node = matchCase[ctr] ? matchCaseSearcher : ignoreCaseSearcher;
+				node.Add(strs[ctr]);
+			}
+		}
+
+		public Searcher(List<Byte[]> strs, List<bool> matchCase)
+		{
+			if (strs.Count != matchCase.Count)
+				throw new Exception("Count mismatch.");
+
+			var matchCaseFindData = new FindData((Byte[])null, true);
+			var ignoreCaseFindData = new FindData((Byte[])null, false);
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			{
+				var node = matchCase[ctr] ? matchCaseFindData : ignoreCaseFindData;
+				node.Add(strs[ctr]);
+				MaxLen = Math.Max(MaxLen, strs[ctr].Length);
+			}
+
+			var maxChars = Math.Max(matchCaseFindData.NumChars, ignoreCaseFindData.NumChars);
+
+			matchCaseSearcher = new SearchData(matchCaseFindData, maxChars);
+			ignoreCaseSearcher = new SearchData(ignoreCaseFindData, maxChars);
+
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			{
+				var node = matchCase[ctr] ? matchCaseSearcher : ignoreCaseSearcher;
+				node.Add(strs[ctr]);
+			}
 		}
 
 		public List<Tuple<int, int>> Find(String input)
@@ -173,37 +256,50 @@ namespace NeoEdit.Common
 		{
 			var result = new List<Tuple<int, int>>();
 			length += index;
-			var working = new List<Searcher>();
+			var working = new List<SearchData>();
 			for (var inputPos = index; inputPos < length; ++inputPos)
 			{
-				var mappedIndex = findData.CharMap[input[inputPos]];
-				if (mappedIndex == -1)
+				bool found = false;
+
+				if (matchCaseSearcher.findData.CharMap[input[inputPos]] != -1)
+				{
+					working.Add(matchCaseSearcher);
+					found = true;
+				}
+
+				if (ignoreCaseSearcher.findData.CharMap[input[inputPos]] != -1)
+				{
+					working.Add(ignoreCaseSearcher);
+					found = true;
+				}
+
+				// Quick check: if the current char doesn't appear in the search at all, skip everything and go on
+				if (!found)
 				{
 					working.Clear();
 					continue;
 				}
 
-				working.Add(this);
-				for (var ctr = 0; ctr < working.Count; )
-				{
-					if (working[ctr][mappedIndex] == null)
-					{
-						working.RemoveAt(ctr);
-						continue;
-					}
 
-					working[ctr] = working[ctr][mappedIndex];
-					if (working[ctr].done)
+				var newWorking = new List<SearchData>();
+				foreach (var worker in working)
+				{
+					var newWorker = worker.data[worker.findData.CharMap[input[inputPos]]];
+					if (newWorker == null)
+						continue;
+
+					newWorking.Add(newWorker);
+
+					if (newWorker.done)
 					{
-						result.Add(new Tuple<int, int>(inputPos - working[ctr].length + 1, working[ctr].length));
+						result.Add(new Tuple<int, int>(inputPos - newWorker.length + 1, newWorker.length));
 						if (firstOnly)
 							return result;
-						working.Clear();
-						continue;
+						newWorking.Clear();
+						break;
 					}
-
-					++ctr;
 				}
+				working = newWorking;
 			}
 			return result;
 		}
@@ -212,37 +308,50 @@ namespace NeoEdit.Common
 		{
 			var result = new List<Tuple<int, int>>();
 			length += index;
-			var working = new List<Searcher>();
+			var working = new List<SearchData>();
 			for (var inputPos = index; inputPos < length; ++inputPos)
 			{
-				var mappedIndex = findData.CharMap[input[inputPos]];
-				if (mappedIndex == -1)
+				bool found = false;
+
+				if (matchCaseSearcher.findData.CharMap[input[inputPos]] != -1)
+				{
+					working.Add(matchCaseSearcher);
+					found = true;
+				}
+
+				if (ignoreCaseSearcher.findData.CharMap[input[inputPos]] != -1)
+				{
+					working.Add(ignoreCaseSearcher);
+					found = true;
+				}
+
+				// Quick check: if the current char doesn't appear in the search at all, skip everything and go on
+				if (!found)
 				{
 					working.Clear();
 					continue;
 				}
 
-				working.Add(this);
-				for (var ctr = 0; ctr < working.Count; )
-				{
-					if (working[ctr][mappedIndex] == null)
-					{
-						working.RemoveAt(ctr);
-						continue;
-					}
 
-					working[ctr] = working[ctr][mappedIndex];
-					if (working[ctr].done)
+				var newWorking = new List<SearchData>();
+				foreach (var worker in working)
+				{
+					var newWorker = worker.data[worker.findData.CharMap[input[inputPos]]];
+					if (newWorker == null)
+						continue;
+
+					newWorking.Add(newWorker);
+
+					if (newWorker.done)
 					{
-						result.Add(new Tuple<int, int>(inputPos - working[ctr].length + 1, working[ctr].length));
+						result.Add(new Tuple<int, int>(inputPos - newWorker.length + 1, newWorker.length));
 						if (firstOnly)
 							return result;
-						working.Clear();
-						continue;
+						newWorking.Clear();
+						break;
 					}
-
-					++ctr;
 				}
+				working = newWorking;
 			}
 			return result;
 		}
@@ -251,37 +360,50 @@ namespace NeoEdit.Common
 		{
 			var result = new List<Tuple<int, int>>();
 			length += index;
-			var working = new List<Searcher>();
+			var working = new List<SearchData>();
 			for (var inputPos = index; inputPos < length; ++inputPos)
 			{
-				var mappedIndex = findData.CharMap[input[inputPos]];
-				if (mappedIndex == -1)
+				bool found = false;
+
+				if (matchCaseSearcher.findData.CharMap[input[inputPos]] != -1)
+				{
+					working.Add(matchCaseSearcher);
+					found = true;
+				}
+
+				if (ignoreCaseSearcher.findData.CharMap[input[inputPos]] != -1)
+				{
+					working.Add(ignoreCaseSearcher);
+					found = true;
+				}
+
+				// Quick check: if the current char doesn't appear in the search at all, skip everything and go on
+				if (!found)
 				{
 					working.Clear();
 					continue;
 				}
 
-				working.Add(this);
-				for (var ctr = 0; ctr < working.Count; )
-				{
-					if (working[ctr][mappedIndex] == null)
-					{
-						working.RemoveAt(ctr);
-						continue;
-					}
 
-					working[ctr] = working[ctr][mappedIndex];
-					if (working[ctr].done)
+				var newWorking = new List<SearchData>();
+				foreach (var worker in working)
+				{
+					var newWorker = worker.data[worker.findData.CharMap[input[inputPos]]];
+					if (newWorker == null)
+						continue;
+
+					newWorking.Add(newWorker);
+
+					if (newWorker.done)
 					{
-						result.Add(new Tuple<int, int>(inputPos - working[ctr].length + 1, working[ctr].length));
+						result.Add(new Tuple<int, int>(inputPos - newWorker.length + 1, newWorker.length));
 						if (firstOnly)
 							return result;
-						working.Clear();
-						continue;
+						newWorking.Clear();
+						break;
 					}
-
-					++ctr;
 				}
+				working = newWorking;
 			}
 			return result;
 		}

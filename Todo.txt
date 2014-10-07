@@ -30,7 +30,6 @@ Files->Open (open all listed files)
 Binary:
 Fix binary editor backwards search
 Remember search history
-Search with no results never returns
 Cursor hard to see
 Fill selection (eg with 0s)
 Checksum (and possibly others) should work only on selected text

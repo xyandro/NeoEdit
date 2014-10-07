@@ -55,7 +55,7 @@ namespace NeoEdit.BinaryEditor.Dialogs
 			result = new FindData
 			{
 				Text = FindText,
-				Searcher = Searcher.Create(findData.Select(a => a.Value).ToList(), findData.Select(a => (MatchCase.IsChecked != true) && (a.Key.IsStr())).ToList()),
+				Searcher = new Searcher(findData.Select(a => a.Value).ToList(), findData.Select(a => (MatchCase.IsChecked == true) && (a.Key.IsStr())).ToList()),
 			};
 
 			DialogResult = true;

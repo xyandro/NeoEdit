@@ -1062,7 +1062,7 @@ namespace NeoEdit.TextEditor
 			if (keysAndValues[0].Count != keysAndValues[index].Count)
 				throw new Exception("Keys and values count must match");
 
-			var searcher = Searcher.Create(keysAndValues[0]);
+			var searcher = new Searcher(keysAndValues[0], true);
 			var ranges = new RangeList();
 			var selections = Selections;
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
@@ -1079,7 +1079,7 @@ namespace NeoEdit.TextEditor
 			if (keysAndValues[0].Count != keysAndValues[index].Count)
 				throw new Exception("Keys and values count must match");
 
-			var searcher = Searcher.Create(keysAndValues[0]);
+			var searcher = new Searcher(keysAndValues[0], true);
 			var ranges = new RangeList();
 			var selections = Selections;
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
