@@ -26,6 +26,8 @@ namespace NeoEdit.BinaryEditor
 		[DepProp]
 		public string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		public int ModifiedSteps { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
@@ -203,8 +205,37 @@ namespace NeoEdit.BinaryEditor
 				Padding = new Thickness(10, 2, 10, 2),
 				Target = this,
 			};
-			label.SetBinding(Label.ContentProperty, new Binding("FileName") { Source = this, Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))" });
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]!=0?'*':'')" };
+			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
+			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = this });
+			label.SetBinding(Label.ContentProperty, multiBinding);
 			return label;
+		}
+
+		internal bool CanClose()
+		{
+			if (ModifiedSteps == 0)
+				return true;
+
+			switch (new Message
+			{
+				Title = "Confirm",
+				Text = "Do you want to save changes?",
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show())
+			{
+				case Message.OptionsEnum.Cancel: return false;
+				case Message.OptionsEnum.No: return true;
+				case Message.OptionsEnum.Yes:
+					Command_File_Save();
+					return ModifiedSteps == 0;
+			}
+			return false;
+		}
+
+		internal void Close()
+		{
 		}
 
 		void EnsureVisible(long position)
@@ -460,16 +491,21 @@ namespace NeoEdit.BinaryEditor
 			{
 				case ReplaceType.Undo:
 					redo.Add(current);
+					--ModifiedSteps;
 					break;
 				case ReplaceType.Redo:
 					undo.Add(current);
+					++ModifiedSteps;
 					break;
 				case ReplaceType.Normal:
+					if (ModifiedSteps < 0)
+						ModifiedSteps = Int32.MinValue / 2; // Should never reach 0 again
+
 					redo.Clear();
 
 					// See if we can add this one to the last one
 					var done = false;
-					if (undo.Count != 0)
+					if ((ModifiedSteps != 0) && (undo.Count != 0))
 					{
 						var last = undo.Last();
 						if (last.index + last.count == current.index)
@@ -483,7 +519,10 @@ namespace NeoEdit.BinaryEditor
 					}
 
 					if (!done)
+					{
 						undo.Add(current);
+						++ModifiedSteps;
+					}
 
 					while (true)
 					{
@@ -642,7 +681,10 @@ namespace NeoEdit.BinaryEditor
 			if (FileName == null)
 				Command_File_SaveAs();
 			else
+			{
 				Data.Save(FileName);
+				ModifiedSteps = 0;
+			}
 		}
 
 		internal void Command_File_SaveAs()

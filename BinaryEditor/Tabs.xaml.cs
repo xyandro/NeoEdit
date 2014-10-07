@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -140,6 +142,23 @@ namespace NeoEdit.BinaryEditor
 			Add(new BinaryEditor(new DumpBinaryData(dialog.FileName), filetitle: "Dump: ", filename: dialog.FileName));
 		}
 
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			var active = Active;
+			foreach (var binaryEditor in BinaryEditors)
+			{
+				Active = binaryEditor;
+				if (!binaryEditor.CanClose())
+				{
+					e.Cancel = true;
+					return;
+				}
+			}
+			Active = active;
+			BinaryEditors.ToList().ForEach(binaryEditor => binaryEditor.Close());
+			base.OnClosing(e);
+		}
+
 		void RunCommand(BinaryEditCommand command)
 		{
 			switch (command)
@@ -159,7 +178,7 @@ namespace NeoEdit.BinaryEditor
 			{
 				case BinaryEditCommand.File_Save: Active.Command_File_Save(); break;
 				case BinaryEditCommand.File_SaveAs: Active.Command_File_SaveAs(); break;
-				case BinaryEditCommand.File_Close: BinaryEditors.Remove(Active); break;
+				case BinaryEditCommand.File_Close: if (Active.CanClose()) { Active.Close(); BinaryEditors.Remove(Active); } break;
 				case BinaryEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case BinaryEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
 				case BinaryEditCommand.File_Encode_Auto: Active.Command_File_Encode(Coder.Type.None); break;

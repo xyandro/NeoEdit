@@ -11,7 +11,7 @@ Text:
 Bookmarks
 Highlight clauses (if/else)
 Text edit multiple files
-Comment/uncomment C#/C++/XML/etc.
+Comment/uncomment C#/C++/XML/etc. (ANTLR?)
 Format JSON/XML
 Set line endings (\r\n / \n / \r)
 HTML/XML: Match closing tag
@@ -32,4 +32,3 @@ Remember search history
 Cursor hard to see
 Fill selection (eg with 0s)
 Reload current file (perhaps automatically?)
-Keep track of whether file is edited; object on close
