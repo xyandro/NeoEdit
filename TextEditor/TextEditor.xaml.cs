@@ -498,7 +498,7 @@ namespace NeoEdit.TextEditor
 			}
 
 			if (Selections.Count != 1)
-				throw new Exception("You may have either 1 or the number copied selections.");
+				throw new Exception(String.Format("You must have either 1 or the number copied selections ({0}).", clipboardStrings.Count));
 
 			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n') + Data.DefaultEnding).ToList();
 			var replace = new List<string> { String.Join("", clipboardStrings) };
