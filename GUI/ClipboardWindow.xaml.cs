@@ -33,7 +33,7 @@ namespace NeoEdit.GUI
 
 			public override string ToString()
 			{
-				return Text.Replace("\r", " ").Replace("\n", " ").Substring(0, 500);
+				return Text.Replace("\r", " ").Replace("\n", " ").Substring(0, Math.Min(Text.Length, 500));
 			}
 		}
 
