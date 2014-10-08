@@ -26,7 +26,7 @@ namespace NeoEdit.BinaryEditor
 		[DepProp]
 		public string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int ModifiedSteps { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public bool IsModified { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -131,30 +131,14 @@ namespace NeoEdit.BinaryEditor
 		readonly Typeface typeface;
 		readonly double fontSize;
 
-		class BinaryEditorUndoRedo
-		{
-			public long index, count;
-			public byte[] bytes;
-
-			public BinaryEditorUndoRedo(long _position, long _length, byte[] _bytes)
-			{
-				index = _position;
-				count = _length;
-				bytes = _bytes;
-			}
-		}
-
-		List<BinaryEditorUndoRedo> undo = new List<BinaryEditorUndoRedo>();
-		List<BinaryEditorUndoRedo> redo = new List<BinaryEditorUndoRedo>();
-
+		readonly UndoRedo undoRedo;
 		static BinaryEditor()
 		{
 			UIHelper<BinaryEditor>.Register();
 			UIHelper<BinaryEditor>.AddCallback(a => a.Data, (obj, o, n) =>
 			{
 				obj.canvas.InvalidateVisual();
-				obj.undo.Clear();
-				obj.redo.Clear();
+				obj.undoRedo.Clear();
 			});
 			UIHelper<BinaryEditor>.AddCallback(a => a.ChangeCount, (obj, o, n) => { obj.Focus(); obj.canvas.InvalidateVisual(); });
 			UIHelper<BinaryEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
@@ -166,6 +150,8 @@ namespace NeoEdit.BinaryEditor
 		{
 			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
+
+			undoRedo = new UndoRedo(b => IsModified = b);
 
 			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#Anonymous Pro");
 			typeface = fontFamily.GetTypefaces().First();
@@ -205,16 +191,16 @@ namespace NeoEdit.BinaryEditor
 				Padding = new Thickness(10, 2, 10, 2),
 				Target = this,
 			};
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]!=0?'*':'')" };
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
-			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = this });
+			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
 			label.SetBinding(Label.ContentProperty, multiBinding);
 			return label;
 		}
 
 		internal bool CanClose()
 		{
-			if (ModifiedSteps == 0)
+			if (!IsModified)
 				return true;
 
 			switch (new Message
@@ -229,7 +215,7 @@ namespace NeoEdit.BinaryEditor
 				case Message.OptionsEnum.No: return true;
 				case Message.OptionsEnum.Yes:
 					Command_File_Save();
-					return ModifiedSteps == 0;
+					return !IsModified;
 			}
 			return false;
 		}
@@ -484,57 +470,6 @@ namespace NeoEdit.BinaryEditor
 			Redo,
 		}
 
-		const int maxUndoBytes = 1048576 * 10;
-		void AddUndoRedo(BinaryEditorUndoRedo current, ReplaceType replaceType)
-		{
-			switch (replaceType)
-			{
-				case ReplaceType.Undo:
-					redo.Add(current);
-					--ModifiedSteps;
-					break;
-				case ReplaceType.Redo:
-					undo.Add(current);
-					++ModifiedSteps;
-					break;
-				case ReplaceType.Normal:
-					if (ModifiedSteps < 0)
-						ModifiedSteps = Int32.MinValue / 2; // Should never reach 0 again
-
-					redo.Clear();
-
-					// See if we can add this one to the last one
-					var done = false;
-					if ((ModifiedSteps != 0) && (undo.Count != 0))
-					{
-						var last = undo.Last();
-						if (last.index + last.count == current.index)
-						{
-							last.count += current.count;
-							var oldSize = last.bytes.LongLength;
-							Array.Resize(ref last.bytes, (int)(last.bytes.LongLength + current.bytes.LongLength));
-							Array.Copy(current.bytes, 0, last.bytes, oldSize, current.bytes.LongLength);
-							done = true;
-						}
-					}
-
-					if (!done)
-					{
-						undo.Add(current);
-						++ModifiedSteps;
-					}
-
-					while (true)
-					{
-						var totalChars = undo.Sum(undoItem => undoItem.bytes.LongLength);
-						if (totalChars <= maxUndoBytes)
-							break;
-						undo.RemoveAt(0);
-					}
-					break;
-			}
-		}
-
 		bool inHexEdit = false;
 		void Replace(byte[] bytes, bool useAllBytes = false)
 		{
@@ -559,7 +494,13 @@ namespace NeoEdit.BinaryEditor
 
 		void Replace(long index, long count, byte[] bytes, ReplaceType replaceType = ReplaceType.Normal)
 		{
-			AddUndoRedo(new BinaryEditorUndoRedo(index, bytes.Length, Data.GetSubset(index, count)), replaceType);
+			var undoRedoStep = new UndoRedo.UndoRedoStep(index, bytes.Length, Data.GetSubset(index, count));
+			switch (replaceType)
+			{
+				case ReplaceType.Undo: undoRedo.AddUndone(undoRedoStep); break;
+				case ReplaceType.Redo: undoRedo.AddRedone(undoRedoStep); break;
+				case ReplaceType.Normal: undoRedo.AddUndo(undoRedoStep); break;
+			}
 			Data.Replace(index, count, bytes);
 			++ChangeCount;
 		}
@@ -683,7 +624,7 @@ namespace NeoEdit.BinaryEditor
 			else
 			{
 				Data.Save(FileName);
-				ModifiedSteps = 0;
+				undoRedo.SetModified(false);
 			}
 		}
 
@@ -720,11 +661,10 @@ namespace NeoEdit.BinaryEditor
 
 		internal void Command_Edit_Undo()
 		{
-			if (undo.Count == 0)
+			var step = undoRedo.GetUndo();
+			if (step == null)
 				return;
 
-			var step = undo.Last();
-			undo.Remove(step);
 			Replace(step.index, step.count, step.bytes, ReplaceType.Undo);
 
 			Pos1 = step.index;
@@ -733,11 +673,10 @@ namespace NeoEdit.BinaryEditor
 
 		internal void Command_Edit_Redo()
 		{
-			if (redo.Count == 0)
+			var step = undoRedo.GetRedo();
+			if (step == null)
 				return;
 
-			var step = redo.Last();
-			redo.Remove(step);
 			Replace(step.index, step.count, step.bytes, ReplaceType.Redo);
 
 			Pos1 = Pos2 = step.index + step.bytes.Length;

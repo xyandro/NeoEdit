@@ -54,6 +54,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="UndoRedo.cs" />
     <Compile Include="Data\BinaryData.cs" />
     <Compile Include="Data\DumpBinaryData.cs" />
     <Compile Include="Data\FindData.cs" />

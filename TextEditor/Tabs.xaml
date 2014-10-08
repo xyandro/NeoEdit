@@ -14,9 +14,8 @@
 	</Window.Resources>
 
 	<Window.Title>
-		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0]t+(([1]!=0)?'*':'')t+' - NeoEdit Text Editor'">
+		<MultiBinding StringFormat="{}{0} - NeoEdit Text Editor">
 			<Binding Path="Active.FileName" ElementName="self"/>
-			<Binding Path="Active.ModifiedSteps" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>
 

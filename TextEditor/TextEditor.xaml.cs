@@ -33,16 +33,16 @@ namespace NeoEdit.TextEditor
 				Selections.Clear();
 				Marks.Clear();
 				Searches.Clear();
-				undo.Clear();
-				redo.Clear();
+				undoRedo.Clear();
 				CalculateBoundaries();
 			}
 		}
+		readonly UndoRedo undoRedo;
 
 		[DepProp]
 		public string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public int ModifiedSteps { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public bool IsModified { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return uiHelper.GetPropValue<Highlighting.HighlightingType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
@@ -93,6 +93,8 @@ namespace NeoEdit.TextEditor
 		{
 			uiHelper = new UIHelper<TextEditor>(this);
 			InitializeComponent();
+
+			undoRedo = new UndoRedo(b => IsModified = b);
 
 			OpenFile(filename, bytes, encoding);
 			Goto(line, column);
@@ -147,9 +149,9 @@ namespace NeoEdit.TextEditor
 				Padding = new Thickness(10, 2, 10, 2),
 				Target = this,
 			};
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]!=0?'*':'')" };
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
-			multiBinding.Bindings.Add(new Binding("ModifiedSteps") { Source = this });
+			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
 			label.SetBinding(Label.ContentProperty, multiBinding);
 
 			return label;
@@ -217,7 +219,7 @@ namespace NeoEdit.TextEditor
 			FileName = filename;
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
-			ModifiedSteps = bytes == null ? 0 : -1;
+			var modified = bytes != null;
 			if (bytes == null)
 			{
 				if (FileName == null)
@@ -228,6 +230,7 @@ namespace NeoEdit.TextEditor
 			if (encoding == Coder.Type.None)
 				encoding = Coder.GuessEncoding(bytes);
 			Data = new TextData(bytes, encoding);
+			undoRedo.SetModified(modified);
 			CoderUsed = encoding;
 			HighlightType = Highlighting.Get(FileName);
 		}
@@ -264,7 +267,7 @@ namespace NeoEdit.TextEditor
 
 		internal bool CanClose()
 		{
-			if (ModifiedSteps == 0)
+			if (!IsModified)
 				return true;
 
 			switch (new Message
@@ -279,7 +282,7 @@ namespace NeoEdit.TextEditor
 				case Message.OptionsEnum.No: return true;
 				case Message.OptionsEnum.Yes:
 					Command_File_Save();
-					return ModifiedSteps == 0;
+					return !IsModified;
 			}
 			return false;
 		}
@@ -327,7 +330,7 @@ namespace NeoEdit.TextEditor
 			{
 				File.WriteAllBytes(FileName, Data.GetBytes(CoderUsed));
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
-				ModifiedSteps = 0;
+				undoRedo.SetModified(false);
 			}
 		}
 
@@ -354,22 +357,20 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_File_Revert()
 		{
-			var run = true;
-
-			if ((run) && (ModifiedSteps != 0))
+			if (IsModified)
 			{
-				run = new Message
+				if (new Message
 				{
 					Title = "Confirm",
 					Text = "You have unsaved changes.  Are you sure you want to reload?",
 					Options = Message.OptionsEnum.YesNo,
 					DefaultAccept = Message.OptionsEnum.Yes,
 					DefaultCancel = Message.OptionsEnum.No,
-				}.Show() == Message.OptionsEnum.Yes;
+				}.Show() != Message.OptionsEnum.Yes)
+					return;
 			}
 
-			if (run)
-				OpenFile(FileName);
+			OpenFile(FileName);
 		}
 
 		internal void Command_File_CheckUpdates()
@@ -453,22 +454,16 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Edit_Undo()
 		{
-			if (undo.Count != 0)
-			{
-				var undoStep = undo.Last();
-				undo.Remove(undoStep);
-				Replace(undoStep.ranges, undoStep.text, true, ReplaceType.Undo);
-			}
+			var undo = undoRedo.GetUndo();
+			if (undo != null)
+				Replace(undo.ranges, undo.text, true, ReplaceType.Undo);
 		}
 
 		internal void Command_Edit_Redo()
 		{
-			if (redo.Count != 0)
-			{
-				var redoStep = redo.Last();
-				redo.Remove(redoStep);
-				Replace(redoStep.ranges, redoStep.text, true, ReplaceType.Redo);
-			}
+			var redo = undoRedo.GetRedo();
+			if (redo != null)
+				Replace(redo.ranges, redo.text, true, ReplaceType.Redo);
 		}
 
 		internal void Command_Edit_CutCopy(bool isCut)
@@ -1369,21 +1364,6 @@ namespace NeoEdit.TextEditor
 		readonly Typeface typeface;
 		readonly double fontSize;
 
-		class TextCanvasUndoRedo
-		{
-			public RangeList ranges { get; private set; }
-			public List<string> text { get; private set; }
-
-			public TextCanvasUndoRedo(RangeList _ranges, List<string> _text)
-			{
-				ranges = _ranges;
-				text = _text;
-			}
-		}
-
-		List<TextCanvasUndoRedo> undo = new List<TextCanvasUndoRedo>();
-		List<TextCanvasUndoRedo> redo = new List<TextCanvasUndoRedo>();
-
 		int visibleIndex = 0;
 		internal void EnsureVisible(bool highlight = false)
 		{
@@ -2027,76 +2007,6 @@ namespace NeoEdit.TextEditor
 			Undo,
 			Redo,
 		}
-
-		const int maxUndoChars = 1048576 * 10;
-		void AddUndoRedo(TextCanvasUndoRedo current, ReplaceType replaceType)
-		{
-			switch (replaceType)
-			{
-				case ReplaceType.Undo:
-					redo.Add(current);
-					--ModifiedSteps;
-					break;
-				case ReplaceType.Redo:
-					undo.Add(current);
-					++ModifiedSteps;
-					break;
-				case ReplaceType.Normal:
-					if (ModifiedSteps < 0)
-						ModifiedSteps = Int32.MinValue / 2; // Should never reach 0 again
-
-					redo.Clear();
-
-					// See if we can add this one to the last one
-					bool done = false;
-					if ((ModifiedSteps != 0) && (undo.Count != 0))
-					{
-						var last = undo.Last();
-						if (last.ranges.Count == current.ranges.Count)
-						{
-							var change = 0;
-							done = true;
-							for (var num = 0; num < last.ranges.Count; ++num)
-							{
-								if (last.ranges[num].End + change != current.ranges[num].Start)
-								{
-									done = false;
-									break;
-								}
-								change += current.ranges[num].Length - current.text[num].Length;
-							}
-
-							if (done)
-							{
-								change = 0;
-								for (var num = 0; num < last.ranges.Count; ++num)
-								{
-									last.ranges[num] = new Range(last.ranges[num].Start + change, last.ranges[num].End + current.ranges[num].Length + change);
-									last.text[num] += current.text[num];
-									change += current.ranges[num].Length - current.text[num].Length;
-								}
-							}
-						}
-					}
-
-					if (!done)
-					{
-						undo.Add(current);
-						++ModifiedSteps;
-					}
-
-					// Limit undo buffer
-					while (true)
-					{
-						var totalChars = undo.Sum(undoItem => undoItem.text.Sum(textItem => textItem.Length));
-						if (totalChars <= maxUndoChars)
-							break;
-						undo.RemoveAt(0);
-					}
-					break;
-			}
-		}
-
 		void Replace(RangeList ranges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
 		{
 			if (strs == null)
@@ -2114,7 +2024,13 @@ namespace NeoEdit.TextEditor
 				change = undoRange.Highlight - ranges[ctr].End;
 			}
 
-			AddUndoRedo(new TextCanvasUndoRedo(undoRanges, undoText), replaceType);
+			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText);
+			switch (replaceType)
+			{
+				case ReplaceType.Undo: undoRedo.AddUndone(textCanvasUndoRedo); break;
+				case ReplaceType.Redo: undoRedo.AddRedone(textCanvasUndoRedo); break;
+				case ReplaceType.Normal: undoRedo.AddUndo(textCanvasUndoRedo); break;
+			}
 
 			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
 
