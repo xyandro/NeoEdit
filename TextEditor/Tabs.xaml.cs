@@ -66,14 +66,14 @@ namespace NeoEdit.TextEditor
 			if ((files == null) || (files.Count < 0))
 				return;
 
-			if (new Message
+			if ((files.Count > 5) && (new Message
 			{
 				Title = "Confirm",
 				Text = String.Format("Are you sure you want to open these {0} files?", files.Count),
 				Options = Message.OptionsEnum.YesNoCancel,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.Cancel,
-			}.Show() != Message.OptionsEnum.Yes)
+			}.Show() != Message.OptionsEnum.Yes))
 				return;
 
 			foreach (var file in files)

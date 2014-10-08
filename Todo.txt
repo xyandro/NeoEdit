@@ -2,6 +2,8 @@ All:
 Control-N should bring up new version of current window
 Starting 2nd instance pops up in background
 Tabs: Ctrl-Tab to switch, Ctrl-T for new
+Add command prompt
+Diff?
 
 Disk:
 Paste filename (Address of disk viewer)
@@ -21,6 +23,8 @@ Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
+Ability to leave pasted data selected
+Series, possibly others don't select result (if some lines are empty some lines won't be selected)
 
 Binary:
 Fix binary editor backwards search
