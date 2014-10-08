@@ -12,6 +12,7 @@
 			<textEditor:TextEditMenuItem CommandEnum="File_Save"/>
 			<textEditor:TextEditMenuItem CommandEnum="File_SaveAs"/>
 			<textEditor:TextEditMenuItem CommandEnum="File_Close"/>
+			<textEditor:TextEditMenuItem CommandEnum="File_Refresh"/>
 			<textEditor:TextEditMenuItem CommandEnum="File_Revert"/>
 			<textEditor:TextEditMenuItem CommandEnum="File_CheckUpdates" IsChecked="{Binding Active.CheckUpdates, ElementName=self}"/>
 			<Separator/>

@@ -80,7 +80,6 @@ namespace NeoEdit.TextEditor
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
-			UIHelper<TextEditor>.AddCallback(a => a.FileName, (obj, o, n) => obj.FilenameChanged());
 			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.InvalidateRender());
 			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.InvalidateRender());
 			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.InvalidateRender());
@@ -157,63 +156,7 @@ namespace NeoEdit.TextEditor
 			return label;
 		}
 
-		FileSystemWatcher watcher;
 		DateTime fileLastWrite;
-		bool checkWatcher = false; // Make sure we only create dialog once
-		void FilenameChanged()
-		{
-			if (watcher != null)
-			{
-				watcher.EnableRaisingEvents = false;
-				watcher.Dispose();
-				watcher = null;
-			}
-
-			if (String.IsNullOrEmpty(FileName))
-				return;
-
-			watcher = new FileSystemWatcher(Path.GetDirectoryName(FileName), Path.GetFileName(FileName));
-			watcher.NotifyFilter = NotifyFilters.LastWrite;
-			var dispatcher = Dispatcher.CurrentDispatcher;
-			watcher.Changed += (s, e) =>
-			{
-				var watcherTimer = new DispatcherTimer(DispatcherPriority.Normal, dispatcher);
-				watcherTimer.Tick += (s2, e2) =>
-				{
-					watcherTimer.Stop();
-					watcherTimer = null;
-
-					if ((!CheckUpdates) || (checkWatcher))
-						return;
-
-					checkWatcher = true;
-					try
-					{
-						var lastWrite = new FileInfo(FileName).LastWriteTime;
-						if (fileLastWrite != lastWrite)
-						{
-							if (new Message
-							{
-								Title = "Confirm",
-								Text = "This file has been updated on disk.  Reload?",
-								Options = Message.OptionsEnum.YesNo,
-								DefaultAccept = Message.OptionsEnum.Yes,
-								DefaultCancel = Message.OptionsEnum.No,
-							}.Show() == Message.OptionsEnum.Yes)
-								Command_File_Revert();
-						}
-						fileLastWrite = lastWrite;
-					}
-					finally
-					{
-						checkWatcher = false;
-					}
-				};
-				watcherTimer.Start();
-			};
-			watcher.EnableRaisingEvents = true;
-		}
-
 		internal void OpenFile(string filename, byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
 		{
 			FileName = filename;
@@ -352,6 +295,22 @@ namespace NeoEdit.TextEditor
 					throw new Exception("Directory doesn't exist");
 				FileName = dialog.FileName;
 				Command_File_Save();
+			}
+		}
+
+		internal void Command_File_Refresh()
+		{
+			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = "This file has been updated on disk.  Reload?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() == Message.OptionsEnum.Yes)
+					Command_File_Revert();
 			}
 		}
 

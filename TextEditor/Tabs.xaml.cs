@@ -116,6 +116,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.File_Save: Active.Command_File_Save(); break;
 				case TextEditCommand.File_SaveAs: Active.Command_File_SaveAs(); break;
 				case TextEditCommand.File_Close: if (Active.CanClose()) { Active.Close(); TextEditors.Remove(Active); } break;
+				case TextEditCommand.File_Refresh: Active.Command_File_Refresh(); break;
 				case TextEditCommand.File_Revert: Active.Command_File_Revert(); break;
 				case TextEditCommand.File_CheckUpdates: Active.Command_File_CheckUpdates(); break;
 				case TextEditCommand.File_InsertFiles: Active.Command_File_InsertFiles(); break;
