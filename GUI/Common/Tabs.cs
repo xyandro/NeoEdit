@@ -30,10 +30,16 @@ namespace NeoEdit.GUI.Common
 		{
 			UIHelper<Tabs<ItemType>>.Register();
 			UIHelper<Tabs<ItemType>>.AddCallback(a => a.View, (obj, o, n) => obj.Layout());
-			UIHelper<Tabs<ItemType>>.AddCallback(a => a.Active, (obj, o, n) => obj.Layout());
+			UIHelper<Tabs<ItemType>>.AddCallback(a => a.Active, (obj, o, n) => obj.ActiveChanged());
 			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.SetActive(e));
 			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.Layout());
 			UIHelper<Tabs<ItemType>>.AddCoerce(a => a.Active, (obj, value) => (value == null) || ((obj.Items != null) && (obj.Items.Contains(value))) ? value : null);
+		}
+
+		void ActiveChanged()
+		{
+			Layout();
+			Active.Focus();
 		}
 
 		readonly UIHelper<Tabs<ItemType>> uiHelper;
@@ -44,6 +50,7 @@ namespace NeoEdit.GUI.Common
 			View = ViewType.Tabs;
 			GetLabel = DefaultGetLabel;
 			Background = Brushes.Gray;
+			Focusable = true;
 		}
 
 		protected virtual Label DefaultGetLabel(ItemType item)
@@ -53,16 +60,17 @@ namespace NeoEdit.GUI.Common
 
 		internal bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
-		public bool HandleKey(Key key)
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
-			var ret = true;
-			switch (key)
+			base.OnPreviewKeyDown(e);
+
+			e.Handled = true;
+			switch (e.Key)
 			{
-				case Key.PageUp: if (controlDown) MovePrev(); else ret = false; break;
-				case Key.PageDown: if (controlDown) MoveNext(); else ret = false; break;
-				default: ret = false; break;
+				case Key.PageUp: if (controlDown) MovePrev(); else e.Handled = false; break;
+				case Key.PageDown: if (controlDown) MoveNext(); else e.Handled = false; break;
+				default: e.Handled = false; break;
 			}
-			return ret;
 		}
 
 		public void MovePrev()
@@ -125,13 +133,13 @@ namespace NeoEdit.GUI.Common
 				Active = Items[index];
 		}
 
-		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+		protected override void OnPreviewGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
 		{
-			foreach (var editor in Items)
-				if (editor.IsMouseOver)
-					Active = editor;
-
-			base.OnPreviewMouseLeftButtonDown(e);
+			base.OnPreviewGotKeyboardFocus(e);
+			var focus = e.NewFocus as DependencyObject;
+			foreach (var item in Items)
+				if (item.IsAncestorOf(focus))
+					Active = item;
 		}
 
 		Label GetMovableLabel(ItemType item, bool tiled)
@@ -140,22 +148,24 @@ namespace NeoEdit.GUI.Common
 			label.Margin = new Thickness(0, 0, tiled ? 0 : 2, 1);
 			label.Background = item == Active ? Brushes.LightBlue : Brushes.LightGray;
 			label.AllowDrop = true;
-			label.MouseLeftButtonDown += (s, e) => Active = label.Target as ItemType;
-
+			label.MouseLeftButtonDown += (s, e) => Active = item;
 			label.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
-					DragDrop.DoDragDrop(label, new DataObject(typeof(ItemType), label), DragDropEffects.Move);
+					DragDrop.DoDragDrop(label, new DataObject(typeof(ItemType), item), DragDropEffects.Move);
 			};
 
 			label.Drop += (s, e) =>
 			{
-				var editor = (e.Data.GetData(typeof(ItemType)) as Label).Target as ItemType;
-				var fromIndex = Items.IndexOf(editor);
-				var toIndex = Items.IndexOf((s as Label).Target as ItemType);
+				var item2 = e.Data.GetData(typeof(ItemType)) as ItemType;
+				var fromIndex = Items.IndexOf(item2);
+				var toIndex = Items.IndexOf(item);
+				if ((fromIndex == toIndex) || (fromIndex == -1) || (toIndex == -1))
+					return;
+
 				Items.RemoveAt(fromIndex);
-				Items.Insert(toIndex, editor);
-				Active = editor;
+				Items.Insert(toIndex, item2);
+				Active = item2;
 			};
 
 			return label;

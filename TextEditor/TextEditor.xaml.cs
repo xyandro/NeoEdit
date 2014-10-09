@@ -121,6 +121,8 @@ namespace NeoEdit.TextEditor
 			canvas.MouseMove += OnCanvasMouseMove;
 			canvas.Render += OnCanvasRender;
 
+			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
+
 			Loaded += (s, e) =>
 			{
 				EnsureVisible();
@@ -136,23 +138,13 @@ namespace NeoEdit.TextEditor
 
 		}
 
-		internal void HandleMouseWheel(int delta)
-		{
-			yScrollValue -= delta / 40;
-		}
-
 		internal Label GetLabel()
 		{
-			var label = new Label
-			{
-				Padding = new Thickness(10, 2, 10, 2),
-				Target = this,
-			};
+			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
 			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
 			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
 			label.SetBinding(Label.ContentProperty, multiBinding);
-
 			return label;
 		}
 
@@ -1557,10 +1549,10 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		internal bool HandleKey(Key key)
+		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			var ret = true;
-			switch (key)
+			e.Handled = true;
+			switch (e.Key)
 			{
 				case Key.Back:
 				case Key.Delete:
@@ -1578,7 +1570,7 @@ namespace NeoEdit.TextEditor
 
 							if (controlDown)
 							{
-								if (key == Key.Back)
+								if (e.Key == Key.Back)
 									offset = GetPrevWord(offset);
 								else
 									offset = GetNextWord(offset);
@@ -1588,7 +1580,7 @@ namespace NeoEdit.TextEditor
 								var line = Data.GetOffsetLine(offset);
 								var index = Data.GetOffsetIndex(offset, line);
 
-								if (key == Key.Back)
+								if (e.Key == Key.Back)
 									--index;
 								else
 									++index;
@@ -1659,7 +1651,7 @@ namespace NeoEdit.TextEditor
 				case Key.Up:
 				case Key.Down:
 					{
-						var mult = key == Key.Up ? -1 : 1;
+						var mult = e.Key == Key.Up ? -1 : 1;
 						if (controlDown)
 							yScrollValue += mult;
 						else
@@ -1762,15 +1754,13 @@ namespace NeoEdit.TextEditor
 						}
 					}
 					else
-						ret = false;
+						e.Handled = false;
 					break;
-				default: ret = false; break;
+				default: e.Handled = false; break;
 			}
 
 			if (SelectionsInvalidated())
 				EnsureVisible();
-
-			return ret;
 		}
 
 		enum WordSkipType
@@ -2053,6 +2043,18 @@ namespace NeoEdit.TextEditor
 			return builder.ToString();
 		}
 
+		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+		{
+			base.OnPreviewMouseLeftButtonDown(e);
+			Focus();
+		}
+
+		protected override void OnTextInput(TextCompositionEventArgs e)
+		{
+			base.OnTextInput(e);
+			HandleText(e.Text);
+		}
+
 		internal void HandleText(string text)
 		{
 			if (text.Length == 0)
@@ -2085,6 +2087,11 @@ namespace NeoEdit.TextEditor
 			LineEnding = Data.OnlyEnding;
 
 			InvalidateRender();
+		}
+
+		public override string ToString()
+		{
+			return FileName;
 		}
 	}
 }

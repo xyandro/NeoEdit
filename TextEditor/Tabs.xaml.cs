@@ -38,8 +38,6 @@ namespace NeoEdit.TextEditor
 
 			TextEditors = new ObservableCollection<TextEditor>();
 			Add(new TextEditor(filename, bytes, encoding, line, column));
-
-			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
 		}
 
 		void Command_File_Open()
@@ -335,40 +333,10 @@ namespace NeoEdit.TextEditor
 			Active.InvalidateRender();
 		}
 
-		protected override void OnTextInput(TextCompositionEventArgs e)
-		{
-			base.OnTextInput(e);
-			if (e.Handled)
-				return;
-
-			if (e.OriginalSource is MenuItem)
-				return;
-
-			if (Active != null)
-				Active.HandleText(e.Text);
-			e.Handled = true;
-		}
-
 		void Add(TextEditor textEditor)
 		{
 			TextEditors.Add(textEditor);
 			Active = textEditor;
-		}
-
-		protected override void OnKeyDown(KeyEventArgs e)
-		{
-			base.OnKeyDown(e);
-			if (e.Handled)
-				return;
-
-			e.Handled = tabs.HandleKey(e.Key);
-			if (e.Handled)
-				return;
-
-			if (Active == null)
-				return;
-
-			e.Handled = Active.HandleKey(e.Key);
 		}
 
 		Label GetLabel(TextEditor textEditor)

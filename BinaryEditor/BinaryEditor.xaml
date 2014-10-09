@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
     xmlns:binaryEditor="clr-namespace:NeoEdit.BinaryEditor"
-	Focusable="True" FocusVisualStyle="{x:Null}" FocusManager.FocusedElement="{Binding ElementName=self}" Background="White">
+	Focusable="True" FocusVisualStyle="{x:Null}" Background="White">
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -25,7 +25,7 @@
 			ParentWindow="{Binding ElementName=self, Mode=OneWay}"
 		/>
 
-		<StatusBar Grid.Row="2" Grid.ColumnSpan="2">
+		<StatusBar Grid.Row="2" Grid.ColumnSpan="2" Focusable="False">
 			<StatusBarItem>
 				<TextBlock Text="Position"/>
 			</StatusBarItem>

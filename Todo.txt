@@ -25,6 +25,8 @@ Files: Select/etc on svn status (ignore/modified)
 Set selection to what was redone/undone on redo/undo
 Ability to leave pasted data selected
 Series, possibly others don't select result (if some lines are empty some lines won't be selected)
+When closing multiple unsaved files ask for "Yes for All"/"No for All"
+Remove "Check Updates"
 
 Binary:
 Fix binary editor backwards search
@@ -33,3 +35,4 @@ Cursor hard to see
 Fill selection (eg with 0s)
 Reload current file (perhaps automatically?)
 Find fails when file is modified
+Position lost when switching between tabs

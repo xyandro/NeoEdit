@@ -37,8 +37,6 @@ namespace NeoEdit.BinaryEditor
 
 			BinaryEditors = new ObservableCollection<BinaryEditor>();
 			Add(new BinaryEditor(data, encoder, filename, filetitle));
-
-			MouseWheel += (s, e) => Active.HandleMouseWheel(e.Delta);
 		}
 
 		void Add(BinaryEditor binaryEditor)
@@ -72,41 +70,6 @@ namespace NeoEdit.BinaryEditor
 			if (process.Id == Process.GetCurrentProcess().Id)
 				throw new ArgumentException("Can't open current process.");
 			return new BinaryEditorTabs(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName));
-		}
-
-		protected override void OnTextInput(TextCompositionEventArgs e)
-		{
-			base.OnTextInput(e);
-			if (e.Handled)
-				return;
-
-			if (e.OriginalSource is MenuItem)
-				return;
-
-			if (Active == null)
-				return;
-
-			Active.HandleText(e.Text);
-		}
-
-		protected override void OnKeyDown(KeyEventArgs e)
-		{
-			base.OnKeyDown(e);
-			if (e.Handled)
-				return;
-
-			e.Handled = tabs.HandleKey(e.Key);
-			if (e.Handled)
-				return;
-
-			if (Active == null)
-				return;
-
-			switch (e.Key)
-			{
-				case Key.Escape: Active.Focus(); e.Handled = true; break;
-				default: e.Handled = Active.HandleKey(e.Key); break;
-			}
 		}
 
 		Label GetLabel(BinaryEditor binaryEditor)

@@ -177,20 +177,12 @@ namespace NeoEdit.BinaryEditor
 			FileName = filename;
 			FileTitle = filetitle;
 
-			Loaded += (s, e) =>
-			{
-				canvas.InvalidateVisual();
-				Pos1 = Pos2 = 0;
-			};
+			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 		}
 
 		internal Label GetLabel()
 		{
-			var label = new Label
-			{
-				Padding = new Thickness(10, 2, 10, 2),
-				Target = this,
-			};
+			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
 			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
 			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
@@ -341,11 +333,6 @@ namespace NeoEdit.BinaryEditor
 			dc.DrawText(textText, new Point(xTextViewStart, y));
 		}
 
-		internal void HandleMouseWheel(int delta)
-		{
-			yScrollValue -= delta / 40;
-		}
-
 		void OnCanvasRender(object sender, DrawingContext dc)
 		{
 			if (Data == null)
@@ -365,11 +352,12 @@ namespace NeoEdit.BinaryEditor
 			}
 		}
 
-		public bool HandleKey(Key key)
+		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			var ret = true;
-			switch (key)
+			e.Handled = true;
+			switch (e.Key)
 			{
+				case Key.Escape: Focus(); break;
 				case Key.Back:
 				case Key.Delete:
 					{
@@ -388,7 +376,7 @@ namespace NeoEdit.BinaryEditor
 							inHexEdit = false;
 						}
 
-						if (key == Key.Back)
+						if (e.Key == Key.Back)
 						{
 							if (SelStart <= 0)
 								break;
@@ -408,7 +396,7 @@ namespace NeoEdit.BinaryEditor
 				case Key.Up:
 				case Key.Down:
 					{
-						var mult = key == Key.Up ? -1 : 1;
+						var mult = e.Key == Key.Up ? -1 : 1;
 						if (controlDown)
 							yScrollValue += mult;
 						else
@@ -448,11 +436,10 @@ namespace NeoEdit.BinaryEditor
 						Pos2 = 0;
 					}
 					else
-						ret = false;
+						e.Handled = false;
 					break;
-				default: ret = false; break;
+				default: e.Handled = false; break;
 			}
-			return ret;
 		}
 
 		void ReplaceAll(byte[] bytes)
@@ -514,18 +501,18 @@ namespace NeoEdit.BinaryEditor
 			Replace(SelStart, useLen, bytes);
 		}
 
-		public void HandleText(string str)
+		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
-			if ((String.IsNullOrEmpty(str)) || (str == "\u001B"))
+			if (String.IsNullOrEmpty(e.Text))
 				return;
 
 			if (!SelHex)
 			{
-				Replace(Coder.StringToBytes(str, CoderUsed));
+				Replace(Coder.StringToBytes(e.Text, CoderUsed));
 				return;
 			}
 
-			var let = Char.ToUpper(str[0]);
+			var let = Char.ToUpper(e.Text[0]);
 			byte val;
 			if ((let >= '0') && (let <= '9'))
 				val = (byte)(let - '0');
@@ -901,6 +888,11 @@ namespace NeoEdit.BinaryEditor
 
 				return;
 			}
+		}
+
+		public override string ToString()
+		{
+			return FileName;
 		}
 	}
 }
