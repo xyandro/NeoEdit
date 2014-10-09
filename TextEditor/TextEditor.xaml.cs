@@ -50,8 +50,6 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		public bool HasBOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public bool CheckUpdates { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
 		public int Line { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public int Column { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
@@ -97,8 +95,6 @@ namespace NeoEdit.TextEditor
 
 			OpenFile(filename, bytes, encoding);
 			Goto(line, column);
-
-			CheckUpdates = true;
 
 			Selections.CollectionChanged += () => InvalidateSelections();
 			Searches.CollectionChanged += () => InvalidateSearches();
@@ -322,11 +318,6 @@ namespace NeoEdit.TextEditor
 			}
 
 			OpenFile(FileName);
-		}
-
-		internal void Command_File_CheckUpdates()
-		{
-			CheckUpdates = !CheckUpdates;
 		}
 
 		internal void Command_File_InsertFiles()
