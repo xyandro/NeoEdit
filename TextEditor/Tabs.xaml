@@ -32,6 +32,7 @@
 
 		<textEditor:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" GetLabel="GetLabel" VerticalAlignment="Stretch"
 			Items="{Binding TextEditors, ElementName=self, Mode=TwoWay}"
+			Selected="{Binding Selected, ElementName=self, Mode=TwoWay}"
 			Active="{Binding Active, ElementName=self, Mode=TwoWay}"
 			View="{Binding View, ElementName=self, Mode=TwoWay}"
 		/>

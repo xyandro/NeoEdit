@@ -1540,10 +1540,10 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		internal bool HandleKey(Key key)
 		{
-			e.Handled = true;
-			switch (e.Key)
+			var ret = true;
+			switch (key)
 			{
 				case Key.Back:
 				case Key.Delete:
@@ -1561,7 +1561,7 @@ namespace NeoEdit.TextEditor
 
 							if (controlDown)
 							{
-								if (e.Key == Key.Back)
+								if (key == Key.Back)
 									offset = GetPrevWord(offset);
 								else
 									offset = GetNextWord(offset);
@@ -1571,7 +1571,7 @@ namespace NeoEdit.TextEditor
 								var line = Data.GetOffsetLine(offset);
 								var index = Data.GetOffsetIndex(offset, line);
 
-								if (e.Key == Key.Back)
+								if (key == Key.Back)
 									--index;
 								else
 									++index;
@@ -1642,7 +1642,7 @@ namespace NeoEdit.TextEditor
 				case Key.Up:
 				case Key.Down:
 					{
-						var mult = e.Key == Key.Up ? -1 : 1;
+						var mult = key == Key.Up ? -1 : 1;
 						if (controlDown)
 							yScrollValue += mult;
 						else
@@ -1745,13 +1745,15 @@ namespace NeoEdit.TextEditor
 						}
 					}
 					else
-						e.Handled = false;
+						ret = false;
 					break;
-				default: e.Handled = false; break;
+				default: ret = false; break;
 			}
 
 			if (SelectionsInvalidated())
 				EnsureVisible();
+
+			return ret;
 		}
 
 		enum WordSkipType
@@ -2038,12 +2040,6 @@ namespace NeoEdit.TextEditor
 		{
 			base.OnPreviewMouseLeftButtonDown(e);
 			Focus();
-		}
-
-		protected override void OnTextInput(TextCompositionEventArgs e)
-		{
-			base.OnTextInput(e);
-			HandleText(e.Text);
 		}
 
 		internal void HandleText(string text)
