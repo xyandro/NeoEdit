@@ -20,8 +20,6 @@ namespace NeoEdit.GUI.Common
 		[DepProp]
 		public ObservableCollection<ItemType> Items { get { return uiHelper.GetPropValue<ObservableCollection<ItemType>>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public ObservableCollection<ItemType> Selected { get { return uiHelper.GetPropValue<ObservableCollection<ItemType>>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
 		public ItemType Active { get { return uiHelper.GetPropValue<ItemType>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public ViewType View { get { return uiHelper.GetPropValue<ViewType>(); } set { uiHelper.SetPropValue(value); } }
@@ -33,11 +31,8 @@ namespace NeoEdit.GUI.Common
 			UIHelper<Tabs<ItemType>>.Register();
 			UIHelper<Tabs<ItemType>>.AddCallback(a => a.View, (obj, o, n) => obj.Layout());
 			UIHelper<Tabs<ItemType>>.AddCallback(a => a.Active, (obj, o, n) => obj.ActiveChanged());
-			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ValidateSelected());
 			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.SetActive(e));
 			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.Layout());
-			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.ValidateSelected());
-			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.Layout());
 			UIHelper<Tabs<ItemType>>.AddCoerce(a => a.Active, (obj, value) => (value == null) || ((obj.Items != null) && (obj.Items.Contains(value))) ? value : null);
 		}
 
@@ -96,30 +91,6 @@ namespace NeoEdit.GUI.Common
 				Active = Items[index];
 		}
 
-		bool validatingSelected = false;
-		void ValidateSelected()
-		{
-			if (validatingSelected)
-				return;
-
-			try
-			{
-				validatingSelected = true;
-
-				if (Selected == null)
-					Selected = new ObservableCollection<ItemType>();
-
-				if (Items == null)
-				{
-					Selected.Clear();
-					return;
-				}
-
-				Selected = new ObservableCollection<ItemType>(Selected.Where(item => Items.Contains(item)).Distinct());
-			}
-			finally { validatingSelected = false; }
-		}
-
 		void SetActive(NotifyCollectionChangedEventArgs e)
 		{
 			if (Items == null)
@@ -175,18 +146,9 @@ namespace NeoEdit.GUI.Common
 		{
 			var label = GetLabel(item);
 			label.Margin = new Thickness(0, 0, tiled ? 0 : 2, 1);
-			label.Background = item == Active ? Brushes.LightBlue : Selected.Contains(item) ? Brushes.LightGreen : Brushes.LightGray;
+			label.Background = item == Active ? Brushes.LightBlue : Brushes.LightGray;
 			label.AllowDrop = true;
-
-			label.MouseLeftButtonDown += (s, e) =>
-			{
-				if (controlDown)
-					Selected.Add(Active);
-				else
-					Selected.Clear();
-				Active = item;
-			};
-
+			label.MouseLeftButtonDown += (s, e) => Active = item;
 			label.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
@@ -276,9 +238,6 @@ namespace NeoEdit.GUI.Common
 				stackPanel.Children.Add(GetMovableLabel(item, false));
 			SetRow(stackPanel, 0);
 			Children.Add(stackPanel);
-
-			if (Active == null)
-				return;
 
 			SetRow(Active, 1);
 			SetColumn(Active, 0);
