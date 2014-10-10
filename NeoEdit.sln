@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TODO", "TODO", "{6F0CF426-4
 		Todo.txt = Todo.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -154,6 +156,14 @@ Global
 		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Release|x64.Build.0 = Release|x64
 		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Release|x86.ActiveCfg = Release|x86
 		{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}.Release|x86.Build.0 = Release|x86
+		{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}.Debug|x64.ActiveCfg = Debug|x64
+		{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}.Debug|x64.Build.0 = Debug|x64
+		{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}.Debug|x86.ActiveCfg = Debug|x86
+		{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}.Debug|x86.Build.0 = Debug|x86
+		{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}.Release|x64.ActiveCfg = Release|x64
+		{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}.Release|x64.Build.0 = Release|x64
+		{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}.Release|x86.ActiveCfg = Release|x86
+		{F70679BC-150E-4DAA-85C9-FDC4A0C49A6B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

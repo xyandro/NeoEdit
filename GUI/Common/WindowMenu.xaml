@@ -6,6 +6,7 @@
 
 	<MenuItem.CommandBindings>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Disk" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Console" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Processes" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Registry" Executed="CommandBinding_Executed"/>
@@ -27,6 +28,7 @@
 	</MenuItem.InputBindings>
 
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Disk" Header="_Disk"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Console" Header="_Console"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Processes" Header="_Processes"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Handles" Header="_Handles"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Registry" Header="_Registry"/>

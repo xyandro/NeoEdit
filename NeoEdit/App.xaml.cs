@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using NeoEdit.BinaryEditor;
 using NeoEdit.Common.Transform;
+using NeoEdit.Console;
 using NeoEdit.DBViewer;
 using NeoEdit.Disk;
 using NeoEdit.GUI.About;
@@ -56,6 +57,8 @@ namespace NeoEdit
 					case "system":
 					case "systeminfo":
 						return new SystemInfoWindow();
+					case "console":
+						return new ConsoleTabs();
 					case "disk":
 					case "disks":
 						{
@@ -173,6 +176,7 @@ namespace NeoEdit
 				fileBinaryEditor: (filename, binarydata, encoder) => BinaryEditorTabs.CreateFromFile(filename, binarydata, encoder),
 				processBinaryEditor: (pid) => BinaryEditorTabs.CreateFromProcess(pid),
 				disk: () => new DiskWindow(),
+				console: () => new ConsoleTabs(),
 				processes: (pid) => new ProcessesWindow(pid),
 				handles: (pid) => new HandlesWindow(pid),
 				registry: (key) => new RegistryWindow(key),

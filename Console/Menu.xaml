@@ -1,0 +1,18 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
+	xmlns:console="clr-namespace:NeoEdit.Console">
+
+	<Menu x:Key="ConsoleMenu">
+		<MenuItem Header="_File">
+			<console:ConsoleMenuItem CommandEnum="File_New"/>
+		</MenuItem>
+		<MenuItem Header="_View">
+			<console:ConsoleMenuItem CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=[0]#3d##3d##27#Tiles#27#}"/>
+		</MenuItem>
+		<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
+		<guiCommon:HelpMenu/>
+	</Menu>
+
+</ResourceDictionary>
