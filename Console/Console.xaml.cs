@@ -87,6 +87,8 @@ namespace NeoEdit.Console
 
 		void Prompt()
 		{
+			FinishAll();
+
 			var line = CreateOrGetAndRemoveLastUnfinished(Line.LineType.Command);
 			Lines.Add(line + String.Format(@"{0}> ", Location));
 		}
@@ -116,14 +118,27 @@ namespace NeoEdit.Console
 			}
 		}
 
+		const int lookBehindLimit = 50;
 		Line CreateOrGetAndRemoveLastUnfinished(Line.LineType type)
 		{
-			var last = Lines.LastOrDefault(line => (line.Type == type) && (!line.Finished));
-			if (last == null)
-				return new Line(type);
+			var first = Math.Max(0, Lines.Count - lookBehindLimit);
+			for (var ctr = Lines.Count - 1; ctr >= first; --ctr)
+				if ((Lines[ctr].Type == type) && (!Lines[ctr].Finished))
+				{
+					var last = Lines[ctr];
+					Lines.RemoveAt(ctr);
+					return last;
+				}
 
-			Lines.Remove(last);
-			return last;
+			return new Line(type);
+		}
+
+		void FinishAll()
+		{
+			var first = Math.Max(0, Lines.Count - lookBehindLimit);
+			for (var ctr = Lines.Count - 1; ctr >= first; --ctr)
+				if (!Lines[ctr].Finished)
+					Lines[ctr] = Lines[ctr].Finish();
 		}
 
 		AsyncProcess proc = null;
