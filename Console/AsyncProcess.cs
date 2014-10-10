@@ -112,5 +112,15 @@ namespace NeoEdit.Console
 		{
 			process.StandardInput.Write(data);
 		}
+
+		public void Write(string data)
+		{
+			process.StandardInput.Write(data);
+		}
+
+		public void Kill()
+		{
+			process.Kill();
+		}
 	}
 }

@@ -97,6 +97,14 @@ namespace NeoEdit.Console
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
 			base.OnTextInput(e);
+
+			if (proc != null)
+			{
+				proc.Write(e.Text);
+				e.Handled = true;
+				return;
+			}
+
 			command += e.Text;
 			Lines[Lines.Count - 1] += e.Text;
 			e.Handled = true;
@@ -104,17 +112,30 @@ namespace NeoEdit.Console
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
+			base.OnKeyDown(e);
+
 			if (proc != null)
 			{
-				proc.Write((byte)e.Key);
-				e.Handled = true;
-				return;
+				var done = true;
+				switch (e.Key)
+				{
+					case Key.Return: break;
+					default: done = false; break;
+				}
+
+				if (done)
+				{
+					proc.Write((byte)e.Key);
+					e.Handled = true;
+					return;
+				}
 			}
 
-			base.OnKeyDown(e);
+
 			switch (e.Key)
 			{
 				case Key.Enter: RunCommand(); e.Handled = true; break;
+				case Key.C: if ((proc != null) && ((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None)) proc.Kill(); break;
 			}
 		}
 
