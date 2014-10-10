@@ -37,7 +37,22 @@ namespace NeoEdit
 			Message.Show(message, "Error");
 #if DEBUG
 			if ((Debugger.IsAttached) && ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None))
+			{
+				var inner = ex;
+				while (inner.InnerException != null)
+					inner = inner.InnerException;
+				var er = inner.StackTrace.Split('\r', '\n').FirstOrDefault(a => a.Contains(":line"));
+				if (er != null)
+				{
+					var idx = er.LastIndexOf(" in ");
+					if (idx != -1)
+						er = er.Substring(idx + 4);
+					idx = er.IndexOf(":line ");
+					er = er.Substring(0, idx) + " " + er.Substring(idx + 6);
+					Clipboard.SetText(er, TextDataFormat.Text);
+				}
 				System.Diagnostics.Debugger.Break();
+			}
 #endif
 
 		}
