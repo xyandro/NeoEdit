@@ -39,7 +39,8 @@ namespace NeoEdit.GUI.Common
 		void ActiveChanged()
 		{
 			Layout();
-			Active.Focus();
+			if (Active != null)
+				Active.Focus();
 		}
 
 		readonly UIHelper<Tabs<ItemType>> uiHelper;

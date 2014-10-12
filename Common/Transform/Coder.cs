@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -315,6 +316,20 @@ namespace NeoEdit.Common.Transform
 				return Type.UTF16LE;
 			else
 				return Type.UTF16BE;
+		}
+
+		public static Dictionary<string, Coder.Type> GetEncodingTypes()
+		{
+			return new Dictionary<string, Type>
+			{
+				{ "UTF8", Coder.Type.UTF8 },
+				{ "UTF7", Coder.Type.UTF7 },
+				{ "UTF16 (Little Endian)", Coder.Type.UTF16LE },
+				{ "UTF16 (Big Endian)", Coder.Type.UTF16BE },
+				{ "UTF32 (Little Endian)", Coder.Type.UTF32LE },
+				{ "UTF32 (Big Endian)", Coder.Type.UTF32BE },
+				{ "Base64", Coder.Type.Base64 },
+			};
 		}
 	}
 }

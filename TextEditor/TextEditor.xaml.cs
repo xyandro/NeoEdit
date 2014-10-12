@@ -366,27 +366,36 @@ namespace NeoEdit.TextEditor
 			Clipboard.SetText(Path.GetFileName(FileName));
 		}
 
-		internal void Command_File_BOM()
+		internal void Command_File_Encoding()
 		{
-			if (Data.BOM)
-				Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
-			else
-				Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
-		}
+			var result = EncodingDialog.Run(CoderUsed, HasBOM, LineEnding);
+			if (result == null)
+				return;
 
-		internal void Command_File_SetEndings(string ending)
-		{
-			var lines = Data.NumLines;
-			var sel = new RangeList();
-			for (var line = 0; line < lines; ++line)
+			CoderUsed = result.Encoding;
+
+			if (Data.BOM != result.BOM)
 			{
-				var current = Data.GetEnding(line);
-				if ((current.Length == 0) || (current == ending))
-					continue;
-				var start = Data.GetOffset(line, Data.GetLineLength(line));
-				sel.Add(Range.FromIndex(start, current.Length));
+				if (result.BOM)
+					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
+				else
+					Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
 			}
-			Replace(sel, sel.Select(str => ending).ToList(), false);
+
+			if (result.LineEndings != null)
+			{
+				var lines = Data.NumLines;
+				var sel = new RangeList();
+				for (var line = 0; line < lines; ++line)
+				{
+					var current = Data.GetEnding(line);
+					if ((current.Length == 0) || (current == result.LineEndings))
+						continue;
+					var start = Data.GetOffset(line, Data.GetLineLength(line));
+					sel.Add(Range.FromIndex(start, current.Length));
+				}
+				Replace(sel, sel.Select(str => result.LineEndings).ToList(), false);
+			}
 		}
 
 		internal void Command_File_BinaryEditor()
@@ -1949,6 +1958,9 @@ namespace NeoEdit.TextEditor
 		}
 		void Replace(RangeList ranges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
 		{
+			if (ranges.Count == 0)
+				return;
+
 			if (strs == null)
 				strs = ranges.Select(range => "").ToList();
 
