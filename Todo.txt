@@ -26,7 +26,6 @@ Set selection to what was redone/undone on redo/undo
 Ability to leave pasted data selected
 Series, possibly others don't select result (if some lines are empty some lines won't be selected)
 When closing multiple unsaved files ask for "Yes for All"/"No for All"
-Ctrl+Shift+Arrow: Make selections on new lines
 Get directory files/dirs
 
 Binary:

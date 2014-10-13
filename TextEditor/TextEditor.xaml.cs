@@ -1586,10 +1586,16 @@ namespace NeoEdit.TextEditor
 				case Key.Down:
 					{
 						var mult = e.Key == Key.Up ? -1 : 1;
-						if (controlDown)
-							yScrollValue += mult;
-						else
+						if (!controlDown)
 							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
+						else if (shiftDown)
+						{
+							shiftOverride = false;
+							Selections.AddRange(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
+							shiftOverride = null;
+						}
+						else
+							yScrollValue += mult;
 					}
 					break;
 				case Key.Home:
