@@ -215,11 +215,6 @@ namespace NeoEdit.TextEditor
 			return false;
 		}
 
-		internal void Close()
-		{
-			FileName = null; // Cancel filesystem watch
-		}
-
 		internal enum GetPathType
 		{
 			FileName,
