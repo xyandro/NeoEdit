@@ -95,6 +95,8 @@ namespace NeoEdit.TextEditor
 			base.OnClosing(e);
 		}
 
+		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+
 		void RunCommand(TextEditCommand command)
 		{
 			switch (command)
@@ -108,6 +110,8 @@ namespace NeoEdit.TextEditor
 
 			if (Active == null)
 				return;
+
+			var include = (!shiftDown) && (TextEditMenuItem.LastClick == MouseButton.Left);
 
 			switch (command)
 			{
@@ -151,10 +155,10 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Information_CreateTime: Active.Command_Files_Information_CreateTime(); break;
 				case TextEditCommand.Files_Information_Attributes: Active.Command_Files_Information_Attributes(); break;
 				case TextEditCommand.Files_Information_ReadOnly: Active.Command_Files_Information_ReadOnly(); break;
-				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(TextEditMenuItem.LastClick == MouseButton.Left); break;
+				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(include); break;
 				case TextEditCommand.Files_Select_Files: Active.Command_Files_Select_Files(); break;
 				case TextEditCommand.Files_Select_Directories: Active.Command_Files_Select_Directories(); break;
-				case TextEditCommand.Files_Select_Roots: Active.Command_Files_Select_Roots(TextEditMenuItem.LastClick == MouseButton.Left); break;
+				case TextEditCommand.Files_Select_Roots: Active.Command_Files_Select_Roots(include); break;
 				case TextEditCommand.Files_RenameKeysToSelections: Active.Command_Files_RenameKeysToSelections(); break;
 				case TextEditCommand.Data_Case_Upper: Active.Command_Data_Case_Upper(); break;
 				case TextEditCommand.Data_Case_Lower: Active.Command_Data_Case_Lower(); break;
@@ -287,7 +291,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_All: Active.Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Active.Command_Select_Limit(); break;
 				case TextEditCommand.Select_Lines: Active.Command_Select_Lines(); break;
-				case TextEditCommand.Select_NonEmpty: Active.Command_Select_NonEmpty(TextEditMenuItem.LastClick == MouseButton.Left); break;
+				case TextEditCommand.Select_NonEmpty: Active.Command_Select_NonEmpty(include); break;
 				case TextEditCommand.Select_Unique: Active.Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Active.Command_Select_Duplicates(); break;
 				case TextEditCommand.Select_Marks: Active.Command_Select_Marks(); break;
@@ -296,8 +300,8 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_Min_Numeric: Active.Command_Select_Min_Numeric(); break;
 				case TextEditCommand.Select_Max_String: Active.Command_Select_Max_String(); break;
 				case TextEditCommand.Select_Max_Numeric: Active.Command_Select_Max_Numeric(); break;
-				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(TextEditMenuItem.LastClick == MouseButton.Left); break;
-				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(TextEditMenuItem.LastClick == MouseButton.Left); break;
+				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(include); break;
+				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(include); break;
 				case TextEditCommand.Select_ShowFirst: Active.Command_Select_ShowFirst(); break;
 				case TextEditCommand.Select_ShowCurrent: Active.Command_Select_ShowCurrent(); break;
 				case TextEditCommand.Select_NextSelection: Active.Command_Select_NextSelection(); break;
