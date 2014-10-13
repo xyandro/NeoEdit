@@ -461,74 +461,61 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Edit_Find()
 		{
-			shiftOverride = shiftDown;
-			try
+			var selecting = shiftDown;
+			string text = null;
+			var selectionOnly = Selections.Any(range => range.HasSelection());
+
+			if (Selections.Count == 1)
 			{
-				string text = null;
-				var selectionOnly = Selections.Any(range => range.HasSelection());
-
-				if (Selections.Count == 1)
+				var sel = Selections.First();
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
 				{
-					var sel = Selections.First();
-					if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
-					{
-						selectionOnly = false;
-						text = GetString(sel);
-					}
-				}
-
-				var findResult = FindDialog.Run(text, selectionOnly);
-				if (findResult != null)
-				{
-					RunSearch(findResult);
-					if (findResult.SelectAll)
-					{
-						if (Searches.Count != 0)
-							Selections.Replace(Searches);
-						Searches.Clear();
-					}
-
-					FindNext(true);
+					selectionOnly = false;
+					text = GetString(sel);
 				}
 			}
-			finally { shiftOverride = null; }
+
+			var findResult = FindDialog.Run(text, selectionOnly);
+			if (findResult != null)
+			{
+				RunSearch(findResult);
+				if (findResult.SelectAll)
+				{
+					if (Searches.Count != 0)
+						Selections.Replace(Searches);
+					Searches.Clear();
+				}
+
+				FindNext(true, selecting);
+			}
 		}
 
 		internal void Command_Edit_FindNextPrev(bool next)
 		{
-			FindNext(next);
+			FindNext(next, shiftDown);
 		}
 
-		bool? shiftOverride;
-		bool shiftDown { get { return shiftOverride.HasValue ? shiftOverride.Value : (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
 		internal void Command_Edit_GotoLine()
 		{
-			shiftOverride = shiftDown;
-			try
-			{
-				var line = Data.GetOffsetLine(Selections.First().Start);
-				var newLine = GotoLineDialog.Run(Data.NumLines, line);
-				if (newLine.HasValue)
-					Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true)).ToList());
-			}
-			finally { shiftOverride = null; }
+			var selecting = shiftDown;
+			var line = Data.GetOffsetLine(Selections.First().Start);
+			var newLine = GotoLineDialog.Run(Data.NumLines, line);
+			if (newLine.HasValue)
+				Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true, selecting)).ToList());
 		}
 
 		internal void Command_Edit_GotoIndex()
 		{
-			shiftOverride = shiftDown;
-			try
-			{
-				var offset = Selections.First().Start;
-				var line = Data.GetOffsetLine(offset);
-				var index = Data.GetOffsetIndex(offset, line);
-				var newIndex = GotoIndexDialog.Run(Data.GetLineLength(line) + 1, index);
-				if (newIndex.HasValue)
-					Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false)).ToList());
-			}
-			finally { shiftOverride = null; }
+			var selecting = shiftDown;
+			var offset = Selections.First().Start;
+			var line = Data.GetOffsetLine(offset);
+			var index = Data.GetOffsetIndex(offset, line);
+			var newIndex = GotoIndexDialog.Run(Data.GetLineLength(line) + 1, index);
+			if (newIndex.HasValue)
+				Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false, selecting)).ToList());
 		}
 
 		internal void Command_Files_CutCopy(bool isCut)
@@ -1589,11 +1576,7 @@ namespace NeoEdit.TextEditor
 						if (!controlDown)
 							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
 						else if (shiftDown)
-						{
-							shiftOverride = false;
-							Selections.AddRange(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
-							shiftOverride = null;
-						}
+							Selections.AddRange(Selections.Select(range => MoveCursor(range, mult, 0, selecting: false)).ToList());
 						else
 							yScrollValue += mult;
 					}
@@ -1794,15 +1777,17 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		Range MoveCursor(Range range, int cursor)
+		Range MoveCursor(Range range, int cursor, bool? selecting = null)
 		{
-			if (shiftDown)
+			if (selecting == null)
+				selecting = shiftDown;
+			if (selecting.Value)
 				return new Range(cursor, range.Highlight);
 
 			return new Range(cursor);
 		}
 
-		Range MoveCursor(Range range, int line, int index, bool lineRel = true, bool indexRel = true)
+		Range MoveCursor(Range range, int line, int index, bool lineRel = true, bool indexRel = true, bool? selecting = null)
 		{
 			if ((lineRel) || (indexRel))
 			{
@@ -1817,20 +1802,20 @@ namespace NeoEdit.TextEditor
 
 			line = Math.Max(0, Math.Min(line, Data.NumLines - 1));
 			index = Math.Max(0, Math.Min(index, Data.GetLineLength(line)));
-			return MoveCursor(range, Data.GetOffset(line, index));
+			return MoveCursor(range, Data.GetOffset(line, index), selecting);
 		}
 
-		void MouseHandler(Point mousePos, int clickCount)
+		void MouseHandler(Point mousePos, int clickCount, bool selecting)
 		{
 			var line = Math.Min(Data.NumLines - 1, (int)(mousePos.Y / font.lineHeight) + yScrollValue);
 			var index = Math.Min(Data.GetLineLength(line), Data.GetIndexFromColumn(line, (int)(mousePos.X / font.charWidth) + xScrollValue, true));
 			var offset = Data.GetOffset(line, index);
 			var mouseRange = Selections[visibleIndex];
 
-			if (shiftDown)
+			if (selecting)
 			{
 				Selections.Remove(mouseRange);
-				Selections.Add(MoveCursor(mouseRange, offset));
+				Selections.Add(MoveCursor(mouseRange, offset, true));
 				visibleIndex = Selections.Count - 1;
 				return;
 			}
@@ -1851,7 +1836,7 @@ namespace NeoEdit.TextEditor
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			MouseHandler(e.GetPosition(canvas), e.ClickCount);
+			MouseHandler(e.GetPosition(canvas), e.ClickCount, false);
 			canvas.CaptureMouse();
 			e.Handled = true;
 		}
@@ -1867,9 +1852,7 @@ namespace NeoEdit.TextEditor
 			if (!canvas.IsMouseCaptured)
 				return;
 
-			shiftOverride = true;
-			MouseHandler(e.GetPosition(canvas), 0);
-			shiftOverride = null;
+			MouseHandler(e.GetPosition(canvas), 0, true);
 			e.Handled = true;
 		}
 
@@ -1940,7 +1923,7 @@ namespace NeoEdit.TextEditor
 			CalculateBoundaries();
 		}
 
-		void FindNext(bool forward)
+		void FindNext(bool forward, bool selecting)
 		{
 			if (Searches.Count == 0)
 				return;
@@ -1961,7 +1944,7 @@ namespace NeoEdit.TextEditor
 						index = Searches.Count - 1;
 				}
 
-				if (!shiftDown)
+				if (!selecting)
 					Selections[ctr] = new Range(Searches[index].End, Searches[index].Start);
 				else if (forward)
 					Selections[ctr] = new Range(Searches[index].End, Selections[ctr].Start);

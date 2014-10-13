@@ -27,6 +27,7 @@ Ability to leave pasted data selected
 Series, possibly others don't select result (if some lines are empty some lines won't be selected)
 When closing multiple unsaved files ask for "Yes for All"/"No for All"
 Get directory files/dirs
+Shift=Right-click on menu items
 
 Binary:
 Fix binary editor backwards search
