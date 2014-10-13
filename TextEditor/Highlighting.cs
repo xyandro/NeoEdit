@@ -58,6 +58,13 @@ namespace NeoEdit.TextEditor
 		static Regex commentRE = new Regex("//.*?$");
 		static Brush commentBrush = new SolidColorBrush(Color.FromRgb(96, 139, 78));
 
+		static HighlightingCSharp()
+		{
+			keywordsBrush.Freeze();
+			stringBrush.Freeze();
+			commentBrush.Freeze();
+		}
+
 		public override Dictionary<Regex, Brush> GetDictionary()
 		{
 			return new Dictionary<Regex, Brush>
@@ -84,6 +91,14 @@ namespace NeoEdit.TextEditor
 
 		static Regex commentRE = new Regex("//.*?$");
 		static Brush commentBrush = new SolidColorBrush(Color.FromRgb(96, 139, 78));
+
+		static HighlightingCPlusPlus()
+		{
+			keywordsBrush.Freeze();
+			directivesBrush.Freeze();
+			stringBrush.Freeze();
+			commentBrush.Freeze();
+		}
 
 		public override Dictionary<Regex, Brush> GetDictionary()
 		{
