@@ -54,6 +54,7 @@
     <Compile Include="ClipboardWindow.xaml.cs">
       <DependentUpon>ClipboardWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\Font.cs" />
     <Compile Include="Common\RunOnceTimer.cs" />
     <Compile Include="Common\EventLogger.cs" />
     <Compile Include="Common\Tabs.cs" />

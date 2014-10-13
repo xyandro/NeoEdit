@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -35,11 +33,7 @@ namespace NeoEdit.Console
 			UIHelper<Console>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		internal readonly double charWidth;
-		internal readonly double lineHeight;
-		readonly Typeface typeface;
-		readonly double fontSize;
-
+		Font font = new Font();
 		RunOnceTimer renderTimer;
 
 		readonly UIHelper<Console> uiHelper;
@@ -57,15 +51,6 @@ namespace NeoEdit.Console
 			if (Location == null)
 				Location = Directory.GetCurrentDirectory();
 
-			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#Anonymous Pro");
-			typeface = fontFamily.GetTypefaces().First();
-			fontSize = 14;
-			lineHeight = fontSize;
-
-			var example = "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()";
-			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-			charWidth = formattedText.Width / example.Length;
-
 			Lines = new ObservableCollection<Line>();
 
 			canvas.Render += OnCanvasRender;
@@ -78,7 +63,7 @@ namespace NeoEdit.Console
 			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
 				return;
 
-			yScroll.ViewportSize = canvas.ActualHeight / lineHeight;
+			yScroll.ViewportSize = canvas.ActualHeight / font.lineHeight;
 			yScroll.Minimum = 0;
 			yScroll.Maximum = Lines.Count - yScrollViewportFloor;
 			yScroll.SmallChange = 1;
@@ -215,13 +200,13 @@ namespace NeoEdit.Console
 			};
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Lines.Count, startLine + yScrollViewportCeiling);
-			var y = 0;
+			var y = 0.0;
 			for (var ctr = startLine; ctr < endLine; ++ctr)
 			{
 				var line = Lines[ctr];
-				var text = new FormattedText(line.Str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, brushes[line.Type]);
+				var text = font.GetText(line.Str, brushes[line.Type]);
 				dc.DrawText(text, new Point(0, y));
-				y += (int)lineHeight;
+				y += font.lineHeight;
 			}
 		}
 	}
