@@ -10,7 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
@@ -78,12 +77,14 @@ namespace NeoEdit.TextEditor
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
-			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.InvalidateRender());
-			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.InvalidateRender());
-			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.InvalidateRender());
+			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.renderTimer.Start());
+			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.renderTimer.Start());
+			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.renderTimer.Start());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
+
+		RunOnceTimer selectionsTimer, searchesTimer, marksTimer, renderTimer;
 
 		readonly UIHelper<TextEditor> uiHelper;
 		public TextEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
@@ -92,13 +93,17 @@ namespace NeoEdit.TextEditor
 			InitializeComponent();
 
 			undoRedo = new UndoRedo(b => IsModified = b);
+			selectionsTimer = new RunOnceTimer(SelectionsInvalidated);
+			searchesTimer = new RunOnceTimer(SearchesInvalidated);
+			marksTimer = new RunOnceTimer(MarksInvalidated);
+			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
 			OpenFile(filename, bytes, encoding);
 			Goto(line, column);
 
-			Selections.CollectionChanged += () => InvalidateSelections();
-			Searches.CollectionChanged += () => InvalidateSearches();
-			Marks.CollectionChanged += () => InvalidateMarks();
+			Selections.CollectionChanged += () => selectionsTimer.Start();
+			Searches.CollectionChanged += () => searchesTimer.Start();
+			Marks.CollectionChanged += () => marksTimer.Start();
 
 			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#Anonymous Pro");
 			typeface = fontFamily.GetTypefaces().First();
@@ -122,7 +127,7 @@ namespace NeoEdit.TextEditor
 			Loaded += (s, e) =>
 			{
 				EnsureVisible();
-				InvalidateRender();
+				renderTimer.Start();
 			};
 		}
 
@@ -1335,92 +1340,35 @@ namespace NeoEdit.TextEditor
 			xScrollValue = Math.Min(x, Math.Max(x - xScrollViewportFloor + 1, xScrollValue));
 		}
 
-		DispatcherTimer selectionsTimer = null;
-		internal bool SelectionsInvalidated()
+		void SelectionsInvalidated()
 		{
-			return selectionsTimer != null;
+			if (Selections.Count == 0)
+			{
+				Selections.Add(new Range(BeginOffset()));
+				EnsureVisible();
+			}
+			var visible = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
+			Selections.DeOverlap();
+			if (visible != null)
+			{
+				visibleIndex = Selections.FindIndex(range => (range.Start == visible.Start) && (range.End == visible.End));
+				if (visibleIndex < 0)
+					visibleIndex = 0;
+			}
+
+			renderTimer.Start();
 		}
 
-		void InvalidateSelections()
+		void SearchesInvalidated()
 		{
-			if (SelectionsInvalidated())
-				return;
-
-			selectionsTimer = new DispatcherTimer();
-			selectionsTimer.Tick += (s, e) =>
-			{
-				selectionsTimer.Stop();
-				if (Selections.Count == 0)
-				{
-					Selections.Add(new Range(BeginOffset()));
-					EnsureVisible();
-				}
-				var visible = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
-				Selections.DeOverlap();
-				if (visible != null)
-				{
-					visibleIndex = Selections.FindIndex(range => (range.Start == visible.Start) && (range.End == visible.End));
-					if (visibleIndex < 0)
-						visibleIndex = 0;
-				}
-
-				selectionsTimer = null;
-				InvalidateRender();
-			};
-			selectionsTimer.Start();
+			Searches.Replace(Searches.Where(range => range.HasSelection()).ToList());
+			Searches.DeOverlap();
+			renderTimer.Start();
 		}
 
-		DispatcherTimer searchesTimer = null;
-		void InvalidateSearches()
+		void MarksInvalidated()
 		{
-			if (searchesTimer != null)
-				return;
-
-			searchesTimer = new DispatcherTimer();
-			searchesTimer.Tick += (s, e) =>
-			{
-				searchesTimer.Stop();
-				Searches.Replace(Searches.Where(range => range.HasSelection()).ToList());
-				Searches.DeOverlap();
-
-				searchesTimer = null;
-				InvalidateRender();
-			};
-			searchesTimer.Start();
-		}
-
-		DispatcherTimer marksTimer = null;
-		void InvalidateMarks()
-		{
-			if (marksTimer != null)
-				return;
-
-			marksTimer = new DispatcherTimer();
-			marksTimer.Tick += (s, e) =>
-			{
-				marksTimer.Stop();
-				Marks.DeOverlap();
-
-				marksTimer = null;
-				InvalidateRender();
-			};
-			marksTimer.Start();
-		}
-
-		DispatcherTimer renderTimer = null;
-		internal void InvalidateRender()
-		{
-			if (renderTimer != null)
-				return;
-
-			renderTimer = new DispatcherTimer();
-			renderTimer.Tick += (s, e) =>
-			{
-				renderTimer.Stop();
-				renderTimer = null;
-
-				canvas.InvalidateVisual();
-			};
+			Marks.DeOverlap();
 			renderTimer.Start();
 		}
 
@@ -1759,7 +1707,7 @@ namespace NeoEdit.TextEditor
 				default: e.Handled = false; break;
 			}
 
-			if (SelectionsInvalidated())
+			if (selectionsTimer.Started())
 				EnsureVisible();
 		}
 
@@ -2064,7 +2012,7 @@ namespace NeoEdit.TextEditor
 				return;
 
 			Replace(Selections, Selections.Select(range => text).ToList(), false);
-			if (SelectionsInvalidated())
+			if (selectionsTimer.Started())
 				EnsureVisible();
 		}
 
@@ -2089,7 +2037,7 @@ namespace NeoEdit.TextEditor
 
 			LineEnding = Data.OnlyEnding;
 
-			InvalidateRender();
+			renderTimer.Start();
 		}
 
 		public override string ToString()

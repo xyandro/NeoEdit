@@ -316,10 +316,10 @@ namespace NeoEdit.TextEditor
 			if (Active == null)
 				return;
 
-			if (Active.SelectionsInvalidated())
-				Active.EnsureVisible();
+			//if (Active.SelectionsInvalidated())
+			//	Active.EnsureVisible();
 
-			Active.InvalidateRender();
+			//Active.InvalidateRender();
 		}
 
 		void Add(TextEditor textEditor)

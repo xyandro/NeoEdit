@@ -12,7 +12,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.ItemGridControl
@@ -73,15 +72,20 @@ namespace NeoEdit.GUI.ItemGridControl
 		const double headerHeight = 21.96;
 		const double rowHeight = 19.96;
 
+		RunOnceTimer drawTimer, sortTimer;
+
 		public ItemGrid()
 		{
 			InitializeComponent();
 
+			drawTimer = new RunOnceTimer(() => Redraw());
+			sortTimer = new RunOnceTimer(() => Sort());
+
 			Columns = new ObservableHashSet<ItemGridColumn>();
 			Selected = new ObservableCollection<IItemGridItem>();
 
-			DependencyPropertyDescriptor.FromProperty(ScrollViewer.ViewportHeightProperty, typeof(ScrollViewer)).AddValueChanged(scroller, (o, e) => InvalidateDraw());
-			scroll.ValueChanged += (s, e) => InvalidateDraw();
+			DependencyPropertyDescriptor.FromProperty(ScrollViewer.ViewportHeightProperty, typeof(ScrollViewer)).AddValueChanged(scroller, (o, e) => drawTimer.Start());
+			scroll.ValueChanged += (s, e) => drawTimer.Start();
 			PreviewMouseWheel += (s, e) => scroll.Value -= e.Delta / 10;
 		}
 
@@ -139,14 +143,14 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void OnItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			InvalidateSort();
+			sortTimer.Start();
 		}
 
 		void OnSortedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			OnFocusedChanged(false);
 			OnSelectedChanged(null, null);
-			InvalidateDraw();
+			drawTimer.Start();
 			lastTextInputTime = null;
 		}
 
@@ -154,13 +158,13 @@ namespace NeoEdit.GUI.ItemGridControl
 		{
 			OnSortColumnChanged();
 			OnFocusedColumnChanged();
-			InvalidateDraw();
+			drawTimer.Start();
 		}
 
 		void OnSelectedChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			Selected.Where(item => !SortedItems.Contains(item)).ToList().ForEach(item => Selected.Remove(item));
-			InvalidateDraw();
+			drawTimer.Start();
 		}
 
 		void OnSortColumnChanged()
@@ -180,7 +184,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void OnSortAscendingChanged()
 		{
-			InvalidateSort();
+			sortTimer.Start();
 		}
 
 		void OnFocusedChanged(bool show = true)
@@ -195,13 +199,13 @@ namespace NeoEdit.GUI.ItemGridControl
 			if (show)
 			{
 				ShowFocus();
-				InvalidateDraw();
+				drawTimer.Start();
 			}
 		}
 
 		void OnFocusColumnsChanged()
 		{
-			InvalidateDraw();
+			drawTimer.Start();
 		}
 
 		void OnFocusedColumnChanged()
@@ -215,7 +219,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				return; // Recursive
 			}
 
-			InvalidateDraw();
+			drawTimer.Start();
 		}
 
 		class Comparer : IComparer
@@ -266,7 +270,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			{
 				SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, (SortedItems.Count <= 500) && (SortColumn.NumericStrings));
 				SetLastFocusedIndex();
-				InvalidateDraw();
+				drawTimer.Start();
 			}
 		}
 
@@ -274,7 +278,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		public void ShowFocus()
 		{
 			showFocus = true;
-			InvalidateDraw();
+			drawTimer.Start();
 		}
 
 		public void ResetScroll()
@@ -298,40 +302,6 @@ namespace NeoEdit.GUI.ItemGridControl
 			Selected = new ObservableCollection<IItemGridItem>(itemsByKey.Where(item => selected.Contains(item.Key)).Select(item => item.Value));
 
 			scroll.Value = scrollPos;
-		}
-
-		DispatcherTimer drawTimer = null;
-		void InvalidateDraw()
-		{
-			if (drawTimer != null)
-				return;
-
-			drawTimer = new DispatcherTimer();
-			drawTimer.Tick += (s, e) =>
-			{
-				drawTimer.Stop();
-				drawTimer = null;
-
-				Redraw();
-			};
-			drawTimer.Start();
-		}
-
-		DispatcherTimer sortTimer = null;
-		void InvalidateSort()
-		{
-			if (sortTimer != null)
-				return;
-
-			sortTimer = new DispatcherTimer();
-			sortTimer.Tick += (s, e) =>
-			{
-				sortTimer.Stop();
-				sortTimer = null;
-
-				Sort();
-			};
-			sortTimer.Start();
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
@@ -479,7 +449,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void Redraw()
 		{
-			if ((sortTimer != null) || (SortedItems == null))
+			if ((sortTimer.Started()) || (SortedItems == null))
 				return;
 
 			scroll.ViewportSize = Math.Max(0, Math.Ceiling((scroller.ViewportHeight - headerHeight) / rowHeight));
@@ -495,7 +465,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				showFocus = false;
 			}
 
-			if (drawTimer != null)
+			if (drawTimer.Started())
 				return;
 
 			contents.Children.Clear();

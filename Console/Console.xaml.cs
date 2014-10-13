@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.Console
@@ -31,8 +30,8 @@ namespace NeoEdit.Console
 			UIHelper<Console>.Register();
 			UIHelper<Console>.AddObservableCallback(a => a.Lines, (obj, s, e) => obj.CalculateBoundaries());
 			UIHelper<Console>.AddObservableCallback(a => a.Lines, (obj, s, e) => obj.yScrollValue = (int)obj.yScroll.Maximum);
-			UIHelper<Console>.AddObservableCallback(a => a.Lines, (obj, s, e) => obj.InvalidateRender());
-			UIHelper<Console>.AddCallback(a => a.yScrollValue, (obj, s, e) => obj.InvalidateRender());
+			UIHelper<Console>.AddObservableCallback(a => a.Lines, (obj, s, e) => obj.renderTimer.Start());
+			UIHelper<Console>.AddCallback(a => a.yScrollValue, (obj, s, e) => obj.renderTimer.Start());
 			UIHelper<Console>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
@@ -41,11 +40,15 @@ namespace NeoEdit.Console
 		readonly Typeface typeface;
 		readonly double fontSize;
 
+		RunOnceTimer renderTimer;
+
 		readonly UIHelper<Console> uiHelper;
 		public Console(string path = null)
 		{
 			uiHelper = new UIHelper<Console>(this);
 			InitializeComponent();
+
+			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
 			UIHelper<Canvas>.AddCallback(canvas, Canvas.ActualHeightProperty, () => CalculateBoundaries());
 			UIHelper<Canvas>.AddCallback(canvas, Canvas.ActualWidthProperty, () => CalculateBoundaries());
@@ -82,7 +85,7 @@ namespace NeoEdit.Console
 			yScroll.LargeChange = Math.Max(0, yScroll.ViewportSize - 1);
 			yScrollValue = yScrollValue;
 
-			InvalidateRender();
+			renderTimer.Start();
 		}
 
 		void Prompt()
@@ -200,22 +203,6 @@ namespace NeoEdit.Console
 			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
 			label.SetBinding(Label.ContentProperty, new Binding("Location") { Source = this, Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"FileName([0])" });
 			return label;
-		}
-
-		DispatcherTimer renderTimer = null;
-		void InvalidateRender()
-		{
-			if (renderTimer != null)
-				return;
-
-			renderTimer = new DispatcherTimer();
-			renderTimer.Tick += (s, e) =>
-			{
-				renderTimer.Stop();
-				renderTimer = null;
-				canvas.InvalidateVisual();
-			};
-			renderTimer.Start();
 		}
 
 		void OnCanvasRender(object sender, DrawingContext dc)

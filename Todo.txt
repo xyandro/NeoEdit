@@ -4,7 +4,6 @@ Starting 2nd instance pops up in background
 Tabs: Ctrl-Tab to switch, Ctrl-T for new
 Add command prompt
 Diff?
-Combine DispatcherTimers being used to prevent multiple renders before control returns to user
 
 Disk:
 Paste filename (Address of disk viewer)
