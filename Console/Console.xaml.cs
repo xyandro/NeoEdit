@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +18,7 @@ namespace NeoEdit.Console
 	{
 		[DepProp]
 		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
+		[DepProp(Default = "")]
 		string Command { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp(Default = true)]
 		bool CommandMode { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
@@ -159,10 +160,58 @@ namespace NeoEdit.Console
 					Lines[ctr] = Lines[ctr].Finish();
 		}
 
+		static List<Tuple<string, int, int>> ParseCommand(string command)
+		{
+			var result = new List<Tuple<string, int, int>>();
+			var current = 0;
+			var index = 0;
+			while (index < command.Length)
+			{
+				var c = command[index++];
+				if (Char.IsWhiteSpace(c))
+				{
+					if (current < result.Count)
+						++current;
+					continue;
+				}
+
+				while (result.Count <= current)
+					result.Add(new Tuple<string, int, int>("", index - 1, 0));
+
+				string add;
+				if (c == '"')
+				{
+					var endIndex = index;
+					while (true)
+					{
+						endIndex = command.IndexOf('"', endIndex) + 1;
+						if (endIndex == 0)
+							endIndex = command.Length;
+						else if ((command.Length > endIndex) && (command[endIndex] == '"'))
+						{
+							++endIndex;
+							continue;
+						}
+						break;
+					}
+					add = command.Substring(index, endIndex - index - 1).Replace("\"\"", "\"");
+					index = endIndex;
+				}
+				else
+					add = new String(c, 1);
+
+				result[current] = new Tuple<string, int, int>(result[current].Item1 + add, result[current].Item2, index - result[current].Item2);
+			}
+			return result;
+		}
+
 		ConsoleRunnerPipe pipe = null;
 		void RunCommand()
 		{
-			Command = @"C:\Documents\Cpp\NeoEdit - Work\Debug\Test2.exe";
+			var commands = ParseCommand(Command);
+			if (commands.Count == 0)
+				return;
+
 			Lines.Add(new Line(String.Format("Starting program {0}.", Command), Line.LineType.Command).Finish());
 			Lines.Add(new Line(Line.LineType.Command).Finish());
 
@@ -177,7 +226,7 @@ namespace NeoEdit.Console
 			using (var proc = new Process())
 			{
 				proc.StartInfo.FileName = name;
-				proc.StartInfo.Arguments = "multi consolerunner " + pipeName;
+				proc.StartInfo.Arguments = "multi consolerunner " + pipeName + " " + String.Join(" ", commands.Select(command => "\"" + command.Item1.Replace("\"", "\"\"") + "\""));
 				proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 				proc.Start();
 			}

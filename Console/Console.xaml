@@ -27,7 +27,7 @@
 			</Grid.RowDefinitions>
 
 			<Label Grid.Row="0" Grid.Column="0" Content="{Binding Location, ElementName=self}"/>
-			<TextBox Grid.Row="0" Grid.Column="1" Name="command" Text="{Binding Command, ElementName=self}"/>
+			<TextBox Grid.Row="0" Grid.Column="1" Name="command" Text="{Binding Command, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		</Grid>
 	</Grid>
 

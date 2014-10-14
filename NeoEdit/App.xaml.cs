@@ -76,7 +76,7 @@ namespace NeoEdit
 						return new ConsoleTabs();
 					case "consolerunner":
 						{
-							new Console.ConsoleRunner(args[1]);
+							new Console.ConsoleRunner(args.Skip(1).ToArray());
 							return null;
 						}
 					case "disk":

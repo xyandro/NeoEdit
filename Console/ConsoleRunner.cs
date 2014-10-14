@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace NeoEdit.Console
@@ -13,20 +14,20 @@ namespace NeoEdit.Console
 		readonly IntPtr console;
 		readonly ConsoleRunnerPipe pipe;
 		readonly Process process;
-		public ConsoleRunner(string pipeName)
+		public ConsoleRunner(string[] args)
 		{
 			try
 			{
 				//System.Windows.MessageBox.Show("ConsoleRunner!!!");
 
-				pipe = new ConsoleRunnerPipe(pipeName, false);
+				pipe = new ConsoleRunnerPipe(args[0], false);
 				pipe.Read += OnStdIn;
 
 				console = NeoEdit.Win32.Interop.AllocConsole();
 
 				process = new Process();
-				process.StartInfo.FileName = @"E:\Dev\Misc\NeoEdit - Work - Test\Test\bin\Debug\Test.exe";
-				//process.StartInfo.FileName = @"C:\Documents\Cpp\NeoEdit - Work\x64\Debug\Test2.exe";
+				process.StartInfo.FileName = args[1];
+				process.StartInfo.Arguments = String.Join(" ", args.Skip(2).Select(arg => "\"" + arg.Replace("\"", "\"\"") + "\""));
 				process.StartInfo.UseShellExecute = false;
 				process.StartInfo.RedirectStandardOutput = true;
 				process.StartInfo.RedirectStandardError = true;
