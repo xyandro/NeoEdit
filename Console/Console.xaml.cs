@@ -166,7 +166,7 @@ namespace NeoEdit.Console
 			using (var proc = new Process())
 			{
 				proc.StartInfo.FileName = name;
-				proc.StartInfo.Arguments = "consolerunner " + pipeName;
+				proc.StartInfo.Arguments = "multi consolerunner " + pipeName;
 				proc.Start();
 			}
 			pipe.Accept();
