@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -16,7 +17,7 @@ namespace NeoEdit.Console
 		{
 			try
 			{
-				//MessageBox.Show("ConsoleRunner!!!");
+				//System.Windows.MessageBox.Show("ConsoleRunner!!!");
 
 				pipe = new ConsoleRunnerPipe(pipeName, false);
 				pipe.Read += OnStdIn;
@@ -24,7 +25,7 @@ namespace NeoEdit.Console
 				console = NeoEdit.Win32.Interop.CreateHiddenConsole();
 
 				process = new Process();
-				process.StartInfo.FileName = @"C:\Documents\Cpp\NeoEdit - Work\bin\Debug.x64\Test.exe";
+				process.StartInfo.FileName = @"E:\Dev\Misc\NeoEdit - Work\Test\bin\Debug\Test.exe";
 				//process.StartInfo.FileName = @"C:\Documents\Cpp\NeoEdit - Work\x64\Debug\Test2.exe";
 				process.StartInfo.UseShellExecute = false;
 				process.StartInfo.RedirectStandardOutput = true;
@@ -36,7 +37,10 @@ namespace NeoEdit.Console
 				SetupEventHandler(process.StandardError, ConsoleRunnerPipe.Type.StdErr);
 				endSem.WaitOne();
 			}
-			catch { Terminate(); }
+			catch (Exception ex)
+			{
+				pipe.Send(ConsoleRunnerPipe.Type.StdErr, Encoding.ASCII.GetBytes(ex.Message));
+			}
 		}
 
 		void OnStdIn(ConsoleRunnerPipe.Type type, byte[] data)

@@ -18,6 +18,10 @@ namespace NeoEdit.Console
 		[DepProp]
 		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
+		string Command { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
+		bool CommandMode { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		[DepProp]
 		int yScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		ObservableCollection<Line> Lines { get { return uiHelper.GetPropValue<ObservableCollection<Line>>(); } set { uiHelper.SetPropValue(value); } }
@@ -31,6 +35,7 @@ namespace NeoEdit.Console
 			UIHelper<Console>.AddObservableCallback(a => a.Lines, (obj, s, e) => obj.CalculateBoundaries());
 			UIHelper<Console>.AddObservableCallback(a => a.Lines, (obj, s, e) => obj.yScrollValue = (int)obj.yScroll.Maximum);
 			UIHelper<Console>.AddObservableCallback(a => a.Lines, (obj, s, e) => obj.renderTimer.Start());
+			UIHelper<Console>.AddCallback(a => a.CommandMode, (obj, s, e) => obj.SetFocus());
 			UIHelper<Console>.AddCallback(a => a.yScrollValue, (obj, s, e) => obj.renderTimer.Start());
 			UIHelper<Console>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
@@ -44,6 +49,8 @@ namespace NeoEdit.Console
 			uiHelper = new UIHelper<Console>(this);
 			InitializeComponent();
 
+			CommandMode = true;
+
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
 			UIHelper<Canvas>.AddCallback(canvas, Canvas.ActualHeightProperty, () => CalculateBoundaries());
@@ -56,8 +63,6 @@ namespace NeoEdit.Console
 			Lines = new ObservableCollection<Line>();
 
 			canvas.Render += OnCanvasRender;
-
-			Prompt();
 		}
 
 		void CalculateBoundaries()
@@ -75,13 +80,14 @@ namespace NeoEdit.Console
 			renderTimer.Start();
 		}
 
-		void Prompt()
+		void SetFocus()
 		{
-			var line = CreateOrGetAndRemoveLastUnfinished(Line.LineType.Command);
-			Lines.Add(new Line(String.Format(@"{0}> {1}", Location, command), Line.LineType.Command));
+			if (CommandMode)
+				command.Focus();
+			else
+				Focus();
 		}
 
-		string command = "";
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
 			base.OnTextInput(e);
@@ -92,10 +98,25 @@ namespace NeoEdit.Console
 				e.Handled = true;
 				return;
 			}
-
-			command += e.Text;
-			Prompt();
 			e.Handled = true;
+		}
+
+		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
+
+		bool HandlePipeKey(Key key)
+		{
+			ConsoleKey? sendKey = null;
+			switch (key)
+			{
+				case Key.Return: sendKey = ConsoleKey.Enter; break;
+				case Key.C: if (controlDown) pipe.Kill(); break;
+			}
+
+			if (!sendKey.HasValue)
+				return false;
+
+			pipe.Send(ConsoleRunnerPipe.Type.StdIn, new byte[] { (byte)sendKey.Value });
+			return true;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -104,25 +125,15 @@ namespace NeoEdit.Console
 
 			if (pipe != null)
 			{
-				ConsoleKey? key = null;
-				switch (e.Key)
-				{
-					case Key.Return: key = ConsoleKey.Enter; break;
-				}
-
-				if (key.HasValue)
-				{
-					pipe.Send(ConsoleRunnerPipe.Type.StdIn, new byte[] { (byte)key.Value });
-					e.Handled = true;
-					return;
-				}
+				e.Handled = HandlePipeKey(e.Key);
+				return;
 			}
 
-
+			e.Handled = true;
 			switch (e.Key)
 			{
-				case Key.Enter: RunCommand(); e.Handled = true; break;
-				case Key.C: if ((pipe != null) && ((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None)) pipe.Kill(); break;
+				case Key.Enter: RunCommand(); break;
+				default: e.Handled = false; break;
 			}
 		}
 
@@ -152,10 +163,11 @@ namespace NeoEdit.Console
 		ConsoleRunnerPipe pipe = null;
 		void RunCommand()
 		{
-			Lines.Add(CreateOrGetAndRemoveLastUnfinished(Line.LineType.Command).Finish());
+			Command = @"C:\Documents\Cpp\NeoEdit - Work\Debug\Test2.exe";
+			Lines.Add(new Line(String.Format("Starting program {0}.", Command), Line.LineType.Command).Finish());
+			Lines.Add(new Line(Line.LineType.Command).Finish());
 
 			var pipeName = @"\\.\NeoEdit-Console-" + Guid.NewGuid().ToString();
-			command = @"C:\Documents\Cpp\NeoEdit - Work\Debug\Test2.exe";
 
 			pipe = new ConsoleRunnerPipe(pipeName, true);
 			pipe.Read += DataReceived;
@@ -171,7 +183,8 @@ namespace NeoEdit.Console
 			}
 			pipe.Accept();
 
-			command = "";
+			CommandMode = false;
+			Command = "";
 		}
 
 		void DataReceived(ConsoleRunnerPipe.Type pipeType, byte[] data)
@@ -211,11 +224,13 @@ namespace NeoEdit.Console
 		{
 			pipe.Dispose();
 			pipe = null;
+			CommandMode = true;
 
 			Dispatcher.Invoke(() =>
 			{
 				FinishAll();
-				Prompt();
+				Lines.Add(new Line(Line.LineType.Command).Finish());
+				Lines.Add(new Line("Program completed.", Line.LineType.Command).Finish());
 			});
 		}
 
