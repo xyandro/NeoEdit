@@ -19,7 +19,7 @@ namespace NeoEdit.Console
 		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		string Command { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
-		[DepProp]
+		[DepProp(Default = true)]
 		bool CommandMode { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		int yScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
@@ -49,8 +49,6 @@ namespace NeoEdit.Console
 			uiHelper = new UIHelper<Console>(this);
 			InitializeComponent();
 
-			CommandMode = true;
-
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
 			UIHelper<Canvas>.AddCallback(canvas, Canvas.ActualHeightProperty, () => CalculateBoundaries());
@@ -63,6 +61,13 @@ namespace NeoEdit.Console
 			Lines = new ObservableCollection<Line>();
 
 			canvas.Render += OnCanvasRender;
+			canvas.KeyDown += CanvasKeyDown;
+			canvas.TextInput += CanvasTextInput;
+			canvas.MouseLeftButtonDown += (s, e) => canvas.Focus();
+
+			command.KeyDown += CommandKeyDown;
+
+			Loaded += (s, e) => SetFocus();
 		}
 
 		void CalculateBoundaries()
@@ -82,52 +87,46 @@ namespace NeoEdit.Console
 
 		void SetFocus()
 		{
+			command.IsReadOnly = !CommandMode;
 			if (CommandMode)
 				command.Focus();
 			else
-				Focus();
+				canvas.Focus();
 		}
 
-		protected override void OnTextInput(TextCompositionEventArgs e)
+		void CanvasTextInput(object sender, TextCompositionEventArgs e)
 		{
-			base.OnTextInput(e);
-
-			if (pipe != null)
-			{
-				pipe.Send(ConsoleRunnerPipe.Type.StdIn, Encoding.ASCII.GetBytes(e.Text));
-				e.Handled = true;
+			if (pipe == null)
 				return;
-			}
+
+			pipe.Send(ConsoleRunnerPipe.Type.StdIn, Encoding.ASCII.GetBytes(e.Text));
 			e.Handled = true;
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
-		bool HandlePipeKey(Key key)
+		void CanvasKeyDown(object sender, KeyEventArgs e)
 		{
+			if (pipe == null)
+				return;
+
 			ConsoleKey? sendKey = null;
-			switch (key)
+			switch (e.Key)
 			{
 				case Key.Return: sendKey = ConsoleKey.Enter; break;
 				case Key.C: if (controlDown) pipe.Kill(); break;
 			}
 
 			if (!sendKey.HasValue)
-				return false;
+				return;
 
 			pipe.Send(ConsoleRunnerPipe.Type.StdIn, new byte[] { (byte)sendKey.Value });
-			return true;
+			e.Handled = true;
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		void CommandKeyDown(object sender, KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
-
-			if (pipe != null)
-			{
-				e.Handled = HandlePipeKey(e.Key);
-				return;
-			}
 
 			e.Handled = true;
 			switch (e.Key)
@@ -184,7 +183,6 @@ namespace NeoEdit.Console
 			pipe.Accept();
 
 			CommandMode = false;
-			Command = "";
 		}
 
 		void DataReceived(ConsoleRunnerPipe.Type pipeType, byte[] data)
@@ -225,6 +223,7 @@ namespace NeoEdit.Console
 			pipe.Dispose();
 			pipe = null;
 			CommandMode = true;
+			Command = "";
 
 			Dispatcher.Invoke(() =>
 			{
