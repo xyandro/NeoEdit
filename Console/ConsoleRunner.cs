@@ -22,10 +22,10 @@ namespace NeoEdit.Console
 				pipe = new ConsoleRunnerPipe(pipeName, false);
 				pipe.Read += OnStdIn;
 
-				console = NeoEdit.Win32.Interop.CreateHiddenConsole();
+				console = NeoEdit.Win32.Interop.AllocConsole();
 
 				process = new Process();
-				process.StartInfo.FileName = @"E:\Dev\Misc\NeoEdit - Work\Test\bin\Debug\Test.exe";
+				process.StartInfo.FileName = @"E:\Dev\Misc\NeoEdit - Work - Test\Test\bin\Debug\Test.exe";
 				//process.StartInfo.FileName = @"C:\Documents\Cpp\NeoEdit - Work\x64\Debug\Test2.exe";
 				process.StartInfo.UseShellExecute = false;
 				process.StartInfo.RedirectStandardOutput = true;

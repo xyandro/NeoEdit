@@ -7,7 +7,7 @@ namespace NeoEdit
 		class Window
 		{
 		public:
-			static intptr_t CreateHiddenConsole();
+			static intptr_t AllocConsole();
 			static void SendChar(intptr_t handle, unsigned char ch);
 		};
 

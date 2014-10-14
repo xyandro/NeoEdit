@@ -174,11 +174,11 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		System::IntPtr Interop::CreateHiddenConsole()
+		System::IntPtr Interop::AllocConsole()
 		{
 			try
 			{
-				return System::IntPtr(Win32Lib::CreateHiddenConsole());
+				return System::IntPtr(Win32Lib::AllocConsole());
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}

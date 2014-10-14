@@ -178,6 +178,7 @@ namespace NeoEdit.Console
 			{
 				proc.StartInfo.FileName = name;
 				proc.StartInfo.Arguments = "multi consolerunner " + pipeName;
+				proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 				proc.Start();
 			}
 			pipe.Accept();
