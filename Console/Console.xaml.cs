@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -75,10 +77,8 @@ namespace NeoEdit.Console
 
 		void Prompt()
 		{
-			FinishAll();
-
 			var line = CreateOrGetAndRemoveLastUnfinished(Line.LineType.Command);
-			Lines.Add(line + String.Format(@"{0}> ", Location));
+			Lines.Add(new Line(String.Format(@"{0}> {1}", Location, command), Line.LineType.Command));
 		}
 
 		string command = "";
@@ -86,15 +86,15 @@ namespace NeoEdit.Console
 		{
 			base.OnTextInput(e);
 
-			if (proc != null)
+			if (pipe != null)
 			{
-				proc.Write(e.Text);
+				pipe.Send(ConsoleRunnerPipe.Type.StdIn, Encoding.ASCII.GetBytes(e.Text));
 				e.Handled = true;
 				return;
 			}
 
 			command += e.Text;
-			Lines[Lines.Count - 1] += e.Text;
+			Prompt();
 			e.Handled = true;
 		}
 
@@ -102,18 +102,17 @@ namespace NeoEdit.Console
 		{
 			base.OnKeyDown(e);
 
-			if (proc != null)
+			if (pipe != null)
 			{
-				var done = true;
+				ConsoleKey? key = null;
 				switch (e.Key)
 				{
-					case Key.Return: break;
-					default: done = false; break;
+					case Key.Return: key = ConsoleKey.Enter; break;
 				}
 
-				if (done)
+				if (key.HasValue)
 				{
-					proc.Write((byte)e.Key);
+					pipe.Send(ConsoleRunnerPipe.Type.StdIn, new byte[] { (byte)key.Value });
 					e.Handled = true;
 					return;
 				}
@@ -123,7 +122,7 @@ namespace NeoEdit.Console
 			switch (e.Key)
 			{
 				case Key.Enter: RunCommand(); e.Handled = true; break;
-				case Key.C: if ((proc != null) && ((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None)) proc.Kill(); break;
+				case Key.C: if ((pipe != null) && ((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None)) pipe.Kill(); break;
 			}
 		}
 
@@ -150,37 +149,74 @@ namespace NeoEdit.Console
 					Lines[ctr] = Lines[ctr].Finish();
 		}
 
-		AsyncProcess proc = null;
+		ConsoleRunnerPipe pipe = null;
 		void RunCommand()
 		{
 			Lines.Add(CreateOrGetAndRemoveLastUnfinished(Line.LineType.Command).Finish());
 
-			command = @"C:\Documents\Cpp\TestConsole\bin\Debug\TestConsole.exe";
-			proc = new AsyncProcess(command);
-			proc.Exit += s => Exited();
-			proc.StdOutData += (s, d, n) => DataReceived(Line.LineType.StdOut, d, n);
-			proc.StdErrData += (s, d, n) => DataReceived(Line.LineType.StdErr, d, n);
-			proc.Start();
+			var pipeName = @"\\.\NeoEdit-Console-" + Guid.NewGuid().ToString();
+			command = @"C:\Documents\Cpp\NeoEdit - Work\Debug\Test2.exe";
+
+			pipe = new ConsoleRunnerPipe(pipeName, true);
+			pipe.Read += DataReceived;
+			var name = Environment.GetCommandLineArgs()[0];
+#if DEBUG
+			name = name.Replace(".vshost.", ".");
+#endif
+			using (var proc = new Process())
+			{
+				proc.StartInfo.FileName = name;
+				proc.StartInfo.Arguments = "consolerunner " + pipeName;
+				proc.Start();
+			}
+			pipe.Accept();
+
+			command = "";
 		}
 
-		void DataReceived(Line.LineType type, string text, bool newline)
+		void DataReceived(ConsoleRunnerPipe.Type pipeType, byte[] data)
 		{
 			Dispatcher.Invoke(() =>
 			{
-				var line = CreateOrGetAndRemoveLastUnfinished(type);
-				line = line + text;
-				if (newline)
-					line = line.Finish();
-				Lines.Add(line);
+				if (pipeType == ConsoleRunnerPipe.Type.None)
+				{
+					Exited();
+					return;
+				}
+
+				var type = pipeType == ConsoleRunnerPipe.Type.StdOut ? Line.LineType.StdOut : Line.LineType.StdErr;
+
+				var str = Encoding.ASCII.GetString(data);
+				str = str.Replace("\r", "");
+				var index = 0;
+				while (index < str.Length)
+				{
+					var endIndex = str.IndexOf('\n', index);
+					var newline = endIndex != -1;
+					if (!newline)
+						endIndex = str.Length;
+
+					var line = CreateOrGetAndRemoveLastUnfinished(type);
+					line = line + str.Substring(index, endIndex - index);
+					if (newline)
+						line = line.Finish();
+					Lines.Add(line);
+
+					index = endIndex + (newline ? 1 : 0);
+				}
 			});
 		}
 
 		void Exited()
 		{
-			proc.Dispose();
-			proc = null;
+			pipe.Dispose();
+			pipe = null;
 
-			Dispatcher.Invoke(Prompt);
+			Dispatcher.Invoke(() =>
+			{
+				FinishAll();
+				Prompt();
+			});
 		}
 
 		internal Label GetLabel()

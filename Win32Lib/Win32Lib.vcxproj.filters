@@ -31,6 +31,9 @@
     <Filter Include="Handles\HandleList">
       <UniqueIdentifier>{478b8bd6-fe3c-431a-851f-95c91255c77e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{c0cf5dc0-d777-4d38-bc6a-9140b37e06df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="HandleList.cpp">
       <Filter>Handles\HandleList</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="HandleList.h">
       <Filter>Handles\HandleList</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Window</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -173,5 +173,23 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
+		System::IntPtr Interop::CreateHiddenConsole()
+		{
+			try
+			{
+				return System::IntPtr(Win32Lib::CreateHiddenConsole());
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+		}
+
+		void Interop::SendChar(System::IntPtr handle, unsigned char ch)
+		{
+			try
+			{
+				return Win32Lib::SendChar((intptr_t)handle, ch);
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+		}
 	}
 }

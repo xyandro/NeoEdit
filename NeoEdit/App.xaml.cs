@@ -74,6 +74,11 @@ namespace NeoEdit
 						return new SystemInfoWindow();
 					case "console":
 						return new ConsoleTabs();
+					case "consolerunner":
+						{
+							new Console.ConsoleRunner(args[1]);
+							return null;
+						}
 					case "disk":
 					case "disks":
 						{
