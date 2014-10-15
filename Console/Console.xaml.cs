@@ -126,7 +126,7 @@ namespace NeoEdit.Console
 			e.Handled = true;
 		}
 
-		void GuessCommand()
+		void GuessCommand(bool fullPath)
 		{
 			var commands = ParseCommand();
 			var selPos = command.CaretIndex;
@@ -137,12 +137,12 @@ namespace NeoEdit.Console
 			if (selCommand == -1)
 				return;
 
-			var entries = new HashSet<string>();
+			var entries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
 			var dir = Path.GetDirectoryName(commands[selCommand].Item1);
 			if ((!String.IsNullOrEmpty(dir)) && (Directory.Exists(dir)))
 				foreach (var entry in Directory.EnumerateFileSystemEntries(dir))
-					entries.Add(entry);
+					entries[entry] = entry;
 
 			if (selCommand == 0)
 			{
@@ -155,34 +155,36 @@ namespace NeoEdit.Console
 
 					var files = Directory.EnumerateFiles(path).Where(file => keepExt.Contains(Path.GetExtension(file).ToLower())).ToList();
 					foreach (var file in files)
-						entries.Add(Path.GetFileName(file));
+						entries[Path.GetFileName(file)] = file;
 				}
 
 				if ((!String.IsNullOrEmpty(Location)) && (Directory.Exists(Location)))
 				{
 					foreach (var entry in Directory.EnumerateDirectories(Location))
-						entries.Add(Path.GetFileName(entry));
+						entries[Path.GetFileName(entry)] = entry;
 					foreach (var entry in Directory.EnumerateFiles(Location).Where(file => keepExt.Contains(Path.GetExtension(file).ToLower())))
-						entries.Add(Path.GetFileName(entry));
+						entries[Path.GetFileName(entry)] = entry;
 				}
 			}
 
 			// Limit to those in common with our command
-			entries = new HashSet<string>(entries.Where(entry => entry.StartsWith(commands[selCommand].Item1, StringComparison.OrdinalIgnoreCase)));
+			entries = entries.Where(entry => entry.Key.StartsWith(commands[selCommand].Item1, StringComparison.OrdinalIgnoreCase)).ToDictionary(a => a.Key, a => a.Value);
 
-			var common = entries.FirstOrDefault() ?? commands[selCommand].Item1;
+			var common = entries.Keys.FirstOrDefault() ?? commands[selCommand].Item1;
 			foreach (var entry in entries)
 			{
-				var len = Math.Min(entry.Length, common.Length);
+				var len = Math.Min(entry.Key.Length, common.Length);
 				int ctr;
 				for (ctr = 0; ctr < len; ++ctr)
-					if (Char.ToLower(entry[ctr]) != Char.ToLower(common[ctr]))
+					if (Char.ToLower(entry.Key[ctr]) != Char.ToLower(common[ctr]))
 						break;
 				common = common.Substring(0, ctr);
 			}
 
-			if (common != commands[selCommand].Item1)
+			if ((fullPath) || (common != commands[selCommand].Item1))
 			{
+				if ((fullPath) && (entries.ContainsKey(common)))
+					common = entries[common];
 				if (common.IndexOfAny(new char[] { '"', ' ' }) != -1)
 					common = "\"" + common.Replace("\"", "\"\"") + "\"";
 				Command = Command.Substring(0, commands[selCommand].Item2) + common + Command.Substring(commands[selCommand].Item2 + commands[selCommand].Item3);
@@ -190,7 +192,7 @@ namespace NeoEdit.Console
 				return;
 			}
 
-			var display = entries.Take(50).ToList();
+			var display = entries.Keys.Take(50).ToList();
 			if (entries.Count != display.Count)
 				display.Add(String.Format("+ {0} more", entries.Count - display.Count));
 
@@ -207,8 +209,8 @@ namespace NeoEdit.Console
 			e.Handled = true;
 			switch (e.Key)
 			{
-				case Key.Enter: RunCommand(); break;
-				case Key.Tab: GuessCommand(); break;
+				case Key.Enter: if (controlDown) GuessCommand(true); else RunCommand(); break;
+				case Key.Tab: GuessCommand(false); break;
 				default: e.Handled = false; break;
 			}
 		}
