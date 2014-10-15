@@ -89,6 +89,7 @@ namespace NeoEdit.Console
 		void SetFocus()
 		{
 			command.IsReadOnly = !CommandMode;
+			command.Foreground = CommandMode ? Brushes.Black : Brushes.Gray;
 			if (CommandMode)
 				command.Focus();
 			else
@@ -125,6 +126,80 @@ namespace NeoEdit.Console
 			e.Handled = true;
 		}
 
+		void GuessCommand()
+		{
+			var commands = ParseCommand();
+			var selPos = command.CaretIndex;
+			var selCommand = -1;
+			for (var ctr = 0; ctr < commands.Count; ++ctr)
+				if ((selPos >= commands[ctr].Item2) && (selPos <= commands[ctr].Item2 + commands[ctr].Item3))
+					selCommand = ctr;
+			if (selCommand == -1)
+				return;
+
+			var entries = new HashSet<string>();
+
+			var dir = Path.GetDirectoryName(commands[selCommand].Item1);
+			if ((!String.IsNullOrEmpty(dir)) && (Directory.Exists(dir)))
+				foreach (var entry in Directory.EnumerateFileSystemEntries(dir))
+					entries.Add(entry);
+
+			if (selCommand == 0)
+			{
+				var keepExt = new HashSet<string> { ".exe", ".com", ".bat" };
+				var paths = Environment.GetEnvironmentVariable("path").Split(';').Select(path => path.Trim()).Where(path => !String.IsNullOrWhiteSpace(path)).Distinct().ToList();
+				foreach (var path in paths)
+				{
+					if (!Directory.Exists(path))
+						continue;
+
+					var files = Directory.EnumerateFiles(path).Where(file => keepExt.Contains(Path.GetExtension(file).ToLower())).ToList();
+					foreach (var file in files)
+						entries.Add(Path.GetFileName(file));
+				}
+
+				if ((!String.IsNullOrEmpty(Location)) && (Directory.Exists(Location)))
+				{
+					foreach (var entry in Directory.EnumerateDirectories(Location))
+						entries.Add(Path.GetFileName(entry));
+					foreach (var entry in Directory.EnumerateFiles(Location).Where(file => keepExt.Contains(Path.GetExtension(file).ToLower())))
+						entries.Add(Path.GetFileName(entry));
+				}
+			}
+
+			// Limit to those in common with our command
+			entries = new HashSet<string>(entries.Where(entry => entry.StartsWith(commands[selCommand].Item1, StringComparison.OrdinalIgnoreCase)));
+
+			var common = entries.FirstOrDefault() ?? commands[selCommand].Item1;
+			foreach (var entry in entries)
+			{
+				var len = Math.Min(entry.Length, common.Length);
+				int ctr;
+				for (ctr = 0; ctr < len; ++ctr)
+					if (Char.ToLower(entry[ctr]) != Char.ToLower(common[ctr]))
+						break;
+				common = common.Substring(0, ctr);
+			}
+
+			if (common != commands[selCommand].Item1)
+			{
+				if (common.IndexOfAny(new char[] { '"', ' ' }) != -1)
+					common = "\"" + common.Replace("\"", "\"\"") + "\"";
+				Command = Command.Substring(0, commands[selCommand].Item2) + common + Command.Substring(commands[selCommand].Item2 + commands[selCommand].Item3);
+				command.CaretIndex = commands[selCommand].Item2 + common.Length;
+				return;
+			}
+
+			var display = entries.Take(50).ToList();
+			if (entries.Count != display.Count)
+				display.Add(String.Format("+ {0} more", entries.Count - display.Count));
+
+			Lines.Add(new Line(Line.LineType.Command).Finish());
+			Lines.Add(new Line(String.Format("Completions for {0}:", commands[selCommand].Item1), Line.LineType.Command).Finish());
+			foreach (var entry in display)
+				Lines.Add(new Line(entry, Line.LineType.Command).Finish());
+		}
+
 		void CommandKeyDown(object sender, KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
@@ -133,6 +208,7 @@ namespace NeoEdit.Console
 			switch (e.Key)
 			{
 				case Key.Enter: RunCommand(); break;
+				case Key.Tab: GuessCommand(); break;
 				default: e.Handled = false; break;
 			}
 		}
@@ -160,14 +236,14 @@ namespace NeoEdit.Console
 					Lines[ctr] = Lines[ctr].Finish();
 		}
 
-		static List<Tuple<string, int, int>> ParseCommand(string command)
+		List<Tuple<string, int, int>> ParseCommand()
 		{
 			var result = new List<Tuple<string, int, int>>();
 			var current = 0;
 			var index = 0;
-			while (index < command.Length)
+			while (index < Command.Length)
 			{
-				var c = command[index++];
+				var c = Command[index++];
 				if (Char.IsWhiteSpace(c))
 				{
 					if (current < result.Count)
@@ -184,18 +260,18 @@ namespace NeoEdit.Console
 					var endIndex = index;
 					while (true)
 					{
-						endIndex = command.IndexOf('"', endIndex) + 1;
+						endIndex = Command.IndexOf('"', endIndex) + 1;
 						if (endIndex == 0)
-							endIndex = command.Length;
-						else if ((command.Length > endIndex) && (command[endIndex] == '"'))
+							endIndex = Command.Length + 1;
+						else if ((Command.Length > endIndex) && (Command[endIndex] == '"'))
 						{
 							++endIndex;
 							continue;
 						}
 						break;
 					}
-					add = command.Substring(index, endIndex - index - 1).Replace("\"\"", "\"");
-					index = endIndex;
+					add = Command.Substring(index, endIndex - index - 1).Replace("\"\"", "\"");
+					index = Math.Min(Command.Length, endIndex);
 				}
 				else
 					add = new String(c, 1);
@@ -208,7 +284,7 @@ namespace NeoEdit.Console
 		ConsoleRunnerPipe pipe = null;
 		void RunCommand()
 		{
-			var commands = ParseCommand(Command);
+			var commands = ParseCommand();
 			if (commands.Count == 0)
 				return;
 
