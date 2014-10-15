@@ -30,6 +30,9 @@ namespace NeoEdit.Console
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
 
+		int currentHistory = -1;
+		List<string> history = new List<string>();
+
 		static Console()
 		{
 			UIHelper<Console>.Register();
@@ -66,7 +69,7 @@ namespace NeoEdit.Console
 			canvas.TextInput += CanvasTextInput;
 			canvas.MouseLeftButtonDown += (s, e) => canvas.Focus();
 
-			command.KeyDown += CommandKeyDown;
+			command.PreviewKeyDown += CommandPreviewKeyDown;
 
 			Loaded += (s, e) => SetFocus();
 		}
@@ -204,15 +207,26 @@ namespace NeoEdit.Console
 			}
 		}
 
-		void CommandKeyDown(object sender, KeyEventArgs e)
+		void InsertCommand(int num)
 		{
-			base.OnKeyDown(e);
+			if ((num < 0) || (num >= history.Count))
+				return;
 
+			Command = history[num];
+			command.CaretIndex = Command.Length;
+			currentHistory = num;
+		}
+
+		void CommandPreviewKeyDown(object sender, KeyEventArgs e)
+		{
 			e.Handled = true;
 			switch (e.Key)
 			{
 				case Key.Enter: if (controlDown) GuessCommand(true); else RunCommand(); break;
 				case Key.Tab: GuessCommand(false); break;
+				case Key.F3: InsertCommand(0); break;
+				case Key.Up: InsertCommand(currentHistory + 1); break;
+				case Key.Down: InsertCommand(currentHistory - 1); break;
 				default: e.Handled = false; break;
 			}
 		}
@@ -291,6 +305,10 @@ namespace NeoEdit.Console
 			var commands = ParseCommand();
 			if (commands.Count == 0)
 				return;
+
+			while (history.Remove(Command)) ;
+			history.Insert(0, Command);
+			currentHistory = -1;
 
 			Lines.Add(new Line(String.Format("Starting program {0}.", Command), Line.LineType.Command).Finish());
 			Lines.Add(new Line(Line.LineType.Command).Finish());
