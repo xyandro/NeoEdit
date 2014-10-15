@@ -131,6 +131,22 @@ namespace NeoEdit.Console
 
 		void GuessCommand(bool fullPath)
 		{
+			if ((fullPath) && (Command.StartsWith("!")))
+			{
+				int num;
+				if (!int.TryParse(Command.Substring(1), out num))
+					num = 0;
+				num = history.Count - num;
+				if ((num < 0) || (num >= history.Count))
+				{
+					Lines.Add(new Line("Item doesn't exist.", Line.LineType.Command).Finish());
+					return;
+				}
+
+				Command = history[num];
+				return;
+			}
+
 			var commands = ParseCommand();
 			var selPos = command.CaretIndex;
 			var selCommand = -1;
@@ -299,19 +315,61 @@ namespace NeoEdit.Console
 			return result;
 		}
 
+		void History(string countStr)
+		{
+			int count;
+			if (!int.TryParse(countStr, out count))
+				count = 50;
+
+			count = Math.Min(count, history.Count);
+
+			for (var ctr = count - 1; ctr >= 0; --ctr)
+				Lines.Add(new Line(String.Format("{0}: {1}", history.Count - ctr, history[ctr]), Line.LineType.Command).Finish());
+		}
+
 		ConsoleRunnerPipe pipe = null;
 		void RunCommand()
 		{
-			var commands = ParseCommand();
+			if (Command.StartsWith("!"))
+			{
+				int num;
+				if (!int.TryParse(Command.Substring(1), out num))
+					num = 0;
+				num = history.Count - num;
+				if ((num < 0) || (num >= history.Count))
+				{
+					Lines.Add(new Line("Item doesn't exist.", Line.LineType.Command).Finish());
+					return;
+				}
+
+				Command = history[num];
+			}
+
+			var commands = ParseCommand().Select(a => a.Item1).ToList();
 			if (commands.Count == 0)
 				return;
 
-			while (history.Remove(Command)) ;
-			history.Insert(0, Command);
 			currentHistory = -1;
 
-			Lines.Add(new Line(String.Format("Starting program {0}.", Command), Line.LineType.Command).Finish());
 			Lines.Add(new Line(Line.LineType.Command).Finish());
+			Lines.Add(new Line(String.Format("{0}:", Command), Line.LineType.Command).Finish());
+
+			switch (commands[0])
+			{
+				case "h":
+				case "history": History(commands.Count > 1 ? commands[1] : null); break;
+				default: RunExternalProgram(); break;
+			}
+
+			if (pipe == null)
+				Command = "";
+		}
+
+		void RunExternalProgram()
+		{
+			history.Insert(0, Command);
+
+			var commands = ParseCommand();
 
 			var pipeName = @"\\.\NeoEdit-Console-" + Guid.NewGuid().ToString();
 
