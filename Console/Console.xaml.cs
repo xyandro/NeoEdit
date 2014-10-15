@@ -185,10 +185,9 @@ namespace NeoEdit.Console
 			{
 				if ((fullPath) && (entries.ContainsKey(common)))
 					common = entries[common];
-				if (common.IndexOfAny(new char[] { '"', ' ' }) != -1)
-					common = "\"" + common.Replace("\"", "\"\"") + "\"";
+				common = "\"" + common.Replace("\"", "\"\"") + "\"";
 				Command = Command.Substring(0, commands[selCommand].Item2) + common + Command.Substring(commands[selCommand].Item2 + commands[selCommand].Item3);
-				command.CaretIndex = commands[selCommand].Item2 + common.Length;
+				command.CaretIndex = commands[selCommand].Item2 + common.Length - 1;
 				return;
 			}
 
@@ -196,10 +195,13 @@ namespace NeoEdit.Console
 			if (entries.Count != display.Count)
 				display.Add(String.Format("+ {0} more", entries.Count - display.Count));
 
-			Lines.Add(new Line(Line.LineType.Command).Finish());
-			Lines.Add(new Line(String.Format("Completions for {0}:", commands[selCommand].Item1), Line.LineType.Command).Finish());
-			foreach (var entry in display)
-				Lines.Add(new Line(entry, Line.LineType.Command).Finish());
+			if (display.Count > 1)
+			{
+				Lines.Add(new Line(Line.LineType.Command).Finish());
+				Lines.Add(new Line(String.Format("Completions for {0}:", commands[selCommand].Item1), Line.LineType.Command).Finish());
+				foreach (var entry in display)
+					Lines.Add(new Line(entry, Line.LineType.Command).Finish());
+			}
 		}
 
 		void CommandKeyDown(object sender, KeyEventArgs e)
