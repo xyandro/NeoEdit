@@ -8,12 +8,12 @@ namespace NeoEdit.TextEditor
 	enum TextEditCommand
 	{
 		None,
-		[Header("_New")] [KeyGesture(Key.N, ModifierKeys.Control)] File_New,
+		[Header("_New")] [KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control)] File_New,
 		[Header("_Open")] [KeyGesture(Key.O, ModifierKeys.Control)] File_Open,
 		[Header("Open Copied/Cut Files")] File_OpenCopied,
 		[Header("_Save")] [KeyGesture(Key.S, ModifierKeys.Control)] File_Save,
 		[Header("Save _As")] File_SaveAs,
-		[Header("_Close")] [KeyGesture(Key.W, ModifierKeys.Control)] [KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
+		[Header("_Close")] [KeyGesture(Key.F4, ModifierKeys.Control)] [KeyGesture(Key.W, ModifierKeys.Control)] File_Close,
 		[Header("Refresh")] [KeyGesture(Key.F5)] File_Refresh,
 		[Header("Re_vert")] File_Revert,
 		[Header("_Insert File(s)")] File_InsertFiles,
@@ -214,6 +214,6 @@ namespace NeoEdit.TextEditor
 		[Header("None")] View_Highlighting_None,
 		[Header("C#")] View_Highlighting_CSharp,
 		[Header("C++")] View_Highlighting_CPlusPlus,
-		[Header("_Tiles")] [KeyGesture(Key.T, ModifierKeys.Control)] View_Tiles,
+		[Header("_Tiles")] View_Tiles,
 	}
 }

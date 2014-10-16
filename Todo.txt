@@ -1,7 +1,7 @@
 All:
 Control-N should bring up new version of current window
 Starting 2nd instance pops up in background
-Tabs: Ctrl-Tab to switch, Ctrl-T for new
+Tabs: Ctrl-Tab to switch
 Add command prompt
 Diff?
 

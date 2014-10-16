@@ -55,7 +55,7 @@ namespace NeoEdit.GUI.Common
 				foreach (KeyGestureAttribute key in keyGestureAttrs)
 					keyGestures.Add(new KeyGesture(key.Key, key.Modifiers));
 				if (keyGestures.Any())
-					InputGestureText = keyGestures.Last().GetDisplayStringForCulture(CultureInfo.CurrentCulture);
+					InputGestureText = keyGestures.First().GetDisplayStringForCulture(CultureInfo.CurrentCulture);
 			}
 
 			public void RegisterCommand(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
