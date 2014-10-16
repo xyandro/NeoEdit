@@ -1314,6 +1314,7 @@ namespace NeoEdit.TextEditor
 				Selections.Add(new Range(BeginOffset()));
 			var visible = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
 			Selections.DeOverlap();
+			selectionsTimer.Stop();
 			if (visible != null)
 			{
 				visibleIndex = Selections.FindIndex(range => (range.Start == visible.Start) && (range.End == visible.End));
@@ -1329,12 +1330,14 @@ namespace NeoEdit.TextEditor
 		{
 			Searches.Replace(Searches.Where(range => range.HasSelection()).ToList());
 			Searches.DeOverlap();
+			searchesTimer.Stop();
 			renderTimer.Start();
 		}
 
 		void MarksInvalidated()
 		{
 			Marks.DeOverlap();
+			marksTimer.Stop();
 			renderTimer.Start();
 		}
 

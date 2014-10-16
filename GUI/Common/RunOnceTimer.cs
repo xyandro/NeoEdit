@@ -26,12 +26,20 @@ namespace NeoEdit.GUI.Common
 			timer = new DispatcherTimer();
 			timer.Tick += (s, e) =>
 			{
-				timer.Stop();
-				timer = null;
+				Stop();
 
 				action();
 			};
 			timer.Start();
+		}
+
+		public void Stop()
+		{
+			if (!Started())
+				return;
+
+			timer.Stop();
+			timer = null;
 		}
 	}
 }
