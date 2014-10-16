@@ -174,26 +174,6 @@ namespace NeoEdit.TextEditor
 			return Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
 		}
 
-		string EscapeXML(string str)
-		{
-			return str.Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;");
-		}
-
-		string UnescapeXML(string str)
-		{
-			return str.Replace("&apos;", "'").Replace("&quot;", "\"").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">");
-		}
-
-		string EscapeRegex(string str)
-		{
-			return Regex.Escape(str);
-		}
-
-		string UnescapeRegex(string str)
-		{
-			return Regex.Unescape(str);
-		}
-
 		internal bool CanClose()
 		{
 			if (!IsModified)
@@ -891,9 +871,9 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Data_Width()
 		{
-			var minWidth = Selections.Select(range => range.Length).Max();
-			var text = String.Join("", Selections.Select(range => GetString(range)));
-			var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			var minWidth = strs.Select(str => str.Length).Max();
+			var numeric = strs.All(str => str.IsNumeric());
 			var result = WidthDialog.Run(minWidth, numeric ? '0' : ' ', numeric);
 			if (result == null)
 				return;
@@ -902,7 +882,12 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Data_Trim()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList());
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			if (strs.All(str => str.IsNumeric()))
+				strs = strs.Select(str => str.TrimStart('0')).ToList();
+			else
+				strs = strs.Select(str => str.Trim()).ToList();
+			ReplaceSelections(strs);
 		}
 
 		internal void Command_Data_EvaluateExpression()
@@ -957,22 +942,22 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Data_Escape_XML()
 		{
-			ReplaceSelections(Selections.Select(range => EscapeXML(GetString(range))).ToList());
+			ReplaceSelections(Selections.Select(range => GetString(range).Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;")).ToList());
 		}
 
 		internal void Command_Data_Escape_Regex()
 		{
-			ReplaceSelections(Selections.Select(range => EscapeRegex(GetString(range))).ToList());
+			ReplaceSelections(Selections.Select(range => Regex.Escape(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Unescape_XML()
 		{
-			ReplaceSelections(Selections.Select(range => UnescapeXML(GetString(range))).ToList());
+			ReplaceSelections(Selections.Select(range => GetString(range).Replace("&apos;", "'").Replace("&quot;", "\"").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">")).ToList());
 		}
 
 		internal void Command_Data_Unescape_Regex()
 		{
-			ReplaceSelections(Selections.Select(range => UnescapeRegex(GetString(range))).ToList());
+			ReplaceSelections(Selections.Select(range => Regex.Unescape(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Checksum(Checksum.Type type, Coder.Type coder)

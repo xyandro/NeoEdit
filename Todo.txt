@@ -25,8 +25,6 @@ Files: Select/etc on svn status (ignore/modified)
 Series, possibly others don't select result (if some lines are empty some lines won't be selected)
 When closing multiple unsaved files ask for "Yes for All"/"No for All"
 Get directory files/dirs
-Trim should only remove leading zeros if input is entirely numeric
-(Un)escape XML/Regex should be extensions or in same function as used
 
 Binary:
 Fix binary editor backwards search

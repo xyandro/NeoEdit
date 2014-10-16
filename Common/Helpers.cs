@@ -226,5 +226,16 @@ namespace NeoEdit.Common
 			}
 			return Encoding.UTF8.GetString(bytes);
 		}
+
+		public static bool IsNumeric(this string input)
+		{
+			var inputLen = input.Length;
+			if (inputLen == 0)
+				return false;
+			for (var ctr = 0; ctr < inputLen; ++ctr)
+				if ((input[ctr] < '0') || (input[ctr] > '9'))
+					return false;
+			return true;
+		}
 	}
 }
