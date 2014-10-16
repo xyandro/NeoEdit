@@ -111,7 +111,7 @@ namespace NeoEdit.TextEditor
 			var orderedRegions = ordering.Select(index => regions[index]).ToList();
 			var orderedRegionText = orderedRegions.Select(range => GetString(range)).ToList();
 
-			Replace(regions, orderedRegionText, false);
+			Replace(regions, orderedRegionText);
 
 			var newRegions = regions.ToList();
 			var add = 0;

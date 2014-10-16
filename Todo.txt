@@ -22,11 +22,11 @@ Show number of items on clipboard on status bar
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
-Set selection to what was redone/undone on redo/undo
-Ability to leave pasted data selected
 Series, possibly others don't select result (if some lines are empty some lines won't be selected)
 When closing multiple unsaved files ask for "Yes for All"/"No for All"
 Get directory files/dirs
+Trim should only remove leading zeros if input is entirely numeric
+(Un)escape XML/Regex should be extensions or in same function as used
 
 Binary:
 Fix binary editor backwards search

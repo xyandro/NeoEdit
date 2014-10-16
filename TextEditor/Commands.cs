@@ -28,7 +28,7 @@ namespace NeoEdit.TextEditor
 		[Header("_Redo")] [KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,
 		[Header("C_ut")] [KeyGesture(Key.X, ModifierKeys.Control)] Edit_Cut,
 		[Header("_Copy")] [KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy,
-		[Header("_Paste")] [KeyGesture(Key.V, ModifierKeys.Control)] Edit_Paste,
+		[Header("_Paste")] [KeyGesture(Key.V, ModifierKeys.Control)] [KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Paste,
 		[Header("_Show Clipboard")] [KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift)] Edit_ShowClipboard,
 		[Header("_Find")] [KeyGesture(Key.F, ModifierKeys.Control)]  [KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Find,
 		[Header("Find _Next")] [KeyGesture(Key.F3)]  [KeyGesture(Key.F3, ModifierKeys.Shift)] Edit_FindNext,

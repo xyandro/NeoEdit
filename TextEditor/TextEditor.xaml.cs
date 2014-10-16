@@ -344,7 +344,7 @@ namespace NeoEdit.TextEditor
 						str += data.GetString(beginOffset, endOffset - beginOffset);
 					}
 
-					Replace(Selections, new List<string> { str }, true);
+					ReplaceSelections(str);
 				}
 			}
 		}
@@ -370,9 +370,9 @@ namespace NeoEdit.TextEditor
 			if (Data.BOM != result.BOM)
 			{
 				if (result.BOM)
-					Replace(new ObservableCollection<Range> { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
+					Replace(new ObservableCollection<Range> { new Range(0, 0) }, new List<string> { "\ufeff" });
 				else
-					Replace(new ObservableCollection<Range> { new Range(0, 1) }, new List<string> { "" }, true);
+					Replace(new ObservableCollection<Range> { new Range(0, 1) }, new List<string> { "" });
 			}
 
 			if (result.LineEndings != null)
@@ -387,7 +387,7 @@ namespace NeoEdit.TextEditor
 					var start = Data.GetOffset(line, Data.GetLineLength(line));
 					sel.Add(Range.FromIndex(start, current.Length));
 				}
-				Replace(sel, sel.Select(str => result.LineEndings).ToList(), false);
+				Replace(sel, sel.Select(str => result.LineEndings).ToList());
 			}
 		}
 
@@ -399,15 +399,19 @@ namespace NeoEdit.TextEditor
 		internal void Command_Edit_Undo()
 		{
 			var undo = undoRedo.GetUndo();
-			if (undo != null)
-				Replace(undo.ranges, undo.text, true, ReplaceType.Undo);
+			if (undo == null)
+				return;
+			Selections.Replace(undo.ranges);
+			ReplaceSelections(undo.text, replaceType: ReplaceType.Undo);
 		}
 
 		internal void Command_Edit_Redo()
 		{
 			var redo = undoRedo.GetRedo();
-			if (redo != null)
-				Replace(redo.ranges, redo.text, true, ReplaceType.Redo);
+			if (redo == null)
+				return;
+			Selections.Replace(redo.ranges);
+			ReplaceSelections(redo.text, replaceType: ReplaceType.Redo);
 		}
 
 		internal void Command_Edit_CutCopy(bool isCut)
@@ -416,7 +420,7 @@ namespace NeoEdit.TextEditor
 			if (result.Length != 0)
 				ClipboardWindow.Set(result);
 			if (isCut)
-				Replace(Selections, null, false);
+				ReplaceSelections("");
 		}
 
 		internal void Command_Edit_Paste()
@@ -430,7 +434,7 @@ namespace NeoEdit.TextEditor
 
 			if (Selections.Count == clipboardStrings.Count)
 			{
-				Replace(Selections, clipboardStrings, false);
+				ReplaceSelections(clipboardStrings, shiftDown);
 				return;
 			}
 
@@ -441,7 +445,7 @@ namespace NeoEdit.TextEditor
 			var replace = new List<string> { String.Join("", clipboardStrings) };
 
 			var offset = Selections.First().Start;
-			Replace(Selections, replace, false);
+			ReplaceSelections(replace);
 			Selections.Clear();
 			foreach (var str in clipboardStrings)
 			{
@@ -588,8 +592,7 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Files_Path_Simplify()
 		{
-			var strs = Selections.Select(range => Path.GetFullPath(GetString(range))).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
 		}
 
 		internal void Command_Files_Path_GetFilePath(GetPathType type)
@@ -620,7 +623,7 @@ namespace NeoEdit.TextEditor
 				else
 					strs.Add("INVALID");
 			}
-			Replace(Selections, strs, true);
+			ReplaceSelections(strs);
 		}
 
 		internal void Command_Files_Information_WriteTime()
@@ -642,7 +645,7 @@ namespace NeoEdit.TextEditor
 				else
 					strs.Add("INVALID");
 			}
-			Replace(Selections, strs, true);
+			ReplaceSelections(strs);
 		}
 
 		internal void Command_Files_Information_AccessTime()
@@ -664,7 +667,7 @@ namespace NeoEdit.TextEditor
 				else
 					strs.Add("INVALID");
 			}
-			Replace(Selections, strs, true);
+			ReplaceSelections(strs);
 		}
 
 		internal void Command_Files_Information_CreateTime()
@@ -686,7 +689,7 @@ namespace NeoEdit.TextEditor
 				else
 					strs.Add("INVALID");
 			}
-			Replace(Selections, strs, true);
+			ReplaceSelections(strs);
 		}
 
 		internal void Command_Files_Information_Attributes()
@@ -708,7 +711,7 @@ namespace NeoEdit.TextEditor
 				else
 					strs.Add("INVALID");
 			}
-			Replace(Selections, strs, true);
+			ReplaceSelections(strs);
 		}
 
 		internal void Command_Files_Information_ReadOnly()
@@ -727,7 +730,7 @@ namespace NeoEdit.TextEditor
 				else
 					strs.Add("INVALID");
 			}
-			Replace(Selections, strs, true);
+			ReplaceSelections(strs);
 		}
 
 		static bool FileOrDirectoryExists(string name)
@@ -823,60 +826,47 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Data_Case_Upper()
 		{
-			var strs = Selections.Select(range => GetString(range).ToUpperInvariant()).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => GetString(range).ToUpperInvariant()).ToList());
 		}
 
 		internal void Command_Data_Case_Lower()
 		{
-			var strs = Selections.Select(range => GetString(range).ToLowerInvariant()).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => GetString(range).ToLowerInvariant()).ToList());
 		}
 
 		internal void Command_Data_Case_Proper()
 		{
-			var strs = Selections.Select(range => GetString(range).ToProper()).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => GetString(range).ToProper()).ToList());
 		}
 
 		internal void Command_Data_Case_Toggle()
 		{
-			var strs = Selections.Select(range => GetString(range).ToToggled()).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => GetString(range).ToToggled()).ToList());
 		}
 
 		internal void Command_Data_Hex_ToHex()
 		{
-			var selections = Selections.Where(range => range.HasSelection()).ToList();
-			var strs = selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList();
-			Replace(selections, strs, true);
+			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList());
 		}
 
 		internal void Command_Data_Hex_FromHex()
 		{
-			var selections = Selections.Where(range => range.HasSelection()).ToList();
-			var strs = selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList();
-			Replace(selections, strs, true);
+			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
 		internal void Command_Data_Char_ToChar()
 		{
-			var selections = Selections.Where(range => range.HasSelection()).ToList();
-			var strs = selections.Select(range => GetString(range).FromUTF8HexString()).ToList();
-			Replace(selections, strs, true);
+			ReplaceSelections(Selections.Select(range => GetString(range).FromUTF8HexString()).ToList());
 		}
 
 		internal void Command_Data_Char_FromChar()
 		{
-			var selections = Selections.Where(range => range.HasSelection()).ToList();
-			var strs = selections.Select(range => GetString(range).ToUTF8HexString()).ToList();
-			Replace(selections, strs, true);
+			ReplaceSelections(Selections.Select(range => GetString(range).ToUTF8HexString()).ToList());
 		}
 
 		internal void Command_Data_DateTime_Insert()
 		{
-			var now = DateTime.Now.ToString("O");
-			Replace(Selections, Selections.Select(range => now).ToList(), true);
+			ReplaceSelections(DateTime.Now.ToString("O"));
 		}
 
 		internal void Command_Data_DateTime_Convert()
@@ -890,14 +880,13 @@ namespace NeoEdit.TextEditor
 				return;
 
 			strs = strs.Select(str => ConvertDateTimeDialog.ConvertFormat(str, result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(strs);
 
 		}
 
 		internal void Command_Data_Length()
 		{
-			var strs = Selections.Select(range => GetString(range).Length.ToString()).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => GetString(range).Length.ToString()).ToList());
 		}
 
 		internal void Command_Data_Width()
@@ -906,59 +895,55 @@ namespace NeoEdit.TextEditor
 			var text = String.Join("", Selections.Select(range => GetString(range)));
 			var numeric = Regex.IsMatch(text, "^[0-9a-fA-F]+$");
 			var result = WidthDialog.Run(minWidth, numeric ? '0' : ' ', numeric);
-			if (result != null)
-				Replace(Selections, Selections.Select(range => SetWidth(GetString(range), result.Value, result.PadChar, result.Before)).ToList(), true);
+			if (result == null)
+				return;
+			ReplaceSelections(Selections.Select(range => SetWidth(GetString(range), result.Value, result.PadChar, result.Before)).ToList());
 		}
 
 		internal void Command_Data_Trim()
 		{
-			var selections = Selections.Where(range => range.HasSelection()).ToList();
-			var strs = selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList();
-			Replace(selections, strs, true);
+			ReplaceSelections(Selections.Select(range => GetString(range).Trim().TrimStart('0')).ToList());
 		}
 
 		internal void Command_Data_EvaluateExpression()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			var expression = ExpressionDialog.GetExpression(strs);
-			if (expression != null)
-			{
-				strs = strs.Select((str, pos) => expression.Evaluate(str, pos + 1).ToString()).ToList();
-				Replace(Selections, strs, true);
-			}
+			if (expression == null)
+				return;
+
+			strs = strs.Select((str, pos) => expression.Evaluate(str, pos + 1).ToString()).ToList();
+			ReplaceSelections(strs);
 		}
 
 		internal void Command_Data_Series()
 		{
-			var strs = Enumerable.Range(1, Selections.Count).Select(num => num.ToString()).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
 		}
 
 		internal void Command_Data_Repeat()
 		{
 			var repeat = RepeatDialog.Run(Selections.Count == 1);
-			if (repeat != null)
+			if (repeat == null)
+				return;
+
+			ReplaceSelections(Selections.Select(range => RepeatString(GetString(range), repeat.RepeatCount)).ToList());
+			if (repeat.SelectAll)
 			{
-				var strs = Selections.Select(range => RepeatString(GetString(range), repeat.RepeatCount)).ToList();
-				Replace(Selections, strs, true);
-				if (repeat.SelectAll)
+				var newSelections = new ObservableCollection<Range>();
+				foreach (var selection in Selections)
 				{
-					var newSelections = new ObservableCollection<Range>();
-					foreach (var selection in Selections)
-					{
-						var len = selection.Length / repeat.RepeatCount;
-						for (var index = selection.Start; index < selection.End; index += len)
-							newSelections.Add(new Range(index + len, index));
-					}
-					Selections.Replace(newSelections);
+					var len = selection.Length / repeat.RepeatCount;
+					for (var index = selection.Start; index < selection.End; index += len)
+						newSelections.Add(new Range(index + len, index));
 				}
+				Selections.Replace(newSelections);
 			}
 		}
 
 		internal void Command_Data_GUID()
 		{
-			var strs = Selections.Select(range => Guid.NewGuid().ToString()).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => Guid.NewGuid().ToString()).ToList());
 		}
 
 		internal void Command_Data_Random()
@@ -967,38 +952,32 @@ namespace NeoEdit.TextEditor
 			if (result == null)
 				return;
 
-			var strs = Selections.Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
 		}
 
 		internal void Command_Data_Escape_XML()
 		{
-			var strs = Selections.Select(range => EscapeXML(GetString(range))).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => EscapeXML(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Escape_Regex()
 		{
-			var strs = Selections.Select(range => EscapeRegex(GetString(range))).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => EscapeRegex(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Unescape_XML()
 		{
-			var strs = Selections.Select(range => UnescapeXML(GetString(range))).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => UnescapeXML(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Unescape_Regex()
 		{
-			var strs = Selections.Select(range => UnescapeRegex(GetString(range))).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => UnescapeRegex(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Checksum(Checksum.Type type, Coder.Type coder)
 		{
-			var strs = Selections.Select(range => Checksum.Get(type, Coder.StringToBytes(GetString(range), coder))).ToList();
-			Replace(Selections, strs, true);
+			ReplaceSelections(Selections.Select(range => Checksum.Get(type, Coder.StringToBytes(GetString(range), coder))).ToList());
 		}
 
 		internal void Command_Keys_SetValues(int index)
@@ -1026,7 +1005,7 @@ namespace NeoEdit.TextEditor
 				else
 					strs.Add(keysAndValues[index][keysHash[str]]);
 			}
-			Replace(Selections, strs, true);
+			ReplaceSelections(strs);
 		}
 
 		internal void Command_Keys_GlobalFind(int index)
@@ -1070,7 +1049,7 @@ namespace NeoEdit.TextEditor
 				else
 					strs.Add(keysAndValues[index][keysHash[str]]);
 			}
-			Replace(ranges, strs, true);
+			Replace(ranges, strs);
 		}
 
 		internal void Command_Keys_CopyValues(int index)
@@ -1480,7 +1459,7 @@ namespace NeoEdit.TextEditor
 					{
 						if (Selections.Any(range => range.HasSelection()))
 						{
-							Replace(Selections, null, false);
+							ReplaceSelections("");
 							break;
 						}
 
@@ -1527,7 +1506,7 @@ namespace NeoEdit.TextEditor
 							selections.Add(new Range(offset, range.Highlight));
 						}
 
-						Replace(selections, null, false);
+						Replace(selections, null);
 					}
 					break;
 				case Key.Escape:
@@ -1660,7 +1639,7 @@ namespace NeoEdit.TextEditor
 
 						var sels = lines.Select(line => Range.FromIndex(line.Value, offset)).ToList();
 						var insert = sels.Select(range => replace).ToList();
-						Replace(sels, insert, true);
+						Replace(sels, insert);
 					}
 					break;
 				case Key.Enter:
@@ -1881,13 +1860,32 @@ namespace NeoEdit.TextEditor
 			Undo,
 			Redo,
 		}
-		void Replace(ObservableCollection<Range> ranges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
+
+		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal)
+		{
+			ReplaceSelections(Selections.Select(range => str).ToList(), highlight, replaceType);
+		}
+
+		void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal)
+		{
+			Replace(Selections, strs, replaceType);
+
+			if (highlight)
+				Selections.Replace(Selections.Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
+			else
+				Selections.Replace(Selections.Select(range => new Range(range.End)).ToList());
+		}
+
+		void Replace(ObservableCollection<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal)
 		{
 			if (ranges.Count == 0)
 				return;
 
 			if (strs == null)
 				strs = ranges.Select(range => "").ToList();
+
+			if (ranges.Count != strs.Count)
+				throw new Exception("Invalid string count");
 
 			var undoRanges = new ObservableCollection<Range>();
 			var undoText = new List<string>();
@@ -1911,16 +1909,13 @@ namespace NeoEdit.TextEditor
 
 			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
 
-			Searches.Clear();
-
 			var translateNums = RangeExtensions.GetTranslateNums(Selections, Marks, Searches);
 			var translateMap = RangeExtensions.GetTranslateMap(translateNums, ranges, strs);
 			Selections.Translate(translateMap);
 			Marks.Translate(translateMap);
+			var searchLens = Searches.Select(range => range.Length).ToList();
 			Searches.Translate(translateMap);
-
-			if (!leaveHighlighted)
-				Selections.Replace(Selections.Select(range => new Range(range.End)).ToList());
+			Searches.Replace(Searches.Where((range, index) => searchLens[index] == range.Length).ToList());
 
 			CalculateBoundaries();
 		}
@@ -1993,7 +1988,7 @@ namespace NeoEdit.TextEditor
 			if (text.Length == 0)
 				return;
 
-			Replace(Selections, Selections.Select(range => text).ToList(), false);
+			ReplaceSelections(text, false);
 			if (selectionsTimer.Started())
 				EnsureVisible();
 		}
