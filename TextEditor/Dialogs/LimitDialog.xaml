@@ -23,7 +23,8 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="_Number of selections:" Target="{Binding ElementName=numSels}" HorizontalAlignment="Right"/>
 		<xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Name="numSels" Value="{Binding NumSels, ElementName=self}" Minimum="1" Maximum="{Binding MaxSels, ElementName=self}"/>
 
-		<CheckBox Grid.Row="2" Grid.ColumnSpan="2" Content="Ignore _blank" IsChecked="{Binding IgnoreBlank, ElementName=self}"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Ignore _blank:" Target="{Binding ElementName=ignoreBlank}" HorizontalAlignment="Right"/>
+		<CheckBox Grid.Row="2" Grid.Column="1" Name="ignoreBlank" IsChecked="{Binding IgnoreBlank, ElementName=self}" VerticalAlignment="Center"/>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Columns="2">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
