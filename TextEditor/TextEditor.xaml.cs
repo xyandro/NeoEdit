@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -68,9 +69,9 @@ namespace NeoEdit.TextEditor
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
 
-		readonly RangeList Selections = new RangeList();
-		readonly RangeList Searches = new RangeList();
-		readonly RangeList Marks = new RangeList();
+		readonly ObservableCollection<Range> Selections = new ObservableCollection<Range>();
+		readonly ObservableCollection<Range> Searches = new ObservableCollection<Range>();
+		readonly ObservableCollection<Range> Marks = new ObservableCollection<Range>();
 
 		Random random = new Random();
 
@@ -102,9 +103,9 @@ namespace NeoEdit.TextEditor
 			OpenFile(filename, bytes, encoding);
 			Goto(line, column);
 
-			Selections.CollectionChanged += () => selectionsTimer.Start();
-			Searches.CollectionChanged += () => searchesTimer.Start();
-			Marks.CollectionChanged += () => marksTimer.Start();
+			Selections.CollectionChanged += (s, e) => selectionsTimer.Start();
+			Searches.CollectionChanged += (s, e) => searchesTimer.Start();
+			Marks.CollectionChanged += (s, e) => marksTimer.Start();
 
 			UIHelper<TextEditor>.AddCallback(this, Canvas.ActualWidthProperty, () => CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(this, Canvas.ActualHeightProperty, () => CalculateBoundaries());
@@ -369,15 +370,15 @@ namespace NeoEdit.TextEditor
 			if (Data.BOM != result.BOM)
 			{
 				if (result.BOM)
-					Replace(new RangeList { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
+					Replace(new ObservableCollection<Range> { new Range(0, 0) }, new List<string> { "\ufeff" }, true);
 				else
-					Replace(new RangeList { new Range(0, 1) }, new List<string> { "" }, true);
+					Replace(new ObservableCollection<Range> { new Range(0, 1) }, new List<string> { "" }, true);
 			}
 
 			if (result.LineEndings != null)
 			{
 				var lines = Data.NumLines;
-				var sel = new RangeList();
+				var sel = new ObservableCollection<Range>();
 				for (var line = 0; line < lines; ++line)
 				{
 					var current = Data.GetEnding(line);
@@ -942,7 +943,7 @@ namespace NeoEdit.TextEditor
 				Replace(Selections, strs, true);
 				if (repeat.SelectAll)
 				{
-					var newSelections = new RangeList();
+					var newSelections = new ObservableCollection<Range>();
 					foreach (var selection in Selections)
 					{
 						var len = selection.Length / repeat.RepeatCount;
@@ -1034,10 +1035,10 @@ namespace NeoEdit.TextEditor
 				throw new Exception("Keys and values count must match");
 
 			var searcher = new Searcher(keysAndValues[0], true);
-			var ranges = new RangeList();
+			var ranges = new ObservableCollection<Range>();
 			var selections = Selections;
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
-				selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
+				selections = new ObservableCollection<Range> { new Range(BeginOffset(), EndOffset()) };
 			foreach (var selection in selections)
 				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 
@@ -1051,10 +1052,10 @@ namespace NeoEdit.TextEditor
 				throw new Exception("Keys and values count must match");
 
 			var searcher = new Searcher(keysAndValues[0], true);
-			var ranges = new RangeList();
+			var ranges = new ObservableCollection<Range>();
 			var selections = Selections;
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
-				selections = new RangeList { new Range(BeginOffset(), EndOffset()) };
+				selections = new ObservableCollection<Range> { new Range(BeginOffset(), EndOffset()) };
 			foreach (var selection in selections)
 				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 
@@ -1196,7 +1197,7 @@ namespace NeoEdit.TextEditor
 			var expression = ExpressionDialog.GetExpression(strs);
 			if (expression != null)
 			{
-				var sels = new RangeList();
+				var sels = new ObservableCollection<Range>();
 				for (var ctr = 0; ctr < strs.Count; ++ctr)
 					if ((bool)expression.Evaluate(strs[ctr], ctr + 1) == include)
 						sels.Add(Selections[ctr]);
@@ -1210,7 +1211,7 @@ namespace NeoEdit.TextEditor
 			var expression = ExpressionDialog.GetRegEx(strs);
 			if (expression != null)
 			{
-				var sels = new RangeList();
+				var sels = new ObservableCollection<Range>();
 				for (var ctr = 0; ctr < strs.Count; ++ctr)
 					if (expression.IsMatch(strs[ctr]) == include)
 						sels.Add(Selections[ctr]);
@@ -1222,6 +1223,7 @@ namespace NeoEdit.TextEditor
 		{
 			visibleIndex = 0;
 			EnsureVisible(true);
+			renderTimer.Start();
 		}
 
 		internal void Command_Select_ShowCurrent()
@@ -1235,6 +1237,7 @@ namespace NeoEdit.TextEditor
 			if (visibleIndex >= Selections.Count)
 				visibleIndex = 0;
 			EnsureVisible(true);
+			renderTimer.Start();
 		}
 
 		internal void Command_Select_PrevSelection()
@@ -1243,6 +1246,7 @@ namespace NeoEdit.TextEditor
 			if (visibleIndex < 0)
 				visibleIndex = Selections.Count - 1;
 			EnsureVisible(true);
+			renderTimer.Start();
 		}
 
 		internal void Command_Select_Single()
@@ -1346,11 +1350,11 @@ namespace NeoEdit.TextEditor
 			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0))
 				return;
 
-			var brushes = new List<Tuple<RangeList, Brush>>
+			var brushes = new List<Tuple<ObservableCollection<Range>, Brush>>
 			{
-				new Tuple<RangeList, Brush>(Selections, Misc.selectionBrush),
-				new Tuple<RangeList, Brush>(Searches, Misc.searchBrush),
-				new Tuple<RangeList, Brush>(Marks, Misc.markBrush),
+				new Tuple<ObservableCollection<Range>, Brush>(Selections, Misc.selectionBrush),
+				new Tuple<ObservableCollection<Range>, Brush>(Searches, Misc.searchBrush),
+				new Tuple<ObservableCollection<Range>, Brush>(Marks, Misc.markBrush),
 			};
 
 			HasBOM = Data.BOM;
@@ -1480,7 +1484,7 @@ namespace NeoEdit.TextEditor
 							break;
 						}
 
-						var selections = new RangeList();
+						var selections = new ObservableCollection<Range>();
 						foreach (var range in Selections)
 						{
 							var offset = range.Start;
@@ -1861,7 +1865,7 @@ namespace NeoEdit.TextEditor
 
 			Searches.Clear();
 
-			var regions = result.SelectionOnly ? Selections : new RangeList { new Range(EndOffset(), BeginOffset()) };
+			var regions = result.SelectionOnly ? Selections : new ObservableCollection<Range> { new Range(EndOffset(), BeginOffset()) };
 			foreach (var region in regions)
 				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.IncludeEndings, result.RegexGroups).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 		}
@@ -1877,7 +1881,7 @@ namespace NeoEdit.TextEditor
 			Undo,
 			Redo,
 		}
-		void Replace(RangeList ranges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
+		void Replace(ObservableCollection<Range> ranges, List<string> strs, bool leaveHighlighted, ReplaceType replaceType = ReplaceType.Normal)
 		{
 			if (ranges.Count == 0)
 				return;
@@ -1885,7 +1889,7 @@ namespace NeoEdit.TextEditor
 			if (strs == null)
 				strs = ranges.Select(range => "").ToList();
 
-			var undoRanges = new RangeList();
+			var undoRanges = new ObservableCollection<Range>();
 			var undoText = new List<string>();
 
 			var change = 0;

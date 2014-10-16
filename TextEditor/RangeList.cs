@@ -1,107 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace NeoEdit.TextEditor
 {
-	class RangeList : List<Range>
+	static class RangeListExtensions
 	{
-		public delegate void CollectionChangedDelegate();
-		CollectionChangedDelegate collectionChanged = () => { };
-		public event CollectionChangedDelegate CollectionChanged { add { collectionChanged += value; } remove { collectionChanged -= value; } }
-
-		public RangeList() { }
-		public RangeList(IEnumerable<Range> collection) : base(collection) { }
-
-		public new void Clear()
+		public static ObservableCollection<Range> ToList(this IEnumerable<Range> source)
 		{
-			base.Clear();
-			collectionChanged();
+			return new ObservableCollection<Range>(source);
 		}
 
-		public new void Add(Range item)
+		public static void AddRange(this ObservableCollection<Range> ranges, IEnumerable<Range> items)
 		{
-			base.Add(item);
-			collectionChanged();
+			foreach (var item in items)
+				ranges.Add(item);
 		}
 
-		public new void Remove(Range item)
+		public static void RemoveRange(this ObservableCollection<Range> ranges, int index, int count)
 		{
-			base.Remove(item);
-			collectionChanged();
+			for (var ctr = 0; ctr < count; ++ctr)
+				ranges.RemoveAt(index);
 		}
 
-		public new void RemoveRange(int index, int count)
+		public static void Replace(this ObservableCollection<Range> ranges, IEnumerable<Range> items)
 		{
-			base.RemoveRange(index, count);
-			collectionChanged();
+			ranges.Clear();
+			ranges.AddRange(items);
 		}
 
-		public new void RemoveAt(int index)
+		public static void Replace(this ObservableCollection<Range> ranges, Range item)
 		{
-			base.RemoveAt(index);
-			collectionChanged();
+			ranges.Clear();
+			ranges.Add(item);
 		}
 
-		public void Replace(RangeList items)
+		public static void ForEach(this ObservableCollection<Range> ranges, Action<Range> action)
 		{
-			base.Clear();
-			base.AddRange(items);
-			collectionChanged();
+			foreach (var item in ranges)
+				action(item);
 		}
 
-		public void Replace(Range item)
+		public static int FindIndex(this ObservableCollection<Range> ranges, Predicate<Range> match)
 		{
-			base.Clear();
-			base.Add(item);
-			collectionChanged();
+			var ctr = 0;
+			foreach (var range in ranges)
+			{
+				if (match(range))
+					return ctr;
+				++ctr;
+			}
+			return -1;
 		}
 
-		public new void AddRange(IEnumerable<Range> items)
+		public static int BinaryFindFirst(this ObservableCollection<Range> ranges, Predicate<Range> predicate)
 		{
-			base.AddRange(items);
-			collectionChanged();
-		}
-
-		public int BinaryFindFirst(Predicate<Range> predicate)
-		{
-			int min = 0, max = Count;
+			int min = 0, max = ranges.Count;
 			while (min < max)
 			{
 				int mid = (min + max) / 2;
-				if (predicate(this[mid]))
+				if (predicate(ranges[mid]))
 					max = mid;
 				else
 					min = mid + 1;
 			}
-			return min == Count ? -1 : min;
+			return min == ranges.Count ? -1 : min;
 		}
 
-		public int BinaryFindLast(Predicate<Range> predicate)
+		public static int BinaryFindLast(this ObservableCollection<Range> ranges, Predicate<Range> predicate)
 		{
-			int min = -1, max = Count - 1;
+			int min = -1, max = ranges.Count - 1;
 			while (min < max)
 			{
 				int mid = (min + max + 1) / 2;
-				if (predicate(this[mid]))
+				if (predicate(ranges[mid]))
 					min = mid;
 				else
 					max = mid - 1;
 			}
 			return min;
-		}
-
-		public new Range this[int index]
-		{
-			get { return base[index]; }
-			set { base[index] = value; collectionChanged(); }
-		}
-	}
-
-	static class RangeListExtensions
-	{
-		public static RangeList ToList(this IEnumerable<Range> source)
-		{
-			return new RangeList(source);
 		}
 	}
 }

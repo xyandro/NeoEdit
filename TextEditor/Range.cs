@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace NeoEdit.TextEditor
@@ -37,11 +38,11 @@ namespace NeoEdit.TextEditor
 
 	static class RangeExtensions
 	{
-		public static void DeOverlap(this RangeList ranges)
+		public static void DeOverlap(this ObservableCollection<Range> ranges)
 		{
 			var rangeList = ranges.OrderBy(range => range.End).OrderBy(range => range.Start).ToList();
 			Range last = null;
-			var newRanges = new RangeList();
+			var newRanges = new ObservableCollection<Range>();
 			var ctr2 = 0;
 			while (true)
 			{
@@ -65,12 +66,12 @@ namespace NeoEdit.TextEditor
 			ranges.Replace(newRanges);
 		}
 
-		public static List<int> GetTranslateNums(params RangeList[] ranges)
+		public static List<int> GetTranslateNums(params ObservableCollection<Range>[] ranges)
 		{
 			return ranges.SelectMany(list => list).SelectMany(range => new int[] { range.Start, range.End }).Distinct().OrderBy(num => num).ToList();
 		}
 
-		public static Dictionary<int, int> GetTranslateMap(List<int> translateNums, RangeList replaceRanges, List<string> strs)
+		public static Dictionary<int, int> GetTranslateMap(List<int> translateNums, ObservableCollection<Range> replaceRanges, List<string> strs)
 		{
 			var translateMap = new Dictionary<int, int>();
 			var replaceRange = 0;
@@ -104,7 +105,7 @@ namespace NeoEdit.TextEditor
 			return translateMap;
 		}
 
-		public static void Translate(this RangeList ranges, Dictionary<int, int> translateMap)
+		public static void Translate(this ObservableCollection<Range> ranges, Dictionary<int, int> translateMap)
 		{
 			ranges.Replace(ranges.Select(range => new Range(translateMap[range.Cursor], translateMap[range.Highlight])).ToList());
 		}
