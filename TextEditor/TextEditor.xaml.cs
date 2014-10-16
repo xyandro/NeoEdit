@@ -1311,10 +1311,7 @@ namespace NeoEdit.TextEditor
 		void SelectionsInvalidated()
 		{
 			if (Selections.Count == 0)
-			{
 				Selections.Add(new Range(BeginOffset()));
-				EnsureVisible();
-			}
 			var visible = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
 			Selections.DeOverlap();
 			if (visible != null)
@@ -1324,6 +1321,7 @@ namespace NeoEdit.TextEditor
 					visibleIndex = 0;
 			}
 
+			EnsureVisible();
 			renderTimer.Start();
 		}
 
@@ -1974,6 +1972,11 @@ namespace NeoEdit.TextEditor
 		{
 			base.OnTextInput(e);
 			HandleText(e.Text);
+		}
+
+		internal bool Empty()
+		{
+			return (!IsModified) && (BeginOffset() == EndOffset());
 		}
 
 		internal void HandleText(string text)

@@ -315,18 +315,17 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.View_Highlighting_CSharp: Active.HighlightType = Highlighting.HighlightingType.CSharp; break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: Active.HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
 			}
-
-			if (Active == null)
-				return;
-
-			//if (Active.SelectionsInvalidated())
-			//	Active.EnsureVisible();
-
-			//Active.InvalidateRender();
 		}
 
 		void Add(TextEditor textEditor)
 		{
+			if ((Active != null) && (Active.Empty()))
+			{
+				var index = TextEditors.IndexOf(Active);
+				Active = TextEditors[index] = textEditor;
+				return;
+			}
+
 			TextEditors.Add(textEditor);
 			Active = textEditor;
 		}
