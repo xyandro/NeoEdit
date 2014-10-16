@@ -1571,10 +1571,12 @@ namespace NeoEdit.TextEditor
 						var mult = e.Key == Key.Up ? -1 : 1;
 						if (!controlDown)
 							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
-						else if (shiftDown)
-							Selections.AddRange(Selections.Select(range => MoveCursor(range, mult, 0, selecting: false)).ToList());
-						else
+						else if (!shiftDown)
 							yScrollValue += mult;
+						else if (e.Key == Key.Down)
+							Selections.Add(MoveCursor(Selections.Last(), mult, 0, selecting: false));
+						else if (Selections.Count > 1)
+							Selections.RemoveAt(Selections.Count - 1);
 					}
 					break;
 				case Key.Home:
