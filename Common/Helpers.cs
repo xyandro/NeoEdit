@@ -172,9 +172,8 @@ namespace NeoEdit.Common
 			return new String(output);
 		}
 
-		public static unsafe string ToUTF8HexString(this string input)
+		public static unsafe string ToHexString(this byte[] bytes)
 		{
-			var bytes = Encoding.UTF8.GetBytes(input);
 			var hexValue = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 			var output = new char[bytes.Length * 2];
 			fixed (byte* bytesFixed = bytes)
@@ -191,7 +190,7 @@ namespace NeoEdit.Common
 			return new String(output);
 		}
 
-		public static unsafe string FromUTF8HexString(this string input)
+		public static unsafe byte[] FromHexString(this string input)
 		{
 			if ((input.Length % 2) != 0)
 				input = '0' + input;
@@ -224,7 +223,7 @@ namespace NeoEdit.Common
 						throw new Exception("Invalid string");
 				}
 			}
-			return Encoding.UTF8.GetString(bytes);
+			return bytes;
 		}
 
 		public static bool IsNumeric(this string input)

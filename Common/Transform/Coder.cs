@@ -10,6 +10,7 @@ namespace NeoEdit.Common.Transform
 		public enum Type
 		{
 			None,
+			Auto,
 			UInt8LE,
 			UInt16LE,
 			UInt32LE,
@@ -148,6 +149,8 @@ namespace NeoEdit.Common.Transform
 
 		public static string BytesToString(byte[] data, Type type)
 		{
+			if (type == Type.Auto)
+				type = GuessEncoding(data);
 			switch (type)
 			{
 				case Type.UInt8LE: return Resize(data, 1, true)[0].ToString();

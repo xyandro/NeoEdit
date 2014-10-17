@@ -834,31 +834,19 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
-		internal void Command_Data_Char_ToChar()
+		internal void Command_Data_Binary_ToBinary(Coder.Type coder)
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).FromUTF8HexString()).ToList());
+			ReplaceSelections(Selections.Select(range => Coder.StringToBytes(GetString(range), coder).ToHexString()).ToList());
 		}
 
-		internal void Command_Data_Char_FromChar()
+		internal void Command_Data_Binary_FromBinary(Coder.Type coder)
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).ToUTF8HexString()).ToList());
+			ReplaceSelections(Selections.Select(range => Coder.BytesToString(GetString(range).FromHexString(), coder)).ToList());
 		}
 
 		internal void Command_Data_ToBase64(Coder.Type coder)
 		{
 			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), coder), Coder.Type.Base64)).ToList());
-		}
-
-		internal void Command_Data_FromBase64Auto()
-		{
-			var strs = new List<string>();
-			foreach (var range in Selections)
-			{
-				var bytes = Coder.StringToBytes(GetString(range), Coder.Type.Base64);
-				var coder = Coder.GuessEncoding(bytes);
-				strs.Add(Coder.BytesToString(bytes, coder));
-			}
-			ReplaceSelections(strs);
 		}
 
 		internal void Command_Data_FromBase64(Coder.Type coder)
