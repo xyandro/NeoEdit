@@ -115,6 +115,8 @@
 					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF16BE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF32LE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF32BE"/>
+					<Separator/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_Binary"/>
 				</MenuItem>
 				<MenuItem Header="_From Base64">
 					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_Auto"/>
@@ -125,6 +127,8 @@
 					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF16BE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF32LE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF32BE"/>
+					<Separator/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_Binary"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Date/Time">

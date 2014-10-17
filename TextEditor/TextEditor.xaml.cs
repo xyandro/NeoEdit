@@ -844,14 +844,24 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Coder.BytesToString(GetString(range).FromHexString(), coder)).ToList());
 		}
 
-		internal void Command_Data_ToBase64(Coder.Type coder)
+		internal void Command_Data_Base64_ToBase64(Coder.Type coder)
 		{
 			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), coder), Coder.Type.Base64)).ToList());
 		}
 
-		internal void Command_Data_FromBase64(Coder.Type coder)
+		internal void Command_Data_Base64_FromBase64(Coder.Type coder)
 		{
 			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), Coder.Type.Base64), coder)).ToList());
+		}
+
+		internal void Command_Data_Base64_ToBase64Binary()
+		{
+			ReplaceSelections(Selections.Select(range => Coder.BytesToString(GetString(range).FromHexString(), Coder.Type.Base64)).ToList());
+		}
+
+		internal void Command_Data_Base64_FromBase64Binary()
+		{
+			ReplaceSelections(Selections.Select(range => Coder.StringToBytes(GetString(range), Coder.Type.Base64).ToHexString()).ToList());
 		}
 
 		internal void Command_Data_DateTime_Insert()
