@@ -19,11 +19,8 @@
 	<MenuItem.InputBindings>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Disk" Key="D" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Processes" Key="P" Modifiers="Control+Shift"/>
-		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Key="H" Modifiers="Control+Shift"/>
-		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Registry" Key="R" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_BinaryEditor" Key="B" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_TextEditor" Key="T" Modifiers="Control+Shift"/>
-		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Key="S" Modifiers="Control+Shift"/>
 	</MenuItem.InputBindings>
 
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Disk" Header="_Disk"/>

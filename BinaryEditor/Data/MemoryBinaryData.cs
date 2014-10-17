@@ -27,12 +27,12 @@ namespace NeoEdit.BinaryEditor.Data
 			if (bytes == null)
 				bytes = new byte[0];
 
-			var newData = new byte[cache.Length - count + bytes.Length];
-			Array.Copy(cache, 0, newData, 0, index);
-			Array.Copy(bytes, 0, newData, index, bytes.Length);
-			Array.Copy(cache, index + count, newData, index + bytes.Length, cache.Length - index - count);
-			cache = newData;
-			length = cache.Length;
+			var cacheLen = cache.Length;
+			Array.Resize(ref cache, cache.Length + Math.Max(0, bytes.Length - (int)count));
+			Array.Copy(cache, index + count, cache, index + bytes.Length, cacheLen - index - count);
+			Array.Resize(ref cache, cache.Length + Math.Min(0, bytes.Length - (int)count));
+			Array.Copy(bytes, 0, cache, index, bytes.Length);
+			cacheEnd = length = cache.Length;
 		}
 
 		public override byte[] GetAllBytes()

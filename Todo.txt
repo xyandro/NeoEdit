@@ -22,7 +22,6 @@ Show number of items on clipboard on status bar
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
-Series, possibly others don't select result (if some lines are empty some lines won't be selected)
 When closing multiple unsaved files ask for "Yes for All"/"No for All"
 Get directory files/dirs
 
@@ -32,4 +31,3 @@ Remember search history
 Cursor hard to see
 Fill selection (eg with 0s)
 Reload current file (perhaps automatically?)
-Find fails when file is modified
