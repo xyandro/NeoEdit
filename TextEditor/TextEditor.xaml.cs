@@ -1411,7 +1411,7 @@ namespace NeoEdit.TextEditor
 
 						start = Math.Max(0, start - startColumn);
 						end = Math.Max(0, Math.Min(endColumn, end) - startColumn);
-						var width = end - start;
+						var width = Math.Max(0, end - start);
 
 						var steps = range == visibleCursor ? 2 : 1;
 						for (var ctr = 0; ctr < steps; ++ctr)
