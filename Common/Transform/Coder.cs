@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace NeoEdit.Common.Transform
 {
@@ -220,8 +219,35 @@ namespace NeoEdit.Common.Transform
 			return ret;
 		}
 
-		static Regex base64Quick = new Regex("^[\ufeff0-9a-zA-Z+/\\s=]*$");
-		static Regex base64Correct = new Regex(@"^\ufeff?((\s*[0-9a-zA-Z+/]){4})*((\s*[0-9a-zA-Z+/]){2}\s*=\s*=|(\s*[0-9a-zA-Z+/]){3}\s*=)?\s*$");
+		static byte[] GetBase64Bytes(string value)
+		{
+			var base64 = new StringBuilder();
+			bool padding = false;
+			for (var ctr = 0; ctr < value.Length; ++ctr)
+			{
+				if ((ctr == 0) && (value[ctr] == '\ufeff'))
+					continue; // Skip BOM
+				else if (Char.IsWhiteSpace(value[ctr]))
+					continue; // Skip whitespace
+				else if (value[ctr] == '=')
+					padding = true;
+				else if (padding)
+					return null; // No more chars allowed after padding starts
+				else if ((Char.IsLetterOrDigit(value[ctr])) || (value[ctr] == '+') || (value[ctr] == '/'))
+					base64.Append(value[ctr]);
+				else
+					return null; // Invalid char
+			}
+
+			var pad = 3 - ((base64.Length - 1) % 4);
+			if ((pad < 0) || (pad > 2))
+				return null; // Invalid; 0, 1, 2 are only options
+
+			base64.Append('=', pad);
+
+			return Convert.FromBase64String(base64.ToString());
+		}
+
 		public static byte[] TryStringToBytes(string value, Type type)
 		{
 			if (value == null)
@@ -257,13 +283,7 @@ namespace NeoEdit.Common.Transform
 					case Type.UTF32BE:
 						return GetEncoding(type).GetBytes(value);
 					case Type.Base64:
-						// Quick match to throw out most invalid stuff; checks only that the string contains the proper characters
-						if (!base64Quick.IsMatch(value))
-							return null;
-						// More expensive one for true correctness
-						if (!base64Correct.IsMatch(value))
-							return null;
-						return Convert.FromBase64String(value.TrimStart('\ufeff'));
+						return GetBase64Bytes(value);
 					case Type.Hex: return StringToHex(value, false);
 					case Type.HexRev: return StringToHex(value, true);
 				}
