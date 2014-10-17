@@ -844,6 +844,28 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => GetString(range).ToUTF8HexString()).ToList());
 		}
 
+		internal void Command_Data_ToBase64(Coder.Type coder)
+		{
+			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), coder), Coder.Type.Base64)).ToList());
+		}
+
+		internal void Command_Data_FromBase64Auto()
+		{
+			var strs = new List<string>();
+			foreach (var range in Selections)
+			{
+				var bytes = Coder.StringToBytes(GetString(range), Coder.Type.Base64);
+				var coder = Coder.GuessEncoding(bytes);
+				strs.Add(Coder.BytesToString(bytes, coder));
+			}
+			ReplaceSelections(strs);
+		}
+
+		internal void Command_Data_FromBase64(Coder.Type coder)
+		{
+			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), Coder.Type.Base64), coder)).ToList());
+		}
+
 		internal void Command_Data_DateTime_Insert()
 		{
 			ReplaceSelections(DateTime.Now.ToString("O"));

@@ -91,6 +91,25 @@
 				<textEditor:TextEditMenuItem CommandEnum="Data_Char_ToChar"/>
 				<textEditor:TextEditMenuItem CommandEnum="Data_Char_FromChar"/>
 			</MenuItem>
+			<MenuItem Header="Base_64">
+				<MenuItem Header="_To Base64">
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF16LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF16BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF32LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_ToBase64_UTF32BE"/>
+				</MenuItem>
+				<MenuItem Header="_From Base64">
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_Auto"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF8"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF7"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF16LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF16BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF32LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Base64_FromBase64_UTF32BE"/>
+				</MenuItem>
+			</MenuItem>
 			<MenuItem Header="_Date/Time">
 				<textEditor:TextEditMenuItem CommandEnum="Data_DateTime_Insert"/>
 				<textEditor:TextEditMenuItem CommandEnum="Data_DateTime_Convert"/>
