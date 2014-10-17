@@ -42,7 +42,7 @@ namespace NeoEdit.TextEditor
 		{
 			var rangeList = ranges.OrderBy(range => range.End).OrderBy(range => range.Start).ToList();
 			Range last = null;
-			var newRanges = new ObservableCollection<Range>();
+			var newRanges = new List<Range>();
 			var ctr2 = 0;
 			while (true)
 			{
@@ -66,12 +66,12 @@ namespace NeoEdit.TextEditor
 			ranges.Replace(newRanges);
 		}
 
-		public static List<int> GetTranslateNums(params ObservableCollection<Range>[] ranges)
+		public static List<int> GetTranslateNums(params IEnumerable<Range>[] ranges)
 		{
 			return ranges.SelectMany(list => list).SelectMany(range => new int[] { range.Start, range.End }).Distinct().OrderBy(num => num).ToList();
 		}
 
-		public static Dictionary<int, int> GetTranslateMap(List<int> translateNums, ObservableCollection<Range> replaceRanges, List<string> strs)
+		public static Dictionary<int, int> GetTranslateMap(List<int> translateNums, IList<Range> replaceRanges, List<string> strs)
 		{
 			var translateMap = new Dictionary<int, int>();
 			var replaceRange = 0;

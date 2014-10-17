@@ -350,15 +350,15 @@ namespace NeoEdit.TextEditor
 			if (Data.BOM != result.BOM)
 			{
 				if (result.BOM)
-					Replace(new ObservableCollection<Range> { new Range(0, 0) }, new List<string> { "\ufeff" });
+					Replace(new List<Range> { new Range(0, 0) }, new List<string> { "\ufeff" });
 				else
-					Replace(new ObservableCollection<Range> { new Range(0, 1) }, new List<string> { "" });
+					Replace(new List<Range> { new Range(0, 1) }, new List<string> { "" });
 			}
 
 			if (result.LineEndings != null)
 			{
 				var lines = Data.NumLines;
-				var sel = new ObservableCollection<Range>();
+				var sel = new List<Range>();
 				for (var line = 0; line < lines; ++line)
 				{
 					var current = Data.GetEnding(line);
@@ -915,7 +915,7 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => RepeatString(GetString(range), repeat.RepeatCount)).ToList());
 			if (repeat.SelectAll)
 			{
-				var newSelections = new ObservableCollection<Range>();
+				var newSelections = new List<Range>();
 				foreach (var selection in Selections)
 				{
 					var len = selection.Length / repeat.RepeatCount;
@@ -999,10 +999,10 @@ namespace NeoEdit.TextEditor
 				throw new Exception("Keys and values count must match");
 
 			var searcher = new Searcher(keysAndValues[0], true);
-			var ranges = new ObservableCollection<Range>();
-			var selections = Selections;
+			var ranges = new List<Range>();
+			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
-				selections = new ObservableCollection<Range> { new Range(BeginOffset(), EndOffset()) };
+				selections = new List<Range> { new Range(BeginOffset(), EndOffset()) };
 			foreach (var selection in selections)
 				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 
@@ -1016,10 +1016,10 @@ namespace NeoEdit.TextEditor
 				throw new Exception("Keys and values count must match");
 
 			var searcher = new Searcher(keysAndValues[0], true);
-			var ranges = new ObservableCollection<Range>();
-			var selections = Selections;
+			var ranges = new List<Range>();
+			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
-				selections = new ObservableCollection<Range> { new Range(BeginOffset(), EndOffset()) };
+				selections = new List<Range> { new Range(BeginOffset(), EndOffset()) };
 			foreach (var selection in selections)
 				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 
@@ -1161,7 +1161,7 @@ namespace NeoEdit.TextEditor
 			var expression = ExpressionDialog.GetExpression(strs);
 			if (expression != null)
 			{
-				var sels = new ObservableCollection<Range>();
+				var sels = new List<Range>();
 				for (var ctr = 0; ctr < strs.Count; ++ctr)
 					if ((bool)expression.Evaluate(strs[ctr], ctr + 1) == include)
 						sels.Add(Selections[ctr]);
@@ -1175,7 +1175,7 @@ namespace NeoEdit.TextEditor
 			var expression = ExpressionDialog.GetRegEx(strs);
 			if (expression != null)
 			{
-				var sels = new ObservableCollection<Range>();
+				var sels = new List<Range>();
 				for (var ctr = 0; ctr < strs.Count; ++ctr)
 					if (expression.IsMatch(strs[ctr]) == include)
 						sels.Add(Selections[ctr]);
@@ -1448,7 +1448,7 @@ namespace NeoEdit.TextEditor
 							break;
 						}
 
-						var selections = new ObservableCollection<Range>();
+						var selections = new List<Range>();
 						foreach (var range in Selections)
 						{
 							var offset = range.Start;
@@ -1829,7 +1829,7 @@ namespace NeoEdit.TextEditor
 
 			Searches.Clear();
 
-			var regions = result.SelectionOnly ? Selections : new ObservableCollection<Range> { new Range(EndOffset(), BeginOffset()) };
+			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { new Range(EndOffset(), BeginOffset()) };
 			foreach (var region in regions)
 				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.IncludeEndings, result.RegexGroups).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 		}
@@ -1861,9 +1861,9 @@ namespace NeoEdit.TextEditor
 				Selections.Replace(Selections.Select(range => new Range(range.End)).ToList());
 		}
 
-		void Replace(ObservableCollection<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal)
+		void Replace(IList<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal)
 		{
-			if (ranges.Count == 0)
+			if (!ranges.Any())
 				return;
 
 			if (strs == null)
@@ -1872,7 +1872,7 @@ namespace NeoEdit.TextEditor
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid string count");
 
-			var undoRanges = new ObservableCollection<Range>();
+			var undoRanges = new List<Range>();
 			var undoText = new List<string>();
 
 			var change = 0;

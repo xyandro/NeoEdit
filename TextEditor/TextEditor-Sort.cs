@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
@@ -12,14 +11,14 @@ namespace NeoEdit.TextEditor
 		internal enum SortScope { Selections, Lines, Regions }
 		internal enum SortType { String, Numeric, Keys, Reverse, Randomize, Length }
 
-		ObservableCollection<Range> GetSortLines()
+		List<Range> GetSortLines()
 		{
 			return Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 		}
 
-		ObservableCollection<Range> GetSortRegions()
+		List<Range> GetSortRegions()
 		{
-			var regions = new ObservableCollection<Range>();
+			var regions = new List<Range>();
 			foreach (var selection in Selections)
 			{
 				var region = Marks.Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
@@ -41,9 +40,9 @@ namespace NeoEdit.TextEditor
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
-		ObservableCollection<Range> GetRegions(SortScope scope)
+		List<Range> GetRegions(SortScope scope)
 		{
-			ObservableCollection<Range> regions = null;
+			List<Range> regions = null;
 			switch (scope)
 			{
 				case SortScope.Selections: regions = Selections.ToList(); break;

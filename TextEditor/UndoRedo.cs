@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace NeoEdit.TextEditor
@@ -9,10 +8,10 @@ namespace NeoEdit.TextEditor
 	{
 		internal class UndoRedoStep
 		{
-			internal ObservableCollection<Range> ranges { get; private set; }
+			internal List<Range> ranges { get; private set; }
 			internal List<string> text { get; private set; }
 
-			internal UndoRedoStep(ObservableCollection<Range> _ranges, List<string> _text)
+			internal UndoRedoStep(List<Range> _ranges, List<string> _text)
 			{
 				ranges = _ranges;
 				text = _text;
