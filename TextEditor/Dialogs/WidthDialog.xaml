@@ -22,12 +22,12 @@
 		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="widthBox" Value="{Binding Value, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" Text="{Binding PadChar, ElementName=self}"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Location:"/>
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-			<RadioButton GroupName="location" Content="_Before    " IsChecked="{Binding Before, ElementName=self}" Focusable="False"/>
-			<RadioButton GroupName="location" Content="_After" IsChecked="{Binding Before, ElementName=self, Mode=OneWay, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5b#0#5d##3d##3d##27#False#27#}" Focusable="False"/>
+			<RadioButton Name="before" GroupName="location" Content="_Before    " IsChecked="{Binding Before, ElementName=self}" Focusable="False"/>
+			<RadioButton Name="after" GroupName="location" Content="_After" Focusable="False"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Columns="2">

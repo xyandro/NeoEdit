@@ -17,7 +17,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public int MinValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
-		public char PadChar { get { return uiHelper.GetPropValue<char>(); } set { uiHelper.SetPropValue(value); } }
+		public string PadChar { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 		[DepProp]
 		public bool Before { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -30,14 +30,19 @@ namespace NeoEdit.TextEditor.Dialogs
 			InitializeComponent();
 
 			Value = MinValue = minValue;
-			PadChar = padChar;
-			Before = before;
+			PadChar = new string(padChar, 1);
+			if (before)
+				this.before.IsChecked = true;
+			else
+				this.after.IsChecked = true;
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Value = Value, PadChar = PadChar, Before = Before };
+			if (PadChar.Length != 1)
+				return;
+			result = new Result { Value = Value, PadChar = PadChar[0], Before = Before };
 			DialogResult = true;
 		}
 
