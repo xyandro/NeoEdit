@@ -243,11 +243,11 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.Type.Base64, "V=GhpcyBpcyBteSBzdHJpbmc=", null); // Padding in middle
 
 			// Hex
-			VerifyCoder(Coder.Type.Hex, "DEADBEEF", new byte[] { 222, 173, 190, 239 });
+			VerifyCoder(Coder.Type.Hex, "deadbeef", new byte[] { 222, 173, 190, 239 });
 			VerifyCoder(Coder.Type.Hex, "", new byte[] { });
-			VerifyCoder(Coder.Type.Hex, "0123456789ABCDEF", new byte[] { 1, 35, 69, 103, 137, 171, 205, 239 });
+			VerifyCoder(Coder.Type.Hex, "0123456789abcdef", new byte[] { 1, 35, 69, 103, 137, 171, 205, 239 });
 			VerifyCoder(Coder.Type.Hex, "0000", new byte[] { 0, 0 });
-			VerifyCoder(Coder.Type.Hex, "GEADBEEF", null);
+			VerifyCoder(Coder.Type.Hex, "geadbeef", null);
 		}
 	}
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NeoEdit.Common
 {
@@ -170,60 +169,6 @@ namespace NeoEdit.Common
 				}
 			}
 			return new String(output);
-		}
-
-		public static unsafe string ToHexString(this byte[] bytes)
-		{
-			var hexValue = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-			var output = new char[bytes.Length * 2];
-			fixed (byte* bytesFixed = bytes)
-			fixed (char* outputFixed = output)
-			{
-				var len = bytesFixed + bytes.Length;
-				char* outputPtr = outputFixed;
-				for (var bytesPtr = bytesFixed; bytesPtr < len; ++bytesPtr)
-				{
-					*outputPtr++ = hexValue[*bytesPtr >> 4];
-					*outputPtr++ = hexValue[*bytesPtr & 15];
-				}
-			}
-			return new String(output);
-		}
-
-		public static unsafe byte[] FromHexString(this string input)
-		{
-			if ((input.Length % 2) != 0)
-				input = '0' + input;
-			var bytes = new byte[input.Length >> 1];
-			fixed (char* inputFixed = input)
-			fixed (byte* bytesFixed = bytes)
-			{
-				char* inputPtr = inputFixed;
-				var len = bytesFixed + bytes.Length;
-				for (var bytesPtr = bytesFixed; bytesPtr < len; ++bytesPtr)
-				{
-					var c = *inputPtr++;
-					if ((c >= '0') && (c <= '9'))
-						*bytesPtr = (byte)((c - '0') << 4);
-					else if ((c >= 'a') && (c <= 'f'))
-						*bytesPtr = (byte)((c - 'a' + 10) << 4);
-					else if ((c >= 'A') && (c <= 'F'))
-						*bytesPtr = (byte)((c - 'A' + 10) << 4);
-					else
-						throw new Exception("Invalid string");
-
-					c = *inputPtr++;
-					if ((c >= '0') && (c <= '9'))
-						*bytesPtr += (byte)(c - '0');
-					else if ((c >= 'a') && (c <= 'f'))
-						*bytesPtr += (byte)(c - 'a' + 10);
-					else if ((c >= 'A') && (c <= 'F'))
-						*bytesPtr += (byte)(c - 'A' + 10);
-					else
-						throw new Exception("Invalid string");
-				}
-			}
-			return bytes;
 		}
 
 		public static bool IsNumeric(this string input)

@@ -184,7 +184,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Base64_ToBase64_UTF16BE: Active.Command_Data_Base64_ToBase64(Coder.Type.UTF16BE); break;
 				case TextEditCommand.Data_Base64_ToBase64_UTF32LE: Active.Command_Data_Base64_ToBase64(Coder.Type.UTF32LE); break;
 				case TextEditCommand.Data_Base64_ToBase64_UTF32BE: Active.Command_Data_Base64_ToBase64(Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_Base64_ToBase64_Binary: Active.Command_Data_Base64_ToBase64Binary(); break;
+				case TextEditCommand.Data_Base64_ToBase64_Binary: Active.Command_Data_Base64_ToBase64(Coder.Type.Hex); break;
 				case TextEditCommand.Data_Base64_FromBase64_Auto: Active.Command_Data_Base64_FromBase64(Coder.Type.Auto); break;
 				case TextEditCommand.Data_Base64_FromBase64_UTF8: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF8); break;
 				case TextEditCommand.Data_Base64_FromBase64_UTF7: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF7); break;
@@ -192,7 +192,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Base64_FromBase64_UTF16BE: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF16BE); break;
 				case TextEditCommand.Data_Base64_FromBase64_UTF32LE: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF32LE); break;
 				case TextEditCommand.Data_Base64_FromBase64_UTF32BE: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_Base64_FromBase64_Binary: Active.Command_Data_Base64_FromBase64Binary(); break;
+				case TextEditCommand.Data_Base64_FromBase64_Binary: Active.Command_Data_Base64_FromBase64(Coder.Type.Hex); break;
 				case TextEditCommand.Data_DateTime_Insert: Active.Command_Data_DateTime_Insert(); break;
 				case TextEditCommand.Data_DateTime_Convert: Active.Command_Data_DateTime_Convert(); break;
 				case TextEditCommand.Data_Length: Active.Command_Data_Length(); break;

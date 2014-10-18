@@ -112,22 +112,58 @@ namespace NeoEdit.Common.Transform
 			return ret;
 		}
 
-		static char GetHexChar(int val)
+		static unsafe string ToHexString(byte[] bytes)
 		{
-			if ((val >= 0) && (val < 10))
-				return (char)('0' + val);
-			return (char)('A' + val - 10);
+			var hexValue = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+			var output = new char[bytes.Length * 2];
+			fixed (byte* bytesFixed = bytes)
+			fixed (char* outputFixed = output)
+			{
+				var len = bytesFixed + bytes.Length;
+				char* outputPtr = outputFixed;
+				for (var bytesPtr = bytesFixed; bytesPtr < len; ++bytesPtr)
+				{
+					*outputPtr++ = hexValue[*bytesPtr >> 4];
+					*outputPtr++ = hexValue[*bytesPtr & 15];
+				}
+			}
+			return new String(output);
 		}
 
-		static string ToHexString(byte[] data)
+		static unsafe byte[] FromHexString(string input)
 		{
-			var sb = new StringBuilder(data.Length * 2);
-			foreach (var ch in data)
+			if ((input.Length % 2) != 0)
+				input = '0' + input;
+			var bytes = new byte[input.Length >> 1];
+			fixed (char* inputFixed = input)
+			fixed (byte* bytesFixed = bytes)
 			{
-				sb.Append(GetHexChar(ch >> 4));
-				sb.Append(GetHexChar(ch & 15));
+				char* inputPtr = inputFixed;
+				var len = bytesFixed + bytes.Length;
+				for (var bytesPtr = bytesFixed; bytesPtr < len; ++bytesPtr)
+				{
+					var c = *inputPtr++;
+					if ((c >= '0') && (c <= '9'))
+						*bytesPtr = (byte)((c - '0') << 4);
+					else if ((c >= 'a') && (c <= 'f'))
+						*bytesPtr = (byte)((c - 'a' + 10) << 4);
+					else if ((c >= 'A') && (c <= 'F'))
+						*bytesPtr = (byte)((c - 'A' + 10) << 4);
+					else
+						throw new Exception("Invalid string");
+
+					c = *inputPtr++;
+					if ((c >= '0') && (c <= '9'))
+						*bytesPtr += (byte)(c - '0');
+					else if ((c >= 'a') && (c <= 'f'))
+						*bytesPtr += (byte)(c - 'a' + 10);
+					else if ((c >= 'A') && (c <= 'F'))
+						*bytesPtr += (byte)(c - 'A' + 10);
+					else
+						throw new Exception("Invalid string");
+				}
 			}
-			return sb.ToString();
+			return bytes;
 		}
 
 		static Encoding GetEncoding(Type type)
@@ -191,28 +227,6 @@ namespace NeoEdit.Common.Transform
 			if (reverse)
 				Array.Reverse(data);
 			return data;
-		}
-
-		static int GetHexValue(char c)
-		{
-			if ((c >= '0') && (c <= '9'))
-				return c - '0';
-			return c - 'A' + 10;
-		}
-
-		static byte[] StringToHex(string str)
-		{
-			str = str.ToUpper().Replace(",", "").Replace(" ", "").Replace("-", "");
-			for (var ctr = 0; ctr < str.Length; ctr++)
-				if (((str[ctr] < '0') || (str[ctr] > '9')) && ((str[ctr] < 'A') || (str[ctr] > 'F')))
-					return null;
-
-			if (str.Length % 2 != 0)
-				str = "0" + str;
-			var ret = new byte[str.Length / 2];
-			for (var ctr = 0; ctr < str.Length; ctr += 2)
-				ret[ctr / 2] = (byte)(GetHexValue(str[ctr]) * 16 + GetHexValue(str[ctr + 1]));
-			return ret;
 		}
 
 		static byte[] GetBase64Bytes(string value)
@@ -280,7 +294,7 @@ namespace NeoEdit.Common.Transform
 						return GetEncoding(type).GetBytes(value);
 					case Type.Base64:
 						return GetBase64Bytes(value);
-					case Type.Hex: return StringToHex(value);
+					case Type.Hex: return FromHexString(value);
 				}
 			}
 			catch
