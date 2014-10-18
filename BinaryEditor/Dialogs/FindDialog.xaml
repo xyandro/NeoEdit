@@ -149,8 +149,7 @@
 				</Grid.RowDefinitions>
 
 				<CheckBox Grid.Column="1" Name="Hex" Content="Hex" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Hex}"/>
-				<CheckBox Grid.Column="2" Name="HexRev" Content="HexRev" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=HexRev}"/>
-				<CheckBox Grid.Column="3" Name="Base64" Content="Base64" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Base64}"/>
+				<CheckBox Grid.Column="2" Name="Base64" Content="Base64" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Base64}"/>
 			</Grid>
 		</GroupBox>
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">

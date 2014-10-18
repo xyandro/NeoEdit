@@ -235,12 +235,12 @@ namespace NeoEdit.Common.UnitTest
 		{
 			// Base64
 			VerifyCoder(Coder.Type.Base64, "", Encoding.UTF8.GetBytes(""));
-			VerifyCoder(Coder.Type.Base64, " V G h p c y B p c y \r B t e S B z \n d H J p b m c = ", Encoding.UTF8.GetBytes("This is my string"), "VGhpcyBpcyBteSBzdHJpbmc=");
-			VerifyCoder(Coder.Type.Base64, "\ufeffVGhpcyBpcyBteSBzdHJpbmc=", Encoding.UTF8.GetBytes("This is my string"), "VGhpcyBpcyBteSBzdHJpbmc="); // BOM at start is ignored
+			VerifyCoder(Coder.Type.Base64, " V G h p c y B p c y \r B t e S B z \n d H J p b m c = ", Encoding.UTF8.GetBytes("This is my string"), "VGhpcyBpcyBteSBzdHJpbmc");
+			VerifyCoder(Coder.Type.Base64, "\ufeffVGhpcyBpcyBteSBzdHJpbmc=", Encoding.UTF8.GetBytes("This is my string"), "VGhpcyBpcyBteSBzdHJpbmc"); // BOM at start is ignored
 			VerifyCoder(Coder.Type.Base64, " \ufeffVGhpcyBpcyBteSBzdHJpbmc=", null); // BOM not at start is error
 			VerifyCoder(Coder.Type.Base64, "(INVALID STRING)", null);
-			VerifyCoder(Coder.Type.Base64, "VGhpcyBpcyBteSBzdHJpbmc", null); // Missing ending padding
-			VerifyCoder(Coder.Type.Base64, "V=GhpcyBpcyBteSBzdHJpbmc=", null);
+			VerifyCoder(Coder.Type.Base64, "VGhpcyBpcyBteSBzdHJpbmc", Encoding.UTF8.GetBytes("This is my string")); // Missing ending padding
+			VerifyCoder(Coder.Type.Base64, "V=GhpcyBpcyBteSBzdHJpbmc=", null); // Padding in middle
 
 			// Hex
 			VerifyCoder(Coder.Type.Hex, "DEADBEEF", new byte[] { 222, 173, 190, 239 });
@@ -248,13 +248,6 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.Type.Hex, "0123456789ABCDEF", new byte[] { 1, 35, 69, 103, 137, 171, 205, 239 });
 			VerifyCoder(Coder.Type.Hex, "0000", new byte[] { 0, 0 });
 			VerifyCoder(Coder.Type.Hex, "GEADBEEF", null);
-
-			// HexRev
-			VerifyCoder(Coder.Type.HexRev, "DEADBEEF", new byte[] { 239, 190, 173, 222 });
-			VerifyCoder(Coder.Type.HexRev, "", new byte[] { });
-			VerifyCoder(Coder.Type.HexRev, "0123456789ABCDEF", new byte[] { 239, 205, 171, 137, 103, 69, 35, 1 });
-			VerifyCoder(Coder.Type.HexRev, "0000", new byte[] { 0, 0 });
-			VerifyCoder(Coder.Type.HexRev, "GEADBEEF", null);
 		}
 	}
 }

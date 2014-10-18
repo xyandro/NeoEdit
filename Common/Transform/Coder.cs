@@ -37,7 +37,6 @@ namespace NeoEdit.Common.Transform
 			UTF32BE,
 			Base64,
 			Hex,
-			HexRev,
 		};
 
 		public static bool IsStr(this Type type)
@@ -98,7 +97,6 @@ namespace NeoEdit.Common.Transform
 				case Type.UTF32BE:
 				case Type.Base64:
 				case Type.Hex:
-				case Type.HexRev:
 					return -1;
 			}
 			throw new Exception("Invalid type");
@@ -121,12 +119,11 @@ namespace NeoEdit.Common.Transform
 			return (char)('A' + val - 10);
 		}
 
-		static string ToHexString(byte[] data, bool reverse)
+		static string ToHexString(byte[] data)
 		{
 			var sb = new StringBuilder(data.Length * 2);
-			for (var ctr = 0; ctr < data.Length; ctr++)
+			foreach (var ch in data)
 			{
-				var ch = reverse ? data[data.Length - ctr - 1] : data[ctr];
 				sb.Append(GetHexChar(ch >> 4));
 				sb.Append(GetHexChar(ch & 15));
 			}
@@ -178,10 +175,8 @@ namespace NeoEdit.Common.Transform
 				case Type.UTF32LE:
 				case Type.UTF32BE:
 					return GetEncoding(type).GetString(data);
-				case Type.Base64: return Convert.ToBase64String(data);
-				case Type.Hex:
-				case Type.HexRev:
-					return ToHexString(data, type == Type.HexRev);
+				case Type.Base64: return Convert.ToBase64String(data).TrimEnd('=');
+				case Type.Hex: return ToHexString(data);
 			}
 			throw new Exception("Invalid conversion");
 		}
@@ -205,7 +200,7 @@ namespace NeoEdit.Common.Transform
 			return c - 'A' + 10;
 		}
 
-		static byte[] StringToHex(string str, bool reverse)
+		static byte[] StringToHex(string str)
 		{
 			str = str.ToUpper().Replace(",", "").Replace(" ", "").Replace("-", "");
 			for (var ctr = 0; ctr < str.Length; ctr++)
@@ -217,8 +212,6 @@ namespace NeoEdit.Common.Transform
 			var ret = new byte[str.Length / 2];
 			for (var ctr = 0; ctr < str.Length; ctr += 2)
 				ret[ctr / 2] = (byte)(GetHexValue(str[ctr]) * 16 + GetHexValue(str[ctr + 1]));
-			if (reverse)
-				Array.Reverse(ret);
 			return ret;
 		}
 
@@ -242,7 +235,7 @@ namespace NeoEdit.Common.Transform
 					return null; // Invalid char
 			}
 
-			var pad = 3 - ((base64.Length - 1) % 4);
+			var pad = 3 - ((base64.Length + 3) % 4);
 			if ((pad < 0) || (pad > 2))
 				return null; // Invalid; 0, 1, 2 are only options
 
@@ -287,8 +280,7 @@ namespace NeoEdit.Common.Transform
 						return GetEncoding(type).GetBytes(value);
 					case Type.Base64:
 						return GetBase64Bytes(value);
-					case Type.Hex: return StringToHex(value, false);
-					case Type.HexRev: return StringToHex(value, true);
+					case Type.Hex: return StringToHex(value);
 				}
 			}
 			catch

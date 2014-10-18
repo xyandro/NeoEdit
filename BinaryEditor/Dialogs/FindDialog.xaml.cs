@@ -37,7 +37,7 @@ namespace NeoEdit.BinaryEditor.Dialogs
 
 			ShowLE = ShowInt = ShowStr = ShowOther = true;
 			ShowBE = ShowFloat = false;
-			MatchCase.IsChecked = UTF7.IsChecked = HexRev.IsChecked = Base64.IsChecked = false;
+			MatchCase.IsChecked = UTF7.IsChecked = Base64.IsChecked = false;
 		}
 
 		FindData result;
