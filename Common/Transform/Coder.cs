@@ -358,6 +358,7 @@ namespace NeoEdit.Common.Transform
 				{ "UTF32 (Little Endian)", Coder.Type.UTF32LE },
 				{ "UTF32 (Big Endian)", Coder.Type.UTF32BE },
 				{ "Base64", Coder.Type.Base64 },
+				{ "Hex", Coder.Type.Hex },
 			};
 		}
 	}

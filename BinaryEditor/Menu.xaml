@@ -28,6 +28,7 @@
 				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
 				<Separator/>
 				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Base64" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#Base64#27#}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Hex" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#Hex#27#}"/>
 			</MenuItem>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_TextEditor"/>
 			<Separator/>

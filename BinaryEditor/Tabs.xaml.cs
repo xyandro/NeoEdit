@@ -174,6 +174,7 @@ namespace NeoEdit.BinaryEditor
 				case BinaryEditCommand.File_Encode_UTF32LE: Active.Command_File_Encode(Coder.Type.UTF32LE); break;
 				case BinaryEditCommand.File_Encode_UTF32BE: Active.Command_File_Encode(Coder.Type.UTF32BE); break;
 				case BinaryEditCommand.File_Encode_Base64: Active.Command_File_Encode(Coder.Type.Base64); break;
+				case BinaryEditCommand.File_Encode_Hex: Active.Command_File_Encode(Coder.Type.Hex); break;
 				case BinaryEditCommand.File_TextEditor: Launcher.Static.LaunchTextEditor(Active.FileName, Active.Data.GetAllBytes(), Active.CoderUsed); Close(); break;
 				case BinaryEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
 				case BinaryEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;
