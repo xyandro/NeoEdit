@@ -29,8 +29,8 @@ namespace NeoEdit.Common.Transform
 			Int64BE,
 			Single,
 			Double,
-			UTF7,
 			UTF8,
+			UTF7,
 			UTF16LE,
 			UTF16BE,
 			UTF32LE,
@@ -43,8 +43,8 @@ namespace NeoEdit.Common.Transform
 		{
 			switch (type)
 			{
-				case Type.UTF7:
 				case Type.UTF8:
+				case Type.UTF7:
 				case Type.UTF16LE:
 				case Type.UTF16BE:
 				case Type.UTF32LE:
@@ -89,8 +89,8 @@ namespace NeoEdit.Common.Transform
 				case Type.Int64BE: return 8;
 				case Type.Single: return 4;
 				case Type.Double: return 8;
-				case Type.UTF7:
 				case Type.UTF8:
+				case Type.UTF7:
 				case Type.UTF16LE:
 				case Type.UTF16BE:
 				case Type.UTF32LE:
@@ -170,8 +170,8 @@ namespace NeoEdit.Common.Transform
 		{
 			switch (type)
 			{
-				case Type.UTF7: return Encoding.UTF7;
 				case Type.UTF8: return Encoding.UTF8;
+				case Type.UTF7: return Encoding.UTF7;
 				case Type.UTF16LE: return Encoding.Unicode;
 				case Type.UTF16BE: return Encoding.BigEndianUnicode;
 				case Type.UTF32LE: return Encoding.UTF32;
@@ -204,8 +204,8 @@ namespace NeoEdit.Common.Transform
 				case Type.Int64BE: return BitConverter.ToInt64(Resize(data, 8, false), 0).ToString();
 				case Type.Single: return BitConverter.ToSingle(Resize(data, 4, true), 0).ToString();
 				case Type.Double: return BitConverter.ToDouble(Resize(data, 8, true), 0).ToString();
-				case Type.UTF7:
 				case Type.UTF8:
+				case Type.UTF7:
 				case Type.UTF16LE:
 				case Type.UTF16BE:
 				case Type.UTF32LE:
@@ -285,8 +285,8 @@ namespace NeoEdit.Common.Transform
 					case Type.Int64BE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), true);
 					case Type.Single: return NumToBytes<Single>(value, Single.TryParse, v => BitConverter.GetBytes(v), false);
 					case Type.Double: return NumToBytes<Double>(value, Double.TryParse, v => BitConverter.GetBytes(v), false);
-					case Type.UTF7:
 					case Type.UTF8:
+					case Type.UTF7:
 					case Type.UTF16LE:
 					case Type.UTF16BE:
 					case Type.UTF32LE:

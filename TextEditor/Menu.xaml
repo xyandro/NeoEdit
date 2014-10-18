@@ -89,22 +89,58 @@
 			</MenuItem>
 			<MenuItem Header="_Binary">
 				<MenuItem Header="_To Binary">
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UInt8LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UInt16LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UInt32LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UInt64LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Int8LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Int16LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Int32LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Int64LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UInt8BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UInt16BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UInt32BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UInt64BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Int8BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Int16BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Int32BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Int64BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Single"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Double"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UTF8"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UTF7"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UTF16LE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UTF16BE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UTF32LE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_UTF32BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_ToBinary_Base64"/>
 				</MenuItem>
 				<MenuItem Header="_From Binary">
-					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Auto"/>
-					<Separator/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UInt8LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UInt16LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UInt32LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UInt64LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Int8LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Int16LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Int32LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Int64LE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UInt8BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UInt16BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UInt32BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UInt64BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Int8BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Int16BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Int32BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Int64BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Single"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Double"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UTF8"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UTF7"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UTF16LE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UTF16BE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UTF32LE"/>
 					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_UTF32BE"/>
+					<textEditor:TextEditMenuItem CommandEnum="Data_Binary_FromBinary_Base64"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="Base_64">

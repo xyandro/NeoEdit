@@ -216,10 +216,10 @@ namespace NeoEdit.Common.UnitTest
 		public void CoderStringTest()
 		{
 			// Strings
-			VerifyCoder(Coder.Type.UTF7, "", new byte[] { });
-			VerifyCoder(Coder.Type.UTF7, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 });
 			VerifyCoder(Coder.Type.UTF8, "", new byte[] { });
 			VerifyCoder(Coder.Type.UTF8, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 });
+			VerifyCoder(Coder.Type.UTF7, "", new byte[] { });
+			VerifyCoder(Coder.Type.UTF7, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 });
 			VerifyCoder(Coder.Type.UTF16LE, "", new byte[] { });
 			VerifyCoder(Coder.Type.UTF16LE, "This is my string", new byte[] { 84, 0, 104, 0, 105, 0, 115, 0, 32, 0, 105, 0, 115, 0, 32, 0, 109, 0, 121, 0, 32, 0, 115, 0, 116, 0, 114, 0, 105, 0, 110, 0, 103, 0 });
 			VerifyCoder(Coder.Type.UTF16BE, "", new byte[] { });

@@ -91,11 +91,11 @@ namespace NeoEdit.Common.UnitTest
 							Encoding encoder = null;
 							switch (encoding)
 							{
-								case Coder.Type.UTF7:
-									encoder = new UTF7Encoding();
-									break;
 								case Coder.Type.UTF8:
 									encoder = new UTF8Encoding(false);
+									break;
+								case Coder.Type.UTF7:
+									encoder = new UTF7Encoding();
 									break;
 								case Coder.Type.UTF16LE:
 								case Coder.Type.UTF16BE:
