@@ -74,11 +74,6 @@ namespace NeoEdit.Disk
 			return true;
 		}
 
-		void Refresh()
-		{
-			files.Refresh();
-		}
-
 		void DoRename(DiskItem item)
 		{
 			if (!item.IsDiskItem)
@@ -89,59 +84,10 @@ namespace NeoEdit.Disk
 				return;
 
 			(files.Location as DiskItem).MoveFrom(item, newName);
-			Refresh();
+			Command_View_Refresh();
 			files.Focused = files.Items.Cast<DiskItem>().Where(file => file.FullName == newName).FirstOrDefault();
 			if (files.Focused != null)
 				files.Selected.Add(files.Focused);
-		}
-
-		void DoPaste()
-		{
-			var location = files.Location as DiskItem;
-			if (!location.IsDiskItem)
-				throw new ArgumentException("Can only pastae to disk.");
-
-			List<string> fileList;
-			bool isCut;
-			if (!ClipboardWindow.GetFiles(out fileList, out isCut))
-				return;
-
-			var items = fileList.Select(file => DiskItem.GetRoot().GetChild(file)).Cast<DiskItem>().ToList();
-
-			var locationFiles = files.Items.Cast<DiskItem>().Select(record => record.Name).ToList();
-			var paths = items.Select(item => item.Path).GroupBy(path => path).Select(path => path.Key).ToList();
-			var canRename = (paths.Count == 1) && (paths[0] == location.FullName);
-			if ((isCut) || (!canRename))
-			{
-				var names = items.Select(record => record.Name).ToList();
-				var exists = locationFiles.Any(name => names.Contains(name));
-				if (exists)
-					throw new Exception("Destination already exists.");
-			}
-
-			foreach (var item in items)
-			{
-				if (isCut)
-				{
-					location.MoveFrom(item);
-					continue;
-				}
-
-				var name = item.NameWoExtension;
-				string newName;
-				for (var num = 1; ; ++num)
-				{
-					var extra = num == 1 ? "" : String.Format(" ({0})", num);
-					newName = name + extra + item.Extension;
-					if (locationFiles.Contains(newName))
-						continue;
-					break;
-				}
-
-				location.CopyFrom(item, newName);
-			}
-
-			Refresh();
 		}
 
 		void ShowColumn(string col)
@@ -193,7 +139,7 @@ namespace NeoEdit.Disk
 				foreach (DiskItem file in files.Selected)
 					file.Delete();
 			}
-			Refresh();
+			Command_View_Refresh();
 		}
 
 		internal void Command_Edit_Cut()
@@ -210,12 +156,56 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Paste()
 		{
-			DoPaste();
+			var location = files.Location as DiskItem;
+			if (!location.IsDiskItem)
+				throw new ArgumentException("Can only pastae to disk.");
+
+			List<string> fileList;
+			bool isCut;
+			if (!ClipboardWindow.GetFiles(out fileList, out isCut))
+				return;
+
+			var items = fileList.Select(file => DiskItem.GetRoot().GetChild(file)).Cast<DiskItem>().ToList();
+
+			var locationFiles = files.Items.Cast<DiskItem>().Select(record => record.Name).ToList();
+			var paths = items.Select(item => item.Path).GroupBy(path => path).Select(path => path.Key).ToList();
+			var canRename = (paths.Count == 1) && (paths[0] == location.FullName);
+			if ((isCut) || (!canRename))
+			{
+				var names = items.Select(record => record.Name).ToList();
+				var exists = locationFiles.Any(name => names.Contains(name));
+				if (exists)
+					throw new Exception("Destination already exists.");
+			}
+
+			foreach (var item in items)
+			{
+				if (isCut)
+				{
+					location.MoveFrom(item);
+					continue;
+				}
+
+				var name = item.NameWoExtension;
+				string newName;
+				for (var num = 1; ; ++num)
+				{
+					var extra = num == 1 ? "" : String.Format(" ({0})", num);
+					newName = name + extra + item.Extension;
+					if (locationFiles.Contains(newName))
+						continue;
+					break;
+				}
+
+				location.CopyFrom(item, newName);
+			}
+
+			Command_View_Refresh();
 		}
 
 		internal void Command_View_Refresh()
 		{
-			Refresh();
+			files.Refresh();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
