@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,8 +22,11 @@ namespace NeoEdit.Disk
 		static DiskWindow() { UIHelper<DiskWindow>.Register(); }
 
 		readonly UIHelper<DiskWindow> uiHelper;
-		public DiskWindow(string path)
+		public DiskWindow(string path = null)
 		{
+			if (String.IsNullOrEmpty(path))
+				path = Directory.GetCurrentDirectory();
+
 			uiHelper = new UIHelper<DiskWindow>(this);
 			InitializeComponent();
 			UIHelper<DiskWindow>.AddCallback(files, ItemGridTree.LocationProperty, () => Location = files.Location.FullName);

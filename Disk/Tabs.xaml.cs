@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.GUI.Common;
@@ -26,9 +24,6 @@ namespace NeoEdit.Disk
 		readonly UIHelper<DiskTabs> uiHelper;
 		public DiskTabs(string path = null)
 		{
-			if (String.IsNullOrEmpty(path))
-				path = Directory.GetCurrentDirectory();
-
 			uiHelper = new UIHelper<DiskTabs>(this);
 			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
@@ -41,11 +36,19 @@ namespace NeoEdit.Disk
 
 		void RunCommand(DiskCommand command)
 		{
+			switch (command)
+			{
+				case DiskCommand.File_New: Add(new DiskWindow()); break;
+				case DiskCommand.File_Exit: Close(); break;
+				case DiskCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
+			}
+
 			if (Active == null)
 				return;
 
 			switch (command)
 			{
+				case DiskCommand.File_Close: DiskWindows.Remove(Active); break;
 				case DiskCommand.File_Rename: Active.Command_File_Rename(); break;
 				case DiskCommand.File_Identify: Active.Command_File_Identify(); break;
 				case DiskCommand.File_MD5: Active.Command_File_MD5(); break;
@@ -60,13 +63,6 @@ namespace NeoEdit.Disk
 
 		void Add(DiskWindow diskWindow)
 		{
-			if (Active != null)
-			{
-				var index = DiskWindows.IndexOf(Active);
-				Active = DiskWindows[index] = diskWindow;
-				return;
-			}
-
 			DiskWindows.Add(diskWindow);
 			Active = diskWindow;
 		}
