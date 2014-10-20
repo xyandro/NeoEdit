@@ -6,29 +6,13 @@
 	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=GUI"
 	Title="NeoEdit Disk Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=files}">
 
-	<Window.CommandBindings>
-		<CommandBinding Command="disk:DiskWindow.Command_File_Rename" Executed="Command_Executed"/>
-		<CommandBinding Command="disk:DiskWindow.Command_File_Identify" Executed="Command_Executed"/>
-		<CommandBinding Command="disk:DiskWindow.Command_File_MD5" Executed="Command_Executed"/>
-		<CommandBinding Command="disk:DiskWindow.Command_File_SHA1" Executed="Command_Executed"/>
-		<CommandBinding Command="disk:DiskWindow.Command_File_Delete" Executed="Command_Executed"/>
-		<CommandBinding Command="disk:DiskWindow.Command_Edit_Cut" Executed="Command_Executed"/>
-		<CommandBinding Command="disk:DiskWindow.Command_Edit_Copy" Executed="Command_Executed"/>
-		<CommandBinding Command="disk:DiskWindow.Command_Edit_Paste" Executed="Command_Executed"/>
-		<CommandBinding Command="disk:DiskWindow.Command_View_Refresh" Executed="Command_Executed"/>
-	</Window.CommandBindings>
-
-	<Window.InputBindings>
-		<KeyBinding Command="disk:DiskWindow.Command_File_Rename" Key="F2"/>
-		<KeyBinding Command="disk:DiskWindow.Command_File_Identify" Modifiers="Control" Key="I"/>
-		<KeyBinding Command="disk:DiskWindow.Command_File_MD5" Modifiers="Control" Key="M"/>
-		<KeyBinding Command="disk:DiskWindow.Command_File_SHA1" Modifiers="Control" Key="S"/>
-		<KeyBinding Command="disk:DiskWindow.Command_File_Delete" Key="Delete"/>
-		<KeyBinding Command="disk:DiskWindow.Command_Edit_Cut" Modifiers="Control" Key="X"/>
-		<KeyBinding Command="disk:DiskWindow.Command_Edit_Copy" Modifiers="Control" Key="C"/>
-		<KeyBinding Command="disk:DiskWindow.Command_Edit_Paste" Modifiers="Control" Key="V"/>
-		<KeyBinding Command="disk:DiskWindow.Command_View_Refresh" Key="F5"/>
-	</Window.InputBindings>
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Menu.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -40,23 +24,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Menu KeyboardNavigation.TabNavigation="None">
-			<MenuItem Header="_File">
-				<MenuItem Command="disk:DiskWindow.Command_File_Rename" Header="_Rename"/>
-				<MenuItem Command="disk:DiskWindow.Command_File_Identify" Header="_Identify"/>
-				<MenuItem Command="disk:DiskWindow.Command_File_MD5" Header="_MD5"/>
-				<MenuItem Command="disk:DiskWindow.Command_File_SHA1" Header="_SHA1"/>
-				<MenuItem Command="disk:DiskWindow.Command_File_Delete" Header="_Delete"/>
-				<MenuItem Command="disk:DiskWindow.Command_Edit_Cut" Header="Cu_t"/>
-				<MenuItem Command="disk:DiskWindow.Command_Edit_Copy" Header="_Copy"/>
-				<MenuItem Command="disk:DiskWindow.Command_Edit_Paste" Header="_Paste"/>
-			</MenuItem>
-			<MenuItem Header="_View">
-				<MenuItem Command="disk:DiskWindow.Command_View_Refresh" Header="_Refresh"/>
-			</MenuItem>
-			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
-			<guiCommon:HelpMenu/>
-		</Menu>
+		<StaticResource ResourceKey="DiskMenu"/>
 
 		<DockPanel Grid.Row="1">
 			<Label Content="A_ddress" Target="{Binding ElementName=location}"/>

@@ -54,6 +54,11 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Menu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="DiskItem.cs" />
     <Compile Include="Dialogs\Rename.xaml.cs">
       <DependentUpon>Rename.xaml</DependentUpon>
     </Compile>
@@ -61,7 +66,7 @@
     <Compile Include="DiskWindow.xaml.cs">
       <DependentUpon>DiskWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DiskItem.cs" />
+    <Compile Include="Commands.cs" />
     <Compile Include="Identifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -1,0 +1,26 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
+	xmlns:disk="clr-namespace:NeoEdit.Disk">
+
+	<Menu KeyboardNavigation.TabNavigation="None" x:Key="DiskMenu">
+		<MenuItem Header="_File">
+			<disk:DiskMenuItem CommandEnum="File_Rename"/>
+			<disk:DiskMenuItem CommandEnum="File_Identify"/>
+			<disk:DiskMenuItem CommandEnum="File_MD5"/>
+			<disk:DiskMenuItem CommandEnum="File_SHA1"/>
+			<disk:DiskMenuItem CommandEnum="File_Delete"/>
+			<disk:DiskMenuItem CommandEnum="Edit_Cut"/>
+			<disk:DiskMenuItem CommandEnum="Edit_Copy"/>
+			<disk:DiskMenuItem CommandEnum="Edit_Paste"/>
+		</MenuItem>
+		<MenuItem Header="_View">
+			<disk:DiskMenuItem CommandEnum="View_Refresh"/>
+		</MenuItem>
+		<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
+		<guiCommon:HelpMenu/>
+	</Menu>
+
+</ResourceDictionary>
+	

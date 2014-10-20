@@ -15,16 +15,6 @@ namespace NeoEdit.Disk
 {
 	public partial class DiskWindow : Window
 	{
-		public static RoutedCommand Command_File_Rename = new RoutedCommand();
-		public static RoutedCommand Command_File_Identify = new RoutedCommand();
-		public static RoutedCommand Command_File_MD5 = new RoutedCommand();
-		public static RoutedCommand Command_File_SHA1 = new RoutedCommand();
-		public static RoutedCommand Command_File_Delete = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Cut = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Copy = new RoutedCommand();
-		public static RoutedCommand Command_Edit_Paste = new RoutedCommand();
-		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
-
 		[DepProp]
 		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
 
@@ -37,6 +27,7 @@ namespace NeoEdit.Disk
 				path = Directory.GetCurrentDirectory();
 
 			uiHelper = new UIHelper<DiskWindow>(this);
+			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 			UIHelper<DiskWindow>.AddCallback(files, ItemGridTree.LocationProperty, () => Location = files.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();
@@ -155,67 +146,75 @@ namespace NeoEdit.Disk
 			Refresh();
 		}
 
-		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
+		void RunCommand(DiskCommand command)
 		{
-			if (e.Command == Command_File_Rename)
-				DoRename(files.Selected.Single() as DiskItem);
-			else if (e.Command == Command_File_Identify)
+			switch (command)
 			{
-				if (!files.Columns.Any(column => column.Header == "Identity"))
-					files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("Identity")));
+				case DiskCommand.File_Rename:
+					DoRename(files.Selected.Single() as DiskItem);
+					break;
+				case DiskCommand.File_Identify:
+					{
+						if (!files.Columns.Any(column => column.Header == "Identity"))
+							files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("Identity")));
 
-				foreach (DiskItem selected in files.Selected)
-					selected.Identify();
-			}
-			else if (e.Command == Command_File_MD5)
-			{
-				if (!files.Columns.Any(column => column.Header == "MD5"))
-					files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("MD5")));
+						foreach (DiskItem selected in files.Selected)
+							selected.Identify();
+					}
+					break;
+				case DiskCommand.File_MD5:
+					{
+						if (!files.Columns.Any(column => column.Header == "MD5"))
+							files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("MD5")));
 
-				foreach (DiskItem selected in files.Selected)
-					selected.CalcMD5();
-			}
-			else if (e.Command == Command_File_SHA1)
-			{
-				if (!files.Columns.Any(column => column.Header == "SHA1"))
-					files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("SHA1")));
+						foreach (DiskItem selected in files.Selected)
+							selected.CalcMD5();
+					}
+					break;
+				case DiskCommand.File_SHA1:
+					{
+						if (!files.Columns.Any(column => column.Header == "SHA1"))
+							files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("SHA1")));
 
-				foreach (DiskItem selected in files.Selected)
-					selected.CalcSHA1();
-			}
-			else if (e.Command == Command_File_Delete)
-			{
-				if (files.Selected.Count == 0)
-					return;
+						foreach (DiskItem selected in files.Selected)
+							selected.CalcSHA1();
+					}
+					break;
+				case DiskCommand.File_Delete:
+					{
+						if (files.Selected.Count == 0)
+							return;
 
-				if (new Message
-				{
-					Title = "Confirm",
-					Text = "Are you sure you want to delete these items?",
-					Options = Message.OptionsEnum.YesNo,
-					DefaultAccept = Message.OptionsEnum.Yes,
-					DefaultCancel = Message.OptionsEnum.No,
-				}.Show() == Message.OptionsEnum.Yes)
-				{
-					foreach (DiskItem file in files.Selected)
-						file.Delete();
-				}
-				Refresh();
+						if (new Message
+						{
+							Title = "Confirm",
+							Text = "Are you sure you want to delete these items?",
+							Options = Message.OptionsEnum.YesNo,
+							DefaultAccept = Message.OptionsEnum.Yes,
+							DefaultCancel = Message.OptionsEnum.No,
+						}.Show() == Message.OptionsEnum.Yes)
+						{
+							foreach (DiskItem file in files.Selected)
+								file.Delete();
+						}
+						Refresh();
+					}
+					break;
+				case DiskCommand.Edit_Cut:
+					if (files.Selected.Count != 0)
+						ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), true);
+					break;
+				case DiskCommand.Edit_Copy:
+					if (files.Selected.Count != 0)
+						ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), false);
+					break;
+				case DiskCommand.Edit_Paste:
+					DoPaste();
+					break;
+				case DiskCommand.View_Refresh:
+					Refresh();
+					break;
 			}
-			else if (e.Command == Command_Edit_Cut)
-			{
-				if (files.Selected.Count != 0)
-					ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), true);
-			}
-			else if (e.Command == Command_Edit_Copy)
-			{
-				if (files.Selected.Count != 0)
-					ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), false);
-			}
-			else if (e.Command == Command_Edit_Paste)
-				DoPaste();
-			else if (e.Command == Command_View_Refresh)
-				Refresh();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
