@@ -60,7 +60,7 @@ namespace NeoEdit.Registry
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (e.Command == Command_View_Refresh)
-				keys.Refresh();
+				keys.SyncItems(keys.Location.GetChildren(), keys.Location.GetDepProp("FullName"));
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
