@@ -205,7 +205,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_View_Refresh()
 		{
-			files.SyncItems(files.Location.GetChildren(), files.Location.GetDepProp("FullName"));
+			files.Refresh();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

@@ -101,5 +101,10 @@ namespace NeoEdit.GUI.ItemGridControl
 			ShowFocus();
 			Selected.Add(Focused);
 		}
+
+		public void Refresh()
+		{
+			SyncItems(Location.GetChildren(), Location.GetDepProp("FullName"));
+		}
 	}
 }
