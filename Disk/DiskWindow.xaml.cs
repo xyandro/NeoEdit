@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Disk.Dialogs;
 using NeoEdit.GUI;
@@ -13,7 +13,7 @@ using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Disk
 {
-	public partial class DiskWindow : Window
+	partial class DiskWindow
 	{
 		[DepProp]
 		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
@@ -21,13 +21,9 @@ namespace NeoEdit.Disk
 		static DiskWindow() { UIHelper<DiskWindow>.Register(); }
 
 		readonly UIHelper<DiskWindow> uiHelper;
-		public DiskWindow(string path = null)
+		public DiskWindow(string path)
 		{
-			if (path == null)
-				path = Directory.GetCurrentDirectory();
-
 			uiHelper = new UIHelper<DiskWindow>(this);
-			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 			UIHelper<DiskWindow>.AddCallback(files, ItemGridTree.LocationProperty, () => Location = files.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();
@@ -43,6 +39,8 @@ namespace NeoEdit.Disk
 			}
 			files.SortColumn = files.TextInputColumn = files.Columns.First(col => col.Header == "Name");
 			SetLocation(path ?? "");
+
+			Loaded += (s, e) => files.Focus();
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control; } }
@@ -146,75 +144,78 @@ namespace NeoEdit.Disk
 			Refresh();
 		}
 
-		void RunCommand(DiskCommand command)
+		void ShowColumn(string col)
 		{
-			switch (command)
+			if (!files.Columns.Any(column => column.Header == col))
+				files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp(col)));
+		}
+
+		internal void Command_File_Rename()
+		{
+			DoRename(files.Selected.Single() as DiskItem);
+		}
+
+		internal void Command_File_Identify()
+		{
+			foreach (DiskItem selected in files.Selected)
+				selected.Identify();
+			ShowColumn("Identity");
+		}
+
+		internal void Command_File_MD5()
+		{
+			foreach (DiskItem selected in files.Selected)
+				selected.CalcMD5();
+			ShowColumn("MD5");
+		}
+
+		internal void Command_File_SHA1()
+		{
+			foreach (DiskItem selected in files.Selected)
+				selected.CalcSHA1();
+			ShowColumn("SHA1");
+		}
+
+		internal void Command_File_Delete()
+		{
+			if (files.Selected.Count == 0)
+				return;
+
+			if (new Message
 			{
-				case DiskCommand.File_Rename:
-					DoRename(files.Selected.Single() as DiskItem);
-					break;
-				case DiskCommand.File_Identify:
-					{
-						if (!files.Columns.Any(column => column.Header == "Identity"))
-							files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("Identity")));
-
-						foreach (DiskItem selected in files.Selected)
-							selected.Identify();
-					}
-					break;
-				case DiskCommand.File_MD5:
-					{
-						if (!files.Columns.Any(column => column.Header == "MD5"))
-							files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("MD5")));
-
-						foreach (DiskItem selected in files.Selected)
-							selected.CalcMD5();
-					}
-					break;
-				case DiskCommand.File_SHA1:
-					{
-						if (!files.Columns.Any(column => column.Header == "SHA1"))
-							files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp("SHA1")));
-
-						foreach (DiskItem selected in files.Selected)
-							selected.CalcSHA1();
-					}
-					break;
-				case DiskCommand.File_Delete:
-					{
-						if (files.Selected.Count == 0)
-							return;
-
-						if (new Message
-						{
-							Title = "Confirm",
-							Text = "Are you sure you want to delete these items?",
-							Options = Message.OptionsEnum.YesNo,
-							DefaultAccept = Message.OptionsEnum.Yes,
-							DefaultCancel = Message.OptionsEnum.No,
-						}.Show() == Message.OptionsEnum.Yes)
-						{
-							foreach (DiskItem file in files.Selected)
-								file.Delete();
-						}
-						Refresh();
-					}
-					break;
-				case DiskCommand.Edit_Cut:
-					if (files.Selected.Count != 0)
-						ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), true);
-					break;
-				case DiskCommand.Edit_Copy:
-					if (files.Selected.Count != 0)
-						ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), false);
-					break;
-				case DiskCommand.Edit_Paste:
-					DoPaste();
-					break;
-				case DiskCommand.View_Refresh:
-					Refresh();
-					break;
+				Title = "Confirm",
+				Text = "Are you sure you want to delete these items?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show() == Message.OptionsEnum.Yes)
+			{
+				foreach (DiskItem file in files.Selected)
+					file.Delete();
 			}
+			Refresh();
+		}
+
+		internal void Command_Edit_Cut()
+		{
+			if (files.Selected.Count != 0)
+				ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), true);
+		}
+
+		internal void Command_Edit_Copy()
+		{
+			if (files.Selected.Count != 0)
+				ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), false);
+		}
+
+		internal void Command_Edit_Paste()
+		{
+			DoPaste();
+		}
+
+		internal void Command_View_Refresh()
+		{
+			Refresh();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -222,9 +223,9 @@ namespace NeoEdit.Disk
 			base.OnKeyDown(e);
 
 			var keySet = new KeySet
-			{
-				{ Key.Escape, () => files.Focus() },
-			};
+					{
+						{ Key.Escape, () => files.Focus() },
+					};
 
 			if (keySet.Run(e))
 				e.Handled = true;
@@ -241,6 +242,15 @@ namespace NeoEdit.Disk
 					break;
 				default: e.Handled = false; break;
 			}
+		}
+
+		internal Label GetLabel()
+		{
+			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"FileName([0])" };
+			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
+			label.SetBinding(Label.ContentProperty, multiBinding);
+			return label;
 		}
 	}
 }

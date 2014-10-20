@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;

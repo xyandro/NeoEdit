@@ -63,7 +63,7 @@ namespace NeoEdit
 			{
 				args = args.Where(arg => arg != "multi").ToArray();
 				if (args.Length == 0)
-					return new DiskWindow();
+					return new DiskTabs();
 
 				switch (args[0])
 				{
@@ -85,7 +85,7 @@ namespace NeoEdit
 							string location = null;
 							if (args.Length > 1)
 								location = args[1];
-							return new DiskWindow(location);
+							return new DiskTabs(location);
 						}
 					case "text":
 					case "textedit":
@@ -195,7 +195,7 @@ namespace NeoEdit
 				textEditor: (filename, bytes, encoding) => new TextEditorTabs(filename, bytes, encoding),
 				fileBinaryEditor: (filename, binarydata, encoder) => BinaryEditorTabs.CreateFromFile(filename, binarydata, encoder),
 				processBinaryEditor: (pid) => BinaryEditorTabs.CreateFromProcess(pid),
-				disk: () => new DiskWindow(),
+				disk: () => new DiskTabs(),
 				console: () => new ConsoleTabs(),
 				processes: (pid) => new ProcessesWindow(pid),
 				handles: (pid) => new HandlesWindow(pid),
