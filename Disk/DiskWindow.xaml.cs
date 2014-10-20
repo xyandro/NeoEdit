@@ -41,6 +41,7 @@ namespace NeoEdit.Disk
 			UIHelper<DiskWindow>.AddCallback(files, ItemGridTree.LocationProperty, () => Location = files.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => UIHelper<DiskWindow>.InvalidateBinding(location, TextBox.TextProperty);
+			location.PreviewKeyDown += LocationKeyDown;
 
 			var keep = new List<string> { "Name", "Size", "WriteTime" };
 			foreach (var prop in DiskItem.StaticGetDepProps())
@@ -53,8 +54,23 @@ namespace NeoEdit.Disk
 			SetLocation(path ?? "");
 		}
 
+		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control; } }
 		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt; } }
 		bool noModifiers { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.None; } }
+
+		void LocationKeyDown(object sender, KeyEventArgs e)
+		{
+			if ((e.Key == Key.V) && (controlDown))
+			{
+				var files = ClipboardWindow.GetFiles();
+				if (files != null)
+				{
+					Location = files.First();
+					location.CaretIndex = Location.Length;
+					e.Handled = true;
+				}
+			}
+		}
 
 		bool SetLocation(string location)
 		{
