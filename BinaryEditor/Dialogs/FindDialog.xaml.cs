@@ -46,7 +46,7 @@ namespace NeoEdit.BinaryEditor.Dialogs
 			if (String.IsNullOrEmpty(FindText))
 				return;
 
-			var converters = Helpers.GetValues<Coder.Type>().Where(a => a != Coder.Type.None).ToDictionary(a => a, a => typeof(FindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic).GetValue(this) as CheckBox);
+			var converters = Helpers.GetValues<Coder.Type>().Select(a => new { Key = a, Value = typeof(FindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic) }).Where(a => a.Value != null).ToDictionary(a => a.Key, a => a.Value.GetValue(this) as CheckBox);
 			var convertersToUse = converters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
 			if (convertersToUse.Count == 0)
 				return;
