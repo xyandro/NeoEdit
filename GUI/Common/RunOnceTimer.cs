@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Threading;
 
 namespace NeoEdit.GUI.Common
@@ -7,10 +9,20 @@ namespace NeoEdit.GUI.Common
 	public class RunOnceTimer
 	{
 		readonly Action action;
+		readonly HashSet<RunOnceTimer> dependencies = new HashSet<RunOnceTimer>();
 		DispatcherTimer timer = null;
 		public RunOnceTimer(Action action)
 		{
 			this.action = action;
+		}
+
+		public void AddDependency(params RunOnceTimer[] timers)
+		{
+			foreach (var timer in timers)
+				if (timer == this)
+					throw new ArgumentException("Cannot add self as dependency.");
+				else
+					dependencies.Add(timer);
 		}
 
 		public bool Started()
@@ -27,6 +39,13 @@ namespace NeoEdit.GUI.Common
 			timer.Tick += (s, e) =>
 			{
 				Stop();
+
+				if (dependencies.Any(dependency => dependency.Started()))
+				{
+					// A dependency is ready to go; queue up for after it's done
+					Start();
+					return;
+				}
 
 				action();
 			};

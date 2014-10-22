@@ -80,6 +80,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 			drawTimer = new RunOnceTimer(() => Redraw());
 			sortTimer = new RunOnceTimer(() => Sort());
+			drawTimer.AddDependency(sortTimer);
 
 			Columns = new ObservableHashSet<ItemGridColumn>();
 			Selected = new ObservableCollection<IItemGridItem>();
@@ -449,7 +450,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void Redraw()
 		{
-			if ((sortTimer.Started()) || (SortedItems == null))
+			if (SortedItems == null)
 				return;
 
 			scroll.ViewportSize = Math.Max(0, Math.Ceiling((scroller.ViewportHeight - headerHeight) / rowHeight));

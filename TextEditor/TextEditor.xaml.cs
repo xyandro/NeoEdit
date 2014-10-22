@@ -99,6 +99,7 @@ namespace NeoEdit.TextEditor
 			searchesTimer = new RunOnceTimer(SearchesInvalidated);
 			marksTimer = new RunOnceTimer(MarksInvalidated);
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
+			renderTimer.AddDependency(selectionsTimer, searchesTimer, marksTimer);
 
 			OpenFile(filename, bytes, encoding);
 			Goto(line, column);
