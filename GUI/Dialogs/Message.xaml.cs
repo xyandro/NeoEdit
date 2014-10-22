@@ -9,13 +9,13 @@ namespace NeoEdit.GUI.Dialogs
 	public partial class Message : Window
 	{
 		[DepProp]
-		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Text { get { return UIHelper<Message>.GetPropValue<string>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 		[DepProp]
-		public OptionsEnum Options { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
+		public OptionsEnum Options { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 		[DepProp]
-		public OptionsEnum DefaultAccept { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
+		public OptionsEnum DefaultAccept { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 		[DepProp]
-		public OptionsEnum DefaultCancel { get { return uiHelper.GetPropValue<OptionsEnum>(); } set { uiHelper.SetPropValue(value); } }
+		public OptionsEnum DefaultCancel { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 
 		public enum OptionsEnum
 		{
@@ -77,10 +77,8 @@ namespace NeoEdit.GUI.Dialogs
 			UIHelper<Message>.AddCallback(a => a.DefaultCancel, (obj, o, n) => obj.SetupButtons());
 		}
 
-		readonly UIHelper<Message> uiHelper;
 		public Message()
 		{
-			uiHelper = new UIHelper<Message>(this);
 			InitializeComponent();
 
 			Answer = DefaultCancel;

@@ -9,13 +9,13 @@ namespace NeoEdit.GUI.Dialogs
 	public partial class GetNumDialog : Window
 	{
 		[DepProp]
-		public string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Text { get { return UIHelper<GetNumDialog>.GetPropValue<string>(this); } set { UIHelper<GetNumDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long? MinValue { get { return uiHelper.GetPropValue<long?>(); } set { uiHelper.SetPropValue(value); } }
+		public long? MinValue { get { return UIHelper<GetNumDialog>.GetPropValue<long?>(this); } set { UIHelper<GetNumDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long? MaxValue { get { return uiHelper.GetPropValue<long?>(); } set { uiHelper.SetPropValue(value); } }
+		public long? MaxValue { get { return UIHelper<GetNumDialog>.GetPropValue<long?>(this); } set { UIHelper<GetNumDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long Value { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		public long Value { get { return UIHelper<GetNumDialog>.GetPropValue<long>(this); } set { UIHelper<GetNumDialog>.SetPropValue(this, value); } }
 
 		static GetNumDialog()
 		{
@@ -23,10 +23,8 @@ namespace NeoEdit.GUI.Dialogs
 			UIHelper<GetNumDialog>.AddCallback(a => a.Value, (obj, o, n) => obj.Value = Math.Max(obj.MinValue.HasValue ? obj.MinValue.Value : long.MinValue, Math.Min(obj.Value, obj.MaxValue.HasValue ? obj.MaxValue.Value : long.MaxValue)));
 		}
 
-		readonly UIHelper<GetNumDialog> uiHelper;
 		public GetNumDialog()
 		{
-			uiHelper = new UIHelper<GetNumDialog>(this);
 			InitializeComponent();
 
 			Loaded += (s, e) => value.SelectAll();

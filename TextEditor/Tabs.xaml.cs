@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -18,21 +17,19 @@ namespace NeoEdit.TextEditor
 	public partial class TextEditorTabs
 	{
 		[DepProp]
-		public ObservableCollection<TextEditor> TextEditors { get { return uiHelper.GetPropValue<ObservableCollection<TextEditor>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<TextEditor> TextEditors { get { return UIHelper<TextEditorTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<TextEditorTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextEditor Active { get { return uiHelper.GetPropValue<TextEditor>(); } set { uiHelper.SetPropValue(value); } }
+		public TextEditor Active { get { return UIHelper<TextEditorTabs>.GetPropValue<TextEditor>(this); } set { UIHelper<TextEditorTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return uiHelper.GetPropValue<Tabs.ViewType>(); } set { uiHelper.SetPropValue(value); } }
+		public Tabs.ViewType View { get { return UIHelper<TextEditorTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextEditorTabs>.SetPropValue(this, value); } }
 
 		static TextEditorTabs()
 		{
 			UIHelper<TextEditorTabs>.Register();
 		}
 
-		readonly UIHelper<TextEditorTabs> uiHelper;
 		public TextEditorTabs(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
 		{
-			uiHelper = new UIHelper<TextEditorTabs>(this);
 			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 

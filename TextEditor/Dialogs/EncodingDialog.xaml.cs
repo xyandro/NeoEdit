@@ -15,11 +15,11 @@ namespace NeoEdit.TextEditor.Dialogs
 		}
 
 		[DepProp]
-		public Coder.Type Encoding { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
+		public Coder.Type Encoding { get { return UIHelper<EncodingDialog>.GetPropValue<Coder.Type>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool BOM { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool BOM { get { return UIHelper<EncodingDialog>.GetPropValue<bool>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string LineEndings { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string LineEndings { get { return UIHelper<EncodingDialog>.GetPropValue<string>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 
 		static EncodingDialog() { UIHelper<EncodingDialog>.Register(); }
 
@@ -29,10 +29,8 @@ namespace NeoEdit.TextEditor.Dialogs
 			public Coder.Type Encoding { get; set; }
 		}
 
-		readonly UIHelper<EncodingDialog> uiHelper;
 		EncodingDialog()
 		{
-			uiHelper = new UIHelper<EncodingDialog>(this);
 			InitializeComponent();
 
 			encoding.ItemsSource = Coder.GetEncodingTypes();

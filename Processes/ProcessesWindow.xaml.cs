@@ -21,15 +21,13 @@ namespace NeoEdit.Processes
 		public static RoutedCommand Command_Process_Kill = new RoutedCommand();
 
 		[DepProp]
-		ObservableCollection<ProcessItem> Processes { get { return uiHelper.GetPropValue<ObservableCollection<ProcessItem>>(); } set { uiHelper.SetPropValue(value); } }
+		ObservableCollection<ProcessItem> Processes { get { return UIHelper<ProcessesWindow>.GetPropValue<ObservableCollection<ProcessItem>>(this); } set { UIHelper<ProcessesWindow>.SetPropValue(this, value); } }
 
 		static ProcessesWindow() { UIHelper<ProcessesWindow>.Register(); }
 
-		readonly UIHelper<ProcessesWindow> uiHelper;
 		public ProcessesWindow(int? pid = null)
 		{
 			ProcessManager.WindowCreated();
-			uiHelper = new UIHelper<ProcessesWindow>(this);
 			InitializeComponent();
 
 			foreach (var prop in ProcessItem.StaticGetDepProps())

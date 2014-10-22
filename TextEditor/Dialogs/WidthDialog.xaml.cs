@@ -13,20 +13,18 @@ namespace NeoEdit.TextEditor.Dialogs
 		}
 
 		[DepProp]
-		public int Value { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int Value { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MinValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int MinValue { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string PadChar { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string PadChar { get { return UIHelper<WidthDialog>.GetPropValue<string>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Before { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool Before { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 
 		static WidthDialog() { UIHelper<WidthDialog>.Register(); }
 
-		readonly UIHelper<WidthDialog> uiHelper;
 		WidthDialog(int minValue, char padChar, bool before)
 		{
-			uiHelper = new UIHelper<WidthDialog>(this);
 			InitializeComponent();
 
 			Value = MinValue = minValue;

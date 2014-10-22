@@ -17,17 +17,15 @@ namespace NeoEdit.Disk
 	partial class DiskWindow
 	{
 		[DepProp]
-		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Location { get { return UIHelper<DiskWindow>.GetPropValue<string>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 
 		static DiskWindow() { UIHelper<DiskWindow>.Register(); }
 
-		readonly UIHelper<DiskWindow> uiHelper;
 		public DiskWindow(string path = null)
 		{
 			if (String.IsNullOrEmpty(path))
 				path = Directory.GetCurrentDirectory();
 
-			uiHelper = new UIHelper<DiskWindow>(this);
 			InitializeComponent();
 			UIHelper<DiskWindow>.AddCallback(files, ItemGridTree.LocationProperty, () => Location = files.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();

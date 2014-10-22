@@ -15,14 +15,12 @@ namespace NeoEdit.SystemInfo
 		public static RoutedCommand Command_View_InstalledPrograms = new RoutedCommand();
 
 		[DepProp]
-		string Text { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Text { get { return UIHelper<SystemInfoWindow>.GetPropValue<string>(this); } set { UIHelper<SystemInfoWindow>.SetPropValue(this, value); } }
 
 		static SystemInfoWindow() { UIHelper<SystemInfoWindow>.Register(); }
 
-		readonly UIHelper<SystemInfoWindow> uiHelper;
 		public SystemInfoWindow()
 		{
-			uiHelper = new UIHelper<SystemInfoWindow>(this);
 			InitializeComponent();
 
 			Text = "Please select an item from the menu.";

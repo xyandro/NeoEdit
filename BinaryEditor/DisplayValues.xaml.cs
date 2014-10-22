@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using NeoEdit.BinaryEditor.Data;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor
@@ -7,24 +6,22 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayValues : StackPanel
 	{
 		[DepProp]
-		public BinaryEditor ParentWindow { get { return uiHelper.GetPropValue<BinaryEditor>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryEditor ParentWindow { get { return UIHelper<DisplayValues>.GetPropValue<BinaryEditor>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowLE { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool ShowLE { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowBE { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool ShowBE { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowInt { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool ShowInt { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowFloat { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool ShowFloat { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowStr { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool ShowStr { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 
 		static DisplayValues() { UIHelper<DisplayValues>.Register(); }
 
-		readonly UIHelper<DisplayValues> uiHelper;
 		public DisplayValues()
 		{
-			uiHelper = new UIHelper<DisplayValues>(this);
 			InitializeComponent();
 			ShowLE = ShowInt = true;
 			ShowBE = ShowFloat = ShowStr = false;

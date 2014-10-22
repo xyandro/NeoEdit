@@ -13,20 +13,18 @@ namespace NeoEdit.TextEditor.Dialogs
 		}
 
 		[DepProp]
-		public int SelMult { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int SelMult { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IgnoreBlank { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool IgnoreBlank { get { return UIHelper<LimitDialog>.GetPropValue<bool>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int NumSels { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int NumSels { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MaxSels { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int MaxSels { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 
 		static LimitDialog() { UIHelper<LimitDialog>.Register(); }
 
-		readonly UIHelper<LimitDialog> uiHelper;
 		LimitDialog(int maxSels)
 		{
-			uiHelper = new UIHelper<LimitDialog>(this);
 			InitializeComponent();
 
 			NumSels = MaxSels = maxSels;

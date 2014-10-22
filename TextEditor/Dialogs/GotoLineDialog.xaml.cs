@@ -6,13 +6,13 @@ namespace NeoEdit.GUI.Dialogs
 	internal partial class GotoLineDialog
 	{
 		[DepProp]
-		public int Line { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int Line { get { return UIHelper<GotoLineDialog>.GetPropValue<int>(this); } set { UIHelper<GotoLineDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MinLine { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int MinLine { get { return UIHelper<GotoLineDialog>.GetPropValue<int>(this); } set { UIHelper<GotoLineDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MaxLine { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int MaxLine { get { return UIHelper<GotoLineDialog>.GetPropValue<int>(this); } set { UIHelper<GotoLineDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Relative { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool Relative { get { return UIHelper<GotoLineDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoLineDialog>.SetPropValue(this, value); } }
 
 		static GotoLineDialog()
 		{
@@ -20,14 +20,12 @@ namespace NeoEdit.GUI.Dialogs
 			UIHelper<GotoLineDialog>.AddCallback(a => a.Relative, (obj, o, n) => obj.SetRelative());
 		}
 
-		readonly UIHelper<GotoLineDialog> uiHelper;
 		readonly int numLines, startLine;
 		GotoLineDialog(int _numLines, int _startLine)
 		{
 			numLines = _numLines;
 			startLine = _startLine + 1;
 
-			uiHelper = new UIHelper<GotoLineDialog>(this);
 			InitializeComponent();
 
 			SetRelative();

@@ -19,13 +19,13 @@ namespace NeoEdit.Handles
 		public static RoutedCommand Command_View_FilterByType = new RoutedCommand();
 
 		[DepProp]
-		ObservableCollection<HandleItem> Handles { get { return uiHelper.GetPropValue<ObservableCollection<HandleItem>>(); } set { uiHelper.SetPropValue(value); } }
+		ObservableCollection<HandleItem> Handles { get { return UIHelper<HandlesWindow>.GetPropValue<ObservableCollection<HandleItem>>(this); } set { UIHelper<HandlesWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		string SubTitle { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string SubTitle { get { return UIHelper<HandlesWindow>.GetPropValue<string>(this); } set { UIHelper<HandlesWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		string HandleType { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string HandleType { get { return UIHelper<HandlesWindow>.GetPropValue<string>(this); } set { UIHelper<HandlesWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		List<string> HandleTypes { get { return uiHelper.GetPropValue<List<string>>(); } set { uiHelper.SetPropValue(value); } }
+		List<string> HandleTypes { get { return UIHelper<HandlesWindow>.GetPropValue<List<string>>(this); } set { UIHelper<HandlesWindow>.SetPropValue(this, value); } }
 
 		static HandlesWindow()
 		{
@@ -33,13 +33,11 @@ namespace NeoEdit.Handles
 			UIHelper<HandlesWindow>.AddCallback(a => a.HandleType, (obj, o, n) => obj.Refresh());
 		}
 
-		readonly UIHelper<HandlesWindow> uiHelper;
 		readonly int? pid;
 		public HandlesWindow(int? pid = null)
 		{
 			this.pid = pid;
 
-			uiHelper = new UIHelper<HandlesWindow>(this);
 			InitializeComponent();
 
 			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy(type => type).ToList();

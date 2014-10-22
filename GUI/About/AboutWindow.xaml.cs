@@ -7,18 +7,16 @@ namespace NeoEdit.GUI.About
 	public partial class AboutWindow : Window
 	{
 		[DepProp]
-		string Product { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Product { get { return UIHelper<AboutWindow>.GetPropValue<string>(this); } set { UIHelper<AboutWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		string Version { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Version { get { return UIHelper<AboutWindow>.GetPropValue<string>(this); } set { UIHelper<AboutWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		string Copyright { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Copyright { get { return UIHelper<AboutWindow>.GetPropValue<string>(this); } set { UIHelper<AboutWindow>.SetPropValue(this, value); } }
 
 		static AboutWindow() { UIHelper<AboutWindow>.Register(); }
 
-		readonly UIHelper<AboutWindow> uiHelper;
 		public AboutWindow()
 		{
-			uiHelper = new UIHelper<AboutWindow>(this);
 			InitializeComponent();
 
 			Product = ((AssemblyProductAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;

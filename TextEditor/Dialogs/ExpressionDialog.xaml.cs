@@ -10,51 +10,51 @@ namespace NeoEdit.TextEditor.Dialogs
 	internal partial class ExpressionDialog
 	{
 		[DepProp]
-		public string Expression { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Expression { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsExpression { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool IsExpression { get { return UIHelper<ExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MatchCase { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool MatchCase { get { return UIHelper<ExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example1 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example1 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example1Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example1Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example2 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example2 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example2Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example2Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example3 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example3 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example3Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example3Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example4 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example4 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example4Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example4Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example5 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example5 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example5Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example5Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example6 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example6 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example6Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example6Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example7 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example7 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example7Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example7Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example8 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example8 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example8Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example8Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example9 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example9 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example9Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example9Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example10 { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example10 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public object Example10Value { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public object Example10Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 
 		static ExpressionDialog()
 		{
@@ -62,10 +62,8 @@ namespace NeoEdit.TextEditor.Dialogs
 			UIHelper<ExpressionDialog>.AddCallback(a => a.Expression, (obj, o, n) => obj.EvaluateExamples());
 		}
 
-		readonly UIHelper<ExpressionDialog> uiHelper;
 		ExpressionDialog(List<string> examples, bool isExpression)
 		{
-			uiHelper = new UIHelper<ExpressionDialog>(this);
 			InitializeComponent();
 
 			Example1 = examples.Count >= 1 ? examples[0] : null;

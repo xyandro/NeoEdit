@@ -9,16 +9,14 @@ namespace NeoEdit.Disk.Dialogs
 	public partial class Rename : Window
 	{
 		[DepProp]
-		public string ItemName { get { return uiHelper.GetPropValue<string>(); } private set { uiHelper.SetPropValue(value); } }
+		public string ItemName { get { return UIHelper<Rename>.GetPropValue<string>(this); } private set { UIHelper<Rename>.SetPropValue(this, value); } }
 		public string FullName { get { return path + @"\" + ItemName; } }
 
 		static Rename() { UIHelper<Rename>.Register(); }
 
-		readonly UIHelper<Rename> uiHelper;
 		readonly string path;
 		Rename(DiskItem item)
 		{
-			uiHelper = new UIHelper<Rename>(this);
 			InitializeComponent();
 
 			label.Content = String.Format("Please enter new name for {0}:", item.Name);

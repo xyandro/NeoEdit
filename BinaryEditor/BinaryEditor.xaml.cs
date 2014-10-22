@@ -20,29 +20,29 @@ namespace NeoEdit.BinaryEditor
 	partial class BinaryEditor
 	{
 		[DepProp]
-		public string FileTitle { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string FileTitle { get { return UIHelper<BinaryEditor>.GetPropValue<string>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public string FileName { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string FileName { get { return UIHelper<BinaryEditor>.GetPropValue<string>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsModified { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool IsModified { get { return UIHelper<BinaryEditor>.GetPropValue<bool>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public BinaryData Data { get { return uiHelper.GetPropValue<BinaryData>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryData Data { get { return UIHelper<BinaryEditor>.GetPropValue<BinaryData>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowValues { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool ShowValues { get { return UIHelper<BinaryEditor>.GetPropValue<bool>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public long ChangeCount { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		public long ChangeCount { get { return UIHelper<BinaryEditor>.GetPropValue<long>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public long SelStart { get { return uiHelper.GetPropValue<long>(); } set { ++internalChangeCount; uiHelper.SetPropValue(value); --internalChangeCount; } }
+		public long SelStart { get { return UIHelper<BinaryEditor>.GetPropValue<long>(this); } set { ++internalChangeCount; UIHelper<BinaryEditor>.SetPropValue(this, value); --internalChangeCount; } }
 		[DepProp]
-		public long SelEnd { get { return uiHelper.GetPropValue<long>(); } set { ++internalChangeCount; uiHelper.SetPropValue(value); --internalChangeCount; } }
+		public long SelEnd { get { return UIHelper<BinaryEditor>.GetPropValue<long>(this); } set { ++internalChangeCount; UIHelper<BinaryEditor>.SetPropValue(this, value); --internalChangeCount; } }
 		[DepProp]
-		public bool Insert { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool Insert { get { return UIHelper<BinaryEditor>.GetPropValue<bool>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public Coder.Type CoderUsed { get { return uiHelper.GetPropValue<Coder.Type>(); } set { uiHelper.SetPropValue(value); } }
+		public Coder.Type CoderUsed { get { return UIHelper<BinaryEditor>.GetPropValue<Coder.Type>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public string FoundText { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string FoundText { get { return UIHelper<BinaryEditor>.GetPropValue<string>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public long yScrollValue { get { return uiHelper.GetPropValue<long>(); } set { uiHelper.SetPropValue(value); } }
+		public long yScrollValue { get { return UIHelper<BinaryEditor>.GetPropValue<long>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 
 		long yScrollViewportFloor { get { return (long)Math.Floor(yScroll.ViewportSize); } }
 		long yScrollViewportCeiling { get { return (long)Math.Ceiling(yScroll.ViewportSize); } }
@@ -138,10 +138,8 @@ namespace NeoEdit.BinaryEditor
 			UIHelper<BinaryEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		readonly UIHelper<BinaryEditor> uiHelper;
 		public BinaryEditor(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null)
 		{
-			uiHelper = new UIHelper<BinaryEditor>(this);
 			InitializeComponent();
 
 			undoRedo = new UndoRedo(b => IsModified = b);

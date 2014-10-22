@@ -6,13 +6,13 @@ namespace NeoEdit.GUI.Dialogs
 	internal partial class GotoIndexDialog
 	{
 		[DepProp]
-		public int Index { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int Index { get { return UIHelper<GotoIndexDialog>.GetPropValue<int>(this); } set { UIHelper<GotoIndexDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MinIndex { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int MinIndex { get { return UIHelper<GotoIndexDialog>.GetPropValue<int>(this); } set { UIHelper<GotoIndexDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MaxIndex { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int MaxIndex { get { return UIHelper<GotoIndexDialog>.GetPropValue<int>(this); } set { UIHelper<GotoIndexDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Relative { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool Relative { get { return UIHelper<GotoIndexDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoIndexDialog>.SetPropValue(this, value); } }
 
 		static GotoIndexDialog()
 		{
@@ -20,14 +20,12 @@ namespace NeoEdit.GUI.Dialogs
 			UIHelper<GotoIndexDialog>.AddCallback(a => a.Relative, (obj, o, n) => obj.SetRelative());
 		}
 
-		readonly UIHelper<GotoIndexDialog> uiHelper;
 		readonly int numIndexes, startIndex;
 		GotoIndexDialog(int _numIndexes, int _startIndex)
 		{
 			numIndexes = _numIndexes;
 			startIndex = _startIndex + 1;
 
-			uiHelper = new UIHelper<GotoIndexDialog>(this);
 			InitializeComponent();
 
 			SetRelative();

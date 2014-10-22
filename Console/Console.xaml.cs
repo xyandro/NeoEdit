@@ -17,15 +17,15 @@ namespace NeoEdit.Console
 	public partial class Console
 	{
 		[DepProp]
-		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Location { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
 		[DepProp(Default = "")]
-		string Command { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Command { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
 		[DepProp(Default = true)]
-		bool CommandMode { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		bool CommandMode { get { return UIHelper<Console>.GetPropValue<bool>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
 		[DepProp]
-		int yScrollValue { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		int yScrollValue { get { return UIHelper<Console>.GetPropValue<int>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
 		[DepProp]
-		ObservableCollection<Line> Lines { get { return uiHelper.GetPropValue<ObservableCollection<Line>>(); } set { uiHelper.SetPropValue(value); } }
+		ObservableCollection<Line> Lines { get { return UIHelper<Console>.GetPropValue<ObservableCollection<Line>>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
 
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
@@ -47,10 +47,8 @@ namespace NeoEdit.Console
 		Font font = new Font();
 		RunOnceTimer renderTimer;
 
-		readonly UIHelper<Console> uiHelper;
 		public Console(string path = null)
 		{
-			uiHelper = new UIHelper<Console>(this);
 			InitializeComponent();
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());

@@ -9,18 +9,16 @@ namespace NeoEdit.Console
 	public partial class ConsoleTabs
 	{
 		[DepProp]
-		public ObservableCollection<Console> Consoles { get { return uiHelper.GetPropValue<ObservableCollection<Console>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<Console> Consoles { get { return UIHelper<ConsoleTabs>.GetPropValue<ObservableCollection<Console>>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Console Active { get { return uiHelper.GetPropValue<Console>(); } set { uiHelper.SetPropValue(value); } }
+		public Console Active { get { return UIHelper<ConsoleTabs>.GetPropValue<Console>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return uiHelper.GetPropValue<Tabs.ViewType>(); } set { uiHelper.SetPropValue(value); } }
+		public Tabs.ViewType View { get { return UIHelper<ConsoleTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
 
 		static ConsoleTabs() { UIHelper<ConsoleTabs>.Register(); }
 
-		readonly UIHelper<ConsoleTabs> uiHelper;
 		public ConsoleTabs(string path = null)
 		{
-			uiHelper = new UIHelper<ConsoleTabs>(this);
 			ConsoleMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 

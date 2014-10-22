@@ -19,19 +19,19 @@ namespace NeoEdit.TextEditor.Dialogs
 		}
 
 		[DepProp]
-		public string InputFormat { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string InputFormat { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool InputUTC { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool InputUTC { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<bool>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string OutputFormat { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string OutputFormat { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool OutputUTC { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool OutputUTC { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<bool>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Example { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string Example { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string ParsedExample { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string ParsedExample { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string OutputExample { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		public string OutputExample { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
 
 		static ConvertDateTimeDialog()
 		{
@@ -54,10 +54,8 @@ namespace NeoEdit.TextEditor.Dialogs
 			"d", "D", "f", "F", "g", "G", "M", "R", "s", "t", "T", "u", "U", "Y",
 		};
 
-		readonly UIHelper<ConvertDateTimeDialog> uiHelper;
 		ConvertDateTimeDialog(string _example)
 		{
-			uiHelper = new UIHelper<ConvertDateTimeDialog>(this);
 			InitializeComponent();
 
 			Example = _example;

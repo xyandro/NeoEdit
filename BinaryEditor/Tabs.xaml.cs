@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.BinaryEditor.Data;
 using NeoEdit.Common.Transform;
@@ -20,18 +19,16 @@ namespace NeoEdit.BinaryEditor
 	public partial class BinaryEditorTabs
 	{
 		[DepProp]
-		public ObservableCollection<BinaryEditor> BinaryEditors { get { return uiHelper.GetPropValue<ObservableCollection<BinaryEditor>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<BinaryEditor> BinaryEditors { get { return UIHelper<BinaryEditorTabs>.GetPropValue<ObservableCollection<BinaryEditor>>(this); } set { UIHelper<BinaryEditorTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public BinaryEditor Active { get { return uiHelper.GetPropValue<BinaryEditor>(); } set { uiHelper.SetPropValue(value); } }
+		public BinaryEditor Active { get { return UIHelper<BinaryEditorTabs>.GetPropValue<BinaryEditor>(this); } set { UIHelper<BinaryEditorTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return uiHelper.GetPropValue<Tabs.ViewType>(); } set { uiHelper.SetPropValue(value); } }
+		public Tabs.ViewType View { get { return UIHelper<BinaryEditorTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<BinaryEditorTabs>.SetPropValue(this, value); } }
 
 		static BinaryEditorTabs() { UIHelper<BinaryEditorTabs>.Register(); }
 
-		readonly UIHelper<BinaryEditorTabs> uiHelper;
 		BinaryEditorTabs(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null)
 		{
-			uiHelper = new UIHelper<BinaryEditorTabs>(this);
 			BinaryEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 

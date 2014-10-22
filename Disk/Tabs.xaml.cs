@@ -10,21 +10,19 @@ namespace NeoEdit.Disk
 	public partial class DiskTabs
 	{
 		[DepProp]
-		public ObservableCollection<DiskWindow> DiskWindows { get { return uiHelper.GetPropValue<ObservableCollection<DiskWindow>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<DiskWindow> DiskWindows { get { return UIHelper<DiskTabs>.GetPropValue<ObservableCollection<DiskWindow>>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public DiskWindow Active { get { return uiHelper.GetPropValue<DiskWindow>(); } set { uiHelper.SetPropValue(value); } }
+		public DiskWindow Active { get { return UIHelper<DiskTabs>.GetPropValue<DiskWindow>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return uiHelper.GetPropValue<Tabs.ViewType>(); } set { uiHelper.SetPropValue(value); } }
+		public Tabs.ViewType View { get { return UIHelper<DiskTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 
 		static DiskTabs()
 		{
 			UIHelper<DiskTabs>.Register();
 		}
 
-		readonly UIHelper<DiskTabs> uiHelper;
 		public DiskTabs(string path = null)
 		{
-			uiHelper = new UIHelper<DiskTabs>(this);
 			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 

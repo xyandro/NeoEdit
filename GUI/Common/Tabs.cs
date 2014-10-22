@@ -18,11 +18,11 @@ namespace NeoEdit.GUI.Common
 		}
 
 		[DepProp]
-		public ObservableCollection<ItemType> Items { get { return uiHelper.GetPropValue<ObservableCollection<ItemType>>(); } set { uiHelper.SetPropValue(value); } }
+		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ItemType Active { get { return uiHelper.GetPropValue<ItemType>(); } set { uiHelper.SetPropValue(value); } }
+		public ItemType Active { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ViewType View { get { return uiHelper.GetPropValue<ViewType>(); } set { uiHelper.SetPropValue(value); } }
+		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ViewType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 
 		public Func<ItemType, Label> GetLabel { get; set; }
 
@@ -43,10 +43,8 @@ namespace NeoEdit.GUI.Common
 				Active.Focus();
 		}
 
-		readonly UIHelper<Tabs<ItemType>> uiHelper;
 		public Tabs()
 		{
-			uiHelper = new UIHelper<Tabs<ItemType>>(this);
 			Items = new ObservableCollection<ItemType>();
 			View = ViewType.Tabs;
 			GetLabel = DefaultGetLabel;

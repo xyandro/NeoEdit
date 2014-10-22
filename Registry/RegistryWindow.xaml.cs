@@ -13,16 +13,14 @@ namespace NeoEdit.Registry
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 
 		[DepProp]
-		string Location { get { return uiHelper.GetPropValue<string>(); } set { uiHelper.SetPropValue(value); } }
+		string Location { get { return UIHelper<RegistryWindow>.GetPropValue<string>(this); } set { UIHelper<RegistryWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		ObservableCollection<RegistryItem> Keys { get { return uiHelper.GetPropValue<ObservableCollection<RegistryItem>>(); } set { uiHelper.SetPropValue(value); } }
+		ObservableCollection<RegistryItem> Keys { get { return UIHelper<RegistryWindow>.GetPropValue<ObservableCollection<RegistryItem>>(this); } set { UIHelper<RegistryWindow>.SetPropValue(this, value); } }
 
 		static RegistryWindow() { UIHelper<RegistryWindow>.Register(); }
 
-		readonly UIHelper<RegistryWindow> uiHelper;
 		public RegistryWindow(string key)
 		{
-			uiHelper = new UIHelper<RegistryWindow>(this);
 			InitializeComponent();
 
 			UIHelper<RegistryWindow>.AddCallback(keys, ItemGridTree.LocationProperty, () => Location = keys.Location.FullName);

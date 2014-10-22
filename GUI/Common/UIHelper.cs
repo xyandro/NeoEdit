@@ -17,7 +17,7 @@ namespace NeoEdit.GUI.Common
 		public object Default { get; set; }
 	}
 
-	public class UIHelper<ControlType> where ControlType : DependencyObject
+	public static class UIHelper<ControlType> where ControlType : DependencyObject
 	{
 		class PropertyHolder
 		{
@@ -37,25 +37,25 @@ namespace NeoEdit.GUI.Common
 				if ((def == null) && (prop.PropertyType.IsValueType))
 					def = Activator.CreateInstance(prop.PropertyType);
 				var propertyHolder = new PropertyHolder();
-				propertyHolder.property = dependencyProperty[prop.Name] = DependencyProperty.Register(prop.Name, prop.PropertyType, typeof(ControlType), new PropertyMetadata(def, propertyChangedCallback, (d, val) => coerceValueCallback(d, propertyHolder.property, val)));
+				propertyHolder.property = dependencyProperty[prop.Name] = DependencyProperty.Register(prop.Name, prop.PropertyType, typeof(ControlType), new PropertyMetadata(def, (d, e) => propertyChangedCallback(d as ControlType, e), (d, val) => coerceValueCallback(d as ControlType, propertyHolder.property, val)));
 			}
 		}
 
 		static Dictionary<DependencyProperty, Action<ControlType, object, object>> propertyChangedCallbacks = new Dictionary<DependencyProperty, Action<ControlType, object, object>>();
-		static void propertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		static void propertyChangedCallback(ControlType d, DependencyPropertyChangedEventArgs e)
 		{
 			var prop = e.Property;
 			if (!propertyChangedCallbacks.ContainsKey(prop))
 				return;
-			propertyChangedCallbacks[prop](d as ControlType, e.OldValue, e.NewValue);
+			propertyChangedCallbacks[prop](d, e.OldValue, e.NewValue);
 		}
 
 		static Dictionary<DependencyProperty, Func<ControlType, object, object>> coerceValueCallbacks = new Dictionary<DependencyProperty, Func<ControlType, object, object>>();
-		static object coerceValueCallback(DependencyObject d, DependencyProperty prop, object value)
+		static object coerceValueCallback(ControlType d, DependencyProperty prop, object value)
 		{
 			if (!coerceValueCallbacks.ContainsKey(prop))
 				return value;
-			return coerceValueCallbacks[prop](d as ControlType, value);
+			return coerceValueCallbacks[prop](d, value);
 		}
 
 		static DependencyProperty GetExpressionProperty<T1, T2>(Expression<Func<T1, T2>> expression)
@@ -128,20 +128,12 @@ namespace NeoEdit.GUI.Common
 				Validation.MarkInvalid(bindingExpression, new ValidationError(new ExceptionValidationRule(), bindingExpression));
 		}
 
-		readonly ControlType control;
-		public UIHelper(ControlType _control)
-		{
-			if (dependencyProperty == null)
-				throw new Exception("Register must be called before creating a UIHelper.");
-			control = _control;
-		}
-
-		public T GetPropValue<T>([CallerMemberName] string caller = "")
+		public static T GetPropValue<T>(ControlType control, [CallerMemberName] string caller = "")
 		{
 			return (T)control.GetValue(dependencyProperty[caller]);
 		}
 
-		public void SetPropValue<T>(T value, [CallerMemberName] string caller = "")
+		public static void SetPropValue<T>(ControlType control, T value, [CallerMemberName] string caller = "")
 		{
 			control.SetValue(dependencyProperty[caller], value);
 		}

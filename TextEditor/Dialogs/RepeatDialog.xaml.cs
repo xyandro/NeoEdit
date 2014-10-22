@@ -12,16 +12,14 @@ namespace NeoEdit.TextEditor.Dialogs
 		}
 
 		[DepProp]
-		public int RepeatCount { get { return uiHelper.GetPropValue<int>(); } set { uiHelper.SetPropValue(value); } }
+		public int RepeatCount { get { return UIHelper<RepeatDialog>.GetPropValue<int>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool SelectAll { get { return uiHelper.GetPropValue<bool>(); } set { uiHelper.SetPropValue(value); } }
+		public bool SelectAll { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 
 		static RepeatDialog() { UIHelper<RepeatDialog>.Register(); }
 
-		readonly UIHelper<RepeatDialog> uiHelper;
 		RepeatDialog(bool selectAll)
 		{
-			uiHelper = new UIHelper<RepeatDialog>(this);
 			InitializeComponent();
 
 			RepeatCount = 1;

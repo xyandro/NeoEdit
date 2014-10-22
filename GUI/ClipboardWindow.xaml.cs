@@ -90,7 +90,7 @@ namespace NeoEdit.GUI
 
 		public static List<string> GetFiles()
 		{
-			var files = new List<string> ();
+			var files = new List<string>();
 			bool isCut;
 			if (!GetFiles(out files, out isCut))
 				return null;
@@ -182,12 +182,10 @@ namespace NeoEdit.GUI
 		}
 
 		[DepProp]
-		ObservableCollection<ClipboardData> Records { get { return uiHelper.GetPropValue<ObservableCollection<ClipboardData>>(); } set { uiHelper.SetPropValue(value); } }
+		ObservableCollection<ClipboardData> Records { get { return UIHelper<ClipboardWindow>.GetPropValue<ObservableCollection<ClipboardData>>(this); } set { UIHelper<ClipboardWindow>.SetPropValue(this, value); } }
 
-		readonly UIHelper<ClipboardWindow> uiHelper;
 		ClipboardWindow()
 		{
-			uiHelper = new UIHelper<ClipboardWindow>(this);
 			InitializeComponent();
 
 			Records = clipboard;
