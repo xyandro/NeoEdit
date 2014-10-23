@@ -58,7 +58,7 @@ namespace NeoEdit.GUI.Common
 			return coerceValueCallbacks[prop](d, value);
 		}
 
-		static DependencyProperty GetExpressionProperty<T1, T2>(Expression<Func<T1, T2>> expression)
+		public static DependencyProperty GetProperty<T>(Expression<Func<ControlType, T>> expression)
 		{
 			return dependencyProperty[((expression.Body as MemberExpression).Member as PropertyInfo).Name];
 		}
@@ -71,7 +71,7 @@ namespace NeoEdit.GUI.Common
 
 		public static void AddCallback<T>(Expression<Func<ControlType, T>> expression, Action<ControlType, T, T> callback)
 		{
-			var prop = GetExpressionProperty(expression);
+			var prop = GetProperty(expression);
 			Action<ControlType, object, object> _callback = (obj, o, n) => callback(obj, (T)o, (T)n);
 			if (!propertyChangedCallbacks.ContainsKey(prop))
 				propertyChangedCallbacks[prop] = _callback;
@@ -81,7 +81,7 @@ namespace NeoEdit.GUI.Common
 
 		public static void AddCoerce<T>(Expression<Func<ControlType, T>> expression, Func<ControlType, T, T> callback)
 		{
-			var prop = GetExpressionProperty(expression);
+			var prop = GetProperty(expression);
 			Func<ControlType, object, object> _callback = (obj, v) => callback(obj, (T)v);
 			if (!coerceValueCallbacks.ContainsKey(prop))
 				coerceValueCallbacks[prop] = _callback;
