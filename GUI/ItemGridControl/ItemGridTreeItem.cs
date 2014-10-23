@@ -1,26 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.ItemGridControl
 {
-	public interface IItemGridTreeItem : IItemGridItem
-	{
-		string FullName { get; }
-		IItemGridTreeItem GetParent();
-		bool CanGetChildren();
-		IEnumerable<IItemGridTreeItem> GetChildren();
-	}
-
-	public abstract class ItemGridTreeItem<ItemType> : ItemGridItem<ItemType>, IItemGridTreeItem
+	public abstract class ItemGridTreeItem : DependencyObject
 	{
 		[DepProp]
-		public string FullName { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string FullName { get { return UIHelper<ItemGridTreeItem>.GetPropValue<string>(this); } private set { UIHelper<ItemGridTreeItem>.SetPropValue(this, value); } }
 
-		public abstract IItemGridTreeItem GetParent();
+		public abstract ItemGridTreeItem GetParent();
 		public virtual bool CanGetChildren() { return false; }
-		public virtual IEnumerable<IItemGridTreeItem> GetChildren() { throw new NotImplementedException(); }
+		public virtual IEnumerable<ItemGridTreeItem> GetChildren() { throw new NotImplementedException(); }
+
+		static ItemGridTreeItem() { UIHelper<ItemGridTreeItem>.Register(); }
 
 		protected ItemGridTreeItem(string FullName)
 		{
@@ -39,7 +34,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			return fullName.Substring(0, idx);
 		}
 
-		public ItemGridTreeItem<ItemType> GetChild(string fullName)
+		public ItemGridTreeItem GetChild(string fullName)
 		{
 			if (fullName == "")
 				return this;
@@ -56,7 +51,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			{
 				if ((result == null) || (!result.CanGetChildren()))
 					return null;
-				result = result.GetChildren().FirstOrDefault(child => (child as ItemGridTreeItem<ItemType>).FullName.Equals(part, StringComparison.InvariantCultureIgnoreCase)) as ItemGridTreeItem<ItemType>;
+				result = result.GetChildren().FirstOrDefault(child => (child as ItemGridTreeItem).FullName.Equals(part, StringComparison.InvariantCultureIgnoreCase)) as ItemGridTreeItem;
 			}
 
 			return result;

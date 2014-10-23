@@ -9,16 +9,18 @@ using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Registry
 {
-	public class RegistryItem : ItemGridTreeItem<RegistryItem>
+	public class RegistryItem : ItemGridTreeItem
 	{
 		[DepProp]
-		public string Name { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Name { get { return UIHelper<RegistryItem>.GetPropValue<string>(this); } private set { UIHelper<RegistryItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Type { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Type { get { return UIHelper<RegistryItem>.GetPropValue<string>(this); } private set { UIHelper<RegistryItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Data { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Data { get { return UIHelper<RegistryItem>.GetPropValue<string>(this); } private set { UIHelper<RegistryItem>.SetPropValue(this, value); } }
 
 		readonly bool isSubKey;
+
+		static RegistryItem() { UIHelper<RegistryItem>.Register(); }
 
 		public RegistryItem() : this(null, null, true) { }
 		RegistryItem(RegistryKey key, string name, bool isSubKey)
@@ -51,7 +53,7 @@ namespace NeoEdit.Registry
 			return Regex.Replace(location.Trim().Trim('"'), @"[\\/]+", @"\");
 		}
 
-		public override IItemGridTreeItem GetParent()
+		public override ItemGridTreeItem GetParent()
 		{
 			if (FullName == "")
 				return null;
@@ -67,7 +69,7 @@ namespace NeoEdit.Registry
 		}
 
 		static Dictionary<string, RegistryKey> RootKeys = Helpers.GetValues<RegistryHive>().Select(a => RegistryKey.OpenBaseKey(a, RegistryView.Registry64)).ToDictionary(value => value.Name, value => value);
-		public override IEnumerable<IItemGridTreeItem> GetChildren()
+		public override IEnumerable<ItemGridTreeItem> GetChildren()
 		{
 			if (FullName == "")
 			{

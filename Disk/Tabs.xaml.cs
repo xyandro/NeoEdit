@@ -16,10 +16,7 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public Tabs.ViewType View { get { return UIHelper<DiskTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 
-		static DiskTabs()
-		{
-			UIHelper<DiskTabs>.Register();
-		}
+		static DiskTabs() { UIHelper<DiskTabs>.Register(); }
 
 		public DiskTabs(string path = null)
 		{

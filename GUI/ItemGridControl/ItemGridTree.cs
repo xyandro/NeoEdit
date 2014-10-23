@@ -9,12 +9,12 @@ namespace NeoEdit.GUI.ItemGridControl
 {
 	public class ItemGridTree : ItemGrid
 	{
-		public static DependencyProperty LocationProperty = DependencyProperty.Register("Location", typeof(IItemGridTreeItem), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGridTree).OnLocationChanged(e.OldValue as IItemGridTreeItem)));
+		public static DependencyProperty LocationProperty = DependencyProperty.Register("Location", typeof(ItemGridTreeItem), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGridTree).OnLocationChanged(e.OldValue as ItemGridTreeItem)));
 
-		public IItemGridTreeItem Location { get { return (IItemGridTreeItem)GetValue(LocationProperty); } set { SetValue(LocationProperty, value); } }
+		public ItemGridTreeItem Location { get { return (ItemGridTreeItem)GetValue(LocationProperty); } set { SetValue(LocationProperty, value); } }
 
-		Stack<IItemGridTreeItem> lastLocation = new Stack<IItemGridTreeItem>();
-		Stack<IItemGridTreeItem> nextLocation = new Stack<IItemGridTreeItem>();
+		Stack<ItemGridTreeItem> lastLocation = new Stack<ItemGridTreeItem>();
+		Stack<ItemGridTreeItem> nextLocation = new Stack<ItemGridTreeItem>();
 
 		public ItemGridTree()
 		{
@@ -69,12 +69,12 @@ namespace NeoEdit.GUI.ItemGridControl
 		{
 			if (Selected.Count != 1)
 				return;
-			if (!(Selected[0] as IItemGridTreeItem).CanGetChildren())
+			if (!(Selected[0] as ItemGridTreeItem).CanGetChildren())
 				return;
-			Location = Selected[0] as IItemGridTreeItem;
+			Location = Selected[0] as ItemGridTreeItem;
 		}
 
-		void OnLocationChanged(IItemGridTreeItem last)
+		void OnLocationChanged(ItemGridTreeItem last)
 		{
 			if ((!isInternal) && (last != null))
 			{
@@ -91,11 +91,11 @@ namespace NeoEdit.GUI.ItemGridControl
 			}
 
 			var oldLocation = last == null ? null : last.FullName;
-			Items = new ObservableCollection<IItemGridTreeItem>(Location.GetChildren());
+			Items = new ObservableCollection<ItemGridTreeItem>(Location.GetChildren());
 			ResetScroll();
 			if (oldLocation == null)
 				return;
-			Focused = Items.FirstOrDefault(item => (item as IItemGridTreeItem).FullName == oldLocation);
+			Focused = Items.FirstOrDefault(item => (item as ItemGridTreeItem).FullName == oldLocation);
 			if (Focused == null)
 				return;
 			ShowFocus();
@@ -104,7 +104,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		public void Refresh()
 		{
-			SyncItems(Location.GetChildren(), Location.GetDepProp("FullName"));
+			SyncItems(Location.GetChildren(), UIHelper<ItemGridTreeItem>.GetProperty(a => a.FullName));
 		}
 	}
 }

@@ -21,27 +21,27 @@ namespace NeoEdit.GUI.ItemGridControl
 		RoutedEventHandler accept = (s, e) => { };
 		public event RoutedEventHandler Accept { add { accept += value; } remove { accept -= value; } }
 
-		public static DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IEnumerable<IItemGridItem>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnItemsCollectionChanged(e.OldValue)));
+		public static DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IEnumerable<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnItemsCollectionChanged(e.OldValue)));
 		public static DependencyProperty SortedItemsProperty = DependencyProperty.Register("SortedItems", typeof(ListCollectionView), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortedItemsCollectionChanged(e.OldValue)));
 		public static DependencyProperty ColumnsProperty = DependencyProperty.Register("Columns", typeof(ObservableHashSet<ItemGridColumn>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnColumnsCollectionChanged(e.OldValue)));
 		public static DependencyProperty SortColumnProperty = DependencyProperty.Register("SortColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortColumnChanged()));
 		public static DependencyProperty SortAscendingProperty = DependencyProperty.Register("SortAscending", typeof(bool), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortAscendingChanged()));
-		public static DependencyProperty FocusedProperty = DependencyProperty.Register("Focused", typeof(IItemGridItem), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusedChanged()));
+		public static DependencyProperty FocusedProperty = DependencyProperty.Register("Focused", typeof(DependencyObject), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusedChanged()));
 		public static DependencyProperty FocusColumnsProperty = DependencyProperty.Register("FocusColumns", typeof(bool), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusColumnsChanged()));
 		public static DependencyProperty FocusedColumnProperty = DependencyProperty.Register("FocusedColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusedColumnChanged()));
-		public static DependencyProperty SelectedProperty = DependencyProperty.Register("Selected", typeof(ObservableCollection<IItemGridItem>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSelectedCollectionChanged(e.OldValue)));
+		public static DependencyProperty SelectedProperty = DependencyProperty.Register("Selected", typeof(ObservableCollection<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSelectedCollectionChanged(e.OldValue)));
 		public static DependencyProperty TextInputColumnProperty = DependencyProperty.Register("TextInputColumn", typeof(ItemGridColumn), typeof(ItemGrid));
 		public static DependencyProperty TextInputDelayProperty = DependencyProperty.Register("TextInputDelay", typeof(int), typeof(ItemGrid), new PropertyMetadata(500));
 
-		public IEnumerable<IItemGridItem> Items { get { return (IEnumerable<IItemGridItem>)GetValue(ItemsProperty) ?? new List<IItemGridItem>(); } set { SetValue(ItemsProperty, value); } }
+		public IEnumerable<DependencyObject> Items { get { return (IEnumerable<DependencyObject>)GetValue(ItemsProperty) ?? new List<DependencyObject>(); } set { SetValue(ItemsProperty, value); } }
 		public ListCollectionView SortedItems { get { return (ListCollectionView)GetValue(SortedItemsProperty); } set { SetValue(SortedItemsProperty, value); } }
 		public ObservableHashSet<ItemGridColumn> Columns { get { return (ObservableHashSet<ItemGridColumn>)GetValue(ColumnsProperty); } set { SetValue(ColumnsProperty, value); } }
 		public ItemGridColumn SortColumn { get { return (ItemGridColumn)GetValue(SortColumnProperty); } set { SetValue(SortColumnProperty, value); } }
 		public bool SortAscending { get { return (bool)GetValue(SortAscendingProperty); } set { SetValue(SortAscendingProperty, value); } }
-		public IItemGridItem Focused { get { return (IItemGridItem)GetValue(FocusedProperty); } set { SetValue(FocusedProperty, value); } }
+		public DependencyObject Focused { get { return (DependencyObject)GetValue(FocusedProperty); } set { SetValue(FocusedProperty, value); } }
 		public bool FocusColumns { get { return (bool)GetValue(FocusColumnsProperty); } set { SetValue(FocusColumnsProperty, value); } }
 		public ItemGridColumn FocusedColumn { get { return (ItemGridColumn)GetValue(FocusedColumnProperty); } set { SetValue(FocusedColumnProperty, value); } }
-		public ObservableCollection<IItemGridItem> Selected { get { return (ObservableCollection<IItemGridItem>)GetValue(SelectedProperty); } set { SetValue(SelectedProperty, value); } }
+		public ObservableCollection<DependencyObject> Selected { get { return (ObservableCollection<DependencyObject>)GetValue(SelectedProperty); } set { SetValue(SelectedProperty, value); } }
 		public ItemGridColumn TextInputColumn { get { return (ItemGridColumn)GetValue(TextInputColumnProperty); } set { SetValue(TextInputColumnProperty, value); } }
 		public int TextInputDelay { get { return (int)GetValue(TextInputDelayProperty); } set { SetValue(TextInputDelayProperty, value); } }
 
@@ -83,7 +83,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			drawTimer.AddDependency(sortTimer);
 
 			Columns = new ObservableHashSet<ItemGridColumn>();
-			Selected = new ObservableCollection<IItemGridItem>();
+			Selected = new ObservableCollection<DependencyObject>();
 
 			DependencyPropertyDescriptor.FromProperty(ScrollViewer.ViewportHeightProperty, typeof(ScrollViewer)).AddValueChanged(scroller, (o, e) => drawTimer.Start());
 			scroll.ValueChanged += (s, e) => drawTimer.Start();
@@ -241,8 +241,8 @@ namespace NeoEdit.GUI.ItemGridControl
 
 			public int Compare(object o1, object o2)
 			{
-				var val1 = (o1 as IItemGridItem).GetValue(prop);
-				var val2 = (o2 as IItemGridItem).GetValue(prop);
+				var val1 = (o1 as DependencyObject).GetValue(prop);
+				var val2 = (o2 as DependencyObject).GetValue(prop);
 
 				if ((val1 == null) && (val2 == null))
 					return 0;
@@ -288,7 +288,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			lastFocusedIndex = 0;
 		}
 
-		public void SyncItems(IEnumerable<IItemGridItem> items, DependencyProperty prop)
+		public void SyncItems(IEnumerable<DependencyObject> items, DependencyProperty prop)
 		{
 			var scrollPos = scroll.Value;
 			IComparable focused = null;
@@ -296,11 +296,11 @@ namespace NeoEdit.GUI.ItemGridControl
 				focused = Focused.GetValue(prop) as IComparable;
 			var selected = Selected.Select(item => item.GetValue(prop) as IComparable).ToList();
 
-			Items = new ObservableCollection<IItemGridItem>(items);
+			Items = new ObservableCollection<DependencyObject>(items);
 			var itemsByKey = Items.ToDictionary(item => item.GetValue(prop), item => item);
 			if ((focused != null) && (itemsByKey.ContainsKey(focused)))
 				Focused = itemsByKey[focused];
-			Selected = new ObservableCollection<IItemGridItem>(itemsByKey.Where(item => selected.Contains(item.Key)).Select(item => item.Value));
+			Selected = new ObservableCollection<DependencyObject>(itemsByKey.Where(item => selected.Contains(item.Key)).Select(item => item.Value));
 
 			scroll.Value = scrollPos;
 		}
@@ -309,7 +309,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
-		WeakReference<IItemGridItem> lastShiftSel;
+		WeakReference<DependencyObject> lastShiftSel;
 		void MoveFocus(int offset, bool relative, bool select = false)
 		{
 			if (relative)
@@ -319,7 +319,7 @@ namespace NeoEdit.GUI.ItemGridControl
 					offset += FocusedIndex.Value;
 
 			offset = Math.Max(0, Math.Min(offset, SortedItems.Count - 1));
-			Focused = SortedItems.GetItemAt(offset) as IItemGridItem;
+			Focused = SortedItems.GetItemAt(offset) as DependencyObject;
 
 			if (!controlDown)
 			{
@@ -329,14 +329,14 @@ namespace NeoEdit.GUI.ItemGridControl
 
 			if (shiftDown)
 			{
-				IItemGridItem lastSel;
+				DependencyObject lastSel;
 				if ((lastShiftSel == null) || (!lastShiftSel.TryGetTarget(out lastSel)))
 					lastSel = null;
 				var lastSelIndex = Math.Max(0, SortedItems.IndexOf(lastSel));
 				var start = Math.Min(lastSelIndex, offset);
 				var end = Math.Max(lastSelIndex, offset);
 				for (var ctr = start; ctr <= end; ++ctr)
-					Selected.Add(SortedItems.GetItemAt(ctr) as IItemGridItem);
+					Selected.Add(SortedItems.GetItemAt(ctr) as DependencyObject);
 			}
 			else if (select)
 			{
@@ -345,7 +345,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				else if (Focused != null)
 				{
 					Selected.Add(Focused);
-					lastShiftSel = new WeakReference<IItemGridItem>(Focused);
+					lastShiftSel = new WeakReference<DependencyObject>(Focused);
 				}
 			}
 
@@ -371,7 +371,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 			var keys = new KeySet
 			{
-				{ ModifierKeys.Control, Key.A, () => SortedItems.Cast<IItemGridItem>().ToList().ForEach(item => Selected.Add(item)) },
+				{ ModifierKeys.Control, Key.A, () => SortedItems.Cast<DependencyObject>().ToList().ForEach(item => Selected.Add(item)) },
 				{ Key.Escape, () => lastTextInputTime = null },
 				{ Key.Enter, () => accept(this, new RoutedEventArgs()) },
 			};
@@ -435,7 +435,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			var index = start;
 			while (true)
 			{
-				if ((SortedItems.GetItemAt(index) as IItemGridItem).GetValue(TextInputColumn.DepProp).ToString().StartsWith(lastTextInput, StringComparison.OrdinalIgnoreCase))
+				if ((SortedItems.GetItemAt(index) as DependencyObject).GetValue(TextInputColumn.DepProp).ToString().StartsWith(lastTextInput, StringComparison.OrdinalIgnoreCase))
 				{
 					MoveFocus(index, false, true);
 					break;

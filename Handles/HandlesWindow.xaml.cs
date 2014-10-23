@@ -43,7 +43,7 @@ namespace NeoEdit.Handles
 			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy(type => type).ToList();
 			HandleTypes.Insert(0, "");
 
-			foreach (var prop in HandleItem.StaticGetDepProps())
+			foreach (var prop in UIHelper<HandleItem>.GetProperties())
 				handles.Columns.Add(new ItemGridColumn(prop));
 			handles.SortColumn = handles.TextInputColumn = handles.Columns.First(col => col.Header == "Type");
 			Handles = new ObservableCollection<HandleItem>();

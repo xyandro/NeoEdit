@@ -30,7 +30,7 @@ namespace NeoEdit.Processes
 			ProcessManager.WindowCreated();
 			InitializeComponent();
 
-			foreach (var prop in ProcessItem.StaticGetDepProps())
+			foreach (var prop in UIHelper<ProcessItem>.GetProperties())
 			{
 				processes.Columns.Add(new ItemGridColumn(prop)
 				{
@@ -55,7 +55,7 @@ namespace NeoEdit.Processes
 
 		void Refresh()
 		{
-			processes.SyncItems(ProcessManager.GetProcesses(), ProcessItem.StaticGetDepProp("PID"));
+			processes.SyncItems(ProcessManager.GetProcesses(), UIHelper<ProcessItem>.GetProperty(a => a.PID));
 		}
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)

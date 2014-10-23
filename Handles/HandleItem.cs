@@ -1,22 +1,24 @@
 ﻿using System;
+using System.Windows;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.ItemGridControl;
 using NeoEdit.Win32;
 
 namespace NeoEdit.Handles
 {
-	public class HandleItem : ItemGridItem<HandleItem>
+	public class HandleItem : DependencyObject
 	{
 		[DepProp]
-		public int PID { get { return GetValue<int>(); } private set { SetValue(value); } }
+		public int PID { get { return UIHelper<HandleItem>.GetPropValue<int>(this); } private set { UIHelper<HandleItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public IntPtr Handle { get { return GetValue<IntPtr>(); } private set { SetValue(value); } }
+		public IntPtr Handle { get { return UIHelper<HandleItem>.GetPropValue<IntPtr>(this); } private set { UIHelper<HandleItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Type { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Type { get { return UIHelper<HandleItem>.GetPropValue<string>(this); } private set { UIHelper<HandleItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Name { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Name { get { return UIHelper<HandleItem>.GetPropValue<string>(this); } private set { UIHelper<HandleItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Data { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Data { get { return UIHelper<HandleItem>.GetPropValue<string>(this); } private set { UIHelper<HandleItem>.SetPropValue(this, value); } }
+
+		static HandleItem() { UIHelper<HandleItem>.Register(); }
 
 		public HandleItem(HandleInfo info)
 		{

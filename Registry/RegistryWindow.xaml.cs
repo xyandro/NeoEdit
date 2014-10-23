@@ -27,7 +27,7 @@ namespace NeoEdit.Registry
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => UIHelper<RegistryWindow>.InvalidateBinding(location, TextBox.TextProperty);
 
-			foreach (var prop in RegistryItem.StaticGetDepProps())
+			foreach (var prop in UIHelper<RegistryItem>.GetProperties())
 			{
 				if (prop.Name == "FullName")
 					continue;

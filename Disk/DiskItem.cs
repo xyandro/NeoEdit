@@ -11,32 +11,32 @@ using SevenZip;
 
 namespace NeoEdit.Disk
 {
-	public class DiskItem : ItemGridTreeItem<DiskItem>
+	public class DiskItem : ItemGridTreeItem
 	{
 		[DepProp]
-		public string Path { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Path { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Name { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Name { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string NameWoExtension { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string NameWoExtension { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Extension { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Extension { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public long? Size { get { return GetValue<long?>(); } private set { SetValue(value); } }
+		public long? Size { get { return UIHelper<DiskItem>.GetPropValue<long?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public DateTime? WriteTime { get { return GetValue<DateTime?>(); } private set { SetValue(value); } }
+		public DateTime? WriteTime { get { return UIHelper<DiskItem>.GetPropValue<DateTime?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public DateTime? CreateTime { get { return GetValue<DateTime?>(); } private set { SetValue(value); } }
+		public DateTime? CreateTime { get { return UIHelper<DiskItem>.GetPropValue<DateTime?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public DateTime? AccessTime { get { return GetValue<DateTime?>(); } private set { SetValue(value); } }
+		public DateTime? AccessTime { get { return UIHelper<DiskItem>.GetPropValue<DateTime?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string MD5 { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string MD5 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string SHA1 { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string SHA1 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Identity { get { return GetValue<string>(); } private set { SetValue(value); } }
+		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public long? CompressedSize { get { return GetValue<long?>(); } private set { SetValue(value); } }
+		public long? CompressedSize { get { return UIHelper<DiskItem>.GetPropValue<long?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
 		public bool IsDiskItem { get { return parent.contentItem.type == DiskItemType.Disk; } }
 		public bool HasChildren { get; private set; }
@@ -54,6 +54,7 @@ namespace NeoEdit.Disk
 
 		static DiskItem()
 		{
+			UIHelper<DiskItem>.Register();
 			using (var input = typeof(DiskItem).Assembly.GetManifestResourceStream("NeoEdit.Disk.7z.dll"))
 			{
 				byte[] data;
@@ -276,7 +277,7 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		public override IItemGridTreeItem GetParent()
+		public override ItemGridTreeItem GetParent()
 		{
 			return parent;
 		}
@@ -286,7 +287,7 @@ namespace NeoEdit.Disk
 			return HasChildren;
 		}
 
-		public override IEnumerable<IItemGridTreeItem> GetChildren()
+		public override IEnumerable<ItemGridTreeItem> GetChildren()
 		{
 			switch (contentItem.type)
 			{
@@ -296,7 +297,7 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		IEnumerable<IItemGridTreeItem> GetDiskChildren()
+		IEnumerable<ItemGridTreeItem> GetDiskChildren()
 		{
 			if (FullName == "")
 			{
@@ -341,7 +342,7 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		IEnumerable<IItemGridTreeItem> GetSevenZipChildren()
+		IEnumerable<ItemGridTreeItem> GetSevenZipChildren()
 		{
 			using (var stream = contentItem.GetStream())
 			using (var zip = new SevenZipExtractor(stream))

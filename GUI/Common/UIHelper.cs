@@ -25,7 +25,7 @@ namespace NeoEdit.GUI.Common
 		}
 
 		static Dictionary<string, DependencyProperty> dependencyProperty;
-		public static void Register()
+		static UIHelper()
 		{
 			dependencyProperty = new Dictionary<string, DependencyProperty>();
 			foreach (var prop in typeof(ControlType).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
@@ -40,6 +40,7 @@ namespace NeoEdit.GUI.Common
 				propertyHolder.property = dependencyProperty[prop.Name] = DependencyProperty.Register(prop.Name, prop.PropertyType, typeof(ControlType), new PropertyMetadata(def, (d, e) => propertyChangedCallback(d as ControlType, e), (d, val) => coerceValueCallback(d as ControlType, propertyHolder.property, val)));
 			}
 		}
+		public static void Register() { } // Only calls static constructor
 
 		static Dictionary<DependencyProperty, Action<ControlType, object, object>> propertyChangedCallbacks = new Dictionary<DependencyProperty, Action<ControlType, object, object>>();
 		static void propertyChangedCallback(ControlType d, DependencyPropertyChangedEventArgs e)
@@ -61,6 +62,11 @@ namespace NeoEdit.GUI.Common
 		public static DependencyProperty GetProperty<T>(Expression<Func<ControlType, T>> expression)
 		{
 			return dependencyProperty[((expression.Body as MemberExpression).Member as PropertyInfo).Name];
+		}
+
+		public static IEnumerable<DependencyProperty> GetProperties()
+		{
+			return dependencyProperty.Values;
 		}
 
 		public static void AddCallback<T>(T obj, DependencyProperty prop, Action callback) where T : DependencyObject

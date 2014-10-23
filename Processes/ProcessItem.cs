@@ -1,21 +1,23 @@
-﻿using NeoEdit.GUI.Common;
-using NeoEdit.GUI.ItemGridControl;
+﻿using System.Windows;
+using NeoEdit.GUI.Common;
 
 namespace NeoEdit.Processes
 {
-	public class ProcessItem : ItemGridItem<ProcessItem>
+	public class ProcessItem : DependencyObject
 	{
 		[DepProp]
-		public int PID { get { return GetValue<int>(); } set { SetValue(value); } }
+		public int PID { get { return UIHelper<ProcessItem>.GetPropValue<int>(this); } set { UIHelper<ProcessItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Name { get { return GetValue<string>(); } set { SetValue(value); } }
+		public string Name { get { return UIHelper<ProcessItem>.GetPropValue<string>(this); } set { UIHelper<ProcessItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Title { get { return GetValue<string>(); } set { SetValue(value); } }
+		public string Title { get { return UIHelper<ProcessItem>.GetPropValue<string>(this); } set { UIHelper<ProcessItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public long Size { get { return GetValue<long>(); } set { SetValue(value); } }
+		public long Size { get { return UIHelper<ProcessItem>.GetPropValue<long>(this); } set { UIHelper<ProcessItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public double CPU { get { return GetValue<double>(); } set { SetValue(value); } }
+		public double CPU { get { return UIHelper<ProcessItem>.GetPropValue<double>(this); } set { UIHelper<ProcessItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public int ParentPID { get { return GetValue<int>(); } set { SetValue(value); } }
+		public int ParentPID { get { return UIHelper<ProcessItem>.GetPropValue<int>(this); } set { UIHelper<ProcessItem>.SetPropValue(this, value); } }
+
+		static ProcessItem() { UIHelper<ProcessItem>.Register(); }
 	}
 }

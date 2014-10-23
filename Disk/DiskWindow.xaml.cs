@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -33,7 +34,7 @@ namespace NeoEdit.Disk
 			location.PreviewKeyDown += LocationKeyDown;
 
 			var keep = new List<string> { "Name", "Size", "WriteTime" };
-			foreach (var prop in DiskItem.StaticGetDepProps())
+			foreach (var prop in UIHelper<DiskItem>.GetProperties())
 			{
 				if (!keep.Contains(prop.Name))
 					continue;
@@ -92,10 +93,11 @@ namespace NeoEdit.Disk
 				files.Selected.Add(files.Focused);
 		}
 
-		void ShowColumn(string col)
+		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
 		{
-			if (!files.Columns.Any(column => column.Header == col))
-				files.Columns.Add(new ItemGridColumn(DiskItem.StaticGetDepProp(col)));
+			var prop = UIHelper<DiskItem>.GetProperty(expression);
+			if (!files.Columns.Any(column => column.DepProp == prop))
+				files.Columns.Add(new ItemGridColumn(prop));
 		}
 
 		internal void Command_File_Rename()
@@ -107,21 +109,21 @@ namespace NeoEdit.Disk
 		{
 			foreach (DiskItem selected in files.Selected)
 				selected.Identify();
-			ShowColumn("Identity");
+			ShowColumn(a => a.Identity);
 		}
 
 		internal void Command_File_MD5()
 		{
 			foreach (DiskItem selected in files.Selected)
 				selected.CalcMD5();
-			ShowColumn("MD5");
+			ShowColumn(a => a.MD5);
 		}
 
 		internal void Command_File_SHA1()
 		{
 			foreach (DiskItem selected in files.Selected)
 				selected.CalcSHA1();
-			ShowColumn("SHA1");
+			ShowColumn(a => a.SHA1);
 		}
 
 		internal void Command_File_Delete()
