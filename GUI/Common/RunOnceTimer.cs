@@ -10,6 +10,7 @@ namespace NeoEdit.GUI.Common
 	{
 		readonly Action action;
 		readonly HashSet<RunOnceTimer> dependencies = new HashSet<RunOnceTimer>();
+		readonly HashSet<RunOnceTimer> children = new HashSet<RunOnceTimer>();
 		DispatcherTimer timer = null;
 		public RunOnceTimer(Action action)
 		{
@@ -22,7 +23,10 @@ namespace NeoEdit.GUI.Common
 				if (timer == this)
 					throw new ArgumentException("Cannot add self as dependency.");
 				else
+				{
+					timer.children.Add(this);
 					dependencies.Add(timer);
+				}
 		}
 
 		public bool Started()
@@ -30,8 +34,12 @@ namespace NeoEdit.GUI.Common
 			return timer != null;
 		}
 
-		public void Start()
+		public void Start(bool startChildren = false)
 		{
+			if (startChildren)
+				foreach (var child in children)
+					child.Start(startChildren);
+
 			if (Started())
 				return;
 

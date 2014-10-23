@@ -98,7 +98,6 @@ namespace NeoEdit.GUI.ItemGridControl
 			Focused = Items.FirstOrDefault(item => (item as ItemGridTreeItem).FullName == oldLocation);
 			if (Focused == null)
 				return;
-			ShowFocus();
 			Selected.Add(Focused);
 		}
 

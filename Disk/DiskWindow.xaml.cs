@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using NeoEdit.Disk.Dialogs;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
@@ -19,6 +19,8 @@ namespace NeoEdit.Disk
 	{
 		[DepProp]
 		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
+		ObservableCollection<DiskItem> Files { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 
 		Stack<DiskItem> lastLocation = new Stack<DiskItem>();
 		Stack<DiskItem> nextLocation = new Stack<DiskItem>();
@@ -40,14 +42,9 @@ namespace NeoEdit.Disk
 			location.PreviewKeyDown += LocationKeyDown;
 			files.Accept += (s, e) => OnAccept();
 
-			var keep = new List<string> { "Name", "Size", "WriteTime" };
-			foreach (var prop in UIHelper<DiskItem>.GetProperties())
-			{
-				if (!keep.Contains(prop.Name))
-					continue;
-				files.Columns.Add(new ItemGridColumn(prop));
-			}
-			files.SortColumn = files.TextInputColumn = files.Columns.First(col => col.Header == "Name");
+			ShowColumn(a => a.Name);
+			ShowColumn(a => a.Size);
+			ShowColumn(a => a.WriteTime);
 			SetLocation(path ?? "");
 
 			Loaded += (s, e) => files.Focus();
@@ -74,6 +71,7 @@ namespace NeoEdit.Disk
 				return;
 			}
 
+			files.ResetScroll();
 			Command_View_Refresh();
 		}
 
@@ -119,8 +117,10 @@ namespace NeoEdit.Disk
 		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
 		{
 			var prop = UIHelper<DiskItem>.GetProperty(expression);
+			var type = prop.PropertyType;
+			var sortAscending = (type != typeof(long?)) && (type != typeof(DateTime?));
 			if (!files.Columns.Any(column => column.DepProp == prop))
-				files.Columns.Add(new ItemGridColumn(prop));
+				files.Columns.Add(new ItemGridColumn(prop) { SortAscending = sortAscending });
 		}
 
 		internal void Command_File_Rename()
@@ -232,7 +232,8 @@ namespace NeoEdit.Disk
 
 		internal void Command_View_Refresh()
 		{
-			files.SyncItems(Location.GetChildren(), UIHelper<DiskItem>.GetProperty(a => a.FullName));
+			var newFiles = new ObservableCollection<DiskItem>(Location.GetChildren());
+			files.SyncItems(newFiles, UIHelper<DiskItem>.GetProperty(a => a.FullName));
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

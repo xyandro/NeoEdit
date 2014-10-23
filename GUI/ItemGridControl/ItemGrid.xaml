@@ -38,8 +38,8 @@
 		<RowDefinition/>
 	</Grid.RowDefinitions>
 
-	<ScrollViewer Name="scroller" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Focusable="False">
+	<ScrollViewer Name="xScroll" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Focusable="False">
 		<Grid Name="contents"/>
 	</ScrollViewer>
-	<ScrollBar Name="scroll" Grid.Column="1" Focusable="False" Minimum="0" Maximum="2147483647" SmallChange="1" LargeChange="1"/>
+	<ScrollBar Name="yScroll" Grid.Column="1" Focusable="False" Minimum="0" Maximum="2147483647" SmallChange="1" LargeChange="1"/>
 </Grid>

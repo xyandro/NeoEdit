@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -21,29 +19,42 @@ namespace NeoEdit.GUI.ItemGridControl
 		RoutedEventHandler accept = (s, e) => { };
 		public event RoutedEventHandler Accept { add { accept += value; } remove { accept -= value; } }
 
-		public static DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IEnumerable<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnItemsCollectionChanged(e.OldValue)));
-		public static DependencyProperty SortedItemsProperty = DependencyProperty.Register("SortedItems", typeof(ListCollectionView), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortedItemsCollectionChanged(e.OldValue)));
-		public static DependencyProperty ColumnsProperty = DependencyProperty.Register("Columns", typeof(ObservableHashSet<ItemGridColumn>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnColumnsCollectionChanged(e.OldValue)));
-		public static DependencyProperty SortColumnProperty = DependencyProperty.Register("SortColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortColumnChanged()));
-		public static DependencyProperty SortAscendingProperty = DependencyProperty.Register("SortAscending", typeof(bool), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSortAscendingChanged()));
-		public static DependencyProperty FocusedProperty = DependencyProperty.Register("Focused", typeof(DependencyObject), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusedChanged()));
-		public static DependencyProperty FocusColumnsProperty = DependencyProperty.Register("FocusColumns", typeof(bool), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusColumnsChanged()));
-		public static DependencyProperty FocusedColumnProperty = DependencyProperty.Register("FocusedColumn", typeof(ItemGridColumn), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnFocusedColumnChanged()));
-		public static DependencyProperty SelectedProperty = DependencyProperty.Register("Selected", typeof(ObservableCollection<DependencyObject>), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGrid).OnSelectedCollectionChanged(e.OldValue)));
-		public static DependencyProperty TextInputColumnProperty = DependencyProperty.Register("TextInputColumn", typeof(ItemGridColumn), typeof(ItemGrid));
-		public static DependencyProperty TextInputDelayProperty = DependencyProperty.Register("TextInputDelay", typeof(int), typeof(ItemGrid), new PropertyMetadata(500));
+		[DepProp]
+		public IEnumerable<DependencyObject> Items { get { return UIHelper<ItemGrid>.GetPropValue<IEnumerable<DependencyObject>>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public ListCollectionView SortedItems { get { return UIHelper<ItemGrid>.GetPropValue<ListCollectionView>(this); } internal set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<ItemGrid>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } private set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public ItemGridColumn SortColumn { get { return UIHelper<ItemGrid>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool SortAscending { get { return UIHelper<ItemGrid>.GetPropValue<bool>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public DependencyObject Focused { get { return UIHelper<ItemGrid>.GetPropValue<DependencyObject>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool FocusColumns { get { return UIHelper<ItemGrid>.GetPropValue<bool>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public ItemGridColumn FocusedColumn { get { return UIHelper<ItemGrid>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public ObservableCollection<DependencyObject> Selected { get { return UIHelper<ItemGrid>.GetPropValue<ObservableCollection<DependencyObject>>(this); } private set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp]
+		public ItemGridColumn TextInputColumn { get { return UIHelper<ItemGrid>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		[DepProp(Default = 500)]
+		public int TextInputDelay { get { return UIHelper<ItemGrid>.GetPropValue<int>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
 
-		public IEnumerable<DependencyObject> Items { get { return (IEnumerable<DependencyObject>)GetValue(ItemsProperty) ?? new List<DependencyObject>(); } set { SetValue(ItemsProperty, value); } }
-		public ListCollectionView SortedItems { get { return (ListCollectionView)GetValue(SortedItemsProperty); } set { SetValue(SortedItemsProperty, value); } }
-		public ObservableHashSet<ItemGridColumn> Columns { get { return (ObservableHashSet<ItemGridColumn>)GetValue(ColumnsProperty); } set { SetValue(ColumnsProperty, value); } }
-		public ItemGridColumn SortColumn { get { return (ItemGridColumn)GetValue(SortColumnProperty); } set { SetValue(SortColumnProperty, value); } }
-		public bool SortAscending { get { return (bool)GetValue(SortAscendingProperty); } set { SetValue(SortAscendingProperty, value); } }
-		public DependencyObject Focused { get { return (DependencyObject)GetValue(FocusedProperty); } set { SetValue(FocusedProperty, value); } }
-		public bool FocusColumns { get { return (bool)GetValue(FocusColumnsProperty); } set { SetValue(FocusColumnsProperty, value); } }
-		public ItemGridColumn FocusedColumn { get { return (ItemGridColumn)GetValue(FocusedColumnProperty); } set { SetValue(FocusedColumnProperty, value); } }
-		public ObservableCollection<DependencyObject> Selected { get { return (ObservableCollection<DependencyObject>)GetValue(SelectedProperty); } set { SetValue(SelectedProperty, value); } }
-		public ItemGridColumn TextInputColumn { get { return (ItemGridColumn)GetValue(TextInputColumnProperty); } set { SetValue(TextInputColumnProperty, value); } }
-		public int TextInputDelay { get { return (int)GetValue(TextInputDelayProperty); } set { SetValue(TextInputDelayProperty, value); } }
+		static ItemGrid()
+		{
+			UIHelper<ItemGrid>.Register();
+			UIHelper<ItemGrid>.AddObservableCallback(a => a.Items, (obj, s, e) => { obj.verifyTimer.Start(true); obj.lastTextInputTime = null; });
+			UIHelper<ItemGrid>.AddObservableCallback(a => a.SortedItems, (obj, s, e) => obj.sortTimer.Start(true));
+			UIHelper<ItemGrid>.AddObservableCallback(a => a.Columns, (obj, s, e) => obj.verifyTimer.Start(true));
+			UIHelper<ItemGrid>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.verifyTimer.Start(true));
+			UIHelper<ItemGrid>.AddCallback(a => a.SortColumn, (obj, s, e) => { obj.SortAscending = obj.SortColumn.SortAscending; obj.verifyTimer.Start(true); });
+			UIHelper<ItemGrid>.AddCallback(a => a.SortAscending, (obj, s, e) => obj.sortTimer.Start(true));
+			UIHelper<ItemGrid>.AddCallback(a => a.Focused, (obj, s, e) => { obj.verifyTimer.Start(true); obj.showFocus = true; });
+			UIHelper<ItemGrid>.AddCallback(a => a.FocusColumns, (obj, s, e) => obj.drawTimer.Start(true));
+			UIHelper<ItemGrid>.AddCallback(a => a.FocusedColumn, (obj, s, e) => obj.verifyTimer.Start(true));
+		}
 
 		public int? FocusedIndex
 		{
@@ -68,159 +79,58 @@ namespace NeoEdit.GUI.ItemGridControl
 			lastFocusedIndex = idx;
 		}
 
-		public ItemGridColumn this[string column] { get { return Columns.FirstOrDefault(col => col.Header == column); } }
 		const double headerHeight = 21.96;
 		const double rowHeight = 19.96;
 
-		RunOnceTimer drawTimer, sortTimer;
+		RunOnceTimer sortTimer, verifyTimer, drawTimer;
 
 		public ItemGrid()
 		{
 			InitializeComponent();
 
-			drawTimer = new RunOnceTimer(() => Redraw());
+			verifyTimer = new RunOnceTimer(() => VerifyParameters());
 			sortTimer = new RunOnceTimer(() => Sort());
-			drawTimer.AddDependency(sortTimer);
+			drawTimer = new RunOnceTimer(() => Redraw());
+			sortTimer.AddDependency(verifyTimer);
+			drawTimer.AddDependency(sortTimer, verifyTimer);
 
-			Columns = new ObservableHashSet<ItemGridColumn>();
+			Items = new ObservableCollection<DependencyObject>();
+			Columns = new ObservableCollection<ItemGridColumn>();
 			Selected = new ObservableCollection<DependencyObject>();
 
-			DependencyPropertyDescriptor.FromProperty(ScrollViewer.ViewportHeightProperty, typeof(ScrollViewer)).AddValueChanged(scroller, (o, e) => drawTimer.Start());
-			scroll.ValueChanged += (s, e) => drawTimer.Start();
-			PreviewMouseWheel += (s, e) => scroll.Value -= e.Delta / 10;
+			yScroll.SizeChanged += (s, e) => drawTimer.Start();
+			yScroll.ValueChanged += (s, e) => drawTimer.Start();
+			PreviewMouseWheel += (s, e) => yScroll.Value -= e.Delta / 10;
 		}
 
-		void OnItemsCollectionChanged(object _oldValue)
+		void VerifyParameters()
 		{
-			var oldValue = _oldValue as INotifyCollectionChanged;
-			if (oldValue != null)
-				oldValue.CollectionChanged -= OnItemsChanged;
-
-			var newValue = Items as INotifyCollectionChanged;
-			if (newValue != null)
-				newValue.CollectionChanged += OnItemsChanged;
-
-			OnItemsChanged(null, null);
-		}
-
-		void OnSortedItemsCollectionChanged(object _oldValue)
-		{
-			var oldValue = _oldValue as INotifyCollectionChanged;
-			if (oldValue != null)
-				oldValue.CollectionChanged -= OnSortedItemsChanged;
-
-			var newValue = SortedItems as INotifyCollectionChanged;
-			if (newValue != null)
-				newValue.CollectionChanged += OnSortedItemsChanged;
-
-			OnSortedItemsChanged(null, null);
-		}
-
-		void OnColumnsCollectionChanged(object _oldValue)
-		{
-			var oldValue = _oldValue as INotifyCollectionChanged;
-			if (oldValue != null)
-				oldValue.CollectionChanged -= OnColumnsChanged;
-
-			var newValue = Columns as INotifyCollectionChanged;
-			if (newValue != null)
-				newValue.CollectionChanged += OnColumnsChanged;
-
-			OnColumnsChanged(null, null);
-		}
-
-		void OnSelectedCollectionChanged(object _oldValue)
-		{
-			var oldValue = _oldValue as INotifyCollectionChanged;
-			if (oldValue != null)
-				oldValue.CollectionChanged -= OnSelectedChanged;
-
-			var newValue = Selected as INotifyCollectionChanged;
-			if (newValue != null)
-				newValue.CollectionChanged += OnSelectedChanged;
-
-			OnSelectedChanged(null, null);
-		}
-
-		void OnItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			sortTimer.Start();
-		}
-
-		void OnSortedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			OnFocusedChanged(false);
-			OnSelectedChanged(null, null);
-			drawTimer.Start();
-			lastTextInputTime = null;
-		}
-
-		void OnColumnsChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			OnSortColumnChanged();
-			OnFocusedColumnChanged();
-			drawTimer.Start();
-		}
-
-		void OnSelectedChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			Selected.Where(item => !SortedItems.Contains(item)).ToList().ForEach(item => Selected.Remove(item));
-			drawTimer.Start();
-		}
-
-		void OnSortColumnChanged()
-		{
-			if (Columns.Count == 0)
-				return;
-
-			if (!Columns.Contains(SortColumn))
+			if (Columns != null)
 			{
-				SortColumn = Columns.First();
-				return; // Recursive
+				if (Columns.Count == 0)
+					SortColumn = FocusedColumn = null;
+				else
+				{
+					if ((SortColumn == null) || (!Columns.Contains(SortColumn)))
+						SortColumn = Columns.First();
+
+					if ((FocusedColumn == null) || (!Columns.Contains(FocusedColumn)))
+						FocusedColumn = Columns.First();
+				}
 			}
 
-			SortAscending = SortColumn.SortAscending;
-			OnSortAscendingChanged();
-		}
-
-		void OnSortAscendingChanged()
-		{
-			sortTimer.Start();
-		}
-
-		void OnFocusedChanged(bool show = true)
-		{
-			if ((Focused != null) && (!SortedItems.Contains(Focused)))
+			if (Items != null)
 			{
-				Focused = null;
-				return; // Recursive
+				if (Selected != null)
+				{
+					Selected.Where(item => !Items.Contains(item)).ToList().ForEach(item => Selected.Remove(item));
+					Selected.GroupBy(item => item).SelectMany(group => group.Skip(1).Select(a => group.Key)).ToList().ForEach(item => Selected.Remove(item));
+				}
+
+				if (!Items.Contains(Focused))
+					Focused = null;
 			}
-
-			SetLastFocusedIndex();
-			if (show)
-			{
-				ShowFocus();
-				drawTimer.Start();
-			}
-		}
-
-		void OnFocusColumnsChanged()
-		{
-			drawTimer.Start();
-		}
-
-		void OnFocusedColumnChanged()
-		{
-			if (Columns.Count == 0)
-				return;
-
-			if (!Columns.Contains(FocusedColumn))
-			{
-				FocusedColumn = Columns.First();
-				return; // Recursive
-			}
-
-			drawTimer.Start();
+			verifyTimer.Stop();
 		}
 
 		class Comparer : IComparer
@@ -267,42 +177,40 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void Sort()
 		{
-			if ((Columns.Contains(SortColumn)) && (SortedItems != null))
-			{
-				SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, (SortedItems.Count <= 500) && (SortColumn.NumericStrings));
-				SetLastFocusedIndex();
-				drawTimer.Start();
-			}
-		}
+			if ((Columns == null) || (SortedItems == null) || (!Columns.Contains(SortColumn)))
+				return;
 
-		bool showFocus = false;
-		public void ShowFocus()
-		{
-			showFocus = true;
+			SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, (SortedItems.Count <= 500) && (SortColumn.NumericStrings));
+			sortTimer.Stop();
+			SetLastFocusedIndex();
 			drawTimer.Start();
 		}
 
 		public void ResetScroll()
 		{
-			scroll.Value = 0;
+			yScroll.Value = 0;
 			lastFocusedIndex = 0;
 		}
 
 		public void SyncItems(IEnumerable<DependencyObject> items, DependencyProperty prop)
 		{
-			var scrollPos = scroll.Value;
-			IComparable focused = null;
-			if (Focused != null)
-				focused = Focused.GetValue(prop) as IComparable;
+			var scrollPos = yScroll.Value;
+			var focused = Focused == null ? null : Focused.GetValue(prop) as IComparable;
 			var selected = Selected.Select(item => item.GetValue(prop) as IComparable).ToList();
 
-			Items = new ObservableCollection<DependencyObject>(items);
-			var itemsByKey = Items.ToDictionary(item => item.GetValue(prop), item => item);
-			if ((focused != null) && (itemsByKey.ContainsKey(focused)))
-				Focused = itemsByKey[focused];
-			Selected = new ObservableCollection<DependencyObject>(itemsByKey.Where(item => selected.Contains(item.Key)).Select(item => item.Value));
+			Items = items;
 
-			scroll.Value = scrollPos;
+			Selected.Clear();
+			foreach (var item in Items)
+			{
+				var itemValue = item.GetValue(prop) as IComparable;
+				if (focused == itemValue)
+					Focused = item;
+				if (selected.Contains(itemValue))
+					Selected.Add(item);
+			}
+
+			yScroll.Value = scrollPos;
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
@@ -348,19 +256,17 @@ namespace NeoEdit.GUI.ItemGridControl
 					lastShiftSel = new WeakReference<DependencyObject>(Focused);
 				}
 			}
-
-			ShowFocus();
 		}
 
 		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
 		{
-			Focus();
 			base.OnMouseLeftButtonDown(e);
+			Focus();
 			if (e.ClickCount == 2)
 				accept(this, new RoutedEventArgs());
 			else
 			{
-				MoveFocus((int)((e.GetPosition(contents).Y - headerHeight) / rowHeight + scroll.Value), false, true);
+				MoveFocus((int)((e.GetPosition(contents).Y - headerHeight) / rowHeight + yScroll.Value), false, true);
 				e.Handled = true;
 			}
 		}
@@ -395,16 +301,16 @@ namespace NeoEdit.GUI.ItemGridControl
 				case Key.Home: MoveFocus(0, false); break;
 				case Key.End: MoveFocus(SortedItems.Count - 1, false); break;
 				case Key.PageUp:
-					if (scroll.Value == FocusedIndex)
-						MoveFocus((int)-scroll.LargeChange, true);
+					if (yScroll.Value == FocusedIndex)
+						MoveFocus((int)-yScroll.LargeChange, true);
 					else
-						MoveFocus((int)scroll.Value, false);
+						MoveFocus((int)yScroll.Value, false);
 					break;
 				case Key.PageDown:
-					if (scroll.Value + scroll.LargeChange == FocusedIndex)
-						MoveFocus((int)scroll.LargeChange, true);
+					if (yScroll.Value + yScroll.LargeChange == FocusedIndex)
+						MoveFocus((int)yScroll.LargeChange, true);
 					else
-						MoveFocus((int)(scroll.Value + scroll.LargeChange), false);
+						MoveFocus((int)(yScroll.Value + yScroll.LargeChange), false);
 					break;
 				case Key.Space: MoveFocus(0, true, true); break;
 				default: e.Handled = false; break;
@@ -425,10 +331,9 @@ namespace NeoEdit.GUI.ItemGridControl
 				TextInputColumn = Columns.First();
 
 			var now = DateTime.UtcNow;
-			if ((lastTextInputTime.HasValue) && ((now - lastTextInputTime.Value).TotalMilliseconds <= TextInputDelay))
-				lastTextInput += e.Text;
-			else
-				lastTextInput = e.Text;
+			if ((!lastTextInputTime.HasValue) || ((now - lastTextInputTime.Value).TotalMilliseconds > TextInputDelay))
+				lastTextInput = "";
+			lastTextInput += e.Text;
 			lastTextInputTime = now;
 
 			var start = FocusedIndex ?? 0;
@@ -441,28 +346,29 @@ namespace NeoEdit.GUI.ItemGridControl
 					break;
 				}
 				++index;
-				if (index >= Items.Count())
+				if (index >= SortedItems.Count)
 					index = 0;
 				if (index == start)
 					break;
 			}
 		}
 
+		bool showFocus = false;
 		void Redraw()
 		{
 			if (SortedItems == null)
 				return;
 
-			scroll.ViewportSize = Math.Max(0, Math.Ceiling((scroller.ViewportHeight - headerHeight) / rowHeight));
-			scroll.LargeChange = Math.Max(0, Math.Floor((scroller.ViewportHeight - headerHeight) / rowHeight) - 1);
-			scroll.Minimum = 0;
-			scroll.Maximum = SortedItems.Count - scroll.ViewportSize + 1;
+			yScroll.ViewportSize = Math.Max(0, Math.Ceiling((xScroll.ViewportHeight - headerHeight) / rowHeight));
+			yScroll.LargeChange = Math.Max(0, Math.Floor((xScroll.ViewportHeight - headerHeight) / rowHeight) - 1);
+			yScroll.Minimum = 0;
+			yScroll.Maximum = SortedItems.Count - yScroll.ViewportSize + 1;
 
 			if (showFocus)
 			{
 				var index = FocusedIndex;
 				if (index.HasValue)
-					scroll.Value = Math.Max(Math.Min(index.Value, scroll.Value), index.Value - scroll.LargeChange);
+					yScroll.Value = Math.Max(Math.Min(index.Value, yScroll.Value), index.Value - yScroll.LargeChange);
 				showFocus = false;
 			}
 
@@ -473,7 +379,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			contents.ColumnDefinitions.Clear();
 			contents.RowDefinitions.Clear();
 
-			if ((scroller.ViewportHeight <= 0) || (Columns == null) || (Columns.Count == 0))
+			if ((xScroll.ViewportHeight <= 0) || (Columns == null) || (Columns.Count == 0))
 				return;
 
 			contents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -496,8 +402,8 @@ namespace NeoEdit.GUI.ItemGridControl
 				contents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 			}
 
-			var start = (int)(scroll.Value);
-			var rows = Math.Min((int)scroll.ViewportSize, SortedItems.Count - start);
+			var start = (int)(yScroll.Value);
+			var rows = Math.Min((int)yScroll.ViewportSize, SortedItems.Count - start);
 			for (var ctr = 0; ctr < rows; ++ctr)
 			{
 				var item = SortedItems.GetItemAt(start + ctr);

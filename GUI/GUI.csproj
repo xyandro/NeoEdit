@@ -112,7 +112,6 @@
       <DependentUpon>ItemGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="ItemGridControl\ItemGridColumn.cs" />
-    <Compile Include="ItemGridControl\ObservableHashSet.cs" />
     <Compile Include="ItemGridControl\StringFormatConverter.cs" />
     <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

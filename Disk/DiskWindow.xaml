@@ -20,7 +20,7 @@
 			<TextBox Name="location" Text="{Binding Location, ElementName=self, Mode=OneWay}" HorizontalAlignment="Stretch" KeyDown="location_KeyDown"/>
 		</DockPanel>
 
-		<ig:ItemGrid x:Name="files" Grid.Row="1"/>
+		<ig:ItemGrid x:Name="files" Grid.Row="1" Items="{Binding Files, ElementName=self}"/>
 	</Grid>
 
 </UserControl>

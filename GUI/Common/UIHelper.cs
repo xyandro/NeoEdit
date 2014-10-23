@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq.Expressions;
@@ -96,19 +96,19 @@ namespace NeoEdit.GUI.Common
 		}
 
 		static ConditionalWeakTable<Action<ControlType, object, NotifyCollectionChangedEventArgs>, ConditionalWeakTable<ControlType, NotifyCollectionChangedEventHandler>> observableCallbacks = new ConditionalWeakTable<Action<ControlType, object, NotifyCollectionChangedEventArgs>, ConditionalWeakTable<ControlType, NotifyCollectionChangedEventHandler>>();
-		public static void AddObservableCallback<T>(Expression<Func<ControlType, ObservableCollection<T>>> expression, Action<ControlType, object, NotifyCollectionChangedEventArgs> action)
+		public static void AddObservableCallback(Expression<Func<ControlType, IEnumerable>> expression, Action<ControlType, object, NotifyCollectionChangedEventArgs> action)
 		{
 			AddCallback(expression, (obj, o, n) =>
 			{
 				var subTable = observableCallbacks.GetOrCreateValue(action);
 				NotifyCollectionChangedEventHandler handler;
 
-				var value = o as ObservableCollection<T>;
+				var value = o as INotifyCollectionChanged;
 				if ((value != null) && (subTable.TryGetValue(obj, out handler)))
 					value.CollectionChanged -= handler;
 				subTable.Remove(obj);
 
-				value = n as ObservableCollection<T>;
+				value = n as INotifyCollectionChanged;
 				if (value != null)
 				{
 					handler = (s, e) => action(obj, s, e);
