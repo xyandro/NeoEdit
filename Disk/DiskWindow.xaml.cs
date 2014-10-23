@@ -18,9 +18,16 @@ namespace NeoEdit.Disk
 	partial class DiskWindow
 	{
 		[DepProp]
-		string Location { get { return UIHelper<DiskWindow>.GetPropValue<string>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 
-		static DiskWindow() { UIHelper<DiskWindow>.Register(); }
+		Stack<DiskItem> lastLocation = new Stack<DiskItem>();
+		Stack<DiskItem> nextLocation = new Stack<DiskItem>();
+
+		static DiskWindow()
+		{
+			UIHelper<DiskWindow>.Register();
+			UIHelper<DiskWindow>.AddCallback(a => a.Location, (s, o, n) => s.LocationChanged(o));
+		}
 
 		public DiskWindow(string path = null)
 		{
@@ -28,10 +35,10 @@ namespace NeoEdit.Disk
 				path = Directory.GetCurrentDirectory();
 
 			InitializeComponent();
-			UIHelper<DiskWindow>.AddCallback(files, ItemGridTree.LocationProperty, () => Location = files.Location.FullName);
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => UIHelper<DiskWindow>.InvalidateBinding(location, TextBox.TextProperty);
 			location.PreviewKeyDown += LocationKeyDown;
+			files.Accept += (s, e) => OnAccept();
 
 			var keep = new List<string> { "Name", "Size", "WriteTime" };
 			foreach (var prop in UIHelper<DiskItem>.GetProperties())
@@ -50,6 +57,26 @@ namespace NeoEdit.Disk
 		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt; } }
 		bool noModifiers { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.None; } }
 
+		bool changingLocation = false;
+		void LocationChanged(DiskItem last)
+		{
+			if ((!changingLocation) && (last != null))
+			{
+				lastLocation.Push(last);
+				nextLocation.Clear();
+			}
+
+			if (!Location.HasChildren)
+			{
+				changingLocation = true;
+				Location = Location.Parent;
+				changingLocation = false;
+				return;
+			}
+
+			Command_View_Refresh();
+		}
+
 		void LocationKeyDown(object sender, KeyEventArgs e)
 		{
 			if ((e.Key == Key.V) && (controlDown))
@@ -57,40 +84,36 @@ namespace NeoEdit.Disk
 				var files = ClipboardWindow.GetFiles();
 				if (files != null)
 				{
-					Location = files.First();
-					location.CaretIndex = Location.Length;
+					location.Text = files.First();
+					location.CaretIndex = location.Text.Length;
 					e.Handled = true;
 				}
 			}
 		}
 
-		bool SetLocation(string location)
+		void SetLocation(string location)
 		{
-			var item = DiskItem.GetRoot().GetChild(DiskItem.Simplify(location));
+			var item = DiskItem.Get(location);
 			if (item == null)
-			{
-				MessageBox.Show("Invalid path.", "Error");
-				return false;
-			}
+				throw new Exception("Invalid path.");
 
-			files.Location = item;
-			return true;
+			Location = item;
 		}
 
 		void DoRename(DiskItem item)
 		{
-			if (!item.IsDiskItem)
-				throw new ArgumentException("Can only rename disk files.");
+			//if (!item.IsDiskItem)
+			//	throw new ArgumentException("Can only rename disk files.");
 
-			var newName = Rename.Run(item);
-			if (newName == null)
-				return;
+			//var newName = Rename.Run(item);
+			//if (newName == null)
+			//	return;
 
-			(files.Location as DiskItem).MoveFrom(item, newName);
-			Command_View_Refresh();
-			files.Focused = files.Items.Cast<DiskItem>().Where(file => file.FullName == newName).FirstOrDefault();
-			if (files.Focused != null)
-				files.Selected.Add(files.Focused);
+			//(files.Location as DiskItem).MoveFrom(item, newName);
+			//Command_View_Refresh();
+			//files.Focused = files.Items.Cast<DiskItem>().Where(file => file.FullName == newName).FirstOrDefault();
+			//if (files.Focused != null)
+			//	files.Selected.Add(files.Focused);
 		}
 
 		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
@@ -160,56 +183,56 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Paste()
 		{
-			var location = files.Location as DiskItem;
-			if (!location.IsDiskItem)
-				throw new ArgumentException("Can only pastae to disk.");
+			//var location = files.Location as DiskItem;
+			//if (!location.IsDiskItem)
+			//	throw new ArgumentException("Can only paste to disk.");
 
-			List<string> fileList;
-			bool isCut;
-			if (!ClipboardWindow.GetFiles(out fileList, out isCut))
-				return;
+			//List<string> fileList;
+			//bool isCut;
+			//if (!ClipboardWindow.GetFiles(out fileList, out isCut))
+			//	return;
 
-			var items = fileList.Select(file => DiskItem.GetRoot().GetChild(file)).Cast<DiskItem>().ToList();
+			//var items = fileList.Select(file => DiskItem.GetRoot().GetChild(file)).Cast<DiskItem>().ToList();
 
-			var locationFiles = files.Items.Cast<DiskItem>().Select(record => record.Name).ToList();
-			var paths = items.Select(item => item.Path).GroupBy(path => path).Select(path => path.Key).ToList();
-			var canRename = (paths.Count == 1) && (paths[0] == location.FullName);
-			if ((isCut) || (!canRename))
-			{
-				var names = items.Select(record => record.Name).ToList();
-				var exists = locationFiles.Any(name => names.Contains(name));
-				if (exists)
-					throw new Exception("Destination already exists.");
-			}
+			//var locationFiles = files.Items.Cast<DiskItem>().Select(record => record.Name).ToList();
+			//var paths = items.Select(item => item.Path).GroupBy(path => path).Select(path => path.Key).ToList();
+			//var canRename = (paths.Count == 1) && (paths[0] == location.FullName);
+			//if ((isCut) || (!canRename))
+			//{
+			//	var names = items.Select(record => record.Name).ToList();
+			//	var exists = locationFiles.Any(name => names.Contains(name));
+			//	if (exists)
+			//		throw new Exception("Destination already exists.");
+			//}
 
-			foreach (var item in items)
-			{
-				if (isCut)
-				{
-					location.MoveFrom(item);
-					continue;
-				}
+			//foreach (var item in items)
+			//{
+			//	if (isCut)
+			//	{
+			//		location.MoveFrom(item);
+			//		continue;
+			//	}
 
-				var name = item.NameWoExtension;
-				string newName;
-				for (var num = 1; ; ++num)
-				{
-					var extra = num == 1 ? "" : String.Format(" ({0})", num);
-					newName = name + extra + item.Extension;
-					if (locationFiles.Contains(newName))
-						continue;
-					break;
-				}
+			//	var name = item.NameWoExtension;
+			//	string newName;
+			//	for (var num = 1; ; ++num)
+			//	{
+			//		var extra = num == 1 ? "" : String.Format(" ({0})", num);
+			//		newName = name + extra + item.Extension;
+			//		if (locationFiles.Contains(newName))
+			//			continue;
+			//		break;
+			//	}
 
-				location.CopyFrom(item, newName);
-			}
+			//	location.CopyFrom(item, newName);
+			//}
 
-			Command_View_Refresh();
+			//Command_View_Refresh();
 		}
 
 		internal void Command_View_Refresh()
 		{
-			files.Refresh();
+			files.SyncItems(Location.GetChildren(), UIHelper<DiskItem>.GetProperty(a => a.FullName));
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -217,12 +240,49 @@ namespace NeoEdit.Disk
 			base.OnKeyDown(e);
 
 			var keySet = new KeySet
-					{
-						{ Key.Escape, () => files.Focus() },
-					};
+			{
+				{ Key.Escape, () => files.Focus() },
+				{ ModifierKeys.Alt, Key.Up, () => Location = Location.Parent },
+				{ ModifierKeys.Alt, Key.Left, () => SetLastLocation() },
+				{ ModifierKeys.Alt, Key.Right, () => SetNextLocation() },
+			};
 
 			if (keySet.Run(e))
 				e.Handled = true;
+		}
+
+		void OnAccept()
+		{
+			if (files.Selected.Count != 1)
+				return;
+
+			var location = files.Selected.Single() as DiskItem;
+			if (!location.HasChildren)
+				return;
+
+			Location = location;
+		}
+
+		void SetLastLocation()
+		{
+			if (!lastLocation.Any())
+				return;
+
+			changingLocation = true;
+			nextLocation.Push(Location);
+			Location = lastLocation.Pop();
+			changingLocation = false;
+		}
+
+		void SetNextLocation()
+		{
+			if (!nextLocation.Any())
+				return;
+
+			changingLocation = true;
+			lastLocation.Push(Location);
+			Location = nextLocation.Pop();
+			changingLocation = false;
 		}
 
 		void location_KeyDown(object sender, KeyEventArgs e)
@@ -231,8 +291,8 @@ namespace NeoEdit.Disk
 			switch (e.Key)
 			{
 				case Key.Enter:
-					if (SetLocation(location.Text))
-						files.Focus();
+					SetLocation(location.Text);
+					files.Focus();
 					break;
 				default: e.Handled = false; break;
 			}

@@ -5,27 +5,19 @@ namespace NeoEdit.Disk
 {
 	public class FilePath : IDisposable
 	{
-		public string Path { get; private set; }
-		bool isTmp = false;
-		Stream stream;
+		public readonly string Path;
+		public readonly Stream Stream;
 
-		public FilePath(string path)
+		public FilePath(string path, Stream stream = null)
 		{
 			Path = path;
-		}
-
-		public FilePath(Stream input)
-		{
-			Path = System.IO.Path.GetTempPath() + "NeoEdit-" + Guid.NewGuid().ToString() + ".tmp";
-			isTmp = true;
-			using (stream = File.OpenWrite(Path))
-				input.CopyTo(stream);
+			Stream = stream;
 		}
 
 		public void Dispose()
 		{
-			if (isTmp)
-				File.Delete(Path);
+			if (Stream != null)
+				Stream.Dispose();
 		}
 
 		public override string ToString() { return Path; }

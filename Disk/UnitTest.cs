@@ -13,7 +13,7 @@ namespace NeoEdit.Disk.UnitTest
 		List<DiskItem> GetAllChildren(DiskItem item)
 		{
 			var result = new List<DiskItem>();
-			if (item.CanGetChildren())
+			if (item.HasChildren)
 			{
 				foreach (DiskItem child in item.GetChildren())
 				{
@@ -29,7 +29,7 @@ namespace NeoEdit.Disk.UnitTest
 		{
 			var testLocation = Path.GetFullPath(Path.Combine(typeof(UnitTest).Assembly.Location, "..", "..", "..", "Disk", "Test"));
 			var location = Path.Combine(testLocation, "Test.7z");
-			var item = DiskItem.GetRoot().GetChild(location) as DiskItem;
+			var item = DiskItem.Get(location);
 			var children = GetAllChildren(item).OrderBy(child => child.FullName).ToList();
 			var childrenDict = children.ToDictionary(file => file.FullName.Substring(location.Length + 1), file => file);
 

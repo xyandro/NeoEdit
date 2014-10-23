@@ -4,15 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Text.RegularExpressions;
+using System.Windows;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.ItemGridControl;
 using SevenZip;
 
 namespace NeoEdit.Disk
 {
-	public class DiskItem : ItemGridTreeItem
+	public class DiskItem : DependencyObject
 	{
+		[DepProp]
+		public string FullName { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Path { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
@@ -38,7 +40,7 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public long? CompressedSize { get { return UIHelper<DiskItem>.GetPropValue<long?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
-		public bool IsDiskItem { get { return parent.contentItem.type == DiskItemType.Disk; } }
+		public bool IsDiskItem { get { return Parent.contentItem.type == DiskItemType.Disk; } }
 		public bool HasChildren { get; private set; }
 		public bool HasData { get; private set; }
 
@@ -49,7 +51,8 @@ namespace NeoEdit.Disk
 			SevenZipArchive,
 		}
 
-		readonly DiskItem parent, contentItem;
+		public readonly DiskItem Parent;
+		readonly DiskItem contentItem;
 		readonly DiskItemType type;
 
 		static DiskItem()
@@ -69,17 +72,17 @@ namespace NeoEdit.Disk
 		}
 
 		DiskItem(string fullName, bool isDir, DiskItem _parent)
-			: base(fullName)
 		{
+			FullName = fullName;
 			HasChildren = isDir;
 			HasData = !isDir;
-			parent = _parent;
+			Parent = _parent;
 			type = DiskItemType.None;
-			if (fullName == "")
+			if (FullName == "")
 				type = DiskItemType.Disk;
 
 			Path = GetPath(FullName);
-			Name = fullName.Substring(Path.Length);
+			Name = FullName.Substring(Path.Length);
 			if ((Name.StartsWith(@"\")) && (Path != ""))
 				Name = Name.Substring(1);
 			var idx = Name.LastIndexOf('.');
@@ -92,7 +95,7 @@ namespace NeoEdit.Disk
 			if (type != DiskItemType.None)
 				HasChildren = true;
 
-			for (contentItem = this; contentItem != null; contentItem = contentItem.parent)
+			for (contentItem = this; contentItem != null; contentItem = contentItem.Parent)
 				if (contentItem.type != DiskItemType.None)
 					break;
 		}
@@ -184,7 +187,7 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		protected override string GetPath(string fullName)
+		static string GetPath(string fullName)
 		{
 			if (fullName == "")
 				return "";
@@ -196,7 +199,7 @@ namespace NeoEdit.Disk
 			return fullName.Substring(0, idx);
 		}
 
-		string GetRelativeName(DiskItem item)
+		string NameRelativeTo(DiskItem item)
 		{
 			var name = item == null ? "" : item.FullName;
 			if (name == FullName)
@@ -218,10 +221,7 @@ namespace NeoEdit.Disk
 			shares.Add(share);
 		}
 
-		public static DiskItem GetRoot()
-		{
-			return new DiskItem("", true, null);
-		}
+		public static readonly DiskItem Root = new DiskItem("", true, null);
 
 		static bool IsChildOf(string path, string parent)
 		{
@@ -233,61 +233,42 @@ namespace NeoEdit.Disk
 		public static string Simplify(string path)
 		{
 			var network = path.StartsWith(@"\\");
-			path = Regex.Replace(path.Trim().Trim('"'), @"[\\/]+", @"\");
+			path = Regex.Replace(path.Trim().Trim('"'), @"[\\/]+", @"\").TrimEnd('\\');
 			if (network)
 			{
-				path = @"\" + path;
+				path = @"\\" + path.TrimStart('\\');
 				EnsureShareExists(path);
 			}
 			return path;
 		}
 
-		public Stream GetStream()
+		FilePath GetFilePath(bool needStream)
 		{
-			var name = GetRelativeName(parent.contentItem);
-			switch (parent.contentItem.type)
+			switch (Parent.contentItem.type)
 			{
-				case DiskItemType.Disk: return File.OpenRead(name);
+				case DiskItemType.Disk:
+					return new FilePath(FullName, needStream ? File.OpenRead(FullName) : null);
 				case DiskItemType.SevenZipArchive:
 					{
-						var stream = new FileStream(System.IO.Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.Delete, 512, FileOptions.DeleteOnClose);
-						using (var zip = new SevenZipExtractor(parent.contentItem.GetStream()))
+						var fileName = System.IO.Path.GetTempFileName();
+						var stream = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete, 512, FileOptions.DeleteOnClose);
+						using (var filePath = Parent.contentItem.GetFilePath(true))
+						using (var zip = new SevenZipExtractor(filePath.Stream))
 						{
-							if (parent.contentItem.IsSevenZipNoName())
+							if (Parent.contentItem.IsSevenZipNoName())
 								zip.ExtractFile(0, stream);
 							else
-								zip.ExtractFile(name, stream);
+								zip.ExtractFile(NameRelativeTo(Parent.contentItem), stream);
 
 							stream.Position = 0;
-							return stream;
 						}
+						return new FilePath(fileName, stream);
 					}
 				default: throw new NotImplementedException();
 			}
 		}
 
-		FilePath GetFileName()
-		{
-			switch (contentItem.type)
-			{
-				case DiskItemType.Disk: return new FilePath(FullName);
-				default:
-					using (var stream = GetStream())
-						return new FilePath(stream);
-			}
-		}
-
-		public override ItemGridTreeItem GetParent()
-		{
-			return parent;
-		}
-
-		public override bool CanGetChildren()
-		{
-			return HasChildren;
-		}
-
-		public override IEnumerable<ItemGridTreeItem> GetChildren()
+		public IEnumerable<DiskItem> GetChildren()
 		{
 			switch (contentItem.type)
 			{
@@ -297,7 +278,7 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		IEnumerable<ItemGridTreeItem> GetDiskChildren()
+		IEnumerable<DiskItem> GetDiskChildren()
 		{
 			if (FullName == "")
 			{
@@ -342,13 +323,13 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		IEnumerable<ItemGridTreeItem> GetSevenZipChildren()
+		IEnumerable<DiskItem> GetSevenZipChildren()
 		{
-			using (var stream = contentItem.GetStream())
-			using (var zip = new SevenZipExtractor(stream))
+			using (var filePath = contentItem.GetFilePath(true))
+			using (var zip = new SevenZipExtractor(filePath.Stream))
 			{
 				var found = new HashSet<string>();
-				var contentName = GetRelativeName(contentItem);
+				var contentName = NameRelativeTo(contentItem);
 				if (contentName != "")
 					contentName += @"\";
 				var noName = IsSevenZipNoName();
@@ -385,8 +366,8 @@ namespace NeoEdit.Disk
 			if (!HasData)
 				return;
 
-			using (var name = GetFileName())
-				Identity = Identifier.Identify(name.Path);
+			using (var filePath = GetFilePath(false))
+				Identity = Identifier.Identify(filePath.Path);
 		}
 
 		public void CalcMD5()
@@ -394,7 +375,8 @@ namespace NeoEdit.Disk
 			if (!HasData)
 				return;
 
-			MD5 = Checksum.Get(Checksum.Type.MD5, GetStream());
+			using (var filePath = GetFilePath(true))
+				MD5 = Checksum.Get(Checksum.Type.MD5, filePath.Stream);
 		}
 
 		public void CalcSHA1()
@@ -402,7 +384,8 @@ namespace NeoEdit.Disk
 			if (!HasData)
 				return;
 
-			SHA1 = Checksum.Get(Checksum.Type.SHA1, GetStream());
+			using (var filePath = GetFilePath(true))
+			SHA1 = Checksum.Get(Checksum.Type.SHA1, filePath.Stream);
 		}
 
 		public void MoveFrom(DiskItem item, string newName = null)
@@ -440,9 +423,9 @@ namespace NeoEdit.Disk
 				return;
 			}
 
-			using (var input = item.GetStream())
+			using (var input = item.GetFilePath(true))
 			using (var output = File.Create(newFullName))
-				input.CopyTo(output);
+				input.Stream.CopyTo(output);
 		}
 
 		public DiskItem CreateFile(string name)
@@ -504,6 +487,31 @@ namespace NeoEdit.Disk
 				Directory.Delete(FullName, true);
 		}
 
-		public override string ToString() { return type.ToString() + ": " + FullName; }
+		public static DiskItem Get(string fullName)
+		{
+			var result = Root;
+			if (String.IsNullOrEmpty(fullName))
+				return result;
+
+			fullName = DiskItem.Simplify(fullName);
+
+			var parts = new List<string>();
+			while (fullName != "")
+			{
+				parts.Insert(0, fullName);
+				fullName = GetPath(fullName);
+			}
+
+			foreach (var part in parts)
+			{
+				if ((result == null) || (!result.HasChildren))
+					return null;
+				result = result.GetChildren().FirstOrDefault(child => child.FullName.Equals(part, StringComparison.InvariantCultureIgnoreCase));
+			}
+
+			return result;
+		}
+
+		public override string ToString() { return FullName; }
 	}
 }
