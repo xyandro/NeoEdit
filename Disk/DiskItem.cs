@@ -7,12 +7,20 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
-using SevenZip;
 
 namespace NeoEdit.Disk
 {
 	public class DiskItem : DependencyObject
 	{
+		public enum DiskItemType
+		{
+			None,
+			Root,
+			Share,
+			Directory,
+			File,
+		}
+
 		[DepProp]
 		public string FullName { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
@@ -38,49 +46,16 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public long? CompressedSize { get { return UIHelper<DiskItem>.GetPropValue<long?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		public DiskItemType Type { get { return UIHelper<DiskItem>.GetPropValue<DiskItemType>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
-		public bool IsDiskItem { get { return Parent.contentItem.type == DiskItemType.Disk; } }
-		public bool HasChildren { get; private set; }
-		public bool HasData { get; private set; }
+		public bool HasChildren { get { return Type != DiskItemType.File; } }
+		public DiskItem Parent { get { return new DiskItem(Path); } }
 
-		public enum DiskItemType
+		static DiskItem() { UIHelper<DiskItem>.Register(); }
+
+		public DiskItem(string fullName)
 		{
-			None,
-			Disk,
-			SevenZipArchive,
-		}
-
-		public readonly DiskItem Parent;
-		readonly DiskItem contentItem;
-		readonly DiskItemType type;
-
-		static DiskItem()
-		{
-			UIHelper<DiskItem>.Register();
-			using (var input = typeof(DiskItem).Assembly.GetManifestResourceStream("NeoEdit.Disk.7z.dll"))
-			{
-				byte[] data;
-				using (var ms = new MemoryStream())
-				{
-					input.CopyTo(ms);
-					data = ms.ToArray();
-				}
-				data = Compression.Decompress(Compression.Type.GZip, data);
-				File.WriteAllBytes(System.IO.Path.GetFullPath(System.IO.Path.Combine(typeof(DiskItem).Assembly.Location, "..", "7z.dll")), data);
-			}
-		}
-
-		DiskItem(string fullName, bool isDir, DiskItem _parent)
-		{
-			FullName = fullName;
-			HasChildren = isDir;
-			HasData = !isDir;
-			Parent = _parent;
-			type = DiskItemType.None;
-			if (FullName == "")
-				type = DiskItemType.Disk;
-
+			FullName = fullName ?? "";
 			Path = GetPath(FullName);
 			Name = FullName.Substring(Path.Length);
 			if ((Name.StartsWith(@"\")) && (Path != ""))
@@ -88,102 +63,37 @@ namespace NeoEdit.Disk
 			var idx = Name.LastIndexOf('.');
 			NameWoExtension = idx == -1 ? Name : Name.Substring(0, idx);
 			Extension = idx == -1 ? "" : Name.Substring(idx).ToLowerInvariant();
+			Type = DiskItemType.None;
 
-			if (IsSevenZipArchiveType())
-				type = DiskItemType.SevenZipArchive;
+			if ((Type == DiskItemType.None) && (String.IsNullOrEmpty(FullName)))
+				Type = DiskItemType.Root;
 
-			if (type != DiskItemType.None)
-				HasChildren = true;
+			if ((Type == DiskItemType.None) && (FullName.StartsWith(@"\\")) && (Path == ""))
+				Type = DiskItemType.Share;
 
-			for (contentItem = this; contentItem != null; contentItem = contentItem.Parent)
-				if (contentItem.type != DiskItemType.None)
-					break;
-		}
-
-		static DiskItem FromFile(string fullName, DiskItem parent)
-		{
-			var item = new DiskItem(fullName, false, parent);
-			var fileInfo = new FileInfo(item.FullName);
-			if (fileInfo.Exists)
+			if (Type == DiskItemType.None)
 			{
-				item.Size = fileInfo.Length;
-				item.WriteTime = fileInfo.LastWriteTimeUtc;
-				item.CreateTime = fileInfo.CreationTimeUtc;
-				item.AccessTime = fileInfo.LastAccessTimeUtc;
+				var dirInfo = new DirectoryInfo(FullName);
+				if (dirInfo.Exists)
+				{
+					WriteTime = dirInfo.LastWriteTimeUtc;
+					CreateTime = dirInfo.CreationTimeUtc;
+					AccessTime = dirInfo.LastAccessTimeUtc;
+					Type = DiskItemType.Directory;
+				}
 			}
-			return item;
-		}
 
-		static DiskItem FromDirectory(string fullName, DiskItem parent)
-		{
-			var item = new DiskItem(fullName, true, parent);
-			var dirInfo = new DirectoryInfo(item.FullName);
-			if (dirInfo.Exists)
+			if (Type == DiskItemType.None)
 			{
-				item.WriteTime = dirInfo.LastWriteTimeUtc;
-				item.CreateTime = dirInfo.CreationTimeUtc;
-				item.AccessTime = dirInfo.LastAccessTimeUtc;
-			}
-			return item;
-		}
-
-		static DiskItem FromSevenZip(string fullName, bool isDir, DiskItem parent, ArchiveFileInfo info)
-		{
-			var item = new DiskItem(fullName, isDir, parent);
-			if (!isDir)
-			{
-				item.CompressedSize = (long)info.PackedSize;
-				item.Size = (long)info.Size;
-				item.AccessTime = info.LastAccessTime;
-				item.WriteTime = info.LastWriteTime;
-				item.CreateTime = info.CreationTime;
-			}
-			return item;
-		}
-
-		bool IsSevenZipArchiveType()
-		{
-			switch (Extension)
-			{
-				case ".7z":
-				case ".xz":
-				case ".txz":
-				case ".bz":
-				case ".bz2":
-				case ".bzip2":
-				case ".tbz":
-				case ".tar":
-				case ".zip":
-				case ".wim":
-				case ".arj":
-				case ".cab":
-				case ".chm":
-				case ".cpio":
-				case ".cramfs":
-				case ".deb":
-				case ".dmg":
-				case ".fat":
-				case ".hfs":
-				case ".iso":
-				case ".lzh":
-				case ".lzma":
-				case ".mbr":
-				case ".msi":
-				case ".nsis":
-				case ".ntfs":
-				case ".rar":
-				case ".rpm":
-				case ".squashfs":
-				case ".udf":
-				case ".vhd":
-				case ".xar":
-				case ".z":
-				case ".gz":
-				case ".gzip":
-				case ".tgz":
-					return true;
-				default:
-					return false;
+				var fileInfo = new FileInfo(FullName);
+				if (fileInfo.Exists)
+				{
+					Size = fileInfo.Length;
+					WriteTime = fileInfo.LastWriteTimeUtc;
+					CreateTime = fileInfo.CreationTimeUtc;
+					AccessTime = fileInfo.LastAccessTimeUtc;
+					Type = DiskItemType.File;
+				}
 			}
 		}
 
@@ -199,18 +109,6 @@ namespace NeoEdit.Disk
 			return fullName.Substring(0, idx);
 		}
 
-		string NameRelativeTo(DiskItem item)
-		{
-			var name = item == null ? "" : item.FullName;
-			if (name == FullName)
-				return "";
-			if (name != "")
-				name += @"\";
-			if (!FullName.StartsWith(name))
-				throw new ArgumentException();
-			return FullName.Substring(name.Length);
-		}
-
 		static HashSet<string> shares = new HashSet<string>();
 		static void EnsureShareExists(string path)
 		{
@@ -219,15 +117,6 @@ namespace NeoEdit.Disk
 				idx = path.Length;
 			var share = path.Substring(0, idx).ToLowerInvariant();
 			shares.Add(share);
-		}
-
-		public static readonly DiskItem Root = new DiskItem("", true, null);
-
-		static bool IsChildOf(string path, string parent)
-		{
-			if ((parent == "") || (path == parent))
-				return true;
-			return path.StartsWith(parent + @"\");
 		}
 
 		public static string Simplify(string path)
@@ -242,202 +131,101 @@ namespace NeoEdit.Disk
 			return path;
 		}
 
-		FilePath GetFilePath(bool needStream)
-		{
-			switch (Parent.contentItem.type)
-			{
-				case DiskItemType.Disk:
-					return new FilePath(FullName, needStream ? File.OpenRead(FullName) : null);
-				case DiskItemType.SevenZipArchive:
-					{
-						var fileName = System.IO.Path.GetTempFileName();
-						var stream = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete, 512, FileOptions.DeleteOnClose);
-						using (var filePath = Parent.contentItem.GetFilePath(true))
-						using (var zip = new SevenZipExtractor(filePath.Stream))
-						{
-							if (Parent.contentItem.IsSevenZipNoName())
-								zip.ExtractFile(0, stream);
-							else
-								zip.ExtractFile(NameRelativeTo(Parent.contentItem), stream);
-
-							stream.Position = 0;
-						}
-						return new FilePath(fileName, stream);
-					}
-				default: throw new NotImplementedException();
-			}
-		}
-
 		public IEnumerable<DiskItem> GetChildren()
 		{
-			switch (contentItem.type)
+			switch (Type)
 			{
-				case DiskItemType.Disk: return GetDiskChildren();
-				case DiskItemType.SevenZipArchive: return GetSevenZipChildren();
+				case DiskItemType.Root: return GetRootChildren();
+				case DiskItemType.Share: return GetShareChildren();
+				case DiskItemType.Directory: return GetDirectoryChildren();
 				default: throw new Exception("Can't get children");
 			}
 		}
 
-		IEnumerable<DiskItem> GetDiskChildren()
+		IEnumerable<DiskItem> GetRootChildren()
 		{
-			if (FullName == "")
-			{
-				foreach (var drive in DriveInfo.GetDrives())
-					yield return new DiskItem(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper(), true, this);
-				foreach (var share in shares)
-					yield return new DiskItem(share, true, this);
-			}
-			else if ((FullName.StartsWith(@"\\")) && (Path == ""))
-			{
-				using (var shares = new ManagementClass(FullName + @"\root\cimv2", "Win32_Share", new ObjectGetOptions()))
-					foreach (var share in shares.GetInstances())
-						yield return new DiskItem(FullName + @"\" + share["Name"], true, this);
-			}
-			else
-			{
-				var find = FullName;
-				if (find.Length == 2)
-					find += @"\";
-				foreach (var dir in Directory.EnumerateDirectories(find))
-					yield return FromDirectory(dir, this);
-				foreach (var file in Directory.EnumerateFiles(find))
-					yield return FromFile(file, this);
-			}
+			foreach (var drive in DriveInfo.GetDrives())
+				yield return new DiskItem(drive.Name.Substring(0, drive.Name.Length - 1).ToUpper());
+			foreach (var share in shares)
+				yield return new DiskItem(share);
 		}
 
-		bool IsSevenZipNoName()
+		IEnumerable<DiskItem> GetShareChildren()
 		{
-			switch (Extension)
-			{
-				case ".xz":
-				case ".txz":
-				case ".bz":
-				case ".bz2":
-				case ".bzip2":
-				case ".tbz":
-				case ".gz":
-				case ".gzip":
-				case ".tgz":
-					return true;
-				default: return false;
-			}
+			using (var shares = new ManagementClass(FullName + @"\root\cimv2", "Win32_Share", new ObjectGetOptions()))
+				foreach (var share in shares.GetInstances())
+					yield return new DiskItem(FullName + @"\" + share["Name"]);
 		}
 
-		IEnumerable<DiskItem> GetSevenZipChildren()
+		IEnumerable<DiskItem> GetDirectoryChildren()
 		{
-			using (var filePath = contentItem.GetFilePath(true))
-			using (var zip = new SevenZipExtractor(filePath.Stream))
-			{
-				var found = new HashSet<string>();
-				var contentName = NameRelativeTo(contentItem);
-				if (contentName != "")
-					contentName += @"\";
-				var noName = IsSevenZipNoName();
-				foreach (var entry in zip.ArchiveFileData)
-				{
-					var name = entry.FileName;
-					if (noName)
-					{
-						name = NameWoExtension;
-						if ((Extension == ".tgz") || (Extension == ".tbz") || (Extension == ".txz"))
-							name += ".tar";
-					}
-					if (!name.StartsWith(contentName))
-						continue;
-					name = name.Substring(contentName.Length);
-					var idx = name.IndexOf('\\');
-					var isDir = entry.IsDirectory;
-					if (idx != -1)
-					{
-						name = name.Substring(0, idx);
-						isDir = true;
-					}
-					if (found.Contains(name))
-						continue;
-					found.Add(name);
-
-					yield return FromSevenZip(FullName + @"\" + name, isDir, this, entry);
-				}
-			}
+			var find = FullName;
+			if (find.Length == 2)
+				find += @"\";
+			foreach (var entry in Directory.EnumerateFileSystemEntries(find))
+				yield return new DiskItem(entry);
 		}
 
 		public void Identify()
 		{
-			if (!HasData)
+			if (Type != DiskItemType.File)
 				return;
 
-			using (var filePath = GetFilePath(false))
-				Identity = Identifier.Identify(filePath.Path);
+			Identity = Identifier.Identify(FullName);
 		}
 
 		public void CalcMD5()
 		{
-			if (!HasData)
+			if (Type != DiskItemType.File)
 				return;
 
-			using (var filePath = GetFilePath(true))
-				MD5 = Checksum.Get(Checksum.Type.MD5, filePath.Stream);
+			var data = File.ReadAllBytes(FullName);
+			MD5 = Checksum.Get(Checksum.Type.MD5, data);
 		}
 
 		public void CalcSHA1()
 		{
-			if (!HasData)
+			if (Type != DiskItemType.File)
 				return;
 
-			using (var filePath = GetFilePath(true))
-			SHA1 = Checksum.Get(Checksum.Type.SHA1, filePath.Stream);
+			var data = File.ReadAllBytes(FullName);
+			SHA1 = Checksum.Get(Checksum.Type.SHA1, data);
 		}
 
 		public void MoveFrom(DiskItem item, string newName = null)
 		{
-			if ((!IsDiskItem) || (!item.IsDiskItem) || (HasData))
-				throw new Exception("Can only move disk between disk locations.");
-
 			var newFullName = System.IO.Path.Combine(FullName, newName ?? item.Name);
 
 			if ((File.Exists(newFullName)) || (Directory.Exists(newFullName)))
 				throw new Exception("A file or directory with that name already exists.");
 
-			if (item.HasData)
-				File.Move(item.FullName, newFullName);
-			else
-				Directory.Move(item.FullName, newFullName);
+			switch (Type)
+			{
+				case DiskItemType.File: File.Move(item.FullName, newFullName); break;
+				case DiskItemType.Directory: Directory.Move(item.FullName, newFullName); break;
+				default: throw new Exception("Can only move file and directories.");
+			}
 		}
 
 		public void CopyFrom(DiskItem item, string newName = null)
 		{
 			newName = newName ?? item.Name;
-			if (!item.HasData)
+			if (item.Type == DiskItemType.Directory)
 			{
-				var dest = CreateDirectory(newName);
-				dest.SyncFrom(item);
+				var name = System.IO.Path.Combine(FullName, newName);
+				Directory.CreateDirectory(name);
+				new DiskItem(name).SyncFrom(item);
 				return;
 			}
 
 			var newFullName = System.IO.Path.Combine(FullName, newName);
 			if ((File.Exists(newFullName)) || (Directory.Exists(newFullName)))
 				throw new Exception("A file or directory with that name already exists.");
-			if (item.IsDiskItem)
+			if (item.Type == DiskItemType.File)
 			{
-				System.IO.File.Copy(item.FullName, newFullName);
+				File.Copy(item.FullName, newFullName);
 				return;
 			}
-
-			using (var input = item.GetFilePath(true))
-			using (var output = File.Create(newFullName))
-				input.Stream.CopyTo(output);
-		}
-
-		public DiskItem CreateFile(string name)
-		{
-			return new DiskItem(System.IO.Path.Combine(FullName, name), false, this);
-		}
-
-		public DiskItem CreateDirectory(string name)
-		{
-			name = System.IO.Path.Combine(FullName, name);
-			Directory.CreateDirectory(name);
-			return new DiskItem(name, true, this);
 		}
 
 		string GetKey()
@@ -446,14 +234,14 @@ namespace NeoEdit.Disk
 			var time = WriteTime;
 			if (time.HasValue)
 				ticks = time.Value.Ticks;
-			return String.Format("{0}-{1}-{2}-{3}", HasData, Name, Size, ticks);
+			return String.Format("{0}-{1}-{2}-{3}", Type, Name, Size, ticks);
 		}
 
 		void SyncFrom(DiskItem source)
 		{
-			if (HasData != source.HasData)
+			if (Type != source.Type)
 				throw new Exception("Can't sync files to directories.");
-			if (HasData)
+			if (Type == DiskItemType.File)
 				return;
 
 			var sourceRecords = new Dictionary<string, DiskItem>();
@@ -481,15 +269,17 @@ namespace NeoEdit.Disk
 
 		public void Delete()
 		{
-			if (HasData)
-				File.Delete(FullName);
-			else
-				Directory.Delete(FullName, true);
+			switch (Type)
+			{
+				case DiskItemType.File: File.Delete(FullName); break;
+				case DiskItemType.Directory: Directory.Delete(FullName, true); break;
+				default: throw new ArgumentException("Can only delete files and directories");
+			}
 		}
 
 		public static DiskItem Get(string fullName)
 		{
-			var result = Root;
+			var result = new DiskItem(null);
 			if (String.IsNullOrEmpty(fullName))
 				return result;
 
