@@ -22,6 +22,7 @@
 		<disk:DiskItemGrid x:Name="files" Grid.Row="1"
 			Items="{Binding Files, ElementName=self}"
 			Selected="{Binding Selected, ElementName=self}"
+			Focused="{Binding Focused, ElementName=self, Mode=TwoWay}"
 			Columns="{Binding Columns, ElementName=self}"
 		/>
 		

@@ -44,6 +44,8 @@ namespace NeoEdit.Disk
 		[DepProp]
 		ObservableCollection<DiskItem> Selected { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
+		DiskItem Focused { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
 		ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		int ColumnsChangeCount { get { return UIHelper<DiskWindow>.GetPropValue<int>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
@@ -129,22 +131,6 @@ namespace NeoEdit.Disk
 			Location = new FilesLocation(item);
 		}
 
-		void DoRename(DiskItem item)
-		{
-			if ((item.Type != DiskItem.DiskItemType.File) && (item.Type != DiskItem.DiskItemType.Directory))
-				throw new ArgumentException("Cannot rename this entry.");
-
-			var newName = Rename.Run(item);
-			if (newName == null)
-				return;
-
-			Location.item.MoveFrom(item, newName);
-			Command_View_Refresh();
-			files.Focused = Files.Cast<DiskItem>().Where(file => file.Name == newName).FirstOrDefault();
-			if (files.Focused != null)
-				Selected.Add(files.Focused);
-		}
-
 		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
 		{
 			ShowColumn(UIHelper<DiskItem>.GetProperty(expression));
@@ -160,7 +146,20 @@ namespace NeoEdit.Disk
 
 		internal void Command_File_Rename()
 		{
-			DoRename(Selected.Single());
+			if (Focused == null)
+				return;
+
+			if (!Focused.CanRename)
+				throw new ArgumentException("Cannot rename this entry.");
+
+			var newName = Rename.Run(Focused);
+			if (newName == null)
+				return;
+
+			var oldName = Focused.FullName;
+			Focused.Rename(newName);
+			foreach (var file in Files)
+				file.Relocate(oldName, newName);
 		}
 
 		internal void Command_File_Identify()

@@ -43,9 +43,9 @@ namespace NeoEdit.Disk.Dialogs
 		public static string Run(DiskItem item)
 		{
 			var rename = new Rename(item);
-			if (rename.ShowDialog() == true)
-				return rename.ItemName;
-			return null;
+			if (rename.ShowDialog() != true)
+				return null;
+			return rename.FullName;
 		}
 	}
 }
