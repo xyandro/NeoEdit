@@ -196,12 +196,15 @@ namespace NeoEdit.Disk
 				Options = Message.OptionsEnum.YesNo,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() == Message.OptionsEnum.Yes)
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+
+			foreach (DiskItem file in Selected)
 			{
-				foreach (DiskItem file in Selected)
-					file.Delete();
+				file.Delete();
+				Files.Remove(file);
 			}
-			Command_View_Refresh();
 		}
 
 		internal void Command_Edit_Cut()
