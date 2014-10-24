@@ -11,6 +11,8 @@ using NeoEdit.Win32;
 
 namespace NeoEdit.Processes
 {
+	class ProcessItemGrid : ItemGrid<ProcessItem> { }
+
 	public partial class ProcessesWindow : Window
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();

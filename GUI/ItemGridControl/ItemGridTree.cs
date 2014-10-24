@@ -7,9 +7,9 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.ItemGridControl
 {
-	public class ItemGridTree : ItemGrid
+	public class ItemGridTree : ItemGrid<ItemGridTreeItem>
 	{
-		public static DependencyProperty LocationProperty = DependencyProperty.Register("Location", typeof(ItemGridTreeItem), typeof(ItemGrid), new PropertyMetadata((d, e) => (d as ItemGridTree).OnLocationChanged(e.OldValue as ItemGridTreeItem)));
+		public static DependencyProperty LocationProperty = DependencyProperty.Register("Location", typeof(ItemGridTreeItem), typeof(ItemGridTree), new PropertyMetadata((d, e) => (d as ItemGridTree).OnLocationChanged(e.OldValue as ItemGridTreeItem)));
 
 		public ItemGridTreeItem Location { get { return (ItemGridTreeItem)GetValue(LocationProperty); } set { SetValue(LocationProperty, value); } }
 

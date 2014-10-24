@@ -99,18 +99,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ItemGridControl\ItemGrid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\KeySet.cs" />
+    <Compile Include="ItemGridControl\ItemGrid.cs" />
     <Compile Include="ItemGridControl\ItemGridTreeItem.cs" />
     <Compile Include="ItemGridControl\ItemGridTree.cs" />
-    <Compile Include="ItemGridControl\ItemGrid.xaml.cs">
-      <DependentUpon>ItemGrid.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ItemGridControl\ItemGridColumn.cs" />
     <Compile Include="ItemGridControl\StringFormatConverter.cs" />
     <Compile Include="Launcher.cs" />

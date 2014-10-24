@@ -3,7 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:handles="clr-namespace:NeoEdit.Handles"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
-	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=GUI"
 	Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=handles}">
 
 	<Window.Title>
@@ -43,7 +42,7 @@
 			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 			<guiCommon:HelpMenu/>
 		</Menu>
-		<ig:ItemGrid x:Name="handles" Grid.Row="1" Items="{Binding Handles, ElementName=self}"/>
+		<handles:HandlesItemGrid x:Name="handles" Grid.Row="1" Items="{Binding Handles, ElementName=self}"/>
 		<StackPanel Grid.Row="2" Orientation="Horizontal">
 			<Label Content="_Filter" Target="{Binding ElementName=filter}"/>
 			<ComboBox Name="filter" ItemsSource="{Binding HandleTypes, ElementName=self}" SelectedItem="{Binding HandleType, ElementName=self}" Width="200" Focusable="False"/>

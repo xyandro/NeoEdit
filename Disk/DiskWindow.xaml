@@ -3,7 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:disk="clr-namespace:NeoEdit.Disk"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
-	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=GUI"
 	Visibility="Visible" Background="White" FocusManager.IsFocusScope="True">
 
 	<Grid>
@@ -20,7 +19,7 @@
 			<TextBox Name="location" Text="{Binding Location, ElementName=self, Mode=OneWay}" HorizontalAlignment="Stretch" KeyDown="location_KeyDown"/>
 		</DockPanel>
 
-		<ig:ItemGrid x:Name="files" Grid.Row="1" Items="{Binding Files, ElementName=self}"/>
+		<disk:DiskItemGrid x:Name="files" Grid.Row="1"/>
 	</Grid>
 
 </UserControl>

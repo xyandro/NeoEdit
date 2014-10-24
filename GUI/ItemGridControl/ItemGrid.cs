@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -14,53 +14,59 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.ItemGridControl
 {
-	public partial class ItemGrid : Grid
+	public class ItemGrid<ItemType> : Grid where ItemType : DependencyObject
 	{
 		RoutedEventHandler accept = (s, e) => { };
 		public event RoutedEventHandler Accept { add { accept += value; } remove { accept -= value; } }
 
 		[DepProp]
-		public IEnumerable<DependencyObject> Items { get { return UIHelper<ItemGrid>.GetPropValue<IEnumerable<DependencyObject>>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemType> Items { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ListCollectionView SortedItems { get { return UIHelper<ItemGrid>.GetPropValue<ListCollectionView>(this); } internal set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } private set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<ItemGrid>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } private set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public ItemGridColumn SortColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ItemGridColumn SortColumn { get { return UIHelper<ItemGrid>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public bool SortAscending { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<bool>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool SortAscending { get { return UIHelper<ItemGrid>.GetPropValue<bool>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public ItemType Focused { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public DependencyObject Focused { get { return UIHelper<ItemGrid>.GetPropValue<DependencyObject>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public bool FocusColumns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<bool>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool FocusColumns { get { return UIHelper<ItemGrid>.GetPropValue<bool>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public ItemGridColumn FocusedColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ItemGridColumn FocusedColumn { get { return UIHelper<ItemGrid>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemType> Selected { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } private set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<DependencyObject> Selected { get { return UIHelper<ItemGrid>.GetPropValue<ObservableCollection<DependencyObject>>(this); } private set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
-		[DepProp]
-		public ItemGridColumn TextInputColumn { get { return UIHelper<ItemGrid>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public ItemGridColumn TextInputColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp(Default = 500)]
-		public int TextInputDelay { get { return UIHelper<ItemGrid>.GetPropValue<int>(this); } set { UIHelper<ItemGrid>.SetPropValue(this, value); } }
+		public int TextInputDelay { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<int>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 
+		static readonly Brush buttonBrush;
+		static readonly Style buttonStyle;
 		static ItemGrid()
 		{
-			UIHelper<ItemGrid>.Register();
-			UIHelper<ItemGrid>.AddObservableCallback(a => a.Items, (obj, s, e) => { obj.verifyTimer.Start(true); obj.lastTextInputTime = null; });
-			UIHelper<ItemGrid>.AddObservableCallback(a => a.SortedItems, (obj, s, e) => obj.sortTimer.Start(true));
-			UIHelper<ItemGrid>.AddObservableCallback(a => a.Columns, (obj, s, e) => obj.verifyTimer.Start(true));
-			UIHelper<ItemGrid>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.verifyTimer.Start(true));
-			UIHelper<ItemGrid>.AddCallback(a => a.SortColumn, (obj, s, e) => { obj.SortAscending = obj.SortColumn.SortAscending; obj.verifyTimer.Start(true); });
-			UIHelper<ItemGrid>.AddCallback(a => a.SortAscending, (obj, s, e) => obj.sortTimer.Start(true));
-			UIHelper<ItemGrid>.AddCallback(a => a.Focused, (obj, s, e) => { obj.verifyTimer.Start(true); obj.showFocus = true; });
-			UIHelper<ItemGrid>.AddCallback(a => a.FocusColumns, (obj, s, e) => obj.drawTimer.Start(true));
-			UIHelper<ItemGrid>.AddCallback(a => a.FocusedColumn, (obj, s, e) => obj.verifyTimer.Start(true));
+			UIHelper<ItemGrid<ItemType>>.Register();
+			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => { obj.verifyTimer.Start(true); obj.lastTextInputTime = null; });
+			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.sortTimer.Start(true));
+			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Columns, (obj, s, e) => obj.verifyTimer.Start(true));
+			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.verifyTimer.Start(true));
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortColumn, (obj, s, e) => { obj.SortAscending = obj.SortColumn.SortAscending; obj.verifyTimer.Start(true); });
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortAscending, (obj, s, e) => obj.sortTimer.Start(true));
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.Focused, (obj, s, e) => { obj.verifyTimer.Start(true); obj.showFocus = true; });
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.FocusColumns, (obj, s, e) => obj.drawTimer.Start(true));
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.FocusedColumn, (obj, s, e) => obj.verifyTimer.Start(true));
+
+			buttonBrush = new SolidColorBrush(Color.FromRgb(208, 208, 208));
+			buttonBrush.Freeze();
+			buttonStyle = new Style(typeof(Button));
+			buttonStyle.Setters.Add(new Setter(Button.FocusableProperty, false));
+			buttonStyle.Setters.Add(new Setter(Button.PaddingProperty, new Thickness(0)));
 		}
 
 		public int? FocusedIndex
 		{
 			get
 			{
-				var idx = SortedItems.IndexOf(Focused);
+				var idx = Items.IndexOf(Focused);
 				if (idx == -1)
 					return null;
 				return idx;
@@ -73,7 +79,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		{
 			if (Focused == null)
 				return;
-			var idx = SortedItems.IndexOf(Focused);
+			var idx = Items.IndexOf(Focused);
 			if (idx == -1)
 				return;
 			lastFocusedIndex = idx;
@@ -84,9 +90,27 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		RunOnceTimer sortTimer, verifyTimer, drawTimer;
 
+		ScrollViewer xScroll;
+		ScrollBar yScroll;
+		Grid contents;
 		public ItemGrid()
 		{
-			InitializeComponent();
+			Focusable = true;
+			KeyboardNavigation.SetIsTabStop(this, true);
+			FocusVisualStyle = null;
+
+			ColumnDefinitions.Add(new ColumnDefinition());
+			ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+			RowDefinitions.Add(new RowDefinition());
+
+			xScroll = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Visible, VerticalScrollBarVisibility = ScrollBarVisibility.Disabled, Focusable = false };
+			contents = new Grid();
+			xScroll.Content = contents;
+			Children.Add(xScroll);
+
+			yScroll = new ScrollBar { Focusable = false };
+			Grid.SetColumn(yScroll, 1);
+			Children.Add(yScroll);
 
 			verifyTimer = new RunOnceTimer(() => VerifyParameters());
 			sortTimer = new RunOnceTimer(() => Sort());
@@ -94,9 +118,9 @@ namespace NeoEdit.GUI.ItemGridControl
 			sortTimer.AddDependency(verifyTimer);
 			drawTimer.AddDependency(sortTimer, verifyTimer);
 
-			Items = new ObservableCollection<DependencyObject>();
+			Items = new ObservableCollection<ItemType>();
 			Columns = new ObservableCollection<ItemGridColumn>();
-			Selected = new ObservableCollection<DependencyObject>();
+			Selected = new ObservableCollection<ItemType>();
 
 			yScroll.SizeChanged += (s, e) => drawTimer.Start();
 			yScroll.ValueChanged += (s, e) => drawTimer.Start();
@@ -133,7 +157,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			verifyTimer.Stop();
 		}
 
-		class Comparer : IComparer
+		class Comparer : IComparer<ItemType>
 		{
 			readonly DependencyProperty prop;
 			readonly bool ascending, numericStrings;
@@ -149,10 +173,10 @@ namespace NeoEdit.GUI.ItemGridControl
 				return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 			}
 
-			public int Compare(object o1, object o2)
+			public int Compare(ItemType o1, ItemType o2)
 			{
-				var val1 = (o1 as DependencyObject).GetValue(prop);
-				var val2 = (o2 as DependencyObject).GetValue(prop);
+				var val1 = o1.GetValue(prop);
+				var val2 = o2.GetValue(prop);
 
 				if ((val1 == null) && (val2 == null))
 					return 0;
@@ -177,13 +201,15 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void Sort()
 		{
-			if ((Columns == null) || (SortedItems == null) || (!Columns.Contains(SortColumn)))
+			if ((Columns == null) || (Items == null) || (!Columns.Contains(SortColumn)))
 				return;
 
-			SortedItems.CustomSort = new Comparer(SortColumn.DepProp, SortAscending, (SortedItems.Count <= 500) && (SortColumn.NumericStrings));
+			var sorted = Items.OrderBy(a => a, new Comparer(SortColumn.DepProp, SortAscending, (Items.Count <= 500) && (SortColumn.NumericStrings))).ToList();
+			Items.Clear();
+			foreach (var item in sorted)
+				Items.Add(item);
 			sortTimer.Stop();
 			SetLastFocusedIndex();
-			drawTimer.Start();
 		}
 
 		public void ResetScroll()
@@ -192,13 +218,15 @@ namespace NeoEdit.GUI.ItemGridControl
 			lastFocusedIndex = 0;
 		}
 
-		public void SyncItems(IEnumerable<DependencyObject> items, DependencyProperty prop)
+		public void SyncItems(IEnumerable<ItemType> items, DependencyProperty prop)
 		{
 			var scrollPos = yScroll.Value;
 			var focused = Focused == null ? null : Focused.GetValue(prop) as IComparable;
 			var selected = Selected.Select(item => item.GetValue(prop) as IComparable).ToList();
 
-			Items = items;
+			Items.Clear();
+			foreach (var item in items)
+				Items.Add(item);
 
 			Selected.Clear();
 			foreach (var item in Items)
@@ -217,7 +245,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
-		WeakReference<DependencyObject> lastShiftSel;
+		WeakReference<ItemType> lastShiftSel;
 		void MoveFocus(int offset, bool relative, bool select = false)
 		{
 			if (relative)
@@ -226,8 +254,8 @@ namespace NeoEdit.GUI.ItemGridControl
 				else
 					offset += FocusedIndex.Value;
 
-			offset = Math.Max(0, Math.Min(offset, SortedItems.Count - 1));
-			Focused = SortedItems.GetItemAt(offset) as DependencyObject;
+			offset = Math.Max(0, Math.Min(offset, Items.Count - 1));
+			Focused = Items[offset];
 
 			if (!controlDown)
 			{
@@ -237,14 +265,14 @@ namespace NeoEdit.GUI.ItemGridControl
 
 			if (shiftDown)
 			{
-				DependencyObject lastSel;
+				ItemType lastSel;
 				if ((lastShiftSel == null) || (!lastShiftSel.TryGetTarget(out lastSel)))
 					lastSel = null;
-				var lastSelIndex = Math.Max(0, SortedItems.IndexOf(lastSel));
+				var lastSelIndex = Math.Max(0, Items.IndexOf(lastSel));
 				var start = Math.Min(lastSelIndex, offset);
 				var end = Math.Max(lastSelIndex, offset);
 				for (var ctr = start; ctr <= end; ++ctr)
-					Selected.Add(SortedItems.GetItemAt(ctr) as DependencyObject);
+					Selected.Add(Items[ctr]);
 			}
 			else if (select)
 			{
@@ -253,7 +281,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				else if (Focused != null)
 				{
 					Selected.Add(Focused);
-					lastShiftSel = new WeakReference<DependencyObject>(Focused);
+					lastShiftSel = new WeakReference<ItemType>(Focused);
 				}
 			}
 		}
@@ -277,7 +305,7 @@ namespace NeoEdit.GUI.ItemGridControl
 
 			var keys = new KeySet
 			{
-				{ ModifierKeys.Control, Key.A, () => SortedItems.Cast<DependencyObject>().ToList().ForEach(item => Selected.Add(item)) },
+				{ ModifierKeys.Control, Key.A, () => Items.ToList().ForEach(item => Selected.Add(item)) },
 				{ Key.Escape, () => lastTextInputTime = null },
 				{ Key.Enter, () => accept(this, new RoutedEventArgs()) },
 			};
@@ -299,7 +327,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				case Key.Up: MoveFocus(-1, true); break;
 				case Key.Down: MoveFocus(1, true); break;
 				case Key.Home: MoveFocus(0, false); break;
-				case Key.End: MoveFocus(SortedItems.Count - 1, false); break;
+				case Key.End: MoveFocus(Items.Count - 1, false); break;
 				case Key.PageUp:
 					if (yScroll.Value == FocusedIndex)
 						MoveFocus((int)-yScroll.LargeChange, true);
@@ -324,7 +352,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			base.OnTextInput(e);
 			e.Handled = true;
 
-			if ((Columns.Count == 0) || (SortedItems.Count == 0))
+			if ((Columns.Count == 0) || (Items.Count == 0))
 				return;
 
 			if (!Columns.Contains(TextInputColumn))
@@ -340,13 +368,13 @@ namespace NeoEdit.GUI.ItemGridControl
 			var index = start;
 			while (true)
 			{
-				if ((SortedItems.GetItemAt(index) as DependencyObject).GetValue(TextInputColumn.DepProp).ToString().StartsWith(lastTextInput, StringComparison.OrdinalIgnoreCase))
+				if (Items[index].GetValue(TextInputColumn.DepProp).ToString().StartsWith(lastTextInput, StringComparison.OrdinalIgnoreCase))
 				{
 					MoveFocus(index, false, true);
 					break;
 				}
 				++index;
-				if (index >= SortedItems.Count)
+				if (index >= Items.Count)
 					index = 0;
 				if (index == start)
 					break;
@@ -356,13 +384,13 @@ namespace NeoEdit.GUI.ItemGridControl
 		bool showFocus = false;
 		void Redraw()
 		{
-			if (SortedItems == null)
+			if (Items == null)
 				return;
 
 			yScroll.ViewportSize = Math.Max(0, Math.Ceiling((xScroll.ViewportHeight - headerHeight) / rowHeight));
 			yScroll.LargeChange = Math.Max(0, Math.Floor((xScroll.ViewportHeight - headerHeight) / rowHeight) - 1);
 			yScroll.Minimum = 0;
-			yScroll.Maximum = SortedItems.Count - yScroll.ViewportSize + 1;
+			yScroll.Maximum = Items.Count - yScroll.ViewportSize + 1;
 
 			if (showFocus)
 			{
@@ -389,7 +417,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				if (column == SortColumn)
 					header += SortAscending ? " \u25b5" : " \u25bf";
 
-				var button = new Button { Content = header };
+				var button = new Button { Content = header, Style = buttonStyle };
 				button.Click += (s, e) =>
 				{
 					if (SortColumn != column)
@@ -403,10 +431,10 @@ namespace NeoEdit.GUI.ItemGridControl
 			}
 
 			var start = (int)(yScroll.Value);
-			var rows = Math.Min((int)yScroll.ViewportSize, SortedItems.Count - start);
+			var rows = Math.Min((int)yScroll.ViewportSize, Items.Count - start);
 			for (var ctr = 0; ctr < rows; ++ctr)
 			{
-				var item = SortedItems.GetItemAt(start + ctr);
+				var item = Items[start + ctr];
 
 				if (Selected.Contains(item))
 				{

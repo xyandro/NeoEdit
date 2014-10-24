@@ -3,7 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:processes="clr-namespace:NeoEdit.Processes"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
-	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=GUI"
 	Title="NeoEdit Process Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=processes}">
 
 	<Window.CommandBindings>
@@ -47,7 +46,7 @@
 			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 			<guiCommon:HelpMenu/>
 		</Menu>
-		<ig:ItemGrid x:Name="processes" Grid.Row="1" Items="{Binding Processes, ElementName=self}"/>
+		<processes:ProcessItemGrid x:Name="processes" Grid.Row="1" Items="{Binding Processes, ElementName=self}"/>
 	</Grid>
 
 </Window>

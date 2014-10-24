@@ -12,6 +12,8 @@ using NeoEdit.Win32;
 
 namespace NeoEdit.Handles
 {
+	class HandlesItemGrid : ItemGrid<HandleItem> { }
+
 	public partial class HandlesWindow : Window
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();

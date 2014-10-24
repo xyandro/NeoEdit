@@ -15,12 +15,12 @@ using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Disk
 {
+	class DiskItemGrid : ItemGrid<DiskItem> { }
+
 	partial class DiskWindow
 	{
 		[DepProp]
 		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
-		[DepProp]
-		ObservableCollection<DiskItem> Files { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 
 		Stack<DiskItem> lastLocation = new Stack<DiskItem>();
 		Stack<DiskItem> nextLocation = new Stack<DiskItem>();
