@@ -51,12 +51,12 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="DiskMenu.xaml">
+    <Page Include="Menu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="DiskMenu.xaml.cs">
-      <DependentUpon>DiskMenu.xaml</DependentUpon>
+    <Compile Include="Menu.xaml.cs">
+      <DependentUpon>Menu.xaml</DependentUpon>
     </Compile>
     <Compile Include="ColumnCheckedConverter.cs" />
     <Compile Include="DiskItem.cs" />
