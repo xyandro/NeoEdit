@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using NeoEdit.Disk.Dialogs;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
@@ -100,18 +101,18 @@ namespace NeoEdit.Disk
 
 		void DoRename(DiskItem item)
 		{
-			//if (!item.IsDiskItem)
-			//	throw new ArgumentException("Can only rename disk files.");
+			if ((item.Type != DiskItem.DiskItemType.File) && (item.Type != DiskItem.DiskItemType.Directory))
+				throw new ArgumentException("Cannot rename this entry.");
 
-			//var newName = Rename.Run(item);
-			//if (newName == null)
-			//	return;
+			var newName = Rename.Run(item);
+			if (newName == null)
+				return;
 
-			//(files.Location as DiskItem).MoveFrom(item, newName);
-			//Command_View_Refresh();
-			//files.Focused = files.Items.Cast<DiskItem>().Where(file => file.FullName == newName).FirstOrDefault();
-			//if (files.Focused != null)
-			//	files.Selected.Add(files.Focused);
+			Location.MoveFrom(item, newName);
+			Command_View_Refresh();
+			files.Focused = files.Items.Cast<DiskItem>().Where(file => file.Name == newName).FirstOrDefault();
+			if (files.Focused != null)
+				files.Selected.Add(files.Focused);
 		}
 
 		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
@@ -125,7 +126,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_File_Rename()
 		{
-			DoRename(files.Selected.Single() as DiskItem);
+			DoRename(files.Selected.Single());
 		}
 
 		internal void Command_File_Identify()
@@ -183,7 +184,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Paste()
 		{
-			//var location = files.Location as DiskItem;
+			//var location = files.Location;
 			//if (!location.IsDiskItem)
 			//	throw new ArgumentException("Can only paste to disk.");
 
@@ -248,7 +249,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_Select_Remove()
 		{
-			files.Selected.ToList().ForEach(file => files.Items.Remove(file as DiskItem));
+			files.Selected.ToList().ForEach(file => files.Items.Remove(file));
 		}
 
 		internal void Command_View_Refresh()
@@ -278,7 +279,7 @@ namespace NeoEdit.Disk
 			if (files.Selected.Count != 1)
 				return;
 
-			var location = files.Selected.Single() as DiskItem;
+			var location = files.Selected.Single();
 			if (!location.HasChildren)
 				return;
 
