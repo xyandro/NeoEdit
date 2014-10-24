@@ -3,8 +3,6 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEditor
 {
-	class TextEditMenuItem : NEMenuItem<TextEditCommand> { }
-
 	enum TextEditCommand
 	{
 		None,
