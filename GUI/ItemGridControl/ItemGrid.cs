@@ -422,13 +422,35 @@ namespace NeoEdit.GUI.ItemGridControl
 				if (column == SortColumn)
 					header += SortAscending ? " \u25b5" : " \u25bf";
 
-				var button = new Button { Content = header, Style = buttonStyle };
+				var button = new Button { Content = header, Style = buttonStyle, AllowDrop = true };
 				button.Click += (s, e) =>
 				{
 					if (SortColumn != column)
 						SortColumn = column;
 					else
 						SortAscending = !SortAscending;
+				};
+
+				Point? dragStart = null;
+				button.PreviewMouseLeftButtonDown += (s, e) => { dragStart = e.GetPosition(button); };
+				button.PreviewMouseLeftButtonUp += (s, e) => dragStart = null;
+				button.PreviewMouseMove += (s, e) =>
+				{
+					if ((dragStart.HasValue) && ((e.GetPosition(button) - dragStart.Value).Length > SystemParameters.MinimumHorizontalDragDistance))
+					{
+						dragStart = null;
+						DragDrop.DoDragDrop(button, new DataObject(typeof(ItemGridColumn), column), DragDropEffects.Move);
+					}
+				};
+				button.Drop += (s, e) =>
+				{
+					var column2 = e.Data.GetData(typeof(ItemGridColumn)) as ItemGridColumn;
+					var fromIndex = Columns.IndexOf(column2);
+					var toIndex = Columns.IndexOf(column);
+					if ((fromIndex == toIndex) || (fromIndex == -1) || (toIndex == -1))
+						return;
+
+					Columns.Move(fromIndex, toIndex);
 				};
 				Grid.SetColumn(button, contents.ColumnDefinitions.Count);
 				contents.Children.Add(button);
