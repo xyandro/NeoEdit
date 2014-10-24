@@ -21,6 +21,8 @@
 			<disk:DiskMenuItem CommandEnum="Edit_Cut"/>
 			<disk:DiskMenuItem CommandEnum="Edit_Copy"/>
 			<disk:DiskMenuItem CommandEnum="Edit_Paste"/>
+			<Separator/>
+			<disk:DiskMenuItem CommandEnum="Edit_Find"/>
 		</MenuItem>
 		<MenuItem Header="_Select">
 			<disk:DiskMenuItem CommandEnum="Select_Directories"/>

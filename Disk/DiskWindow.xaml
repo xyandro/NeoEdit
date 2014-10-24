@@ -2,7 +2,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:disk="clr-namespace:NeoEdit.Disk"
-	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	Visibility="Visible" Background="White" FocusManager.IsFocusScope="True">
 
 	<Grid>
