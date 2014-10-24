@@ -45,15 +45,14 @@ namespace NeoEdit.GUI.ItemGridControl
 		static ItemGrid()
 		{
 			UIHelper<ItemGrid<ItemType>>.Register();
-			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => { obj.verifyTimer.Start(true); obj.lastTextInputTime = null; });
-			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.sortTimer.Start(true));
-			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Columns, (obj, s, e) => obj.verifyTimer.Start(true));
-			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.verifyTimer.Start(true));
-			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortColumn, (obj, s, e) => { obj.SortAscending = obj.SortColumn.SortAscending; obj.verifyTimer.Start(true); });
-			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortAscending, (obj, s, e) => obj.sortTimer.Start(true));
-			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.Focused, (obj, s, e) => { obj.verifyTimer.Start(true); obj.showFocus = true; });
-			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.FocusColumns, (obj, s, e) => obj.drawTimer.Start(true));
-			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.FocusedColumn, (obj, s, e) => obj.verifyTimer.Start(true));
+			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => { obj.verifyTimer.Start(); obj.sortTimer.Start(); });
+			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Columns, (obj, s, e) => obj.verifyTimer.Start());
+			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.verifyTimer.Start());
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortColumn, (obj, s, e) => { obj.SortAscending = obj.SortColumn.SortAscending; obj.verifyTimer.Start(); obj.sortTimer.Start(); });
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortAscending, (obj, s, e) => obj.sortTimer.Start());
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.Focused, (obj, s, e) => { obj.verifyTimer.Start(); obj.showFocus = true; });
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.FocusColumns, (obj, s, e) => obj.drawTimer.Start());
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.FocusedColumn, (obj, s, e) => obj.verifyTimer.Start());
 
 			buttonBrush = new SolidColorBrush(Color.FromRgb(208, 208, 208));
 			buttonBrush.Freeze();
@@ -88,7 +87,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		const double headerHeight = 21.96;
 		const double rowHeight = 19.96;
 
-		RunOnceTimer sortTimer, verifyTimer, drawTimer;
+		RunOnceTimer verifyTimer, sortTimer, drawTimer;
 
 		ScrollViewer xScroll;
 		ScrollBar yScroll;
@@ -154,7 +153,9 @@ namespace NeoEdit.GUI.ItemGridControl
 				if (!Items.Contains(Focused))
 					Focused = null;
 			}
+
 			verifyTimer.Stop();
+			drawTimer.Start();
 		}
 
 		class Comparer : IComparer<ItemType>
@@ -201,15 +202,19 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		void Sort()
 		{
-			if ((Columns == null) || (Items == null) || (!Columns.Contains(SortColumn)))
+			if ((Columns == null) || (Items == null) || (SortColumn == null))
 				return;
 
 			var sorted = Items.OrderBy(a => a, new Comparer(SortColumn.DepProp, SortAscending, (Items.Count <= 500) && (SortColumn.NumericStrings))).ToList();
-			Items.Clear();
-			foreach (var item in sorted)
-				Items.Add(item);
+			for (var ctr = 0; ctr < sorted.Count; ++ctr)
+				if (Items[ctr] != sorted[ctr])
+					Items[ctr] = sorted[ctr];
 			sortTimer.Stop();
+			verifyTimer.Stop(); // Since verify is a dependency of sort, this way already done
+
+			lastTextInputTime = null;
 			SetLastFocusedIndex();
+			drawTimer.Start();
 		}
 
 		public void ResetScroll()
