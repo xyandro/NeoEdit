@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.GUI.Common;
@@ -58,6 +59,12 @@ namespace NeoEdit.Disk
 				case DiskCommand.Select_Remove: Active.Command_Select_Remove(); break;
 				case DiskCommand.View_Refresh: Active.Command_View_Refresh(); break;
 			}
+		}
+
+		internal void ToggleColumn(DependencyProperty property)
+		{
+			if (Active != null)
+				Active.ToggleColumn(property);
 		}
 
 		void Add(DiskWindow diskWindow)

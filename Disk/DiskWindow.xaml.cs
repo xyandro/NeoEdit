@@ -39,6 +39,10 @@ namespace NeoEdit.Disk
 	{
 		[DepProp]
 		FilesLocation Location { get { return UIHelper<DiskWindow>.GetPropValue<FilesLocation>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
+		ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
+		int ColumnsChangeCount { get { return UIHelper<DiskWindow>.GetPropValue<int>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 
 		Stack<FilesLocation> lastLocation = new Stack<FilesLocation>();
 		Stack<FilesLocation> nextLocation = new Stack<FilesLocation>();
@@ -47,6 +51,7 @@ namespace NeoEdit.Disk
 		{
 			UIHelper<DiskWindow>.Register();
 			UIHelper<DiskWindow>.AddCallback(a => a.Location, (s, o, n) => s.LocationChanged(o));
+			UIHelper<DiskWindow>.AddObservableCallback(a => a.Columns, (obj, s, e) => ++obj.ColumnsChangeCount);
 		}
 
 		public DiskWindow(string path = null)
@@ -59,6 +64,8 @@ namespace NeoEdit.Disk
 			location.LostFocus += (s, e) => UIHelper<DiskWindow>.InvalidateBinding(location, TextBox.TextProperty);
 			location.PreviewKeyDown += LocationKeyDown;
 			files.Accept += (s, e) => OnAccept();
+
+			Columns = new ObservableCollection<ItemGridColumn>();
 
 			ShowColumn(a => a.Name);
 			ShowColumn(a => a.Size);
@@ -134,7 +141,11 @@ namespace NeoEdit.Disk
 
 		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
 		{
-			var prop = UIHelper<DiskItem>.GetProperty(expression);
+			ShowColumn(UIHelper<DiskItem>.GetProperty(expression));
+		}
+
+		void ShowColumn(DependencyProperty prop)
+		{
 			var type = prop.PropertyType;
 			var sortAscending = (type != typeof(long?)) && (type != typeof(DateTime?));
 			if (!files.Columns.Any(column => column.DepProp == prop))
@@ -292,6 +303,18 @@ namespace NeoEdit.Disk
 				}
 			}
 			files.SyncItems(newFiles, UIHelper<DiskItem>.GetProperty(a => a.FullName));
+		}
+
+		internal void ToggleColumn(DependencyProperty property)
+		{
+			var found = Columns.FirstOrDefault(a => a.DepProp == property);
+			if (found != null)
+			{
+				Columns.Remove(found);
+				return;
+			}
+
+			ShowColumn(property);
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

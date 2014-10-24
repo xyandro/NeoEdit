@@ -22,7 +22,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		[DepProp]
 		public ObservableCollection<ItemType> Items { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } private set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public ItemGridColumn SortColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,7 +34,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		[DepProp]
 		public ItemGridColumn FocusedColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<ItemType> Selected { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } private set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemType> Selected { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public ItemGridColumn TextInputColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp(Default = 500)]
@@ -48,7 +48,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => { obj.verifyTimer.Start(); obj.sortTimer.Start(); });
 			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Columns, (obj, s, e) => obj.verifyTimer.Start());
 			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.verifyTimer.Start());
-			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortColumn, (obj, s, e) => { obj.SortAscending = obj.SortColumn.SortAscending; obj.verifyTimer.Start(); obj.sortTimer.Start(); });
+			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortColumn, (obj, s, e) => { obj.SortAscending = obj.SortColumn != null ? obj.SortColumn.SortAscending : true; obj.verifyTimer.Start(); obj.sortTimer.Start(); });
 			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortAscending, (obj, s, e) => obj.sortTimer.Start());
 			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.Focused, (obj, s, e) => { obj.verifyTimer.Start(); obj.showFocus = true; });
 			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.FocusColumns, (obj, s, e) => obj.drawTimer.Start());
@@ -425,7 +425,9 @@ namespace NeoEdit.GUI.ItemGridControl
 				var button = new Button { Content = header, Style = buttonStyle, AllowDrop = true };
 				button.Click += (s, e) =>
 				{
-					if (SortColumn != column)
+					if (controlDown)
+						Columns.Remove(column);
+					else if (SortColumn != column)
 						SortColumn = column;
 					else
 						SortAscending = !SortAscending;

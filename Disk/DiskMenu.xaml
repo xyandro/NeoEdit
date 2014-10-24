@@ -30,6 +30,26 @@
 		<disk:DiskMenuItem CommandEnum="Select_Remove"/>
 	</MenuItem>
 	<MenuItem Header="_View">
+		<MenuItem Header="_Columns" ItemsSource="{Binding Columns, ElementName=self}">
+			<MenuItem.Style>
+				<Style TargetType="MenuItem">
+					<EventSetter Event="Click" Handler="ToggleColumn"/>
+					<Style.Resources>
+						<Style TargetType="disk:ColumnMenuItem">
+							<Setter Property="IsChecked">
+								<Setter.Value>
+									<MultiBinding Converter="{disk:ColumnCheckedConverter}">
+										<Binding RelativeSource="{RelativeSource Self}" Mode="OneWay"/>
+										<Binding Path="Parent.Active.Columns" ElementName="self"/>
+										<Binding Path="Parent.Active.ColumnsChangeCount" ElementName="self"/>
+									</MultiBinding>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</Style.Resources>
+				</Style>
+			</MenuItem.Style>
+		</MenuItem>
 		<disk:DiskMenuItem CommandEnum="View_Refresh"/>
 		<disk:DiskMenuItem CommandEnum="View_Tiles"/>
 	</MenuItem>

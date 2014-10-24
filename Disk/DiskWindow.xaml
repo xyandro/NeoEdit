@@ -18,7 +18,9 @@
 			<TextBox Name="location" Text="{Binding Location, ElementName=self, Mode=OneWay}" HorizontalAlignment="Stretch" KeyDown="location_KeyDown"/>
 		</DockPanel>
 
-		<disk:DiskItemGrid x:Name="files" Grid.Row="1"/>
+		<disk:DiskItemGrid x:Name="files" Grid.Row="1"
+			Columns="{Binding Columns, ElementName=self}"
+		/>
 	</Grid>
 
 </UserControl>

@@ -58,6 +58,7 @@
     <Compile Include="DiskMenu.xaml.cs">
       <DependentUpon>DiskMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ColumnCheckedConverter.cs" />
     <Compile Include="DiskItem.cs" />
     <Compile Include="Dialogs\Rename.xaml.cs">
       <DependentUpon>Rename.xaml</DependentUpon>
