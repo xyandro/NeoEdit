@@ -40,6 +40,10 @@ namespace NeoEdit.Disk
 		[DepProp]
 		FilesLocation Location { get { return UIHelper<DiskWindow>.GetPropValue<FilesLocation>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
+		ObservableCollection<DiskItem> Files { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
+		ObservableCollection<DiskItem> Selected { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
 		ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		int ColumnsChangeCount { get { return UIHelper<DiskWindow>.GetPropValue<int>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
@@ -65,6 +69,8 @@ namespace NeoEdit.Disk
 			location.PreviewKeyDown += LocationKeyDown;
 			files.Accept += (s, e) => OnAccept();
 
+			Files = new ObservableCollection<DiskItem>();
+			Selected = new ObservableCollection<DiskItem>();
 			Columns = new ObservableCollection<ItemGridColumn>();
 
 			ShowColumn(a => a.Name);
@@ -134,9 +140,9 @@ namespace NeoEdit.Disk
 
 			Location.item.MoveFrom(item, newName);
 			Command_View_Refresh();
-			files.Focused = files.Items.Cast<DiskItem>().Where(file => file.Name == newName).FirstOrDefault();
+			files.Focused = Files.Cast<DiskItem>().Where(file => file.Name == newName).FirstOrDefault();
 			if (files.Focused != null)
-				files.Selected.Add(files.Focused);
+				Selected.Add(files.Focused);
 		}
 
 		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
@@ -148,39 +154,39 @@ namespace NeoEdit.Disk
 		{
 			var type = prop.PropertyType;
 			var sortAscending = (type != typeof(long?)) && (type != typeof(DateTime?));
-			if (!files.Columns.Any(column => column.DepProp == prop))
-				files.Columns.Add(new ItemGridColumn(prop) { SortAscending = sortAscending });
+			if (!Columns.Any(column => column.DepProp == prop))
+				Columns.Add(new ItemGridColumn(prop) { SortAscending = sortAscending });
 		}
 
 		internal void Command_File_Rename()
 		{
-			DoRename(files.Selected.Single());
+			DoRename(Selected.Single());
 		}
 
 		internal void Command_File_Identify()
 		{
-			foreach (DiskItem selected in files.Selected)
+			foreach (DiskItem selected in Selected)
 				selected.Identify();
 			ShowColumn(a => a.Identity);
 		}
 
 		internal void Command_File_MD5()
 		{
-			foreach (DiskItem selected in files.Selected)
+			foreach (DiskItem selected in Selected)
 				selected.CalcMD5();
 			ShowColumn(a => a.MD5);
 		}
 
 		internal void Command_File_SHA1()
 		{
-			foreach (DiskItem selected in files.Selected)
+			foreach (DiskItem selected in Selected)
 				selected.CalcSHA1();
 			ShowColumn(a => a.SHA1);
 		}
 
 		internal void Command_File_Delete()
 		{
-			if (files.Selected.Count == 0)
+			if (Selected.Count == 0)
 				return;
 
 			if (new Message
@@ -192,7 +198,7 @@ namespace NeoEdit.Disk
 				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() == Message.OptionsEnum.Yes)
 			{
-				foreach (DiskItem file in files.Selected)
+				foreach (DiskItem file in Selected)
 					file.Delete();
 			}
 			Command_View_Refresh();
@@ -200,14 +206,14 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Cut()
 		{
-			if (files.Selected.Count != 0)
-				ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), true);
+			if (Selected.Count != 0)
+				ClipboardWindow.SetFiles(Selected.Cast<DiskItem>().Select(item => item.FullName), true);
 		}
 
 		internal void Command_Edit_Copy()
 		{
-			if (files.Selected.Count != 0)
-				ClipboardWindow.SetFiles(files.Selected.Cast<DiskItem>().Select(item => item.FullName), false);
+			if (Selected.Count != 0)
+				ClipboardWindow.SetFiles(Selected.Cast<DiskItem>().Select(item => item.FullName), false);
 		}
 
 		internal void Command_Edit_Paste()
@@ -223,7 +229,7 @@ namespace NeoEdit.Disk
 
 			//var items = fileList.Select(file => DiskItem.GetRoot().GetChild(file)).Cast<DiskItem>().ToList();
 
-			//var locationFiles = files.Items.Cast<DiskItem>().Select(record => record.Name).ToList();
+			//var locationFiles = Files.Cast<DiskItem>().Select(record => record.Name).ToList();
 			//var paths = items.Select(item => item.Path).GroupBy(path => path).Select(path => path.Key).ToList();
 			//var canRename = (paths.Count == 1) && (paths[0] == location.FullName);
 			//if ((isCut) || (!canRename))
@@ -266,23 +272,23 @@ namespace NeoEdit.Disk
 
 		internal void Command_Select_Directories()
 		{
-			files.Selected.Clear();
-			foreach (var file in files.Items)
+			Selected.Clear();
+			foreach (var file in Files)
 				if (file.HasChildren)
-					files.Selected.Add(file);
+					Selected.Add(file);
 		}
 
 		internal void Command_Select_Files()
 		{
-			files.Selected.Clear();
-			foreach (var file in files.Items)
+			Selected.Clear();
+			foreach (var file in Files)
 				if (!file.HasChildren)
-					files.Selected.Add(file);
+					Selected.Add(file);
 		}
 
 		internal void Command_Select_Remove()
 		{
-			files.Selected.ToList().ForEach(file => files.Items.Remove(file));
+			Selected.ToList().ForEach(file => Files.Remove(file));
 		}
 
 		internal void Command_View_Refresh()
@@ -335,10 +341,10 @@ namespace NeoEdit.Disk
 
 		void OnAccept()
 		{
-			if (files.Selected.Count != 1)
+			if (Selected.Count != 1)
 				return;
 
-			var location = files.Selected.Single();
+			var location = Selected.Single();
 			if (!location.HasChildren)
 				return;
 

@@ -11,6 +11,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<DockPanel Grid.Row="0">
@@ -19,8 +20,29 @@
 		</DockPanel>
 
 		<disk:DiskItemGrid x:Name="files" Grid.Row="1"
+			Items="{Binding Files, ElementName=self}"
+			Selected="{Binding Selected, ElementName=self}"
 			Columns="{Binding Columns, ElementName=self}"
 		/>
+		
+		<StatusBar Grid.Row="2" Focusable="False">
+			<StatusBarItem>
+				<TextBlock Text="Files"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Files.Count, ElementName=self}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
+				<TextBlock Text="Selected"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Selected.Count, ElementName=self}"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock/>
+			</StatusBarItem>
+		</StatusBar>
 	</Grid>
 
 </UserControl>
