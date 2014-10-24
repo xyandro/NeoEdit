@@ -19,6 +19,9 @@ namespace NeoEdit.Disk
 		[Header("Cu_t")] [KeyGesture(Key.X, ModifierKeys.Control)] Edit_Cut,
 		[Header("_Copy")] [KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy,
 		[Header("_Paste")] [KeyGesture(Key.V, ModifierKeys.Control)] Edit_Paste,
+		[Header("_Directories")] Select_Directories,
+		[Header("_Files")] Select_Files,
+		[Header("_Remove")] [KeyGesture(Key.OemMinus, ModifierKeys.Alt)] [KeyGesture(Key.OemMinus, ModifierKeys.Control)] Select_Remove,
 		[Header("_Refresh")] [KeyGesture(Key.F5)] View_Refresh,
 		[Header("_Tiles")] View_Tiles,
 	}

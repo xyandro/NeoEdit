@@ -14,11 +14,18 @@
 			<disk:DiskMenuItem CommandEnum="File_MD5"/>
 			<disk:DiskMenuItem CommandEnum="File_SHA1"/>
 			<disk:DiskMenuItem CommandEnum="File_Delete"/>
+			<Separator/>
+			<disk:DiskMenuItem CommandEnum="File_Exit"/>
+		</MenuItem>
+		<MenuItem Header="_Edit">
 			<disk:DiskMenuItem CommandEnum="Edit_Cut"/>
 			<disk:DiskMenuItem CommandEnum="Edit_Copy"/>
 			<disk:DiskMenuItem CommandEnum="Edit_Paste"/>
-			<Separator/>
-			<disk:DiskMenuItem CommandEnum="File_Exit"/>
+		</MenuItem>
+		<MenuItem Header="_Select">
+			<disk:DiskMenuItem CommandEnum="Select_Directories"/>
+			<disk:DiskMenuItem CommandEnum="Select_Files"/>
+			<disk:DiskMenuItem CommandEnum="Select_Remove"/>
 		</MenuItem>
 		<MenuItem Header="_View">
 			<disk:DiskMenuItem CommandEnum="View_Refresh"/>

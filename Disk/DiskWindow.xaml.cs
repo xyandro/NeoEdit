@@ -230,6 +230,27 @@ namespace NeoEdit.Disk
 			//Command_View_Refresh();
 		}
 
+		internal void Command_Select_Directories()
+		{
+			files.Selected.Clear();
+			foreach (var file in files.Items)
+				if (file.HasChildren)
+					files.Selected.Add(file);
+		}
+
+		internal void Command_Select_Files()
+		{
+			files.Selected.Clear();
+			foreach (var file in files.Items)
+				if (!file.HasChildren)
+					files.Selected.Add(file);
+		}
+
+		internal void Command_Select_Remove()
+		{
+			files.Selected.ToList().ForEach(file => files.Items.Remove(file as DiskItem));
+		}
+
 		internal void Command_View_Refresh()
 		{
 			var newFiles = new ObservableCollection<DiskItem>(Location.GetChildren());
