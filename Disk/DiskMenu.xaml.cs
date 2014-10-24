@@ -2,6 +2,8 @@
 
 namespace NeoEdit.Disk
 {
+	class DiskMenuItem : NEMenuItem<DiskCommand> { }
+
 	partial class DiskMenu
 	{
 		[DepProp]

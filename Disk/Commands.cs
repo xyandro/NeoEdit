@@ -3,8 +3,6 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.Disk
 {
-	class DiskMenuItem : NEMenuItem<DiskCommand> { }
-
 	enum DiskCommand
 	{
 		None,
