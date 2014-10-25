@@ -131,10 +131,19 @@ namespace NeoEdit.Disk
 
 		void ShowColumn(DependencyProperty prop)
 		{
-			var type = prop.PropertyType;
-			var sortAscending = (type != typeof(long?)) && (type != typeof(DateTime?));
-			if (!Columns.Any(column => column.DepProp == prop))
-				Columns.Add(new ItemGridColumn(prop) { SortAscending = sortAscending });
+			if (Columns.Any(column => column.DepProp == prop))
+				return;
+			var props = UIHelper<DiskItem>.GetProperties().ToList();
+			while ((props.Count != 0) && (props[0] != prop))
+				props.RemoveAt(0);
+			var index = Columns.Count;
+			for (var ctr = 0; ctr < Columns.Count; ++ctr)
+				if (props.Contains(Columns[ctr].DepProp))
+				{
+					index = ctr;
+					break;
+				}
+			Columns.Insert(index, new ItemGridColumn(prop));
 		}
 
 		internal void Command_File_Rename()
@@ -262,7 +271,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Find()
 		{
-			ShowColumn(a => a.FullName);
+			ShowColumn(a => a.Path);
 			Recursive = true;
 			locationChangedTimer.Start();
 		}

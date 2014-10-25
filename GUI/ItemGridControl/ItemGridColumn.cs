@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using NeoEdit.Common;
 
 namespace NeoEdit.GUI.ItemGridControl
@@ -20,7 +19,8 @@ namespace NeoEdit.GUI.ItemGridControl
 			var type = depProp.PropertyType;
 			HorizontalAlignment = ((!type.IsEnum) && (type.IsIntegerType()) || (type.IsDateType())) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
 			StringFormat = type.IsEnum ? null : type.IsIntegerType() ? "n0" : type.IsDateType() ? "yyyy/MM/dd HH:mm:ss" : null;
-			SortAscending = NumericStrings = true;
+			SortAscending = (!type.IsIntegerType()) && (!type.IsDateType());
+			NumericStrings = true;
 		}
 
 		public override string ToString()
