@@ -313,7 +313,6 @@ namespace NeoEdit.GUI.ItemGridControl
 
 			var keys = new KeySet
 			{
-				{ ModifierKeys.Control, Key.A, () => Items.ToList().ForEach(item => Selected.Add(item)) },
 				{ Key.Escape, () => lastTextInputTime = null },
 				{ Key.Enter, () => accept(this, new RoutedEventArgs()) },
 			};

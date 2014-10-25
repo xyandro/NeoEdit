@@ -54,6 +54,9 @@ namespace NeoEdit.Disk
 				case DiskCommand.Edit_Copy: Active.Command_Edit_Copy(); break;
 				case DiskCommand.Edit_Paste: Active.Command_Edit_Paste(); break;
 				case DiskCommand.Edit_Find: Active.Command_Edit_Find(); break;
+				case DiskCommand.Select_All: Active.Command_Select_All(); break;
+				case DiskCommand.Select_None: Active.Command_Select_None(); break;
+				case DiskCommand.Select_Invert: Active.Command_Select_Invert(); break;
 				case DiskCommand.Select_Directories: Active.Command_Select_Directories(); break;
 				case DiskCommand.Select_Files: Active.Command_Select_Files(); break;
 				case DiskCommand.Select_Remove: Active.Command_Select_Remove(); break;

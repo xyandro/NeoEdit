@@ -276,6 +276,27 @@ namespace NeoEdit.Disk
 			locationChangedTimer.Start();
 		}
 
+		internal void Command_Select_All()
+		{
+			Selected.Clear();
+			foreach (var file in Files)
+				Selected.Add(file);
+		}
+
+		internal void Command_Select_None()
+		{
+			Selected.Clear();
+		}
+
+		internal void Command_Select_Invert()
+		{
+			foreach (var file in Files)
+				if (Selected.Contains(file))
+					Selected.Remove(file);
+				else
+					Selected.Add(file);
+		}
+
 		internal void Command_Select_Directories()
 		{
 			Selected.Clear();

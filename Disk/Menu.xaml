@@ -25,6 +25,10 @@
 		<disk:DiskMenuItem CommandEnum="Edit_Find"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
+		<disk:DiskMenuItem CommandEnum="Select_All"/>
+		<disk:DiskMenuItem CommandEnum="Select_None"/>
+		<disk:DiskMenuItem CommandEnum="Select_Invert"/>
+		<Separator/>
 		<disk:DiskMenuItem CommandEnum="Select_Directories"/>
 		<disk:DiskMenuItem CommandEnum="Select_Files"/>
 		<disk:DiskMenuItem CommandEnum="Select_Remove"/>
