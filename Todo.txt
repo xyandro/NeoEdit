@@ -22,7 +22,6 @@ Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
 When closing multiple unsaved files ask for "Yes for All"/"No for All"
 Get directory files/dirs
-URL encoding/decoding
 
 Binary:
 Fix binary editor backwards search

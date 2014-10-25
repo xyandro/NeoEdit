@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -963,6 +964,11 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Regex.Escape(GetString(range))).ToList());
 		}
 
+		internal void Command_Data_Escape_URL()
+		{
+			ReplaceSelections(Selections.Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
+		}
+
 		internal void Command_Data_Unescape_XML()
 		{
 			ReplaceSelections(Selections.Select(range => GetString(range).Replace("&apos;", "'").Replace("&quot;", "\"").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">")).ToList());
@@ -971,6 +977,11 @@ namespace NeoEdit.TextEditor
 		internal void Command_Data_Unescape_Regex()
 		{
 			ReplaceSelections(Selections.Select(range => Regex.Unescape(GetString(range))).ToList());
+		}
+
+		internal void Command_Data_Unescape_URL()
+		{
+			ReplaceSelections(Selections.Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Checksum(Checksum.Type type, Coder.Type coder)

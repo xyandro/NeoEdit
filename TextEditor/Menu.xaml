@@ -212,10 +212,12 @@
 		<MenuItem Header="Escape">
 			<textEditor:TextEditMenuItem CommandEnum="Data_Escape_XML"/>
 			<textEditor:TextEditMenuItem CommandEnum="Data_Escape_Regex"/>
+			<textEditor:TextEditMenuItem CommandEnum="Data_Escape_URL"/>
 		</MenuItem>
 		<MenuItem Header="Unescape">
 			<textEditor:TextEditMenuItem CommandEnum="Data_Unescape_XML"/>
 			<textEditor:TextEditMenuItem CommandEnum="Data_Unescape_Regex"/>
+			<textEditor:TextEditMenuItem CommandEnum="Data_Unescape_URL"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="MD_5">

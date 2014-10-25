@@ -244,8 +244,10 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Random: Active.Command_Data_Random(); break;
 				case TextEditCommand.Data_Escape_XML: Active.Command_Data_Escape_XML(); break;
 				case TextEditCommand.Data_Escape_Regex: Active.Command_Data_Escape_Regex(); break;
+				case TextEditCommand.Data_Escape_URL: Active.Command_Data_Escape_URL(); break;
 				case TextEditCommand.Data_Unescape_XML: Active.Command_Data_Unescape_XML(); break;
 				case TextEditCommand.Data_Unescape_Regex: Active.Command_Data_Unescape_Regex(); break;
+				case TextEditCommand.Data_Unescape_URL: Active.Command_Data_Unescape_URL(); break;
 				case TextEditCommand.Data_MD5_UTF8: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF8); break;
 				case TextEditCommand.Data_MD5_UTF7: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF7); break;
 				case TextEditCommand.Data_MD5_UTF16LE: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF16LE); break;
