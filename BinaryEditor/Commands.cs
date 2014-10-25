@@ -26,7 +26,7 @@ namespace NeoEdit.BinaryEditor
 		[Header("UTF32BE")] File_Encode_UTF32BE,
 		[Header("Base64")] File_Encode_Base64,
 		[Header("Hex")] File_Encode_Hex,
-		[Header("Text Editor")] File_TextEditor,
+		[Header("Text Editor")] [KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Alt)] File_TextEditor,
 		[Header("E_xit")] File_Exit,
 		[Header("_Undo")] [KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,
 		[Header("_Redo")] [KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,

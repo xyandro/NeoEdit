@@ -280,6 +280,49 @@ namespace NeoEdit.Disk
 			locationChangedTimer.Start();
 		}
 
+		bool SearchFile(DiskItem file, BinaryFindDialog.Result search)
+		{
+			if ((file.Type != DiskItem.DiskItemType.File) || (!file.Exists))
+				return false;
+
+			var findLen = search.Searcher.MaxLen;
+			var buffer = new byte[8192];
+			var used = 0;
+			using (var stream = File.OpenRead(file.FullName))
+				while (true)
+				{
+					var block = stream.Read(buffer, used, buffer.Length - used);
+					if (block == 0)
+						break;
+					used += block;
+
+					var result = search.Searcher.Find(buffer, 0, used, true);
+					if (result.Any())
+						return true;
+
+					var keep = Math.Min(used, findLen - 1);
+					Array.Copy(buffer, used - keep, buffer, 0, keep);
+					used = keep;
+				}
+
+			return false;
+		}
+
+		internal void Command_Edit_FindInFiles()
+		{
+			if (Selected.Count == 0)
+				return;
+			var search = BinaryFindDialog.Run();
+			if (search == null)
+				return;
+
+			var files = Selected.ToList();
+			Selected.Clear();
+			foreach (var file in files)
+				if (SearchFile(file, search))
+					Selected.Add(file);
+		}
+
 		internal void Command_Edit_TextEdit()
 		{
 			foreach (var file in Selected)

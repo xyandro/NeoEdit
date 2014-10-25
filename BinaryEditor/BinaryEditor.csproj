@@ -57,7 +57,6 @@
     <Compile Include="UndoRedo.cs" />
     <Compile Include="Data\BinaryData.cs" />
     <Compile Include="Data\DumpBinaryData.cs" />
-    <Compile Include="Data\FindData.cs" />
     <Compile Include="Data\MemoryBinaryData.cs" />
     <Compile Include="Data\ProcessBinaryData.cs" />
     <Compile Include="Data\SharedMemoryBinaryData.cs" />
@@ -69,10 +68,6 @@
     </Compile>
     <Compile Include="BinaryEditor.xaml.cs">
       <DependentUpon>BinaryEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Converters\ValidValueConverter.cs" />
-    <Compile Include="Dialogs\FindDialog.xaml.cs">
-      <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="DisplayValue.xaml.cs">
       <DependentUpon>DisplayValue.xaml</DependentUpon>
@@ -92,10 +87,6 @@
     <Page Include="Dialogs\AsymmetricKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\FindDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DisplayValue.xaml">
       <SubType>Designer</SubType>

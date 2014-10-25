@@ -1,5 +1,6 @@
 ﻿using System;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.BinaryEditor.Data
 {
@@ -25,7 +26,7 @@ namespace NeoEdit.BinaryEditor.Data
 
 		public long Length { get { return length; } }
 
-		public virtual bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
+		public virtual bool Find(BinaryFindDialog.Result currentFind, long index, out long start, out long end, bool forward = true)
 		{
 			start = end = -1;
 			if (!forward)

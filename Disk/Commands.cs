@@ -18,6 +18,7 @@ namespace NeoEdit.Disk
 		[Header("_Copy")] [KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy,
 		[Header("_Paste")] [KeyGesture(Key.V, ModifierKeys.Control)] Edit_Paste,
 		[Header("_Find")] [KeyGesture(Key.F3)] Edit_Find,
+		[Header("Find In Files")] [KeyGesture(Key.F, ModifierKeys.Control)] Edit_FindInFiles,
 		[Header("Text Edit")] [KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Alt)] Edit_TextEdit,
 		[Header("Binary Edit")] [KeyGesture(Key.B, ModifierKeys.Control | ModifierKeys.Alt)] Edit_BinaryEdit,
 		[Header("_All")] [KeyGesture(Key.A, ModifierKeys.Control)] Select_All,

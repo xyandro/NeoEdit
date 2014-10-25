@@ -23,6 +23,7 @@
 		<disk:DiskMenuItem CommandEnum="Edit_Paste"/>
 		<Separator/>
 		<disk:DiskMenuItem CommandEnum="Edit_Find"/>
+		<disk:DiskMenuItem CommandEnum="Edit_FindInFiles"/>
 		<Separator/>
 		<disk:DiskMenuItem CommandEnum="Edit_TextEdit"/>
 		<disk:DiskMenuItem CommandEnum="Edit_BinaryEdit"/>

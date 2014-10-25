@@ -68,6 +68,9 @@
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\ExpressionConverter.cs" />
+    <Compile Include="Dialogs\BinaryFindDialog.xaml.cs">
+      <DependentUpon>BinaryFindDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
@@ -91,6 +94,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\BinaryFindDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\KeySet.cs" />
+    <Compile Include="Dialogs\ValidValueConverter.cs" />
     <Compile Include="ItemGridControl\ItemGrid.cs" />
     <Compile Include="ItemGridControl\ItemGridTreeItem.cs" />
     <Compile Include="ItemGridControl\ItemGridTree.cs" />

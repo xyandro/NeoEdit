@@ -688,7 +688,7 @@ namespace NeoEdit.BinaryEditor
 
 		internal void Command_Edit_Find()
 		{
-			var results = FindDialog.Run();
+			var results = BinaryFindDialog.Run();
 			if (results != null)
 			{
 				currentFind = results;
@@ -808,7 +808,7 @@ namespace NeoEdit.BinaryEditor
 			}.Show();
 		}
 
-		FindData currentFind;
+		BinaryFindDialog.Result currentFind;
 		void DoFind(bool forward = true)
 		{
 			if (currentFind == null)

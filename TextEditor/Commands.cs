@@ -20,7 +20,7 @@ namespace NeoEdit.TextEditor
 		[Header("_Encoding")] File_Encoding,
 		[Header("_Unix")] File_Ending_LF,
 		[Header("_Mac")] File_Ending_CR,
-		[Header("Binary Editor")] File_BinaryEditor,
+		[Header("Binary Editor")] [KeyGesture(Key.B, ModifierKeys.Control | ModifierKeys.Alt)] File_BinaryEditor,
 		[Header("E_xit")] File_Exit,
 		[Header("_Undo")] [KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,
 		[Header("_Redo")] [KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,

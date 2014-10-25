@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using NeoEdit.GUI.Dialogs;
 using NeoEdit.Win32;
 
 namespace NeoEdit.BinaryEditor.Data
@@ -130,7 +131,7 @@ namespace NeoEdit.BinaryEditor.Data
 			}
 		}
 
-		public override bool Find(FindData currentFind, long index, out long start, out long end, bool forward = true)
+		public override bool Find(BinaryFindDialog.Result currentFind, long index, out long start, out long end, bool forward = true)
 		{
 			using (Suspend())
 			using (Open())

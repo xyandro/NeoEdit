@@ -4,7 +4,7 @@ using System.Windows.Data;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.BinaryEditor.Converters
+namespace NeoEdit.GUI.Dialogs
 {
 	class ValidValueConverter : IValueConverter
 	{

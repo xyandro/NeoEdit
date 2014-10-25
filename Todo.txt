@@ -6,7 +6,6 @@ Add command prompt
 Diff?
 
 Disk:
-Search in multiple files
 
 Text:
 Bookmarks
