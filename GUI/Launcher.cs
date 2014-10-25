@@ -9,8 +9,8 @@ namespace NeoEdit.GUI
 		public static Launcher Static { get { return launcher; } }
 
 		protected Action systemInfoLauncher;
-		protected Action<string, byte[], Coder.Type> textEditorLauncher;
-		protected Action<string, byte[], Coder.Type> fileBinaryEditorLauncher;
+		protected Action<string, byte[], Coder.Type, bool> textEditorLauncher;
+		protected Action<string, byte[], Coder.Type, bool> fileBinaryEditorLauncher;
 		protected Action<int> processBinaryEditorLauncher;
 		protected Action diskLauncher;
 		protected Action consoleLauncher;
@@ -20,8 +20,8 @@ namespace NeoEdit.GUI
 		protected Action dbViewerLauncher;
 		public static void Initialize(
 			Action systemInfo,
-			Action<string, byte[], Coder.Type> textEditor,
-			Action<string, byte[], Coder.Type> fileBinaryEditor,
+			Action<string, byte[], Coder.Type, bool> textEditor,
+			Action<string, byte[], Coder.Type, bool> fileBinaryEditor,
 			Action<int> processBinaryEditor,
 			Action disk,
 			Action console,
@@ -51,14 +51,14 @@ namespace NeoEdit.GUI
 			systemInfoLauncher();
 		}
 
-		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
+		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, bool createNew = false)
 		{
-			textEditorLauncher(filename, bytes, encoding);
+			textEditorLauncher(filename, bytes, encoding, createNew);
 		}
 
-		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
+		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, bool createNew = false)
 		{
-			fileBinaryEditorLauncher(filename, bytes, encoding);
+			fileBinaryEditorLauncher(filename, bytes, encoding, createNew);
 		}
 
 		public void LaunchBinaryEditor(int pid)

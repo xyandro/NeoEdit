@@ -48,9 +48,9 @@ namespace NeoEdit.GUI.Common
 			else if (e.Command == Command_Window_DBViewer)
 				Launcher.Static.LaunchDBViewer();
 			else if (e.Command == Command_Window_BinaryEditor)
-				Launcher.Static.LaunchBinaryEditor();
+				Launcher.Static.LaunchBinaryEditor(createNew: true);
 			else if (e.Command == Command_Window_TextEditor)
-				Launcher.Static.LaunchTextEditor();
+				Launcher.Static.LaunchTextEditor(createNew: true);
 			else if (e.Command == Command_Window_SystemInfo)
 				Launcher.Static.LaunchSystemInfo();
 		}

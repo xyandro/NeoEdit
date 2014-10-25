@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -142,6 +143,11 @@ namespace NeoEdit.GUI.Common
 		public static void SetPropValue<T>(ControlType control, T value, [CallerMemberName] string caller = "")
 		{
 			control.SetValue(dependencyProperty[caller], value);
+		}
+
+		public static ControlType GetNewest()
+		{
+			return Application.Current.Windows.OfType<ControlType>().Cast<ControlType>().LastOrDefault();
 		}
 	}
 }

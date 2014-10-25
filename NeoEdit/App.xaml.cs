@@ -107,7 +107,7 @@ namespace NeoEdit
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							return new TextEditorTabs(filename, line: line, column: column);
+							return TextEditorTabs.Create(filename, line: line, column: column);
 						}
 					case "binary":
 					case "binaryedit":
@@ -192,8 +192,8 @@ namespace NeoEdit
 
 			NeoEdit.GUI.Launcher.Initialize(
 				systemInfo: () => new SystemInfoWindow(),
-				textEditor: (filename, bytes, encoding) => new TextEditorTabs(filename, bytes, encoding),
-				fileBinaryEditor: (filename, binarydata, encoder) => BinaryEditorTabs.CreateFromFile(filename, binarydata, encoder),
+				textEditor: (filename, bytes, encoding, createNew) => TextEditorTabs.Create(filename, bytes, encoding, createNew: createNew),
+				fileBinaryEditor: (filename, binarydata, encoder, createNew) => BinaryEditorTabs.CreateFromFile(filename, binarydata, encoder, createNew),
 				processBinaryEditor: (pid) => BinaryEditorTabs.CreateFromProcess(pid),
 				disk: () => new DiskTabs(),
 				console: () => new ConsoleTabs(),

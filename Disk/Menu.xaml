@@ -23,6 +23,9 @@
 		<disk:DiskMenuItem CommandEnum="Edit_Paste"/>
 		<Separator/>
 		<disk:DiskMenuItem CommandEnum="Edit_Find"/>
+		<Separator/>
+		<disk:DiskMenuItem CommandEnum="Edit_TextEdit"/>
+		<disk:DiskMenuItem CommandEnum="Edit_BinaryEdit"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<disk:DiskMenuItem CommandEnum="Select_All"/>

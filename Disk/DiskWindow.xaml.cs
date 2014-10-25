@@ -280,6 +280,18 @@ namespace NeoEdit.Disk
 			locationChangedTimer.Start();
 		}
 
+		internal void Command_Edit_TextEdit()
+		{
+			foreach (var file in Selected)
+				Launcher.Static.LaunchTextEditor(file.FullName);
+		}
+
+		internal void Command_Edit_BinaryEdit()
+		{
+			foreach (var file in Selected)
+				Launcher.Static.LaunchBinaryEditor(file.FullName);
+		}
+
 		internal void Command_Select_All()
 		{
 			Selected.Clear();

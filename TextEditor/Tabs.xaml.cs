@@ -23,18 +23,21 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		public Tabs.ViewType View { get { return UIHelper<TextEditorTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextEditorTabs>.SetPropValue(this, value); } }
 
-		static TextEditorTabs()
+		static TextEditorTabs() { UIHelper<TextEditorTabs>.Register(); }
+
+		public static TextEditorTabs Create(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1, bool createNew = false)
 		{
-			UIHelper<TextEditorTabs>.Register();
+			var textEditorTabs = (!createNew ? UIHelper<TextEditorTabs>.GetNewest() : null) ?? new TextEditorTabs();
+			textEditorTabs.Add(new TextEditor(filename, bytes, encoding, line, column));
+			return textEditorTabs;
 		}
 
-		public TextEditorTabs(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1)
+		TextEditorTabs()
 		{
 			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 
 			TextEditors = new ObservableCollection<TextEditor>();
-			Add(new TextEditor(filename, bytes, encoding, line, column));
 		}
 
 		void Command_File_Open()
