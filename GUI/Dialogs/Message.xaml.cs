@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Common;
@@ -17,6 +18,7 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		public OptionsEnum DefaultCancel { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 
+		[Flags]
 		public enum OptionsEnum
 		{
 			None = 0,
@@ -30,7 +32,9 @@ namespace NeoEdit.GUI.Dialogs
 			YesNoYesAllNoAll = Yes | No | YesToAll | NoToAll,
 			Ok = 16,
 			Cancel = 32,
+			OkCancel = Ok | Cancel,
 			YesNoCancel = Yes | No | Cancel,
+			YesNoYesAllNoAllCancel = Yes | No | YesToAll | NoToAll | Cancel,
 		}
 
 		static Dictionary<OptionsEnum, string> buttonContent = new Dictionary<OptionsEnum, string>()

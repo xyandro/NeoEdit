@@ -175,20 +175,33 @@ namespace NeoEdit.TextEditor
 
 		internal bool CanClose()
 		{
+			var answer = Message.OptionsEnum.None;
+			return CanClose(ref answer);
+		}
+
+		internal bool CanClose(ref Message.OptionsEnum answer)
+		{
 			if (!IsModified)
 				return true;
 
-			switch (new Message
+			if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
+				answer = new Message
+				{
+					Title = "Confirm",
+					Text = "Do you want to save changes?",
+					Options = Message.OptionsEnum.YesNoYesAllNoAllCancel,
+					DefaultCancel = Message.OptionsEnum.Cancel,
+				}.Show();
+
+			switch (answer)
 			{
-				Title = "Confirm",
-				Text = "Do you want to save changes?",
-				Options = Message.OptionsEnum.YesNoCancel,
-				DefaultCancel = Message.OptionsEnum.Cancel,
-			}.Show())
-			{
-				case Message.OptionsEnum.Cancel: return false;
-				case Message.OptionsEnum.No: return true;
+				case Message.OptionsEnum.Cancel:
+					return false;
+				case Message.OptionsEnum.No:
+				case Message.OptionsEnum.NoToAll:
+					return true;
 				case Message.OptionsEnum.Yes:
+				case Message.OptionsEnum.YesToAll:
 					Command_File_Save();
 					return !IsModified;
 			}

@@ -80,11 +80,12 @@ namespace NeoEdit.TextEditor
 
 		protected override void OnClosing(CancelEventArgs e)
 		{
+			var answer = Message.OptionsEnum.None;
 			var active = Active;
 			foreach (var textEditor in TextEditors)
 			{
 				Active = textEditor;
-				if (!textEditor.CanClose())
+				if (!textEditor.CanClose(ref answer))
 				{
 					e.Cancel = true;
 					return;
