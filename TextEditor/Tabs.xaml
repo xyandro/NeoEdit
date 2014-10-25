@@ -4,9 +4,10 @@
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:textEditor="clr-namespace:NeoEdit.TextEditor"
 	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
-
+	
 	<Window.Title>
-		<MultiBinding StringFormat="{}{0} - NeoEdit Text Editor">
+		<!--A simple Binding doesn't give any title if [0] blank-->
+		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="StrFormat('{0} - NeoEdit Text Editor', [0])">
 			<Binding Path="Active.FileName" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>
