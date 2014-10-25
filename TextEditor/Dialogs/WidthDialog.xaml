@@ -22,7 +22,7 @@
 		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="widthBox" Value="{Binding Value, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self}"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Location:"/>
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">

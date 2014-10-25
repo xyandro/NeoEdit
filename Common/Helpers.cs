@@ -177,7 +177,7 @@ namespace NeoEdit.Common
 			if (inputLen == 0)
 				return false;
 			for (var ctr = 0; ctr < inputLen; ++ctr)
-				if ((input[ctr] < '0') || (input[ctr] > '9'))
+				if (!Char.IsDigit(input[ctr]))
 					return false;
 			return true;
 		}

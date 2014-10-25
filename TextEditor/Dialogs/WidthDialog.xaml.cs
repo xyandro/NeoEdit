@@ -27,6 +27,8 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			InitializeComponent();
 
+			this.padChar.GotFocus += (s, e) => this.padChar.SelectAll();
+
 			Value = MinValue = minValue;
 			PadChar = new string(padChar, 1);
 			if (before)
