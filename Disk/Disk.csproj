@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="ColumnsConverter.cs" />
     <Compile Include="Dialogs\ExpressionDialog.xaml.cs">
       <DependentUpon>ExpressionDialog.xaml</DependentUpon>
     </Compile>

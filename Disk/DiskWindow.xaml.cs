@@ -33,6 +33,10 @@ namespace NeoEdit.Disk
 		[DepProp]
 		ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
+		ItemGridColumn SortColumn { get { return UIHelper<DiskWindow>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
+		bool SortAscending { get { return UIHelper<DiskWindow>.GetPropValue<bool>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
 		int ColumnsChangeCount { get { return UIHelper<DiskWindow>.GetPropValue<int>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 
 		static DiskWindow()
@@ -376,6 +380,18 @@ namespace NeoEdit.Disk
 			}
 
 			ShowColumn(property);
+		}
+
+		internal void SetSort(DependencyProperty property)
+		{
+			var sortColumn = Columns.FirstOrDefault(column => column.DepProp == property);
+			if (sortColumn == null)
+				return;
+
+			if (SortColumn != sortColumn)
+				SortColumn = sortColumn;
+			else
+				SortAscending = !SortAscending;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

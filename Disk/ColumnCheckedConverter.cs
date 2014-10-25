@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
@@ -21,7 +21,9 @@ namespace NeoEdit.Disk
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var menuitem = value[0] as ColumnMenuItem;
-			var columns = value[1] as ObservableCollection<ItemGridColumn>;
+			var columns = value[1] as IEnumerable<ItemGridColumn>;
+			if ((columns == null) && (value[1] is ItemGridColumn))
+				columns = new List<ItemGridColumn> { value[1] as ItemGridColumn };
 			return columns.Any(column => column.DepProp == menuitem.Property);
 		}
 

@@ -71,6 +71,12 @@ namespace NeoEdit.Disk
 				Active.ToggleColumn(property);
 		}
 
+		internal void SetSort(DependencyProperty property)
+		{
+			if (Active != null)
+				Active.SetSort(property);
+		}
+
 		void Add(DiskWindow diskWindow)
 		{
 			DiskWindows.Add(diskWindow);

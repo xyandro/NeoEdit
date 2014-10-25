@@ -24,6 +24,8 @@
 			Selected="{Binding Selected, ElementName=self}"
 			Focused="{Binding Focused, ElementName=self, Mode=TwoWay}"
 			Columns="{Binding Columns, ElementName=self}"
+			SortColumn="{Binding SortColumn, ElementName=self, Mode=TwoWay}"
+			SortAscending="{Binding SortAscending, ElementName=self, Mode=TwoWay}"
 		/>
 		
 		<StatusBar Grid.Row="2" Focusable="False">
