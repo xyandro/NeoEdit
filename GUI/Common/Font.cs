@@ -6,17 +6,17 @@ using System.Windows.Media;
 
 namespace NeoEdit.GUI.Common
 {
-	public class Font
+	public static class Font
 	{
-		public readonly double charWidth;
-		public readonly double lineHeight;
+		public static readonly double charWidth;
+		public static readonly double lineHeight;
 
-		readonly Typeface typeface;
-		readonly double fontSize;
+		static readonly Typeface typeface;
+		static readonly double fontSize;
 
-		public Font()
+		static Font()
 		{
-			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#Anonymous Pro");
+			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#DejaVu Sans Mono");
 			typeface = fontFamily.GetTypefaces().First();
 			fontSize = 14;
 			lineHeight = fontSize;
@@ -26,7 +26,7 @@ namespace NeoEdit.GUI.Common
 			charWidth = formattedText.Width / example.Length;
 		}
 
-		public FormattedText GetText(string str, Brush brush = null)
+		public static FormattedText GetText(string str, Brush brush = null)
 		{
 			if (brush == null)
 				brush = Brushes.Black;

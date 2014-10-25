@@ -86,7 +86,6 @@ namespace NeoEdit.TextEditor
 		}
 
 		RunOnceTimer selectionsTimer, searchesTimer, marksTimer, renderTimer;
-		Font font = new Font();
 
 		public TextEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
 		{
@@ -1352,7 +1351,7 @@ namespace NeoEdit.TextEditor
 			var screenEnd = lineRanges.Last().Value.End + 1;
 			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn, true));
 			var endIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, endColumn, true));
-			var y = lines.ToDictionary(line => line, line => (line - startLine) * font.lineHeight);
+			var y = lines.ToDictionary(line => line, line => (line - startLine) * Font.lineHeight);
 			var cursorLineDone = new HashSet<int>();
 			var visibleCursor = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
 
@@ -1374,11 +1373,11 @@ namespace NeoEdit.TextEditor
 					if ((entry.Item1 == Selections) && (!hasSelection) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
 						if (range == visibleCursor)
-							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, font.lineHeight));
+							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.lineHeight));
 
 						if (!cursorLineDone.Contains(cursorLine))
 						{
-							dc.DrawRectangle(Misc.cursorBrush, Misc.cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, font.lineHeight));
+							dc.DrawRectangle(Misc.cursorBrush, Misc.cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.lineHeight));
 							cursorLineDone.Add(cursorLine);
 						}
 
@@ -1386,7 +1385,7 @@ namespace NeoEdit.TextEditor
 						if ((cursor >= startIndexes[cursorLine]) && (cursor <= endIndexes[cursorLine]))
 						{
 							cursor = Data.GetColumnFromIndex(cursorLine, cursor);
-							dc.DrawRectangle(Brushes.Black, null, new Rect((cursor - startColumn) * font.charWidth - 1, y[cursorLine], 2, font.lineHeight));
+							dc.DrawRectangle(Brushes.Black, null, new Rect((cursor - startColumn) * Font.charWidth - 1, y[cursorLine], 2, Font.lineHeight));
 						}
 					}
 
@@ -1409,7 +1408,7 @@ namespace NeoEdit.TextEditor
 
 						var steps = range == visibleCursor ? 2 : 1;
 						for (var ctr = 0; ctr < steps; ++ctr)
-							dc.DrawRectangle(entry.Item2, null, new Rect(start * font.charWidth, y[line], width * font.charWidth + 1, font.lineHeight));
+							dc.DrawRectangle(entry.Item2, null, new Rect(start * Font.charWidth, y[line], width * Font.charWidth + 1, Font.lineHeight));
 					}
 				}
 			}
@@ -1431,7 +1430,7 @@ namespace NeoEdit.TextEditor
 				}
 
 				str = str.Substring(startColumn, Math.Min(endColumn, str.Length) - startColumn);
-				var text = font.GetText(str);
+				var text = Font.GetText(str);
 				foreach (var entry in highlight)
 				{
 					var start = entry.Item2 - startColumn;
@@ -1789,8 +1788,8 @@ namespace NeoEdit.TextEditor
 
 		void MouseHandler(Point mousePos, int clickCount, bool selecting)
 		{
-			var line = Math.Min(Data.NumLines - 1, (int)(mousePos.Y / font.lineHeight) + yScrollValue);
-			var index = Math.Min(Data.GetLineLength(line), Data.GetIndexFromColumn(line, (int)(mousePos.X / font.charWidth) + xScrollValue, true));
+			var line = Math.Min(Data.NumLines - 1, (int)(mousePos.Y / Font.lineHeight) + yScrollValue);
+			var index = Math.Min(Data.GetLineLength(line), Data.GetIndexFromColumn(line, (int)(mousePos.X / Font.charWidth) + xScrollValue, true));
 			var offset = Data.GetOffset(line, index);
 			var mouseRange = Selections[visibleIndex];
 
@@ -1999,14 +1998,14 @@ namespace NeoEdit.TextEditor
 			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
 				return;
 
-			xScroll.ViewportSize = canvas.ActualWidth / font.charWidth;
+			xScroll.ViewportSize = canvas.ActualWidth / Font.charWidth;
 			xScroll.Minimum = 0;
 			xScroll.Maximum = Data.MaxColumn - xScrollViewportFloor;
 			xScroll.SmallChange = 1;
 			xScroll.LargeChange = Math.Max(0, xScroll.ViewportSize - 1);
 			xScrollValue = xScrollValue;
 
-			yScroll.ViewportSize = canvas.ActualHeight / font.lineHeight;
+			yScroll.ViewportSize = canvas.ActualHeight / Font.lineHeight;
 			yScroll.Minimum = 0;
 			yScroll.Maximum = Data.NumLines - yScrollViewportFloor;
 			yScroll.SmallChange = 1;

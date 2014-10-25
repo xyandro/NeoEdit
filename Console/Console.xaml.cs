@@ -44,7 +44,6 @@ namespace NeoEdit.Console
 			UIHelper<Console>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		Font font = new Font();
 		RunOnceTimer renderTimer;
 
 		public Console(string path = null)
@@ -77,7 +76,7 @@ namespace NeoEdit.Console
 			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
 				return;
 
-			yScroll.ViewportSize = canvas.ActualHeight / font.lineHeight;
+			yScroll.ViewportSize = canvas.ActualHeight / Font.lineHeight;
 			yScroll.Minimum = 0;
 			yScroll.Maximum = Lines.Count - yScrollViewportFloor;
 			yScroll.SmallChange = 1;
@@ -458,9 +457,9 @@ namespace NeoEdit.Console
 			for (var ctr = startLine; ctr < endLine; ++ctr)
 			{
 				var line = Lines[ctr];
-				var text = font.GetText(line.Str, brushes[line.Type]);
+				var text = Font.GetText(line.Str, brushes[line.Type]);
 				dc.DrawText(text, new Point(0, y));
-				y += font.lineHeight;
+				y += Font.lineHeight;
 			}
 		}
 	}
