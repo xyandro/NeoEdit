@@ -25,7 +25,7 @@ namespace NeoEdit.Common
 				public int index;
 				public object term;
 
-				public object GetTerm(object[] values, List<object> results)
+				public object GetTerm(List<object> values, List<object> results)
 				{
 					switch (type)
 					{
@@ -44,17 +44,17 @@ namespace NeoEdit.Common
 			}
 
 			public string operation { get; private set; }
-			public Term[] terms { get; private set; }
+			public List<Term> terms { get; private set; }
 
 			public Operation(string _operation, params Term[] _terms)
 			{
 				operation = _operation;
-				terms = _terms;
+				terms = _terms.ToList();
 			}
 
-			public object GetTerm(int index, object[] values, List<object> results)
+			public object GetTerm(int index, List<object> values, List<object> results)
 			{
-				if ((terms.Length <= index) || (terms[index] == null))
+				if ((terms.Count <= index) || (terms[index] == null))
 					return null;
 				return terms[index].GetTerm(values, results);
 			}
@@ -106,12 +106,17 @@ namespace NeoEdit.Common
 
 		void SimplifyAndPopulateInternals(ref string expression, out List<object> internals)
 		{
-			if (expression.StartsWith("!"))
+			if (expression.StartsWith("!!"))
 			{
-				debug = true;
-				expression = expression.Substring(1);
+				expression = expression.Substring(2);
 				if (Debugger.IsAttached)
 					Debugger.Break();
+			}
+
+			if (expression.StartsWith("!"))
+			{
+				expression = expression.Substring(1);
+				debug = true;
 			}
 
 			internals = new List<object>();
@@ -381,24 +386,31 @@ namespace NeoEdit.Common
 			return new Expression(expression).Evaluate();
 		}
 
-		string StrFormat(Operation.Term[] terms, object[] values, List<object> results)
+		string StrFormat(List<Operation.Term> terms, List<object> values, List<object> results)
 		{
 			var termVals = terms.Select(term => term.GetTerm(values, results)).ToList();
 			var format = GetString(termVals[0]);
-			var args = termVals.Skip(1).ToArray();
+			var args = termVals.Skip(1).Select(arg => arg ?? "").ToArray();
 			return String.Format(format, args);
 		}
 
-		object LiveValue(object[] values)
+		object LiveValue(List<object> values)
 		{
-			var expression = String.Join(liveExp, Enumerable.Range(0, values.Length).Select(a => String.Format("[{0}]", a)));
-			return new Expression(expression).Evaluate(values);
+			var expression = String.Join(liveExp, Enumerable.Range(0, values.Count).Select(a => String.Format("[{0}]", a)));
+			return new Expression(expression).Evaluate(values.ToArray());
 		}
 
-		public object Evaluate(params object[] values)
+		object CheckUnset(object value)
+		{
+			return (value != null) && (value.GetType().FullName == "MS.Internal.NamedObject") && (value.ToString() == "{DependencyProperty.UnsetValue}") ? null : value;
+		}
+
+		public object Evaluate(params object[] _values)
 		{
 			if ((debug) && (Debugger.IsAttached))
 				Debugger.Break();
+
+			var values = _values.Select(value => CheckUnset(value)).ToList();
 
 			if (liveExp != null)
 				return LiveValue(values);
