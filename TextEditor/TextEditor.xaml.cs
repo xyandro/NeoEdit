@@ -499,9 +499,16 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Files_CutCopy(bool isCut)
 		{
-			var result = Selections.Select(range => GetString(range)).ToArray();
-			if (result.Length != 0)
+			var result = Selections.Select(range => GetString(range)).ToList();
+			if (result.Count != 0)
 				ClipboardWindow.SetFiles(result, isCut);
+		}
+
+		internal void Command_Files_Open()
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			foreach (var file in files)
+				TextEditorTabs.Create(file);
 		}
 
 		internal void Command_Files_Delete()
@@ -514,7 +521,7 @@ namespace NeoEdit.TextEditor
 				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() == Message.OptionsEnum.Yes)
 			{
-				var files = Selections.Select(range => GetString(range)).ToArray();
+				var files = Selections.Select(range => GetString(range)).ToList();
 				foreach (var file in files)
 				{
 					if (File.Exists(file))
@@ -539,7 +546,7 @@ namespace NeoEdit.TextEditor
 			var result = ChooseDateTimeDialog.Run(DateTime.Now);
 			if (result != null)
 			{
-				var files = Selections.Select(range => GetString(range)).ToArray();
+				var files = Selections.Select(range => GetString(range)).ToList();
 				foreach (var file in files)
 				{
 					if (!FileOrDirectoryExists(file))
@@ -581,7 +588,7 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Files_CreateDirectory()
 		{
-			var files = Selections.Select(range => GetString(range)).ToArray();
+			var files = Selections.Select(range => GetString(range)).ToList();
 			foreach (var file in files)
 				Directory.CreateDirectory(file);
 		}

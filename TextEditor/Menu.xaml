@@ -43,6 +43,7 @@
 	<MenuItem Header="F_iles">
 		<textEditor:TextEditMenuItem CommandEnum="Files_Copy"/>
 		<textEditor:TextEditMenuItem CommandEnum="Files_Cut"/>
+		<textEditor:TextEditMenuItem CommandEnum="Files_Open"/>
 		<textEditor:TextEditMenuItem CommandEnum="Files_Delete"/>
 		<Separator/>
 		<MenuItem Header="_Timestamp">

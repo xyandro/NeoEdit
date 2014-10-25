@@ -137,6 +137,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Edit_GotoIndex: Active.Command_Edit_GotoIndex(); break;
 				case TextEditCommand.Files_Copy: Active.Command_Files_CutCopy(false); break;
 				case TextEditCommand.Files_Cut: Active.Command_Files_CutCopy(true); break;
+				case TextEditCommand.Files_Open: Active.Command_Files_Open(); break;
 				case TextEditCommand.Files_Delete: Active.Command_Files_Delete(); break;
 				case TextEditCommand.Files_Timestamp_Write: Active.Command_Files_Timestamp(TextEditor.TimestampType.Write); break;
 				case TextEditCommand.Files_Timestamp_Access: Active.Command_Files_Timestamp(TextEditor.TimestampType.Access); break;

@@ -35,6 +35,7 @@ namespace NeoEdit.TextEditor
 		[Header("Goto C_olumn")] Edit_GotoIndex,
 		[Header("_Copy")] Files_Copy,
 		[Header("C_ut")] Files_Cut,
+		[Header("_Open")] Files_Open,
 		[Header("_Delete")] Files_Delete,
 		[Header("_Write")] Files_Timestamp_Write,
 		[Header("_Access")] Files_Timestamp_Access,
