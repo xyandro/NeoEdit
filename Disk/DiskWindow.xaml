@@ -16,7 +16,7 @@
 
 		<DockPanel Grid.Row="0">
 			<Label Content="A_ddress" Target="{Binding ElementName=location}"/>
-			<TextBox Name="location" Text="{Binding Location, ElementName=self, Mode=OneWay}" HorizontalAlignment="Stretch" KeyDown="location_KeyDown"/>
+			<TextBox Name="location" HorizontalAlignment="Stretch" KeyDown="location_KeyDown"/>
 		</DockPanel>
 
 		<disk:DiskItemGrid x:Name="files" Grid.Row="1"

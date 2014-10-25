@@ -4,6 +4,7 @@ Starting 2nd instance pops up in background
 Tabs: Ctrl-Tab to switch
 Add command prompt
 Diff?
+Don't hide title when no active item available
 
 Disk:
 Search in multiple files

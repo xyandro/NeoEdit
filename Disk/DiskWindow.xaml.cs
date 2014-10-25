@@ -18,27 +18,12 @@ namespace NeoEdit.Disk
 {
 	class DiskItemGrid : ItemGrid<DiskItem> { }
 
-	class FilesLocation
-	{
-		public readonly DiskItem item;
-		public readonly bool recursive;
-
-		public FilesLocation(DiskItem item, bool recursive = false)
-		{
-			this.item = item;
-			this.recursive = recursive;
-		}
-
-		public override string ToString()
-		{
-			return item.ToString();
-		}
-	}
-
 	partial class DiskWindow
 	{
 		[DepProp]
-		FilesLocation Location { get { return UIHelper<DiskWindow>.GetPropValue<FilesLocation>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
+		bool Recursive { get { return UIHelper<DiskWindow>.GetPropValue<bool>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		ObservableCollection<DiskItem> Files { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
@@ -50,24 +35,26 @@ namespace NeoEdit.Disk
 		[DepProp]
 		int ColumnsChangeCount { get { return UIHelper<DiskWindow>.GetPropValue<int>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 
-		Stack<FilesLocation> lastLocation = new Stack<FilesLocation>();
-		Stack<FilesLocation> nextLocation = new Stack<FilesLocation>();
-
 		static DiskWindow()
 		{
 			UIHelper<DiskWindow>.Register();
-			UIHelper<DiskWindow>.AddCallback(a => a.Location, (s, o, n) => s.LocationChanged(o));
+			UIHelper<DiskWindow>.AddCallback(a => a.Location, (obj, o, n) => { if (obj.Location != null) { obj.Recursive = false; obj.locationChangedTimer.Start(); } });
+			UIHelper<DiskWindow>.AddCallback(a => a.Recursive, (obj, o, n) => obj.locationChangedTimer.Start());
 			UIHelper<DiskWindow>.AddObservableCallback(a => a.Columns, (obj, s, e) => ++obj.ColumnsChangeCount);
 		}
+
+		RunOnceTimer locationChangedTimer;
 
 		public DiskWindow(string path = null)
 		{
 			if (String.IsNullOrEmpty(path))
 				path = Directory.GetCurrentDirectory();
 
+			locationChangedTimer = new RunOnceTimer(() => LocationChanged());
+
 			InitializeComponent();
 			location.GotFocus += (s, e) => location.SelectAll();
-			location.LostFocus += (s, e) => UIHelper<DiskWindow>.InvalidateBinding(location, TextBox.TextProperty);
+			location.LostFocus += (s, e) => { if (Location != null) location.Text = Location.FullName; };
 			location.PreviewKeyDown += LocationKeyDown;
 			files.Accept += (s, e) => OnAccept();
 
@@ -87,27 +74,6 @@ namespace NeoEdit.Disk
 		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt; } }
 		bool noModifiers { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.None; } }
 
-		bool changingLocation = false;
-		void LocationChanged(FilesLocation last)
-		{
-			if ((!changingLocation) && (last != null))
-			{
-				lastLocation.Push(last);
-				nextLocation.Clear();
-			}
-
-			if (!Location.item.HasChildren)
-			{
-				changingLocation = true;
-				Location = new FilesLocation(Location.item.Parent);
-				changingLocation = false;
-				return;
-			}
-
-			files.ResetScroll();
-			Command_View_Refresh();
-		}
-
 		void LocationKeyDown(object sender, KeyEventArgs e)
 		{
 			if ((e.Key == Key.V) && (controlDown))
@@ -122,13 +88,40 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		void SetLocation(string location)
+		void SetLocation(string path)
 		{
-			var item = DiskItem.Get(location);
-			if (item == null)
+			var location = DiskItem.Get(path);
+			if (location == null)
 				throw new Exception("Invalid path.");
 
-			Location = new FilesLocation(item);
+			Location = location;
+		}
+
+		void LocationChanged()
+		{
+			DiskItem selectedFile = null;
+			if (Location != null)
+			{
+				if (!Location.HasChildren)
+				{
+					selectedFile = Location;
+					Location = Location.Parent;
+				}
+				location.Text = Location.FullName;
+			}
+
+			Command_View_Refresh();
+			files.ResetScroll();
+
+			if (selectedFile != null)
+				selectedFile = Files.FirstOrDefault(file => file.Equals(selectedFile));
+			if (selectedFile != null)
+			{
+				Focused = selectedFile;
+				Selected.Add(selectedFile);
+			}
+
+			locationChangedTimer.Stop();
 		}
 
 		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
@@ -198,11 +191,11 @@ namespace NeoEdit.Disk
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 
-
-			foreach (DiskItem file in Selected)
+			foreach (var file in Selected)
 			{
 				file.Delete();
 				Files.Remove(file);
+				Files.Where(item => item.IsChildOf(file)).ToList().ForEach(item => Files.Remove(item));
 			}
 		}
 
@@ -269,7 +262,9 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Find()
 		{
-			Location = new FilesLocation(Location.item, true);
+			ShowColumn(a => a.FullName);
+			Recursive = true;
+			locationChangedTimer.Start();
 		}
 
 		internal void Command_Select_Directories()
@@ -290,27 +285,43 @@ namespace NeoEdit.Disk
 
 		internal void Command_Select_Remove()
 		{
+			Location = null;
 			Selected.ToList().ForEach(file => Files.Remove(file));
 		}
 
 		internal void Command_View_Refresh()
 		{
-			var recursive = Location.recursive;
-			if (recursive)
-				ShowColumn(a => a.Path);
-			var newFiles = new ObservableCollection<DiskItem>();
-			var locations = new List<DiskItem> { Location.item };
-			for (var ctr = 0; ctr < locations.Count; ++ctr)
-			{
-				var children = locations[ctr].GetChildren();
-				foreach (var child in children)
+			List<DiskItem> items;
+
+			if (Location == null)
+				items = Files.Where(file => file.Exists).ToList();
+			else
+				items = new List<DiskItem> { Location };
+
+			var found = new HashSet<string>(items.Select(file => file.FullName));
+			if ((Location != null) || (Recursive))
+				for (var ctr = 0; ctr < items.Count; ++ctr)
 				{
-					if ((recursive) && (child.HasChildren))
-						locations.Add(child);
-					newFiles.Add(child);
+					if (items[ctr].HasChildren)
+						foreach (var file in items[ctr].GetChildren())
+						{
+							if (found.Contains(file.FullName))
+								continue;
+							items.Add(file);
+							found.Add(file.FullName);
+						}
+					if (!Recursive)
+					{
+						items.RemoveAt(ctr);
+						break;
+					}
 				}
-			}
-			files.SyncItems(newFiles, UIHelper<DiskItem>.GetProperty(a => a.FullName));
+
+			var filesDict = Files.ToDictionary(file => file.FullName, file => file);
+			var itemsDict = items.ToDictionary(file => file.FullName, file => file);
+			filesDict.Where(pair => !itemsDict.ContainsKey(pair.Key)).ToList().ForEach(pair => Files.Remove(pair.Value));
+			itemsDict.Where(pair => !filesDict.ContainsKey(pair.Key)).ToList().ForEach(pair => Files.Add(pair.Value));
+			filesDict.Where(pair => itemsDict.ContainsKey(pair.Key)).ToList().ForEach(pair => pair.Value.Refresh());
 		}
 
 		internal void ToggleColumn(DependencyProperty property)
@@ -332,9 +343,7 @@ namespace NeoEdit.Disk
 			var keySet = new KeySet
 			{
 				{ Key.Escape, () => files.Focus() },
-				{ ModifierKeys.Alt, Key.Up, () => Location = new FilesLocation(Location.item.Parent) },
-				{ ModifierKeys.Alt, Key.Left, () => SetLastLocation() },
-				{ ModifierKeys.Alt, Key.Right, () => SetNextLocation() },
+				{ ModifierKeys.Alt, Key.Up, () => Location = new DiskItem(location.Text).Parent },
 			};
 
 			if (keySet.Run(e))
@@ -343,36 +352,11 @@ namespace NeoEdit.Disk
 
 		void OnAccept()
 		{
-			if (Selected.Count != 1)
+			if ((Focused == null) || (!Focused.HasChildren))
 				return;
 
-			var location = Selected.Single();
-			if (!location.HasChildren)
-				return;
-
-			Location = new FilesLocation(location);
-		}
-
-		void SetLastLocation()
-		{
-			if (!lastLocation.Any())
-				return;
-
-			changingLocation = true;
-			nextLocation.Push(Location);
-			Location = lastLocation.Pop();
-			changingLocation = false;
-		}
-
-		void SetNextLocation()
-		{
-			if (!nextLocation.Any())
-				return;
-
-			changingLocation = true;
-			lastLocation.Push(Location);
-			Location = nextLocation.Pop();
-			changingLocation = false;
+			Recursive = false;
+			Location = Focused;
 		}
 
 		void location_KeyDown(object sender, KeyEventArgs e)

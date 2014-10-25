@@ -253,6 +253,9 @@ namespace NeoEdit.GUI.ItemGridControl
 		WeakReference<ItemType> lastShiftSel;
 		void MoveFocus(int offset, bool relative, bool select = false)
 		{
+			if (!Items.Any())
+				return;
+
 			if (relative)
 				if (!FocusedIndex.HasValue)
 					offset = lastFocusedIndex;

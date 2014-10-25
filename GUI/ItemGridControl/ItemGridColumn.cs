@@ -17,8 +17,9 @@ namespace NeoEdit.GUI.ItemGridControl
 		{
 			Header = depProp.Name;
 			DepProp = depProp;
-			HorizontalAlignment = (depProp.PropertyType.IsIntegerType()) || (depProp.PropertyType.IsDateType()) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-			StringFormat = depProp.PropertyType.IsIntegerType() ? "n0" : depProp.PropertyType.IsDateType() ? "yyyy/MM/dd HH:mm:ss" : null;
+			var type = depProp.PropertyType;
+			HorizontalAlignment = ((!type.IsEnum) && (type.IsIntegerType()) || (type.IsDateType())) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+			StringFormat = type.IsEnum ? null : type.IsIntegerType() ? "n0" : type.IsDateType() ? "yyyy/MM/dd HH:mm:ss" : null;
 			SortAscending = NumericStrings = true;
 		}
 
