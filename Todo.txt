@@ -6,6 +6,8 @@ Add command prompt
 Diff?
 
 Disk:
+Expression should be able to key off full path
+Select by SVN ignore
 
 Text:
 Bookmarks

@@ -33,7 +33,7 @@ namespace NeoEdit.Registry
 					continue;
 				keys.Columns.Add(new ItemGridColumn(prop));
 			}
-			keys.SortColumn = keys.TextInputColumn = keys.Columns.First(col => col.Header == "Name");
+			keys.SortColumn = keys.Columns.First(col => col.Header == "Name");
 			Keys = new ObservableCollection<RegistryItem>();
 			SetLocation(key ?? "");
 		}

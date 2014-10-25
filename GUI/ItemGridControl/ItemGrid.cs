@@ -35,8 +35,6 @@ namespace NeoEdit.GUI.ItemGridControl
 		public ItemGridColumn FocusedColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public ObservableCollection<ItemType> Selected { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
-		[DepProp]
-		public ItemGridColumn TextInputColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp(Default = 500)]
 		public int TextInputDelay { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<int>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 
@@ -362,9 +360,6 @@ namespace NeoEdit.GUI.ItemGridControl
 			if ((Columns.Count == 0) || (Items.Count == 0))
 				return;
 
-			if (!Columns.Contains(TextInputColumn))
-				TextInputColumn = Columns.First();
-
 			var now = DateTime.UtcNow;
 			if ((!lastTextInputTime.HasValue) || ((now - lastTextInputTime.Value).TotalMilliseconds > TextInputDelay))
 				lastTextInput = "";
@@ -375,7 +370,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			var index = start;
 			while (true)
 			{
-				if (Items[index].GetValue(TextInputColumn.DepProp).ToString().StartsWith(lastTextInput, StringComparison.OrdinalIgnoreCase))
+				if (Items[index].GetValue(SortColumn.DepProp).ToString().StartsWith(lastTextInput, StringComparison.OrdinalIgnoreCase))
 				{
 					MoveFocus(index, false, true);
 					break;

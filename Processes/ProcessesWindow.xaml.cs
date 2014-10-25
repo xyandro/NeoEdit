@@ -39,7 +39,7 @@ namespace NeoEdit.Processes
 					SortAscending = (prop.Name != "CPU") && (prop.Name != "Size"),
 				});
 			}
-			processes.SortColumn = processes.TextInputColumn = processes.Columns.First(col => col.Header == "Name");
+			processes.SortColumn = processes.Columns.First(col => col.Header == "Name");
 			Processes = new ObservableCollection<ProcessItem>();
 			Refresh();
 			if (pid.HasValue)
