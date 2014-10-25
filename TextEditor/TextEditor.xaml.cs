@@ -240,9 +240,7 @@ namespace NeoEdit.TextEditor
 		{
 			var dialog = new SaveFileDialog
 			{
-				DefaultExt = "txt",
 				Filter = "Text files|*.txt|All files|*.*",
-				FilterIndex = 2,
 				FileName = Path.GetFileName(FileName),
 				InitialDirectory = Path.GetDirectoryName(FileName),
 			};
