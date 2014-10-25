@@ -400,12 +400,13 @@ namespace NeoEdit.TextEditor
 				var matches = regex.Matches(data.Substring(offset, length)).Cast<Match>();
 				foreach (var match in matches)
 				{
-					if (!regexGroups)
+					if ((!regexGroups) || (match.Groups.Count == 1))
 						result.Add(new Tuple<int, int>(offset + match.Index, match.Length));
 					else
 					{
 						for (var ctr = 1; ctr < match.Groups.Count; ++ctr)
-							result.Add(new Tuple<int, int>(offset + match.Groups[ctr].Index, match.Groups[ctr].Length));
+							if (match.Groups[ctr].Success)
+								result.Add(new Tuple<int, int>(offset + match.Groups[ctr].Index, match.Groups[ctr].Length));
 					}
 				}
 				offset = nextOffset;
