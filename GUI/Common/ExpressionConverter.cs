@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
@@ -19,19 +18,13 @@ namespace NeoEdit.GUI.Common
 			return converter;
 		}
 
-		static readonly string hexExp = @"#([0-9a-fA-F]{1,2})#";
-		static readonly Regex hexExpRE = new Regex(hexExp);
-
 		static Dictionary<string, NeoEdit.Common.Expression> expressionUsed = new Dictionary<string, NeoEdit.Common.Expression>();
 		NeoEdit.Common.Expression GetExpression(string expression)
 		{
 			if (expression == null)
 				expression = "";
 			if (!expressionUsed.ContainsKey(expression))
-			{
-				var nonHexExp = hexExpRE.Replace(expression, match => ((char)(Byte.Parse(match.Groups[1].Value, NumberStyles.HexNumber))).ToString());
-				expressionUsed[expression] = new NeoEdit.Common.Expression(nonHexExp);
-			}
+				expressionUsed[expression] = new NeoEdit.Common.Expression(expression);
 			return expressionUsed[expression];
 		}
 

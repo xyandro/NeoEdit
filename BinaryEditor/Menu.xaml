@@ -20,15 +20,15 @@
 			<MenuItem Header="_Encoding">
 				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Auto"/>
 				<Separator/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF8" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF8#27#}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF7" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF7#27#}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF16LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16LE#27#}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF16BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF16BE#27#}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32LE#27#}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#UTF32BE#27#}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF8" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF8\''}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF7" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF7\''}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF16LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16LE\''}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF16BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16BE\''}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32LE\''}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32BE\''}"/>
 				<Separator/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Base64" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#Base64#27#}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Hex" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=#5B#0#5D##3D##3D##27#Hex#27#}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Base64" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Base64\''}"/>
+				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Hex" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Hex\''}"/>
 			</MenuItem>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="File_TextEditor"/>
 			<Separator/>
@@ -53,7 +53,7 @@
 		<MenuItem Header="_View">
 			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Values" IsChecked="{Binding Active.ShowValues, ElementName=self}"/>
 			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Refresh"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=[0]#3d##3d##27#Tiles#27#}"/>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
 		</MenuItem>
 		<MenuItem Header="_Data">
 			<MenuItem Header="C_hecksum">

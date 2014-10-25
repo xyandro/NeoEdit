@@ -9,7 +9,7 @@
 			<console:ConsoleMenuItem CommandEnum="File_New"/>
 		</MenuItem>
 		<MenuItem Header="_View">
-			<console:ConsoleMenuItem CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter=[0]#3d##3d##27#Tiles#27#}"/>
+			<console:ConsoleMenuItem CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
 		</MenuItem>
 		<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 		<guiCommon:HelpMenu/>
