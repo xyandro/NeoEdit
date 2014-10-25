@@ -13,6 +13,9 @@ namespace NeoEdit.Disk
 		{
 			Property = property;
 			Header = "_" + property.Name;
+			// These next 2 lines make it so a bunch of warnings don't show at runtime
+			HorizontalContentAlignment = HorizontalAlignment.Left;
+			VerticalContentAlignment = VerticalAlignment.Top;
 		}
 	}
 
