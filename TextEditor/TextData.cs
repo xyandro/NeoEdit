@@ -423,6 +423,8 @@ namespace NeoEdit.TextEditor
 			var index = GetOffsetIndex(offset, line);
 			while (true)
 			{
+				if (line >= NumLines)
+					break;
 				var matchOffset = lineOffset[line] + index;
 				if (matchOffset >= endOffset)
 					break;
