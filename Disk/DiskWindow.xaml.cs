@@ -390,6 +390,16 @@ namespace NeoEdit.Disk
 			Selected.ToList().ForEach(file => Files.Remove(file));
 		}
 
+		internal void Command_Select_RemoveWithChildren()
+		{
+			Location = null;
+			foreach (var sel in Selected.ToList())
+			{
+				Files.Remove(sel);
+				Files.Where(file => file.IsChildOf(sel)).ToList().ForEach(file => Files.Remove(file));
+			}
+		}
+
 		internal void Command_View_Refresh()
 		{
 			List<DiskItem> items;

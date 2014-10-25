@@ -38,6 +38,7 @@
 		<disk:DiskMenuItem CommandEnum="Select_Expression"/>
 		<Separator/>
 		<disk:DiskMenuItem CommandEnum="Select_Remove"/>
+		<disk:DiskMenuItem CommandEnum="Select_RemoveWithChildren"/>
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Columns" ItemsSource="{Binding Converter={disk:ColumnsConverter}}">

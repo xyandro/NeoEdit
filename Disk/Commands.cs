@@ -28,6 +28,7 @@ namespace NeoEdit.Disk
 		[Header("_Files")] Select_Files,
 		[Header("_Expression")] [KeyGesture(Key.E, ModifierKeys.Control)] [KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Select_Expression,
 		[Header("_Remove")] [KeyGesture(Key.OemMinus, ModifierKeys.Alt)] [KeyGesture(Key.OemMinus, ModifierKeys.Control)] Select_Remove,
+		[Header("_Remove With Children")] [KeyGesture(Key.OemMinus, ModifierKeys.Alt | ModifierKeys.Shift)] [KeyGesture(Key.OemMinus, ModifierKeys.Control | ModifierKeys.Shift)] Select_RemoveWithChildren,
 		[Header("_Refresh")] [KeyGesture(Key.F5)] View_Refresh,
 		[Header("_Tiles")] View_Tiles,
 	}
