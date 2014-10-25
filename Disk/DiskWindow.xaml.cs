@@ -154,7 +154,7 @@ namespace NeoEdit.Disk
 			if (!Focused.CanRename)
 				throw new ArgumentException("Cannot rename this entry.");
 
-			var newName = Rename.Run(Focused);
+			var newName = RenameDialog.Run(Focused);
 			if (newName == null)
 				return;
 
@@ -311,6 +311,18 @@ namespace NeoEdit.Disk
 			foreach (var file in Files)
 				if (!file.HasChildren)
 					Selected.Add(file);
+		}
+
+		internal void Command_Select_Expression(bool addToSel)
+		{
+			var regex = ExpressionDialog.Run();
+			if (regex == null)
+				return;
+
+			if (!addToSel)
+				Selected.Clear();
+			foreach (var file in Files.Where(file => regex.IsMatch(file.Name)).ToList())
+				Selected.Add(file);
 		}
 
 		internal void Command_Select_Remove()

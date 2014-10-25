@@ -23,6 +23,7 @@ namespace NeoEdit.Disk
 		[Header("_Invert")] [KeyGesture(Key.I, ModifierKeys.Control)] Select_Invert,
 		[Header("_Directories")] Select_Directories,
 		[Header("_Files")] Select_Files,
+		[Header("_Expression")] [KeyGesture(Key.E, ModifierKeys.Control)] [KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Select_Expression,
 		[Header("_Remove")] [KeyGesture(Key.OemMinus, ModifierKeys.Alt)] [KeyGesture(Key.OemMinus, ModifierKeys.Control)] Select_Remove,
 		[Header("_Refresh")] [KeyGesture(Key.F5)] View_Refresh,
 		[Header("_Tiles")] View_Tiles,

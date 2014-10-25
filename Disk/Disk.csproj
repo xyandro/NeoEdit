@@ -51,17 +51,24 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Dialogs\ExpressionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Menu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\ExpressionDialog.xaml.cs">
+      <DependentUpon>ExpressionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Menu.xaml.cs">
       <DependentUpon>Menu.xaml</DependentUpon>
     </Compile>
     <Compile Include="ColumnCheckedConverter.cs" />
     <Compile Include="DiskItem.cs" />
-    <Compile Include="Dialogs\Rename.xaml.cs">
-      <DependentUpon>Rename.xaml</DependentUpon>
+    <Compile Include="Dialogs\RenameDialog.xaml.cs">
+      <DependentUpon>RenameDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="FilePath.cs" />
     <Compile Include="DiskWindow.xaml.cs">
@@ -94,7 +101,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Dialogs\Rename.xaml">
+    <Page Include="Dialogs\RenameDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

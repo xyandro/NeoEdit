@@ -31,6 +31,8 @@
 		<Separator/>
 		<disk:DiskMenuItem CommandEnum="Select_Directories"/>
 		<disk:DiskMenuItem CommandEnum="Select_Files"/>
+		<disk:DiskMenuItem CommandEnum="Select_Expression"/>
+		<Separator/>
 		<disk:DiskMenuItem CommandEnum="Select_Remove"/>
 	</MenuItem>
 	<MenuItem Header="_View">

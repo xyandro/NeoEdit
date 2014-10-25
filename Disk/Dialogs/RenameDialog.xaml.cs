@@ -6,27 +6,26 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Disk.Dialogs
 {
-	public partial class Rename : Window
+	partial class RenameDialog
 	{
 		[DepProp]
-		public string ItemName { get { return UIHelper<Rename>.GetPropValue<string>(this); } private set { UIHelper<Rename>.SetPropValue(this, value); } }
-		public string FullName { get { return path + @"\" + ItemName; } }
+		public string ItemName { get { return UIHelper<RenameDialog>.GetPropValue<string>(this); } private set { UIHelper<RenameDialog>.SetPropValue(this, value); } }
+		public string FullName { get { return item.Path + @"\" + ItemName; } }
 
-		static Rename() { UIHelper<Rename>.Register(); }
+		static RenameDialog() { UIHelper<RenameDialog>.Register(); }
 
-		readonly string path;
-		Rename(DiskItem item)
+		readonly DiskItem item;
+		RenameDialog(DiskItem item)
 		{
 			InitializeComponent();
 
 			label.Content = String.Format("Please enter new name for {0}:", item.Name);
-
+			this.item = item;
 			ItemName = item.Name;
-			path = item.Path;
 
 			name.Focus();
 			name.CaretIndex = item.NameWoExtension.Length;
-			name.Select(0, item.NameWoExtension.Length);
+			name.Select(0, name.CaretIndex);
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)
@@ -42,10 +41,10 @@ namespace NeoEdit.Disk.Dialogs
 
 		public static string Run(DiskItem item)
 		{
-			var rename = new Rename(item);
-			if (rename.ShowDialog() != true)
+			var dialog = new RenameDialog(item);
+			if (dialog.ShowDialog() != true)
 				return null;
-			return rename.FullName;
+			return dialog.FullName;
 		}
 	}
 }

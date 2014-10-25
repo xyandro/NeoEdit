@@ -59,6 +59,7 @@ namespace NeoEdit.Disk
 				case DiskCommand.Select_Invert: Active.Command_Select_Invert(); break;
 				case DiskCommand.Select_Directories: Active.Command_Select_Directories(); break;
 				case DiskCommand.Select_Files: Active.Command_Select_Files(); break;
+				case DiskCommand.Select_Expression: Active.Command_Select_Expression(shiftDown); break;
 				case DiskCommand.Select_Remove: Active.Command_Select_Remove(); break;
 				case DiskCommand.View_Refresh: Active.Command_View_Refresh(); break;
 			}
