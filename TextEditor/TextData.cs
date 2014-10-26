@@ -30,22 +30,21 @@ namespace NeoEdit.TextEditor
 		public int NumLines { get { return lineOffset.Count; } }
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
-		public bool BOM { get; private set; }
 
-		public TextData() : this(null, Coder.Type.UTF8) { }
-		public TextData(byte[] bytes, Coder.Type encoding)
+		public TextData() : this(null, StrCoder.CodePage.UTF8) { }
+		public TextData(byte[] bytes, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM)
 		{
 			if (bytes == null)
 				bytes = new byte[0];
-			if (encoding == Coder.Type.None)
+			if (codePage == StrCoder.CodePage.None)
 				throw new Exception("No encoder specified");
 
-			data = Coder.BytesToString(bytes, encoding);
+			data = StrCoder.BytesToString(bytes, codePage, true);
 		}
 
-		public byte[] GetBytes(Coder.Type encoding = Coder.Type.UTF8)
+		public byte[] GetBytes(StrCoder.CodePage codePage = StrCoder.CodePage.UTF8)
 		{
-			return Coder.StringToBytes(data, encoding);
+			return StrCoder.StringToBytes(data, codePage, true);
 		}
 
 		void RecalculateLines()
@@ -55,8 +54,7 @@ namespace NeoEdit.TextEditor
 			endingOffset = new List<int>();
 			endingLength = new List<int>();
 
-			BOM = (data.Length > 0) && (data[0] == '\ufeff');
-			var offset = BOM ? 1 : 0;
+			var offset = 0;
 			var lineEndChars = new char[] { '\r', '\n' };
 			while (offset < data.Length)
 			{

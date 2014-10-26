@@ -27,10 +27,10 @@ namespace NeoEdit.BinaryEditor
 
 		static BinaryEditorTabs() { UIHelper<BinaryEditorTabs>.Register(); }
 
-		static BinaryEditorTabs Create(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null, bool createNew = false)
+		static BinaryEditorTabs Create(BinaryData data, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool createNew = false)
 		{
 			var binaryEditorTabs = (!createNew ? UIHelper<BinaryEditorTabs>.GetNewest() : null) ?? new BinaryEditorTabs();
-			binaryEditorTabs.Add(new BinaryEditor(data, encoder, filename, filetitle));
+			binaryEditorTabs.Add(new BinaryEditor(data, codePage, filename, filetitle));
 			return binaryEditorTabs;
 		}
 
@@ -48,7 +48,7 @@ namespace NeoEdit.BinaryEditor
 			Active = binaryEditor;
 		}
 
-		public static BinaryEditorTabs CreateFromFile(string filename = null, byte[] bytes = null, Coder.Type encoder = Coder.Type.None, bool createNew = false)
+		public static BinaryEditorTabs CreateFromFile(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
 		{
 			if (bytes == null)
 			{
@@ -57,7 +57,7 @@ namespace NeoEdit.BinaryEditor
 				else
 					bytes = File.ReadAllBytes(filename);
 			}
-			return Create(new MemoryBinaryData(bytes), encoder, filename, createNew: createNew);
+			return Create(new MemoryBinaryData(bytes), codePage, filename, createNew: createNew);
 		}
 
 		public static BinaryEditorTabs CreateFromDump(string filename, bool createNew = false)
@@ -169,16 +169,16 @@ namespace NeoEdit.BinaryEditor
 				case BinaryEditCommand.File_Close: if (Active.CanClose()) { Active.Close(); BinaryEditors.Remove(Active); } break;
 				case BinaryEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case BinaryEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
-				case BinaryEditCommand.File_Encoding_Auto: Active.Command_File_Encoding(Coder.Type.None); break;
-				case BinaryEditCommand.File_Encoding_UTF8: Active.Command_File_Encoding(Coder.Type.UTF8); break;
-				case BinaryEditCommand.File_Encoding_UTF16LE: Active.Command_File_Encoding(Coder.Type.UTF16LE); break;
-				case BinaryEditCommand.File_Encoding_UTF16BE: Active.Command_File_Encoding(Coder.Type.UTF16BE); break;
-				case BinaryEditCommand.File_Encoding_UTF32LE: Active.Command_File_Encoding(Coder.Type.UTF32LE); break;
-				case BinaryEditCommand.File_Encoding_UTF32BE: Active.Command_File_Encoding(Coder.Type.UTF32BE); break;
-				case BinaryEditCommand.File_Encoding_Default: Active.Command_File_Encoding(Coder.Type.Default); break;
-				case BinaryEditCommand.File_Encoding_Base64: Active.Command_File_Encoding(Coder.Type.Base64); break;
-				case BinaryEditCommand.File_Encoding_Hex: Active.Command_File_Encoding(Coder.Type.Hex); break;
-				case BinaryEditCommand.File_TextEditor: Launcher.Static.LaunchTextEditor(Active.FileName, Active.Data.GetAllBytes(), Active.CoderUsed); BinaryEditors.Remove(Active); if (BinaryEditors.Count == 0) Close(); break;
+				case BinaryEditCommand.File_Encoding_Auto: Active.Command_File_Encoding(StrCoder.CodePage.AutoByBOM); break;
+				case BinaryEditCommand.File_Encoding_UTF8: Active.Command_File_Encoding(StrCoder.CodePage.UTF8); break;
+				case BinaryEditCommand.File_Encoding_UTF16LE: Active.Command_File_Encoding(StrCoder.CodePage.UTF16LE); break;
+				case BinaryEditCommand.File_Encoding_UTF16BE: Active.Command_File_Encoding(StrCoder.CodePage.UTF16BE); break;
+				case BinaryEditCommand.File_Encoding_UTF32LE: Active.Command_File_Encoding(StrCoder.CodePage.UTF32LE); break;
+				case BinaryEditCommand.File_Encoding_UTF32BE: Active.Command_File_Encoding(StrCoder.CodePage.UTF32BE); break;
+				case BinaryEditCommand.File_Encoding_Default: Active.Command_File_Encoding(StrCoder.CodePage.Default); break;
+				case BinaryEditCommand.File_Encoding_Base64: Active.Command_File_Encoding(StrCoder.CodePage.Base64); break;
+				case BinaryEditCommand.File_Encoding_Hex: Active.Command_File_Encoding(StrCoder.CodePage.Hex); break;
+				case BinaryEditCommand.File_TextEditor: Launcher.Static.LaunchTextEditor(Active.FileName, Active.Data.GetAllBytes(), Active.CodePage); BinaryEditors.Remove(Active); if (BinaryEditors.Count == 0) Close(); break;
 				case BinaryEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
 				case BinaryEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;
 				case BinaryEditCommand.Edit_Cut: Active.Command_Edit_CutCopy(true); break;

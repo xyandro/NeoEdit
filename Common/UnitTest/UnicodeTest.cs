@@ -29,7 +29,7 @@ namespace NeoEdit.Common.UnitTest
 			}
 		}
 
-		string GetText(Coder.Type encoding, bool bom, Endings ending)
+		string GetText(StrCoder.CodePage codePage, bool bom, Endings ending)
 		{
 			var text = new List<string>
 			{
@@ -62,7 +62,7 @@ namespace NeoEdit.Common.UnitTest
 				}
 			}
 
-			result = result.Replace("<Encoding>", encoding.ToString()).Replace("<BOM>", bom.ToString()).Replace("<Ending>", ending.ToString());
+			result = result.Replace("<Encoding>", codePage.ToString()).Replace("<BOM>", bom.ToString()).Replace("<Ending>", ending.ToString());
 			if (bom)
 				result = "\ufeff" + result;
 
@@ -82,9 +82,9 @@ namespace NeoEdit.Common.UnitTest
 
 			using (var combined = File.Create(Path.Combine(dir, "Combined.txt")))
 			{
-				foreach (var encoding in GetValues<Coder.Type>().Where(a => a.IsStr()))
+				foreach (var codePage in GetValues<StrCoder.CodePage>())
 				{
-					if (encoding == Coder.Type.Default)
+					if (codePage <= 0)
 						continue;
 
 					for (var useBom = 0; useBom < 2; ++useBom)
@@ -93,34 +93,34 @@ namespace NeoEdit.Common.UnitTest
 						foreach (var ending in GetValues<Endings>())
 						{
 							Encoding encoder = null;
-							switch (encoding)
+							switch (codePage)
 							{
-								case Coder.Type.UTF8:
+								case StrCoder.CodePage.UTF8:
 									encoder = new UTF8Encoding(false);
 									break;
-								case Coder.Type.UTF16LE:
-								case Coder.Type.UTF16BE:
-									encoder = new UnicodeEncoding(encoding == Coder.Type.UTF16BE, false);
+								case StrCoder.CodePage.UTF16LE:
+								case StrCoder.CodePage.UTF16BE:
+									encoder = new UnicodeEncoding(codePage == StrCoder.CodePage.UTF16BE, false);
 									break;
-								case Coder.Type.UTF32BE:
-								case Coder.Type.UTF32LE:
-									encoder = new UTF32Encoding(encoding == Coder.Type.UTF32BE, false);
+								case StrCoder.CodePage.UTF32BE:
+								case StrCoder.CodePage.UTF32LE:
+									encoder = new UTF32Encoding(codePage == StrCoder.CodePage.UTF32BE, false);
 									break;
 								default:
 									throw new Exception("No encoder found");
 							}
-							var filename = Path.Combine(dir, String.Format("{0}-{1}-{2}.txt", encoding, bom, ending));
-							var str = GetText(encoding, bom, ending);
+							var filename = Path.Combine(dir, String.Format("{0}-{1}-{2}.txt", codePage, bom, ending));
+							var str = GetText(codePage, bom, ending);
 							File.WriteAllText(filename, str, encoder);
 
 							var bytes = File.ReadAllBytes(filename);
 							combined.Write(bytes, 0, bytes.Length);
 
-							var encoding2 = Coder.GuessUnicodeEncoding(bytes);
-							var str2 = Coder.BytesToString(bytes, encoding2);
+							var encoding2 = StrCoder.GuessUnicodeEncoding(bytes);
+							var str2 = StrCoder.BytesToString(bytes, encoding2);
 							var bom2 = (str2.Length > 0) && (str2[0] == '\ufeff');
 
-							Assert.AreEqual(encoding, encoding2);
+							Assert.AreEqual(codePage, encoding2);
 							Assert.AreEqual(bom, bom2);
 							Assert.AreEqual(str, str2);
 						}

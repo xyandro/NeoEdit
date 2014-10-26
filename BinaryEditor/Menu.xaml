@@ -19,15 +19,15 @@
 		<MenuItem Header="_Encoding">
 			<binaryEditor:BinaryEditMenuItem Header="Auto" CommandEnum="File_Encoding_Auto"/>
 			<Separator/>
-			<binaryEditor:BinaryEditMenuItem Header="UTF8" CommandEnum="File_Encoding_UTF8" IsChecked="{Binding Parent.Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF8\''}"/>
-			<binaryEditor:BinaryEditMenuItem Header="UTF16LE" CommandEnum="File_Encoding_UTF16LE" IsChecked="{Binding Parent.Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16LE\''}"/>
-			<binaryEditor:BinaryEditMenuItem Header="UTF16BE" CommandEnum="File_Encoding_UTF16BE" IsChecked="{Binding Parent.Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16BE\''}"/>
-			<binaryEditor:BinaryEditMenuItem Header="UTF32LE" CommandEnum="File_Encoding_UTF32LE" IsChecked="{Binding Parent.Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32LE\''}"/>
-			<binaryEditor:BinaryEditMenuItem Header="UTF32BE" CommandEnum="File_Encoding_UTF32BE" IsChecked="{Binding Parent.Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32BE\''}"/>
-			<binaryEditor:BinaryEditMenuItem Header="Default" CommandEnum="File_Encoding_Default" IsChecked="{Binding Parent.Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Default\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="UTF8" CommandEnum="File_Encoding_UTF8" IsChecked="{Binding Parent.Active.CodePage, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF8\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="UTF16LE" CommandEnum="File_Encoding_UTF16LE" IsChecked="{Binding Parent.Active.CodePage, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16LE\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="UTF16BE" CommandEnum="File_Encoding_UTF16BE" IsChecked="{Binding Parent.Active.CodePage, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16BE\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="UTF32LE" CommandEnum="File_Encoding_UTF32LE" IsChecked="{Binding Parent.Active.CodePage, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32LE\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="UTF32BE" CommandEnum="File_Encoding_UTF32BE" IsChecked="{Binding Parent.Active.CodePage, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32BE\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="Default" CommandEnum="File_Encoding_Default" IsChecked="{Binding Parent.Active.CodePage, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Default\''}"/>
 			<Separator/>
-			<binaryEditor:BinaryEditMenuItem Header="Base64" CommandEnum="File_Encoding_Base64" IsChecked="{Binding Parent.Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Base64\''}"/>
-			<binaryEditor:BinaryEditMenuItem Header="Hex" CommandEnum="File_Encoding_Hex" IsChecked="{Binding Parent.Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Hex\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="Base64" CommandEnum="File_Encoding_Base64" IsChecked="{Binding Parent.Active.CodePage, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Base64\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="Hex" CommandEnum="File_Encoding_Hex" IsChecked="{Binding Parent.Active.CodePage, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Hex\''}"/>
 		</MenuItem>
 		<binaryEditor:BinaryEditMenuItem Header="Text Editor" CommandEnum="File_TextEditor"/>
 		<Separator/>

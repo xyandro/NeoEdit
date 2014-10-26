@@ -59,9 +59,10 @@ namespace NeoEdit.GUI.Dialogs
 			var convertersToUse = converters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
 			if (convertersToUse.Count == 0)
 				return;
-			var findData = convertersToUse.Select(converter => new { converter = converter, bytes = Coder.StringToBytes(FindText, converter) }).GroupBy(obj => Coder.BytesToString(obj.bytes, Coder.Type.Hex)).Select(group => group.First()).ToDictionary(obj => obj.converter, obj => obj.bytes);
+			var findData = convertersToUse.Select(converter => new { converter = converter, bytes = Coder.StringToBytes(FindText, converter) }).GroupBy(obj => StrCoder.BytesToString(obj.bytes, StrCoder.CodePage.Hex)).Select(group => group.First()).ToDictionary(obj => obj.converter, obj => obj.bytes);
 
-			result = new Result(FindText, new Searcher(findData.Select(a => a.Value).ToList(), findData.Select(a => (MatchCase.IsChecked == true) && (a.Key.IsStr())).ToList()));
+			result = new Result(FindText, new Searcher(findData.Select(a => a.Value).ToList()));
+			//result = new Result(FindText, new Searcher(findData.Select(a => a.Value).ToList(), findData.Select(a => (MatchCase.IsChecked == true) && (a.Key.IsStr())).ToList()));
 
 			DialogResult = true;
 		}

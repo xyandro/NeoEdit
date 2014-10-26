@@ -81,9 +81,9 @@ namespace NeoEdit.BinaryEditor.Data
 			return result;
 		}
 
-		public Coder.Type GuessEncoding()
+		public StrCoder.CodePage CodePageFromBOM()
 		{
-			return Coder.EncodingFromBOM(GetSubset(0, Math.Min(10, length)));
+			return StrCoder.CodePageFromBOM(GetSubset(0, Math.Min(10, length)));
 		}
 
 		public virtual void Save(string filename)

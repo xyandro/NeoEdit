@@ -9,8 +9,8 @@ namespace NeoEdit.GUI
 		public static Launcher Static { get { return launcher; } }
 
 		protected Action systemInfoLauncher;
-		protected Action<string, byte[], Coder.Type, bool> textEditorLauncher;
-		protected Action<string, byte[], Coder.Type, bool> fileBinaryEditorLauncher;
+		protected Action<string, byte[], StrCoder.CodePage, bool> textEditorLauncher;
+		protected Action<string, byte[], StrCoder.CodePage, bool> fileBinaryEditorLauncher;
 		protected Action<int> processBinaryEditorLauncher;
 		protected Action diskLauncher;
 		protected Action consoleLauncher;
@@ -20,8 +20,8 @@ namespace NeoEdit.GUI
 		protected Action dbViewerLauncher;
 		public static void Initialize(
 			Action systemInfo,
-			Action<string, byte[], Coder.Type, bool> textEditor,
-			Action<string, byte[], Coder.Type, bool> fileBinaryEditor,
+			Action<string, byte[], StrCoder.CodePage, bool> textEditor,
+			Action<string, byte[], StrCoder.CodePage, bool> fileBinaryEditor,
 			Action<int> processBinaryEditor,
 			Action disk,
 			Action console,
@@ -51,14 +51,14 @@ namespace NeoEdit.GUI
 			systemInfoLauncher();
 		}
 
-		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, bool createNew = false)
+		public void LaunchTextEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
 		{
-			textEditorLauncher(filename, bytes, encoding, createNew);
+			textEditorLauncher(filename, bytes, codePage, createNew);
 		}
 
-		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, bool createNew = false)
+		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
 		{
-			fileBinaryEditorLauncher(filename, bytes, encoding, createNew);
+			fileBinaryEditorLauncher(filename, bytes, codePage, createNew);
 		}
 
 		public void LaunchBinaryEditor(int pid)

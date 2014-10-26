@@ -47,9 +47,7 @@ namespace NeoEdit.TextEditor
 		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return UIHelper<TextEditor>.GetPropValue<Highlighting.HighlightingType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public Coder.Type CoderUsed { get { return UIHelper<TextEditor>.GetPropValue<Coder.Type>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool HasBOM { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public StrCoder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int Line { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -88,7 +86,7 @@ namespace NeoEdit.TextEditor
 
 		RunOnceTimer selectionsTimer, searchesTimer, marksTimer, renderTimer;
 
-		public TextEditor(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = -1, int column = -1)
+		public TextEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, int line = -1, int column = -1)
 		{
 			InitializeComponent();
 
@@ -99,7 +97,7 @@ namespace NeoEdit.TextEditor
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 			renderTimer.AddDependency(selectionsTimer, searchesTimer, marksTimer);
 
-			OpenFile(filename, bytes, encoding);
+			OpenFile(filename, bytes, codePage);
 			Goto(line, column);
 
 			Selections.CollectionChanged += (s, e) => selectionsTimer.Start();
@@ -142,7 +140,7 @@ namespace NeoEdit.TextEditor
 		}
 
 		DateTime fileLastWrite;
-		internal void OpenFile(string filename, byte[] bytes = null, Coder.Type encoding = Coder.Type.None)
+		internal void OpenFile(string filename, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM)
 		{
 			FileName = filename;
 			if (File.Exists(FileName))
@@ -155,13 +153,13 @@ namespace NeoEdit.TextEditor
 				else
 					bytes = File.ReadAllBytes(FileName);
 			}
-			if (encoding == Coder.Type.None)
-				encoding = Coder.EncodingFromBOM(bytes);
-			Data = new TextData(bytes, encoding);
-			CoderUsed = encoding;
+			if (codePage == StrCoder.CodePage.AutoByBOM)
+				codePage = StrCoder.CodePageFromBOM(bytes);
+			Data = new TextData(bytes, codePage);
+			CodePage = codePage;
 			HighlightType = Highlighting.Get(FileName);
 
-			var bytes2 = Data.GetBytes(CoderUsed);
+			var bytes2 = Data.GetBytes(CodePage);
 			if ((!modified) && (bytes.Length != bytes2.Length))
 				modified = true;
 			if (!modified)
@@ -255,7 +253,7 @@ namespace NeoEdit.TextEditor
 				Command_File_SaveAs();
 			else
 			{
-				File.WriteAllBytes(FileName, Data.GetBytes(CoderUsed));
+				File.WriteAllBytes(FileName, Data.GetBytes(CodePage));
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 				undoRedo.SetModified(false);
 			}
@@ -338,7 +336,7 @@ namespace NeoEdit.TextEditor
 					foreach (var filename in dialog.FileNames)
 					{
 						var bytes = File.ReadAllBytes(filename);
-						var data = new TextData(bytes, Coder.EncodingFromBOM(bytes));
+						var data = new TextData(bytes);
 
 						var beginOffset = data.GetOffset(0, 0);
 						var endOffset = data.GetOffset(data.NumLines - 1, data.GetLineLength(data.NumLines - 1));
@@ -362,19 +360,11 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_File_Encoding()
 		{
-			var result = EncodingDialog.Run(CoderUsed, HasBOM, LineEnding);
+			var result = EncodingDialog.Run(CodePage, LineEnding);
 			if (result == null)
 				return;
 
-			CoderUsed = result.Encoding;
-
-			if (Data.BOM != result.BOM)
-			{
-				if (result.BOM)
-					Replace(new List<Range> { new Range(0, 0) }, new List<string> { "\ufeff" });
-				else
-					Replace(new List<Range> { new Range(0, 1) }, new List<string> { "" });
-			}
+			CodePage = result.CodePage;
 
 			if (result.LineEndings != null)
 			{
@@ -394,7 +384,7 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_File_BinaryEditor()
 		{
-			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CoderUsed), CoderUsed);
+			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CodePage), CodePage);
 		}
 
 		internal void Command_Edit_Undo()
@@ -886,24 +876,34 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
+		internal void Command_Data_Binary_ToBinary(StrCoder.CodePage codePage)
+		{
+			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(StrCoder.StringToBytes(GetString(range), codePage), StrCoder.CodePage.Hex)).ToList());
+		}
+
 		internal void Command_Data_Binary_ToBinary(Coder.Type coder)
 		{
-			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), coder), Coder.Type.Hex)).ToList());
+			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(Coder.StringToBytes(GetString(range), coder), StrCoder.CodePage.Hex)).ToList());
+		}
+
+		internal void Command_Data_Binary_FromBinary(StrCoder.CodePage codePage)
+		{
+			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex), codePage)).ToList());
 		}
 
 		internal void Command_Data_Binary_FromBinary(Coder.Type coder)
 		{
-			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), Coder.Type.Hex), coder)).ToList());
+			ReplaceSelections(Selections.Select(range => Coder.BytesToString(StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex), coder)).ToList());
 		}
 
-		internal void Command_Data_Base64_ToBase64(Coder.Type coder)
+		internal void Command_Data_Base64_ToBase64(StrCoder.CodePage codePage)
 		{
-			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), coder), Coder.Type.Base64)).ToList());
+			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(StrCoder.StringToBytes(GetString(range), codePage), StrCoder.CodePage.Base64)).ToList());
 		}
 
-		internal void Command_Data_Base64_FromBase64(Coder.Type coder)
+		internal void Command_Data_Base64_FromBase64(StrCoder.CodePage codePage)
 		{
-			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), Coder.Type.Base64), coder)).ToList());
+			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Base64), codePage)).ToList());
 		}
 
 		internal void Command_Data_DateTime_Insert()
@@ -1072,9 +1072,9 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Checksum(Checksum.Type type, Coder.Type coder)
+		internal void Command_Data_Checksum(Checksum.Type type, StrCoder.CodePage codePage)
 		{
-			ReplaceSelections(Selections.Select(range => Checksum.Get(type, Coder.StringToBytes(GetString(range), coder))).ToList());
+			ReplaceSelections(Selections.Select(range => Checksum.Get(type, StrCoder.StringToBytes(GetString(range), codePage))).ToList());
 		}
 
 		internal void Command_Keys_Set(int index)
@@ -1432,8 +1432,6 @@ namespace NeoEdit.TextEditor
 				new Tuple<ObservableCollection<Range>, Brush>(Searches, Misc.searchBrush),
 				new Tuple<ObservableCollection<Range>, Brush>(Marks, Misc.markBrush),
 			};
-
-			HasBOM = Data.BOM;
 
 			NumSelections = Selections.Count;
 

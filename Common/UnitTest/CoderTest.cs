@@ -24,6 +24,24 @@ namespace NeoEdit.Common.UnitTest
 				Assert.AreEqual(expected[ctr], result[ctr]);
 		}
 
+		void VerifyStrCoder(StrCoder.CodePage codePage, string value, byte[] expected, bool bom, string reverse = null)
+		{
+			if (reverse == null)
+				reverse = value;
+
+			var result = StrCoder.TryStringToBytes(value, codePage, bom);
+			Assert.AreEqual(result != null, expected != null);
+			if (expected == null)
+				return;
+
+			var str = StrCoder.BytesToString(result, codePage, bom);
+			Assert.AreEqual(str, reverse);
+
+			Assert.AreEqual(expected.Length, result.Length);
+			for (var ctr = 0; ctr < result.Length; ctr++)
+				Assert.AreEqual(expected[ctr], result[ctr]);
+		}
+
 		[TestMethod]
 		public void CoderIntTest()
 		{
@@ -216,38 +234,47 @@ namespace NeoEdit.Common.UnitTest
 		public void CoderStringTest()
 		{
 			// Strings
-			VerifyCoder(Coder.Type.UTF8, "", new byte[] { });
-			VerifyCoder(Coder.Type.UTF8, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 });
-			VerifyCoder(Coder.Type.UTF16LE, "", new byte[] { });
-			VerifyCoder(Coder.Type.UTF16LE, "This is my string", new byte[] { 84, 0, 104, 0, 105, 0, 115, 0, 32, 0, 105, 0, 115, 0, 32, 0, 109, 0, 121, 0, 32, 0, 115, 0, 116, 0, 114, 0, 105, 0, 110, 0, 103, 0 });
-			VerifyCoder(Coder.Type.UTF16BE, "", new byte[] { });
-			VerifyCoder(Coder.Type.UTF16BE, "This is my string", new byte[] { 0, 84, 0, 104, 0, 105, 0, 115, 0, 32, 0, 105, 0, 115, 0, 32, 0, 109, 0, 121, 0, 32, 0, 115, 0, 116, 0, 114, 0, 105, 0, 110, 0, 103 });
-			VerifyCoder(Coder.Type.UTF32LE, "", new byte[] { });
-			VerifyCoder(Coder.Type.UTF32LE, "This is my string", new byte[] { 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103, 0, 0, 0 });
-			VerifyCoder(Coder.Type.UTF32BE, "", new byte[] { });
-			VerifyCoder(Coder.Type.UTF32BE, "This is my string", new byte[] { 0, 0, 0, 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103 });
-			VerifyCoder(Coder.Type.Default, "", new byte[] { });
-			VerifyCoder(Coder.Type.Default, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 });
+			VerifyStrCoder(StrCoder.CodePage.UTF8, "", new byte[] { }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF8, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF8, "This is my string", new byte[] { 239, 187, 191, 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, true);
+			VerifyStrCoder(StrCoder.CodePage.UTF16LE, "", new byte[] { }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF16LE, "This is my string", new byte[] { 84, 0, 104, 0, 105, 0, 115, 0, 32, 0, 105, 0, 115, 0, 32, 0, 109, 0, 121, 0, 32, 0, 115, 0, 116, 0, 114, 0, 105, 0, 110, 0, 103, 0 }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF16LE, "This is my string", new byte[] { 255, 254, 84, 0, 104, 0, 105, 0, 115, 0, 32, 0, 105, 0, 115, 0, 32, 0, 109, 0, 121, 0, 32, 0, 115, 0, 116, 0, 114, 0, 105, 0, 110, 0, 103, 0 }, true);
+			VerifyStrCoder(StrCoder.CodePage.UTF16BE, "", new byte[] { }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF16BE, "This is my string", new byte[] { 0, 84, 0, 104, 0, 105, 0, 115, 0, 32, 0, 105, 0, 115, 0, 32, 0, 109, 0, 121, 0, 32, 0, 115, 0, 116, 0, 114, 0, 105, 0, 110, 0, 103 }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF16BE, "This is my string", new byte[] { 254, 255, 0, 84, 0, 104, 0, 105, 0, 115, 0, 32, 0, 105, 0, 115, 0, 32, 0, 109, 0, 121, 0, 32, 0, 115, 0, 116, 0, 114, 0, 105, 0, 110, 0, 103 }, true);
+			VerifyStrCoder(StrCoder.CodePage.UTF32LE, "", new byte[] { }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF32LE, "This is my string", new byte[] { 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103, 0, 0, 0 }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF32LE, "This is my string", new byte[] { 255, 254, 0, 0, 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103, 0, 0, 0 }, true);
+			VerifyStrCoder(StrCoder.CodePage.UTF32BE, "", new byte[] { }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF32BE, "This is my string", new byte[] { 0, 0, 0, 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103 }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF32BE, "This is my string", new byte[] { 0, 0, 254, 255, 0, 0, 0, 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103 }, true);
+			VerifyStrCoder(StrCoder.CodePage.Default, "", new byte[] { }, false);
+			VerifyStrCoder(StrCoder.CodePage.Default, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, false);
+			VerifyStrCoder(StrCoder.CodePage.Default, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, true);
+
+			VerifyStrCoder(StrCoder.CodePage.UTF8, "\ufeffThis is my string", new byte[] { 239, 187, 191, 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, false);
+			VerifyStrCoder(StrCoder.CodePage.UTF8, "\ufeffThis is my string", new byte[] { 239, 187, 191, 239, 187, 191, 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, true);
 		}
 
 		[TestMethod]
 		public void CoderOtherTest()
 		{
 			// Base64
-			VerifyCoder(Coder.Type.Base64, "", Encoding.UTF8.GetBytes(""));
-			VerifyCoder(Coder.Type.Base64, " V G h p c y B p c y \r B t e S B z \n d H J p b m c = ", Encoding.UTF8.GetBytes("This is my string"), "VGhpcyBpcyBteSBzdHJpbmc");
-			VerifyCoder(Coder.Type.Base64, "\ufeffVGhpcyBpcyBteSBzdHJpbmc=", Encoding.UTF8.GetBytes("This is my string"), "VGhpcyBpcyBteSBzdHJpbmc"); // BOM at start is ignored
-			VerifyCoder(Coder.Type.Base64, " \ufeffVGhpcyBpcyBteSBzdHJpbmc=", null); // BOM not at start is error
-			VerifyCoder(Coder.Type.Base64, "(INVALID STRING)", null);
-			VerifyCoder(Coder.Type.Base64, "VGhpcyBpcyBteSBzdHJpbmc", Encoding.UTF8.GetBytes("This is my string")); // Missing ending padding
-			VerifyCoder(Coder.Type.Base64, "V=GhpcyBpcyBteSBzdHJpbmc=", null); // Padding in middle
+			VerifyStrCoder(StrCoder.CodePage.Base64, "", Encoding.UTF8.GetBytes(""), false);
+			VerifyStrCoder(StrCoder.CodePage.Base64, " V G h p c y B p c y \r B t e S B z \n d H J p b m c = ", Encoding.UTF8.GetBytes("This is my string"), false, "VGhpcyBpcyBteSBzdHJpbmc");
+			VerifyStrCoder(StrCoder.CodePage.Base64, "\ufeffVGhpcyBpcyBteSBzdHJpbmc=", Encoding.UTF8.GetBytes("This is my string"), false, "VGhpcyBpcyBteSBzdHJpbmc"); // BOM at start is ignored
+			VerifyStrCoder(StrCoder.CodePage.Base64, " \ufeffVGhpcyBpcyBteSBzdHJpbmc=", null, false); // BOM not at start is error
+			VerifyStrCoder(StrCoder.CodePage.Base64, "(INVALID STRING)", null, false);
+			VerifyStrCoder(StrCoder.CodePage.Base64, "VGhpcyBpcyBteSBzdHJpbmc", Encoding.UTF8.GetBytes("This is my string"), false); // Missing ending padding
+			VerifyStrCoder(StrCoder.CodePage.Base64, "V=GhpcyBpcyBteSBzdHJpbmc=", null, false); // Padding in middle
 
 			// Hex
-			VerifyCoder(Coder.Type.Hex, "deadbeef", new byte[] { 222, 173, 190, 239 });
-			VerifyCoder(Coder.Type.Hex, "", new byte[] { });
-			VerifyCoder(Coder.Type.Hex, "0123456789abcdef", new byte[] { 1, 35, 69, 103, 137, 171, 205, 239 });
-			VerifyCoder(Coder.Type.Hex, "0000", new byte[] { 0, 0 });
-			VerifyCoder(Coder.Type.Hex, "geadbeef", null);
+			VerifyStrCoder(StrCoder.CodePage.Hex, "deadbeef", new byte[] { 222, 173, 190, 239 }, false);
+			VerifyStrCoder(StrCoder.CodePage.Hex, "", new byte[] { }, false);
+			VerifyStrCoder(StrCoder.CodePage.Hex, "0123456789abcdef", new byte[] { 1, 35, 69, 103, 137, 171, 205, 239 }, false);
+			VerifyStrCoder(StrCoder.CodePage.Hex, "0000", new byte[] { 0, 0 }, false);
+			VerifyStrCoder(StrCoder.CodePage.Hex, "geadbeef", null, false);
 		}
 	}
 }

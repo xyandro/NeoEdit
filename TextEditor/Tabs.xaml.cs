@@ -25,10 +25,10 @@ namespace NeoEdit.TextEditor
 
 		static TextEditorTabs() { UIHelper<TextEditorTabs>.Register(); }
 
-		public static TextEditorTabs Create(string filename = null, byte[] bytes = null, Coder.Type encoding = Coder.Type.None, int line = 1, int column = 1, bool createNew = false)
+		public static TextEditorTabs Create(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false)
 		{
 			var textEditorTabs = (!createNew ? UIHelper<TextEditorTabs>.GetNewest() : null) ?? new TextEditorTabs();
-			textEditorTabs.Add(new TextEditor(filename, bytes, encoding, line, column));
+			textEditorTabs.Add(new TextEditor(filename, bytes, codePage, line, column));
 			return textEditorTabs;
 		}
 
@@ -170,13 +170,13 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Case_Toggle: Active.Command_Data_Case_Toggle(); break;
 				case TextEditCommand.Data_Hex_ToHex: Active.Command_Data_Hex_ToHex(); break;
 				case TextEditCommand.Data_Hex_FromHex: Active.Command_Data_Hex_FromHex(); break;
-				case TextEditCommand.Data_Binary_ToBinary_String_UTF8: Active.Command_Data_Binary_ToBinary(Coder.Type.UTF8); break;
-				case TextEditCommand.Data_Binary_ToBinary_String_UTF16LE: Active.Command_Data_Binary_ToBinary(Coder.Type.UTF16LE); break;
-				case TextEditCommand.Data_Binary_ToBinary_String_UTF16BE: Active.Command_Data_Binary_ToBinary(Coder.Type.UTF16BE); break;
-				case TextEditCommand.Data_Binary_ToBinary_String_UTF32LE: Active.Command_Data_Binary_ToBinary(Coder.Type.UTF32LE); break;
-				case TextEditCommand.Data_Binary_ToBinary_String_UTF32BE: Active.Command_Data_Binary_ToBinary(Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_Binary_ToBinary_String_Default: Active.Command_Data_Binary_ToBinary(Coder.Type.Default); break;
-				case TextEditCommand.Data_Binary_ToBinary_String_Base64: Active.Command_Data_Binary_ToBinary(Coder.Type.Base64); break;
+				case TextEditCommand.Data_Binary_ToBinary_String_UTF8: Active.Command_Data_Binary_ToBinary(StrCoder.CodePage.UTF8); break;
+				case TextEditCommand.Data_Binary_ToBinary_String_UTF16LE: Active.Command_Data_Binary_ToBinary(StrCoder.CodePage.UTF16LE); break;
+				case TextEditCommand.Data_Binary_ToBinary_String_UTF16BE: Active.Command_Data_Binary_ToBinary(StrCoder.CodePage.UTF16BE); break;
+				case TextEditCommand.Data_Binary_ToBinary_String_UTF32LE: Active.Command_Data_Binary_ToBinary(StrCoder.CodePage.UTF32LE); break;
+				case TextEditCommand.Data_Binary_ToBinary_String_UTF32BE: Active.Command_Data_Binary_ToBinary(StrCoder.CodePage.UTF32BE); break;
+				case TextEditCommand.Data_Binary_ToBinary_String_Default: Active.Command_Data_Binary_ToBinary(StrCoder.CodePage.Default); break;
+				case TextEditCommand.Data_Binary_ToBinary_String_Base64: Active.Command_Data_Binary_ToBinary(StrCoder.CodePage.Base64); break;
 				case TextEditCommand.Data_Binary_ToBinary_UIntLE_UInt8LE: Active.Command_Data_Binary_ToBinary(Coder.Type.UInt8LE); break;
 				case TextEditCommand.Data_Binary_ToBinary_UIntLE_UInt16LE: Active.Command_Data_Binary_ToBinary(Coder.Type.UInt16LE); break;
 				case TextEditCommand.Data_Binary_ToBinary_UIntLE_UInt32LE: Active.Command_Data_Binary_ToBinary(Coder.Type.UInt32LE); break;
@@ -195,14 +195,14 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Binary_ToBinary_IntBE_Int64BE: Active.Command_Data_Binary_ToBinary(Coder.Type.Int64BE); break;
 				case TextEditCommand.Data_Binary_ToBinary_Float_Single: Active.Command_Data_Binary_ToBinary(Coder.Type.Single); break;
 				case TextEditCommand.Data_Binary_ToBinary_Float_Double: Active.Command_Data_Binary_ToBinary(Coder.Type.Double); break;
-				case TextEditCommand.Data_Binary_FromBinary_String_Auto: Active.Command_Data_Binary_FromBinary(Coder.Type.AutoUnicode); break;
-				case TextEditCommand.Data_Binary_FromBinary_String_UTF8: Active.Command_Data_Binary_FromBinary(Coder.Type.UTF8); break;
-				case TextEditCommand.Data_Binary_FromBinary_String_UTF16LE: Active.Command_Data_Binary_FromBinary(Coder.Type.UTF16LE); break;
-				case TextEditCommand.Data_Binary_FromBinary_String_UTF16BE: Active.Command_Data_Binary_FromBinary(Coder.Type.UTF16BE); break;
-				case TextEditCommand.Data_Binary_FromBinary_String_UTF32LE: Active.Command_Data_Binary_FromBinary(Coder.Type.UTF32LE); break;
-				case TextEditCommand.Data_Binary_FromBinary_String_UTF32BE: Active.Command_Data_Binary_FromBinary(Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_Binary_FromBinary_String_Default: Active.Command_Data_Binary_FromBinary(Coder.Type.Default); break;
-				case TextEditCommand.Data_Binary_FromBinary_String_Base64: Active.Command_Data_Binary_FromBinary(Coder.Type.Base64); break;
+				case TextEditCommand.Data_Binary_FromBinary_String_Auto: Active.Command_Data_Binary_FromBinary(StrCoder.CodePage.AutoUnicode); break;
+				case TextEditCommand.Data_Binary_FromBinary_String_UTF8: Active.Command_Data_Binary_FromBinary(StrCoder.CodePage.UTF8); break;
+				case TextEditCommand.Data_Binary_FromBinary_String_UTF16LE: Active.Command_Data_Binary_FromBinary(StrCoder.CodePage.UTF16LE); break;
+				case TextEditCommand.Data_Binary_FromBinary_String_UTF16BE: Active.Command_Data_Binary_FromBinary(StrCoder.CodePage.UTF16BE); break;
+				case TextEditCommand.Data_Binary_FromBinary_String_UTF32LE: Active.Command_Data_Binary_FromBinary(StrCoder.CodePage.UTF32LE); break;
+				case TextEditCommand.Data_Binary_FromBinary_String_UTF32BE: Active.Command_Data_Binary_FromBinary(StrCoder.CodePage.UTF32BE); break;
+				case TextEditCommand.Data_Binary_FromBinary_String_Default: Active.Command_Data_Binary_FromBinary(StrCoder.CodePage.Default); break;
+				case TextEditCommand.Data_Binary_FromBinary_String_Base64: Active.Command_Data_Binary_FromBinary(StrCoder.CodePage.Base64); break;
 				case TextEditCommand.Data_Binary_FromBinary_UIntLE_UInt8LE: Active.Command_Data_Binary_FromBinary(Coder.Type.UInt8LE); break;
 				case TextEditCommand.Data_Binary_FromBinary_UIntLE_UInt16LE: Active.Command_Data_Binary_FromBinary(Coder.Type.UInt16LE); break;
 				case TextEditCommand.Data_Binary_FromBinary_UIntLE_UInt32LE: Active.Command_Data_Binary_FromBinary(Coder.Type.UInt32LE); break;
@@ -221,21 +221,21 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Binary_FromBinary_IntBE_Int64BE: Active.Command_Data_Binary_FromBinary(Coder.Type.Int64BE); break;
 				case TextEditCommand.Data_Binary_FromBinary_Float_Single: Active.Command_Data_Binary_FromBinary(Coder.Type.Single); break;
 				case TextEditCommand.Data_Binary_FromBinary_Float_Double: Active.Command_Data_Binary_FromBinary(Coder.Type.Double); break;
-				case TextEditCommand.Data_Base64_ToBase64_UTF8: Active.Command_Data_Base64_ToBase64(Coder.Type.UTF8); break;
-				case TextEditCommand.Data_Base64_ToBase64_UTF16LE: Active.Command_Data_Base64_ToBase64(Coder.Type.UTF16LE); break;
-				case TextEditCommand.Data_Base64_ToBase64_UTF16BE: Active.Command_Data_Base64_ToBase64(Coder.Type.UTF16BE); break;
-				case TextEditCommand.Data_Base64_ToBase64_UTF32LE: Active.Command_Data_Base64_ToBase64(Coder.Type.UTF32LE); break;
-				case TextEditCommand.Data_Base64_ToBase64_UTF32BE: Active.Command_Data_Base64_ToBase64(Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_Base64_ToBase64_Default: Active.Command_Data_Base64_ToBase64(Coder.Type.Default); break;
-				case TextEditCommand.Data_Base64_ToBase64_Binary: Active.Command_Data_Base64_ToBase64(Coder.Type.Hex); break;
-				case TextEditCommand.Data_Base64_FromBase64_Auto: Active.Command_Data_Base64_FromBase64(Coder.Type.AutoUnicode); break;
-				case TextEditCommand.Data_Base64_FromBase64_UTF8: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF8); break;
-				case TextEditCommand.Data_Base64_FromBase64_UTF16LE: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF16LE); break;
-				case TextEditCommand.Data_Base64_FromBase64_UTF16BE: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF16BE); break;
-				case TextEditCommand.Data_Base64_FromBase64_UTF32LE: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF32LE); break;
-				case TextEditCommand.Data_Base64_FromBase64_UTF32BE: Active.Command_Data_Base64_FromBase64(Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_Base64_FromBase64_Default: Active.Command_Data_Base64_FromBase64(Coder.Type.Default); break;
-				case TextEditCommand.Data_Base64_FromBase64_Binary: Active.Command_Data_Base64_FromBase64(Coder.Type.Hex); break;
+				case TextEditCommand.Data_Base64_ToBase64_UTF8: Active.Command_Data_Base64_ToBase64(StrCoder.CodePage.UTF8); break;
+				case TextEditCommand.Data_Base64_ToBase64_UTF16LE: Active.Command_Data_Base64_ToBase64(StrCoder.CodePage.UTF16LE); break;
+				case TextEditCommand.Data_Base64_ToBase64_UTF16BE: Active.Command_Data_Base64_ToBase64(StrCoder.CodePage.UTF16BE); break;
+				case TextEditCommand.Data_Base64_ToBase64_UTF32LE: Active.Command_Data_Base64_ToBase64(StrCoder.CodePage.UTF32LE); break;
+				case TextEditCommand.Data_Base64_ToBase64_UTF32BE: Active.Command_Data_Base64_ToBase64(StrCoder.CodePage.UTF32BE); break;
+				case TextEditCommand.Data_Base64_ToBase64_Default: Active.Command_Data_Base64_ToBase64(StrCoder.CodePage.Default); break;
+				case TextEditCommand.Data_Base64_ToBase64_Binary: Active.Command_Data_Base64_ToBase64(StrCoder.CodePage.Hex); break;
+				case TextEditCommand.Data_Base64_FromBase64_Auto: Active.Command_Data_Base64_FromBase64(StrCoder.CodePage.AutoUnicode); break;
+				case TextEditCommand.Data_Base64_FromBase64_UTF8: Active.Command_Data_Base64_FromBase64(StrCoder.CodePage.UTF8); break;
+				case TextEditCommand.Data_Base64_FromBase64_UTF16LE: Active.Command_Data_Base64_FromBase64(StrCoder.CodePage.UTF16LE); break;
+				case TextEditCommand.Data_Base64_FromBase64_UTF16BE: Active.Command_Data_Base64_FromBase64(StrCoder.CodePage.UTF16BE); break;
+				case TextEditCommand.Data_Base64_FromBase64_UTF32LE: Active.Command_Data_Base64_FromBase64(StrCoder.CodePage.UTF32LE); break;
+				case TextEditCommand.Data_Base64_FromBase64_UTF32BE: Active.Command_Data_Base64_FromBase64(StrCoder.CodePage.UTF32BE); break;
+				case TextEditCommand.Data_Base64_FromBase64_Default: Active.Command_Data_Base64_FromBase64(StrCoder.CodePage.Default); break;
+				case TextEditCommand.Data_Base64_FromBase64_Binary: Active.Command_Data_Base64_FromBase64(StrCoder.CodePage.Hex); break;
 				case TextEditCommand.Data_DateTime_Insert: Active.Command_Data_DateTime_Insert(); break;
 				case TextEditCommand.Data_DateTime_Convert: Active.Command_Data_DateTime_Convert(); break;
 				case TextEditCommand.Data_Length: Active.Command_Data_Length(); break;
@@ -261,24 +261,24 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Unescape_XML: Active.Command_Data_Unescape_XML(); break;
 				case TextEditCommand.Data_Unescape_Regex: Active.Command_Data_Unescape_Regex(); break;
 				case TextEditCommand.Data_Unescape_URL: Active.Command_Data_Unescape_URL(); break;
-				case TextEditCommand.Data_MD5_UTF8: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF8); break;
-				case TextEditCommand.Data_MD5_UTF16LE: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF16LE); break;
-				case TextEditCommand.Data_MD5_UTF16BE: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF16BE); break;
-				case TextEditCommand.Data_MD5_UTF32LE: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF32LE); break;
-				case TextEditCommand.Data_MD5_UTF32BE: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_MD5_Default: Active.Command_Data_Checksum(Checksum.Type.MD5, Coder.Type.Default); break;
-				case TextEditCommand.Data_SHA1_UTF8: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF8); break;
-				case TextEditCommand.Data_SHA1_UTF16LE: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF16LE); break;
-				case TextEditCommand.Data_SHA1_UTF16BE: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF16BE); break;
-				case TextEditCommand.Data_SHA1_UTF32LE: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF32LE); break;
-				case TextEditCommand.Data_SHA1_UTF32BE: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_SHA1_Default: Active.Command_Data_Checksum(Checksum.Type.SHA1, Coder.Type.Default); break;
-				case TextEditCommand.Data_SHA256_UTF8: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF8); break;
-				case TextEditCommand.Data_SHA256_UTF16LE: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF16LE); break;
-				case TextEditCommand.Data_SHA256_UTF16BE: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF16BE); break;
-				case TextEditCommand.Data_SHA256_UTF32LE: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF32LE); break;
-				case TextEditCommand.Data_SHA256_UTF32BE: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.UTF32BE); break;
-				case TextEditCommand.Data_SHA256_Default: Active.Command_Data_Checksum(Checksum.Type.SHA256, Coder.Type.Default); break;
+				case TextEditCommand.Data_MD5_UTF8: Active.Command_Data_Checksum(Checksum.Type.MD5, StrCoder.CodePage.UTF8); break;
+				case TextEditCommand.Data_MD5_UTF16LE: Active.Command_Data_Checksum(Checksum.Type.MD5, StrCoder.CodePage.UTF16LE); break;
+				case TextEditCommand.Data_MD5_UTF16BE: Active.Command_Data_Checksum(Checksum.Type.MD5, StrCoder.CodePage.UTF16BE); break;
+				case TextEditCommand.Data_MD5_UTF32LE: Active.Command_Data_Checksum(Checksum.Type.MD5, StrCoder.CodePage.UTF32LE); break;
+				case TextEditCommand.Data_MD5_UTF32BE: Active.Command_Data_Checksum(Checksum.Type.MD5, StrCoder.CodePage.UTF32BE); break;
+				case TextEditCommand.Data_MD5_Default: Active.Command_Data_Checksum(Checksum.Type.MD5, StrCoder.CodePage.Default); break;
+				case TextEditCommand.Data_SHA1_UTF8: Active.Command_Data_Checksum(Checksum.Type.SHA1, StrCoder.CodePage.UTF8); break;
+				case TextEditCommand.Data_SHA1_UTF16LE: Active.Command_Data_Checksum(Checksum.Type.SHA1, StrCoder.CodePage.UTF16LE); break;
+				case TextEditCommand.Data_SHA1_UTF16BE: Active.Command_Data_Checksum(Checksum.Type.SHA1, StrCoder.CodePage.UTF16BE); break;
+				case TextEditCommand.Data_SHA1_UTF32LE: Active.Command_Data_Checksum(Checksum.Type.SHA1, StrCoder.CodePage.UTF32LE); break;
+				case TextEditCommand.Data_SHA1_UTF32BE: Active.Command_Data_Checksum(Checksum.Type.SHA1, StrCoder.CodePage.UTF32BE); break;
+				case TextEditCommand.Data_SHA1_Default: Active.Command_Data_Checksum(Checksum.Type.SHA1, StrCoder.CodePage.Default); break;
+				case TextEditCommand.Data_SHA256_UTF8: Active.Command_Data_Checksum(Checksum.Type.SHA256, StrCoder.CodePage.UTF8); break;
+				case TextEditCommand.Data_SHA256_UTF16LE: Active.Command_Data_Checksum(Checksum.Type.SHA256, StrCoder.CodePage.UTF16LE); break;
+				case TextEditCommand.Data_SHA256_UTF16BE: Active.Command_Data_Checksum(Checksum.Type.SHA256, StrCoder.CodePage.UTF16BE); break;
+				case TextEditCommand.Data_SHA256_UTF32LE: Active.Command_Data_Checksum(Checksum.Type.SHA256, StrCoder.CodePage.UTF32LE); break;
+				case TextEditCommand.Data_SHA256_UTF32BE: Active.Command_Data_Checksum(Checksum.Type.SHA256, StrCoder.CodePage.UTF32BE); break;
+				case TextEditCommand.Data_SHA256_Default: Active.Command_Data_Checksum(Checksum.Type.SHA256, StrCoder.CodePage.Default); break;
 				case TextEditCommand.Sort_String: Active.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.String, include); break;
 				case TextEditCommand.Sort_Numeric: Active.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Numeric, include); break;
 				case TextEditCommand.Sort_Keys: Active.Command_Sort(TextEditor.SortScope.Selections, TextEditor.SortType.Keys, include); break;

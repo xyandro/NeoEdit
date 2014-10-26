@@ -39,7 +39,7 @@ namespace NeoEdit.BinaryEditor
 		[DepProp]
 		public bool Insert { get { return UIHelper<BinaryEditor>.GetPropValue<bool>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public Coder.Type CoderUsed { get { return UIHelper<BinaryEditor>.GetPropValue<Coder.Type>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
+		public StrCoder.CodePage CodePage { get { return UIHelper<BinaryEditor>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string FoundText { get { return UIHelper<BinaryEditor>.GetPropValue<string>(this); } set { UIHelper<BinaryEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -137,7 +137,7 @@ namespace NeoEdit.BinaryEditor
 			UIHelper<BinaryEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		public BinaryEditor(BinaryData data, Coder.Type encoder = Coder.Type.None, string filename = null, string filetitle = null)
+		public BinaryEditor(BinaryData data, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, string filename = null, string filetitle = null)
 		{
 			InitializeComponent();
 
@@ -152,9 +152,9 @@ namespace NeoEdit.BinaryEditor
 			canvas.Render += OnCanvasRender;
 
 			Data = data;
-			CoderUsed = encoder;
-			if (CoderUsed == Coder.Type.None)
-				CoderUsed = Data.GuessEncoding();
+			CodePage = codePage;
+			if (CodePage == StrCoder.CodePage.AutoByBOM)
+				CodePage = Data.CodePageFromBOM();
 			FileName = filename;
 			FileTitle = filetitle;
 
@@ -489,7 +489,7 @@ namespace NeoEdit.BinaryEditor
 
 			if (!SelHex)
 			{
-				Replace(Coder.StringToBytes(e.Text, CoderUsed));
+				Replace(StrCoder.StringToBytes(e.Text, CodePage));
 				return;
 			}
 
@@ -620,11 +620,11 @@ namespace NeoEdit.BinaryEditor
 			Clipboard.SetText(Path.GetFileName(FileName));
 		}
 
-		internal void Command_File_Encoding(Coder.Type type)
+		internal void Command_File_Encoding(StrCoder.CodePage type)
 		{
-			CoderUsed = type;
-			if (CoderUsed == Coder.Type.None)
-				CoderUsed = Data.GuessEncoding();
+			CodePage = type;
+			if (CodePage == StrCoder.CodePage.AutoByBOM)
+				CodePage = Data.CodePageFromBOM();
 		}
 
 		internal void Command_Edit_Undo()
@@ -658,7 +658,7 @@ namespace NeoEdit.BinaryEditor
 			var bytes = Data.GetSubset(SelStart, Length);
 			string str;
 			if (SelHex)
-				str = Coder.BytesToString(bytes, Coder.Type.Hex);
+				str = StrCoder.BytesToString(bytes, StrCoder.CodePage.Hex);
 			else
 			{
 				var sb = new StringBuilder(bytes.Length);
@@ -679,7 +679,7 @@ namespace NeoEdit.BinaryEditor
 			{
 				var str = ClipboardWindow.GetString();
 				if (str != null)
-					bytes = Coder.TryStringToBytes(str, CoderUsed);
+					bytes = StrCoder.TryStringToBytes(str, CodePage);
 			}
 			if ((bytes != null) && (bytes.Length != 0))
 				Replace(bytes);

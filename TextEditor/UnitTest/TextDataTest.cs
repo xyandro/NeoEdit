@@ -20,7 +20,7 @@ namespace NeoEdit.TextEditor.UnitTest
 
 		TextData GetTextData()
 		{
-			return new TextData(Encoding.UTF8.GetBytes(TestString), Coder.Type.UTF8);
+			return new TextData(Encoding.UTF8.GetBytes(TestString), StrCoder.CodePage.UTF8);
 		}
 
 		[TestMethod]

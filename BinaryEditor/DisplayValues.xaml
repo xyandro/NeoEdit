@@ -14,6 +14,9 @@
 				<Style TargetType="binaryEditor:DisplayValue">
 					<Setter Property="ParentWindow" Value="{Binding ParentWindow, ElementName=self}"/>
 				</Style>
+				<Style TargetType="binaryEditor:DisplayString">
+					<Setter Property="ParentWindow" Value="{Binding ParentWindow, ElementName=self}"/>
+				</Style>
 				<Style TargetType="CheckBox">
 					<Setter Property="Focusable" Value="False"/>
 					<Setter Property="Margin" Value="0,0,5,0"/>
@@ -111,7 +114,7 @@
 
 	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
 		<Label Content="UTF8:"/>
-		<binaryEditor:DisplayValue Type="UTF8"/>
+		<binaryEditor:DisplayString Type="UTF8"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -123,7 +126,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF16LE:"/>
-		<binaryEditor:DisplayValue Type="UTF16LE"/>
+		<binaryEditor:DisplayString Type="UTF16LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -135,7 +138,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF16BE:"/>
-		<binaryEditor:DisplayValue Type="UTF16BE"/>
+		<binaryEditor:DisplayString Type="UTF16BE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -147,7 +150,7 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF32LE:"/>
-		<binaryEditor:DisplayValue Type="UTF32LE"/>
+		<binaryEditor:DisplayString Type="UTF32LE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal">
@@ -159,12 +162,12 @@
 		</StackPanel.Visibility>
 
 		<Label Content="UTF32BE:"/>
-		<binaryEditor:DisplayValue Type="UTF32BE"/>
+		<binaryEditor:DisplayString Type="UTF32BE"/>
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
 		<Label Content="Default:"/>
-		<binaryEditor:DisplayValue Type="Default"/>
+		<binaryEditor:DisplayString Type="Default"/>
 	</StackPanel>
 
 </StackPanel>

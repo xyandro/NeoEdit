@@ -9,15 +9,12 @@ namespace NeoEdit.TextEditor.Dialogs
 	{
 		internal class Response
 		{
-			public Coder.Type Encoding { get; set; }
-			public bool BOM { get; set; }
+			public StrCoder.CodePage CodePage { get; set; }
 			public string LineEndings { get; set; }
 		}
 
 		[DepProp]
-		public Coder.Type Encoding { get { return UIHelper<EncodingDialog>.GetPropValue<Coder.Type>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool BOM { get { return UIHelper<EncodingDialog>.GetPropValue<bool>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
+		public StrCoder.CodePage CodePage { get { return UIHelper<EncodingDialog>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string LineEndings { get { return UIHelper<EncodingDialog>.GetPropValue<string>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 
@@ -26,16 +23,16 @@ namespace NeoEdit.TextEditor.Dialogs
 		class Tester
 		{
 			public string Display { get; set; }
-			public Coder.Type Encoding { get; set; }
+			public StrCoder.CodePage CodePage { get; set; }
 		}
 
 		EncodingDialog()
 		{
 			InitializeComponent();
 
-			encoding.ItemsSource = Coder.GetEncodingTypes();
-			encoding.DisplayMemberPath = "Key";
-			encoding.SelectedValuePath = "Value";
+			codePage.ItemsSource = StrCoder.GetEncodingTypes();
+			codePage.SelectedValuePath = "Item1";
+			codePage.DisplayMemberPath = "Item2";
 
 			lineEndings.ItemsSource = new Dictionary<string, string>
 			{
@@ -52,13 +49,13 @@ namespace NeoEdit.TextEditor.Dialogs
 		Response response = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			response = new Response { Encoding = Encoding, BOM = BOM, LineEndings = LineEndings };
+			response = new Response { CodePage = CodePage, LineEndings = LineEndings };
 			DialogResult = true;
 		}
 
-		public static Response Run(Coder.Type encoding, bool bom, string lineEndings)
+		public static Response Run(StrCoder.CodePage codePage, string lineEndings)
 		{
-			var dialog = new EncodingDialog { Encoding = encoding, BOM = bom, LineEndings = lineEndings };
+			var dialog = new EncodingDialog { CodePage = codePage, LineEndings = lineEndings };
 			if (dialog.ShowDialog() != true)
 				return null;
 
