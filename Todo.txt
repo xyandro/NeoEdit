@@ -26,6 +26,7 @@ Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
 Get directory files/dirs
 Checksums for files
+Copy down (move data down into empty selections)
 
 Binary:
 Fix binary editor backwards search

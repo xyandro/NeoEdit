@@ -212,6 +212,7 @@ namespace NeoEdit.BinaryEditor
 				case BinaryEditCommand.Sign_DSA: Active.Command_Sign(true, Crypto.Type.DSA); break;
 				case BinaryEditCommand.Verify_RSA: Active.Command_Sign(false, Crypto.Type.RSA); break;
 				case BinaryEditCommand.Verify_DSA: Active.Command_Sign(false, Crypto.Type.DSA); break;
+				case BinaryEditCommand.Data_Fill: Active.Command_Data_Fill(); break;
 			}
 		}
 	}

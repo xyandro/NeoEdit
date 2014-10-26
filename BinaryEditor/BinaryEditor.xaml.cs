@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -804,6 +805,15 @@ namespace NeoEdit.BinaryEditor
 				Text = text,
 				Options = Message.OptionsEnum.Ok,
 			}.Show();
+		}
+
+		internal void Command_Data_Fill()
+		{
+			var fill = FillDialog.Run();
+			if (fill == null)
+				return;
+			var data = Enumerable.Range(0, (int)(SelEnd - SelStart)).Select(a => fill.Value).ToArray();
+			Replace(SelStart, SelEnd - SelStart, data);
 		}
 
 		BinaryFindDialog.Result currentFind;

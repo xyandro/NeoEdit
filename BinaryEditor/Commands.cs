@@ -63,5 +63,6 @@ namespace NeoEdit.BinaryEditor
 		[Header("_DSA")] Sign_DSA,
 		[Header("_RSA")] Verify_RSA,
 		[Header("_DSA")] Verify_DSA,
+		[Header("_Fill")] Data_Fill,
 	}
 }

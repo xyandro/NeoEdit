@@ -91,6 +91,7 @@
 				<binaryEditor:BinaryEditMenuItem CommandEnum="Verify_RSA"/>
 				<binaryEditor:BinaryEditMenuItem CommandEnum="Verify_DSA"/>
 			</MenuItem>
+			<binaryEditor:BinaryEditMenuItem CommandEnum="Data_Fill"/>
 		</MenuItem>
 		<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 		<guiCommon:HelpMenu/>
