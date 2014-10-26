@@ -462,7 +462,15 @@ namespace NeoEdit.Common
 						throw new Exception(String.Format("Invalid operation: {0}", op.operation));
 				}
 			}
-			return results.Last();
+			var result = results.Last();
+			if (result is string)
+			{
+				if ((result as string).Equals("True", StringComparison.OrdinalIgnoreCase))
+					result = true;
+				else if ((result as string).Equals("False", StringComparison.OrdinalIgnoreCase))
+					result = false;
+			}
+			return result;
 		}
 	}
 }
