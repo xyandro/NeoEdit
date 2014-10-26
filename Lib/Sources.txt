@@ -1,0 +1,1 @@
+Xceed.Wpf.Toolkit.dll: https://www.nuget.org/packages/Extended.Wpf.Toolkit/2.3.0 "packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.Toolkit.dll"
