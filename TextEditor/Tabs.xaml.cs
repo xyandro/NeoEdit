@@ -58,7 +58,7 @@ namespace NeoEdit.TextEditor
 				Add(new TextEditor(filename));
 		}
 
-		void Command_File_OpenCopied()
+		void Command_File_OpenCopiedCutFiles()
 		{
 			var files = ClipboardWindow.GetFiles();
 			if ((files == null) || (files.Count < 0))
@@ -103,7 +103,7 @@ namespace NeoEdit.TextEditor
 			{
 				case TextEditCommand.File_New: Add(new TextEditor()); break;
 				case TextEditCommand.File_Open: Command_File_Open(); break;
-				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopied(); break;
+				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
@@ -135,7 +135,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true); break;
 				case TextEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false); break;
 				case TextEditCommand.Edit_GotoLine: Active.Command_Edit_GotoLine(); break;
-				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_GotoIndex(); break;
+				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_GotoColumn(); break;
 				case TextEditCommand.Files_Copy: Active.Command_Files_CutCopy(false); break;
 				case TextEditCommand.Files_Cut: Active.Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Open: Active.Command_Files_Open(); break;
@@ -253,8 +253,8 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Copy_Length_Max: Active.Command_Data_Copy_MinMaxLength(false); break;
 				case TextEditCommand.Data_Copy_Sum: Active.Command_Data_Copy_Sum(); break;
 				case TextEditCommand.Data_Repeat: Active.Command_Data_Repeat(); break;
-				case TextEditCommand.Data_InsertGUID: Active.Command_Data_GUID(); break;
-				case TextEditCommand.Data_InsertRandomNumber: Active.Command_Data_Random(); break;
+				case TextEditCommand.Data_InsertGUID: Active.Command_Data_InsertGUID(); break;
+				case TextEditCommand.Data_InsertRandomNumber: Active.Command_Data_InsertRandomNumber(); break;
 				case TextEditCommand.Data_Escape_XML: Active.Command_Data_Escape_XML(); break;
 				case TextEditCommand.Data_Escape_Regex: Active.Command_Data_Escape_Regex(); break;
 				case TextEditCommand.Data_Escape_URL: Active.Command_Data_Escape_URL(); break;
@@ -297,16 +297,16 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Sort_Regions_Reverse: Active.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.Reverse, include); break;
 				case TextEditCommand.Sort_Regions_Randomize: Active.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.Randomize, include); break;
 				case TextEditCommand.Sort_Regions_SortByLength: Active.Command_Sort(TextEditor.SortScope.Regions, TextEditor.SortType.Length, include); break;
-				case TextEditCommand.Keys_Set_Keys: Active.Command_Keys_SetValues(0); break;
-				case TextEditCommand.Keys_Set_Values1: Active.Command_Keys_SetValues(1); break;
-				case TextEditCommand.Keys_Set_Values2: Active.Command_Keys_SetValues(2); break;
-				case TextEditCommand.Keys_Set_Values3: Active.Command_Keys_SetValues(3); break;
-				case TextEditCommand.Keys_Set_Values4: Active.Command_Keys_SetValues(4); break;
-				case TextEditCommand.Keys_Set_Values5: Active.Command_Keys_SetValues(5); break;
-				case TextEditCommand.Keys_Set_Values6: Active.Command_Keys_SetValues(6); break;
-				case TextEditCommand.Keys_Set_Values7: Active.Command_Keys_SetValues(7); break;
-				case TextEditCommand.Keys_Set_Values8: Active.Command_Keys_SetValues(8); break;
-				case TextEditCommand.Keys_Set_Values9: Active.Command_Keys_SetValues(9); break;
+				case TextEditCommand.Keys_Set_Keys: Active.Command_Keys_Set(0); break;
+				case TextEditCommand.Keys_Set_Values1: Active.Command_Keys_Set(1); break;
+				case TextEditCommand.Keys_Set_Values2: Active.Command_Keys_Set(2); break;
+				case TextEditCommand.Keys_Set_Values3: Active.Command_Keys_Set(3); break;
+				case TextEditCommand.Keys_Set_Values4: Active.Command_Keys_Set(4); break;
+				case TextEditCommand.Keys_Set_Values5: Active.Command_Keys_Set(5); break;
+				case TextEditCommand.Keys_Set_Values6: Active.Command_Keys_Set(6); break;
+				case TextEditCommand.Keys_Set_Values7: Active.Command_Keys_Set(7); break;
+				case TextEditCommand.Keys_Set_Values8: Active.Command_Keys_Set(8); break;
+				case TextEditCommand.Keys_Set_Values9: Active.Command_Keys_Set(9); break;
 				case TextEditCommand.Keys_SelectionReplace_Values1: Active.Command_Keys_SelectionReplace(1); break;
 				case TextEditCommand.Keys_SelectionReplace_Values2: Active.Command_Keys_SelectionReplace(2); break;
 				case TextEditCommand.Keys_SelectionReplace_Values3: Active.Command_Keys_SelectionReplace(3); break;
@@ -335,16 +335,16 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Keys_GlobalReplace_Values7: Active.Command_Keys_GlobalReplace(7); break;
 				case TextEditCommand.Keys_GlobalReplace_Values8: Active.Command_Keys_GlobalReplace(8); break;
 				case TextEditCommand.Keys_GlobalReplace_Values9: Active.Command_Keys_GlobalReplace(9); break;
-				case TextEditCommand.Keys_Copy_Keys: Active.Command_Keys_CopyValues(0); break;
-				case TextEditCommand.Keys_Copy_Values1: Active.Command_Keys_CopyValues(1); break;
-				case TextEditCommand.Keys_Copy_Values2: Active.Command_Keys_CopyValues(2); break;
-				case TextEditCommand.Keys_Copy_Values3: Active.Command_Keys_CopyValues(3); break;
-				case TextEditCommand.Keys_Copy_Values4: Active.Command_Keys_CopyValues(4); break;
-				case TextEditCommand.Keys_Copy_Values5: Active.Command_Keys_CopyValues(5); break;
-				case TextEditCommand.Keys_Copy_Values6: Active.Command_Keys_CopyValues(6); break;
-				case TextEditCommand.Keys_Copy_Values7: Active.Command_Keys_CopyValues(7); break;
-				case TextEditCommand.Keys_Copy_Values8: Active.Command_Keys_CopyValues(8); break;
-				case TextEditCommand.Keys_Copy_Values9: Active.Command_Keys_CopyValues(9); break;
+				case TextEditCommand.Keys_Copy_Keys: Active.Command_Keys_Copy(0); break;
+				case TextEditCommand.Keys_Copy_Values1: Active.Command_Keys_Copy(1); break;
+				case TextEditCommand.Keys_Copy_Values2: Active.Command_Keys_Copy(2); break;
+				case TextEditCommand.Keys_Copy_Values3: Active.Command_Keys_Copy(3); break;
+				case TextEditCommand.Keys_Copy_Values4: Active.Command_Keys_Copy(4); break;
+				case TextEditCommand.Keys_Copy_Values5: Active.Command_Keys_Copy(5); break;
+				case TextEditCommand.Keys_Copy_Values6: Active.Command_Keys_Copy(6); break;
+				case TextEditCommand.Keys_Copy_Values7: Active.Command_Keys_Copy(7); break;
+				case TextEditCommand.Keys_Copy_Values8: Active.Command_Keys_Copy(8); break;
+				case TextEditCommand.Keys_Copy_Values9: Active.Command_Keys_Copy(9); break;
 				case TextEditCommand.Keys_Hits_Keys: Active.Command_Keys_HitsMisses(0, true); break;
 				case TextEditCommand.Keys_Hits_Values1: Active.Command_Keys_HitsMisses(1, true); break;
 				case TextEditCommand.Keys_Hits_Values2: Active.Command_Keys_HitsMisses(2, true); break;
@@ -365,7 +365,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Keys_Misses_Values7: Active.Command_Keys_HitsMisses(7, false); break;
 				case TextEditCommand.Keys_Misses_Values8: Active.Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Active.Command_Keys_HitsMisses(9, false); break;
-				case TextEditCommand.Keys_CountstoKeysValues1: Active.Command_Keys_Counts(); break;
+				case TextEditCommand.Keys_CountstoKeysValues1: Active.Command_Keys_CountstoKeysValues1(); break;
 				case TextEditCommand.SelectMark_Toggle: Active.Command_SelectMark_Toggle(); break;
 				case TextEditCommand.Select_All: Active.Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Active.Command_Select_Limit(); break;
@@ -374,22 +374,22 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_Unique: Active.Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Active.Command_Select_Duplicates(); break;
 				case TextEditCommand.Select_Marks: Active.Command_Select_Marks(); break;
-				case TextEditCommand.Select_FindResults: Active.Command_Select_Find(); break;
+				case TextEditCommand.Select_FindResults: Active.Command_Select_FindResults(); break;
 				case TextEditCommand.Select_Min_String: Active.Command_Select_Min_String(); break;
 				case TextEditCommand.Select_Min_Numeric: Active.Command_Select_Min_Numeric(); break;
 				case TextEditCommand.Select_Max_String: Active.Command_Select_Max_String(); break;
 				case TextEditCommand.Select_Max_Numeric: Active.Command_Select_Max_Numeric(); break;
 				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(include); break;
 				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(include); break;
-				case TextEditCommand.Select_FirstSelection: Active.Command_Select_ShowFirst(); break;
+				case TextEditCommand.Select_FirstSelection: Active.Command_Select_FirstSelection(); break;
 				case TextEditCommand.Select_ShowCurrent: Active.Command_Select_ShowCurrent(); break;
 				case TextEditCommand.Select_NextSelection: Active.Command_Select_NextSelection(); break;
 				case TextEditCommand.Select_PrevSelection: Active.Command_Select_PrevSelection(); break;
 				case TextEditCommand.Select_Single: Active.Command_Select_Single(); break;
 				case TextEditCommand.Select_Remove: Active.Command_Select_Remove(); break;
 				case TextEditCommand.Mark_Selection: Active.Command_Mark_Selection(); break;
-				case TextEditCommand.Mark_FindResults: Active.Command_Mark_Find(); break;
-				case TextEditCommand.Mark_ClearMarks: Active.Command_Mark_Clear(); break;
+				case TextEditCommand.Mark_FindResults: Active.Command_Mark_FindResults(); break;
+				case TextEditCommand.Mark_ClearMarks: Active.Command_Mark_ClearMarks(); break;
 				case TextEditCommand.Mark_LimitToSelection: Active.Command_Mark_LimitToSelection(); break;
 				case TextEditCommand.View_Highlighting_None: Active.HighlightType = Highlighting.HighlightingType.None; break;
 				case TextEditCommand.View_Highlighting_CSharp: Active.HighlightType = Highlighting.HighlightingType.CSharp; break;
