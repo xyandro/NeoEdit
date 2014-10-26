@@ -156,7 +156,7 @@ namespace NeoEdit.TextEditor
 					bytes = File.ReadAllBytes(FileName);
 			}
 			if (encoding == Coder.Type.None)
-				encoding = Coder.GuessEncoding(bytes);
+				encoding = Coder.EncodingFromBOM(bytes);
 			Data = new TextData(bytes, encoding);
 			undoRedo.SetModified(modified);
 			CoderUsed = encoding;
@@ -327,7 +327,7 @@ namespace NeoEdit.TextEditor
 					foreach (var filename in dialog.FileNames)
 					{
 						var bytes = File.ReadAllBytes(filename);
-						var data = new TextData(bytes, Coder.GuessEncoding(bytes));
+						var data = new TextData(bytes, Coder.EncodingFromBOM(bytes));
 
 						var beginOffset = data.GetOffset(0, 0);
 						var endOffset = data.GetOffset(data.NumLines - 1, data.GetLineLength(data.NumLines - 1));

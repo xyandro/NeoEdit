@@ -83,6 +83,10 @@ namespace NeoEdit.Common.UnitTest
 			using (var combined = File.Create(Path.Combine(dir, "Combined.txt")))
 			{
 				foreach (var encoding in GetValues<Coder.Type>().Where(a => a.IsStr()))
+				{
+					if (encoding == Coder.Type.Default)
+						continue;
+
 					for (var useBom = 0; useBom < 2; ++useBom)
 					{
 						var bom = useBom == 0;
@@ -93,9 +97,6 @@ namespace NeoEdit.Common.UnitTest
 							{
 								case Coder.Type.UTF8:
 									encoder = new UTF8Encoding(false);
-									break;
-								case Coder.Type.UTF7:
-									encoder = new UTF7Encoding();
 									break;
 								case Coder.Type.UTF16LE:
 								case Coder.Type.UTF16BE:
@@ -109,23 +110,22 @@ namespace NeoEdit.Common.UnitTest
 									throw new Exception("No encoder found");
 							}
 							var filename = Path.Combine(dir, String.Format("{0}-{1}-{2}.txt", encoding, bom, ending));
-							File.WriteAllText(filename, GetText(encoding, bom, ending), encoder);
+							var str = GetText(encoding, bom, ending);
+							File.WriteAllText(filename, str, encoder);
 
 							var bytes = File.ReadAllBytes(filename);
 							combined.Write(bytes, 0, bytes.Length);
 
-							// UTF7 in general thinks it's UTF8; ignore it
-							if (encoding == Coder.Type.UTF7)
-								continue;
-
-							var encoding2 = Coder.GuessEncoding(bytes);
-							var str = Coder.BytesToString(bytes, encoding2);
-							var bom2 = (str.Length > 0) && (str[0] == '\ufeff');
+							var encoding2 = Coder.GuessUnicodeEncoding(bytes);
+							var str2 = Coder.BytesToString(bytes, encoding2);
+							var bom2 = (str2.Length > 0) && (str2[0] == '\ufeff');
 
 							Assert.AreEqual(encoding, encoding2);
 							Assert.AreEqual(bom, bom2);
+							Assert.AreEqual(str, str2);
 						}
 					}
+				}
 			}
 		}
 	}

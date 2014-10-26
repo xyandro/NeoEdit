@@ -83,7 +83,7 @@ namespace NeoEdit.BinaryEditor.Data
 
 		public Coder.Type GuessEncoding()
 		{
-			return Coder.GuessEncoding(GetSubset(0, Math.Min(50, length)));
+			return Coder.EncodingFromBOM(GetSubset(0, Math.Min(10, length)));
 		}
 
 		public virtual void Save(string filename)

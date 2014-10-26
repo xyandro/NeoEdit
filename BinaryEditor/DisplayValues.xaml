@@ -110,11 +110,6 @@
 	</StackPanel>
 
 	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
-		<Label Content="UTF7:"/>
-		<binaryEditor:DisplayValue Type="UTF7"/>
-	</StackPanel>
-
-	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
 		<Label Content="UTF8:"/>
 		<binaryEditor:DisplayValue Type="UTF8"/>
 	</StackPanel>
@@ -165,6 +160,11 @@
 
 		<Label Content="UTF32BE:"/>
 		<binaryEditor:DisplayValue Type="UTF32BE"/>
+	</StackPanel>
+
+	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
+		<Label Content="Default:"/>
+		<binaryEditor:DisplayValue Type="Default"/>
 	</StackPanel>
 
 </StackPanel>

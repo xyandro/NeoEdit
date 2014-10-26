@@ -123,8 +123,8 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<CheckBox Grid.Row="0" Grid.Column="1" Name="UTF7" Content="UTF7" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF7}"/>
-				<CheckBox Grid.Row="0" Grid.Column="2" Name="UTF8" Content="UTF8" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF8}"/>
+				<CheckBox Grid.Row="0" Grid.Column="1" Name="UTF8" Content="UTF8" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF8}"/>
+				<CheckBox Grid.Row="0" Grid.Column="2" Name="Default" Content="Default" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Default}"/>
 
 				<CheckBox Grid.Row="1" Grid.Column="1" Name="UTF16LE" Content="UTF16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiCommon:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF16LE}"/>
 				<CheckBox Grid.Row="1" Grid.Column="2" Name="UTF16BE" Content="UTF16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiCommon:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF16BE}"/>

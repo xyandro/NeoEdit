@@ -10,7 +10,6 @@ namespace NeoEdit.Common.Transform
 		public enum Type
 		{
 			None,
-			Auto,
 			UInt8LE,
 			UInt16LE,
 			UInt32LE,
@@ -29,12 +28,14 @@ namespace NeoEdit.Common.Transform
 			Int64BE,
 			Single,
 			Double,
+			AutoUnicode,
+			AutoFromBOM,
 			UTF8,
-			UTF7,
 			UTF16LE,
 			UTF16BE,
 			UTF32LE,
 			UTF32BE,
+			Default,
 			Base64,
 			Hex,
 		};
@@ -44,11 +45,11 @@ namespace NeoEdit.Common.Transform
 			switch (type)
 			{
 				case Type.UTF8:
-				case Type.UTF7:
 				case Type.UTF16LE:
 				case Type.UTF16BE:
 				case Type.UTF32LE:
 				case Type.UTF32BE:
+				case Type.Default:
 					return true;
 				default:
 					return false;
@@ -90,11 +91,11 @@ namespace NeoEdit.Common.Transform
 				case Type.Single: return 4;
 				case Type.Double: return 8;
 				case Type.UTF8:
-				case Type.UTF7:
 				case Type.UTF16LE:
 				case Type.UTF16BE:
 				case Type.UTF32LE:
 				case Type.UTF32BE:
+				case Type.Default:
 				case Type.Base64:
 				case Type.Hex:
 					return -1;
@@ -171,19 +172,27 @@ namespace NeoEdit.Common.Transform
 			switch (type)
 			{
 				case Type.UTF8: return Encoding.UTF8;
-				case Type.UTF7: return Encoding.UTF7;
 				case Type.UTF16LE: return Encoding.Unicode;
 				case Type.UTF16BE: return Encoding.BigEndianUnicode;
 				case Type.UTF32LE: return Encoding.UTF32;
 				case Type.UTF32BE: return new UTF32Encoding(true, true);
+				case Type.Default: return Encoding.Default;
 				default: return null;
 			}
 		}
 
+		static byte[] GetPreamble(Type type)
+		{
+			return GetEncoding(type).GetPreamble();
+		}
+
 		public static string BytesToString(byte[] data, Type type)
 		{
-			if (type == Type.Auto)
-				type = GuessEncoding(data);
+			if (type == Type.AutoUnicode)
+				type = GuessUnicodeEncoding(data);
+			else if (type == Type.AutoFromBOM)
+				type = EncodingFromBOM(data);
+
 			switch (type)
 			{
 				case Type.UInt8LE: return Resize(data, 1, true)[0].ToString();
@@ -205,11 +214,11 @@ namespace NeoEdit.Common.Transform
 				case Type.Single: return BitConverter.ToSingle(Resize(data, 4, true), 0).ToString();
 				case Type.Double: return BitConverter.ToDouble(Resize(data, 8, true), 0).ToString();
 				case Type.UTF8:
-				case Type.UTF7:
 				case Type.UTF16LE:
 				case Type.UTF16BE:
 				case Type.UTF32LE:
 				case Type.UTF32BE:
+				case Type.Default:
 					return GetEncoding(type).GetString(data);
 				case Type.Base64: return Convert.ToBase64String(data).TrimEnd('=');
 				case Type.Hex: return ToHexString(data);
@@ -286,11 +295,11 @@ namespace NeoEdit.Common.Transform
 					case Type.Single: return NumToBytes<Single>(value, Single.TryParse, v => BitConverter.GetBytes(v), false);
 					case Type.Double: return NumToBytes<Double>(value, Double.TryParse, v => BitConverter.GetBytes(v), false);
 					case Type.UTF8:
-					case Type.UTF7:
 					case Type.UTF16LE:
 					case Type.UTF16BE:
 					case Type.UTF32LE:
 					case Type.UTF32BE:
+					case Type.Default:
 						return GetEncoding(type).GetBytes(value);
 					case Type.Base64:
 						return GetBase64Bytes(value);
@@ -313,9 +322,9 @@ namespace NeoEdit.Common.Transform
 			return result;
 		}
 
-		public static Type GuessEncoding(byte[] data)
+		public static Type EncodingFromBOM(byte[] data)
 		{
-			var preambles = Helpers.GetValues<Type>().Where(a => a.IsStr()).Select(a => new { type = a, preamble = Coder.StringToBytes("\ufeff", a) }).OrderByDescending(a => a.preamble.Length).ToDictionary(a => a.type, a => a.preamble);
+			var preambles = Helpers.GetValues<Type>().Where(a => a.IsStr()).Select(a => new { type = a, preamble = Coder.GetPreamble(a) }).OrderByDescending(a => a.preamble.Length).ToDictionary(a => a.type, a => a.preamble);
 
 			foreach (var preamble in preambles)
 			{
@@ -329,6 +338,16 @@ namespace NeoEdit.Common.Transform
 				if (match)
 					return preamble.Key;
 			}
+
+			// Shouldn't get here since Default's BOM is empty and should have returned earlier
+			return Type.Default;
+		}
+
+		public static Type GuessUnicodeEncoding(byte[] data)
+		{
+			var encoding = EncodingFromBOM(data);
+			if (encoding != Type.Default)
+				return encoding;
 
 			if (data.Length >= 4)
 			{
@@ -352,11 +371,11 @@ namespace NeoEdit.Common.Transform
 			return new Dictionary<string, Type>
 			{
 				{ "UTF8", Coder.Type.UTF8 },
-				{ "UTF7", Coder.Type.UTF7 },
 				{ "UTF16 (Little Endian)", Coder.Type.UTF16LE },
 				{ "UTF16 (Big Endian)", Coder.Type.UTF16BE },
 				{ "UTF32 (Little Endian)", Coder.Type.UTF32LE },
 				{ "UTF32 (Big Endian)", Coder.Type.UTF32BE },
+				{ "Default", Coder.Type.Default },
 				{ "Base64", Coder.Type.Base64 },
 				{ "Hex", Coder.Type.Hex },
 			};

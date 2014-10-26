@@ -46,7 +46,7 @@ namespace NeoEdit.GUI.Dialogs
 
 			ShowLE = ShowInt = ShowStr = ShowOther = true;
 			ShowBE = ShowFloat = false;
-			MatchCase.IsChecked = UTF7.IsChecked = Base64.IsChecked = false;
+			Default.IsChecked = MatchCase.IsChecked = Base64.IsChecked = false;
 		}
 
 		Result result;

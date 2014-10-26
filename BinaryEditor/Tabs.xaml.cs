@@ -171,11 +171,11 @@ namespace NeoEdit.BinaryEditor
 				case BinaryEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
 				case BinaryEditCommand.File_Encoding_Auto: Active.Command_File_Encoding(Coder.Type.None); break;
 				case BinaryEditCommand.File_Encoding_UTF8: Active.Command_File_Encoding(Coder.Type.UTF8); break;
-				case BinaryEditCommand.File_Encoding_UTF7: Active.Command_File_Encoding(Coder.Type.UTF7); break;
 				case BinaryEditCommand.File_Encoding_UTF16LE: Active.Command_File_Encoding(Coder.Type.UTF16LE); break;
 				case BinaryEditCommand.File_Encoding_UTF16BE: Active.Command_File_Encoding(Coder.Type.UTF16BE); break;
 				case BinaryEditCommand.File_Encoding_UTF32LE: Active.Command_File_Encoding(Coder.Type.UTF32LE); break;
 				case BinaryEditCommand.File_Encoding_UTF32BE: Active.Command_File_Encoding(Coder.Type.UTF32BE); break;
+				case BinaryEditCommand.File_Encoding_Default: Active.Command_File_Encoding(Coder.Type.Default); break;
 				case BinaryEditCommand.File_Encoding_Base64: Active.Command_File_Encoding(Coder.Type.Base64); break;
 				case BinaryEditCommand.File_Encoding_Hex: Active.Command_File_Encoding(Coder.Type.Hex); break;
 				case BinaryEditCommand.File_TextEditor: Launcher.Static.LaunchTextEditor(Active.FileName, Active.Data.GetAllBytes(), Active.CoderUsed); BinaryEditors.Remove(Active); if (BinaryEditors.Count == 0) Close(); break;

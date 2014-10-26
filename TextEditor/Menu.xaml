@@ -96,11 +96,11 @@
 			<MenuItem Header="_To Binary">
 				<MenuItem Header="String">
 					<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_Binary_ToBinary_String_UTF8"/>
-					<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_Binary_ToBinary_String_UTF7"/>
 					<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_Binary_ToBinary_String_UTF16LE"/>
 					<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_Binary_ToBinary_String_UTF16BE"/>
 					<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_Binary_ToBinary_String_UTF32LE"/>
 					<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_Binary_ToBinary_String_UTF32BE"/>
+					<textEditor:TextEditMenuItem Header="Default" CommandEnum="Data_Binary_ToBinary_String_Default"/>
 					<textEditor:TextEditMenuItem Header="Base64" CommandEnum="Data_Binary_ToBinary_String_Base64"/>
 				</MenuItem>
 				<MenuItem Header="UIntLE">
@@ -137,11 +137,11 @@
 					<textEditor:TextEditMenuItem Header="Auto" CommandEnum="Data_Binary_FromBinary_String_Auto"/>
 					<Separator/>
 					<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_Binary_FromBinary_String_UTF8"/>
-					<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_Binary_FromBinary_String_UTF7"/>
 					<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_Binary_FromBinary_String_UTF16LE"/>
 					<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_Binary_FromBinary_String_UTF16BE"/>
 					<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_Binary_FromBinary_String_UTF32LE"/>
 					<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_Binary_FromBinary_String_UTF32BE"/>
+					<textEditor:TextEditMenuItem Header="Default" CommandEnum="Data_Binary_FromBinary_String_Default"/>
 					<textEditor:TextEditMenuItem Header="Base64" CommandEnum="Data_Binary_FromBinary_String_Base64"/>
 				</MenuItem>
 				<MenuItem Header="UIntLE">
@@ -177,11 +177,11 @@
 		<MenuItem Header="Base_64">
 			<MenuItem Header="_To Base64">
 				<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_Base64_ToBase64_UTF8"/>
-				<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_Base64_ToBase64_UTF7"/>
 				<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_Base64_ToBase64_UTF16LE"/>
 				<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_Base64_ToBase64_UTF16BE"/>
 				<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_Base64_ToBase64_UTF32LE"/>
 				<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_Base64_ToBase64_UTF32BE"/>
+				<textEditor:TextEditMenuItem Header="Default" CommandEnum="Data_Base64_ToBase64_Default"/>
 				<Separator/>
 				<textEditor:TextEditMenuItem Header="Binary" CommandEnum="Data_Base64_ToBase64_Binary"/>
 			</MenuItem>
@@ -189,11 +189,11 @@
 				<textEditor:TextEditMenuItem Header="Auto" CommandEnum="Data_Base64_FromBase64_Auto"/>
 				<Separator/>
 				<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_Base64_FromBase64_UTF8"/>
-				<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_Base64_FromBase64_UTF7"/>
 				<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_Base64_FromBase64_UTF16LE"/>
 				<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_Base64_FromBase64_UTF16BE"/>
 				<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_Base64_FromBase64_UTF32LE"/>
 				<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_Base64_FromBase64_UTF32BE"/>
+				<textEditor:TextEditMenuItem Header="Default" CommandEnum="Data_Base64_FromBase64_Default"/>
 				<Separator/>
 				<textEditor:TextEditMenuItem Header="Binary" CommandEnum="Data_Base64_FromBase64_Binary"/>
 			</MenuItem>
@@ -244,27 +244,27 @@
 		<Separator/>
 		<MenuItem Header="MD_5">
 			<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_MD5_UTF8"/>
-			<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_MD5_UTF7"/>
 			<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_MD5_UTF16LE"/>
 			<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_MD5_UTF16BE"/>
 			<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_MD5_UTF32LE"/>
 			<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_MD5_UTF32BE"/>
+			<textEditor:TextEditMenuItem Header="Default" CommandEnum="Data_MD5_Default"/>
 		</MenuItem>
 		<MenuItem Header="SHA_1">
 			<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_SHA1_UTF8"/>
-			<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_SHA1_UTF7"/>
 			<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_SHA1_UTF16LE"/>
 			<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_SHA1_UTF16BE"/>
 			<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_SHA1_UTF32LE"/>
 			<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_SHA1_UTF32BE"/>
+			<textEditor:TextEditMenuItem Header="Default" CommandEnum="Data_SHA1_Default"/>
 		</MenuItem>
 		<MenuItem Header="SHA_256">
 			<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_SHA256_UTF8"/>
-			<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_SHA256_UTF7"/>
 			<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_SHA256_UTF16LE"/>
 			<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_SHA256_UTF16BE"/>
 			<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_SHA256_UTF32LE"/>
 			<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_SHA256_UTF32BE"/>
+			<textEditor:TextEditMenuItem Header="Default" CommandEnum="Data_SHA256_Default"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="S_ort">
