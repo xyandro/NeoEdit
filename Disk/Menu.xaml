@@ -37,6 +37,7 @@
 		<disk:DiskMenuItem Header="_Files" CommandEnum="Select_Files"/>
 		<disk:DiskMenuItem Header="_Expression" CommandEnum="Select_Expression"/>
 		<Separator/>
+		<disk:DiskMenuItem Header="Add Copied/Cut" CommandEnum="Select_AddCopiedCut"/>
 		<disk:DiskMenuItem Header="_Remove" CommandEnum="Select_Remove"/>
 		<disk:DiskMenuItem Header="_Remove With Children" CommandEnum="Select_RemoveWithChildren"/>
 	</MenuItem>

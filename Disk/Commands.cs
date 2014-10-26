@@ -27,6 +27,7 @@ namespace NeoEdit.Disk
 		Select_Directories,
 		Select_Files,
 		[KeyGesture(Key.E, ModifierKeys.Control)] [KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Select_Expression,
+		Select_AddCopiedCut,
 		[KeyGesture(Key.OemMinus, ModifierKeys.Alt)] [KeyGesture(Key.OemMinus, ModifierKeys.Control)] Select_Remove,
 		[KeyGesture(Key.OemMinus, ModifierKeys.Alt | ModifierKeys.Shift)] [KeyGesture(Key.OemMinus, ModifierKeys.Control | ModifierKeys.Shift)] Select_RemoveWithChildren,
 		[KeyGesture(Key.F5)] View_Refresh,

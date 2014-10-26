@@ -384,6 +384,17 @@ namespace NeoEdit.Disk
 				Selected.Add(file);
 		}
 
+		internal void Command_Select_AddCopiedCut()
+		{
+			var files = ClipboardWindow.GetFiles();
+			if ((files == null) || (files.Count == 0))
+				return;
+			var existing = new HashSet<string>(Files.Select(file => file.FullName));
+			foreach (var file in files)
+				if (!existing.Contains(file))
+					Files.Add(new DiskItem(file));
+		}
+
 		internal void Command_Select_Remove()
 		{
 			Location = null;

@@ -9,7 +9,6 @@ Disk:
 Expression should be able to key off full path
 Select by SVN ignore
 Move timestamp (possibly others) from TextEditor
-Add copied/cut files to list
 Select readable
 
 Text:
