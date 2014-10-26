@@ -3,8 +3,6 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.Console
 {
-	class ConsoleMenuItem : NEMenuItem<ConsoleCommand> { }
-
 	enum ConsoleCommand
 	{
 		None,
