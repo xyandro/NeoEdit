@@ -415,7 +415,9 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Edit_Paste()
 		{
-			var clipboardStrings = ClipboardWindow.GetStrings().ToList();
+			var clipboardStrings = ClipboardWindow.GetFiles();
+			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
+				clipboardStrings = ClipboardWindow.GetStrings().ToList();
 			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
 				return;
 
