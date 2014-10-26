@@ -6,10 +6,10 @@
 
 	<Menu x:Key="ConsoleMenu">
 		<MenuItem Header="_File">
-			<console:ConsoleMenuItem CommandEnum="File_New"/>
+			<console:ConsoleMenuItem Header="_New" CommandEnum="File_New"/>
 		</MenuItem>
 		<MenuItem Header="_View">
-			<console:ConsoleMenuItem CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
+			<console:ConsoleMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
 		</MenuItem>
 		<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 		<guiCommon:HelpMenu/>

@@ -6,39 +6,39 @@
 	KeyboardNavigation.TabNavigation="None">
 
 	<MenuItem Header="_File">
-		<disk:DiskMenuItem CommandEnum="File_New"/>
-		<disk:DiskMenuItem CommandEnum="File_Close"/>
+		<disk:DiskMenuItem Header="_New Tab" CommandEnum="File_New"/>
+		<disk:DiskMenuItem Header="_Close" CommandEnum="File_Close"/>
 		<Separator/>
-		<disk:DiskMenuItem CommandEnum="File_Rename"/>
-		<disk:DiskMenuItem CommandEnum="File_Identify"/>
-		<disk:DiskMenuItem CommandEnum="File_MD5"/>
-		<disk:DiskMenuItem CommandEnum="File_SHA1"/>
-		<disk:DiskMenuItem CommandEnum="File_Delete"/>
+		<disk:DiskMenuItem Header="_Rename" CommandEnum="File_Rename"/>
+		<disk:DiskMenuItem Header="_Identify" CommandEnum="File_Identify"/>
+		<disk:DiskMenuItem Header="_MD5" CommandEnum="File_MD5"/>
+		<disk:DiskMenuItem Header="_SHA1" CommandEnum="File_SHA1"/>
+		<disk:DiskMenuItem Header="_Delete" CommandEnum="File_Delete"/>
 		<Separator/>
-		<disk:DiskMenuItem CommandEnum="File_Exit"/>
+		<disk:DiskMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
-		<disk:DiskMenuItem CommandEnum="Edit_Cut"/>
-		<disk:DiskMenuItem CommandEnum="Edit_Copy"/>
-		<disk:DiskMenuItem CommandEnum="Edit_Paste"/>
+		<disk:DiskMenuItem Header="Cu_t" CommandEnum="Edit_Cut"/>
+		<disk:DiskMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
+		<disk:DiskMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 		<Separator/>
-		<disk:DiskMenuItem CommandEnum="Edit_Find"/>
-		<disk:DiskMenuItem CommandEnum="Edit_FindInFiles"/>
+		<disk:DiskMenuItem Header="_Find" CommandEnum="Edit_Find"/>
+		<disk:DiskMenuItem Header="Find In Files" CommandEnum="Edit_FindInFiles"/>
 		<Separator/>
-		<disk:DiskMenuItem CommandEnum="Edit_TextEdit"/>
-		<disk:DiskMenuItem CommandEnum="Edit_BinaryEdit"/>
+		<disk:DiskMenuItem Header="Text Edit" CommandEnum="Edit_TextEdit"/>
+		<disk:DiskMenuItem Header="Binary Edit" CommandEnum="Edit_BinaryEdit"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
-		<disk:DiskMenuItem CommandEnum="Select_All"/>
-		<disk:DiskMenuItem CommandEnum="Select_None"/>
-		<disk:DiskMenuItem CommandEnum="Select_Invert"/>
+		<disk:DiskMenuItem Header="_All" CommandEnum="Select_All"/>
+		<disk:DiskMenuItem Header="_None" CommandEnum="Select_None"/>
+		<disk:DiskMenuItem Header="_Invert" CommandEnum="Select_Invert"/>
 		<Separator/>
-		<disk:DiskMenuItem CommandEnum="Select_Directories"/>
-		<disk:DiskMenuItem CommandEnum="Select_Files"/>
-		<disk:DiskMenuItem CommandEnum="Select_Expression"/>
+		<disk:DiskMenuItem Header="_Directories" CommandEnum="Select_Directories"/>
+		<disk:DiskMenuItem Header="_Files" CommandEnum="Select_Files"/>
+		<disk:DiskMenuItem Header="_Expression" CommandEnum="Select_Expression"/>
 		<Separator/>
-		<disk:DiskMenuItem CommandEnum="Select_Remove"/>
-		<disk:DiskMenuItem CommandEnum="Select_RemoveWithChildren"/>
+		<disk:DiskMenuItem Header="_Remove" CommandEnum="Select_Remove"/>
+		<disk:DiskMenuItem Header="_Remove With Children" CommandEnum="Select_RemoveWithChildren"/>
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Columns" ItemsSource="{Binding Converter={disk:ColumnsConverter}}">
@@ -86,8 +86,8 @@
 				</Style>
 			</MenuItem.Style>
 		</MenuItem>
-		<disk:DiskMenuItem CommandEnum="View_Refresh"/>
-		<disk:DiskMenuItem CommandEnum="View_Tiles"/>
+		<disk:DiskMenuItem Header="_Refresh" CommandEnum="View_Refresh"/>
+		<disk:DiskMenuItem Header="_Tiles" CommandEnum="View_Tiles"/>
 	</MenuItem>
 	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
 	<guiCommon:HelpMenu/>

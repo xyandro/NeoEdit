@@ -9,16 +9,6 @@ using System.Windows.Input;
 
 namespace NeoEdit.GUI.Common
 {
-	[AttributeUsage(AttributeTargets.Field)]
-	public class HeaderAttribute : Attribute
-	{
-		public string Header { get; private set; }
-		public HeaderAttribute(string header)
-		{
-			Header = header;
-		}
-	}
-
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
 	public class KeyGestureAttribute : Attribute
 	{
@@ -37,7 +27,6 @@ namespace NeoEdit.GUI.Common
 		class NECommand : RoutedCommand
 		{
 			public CommandEnumT Command { get; private set; }
-			public string Header { get; private set; }
 			public string InputGestureText { get; private set; }
 
 			readonly List<KeyGesture> keyGestures = new List<KeyGesture>();
@@ -46,11 +35,6 @@ namespace NeoEdit.GUI.Common
 				Command = command;
 
 				var memberInfo = typeof(CommandEnumT).GetMember(command.ToString()).First();
-				var headerAttr = memberInfo.GetCustomAttributes(typeof(HeaderAttribute), false).FirstOrDefault() as HeaderAttribute;
-				if (headerAttr != null)
-					Header = headerAttr.Header;
-				if (String.IsNullOrEmpty(Header))
-					Header = command.ToString();
 				var keyGestureAttrs = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false);
 				foreach (KeyGestureAttribute key in keyGestureAttrs)
 					keyGestures.Add(new KeyGesture(key.Key, key.Modifiers));
@@ -95,7 +79,6 @@ namespace NeoEdit.GUI.Common
 			{
 				var neCommand = commands[value];
 				Command = neCommand;
-				Header = neCommand.Header;
 				InputGestureText = neCommand.InputGestureText;
 			}
 		}

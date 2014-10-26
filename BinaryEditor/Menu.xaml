@@ -6,92 +6,92 @@
 
 	<Menu x:Key="BinaryEditorMenu" Grid.ColumnSpan="2">
 		<MenuItem Header="_File">
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_New"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Open"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_OpenDump"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_OpenCopied"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Save"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_SaveAs"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Close"/>
+			<binaryEditor:BinaryEditMenuItem Header="_New" CommandEnum="File_New"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Open" CommandEnum="File_Open"/>
+			<binaryEditor:BinaryEditMenuItem Header="Open _Dump" CommandEnum="File_OpenDump"/>
+			<binaryEditor:BinaryEditMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopied"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Save" CommandEnum="File_Save"/>
+			<binaryEditor:BinaryEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Close" CommandEnum="File_Close"/>
 			<Separator/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_CopyPath"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_CopyName"/>
+			<binaryEditor:BinaryEditMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
+			<binaryEditor:BinaryEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
 			<Separator/>
 			<MenuItem Header="_Encoding">
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Auto"/>
+				<binaryEditor:BinaryEditMenuItem Header="Auto" CommandEnum="File_Encode_Auto"/>
 				<Separator/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF8" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF8\''}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF7" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF7\''}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF16LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16LE\''}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF16BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16BE\''}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32LE\''}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_UTF32BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32BE\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF8" CommandEnum="File_Encode_UTF8" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF8\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF7" CommandEnum="File_Encode_UTF7" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF7\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF16LE" CommandEnum="File_Encode_UTF16LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16LE\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF16BE" CommandEnum="File_Encode_UTF16BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16BE\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF32LE" CommandEnum="File_Encode_UTF32LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32LE\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF32BE" CommandEnum="File_Encode_UTF32BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32BE\''}"/>
 				<Separator/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Base64" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Base64\''}"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="File_Encode_Hex" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Hex\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="Base64" CommandEnum="File_Encode_Base64" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Base64\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="Hex" CommandEnum="File_Encode_Hex" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Hex\''}"/>
 			</MenuItem>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_TextEditor"/>
+			<binaryEditor:BinaryEditMenuItem Header="Text Editor" CommandEnum="File_TextEditor"/>
 			<Separator/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="File_Exit"/>
+			<binaryEditor:BinaryEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 		</MenuItem>
 		<MenuItem Header="_Edit">
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Undo"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Redo"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
 			<Separator/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Cut"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Copy"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Paste"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_ShowClipboard"/>
+			<binaryEditor:BinaryEditMenuItem Header="Cu_t" CommandEnum="Edit_Cut"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Show Clipboard" CommandEnum="Edit_ShowClipboard"/>
 			<Separator/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Find"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_FindNext"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_FindPrev"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Goto"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
+			<binaryEditor:BinaryEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>
+			<binaryEditor:BinaryEditMenuItem Header="Find _Previous" CommandEnum="Edit_FindPrev"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Goto" CommandEnum="Edit_Goto"/>
 			<Separator/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Edit_Insert" IsChecked="{Binding Active.Insert, ElementName=self}"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Active.Insert, ElementName=self}"/>
 		</MenuItem>
 		<MenuItem Header="_View">
-			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Values" IsChecked="{Binding Active.ShowValues, ElementName=self}"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Refresh"/>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Values" CommandEnum="View_Values" IsChecked="{Binding Active.ShowValues, ElementName=self}"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Refresh" CommandEnum="View_Refresh"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
 		</MenuItem>
 		<MenuItem Header="_Data">
 			<MenuItem Header="C_hecksum">
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Checksum_MD5"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Checksum_SHA1"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Checksum_SHA256"/>
+				<binaryEditor:BinaryEditMenuItem Header="_MD5" CommandEnum="Checksum_MD5"/>
+				<binaryEditor:BinaryEditMenuItem Header="SHA_1" CommandEnum="Checksum_SHA1"/>
+				<binaryEditor:BinaryEditMenuItem Header="SHA_256" CommandEnum="Checksum_SHA256"/>
 			</MenuItem>
 			<MenuItem Header="_Compress">
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Compress_GZip"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Compress_Deflate"/>
+				<binaryEditor:BinaryEditMenuItem Header="_GZip" CommandEnum="Compress_GZip"/>
+				<binaryEditor:BinaryEditMenuItem Header="_Deflate" CommandEnum="Compress_Deflate"/>
 			</MenuItem>
 			<MenuItem Header="_Decompress">
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Decompress_GZip"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Decompress_Inflate"/>
+				<binaryEditor:BinaryEditMenuItem Header="_GZip" CommandEnum="Decompress_GZip"/>
+				<binaryEditor:BinaryEditMenuItem Header="_Inflate" CommandEnum="Decompress_Inflate"/>
 			</MenuItem>
 			<MenuItem Header="_Encrypt">
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_AES"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_DES"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_DES3"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_RSA"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Encrypt_RSAAES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_AES" CommandEnum="Encrypt_AES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_DES" CommandEnum="Encrypt_DES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_3DES" CommandEnum="Encrypt_DES3"/>
+				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Encrypt_RSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="RSA/AES" CommandEnum="Encrypt_RSAAES"/>
 			</MenuItem>
 			<MenuItem Header="Dec_rypt">
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_AES"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_DES"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_DES3"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_RSA"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Decrypt_RSAAES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_AES" CommandEnum="Decrypt_AES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_DES" CommandEnum="Decrypt_DES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_3DES" CommandEnum="Decrypt_DES3"/>
+				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Decrypt_RSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="RSA/AES" CommandEnum="Decrypt_RSAAES"/>
 			</MenuItem>
 			<MenuItem Header="_Sign">
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Sign_RSA"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Sign_DSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Sign_RSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="_DSA" CommandEnum="Sign_DSA"/>
 			</MenuItem>
 			<MenuItem Header="_Verify">
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Verify_RSA"/>
-				<binaryEditor:BinaryEditMenuItem CommandEnum="Verify_DSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Verify_RSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="_DSA" CommandEnum="Verify_DSA"/>
 			</MenuItem>
-			<binaryEditor:BinaryEditMenuItem CommandEnum="Data_Fill"/>
+			<binaryEditor:BinaryEditMenuItem Header="_Fill" CommandEnum="Data_Fill"/>
 		</MenuItem>
 		<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
 		<guiCommon:HelpMenu/>
