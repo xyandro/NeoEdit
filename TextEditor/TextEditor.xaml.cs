@@ -158,9 +158,20 @@ namespace NeoEdit.TextEditor
 			if (encoding == Coder.Type.None)
 				encoding = Coder.EncodingFromBOM(bytes);
 			Data = new TextData(bytes, encoding);
-			undoRedo.SetModified(modified);
 			CoderUsed = encoding;
 			HighlightType = Highlighting.Get(FileName);
+
+			var bytes2 = Data.GetBytes(CoderUsed);
+			if ((!modified) && (bytes.Length != bytes2.Length))
+				modified = true;
+			if (!modified)
+				for (var ctr = 0; ctr < bytes.Length; ++ctr)
+					if (bytes[ctr] != bytes2[ctr])
+					{
+						modified = true;
+						break;
+					}
+			undoRedo.SetModified(modified);
 		}
 
 		int BeginOffset()
