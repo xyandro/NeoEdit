@@ -604,23 +604,40 @@ namespace NeoEdit.TextEditor
 				Directory.CreateDirectory(file);
 		}
 
+		string GetSize(string path)
+		{
+			if (File.Exists(path))
+			{
+				var fileinfo = new FileInfo(path);
+				return fileinfo.Length.ToString();
+			}
+
+			if (Directory.Exists(path))
+			{
+				var dirs = new List<string> { path };
+				for (var ctr = 0; ctr < dirs.Count; ++ctr)
+					dirs.AddRange(Directory.EnumerateDirectories(dirs[ctr]));
+				int files = 0;
+				long totalSize = 0;
+				foreach (var dir in dirs)
+				{
+					foreach (var file in Directory.EnumerateFiles(dir))
+					{
+						++files;
+						var fileinfo = new FileInfo(file);
+						totalSize += fileinfo.Length;
+					}
+				}
+
+				return String.Format("{0} directories, {1} files, {2} bytes", dirs.Count, files, totalSize);
+			}
+
+			return "INVALID";
+		}
+
 		internal void Command_Files_Information_Size()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
-			var strs = new List<string>();
-			foreach (var file in files)
-			{
-				if (File.Exists(file))
-				{
-					var fileinfo = new FileInfo(file);
-					strs.Add(fileinfo.Length.ToString());
-				}
-				else if (Directory.Exists(file))
-					strs.Add("Directory");
-				else
-					strs.Add("INVALID");
-			}
-			ReplaceSelections(strs);
+			ReplaceSelections(Selections.Select(range => GetSize(GetString(range))).ToList());
 		}
 
 		internal void Command_Files_Information_WriteTime()
