@@ -24,5 +24,10 @@ namespace NeoEdit.Common
 		{
 			return source.OrderBy(keySelector, new LinqHelperComparer<TKey>(comparer));
 		}
+
+		public static IOrderedEnumerable<TSource> OrderByDescending<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TKey, TKey, int> comparer)
+		{
+			return source.OrderByDescending(keySelector, new LinqHelperComparer<TKey>(comparer));
+		}
 	}
 }

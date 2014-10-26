@@ -67,17 +67,25 @@ namespace NeoEdit.TextEditor
 			return regions;
 		}
 
-		List<int> GetOrdering(SortType type)
+		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(bool ascending, IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TKey, TKey, int> comparer = null)
+		{
+			if (ascending)
+				return comparer == null ? source.OrderBy(keySelector) : source.OrderBy(keySelector, comparer);
+			else
+				return comparer == null ? source.OrderByDescending(keySelector) : source.OrderByDescending(keySelector, comparer);
+		}
+
+		List<int> GetOrdering(SortType type, bool ascending)
 		{
 			var entries = Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
 			switch (type)
 			{
-				case SortType.String: entries = entries.OrderBy(entry => entry.value).ToList(); break;
-				case SortType.Numeric: entries = entries.OrderBy(entry => NumericSort(entry.value)).ToList(); break;
+				case SortType.String: entries = OrderByAscDesc(ascending, entries, entry => entry.value).ToList(); break;
+				case SortType.Numeric: entries = OrderByAscDesc(ascending, entries, entry => NumericSort(entry.value)).ToList(); break;
 				case SortType.Keys:
 					{
 						var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
-						entries = entries.OrderBy(entry => entry.value, (value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue)).ToList();
+						entries = OrderByAscDesc(ascending, entries, entry => entry.value, (value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue)).ToList();
 					}
 					break;
 				case SortType.Reverse: entries.Reverse(); break;
@@ -87,16 +95,16 @@ namespace NeoEdit.TextEditor
 						entries = entries.OrderBy(entry => random.Next()).ToList();
 					}
 					break;
-				case SortType.Length: entries = entries.OrderBy(entry => entry.value.Length).ToList(); break;
+				case SortType.Length: entries = OrderByAscDesc(ascending, entries, entry => entry.value.Length).ToList(); break;
 			}
 
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		internal void Command_Sort(SortScope scope, SortType type)
+		internal void Command_Sort(SortScope scope, SortType type, bool ascending)
 		{
 			var regions = GetRegions(scope);
-			var ordering = GetOrdering(type);
+			var ordering = GetOrdering(type, ascending);
 			if (regions.Count != ordering.Count)
 				throw new Exception("Ordering misaligned");
 
