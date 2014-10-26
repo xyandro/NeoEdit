@@ -34,5 +34,11 @@ namespace NeoEdit.Common.Transform
 		{
 			return BitConverter.ToString(GetHashAlgorithm(type).ComputeHash(stream)).Replace("-", "").ToLower();
 		}
+
+		public static string Get(Type type, string fileName)
+		{
+			using (var stream = File.OpenRead(fileName))
+				return Get(type, stream);
+		}
 	}
 }

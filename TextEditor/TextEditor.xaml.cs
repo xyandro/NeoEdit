@@ -730,6 +730,11 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(strs);
 		}
 
+		internal void Command_Files_Checksum(Checksum.Type type)
+		{
+			ReplaceSelections(Selections.Select(range => Checksum.Get(type, GetString(range))).ToList());
+		}
+
 		static bool FileOrDirectoryExists(string name)
 		{
 			return (Directory.Exists(name)) || (File.Exists(name));

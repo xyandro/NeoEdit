@@ -208,8 +208,7 @@ namespace NeoEdit.Disk
 			if (Type != DiskItemType.File)
 				return;
 
-			var data = File.ReadAllBytes(FullName);
-			MD5 = Checksum.Get(Checksum.Type.MD5, data);
+			MD5 = Checksum.Get(Checksum.Type.MD5, FullName);
 		}
 
 		public void CalcSHA1()
@@ -217,8 +216,7 @@ namespace NeoEdit.Disk
 			if (Type != DiskItemType.File)
 				return;
 
-			var data = File.ReadAllBytes(FullName);
-			SHA1 = Checksum.Get(Checksum.Type.SHA1, data);
+			SHA1 = Checksum.Get(Checksum.Type.SHA1, FullName);
 		}
 
 		public void Rename(string newName)

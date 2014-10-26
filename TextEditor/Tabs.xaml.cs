@@ -156,6 +156,9 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Information_CreateTime: Active.Command_Files_Information_CreateTime(); break;
 				case TextEditCommand.Files_Information_Attributes: Active.Command_Files_Information_Attributes(); break;
 				case TextEditCommand.Files_Information_ReadOnly: Active.Command_Files_Information_ReadOnly(); break;
+				case TextEditCommand.Files_Checksum_MD5: Active.Command_Files_Checksum(Checksum.Type.MD5); break;
+				case TextEditCommand.Files_Checksum_SHA1: Active.Command_Files_Checksum(Checksum.Type.SHA1); break;
+				case TextEditCommand.Files_Checksum_SHA256: Active.Command_Files_Checksum(Checksum.Type.SHA256); break;
 				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(include); break;
 				case TextEditCommand.Files_Select_Files: Active.Command_Files_Select_Files(); break;
 				case TextEditCommand.Files_Select_Directories: Active.Command_Files_Select_Directories(); break;

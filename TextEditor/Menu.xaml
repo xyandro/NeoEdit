@@ -68,6 +68,11 @@
 			<textEditor:TextEditMenuItem CommandEnum="Files_Information_Attributes"/>
 			<textEditor:TextEditMenuItem CommandEnum="Files_Information_ReadOnly"/>
 		</MenuItem>
+		<MenuItem Header="Checksum">
+			<textEditor:TextEditMenuItem CommandEnum="Files_Checksum_MD5"/>
+			<textEditor:TextEditMenuItem CommandEnum="Files_Checksum_SHA1"/>
+			<textEditor:TextEditMenuItem CommandEnum="Files_Checksum_SHA256"/>
+		</MenuItem>
 		<MenuItem Header="_Select">
 			<textEditor:TextEditMenuItem CommandEnum="Files_Select_Existing"/>
 			<textEditor:TextEditMenuItem CommandEnum="Files_Select_Files"/>
