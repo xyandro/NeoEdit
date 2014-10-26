@@ -135,6 +135,7 @@ namespace NeoEdit.TextEditor
 		[Header("_Trim")] Data_Trim,
 		[Header("Evaluate _Expression")] [KeyGesture(Key.E, ModifierKeys.Control)] Data_EvaluateExpression,
 		[Header("_Series")] Data_Series,
+		[Header("Copy Down")] [KeyGesture(Key.D, ModifierKeys.Control)] Data_CopyDown,
 		[Header("_Repeat")] [KeyGesture(Key.R, ModifierKeys.Control)] Data_Repeat,
 		[Header("Insert _GUID")] Data_GUID,
 		[Header("Insert Random Number")] Data_Random,

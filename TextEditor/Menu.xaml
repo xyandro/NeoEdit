@@ -204,6 +204,7 @@
 		<Separator/>
 		<textEditor:TextEditMenuItem CommandEnum="Data_EvaluateExpression"/>
 		<textEditor:TextEditMenuItem CommandEnum="Data_Series"/>
+		<textEditor:TextEditMenuItem CommandEnum="Data_CopyDown"/>
 		<textEditor:TextEditMenuItem CommandEnum="Data_Repeat"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem CommandEnum="Data_GUID"/>

@@ -933,6 +933,18 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
 		}
 
+		internal void Command_Data_CopyDown()
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			var index = 0;
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+				if (String.IsNullOrWhiteSpace(strs[ctr]))
+					strs[ctr] = strs[index];
+				else
+					index = ctr;
+			ReplaceSelections(strs);
+		}
+
 		internal void Command_Data_Repeat()
 		{
 			var repeat = RepeatDialog.Run(Selections.Count == 1);
