@@ -7,7 +7,7 @@
 	<MenuItem Header="_File">
 		<textEditor:TextEditMenuItem Header="_New" CommandEnum="File_New"/>
 		<textEditor:TextEditMenuItem Header="_Open" CommandEnum="File_Open"/>
-		<textEditor:TextEditMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopied"/>
+		<textEditor:TextEditMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
 		<textEditor:TextEditMenuItem Header="_Save" CommandEnum="File_Save"/>
 		<textEditor:TextEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
 		<textEditor:TextEditMenuItem Header="_Close" CommandEnum="File_Close"/>
@@ -38,7 +38,7 @@
 		<textEditor:TextEditMenuItem Header="Find _Prev" CommandEnum="Edit_FindPrev"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="Goto _Line" CommandEnum="Edit_GotoLine"/>
-		<textEditor:TextEditMenuItem Header="Goto C_olumn" CommandEnum="Edit_GotoIndex"/>
+		<textEditor:TextEditMenuItem Header="Goto C_olumn" CommandEnum="Edit_GotoColumn"/>
 	</MenuItem>
 	<MenuItem Header="F_iles">
 		<textEditor:TextEditMenuItem Header="_Copy" CommandEnum="Files_Copy"/>
@@ -54,10 +54,10 @@
 		</MenuItem>
 		<MenuItem Header="_Path">
 			<textEditor:TextEditMenuItem Header="_Simplify" CommandEnum="Files_Path_Simplify"/>
-			<textEditor:TextEditMenuItem Header="_File Name" CommandEnum="Files_Path_GetFileName"/>
-			<textEditor:TextEditMenuItem Header="File Name w/o Extension" CommandEnum="Files_Path_GetFileNameWoExtension"/>
-			<textEditor:TextEditMenuItem Header="_Directory Name" CommandEnum="Files_Path_GetDirectory"/>
-			<textEditor:TextEditMenuItem Header="_Extension" CommandEnum="Files_Path_GetExtension"/>
+			<textEditor:TextEditMenuItem Header="_File Name" CommandEnum="Files_Path_FileName"/>
+			<textEditor:TextEditMenuItem Header="File Name w/o Extension" CommandEnum="Files_Path_FileNamewoExtension"/>
+			<textEditor:TextEditMenuItem Header="_Directory Name" CommandEnum="Files_Path_DirectoryName"/>
+			<textEditor:TextEditMenuItem Header="_Extension" CommandEnum="Files_Path_Extension"/>
 		</MenuItem>
 		<textEditor:TextEditMenuItem Header="Create Directory" CommandEnum="Files_CreateDirectory"/>
 		<MenuItem Header="_Information">
@@ -95,82 +95,82 @@
 		<MenuItem Header="_Binary">
 			<MenuItem Header="_To Binary">
 				<MenuItem Header="String">
-					<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_Binary_ToBinary_UTF8"/>
-					<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_Binary_ToBinary_UTF7"/>
-					<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_Binary_ToBinary_UTF16LE"/>
-					<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_Binary_ToBinary_UTF16BE"/>
-					<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_Binary_ToBinary_UTF32LE"/>
-					<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_Binary_ToBinary_UTF32BE"/>
-					<textEditor:TextEditMenuItem Header="Base64" CommandEnum="Data_Binary_ToBinary_Base64"/>
+					<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_Binary_ToBinary_String_UTF8"/>
+					<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_Binary_ToBinary_String_UTF7"/>
+					<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_Binary_ToBinary_String_UTF16LE"/>
+					<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_Binary_ToBinary_String_UTF16BE"/>
+					<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_Binary_ToBinary_String_UTF32LE"/>
+					<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_Binary_ToBinary_String_UTF32BE"/>
+					<textEditor:TextEditMenuItem Header="Base64" CommandEnum="Data_Binary_ToBinary_String_Base64"/>
 				</MenuItem>
 				<MenuItem Header="UIntLE">
-					<textEditor:TextEditMenuItem Header="UInt8LE" CommandEnum="Data_Binary_ToBinary_UInt8LE"/>
-					<textEditor:TextEditMenuItem Header="UInt16LE" CommandEnum="Data_Binary_ToBinary_UInt16LE"/>
-					<textEditor:TextEditMenuItem Header="UInt32LE" CommandEnum="Data_Binary_ToBinary_UInt32LE"/>
-					<textEditor:TextEditMenuItem Header="UInt64LE" CommandEnum="Data_Binary_ToBinary_UInt64LE"/>
+					<textEditor:TextEditMenuItem Header="UInt8LE" CommandEnum="Data_Binary_ToBinary_UIntLE_UInt8LE"/>
+					<textEditor:TextEditMenuItem Header="UInt16LE" CommandEnum="Data_Binary_ToBinary_UIntLE_UInt16LE"/>
+					<textEditor:TextEditMenuItem Header="UInt32LE" CommandEnum="Data_Binary_ToBinary_UIntLE_UInt32LE"/>
+					<textEditor:TextEditMenuItem Header="UInt64LE" CommandEnum="Data_Binary_ToBinary_UIntLE_UInt64LE"/>
 				</MenuItem>
 				<MenuItem Header="IntLE">
-					<textEditor:TextEditMenuItem Header="Int8LE" CommandEnum="Data_Binary_ToBinary_Int8LE"/>
-					<textEditor:TextEditMenuItem Header="Int16LE" CommandEnum="Data_Binary_ToBinary_Int16LE"/>
-					<textEditor:TextEditMenuItem Header="Int32LE" CommandEnum="Data_Binary_ToBinary_Int32LE"/>
-					<textEditor:TextEditMenuItem Header="Int64LE" CommandEnum="Data_Binary_ToBinary_Int64LE"/>
+					<textEditor:TextEditMenuItem Header="Int8LE" CommandEnum="Data_Binary_ToBinary_IntLE_Int8LE"/>
+					<textEditor:TextEditMenuItem Header="Int16LE" CommandEnum="Data_Binary_ToBinary_IntLE_Int16LE"/>
+					<textEditor:TextEditMenuItem Header="Int32LE" CommandEnum="Data_Binary_ToBinary_IntLE_Int32LE"/>
+					<textEditor:TextEditMenuItem Header="Int64LE" CommandEnum="Data_Binary_ToBinary_IntLE_Int64LE"/>
 				</MenuItem>
 				<MenuItem Header="UIntBE">
-					<textEditor:TextEditMenuItem Header="UInt8BE" CommandEnum="Data_Binary_ToBinary_UInt8BE"/>
-					<textEditor:TextEditMenuItem Header="UInt16BE" CommandEnum="Data_Binary_ToBinary_UInt16BE"/>
-					<textEditor:TextEditMenuItem Header="UInt32BE" CommandEnum="Data_Binary_ToBinary_UInt32BE"/>
-					<textEditor:TextEditMenuItem Header="UInt64BE" CommandEnum="Data_Binary_ToBinary_UInt64BE"/>
+					<textEditor:TextEditMenuItem Header="UInt8BE" CommandEnum="Data_Binary_ToBinary_UIntBE_UInt8BE"/>
+					<textEditor:TextEditMenuItem Header="UInt16BE" CommandEnum="Data_Binary_ToBinary_UIntBE_UInt16BE"/>
+					<textEditor:TextEditMenuItem Header="UInt32BE" CommandEnum="Data_Binary_ToBinary_UIntBE_UInt32BE"/>
+					<textEditor:TextEditMenuItem Header="UInt64BE" CommandEnum="Data_Binary_ToBinary_UIntBE_UInt64BE"/>
 				</MenuItem>
 				<MenuItem Header="IntBE">
-					<textEditor:TextEditMenuItem Header="Int8BE" CommandEnum="Data_Binary_ToBinary_Int8BE"/>
-					<textEditor:TextEditMenuItem Header="Int16BE" CommandEnum="Data_Binary_ToBinary_Int16BE"/>
-					<textEditor:TextEditMenuItem Header="Int32BE" CommandEnum="Data_Binary_ToBinary_Int32BE"/>
-					<textEditor:TextEditMenuItem Header="Int64BE" CommandEnum="Data_Binary_ToBinary_Int64BE"/>
+					<textEditor:TextEditMenuItem Header="Int8BE" CommandEnum="Data_Binary_ToBinary_IntBE_Int8BE"/>
+					<textEditor:TextEditMenuItem Header="Int16BE" CommandEnum="Data_Binary_ToBinary_IntBE_Int16BE"/>
+					<textEditor:TextEditMenuItem Header="Int32BE" CommandEnum="Data_Binary_ToBinary_IntBE_Int32BE"/>
+					<textEditor:TextEditMenuItem Header="Int64BE" CommandEnum="Data_Binary_ToBinary_IntBE_Int64BE"/>
 				</MenuItem>
 				<MenuItem Header="Float">
-					<textEditor:TextEditMenuItem Header="Single" CommandEnum="Data_Binary_ToBinary_Single"/>
-					<textEditor:TextEditMenuItem Header="Double" CommandEnum="Data_Binary_ToBinary_Double"/>
+					<textEditor:TextEditMenuItem Header="Single" CommandEnum="Data_Binary_ToBinary_Float_Single"/>
+					<textEditor:TextEditMenuItem Header="Double" CommandEnum="Data_Binary_ToBinary_Float_Double"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_From Binary">
 				<MenuItem Header="String">
-					<textEditor:TextEditMenuItem Header="Auto" CommandEnum="Data_Binary_FromBinary_Auto"/>
+					<textEditor:TextEditMenuItem Header="Auto" CommandEnum="Data_Binary_FromBinary_String_Auto"/>
 					<Separator/>
-					<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_Binary_FromBinary_UTF8"/>
-					<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_Binary_FromBinary_UTF7"/>
-					<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_Binary_FromBinary_UTF16LE"/>
-					<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_Binary_FromBinary_UTF16BE"/>
-					<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_Binary_FromBinary_UTF32LE"/>
-					<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_Binary_FromBinary_UTF32BE"/>
-					<textEditor:TextEditMenuItem Header="Base64" CommandEnum="Data_Binary_FromBinary_Base64"/>
+					<textEditor:TextEditMenuItem Header="UTF8" CommandEnum="Data_Binary_FromBinary_String_UTF8"/>
+					<textEditor:TextEditMenuItem Header="UTF7" CommandEnum="Data_Binary_FromBinary_String_UTF7"/>
+					<textEditor:TextEditMenuItem Header="UTF16LE" CommandEnum="Data_Binary_FromBinary_String_UTF16LE"/>
+					<textEditor:TextEditMenuItem Header="UTF16BE" CommandEnum="Data_Binary_FromBinary_String_UTF16BE"/>
+					<textEditor:TextEditMenuItem Header="UTF32LE" CommandEnum="Data_Binary_FromBinary_String_UTF32LE"/>
+					<textEditor:TextEditMenuItem Header="UTF32BE" CommandEnum="Data_Binary_FromBinary_String_UTF32BE"/>
+					<textEditor:TextEditMenuItem Header="Base64" CommandEnum="Data_Binary_FromBinary_String_Base64"/>
 				</MenuItem>
 				<MenuItem Header="UIntLE">
-					<textEditor:TextEditMenuItem Header="UInt8LE" CommandEnum="Data_Binary_FromBinary_UInt8LE"/>
-					<textEditor:TextEditMenuItem Header="UInt16LE" CommandEnum="Data_Binary_FromBinary_UInt16LE"/>
-					<textEditor:TextEditMenuItem Header="UInt32LE" CommandEnum="Data_Binary_FromBinary_UInt32LE"/>
-					<textEditor:TextEditMenuItem Header="UInt64LE" CommandEnum="Data_Binary_FromBinary_UInt64LE"/>
+					<textEditor:TextEditMenuItem Header="UInt8LE" CommandEnum="Data_Binary_FromBinary_UIntLE_UInt8LE"/>
+					<textEditor:TextEditMenuItem Header="UInt16LE" CommandEnum="Data_Binary_FromBinary_UIntLE_UInt16LE"/>
+					<textEditor:TextEditMenuItem Header="UInt32LE" CommandEnum="Data_Binary_FromBinary_UIntLE_UInt32LE"/>
+					<textEditor:TextEditMenuItem Header="UInt64LE" CommandEnum="Data_Binary_FromBinary_UIntLE_UInt64LE"/>
 				</MenuItem>
 				<MenuItem Header="IntLE">
-					<textEditor:TextEditMenuItem Header="Int8LE" CommandEnum="Data_Binary_FromBinary_Int8LE"/>
-					<textEditor:TextEditMenuItem Header="Int16LE" CommandEnum="Data_Binary_FromBinary_Int16LE"/>
-					<textEditor:TextEditMenuItem Header="Int32LE" CommandEnum="Data_Binary_FromBinary_Int32LE"/>
-					<textEditor:TextEditMenuItem Header="Int64LE" CommandEnum="Data_Binary_FromBinary_Int64LE"/>
+					<textEditor:TextEditMenuItem Header="Int8LE" CommandEnum="Data_Binary_FromBinary_IntLE_Int8LE"/>
+					<textEditor:TextEditMenuItem Header="Int16LE" CommandEnum="Data_Binary_FromBinary_IntLE_Int16LE"/>
+					<textEditor:TextEditMenuItem Header="Int32LE" CommandEnum="Data_Binary_FromBinary_IntLE_Int32LE"/>
+					<textEditor:TextEditMenuItem Header="Int64LE" CommandEnum="Data_Binary_FromBinary_IntLE_Int64LE"/>
 				</MenuItem>
 				<MenuItem Header="UIntBE">
-					<textEditor:TextEditMenuItem Header="UInt8BE" CommandEnum="Data_Binary_FromBinary_UInt8BE"/>
-					<textEditor:TextEditMenuItem Header="UInt16BE" CommandEnum="Data_Binary_FromBinary_UInt16BE"/>
-					<textEditor:TextEditMenuItem Header="UInt32BE" CommandEnum="Data_Binary_FromBinary_UInt32BE"/>
-					<textEditor:TextEditMenuItem Header="UInt64BE" CommandEnum="Data_Binary_FromBinary_UInt64BE"/>
+					<textEditor:TextEditMenuItem Header="UInt8BE" CommandEnum="Data_Binary_FromBinary_UIntBE_UInt8BE"/>
+					<textEditor:TextEditMenuItem Header="UInt16BE" CommandEnum="Data_Binary_FromBinary_UIntBE_UInt16BE"/>
+					<textEditor:TextEditMenuItem Header="UInt32BE" CommandEnum="Data_Binary_FromBinary_UIntBE_UInt32BE"/>
+					<textEditor:TextEditMenuItem Header="UInt64BE" CommandEnum="Data_Binary_FromBinary_UIntBE_UInt64BE"/>
 				</MenuItem>
 				<MenuItem Header="IntBE">
-					<textEditor:TextEditMenuItem Header="Int8BE" CommandEnum="Data_Binary_FromBinary_Int8BE"/>
-					<textEditor:TextEditMenuItem Header="Int16BE" CommandEnum="Data_Binary_FromBinary_Int16BE"/>
-					<textEditor:TextEditMenuItem Header="Int32BE" CommandEnum="Data_Binary_FromBinary_Int32BE"/>
-					<textEditor:TextEditMenuItem Header="Int64BE" CommandEnum="Data_Binary_FromBinary_Int64BE"/>
+					<textEditor:TextEditMenuItem Header="Int8BE" CommandEnum="Data_Binary_FromBinary_IntBE_Int8BE"/>
+					<textEditor:TextEditMenuItem Header="Int16BE" CommandEnum="Data_Binary_FromBinary_IntBE_Int16BE"/>
+					<textEditor:TextEditMenuItem Header="Int32BE" CommandEnum="Data_Binary_FromBinary_IntBE_Int32BE"/>
+					<textEditor:TextEditMenuItem Header="Int64BE" CommandEnum="Data_Binary_FromBinary_IntBE_Int64BE"/>
 				</MenuItem>
 				<MenuItem Header="Float">
-					<textEditor:TextEditMenuItem Header="Single" CommandEnum="Data_Binary_FromBinary_Single"/>
-					<textEditor:TextEditMenuItem Header="Double" CommandEnum="Data_Binary_FromBinary_Double"/>
+					<textEditor:TextEditMenuItem Header="Single" CommandEnum="Data_Binary_FromBinary_Float_Single"/>
+					<textEditor:TextEditMenuItem Header="Double" CommandEnum="Data_Binary_FromBinary_Float_Double"/>
 				</MenuItem>
 			</MenuItem>
 		</MenuItem>
@@ -228,8 +228,8 @@
 		</MenuItem>
 		<textEditor:TextEditMenuItem Header="_Repeat" CommandEnum="Data_Repeat"/>
 		<Separator/>
-		<textEditor:TextEditMenuItem Header="Insert _GUID" CommandEnum="Data_GUID"/>
-		<textEditor:TextEditMenuItem Header="Insert Random Number" CommandEnum="Data_Random"/>
+		<textEditor:TextEditMenuItem Header="Insert _GUID" CommandEnum="Data_InsertGUID"/>
+		<textEditor:TextEditMenuItem Header="Insert Random Number" CommandEnum="Data_InsertRandomNumber"/>
 		<Separator/>
 		<MenuItem Header="Escape">
 			<textEditor:TextEditMenuItem Header="XML" CommandEnum="Data_Escape_XML"/>
@@ -273,14 +273,14 @@
 		<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Sort_Keys"/>
 		<textEditor:TextEditMenuItem Header="R_everse" CommandEnum="Sort_Reverse"/>
 		<textEditor:TextEditMenuItem Header="R_andomize" CommandEnum="Sort_Randomize"/>
-		<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_Length"/>
+		<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_SortByLength"/>
 		<MenuItem Header="_Lines">
 			<textEditor:TextEditMenuItem Header="_String" CommandEnum="Sort_Lines_String"/>
 			<textEditor:TextEditMenuItem Header="_Numeric" CommandEnum="Sort_Lines_Numeric"/>
 			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Sort_Lines_Keys"/>
 			<textEditor:TextEditMenuItem Header="R_everse" CommandEnum="Sort_Lines_Reverse"/>
 			<textEditor:TextEditMenuItem Header="R_andomize" CommandEnum="Sort_Lines_Randomize"/>
-			<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_Lines_Length"/>
+			<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_Lines_SortByLength"/>
 		</MenuItem>
 		<MenuItem Header="_Regions">
 			<textEditor:TextEditMenuItem Header="_String" CommandEnum="Sort_Regions_String"/>
@@ -288,93 +288,93 @@
 			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Sort_Regions_Keys"/>
 			<textEditor:TextEditMenuItem Header="R_everse" CommandEnum="Sort_Regions_Reverse"/>
 			<textEditor:TextEditMenuItem Header="R_andomize" CommandEnum="Sort_Regions_Randomize"/>
-			<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_Regions_Length"/>
+			<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_Regions_SortByLength"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">
-			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_SetKeys"/>
-			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_SetValues1"/>
-			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_SetValues2"/>
-			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_SetValues3"/>
-			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_SetValues4"/>
-			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_SetValues5"/>
-			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_SetValues6"/>
-			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_SetValues7"/>
-			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_SetValues8"/>
-			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_SetValues9"/>
+			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Set_Keys"/>
+			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Set_Values1"/>
+			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Set_Values2"/>
+			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Set_Values3"/>
+			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Set_Values4"/>
+			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Set_Values5"/>
+			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Set_Values6"/>
+			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Set_Values7"/>
+			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
+			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
 		</MenuItem>
 		<MenuItem Header="Selection _Replace">
-			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_SelectionReplace1"/>
-			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_SelectionReplace2"/>
-			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_SelectionReplace3"/>
-			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_SelectionReplace4"/>
-			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_SelectionReplace5"/>
-			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_SelectionReplace6"/>
-			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_SelectionReplace7"/>
-			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_SelectionReplace8"/>
-			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_SelectionReplace9"/>
+			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_SelectionReplace_Values1"/>
+			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_SelectionReplace_Values2"/>
+			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_SelectionReplace_Values3"/>
+			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_SelectionReplace_Values4"/>
+			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_SelectionReplace_Values5"/>
+			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_SelectionReplace_Values6"/>
+			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_SelectionReplace_Values7"/>
+			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_SelectionReplace_Values8"/>
+			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_SelectionReplace_Values9"/>
 		</MenuItem>
 		<MenuItem Header="Global _Find">
-			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_GlobalFindKeys"/>
-			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_GlobalFind1"/>
-			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_GlobalFind2"/>
-			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_GlobalFind3"/>
-			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_GlobalFind4"/>
-			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_GlobalFind5"/>
-			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_GlobalFind6"/>
-			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_GlobalFind7"/>
-			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_GlobalFind8"/>
-			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_GlobalFind9"/>
+			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_GlobalFind_Keys"/>
+			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_GlobalFind_Values1"/>
+			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_GlobalFind_Values2"/>
+			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_GlobalFind_Values3"/>
+			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_GlobalFind_Values4"/>
+			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_GlobalFind_Values5"/>
+			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_GlobalFind_Values6"/>
+			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_GlobalFind_Values7"/>
+			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_GlobalFind_Values8"/>
+			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_GlobalFind_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Global Replace">
-			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_GlobalReplace1"/>
-			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_GlobalReplace2"/>
-			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_GlobalReplace3"/>
-			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_GlobalReplace4"/>
-			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_GlobalReplace5"/>
-			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_GlobalReplace6"/>
-			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_GlobalReplace7"/>
-			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_GlobalReplace8"/>
-			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_GlobalReplace9"/>
+			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_GlobalReplace_Values1"/>
+			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_GlobalReplace_Values2"/>
+			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_GlobalReplace_Values3"/>
+			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_GlobalReplace_Values4"/>
+			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_GlobalReplace_Values5"/>
+			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_GlobalReplace_Values6"/>
+			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_GlobalReplace_Values7"/>
+			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_GlobalReplace_Values8"/>
+			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_GlobalReplace_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
-			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_CopyKeys"/>
-			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_CopyValues1"/>
-			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_CopyValues2"/>
-			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_CopyValues3"/>
-			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_CopyValues4"/>
-			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_CopyValues5"/>
-			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_CopyValues6"/>
-			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_CopyValues7"/>
-			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_CopyValues8"/>
-			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_CopyValues9"/>
+			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Copy_Keys"/>
+			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Copy_Values1"/>
+			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Copy_Values2"/>
+			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Copy_Values3"/>
+			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Copy_Values4"/>
+			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Copy_Values5"/>
+			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Copy_Values6"/>
+			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Copy_Values7"/>
+			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Copy_Values8"/>
+			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Copy_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Hits">
-			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_HitsKeys"/>
-			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_HitsValues1"/>
-			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_HitsValues2"/>
-			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_HitsValues3"/>
-			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_HitsValues4"/>
-			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_HitsValues5"/>
-			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_HitsValues6"/>
-			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_HitsValues7"/>
-			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_HitsValues8"/>
-			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_HitsValues9"/>
+			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Hits_Keys"/>
+			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Hits_Values1"/>
+			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Hits_Values2"/>
+			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Hits_Values3"/>
+			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Hits_Values4"/>
+			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Hits_Values5"/>
+			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Hits_Values6"/>
+			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Hits_Values7"/>
+			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Hits_Values8"/>
+			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Hits_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Misses">
-			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_MissesKeys"/>
-			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_MissesValues1"/>
-			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_MissesValues2"/>
-			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_MissesValues3"/>
-			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_MissesValues4"/>
-			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_MissesValues5"/>
-			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_MissesValues6"/>
-			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_MissesValues7"/>
-			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_MissesValues8"/>
-			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_MissesValues9"/>
+			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Misses_Keys"/>
+			<textEditor:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Misses_Values1"/>
+			<textEditor:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Misses_Values2"/>
+			<textEditor:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Misses_Values3"/>
+			<textEditor:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Misses_Values4"/>
+			<textEditor:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Misses_Values5"/>
+			<textEditor:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Misses_Values6"/>
+			<textEditor:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Misses_Values7"/>
+			<textEditor:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Misses_Values8"/>
+			<textEditor:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Misses_Values9"/>
 		</MenuItem>
-		<textEditor:TextEditMenuItem Header="Counts to Keys/Values 1" CommandEnum="Keys_Counts"/>
+		<textEditor:TextEditMenuItem Header="Counts to Keys/Values 1" CommandEnum="Keys_CountstoKeysValues1"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEditor:TextEditMenuItem Header="Toggle Marks/Selection" CommandEnum="SelectMark_Toggle"/>
@@ -388,7 +388,7 @@
 		<textEditor:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="_Marks" CommandEnum="Select_Marks"/>
-		<textEditor:TextEditMenuItem Header="_Find Results" CommandEnum="Select_Find"/>
+		<textEditor:TextEditMenuItem Header="_Find Results" CommandEnum="Select_FindResults"/>
 		<Separator/>
 		<MenuItem Header="Min">
 			<textEditor:TextEditMenuItem Header="_String" CommandEnum="Select_Min_String"/>
@@ -402,7 +402,7 @@
 		<textEditor:TextEditMenuItem Header="_Expression Matches" CommandEnum="Select_ExpressionMatches"/>
 		<textEditor:TextEditMenuItem Header="_RegEx Matches" CommandEnum="Select_RegExMatches"/>
 		<Separator/>
-		<textEditor:TextEditMenuItem Header="First Selection" CommandEnum="Select_ShowFirst"/>
+		<textEditor:TextEditMenuItem Header="First Selection" CommandEnum="Select_FirstSelection"/>
 		<textEditor:TextEditMenuItem Header="Show Current" CommandEnum="Select_ShowCurrent"/>
 		<textEditor:TextEditMenuItem Header="Next Selection" CommandEnum="Select_NextSelection"/>
 		<textEditor:TextEditMenuItem Header="Prev Selection" CommandEnum="Select_PrevSelection"/>
@@ -413,8 +413,8 @@
 		<textEditor:TextEditMenuItem Header="Toggle Marks/Selection" CommandEnum="SelectMark_Toggle"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="_Selection" CommandEnum="Mark_Selection"/>
-		<textEditor:TextEditMenuItem Header="_Find Results" CommandEnum="Mark_Find"/>
-		<textEditor:TextEditMenuItem Header="_Clear Marks" CommandEnum="Mark_Clear"/>
+		<textEditor:TextEditMenuItem Header="_Find Results" CommandEnum="Mark_FindResults"/>
+		<textEditor:TextEditMenuItem Header="_Clear Marks" CommandEnum="Mark_ClearMarks"/>
 		<textEditor:TextEditMenuItem Header="_Limit To Selection" CommandEnum="Mark_LimitToSelection"/>
 	</MenuItem>
 	<MenuItem Header="_View">

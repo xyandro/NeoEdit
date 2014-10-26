@@ -9,7 +9,7 @@
 			<binaryEditor:BinaryEditMenuItem Header="_New" CommandEnum="File_New"/>
 			<binaryEditor:BinaryEditMenuItem Header="_Open" CommandEnum="File_Open"/>
 			<binaryEditor:BinaryEditMenuItem Header="Open _Dump" CommandEnum="File_OpenDump"/>
-			<binaryEditor:BinaryEditMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopied"/>
+			<binaryEditor:BinaryEditMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
 			<binaryEditor:BinaryEditMenuItem Header="_Save" CommandEnum="File_Save"/>
 			<binaryEditor:BinaryEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
 			<binaryEditor:BinaryEditMenuItem Header="_Close" CommandEnum="File_Close"/>
@@ -18,17 +18,17 @@
 			<binaryEditor:BinaryEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
 			<Separator/>
 			<MenuItem Header="_Encoding">
-				<binaryEditor:BinaryEditMenuItem Header="Auto" CommandEnum="File_Encode_Auto"/>
+				<binaryEditor:BinaryEditMenuItem Header="Auto" CommandEnum="File_Encoding_Auto"/>
 				<Separator/>
-				<binaryEditor:BinaryEditMenuItem Header="UTF8" CommandEnum="File_Encode_UTF8" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF8\''}"/>
-				<binaryEditor:BinaryEditMenuItem Header="UTF7" CommandEnum="File_Encode_UTF7" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF7\''}"/>
-				<binaryEditor:BinaryEditMenuItem Header="UTF16LE" CommandEnum="File_Encode_UTF16LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16LE\''}"/>
-				<binaryEditor:BinaryEditMenuItem Header="UTF16BE" CommandEnum="File_Encode_UTF16BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16BE\''}"/>
-				<binaryEditor:BinaryEditMenuItem Header="UTF32LE" CommandEnum="File_Encode_UTF32LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32LE\''}"/>
-				<binaryEditor:BinaryEditMenuItem Header="UTF32BE" CommandEnum="File_Encode_UTF32BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32BE\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF8" CommandEnum="File_Encoding_UTF8" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF8\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF7" CommandEnum="File_Encoding_UTF7" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF7\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF16LE" CommandEnum="File_Encoding_UTF16LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16LE\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF16BE" CommandEnum="File_Encoding_UTF16BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF16BE\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF32LE" CommandEnum="File_Encoding_UTF32LE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32LE\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="UTF32BE" CommandEnum="File_Encoding_UTF32BE" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'UTF32BE\''}"/>
 				<Separator/>
-				<binaryEditor:BinaryEditMenuItem Header="Base64" CommandEnum="File_Encode_Base64" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Base64\''}"/>
-				<binaryEditor:BinaryEditMenuItem Header="Hex" CommandEnum="File_Encode_Hex" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Hex\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="Base64" CommandEnum="File_Encoding_Base64" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Base64\''}"/>
+				<binaryEditor:BinaryEditMenuItem Header="Hex" CommandEnum="File_Encoding_Hex" IsChecked="{Binding Active.CoderUsed, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Hex\''}"/>
 			</MenuItem>
 			<binaryEditor:BinaryEditMenuItem Header="Text Editor" CommandEnum="File_TextEditor"/>
 			<Separator/>
@@ -45,7 +45,7 @@
 			<Separator/>
 			<binaryEditor:BinaryEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
 			<binaryEditor:BinaryEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>
-			<binaryEditor:BinaryEditMenuItem Header="Find _Previous" CommandEnum="Edit_FindPrev"/>
+			<binaryEditor:BinaryEditMenuItem Header="Find _Previous" CommandEnum="Edit_FindPrevious"/>
 			<binaryEditor:BinaryEditMenuItem Header="_Goto" CommandEnum="Edit_Goto"/>
 			<Separator/>
 			<binaryEditor:BinaryEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Active.Insert, ElementName=self}"/>
@@ -57,39 +57,39 @@
 		</MenuItem>
 		<MenuItem Header="_Data">
 			<MenuItem Header="C_hecksum">
-				<binaryEditor:BinaryEditMenuItem Header="_MD5" CommandEnum="Checksum_MD5"/>
-				<binaryEditor:BinaryEditMenuItem Header="SHA_1" CommandEnum="Checksum_SHA1"/>
-				<binaryEditor:BinaryEditMenuItem Header="SHA_256" CommandEnum="Checksum_SHA256"/>
+				<binaryEditor:BinaryEditMenuItem Header="_MD5" CommandEnum="Data_Checksum_MD5"/>
+				<binaryEditor:BinaryEditMenuItem Header="SHA_1" CommandEnum="Data_Checksum_SHA1"/>
+				<binaryEditor:BinaryEditMenuItem Header="SHA_256" CommandEnum="Data_Checksum_SHA256"/>
 			</MenuItem>
 			<MenuItem Header="_Compress">
-				<binaryEditor:BinaryEditMenuItem Header="_GZip" CommandEnum="Compress_GZip"/>
-				<binaryEditor:BinaryEditMenuItem Header="_Deflate" CommandEnum="Compress_Deflate"/>
+				<binaryEditor:BinaryEditMenuItem Header="_GZip" CommandEnum="Data_Compress_GZip"/>
+				<binaryEditor:BinaryEditMenuItem Header="_Deflate" CommandEnum="Data_Compress_Deflate"/>
 			</MenuItem>
 			<MenuItem Header="_Decompress">
-				<binaryEditor:BinaryEditMenuItem Header="_GZip" CommandEnum="Decompress_GZip"/>
-				<binaryEditor:BinaryEditMenuItem Header="_Inflate" CommandEnum="Decompress_Inflate"/>
+				<binaryEditor:BinaryEditMenuItem Header="_GZip" CommandEnum="Data_Decompress_GZip"/>
+				<binaryEditor:BinaryEditMenuItem Header="_Inflate" CommandEnum="Data_Decompress_Inflate"/>
 			</MenuItem>
 			<MenuItem Header="_Encrypt">
-				<binaryEditor:BinaryEditMenuItem Header="_AES" CommandEnum="Encrypt_AES"/>
-				<binaryEditor:BinaryEditMenuItem Header="_DES" CommandEnum="Encrypt_DES"/>
-				<binaryEditor:BinaryEditMenuItem Header="_3DES" CommandEnum="Encrypt_DES3"/>
-				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Encrypt_RSA"/>
-				<binaryEditor:BinaryEditMenuItem Header="RSA/AES" CommandEnum="Encrypt_RSAAES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_AES" CommandEnum="Data_Encrypt_AES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_DES" CommandEnum="Data_Encrypt_DES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_3DES" CommandEnum="Data_Encrypt_3DES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Data_Encrypt_RSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="RSA/AES" CommandEnum="Data_Encrypt_RSAAES"/>
 			</MenuItem>
 			<MenuItem Header="Dec_rypt">
-				<binaryEditor:BinaryEditMenuItem Header="_AES" CommandEnum="Decrypt_AES"/>
-				<binaryEditor:BinaryEditMenuItem Header="_DES" CommandEnum="Decrypt_DES"/>
-				<binaryEditor:BinaryEditMenuItem Header="_3DES" CommandEnum="Decrypt_DES3"/>
-				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Decrypt_RSA"/>
-				<binaryEditor:BinaryEditMenuItem Header="RSA/AES" CommandEnum="Decrypt_RSAAES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_AES" CommandEnum="Data_Decrypt_AES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_DES" CommandEnum="Data_Decrypt_DES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_3DES" CommandEnum="Data_Decrypt_3DES"/>
+				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Data_Decrypt_RSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="RSA/AES" CommandEnum="Data_Decrypt_RSAAES"/>
 			</MenuItem>
 			<MenuItem Header="_Sign">
-				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Sign_RSA"/>
-				<binaryEditor:BinaryEditMenuItem Header="_DSA" CommandEnum="Sign_DSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Data_Sign_RSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="_DSA" CommandEnum="Data_Sign_DSA"/>
 			</MenuItem>
 			<MenuItem Header="_Verify">
-				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Verify_RSA"/>
-				<binaryEditor:BinaryEditMenuItem Header="_DSA" CommandEnum="Verify_DSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="_RSA" CommandEnum="Data_Verify_RSA"/>
+				<binaryEditor:BinaryEditMenuItem Header="_DSA" CommandEnum="Data_Verify_DSA"/>
 			</MenuItem>
 			<binaryEditor:BinaryEditMenuItem Header="_Fill" CommandEnum="Data_Fill"/>
 		</MenuItem>
