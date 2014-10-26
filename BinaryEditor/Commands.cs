@@ -3,8 +3,6 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.BinaryEditor
 {
-	class BinaryEditMenuItem : NEMenuItem<BinaryEditCommand> { }
-
 	enum BinaryEditCommand
 	{
 		None,

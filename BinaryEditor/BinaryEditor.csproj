@@ -62,6 +62,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="Menu.xaml.cs">
+      <DependentUpon>Menu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FillDialog.xaml.cs">
       <DependentUpon>FillDialog.xaml</DependentUpon>
     </Compile>
