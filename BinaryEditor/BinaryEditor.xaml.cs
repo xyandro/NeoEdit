@@ -620,7 +620,7 @@ namespace NeoEdit.BinaryEditor
 			Clipboard.SetText(Path.GetFileName(FileName));
 		}
 
-		internal void Command_File_Encode(Coder.Type type)
+		internal void Command_File_Encoding(Coder.Type type)
 		{
 			CoderUsed = type;
 			if (CoderUsed == Coder.Type.None)
@@ -650,7 +650,7 @@ namespace NeoEdit.BinaryEditor
 			Pos1 = Pos2 = step.index + step.bytes.Length;
 		}
 
-		internal void Command_Edit_Copy(bool isCut)
+		internal void Command_Edit_CutCopy(bool isCut)
 		{
 			if (SelStart == SelEnd)
 				return;
@@ -732,7 +732,7 @@ namespace NeoEdit.BinaryEditor
 			++ChangeCount;
 		}
 
-		internal void Command_Checksum(Checksum.Type type)
+		internal void Command_Data_Checksum(Checksum.Type type)
 		{
 			byte[] data;
 			if (Length == 0)
@@ -747,7 +747,7 @@ namespace NeoEdit.BinaryEditor
 			}.Show();
 		}
 
-		internal void Command_Compress(bool compress, Compression.Type type)
+		internal void Command_Data_Compress(bool compress, Compression.Type type)
 		{
 			if (!VerifyInsert())
 				return;
@@ -758,7 +758,7 @@ namespace NeoEdit.BinaryEditor
 				ReplaceAll(Compression.Decompress(type, Data.GetAllBytes()));
 		}
 
-		internal void Command_Encrypt(bool isEncrypt, Crypto.Type type)
+		internal void Command_Data_Encrypt(bool isEncrypt, Crypto.Type type)
 		{
 			if (!VerifyInsert())
 				return;
@@ -785,7 +785,7 @@ namespace NeoEdit.BinaryEditor
 				ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), key));
 		}
 
-		internal void Command_Sign(bool sign, Crypto.Type type)
+		internal void Command_Data_Sign(bool sign, Crypto.Type type)
 		{
 			var keyDialog = new AsymmetricKeyDialog { Type = type, Public = !sign, GetHash = true, CanGenerate = sign, GetSignature = !sign };
 			if (keyDialog.ShowDialog() != true)

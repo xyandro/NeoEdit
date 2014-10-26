@@ -497,7 +497,7 @@ namespace NeoEdit.TextEditor
 				Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true, selecting)).ToList());
 		}
 
-		internal void Command_Edit_GotoIndex()
+		internal void Command_Edit_GotoColumn()
 		{
 			var selecting = shiftDown;
 			var offset = Selections.First().Start;
@@ -1015,12 +1015,12 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		internal void Command_Data_GUID()
+		internal void Command_Data_InsertGUID()
 		{
 			ReplaceSelections(Selections.Select(range => Guid.NewGuid().ToString()).ToList());
 		}
 
-		internal void Command_Data_Random()
+		internal void Command_Data_InsertRandomNumber()
 		{
 			var result = RandomNumberDialog.Run();
 			if (result == null)
@@ -1064,7 +1064,7 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Checksum.Get(type, Coder.StringToBytes(GetString(range), coder))).ToList());
 		}
 
-		internal void Command_Keys_SetValues(int index)
+		internal void Command_Keys_Set(int index)
 		{
 			// Handles keys as well as values
 			var values = Selections.Select(range => GetString(range)).ToList();
@@ -1136,7 +1136,7 @@ namespace NeoEdit.TextEditor
 			Replace(ranges, strs);
 		}
 
-		internal void Command_Keys_CopyValues(int index)
+		internal void Command_Keys_Copy(int index)
 		{
 			ClipboardWindow.Set(keysAndValues[index].ToArray());
 		}
@@ -1147,7 +1147,7 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(Selections.Where(range => set.Contains(GetString(range)) == hits).ToList());
 		}
 
-		internal void Command_Keys_Counts()
+		internal void Command_Keys_CountstoKeysValues1()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			var group = strs.GroupBy(a => a).Select(a => new { key = a.Key, count = a.Count() }).OrderBy(a => a.count).ToList();
@@ -1220,7 +1220,7 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		internal void Command_Select_Find()
+		internal void Command_Select_FindResults()
 		{
 			Selections.Replace(Searches);
 			Searches.Clear();
@@ -1282,7 +1282,7 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		internal void Command_Select_ShowFirst()
+		internal void Command_Select_FirstSelection()
 		{
 			visibleIndex = 0;
 			EnsureVisible(true);
@@ -1329,13 +1329,13 @@ namespace NeoEdit.TextEditor
 			Marks.AddRange(Selections);
 		}
 
-		internal void Command_Mark_Find()
+		internal void Command_Mark_FindResults()
 		{
 			Marks.AddRange(Searches);
 			Searches.Clear();
 		}
 
-		internal void Command_Mark_Clear()
+		internal void Command_Mark_ClearMarks()
 		{
 			var hasSelection = Selections.Any(range => range.HasSelection());
 			if (!hasSelection)

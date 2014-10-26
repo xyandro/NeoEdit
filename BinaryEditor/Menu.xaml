@@ -45,7 +45,7 @@
 			<Separator/>
 			<binaryEditor:BinaryEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
 			<binaryEditor:BinaryEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>
-			<binaryEditor:BinaryEditMenuItem Header="Find _Previous" CommandEnum="Edit_FindPrevious"/>
+			<binaryEditor:BinaryEditMenuItem Header="Find _Prev" CommandEnum="Edit_FindPrev"/>
 			<binaryEditor:BinaryEditMenuItem Header="_Goto" CommandEnum="Edit_Goto"/>
 			<Separator/>
 			<binaryEditor:BinaryEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Active.Insert, ElementName=self}"/>
