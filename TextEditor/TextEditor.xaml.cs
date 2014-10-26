@@ -967,6 +967,34 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(strs);
 		}
 
+		internal void Command_Data_Copy_Count()
+		{
+			Clipboard.SetText(Selections.Count.ToString());
+		}
+
+		internal void Command_Data_Copy_MinMax(bool min, bool numeric)
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			if (numeric)
+				strs = strs.OrderBy(str => NumericSort(str)).ToList();
+			else
+				strs = strs.OrderBy(str => str).ToList();
+			var value = min ? strs.First() : strs.Last();
+			Clipboard.SetText(value);
+		}
+
+		internal void Command_Data_Copy_MinMaxLength(bool min)
+		{
+			var lens = Selections.Select(range => range.Length).OrderBy(len => len).ToList();
+			var value = min ? lens.First() : lens.Last();
+			Clipboard.SetText(value.ToString());
+		}
+
+		internal void Command_Data_Copy_Sum()
+		{
+			Clipboard.SetText(Selections.Select(range => Double.Parse(GetString(range))).Sum().ToString());
+		}
+
 		internal void Command_Data_Repeat()
 		{
 			var repeat = RepeatDialog.Run(Selections.Count == 1);

@@ -244,6 +244,14 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_EvaluateExpression: Active.Command_Data_EvaluateExpression(); break;
 				case TextEditCommand.Data_Series: Active.Command_Data_Series(); break;
 				case TextEditCommand.Data_CopyDown: Active.Command_Data_CopyDown(); break;
+				case TextEditCommand.Data_Copy_Count: Active.Command_Data_Copy_Count(); break;
+				case TextEditCommand.Data_Copy_Min_String: Active.Command_Data_Copy_MinMax(true, false); break;
+				case TextEditCommand.Data_Copy_Min_Numeric: Active.Command_Data_Copy_MinMax(true, true); break;
+				case TextEditCommand.Data_Copy_Max_String: Active.Command_Data_Copy_MinMax(false, false); break;
+				case TextEditCommand.Data_Copy_Max_Numeric: Active.Command_Data_Copy_MinMax(false, true); break;
+				case TextEditCommand.Data_Copy_Length_Min: Active.Command_Data_Copy_MinMaxLength(true); break;
+				case TextEditCommand.Data_Copy_Length_Max: Active.Command_Data_Copy_MinMaxLength(false); break;
+				case TextEditCommand.Data_Copy_Sum: Active.Command_Data_Copy_Sum(); break;
 				case TextEditCommand.Data_Repeat: Active.Command_Data_Repeat(); break;
 				case TextEditCommand.Data_GUID: Active.Command_Data_GUID(); break;
 				case TextEditCommand.Data_Random: Active.Command_Data_Random(); break;

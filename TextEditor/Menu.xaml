@@ -82,7 +82,7 @@
 		<textEditor:TextEditMenuItem CommandEnum="Files_RenameKeysToSelections"/>
 	</MenuItem>
 	<MenuItem Header="_Data">
-		<MenuItem Header="_Case">
+		<MenuItem Header="Case">
 			<textEditor:TextEditMenuItem CommandEnum="Data_Case_Upper"/>
 			<textEditor:TextEditMenuItem CommandEnum="Data_Case_Lower"/>
 			<textEditor:TextEditMenuItem CommandEnum="Data_Case_Proper"/>
@@ -210,6 +210,22 @@
 		<textEditor:TextEditMenuItem CommandEnum="Data_EvaluateExpression"/>
 		<textEditor:TextEditMenuItem CommandEnum="Data_Series"/>
 		<textEditor:TextEditMenuItem CommandEnum="Data_CopyDown"/>
+		<MenuItem Header="_Copy">
+			<textEditor:TextEditMenuItem CommandEnum="Data_Copy_Count"/>
+			<MenuItem Header="_Min">
+				<textEditor:TextEditMenuItem CommandEnum="Data_Copy_Min_String"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Copy_Min_Numeric"/>
+			</MenuItem>
+			<MenuItem Header="Ma_x">
+				<textEditor:TextEditMenuItem CommandEnum="Data_Copy_Max_String"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Copy_Max_Numeric"/>
+			</MenuItem>
+			<MenuItem Header="_Length">
+				<textEditor:TextEditMenuItem CommandEnum="Data_Copy_Length_Min"/>
+				<textEditor:TextEditMenuItem CommandEnum="Data_Copy_Length_Max"/>
+			</MenuItem>
+			<textEditor:TextEditMenuItem CommandEnum="Data_Copy_Sum"/>
+		</MenuItem>
 		<textEditor:TextEditMenuItem CommandEnum="Data_Repeat"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem CommandEnum="Data_GUID"/>
