@@ -8,6 +8,8 @@ Diff?
 Disk:
 Expression should be able to key off full path
 Select by SVN ignore
+Move timestamp (possibly others) from TextEditor
+Add copied/cut files to list
 
 Text:
 Bookmarks
@@ -23,10 +25,10 @@ Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
 Get directory files/dirs
+Checksums for files
 
 Binary:
 Fix binary editor backwards search
 Remember search history
 Cursor hard to see
-Fill selection (eg with 0s)
 Reload current file (perhaps automatically?)
