@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
@@ -20,19 +21,13 @@ namespace NeoEdit.TextEditor.Dialogs
 
 		static EncodingDialog() { UIHelper<EncodingDialog>.Register(); }
 
-		class Tester
-		{
-			public string Display { get; set; }
-			public StrCoder.CodePage CodePage { get; set; }
-		}
-
 		EncodingDialog()
 		{
 			InitializeComponent();
 
-			codePage.ItemsSource = StrCoder.GetEncodingTypes();
-			codePage.SelectedValuePath = "Item1";
-			codePage.DisplayMemberPath = "Item2";
+			codePage.ItemsSource = StrCoder.GetCodePages().ToDictionary(page => page, page => StrCoder.GetDescription(page));
+			codePage.SelectedValuePath = "Key";
+			codePage.DisplayMemberPath = "Value";
 
 			lineEndings.ItemsSource = new Dictionary<string, string>
 			{

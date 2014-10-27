@@ -3,23 +3,22 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
 	xmlns:binaryEditorConverters="clr-namespace:NeoEdit.BinaryEditor.Converters"
-	Padding="0" BorderThickness="0" HorizontalAlignment="Right"
-	IsReadOnly="True">
+	Padding="0" BorderThickness="0" HorizontalAlignment="Left" IsReadOnly="True">
 
 	<TextBox.Background>
 		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] ti== [1] ? 'LightBlue' : 'Transparent'">
 			<Binding Path="Text" ElementName="self"/>
-			<Binding Path="ParentWindow.FoundText" ElementName="self"/>
+			<Binding Path="BinaryEditor.FoundText" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Background>
 
 	<TextBox.Text>
 		<MultiBinding Converter="{binaryEditorConverters:DisplayValueConverter}" Mode="OneWay">
-			<Binding Path="ParentWindow.Data" ElementName="self"/>
-			<Binding Path="ParentWindow.SelStart" ElementName="self"/>
-			<Binding Path="ParentWindow.SelEnd" ElementName="self"/>
-			<Binding Path="ParentWindow.ChangeCount" ElementName="self"/>
-			<Binding Path="Type" ElementName="self"/>
+			<Binding Path="BinaryEditor.Data" ElementName="self"/>
+			<Binding Path="BinaryEditor.SelStart" ElementName="self"/>
+			<Binding Path="BinaryEditor.SelEnd" ElementName="self"/>
+			<Binding Path="BinaryEditor.ChangeCount" ElementName="self"/>
+			<Binding Path="CodePage" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Text>
 </TextBox>

@@ -8,7 +8,7 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayValue : TextBox
 	{
 		[DepProp]
-		public BinaryEditor ParentWindow { get { return UIHelper<DisplayValue>.GetPropValue<BinaryEditor>(this); } set { UIHelper<DisplayValue>.SetPropValue(this, value); } }
+		public BinaryEditor BinaryEditor { get { return UIHelper<DisplayValue>.GetPropValue<BinaryEditor>(this); } set { UIHelper<DisplayValue>.SetPropValue(this, value); } }
 		[DepProp]
 		public Coder.Type Type { get { return UIHelper<DisplayValue>.GetPropValue<Coder.Type>(this); } set { UIHelper<DisplayValue>.SetPropValue(this, value); } }
 
@@ -38,7 +38,7 @@ namespace NeoEdit.BinaryEditor
 						if (data == null)
 							break;
 
-						ParentWindow.DisplayValuesReplace(data);
+						BinaryEditor.DisplayValuesReplace(data);
 					}
 					break;
 			}

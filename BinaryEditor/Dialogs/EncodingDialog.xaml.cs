@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
@@ -15,19 +16,13 @@ namespace NeoEdit.BinaryEditor.Dialogs
 
 		static EncodingDialog() { UIHelper<EncodingDialog>.Register(); }
 
-		class Tester
-		{
-			public string Display { get; set; }
-			public StrCoder.CodePage CodePage { get; set; }
-		}
-
 		EncodingDialog(StrCoder.CodePage _CodePage, StrCoder.CodePage _Detected)
 		{
 			InitializeComponent();
 
-			codePage.ItemsSource = StrCoder.GetEncodingTypes();
-			codePage.SelectedValuePath = "Item1";
-			codePage.DisplayMemberPath = "Item2";
+			codePage.ItemsSource = StrCoder.GetCodePages().ToDictionary(page => page, page => StrCoder.GetDescription(page));
+			codePage.SelectedValuePath = "Key";
+			codePage.DisplayMemberPath = "Value";
 
 			CodePage = _CodePage;
 			Detected = _Detected;

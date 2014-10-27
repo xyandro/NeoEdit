@@ -22,7 +22,7 @@
 
 		<binaryEditor:DisplayValues Grid.Row="1" Grid.ColumnSpan="2"
 			Visibility="{Binding ShowValues, ElementName=self, Converter={guiCommon:ExpressionConverter}}"
-			ParentWindow="{Binding ElementName=self, Mode=OneWay}"
+			BinaryEditor="{Binding ElementName=self, Mode=OneWay}"
 		/>
 
 		<StatusBar Grid.Row="2" Grid.ColumnSpan="2" Focusable="False">

@@ -7,9 +7,9 @@ namespace NeoEdit.BinaryEditor
 	partial class DisplayString : TextBox
 	{
 		[DepProp]
-		public BinaryEditor ParentWindow { get { return UIHelper<DisplayString>.GetPropValue<BinaryEditor>(this); } set { UIHelper<DisplayString>.SetPropValue(this, value); } }
+		public BinaryEditor BinaryEditor { get { return UIHelper<DisplayString>.GetPropValue<BinaryEditor>(this); } set { UIHelper<DisplayString>.SetPropValue(this, value); } }
 		[DepProp]
-		public StrCoder.CodePage Type { get { return UIHelper<DisplayString>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<DisplayString>.SetPropValue(this, value); } }
+		public StrCoder.CodePage CodePage { get { return UIHelper<DisplayString>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<DisplayString>.SetPropValue(this, value); } }
 
 		static DisplayString() { UIHelper<DisplayString>.Register(); }
 

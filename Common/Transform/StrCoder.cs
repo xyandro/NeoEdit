@@ -25,6 +25,7 @@ namespace NeoEdit.Common.Transform
 		class NEEncoding
 		{
 			public CodePage codePage { get; private set; }
+			public string shortDescription { get; private set; }
 			public string description { get; private set; }
 			public Encoding encoding { get; private set; }
 			public byte[] preamble { get; private set; }
@@ -34,7 +35,7 @@ namespace NeoEdit.Common.Transform
 			internal NEEncoding(CodePage _codePage, string _description)
 			{
 				codePage = _codePage;
-				description = _description;
+				shortDescription = description = _description;
 
 				if (codePage >= 0)
 				{
@@ -303,13 +304,15 @@ namespace NeoEdit.Common.Transform
 				return CodePage.UTF16BE;
 		}
 
-		public static List<Tuple<CodePage, string>> GetEncodingTypes()
+		public static List<CodePage> GetCodePages()
 		{
-			return NEEncodings.Select(encoding => new Tuple<CodePage, string>(encoding.codePage, encoding.description)).ToList();
+			return NEEncodings.Select(encoding => encoding.codePage).ToList();
 		}
 
-		public static string GetDescription(CodePage codePage)
+		public static string GetDescription(CodePage codePage, bool shortDescription = false)
 		{
+			if (shortDescription)
+				return NEEncodingDictionary[codePage].shortDescription;
 			return NEEncodingDictionary[codePage].description;
 		}
 	}

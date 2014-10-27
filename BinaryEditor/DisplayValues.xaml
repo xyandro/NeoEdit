@@ -12,10 +12,10 @@
 					<Setter Property="Padding" Value="0,-2,0,0"/>
 				</Style>
 				<Style TargetType="binaryEditor:DisplayValue">
-					<Setter Property="ParentWindow" Value="{Binding ParentWindow, ElementName=self}"/>
+					<Setter Property="BinaryEditor" Value="{Binding BinaryEditor, ElementName=self}"/>
 				</Style>
 				<Style TargetType="binaryEditor:DisplayString">
-					<Setter Property="ParentWindow" Value="{Binding ParentWindow, ElementName=self}"/>
+					<Setter Property="BinaryEditor" Value="{Binding BinaryEditor, ElementName=self}"/>
 				</Style>
 				<Style TargetType="CheckBox">
 					<Setter Property="Focusable" Value="False"/>
@@ -25,13 +25,14 @@
 		</Style>
 	</StackPanel.Style>
 
-	<StackPanel Orientation="Horizontal">
-		<Label Content="Show:" Margin="0,0,5,0"/>
-		<CheckBox Content="Little Endian" IsChecked="{Binding ShowLE, ElementName=self}"/>
-		<CheckBox Content="Big Endian" IsChecked="{Binding ShowBE, ElementName=self}"/>
-		<CheckBox Content="Ints" IsChecked="{Binding ShowInt, ElementName=self}"/>
-		<CheckBox Content="Floats" IsChecked="{Binding ShowFloat, ElementName=self}"/>
-		<CheckBox Content="Strings" IsChecked="{Binding ShowStr, ElementName=self}"/>
+	<StackPanel Orientation="Horizontal" >
+		<Label Content="Show:" Margin="0,0,5,0" VerticalAlignment="Center"/>
+		<CheckBox Content="Little Endian" IsChecked="{Binding ShowLE, ElementName=self}" VerticalAlignment="Center"/>
+		<CheckBox Content="Big Endian" IsChecked="{Binding ShowBE, ElementName=self}" VerticalAlignment="Center"/>
+		<CheckBox Content="Ints" IsChecked="{Binding ShowInt, ElementName=self}" VerticalAlignment="Center"/>
+		<CheckBox Content="Floats" IsChecked="{Binding ShowFloat, ElementName=self}" VerticalAlignment="Center"/>
+		<CheckBox Content="Strings" IsChecked="{Binding ShowStr, ElementName=self}" VerticalAlignment="Center"/>
+		<Button Content="Encodings" Click="ChooseEncodings" VerticalAlignment="Center"/>
 	</StackPanel>
 
 	<Grid>
@@ -112,62 +113,11 @@
 		<binaryEditor:DisplayValue Type="Double"/>
 	</StackPanel>
 
-	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
-		<Label Content="UTF8:"/>
-		<binaryEditor:DisplayString Type="UTF8"/>
-	</StackPanel>
-
-	<StackPanel Orientation="Horizontal">
-		<StackPanel.Visibility>
-			<MultiBinding Converter="{guiCommon:ExpressionConverter}">
-				<Binding Path="ShowLE" ElementName="self"/>
-				<Binding Path="ShowStr" ElementName="self"/>
-			</MultiBinding>
-		</StackPanel.Visibility>
-
-		<Label Content="UTF16LE:"/>
-		<binaryEditor:DisplayString Type="UTF16LE"/>
-	</StackPanel>
-
-	<StackPanel Orientation="Horizontal">
-		<StackPanel.Visibility>
-			<MultiBinding Converter="{guiCommon:ExpressionConverter}">
-				<Binding Path="ShowBE" ElementName="self"/>
-				<Binding Path="ShowStr" ElementName="self"/>
-			</MultiBinding>
-		</StackPanel.Visibility>
-
-		<Label Content="UTF16BE:"/>
-		<binaryEditor:DisplayString Type="UTF16BE"/>
-	</StackPanel>
-
-	<StackPanel Orientation="Horizontal">
-		<StackPanel.Visibility>
-			<MultiBinding Converter="{guiCommon:ExpressionConverter}">
-				<Binding Path="ShowLE" ElementName="self"/>
-				<Binding Path="ShowStr" ElementName="self"/>
-			</MultiBinding>
-		</StackPanel.Visibility>
-
-		<Label Content="UTF32LE:"/>
-		<binaryEditor:DisplayString Type="UTF32LE"/>
-	</StackPanel>
-
-	<StackPanel Orientation="Horizontal">
-		<StackPanel.Visibility>
-			<MultiBinding Converter="{guiCommon:ExpressionConverter}">
-				<Binding Path="ShowBE" ElementName="self"/>
-				<Binding Path="ShowStr" ElementName="self"/>
-			</MultiBinding>
-		</StackPanel.Visibility>
-
-		<Label Content="UTF32BE:"/>
-		<binaryEditor:DisplayString Type="UTF32BE"/>
-	</StackPanel>
-
-	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
-		<Label Content="Default:"/>
-		<binaryEditor:DisplayString Type="Default"/>
-	</StackPanel>
+	<Grid Name="strings" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+	</Grid>
 
 </StackPanel>

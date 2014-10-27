@@ -8,16 +8,16 @@
 	<TextBox.Background>
 		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] ti== [1] ? 'LightBlue' : 'Transparent'">
 			<Binding Path="Text" ElementName="self"/>
-			<Binding Path="ParentWindow.FoundText" ElementName="self"/>
+			<Binding Path="BinaryEditor.FoundText" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Background>
 
 	<TextBox.Text>
 		<MultiBinding Converter="{binaryEditorConverters:DisplayValueConverter}" Mode="OneWay">
-			<Binding Path="ParentWindow.Data" ElementName="self"/>
-			<Binding Path="ParentWindow.SelStart" ElementName="self"/>
-			<Binding Path="ParentWindow.SelEnd" ElementName="self"/>
-			<Binding Path="ParentWindow.ChangeCount" ElementName="self"/>
+			<Binding Path="BinaryEditor.Data" ElementName="self"/>
+			<Binding Path="BinaryEditor.SelStart" ElementName="self"/>
+			<Binding Path="BinaryEditor.SelEnd" ElementName="self"/>
+			<Binding Path="BinaryEditor.ChangeCount" ElementName="self"/>
 			<Binding Path="Type" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Text>
