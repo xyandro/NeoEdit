@@ -31,15 +31,15 @@ namespace NeoEdit.Common.Transform
 
 			internal NEEncoding(EncodingInfo encoding) : this((CodePage)encoding.CodePage, encoding.DisplayName) { }
 
-			internal NEEncoding(CodePage codePage, string description)
+			internal NEEncoding(CodePage _codePage, string _description)
 			{
-				this.codePage = codePage;
-				this.description = description;
+				codePage = _codePage;
+				description = _description;
 
 				if (codePage >= 0)
 				{
 					if (codePage > 0)
-						description += " - Codepage " + codePage;
+						description += " - Codepage " + (int)codePage;
 					encoding = Encoding.GetEncoding((int)codePage);
 					preamble = encoding.GetPreamble();
 					if ((preamble != null) && (preamble.Length == 0))
@@ -218,7 +218,7 @@ namespace NeoEdit.Common.Transform
 
 		public static bool CanFullyEncode(string str1, CodePage codePage)
 		{
-			// These two format will allow whitespace although you can't save it
+			// These two formats will allow whitespace, although you can't save it
 			if ((codePage == CodePage.Hex) || (codePage == CodePage.Base64))
 				str1 = str1.StripWhitespace();
 
@@ -273,6 +273,11 @@ namespace NeoEdit.Common.Transform
 		public static List<Tuple<CodePage, string>> GetEncodingTypes()
 		{
 			return NEEncodings.Select(encoding => new Tuple<CodePage, string>(encoding.codePage, encoding.description)).ToList();
+		}
+
+		public static string GetDescription(CodePage codePage)
+		{
+			return NEEncodingDictionary[codePage].description;
 		}
 	}
 }

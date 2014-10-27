@@ -620,11 +620,12 @@ namespace NeoEdit.BinaryEditor
 			Clipboard.SetText(Path.GetFileName(FileName));
 		}
 
-		internal void Command_File_Encoding(StrCoder.CodePage type)
+		internal void Command_File_Encoding()
 		{
-			CodePage = type;
-			if (CodePage == StrCoder.CodePage.AutoByBOM)
-				CodePage = Data.CodePageFromBOM();
+			var codePage = EncodingDialog.Run(CodePage, Data.CodePageFromBOM());
+			if (!codePage.HasValue)
+				return;
+			CodePage = codePage.Value;
 		}
 
 		internal void Command_Edit_Undo()

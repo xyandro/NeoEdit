@@ -1,4 +1,4 @@
-﻿<Window Name="self" x:Class="NeoEdit.TextEditor.Dialogs.EncodingDialog" x:ClassModifier="internal"
+﻿<Window Name="self" x:Class="NeoEdit.BinaryEditor.Dialogs.EncodingDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -7,7 +7,8 @@
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
-			<ColumnDefinition Width="150"/>
+			<ColumnDefinition Width="400"/>
+			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition/>
@@ -17,12 +18,13 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Code Page:" Target="{Binding ElementName=codePage}" HorizontalAlignment="Right"/>
-		<ComboBox Grid.Row="0" Grid.Column="1" Name="codePage" SelectedValue="{Binding CodePage, ElementName=self}"/>
+		<ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="codePage" SelectedValue="{Binding CodePage, ElementName=self}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Line Endings:" Target="{Binding ElementName=lineEndings}" HorizontalAlignment="Right"/>
-		<ComboBox Grid.Row="1" Grid.Column="1" Name="lineEndings" SelectedValue="{Binding LineEndings, ElementName=self}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Detected:" HorizontalAlignment="Right" Target="{Binding ElementName=setDetected}"/>
+		<Label Grid.Row="1" Grid.Column="1" Content="{Binding DetectedStr, ElementName=self}"/>
+		<Button Grid.Row="1" Grid.Column="2" Width="50" Name="setDetected"  Content="_Set" Margin="0,4,0,0" Click="SetDetected"/>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Columns="2">
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" Columns="2">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
