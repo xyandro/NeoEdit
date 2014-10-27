@@ -149,7 +149,7 @@ namespace NeoEdit.TextEditor
 			if (bytes == null)
 			{
 				if (FileName == null)
-					bytes = Encoding.UTF8.GetPreamble();
+					bytes = new byte[0];
 				else
 					bytes = File.ReadAllBytes(FileName);
 			}
@@ -356,7 +356,7 @@ namespace NeoEdit.TextEditor
 					foreach (var filename in dialog.FileNames)
 					{
 						var bytes = File.ReadAllBytes(filename);
-						var data = new TextData(bytes);
+						var data = new TextData(bytes, StrCoder.CodePage.AutoByBOM);
 
 						var beginOffset = data.GetOffset(0, 0);
 						var endOffset = data.GetOffset(data.NumLines - 1, data.GetLineLength(data.NumLines - 1));

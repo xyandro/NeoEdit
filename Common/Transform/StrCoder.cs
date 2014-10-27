@@ -58,12 +58,12 @@ namespace NeoEdit.Common.Transform
 		{
 			NEEncodings = new List<NEEncoding>
 			{
+				new NEEncoding(CodePage.Default, "Default"),
 				new NEEncoding(CodePage.UTF8, "UTF8"),
 				new NEEncoding(CodePage.UTF16LE, "UTF16 (Little endian)"),
 				new NEEncoding(CodePage.UTF16BE, "UTF16 (Big endian)"),
 				new NEEncoding(CodePage.UTF32LE, "UTF32 (Little endian)"),
 				new NEEncoding(CodePage.UTF32BE, "UTF32 (Big endian)"),
-				new NEEncoding(CodePage.Default, "Default"),
 				new NEEncoding(CodePage.Hex, "Hex"),
 				new NEEncoding(CodePage.Base64, "Base64"),
 			};

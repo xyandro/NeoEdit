@@ -32,7 +32,7 @@ namespace NeoEdit.TextEditor
 		public int MaxColumn { get; private set; }
 
 		public TextData() : this(null, StrCoder.CodePage.UTF8) { }
-		public TextData(byte[] bytes, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM)
+		public TextData(byte[] bytes, StrCoder.CodePage codePage)
 		{
 			if (bytes == null)
 				bytes = new byte[0];
@@ -93,7 +93,7 @@ namespace NeoEdit.TextEditor
 			DefaultEnding = endingInfo.FirstOrDefault();
 			if (String.IsNullOrEmpty(DefaultEnding))
 				DefaultEnding = "\r\n";
-			OnlyEnding = endingInfo.Count == 1 ? DefaultEnding : null;
+			OnlyEnding = endingInfo.Count <= 1 ? DefaultEnding : null;
 
 			// Calculate max index/columns
 			MaxIndex = lineLength.Max();
