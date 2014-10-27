@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
-	Title="Width" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=widthBox}">
+	Title="Width" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=length}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -18,16 +18,17 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Set _width to:" Target="{Binding ElementName=widthBox}"/>
-		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="widthBox" Value="{Binding Value, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Set _width to:" Target="{Binding ElementName=length}"/>
+		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="length" Value="{Binding Length, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}"/>
 		<TextBox Grid.Row="1" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Location:"/>
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-			<RadioButton Name="before" GroupName="location" Content="_Before    " IsChecked="{Binding Before, ElementName=self}" Focusable="False"/>
-			<RadioButton Name="after" GroupName="location" Content="_After" Focusable="False"/>
+			<RadioButton GroupName="location" Content="_Before  " IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Before}" Focusable="False"/>
+			<RadioButton GroupName="location" Content="_After  " IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=After}" Focusable="False"/>
+			<RadioButton GroupName="location" Content="B_oth" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Both}" Focusable="False"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Columns="2">

@@ -957,7 +957,7 @@ namespace NeoEdit.TextEditor
 			var result = WidthDialog.Run(minWidth, numeric ? '0' : ' ', numeric);
 			if (result == null)
 				return;
-			ReplaceSelections(Selections.Select(range => SetWidth(GetString(range), result.Value, result.PadChar, result.Before)).ToList());
+			ReplaceSelections(Selections.Select(range => SetWidth(GetString(range), result)).ToList());
 		}
 
 		internal void Command_Data_Trim()
@@ -2063,12 +2063,16 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		string SetWidth(string str, int length, char padChar, bool before)
+		string SetWidth(string str, WidthDialog.Result result)
 		{
-			var pad = new string(padChar, length - str.Length);
-			if (before)
-				return pad + str;
-			return str + pad;
+			var len = result.Length - str.Length;
+			switch (result.Location)
+			{
+				case WidthDialog.PadLocation.Before: return new string(result.PadChar, len) + str;
+				case WidthDialog.PadLocation.After: return str + new string(result.PadChar, len);
+				case WidthDialog.PadLocation.Both: return new string(result.PadChar, (len + 1) / 2) + str + new string(result.PadChar, len / 2);
+				default: throw new ArgumentException("Invalid");
+			}
 		}
 
 		public string RepeatString(string input, int count)

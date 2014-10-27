@@ -5,21 +5,28 @@ namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class WidthDialog
 	{
+		public enum PadLocation
+		{
+			Before,
+			After,
+			Both,
+		}
+
 		internal class Result
 		{
-			public int Value { get; set; }
+			public int Length { get; set; }
 			public char PadChar { get; set; }
-			public bool Before { get; set; }
+			public PadLocation Location { get; set; }
 		}
 
 		[DepProp]
-		public int Value { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public int Length { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public int MinValue { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string PadChar { get { return UIHelper<WidthDialog>.GetPropValue<string>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Before { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public PadLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<PadLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 
 		static WidthDialog() { UIHelper<WidthDialog>.Register(); }
 
@@ -29,12 +36,9 @@ namespace NeoEdit.TextEditor.Dialogs
 
 			this.padChar.GotFocus += (s, e) => this.padChar.SelectAll();
 
-			Value = MinValue = minValue;
+			Length = MinValue = minValue;
 			PadChar = new string(padChar, 1);
-			if (before)
-				this.before.IsChecked = true;
-			else
-				this.after.IsChecked = true;
+			Location = before ? PadLocation.Before : PadLocation.After;
 		}
 
 		Result result;
@@ -42,7 +46,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			if (PadChar.Length != 1)
 				return;
-			result = new Result { Value = Value, PadChar = PadChar[0], Before = Before };
+			result = new Result { Length = Length, PadChar = PadChar[0], Location = Location };
 			DialogResult = true;
 		}
 
