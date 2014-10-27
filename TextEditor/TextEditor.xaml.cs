@@ -2017,6 +2017,10 @@ namespace NeoEdit.TextEditor
 				change = undoRange.Highlight - ranges[ctr].End;
 			}
 
+			// Abort if no changes
+			if (!Enumerable.Range(0, ranges.Count).Any(ctr => undoText[ctr] != strs[ctr]))
+				return;
+
 			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText);
 			switch (replaceType)
 			{
