@@ -628,6 +628,26 @@ namespace NeoEdit.BinaryEditor
 			CodePage = codePage.Value;
 		}
 
+		internal bool Command_File_TextEditor()
+		{
+			var bytes = Data.GetAllBytes();
+			if (!StrCoder.CanFullyEncode(bytes, CodePage))
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = String.Format("The current encoding cannot represent all bytes.  Continue anyway?"),
+					Options = Message.OptionsEnum.YesNoCancel,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.Cancel,
+				}.Show() != GUI.Dialogs.Message.OptionsEnum.Yes)
+					return false;
+			}
+
+			Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), CodePage);
+			return true;
+		}
+
 		internal void Command_Edit_Undo()
 		{
 			var step = undoRedo.GetUndo();

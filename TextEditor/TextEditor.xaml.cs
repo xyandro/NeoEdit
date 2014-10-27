@@ -159,17 +159,10 @@ namespace NeoEdit.TextEditor
 			CodePage = codePage;
 			HighlightType = Highlighting.Get(FileName);
 
-			// See if we have an exact copy; mark as modified otherwise
-			var bytes2 = Data.GetBytes(CodePage);
-			if ((!modified) && (bytes.Length != bytes2.Length))
-				modified = true;
+			// If encoding can't exactly express bytes mark as modified
 			if (!modified)
-				for (var ctr = 0; ctr < bytes.Length; ++ctr)
-					if (bytes[ctr] != bytes2[ctr])
-					{
-						modified = true;
-						break;
-					}
+				modified = !StrCoder.CanFullyEncode(bytes, CodePage);
+
 			undoRedo.SetModified(modified);
 		}
 

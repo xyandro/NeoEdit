@@ -170,7 +170,7 @@ namespace NeoEdit.BinaryEditor
 				case BinaryEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case BinaryEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
 				case BinaryEditCommand.File_Encoding: Active.Command_File_Encoding(); break;
-				case BinaryEditCommand.File_TextEditor: Launcher.Static.LaunchTextEditor(Active.FileName, Active.Data.GetAllBytes(), Active.CodePage); BinaryEditors.Remove(Active); if (BinaryEditors.Count == 0) Close(); break;
+				case BinaryEditCommand.File_TextEditor: if (Active.Command_File_TextEditor()) { BinaryEditors.Remove(Active); if (BinaryEditors.Count == 0) Close(); } break;
 				case BinaryEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
 				case BinaryEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;
 				case BinaryEditCommand.Edit_Cut: Active.Command_Edit_CutCopy(true); break;

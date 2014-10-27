@@ -227,6 +227,18 @@ namespace NeoEdit.Common.Transform
 			return str1 == str2;
 		}
 
+		public static bool CanFullyEncode(byte[] bytes1, CodePage codePage)
+		{
+			var str = StrCoder.BytesToString(bytes1, codePage);
+			var bytes2 = StrCoder.StringToBytes(str, codePage);
+			if (bytes1.Length != bytes2.Length)
+				return false;
+			for (var ctr = 0; ctr < bytes1.Length; ++ctr)
+				if (bytes1[ctr] != bytes2[ctr])
+					return false;
+			return true;
+		}
+
 		public static CodePage CodePageFromBOM(byte[] data)
 		{
 			var encodingWithPreambles = NEEncodings.Where(encoding => encoding.preamble != null).OrderByDescending(encoding => encoding.preamble.Length).ToList();
