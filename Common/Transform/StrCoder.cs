@@ -104,6 +104,7 @@ namespace NeoEdit.Common.Transform
 
 		static unsafe byte[] FromHexString(string input)
 		{
+			input = input.StripWhitespace();
 			if ((input.Length % 2) != 0)
 				input = '0' + input;
 			var bytes = new byte[input.Length >> 1];
@@ -213,6 +214,17 @@ namespace NeoEdit.Common.Transform
 			if (result == null)
 				throw new Exception("Invalid conversion");
 			return result;
+		}
+
+		public static bool CanFullyEncode(string str1, CodePage codePage)
+		{
+			// These two format will allow whitespace although you can't save it
+			if ((codePage == CodePage.Hex) || (codePage == CodePage.Base64))
+				str1 = str1.StripWhitespace();
+
+			var bytes = StringToBytes(str1, codePage);
+			var str2 = BytesToString(bytes, codePage);
+			return str1 == str2;
 		}
 
 		public static CodePage CodePageFromBOM(byte[] data)

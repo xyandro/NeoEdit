@@ -250,13 +250,31 @@ namespace NeoEdit.TextEditor
 		internal void Command_File_Save()
 		{
 			if (FileName == null)
-				Command_File_SaveAs();
-			else
 			{
-				File.WriteAllBytes(FileName, Data.GetBytes(CodePage));
-				fileLastWrite = new FileInfo(FileName).LastWriteTime;
-				undoRedo.SetModified(false);
+				Command_File_SaveAs();
+				return;
 			}
+
+			if (!Data.CanFullyEncode(CodePage))
+			{
+				switch (new Message
+				{
+					Title = "Confirm",
+					Text = String.Format("The current encoding cannot save all characters in the file.  Switch to UTF8?"),
+					Options = Message.OptionsEnum.YesNoCancel,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.Cancel,
+				}.Show())
+				{
+					case Message.OptionsEnum.Yes: CodePage = StrCoder.CodePage.UTF8; break;
+					case Message.OptionsEnum.No: break;
+					case Message.OptionsEnum.Cancel: return;
+				}
+			}
+
+			File.WriteAllBytes(FileName, Data.GetBytes(CodePage));
+			fileLastWrite = new FileInfo(FileName).LastWriteTime;
+			undoRedo.SetModified(false);
 		}
 
 		internal void Command_File_SaveAs()

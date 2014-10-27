@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace NeoEdit.Common
 {
@@ -180,6 +181,15 @@ namespace NeoEdit.Common
 				if (!Char.IsDigit(input[ctr]))
 					return false;
 			return true;
+		}
+
+		public static string StripWhitespace(this string input)
+		{
+			var sb = new StringBuilder();
+			foreach (var c in input)
+				if (!Char.IsWhiteSpace(c))
+					sb.Append(c);
+			return sb.ToString();
 		}
 	}
 }
