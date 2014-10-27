@@ -124,7 +124,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
 				case TextEditCommand.File_Encoding: Active.Command_File_Encoding(); break;
-				case TextEditCommand.File_BinaryEditor: Active.Command_File_BinaryEditor(); TextEditors.Remove(Active); if (TextEditors.Count == 0) Close(); break;
+				case TextEditCommand.File_BinaryEditor: if (Active.Command_File_BinaryEditor()) { TextEditors.Remove(Active); if (TextEditors.Count == 0) Close(); } break;
 				case TextEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;
 				case TextEditCommand.Edit_Cut: Active.Command_Edit_CutCopy(true); break;

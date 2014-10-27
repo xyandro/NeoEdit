@@ -159,6 +159,7 @@ namespace NeoEdit.TextEditor
 			CodePage = codePage;
 			HighlightType = Highlighting.Get(FileName);
 
+			// See if we have an exact copy; mark as modified otherwise
 			var bytes2 = Data.GetBytes(CodePage);
 			if ((!modified) && (bytes.Length != bytes2.Length))
 				modified = true;
@@ -247,6 +248,28 @@ namespace NeoEdit.TextEditor
 		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
 		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
 
+		bool VerifyCanFullyEncode()
+		{
+			if (Data.CanFullyEncode(CodePage))
+				return true;
+
+			switch (new Message
+			{
+				Title = "Confirm",
+				Text = String.Format("The current encoding cannot save all characters in the file.  Switch to UTF8?"),
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show())
+			{
+				case Message.OptionsEnum.Yes: CodePage = StrCoder.CodePage.UTF8; break;
+				case Message.OptionsEnum.No: break;
+				case Message.OptionsEnum.Cancel: return false;
+			}
+
+			return true;
+		}
+
 		internal void Command_File_Save()
 		{
 			if (FileName == null)
@@ -255,22 +278,8 @@ namespace NeoEdit.TextEditor
 				return;
 			}
 
-			if (!Data.CanFullyEncode(CodePage))
-			{
-				switch (new Message
-				{
-					Title = "Confirm",
-					Text = String.Format("The current encoding cannot save all characters in the file.  Switch to UTF8?"),
-					Options = Message.OptionsEnum.YesNoCancel,
-					DefaultAccept = Message.OptionsEnum.Yes,
-					DefaultCancel = Message.OptionsEnum.Cancel,
-				}.Show())
-				{
-					case Message.OptionsEnum.Yes: CodePage = StrCoder.CodePage.UTF8; break;
-					case Message.OptionsEnum.No: break;
-					case Message.OptionsEnum.Cancel: return;
-				}
-			}
+			if (!VerifyCanFullyEncode())
+				return;
 
 			File.WriteAllBytes(FileName, Data.GetBytes(CodePage));
 			fileLastWrite = new FileInfo(FileName).LastWriteTime;
@@ -400,9 +409,12 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		internal void Command_File_BinaryEditor()
+		internal bool Command_File_BinaryEditor()
 		{
+			if (!VerifyCanFullyEncode())
+				return false;
 			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CodePage), CodePage);
+			return true;
 		}
 
 		internal void Command_Edit_Undo()
