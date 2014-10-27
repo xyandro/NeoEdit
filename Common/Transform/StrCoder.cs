@@ -139,26 +139,39 @@ namespace NeoEdit.Common.Transform
 			return bytes;
 		}
 
+		public static string TryBytesToString(byte[] data, CodePage codePage, bool stripBOM = false)
+		{
+			try
+			{
+				if (codePage == CodePage.AutoUnicode)
+					codePage = GuessUnicodeEncoding(data);
+				else if (codePage == CodePage.AutoByBOM)
+					codePage = CodePageFromBOM(data);
+
+				switch (codePage)
+				{
+					case CodePage.Base64: return Convert.ToBase64String(data).TrimEnd('=');
+					case CodePage.Hex: return ToHexString(data);
+					default:
+						{
+							var encoding = NEEncodingDictionary[codePage];
+							var result = encoding.encoding.GetString(data);
+							if ((stripBOM) && (encoding.preamble != null) && (result.StartsWith("\ufeff")))
+								result = result.Substring(1);
+							return result;
+						}
+				}
+			}
+			catch { return null; }
+			throw new Exception("Invalid conversion");
+		}
+
 		public static string BytesToString(byte[] data, CodePage codePage, bool stripBOM = false)
 		{
-			if (codePage == CodePage.AutoUnicode)
-				codePage = GuessUnicodeEncoding(data);
-			else if (codePage == CodePage.AutoByBOM)
-				codePage = CodePageFromBOM(data);
-
-			switch (codePage)
-			{
-				case CodePage.Base64: return Convert.ToBase64String(data).TrimEnd('=');
-				case CodePage.Hex: return ToHexString(data);
-				default:
-					{
-						var encoding = NEEncodingDictionary[codePage];
-						var result = encoding.encoding.GetString(data);
-						if ((stripBOM) && (encoding.preamble != null) && (result.StartsWith("\ufeff")))
-							result = result.Substring(1);
-						return result;
-					}
-			}
+			var result = TryBytesToString(data, codePage, stripBOM);
+			if (result == null)
+				throw new Exception("Invalid conversion");
+			return result;
 		}
 
 		static byte[] GetBase64Bytes(string value)
@@ -222,15 +235,23 @@ namespace NeoEdit.Common.Transform
 			if ((codePage == CodePage.Hex) || (codePage == CodePage.Base64))
 				str1 = str1.StripWhitespace();
 
-			var bytes = StringToBytes(str1, codePage);
-			var str2 = BytesToString(bytes, codePage);
+			var bytes = TryStringToBytes(str1, codePage);
+			if (bytes == null)
+				return false;
+			var str2 = TryBytesToString(bytes, codePage);
+			if (str2 == null)
+				return false;
 			return str1 == str2;
 		}
 
 		public static bool CanFullyEncode(byte[] bytes1, CodePage codePage)
 		{
-			var str = StrCoder.BytesToString(bytes1, codePage);
-			var bytes2 = StrCoder.StringToBytes(str, codePage);
+			var str = StrCoder.TryBytesToString(bytes1, codePage);
+			if (str == null)
+				return false;
+			var bytes2 = StrCoder.TryStringToBytes(str, codePage);
+			if (bytes2 == null)
+				return false;
 			if (bytes1.Length != bytes2.Length)
 				return false;
 			for (var ctr = 0; ctr < bytes1.Length; ++ctr)
