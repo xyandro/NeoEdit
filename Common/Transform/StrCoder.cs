@@ -151,7 +151,7 @@ namespace NeoEdit.Common.Transform
 
 				switch (codePage)
 				{
-					case CodePage.Base64: return Convert.ToBase64String(data).TrimEnd('=');
+					case CodePage.Base64: return Convert.ToBase64String(data);
 					case CodePage.Hex: return ToHexString(data);
 					default:
 						{
