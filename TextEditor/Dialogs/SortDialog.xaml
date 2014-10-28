@@ -44,15 +44,17 @@
 				<Grid.RowDefinitions>
 					<RowDefinition/>
 					<RowDefinition/>
+					<RowDefinition/>
 				</Grid.RowDefinitions>
 
 				<RadioButton Grid.Row="0" Grid.Column="0" GroupName="sortType" Content="S_tring" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=String}"/>
-				<RadioButton Grid.Row="0" Grid.Column="1" GroupName="sortType" Content="Str_ing (Raw)" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=StringNonNumeric}"/>
-				<RadioButton Grid.Row="0" Grid.Column="2" GroupName="sortType" Content="_Keys" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Keys}"/>
-				<RadioButton Grid.Row="1" Grid.Column="0" GroupName="sortType" Content="Re_verse" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Reverse}"/>
-				<RadioButton Grid.Row="1" Grid.Column="1" GroupName="sortType" Content="Rando_mize" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Randomize}"/>
-				<RadioButton Grid.Row="1" Grid.Column="2" GroupName="sortType" Content="Le_ngth" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Length}"/>
-
+				<RadioButton Grid.Row="0" Grid.Column="1" GroupName="sortType" Content="Str_ing (Raw)" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=StringRaw}"/>
+				<RadioButton Grid.Row="0" Grid.Column="2" GroupName="sortType" Content="N_umeric" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Numeric}"/>
+				<RadioButton Grid.Row="1" Grid.Column="0" GroupName="sortType" Content="Dat_e/Time" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=DateTime}"/>
+				<RadioButton Grid.Row="1" Grid.Column="1" GroupName="sortType" Content="_Keys" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Keys}"/>
+				<RadioButton Grid.Row="1" Grid.Column="2" GroupName="sortType" Content="Re_verse" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Reverse}"/>
+				<RadioButton Grid.Row="2" Grid.Column="0" GroupName="sortType" Content="Rando_mize" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Randomize}"/>
+				<RadioButton Grid.Row="2" Grid.Column="1" GroupName="sortType" Content="Le_ngth" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Length}"/>
 			</Grid>
 		</GroupBox>
 

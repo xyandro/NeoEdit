@@ -10,7 +10,7 @@ namespace NeoEdit.TextEditor
 	public partial class TextEditor
 	{
 		internal enum SortScope { Selections, Lines, Regions }
-		internal enum SortType { String, StringNonNumeric, Keys, Reverse, Randomize, Length }
+		internal enum SortType { String, StringRaw, Numeric, DateTime, Keys, Reverse, Randomize, Length }
 
 		List<Range> GetSortLines()
 		{
@@ -82,7 +82,9 @@ namespace NeoEdit.TextEditor
 			switch (type)
 			{
 				case SortType.String: entries = OrderByAscDesc(ascending, entries, entry => NumericSort(entry.value)).ToList(); break;
-				case SortType.StringNonNumeric: entries = OrderByAscDesc(ascending, entries, entry => entry.value).ToList(); break;
+				case SortType.StringRaw: entries = OrderByAscDesc(ascending, entries, entry => entry.value).ToList(); break;
+				case SortType.Numeric: entries = OrderByAscDesc(ascending, entries, entry => Double.Parse(entry.value)).ToList(); break;
+				case SortType.DateTime: entries = OrderByAscDesc(ascending, entries, entry => DateTime.Parse(entry.value)).ToList(); break;
 				case SortType.Keys:
 					{
 						var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
