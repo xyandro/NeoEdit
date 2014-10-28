@@ -167,18 +167,9 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVNInfo.h" />
     <CustomBuild Include="SVNInfo.Template.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -nNmq</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -nNmq</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Getting SVN info...</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Getting SVN info...</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Getting SVN info...</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Getting SVN info...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)SVNInfo.h</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)SVNInfo.h</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)SVNInfo.h</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)SVNInfo.h</Outputs>
+      <Command>SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
+      <Message>Getting SVN info...</Message>
+      <Outputs>$(ProjectDir)SVNInfo.h</Outputs>
     </CustomBuild>
     <ClInclude Include="VirtualQueryInfo.h" />
   </ItemGroup>
