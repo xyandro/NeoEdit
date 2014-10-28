@@ -111,8 +111,6 @@ namespace NeoEdit.TextEditor
 			if (Active == null)
 				return;
 
-			var include = (!shiftDown) && (TextEditMenuItem.LastClick == MouseButton.Left);
-
 			switch (command)
 			{
 				case TextEditCommand.File_Save: Active.Command_File_Save(); break;
@@ -159,10 +157,12 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Checksum_MD5: Active.Command_Files_Checksum(Checksum.Type.MD5); break;
 				case TextEditCommand.Files_Checksum_SHA1: Active.Command_Files_Checksum(Checksum.Type.SHA1); break;
 				case TextEditCommand.Files_Checksum_SHA256: Active.Command_Files_Checksum(Checksum.Type.SHA256); break;
-				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(include); break;
+				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(true); break;
+				case TextEditCommand.Files_Select_NonExisting: Active.Command_Files_Select_Existing(false); break;
 				case TextEditCommand.Files_Select_Files: Active.Command_Files_Select_Files(); break;
 				case TextEditCommand.Files_Select_Directories: Active.Command_Files_Select_Directories(); break;
-				case TextEditCommand.Files_Select_Roots: Active.Command_Files_Select_Roots(include); break;
+				case TextEditCommand.Files_Select_Roots: Active.Command_Files_Select_Roots(true); break;
+				case TextEditCommand.Files_Select_NonRoots: Active.Command_Files_Select_Roots(false); break;
 				case TextEditCommand.Files_RenameKeysToSelections: Active.Command_Files_RenameKeysToSelections(); break;
 				case TextEditCommand.Data_Case_Upper: Active.Command_Data_Case_Upper(); break;
 				case TextEditCommand.Data_Case_Lower: Active.Command_Data_Case_Lower(); break;

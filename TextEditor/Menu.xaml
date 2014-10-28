@@ -75,9 +75,11 @@
 		</MenuItem>
 		<MenuItem Header="_Select">
 			<textEditor:TextEditMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
+			<textEditor:TextEditMenuItem Header="_Non-Existing" CommandEnum="Files_Select_NonExisting"/>
 			<textEditor:TextEditMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>
 			<textEditor:TextEditMenuItem Header="_Directories" CommandEnum="Files_Select_Directories"/>
 			<textEditor:TextEditMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
+			<textEditor:TextEditMenuItem Header="N_on-Roots" CommandEnum="Files_Select_NonRoots"/>
 		</MenuItem>
 		<textEditor:TextEditMenuItem Header="_Rename Keys To Selections" CommandEnum="Files_RenameKeysToSelections"/>
 	</MenuItem>
