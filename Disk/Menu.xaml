@@ -6,7 +6,7 @@
 	KeyboardNavigation.TabNavigation="None">
 
 	<MenuItem Header="_File">
-		<disk:DiskMenuItem Header="_New Tab" CommandEnum="File_New"/>
+		<disk:DiskMenuItem Header="_New Tab" CommandEnum="File_NewTab"/>
 		<disk:DiskMenuItem Header="_Close" CommandEnum="File_Close"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="_Rename" CommandEnum="File_Rename"/>

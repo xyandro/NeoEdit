@@ -34,7 +34,7 @@ namespace NeoEdit.Disk
 		{
 			switch (command)
 			{
-				case DiskCommand.File_New: Add(new DiskWindow()); break;
+				case DiskCommand.File_NewTab: Add(new DiskWindow()); break;
 				case DiskCommand.File_Exit: Close(); break;
 				case DiskCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
