@@ -1057,11 +1057,11 @@ namespace NeoEdit.TextEditor
 		internal void Command_Data_EvaluateExpression()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
-			var expression = ExpressionDialog.GetExpression(strs);
-			if (expression == null)
+			var result = ExpressionDialog.GetExpression(strs, false);
+			if (result == null)
 				return;
 
-			strs = strs.Select((str, pos) => expression.Evaluate(str, pos + 1).ToString()).ToList();
+			strs = strs.Select((str, pos) => result.Expression.Evaluate(str, pos + 1).ToString()).ToList();
 			ReplaceSelections(strs);
 		}
 
@@ -1390,32 +1390,32 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 		}
 
-		internal void Command_Select_ExpressionMatches(bool include)
+		internal void Command_Select_ExpressionMatches()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
-			var expression = ExpressionDialog.GetExpression(strs);
-			if (expression != null)
-			{
-				var sels = new List<Range>();
-				for (var ctr = 0; ctr < strs.Count; ++ctr)
-					if ((bool)expression.Evaluate(strs[ctr], ctr + 1) == include)
-						sels.Add(Selections[ctr]);
-				Selections.Replace(sels);
-			}
+			var result = ExpressionDialog.GetExpression(strs, true);
+			if (result == null)
+				return;
+
+			var sels = new List<Range>();
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+				if ((bool)result.Expression.Evaluate(strs[ctr], ctr + 1) == result.IncludeMatches)
+					sels.Add(Selections[ctr]);
+			Selections.Replace(sels);
 		}
 
-		internal void Command_Select_RegExMatches(bool include)
+		internal void Command_Select_RegExMatches()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
-			var expression = ExpressionDialog.GetRegEx(strs);
-			if (expression != null)
-			{
-				var sels = new List<Range>();
-				for (var ctr = 0; ctr < strs.Count; ++ctr)
-					if (expression.IsMatch(strs[ctr]) == include)
-						sels.Add(Selections[ctr]);
-				Selections.Replace(sels);
-			}
+			var result = ExpressionDialog.GetRegEx(strs, true);
+			if (result == null)
+				return;
+
+			var sels = new List<Range>();
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+				if (result.Regex.IsMatch(strs[ctr]) == result.IncludeMatches)
+					sels.Add(Selections[ctr]);
+			Selections.Replace(sels);
 		}
 
 		internal void Command_Select_FirstSelection()

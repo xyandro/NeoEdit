@@ -326,8 +326,8 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_Min_Numeric: Active.Command_Select_Min_Numeric(); break;
 				case TextEditCommand.Select_Max_String: Active.Command_Select_Max_String(); break;
 				case TextEditCommand.Select_Max_Numeric: Active.Command_Select_Max_Numeric(); break;
-				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(include); break;
-				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(include); break;
+				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(); break;
+				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(); break;
 				case TextEditCommand.Select_FirstSelection: Active.Command_Select_FirstSelection(); break;
 				case TextEditCommand.Select_ShowCurrent: Active.Command_Select_ShowCurrent(); break;
 				case TextEditCommand.Select_NextSelection: Active.Command_Select_NextSelection(); break;

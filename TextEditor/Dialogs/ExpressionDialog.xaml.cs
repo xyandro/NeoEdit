@@ -16,6 +16,10 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<ExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool GetIncludeMatches { get { return UIHelper<ExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool IncludeMatches { get { return UIHelper<ExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public string Example1 { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public object Example1Value { get { return UIHelper<ExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionDialog>.SetPropValue(this, value); } }
@@ -62,7 +66,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			UIHelper<ExpressionDialog>.AddCallback(a => a.Expression, (obj, o, n) => obj.EvaluateExamples());
 		}
 
-		ExpressionDialog(List<string> examples, bool isExpression)
+		ExpressionDialog(List<string> examples, bool isExpression, bool getIncludeMatches)
 		{
 			InitializeComponent();
 
@@ -80,6 +84,8 @@ namespace NeoEdit.TextEditor.Dialogs
 			IsExpression = isExpression;
 			Expression = isExpression ? "x" : "^$";
 			expression.CaretIndex = 1;
+			GetIncludeMatches = getIncludeMatches;
+			IncludeMatches = true;
 		}
 
 		void EvaluateExamples()
@@ -135,31 +141,43 @@ namespace NeoEdit.TextEditor.Dialogs
 			UIHelper<ExpressionDialog>.SetValidation(example10Value, TextBox.TextProperty, valid);
 		}
 
-		NeoEdit.Common.Expression expressionResult;
-		Regex regexResult;
+		internal class ExpressionResult
+		{
+			public NeoEdit.Common.Expression Expression { get; set; }
+			public bool IncludeMatches { get; set; }
+		}
+		ExpressionResult expressionResult;
+
+		internal class RegexResult
+		{
+			public Regex Regex { get; set; }
+			public bool IncludeMatches { get; set; }
+		}
+		RegexResult regexResult;
+
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (IsExpression)
-				expressionResult = new NeoEdit.Common.Expression(Expression);
+				expressionResult = new ExpressionResult { Expression = new NeoEdit.Common.Expression(Expression), IncludeMatches = IncludeMatches };
 			else
 			{
 				var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 				if (!MatchCase)
 					options |= RegexOptions.IgnoreCase;
-				regexResult = new Regex(Expression, options);
+				regexResult = new RegexResult { Regex = new Regex(Expression, options), IncludeMatches = IncludeMatches };
 			}
 			DialogResult = true;
 		}
 
-		static public NeoEdit.Common.Expression GetExpression(List<string> examples)
+		static internal ExpressionResult GetExpression(List<string> examples, bool getIncludeMatches)
 		{
-			var dialog = new ExpressionDialog(examples, true);
+			var dialog = new ExpressionDialog(examples, true, getIncludeMatches);
 			return dialog.ShowDialog() == true ? dialog.expressionResult : null;
 		}
 
-		static public Regex GetRegEx(List<string> examples)
+		static internal RegexResult GetRegEx(List<string> examples, bool getIncludeMatches)
 		{
-			var dialog = new ExpressionDialog(examples, false);
+			var dialog = new ExpressionDialog(examples, false, getIncludeMatches);
 			return dialog.ShowDialog() == true ? dialog.regexResult : null;
 		}
 	}
