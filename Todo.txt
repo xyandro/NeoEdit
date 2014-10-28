@@ -27,6 +27,8 @@ Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
 Get directory files/dirs
 Sort by date
+Accept dropped files from explorer
+Find: Autocomplete is annoying; make user select something instead of assuming "ASDF" from "a"
 
 Binary:
 Fix binary editor backwards search

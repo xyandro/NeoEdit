@@ -26,10 +26,10 @@ namespace NeoEdit.GUI.Common
 	{
 		class NECommand : RoutedCommand
 		{
-			public CommandEnumT Command { get; private set; }
-			public string InputGestureText { get; private set; }
+			public readonly CommandEnumT Command;
+			public readonly string InputGestureText;
+			public readonly List<Tuple<KeyGesture, string>> KeyGestures = new List<Tuple<KeyGesture, string>>();
 
-			readonly List<KeyGesture> keyGestures = new List<KeyGesture>();
 			public NECommand(CommandEnumT command)
 			{
 				Command = command;
@@ -37,16 +37,19 @@ namespace NeoEdit.GUI.Common
 				var memberInfo = typeof(CommandEnumT).GetMember(command.ToString()).First();
 				var keyGestureAttrs = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false);
 				foreach (KeyGestureAttribute key in keyGestureAttrs)
-					keyGestures.Add(new KeyGesture(key.Key, key.Modifiers));
-				if (keyGestures.Any())
-					InputGestureText = keyGestures.First().GetDisplayStringForCulture(CultureInfo.CurrentCulture);
+				{
+					var gesture = new KeyGesture(key.Key, key.Modifiers);
+					KeyGestures.Add(new Tuple<KeyGesture, string>(gesture, gesture.GetDisplayStringForCulture(CultureInfo.CurrentCulture)));
+				}
+				if (KeyGestures.Any())
+					InputGestureText = KeyGestures.First().Item2;
 			}
 
 			public void RegisterCommand(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
 			{
 				window.CommandBindings.Add(new CommandBinding(this, (s, e) => handler(s, e, Command)));
-				foreach (var attr in keyGestures)
-					window.InputBindings.Add(new KeyBinding(this, attr));
+				foreach (var attr in KeyGestures)
+					window.InputBindings.Add(new KeyBinding(this, attr.Item1));
 			}
 		}
 
@@ -84,18 +87,16 @@ namespace NeoEdit.GUI.Common
 		}
 
 		static Dictionary<CommandEnumT, NECommand> commands;
-		static void SetupCommands()
+		static public void RegisterCommands(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
 		{
 			if (commands != null)
 				return;
 			commands = new Dictionary<CommandEnumT, NECommand>();
 			foreach (CommandEnumT a in Enum.GetValues(typeof(CommandEnumT)))
 				commands[a] = new NECommand(a);
-		}
-
-		static public void RegisterCommands(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
-		{
-			SetupCommands();
+			var duplicates = commands.Values.SelectMany(command => command.KeyGestures.Select(keyGesture => keyGesture.Item2)).GroupBy(key => key).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
+			if (duplicates.Any())
+				throw new Exception(String.Format("Duplicate hotkeys: {0}", String.Join(", ", duplicates)));
 			foreach (var command in commands.Values)
 				command.RegisterCommand(window, handler);
 		}
