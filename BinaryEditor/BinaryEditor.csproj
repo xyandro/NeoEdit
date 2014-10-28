@@ -53,6 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands.cs" />
+    <Page Include="Dialogs\EncodingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DisplayString.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -65,6 +69,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="Dialogs\EncodingsDialog.xaml.cs">
+      <DependentUpon>EncodingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DisplayString.xaml.cs">
       <DependentUpon>DisplayString.xaml</DependentUpon>
     </Compile>

@@ -7,7 +7,7 @@ using System.Windows.Input;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
-namespace NeoEdit.GUI.Dialogs
+namespace NeoEdit.BinaryEditor
 {
 	partial class EncodingsDialog
 	{
