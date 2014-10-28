@@ -241,26 +241,39 @@ namespace NeoEdit.TextEditor
 		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
 		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
 
-		bool VerifyCanFullyEncode()
+		bool ConfirmVerifyCanFullyEncode()
 		{
-			if (Data.CanFullyEncode(CodePage))
-				return true;
-
-			switch (new Message
+			return new Message
 			{
 				Title = "Confirm",
-				Text = String.Format("The current encoding cannot save all characters in the file.  Switch to UTF8?"),
-				Options = Message.OptionsEnum.YesNoCancel,
+				Text = String.Format("The current encoding cannot fully represent this data.  Continue?"),
+				Options = Message.OptionsEnum.YesNo,
 				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.Cancel,
-			}.Show())
-			{
-				case Message.OptionsEnum.Yes: CodePage = StrCoder.CodePage.UTF8; break;
-				case Message.OptionsEnum.No: break;
-				case Message.OptionsEnum.Cancel: return false;
-			}
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show() == Message.OptionsEnum.Yes;
+		}
 
-			return true;
+		bool VerifyCanFullyEncode()
+		{
+			return (Data.CanFullyEncode(CodePage)) || (ConfirmVerifyCanFullyEncode());
+		}
+
+		bool VerifyCanFullyEncode(List<string> strs, StrCoder.CodePage codePage)
+		{
+			return (strs.All(str => StrCoder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
+		}
+
+		bool VerifyCanFullyEncode(List<byte[]> data, StrCoder.CodePage codePage)
+		{
+			return (data.All(str => StrCoder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
+		}
+
+		StrCoder.CodePage DetectUnicode(List<byte[]> data)
+		{
+			if (data.Count == 0)
+				return StrCoder.CodePage.Default;
+
+			return data.Select(a => StrCoder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
 		}
 
 		internal void Command_File_Save()
@@ -899,9 +912,17 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
-		internal void Command_Data_Binary_ToBinary(StrCoder.CodePage codePage)
+		internal void Command_Data_Binary_ToBinary()
 		{
-			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(StrCoder.StringToBytes(GetString(range), codePage), StrCoder.CodePage.Hex)).ToList());
+			var result = EncodingDialog.Run(CodePage);
+			if (result == null)
+				return;
+
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			if (!VerifyCanFullyEncode(strs, result.CodePage))
+				return;
+
+			ReplaceSelections(strs.Select(str => StrCoder.BytesToString(StrCoder.StringToBytes(str, result.CodePage), StrCoder.CodePage.Hex)).ToList());
 		}
 
 		internal void Command_Data_Binary_ToBinary(Coder.Type coder)
@@ -909,9 +930,17 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(Coder.StringToBytes(GetString(range), coder), StrCoder.CodePage.Hex)).ToList());
 		}
 
-		internal void Command_Data_Binary_FromBinary(StrCoder.CodePage codePage)
+		internal void Command_Data_Binary_FromBinary()
 		{
-			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex), codePage)).ToList());
+			var data = Selections.Select(range => StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex)).ToList();
+			var result = EncodingDialog.Run(DetectUnicode(data));
+			if (result == null)
+				return;
+
+			if (!VerifyCanFullyEncode(data, result.CodePage))
+				return;
+
+			ReplaceSelections(data.Select(bytes => StrCoder.BytesToString(bytes, result.CodePage)).ToList());
 		}
 
 		internal void Command_Data_Binary_FromBinary(Coder.Type coder)
@@ -919,14 +948,30 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Coder.BytesToString(StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex), coder)).ToList());
 		}
 
-		internal void Command_Data_Base64_ToBase64(StrCoder.CodePage codePage)
+		internal void Command_Data_Base64_ToBase64()
 		{
-			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(StrCoder.StringToBytes(GetString(range), codePage), StrCoder.CodePage.Base64)).ToList());
+			var result = EncodingDialog.Run(CodePage);
+			if (result == null)
+				return;
+
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			if (!VerifyCanFullyEncode(strs, result.CodePage))
+				return;
+
+			ReplaceSelections(strs.Select(str => StrCoder.BytesToString(StrCoder.StringToBytes(str, result.CodePage), StrCoder.CodePage.Base64)).ToList());
 		}
 
-		internal void Command_Data_Base64_FromBase64(StrCoder.CodePage codePage)
+		internal void Command_Data_Base64_FromBase64()
 		{
-			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Base64), codePage)).ToList());
+			var data = Selections.Select(range => StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Base64)).ToList();
+			var result = EncodingDialog.Run(DetectUnicode(data));
+			if (result == null)
+				return;
+
+			if (!VerifyCanFullyEncode(data, result.CodePage))
+				return;
+
+			ReplaceSelections(data.Select(bytes => StrCoder.BytesToString(bytes, result.CodePage)).ToList());
 		}
 
 		internal void Command_Data_DateTime_Insert()
@@ -1095,9 +1140,17 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Checksum(Checksum.Type type, StrCoder.CodePage codePage)
+		internal void Command_Data_Checksum(Checksum.Type type)
 		{
-			ReplaceSelections(Selections.Select(range => Checksum.Get(type, StrCoder.StringToBytes(GetString(range), codePage))).ToList());
+			var result = EncodingDialog.Run(CodePage);
+			if (result == null)
+				return;
+
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			if (!VerifyCanFullyEncode(strs, result.CodePage))
+				return;
+
+			ReplaceSelections(strs.Select(str => Checksum.Get(type, StrCoder.StringToBytes(str, result.CodePage))).ToList());
 		}
 
 		internal void Command_Keys_Set(int index)
