@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
@@ -10,21 +11,14 @@ namespace NeoEdit.GUI.Dialogs
 {
 	partial class EncodingsDialog
 	{
-		class CodePageItem : DependencyObject
+		class CodePageItem : CheckBox
 		{
-			[DepProp]
-			public bool IsChecked { get { return UIHelper<CodePageItem>.GetPropValue<bool>(this); } set { UIHelper<CodePageItem>.SetPropValue(this, value); } }
-			[DepProp]
-			public StrCoder.CodePage CodePage { get { return UIHelper<CodePageItem>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<CodePageItem>.SetPropValue(this, value); } }
-			[DepProp]
-			public string Name { get { return UIHelper<CodePageItem>.GetPropValue<string>(this); } set { UIHelper<CodePageItem>.SetPropValue(this, value); } }
-
-			static CodePageItem() { UIHelper<CodePageItem>.Register(); }
+			readonly public StrCoder.CodePage CodePage;
 
 			public CodePageItem(StrCoder.CodePage codePage)
 			{
 				CodePage = codePage;
-				Name = StrCoder.GetDescription(CodePage);
+				Content = StrCoder.GetDescription(CodePage);
 			}
 		}
 
@@ -44,7 +38,7 @@ namespace NeoEdit.GUI.Dialogs
 				if (e.Key == Key.Space)
 				{
 					var selected = codePages.SelectedItems.Cast<CodePageItem>().ToList();
-					var status = !selected.All(item => item.IsChecked);
+					var status = !selected.All(item => item.IsChecked == true);
 					selected.ForEach(item => item.IsChecked = status);
 					e.Handled = true;
 				}
@@ -53,7 +47,7 @@ namespace NeoEdit.GUI.Dialogs
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new HashSet<StrCoder.CodePage>(CodePageItems.Where(item => item.IsChecked).Select(item => item.CodePage));
+			result = new HashSet<StrCoder.CodePage>(CodePageItems.Where(item => item.IsChecked == true).Select(item => item.CodePage));
 			DialogResult = true;
 		}
 

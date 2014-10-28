@@ -14,13 +14,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<ListBox Grid.Row="0" Grid.Column="0" Name="codePages" Width="400" Height="300" ItemsSource="{Binding CodePageItems, ElementName=self}" SelectionMode="Extended">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}"/>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+		<ListBox Grid.Row="0" Grid.Column="0" Name="codePages" Width="400" Height="300" ItemsSource="{Binding CodePageItems, ElementName=self}" SelectionMode="Extended"/>
 
 		<UniformGrid Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Columns="2">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
