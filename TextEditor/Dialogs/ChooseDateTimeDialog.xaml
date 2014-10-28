@@ -14,7 +14,7 @@
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-		
+
 		<Label Grid.Row="0" Grid.Column="0" Content="_Date/time to use:" Target="{Binding ElementName=value}"/>
 		<xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Name="value" Value="{Binding Value, ElementName=self}" Width="300" TextAlignment="Left" Format="Custom" FormatString="O"/>
 

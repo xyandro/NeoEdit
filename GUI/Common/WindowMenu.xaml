@@ -1,7 +1,7 @@
 ﻿<MenuItem x:Class="NeoEdit.GUI.Common.WindowMenu"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common"
 	Header="_Window" Style="{StaticResource {x:Type MenuItem}}">
 
 	<MenuItem.CommandBindings>
@@ -15,7 +15,7 @@
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_TextEditor" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Executed="CommandBinding_Executed"/>
 	</MenuItem.CommandBindings>
-	
+
 	<MenuItem.InputBindings>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Disk" Key="D" Modifiers="Control+Shift"/>
 		<KeyBinding Command="guiCommon:WindowMenu.Command_Window_Processes" Key="P" Modifiers="Control+Shift"/>

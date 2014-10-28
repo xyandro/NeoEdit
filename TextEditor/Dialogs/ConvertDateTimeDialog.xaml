@@ -20,7 +20,7 @@
 			<ColumnDefinition/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
-		
+
 		<Label Grid.Row="0" Grid.Column="0" Content="_Input format:" Target="{Binding ElementName=inputFormat}"/>
 		<ComboBox Grid.Row="0" Grid.Column="1" Name="inputFormat" IsEditable="True" Text="{Binding InputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<Label Grid.Row="0" Grid.Column="2" Content="_UTC" Target="{Binding ElementName=inputUTC}"/>

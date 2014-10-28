@@ -27,7 +27,7 @@
 			SortColumn="{Binding SortColumn, ElementName=self, Mode=TwoWay}"
 			SortAscending="{Binding SortAscending, ElementName=self, Mode=TwoWay}"
 		/>
-		
+
 		<StatusBar Grid.Row="2" Focusable="False">
 			<StatusBarItem>
 				<TextBlock Text="Files"/>
