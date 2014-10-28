@@ -1020,6 +1020,11 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(strs);
 		}
 
+		internal void Command_Data_SingleLine()
+		{
+			ReplaceSelections(Selections.Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
+		}
+
 		internal void Command_Data_ToTable()
 		{
 			var lines = Selections.Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();

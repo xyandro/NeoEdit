@@ -168,6 +168,7 @@
 		<textEditor:TextEditMenuItem Header="_Length" CommandEnum="Data_Length"/>
 		<textEditor:TextEditMenuItem Header="_Width" CommandEnum="Data_Width"/>
 		<textEditor:TextEditMenuItem Header="_Trim" CommandEnum="Data_Trim"/>
+		<textEditor:TextEditMenuItem Header="Single Line" CommandEnum="Data_SingleLine"/>
 		<MenuItem Header="Table">
 			<textEditor:TextEditMenuItem Header="_To Table" CommandEnum="Data_Table_ToTable"/>
 			<textEditor:TextEditMenuItem Header="_From Table" CommandEnum="Data_Table_FromTable"/>

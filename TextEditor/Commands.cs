@@ -110,6 +110,7 @@ namespace NeoEdit.TextEditor
 		Data_Length,
 		Data_Width,
 		Data_Trim,
+		Data_SingleLine,
 		Data_Table_ToTable,
 		Data_Table_FromTable,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Data_EvaluateExpression,

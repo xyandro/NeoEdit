@@ -215,6 +215,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Length: Active.Command_Data_Length(); break;
 				case TextEditCommand.Data_Width: Active.Command_Data_Width(); break;
 				case TextEditCommand.Data_Trim: Active.Command_Data_Trim(); break;
+				case TextEditCommand.Data_SingleLine: Active.Command_Data_SingleLine(); break;
 				case TextEditCommand.Data_Table_ToTable: Active.Command_Data_ToTable(); break;
 				case TextEditCommand.Data_Table_FromTable: Active.Command_Data_FromTable(); break;
 				case TextEditCommand.Data_EvaluateExpression: Active.Command_Data_EvaluateExpression(); break;
