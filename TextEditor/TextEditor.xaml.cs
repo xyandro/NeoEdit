@@ -1020,6 +1020,17 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(strs);
 		}
 
+		internal void Command_Data_Table()
+		{
+			var lines = Selections.Select(range => GetString(range).Split('\t').ToList()).ToList();
+			var numColumns = lines.Max(line => line.Count);
+			foreach (var line in lines)
+				line.AddRange(Enumerable.Range(0, numColumns - line.Count).Select(a => ""));
+			var columnWidths = Enumerable.Range(0, numColumns).Select(column => lines.Max(line => line[column].Length)).ToList();
+			var strs = lines.Select(line => "|" + String.Join("|", Enumerable.Range(0, numColumns).Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + "|").ToList();
+			ReplaceSelections(strs);
+		}
+
 		internal void Command_Data_EvaluateExpression()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();

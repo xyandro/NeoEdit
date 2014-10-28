@@ -168,6 +168,7 @@
 		<textEditor:TextEditMenuItem Header="_Length" CommandEnum="Data_Length"/>
 		<textEditor:TextEditMenuItem Header="_Width" CommandEnum="Data_Width"/>
 		<textEditor:TextEditMenuItem Header="_Trim" CommandEnum="Data_Trim"/>
+		<textEditor:TextEditMenuItem Header="Table" CommandEnum="Data_Table"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="Evaluate _Expression" CommandEnum="Data_EvaluateExpression"/>
 		<textEditor:TextEditMenuItem Header="_Series" CommandEnum="Data_Series"/>
