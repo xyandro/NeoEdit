@@ -23,7 +23,7 @@ namespace NeoEdit.BinaryEditor
 
 		static DisplayValues() { UIHelper<DisplayValues>.Register(); }
 
-		HashSet<StrCoder.CodePage> codePages = new HashSet<StrCoder.CodePage> { StrCoder.CodePage.UTF8, StrCoder.CodePage.UTF16LE, StrCoder.CodePage.Default };
+		HashSet<StrCoder.CodePage> codePages = new HashSet<StrCoder.CodePage> { StrCoder.CodePage.Default, StrCoder.CodePage.UTF8, StrCoder.CodePage.UTF16LE };
 
 		public DisplayValues()
 		{

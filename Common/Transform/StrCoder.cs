@@ -233,7 +233,7 @@ namespace NeoEdit.Common.Transform
 		public static bool CanFullyEncode(string str1, CodePage codePage)
 		{
 			// These two formats will allow whitespace, although you can't save it
-			if ((codePage == CodePage.Hex) || (codePage == CodePage.Base64))
+			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.Base64)))
 				str1 = str1.StripWhitespace();
 
 			var bytes = TryStringToBytes(str1, codePage);
@@ -314,6 +314,11 @@ namespace NeoEdit.Common.Transform
 			if (shortDescription)
 				return NEEncodingDictionary[codePage].shortDescription;
 			return NEEncodingDictionary[codePage].description;
+		}
+
+		public static bool AlwaysCaseSensitive(CodePage codePage)
+		{
+			return (codePage == CodePage.Hex) || (codePage == CodePage.Base64);
 		}
 	}
 }

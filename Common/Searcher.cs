@@ -284,6 +284,8 @@ namespace NeoEdit.Common
 				var newWorking = new List<SearchData>();
 				foreach (var worker in working)
 				{
+					if (worker.findData.CharMap[input[inputPos]] == -1)
+						continue;
 					var newWorker = worker.data[worker.findData.CharMap[input[inputPos]]];
 					if (newWorker == null)
 						continue;
@@ -336,6 +338,8 @@ namespace NeoEdit.Common
 				var newWorking = new List<SearchData>();
 				foreach (var worker in working)
 				{
+					if (worker.findData.CharMap[input[inputPos]] == -1)
+						continue;
 					var newWorker = worker.data[worker.findData.CharMap[input[inputPos]]];
 					if (newWorker == null)
 						continue;
@@ -388,6 +392,8 @@ namespace NeoEdit.Common
 				var newWorking = new List<SearchData>();
 				foreach (var worker in working)
 				{
+					if (worker.findData.CharMap[input[inputPos]] == -1)
+						continue;
 					var newWorker = worker.data[worker.findData.CharMap[input[inputPos]]];
 					if (newWorker == null)
 						continue;

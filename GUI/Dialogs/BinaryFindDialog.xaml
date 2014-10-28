@@ -8,7 +8,7 @@
 	<Window.Resources>
 		<guiDialogs:ValidValueConverter x:Key="ValidConv"/>
 	</Window.Resources>
-	
+
 	<StackPanel Margin="10,5">
 		<StackPanel.Style>
 			<Style>
@@ -27,7 +27,7 @@
 				</Style.Resources>
 			</Style>
 		</StackPanel.Style>
-		
+
 		<Label Content="Search for:"/>
 		<TextBox Name="findText" Margin="0,0,0,10" Text="{Binding FindText, ElementName=self, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
@@ -38,7 +38,6 @@
 			<CheckBox Content="_Integers" IsChecked="{Binding ShowInt, ElementName=self}"/>
 			<CheckBox Content="_Floats" IsChecked="{Binding ShowFloat, ElementName=self}"/>
 			<CheckBox Content="_Strings" IsChecked="{Binding ShowStr, ElementName=self}"/>
-			<CheckBox Content="_Other" IsChecked="{Binding ShowOther, ElementName=self}"/>
 		</StackPanel>
 
 		<GroupBox Header="Integers">
@@ -91,6 +90,7 @@
 				<CheckBox Grid.Row="3" Grid.Column="4" Name="Int64BE" Content="Int64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiCommon:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64BE}"/>
 			</Grid>
 		</GroupBox>
+
 		<GroupBox Header="Floats" Visibility="{Binding ShowFloat, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
 			<Grid>
 				<Grid.ColumnDefinitions>
@@ -108,53 +108,45 @@
 				<CheckBox Grid.Column="2" Name="Double" Content="Double" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Double}"/>
 			</Grid>
 		</GroupBox>
+
 		<GroupBox Header="Strings" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
 			<Grid>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
-					<ColumnDefinition Width="{Binding Width, ElementName=col1}"/>
-					<ColumnDefinition Width="{Binding Width, ElementName=col2}"/>
-					<ColumnDefinition Width="{Binding Width, ElementName=col3}"/>
-					<ColumnDefinition Width="{Binding Width, ElementName=col4}"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
 					<RowDefinition/>
 					<RowDefinition/>
-					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<CheckBox Grid.Row="0" Grid.Column="1" Name="UTF8" Content="UTF8" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF8}"/>
-				<CheckBox Grid.Row="0" Grid.Column="2" Name="Default" Content="Default" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Default}"/>
+				<Label Grid.Row="0" Grid.Column="0" Content="_Encodings:" Target="{Binding ElementName=codePages}"/>
+				<CheckBox Grid.Row="0" Grid.Column="1" Content="Match _Case" IsChecked="{Binding MatchCase, ElementName=self}" HorizontalAlignment="Right"/>
 
-				<CheckBox Grid.Row="1" Grid.Column="1" Name="UTF16LE" Content="UTF16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiCommon:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF16LE}"/>
-				<CheckBox Grid.Row="1" Grid.Column="2" Name="UTF16BE" Content="UTF16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiCommon:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF16BE}"/>
-
-				<CheckBox Grid.Row="2" Grid.Column="1" Name="UTF32LE" Content="UTF32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiCommon:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF32LE}"/>
-				<CheckBox Grid.Row="2" Grid.Column="2" Name="UTF32BE" Content="UTF32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiCommon:ExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UTF32BE}"/>
-
-				<CheckBox Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Name="MatchCase" Content="Match _Case"/>
+				<ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="codePages" ItemsSource="{Binding CodePageItems, ElementName=self}" Height="200" BorderBrush="{x:Null}" SelectionMode="Extended">
+					<ListBox.Style>
+						<Style>
+							<Style.Resources>
+								<Style TargetType="guiDialogs:BinaryFindDialog+CodePageItem">
+									<Setter Property="IsEnabled">
+										<Setter.Value>
+											<MultiBinding Converter="{StaticResource ValidConv}">
+												<Binding Path="FindText" ElementName="self"/>
+												<Binding Path="CodePage"/>
+											</MultiBinding>
+										</Setter.Value>
+									</Setter>
+								</Style>
+							</Style.Resources>
+						</Style>
+					</ListBox.Style>
+				</ListBox>
 			</Grid>
 		</GroupBox>
-		<GroupBox Header="Other" Visibility="{Binding ShowOther, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
-					<ColumnDefinition Width="{Binding Width, ElementName=col1}"/>
-					<ColumnDefinition Width="{Binding Width, ElementName=col2}"/>
-					<ColumnDefinition Width="{Binding Width, ElementName=col3}"/>
-					<ColumnDefinition Width="{Binding Width, ElementName=col4}"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
 
-				<CheckBox Grid.Column="1" Name="Hex" Content="Hex" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Hex}"/>
-				<CheckBox Grid.Column="2" Name="Base64" Content="Base64" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Base64}"/>
-			</Grid>
-		</GroupBox>
-		<UniformGrid Grid.Row="2" HorizontalAlignment="Right">
-			<Button Click="OkClick" IsDefault="True" Content="Ok"/>
-			<Button IsCancel="True" Content="Cancel"/>
+		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Columns="2">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</StackPanel>
 </Window>
