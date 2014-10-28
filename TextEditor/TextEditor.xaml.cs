@@ -143,8 +143,6 @@ namespace NeoEdit.TextEditor
 		internal void OpenFile(string filename, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM)
 		{
 			FileName = filename;
-			if (File.Exists(FileName))
-				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 			var modified = bytes != null;
 			if (bytes == null)
 			{
@@ -158,6 +156,8 @@ namespace NeoEdit.TextEditor
 			Data = new TextData(bytes, codePage);
 			CodePage = codePage;
 			HighlightType = Highlighting.Get(FileName);
+			if (File.Exists(FileName))
+				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
 			// If encoding can't exactly express bytes mark as modified
 			if (!modified)
