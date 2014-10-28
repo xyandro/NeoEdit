@@ -314,7 +314,9 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_All: Active.Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Active.Command_Select_Limit(); break;
 				case TextEditCommand.Select_Lines: Active.Command_Select_Lines(); break;
-				case TextEditCommand.Select_NonEmpty: Active.Command_Select_NonEmpty(include); break;
+				case TextEditCommand.Select_Empty: Active.Command_Select_Empty(true); break;
+				case TextEditCommand.Select_NonEmpty: Active.Command_Select_Empty(false); break;
+				case TextEditCommand.Select_Trim: Active.Command_Select_Trim(); break;
 				case TextEditCommand.Select_Unique: Active.Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Active.Command_Select_Duplicates(); break;
 				case TextEditCommand.Select_Marks: Active.Command_Select_Marks(); break;

@@ -441,5 +441,16 @@ namespace NeoEdit.TextEditor
 			}
 			return result;
 		}
+
+		public void Trim(ref int offset, ref int length)
+		{
+			while ((length > 0) && (Char.IsWhiteSpace(data[offset + length - 1])))
+				--length;
+			while ((length > 0) && (Char.IsWhiteSpace(data[offset])))
+			{
+				++offset;
+				--length;
+			}
+		}
 	}
 }

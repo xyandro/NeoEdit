@@ -307,7 +307,9 @@
 		<textEditor:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
 		<textEditor:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEditor:TextEditMenuItem Header="Lines" CommandEnum="Select_Lines"/>
+		<textEditor:TextEditMenuItem Header="Empty" CommandEnum="Select_Empty"/>
 		<textEditor:TextEditMenuItem Header="Non-Empty" CommandEnum="Select_NonEmpty"/>
+		<textEditor:TextEditMenuItem Header="_Trim" CommandEnum="Select_Trim"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
 		<textEditor:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>

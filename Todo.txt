@@ -30,7 +30,7 @@ Accept dropped files from explorer
 Find: Autocomplete is annoying; make user select something instead of assuming "ASDF" from "a"
 Combine selections to one line
 Translate HTML to table
-Select trim
+Repeat, width, goto line/index, etc. by copied values
 
 Binary:
 Fix binary editor backwards search

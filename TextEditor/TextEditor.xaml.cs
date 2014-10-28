@@ -1314,9 +1314,22 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(sels);
 		}
 
-		internal void Command_Select_NonEmpty(bool include)
+		internal void Command_Select_Empty(bool empty)
 		{
-			Selections.Replace(Selections.Where(range => range.HasSelection() == include).ToList());
+			Selections.Replace(Selections.Where(range => range.HasSelection() != empty).ToList());
+		}
+
+		internal void Command_Select_Trim()
+		{
+			var sels = new ObservableCollection<Range>();
+			foreach (var range in Selections)
+			{
+				var index = range.Start;
+				var length = range.Length;
+				Data.Trim(ref index, ref length);
+				sels.Add(Range.FromIndex(index, length));
+			}
+			Selections.Replace(sels);
 		}
 
 		internal void Command_Select_Unique()
