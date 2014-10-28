@@ -10,7 +10,7 @@ RD /S /Q %BUILDDIR%
 
 svn up --non-interactive
 svn cleanup --non-interactive
-"%DEVENV%" "%SOLUTION%" /clean "%CONFIGURATION%|%PLATFORM%"
+powershell -Command "&{(svn status --no-ignore) -match '^[\?i]' -replace '^.\s+' | rm -recurse -force}
 IF EXIST Build.log DEL Build.log
 "%DEVENV%" "%SOLUTION%" /build "%CONFIGURATION%|%PLATFORM%" /out Build.log
 
