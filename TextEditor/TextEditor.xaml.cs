@@ -1020,14 +1020,32 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Data_Table()
+		internal void Command_Data_ToTable()
 		{
-			var lines = Selections.Select(range => GetString(range).Split('\t').ToList()).ToList();
+			var lines = Selections.Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();
 			var numColumns = lines.Max(line => line.Count);
 			foreach (var line in lines)
 				line.AddRange(Enumerable.Range(0, numColumns - line.Count).Select(a => ""));
 			var columnWidths = Enumerable.Range(0, numColumns).Select(column => lines.Max(line => line[column].Length)).ToList();
-			var strs = lines.Select(line => "|" + String.Join("|", Enumerable.Range(0, numColumns).Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + "|").ToList();
+			var columns = Enumerable.Range(0, numColumns).Where(column => columnWidths[column] != 0).ToList();
+			var strs = lines.Select(line => "|" + String.Join("|", columns.Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + "|").ToList();
+			ReplaceSelections(strs);
+		}
+
+		internal void Command_Data_FromTable()
+		{
+			var lines = Selections.Select(range => GetString(range).Split('|').Select(str => str.Trim()).ToList()).ToList();
+
+			// Strip leading tabs if all lines have them
+			while (lines.All(line => (line.Count != 0) && (line[0].Length == 0)))
+				lines.ForEach(line => line.RemoveAt(0));
+
+			// Strip trailing tabs from each line
+			foreach (var line in lines)
+				while ((line.Count != 0) && (String.IsNullOrEmpty(line[line.Count - 1])))
+					line.RemoveAt(line.Count - 1);
+
+			var strs = lines.Select(line => String.Join("\t", line)).ToList();
 			ReplaceSelections(strs);
 		}
 
