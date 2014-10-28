@@ -47,7 +47,7 @@ namespace NeoEdit.TextEditor
 			return StrCoder.CanFullyEncode(data, codePage);
 		}
 
-		public byte[] GetBytes(StrCoder.CodePage codePage = StrCoder.CodePage.UTF8)
+		public byte[] GetBytes(StrCoder.CodePage codePage)
 		{
 			return StrCoder.StringToBytes(data, codePage, true);
 		}
