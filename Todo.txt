@@ -25,6 +25,7 @@ Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
 Get directory files/dirs
+Sort by date
 
 Binary:
 Fix binary editor backwards search
