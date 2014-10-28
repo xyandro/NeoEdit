@@ -29,6 +29,9 @@ Get directory files/dirs
 Sort by date
 Accept dropped files from explorer
 Find: Autocomplete is annoying; make user select something instead of assuming "ASDF" from "a"
+Combine selections to one line
+Translate HTML to table
+Select trim
 
 Binary:
 Fix binary editor backwards search

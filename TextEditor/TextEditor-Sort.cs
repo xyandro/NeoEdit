@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.TextEditor.Dialogs;
 
 namespace NeoEdit.TextEditor
 {
 	public partial class TextEditor
 	{
 		internal enum SortScope { Selections, Lines, Regions }
-		internal enum SortType { String, Numeric, Keys, Reverse, Randomize, Length }
+		internal enum SortType { String, StringNonNumeric, Keys, Reverse, Randomize, Length }
 
 		List<Range> GetSortLines()
 		{
@@ -80,8 +81,8 @@ namespace NeoEdit.TextEditor
 			var entries = Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
 			switch (type)
 			{
-				case SortType.String: entries = OrderByAscDesc(ascending, entries, entry => entry.value).ToList(); break;
-				case SortType.Numeric: entries = OrderByAscDesc(ascending, entries, entry => NumericSort(entry.value)).ToList(); break;
+				case SortType.String: entries = OrderByAscDesc(ascending, entries, entry => NumericSort(entry.value)).ToList(); break;
+				case SortType.StringNonNumeric: entries = OrderByAscDesc(ascending, entries, entry => entry.value).ToList(); break;
 				case SortType.Keys:
 					{
 						var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
@@ -101,10 +102,14 @@ namespace NeoEdit.TextEditor
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		internal void Command_Sort(SortScope scope, SortType type, bool ascending)
+		internal void Command_Data_Sort()
 		{
-			var regions = GetRegions(scope);
-			var ordering = GetOrdering(type, ascending);
+			var result = SortDialog.Run();
+			if (result == null)
+				return;
+
+			var regions = GetRegions(result.SortScope);
+			var ordering = GetOrdering(result.SortType, result.Ascending);
 			if (regions.Count != ordering.Count)
 				throw new Exception("Ordering misaligned");
 
@@ -132,7 +137,7 @@ namespace NeoEdit.TextEditor
 			newSelections = ordering.Select(num => newSelections[num]).ToList();
 
 			Selections.Replace(newSelections);
-			if (scope == SortScope.Regions)
+			if (result.SortScope == SortScope.Regions)
 				Marks.Replace(newRegions);
 		}
 	}

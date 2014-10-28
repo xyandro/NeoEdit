@@ -213,30 +213,8 @@
 			<textEditor:TextEditMenuItem Header="SHA_1" CommandEnum="Data_Checksum_SHA1"/>
 			<textEditor:TextEditMenuItem Header="SHA_256" CommandEnum="Data_Checksum_SHA256"/>
 		</MenuItem>
-	</MenuItem>
-	<MenuItem Header="S_ort">
-		<textEditor:TextEditMenuItem Header="_String" CommandEnum="Sort_String"/>
-		<textEditor:TextEditMenuItem Header="_Numeric" CommandEnum="Sort_Numeric"/>
-		<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Sort_Keys"/>
-		<textEditor:TextEditMenuItem Header="R_everse" CommandEnum="Sort_Reverse"/>
-		<textEditor:TextEditMenuItem Header="R_andomize" CommandEnum="Sort_Randomize"/>
-		<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_SortByLength"/>
-		<MenuItem Header="_Lines">
-			<textEditor:TextEditMenuItem Header="_String" CommandEnum="Sort_Lines_String"/>
-			<textEditor:TextEditMenuItem Header="_Numeric" CommandEnum="Sort_Lines_Numeric"/>
-			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Sort_Lines_Keys"/>
-			<textEditor:TextEditMenuItem Header="R_everse" CommandEnum="Sort_Lines_Reverse"/>
-			<textEditor:TextEditMenuItem Header="R_andomize" CommandEnum="Sort_Lines_Randomize"/>
-			<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_Lines_SortByLength"/>
-		</MenuItem>
-		<MenuItem Header="_Regions">
-			<textEditor:TextEditMenuItem Header="_String" CommandEnum="Sort_Regions_String"/>
-			<textEditor:TextEditMenuItem Header="_Numeric" CommandEnum="Sort_Regions_Numeric"/>
-			<textEditor:TextEditMenuItem Header="_Keys" CommandEnum="Sort_Regions_Keys"/>
-			<textEditor:TextEditMenuItem Header="R_everse" CommandEnum="Sort_Regions_Reverse"/>
-			<textEditor:TextEditMenuItem Header="R_andomize" CommandEnum="Sort_Regions_Randomize"/>
-			<textEditor:TextEditMenuItem Header="Sort By Len_gth" CommandEnum="Sort_Regions_SortByLength"/>
-		</MenuItem>
+		<Separator/>
+		<textEditor:TextEditMenuItem Header="Sort" CommandEnum="Data_Sort"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">
