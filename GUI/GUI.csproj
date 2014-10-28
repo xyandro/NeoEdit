@@ -72,6 +72,12 @@
     <Compile Include="Dialogs\BinaryFindDialog.xaml.cs">
       <DependentUpon>BinaryFindDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\EncodingsDialog.xaml.cs">
+      <DependentUpon>EncodingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\EncodingDialog.xaml.cs">
+      <DependentUpon>EncodingDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
@@ -96,6 +102,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\BinaryFindDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\EncodingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\EncodingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

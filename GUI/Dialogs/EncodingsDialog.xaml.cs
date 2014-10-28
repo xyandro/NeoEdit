@@ -6,9 +6,9 @@ using System.Windows.Input;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
-namespace NeoEdit.BinaryEditor.Dialogs
+namespace NeoEdit.GUI.Dialogs
 {
-	internal partial class ChooseEncodingsDialog
+	partial class EncodingsDialog
 	{
 		class CodePageItem : DependencyObject
 		{
@@ -29,13 +29,13 @@ namespace NeoEdit.BinaryEditor.Dialogs
 		}
 
 		[DepProp]
-		ObservableCollection<CodePageItem> CodePageItems { get { return UIHelper<ChooseEncodingsDialog>.GetPropValue<ObservableCollection<CodePageItem>>(this); } set { UIHelper<ChooseEncodingsDialog>.SetPropValue(this, value); } }
+		ObservableCollection<CodePageItem> CodePageItems { get { return UIHelper<EncodingsDialog>.GetPropValue<ObservableCollection<CodePageItem>>(this); } set { UIHelper<EncodingsDialog>.SetPropValue(this, value); } }
 
-		static ChooseEncodingsDialog() { UIHelper<ChooseEncodingsDialog>.Register(); }
+		static EncodingsDialog() { UIHelper<EncodingsDialog>.Register(); }
 
 		HashSet<StrCoder.CodePage> result;
 
-		ChooseEncodingsDialog(HashSet<StrCoder.CodePage> CodePages)
+		EncodingsDialog(HashSet<StrCoder.CodePage> CodePages)
 		{
 			InitializeComponent();
 			CodePageItems = new ObservableCollection<CodePageItem>(StrCoder.GetCodePages().Select(codePage => new CodePageItem(codePage) { IsChecked = CodePages.Contains(codePage) }));
@@ -59,7 +59,7 @@ namespace NeoEdit.BinaryEditor.Dialogs
 
 		public static HashSet<StrCoder.CodePage> Run(HashSet<StrCoder.CodePage> codePages)
 		{
-			var dialog = new ChooseEncodingsDialog(codePages);
+			var dialog = new EncodingsDialog(codePages);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 

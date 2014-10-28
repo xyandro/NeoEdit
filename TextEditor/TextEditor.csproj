@@ -57,9 +57,6 @@
     <Compile Include="Menu.xaml.cs">
       <DependentUpon>Menu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\EncodingDialog.xaml.cs">
-      <DependentUpon>EncodingDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UndoRedo.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Commands.cs" />
@@ -105,10 +102,6 @@
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
     <Compile Include="UnitTest\TextDataTest.cs" />
-    <Page Include="Dialogs\EncodingDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Menu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

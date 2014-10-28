@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
-using NeoEdit.BinaryEditor.Dialogs;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.BinaryEditor
 {
@@ -35,7 +35,7 @@ namespace NeoEdit.BinaryEditor
 
 		void ChooseEncodings(object sender, System.Windows.RoutedEventArgs e)
 		{
-			var result = ChooseEncodingsDialog.Run(codePages);
+			var result = EncodingsDialog.Run(codePages);
 			if (result == null)
 				return;
 			ShowStr = true;

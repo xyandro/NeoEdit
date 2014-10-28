@@ -380,13 +380,13 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_File_Encoding()
 		{
-			var result = EncodingDialog.Run(CodePage, LineEnding);
+			var result = EncodingDialog.Run(CodePage, lineEndings: LineEnding ?? "");
 			if (result == null)
 				return;
 
 			CodePage = result.CodePage;
 
-			if (result.LineEndings != null)
+			if (result.LineEndings != "")
 			{
 				var lines = Data.NumLines;
 				var sel = new List<Range>();

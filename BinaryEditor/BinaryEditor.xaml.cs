@@ -622,10 +622,10 @@ namespace NeoEdit.BinaryEditor
 
 		internal void Command_File_Encoding()
 		{
-			var codePage = EncodingDialog.Run(CodePage, Data.CodePageFromBOM());
-			if (!codePage.HasValue)
+			var result = EncodingDialog.Run(CodePage, Data.CodePageFromBOM());
+			if (result == null)
 				return;
-			CodePage = codePage.Value;
+			CodePage = result.CodePage;
 		}
 
 		internal bool Command_File_TextEditor()
