@@ -10,6 +10,7 @@ Expression should be able to key off full path
 Select by SVN ignore
 Move timestamp (possibly others) from TextEditor
 Select readable
+Search by text (regex)
 
 Text:
 Bookmarks
