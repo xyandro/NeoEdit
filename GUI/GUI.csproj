@@ -69,6 +69,9 @@
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\ExpressionConverter.cs" />
+    <Compile Include="Common\AutoCompleteTextBox.xaml.cs">
+      <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\BinaryFindDialog.xaml.cs">
       <DependentUpon>BinaryFindDialog.xaml</DependentUpon>
     </Compile>
@@ -95,6 +98,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\WindowMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\AutoCompleteTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -61,9 +61,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			Loaded += (s, e) =>
 			{
 				if ((Text == null) && (History.Count != 0))
-					findText.SelectedIndex = 0;
-				var textbox = findText.Template.FindName("PART_EditableTextBox", findText) as TextBox;
-				textbox.AcceptsTab = true;
+					Text = History[0];
 			};
 
 		}
