@@ -9,6 +9,7 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
 			<ColumnDefinition Width="150"/>
+			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition/>
@@ -19,19 +20,20 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Set _width to:" Target="{Binding ElementName=length}"/>
-		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="length" Value="{Binding Length, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}"/>
+		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="length" Value="{Binding Length, ElementName=self}" Minimum="{Binding MinValue, ElementName=self}" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==false'}"/>
+		<CheckBox Grid.Row="0" Grid.Column="2" Content="C_lipboard Value" IsChecked="{Binding ClipboardValue, ElementName=self}" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Location:"/>
-		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
 			<RadioButton GroupName="location" Content="_Before  " IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Before}"/>
 			<RadioButton GroupName="location" Content="_After  " IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=After}"/>
 			<RadioButton GroupName="location" Content="B_oth" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Both}"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Columns="2">
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Columns="2">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

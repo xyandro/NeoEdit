@@ -8,34 +8,38 @@ namespace NeoEdit.TextEditor.Dialogs
 		internal class Result
 		{
 			public int RepeatCount { get; set; }
-			public bool SelectAll { get; set; }
+			public bool ClipboardValue { get; set; }
+			public bool SelectRepetitions { get; set; }
 		}
 
 		[DepProp]
 		public int RepeatCount { get { return UIHelper<RepeatDialog>.GetPropValue<int>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool SelectAll { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
+		public bool ClipboardValue { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool SelectRepetitions { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 
 		static RepeatDialog() { UIHelper<RepeatDialog>.Register(); }
 
-		RepeatDialog(bool selectAll)
+		RepeatDialog(bool selectRepetitions)
 		{
 			InitializeComponent();
 
 			RepeatCount = 1;
-			SelectAll = selectAll;
+			ClipboardValue = false;
+			SelectRepetitions = selectRepetitions;
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { RepeatCount = RepeatCount, SelectAll = SelectAll };
+			result = new Result { RepeatCount = RepeatCount, ClipboardValue = ClipboardValue, SelectRepetitions = SelectRepetitions };
 			DialogResult = true;
 		}
 
-		static public Result Run(bool selectAll)
+		static public Result Run(bool selectRepetitions)
 		{
-			var dialog = new RepeatDialog(selectAll);
+			var dialog = new RepeatDialog(selectRepetitions);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}

@@ -527,24 +527,38 @@ namespace NeoEdit.TextEditor
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
-		internal void Command_Edit_GotoLine()
+		internal void Command_Edit_Goto(bool isLine)
 		{
 			var selecting = shiftDown;
-			var line = Data.GetOffsetLine(Selections.First().Start);
-			var newLine = GotoLineDialog.Run(Data.NumLines, line);
-			if (newLine.HasValue)
-				Selections.Replace(Selections.Select(range => MoveCursor(range, newLine.Value, 0, false, true, selecting)).ToList());
-		}
+			var lines = Selections.Select(range => Data.GetOffsetLine(range.Start)).ToList();
+			var indexes = Selections.Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
+			var line = lines.Any() ? lines.First() + 1 : 1;
+			var index = indexes.Any() ? indexes.First() + 1 : 1;
 
-		internal void Command_Edit_GotoColumn()
-		{
-			var selecting = shiftDown;
-			var offset = Selections.First().Start;
-			var line = Data.GetOffsetLine(offset);
-			var index = Data.GetOffsetIndex(offset, line);
-			var newIndex = GotoIndexDialog.Run(Data.GetLineLength(line) + 1, index);
-			if (newIndex.HasValue)
-				Selections.Replace(Selections.Select(range => MoveCursor(range, 0, newIndex.Value, true, false, selecting)).ToList());
+			var result = GotoDialog.Run(isLine, isLine ? line : index);
+			if (result == null)
+				return;
+
+			List<int> offsets;
+			if (result.ClipboardValue)
+			{
+				var clipboardStrings = ClipboardWindow.GetStrings().ToList();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+				offsets = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
+			}
+			else
+				offsets = Selections.Select(range => result.Value).ToList();
+
+			if (result.Relative)
+			{
+				var list = isLine ? lines : indexes;
+				offsets = offsets.Select((ofs, ctr) => ofs + list[ctr]).ToList();
+			}
+			else
+				offsets = offsets.Select(ofs => ofs - 1).ToList();
+
+			Selections.Replace(Selections.Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], !isLine, isLine, selecting)).ToList());
 		}
 
 		internal void Command_Files_CutCopy(bool isCut)
@@ -1007,7 +1021,19 @@ namespace NeoEdit.TextEditor
 			var result = WidthDialog.Run(minWidth, numeric ? '0' : ' ', numeric);
 			if (result == null)
 				return;
-			ReplaceSelections(Selections.Select(range => SetWidth(GetString(range), result)).ToList());
+
+			List<int> lengths;
+			if (result.ClipboardValue)
+			{
+				var clipboardStrings = ClipboardWindow.GetStrings().ToList();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+				lengths = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
+			}
+			else
+				lengths = Enumerable.Range(0, Selections.Count).Select(num => result.Length).ToList();
+
+			ReplaceSelections(Selections.Select((range, index) => SetWidth(GetString(range), lengths[index], result.Location, result.PadChar)).ToList());
 		}
 
 		internal void Command_Data_Trim()
@@ -1116,17 +1142,29 @@ namespace NeoEdit.TextEditor
 			if (repeat == null)
 				return;
 
-			ReplaceSelections(Selections.Select(range => RepeatString(GetString(range), repeat.RepeatCount)).ToList());
-			if (repeat.SelectAll)
+			List<int> repeatCounts;
+			if (repeat.ClipboardValue)
 			{
-				var newSelections = new List<Range>();
-				foreach (var selection in Selections)
+				var clipboardStrings = ClipboardWindow.GetStrings().ToList();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+				repeatCounts = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
+			}
+			else
+				repeatCounts = Enumerable.Range(0, Selections.Count).Select(range => repeat.RepeatCount).ToList();
+			ReplaceSelections(Selections.Select((range, index) => RepeatString(GetString(range), repeatCounts[index])).ToList());
+			if (repeat.SelectRepetitions)
+			{
+				var sels = new List<Range>();
+				for (var ctr = 0; ctr < Selections.Count; ++ctr)
 				{
-					var len = selection.Length / repeat.RepeatCount;
+					var selection = Selections[ctr];
+					var repeatCount = repeatCounts[ctr];
+					var len = selection.Length / repeatCount;
 					for (var index = selection.Start; index < selection.End; index += len)
-						newSelections.Add(new Range(index + len, index));
+						sels.Add(new Range(index + len, index));
 				}
-				Selections.Replace(newSelections);
+				Selections.Replace(sels);
 			}
 		}
 
@@ -2172,14 +2210,16 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		string SetWidth(string str, WidthDialog.Result result)
+		string SetWidth(string str, int length, WidthDialog.PadLocation location, char padChar)
 		{
-			var len = result.Length - str.Length;
-			switch (result.Location)
+			if (str.Length >= length)
+				return str;
+			var len = length - str.Length;
+			switch (location)
 			{
-				case WidthDialog.PadLocation.Before: return new string(result.PadChar, len) + str;
-				case WidthDialog.PadLocation.After: return str + new string(result.PadChar, len);
-				case WidthDialog.PadLocation.Both: return new string(result.PadChar, (len + 1) / 2) + str + new string(result.PadChar, len / 2);
+				case WidthDialog.PadLocation.Before: return new string(padChar, len) + str;
+				case WidthDialog.PadLocation.After: return str + new string(padChar, len);
+				case WidthDialog.PadLocation.Both: return new string(padChar, (len + 1) / 2) + str + new string(padChar, len / 2);
 				default: throw new ArgumentException("Invalid");
 			}
 		}

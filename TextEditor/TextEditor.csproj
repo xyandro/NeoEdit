@@ -75,11 +75,8 @@
     <Compile Include="Dialogs\RandomNumberDialog.xaml.cs">
       <DependentUpon>RandomNumberDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\GotoIndexDialog.xaml.cs">
-      <DependentUpon>GotoIndexDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\GotoLineDialog.xaml.cs">
-      <DependentUpon>GotoLineDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\GotoDialog.xaml.cs">
+      <DependentUpon>GotoDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\LimitDialog.xaml.cs">
       <DependentUpon>LimitDialog.xaml</DependentUpon>
@@ -129,11 +126,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\GotoIndexDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\GotoLineDialog.xaml">
+    <Page Include="Dialogs\GotoDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

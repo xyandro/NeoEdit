@@ -15,12 +15,15 @@ namespace NeoEdit.TextEditor.Dialogs
 		internal class Result
 		{
 			public int Length { get; set; }
+			public bool ClipboardValue { get; set; }
 			public char PadChar { get; set; }
 			public PadLocation Location { get; set; }
 		}
 
 		[DepProp]
 		public int Length { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool ClipboardValue { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public int MinValue { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -37,6 +40,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			this.padChar.GotFocus += (s, e) => this.padChar.SelectAll();
 
 			Length = MinValue = minValue;
+			ClipboardValue = false;
 			PadChar = new string(padChar, 1);
 			Location = before ? PadLocation.Before : PadLocation.After;
 		}
@@ -46,7 +50,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			if (PadChar.Length != 1)
 				return;
-			result = new Result { Length = Length, PadChar = PadChar[0], Location = Location };
+			result = new Result { Length = Length, ClipboardValue = ClipboardValue, PadChar = PadChar[0], Location = Location };
 			DialogResult = true;
 		}
 

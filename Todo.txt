@@ -19,7 +19,6 @@ Text edit multiple files
 Comment/uncomment C#/C++/XML/etc. (ANTLR?)
 Format JSON/XML
 HTML/XML: Match closing tag
-Relative goto line/index should work for all selections
 Ctrl+M should move to "current" selection
 Show number of items on clipboard on status bar
 Continue after error deleting files (perhaps with dialog Yes/No/All)
@@ -29,7 +28,6 @@ Get directory files/dirs
 Accept dropped files from explorer
 Find: Autocomplete is annoying; make user select something instead of assuming "ASDF" from "a"
 Translate HTML to table
-Repeat, width, goto line/index, etc. by copied values
 Functions that change selections should leave them selected if shift is down
 
 Binary:

@@ -132,8 +132,8 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Edit_Find: Active.Command_Edit_Find(); break;
 				case TextEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true); break;
 				case TextEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false); break;
-				case TextEditCommand.Edit_GotoLine: Active.Command_Edit_GotoLine(); break;
-				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_GotoColumn(); break;
+				case TextEditCommand.Edit_GotoLine: Active.Command_Edit_Goto(true); break;
+				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_Goto(false); break;
 				case TextEditCommand.Files_Copy: Active.Command_Files_CutCopy(false); break;
 				case TextEditCommand.Files_Cut: Active.Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Open: Active.Command_Files_Open(); break;
