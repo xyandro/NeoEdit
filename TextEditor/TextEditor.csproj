@@ -69,8 +69,8 @@
     <Compile Include="Dialogs\ConvertDateTimeDialog.xaml.cs">
       <DependentUpon>ConvertDateTimeDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ExpressionDialog.xaml.cs">
-      <DependentUpon>ExpressionDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\GetExpressionDialog.xaml.cs">
+      <DependentUpon>GetExpressionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\RandomNumberDialog.xaml.cs">
       <DependentUpon>RandomNumberDialog.xaml</DependentUpon>
@@ -90,8 +90,8 @@
     <Compile Include="Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\FindDialog.xaml.cs">
-      <DependentUpon>FindDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\GetRegExDialog.xaml.cs">
+      <DependentUpon>GetRegExDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Highlighting.cs" />
     <Compile Include="TextEditor.xaml.cs">
@@ -118,7 +118,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\ExpressionDialog.xaml">
+    <Page Include="Dialogs\GetExpressionDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -142,7 +142,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\FindDialog.xaml">
+    <Page Include="Dialogs\GetRegExDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

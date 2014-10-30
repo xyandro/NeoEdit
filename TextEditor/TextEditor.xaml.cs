@@ -504,11 +504,11 @@ namespace NeoEdit.TextEditor
 				}
 			}
 
-			var findResult = FindDialog.Run(text, selectionOnly);
+			var findResult = GetRegExDialog.Run(GetRegExDialog.GetRegExDialogType.Find, text, selectionOnly);
 			if (findResult != null)
 			{
 				RunSearch(findResult);
-				if (findResult.SelectAll)
+				if (findResult.ResultType == GetRegExDialog.GetRegExResultType.All)
 				{
 					if (Searches.Count != 0)
 						Selections.Replace(Searches);
@@ -1083,7 +1083,7 @@ namespace NeoEdit.TextEditor
 		internal void Command_Data_EvaluateExpression()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
-			var result = ExpressionDialog.GetExpression(strs, false);
+			var result = GetExpressionDialog.Run(strs, false);
 			if (result == null)
 				return;
 
@@ -1431,7 +1431,7 @@ namespace NeoEdit.TextEditor
 		internal void Command_Select_ExpressionMatches()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
-			var result = ExpressionDialog.GetExpression(strs, true);
+			var result = GetExpressionDialog.Run(strs, true);
 			if (result == null)
 				return;
 
@@ -1444,15 +1444,14 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Select_RegExMatches()
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			var result = ExpressionDialog.GetRegEx(strs, true);
+			var result = GetRegExDialog.Run(GetRegExDialog.GetRegExDialogType.MatchSelections);
 			if (result == null)
 				return;
 
 			var sels = new List<Range>();
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
-				if (result.Regex.IsMatch(strs[ctr]) == result.IncludeMatches)
-					sels.Add(Selections[ctr]);
+			foreach (var selection in Selections)
+				if (result.Regex.IsMatch(GetString(selection)) == result.IncludeMatches)
+					sels.Add(selection);
 			Selections.Replace(sels);
 		}
 
@@ -2093,7 +2092,7 @@ namespace NeoEdit.TextEditor
 			e.Handled = true;
 		}
 
-		void RunSearch(FindDialog.Result result)
+		void RunSearch(GetRegExDialog.Result result)
 		{
 			if ((result == null) || (result.Regex == null))
 				return;

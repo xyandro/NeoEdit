@@ -27,6 +27,13 @@ Files: Select/etc on svn status (ignore/modified)
 Get directory files/dirs
 Accept dropped files from explorer
 Translate HTML to table
+Select max/min length
+Expression: c=clipboard, k=keys, v1=values, etc
+Sort dialog truncated
+Distinct operations by marked region (sort/series/etc within region)
+Numeric sort should be "n" accel
+RegEx substitution
+Change all uniform grid to Rows=1 instead of Columns=x
 
 Binary:
 Fix binary editor backwards search
