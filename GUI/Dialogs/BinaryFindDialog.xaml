@@ -144,7 +144,7 @@
 			</Grid>
 		</GroupBox>
 
-		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Columns="2">
+		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

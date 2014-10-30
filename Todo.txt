@@ -33,7 +33,6 @@ Sort dialog truncated
 Distinct operations by marked region (sort/series/etc within region)
 Numeric sort should be "n" accel
 RegEx substitution
-Change all uniform grid to Rows=1 instead of Columns=x
 
 Binary:
 Fix binary editor backwards search

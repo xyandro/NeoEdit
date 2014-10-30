@@ -83,7 +83,7 @@
 		<Label Grid.Row="12" Grid.Column="2" Content="->"/>
 		<TextBox Grid.Row="12" Grid.Column="3" Name="example10Value" Text="{Binding Example10Value, ElementName=self}" IsEnabled="False"/>
 
-		<UniformGrid Grid.Row="14" Grid.ColumnSpan="4" HorizontalAlignment="Right" Columns="2">
+		<UniformGrid Grid.Row="14" Grid.ColumnSpan="4" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

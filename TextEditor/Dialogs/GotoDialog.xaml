@@ -25,7 +25,7 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="_Relative" Target="{Binding ElementName=relative}" HorizontalAlignment="Right"/>
 		<CheckBox Grid.Row="1" Grid.Column="1" Name="relative" IsChecked="{Binding Relative, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 
-		<UniformGrid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" Columns="2">
+		<UniformGrid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

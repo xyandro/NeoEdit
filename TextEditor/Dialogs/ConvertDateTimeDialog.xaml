@@ -39,7 +39,7 @@
 		<Label Grid.Row="5" Grid.Column="0" Content="Result:"/>
 		<TextBox Grid.Row="5" Grid.Column="1" Text="{Binding OutputExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
 
-		<UniformGrid Grid.Row="7" Grid.ColumnSpan="4" HorizontalAlignment="Right" Columns="2">
+		<UniformGrid Grid.Row="7" Grid.ColumnSpan="4" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

@@ -18,7 +18,7 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="_Date/time to use:" Target="{Binding ElementName=value}"/>
 		<xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Name="value" Value="{Binding Value, ElementName=self}" Width="300" TextAlignment="Left" Format="Custom" FormatString="O"/>
 
-		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Columns="2">
+		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

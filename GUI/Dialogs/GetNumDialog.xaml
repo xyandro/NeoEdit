@@ -24,7 +24,7 @@
 		<Label Content="{Binding Text, ElementName=self, TargetNullValue=Number:}"/>
 		<TextBox Name="value" Width="300" Text="{Binding Value, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<UniformGrid HorizontalAlignment="Right" Columns="2">
+		<UniformGrid HorizontalAlignment="Right" Rows="1">
 			<Button Name="okClick" IsDefault="True" Content="Ok"/>
 			<Button IsCancel="True" Content="Cancel"/>
 		</UniformGrid>
