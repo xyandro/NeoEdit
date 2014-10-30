@@ -22,7 +22,7 @@
 		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="repeatCount" Value="{Binding RepeatCount, ElementName=self}" Minimum="1" VerticalAlignment="Center" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==false'}"/>
 		<CheckBox Grid.Row="0" Grid.Column="2" Content="C_lipboard Value" IsChecked="{Binding ClipboardValue, ElementName=self}" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Select _repetitions:" Target="{Binding ElementName=selectRepetitions}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Select repetitions:" Target="{Binding ElementName=selectRepetitions}" HorizontalAlignment="Right"/>
 		<CheckBox Grid.Row="1" Grid.Column="1" Name="selectRepetitions" IsChecked="{Binding SelectRepetitions, ElementName=self}" VerticalAlignment="Center"/>
 
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" Columns="2">
