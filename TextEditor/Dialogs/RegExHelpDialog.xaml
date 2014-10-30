@@ -62,20 +62,20 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Column="0" Grid.Row="0" Content="^" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="0" Content="Beginning of line/selection"/>
-				<Label Grid.Column="0" Grid.Row="1" Content="$" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="1" Content="Ending of line/selection"/>
-				<Label Grid.Column="0" Grid.Row="2" Content="\G" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="2" Content="End of last match"/>
-				<Label Grid.Column="2" Grid.Row="0" Content="\A" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="0" Content="Beginning of selection"/>
-				<Label Grid.Column="2" Grid.Row="1" Content="\Z" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="1" Content="End of selection"/>
-				<Label Grid.Column="4" Grid.Row="0" Content="\b" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="0" Content="Word boundary"/>
-				<Label Grid.Column="4" Grid.Row="1" Content="\B" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="1" Content="Non-word boundary"/>
+				<TextBlock Grid.Column="0" Grid.Row="0" Text="^" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="0" Text="Beginning of line/selection"/>
+				<TextBlock Grid.Column="0" Grid.Row="1" Text="$" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="1" Text="Ending of line/selection"/>
+				<TextBlock Grid.Column="0" Grid.Row="2" Text="\G" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="2" Text="End of last match"/>
+				<TextBlock Grid.Column="2" Grid.Row="0" Text="\A" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="0" Text="Beginning of selection"/>
+				<TextBlock Grid.Column="2" Grid.Row="1" Text="\Z" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="1" Text="End of selection"/>
+				<TextBlock Grid.Column="4" Grid.Row="0" Text="\b" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="0" Text="Word boundary"/>
+				<TextBlock Grid.Column="4" Grid.Row="1" Text="\B" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="1" Text="Non-word boundary"/>
 			</Grid>
 		</GroupBox>
 
@@ -100,30 +100,30 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Column="0" Grid.Row="0" Content="." FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="0" Content="Any character"/>
-				<Label Grid.Column="0" Grid.Row="1" Content="[xyz^]" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="1" Content="Any of the characters"/>
-				<Label Grid.Column="0" Grid.Row="2" Content="[a-z]" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="2" Content="Any character in range"/>
-				<Label Grid.Column="0" Grid.Row="3" Content="[^acgz]" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="3" Content="None of the characters"/>
-				<Label Grid.Column="2" Grid.Row="0" Content="\d" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="0" Content="Digit: [0-9]"/>
-				<Label Grid.Column="2" Grid.Row="1" Content="\D" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="1" Content="Non-digit: [^0-9]"/>
-				<Label Grid.Column="2" Grid.Row="2" Content="\s" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="2" Content="Whitespace: [ \f\n\r\t\v]"/>
-				<Label Grid.Column="2" Grid.Row="3" Content="\S" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="3" Content="Non-whitespace: [^ \f\n\r\t\v]"/>
-				<Label Grid.Column="4" Grid.Row="0" Content="\w" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="0" Content="Word character: [A-Za-z0-9_]"/>
-				<Label Grid.Column="4" Grid.Row="1" Content="\W" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="1" Content="Non-word character: [^A-Za-z0-9_]"/>
-				<Label Grid.Column="4" Grid.Row="2" Content="\p{name}" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="2" Content="Unicode category &quot;name&quot;"/>
-				<Label Grid.Column="4" Grid.Row="3" Content="\P{name}" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="3" Content="Non-unicode category &quot;name&quot;"/>
+				<TextBlock Grid.Column="0" Grid.Row="0" Text="." FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="0" Text="Any character"/>
+				<TextBlock Grid.Column="0" Grid.Row="1" Text="[xyz^]" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="1" Text="Any of the characters"/>
+				<TextBlock Grid.Column="0" Grid.Row="2" Text="[a-z]" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="2" Text="Any character in range"/>
+				<TextBlock Grid.Column="0" Grid.Row="3" Text="[^acgz]" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="3" Text="None of the characters"/>
+				<TextBlock Grid.Column="2" Grid.Row="0" Text="\d" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="0" Text="Digit: [0-9]"/>
+				<TextBlock Grid.Column="2" Grid.Row="1" Text="\D" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="1" Text="Non-digit: [^0-9]"/>
+				<TextBlock Grid.Column="2" Grid.Row="2" Text="\s" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="2" Text="Whitespace: [ \f\n\r\t\v]"/>
+				<TextBlock Grid.Column="2" Grid.Row="3" Text="\S" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="3" Text="Non-whitespace: [^ \f\n\r\t\v]"/>
+				<TextBlock Grid.Column="4" Grid.Row="0" Text="\w" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="0" Text="Word character: [A-Za-z0-9_]"/>
+				<TextBlock Grid.Column="4" Grid.Row="1" Text="\W" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="1" Text="Non-word character: [^A-Za-z0-9_]"/>
+				<TextBlock Grid.Column="4" Grid.Row="2" Text="\p{name}" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="2" Text="Unicode category &quot;name&quot;"/>
+				<TextBlock Grid.Column="4" Grid.Row="3" Text="\P{name}" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="3" Text="Non-unicode category &quot;name&quot;"/>
 			</Grid>
 		</GroupBox>
 
@@ -146,18 +146,18 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Column="0" Grid.Row="0" Content="* / *?" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="0" Content="Zero or more: {0,}"/>
-				<Label Grid.Column="0" Grid.Row="1" Content="+ / +?" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="1" Content="One or more: {1,}"/>
-				<Label Grid.Column="2" Grid.Row="0" Content="? / ??" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="0" Content="Zero or one: {0,1}"/>
-				<Label Grid.Column="2" Grid.Row="1" Content="{}{n} / {n}?" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="1" Content="Match n times"/>
-				<Label Grid.Column="4" Grid.Row="0" Content="{}{n,} / {n,}?" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="0" Content="Match at least n times"/>
-				<Label Grid.Column="4" Grid.Row="1" Content="{}{n,m} / {n,m}?" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="1" Content="Match n - m times"/>
+				<TextBlock Grid.Column="0" Grid.Row="0" Text="* / *?" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="0" Text="Zero or more: {0,}"/>
+				<TextBlock Grid.Column="0" Grid.Row="1" Text="+ / +?" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="1" Text="One or more: {1,}"/>
+				<TextBlock Grid.Column="2" Grid.Row="0" Text="? / ??" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="0" Text="Zero or one: {0,1}"/>
+				<TextBlock Grid.Column="2" Grid.Row="1" Text="{}{n} / {n}?" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="1" Text="Match n times"/>
+				<TextBlock Grid.Column="4" Grid.Row="0" Text="{}{n,} / {n,}?" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="0" Text="Match at least n times"/>
+				<TextBlock Grid.Column="4" Grid.Row="1" Text="{}{n,m} / {n,m}?" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="1" Text="Match n - m times"/>
 			</Grid>
 		</GroupBox>
 
@@ -182,30 +182,30 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Column="0" Grid.Row="0" Content="(pattern)" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="0" Content="Capture group"/>
-				<Label Grid.Column="0" Grid.Row="1" Content="\n" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="1" Content="Backreference group n (1 digit)"/>
-				<Label Grid.Column="0" Grid.Row="2" Content="(?:pattern)" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="2" Content="Non-capturing match"/>
-				<Label Grid.Column="0" Grid.Row="3" Content="(?&gt;pattern)" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="3" Content="Nonbacktracking"/>
-				<Label Grid.Column="2" Grid.Row="0" Content="(?&lt;name&gt;)" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="0" Content="Capture and name group"/>
-				<Label Grid.Column="2" Grid.Row="1" Content="\k&lt;name&gt;" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="1" Content="Backreference named group"/>
-				<Label Grid.Column="2" Grid.Row="2" Content="(?imnsx-imnsx:pattern)" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="2" Content="Enable/disable options"/>
-				<Label Grid.Column="2" Grid.Row="3" Content="(?&lt;name1-name2&gt;pattern)" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="3" Content="Balancing group"/>
-				<Label Grid.Column="4" Grid.Row="0" Content="(?=...)" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="0" Content="Positive lookahead"/>
-				<Label Grid.Column="4" Grid.Row="1" Content="(?!...)" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="1" Content="Negative lookahead"/>
-				<Label Grid.Column="4" Grid.Row="2" Content="(?&lt;=...)" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="2" Content="Positive lookbehind"/>
-				<Label Grid.Column="4" Grid.Row="3" Content="(?&lt;!...)" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="3" Content="Negative lookbehind"/>
+				<TextBlock Grid.Column="0" Grid.Row="0" Text="(pattern)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="0" Text="Capture group"/>
+				<TextBlock Grid.Column="0" Grid.Row="1" Text="\n" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="1" Text="Backreference group n (1 digit)"/>
+				<TextBlock Grid.Column="0" Grid.Row="2" Text="(?:pattern)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="2" Text="Non-capturing match"/>
+				<TextBlock Grid.Column="0" Grid.Row="3" Text="(?&gt;pattern)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="3" Text="Nonbacktracking"/>
+				<TextBlock Grid.Column="2" Grid.Row="0" Text="(?&lt;name&gt;)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="0" Text="Capture and name group"/>
+				<TextBlock Grid.Column="2" Grid.Row="1" Text="\k&lt;name&gt;" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="1" Text="Backreference named group"/>
+				<TextBlock Grid.Column="2" Grid.Row="2" Text="(?imnsx-imnsx:pattern)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="2" Text="Enable/disable options"/>
+				<TextBlock Grid.Column="2" Grid.Row="3" Text="(?&lt;name1-name2&gt;pattern)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="3" Text="Balancing group"/>
+				<TextBlock Grid.Column="4" Grid.Row="0" Text="(?=...)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="0" Text="Positive lookahead"/>
+				<TextBlock Grid.Column="4" Grid.Row="1" Text="(?!...)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="1" Text="Negative lookahead"/>
+				<TextBlock Grid.Column="4" Grid.Row="2" Text="(?&lt;=...)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="2" Text="Positive lookbehind"/>
+				<TextBlock Grid.Column="4" Grid.Row="3" Text="(?&lt;!...)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="3" Text="Negative lookbehind"/>
 			</Grid>
 		</GroupBox>
 
@@ -227,12 +227,12 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Column="0" Grid.Row="0" Content="x|y" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="0" Content="x or y"/>
-				<Label Grid.Column="2" Grid.Row="0" Content="(?(expression)yes|no)" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="0" Content="Ternary"/>
-				<Label Grid.Column="4" Grid.Row="0" Content="(?(name)yes|no)" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="1" Content="Ternary on name/number"/>
+				<TextBlock Grid.Column="0" Grid.Row="0" Text="x|y" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="0" Text="x or y"/>
+				<TextBlock Grid.Column="2" Grid.Row="0" Text="(?(expression)yes|no)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="0" Text="Ternary"/>
+				<TextBlock Grid.Column="4" Grid.Row="0" Text="(?(name)yes|no)" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="1" Text="Ternary on name/number"/>
 			</Grid>
 		</GroupBox>
 
@@ -258,32 +258,32 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Column="0" Grid.Row="0" Content="\" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="0" Content="Escape character"/>
-				<Label Grid.Column="0" Grid.Row="1" Content="\a" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="1" Content="Bell"/>
-				<Label Grid.Column="0" Grid.Row="2" Content="\b" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="2" Content="Backspace"/>
-				<Label Grid.Column="0" Grid.Row="3" Content="\cx" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="3" Content="Ctrl-&quot;x&quot;"/>
-				<Label Grid.Column="0" Grid.Row="4" Content="\e" FontWeight="Bold"/>
-				<Label Grid.Column="1" Grid.Row="4" Content="Escape"/>
-				<Label Grid.Column="2" Grid.Row="0" Content="\f" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="0" Content="Form-feed"/>
-				<Label Grid.Column="2" Grid.Row="1" Content="\n" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="1" Content="Newline"/>
-				<Label Grid.Column="2" Grid.Row="2" Content="\r" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="2" Content="Carriage return"/>
-				<Label Grid.Column="2" Grid.Row="3" Content="\t" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="3" Content="Tab"/>
-				<Label Grid.Column="2" Grid.Row="4" Content="\v" FontWeight="Bold"/>
-				<Label Grid.Column="3" Grid.Row="4" Content="Vertical tab"/>
-				<Label Grid.Column="4" Grid.Row="0" Content="\nn" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="0" Content="Octal character (2-3 digits)"/>
-				<Label Grid.Column="4" Grid.Row="1" Content="\xnn" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="1" Content="Hex character (2 hex digits)"/>
-				<Label Grid.Column="4" Grid.Row="2" Content="\unnnn" FontWeight="Bold"/>
-				<Label Grid.Column="5" Grid.Row="2" Content="Unicode character (4 hex digits)"/>
+				<TextBlock Grid.Column="0" Grid.Row="0" Text="\" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="0" Text="Escape character"/>
+				<TextBlock Grid.Column="0" Grid.Row="1" Text="\a" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="1" Text="Bell"/>
+				<TextBlock Grid.Column="0" Grid.Row="2" Text="\b" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="2" Text="Backspace"/>
+				<TextBlock Grid.Column="0" Grid.Row="3" Text="\cx" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="3" Text="Ctrl-&quot;x&quot;"/>
+				<TextBlock Grid.Column="0" Grid.Row="4" Text="\e" FontWeight="Bold"/>
+				<TextBlock Grid.Column="1" Grid.Row="4" Text="Escape"/>
+				<TextBlock Grid.Column="2" Grid.Row="0" Text="\f" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="0" Text="Form-feed"/>
+				<TextBlock Grid.Column="2" Grid.Row="1" Text="\n" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="1" Text="Newline"/>
+				<TextBlock Grid.Column="2" Grid.Row="2" Text="\r" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="2" Text="Carriage return"/>
+				<TextBlock Grid.Column="2" Grid.Row="3" Text="\t" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="3" Text="Tab"/>
+				<TextBlock Grid.Column="2" Grid.Row="4" Text="\v" FontWeight="Bold"/>
+				<TextBlock Grid.Column="3" Grid.Row="4" Text="Vertical tab"/>
+				<TextBlock Grid.Column="4" Grid.Row="0" Text="\nn" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="0" Text="Octal character (2-3 digits)"/>
+				<TextBlock Grid.Column="4" Grid.Row="1" Text="\xnn" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="1" Text="Hex character (2 hex digits)"/>
+				<TextBlock Grid.Column="4" Grid.Row="2" Text="\unnnn" FontWeight="Bold"/>
+				<TextBlock Grid.Column="5" Grid.Row="2" Text="Unicode character (4 hex digits)"/>
 			</Grid>
 		</GroupBox>
 
