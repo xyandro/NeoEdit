@@ -16,6 +16,7 @@ namespace NeoEdit.TextEditor
 			Start = Math.Min(Cursor, Highlight);
 			End = Math.Max(Cursor, Highlight);
 			Length = Math.Abs(Cursor - Highlight);
+			HasSelection = Length != 0;
 		}
 		public static Range FromIndex(int index, int length) { return new Range(index + length, index); }
 
@@ -24,11 +25,7 @@ namespace NeoEdit.TextEditor
 		public int Start { get; private set; }
 		public int End { get; private set; }
 		public int Length { get; private set; }
-
-		public bool HasSelection()
-		{
-			return Cursor != Highlight;
-		}
+		public bool HasSelection { get; private set; }
 
 		public override string ToString()
 		{

@@ -490,7 +490,7 @@ namespace NeoEdit.TextEditor
 		{
 			var selecting = shiftDown;
 			string text = null;
-			var selectionOnly = Selections.Any(range => range.HasSelection());
+			var selectionOnly = Selections.Any(range => range.HasSelection);
 
 			if (Selections.Count == 1)
 			{
@@ -1259,7 +1259,7 @@ namespace NeoEdit.TextEditor
 			var searcher = new Searcher(keysAndValues[0], true);
 			var ranges = new List<Range>();
 			var selections = Selections.ToList();
-			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
+			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { new Range(BeginOffset(), EndOffset()) };
 			foreach (var selection in selections)
 				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
@@ -1276,7 +1276,7 @@ namespace NeoEdit.TextEditor
 			var searcher = new Searcher(keysAndValues[0], true);
 			var ranges = new List<Range>();
 			var selections = Selections.ToList();
-			if ((Selections.Count == 1) && (!Selections[0].HasSelection()))
+			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { new Range(BeginOffset(), EndOffset()) };
 			foreach (var selection in selections)
 				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
@@ -1341,7 +1341,7 @@ namespace NeoEdit.TextEditor
 				return;
 
 			if (result.IgnoreBlank)
-				Selections.Replace(Selections.Where(sel => sel.HasSelection()).ToList());
+				Selections.Replace(Selections.Where(sel => sel.HasSelection).ToList());
 			if (result.SelMult > 1)
 				Selections.Replace(Selections.Where((sel, index) => index % result.SelMult == 0).ToList());
 			var sels = Math.Min(Selections.Count, result.NumSels);
@@ -1355,9 +1355,9 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(sels);
 		}
 
-		internal void Command_Select_Empty(bool empty)
+		internal void Command_Select_Empty(bool include)
 		{
-			Selections.Replace(Selections.Where(range => range.HasSelection() != empty).ToList());
+			Selections.Replace(Selections.Where(range => range.HasSelection != include).ToList());
 		}
 
 		internal void Command_Select_Trim()
@@ -1497,8 +1497,7 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Mark_ClearMarks()
 		{
-			var hasSelection = Selections.Any(range => range.HasSelection());
-			if (!hasSelection)
+			if (!Selections.Any(range => range.HasSelection))
 				Marks.Clear();
 			else
 			{
@@ -1555,7 +1554,7 @@ namespace NeoEdit.TextEditor
 
 		void SearchesInvalidated()
 		{
-			Searches.Replace(Searches.Where(range => range.HasSelection()).ToList());
+			Searches.Replace(Searches.Where(range => range.HasSelection).ToList());
 			Searches.DeOverlap();
 			searchesTimer.Stop();
 			renderTimer.Start();
@@ -1599,7 +1598,7 @@ namespace NeoEdit.TextEditor
 
 			foreach (var entry in brushes)
 			{
-				var hasSelection = entry.Item1.Any(range => range.HasSelection());
+				var hasSelection = entry.Item1.Any(range => range.HasSelection);
 
 				foreach (var range in entry.Item1)
 				{
@@ -1699,7 +1698,7 @@ namespace NeoEdit.TextEditor
 				case Key.Back:
 				case Key.Delete:
 					{
-						if (Selections.Any(range => range.HasSelection()))
+						if (Selections.Any(range => range.HasSelection))
 						{
 							ReplaceSelections("");
 							break;
@@ -1756,7 +1755,7 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.Left:
 					{
-						var hasSelection = Selections.Any(range => range.HasSelection());
+						var hasSelection = Selections.Any(range => range.HasSelection);
 						for (var ctr = 0; ctr < Selections.Count; ++ctr)
 						{
 							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
@@ -1774,7 +1773,7 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.Right:
 					{
-						var hasSelection = Selections.Any(range => range.HasSelection());
+						var hasSelection = Selections.Any(range => range.HasSelection);
 						for (var ctr = 0; ctr < Selections.Count; ++ctr)
 						{
 							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
@@ -1856,13 +1855,13 @@ namespace NeoEdit.TextEditor
 					break;
 				case Key.Tab:
 					{
-						if (!Selections.Any(range => range.HasSelection()))
+						if (!Selections.Any(range => range.HasSelection))
 						{
 							HandleText("\t");
 							break;
 						}
 
-						var selLines = Selections.Where(a => a.HasSelection()).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
+						var selLines = Selections.Where(a => a.HasSelection).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
 						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy(line => line).ToDictionary(line => line, line => Data.GetOffset(line, 0));
 						int offset;
 						string replace;

@@ -30,7 +30,6 @@ Translate HTML to table
 Expression: c=clipboard, k=keys, v1=values, etc
 Distinct operations by marked region (sort/series/etc within region)
 RegEx substitution
-Make sure selections are being ignored in functions when blank
 
 Binary:
 Fix binary editor backwards search
