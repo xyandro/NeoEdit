@@ -124,5 +124,10 @@ namespace NeoEdit.TextEditor.Dialogs
 			var dialog = new GetRegExDialog(type, text, selectionOnly);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
+
+		void RegExHelp(object sender, RoutedEventArgs e)
+		{
+			RegExHelpDialog.Display();
+		}
 	}
 }

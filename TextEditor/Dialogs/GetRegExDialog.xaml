@@ -33,6 +33,8 @@
 		<CheckBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Name="includeLineEndings" Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}" Focusable="False"/>
 		<CheckBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Name="includeMatches" Content="_Include Matches" IsChecked="{Binding IncludeMatches, ElementName=self}" Focusable="False"/>
 
+		<Button Grid.Row="8" Grid.ColumnSpan="3" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
+
 		<UniformGrid Grid.Row="8" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Find" Padding="10,1"/>
 			<Button Click="OkClick" Name="selectAll" Content="Select _All" Padding="10,1"/>

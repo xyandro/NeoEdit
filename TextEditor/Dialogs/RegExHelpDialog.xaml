@@ -1,0 +1,293 @@
+﻿<Window Name="self" x:Class="NeoEdit.TextEditor.Dialogs.RegExHelpDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:System="clr-namespace:System;assembly=mscorlib"
+	Title="Regular Expression Reference" SizeToContent="WidthAndHeight">
+
+	<Window.Resources>
+		<GridLength x:Key="nameColumn">160</GridLength>
+		<GridLength x:Key="descColumn">200</GridLength>
+	</Window.Resources>
+
+	<Grid Margin="10">
+		<Grid.Style>
+			<Style>
+				<Style.Resources>
+					<Style TargetType="Label">
+						<Setter Property="Margin" Value="0"/>
+						<Setter Property="Padding" Value="2,0"/>
+					</Style>
+				</Style.Resources>
+			</Style>
+		</Grid.Style>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<TextBlock Grid.Row="0" Grid.Column="0">
+			<Italic>Regular Expression Reference</Italic>
+		</TextBlock>
+
+		<GroupBox Grid.Row="2">
+			<GroupBox.Header>
+				<Italic>Anchors</Italic>
+			</GroupBox.Header>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Column="0" Grid.Row="0" Content="^" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="0" Content="Beginning of line/selection"/>
+				<Label Grid.Column="0" Grid.Row="1" Content="$" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="1" Content="Ending of line/selection"/>
+				<Label Grid.Column="0" Grid.Row="2" Content="\G" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="2" Content="End of last match"/>
+				<Label Grid.Column="2" Grid.Row="0" Content="\A" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="0" Content="Beginning of selection"/>
+				<Label Grid.Column="2" Grid.Row="1" Content="\Z" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="1" Content="End of selection"/>
+				<Label Grid.Column="4" Grid.Row="0" Content="\b" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="0" Content="Word boundary"/>
+				<Label Grid.Column="4" Grid.Row="1" Content="\B" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="1" Content="Non-word boundary"/>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="3">
+			<GroupBox.Header>
+				<Italic>Characters</Italic>
+			</GroupBox.Header>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Column="0" Grid.Row="0" Content="." FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="0" Content="Any character"/>
+				<Label Grid.Column="0" Grid.Row="1" Content="[xyz^]" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="1" Content="Any of the characters"/>
+				<Label Grid.Column="0" Grid.Row="2" Content="[a-z]" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="2" Content="Any character in range"/>
+				<Label Grid.Column="0" Grid.Row="3" Content="[^acgz]" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="3" Content="None of the characters"/>
+				<Label Grid.Column="2" Grid.Row="0" Content="\d" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="0" Content="Digit: [0-9]"/>
+				<Label Grid.Column="2" Grid.Row="1" Content="\D" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="1" Content="Non-digit: [^0-9]"/>
+				<Label Grid.Column="2" Grid.Row="2" Content="\s" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="2" Content="Whitespace: [ \f\n\r\t\v]"/>
+				<Label Grid.Column="2" Grid.Row="3" Content="\S" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="3" Content="Non-whitespace: [^ \f\n\r\t\v]"/>
+				<Label Grid.Column="4" Grid.Row="0" Content="\w" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="0" Content="Word character: [A-Za-z0-9_]"/>
+				<Label Grid.Column="4" Grid.Row="1" Content="\W" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="1" Content="Non-word character: [^A-Za-z0-9_]"/>
+				<Label Grid.Column="4" Grid.Row="2" Content="\p{name}" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="2" Content="Unicode category &quot;name&quot;"/>
+				<Label Grid.Column="4" Grid.Row="3" Content="\P{name}" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="3" Content="Non-unicode category &quot;name&quot;"/>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="4">
+			<GroupBox.Header>
+				<Italic>Repetition</Italic>
+			</GroupBox.Header>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Column="0" Grid.Row="0" Content="* / *?" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="0" Content="Zero or more: {0,}"/>
+				<Label Grid.Column="0" Grid.Row="1" Content="+ / +?" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="1" Content="One or more: {1,}"/>
+				<Label Grid.Column="2" Grid.Row="0" Content="? / ??" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="0" Content="Zero or one: {0,1}"/>
+				<Label Grid.Column="2" Grid.Row="1" Content="{}{n} / {n}?" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="1" Content="Match n times"/>
+				<Label Grid.Column="4" Grid.Row="0" Content="{}{n,} / {n,}?" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="0" Content="Match at least n times"/>
+				<Label Grid.Column="4" Grid.Row="1" Content="{}{n,m} / {n,m}?" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="1" Content="Match n - m times"/>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="5">
+			<GroupBox.Header>
+				<Italic>Grouping</Italic>
+			</GroupBox.Header>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Column="0" Grid.Row="0" Content="(pattern)" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="0" Content="Capture group"/>
+				<Label Grid.Column="0" Grid.Row="1" Content="\n" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="1" Content="Backreference group n (1 digit)"/>
+				<Label Grid.Column="0" Grid.Row="2" Content="(?:pattern)" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="2" Content="Non-capturing match"/>
+				<Label Grid.Column="0" Grid.Row="3" Content="(?&gt;pattern)" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="3" Content="Nonbacktracking"/>
+				<Label Grid.Column="2" Grid.Row="0" Content="(?&lt;name&gt;)" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="0" Content="Capture and name group"/>
+				<Label Grid.Column="2" Grid.Row="1" Content="\k&lt;name&gt;" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="1" Content="Backreference named group"/>
+				<Label Grid.Column="2" Grid.Row="2" Content="(?imnsx-imnsx:pattern)" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="2" Content="Enable/disable options"/>
+				<Label Grid.Column="2" Grid.Row="3" Content="(?&lt;name1-name2&gt;pattern)" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="3" Content="Balancing group"/>
+				<Label Grid.Column="4" Grid.Row="0" Content="(?=...)" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="0" Content="Positive lookahead"/>
+				<Label Grid.Column="4" Grid.Row="1" Content="(?!...)" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="1" Content="Negative lookahead"/>
+				<Label Grid.Column="4" Grid.Row="2" Content="(?&lt;=...)" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="2" Content="Positive lookbehind"/>
+				<Label Grid.Column="4" Grid.Row="3" Content="(?&lt;!...)" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="3" Content="Negative lookbehind"/>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="6">
+			<GroupBox.Header>
+				<Italic>Conditional</Italic>
+			</GroupBox.Header>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Column="0" Grid.Row="0" Content="x|y" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="0" Content="x or y"/>
+				<Label Grid.Column="2" Grid.Row="0" Content="(?(expression)yes|no)" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="0" Content="Ternary"/>
+				<Label Grid.Column="4" Grid.Row="0" Content="(?(name)yes|no)" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="1" Content="Ternary on name/number"/>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="7">
+			<GroupBox.Header>
+				<Italic>Special</Italic>
+			</GroupBox.Header>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+					<ColumnDefinition Width="{StaticResource nameColumn}"/>
+					<ColumnDefinition Width="{StaticResource descColumn}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Column="0" Grid.Row="0" Content="\" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="0" Content="Escape character"/>
+				<Label Grid.Column="0" Grid.Row="1" Content="\a" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="1" Content="Bell"/>
+				<Label Grid.Column="0" Grid.Row="2" Content="\b" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="2" Content="Backspace"/>
+				<Label Grid.Column="0" Grid.Row="3" Content="\cx" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="3" Content="Ctrl-&quot;x&quot;"/>
+				<Label Grid.Column="0" Grid.Row="4" Content="\e" FontWeight="Bold"/>
+				<Label Grid.Column="1" Grid.Row="4" Content="Escape"/>
+				<Label Grid.Column="2" Grid.Row="0" Content="\f" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="0" Content="Form-feed"/>
+				<Label Grid.Column="2" Grid.Row="1" Content="\n" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="1" Content="Newline"/>
+				<Label Grid.Column="2" Grid.Row="2" Content="\r" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="2" Content="Carriage return"/>
+				<Label Grid.Column="2" Grid.Row="3" Content="\t" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="3" Content="Tab"/>
+				<Label Grid.Column="2" Grid.Row="4" Content="\v" FontWeight="Bold"/>
+				<Label Grid.Column="3" Grid.Row="4" Content="Vertical tab"/>
+				<Label Grid.Column="4" Grid.Row="0" Content="\nn" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="0" Content="Octal character (2-3 digits)"/>
+				<Label Grid.Column="4" Grid.Row="1" Content="\xnn" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="1" Content="Hex character (2 hex digits)"/>
+				<Label Grid.Column="4" Grid.Row="2" Content="\unnnn" FontWeight="Bold"/>
+				<Label Grid.Column="5" Grid.Row="2" Content="Unicode character (4 hex digits)"/>
+			</Grid>
+		</GroupBox>
+
+		<Button Grid.Row="9" Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Padding="20,1" HorizontalAlignment="Right"/>
+	</Grid>
+
+</Window>
