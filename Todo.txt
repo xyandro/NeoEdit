@@ -27,10 +27,10 @@ Files: Select/etc on svn status (ignore/modified)
 Get directory files/dirs
 Accept dropped files from explorer
 Translate HTML to table
-Select max/min length
 Expression: c=clipboard, k=keys, v1=values, etc
 Distinct operations by marked region (sort/series/etc within region)
 RegEx substitution
+Make sure selections are being ignored in functions when blank
 
 Binary:
 Fix binary editor backwards search

@@ -1111,22 +1111,22 @@ namespace NeoEdit.TextEditor
 			Clipboard.SetText(Selections.Count.ToString());
 		}
 
-		internal void Command_Data_Copy_MinMax(bool min, bool numeric)
+		internal enum Command_MinMax_Type { String, Numeric, Length }
+		internal void DoCommand_Data_Copy_MinMax<T>(bool min, Func<Range, T> sortBy, Func<Range, string> value)
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			if (numeric)
-				strs = strs.OrderBy(str => NumericSort(str)).ToList();
-			else
-				strs = strs.OrderBy(str => str).ToList();
-			var value = min ? strs.First() : strs.Last();
-			Clipboard.SetText(value);
+			var strs = Selections.Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
+			var found = min ? strs.First().range : strs.Last().range;
+			Clipboard.SetText(value(found));
 		}
 
-		internal void Command_Data_Copy_MinMaxLength(bool min)
+		internal void Command_Data_Copy_MinMax(bool min, Command_MinMax_Type type)
 		{
-			var lens = Selections.Select(range => range.Length).OrderBy(len => len).ToList();
-			var value = min ? lens.First() : lens.Last();
-			Clipboard.SetText(value.ToString());
+			switch (type)
+			{
+				case Command_MinMax_Type.String: DoCommand_Data_Copy_MinMax(min, range => GetString(range), range => GetString(range)); break;
+				case Command_MinMax_Type.Numeric: DoCommand_Data_Copy_MinMax(min, range => NumericSort(GetString(range)), range => GetString(range)); break;
+				case Command_MinMax_Type.Length: DoCommand_Data_Copy_MinMax(min, range => range.Length, range => range.Length.ToString()); break;
+			}
 		}
 
 		internal void Command_Data_Copy_Sum()
@@ -1398,46 +1398,21 @@ namespace NeoEdit.TextEditor
 			Searches.Clear();
 		}
 
-		internal void Command_Select_Min_String()
+		void DoCommand_Select_MinMax<T>(bool min, Func<Range, T> sortBy)
 		{
-			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
-			var first = selections.First().str;
-			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
+			var selections = Selections.Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
+			var found = min ? selections.First().sort : selections.Last().sort;
+			Selections.Replace(selections.Where(obj => obj.sort.Equals(found)).Select(obj => obj.range).ToList());
 		}
 
-		internal void Command_Select_Min_Numeric()
+		internal void Command_Select_MinMax(bool min, Command_MinMax_Type type)
 		{
-			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
-			var first = selections.First().str;
-			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
-		}
-
-		internal void Command_Select_Min_Length()
-		{
-			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, len = range.Length }).OrderBy(obj => obj.len).ToList();
-			var first = selections.First().len;
-			Selections.Replace(selections.Where(obj => obj.len == first).Select(obj => obj.range).ToList());
-		}
-
-		internal void Command_Select_Max_String()
-		{
-			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
-			var first = selections.Last().str;
-			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
-		}
-
-		internal void Command_Select_Max_Numeric()
-		{
-			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
-			var first = selections.Last().str;
-			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
-		}
-
-		internal void Command_Select_Max_Length()
-		{
-			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, len = range.Length }).OrderBy(obj => obj.len).ToList();
-			var first = selections.Last().len;
-			Selections.Replace(selections.Where(obj => obj.len == first).Select(obj => obj.range).ToList());
+			switch (type)
+			{
+				case Command_MinMax_Type.String: DoCommand_Select_MinMax(min, range => GetString(range)); break;
+				case Command_MinMax_Type.Numeric: DoCommand_Select_MinMax(min, range => NumericSort(GetString(range))); break;
+				case Command_MinMax_Type.Length: DoCommand_Select_MinMax(min, range => range.Length); break;
+			}
 		}
 
 		internal void Command_Select_ExpressionMatches()
