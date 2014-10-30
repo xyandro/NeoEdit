@@ -29,9 +29,7 @@ Accept dropped files from explorer
 Translate HTML to table
 Select max/min length
 Expression: c=clipboard, k=keys, v1=values, etc
-Sort dialog truncated
 Distinct operations by marked region (sort/series/etc within region)
-Numeric sort should be "n" accel
 RegEx substitution
 
 Binary:
