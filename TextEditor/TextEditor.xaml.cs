@@ -1412,6 +1412,13 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
 		}
 
+		internal void Command_Select_Min_Length()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, len = range.Length }).OrderBy(obj => obj.len).ToList();
+			var first = selections.First().len;
+			Selections.Replace(selections.Where(obj => obj.len == first).Select(obj => obj.range).ToList());
+		}
+
 		internal void Command_Select_Max_String()
 		{
 			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => obj.str).ToList();
@@ -1424,6 +1431,13 @@ namespace NeoEdit.TextEditor
 			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, str = GetString(range) }).OrderBy(obj => NumericSort(obj.str)).ToList();
 			var first = selections.Last().str;
 			Selections.Replace(selections.Where(obj => obj.str == first).Select(obj => obj.range).ToList());
+		}
+
+		internal void Command_Select_Max_Length()
+		{
+			var selections = Selections.Where(range => range.HasSelection()).Select(range => new { range = range, len = range.Length }).OrderBy(obj => obj.len).ToList();
+			var first = selections.Last().len;
+			Selections.Replace(selections.Where(obj => obj.len == first).Select(obj => obj.range).ToList());
 		}
 
 		internal void Command_Select_ExpressionMatches()

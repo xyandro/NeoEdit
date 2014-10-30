@@ -183,14 +183,12 @@
 			<MenuItem Header="_Min">
 				<textEditor:TextEditMenuItem Header="_String" CommandEnum="Data_Copy_Min_String"/>
 				<textEditor:TextEditMenuItem Header="_Numeric" CommandEnum="Data_Copy_Min_Numeric"/>
+				<textEditor:TextEditMenuItem Header="_Length" CommandEnum="Data_Copy_Min_Length"/>
 			</MenuItem>
 			<MenuItem Header="Ma_x">
 				<textEditor:TextEditMenuItem Header="_String" CommandEnum="Data_Copy_Max_String"/>
 				<textEditor:TextEditMenuItem Header="_Numeric" CommandEnum="Data_Copy_Max_Numeric"/>
-			</MenuItem>
-			<MenuItem Header="_Length">
-				<textEditor:TextEditMenuItem Header="_Min" CommandEnum="Data_Copy_Length_Min"/>
-				<textEditor:TextEditMenuItem Header="Ma_x" CommandEnum="Data_Copy_Length_Max"/>
+				<textEditor:TextEditMenuItem Header="_Length" CommandEnum="Data_Copy_Max_Length"/>
 			</MenuItem>
 			<textEditor:TextEditMenuItem Header="_Sum" CommandEnum="Data_Copy_Sum"/>
 		</MenuItem>
@@ -322,10 +320,12 @@
 		<MenuItem Header="Min">
 			<textEditor:TextEditMenuItem Header="_String" CommandEnum="Select_Min_String"/>
 			<textEditor:TextEditMenuItem Header="_Numeric" CommandEnum="Select_Min_Numeric"/>
+			<textEditor:TextEditMenuItem Header="_Length" CommandEnum="Select_Min_Length"/>
 		</MenuItem>
 		<MenuItem Header="Max">
 			<textEditor:TextEditMenuItem Header="_String" CommandEnum="Select_Max_String"/>
 			<textEditor:TextEditMenuItem Header="_Numeric" CommandEnum="Select_Max_Numeric"/>
+			<textEditor:TextEditMenuItem Header="_Length" CommandEnum="Select_Max_Length"/>
 		</MenuItem>
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="_Expression Matches" CommandEnum="Select_ExpressionMatches"/>

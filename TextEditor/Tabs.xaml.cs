@@ -224,10 +224,10 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Copy_Count: Active.Command_Data_Copy_Count(); break;
 				case TextEditCommand.Data_Copy_Min_String: Active.Command_Data_Copy_MinMax(true, false); break;
 				case TextEditCommand.Data_Copy_Min_Numeric: Active.Command_Data_Copy_MinMax(true, true); break;
+				case TextEditCommand.Data_Copy_Min_Length: Active.Command_Data_Copy_MinMaxLength(true); break;
 				case TextEditCommand.Data_Copy_Max_String: Active.Command_Data_Copy_MinMax(false, false); break;
 				case TextEditCommand.Data_Copy_Max_Numeric: Active.Command_Data_Copy_MinMax(false, true); break;
-				case TextEditCommand.Data_Copy_Length_Min: Active.Command_Data_Copy_MinMaxLength(true); break;
-				case TextEditCommand.Data_Copy_Length_Max: Active.Command_Data_Copy_MinMaxLength(false); break;
+				case TextEditCommand.Data_Copy_Max_Length: Active.Command_Data_Copy_MinMaxLength(false); break;
 				case TextEditCommand.Data_Copy_Sum: Active.Command_Data_Copy_Sum(); break;
 				case TextEditCommand.Data_Repeat: Active.Command_Data_Repeat(); break;
 				case TextEditCommand.Data_InsertGUID: Active.Command_Data_InsertGUID(); break;
@@ -324,8 +324,10 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_FindResults: Active.Command_Select_FindResults(); break;
 				case TextEditCommand.Select_Min_String: Active.Command_Select_Min_String(); break;
 				case TextEditCommand.Select_Min_Numeric: Active.Command_Select_Min_Numeric(); break;
+				case TextEditCommand.Select_Min_Length: Active.Command_Select_Min_Length(); break;
 				case TextEditCommand.Select_Max_String: Active.Command_Select_Max_String(); break;
 				case TextEditCommand.Select_Max_Numeric: Active.Command_Select_Max_Numeric(); break;
+				case TextEditCommand.Select_Max_Length: Active.Command_Select_Max_Length(); break;
 				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(); break;
 				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(); break;
 				case TextEditCommand.Select_FirstSelection: Active.Command_Select_FirstSelection(); break;
