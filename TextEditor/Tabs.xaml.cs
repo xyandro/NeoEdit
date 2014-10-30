@@ -60,7 +60,7 @@ namespace NeoEdit.TextEditor
 
 		void Command_File_OpenCopiedCutFiles()
 		{
-			var files = ClipboardWindow.GetFiles();
+			var files = ClipboardWindow.GetStrings();
 			if ((files == null) || (files.Count < 0))
 				return;
 

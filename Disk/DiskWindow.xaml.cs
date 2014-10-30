@@ -82,7 +82,7 @@ namespace NeoEdit.Disk
 		{
 			if ((e.Key == Key.V) && (controlDown))
 			{
-				var files = ClipboardWindow.GetFiles();
+				var files = ClipboardWindow.GetStrings();
 				if (files != null)
 				{
 					location.Text = files.First();
@@ -386,7 +386,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_Select_AddCopiedCut()
 		{
-			var files = ClipboardWindow.GetFiles();
+			var files = ClipboardWindow.GetStrings();
 			if ((files == null) || (files.Count == 0))
 				return;
 			var existing = new HashSet<string>(Files.Select(file => file.FullName));

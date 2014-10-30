@@ -443,8 +443,8 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Edit_CutCopy(bool isCut)
 		{
-			var result = Selections.Select(range => GetString(range)).ToArray();
-			if (result.Length != 0)
+			var result = Selections.Select(range => GetString(range)).ToList();
+			if (result.Count != 0)
 				ClipboardWindow.Set(result);
 			if (isCut)
 				ReplaceSelections("");
@@ -452,9 +452,7 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Edit_Paste()
 		{
-			var clipboardStrings = ClipboardWindow.GetFiles();
-			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
-				clipboardStrings = ClipboardWindow.GetStrings().ToList();
+			var clipboardStrings = ClipboardWindow.GetStrings();
 			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
 				return;
 
@@ -542,7 +540,7 @@ namespace NeoEdit.TextEditor
 			List<int> offsets;
 			if (result.ClipboardValue)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings().ToList();
+				var clipboardStrings = ClipboardWindow.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				offsets = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
@@ -1025,7 +1023,7 @@ namespace NeoEdit.TextEditor
 			List<int> lengths;
 			if (result.ClipboardValue)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings().ToList();
+				var clipboardStrings = ClipboardWindow.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				lengths = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
@@ -1145,7 +1143,7 @@ namespace NeoEdit.TextEditor
 			List<int> repeatCounts;
 			if (repeat.ClipboardValue)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings().ToList();
+				var clipboardStrings = ClipboardWindow.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				repeatCounts = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
@@ -1299,7 +1297,7 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Keys_Copy(int index)
 		{
-			ClipboardWindow.Set(keysAndValues[index].ToArray());
+			ClipboardWindow.Set(keysAndValues[index]);
 		}
 
 		internal void Command_Keys_HitsMisses(int index, bool hits)

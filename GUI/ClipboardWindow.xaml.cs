@@ -83,18 +83,9 @@ namespace NeoEdit.GUI
 			Add(new ClipboardData(bytes, text));
 		}
 
-		public static void Set(string[] strings)
+		public static void Set(List<string> strings)
 		{
 			Add(new ClipboardData(strings, String.Join(" ", strings)));
-		}
-
-		public static List<string> GetFiles()
-		{
-			var files = new List<string>();
-			bool isCut;
-			if (!GetFiles(out files, out isCut))
-				return null;
-			return files;
 		}
 
 		public static bool GetFiles(out List<string> files, out bool isCut)
@@ -122,11 +113,13 @@ namespace NeoEdit.GUI
 			}
 
 			var dropList = Clipboard.GetFileDropList();
-			if ((dropList == null) || (dropList.Count == 0))
-				return false;
+			if ((dropList != null) && (dropList.Count != 0))
+			{
+				files = dropList.Cast<string>().ToList();
+				return true;
+			}
 
-			files = dropList.Cast<string>().ToList();
-			return true;
+			return false;
 		}
 
 		public static byte[] GetBytes()
@@ -134,21 +127,18 @@ namespace NeoEdit.GUI
 			return GetContents<byte[]>();
 		}
 
-		public static string[] GetStrings()
+		public static List<string> GetStrings()
 		{
-			var contents = GetContents<string[]>();
-			if (contents != null)
-				return contents;
+			List<string> files;
+			bool isCut;
+			if (GetFiles(out files, out isCut))
+				return files;
 
-			var str = Clipboard.GetText();
-			if (!String.IsNullOrEmpty(str))
-				return new string[] { str };
+			var str = GetString();
+			if (str != null)
+				return new List<string> { str };
 
-			var dropList = Clipboard.GetFileDropList();
-			if ((dropList != null) && (dropList.Count != 0))
-				return dropList.Cast<string>().ToArray();
-
-			return new string[0];
+			return new List<string>();
 		}
 
 		public static string GetString()
