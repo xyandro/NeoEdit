@@ -52,13 +52,7 @@
 			<textEditor:TextEditMenuItem Header="_Create" CommandEnum="Files_Timestamp_Create"/>
 			<textEditor:TextEditMenuItem Header="A_ll" CommandEnum="Files_Timestamp_All"/>
 		</MenuItem>
-		<MenuItem Header="_Path">
-			<textEditor:TextEditMenuItem Header="_Simplify" CommandEnum="Files_Path_Simplify"/>
-			<textEditor:TextEditMenuItem Header="_File Name" CommandEnum="Files_Path_FileName"/>
-			<textEditor:TextEditMenuItem Header="File Name w/o Extension" CommandEnum="Files_Path_FileNamewoExtension"/>
-			<textEditor:TextEditMenuItem Header="_Directory Name" CommandEnum="Files_Path_DirectoryName"/>
-			<textEditor:TextEditMenuItem Header="_Extension" CommandEnum="Files_Path_Extension"/>
-		</MenuItem>
+		<textEditor:TextEditMenuItem Header="Si_mplify" CommandEnum="Files_Simplify"/>
 		<textEditor:TextEditMenuItem Header="Create Directory" CommandEnum="Files_CreateDirectory"/>
 		<MenuItem Header="_Information">
 			<textEditor:TextEditMenuItem Header="_Size" CommandEnum="Files_Information_Size"/>
@@ -74,6 +68,11 @@
 			<textEditor:TextEditMenuItem Header="SHA256" CommandEnum="Files_Checksum_SHA256"/>
 		</MenuItem>
 		<MenuItem Header="_Select">
+			<textEditor:TextEditMenuItem Header="_File Name" CommandEnum="Files_Select_FileName"/>
+			<textEditor:TextEditMenuItem Header="File Name w/o Extension" CommandEnum="Files_Select_FileNamewoExtension"/>
+			<textEditor:TextEditMenuItem Header="_Directory Name" CommandEnum="Files_Select_DirectoryName"/>
+			<textEditor:TextEditMenuItem Header="_Extension" CommandEnum="Files_Select_Extension"/>
+			<Separator/>
 			<textEditor:TextEditMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
 			<textEditor:TextEditMenuItem Header="_Non-Existing" CommandEnum="Files_Select_NonExisting"/>
 			<textEditor:TextEditMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>

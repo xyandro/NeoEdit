@@ -142,11 +142,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Timestamp_Access: Active.Command_Files_Timestamp(TextEditor.TimestampType.Access); break;
 				case TextEditCommand.Files_Timestamp_Create: Active.Command_Files_Timestamp(TextEditor.TimestampType.Create); break;
 				case TextEditCommand.Files_Timestamp_All: Active.Command_Files_Timestamp(TextEditor.TimestampType.All); break;
-				case TextEditCommand.Files_Path_Simplify: Active.Command_Files_Path_Simplify(); break;
-				case TextEditCommand.Files_Path_FileName: Active.Command_Files_Path_GetFilePath(TextEditor.GetPathType.FileName); break;
-				case TextEditCommand.Files_Path_FileNamewoExtension: Active.Command_Files_Path_GetFilePath(TextEditor.GetPathType.FileNameWoExtension); break;
-				case TextEditCommand.Files_Path_DirectoryName: Active.Command_Files_Path_GetFilePath(TextEditor.GetPathType.Directory); break;
-				case TextEditCommand.Files_Path_Extension: Active.Command_Files_Path_GetFilePath(TextEditor.GetPathType.Extension); break;
+				case TextEditCommand.Files_Simplify: Active.Command_Files_Simplify(); break;
 				case TextEditCommand.Files_CreateDirectory: Active.Command_Files_CreateDirectory(); break;
 				case TextEditCommand.Files_Information_Size: Active.Command_Files_Information_Size(); break;
 				case TextEditCommand.Files_Information_WriteTime: Active.Command_Files_Information_WriteTime(); break;
@@ -157,6 +153,10 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Files_Checksum_MD5: Active.Command_Files_Checksum(Checksum.Type.MD5); break;
 				case TextEditCommand.Files_Checksum_SHA1: Active.Command_Files_Checksum(Checksum.Type.SHA1); break;
 				case TextEditCommand.Files_Checksum_SHA256: Active.Command_Files_Checksum(Checksum.Type.SHA256); break;
+				case TextEditCommand.Files_Select_FileName: Active.Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileName); break;
+				case TextEditCommand.Files_Select_FileNamewoExtension: Active.Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileNameWoExtension); break;
+				case TextEditCommand.Files_Select_DirectoryName: Active.Command_Files_Select_GetFilePath(TextEditor.GetPathType.Directory); break;
+				case TextEditCommand.Files_Select_Extension: Active.Command_Files_Select_GetFilePath(TextEditor.GetPathType.Extension); break;
 				case TextEditCommand.Files_Select_Existing: Active.Command_Files_Select_Existing(true); break;
 				case TextEditCommand.Files_Select_NonExisting: Active.Command_Files_Select_Existing(false); break;
 				case TextEditCommand.Files_Select_Files: Active.Command_Files_Select_Files(); break;

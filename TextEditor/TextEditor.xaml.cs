@@ -638,14 +638,9 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		internal void Command_Files_Path_Simplify()
+		internal void Command_Files_Simplify()
 		{
 			ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
-		}
-
-		internal void Command_Files_Path_GetFilePath(GetPathType type)
-		{
-			Selections.Replace(Selections.Select(range => GetPathRange(type, range)).ToList());
 		}
 
 		internal void Command_Files_CreateDirectory()
@@ -801,6 +796,11 @@ namespace NeoEdit.TextEditor
 		internal void Command_Files_Checksum(Checksum.Type type)
 		{
 			ReplaceSelections(Selections.Select(range => Checksum.Get(type, GetString(range))).ToList());
+		}
+
+		internal void Command_Files_Select_GetFilePath(GetPathType type)
+		{
+			Selections.Replace(Selections.Select(range => GetPathRange(type, range)).ToList());
 		}
 
 		static bool FileOrDirectoryExists(string name)
