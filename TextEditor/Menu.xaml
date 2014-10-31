@@ -36,6 +36,7 @@
 		<textEditor:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
 		<textEditor:TextEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>
 		<textEditor:TextEditMenuItem Header="Find _Prev" CommandEnum="Edit_FindPrev"/>
+		<textEditor:TextEditMenuItem Header="R_eplace" CommandEnum="Edit_Replace"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="Goto _Line" CommandEnum="Edit_GotoLine"/>
 		<textEditor:TextEditMenuItem Header="Goto C_olumn" CommandEnum="Edit_GotoColumn"/>

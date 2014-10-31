@@ -486,7 +486,7 @@ namespace NeoEdit.TextEditor
 			ClipboardWindow.Show();
 		}
 
-		internal void Command_Edit_Find()
+		internal void Command_Edit_FindReplace(bool replace)
 		{
 			var selecting = shiftDown;
 			string text = null;
@@ -502,19 +502,24 @@ namespace NeoEdit.TextEditor
 				}
 			}
 
-			var findResult = GetRegExDialog.Run(GetRegExDialog.GetRegExDialogType.Find, text, selectionOnly);
-			if (findResult != null)
-			{
-				RunSearch(findResult);
-				if (findResult.ResultType == GetRegExDialog.GetRegExResultType.All)
-				{
-					if (Searches.Count != 0)
-						Selections.Replace(Searches);
-					Searches.Clear();
-				}
+			var findResult = GetRegExDialog.Run(replace ? GetRegExDialog.GetRegExDialogType.Replace : GetRegExDialog.GetRegExDialogType.Find, text, selectionOnly);
+			if (findResult == null)
+				return;
 
-				FindNext(true, selecting);
+			RunSearch(findResult);
+			if ((replace) || (findResult.ResultType == GetRegExDialog.GetRegExResultType.All))
+			{
+				if (Searches.Count != 0)
+					Selections.Replace(Searches);
+				Searches.Clear();
+
+				if (replace)
+					ReplaceSelections(Selections.Select(range => findResult.Regex.Replace(GetString(range), findResult.Replace)).ToList());
+
+				return;
 			}
+
+			FindNext(true, selecting);
 		}
 
 		internal void Command_Edit_FindNextPrev(bool next)

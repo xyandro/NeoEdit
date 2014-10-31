@@ -18,6 +18,7 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -25,18 +26,22 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}"/>
 		<guiCommon:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="text" Width="500" Text="{Binding Text, Mode=TwoWay, ElementName=self}" AutoSuggestionList="{Binding History, ElementName=self}"/>
 
-		<CheckBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
-		<CheckBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
-		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Regex " IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False"/>
-		<CheckBox Grid.Row="3" Grid.Column="2" Content="by _group" Name="byGroup" IsChecked="{Binding RegexGroups, ElementName=self}" Focusable="False"/>
-		<CheckBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Name="selectionOnly" Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False"/>
-		<CheckBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Name="includeLineEndings" Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}" Focusable="False"/>
-		<CheckBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Name="includeMatches" Content="_Include Matches" IsChecked="{Binding IncludeMatches, ElementName=self}" Focusable="False"/>
+		<Label Grid.Row="1" Grid.Column="0" Name="replaceLabel" Content="R_eplace:" Target="{Binding ElementName=replace}"/>
+		<guiCommon:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="replace" Width="500" Text="{Binding Replace, Mode=TwoWay, ElementName=self}" AutoSuggestionList="{Binding ReplaceHistory, ElementName=self}"/>
 
-		<Button Grid.Row="8" Grid.ColumnSpan="3" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
+		<CheckBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="4" Grid.Column="1" Content="_Regex " IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="4" Grid.Column="2" Content="by _group" Name="byGroup" IsChecked="{Binding RegexGroups, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Name="selectionOnly" Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Name="includeLineEndings" Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Name="includeMatches" Content="_Include Matches" IsChecked="{Binding IncludeMatches, ElementName=self}" Focusable="False"/>
 
-		<UniformGrid Grid.Row="8" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
-			<Button Click="OkClick" IsDefault="True" Content="Find" Padding="10,1"/>
+		<Button Grid.Row="9" Grid.ColumnSpan="3" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
+
+		<UniformGrid Grid.Row="9" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" Name="replaceButton" IsDefault="True" Content="Replace" Padding="10,1"/>
+			<Button Click="OkClick" Name="find" IsDefault="True" Content="Find" Padding="10,1"/>
 			<Button Click="OkClick" Name="selectAll" Content="Select _All" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

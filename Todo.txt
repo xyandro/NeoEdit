@@ -29,7 +29,6 @@ Accept dropped files from explorer
 Translate HTML to table
 Expression: c=clipboard, k=keys, v1=values, etc
 Distinct operations by marked region (sort/series/etc within region)
-RegEx substitution
 
 Binary:
 Fix binary editor backwards search
