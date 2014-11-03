@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.GUI.Common;
@@ -65,22 +64,26 @@ namespace NeoEdit.TextEditor.Dialogs
 			UIHelper<GetExpressionDialog>.AddCallback(a => a.Expression, (obj, o, n) => obj.EvaluateExamples());
 		}
 
-		GetExpressionDialog(List<string> examples, bool getIncludeMatches)
+		readonly ExpressionData expressionData;
+		GetExpressionDialog(ExpressionData _expressionData, bool getIncludeMatches)
 		{
 			InitializeComponent();
 
-			Example1 = examples.Count >= 1 ? examples[0] : null;
-			Example2 = examples.Count >= 2 ? examples[1] : null;
-			Example3 = examples.Count >= 3 ? examples[2] : null;
-			Example4 = examples.Count >= 4 ? examples[3] : null;
-			Example5 = examples.Count >= 5 ? examples[4] : null;
-			Example6 = examples.Count >= 6 ? examples[5] : null;
-			Example7 = examples.Count >= 7 ? examples[6] : null;
-			Example8 = examples.Count >= 8 ? examples[7] : null;
-			Example9 = examples.Count >= 9 ? examples[8] : null;
-			Example10 = examples.Count >= 10 ? examples[9] : null;
+			expressionData = _expressionData;
 
 			Expression = "x";
+			var index = expressionData.vars.IndexOf(Expression);
+			Example1 = expressionData.values.Count > 0 ? expressionData.values[0][index] : null;
+			Example2 = expressionData.values.Count > 1 ? expressionData.values[1][index] : null;
+			Example3 = expressionData.values.Count > 2 ? expressionData.values[2][index] : null;
+			Example4 = expressionData.values.Count > 3 ? expressionData.values[3][index] : null;
+			Example5 = expressionData.values.Count > 4 ? expressionData.values[4][index] : null;
+			Example6 = expressionData.values.Count > 5 ? expressionData.values[5][index] : null;
+			Example7 = expressionData.values.Count > 6 ? expressionData.values[6][index] : null;
+			Example8 = expressionData.values.Count > 7 ? expressionData.values[7][index] : null;
+			Example9 = expressionData.values.Count > 8 ? expressionData.values[8][index] : null;
+			Example10 = expressionData.values.Count > 9 ? expressionData.values[9][index] : null;
+
 			expression.CaretIndex = 1;
 			IncludeMatches = true;
 			if (!getIncludeMatches)
@@ -92,17 +95,17 @@ namespace NeoEdit.TextEditor.Dialogs
 			bool valid = true;
 			try
 			{
-				var expression = new NeoEdit.Common.Expression(Expression);
-				if (!String.IsNullOrEmpty(Example1)) Example1Value = expression.Evaluate(Example1, 1);
-				if (!String.IsNullOrEmpty(Example2)) Example2Value = expression.Evaluate(Example2, 2);
-				if (!String.IsNullOrEmpty(Example3)) Example3Value = expression.Evaluate(Example3, 3);
-				if (!String.IsNullOrEmpty(Example4)) Example4Value = expression.Evaluate(Example4, 4);
-				if (!String.IsNullOrEmpty(Example5)) Example5Value = expression.Evaluate(Example5, 5);
-				if (!String.IsNullOrEmpty(Example6)) Example6Value = expression.Evaluate(Example6, 6);
-				if (!String.IsNullOrEmpty(Example7)) Example7Value = expression.Evaluate(Example7, 7);
-				if (!String.IsNullOrEmpty(Example8)) Example8Value = expression.Evaluate(Example8, 8);
-				if (!String.IsNullOrEmpty(Example9)) Example9Value = expression.Evaluate(Example9, 9);
-				if (!String.IsNullOrEmpty(Example10)) Example10Value = expression.Evaluate(Example10, 10);
+				var expression = new NeoEdit.Common.Expression(Expression, expressionData.vars);
+				if (expressionData.values.Count > 0) Example1Value = expression.Evaluate(expressionData.values[0]);
+				if (expressionData.values.Count > 1) Example2Value = expression.Evaluate(expressionData.values[1]);
+				if (expressionData.values.Count > 2) Example3Value = expression.Evaluate(expressionData.values[2]);
+				if (expressionData.values.Count > 3) Example4Value = expression.Evaluate(expressionData.values[3]);
+				if (expressionData.values.Count > 4) Example5Value = expression.Evaluate(expressionData.values[4]);
+				if (expressionData.values.Count > 5) Example6Value = expression.Evaluate(expressionData.values[5]);
+				if (expressionData.values.Count > 6) Example7Value = expression.Evaluate(expressionData.values[6]);
+				if (expressionData.values.Count > 7) Example8Value = expression.Evaluate(expressionData.values[7]);
+				if (expressionData.values.Count > 8) Example9Value = expression.Evaluate(expressionData.values[8]);
+				if (expressionData.values.Count > 9) Example10Value = expression.Evaluate(expressionData.values[9]);
 				valid = true;
 			}
 			catch
@@ -126,11 +129,11 @@ namespace NeoEdit.TextEditor.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = new NeoEdit.Common.Expression(Expression), IncludeMatches = IncludeMatches };
+			result = new Result { Expression = new NeoEdit.Common.Expression(Expression, expressionData.vars), IncludeMatches = IncludeMatches };
 			DialogResult = true;
 		}
 
-		static internal Result Run(List<string> examples, bool getIncludeMatches)
+		static internal Result Run(ExpressionData examples, bool getIncludeMatches)
 		{
 			var dialog = new GetExpressionDialog(examples, getIncludeMatches);
 			return dialog.ShowDialog() == true ? dialog.result : null;

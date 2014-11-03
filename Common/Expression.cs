@@ -73,7 +73,7 @@ namespace NeoEdit.Common
 		readonly string expression;
 		bool debug = false;
 
-		static readonly Regex simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|(true|false)|\b([xy])\b", RegexOptions.IgnoreCase);
+		static readonly Regex simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|\b(true|false)\b", RegexOptions.IgnoreCase);
 
 		static readonly string parenPlaceholder = "#PARENS#";
 
@@ -96,15 +96,15 @@ namespace NeoEdit.Common
 
 		static readonly Regex ternaryOperatorRE = new Regex(@"(\[[vir]\d+\])\s*\?\s*(\[[vir]\d+\])\s*:\s*(\[[vir]\d+\])");
 
-		public Expression(string expression)
+		public Expression(string expression, List<string> vars = null)
 		{
 			this.expression = expression;
 			List<object> internals;
-			SimplifyAndPopulateInternals(ref expression, out internals);
+			SimplifyAndPopulateInternals(ref expression, out internals, vars);
 			GetEvaluation(expression, internals);
 		}
 
-		void SimplifyAndPopulateInternals(ref string expression, out List<object> internals)
+		void SimplifyAndPopulateInternals(ref string expression, out List<object> internals, List<string> vars)
 		{
 			if (expression.StartsWith("!!"))
 			{
@@ -121,10 +121,24 @@ namespace NeoEdit.Common
 
 			internals = new List<object>();
 
+			var varsRE = vars != null ? new Regex(String.Format(@"\b({0})\b", String.Join("|", vars)), RegexOptions.Compiled) : null;
+
 			var result = "";
 			while (true)
 			{
-				var match = simplifyTermRE.Match(expression);
+				bool isVars = false;
+				Match match = null;
+
+				if (varsRE != null)
+				{
+					match = varsRE.Match(expression);
+					isVars = true;
+				}
+				if ((match == null) || (!match.Success))
+				{
+					match = simplifyTermRE.Match(expression);
+					isVars = false;
+				}
 				if (!match.Success)
 				{
 					result += expression;
@@ -134,7 +148,9 @@ namespace NeoEdit.Common
 				result += expression.Substring(0, match.Index);
 				expression = expression.Substring(match.Index + match.Length);
 
-				if (match.Groups[1].Success)
+				if (isVars)
+					result += "[v" + vars.IndexOf(match.Groups[1].Value) + "]";
+				else if (match.Groups[1].Success)
 					result += "[v" + match.Value.Substring(1, match.Length - 2) + "]";
 				else if (match.Groups[2].Success)
 				{
@@ -151,8 +167,6 @@ namespace NeoEdit.Common
 					result += "[i" + internals.Count + "]";
 					internals.Add(Boolean.Parse(match.Groups[4].Value));
 				}
-				else if (match.Groups[5].Success)
-					result += "[v" + (match.Value.ToLower()[0] - 'x') + "]";
 			}
 			expression = result;
 

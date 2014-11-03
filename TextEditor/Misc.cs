@@ -1,7 +1,14 @@
-﻿using System.Windows.Media;
+﻿using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace NeoEdit.TextEditor
 {
+	internal struct ExpressionData
+	{
+		public List<string> vars;
+		public List<string[]> values;
+	}
+
 	static class Misc
 	{
 		static Misc()

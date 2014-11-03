@@ -276,6 +276,50 @@ namespace NeoEdit.TextEditor
 			return data.Select(a => StrCoder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
 		}
 
+		ExpressionData GetExpressionData()
+		{
+			var strs = Selections.Select(range => GetString(range)).ToList();
+			var data = new Dictionary<string, List<string>>
+			{
+				{ "x", strs },
+				{ "y", strs.Select((str, order) => (order + 1).ToString()).ToList() },
+				{ "z", strs.Select((str, order) => order.ToString()).ToList() },
+				{ "c", ClipboardWindow.GetStrings() },
+				{ "rk", keysAndValues[0] },
+			};
+			Enumerable.Range(1, 9).ToList().ForEach(num => data[String.Format("rv{0}", num)] = keysAndValues[num]);
+
+			for (var num = 1; num <= 9; ++num)
+			{
+				var values = new List<string>();
+				if (keysAndValues[0].Count == keysAndValues[num].Count)
+				{
+					foreach (var str in strs)
+					{
+						if (!keysHash.ContainsKey(str))
+							values.Add(null);
+						else
+							values.Add(keysAndValues[num][keysHash[str]]);
+					}
+				}
+				data[String.Format("v{0}", num)] = values;
+			}
+
+			var expressionData = new ExpressionData { vars = data.Keys.ToList(), values = new List<string[]>() };
+			for (var value = 0; value < Selections.Count; ++value)
+			{
+				var values = new string[expressionData.vars.Count];
+				for (var key = 0; key < values.Length; ++key)
+				{
+					if (value < data[expressionData.vars[key]].Count)
+						values[key] = data[expressionData.vars[key]][value];
+				}
+				expressionData.values.Add(values);
+			}
+
+			return expressionData;
+		}
+
 		internal void Command_File_Save()
 		{
 			if (FileName == null)
@@ -1085,12 +1129,14 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Data_EvaluateExpression()
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			var result = GetExpressionDialog.Run(strs, false);
+			var expressionData = GetExpressionData();
+			var result = GetExpressionDialog.Run(expressionData, false);
 			if (result == null)
 				return;
 
-			strs = strs.Select((str, pos) => result.Expression.Evaluate(str, pos + 1).ToString()).ToList();
+			var strs = new List<string>();
+			for (var ctr = 0; ctr < expressionData.values.Count; ++ctr)
+				strs.Add(result.Expression.Evaluate(expressionData.values[ctr]).ToString());
 			ReplaceSelections(strs);
 		}
 
@@ -1422,14 +1468,14 @@ namespace NeoEdit.TextEditor
 
 		internal void Command_Select_ExpressionMatches()
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			var result = GetExpressionDialog.Run(strs, true);
+			var expressionData = GetExpressionData();
+			var result = GetExpressionDialog.Run(expressionData, true);
 			if (result == null)
 				return;
 
 			var sels = new List<Range>();
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
-				if ((bool)result.Expression.Evaluate(strs[ctr], ctr + 1) == result.IncludeMatches)
+			for (var ctr = 0; ctr < expressionData.values.Count; ++ctr)
+				if ((bool)result.Expression.Evaluate(expressionData.values[ctr]) == result.IncludeMatches)
 					sels.Add(Selections[ctr]);
 			Selections.Replace(sels);
 		}
