@@ -605,7 +605,7 @@ namespace NeoEdit.TextEditor
 			else
 				offsets = offsets.Select(ofs => ofs - 1).ToList();
 
-			Selections.Replace(Selections.Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], !isLine, isLine, selecting)).ToList());
+			Selections.Replace(Selections.Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], selecting, !isLine, isLine)).ToList());
 		}
 
 		internal void Command_Files_CutCopy(bool isCut)
@@ -1743,6 +1743,7 @@ namespace NeoEdit.TextEditor
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
+			var selecting = shiftDown;
 			e.Handled = true;
 			switch (e.Key)
 			{
@@ -1812,13 +1813,13 @@ namespace NeoEdit.TextEditor
 							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
 							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
 							if (controlDown)
-								Selections[ctr] = MoveCursor(Selections[ctr], GetPrevWord(Selections[ctr].Cursor));
-							else if ((!shiftDown) && (hasSelection))
+								Selections[ctr] = MoveCursor(Selections[ctr], GetPrevWord(Selections[ctr].Cursor), selecting);
+							else if ((!selecting) && (hasSelection))
 								Selections[ctr] = new Range(Selections[ctr].Start);
 							else if ((index == 0) && (line != 0))
-								Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, indexRel: false);
+								Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, selecting, indexRel: false);
 							else
-								Selections[ctr] = MoveCursor(Selections[ctr], 0, -1);
+								Selections[ctr] = MoveCursor(Selections[ctr], 0, -1, selecting);
 						}
 					}
 					break;
@@ -1830,13 +1831,13 @@ namespace NeoEdit.TextEditor
 							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
 							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
 							if (controlDown)
-								Selections[ctr] = MoveCursor(Selections[ctr], GetNextWord(Selections[ctr].Cursor));
-							else if ((!shiftDown) && (hasSelection))
+								Selections[ctr] = MoveCursor(Selections[ctr], GetNextWord(Selections[ctr].Cursor), selecting);
+							else if ((!selecting) && (hasSelection))
 								Selections[ctr] = new Range(Selections[ctr].End);
 							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
-								Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, indexRel: false);
+								Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, selecting, indexRel: false);
 							else
-								Selections[ctr] = MoveCursor(Selections[ctr], 0, 1);
+								Selections[ctr] = MoveCursor(Selections[ctr], 0, 1, selecting);
 						}
 					}
 					break;
@@ -1845,18 +1846,18 @@ namespace NeoEdit.TextEditor
 					{
 						var mult = e.Key == Key.Up ? -1 : 1;
 						if (!controlDown)
-							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0)).ToList());
-						else if (!shiftDown)
+							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0, selecting)).ToList());
+						else if (!selecting)
 							yScrollValue += mult;
 						else if (e.Key == Key.Down)
-							Selections.Add(MoveCursor(Selections.Last(), mult, 0, selecting: false));
+							Selections.Add(MoveCursor(Selections.Last(), mult, 0, false));
 						else if (Selections.Count > 1)
 							Selections.RemoveAt(Selections.Count - 1);
 					}
 					break;
 				case Key.Home:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset())).ToList()); // Have to use MoveCursor for selection
+						Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset(), selecting)).ToList()); // Have to use MoveCursor for selection
 					else
 					{
 						bool changed = false;
@@ -1877,32 +1878,32 @@ namespace NeoEdit.TextEditor
 
 							if (first != index)
 								changed = true;
-							Selections[ctr] = MoveCursor(Selections[ctr], 0, first, indexRel: false);
+							Selections[ctr] = MoveCursor(Selections[ctr], 0, first, selecting, indexRel: false);
 						}
 						if (!changed)
 						{
-							Selections.Replace(Selections.Select(range => MoveCursor(range, 0, 0, indexRel: false)).ToList());
+							Selections.Replace(Selections.Select(range => MoveCursor(range, 0, 0, selecting, indexRel: false)).ToList());
 							xScrollValue = 0;
 						}
 					}
 					break;
 				case Key.End:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => MoveCursor(range, EndOffset())).ToList()); // Have to use MoveCursor for selection
+						Selections.Replace(Selections.Select(range => MoveCursor(range, EndOffset(), selecting)).ToList()); // Have to use MoveCursor for selection
 					else
-						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, indexRel: false)).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, selecting, indexRel: false)).ToList());
 					break;
 				case Key.PageUp:
 					if (controlDown)
 						yScrollValue -= yScrollViewportFloor / 2;
 					else
-						Selections.Replace(Selections.Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0)).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0, selecting)).ToList());
 					break;
 				case Key.PageDown:
 					if (controlDown)
 						yScrollValue += yScrollViewportFloor / 2;
 					else
-						Selections.Replace(Selections.Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0)).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0, selecting)).ToList());
 					break;
 				case Key.Tab:
 					{
@@ -1916,7 +1917,7 @@ namespace NeoEdit.TextEditor
 						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy(line => line).ToDictionary(line => line, line => Data.GetOffset(line, 0));
 						int offset;
 						string replace;
-						if (shiftDown)
+						if (selecting)
 						{
 							offset = 1;
 							replace = "";
@@ -1946,7 +1947,7 @@ namespace NeoEdit.TextEditor
 							if (newPos == -1)
 								continue;
 
-							Selections[ctr] = MoveCursor(Selections[ctr], newPos);
+							Selections[ctr] = MoveCursor(Selections[ctr], newPos, selecting);
 						}
 					}
 					else
@@ -2050,17 +2051,15 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		Range MoveCursor(Range range, int cursor, bool? selecting = null)
+		Range MoveCursor(Range range, int cursor, bool selecting)
 		{
-			if (selecting == null)
-				selecting = shiftDown;
-			if (selecting.Value)
+			if (selecting)
 				return new Range(cursor, range.Highlight);
 
 			return new Range(cursor);
 		}
 
-		Range MoveCursor(Range range, int line, int index, bool lineRel = true, bool indexRel = true, bool? selecting = null)
+		Range MoveCursor(Range range, int line, int index, bool selecting, bool lineRel = true, bool indexRel = true)
 		{
 			if ((lineRel) || (indexRel))
 			{
