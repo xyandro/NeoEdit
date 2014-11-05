@@ -18,6 +18,7 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Globals">
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <ProjectGuid>{95A660DC-FBFE-4560-A433-0B024494B213}</ProjectGuid>
@@ -101,7 +102,6 @@
       <Project>{785c1014-852f-4ec1-a2d6-cdb52880b7ad}</Project>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
