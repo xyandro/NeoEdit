@@ -37,30 +37,33 @@ namespace NeoEdit.TextEditor
 	{
 		public static void DeOverlap(this ObservableCollection<Range> ranges)
 		{
-			var rangeList = ranges.OrderBy(range => range.End).OrderBy(range => range.Start).ToList();
-			Range last = null;
-			var newRanges = new List<Range>();
-			var ctr2 = 0;
-			while (true)
+			if (ranges.Count == 0)
+				return;
+
+			var end = new Dictionary<int, int>();
+			var cursorFirst = new Dictionary<int, bool>();
+			foreach (var range in ranges)
 			{
-				var range = ctr2 < rangeList.Count ? rangeList[ctr2++] : null;
-				if (last != null)
-				{
-					if (range != null)
-					{
-						if ((last.Start == range.Start) && (last.End == range.End))
-							continue;
-						last = new Range(Math.Min(last.Cursor, range.Start), Math.Min(last.Highlight, range.Start));
-					}
+				if ((end.ContainsKey(range.Start)) && (range.End <= end[range.Start]))
+					continue;
 
-					newRanges.Add(last);
-				}
-				last = range;
-				if (last == null)
-					break;
+				end[range.Start] = range.End;
+				cursorFirst[range.Start] = range.Cursor < range.Highlight;
 			}
+			var start = end.Keys.ToList();
+			start.Sort();
+			start.Add(end[start[start.Count - 1]]);
 
-			ranges.Replace(newRanges);
+			ranges.Clear();
+			for (var ctr = 0; ctr < start.Count - 1; ++ctr)
+			{
+				var rangeStart = start[ctr];
+				var rangeEnd = Math.Min(end[rangeStart], start[ctr + 1]);
+				if (cursorFirst[rangeStart])
+					ranges.Add(new Range(rangeStart, rangeEnd));
+				else
+					ranges.Add(new Range(rangeEnd, rangeStart));
+			}
 		}
 
 		public static List<int> GetTranslateNums(params IEnumerable<Range>[] ranges)
