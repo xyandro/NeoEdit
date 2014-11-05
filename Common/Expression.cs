@@ -73,29 +73,6 @@ namespace NeoEdit.Common
 		readonly string expression;
 		bool debug = false;
 
-		static readonly Regex simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|\b(true|false)\b", RegexOptions.IgnoreCase);
-
-		static readonly string parenPlaceholder = "#PARENS#";
-
-		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int", "Long", "FileName", "StrFormat" };
-		static readonly Regex functionRE = new Regex(String.Format(@"\b({0})\s*{1}", String.Join("|", functions), parenPlaceholder));
-		static readonly Regex functionArgsRE = new Regex(@"(\[[vir]\d+\])\s*($|,)");
-
-		static readonly List<List<string>> binaryOperators = new List<List<string>>
-		{
-			new List<string>{ "." },
-			new List<string>{ "*", "/", "%" },
-			new List<string>{ "+", "-", "t+" },
-			new List<string>{ "IS" },
-			new List<string>{ "<", "<=", ">", ">=", "t<", "t<=", "t>", "t>=", "ti<", "ti<=", "ti>", "ti>=" },
-			new List<string>{ "=", "==", "!=", "t==", "t!=", "ti==", "ti!=" },
-			new List<string>{ "&&" },
-			new List<string>{ "||" },
-		};
-		static readonly List<Regex> binaryOperatorREs = binaryOperators.Select(a => new Regex(String.Format(@"(\[[vir]\d+\])\s*({0})\s*(\[[vir]\d+\])", String.Join("|", a.Select(b => Regex.Escape(b)))))).ToList();
-
-		static readonly Regex ternaryOperatorRE = new Regex(@"(\[[vir]\d+\])\s*\?\s*(\[[vir]\d+\])\s*:\s*(\[[vir]\d+\])");
-
 		public Expression(string expression, List<string> vars = null)
 		{
 			this.expression = expression;
@@ -121,24 +98,13 @@ namespace NeoEdit.Common
 
 			internals = new List<object>();
 
-			var varsRE = vars != null ? new Regex(String.Format(@"\b({0})\b", String.Join("|", vars)), RegexOptions.Compiled) : null;
+			var varsRE = vars != null ? String.Format(@"|\b({0})\b", String.Join("|", vars)) : "";
+			var simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|\b(true|false)\b" + varsRE, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 			var result = "";
 			while (true)
 			{
-				bool isVars = false;
-				Match match = null;
-
-				if (varsRE != null)
-				{
-					match = varsRE.Match(expression);
-					isVars = true;
-				}
-				if ((match == null) || (!match.Success))
-				{
-					match = simplifyTermRE.Match(expression);
-					isVars = false;
-				}
+				var match = simplifyTermRE.Match(expression);
 				if (!match.Success)
 				{
 					result += expression;
@@ -148,9 +114,7 @@ namespace NeoEdit.Common
 				result += expression.Substring(0, match.Index);
 				expression = expression.Substring(match.Index + match.Length);
 
-				if (isVars)
-					result += "[v" + vars.IndexOf(match.Groups[1].Value) + "]";
-				else if (match.Groups[1].Success)
+				if (match.Groups[1].Success)
 					result += "[v" + match.Value.Substring(1, match.Length - 2) + "]";
 				else if (match.Groups[2].Success)
 				{
@@ -167,6 +131,8 @@ namespace NeoEdit.Common
 					result += "[i" + internals.Count + "]";
 					internals.Add(Boolean.Parse(match.Groups[4].Value));
 				}
+				else if (match.Groups[5].Success)
+					result += "[v" + vars.IndexOf(match.Groups[5].Value) + "]";
 			}
 			expression = result;
 
@@ -178,6 +144,7 @@ namespace NeoEdit.Common
 				liveExp = expression;
 		}
 
+		static readonly string parenPlaceholder = "#PARENS#";
 		bool EnterParens(ref string expression, Stack<string> expressionStack)
 		{
 			bool inStr = false;
@@ -216,6 +183,9 @@ namespace NeoEdit.Common
 			return false;
 		}
 
+		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int", "Long", "FileName", "StrFormat" };
+		static readonly Regex functionRE = new Regex(String.Format(@"\b({0})\s*{1}", String.Join("|", functions), parenPlaceholder));
+		static readonly Regex functionArgsRE = new Regex(@"(\[[vir]\d+\])\s*($|,)");
 		bool ExitParensAndEvalFunctions(ref string expression, Stack<string> expressionStack, List<object> internals, ref int results)
 		{
 			if (expressionStack.Count == 0)
@@ -262,6 +232,18 @@ namespace NeoEdit.Common
 			throw new Exception("Invalid expression");
 		}
 
+		static readonly List<List<string>> binaryOperators = new List<List<string>>
+		{
+			new List<string>{ "." },
+			new List<string>{ "*", "/", "%" },
+			new List<string>{ "+", "-", "t+" },
+			new List<string>{ "IS" },
+			new List<string>{ "<", "<=", ">", ">=", "t<", "t<=", "t>", "t>=", "ti<", "ti<=", "ti>", "ti>=" },
+			new List<string>{ "=", "==", "!=", "t==", "t!=", "ti==", "ti!=" },
+			new List<string>{ "&&" },
+			new List<string>{ "||" },
+		};
+		static readonly List<Regex> binaryOperatorREs = binaryOperators.Select(a => new Regex(String.Format(@"(\[[vir]\d+\])\s*({0})\s*(\[[vir]\d+\])", String.Join("|", a.Select(b => Regex.Escape(b)))))).ToList();
 		bool DoBinaryOperation(ref string expression, List<object> internals, ref int results)
 		{
 			foreach (var binaryOperatorRE in binaryOperatorREs)
@@ -280,6 +262,7 @@ namespace NeoEdit.Common
 			return false;
 		}
 
+		static readonly Regex ternaryOperatorRE = new Regex(@"(\[[vir]\d+\])\s*\?\s*(\[[vir]\d+\])\s*:\s*(\[[vir]\d+\])");
 		bool DoTernaryOperation(ref string expression, List<object> internals, ref int results)
 		{
 			var match = ternaryOperatorRE.Match(expression);
