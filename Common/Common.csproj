@@ -1,90 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1C928016-0E00-4125-80A5-458B82F1EC0D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NeoEdit.Common</RootNamespace>
     <AssemblyName>Common</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
-    <PlatformTarget>$(Platform)</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="LinqHelper.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="LinqHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Properties\AssemblyInfo.Template.cs" />
     <Compile Include="Searcher.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Searcher.tt</DependentUpon>
     </Compile>
-    <Compile Include="Transform\Checksum.cs" />
-    <Compile Include="Transform\Compression.cs" />
-    <Compile Include="Transform\Crypto.cs" />
-    <Compile Include="Transform\Coder.cs" />
-    <Compile Include="Transform\StrCoder.cs" />
-    <Compile Include="Helpers.cs" />
-    <Compile Include="UnitTest\ChecksumTest.cs" />
-    <Compile Include="UnitTest\CoderTest.cs" />
-    <Compile Include="UnitTest\CompressionTest.cs" />
-    <Compile Include="UnitTest\SearcherTest.cs" />
-    <Compile Include="UnitTest\ExpressionTest.cs" />
-    <Compile Include="UnitTest\CryptoTest.cs" />
-    <Compile Include="UnitTest\UnitTest.cs" />
-    <Compile Include="UnitTest\UnicodeTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Properties\AssemblyInfo.Template.cs" />
     <None Include="Searcher.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Searcher.cs</LastGenOutput>
     </None>
+    <Compile Include="Transform\Checksum.cs" />
+    <Compile Include="Transform\Coder.cs" />
+    <Compile Include="Transform\Compression.cs" />
+    <Compile Include="Transform\Crypto.cs" />
+    <Compile Include="Transform\StrCoder.cs" />
+    <Compile Include="UnitTest\ChecksumTest.cs" />
+    <Compile Include="UnitTest\CoderTest.cs" />
+    <Compile Include="UnitTest\CompressionTest.cs" />
+    <Compile Include="UnitTest\CryptoTest.cs" />
+    <Compile Include="UnitTest\ExpressionTest.cs" />
+    <Compile Include="UnitTest\SearcherTest.cs" />
+    <Compile Include="UnitTest\UnicodeTest.cs" />
+    <Compile Include="UnitTest\UnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>SubWCRev "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.Template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs"</PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -1,129 +1,90 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NeoEdit.BinaryEditor</RootNamespace>
     <AssemblyName>BinaryEditor</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
-    <PlatformTarget>$(Platform)</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.Toolkit, Version=2.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Xceed.Wpf.Toolkit.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
+    <Page Include="BinaryEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="BinaryEditor.xaml.cs">
+      <DependentUpon>BinaryEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Commands.cs" />
-    <Page Include="Dialogs\EncodingsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DisplayString.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\FillDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Menu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Dialogs\EncodingsDialog.xaml.cs">
-      <DependentUpon>EncodingsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DisplayString.xaml.cs">
-      <DependentUpon>DisplayString.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Menu.xaml.cs">
-      <DependentUpon>Menu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FillDialog.xaml.cs">
-      <DependentUpon>FillDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UndoRedo.cs" />
+    <Compile Include="Converters\DisplayValueConverter.cs" />
     <Compile Include="Data\BinaryData.cs" />
     <Compile Include="Data\DumpBinaryData.cs" />
     <Compile Include="Data\MemoryBinaryData.cs" />
     <Compile Include="Data\ProcessBinaryData.cs" />
     <Compile Include="Data\SharedMemoryBinaryData.cs" />
-    <Compile Include="Dialogs\SymmetricKeyDialog.xaml.cs">
-      <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\AsymmetricKeyDialog.xaml.cs">
-      <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BinaryEditor.xaml.cs">
-      <DependentUpon>BinaryEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DisplayValue.xaml.cs">
-      <DependentUpon>DisplayValue.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Converters\DisplayValueConverter.cs" />
-    <Compile Include="DisplayValues.xaml.cs">
-      <DependentUpon>DisplayValues.xaml</DependentUpon>
-    </Compile>
-    <Page Include="BinaryEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\SymmetricKeyDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Dialogs\AsymmetricKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\AsymmetricKeyDialog.xaml.cs">
+      <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\EncodingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EncodingsDialog.xaml.cs">
+      <DependentUpon>EncodingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FillDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FillDialog.xaml.cs">
+      <DependentUpon>FillDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\SymmetricKeyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\SymmetricKeyDialog.xaml.cs">
+      <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="DisplayString.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="DisplayString.xaml.cs">
+      <DependentUpon>DisplayString.xaml</DependentUpon>
+    </Compile>
     <Page Include="DisplayValue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="DisplayValue.xaml.cs">
+      <DependentUpon>DisplayValue.xaml</DependentUpon>
+    </Compile>
     <Page Include="DisplayValues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="DisplayValues.xaml.cs">
+      <DependentUpon>DisplayValues.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Menu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Menu.xaml.cs">
+      <DependentUpon>Menu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Misc.cs" />
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="Properties\AssemblyInfo.Template.cs" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -131,14 +92,7 @@
     <Compile Include="Tabs.xaml.cs">
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Misc.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="Properties\AssemblyInfo.Template.cs" />
-    <AppDesigner Include="Properties\" />
+    <Compile Include="UndoRedo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -154,15 +108,4 @@
       <Name>Win32</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>SubWCRev "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.Template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs"</PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

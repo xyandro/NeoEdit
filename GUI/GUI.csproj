@@ -1,144 +1,103 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{53DA8D50-6F45-4663-8101-9DD4BF99096E}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NeoEdit.GUI</RootNamespace>
     <AssemblyName>GUI</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
-    <PlatformTarget>$(Platform)</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="About\AboutWindow.xaml.cs">
-      <DependentUpon>AboutWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ClipboardWindow.xaml.cs">
-      <DependentUpon>ClipboardWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\Font.cs" />
-    <Compile Include="Common\RadioConverter.cs" />
-    <Compile Include="Common\RunOnceTimer.cs" />
-    <Compile Include="Common\EventLogger.cs" />
-    <Compile Include="Common\Tabs.cs" />
-    <Compile Include="Common\RenderCanvas.cs" />
-    <Compile Include="Common\NECommand.cs" />
-    <Compile Include="Common\HelpMenu.xaml.cs">
-      <DependentUpon>HelpMenu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\InputGestureTextConverter.cs" />
-    <Compile Include="Common\WindowMenu.xaml.cs">
-      <DependentUpon>WindowMenu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\ExpressionConverter.cs" />
-    <Compile Include="Common\AutoCompleteTextBox.xaml.cs">
-      <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\BinaryFindDialog.xaml.cs">
-      <DependentUpon>BinaryFindDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\EncodingDialog.xaml.cs">
-      <DependentUpon>EncodingDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Message.xaml.cs">
-      <DependentUpon>Message.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\UIHelper.cs" />
-    <Compile Include="Dialogs\GetNumDialog.xaml.cs">
-      <DependentUpon>GetNumDialog.xaml</DependentUpon>
-    </Compile>
+    <Resource Include="..\Photoshop\NeoEdit.png">
+      <Link>About\NeoEdit.png</Link>
+    </Resource>
     <Page Include="About\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="About\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="ClipboardWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Common\HelpMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Common\WindowMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="ClipboardWindow.xaml.cs">
+      <DependentUpon>ClipboardWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Common\AutoCompleteTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="Common\AutoCompleteTextBox.xaml.cs">
+      <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\EventLogger.cs" />
+    <Compile Include="Common\ExpressionConverter.cs" />
+    <Compile Include="Common\Font.cs" />
+    <Page Include="Common\HelpMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Common\HelpMenu.xaml.cs">
+      <DependentUpon>HelpMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\InputGestureTextConverter.cs" />
+    <Compile Include="Common\KeySet.cs" />
+    <Compile Include="Common\NECommand.cs" />
+    <Compile Include="Common\RadioConverter.cs" />
+    <Compile Include="Common\RenderCanvas.cs" />
+    <Compile Include="Common\RunOnceTimer.cs" />
+    <Compile Include="Common\Tabs.cs" />
+    <Compile Include="Common\UIHelper.cs" />
+    <Page Include="Common\WindowMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Common\WindowMenu.xaml.cs">
+      <DependentUpon>WindowMenu.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\BinaryFindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\BinaryFindDialog.xaml.cs">
+      <DependentUpon>BinaryFindDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\EncodingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\Message.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="Dialogs\EncodingDialog.xaml.cs">
+      <DependentUpon>EncodingDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\GetNumDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Common\KeySet.cs" />
+    <Compile Include="Dialogs\GetNumDialog.xaml.cs">
+      <DependentUpon>GetNumDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Message.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Message.xaml.cs">
+      <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ValidValueConverter.cs" />
     <Compile Include="ItemGridControl\ItemGrid.cs" />
-    <Compile Include="ItemGridControl\ItemGridTreeItem.cs" />
-    <Compile Include="ItemGridControl\ItemGridTree.cs" />
     <Compile Include="ItemGridControl\ItemGridColumn.cs" />
+    <Compile Include="ItemGridControl\ItemGridTree.cs" />
+    <Compile Include="ItemGridControl\ItemGridTreeItem.cs" />
     <Compile Include="ItemGridControl\StringFormatConverter.cs" />
     <Compile Include="Launcher.cs" />
+    <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <None Include="Properties\AssemblyInfo.Template.cs" />
-    <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\DejaVuSansMono.ttf" />
   </ItemGroup>
   <ItemGroup>
@@ -147,20 +106,4 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\Photoshop\NeoEdit.png">
-      <Link>About\NeoEdit.png</Link>
-    </Resource>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>SubWCRev "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.Template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs"</PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
