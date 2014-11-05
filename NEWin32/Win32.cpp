@@ -36,7 +36,7 @@ void wmain(int argc, wchar_t *argv[])
 
 			auto handleInfo = Win32Lib::GetHandleInfo(handles);
 			for each (auto handle in *handleInfo)
-				printf("PID: %i, Handle: %i, Type: %S, Name: %S, Data %S\n", handle->PID, handle->Handle, handle->Type.c_str(), handle->Name.c_str(), handle->Data.c_str());
+				printf("PID: %i, Handle: %i, Type: %S, Name: %S, Data %S\n", handle->PID, (intptr_t)handle->Handle, handle->Type.c_str(), handle->Name.c_str(), handle->Data.c_str());
 		}
 		else if (params[0] == L"-types")
 		{
