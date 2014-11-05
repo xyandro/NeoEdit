@@ -36,4 +36,5 @@
       <Name>Win32</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
 </Project>

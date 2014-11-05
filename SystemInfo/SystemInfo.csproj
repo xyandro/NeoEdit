@@ -32,4 +32,5 @@
       <Name>GUI</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
 </Project>

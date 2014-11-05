@@ -36,6 +36,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-400C-4A95-B92C-95DF0146B2F4}"
 	ProjectSection(SolutionItems) = preProject
 		NeoEdit.csproj.props = NeoEdit.csproj.props
+		NeoEdit.csproj2.props = NeoEdit.csproj2.props
 		NeoEdit.vcxproj.props = NeoEdit.vcxproj.props
 		NeoEdit.vcxproj2.props = NeoEdit.vcxproj2.props
 		Todo.txt = Todo.txt
