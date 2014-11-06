@@ -44,10 +44,11 @@ namespace NeoEdit.Disk
 			UIHelper<DiskWindow>.Register();
 			UIHelper<DiskWindow>.AddCallback(a => a.Location, (obj, o, n) => { if (obj.Location != null) { obj.Recursive = false; obj.locationChangedTimer.Start(); } });
 			UIHelper<DiskWindow>.AddCallback(a => a.Recursive, (obj, o, n) => obj.locationChangedTimer.Start());
+			UIHelper<DiskWindow>.AddObservableCallback(a => a.Files, (obj, o, n) => obj.filesChangedTimer.Start());
 			UIHelper<DiskWindow>.AddObservableCallback(a => a.Columns, (obj, s, e) => ++obj.ColumnsChangeCount);
 		}
 
-		RunOnceTimer locationChangedTimer;
+		RunOnceTimer locationChangedTimer, filesChangedTimer;
 
 		public DiskWindow(string path = null)
 		{
@@ -55,6 +56,9 @@ namespace NeoEdit.Disk
 				path = Directory.GetCurrentDirectory();
 
 			locationChangedTimer = new RunOnceTimer(() => LocationChanged());
+			filesChangedTimer = new RunOnceTimer(() => FilesChanged());
+			filesChangedTimer.AddDependency(locationChangedTimer);
+
 
 			InitializeComponent();
 			location.GotFocus += (s, e) => location.SelectAll();
@@ -114,7 +118,7 @@ namespace NeoEdit.Disk
 				location.Text = Location.FullName;
 			}
 
-			Command_View_Refresh();
+			PopulateFilesFromLocation();
 			files.ResetScroll();
 
 			if (selectedFile != null)
@@ -126,6 +130,73 @@ namespace NeoEdit.Disk
 			}
 
 			locationChangedTimer.Stop();
+			filesChangedTimer.Stop();
+		}
+
+		void FilesChanged()
+		{
+			Location = null;
+			RemoveDuplicateFiles();
+			filesChangedTimer.Stop();
+		}
+
+		void RemoveDuplicateFiles()
+		{
+			var selected = new HashSet<string>(Selected.Select(file => file.FullName));
+			var focused = Focused == null ? null : Focused.FullName;
+
+			var duplicates = Files.GroupBy(file => file.FullName).SelectMany(group => group.Skip(1)).ToList();
+
+			foreach (var dup in duplicates)
+				Files.Remove(dup);
+
+			foreach (var file in Files)
+			{
+				if (file.FullName == focused)
+					Focused = file;
+				if (selected.Contains(file.FullName))
+					Selected.Add(file);
+			}
+		}
+
+		void SyncFiles(List<DiskItem> items)
+		{
+			var filesDict = Files.ToDictionary(file => file.FullName, file => file);
+			var itemsDict = items.ToDictionary(file => file.FullName, file => file);
+			filesDict.Where(pair => !itemsDict.ContainsKey(pair.Key)).ToList().ForEach(pair => Files.Remove(pair.Value));
+			itemsDict.Where(pair => !filesDict.ContainsKey(pair.Key)).ToList().ForEach(pair => Files.Add(pair.Value));
+			filesDict.Where(pair => itemsDict.ContainsKey(pair.Key)).ToList().ForEach(pair => pair.Value.Refresh());
+		}
+
+		void PopulateFilesFromLocation()
+		{
+			List<DiskItem> items;
+
+			if (Location == null)
+				items = Files.Where(file => file.Exists).ToList();
+			else
+				items = new List<DiskItem> { Location };
+
+			var found = new HashSet<string>(items.Select(file => file.FullName));
+			if ((Location != null) || (Recursive))
+				for (var ctr = 0; ctr < items.Count; ++ctr)
+				{
+					if (items[ctr].HasChildren)
+						foreach (var file in items[ctr].GetChildren())
+						{
+							if (found.Contains(file.FullName))
+								continue;
+							items.Add(file);
+							found.Add(file.FullName);
+						}
+					if (!Recursive)
+					{
+						items.RemoveAt(ctr);
+						break;
+					}
+				}
+
+			SyncFiles(items);
 		}
 
 		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
@@ -270,7 +341,7 @@ namespace NeoEdit.Disk
 			//	location.CopyFrom(item, newName);
 			//}
 
-			//Command_View_Refresh();
+			//PopulateFilesFromLocation();
 		}
 
 		internal void Command_Edit_Find()
@@ -321,6 +392,7 @@ namespace NeoEdit.Disk
 			foreach (var file in files)
 				if (SearchFile(file, search))
 					Selected.Add(file);
+			Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Edit_TextEdit()
@@ -333,6 +405,22 @@ namespace NeoEdit.Disk
 		{
 			foreach (var file in Selected)
 				Launcher.Static.LaunchBinaryEditor(file.FullName);
+		}
+
+		internal void Command_Edit_AddCopiedCut()
+		{
+			var files = ClipboardWindow.GetStrings();
+			if (files == null)
+				return;
+
+			Selected.Clear();
+			foreach (var file in files)
+			{
+				var diskItem = new DiskItem(file);
+				Files.Add(diskItem);
+				Selected.Add(diskItem);
+			}
+			Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Select_All()
@@ -362,6 +450,7 @@ namespace NeoEdit.Disk
 			foreach (var file in Files)
 				if (file.HasChildren)
 					Selected.Add(file);
+			Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Select_Files()
@@ -370,6 +459,7 @@ namespace NeoEdit.Disk
 			foreach (var file in Files)
 				if (!file.HasChildren)
 					Selected.Add(file);
+			Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Select_Expression(bool addToSel)
@@ -382,6 +472,8 @@ namespace NeoEdit.Disk
 				Selected.Clear();
 			foreach (var file in Files.Where(file => regex.IsMatch(file.Name)).ToList())
 				Selected.Add(file);
+			if (!addToSel)
+				Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Select_AddCopiedCut()
@@ -397,13 +489,11 @@ namespace NeoEdit.Disk
 
 		internal void Command_Select_Remove()
 		{
-			Location = null;
 			Selected.ToList().ForEach(file => Files.Remove(file));
 		}
 
 		internal void Command_Select_RemoveWithChildren()
 		{
-			Location = null;
 			foreach (var sel in Selected.ToList())
 			{
 				Files.Remove(sel);
@@ -413,49 +503,17 @@ namespace NeoEdit.Disk
 
 		internal void Command_View_Refresh()
 		{
-			List<DiskItem> items;
-
-			if (Location == null)
-				items = Files.Where(file => file.Exists).ToList();
-			else
-				items = new List<DiskItem> { Location };
-
-			var found = new HashSet<string>(items.Select(file => file.FullName));
-			if ((Location != null) || (Recursive))
-				for (var ctr = 0; ctr < items.Count; ++ctr)
-				{
-					if (items[ctr].HasChildren)
-						foreach (var file in items[ctr].GetChildren())
-						{
-							if (found.Contains(file.FullName))
-								continue;
-							items.Add(file);
-							found.Add(file.FullName);
-						}
-					if (!Recursive)
-					{
-						items.RemoveAt(ctr);
-						break;
-					}
-				}
-
-			var filesDict = Files.ToDictionary(file => file.FullName, file => file);
-			var itemsDict = items.ToDictionary(file => file.FullName, file => file);
-			filesDict.Where(pair => !itemsDict.ContainsKey(pair.Key)).ToList().ForEach(pair => Files.Remove(pair.Value));
-			itemsDict.Where(pair => !filesDict.ContainsKey(pair.Key)).ToList().ForEach(pair => Files.Add(pair.Value));
-			filesDict.Where(pair => itemsDict.ContainsKey(pair.Key)).ToList().ForEach(pair => pair.Value.Refresh());
+			PopulateFilesFromLocation();
+			filesChangedTimer.Stop();
 		}
 
 		internal void ToggleColumn(DependencyProperty property)
 		{
 			var found = Columns.FirstOrDefault(a => a.DepProp == property);
 			if (found != null)
-			{
 				Columns.Remove(found);
-				return;
-			}
-
-			ShowColumn(property);
+			else
+				ShowColumn(property);
 		}
 
 		internal void SetSort(DependencyProperty property)

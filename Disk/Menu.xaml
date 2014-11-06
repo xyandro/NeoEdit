@@ -27,6 +27,8 @@
 		<Separator/>
 		<disk:DiskMenuItem Header="Text Edit" CommandEnum="Edit_TextEdit"/>
 		<disk:DiskMenuItem Header="Binary Edit" CommandEnum="Edit_BinaryEdit"/>
+		<Separator/>
+		<disk:DiskMenuItem Header="Add copied/cut" CommandEnum="Edit_AddCopiedCut"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<disk:DiskMenuItem Header="_All" CommandEnum="Select_All"/>
