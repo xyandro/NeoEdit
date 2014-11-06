@@ -129,27 +129,26 @@ namespace NeoEdit.Disk
 
 		void FilesChanged()
 		{
-			RemoveDuplicateFiles();
-			filesChangedTimer.Stop();
-		}
-
-		void RemoveDuplicateFiles()
-		{
-			var selected = new HashSet<string>(Selected.Select(file => file.FullName));
-			var focused = Focused == null ? null : Focused.FullName;
-
 			var duplicates = Files.GroupBy(file => file.FullName).SelectMany(group => group.Skip(1)).ToList();
-
-			foreach (var dup in duplicates)
-				Files.Remove(dup);
-
-			foreach (var file in Files)
+			if (duplicates.Any())
 			{
-				if (file.FullName == focused)
-					Focused = file;
-				if (selected.Contains(file.FullName))
-					Selected.Add(file);
+				var selected = new HashSet<string>(Selected.Select(file => file.FullName));
+				var focused = Focused == null ? null : Focused.FullName;
+
+				foreach (var dup in duplicates)
+					Files.Remove(dup);
+
+				foreach (var file in Files)
+				{
+					if (file.FullName == focused)
+						Focused = file;
+					if (selected.Contains(file.FullName))
+						Selected.Add(file);
+				}
 			}
+
+			files.BringFocusedIntoView();
+			filesChangedTimer.Stop();
 		}
 
 		void SyncFiles(List<DiskItem> items)
@@ -367,7 +366,8 @@ namespace NeoEdit.Disk
 			foreach (var file in files)
 				if (SearchFile(file, search))
 					Selected.Add(file);
-			Focused = Selected.FirstOrDefault();
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Edit_TextEdit()
@@ -380,22 +380,6 @@ namespace NeoEdit.Disk
 		{
 			foreach (var file in Selected)
 				Launcher.Static.LaunchBinaryEditor(file.FullName);
-		}
-
-		internal void Command_Edit_AddCopiedCut()
-		{
-			var files = ClipboardWindow.GetStrings();
-			if (files == null)
-				return;
-
-			Selected.Clear();
-			foreach (var file in files)
-			{
-				var diskItem = DiskItem.Get(file);
-				Files.Add(diskItem);
-				Selected.Add(diskItem);
-			}
-			Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Select_All()
@@ -425,7 +409,8 @@ namespace NeoEdit.Disk
 			foreach (var file in Files)
 				if (file.HasChildren)
 					Selected.Add(file);
-			Focused = Selected.FirstOrDefault();
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Select_Files()
@@ -434,7 +419,8 @@ namespace NeoEdit.Disk
 			foreach (var file in Files)
 				if (!file.HasChildren)
 					Selected.Add(file);
-			Focused = Selected.FirstOrDefault();
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Select_Expression(bool addToSel)
@@ -447,7 +433,7 @@ namespace NeoEdit.Disk
 				Selected.Clear();
 			foreach (var file in Files.Where(file => regex.IsMatch(file.Name)).ToList())
 				Selected.Add(file);
-			if (!addToSel)
+			if ((!addToSel) && (!Selected.Contains(Focused)))
 				Focused = Selected.FirstOrDefault();
 		}
 
@@ -456,10 +442,16 @@ namespace NeoEdit.Disk
 			var files = ClipboardWindow.GetStrings();
 			if ((files == null) || (files.Count == 0))
 				return;
-			var existing = new HashSet<string>(Files.Select(file => file.FullName));
+
+			Selected.Clear();
 			foreach (var file in files)
-				if (!existing.Contains(file))
-					Files.Add(new DiskItem(file));
+			{
+				var diskItem = DiskItem.Get(file);
+				Files.Add(diskItem);
+				Selected.Add(diskItem);
+			}
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
 		}
 
 		internal void Command_Select_Remove()

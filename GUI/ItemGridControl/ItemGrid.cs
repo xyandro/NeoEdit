@@ -245,6 +245,12 @@ namespace NeoEdit.GUI.ItemGridControl
 			yScroll.Value = scrollPos;
 		}
 
+		public void BringFocusedIntoView()
+		{
+			showFocus = true;
+			drawTimer.Start();
+		}
+
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
