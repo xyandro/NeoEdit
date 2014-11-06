@@ -31,7 +31,6 @@ namespace NeoEdit.Disk
 		Select_AddCopiedCut,
 		[KeyGesture(Key.OemMinus, ModifierKeys.Alt)] [KeyGesture(Key.OemMinus, ModifierKeys.Control)] Select_Remove,
 		[KeyGesture(Key.OemMinus, ModifierKeys.Alt | ModifierKeys.Shift)] [KeyGesture(Key.OemMinus, ModifierKeys.Control | ModifierKeys.Shift)] Select_RemoveWithChildren,
-		[KeyGesture(Key.F5)] View_Refresh,
 		View_Tiles,
 	}
 }

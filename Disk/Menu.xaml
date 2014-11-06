@@ -89,7 +89,6 @@
 				</Style>
 			</MenuItem.Style>
 		</MenuItem>
-		<disk:DiskMenuItem Header="_Refresh" CommandEnum="View_Refresh"/>
 		<disk:DiskMenuItem Header="_Tiles" CommandEnum="View_Tiles"/>
 	</MenuItem>
 	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
