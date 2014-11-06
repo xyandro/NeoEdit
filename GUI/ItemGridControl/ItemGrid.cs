@@ -76,7 +76,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		int lastFocusedIndex = -1;
 		void SetLastFocusedIndex()
 		{
-			if (Focused == null)
+			if ((Focused == null) || (SortedItems == null))
 				return;
 			var idx = SortedItems.IndexOf(Focused);
 			if (idx == -1)
@@ -152,6 +152,8 @@ namespace NeoEdit.GUI.ItemGridControl
 
 				if (!Items.Contains(Focused))
 					Focused = null;
+
+				SetLastFocusedIndex();
 			}
 
 			verifyTimer.Stop();
