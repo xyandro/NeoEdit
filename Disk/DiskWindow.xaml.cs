@@ -447,6 +447,8 @@ namespace NeoEdit.Disk
 			foreach (var file in files)
 			{
 				var diskItem = DiskItem.Get(file);
+				if (diskItem == null)
+					continue;
 				Files.Add(diskItem);
 				Selected.Add(diskItem);
 			}
