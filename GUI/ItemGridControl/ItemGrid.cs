@@ -22,6 +22,8 @@ namespace NeoEdit.GUI.ItemGridControl
 		[DepProp]
 		public ObservableCollection<ItemType> Items { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
+		public ObservableCollection<ItemType> SortedItems { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
+		[DepProp]
 		public ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public ItemGridColumn SortColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
@@ -63,7 +65,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		{
 			get
 			{
-				var idx = Items.IndexOf(Focused);
+				var idx = SortedItems.IndexOf(Focused);
 				if (idx == -1)
 					return null;
 				return idx;
@@ -76,7 +78,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		{
 			if (Focused == null)
 				return;
-			var idx = Items.IndexOf(Focused);
+			var idx = SortedItems.IndexOf(Focused);
 			if (idx == -1)
 				return;
 			lastFocusedIndex = idx;
@@ -203,12 +205,9 @@ namespace NeoEdit.GUI.ItemGridControl
 			if ((Columns == null) || (Items == null) || (SortColumn == null))
 				return;
 
-			var sorted = Items.OrderBy(a => a, new Comparer(SortColumn.DepProp, SortAscending, (Items.Count <= 500) && (SortColumn.NumericStrings))).ToList();
-			for (var ctr = 0; ctr < sorted.Count; ++ctr)
-				if (Items[ctr] != sorted[ctr])
-					Items[ctr] = sorted[ctr];
+			SortedItems = new ObservableCollection<ItemType>(Items.OrderBy(a => a, new Comparer(SortColumn.DepProp, SortAscending, (Items.Count <= 500) && (SortColumn.NumericStrings))));
 			sortTimer.Stop();
-			verifyTimer.Stop(); // Since verify is a dependency of sort, this way already done
+			verifyTimer.Stop(); // Since verify is a dependency of sort, this was already done
 
 			lastTextInputTime = null;
 			SetLastFocusedIndex();
@@ -251,7 +250,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		WeakReference<ItemType> lastShiftSel;
 		void MoveFocus(int offset, bool relative, bool select = false)
 		{
-			if (!Items.Any())
+			if (!SortedItems.Any())
 				return;
 
 			if (relative)
@@ -260,8 +259,8 @@ namespace NeoEdit.GUI.ItemGridControl
 				else
 					offset += FocusedIndex.Value;
 
-			offset = Math.Max(0, Math.Min(offset, Items.Count - 1));
-			Focused = Items[offset];
+			offset = Math.Max(0, Math.Min(offset, SortedItems.Count - 1));
+			Focused = SortedItems[offset];
 
 			if (!controlDown)
 			{
@@ -274,11 +273,11 @@ namespace NeoEdit.GUI.ItemGridControl
 				ItemType lastSel;
 				if ((lastShiftSel == null) || (!lastShiftSel.TryGetTarget(out lastSel)))
 					lastSel = null;
-				var lastSelIndex = Math.Max(0, Items.IndexOf(lastSel));
+				var lastSelIndex = Math.Max(0, SortedItems.IndexOf(lastSel));
 				var start = Math.Min(lastSelIndex, offset);
 				var end = Math.Max(lastSelIndex, offset);
 				for (var ctr = start; ctr <= end; ++ctr)
-					Selected.Add(Items[ctr]);
+					Selected.Add(SortedItems[ctr]);
 			}
 			else if (select)
 			{
@@ -332,7 +331,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				case Key.Up: MoveFocus(-1, true); break;
 				case Key.Down: MoveFocus(1, true); break;
 				case Key.Home: MoveFocus(0, false); break;
-				case Key.End: MoveFocus(Items.Count - 1, false); break;
+				case Key.End: MoveFocus(SortedItems.Count - 1, false); break;
 				case Key.PageUp:
 					if (yScroll.Value == FocusedIndex)
 						MoveFocus((int)-yScroll.LargeChange, true);
@@ -357,7 +356,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			base.OnTextInput(e);
 			e.Handled = true;
 
-			if ((Columns.Count == 0) || (Items.Count == 0))
+			if ((Columns.Count == 0) || (SortedItems.Count == 0))
 				return;
 
 			var now = DateTime.UtcNow;
@@ -370,13 +369,13 @@ namespace NeoEdit.GUI.ItemGridControl
 			var index = start;
 			while (true)
 			{
-				if (Items[index].GetValue(SortColumn.DepProp).ToString().StartsWith(lastTextInput, StringComparison.OrdinalIgnoreCase))
+				if (SortedItems[index].GetValue(SortColumn.DepProp).ToString().StartsWith(lastTextInput, StringComparison.OrdinalIgnoreCase))
 				{
 					MoveFocus(index, false, true);
 					break;
 				}
 				++index;
-				if (index >= Items.Count)
+				if (index >= SortedItems.Count)
 					index = 0;
 				if (index == start)
 					break;
@@ -386,13 +385,13 @@ namespace NeoEdit.GUI.ItemGridControl
 		bool showFocus = false;
 		void Redraw()
 		{
-			if (Items == null)
+			if (SortedItems == null)
 				return;
 
 			yScroll.ViewportSize = Math.Max(0, Math.Ceiling((xScroll.ViewportHeight - headerHeight) / rowHeight));
 			yScroll.LargeChange = Math.Max(0, Math.Floor((xScroll.ViewportHeight - headerHeight) / rowHeight) - 1);
 			yScroll.Minimum = 0;
-			yScroll.Maximum = Items.Count - yScroll.ViewportSize + 1;
+			yScroll.Maximum = SortedItems.Count - yScroll.ViewportSize + 1;
 
 			if (showFocus)
 			{
@@ -457,10 +456,10 @@ namespace NeoEdit.GUI.ItemGridControl
 			}
 
 			var start = (int)(yScroll.Value);
-			var rows = Math.Min((int)yScroll.ViewportSize, Items.Count - start);
+			var rows = Math.Min((int)yScroll.ViewportSize, SortedItems.Count - start);
 			for (var ctr = 0; ctr < rows; ++ctr)
 			{
-				var item = Items[start + ctr];
+				var item = SortedItems[start + ctr];
 
 				if (Selected.Contains(item))
 				{
