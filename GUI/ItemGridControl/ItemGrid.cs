@@ -321,7 +321,44 @@ namespace NeoEdit.GUI.ItemGridControl
 			}
 
 			if (altDown)
+			{
+				e.Handled = true;
+				switch (e.Key)
+				{
+					case Key.System:
+						switch (e.SystemKey)
+						{
+							case Key.Down:
+							case Key.Up:
+								if ((Selected.Count == 0) || (SortedItems.Count == 0) || (Focused == null))
+									break;
+
+								var index = FocusedIndex.Value;
+								var offset = e.SystemKey == Key.Up ? -1 : 1;
+								while (true)
+								{
+									index += offset;
+									if (index < 0)
+										index = SortedItems.Count - 1;
+									if (index >= SortedItems.Count)
+										index = 0;
+									if (Selected.Contains(SortedItems[index]))
+									{
+										Focused = SortedItems[index];
+										break;
+									}
+								}
+								break;
+							case Key.Space:
+								Focused = SortedItems.FirstOrDefault(item => Selected.Contains(item));
+								break;
+							default: e.Handled = false; break;
+						}
+						break;
+					default: e.Handled = false; break;
+				}
 				return;
+			}
 
 			e.Handled = true;
 			switch (e.Key)
