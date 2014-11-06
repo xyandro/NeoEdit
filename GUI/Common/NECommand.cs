@@ -89,14 +89,15 @@ namespace NeoEdit.GUI.Common
 		static Dictionary<CommandEnumT, NECommand> commands;
 		static public void RegisterCommands(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
 		{
-			if (commands != null)
-				return;
-			commands = new Dictionary<CommandEnumT, NECommand>();
-			foreach (CommandEnumT a in Enum.GetValues(typeof(CommandEnumT)))
-				commands[a] = new NECommand(a);
-			var duplicates = commands.Values.SelectMany(command => command.KeyGestures.Select(keyGesture => keyGesture.Item2)).GroupBy(key => key).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
-			if (duplicates.Any())
-				throw new Exception(String.Format("Duplicate hotkeys: {0}", String.Join(", ", duplicates)));
+			if (commands == null)
+			{
+				commands = new Dictionary<CommandEnumT, NECommand>();
+				foreach (CommandEnumT a in Enum.GetValues(typeof(CommandEnumT)))
+					commands[a] = new NECommand(a);
+				var duplicates = commands.Values.SelectMany(command => command.KeyGestures.Select(keyGesture => keyGesture.Item2)).GroupBy(key => key).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
+				if (duplicates.Any())
+					throw new Exception(String.Format("Duplicate hotkeys: {0}", String.Join(", ", duplicates)));
+			}
 			foreach (var command in commands.Values)
 				command.RegisterCommand(window, handler);
 		}
