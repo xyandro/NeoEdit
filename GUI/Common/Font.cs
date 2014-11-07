@@ -16,7 +16,7 @@ namespace NeoEdit.GUI.Common
 
 		static Font()
 		{
-			var fontFamily = new FontFamily(new Uri("pack://application:,,,/GUI;component/"), "./Resources/#DejaVu Sans Mono");
+			var fontFamily = new FontFamily(new Uri("pack://application:,,,/NeoEdit.GUI;component/"), "./Resources/#DejaVu Sans Mono");
 			typeface = fontFamily.GetTypefaces().First();
 			fontSize = 14;
 			lineHeight = fontSize;
