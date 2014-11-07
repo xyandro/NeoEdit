@@ -49,6 +49,7 @@ namespace NeoEdit.Disk
 				case DiskCommand.File_Identify: Active.Command_File_Identify(); break;
 				case DiskCommand.File_MD5: Active.Command_File_MD5(); break;
 				case DiskCommand.File_SHA1: Active.Command_File_SHA1(); break;
+				case DiskCommand.File_Svn: Active.Command_File_Svn(); break;
 				case DiskCommand.File_Delete: Active.Command_File_Delete(); break;
 				case DiskCommand.Edit_Cut: Active.Command_Edit_Cut(); break;
 				case DiskCommand.Edit_Copy: Active.Command_Edit_Copy(); break;

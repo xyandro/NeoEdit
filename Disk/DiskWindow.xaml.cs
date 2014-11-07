@@ -210,15 +210,22 @@ namespace NeoEdit.Disk
 		internal void Command_File_MD5()
 		{
 			foreach (DiskItem selected in Selected)
-				selected.CalcMD5();
+				selected.SetMD5();
 			ShowColumn(a => a.MD5);
 		}
 
 		internal void Command_File_SHA1()
 		{
 			foreach (DiskItem selected in Selected)
-				selected.CalcSHA1();
+				selected.SetSHA1();
 			ShowColumn(a => a.SHA1);
+		}
+
+		internal void Command_File_Svn()
+		{
+			foreach (DiskItem selected in Selected)
+				selected.SetSvnStatus();
+			ShowColumn(a => a.SvnStatus);
 		}
 
 		internal void Command_File_Delete()
@@ -498,7 +505,7 @@ namespace NeoEdit.Disk
 			var keySet = new KeySet
 			{
 				{ Key.Escape, () => files.Focus() },
-				{ ModifierKeys.Alt, Key.Up, () => SetLocation(Location.Parent) },
+				{ Key.Back, () => SetLocation(Location.Parent) },
 			};
 
 			if (keySet.Run(e))

@@ -47,6 +47,8 @@ namespace NeoEdit.Disk
 		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public DiskItemType Type { get { return UIHelper<DiskItem>.GetPropValue<DiskItemType>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		[DepProp]
+		public VersionControlStatus SvnStatus { get { return UIHelper<DiskItem>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
 		public bool HasChildren { get { return Type != DiskItemType.File; } }
 		public DiskItem Parent { get { return new DiskItem(Path); } }
@@ -203,7 +205,7 @@ namespace NeoEdit.Disk
 			Identity = Identifier.Identify(FullName);
 		}
 
-		public void CalcMD5()
+		public void SetMD5()
 		{
 			if (Type != DiskItemType.File)
 				return;
@@ -211,12 +213,18 @@ namespace NeoEdit.Disk
 			MD5 = Checksum.Get(Checksum.Type.MD5, FullName);
 		}
 
-		public void CalcSHA1()
+		public void SetSHA1()
 		{
 			if (Type != DiskItemType.File)
 				return;
 
 			SHA1 = Checksum.Get(Checksum.Type.SHA1, FullName);
+		}
+
+		static SvnCache svnCache = new SvnCache();
+		public void SetSvnStatus()
+		{
+			SvnStatus = svnCache.GetStatus(FullName, Path);
 		}
 
 		public void Rename(string newName)
