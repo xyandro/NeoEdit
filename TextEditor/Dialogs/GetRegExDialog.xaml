@@ -35,7 +35,7 @@
 		<CheckBox Grid.Row="4" Grid.Column="2" Content="by _group" Name="byGroup" IsChecked="{Binding RegexGroups, ElementName=self}" Focusable="False"/>
 		<CheckBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Name="selectionOnly" Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False"/>
 		<CheckBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Name="includeLineEndings" Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}" Focusable="False"/>
-		<CheckBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Name="includeMatches" Content="_Include Matches" IsChecked="{Binding IncludeMatches, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Name="includeMatches" Content="I_nclude matches" IsChecked="{Binding IncludeMatches, ElementName=self}" Focusable="False"/>
 
 		<Button Grid.Row="9" Grid.ColumnSpan="3" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
 
