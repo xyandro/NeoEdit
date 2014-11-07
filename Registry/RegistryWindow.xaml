@@ -2,8 +2,8 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:registry="clr-namespace:NeoEdit.Registry"
-	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=GUI"
-	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=GUI"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
+	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=NeoEdit.GUI"
 	Title="NeoEdit Registry Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=keys}">
 
 	<Window.CommandBindings>

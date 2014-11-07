@@ -5,7 +5,7 @@
     <ProjectGuid>{C65DD007-A448-49F5-B813-372C53D374C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>NeoEdit.Processes</RootNamespace>
-    <AssemblyName>Processes</AssemblyName>
+    <AssemblyName>NeoEdit.Processes</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup>

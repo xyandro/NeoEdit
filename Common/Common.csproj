@@ -5,7 +5,7 @@
     <ProjectGuid>{1C928016-0E00-4125-80A5-458B82F1EC0D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>NeoEdit.Common</RootNamespace>
-    <AssemblyName>Common</AssemblyName>
+    <AssemblyName>NeoEdit.Common</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>

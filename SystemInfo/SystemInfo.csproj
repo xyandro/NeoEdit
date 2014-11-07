@@ -5,7 +5,7 @@
     <ProjectGuid>{5FC0FBFF-7CE1-4540-9E41-D757D0D9708D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>NeoEdit.SystemInfo</RootNamespace>
-    <AssemblyName>SystemInfo</AssemblyName>
+    <AssemblyName>NeoEdit.SystemInfo</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup>

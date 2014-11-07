@@ -24,6 +24,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <TargetName>NeoEdit.$(ProjectName)</TargetName>
     <IntDir>$(ProjectDir)obj\$(Configuration).$(PlatformTarget)\</IntDir>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformTarget)\</OutDir>
   </PropertyGroup>
