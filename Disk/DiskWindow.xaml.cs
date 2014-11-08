@@ -341,7 +341,9 @@ namespace NeoEdit.Disk
 			}
 
 			var selected = new List<DiskItem>();
-			if (result.Regex != null)
+			if (result.Regex == null)
+				selected = items;
+			else
 				selected = items.Where(file => result.Regex.IsMatch(file.Name)).ToList();
 
 			if (result.Recursive)
