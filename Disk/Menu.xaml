@@ -24,7 +24,7 @@
 		<disk:DiskMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="_Find" CommandEnum="Edit_Find"/>
-		<disk:DiskMenuItem Header="Find In Files" CommandEnum="Edit_FindInFiles"/>
+		<disk:DiskMenuItem Header="Binary Find" CommandEnum="Edit_BinaryFind"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="Text Edit" CommandEnum="Edit_TextEdit"/>
 		<disk:DiskMenuItem Header="Binary Edit" CommandEnum="Edit_BinaryEdit"/>
@@ -36,7 +36,6 @@
 		<Separator/>
 		<disk:DiskMenuItem Header="_Directories" CommandEnum="Select_Directories"/>
 		<disk:DiskMenuItem Header="_Files" CommandEnum="Select_Files"/>
-		<disk:DiskMenuItem Header="_Expression" CommandEnum="Select_Expression"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="Add Copied/Cut" CommandEnum="Select_AddCopiedCut"/>
 		<disk:DiskMenuItem Header="_Remove" CommandEnum="Select_Remove"/>

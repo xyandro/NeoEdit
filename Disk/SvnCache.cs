@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using NeoEdit.GUI.Common;
+﻿using NeoEdit.GUI.Common;
 using SharpSvn;
+using System;
+using System.Collections.Generic;
 
 namespace NeoEdit.Disk
 {
@@ -69,8 +69,9 @@ namespace NeoEdit.Disk
 
 			if (!svnStatusCache.ContainsKey(repository))
 			{
+				var root = svnClient.GetWorkingCopyRoot(Path);
 				svnStatusCache[repository] = new Dictionary<string, VersionControlStatus>();
-				svnClient.Status(Path, new SvnStatusArgs { RetrieveAllEntries = true, RetrieveIgnoredEntries = true, Depth = SvnDepth.Infinity }, (sender, status) =>
+				svnClient.Status(root, new SvnStatusArgs { RetrieveAllEntries = true, RetrieveIgnoredEntries = true, Depth = SvnDepth.Infinity }, (sender, status) =>
 				{
 					switch (status.LocalContentStatus)
 					{

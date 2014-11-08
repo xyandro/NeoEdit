@@ -314,22 +314,48 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Find()
 		{
-			var items = Files.Where(file => file.Exists).ToList();
-			var found = new HashSet<string>(items.Select(file => file.FullName));
-			for (var ctr = 0; ctr < items.Count; ++ctr)
+			var result = FindDialog.Run();
+			if (result == null)
+				return;
+
+			Selected.Clear();
+
+			var items = Files.ToList();
+			if (result.Recursive)
 			{
-				if (items[ctr].HasChildren)
-					foreach (var file in items[ctr].GetChildren())
-					{
-						if (found.Contains(file.FullName))
-							continue;
-						items.Add(file);
-						found.Add(file.FullName);
-					}
+				items = items.Where(file => file.Exists).ToList();
+				var found = new HashSet<string>(items.Select(file => file.FullName));
+				for (var ctr = 0; ctr < items.Count; ++ctr)
+				{
+					if (items[ctr].HasChildren)
+						foreach (var file in items[ctr].GetChildren())
+						{
+							if (found.Contains(file.FullName))
+								continue;
+							items.Add(file);
+							found.Add(file.FullName);
+						}
+				}
+
+				ShowColumn(a => a.Path);
+			}
+
+			var selected = new List<DiskItem>();
+			if (result.Regex != null)
+				selected = items.Where(file => result.Regex.IsMatch(file.Name)).ToList();
+
+			if (result.Recursive)
+			{
+				items = selected;
+				selected = new List<DiskItem>();
 			}
 
 			SyncFiles(items);
-			ShowColumn(a => a.Path);
+			foreach (var file in selected)
+				Selected.Add(file);
+
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
 		}
 
 		bool SearchFile(DiskItem file, BinaryFindDialog.Result search)
@@ -360,7 +386,7 @@ namespace NeoEdit.Disk
 			return false;
 		}
 
-		internal void Command_Edit_FindInFiles()
+		internal void Command_Edit_BinaryFind()
 		{
 			if (Selected.Count == 0)
 				return;
@@ -427,20 +453,6 @@ namespace NeoEdit.Disk
 				if (!file.HasChildren)
 					Selected.Add(file);
 			if (!Selected.Contains(Focused))
-				Focused = Selected.FirstOrDefault();
-		}
-
-		internal void Command_Select_Expression(bool addToSel)
-		{
-			var regex = ExpressionDialog.Run();
-			if (regex == null)
-				return;
-
-			if (!addToSel)
-				Selected.Clear();
-			foreach (var file in Files.Where(file => regex.IsMatch(file.Name)).ToList())
-				Selected.Add(file);
-			if ((!addToSel) && (!Selected.Contains(Focused)))
 				Focused = Selected.FirstOrDefault();
 		}
 

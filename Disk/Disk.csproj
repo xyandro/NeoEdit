@@ -12,12 +12,12 @@
     <Compile Include="ColumnCheckedConverter.cs" />
     <Compile Include="ColumnsConverter.cs" />
     <Compile Include="Commands.cs" />
-    <Page Include="Dialogs\ExpressionDialog.xaml">
+    <Page Include="Dialogs\FindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\ExpressionDialog.xaml.cs">
-      <DependentUpon>ExpressionDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\FindDialog.xaml.cs">
+      <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\RenameDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
