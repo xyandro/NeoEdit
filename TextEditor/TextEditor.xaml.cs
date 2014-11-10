@@ -320,6 +320,23 @@ namespace NeoEdit.TextEditor
 			return expressionData;
 		}
 
+		void CopyDirectory(string src, string dest)
+		{
+			var srcDirs = new List<string> { src };
+			for (var ctr = 0; ctr < srcDirs.Count; ++ctr)
+				srcDirs.AddRange(Directory.GetDirectories(srcDirs[ctr]));
+
+			var srcFiles = new List<string>();
+			foreach (var dir in srcDirs)
+				srcFiles.AddRange(Directory.GetFiles(dir));
+
+			var destDirs = srcDirs.Select(dir => dest + dir.Substring(src.Length)).ToList();
+			var destFiles = srcFiles.Select(file => dest + file.Substring(src.Length)).ToList();
+			destDirs.ForEach(dir => Directory.CreateDirectory(dir));
+			for (var ctr = 0; ctr < srcFiles.Count; ++ctr)
+				File.Copy(srcFiles[ctr], destFiles[ctr]);
+		}
+
 		internal void Command_File_Save()
 		{
 			if (FileName == null)
@@ -894,7 +911,7 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(result);
 		}
 
-		internal void Command_Files_RenameKeysToSelections()
+		internal void Command_Files_Operations_CopyMoveKeysToSelections(bool move)
 		{
 			if ((keysAndValues[0].Count == 0) || (Selections.Count == 0))
 				throw new Exception("Keys and selections must be set");
@@ -925,10 +942,11 @@ namespace NeoEdit.TextEditor
 			if (sels.Count > numExamples)
 				examples += String.Format(" + {0} more\n", sels.Count - numExamples);
 
+			var op = move ? "move" : "copy";
 			if (new Message
 			{
 				Title = "Confirm",
-				Text = "Are you sure you want to rename these files?\n" + examples,
+				Text = "Are you sure you want to " + op + " these files?\n" + examples,
 				Options = Message.OptionsEnum.YesNo,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.No,
@@ -938,9 +956,19 @@ namespace NeoEdit.TextEditor
 
 			for (var ctr = 0; ctr < sels.Count; ++ctr)
 				if (Directory.Exists(keysAndValues[0][ctr]))
-					Directory.Move(keysAndValues[0][ctr], sels[ctr]);
+				{
+					if (move)
+						Directory.Move(keysAndValues[0][ctr], sels[ctr]);
+					else
+						CopyDirectory(keysAndValues[0][ctr], sels[ctr]);
+				}
 				else
-					File.Move(keysAndValues[0][ctr], sels[ctr]);
+				{
+					if (move)
+						File.Move(keysAndValues[0][ctr], sels[ctr]);
+					else
+						File.Copy(keysAndValues[0][ctr], sels[ctr]);
+				}
 		}
 
 		internal void Command_Data_Case_Upper()

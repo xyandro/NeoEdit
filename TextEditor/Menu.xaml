@@ -81,7 +81,10 @@
 			<textEditor:TextEditMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
 			<textEditor:TextEditMenuItem Header="N_on-Roots" CommandEnum="Files_Select_NonRoots"/>
 		</MenuItem>
-		<textEditor:TextEditMenuItem Header="_Rename Keys To Selections" CommandEnum="Files_RenameKeysToSelections"/>
+		<MenuItem Header="_Operations">
+			<textEditor:TextEditMenuItem Header="_Copy Keys To Selections" CommandEnum="Files_Operations_CopyKeysToSelections"/>
+			<textEditor:TextEditMenuItem Header="_Move Keys To Selections" CommandEnum="Files_Operations_MoveKeysToSelections"/>
+		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Data">
 		<MenuItem Header="Case">
