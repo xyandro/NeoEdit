@@ -6,23 +6,38 @@
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition/>
-			<RowDefinition/>
+			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" HorizontalAlignment="Right" Target="{Binding ElementName=expression}"/>
-		<TextBox Name="expression" Grid.Row="0" Grid.Column="1" Width="400" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<GroupBox Grid.Row="0" Grid.Column="0" Header="File Name">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
 
-		<CheckBox Grid.Row="1" Grid.Column="1" Content="_Regex" IsChecked="{Binding IsRegEx, ElementName=self}" Focusable="False"/>
-		<CheckBox Grid.Row="2" Grid.Column="1" Content="R_ecursive" IsChecked="{Binding Recursive, ElementName=self}" Focusable="False"/>
+				<Label Grid.Row="0" Grid.Column="0" Content="_Name:" HorizontalAlignment="Right" Target="{Binding ElementName=expression}"/>
+				<TextBox Name="expression" Grid.Row="0" Grid.Column="1" Width="400" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+				<CheckBox Grid.Row="1" Grid.Column="1" Content="_Regex" IsChecked="{Binding IsRegEx, ElementName=self}" Focusable="False"/>
+				<CheckBox Grid.Row="2" Grid.Column="1" Content="_Full Path" IsChecked="{Binding FullPath, ElementName=self}" Focusable="False"/>
+			</Grid>
+		</GroupBox>
+
+		<CheckBox Grid.Row="1" Grid.Column="1" Content="R_ecursive" IsChecked="{Binding Recursive, ElementName=self}" Focusable="False"/>
+
+		<UniformGrid Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

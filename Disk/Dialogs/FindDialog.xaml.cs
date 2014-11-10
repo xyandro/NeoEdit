@@ -10,6 +10,7 @@ namespace NeoEdit.Disk.Dialogs
 		internal class Result
 		{
 			public Regex Regex;
+			public bool FullPath;
 			public bool Recursive;
 		}
 
@@ -18,6 +19,8 @@ namespace NeoEdit.Disk.Dialogs
 		[DepProp]
 		public bool IsRegEx { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool FullPath { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 
 		static FindDialog() { UIHelper<FindDialog>.Register(); }
@@ -25,14 +28,15 @@ namespace NeoEdit.Disk.Dialogs
 		FindDialog()
 		{
 			InitializeComponent();
+			Expression = "*.*";
+			expression.SelectAll();
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			Regex regex = null;
-
-			if (!String.IsNullOrEmpty(Expression))
+			if ((!String.IsNullOrEmpty(Expression)) && (Expression != "*.*"))
 			{
 				var expr = Expression;
 				if (!IsRegEx)
@@ -43,6 +47,7 @@ namespace NeoEdit.Disk.Dialogs
 			result = new Result
 			{
 				Regex = regex,
+				FullPath = FullPath,
 				Recursive = Recursive,
 			};
 

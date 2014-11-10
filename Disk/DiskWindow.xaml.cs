@@ -343,6 +343,8 @@ namespace NeoEdit.Disk
 			var selected = new List<DiskItem>();
 			if (result.Regex == null)
 				selected = items;
+			else if (result.FullPath)
+				selected = items.Where(file => result.Regex.IsMatch(file.FullName)).ToList();
 			else
 				selected = items.Where(file => result.Regex.IsMatch(file.Name)).ToList();
 
