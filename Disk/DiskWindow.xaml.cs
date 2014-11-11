@@ -348,6 +348,11 @@ namespace NeoEdit.Disk
 			else
 				selected = items.Where(file => result.Regex.IsMatch(file.Name)).ToList();
 
+			if (result.StartDate != null)
+				items = items.Where(file => file.WriteTime >= result.StartDate.Value).ToList();
+			if (result.EndDate != null)
+				items = items.Where(file => file.WriteTime <= result.EndDate.Value).ToList();
+
 			if (result.Recursive)
 			{
 				items = selected;

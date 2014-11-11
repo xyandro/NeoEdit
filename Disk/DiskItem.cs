@@ -107,9 +107,9 @@ namespace NeoEdit.Disk
 				var dirInfo = new DirectoryInfo(FullName);
 				if (dirInfo.Exists)
 				{
-					WriteTime = dirInfo.LastWriteTimeUtc;
-					CreateTime = dirInfo.CreationTimeUtc;
-					AccessTime = dirInfo.LastAccessTimeUtc;
+					WriteTime = dirInfo.LastWriteTime;
+					CreateTime = dirInfo.CreationTime;
+					AccessTime = dirInfo.LastAccessTime;
 					Type = DiskItemType.Directory;
 				}
 			}
@@ -120,9 +120,9 @@ namespace NeoEdit.Disk
 				if (fileInfo.Exists)
 				{
 					Size = fileInfo.Length;
-					WriteTime = fileInfo.LastWriteTimeUtc;
-					CreateTime = fileInfo.CreationTimeUtc;
-					AccessTime = fileInfo.LastAccessTimeUtc;
+					WriteTime = fileInfo.LastWriteTime;
+					CreateTime = fileInfo.CreationTime;
+					AccessTime = fileInfo.LastAccessTime;
 					Type = DiskItemType.File;
 				}
 			}

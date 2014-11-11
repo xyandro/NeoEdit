@@ -12,6 +12,8 @@ namespace NeoEdit.Disk.Dialogs
 			public Regex Regex;
 			public bool FullPath;
 			public bool Recursive;
+			public DateTime? StartDate;
+			public DateTime? EndDate;
 		}
 
 		[DepProp]
@@ -22,6 +24,10 @@ namespace NeoEdit.Disk.Dialogs
 		public bool FullPath { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public DateTime? StartDate { get { return UIHelper<FindDialog>.GetPropValue<DateTime?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public DateTime? EndDate { get { return UIHelper<FindDialog>.GetPropValue<DateTime?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 
 		static FindDialog() { UIHelper<FindDialog>.Register(); }
 
@@ -49,6 +55,8 @@ namespace NeoEdit.Disk.Dialogs
 				Regex = regex,
 				FullPath = FullPath,
 				Recursive = Recursive,
+				StartDate = StartDate,
+				EndDate = EndDate,
 			};
 
 			DialogResult = true;
