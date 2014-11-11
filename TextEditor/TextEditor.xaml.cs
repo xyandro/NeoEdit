@@ -2281,7 +2281,6 @@ namespace NeoEdit.TextEditor
 
 			if (str.Length > length)
 			{
-				var len = length - str.Length;
 				switch (location)
 				{
 					case WidthDialog.PadLocation.Before: return str.Substring(0, length);
