@@ -88,7 +88,16 @@
 			</Grid>
 		</GroupBox>
 
-		<CheckBox Grid.Row="3" Grid.Column="0" Content="R_ecursive   " IsChecked="{Binding Recursive, ElementName=self}" Focusable="False"/>
+		<GroupBox Grid.Row="3" Grid.Column="0">
+			<GroupBox.Header>
+				<Italic>Options</Italic>
+			</GroupBox.Header>
+
+			<StackPanel Orientation="Horizontal">
+				<CheckBox Content="R_ecursive   " IsChecked="{Binding Recursive, ElementName=self}" Focusable="False"/>
+				<CheckBox Content="S_VN Ignore" IsThreeState="True" IsChecked="{Binding SvnIgnore, ElementName=self}" Focusable="False"/>
+			</StackPanel>
+		</GroupBox>
 
 		<UniformGrid Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

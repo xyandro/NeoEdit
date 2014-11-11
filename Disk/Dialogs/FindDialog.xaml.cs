@@ -12,6 +12,7 @@ namespace NeoEdit.Disk.Dialogs
 			public Regex Regex;
 			public bool FullPath;
 			public bool Recursive;
+			public bool? SvnIgnore;
 			public long? MinSize;
 			public long? MaxSize;
 			public DateTime? StartDate;
@@ -26,6 +27,8 @@ namespace NeoEdit.Disk.Dialogs
 		public bool FullPath { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool? SvnIgnore { get { return UIHelper<FindDialog>.GetPropValue<bool?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public long? MinSize { get { return UIHelper<FindDialog>.GetPropValue<long?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -61,6 +64,7 @@ namespace NeoEdit.Disk.Dialogs
 				Regex = regex,
 				FullPath = FullPath,
 				Recursive = Recursive,
+				SvnIgnore = SvnIgnore,
 				MinSize = MinSize,
 				MaxSize = MaxSize,
 				StartDate = StartDate,

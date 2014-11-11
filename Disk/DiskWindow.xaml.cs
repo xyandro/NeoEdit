@@ -323,18 +323,32 @@ namespace NeoEdit.Disk
 			var items = Files.ToList();
 			if (result.Recursive)
 			{
-				items = items.Where(file => file.Exists).ToList();
-				var found = new HashSet<string>(items.Select(file => file.FullName));
-				for (var ctr = 0; ctr < items.Count; ++ctr)
+				var list = items.Where(file => file.Exists).ToList();
+				items.Clear();
+				var found = new HashSet<string>();
+				for (var ctr = 0; ctr < list.Count; ++ctr)
 				{
-					if (items[ctr].HasChildren)
-						foreach (var file in items[ctr].GetChildren())
+					var file = list[ctr];
+
+					if (found.Contains(file.FullName))
+						continue;
+					found.Add(file.FullName);
+
+					items.Add(file);
+
+					if (file.HasChildren)
+					{
+						var add = true;
+						if (result.SvnIgnore.HasValue)
 						{
-							if (found.Contains(file.FullName))
-								continue;
-							items.Add(file);
-							found.Add(file.FullName);
+							file.SetSvnStatus();
+							if ((file.SvnStatus == VersionControlStatus.None) || (file.SvnStatus == VersionControlStatus.Ignored))
+								add = false;
 						}
+
+						if (add)
+							list.AddRange(file.GetChildren());
+					}
 				}
 
 				ShowColumn(a => a.Path);
@@ -357,6 +371,18 @@ namespace NeoEdit.Disk
 				selected = selected.Where(file => file.WriteTime >= result.StartDate.Value).ToList();
 			if (result.EndDate.HasValue)
 				selected = selected.Where(file => file.WriteTime <= result.EndDate.Value).ToList();
+
+			if (result.SvnIgnore.HasValue)
+			{
+				foreach (var file in selected)
+					file.SetSvnStatus();
+				if (result.SvnIgnore.Value)
+					selected = selected.Where(file => file.SvnStatus == VersionControlStatus.Ignored).ToList();
+				else
+					selected = selected.Where(file => (file.SvnStatus != VersionControlStatus.Ignored) && file.SvnStatus != VersionControlStatus.None).ToList();
+
+				ShowColumn(a => a.SvnStatus);
+			}
 
 			if (result.Recursive)
 			{
