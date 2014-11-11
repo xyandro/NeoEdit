@@ -1091,9 +1091,9 @@ namespace NeoEdit.TextEditor
 		internal void Command_Data_Width()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
-			var minWidth = strs.Select(str => str.Length).Max();
+			var startLength = strs.Select(str => str.Length).Max();
 			var numeric = strs.All(str => str.IsNumeric());
-			var result = WidthDialog.Run(minWidth, numeric ? '0' : ' ', numeric);
+			var result = WidthDialog.Run(startLength, numeric ? '0' : ' ', numeric);
 			if (result == null)
 				return;
 
@@ -2276,15 +2276,30 @@ namespace NeoEdit.TextEditor
 
 		string SetWidth(string str, int length, WidthDialog.PadLocation location, char padChar)
 		{
-			if (str.Length >= length)
+			if (str.Length == length)
 				return str;
-			var len = length - str.Length;
-			switch (location)
+
+			if (str.Length > length)
 			{
-				case WidthDialog.PadLocation.Before: return new string(padChar, len) + str;
-				case WidthDialog.PadLocation.After: return str + new string(padChar, len);
-				case WidthDialog.PadLocation.Both: return new string(padChar, (len + 1) / 2) + str + new string(padChar, len / 2);
-				default: throw new ArgumentException("Invalid");
+				var len = length - str.Length;
+				switch (location)
+				{
+					case WidthDialog.PadLocation.Before: return str.Substring(0, length);
+					case WidthDialog.PadLocation.After: return str.Substring(str.Length - length);
+					case WidthDialog.PadLocation.Both: return str.Substring((str.Length - length) / 2, length);
+					default: throw new ArgumentException("Invalid");
+				}
+			}
+			else
+			{
+				var len = length - str.Length;
+				switch (location)
+				{
+					case WidthDialog.PadLocation.Before: return new string(padChar, len) + str;
+					case WidthDialog.PadLocation.After: return str + new string(padChar, len);
+					case WidthDialog.PadLocation.Both: return new string(padChar, (len + 1) / 2) + str + new string(padChar, len / 2);
+					default: throw new ArgumentException("Invalid");
+				}
 			}
 		}
 

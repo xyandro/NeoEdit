@@ -25,7 +25,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public bool ClipboardValue { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MinValue { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public int StartLength { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string PadChar { get { return UIHelper<WidthDialog>.GetPropValue<string>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -33,13 +33,13 @@ namespace NeoEdit.TextEditor.Dialogs
 
 		static WidthDialog() { UIHelper<WidthDialog>.Register(); }
 
-		WidthDialog(int minValue, char padChar, bool before)
+		WidthDialog(int startLength, char padChar, bool before)
 		{
 			InitializeComponent();
 
 			this.padChar.GotFocus += (s, e) => this.padChar.SelectAll();
 
-			Length = MinValue = minValue;
+			Length = StartLength = startLength;
 			ClipboardValue = false;
 			PadChar = new string(padChar, 1);
 			Location = before ? PadLocation.Before : PadLocation.After;
@@ -54,9 +54,9 @@ namespace NeoEdit.TextEditor.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(int minValue, char padChar, bool before)
+		public static Result Run(int startLength, char padChar, bool before)
 		{
-			var dialog = new WidthDialog(minValue, padChar, before);
+			var dialog = new WidthDialog(startLength, padChar, before);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}
