@@ -14,6 +14,7 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -90,16 +91,27 @@
 
 		<GroupBox Grid.Row="3" Grid.Column="0">
 			<GroupBox.Header>
-				<Italic>Options</Italic>
+				<Italic>Source Control</Italic>
 			</GroupBox.Header>
 
-			<StackPanel Orientation="Horizontal">
-				<CheckBox Content="R_ecursive   " IsChecked="{Binding Recursive, ElementName=self}" Focusable="False"/>
-				<CheckBox Content="S_VN Ignore" IsThreeState="True" IsChecked="{Binding SvnIgnore, ElementName=self}" Focusable="False"/>
-			</StackPanel>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col1}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Row="0" Grid.Column="0" Content="S_tatus" Target="{Binding ElementName=svnIgnore}" HorizontalAlignment="Right"/>
+				<ComboBox Grid.Row="0" Grid.Column="1" Name="sourceControlStatus" SelectedItem="{Binding SourceControlStatus, ElementName=self}"/>
+			</Grid>
 		</GroupBox>
 
-		<UniformGrid Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Rows="1">
+		<CheckBox Grid.Row="4" Grid.Column="0" Content="R_ecursive   " IsChecked="{Binding Recursive, ElementName=self}" Focusable="False"/>
+
+		<UniformGrid Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

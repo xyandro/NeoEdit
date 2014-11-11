@@ -1,18 +1,27 @@
-﻿using NeoEdit.GUI.Common;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
+using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 
 namespace NeoEdit.Disk.Dialogs
 {
 	internal partial class FindDialog
 	{
+		internal enum SourceControlStatusEnum
+		{
+			None,
+			IgnoredItems,
+			Standard,
+			Modified,
+		};
+
 		internal class Result
 		{
 			public Regex Regex;
 			public bool FullPath;
 			public bool Recursive;
-			public bool? SvnIgnore;
+			public SourceControlStatusEnum SourceControlStatus;
 			public long? MinSize;
 			public long? MaxSize;
 			public DateTime? StartDate;
@@ -28,7 +37,7 @@ namespace NeoEdit.Disk.Dialogs
 		[DepProp]
 		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool? SvnIgnore { get { return UIHelper<FindDialog>.GetPropValue<bool?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
+		public SourceControlStatusEnum SourceControlStatus { get { return UIHelper<FindDialog>.GetPropValue<SourceControlStatusEnum>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public long? MinSize { get { return UIHelper<FindDialog>.GetPropValue<long?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -45,6 +54,9 @@ namespace NeoEdit.Disk.Dialogs
 			InitializeComponent();
 			Expression = "*.*";
 			expression.SelectAll();
+
+			foreach (var status in Helpers.GetValues<SourceControlStatusEnum>())
+				sourceControlStatus.Items.Add(status);
 		}
 
 		Result result;
@@ -64,7 +76,7 @@ namespace NeoEdit.Disk.Dialogs
 				Regex = regex,
 				FullPath = FullPath,
 				Recursive = Recursive,
-				SvnIgnore = SvnIgnore,
+				SourceControlStatus = SourceControlStatus,
 				MinSize = MinSize,
 				MaxSize = MaxSize,
 				StartDate = StartDate,

@@ -339,7 +339,7 @@ namespace NeoEdit.Disk
 					if (file.HasChildren)
 					{
 						var add = true;
-						if (result.SvnIgnore.HasValue)
+						if (result.SourceControlStatus != FindDialog.SourceControlStatusEnum.None)
 						{
 							file.SetSvnStatus();
 							if ((file.SvnStatus == VersionControlStatus.None) || (file.SvnStatus == VersionControlStatus.Ignored))
@@ -372,14 +372,22 @@ namespace NeoEdit.Disk
 			if (result.EndDate.HasValue)
 				selected = selected.Where(file => file.WriteTime <= result.EndDate.Value).ToList();
 
-			if (result.SvnIgnore.HasValue)
+			if (result.SourceControlStatus != FindDialog.SourceControlStatusEnum.None)
 			{
 				foreach (var file in selected)
 					file.SetSvnStatus();
-				if (result.SvnIgnore.Value)
-					selected = selected.Where(file => file.SvnStatus == VersionControlStatus.Ignored).ToList();
-				else
-					selected = selected.Where(file => (file.SvnStatus != VersionControlStatus.Ignored) && file.SvnStatus != VersionControlStatus.None).ToList();
+				switch (result.SourceControlStatus)
+				{
+					case FindDialog.SourceControlStatusEnum.IgnoredItems:
+						selected = selected.Where(file => file.SvnStatus == VersionControlStatus.Ignored).ToList();
+						break;
+					case FindDialog.SourceControlStatusEnum.Standard:
+						selected = selected.Where(file => (file.SvnStatus != VersionControlStatus.Ignored) && (file.SvnStatus != VersionControlStatus.None)).ToList();
+						break;
+					case FindDialog.SourceControlStatusEnum.Modified:
+						selected = selected.Where(file => (file.SvnStatus != VersionControlStatus.Ignored) && (file.SvnStatus != VersionControlStatus.None) && (file.SvnStatus != VersionControlStatus.Normal)).ToList();
+						break;
+				}
 
 				ShowColumn(a => a.SvnStatus);
 			}
