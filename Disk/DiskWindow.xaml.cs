@@ -340,18 +340,23 @@ namespace NeoEdit.Disk
 				ShowColumn(a => a.Path);
 			}
 
-			var selected = new List<DiskItem>();
-			if (result.Regex == null)
-				selected = items;
-			else if (result.FullPath)
-				selected = items.Where(file => result.Regex.IsMatch(file.FullName)).ToList();
-			else
-				selected = items.Where(file => result.Regex.IsMatch(file.Name)).ToList();
+			var selected = items;
+			if (result.Regex != null)
+			{
+				if (result.FullPath)
+					selected = selected.Where(file => result.Regex.IsMatch(file.FullName)).ToList();
+				else
+					selected = selected.Where(file => result.Regex.IsMatch(file.Name)).ToList();
+			}
 
-			if (result.StartDate != null)
-				items = items.Where(file => file.WriteTime >= result.StartDate.Value).ToList();
-			if (result.EndDate != null)
-				items = items.Where(file => file.WriteTime <= result.EndDate.Value).ToList();
+			if (result.MinSize.HasValue)
+				selected = selected.Where(file => file.Size >= result.MinSize.Value).ToList();
+			if (result.MaxSize.HasValue)
+				selected = selected.Where(file => file.Size <= result.MaxSize.Value).ToList();
+			if (result.StartDate.HasValue)
+				selected = selected.Where(file => file.WriteTime >= result.StartDate.Value).ToList();
+			if (result.EndDate.HasValue)
+				selected = selected.Where(file => file.WriteTime <= result.EndDate.Value).ToList();
 
 			if (result.Recursive)
 			{

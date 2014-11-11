@@ -13,6 +13,7 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -24,7 +25,7 @@
 
 			<Grid>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition x:Name="col0" Width="45"/>
+					<ColumnDefinition x:Name="col0" Width="65"/>
 					<ColumnDefinition x:Name="col1" Width="400"/>
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
@@ -43,6 +44,29 @@
 
 		<GroupBox Grid.Row="1" Grid.Column="0">
 			<GroupBox.Header>
+				<Italic>Size</Italic>
+			</GroupBox.Header>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col1}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Row="0" Grid.Column="0" Content="M_in Size:" Target="{Binding ElementName=minSize}" HorizontalAlignment="Right"/>
+				<xctk:LongUpDown Grid.Row="0" Grid.Column="1" Name="minSize" Value="{Binding MinSize, ElementName=self}" TextAlignment="Left"/>
+
+				<Label Grid.Row="1" Grid.Column="0" Content="Ma_x Size:" Target="{Binding ElementName=maxSize}" HorizontalAlignment="Right"/>
+				<xctk:LongUpDown Grid.Row="1" Grid.Column="1" Name="maxSize" Value="{Binding MaxSize, ElementName=self}" TextAlignment="Left"/>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="2" Grid.Column="0">
+			<GroupBox.Header>
 				<Italic>Modified Date</Italic>
 			</GroupBox.Header>
 
@@ -57,16 +81,16 @@
 				</Grid.RowDefinitions>
 
 				<Label Grid.Row="0" Grid.Column="0" Content="_Start:" Target="{Binding ElementName=startDate}" HorizontalAlignment="Right"/>
-				<xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Name="startDate" Value="{Binding StartDate, ElementName=self}" Width="400" Format="Custom" FormatString="yyyy/MM/dd hh:mm:ss tt" TextAlignment="Left"/>
+				<xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Name="startDate" Value="{Binding StartDate, ElementName=self}" Format="Custom" FormatString="yyyy/MM/dd hh:mm:ss tt" TextAlignment="Left"/>
 
 				<Label Grid.Row="1" Grid.Column="0" Content="En_d:" Target="{Binding ElementName=endDate}" HorizontalAlignment="Right"/>
-				<xctk:DateTimePicker Grid.Row="1" Grid.Column="1" Name="endDate" Value="{Binding EndDate, ElementName=self}" Width="400" Format="Custom" FormatString="yyyy/MM/dd hh:mm:ss tt" TextAlignment="Left"/>
+				<xctk:DateTimePicker Grid.Row="1" Grid.Column="1" Name="endDate" Value="{Binding EndDate, ElementName=self}" Format="Custom" FormatString="yyyy/MM/dd hh:mm:ss tt" TextAlignment="Left"/>
 			</Grid>
 		</GroupBox>
 
-		<CheckBox Grid.Row="2" Grid.Column="0" Content="R_ecursive" IsChecked="{Binding Recursive, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="3" Grid.Column="0" Content="R_ecursive   " IsChecked="{Binding Recursive, ElementName=self}" Focusable="False"/>
 
-		<UniformGrid Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
