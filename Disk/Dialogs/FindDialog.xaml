@@ -104,7 +104,7 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Row="0" Grid.Column="0" Content="S_tatus" Target="{Binding ElementName=svnIgnore}" HorizontalAlignment="Right"/>
+				<Label Grid.Row="0" Grid.Column="0" Content="S_tatus" Target="{Binding ElementName=sourceControlStatus}" HorizontalAlignment="Right"/>
 				<ComboBox Grid.Row="0" Grid.Column="1" Name="sourceControlStatus" SelectedItem="{Binding SourceControlStatus, ElementName=self}"/>
 			</Grid>
 		</GroupBox>
