@@ -19,18 +19,18 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Set _width to:" Target="{Binding ElementName=length}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Set _width to:" Target="{Binding ElementName=length}" HorizontalAlignment="Right"/>
 		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="length" Value="{Binding Length, ElementName=self}" Minimum="0" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==false'}"/>
 		<CheckBox Grid.Row="0" Grid.Column="2" Content="C_lipboard Value" IsChecked="{Binding ClipboardValue, ElementName=self}" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Location:"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-			<RadioButton GroupName="location" Content="_Before" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Before}" Margin="0,0,10,0"/>
-			<RadioButton GroupName="location" Content="_Middle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0"/>
-			<RadioButton GroupName="location" Content="_After" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=After}" Margin="0,0,10,0"/>
+			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="location" Content="_Middle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">

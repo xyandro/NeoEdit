@@ -2274,7 +2274,7 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		string SetWidth(string str, int length, WidthDialog.PadLocation location, char padChar)
+		string SetWidth(string str, int length, WidthDialog.TextLocation location, char padChar)
 		{
 			if (str.Length == length)
 				return str;
@@ -2283,9 +2283,9 @@ namespace NeoEdit.TextEditor
 			{
 				switch (location)
 				{
-					case WidthDialog.PadLocation.Before: return str.Substring(0, length);
-					case WidthDialog.PadLocation.Middle: return str.Substring((str.Length - length + 1) / 2, length);
-					case WidthDialog.PadLocation.After: return str.Substring(str.Length - length);
+					case WidthDialog.TextLocation.Start: return str.Substring(0, length);
+					case WidthDialog.TextLocation.Middle: return str.Substring((str.Length - length + 1) / 2, length);
+					case WidthDialog.TextLocation.End: return str.Substring(str.Length - length);
 					default: throw new ArgumentException("Invalid");
 				}
 			}
@@ -2294,9 +2294,9 @@ namespace NeoEdit.TextEditor
 				var len = length - str.Length;
 				switch (location)
 				{
-					case WidthDialog.PadLocation.Before: return new string(padChar, len) + str;
-					case WidthDialog.PadLocation.Middle: return new string(padChar, (len + 1) / 2) + str + new string(padChar, len / 2);
-					case WidthDialog.PadLocation.After: return str + new string(padChar, len);
+					case WidthDialog.TextLocation.Start: return str + new string(padChar, len);
+					case WidthDialog.TextLocation.Middle: return new string(padChar, (len + 1) / 2) + str + new string(padChar, len / 2);
+					case WidthDialog.TextLocation.End: return new string(padChar, len) + str;
 					default: throw new ArgumentException("Invalid");
 				}
 			}

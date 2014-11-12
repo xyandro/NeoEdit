@@ -5,11 +5,11 @@ namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class WidthDialog
 	{
-		public enum PadLocation
+		public enum TextLocation
 		{
-			Before,
+			Start,
 			Middle,
-			After,
+			End,
 		}
 
 		internal class Result
@@ -17,7 +17,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			public int Length { get; set; }
 			public bool ClipboardValue { get; set; }
 			public char PadChar { get; set; }
-			public PadLocation Location { get; set; }
+			public TextLocation Location { get; set; }
 		}
 
 		[DepProp]
@@ -29,7 +29,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		[DepProp]
 		public string PadChar { get { return UIHelper<WidthDialog>.GetPropValue<string>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public PadLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<PadLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public TextLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<TextLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 
 		static WidthDialog() { UIHelper<WidthDialog>.Register(); }
 
@@ -42,7 +42,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			Length = StartLength = startLength;
 			ClipboardValue = false;
 			PadChar = new string(padChar, 1);
-			Location = before ? PadLocation.Before : PadLocation.After;
+			Location = before ? TextLocation.End : TextLocation.Start;
 		}
 
 		Result result;
