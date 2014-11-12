@@ -2284,8 +2284,8 @@ namespace NeoEdit.TextEditor
 				switch (location)
 				{
 					case WidthDialog.PadLocation.Before: return str.Substring(0, length);
+					case WidthDialog.PadLocation.Middle: return str.Substring((str.Length - length + 1) / 2, length);
 					case WidthDialog.PadLocation.After: return str.Substring(str.Length - length);
-					case WidthDialog.PadLocation.Both: return str.Substring((str.Length - length) / 2, length);
 					default: throw new ArgumentException("Invalid");
 				}
 			}
@@ -2295,8 +2295,8 @@ namespace NeoEdit.TextEditor
 				switch (location)
 				{
 					case WidthDialog.PadLocation.Before: return new string(padChar, len) + str;
+					case WidthDialog.PadLocation.Middle: return new string(padChar, (len + 1) / 2) + str + new string(padChar, len / 2);
 					case WidthDialog.PadLocation.After: return str + new string(padChar, len);
-					case WidthDialog.PadLocation.Both: return new string(padChar, (len + 1) / 2) + str + new string(padChar, len / 2);
 					default: throw new ArgumentException("Invalid");
 				}
 			}

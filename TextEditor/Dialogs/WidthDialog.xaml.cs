@@ -8,8 +8,8 @@ namespace NeoEdit.TextEditor.Dialogs
 		public enum PadLocation
 		{
 			Before,
+			Middle,
 			After,
-			Both,
 		}
 
 		internal class Result

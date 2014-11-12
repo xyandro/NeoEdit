@@ -28,9 +28,9 @@
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Location:"/>
 		<StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-			<RadioButton GroupName="location" Content="_Before  " IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Before}"/>
-			<RadioButton GroupName="location" Content="_After  " IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=After}"/>
-			<RadioButton GroupName="location" Content="B_oth" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Both}"/>
+			<RadioButton GroupName="location" Content="_Before" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Before}" Margin="0,0,10,0"/>
+			<RadioButton GroupName="location" Content="_Middle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0"/>
+			<RadioButton GroupName="location" Content="_After" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=After}" Margin="0,0,10,0"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
