@@ -64,9 +64,11 @@ namespace NeoEdit.Disk
 			Selected = new ObservableCollection<DiskItem>();
 			Columns = new ObservableCollection<ItemGridColumn>();
 
+			ShowColumn(a => a.Icon);
 			ShowColumn(a => a.Name);
 			ShowColumn(a => a.Size);
 			ShowColumn(a => a.WriteTime);
+			SetSort(a => a.Name);
 			SetLocation(path ?? "");
 
 			Loaded += (s, e) => files.Focus();
@@ -544,6 +546,11 @@ namespace NeoEdit.Disk
 				Columns.Remove(found);
 			else
 				ShowColumn(property);
+		}
+
+		void SetSort<T>(Expression<Func<DiskItem, T>> expression)
+		{
+			SetSort(UIHelper<DiskItem>.GetProperty(expression));
 		}
 
 		internal void SetSort(DependencyProperty property)

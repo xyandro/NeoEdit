@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using NeoEdit.GUI.Common;
 
@@ -197,8 +198,7 @@ namespace NeoEdit.GUI.ItemGridControl
 					return mult * SortStr((string)val1).CompareTo(SortStr((string)val2));
 				if (val1 is IComparable)
 					return mult * (val1 as IComparable).CompareTo(val2);
-
-				throw new Exception("Unable to compare");
+				return 0;
 			}
 		}
 
@@ -525,14 +525,30 @@ namespace NeoEdit.GUI.ItemGridControl
 					contents.Children.Add(rect);
 				}
 
-				var col = 0;
-				foreach (var column in Columns)
+				for (var col = 0; col < Columns.Count; ++col)
 				{
-					var textBlock = new TextBlock { Padding = new Thickness(10, 2, 10, 2), HorizontalAlignment = column.HorizontalAlignment };
-					textBlock.SetBinding(TextBlock.TextProperty, new Binding(column.DepProp.Name) { Source = item, Converter = StringFormatConverter.Converter, ConverterParameter = column.StringFormat });
-					Grid.SetRow(textBlock, contents.RowDefinitions.Count);
-					Grid.SetColumn(textBlock, col++);
-					contents.Children.Add(textBlock);
+					var column = Columns[col];
+					UIElement element = null;
+
+					if (column.DepProp.PropertyType == typeof(BitmapSource))
+					{
+						var source = item.GetValue(column.DepProp) as BitmapSource;
+						if (source != null)
+							element = new Image { Source = source, Height = 20 };
+					}
+					else
+					{
+						var textBlock = new TextBlock { Padding = new Thickness(10, 2, 10, 2), HorizontalAlignment = column.HorizontalAlignment };
+						textBlock.SetBinding(TextBlock.TextProperty, new Binding(column.DepProp.Name) { Source = item, Converter = StringFormatConverter.Converter, ConverterParameter = column.StringFormat });
+						element = textBlock;
+					}
+
+					if (element == null)
+						continue;
+
+					Grid.SetRow(element, contents.RowDefinitions.Count);
+					Grid.SetColumn(element, col);
+					contents.Children.Add(element);
 				}
 				contents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 			}

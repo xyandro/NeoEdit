@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
@@ -21,6 +22,8 @@ namespace NeoEdit.Disk
 			File,
 		}
 
+		[DepProp]
+		public BitmapSource Icon { get { return UIHelper<DiskItem>.GetPropValue<BitmapSource>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public string FullName { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } set { UIHelper<DiskItem>.SetPropValue(this, value ?? ""); SetFullName(); } }
 		[DepProp]
@@ -111,6 +114,7 @@ namespace NeoEdit.Disk
 					CreateTime = dirInfo.CreationTime;
 					AccessTime = dirInfo.LastAccessTime;
 					Type = DiskItemType.Directory;
+					Icon = IconProvider.GetIcon(FullName, true);
 				}
 			}
 
@@ -124,6 +128,7 @@ namespace NeoEdit.Disk
 					CreateTime = fileInfo.CreationTime;
 					AccessTime = fileInfo.LastAccessTime;
 					Type = DiskItemType.File;
+					Icon = IconProvider.GetIcon(FullName, false);
 				}
 			}
 		}
