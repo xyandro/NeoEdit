@@ -6,9 +6,10 @@ using System.Windows.Media.Imaging;
 
 namespace NeoEdit.Disk
 {
-	static class IconProvider
+	static class DiskItemDataProvider
 	{
 		const uint SHGFI_ICON = 0x000000100;
+		const uint SHGFI_TYPENAME = 0x000000400;
 		const uint SHGFI_USEFILEATTRIBUTES = 0x000000010;
 		const uint SHGFI_LARGEICON = 0x000000000;
 
@@ -34,13 +35,18 @@ namespace NeoEdit.Disk
 		[DllImport("user32.dll", SetLastError = true)]
 		static extern bool DestroyIcon(IntPtr hIcon);
 
-		public static BitmapSource GetIcon(string path, bool folder)
+		public static void GetExtraData(string path, bool folder, out BitmapSource icon, out string typeName)
 		{
+			icon = null;
+			typeName = null;
+
 			var shfi = new SHFILEINFO();
-			SHGetFileInfo(path, folder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL, ref shfi, Marshal.SizeOf(shfi), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON);
-			var icon = Imaging.CreateBitmapSourceFromHIcon(shfi.hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+			if (SHGetFileInfo(path, folder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL, ref shfi, Marshal.SizeOf(shfi), SHGFI_ICON | SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON) == IntPtr.Zero)
+				return;
+
+			icon = Imaging.CreateBitmapSourceFromHIcon(shfi.hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+			typeName = shfi.szTypeName;
 			DestroyIcon(shfi.hIcon);
-			return icon;
 		}
 	}
 }

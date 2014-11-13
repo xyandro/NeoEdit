@@ -43,26 +43,28 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public DateTime? AccessTime { get { return UIHelper<DiskItem>.GetPropValue<DateTime?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
+		public DiskItemType FileType { get { return UIHelper<DiskItem>.GetPropValue<DiskItemType>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		[DepProp]
+		public string Type { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		[DepProp]
 		public string MD5 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public string SHA1 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public DiskItemType Type { get { return UIHelper<DiskItem>.GetPropValue<DiskItemType>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
-		[DepProp]
 		public VersionControlStatus SvnStatus { get { return UIHelper<DiskItem>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
-		public bool HasChildren { get { return Type != DiskItemType.File; } }
+		public bool HasChildren { get { return FileType != DiskItemType.File; } }
 		public DiskItem Parent { get { return new DiskItem(Path); } }
 
-		public bool CanRename { get { return (Type == DiskItemType.File) || (Type == DiskItemType.Directory); } }
+		public bool CanRename { get { return (FileType == DiskItemType.File) || (FileType == DiskItemType.Directory); } }
 
 		public bool Exists
 		{
 			get
 			{
-				switch (Type)
+				switch (FileType)
 				{
 					case DiskItemType.None: return false;
 					case DiskItemType.Directory: return Directory.Exists(FullName);
@@ -97,15 +99,15 @@ namespace NeoEdit.Disk
 		{
 			Size = null;
 			WriteTime = CreateTime = AccessTime = null;
-			Type = DiskItemType.None;
+			FileType = DiskItemType.None;
 
-			if ((Type == DiskItemType.None) && (String.IsNullOrEmpty(FullName)))
-				Type = DiskItemType.Root;
+			if ((FileType == DiskItemType.None) && (String.IsNullOrEmpty(FullName)))
+				FileType = DiskItemType.Root;
 
-			if ((Type == DiskItemType.None) && (FullName.StartsWith(@"\\")) && (Path == ""))
-				Type = DiskItemType.Share;
+			if ((FileType == DiskItemType.None) && (FullName.StartsWith(@"\\")) && (Path == ""))
+				FileType = DiskItemType.Share;
 
-			if (Type == DiskItemType.None)
+			if (FileType == DiskItemType.None)
 			{
 				var dirInfo = new DirectoryInfo(FullName);
 				if (dirInfo.Exists)
@@ -113,12 +115,17 @@ namespace NeoEdit.Disk
 					WriteTime = dirInfo.LastWriteTime;
 					CreateTime = dirInfo.CreationTime;
 					AccessTime = dirInfo.LastAccessTime;
-					Type = DiskItemType.Directory;
-					Icon = IconProvider.GetIcon(FullName, true);
+					FileType = DiskItemType.Directory;
+
+					BitmapSource icon;
+					string type;
+					DiskItemDataProvider.GetExtraData(FullName, true, out icon, out type);
+					Icon = icon;
+					Type = type;
 				}
 			}
 
-			if (Type == DiskItemType.None)
+			if (FileType == DiskItemType.None)
 			{
 				var fileInfo = new FileInfo(FullName);
 				if (fileInfo.Exists)
@@ -127,8 +134,13 @@ namespace NeoEdit.Disk
 					WriteTime = fileInfo.LastWriteTime;
 					CreateTime = fileInfo.CreationTime;
 					AccessTime = fileInfo.LastAccessTime;
-					Type = DiskItemType.File;
-					Icon = IconProvider.GetIcon(FullName, false);
+					FileType = DiskItemType.File;
+
+					BitmapSource icon;
+					string type;
+					DiskItemDataProvider.GetExtraData(FullName, false, out icon, out type);
+					Icon = icon;
+					Type = type;
 				}
 			}
 		}
@@ -169,7 +181,7 @@ namespace NeoEdit.Disk
 
 		public IEnumerable<DiskItem> GetChildren()
 		{
-			switch (Type)
+			switch (FileType)
 			{
 				case DiskItemType.Root: return GetRootChildren();
 				case DiskItemType.Share: return GetShareChildren();
@@ -204,7 +216,7 @@ namespace NeoEdit.Disk
 
 		public void Identify()
 		{
-			if (Type != DiskItemType.File)
+			if (FileType != DiskItemType.File)
 				return;
 
 			Identity = Identifier.Identify(FullName);
@@ -212,7 +224,7 @@ namespace NeoEdit.Disk
 
 		public void SetMD5()
 		{
-			if (Type != DiskItemType.File)
+			if (FileType != DiskItemType.File)
 				return;
 
 			MD5 = Checksum.Get(Checksum.Type.MD5, FullName);
@@ -220,7 +232,7 @@ namespace NeoEdit.Disk
 
 		public void SetSHA1()
 		{
-			if (Type != DiskItemType.File)
+			if (FileType != DiskItemType.File)
 				return;
 
 			SHA1 = Checksum.Get(Checksum.Type.SHA1, FullName);
@@ -237,7 +249,7 @@ namespace NeoEdit.Disk
 			if (new DiskItem(newName).Exists)
 				throw new Exception("A file or directory with that name already exists.");
 
-			switch (Type)
+			switch (FileType)
 			{
 				case DiskItemType.File: File.Move(FullName, newName); break;
 				case DiskItemType.Directory: Directory.Move(FullName, newName); break;
@@ -270,12 +282,12 @@ namespace NeoEdit.Disk
 			var time = WriteTime;
 			if (time.HasValue)
 				ticks = time.Value.Ticks;
-			return String.Format("{0}-{1}-{2}-{3}", Type, Name, Size, ticks);
+			return String.Format("{0}-{1}-{2}-{3}", FileType, Name, Size, ticks);
 		}
 
 		public void Delete()
 		{
-			switch (Type)
+			switch (FileType)
 			{
 				case DiskItemType.File: File.Delete(FullName); break;
 				case DiskItemType.Directory: Directory.Delete(FullName, true); break;

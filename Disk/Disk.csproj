@@ -26,7 +26,7 @@
     <Compile Include="Dialogs\RenameDialog.xaml.cs">
       <DependentUpon>RenameDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IconProvider.cs" />
+    <Compile Include="DiskItemDataProvider.cs" />
     <Compile Include="SvnCache.cs" />
     <Compile Include="DiskItem.cs" />
     <Page Include="DiskWindow.xaml">

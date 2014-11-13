@@ -68,6 +68,7 @@ namespace NeoEdit.Disk
 			ShowColumn(a => a.Name);
 			ShowColumn(a => a.Size);
 			ShowColumn(a => a.WriteTime);
+			ShowColumn(a => a.Type);
 			SetSort(a => a.Name);
 			SetLocation(path ?? "");
 
@@ -410,7 +411,7 @@ namespace NeoEdit.Disk
 
 		bool SearchFile(DiskItem file, BinaryFindDialog.Result search)
 		{
-			if ((file.Type != DiskItem.DiskItemType.File) || (!file.Exists))
+			if ((file.FileType != DiskItem.DiskItemType.File) || (!file.Exists))
 				return false;
 
 			var findLen = search.Searcher.MaxLen;
