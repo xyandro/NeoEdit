@@ -23,7 +23,7 @@ namespace NeoEdit.Disk
 		}
 
 		[DepProp]
-		public BitmapSource Icon { get { return UIHelper<DiskItem>.GetPropValue<BitmapSource>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		public BitmapSource Ico { get { return UIHelper<DiskItem>.GetPropValue<BitmapSource>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public string FullName { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } set { UIHelper<DiskItem>.SetPropValue(this, value ?? ""); SetFullName(); } }
 		[DepProp]
@@ -120,7 +120,7 @@ namespace NeoEdit.Disk
 					BitmapSource icon;
 					string type;
 					DiskItemDataProvider.GetExtraData(FullName, true, out icon, out type);
-					Icon = icon;
+					Ico = icon;
 					Type = type;
 				}
 			}
@@ -139,7 +139,7 @@ namespace NeoEdit.Disk
 					BitmapSource icon;
 					string type;
 					DiskItemDataProvider.GetExtraData(FullName, false, out icon, out type);
-					Icon = icon;
+					Ico = icon;
 					Type = type;
 				}
 			}

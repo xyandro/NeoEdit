@@ -64,7 +64,7 @@ namespace NeoEdit.Disk
 			Selected = new ObservableCollection<DiskItem>();
 			Columns = new ObservableCollection<ItemGridColumn>();
 
-			ShowColumn(a => a.Icon);
+			ShowColumn(a => a.Ico);
 			ShowColumn(a => a.Name);
 			ShowColumn(a => a.Size);
 			ShowColumn(a => a.WriteTime);
