@@ -66,6 +66,7 @@ namespace NeoEdit.Disk
 				case DiskCommand.Select_AddCopiedCut: Active.Command_Select_AddCopiedCut(); break;
 				case DiskCommand.Select_Remove: Active.Command_Select_Remove(); break;
 				case DiskCommand.Select_RemoveWithChildren: Active.Command_Select_RemoveWithChildren(); break;
+				case DiskCommand.View_DiskUsage: Active.Command_View_DiskUsage(); break;
 			}
 		}
 

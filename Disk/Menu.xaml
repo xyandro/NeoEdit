@@ -88,6 +88,8 @@
 			</MenuItem.Style>
 		</MenuItem>
 		<disk:DiskMenuItem Header="_Tiles" CommandEnum="View_Tiles"/>
+		<Separator/>
+		<disk:DiskMenuItem Header="_Disk Usage" CommandEnum="View_DiskUsage"/>
 	</MenuItem>
 	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
 	<guiCommon:HelpMenu/>

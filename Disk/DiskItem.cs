@@ -295,6 +295,15 @@ namespace NeoEdit.Disk
 			}
 		}
 
+		public long DiskUsage()
+		{
+			var items = new List<DiskItem> { this };
+			for (var ctr = 0; ctr < items.Count; ++ctr)
+				if (items[ctr].HasChildren)
+					items.AddRange(items[ctr].GetChildren());
+			return items.Sum(item => item.Size.HasValue ? item.Size.Value : 0);
+		}
+
 		public static DiskItem Get(string fullName)
 		{
 			var result = new DiskItem(null);

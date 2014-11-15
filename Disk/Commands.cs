@@ -31,5 +31,6 @@ namespace NeoEdit.Disk
 		[KeyGesture(Key.OemMinus, ModifierKeys.Alt)] [KeyGesture(Key.OemMinus, ModifierKeys.Control)] Select_Remove,
 		[KeyGesture(Key.OemMinus, ModifierKeys.Alt | ModifierKeys.Shift)] [KeyGesture(Key.OemMinus, ModifierKeys.Control | ModifierKeys.Shift)] Select_RemoveWithChildren,
 		View_Tiles,
+		[KeyGesture(Key.U, ModifierKeys.Control)] View_DiskUsage,
 	}
 }

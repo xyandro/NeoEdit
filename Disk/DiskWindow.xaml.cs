@@ -540,6 +540,13 @@ namespace NeoEdit.Disk
 			}
 		}
 
+		internal void Command_View_DiskUsage()
+		{
+			var files = Selected.Count != 0 ? Selected : Files;
+			var usage = files.Select(file => new Tuple<string, string, long>(file.Name, file.FullName, file.DiskUsage())).OrderByDescending(tuple => tuple.Item3).ToList();
+			new Chart(usage);
+		}
+
 		internal void ToggleColumn(DependencyProperty property)
 		{
 			var found = Columns.FirstOrDefault(a => a.DepProp == property);
