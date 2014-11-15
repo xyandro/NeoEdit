@@ -19,7 +19,7 @@ namespace NeoEdit.Disk
 			InitializeComponent();
 			data = _data;
 
-			var random = new Random(1);
+			var random = new Random(19);
 			var brushInfo = typeof(Brushes).GetProperties();
 			brushes = Enumerable.Range(0, brushInfo.Length).Select(ctr => brushInfo[ctr].GetValue(null, null) as Brush).OrderBy(brush => random.Next()).ToList();
 			while (brushes.Count < data.Count)
