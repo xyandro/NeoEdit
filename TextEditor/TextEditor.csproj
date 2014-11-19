@@ -119,7 +119,9 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Sort.cs" />
+    <Compile Include="TextEditor-Sort.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+	</Compile>
     <Compile Include="UndoRedo.cs" />
     <Compile Include="UnitTest\TextDataTest.cs" />
   </ItemGroup>
