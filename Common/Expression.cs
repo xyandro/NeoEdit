@@ -81,6 +81,7 @@ namespace NeoEdit.Common
 			GetEvaluation(expression, internals);
 		}
 
+		static readonly Regex simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|\b(true|false)\b|\b(\w+)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 		void SimplifyAndPopulateInternals(ref string expression, out List<object> internals, List<string> vars)
 		{
 			if (expression.StartsWith("!!"))
@@ -98,21 +99,14 @@ namespace NeoEdit.Common
 
 			internals = new List<object>();
 
-			var varsRE = vars != null ? String.Format(@"|\b({0})\b", String.Join("|", vars)) : "";
-			var simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|\b(true|false)\b" + varsRE, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			var matches = simplifyTermRE.Matches(expression).Cast<Match>().ToList();
 
 			var result = "";
-			while (true)
+			var textAt = 0;
+			foreach (var match in matches)
 			{
-				var match = simplifyTermRE.Match(expression);
-				if (!match.Success)
-				{
-					result += expression;
-					break;
-				}
-
-				result += expression.Substring(0, match.Index);
-				expression = expression.Substring(match.Index + match.Length);
+				result += expression.Substring(textAt, match.Index - textAt);
+				textAt = match.Index + match.Length;
 
 				if (match.Groups[1].Success)
 					result += "[v" + match.Value.Substring(1, match.Length - 2) + "]";
@@ -132,8 +126,16 @@ namespace NeoEdit.Common
 					internals.Add(Boolean.Parse(match.Groups[4].Value));
 				}
 				else if (match.Groups[5].Success)
-					result += "[v" + vars.IndexOf(match.Groups[5].Value) + "]";
+				{
+					var str = match.Groups[5].Value;
+					var pos = vars == null ? -1 : vars.IndexOf(str);
+					if (pos == -1)
+						result += str;
+					else
+						result += "[v" + pos + "]";
+				}
 			}
+			result += expression.Substring(textAt);
 			expression = result;
 
 			if (String.IsNullOrWhiteSpace(expression))
