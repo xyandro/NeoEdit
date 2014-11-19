@@ -41,7 +41,12 @@ namespace NeoEdit.TextEditor
 			TextEditors = new ObservableCollection<TextEditor>();
 		}
 
-		void Command_File_Open()
+		class OpenFileDialogResult : IDialogResult
+		{
+			public string[] files { get; set; }
+		}
+
+		OpenFileDialogResult Command_File_Open_Dialog()
 		{
 			var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
 			var dialog = new OpenFileDialog
@@ -53,9 +58,14 @@ namespace NeoEdit.TextEditor
 				InitialDirectory = dir,
 			};
 			if (dialog.ShowDialog() != true)
-				return;
+				return null;
 
-			foreach (var filename in dialog.FileNames)
+			return new OpenFileDialogResult { files = dialog.FileNames };
+		}
+
+		void Command_File_Open(OpenFileDialogResult result)
+		{
+			foreach (var filename in result.files)
 				Add(new TextEditor(filename));
 		}
 
@@ -137,47 +147,11 @@ namespace NeoEdit.TextEditor
 				return;
 			}
 
-			IDialogResult dialogResult = null;
 			var shiftDown = this.shiftDown;
 
-			if (Active != null)
-			{
-				bool checkResult = true;
-				// These require additional dialogs
-				switch (command)
-				{
-					case TextEditCommand.Files_Timestamp_Write:
-					case TextEditCommand.Files_Timestamp_Access:
-					case TextEditCommand.Files_Timestamp_Create:
-					case TextEditCommand.Files_Timestamp_All:
-						dialogResult = Active.Command_Files_Timestamp_Dialog();
-						break;
-					case TextEditCommand.Data_DateTime_Convert: dialogResult = Active.Command_Data_DateTime_Convert_Dialog(); break;
-					case TextEditCommand.File_Encoding: dialogResult = Active.Command_File_Encoding_Dialog(); break;
-					case TextEditCommand.Data_Binary_FromBinary_String: dialogResult = Active.Command_Data_Binary_FromBinary_Dialog(); break;
-					case TextEditCommand.Data_Base64_ToBase64: dialogResult = Active.Command_Data_Base64_ToBase64_Dialog(); break;
-					case TextEditCommand.Data_Base64_FromBase64: dialogResult = Active.Command_Data_Base64_FromBase64_Dialog(); break;
-					case TextEditCommand.Data_Checksum_MD5: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
-					case TextEditCommand.Data_Checksum_SHA1: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
-					case TextEditCommand.Data_Checksum_SHA256: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
-					case TextEditCommand.Data_Binary_ToBinary_String: dialogResult = Active.Command_Data_Binary_ToBinary_Dialog(); break;
-					case TextEditCommand.Edit_Find: dialogResult = Active.Command_Edit_FindReplace_Dialog(false); break;
-					case TextEditCommand.Edit_Replace: dialogResult = Active.Command_Edit_FindReplace_Dialog(true); break;
-					case TextEditCommand.Select_RegExMatches: dialogResult = Active.Command_Select_RegExMatches_Dialog(); break;
-					case TextEditCommand.Edit_GotoLine: dialogResult = Active.Command_Edit_Goto_Dialog(true); break;
-					case TextEditCommand.Edit_GotoColumn: dialogResult = Active.Command_Edit_Goto_Dialog(false); break;
-					case TextEditCommand.Select_Limit: dialogResult = Active.Command_Select_Limit_Dialog(); break;
-					case TextEditCommand.Data_InsertRandomNumber: dialogResult = Active.Command_Data_InsertRandomNumber_Dialog(); break;
-					case TextEditCommand.Data_Repeat: dialogResult = Active.Command_Data_Repeat_Dialog(); break;
-					case TextEditCommand.Data_Width: dialogResult = Active.Command_Data_Width_Dialog(); break;
-					case TextEditCommand.Data_EvaluateExpression: dialogResult = Active.Command_Data_EvaluateExpression_Dialog(); break;
-					case TextEditCommand.Select_ExpressionMatches: dialogResult = Active.Command_Select_ExpressionMatches_Dialog(); break;
-					default: checkResult = false; break;
-				}
-
-				if ((checkResult) && (dialogResult == null))
-					return;
-			}
+			IDialogResult dialogResult;
+			if (!GetDialogResult(command, out dialogResult))
+				return;
 
 			if (recordingMacro != null)
 				recordingMacro.AddCommand(command, shiftDown, dialogResult);
@@ -185,12 +159,61 @@ namespace NeoEdit.TextEditor
 			HandleCommand(command, shiftDown, dialogResult);
 		}
 
+		internal bool GetDialogResult(TextEditCommand command, out IDialogResult dialogResult)
+		{
+			dialogResult = null;
+
+			bool dialogResultSet = true;
+			switch (command)
+			{
+				case TextEditCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
+				default: dialogResultSet = false; break;
+			}
+
+			if ((!dialogResultSet) && (Active != null))
+			{
+				dialogResultSet = true;
+				switch (command)
+				{
+					case TextEditCommand.File_Encoding: dialogResult = Active.Command_File_Encoding_Dialog(); break;
+					case TextEditCommand.Edit_Find: dialogResult = Active.Command_Edit_FindReplace_Dialog(false); break;
+					case TextEditCommand.Edit_Replace: dialogResult = Active.Command_Edit_FindReplace_Dialog(true); break;
+					case TextEditCommand.Edit_GotoLine: dialogResult = Active.Command_Edit_Goto_Dialog(true); break;
+					case TextEditCommand.Edit_GotoColumn: dialogResult = Active.Command_Edit_Goto_Dialog(false); break;
+					case TextEditCommand.Files_Timestamp_Write:
+					case TextEditCommand.Files_Timestamp_Access:
+					case TextEditCommand.Files_Timestamp_Create:
+					case TextEditCommand.Files_Timestamp_All:
+						dialogResult = Active.Command_Files_Timestamp_Dialog();
+						break;
+					case TextEditCommand.Data_Binary_ToBinary_String: dialogResult = Active.Command_Data_Binary_ToBinary_Dialog(); break;
+					case TextEditCommand.Data_Binary_FromBinary_String: dialogResult = Active.Command_Data_Binary_FromBinary_Dialog(); break;
+					case TextEditCommand.Data_Base64_ToBase64: dialogResult = Active.Command_Data_Base64_ToBase64_Dialog(); break;
+					case TextEditCommand.Data_Base64_FromBase64: dialogResult = Active.Command_Data_Base64_FromBase64_Dialog(); break;
+					case TextEditCommand.Data_DateTime_Convert: dialogResult = Active.Command_Data_DateTime_Convert_Dialog(); break;
+					case TextEditCommand.Data_Width: dialogResult = Active.Command_Data_Width_Dialog(); break;
+					case TextEditCommand.Data_EvaluateExpression: dialogResult = Active.Command_Data_EvaluateExpression_Dialog(); break;
+					case TextEditCommand.Data_Repeat: dialogResult = Active.Command_Data_Repeat_Dialog(); break;
+					case TextEditCommand.Data_InsertRandomNumber: dialogResult = Active.Command_Data_InsertRandomNumber_Dialog(); break;
+					case TextEditCommand.Data_Checksum_MD5: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
+					case TextEditCommand.Data_Checksum_SHA1: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
+					case TextEditCommand.Data_Checksum_SHA256: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
+					case TextEditCommand.Select_Limit: dialogResult = Active.Command_Select_Limit_Dialog(); break;
+					case TextEditCommand.Select_ExpressionMatches: dialogResult = Active.Command_Select_ExpressionMatches_Dialog(); break;
+					case TextEditCommand.Select_RegExMatches: dialogResult = Active.Command_Select_RegExMatches_Dialog(); break;
+					default: dialogResultSet = false; break;
+				}
+			}
+
+			return (!dialogResultSet) || (dialogResult != null);
+		}
+
 		internal void HandleCommand(TextEditCommand command, bool shiftDown, IDialogResult dialogResult)
 		{
 			switch (command)
 			{
 				case TextEditCommand.File_New: Add(new TextEditor()); break;
-				case TextEditCommand.File_Open: Command_File_Open(); break;
+				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
