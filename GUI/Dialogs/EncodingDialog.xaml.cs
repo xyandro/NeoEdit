@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Linq;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
@@ -9,10 +10,28 @@ namespace NeoEdit.GUI.Dialogs
 {
 	partial class EncodingDialog
 	{
-		public class Result : IDialogResult
+		public class Result : DialogResult
 		{
 			public StrCoder.CodePage CodePage { get; set; }
 			public string LineEndings { get; set; }
+
+			public override XElement ToXML()
+			{
+				var neXml = NEXML.Create(this);
+				return new XElement(neXml.Name,
+					neXml.Element(a => a.CodePage),
+					neXml.Element(a => a.LineEndings)
+				);
+			}
+
+			public static Result FromXML(XElement xml)
+			{
+				return new Result
+				{
+					CodePage = NEXML<Result>.Element(xml, a => a.CodePage),
+					LineEndings = NEXML<Result>.Element(xml, a => a.LineEndings),
+				};
+			}
 		}
 
 		[DepProp]

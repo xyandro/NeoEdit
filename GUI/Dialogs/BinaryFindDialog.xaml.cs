@@ -28,7 +28,7 @@ namespace NeoEdit.GUI.Dialogs
 			}
 		}
 
-		public class Result : IDialogResult
+		public class Result
 		{
 			public string Text { get; private set; }
 			public Searcher Searcher { get; private set; }

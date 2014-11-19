@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Xml.Linq;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 
@@ -6,11 +7,31 @@ namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class LimitDialog
 	{
-		internal class Result : IDialogResult
+		internal class Result : DialogResult
 		{
 			public int SelMult { get; set; }
 			public bool IgnoreBlank { get; set; }
 			public int NumSels { get; set; }
+
+			public override XElement ToXML()
+			{
+				var neXml = NEXML.Create(this);
+				return new XElement(neXml.Name,
+					neXml.Attribute(a => a.SelMult),
+					neXml.Attribute(a => a.IgnoreBlank),
+					neXml.Attribute(a => a.NumSels)
+				);
+			}
+
+			public static Result FromXML(XElement xml)
+			{
+				return new Result
+				{
+					SelMult = NEXML<Result>.Attribute(xml, a => a.SelMult),
+					IgnoreBlank = NEXML<Result>.Attribute(xml, a => a.IgnoreBlank),
+					NumSels = NEXML<Result>.Attribute(xml, a => a.NumSels)
+				};
+			}
 		}
 
 		[DepProp]

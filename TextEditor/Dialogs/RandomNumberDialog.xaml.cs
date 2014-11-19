@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Xml.Linq;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 
@@ -7,10 +8,28 @@ namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class RandomNumberDialog
 	{
-		internal class Result : IDialogResult
+		internal class Result : DialogResult
 		{
 			public int MinValue { get; set; }
 			public int MaxValue { get; set; }
+
+			public override XElement ToXML()
+			{
+				var neXml = NEXML.Create(this);
+				return new XElement(neXml.Name,
+					neXml.Attribute(a => a.MinValue),
+					neXml.Attribute(a => a.MaxValue)
+				);
+			}
+
+			public static Result FromXML(XElement xml)
+			{
+				return new Result
+				{
+					MinValue = NEXML<Result>.Attribute(xml, a => a.MinValue),
+					MaxValue = NEXML<Result>.Attribute(xml, a => a.MaxValue)
+				};
+			}
 		}
 
 		[DepProp]

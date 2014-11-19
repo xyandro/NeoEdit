@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
@@ -41,9 +44,25 @@ namespace NeoEdit.TextEditor
 			TextEditors = new ObservableCollection<TextEditor>();
 		}
 
-		class OpenFileDialogResult : IDialogResult
+		class OpenFileDialogResult : DialogResult
 		{
-			public string[] files { get; set; }
+			public List<string> files { get; set; }
+
+			public override XElement ToXML()
+			{
+				var neXml = NEXML.Create(this);
+				return new XElement(neXml.Name,
+					neXml.Element(a => a.files)
+				);
+			}
+
+			public static OpenFileDialogResult FromXML(XElement xml)
+			{
+				return new OpenFileDialogResult
+				{
+					files = NEXML<OpenFileDialogResult>.Element(xml, a => a.files),
+				};
+			}
 		}
 
 		OpenFileDialogResult Command_File_Open_Dialog()
@@ -60,7 +79,7 @@ namespace NeoEdit.TextEditor
 			if (dialog.ShowDialog() != true)
 				return null;
 
-			return new OpenFileDialogResult { files = dialog.FileNames };
+			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
 		void Command_File_Open(OpenFileDialogResult result)
@@ -103,9 +122,8 @@ namespace NeoEdit.TextEditor
 
 		void Command_Macro_QuickPlay()
 		{
-			if (quickMacro == null)
+			if ((recordingMacro != null) || (quickMacro == null))
 				return;
-
 			quickMacro.Play(this);
 		}
 
@@ -133,23 +151,15 @@ namespace NeoEdit.TextEditor
 
 		internal void RunCommand(TextEditCommand command)
 		{
-			if (command == TextEditCommand.Macro_QuickRecord)
+			switch (command)
 			{
-				Command_Macro_QuickRecord();
-				return;
-			}
-
-			if (command == TextEditCommand.Macro_QuickPlay)
-			{
-				if (recordingMacro != null)
-					return;
-				Command_Macro_QuickPlay();
-				return;
+				case TextEditCommand.Macro_QuickRecord: Command_Macro_QuickRecord(); return;
+				case TextEditCommand.Macro_QuickPlay: Command_Macro_QuickPlay(); return;
 			}
 
 			var shiftDown = this.shiftDown;
 
-			IDialogResult dialogResult;
+			DialogResult dialogResult;
 			if (!GetDialogResult(command, out dialogResult))
 				return;
 
@@ -159,7 +169,7 @@ namespace NeoEdit.TextEditor
 			HandleCommand(command, shiftDown, dialogResult);
 		}
 
-		internal bool GetDialogResult(TextEditCommand command, out IDialogResult dialogResult)
+		internal bool GetDialogResult(TextEditCommand command, out DialogResult dialogResult)
 		{
 			dialogResult = null;
 
@@ -208,7 +218,7 @@ namespace NeoEdit.TextEditor
 			return (!dialogResultSet) || (dialogResult != null);
 		}
 
-		internal void HandleCommand(TextEditCommand command, bool shiftDown, IDialogResult dialogResult)
+		internal void HandleCommand(TextEditCommand command, bool shiftDown, DialogResult dialogResult)
 		{
 			switch (command)
 			{
@@ -486,10 +496,10 @@ namespace NeoEdit.TextEditor
 			var shiftDown = this.shiftDown;
 			var controlDown = this.controlDown;
 
-			if (recordingMacro != null)
-				recordingMacro.AddKey(e.Key, shiftDown, controlDown);
-
 			e.Handled = HandleKey(e.Key, shiftDown, controlDown);
+
+			if ((recordingMacro != null) && (e.Handled))
+				recordingMacro.AddKey(e.Key, shiftDown, controlDown);
 		}
 
 		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
@@ -508,10 +518,10 @@ namespace NeoEdit.TextEditor
 			if (e.Source is MenuItem)
 				return;
 
-			if (recordingMacro != null)
-				recordingMacro.AddText(e.Text);
+			e.Handled = HandleText(e.Text);
 
-			HandleText(e.Text);
+			if ((recordingMacro != null) && (e.Handled))
+				recordingMacro.AddText(e.Text);
 		}
 
 		internal bool HandleText(string text)

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Xml.Linq;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 
@@ -22,7 +23,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			All,
 		}
 
-		internal class Result : IDialogResult
+		internal class Result : DialogResult
 		{
 			public Regex Regex { get; set; }
 			public string Replace { get; set; }
@@ -31,6 +32,34 @@ namespace NeoEdit.TextEditor.Dialogs
 			public bool IncludeEndings { get; set; }
 			public bool IncludeMatches { get; set; }
 			public GetRegExResultType ResultType { get; set; }
+
+			public override XElement ToXML()
+			{
+				var neXml = NEXML.Create(this);
+				return new XElement(neXml.Name,
+					neXml.Element(a => a.Regex),
+					neXml.Attribute(a => a.Replace),
+					neXml.Attribute(a => a.RegexGroups),
+					neXml.Attribute(a => a.SelectionOnly),
+					neXml.Attribute(a => a.IncludeEndings),
+					neXml.Attribute(a => a.IncludeMatches),
+					neXml.Attribute(a => a.ResultType)
+				);
+			}
+
+			public static Result FromXML(XElement xml)
+			{
+				return new Result
+				{
+					Regex = NEXML<Result>.Element(xml, a => a.Regex),
+					Replace = NEXML<Result>.Attribute(xml, a => a.Replace),
+					RegexGroups = NEXML<Result>.Attribute(xml, a => a.RegexGroups),
+					SelectionOnly = NEXML<Result>.Attribute(xml, a => a.SelectionOnly),
+					IncludeEndings = NEXML<Result>.Attribute(xml, a => a.IncludeEndings),
+					IncludeMatches = NEXML<Result>.Attribute(xml, a => a.IncludeMatches),
+					ResultType = NEXML<Result>.Attribute(xml, a => a.ResultType)
+				};
+			}
 		}
 
 		[DepProp]
