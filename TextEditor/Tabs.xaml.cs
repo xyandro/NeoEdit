@@ -314,7 +314,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Keys_Misses_Values8: Active.Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Active.Command_Keys_HitsMisses(9, false); break;
 				case TextEditCommand.Keys_CountstoKeysValues1: Active.Command_Keys_CountstoKeysValues1(); break;
-				case TextEditCommand.SelectMark_Toggle: Active.Command_SelectMark_Toggle(); break;
+				case TextEditCommand.SelectRegion_Toggle: Active.Command_SelectRegion_Toggle(); break;
 				case TextEditCommand.Select_All: Active.Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Active.Command_Select_Limit(); break;
 				case TextEditCommand.Select_Lines: Active.Command_Select_Lines(); break;
@@ -323,7 +323,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_Trim: Active.Command_Select_Trim(); break;
 				case TextEditCommand.Select_Unique: Active.Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Active.Command_Select_Duplicates(); break;
-				case TextEditCommand.Select_Marks: Active.Command_Select_Marks(); break;
+				case TextEditCommand.Select_Regions: Active.Command_Select_Regions(); break;
 				case TextEditCommand.Select_FindResults: Active.Command_Select_FindResults(); break;
 				case TextEditCommand.Select_Min_String: Active.Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
 				case TextEditCommand.Select_Min_Numeric: Active.Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
@@ -339,10 +339,10 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Select_PrevSelection: Active.Command_Select_PrevSelection(); break;
 				case TextEditCommand.Select_Single: Active.Command_Select_Single(); break;
 				case TextEditCommand.Select_Remove: Active.Command_Select_Remove(); break;
-				case TextEditCommand.Mark_Selection: Active.Command_Mark_Selection(); break;
-				case TextEditCommand.Mark_FindResults: Active.Command_Mark_FindResults(); break;
-				case TextEditCommand.Mark_ClearMarks: Active.Command_Mark_ClearMarks(); break;
-				case TextEditCommand.Mark_LimitToSelection: Active.Command_Mark_LimitToSelection(); break;
+				case TextEditCommand.Region_SetSelection: Active.Command_Region_SetSelection(); break;
+				case TextEditCommand.Region_SetFindResults: Active.Command_Region_SetFindResults(); break;
+				case TextEditCommand.Region_ClearRegions: Active.Command_Region_ClearRegions(); break;
+				case TextEditCommand.Region_LimitToSelection: Active.Command_Region_LimitToSelection(); break;
 				case TextEditCommand.View_Highlighting_None: Active.HighlightType = Highlighting.HighlightingType.None; break;
 				case TextEditCommand.View_Highlighting_CSharp: Active.HighlightType = Highlighting.HighlightingType.CSharp; break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: Active.HighlightType = Highlighting.HighlightingType.CPlusPlus; break;

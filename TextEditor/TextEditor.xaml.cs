@@ -32,7 +32,7 @@ namespace NeoEdit.TextEditor
 			{
 				_data = value;
 				Selections.Clear();
-				Marks.Clear();
+				Regions.Clear();
 				Searches.Clear();
 				undoRedo.Clear();
 				CalculateBoundaries();
@@ -70,7 +70,7 @@ namespace NeoEdit.TextEditor
 
 		readonly ObservableCollection<Range> Selections = new ObservableCollection<Range>();
 		readonly ObservableCollection<Range> Searches = new ObservableCollection<Range>();
-		readonly ObservableCollection<Range> Marks = new ObservableCollection<Range>();
+		readonly ObservableCollection<Range> Regions = new ObservableCollection<Range>();
 
 		Random random = new Random();
 
@@ -84,7 +84,7 @@ namespace NeoEdit.TextEditor
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		RunOnceTimer selectionsTimer, searchesTimer, marksTimer, renderTimer;
+		RunOnceTimer selectionsTimer, searchesTimer, regionsTimer, renderTimer;
 
 		public TextEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, int line = -1, int column = -1)
 		{
@@ -93,16 +93,16 @@ namespace NeoEdit.TextEditor
 			undoRedo = new UndoRedo(b => IsModified = b);
 			selectionsTimer = new RunOnceTimer(SelectionsInvalidated);
 			searchesTimer = new RunOnceTimer(SearchesInvalidated);
-			marksTimer = new RunOnceTimer(MarksInvalidated);
+			regionsTimer = new RunOnceTimer(RegionsInvalidated);
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
-			renderTimer.AddDependency(selectionsTimer, searchesTimer, marksTimer);
+			renderTimer.AddDependency(selectionsTimer, searchesTimer, regionsTimer);
 
 			OpenFile(filename, bytes, codePage);
 			Goto(line, column);
 
 			Selections.CollectionChanged += (s, e) => selectionsTimer.Start();
 			Searches.CollectionChanged += (s, e) => searchesTimer.Start();
-			Marks.CollectionChanged += (s, e) => marksTimer.Start();
+			Regions.CollectionChanged += (s, e) => regionsTimer.Start();
 
 			UIHelper<TextEditor>.AddCallback(this, Canvas.ActualWidthProperty, () => CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(this, Canvas.ActualHeightProperty, () => CalculateBoundaries());
@@ -1389,17 +1389,17 @@ namespace NeoEdit.TextEditor
 			keysAndValues[1] = group.Select(a => a.count.ToString()).ToList();
 		}
 
-		internal void Command_SelectMark_Toggle()
+		internal void Command_SelectRegion_Toggle()
 		{
 			if (Selections.Count > 1)
 			{
-				Marks.AddRange(Selections);
+				Regions.AddRange(Selections);
 				Selections.Replace(Selections.First());
 			}
-			else if (Marks.Count != 0)
+			else if (Regions.Count != 0)
 			{
-				Selections.Replace(Marks);
-				Marks.Clear();
+				Selections.Replace(Regions);
+				Regions.Clear();
 			}
 		}
 
@@ -1457,13 +1457,9 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
 		}
 
-		internal void Command_Select_Marks()
+		internal void Command_Select_Regions()
 		{
-			if (Marks.Count != 0)
-			{
-				Selections.Replace(Marks);
-				Marks.Clear();
-			}
+			Selections.Replace(Regions);
 		}
 
 		internal void Command_Select_FindResults()
@@ -1558,34 +1554,34 @@ namespace NeoEdit.TextEditor
 			Selections.RemoveAt(visibleIndex);
 		}
 
-		internal void Command_Mark_Selection()
+		internal void Command_Region_SetSelection()
 		{
-			Marks.AddRange(Selections);
+			Regions.AddRange(Selections);
 		}
 
-		internal void Command_Mark_FindResults()
+		internal void Command_Region_SetFindResults()
 		{
-			Marks.AddRange(Searches);
+			Regions.AddRange(Searches);
 			Searches.Clear();
 		}
 
-		internal void Command_Mark_ClearMarks()
+		internal void Command_Region_ClearRegions()
 		{
 			if (!Selections.Any(range => range.HasSelection))
-				Marks.Clear();
+				Regions.Clear();
 			else
 			{
 				foreach (var selection in Selections)
 				{
-					var toRemove = Marks.Where(mark => (mark.Start >= selection.Start) && (mark.End <= selection.End)).ToList();
-					toRemove.ForEach(mark => Marks.Remove(mark));
+					var toRemove = Regions.Where(region => (region.Start >= selection.Start) && (region.End <= selection.End)).ToList();
+					toRemove.ForEach(region => Regions.Remove(region));
 				}
 			}
 		}
 
-		internal void Command_Mark_LimitToSelection()
+		internal void Command_Region_LimitToSelection()
 		{
-			Marks.Replace(Marks.Where(mark => Selections.Any(selection => (mark.Start >= selection.Start) && (mark.End <= selection.End))).ToList());
+			Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
 		}
 
 		int visibleIndex = 0;
@@ -1634,10 +1630,10 @@ namespace NeoEdit.TextEditor
 			renderTimer.Start();
 		}
 
-		void MarksInvalidated()
+		void RegionsInvalidated()
 		{
-			Marks.DeOverlap();
-			marksTimer.Stop();
+			Regions.DeOverlap();
+			regionsTimer.Stop();
 			renderTimer.Start();
 		}
 
@@ -1650,7 +1646,7 @@ namespace NeoEdit.TextEditor
 			{
 				new Tuple<ObservableCollection<Range>, Brush>(Selections, Misc.selectionBrush),
 				new Tuple<ObservableCollection<Range>, Brush>(Searches, Misc.searchBrush),
-				new Tuple<ObservableCollection<Range>, Brush>(Marks, Misc.markBrush),
+				new Tuple<ObservableCollection<Range>, Brush>(Regions, Misc.regionBrush),
 			};
 
 			NumSelections = Selections.Count;
@@ -2228,10 +2224,10 @@ namespace NeoEdit.TextEditor
 
 			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
 
-			var translateNums = RangeExtensions.GetTranslateNums(Selections, Marks, Searches);
+			var translateNums = RangeExtensions.GetTranslateNums(Selections, Regions, Searches);
 			var translateMap = RangeExtensions.GetTranslateMap(translateNums, ranges, strs);
 			Selections.Translate(translateMap);
-			Marks.Translate(translateMap);
+			Regions.Translate(translateMap);
 			var searchLens = Searches.Select(range => range.Length).ToList();
 			Searches.Translate(translateMap);
 			Searches.Replace(Searches.Where((range, index) => searchLens[index] == range.Length).ToList());

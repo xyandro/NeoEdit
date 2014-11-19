@@ -306,7 +306,7 @@
 		<textEditor:TextEditMenuItem Header="Counts to Keys/Values 1" CommandEnum="Keys_CountstoKeysValues1"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
-		<textEditor:TextEditMenuItem Header="Toggle Marks/Selection" CommandEnum="SelectMark_Toggle"/>
+		<textEditor:TextEditMenuItem Header="Toggle Regions/Selections" CommandEnum="SelectRegion_Toggle"/>
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
 		<textEditor:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
@@ -318,7 +318,7 @@
 		<textEditor:TextEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
 		<textEditor:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>
 		<Separator/>
-		<textEditor:TextEditMenuItem Header="_Marks" CommandEnum="Select_Marks"/>
+		<textEditor:TextEditMenuItem Header="_Regions" CommandEnum="Select_Regions"/>
 		<textEditor:TextEditMenuItem Header="_Find Results" CommandEnum="Select_FindResults"/>
 		<Separator/>
 		<MenuItem Header="Min">
@@ -342,13 +342,13 @@
 		<textEditor:TextEditMenuItem Header="S_ingle" CommandEnum="Select_Single"/>
 		<textEditor:TextEditMenuItem Header="Remove" CommandEnum="Select_Remove"/>
 	</MenuItem>
-	<MenuItem Header="_Mark">
-		<textEditor:TextEditMenuItem Header="Toggle Marks/Selection" CommandEnum="SelectMark_Toggle"/>
+	<MenuItem Header="_Region">
+		<textEditor:TextEditMenuItem Header="Toggle Regions/Selections" CommandEnum="SelectRegion_Toggle"/>
 		<Separator/>
-		<textEditor:TextEditMenuItem Header="_Selection" CommandEnum="Mark_Selection"/>
-		<textEditor:TextEditMenuItem Header="_Find Results" CommandEnum="Mark_FindResults"/>
-		<textEditor:TextEditMenuItem Header="_Clear Marks" CommandEnum="Mark_ClearMarks"/>
-		<textEditor:TextEditMenuItem Header="_Limit To Selection" CommandEnum="Mark_LimitToSelection"/>
+		<textEditor:TextEditMenuItem Header="Set _Selection" CommandEnum="Region_SetSelection"/>
+		<textEditor:TextEditMenuItem Header="Set _Find Results" CommandEnum="Region_SetFindResults"/>
+		<textEditor:TextEditMenuItem Header="_Clear Regions" CommandEnum="Region_ClearRegions"/>
+		<textEditor:TextEditMenuItem Header="_Limit To Selection" CommandEnum="Region_LimitToSelection"/>
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Highlighting">

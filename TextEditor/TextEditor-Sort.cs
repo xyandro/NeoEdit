@@ -22,15 +22,15 @@ namespace NeoEdit.TextEditor
 			var regions = new List<Range>();
 			foreach (var selection in Selections)
 			{
-				var region = Marks.Where(mark => (selection.Start >= mark.Start) && (selection.End <= mark.End)).ToList();
-				if (region.Count == 0)
-					throw new Exception("No region found.  All selections must be inside a marked region.");
-				if (region.Count != 1)
-					throw new Exception("Multiple regions found.  All selections must be inside a single marked region.");
-				regions.Add(region.Single());
+				var selectionRegion = Regions.Where(region => (selection.Start >= region.Start) && (selection.End <= region.End)).ToList();
+				if (selectionRegion.Count == 0)
+					throw new Exception("No region found.  All selections must be inside a region.");
+				if (selectionRegion.Count != 1)
+					throw new Exception("Multiple regions found.  All selections must be inside a single region.");
+				regions.Add(selectionRegion.Single());
 			}
 
-			if (Marks.Count != regions.Count)
+			if (Regions.Count != regions.Count)
 				throw new Exception("Extra regions found.");
 
 			return regions;
@@ -140,7 +140,7 @@ namespace NeoEdit.TextEditor
 
 			Selections.Replace(newSelections);
 			if (result.SortScope == SortScope.Regions)
-				Marks.Replace(newRegions);
+				Regions.Replace(newRegions);
 		}
 	}
 }
