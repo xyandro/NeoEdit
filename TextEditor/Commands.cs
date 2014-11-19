@@ -245,5 +245,8 @@ namespace NeoEdit.TextEditor
 		View_Tiles,
 		[KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Shift)] Macro_QuickRecord,
 		[KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift)] Macro_QuickPlay,
+		Macro_Record,
+		Macro_StopRecording,
+		Macro_Play,
 	}
 }

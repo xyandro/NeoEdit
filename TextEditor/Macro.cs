@@ -117,6 +117,13 @@ namespace NeoEdit.TextEditor
 
 		public void AddText(string text)
 		{
+			var last = macroActions.LastOrDefault() as MacroActionText;
+			if (last != null)
+			{
+				text = last.text + text;
+				macroActions.Remove(last);
+			}
+
 			macroActions.Add(new MacroActionText(text));
 		}
 

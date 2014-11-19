@@ -108,23 +108,94 @@ namespace NeoEdit.TextEditor
 				Add(new TextEditor(file));
 		}
 
+		const string quickMacroFilename = "Quick.xml";
 		void Command_Macro_QuickRecord()
 		{
 			if (recordingMacro == null)
-			{
-				recordingMacro = new Macro();
-				return;
-			}
-
-			quickMacro = recordingMacro;
-			recordingMacro = null;
+				Command_Macro_Record();
+			else
+				Command_Macro_StopRecording(quickMacroFilename);
 		}
 
 		void Command_Macro_QuickPlay()
 		{
-			if ((recordingMacro != null) || (quickMacro == null))
+			Command_Macro_Play(quickMacroFilename);
+		}
+
+		void Command_Macro_Record()
+		{
+			if (recordingMacro != null)
+			{
+				new Message
+				{
+					Title = "Error",
+					Text = String.Format("Cannot start recording; recording is already in progess."),
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
 				return;
-			quickMacro.Play(this);
+			}
+
+			recordingMacro = new Macro();
+		}
+
+		string macroDirectory = Path.Combine(Path.GetDirectoryName(typeof(TextEditorTabs).Assembly.Location), "Macro");
+		void Command_Macro_StopRecording(string fileName = null)
+		{
+			if (recordingMacro == null)
+			{
+				new Message
+				{
+					Title = "Error",
+					Text = String.Format("Cannot stop recording; recording not in progess."),
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
+				return;
+			}
+
+			var macro = recordingMacro;
+			recordingMacro = null;
+
+			Directory.CreateDirectory(macroDirectory);
+			if (fileName == null)
+			{
+				var dialog = new SaveFileDialog
+				{
+					DefaultExt = "xml",
+					Filter = "Macro files|*.xml|All files|*.*",
+					FileName = "Macro.xml",
+					InitialDirectory = macroDirectory,
+				};
+				if (dialog.ShowDialog() != true)
+					return;
+
+				fileName = dialog.FileName;
+			}
+			else
+				fileName = Path.Combine(macroDirectory, fileName);
+
+			macro.ToXML().Save(fileName);
+		}
+
+		void Command_Macro_Play(string fileName = null)
+		{
+			if (fileName == null)
+			{
+				var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
+				var dialog = new OpenFileDialog
+				{
+					DefaultExt = "xml",
+					Filter = "Macro files|*.xml|All files|*.*",
+					InitialDirectory = macroDirectory,
+				};
+				if (dialog.ShowDialog() != true)
+					return;
+
+				fileName = dialog.FileName;
+			}
+			else
+				fileName = Path.Combine(macroDirectory, fileName);
+
+			Macro.FromXML(XElement.Load(fileName)).Play(this);
 		}
 
 		protected override void OnClosing(CancelEventArgs e)
@@ -147,7 +218,7 @@ namespace NeoEdit.TextEditor
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
-		Macro quickMacro, recordingMacro;
+		static Macro recordingMacro;
 
 		internal void RunCommand(TextEditCommand command)
 		{
@@ -155,6 +226,9 @@ namespace NeoEdit.TextEditor
 			{
 				case TextEditCommand.Macro_QuickRecord: Command_Macro_QuickRecord(); return;
 				case TextEditCommand.Macro_QuickPlay: Command_Macro_QuickPlay(); return;
+				case TextEditCommand.Macro_Record: Command_Macro_Record(); return;
+				case TextEditCommand.Macro_StopRecording: Command_Macro_StopRecording(); return;
+				case TextEditCommand.Macro_Play: Command_Macro_Play(); return;
 			}
 
 			var shiftDown = this.shiftDown;
