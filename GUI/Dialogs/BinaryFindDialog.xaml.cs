@@ -88,17 +88,17 @@ namespace NeoEdit.GUI.Dialogs
 
 			var valueConverters = Helpers.GetValues<Coder.Type>().Select(a => new { Key = a, Value = typeof(BinaryFindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic) }).Where(a => a.Value != null).ToDictionary(a => a.Key, a => a.Value.GetValue(this) as CheckBox);
 			var valueConvertersToUse = valueConverters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
-			var findData = valueConvertersToUse.Select(converter => Coder.StringToBytes(FindText, converter)).ToList();
-			var matchCase = valueConvertersToUse.Select(converter => true).ToList();
+			var data = valueConvertersToUse.Select(converter => new Tuple<byte[], bool>(Coder.StringToBytes(FindText, converter), true)).ToList();
 
 			var stringConverters = CodePageItems.Where(item => (item.IsVisible) && (item.IsEnabled) && (item.IsChecked == true)).Select(item => item.CodePage).ToList();
-			findData.AddRange(stringConverters.Select(converter => StrCoder.StringToBytes(FindText, converter)));
-			matchCase.AddRange(stringConverters.Select(converter => (MatchCase) || (StrCoder.AlwaysCaseSensitive(converter))));
+			data.AddRange(stringConverters.Select(converter => new Tuple<byte[], bool>(StrCoder.StringToBytes(FindText, converter), (MatchCase) || (StrCoder.AlwaysCaseSensitive(converter)))));
 
-			if (findData.Count == 0)
+			data = data.GroupBy(tuple => String.Format("{0}-{1}", StrCoder.BytesToString(tuple.Item1, StrCoder.CodePage.Hex), tuple.Item2)).Select(item => item.First()).ToList();
+
+			if (data.Count == 0)
 				return;
 
-			result = new Result(FindText, new Searcher(findData, matchCase));
+			result = new Result(FindText, new Searcher(data));
 
 			DialogResult = true;
 		}

@@ -155,22 +155,19 @@ namespace NeoEdit.Common
 		readonly SearchData ignoreCaseSearcher;
 		public readonly int MaxLen = 0;
 
-		public Searcher(List<String> strs, bool matchCase = false) : this(strs, strs.Select(a => matchCase).ToList()) { }
-		public Searcher(List<Char[]> strs, bool matchCase = false) : this(strs, strs.Select(a => matchCase).ToList()) { }
-		public Searcher(List<Byte[]> strs, bool matchCase = false) : this(strs, strs.Select(a => matchCase).ToList()) { }
+		public Searcher(List<String> data, bool matchCase = false) : this(data.Select(str => new Tuple<String, bool>(str, matchCase)).ToList()) { }
+		public Searcher(List<Char[]> data, bool matchCase = false) : this(data.Select(str => new Tuple<Char[], bool>(str, matchCase)).ToList()) { }
+		public Searcher(List<Byte[]> data, bool matchCase = false) : this(data.Select(str => new Tuple<Byte[], bool>(str, matchCase)).ToList()) { }
 
-		public Searcher(List<String> strs, List<bool> matchCase)
+		public Searcher(List<Tuple<String, bool>> data)
 		{
-			if (strs.Count != matchCase.Count)
-				throw new Exception("Count mismatch.");
-
 			var matchCaseFindData = new FindData((String)null, true);
 			var ignoreCaseFindData = new FindData((String)null, false);
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			for (var ctr = 0; ctr < data.Count; ++ctr)
 			{
-				var node = matchCase[ctr] ? matchCaseFindData : ignoreCaseFindData;
-				node.Add(strs[ctr]);
-				MaxLen = Math.Max(MaxLen, strs[ctr].Length);
+				var node = data[ctr].Item2 ? matchCaseFindData : ignoreCaseFindData;
+				node.Add(data[ctr].Item1);
+				MaxLen = Math.Max(MaxLen, data[ctr].Item1.Length);
 			}
 
 			var maxChars = Math.Max(matchCaseFindData.NumChars, ignoreCaseFindData.NumChars);
@@ -178,25 +175,22 @@ namespace NeoEdit.Common
 			matchCaseSearcher = new SearchData(matchCaseFindData, maxChars);
 			ignoreCaseSearcher = new SearchData(ignoreCaseFindData, maxChars);
 
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			for (var ctr = 0; ctr < data.Count; ++ctr)
 			{
-				var node = matchCase[ctr] ? matchCaseSearcher : ignoreCaseSearcher;
-				node.Add(strs[ctr]);
+				var node = data[ctr].Item2 ? matchCaseSearcher : ignoreCaseSearcher;
+				node.Add(data[ctr].Item1);
 			}
 		}
 
-		public Searcher(List<Char[]> strs, List<bool> matchCase)
+		public Searcher(List<Tuple<Char[], bool>> data)
 		{
-			if (strs.Count != matchCase.Count)
-				throw new Exception("Count mismatch.");
-
 			var matchCaseFindData = new FindData((Char[])null, true);
 			var ignoreCaseFindData = new FindData((Char[])null, false);
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			for (var ctr = 0; ctr < data.Count; ++ctr)
 			{
-				var node = matchCase[ctr] ? matchCaseFindData : ignoreCaseFindData;
-				node.Add(strs[ctr]);
-				MaxLen = Math.Max(MaxLen, strs[ctr].Length);
+				var node = data[ctr].Item2 ? matchCaseFindData : ignoreCaseFindData;
+				node.Add(data[ctr].Item1);
+				MaxLen = Math.Max(MaxLen, data[ctr].Item1.Length);
 			}
 
 			var maxChars = Math.Max(matchCaseFindData.NumChars, ignoreCaseFindData.NumChars);
@@ -204,25 +198,22 @@ namespace NeoEdit.Common
 			matchCaseSearcher = new SearchData(matchCaseFindData, maxChars);
 			ignoreCaseSearcher = new SearchData(ignoreCaseFindData, maxChars);
 
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			for (var ctr = 0; ctr < data.Count; ++ctr)
 			{
-				var node = matchCase[ctr] ? matchCaseSearcher : ignoreCaseSearcher;
-				node.Add(strs[ctr]);
+				var node = data[ctr].Item2 ? matchCaseSearcher : ignoreCaseSearcher;
+				node.Add(data[ctr].Item1);
 			}
 		}
 
-		public Searcher(List<Byte[]> strs, List<bool> matchCase)
+		public Searcher(List<Tuple<Byte[], bool>> data)
 		{
-			if (strs.Count != matchCase.Count)
-				throw new Exception("Count mismatch.");
-
 			var matchCaseFindData = new FindData((Byte[])null, true);
 			var ignoreCaseFindData = new FindData((Byte[])null, false);
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			for (var ctr = 0; ctr < data.Count; ++ctr)
 			{
-				var node = matchCase[ctr] ? matchCaseFindData : ignoreCaseFindData;
-				node.Add(strs[ctr]);
-				MaxLen = Math.Max(MaxLen, strs[ctr].Length);
+				var node = data[ctr].Item2 ? matchCaseFindData : ignoreCaseFindData;
+				node.Add(data[ctr].Item1);
+				MaxLen = Math.Max(MaxLen, data[ctr].Item1.Length);
 			}
 
 			var maxChars = Math.Max(matchCaseFindData.NumChars, ignoreCaseFindData.NumChars);
@@ -230,10 +221,10 @@ namespace NeoEdit.Common
 			matchCaseSearcher = new SearchData(matchCaseFindData, maxChars);
 			ignoreCaseSearcher = new SearchData(ignoreCaseFindData, maxChars);
 
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			for (var ctr = 0; ctr < data.Count; ++ctr)
 			{
-				var node = matchCase[ctr] ? matchCaseSearcher : ignoreCaseSearcher;
-				node.Add(strs[ctr]);
+				var node = data[ctr].Item2 ? matchCaseSearcher : ignoreCaseSearcher;
+				node.Add(data[ctr].Item1);
 			}
 		}
 
