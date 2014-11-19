@@ -5,12 +5,13 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class ConvertDateTimeDialog
 	{
-		internal class Result
+		internal class Result : IDialogResult
 		{
 			public string InputFormat { get; set; }
 			public bool InputUTC { get; set; }

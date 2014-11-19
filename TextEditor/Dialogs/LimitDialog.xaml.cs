@@ -1,11 +1,12 @@
 ﻿using System.Windows;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class LimitDialog
 	{
-		internal class Response
+		internal class Result : IDialogResult
 		{
 			public int SelMult { get; set; }
 			public bool IgnoreBlank { get; set; }
@@ -32,14 +33,14 @@ namespace NeoEdit.TextEditor.Dialogs
 			IgnoreBlank = false;
 		}
 
-		Response response = null;
+		Result response = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			response = new Response { SelMult = SelMult, IgnoreBlank = IgnoreBlank, NumSels = NumSels };
+			response = new Result { SelMult = SelMult, IgnoreBlank = IgnoreBlank, NumSels = NumSels };
 			DialogResult = true;
 		}
 
-		public static Response Run(int numSels)
+		public static Result Run(int numSels)
 		{
 			var dialog = new LimitDialog(numSels);
 			if (dialog.ShowDialog() != true)

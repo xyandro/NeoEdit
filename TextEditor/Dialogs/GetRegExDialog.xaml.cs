@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
@@ -22,7 +22,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			All,
 		}
 
-		internal class Result
+		internal class Result : IDialogResult
 		{
 			public Regex Regex { get; set; }
 			public string Replace { get; set; }

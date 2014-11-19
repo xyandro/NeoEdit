@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
@@ -12,7 +13,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			End,
 		}
 
-		internal class Result
+		internal class Result : IDialogResult
 		{
 			public int Length { get; set; }
 			public bool ClipboardValue { get; set; }

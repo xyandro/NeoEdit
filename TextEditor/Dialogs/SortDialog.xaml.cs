@@ -1,13 +1,12 @@
-﻿using System;
-using System.Windows;
-using System.Collections.Generic;
+﻿using System.Windows;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	partial class SortDialog
 	{
-		internal class Result
+		internal class Result : IDialogResult
 		{
 			public TextEditor.SortScope SortScope { get; set; }
 			public TextEditor.SortType SortType { get; set; }

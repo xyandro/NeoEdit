@@ -30,6 +30,7 @@ Translate HTML to table
 Distinct operations by marked region (sort/series/etc within region)
 Select square (right mouse button)
 Insert copied files
+Get enclosing region
 
 Binary:
 Fix binary editor backwards search

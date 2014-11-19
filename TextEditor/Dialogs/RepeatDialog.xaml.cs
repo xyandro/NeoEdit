@@ -1,11 +1,12 @@
 ﻿using System.Windows;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class RepeatDialog
 	{
-		internal class Result
+		internal class Result : IDialogResult
 		{
 			public int RepeatCount { get; set; }
 			public bool ClipboardValue { get; set; }

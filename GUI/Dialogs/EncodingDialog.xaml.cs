@@ -9,7 +9,7 @@ namespace NeoEdit.GUI.Dialogs
 {
 	partial class EncodingDialog
 	{
-		public class Response
+		public class Result : IDialogResult
 		{
 			public StrCoder.CodePage CodePage { get; set; }
 			public string LineEndings { get; set; }
@@ -59,14 +59,14 @@ namespace NeoEdit.GUI.Dialogs
 				LineEndings = _LineEndings;
 		}
 
-		Response response = null;
+		Result response = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			response = new Response { CodePage = CodePage, LineEndings = LineEndings };
+			response = new Result { CodePage = CodePage, LineEndings = LineEndings };
 			DialogResult = true;
 		}
 
-		public static Response Run(StrCoder.CodePage codePage = StrCoder.CodePage.Default, StrCoder.CodePage detected = StrCoder.CodePage.None, string lineEndings = null)
+		public static Result Run(StrCoder.CodePage codePage = StrCoder.CodePage.Default, StrCoder.CodePage detected = StrCoder.CodePage.None, string lineEndings = null)
 		{
 			var dialog = new EncodingDialog(codePage, detected, lineEndings);
 			if (dialog.ShowDialog() != true)

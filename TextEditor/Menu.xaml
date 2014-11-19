@@ -372,6 +372,10 @@
 		<Separator/>
 		<textEditor:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
 	</MenuItem>
+	<MenuItem Header="_Macro">
+		<textEditor:TextEditMenuItem Header="Quick _Record" CommandEnum="Macro_QuickRecord"/>
+		<textEditor:TextEditMenuItem Header="Quick _Play" CommandEnum="Macro_QuickPlay"/>
+	</MenuItem>
 	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
 	<guiCommon:HelpMenu/>
 

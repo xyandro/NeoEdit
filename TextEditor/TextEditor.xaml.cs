@@ -276,9 +276,12 @@ namespace NeoEdit.TextEditor
 			return data.Select(a => StrCoder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
 		}
 
-		ExpressionData GetExpressionData()
+		ExpressionData GetExpressionData(int count = -1)
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
+			var sels = Selections.ToList();
+			if (count != -1)
+				sels = sels.Take(Math.Min(count, sels.Count)).ToList();
+			var strs = sels.Select(range => GetString(range)).ToList();
 			var data = new Dictionary<string, List<string>>
 			{
 				{ "x", strs },
@@ -306,7 +309,7 @@ namespace NeoEdit.TextEditor
 			}
 
 			var expressionData = new ExpressionData { vars = data.Keys.ToList(), values = new List<string[]>() };
-			for (var value = 0; value < Selections.Count; ++value)
+			for (var value = 0; value < strs.Count; ++value)
 			{
 				var values = new string[expressionData.vars.Count];
 				for (var key = 0; key < values.Length; ++key)
@@ -452,12 +455,13 @@ namespace NeoEdit.TextEditor
 			Clipboard.SetText(Path.GetFileName(FileName));
 		}
 
-		internal void Command_File_Encoding()
+		internal EncodingDialog.Result Command_File_Encoding_Dialog()
 		{
-			var result = EncodingDialog.Run(CodePage, lineEndings: LineEnding ?? "");
-			if (result == null)
-				return;
+			return EncodingDialog.Run(CodePage, lineEndings: LineEnding ?? "");
+		}
 
+		internal void Command_File_Encoding(EncodingDialog.Result result)
+		{
 			CodePage = result.CodePage;
 
 			if (result.LineEndings != "")
@@ -547,7 +551,7 @@ namespace NeoEdit.TextEditor
 			ClipboardWindow.Show();
 		}
 
-		internal void Command_Edit_FindReplace(bool replace, bool selecting)
+		internal GetRegExDialog.Result Command_Edit_FindReplace_Dialog(bool replace)
 		{
 			string text = null;
 			var selectionOnly = Selections.Any(range => range.HasSelection);
@@ -562,10 +566,11 @@ namespace NeoEdit.TextEditor
 				}
 			}
 
-			var findResult = GetRegExDialog.Run(replace ? GetRegExDialog.GetRegExDialogType.Replace : GetRegExDialog.GetRegExDialogType.Find, text, selectionOnly);
-			if (findResult == null)
-				return;
+			return GetRegExDialog.Run(replace ? GetRegExDialog.GetRegExDialogType.Replace : GetRegExDialog.GetRegExDialogType.Find, text, selectionOnly);
+		}
 
+		internal void Command_Edit_FindReplace(bool replace, bool selecting, GetRegExDialog.Result findResult)
+		{
 			RunSearch(findResult);
 			if ((replace) || (findResult.ResultType == GetRegExDialog.GetRegExResultType.All))
 			{
@@ -587,16 +592,19 @@ namespace NeoEdit.TextEditor
 			FindNext(next, selecting);
 		}
 
-		internal void Command_Edit_Goto(bool isLine, bool selecting)
+		internal GotoDialog.Result Command_Edit_Goto_Dialog(bool isLine)
 		{
 			var lines = Selections.Select(range => Data.GetOffsetLine(range.Start)).ToList();
 			var indexes = Selections.Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
 			var line = lines.Any() ? lines.First() + 1 : 1;
 			var index = indexes.Any() ? indexes.First() + 1 : 1;
+			return GotoDialog.Run(isLine, isLine ? line : index);
+		}
 
-			var result = GotoDialog.Run(isLine, isLine ? line : index);
-			if (result == null)
-				return;
+		internal void Command_Edit_Goto(bool isLine, bool selecting, GotoDialog.Result result)
+		{
+			var lines = Selections.Select(range => Data.GetOffsetLine(range.Start)).ToList();
+			var indexes = Selections.Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
 
 			List<int> offsets;
 			if (result.ClipboardValue)
@@ -664,37 +672,38 @@ namespace NeoEdit.TextEditor
 			All = Write | Access | Create,
 		}
 
-		internal void Command_Files_Timestamp(TimestampType type)
+		internal ChooseDateTimeDialog.Result Command_Files_Timestamp_Dialog()
 		{
-			var result = ChooseDateTimeDialog.Run(DateTime.Now);
-			if (result != null)
-			{
-				var files = Selections.Select(range => GetString(range)).ToList();
-				foreach (var file in files)
-				{
-					if (!FileOrDirectoryExists(file))
-						File.WriteAllBytes(file, new byte[0]);
+			return ChooseDateTimeDialog.Run(DateTime.Now);
+		}
 
-					if (File.Exists(file))
-					{
-						var info = new FileInfo(file);
-						if (type.HasFlag(TimestampType.Write))
-							info.LastWriteTime = result.Value;
-						if (type.HasFlag(TimestampType.Access))
-							info.LastAccessTime = result.Value;
-						if (type.HasFlag(TimestampType.Create))
-							info.CreationTime = result.Value;
-					}
-					else if (Directory.Exists(file))
-					{
-						var info = new DirectoryInfo(file);
-						if (type.HasFlag(TimestampType.Write))
-							info.LastWriteTime = result.Value;
-						if (type.HasFlag(TimestampType.Access))
-							info.LastAccessTime = result.Value;
-						if (type.HasFlag(TimestampType.Create))
-							info.CreationTime = result.Value;
-					}
+		internal void Command_Files_Timestamp(TimestampType type, ChooseDateTimeDialog.Result result)
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			foreach (var file in files)
+			{
+				if (!FileOrDirectoryExists(file))
+					File.WriteAllBytes(file, new byte[0]);
+
+				if (File.Exists(file))
+				{
+					var info = new FileInfo(file);
+					if (type.HasFlag(TimestampType.Write))
+						info.LastWriteTime = result.Value;
+					if (type.HasFlag(TimestampType.Access))
+						info.LastAccessTime = result.Value;
+					if (type.HasFlag(TimestampType.Create))
+						info.CreationTime = result.Value;
+				}
+				else if (Directory.Exists(file))
+				{
+					var info = new DirectoryInfo(file);
+					if (type.HasFlag(TimestampType.Write))
+						info.LastWriteTime = result.Value;
+					if (type.HasFlag(TimestampType.Access))
+						info.LastAccessTime = result.Value;
+					if (type.HasFlag(TimestampType.Create))
+						info.CreationTime = result.Value;
 				}
 			}
 		}
@@ -996,12 +1005,13 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
-		internal void Command_Data_Binary_ToBinary()
+		internal EncodingDialog.Result Command_Data_Binary_ToBinary_Dialog()
 		{
-			var result = EncodingDialog.Run(CodePage);
-			if (result == null)
-				return;
+			return EncodingDialog.Run(CodePage);
+		}
 
+		internal void Command_Data_Binary_ToBinary(EncodingDialog.Result result)
+		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
 				return;
@@ -1014,13 +1024,15 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(Coder.StringToBytes(GetString(range), coder), StrCoder.CodePage.Hex)).ToList());
 		}
 
-		internal void Command_Data_Binary_FromBinary()
+		internal EncodingDialog.Result Command_Data_Binary_FromBinary_Dialog()
 		{
 			var data = Selections.Select(range => StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex)).ToList();
-			var result = EncodingDialog.Run(DetectUnicode(data));
-			if (result == null)
-				return;
+			return EncodingDialog.Run(DetectUnicode(data));
+		}
 
+		internal void Command_Data_Binary_FromBinary(EncodingDialog.Result result)
+		{
+			var data = Selections.Select(range => StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex)).ToList();
 			if (!VerifyCanFullyEncode(data, result.CodePage))
 				return;
 
@@ -1032,12 +1044,13 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Coder.BytesToString(StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex), coder)).ToList());
 		}
 
-		internal void Command_Data_Base64_ToBase64()
+		internal EncodingDialog.Result Command_Data_Base64_ToBase64_Dialog()
 		{
-			var result = EncodingDialog.Run(CodePage);
-			if (result == null)
-				return;
+			return EncodingDialog.Run(CodePage);
+		}
 
+		internal void Command_Data_Base64_ToBase64(EncodingDialog.Result result)
+		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
 				return;
@@ -1045,13 +1058,15 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(strs.Select(str => StrCoder.BytesToString(StrCoder.StringToBytes(str, result.CodePage), StrCoder.CodePage.Base64)).ToList());
 		}
 
-		internal void Command_Data_Base64_FromBase64()
+		internal EncodingDialog.Result Command_Data_Base64_FromBase64_Dialog()
 		{
 			var data = Selections.Select(range => StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Base64)).ToList();
-			var result = EncodingDialog.Run(DetectUnicode(data));
-			if (result == null)
-				return;
+			return EncodingDialog.Run(DetectUnicode(data));
+		}
 
+		internal void Command_Data_Base64_FromBase64(EncodingDialog.Result result)
+		{
+			var data = Selections.Select(range => StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Base64)).ToList();
 			if (!VerifyCanFullyEncode(data, result.CodePage))
 				return;
 
@@ -1063,19 +1078,17 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(DateTime.Now.ToString("O"));
 		}
 
-		internal void Command_Data_DateTime_Convert()
+		internal ConvertDateTimeDialog.Result Command_Data_DateTime_Convert_Dialog()
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			if (strs.Count < 1)
-				return;
+			if (Selections.Count < 1)
+				return null;
 
-			var result = ConvertDateTimeDialog.Run(strs.First());
-			if (result == null)
-				return;
+			return ConvertDateTimeDialog.Run(GetString(Selections.First()));
+		}
 
-			strs = strs.Select(str => ConvertDateTimeDialog.ConvertFormat(str, result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList();
-			ReplaceSelections(strs);
-
+		internal void Command_Data_DateTime_Convert(ConvertDateTimeDialog.Result result)
+		{
+			ReplaceSelections(Selections.Select(range => ConvertDateTimeDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList());
 		}
 
 		internal void Command_Data_Length()
@@ -1083,15 +1096,16 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => GetString(range).Length.ToString()).ToList());
 		}
 
-		internal void Command_Data_Width()
+		internal WidthDialog.Result Command_Data_Width_Dialog()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			var startLength = strs.Select(str => str.Length).Max();
 			var numeric = strs.All(str => str.IsNumeric());
-			var result = WidthDialog.Run(startLength, numeric ? '0' : ' ', numeric);
-			if (result == null)
-				return;
+			return WidthDialog.Run(startLength, numeric ? '0' : ' ', numeric);
+		}
 
+		internal void Command_Data_Width(WidthDialog.Result result)
+		{
 			List<int> lengths;
 			if (result.ClipboardValue)
 			{
@@ -1150,14 +1164,15 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Data_EvaluateExpression()
+		internal GetExpressionDialog.Result Command_Data_EvaluateExpression_Dialog()
 		{
-			var expressionData = GetExpressionData();
-			var result = GetExpressionDialog.Run(expressionData, false);
-			if (result == null)
-				return;
+			return GetExpressionDialog.Run(GetExpressionData(10), false);
+		}
 
+		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
+		{
 			var strs = new List<string>();
+			var expressionData = GetExpressionData();
 			for (var ctr = 0; ctr < expressionData.values.Count; ++ctr)
 				strs.Add(result.Expression.Evaluate(expressionData.values[ctr]).ToString());
 			ReplaceSelections(strs);
@@ -1208,14 +1223,15 @@ namespace NeoEdit.TextEditor
 			Clipboard.SetText(Selections.Select(range => Double.Parse(GetString(range))).Sum().ToString());
 		}
 
-		internal void Command_Data_Repeat()
+		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
 		{
-			var repeat = RepeatDialog.Run(Selections.Count == 1);
-			if (repeat == null)
-				return;
+			return RepeatDialog.Run(Selections.Count == 1);
+		}
 
+		internal void Command_Data_Repeat(RepeatDialog.Result result)
+		{
 			List<int> repeatCounts;
-			if (repeat.ClipboardValue)
+			if (result.ClipboardValue)
 			{
 				var clipboardStrings = ClipboardWindow.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
@@ -1223,9 +1239,9 @@ namespace NeoEdit.TextEditor
 				repeatCounts = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
 			}
 			else
-				repeatCounts = Enumerable.Range(0, Selections.Count).Select(range => repeat.RepeatCount).ToList();
+				repeatCounts = Enumerable.Range(0, Selections.Count).Select(range => result.RepeatCount).ToList();
 			ReplaceSelections(Selections.Select((range, index) => RepeatString(GetString(range), repeatCounts[index])).ToList());
-			if (repeat.SelectRepetitions)
+			if (result.SelectRepetitions)
 			{
 				var sels = new List<Range>();
 				for (var ctr = 0; ctr < Selections.Count; ++ctr)
@@ -1245,12 +1261,13 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => Guid.NewGuid().ToString()).ToList());
 		}
 
-		internal void Command_Data_InsertRandomNumber()
+		internal RandomNumberDialog.Result Command_Data_InsertRandomNumber_Dialog()
 		{
-			var result = RandomNumberDialog.Run();
-			if (result == null)
-				return;
+			return RandomNumberDialog.Run();
+		}
 
+		internal void Command_Data_InsertRandomNumber(RandomNumberDialog.Result result)
+		{
 			ReplaceSelections(Selections.Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
 		}
 
@@ -1284,12 +1301,13 @@ namespace NeoEdit.TextEditor
 			ReplaceSelections(Selections.Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Checksum(Checksum.Type type)
+		internal EncodingDialog.Result Command_Data_Checksum_Dialog()
 		{
-			var result = EncodingDialog.Run(CodePage);
-			if (result == null)
-				return;
+			return EncodingDialog.Run(CodePage);
+		}
 
+		internal void Command_Data_Checksum(Checksum.Type type, EncodingDialog.Result result)
+		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
 				return;
@@ -1408,12 +1426,13 @@ namespace NeoEdit.TextEditor
 			Selections.Replace(new Range(EndOffset(), BeginOffset()));
 		}
 
-		internal void Command_Select_Limit()
+		internal LimitDialog.Result Command_Select_Limit_Dialog()
 		{
-			var result = LimitDialog.Run(Selections.Count);
-			if (result == null)
-				return;
+			return LimitDialog.Run(Selections.Count);
+		}
 
+		internal void Command_Select_Limit(LimitDialog.Result result)
+		{
 			if (result.IgnoreBlank)
 				Selections.Replace(Selections.Where(sel => sel.HasSelection).ToList());
 			if (result.SelMult > 1)
@@ -1485,26 +1504,28 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		internal void Command_Select_ExpressionMatches()
+		internal GetExpressionDialog.Result Command_Select_ExpressionMatches_Dialog()
 		{
-			var expressionData = GetExpressionData();
-			var result = GetExpressionDialog.Run(expressionData, true);
-			if (result == null)
-				return;
+			return GetExpressionDialog.Run(GetExpressionData(10), true);
+		}
 
+		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
+		{
 			var sels = new List<Range>();
+			var expressionData = GetExpressionData();
 			for (var ctr = 0; ctr < expressionData.values.Count; ++ctr)
 				if ((bool)result.Expression.Evaluate(expressionData.values[ctr]) == result.IncludeMatches)
 					sels.Add(Selections[ctr]);
 			Selections.Replace(sels);
 		}
 
-		internal void Command_Select_RegExMatches()
+		internal GetRegExDialog.Result Command_Select_RegExMatches_Dialog()
 		{
-			var result = GetRegExDialog.Run(GetRegExDialog.GetRegExDialogType.MatchSelections);
-			if (result == null)
-				return;
+			return GetRegExDialog.Run(GetRegExDialog.GetRegExDialogType.MatchSelections);
+		}
 
+		internal void Command_Select_RegExMatches(GetRegExDialog.Result result)
+		{
 			var sels = new List<Range>();
 			foreach (var selection in Selections)
 				if (result.Regex.IsMatch(GetString(selection)) == result.IncludeMatches)

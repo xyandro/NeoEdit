@@ -1,13 +1,13 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	partial class GetExpressionDialog
 	{
-		internal class Result
+		internal class Result : IDialogResult
 		{
 			public NeoEdit.Common.Expression Expression { get; set; }
 			public bool IncludeMatches { get; set; }

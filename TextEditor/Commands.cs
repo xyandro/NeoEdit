@@ -243,5 +243,7 @@ namespace NeoEdit.TextEditor
 		View_Highlighting_CSharp,
 		View_Highlighting_CPlusPlus,
 		View_Tiles,
+		[KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Shift)] Macro_QuickRecord,
+		[KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift)] Macro_QuickPlay,
 	}
 }

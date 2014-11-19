@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class RandomNumberDialog
 	{
-		internal class Result
+		internal class Result : IDialogResult
 		{
 			public int MinValue { get; set; }
 			public int MaxValue { get; set; }
