@@ -511,7 +511,7 @@ namespace NeoEdit.TextEditor
 				ReplaceSelections("");
 		}
 
-		internal void Command_Edit_Paste()
+		internal void Command_Edit_Paste(bool highlight)
 		{
 			var clipboardStrings = ClipboardWindow.GetStrings();
 			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
@@ -522,7 +522,7 @@ namespace NeoEdit.TextEditor
 
 			if (Selections.Count == clipboardStrings.Count)
 			{
-				ReplaceSelections(clipboardStrings, shiftDown);
+				ReplaceSelections(clipboardStrings, highlight);
 				return;
 			}
 
@@ -547,9 +547,8 @@ namespace NeoEdit.TextEditor
 			ClipboardWindow.Show();
 		}
 
-		internal void Command_Edit_FindReplace(bool replace)
+		internal void Command_Edit_FindReplace(bool replace, bool selecting)
 		{
-			var selecting = shiftDown;
 			string text = null;
 			var selectionOnly = Selections.Any(range => range.HasSelection);
 
@@ -583,17 +582,13 @@ namespace NeoEdit.TextEditor
 			FindNext(true, selecting);
 		}
 
-		internal void Command_Edit_FindNextPrev(bool next)
+		internal void Command_Edit_FindNextPrev(bool next, bool selecting)
 		{
-			FindNext(next, shiftDown);
+			FindNext(next, selecting);
 		}
 
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
-
-		internal void Command_Edit_Goto(bool isLine)
+		internal void Command_Edit_Goto(bool isLine, bool selecting)
 		{
-			var selecting = shiftDown;
 			var lines = Selections.Select(range => Data.GetOffsetLine(range.Start)).ToList();
 			var indexes = Selections.Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
 			var line = lines.Any() ? lines.First() + 1 : 1;
@@ -1769,12 +1764,10 @@ namespace NeoEdit.TextEditor
 			}
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
-			var shiftDown = this.shiftDown;
-			var controlDown = this.controlDown;
-			e.Handled = true;
-			switch (e.Key)
+			var ret = true;
+			switch (key)
 			{
 				case Key.Back:
 				case Key.Delete:
@@ -1792,7 +1785,7 @@ namespace NeoEdit.TextEditor
 
 							if (controlDown)
 							{
-								if (e.Key == Key.Back)
+								if (key == Key.Back)
 									offset = GetPrevWord(offset);
 								else
 									offset = GetNextWord(offset);
@@ -1802,7 +1795,7 @@ namespace NeoEdit.TextEditor
 								var line = Data.GetOffsetLine(offset);
 								var index = Data.GetOffsetIndex(offset, line);
 
-								if (e.Key == Key.Back)
+								if (key == Key.Back)
 									--index;
 								else
 									++index;
@@ -1873,12 +1866,12 @@ namespace NeoEdit.TextEditor
 				case Key.Up:
 				case Key.Down:
 					{
-						var mult = e.Key == Key.Up ? -1 : 1;
+						var mult = key == Key.Up ? -1 : 1;
 						if (!controlDown)
 							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0, shiftDown)).ToList());
 						else if (!shiftDown)
 							yScrollValue += mult;
-						else if (e.Key == Key.Down)
+						else if (key == Key.Down)
 							Selections.Add(MoveCursor(Selections.Last(), mult, 0, false));
 						else if (Selections.Count > 1)
 							Selections.RemoveAt(Selections.Count - 1);
@@ -1980,13 +1973,15 @@ namespace NeoEdit.TextEditor
 						}
 					}
 					else
-						e.Handled = false;
+						ret = false;
 					break;
-				default: e.Handled = false; break;
+				default: ret = false; break;
 			}
 
 			if (selectionsTimer.Started())
 				EnsureVisible();
+
+			return ret;
 		}
 
 		enum WordSkipType
@@ -2121,7 +2116,7 @@ namespace NeoEdit.TextEditor
 				return;
 			}
 
-			if (!controlDown)
+			if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.None)
 				Selections.Clear();
 
 			if (clickCount == 1)
@@ -2316,25 +2311,20 @@ namespace NeoEdit.TextEditor
 			Focus();
 		}
 
-		protected override void OnTextInput(TextCompositionEventArgs e)
-		{
-			base.OnTextInput(e);
-			HandleText(e.Text);
-		}
-
 		internal bool Empty()
 		{
 			return (!IsModified) && (BeginOffset() == EndOffset());
 		}
 
-		internal void HandleText(string text)
+		internal bool HandleText(string text)
 		{
 			if (text.Length == 0)
-				return;
+				return true;
 
 			ReplaceSelections(text, false);
 			if (selectionsTimer.Started())
 				EnsureVisible();
+			return true;
 		}
 
 		void CalculateBoundaries()

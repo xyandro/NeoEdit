@@ -96,6 +96,7 @@ namespace NeoEdit.TextEditor
 		}
 
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
 		void RunCommand(TextEditCommand command)
 		{
@@ -127,14 +128,14 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;
 				case TextEditCommand.Edit_Cut: Active.Command_Edit_CutCopy(true); break;
 				case TextEditCommand.Edit_Copy: Active.Command_Edit_CutCopy(false); break;
-				case TextEditCommand.Edit_Paste: Active.Command_Edit_Paste(); break;
+				case TextEditCommand.Edit_Paste: Active.Command_Edit_Paste(shiftDown); break;
 				case TextEditCommand.Edit_ShowClipboard: Active.Command_Edit_ShowClipboard(); break;
-				case TextEditCommand.Edit_Find: Active.Command_Edit_FindReplace(false); break;
-				case TextEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true); break;
-				case TextEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false); break;
-				case TextEditCommand.Edit_Replace: Active.Command_Edit_FindReplace(true); break;
-				case TextEditCommand.Edit_GotoLine: Active.Command_Edit_Goto(true); break;
-				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_Goto(false); break;
+				case TextEditCommand.Edit_Find: Active.Command_Edit_FindReplace(false, shiftDown); break;
+				case TextEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true, shiftDown); break;
+				case TextEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false, shiftDown); break;
+				case TextEditCommand.Edit_Replace: Active.Command_Edit_FindReplace(true, shiftDown); break;
+				case TextEditCommand.Edit_GotoLine: Active.Command_Edit_Goto(true, shiftDown); break;
+				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_Goto(false, shiftDown); break;
 				case TextEditCommand.Files_Copy: Active.Command_Files_CutCopy(false); break;
 				case TextEditCommand.Files_Cut: Active.Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Open: Active.Command_Files_Open(); break;
@@ -364,6 +365,29 @@ namespace NeoEdit.TextEditor
 		Label GetLabel(TextEditor textEditor)
 		{
 			return textEditor.GetLabel();
+		}
+
+		protected override void OnKeyDown(KeyEventArgs e)
+		{
+			base.OnKeyDown(e);
+			if (e.Handled)
+				return;
+
+			if (Active != null)
+				e.Handled = Active.HandleKey(e.Key, shiftDown, controlDown);
+		}
+
+		protected override void OnTextInput(TextCompositionEventArgs e)
+		{
+			base.OnTextInput(e);
+			if (e.Handled)
+				return;
+
+			if (e.Source is MenuItem)
+				return;
+
+			if (Active != null)
+				e.Handled = Active.HandleText(e.Text);
 		}
 	}
 }
