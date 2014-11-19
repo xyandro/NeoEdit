@@ -282,6 +282,7 @@ namespace NeoEdit.TextEditor
 					case TextEditCommand.Data_Checksum_MD5: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
 					case TextEditCommand.Data_Checksum_SHA1: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
 					case TextEditCommand.Data_Checksum_SHA256: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
+					case TextEditCommand.Data_Sort: dialogResult = Active.Command_Data_Sort_Dialog(); break;
 					case TextEditCommand.Select_Limit: dialogResult = Active.Command_Select_Limit_Dialog(); break;
 					case TextEditCommand.Select_ExpressionMatches: dialogResult = Active.Command_Select_ExpressionMatches_Dialog(); break;
 					case TextEditCommand.Select_RegExMatches: dialogResult = Active.Command_Select_RegExMatches_Dialog(); break;
@@ -438,7 +439,7 @@ namespace NeoEdit.TextEditor
 				case TextEditCommand.Data_Checksum_MD5: Active.Command_Data_Checksum(Checksum.Type.MD5, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Checksum_SHA1: Active.Command_Data_Checksum(Checksum.Type.SHA1, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Checksum_SHA256: Active.Command_Data_Checksum(Checksum.Type.SHA256, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Data_Sort: Active.Command_Data_Sort(); break;
+				case TextEditCommand.Data_Sort: Active.Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Keys_Set_Keys: Active.Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Active.Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Active.Command_Keys_Set(2); break;

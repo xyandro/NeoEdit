@@ -104,12 +104,13 @@ namespace NeoEdit.TextEditor
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		internal void Command_Data_Sort()
+		internal SortDialog.Result Command_Data_Sort_Dialog()
 		{
-			var result = SortDialog.Run();
-			if (result == null)
-				return;
+			return SortDialog.Run();
+		}
 
+		internal void Command_Data_Sort(SortDialog.Result result)
+		{
 			var regions = GetRegions(result.SortScope);
 			var ordering = GetOrdering(result.SortType, result.Ascending);
 			if (regions.Count != ordering.Count)
