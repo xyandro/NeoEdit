@@ -2,9 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Xml.Linq;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
@@ -23,7 +21,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			All,
 		}
 
-		internal class Result : DialogResult
+		internal class Result
 		{
 			public Regex Regex { get; set; }
 			public string Replace { get; set; }
@@ -32,34 +30,6 @@ namespace NeoEdit.TextEditor.Dialogs
 			public bool IncludeEndings { get; set; }
 			public bool IncludeMatches { get; set; }
 			public GetRegExResultType ResultType { get; set; }
-
-			public override XElement ToXML()
-			{
-				var neXml = NEXML.Create(this);
-				return new XElement(neXml.Name,
-					neXml.Element(a => a.Regex),
-					neXml.Attribute(a => a.Replace),
-					neXml.Attribute(a => a.RegexGroups),
-					neXml.Attribute(a => a.SelectionOnly),
-					neXml.Attribute(a => a.IncludeEndings),
-					neXml.Attribute(a => a.IncludeMatches),
-					neXml.Attribute(a => a.ResultType)
-				);
-			}
-
-			public static Result FromXML(XElement xml)
-			{
-				return new Result
-				{
-					Regex = NEXML<Result>.Element(xml, a => a.Regex),
-					Replace = NEXML<Result>.Attribute(xml, a => a.Replace),
-					RegexGroups = NEXML<Result>.Attribute(xml, a => a.RegexGroups),
-					SelectionOnly = NEXML<Result>.Attribute(xml, a => a.SelectionOnly),
-					IncludeEndings = NEXML<Result>.Attribute(xml, a => a.IncludeEndings),
-					IncludeMatches = NEXML<Result>.Attribute(xml, a => a.IncludeMatches),
-					ResultType = NEXML<Result>.Attribute(xml, a => a.ResultType)
-				};
-			}
 		}
 
 		[DepProp]
@@ -84,8 +54,6 @@ namespace NeoEdit.TextEditor.Dialogs
 		public ObservableCollection<string> History { get { return UIHelper<GetRegExDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public ObservableCollection<string> ReplaceHistory { get { return UIHelper<GetRegExDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
-
-		public Result result { get; private set; }
 
 		readonly static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
 		readonly static ObservableCollection<string> StaticReplaceHistory = new ObservableCollection<string>();
@@ -137,6 +105,7 @@ namespace NeoEdit.TextEditor.Dialogs
 			}
 		}
 
+		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (String.IsNullOrEmpty(Text))

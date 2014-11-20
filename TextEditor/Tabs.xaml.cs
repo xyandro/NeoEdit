@@ -44,25 +44,9 @@ namespace NeoEdit.TextEditor
 			TextEditors = new ObservableCollection<TextEditor>();
 		}
 
-		class OpenFileDialogResult : DialogResult
+		class OpenFileDialogResult
 		{
 			public List<string> files { get; set; }
-
-			public override XElement ToXML()
-			{
-				var neXml = NEXML.Create(this);
-				return new XElement(neXml.Name,
-					neXml.Element(a => a.files)
-				);
-			}
-
-			public static OpenFileDialogResult FromXML(XElement xml)
-			{
-				return new OpenFileDialogResult
-				{
-					files = NEXML<OpenFileDialogResult>.Element(xml, a => a.files),
-				};
-			}
 		}
 
 		OpenFileDialogResult Command_File_Open_Dialog()
@@ -173,7 +157,7 @@ namespace NeoEdit.TextEditor
 			else
 				fileName = Path.Combine(macroDirectory, fileName);
 
-			macro.ToXML().Save(fileName);
+			XMLConverter.ToXML(macro).Save(fileName);
 		}
 
 		void Command_Macro_Play(string fileName = null)
@@ -195,7 +179,7 @@ namespace NeoEdit.TextEditor
 			else
 				fileName = Path.Combine(macroDirectory, fileName);
 
-			Macro.FromXML(XElement.Load(fileName)).Play(this);
+			XMLConverter.FromXML<Macro>(XElement.Load(fileName)).Play(this);
 		}
 
 		protected override void OnClosing(CancelEventArgs e)
@@ -233,7 +217,7 @@ namespace NeoEdit.TextEditor
 
 			var shiftDown = this.shiftDown;
 
-			DialogResult dialogResult;
+			object dialogResult;
 			if (!GetDialogResult(command, out dialogResult))
 				return;
 
@@ -243,7 +227,7 @@ namespace NeoEdit.TextEditor
 			HandleCommand(command, shiftDown, dialogResult);
 		}
 
-		internal bool GetDialogResult(TextEditCommand command, out DialogResult dialogResult)
+		internal bool GetDialogResult(TextEditCommand command, out object dialogResult)
 		{
 			dialogResult = null;
 
@@ -293,7 +277,7 @@ namespace NeoEdit.TextEditor
 			return (!dialogResultSet) || (dialogResult != null);
 		}
 
-		internal void HandleCommand(TextEditCommand command, bool shiftDown, DialogResult dialogResult)
+		internal void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
 		{
 			switch (command)
 			{

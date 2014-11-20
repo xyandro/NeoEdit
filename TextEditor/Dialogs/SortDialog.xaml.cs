@@ -1,37 +1,15 @@
 ﻿using System.Windows;
-using System.Xml.Linq;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	partial class SortDialog
 	{
-		internal class Result : DialogResult
+		internal class Result
 		{
 			public TextEditor.SortScope SortScope { get; set; }
 			public TextEditor.SortType SortType { get; set; }
 			public bool Ascending { get; set; }
-
-			public override XElement ToXML()
-			{
-				var neXml = NEXML.Create(this);
-				return new XElement(neXml.Name,
-					neXml.Attribute(a => a.SortScope),
-					neXml.Attribute(a => a.SortType),
-					neXml.Attribute(a => a.Ascending)
-				);
-			}
-
-			public static Result FromXML(XElement xml)
-			{
-				return new Result
-				{
-					SortScope = NEXML<Result>.Attribute(xml, a => a.SortScope),
-					SortType = NEXML<Result>.Attribute(xml, a => a.SortType),
-					Ascending = NEXML<Result>.Attribute(xml, a => a.Ascending)
-				};
-			}
 		}
 
 		[DepProp]

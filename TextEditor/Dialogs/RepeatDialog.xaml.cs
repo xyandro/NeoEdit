@@ -1,37 +1,15 @@
 ﻿using System.Windows;
-using System.Xml.Linq;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class RepeatDialog
 	{
-		internal class Result : DialogResult
+		internal class Result
 		{
 			public int RepeatCount { get; set; }
 			public bool ClipboardValue { get; set; }
 			public bool SelectRepetitions { get; set; }
-
-			public override XElement ToXML()
-			{
-				var neXml = NEXML.Create(this);
-				return new XElement(neXml.Name,
-					neXml.Attribute(a => a.RepeatCount),
-					neXml.Attribute(a => a.ClipboardValue),
-					neXml.Attribute(a => a.SelectRepetitions)
-				);
-			}
-
-			public static Result FromXML(XElement xml)
-			{
-				return new Result
-				{
-					RepeatCount = NEXML<Result>.Attribute(xml, a => a.RepeatCount),
-					ClipboardValue = NEXML<Result>.Attribute(xml, a => a.ClipboardValue),
-					SelectRepetitions = NEXML<Result>.Attribute(xml, a => a.SelectRepetitions)
-				};
-			}
 		}
 
 		[DepProp]

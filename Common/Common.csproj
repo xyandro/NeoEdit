@@ -27,8 +27,8 @@
     <Compile Include="Transform\Coder.cs" />
     <Compile Include="Transform\Compression.cs" />
     <Compile Include="Transform\Crypto.cs" />
-    <Compile Include="Transform\NEXML.cs" />
     <Compile Include="Transform\StrCoder.cs" />
+    <Compile Include="Transform\XMLConverter.cs" />
     <Compile Include="UnitTest\ChecksumTest.cs" />
     <Compile Include="UnitTest\CoderTest.cs" />
     <Compile Include="UnitTest\CompressionTest.cs" />

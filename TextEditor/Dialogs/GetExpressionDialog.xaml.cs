@@ -1,43 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Linq;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	partial class GetExpressionDialog
 	{
-		internal class Result : DialogResult
+		internal class Result
 		{
-			public string ExpressionStr { get; set; }
-			public List<string> ExpressionVars { get; set; }
 			public NeoEdit.Common.Expression Expression { get; set; }
 			public bool IncludeMatches { get; set; }
-
-			public Result(string expressionStr, List<string> expressionVars, bool includeMatches)
-			{
-				ExpressionStr = expressionStr;
-				ExpressionVars = expressionVars;
-				IncludeMatches = includeMatches;
-				Expression = new Common.Expression(ExpressionStr, ExpressionVars);
-			}
-
-			public override XElement ToXML()
-			{
-				var neXml = NEXML.Create(this);
-				return new XElement(neXml.Name,
-					neXml.Element(a => a.ExpressionStr),
-					neXml.Element(a => a.ExpressionVars),
-					neXml.Attribute(a => a.IncludeMatches)
-				);
-			}
-
-			public static Result FromXML(XElement xml)
-			{
-				return new Result(NEXML<Result>.Element(xml, a => a.ExpressionStr), NEXML<Result>.Element(xml, a => a.ExpressionVars), NEXML<Result>.Attribute(xml, a => a.IncludeMatches));
-			}
 		}
 
 		[DepProp]
@@ -156,7 +128,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result(Expression, expressionData.vars, IncludeMatches);
+			result = new Result { Expression = new Common.Expression(Expression, expressionData.vars), IncludeMatches = IncludeMatches };
 			DialogResult = true;
 		}
 

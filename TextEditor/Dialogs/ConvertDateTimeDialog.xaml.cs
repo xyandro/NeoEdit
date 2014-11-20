@@ -4,42 +4,18 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Linq;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class ConvertDateTimeDialog
 	{
-		internal class Result : DialogResult
+		internal class Result
 		{
 			public string InputFormat { get; set; }
 			public bool InputUTC { get; set; }
 			public string OutputFormat { get; set; }
 			public bool OutputUTC { get; set; }
-
-			public override XElement ToXML()
-			{
-				var neXml = NEXML.Create(this);
-				return new XElement(neXml.Name,
-					neXml.Attribute(a => a.InputFormat),
-					neXml.Attribute(a => a.InputUTC),
-					neXml.Attribute(a => a.OutputFormat),
-					neXml.Attribute(a => a.OutputUTC)
-				);
-			}
-
-			public static Result FromXML(XElement xml)
-			{
-				return new Result
-				{
-					InputFormat = NEXML<Result>.Attribute(xml, a => a.InputFormat),
-					InputUTC = NEXML<Result>.Attribute(xml, a => a.InputUTC),
-					OutputFormat = NEXML<Result>.Attribute(xml, a => a.OutputFormat),
-					OutputUTC = NEXML<Result>.Attribute(xml, a => a.OutputUTC),
-				};
-			}
 		}
 
 		[DepProp]

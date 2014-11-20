@@ -1,37 +1,15 @@
 ﻿using System.Windows;
-using System.Xml.Linq;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
 	internal partial class GotoDialog
 	{
-		internal class Result : DialogResult
+		internal class Result
 		{
 			public int Value { get; set; }
 			public bool ClipboardValue { get; set; }
 			public bool Relative { get; set; }
-
-			public override XElement ToXML()
-			{
-				var neXml = NEXML.Create(this);
-				return new XElement(neXml.Name,
-					neXml.Attribute(a => a.Value),
-					neXml.Attribute(a => a.ClipboardValue),
-					neXml.Attribute(a => a.Relative)
-				);
-			}
-
-			public static Result FromXML(XElement xml)
-			{
-				return new Result
-				{
-					Value = NEXML<Result>.Attribute(xml, a => a.Value),
-					ClipboardValue = NEXML<Result>.Attribute(xml, a => a.ClipboardValue),
-					Relative = NEXML<Result>.Attribute(xml, a => a.Relative)
-				};
-			}
 		}
 
 		[DepProp]

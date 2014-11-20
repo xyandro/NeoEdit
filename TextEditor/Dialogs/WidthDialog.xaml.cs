@@ -1,7 +1,5 @@
 ﻿using System.Windows;
-using System.Xml.Linq;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEditor.Dialogs
 {
@@ -14,34 +12,12 @@ namespace NeoEdit.TextEditor.Dialogs
 			End,
 		}
 
-		internal class Result : DialogResult
+		internal class Result
 		{
 			public int Length { get; set; }
 			public bool ClipboardValue { get; set; }
 			public char PadChar { get; set; }
 			public TextLocation Location { get; set; }
-
-			public override XElement ToXML()
-			{
-				var neXml = NEXML.Create(this);
-				return new XElement(neXml.Name,
-					neXml.Attribute(a => a.Length),
-					neXml.Attribute(a => a.ClipboardValue),
-					neXml.Attribute(a => a.PadChar),
-					neXml.Attribute(a => a.Location)
-				);
-			}
-
-			public static Result FromXML(XElement xml)
-			{
-				return new Result
-				{
-					Length = NEXML<Result>.Attribute(xml, a => a.Length),
-					ClipboardValue = NEXML<Result>.Attribute(xml, a => a.ClipboardValue),
-					PadChar = NEXML<Result>.Attribute(xml, a => a.PadChar),
-					Location = NEXML<Result>.Attribute(xml, a => a.Location)
-				};
-			}
 		}
 
 		[DepProp]
