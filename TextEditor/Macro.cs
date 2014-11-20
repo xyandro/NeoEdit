@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -71,19 +72,21 @@ namespace NeoEdit.TextEditor
 			macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult));
 		}
 
-		public void Play(TextEditorTabs tabs)
+		public void Play(TextEditorTabs tabs, Action<bool> setPlayingStatus)
 		{
+			setPlayingStatus(true);
 			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
 			var ctr = 0;
-			timer.Tick += (s, e) =>
+			timer.Tick += (s, e) => tabs.Dispatcher.Invoke(() =>
 			{
 				if (ctr >= macroActions.Count)
 				{
 					timer.Stop();
+					setPlayingStatus(false);
 					return;
 				}
 
-				tabs.Dispatcher.Invoke(() =>
+				try
 				{
 					var action = macroActions[ctr++];
 					if (action is MacroActionKey)
@@ -101,8 +104,14 @@ namespace NeoEdit.TextEditor
 						var commandAction = action as MacroActionCommand;
 						tabs.HandleCommand(commandAction.command, commandAction.shiftDown, commandAction.dialogResult);
 					}
-				});
-			};
+				}
+				catch
+				{
+					timer.Stop();
+					setPlayingStatus(false);
+					throw;
+				}
+			});
 			timer.Start();
 		}
 	}

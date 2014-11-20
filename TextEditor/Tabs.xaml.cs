@@ -179,7 +179,7 @@ namespace NeoEdit.TextEditor
 			else
 				fileName = Path.Combine(macroDirectory, fileName);
 
-			XMLConverter.FromXML<Macro>(XElement.Load(fileName)).Play(this);
+			XMLConverter.FromXML<Macro>(XElement.Load(fileName)).Play(this, playing => macroPlaying = playing);
 		}
 
 		protected override void OnClosing(CancelEventArgs e)
@@ -202,10 +202,14 @@ namespace NeoEdit.TextEditor
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
-		static Macro recordingMacro;
+		Macro recordingMacro;
+		internal bool macroPlaying = false;
 
 		internal void RunCommand(TextEditCommand command)
 		{
+			if (macroPlaying)
+				return;
+
 			switch (command)
 			{
 				case TextEditCommand.Macro_QuickRecord: Command_Macro_QuickRecord(); return;
@@ -548,6 +552,9 @@ namespace NeoEdit.TextEditor
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
+			if (macroPlaying)
+				return;
+
 			base.OnKeyDown(e);
 			if (e.Handled)
 				return;
@@ -570,6 +577,9 @@ namespace NeoEdit.TextEditor
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
+			if (macroPlaying)
+				return;
+
 			base.OnTextInput(e);
 			if (e.Handled)
 				return;
