@@ -9,6 +9,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		{
 			public TextEditor.SortScope SortScope { get; set; }
 			public TextEditor.SortType SortType { get; set; }
+			public bool CaseSensitive { get; set; }
 			public bool Ascending { get; set; }
 		}
 
@@ -16,6 +17,8 @@ namespace NeoEdit.TextEditor.Dialogs
 		public TextEditor.SortScope SortScope { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortScope>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public TextEditor.SortType SortType { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortType>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool CaseSensitive { get { return UIHelper<SortDialog>.GetPropValue<bool>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool Ascending { get { return UIHelper<SortDialog>.GetPropValue<bool>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
 
@@ -33,7 +36,7 @@ namespace NeoEdit.TextEditor.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { SortScope = SortScope, SortType = SortType, Ascending = Ascending };
+			result = new Result { SortScope = SortScope, SortType = SortType, CaseSensitive = CaseSensitive, Ascending = Ascending };
 			DialogResult = true;
 		}
 

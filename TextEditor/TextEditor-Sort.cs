@@ -76,13 +76,18 @@ namespace NeoEdit.TextEditor
 				return comparer == null ? source.OrderByDescending(keySelector) : source.OrderByDescending(keySelector, comparer);
 		}
 
-		List<int> GetOrdering(SortType type, bool ascending)
+		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{
 			var entries = Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
+
+			Func<string, string, int> stringComparer = null;
+			if (caseSensitive)
+				stringComparer = (entry1, entry2) => String.CompareOrdinal(entry1, entry2);
+
 			switch (type)
 			{
-				case SortType.String: entries = OrderByAscDesc(ascending, entries, entry => NumericSort(entry.value)).ToList(); break;
-				case SortType.StringRaw: entries = OrderByAscDesc(ascending, entries, entry => entry.value).ToList(); break;
+				case SortType.String: entries = OrderByAscDesc(ascending, entries, entry => NumericSort(entry.value), stringComparer).ToList(); break;
+				case SortType.StringRaw: entries = OrderByAscDesc(ascending, entries, entry => entry.value, stringComparer).ToList(); break;
 				case SortType.Numeric: entries = OrderByAscDesc(ascending, entries, entry => Double.Parse(entry.value)).ToList(); break;
 				case SortType.DateTime: entries = OrderByAscDesc(ascending, entries, entry => DateTime.Parse(entry.value)).ToList(); break;
 				case SortType.Keys:
@@ -112,7 +117,7 @@ namespace NeoEdit.TextEditor
 		internal void Command_Data_Sort(SortDialog.Result result)
 		{
 			var regions = GetRegions(result.SortScope);
-			var ordering = GetOrdering(result.SortType, result.Ascending);
+			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
 				throw new Exception("Ordering misaligned");
 
