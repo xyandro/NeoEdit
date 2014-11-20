@@ -20,7 +20,7 @@ namespace NeoEdit.Common.Transform
 			if (name == null)
 				name = typeof(T).Name;
 			var converter = new XMLConverter();
-			var xml = converter.rToXML(obj, name, null);
+			var xml = converter.rToXML(obj, name, null, false) as XElement;
 			xml.Add(new XElement("NameMapping",
 				new XElement("FieldNames", converter.fieldNames.Where(pair => pair.Key != pair.Value).Select(pair => new XElement("FieldName", new XAttribute("Key", pair.Key), new XAttribute("Value", pair.Value)))),
 				new XElement("TypeNames", converter.typeNames.Where(pair => pair.Key != pair.Value).Select(pair => new XElement("TypeName", new XAttribute("Key", pair.Key), new XAttribute("Value", pair.Value))))
@@ -40,33 +40,46 @@ namespace NeoEdit.Common.Transform
 		}
 
 		Dictionary<object, XElement> toXMLReferences = new Dictionary<object, XElement>();
-		XElement rToXML(object obj, string name, Type startType)
+		object rToXML(object obj, string name, Type expectedType, bool rawToAttr)
 		{
-			var type = startType;
+			var type = expectedType;
 			if (obj != null)
 				type = obj.GetType();
 
 			var xml = new XElement(name);
-			if (type != startType)
-				xml.Add(new XAttribute("Type", EscapeType(type)));
-			if (ToRaw(type, obj, xml))
-				return xml;
+			if (type != expectedType)
+				if ((expectedType == null) || (!expectedType.IsGenericType) || (expectedType.GetGenericTypeDefinition() != typeof(Nullable<>)) || (expectedType.GetGenericArguments()[0] != type))
+					xml.Add(new XAttribute("Type", EscapeType(type)));
 
-			if (obj != null)
+			if (ToRaw(type, obj, xml))
+			{
+				if ((rawToAttr) && (!xml.IsEmpty) && (!xml.HasElements) && (!xml.HasAttributes))
+					return new XAttribute(xml.Name, xml.Value);
+
+				return xml;
+			}
+
+			if (obj == null)
+				xml.Add(new XAttribute("Type", "null"));
+			else
 			{
 				if (toXMLReferences.ContainsKey(obj))
 				{
 					if (toXMLReferences[obj].Attribute("GUID") == null)
 						toXMLReferences[obj].Add(new XAttribute("GUID", Guid.NewGuid().ToString()));
-					var guid = toXMLReferences[obj].Attribute("GUID").Value;
-					xml.Add(new XAttribute("Reference", guid));
+					xml.RemoveAttributes();
+					xml.Add(new XAttribute("Reference", toXMLReferences[obj].Attribute("GUID").Value));
 					return xml;
 				}
 				toXMLReferences[obj] = xml;
 
 				var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 				foreach (var field in fields)
-					xml.Add(rToXML(field.GetValue(obj), EscapeField(field), field.FieldType));
+				{
+					var value = field.GetValue(obj);
+					if (value != null)
+						xml.Add(rToXML(value, EscapeField(field), field.FieldType, true));
+				}
 			}
 
 			return xml;
@@ -75,9 +88,15 @@ namespace NeoEdit.Common.Transform
 		Dictionary<string, object> fromXMLReferences = new Dictionary<string, object>();
 		object rFromXML(XElement xml, Type type)
 		{
+			var reference = xml.Attribute("Reference") == null ? null : xml.Attribute("Reference").Value;
+			if (!String.IsNullOrEmpty(reference))
+				return fromXMLReferences[reference];
+
 			if (xml.Attribute("Type") != null)
 			{
 				var typeName = xml.Attribute("Type").Value;
+				if (typeName == "null")
+					return null;
 				typeName = typeNames.ContainsKey(typeName) ? typeNames[typeName] : typeName;
 				type = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(typeName)).First(val => val != null);
 			}
@@ -85,13 +104,6 @@ namespace NeoEdit.Common.Transform
 			object raw;
 			if (FromRaw(type, xml, out raw))
 				return raw;
-
-			var reference = xml.Attribute("Reference") == null ? null : xml.Attribute("Reference").Value;
-			if (!String.IsNullOrEmpty(reference))
-				return fromXMLReferences[reference];
-
-			if (xml.IsEmpty)
-				return null;
 
 			var obj = FormatterServices.GetUninitializedObject(type);
 
@@ -103,18 +115,22 @@ namespace NeoEdit.Common.Transform
 			foreach (var field in fields)
 			{
 				var name = fieldNames.ContainsKey(field.Name) ? fieldNames[field.Name] : field.Name;
-				field.SetValue(obj, rFromXML(xml.Element(name), field.FieldType));
+				if (xml.Element(name) != null)
+					field.SetValue(obj, rFromXML(xml.Element(name), field.FieldType));
+				else if ((xml.Attribute(name) != null) && (FromRaw(field.FieldType, xml.Attribute(name).Value, out raw)))
+					field.SetValue(obj, raw);
 			}
 			return obj;
 		}
 
 		string GetUniqueName(string name, HashSet<string> used)
 		{
+			var reserved = new HashSet<string> { "Type", "GUID", "Reference" };
 			var ctr = 0;
 			while (true)
 			{
 				var useName = name + (++ctr == 1 ? "" : ctr.ToString());
-				if ((String.IsNullOrEmpty(useName)) || (used.Contains(useName)))
+				if ((String.IsNullOrEmpty(useName)) || (reserved.Contains(useName)) || (used.Contains(useName)))
 					continue;
 				return useName;
 			}
@@ -176,6 +192,25 @@ namespace NeoEdit.Common.Transform
 				return true;
 			}
 
+			if (type.IsArray)
+			{
+				var arrayType = type.GetElementType();
+				if (arrayType == typeof(byte))
+				{
+					xml.Add(StrCoder.BytesToString(obj as byte[], StrCoder.CodePage.Hex));
+					return true;
+				}
+
+				var array = obj as Array;
+				if (array != null)
+				{
+					foreach (var item in array)
+						xml.Add(rToXML(item, "Item", arrayType, false));
+				}
+
+				return true;
+			}
+
 			if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(List<>)))
 			{
 				var list = obj as IList;
@@ -183,7 +218,7 @@ namespace NeoEdit.Common.Transform
 				{
 					var listType = type.GetGenericArguments()[0];
 					foreach (var item in list)
-						xml.Add(rToXML(item, "ListItem", listType));
+						xml.Add(rToXML(item, "Item", listType, false));
 				}
 
 				return true;
@@ -197,7 +232,7 @@ namespace NeoEdit.Common.Transform
 					var keyType = type.GetGenericArguments()[0];
 					var valueType = type.GetGenericArguments()[1];
 					foreach (DictionaryEntry item in dictionary)
-						xml.Add(new XElement("DictionaryItem", rToXML(item.Key, "Key", keyType), rToXML(item.Value, "Value", valueType)));
+						xml.Add(new XElement("Item", rToXML(item.Key, "Key", keyType, false), rToXML(item.Value, "Value", valueType, false)));
 				}
 
 				return true;
@@ -206,25 +241,55 @@ namespace NeoEdit.Common.Transform
 			return false;
 		}
 
-		bool FromRaw(Type type, XElement xml, out object raw)
+		bool FromRaw(Type type, string value, out object raw)
 		{
 			raw = null;
 			if ((type.IsPrimitive) || (!type.IsClass) || (type == typeof(string)))
 			{
-				if (xml.IsEmpty)
+				if (value == null)
 				{
 					if (type.IsValueType)
 						raw = Activator.CreateInstance(type);
 					return true;
 				}
-				raw = TypeDescriptor.GetConverter(type).ConvertFrom(xml.Value);
+				raw = TypeDescriptor.GetConverter(type).ConvertFrom(value);
 				return true;
 			}
+
+			if ((type.IsArray) && (type.GetElementType() == typeof(byte)))
+			{
+				raw = StrCoder.StringToBytes(value, StrCoder.CodePage.Hex);
+				return true;
+			}
+
+			return false;
+		}
+
+		bool FromRaw(Type type, XElement xml, out object raw)
+		{
+			if (FromRaw(type, xml.IsEmpty ? null : xml.Value, out raw))
+				return true;
 
 			if (type == typeof(Regex))
 			{
 				if (!xml.IsEmpty)
 					raw = new Regex(xml.Element("Pattern").Value, (RegexOptions)Enum.Parse(typeof(RegexOptions), xml.Element("Options").Value));
+				return true;
+			}
+
+			if (type.IsArray)
+			{
+				if (!xml.IsEmpty)
+				{
+					var elements = xml.Elements("Item").ToList();
+					raw = type.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { elements.Count });
+					var array = raw as Array;
+
+					var arrayType = type.GetElementType();
+					for (var ctr = 0; ctr < elements.Count; ++ctr)
+						array.SetValue(rFromXML(elements[ctr], arrayType), ctr);
+				}
+
 				return true;
 			}
 
@@ -236,7 +301,7 @@ namespace NeoEdit.Common.Transform
 					var list = raw as IList;
 
 					var listType = type.GetGenericArguments()[0];
-					foreach (var element in xml.Elements("ListItem"))
+					foreach (var element in xml.Elements("Item"))
 						list.Add(rFromXML(element, listType));
 				}
 
@@ -252,7 +317,7 @@ namespace NeoEdit.Common.Transform
 
 					var keyType = type.GetGenericArguments()[0];
 					var valueType = type.GetGenericArguments()[1];
-					foreach (var element in xml.Elements("DictionaryItem"))
+					foreach (var element in xml.Elements("Item"))
 						dictionary.Add(rFromXML(element.Element("Key"), keyType), rFromXML(element.Element("Value"), valueType));
 				}
 
