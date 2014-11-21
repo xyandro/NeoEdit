@@ -96,6 +96,7 @@ namespace NeoEdit.TextView
 
 			switch (command)
 			{
+				case TextViewCommand.File_Close: TextViewers.Remove(Active); break;
 				case TextViewCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 			}
 		}
