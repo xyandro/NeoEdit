@@ -110,6 +110,7 @@ namespace NeoEdit
 
 							return TextEditorTabs.Create(filename, line: line, column: column);
 						}
+					case "view":
 					case "textview":
 					case "textviewer":
 						{

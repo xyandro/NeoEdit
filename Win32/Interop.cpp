@@ -191,5 +191,48 @@ namespace NeoEdit
 			}
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
+
+		template <typename type> System::Collections::Generic::List<int64_t> ^GetLinesTemplate(array<uint8_t>^ data, int64_t use, int64_t %position, bool bigEndian)
+		{
+			type cr = !bigEndian ? 0x0d : sizeof(type) == 2 ? 0x0d00 : 0x0d000000;
+			type lf = !bigEndian ? 0x0a : sizeof(type) == 2 ? 0x0a00 : 0x0a000000;
+
+			use /= sizeof(type);
+			auto lineStart = gcnew System::Collections::Generic::List<int64_t>();
+			pin_ptr<const unsigned char> pin = &data[0];
+			auto block = (const type*)pin;
+
+			int ctr, endLen = 0;
+			for (ctr = 0; ctr < use; ctr += 1)
+			{
+				if ((block[ctr + 0] == cr) || (block[ctr + 0] == lf)) endLen = 1;
+				if (((block[ctr + 0] == cr) && (block[ctr + 1] == lf)) || ((block[ctr + 0] == lf) && (block[ctr + 1] == cr))) endLen = 2;
+
+				if (endLen != 0)
+				{
+					lineStart->Add(position + (ctr + endLen) * sizeof(type));
+					ctr += endLen - 1;
+					endLen = 0;
+				}
+			}
+			position += ctr * sizeof(type);
+			return lineStart;
+		}
+
+		System::Collections::Generic::List<int64_t> ^Interop::GetLines(array<uint8_t>^ data, int64_t use, int charSize, bool bigEndian, int64_t %position)
+		{
+			try
+			{
+				switch (charSize)
+				{
+				case 1: return GetLinesTemplate<uint8_t>(data, use, position, bigEndian);
+				case 2: return GetLinesTemplate<uint16_t>(data, use, position, bigEndian);
+				case 4: return GetLinesTemplate<uint32_t>(data, use, position, bigEndian);
+				default: throw gcnew System::Exception("Invalid argument type");
+				}
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+			return nullptr;
+		}
 	}
 }

@@ -31,6 +31,7 @@ namespace NeoEdit
 			static void WriteSharedMemory(int pid, System::IntPtr handle, int64_t index, array<uint8_t> ^bytes);
 			static System::IntPtr AllocConsole();
 			static void SendChar(System::IntPtr handle, unsigned char ch);
+			static System::Collections::Generic::List<int64_t> ^GetLines(array<uint8_t>^ data, int64_t use, int charSize, bool bigEndian, int64_t %position);
 		};
 	}
 }

@@ -54,6 +54,10 @@
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Win32\Win32.vcxproj">
+      <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
+      <Name>Win32</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
 </Project>
