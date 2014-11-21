@@ -237,6 +237,7 @@ namespace NeoEdit.Common
 		static readonly List<List<string>> binaryOperators = new List<List<string>>
 		{
 			new List<string>{ "." },
+			new List<string>{ "^", "root" },
 			new List<string>{ "*", "/", "%" },
 			new List<string>{ "+", "-", "t+" },
 			new List<string>{ "IS" },
@@ -427,6 +428,8 @@ namespace NeoEdit.Common
 					case "FileName": results.Add(Path.GetFileName(GetString(op.GetTerm(0, values, results)))); break;
 					case "StrFormat": results.Add(StrFormat(op.terms, values, results)); break;
 					case ".": results.Add(GetDotOp(op.GetTerm(0, values, results), GetString(op.GetTerm(1, values, results)))); break;
+					case "^": results.Add(Math.Pow(GetDouble(op.GetTerm(0, values, results)), GetDouble(op.GetTerm(1, values, results)))); break;
+					case "root": results.Add(Math.Pow(GetDouble(op.GetTerm(1, values, results)), (1.0 / GetDouble(op.GetTerm(0, values, results))))); break;
 					case "*": results.Add(GetDouble(op.GetTerm(0, values, results)) * GetDouble(op.GetTerm(1, values, results))); break;
 					case "/": results.Add(GetDouble(op.GetTerm(0, values, results)) / GetDouble(op.GetTerm(1, values, results))); break;
 					case "%": results.Add(GetDouble(op.GetTerm(0, values, results)) % GetDouble(op.GetTerm(1, values, results))); break;
