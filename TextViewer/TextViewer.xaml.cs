@@ -10,7 +10,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextView
 {
-	public partial class TextViewer
+	partial class TextViewer
 	{
 		[DepProp]
 		public string FileName { get { return UIHelper<TextViewer>.GetPropValue<string>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
@@ -30,16 +30,16 @@ namespace NeoEdit.TextView
 		RunOnceTimer renderTimer;
 
 		readonly TextData data;
-		public TextViewer(string filename)
+		internal TextViewer(TextData _data)
 		{
 			InitializeComponent();
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
-			if (!File.Exists(filename))
-				throw new Exception(String.Format("File {0} doesn't exist.", filename));
-			FileName = filename;
-			data = new TextData(FileName);
+			data = _data;
+			FileName = data.FileName;
+			if (!File.Exists(FileName))
+				throw new Exception(String.Format("File {0} doesn't exist.", FileName));
 
 			UIHelper<TextViewer>.AddCallback(this, Canvas.ActualWidthProperty, () => CalculateBoundaries());
 			UIHelper<TextViewer>.AddCallback(this, Canvas.ActualHeightProperty, () => CalculateBoundaries());

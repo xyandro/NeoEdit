@@ -1,86 +1,111 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using NeoEdit.Common.Transform;
+using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
 	class TextData
 	{
-		public int NumLines { get { return lines; } }
-
-		readonly FileStream file;
-		readonly long length;
-		readonly int lines;
-		readonly List<long> lineStart;
-		readonly Encoding encoder;
-		public TextData(string filename)
+		public string FileName { get; private set; }
+		public int NumLines { get; private set; }
+		FileStream file { get; set; }
+		long length { get; set; }
+		List<long> lineStart { get; set; }
+		Encoding encoder { get; set; }
+		public TextData(string filename, Action<TextData> onScanComplete)
 		{
-			file = File.OpenRead(filename);
-			length = file.Length;
-			var header = Read(0, (int)Math.Min(4, length));
-			var codePage = StrCoder.CodePageFromBOM(header);
-
-			long position = 0;
-			int charSize = 1;
-			switch (codePage)
+			var worker = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
+			var scanningDialog = new ScanFileDialog(filename, () => worker.CancelAsync());
+			worker.ProgressChanged += (s, e) => scanningDialog.SetProgress(e.ProgressPercentage);
+			worker.RunWorkerCompleted += (s, e) =>
 			{
-				case StrCoder.CodePage.UTF8: position = 3; break;
-				case StrCoder.CodePage.UTF16LE: position = charSize = 2; break;
-				case StrCoder.CodePage.UTF16BE: position = charSize = 2; break;
-				case StrCoder.CodePage.UTF32LE: position = charSize = 4; break;
-				case StrCoder.CodePage.UTF32BE: position = charSize = 4; break;
-			}
-
-			encoder = StrCoder.GetEncoding(codePage);
-
-			lineStart = new List<long> { position };
-			while (position != length)
+				scanningDialog.Close();
+				if (e.Error != null)
+					throw e.Error;
+				if (!e.Cancelled)
+					onScanComplete(this);
+			};
+			worker.DoWork += (s, e) =>
 			{
-				var block = Read(position, (int)Math.Min(length - position, 65536));
-				var use = block.Length - ((position + block.Length == length) ? 0 : charSize);
-				int ctr, endLen = 0;
-				for (ctr = 0; ctr < use; ctr += charSize)
+				FileName = filename;
+				file = File.OpenRead(FileName);
+				length = file.Length;
+				var header = Read(0, (int)Math.Min(4, length));
+				var codePage = StrCoder.CodePageFromBOM(header);
+
+				long position = 0;
+				int charSize = 1;
+				switch (codePage)
 				{
-					switch (codePage)
+					case StrCoder.CodePage.UTF8: position = 3; break;
+					case StrCoder.CodePage.UTF16LE: position = charSize = 2; break;
+					case StrCoder.CodePage.UTF16BE: position = charSize = 2; break;
+					case StrCoder.CodePage.UTF32LE: position = charSize = 4; break;
+					case StrCoder.CodePage.UTF32BE: position = charSize = 4; break;
+				}
+
+				encoder = StrCoder.GetEncoding(codePage);
+
+				lineStart = new List<long> { position };
+				while (position != length)
+				{
+					if (worker.CancellationPending)
 					{
-						case StrCoder.CodePage.Default:
-						case StrCoder.CodePage.UTF8:
-							if ((block[ctr + 0] == '\r') || (block[ctr + 0] == '\n')) endLen = 1;
-							if (((block[ctr + 0] == '\r') && (block[ctr + 1] == '\n')) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == '\r'))) endLen = 2;
-							break;
-						case StrCoder.CodePage.UTF16LE:
-							if (((block[ctr + 0] == '\r') && (block[ctr + 1] == 0)) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == 0))) endLen = 2;
-							if (((block[ctr + 0] == '\r') && (block[ctr + 1] == 0) && (block[ctr + 2] == '\n') && (block[ctr + 3] == 0)) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == 0) && (block[ctr + 2] == '\r') && (block[ctr + 3] == 0))) endLen = 4;
-							break;
-						case StrCoder.CodePage.UTF16BE:
-							if (((block[ctr + 0] == 0) && (block[ctr + 1] == '\r')) || ((block[ctr + 0] == 0) && (block[ctr + 1] == '\n'))) endLen = 2;
-							if (((block[ctr + 0] == 0) && (block[ctr + 1] == '\r') && (block[ctr + 2] == 0) && (block[ctr + 3] == '\n')) || ((block[ctr + 0] == 0) && (block[ctr + 1] == '\n') && (block[ctr + 2] == 0) && (block[ctr + 3] == '\r'))) endLen = 4;
-							break;
-						case StrCoder.CodePage.UTF32LE:
-							if (((block[ctr + 0] == '\r') && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == 0)) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == 0))) endLen = 4;
-							if (((block[ctr + 0] == '\r') && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == 0) && (block[ctr + 4] == '\n') && (block[ctr + 5] == 0) && (block[ctr + 6] == 0) && (block[ctr + 7] == 0)) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == 0) && (block[ctr + 4] == '\r') && (block[ctr + 5] == 0) && (block[ctr + 6] == 0) && (block[ctr + 7] == 0))) endLen = 8;
-							break;
-						case StrCoder.CodePage.UTF32BE:
-							if (((block[ctr + 0] == 0) && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == '\r')) || ((block[ctr + 0] == 0) && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == '\n'))) endLen = 4;
-							if (((block[ctr + 0] == 0) && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == '\r') && (block[ctr + 4] == 0) && (block[ctr + 5] == 0) && (block[ctr + 6] == 0) && (block[ctr + 7] == '\n')) || ((block[ctr + 0] == 0) && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == '\n') && (block[ctr + 4] == 0) && (block[ctr + 5] == 0) && (block[ctr + 6] == 0) && (block[ctr + 7] == '\r'))) endLen = 8;
-							break;
+						e.Cancel = true;
+						return;
 					}
 
-					if (endLen != 0)
+					worker.ReportProgress((int)(position * 100 / length));
+
+					var block = Read(position, (int)Math.Min(length - position, 65536));
+					var use = block.Length - ((position + block.Length == length) ? 0 : charSize);
+					int ctr, endLen = 0;
+					for (ctr = 0; ctr < use; ctr += charSize)
 					{
-						lineStart.Add(position + ctr + endLen);
-						ctr += endLen - charSize;
-						endLen = 0;
+						switch (codePage)
+						{
+							case StrCoder.CodePage.Default:
+							case StrCoder.CodePage.UTF8:
+								if ((block[ctr + 0] == '\r') || (block[ctr + 0] == '\n')) endLen = 1;
+								if (((block[ctr + 0] == '\r') && (block[ctr + 1] == '\n')) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == '\r'))) endLen = 2;
+								break;
+							case StrCoder.CodePage.UTF16LE:
+								if (((block[ctr + 0] == '\r') && (block[ctr + 1] == 0)) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == 0))) endLen = 2;
+								if (((block[ctr + 0] == '\r') && (block[ctr + 1] == 0) && (block[ctr + 2] == '\n') && (block[ctr + 3] == 0)) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == 0) && (block[ctr + 2] == '\r') && (block[ctr + 3] == 0))) endLen = 4;
+								break;
+							case StrCoder.CodePage.UTF16BE:
+								if (((block[ctr + 0] == 0) && (block[ctr + 1] == '\r')) || ((block[ctr + 0] == 0) && (block[ctr + 1] == '\n'))) endLen = 2;
+								if (((block[ctr + 0] == 0) && (block[ctr + 1] == '\r') && (block[ctr + 2] == 0) && (block[ctr + 3] == '\n')) || ((block[ctr + 0] == 0) && (block[ctr + 1] == '\n') && (block[ctr + 2] == 0) && (block[ctr + 3] == '\r'))) endLen = 4;
+								break;
+							case StrCoder.CodePage.UTF32LE:
+								if (((block[ctr + 0] == '\r') && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == 0)) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == 0))) endLen = 4;
+								if (((block[ctr + 0] == '\r') && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == 0) && (block[ctr + 4] == '\n') && (block[ctr + 5] == 0) && (block[ctr + 6] == 0) && (block[ctr + 7] == 0)) || ((block[ctr + 0] == '\n') && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == 0) && (block[ctr + 4] == '\r') && (block[ctr + 5] == 0) && (block[ctr + 6] == 0) && (block[ctr + 7] == 0))) endLen = 8;
+								break;
+							case StrCoder.CodePage.UTF32BE:
+								if (((block[ctr + 0] == 0) && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == '\r')) || ((block[ctr + 0] == 0) && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == '\n'))) endLen = 4;
+								if (((block[ctr + 0] == 0) && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == '\r') && (block[ctr + 4] == 0) && (block[ctr + 5] == 0) && (block[ctr + 6] == 0) && (block[ctr + 7] == '\n')) || ((block[ctr + 0] == 0) && (block[ctr + 1] == 0) && (block[ctr + 2] == 0) && (block[ctr + 3] == '\n') && (block[ctr + 4] == 0) && (block[ctr + 5] == 0) && (block[ctr + 6] == 0) && (block[ctr + 7] == '\r'))) endLen = 8;
+								break;
+						}
+
+						if (endLen != 0)
+						{
+							lineStart.Add(position + ctr + endLen);
+							ctr += endLen - charSize;
+							endLen = 0;
+						}
 					}
+					position += ctr;
 				}
-				position += ctr;
-			}
-			if (lineStart.Last() != length)
-				lineStart.Add(length);
-			lines = lineStart.Count - 1;
+				if (lineStart.Last() != length)
+					lineStart.Add(length);
+				NumLines = lineStart.Count - 1;
+			};
+			worker.RunWorkerAsync();
 		}
 
 		byte[] Read(long position, int size)

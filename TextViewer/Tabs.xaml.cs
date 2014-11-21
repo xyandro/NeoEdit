@@ -12,7 +12,7 @@ namespace NeoEdit.TextView
 {
 	public class Tabs : Tabs<TextViewer> { }
 
-	public partial class TextViewerTabs
+	partial class TextViewerTabs
 	{
 		[DepProp]
 		public ObservableCollection<TextViewer> TextViewers { get { return UIHelper<TextViewerTabs>.GetPropValue<ObservableCollection<TextViewer>>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
@@ -26,7 +26,7 @@ namespace NeoEdit.TextView
 		public static TextViewerTabs Create(string filename = null, bool createNew = false)
 		{
 			var textViewerTabs = (!createNew ? UIHelper<TextViewerTabs>.GetNewest() : null) ?? new TextViewerTabs();
-			textViewerTabs.Add(new TextViewer(filename));
+			textViewerTabs.Add(filename);
 			return textViewerTabs;
 		}
 
@@ -53,7 +53,7 @@ namespace NeoEdit.TextView
 				return;
 
 			foreach (var filename in dialog.FileNames)
-				Add(new TextViewer(filename));
+				Add(filename);
 		}
 
 		void Command_File_OpenCopiedCutFiles()
@@ -73,7 +73,7 @@ namespace NeoEdit.TextView
 				return;
 
 			foreach (var file in files)
-				Add(new TextViewer(file));
+				Add(file);
 		}
 
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
@@ -101,10 +101,12 @@ namespace NeoEdit.TextView
 			}
 		}
 
-		void Add(TextViewer textViewer)
+		void Add(string filename)
 		{
-			TextViewers.Add(textViewer);
-			Active = textViewer;
+			if (filename == null)
+				return;
+
+			new TextData(filename, data => TextViewers.Add(Active = new TextViewer(data)));
 		}
 
 		Label GetLabel(TextViewer textViewer)
