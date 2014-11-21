@@ -29,11 +29,55 @@ namespace NeoEdit.TextEditor
 
 		static TextEditorTabs() { UIHelper<TextEditorTabs>.Register(); }
 
-		public static TextEditorTabs Create(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false)
+		public static void Create(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false)
 		{
-			var textEditorTabs = (!createNew ? UIHelper<TextEditorTabs>.GetNewest() : null) ?? new TextEditorTabs();
-			textEditorTabs.Add(new TextEditor(filename, bytes, codePage, line, column));
-			return textEditorTabs;
+			var textEditor = CreateTextEditor(filename, bytes, codePage, line, column);
+			if (textEditor == null)
+				return;
+
+			((!createNew ? UIHelper<TextEditorTabs>.GetNewest() : null) ?? new TextEditorTabs()).Add(textEditor);
+		}
+
+		static TextEditor CreateTextEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, int line = -1, int column = -1)
+		{
+			if (filename != null)
+			{
+				var fileInfo = new FileInfo(filename);
+				if (fileInfo.Exists)
+				{
+					if (fileInfo.Length > 52428800) // 50 MB
+					{
+						switch (new Message
+						{
+							Title = "Confirm",
+							Text = "The file you are trying to open is very large.  Would you like to open it in the text viewer instead?",
+							Options = Message.OptionsEnum.YesNoCancel,
+							DefaultAccept = Message.OptionsEnum.Yes,
+							DefaultCancel = Message.OptionsEnum.Cancel,
+						}.Show())
+						{
+							case Message.OptionsEnum.Yes: Launcher.Static.LaunchTextViewer(filename); return null;
+							case Message.OptionsEnum.No: break;
+							case Message.OptionsEnum.Cancel: return null;
+						}
+					}
+					//{
+					//	// Using MessageBox instead of Message because Message caused program to exit if it was created first
+					//	switch (MessageBox.Show(
+					//		caption: "Confirm",
+					//		messageBoxText: "The file you are trying to open is very large.  Would you like to open it in the text viewer instead?",
+					//		button: MessageBoxButton.YesNoCancel
+					//	))
+					//	{
+					//		case MessageBoxResult.Yes: Launcher.Static.LaunchTextViewer(filename); return null;
+					//		case MessageBoxResult.No: break;
+					//		case MessageBoxResult.Cancel: return null;
+					//	}
+					//}
+				}
+			}
+
+			return new TextEditor(filename, bytes, codePage, line, column);
 		}
 
 		TextEditorTabs()
@@ -69,7 +113,7 @@ namespace NeoEdit.TextEditor
 		void Command_File_Open(OpenFileDialogResult result)
 		{
 			foreach (var filename in result.files)
-				Add(new TextEditor(filename));
+				Add(CreateTextEditor(filename));
 		}
 
 		void Command_File_OpenCopiedCutFiles()
@@ -89,7 +133,7 @@ namespace NeoEdit.TextEditor
 				return;
 
 			foreach (var file in files)
-				Add(new TextEditor(file));
+				Add(CreateTextEditor(file));
 		}
 
 		const string quickMacroFilename = "Quick.xml";
@@ -285,7 +329,7 @@ namespace NeoEdit.TextEditor
 		{
 			switch (command)
 			{
-				case TextEditCommand.File_New: Add(new TextEditor()); break;
+				case TextEditCommand.File_New: Add(CreateTextEditor()); break;
 				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextEditCommand.File_Exit: Close(); break;
@@ -534,6 +578,9 @@ namespace NeoEdit.TextEditor
 
 		void Add(TextEditor textEditor)
 		{
+			if (textEditor == null)
+				return;
+
 			if ((Active != null) && (Active.Empty()))
 			{
 				var index = TextEditors.IndexOf(Active);

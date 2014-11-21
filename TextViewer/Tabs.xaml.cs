@@ -23,11 +23,9 @@ namespace NeoEdit.TextView
 
 		static TextViewerTabs() { UIHelper<TextViewerTabs>.Register(); }
 
-		public static TextViewerTabs Create(string filename = null, bool createNew = false)
+		public static void Create(string filename = null, bool createNew = false)
 		{
-			var textViewerTabs = (!createNew ? UIHelper<TextViewerTabs>.GetNewest() : null) ?? new TextViewerTabs();
-			textViewerTabs.Add(filename);
-			return textViewerTabs;
+			((!createNew ? UIHelper<TextViewerTabs>.GetNewest() : null) ?? new TextViewerTabs()).Add(filename);
 		}
 
 		TextViewerTabs()
@@ -106,7 +104,12 @@ namespace NeoEdit.TextView
 			if (filename == null)
 				return;
 
-			new TextData(filename, data => TextViewers.Add(Active = new TextViewer(data)));
+			new TextData(filename, data =>
+			{
+				var textViewer = new TextViewer(data);
+				TextViewers.Add(textViewer);
+				Active = textViewer;
+			});
 		}
 
 		Label GetLabel(TextViewer textViewer)

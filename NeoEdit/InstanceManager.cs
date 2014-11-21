@@ -27,14 +27,7 @@ namespace NeoEdit
 		protected override void OnStartupNextInstance(Microsoft.VisualBasic.ApplicationServices.StartupNextInstanceEventArgs e)
 		{
 			base.OnStartupNextInstance(e);
-			var window = app.GetWindowFromArgs(e.CommandLine.ToArray());
-			if (window != null)
-			{
-				window.Activate();
-				window.Topmost = true;
-				window.Topmost = false;
-				window.Focus();
-			}
+			app.CreateWindowFromArgs(e.CommandLine.ToArray());
 		}
 	}
 }

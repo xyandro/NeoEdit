@@ -35,7 +35,6 @@ Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Error on refresh file with no name
 Ignore unchanged filenames on move files
-Suggest viewer if file > 50 MB
 
 Binary:
 Fix binary editor backwards search

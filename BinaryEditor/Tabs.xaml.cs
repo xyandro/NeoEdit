@@ -27,11 +27,9 @@ namespace NeoEdit.BinaryEditor
 
 		static BinaryEditorTabs() { UIHelper<BinaryEditorTabs>.Register(); }
 
-		static BinaryEditorTabs Create(BinaryData data, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool createNew = false)
+		static void Create(BinaryData data, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool createNew = false)
 		{
-			var binaryEditorTabs = (!createNew ? UIHelper<BinaryEditorTabs>.GetNewest() : null) ?? new BinaryEditorTabs();
-			binaryEditorTabs.Add(new BinaryEditor(data, codePage, filename, filetitle));
-			return binaryEditorTabs;
+			((!createNew ? UIHelper<BinaryEditorTabs>.GetNewest() : null) ?? new BinaryEditorTabs()).Add(new BinaryEditor(data, codePage, filename, filetitle));
 		}
 
 		BinaryEditorTabs()
@@ -48,7 +46,7 @@ namespace NeoEdit.BinaryEditor
 			Active = binaryEditor;
 		}
 
-		public static BinaryEditorTabs CreateFromFile(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
+		public static void CreateFromFile(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
 		{
 			if (bytes == null)
 			{
@@ -57,22 +55,22 @@ namespace NeoEdit.BinaryEditor
 				else
 					bytes = File.ReadAllBytes(filename);
 			}
-			return Create(new MemoryBinaryData(bytes), codePage, filename, createNew: createNew);
+			Create(new MemoryBinaryData(bytes), codePage, filename, createNew: createNew);
 		}
 
-		public static BinaryEditorTabs CreateFromDump(string filename, bool createNew = false)
+		public static void CreateFromDump(string filename, bool createNew = false)
 		{
-			return Create(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ", createNew: createNew);
+			Create(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ", createNew: createNew);
 		}
 
-		public static BinaryEditorTabs CreateFromProcess(int pid, bool createNew = false)
+		public static void CreateFromProcess(int pid, bool createNew = false)
 		{
 			var process = Process.GetProcessById(pid);
 			if (process == null)
 				throw new ArgumentException("Process doesn't exist.");
 			if (process.Id == Process.GetCurrentProcess().Id)
 				throw new ArgumentException("Can't open current process.");
-			return Create(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName), createNew: createNew);
+			Create(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName), createNew: createNew);
 		}
 
 		Label GetLabel(BinaryEditor binaryEditor)

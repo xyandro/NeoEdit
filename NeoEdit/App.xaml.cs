@@ -26,7 +26,11 @@ namespace NeoEdit
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
-			if (GetWindowFromArgs(e.Args) == null)
+			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
+			ShutdownMode = ShutdownMode.OnExplicitShutdown;
+			CreateWindowFromArgs(e.Args);
+			ShutdownMode = ShutdownMode.OnLastWindowClose;
+			if (Application.Current.Windows.Count == 0)
 				Application.Current.Shutdown();
 		}
 
@@ -58,35 +62,40 @@ namespace NeoEdit
 
 		}
 
-		public Window GetWindowFromArgs(string[] args)
+		public void CreateWindowFromArgs(string[] args)
 		{
 			try
 			{
 				args = args.Where(arg => arg != "multi").ToArray();
 				if (args.Length == 0)
-					return new DiskTabs();
+				{
+					new DiskTabs();
+					return;
+				}
 
 				switch (args[0])
 				{
 					case "about":
-						return new AboutWindow();
+						new AboutWindow();
+						return;
 					case "system":
 					case "systeminfo":
-						return new SystemInfoWindow();
+						new SystemInfoWindow();
+						return;
 					case "console":
-						return new ConsoleTabs();
+						new ConsoleTabs();
+						return;
 					case "consolerunner":
-						{
-							new Console.ConsoleRunner(args.Skip(1).ToArray());
-							return null;
-						}
+						new Console.ConsoleRunner(args.Skip(1).ToArray());
+						return;
 					case "disk":
 					case "disks":
 						{
 							string location = null;
 							if (args.Length > 1)
 								location = args[1];
-							return new DiskTabs(location);
+							new DiskTabs(location);
+							return;
 						}
 					case "text":
 					case "textedit":
@@ -108,7 +117,8 @@ namespace NeoEdit
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							return TextEditorTabs.Create(filename, line: line, column: column);
+							TextEditorTabs.Create(filename, line: line, column: column);
+							return;
 						}
 					case "view":
 					case "textview":
@@ -122,7 +132,8 @@ namespace NeoEdit
 									throw new ArgumentException("Invalid file.");
 							}
 
-							return TextViewerTabs.Create(filename);
+							TextViewerTabs.Create(filename);
+							return;
 						}
 					case "binary":
 					case "binaryedit":
@@ -136,21 +147,24 @@ namespace NeoEdit
 									throw new ArgumentException("Invalid file.");
 							}
 
-							return BinaryEditorTabs.CreateFromFile(filename);
+							BinaryEditorTabs.CreateFromFile(filename);
+							return;
 						}
 					case "binarypid":
 						{
 							if (args.Length < 2)
 								throw new ArgumentException("Not enough parameters.");
 
-							return BinaryEditorTabs.CreateFromProcess(Convert.ToInt32(args[1]));
+							BinaryEditorTabs.CreateFromProcess(Convert.ToInt32(args[1]));
+							return;
 						}
 					case "binarydump":
 						{
 							if (args.Length < 2)
 								throw new ArgumentException("Not enough parameters.");
 
-							return BinaryEditorTabs.CreateFromDump(args[1]);
+							BinaryEditorTabs.CreateFromDump(args[1]);
+							return;
 						}
 					case "process":
 					case "processes":
@@ -158,7 +172,8 @@ namespace NeoEdit
 							int? pid = null;
 							if (args.Length > 1)
 								pid = Convert.ToInt32(args[1]);
-							return new ProcessesWindow(pid);
+							new ProcessesWindow(pid);
+							return;
 						}
 					case "handle":
 					case "handles":
@@ -166,19 +181,22 @@ namespace NeoEdit
 							int? pid = null;
 							if (args.Length > 1)
 								pid = Convert.ToInt32(args[1]);
-							return new HandlesWindow(pid);
+							new HandlesWindow(pid);
+							return;
 						}
 					case "registry":
 						{
 							string key = null;
 							if (args.Length > 1)
 								key = args[1];
-							return new RegistryWindow(key);
+							new RegistryWindow(key);
+							return;
 						}
 					case "db":
 					case "dbview":
 					case "dbviewer":
-						return new DBViewerWindow();
+						new DBViewerWindow();
+						return;
 					case "gzip":
 						{
 							var data = File.ReadAllBytes(args[1]);
@@ -197,8 +215,6 @@ namespace NeoEdit
 				}
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }
-
-			return null;
 		}
 
 		public App()
