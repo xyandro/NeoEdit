@@ -1,0 +1,86 @@
+﻿<Window Name="self" x:Class="NeoEdit.TextEdit.Dialogs.SortDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
+	Title="Sort" SizeToContent="WidthAndHeight">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<GroupBox Grid.Row="0" Header="What to sort:">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition x:Name="col0" Width="100"/>
+					<ColumnDefinition x:Name="col1" Width="{Binding Width, ElementName=col0}"/>
+					<ColumnDefinition x:Name="col2" Width="{Binding Width, ElementName=col0}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<RadioButton Grid.Row="0" Grid.Column="0" GroupName="sortScope" Content="_Selections" IsChecked="{Binding SortScope, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Selections}"/>
+				<RadioButton Grid.Row="0" Grid.Column="1" GroupName="sortScope" Content="_Lines" IsChecked="{Binding SortScope, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Lines}"/>
+				<RadioButton Grid.Row="0" Grid.Column="2" GroupName="sortScope" Content="_Regions" IsChecked="{Binding SortScope, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Regions}"/>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="1" Header="_How to sort it:">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col1}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col2}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition Height="10"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<RadioButton Grid.Row="0" Grid.Column="0" GroupName="sortType" Content="S_tring" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=String}"/>
+				<RadioButton Grid.Row="0" Grid.Column="1" GroupName="sortType" Content="Str_ing (Raw)" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=StringRaw}"/>
+				<RadioButton Grid.Row="0" Grid.Column="2" GroupName="sortType" Content="_Numeric" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Numeric}"/>
+				<RadioButton Grid.Row="1" Grid.Column="0" GroupName="sortType" Content="Dat_e/Time" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=DateTime}"/>
+				<RadioButton Grid.Row="1" Grid.Column="1" GroupName="sortType" Content="_Keys" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Keys}"/>
+				<RadioButton Grid.Row="1" Grid.Column="2" GroupName="sortType" Content="Re_verse" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Reverse}"/>
+				<RadioButton Grid.Row="2" Grid.Column="0" GroupName="sortType" Content="Rando_mize" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Randomize}"/>
+				<RadioButton Grid.Row="2" Grid.Column="1" GroupName="sortType" Content="Len_gth" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Length}"/>
+
+				<CheckBox Grid.Row="4" Grid.Column="0" Content="_Case Sensitive" IsChecked="{Binding CaseSensitive, ElementName=self}"/>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="2" Header="Order:">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col1}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col2}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<RadioButton Grid.Row="0" Grid.Column="0" GroupName="ascending" Name="ascending" Content="_Ascending" IsChecked="{Binding Ascending, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=True}"/>
+				<RadioButton Grid.Row="0" Grid.Column="1" GroupName="ascending" Content="_Descending" IsChecked="{Binding Ascending, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=False}"/>
+			</Grid>
+		</GroupBox>
+
+		<UniformGrid Grid.Row="4" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+</Window>

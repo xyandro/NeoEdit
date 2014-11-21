@@ -1,0 +1,47 @@
+﻿<Window Name="self" x:Class="NeoEdit.TextEdit.Dialogs.ConvertDateTimeDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Convert Date/Time" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=outputFormat}">
+
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition Width="500"/>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_Input format:" Target="{Binding ElementName=inputFormat}"/>
+		<ComboBox Grid.Row="0" Grid.Column="1" Name="inputFormat" IsEditable="True" Text="{Binding InputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="0" Grid.Column="2" Content="_UTC" Target="{Binding ElementName=inputUTC}"/>
+		<CheckBox Grid.Row="0" Grid.Column="3" Name="inputUTC" IsChecked="{Binding InputUTC, ElementName=self}" VerticalAlignment="Center"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="Example:"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Example, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
+
+		<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ParsedExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
+
+		<Label Grid.Row="4" Grid.Column="0" Content="_Output format:" Target="{Binding ElementName=outputFormat}"/>
+		<ComboBox Grid.Row="4" Grid.Column="1" Name="outputFormat" IsEditable="True" Text="{Binding OutputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="4" Grid.Column="2" Content="U_TC" Target="{Binding ElementName=outputUTC}"/>
+		<CheckBox Grid.Row="4" Grid.Column="3" Name="outputUTC" IsChecked="{Binding OutputUTC, ElementName=self}" VerticalAlignment="Center"/>
+
+		<Label Grid.Row="5" Grid.Column="0" Content="Result:"/>
+		<TextBox Grid.Row="5" Grid.Column="1" Text="{Binding OutputExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
+
+		<UniformGrid Grid.Row="7" Grid.ColumnSpan="4" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+</Window>

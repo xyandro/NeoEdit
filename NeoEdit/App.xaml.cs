@@ -16,7 +16,7 @@ using NeoEdit.Handles;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
-using NeoEdit.TextEditor;
+using NeoEdit.TextEdit;
 using NeoEdit.TextView;
 
 namespace NeoEdit
@@ -117,7 +117,7 @@ namespace NeoEdit
 							if (args.Length > 3)
 								column = Convert.ToInt32(args[3]);
 
-							TextEditorTabs.Create(filename, line: line, column: column);
+							TextEditTabs.Create(filename, line: line, column: column);
 							return;
 						}
 					case "view":
@@ -223,7 +223,7 @@ namespace NeoEdit
 
 			NeoEdit.GUI.Launcher.Initialize(
 				systemInfo: () => new SystemInfoWindow(),
-				textEditor: (filename, bytes, encoding, createNew) => TextEditorTabs.Create(filename, bytes, encoding, createNew: createNew),
+				textEditor: (filename, bytes, encoding, createNew) => TextEditTabs.Create(filename, bytes, encoding, createNew: createNew),
 				textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew),
 				fileBinaryEditor: (filename, binarydata, encoder, createNew) => BinaryEditTabs.CreateFromFile(filename, binarydata, encoder, createNew),
 				processBinaryEditor: (pid) => BinaryEditTabs.CreateFromProcess(pid),

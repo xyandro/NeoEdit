@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Registry", "Registry\Regist
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemInfo", "SystemInfo\SystemInfo.csproj", "{5FC0FBFF-7CE1-4540-9E41-D757D0D9708D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEditor", "TextEditor\TextEditor.csproj", "{9A35AB82-2481-4C44-B51E-66DF7D248EAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEdit", "TextEdit\TextEdit.csproj", "{9A35AB82-2481-4C44-B51E-66DF7D248EAD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32", "Win32\Win32.vcxproj", "{95A660DC-FBFE-4560-A433-0B024494B213}"
 EndProject

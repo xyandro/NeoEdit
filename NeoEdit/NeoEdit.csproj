@@ -75,9 +75,9 @@
       <Project>{5fc0fbff-7ce1-4540-9e41-d757d0d9708d}</Project>
       <Name>SystemInfo</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TextEditor\TextEditor.csproj">
+    <ProjectReference Include="..\TextEdit\TextEdit.csproj">
       <Project>{9a35ab82-2481-4c44-b51e-66df7d248ead}</Project>
-      <Name>TextEditor</Name>
+      <Name>TextEdit</Name>
     </ProjectReference>
     <ProjectReference Include="..\TextViewer\TextView.csproj">
       <Project>{46568e12-8f80-492e-aed8-647c2386c3e9}</Project>
