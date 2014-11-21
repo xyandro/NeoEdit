@@ -79,7 +79,7 @@
       <Project>{9a35ab82-2481-4c44-b51e-66df7d248ead}</Project>
       <Name>TextEdit</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TextViewer\TextView.csproj">
+    <ProjectReference Include="..\TextView\TextView.csproj">
       <Project>{46568e12-8f80-492e-aed8-647c2386c3e9}</Project>
       <Name>TextView</Name>
     </ProjectReference>
