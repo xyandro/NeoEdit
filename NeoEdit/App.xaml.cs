@@ -17,6 +17,7 @@ using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
 using NeoEdit.TextEditor;
+using NeoEdit.TextView;
 
 namespace NeoEdit
 {
@@ -109,6 +110,19 @@ namespace NeoEdit
 
 							return TextEditorTabs.Create(filename, line: line, column: column);
 						}
+					case "textview":
+					case "textviewer":
+						{
+							string filename = null;
+							if (args.Length > 1)
+							{
+								filename = args[1];
+								if (!File.Exists(filename))
+									throw new ArgumentException("Invalid file.");
+							}
+
+							return TextViewerTabs.Create(filename);
+						}
 					case "binary":
 					case "binaryedit":
 					case "binaryeditor":
@@ -193,6 +207,7 @@ namespace NeoEdit
 			NeoEdit.GUI.Launcher.Initialize(
 				systemInfo: () => new SystemInfoWindow(),
 				textEditor: (filename, bytes, encoding, createNew) => TextEditorTabs.Create(filename, bytes, encoding, createNew: createNew),
+				textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew),
 				fileBinaryEditor: (filename, binarydata, encoder, createNew) => BinaryEditorTabs.CreateFromFile(filename, binarydata, encoder, createNew),
 				processBinaryEditor: (pid) => BinaryEditorTabs.CreateFromProcess(pid),
 				disk: () => new DiskTabs(),

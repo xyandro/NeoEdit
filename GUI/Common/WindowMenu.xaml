@@ -13,6 +13,7 @@
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_DBViewer" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_BinaryEditor" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_TextEditor" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_TextViewer" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Executed="CommandBinding_Executed"/>
 	</MenuItem.CommandBindings>
 
@@ -27,9 +28,10 @@
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Processes" Header="_Processes"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Handles" Header="_Handles"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Registry" Header="_Registry"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_DBViewer" Header="DB _Viewer"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_DBViewer" Header="DB Viewer"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_BinaryEditor" Header="_Binary Editor"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextEditor" Header="_Text Editor"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextViewer" Header="Text _Viewer"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Header="_System Info"/>
 
 </MenuItem>

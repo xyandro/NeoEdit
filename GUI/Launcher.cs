@@ -10,6 +10,7 @@ namespace NeoEdit.GUI
 
 		protected Action systemInfoLauncher;
 		protected Action<string, byte[], StrCoder.CodePage, bool> textEditorLauncher;
+		protected Action<string, bool> textViewerLauncher;
 		protected Action<string, byte[], StrCoder.CodePage, bool> fileBinaryEditorLauncher;
 		protected Action<int> processBinaryEditorLauncher;
 		protected Action diskLauncher;
@@ -21,6 +22,7 @@ namespace NeoEdit.GUI
 		public static void Initialize(
 			Action systemInfo,
 			Action<string, byte[], StrCoder.CodePage, bool> textEditor,
+			Action<string, bool> textViewer,
 			Action<string, byte[], StrCoder.CodePage, bool> fileBinaryEditor,
 			Action<int> processBinaryEditor,
 			Action disk,
@@ -35,6 +37,7 @@ namespace NeoEdit.GUI
 			{
 				systemInfoLauncher = systemInfo,
 				textEditorLauncher = textEditor,
+				textViewerLauncher = textViewer,
 				fileBinaryEditorLauncher = fileBinaryEditor,
 				processBinaryEditorLauncher = processBinaryEditor,
 				diskLauncher = disk,
@@ -54,6 +57,11 @@ namespace NeoEdit.GUI
 		public void LaunchTextEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
 		{
 			textEditorLauncher(filename, bytes, codePage, createNew);
+		}
+
+		public void LaunchTextViewer(string filename = null, bool createNew = false)
+		{
+			textViewerLauncher(filename, createNew);
 		}
 
 		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)

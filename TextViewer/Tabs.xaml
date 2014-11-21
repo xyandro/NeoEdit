@@ -1,0 +1,33 @@
+﻿<Window Name="self" x:Class="NeoEdit.TextView.TextViewerTabs"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
+	xmlns:textView="clr-namespace:NeoEdit.TextView"
+	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
+
+	<Window.Title>
+		<!--A simple Binding doesn't give any title if [0] blank-->
+		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="StrFormat('{0} - NeoEdit Text Viewer', [0])">
+			<Binding Path="Active.FileName" ElementName="self"/>
+		</MultiBinding>
+	</Window.Title>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<textView:TextViewMenu Parent="{Binding ElementName=self}"/>
+
+		<textView:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" GetLabel="GetLabel" VerticalAlignment="Stretch"
+			Items="{Binding TextViewers, ElementName=self, Mode=TwoWay}"
+			Active="{Binding Active, ElementName=self, Mode=TwoWay}"
+			View="{Binding View, ElementName=self, Mode=TwoWay}"
+		/>
+	</Grid>
+
+</Window>

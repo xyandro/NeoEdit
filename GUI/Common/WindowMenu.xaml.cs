@@ -14,6 +14,7 @@ namespace NeoEdit.GUI.Common
 		public static RoutedCommand Command_Window_DBViewer = new RoutedCommand();
 		public static RoutedCommand Command_Window_BinaryEditor = new RoutedCommand();
 		public static RoutedCommand Command_Window_TextEditor = new RoutedCommand();
+		public static RoutedCommand Command_Window_TextViewer = new RoutedCommand();
 		public static RoutedCommand Command_Window_SystemInfo = new RoutedCommand();
 
 		public static DependencyProperty ParentWindowProperty = DependencyProperty.Register("ParentWindow", typeof(Window), typeof(WindowMenu), new PropertyMetadata((d, e) => (d as WindowMenu).OnParentWindowChanged()));
@@ -51,6 +52,8 @@ namespace NeoEdit.GUI.Common
 				Launcher.Static.LaunchBinaryEditor(createNew: true);
 			else if (e.Command == Command_Window_TextEditor)
 				Launcher.Static.LaunchTextEditor(createNew: true);
+			else if (e.Command == Command_Window_TextViewer)
+				Launcher.Static.LaunchTextViewer();
 			else if (e.Command == Command_Window_SystemInfo)
 				Launcher.Static.LaunchSystemInfo();
 		}

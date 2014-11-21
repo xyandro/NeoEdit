@@ -45,6 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-4
 		Todo.txt = Todo.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextView", "TextViewer\TextView.csproj", "{46568E12-8F80-492E-AED8-647C2386C3E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -173,6 +175,14 @@ Global
 		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Release|x64.Build.0 = Release|x64
 		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Release|x86.ActiveCfg = Release|Win32
 		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Release|x86.Build.0 = Release|Win32
+		{46568E12-8F80-492E-AED8-647C2386C3E9}.Debug|x64.ActiveCfg = Debug|x64
+		{46568E12-8F80-492E-AED8-647C2386C3E9}.Debug|x64.Build.0 = Debug|x64
+		{46568E12-8F80-492E-AED8-647C2386C3E9}.Debug|x86.ActiveCfg = Debug|x86
+		{46568E12-8F80-492E-AED8-647C2386C3E9}.Debug|x86.Build.0 = Debug|x86
+		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x64.ActiveCfg = Release|x64
+		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x64.Build.0 = Release|x64
+		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x86.ActiveCfg = Release|x86
+		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

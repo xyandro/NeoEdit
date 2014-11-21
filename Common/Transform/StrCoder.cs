@@ -320,5 +320,10 @@ namespace NeoEdit.Common.Transform
 		{
 			return (codePage == CodePage.Hex) || (codePage == CodePage.Base64);
 		}
+
+		public static Encoding GetEncoding(CodePage codePage)
+		{
+			return NEEncodingDictionary[codePage].encoding;
+		}
 	}
 }
