@@ -4,6 +4,7 @@ Starting 2nd instance pops up in background
 Tabs: Ctrl-Tab to switch
 Add command prompt
 Diff?
+Large file viewer
 
 Disk:
 Select by SVN ignore
@@ -31,6 +32,9 @@ Distinct operations by marked region (sort/series/etc within region)
 Select square (right mouse button)
 Insert copied files
 Get enclosing region
+Select based on type (int, double, datetime, etc)
+Copy counts based on searches
+Error on refresh file with no name
 
 Binary:
 Fix binary editor backwards search
