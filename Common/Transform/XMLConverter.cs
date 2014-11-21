@@ -22,8 +22,8 @@ namespace NeoEdit.Common.Transform
 			var converter = new XMLConverter();
 			var xml = converter.rToXML(obj, name, null, false) as XElement;
 			xml.Add(new XElement("NameMapping",
-				new XElement("FieldNames", converter.fieldNames.Where(pair => pair.Key != pair.Value).Select(pair => new XElement("FieldName", new XAttribute("Key", pair.Key), new XAttribute("Value", pair.Value)))),
-				new XElement("TypeNames", converter.typeNames.Where(pair => pair.Key != pair.Value).Select(pair => new XElement("TypeName", new XAttribute("Key", pair.Key), new XAttribute("Value", pair.Value))))
+				new XElement("FieldNames", converter.fieldNames.Select(pair => new XElement("FieldName", new XAttribute("Key", pair.Key), new XAttribute("Value", pair.Value)))),
+				new XElement("TypeNames", converter.typeNames.Select(pair => new XElement("TypeName", new XAttribute("Key", pair.Key), new XAttribute("Value", pair.Value))))
 			));
 			return xml;
 		}
@@ -97,8 +97,7 @@ namespace NeoEdit.Common.Transform
 				var typeName = xml.Attribute("Type").Value;
 				if (typeName == "null")
 					return null;
-				typeName = typeNames.ContainsKey(typeName) ? typeNames[typeName] : typeName;
-				type = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(typeName)).First(val => val != null);
+				type = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(typeNames[typeName])).First(val => val != null);
 			}
 
 			object raw;
@@ -114,7 +113,9 @@ namespace NeoEdit.Common.Transform
 			var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 			foreach (var field in fields)
 			{
-				var name = fieldNames.ContainsKey(field.Name) ? fieldNames[field.Name] : field.Name;
+				if (!fieldNames.ContainsKey(field.Name))
+					continue;
+				var name = fieldNames[field.Name];
 				if (xml.Element(name) != null)
 					field.SetValue(obj, rFromXML(xml.Element(name), field.FieldType));
 				else if ((xml.Attribute(name) != null) && (FromRaw(field.FieldType, xml.Attribute(name).Value, out raw)))
