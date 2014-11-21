@@ -169,7 +169,7 @@ namespace NeoEdit.Common.Transform
 					name = "List-" + EscapeType(type.GetGenericArguments()[0]);
 				else if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
 					name = "Dictionary-" + EscapeType(type.GetGenericArguments()[0]) + "-" + EscapeType(type.GetGenericArguments()[1]);
-				name = GetUniqueName(name, new HashSet<string>(typeNames.Keys));
+				name = GetUniqueName(name, new HashSet<string>(typeNames.Values));
 				typeNames[type.FullName] = name;
 			}
 
