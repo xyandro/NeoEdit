@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextView
 {
@@ -84,6 +85,39 @@ namespace NeoEdit.TextView
 		internal void Command_File_CopyPath()
 		{
 			ClipboardWindow.SetFiles(new List<string> { FileName }, false);
+		}
+
+		internal void Command_Edit_Copy()
+		{
+			int selStartLine, selStartColumn, selEndLine, selEndColumn;
+			GetSel(out selStartLine, out selStartColumn, out selEndLine, out selEndColumn);
+			var estimate = data.GetSizeEstimate(selStartLine, selEndLine);
+			if (estimate >= 10485760)
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = String.Format("The data you are attempting to copy is roughly {0:n0} bytes.  Are you sure you want to do this?", estimate),
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.No,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() != Message.OptionsEnum.Yes)
+					return;
+			}
+
+			var lines = data.GetLines(selStartLine, Math.Min(selEndLine + 1, data.NumLines), false);
+			var result = "";
+			for (var line = selStartLine; (line <= selEndLine) && (line - selStartLine < lines.Count); ++line)
+			{
+				var str = lines[line - selStartLine];
+				if (line == selEndLine)
+					str = str.Substring(0, Math.Min(str.Length, selEndColumn));
+				if (line == selStartLine)
+					str = str.Substring(Math.Min(str.Length, selStartColumn));
+				result += str;
+			}
+			if (result.Length != 0)
+				ClipboardWindow.Set(new List<string> { result });
 		}
 
 		void GetSel(out int startLine, out int startColumn, out int endLine, out int endColumn)

@@ -105,8 +105,9 @@ namespace NeoEdit.TextView
 			return GetLines(line, line + 1).First();
 		}
 
-		string TabFormatLine(string str)
+		string FormatLine(string str)
 		{
+			str = str.TrimEnd('\r', '\n');
 			const int tabStop = 4;
 			var index = 0;
 			var sb = new StringBuilder();
@@ -131,14 +132,24 @@ namespace NeoEdit.TextView
 			return sb.ToString();
 		}
 
-		public List<string> GetLines(int startLine, int endLine)
+		public List<string> GetLines(int startLine, int endLine, bool format = true)
 		{
 			var result = new List<string>();
 			var startOffset = lineStart[startLine];
 			var data = Read(startOffset, (int)(lineStart[endLine] - startOffset));
 			for (var line = startLine; line < endLine; ++line)
-				result.Add(TabFormatLine(encoder.GetString(data, (int)(lineStart[line] - startOffset), (int)(lineStart[line + 1] - lineStart[line])).TrimEnd('\r', '\n')));
+			{
+				var str = encoder.GetString(data, (int)(lineStart[line] - startOffset), (int)(lineStart[line + 1] - lineStart[line]));
+				if (format)
+					str = FormatLine(str);
+				result.Add(str);
+			}
 			return result;
+		}
+
+		public long GetSizeEstimate(int startLine, int endLine)
+		{
+			return lineStart[endLine] - lineStart[startLine];
 		}
 
 		public void Close()
