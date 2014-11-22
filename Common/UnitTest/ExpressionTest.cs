@@ -16,6 +16,13 @@ namespace NeoEdit.Common.UnitTest
 		[TestMethod]
 		public void ExpressionTest()
 		{
+			Assert.AreEqual(new Expression("2 << 2").Evaluate().ToString(), "8");
+			Assert.AreEqual(new Expression("1048576 >> 10").Evaluate().ToString(), "1024");
+
+			Assert.AreEqual(new Expression("&").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "179154957");
+			Assert.AreEqual(new Expression("^").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3573567202");
+			Assert.AreEqual(new Expression("|").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3752722159");
+
 			Assert.AreEqual(new Expression("TRUE").Evaluate().ToString(), "True");
 			Assert.AreEqual(new Expression("FaLsE").Evaluate().ToString(), "False");
 
