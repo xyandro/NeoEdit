@@ -57,6 +57,7 @@
 				<RadioButton Grid.Row="1" Grid.Column="2" GroupName="sortType" Content="Re_verse" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Reverse}"/>
 				<RadioButton Grid.Row="2" Grid.Column="0" GroupName="sortType" Content="Rando_mize" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Randomize}"/>
 				<RadioButton Grid.Row="2" Grid.Column="1" GroupName="sortType" Content="Len_gth" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Length}"/>
+				<RadioButton Grid.Row="2" Grid.Column="2" GroupName="sortType" Content="_Frequency" IsChecked="{Binding SortType, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Frequency}"/>
 
 				<CheckBox Grid.Row="4" Grid.Column="0" Content="_Case Sensitive" IsChecked="{Binding CaseSensitive, ElementName=self}"/>
 			</Grid>
