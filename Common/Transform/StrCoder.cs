@@ -19,7 +19,8 @@ namespace NeoEdit.Common.Transform
 			UTF32BE = 12001,
 			Default = 0,
 			Hex = -1,
-			Base64 = -2,
+			Binary = -2,
+			Base64 = -3,
 		}
 
 		class NEEncoding
@@ -65,6 +66,7 @@ namespace NeoEdit.Common.Transform
 				new NEEncoding(CodePage.UTF32LE, "UTF32 (Little endian)"),
 				new NEEncoding(CodePage.UTF32BE, "UTF32 (Big endian)"),
 				new NEEncoding(CodePage.Hex, "Hex"),
+				new NEEncoding(CodePage.Binary, "Binary"),
 				new NEEncoding(CodePage.Base64, "Base64"),
 			};
 
@@ -99,6 +101,21 @@ namespace NeoEdit.Common.Transform
 					*outputPtr++ = hexValue[*bytesPtr >> 4];
 					*outputPtr++ = hexValue[*bytesPtr & 15];
 				}
+			}
+			return new String(output);
+		}
+
+		static unsafe string ToBinaryString(byte[] bytes)
+		{
+			var output = new char[bytes.Length * 8];
+			fixed (byte* bytesFixed = bytes)
+			fixed (char* outputFixed = output)
+			{
+				var len = bytesFixed + bytes.Length;
+				char* outputPtr = outputFixed;
+				for (var bytesPtr = bytesFixed; bytesPtr < len; ++bytesPtr)
+					for (byte mult = 0x80; mult != 0; mult >>= 1)
+						*outputPtr++ = (*bytesPtr & mult) == 0 ? '0' : '1';
 			}
 			return new String(output);
 		}
@@ -140,6 +157,24 @@ namespace NeoEdit.Common.Transform
 			return bytes;
 		}
 
+		static unsafe byte[] FromBinaryString(string input)
+		{
+			input = input.StripWhitespace();
+			input = new string('0', 7 - (input.Length + 7) % 8) + input;
+			var bytes = new byte[input.Length >> 3];
+			fixed (char* inputFixed = input)
+			fixed (byte* bytesFixed = bytes)
+			{
+				char* inputPtr = inputFixed;
+				var len = bytesFixed + bytes.Length;
+				for (var bytesPtr = bytesFixed; bytesPtr < len; ++bytesPtr)
+					for (byte mult = 0x80; mult != 0; mult >>= 1)
+						if (*inputPtr++ == '1')
+							*bytesPtr |= mult;
+			}
+			return bytes;
+		}
+
 		public static string TryBytesToString(byte[] data, CodePage codePage, bool stripBOM = false)
 		{
 			try
@@ -153,6 +188,7 @@ namespace NeoEdit.Common.Transform
 				{
 					case CodePage.Base64: return Convert.ToBase64String(data);
 					case CodePage.Hex: return ToHexString(data);
+					case CodePage.Binary: return ToBinaryString(data);
 					default:
 						{
 							var encoding = NEEncodingDictionary[codePage];
@@ -215,6 +251,7 @@ namespace NeoEdit.Common.Transform
 				{
 					case CodePage.Base64: return GetBase64Bytes(value);
 					case CodePage.Hex: return FromHexString(value);
+					case CodePage.Binary: return FromBinaryString(value);
 					default: return NEEncodingDictionary[codePage].encoding.GetBytes(((addBOM) && (NEEncodingDictionary[codePage].preamble != null) ? "\ufeff" : "") + value);
 				}
 			}
@@ -232,8 +269,8 @@ namespace NeoEdit.Common.Transform
 
 		public static bool CanFullyEncode(string str1, CodePage codePage)
 		{
-			// These two formats will allow whitespace, although you can't save it
-			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.Base64)))
+			// These formats will allow whitespace, although you can't save it
+			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.Binary) || (codePage == CodePage.Base64)))
 				str1 = str1.StripWhitespace();
 
 			var bytes = TryStringToBytes(str1, codePage);
