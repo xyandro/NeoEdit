@@ -91,8 +91,8 @@ namespace NeoEdit.TextView
 		{
 			int selStartLine, selStartColumn, selEndLine, selEndColumn;
 			GetSel(out selStartLine, out selStartColumn, out selEndLine, out selEndColumn);
-			var estimate = data.GetSizeEstimate(selStartLine, selEndLine);
-			if (estimate >= 10485760)
+			var estimate = data.GetSizeEstimate(selStartLine, Math.Min(selEndLine + 1, data.NumLines));
+			if (estimate >= 524288)
 			{
 				if (new Message
 				{
