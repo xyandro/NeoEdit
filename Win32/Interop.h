@@ -31,7 +31,17 @@ namespace NeoEdit
 			static void WriteSharedMemory(int pid, System::IntPtr handle, int64_t index, array<uint8_t> ^bytes);
 			static System::IntPtr AllocConsole();
 			static void SendChar(System::IntPtr handle, unsigned char ch);
-			static System::Collections::Generic::List<int64_t> ^GetLines(array<uint8_t>^ data, int64_t use, int charSize, bool bigEndian, int64_t %position);
+
+			enum class GetLinesEncoding
+			{
+				Default,
+				UTF8,
+				UTF16LE,
+				UTF16BE,
+				UTF32LE,
+				UTF32BE,
+			};
+			static System::Collections::Generic::List<int64_t> ^GetLines(GetLinesEncoding encoding, array<uint8_t>^ data, int64_t use, int64_t %position, int %lineLength, int %maxLine);
 		};
 	}
 }

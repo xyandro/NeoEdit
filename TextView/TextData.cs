@@ -13,6 +13,7 @@ namespace NeoEdit.TextView
 	{
 		public string FileName { get; private set; }
 		public int NumLines { get; private set; }
+		public int NumColumns { get; private set; }
 		FileStream file { get; set; }
 		long length { get; set; }
 		List<long> lineStart { get; set; }
@@ -25,6 +26,8 @@ namespace NeoEdit.TextView
 			worker.RunWorkerCompleted += (s, e) =>
 			{
 				scanningDialog.Close();
+				if ((e.Error != null) || (e.Cancelled))
+					Close();
 				if (e.Error != null)
 					throw e.Error;
 				if (!e.Cancelled)
@@ -39,15 +42,15 @@ namespace NeoEdit.TextView
 				var codePage = Coder.CodePageFromBOM(header);
 
 				long position = 0;
-				int charSize = 1;
-				bool bigEndian = false;
+				int charSize = 1, lineLength = 0, maxLine = 0;
+				Win32.Interop.GetLinesEncoding getLinesEncoding = Win32.Interop.GetLinesEncoding.Default;
 				switch (codePage)
 				{
-					case Coder.CodePage.UTF8: position = 3; break;
-					case Coder.CodePage.UTF16LE: position = charSize = 2; break;
-					case Coder.CodePage.UTF16BE: position = charSize = 2; bigEndian = true; break;
-					case Coder.CodePage.UTF32LE: position = charSize = 4; break;
-					case Coder.CodePage.UTF32BE: position = charSize = 4; bigEndian = true; break;
+					case Coder.CodePage.UTF8: position = 3; getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF8; break;
+					case Coder.CodePage.UTF16LE: position = charSize = 2; getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF16LE; break;
+					case Coder.CodePage.UTF16BE: position = charSize = 2; getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF16BE; break;
+					case Coder.CodePage.UTF32LE: position = charSize = 4; getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF32LE; break;
+					case Coder.CodePage.UTF32BE: position = charSize = 4; getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF32BE; break;
 				}
 
 				var block = new byte[65536];
@@ -71,12 +74,16 @@ namespace NeoEdit.TextView
 					if (position + use != length)
 						use -= charSize;
 
-					lineStart.AddRange(Win32.Interop.GetLines(block, use, charSize, bigEndian, ref position));
+					lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, use, ref position, ref lineLength, ref maxLine));
 				}
 				if (lineStart.Last() != length)
+				{
 					lineStart.Add(length);
+					maxLine = Math.Max(maxLine, lineLength);
+				}
 
 				NumLines = lineStart.Count - 1;
+				NumColumns = maxLine;
 			};
 			worker.RunWorkerAsync();
 		}
