@@ -11,8 +11,8 @@ namespace NeoEdit.GUI
 		protected Action systemInfoLauncher;
 		protected Action<string, byte[], StrCoder.CodePage, bool> textEditorLauncher;
 		protected Action<string, bool> textViewerLauncher;
-		protected Action<string, byte[], StrCoder.CodePage, bool> fileBinaryEditorLauncher;
-		protected Action<int> processBinaryEditorLauncher;
+		protected Action<string, byte[], StrCoder.CodePage, bool> fileHexEditorLauncher;
+		protected Action<int> processHexEditorLauncher;
 		protected Action diskLauncher;
 		protected Action consoleLauncher;
 		protected Action<int?> processesLauncher;
@@ -23,8 +23,8 @@ namespace NeoEdit.GUI
 			Action systemInfo,
 			Action<string, byte[], StrCoder.CodePage, bool> textEditor,
 			Action<string, bool> textViewer,
-			Action<string, byte[], StrCoder.CodePage, bool> fileBinaryEditor,
-			Action<int> processBinaryEditor,
+			Action<string, byte[], StrCoder.CodePage, bool> fileHexEditor,
+			Action<int> processHexEditor,
 			Action disk,
 			Action console,
 			Action<int?> processes,
@@ -38,8 +38,8 @@ namespace NeoEdit.GUI
 				systemInfoLauncher = systemInfo,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
-				fileBinaryEditorLauncher = fileBinaryEditor,
-				processBinaryEditorLauncher = processBinaryEditor,
+				fileHexEditorLauncher = fileHexEditor,
+				processHexEditorLauncher = processHexEditor,
 				diskLauncher = disk,
 				consoleLauncher = console,
 				processesLauncher = processes,
@@ -64,14 +64,14 @@ namespace NeoEdit.GUI
 			textViewerLauncher(filename, createNew);
 		}
 
-		public void LaunchBinaryEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
+		public void LaunchHexEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
 		{
-			fileBinaryEditorLauncher(filename, bytes, codePage, createNew);
+			fileHexEditorLauncher(filename, bytes, codePage, createNew);
 		}
 
-		public void LaunchBinaryEditor(int pid)
+		public void LaunchHexEditor(int pid)
 		{
-			processBinaryEditorLauncher(pid);
+			processHexEditorLauncher(pid);
 		}
 
 		public void LaunchDisk()

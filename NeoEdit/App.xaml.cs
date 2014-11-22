@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.BinaryEdit;
+using NeoEdit.HexEdit;
 using NeoEdit.Common.Transform;
 using NeoEdit.Console;
 using NeoEdit.DBViewer;
@@ -138,6 +138,8 @@ namespace NeoEdit
 					case "binary":
 					case "binaryedit":
 					case "binaryeditor":
+					case "hexedit":
+					case "hexeditor":
 						{
 							string filename = null;
 							if (args.Length > 1)
@@ -147,23 +149,25 @@ namespace NeoEdit
 									throw new ArgumentException("Invalid file.");
 							}
 
-							BinaryEditTabs.CreateFromFile(filename);
+							HexEditTabs.CreateFromFile(filename);
 							return;
 						}
 					case "binarypid":
+					case "hexpid":
 						{
 							if (args.Length < 2)
 								throw new ArgumentException("Not enough parameters.");
 
-							BinaryEditTabs.CreateFromProcess(Convert.ToInt32(args[1]));
+							HexEditTabs.CreateFromProcess(Convert.ToInt32(args[1]));
 							return;
 						}
 					case "binarydump":
+					case "hexdump":
 						{
 							if (args.Length < 2)
 								throw new ArgumentException("Not enough parameters.");
 
-							BinaryEditTabs.CreateFromDump(args[1]);
+							HexEditTabs.CreateFromDump(args[1]);
 							return;
 						}
 					case "process":
@@ -225,8 +229,8 @@ namespace NeoEdit
 				systemInfo: () => new SystemInfoWindow(),
 				textEditor: (filename, bytes, encoding, createNew) => TextEditTabs.Create(filename, bytes, encoding, createNew: createNew),
 				textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew),
-				fileBinaryEditor: (filename, binarydata, encoder, createNew) => BinaryEditTabs.CreateFromFile(filename, binarydata, encoder, createNew),
-				processBinaryEditor: (pid) => BinaryEditTabs.CreateFromProcess(pid),
+				fileHexEditor: (filename, binarydata, encoder, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, createNew),
+				processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid),
 				disk: () => new DiskTabs(),
 				console: () => new ConsoleTabs(),
 				processes: (pid) => new ProcessesWindow(pid),

@@ -1,0 +1,86 @@
+﻿<Menu Name="self" x:Class="NeoEdit.HexEdit.HexEditMenu"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
+	xmlns:hexEdit="clr-namespace:NeoEdit.HexEdit">
+
+	<MenuItem Header="_File">
+		<hexEdit:HexEditMenuItem Header="_New" CommandEnum="File_New"/>
+		<hexEdit:HexEditMenuItem Header="_Open" CommandEnum="File_Open"/>
+		<hexEdit:HexEditMenuItem Header="Open _Dump" CommandEnum="File_OpenDump"/>
+		<hexEdit:HexEditMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
+		<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="File_Save"/>
+		<hexEdit:HexEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
+		<hexEdit:HexEditMenuItem Header="_Close" CommandEnum="File_Close"/>
+		<Separator/>
+		<hexEdit:HexEditMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
+		<hexEdit:HexEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
+		<Separator/>
+		<hexEdit:HexEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
+		<hexEdit:HexEditMenuItem Header="Text Editor" CommandEnum="File_TextEditor"/>
+		<Separator/>
+		<hexEdit:HexEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>
+	</MenuItem>
+	<MenuItem Header="_Edit">
+		<hexEdit:HexEditMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
+		<hexEdit:HexEditMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
+		<Separator/>
+		<hexEdit:HexEditMenuItem Header="Cu_t" CommandEnum="Edit_Cut"/>
+		<hexEdit:HexEditMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
+		<hexEdit:HexEditMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
+		<hexEdit:HexEditMenuItem Header="_Show Clipboard" CommandEnum="Edit_ShowClipboard"/>
+		<Separator/>
+		<hexEdit:HexEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
+		<hexEdit:HexEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>
+		<hexEdit:HexEditMenuItem Header="Find _Prev" CommandEnum="Edit_FindPrev"/>
+		<hexEdit:HexEditMenuItem Header="_Goto" CommandEnum="Edit_Goto"/>
+		<Separator/>
+		<hexEdit:HexEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Parent.Active.Insert, ElementName=self}"/>
+	</MenuItem>
+	<MenuItem Header="_View">
+		<hexEdit:HexEditMenuItem Header="_Values" CommandEnum="View_Values" IsChecked="{Binding Parent.Active.ShowValues, ElementName=self}"/>
+		<hexEdit:HexEditMenuItem Header="_Refresh" CommandEnum="View_Refresh"/>
+		<hexEdit:HexEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
+	</MenuItem>
+	<MenuItem Header="_Data">
+		<MenuItem Header="C_hecksum">
+			<hexEdit:HexEditMenuItem Header="_MD5" CommandEnum="Data_Checksum_MD5"/>
+			<hexEdit:HexEditMenuItem Header="SHA_1" CommandEnum="Data_Checksum_SHA1"/>
+			<hexEdit:HexEditMenuItem Header="SHA_256" CommandEnum="Data_Checksum_SHA256"/>
+		</MenuItem>
+		<MenuItem Header="_Compress">
+			<hexEdit:HexEditMenuItem Header="_GZip" CommandEnum="Data_Compress_GZip"/>
+			<hexEdit:HexEditMenuItem Header="_Deflate" CommandEnum="Data_Compress_Deflate"/>
+		</MenuItem>
+		<MenuItem Header="_Decompress">
+			<hexEdit:HexEditMenuItem Header="_GZip" CommandEnum="Data_Decompress_GZip"/>
+			<hexEdit:HexEditMenuItem Header="_Inflate" CommandEnum="Data_Decompress_Inflate"/>
+		</MenuItem>
+		<MenuItem Header="_Encrypt">
+			<hexEdit:HexEditMenuItem Header="_AES" CommandEnum="Data_Encrypt_AES"/>
+			<hexEdit:HexEditMenuItem Header="_DES" CommandEnum="Data_Encrypt_DES"/>
+			<hexEdit:HexEditMenuItem Header="_3DES" CommandEnum="Data_Encrypt_3DES"/>
+			<hexEdit:HexEditMenuItem Header="_RSA" CommandEnum="Data_Encrypt_RSA"/>
+			<hexEdit:HexEditMenuItem Header="RSA/AES" CommandEnum="Data_Encrypt_RSAAES"/>
+		</MenuItem>
+		<MenuItem Header="Dec_rypt">
+			<hexEdit:HexEditMenuItem Header="_AES" CommandEnum="Data_Decrypt_AES"/>
+			<hexEdit:HexEditMenuItem Header="_DES" CommandEnum="Data_Decrypt_DES"/>
+			<hexEdit:HexEditMenuItem Header="_3DES" CommandEnum="Data_Decrypt_3DES"/>
+			<hexEdit:HexEditMenuItem Header="_RSA" CommandEnum="Data_Decrypt_RSA"/>
+			<hexEdit:HexEditMenuItem Header="RSA/AES" CommandEnum="Data_Decrypt_RSAAES"/>
+		</MenuItem>
+		<MenuItem Header="_Sign">
+			<hexEdit:HexEditMenuItem Header="_RSA" CommandEnum="Data_Sign_RSA"/>
+			<hexEdit:HexEditMenuItem Header="_DSA" CommandEnum="Data_Sign_DSA"/>
+		</MenuItem>
+		<MenuItem Header="_Verify">
+			<hexEdit:HexEditMenuItem Header="_RSA" CommandEnum="Data_Verify_RSA"/>
+			<hexEdit:HexEditMenuItem Header="_DSA" CommandEnum="Data_Verify_DSA"/>
+		</MenuItem>
+		<hexEdit:HexEditMenuItem Header="_Fill" CommandEnum="Data_Fill"/>
+	</MenuItem>
+	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
+	<guiCommon:HelpMenu/>
+
+</Menu>

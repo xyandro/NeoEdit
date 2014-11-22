@@ -20,7 +20,7 @@
 		<textEdit:TextEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
-		<textEdit:TextEditMenuItem Header="Binary Editor" CommandEnum="File_BinaryEditor"/>
+		<textEdit:TextEditMenuItem Header="Hex Editor" CommandEnum="File_HexEditor"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
@@ -94,70 +94,68 @@
 			<textEdit:TextEditMenuItem Header="_Toggle" CommandEnum="Data_Case_Toggle"/>
 		</MenuItem>
 		<MenuItem Header="_Hex">
-			<textEdit:TextEditMenuItem Header="_To Hex" CommandEnum="Data_Hex_ToHex"/>
-			<textEdit:TextEditMenuItem Header="_From Hex" CommandEnum="Data_Hex_FromHex"/>
-		</MenuItem>
-		<MenuItem Header="_Binary">
-			<MenuItem Header="_To Binary">
-				<textEdit:TextEditMenuItem Header="String" CommandEnum="Data_Binary_ToBinary_String"/>
+			<MenuItem Header="_To Hex">
+				<textEdit:TextEditMenuItem Header="String" CommandEnum="Data_Hex_ToHex_String"/>
+				<textEdit:TextEditMenuItem Header="Int" CommandEnum="Data_Hex_ToHex_Int"/>
 				<MenuItem Header="UIntLE">
-					<textEdit:TextEditMenuItem Header="UInt8LE" CommandEnum="Data_Binary_ToBinary_UIntLE_UInt8LE"/>
-					<textEdit:TextEditMenuItem Header="UInt16LE" CommandEnum="Data_Binary_ToBinary_UIntLE_UInt16LE"/>
-					<textEdit:TextEditMenuItem Header="UInt32LE" CommandEnum="Data_Binary_ToBinary_UIntLE_UInt32LE"/>
-					<textEdit:TextEditMenuItem Header="UInt64LE" CommandEnum="Data_Binary_ToBinary_UIntLE_UInt64LE"/>
+					<textEdit:TextEditMenuItem Header="UInt8LE" CommandEnum="Data_Hex_ToHex_UIntLE_UInt8LE"/>
+					<textEdit:TextEditMenuItem Header="UInt16LE" CommandEnum="Data_Hex_ToHex_UIntLE_UInt16LE"/>
+					<textEdit:TextEditMenuItem Header="UInt32LE" CommandEnum="Data_Hex_ToHex_UIntLE_UInt32LE"/>
+					<textEdit:TextEditMenuItem Header="UInt64LE" CommandEnum="Data_Hex_ToHex_UIntLE_UInt64LE"/>
 				</MenuItem>
 				<MenuItem Header="IntLE">
-					<textEdit:TextEditMenuItem Header="Int8LE" CommandEnum="Data_Binary_ToBinary_IntLE_Int8LE"/>
-					<textEdit:TextEditMenuItem Header="Int16LE" CommandEnum="Data_Binary_ToBinary_IntLE_Int16LE"/>
-					<textEdit:TextEditMenuItem Header="Int32LE" CommandEnum="Data_Binary_ToBinary_IntLE_Int32LE"/>
-					<textEdit:TextEditMenuItem Header="Int64LE" CommandEnum="Data_Binary_ToBinary_IntLE_Int64LE"/>
+					<textEdit:TextEditMenuItem Header="Int8LE" CommandEnum="Data_Hex_ToHex_IntLE_Int8LE"/>
+					<textEdit:TextEditMenuItem Header="Int16LE" CommandEnum="Data_Hex_ToHex_IntLE_Int16LE"/>
+					<textEdit:TextEditMenuItem Header="Int32LE" CommandEnum="Data_Hex_ToHex_IntLE_Int32LE"/>
+					<textEdit:TextEditMenuItem Header="Int64LE" CommandEnum="Data_Hex_ToHex_IntLE_Int64LE"/>
 				</MenuItem>
 				<MenuItem Header="UIntBE">
-					<textEdit:TextEditMenuItem Header="UInt8BE" CommandEnum="Data_Binary_ToBinary_UIntBE_UInt8BE"/>
-					<textEdit:TextEditMenuItem Header="UInt16BE" CommandEnum="Data_Binary_ToBinary_UIntBE_UInt16BE"/>
-					<textEdit:TextEditMenuItem Header="UInt32BE" CommandEnum="Data_Binary_ToBinary_UIntBE_UInt32BE"/>
-					<textEdit:TextEditMenuItem Header="UInt64BE" CommandEnum="Data_Binary_ToBinary_UIntBE_UInt64BE"/>
+					<textEdit:TextEditMenuItem Header="UInt8BE" CommandEnum="Data_Hex_ToHex_UIntBE_UInt8BE"/>
+					<textEdit:TextEditMenuItem Header="UInt16BE" CommandEnum="Data_Hex_ToHex_UIntBE_UInt16BE"/>
+					<textEdit:TextEditMenuItem Header="UInt32BE" CommandEnum="Data_Hex_ToHex_UIntBE_UInt32BE"/>
+					<textEdit:TextEditMenuItem Header="UInt64BE" CommandEnum="Data_Hex_ToHex_UIntBE_UInt64BE"/>
 				</MenuItem>
 				<MenuItem Header="IntBE">
-					<textEdit:TextEditMenuItem Header="Int8BE" CommandEnum="Data_Binary_ToBinary_IntBE_Int8BE"/>
-					<textEdit:TextEditMenuItem Header="Int16BE" CommandEnum="Data_Binary_ToBinary_IntBE_Int16BE"/>
-					<textEdit:TextEditMenuItem Header="Int32BE" CommandEnum="Data_Binary_ToBinary_IntBE_Int32BE"/>
-					<textEdit:TextEditMenuItem Header="Int64BE" CommandEnum="Data_Binary_ToBinary_IntBE_Int64BE"/>
+					<textEdit:TextEditMenuItem Header="Int8BE" CommandEnum="Data_Hex_ToHex_IntBE_Int8BE"/>
+					<textEdit:TextEditMenuItem Header="Int16BE" CommandEnum="Data_Hex_ToHex_IntBE_Int16BE"/>
+					<textEdit:TextEditMenuItem Header="Int32BE" CommandEnum="Data_Hex_ToHex_IntBE_Int32BE"/>
+					<textEdit:TextEditMenuItem Header="Int64BE" CommandEnum="Data_Hex_ToHex_IntBE_Int64BE"/>
 				</MenuItem>
 				<MenuItem Header="Float">
-					<textEdit:TextEditMenuItem Header="Single" CommandEnum="Data_Binary_ToBinary_Float_Single"/>
-					<textEdit:TextEditMenuItem Header="Double" CommandEnum="Data_Binary_ToBinary_Float_Double"/>
+					<textEdit:TextEditMenuItem Header="Single" CommandEnum="Data_Hex_ToHex_Float_Single"/>
+					<textEdit:TextEditMenuItem Header="Double" CommandEnum="Data_Hex_ToHex_Float_Double"/>
 				</MenuItem>
 			</MenuItem>
-			<MenuItem Header="_From Binary">
-				<textEdit:TextEditMenuItem Header="String" CommandEnum="Data_Binary_FromBinary_String"/>
+			<MenuItem Header="_From Hex">
+				<textEdit:TextEditMenuItem Header="String" CommandEnum="Data_Hex_FromHex_String"/>
+				<textEdit:TextEditMenuItem Header="Int" CommandEnum="Data_Hex_FromHex_Int"/>
 				<MenuItem Header="UIntLE">
-					<textEdit:TextEditMenuItem Header="UInt8LE" CommandEnum="Data_Binary_FromBinary_UIntLE_UInt8LE"/>
-					<textEdit:TextEditMenuItem Header="UInt16LE" CommandEnum="Data_Binary_FromBinary_UIntLE_UInt16LE"/>
-					<textEdit:TextEditMenuItem Header="UInt32LE" CommandEnum="Data_Binary_FromBinary_UIntLE_UInt32LE"/>
-					<textEdit:TextEditMenuItem Header="UInt64LE" CommandEnum="Data_Binary_FromBinary_UIntLE_UInt64LE"/>
+					<textEdit:TextEditMenuItem Header="UInt8LE" CommandEnum="Data_Hex_FromHex_UIntLE_UInt8LE"/>
+					<textEdit:TextEditMenuItem Header="UInt16LE" CommandEnum="Data_Hex_FromHex_UIntLE_UInt16LE"/>
+					<textEdit:TextEditMenuItem Header="UInt32LE" CommandEnum="Data_Hex_FromHex_UIntLE_UInt32LE"/>
+					<textEdit:TextEditMenuItem Header="UInt64LE" CommandEnum="Data_Hex_FromHex_UIntLE_UInt64LE"/>
 				</MenuItem>
 				<MenuItem Header="IntLE">
-					<textEdit:TextEditMenuItem Header="Int8LE" CommandEnum="Data_Binary_FromBinary_IntLE_Int8LE"/>
-					<textEdit:TextEditMenuItem Header="Int16LE" CommandEnum="Data_Binary_FromBinary_IntLE_Int16LE"/>
-					<textEdit:TextEditMenuItem Header="Int32LE" CommandEnum="Data_Binary_FromBinary_IntLE_Int32LE"/>
-					<textEdit:TextEditMenuItem Header="Int64LE" CommandEnum="Data_Binary_FromBinary_IntLE_Int64LE"/>
+					<textEdit:TextEditMenuItem Header="Int8LE" CommandEnum="Data_Hex_FromHex_IntLE_Int8LE"/>
+					<textEdit:TextEditMenuItem Header="Int16LE" CommandEnum="Data_Hex_FromHex_IntLE_Int16LE"/>
+					<textEdit:TextEditMenuItem Header="Int32LE" CommandEnum="Data_Hex_FromHex_IntLE_Int32LE"/>
+					<textEdit:TextEditMenuItem Header="Int64LE" CommandEnum="Data_Hex_FromHex_IntLE_Int64LE"/>
 				</MenuItem>
 				<MenuItem Header="UIntBE">
-					<textEdit:TextEditMenuItem Header="UInt8BE" CommandEnum="Data_Binary_FromBinary_UIntBE_UInt8BE"/>
-					<textEdit:TextEditMenuItem Header="UInt16BE" CommandEnum="Data_Binary_FromBinary_UIntBE_UInt16BE"/>
-					<textEdit:TextEditMenuItem Header="UInt32BE" CommandEnum="Data_Binary_FromBinary_UIntBE_UInt32BE"/>
-					<textEdit:TextEditMenuItem Header="UInt64BE" CommandEnum="Data_Binary_FromBinary_UIntBE_UInt64BE"/>
+					<textEdit:TextEditMenuItem Header="UInt8BE" CommandEnum="Data_Hex_FromHex_UIntBE_UInt8BE"/>
+					<textEdit:TextEditMenuItem Header="UInt16BE" CommandEnum="Data_Hex_FromHex_UIntBE_UInt16BE"/>
+					<textEdit:TextEditMenuItem Header="UInt32BE" CommandEnum="Data_Hex_FromHex_UIntBE_UInt32BE"/>
+					<textEdit:TextEditMenuItem Header="UInt64BE" CommandEnum="Data_Hex_FromHex_UIntBE_UInt64BE"/>
 				</MenuItem>
 				<MenuItem Header="IntBE">
-					<textEdit:TextEditMenuItem Header="Int8BE" CommandEnum="Data_Binary_FromBinary_IntBE_Int8BE"/>
-					<textEdit:TextEditMenuItem Header="Int16BE" CommandEnum="Data_Binary_FromBinary_IntBE_Int16BE"/>
-					<textEdit:TextEditMenuItem Header="Int32BE" CommandEnum="Data_Binary_FromBinary_IntBE_Int32BE"/>
-					<textEdit:TextEditMenuItem Header="Int64BE" CommandEnum="Data_Binary_FromBinary_IntBE_Int64BE"/>
+					<textEdit:TextEditMenuItem Header="Int8BE" CommandEnum="Data_Hex_FromHex_IntBE_Int8BE"/>
+					<textEdit:TextEditMenuItem Header="Int16BE" CommandEnum="Data_Hex_FromHex_IntBE_Int16BE"/>
+					<textEdit:TextEditMenuItem Header="Int32BE" CommandEnum="Data_Hex_FromHex_IntBE_Int32BE"/>
+					<textEdit:TextEditMenuItem Header="Int64BE" CommandEnum="Data_Hex_FromHex_IntBE_Int64BE"/>
 				</MenuItem>
 				<MenuItem Header="Float">
-					<textEdit:TextEditMenuItem Header="Single" CommandEnum="Data_Binary_FromBinary_Float_Single"/>
-					<textEdit:TextEditMenuItem Header="Double" CommandEnum="Data_Binary_FromBinary_Float_Double"/>
+					<textEdit:TextEditMenuItem Header="Single" CommandEnum="Data_Hex_FromHex_Float_Single"/>
+					<textEdit:TextEditMenuItem Header="Double" CommandEnum="Data_Hex_FromHex_Float_Double"/>
 				</MenuItem>
 			</MenuItem>
 		</MenuItem>

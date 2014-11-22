@@ -27,7 +27,7 @@
 		<disk:DiskMenuItem Header="Binary Find" CommandEnum="Edit_BinaryFind"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="Text Edit" CommandEnum="Edit_TextEdit"/>
-		<disk:DiskMenuItem Header="Binary Edit" CommandEnum="Edit_BinaryEdit"/>
+		<disk:DiskMenuItem Header="Hex Edit" CommandEnum="Edit_HexEdit"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<disk:DiskMenuItem Header="_All" CommandEnum="Select_All"/>

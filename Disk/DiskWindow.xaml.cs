@@ -460,10 +460,10 @@ namespace NeoEdit.Disk
 				Launcher.Static.LaunchTextEditor(file.FullName);
 		}
 
-		internal void Command_Edit_BinaryEdit()
+		internal void Command_Edit_HexEdit()
 		{
 			foreach (var file in Selected)
-				Launcher.Static.LaunchBinaryEditor(file.FullName);
+				Launcher.Static.LaunchHexEditor(file.FullName);
 		}
 
 		internal void Command_Select_All()

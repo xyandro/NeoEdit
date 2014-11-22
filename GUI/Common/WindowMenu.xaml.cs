@@ -12,7 +12,7 @@ namespace NeoEdit.GUI.Common
 		public static RoutedCommand Command_Window_Handles = new RoutedCommand();
 		public static RoutedCommand Command_Window_Registry = new RoutedCommand();
 		public static RoutedCommand Command_Window_DBViewer = new RoutedCommand();
-		public static RoutedCommand Command_Window_BinaryEditor = new RoutedCommand();
+		public static RoutedCommand Command_Window_HexEditor = new RoutedCommand();
 		public static RoutedCommand Command_Window_TextEditor = new RoutedCommand();
 		public static RoutedCommand Command_Window_TextViewer = new RoutedCommand();
 		public static RoutedCommand Command_Window_SystemInfo = new RoutedCommand();
@@ -48,8 +48,8 @@ namespace NeoEdit.GUI.Common
 				Launcher.Static.LaunchRegistry();
 			else if (e.Command == Command_Window_DBViewer)
 				Launcher.Static.LaunchDBViewer();
-			else if (e.Command == Command_Window_BinaryEditor)
-				Launcher.Static.LaunchBinaryEditor(createNew: true);
+			else if (e.Command == Command_Window_HexEditor)
+				Launcher.Static.LaunchHexEditor(createNew: true);
 			else if (e.Command == Command_Window_TextEditor)
 				Launcher.Static.LaunchTextEditor(createNew: true);
 			else if (e.Command == Command_Window_TextViewer)

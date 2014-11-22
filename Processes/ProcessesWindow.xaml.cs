@@ -72,7 +72,7 @@ namespace NeoEdit.Processes
 			else if (e.Command == Command_View_Memory)
 			{
 				foreach (ProcessItem selected in processes.Selected)
-					Launcher.Static.LaunchBinaryEditor(selected.PID);
+					Launcher.Static.LaunchHexEditor(selected.PID);
 			}
 			else if (e.Command == Command_Process_Suspend)
 			{

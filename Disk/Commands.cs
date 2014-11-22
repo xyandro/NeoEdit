@@ -21,7 +21,7 @@ namespace NeoEdit.Disk
 		[KeyGesture(Key.F, ModifierKeys.Control)] Edit_Find,
 		Edit_BinaryFind,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Alt)] Edit_TextEdit,
-		[KeyGesture(Key.B, ModifierKeys.Control | ModifierKeys.Alt)] Edit_BinaryEdit,
+		[KeyGesture(Key.H, ModifierKeys.Control | ModifierKeys.Alt)] Edit_HexEdit,
 		[KeyGesture(Key.A, ModifierKeys.Control)] Select_All,
 		[KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Shift)] Select_None,
 		[KeyGesture(Key.I, ModifierKeys.Control)] Select_Invert,

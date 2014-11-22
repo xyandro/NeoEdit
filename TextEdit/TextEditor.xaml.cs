@@ -480,11 +480,11 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal bool Command_File_BinaryEditor()
+		internal bool Command_File_HexEditor()
 		{
 			if (!VerifyCanFullyEncode())
 				return false;
-			Launcher.Static.LaunchBinaryEditor(FileName, Data.GetBytes(CodePage), CodePage);
+			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage);
 			return true;
 		}
 
@@ -1005,12 +1005,12 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
-		internal EncodingDialog.Result Command_Data_Binary_ToBinary_Dialog()
+		internal EncodingDialog.Result Command_Data_Hex_ToHex_Dialog()
 		{
 			return EncodingDialog.Run(CodePage);
 		}
 
-		internal void Command_Data_Binary_ToBinary(EncodingDialog.Result result)
+		internal void Command_Data_Hex_ToHex(EncodingDialog.Result result)
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
@@ -1019,18 +1019,18 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs.Select(str => StrCoder.BytesToString(StrCoder.StringToBytes(str, result.CodePage), StrCoder.CodePage.Hex)).ToList());
 		}
 
-		internal void Command_Data_Binary_ToBinary(Coder.Type coder)
+		internal void Command_Data_Hex_ToHex(Coder.Type coder)
 		{
 			ReplaceSelections(Selections.Select(range => StrCoder.BytesToString(Coder.StringToBytes(GetString(range), coder), StrCoder.CodePage.Hex)).ToList());
 		}
 
-		internal EncodingDialog.Result Command_Data_Binary_FromBinary_Dialog()
+		internal EncodingDialog.Result Command_Data_Hex_FromHex_Dialog()
 		{
 			var data = Selections.Select(range => StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex)).ToList();
 			return EncodingDialog.Run(DetectUnicode(data));
 		}
 
-		internal void Command_Data_Binary_FromBinary(EncodingDialog.Result result)
+		internal void Command_Data_Hex_FromHex(EncodingDialog.Result result)
 		{
 			var data = Selections.Select(range => StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex)).ToList();
 			if (!VerifyCanFullyEncode(data, result.CodePage))
@@ -1039,7 +1039,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(data.Select(bytes => StrCoder.BytesToString(bytes, result.CodePage)).ToList());
 		}
 
-		internal void Command_Data_Binary_FromBinary(Coder.Type coder)
+		internal void Command_Data_Hex_FromHex(Coder.Type coder)
 		{
 			ReplaceSelections(Selections.Select(range => Coder.BytesToString(StrCoder.StringToBytes(GetString(range), StrCoder.CodePage.Hex), coder)).ToList());
 		}

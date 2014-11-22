@@ -57,7 +57,7 @@ namespace NeoEdit.Disk
 				case DiskCommand.Edit_Find: Active.Command_Edit_Find(); break;
 				case DiskCommand.Edit_BinaryFind: Active.Command_Edit_BinaryFind(); break;
 				case DiskCommand.Edit_TextEdit: Active.Command_Edit_TextEdit(); break;
-				case DiskCommand.Edit_BinaryEdit: Active.Command_Edit_BinaryEdit(); break;
+				case DiskCommand.Edit_HexEdit: Active.Command_Edit_HexEdit(); break;
 				case DiskCommand.Select_All: Active.Command_Select_All(); break;
 				case DiskCommand.Select_None: Active.Command_Select_None(); break;
 				case DiskCommand.Select_Invert: Active.Command_Select_Invert(); break;

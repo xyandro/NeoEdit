@@ -35,9 +35,9 @@
     <None Include="Properties\AssemblyInfo.Template.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BinaryEdit\BinaryEdit.csproj">
+    <ProjectReference Include="..\HexEdit\HexEdit.csproj">
       <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
-      <Name>BinaryEdit</Name>
+      <Name>HexEdit</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
