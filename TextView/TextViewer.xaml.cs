@@ -69,11 +69,6 @@ namespace NeoEdit.TextView
 			canvas.Render += OnCanvasRender;
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
-
-			selCursorLine = 1;
-			selCursorColumn = 5;
-			selHighlightLine = 5;
-			selHighlightColumn = 6;
 		}
 
 		internal Label GetLabel()
