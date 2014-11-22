@@ -25,6 +25,7 @@
       <DependentUpon>Menu.xaml</DependentUpon>
     </Compile>
     <AppDesigner Include="Properties\" />
+    <Compile Include="Misc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
