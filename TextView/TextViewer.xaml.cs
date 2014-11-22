@@ -54,6 +54,11 @@ namespace NeoEdit.TextView
 			return new Label { Padding = new Thickness(10, 2, 10, 2), Content = Path.GetFileName(FileName) };
 		}
 
+		internal void Close()
+		{
+			data.Close();
+		}
+
 		internal void Command_File_CopyPath()
 		{
 			ClipboardWindow.SetFiles(new List<string> { FileName }, false);

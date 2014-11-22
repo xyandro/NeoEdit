@@ -97,6 +97,7 @@ namespace NeoEdit
 							new DiskTabs(location);
 							return;
 						}
+					case "edit":
 					case "text":
 					case "textedit":
 					case "texteditor":

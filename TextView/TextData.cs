@@ -133,5 +133,10 @@ namespace NeoEdit.TextView
 				result.Add(TabFormatLine(encoder.GetString(data, (int)(lineStart[line] - startOffset), (int)(lineStart[line + 1] - lineStart[line])).TrimEnd('\r', '\n')));
 			return result;
 		}
+
+		public void Close()
+		{
+			file.Close();
+		}
 	}
 }
