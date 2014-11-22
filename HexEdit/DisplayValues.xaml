@@ -14,9 +14,6 @@
 				<Style TargetType="hexEdit:DisplayValue">
 					<Setter Property="HexEditor" Value="{Binding HexEditor, ElementName=self}"/>
 				</Style>
-				<Style TargetType="hexEdit:DisplayString">
-					<Setter Property="HexEditor" Value="{Binding HexEditor, ElementName=self}"/>
-				</Style>
 				<Style TargetType="CheckBox">
 					<Setter Property="Focusable" Value="False"/>
 					<Setter Property="Margin" Value="0,0,5,0"/>
@@ -83,34 +80,34 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="UnsignedLE:"/>
-		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="1" Type="UInt8LE"/>
-		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="2" Type="UInt16LE"/>
-		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="3" Type="UInt32LE"/>
-		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="4" Type="UInt64LE"/>
+		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="1" CodePage="UInt8LE"/>
+		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="2" CodePage="UInt16LE"/>
+		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="3" CodePage="UInt32LE"/>
+		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="4" CodePage="UInt64LE"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="SignedLE:"/>
-		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="1" Type="Int8LE"/>
-		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="2" Type="Int16LE"/>
-		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="3" Type="Int32LE"/>
-		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="4" Type="Int64LE"/>
+		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="1" CodePage="Int8LE"/>
+		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="2" CodePage="Int16LE"/>
+		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="3" CodePage="Int32LE"/>
+		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="4" CodePage="Int64LE"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="UnsignedBE:"/>
-		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="1" Type="UInt8BE"/>
-		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="2" Type="UInt16BE"/>
-		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="3" Type="UInt32BE"/>
-		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="4" Type="UInt64BE"/>
+		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="1" CodePage="UInt8BE"/>
+		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="2" CodePage="UInt16BE"/>
+		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="3" CodePage="UInt32BE"/>
+		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="4" CodePage="UInt64BE"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="SignedBE:"/>
-		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="1" Type="Int8BE"/>
-		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="2" Type="Int16BE"/>
-		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="3" Type="Int32BE"/>
-		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="4" Type="Int64BE"/>
+		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="1" CodePage="Int8BE"/>
+		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="2" CodePage="Int16BE"/>
+		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="3" CodePage="Int32BE"/>
+		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="4" CodePage="Int64BE"/>
 	</Grid>
 
 	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowFloat, ElementName=self, Converter={guiCommon:ExpressionConverter}}">
 		<Label Content="Float:"/>
-		<hexEdit:DisplayValue Type="Single"/>
-		<hexEdit:DisplayValue Type="Double"/>
+		<hexEdit:DisplayValue CodePage="Single"/>
+		<hexEdit:DisplayValue CodePage="Double"/>
 	</StackPanel>
 
 	<Grid Name="strings" Visibility="{Binding ShowStr, ElementName=self, Converter={guiCommon:ExpressionConverter}}">

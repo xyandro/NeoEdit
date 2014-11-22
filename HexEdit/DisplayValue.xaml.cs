@@ -10,7 +10,7 @@ namespace NeoEdit.HexEdit
 		[DepProp]
 		public HexEditor HexEditor { get { return UIHelper<DisplayValue>.GetPropValue<HexEditor>(this); } set { UIHelper<DisplayValue>.SetPropValue(this, value); } }
 		[DepProp]
-		public Coder.Type Type { get { return UIHelper<DisplayValue>.GetPropValue<Coder.Type>(this); } set { UIHelper<DisplayValue>.SetPropValue(this, value); } }
+		public Coder.CodePage CodePage { get { return UIHelper<DisplayValue>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<DisplayValue>.SetPropValue(this, value); } }
 
 		static DisplayValue() { UIHelper<DisplayValue>.Register(); }
 
@@ -34,7 +34,7 @@ namespace NeoEdit.HexEdit
 						if (IsReadOnly)
 							break;
 
-						var data = Coder.TryStringToBytes(Text, Type);
+						var data = Coder.TryStringToBytes(Text, CodePage);
 						if (data == null)
 							break;
 

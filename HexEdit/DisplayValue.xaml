@@ -18,7 +18,7 @@
 			<Binding Path="HexEditor.SelStart" ElementName="self"/>
 			<Binding Path="HexEditor.SelEnd" ElementName="self"/>
 			<Binding Path="HexEditor.ChangeCount" ElementName="self"/>
-			<Binding Path="Type" ElementName="self"/>
+			<Binding Path="CodePage" ElementName="self"/>
 		</MultiBinding>
 	</TextBox.Text>
 </TextBox>

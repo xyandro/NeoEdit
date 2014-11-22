@@ -11,26 +11,26 @@ namespace NeoEdit.GUI.Dialogs
 	{
 		public class Result
 		{
-			public StrCoder.CodePage CodePage { get; set; }
+			public Coder.CodePage CodePage { get; set; }
 			public string LineEndings { get; set; }
 		}
 
 		[DepProp]
-		StrCoder.CodePage CodePage { get { return UIHelper<EncodingDialog>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
+		Coder.CodePage CodePage { get { return UIHelper<EncodingDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		string DetectedStr { get { return UIHelper<EncodingDialog>.GetPropValue<string>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		string LineEndings { get { return UIHelper<EncodingDialog>.GetPropValue<string>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 
-		readonly StrCoder.CodePage Detected;
+		readonly Coder.CodePage Detected;
 
 		static EncodingDialog() { UIHelper<EncodingDialog>.Register(); }
 
-		EncodingDialog(StrCoder.CodePage _CodePage, StrCoder.CodePage _Detected, string _LineEndings)
+		EncodingDialog(Coder.CodePage _CodePage, Coder.CodePage _Detected, string _LineEndings)
 		{
 			InitializeComponent();
 
-			codePage.ItemsSource = StrCoder.GetCodePages().ToDictionary(page => page, page => StrCoder.GetDescription(page));
+			codePage.ItemsSource = Coder.GetCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
 			codePage.SelectedValuePath = "Key";
 			codePage.DisplayMemberPath = "Value";
 
@@ -46,12 +46,12 @@ namespace NeoEdit.GUI.Dialogs
 			lineEndings.SelectedIndex = 0;
 
 			CodePage = _CodePage;
-			if (_Detected == StrCoder.CodePage.None)
+			if (_Detected == Coder.CodePage.None)
 				content.Children.Cast<UIElement>().Where(child => Grid.GetRow(child) == Grid.GetRow(setDetected)).ToList().ForEach(child => child.Visibility = Visibility.Collapsed);
 			else
 			{
 				Detected = _Detected;
-				DetectedStr = StrCoder.GetDescription(Detected);
+				DetectedStr = Coder.GetDescription(Detected);
 			}
 			if (_LineEndings == null)
 				content.Children.Cast<UIElement>().Where(child => Grid.GetRow(child) == Grid.GetRow(lineEndings)).ToList().ForEach(child => child.Visibility = Visibility.Collapsed);
@@ -66,7 +66,7 @@ namespace NeoEdit.GUI.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(StrCoder.CodePage codePage = StrCoder.CodePage.Default, StrCoder.CodePage detected = StrCoder.CodePage.None, string lineEndings = null)
+		public static Result Run(Coder.CodePage codePage = Coder.CodePage.Default, Coder.CodePage detected = Coder.CodePage.None, string lineEndings = null)
 		{
 			var dialog = new EncodingDialog(codePage, detected, lineEndings);
 			if (dialog.ShowDialog() != true)

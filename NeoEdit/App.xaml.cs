@@ -138,6 +138,7 @@ namespace NeoEdit
 					case "binary":
 					case "binaryedit":
 					case "binaryeditor":
+					case "hex":
 					case "hexedit":
 					case "hexeditor":
 						{

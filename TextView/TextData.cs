@@ -36,23 +36,23 @@ namespace NeoEdit.TextView
 				file = File.OpenRead(FileName);
 				length = file.Length;
 				var header = Read(0, (int)Math.Min(4, length));
-				var codePage = StrCoder.CodePageFromBOM(header);
+				var codePage = Coder.CodePageFromBOM(header);
 
 				long position = 0;
 				int charSize = 1;
 				bool bigEndian = false;
 				switch (codePage)
 				{
-					case StrCoder.CodePage.UTF8: position = 3; break;
-					case StrCoder.CodePage.UTF16LE: position = charSize = 2; break;
-					case StrCoder.CodePage.UTF16BE: position = charSize = 2; bigEndian = true; break;
-					case StrCoder.CodePage.UTF32LE: position = charSize = 4; break;
-					case StrCoder.CodePage.UTF32BE: position = charSize = 4; bigEndian = true; break;
+					case Coder.CodePage.UTF8: position = 3; break;
+					case Coder.CodePage.UTF16LE: position = charSize = 2; break;
+					case Coder.CodePage.UTF16BE: position = charSize = 2; bigEndian = true; break;
+					case Coder.CodePage.UTF32LE: position = charSize = 4; break;
+					case Coder.CodePage.UTF32BE: position = charSize = 4; bigEndian = true; break;
 				}
 
 				var block = new byte[65536];
 				var blockSize = block.Length - charSize;
-				encoder = StrCoder.GetEncoding(codePage);
+				encoder = Coder.GetEncoding(codePage);
 
 				lineStart = new List<long> { position };
 				while (position != length)

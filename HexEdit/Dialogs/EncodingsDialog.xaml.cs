@@ -13,12 +13,12 @@ namespace NeoEdit.HexEdit
 	{
 		class CodePageItem : CheckBox
 		{
-			readonly public StrCoder.CodePage CodePage;
+			readonly public Coder.CodePage CodePage;
 
-			public CodePageItem(StrCoder.CodePage codePage)
+			public CodePageItem(Coder.CodePage codePage)
 			{
 				CodePage = codePage;
-				Content = StrCoder.GetDescription(CodePage);
+				Content = Coder.GetDescription(CodePage);
 			}
 		}
 
@@ -27,12 +27,12 @@ namespace NeoEdit.HexEdit
 
 		static EncodingsDialog() { UIHelper<EncodingsDialog>.Register(); }
 
-		HashSet<StrCoder.CodePage> result;
+		HashSet<Coder.CodePage> result;
 
-		EncodingsDialog(HashSet<StrCoder.CodePage> CodePages)
+		EncodingsDialog(HashSet<Coder.CodePage> CodePages)
 		{
 			InitializeComponent();
-			CodePageItems = new ObservableCollection<CodePageItem>(StrCoder.GetCodePages().Select(codePage => new CodePageItem(codePage) { IsChecked = CodePages.Contains(codePage) }));
+			CodePageItems = new ObservableCollection<CodePageItem>(Coder.GetCodePages().Select(codePage => new CodePageItem(codePage) { IsChecked = CodePages.Contains(codePage) }));
 			codePages.PreviewKeyDown += (s, e) =>
 			{
 				if (e.Key == Key.Space)
@@ -47,11 +47,11 @@ namespace NeoEdit.HexEdit
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new HashSet<StrCoder.CodePage>(CodePageItems.Where(item => item.IsChecked == true).Select(item => item.CodePage));
+			result = new HashSet<Coder.CodePage>(CodePageItems.Where(item => item.IsChecked == true).Select(item => item.CodePage));
 			DialogResult = true;
 		}
 
-		public static HashSet<StrCoder.CodePage> Run(HashSet<StrCoder.CodePage> codePages)
+		public static HashSet<Coder.CodePage> Run(HashSet<Coder.CodePage> codePages)
 		{
 			var dialog = new EncodingsDialog(codePages);
 			return dialog.ShowDialog() == true ? dialog.result : null;

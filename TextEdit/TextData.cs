@@ -31,25 +31,25 @@ namespace NeoEdit.TextEdit
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
 
-		public TextData() : this(null, StrCoder.CodePage.UTF8) { }
-		public TextData(byte[] bytes, StrCoder.CodePage codePage)
+		public TextData() : this(null, Coder.CodePage.UTF8) { }
+		public TextData(byte[] bytes, Coder.CodePage codePage)
 		{
 			if (bytes == null)
 				bytes = new byte[0];
-			if (codePage == StrCoder.CodePage.None)
+			if (codePage == Coder.CodePage.None)
 				throw new Exception("No encoder specified");
 
-			data = StrCoder.BytesToString(bytes, codePage, true);
+			data = Coder.BytesToString(bytes, codePage, true);
 		}
 
-		public bool CanFullyEncode(StrCoder.CodePage codePage)
+		public bool CanFullyEncode(Coder.CodePage codePage)
 		{
-			return StrCoder.CanFullyEncode(data, codePage);
+			return Coder.CanFullyEncode(data, codePage);
 		}
 
-		public byte[] GetBytes(StrCoder.CodePage codePage)
+		public byte[] GetBytes(Coder.CodePage codePage)
 		{
-			return StrCoder.StringToBytes(data, codePage, true);
+			return Coder.StringToBytes(data, codePage, true);
 		}
 
 		void RecalculateLines()

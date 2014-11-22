@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
@@ -23,7 +24,7 @@ namespace NeoEdit.HexEdit
 
 		static DisplayValues() { UIHelper<DisplayValues>.Register(); }
 
-		HashSet<StrCoder.CodePage> codePages = new HashSet<StrCoder.CodePage> { StrCoder.CodePage.Default, StrCoder.CodePage.UTF8, StrCoder.CodePage.UTF16LE };
+		HashSet<Coder.CodePage> codePages = new HashSet<Coder.CodePage> { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE };
 
 		public DisplayValues()
 		{
@@ -53,12 +54,12 @@ namespace NeoEdit.HexEdit
 				var row = strings.RowDefinitions.Count;
 				strings.RowDefinitions.Add(new RowDefinition());
 
-				var label = new Label { Content = StrCoder.GetDescription(codePage, true) };
+				var label = new Label { Content = Coder.GetDescription(codePage, true) };
 				Grid.SetRow(label, row);
 				Grid.SetColumn(label, 0);
 				strings.Children.Add(label);
 
-				var displayString = new DisplayString { CodePage = codePage };
+				var displayString = new DisplayValue { CodePage = codePage, HorizontalAlignment = HorizontalAlignment.Left, IsReadOnly = true };
 				Grid.SetRow(displayString, row);
 				Grid.SetColumn(displayString, 1);
 				strings.Children.Add(displayString);

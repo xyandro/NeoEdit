@@ -17,14 +17,14 @@ namespace NeoEdit.GUI.Dialogs
 		internal class CodePageItem : CheckBox
 		{
 			[DepProp]
-			public StrCoder.CodePage CodePage { get { return UIHelper<CodePageItem>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<CodePageItem>.SetPropValue(this, value); } }
+			public Coder.CodePage CodePage { get { return UIHelper<CodePageItem>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<CodePageItem>.SetPropValue(this, value); } }
 
 			static CodePageItem() { UIHelper<CodePageItem>.Register(); }
 
-			public CodePageItem(StrCoder.CodePage codePage)
+			public CodePageItem(Coder.CodePage codePage)
 			{
 				CodePage = codePage;
-				Content = StrCoder.GetDescription(CodePage);
+				Content = Coder.GetDescription(CodePage);
 			}
 		}
 
@@ -63,8 +63,8 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			InitializeComponent();
 
-			var defaultCodePages = new HashSet<StrCoder.CodePage> { StrCoder.CodePage.Default, StrCoder.CodePage.UTF8, StrCoder.CodePage.UTF16LE };
-			CodePageItems = new ObservableCollection<CodePageItem>(StrCoder.GetCodePages().Select(codePage => new CodePageItem(codePage) { IsChecked = defaultCodePages.Contains(codePage) }));
+			var defaultCodePages = new HashSet<Coder.CodePage> { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE };
+			CodePageItems = new ObservableCollection<CodePageItem>(Coder.GetCodePages().Select(codePage => new CodePageItem(codePage) { IsChecked = defaultCodePages.Contains(codePage) }));
 			codePages.PreviewKeyDown += (s, e) =>
 			{
 				if (e.Key == Key.Space)
@@ -86,14 +86,17 @@ namespace NeoEdit.GUI.Dialogs
 			if (String.IsNullOrEmpty(FindText))
 				return;
 
-			var valueConverters = Helpers.GetValues<Coder.Type>().Select(a => new { Key = a, Value = typeof(BinaryFindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic) }).Where(a => a.Value != null).ToDictionary(a => a.Key, a => a.Value.GetValue(this) as CheckBox);
+			var valueConverters = Helpers.GetValues<Coder.CodePage>().Select(a => new { Key = a, Value = typeof(BinaryFindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic) }).Where(a => a.Value != null).ToDictionary(a => a.Key, a => a.Value.GetValue(this) as CheckBox);
 			var valueConvertersToUse = valueConverters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
 			var data = valueConvertersToUse.Select(converter => new Tuple<byte[], bool>(Coder.StringToBytes(FindText, converter), true)).ToList();
 
-			var stringConverters = CodePageItems.Where(item => (item.IsVisible) && (item.IsEnabled) && (item.IsChecked == true)).Select(item => item.CodePage).ToList();
-			data.AddRange(stringConverters.Select(converter => new Tuple<byte[], bool>(StrCoder.StringToBytes(FindText, converter), (MatchCase) || (StrCoder.AlwaysCaseSensitive(converter)))));
+			if (ShowStr)
+			{
+				var stringConverters = CodePageItems.Where(item => (item.IsEnabled) && (item.IsChecked == true)).Select(item => item.CodePage).ToList();
+				data.AddRange(stringConverters.Select(converter => new Tuple<byte[], bool>(Coder.StringToBytes(FindText, converter), (MatchCase) || (Coder.AlwaysCaseSensitive(converter)))));
+			}
 
-			data = data.GroupBy(tuple => String.Format("{0}-{1}", StrCoder.BytesToString(tuple.Item1, StrCoder.CodePage.Hex), tuple.Item2)).Select(item => item.First()).ToList();
+			data = data.GroupBy(tuple => String.Format("{0}-{1}", Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex), tuple.Item2)).Select(item => item.First()).ToList();
 
 			if (data.Count == 0)
 				return;

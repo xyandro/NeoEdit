@@ -198,7 +198,7 @@ namespace NeoEdit.Common.Transform
 				var arrayType = type.GetElementType();
 				if (arrayType == typeof(byte))
 				{
-					xml.Add(StrCoder.BytesToString(obj as byte[], StrCoder.CodePage.Hex));
+					xml.Add(Coder.BytesToString(obj as byte[], Coder.CodePage.Hex));
 					return true;
 				}
 
@@ -259,7 +259,7 @@ namespace NeoEdit.Common.Transform
 
 			if ((type.IsArray) && (type.GetElementType() == typeof(byte)))
 			{
-				raw = StrCoder.StringToBytes(value, StrCoder.CodePage.Hex);
+				raw = Coder.StringToBytes(value, Coder.CodePage.Hex);
 				return true;
 			}
 

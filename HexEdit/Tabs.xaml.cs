@@ -27,7 +27,7 @@ namespace NeoEdit.HexEdit
 
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 
-		static void Create(BinaryData data, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool createNew = false)
+		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool createNew = false)
 		{
 			((!createNew ? UIHelper<HexEditTabs>.GetNewest() : null) ?? new HexEditTabs()).Add(new HexEditor(data, codePage, filename, filetitle));
 		}
@@ -46,7 +46,7 @@ namespace NeoEdit.HexEdit
 			Active = hexEditor;
 		}
 
-		public static void CreateFromFile(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
+		public static void CreateFromFile(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool createNew = false)
 		{
 			if (bytes == null)
 			{

@@ -9,9 +9,9 @@ namespace NeoEdit.GUI
 		public static Launcher Static { get { return launcher; } }
 
 		protected Action systemInfoLauncher;
-		protected Action<string, byte[], StrCoder.CodePage, bool> textEditorLauncher;
+		protected Action<string, byte[], Coder.CodePage, bool> textEditorLauncher;
 		protected Action<string, bool> textViewerLauncher;
-		protected Action<string, byte[], StrCoder.CodePage, bool> fileHexEditorLauncher;
+		protected Action<string, byte[], Coder.CodePage, bool> fileHexEditorLauncher;
 		protected Action<int> processHexEditorLauncher;
 		protected Action diskLauncher;
 		protected Action consoleLauncher;
@@ -21,9 +21,9 @@ namespace NeoEdit.GUI
 		protected Action dbViewerLauncher;
 		public static void Initialize(
 			Action systemInfo,
-			Action<string, byte[], StrCoder.CodePage, bool> textEditor,
+			Action<string, byte[], Coder.CodePage, bool> textEditor,
 			Action<string, bool> textViewer,
-			Action<string, byte[], StrCoder.CodePage, bool> fileHexEditor,
+			Action<string, byte[], Coder.CodePage, bool> fileHexEditor,
 			Action<int> processHexEditor,
 			Action disk,
 			Action console,
@@ -54,7 +54,7 @@ namespace NeoEdit.GUI
 			systemInfoLauncher();
 		}
 
-		public void LaunchTextEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
+		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool createNew = false)
 		{
 			textEditorLauncher(filename, bytes, codePage, createNew);
 		}
@@ -64,7 +64,7 @@ namespace NeoEdit.GUI
 			textViewerLauncher(filename, createNew);
 		}
 
-		public void LaunchHexEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, bool createNew = false)
+		public void LaunchHexEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool createNew = false)
 		{
 			fileHexEditorLauncher(filename, bytes, codePage, createNew);
 		}

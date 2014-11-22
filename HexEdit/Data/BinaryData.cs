@@ -81,9 +81,9 @@ namespace NeoEdit.HexEdit.Data
 			return result;
 		}
 
-		public StrCoder.CodePage CodePageFromBOM()
+		public Coder.CodePage CodePageFromBOM()
 		{
-			return StrCoder.CodePageFromBOM(GetSubset(0, Math.Min(10, length)));
+			return Coder.CodePageFromBOM(GetSubset(0, Math.Min(10, length)));
 		}
 
 		public virtual void Save(string filename)

@@ -39,7 +39,7 @@ namespace NeoEdit.HexEdit
 		[DepProp]
 		public bool Insert { get { return UIHelper<HexEditor>.GetPropValue<bool>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public StrCoder.CodePage CodePage { get { return UIHelper<HexEditor>.GetPropValue<StrCoder.CodePage>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
+		public Coder.CodePage CodePage { get { return UIHelper<HexEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string FoundText { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -137,7 +137,7 @@ namespace NeoEdit.HexEdit
 			UIHelper<HexEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		public HexEditor(BinaryData data, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, string filename = null, string filetitle = null)
+		public HexEditor(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null)
 		{
 			InitializeComponent();
 
@@ -153,7 +153,7 @@ namespace NeoEdit.HexEdit
 
 			Data = data;
 			CodePage = codePage;
-			if (CodePage == StrCoder.CodePage.AutoByBOM)
+			if (CodePage == Coder.CodePage.AutoByBOM)
 				CodePage = Data.CodePageFromBOM();
 			FileName = filename;
 			FileTitle = filetitle;
@@ -489,7 +489,7 @@ namespace NeoEdit.HexEdit
 
 			if (!SelHex)
 			{
-				Replace(StrCoder.StringToBytes(e.Text, CodePage));
+				Replace(Coder.StringToBytes(e.Text, CodePage));
 				return;
 			}
 
@@ -631,7 +631,7 @@ namespace NeoEdit.HexEdit
 		internal bool Command_File_TextEditor()
 		{
 			var bytes = Data.GetAllBytes();
-			if (!StrCoder.CanFullyEncode(bytes, CodePage))
+			if (!Coder.CanFullyEncode(bytes, CodePage))
 			{
 				if (new Message
 				{
@@ -679,7 +679,7 @@ namespace NeoEdit.HexEdit
 			var bytes = Data.GetSubset(SelStart, Length);
 			string str;
 			if (SelHex)
-				str = StrCoder.BytesToString(bytes, StrCoder.CodePage.Hex);
+				str = Coder.BytesToString(bytes, Coder.CodePage.Hex);
 			else
 			{
 				var sb = new StringBuilder(bytes.Length);
@@ -700,7 +700,7 @@ namespace NeoEdit.HexEdit
 			{
 				var str = ClipboardWindow.GetString();
 				if (str != null)
-					bytes = StrCoder.TryStringToBytes(str, CodePage);
+					bytes = Coder.TryStringToBytes(str, CodePage);
 			}
 			if ((bytes != null) && (bytes.Length != 0))
 				Replace(bytes);

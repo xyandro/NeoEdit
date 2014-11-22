@@ -29,7 +29,7 @@ namespace NeoEdit.Common.UnitTest
 			}
 		}
 
-		string GetText(StrCoder.CodePage codePage, bool bom, Endings ending)
+		string GetText(Coder.CodePage codePage, bool bom, Endings ending)
 		{
 			var text = new List<string>
 			{
@@ -82,7 +82,7 @@ namespace NeoEdit.Common.UnitTest
 
 			using (var combined = File.Create(Path.Combine(dir, "Combined.txt")))
 			{
-				foreach (var codePage in GetValues<StrCoder.CodePage>())
+				foreach (var codePage in GetValues<Coder.CodePage>())
 				{
 					if (codePage <= 0)
 						continue;
@@ -95,16 +95,16 @@ namespace NeoEdit.Common.UnitTest
 							Encoding encoder = null;
 							switch (codePage)
 							{
-								case StrCoder.CodePage.UTF8:
+								case Coder.CodePage.UTF8:
 									encoder = new UTF8Encoding(false);
 									break;
-								case StrCoder.CodePage.UTF16LE:
-								case StrCoder.CodePage.UTF16BE:
-									encoder = new UnicodeEncoding(codePage == StrCoder.CodePage.UTF16BE, false);
+								case Coder.CodePage.UTF16LE:
+								case Coder.CodePage.UTF16BE:
+									encoder = new UnicodeEncoding(codePage == Coder.CodePage.UTF16BE, false);
 									break;
-								case StrCoder.CodePage.UTF32BE:
-								case StrCoder.CodePage.UTF32LE:
-									encoder = new UTF32Encoding(codePage == StrCoder.CodePage.UTF32BE, false);
+								case Coder.CodePage.UTF32BE:
+								case Coder.CodePage.UTF32LE:
+									encoder = new UTF32Encoding(codePage == Coder.CodePage.UTF32BE, false);
 									break;
 								default:
 									throw new Exception("No encoder found");
@@ -116,8 +116,8 @@ namespace NeoEdit.Common.UnitTest
 							var bytes = File.ReadAllBytes(filename);
 							combined.Write(bytes, 0, bytes.Length);
 
-							var encoding2 = StrCoder.GuessUnicodeEncoding(bytes);
-							var str2 = StrCoder.BytesToString(bytes, encoding2);
+							var encoding2 = Coder.GuessUnicodeEncoding(bytes);
+							var str2 = Coder.BytesToString(bytes, encoding2);
 							var bom2 = (str2.Length > 0) && (str2[0] == '\ufeff');
 
 							Assert.AreEqual(codePage, encoding2);

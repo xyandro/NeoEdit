@@ -29,7 +29,7 @@ namespace NeoEdit.TextEdit
 
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
-		public static void Create(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false)
+		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false)
 		{
 			var textEditor = CreateTextEditor(filename, bytes, codePage, line, column);
 			if (textEditor == null)
@@ -38,7 +38,7 @@ namespace NeoEdit.TextEdit
 			((!createNew ? UIHelper<TextEditTabs>.GetNewest() : null) ?? new TextEditTabs()).Add(textEditor);
 		}
 
-		static TextEditor CreateTextEditor(string filename = null, byte[] bytes = null, StrCoder.CodePage codePage = StrCoder.CodePage.AutoByBOM, int line = -1, int column = -1)
+		static TextEditor CreateTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = -1, int column = -1)
 		{
 			if (filename != null)
 			{
@@ -400,44 +400,44 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Case_Toggle: Active.Command_Data_Case_Toggle(); break;
 				case TextEditCommand.Data_Hex_ToHex_String: Active.Command_Data_Hex_ToHex(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Hex_ToHex_Int: Active.Command_Data_Hex_ToHex(); break;
-				case TextEditCommand.Data_Hex_ToHex_UIntLE_UInt8LE: Active.Command_Data_Hex_ToHex(Coder.Type.UInt8LE); break;
-				case TextEditCommand.Data_Hex_ToHex_UIntLE_UInt16LE: Active.Command_Data_Hex_ToHex(Coder.Type.UInt16LE); break;
-				case TextEditCommand.Data_Hex_ToHex_UIntLE_UInt32LE: Active.Command_Data_Hex_ToHex(Coder.Type.UInt32LE); break;
-				case TextEditCommand.Data_Hex_ToHex_UIntLE_UInt64LE: Active.Command_Data_Hex_ToHex(Coder.Type.UInt64LE); break;
-				case TextEditCommand.Data_Hex_ToHex_IntLE_Int8LE: Active.Command_Data_Hex_ToHex(Coder.Type.Int8LE); break;
-				case TextEditCommand.Data_Hex_ToHex_IntLE_Int16LE: Active.Command_Data_Hex_ToHex(Coder.Type.Int16LE); break;
-				case TextEditCommand.Data_Hex_ToHex_IntLE_Int32LE: Active.Command_Data_Hex_ToHex(Coder.Type.Int32LE); break;
-				case TextEditCommand.Data_Hex_ToHex_IntLE_Int64LE: Active.Command_Data_Hex_ToHex(Coder.Type.Int64LE); break;
-				case TextEditCommand.Data_Hex_ToHex_UIntBE_UInt8BE: Active.Command_Data_Hex_ToHex(Coder.Type.UInt8BE); break;
-				case TextEditCommand.Data_Hex_ToHex_UIntBE_UInt16BE: Active.Command_Data_Hex_ToHex(Coder.Type.UInt16BE); break;
-				case TextEditCommand.Data_Hex_ToHex_UIntBE_UInt32BE: Active.Command_Data_Hex_ToHex(Coder.Type.UInt32BE); break;
-				case TextEditCommand.Data_Hex_ToHex_UIntBE_UInt64BE: Active.Command_Data_Hex_ToHex(Coder.Type.UInt64BE); break;
-				case TextEditCommand.Data_Hex_ToHex_IntBE_Int8BE: Active.Command_Data_Hex_ToHex(Coder.Type.Int8BE); break;
-				case TextEditCommand.Data_Hex_ToHex_IntBE_Int16BE: Active.Command_Data_Hex_ToHex(Coder.Type.Int16BE); break;
-				case TextEditCommand.Data_Hex_ToHex_IntBE_Int32BE: Active.Command_Data_Hex_ToHex(Coder.Type.Int32BE); break;
-				case TextEditCommand.Data_Hex_ToHex_IntBE_Int64BE: Active.Command_Data_Hex_ToHex(Coder.Type.Int64BE); break;
-				case TextEditCommand.Data_Hex_ToHex_Float_Single: Active.Command_Data_Hex_ToHex(Coder.Type.Single); break;
-				case TextEditCommand.Data_Hex_ToHex_Float_Double: Active.Command_Data_Hex_ToHex(Coder.Type.Double); break;
+				case TextEditCommand.Data_Hex_ToHex_UIntLE_UInt8LE: Active.Command_Data_Hex_ToHex(Coder.CodePage.UInt8LE); break;
+				case TextEditCommand.Data_Hex_ToHex_UIntLE_UInt16LE: Active.Command_Data_Hex_ToHex(Coder.CodePage.UInt16LE); break;
+				case TextEditCommand.Data_Hex_ToHex_UIntLE_UInt32LE: Active.Command_Data_Hex_ToHex(Coder.CodePage.UInt32LE); break;
+				case TextEditCommand.Data_Hex_ToHex_UIntLE_UInt64LE: Active.Command_Data_Hex_ToHex(Coder.CodePage.UInt64LE); break;
+				case TextEditCommand.Data_Hex_ToHex_IntLE_Int8LE: Active.Command_Data_Hex_ToHex(Coder.CodePage.Int8LE); break;
+				case TextEditCommand.Data_Hex_ToHex_IntLE_Int16LE: Active.Command_Data_Hex_ToHex(Coder.CodePage.Int16LE); break;
+				case TextEditCommand.Data_Hex_ToHex_IntLE_Int32LE: Active.Command_Data_Hex_ToHex(Coder.CodePage.Int32LE); break;
+				case TextEditCommand.Data_Hex_ToHex_IntLE_Int64LE: Active.Command_Data_Hex_ToHex(Coder.CodePage.Int64LE); break;
+				case TextEditCommand.Data_Hex_ToHex_UIntBE_UInt8BE: Active.Command_Data_Hex_ToHex(Coder.CodePage.UInt8BE); break;
+				case TextEditCommand.Data_Hex_ToHex_UIntBE_UInt16BE: Active.Command_Data_Hex_ToHex(Coder.CodePage.UInt16BE); break;
+				case TextEditCommand.Data_Hex_ToHex_UIntBE_UInt32BE: Active.Command_Data_Hex_ToHex(Coder.CodePage.UInt32BE); break;
+				case TextEditCommand.Data_Hex_ToHex_UIntBE_UInt64BE: Active.Command_Data_Hex_ToHex(Coder.CodePage.UInt64BE); break;
+				case TextEditCommand.Data_Hex_ToHex_IntBE_Int8BE: Active.Command_Data_Hex_ToHex(Coder.CodePage.Int8BE); break;
+				case TextEditCommand.Data_Hex_ToHex_IntBE_Int16BE: Active.Command_Data_Hex_ToHex(Coder.CodePage.Int16BE); break;
+				case TextEditCommand.Data_Hex_ToHex_IntBE_Int32BE: Active.Command_Data_Hex_ToHex(Coder.CodePage.Int32BE); break;
+				case TextEditCommand.Data_Hex_ToHex_IntBE_Int64BE: Active.Command_Data_Hex_ToHex(Coder.CodePage.Int64BE); break;
+				case TextEditCommand.Data_Hex_ToHex_Float_Single: Active.Command_Data_Hex_ToHex(Coder.CodePage.Single); break;
+				case TextEditCommand.Data_Hex_ToHex_Float_Double: Active.Command_Data_Hex_ToHex(Coder.CodePage.Double); break;
 				case TextEditCommand.Data_Hex_FromHex_String: Active.Command_Data_Hex_FromHex(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Hex_FromHex_Int: Active.Command_Data_Hex_FromHex(); break;
-				case TextEditCommand.Data_Hex_FromHex_UIntLE_UInt8LE: Active.Command_Data_Hex_FromHex(Coder.Type.UInt8LE); break;
-				case TextEditCommand.Data_Hex_FromHex_UIntLE_UInt16LE: Active.Command_Data_Hex_FromHex(Coder.Type.UInt16LE); break;
-				case TextEditCommand.Data_Hex_FromHex_UIntLE_UInt32LE: Active.Command_Data_Hex_FromHex(Coder.Type.UInt32LE); break;
-				case TextEditCommand.Data_Hex_FromHex_UIntLE_UInt64LE: Active.Command_Data_Hex_FromHex(Coder.Type.UInt64LE); break;
-				case TextEditCommand.Data_Hex_FromHex_IntLE_Int8LE: Active.Command_Data_Hex_FromHex(Coder.Type.Int8LE); break;
-				case TextEditCommand.Data_Hex_FromHex_IntLE_Int16LE: Active.Command_Data_Hex_FromHex(Coder.Type.Int16LE); break;
-				case TextEditCommand.Data_Hex_FromHex_IntLE_Int32LE: Active.Command_Data_Hex_FromHex(Coder.Type.Int32LE); break;
-				case TextEditCommand.Data_Hex_FromHex_IntLE_Int64LE: Active.Command_Data_Hex_FromHex(Coder.Type.Int64LE); break;
-				case TextEditCommand.Data_Hex_FromHex_UIntBE_UInt8BE: Active.Command_Data_Hex_FromHex(Coder.Type.UInt8BE); break;
-				case TextEditCommand.Data_Hex_FromHex_UIntBE_UInt16BE: Active.Command_Data_Hex_FromHex(Coder.Type.UInt16BE); break;
-				case TextEditCommand.Data_Hex_FromHex_UIntBE_UInt32BE: Active.Command_Data_Hex_FromHex(Coder.Type.UInt32BE); break;
-				case TextEditCommand.Data_Hex_FromHex_UIntBE_UInt64BE: Active.Command_Data_Hex_FromHex(Coder.Type.UInt64BE); break;
-				case TextEditCommand.Data_Hex_FromHex_IntBE_Int8BE: Active.Command_Data_Hex_FromHex(Coder.Type.Int8BE); break;
-				case TextEditCommand.Data_Hex_FromHex_IntBE_Int16BE: Active.Command_Data_Hex_FromHex(Coder.Type.Int16BE); break;
-				case TextEditCommand.Data_Hex_FromHex_IntBE_Int32BE: Active.Command_Data_Hex_FromHex(Coder.Type.Int32BE); break;
-				case TextEditCommand.Data_Hex_FromHex_IntBE_Int64BE: Active.Command_Data_Hex_FromHex(Coder.Type.Int64BE); break;
-				case TextEditCommand.Data_Hex_FromHex_Float_Single: Active.Command_Data_Hex_FromHex(Coder.Type.Single); break;
-				case TextEditCommand.Data_Hex_FromHex_Float_Double: Active.Command_Data_Hex_FromHex(Coder.Type.Double); break;
+				case TextEditCommand.Data_Hex_FromHex_UIntLE_UInt8LE: Active.Command_Data_Hex_FromHex(Coder.CodePage.UInt8LE); break;
+				case TextEditCommand.Data_Hex_FromHex_UIntLE_UInt16LE: Active.Command_Data_Hex_FromHex(Coder.CodePage.UInt16LE); break;
+				case TextEditCommand.Data_Hex_FromHex_UIntLE_UInt32LE: Active.Command_Data_Hex_FromHex(Coder.CodePage.UInt32LE); break;
+				case TextEditCommand.Data_Hex_FromHex_UIntLE_UInt64LE: Active.Command_Data_Hex_FromHex(Coder.CodePage.UInt64LE); break;
+				case TextEditCommand.Data_Hex_FromHex_IntLE_Int8LE: Active.Command_Data_Hex_FromHex(Coder.CodePage.Int8LE); break;
+				case TextEditCommand.Data_Hex_FromHex_IntLE_Int16LE: Active.Command_Data_Hex_FromHex(Coder.CodePage.Int16LE); break;
+				case TextEditCommand.Data_Hex_FromHex_IntLE_Int32LE: Active.Command_Data_Hex_FromHex(Coder.CodePage.Int32LE); break;
+				case TextEditCommand.Data_Hex_FromHex_IntLE_Int64LE: Active.Command_Data_Hex_FromHex(Coder.CodePage.Int64LE); break;
+				case TextEditCommand.Data_Hex_FromHex_UIntBE_UInt8BE: Active.Command_Data_Hex_FromHex(Coder.CodePage.UInt8BE); break;
+				case TextEditCommand.Data_Hex_FromHex_UIntBE_UInt16BE: Active.Command_Data_Hex_FromHex(Coder.CodePage.UInt16BE); break;
+				case TextEditCommand.Data_Hex_FromHex_UIntBE_UInt32BE: Active.Command_Data_Hex_FromHex(Coder.CodePage.UInt32BE); break;
+				case TextEditCommand.Data_Hex_FromHex_UIntBE_UInt64BE: Active.Command_Data_Hex_FromHex(Coder.CodePage.UInt64BE); break;
+				case TextEditCommand.Data_Hex_FromHex_IntBE_Int8BE: Active.Command_Data_Hex_FromHex(Coder.CodePage.Int8BE); break;
+				case TextEditCommand.Data_Hex_FromHex_IntBE_Int16BE: Active.Command_Data_Hex_FromHex(Coder.CodePage.Int16BE); break;
+				case TextEditCommand.Data_Hex_FromHex_IntBE_Int32BE: Active.Command_Data_Hex_FromHex(Coder.CodePage.Int32BE); break;
+				case TextEditCommand.Data_Hex_FromHex_IntBE_Int64BE: Active.Command_Data_Hex_FromHex(Coder.CodePage.Int64BE); break;
+				case TextEditCommand.Data_Hex_FromHex_Float_Single: Active.Command_Data_Hex_FromHex(Coder.CodePage.Single); break;
+				case TextEditCommand.Data_Hex_FromHex_Float_Double: Active.Command_Data_Hex_FromHex(Coder.CodePage.Double); break;
 				case TextEditCommand.Data_Base64_ToBase64: Active.Command_Data_Base64_ToBase64(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Base64_FromBase64: Active.Command_Data_Base64_FromBase64(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_DateTime_Insert: Active.Command_Data_DateTime_Insert(); break;

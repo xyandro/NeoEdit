@@ -51,13 +51,6 @@
     <Compile Include="Dialogs\SymmetricKeyDialog.xaml.cs">
       <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="DisplayString.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="DisplayString.xaml.cs">
-      <DependentUpon>DisplayString.xaml</DependentUpon>
-    </Compile>
     <Page Include="DisplayValue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
