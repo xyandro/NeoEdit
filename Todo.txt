@@ -35,6 +35,7 @@ Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Error on refresh file with no name
 Ignore unchanged filenames on move files
+Sort by frequency
 
 Binary:
 Fix binary editor backwards search

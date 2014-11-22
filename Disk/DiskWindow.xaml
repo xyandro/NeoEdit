@@ -33,14 +33,14 @@
 				<TextBlock Text="Files"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Files.Count, ElementName=self}"/>
+				<TextBlock Text="{Binding Files.Count, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Selected"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Selected.Count, ElementName=self}"/>
+				<TextBlock Text="{Binding Selected.Count, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock/>

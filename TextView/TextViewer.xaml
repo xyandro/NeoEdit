@@ -28,7 +28,7 @@
 			<StatusBarItem>
 				<TextBlock>
 					<TextBlock.Text>
-						<MultiBinding StringFormat="{}Selection: {0} - {1}">
+						<MultiBinding StringFormat="{}Selection: {0:n0} - {1:n0}">
 							<Binding Path="SelStart" ElementName="self"/>
 							<Binding Path="SelEnd" ElementName="self"/>
 						</MultiBinding>

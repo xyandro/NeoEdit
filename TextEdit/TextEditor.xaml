@@ -28,28 +28,28 @@
 				<TextBlock Text="Line"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Line, ElementName=self}"/>
+				<TextBlock Text="{Binding Line, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Col"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Column, ElementName=self}"/>
+				<TextBlock Text="{Binding Column, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Ch"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Index, ElementName=self}"/>
+				<TextBlock Text="{Binding Index, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
 				<TextBlock Text="Selections"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding NumSelections, ElementName=self}"/>
+				<TextBlock Text="{Binding NumSelections, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock/>
