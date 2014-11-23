@@ -507,5 +507,30 @@ namespace NeoEdit.Common.Transform
 		{
 			return codePage >= CodePage.StartString;
 		}
+
+		public static int PreambleSize(CodePage codePage)
+		{
+			switch (codePage)
+			{
+				case CodePage.UTF8: return 3;
+				case CodePage.UTF16LE: return 2;
+				case CodePage.UTF16BE: return 2;
+				case CodePage.UTF32LE: return 2;
+				case CodePage.UTF32BE: return 4;
+				default: return 0;
+			}
+		}
+
+		public static int CharSize(CodePage codePage)
+		{
+			switch (codePage)
+			{
+				case CodePage.UTF16LE: return 2;
+				case CodePage.UTF16BE: return 2;
+				case CodePage.UTF32LE: return 2;
+				case CodePage.UTF32BE: return 4;
+				default: return 1;
+			}
+		}
 	}
 }

@@ -40,9 +40,15 @@ Add "l" for various things to expression for lengths
 Asking to save despite encoding always changes filename even if you hit no
 Buttons on width dialog for numeric/string
 Ctrl-L with no selection at top of doc gives error
+Convert
 
-Binary:
-Fix binary editor backwards search
+View:
+Split
+Combine
+Merge
+
+Hex:
+Fix backwards search
 Remember search history
 Cursor hard to see
 Reload current file (perhaps automatically?)
