@@ -18,10 +18,10 @@ namespace NeoEdit.TextView.Dialogs
 
 		public enum SizeTypeEnum
 		{
-			Bytes,
-			KB,
-			MB,
 			GB,
+			MB,
+			KB,
+			Bytes,
 		}
 
 		[DepProp]
@@ -29,7 +29,7 @@ namespace NeoEdit.TextView.Dialogs
 		[DepProp]
 		public SizeTypeEnum SizeType { get { return UIHelper<SplitDialog>.GetPropValue<SizeTypeEnum>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? NumFiles { get { return UIHelper<SplitDialog>.GetPropValue<int?>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
+		public int NumFiles { get { return UIHelper<SplitDialog>.GetPropValue<int>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string OutputDir { get { return UIHelper<SplitDialog>.GetPropValue<string>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -40,14 +40,16 @@ namespace NeoEdit.TextView.Dialogs
 			UIHelper<SplitDialog>.Register();
 			UIHelper<SplitDialog>.AddCallback(a => a.Size, (obj, o, n) => obj.calcNumFiles.Start());
 			UIHelper<SplitDialog>.AddCallback(a => a.SizeType, (obj, o, n) => obj.calcNumFiles.Start());
+			UIHelper<SplitDialog>.AddCallback(a => a.NumFiles, (obj, o, n) => obj.calcSize.Start());
 		}
 
 		readonly TextData data;
-		readonly RunOnceTimer calcNumFiles;
+		readonly RunOnceTimer calcNumFiles, calcSize;
 		SplitDialog(TextData data)
 		{
 			InitializeComponent();
 			calcNumFiles = new RunOnceTimer(() => CalculateNumFiles());
+			calcSize = new RunOnceTimer(() => CalculateSize());
 			this.data = data;
 			OutputDir = Path.GetDirectoryName(data.FileName);
 			OutputTemplate = Path.GetFileNameWithoutExtension(data.FileName) + " - {0}" + Path.GetExtension(data.FileName);
@@ -73,9 +75,28 @@ namespace NeoEdit.TextView.Dialogs
 
 		void CalculateNumFiles()
 		{
-			NumFiles = data.CalculateSplit("", GetSize()).Count;
-			if (NumFiles == 0)
-				NumFiles = null;
+			NumFiles = data.CalculateSplit(GetSize());
+			calcSize.Stop();
+		}
+
+		void CalculateSize()
+		{
+			if (NumFiles <= 0)
+				return;
+
+			long min = 1, max = data.Size;
+			while (min != max)
+			{
+				var mid = (min + max) / 2;
+				var count = data.CalculateSplit(mid);
+				if (count > NumFiles)
+					min = mid + 1;
+				else
+					max = mid;
+			}
+			Size = min;
+			SizeType = SizeTypeEnum.Bytes;
+			calcNumFiles.Stop();
 		}
 
 		Result result;

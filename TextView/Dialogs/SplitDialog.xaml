@@ -25,8 +25,8 @@
 			<ComboBox Name="sizeType" Width="60" SelectedValue="{Binding SizeType, ElementName=self}"/>
 		</StackPanel>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Number of files:" HorizontalAlignment="Right"/>
-		<Label Grid.Row="1" Grid.Column="1" Content="{Binding NumFiles, ElementName=self}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Number of files:" HorizontalAlignment="Right" Target="{Binding ElementName=numFiles}"/>
+		<xctk:LongUpDown Grid.Row="1" Grid.Column="1" Width="100" Name="numFiles" Value="{Binding NumFiles, ElementName=self}" Minimum="1" AutoSelectBehavior="OnFocus" FormatString="n0" HorizontalAlignment="Left"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Output _directory:" HorizontalAlignment="Right" Target="{Binding ElementName=outputDir}"/>
 		<Grid Grid.Row="2" Grid.Column="1">

@@ -147,28 +147,47 @@ namespace NeoEdit.TextView
 
 		public List<Tuple<string, long, long>> CalculateSplit(string format, long minSize)
 		{
+			var headerSize = Coder.PreambleSize(codePage);
 			if (minSize <= 0)
 				return new List<Tuple<string, long, long>>();
 
 			var result = new List<Tuple<string, long, long>>();
-			var header = Coder.PreambleSize(codePage);
 			var fileNum = 0;
-			var line = 0;
+			var end = 0;
 			while (true)
 			{
-				var start = lineStart[line];
-				line = lineStart.BinarySearch(start + minSize);
-				if (line < 0)
-					line = ~line;
-				line = Math.Min(line, lineStart.Count - 1);
-				var end = lineStart[line];
+				var start = end;
+				end = lineStart.BinarySearch(lineStart[start] + minSize - headerSize);
+				if (end < 0)
+					end = ~end;
+				end = Math.Min(Math.Max(start + 1, end), lineStart.Count - 1);
 				if (start == end)
 					break;
-				result.Add(Tuple.Create(String.Format(format, ++fileNum), start, end));
+				result.Add(Tuple.Create(String.Format(format, ++fileNum), lineStart[start], lineStart[end]));
 			}
-			if (result.Count <= 1)
-				return new List<Tuple<string, long, long>>();
 			return result;
+		}
+
+		public int CalculateSplit(long minSize)
+		{
+			var headerSize = Coder.PreambleSize(codePage);
+			if (minSize <= 0)
+				return 0;
+
+			var count = 0;
+			var end = 0;
+			while (true)
+			{
+				var start = end;
+				end = lineStart.BinarySearch(lineStart[start] + minSize - headerSize);
+				if (end < 0)
+					end = ~end;
+				end = Math.Min(Math.Max(start + 1, end), lineStart.Count - 1);
+				if (start == end)
+					break;
+				++count;
+			}
+			return count;
 		}
 
 		public void SplitFile(List<Tuple<string, long, long>> splitData)
@@ -246,7 +265,7 @@ namespace NeoEdit.TextView
 
 					var buffer = new byte[65536];
 					long written = 0;
-					long total = fileLengths.Values.Sum() - header.Length * fileLengths.Count + header.Length;
+					long total = files.Select(file => fileLengths[file]).Sum() - header.Length * files.Count + header.Length;
 					using (var output = File.Create(outputFile))
 					{
 						output.Write(header, 0, header.Length);
