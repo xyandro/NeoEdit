@@ -34,6 +34,7 @@ namespace NeoEdit.TextView
 			InitializeComponent();
 
 			TextViewers = new ObservableCollection<TextViewer>();
+			Show(); // Explicitly show because sometimes the loading file dialog will put up first and be hidden
 		}
 
 		void Command_File_Open()

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,20 +19,7 @@ namespace NeoEdit.TextView
 		Coder.CodePage codePage { get; set; }
 		public TextData(string filename, Action<TextData> onScanComplete)
 		{
-			var worker = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
-			var scanningDialog = new ScanFileDialog(filename, () => worker.CancelAsync());
-			worker.ProgressChanged += (s, e) => scanningDialog.SetProgress(e.ProgressPercentage);
-			worker.RunWorkerCompleted += (s, e) =>
-			{
-				scanningDialog.Close();
-				if ((e.Error != null) || (e.Cancelled))
-					Close();
-				if (e.Error != null)
-					throw e.Error;
-				if (!e.Cancelled)
-					onScanComplete(this);
-			};
-			worker.DoWork += (s, e) =>
+			MultiProgressDialog.Run("Scanning file...", new List<string> { filename }, (progress, cancel) =>
 			{
 				FileName = filename;
 				file = File.OpenRead(FileName);
@@ -61,11 +47,8 @@ namespace NeoEdit.TextView
 				lineStart = new List<long> { position };
 				while (position < Size)
 				{
-					if (worker.CancellationPending)
-					{
-						e.Cancel = true;
+					if (cancel())
 						return;
-					}
 
 					var use = (int)Math.Min(Size - position, blockSize);
 					Read(position, use, block);
@@ -74,7 +57,7 @@ namespace NeoEdit.TextView
 						use -= charSize;
 
 					lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, use, ref position, ref lineLength, ref maxLine));
-					worker.ReportProgress((int)(position * 100 / Size));
+					progress(0, (int)(position * 100 / Size));
 				}
 				if (lineStart.Last() != Size)
 				{
@@ -84,8 +67,7 @@ namespace NeoEdit.TextView
 
 				NumLines = lineStart.Count - 1;
 				NumColumns = maxLine;
-			};
-			worker.RunWorkerAsync();
+			}, () => onScanComplete(this));
 		}
 
 		byte[] Read(long position, int size, byte[] buffer = null)
