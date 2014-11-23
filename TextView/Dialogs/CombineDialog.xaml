@@ -12,7 +12,7 @@
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
+			<RowDefinition Height="400"/>
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition Height="10"/>
@@ -20,7 +20,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Files:" HorizontalAlignment="Right" Target="{Binding ElementName=files}"/>
-		<ListBox Grid.Row="0" Grid.Column="1" Name="files" Height="400" ItemsSource="{Binding Files, ElementName=self}" SelectionMode="Extended"/>
+		<ListBox Grid.Row="0" Grid.Column="1" Name="files" ItemsSource="{Binding Files, ElementName=self}" SelectionMode="Extended"/>
 
 		<StackPanel Grid.Row="0" Grid.Column="2">
 			<Button Content="_Add" Margin="0,0,0,10" Click="AddFiles" Focusable="False"/>
