@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.HexEdit;
 using NeoEdit.Common.Transform;
 using NeoEdit.Console;
 using NeoEdit.DBViewer;
@@ -13,6 +13,7 @@ using NeoEdit.Disk;
 using NeoEdit.GUI.About;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Handles;
+using NeoEdit.HexEdit;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
@@ -25,6 +26,7 @@ namespace NeoEdit
 	{
 		protected override void OnStartup(StartupEventArgs e)
 		{
+			EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, e2) => (s as TextBox).SelectAll()));
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
