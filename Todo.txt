@@ -43,7 +43,6 @@ Ctrl-L with no selection at top of doc gives error
 Convert
 
 View:
-Split
 Combine
 Merge
 

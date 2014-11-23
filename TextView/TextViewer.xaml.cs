@@ -8,6 +8,7 @@ using System.Windows.Media;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
@@ -85,6 +86,15 @@ namespace NeoEdit.TextView
 		internal void Command_File_CopyPath()
 		{
 			ClipboardWindow.SetFiles(new List<string> { FileName }, false);
+		}
+
+		internal void Command_File_Split()
+		{
+			var result = SplitDialog.Run(data);
+			if (result == null)
+				return;
+
+			data.SplitFile(result.splitData);
 		}
 
 		internal void Command_Edit_Copy()

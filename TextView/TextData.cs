@@ -139,5 +139,69 @@ namespace NeoEdit.TextView
 		{
 			file.Close();
 		}
+
+		public List<Tuple<string, long, long>> CalculateSplit(string format, long minSize)
+		{
+			if (minSize <= 0)
+				return new List<Tuple<string, long, long>>();
+
+			var result = new List<Tuple<string, long, long>>();
+			var header = Coder.PreambleSize(codePage);
+			var fileNum = 0;
+			var line = 0;
+			while (true)
+			{
+				var start = lineStart[line];
+				line = lineStart.BinarySearch(start + minSize);
+				if (line < 0)
+					line = ~line;
+				line = Math.Min(line, lineStart.Count - 1);
+				var end = lineStart[line];
+				if (start == end)
+					break;
+				result.Add(Tuple.Create(String.Format(format, ++fileNum), start, end));
+			}
+			if (result.Count <= 1)
+				return new List<Tuple<string, long, long>>();
+			return result;
+		}
+
+		public void SplitFile(List<Tuple<string, long, long>> splitData)
+		{
+			var names = new List<string> { FileName };
+			names.AddRange(splitData.Select(tuple => tuple.Item1));
+			names = names.Select(file => Path.GetFileName(file)).ToList();
+
+			MultiProgressDialog.Run("Splitting files...", names, (progress, cancel) =>
+			{
+				var header = Read(0, Coder.PreambleSize(codePage));
+				long inputRead = 0;
+				long inputSize = Size - header.Length;
+				var buffer = new byte[65536];
+				for (var ctr = 0; ctr < splitData.Count; ++ctr)
+				{
+					var item = splitData[ctr];
+					using (var file = File.Create(item.Item1))
+					{
+						file.Write(header, 0, header.Length);
+						long outputWritten = 0;
+						long outputSize = item.Item3 - item.Item2;
+						while (outputWritten < outputSize)
+						{
+							if (cancel())
+								return;
+
+							var block = (int)Math.Min(buffer.Length, outputSize - outputWritten);
+							Read(outputWritten + item.Item2, block, buffer);
+							inputRead += block;
+							progress(0, (int)(inputRead * 100 / inputSize));
+							file.Write(buffer, 0, block);
+							outputWritten += block;
+							progress(ctr + 1, (int)(outputWritten * 100 / outputSize));
+						}
+					}
+				}
+			});
+		}
 	}
 }

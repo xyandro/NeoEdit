@@ -11,6 +11,8 @@
 		<Separator/>
 		<textView:TextViewMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
 		<Separator/>
+		<textView:TextViewMenuItem Header="_Split" CommandEnum="File_Split"/>
+		<Separator/>
 		<textView:TextViewMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
