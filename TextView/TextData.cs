@@ -57,7 +57,7 @@ namespace NeoEdit.TextView
 						use -= charSize;
 
 					lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, use, ref position, ref lineLength, ref maxLine));
-					progress(0, (int)(position * 100 / Size));
+					progress(0, position, Size);
 				}
 				if (lineStart.Last() != Size)
 				{
@@ -70,7 +70,7 @@ namespace NeoEdit.TextView
 			}, () => onScanComplete(this));
 		}
 
-		byte[] Read(long position, int size, byte[] buffer = null)
+		static byte[] Read(FileStream file, long position, int size, byte[] buffer = null)
 		{
 			if (buffer == null)
 				buffer = new byte[size];
@@ -80,6 +80,11 @@ namespace NeoEdit.TextView
 			if (file.Read(buffer, 0, size) != size)
 				throw new Exception("Failed to read whole block");
 			return buffer;
+		}
+
+		byte[] Read(long position, int size, byte[] buffer = null)
+		{
+			return Read(file, position, size, buffer);
 		}
 
 		public string GetLine(int line)
@@ -194,14 +199,87 @@ namespace NeoEdit.TextView
 							var block = (int)Math.Min(buffer.Length, outputSize - outputWritten);
 							Read(outputWritten + item.Item2, block, buffer);
 							inputRead += block;
-							progress(0, (int)(inputRead * 100 / inputSize));
+							progress(0, inputRead, inputSize);
 							file.Write(buffer, 0, block);
 							outputWritten += block;
-							progress(ctr + 1, (int)(outputWritten * 100 / outputSize));
+							progress(ctr + 1, outputWritten, outputSize);
 						}
 					}
 				}
 			});
+		}
+
+		public static void CombineFiles(string outputFile, List<string> files, Action finished)
+		{
+			var names = new List<string> { outputFile };
+			names.AddRange(files);
+			names = names.Select(file => Path.GetFileName(file)).ToList();
+
+			MultiProgressDialog.Run("Combining files...", names, (progress, cancel) =>
+			{
+				var fileStreams = new Dictionary<string, FileStream>();
+				try
+				{
+					Coder.CodePage? codePage = null;
+					byte[] header = null;
+					var fileLengths = new Dictionary<string, long>();
+					foreach (var file in files)
+					{
+						if (fileStreams.ContainsKey(file))
+							continue;
+
+						fileStreams[file] = File.OpenRead(file);
+						fileLengths[file] = fileStreams[file].Length;
+
+						var fileHeader = Read(fileStreams[file], 0, (int)Math.Min(fileStreams[file].Length, 4));
+						var fileCodePage = Coder.CodePageFromBOM(fileHeader);
+						if (codePage == null)
+							codePage = fileCodePage;
+						if (codePage != fileCodePage)
+							throw new Exception("All files must have the same encoding to combine them.");
+						if (header == null)
+						{
+							header = new byte[Coder.PreambleSize(fileCodePage)];
+							Array.Copy(fileHeader, header, header.Length);
+						}
+					}
+
+					var buffer = new byte[65536];
+					long written = 0;
+					long total = fileLengths.Values.Sum() - header.Length * fileLengths.Count + header.Length;
+					using (var output = File.Create(outputFile))
+					{
+						output.Write(header, 0, header.Length);
+						written += header.Length;
+						for (var ctr = 0; ctr < files.Count; ++ctr)
+						{
+							var file = files[ctr];
+							long filePosition = header.Length;
+							while (filePosition < fileLengths[file])
+							{
+								if (cancel())
+									return;
+
+								var block = (int)Math.Min(buffer.Length, fileLengths[file] - filePosition);
+								Read(fileStreams[file], filePosition, block, buffer);
+								filePosition += block;
+								progress(ctr + 1, filePosition, fileLengths[file]);
+
+								output.Write(buffer, 0, block);
+								written += block;
+								progress(0, written, total);
+							}
+						}
+					}
+				}
+				finally
+				{
+					var close = fileStreams.Values.ToList();
+					foreach (var file in close)
+						try { file.Dispose(); }
+						catch { }
+				}
+			}, finished);
 		}
 	}
 }

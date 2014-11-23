@@ -9,6 +9,9 @@ namespace NeoEdit.TextView.Dialogs
 {
 	partial class MultiProgressDialog
 	{
+		public delegate void ProgressDelegate(int num, long done, long total = -1);
+		public delegate bool CancelDelegate();
+
 		[DepProp]
 		public string Status { get { return UIHelper<MultiProgressDialog>.GetPropValue<string>(this); } set { UIHelper<MultiProgressDialog>.SetPropValue(this, value); } }
 
@@ -18,7 +21,7 @@ namespace NeoEdit.TextView.Dialogs
 		readonly List<MultiProgressDialogProgress> progressBars = new List<MultiProgressDialogProgress>();
 		readonly List<int> progress;
 		bool canClose = false;
-		MultiProgressDialog(string status, List<string> names, Action<Action<int, int>, Func<bool>> work, Action finished = null)
+		MultiProgressDialog(string status, List<string> names, Action<ProgressDelegate, CancelDelegate> work, Action finished = null)
 		{
 			InitializeComponent();
 			Status = status;
@@ -28,7 +31,7 @@ namespace NeoEdit.TextView.Dialogs
 			worker = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
 			worker.DoWork += (s, e) =>
 			{
-				work((child, newProgress) => SetProgress(child, newProgress), () =>
+				work((child, done, total) => SetProgress(child, done, total), () =>
 				{
 					if (worker.CancellationPending)
 						e.Cancel = true;
@@ -45,16 +48,23 @@ namespace NeoEdit.TextView.Dialogs
 				canClose = true;
 				Close();
 				if (e.Error != null)
-					throw e.Error;
+					throw new Exception(String.Format("Background task failed: ", e.Error.Message), e.Error);
 				if ((!e.Cancelled) && (finished != null))
 					finished();
 			};
 			worker.RunWorkerAsync();
 		}
 
-		void SetProgress(int child, int number)
+		void SetProgress(int child, long done, long total)
 		{
-			progress[child] = number;
+			if (total != -1)
+			{
+				if (total == 0)
+					done = 0;
+				else
+					done = done * 100 / total;
+			}
+			progress[child] = (int)done;
 			worker.ReportProgress(0);
 		}
 
@@ -86,7 +96,7 @@ namespace NeoEdit.TextView.Dialogs
 			worker.CancelAsync();
 		}
 
-		public static void Run(string status, List<string> names, Action<Action<int, int>, Func<bool>> work, Action finished = null)
+		public static void Run(string status, List<string> names, Action<ProgressDelegate, CancelDelegate> work, Action finished = null)
 		{
 			new MultiProgressDialog(status, names, work, finished).Show();
 		}

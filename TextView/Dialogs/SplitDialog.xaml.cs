@@ -13,7 +13,7 @@ namespace NeoEdit.TextView.Dialogs
 	{
 		internal class Result
 		{
-			public List<Tuple<string, long, long>> splitData;
+			public List<Tuple<string, long, long>> SplitData { get; set; }
 		}
 
 		public enum SizeTypeEnum
@@ -97,8 +97,8 @@ namespace NeoEdit.TextView.Dialogs
 				}.Show() != Message.OptionsEnum.Yes)
 					return;
 			}
-			result = new Result { splitData = splitData };
-			if (result.splitData.Count <= 1)
+			result = new Result { SplitData = splitData };
+			if (result.SplitData.Count <= 1)
 				return;
 			DialogResult = true;
 		}

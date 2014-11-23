@@ -94,7 +94,7 @@ namespace NeoEdit.TextView
 			if (result == null)
 				return;
 
-			data.SplitFile(result.splitData);
+			data.SplitFile(result.SplitData);
 		}
 
 		internal void Command_Edit_Copy()

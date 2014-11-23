@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
@@ -75,6 +76,15 @@ namespace NeoEdit.TextView
 				Add(file);
 		}
 
+		void Command_File_Combine()
+		{
+			var result = CombineDialog.Run();
+			if (result == null)
+				return;
+
+			TextData.CombineFiles(result.OutputFile, result.Files, () => { if (result.OpenFile) Add(result.OutputFile); });
+		}
+
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
@@ -86,6 +96,7 @@ namespace NeoEdit.TextView
 			{
 				case TextViewCommand.File_Open: Command_File_Open(); break;
 				case TextViewCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
+				case TextViewCommand.File_Combine: Command_File_Combine(); break;
 				case TextViewCommand.File_Exit: Close(); break;
 				case TextViewCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
