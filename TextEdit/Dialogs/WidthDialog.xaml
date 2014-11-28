@@ -28,10 +28,15 @@
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="location" Content="_Start" Name="start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="location" Content="_Middle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Left" Rows="1">
+			<Button Content="_Numeric" Padding="10,1" Click="NumericClick"/>
+			<Button Content="S_tring" Padding="10,1" Click="StringClick"/>
+		</UniformGrid>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

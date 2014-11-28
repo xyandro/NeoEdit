@@ -45,6 +45,18 @@ namespace NeoEdit.TextEdit.Dialogs
 			Location = before ? TextLocation.End : TextLocation.Start;
 		}
 
+		void NumericClick(object sender, RoutedEventArgs e)
+		{
+			PadChar = "0";
+			Location = TextLocation.End;
+		}
+
+		void StringClick(object sender, RoutedEventArgs e)
+		{
+			PadChar = " ";
+			start.IsChecked = true;
+		}
+
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{

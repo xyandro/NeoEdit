@@ -37,7 +37,6 @@ Error on refresh file with no name
 Ignore unchanged filenames on move files
 Make width multiple of some number
 Add "l" for various things to expression for lengths
-Buttons on width dialog for numeric/string
 Convert
 
 View:
