@@ -39,7 +39,6 @@ Make width multiple of some number
 Add "l" for various things to expression for lengths
 Asking to save despite encoding always changes filename even if you hit no
 Buttons on width dialog for numeric/string
-Ctrl-L with no selection at top of doc gives error
 Convert
 
 View:

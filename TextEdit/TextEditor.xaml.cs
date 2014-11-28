@@ -343,7 +343,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_File_Save()
 		{
 			if (FileName == null)
-			{
+		{
 				Command_File_SaveAs();
 				return;
 			}
@@ -1443,7 +1443,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Lines()
 		{
-			var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(selection.End - 1) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
+			var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(Math.Max(BeginOffset(), selection.End - 1)) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
 			var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
 			Selections.Replace(sels);
 		}
