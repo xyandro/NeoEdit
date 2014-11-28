@@ -340,20 +340,20 @@ namespace NeoEdit.TextEdit
 				File.Copy(srcFiles[ctr], destFiles[ctr]);
 		}
 
-		internal void Command_File_Save()
+		void Save(string fileName)
 		{
-			if (FileName == null)
-		{
-				Command_File_SaveAs();
-				return;
-			}
-
 			if (!VerifyCanFullyEncode())
 				return;
 
-			File.WriteAllBytes(FileName, Data.GetBytes(CodePage));
-			fileLastWrite = new FileInfo(FileName).LastWriteTime;
+			File.WriteAllBytes(fileName, Data.GetBytes(CodePage));
+			fileLastWrite = new FileInfo(fileName).LastWriteTime;
 			undoRedo.SetModified(false);
+			FileName = fileName;
+		}
+
+		internal void Command_File_Save()
+		{
+			Save(FileName);
 		}
 
 		internal void Command_File_SaveAs()
@@ -370,8 +370,7 @@ namespace NeoEdit.TextEdit
 					throw new Exception("A directory by that name already exists");
 				if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
 					throw new Exception("Directory doesn't exist");
-				FileName = dialog.FileName;
-				Command_File_Save();
+				Save(dialog.FileName);
 			}
 		}
 
