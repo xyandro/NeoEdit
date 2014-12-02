@@ -376,6 +376,8 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Refresh()
 		{
+			if (String.IsNullOrEmpty(FileName))
+				return;
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
 				if (new Message

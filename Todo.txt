@@ -33,7 +33,6 @@ Insert copied files
 Get enclosing region
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
-Error on refresh file with no name
 Add "l" for various things to expression for lengths
 Convert
 
