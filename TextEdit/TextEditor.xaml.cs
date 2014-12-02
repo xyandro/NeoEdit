@@ -282,15 +282,20 @@ namespace NeoEdit.TextEdit
 			if (count != -1)
 				sels = sels.Take(Math.Min(count, sels.Count)).ToList();
 			var strs = sels.Select(range => GetString(range)).ToList();
+			var c = ClipboardWindow.GetStrings();
 			var data = new Dictionary<string, List<string>>
 			{
 				{ "x", strs },
+				{ "xl", strs.Select(str => str.Length.ToString()).ToList() },
 				{ "y", strs.Select((str, order) => (order + 1).ToString()).ToList() },
 				{ "z", strs.Select((str, order) => order.ToString()).ToList() },
-				{ "c", ClipboardWindow.GetStrings() },
+				{ "c", c },
+				{ "cl", c.Select(str => str.Length.ToString()).ToList() },
 				{ "rk", keysAndValues[0] },
+				{ "rkl", keysAndValues[0].Select(str => str.Length.ToString()).ToList() },
 			};
 			Enumerable.Range(1, 9).ToList().ForEach(num => data[String.Format("rv{0}", num)] = keysAndValues[num]);
+			Enumerable.Range(1, 9).ToList().ForEach(num => data[String.Format("rv{0}l", num)] = keysAndValues[num].Select(str => str.Length.ToString()).ToList());
 
 			for (var num = 1; num <= 9; ++num)
 			{
@@ -300,12 +305,13 @@ namespace NeoEdit.TextEdit
 					foreach (var str in strs)
 					{
 						if (!keysHash.ContainsKey(str))
-							values.Add(null);
+							values.Add("");
 						else
 							values.Add(keysAndValues[num][keysHash[str]]);
 					}
 				}
 				data[String.Format("v{0}", num)] = values;
+				data[String.Format("v{0}l", num)] = values.Select(str => str.Length.ToString()).ToList();
 			}
 
 			var expressionData = new ExpressionData { vars = data.Keys.ToList(), values = new List<string[]>() };
