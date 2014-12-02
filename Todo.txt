@@ -33,7 +33,6 @@ Insert copied files
 Get enclosing region
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
-Convert
 
 View:
 Merge

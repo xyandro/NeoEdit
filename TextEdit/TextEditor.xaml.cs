@@ -1024,74 +1024,6 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
-		internal EncodingDialog.Result Command_Data_Hex_ToHex_Dialog()
-		{
-			return EncodingDialog.Run(CodePage);
-		}
-
-		internal void Command_Data_Hex_ToHex(EncodingDialog.Result result)
-		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			if (!VerifyCanFullyEncode(strs, result.CodePage))
-				return;
-
-			ReplaceSelections(strs.Select(str => Coder.BytesToString(Coder.StringToBytes(str, result.CodePage), Coder.CodePage.Hex)).ToList());
-		}
-
-		internal void Command_Data_Hex_ToHex(Coder.CodePage coder)
-		{
-			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), coder), Coder.CodePage.Hex)).ToList());
-		}
-
-		internal EncodingDialog.Result Command_Data_Hex_FromHex_Dialog()
-		{
-			var data = Selections.Select(range => Coder.StringToBytes(GetString(range), Coder.CodePage.Hex)).ToList();
-			return EncodingDialog.Run(DetectUnicode(data));
-		}
-
-		internal void Command_Data_Hex_FromHex(EncodingDialog.Result result)
-		{
-			var data = Selections.Select(range => Coder.StringToBytes(GetString(range), Coder.CodePage.Hex)).ToList();
-			if (!VerifyCanFullyEncode(data, result.CodePage))
-				return;
-
-			ReplaceSelections(data.Select(bytes => Coder.BytesToString(bytes, result.CodePage)).ToList());
-		}
-
-		internal void Command_Data_Hex_FromHex(Coder.CodePage coder)
-		{
-			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), Coder.CodePage.Hex), coder)).ToList());
-		}
-
-		internal EncodingDialog.Result Command_Data_Base64_ToBase64_Dialog()
-		{
-			return EncodingDialog.Run(CodePage);
-		}
-
-		internal void Command_Data_Base64_ToBase64(EncodingDialog.Result result)
-		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			if (!VerifyCanFullyEncode(strs, result.CodePage))
-				return;
-
-			ReplaceSelections(strs.Select(str => Coder.BytesToString(Coder.StringToBytes(str, result.CodePage), Coder.CodePage.Base64)).ToList());
-		}
-
-		internal EncodingDialog.Result Command_Data_Base64_FromBase64_Dialog()
-		{
-			var data = Selections.Select(range => Coder.StringToBytes(GetString(range), Coder.CodePage.Base64)).ToList();
-			return EncodingDialog.Run(DetectUnicode(data));
-		}
-
-		internal void Command_Data_Base64_FromBase64(EncodingDialog.Result result)
-		{
-			var data = Selections.Select(range => Coder.StringToBytes(GetString(range), Coder.CodePage.Base64)).ToList();
-			if (!VerifyCanFullyEncode(data, result.CodePage))
-				return;
-
-			ReplaceSelections(data.Select(bytes => Coder.BytesToString(bytes, result.CodePage)).ToList());
-		}
-
 		internal void Command_Data_DateTime_Insert()
 		{
 			ReplaceSelections(DateTime.Now.ToString("O"));
@@ -1108,6 +1040,16 @@ namespace NeoEdit.TextEdit
 		internal void Command_Data_DateTime_Convert(ConvertDateTimeDialog.Result result)
 		{
 			ReplaceSelections(Selections.Select(range => ConvertDateTimeDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList());
+		}
+
+		internal ConvertDialog.Result Command_Data_Convert_Dialog()
+		{
+			return ConvertDialog.Run();
+		}
+
+		internal void Command_Data_Convert(ConvertDialog.Result result)
+		{
+			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType), result.OutputType)).ToList());
 		}
 
 		internal void Command_Data_Length()

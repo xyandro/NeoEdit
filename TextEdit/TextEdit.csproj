@@ -66,10 +66,17 @@
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ConvertDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\RepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\ConvertDialog.xaml.cs">
+      <DependentUpon>ConvertDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\RepeatDialog.xaml.cs">
       <DependentUpon>RepeatDialog.xaml</DependentUpon>
     </Compile>
