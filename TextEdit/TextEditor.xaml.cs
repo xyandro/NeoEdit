@@ -1755,6 +1755,53 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		void BlockSelDown()
+		{
+			foreach (var range in Selections.ToList())
+			{
+				var cursorLine = Data.GetOffsetLine(range.Cursor);
+				var highlightLine = Data.GetOffsetLine(range.Highlight);
+				var cursorIndex = Data.GetOffsetIndex(range.Cursor, cursorLine);
+				var highlightIndex = Data.GetOffsetIndex(range.Highlight, highlightLine);
+
+				cursorLine = Math.Max(0, Math.Min(cursorLine + 1, Data.NumLines - 1));
+				highlightLine = Math.Max(0, Math.Min(highlightLine + 1, Data.NumLines - 1));
+				cursorIndex = Math.Max(0, Math.Min(cursorIndex, Data.GetLineLength(cursorLine)));
+				highlightIndex = Math.Max(0, Math.Min(highlightIndex, Data.GetLineLength(highlightLine)));
+
+				Selections.Add(new Range(Data.GetOffset(cursorLine, cursorIndex), Data.GetOffset(highlightLine, highlightIndex)));
+			}
+		}
+
+		void BlockSelUp()
+		{
+			var found = new HashSet<string>();
+			foreach (var range in Selections)
+				found.Add(range.ToString());
+
+			var sels = new List<Range>();
+			foreach (var range in Selections.ToList())
+			{
+				var startLine = Data.GetOffsetLine(range.Start);
+				var endLine = Data.GetOffsetLine(range.End);
+				var startIndex = Data.GetOffsetIndex(range.Start, startLine);
+				var endIndex = Data.GetOffsetIndex(range.End, endLine);
+
+				startLine = Math.Max(0, Math.Min(startLine - 1, Data.NumLines - 1));
+				endLine = Math.Max(0, Math.Min(endLine - 1, Data.NumLines - 1));
+				startIndex = Math.Max(0, Math.Min(startIndex, Data.GetLineLength(startLine)));
+				endIndex = Math.Max(0, Math.Min(endIndex, Data.GetLineLength(endLine)));
+
+				var prevLineRange = new Range(Data.GetOffset(startLine, startIndex), Data.GetOffset(endLine, endIndex));
+				if (found.Contains(prevLineRange.ToString()))
+					sels.Add(prevLineRange);
+				else
+					sels.Add(range);
+			}
+
+			Selections.Replace(sels);
+		}
+
 		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
 			var ret = true;
@@ -1863,9 +1910,9 @@ namespace NeoEdit.TextEdit
 						else if (!shiftDown)
 							yScrollValue += mult;
 						else if (key == Key.Down)
-							Selections.Add(MoveCursor(Selections.Last(), mult, 0, false));
-						else if (Selections.Count > 1)
-							Selections.RemoveAt(Selections.Count - 1);
+							BlockSelDown();
+						else
+							BlockSelUp();
 					}
 					break;
 				case Key.Home:
