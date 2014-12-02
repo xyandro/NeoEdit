@@ -5,6 +5,15 @@ namespace NeoEdit.TextEdit.Dialogs
 {
 	internal partial class WidthDialog
 	{
+		public enum WidthType
+		{
+			None,
+			Absolute,
+			Relative,
+			Multiple,
+			Clipboard,
+		}
+
 		public enum TextLocation
 		{
 			Start,
@@ -14,35 +23,47 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		internal class Result
 		{
-			public int Length { get; set; }
-			public bool ClipboardValue { get; set; }
+			public WidthType Type { get; set; }
+			public int Value { get; set; }
 			public char PadChar { get; set; }
 			public TextLocation Location { get; set; }
 		}
 
 		[DepProp]
-		public int Length { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public WidthType Type { get { return UIHelper<WidthDialog>.GetPropValue<WidthType>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ClipboardValue { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public int StartLength { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public int Value { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string PadChar { get { return UIHelper<WidthDialog>.GetPropValue<string>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public TextLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<TextLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool NeedValue { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 
-		static WidthDialog() { UIHelper<WidthDialog>.Register(); }
+		static WidthDialog()
+		{
+			UIHelper<WidthDialog>.Register();
+			UIHelper<WidthDialog>.AddCallback(a => a.Type, (obj, o, n) => obj.SetValueParams());
+		}
 
+		readonly int startLength;
 		WidthDialog(int startLength, char padChar, bool before)
 		{
 			InitializeComponent();
 
+			this.startLength = startLength;
 			this.padChar.GotFocus += (s, e) => this.padChar.SelectAll();
 
-			Length = StartLength = startLength;
-			ClipboardValue = false;
+			Type = WidthType.Absolute;
 			PadChar = new string(padChar, 1);
 			Location = before ? TextLocation.End : TextLocation.Start;
+		}
+
+		void SetValueParams()
+		{
+			NeedValue = Type != WidthType.Clipboard;
+			value.Minimum = Type == WidthType.Absolute ? 0 : Type == WidthType.Multiple ? 1 : int.MinValue;
+			Value = Type == WidthType.Absolute ? startLength : Type == WidthType.Relative ? 0 : Type == WidthType.Multiple ? 1 : Value;
 		}
 
 		void NumericClick(object sender, RoutedEventArgs e)
@@ -62,7 +83,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			if (PadChar.Length != 1)
 				return;
-			result = new Result { Length = Length, ClipboardValue = ClipboardValue, PadChar = PadChar[0], Location = Location };
+			result = new Result { Type = Type, Value = Value, PadChar = PadChar[0], Location = Location };
 			DialogResult = true;
 		}
 

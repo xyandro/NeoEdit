@@ -1106,15 +1106,28 @@ namespace NeoEdit.TextEdit
 		internal void Command_Data_Width(WidthDialog.Result result)
 		{
 			List<int> lengths;
-			if (result.ClipboardValue)
+			switch (result.Type)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard doesn't match number of selections.");
-				lengths = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
+				case WidthDialog.WidthType.Absolute:
+					lengths = Enumerable.Range(0, Selections.Count).Select(num => result.Value).ToList();
+					break;
+				case WidthDialog.WidthType.Relative:
+					lengths = Selections.Select(range => Math.Max(0, range.Length + result.Value)).ToList();
+					break;
+				case WidthDialog.WidthType.Multiple:
+					lengths = Selections.Select(range => range.Length + result.Value - 1 - (range.Length + result.Value - 1) % result.Value).ToList();
+					break;
+				case WidthDialog.WidthType.Clipboard:
+					{
+						var clipboardStrings = ClipboardWindow.GetStrings();
+						if (clipboardStrings.Count != Selections.Count)
+							throw new Exception("Number of items on clipboard doesn't match number of selections.");
+						lengths = clipboardStrings.Select(str => Int32.Parse(str)).ToList();
+					}
+					break;
+				default: throw new ArgumentException("Invalid width type");
 			}
-			else
-				lengths = Enumerable.Range(0, Selections.Count).Select(num => result.Length).ToList();
+
 
 			ReplaceSelections(Selections.Select((range, index) => SetWidth(GetString(range), lengths[index], result.Location, result.PadChar)).ToList());
 		}

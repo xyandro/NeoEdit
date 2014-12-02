@@ -3,15 +3,15 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
-	Title="Width" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=length}">
+	Title="Width" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=value}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
-			<ColumnDefinition Width="150"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
@@ -19,26 +19,33 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Set _width to:" Target="{Binding ElementName=length}" HorizontalAlignment="Right"/>
-		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="length" Value="{Binding Length, ElementName=self}" Minimum="0" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==false'}"/>
-		<CheckBox Grid.Row="0" Grid.Column="2" Content="C_lipboard Value" IsChecked="{Binding ClipboardValue, ElementName=self}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Type:" HorizontalAlignment="Right"/>
+		<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+			<RadioButton GroupName="type" Content="_Absolute" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Absolute}" Margin="0,0,10,0" Focusable="False"/>
+			<RadioButton GroupName="type" Content="_Relative" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Relative}" Margin="0,0,10,0" Focusable="False"/>
+			<RadioButton GroupName="type" Content="_Multiple" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
+			<RadioButton GroupName="type" Content="_Clipboard" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Clipboard}" Margin="0,0,10,0" Focusable="False"/>
+		</StackPanel>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Value:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
+		<xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Name="value" Value="{Binding Value, ElementName=self}" Minimum="0" IsEnabled="{Binding NeedValue, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+		<Label Grid.Row="2" Grid.Column="0" Content="Padding c_haracter:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Label Grid.Row="3" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right"/>
+		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
 			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-			<RadioButton GroupName="location" Content="_Middle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="location" Content="M_iddle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Left" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
 			<Button Content="_Numeric" Padding="10,1" Click="NumericClick"/>
 			<Button Content="S_tring" Padding="10,1" Click="StringClick"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
