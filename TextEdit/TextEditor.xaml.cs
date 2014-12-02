@@ -914,6 +914,17 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(result);
 		}
 
+		internal void Command_Files_Files_Operations_CreateFiles()
+		{
+			var files = Selections.Select(range => GetString(range)).ToList();
+			if (files.Any(file => Directory.Exists(file)))
+				throw new Exception("Directory already exists");
+			files = files.Where(file => !File.Exists(file)).ToList();
+			var data = new byte[0];
+			foreach (var file in files)
+				File.WriteAllBytes(file, data);
+		}
+
 		internal void Command_Files_Operations_CopyMoveKeysToSelections(bool move)
 		{
 			if ((keysAndValues[0].Count == 0) || (Selections.Count == 0))
@@ -922,34 +933,35 @@ namespace NeoEdit.TextEdit
 			if (keysAndValues[0].Count != Selections.Count)
 				throw new Exception("Keys and selections count must match");
 
-			var sels = Selections.Select(range => GetString(range)).ToList();
+			var sels = Selections.Select((range, index) => new { source = keysAndValues[0][index], dest = GetString(range) }).Where(pair => pair.source != pair.dest).ToList();
+			if (sels.Count == 0)
+				throw new Exception("Nothing to do!");
 
-			if ((keysAndValues[0].Any(a => String.IsNullOrEmpty(a))) || (sels.Any(a => String.IsNullOrEmpty(a))))
+			if (sels.Any(pair => (String.IsNullOrEmpty(pair.source)) || (String.IsNullOrEmpty(pair.dest))))
 				throw new Exception("Can't have empty items in list");
 
-			var invalid = keysAndValues[0].FirstOrDefault(file => !FileOrDirectoryExists(file));
+			var invalid = sels.Select(pair => pair.source).FirstOrDefault(file => !FileOrDirectoryExists(file));
 			if (invalid != null)
-				throw new Exception(String.Format("File/directory doesn't exist: {0}", invalid));
+				throw new Exception(String.Format("Source file/directory doesn't exist: {0}", invalid));
 
-			invalid = sels.FirstOrDefault(file => FileOrDirectoryExists(file));
+			invalid = sels.Select(pair => pair.dest).FirstOrDefault(pair => FileOrDirectoryExists(pair));
 			if (invalid != null)
-				throw new Exception(String.Format("File/directory already exists: {0}", invalid));
+				throw new Exception(String.Format("Destination file/directory already exists: {0}", invalid));
 
-			var paths = sels.Select(path => Path.GetDirectoryName(path)).Distinct().ToList();
+			var paths = sels.Select(pair => Path.GetDirectoryName(pair.dest)).Distinct().ToList();
 			invalid = paths.FirstOrDefault(dir => !Directory.Exists(dir));
 			if (invalid != null)
 				throw new Exception(String.Format("Directory doesn't exist: {0}", invalid));
 
 			const int numExamples = 10;
-			var examples = String.Join("", Enumerable.Range(0, Math.Min(numExamples, sels.Count)).Select(num => keysAndValues[0][num] + " => " + sels[num] + "\n"));
+			var examples = String.Join("", Enumerable.Range(0, Math.Min(numExamples, sels.Count)).Select(num => sels[num].source + " => " + sels[num].dest + "\n"));
 			if (sels.Count > numExamples)
 				examples += String.Format(" + {0} more\n", sels.Count - numExamples);
 
-			var op = move ? "move" : "copy";
 			if (new Message
 			{
 				Title = "Confirm",
-				Text = "Are you sure you want to " + op + " these files?\n" + examples,
+				Text = "Are you sure you want to " + (move ? "move" : "copy") + " these files?\n" + examples,
 				Options = Message.OptionsEnum.YesNo,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.No,
@@ -957,20 +969,20 @@ namespace NeoEdit.TextEdit
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 
-			for (var ctr = 0; ctr < sels.Count; ++ctr)
-				if (Directory.Exists(keysAndValues[0][ctr]))
+			foreach (var pair in sels)
+				if (Directory.Exists(pair.source))
 				{
 					if (move)
-						Directory.Move(keysAndValues[0][ctr], sels[ctr]);
+						Directory.Move(pair.source, pair.dest);
 					else
-						CopyDirectory(keysAndValues[0][ctr], sels[ctr]);
+						CopyDirectory(pair.source, pair.dest);
 				}
 				else
 				{
 					if (move)
-						File.Move(keysAndValues[0][ctr], sels[ctr]);
+						File.Move(pair.source, pair.dest);
 					else
-						File.Copy(keysAndValues[0][ctr], sels[ctr]);
+						File.Copy(pair.source, pair.dest);
 				}
 		}
 

@@ -82,6 +82,7 @@
 			<textEdit:TextEditMenuItem Header="N_on-Roots" CommandEnum="Files_Select_NonRoots"/>
 		</MenuItem>
 		<MenuItem Header="_Operations">
+			<textEdit:TextEditMenuItem Header="Create Files" CommandEnum="Files_Operations_CreateFiles"/>
 			<textEdit:TextEditMenuItem Header="_Copy Keys To Selections" CommandEnum="Files_Operations_CopyKeysToSelections"/>
 			<textEdit:TextEditMenuItem Header="_Move Keys To Selections" CommandEnum="Files_Operations_MoveKeysToSelections"/>
 		</MenuItem>

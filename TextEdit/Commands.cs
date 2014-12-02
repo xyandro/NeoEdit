@@ -61,6 +61,7 @@ namespace NeoEdit.TextEdit
 		Files_Select_Directories,
 		Files_Select_Roots,
 		Files_Select_NonRoots,
+		Files_Operations_CreateFiles,
 		Files_Operations_CopyKeysToSelections,
 		Files_Operations_MoveKeysToSelections,
 		[KeyGesture(Key.U, ModifierKeys.Control)] Data_Case_Upper,
