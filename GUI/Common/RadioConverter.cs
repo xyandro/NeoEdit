@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
@@ -22,8 +23,8 @@ namespace NeoEdit.GUI.Common
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (targetType == typeof(Boolean))
-				return Boolean.Parse(parameter as string);
+			if ((value is bool) && (!(bool)value))
+				return DependencyProperty.UnsetValue;
 			return Enum.Parse(targetType, parameter as string);
 		}
 	}

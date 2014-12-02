@@ -54,7 +54,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		void StringClick(object sender, RoutedEventArgs e)
 		{
 			PadChar = " ";
-			start.IsChecked = true;
+			Location = TextLocation.Start;
 		}
 
 		Result result;

@@ -28,7 +28,7 @@
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-			<RadioButton GroupName="location" Content="_Start" Name="start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="location" Content="_Middle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
