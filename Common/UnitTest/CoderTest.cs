@@ -27,15 +27,15 @@ namespace NeoEdit.Common.UnitTest
 		[TestMethod]
 		public void CoderIntTest()
 		{
-			// UInt8LE
-			VerifyCoder(Coder.CodePage.UInt8LE, "0", new byte[] { 0 }, false);
-			VerifyCoder(Coder.CodePage.UInt8LE, "100", new byte[] { 100 }, false);
-			VerifyCoder(Coder.CodePage.UInt8LE, "200", new byte[] { 200 }, false);
-			VerifyCoder(Coder.CodePage.UInt8LE, "255", new byte[] { 255 }, false);
-			VerifyCoder(Coder.CodePage.UInt8LE, "", null, false);
-			VerifyCoder(Coder.CodePage.UInt8LE, "-1", null, false);
-			VerifyCoder(Coder.CodePage.UInt8LE, "256", null, false);
-			VerifyCoder(Coder.CodePage.UInt8LE, "Whee", null, false);
+			// UInt8
+			VerifyCoder(Coder.CodePage.UInt8, "0", new byte[] { 0 }, false);
+			VerifyCoder(Coder.CodePage.UInt8, "100", new byte[] { 100 }, false);
+			VerifyCoder(Coder.CodePage.UInt8, "200", new byte[] { 200 }, false);
+			VerifyCoder(Coder.CodePage.UInt8, "255", new byte[] { 255 }, false);
+			VerifyCoder(Coder.CodePage.UInt8, "", null, false);
+			VerifyCoder(Coder.CodePage.UInt8, "-1", null, false);
+			VerifyCoder(Coder.CodePage.UInt8, "256", null, false);
+			VerifyCoder(Coder.CodePage.UInt8, "Whee", null, false);
 
 			// UInt16LE
 			VerifyCoder(Coder.CodePage.UInt16LE, "0", new byte[] { 0, 0 }, false);
@@ -67,15 +67,15 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt64LE, "18446744073709551616", null, false);
 			VerifyCoder(Coder.CodePage.UInt64LE, "Whee", null, false);
 
-			// Int8LE
-			VerifyCoder(Coder.CodePage.Int8LE, "-128", new byte[] { 128 }, false);
-			VerifyCoder(Coder.CodePage.Int8LE, "-28", new byte[] { 228 }, false);
-			VerifyCoder(Coder.CodePage.Int8LE, "72", new byte[] { 72 }, false);
-			VerifyCoder(Coder.CodePage.Int8LE, "127", new byte[] { 127 }, false);
-			VerifyCoder(Coder.CodePage.Int8LE, "", null, false);
-			VerifyCoder(Coder.CodePage.Int8LE, "-129", null, false);
-			VerifyCoder(Coder.CodePage.Int8LE, "128", null, false);
-			VerifyCoder(Coder.CodePage.Int8LE, "Whee", null, false);
+			// Int8
+			VerifyCoder(Coder.CodePage.Int8, "-128", new byte[] { 128 }, false);
+			VerifyCoder(Coder.CodePage.Int8, "-28", new byte[] { 228 }, false);
+			VerifyCoder(Coder.CodePage.Int8, "72", new byte[] { 72 }, false);
+			VerifyCoder(Coder.CodePage.Int8, "127", new byte[] { 127 }, false);
+			VerifyCoder(Coder.CodePage.Int8, "", null, false);
+			VerifyCoder(Coder.CodePage.Int8, "-129", null, false);
+			VerifyCoder(Coder.CodePage.Int8, "128", null, false);
+			VerifyCoder(Coder.CodePage.Int8, "Whee", null, false);
 
 			// Int16LE
 			VerifyCoder(Coder.CodePage.Int16LE, "-32768", new byte[] { 0, 128 }, false);
@@ -107,16 +107,6 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Int64LE, "9223372036854775808", null, false);
 			VerifyCoder(Coder.CodePage.Int64LE, "Whee", null, false);
 
-			// UInt8BE
-			VerifyCoder(Coder.CodePage.UInt8BE, "0", new byte[] { 0 }, false);
-			VerifyCoder(Coder.CodePage.UInt8BE, "100", new byte[] { 100 }, false);
-			VerifyCoder(Coder.CodePage.UInt8BE, "200", new byte[] { 200 }, false);
-			VerifyCoder(Coder.CodePage.UInt8BE, "255", new byte[] { 255 }, false);
-			VerifyCoder(Coder.CodePage.UInt8BE, "", null, false);
-			VerifyCoder(Coder.CodePage.UInt8BE, "-1", null, false);
-			VerifyCoder(Coder.CodePage.UInt8BE, "256", null, false);
-			VerifyCoder(Coder.CodePage.UInt8BE, "Whee", null, false);
-
 			// UInt16BE
 			VerifyCoder(Coder.CodePage.UInt16BE, "0", new byte[] { 0, 0 }, false);
 			VerifyCoder(Coder.CodePage.UInt16BE, "20000", new byte[] { 78, 32 }, false);
@@ -146,16 +136,6 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt64BE, "-1", null, false);
 			VerifyCoder(Coder.CodePage.UInt64BE, "18446744073709551616", null, false);
 			VerifyCoder(Coder.CodePage.UInt64BE, "Whee", null, false);
-
-			// Int8BE
-			VerifyCoder(Coder.CodePage.Int8BE, "-128", new byte[] { 128 }, false);
-			VerifyCoder(Coder.CodePage.Int8BE, "-28", new byte[] { 228 }, false);
-			VerifyCoder(Coder.CodePage.Int8BE, "72", new byte[] { 72 }, false);
-			VerifyCoder(Coder.CodePage.Int8BE, "127", new byte[] { 127 }, false);
-			VerifyCoder(Coder.CodePage.Int8BE, "", null, false);
-			VerifyCoder(Coder.CodePage.Int8BE, "-129", null, false);
-			VerifyCoder(Coder.CodePage.Int8BE, "128", null, false);
-			VerifyCoder(Coder.CodePage.Int8BE, "Whee", null, false);
 
 			// Int16BE
 			VerifyCoder(Coder.CodePage.Int16BE, "-32768", new byte[] { 128, 0 }, false);

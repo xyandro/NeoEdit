@@ -12,24 +12,22 @@ namespace NeoEdit.Common.Transform
 			None = -1000,
 
 			StartNum = -100,
-			Int8LE = -105,
-			Int8BE = -106,
-			Int16LE = -107,
-			Int16BE = -108,
-			Int32LE = -113,
-			Int32BE = -114,
-			Int64LE = -115,
-			Int64BE = -116,
-			UInt8LE = -101,
-			UInt8BE = -102,
-			UInt16LE = -103,
-			UInt16BE = -104,
-			UInt32LE = -109,
-			UInt32BE = -110,
-			UInt64LE = -111,
-			UInt64BE = -112,
-			Single = -117,
-			Double = -118,
+			Int8 = -101,
+			Int16LE = -102,
+			Int16BE = -103,
+			Int32LE = -104,
+			Int32BE = -105,
+			Int64LE = -106,
+			Int64BE = -107,
+			UInt8 = -108,
+			UInt16LE = -109,
+			UInt16BE = -110,
+			UInt32LE = -111,
+			UInt32BE = -112,
+			UInt64LE = -113,
+			UInt64BE = -114,
+			Single = -115,
+			Double = -116,
 			EndNum = -119,
 
 			StartString = -50,
@@ -55,16 +53,14 @@ namespace NeoEdit.Common.Transform
 		{
 			switch (codePage)
 			{
-				case CodePage.Int8LE: return 1;
-				case CodePage.Int8BE: return 1;
+				case CodePage.Int8: return 1;
 				case CodePage.Int16LE: return 2;
 				case CodePage.Int16BE: return 2;
 				case CodePage.Int32LE: return 4;
 				case CodePage.Int32BE: return 4;
 				case CodePage.Int64LE: return 8;
 				case CodePage.Int64BE: return 8;
-				case CodePage.UInt8LE: return 1;
-				case CodePage.UInt8BE: return 1;
+				case CodePage.UInt8: return 1;
 				case CodePage.UInt16LE: return 2;
 				case CodePage.UInt16BE: return 2;
 				case CodePage.UInt32LE: return 4;
@@ -134,16 +130,14 @@ namespace NeoEdit.Common.Transform
 				new NEEncoding(CodePage.Hex, "Hex"),
 				new NEEncoding(CodePage.Binary, "Binary"),
 				new NEEncoding(CodePage.Base64, "Base64"),
-				new NEEncoding(CodePage.Int8LE, "Int8 (Little endian)"),
-				new NEEncoding(CodePage.Int8BE, "Int8 (Big endian)"),
+				new NEEncoding(CodePage.Int8, "Int8"),
 				new NEEncoding(CodePage.Int16LE, "Int16 (Little endian)"),
 				new NEEncoding(CodePage.Int16BE, "Int16 (Big endian)"),
 				new NEEncoding(CodePage.Int32LE, "Int32 (Little endian)"),
 				new NEEncoding(CodePage.Int32BE, "Int32 (Big endian)"),
 				new NEEncoding(CodePage.Int64LE, "Int64 (Little endian)"),
 				new NEEncoding(CodePage.Int64BE, "Int64 (Big endian)"),
-				new NEEncoding(CodePage.UInt8LE, "UInt8 (Little endian)"),
-				new NEEncoding(CodePage.UInt8BE, "UInt8 (Big endian)"),
+				new NEEncoding(CodePage.UInt8, "UInt8"),
 				new NEEncoding(CodePage.UInt16LE, "UInt16 (Little endian)"),
 				new NEEncoding(CodePage.UInt16BE, "UInt16 (Big endian)"),
 				new NEEncoding(CodePage.UInt32LE, "UInt32 (Little endian)"),
@@ -275,16 +269,14 @@ namespace NeoEdit.Common.Transform
 
 				switch (codePage)
 				{
-					case CodePage.Int8LE: return ((sbyte)Resize(data, 1, true)[0]).ToString();
-					case CodePage.Int8BE: return ((sbyte)Resize(data, 1, false)[0]).ToString();
+					case CodePage.Int8: return ((sbyte)Resize(data, 1, true)[0]).ToString();
 					case CodePage.Int16LE: return BitConverter.ToInt16(Resize(data, 2, true), 0).ToString();
 					case CodePage.Int16BE: return BitConverter.ToInt16(Resize(data, 2, false), 0).ToString();
 					case CodePage.Int32LE: return BitConverter.ToInt32(Resize(data, 4, true), 0).ToString();
 					case CodePage.Int32BE: return BitConverter.ToInt32(Resize(data, 4, false), 0).ToString();
 					case CodePage.Int64LE: return BitConverter.ToInt64(Resize(data, 8, true), 0).ToString();
 					case CodePage.Int64BE: return BitConverter.ToInt64(Resize(data, 8, false), 0).ToString();
-					case CodePage.UInt8LE: return Resize(data, 1, true)[0].ToString();
-					case CodePage.UInt8BE: return Resize(data, 1, false)[0].ToString();
+					case CodePage.UInt8: return Resize(data, 1, true)[0].ToString();
 					case CodePage.UInt16LE: return BitConverter.ToUInt16(Resize(data, 2, true), 0).ToString();
 					case CodePage.UInt16BE: return BitConverter.ToUInt16(Resize(data, 2, false), 0).ToString();
 					case CodePage.UInt32LE: return BitConverter.ToUInt32(Resize(data, 4, true), 0).ToString();
@@ -368,16 +360,14 @@ namespace NeoEdit.Common.Transform
 			{
 				switch (codePage)
 				{
-					case CodePage.Int8LE: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, false);
-					case CodePage.Int8BE: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, true);
+					case CodePage.Int8: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, false);
 					case CodePage.Int16LE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), false);
 					case CodePage.Int16BE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), true);
 					case CodePage.Int32LE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), false);
 					case CodePage.Int32BE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), true);
 					case CodePage.Int64LE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), false);
 					case CodePage.Int64BE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), true);
-					case CodePage.UInt8LE: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, false);
-					case CodePage.UInt8BE: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, true);
+					case CodePage.UInt8: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, false);
 					case CodePage.UInt16LE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), false);
 					case CodePage.UInt16BE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), true);
 					case CodePage.UInt32LE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), false);
