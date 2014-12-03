@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using NeoEdit.Common.Transform;
 using NeoEdit.TextView.Dialogs;
 
@@ -17,60 +18,99 @@ namespace NeoEdit.TextView
 		FileStream file { get; set; }
 		List<long> lineStart { get; set; }
 		Coder.CodePage codePage { get; set; }
-		public TextData(string filename, Action<TextData> onScanComplete)
+		static public void Create(List<string> fileNames, Action<TextData> onScanComplete)
 		{
-			MultiProgressDialog.Run("Scanning file...", new List<string> { filename }, (progress, cancel) =>
+			var headers = new List<string>();
+			if (fileNames.Count != 1)
+				headers.Add("Reading files");
+			headers.AddRange(fileNames.Select(name => Path.GetFileName(name)));
+			MultiProgressDialog.Run("Scanning file...", headers, (progress, cancel) =>
 			{
-				FileName = filename;
-				file = File.OpenRead(FileName);
-				Size = file.Length;
-				var header = Read(0, (int)Math.Min(4, Size));
-				codePage = Coder.CodePageFromBOM(header);
+				var files = fileNames.Select(file => new TextData(file)).ToList();
+				var totalRead = 0L;
+				var totalSize = files.Sum(a => a.Size);
+				var lockObj = new object();
 
-				long position = Coder.PreambleSize(codePage);
-				var charSize = Coder.CharSize(codePage);
-				var bigEndian = (codePage == Coder.CodePage.UTF16BE) || (codePage == Coder.CodePage.UTF32BE);
-				int lineLength = 0, maxLine = 0;
-				Win32.Interop.GetLinesEncoding getLinesEncoding = Win32.Interop.GetLinesEncoding.Default;
-				switch (codePage)
+				Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 4 }, (file, state, index) =>
 				{
-					case Coder.CodePage.UTF8: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF8; break;
-					case Coder.CodePage.UTF16LE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF16LE; break;
-					case Coder.CodePage.UTF16BE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF16BE; break;
-					case Coder.CodePage.UTF32LE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF32LE; break;
-					case Coder.CodePage.UTF32BE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF32BE; break;
-				}
-
-				var block = new byte[65536];
-				var blockSize = block.Length - charSize;
-
-				lineStart = new List<long> { position };
-				while (position < Size)
-				{
-					if (cancel())
+					try
 					{
-						Dispose();
-						return;
+						var lastRead = 0L;
+						if (file.Scan((read, total) =>
+						{
+							if (fileNames.Count != 1)
+								progress((int)index + 1, read, total);
+							lock (lockObj)
+								totalRead += read - lastRead;
+							lastRead = read;
+							progress(0, totalRead, totalSize);
+						}, () => cancel()))
+							onScanComplete(file);
 					}
+					catch
+					{
+						cancel(true);
+						throw;
+					}
+				});
+			});
+		}
 
-					var use = (int)Math.Min(Size - position, blockSize);
-					Read(position, use, block);
-					block[use] = 1; // This won't match anything and is written beyond the used array
-					if (position + use != Size)
-						use -= charSize;
+		TextData(string filename)
+		{
+			FileName = filename;
+			file = File.OpenRead(FileName);
+			Size = file.Length;
+			var header = Read(0, (int)Math.Min(4, Size));
+			codePage = Coder.CodePageFromBOM(header);
+		}
 
-					lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, use, ref position, ref lineLength, ref maxLine));
-					progress(0, position, Size);
-				}
-				if (lineStart.Last() != Size)
+		bool Scan(Action<long, long> progress, Func<bool> cancel)
+		{
+			long position = Coder.PreambleSize(codePage);
+			var charSize = Coder.CharSize(codePage);
+			var bigEndian = (codePage == Coder.CodePage.UTF16BE) || (codePage == Coder.CodePage.UTF32BE);
+			int lineLength = 0, maxLine = 0;
+			Win32.Interop.GetLinesEncoding getLinesEncoding = Win32.Interop.GetLinesEncoding.Default;
+			switch (codePage)
+			{
+				case Coder.CodePage.UTF8: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF8; break;
+				case Coder.CodePage.UTF16LE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF16LE; break;
+				case Coder.CodePage.UTF16BE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF16BE; break;
+				case Coder.CodePage.UTF32LE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF32LE; break;
+				case Coder.CodePage.UTF32BE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF32BE; break;
+			}
+
+			var block = new byte[65536];
+			var blockSize = block.Length - charSize;
+
+			lineStart = new List<long> { position };
+			while (position < Size)
+			{
+				if (cancel())
 				{
-					lineStart.Add(Size);
-					maxLine = Math.Max(maxLine, lineLength);
+					Dispose();
+					return false;
 				}
 
-				NumLines = lineStart.Count - 1;
-				NumColumns = maxLine;
-			}, () => onScanComplete(this));
+				var use = (int)Math.Min(Size - position, blockSize);
+				Read(position, use, block);
+				block[use] = 1; // This won't match anything and is written beyond the used array
+				if (position + use != Size)
+					use -= charSize;
+
+				lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, use, ref position, ref lineLength, ref maxLine));
+				progress(position, Size);
+			}
+			if (lineStart.Last() != Size)
+			{
+				lineStart.Add(Size);
+				maxLine = Math.Max(maxLine, lineLength);
+			}
+
+			NumLines = lineStart.Count - 1;
+			NumColumns = maxLine;
+			return true;
 		}
 
 		static byte[] Read(FileStream file, long position, int size, byte[] buffer = null)

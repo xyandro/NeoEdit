@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -52,8 +54,7 @@ namespace NeoEdit.TextView
 			if (dialog.ShowDialog() != true)
 				return;
 
-			foreach (var filename in dialog.FileNames)
-				Add(filename);
+			Add(dialog.FileNames.ToList());
 		}
 
 		void Command_File_OpenCopiedCutFiles()
@@ -72,8 +73,7 @@ namespace NeoEdit.TextView
 			}.Show() != Message.OptionsEnum.Yes))
 				return;
 
-			foreach (var file in files)
-				Add(file);
+			Add(files);
 		}
 
 		void Command_File_Combine()
@@ -113,17 +113,24 @@ namespace NeoEdit.TextView
 			}
 		}
 
-		void Add(string filename)
+		void Add(string fileName)
 		{
-			if (filename == null)
+			if (String.IsNullOrEmpty(fileName))
+				return;
+			Add(new List<string> { fileName });
+		}
+
+		void Add(List<string> fileNames)
+		{
+			if ((fileNames == null) || (fileNames.Count == 0))
 				return;
 
-			new TextData(filename, data =>
+			TextData.Create(fileNames, data => Dispatcher.Invoke(() =>
 			{
 				var textViewer = new TextViewer(data);
 				TextViewers.Add(textViewer);
 				Active = textViewer;
-			});
+			}));
 		}
 
 		Label GetLabel(TextViewer textViewer)

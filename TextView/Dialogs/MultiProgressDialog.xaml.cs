@@ -10,7 +10,7 @@ namespace NeoEdit.TextView.Dialogs
 	partial class MultiProgressDialog
 	{
 		public delegate void ProgressDelegate(int num, long done, long total = -1);
-		public delegate bool CancelDelegate();
+		public delegate bool CancelDelegate(bool forceCancel = false);
 
 		[DepProp]
 		public string Status { get { return UIHelper<MultiProgressDialog>.GetPropValue<string>(this); } set { UIHelper<MultiProgressDialog>.SetPropValue(this, value); } }
@@ -31,8 +31,10 @@ namespace NeoEdit.TextView.Dialogs
 			worker = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
 			worker.DoWork += (s, e) =>
 			{
-				work((child, done, total) => SetProgress(child, done, total), () =>
+				work((child, done, total) => SetProgress(child, done, total), forceCancel =>
 				{
+					if (forceCancel)
+						worker.CancelAsync();
 					if (worker.CancellationPending)
 						e.Cancel = true;
 					return e.Cancel;
