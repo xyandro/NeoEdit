@@ -20,6 +20,7 @@
 		<textEdit:TextEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
+		<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_ReopenWithEncoding"/>
 		<textEdit:TextEditMenuItem Header="Hex Editor" CommandEnum="File_HexEditor"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>

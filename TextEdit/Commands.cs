@@ -18,6 +18,7 @@ namespace NeoEdit.TextEdit
 		File_CopyPath,
 		File_CopyName,
 		File_Encoding,
+		File_ReopenWithEncoding,
 		[KeyGesture(Key.H, ModifierKeys.Control | ModifierKeys.Alt)] File_HexEditor,
 		File_Exit,
 		[KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,

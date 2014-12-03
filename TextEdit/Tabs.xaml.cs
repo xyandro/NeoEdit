@@ -292,6 +292,7 @@ namespace NeoEdit.TextEdit
 				switch (command)
 				{
 					case TextEditCommand.File_Encoding: dialogResult = Active.Command_File_Encoding_Dialog(); break;
+					case TextEditCommand.File_ReopenWithEncoding: dialogResult = Active.Command_File_ReopenWithEncoding_Dialog(); break;
 					case TextEditCommand.Edit_Find: dialogResult = Active.Command_Edit_FindReplace_Dialog(false); break;
 					case TextEditCommand.Edit_Replace: dialogResult = Active.Command_Edit_FindReplace_Dialog(true); break;
 					case TextEditCommand.Edit_GotoLine: dialogResult = Active.Command_Edit_Goto_Dialog(true); break;
@@ -347,6 +348,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
 				case TextEditCommand.File_Encoding: Active.Command_File_Encoding(dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.File_ReopenWithEncoding: Active.Command_File_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_HexEditor: if (Active.Command_File_HexEditor()) { TextEditors.Remove(Active); if (TextEditors.Count == 0) Close(); } break;
 				case TextEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;

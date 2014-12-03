@@ -487,6 +487,29 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		internal EncodingDialog.Result Command_File_ReopenWithEncoding_Dialog()
+		{
+			return EncodingDialog.Run(CodePage);
+		}
+
+		internal void Command_File_ReopenWithEncoding(EncodingDialog.Result result)
+		{
+			if (IsModified)
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = "You have unsaved changes.  Are you sure you want to reload?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() != Message.OptionsEnum.Yes)
+					return;
+			}
+
+			OpenFile(FileName, codePage: result.CodePage);
+		}
+
 		internal bool Command_File_HexEditor()
 		{
 			if (!VerifyCanFullyEncode())
