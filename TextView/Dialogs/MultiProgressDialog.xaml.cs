@@ -9,7 +9,7 @@ namespace NeoEdit.TextView.Dialogs
 {
 	partial class MultiProgressDialog
 	{
-		public delegate void ProgressDelegate(int num, long done, long total = -1);
+		public delegate void ProgressDelegate(int num, long done, long total);
 		public delegate bool CancelDelegate(bool forceCancel = false);
 
 		[DepProp]
@@ -59,14 +59,18 @@ namespace NeoEdit.TextView.Dialogs
 
 		void SetProgress(int child, long done, long total)
 		{
-			if (total != -1)
-			{
-				if (total == 0)
-					done = 0;
-				else
-					done = done * 100 / total;
-			}
-			progress[child] = (int)done;
+			int percent;
+			if (total == 0)
+				percent = 0;
+			else if (done == total)
+				percent = 100;
+			else
+				percent = (int)(done * 100 / total);
+
+			if (progress[child] == percent)
+				return;
+
+			progress[child] = percent;
 			worker.ReportProgress(0);
 		}
 

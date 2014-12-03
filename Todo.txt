@@ -35,7 +35,6 @@ Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 
 View:
-Merge
 
 Hex:
 Fix backwards search
