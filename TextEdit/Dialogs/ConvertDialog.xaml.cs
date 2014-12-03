@@ -10,13 +10,19 @@ namespace NeoEdit.TextEdit.Dialogs
 		internal class Result
 		{
 			public Coder.CodePage InputType { get; set; }
+			public bool InputBOM { get; set; }
 			public Coder.CodePage OutputType { get; set; }
+			public bool OutputBOM { get; set; }
 		}
 
 		[DepProp]
 		public Coder.CodePage InputType { get { return UIHelper<ConvertDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<ConvertDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool InputBOM { get { return UIHelper<ConvertDialog>.GetPropValue<bool>(this); } set { UIHelper<ConvertDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public Coder.CodePage OutputType { get { return UIHelper<ConvertDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<ConvertDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool OutputBOM { get { return UIHelper<ConvertDialog>.GetPropValue<bool>(this); } set { UIHelper<ConvertDialog>.SetPropValue(this, value); } }
 
 		static ConvertDialog() { UIHelper<ConvertDialog>.Register(); }
 
@@ -36,12 +42,13 @@ namespace NeoEdit.TextEdit.Dialogs
 
 			InputType = Coder.CodePage.UTF8;
 			OutputType = Coder.CodePage.Hex;
+			InputBOM = OutputBOM = false;
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputType = InputType, OutputType = OutputType };
+			result = new Result { InputType = InputType, InputBOM = InputBOM, OutputType = OutputType, OutputBOM = OutputBOM };
 			DialogResult = true;
 		}
 

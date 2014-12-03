@@ -1049,7 +1049,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Convert(ConvertDialog.Result result)
 		{
-			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType), result.OutputType)).ToList());
+			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType, result.InputBOM), result.OutputType, result.OutputBOM)).ToList());
 		}
 
 		internal void Command_Data_Length()
