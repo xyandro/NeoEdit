@@ -72,7 +72,7 @@ namespace NeoEdit.TextEdit
 		readonly ObservableCollection<Range> Searches = new ObservableCollection<Range>();
 		readonly ObservableCollection<Range> Regions = new ObservableCollection<Range>();
 
-		Random random = new Random();
+		static Random random = new Random();
 
 		static TextEditor()
 		{
