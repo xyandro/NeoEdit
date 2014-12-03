@@ -8,7 +8,7 @@ using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
-	class TextData
+	class TextData : IDisposable
 	{
 		public string FileName { get; private set; }
 		public int NumLines { get; private set; }
@@ -48,7 +48,10 @@ namespace NeoEdit.TextView
 				while (position < Size)
 				{
 					if (cancel())
+					{
+						Dispose();
 						return;
+					}
 
 					var use = (int)Math.Min(Size - position, blockSize);
 					Read(position, use, block);
@@ -140,11 +143,14 @@ namespace NeoEdit.TextView
 			return lineStart[endLine] - lineStart[startLine];
 		}
 
-		public void Close()
+		public void Dispose()
 		{
-			file.Close();
+			if (file != null)
+			{
+				file.Dispose();
+				file = null;
+			}
 		}
-
 		public List<Tuple<string, long, long>> CalculateSplit(string format, long minSize)
 		{
 			var headerSize = Coder.PreambleSize(codePage);

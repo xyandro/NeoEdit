@@ -33,6 +33,8 @@ Insert copied files
 Get enclosing region
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
+Int8LE & Int8BE are the same
+Open file when current one is empty will replace it (should only happen with no filename)
 
 View:
 Merge

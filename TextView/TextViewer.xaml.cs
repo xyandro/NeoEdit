@@ -12,7 +12,7 @@ using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
-	partial class TextViewer
+	partial class TextViewer : IDisposable
 	{
 		[DepProp]
 		public string FileName { get { return UIHelper<TextViewer>.GetPropValue<string>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
@@ -78,9 +78,9 @@ namespace NeoEdit.TextView
 			return new Label { Padding = new Thickness(10, 2, 10, 2), Content = Path.GetFileName(FileName) };
 		}
 
-		internal void Close()
+		public void Dispose()
 		{
-			data.Close();
+			data.Dispose();
 		}
 
 		internal void Command_File_CopyPath()
