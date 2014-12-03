@@ -30,16 +30,21 @@ namespace NeoEdit.TextView
 				var totalRead = 0L;
 				var totalSize = files.Sum(a => a.Size);
 				var lockObj = new object();
+				int num = 0;
 
-				Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 4 }, (file, state, index) =>
+				Parallel.ForEach(files, ignored =>
 				{
 					try
 					{
+						int index;
+						lock (lockObj)
+							index = num++;
+						var file = files[index];
 						var lastRead = 0L;
 						if (file.Scan((read, total) =>
 						{
 							if (fileNames.Count != 1)
-								progress((int)index + 1, read, total);
+								progress(index + 1, read, total);
 							lock (lockObj)
 								totalRead += read - lastRead;
 							lastRead = read;
@@ -125,9 +130,11 @@ namespace NeoEdit.TextView
 			return buffer;
 		}
 
+		static object readLock = new object();
 		byte[] Read(long position, int size, byte[] buffer = null)
 		{
-			return Read(file, position, size, buffer);
+			lock (readLock)
+				return Read(file, position, size, buffer);
 		}
 
 		public string GetLine(int line)
