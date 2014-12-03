@@ -540,7 +540,7 @@ namespace NeoEdit.TextEdit
 			if (textEditor == null)
 				return;
 
-			if ((Active != null) && (Active.Empty()))
+			if ((Active != null) && (Active.FileName == null) && (Active.Empty()))
 			{
 				var index = TextEditors.IndexOf(Active);
 				Active = TextEditors[index] = textEditor;
