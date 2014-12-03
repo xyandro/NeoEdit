@@ -211,5 +211,6 @@ namespace NeoEdit.TextEdit
 		Macro_Record,
 		Macro_StopRecording,
 		Macro_Play,
+		Macro_PlayOnCopiedFiles,
 	}
 }

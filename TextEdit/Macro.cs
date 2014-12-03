@@ -72,7 +72,7 @@ namespace NeoEdit.TextEdit
 			macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult));
 		}
 
-		public void Play(TextEditTabs tabs, Action<bool> setPlayingStatus)
+		public void Play(TextEditTabs tabs, Action<bool> setPlayingStatus, Action finished=null)
 		{
 			setPlayingStatus(true);
 			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
@@ -83,6 +83,8 @@ namespace NeoEdit.TextEdit
 				{
 					timer.Stop();
 					setPlayingStatus(false);
+					if (finished != null)
+						finished();
 					return;
 				}
 

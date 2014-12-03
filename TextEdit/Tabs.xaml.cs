@@ -204,26 +204,50 @@ namespace NeoEdit.TextEdit
 			XMLConverter.ToXML(macro).Save(fileName);
 		}
 
-		void Command_Macro_Play(string fileName = null)
+		string ChooseMacro()
 		{
-			if (fileName == null)
+			var dialog = new OpenFileDialog
 			{
-				var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
-				var dialog = new OpenFileDialog
-				{
-					DefaultExt = "xml",
-					Filter = "Macro files|*.xml|All files|*.*",
-					InitialDirectory = macroDirectory,
-				};
-				if (dialog.ShowDialog() != true)
-					return;
+				DefaultExt = "xml",
+				Filter = "Macro files|*.xml|All files|*.*",
+				InitialDirectory = macroDirectory,
+			};
+			if (dialog.ShowDialog() != true)
+				return null;
+			return dialog.FileName;
+		}
 
-				fileName = dialog.FileName;
+		void Command_Macro_Play(string macroFile = null)
+		{
+			if (macroFile != null)
+			{
+				macroFile = ChooseMacro();
+				if (macroFile == null)
+					return;
 			}
 			else
-				fileName = Path.Combine(macroDirectory, fileName);
+				macroFile = Path.Combine(macroDirectory, macroFile);
 
-			XMLConverter.FromXML<Macro>(XElement.Load(fileName)).Play(this, playing => macroPlaying = playing);
+			XMLConverter.FromXML<Macro>(XElement.Load(macroFile)).Play(this, playing => macroPlaying = playing);
+		}
+
+		void Command_Macro_PlayOnCopiedFiles()
+		{
+			var files = new Queue<string>(ClipboardWindow.GetStrings());
+			var macroFile = ChooseMacro();
+			if (macroFile == null)
+				return;
+
+			var macro = XMLConverter.FromXML<Macro>(XElement.Load(macroFile));
+			Action startNext = null;
+			startNext = () =>
+			{
+				if (!files.Any())
+					return;
+				Add(CreateTextEditor(files.Dequeue()));
+				macro.Play(this, playing => macroPlaying = playing, startNext);
+			};
+			startNext();
 		}
 
 		protected override void OnClosing(CancelEventArgs e)
@@ -261,6 +285,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Macro_Record: Command_Macro_Record(); return;
 				case TextEditCommand.Macro_StopRecording: Command_Macro_StopRecording(); return;
 				case TextEditCommand.Macro_Play: Command_Macro_Play(); return;
+				case TextEditCommand.Macro_PlayOnCopiedFiles: Command_Macro_PlayOnCopiedFiles(); return;
 			}
 
 			var shiftDown = this.shiftDown;
