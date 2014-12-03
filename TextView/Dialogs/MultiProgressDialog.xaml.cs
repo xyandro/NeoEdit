@@ -65,10 +65,11 @@ namespace NeoEdit.TextView.Dialogs
 			else if (done == total)
 				percent = 100;
 			else
+			{
 				percent = (int)(done * 100 / total);
-
-			if (progress[child] == percent)
-				return;
+				if (progress[child] == percent)
+					return;
+			}
 
 			progress[child] = percent;
 			worker.ReportProgress(0);
