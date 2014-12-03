@@ -370,57 +370,64 @@ namespace NeoEdit.TextView
 
 				MultiProgressDialog.Run("Merging files...", headers, (progress, cancel) =>
 				{
-					using (var output = File.CreateText(outputFile))
+					try
 					{
-						var fileProgressNum = files.GroupJoin(fileNames.Select((file, index) => new { file = file, resultIndex = index + 1 }), file => file.FileName, file => file.file, (item, group) => new { key = item, value = group.Select(file => file.resultIndex).ToList() }).ToDictionary(obj => obj.key, obj => obj.value);
-						var fileLine = files.ToDictionary(file => file, file => 0);
-						var cacheStartLine = new Dictionary<TextData, int>();
-						var cacheLines = new Dictionary<TextData, List<string>>();
-
-						var linesWritten = 0;
-						var linesTotal = fileProgressNum.Sum(file => file.Key.NumLines * file.Value.Count);
-
-						while (true)
+						using (var output = File.CreateText(outputFile))
 						{
-							foreach (var file in fileLine.Keys.ToList())
+							var fileProgressNum = files.GroupJoin(fileNames.Select((file, index) => new { file = file, resultIndex = index + 1 }), file => file.FileName, file => file.file, (item, group) => new { key = item, value = group.Select(file => file.resultIndex).ToList() }).ToDictionary(obj => obj.key, obj => obj.value);
+							var fileLine = files.ToDictionary(file => file, file => 0);
+							var cacheStartLine = new Dictionary<TextData, int>();
+							var cacheLines = new Dictionary<TextData, List<string>>();
+
+							var linesWritten = 0;
+							var linesTotal = fileProgressNum.Sum(file => file.Key.NumLines * file.Value.Count);
+
+							while (true)
 							{
-								if ((!cacheStartLine.ContainsKey(file)) || (cacheStartLine[file] + cacheLines[file].Count <= fileLine[file]))
+								foreach (var file in fileLine.Keys.ToList())
 								{
-									if (fileLine[file] >= file.NumLines)
+									if ((!cacheStartLine.ContainsKey(file)) || (cacheStartLine[file] + cacheLines[file].Count <= fileLine[file]))
 									{
-										fileLine.Remove(file);
-										continue;
+										if (fileLine[file] >= file.NumLines)
+										{
+											fileLine.Remove(file);
+											continue;
+										}
+										cacheStartLine[file] = fileLine[file];
+										cacheLines[file] = file.GetLines(cacheStartLine[file], Math.Min(cacheStartLine[file] + 2, file.NumLines), false);
 									}
-									cacheStartLine[file] = fileLine[file];
-									cacheLines[file] = file.GetLines(cacheStartLine[file], Math.Min(cacheStartLine[file] + 2, file.NumLines), false);
 								}
-							}
 
-							if (!fileLine.Keys.Any())
-								break;
+								if (!fileLine.Keys.Any())
+									break;
 
-							string minLine = null;
-							TextData minLineFile = null;
-							foreach (var file in fileLine.Keys)
-							{
-								var fileCurLine = cacheLines[file][fileLine[file] - cacheStartLine[file]];
-								if ((minLine == null) || (fileCurLine.CompareTo(minLine) < 0))
+								string minLine = null;
+								TextData minLineFile = null;
+								foreach (var file in fileLine.Keys)
 								{
-									minLine = fileCurLine;
-									minLineFile = file;
+									var fileCurLine = cacheLines[file][fileLine[file] - cacheStartLine[file]];
+									if ((minLine == null) || (fileCurLine.CompareTo(minLine) < 0))
+									{
+										minLine = fileCurLine;
+										minLineFile = file;
+									}
 								}
-							}
 
-							++fileLine[minLineFile];
-							foreach (var progressNum in fileProgressNum[minLineFile])
-							{
-								output.Write(minLine);
-								++linesWritten;
-								progress(progressNum, fileLine[minLineFile], minLineFile.NumLines);
-							}
+								++fileLine[minLineFile];
+								foreach (var progressNum in fileProgressNum[minLineFile])
+								{
+									output.Write(minLine);
+									++linesWritten;
+									progress(progressNum, fileLine[minLineFile], minLineFile.NumLines);
+								}
 
-							progress(0, linesWritten, linesTotal);
+								progress(0, linesWritten, linesTotal);
+							}
 						}
+					}
+					finally
+					{
+						files.ForEach(file => { try { file.Dispose(); } catch { } });
 					}
 				}, finished);
 			});
