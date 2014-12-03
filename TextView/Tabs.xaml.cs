@@ -78,11 +78,20 @@ namespace NeoEdit.TextView
 
 		void Command_File_Combine()
 		{
-			var result = CombineDialog.Run();
+			var result = CombineDialog.Run(false);
 			if (result == null)
 				return;
 
 			TextData.CombineFiles(result.OutputFile, result.Files, () => { if (result.OpenFile) Add(result.OutputFile); });
+		}
+
+		void Command_File_Merge()
+		{
+			var result = CombineDialog.Run(true);
+			if (result == null)
+				return;
+
+			TextData.MergeFiles(result.OutputFile, result.Files, () => { if (result.OpenFile) Add(result.OutputFile); });
 		}
 
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
@@ -97,6 +106,7 @@ namespace NeoEdit.TextView
 				case TextViewCommand.File_Open: Command_File_Open(); break;
 				case TextViewCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextViewCommand.File_Combine: Command_File_Combine(); break;
+				case TextViewCommand.File_Merge: Command_File_Merge(); break;
 				case TextViewCommand.File_Exit: Close(); break;
 				case TextViewCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
@@ -125,7 +135,7 @@ namespace NeoEdit.TextView
 			if ((fileNames == null) || (fileNames.Count == 0))
 				return;
 
-			TextData.Create(fileNames, data => Dispatcher.Invoke(() =>
+			TextData.ReadFiles(fileNames, data => Dispatcher.Invoke(() =>
 			{
 				var textViewer = new TextViewer(data);
 				TextViewers.Add(textViewer);

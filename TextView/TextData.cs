@@ -18,15 +18,21 @@ namespace NeoEdit.TextView
 		FileStream file { get; set; }
 		List<long> lineStart { get; set; }
 		Coder.CodePage codePage { get; set; }
-		static public void Create(List<string> fileNames, Action<TextData> onScanComplete)
+		static public void ReadFiles(List<string> fileNames, Action<TextData> onFileScanComplete = null, Action<List<TextData>> onAllScanComplete = null)
 		{
+			if (onFileScanComplete == null) onFileScanComplete = result => { };
+			if (onAllScanComplete == null) onAllScanComplete = result => { };
+
+
 			var headers = new List<string>();
 			if (fileNames.Count != 1)
 				headers.Add("Reading files");
 			headers.AddRange(fileNames.Select(name => Path.GetFileName(name)));
+
+			var files = fileNames.Select(file => new TextData(file)).ToList();
+
 			MultiProgressDialog.Run("Scanning file...", headers, (progress, cancel) =>
 			{
-				var files = fileNames.Select(file => new TextData(file)).ToList();
 				var totalRead = 0L;
 				var totalSize = files.Sum(a => a.Size);
 				var lockObj = new object();
@@ -50,7 +56,7 @@ namespace NeoEdit.TextView
 							lastRead = read;
 							progress(0, totalRead, totalSize);
 						}, () => cancel()))
-							onScanComplete(file);
+							onFileScanComplete(file);
 					}
 					catch
 					{
@@ -58,7 +64,7 @@ namespace NeoEdit.TextView
 						throw;
 					}
 				});
-			});
+			}, () => onAllScanComplete(files));
 		}
 
 		TextData(string filename)
@@ -352,6 +358,77 @@ namespace NeoEdit.TextView
 						catch { }
 				}
 			}, finished);
+		}
+
+		public static void MergeFiles(string outputFile, List<string> fileNames, Action finished)
+		{
+			TextData.ReadFiles(fileNames.Distinct().ToList(), null, files =>
+			{
+				var headers = new List<string> { outputFile };
+				headers.AddRange(fileNames);
+				headers = headers.Select(file => Path.GetFileName(file)).ToList();
+
+				MultiProgressDialog.Run("Merging files...", headers, (progress, cancel) =>
+				{
+					using (var output = File.CreateText(outputFile))
+					{
+						var fileProgressNum = files.GroupJoin(fileNames.Select((file, index) => new { file = file, resultIndex = index + 1 }), file => file.FileName, file => file.file, (item, group) => new { key = item, value = group.Select(file => file.resultIndex).ToList() }).ToDictionary(obj => obj.key, obj => obj.value);
+						var fileLine = files.ToDictionary(file => file, file => 0);
+						var cacheStartLine = new Dictionary<TextData, int>();
+						var cacheLines = new Dictionary<TextData, List<string>>();
+
+						var linesWritten = 0;
+						var linesTotal = fileProgressNum.Sum(file => file.Key.NumLines * file.Value.Count);
+
+						while (true)
+						{
+							foreach (var file in fileLine.Keys.ToList())
+							{
+								if ((!cacheStartLine.ContainsKey(file)) || (cacheStartLine[file] + cacheLines[file].Count <= fileLine[file]))
+								{
+									if (fileLine[file] >= file.NumLines)
+									{
+										fileLine.Remove(file);
+										continue;
+									}
+									cacheStartLine[file] = fileLine[file];
+									cacheLines[file] = file.GetLines(cacheStartLine[file], Math.Min(cacheStartLine[file] + 2, file.NumLines), false);
+								}
+							}
+
+							if (!fileLine.Keys.Any())
+								break;
+
+							string minLine = null;
+							TextData minLineFile = null;
+							foreach (var file in fileLine.Keys)
+							{
+								var fileCurLine = cacheLines[file][fileLine[file] - cacheStartLine[file]];
+								if ((minLine == null) || (fileCurLine.CompareTo(minLine) < 0))
+								{
+									minLine = fileCurLine;
+									minLineFile = file;
+								}
+							}
+
+							++fileLine[minLineFile];
+							foreach (var progressNum in fileProgressNum[minLineFile])
+							{
+								output.Write(minLine);
+								++linesWritten;
+								progress(progressNum, fileLine[minLineFile], minLineFile.NumLines);
+							}
+
+							progress(0, linesWritten, linesTotal);
+						}
+					}
+				}, finished);
+			});
+		}
+
+		public override string ToString()
+		{
+			return FileName;
 		}
 	}
 }

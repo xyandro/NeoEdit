@@ -28,9 +28,10 @@ namespace NeoEdit.TextView.Dialogs
 
 		static CombineDialog() { UIHelper<CombineDialog>.Register(); }
 
-		CombineDialog()
+		CombineDialog(bool isMerge)
 		{
 			InitializeComponent();
+			Title = isMerge ? "Merge Files" : "Combine Files";
 			Files = new ObservableCollection<string>();
 			OpenFile = true;
 		}
@@ -60,9 +61,9 @@ namespace NeoEdit.TextView.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run()
+		static public Result Run(bool isMerge)
 		{
-			var dialog = new CombineDialog();
+			var dialog = new CombineDialog(isMerge);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 
