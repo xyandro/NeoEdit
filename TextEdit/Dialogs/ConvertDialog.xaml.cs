@@ -42,7 +42,8 @@ namespace NeoEdit.TextEdit.Dialogs
 
 			InputType = Coder.CodePage.UTF8;
 			OutputType = Coder.CodePage.Hex;
-			InputBOM = OutputBOM = false;
+			InputBOM = false;
+			OutputBOM = true;
 		}
 
 		Result result;
