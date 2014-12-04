@@ -361,7 +361,10 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Save()
 		{
-			Save(FileName);
+			if (FileName == null)
+				Command_File_SaveAs();
+			else
+				Save(FileName);
 		}
 
 		internal void Command_File_SaveAs()
