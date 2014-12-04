@@ -23,7 +23,6 @@ namespace NeoEdit.TextView
 			if (onFileScanComplete == null) onFileScanComplete = result => { };
 			if (onAllScanComplete == null) onAllScanComplete = result => { };
 
-
 			var headers = new List<string>();
 			if (fileNames.Count != 1)
 				headers.Add("Reading files");
@@ -82,15 +81,7 @@ namespace NeoEdit.TextView
 			var charSize = Coder.CharSize(codePage);
 			var bigEndian = (codePage == Coder.CodePage.UTF16BE) || (codePage == Coder.CodePage.UTF32BE);
 			int lineLength = 0, maxLine = 0;
-			Win32.Interop.GetLinesEncoding getLinesEncoding = Win32.Interop.GetLinesEncoding.Default;
-			switch (codePage)
-			{
-				case Coder.CodePage.UTF8: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF8; break;
-				case Coder.CodePage.UTF16LE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF16LE; break;
-				case Coder.CodePage.UTF16BE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF16BE; break;
-				case Coder.CodePage.UTF32LE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF32LE; break;
-				case Coder.CodePage.UTF32BE: getLinesEncoding = Win32.Interop.GetLinesEncoding.UTF32BE; break;
-			}
+			var getLinesEncoding = NativeEncoding(codePage);
 
 			var block = new byte[65536];
 			var blockSize = block.Length - charSize;
@@ -122,6 +113,20 @@ namespace NeoEdit.TextView
 			NumLines = lineStart.Count - 1;
 			NumColumns = maxLine;
 			return true;
+		}
+
+		static Win32.Interop.GetLinesEncoding NativeEncoding(Coder.CodePage codePage)
+		{
+			switch (codePage)
+			{
+				case Coder.CodePage.Default: return Win32.Interop.GetLinesEncoding.Default;
+				case Coder.CodePage.UTF8: return Win32.Interop.GetLinesEncoding.UTF8;
+				case Coder.CodePage.UTF16LE: return Win32.Interop.GetLinesEncoding.UTF16LE;
+				case Coder.CodePage.UTF16BE: return Win32.Interop.GetLinesEncoding.UTF16BE;
+				case Coder.CodePage.UTF32LE: return Win32.Interop.GetLinesEncoding.UTF32LE;
+				case Coder.CodePage.UTF32BE: return Win32.Interop.GetLinesEncoding.UTF32BE;
+				default: throw new ArgumentException("Invalid encoding");
+			}
 		}
 
 		static byte[] Read(FileStream file, long position, int size, byte[] buffer = null)
@@ -432,6 +437,50 @@ namespace NeoEdit.TextView
 						files.ForEach(file => { try { file.Dispose(); } catch { } });
 					}
 				}, finished);
+			});
+		}
+
+		public static void SaveEncoding(string inputFile, string outputFile, Coder.CodePage outCodePage)
+		{
+			MultiProgressDialog.Run("Changing encoding...", new List<string> { inputFile }, (progress, cancel) =>
+			{
+				using (var input = File.OpenRead(inputFile))
+				{
+					var header = Read(input, 0, (int)Math.Min(input.Length, 4));
+					var inCodePage = Coder.CodePageFromBOM(header);
+
+					if (inCodePage == outCodePage)
+						throw new Exception("File already has that encoding.");
+
+					var inNativeCodePage = NativeEncoding(inCodePage);
+					var outNativeCodePage = NativeEncoding(outCodePage);
+
+					long position = Coder.PreambleSize(inCodePage);
+					var size = input.Length;
+					using (var output = File.Create(outputFile))
+					{
+						var bom = Coder.StringToBytes("", outCodePage, true);
+						output.Write(bom, 0, bom.Length);
+						var inputData = new byte[65536];
+						var outputData = new byte[inputData.Length * 5]; // Should be big enough to hold any resulting output
+						while (position < size)
+						{
+							if (cancel())
+								return;
+
+							var block = (int)Math.Min(inputData.Length, size - position);
+							Read(input, position, block, inputData);
+
+							int inUsed, outUsed;
+							Win32.Interop.ConvertEncoding(inputData, block, inNativeCodePage, outputData, outNativeCodePage, out inUsed, out outUsed);
+
+							output.Write(outputData, 0, outUsed);
+
+							position += inUsed;
+							progress(0, position, size);
+						}
+					}
+				}
 			});
 		}
 

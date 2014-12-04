@@ -15,6 +15,8 @@
 		<textView:TextViewMenuItem Header="Com_bine" CommandEnum="File_Combine"/>
 		<textView:TextViewMenuItem Header="_Merge" CommandEnum="File_Merge"/>
 		<Separator/>
+		<textView:TextViewMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
+		<Separator/>
 		<textView:TextViewMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">

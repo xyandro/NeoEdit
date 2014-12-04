@@ -94,6 +94,15 @@ namespace NeoEdit.TextView
 			TextData.MergeFiles(result.OutputFile, result.Files, () => { if (result.OpenFile) Add(result.OutputFile); });
 		}
 
+		void Command_File_Encoding()
+		{
+			var result = ChangeEncodingDialog.Run();
+			if (result == null)
+				return;
+
+			TextData.SaveEncoding(result.InputFile, result.OutputFile, result.OutputCodePage);
+		}
+
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
@@ -107,6 +116,7 @@ namespace NeoEdit.TextView
 				case TextViewCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextViewCommand.File_Combine: Command_File_Combine(); break;
 				case TextViewCommand.File_Merge: Command_File_Merge(); break;
+				case TextViewCommand.File_Encoding: Command_File_Encoding(); break;
 				case TextViewCommand.File_Exit: Close(); break;
 				case TextViewCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}

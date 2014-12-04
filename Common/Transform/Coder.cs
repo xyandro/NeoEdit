@@ -505,7 +505,7 @@ namespace NeoEdit.Common.Transform
 				case CodePage.UTF8: return 3;
 				case CodePage.UTF16LE: return 2;
 				case CodePage.UTF16BE: return 2;
-				case CodePage.UTF32LE: return 2;
+				case CodePage.UTF32LE: return 4;
 				case CodePage.UTF32BE: return 4;
 				default: return 0;
 			}
@@ -517,7 +517,7 @@ namespace NeoEdit.Common.Transform
 			{
 				case CodePage.UTF16LE: return 2;
 				case CodePage.UTF16BE: return 2;
-				case CodePage.UTF32LE: return 2;
+				case CodePage.UTF32LE: return 4;
 				case CodePage.UTF32BE: return 4;
 				default: return 1;
 			}

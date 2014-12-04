@@ -42,6 +42,7 @@ namespace NeoEdit
 				UTF32BE,
 			};
 			static System::Collections::Generic::List<int64_t> ^GetLines(GetLinesEncoding encoding, array<uint8_t>^ data, int64_t use, int64_t %position, int %lineLength, int %maxLine);
+			static void ConvertEncoding(array<uint8_t>^ inputArray, int inputSize, GetLinesEncoding inputEncoding, array<uint8_t>^ outputArray, GetLinesEncoding outputEncoding, [System::Runtime::InteropServices::Out]int %inputUsed, [System::Runtime::InteropServices::Out]int %outputUsed);
 		};
 	}
 }

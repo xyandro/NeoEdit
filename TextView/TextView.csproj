@@ -22,6 +22,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\ChangeEncodingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\SplitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -38,6 +42,9 @@
     </Compile>
     <Compile Include="Dialogs\CombineDialog.xaml.cs">
       <DependentUpon>CombineDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ChangeEncodingDialog.xaml.cs">
+      <DependentUpon>ChangeEncodingDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SplitDialog.xaml.cs">
       <DependentUpon>SplitDialog.xaml</DependentUpon>

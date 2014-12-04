@@ -13,6 +13,7 @@ namespace NeoEdit.TextView
 		File_Split,
 		File_Combine,
 		File_Merge,
+		File_Encoding,
 		File_Exit,
 		[KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy,
 		View_Tiles,
