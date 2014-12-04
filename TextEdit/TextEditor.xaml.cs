@@ -1190,11 +1190,17 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
-			var strs = new List<string>();
 			var expressionData = GetExpressionData();
+			var strs = new List<string>();
 			for (var ctr = 0; ctr < expressionData.values.Count; ++ctr)
 				strs.Add(result.Expression.Evaluate(expressionData.values[ctr]).ToString());
 			ReplaceSelections(strs);
+		}
+
+		internal void Command_Data_EvaluateSelectedExpression()
+		{
+			var expression = new NeoEdit.Common.Expression("Eval({0})");
+			ReplaceSelections(Selections.Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
 		}
 
 		internal void Command_Data_Series()

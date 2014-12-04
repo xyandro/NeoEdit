@@ -81,6 +81,7 @@ namespace NeoEdit.TextEdit
 		Data_Table_ToTable,
 		Data_Table_FromTable,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Data_EvaluateExpression,
+		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Data_EvaluateSelectedExpression,
 		Data_Series,
 		[KeyGesture(Key.D, ModifierKeys.Control)] Data_CopyDown,
 		Data_Copy_Count,

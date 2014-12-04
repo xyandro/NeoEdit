@@ -436,6 +436,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Table_ToTable: Active.Command_Data_ToTable(); break;
 				case TextEditCommand.Data_Table_FromTable: Active.Command_Data_FromTable(); break;
 				case TextEditCommand.Data_EvaluateExpression: Active.Command_Data_EvaluateExpression(dialogResult as GetExpressionDialog.Result); break;
+				case TextEditCommand.Data_EvaluateSelectedExpression: Active.Command_Data_EvaluateSelectedExpression(); break;
 				case TextEditCommand.Data_Series: Active.Command_Data_Series(); break;
 				case TextEditCommand.Data_CopyDown: Active.Command_Data_CopyDown(); break;
 				case TextEditCommand.Data_Copy_Count: Active.Command_Data_Copy_Count(); break;

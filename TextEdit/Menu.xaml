@@ -116,6 +116,8 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Evaluate _Expression" CommandEnum="Data_EvaluateExpression"/>
+		<textEdit:TextEditMenuItem Header="Evaluate Selected Expression" CommandEnum="Data_EvaluateSelectedExpression"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Series" CommandEnum="Data_Series"/>
 		<textEdit:TextEditMenuItem Header="Copy Down" CommandEnum="Data_CopyDown"/>
 		<MenuItem Header="_Copy">
