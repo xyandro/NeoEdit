@@ -1,24 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Microsoft.Win32;
-using NeoEdit.GUI;
-using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
-using NeoEdit.TextView.Dialogs;
-using System;
-using NeoEdit.Common.Transform;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Common;
+using Microsoft.Win32;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextView.Dialogs
 {
@@ -34,6 +21,8 @@ namespace NeoEdit.TextView.Dialogs
 		[DepProp]
 		public string InputFile { get { return UIHelper<ChangeEncodingDialog>.GetPropValue<string>(this); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public string InputCodePage { get { return UIHelper<ChangeEncodingDialog>.GetPropValue<string>(this); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public string OutputFile { get { return UIHelper<ChangeEncodingDialog>.GetPropValue<string>(this); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public Coder.CodePage OutputCodePage { get { return UIHelper<ChangeEncodingDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(this, value); } }
@@ -41,6 +30,7 @@ namespace NeoEdit.TextView.Dialogs
 		static ChangeEncodingDialog()
 		{
 			UIHelper<ChangeEncodingDialog>.Register();
+			UIHelper<ChangeEncodingDialog>.AddCallback(a => a.InputFile, (obj, o, n) => obj.SetInputCodePage());
 		}
 
 		ChangeEncodingDialog()
@@ -52,6 +42,11 @@ namespace NeoEdit.TextView.Dialogs
 			outputCodePage.SelectedValuePath = "Item1";
 			outputCodePage.DisplayMemberPath = "Item2";
 			OutputCodePage = Coder.CodePage.UTF8;
+		}
+
+		void SetInputCodePage()
+		{
+			InputCodePage = Coder.GetDescription(Coder.CodePageFromBOM(InputFile));
 		}
 
 		Result result;

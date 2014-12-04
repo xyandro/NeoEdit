@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -423,6 +424,16 @@ namespace NeoEdit.Common.Transform
 				if (bytes1[ctr] != bytes2[ctr])
 					return false;
 			return true;
+		}
+
+		public static CodePage CodePageFromBOM(string fileName)
+		{
+			using (var file = File.OpenRead(fileName))
+			{
+				var header = new byte[Math.Min(4, file.Length)];
+				file.Read(header, 0, header.Length);
+				return Coder.CodePageFromBOM(header);
+			}
 		}
 
 		public static CodePage CodePageFromBOM(byte[] data)
