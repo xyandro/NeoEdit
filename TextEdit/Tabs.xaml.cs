@@ -219,7 +219,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_Play(string macroFile = null)
 		{
-			if (macroFile != null)
+			if (macroFile == null)
 			{
 				macroFile = ChooseMacro();
 				if (macroFile == null)
