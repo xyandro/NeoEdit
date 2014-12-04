@@ -331,6 +331,7 @@ namespace NeoEdit.TextEdit
 					case TextEditCommand.Data_DateTime_Convert: dialogResult = Active.Command_Data_DateTime_Convert_Dialog(); break;
 					case TextEditCommand.Data_Convert: dialogResult = Active.Command_Data_Convert_Dialog(); break;
 					case TextEditCommand.Data_Width: dialogResult = Active.Command_Data_Width_Dialog(); break;
+					case TextEditCommand.Data_Trim: dialogResult = Active.Command_Data_Trim_Dialog(); break;
 					case TextEditCommand.Data_EvaluateExpression: dialogResult = Active.Command_Data_EvaluateExpression_Dialog(); break;
 					case TextEditCommand.Data_Repeat: dialogResult = Active.Command_Data_Repeat_Dialog(); break;
 					case TextEditCommand.Data_InsertRandomNumber: dialogResult = Active.Command_Data_InsertRandomNumber_Dialog(); break;
@@ -430,7 +431,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Convert: Active.Command_Data_Convert(dialogResult as ConvertDialog.Result); break;
 				case TextEditCommand.Data_Length: Active.Command_Data_Length(); break;
 				case TextEditCommand.Data_Width: Active.Command_Data_Width(dialogResult as WidthDialog.Result); break;
-				case TextEditCommand.Data_Trim: Active.Command_Data_Trim(); break;
+				case TextEditCommand.Data_Trim: Active.Command_Data_Trim(dialogResult as TrimDialog.Result); break;
 				case TextEditCommand.Data_SingleLine: Active.Command_Data_SingleLine(); break;
 				case TextEditCommand.Data_Table_ToTable: Active.Command_Data_ToTable(); break;
 				case TextEditCommand.Data_Table_FromTable: Active.Command_Data_FromTable(); break;

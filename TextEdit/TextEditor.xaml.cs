@@ -1122,13 +1122,23 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.Select((range, index) => SetWidth(GetString(range), lengths[index], result.Location, result.PadChar)).ToList());
 		}
 
-		internal void Command_Data_Trim()
+		internal TrimDialog.Result Command_Data_Trim_Dialog()
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			if (strs.All(str => str.IsNumeric()))
-				strs = strs.Select(str => str.TrimStart('0')).ToList();
-			else
-				strs = strs.Select(str => str.Trim()).ToList();
+			var numeric = Selections.Select(range => GetString(range)).Take(10).All(str => str.IsNumeric());
+			return TrimDialog.Run(numeric);
+		}
+
+		internal void Command_Data_Trim(TrimDialog.Result result)
+		{
+			var strs = new List<string>();
+			foreach (var str in Selections.Select(range => GetString(range)))
+				switch (result.Location)
+				{
+					case TrimDialog.TrimLocation.Start: strs.Add(str.TrimStart(result.TrimChars)); break;
+					case TrimDialog.TrimLocation.Both: strs.Add(str.Trim(result.TrimChars)); break;
+					case TrimDialog.TrimLocation.End: strs.Add(str.TrimEnd(result.TrimChars)); break;
+				}
+
 			ReplaceSelections(strs);
 		}
 

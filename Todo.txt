@@ -35,7 +35,6 @@ Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Run macro on series of files
 Expression: add value for total selection count
-Trim shouldn't remove last 0
 Width: Allow minimum/maximum (longer is fine)
 
 View:
