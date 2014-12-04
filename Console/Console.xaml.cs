@@ -41,19 +41,21 @@ namespace NeoEdit.Console
 			UIHelper<Console>.AddObservableCallback(a => a.Lines, (obj, s, e) => obj.renderTimer.Start());
 			UIHelper<Console>.AddCallback(a => a.CommandMode, (obj, s, e) => obj.SetFocus());
 			UIHelper<Console>.AddCallback(a => a.yScrollValue, (obj, s, e) => obj.renderTimer.Start());
+			UIHelper<Console>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
+			UIHelper<Console>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
 			UIHelper<Console>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
 		RunOnceTimer renderTimer;
 
+		List<PropertyChangeNotifier> localCallbacks;
 		public Console(string path = null)
 		{
 			InitializeComponent();
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
-			UIHelper<Canvas>.AddCallback(canvas, Canvas.ActualHeightProperty, () => CalculateBoundaries());
-			UIHelper<Canvas>.AddCallback(canvas, Canvas.ActualWidthProperty, () => CalculateBoundaries());
+			localCallbacks = UIHelper<Console>.GetLocalCallbacks(this);
 
 			Location = path;
 			if (Location == null)

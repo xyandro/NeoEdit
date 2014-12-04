@@ -9,12 +9,12 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
-using NeoEdit.HexEdit.Data;
-using NeoEdit.HexEdit.Dialogs;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.HexEdit.Data;
+using NeoEdit.HexEdit.Dialogs;
 
 namespace NeoEdit.HexEdit
 {
@@ -134,17 +134,19 @@ namespace NeoEdit.HexEdit
 			});
 			UIHelper<HexEditor>.AddCallback(a => a.ChangeCount, (obj, o, n) => { obj.Focus(); obj.canvas.InvalidateVisual(); });
 			UIHelper<HexEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvas.InvalidateVisual());
+			UIHelper<HexEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.canvas.InvalidateVisual());
+			UIHelper<HexEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => { obj.EnsureVisible(obj.Pos1); obj.canvas.InvalidateVisual(); });
 			UIHelper<HexEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
+		List<PropertyChangeNotifier> localCallbacks;
 		public HexEditor(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null)
 		{
 			InitializeComponent();
 
 			undoRedo = new UndoRedo(b => IsModified = b);
 
-			UIHelper<HexEditor>.AddCallback(canvas, Canvas.ActualWidthProperty, () => canvas.InvalidateVisual());
-			UIHelper<HexEditor>.AddCallback(canvas, Canvas.ActualHeightProperty, () => { EnsureVisible(Pos1); canvas.InvalidateVisual(); });
+			localCallbacks = UIHelper<HexEditor>.GetLocalCallbacks(this);
 
 			canvas.MouseLeftButtonDown += OnCanvasMouseLeftButtonDown;
 			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonDown;

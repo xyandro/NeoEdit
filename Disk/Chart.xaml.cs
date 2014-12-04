@@ -12,8 +12,17 @@ namespace NeoEdit.Disk
 {
 	partial class Chart
 	{
+		static Chart()
+		{
+			UIHelper<Chart>.AddCallback(a => a.scroller, ScrollViewer.ViewportWidthProperty, obj => obj.RecalculateLegend());
+			UIHelper<Chart>.AddCallback(a => a.scroller, ScrollViewer.ViewportHeightProperty, obj => obj.RecalculateLegend());
+			UIHelper<Chart>.AddCallback(a => a.pieChart, ActualWidthProperty, obj => obj.RecalculatePieChart());
+			UIHelper<Chart>.AddCallback(a => a.pieChart, ActualHeightProperty, obj => obj.RecalculatePieChart());
+		}
+
 		List<Tuple<string, string, long>> data;
 		List<Brush> brushes;
+		List<PropertyChangeNotifier> localCallbacks;
 		public Chart(List<Tuple<string, string, long>> _data)
 		{
 			InitializeComponent();
@@ -29,10 +38,7 @@ namespace NeoEdit.Disk
 			for (var ctr = 0; ctr < data.Count; ++ctr)
 				legend.Children.Add(GetKey(data[ctr].Item1, brushes[ctr], data[ctr].Item3));
 
-			UIHelper<Chart>.AddCallback(scroller, ScrollViewer.ViewportWidthProperty, () => RecalculateLegend());
-			UIHelper<Chart>.AddCallback(scroller, ScrollViewer.ViewportHeightProperty, () => RecalculateLegend());
-			UIHelper<Chart>.AddCallback(pieChart, ActualWidthProperty, () => RecalculatePieChart());
-			UIHelper<Chart>.AddCallback(pieChart, ActualHeightProperty, () => RecalculatePieChart());
+			localCallbacks = UIHelper<Chart>.GetLocalCallbacks(this);
 		}
 
 		Point GetPoint(Point center, double radius, double angle)

@@ -50,6 +50,7 @@
     <Compile Include="Common\RenderCanvas.cs" />
     <Compile Include="Common\RunOnceTimer.cs" />
     <Compile Include="Common\Tabs.cs" />
+    <Compile Include="Common\PropertyChangeNotifier.cs" />
     <Compile Include="Common\UIHelper.cs" />
     <Page Include="Common\WindowMenu.xaml">
       <SubType>Designer</SubType>

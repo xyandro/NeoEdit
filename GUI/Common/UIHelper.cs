@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -70,10 +69,15 @@ namespace NeoEdit.GUI.Common
 			return dependencyProperty.Values;
 		}
 
-		public static void AddCallback<T>(T obj, DependencyProperty prop, Action callback) where T : DependencyObject
+		static List<Tuple<Func<ControlType, DependencyObject>, DependencyProperty, Action<ControlType>>> localCallbacks = new List<Tuple<Func<ControlType, DependencyObject>, DependencyProperty, Action<ControlType>>>();
+		public static void AddCallback(Func<ControlType, DependencyObject> obj, DependencyProperty prop, Action<ControlType> callback)
 		{
-			var dpd = DependencyPropertyDescriptor.FromProperty(prop, typeof(T));
-			dpd.AddValueChanged(obj, (s, e) => callback());
+			localCallbacks.Add(Tuple.Create(obj, prop, callback));
+		}
+
+		public static List<PropertyChangeNotifier> GetLocalCallbacks(ControlType control)
+		{
+			return localCallbacks.Select(tuple => new PropertyChangeNotifier(tuple.Item1(control), tuple.Item2, () => tuple.Item3(control))).ToList();
 		}
 
 		public static void AddCallback<T>(Expression<Func<ControlType, T>> expression, Action<ControlType, T, T> callback)

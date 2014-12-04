@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,13 +18,18 @@ namespace NeoEdit.Registry
 		[DepProp]
 		ObservableCollection<RegistryItem> Keys { get { return UIHelper<RegistryWindow>.GetPropValue<ObservableCollection<RegistryItem>>(this); } set { UIHelper<RegistryWindow>.SetPropValue(this, value); } }
 
-		static RegistryWindow() { UIHelper<RegistryWindow>.Register(); }
+		static RegistryWindow()
+		{
+			UIHelper<RegistryWindow>.Register();
+			UIHelper<RegistryWindow>.AddCallback(a => a.keys, ItemGridTree.LocationProperty, obj => obj.Location = obj.keys.Location.FullName);
+		}
 
+		List<PropertyChangeNotifier> localCallbacks;
 		public RegistryWindow(string key)
 		{
 			InitializeComponent();
 
-			UIHelper<RegistryWindow>.AddCallback(keys, ItemGridTree.LocationProperty, () => Location = keys.Location.FullName);
+			localCallbacks = UIHelper<RegistryWindow>.GetLocalCallbacks(this);
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => UIHelper<RegistryWindow>.InvalidateBinding(location, TextBox.TextProperty);
 

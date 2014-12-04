@@ -43,6 +43,8 @@ namespace NeoEdit.TextView
 			UIHelper<TextViewer>.AddCallback(a => a.selCursorColumn, (obj, o, n) => obj.renderTimer.Start());
 			UIHelper<TextViewer>.AddCallback(a => a.selHighlightLine, (obj, o, n) => obj.renderTimer.Start());
 			UIHelper<TextViewer>.AddCallback(a => a.selHighlightColumn, (obj, o, n) => obj.renderTimer.Start());
+			UIHelper<TextViewer>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
+			UIHelper<TextViewer>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextViewer>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextViewer>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 			UIHelper<TextViewer>.AddCoerce(a => a.selCursorLine, (obj, value) => (int)Math.Max(0, Math.Min(obj.data.NumLines, value)));
@@ -54,6 +56,7 @@ namespace NeoEdit.TextView
 		RunOnceTimer renderTimer;
 
 		readonly TextData data;
+		List<PropertyChangeNotifier> localCallbacks;
 		internal TextViewer(TextData _data)
 		{
 			InitializeComponent();
@@ -65,8 +68,7 @@ namespace NeoEdit.TextView
 			if (!File.Exists(FileName))
 				throw new Exception(String.Format("File {0} doesn't exist.", FileName));
 
-			UIHelper<TextViewer>.AddCallback(this, Canvas.ActualWidthProperty, () => CalculateBoundaries());
-			UIHelper<TextViewer>.AddCallback(this, Canvas.ActualHeightProperty, () => CalculateBoundaries());
+			localCallbacks = UIHelper<TextViewer>.GetLocalCallbacks(this);
 
 			canvas.Render += OnCanvasRender;
 

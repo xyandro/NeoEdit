@@ -80,11 +80,14 @@ namespace NeoEdit.TextEdit
 			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.renderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.renderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.renderTimer.Start());
+			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
+			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
 		RunOnceTimer selectionsTimer, searchesTimer, regionsTimer, renderTimer;
+		List<PropertyChangeNotifier> localCallbacks;
 
 		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = -1, int column = -1)
 		{
@@ -104,8 +107,7 @@ namespace NeoEdit.TextEdit
 			Searches.CollectionChanged += (s, e) => searchesTimer.Start();
 			Regions.CollectionChanged += (s, e) => regionsTimer.Start();
 
-			UIHelper<TextEditor>.AddCallback(this, Canvas.ActualWidthProperty, () => CalculateBoundaries());
-			UIHelper<TextEditor>.AddCallback(this, Canvas.ActualHeightProperty, () => CalculateBoundaries());
+			localCallbacks = UIHelper<TextEditor>.GetLocalCallbacks(this);
 
 			canvas.MouseLeftButtonDown += OnCanvasMouseLeftButtonDown;
 			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonUp;
