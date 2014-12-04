@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace NeoEdit.GUI.Common
@@ -13,6 +14,11 @@ namespace NeoEdit.GUI.Common
 		void HelpAbout(object sender, RoutedEventArgs e)
 		{
 			new About.AboutWindow().ShowDialog();
+		}
+
+		void RunGC(object sender, RoutedEventArgs e)
+		{
+			GC.Collect();
 		}
 	}
 }
