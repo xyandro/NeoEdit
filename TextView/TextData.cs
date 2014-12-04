@@ -422,6 +422,8 @@ namespace NeoEdit.TextView
 								}
 
 								progress(0, linesWritten, linesTotal);
+								if (cancel())
+									return;
 							}
 						}
 					}
