@@ -23,7 +23,9 @@
 		<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
 			<RadioButton GroupName="type" Content="_Absolute" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Absolute}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="_Relative" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Relative}" Margin="0,0,10,0" Focusable="False"/>
-			<RadioButton GroupName="type" Content="_Multiple" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
+			<RadioButton GroupName="type" Content="_Minimum" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Minimum}" Margin="0,0,10,0" Focusable="False"/>
+			<RadioButton GroupName="type" Content="Ma_ximum" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Maximum}" Margin="0,0,10,0" Focusable="False"/>
+			<RadioButton GroupName="type" Content="Multi_ple" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="_Clipboard" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Clipboard}" Margin="0,0,10,0" Focusable="False"/>
 		</StackPanel>
 

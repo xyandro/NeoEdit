@@ -10,6 +10,8 @@ namespace NeoEdit.TextEdit.Dialogs
 			None,
 			Absolute,
 			Relative,
+			Minimum,
+			Maximum,
 			Multiple,
 			Clipboard,
 		}
@@ -46,24 +48,27 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<WidthDialog>.AddCallback(a => a.Type, (obj, o, n) => obj.SetValueParams());
 		}
 
-		readonly int startLength;
-		WidthDialog(int startLength, char padChar, bool before)
+		readonly int minLength, maxLength;
+		WidthDialog(int minLength, int maxLength, bool numeric)
 		{
 			InitializeComponent();
 
-			this.startLength = startLength;
-			this.padChar.GotFocus += (s, e) => this.padChar.SelectAll();
+			this.minLength = minLength;
+			this.maxLength = maxLength;
+			padChar.GotFocus += (s, e) => padChar.SelectAll();
 
 			Type = WidthType.Absolute;
-			PadChar = new string(padChar, 1);
-			Location = before ? TextLocation.End : TextLocation.Start;
+			if (numeric)
+				NumericClick(null, null);
+			else
+				StringClick(null, null);
 		}
 
 		void SetValueParams()
 		{
 			NeedValue = Type != WidthType.Clipboard;
-			value.Minimum = Type == WidthType.Absolute ? 0 : Type == WidthType.Multiple ? 1 : int.MinValue;
-			Value = Type == WidthType.Absolute ? startLength : Type == WidthType.Relative ? 0 : Type == WidthType.Multiple ? 1 : Value;
+			value.Minimum = Type == WidthType.Multiple ? 1 : Type == WidthType.Relative ? int.MinValue : 0;
+			Value = Type == WidthType.Multiple ? 1 : Type == WidthType.Relative ? 0 : Type == WidthType.Minimum ? minLength : maxLength;
 		}
 
 		void NumericClick(object sender, RoutedEventArgs e)
@@ -87,9 +92,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(int startLength, char padChar, bool before)
+		public static Result Run(int minLength, int maxLength, bool numeric)
 		{
-			var dialog = new WidthDialog(startLength, padChar, before);
+			var dialog = new WidthDialog(minLength, maxLength, numeric);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}

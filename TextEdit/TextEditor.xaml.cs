@@ -1088,9 +1088,10 @@ namespace NeoEdit.TextEdit
 		internal WidthDialog.Result Command_Data_Width_Dialog()
 		{
 			var strs = Selections.Select(range => GetString(range)).ToList();
-			var startLength = strs.Select(str => str.Length).Max();
+			var minLength = strs.Select(str => str.Length).Min();
+			var maxLength = strs.Select(str => str.Length).Max();
 			var numeric = strs.All(str => str.IsNumeric());
-			return WidthDialog.Run(startLength, numeric ? '0' : ' ', numeric);
+			return WidthDialog.Run(minLength, maxLength, numeric);
 		}
 
 		internal void Command_Data_Width(WidthDialog.Result result)
@@ -1103,6 +1104,12 @@ namespace NeoEdit.TextEdit
 					break;
 				case WidthDialog.WidthType.Relative:
 					lengths = Selections.Select(range => Math.Max(0, range.Length + result.Value)).ToList();
+					break;
+				case WidthDialog.WidthType.Minimum:
+					lengths = Selections.Select(range => Math.Max(range.Length, result.Value)).ToList();
+					break;
+				case WidthDialog.WidthType.Maximum:
+					lengths = Selections.Select(range => Math.Min(range.Length, result.Value)).ToList();
 					break;
 				case WidthDialog.WidthType.Multiple:
 					lengths = Selections.Select(range => range.Length + result.Value - 1 - (range.Length + result.Value - 1) % result.Value).ToList();
@@ -1124,7 +1131,7 @@ namespace NeoEdit.TextEdit
 
 		internal TrimDialog.Result Command_Data_Trim_Dialog()
 		{
-			var numeric = Selections.Select(range => GetString(range)).Take(10).All(str => str.IsNumeric());
+			var numeric = Selections.Select(range => GetString(range)).All(str => str.IsNumeric());
 			return TrimDialog.Run(numeric);
 		}
 
