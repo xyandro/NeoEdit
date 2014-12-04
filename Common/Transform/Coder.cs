@@ -39,8 +39,9 @@ namespace NeoEdit.Common.Transform
 			StartNonAutoString = -30,
 
 			Hex = -3,
-			Binary = -4,
-			Base64 = -5,
+			HexRev = -4,
+			Binary = -5,
+			Base64 = -6,
 
 			Default = 0,
 			UTF8 = 65001,
@@ -129,6 +130,7 @@ namespace NeoEdit.Common.Transform
 				new NEEncoding(CodePage.AutoUnicode, "Auto Unicode"),
 				new NEEncoding(CodePage.AutoByBOM, "Auto By BOM"),
 				new NEEncoding(CodePage.Hex, "Hex"),
+				new NEEncoding(CodePage.HexRev, "Hex Reversed"),
 				new NEEncoding(CodePage.Binary, "Binary"),
 				new NEEncoding(CodePage.Base64, "Base64"),
 				new NEEncoding(CodePage.Int8, "Int8"),
@@ -222,6 +224,59 @@ namespace NeoEdit.Common.Transform
 			return bytes;
 		}
 
+		static unsafe string ToHexRevString(byte[] bytes)
+		{
+			var hexValue = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+			var output = new char[bytes.Length * 2];
+			fixed (byte* bytesFixed = bytes)
+			fixed (char* outputFixed = output)
+			{
+				char* outputPtr = outputFixed;
+				for (var bytesPtr = bytesFixed + bytes.Length - 1; bytesPtr >= bytesFixed; --bytesPtr)
+				{
+					*outputPtr++ = hexValue[*bytesPtr >> 4];
+					*outputPtr++ = hexValue[*bytesPtr & 15];
+				}
+			}
+			return new String(output);
+		}
+
+		static unsafe byte[] FromHexRevString(string input)
+		{
+			input = input.StripWhitespace();
+			if ((input.Length % 2) != 0)
+				input = '0' + input;
+			var bytes = new byte[input.Length >> 1];
+			fixed (char* inputFixed = input)
+			fixed (byte* bytesFixed = bytes)
+			{
+				char* inputPtr = inputFixed;
+				for (var bytesPtr = bytesFixed + bytes.Length - 1; bytesPtr >= bytesFixed; --bytesPtr)
+				{
+					var c = *inputPtr++;
+					if ((c >= '0') && (c <= '9'))
+						*bytesPtr = (byte)((c - '0') << 4);
+					else if ((c >= 'a') && (c <= 'f'))
+						*bytesPtr = (byte)((c - 'a' + 10) << 4);
+					else if ((c >= 'A') && (c <= 'F'))
+						*bytesPtr = (byte)((c - 'A' + 10) << 4);
+					else
+						return null;
+
+					c = *inputPtr++;
+					if ((c >= '0') && (c <= '9'))
+						*bytesPtr += (byte)(c - '0');
+					else if ((c >= 'a') && (c <= 'f'))
+						*bytesPtr += (byte)(c - 'a' + 10);
+					else if ((c >= 'A') && (c <= 'F'))
+						*bytesPtr += (byte)(c - 'A' + 10);
+					else
+						return null;
+				}
+			}
+			return bytes;
+		}
+
 		static unsafe string ToBinaryString(byte[] bytes)
 		{
 			var output = new char[bytes.Length * 8];
@@ -288,6 +343,7 @@ namespace NeoEdit.Common.Transform
 					case CodePage.Double: return BitConverter.ToDouble(Resize(data, 8, true), 0).ToString();
 					case CodePage.Base64: return Convert.ToBase64String(data);
 					case CodePage.Hex: return ToHexString(data);
+					case CodePage.HexRev: return ToHexRevString(data);
 					case CodePage.Binary: return ToBinaryString(data);
 					default:
 						{
@@ -379,6 +435,7 @@ namespace NeoEdit.Common.Transform
 					case CodePage.Double: return NumToBytes<Double>(value, Double.TryParse, v => BitConverter.GetBytes(v), false);
 					case CodePage.Base64: return GetBase64Bytes(value);
 					case CodePage.Hex: return FromHexString(value);
+					case CodePage.HexRev: return FromHexRevString(value);
 					case CodePage.Binary: return FromBinaryString(value);
 					default: return NEEncodingDictionary[codePage].encoding.GetBytes(((addBOM) && (NEEncodingDictionary[codePage].preamble != null) ? "\ufeff" : "") + value);
 				}
@@ -398,7 +455,7 @@ namespace NeoEdit.Common.Transform
 		public static bool CanFullyEncode(string str1, CodePage codePage)
 		{
 			// These formats will allow whitespace, although you can't save it
-			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.Binary) || (codePage == CodePage.Base64)))
+			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Binary) || (codePage == CodePage.Base64)))
 				str1 = str1.StripWhitespace();
 
 			var bytes = TryStringToBytes(str1, codePage);
@@ -496,7 +553,7 @@ namespace NeoEdit.Common.Transform
 
 		public static bool AlwaysCaseSensitive(CodePage codePage)
 		{
-			return (codePage == CodePage.Hex) || (codePage == CodePage.Base64);
+			return (codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Base64);
 		}
 
 		public static Encoding GetEncoding(CodePage codePage)
