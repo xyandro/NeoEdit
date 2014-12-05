@@ -20,14 +20,12 @@ namespace NeoEdit.TextEdit
 		string _data;
 		string data { get { return _data; } set { _data = value; RecalculateLines(); } }
 		List<int> lineOffset;
-		List<int> lineLength;
 		List<int> endingOffset;
-		List<int> endingLength;
 		public string OnlyEnding { get; private set; }
 		public string DefaultEnding { get; private set; }
 		const int tabStop = 4;
 
-		public int NumLines { get { return lineOffset.Count; } }
+		public int NumLines { get { return endingOffset.Count; } }
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
 
@@ -55,9 +53,8 @@ namespace NeoEdit.TextEdit
 		void RecalculateLines()
 		{
 			lineOffset = new List<int>();
-			lineLength = new List<int>();
 			endingOffset = new List<int>();
-			endingLength = new List<int>();
+			MaxIndex = MaxColumn = 0;
 
 			var offset = 0;
 			var lineEndChars = new char[] { '\r', '\n' };
@@ -73,20 +70,20 @@ namespace NeoEdit.TextEdit
 				else if ((endLine + 1 < data.Length) && (((data[endLine] == '\n') && (data[endLine + 1] == '\r')) || ((data[endLine] == '\r') && (data[endLine + 1] == '\n'))))
 					++endLineLen;
 				lineOffset.Add(offset);
-				lineLength.Add(endLine - offset);
 				endingOffset.Add(endLine);
-				endingLength.Add(endLineLen);
 				offset = endLine + endLineLen;
+				MaxIndex = Math.Max(MaxIndex, endLine - offset);
 			}
 
 			// Always have an ending line
-			if ((endingLength.Count == 0) || (endingLength[endingLength.Count - 1] != 0))
+			if ((endingOffset.Count == 0) || (endingOffset.Last() != data.Length))
 			{
 				lineOffset.Add(data.Length);
-				lineLength.Add(0);
 				endingOffset.Add(data.Length);
-				endingLength.Add(0);
 			}
+
+			// Used only for calculating length
+			lineOffset.Add(data.Length);
 
 			// Analyze line endings
 			var endingInfo = Enumerable.Range(0, endingOffset.Count).Select(a => GetEnding(a)).Where(a => a.Length != 0).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).ToList();
@@ -96,9 +93,7 @@ namespace NeoEdit.TextEdit
 			OnlyEnding = endingInfo.Count <= 1 ? DefaultEnding : null;
 
 			// Calculate max index/columns
-			MaxIndex = lineLength.Max();
-			MaxColumn = 0;
-			for (var line = 0; line < lineOffset.Count; ++line)
+			for (var line = 0; line < NumLines; ++line)
 				MaxColumn = Math.Max(MaxColumn, GetLineColumnsLength(line));
 		}
 
@@ -107,9 +102,9 @@ namespace NeoEdit.TextEdit
 		{
 			get
 			{
-				if ((line < 0) || (line >= lineOffset.Count))
+				if ((line < 0) || (line >= NumLines))
 					throw new IndexOutOfRangeException();
-				if ((index < 0) || (index >= lineLength[line]))
+				if ((index < 0) || (index >= GetLineLength(line)))
 					throw new IndexOutOfRangeException();
 				return data[lineOffset[line] + index];
 			}
@@ -117,18 +112,25 @@ namespace NeoEdit.TextEdit
 
 		public int GetLineLength(int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return lineLength[line];
+			return endingOffset[line] - lineOffset[line];
+		}
+
+		public int GetEndingLength(int line)
+		{
+			if ((line < 0) || (line >= NumLines))
+				throw new IndexOutOfRangeException();
+			return lineOffset[line + 1] - endingOffset[line];
 		}
 
 		public int GetLineColumnsLength(int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
 
 			var index = lineOffset[line];
-			var len = lineLength[line];
+			var len = GetLineLength(line);
 			var columns = 0;
 			while (len > 0)
 			{
@@ -155,18 +157,18 @@ namespace NeoEdit.TextEdit
 
 		public string GetLine(int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return data.Substring(lineOffset[line], lineLength[line]);
+			return data.Substring(lineOffset[line], GetLineLength(line));
 		}
 
 		public string GetLineColumns(int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
 
 			var index = lineOffset[line];
-			var len = lineLength[line];
+			var len = GetLineLength(line);
 			var sb = new StringBuilder();
 			while (len > 0)
 			{
@@ -193,19 +195,19 @@ namespace NeoEdit.TextEdit
 
 		public string GetEnding(int line)
 		{
-			if ((line < 0) || (line >= endingOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return data.Substring(endingOffset[line], endingLength[line]);
+			return data.Substring(endingOffset[line], GetEndingLength(line));
 		}
 
 		public int GetOffset(int line, int index)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			if ((index < 0) || (index > lineLength[line] + 1))
+			if ((index < 0) || (index > GetLineLength(line) + 1))
 				throw new IndexOutOfRangeException();
-			if (index == lineLength[line] + 1)
-				return endingOffset[line] + endingLength[line];
+			if (index == GetLineLength(line) + 1)
+				return endingOffset[line] + GetEndingLength(line);
 			return lineOffset[line] + index;
 		}
 
@@ -216,31 +218,33 @@ namespace NeoEdit.TextEdit
 			var line = lineOffset.BinarySearch(offset);
 			if (line < 0)
 				line = ~line - 1;
+			if (line == lineOffset.Count - 1)
+				--line;
 			return line;
 		}
 
 		public int GetOffsetIndex(int offset, int line)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			if ((offset < lineOffset[line]) || (offset > endingOffset[line] + endingLength[line]))
+			if ((offset < lineOffset[line]) || (offset > endingOffset[line] + GetEndingLength(line)))
 				throw new IndexOutOfRangeException();
 			if (offset > endingOffset[line])
-				return lineLength[line] + 1;
+				return GetLineLength(line) + 1;
 			return offset - lineOffset[line];
 		}
 
 		public int GetColumnFromIndex(int line, int findIndex)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			if ((findIndex < 0) || (findIndex > lineLength[line] + 1))
+			if ((findIndex < 0) || (findIndex > GetLineLength(line) + 1))
 				throw new IndexOutOfRangeException();
 
 			var column = 0;
 			var offset = lineOffset[line];
 			var findOffset = findIndex + offset;
-			var end = offset + lineLength[line];
+			var end = offset + GetLineLength(line);
 			while (offset < findOffset)
 			{
 				var find = data.IndexOf('\t', offset, end - offset);
@@ -264,14 +268,14 @@ namespace NeoEdit.TextEdit
 
 		public int GetIndexFromColumn(int line, int findColumn, bool returnMaxOnFail = false)
 		{
-			if ((line < 0) || (line >= lineOffset.Count))
+			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
 			if (findColumn < 0)
 				throw new IndexOutOfRangeException();
 
 			var column = 0;
 			var offset = lineOffset[line];
-			var end = offset + lineLength[line];
+			var end = offset + GetLineLength(line);
 			while (column < findColumn)
 			{
 				var find = data.IndexOf('\t', offset, end - offset);
@@ -293,7 +297,7 @@ namespace NeoEdit.TextEdit
 			if (offset > end + 1)
 			{
 				if (returnMaxOnFail)
-					return lineLength[line] + 1;
+					return GetLineLength(line) + 1;
 				throw new IndexOutOfRangeException();
 			}
 			return offset - lineOffset[line];
@@ -396,8 +400,8 @@ namespace NeoEdit.TextEdit
 				if (!includeEndings)
 				{
 					var line = GetOffsetLine(offset);
-					length = Math.Min(lineOffset[line] + lineLength[line], endOffset) - offset;
-					nextOffset = Math.Min(endOffset, offset + length + endingLength[line]);
+					length = Math.Min(lineOffset[line] + GetLineLength(line), endOffset) - offset;
+					nextOffset = Math.Min(endOffset, offset + length + GetEndingLength(line));
 				}
 
 				var matches = regex.Matches(data.Substring(offset, length)).Cast<Match>();
@@ -433,7 +437,7 @@ namespace NeoEdit.TextEdit
 				if (matchOffset >= endOffset)
 					break;
 
-				var matchLength = Math.Min(lineOffset[line] + lineLength[line], endOffset) - matchOffset;
+				var matchLength = Math.Min(lineOffset[line] + GetLineLength(line), endOffset) - matchOffset;
 				result.AddRange(searcher.Find(data, matchOffset, matchLength));
 				++line;
 				index = 0;
