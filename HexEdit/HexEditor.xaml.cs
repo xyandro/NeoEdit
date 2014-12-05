@@ -107,7 +107,7 @@ namespace NeoEdit.HexEdit
 		bool controlOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Control; } }
 		bool selecting { get { return (mouseDown) || (shiftDown); } }
 
-		int columns;
+		int columns = minColumns;
 		long rows;
 
 		// X spacing
