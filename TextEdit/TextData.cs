@@ -52,23 +52,53 @@ namespace NeoEdit.TextEdit
 
 		void RecalculateLines()
 		{
+			const int Ending_None = 0;
+			const int Ending_CR = 1;
+			const int Ending_LF = 2;
+			const int Ending_CRLF = 3;
+			const int Ending_LFCR = 4;
+			const int Ending_Mixed = 5;
+
+			var endingText = new Dictionary<int, string>
+			{
+				{ Ending_None, "\r\n" },
+				{ Ending_CR, "\r" },
+				{ Ending_LF, "\n" },
+				{ Ending_CRLF, "\r\n" },
+				{ Ending_LFCR, "\n\r" },
+				{ Ending_Mixed, null },
+			};
+
 			lineOffset = new List<int>();
 			endingOffset = new List<int>();
 			MaxIndex = MaxColumn = 0;
 
 			var offset = 0;
 			var lineEndChars = new char[] { '\r', '\n' };
+			int defaultEnding = Ending_None, onlyEnding = Ending_None;
 			while (offset < data.Length)
 			{
 				var endLine = data.IndexOfAny(lineEndChars, offset);
 				var endLineLen = 1;
+				var ending = Ending_None;
 				if (endLine == -1)
 				{
 					endLine = data.Length;
 					endLineLen = 0;
 				}
 				else if ((endLine + 1 < data.Length) && (((data[endLine] == '\n') && (data[endLine + 1] == '\r')) || ((data[endLine] == '\r') && (data[endLine + 1] == '\n'))))
+				{
 					++endLineLen;
+					ending = data[endLine] == '\r' ? Ending_CRLF : Ending_LFCR;
+				}
+				else
+					ending = data[endLine] == '\r' ? Ending_CR : Ending_LF;
+				if (defaultEnding == Ending_None)
+					defaultEnding = ending;
+				if (onlyEnding == Ending_None)
+					onlyEnding = ending;
+				if (onlyEnding != ending)
+					onlyEnding = Ending_Mixed;
 				lineOffset.Add(offset);
 				endingOffset.Add(endLine);
 				offset = endLine + endLineLen;
@@ -85,12 +115,8 @@ namespace NeoEdit.TextEdit
 			// Used only for calculating length
 			lineOffset.Add(data.Length);
 
-			// Analyze line endings
-			var endingInfo = Enumerable.Range(0, endingOffset.Count).Select(a => GetEnding(a)).Where(a => a.Length != 0).GroupBy(a => a).OrderByDescending(a => a.Count()).Select(a => a.Key).ToList();
-			DefaultEnding = endingInfo.FirstOrDefault();
-			if (String.IsNullOrEmpty(DefaultEnding))
-				DefaultEnding = "\r\n";
-			OnlyEnding = endingInfo.Count <= 1 ? DefaultEnding : null;
+			DefaultEnding = endingText[defaultEnding];
+			OnlyEnding = endingText[onlyEnding];
 
 			// Calculate max index/columns
 			for (var line = 0; line < NumLines; ++line)
