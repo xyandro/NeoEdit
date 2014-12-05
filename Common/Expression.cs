@@ -375,7 +375,7 @@ namespace NeoEdit.Common
 		object LiveValue(List<object> values)
 		{
 			if (!values.Any())
-				return true;
+				return "";
 			var expression = String.Join(liveExp, Enumerable.Range(0, values.Count).Select(a => String.Format("[{0}]", a)));
 			return new Expression(expression).Evaluate(values.ToArray());
 		}
