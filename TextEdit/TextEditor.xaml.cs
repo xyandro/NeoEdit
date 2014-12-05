@@ -1463,9 +1463,15 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Lines()
 		{
-			var lines = Selections.SelectMany(selection => Enumerable.Range(Data.GetOffsetLine(selection.Start), Data.GetOffsetLine(Math.Max(BeginOffset(), selection.End - 1)) - Data.GetOffsetLine(selection.Start) + 1)).Distinct().OrderBy(lineNum => lineNum).ToList();
-			var sels = lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
-			Selections.Replace(sels);
+			var lines = new HashSet<int>();
+			foreach (var range in Selections)
+			{
+				var startLine = Data.GetOffsetLine(range.Start);
+				var endLine = Data.GetOffsetLine(Math.Max(BeginOffset(), range.End - 1)) + 1;
+				for (var line = startLine; line <= endLine; ++line)
+					lines.Add(line);
+			}
+			Selections.Replace(lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
 		}
 
 		internal void Command_Select_Empty(bool include)
