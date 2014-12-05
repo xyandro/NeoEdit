@@ -477,10 +477,7 @@ namespace NeoEdit.Common.Transform
 				return false;
 			if (bytes1.Length != bytes2.Length)
 				return false;
-			for (var ctr = 0; ctr < bytes1.Length; ++ctr)
-				if (bytes1[ctr] != bytes2[ctr])
-					return false;
-			return true;
+			return bytes1.Equal(bytes2);
 		}
 
 		public static CodePage CodePageFromBOM(string fileName)

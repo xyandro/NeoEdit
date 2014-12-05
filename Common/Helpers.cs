@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace NeoEdit.Common
@@ -191,5 +192,15 @@ namespace NeoEdit.Common
 					sb.Append(c);
 			return sb.ToString();
 		}
+
+		public static bool Equal(this byte[] b1, byte[] b2)
+		{
+			if (b1.Length != b2.Length)
+				return false;
+			return memcmp(b1, b2, b1.Length) == 0;
+		}
+
+		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
+		static extern int memcmp(byte[] b1, byte[] b2, long count);
 	}
 }
