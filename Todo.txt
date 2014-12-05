@@ -33,11 +33,12 @@ Insert copied files
 Get enclosing region
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
-Run macro on series of files
 Expression: add value for total selection count
-Width: Allow minimum/maximum (longer is fine)
+Expression: Hex-based math
+Use PLINQ whereever it makes things faster
 
 View:
+Update as new lines are added
 
 Hex:
 Fix backwards search

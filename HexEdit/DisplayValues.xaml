@@ -80,25 +80,25 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="UnsignedLE:"/>
-		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="1" CodePage="UInt8LE"/>
+		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="1" CodePage="UInt8"/>
 		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="2" CodePage="UInt16LE"/>
 		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="3" CodePage="UInt32LE"/>
 		<hexEdit:DisplayValue Grid.Row="0" Grid.Column="4" CodePage="UInt64LE"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="SignedLE:"/>
-		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="1" CodePage="Int8LE"/>
+		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="1" CodePage="Int8"/>
 		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="2" CodePage="Int16LE"/>
 		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="3" CodePage="Int32LE"/>
 		<hexEdit:DisplayValue Grid.Row="1" Grid.Column="4" CodePage="Int64LE"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="UnsignedBE:"/>
-		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="1" CodePage="UInt8BE"/>
+		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="1" CodePage="UInt8"/>
 		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="2" CodePage="UInt16BE"/>
 		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="3" CodePage="UInt32BE"/>
 		<hexEdit:DisplayValue Grid.Row="2" Grid.Column="4" CodePage="UInt64BE"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="SignedBE:"/>
-		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="1" CodePage="Int8BE"/>
+		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="1" CodePage="Int8"/>
 		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="2" CodePage="Int16BE"/>
 		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="3" CodePage="Int32BE"/>
 		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="4" CodePage="Int64BE"/>
