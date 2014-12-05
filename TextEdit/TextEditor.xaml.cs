@@ -162,8 +162,8 @@ namespace NeoEdit.TextEdit
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
-			// If encoding can't exactly express bytes mark as modified
-			if (!modified)
+			// If encoding can't exactly express bytes mark as modified (only for < 50 MB)
+			if ((!modified) && ((bytes.Length >> 20) < 50))
 				modified = !Coder.CanFullyEncode(bytes, CodePage);
 
 			undoRedo.SetModified(modified);
