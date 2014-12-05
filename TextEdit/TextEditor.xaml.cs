@@ -1199,7 +1199,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_EvaluateSelectedExpression()
 		{
-			var expression = new NeoEdit.Common.Expression("Eval({0})");
+			var expression = new NeoEdit.Common.Expression("Eval([0])");
 			ReplaceSelections(Selections.Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
 		}
 
