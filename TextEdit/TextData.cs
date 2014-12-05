@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
@@ -59,51 +60,85 @@ namespace NeoEdit.TextEdit
 			const int Ending_LFCR = 4;
 			const int Ending_Mixed = 5;
 
-			var endingText = new Dictionary<int, string>
-			{
-				{ Ending_None, "\r\n" },
-				{ Ending_CR, "\r" },
-				{ Ending_LF, "\n" },
-				{ Ending_CRLF, "\r\n" },
-				{ Ending_LFCR, "\n\r" },
-				{ Ending_Mixed, null },
-			};
-
 			lineOffset = new List<int>();
 			endingOffset = new List<int>();
 			MaxIndex = MaxColumn = 0;
 
-			var offset = 0;
 			var lineEndChars = new char[] { '\r', '\n' };
-			int defaultEnding = Ending_None, onlyEnding = Ending_None;
-			while (offset < data.Length)
+
+			var chunkSize = Math.Max(65536, data.Length / 32);
+			var startChunk = 0;
+			var chunks = new List<Tuple<int, int>>();
+			while (startChunk < data.Length)
 			{
-				var endLine = data.IndexOfAny(lineEndChars, offset);
-				var endLineLen = 1;
-				var ending = Ending_None;
-				if (endLine == -1)
-				{
-					endLine = data.Length;
-					endLineLen = 0;
-				}
-				else if ((endLine + 1 < data.Length) && (((data[endLine] == '\n') && (data[endLine + 1] == '\r')) || ((data[endLine] == '\r') && (data[endLine + 1] == '\n'))))
-				{
-					++endLineLen;
-					ending = data[endLine] == '\r' ? Ending_CRLF : Ending_LFCR;
-				}
-				else
-					ending = data[endLine] == '\r' ? Ending_CR : Ending_LF;
-				if (defaultEnding == Ending_None)
-					defaultEnding = ending;
-				if (onlyEnding == Ending_None)
-					onlyEnding = ending;
-				if (onlyEnding != ending)
-					onlyEnding = Ending_Mixed;
-				lineOffset.Add(offset);
-				endingOffset.Add(endLine);
-				offset = endLine + endLineLen;
-				MaxIndex = Math.Max(MaxIndex, endLine - offset);
+				var endChunk = data.IndexOfAny(lineEndChars, Math.Min(data.Length, startChunk + chunkSize));
+				if (endChunk == -1)
+					endChunk = data.Length;
+				while ((endChunk < data.Length) && (lineEndChars.Contains(data[endChunk])))
+					++endChunk;
+
+				chunks.Add(Tuple.Create(startChunk, endChunk));
+
+				startChunk = endChunk;
 			}
+
+			var chunkLineOffsets = chunks.Select(chunk => new List<int>()).ToList();
+			var chunkEndingOffsets = chunks.Select(chunk => new List<int>()).ToList();
+
+			int defaultEnding = Ending_None, onlyEnding = Ending_None;
+			Parallel.ForEach(chunks, chunk =>
+			{
+				var index = chunks.IndexOf(chunk);
+				int chunkDefaultEnding = Ending_None, chunkOnlyEnding = Ending_None;
+				var chunkLineOffset = chunkLineOffsets[index];
+				var chunkEndingOffset = chunkEndingOffsets[index];
+				var chunkMaxIndex = 0;
+
+				var offset = chunk.Item1;
+				while (offset < chunk.Item2)
+				{
+					var endLine = data.IndexOfAny(lineEndChars, offset, chunk.Item2 - offset);
+					var endLineLen = 1;
+					var ending = Ending_None;
+					if (endLine == -1)
+					{
+						endLine = chunk.Item2;
+						endLineLen = 0;
+					}
+					else if ((endLine + 1 < chunk.Item2) && (((data[endLine] == '\n') && (data[endLine + 1] == '\r')) || ((data[endLine] == '\r') && (data[endLine + 1] == '\n'))))
+					{
+						++endLineLen;
+						ending = data[endLine] == '\r' ? Ending_CRLF : Ending_LFCR;
+					}
+					else
+						ending = data[endLine] == '\r' ? Ending_CR : Ending_LF;
+
+					if (chunkDefaultEnding == Ending_None)
+						chunkDefaultEnding = ending;
+					if (chunkOnlyEnding == Ending_None)
+						chunkOnlyEnding = ending;
+					if (chunkOnlyEnding != ending)
+						chunkOnlyEnding = Ending_Mixed;
+					chunkLineOffset.Add(offset);
+					chunkEndingOffset.Add(endLine);
+					offset = endLine + endLineLen;
+					chunkMaxIndex = Math.Max(chunkMaxIndex, endLine - offset);
+				}
+
+				lock (chunkLineOffsets)
+				{
+					if (defaultEnding == Ending_None)
+						defaultEnding = chunkDefaultEnding;
+					if (onlyEnding == Ending_None)
+						onlyEnding = chunkOnlyEnding;
+					if (onlyEnding != chunkOnlyEnding)
+						onlyEnding = Ending_Mixed;
+					MaxIndex = Math.Max(MaxIndex, chunkMaxIndex);
+				}
+			});
+
+			chunkLineOffsets.ForEach(values => lineOffset.AddRange(values));
+			chunkEndingOffsets.ForEach(values => endingOffset.AddRange(values));
 
 			// Always have an ending line
 			if ((endingOffset.Count == 0) || (endingOffset.Last() != data.Length))
@@ -115,12 +150,21 @@ namespace NeoEdit.TextEdit
 			// Used only for calculating length
 			lineOffset.Add(data.Length);
 
+			var endingText = new Dictionary<int, string>
+			{
+				{ Ending_None, "\r\n" },
+				{ Ending_CR, "\r" },
+				{ Ending_LF, "\n" },
+				{ Ending_CRLF, "\r\n" },
+				{ Ending_LFCR, "\n\r" },
+				{ Ending_Mixed, null },
+			};
+
 			DefaultEnding = endingText[defaultEnding];
 			OnlyEnding = endingText[onlyEnding];
 
 			// Calculate max index/columns
-			for (var line = 0; line < NumLines; ++line)
-				MaxColumn = Math.Max(MaxColumn, GetLineColumnsLength(line));
+			MaxColumn = Enumerable.Range(0, NumLines).AsParallel().Max(line => GetLineColumnsLength(line));
 		}
 
 		public string this[int line] { get { return GetLine(line); } }
