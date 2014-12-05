@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Windows.Controls;
@@ -280,41 +281,50 @@ namespace NeoEdit.TextEdit
 
 		Dictionary<string, List<string>> GetExpressionData(int count = -1)
 		{
-			var sels = Selections.ToList();
-			if (count != -1)
-				sels = sels.Take(Math.Min(count, sels.Count)).ToList();
+			var sels = count == -1 ? Selections.ToList() : Selections.Take(Math.Min(count, Selections.Count)).ToList();
 			var strs = sels.Select(range => GetString(range)).ToList();
 			var c = ClipboardWindow.GetStrings();
-			var data = new Dictionary<string, List<string>>
-			{
-				{ "x", strs },
-				{ "xl", strs.Select(str => str.Length.ToString()).ToList() },
-				{ "y", strs.Select((str, order) => (order + 1).ToString()).ToList() },
-				{ "z", strs.Select((str, order) => order.ToString()).ToList() },
-				{ "c", c },
-				{ "cl", c.Select(str => str.Length.ToString()).ToList() },
-				{ "rk", keysAndValues[0] },
-				{ "rkl", keysAndValues[0].Select(str => str.Length.ToString()).ToList() },
-			};
-			Enumerable.Range(1, 9).ToList().ForEach(num => data[String.Format("rv{0}", num)] = keysAndValues[num]);
-			Enumerable.Range(1, 9).ToList().ForEach(num => data[String.Format("rv{0}l", num)] = keysAndValues[num].Select(str => str.Length.ToString()).ToList());
+			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? keysHash[str] : -1);
 
-			for (var num = 1; num <= 9; ++num)
+			var parallelDataActions = new List<Action<Action<string, List<string>>>>
 			{
-				var values = new List<string>();
-				if (keysAndValues[0].Count == keysAndValues[num].Count)
+				addData => addData("x", strs),
+				addData => addData("xl", strs.Select(str => str.Length.ToString()).ToList()),
+				addData => addData("y", strs.Select((str, order) => (order + 1).ToString()).ToList()),
+				addData => addData("z", strs.Select((str, order) => order.ToString()).ToList()),
+				addData => addData("c", c),
+				addData => addData("cl", c.Select(str => str.Length.ToString()).ToList()),
+				addData => addData("rk", keysAndValues[0]),
+				addData => addData("rkl", keysAndValues[0].Select(str => str.Length.ToString()).ToList()),
+			};
+
+			for (var ctr = 1; ctr <= 9; ++ctr)
+			{
+				var num = ctr; // If we don't copy this the threads get the wrong value
+				parallelDataActions.Add(addData => addData(String.Format("rv{0}", num), keysAndValues[num]));
+				parallelDataActions.Add(addData => addData(String.Format("rv{0}l", num), keysAndValues[num].Select(str => str.Length.ToString()).ToList()));
+				parallelDataActions.Add(addData =>
 				{
-					foreach (var str in strs)
-					{
-						if (!keysHash.ContainsKey(str))
-							values.Add("");
-						else
-							values.Add(keysAndValues[num][keysHash[str]]);
-					}
-				}
-				data[String.Format("v{0}", num)] = values;
-				data[String.Format("v{0}l", num)] = values.Select(str => str.Length.ToString()).ToList();
+					List<string> values;
+					if (keysAndValues[0].Count == keysAndValues[num].Count)
+						values = keyOrdering.Select(order => order == -1 ? "" : keysAndValues[num][order]).ToList();
+					else
+						values = new List<string>();
+
+					addData(String.Format("v{0}", num), values);
+					addData(String.Format("v{0}l", num), values.Select(str => str.Length.ToString()).ToList());
+				});
 			}
+
+			var data = new Dictionary<string, List<string>>();
+			Parallel.ForEach(parallelDataActions, func =>
+			{
+				func((key, value) =>
+				{
+					lock (data)
+						data[key] = value;
+				});
+			});
 
 			return data;
 		}
@@ -1179,10 +1189,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
 			var expressionData = GetExpressionData();
-			var strs = new List<string>();
-			for (var ctr = 0; ctr < expressionData["x"].Count; ++ctr)
-				strs.Add(result.Expression.EvaluateDict(expressionData, ctr).ToString());
-			ReplaceSelections(strs);
+			ReplaceSelections(Enumerable.Range(0, expressionData["x"].Count).AsParallel().AsOrdered().Select(index => result.Expression.EvaluateDict(expressionData, index).ToString()).ToList());
 		}
 
 		internal void Command_Data_EvaluateSelectedExpression()
