@@ -61,19 +61,6 @@ namespace NeoEdit.TextEdit
 							case Message.OptionsEnum.Cancel: return null;
 						}
 					}
-					//{
-					//	// Using MessageBox instead of Message because Message caused program to exit if it was created first
-					//	switch (MessageBox.Show(
-					//		caption: "Confirm",
-					//		messageBoxText: "The file you are trying to open is very large.  Would you like to open it in the text viewer instead?",
-					//		button: MessageBoxButton.YesNoCancel
-					//	))
-					//	{
-					//		case MessageBoxResult.Yes: Launcher.Static.LaunchTextViewer(filename); return null;
-					//		case MessageBoxResult.No: break;
-					//		case MessageBoxResult.Cancel: return null;
-					//	}
-					//}
 				}
 			}
 
