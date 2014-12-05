@@ -278,7 +278,7 @@ namespace NeoEdit.TextEdit
 			return data.Select(a => Coder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
 		}
 
-		ExpressionData GetExpressionData(int count = -1)
+		Dictionary<string, List<string>> GetExpressionData(int count = -1)
 		{
 			var sels = Selections.ToList();
 			if (count != -1)
@@ -316,19 +316,7 @@ namespace NeoEdit.TextEdit
 				data[String.Format("v{0}l", num)] = values.Select(str => str.Length.ToString()).ToList();
 			}
 
-			var expressionData = new ExpressionData { vars = data.Keys.ToList(), values = new List<string[]>() };
-			for (var value = 0; value < strs.Count; ++value)
-			{
-				var values = new string[expressionData.vars.Count];
-				for (var key = 0; key < values.Length; ++key)
-				{
-					if (value < data[expressionData.vars[key]].Count)
-						values[key] = data[expressionData.vars[key]][value];
-				}
-				expressionData.values.Add(values);
-			}
-
-			return expressionData;
+			return data;
 		}
 
 		void CopyDirectory(string src, string dest)
@@ -1192,8 +1180,8 @@ namespace NeoEdit.TextEdit
 		{
 			var expressionData = GetExpressionData();
 			var strs = new List<string>();
-			for (var ctr = 0; ctr < expressionData.values.Count; ++ctr)
-				strs.Add(result.Expression.Evaluate(expressionData.values[ctr]).ToString());
+			for (var ctr = 0; ctr < expressionData["x"].Count; ++ctr)
+				strs.Add(result.Expression.EvaluateDict(expressionData, ctr).ToString());
 			ReplaceSelections(strs);
 		}
 
@@ -1538,8 +1526,8 @@ namespace NeoEdit.TextEdit
 		{
 			var sels = new List<Range>();
 			var expressionData = GetExpressionData();
-			for (var ctr = 0; ctr < expressionData.values.Count; ++ctr)
-				if ((bool)result.Expression.Evaluate(expressionData.values[ctr]) == result.IncludeMatches)
+			for (var ctr = 0; ctr < expressionData["x"].Count; ++ctr)
+				if ((bool)result.Expression.Evaluate(expressionData, ctr) == result.IncludeMatches)
 					sels.Add(Selections[ctr]);
 			Selections.Replace(sels);
 		}

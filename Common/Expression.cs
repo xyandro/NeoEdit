@@ -10,6 +10,32 @@ namespace NeoEdit.Common
 {
 	public class Expression
 	{
+		class EvaluationData
+		{
+			public List<object> values { get; private set; }
+			public List<object> results { get; private set; }
+			public Dictionary<string, List<string>> dict { get; private set; }
+			public int row { get; private set; }
+
+			public EvaluationData(List<object> values, Dictionary<string, List<string>> dict, int row)
+			{
+				this.values = values;
+				this.dict = dict;
+				this.row = row;
+				results = new List<object>();
+			}
+
+			public void AddResult(object result)
+			{
+				results.Add(result);
+			}
+
+			public object LastResult()
+			{
+				return results.Last();
+			}
+		}
+
 		class Operation
 		{
 			public class Term
@@ -19,19 +45,22 @@ namespace NeoEdit.Common
 					Value,
 					Result,
 					Term,
+					Dictionary,
 				}
 
 				public TermType type;
 				public int index;
+				public string key;
 				public object term;
 
-				public object GetTerm(List<object> values, List<object> results)
+				public object GetTerm(EvaluationData data)
 				{
 					switch (type)
 					{
 						case Term.TermType.Term: return term;
-						case Term.TermType.Value: return values[index];
-						case Term.TermType.Result: return results[index];
+						case Term.TermType.Value: return data.values[index];
+						case Term.TermType.Result: return data.results[index];
+						case TermType.Dictionary: return (data.dict != null) && (data.dict.ContainsKey(key)) && (data.row < data.dict[key].Count) ? data.dict[key][data.row] : null;
 					}
 
 					throw new Exception("Invalid term");
@@ -52,11 +81,11 @@ namespace NeoEdit.Common
 				terms = _terms.ToList();
 			}
 
-			public T GetTerm<T>(int index, List<object> values, List<object> results)
+			public T GetTerm<T>(int index, EvaluationData data)
 			{
 				object value = null;
 				if ((terms.Count > index) && (terms[index] != null))
-					value = terms[index].GetTerm(values, results);
+					value = terms[index].GetTerm(data);
 				if ((value == null) && (typeof(T) == typeof(object)))
 					return default(T);
 				if ((value == null) && (typeof(T) == typeof(string)))
@@ -84,7 +113,7 @@ namespace NeoEdit.Common
 		readonly string expression;
 		bool debug = false;
 
-		public Expression(string expression, List<string> vars = null)
+		public Expression(string expression, IEnumerable<string> vars = null)
 		{
 			this.expression = expression;
 			List<object> internals;
@@ -93,7 +122,7 @@ namespace NeoEdit.Common
 		}
 
 		static readonly Regex simplifyTermRE = new Regex(@"\[(\d+)\]|'((?:[^']|'')*)'|(\d+(?:\.\d*)?(?:[eE]\d+)?)|\b(true|false)\b|\b(\w+)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-		void SimplifyAndPopulateInternals(ref string expression, out List<object> internals, List<string> vars)
+		void SimplifyAndPopulateInternals(ref string expression, out List<object> internals, IEnumerable<string> vars)
 		{
 			if (expression.StartsWith("!!"))
 			{
@@ -139,11 +168,10 @@ namespace NeoEdit.Common
 				else if (match.Groups[5].Success)
 				{
 					var str = match.Groups[5].Value;
-					var pos = vars == null ? -1 : vars.IndexOf(str);
-					if (pos == -1)
-						result += str;
+					if ((vars != null) && (vars.Contains(str)))
+						result += "[d" + str + "]";
 					else
-						result += "[v" + pos + "]";
+						result += str;
 				}
 			}
 			result += expression.Substring(textAt);
@@ -198,7 +226,7 @@ namespace NeoEdit.Common
 
 		static readonly List<string> functions = new List<string> { "Type", "ValidRE", "Eval", "Int", "Long", "FileName", "StrFormat" };
 		static readonly Regex functionRE = new Regex(String.Format(@"\b({0})\s*{1}", String.Join("|", functions), parenPlaceholder));
-		static readonly Regex functionArgsRE = new Regex(@"(\[[vir]\d+\])\s*($|,)");
+		static readonly Regex functionArgsRE = new Regex(@"(\[[vird]\w+\])\s*($|,)");
 		bool ExitParensAndEvalFunctions(ref string expression, Stack<string> expressionStack, List<object> internals, ref int results)
 		{
 			if (expressionStack.Count == 0)
@@ -234,12 +262,14 @@ namespace NeoEdit.Common
 			if ((!term.StartsWith("[")) || (!term.EndsWith("]")))
 				throw new Exception("Invalid expression");
 
-			var index = Int32.Parse(term.Substring(2, term.Length - 3));
+			var index = term[1] == 'd' ? 0 : Int32.Parse(term.Substring(2, term.Length - 3));
+			var key = term[1] == 'd' ? term.Substring(2, term.Length - 3) : null;
 			switch (term[1])
 			{
 				case 'v': return new Operation.Term { type = Operation.Term.TermType.Value, index = index };
 				case 'i': return new Operation.Term { type = Operation.Term.TermType.Term, term = internals[index] };
 				case 'r': return new Operation.Term { type = Operation.Term.TermType.Result, index = index };
+				case 'd': return new Operation.Term { type = Operation.Term.TermType.Dictionary, key = key };
 			}
 
 			throw new Exception("Invalid expression");
@@ -261,7 +291,7 @@ namespace NeoEdit.Common
 			new List<string>{ "&&" },
 			new List<string>{ "||" },
 		};
-		static readonly List<Regex> binaryOperatorREs = binaryOperators.Select(a => new Regex(String.Format(@"(\[[vir]\d+\])\s*({0})\s*(\[[vir]\d+\])", String.Join("|", a.Select(b => Regex.Escape(b)))))).ToList();
+		static readonly List<Regex> binaryOperatorREs = binaryOperators.Select(a => new Regex(String.Format(@"(\[[vird]\w+\])\s*({0})\s*(\[[vird]\w+\])", String.Join("|", a.Select(b => Regex.Escape(b)))))).ToList();
 		bool DoBinaryOperation(ref string expression, List<object> internals, ref int results)
 		{
 			foreach (var binaryOperatorRE in binaryOperatorREs)
@@ -280,7 +310,7 @@ namespace NeoEdit.Common
 			return false;
 		}
 
-		static readonly Regex ternaryOperatorRE = new Regex(@"(\[[vir]\d+\])\s*\?\s*(\[[vir]\d+\])\s*:\s*(\[[vir]\d+\])");
+		static readonly Regex ternaryOperatorRE = new Regex(@"(\[[vird]\w+\])\s*\?\s*(\[[vird]\w+\])\s*:\s*(\[[vird]\w+\])");
 		bool DoTernaryOperation(ref string expression, List<object> internals, ref int results)
 		{
 			var match = ternaryOperatorRE.Match(expression);
@@ -364,9 +394,9 @@ namespace NeoEdit.Common
 			return new Expression(expression).Evaluate();
 		}
 
-		string StrFormat(List<Operation.Term> terms, List<object> values, List<object> results)
+		string StrFormat(List<Operation.Term> terms, EvaluationData data)
 		{
-			var termVals = terms.Select(term => term.GetTerm(values, results)).ToList();
+			var termVals = terms.Select(term => term.GetTerm(data)).ToList();
 			var format = Convert.ToString(termVals[0]);
 			var args = termVals.Skip(1).Select(arg => arg ?? "").ToArray();
 			return String.Format(format, args);
@@ -385,7 +415,12 @@ namespace NeoEdit.Common
 			return (value != null) && (value.GetType().FullName == "MS.Internal.NamedObject") && (value.ToString() == "{DependencyProperty.UnsetValue}") ? null : value;
 		}
 
-		public object Evaluate(params object[] _values)
+		public object Evaluate(params object[] values)
+		{
+			return EvaluateDict(null, 0, values);
+		}
+
+		public object EvaluateDict(Dictionary<string, List<string>> dict, int row, params object[] _values)
 		{
 			if ((debug) && (Debugger.IsAttached))
 				Debugger.Break();
@@ -395,61 +430,61 @@ namespace NeoEdit.Common
 			if (liveExp != null)
 				return LiveValue(values);
 
-			var results = new List<object>();
+			var data = new EvaluationData(values, dict, row);
 			foreach (var op in operations)
 			{
 				switch (op.operation)
 				{
-					case "Type": results.Add(AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(op.GetTerm<string>(0, values, results))).FirstOrDefault(find => find != null)); break;
-					case "ValidRE": results.Add(ValidRE(op.GetTerm<string>(0, values, results))); break;
-					case "Eval": results.Add(Eval(op.GetTerm<string>(0, values, results))); break;
-					case "Int": results.Add((int)op.GetTerm<double>(0, values, results)); break;
-					case "Long": results.Add((long)op.GetTerm<double>(0, values, results)); break;
-					case "FileName": results.Add(Path.GetFileName(op.GetTerm<string>(0, values, results))); break;
-					case "StrFormat": results.Add(StrFormat(op.terms, values, results)); break;
-					case ".": results.Add(GetDotOp(op.GetTerm<object>(0, values, results), op.GetTerm<string>(1, values, results))); break;
-					case "^^": results.Add(Math.Pow(op.GetTerm<double>(0, values, results), op.GetTerm<double>(1, values, results))); break;
-					case "root": results.Add(Math.Pow(op.GetTerm<double>(1, values, results), (1.0 / op.GetTerm<double>(0, values, results)))); break;
-					case "*": results.Add(op.GetTerm<double>(0, values, results) * op.GetTerm<double>(1, values, results)); break;
-					case "/": results.Add(op.GetTerm<double>(0, values, results) / op.GetTerm<double>(1, values, results)); break;
-					case "%": results.Add(op.GetTerm<double>(0, values, results) % op.GetTerm<double>(1, values, results)); break;
-					case "+": results.Add(op.GetTerm<double>(0, values, results) + op.GetTerm<double>(1, values, results)); break;
-					case "-": results.Add(op.GetTerm<double>(0, values, results) - op.GetTerm<double>(1, values, results)); break;
-					case "t+": results.Add(op.GetTerm<string>(0, values, results) + op.GetTerm<string>(1, values, results)); break;
-					case "<<": results.Add(op.GetTerm<long>(0, values, results) << (int)op.GetTerm<long>(1, values, results)); break;
-					case ">>": results.Add(op.GetTerm<long>(0, values, results) >> (int)op.GetTerm<long>(1, values, results)); break;
-					case "IS": results.Add(IsType(op.GetTerm<object>(0, values, results), op.GetTerm<string>(1, values, results))); break;
-					case "<": results.Add(op.GetTerm<double>(0, values, results) < op.GetTerm<double>(1, values, results)); break;
-					case "<=": results.Add(op.GetTerm<double>(0, values, results) <= op.GetTerm<double>(1, values, results)); break;
-					case ">": results.Add(op.GetTerm<double>(0, values, results) > op.GetTerm<double>(1, values, results)); break;
-					case ">=": results.Add(op.GetTerm<double>(0, values, results) >= op.GetTerm<double>(1, values, results)); break;
-					case "t<": results.Add(op.GetTerm<string>(0, values, results).CompareTo(op.GetTerm<string>(1, values, results)) < 0); break;
-					case "t<=": results.Add(op.GetTerm<string>(0, values, results).CompareTo(op.GetTerm<string>(1, values, results)) <= 0); break;
-					case "t>": results.Add(op.GetTerm<string>(0, values, results).CompareTo(op.GetTerm<string>(1, values, results)) > 0); break;
-					case "t>=": results.Add(op.GetTerm<string>(0, values, results).CompareTo(op.GetTerm<string>(1, values, results)) >= 0); break;
-					case "ti<": results.Add(op.GetTerm<string>(0, values, results).ToLower().CompareTo(op.GetTerm<string>(1, values, results).ToLower()) < 0); break;
-					case "ti<=": results.Add(op.GetTerm<string>(0, values, results).ToLower().CompareTo(op.GetTerm<string>(1, values, results).ToLower()) <= 0); break;
-					case "ti>": results.Add(op.GetTerm<string>(0, values, results).ToLower().CompareTo(op.GetTerm<string>(1, values, results).ToLower()) > 0); break;
-					case "ti>=": results.Add(op.GetTerm<string>(0, values, results).ToLower().CompareTo(op.GetTerm<string>(1, values, results).ToLower()) >= 0); break;
+					case "Type": data.AddResult(AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(op.GetTerm<string>(0, data))).FirstOrDefault(find => find != null)); break;
+					case "ValidRE": data.AddResult(ValidRE(op.GetTerm<string>(0, data))); break;
+					case "Eval": data.AddResult(Eval(op.GetTerm<string>(0, data))); break;
+					case "Int": data.AddResult((int)op.GetTerm<double>(0, data)); break;
+					case "Long": data.AddResult((long)op.GetTerm<double>(0, data)); break;
+					case "FileName": data.AddResult(Path.GetFileName(op.GetTerm<string>(0, data))); break;
+					case "StrFormat": data.AddResult(StrFormat(op.terms, data)); break;
+					case ".": data.AddResult(GetDotOp(op.GetTerm<object>(0, data), op.GetTerm<string>(1, data))); break;
+					case "^^": data.AddResult(Math.Pow(op.GetTerm<double>(0, data), op.GetTerm<double>(1, data))); break;
+					case "root": data.AddResult(Math.Pow(op.GetTerm<double>(1, data), (1.0 / op.GetTerm<double>(0, data)))); break;
+					case "*": data.AddResult(op.GetTerm<double>(0, data) * op.GetTerm<double>(1, data)); break;
+					case "/": data.AddResult(op.GetTerm<double>(0, data) / op.GetTerm<double>(1, data)); break;
+					case "%": data.AddResult(op.GetTerm<double>(0, data) % op.GetTerm<double>(1, data)); break;
+					case "+": data.AddResult(op.GetTerm<double>(0, data) + op.GetTerm<double>(1, data)); break;
+					case "-": data.AddResult(op.GetTerm<double>(0, data) - op.GetTerm<double>(1, data)); break;
+					case "t+": data.AddResult(op.GetTerm<string>(0, data) + op.GetTerm<string>(1, data)); break;
+					case "<<": data.AddResult(op.GetTerm<long>(0, data) << (int)op.GetTerm<long>(1, data)); break;
+					case ">>": data.AddResult(op.GetTerm<long>(0, data) >> (int)op.GetTerm<long>(1, data)); break;
+					case "IS": data.AddResult(IsType(op.GetTerm<object>(0, data), op.GetTerm<string>(1, data))); break;
+					case "<": data.AddResult(op.GetTerm<double>(0, data) < op.GetTerm<double>(1, data)); break;
+					case "<=": data.AddResult(op.GetTerm<double>(0, data) <= op.GetTerm<double>(1, data)); break;
+					case ">": data.AddResult(op.GetTerm<double>(0, data) > op.GetTerm<double>(1, data)); break;
+					case ">=": data.AddResult(op.GetTerm<double>(0, data) >= op.GetTerm<double>(1, data)); break;
+					case "t<": data.AddResult(op.GetTerm<string>(0, data).CompareTo(op.GetTerm<string>(1, data)) < 0); break;
+					case "t<=": data.AddResult(op.GetTerm<string>(0, data).CompareTo(op.GetTerm<string>(1, data)) <= 0); break;
+					case "t>": data.AddResult(op.GetTerm<string>(0, data).CompareTo(op.GetTerm<string>(1, data)) > 0); break;
+					case "t>=": data.AddResult(op.GetTerm<string>(0, data).CompareTo(op.GetTerm<string>(1, data)) >= 0); break;
+					case "ti<": data.AddResult(op.GetTerm<string>(0, data).ToLower().CompareTo(op.GetTerm<string>(1, data).ToLower()) < 0); break;
+					case "ti<=": data.AddResult(op.GetTerm<string>(0, data).ToLower().CompareTo(op.GetTerm<string>(1, data).ToLower()) <= 0); break;
+					case "ti>": data.AddResult(op.GetTerm<string>(0, data).ToLower().CompareTo(op.GetTerm<string>(1, data).ToLower()) > 0); break;
+					case "ti>=": data.AddResult(op.GetTerm<string>(0, data).ToLower().CompareTo(op.GetTerm<string>(1, data).ToLower()) >= 0); break;
 					case "=":
 					case "==":
-					case "t==": results.Add(op.GetTerm<string>(0, values, results) == op.GetTerm<string>(1, values, results)); break;
+					case "t==": data.AddResult(op.GetTerm<string>(0, data) == op.GetTerm<string>(1, data)); break;
 					case "!=":
-					case "t!=": results.Add(op.GetTerm<string>(0, values, results) != op.GetTerm<string>(1, values, results)); break;
-					case "ti==": results.Add(op.GetTerm<string>(0, values, results).Equals(op.GetTerm<string>(1, values, results), StringComparison.OrdinalIgnoreCase)); break;
-					case "ti!=": results.Add(!op.GetTerm<string>(0, values, results).Equals(op.GetTerm<string>(1, values, results), StringComparison.OrdinalIgnoreCase)); break;
-					case "&": results.Add(op.GetTerm<long>(0, values, results) & op.GetTerm<long>(1, values, results)); break;
-					case "^": results.Add(op.GetTerm<long>(0, values, results) ^ op.GetTerm<long>(1, values, results)); break;
-					case "|": results.Add(op.GetTerm<long>(0, values, results) | op.GetTerm<long>(1, values, results)); break;
-					case "&&": results.Add(op.GetTerm<bool>(0, values, results) && op.GetTerm<bool>(1, values, results)); break;
-					case "||": results.Add(op.GetTerm<bool>(0, values, results) || op.GetTerm<bool>(1, values, results)); break;
-					case "?:": results.Add(op.GetTerm<bool>(0, values, results) ? op.GetTerm<object>(1, values, results) : op.GetTerm<object>(2, values, results)); break;
-					case "RETURN": results.Add(op.GetTerm<object>(0, values, results)); break;
+					case "t!=": data.AddResult(op.GetTerm<string>(0, data) != op.GetTerm<string>(1, data)); break;
+					case "ti==": data.AddResult(op.GetTerm<string>(0, data).Equals(op.GetTerm<string>(1, data), StringComparison.OrdinalIgnoreCase)); break;
+					case "ti!=": data.AddResult(!op.GetTerm<string>(0, data).Equals(op.GetTerm<string>(1, data), StringComparison.OrdinalIgnoreCase)); break;
+					case "&": data.AddResult(op.GetTerm<long>(0, data) & op.GetTerm<long>(1, data)); break;
+					case "^": data.AddResult(op.GetTerm<long>(0, data) ^ op.GetTerm<long>(1, data)); break;
+					case "|": data.AddResult(op.GetTerm<long>(0, data) | op.GetTerm<long>(1, data)); break;
+					case "&&": data.AddResult(op.GetTerm<bool>(0, data) && op.GetTerm<bool>(1, data)); break;
+					case "||": data.AddResult(op.GetTerm<bool>(0, data) || op.GetTerm<bool>(1, data)); break;
+					case "?:": data.AddResult(op.GetTerm<bool>(0, data) ? op.GetTerm<object>(1, data) : op.GetTerm<object>(2, data)); break;
+					case "RETURN": data.AddResult(op.GetTerm<object>(0, data)); break;
 					default:
 						throw new Exception(String.Format("Invalid operation: {0}", op.operation));
 				}
 			}
-			var result = results.Last();
+			var result = data.LastResult();
 			if (result is string)
 			{
 				bool value;
