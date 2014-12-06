@@ -25,14 +25,11 @@ namespace NeoEdit.GUI.Common
 					dependencies.Add(timer);
 		}
 
-		public bool Started()
-		{
-			return timer != null;
-		}
+		public bool Started { get { return timer != null; } }
 
 		public void Start()
 		{
-			if (Started())
+			if (Started)
 				return;
 
 			timer = new DispatcherTimer();
@@ -40,7 +37,7 @@ namespace NeoEdit.GUI.Common
 			{
 				Stop();
 
-				if (dependencies.Any(dependency => dependency.Started()))
+				if (dependencies.Any(dependency => dependency.Started))
 				{
 					// A dependency is ready to go; queue up for after it's done
 					Start();
@@ -54,7 +51,7 @@ namespace NeoEdit.GUI.Common
 
 		public void Stop()
 		{
-			if (!Started())
+			if (!Started)
 				return;
 
 			timer.Stop();

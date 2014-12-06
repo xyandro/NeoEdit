@@ -446,7 +446,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				showFocus = false;
 			}
 
-			if (drawTimer.Started())
+			if (drawTimer.Started)
 				return;
 
 			contents.Children.Clear();

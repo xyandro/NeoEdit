@@ -2068,7 +2068,7 @@ namespace NeoEdit.TextEdit
 				default: ret = false; break;
 			}
 
-			if (selectionsTimer.Started())
+			if (selectionsTimer.Started)
 				EnsureVisible();
 
 			return ret;
@@ -2412,7 +2412,7 @@ namespace NeoEdit.TextEdit
 				return true;
 
 			ReplaceSelections(text, false);
-			if (selectionsTimer.Started())
+			if (selectionsTimer.Started)
 				EnsureVisible();
 			return true;
 		}
