@@ -260,12 +260,12 @@ namespace NeoEdit.TextEdit
 
 		bool VerifyCanFullyEncode(List<string> strs, Coder.CodePage codePage)
 		{
-			return (strs.All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
+			return (strs.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
 		}
 
 		bool VerifyCanFullyEncode(List<byte[]> data, Coder.CodePage codePage)
 		{
-			return (data.All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
+			return (data.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
 		}
 
 		Coder.CodePage DetectUnicode(List<byte[]> data)
@@ -352,6 +352,11 @@ namespace NeoEdit.TextEdit
 			fileLastWrite = new FileInfo(fileName).LastWriteTime;
 			undoRedo.SetModified(false);
 			FileName = fileName;
+		}
+
+		List<string> GetSelectionStrings()
+		{
+			return Selections.AsParallel().AsOrdered().Select(range => GetString(range)).ToList();
 		}
 
 		internal void Command_File_Save()
@@ -538,7 +543,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_CutCopy(bool isCut)
 		{
-			var result = Selections.Select(range => GetString(range)).ToList();
+			var result = GetSelectionStrings();
 			if (result.Count != 0)
 				ClipboardWindow.Set(result);
 			if (isCut)
@@ -584,7 +589,7 @@ namespace NeoEdit.TextEdit
 		internal GetRegExDialog.Result Command_Edit_FindReplace_Dialog(bool replace)
 		{
 			string text = null;
-			var selectionOnly = Selections.Any(range => range.HasSelection);
+			var selectionOnly = Selections.AsParallel().AsOrdered().Any(range => range.HasSelection);
 
 			if (Selections.Count == 1)
 			{
@@ -609,7 +614,7 @@ namespace NeoEdit.TextEdit
 				Searches.Clear();
 
 				if (replace)
-					ReplaceSelections(Selections.Select(range => findResult.Regex.Replace(GetString(range), findResult.Replace)).ToList());
+					ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => findResult.Regex.Replace(GetString(range), findResult.Replace)).ToList());
 
 				return;
 			}
@@ -624,17 +629,20 @@ namespace NeoEdit.TextEdit
 
 		internal GotoDialog.Result Command_Edit_Goto_Dialog(bool isLine)
 		{
-			var lines = Selections.Select(range => Data.GetOffsetLine(range.Start)).ToList();
-			var indexes = Selections.Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
-			var line = lines.Any() ? lines.First() + 1 : 1;
-			var index = indexes.Any() ? indexes.First() + 1 : 1;
+			int line = 1, index = 1;
+			var range = Selections.FirstOrDefault();
+			if (range != null)
+			{
+				line = Data.GetOffsetLine(range.Start);
+				index = Data.GetOffsetIndex(range.Start, line);
+			}
 			return GotoDialog.Run(isLine, isLine ? line : index);
 		}
 
 		internal void Command_Edit_Goto(bool isLine, bool selecting, GotoDialog.Result result)
 		{
-			var lines = Selections.Select(range => Data.GetOffsetLine(range.Start)).ToList();
-			var indexes = Selections.Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
+			var lines = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
+			var indexes = Selections.AsParallel().AsOrdered().Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
 
 			List<int> offsets;
 			if (result.ClipboardValue)
@@ -655,19 +663,19 @@ namespace NeoEdit.TextEdit
 			else
 				offsets = offsets.Select(ofs => ofs - 1).ToList();
 
-			Selections.Replace(Selections.Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], selecting, !isLine, isLine)).ToList());
+			Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], selecting, !isLine, isLine)).ToList());
 		}
 
 		internal void Command_Files_CutCopy(bool isCut)
 		{
-			var result = Selections.Select(range => GetString(range)).ToList();
+			var result = GetSelectionStrings();
 			if (result.Count != 0)
 				ClipboardWindow.SetFiles(result, isCut);
 		}
 
 		internal void Command_Files_Open()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			foreach (var file in files)
 				TextEditTabs.Create(file);
 		}
@@ -682,7 +690,7 @@ namespace NeoEdit.TextEdit
 				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() == Message.OptionsEnum.Yes)
 			{
-				var files = Selections.Select(range => GetString(range)).ToList();
+				var files = GetSelectionStrings();
 				foreach (var file in files)
 				{
 					if (File.Exists(file))
@@ -709,7 +717,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Timestamp(TimestampType type, ChooseDateTimeDialog.Result result)
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			foreach (var file in files)
 			{
 				if (!FileOrDirectoryExists(file))
@@ -745,7 +753,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_CreateDirectory()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			foreach (var file in files)
 				Directory.CreateDirectory(file);
 		}
@@ -788,7 +796,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Information_WriteTime()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			var strs = new List<string>();
 			foreach (var file in files)
 			{
@@ -810,7 +818,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Information_AccessTime()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			var strs = new List<string>();
 			foreach (var file in files)
 			{
@@ -832,7 +840,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Information_CreateTime()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			var strs = new List<string>();
 			foreach (var file in files)
 			{
@@ -854,7 +862,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Information_Attributes()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			var strs = new List<string>();
 			foreach (var file in files)
 			{
@@ -876,7 +884,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Information_ReadOnly()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			var strs = new List<string>();
 			foreach (var file in files)
 			{
@@ -900,7 +908,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Select_GetFilePath(GetPathType type)
 		{
-			Selections.Replace(Selections.Select(range => GetPathRange(type, range)).ToList());
+			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());
 		}
 
 		static bool FileOrDirectoryExists(string name)
@@ -910,20 +918,17 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Select_Existing(bool existing)
 		{
-			var sels = Selections.Where(range => FileOrDirectoryExists(GetString(range)) == existing).ToList();
-			Selections.Replace(sels);
+			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => FileOrDirectoryExists(GetString(range)) == existing).ToList());
 		}
 
 		internal void Command_Files_Select_Files()
 		{
-			var sels = Selections.Where(range => File.Exists(GetString(range))).ToList();
-			Selections.Replace(sels);
+			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => File.Exists(GetString(range))).ToList());
 		}
 
 		internal void Command_Files_Select_Directories()
 		{
-			var sels = Selections.Where(range => Directory.Exists(GetString(range))).ToList();
-			Selections.Replace(sels);
+			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => Directory.Exists(GetString(range))).ToList());
 		}
 
 		internal void Command_Files_Select_Roots(bool include)
@@ -941,13 +946,12 @@ namespace NeoEdit.TextEdit
 				root = file + @"\";
 			}
 
-			var result = sels.Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
-			Selections.Replace(result);
+			Selections.Replace(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
 		}
 
 		internal void Command_Files_Files_Operations_CreateFiles()
 		{
-			var files = Selections.Select(range => GetString(range)).ToList();
+			var files = GetSelectionStrings();
 			if (files.Any(file => Directory.Exists(file)))
 				throw new Exception("Directory already exists");
 			files = files.Where(file => !File.Exists(file)).ToList();
@@ -1019,32 +1023,32 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Case_Upper()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).ToUpperInvariant()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());
 		}
 
 		internal void Command_Data_Case_Lower()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).ToLowerInvariant()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToLowerInvariant()).ToList());
 		}
 
 		internal void Command_Data_Case_Proper()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).ToProper()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToProper()).ToList());
 		}
 
 		internal void Command_Data_Case_Toggle()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).ToToggled()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToToggled()).ToList());
 		}
 
 		internal void Command_Data_Hex_ToHex()
 		{
-			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList());
 		}
 
 		internal void Command_Data_Hex_FromHex()
 		{
-			ReplaceSelections(Selections.Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
 		internal void Command_Data_DateTime_Insert()
@@ -1062,7 +1066,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_DateTime_Convert(ConvertDateTimeDialog.Result result)
 		{
-			ReplaceSelections(Selections.Select(range => ConvertDateTimeDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ConvertDateTimeDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList());
 		}
 
 		internal ConvertDialog.Result Command_Data_Convert_Dialog()
@@ -1072,20 +1076,19 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Convert(ConvertDialog.Result result)
 		{
-			ReplaceSelections(Selections.Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType, result.InputBOM), result.OutputType, result.OutputBOM)).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType, result.InputBOM), result.OutputType, result.OutputBOM)).ToList());
 		}
 
 		internal void Command_Data_Length()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).Length.ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
 		}
 
 		internal WidthDialog.Result Command_Data_Width_Dialog()
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
-			var minLength = strs.Select(str => str.Length).Min();
-			var maxLength = strs.Select(str => str.Length).Max();
-			var numeric = strs.All(str => str.IsNumeric());
+			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
+			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
+			var numeric = Selections.AsParallel().AsOrdered().All(range => GetString(range).IsNumeric());
 			return WidthDialog.Run(minLength, maxLength, numeric);
 		}
 
@@ -1095,45 +1098,44 @@ namespace NeoEdit.TextEdit
 			switch (result.Type)
 			{
 				case WidthDialog.WidthType.Absolute:
-					lengths = Enumerable.Range(0, Selections.Count).Select(num => result.Value).ToList();
+					lengths = ParallelEnumerable.Range(0, Selections.Count).Select(num => result.Value).ToList();
 					break;
 				case WidthDialog.WidthType.Relative:
-					lengths = Selections.Select(range => Math.Max(0, range.Length + result.Value)).ToList();
+					lengths = Selections.AsParallel().AsOrdered().Select(range => Math.Max(0, range.Length + result.Value)).ToList();
 					break;
 				case WidthDialog.WidthType.Minimum:
-					lengths = Selections.Select(range => Math.Max(range.Length, result.Value)).ToList();
+					lengths = Selections.AsParallel().AsOrdered().Select(range => Math.Max(range.Length, result.Value)).ToList();
 					break;
 				case WidthDialog.WidthType.Maximum:
-					lengths = Selections.Select(range => Math.Min(range.Length, result.Value)).ToList();
+					lengths = Selections.AsParallel().AsOrdered().Select(range => Math.Min(range.Length, result.Value)).ToList();
 					break;
 				case WidthDialog.WidthType.Multiple:
-					lengths = Selections.Select(range => range.Length + result.Value - 1 - (range.Length + result.Value - 1) % result.Value).ToList();
+					lengths = Selections.AsParallel().AsOrdered().Select(range => range.Length + result.Value - 1 - (range.Length + result.Value - 1) % result.Value).ToList();
 					break;
 				case WidthDialog.WidthType.Clipboard:
 					{
 						var clipboardStrings = ClipboardWindow.GetStrings();
 						if (clipboardStrings.Count != Selections.Count)
 							throw new Exception("Number of items on clipboard doesn't match number of selections.");
-						lengths = clipboardStrings.Select(str => Int32.Parse(str)).ToList();
+						lengths = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
 					}
 					break;
 				default: throw new ArgumentException("Invalid width type");
 			}
 
-
-			ReplaceSelections(Selections.Select((range, index) => SetWidth(GetString(range), lengths[index], result.Location, result.PadChar)).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), lengths[index], result.Location, result.PadChar)).ToList());
 		}
 
 		internal TrimDialog.Result Command_Data_Trim_Dialog()
 		{
-			var numeric = Selections.Select(range => GetString(range)).All(str => str.IsNumeric());
+			var numeric = Selections.AsParallel().All(range => GetString(range).IsNumeric());
 			return TrimDialog.Run(numeric);
 		}
 
 		internal void Command_Data_Trim(TrimDialog.Result result)
 		{
 			var strs = new List<string>();
-			foreach (var str in Selections.Select(range => GetString(range)))
+			foreach (var str in GetSelectionStrings())
 				switch (result.Location)
 				{
 					case TrimDialog.TrimLocation.Start: strs.Add(str.TrimStart(result.TrimChars)); break;
@@ -1146,24 +1148,24 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_SingleLine()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 		}
 
 		internal void Command_Data_ToTable()
 		{
-			var lines = Selections.Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();
+			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();
 			var numColumns = lines.Max(line => line.Count);
 			foreach (var line in lines)
 				line.AddRange(Enumerable.Range(0, numColumns - line.Count).Select(a => ""));
 			var columnWidths = Enumerable.Range(0, numColumns).Select(column => lines.Max(line => line[column].Length)).ToList();
 			var columns = Enumerable.Range(0, numColumns).Where(column => columnWidths[column] != 0).ToList();
-			var strs = lines.Select(line => "|" + String.Join("|", columns.Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + "|").ToList();
+			var strs = lines.AsParallel().AsOrdered().Select(line => "|" + String.Join("|", columns.Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + "|").ToList();
 			ReplaceSelections(strs);
 		}
 
 		internal void Command_Data_FromTable()
 		{
-			var lines = Selections.Select(range => GetString(range).Split('|').Select(str => str.Trim()).ToList()).ToList();
+			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('|').Select(str => str.Trim()).ToList()).ToList();
 
 			// Strip leading tabs if all lines have them
 			while (lines.All(line => (line.Count != 0) && (line[0].Length == 0)))
@@ -1174,7 +1176,7 @@ namespace NeoEdit.TextEdit
 				while ((line.Count != 0) && (String.IsNullOrEmpty(line[line.Count - 1])))
 					line.RemoveAt(line.Count - 1);
 
-			var strs = lines.Select(line => String.Join("\t", line)).ToList();
+			var strs = lines.AsParallel().AsOrdered().Select(line => String.Join("\t", line)).ToList();
 			ReplaceSelections(strs);
 		}
 
@@ -1186,13 +1188,13 @@ namespace NeoEdit.TextEdit
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
 			var expressionData = GetExpressionData();
-			ReplaceSelections(Enumerable.Range(0, expressionData["x"].Count).AsParallel().AsOrdered().Select(index => result.Expression.EvaluateDict(expressionData, index).ToString()).ToList());
+			ReplaceSelections(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Select(index => result.Expression.EvaluateDict(expressionData, index).ToString()).ToList());
 		}
 
 		internal void Command_Data_EvaluateSelectedExpression()
 		{
 			var expression = new NeoEdit.Common.Expression("Eval([0])");
-			ReplaceSelections(Selections.Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
 		}
 
 		internal void Command_Data_Series()
@@ -1202,7 +1204,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_CopyDown()
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
+			var strs = GetSelectionStrings();
 			var index = 0;
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
 				if (String.IsNullOrWhiteSpace(strs[ctr]))
@@ -1220,7 +1222,7 @@ namespace NeoEdit.TextEdit
 		internal enum Command_MinMax_Type { String, Numeric, Length }
 		internal void DoCommand_Data_Copy_MinMax<T>(bool min, Func<Range, T> sortBy, Func<Range, string> value)
 		{
-			var strs = Selections.Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
+			var strs = Selections.AsParallel().AsOrdered().Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
 			var found = min ? strs.First().range : strs.Last().range;
 			Clipboard.SetText(value(found));
 		}
@@ -1237,7 +1239,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Copy_Sum()
 		{
-			Clipboard.SetText(Selections.Select(range => Double.Parse(GetString(range))).Sum().ToString());
+			Clipboard.SetText(Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum().ToString());
 		}
 
 		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
@@ -1257,7 +1259,7 @@ namespace NeoEdit.TextEdit
 			}
 			else
 				repeatCounts = Enumerable.Range(0, Selections.Count).Select(range => result.RepeatCount).ToList();
-			ReplaceSelections(Selections.Select((range, index) => RepeatString(GetString(range), repeatCounts[index])).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), repeatCounts[index])).ToList());
 			if (result.SelectRepetitions)
 			{
 				var sels = new List<Range>();
@@ -1275,7 +1277,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_InsertGUID()
 		{
-			ReplaceSelections(Selections.Select(range => Guid.NewGuid().ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 		}
 
 		internal RandomNumberDialog.Result Command_Data_InsertRandomNumber_Dialog()
@@ -1285,37 +1287,37 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_InsertRandomNumber(RandomNumberDialog.Result result)
 		{
-			ReplaceSelections(Selections.Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
 		}
 
 		internal void Command_Data_Escape_XML()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;")).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;")).ToList());
 		}
 
 		internal void Command_Data_Escape_Regex()
 		{
-			ReplaceSelections(Selections.Select(range => Regex.Escape(GetString(range))).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Escape_URL()
 		{
-			ReplaceSelections(Selections.Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Unescape_XML()
 		{
-			ReplaceSelections(Selections.Select(range => GetString(range).Replace("&apos;", "'").Replace("&quot;", "\"").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">")).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("&apos;", "'").Replace("&quot;", "\"").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">")).ToList());
 		}
 
 		internal void Command_Data_Unescape_Regex()
 		{
-			ReplaceSelections(Selections.Select(range => Regex.Unescape(GetString(range))).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Unescape_URL()
 		{
-			ReplaceSelections(Selections.Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 		}
 
 		internal EncodingDialog.Result Command_Data_Checksum_Dialog()
@@ -1325,17 +1327,17 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Checksum(Checksum.Type type, EncodingDialog.Result result)
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
+			var strs = GetSelectionStrings();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
 				return;
 
-			ReplaceSelections(strs.Select(str => Checksum.Get(type, Coder.StringToBytes(str, result.CodePage))).ToList());
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Checksum.Get(type, Coder.StringToBytes(str, result.CodePage))).ToList());
 		}
 
 		internal void Command_Keys_Set(int index)
 		{
 			// Handles keys as well as values
-			var values = Selections.Select(range => GetString(range)).ToList();
+			var values = GetSelectionStrings();
 			if ((index == 0) && (values.Distinct().Count() != values.Count))
 				throw new ArgumentException("Cannot have duplicate keys");
 			keysAndValues[index] = values;
@@ -1412,12 +1414,12 @@ namespace NeoEdit.TextEdit
 		internal void Command_Keys_HitsMisses(int index, bool hits)
 		{
 			var set = new HashSet<string>(keysAndValues[index]);
-			Selections.Replace(Selections.Where(range => set.Contains(GetString(range)) == hits).ToList());
+			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == hits).ToList());
 		}
 
 		internal void Command_Keys_CountstoKeysValues1()
 		{
-			var strs = Selections.Select(range => GetString(range)).ToList();
+			var strs = GetSelectionStrings();
 			var group = strs.GroupBy(a => a).Select(a => new { key = a.Key, count = a.Count() }).OrderBy(a => a.count).ToList();
 			keysAndValues[0] = group.Select(a => a.key).ToList();
 			keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
@@ -1453,7 +1455,7 @@ namespace NeoEdit.TextEdit
 			if (result.IgnoreBlank)
 				Selections.Replace(Selections.Where(sel => sel.HasSelection).ToList());
 			if (result.SelMult > 1)
-				Selections.Replace(Selections.Where((sel, index) => index % result.SelMult == 0).ToList());
+				Selections.Replace(Selections.AsParallel().AsOrdered().Where((sel, index) => index % result.SelMult == 0).ToList());
 			var sels = Math.Min(Selections.Count, result.NumSels);
 			Selections.RemoveRange(sels, Selections.Count - sels);
 		}
@@ -1467,26 +1469,13 @@ namespace NeoEdit.TextEdit
 				for (var ctr = set.start; ctr <= set.end; ++ctr)
 					hasLine[ctr] = true;
 
-			var size = Math.Max(65536, (hasLine.Length + 31) / 32);
-			var chunks = new List<Tuple<int, int>>();
-			for (var start = 0; start < hasLine.Length; )
-			{
-				var end = Math.Min(hasLine.Length, start + size);
-				chunks.Add(Tuple.Create(start, end));
-				start = end;
-			}
+			var lines = new List<int>();
+			for (var line = 0; line < hasLine.Length; ++line)
+				if (hasLine[line])
+					lines.Add(line);
 
-			var resultSets = chunks.Select(chunk => new List<Range>()).ToList();
-			Parallel.ForEach(chunks, (chunk, state, index) =>
-			{
-				var resultSet = resultSets[(int)index];
-				for (var line = chunk.Item1; line < chunk.Item2; ++line)
-					if (hasLine[line])
-						resultSet.Add(new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0)));
-			});
+			var sels = lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
 
-			var sels = new List<Range>();
-			resultSets.ForEach(set => sels.AddRange(set));
 			Selections.Replace(sels);
 		}
 
@@ -1510,12 +1499,12 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Unique()
 		{
-			Selections.Replace(Selections.GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
+			Selections.Replace(Selections.AsParallel().AsOrdered().GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
 		}
 
 		internal void Command_Select_Duplicates()
 		{
-			Selections.Replace(Selections.GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
+			Selections.Replace(Selections.AsParallel().AsOrdered().GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
 		}
 
 		internal void Command_Select_Regions()
@@ -1531,9 +1520,9 @@ namespace NeoEdit.TextEdit
 
 		void DoCommand_Select_MinMax<T>(bool min, Func<Range, T> sortBy)
 		{
-			var selections = Selections.Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
+			var selections = Selections.AsParallel().AsOrdered().Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
 			var found = min ? selections.First().sort : selections.Last().sort;
-			Selections.Replace(selections.Where(obj => obj.sort.Equals(found)).Select(obj => obj.range).ToList());
+			Selections.Replace(selections.AsParallel().AsOrdered().Where(obj => obj.sort.Equals(found)).Select(obj => obj.range).ToList());
 		}
 
 		internal void Command_Select_MinMax(bool min, Command_MinMax_Type type)
@@ -1971,7 +1960,7 @@ namespace NeoEdit.TextEdit
 					{
 						var mult = key == Key.Up ? -1 : 1;
 						if (!controlDown)
-							Selections.Replace(Selections.Select(range => MoveCursor(range, mult, 0, shiftDown)).ToList());
+							Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, shiftDown)).ToList());
 						else if (!shiftDown)
 							yScrollValue += mult;
 						else if (key == Key.Down)
@@ -1982,7 +1971,7 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Home:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => MoveCursor(range, BeginOffset(), shiftDown)).ToList()); // Have to use MoveCursor for selection
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginOffset(), shiftDown)).ToList()); // Have to use MoveCursor for selection
 					else
 					{
 						bool changed = false;
@@ -2007,28 +1996,28 @@ namespace NeoEdit.TextEdit
 						}
 						if (!changed)
 						{
-							Selections.Replace(Selections.Select(range => MoveCursor(range, 0, 0, shiftDown, indexRel: false)).ToList());
+							Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, 0, shiftDown, indexRel: false)).ToList());
 							xScrollValue = 0;
 						}
 					}
 					break;
 				case Key.End:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => MoveCursor(range, EndOffset(), shiftDown)).ToList()); // Have to use MoveCursor for selection
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndOffset(), shiftDown)).ToList()); // Have to use MoveCursor for selection
 					else
-						Selections.Replace(Selections.Select(range => MoveCursor(range, 0, Int32.MaxValue, shiftDown, indexRel: false)).ToList());
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, Int32.MaxValue, shiftDown, indexRel: false)).ToList());
 					break;
 				case Key.PageUp:
 					if (controlDown)
 						yScrollValue -= yScrollViewportFloor / 2;
 					else
-						Selections.Replace(Selections.Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0, shiftDown)).ToList());
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0, shiftDown)).ToList());
 					break;
 				case Key.PageDown:
 					if (controlDown)
 						yScrollValue += yScrollViewportFloor / 2;
 					else
-						Selections.Replace(Selections.Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0, shiftDown)).ToList());
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0, shiftDown)).ToList());
 					break;
 				case Key.Tab:
 					{
@@ -2289,9 +2278,9 @@ namespace NeoEdit.TextEdit
 			Replace(Selections, strs, replaceType);
 
 			if (highlight)
-				Selections.Replace(Selections.Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
+				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
 			else
-				Selections.Replace(Selections.Select(range => new Range(range.End)).ToList());
+				Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
 		void Replace(IList<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal)
