@@ -40,6 +40,7 @@ namespace NeoEdit.TextEdit
 
 		static TextEditor CreateTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = -1, int column = -1)
 		{
+#if !DEBUG
 			if (filename != null)
 			{
 				var fileInfo = new FileInfo(filename);
@@ -63,6 +64,7 @@ namespace NeoEdit.TextEdit
 					}
 				}
 			}
+#endif
 
 			return new TextEditor(filename, bytes, codePage, line, column);
 		}

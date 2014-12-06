@@ -1460,15 +1460,34 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Lines()
 		{
-			var lines = new HashSet<int>();
-			foreach (var range in Selections)
+			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(Math.Max(BeginOffset(), range.End - 1)) }).ToList();
+
+			var hasLine = new bool[Data.NumLines];
+			foreach (var set in lineSets)
+				for (var ctr = set.start; ctr <= set.end; ++ctr)
+					hasLine[ctr] = true;
+
+			var size = Math.Max(65536, (hasLine.Length + 31) / 32);
+			var chunks = new List<Tuple<int, int>>();
+			for (var start = 0; start < hasLine.Length; )
 			{
-				var startLine = Data.GetOffsetLine(range.Start);
-				var endLine = Data.GetOffsetLine(Math.Max(BeginOffset(), range.End - 1)) + 1;
-				for (var line = startLine; line <= endLine; ++line)
-					lines.Add(line);
+				var end = Math.Min(hasLine.Length, start + size);
+				chunks.Add(Tuple.Create(start, end));
+				start = end;
 			}
-			Selections.Replace(lines.Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
+
+			var resultSets = chunks.Select(chunk => new List<Range>()).ToList();
+			Parallel.ForEach(chunks, (chunk, state, index) =>
+			{
+				var resultSet = resultSets[(int)index];
+				for (var line = chunk.Item1; line < chunk.Item2; ++line)
+					if (hasLine[line])
+						resultSet.Add(new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0)));
+			});
+
+			var sels = new List<Range>();
+			resultSets.ForEach(set => sels.AddRange(set));
+			Selections.Replace(sels);
 		}
 
 		internal void Command_Select_Empty(bool include)
