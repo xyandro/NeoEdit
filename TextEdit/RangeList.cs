@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Common;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.TextEdit
@@ -171,20 +172,49 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		public static List<int> GetTranslateNums(params RangeList[] ranges)
+		static int[] GetTranslateNums(params RangeList[] rangeLists)
 		{
-			return ranges.SelectMany(list => list).SelectMany(range => new int[] { range.Start, range.End }).Distinct().OrderBy(num => num).ToList();
+			var nums = new int[rangeLists.Sum(rangeList => rangeList.Count * 2)];
+			var numsStart = 0;
+			foreach (var rangeList in rangeLists)
+			{
+				var size = Math.Max(65536, (rangeList.Count + 31) / 32);
+				rangeList.PartitionedParallelForEach(size, (start, end) =>
+				{
+					var numPos = numsStart + start * 2;
+					for (var r = start; r < end; ++r)
+					{
+						nums[numPos++] = rangeList[r].Start;
+						nums[numPos++] = rangeList[r].End;
+					}
+				});
+				numsStart += rangeList.Count * 2;
+			}
+
+			Array.Sort(nums);
+
+			var outPos = -1;
+			for (var inPos = 0; inPos < nums.Length; ++inPos)
+			{
+				if ((outPos != -1) && (nums[inPos] == nums[outPos]))
+					continue;
+				nums[++outPos] = nums[inPos];
+			}
+
+			Array.Resize(ref nums, outPos + 1);
+			return nums;
 		}
 
-		public static Dictionary<int, int> GetTranslateMap(List<int> translateNums, IList<Range> replaceRanges, List<string> strs)
+		public static Tuple<int[], int[]> GetTranslateMap(List<Range> replaceRanges, List<string> strs, params RangeList[] rangeLists)
 		{
-			var translateMap = new Dictionary<int, int>();
+			var translateNums = GetTranslateNums(rangeLists);
+			var translateResults = new int[translateNums.Length];
 			var replaceRange = 0;
 			var offset = 0;
 			var current = 0;
-			while (current < translateNums.Count)
+			while (current < translateNums.Length)
 			{
-				int start = Int32.MaxValue, end = Int32.MaxValue, length = 0;
+				int start = int.MaxValue, end = int.MaxValue, length = 0;
 				if (replaceRange < replaceRanges.Count)
 				{
 					start = replaceRanges[replaceRange].Start;
@@ -203,16 +233,30 @@ namespace NeoEdit.TextEdit
 				if ((value > start) && (value < end))
 					value = start + length;
 
-				translateMap[translateNums[current]] = value + offset;
+				translateResults[current] = value + offset;
 				++current;
 			}
 
-			return translateMap;
+			return Tuple.Create(translateNums, translateResults);
 		}
 
-		public void Translate(Dictionary<int, int> translateMap)
+		public void Translate(Tuple<int[], int[]> translateMap)
 		{
-			Replace(this.Select(range => new Range(translateMap[range.Cursor], translateMap[range.Highlight])).ToList());
+			var result = this.PartitionedParallelForEach<Range, Range>(Math.Max(65536, (Count + 31) / 32), (start, end, list) =>
+			{
+				var current = 0;
+				for (var ctr = start; ctr < end; ++ctr)
+				{
+					current = Array.IndexOf(translateMap.Item1, this[start].Start, current);
+					var startPos = current;
+					current = Array.IndexOf(translateMap.Item1, this[start].End, current);
+					if (this[ctr].Cursor < this[ctr].Highlight)
+						list.Add(new Range(translateMap.Item2[startPos], translateMap.Item2[current]));
+					else
+						list.Add(new Range(translateMap.Item2[current], translateMap.Item2[startPos]));
+				}
+			});
+			Replace(result);
 		}
 
 		public int BinaryFindFirst(Predicate<Range> predicate)

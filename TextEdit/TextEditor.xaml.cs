@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -2283,7 +2282,7 @@ namespace NeoEdit.TextEdit
 				Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
-		void Replace(IList<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal)
+		void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal)
 		{
 			if (!ranges.Any())
 				return;
@@ -2320,8 +2319,7 @@ namespace NeoEdit.TextEdit
 
 			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
 
-			var translateNums = RangeList.GetTranslateNums(Selections, Regions, Searches);
-			var translateMap = RangeList.GetTranslateMap(translateNums, ranges, strs);
+			var translateMap = RangeList.GetTranslateMap(ranges, strs, Selections, Regions, Searches);
 			Selections.Translate(translateMap);
 			Regions.Translate(translateMap);
 			var searchLens = Searches.Select(range => range.Length).ToList();

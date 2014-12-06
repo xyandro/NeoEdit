@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NeoEdit.Common
 {
@@ -198,6 +199,34 @@ namespace NeoEdit.Common
 			if (b1.Length != b2.Length)
 				return false;
 			return memcmp(b1, b2, b1.Length) == 0;
+		}
+
+		public static void PartitionedParallelForEach<TSource>(this IEnumerable<TSource> source, int partitionSize, Action<int, int> action)
+		{
+			var chunks = new List<Tuple<int, int>>();
+			for (var start = 0; start < source.Count(); )
+			{
+				var end = Math.Min(source.Count(), start + partitionSize);
+				chunks.Add(Tuple.Create(start, end));
+				start = end;
+			}
+			Parallel.ForEach(chunks, chunk => action(chunk.Item1, chunk.Item2));
+		}
+
+		public static List<TResult> PartitionedParallelForEach<TSource, TResult>(this IEnumerable<TSource> source, int partitionSize, Action<int, int, List<TResult>> action)
+		{
+			var chunks = new List<Tuple<int, int>>();
+			for (var start = 0; start < source.Count(); )
+			{
+				var end = Math.Min(source.Count(), start + partitionSize);
+				chunks.Add(Tuple.Create(start, end));
+				start = end;
+			}
+			var lists = chunks.Select(chunk => new List<TResult>()).ToList();
+			Parallel.ForEach(chunks, (chunk, state, index) => action(chunk.Item1, chunk.Item2, lists[(int)index]));
+			var result = new List<TResult>();
+			lists.ForEach(list => result.AddRange(list));
+			return result;
 		}
 
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
