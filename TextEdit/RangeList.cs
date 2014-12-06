@@ -247,9 +247,9 @@ namespace NeoEdit.TextEdit
 				var current = 0;
 				for (var ctr = start; ctr < end; ++ctr)
 				{
-					current = Array.IndexOf(translateMap.Item1, this[start].Start, current);
+					current = Array.IndexOf(translateMap.Item1, this[ctr].Start, current);
 					var startPos = current;
-					current = Array.IndexOf(translateMap.Item1, this[start].End, current);
+					current = Array.IndexOf(translateMap.Item1, this[ctr].End, current);
 					if (this[ctr].Cursor < this[ctr].Highlight)
 						list.Add(new Range(translateMap.Item2[startPos], translateMap.Item2[current]));
 					else
