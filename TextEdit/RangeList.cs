@@ -158,7 +158,7 @@ namespace NeoEdit.TextEdit
 			Replace(result);
 		}
 
-		void DeOverlap2()
+		public void DeOverlap()
 		{
 			while (true)
 			{
@@ -169,13 +169,6 @@ namespace NeoEdit.TextEdit
 					case DeOverlapStep.Done: return;
 				}
 			}
-		}
-
-		public void DeOverlap()
-		{
-			var timer1 = DateTime.Now;
-			DeOverlap2();
-			var timer2 = DateTime.Now;
 		}
 
 		public static List<int> GetTranslateNums(params RangeList[] ranges)
