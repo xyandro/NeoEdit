@@ -275,31 +275,30 @@ namespace NeoEdit.TextEdit
 			return data.Select(a => Coder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
 		}
 
-		Dictionary<string, List<string>> GetExpressionData(int count = -1)
+		Dictionary<string, List<string>> GetExpressionData(int count = -1, NeoEdit.Common.Expression expression = null)
 		{
 			var sels = count == -1 ? Selections.ToList() : Selections.Take(Math.Min(count, Selections.Count)).ToList();
 			var strs = sels.Select(range => GetString(range)).ToList();
 			var c = ClipboardWindow.GetStrings();
 			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? keysHash[str] : -1);
 
-			var parallelDataActions = new List<Action<Action<string, List<string>>>>
+			var parallelDataActions = new Dictionary<string[], Action<Action<string, List<string>>>>
 			{
-				addData => addData("x", strs),
-				addData => addData("xl", strs.Select(str => str.Length.ToString()).ToList()),
-				addData => addData("y", strs.Select((str, order) => (order + 1).ToString()).ToList()),
-				addData => addData("z", strs.Select((str, order) => order.ToString()).ToList()),
-				addData => addData("c", c),
-				addData => addData("cl", c.Select(str => str.Length.ToString()).ToList()),
-				addData => addData("rk", keysAndValues[0]),
-				addData => addData("rkl", keysAndValues[0].Select(str => str.Length.ToString()).ToList()),
+				{ new string[] { "xl" }, addData => addData("xl", strs.Select(str => str.Length.ToString()).ToList()) },
+				{ new string[] { "y" }, addData => addData("y", strs.Select((str, order) => (order + 1).ToString()).ToList()) },
+				{ new string[] { "z" }, addData => addData("z", strs.Select((str, order) => order.ToString()).ToList()) },
+				{ new string[] { "c" }, addData => addData("c", c) },
+				{ new string[] { "cl" }, addData => addData("cl", c.Select(str => str.Length.ToString()).ToList()) },
+				{ new string[] { "rk" }, addData => addData("rk", keysAndValues[0]) },
+				{ new string[] { "rkl" }, addData => addData("rkl", keysAndValues[0].Select(str => str.Length.ToString()).ToList()) },
 			};
 
 			for (var ctr = 1; ctr <= 9; ++ctr)
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
-				parallelDataActions.Add(addData => addData(String.Format("rv{0}", num), keysAndValues[num]));
-				parallelDataActions.Add(addData => addData(String.Format("rv{0}l", num), keysAndValues[num].Select(str => str.Length.ToString()).ToList()));
-				parallelDataActions.Add(addData =>
+				parallelDataActions.Add(new string[] { String.Format("rv{0}", num) }, addData => addData(String.Format("rv{0}", num), keysAndValues[num]));
+				parallelDataActions.Add(new string[] { String.Format("rv{0}l", num) }, addData => addData(String.Format("rv{0}l", num), keysAndValues[num].Select(str => str.Length.ToString()).ToList()));
+				parallelDataActions.Add(new string[] { String.Format("v{0}", num), String.Format("v{0}l", num) }, addData =>
 				{
 					List<string> values;
 					if (keysAndValues[0].Count == keysAndValues[num].Count)
@@ -312,14 +311,17 @@ namespace NeoEdit.TextEdit
 				});
 			}
 
+			var used = expression != null ? expression.DictValues() : null;
 			var data = new Dictionary<string, List<string>>();
-			Parallel.ForEach(parallelDataActions, func =>
+			data["x"] = strs;
+			Parallel.ForEach(parallelDataActions, pair =>
 			{
-				func((key, value) =>
-				{
-					lock (data)
-						data[key] = value;
-				});
+				if (pair.Key.Any(key => (used == null) || (used.Contains(key))))
+					pair.Value((key, value) =>
+					{
+						lock (data)
+							data[key] = value;
+					});
 			});
 
 			return data;
@@ -1186,7 +1188,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
-			var expressionData = GetExpressionData();
+			var expressionData = GetExpressionData(expression: result.Expression);
 			ReplaceSelections(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Select(index => result.Expression.EvaluateDict(expressionData, index).ToString()).ToList());
 		}
 
@@ -1541,12 +1543,8 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
 		{
-			var sels = new List<Range>();
-			var expressionData = GetExpressionData();
-			for (var ctr = 0; ctr < expressionData["x"].Count; ++ctr)
-				if ((bool)result.Expression.Evaluate(expressionData, ctr) == result.IncludeMatches)
-					sels.Add(Selections[ctr]);
-			Selections.Replace(sels);
+			var expressionData = GetExpressionData(expression: result.Expression);
+			Selections.Replace(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Where(num => (bool)result.Expression.EvaluateDict(expressionData, num) == result.IncludeMatches).Select(num => Selections[num]).ToList());
 		}
 
 		internal GetRegExDialog.Result Command_Select_RegExMatches_Dialog()
@@ -1556,11 +1554,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_RegExMatches(GetRegExDialog.Result result)
 		{
-			var sels = new List<Range>();
-			foreach (var selection in Selections)
-				if (result.Regex.IsMatch(GetString(selection)) == result.IncludeMatches)
-					sels.Add(selection);
-			Selections.Replace(sels);
+			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => result.Regex.IsMatch(GetString(range)) == result.IncludeMatches).ToList());
 		}
 
 		internal void Command_Select_FirstSelection()

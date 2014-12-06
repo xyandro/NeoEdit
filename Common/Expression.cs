@@ -366,6 +366,11 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public List<string> DictValues()
+		{
+			return operations.SelectMany(op => op.terms).Where(term => term.type == Operation.Term.TermType.Dictionary).Select(term => term.key).Distinct().ToList();
+		}
+
 		bool IsType(object obj, string type)
 		{
 			if (obj == null)
