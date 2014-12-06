@@ -101,7 +101,7 @@
     <Compile Include="Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Extensions.cs" />
+    <Compile Include="RangeList.cs" />
     <Compile Include="Highlighting.cs" />
     <Page Include="Menu.xaml">
       <SubType>Designer</SubType>

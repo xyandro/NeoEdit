@@ -69,9 +69,9 @@ namespace NeoEdit.TextEdit
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
 
-		readonly ObservableCollection<Range> Selections = new ObservableCollection<Range>();
-		readonly ObservableCollection<Range> Searches = new ObservableCollection<Range>();
-		readonly ObservableCollection<Range> Regions = new ObservableCollection<Range>();
+		readonly RangeList Selections;
+		readonly RangeList Searches;
+		readonly RangeList Regions;
 
 		static Random random = new Random();
 
@@ -87,7 +87,7 @@ namespace NeoEdit.TextEdit
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		RunOnceTimer selectionsTimer, searchesTimer, regionsTimer, renderTimer;
+		RunOnceTimer renderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 
 		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = -1, int column = -1)
@@ -95,18 +95,15 @@ namespace NeoEdit.TextEdit
 			InitializeComponent();
 
 			undoRedo = new UndoRedo(b => IsModified = b);
-			selectionsTimer = new RunOnceTimer(SelectionsInvalidated);
-			searchesTimer = new RunOnceTimer(SearchesInvalidated);
-			regionsTimer = new RunOnceTimer(RegionsInvalidated);
+			Selections = new RangeList(SelectionsInvalidated);
+			Searches = new RangeList(SearchesInvalidated);
+			Regions = new RangeList(RegionsInvalidated);
+
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
-			renderTimer.AddDependency(selectionsTimer, searchesTimer, regionsTimer);
+			renderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
 
 			OpenFile(filename, bytes, codePage);
 			Goto(line, column);
-
-			Selections.CollectionChanged += (s, e) => selectionsTimer.Start();
-			Searches.CollectionChanged += (s, e) => searchesTimer.Start();
-			Regions.CollectionChanged += (s, e) => regionsTimer.Start();
 
 			localCallbacks = UIHelper<TextEditor>.GetLocalCallbacks(this);
 
@@ -1481,7 +1478,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Trim()
 		{
-			var sels = new ObservableCollection<Range>();
+			var sels = new List<Range>();
 			foreach (var range in Selections)
 			{
 				var index = range.Start;
@@ -1657,7 +1654,6 @@ namespace NeoEdit.TextEdit
 				Selections.Add(new Range(BeginOffset()));
 			var visible = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
 			Selections.DeOverlap();
-			selectionsTimer.Stop();
 			if (visible != null)
 			{
 				visibleIndex = Selections.FindIndex(range => (range.Start == visible.Start) && (range.End == visible.End));
@@ -1673,14 +1669,12 @@ namespace NeoEdit.TextEdit
 		{
 			Searches.Replace(Searches.Where(range => range.HasSelection).ToList());
 			Searches.DeOverlap();
-			searchesTimer.Stop();
 			renderTimer.Start();
 		}
 
 		void RegionsInvalidated()
 		{
 			Regions.DeOverlap();
-			regionsTimer.Stop();
 			renderTimer.Start();
 		}
 
@@ -1689,11 +1683,11 @@ namespace NeoEdit.TextEdit
 			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0))
 				return;
 
-			var brushes = new List<Tuple<ObservableCollection<Range>, Brush>>
+			var brushes = new List<Tuple<RangeList, Brush>>
 			{
-				new Tuple<ObservableCollection<Range>, Brush>(Selections, Misc.selectionBrush),
-				new Tuple<ObservableCollection<Range>, Brush>(Searches, Misc.searchBrush),
-				new Tuple<ObservableCollection<Range>, Brush>(Regions, Misc.regionBrush),
+				Tuple.Create(Selections, Misc.selectionBrush),
+				Tuple.Create(Searches, Misc.searchBrush),
+				Tuple.Create(Regions, Misc.regionBrush),
 			};
 
 			NumSelections = Selections.Count;
@@ -2068,7 +2062,7 @@ namespace NeoEdit.TextEdit
 				default: ret = false; break;
 			}
 
-			if (selectionsTimer.Started)
+			if (Selections.Changed)
 				EnsureVisible();
 
 			return ret;
@@ -2318,8 +2312,8 @@ namespace NeoEdit.TextEdit
 
 			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
 
-			var translateNums = RangeExtensions.GetTranslateNums(Selections, Regions, Searches);
-			var translateMap = RangeExtensions.GetTranslateMap(translateNums, ranges, strs);
+			var translateNums = RangeList.GetTranslateNums(Selections, Regions, Searches);
+			var translateMap = RangeList.GetTranslateMap(translateNums, ranges, strs);
 			Selections.Translate(translateMap);
 			Regions.Translate(translateMap);
 			var searchLens = Searches.Select(range => range.Length).ToList();
@@ -2412,7 +2406,7 @@ namespace NeoEdit.TextEdit
 				return true;
 
 			ReplaceSelections(text, false);
-			if (selectionsTimer.Started)
+			if (Selections.Changed)
 				EnsureVisible();
 			return true;
 		}
