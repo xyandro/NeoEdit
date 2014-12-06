@@ -1095,36 +1095,16 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Width(WidthDialog.Result result)
 		{
-			List<int> lengths;
-			switch (result.Type)
+			List<int> clipboardLens = null;
+			if (result.Type == WidthDialog.WidthType.Clipboard)
 			{
-				case WidthDialog.WidthType.Absolute:
-					lengths = ParallelEnumerable.Range(0, Selections.Count).Select(num => result.Value).ToList();
-					break;
-				case WidthDialog.WidthType.Relative:
-					lengths = Selections.AsParallel().AsOrdered().Select(range => Math.Max(0, range.Length + result.Value)).ToList();
-					break;
-				case WidthDialog.WidthType.Minimum:
-					lengths = Selections.AsParallel().AsOrdered().Select(range => Math.Max(range.Length, result.Value)).ToList();
-					break;
-				case WidthDialog.WidthType.Maximum:
-					lengths = Selections.AsParallel().AsOrdered().Select(range => Math.Min(range.Length, result.Value)).ToList();
-					break;
-				case WidthDialog.WidthType.Multiple:
-					lengths = Selections.AsParallel().AsOrdered().Select(range => range.Length + result.Value - 1 - (range.Length + result.Value - 1) % result.Value).ToList();
-					break;
-				case WidthDialog.WidthType.Clipboard:
-					{
-						var clipboardStrings = ClipboardWindow.GetStrings();
-						if (clipboardStrings.Count != Selections.Count)
-							throw new Exception("Number of items on clipboard doesn't match number of selections.");
-						lengths = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
-					}
-					break;
-				default: throw new ArgumentException("Invalid width type");
+				var clipboardStrings = ClipboardWindow.GetStrings();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
 			}
 
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), lengths[index], result.Location, result.PadChar)).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, clipboardLens == null ? 0 : clipboardLens[index])).ToList());
 		}
 
 		internal TrimDialog.Result Command_Data_Trim_Dialog()
@@ -1133,18 +1113,20 @@ namespace NeoEdit.TextEdit
 			return TrimDialog.Run(numeric);
 		}
 
+		string TrimString(string str, TrimDialog.Result result)
+		{
+			switch (result.Location)
+			{
+				case TrimDialog.TrimLocation.Start: return str.TrimStart(result.TrimChars);
+				case TrimDialog.TrimLocation.Both: return str.Trim(result.TrimChars);
+				case TrimDialog.TrimLocation.End: return str.TrimEnd(result.TrimChars);
+				default: throw new Exception("Invalid location");
+			}
+		}
+
 		internal void Command_Data_Trim(TrimDialog.Result result)
 		{
-			var strs = new List<string>();
-			foreach (var str in GetSelectionStrings())
-				switch (result.Location)
-				{
-					case TrimDialog.TrimLocation.Start: strs.Add(str.TrimStart(result.TrimChars)); break;
-					case TrimDialog.TrimLocation.Both: strs.Add(str.Trim(result.TrimChars)); break;
-					case TrimDialog.TrimLocation.End: strs.Add(str.TrimEnd(result.TrimChars)); break;
-				}
-
-			ReplaceSelections(strs);
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(GetString(str), result)).ToList());
 		}
 
 		internal void Command_Data_SingleLine()
@@ -1485,17 +1467,19 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.Where(range => range.HasSelection != include).ToList());
 		}
 
+		Range TrimRange(Range range)
+		{
+			var index = range.Start;
+			var length = range.Length;
+			Data.Trim(ref index, ref length);
+			if ((index == range.Start) && (length == range.Length))
+				return range;
+			return Range.FromIndex(index, length);
+		}
+
 		internal void Command_Select_Trim()
 		{
-			var sels = new List<Range>();
-			foreach (var range in Selections)
-			{
-				var index = range.Start;
-				var length = range.Length;
-				Data.Trim(ref index, ref length);
-				sels.Add(Range.FromIndex(index, length));
-			}
-			Selections.Replace(sels);
+			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range)).ToList());
 		}
 
 		internal void Command_Select_Unique()
@@ -2004,13 +1988,13 @@ namespace NeoEdit.TextEdit
 					if (controlDown)
 						yScrollValue -= yScrollViewportFloor / 2;
 					else
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0, shiftDown)).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0, shiftDown)).ToList());
 					break;
 				case Key.PageDown:
 					if (controlDown)
 						yScrollValue += yScrollViewportFloor / 2;
 					else
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0, shiftDown)).ToList());
+						Selections.Replace(Selections.Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0, shiftDown)).ToList());
 					break;
 				case Key.Tab:
 					{
@@ -2353,14 +2337,26 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		string SetWidth(string str, int length, WidthDialog.TextLocation location, char padChar)
+		string SetWidth(string str, WidthDialog.Result result, int clipboardLen)
 		{
+			int length;
+			switch (result.Type)
+			{
+				case WidthDialog.WidthType.Absolute: length = result.Value; break;
+				case WidthDialog.WidthType.Relative: length = Math.Max(0, str.Length + result.Value); break;
+				case WidthDialog.WidthType.Minimum: length = Math.Max(str.Length, result.Value); break;
+				case WidthDialog.WidthType.Maximum: length = Math.Min(str.Length, result.Value); break;
+				case WidthDialog.WidthType.Multiple: length = str.Length + result.Value - 1 - (str.Length + result.Value - 1) % result.Value; break;
+				case WidthDialog.WidthType.Clipboard: length = clipboardLen; break;
+				default: throw new ArgumentException("Invalid width type");
+			}
+
 			if (str.Length == length)
 				return str;
 
 			if (str.Length > length)
 			{
-				switch (location)
+				switch (result.Location)
 				{
 					case WidthDialog.TextLocation.Start: return str.Substring(0, length);
 					case WidthDialog.TextLocation.Middle: return str.Substring((str.Length - length + 1) / 2, length);
@@ -2371,11 +2367,11 @@ namespace NeoEdit.TextEdit
 			else
 			{
 				var len = length - str.Length;
-				switch (location)
+				switch (result.Location)
 				{
-					case WidthDialog.TextLocation.Start: return str + new string(padChar, len);
-					case WidthDialog.TextLocation.Middle: return new string(padChar, (len + 1) / 2) + str + new string(padChar, len / 2);
-					case WidthDialog.TextLocation.End: return new string(padChar, len) + str;
+					case WidthDialog.TextLocation.Start: return str + new string(result.PadChar, len);
+					case WidthDialog.TextLocation.Middle: return new string(result.PadChar, (len + 1) / 2) + str + new string(result.PadChar, len / 2);
+					case WidthDialog.TextLocation.End: return new string(result.PadChar, len) + str;
 					default: throw new ArgumentException("Invalid");
 				}
 			}
