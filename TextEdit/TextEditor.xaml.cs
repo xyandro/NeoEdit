@@ -1457,9 +1457,7 @@ namespace NeoEdit.TextEdit
 				if (hasLine[line])
 					lines.Add(line);
 
-			var sels = lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList();
-
-			Selections.Replace(sels);
+			Selections.Replace(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
 		}
 
 		internal void Command_Select_Empty(bool include)
@@ -1847,8 +1845,7 @@ namespace NeoEdit.TextEdit
 							break;
 						}
 
-						var selections = new List<Range>();
-						foreach (var range in Selections)
+						Replace(Selections.AsParallel().AsOrdered().Select(range =>
 						{
 							var offset = range.Start;
 
@@ -1873,24 +1870,22 @@ namespace NeoEdit.TextEdit
 								{
 									--line;
 									if (line < 0)
-										continue;
+										return null;
 									index = Data.GetLineLength(line);
 								}
 								if (index > Data.GetLineLength(line))
 								{
 									++line;
 									if (line >= Data.NumLines)
-										continue;
+										return null;
 									index = 0;
 								}
 
 								offset = Data.GetOffset(line, index);
 							}
 
-							selections.Add(new Range(offset, range.Highlight));
-						}
-
-						Replace(selections, null);
+							return new Range(offset, range.Highlight);
+						}).Where(range => range != null).ToList(), null);
 					}
 					break;
 				case Key.Escape:
@@ -1899,37 +1894,37 @@ namespace NeoEdit.TextEdit
 				case Key.Left:
 					{
 						var hasSelection = Selections.Any(range => range.HasSelection);
-						for (var ctr = 0; ctr < Selections.Count; ++ctr)
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
-							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
+							var line = Data.GetOffsetLine(range.Cursor);
+							var index = Data.GetOffsetIndex(range.Cursor, line);
 							if (controlDown)
-								Selections[ctr] = MoveCursor(Selections[ctr], GetPrevWord(Selections[ctr].Cursor), shiftDown);
+								return MoveCursor(range, GetPrevWord(range.Cursor), shiftDown);
 							else if ((!shiftDown) && (hasSelection))
-								Selections[ctr] = new Range(Selections[ctr].Start);
+								return new Range(range.Start);
 							else if ((index == 0) && (line != 0))
-								Selections[ctr] = MoveCursor(Selections[ctr], -1, Int32.MaxValue, shiftDown, indexRel: false);
+								return MoveCursor(range, -1, Int32.MaxValue, shiftDown, indexRel: false);
 							else
-								Selections[ctr] = MoveCursor(Selections[ctr], 0, -1, shiftDown);
-						}
+								return MoveCursor(range, 0, -1, shiftDown);
+						}).ToList());
 					}
 					break;
 				case Key.Right:
 					{
 						var hasSelection = Selections.Any(range => range.HasSelection);
-						for (var ctr = 0; ctr < Selections.Count; ++ctr)
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
-							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
+							var line = Data.GetOffsetLine(range.Cursor);
+							var index = Data.GetOffsetIndex(range.Cursor, line);
 							if (controlDown)
-								Selections[ctr] = MoveCursor(Selections[ctr], GetNextWord(Selections[ctr].Cursor), shiftDown);
+								return MoveCursor(range, GetNextWord(range.Cursor), shiftDown);
 							else if ((!shiftDown) && (hasSelection))
-								Selections[ctr] = new Range(Selections[ctr].End);
+								return new Range(range.End);
 							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
-								Selections[ctr] = MoveCursor(Selections[ctr], 1, 0, shiftDown, indexRel: false);
+								return MoveCursor(range, 1, 0, shiftDown, indexRel: false);
 							else
-								Selections[ctr] = MoveCursor(Selections[ctr], 0, 1, shiftDown);
-						}
+								return MoveCursor(range, 0, 1, shiftDown);
+						}).ToList());
 					}
 					break;
 				case Key.Up:
@@ -1988,13 +1983,19 @@ namespace NeoEdit.TextEdit
 					if (controlDown)
 						yScrollValue -= yScrollViewportFloor / 2;
 					else
-						Selections.Replace(Selections.Select(range => MoveCursor(range, 1 - yScrollViewportFloor, 0, shiftDown)).ToList());
+					{
+						var savedYScrollViewportFloor = yScrollViewportFloor;
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - savedYScrollViewportFloor, 0, shiftDown)).ToList());
+					}
 					break;
 				case Key.PageDown:
 					if (controlDown)
 						yScrollValue += yScrollViewportFloor / 2;
 					else
-						Selections.Replace(Selections.Select(range => MoveCursor(range, yScrollViewportFloor - 1, 0, shiftDown)).ToList());
+					{
+						var savedYScrollViewportFloor = yScrollViewportFloor;
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, savedYScrollViewportFloor - 1, 0, shiftDown)).ToList());
+					}
 					break;
 				case Key.Tab:
 					{
@@ -2004,7 +2005,7 @@ namespace NeoEdit.TextEdit
 							break;
 						}
 
-						var selLines = Selections.Where(a => a.HasSelection).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
+						var selLines = Selections.AsParallel().AsOrdered().Where(a => a.HasSelection).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
 						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy(line => line).ToDictionary(line => line, line => Data.GetOffset(line, 0));
 						int offset;
 						string replace;
@@ -2032,14 +2033,14 @@ namespace NeoEdit.TextEdit
 				case Key.OemCloseBrackets:
 					if (controlDown)
 					{
-						for (var ctr = 0; ctr < Selections.Count; ++ctr)
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							var newPos = Data.GetOppositeBracket(Selections[ctr].Cursor);
+							var newPos = Data.GetOppositeBracket(range.Cursor);
 							if (newPos == -1)
-								continue;
+								return range;
 
-							Selections[ctr] = MoveCursor(Selections[ctr], newPos, shiftDown);
-						}
+							return MoveCursor(range, newPos, shiftDown);
+						}).ToList());
 					}
 					else
 						ret = false;
@@ -2147,8 +2148,13 @@ namespace NeoEdit.TextEdit
 		Range MoveCursor(Range range, int cursor, bool selecting)
 		{
 			if (selecting)
-				return new Range(cursor, range.Highlight);
+				if (range.Cursor == cursor)
+					return range;
+				else
+					return new Range(cursor, range.Highlight);
 
+			if ((range.Cursor == cursor) && (range.Highlight == cursor))
+				return range;
 			return new Range(cursor);
 		}
 
