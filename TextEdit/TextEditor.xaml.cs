@@ -2257,14 +2257,14 @@ namespace NeoEdit.TextEdit
 			Redo,
 		}
 
-		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal)
+		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
-			ReplaceSelections(Selections.Select(range => str).ToList(), highlight, replaceType);
+			ReplaceSelections(Selections.Select(range => str).ToList(), highlight, replaceType, tryJoinUndo);
 		}
 
-		void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal)
+		void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
-			Replace(Selections, strs, replaceType);
+			Replace(Selections, strs, replaceType, tryJoinUndo);
 
 			if (highlight)
 				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
@@ -2272,7 +2272,7 @@ namespace NeoEdit.TextEdit
 				Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
-		void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal)
+		void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			if (!ranges.Any())
 				return;
@@ -2299,7 +2299,7 @@ namespace NeoEdit.TextEdit
 			if (!Enumerable.Range(0, ranges.Count).Any(ctr => undoText[ctr] != strs[ctr]))
 				return;
 
-			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText);
+			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText, tryJoinUndo);
 			switch (replaceType)
 			{
 				case ReplaceType.Undo: undoRedo.AddUndone(textCanvasUndoRedo); break;
@@ -2413,7 +2413,7 @@ namespace NeoEdit.TextEdit
 			if (text.Length == 0)
 				return true;
 
-			ReplaceSelections(text, false);
+			ReplaceSelections(text, false, tryJoinUndo: true);
 			if (Selections.Changed)
 				EnsureVisible();
 			return true;

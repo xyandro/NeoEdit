@@ -10,11 +10,13 @@ namespace NeoEdit.TextEdit
 		{
 			internal List<Range> ranges { get; private set; }
 			internal List<string> text { get; private set; }
+			internal bool tryJoinLast { get; private set; }
 
-			internal UndoRedoStep(List<Range> _ranges, List<string> _text)
+			internal UndoRedoStep(List<Range> _ranges, List<string> _text, bool _tryJoinLast)
 			{
 				ranges = _ranges;
 				text = _text;
+				tryJoinLast = _tryJoinLast;
 			}
 		}
 
@@ -93,10 +95,10 @@ namespace NeoEdit.TextEdit
 
 			// See if we can add this one to the last one
 			var done = false;
-			if ((modifiedSteps != 0) && (undo.Count != 0))
+			if ((current.tryJoinLast) && (modifiedSteps != 0) && (undo.Count != 0))
 			{
 				var last = undo.Last();
-				if (last.ranges.Count == current.ranges.Count)
+				if ((last.tryJoinLast) && (last.ranges.Count == current.ranges.Count))
 				{
 					var change = 0;
 					done = true;
