@@ -2001,7 +2001,13 @@ namespace NeoEdit.TextEdit
 					{
 						if (!Selections.Any(range => range.HasSelection))
 						{
-							HandleText("\t");
+							if (!shiftDown)
+								HandleText("\t");
+							else
+							{
+								var tabs = Selections.AsParallel().AsOrdered().Where(range => (range.Start != 0) && (Data.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
+								Replace(tabs, null);
+							}
 							break;
 						}
 
@@ -2272,7 +2278,7 @@ namespace NeoEdit.TextEdit
 				return;
 
 			if (strs == null)
-				strs = ranges.Select(range => "").ToList();
+				strs = Enumerable.Repeat("", ranges.Count).ToList();
 
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid string count");
