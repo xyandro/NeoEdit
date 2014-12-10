@@ -14,6 +14,7 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -31,7 +32,11 @@
 		<Label Grid.Row="2" Grid.Column="0" Content="_Chars:" Target="{Binding ElementName=chars}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="2" Grid.Column="1" Name="chars" Text="{Binding Chars, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<Label Grid.Row="3" Grid.Column="1">
+			<Italic>Note: Putting a character in the list more often increases its frequency.</Italic>
+		</Label>
+
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.GUI.Common;
@@ -48,13 +50,27 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (Chars.Length == 0)
 				return;
 
-			var regex = new Regex("([" + Chars.Replace("[", @"\[").Replace("]", @"\]") + "])");
-			var allChars = new string(Enumerable.Range(0, 65536).Select(ch => (char)ch).ToArray());
-			var chars = regex.Matches(allChars).Cast<Match>().Select(match => match.Value[0]).ToArray();
+			var chars = new List<char>();
+			var matches = Regex.Matches(Regex.Unescape(Chars), "(.)-(.)|(.)", RegexOptions.Singleline);
+			foreach (Match match in matches)
+			{
+				if (match.Groups[1].Success)
+				{
+					var v0 = match.Groups[1].Value[0];
+					var v1 = match.Groups[2].Value[0];
+					var start = (char)Math.Min(v0, v1);
+					var end = (char)Math.Max(v0, v1);
+					for (var c = start; c <= end; ++c)
+						chars.Add(c);
+				}
+				else if (match.Groups[3].Success)
+					chars.Add(match.Groups[3].Value[0]);
+			}
+
 			if (!chars.Any())
 				return;
 
-			result = new Result { Type = Type, Value = Value, Chars = chars };
+			result = new Result { Type = Type, Value = Value, Chars = chars.ToArray() };
 			DialogResult = true;
 		}
 
