@@ -181,9 +181,9 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.Edit_Insert: Active.Command_Edit_Insert(); break;
 				case HexEditCommand.View_Values: Active.Command_View_Values(); break;
 				case HexEditCommand.View_Refresh: Active.Command_View_Refresh(); break;
-				case HexEditCommand.Data_Checksum_MD5: Active.Command_Data_Checksum(Checksum.Type.MD5); break;
-				case HexEditCommand.Data_Checksum_SHA1: Active.Command_Data_Checksum(Checksum.Type.SHA1); break;
-				case HexEditCommand.Data_Checksum_SHA256: Active.Command_Data_Checksum(Checksum.Type.SHA256); break;
+				case HexEditCommand.Data_Hash_MD5: Active.Command_Data_Hash(Hash.Type.MD5); break;
+				case HexEditCommand.Data_Hash_SHA1: Active.Command_Data_Hash(Hash.Type.SHA1); break;
+				case HexEditCommand.Data_Hash_SHA256: Active.Command_Data_Hash(Hash.Type.SHA256); break;
 				case HexEditCommand.Data_Compress_GZip: Active.Command_Data_Compress(true, Compression.Type.GZip); break;
 				case HexEditCommand.Data_Compress_Deflate: Active.Command_Data_Compress(true, Compression.Type.Deflate); break;
 				case HexEditCommand.Data_Decompress_GZip: Active.Command_Data_Compress(false, Compression.Type.GZip); break;

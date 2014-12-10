@@ -946,9 +946,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Files_Checksum(Checksum.Type type)
+		internal void Command_Files_Hash(Hash.Type type)
 		{
-			ReplaceSelections(Selections.Select(range => Checksum.Get(type, GetString(range))).ToList());
+			ReplaceSelections(Selections.Select(range => Hash.Get(type, GetString(range))).ToList());
 		}
 
 		internal void Command_Files_Select_GetFilePath(GetPathType type)
@@ -1379,18 +1379,18 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 		}
 
-		internal EncodingDialog.Result Command_Data_Checksum_Dialog()
+		internal EncodingDialog.Result Command_Data_Hash_Dialog()
 		{
 			return EncodingDialog.Run(CodePage);
 		}
 
-		internal void Command_Data_Checksum(Checksum.Type type, EncodingDialog.Result result)
+		internal void Command_Data_Hash(Hash.Type type, EncodingDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
 				return;
 
-			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Checksum.Get(type, Coder.StringToBytes(str, result.CodePage))).ToList());
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hash.Get(type, Coder.StringToBytes(str, result.CodePage))).ToList());
 		}
 
 		internal void Command_Keys_Set(int index)

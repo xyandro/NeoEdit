@@ -227,7 +227,7 @@ namespace NeoEdit.Disk
 			if (FileType != DiskItemType.File)
 				return;
 
-			MD5 = Checksum.Get(Checksum.Type.MD5, FullName);
+			MD5 = Hash.Get(Hash.Type.MD5, FullName);
 		}
 
 		public void SetSHA1()
@@ -235,7 +235,7 @@ namespace NeoEdit.Disk
 			if (FileType != DiskItemType.File)
 				return;
 
-			SHA1 = Checksum.Get(Checksum.Type.SHA1, FullName);
+			SHA1 = Hash.Get(Hash.Type.SHA1, FullName);
 		}
 
 		static SvnCache svnCache = new SvnCache();

@@ -60,7 +60,7 @@ namespace NeoEdit.Common.UnitTest
 
 				var encrypted = Crypto.Encrypt(type, SmallTestData, pubKeys[type]);
 				var decrypted = Crypto.Decrypt(type, encrypted, privKeys[type]);
-				var decryptedSHA1 = Checksum.Get(Checksum.Type.SHA1, decrypted);
+				var decryptedSHA1 = Hash.Get(Hash.Type.SHA1, decrypted);
 
 				Assert.AreEqual(SmallTestDataSHA1, decryptedSHA1);
 			}
@@ -77,7 +77,7 @@ namespace NeoEdit.Common.UnitTest
 
 				var encrypted = Crypto.Encrypt(type, LargeTestData, pubKeys[type]);
 				var decrypted = Crypto.Decrypt(type, encrypted, privKeys[type]);
-				var decryptedSHA1 = Checksum.Get(Checksum.Type.SHA1, decrypted);
+				var decryptedSHA1 = Hash.Get(Hash.Type.SHA1, decrypted);
 
 				Assert.AreEqual(LargeTestDataSHA1, decryptedSHA1);
 			}

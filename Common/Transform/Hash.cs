@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace NeoEdit.Common.Transform
 {
-	public static class Checksum
+	public static class Hash
 	{
 		public enum Type
 		{

@@ -43,10 +43,10 @@
 		<hexEdit:HexEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
 	</MenuItem>
 	<MenuItem Header="_Data">
-		<MenuItem Header="C_hecksum">
-			<hexEdit:HexEditMenuItem Header="_MD5" CommandEnum="Data_Checksum_MD5"/>
-			<hexEdit:HexEditMenuItem Header="SHA_1" CommandEnum="Data_Checksum_SHA1"/>
-			<hexEdit:HexEditMenuItem Header="SHA_256" CommandEnum="Data_Checksum_SHA256"/>
+		<MenuItem Header="_Hash">
+			<hexEdit:HexEditMenuItem Header="_MD5" CommandEnum="Data_Hash_MD5"/>
+			<hexEdit:HexEditMenuItem Header="SHA_1" CommandEnum="Data_Hash_SHA1"/>
+			<hexEdit:HexEditMenuItem Header="SHA_256" CommandEnum="Data_Hash_SHA256"/>
 		</MenuItem>
 		<MenuItem Header="_Compress">
 			<hexEdit:HexEditMenuItem Header="_GZip" CommandEnum="Data_Compress_GZip"/>

@@ -755,7 +755,7 @@ namespace NeoEdit.HexEdit
 			++ChangeCount;
 		}
 
-		internal void Command_Data_Checksum(Checksum.Type type)
+		internal void Command_Data_Hash(Hash.Type type)
 		{
 			byte[] data;
 			if (Length == 0)
@@ -765,7 +765,7 @@ namespace NeoEdit.HexEdit
 			new Message
 			{
 				Title = "Result",
-				Text = Checksum.Get(type, data),
+				Text = Hash.Get(type, data),
 				Options = Message.OptionsEnum.Ok
 			}.Show();
 		}

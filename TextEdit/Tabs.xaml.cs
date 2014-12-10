@@ -325,9 +325,9 @@ namespace NeoEdit.TextEdit
 					case TextEditCommand.Data_Repeat: dialogResult = Active.Command_Data_Repeat_Dialog(); break;
 					case TextEditCommand.Data_InsertRandomNumber: dialogResult = Active.Command_Data_InsertRandomNumber_Dialog(); break;
 					case TextEditCommand.Data_InsertRandomData: dialogResult = Active.Command_Data_InsertRandomData_Dialog(); break;
-					case TextEditCommand.Data_Checksum_MD5: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
-					case TextEditCommand.Data_Checksum_SHA1: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
-					case TextEditCommand.Data_Checksum_SHA256: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
+					case TextEditCommand.Data_Hash_MD5: dialogResult = Active.Command_Data_Hash_Dialog(); break;
+					case TextEditCommand.Data_Hash_SHA1: dialogResult = Active.Command_Data_Hash_Dialog(); break;
+					case TextEditCommand.Data_Hash_SHA256: dialogResult = Active.Command_Data_Hash_Dialog(); break;
 					case TextEditCommand.Data_Sort: dialogResult = Active.Command_Data_Sort_Dialog(); break;
 					case TextEditCommand.Select_Limit: dialogResult = Active.Command_Select_Limit_Dialog(); break;
 					case TextEditCommand.Select_ExpressionMatches: dialogResult = Active.Command_Select_ExpressionMatches_Dialog(); break;
@@ -393,9 +393,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Information_CreateTime: Active.Command_Files_Information_CreateTime(); break;
 				case TextEditCommand.Files_Information_Attributes: Active.Command_Files_Information_Attributes(); break;
 				case TextEditCommand.Files_Information_ReadOnly: Active.Command_Files_Information_ReadOnly(); break;
-				case TextEditCommand.Files_Checksum_MD5: Active.Command_Files_Checksum(Checksum.Type.MD5); break;
-				case TextEditCommand.Files_Checksum_SHA1: Active.Command_Files_Checksum(Checksum.Type.SHA1); break;
-				case TextEditCommand.Files_Checksum_SHA256: Active.Command_Files_Checksum(Checksum.Type.SHA256); break;
+				case TextEditCommand.Files_Hash_MD5: Active.Command_Files_Hash(Hash.Type.MD5); break;
+				case TextEditCommand.Files_Hash_SHA1: Active.Command_Files_Hash(Hash.Type.SHA1); break;
+				case TextEditCommand.Files_Hash_SHA256: Active.Command_Files_Hash(Hash.Type.SHA256); break;
 				case TextEditCommand.Files_Select_FileName: Active.Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileName); break;
 				case TextEditCommand.Files_Select_FileNamewoExtension: Active.Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileNameWoExtension); break;
 				case TextEditCommand.Files_Select_DirectoryName: Active.Command_Files_Select_GetFilePath(TextEditor.GetPathType.Directory); break;
@@ -446,9 +446,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Unescape_XML: Active.Command_Data_Unescape_XML(); break;
 				case TextEditCommand.Data_Unescape_Regex: Active.Command_Data_Unescape_Regex(); break;
 				case TextEditCommand.Data_Unescape_URL: Active.Command_Data_Unescape_URL(); break;
-				case TextEditCommand.Data_Checksum_MD5: Active.Command_Data_Checksum(Checksum.Type.MD5, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Data_Checksum_SHA1: Active.Command_Data_Checksum(Checksum.Type.SHA1, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Data_Checksum_SHA256: Active.Command_Data_Checksum(Checksum.Type.SHA256, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Data_Hash_MD5: Active.Command_Data_Hash(Hash.Type.MD5, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Data_Hash_SHA1: Active.Command_Data_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Data_Hash_SHA256: Active.Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Sort: Active.Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Keys_Set_Keys: Active.Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Active.Command_Keys_Set(1); break;
