@@ -21,7 +21,7 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="Type:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
 			<RadioButton GroupName="type" Content="_Absolute" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Absolute}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-			<RadioButton GroupName="type" Content="_Clipboard" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Clipboard}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="type" Content="C_lipboard" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Clipboard}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="type" Content="_Selection Length" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=SelectionLength}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
 

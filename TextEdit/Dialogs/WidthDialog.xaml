@@ -26,13 +26,13 @@
 			<RadioButton GroupName="type" Content="_Minimum" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Minimum}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="Ma_ximum" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Maximum}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="Multi_ple" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
-			<RadioButton GroupName="type" Content="_Clipboard" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Clipboard}" Margin="0,0,10,0" Focusable="False"/>
+			<RadioButton GroupName="type" Content="C_lipboard" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Clipboard}" Margin="0,0,10,0" Focusable="False"/>
 		</StackPanel>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Value:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
 		<xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Name="value" Value="{Binding Value, ElementName=self}" Minimum="0" IsEnabled="{Binding NeedValue, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Padding c_haracter:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="2" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right"/>

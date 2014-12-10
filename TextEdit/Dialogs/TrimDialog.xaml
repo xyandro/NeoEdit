@@ -16,7 +16,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Trim c_haracters:" Target="{Binding ElementName=trimChars}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Trim _characters:" Target="{Binding ElementName=trimChars}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Name="trimChars" Width="200" HorizontalAlignment="Left" Text="{Binding TrimChars, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Trim Location:" HorizontalAlignment="Right"/>
