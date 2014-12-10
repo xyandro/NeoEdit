@@ -13,8 +13,8 @@
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition/>
-			<RowDefinition/>
 			<RowDefinition Height="10"/>
+			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
@@ -81,7 +81,7 @@
 
 		<TextBlock Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="4">
 			<Bold>Help</Bold> <Italic>(t = text, i = case-insensitive)</Italic><LineBreak/>
-			x: <Italic>selection</Italic>, y: <Italic>order (1-based)</Italic>, z: <Italic>order (0-based)</Italic>, c: <Italic>clipboard</Italic>, v1-v9: <Italic>values</Italic>, rk/rv1-rv9: <Italic>raw keys/values</Italic><LineBreak/>
+			x: <Italic>selection</Italic>, y: <Italic>order (1-based)</Italic>, z: <Italic>order (0-based)</Italic>, n: <Italic>count</Italic>, c: <Italic>clipboard</Italic>, v1-v9: <Italic>values</Italic>, rk/rv1-rv9: <Italic>raw keys/values</Italic><LineBreak/>
 			xl: <Italic>selection length</Italic>, cl: <Italic>clipboard length</Italic>, v1l-v9l: <Italic>values length</Italic>, rkl/rv1l-rv9l: <Italic>raw keys/values length</Italic><LineBreak/>
 			<Italic>Evaluate parameter as expression:</Italic> Eval(x)<LineBreak/>
 			<Italic>Force to integer:</Italic> Int(x/2)<LineBreak/>

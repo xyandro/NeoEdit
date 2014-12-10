@@ -285,6 +285,7 @@ namespace NeoEdit.TextEdit
 			var parallelDataActions = new Dictionary<string[], Action<Action<string, List<string>>>>
 			{
 				{ new string[] { "xl" }, addData => addData("xl", strs.Select(str => str.Length.ToString()).ToList()) },
+				{ new string[] { "n" }, addData => addData("n", Enumerable.Repeat(Selections.Count.ToString(), sels.Count).ToList()) },
 				{ new string[] { "y" }, addData => addData("y", strs.Select((str, order) => (order + 1).ToString()).ToList()) },
 				{ new string[] { "z" }, addData => addData("z", strs.Select((str, order) => order.ToString()).ToList()) },
 				{ new string[] { "c" }, addData => addData("c", c) },

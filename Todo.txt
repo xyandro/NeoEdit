@@ -33,7 +33,6 @@ Insert copied files
 Get enclosing region
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
-Expression: add value for total selection count
 Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 
