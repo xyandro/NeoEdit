@@ -72,7 +72,7 @@ namespace NeoEdit.TextEdit
 		readonly RangeList Searches;
 		readonly RangeList Regions;
 
-		static Random random = new Random();
+		static ThreadSafeRandom random = new ThreadSafeRandom();
 
 		static TextEditor()
 		{

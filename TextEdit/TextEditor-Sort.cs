@@ -98,15 +98,12 @@ namespace NeoEdit.TextEdit
 					break;
 				case SortType.Reverse: entries.Reverse(); break;
 				case SortType.Randomize:
-					{
-						var random = new Random();
-						entries = entries.OrderBy(entry => random.Next()).ToList();
-					}
+					entries = entries.OrderBy(entry => random.Next()).ToList();
 					break;
 				case SortType.Length: entries = OrderByAscDesc(entries, entry => entry.value.Length, ascending).ToList(); break;
 				case SortType.Frequency:
 					{
-						var comparer = caseSensitive ? StringComparer.Ordinal  : StringComparer.OrdinalIgnoreCase;
+						var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 						var frequency = entries.GroupBy(a => a.value, comparer).ToDictionary(a => a.Key, a => a.Count(), comparer);
 						entries = OrderByAscDesc(entries, entry => frequency[entry.value], ascending).ToList();
 					}

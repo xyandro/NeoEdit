@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="Expression.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="LinqHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\AssemblyInfo.Template.cs" />
