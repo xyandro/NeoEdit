@@ -138,6 +138,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Insert _GUID" CommandEnum="Data_InsertGUID"/>
 		<textEdit:TextEditMenuItem Header="Insert Random Number" CommandEnum="Data_InsertRandomNumber"/>
+		<textEdit:TextEditMenuItem Header="Insert Random Data" CommandEnum="Data_InsertRandomData"/>
 		<Separator/>
 		<MenuItem Header="Escape">
 			<textEdit:TextEditMenuItem Header="XML" CommandEnum="Data_Escape_XML"/>

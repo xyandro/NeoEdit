@@ -87,6 +87,10 @@
     <Compile Include="Dialogs\SortDialog.xaml.cs">
       <DependentUpon>SortDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\RandomDataDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\TrimDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -95,6 +99,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\RandomDataDialog.xaml.cs">
+      <DependentUpon>RandomDataDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\TrimDialog.xaml.cs">
       <DependentUpon>TrimDialog.xaml</DependentUpon>
     </Compile>

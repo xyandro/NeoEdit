@@ -95,6 +95,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.R, ModifierKeys.Control)] Data_Repeat,
 		Data_InsertGUID,
 		Data_InsertRandomNumber,
+		Data_InsertRandomData,
 		Data_Escape_XML,
 		Data_Escape_Regex,
 		Data_Escape_URL,

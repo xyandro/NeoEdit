@@ -324,6 +324,7 @@ namespace NeoEdit.TextEdit
 					case TextEditCommand.Data_EvaluateExpression: dialogResult = Active.Command_Data_EvaluateExpression_Dialog(); break;
 					case TextEditCommand.Data_Repeat: dialogResult = Active.Command_Data_Repeat_Dialog(); break;
 					case TextEditCommand.Data_InsertRandomNumber: dialogResult = Active.Command_Data_InsertRandomNumber_Dialog(); break;
+					case TextEditCommand.Data_InsertRandomData: dialogResult = Active.Command_Data_InsertRandomData_Dialog(); break;
 					case TextEditCommand.Data_Checksum_MD5: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
 					case TextEditCommand.Data_Checksum_SHA1: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
 					case TextEditCommand.Data_Checksum_SHA256: dialogResult = Active.Command_Data_Checksum_Dialog(); break;
@@ -438,6 +439,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Repeat: Active.Command_Data_Repeat(dialogResult as RepeatDialog.Result); break;
 				case TextEditCommand.Data_InsertGUID: Active.Command_Data_InsertGUID(); break;
 				case TextEditCommand.Data_InsertRandomNumber: Active.Command_Data_InsertRandomNumber(dialogResult as RandomNumberDialog.Result); break;
+				case TextEditCommand.Data_InsertRandomData: Active.Command_Data_InsertRandomData(dialogResult as RandomDataDialog.Result); break;
 				case TextEditCommand.Data_Escape_XML: Active.Command_Data_Escape_XML(); break;
 				case TextEditCommand.Data_Escape_Regex: Active.Command_Data_Escape_Regex(); break;
 				case TextEditCommand.Data_Escape_URL: Active.Command_Data_Escape_URL(); break;
