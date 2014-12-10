@@ -93,6 +93,8 @@ namespace NeoEdit.TextEdit
 		{
 			InitializeComponent();
 
+			SetupDragDrop();
+
 			undoRedo = new UndoRedo(b => IsModified = b);
 			Selections = new RangeList(SelectionsInvalidated);
 			Searches = new RangeList(SearchesInvalidated);
@@ -117,6 +119,39 @@ namespace NeoEdit.TextEdit
 			{
 				EnsureVisible();
 				renderTimer.Start();
+			};
+		}
+
+		void SetupDragDrop()
+		{
+			AllowDrop = true;
+			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
+			Drop += (s, e) =>
+			{
+				var fileList = e.Data.GetData("FileDrop") as string[];
+				if (fileList != null)
+				{
+					if (Selections.Count != 1)
+						throw new Exception("Must have only 1 selection.");
+
+					if (fileList.Length == 1)
+					{
+						ReplaceSelections(fileList[0]);
+						return;
+					}
+
+					var files = fileList.Select(file => file + Data.DefaultEnding).ToList();
+					var offset = Selections.First().Start;
+					ReplaceSelections(String.Join("", files));
+					Selections.Clear();
+					foreach (var str in files)
+					{
+						Selections.Add(Range.FromIndex(offset, str.Length - Data.DefaultEnding.Length));
+						offset += str.Length;
+					}
+
+					e.Handled = true;
+				}
 			};
 		}
 
