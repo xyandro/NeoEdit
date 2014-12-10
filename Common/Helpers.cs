@@ -201,24 +201,24 @@ namespace NeoEdit.Common
 			return memcmp(b1, b2, b1.Length) == 0;
 		}
 
-		public static void PartitionedParallelForEach<TSource>(this IEnumerable<TSource> source, int partitionSize, Action<int, int> action)
+		public static void PartitionedParallelForEach(int count, int partitionSize, Action<int, int> action)
 		{
 			var chunks = new List<Tuple<int, int>>();
-			for (var start = 0; start < source.Count(); )
+			for (var start = 0; start < count; )
 			{
-				var end = Math.Min(source.Count(), start + partitionSize);
+				var end = Math.Min(count, start + partitionSize);
 				chunks.Add(Tuple.Create(start, end));
 				start = end;
 			}
 			Parallel.ForEach(chunks, chunk => action(chunk.Item1, chunk.Item2));
 		}
 
-		public static List<TResult> PartitionedParallelForEach<TSource, TResult>(this IEnumerable<TSource> source, int partitionSize, Action<int, int, List<TResult>> action)
+		public static List<TResult> PartitionedParallelForEach<TResult>(int count, int partitionSize, Action<int, int, List<TResult>> action)
 		{
 			var chunks = new List<Tuple<int, int>>();
-			for (var start = 0; start < source.Count(); )
+			for (var start = 0; start < count; )
 			{
-				var end = Math.Min(source.Count(), start + partitionSize);
+				var end = Math.Min(count, start + partitionSize);
 				chunks.Add(Tuple.Create(start, end));
 				start = end;
 			}

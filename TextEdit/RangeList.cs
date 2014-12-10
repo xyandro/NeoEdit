@@ -179,7 +179,7 @@ namespace NeoEdit.TextEdit
 			foreach (var rangeList in rangeLists)
 			{
 				var size = Math.Max(65536, (rangeList.Count + 31) / 32);
-				rangeList.PartitionedParallelForEach(size, (start, end) =>
+				Helpers.PartitionedParallelForEach(rangeList.Count, size, (start, end) =>
 				{
 					var numPos = numsStart + start * 2;
 					for (var r = start; r < end; ++r)
@@ -242,7 +242,7 @@ namespace NeoEdit.TextEdit
 
 		public void Translate(Tuple<int[], int[]> translateMap)
 		{
-			var result = this.PartitionedParallelForEach<Range, Range>(Math.Max(65536, (Count + 31) / 32), (start, end, list) =>
+			var result = Helpers.PartitionedParallelForEach<Range>(Count, Math.Max(65536, (Count + 31) / 32), (start, end, list) =>
 			{
 				var current = 0;
 				for (var ctr = start; ctr < end; ++ctr)
