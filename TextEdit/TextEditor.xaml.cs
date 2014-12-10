@@ -587,7 +587,7 @@ namespace NeoEdit.TextEdit
 			ClipboardWindow.Show();
 		}
 
-		internal GetRegExDialog.Result Command_Edit_FindReplace_Dialog(bool replace)
+		internal GetRegExDialog.Result Command_Edit_FindReplace_Dialog(bool isReplace)
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().AsOrdered().Any(range => range.HasSelection);
@@ -602,20 +602,28 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return GetRegExDialog.Run(replace ? GetRegExDialog.GetRegExDialogType.Replace : GetRegExDialog.GetRegExDialogType.Find, text, selectionOnly);
+			return GetRegExDialog.Run(isReplace, text, selectionOnly);
 		}
 
-		internal void Command_Edit_FindReplace(bool replace, bool selecting, GetRegExDialog.Result findResult)
+		internal void Command_Edit_FindReplace(bool replace, bool selecting, GetRegExDialog.Result result)
 		{
-			RunSearch(findResult);
-			if ((replace) || (findResult.ResultType == GetRegExDialog.GetRegExResultType.All))
+			if ((result.KeepMatching) || (result.RemoveMatching))
+			{
+				var keep = result.KeepMatching;
+				Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => result.Regex.IsMatch(GetString(range)) == keep).ToList());
+				return;
+			}
+
+			RunSearch(result);
+
+			if ((replace) || (result.ResultType == GetRegExDialog.GetRegExResultType.All))
 			{
 				if (Searches.Count != 0)
 					Selections.Replace(Searches);
 				Searches.Clear();
 
 				if (replace)
-					ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => findResult.Regex.Replace(GetString(range), findResult.Replace)).ToList());
+					ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => result.Regex.Replace(GetString(range), result.Replace)).ToList());
 
 				return;
 			}
@@ -1165,7 +1173,7 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Data_EvaluateExpression_Dialog()
 		{
-			return GetExpressionDialog.Run(GetExpressionData(10), false);
+			return GetExpressionDialog.Run(GetExpressionData(10));
 		}
 
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
@@ -1520,23 +1528,13 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Select_ExpressionMatches_Dialog()
 		{
-			return GetExpressionDialog.Run(GetExpressionData(10), true);
+			return GetExpressionDialog.Run(GetExpressionData(10));
 		}
 
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
 		{
 			var expressionData = GetExpressionData(expression: result.Expression);
-			Selections.Replace(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Where(num => (bool)result.Expression.EvaluateDict(expressionData, num) == result.IncludeMatches).Select(num => Selections[num]).ToList());
-		}
-
-		internal GetRegExDialog.Result Command_Select_RegExMatches_Dialog()
-		{
-			return GetRegExDialog.Run(GetRegExDialog.GetRegExDialogType.MatchSelections);
-		}
-
-		internal void Command_Select_RegExMatches(GetRegExDialog.Result result)
-		{
-			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => result.Regex.IsMatch(GetString(range)) == result.IncludeMatches).ToList());
+			Selections.Replace(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Where(num => (bool)result.Expression.EvaluateDict(expressionData, num)).Select(num => Selections[num]).ToList());
 		}
 
 		internal void Command_Select_FirstSelection()

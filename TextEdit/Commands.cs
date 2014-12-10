@@ -192,7 +192,6 @@ namespace NeoEdit.TextEdit
 		Select_Max_Numeric,
 		Select_Max_Length,
 		Select_ExpressionMatches,
-		Select_RegExMatches,
 		[KeyGesture(Key.D0, ModifierKeys.Alt)] [KeyGesture(Key.D0, ModifierKeys.Control)] Select_FirstSelection,
 		[KeyGesture(Key.Space, ModifierKeys.Alt)]  [KeyGesture(Key.Space, ModifierKeys.Control)] Select_ShowCurrent,
 		[KeyGesture(Key.Down, ModifierKeys.Alt)] Select_NextSelection,

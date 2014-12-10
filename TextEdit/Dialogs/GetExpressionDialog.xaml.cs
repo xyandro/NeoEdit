@@ -10,13 +10,10 @@ namespace NeoEdit.TextEdit.Dialogs
 		internal class Result
 		{
 			public NeoEdit.Common.Expression Expression { get; set; }
-			public bool IncludeMatches { get; set; }
 		}
 
 		[DepProp]
 		public string Expression { get { return UIHelper<GetExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<GetExpressionDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool IncludeMatches { get { return UIHelper<GetExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<GetExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Example1 { get { return UIHelper<GetExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<GetExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -65,7 +62,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		readonly Dictionary<string, List<string>> expressionData;
-		GetExpressionDialog(Dictionary<string, List<string>> expressionData, bool getIncludeMatches)
+		GetExpressionDialog(Dictionary<string, List<string>> expressionData)
 		{
 			InitializeComponent();
 
@@ -85,9 +82,6 @@ namespace NeoEdit.TextEdit.Dialogs
 			Example10 = list.Count > 9 ? list[9] : null;
 
 			expression.CaretIndex = 1;
-			IncludeMatches = true;
-			if (!getIncludeMatches)
-				includeMatches.Visibility = Visibility.Hidden;
 		}
 
 		void EvaluateExamples()
@@ -129,13 +123,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = new Common.Expression(Expression, expressionData.Keys), IncludeMatches = IncludeMatches };
+			result = new Result { Expression = new Common.Expression(Expression, expressionData.Keys) };
 			DialogResult = true;
 		}
 
-		static internal Result Run(Dictionary<string, List<string>> examples, bool getIncludeMatches)
+		static internal Result Run(Dictionary<string, List<string>> examples)
 		{
-			var dialog = new GetExpressionDialog(examples, getIncludeMatches);
+			var dialog = new GetExpressionDialog(examples);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}

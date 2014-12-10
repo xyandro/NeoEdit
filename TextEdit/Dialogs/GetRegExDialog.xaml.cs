@@ -8,13 +8,6 @@ namespace NeoEdit.TextEdit.Dialogs
 {
 	partial class GetRegExDialog
 	{
-		internal enum GetRegExDialogType
-		{
-			Find,
-			Replace,
-			MatchSelections,
-		}
-
 		internal enum GetRegExResultType
 		{
 			Next,
@@ -27,8 +20,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			public string Replace { get; set; }
 			public bool RegexGroups { get; set; }
 			public bool SelectionOnly { get; set; }
+			public bool KeepMatching { get; set; }
+			public bool RemoveMatching { get; set; }
 			public bool IncludeEndings { get; set; }
-			public bool IncludeMatches { get; set; }
 			public GetRegExResultType ResultType { get; set; }
 		}
 
@@ -47,9 +41,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public bool SelectionOnly { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IncludeEndings { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool KeepMatching { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IncludeMatches { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool RemoveMatching { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool IncludeEndings { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public ObservableCollection<string> History { get { return UIHelper<GetRegExDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -64,9 +60,12 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<GetRegExDialog>.Register();
 			UIHelper<GetRegExDialog>.AddCallback(a => a.IsRegex, (obj, o, n) => { if (!obj.IsRegex) obj.RegexGroups = false; });
 			UIHelper<GetRegExDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) => { if (obj.RegexGroups) obj.IsRegex = true; });
+			UIHelper<GetRegExDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.KeepMatching = obj.RemoveMatching = false; });
+			UIHelper<GetRegExDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) => { if (obj.KeepMatching) { obj.SelectionOnly = true; obj.RemoveMatching = false; } });
+			UIHelper<GetRegExDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
 		}
 
-		GetRegExDialog(GetRegExDialogType type, string _Text, bool _SelectionOnly)
+		GetRegExDialog(bool isReplace, string _Text, bool _SelectionOnly)
 		{
 			InitializeComponent();
 
@@ -80,29 +79,19 @@ namespace NeoEdit.TextEdit.Dialogs
 			RegexGroups = regexGroupsVal;
 			IsRegex = isRegexVal;
 			IncludeEndings = includeEndingsVal;
-			IncludeMatches = true;
 
-			switch (type)
+			if ((String.IsNullOrEmpty(Text)) && (History.Count != 0))
+				Text = History[0];
+
+			if (isReplace)
 			{
-				case GetRegExDialogType.Find:
-					if ((String.IsNullOrEmpty(Text)) && (History.Count != 0))
-						Text = History[0];
-					includeMatches.Visibility = replaceLabel.Visibility = replace.Visibility = replaceButton.Visibility = Visibility.Collapsed;
-					IncludeMatches = false;
-					break;
-				case GetRegExDialogType.Replace:
-					if (History.Count != 0)
-						Text = History[0];
-					if (ReplaceHistory.Count != 0)
-						Replace = ReplaceHistory[0];
-					byGroup.Visibility = includeMatches.Visibility = find.Visibility = selectAll.Visibility = Visibility.Collapsed;
-					RegexGroups = IncludeMatches = false;
-					break;
-				case GetRegExDialogType.MatchSelections:
-					replaceLabel.Visibility = replace.Visibility = byGroup.Visibility = selectAll.Visibility = replaceButton.Visibility = Visibility.Collapsed;
-					RegexGroups = false;
-					break;
+				if (ReplaceHistory.Count != 0)
+					Replace = ReplaceHistory[0];
+				byGroup.Visibility = find.Visibility = selectAll.Visibility = keepMatching.Visibility = removeMatching.Visibility = Visibility.Collapsed;
+				RegexGroups = false;
 			}
+			else
+				replaceLabel.Visibility = replace.Visibility = replaceButton.Visibility = Visibility.Collapsed;
 		}
 
 		Result result;
@@ -123,7 +112,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
-			result = new Result { Regex = new Regex(text, options), Replace = replace, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, IncludeEndings = IncludeEndings, IncludeMatches = IncludeMatches, ResultType = sender == selectAll ? GetRegExResultType.All : GetRegExResultType.Next };
+			result = new Result { Regex = new Regex(text, options), Replace = replace, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, IncludeEndings = IncludeEndings, ResultType = sender == selectAll ? GetRegExResultType.All : GetRegExResultType.Next };
 
 			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
@@ -143,9 +132,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(GetRegExDialogType type, string text = null, bool selectionOnly = false)
+		static public Result Run(bool isReplace, string text = null, bool selectionOnly = false)
 		{
-			var dialog = new GetRegExDialog(type, text, selectionOnly);
+			var dialog = new GetRegExDialog(isReplace, text, selectionOnly);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 

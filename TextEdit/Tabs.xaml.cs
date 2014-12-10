@@ -330,7 +330,6 @@ namespace NeoEdit.TextEdit
 					case TextEditCommand.Data_Sort: dialogResult = Active.Command_Data_Sort_Dialog(); break;
 					case TextEditCommand.Select_Limit: dialogResult = Active.Command_Select_Limit_Dialog(); break;
 					case TextEditCommand.Select_ExpressionMatches: dialogResult = Active.Command_Select_ExpressionMatches_Dialog(); break;
-					case TextEditCommand.Select_RegExMatches: dialogResult = Active.Command_Select_RegExMatches_Dialog(); break;
 					default: dialogResultSet = false; break;
 				}
 			}
@@ -536,7 +535,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Max_Numeric: Active.Command_Select_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Select_Max_Length: Active.Command_Select_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
 				case TextEditCommand.Select_ExpressionMatches: Active.Command_Select_ExpressionMatches(dialogResult as GetExpressionDialog.Result); break;
-				case TextEditCommand.Select_RegExMatches: Active.Command_Select_RegExMatches(dialogResult as GetRegExDialog.Result); break;
 				case TextEditCommand.Select_FirstSelection: Active.Command_Select_FirstSelection(); break;
 				case TextEditCommand.Select_ShowCurrent: Active.Command_Select_ShowCurrent(); break;
 				case TextEditCommand.Select_NextSelection: Active.Command_Select_NextSelection(); break;

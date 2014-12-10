@@ -271,7 +271,6 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Expression Matches" CommandEnum="Select_ExpressionMatches"/>
-		<textEdit:TextEditMenuItem Header="_RegEx Matches" CommandEnum="Select_RegExMatches"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="First Selection" CommandEnum="Select_FirstSelection"/>
 		<textEdit:TextEditMenuItem Header="Show Current" CommandEnum="Select_ShowCurrent"/>
