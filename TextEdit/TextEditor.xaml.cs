@@ -2279,7 +2279,7 @@ namespace NeoEdit.TextEdit
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			MouseHandler(e.GetPosition(canvas), e.ClickCount, false);
+			MouseHandler(e.GetPosition(canvas), e.ClickCount, (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None);
 			canvas.CaptureMouse();
 			e.Handled = true;
 		}
