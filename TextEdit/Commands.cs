@@ -186,6 +186,7 @@ namespace NeoEdit.TextEdit
 		Select_Empty,
 		Select_NonEmpty,
 		Select_Trim,
+		Select_Width,
 		Select_Unique,
 		Select_Duplicates,
 		Select_Regions,

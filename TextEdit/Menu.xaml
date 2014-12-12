@@ -258,6 +258,7 @@
 		<textEdit:TextEditMenuItem Header="Empty" CommandEnum="Select_Empty"/>
 		<textEdit:TextEditMenuItem Header="Non-Empty" CommandEnum="Select_NonEmpty"/>
 		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Select_Trim"/>
+		<textEdit:TextEditMenuItem Header="_Width" CommandEnum="Select_Width"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
 		<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>

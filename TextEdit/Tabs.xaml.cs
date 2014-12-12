@@ -330,6 +330,7 @@ namespace NeoEdit.TextEdit
 					case TextEditCommand.Data_Hash_SHA256: dialogResult = Active.Command_Data_Hash_Dialog(); break;
 					case TextEditCommand.Data_Sort: dialogResult = Active.Command_Data_Sort_Dialog(); break;
 					case TextEditCommand.Select_Limit: dialogResult = Active.Command_Select_Limit_Dialog(); break;
+					case TextEditCommand.Select_Width: dialogResult = Active.Command_Select_Width_Dialog(); break;
 					case TextEditCommand.Select_ExpressionMatches: dialogResult = Active.Command_Select_ExpressionMatches_Dialog(); break;
 					default: dialogResultSet = false; break;
 				}
@@ -530,6 +531,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Empty: Active.Command_Select_Empty(true); break;
 				case TextEditCommand.Select_NonEmpty: Active.Command_Select_Empty(false); break;
 				case TextEditCommand.Select_Trim: Active.Command_Select_Trim(); break;
+				case TextEditCommand.Select_Width: Active.Command_Select_Width(dialogResult as WidthDialog.Result); break;
 				case TextEditCommand.Select_Unique: Active.Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Active.Command_Select_Duplicates(); break;
 				case TextEditCommand.Select_Regions: Active.Command_Select_Regions(); break;

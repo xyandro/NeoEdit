@@ -22,7 +22,7 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="Type:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
 			<RadioButton GroupName="type" Content="_Absolute" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Absolute}" Margin="0,0,10,0" Focusable="False"/>
-			<RadioButton GroupName="type" Content="_Relative" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Relative}" Margin="0,0,10,0" Focusable="False"/>
+			<RadioButton GroupName="type" Content="_Relative" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Relative}" Margin="0,0,10,0" Focusable="False" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==False'}"/>
 			<RadioButton GroupName="type" Content="_Minimum" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Minimum}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="Ma_ximum" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Maximum}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="Multi_ple" IsChecked="{Binding Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
@@ -32,17 +32,17 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="_Value:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
 		<xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Name="value" Value="{Binding Value, ElementName=self}" Minimum="0" IsEnabled="{Binding NeedValue, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="2" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==False'}"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==False'}"/>
 
-		<Label Grid.Row="3" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+		<Label Grid.Row="3" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==False'}"/>
+		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==False'}">
 			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="location" Content="M_iddle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==False'}">
 			<Button Content="_Numeric" Padding="10,1" Click="NumericClick"/>
 			<Button Content="S_tring" Padding="10,1" Click="StringClick"/>
 		</UniformGrid>

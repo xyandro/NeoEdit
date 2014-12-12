@@ -41,6 +41,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		public TextLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<TextLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool NeedValue { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool IsSelect { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 
 		static WidthDialog()
 		{
@@ -49,13 +51,15 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		readonly int minLength, maxLength;
-		WidthDialog(int minLength, int maxLength, bool numeric)
+		WidthDialog(int minLength, int maxLength, bool numeric, bool isSelect)
 		{
 			InitializeComponent();
 
 			this.minLength = minLength;
 			this.maxLength = maxLength;
 			padChar.GotFocus += (s, e) => padChar.SelectAll();
+
+			IsSelect = isSelect;
 
 			Type = WidthType.Absolute;
 			if (numeric)
@@ -92,9 +96,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(int minLength, int maxLength, bool numeric)
+		public static Result Run(int minLength, int maxLength, bool numeric, bool isSelect)
 		{
-			var dialog = new WidthDialog(minLength, maxLength, numeric);
+			var dialog = new WidthDialog(minLength, maxLength, numeric, isSelect);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}

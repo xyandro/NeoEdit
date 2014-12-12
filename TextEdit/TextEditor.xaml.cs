@@ -1191,7 +1191,7 @@ namespace NeoEdit.TextEdit
 			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
 			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
 			var numeric = Selections.AsParallel().AsOrdered().All(range => GetString(range).IsNumeric());
-			return WidthDialog.Run(minLength, maxLength, numeric);
+			return WidthDialog.Run(minLength, maxLength, numeric, false);
 		}
 
 		internal void Command_Data_Width(WidthDialog.Result result)
@@ -1611,6 +1611,40 @@ namespace NeoEdit.TextEdit
 		internal void Command_Select_Trim()
 		{
 			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range)).ToList());
+		}
+
+		internal WidthDialog.Result Command_Select_Width_Dialog()
+		{
+			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
+			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
+			return WidthDialog.Run(minLength, maxLength, false, true);
+		}
+
+		bool WidthMatch(string str, WidthDialog.Result result, int clipboardLen)
+		{
+			switch (result.Type)
+			{
+				case WidthDialog.WidthType.Absolute: return str.Length == result.Value;
+				case WidthDialog.WidthType.Minimum: return str.Length >= result.Value;
+				case WidthDialog.WidthType.Maximum: return str.Length <= result.Value;
+				case WidthDialog.WidthType.Multiple: return str.Length % result.Value == 0;
+				case WidthDialog.WidthType.Clipboard: return str.Length == clipboardLen;
+				default: throw new ArgumentException("Invalid width type");
+			}
+		}
+
+		internal void Command_Select_Width(WidthDialog.Result result)
+		{
+			List<int> clipboardLens = null;
+			if (result.Type == WidthDialog.WidthType.Clipboard)
+			{
+				var clipboardStrings = ClipboardWindow.GetStrings();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
+			}
+
+			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => WidthMatch(GetString(range), result, clipboardLens == null ? 0 : clipboardLens[index])).ToList());
 		}
 
 		internal void Command_Select_Unique()
