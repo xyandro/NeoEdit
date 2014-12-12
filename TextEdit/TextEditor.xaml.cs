@@ -34,6 +34,7 @@ namespace NeoEdit.TextEdit
 				Selections.Clear();
 				Regions.Clear();
 				Searches.Clear();
+				Bookmarks.Clear();
 				undoRedo.Clear();
 				CalculateBoundaries();
 			}
@@ -68,9 +69,8 @@ namespace NeoEdit.TextEdit
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
 
-		readonly RangeList Selections;
-		readonly RangeList Searches;
-		readonly RangeList Regions;
+		readonly RangeList Selections, Searches, Regions;
+		readonly List<int> Bookmarks = new List<int>();
 
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
@@ -92,6 +92,7 @@ namespace NeoEdit.TextEdit
 		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = -1, int column = -1)
 		{
 			InitializeComponent();
+			bookmarks.Width = Font.lineHeight;
 
 			SetupDragDrop();
 
@@ -100,7 +101,7 @@ namespace NeoEdit.TextEdit
 			Searches = new RangeList(SearchesInvalidated);
 			Regions = new RangeList(RegionsInvalidated);
 
-			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
+			renderTimer = new RunOnceTimer(() => { canvas.InvalidateVisual(); bookmarks.InvalidateVisual(); });
 			renderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
 
 			OpenFile(filename, bytes, codePage);
@@ -112,6 +113,8 @@ namespace NeoEdit.TextEdit
 			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonUp;
 			canvas.MouseMove += OnCanvasMouseMove;
 			canvas.Render += OnCanvasRender;
+
+			bookmarks.Render += OnBookmarksRender;
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 
@@ -709,6 +712,60 @@ namespace NeoEdit.TextEdit
 				offsets = offsets.Select(ofs => ofs - 1).ToList();
 
 			Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], selecting, !isLine, isLine)).ToList());
+		}
+
+		internal void Command_Edit_ToggleBookmark()
+		{
+			var linePairs = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
+			if (linePairs.Any(pair => pair.start != pair.end))
+				throw new Exception("Selections must be on a single line.");
+
+			var lines = linePairs.Select(pair => pair.start).ToList();
+
+			var contains = new HashSet<int>(lines.Where(line => Bookmarks.BinarySearch(line) >= 0));
+
+			if (contains.Count == lines.Count)
+			{
+				foreach (var line in lines)
+					Bookmarks.Remove(line);
+			}
+			else
+			{
+				foreach (var line in lines)
+					if (!contains.Contains(line))
+						Bookmarks.Add(line);
+				Bookmarks.Sort();
+			}
+			bookmarks.InvalidateVisual();
+		}
+
+		Range GetNextPrevBookmark(Range range, bool next, bool selecting)
+		{
+			var line = Data.GetOffsetLine(range.Cursor);
+			var result = Bookmarks.BinarySearch(line + (next ? 1 : 0));
+			if (result < 0)
+				result = ~result;
+			if (!next)
+				--result;
+			if (result < 0)
+				result = Bookmarks.Count - 1;
+			if (result >= Bookmarks.Count)
+				result = 0;
+			line = Bookmarks[result];
+			return MoveCursor(range, line, 0, selecting, lineRel: false, indexRel: false);
+		}
+
+		internal void Command_Edit_NextPreviousBookmark(bool next, bool selecting)
+		{
+			if (!Bookmarks.Any())
+				return;
+			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetNextPrevBookmark(range, next, selecting)).ToList());
+		}
+
+		internal void Command_Edit_ClearBookmarks()
+		{
+			Bookmarks.Clear();
+			bookmarks.InvalidateVisual();
 		}
 
 		internal void Command_Files_CutCopy(bool isCut)
@@ -1847,6 +1904,23 @@ namespace NeoEdit.TextEdit
 					text.SetForegroundBrush(entry.Item1, start, count);
 				}
 				dc.DrawText(text, new Point(0, y[line]));
+			}
+		}
+
+		void OnBookmarksRender(object sender, DrawingContext dc)
+		{
+			if ((Data == null) || (yScrollViewportCeiling == 0) || (!Bookmarks.Any()))
+				return;
+			var startLine = yScrollValue;
+			var endLine = Math.Min(Data.NumLines, startLine + yScrollViewportCeiling);
+			for (var line = startLine; line < endLine; ++line)
+			{
+				if (!Bookmarks.Contains(line))
+					continue;
+
+				var y = (line - startLine) * Font.lineHeight;
+
+				dc.DrawRoundedRectangle(Brushes.CadetBlue, new Pen(Brushes.Black, 1), new Rect(1, y + 1, Font.lineHeight - 2, Font.lineHeight - 2), 2, 2);
 			}
 		}
 

@@ -13,7 +13,7 @@ Search by text (regex)
 Move to next/prev selected file
 
 Text:
-Bookmarks
+Make bookmarks sync with text editing
 Highlight clauses (if/else)
 Text edit multiple files
 Comment/uncomment C#/C++/XML/etc. (ANTLR?)
@@ -34,6 +34,7 @@ Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
+Specify which accelerator to display in menu (currently picking one of available options at random)
 
 View:
 Update as new lines are added

@@ -9,21 +9,30 @@
 
 	<Grid>
 		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="5"/>
 			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="5"/>
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="5"/>
 			<RowDefinition Height="*"/>
+			<RowDefinition Height="5"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10,5" ClipToBounds="True"/>
+		<Canvas Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Background="Gray"/>
+		<guiCommon:RenderCanvas x:Name="bookmarks" Grid.Row="1" Grid.Column="1"/>
 
-		<ScrollBar Name="yScroll" Grid.Row="0" Grid.Column="1" Value="{Binding yScrollValue, ElementName=self}"/>
-		<ScrollBar Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
+		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="1" Grid.Column="3" Background="Transparent" ClipToBounds="True"/>
 
-		<StatusBar Grid.ColumnSpan="2" Grid.Row="2" Focusable="False">
+		<ScrollBar Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="5" Value="{Binding yScrollValue, ElementName=self}"/>
+		<ScrollBar Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
+
+		<StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Focusable="False">
 			<StatusBarItem>
 				<TextBlock Text="Line"/>
 			</StatusBarItem>

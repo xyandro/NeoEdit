@@ -377,6 +377,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Replace: Active.Command_Edit_FindReplace(true, shiftDown, dialogResult as GetRegExDialog.Result); break;
 				case TextEditCommand.Edit_GotoLine: Active.Command_Edit_Goto(true, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_Goto(false, shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_ToggleBookmark: Active.Command_Edit_ToggleBookmark(); break;
+				case TextEditCommand.Edit_NextBookmark: Active.Command_Edit_NextPreviousBookmark(true, shiftDown); break;
+				case TextEditCommand.Edit_PreviousBookmark: Active.Command_Edit_NextPreviousBookmark(false, shiftDown); break;
+				case TextEditCommand.Edit_ClearBookmarks: Active.Command_Edit_ClearBookmarks(); break;
 				case TextEditCommand.Files_Copy: Active.Command_Files_CutCopy(false); break;
 				case TextEditCommand.Files_Cut: Active.Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Open: Active.Command_Files_Open(); break;
