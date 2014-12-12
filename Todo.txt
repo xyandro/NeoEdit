@@ -13,7 +13,6 @@ Search by text (regex)
 Move to next/prev selected file
 
 Text:
-Make bookmarks sync with text editing
 Highlight clauses (if/else)
 Text edit multiple files
 Comment/uncomment C#/C++/XML/etc. (ANTLR?)

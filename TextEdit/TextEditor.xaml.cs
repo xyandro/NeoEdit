@@ -69,24 +69,23 @@ namespace NeoEdit.TextEdit
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
 
-		readonly RangeList Selections, Searches, Regions;
-		readonly List<int> Bookmarks = new List<int>();
+		readonly RangeList Selections, Searches, Regions, Bookmarks;
 
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
-			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.renderTimer.Start());
-			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.renderTimer.Start());
-			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.renderTimer.Start());
+			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
+			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
+			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
 
-		RunOnceTimer renderTimer;
+		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 
 		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = -1, int column = -1)
@@ -100,9 +99,11 @@ namespace NeoEdit.TextEdit
 			Selections = new RangeList(SelectionsInvalidated);
 			Searches = new RangeList(SearchesInvalidated);
 			Regions = new RangeList(RegionsInvalidated);
+			Bookmarks = new RangeList(BookmarksInvalidated);
 
-			renderTimer = new RunOnceTimer(() => { canvas.InvalidateVisual(); bookmarks.InvalidateVisual(); });
-			renderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
+			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
+			canvasRenderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
+			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 
 			OpenFile(filename, bytes, codePage);
 			Goto(line, column);
@@ -121,7 +122,7 @@ namespace NeoEdit.TextEdit
 			Loaded += (s, e) =>
 			{
 				EnsureVisible();
-				renderTimer.Start();
+				canvasRenderTimer.Start();
 			};
 		}
 
@@ -716,43 +717,43 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_ToggleBookmark()
 		{
-			var linePairs = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
+			var linePairs = Selections.AsParallel().AsOrdered().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
 			if (linePairs.Any(pair => pair.start != pair.end))
 				throw new Exception("Selections must be on a single line.");
 
-			var lines = linePairs.Select(pair => pair.start).ToList();
+			var lineRanges = linePairs.AsParallel().AsOrdered().Select(pair => new Range(Data.GetOffset(pair.start, 0))).ToList();
+			var comparer = Comparer<Range>.Create((r1, r2) => r1.Start.CompareTo(r2.Start));
+			var indexes = lineRanges.AsParallel().Select(range => new { range = range, index = Bookmarks.BinarySearch(range, comparer) }).Reverse().ToList();
 
-			var contains = new HashSet<int>(lines.Where(line => Bookmarks.BinarySearch(line) >= 0));
-
-			if (contains.Count == lines.Count)
+			if (indexes.Any(index => index.index < 0))
 			{
-				foreach (var line in lines)
-					Bookmarks.Remove(line);
+				foreach (var pair in indexes)
+					if (pair.index < 0)
+						Bookmarks.Insert(~pair.index, pair.range);
 			}
 			else
 			{
-				foreach (var line in lines)
-					if (!contains.Contains(line))
-						Bookmarks.Add(line);
-				Bookmarks.Sort();
+				foreach (var pair in indexes)
+					Bookmarks.RemoveAt(pair.index);
 			}
-			bookmarks.InvalidateVisual();
 		}
 
 		Range GetNextPrevBookmark(Range range, bool next, bool selecting)
 		{
-			var line = Data.GetOffsetLine(range.Cursor);
-			var result = Bookmarks.BinarySearch(line + (next ? 1 : 0));
-			if (result < 0)
-				result = ~result;
-			if (!next)
-				--result;
-			if (result < 0)
-				result = Bookmarks.Count - 1;
-			if (result >= Bookmarks.Count)
-				result = 0;
-			line = Bookmarks[result];
-			return MoveCursor(range, line, 0, selecting, lineRel: false, indexRel: false);
+			int index;
+			if (next)
+			{
+				index = Bookmarks.BinaryFindFirst(r => r.Start > range.Cursor);
+				if (index == -1)
+					index = 0;
+			}
+			else
+			{
+				index = Bookmarks.BinaryFindLast(r => r.Start < range.Cursor);
+				if (index == -1)
+					index = Bookmarks.Count - 1;
+			}
+			return MoveCursor(range, Bookmarks[index].Start, selecting);
 		}
 
 		internal void Command_Edit_NextPreviousBookmark(bool next, bool selecting)
@@ -765,7 +766,6 @@ namespace NeoEdit.TextEdit
 		internal void Command_Edit_ClearBookmarks()
 		{
 			Bookmarks.Clear();
-			bookmarks.InvalidateVisual();
 		}
 
 		internal void Command_Files_CutCopy(bool isCut)
@@ -1666,7 +1666,7 @@ namespace NeoEdit.TextEdit
 		{
 			visibleIndex = 0;
 			EnsureVisible(true);
-			renderTimer.Start();
+			canvasRenderTimer.Start();
 		}
 
 		internal void Command_Select_ShowCurrent()
@@ -1680,7 +1680,7 @@ namespace NeoEdit.TextEdit
 			if (visibleIndex >= Selections.Count)
 				visibleIndex = 0;
 			EnsureVisible(true);
-			renderTimer.Start();
+			canvasRenderTimer.Start();
 		}
 
 		internal void Command_Select_PrevSelection()
@@ -1689,7 +1689,7 @@ namespace NeoEdit.TextEdit
 			if (visibleIndex < 0)
 				visibleIndex = Selections.Count - 1;
 			EnsureVisible(true);
-			renderTimer.Start();
+			canvasRenderTimer.Start();
 		}
 
 		internal void Command_Select_Single()
@@ -1768,20 +1768,27 @@ namespace NeoEdit.TextEdit
 			}
 
 			EnsureVisible();
-			renderTimer.Start();
+			canvasRenderTimer.Start();
 		}
 
 		void SearchesInvalidated()
 		{
 			Searches.Replace(Searches.Where(range => range.HasSelection).ToList());
 			Searches.DeOverlap();
-			renderTimer.Start();
+			canvasRenderTimer.Start();
 		}
 
 		void RegionsInvalidated()
 		{
 			Regions.DeOverlap();
-			renderTimer.Start();
+			canvasRenderTimer.Start();
+		}
+
+		void BookmarksInvalidated()
+		{
+			Bookmarks.Replace(Bookmarks.Select(range => MoveCursor(range, 0, 0, false, lineRel: true, indexRel: false)).ToList());
+			Bookmarks.DeOverlap();
+			bookmarkRenderTimer.Start();
 		}
 
 		void OnCanvasRender(object sender, DrawingContext dc)
@@ -1915,7 +1922,8 @@ namespace NeoEdit.TextEdit
 			var endLine = Math.Min(Data.NumLines, startLine + yScrollViewportCeiling);
 			for (var line = startLine; line < endLine; ++line)
 			{
-				if (!Bookmarks.Contains(line))
+				var offset = Data.GetOffset(line, 0);
+				if (!Bookmarks.Any(range => range.Start == offset))
 					continue;
 
 				var y = (line - startLine) * Font.lineHeight;
@@ -2449,12 +2457,13 @@ namespace NeoEdit.TextEdit
 
 			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
 
-			var translateMap = RangeList.GetTranslateMap(ranges, strs, Selections, Regions, Searches);
+			var translateMap = RangeList.GetTranslateMap(ranges, strs, Selections, Regions, Searches, Bookmarks);
 			Selections.Translate(translateMap);
 			Regions.Translate(translateMap);
 			var searchLens = Searches.Select(range => range.Length).ToList();
 			Searches.Translate(translateMap);
 			Searches.Replace(Searches.Where((range, index) => searchLens[index] == range.Length).ToList());
+			Bookmarks.Translate(translateMap);
 
 			CalculateBoundaries();
 		}
@@ -2580,7 +2589,7 @@ namespace NeoEdit.TextEdit
 
 			LineEnding = Data.OnlyEnding;
 
-			renderTimer.Start();
+			canvasRenderTimer.Start();
 		}
 
 		public override string ToString()
