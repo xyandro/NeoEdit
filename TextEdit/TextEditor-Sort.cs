@@ -68,19 +68,19 @@ namespace NeoEdit.TextEdit
 			return regions;
 		}
 
-		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, Func<TKey, TKey, int> comparer = null)
+		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, Comparison<TKey> comparer = null)
 		{
 			if (ascending)
-				return comparer == null ? source.OrderBy(keySelector) : source.OrderBy(keySelector, comparer);
+				return comparer == null ? source.OrderBy(keySelector) : source.OrderBy(keySelector, Comparer<TKey>.Create(comparer));
 			else
-				return comparer == null ? source.OrderByDescending(keySelector) : source.OrderByDescending(keySelector, comparer);
+				return comparer == null ? source.OrderByDescending(keySelector) : source.OrderByDescending(keySelector, Comparer<TKey>.Create(comparer));
 		}
 
 		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{
 			var entries = Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
 
-			Func<string, string, int> stringComparer = null;
+			Comparison<string> stringComparer = null;
 			if (caseSensitive)
 				stringComparer = (entry1, entry2) => String.CompareOrdinal(entry1, entry2);
 
