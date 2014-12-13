@@ -386,7 +386,7 @@ namespace NeoEdit.TextEdit
 
 		void Save(string fileName)
 		{
-			if (!VerifyCanFullyEncode())
+			if (((Data.NumChars >> 20) < 50) && (!VerifyCanFullyEncode()))
 				return;
 
 			File.WriteAllBytes(fileName, Data.GetBytes(CodePage));

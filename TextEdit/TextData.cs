@@ -27,6 +27,7 @@ namespace NeoEdit.TextEdit
 		const int tabStop = 4;
 
 		public int NumLines { get { return endingOffset.Count; } }
+		public int NumChars { get { return data.Length; } }
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
 
