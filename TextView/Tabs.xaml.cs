@@ -145,8 +145,26 @@ namespace NeoEdit.TextView
 			if ((fileNames == null) || (fileNames.Count == 0))
 				return;
 
-			TextData.ReadFiles(fileNames, data => Dispatcher.Invoke(() =>
+			var start = DateTime.Now;
+			TextData.ReadFiles(fileNames, (data, cancelled) => Dispatcher.Invoke(() =>
 			{
+				if (cancelled)
+				{
+					var end = DateTime.Now;
+					if (((end - start).TotalSeconds < 10) || (new Message
+						{
+							Title = "Confirm",
+							Text = "File processing cancelled.  Open the processed portion?",
+							Options = Message.OptionsEnum.YesNoCancel,
+							DefaultAccept = Message.OptionsEnum.Yes,
+							DefaultCancel = Message.OptionsEnum.Cancel,
+						}.Show() != Message.OptionsEnum.Yes))
+					{
+						data.Dispose();
+						return;
+					}
+				}
+
 				var textViewer = new TextViewer(data);
 				TextViewers.Add(textViewer);
 				Active = textViewer;

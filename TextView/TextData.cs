@@ -18,9 +18,9 @@ namespace NeoEdit.TextView
 		FileStream file { get; set; }
 		List<long> lineStart { get; set; }
 		Coder.CodePage codePage { get; set; }
-		static public void ReadFiles(List<string> fileNames, Action<TextData> onFileScanComplete = null, Action<List<TextData>> onAllScanComplete = null)
+		static public void ReadFiles(List<string> fileNames, Action<TextData, bool> onFileScanComplete = null, Action<List<TextData>> onAllScanComplete = null)
 		{
-			if (onFileScanComplete == null) onFileScanComplete = result => { };
+			if (onFileScanComplete == null) onFileScanComplete = (result, cancelled) => { };
 			if (onAllScanComplete == null) onAllScanComplete = result => { };
 
 			var headers = new List<string>();
@@ -46,7 +46,7 @@ namespace NeoEdit.TextView
 							index = num++;
 						var file = files[index];
 						var lastRead = 0L;
-						if (file.Scan((read, total) =>
+						var cancelled = !file.Scan((read, total) =>
 						{
 							if (fileNames.Count != 1)
 								progress(index + 1, read, total);
@@ -54,8 +54,8 @@ namespace NeoEdit.TextView
 								totalRead += read - lastRead;
 							lastRead = read;
 							progress(0, totalRead, totalSize);
-						}, () => cancel()))
-							onFileScanComplete(file);
+						}, () => cancel());
+						onFileScanComplete(file, cancelled);
 					}
 					catch
 					{
@@ -77,6 +77,8 @@ namespace NeoEdit.TextView
 
 		bool Scan(Action<long, long> progress, Func<bool> cancel)
 		{
+			var result = true;
+
 			long position = Coder.PreambleSize(codePage);
 			var charSize = Coder.CharSize(codePage);
 			var bigEndian = (codePage == Coder.CodePage.UTF16BE) || (codePage == Coder.CodePage.UTF32BE);
@@ -91,8 +93,8 @@ namespace NeoEdit.TextView
 			{
 				if (cancel())
 				{
-					Dispose();
-					return false;
+					result = false;
+					break;
 				}
 
 				var use = (int)Math.Min(Size - position, blockSize);
@@ -104,7 +106,7 @@ namespace NeoEdit.TextView
 				lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, use, ref position, ref lineLength, ref maxLine));
 				progress(position, Size);
 			}
-			if (lineStart.Last() != Size)
+			if ((position >= Size) && (lineStart.Last() != Size))
 			{
 				lineStart.Add(Size);
 				maxLine = Math.Max(maxLine, lineLength);
@@ -112,7 +114,7 @@ namespace NeoEdit.TextView
 
 			NumLines = lineStart.Count - 1;
 			NumColumns = maxLine;
-			return true;
+			return result;
 		}
 
 		static Win32.Interop.GetLinesEncoding NativeEncoding(Coder.CodePage codePage)
