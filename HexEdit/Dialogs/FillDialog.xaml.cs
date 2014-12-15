@@ -9,26 +9,15 @@ namespace NeoEdit.HexEdit.Dialogs
 	{
 		[DepProp]
 		public byte Fill { get { return UIHelper<FillDialog>.GetPropValue<byte>(this); } set { UIHelper<FillDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool IsHex { get { return UIHelper<FillDialog>.GetPropValue<bool>(this); } set { UIHelper<FillDialog>.SetPropValue(this, value); } }
 
 		static FillDialog()
 		{
 			UIHelper<FillDialog>.Register();
-			UIHelper<FillDialog>.AddCallback(a => a.IsHex, (obj, o, n) => obj.IsHexChanged());
 		}
 
 		FillDialog()
 		{
 			InitializeComponent();
-			IsHex = true;
-		}
-
-		void IsHexChanged()
-		{
-			fill.FormatString = IsHex ? "x" : "";
-			fill.ParsingNumberStyle = IsHex ? NumberStyles.HexNumber : NumberStyles.Integer;
-			FocusManager.SetFocusedElement(this, fill);
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)

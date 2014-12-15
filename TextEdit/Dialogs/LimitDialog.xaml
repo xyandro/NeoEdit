@@ -1,7 +1,7 @@
 ﻿<Window Name="self" x:Class="NeoEdit.TextEdit.Dialogs.LimitDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
 	Title="Limit Selections" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=selMult}">
 
 	<Grid Margin="10">
@@ -18,10 +18,10 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Every nth selection:" Target="{Binding ElementName=selMult}" HorizontalAlignment="Right"/>
-		<xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Name="selMult" Minimum="1" Maximum="{Binding MaxSels, ElementName=self}" Value="{Binding SelMult, ElementName=self}"/>
+		<guiCommon:NumericUpDown Grid.Row="0" Grid.Column="1" Name="selMult" Minimum="1" Maximum="{Binding MaxSels, ElementName=self}" Value="{Binding SelMult, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Number of selections:" Target="{Binding ElementName=numSels}" HorizontalAlignment="Right"/>
-		<xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Name="numSels" Value="{Binding NumSels, ElementName=self}" Minimum="1" Maximum="{Binding MaxSels, ElementName=self}"/>
+		<guiCommon:NumericUpDown Grid.Row="1" Grid.Column="1" Name="numSels" Value="{Binding NumSels, ElementName=self}" Minimum="1" Maximum="{Binding MaxSels, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Ignore _blank:" Target="{Binding ElementName=ignoreBlank}" HorizontalAlignment="Right"/>
 		<CheckBox Grid.Row="2" Grid.Column="1" Name="ignoreBlank" IsChecked="{Binding IgnoreBlank, ElementName=self}" VerticalAlignment="Center"/>

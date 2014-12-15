@@ -15,6 +15,7 @@ namespace NeoEdit.GUI.Common
 	public class DepPropAttribute : Attribute
 	{
 		public object Default { get; set; }
+		public bool BindsTwoWayByDefault { get; set; }
 	}
 
 	public static class UIHelper<ControlType> where ControlType : DependencyObject
@@ -36,8 +37,9 @@ namespace NeoEdit.GUI.Common
 				var def = attr.Default;
 				if ((def == null) && (prop.PropertyType.IsValueType))
 					def = Activator.CreateInstance(prop.PropertyType);
+				var bindsTwoWayByDefault = attr.BindsTwoWayByDefault;
 				var propertyHolder = new PropertyHolder();
-				propertyHolder.property = dependencyProperty[prop.Name] = DependencyProperty.Register(prop.Name, prop.PropertyType, typeof(ControlType), new PropertyMetadata(def, (d, e) => propertyChangedCallback(d as ControlType, e), (d, val) => coerceValueCallback(d as ControlType, propertyHolder.property, val)));
+				propertyHolder.property = dependencyProperty[prop.Name] = DependencyProperty.Register(prop.Name, prop.PropertyType, typeof(ControlType), new FrameworkPropertyMetadata { DefaultValue = def, BindsTwoWayByDefault = bindsTwoWayByDefault, PropertyChangedCallback = (d, e) => propertyChangedCallback(d as ControlType, e), CoerceValueCallback = (d, val) => coerceValueCallback(d as ControlType, propertyHolder.property, val) });
 			}
 		}
 		public static void Register() { } // Only calls static constructor

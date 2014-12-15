@@ -59,10 +59,10 @@
 				</Grid.RowDefinitions>
 
 				<Label Grid.Row="0" Grid.Column="0" Content="M_in Size:" Target="{Binding ElementName=minSize}" HorizontalAlignment="Right"/>
-				<xctk:LongUpDown Grid.Row="0" Grid.Column="1" Name="minSize" Value="{Binding MinSize, ElementName=self}" TextAlignment="Left"/>
+				<guiCommon:NumericUpDown Grid.Row="0" Grid.Column="1" Name="minSize" Value="{Binding MinSize, ElementName=self}" TextAlignment="Left"/>
 
 				<Label Grid.Row="1" Grid.Column="0" Content="Ma_x Size:" Target="{Binding ElementName=maxSize}" HorizontalAlignment="Right"/>
-				<xctk:LongUpDown Grid.Row="1" Grid.Column="1" Name="maxSize" Value="{Binding MaxSize, ElementName=self}" TextAlignment="Left"/>
+				<guiCommon:NumericUpDown Grid.Row="1" Grid.Column="1" Name="maxSize" Value="{Binding MaxSize, ElementName=self}" TextAlignment="Left"/>
 			</Grid>
 		</GroupBox>
 
