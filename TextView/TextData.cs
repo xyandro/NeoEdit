@@ -86,7 +86,6 @@ namespace NeoEdit.TextView
 			var getLinesEncoding = NativeEncoding(codePage);
 
 			var block = new byte[65536];
-			var blockSize = block.Length - charSize;
 
 			lineStart = new List<long> { position };
 			while (position < Size)
@@ -97,13 +96,18 @@ namespace NeoEdit.TextView
 					break;
 				}
 
-				var use = (int)Math.Min(Size - position, blockSize);
-				Read(position, use, block);
-				block[use] = 1; // This won't match anything and is written beyond the used array
-				if (position + use != Size)
-					use -= charSize;
+				if (Size - position < block.Length)
+					block = new byte[Size - position];
+				Read(position, block.Length, block);
 
-				lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, use, ref position, ref lineLength, ref maxLine));
+				lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, ref lineLength, ref maxLine).Select(offset => offset + position));
+				position += block.Length;
+				if ((position != Size) && (lineStart.Last() == position))
+				{
+					// We have a newline at the end of the block but it may have been split over blocks
+					lineStart.RemoveAt(lineStart.Count - 1);
+					position = Math.Max(lineStart.Last(), position - 2);
+				}
 				progress(position, Size);
 			}
 			if ((position >= Size) && (lineStart.Last() != Size))

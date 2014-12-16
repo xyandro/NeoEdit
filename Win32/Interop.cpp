@@ -195,7 +195,7 @@ namespace NeoEdit
 #pragma warning( disable : 4305)
 #pragma warning( disable : 4309)
 
-		template <typename type> System::Collections::Generic::List<int64_t> ^GetLinesTemplate(Interop::GetLinesEncoding encoding, array<uint8_t>^ data, int64_t use, int64_t %position, int %lineLength, int %maxLine)
+		template <typename type> System::Collections::Generic::List<int64_t> ^GetLinesTemplate(Interop::GetLinesEncoding encoding, array<uint8_t>^ data, int %lineLength, int %maxLine)
 		{
 			bool bigEndian = (encoding == Interop::GetLinesEncoding::UTF16BE) || (encoding == Interop::GetLinesEncoding::UTF32BE);
 			type cr = !bigEndian ? 0x0d : sizeof(type) == 2 ? 0x0d00 : 0x0d000000;
@@ -209,19 +209,23 @@ namespace NeoEdit
 			case NeoEdit::Win32::Interop::GetLinesEncoding::UTF16BE: mask = 0x00fc; value = 0x00dc; break;
 			}
 
-			use /= sizeof(type);
 			auto lineStart = gcnew System::Collections::Generic::List<int64_t>();
-			pin_ptr<const unsigned char> pin = &data[0];
-			auto block = (const type*)pin;
+			auto size = data->Length / sizeof(type);
+			if (size == 0)
+				return lineStart;
 
-			int ctr, endLen = 0;
-			for (ctr = 0; ctr < use; ctr += 1)
+			pin_ptr<const unsigned char> pin = &data[0];
+			auto start = (const type*)pin;
+			auto end = start + size;
+
+			for (auto ptr = start; ptr < end; ++ptr)
 			{
-				if (((block[ctr + 0] == cr) && (block[ctr + 1] == lf)) || ((block[ctr + 0] == lf) && (block[ctr + 1] == cr))) endLen = 2;
-				else if ((block[ctr + 0] == cr) || (block[ctr + 0] == lf)) endLen = 1;
-				else if (block[ctr] == tab)
+				auto endLen = 0;
+				if ((ptr + 1 < end) && (((ptr[0] == cr) && (ptr[1] == lf)) || ((ptr[0] == lf) && (ptr[1] == cr)))) endLen = 2;
+				else if ((*ptr == cr) || (*ptr == lf)) endLen = 1;
+				else if (*ptr == tab)
 					lineLength = ((lineLength >> 2) + 1) << 2;
-				else if ((mask == 0) || ((block[ctr] & mask) != value))
+				else if ((mask == 0) || ((*ptr & mask) != value))
 					++lineLength;
 
 				if (endLen != 0)
@@ -229,28 +233,26 @@ namespace NeoEdit
 					if (lineLength > maxLine)
 						maxLine = lineLength;
 					lineLength = 0;
-					lineStart->Add(position + (ctr + endLen) * sizeof(type));
-					ctr += endLen - 1;
-					endLen = 0;
+					lineStart->Add((ptr - start + endLen) * sizeof(type));
+					ptr += endLen - 1;
 				}
 			}
-			position += ctr * sizeof(type);
 			return lineStart;
 		}
 #pragma warning( pop ) 
 
-		System::Collections::Generic::List<int64_t> ^Interop::GetLines(GetLinesEncoding encoding, array<uint8_t>^ data, int64_t use, int64_t %position, int %lineLength, int %maxLine)
+		System::Collections::Generic::List<int64_t> ^Interop::GetLines(GetLinesEncoding encoding, array<uint8_t>^ data, int %lineLength, int %maxLine)
 		{
 			try
 			{
 				switch (encoding)
 				{
-				case GetLinesEncoding::Default: return GetLinesTemplate<uint8_t>(encoding, data, use, position, lineLength, maxLine);
-				case GetLinesEncoding::UTF8: return GetLinesTemplate<uint8_t>(encoding, data, use, position, lineLength, maxLine);
-				case GetLinesEncoding::UTF16LE: return GetLinesTemplate<uint16_t>(encoding, data, use, position, lineLength, maxLine);
-				case GetLinesEncoding::UTF16BE: return GetLinesTemplate<uint16_t>(encoding, data, use, position, lineLength, maxLine);
-				case GetLinesEncoding::UTF32LE: return GetLinesTemplate<uint32_t>(encoding, data, use, position, lineLength, maxLine);
-				case GetLinesEncoding::UTF32BE: return GetLinesTemplate<uint32_t>(encoding, data, use, position, lineLength, maxLine);
+				case GetLinesEncoding::Default: return GetLinesTemplate<uint8_t>(encoding, data, lineLength, maxLine);
+				case GetLinesEncoding::UTF8: return GetLinesTemplate<uint8_t>(encoding, data, lineLength, maxLine);
+				case GetLinesEncoding::UTF16LE: return GetLinesTemplate<uint16_t>(encoding, data, lineLength, maxLine);
+				case GetLinesEncoding::UTF16BE: return GetLinesTemplate<uint16_t>(encoding, data, lineLength, maxLine);
+				case GetLinesEncoding::UTF32LE: return GetLinesTemplate<uint32_t>(encoding, data, lineLength, maxLine);
+				case GetLinesEncoding::UTF32BE: return GetLinesTemplate<uint32_t>(encoding, data, lineLength, maxLine);
 				default: throw gcnew System::Exception("Invalid argument type");
 				}
 			}
