@@ -80,13 +80,6 @@
     <Compile Include="Dialogs\EncodingDialog.xaml.cs">
       <DependentUpon>EncodingDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\GetNumDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\GetNumDialog.xaml.cs">
-      <DependentUpon>GetNumDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -10,7 +10,6 @@ Select by SVN ignore
 Move timestamp (possibly others) from TextEditor
 Select readable
 Search by text (regex)
-Move to next/prev selected file
 
 Text:
 Highlight clauses (if/else)
