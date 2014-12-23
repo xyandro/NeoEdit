@@ -41,7 +41,7 @@ namespace NeoEdit.HexEdit.Data
 
 			using (Suspend())
 			using (Open())
-				length = (long)Interop.GetProcessMemoryLength(handle);
+				Length = (long)Interop.GetProcessMemoryLength(handle);
 		}
 
 		int suspendCount = 0;

@@ -13,7 +13,7 @@ namespace NeoEdit.HexEdit.Data
 		List<long> pos = new List<long>();
 		public DumpBinaryData(string filename)
 		{
-			length = 0x80000000000;
+			Length = 0x80000000000;
 
 			input = File.OpenRead(filename);
 

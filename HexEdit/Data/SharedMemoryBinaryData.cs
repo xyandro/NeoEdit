@@ -11,7 +11,7 @@ namespace NeoEdit.HexEdit.Data
 		{
 			pid = _pid;
 			handle = _handle;
-			length = Interop.GetSharedMemorySize(pid, handle);
+			Length = Interop.GetSharedMemorySize(pid, handle);
 		}
 
 		protected override void SetCache(long index, int count)

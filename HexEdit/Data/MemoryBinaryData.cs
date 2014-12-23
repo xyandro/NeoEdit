@@ -11,7 +11,7 @@ namespace NeoEdit.HexEdit.Data
 				data = new byte[0];
 			cache = data;
 			cacheStart = 0;
-			cacheEnd = length = data.Length;
+			cacheEnd = Length = data.Length;
 			cacheHasData = true;
 		}
 
@@ -32,7 +32,7 @@ namespace NeoEdit.HexEdit.Data
 			Array.Copy(cache, index + count, cache, index + bytes.Length, cacheLen - index - count);
 			Array.Resize(ref cache, cache.Length + Math.Min(0, bytes.Length - (int)count));
 			Array.Copy(bytes, 0, cache, index, bytes.Length);
-			cacheEnd = length = cache.Length;
+			cacheEnd = Length = cache.Length;
 		}
 
 		public override byte[] GetAllBytes()

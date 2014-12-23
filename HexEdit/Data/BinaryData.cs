@@ -8,7 +8,7 @@ namespace NeoEdit.HexEdit.Data
 	{
 		public virtual bool CanInsert() { return false; }
 
-		protected long length = 0, cacheStart = 0, cacheEnd = 0;
+		protected long cacheStart = 0, cacheEnd = 0;
 		protected bool cacheHasData = false;
 		protected byte[] cache = new byte[65536];
 		protected virtual void SetCache(long index, int count) { }
@@ -24,7 +24,7 @@ namespace NeoEdit.HexEdit.Data
 			}
 		}
 
-		public long Length { get { return length; } }
+		public long Length { get; protected set; }
 
 		public virtual bool Find(BinaryFindDialog.Result currentFind, long index, out long start, out long end, bool forward = true)
 		{
@@ -83,7 +83,7 @@ namespace NeoEdit.HexEdit.Data
 
 		public Coder.CodePage CodePageFromBOM()
 		{
-			return Coder.CodePageFromBOM(GetSubset(0, Math.Min(10, length)));
+			return Coder.CodePageFromBOM(GetSubset(0, Math.Min(10, Length)));
 		}
 
 		public virtual void Save(string filename)
