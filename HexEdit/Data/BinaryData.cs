@@ -43,7 +43,7 @@ namespace NeoEdit.HexEdit.Data
 				SetCache(index, findLen);
 				if (cacheHasData)
 				{
-					var result = currentFind.Searcher.Find(cache, (int)index, (int)(cache.LongLength - index), true);
+					var result = currentFind.Searcher.Find(cache, (int)(index - cacheStart), (int)(cache.LongLength - index + cacheStart), true);
 					if (result.Count != 0)
 					{
 						start = result[0].Item1 + cacheStart;
