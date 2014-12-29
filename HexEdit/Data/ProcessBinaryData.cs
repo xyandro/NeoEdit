@@ -79,55 +79,35 @@ namespace NeoEdit.HexEdit.Data
 			handle.Dispose();
 		}
 
-		protected override void SetCache(long index, int count)
+		protected override void ReadBlock(long index, int count, out byte[] block, out long blockStart, out long blockEnd)
 		{
-			if ((index >= cacheStart) && (index + count <= cacheEnd))
-				return;
-
-			if (count > cache.Length)
-				throw new ArgumentException("count");
-
 			using (Suspend())
 			using (Open())
 			{
-				cacheStart = cacheEnd = index;
-				cacheHasData = false;
+				block = null;
+				blockStart = blockEnd = index;
 
-				while (cacheEnd - cacheStart < count)
+				var queryInfo = Interop.VirtualQuery(handle, index);
+				if (queryInfo == null)
 				{
-					bool hasData;
-
-					var queryInfo = Interop.VirtualQuery(handle, index);
-					if (queryInfo != null)
-					{
-						hasData = queryInfo.Committed;
-						if ((hasData) && (queryInfo.Mapped))
-						{
-							if (queryInfo.NoAccess)
-								hasData = false;
-						}
-						cacheEnd = queryInfo.EndAddress.ToInt64();
-					}
-					else
-					{
-						hasData = false;
-						cacheEnd = Length;
-					}
-
-					if ((!hasData) && (!cacheHasData) && (cacheEnd - cacheStart >= count))
-						return;
-
-					cacheHasData = true;
-					cacheEnd = Math.Min(cacheEnd, cacheStart + cache.Length);
-
-					if (!hasData)
-						Array.Clear(cache, (int)(index - cacheStart), (int)(cacheEnd - index));
-					else
-						using (Interop.SetProtect(handle, queryInfo, false))
-							Interop.ReadProcessMemory(handle, index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
-
-					index = cacheEnd;
+					blockEnd = Length;
+					return;
 				}
+
+				blockEnd = queryInfo.EndAddress.ToInt64();
+
+				if ((!queryInfo.Committed) || ((queryInfo.Mapped) && queryInfo.NoAccess))
+				{
+					blockStart = queryInfo.StartAddress.ToInt64();
+					return;
+				}
+
+				blockEnd = Math.Min(blockEnd, blockStart + count);
+
+				block = new byte[blockEnd - blockStart];
+
+				using (Interop.SetProtect(handle, queryInfo, false))
+					Interop.ReadProcessMemory(handle, index, block, (int)(index - blockStart), (int)(blockEnd - index));
 			}
 		}
 
@@ -167,45 +147,37 @@ namespace NeoEdit.HexEdit.Data
 			Refresh();
 		}
 
-		public override void Refresh()
-		{
-			cacheStart = cacheEnd = 0;
-			base.Refresh();
-		}
-
 		public override void Save(string fileName)
 		{
 			using (Suspend())
 			using (Open())
 			using (var output = File.Create(fileName))
 			{
-				long startBlock = -1, endBlock = -1;
+				long sectionStart = -1, sectionEnd = -1;
 				var start = new List<long>();
 				var end = new List<long>();
 
-				cacheStart = cacheEnd = 0;
+				byte[] block = null;
+				long blockStart = 0, blockEnd = 0;
 				long index = 0;
 				while (true)
 				{
-					var hasData = false;
+					block = null;
 					if (index < Length)
-					{
-						SetCache(index, 1);
-						hasData = cacheHasData;
-					}
+						ReadBlock(index, 65536, out block, out blockStart, out blockEnd);
 
-					if (hasData)
+					if (block != null)
 					{
-						if (startBlock == -1)
-							startBlock = cacheStart;
-						endBlock = cacheEnd;
-						output.Write(cache, 0, (int)(cacheEnd - cacheStart));
+						if (sectionStart == -1)
+							sectionStart = blockStart;
+						sectionEnd = blockEnd;
+						output.Write(block, 0, (int)(blockEnd - blockStart));
 					}
-					else if (startBlock != -1)
+					else if (sectionStart != -1)
 					{
-						start.Add(startBlock);
-						end.Add(endBlock);
-						startBlock = endBlock = -1;
+						start.Add(sectionStart);
+						end.Add(sectionEnd);
+						sectionStart = sectionEnd = -1;
 					}
 					else if (index >= Length)
 					{
@@ -221,7 +193,7 @@ namespace NeoEdit.HexEdit.Data
 						break;
 					}
 
-					index = cacheEnd;
+					index = blockEnd;
 				}
 			}
 		}

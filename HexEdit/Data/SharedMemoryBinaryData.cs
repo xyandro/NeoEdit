@@ -14,18 +14,12 @@ namespace NeoEdit.HexEdit.Data
 			Length = Interop.GetSharedMemorySize(pid, handle);
 		}
 
-		protected override void SetCache(long index, int count)
+		protected override void ReadBlock(long index, int count, out byte[] block, out long blockStart, out long blockEnd)
 		{
-			if ((index >= cacheStart) && (index + count <= cacheEnd))
-				return;
-
-			if (count > cache.Length)
-				throw new ArgumentException("count");
-
-			cacheStart = index;
-			cacheEnd = Math.Min(cacheStart + cache.Length, Length);
-			cacheHasData = true;
-			Interop.ReadSharedMemory(pid, handle, index, cache, (int)(index - cacheStart), (int)(cacheEnd - index));
+			blockStart = index;
+			blockEnd = Math.Min(index + count, Length);
+			block = new byte[blockEnd - blockStart];
+			Interop.ReadSharedMemory(pid, handle, blockStart, block, 0, block.Length);
 		}
 
 		public override void Replace(long index, long count, byte[] bytes)
@@ -37,12 +31,6 @@ namespace NeoEdit.HexEdit.Data
 			Interop.WriteSharedMemory(pid, handle, index, bytes);
 
 			Refresh();
-		}
-
-		public override void Refresh()
-		{
-			cacheStart = cacheEnd = 0;
-			base.Refresh();
 		}
 	}
 }

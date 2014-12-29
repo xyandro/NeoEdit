@@ -5,44 +5,49 @@ namespace NeoEdit.HexEdit.Data
 {
 	class MemoryBinaryData : BinaryData
 	{
-		public MemoryBinaryData(byte[] data = null)
+		byte[] data;
+		public MemoryBinaryData(byte[] _data = null)
 		{
+			data = _data;
 			if (data == null)
 				data = new byte[0];
-			cache = data;
-			cacheStart = 0;
-			cacheEnd = Length = data.Length;
-			cacheHasData = true;
+			Length = data.Length;
+		}
+
+		protected override void ReadBlock(long index, int count, out byte[] block, out long blockStart, out long blockEnd)
+		{
+			block = data;
+			blockStart = 0;
+			blockEnd = data.Length;
 		}
 
 		public override bool CanInsert() { return true; }
 
 		public override void Replace(long index, long count, byte[] bytes)
 		{
-			if ((index < 0) || (index > cache.Length))
+			if ((index < 0) || (index > data.Length))
 				throw new ArgumentOutOfRangeException("offset");
-			if ((count < 0) || (index + count > cache.Length))
+			if ((count < 0) || (index + count > data.Length))
 				throw new ArgumentOutOfRangeException("length");
 
 			if (bytes == null)
 				bytes = new byte[0];
 
-			var cacheLen = cache.Length;
-			Array.Resize(ref cache, cache.Length + Math.Max(0, bytes.Length - (int)count));
-			Array.Copy(cache, index + count, cache, index + bytes.Length, cacheLen - index - count);
-			Array.Resize(ref cache, cache.Length + Math.Min(0, bytes.Length - (int)count));
-			Array.Copy(bytes, 0, cache, index, bytes.Length);
-			cacheEnd = Length = cache.Length;
+			Array.Resize(ref data, data.Length + Math.Max(0, bytes.Length - (int)count));
+			Array.Copy(data, index + count, data, index + bytes.Length, Length - index - count);
+			Array.Resize(ref data, data.Length + Math.Min(0, bytes.Length - (int)count));
+			Array.Copy(bytes, 0, data, index, bytes.Length);
+			Length = data.Length;
 		}
 
 		public override byte[] GetAllBytes()
 		{
-			return cache;
+			return data;
 		}
 
 		public override void Save(string filename)
 		{
-			File.WriteAllBytes(filename, cache);
+			File.WriteAllBytes(filename, data);
 		}
 	}
 }

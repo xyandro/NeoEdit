@@ -36,51 +36,30 @@ namespace NeoEdit.HexEdit.Data
 			}
 		}
 
-		protected override void SetCache(long index, int count)
+		protected override void ReadBlock(long index, int count, out byte[] block, out long blockStart, out long blockEnd)
 		{
-			if ((index >= cacheStart) && (index + count <= cacheEnd))
+			block = null;
+			blockStart = blockEnd = index;
+
+			var idx = start.FindLastIndex(num => index >= num);
+			var hasData = (idx != -1) && (index >= start[idx]) && (index < end[idx]);
+			if (idx == -1)
+				blockEnd = start[0];
+			else if (hasData)
+				blockEnd = end[idx];
+			else if (idx + 1 >= start.Count)
+				blockEnd = Length;
+			else
+				blockEnd = start[idx + 1];
+
+			if (!hasData)
 				return;
 
-			if (count > cache.Length)
-				throw new ArgumentException("count");
+			blockEnd = Math.Min(blockEnd, index + count);
+			block = new byte[blockEnd - index];
 
-			cacheStart = cacheEnd = index;
-			cacheHasData = false;
-
-			while (cacheEnd - cacheStart < count)
-			{
-				var idx = start.FindLastIndex(num => index >= num);
-				var hasData = (idx != -1) && (index >= start[idx]) && (index < end[idx]);
-				if (idx == -1)
-					cacheEnd = start[0];
-				else if (hasData)
-					cacheEnd = end[idx];
-				else if (idx + 1 >= start.Count)
-					cacheEnd = Length;
-				else
-					cacheEnd = start[idx + 1];
-
-				if ((!hasData) && (!cacheHasData) && (cacheEnd - cacheStart >= count))
-					return;
-
-				cacheHasData = true;
-				cacheEnd = Math.Min(cacheEnd, cacheStart + cache.Length);
-
-				if (!hasData)
-					Array.Clear(cache, (int)(index - cacheStart), (int)(cacheEnd - index));
-				else
-				{
-					input.Position = pos[idx] + index - start[idx];
-					input.Read(cache, (int)(index - cacheStart), (int)(cacheEnd - index));
-				}
-
-				index = cacheEnd;
-			}
-		}
-
-		public override void Refresh()
-		{
-			cacheStart = cacheEnd = 0;
+			input.Position = pos[idx] + index - start[idx];
+			input.Read(block, 0, block.Length);
 		}
 	}
 }
