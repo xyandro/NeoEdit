@@ -214,6 +214,9 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Default, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Default, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, false);
 			VerifyCoder(Coder.CodePage.Default, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, true);
+			VerifyCoder(Coder.CodePage.ASCII, "", new byte[] { }, false);
+			VerifyCoder(Coder.CodePage.ASCII, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, false);
+			VerifyCoder(Coder.CodePage.ASCII, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, true);
 
 			VerifyCoder(Coder.CodePage.UTF8, "\ufeffThis is my string", new byte[] { 239, 187, 191, 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, false);
 			VerifyCoder(Coder.CodePage.UTF8, "\ufeffThis is my string", new byte[] { 239, 187, 191, 239, 187, 191, 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, true);

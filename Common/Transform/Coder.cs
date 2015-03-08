@@ -44,6 +44,7 @@ namespace NeoEdit.Common.Transform
 			Base64 = -6,
 
 			Default = 0,
+			ASCII = 437,
 			UTF8 = 65001,
 			UTF16LE = 1200,
 			UTF16BE = 1201,
@@ -122,6 +123,7 @@ namespace NeoEdit.Common.Transform
 			NEEncodings = new List<NEEncoding>
 			{
 				new NEEncoding(CodePage.Default, "Default"),
+				new NEEncoding(CodePage.ASCII, "ASCII"),
 				new NEEncoding(CodePage.UTF8, "UTF8"),
 				new NEEncoding(CodePage.UTF16LE, "UTF16 (Little endian)"),
 				new NEEncoding(CodePage.UTF16BE, "UTF16 (Big endian)"),
