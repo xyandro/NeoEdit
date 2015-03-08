@@ -71,7 +71,7 @@ namespace NeoEdit
 				args = args.Where(arg => arg != "multi").ToArray();
 				if (args.Length == 0)
 				{
-					new DiskTabs();
+					TextEditTabs.Create();
 					return;
 				}
 
