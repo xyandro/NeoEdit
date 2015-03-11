@@ -36,6 +36,7 @@ Specify which accelerator to display in menu (currently picking one of available
 
 View:
 Update as new lines are added
+Add cursor mouse navigation (currently no way to jump to middle of file)
 
 Hex:
 Fix backwards search

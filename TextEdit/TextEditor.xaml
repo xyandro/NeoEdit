@@ -32,7 +32,9 @@
 		<ScrollBar Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="5" Value="{Binding yScrollValue, ElementName=self}"/>
 		<ScrollBar Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
 
-		<StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Focusable="False">
+		<Rectangle Grid.Row="3" Grid.Column="5" Fill="LightGray" Focusable="False"/>
+
+		<StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Background="LightGray" Focusable="False">
 			<StatusBarItem>
 				<TextBlock Text="Line"/>
 			</StatusBarItem>
