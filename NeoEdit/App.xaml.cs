@@ -234,7 +234,7 @@ namespace NeoEdit
 				systemInfo: () => new SystemInfoWindow(),
 				textEditor: (filename, bytes, encoding, createNew) => TextEditTabs.Create(filename, bytes, encoding, createNew: createNew),
 				textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew),
-				fileHexEditor: (filename, binarydata, encoder, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, createNew),
+				fileHexEditor: (filename, binarydata, encoder, modified, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, createNew),
 				processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid),
 				disk: () => new DiskTabs(),
 				console: () => new ConsoleTabs(),

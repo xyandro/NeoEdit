@@ -11,7 +11,7 @@ namespace NeoEdit.GUI
 		protected Action systemInfoLauncher;
 		protected Action<string, byte[], Coder.CodePage, bool> textEditorLauncher;
 		protected Action<string, bool> textViewerLauncher;
-		protected Action<string, byte[], Coder.CodePage, bool> fileHexEditorLauncher;
+		protected Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
 		protected Action<int> processHexEditorLauncher;
 		protected Action diskLauncher;
 		protected Action consoleLauncher;
@@ -23,7 +23,7 @@ namespace NeoEdit.GUI
 			Action systemInfo,
 			Action<string, byte[], Coder.CodePage, bool> textEditor,
 			Action<string, bool> textViewer,
-			Action<string, byte[], Coder.CodePage, bool> fileHexEditor,
+			Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor,
 			Action<int> processHexEditor,
 			Action disk,
 			Action console,
@@ -64,9 +64,9 @@ namespace NeoEdit.GUI
 			textViewerLauncher(filename, createNew);
 		}
 
-		public void LaunchHexEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool createNew = false)
+		public void LaunchHexEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool createNew = false)
 		{
-			fileHexEditorLauncher(filename, bytes, codePage, createNew);
+			fileHexEditorLauncher(filename, bytes, codePage, modified, createNew);
 		}
 
 		public void LaunchHexEditor(int pid)

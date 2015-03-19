@@ -29,7 +29,7 @@ namespace NeoEdit.HexEdit
 
 		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, bool createNew = false)
 		{
-			((!createNew ? UIHelper<HexEditTabs>.GetNewest() : null) ?? new HexEditTabs()).Add(new HexEditor(data, codePage, filename, filetitle));
+			((!createNew ? UIHelper<HexEditTabs>.GetNewest() : null) ?? new HexEditTabs()).Add(new HexEditor(data, codePage, filename, filetitle, modified));
 		}
 
 		HexEditTabs()
@@ -46,7 +46,7 @@ namespace NeoEdit.HexEdit
 			Active = hexEditor;
 		}
 
-		public static void CreateFromFile(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool createNew = false)
+		public static void CreateFromFile(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool createNew = false)
 		{
 			if (bytes == null)
 			{
@@ -55,7 +55,7 @@ namespace NeoEdit.HexEdit
 				else
 					bytes = File.ReadAllBytes(filename);
 			}
-			Create(new MemoryBinaryData(bytes), codePage, filename, createNew: createNew);
+			Create(new MemoryBinaryData(bytes), codePage, filename, modified: modified, createNew: createNew);
 		}
 
 		public static void CreateFromDump(string filename, bool createNew = false)

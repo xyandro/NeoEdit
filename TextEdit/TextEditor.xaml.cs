@@ -560,7 +560,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (!VerifyCanFullyEncode())
 				return false;
-			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage);
+			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage, true);
 			return true;
 		}
 

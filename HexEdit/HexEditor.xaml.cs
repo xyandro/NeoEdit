@@ -142,7 +142,7 @@ namespace NeoEdit.HexEdit
 		}
 
 		List<PropertyChangeNotifier> localCallbacks;
-		public HexEditor(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null)
+		public HexEditor(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false)
 		{
 			InitializeComponent();
 
@@ -163,6 +163,7 @@ namespace NeoEdit.HexEdit
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 			FileTitle = filetitle;
+			undoRedo.SetModified(modified);
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 		}
