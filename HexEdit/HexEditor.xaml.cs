@@ -277,8 +277,8 @@ namespace NeoEdit.HexEdit
 			if (selRow == row)
 			{
 				var selCol = (int)(Pos1 % columns);
-				dc.DrawRectangle(SelHex ? Brushes.Black : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol), y, 1, Font.lineHeight));
-				dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Black, null, new Rect(GetXTextFromColumn(selCol), y, 1, Font.lineHeight));
+				dc.DrawRectangle(SelHex ? Brushes.Blue : Brushes.Gray, null, new Rect(GetXHexFromColumn(selCol) - 1, y, 2, Font.lineHeight));
+				dc.DrawRectangle(SelHex ? Brushes.Gray : Brushes.Blue, null, new Rect(GetXTextFromColumn(selCol) - 1, y, 2, Font.lineHeight));
 			}
 		}
 
