@@ -27,7 +27,7 @@ namespace NeoEdit.HexEdit
 
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 
-		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool createNew = false)
+		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, bool createNew = false)
 		{
 			((!createNew ? UIHelper<HexEditTabs>.GetNewest() : null) ?? new HexEditTabs()).Add(new HexEditor(data, codePage, filename, filetitle));
 		}
@@ -165,6 +165,7 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.File_Save: Active.Command_File_Save(); break;
 				case HexEditCommand.File_SaveAs: Active.Command_File_SaveAs(); break;
 				case HexEditCommand.File_Close: if (Active.CanClose()) { Active.Close(); HexEditors.Remove(Active); } break;
+				case HexEditCommand.File_Revert: Active.Command_File_Revert(); break;
 				case HexEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case HexEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
 				case HexEditCommand.File_Encoding: Active.Command_File_Encoding(); break;

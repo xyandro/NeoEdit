@@ -20,6 +20,7 @@ namespace NeoEdit.HexEdit.Data
 		}
 
 		public override bool CanInsert() { return true; }
+		public override bool CanReload() { return true; }
 
 		protected override void VirtWrite(long index, long count, byte[] bytes)
 		{

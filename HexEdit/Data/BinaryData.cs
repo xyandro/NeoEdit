@@ -7,6 +7,7 @@ namespace NeoEdit.HexEdit.Data
 	public abstract class BinaryData
 	{
 		public virtual bool CanInsert() { return false; }
+		public virtual bool CanReload() { return false; }
 
 		byte[] cache = null;
 		long cacheStart = -1, cacheEnd = -1;

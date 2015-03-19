@@ -50,6 +50,8 @@ namespace NeoEdit.HexEdit
 
 		int internalChangeCount = 0;
 
+		DateTime fileLastWrite;
+
 		long _pos1, _pos2;
 
 		long Pos1
@@ -158,6 +160,8 @@ namespace NeoEdit.HexEdit
 			if (CodePage == Coder.CodePage.AutoByBOM)
 				CodePage = Data.CodePageFromBOM();
 			FileName = filename;
+			if (File.Exists(FileName))
+				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 			FileTitle = filetitle;
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
@@ -612,6 +616,34 @@ namespace NeoEdit.HexEdit
 			Command_File_Save();
 		}
 
+		internal void Command_File_Revert()
+		{
+			if (!Data.CanReload())
+				return;
+
+			if (IsModified)
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = "You have unsaved changes.  Are you sure you want to reload?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() != Message.OptionsEnum.Yes)
+					return;
+			}
+
+			undoRedo.Clear();
+			Data.Replace(0, Data.Length, File.ReadAllBytes(FileName));
+			if (File.Exists(FileName))
+				fileLastWrite = new FileInfo(FileName).LastWriteTime;
+
+			Pos2 = Pos1 = 0;
+
+			++ChangeCount;
+		}
+
 		internal void Command_File_CopyPath()
 		{
 			ClipboardWindow.SetFiles(new List<string> { FileName }, false);
@@ -746,6 +778,21 @@ namespace NeoEdit.HexEdit
 		{
 			Data.Refresh();
 			++ChangeCount;
+
+			if ((!Data.CanReload()) || (String.IsNullOrEmpty(FileName)))
+				return;
+			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = "This file has been updated on disk.  Reload?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() == Message.OptionsEnum.Yes)
+					Command_File_Revert();
+			}
 		}
 
 		internal void Command_Data_Hash(Hash.Type type)

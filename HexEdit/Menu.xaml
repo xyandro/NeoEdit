@@ -12,6 +12,7 @@
 		<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="File_Save"/>
 		<hexEdit:HexEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
 		<hexEdit:HexEditMenuItem Header="_Close" CommandEnum="File_Close"/>
+		<hexEdit:HexEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
 		<hexEdit:HexEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
