@@ -43,4 +43,3 @@ Fix backwards search
 Remember search history
 Cursor hard to see
 Reload current file (perhaps automatically?)
-ProcessBinaryData.cs: Combine suspend/open

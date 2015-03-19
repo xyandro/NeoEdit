@@ -11,14 +11,14 @@ namespace NeoEdit.HexEdit.Data
 		byte[] cache = null;
 		long cacheStart = -1, cacheEnd = -1;
 
-		protected abstract void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd);
+		protected abstract void VirtRead(long index, out byte[] block, out long blockStart, out long blockEnd);
 
 		void SetCache(long index)
 		{
 			if ((index >= cacheStart) && (index < cacheEnd))
 				return;
 
-			ReadBlock(index, out cache, out cacheStart, out cacheEnd);
+			VirtRead(index, out cache, out cacheStart, out cacheEnd);
 			if ((cache != null) && (cacheEnd != cacheStart + cache.Length))
 				throw new Exception("Invalid newCacheEnd");
 			if ((cacheEnd <= index) || (cacheStart > index))
@@ -90,9 +90,32 @@ namespace NeoEdit.HexEdit.Data
 			return false;
 		}
 
-		public virtual void Replace(long index, long count, byte[] bytes)
+		protected virtual void VirtWrite(long index, long count, byte[] bytes)
 		{
 			throw new NotImplementedException();
+		}
+
+		public void Replace(long index, long count, byte[] bytes)
+		{
+			if (index < 0)
+				throw new ArgumentOutOfRangeException("Invalid index");
+			if (count < 0)
+				throw new ArgumentOutOfRangeException("Invalid count");
+			if (bytes == null)
+				bytes = new byte[0];
+			if (!CanInsert())
+			{
+				if (count != bytes.Length)
+					throw new Exception("Cannot change byte count.");
+				if (index > Length)
+					throw new ArgumentOutOfRangeException("offset");
+				if (index + count > Length)
+					throw new ArgumentOutOfRangeException("length");
+			}
+
+			VirtWrite(index, count, bytes);
+
+			Refresh();
 		}
 
 		public void Refresh()

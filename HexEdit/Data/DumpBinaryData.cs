@@ -36,7 +36,7 @@ namespace NeoEdit.HexEdit.Data
 			}
 		}
 
-		protected override void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd)
+		protected override void VirtRead(long index, out byte[] block, out long blockStart, out long blockEnd)
 		{
 			block = null;
 			blockStart = blockEnd = index;

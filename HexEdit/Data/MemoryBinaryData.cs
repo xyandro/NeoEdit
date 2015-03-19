@@ -12,7 +12,7 @@ namespace NeoEdit.HexEdit.Data
 			Length = data.Length;
 		}
 
-		protected override void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd)
+		protected override void VirtRead(long index, out byte[] block, out long blockStart, out long blockEnd)
 		{
 			block = data;
 			blockStart = 0;
@@ -21,16 +21,8 @@ namespace NeoEdit.HexEdit.Data
 
 		public override bool CanInsert() { return true; }
 
-		public override void Replace(long index, long count, byte[] bytes)
+		protected override void VirtWrite(long index, long count, byte[] bytes)
 		{
-			if ((index < 0) || (index > data.Length))
-				throw new ArgumentOutOfRangeException("offset");
-			if ((count < 0) || (index + count > data.Length))
-				throw new ArgumentOutOfRangeException("length");
-
-			if (bytes == null)
-				bytes = new byte[0];
-
 			Array.Resize(ref data, data.Length + Math.Max(0, bytes.Length - (int)count));
 			Array.Copy(data, index + count, data, index + bytes.Length, Length - index - count);
 			Array.Resize(ref data, data.Length + Math.Min(0, bytes.Length - (int)count));

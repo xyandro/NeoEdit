@@ -14,7 +14,7 @@ namespace NeoEdit.HexEdit.Data
 			Length = Interop.GetSharedMemorySize(pid, handle);
 		}
 
-		protected override void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd)
+		protected override void VirtRead(long index, out byte[] block, out long blockStart, out long blockEnd)
 		{
 			blockStart = index;
 			blockEnd = Math.Min(index + 65536, Length);
@@ -22,15 +22,9 @@ namespace NeoEdit.HexEdit.Data
 			Interop.ReadSharedMemory(pid, handle, blockStart, block, 0, block.Length);
 		}
 
-		public override void Replace(long index, long count, byte[] bytes)
+		protected override void VirtWrite(long index, long count, byte[] bytes)
 		{
-			if (count != bytes.Length)
-				throw new Exception("Cannot change size.");
-
-			var length = bytes.Length;
 			Interop.WriteSharedMemory(pid, handle, index, bytes);
-
-			Refresh();
 		}
 	}
 }

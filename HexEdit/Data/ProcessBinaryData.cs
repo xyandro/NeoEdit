@@ -79,7 +79,7 @@ namespace NeoEdit.HexEdit.Data
 			handle.Dispose();
 		}
 
-		protected override void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd)
+		protected override void VirtRead(long index, out byte[] block, out long blockStart, out long blockEnd)
 		{
 			using (Suspend())
 			using (Open())
@@ -118,11 +118,8 @@ namespace NeoEdit.HexEdit.Data
 				return base.Find(currentFind, index, out start, out end, forward);
 		}
 
-		public override void Replace(long index, long count, byte[] bytes)
+		protected override void VirtWrite(long index, long count, byte[] bytes)
 		{
-			if (count != bytes.Length)
-				throw new Exception("Cannot change byte count.");
-
 			using (Suspend())
 			using (Open())
 			{
@@ -143,8 +140,6 @@ namespace NeoEdit.HexEdit.Data
 					Array.Resize(ref bytes, bytes.Length - numBytes);
 				}
 			}
-
-			Refresh();
 		}
 
 		public override void Save(string fileName)
@@ -164,7 +159,7 @@ namespace NeoEdit.HexEdit.Data
 				{
 					block = null;
 					if (index < Length)
-						ReadBlock(index, out block, out blockStart, out blockEnd);
+						VirtRead(index, out block, out blockStart, out blockEnd);
 
 					if (block != null)
 					{
