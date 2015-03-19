@@ -165,6 +165,7 @@ namespace NeoEdit
 							HexEditTabs.CreateFromProcess(Convert.ToInt32(args[1]));
 							return;
 						}
+					case "dump":
 					case "binarydump":
 					case "hexdump":
 						{

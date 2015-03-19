@@ -36,7 +36,7 @@ namespace NeoEdit.HexEdit.Data
 			}
 		}
 
-		protected override void ReadBlock(long index, int count, out byte[] block, out long blockStart, out long blockEnd)
+		protected override void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd)
 		{
 			block = null;
 			blockStart = blockEnd = index;
@@ -55,7 +55,7 @@ namespace NeoEdit.HexEdit.Data
 			if (!hasData)
 				return;
 
-			blockEnd = Math.Min(blockEnd, index + count);
+			blockEnd = Math.Min(blockEnd, index + 65536);
 			block = new byte[blockEnd - index];
 
 			input.Position = pos[idx] + index - start[idx];

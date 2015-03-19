@@ -11,58 +11,44 @@ namespace NeoEdit.HexEdit.Data
 		byte[] cache = null;
 		long cacheStart = -1, cacheEnd = -1;
 
-		protected virtual void ReadBlock(long index, int count, out byte[] block, out long blockStart, out long blockEnd)
-		{
-			throw new NotImplementedException();
-		}
+		protected abstract void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd);
 
-		protected void SetCache(long index, int origCount)
+		void SetCache(long index)
 		{
-			if ((index >= cacheStart) && (index + origCount <= cacheEnd))
+			if ((index >= cacheStart) && (index < cacheEnd))
 				return;
 
-			var count = 65536;
-
-			cache = new byte[count];
-			cacheStart = index;
-			cacheEnd = index + count;
-
-			var read = 0;
-			while (read < count)
-			{
-				byte[] block;
-				long blockStart, blockEnd;
-				ReadBlock(index + read, count - read, out block, out blockStart, out blockEnd);
-
-				if (block != null)
-					blockEnd = blockStart + block.Length;
-
-				if ((index >= blockStart) && (index + origCount <= blockEnd))
-				{
-					cache = block;
-					cacheStart = blockStart;
-					cacheEnd = blockEnd;
-					return;
-				}
-
-				var size = (int)Math.Min(blockEnd - index - read, count - read);
-				if (block != null)
-					Array.Copy(block, index + read - blockStart, cache, read, size);
-
-				read += size;
-			}
+			ReadBlock(index, out cache, out cacheStart, out cacheEnd);
+			if ((cache != null) && (cacheEnd != cacheStart + cache.Length))
+				throw new Exception("Invalid newCacheEnd");
+			if ((cacheEnd <= index) || (cacheStart > index))
+				throw new Exception("Invalid cache");
 		}
 
-		public byte this[long index]
+		public byte[] Read(long index, long count)
 		{
-			get
+			var data = new byte[count];
+			while (count > 0)
 			{
-				SetCache(index, 1);
-				if (cache == null)
-					return 0;
-				return cache[index - cacheStart];
+				SetCache(index);
+				var size = Math.Min(count, cacheEnd - index);
+				if (cache != null)
+					Array.Copy(cache, index - cacheStart, data, data.Length - count, size);
+				index += size;
+				count -= size;
 			}
+			return data;
 		}
+
+		public long GetNonSparse(long index)
+		{
+			SetCache(index);
+			if (cache != null)
+				return index;
+			return cacheEnd;
+		}
+
+		public byte this[long index] { get { return Read(index, 1)[0]; } }
 
 		public long Length { get; protected set; }
 
@@ -76,25 +62,29 @@ namespace NeoEdit.HexEdit.Data
 			if ((index < 0) || (index >= Length))
 				return false;
 
+			var min = index;
 			var findLen = currentFind.Searcher.MaxLen;
 
 			while (index < Length)
 			{
-				SetCache(index, findLen);
-				if (cache != null)
+				var nonSparse = GetNonSparse(index);
+				if (nonSparse != index)
 				{
-					var result = currentFind.Searcher.Find(cache, (int)(index - cacheStart), (int)(cache.LongLength - index + cacheStart), true);
-					if (result.Count != 0)
-					{
-						start = result[0].Item1 + cacheStart;
-						end = start + result[0].Item2;
-						return true;
-					}
+					index = nonSparse;
+					continue;
 				}
 
-				index = cacheEnd;
-				if (index != Length)
-					index -= findLen - 1;
+				index = Math.Max(min, index - findLen - 1);
+				var block = Read(index, Math.Min(65536, Length - index));
+				var result = currentFind.Searcher.Find(block, 0, block.Length, true);
+				if (result.Count != 0)
+				{
+					start = result[0].Item1 + index;
+					end = start + result[0].Item2;
+					return true;
+				}
+
+				index += block.Length;
 			}
 
 			return false;
@@ -118,11 +108,7 @@ namespace NeoEdit.HexEdit.Data
 
 		public virtual byte[] GetSubset(long index, long count)
 		{
-			var result = new byte[count];
-			SetCache(index, (int)count);
-			if (cache != null)
-				Array.Copy(cache, index - cacheStart, result, 0, count);
-			return result;
+			return Read(index, count);
 		}
 
 		public Coder.CodePage CodePageFromBOM()

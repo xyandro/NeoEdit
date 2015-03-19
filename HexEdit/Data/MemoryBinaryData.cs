@@ -8,13 +8,11 @@ namespace NeoEdit.HexEdit.Data
 		byte[] data;
 		public MemoryBinaryData(byte[] _data = null)
 		{
-			data = _data;
-			if (data == null)
-				data = new byte[0];
+			data = _data ?? new byte[0];
 			Length = data.Length;
 		}
 
-		protected override void ReadBlock(long index, int count, out byte[] block, out long blockStart, out long blockEnd)
+		protected override void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd)
 		{
 			block = data;
 			blockStart = 0;

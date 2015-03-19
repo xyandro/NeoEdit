@@ -79,7 +79,7 @@ namespace NeoEdit.HexEdit.Data
 			handle.Dispose();
 		}
 
-		protected override void ReadBlock(long index, int count, out byte[] block, out long blockStart, out long blockEnd)
+		protected override void ReadBlock(long index, out byte[] block, out long blockStart, out long blockEnd)
 		{
 			using (Suspend())
 			using (Open())
@@ -102,7 +102,7 @@ namespace NeoEdit.HexEdit.Data
 					return;
 				}
 
-				blockEnd = Math.Min(blockEnd, blockStart + count);
+				blockEnd = Math.Min(blockEnd, blockStart + 65536);
 
 				block = new byte[blockEnd - blockStart];
 
@@ -164,14 +164,14 @@ namespace NeoEdit.HexEdit.Data
 				{
 					block = null;
 					if (index < Length)
-						ReadBlock(index, 65536, out block, out blockStart, out blockEnd);
+						ReadBlock(index, out block, out blockStart, out blockEnd);
 
 					if (block != null)
 					{
 						if (sectionStart == -1)
 							sectionStart = blockStart;
 						sectionEnd = blockEnd;
-						output.Write(block, 0, (int)(blockEnd - blockStart));
+						output.Write(block, 0, block.Length);
 					}
 					else if (sectionStart != -1)
 					{
