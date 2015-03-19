@@ -309,7 +309,7 @@ namespace NeoEdit.HexEdit
 			for (var column = 0; column < useColumns; ++column)
 			{
 				var c = (char)Data[row * columns + column];
-				text.Append(Char.IsControl(c) ? '·' : c);
+				text.Append((Char.IsControl(c) || c == 0xad) ? '·' : c); // ad = soft hyphen, won't show
 			}
 
 			var textText = Font.GetText(text.ToString());
