@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
@@ -15,13 +14,6 @@ namespace NeoEdit.Processes
 
 	public partial class ProcessesWindow : Window
 	{
-		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
-		public static RoutedCommand Command_View_Handles = new RoutedCommand();
-		public static RoutedCommand Command_View_Memory = new RoutedCommand();
-		public static RoutedCommand Command_Process_Suspend = new RoutedCommand();
-		public static RoutedCommand Command_Process_Resume = new RoutedCommand();
-		public static RoutedCommand Command_Process_Kill = new RoutedCommand();
-
 		[DepProp]
 		ObservableCollection<ProcessItem> Processes { get { return UIHelper<ProcessesWindow>.GetPropValue<ObservableCollection<ProcessItem>>(this); } set { UIHelper<ProcessesWindow>.SetPropValue(this, value); } }
 
@@ -30,6 +22,7 @@ namespace NeoEdit.Processes
 		public ProcessesWindow(int? pid = null)
 		{
 			ProcessManager.WindowCreated();
+			ProcessesMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 
 			foreach (var prop in UIHelper<ProcessItem>.GetProperties())
@@ -60,47 +53,46 @@ namespace NeoEdit.Processes
 			processes.SyncItems(ProcessManager.GetProcesses(), UIHelper<ProcessItem>.GetProperty(a => a.PID));
 		}
 
-		void Command_Executed(object sender, ExecutedRoutedEventArgs e)
+		internal void RunCommand(ProcessesCommand command)
 		{
-			if (e.Command == Command_View_Refresh)
-				Refresh();
-			else if (e.Command == Command_View_Handles)
+			switch (command)
 			{
-				foreach (ProcessItem selected in processes.Selected)
-					Launcher.Static.LaunchHandles(selected.PID);
-			}
-			else if (e.Command == Command_View_Memory)
-			{
-				foreach (ProcessItem selected in processes.Selected)
-					Launcher.Static.LaunchHexEditor(selected.PID);
-			}
-			else if (e.Command == Command_Process_Suspend)
-			{
-				foreach (ProcessItem selected in processes.Selected)
-					Interop.SuspendProcess(selected.PID);
-			}
-			else if (e.Command == Command_Process_Resume)
-			{
-				foreach (ProcessItem selected in processes.Selected)
-					Interop.ResumeProcess(selected.PID);
-			}
-			else if (e.Command == Command_Process_Kill)
-			{
-				if (processes.Selected.Count != 0)
-				{
-					if (new Message
+				case ProcessesCommand.View_Refresh:
+					Refresh();
+					break;
+				case ProcessesCommand.View_Handles:
+					foreach (ProcessItem selected in processes.Selected)
+						Launcher.Static.LaunchHandles(selected.PID);
+					break;
+				case ProcessesCommand.View_Memory:
+					foreach (ProcessItem selected in processes.Selected)
+						Launcher.Static.LaunchHexEditor(selected.PID);
+					break;
+				case ProcessesCommand.Process_Suspend:
+					foreach (ProcessItem selected in processes.Selected)
+						Interop.SuspendProcess(selected.PID);
+					break;
+				case ProcessesCommand.Process_Resume:
+					foreach (ProcessItem selected in processes.Selected)
+						Interop.ResumeProcess(selected.PID);
+					break;
+				case ProcessesCommand.Process_Kill:
+					if (processes.Selected.Count != 0)
 					{
-						Text = "Are you sure you want to kill these processes?",
-						Options = Message.OptionsEnum.YesNo,
-						DefaultAccept = Message.OptionsEnum.Yes,
-						DefaultCancel = Message.OptionsEnum.No,
-					}.Show() == Message.OptionsEnum.Yes)
-					{
-						foreach (ProcessItem selected in processes.Selected)
-							Process.GetProcessById(selected.PID).Kill();
-						Refresh();
+						if (new Message
+						{
+							Text = "Are you sure you want to kill these processes?",
+							Options = Message.OptionsEnum.YesNo,
+							DefaultAccept = Message.OptionsEnum.Yes,
+							DefaultCancel = Message.OptionsEnum.No,
+						}.Show() == Message.OptionsEnum.Yes)
+						{
+							foreach (ProcessItem selected in processes.Selected)
+								Process.GetProcessById(selected.PID).Kill();
+							Refresh();
+						}
 					}
-				}
+					break;
 			}
 		}
 	}

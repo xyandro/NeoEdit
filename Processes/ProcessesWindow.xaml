@@ -5,24 +5,6 @@
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
 	Title="NeoEdit Process Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=processes}">
 
-	<Window.CommandBindings>
-		<CommandBinding Command="processes:ProcessesWindow.Command_View_Refresh" Executed="Command_Executed"/>
-		<CommandBinding Command="processes:ProcessesWindow.Command_View_Handles" Executed="Command_Executed"/>
-		<CommandBinding Command="processes:ProcessesWindow.Command_View_Memory" Executed="Command_Executed"/>
-		<CommandBinding Command="processes:ProcessesWindow.Command_Process_Suspend" Executed="Command_Executed"/>
-		<CommandBinding Command="processes:ProcessesWindow.Command_Process_Resume" Executed="Command_Executed"/>
-		<CommandBinding Command="processes:ProcessesWindow.Command_Process_Kill" Executed="Command_Executed"/>
-	</Window.CommandBindings>
-
-	<Window.InputBindings>
-		<KeyBinding Command="processes:ProcessesWindow.Command_View_Refresh" Key="F5"/>
-		<KeyBinding Command="processes:ProcessesWindow.Command_View_Handles" Key="H" Modifiers="Control"/>
-		<KeyBinding Command="processes:ProcessesWindow.Command_View_Memory" Key="M" Modifiers="Control"/>
-		<KeyBinding Command="processes:ProcessesWindow.Command_Process_Suspend" Key="S" Modifiers="Control"/>
-		<KeyBinding Command="processes:ProcessesWindow.Command_Process_Resume" Key="R" Modifiers="Control"/>
-		<KeyBinding Command="processes:ProcessesWindow.Command_Process_Kill" Key="Delete"/>
-	</Window.InputBindings>
-
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
@@ -32,20 +14,8 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Menu Focusable="False">
-			<MenuItem Header="_View">
-				<MenuItem Command="processes:ProcessesWindow.Command_View_Refresh" Header="_Refresh"/>
-				<MenuItem Command="processes:ProcessesWindow.Command_View_Handles" Header="_Handles"/>
-				<MenuItem Command="processes:ProcessesWindow.Command_View_Memory" Header="_Memory"/>
-			</MenuItem>
-			<MenuItem Header="_Process">
-				<MenuItem Command="processes:ProcessesWindow.Command_Process_Suspend" Header="_Suspend"/>
-				<MenuItem Command="processes:ProcessesWindow.Command_Process_Resume" Header="_Resume"/>
-				<MenuItem Command="processes:ProcessesWindow.Command_Process_Kill" Header="_Kill"/>
-			</MenuItem>
-			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
-			<guiCommon:HelpMenu/>
-		</Menu>
+		<processes:ProcessesMenu Parent="{Binding ElementName=self}" Focusable="False"/>
+		
 		<processes:ProcessItemGrid x:Name="processes" Grid.Row="1" Items="{Binding Processes, ElementName=self}"/>
 	</Grid>
 
