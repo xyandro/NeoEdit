@@ -68,6 +68,10 @@ namespace NeoEdit.Processes
 					foreach (ProcessItem selected in processes.Selected)
 						Launcher.Static.LaunchHexEditor(selected.PID);
 					break;
+				case ProcessesCommand.View_Modules:
+					foreach (ProcessItem selected in processes.Selected)
+						ViewModules.Run(selected.PID);
+					break;
 				case ProcessesCommand.Process_Suspend:
 					foreach (ProcessItem selected in processes.Selected)
 						Interop.SuspendProcess(selected.PID);

@@ -8,6 +8,7 @@
 		<processes:ProcessesMenuItem Header="_Refresh" CommandEnum="View_Refresh"/>
 		<processes:ProcessesMenuItem Header="_Handles" CommandEnum="View_Handles"/>
 		<processes:ProcessesMenuItem Header="_Memory" CommandEnum="View_Memory"/>
+		<processes:ProcessesMenuItem Header="M_odules" CommandEnum="View_Modules"/>
 	</MenuItem>
 	<MenuItem Header="_Process">
 		<processes:ProcessesMenuItem Header="_Suspend" CommandEnum="Process_Suspend"/>

@@ -11,12 +11,13 @@ namespace NeoEdit.GUI.Common
 		public static readonly double charWidth;
 		public static readonly double lineHeight;
 
+		static readonly FontFamily fontFamily;
 		static readonly Typeface typeface;
 		static readonly double fontSize;
 
 		static Font()
 		{
-			var fontFamily = new FontFamily(new Uri("pack://application:,,,/NeoEdit.GUI;component/"), "./Resources/#DejaVu Sans Mono");
+			fontFamily = new FontFamily(new Uri("pack://application:,,,/NeoEdit.GUI;component/"), "./Resources/#DejaVu Sans Mono");
 			typeface = fontFamily.GetTypefaces().First();
 			fontSize = 14;
 			lineHeight = fontSize;
@@ -25,6 +26,8 @@ namespace NeoEdit.GUI.Common
 			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 			charWidth = formattedText.Width / example.Length;
 		}
+
+		public static FontFamily FontFamily { get { return fontFamily; } }
 
 		public static FormattedText GetText(string str, Brush brush = null)
 		{

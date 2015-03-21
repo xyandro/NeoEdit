@@ -175,6 +175,7 @@ namespace NeoEdit
 							HexEditTabs.CreateFromDump(args[1]);
 							return;
 						}
+					case "pid":
 					case "process":
 					case "processes":
 						{
