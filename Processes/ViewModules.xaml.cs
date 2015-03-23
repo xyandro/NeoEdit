@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.ItemGridControl;
+using NeoEdit.Processes.Dialogs;
 
 namespace NeoEdit.Processes
 {
@@ -75,6 +76,19 @@ namespace NeoEdit.Processes
 		static public void Run(int pid)
 		{
 			new ViewModules(pid).ShowDialog();
+		}
+
+		private void GotoCommandExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+			var result = GotoDialog.Run();
+			if (!result.HasValue)
+				return;
+
+			var find = result.Value;
+			modules.Selected.Clear();
+			foreach (var module in Modules)
+				if ((find >= module.StartAddress) && (find < module.EndAddress))
+					modules.Selected.Add(module);
 		}
 	}
 }

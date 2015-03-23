@@ -4,6 +4,18 @@
 	xmlns:processes="clr-namespace:NeoEdit.Processes"
 	Title="View Modules" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=value}">
 
+	<Window.Resources>
+		<RoutedUICommand x:Key="GotoCommand" Text="Goto"/>
+	</Window.Resources>
+	
+	<Window.CommandBindings>
+		<CommandBinding Command="{StaticResource GotoCommand}" Executed="GotoCommandExecuted"/>
+	</Window.CommandBindings>
+	
+	<Window.InputBindings>
+		<KeyBinding Key="G" Modifiers="Control" Command="{StaticResource GotoCommand}"/>
+	</Window.InputBindings>
+	
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
@@ -36,12 +48,18 @@
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="500"/>
+					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
-				<processes:ModuleItemGrid x:Name="modules" Grid.Row="0" Grid.Column="0" Items="{Binding Modules, ElementName=self}"/>
+				<processes:ModuleItemGrid x:Name="modules" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Items="{Binding Modules, ElementName=self}"/>
+
+				<UniformGrid Grid.Row="1" Grid.Column="0" Rows="1">
+					<Button Command="{StaticResource GotoCommand}" Content="_Goto" Padding="10,0"/>
+				</UniformGrid>
 			</Grid>
 		</GroupBox>
 
