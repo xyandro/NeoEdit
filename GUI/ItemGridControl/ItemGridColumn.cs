@@ -7,7 +7,7 @@ namespace NeoEdit.GUI.ItemGridControl
 	{
 		public string Header { get; set; }
 		public DependencyProperty DepProp { get; set; }
-		public string StringFormat { get; set; }
+		public object StringFormat { get; set; }
 		public HorizontalAlignment HorizontalAlignment { get; set; }
 		public bool SortAscending { get; set; }
 		public bool NumericStrings { get; set; }

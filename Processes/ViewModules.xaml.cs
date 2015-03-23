@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using NeoEdit.Common;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.ItemGridControl;
 using NeoEdit.Processes.Dialogs;
@@ -54,7 +55,7 @@ namespace NeoEdit.Processes
 			{
 				var col = new ItemGridColumn(prop) { SortAscending = true };
 				if (col.Header.EndsWith("Address"))
-					col.StringFormat = "X16";
+					col.StringFormat = (StringFormatDelegate)(a => ((long)a).ToSpacedHex());
 				modules.Columns.Add(col);
 			}
 			modules.SortColumn = modules.Columns.First(col => col.Header == "StartAddress");

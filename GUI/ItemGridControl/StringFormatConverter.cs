@@ -4,6 +4,8 @@ using System.Windows.Data;
 
 namespace NeoEdit.GUI.ItemGridControl
 {
+	public delegate string StringFormatDelegate(object obj);
+
 	class StringFormatConverter : IValueConverter
 	{
 		static StringFormatConverter converter = new StringFormatConverter();
@@ -13,9 +15,13 @@ namespace NeoEdit.GUI.ItemGridControl
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if ((value == null) || (!(parameter is string)))
+			if ((value == null) || (parameter == null))
 				return value;
-			return String.Format("{0:" + (string)parameter + "}", value);
+			if (parameter is string)
+				return String.Format("{0:" + (string)parameter + "}", value);
+			if (parameter is StringFormatDelegate)
+				return (parameter as StringFormatDelegate)(value);
+			return value;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

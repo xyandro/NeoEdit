@@ -194,6 +194,14 @@ namespace NeoEdit.Common
 			return sb.ToString();
 		}
 
+		public static string ToSpacedHex(this long input, int len = 16, int spacing = 4)
+		{
+			var format = String.Format(String.Format("{{0:X{0}}}", len), input);
+			for (var space = len - spacing; space > 0; space -= spacing)
+				format = format.Substring(0, space) + " " + format.Substring(space);
+			return format;
+		}
+
 		public static bool Equal(this byte[] b1, byte[] b2)
 		{
 			if (b1.Length != b2.Length)
