@@ -1,11 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using NeoEdit.GUI.Common;
+using NeoEdit.GUI.ItemGridControl;
 
 namespace NeoEdit.Processes
 {
+	class ModuleItemGrid : ItemGrid<ModuleItem> { }
+
+	class ModuleItem : DependencyObject
+	{
+		[DepProp]
+		public string Name { get { return UIHelper<ModuleItem>.GetPropValue<string>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
+		[DepProp]
+		public string FileName { get { return UIHelper<ModuleItem>.GetPropValue<string>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
+		[DepProp]
+		public long StartAddress { get { return UIHelper<ModuleItem>.GetPropValue<long>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
+		[DepProp]
+		public long EndAddress { get { return UIHelper<ModuleItem>.GetPropValue<long>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
+		[DepProp]
+		public long Size { get { return UIHelper<ModuleItem>.GetPropValue<long>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
+
+		static ModuleItem() { UIHelper<ModuleItem>.Register(); }
+	}
+
 	partial class ViewModules
 	{
 		[DepProp]
@@ -13,7 +33,7 @@ namespace NeoEdit.Processes
 		[DepProp]
 		public int PID { get { return UIHelper<ViewModules>.GetPropValue<int>(this); } set { UIHelper<ViewModules>.SetPropValue(this, value); } }
 		[DepProp]
-		public List<Dictionary<string, string>> Modules { get { return UIHelper<ViewModules>.GetPropValue<List<Dictionary<string, string>>>(this); } set { UIHelper<ViewModules>.SetPropValue(this, value); } }
+		ObservableCollection<ModuleItem> Modules { get { return UIHelper<ViewModules>.GetPropValue<ObservableCollection<ModuleItem>>(this); } set { UIHelper<ViewModules>.SetPropValue(this, value); } }
 		[DepProp]
 		public FontFamily ListFont { get { return UIHelper<ViewModules>.GetPropValue<FontFamily>(this); } set { UIHelper<ViewModules>.SetPropValue(this, value); } }
 
@@ -29,32 +49,27 @@ namespace NeoEdit.Processes
 			var process = Process.GetProcessById(PID);
 			ProcessName = process.ProcessName;
 
-			Modules = new List<Dictionary<string, string>>();
+			foreach (var prop in UIHelper<ModuleItem>.GetProperties())
+			{
+				var col = new ItemGridColumn(prop) { SortAscending = true };
+				if (col.Header.EndsWith("Address"))
+					col.StringFormat = "X16";
+				modules.Columns.Add(col);
+			}
+			modules.SortColumn = modules.Columns.First(col => col.Header == "StartAddress");
+
+			Modules = new ObservableCollection<ModuleItem>();
 			foreach (ProcessModule module in process.Modules)
 			{
-				var modDict = new Dictionary<string, string>();
-				modDict["Name"] = module.ModuleName;
-				modDict["FileName"] = module.FileName;
-				modDict["StartAddress"] = module.BaseAddress.ToString("x16");
-				modDict["EndAddress"] = (module.BaseAddress + module.ModuleMemorySize).ToString("x16");
-
-				var size = (double)module.ModuleMemorySize;
-				var inc = 0;
-				while (size >= 1000)
+				Modules.Add(new ModuleItem
 				{
-					size /= 1024;
-					++inc;
-				}
-
-				var sizes = new List<string> { "", "KB", "MB", "GB", "TB" };
-				var sizeStr = size.ToString("0.00").PadLeft(6) + " " + sizes[inc];
-
-				modDict["Size"] = sizeStr;
-
-				Modules.Add(modDict);
+					Name = module.ModuleName,
+					FileName = module.FileName,
+					StartAddress = module.BaseAddress.ToInt64(),
+					EndAddress = module.BaseAddress.ToInt64() + module.ModuleMemorySize,
+					Size = module.ModuleMemorySize,
+				});
 			}
-
-			Modules = Modules.OrderBy(entry => entry["StartAddress"]).ToList();
 		}
 
 		static public void Run(int pid)
