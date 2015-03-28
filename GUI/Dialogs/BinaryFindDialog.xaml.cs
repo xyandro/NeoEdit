@@ -12,22 +12,22 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	partial class BinaryFindDialog
+	internal class CodePageCheckBox : CheckBox
 	{
-		internal class CodePageItem : CheckBox
+		[DepProp]
+		public Coder.CodePage CodePage { get { return UIHelper<CodePageCheckBox>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<CodePageCheckBox>.SetPropValue(this, value); } }
+
+		static CodePageCheckBox()
 		{
-			[DepProp]
-			public Coder.CodePage CodePage { get { return UIHelper<CodePageItem>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<CodePageItem>.SetPropValue(this, value); } }
-
-			static CodePageItem() { UIHelper<CodePageItem>.Register(); }
-
-			public CodePageItem(Coder.CodePage codePage)
-			{
-				CodePage = codePage;
-				Content = Coder.GetDescription(CodePage);
-			}
+			UIHelper<CodePageCheckBox>.Register();
+			UIHelper<CodePageCheckBox>.AddCallback(a => a.CodePage, (obj, o, n) => obj.Content = Coder.IsStr(obj.CodePage) ? Coder.GetDescription(obj.CodePage) : obj.CodePage.ToString());
 		}
 
+		public CodePageCheckBox() { CodePage = Coder.CodePage.None; }
+	}
+
+	partial class BinaryFindDialog
+	{
 		public class Result
 		{
 			public string Text { get; private set; }
@@ -55,7 +55,20 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		ObservableCollection<CodePageItem> CodePageItems { get { return UIHelper<BinaryFindDialog>.GetPropValue<ObservableCollection<CodePageItem>>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		ObservableCollection<CodePageCheckBox> EncodingCheckBoxes { get { return UIHelper<BinaryFindDialog>.GetPropValue<ObservableCollection<CodePageCheckBox>>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public ObservableCollection<string> History { get { return UIHelper<BinaryFindDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+
+		static bool savedShowLE = true;
+		static bool savedShowBE = false;
+		static bool savedShowInt = true;
+		static bool savedShowFloat = false;
+		static bool savedShowStr = true;
+		static bool savedMatchCase = false;
+		readonly static ObservableCollection<string> staticHistory = new ObservableCollection<string>();
+		readonly List<CodePageCheckBox> checkBoxes;
+		readonly static HashSet<Coder.CodePage> defaultCodePages = new HashSet<Coder.CodePage>(Helpers.GetValues<Coder.CodePage>().Where(codePage => !Coder.IsStr(codePage)).Concat(new Coder.CodePage[] { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE }));
+		readonly static HashSet<Coder.CodePage> savedCodePages = new HashSet<Coder.CodePage>(defaultCodePages);
 
 		static BinaryFindDialog() { UIHelper<BinaryFindDialog>.Register(); }
 
@@ -63,21 +76,39 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			InitializeComponent();
 
-			var defaultCodePages = new HashSet<Coder.CodePage> { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE };
-			CodePageItems = new ObservableCollection<CodePageItem>(Coder.GetCodePages().Select(codePage => new CodePageItem(codePage) { IsChecked = defaultCodePages.Contains(codePage) }));
+			History = staticHistory;
+			EncodingCheckBoxes = new ObservableCollection<CodePageCheckBox>(Coder.GetCodePages().Select(codePage => new CodePageCheckBox { CodePage = codePage }));
+			checkBoxes = UIHelper<BinaryFindDialog>.FindLogicalChildren<CodePageCheckBox>(this).Concat(EncodingCheckBoxes).ToList();
 			codePages.PreviewKeyDown += (s, e) =>
 			{
 				if (e.Key == Key.Space)
 				{
-					var selected = codePages.SelectedItems.Cast<CodePageItem>().ToList();
+					var selected = codePages.SelectedItems.Cast<CodePageCheckBox>().ToList();
 					var status = !selected.All(item => item.IsChecked == true);
 					selected.ForEach(item => item.IsChecked = status);
 					e.Handled = true;
 				}
 			};
 
+			if ((String.IsNullOrEmpty(FindText)) && (History.Count != 0))
+				FindText = History[0];
+
+			ShowLE = savedShowLE;
+			ShowBE = savedShowBE;
+			ShowInt = savedShowInt;
+			ShowFloat = savedShowFloat;
+			ShowStr = savedShowStr;
+			MatchCase = savedMatchCase;
+			foreach (var checkBox in checkBoxes)
+				checkBox.IsChecked = savedCodePages.Contains(checkBox.CodePage);
+		}
+
+		void Reset(object sender = null, RoutedEventArgs e = null)
+		{
 			ShowLE = ShowInt = ShowStr = true;
 			ShowBE = ShowFloat = MatchCase = false;
+			foreach (var checkBox in checkBoxes)
+				checkBox.IsChecked = defaultCodePages.Contains(checkBox.CodePage);
 		}
 
 		Result result;
@@ -86,14 +117,17 @@ namespace NeoEdit.GUI.Dialogs
 			if (String.IsNullOrEmpty(FindText))
 				return;
 
-			var valueConverters = Helpers.GetValues<Coder.CodePage>().Select(a => new { Key = a, Value = typeof(BinaryFindDialog).GetField(a.ToString(), BindingFlags.Instance | BindingFlags.NonPublic) }).Where(a => a.Value != null).ToDictionary(a => a.Key, a => a.Value.GetValue(this) as CheckBox);
-			var valueConvertersToUse = valueConverters.Where(a => (a.Value.IsVisible) && (a.Value.IsEnabled) && (a.Value.IsChecked == true)).Select(a => a.Key).ToList();
-			var data = valueConvertersToUse.Select(converter => new Tuple<byte[], bool>(Coder.StringToBytes(FindText, converter), true)).ToList();
-
-			if (ShowStr)
+			var data = new List<Tuple<byte[], bool>>();
+			foreach (var checkBox in checkBoxes)
 			{
-				var stringConverters = CodePageItems.Where(item => (item.IsEnabled) && (item.IsChecked == true)).Select(item => item.CodePage).ToList();
-				data.AddRange(stringConverters.Select(converter => new Tuple<byte[], bool>(Coder.StringToBytes(FindText, converter), (MatchCase) || (Coder.AlwaysCaseSensitive(converter)))));
+				if ((!checkBox.IsEnabled) || (checkBox.IsChecked != true))
+					continue;
+				var str = Coder.IsStr(checkBox.CodePage);
+				if ((str) && (!ShowStr))
+					continue;
+				if ((!str) && (!checkBox.IsVisible))
+					continue;
+				data.Add(Tuple.Create(Coder.StringToBytes(FindText, checkBox.CodePage), (!str) || (MatchCase) || (Coder.AlwaysCaseSensitive(checkBox.CodePage))));
 			}
 
 			data = data.GroupBy(tuple => String.Format("{0}-{1}", Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex), tuple.Item2)).Select(item => item.First()).ToList();
@@ -102,6 +136,20 @@ namespace NeoEdit.GUI.Dialogs
 				return;
 
 			result = new Result(FindText, new Searcher(data));
+
+			History.Remove(FindText);
+			History.Insert(0, FindText);
+
+			savedShowLE = ShowLE;
+			savedShowBE = ShowBE;
+			savedShowInt = ShowInt;
+			savedShowFloat = ShowFloat;
+			savedShowStr = ShowStr;
+			savedMatchCase = MatchCase;
+			savedCodePages.Clear();
+			foreach (var checkBox in checkBoxes)
+				if (checkBox.IsChecked == true)
+					savedCodePages.Add(checkBox.CodePage);
 
 			DialogResult = true;
 		}
@@ -112,6 +160,33 @@ namespace NeoEdit.GUI.Dialogs
 			if (find.ShowDialog() == false)
 				return null;
 			return find.result;
+		}
+
+		void SelectAllNone(object sender, RoutedEventArgs e)
+		{
+			var button = e.Source as Button;
+			var strings = (button == AllStrings) || (button == NoStrings);
+			var all = button.Content as string == "All";
+			if (strings)
+			{
+				foreach (var checkBox in EncodingCheckBoxes)
+					checkBox.IsChecked = all;
+			}
+			else
+			{
+				var parent = UIHelper<BinaryFindDialog>.FindParent<GroupBox>(e.Source as FrameworkElement);
+				var children = UIHelper<BinaryFindDialog>.FindLogicalChildren<CodePageCheckBox>(parent).ToList();
+				foreach (var child in children)
+					if (child.IsVisible)
+						child.IsChecked = all;
+			}
+		}
+
+		void SelectAllNoneGlobal(object sender, RoutedEventArgs e)
+		{
+			var all = (e.Source as Button).Content as string == "_All";
+			foreach (var checkBox in checkBoxes)
+				checkBox.IsChecked = all;
 		}
 	}
 }

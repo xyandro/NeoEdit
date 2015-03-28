@@ -40,4 +40,4 @@ Add cursor mouse navigation (currently no way to jump to middle of file)
 
 Hex:
 Fix backwards search
-Remember search history
+Relative goto

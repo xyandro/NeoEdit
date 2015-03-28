@@ -155,5 +155,32 @@ namespace NeoEdit.GUI.Common
 		{
 			return Application.Current.Windows.OfType<ControlType>().Cast<ControlType>().LastOrDefault();
 		}
+
+		public static T FindParent<T>(FrameworkElement obj) where T : DependencyObject
+		{
+			while (obj != null)
+			{
+				if (obj is T)
+					return obj as T;
+				obj = obj.Parent as FrameworkElement;
+			}
+			return null;
+		}
+
+		public static IEnumerable<T> FindLogicalChildren<T>(DependencyObject obj) where T : DependencyObject
+		{
+			if (obj == null)
+				yield break;
+			foreach (var child in LogicalTreeHelper.GetChildren(obj))
+			{
+				if (child == null)
+					continue;
+				if (child is T)
+					yield return child as T;
+				if (child is DependencyObject)
+					foreach (var subChild in FindLogicalChildren<T>(child as DependencyObject))
+						yield return subChild;
+			}
+		}
 	}
 }
