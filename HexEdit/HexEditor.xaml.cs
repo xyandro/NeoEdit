@@ -90,11 +90,6 @@ namespace NeoEdit.HexEdit
 		const int minColumns = 4;
 		const int maxColumns = Int32.MaxValue;
 
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
-		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
-		bool controlOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Control; } }
-
 		int columns = minColumns;
 		long rows;
 
@@ -326,10 +321,10 @@ namespace NeoEdit.HexEdit
 			}
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
-			e.Handled = true;
-			switch (e.Key)
+			var ret = true;
+			switch (key)
 			{
 				case Key.Escape: Focus(); break;
 				case Key.Back:
@@ -350,7 +345,7 @@ namespace NeoEdit.HexEdit
 							inHexEdit = false;
 						}
 
-						if (e.Key == Key.Back)
+						if (key == Key.Back)
 						{
 							if (SelStart <= 0)
 								break;
@@ -370,7 +365,7 @@ namespace NeoEdit.HexEdit
 				case Key.Up:
 				case Key.Down:
 					{
-						var mult = e.Key == Key.Up ? -1 : 1;
+						var mult = key == Key.Up ? -1 : 1;
 						if (controlDown)
 							yScrollValue += mult;
 						else
@@ -404,16 +399,18 @@ namespace NeoEdit.HexEdit
 						MoveCursor((yScrollViewportFloor - 1) * columns, shiftDown);
 					break;
 				case Key.A:
-					if (controlOnly)
+					if (controlDown)
 					{
 						MoveCursor(Data.Length, false, false);
 						MoveCursor(0, true, false);
 					}
 					else
-						e.Handled = false;
+						ret = false;
 					break;
-				default: e.Handled = false; break;
+				default: ret = false; break;
 			}
+
+			return ret;
 		}
 
 		void ReplaceAll(byte[] bytes)
@@ -475,25 +472,25 @@ namespace NeoEdit.HexEdit
 			Replace(SelStart, useLen, bytes);
 		}
 
-		protected override void OnTextInput(TextCompositionEventArgs e)
+		internal bool HandleText(string text)
 		{
-			if (String.IsNullOrEmpty(e.Text))
-				return;
+			if (String.IsNullOrEmpty(text))
+				return true;
 
 			if (!SelHex)
 			{
-				Replace(Coder.StringToBytes(e.Text, CodePage));
-				return;
+				Replace(Coder.StringToBytes(text, CodePage));
+				return true;
 			}
 
-			var let = Char.ToUpper(e.Text[0]);
+			var let = Char.ToUpper(text[0]);
 			byte val;
 			if ((let >= '0') && (let <= '9'))
 				val = (byte)(let - '0');
 			else if ((let >= 'A') && (let <= 'F'))
 				val = (byte)(let - 'A' + 10);
 			else
-				return;
+				return true;
 
 			var saveInHexEdit = inHexEdit;
 			if (saveInHexEdit)
@@ -509,6 +506,8 @@ namespace NeoEdit.HexEdit
 				MoveCursor(SelStart - 1, false, false);
 				inHexEdit = true;
 			}
+
+			return true;
 		}
 
 		void MouseHandler(Point mousePos, bool selecting)
@@ -753,7 +752,7 @@ namespace NeoEdit.HexEdit
 				return;
 			if (position.Relative)
 				position.Value += Pos1;
-			MoveCursor(position.Value, shiftDown, false);
+			MoveCursor(position.Value, false, false);
 		}
 
 		internal void Command_Edit_Insert()

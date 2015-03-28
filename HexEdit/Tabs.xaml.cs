@@ -5,12 +5,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Microsoft.Win32;
-using NeoEdit.HexEdit.Data;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.HexEdit.Data;
 
 namespace NeoEdit.HexEdit
 {
@@ -39,6 +40,9 @@ namespace NeoEdit.HexEdit
 
 			HexEditors = new ObservableCollection<HexEditor>();
 		}
+
+		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
 		void Add(HexEditor hexEditor)
 		{
@@ -142,6 +146,44 @@ namespace NeoEdit.HexEdit
 			Active = active;
 			HexEditors.ToList().ForEach(hexEditor => hexEditor.Close());
 			base.OnClosing(e);
+		}
+
+		protected override void OnKeyDown(KeyEventArgs e)
+		{
+			base.OnKeyDown(e);
+			if (e.Handled)
+				return;
+
+			var shiftDown = this.shiftDown;
+			var controlDown = this.controlDown;
+
+			e.Handled = HandleKey(e.Key, shiftDown, controlDown);
+		}
+
+		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
+		{
+			if (Active == null)
+				return false;
+			return Active.HandleKey(key, shiftDown, controlDown);
+		}
+
+		protected override void OnTextInput(TextCompositionEventArgs e)
+		{
+			base.OnTextInput(e);
+			if (e.Handled)
+				return;
+
+			if (e.Source is MenuItem)
+				return;
+
+			e.Handled = HandleText(e.Text);
+		}
+
+		internal bool HandleText(string text)
+		{
+			if (Active == null)
+				return false;
+			return Active.HandleText(text);
 		}
 
 		void RunCommand(HexEditCommand command)
