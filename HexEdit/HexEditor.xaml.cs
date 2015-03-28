@@ -745,14 +745,14 @@ namespace NeoEdit.HexEdit
 			DoFind(forward);
 		}
 
-		internal void Command_Edit_Goto()
+		internal void Command_Edit_Goto(bool shiftDown)
 		{
 			var position = GotoDialog.Run(Pos1);
 			if (position == null)
 				return;
 			if (position.Relative)
 				position.Value += Pos1;
-			MoveCursor(position.Value, false, false);
+			MoveCursor(position.Value, shiftDown, false);
 		}
 
 		internal void Command_Edit_Insert()

@@ -220,7 +220,7 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.Edit_Find: Active.Command_Edit_Find(); break;
 				case HexEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true); break;
 				case HexEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false); break;
-				case HexEditCommand.Edit_Goto: Active.Command_Edit_Goto(); break;
+				case HexEditCommand.Edit_Goto: Active.Command_Edit_Goto(shiftDown); break;
 				case HexEditCommand.Edit_Insert: Active.Command_Edit_Insert(); break;
 				case HexEditCommand.View_Values: Active.Command_View_Values(); break;
 				case HexEditCommand.View_Refresh: Active.Command_View_Refresh(); break;

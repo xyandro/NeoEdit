@@ -28,7 +28,7 @@ namespace NeoEdit.HexEdit
 		[KeyGesture(Key.F, ModifierKeys.Control)] Edit_Find,
 		[KeyGesture(Key.F3)] Edit_FindNext,
 		[KeyGesture(Key.F3, ModifierKeys.Shift)] Edit_FindPrev,
-		[KeyGesture(Key.G, ModifierKeys.Control)] Edit_Goto,
+		[KeyGesture(Key.G, ModifierKeys.Control)] [KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Goto,
 		[KeyGesture(Key.Insert)] Edit_Insert,
 		View_Values,
 		[KeyGesture(Key.F5)] View_Refresh,
