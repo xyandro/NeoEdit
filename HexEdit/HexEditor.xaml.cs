@@ -54,38 +54,26 @@ namespace NeoEdit.HexEdit
 
 		long _pos1, _pos2;
 
-		long Pos1
+		long Pos1 { get { return _pos1; } }
+		long Pos2 { get { return _pos2; } }
+
+		void MoveCursor(long value, bool selecting, bool rel = true)
 		{
-			get { return _pos1; }
-			set
-			{
-				_pos1 = Math.Min(Data.Length, Math.Max(0, value));
-				if (!selecting)
-					_pos2 = _pos1;
+			if (rel)
+				value += _pos1;
+			_pos1 = Math.Min(Data.Length, Math.Max(0, value));
+			if (!selecting)
+				_pos2 = _pos1;
 
-				inHexEdit = false;
+			inHexEdit = false;
 
-				SelStart = Math.Min(_pos1, _pos2);
-				SelEnd = Math.Max(_pos1, _pos2);
+			SelStart = Math.Min(_pos1, _pos2);
+			SelEnd = Math.Max(_pos1, _pos2);
 
-				EnsureVisible(Pos1);
-				canvas.InvalidateVisual();
-			}
+			EnsureVisible(Pos1);
+			canvas.InvalidateVisual();
 		}
 
-		long Pos2
-		{
-			get { return _pos2; }
-			set
-			{
-				_pos2 = Math.Min(Data.Length, Math.Max(0, value));
-
-				SelStart = Math.Min(_pos1, _pos2);
-				SelEnd = Math.Max(_pos1, _pos2);
-
-				canvas.InvalidateVisual();
-			}
-		}
 		long Length { get { return SelEnd - SelStart; } }
 		bool sexHex;
 		bool SelHex
@@ -102,12 +90,10 @@ namespace NeoEdit.HexEdit
 		const int minColumns = 4;
 		const int maxColumns = Int32.MaxValue;
 
-		bool mouseDown;
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
 		bool controlOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.Control; } }
-		bool selecting { get { return (mouseDown) || (shiftDown); } }
 
 		int columns = minColumns;
 		long rows;
@@ -151,7 +137,7 @@ namespace NeoEdit.HexEdit
 			localCallbacks = UIHelper<HexEditor>.GetLocalCallbacks(this);
 
 			canvas.MouseLeftButtonDown += OnCanvasMouseLeftButtonDown;
-			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonDown;
+			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonUp;
 			canvas.MouseMove += OnCanvasMouseMove;
 			canvas.Render += OnCanvasRender;
 
@@ -368,17 +354,17 @@ namespace NeoEdit.HexEdit
 						{
 							if (SelStart <= 0)
 								break;
-							Pos1 = SelStart - 1;
+							MoveCursor(-1, false);
 						}
 						if (SelStart >= Data.Length)
 							break;
-						Pos2 = Pos1 + 1;
+						MoveCursor(1, true);
 						Replace(null);
 					}
 					break;
 				case Key.Tab:
 					if (inHexEdit)
-						Pos1++;
+						MoveCursor(1, shiftDown);
 					SelHex = !SelHex;
 					break;
 				case Key.Up:
@@ -388,40 +374,40 @@ namespace NeoEdit.HexEdit
 						if (controlDown)
 							yScrollValue += mult;
 						else
-							Pos1 += columns * mult;
+							MoveCursor(columns * mult, shiftDown);
 					}
 					break;
-				case Key.Left: --Pos1; break;
-				case Key.Right: ++Pos1; break;
+				case Key.Left: MoveCursor(-1, shiftDown); break;
+				case Key.Right: MoveCursor(1, shiftDown); break;
 				case Key.Home:
 					if (controlDown)
-						Pos1 = 0;
+						MoveCursor(0, shiftDown, false);
 					else
-						Pos1 -= Pos1 % columns;
+						MoveCursor(-(Pos1 % columns), shiftDown);
 					break;
 				case Key.End:
 					if (controlDown)
-						Pos1 = Data.Length;
+						MoveCursor(Data.Length, shiftDown, false);
 					else
-						Pos1 += columns - Pos1 % columns - 1;
+						MoveCursor(columns - Pos1 % columns - 1, shiftDown);
 					break;
 				case Key.PageUp:
 					if (controlDown)
-						Pos1 = yScrollValue * columns + Pos1 % columns;
+						MoveCursor(yScrollValue * columns + Pos1 % columns, shiftDown, false);
 					else
-						Pos1 -= (yScrollViewportFloor - 1) * columns;
+						MoveCursor(-(yScrollViewportFloor - 1) * columns, shiftDown);
 					break;
 				case Key.PageDown:
 					if (controlDown)
-						Pos1 = (yScrollValue + yScrollViewportFloor - 1) * columns + Pos1 % columns;
+						MoveCursor((yScrollValue + yScrollViewportFloor - 1) * columns + Pos1 % columns, shiftDown, false);
 					else
-						Pos1 += (yScrollViewportFloor - 1) * columns;
+						MoveCursor((yScrollViewportFloor - 1) * columns, shiftDown);
 					break;
 				case Key.A:
 					if (controlOnly)
 					{
-						Pos1 = Data.Length;
-						Pos2 = 0;
+						MoveCursor(Data.Length, false, false);
+						MoveCursor(0, true, false);
 					}
 					else
 						e.Handled = false;
@@ -432,10 +418,10 @@ namespace NeoEdit.HexEdit
 
 		void ReplaceAll(byte[] bytes)
 		{
-			Pos1 = 0;
-			Pos2 = Data.Length;
+			MoveCursor(Data.Length, false, false);
+			MoveCursor(0, true, false);
 			Replace(bytes, true);
-			Pos1 = Pos2 = 0;
+			MoveCursor(0, false, false);
 		}
 
 		enum ReplaceType
@@ -464,7 +450,7 @@ namespace NeoEdit.HexEdit
 
 			Replace(SelStart, count, bytes);
 
-			Pos1 = Pos2 = SelStart + bytes.Length;
+			MoveCursor(SelStart + bytes.Length, false, false);
 		}
 
 		void Replace(long index, long count, byte[] bytes, ReplaceType replaceType = ReplaceType.Normal)
@@ -513,19 +499,19 @@ namespace NeoEdit.HexEdit
 			if (saveInHexEdit)
 			{
 				val = (byte)(Data[SelStart] * 16 + val);
-				++Pos2;
+				MoveCursor(1, true);
 			}
 
 			Replace(new byte[] { val });
 
 			if (!saveInHexEdit)
 			{
-				Pos1 = Pos2 = SelStart - 1;
+				MoveCursor(SelStart - 1, false, false);
 				inHexEdit = true;
 			}
 		}
 
-		void MouseHandler(Point mousePos)
+		void MouseHandler(Point mousePos, bool selecting)
 		{
 			var x = mousePos.X;
 			var row = (long)(mousePos.Y / Font.lineHeight) + yScrollValue;
@@ -553,27 +539,29 @@ namespace NeoEdit.HexEdit
 				return;
 
 			SelHex = isHex;
-			Pos1 = pos;
+			MoveCursor(pos, selecting, false);
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			Focus();
-			MouseHandler(e.GetPosition(canvas));
-			mouseDown = e.ButtonState == MouseButtonState.Pressed;
-			if (mouseDown)
-				canvas.CaptureMouse();
-			else
-				canvas.ReleaseMouseCapture();
+			canvas.CaptureMouse();
+			MouseHandler(e.GetPosition(canvas), (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None);
+			e.Handled = true;
+		}
+
+		void OnCanvasMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			canvas.ReleaseMouseCapture();
 			e.Handled = true;
 		}
 
 		void OnCanvasMouseMove(object sender, MouseEventArgs e)
 		{
-			if (!mouseDown)
+			if (!canvas.IsMouseCaptured)
 				return;
 
-			MouseHandler(e.GetPosition(canvas));
+			MouseHandler(e.GetPosition(canvas), true);
 			e.Handled = true;
 		}
 
@@ -640,7 +628,7 @@ namespace NeoEdit.HexEdit
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
-			Pos2 = Pos1 = 0;
+			MoveCursor(0, false, false);
 
 			++ChangeCount;
 		}
@@ -691,8 +679,8 @@ namespace NeoEdit.HexEdit
 
 			Replace(step.index, step.count, step.bytes, ReplaceType.Undo);
 
-			Pos1 = step.index;
-			Pos2 = Pos1 + step.bytes.Length;
+			MoveCursor(step.index, false, false);
+			MoveCursor(step.index + step.bytes.Length, true, false);
 		}
 
 		internal void Command_Edit_Redo()
@@ -703,7 +691,8 @@ namespace NeoEdit.HexEdit
 
 			Replace(step.index, step.count, step.bytes, ReplaceType.Redo);
 
-			Pos1 = Pos2 = step.index + step.bytes.Length;
+			MoveCursor(step.index, false, false);
+			MoveCursor(step.index + step.bytes.Length, step.bytes.Length != 1, false);
 		}
 
 		internal void Command_Edit_CutCopy(bool isCut)
@@ -764,7 +753,7 @@ namespace NeoEdit.HexEdit
 				return;
 			if (position.Relative)
 				position.Value += Pos1;
-			Pos1 = position.Value;
+			MoveCursor(position.Value, shiftDown, false);
 		}
 
 		internal void Command_Edit_Insert()
@@ -896,8 +885,8 @@ namespace NeoEdit.HexEdit
 				if (Data.Find(currentFind, index, out start, out end, forward))
 				{
 					EnsureVisible(start);
-					Pos1 = end;
-					Pos2 = start;
+					MoveCursor(start, false, false);
+					MoveCursor(end, true, false);
 					return;
 				}
 
