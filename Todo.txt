@@ -4,6 +4,7 @@ Starting 2nd instance pops up in background
 Tabs: Ctrl-Tab to switch
 Add command prompt
 Diff?
+Hex number dialog should accept negative numbers
 
 Disk:
 Select by SVN ignore
@@ -40,4 +41,4 @@ Add cursor mouse navigation (currently no way to jump to middle of file)
 
 Hex:
 Fix backwards search
-Relative goto
+Can select with goto

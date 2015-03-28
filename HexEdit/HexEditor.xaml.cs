@@ -759,9 +759,12 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Goto()
 		{
-			var position = GoToPositionDialog.Run(0, Data.Length - 1, Pos1);
-			if (position.HasValue)
-				Pos1 = Pos2 = position.Value;
+			var position = GotoDialog.Run(Pos1);
+			if (position == null)
+				return;
+			if (position.Relative)
+				position.Value += Pos1;
+			Pos1 = position.Value;
 		}
 
 		internal void Command_Edit_Insert()

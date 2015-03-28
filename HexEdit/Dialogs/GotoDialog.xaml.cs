@@ -1,0 +1,56 @@
+﻿using System.Windows;
+using NeoEdit.GUI.Common;
+
+namespace NeoEdit.HexEdit.Dialogs
+{
+	internal partial class GotoDialog
+	{
+		internal class Result
+		{
+			public long Value { get; set; }
+			public bool Relative { get; set; }
+		}
+
+		[DepProp]
+		public long Value { get { return UIHelper<GotoDialog>.GetPropValue<long>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool Relative { get { return UIHelper<GotoDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+
+		static GotoDialog()
+		{
+			UIHelper<GotoDialog>.Register();
+			UIHelper<GotoDialog>.AddCallback(a => a.Relative, (obj, o, n) => obj.SetRelative(o, n));
+		}
+
+		readonly long startValue;
+		GotoDialog(long value)
+		{
+			InitializeComponent();
+			Value = startValue = value;
+		}
+
+		void SetRelative(bool oldValue, bool newValue)
+		{
+			if (oldValue == newValue)
+				return;
+
+			if (newValue)
+				Value -= startValue;
+			else
+				Value += startValue;
+		}
+
+		Result result;
+		void OkClick(object sender, RoutedEventArgs e)
+		{
+			result = new Result { Value = Value, Relative = Relative };
+			DialogResult = true;
+		}
+
+		public static Result Run(long value)
+		{
+			var dialog = new GotoDialog(value);
+			return dialog.ShowDialog() == true ? dialog.result : null;
+		}
+	}
+}
