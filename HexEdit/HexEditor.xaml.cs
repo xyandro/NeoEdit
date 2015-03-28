@@ -400,10 +400,7 @@ namespace NeoEdit.HexEdit
 					break;
 				case Key.A:
 					if (controlDown)
-					{
-						MoveCursor(Data.Length, false, false);
-						MoveCursor(0, true, false);
-					}
+						SelectAll();
 					else
 						ret = false;
 					break;
@@ -413,12 +410,10 @@ namespace NeoEdit.HexEdit
 			return ret;
 		}
 
-		void ReplaceAll(byte[] bytes)
+		void SelectAll()
 		{
-			MoveCursor(Data.Length, false, false);
-			MoveCursor(0, true, false);
-			Replace(bytes, true);
 			MoveCursor(0, false, false);
+			MoveCursor(Data.Length, true, false);
 		}
 
 		enum ReplaceType
@@ -447,7 +442,8 @@ namespace NeoEdit.HexEdit
 
 			Replace(SelStart, count, bytes);
 
-			MoveCursor(SelStart + bytes.Length, false, false);
+			MoveCursor(SelStart, false, false);
+			MoveCursor(SelStart + bytes.Length, bytes.Length != 1, false);
 		}
 
 		void Replace(long index, long count, byte[] bytes, ReplaceType replaceType = ReplaceType.Normal)
@@ -789,11 +785,10 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Hash(Hash.Type type)
 		{
-			byte[] data;
 			if (Length == 0)
-				data = Data.GetAllBytes();
-			else
-				data = Data.GetSubset(SelStart, Length);
+				SelectAll();
+
+			var data = Data.GetSubset(SelStart, Length);
 			new Message
 			{
 				Title = "Result",
@@ -807,10 +802,13 @@ namespace NeoEdit.HexEdit
 			if (!VerifyInsert())
 				return;
 
+			if (Length == 0)
+				SelectAll();
+
 			if (compress)
-				ReplaceAll(Compression.Compress(type, Data.GetAllBytes()));
+				Replace(Compression.Compress(type, Data.GetSubset(SelStart, SelEnd - SelStart)), true);
 			else
-				ReplaceAll(Compression.Decompress(type, Data.GetAllBytes()));
+				Replace(Compression.Decompress(type, Data.GetSubset(SelStart, SelEnd - SelStart)), true);
 		}
 
 		internal void Command_Data_Encrypt(bool isEncrypt, Crypto.Type type)
@@ -834,10 +832,13 @@ namespace NeoEdit.HexEdit
 				key = keyDialog.Key;
 			}
 
+			if (Length == 0)
+				SelectAll();
+
 			if (isEncrypt)
-				ReplaceAll(Crypto.Encrypt(type, Data.GetAllBytes(), key));
+				Replace(Crypto.Encrypt(type, Data.GetSubset(SelStart, SelEnd - SelStart), key), true);
 			else
-				ReplaceAll(Crypto.Decrypt(type, Data.GetAllBytes(), key));
+				Replace(Crypto.Decrypt(type, Data.GetSubset(SelStart, SelEnd - SelStart), key), true);
 		}
 
 		internal void Command_Data_Sign(bool sign, Crypto.Type type)
@@ -846,10 +847,13 @@ namespace NeoEdit.HexEdit
 			if (keyDialog.ShowDialog() != true)
 				return;
 
+			if (Length == 0)
+				SelectAll();
+
 			string text;
 			if (sign)
-				text = Crypto.Sign(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash);
-			else if (Crypto.Verify(type, Data.GetAllBytes(), keyDialog.Key, keyDialog.Hash, keyDialog.Signature))
+				text = Crypto.Sign(type, Data.GetSubset(SelStart, SelEnd - SelStart), keyDialog.Key, keyDialog.Hash);
+			else if (Crypto.Verify(type, Data.GetSubset(SelStart, SelEnd - SelStart), keyDialog.Key, keyDialog.Hash, keyDialog.Signature))
 				text = "Matched.";
 			else
 				text = "ERROR: Signature DOES NOT match.";
