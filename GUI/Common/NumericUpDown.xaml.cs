@@ -99,7 +99,7 @@ namespace NeoEdit.GUI.Common
 				if (isHex)
 					value = long.Parse(values.Substring(2), NumberStyles.AllowHexSpecifier);
 				else
-					value = long.Parse(values, NumberStyles.AllowThousands);
+					value = long.Parse(values, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign);
 				return new object[] { value, isHex };
 			}
 			catch { return null; }
