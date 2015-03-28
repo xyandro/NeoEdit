@@ -217,9 +217,9 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.Edit_Cut: Active.Command_Edit_CutCopy(true); break;
 				case HexEditCommand.Edit_Copy: Active.Command_Edit_CutCopy(false); break;
 				case HexEditCommand.Edit_Paste: Active.Command_Edit_Paste(); break;
-				case HexEditCommand.Edit_Find: Active.Command_Edit_Find(); break;
-				case HexEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true); break;
-				case HexEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false); break;
+				case HexEditCommand.Edit_Find: Active.Command_Edit_Find(shiftDown); break;
+				case HexEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true, shiftDown); break;
+				case HexEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false, shiftDown); break;
 				case HexEditCommand.Edit_Goto: Active.Command_Edit_Goto(shiftDown); break;
 				case HexEditCommand.Edit_Insert: Active.Command_Edit_Insert(); break;
 				case HexEditCommand.View_Values: Active.Command_View_Values(); break;

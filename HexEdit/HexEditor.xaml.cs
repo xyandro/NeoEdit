@@ -729,20 +729,20 @@ namespace NeoEdit.HexEdit
 				Replace(bytes);
 		}
 
-		internal void Command_Edit_Find()
+		internal void Command_Edit_Find(bool shiftDown)
 		{
 			var results = BinaryFindDialog.Run();
 			if (results != null)
 			{
 				currentFind = results;
 				FoundText = currentFind.Text;
-				DoFind();
+				DoFind(shiftDown);
 			}
 		}
 
-		internal void Command_Edit_FindNextPrev(bool forward)
+		internal void Command_Edit_FindNextPrev(bool forward, bool shiftDown)
 		{
-			DoFind(forward);
+			DoFind(shiftDown, forward);
 		}
 
 		internal void Command_Edit_Goto(bool shiftDown)
@@ -872,19 +872,20 @@ namespace NeoEdit.HexEdit
 		}
 
 		BinaryFindDialog.Result currentFind;
-		void DoFind(bool forward = true)
+		void DoFind(bool shiftDown, bool forward = true)
 		{
 			if (currentFind == null)
 				return;
 
-			long index = SelStart, start, end;
+			long index = SelEnd, start, end;
 
 			while (true)
 			{
 				if (Data.Find(currentFind, index, out start, out end, forward))
 				{
 					EnsureVisible(start);
-					MoveCursor(start, false, false);
+					if (!shiftDown)
+						MoveCursor(start, false, false);
 					MoveCursor(end, true, false);
 					return;
 				}
