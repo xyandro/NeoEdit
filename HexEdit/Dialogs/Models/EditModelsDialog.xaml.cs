@@ -105,6 +105,16 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			ModelData.Modified = true;
 		}
 
+		void DefaultModel(object sender, RoutedEventArgs e)
+		{
+			var defaultModel = models.SelectedItems.Cast<Model>().SingleOrDefault();
+			if ((defaultModel == null) || (ModelData.Default == defaultModel))
+				return;
+
+			ModelData.Default = defaultModel;
+			ModelData.Modified = true;
+		}
+
 		void SaveModels(object sender, RoutedEventArgs e)
 		{
 			SaveModels();

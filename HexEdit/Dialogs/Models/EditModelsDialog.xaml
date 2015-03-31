@@ -18,12 +18,29 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Content="_Models:" Target="{Binding ElementName=models}"/>
-		<ListView Grid.Row="1" Grid.RowSpan="2" Name="models" MouseDoubleClick="EditModel" ItemsSource="{Binding ModelData.Models, ElementName=self}" Width="400" Height="300" DisplayMemberPath="ModelName"/>
+		<ListView Grid.Row="1" Grid.RowSpan="2" Name="models" MouseDoubleClick="EditModel" ItemsSource="{Binding ModelData.Models, ElementName=self}" Width="400" Height="300" DisplayMemberPath="ModelName">
+			<ListView.ItemContainerStyle>
+				<Style TargetType="{x:Type ListViewItem}">
+					<Style.Triggers>
+						<DataTrigger Value="True">
+							<DataTrigger.Binding>
+								<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] == [1]">
+									<Binding/>
+									<Binding Path="ModelData.Default" ElementName="self"/>
+								</MultiBinding>
+							</DataTrigger.Binding>
+							<Setter Property="FontWeight" Value="Bold"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</ListView.ItemContainerStyle>
+		</ListView>
 
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Left" Rows="1">
 			<Button Content="_New" Click="NewModel" Padding="10,1"/>
 			<Button Content="_Edit" Click="EditModel" Padding="10,1"/>
 			<Button Content="_Delete" Click="DeleteModel" Padding="10,1"/>
+			<Button Content="De_fault" Click="DefaultModel" Padding="10,1"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Rows="1">
