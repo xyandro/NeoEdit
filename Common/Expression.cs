@@ -472,9 +472,9 @@ namespace NeoEdit.Common
 					case "ti>": data.AddResult(op.GetTerm<string>(0, data).ToLower().CompareTo(op.GetTerm<string>(1, data).ToLower()) > 0); break;
 					case "ti>=": data.AddResult(op.GetTerm<string>(0, data).ToLower().CompareTo(op.GetTerm<string>(1, data).ToLower()) >= 0); break;
 					case "=":
-					case "==":
+					case "==": data.AddResult(op.GetTerm<object>(0, data) == op.GetTerm<object>(1, data)); break;
 					case "t==": data.AddResult(op.GetTerm<string>(0, data) == op.GetTerm<string>(1, data)); break;
-					case "!=":
+					case "!=": data.AddResult(op.GetTerm<object>(0, data) != op.GetTerm<object>(1, data)); break;
 					case "t!=": data.AddResult(op.GetTerm<string>(0, data) != op.GetTerm<string>(1, data)); break;
 					case "ti==": data.AddResult(op.GetTerm<string>(0, data).Equals(op.GetTerm<string>(1, data), StringComparison.OrdinalIgnoreCase)); break;
 					case "ti!=": data.AddResult(!op.GetTerm<string>(0, data).Equals(op.GetTerm<string>(1, data), StringComparison.OrdinalIgnoreCase)); break;

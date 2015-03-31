@@ -15,6 +15,8 @@ using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.HexEdit.Data;
 using NeoEdit.HexEdit.Dialogs;
+using NeoEdit.HexEdit.Dialogs.Models;
+using NeoEdit.HexEdit.Models;
 
 namespace NeoEdit.HexEdit
 {
@@ -873,6 +875,12 @@ namespace NeoEdit.HexEdit
 				return;
 			var data = Enumerable.Range(0, (int)(SelEnd - SelStart)).Select(a => fill.Value).ToArray();
 			Replace(SelStart, SelEnd - SelStart, data);
+		}
+
+		internal void Command_Model_Define()
+		{
+			var models = new List<Model>();
+			EditModelsDialog.Run(models);
 		}
 
 		BinaryFindDialog.Result currentFind;

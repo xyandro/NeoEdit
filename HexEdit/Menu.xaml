@@ -81,6 +81,9 @@
 		</MenuItem>
 		<hexEdit:HexEditMenuItem Header="_Fill" CommandEnum="Data_Fill"/>
 	</MenuItem>
+	<MenuItem Header="_Models">
+		<hexEdit:HexEditMenuItem Header="_Define" CommandEnum="Data_Models_Define"/>
+	</MenuItem>
 	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
 	<guiCommon:HelpMenu/>
 

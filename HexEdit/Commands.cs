@@ -55,5 +55,6 @@ namespace NeoEdit.HexEdit
 		Data_Verify_RSA,
 		Data_Verify_DSA,
 		Data_Fill,
+		[KeyGesture(Key.D, ModifierKeys.Control)] Data_Models_Define,
 	}
 }

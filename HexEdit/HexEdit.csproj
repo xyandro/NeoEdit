@@ -9,16 +9,37 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup>
+    <Page Include="Dialogs\Models\EditModelsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Models\EditModelDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\GotoDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Models\EditActionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="HexEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="Dialogs\Models\EditModelsDialog.xaml.cs">
+      <DependentUpon>EditModelsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Models\EditModelDialog.xaml.cs">
+      <DependentUpon>EditModelDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\GotoDialog.xaml.cs">
       <DependentUpon>GotoDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Models\EditActionDialog.xaml.cs">
+      <DependentUpon>EditActionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="HexEditor.xaml.cs">
       <DependentUpon>HexEditor.xaml</DependentUpon>
@@ -81,6 +102,8 @@
     </Compile>
     <Compile Include="Misc.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="Models\ModelAction.cs" />
+    <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
