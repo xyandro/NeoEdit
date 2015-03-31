@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.HexEdit.Dialogs
@@ -10,10 +8,7 @@ namespace NeoEdit.HexEdit.Dialogs
 		[DepProp]
 		public byte Fill { get { return UIHelper<FillDialog>.GetPropValue<byte>(this); } set { UIHelper<FillDialog>.SetPropValue(this, value); } }
 
-		static FillDialog()
-		{
-			UIHelper<FillDialog>.Register();
-		}
+		static FillDialog() { UIHelper<FillDialog>.Register(); }
 
 		FillDialog()
 		{
