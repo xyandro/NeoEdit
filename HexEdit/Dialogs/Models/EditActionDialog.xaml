@@ -28,7 +28,7 @@
 				<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
 					<RadioButton Content="B_it" Margin="0,0,10,0" GroupName="ActionType" IsChecked="{Binding Action.Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Bit}"/>
 					<RadioButton Content="_Basic Type" Margin="0,0,10,0" GroupName="ActionType" IsChecked="{Binding Action.Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=BasicType}"/>
-					<RadioButton Content="_String" Margin="0,0,10,0" GroupName="ActionType" IsChecked="{Binding Action.Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=String}"/>
+					<RadioButton Content="Strin_g" Margin="0,0,10,0" GroupName="ActionType" IsChecked="{Binding Action.Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=String}"/>
 					<RadioButton Content="_Unused" Margin="0,0,10,0" GroupName="ActionType" IsChecked="{Binding Action.Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Unused}"/>
 					<RadioButton Content="_Model" Margin="0,0,10,0" GroupName="ActionType" IsChecked="{Binding Action.Type, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Model}"/>
 				</StackPanel>
@@ -118,7 +118,7 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Row="0" Grid.Column="0" Content="_Model:" HorizontalContentAlignment="Right" Target="{Binding ElementName=model}"/>
+				<Label Grid.Row="0" Grid.Column="0" Content="M_odel:" HorizontalContentAlignment="Right" Target="{Binding ElementName=model}"/>
 				<ComboBox Grid.Row="0" Grid.Column="1" Name="model" ItemsSource="{Binding Models, ElementName=self}" SelectedValue="{Binding Action.Model, ElementName=self}" DisplayMemberPath="Value" SelectedValuePath="Key"/>
 			</Grid>
 		</GroupBox>

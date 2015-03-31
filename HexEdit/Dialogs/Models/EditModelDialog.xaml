@@ -17,17 +17,11 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Name:" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Na_me:" HorizontalAlignment="Right" Target="{Binding ElementName=name}"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Name="name" Text="{Binding Model.ModelName, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Actions:" HorizontalAlignment="Right"/>
-		<ListView Grid.Row="1" Grid.Column="1" Name="actions" ItemsSource="{Binding Model.Actions, ElementName=self}" Width="500" Height="300">
-			<ListView.View>
-				<GridView>
-					<GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"/>
-				</GridView>
-			</ListView.View>
-		</ListView>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Actions:" HorizontalAlignment="Right" Target="{Binding ElementName=actions}"/>
+		<ListView Grid.Row="1" Grid.Column="1" Name="actions" DisplayMemberPath="Description" ItemsSource="{Binding Model.Actions, ElementName=self}" Width="500" Height="300"/>
 
 		<UniformGrid Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
 			<Button Content="_New" Click="NewAction" Padding="10,1"/>

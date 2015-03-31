@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -85,20 +86,22 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 		void DeleteModel(object sender, RoutedEventArgs e)
 		{
-			if (models.SelectedIndex == -1)
+			var delete = models.SelectedItems.Cast<Model>().ToList();
+			if (!delete.Any())
 				return;
 
 			if (new Message
 			{
 				Title = "Please confirm",
-				Text = "Are you sure you want to delete this model?",
+				Text = "Are you sure you want to delete these models?",
 				Options = Message.OptionsEnum.YesNo,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 
-			ModelData.Models.RemoveAt(models.SelectedIndex);
+			foreach (var model in delete)
+				ModelData.Models.Remove(model);
 			ModelData.Modified = true;
 		}
 

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using NeoEdit.GUI.Common;
 using NeoEdit.HexEdit.Models;
 
@@ -46,9 +47,11 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 		void DeleteAction(object sender, RoutedEventArgs e)
 		{
-			if (actions.SelectedIndex == -1)
+			var delete = actions.SelectedItems.Cast<ModelAction>().ToList();
+			if (!delete.Any())
 				return;
-			Model.Actions.RemoveAt(actions.SelectedIndex);
+			foreach (var action in delete)
+				Model.Actions.Remove(action);
 		}
 
 		public static Model Run(ModelData modelData, Model model = null)

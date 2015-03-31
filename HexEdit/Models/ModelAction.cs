@@ -55,6 +55,7 @@ namespace NeoEdit.HexEdit.Models
 			{
 				switch (Type)
 				{
+					case ActionType.Bit: return "Bit";
 					case ActionType.BasicType: return CodePage.ToString();
 					case ActionType.String:
 						{
