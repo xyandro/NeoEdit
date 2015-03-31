@@ -300,7 +300,7 @@
 				<Style TargetType="MenuItem">
 					<Setter Property="IsChecked">
 						<Setter.Value>
-							<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] == 'View_Highlighting_' t+ [1]">
+							<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="[0] t== 'View_Highlighting_' t+ [1]">
 								<Binding Path="CommandEnum" RelativeSource="{RelativeSource Self}"/>
 								<Binding Path="Parent.Active.HighlightType" ElementName="self"/>
 							</MultiBinding>
@@ -314,7 +314,7 @@
 			<textEdit:TextEditMenuItem Header="C++" CommandEnum="View_Highlighting_CPlusPlus"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
+		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0] t== \'Tiles\''}"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<textEdit:TextEditMenuItem Header="Quick Record" CommandEnum="Macro_QuickRecord"/>

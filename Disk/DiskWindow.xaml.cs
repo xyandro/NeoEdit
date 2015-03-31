@@ -611,7 +611,7 @@ namespace NeoEdit.Disk
 		internal Label GetLabel()
 		{
 			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"[0] == '' ? 'Custom' : FileName([0])" };
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"[0] t== '' ? 'Custom' : FileName([0])" };
 			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
 			label.SetBinding(Label.ContentProperty, multiBinding);
 			return label;

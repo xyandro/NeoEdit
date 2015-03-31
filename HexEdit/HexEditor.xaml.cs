@@ -156,7 +156,7 @@ namespace NeoEdit.HexEdit
 		internal Label GetLabel()
 		{
 			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0]==''?'[Untitled]':FileName([0]))t+([1]?'*':'')" };
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"([0] t== ''?'[Untitled]':FileName([0]))t+([1]?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
 			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
 			label.SetBinding(Label.ContentProperty, multiBinding);

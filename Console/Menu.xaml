@@ -8,7 +8,7 @@
 		<console:ConsoleMenuItem Header="_New" CommandEnum="File_New"/>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<console:ConsoleMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0]==\'Tiles\''}"/>
+		<console:ConsoleMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0] t== \'Tiles\''}"/>
 	</MenuItem>
 	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
 	<guiCommon:HelpMenu/>
