@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using NeoEdit.GUI.Common;
 using NeoEdit.HexEdit.Models;
 
@@ -10,15 +9,15 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 		[DepProp]
 		public Model Model { get { return UIHelper<EditModelDialog>.GetPropValue<Model>(this); } set { UIHelper<EditModelDialog>.SetPropValue(this, value); } }
 
-		readonly IEnumerable<Model> models;
+		readonly ModelData modelData;
 
 		static EditModelDialog() { UIHelper<EditModelDialog>.Register(); }
 
-		EditModelDialog(IEnumerable<Model> _models, Model model)
+		EditModelDialog(ModelData _modelData, Model model)
 		{
 			InitializeComponent();
 
-			models = _models;
+			modelData = _modelData;
 			Model = model;
 		}
 
@@ -29,7 +28,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 		void NewAction(object sender, RoutedEventArgs e)
 		{
-			var action = EditActionDialog.Run(models, new ModelAction());
+			var action = EditActionDialog.Run(modelData, new ModelAction());
 			if (action != null)
 				Model.Actions.Add(action);
 		}
@@ -40,7 +39,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			if (action == null)
 				return;
 
-			action = EditActionDialog.Run(models, action);
+			action = EditActionDialog.Run(modelData, action);
 			if (action != null)
 				Model.Actions[actions.SelectedIndex] = action;
 		}
@@ -52,10 +51,10 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			Model.Actions.RemoveAt(actions.SelectedIndex);
 		}
 
-		public static Model Run(IEnumerable<Model> models, Model model = null)
+		public static Model Run(ModelData modelData, Model model = null)
 		{
 			model = model == null ? new Model() : model.Copy();
-			return new EditModelDialog(models, model).ShowDialog() == true ? model : null;
+			return new EditModelDialog(modelData, model).ShowDialog() == true ? model : null;
 		}
 	}
 }

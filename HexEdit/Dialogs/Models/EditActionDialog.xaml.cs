@@ -22,7 +22,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 		static EditActionDialog() { UIHelper<EditActionDialog>.Register(); }
 
-		EditActionDialog(IEnumerable<Model> models, ModelAction action)
+		EditActionDialog(ModelData modelData, ModelAction action)
 		{
 			StringTypes = new List<ModelAction.ActionStringType>();
 			StringTypes.Add(ModelAction.ActionStringType.StringWithLength);
@@ -40,7 +40,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			}
 
 			Models = new Dictionary<HexEdit.Models.Model, string>();
-			foreach (var model in models)
+			foreach (var model in modelData.Models)
 				Models[model] = model.ModelName;
 
 			InitializeComponent();
@@ -53,10 +53,10 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			DialogResult = true;
 		}
 
-		public static ModelAction Run(IEnumerable<Model> models, ModelAction action = null)
+		public static ModelAction Run(ModelData modelData, ModelAction action = null)
 		{
 			action = action == null ? new ModelAction() : action.Copy();
-			return new EditActionDialog(models, action).ShowDialog() == true ? action : null;
+			return new EditActionDialog(modelData, action).ShowDialog() == true ? action : null;
 		}
 	}
 }

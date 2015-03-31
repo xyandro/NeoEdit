@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
@@ -11,16 +9,15 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 	partial class EditModelsDialog
 	{
 		[DepProp]
-		public ObservableCollection<Model> Models { get { return UIHelper<EditModelsDialog>.GetPropValue<ObservableCollection<Model>>(this); } set { UIHelper<EditModelsDialog>.SetPropValue(this, value); } }
+		public ModelData ModelData { get { return UIHelper<EditModelsDialog>.GetPropValue<ModelData>(this); } set { UIHelper<EditModelsDialog>.SetPropValue(this, value); } }
 
 		static EditModelsDialog() { UIHelper<EditModelsDialog>.Register(); }
 
-		EditModelsDialog(IEnumerable<Model> models)
+		EditModelsDialog(ModelData modelData)
 		{
 			InitializeComponent();
 
-			Models = new ObservableCollection<Model>(models);
-			Models.Add(new Model { ModelName = "Test" });
+			ModelData = modelData;
 		}
 
 		void OkClick(object sender, RoutedEventArgs e)
@@ -30,9 +27,9 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 		void NewModel(object sender, RoutedEventArgs e)
 		{
-			var model = EditModelDialog.Run(Models, new Model());
+			var model = EditModelDialog.Run(ModelData, new Model());
 			if (model != null)
-				Models.Add(model);
+				ModelData.Models.Add(model);
 		}
 
 		void EditModel(object sender, RoutedEventArgs e)
@@ -41,9 +38,9 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			if (model == null)
 				return;
 
-			model = EditModelDialog.Run(Models, model);
+			model = EditModelDialog.Run(ModelData, model);
 			if (model != null)
-				Models[models.SelectedIndex] = model;
+				ModelData.Models[models.SelectedIndex] = model;
 		}
 
 		void EditModel(object sender, MouseButtonEventArgs e)
@@ -66,13 +63,13 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 
-			Models.RemoveAt(models.SelectedIndex);
+			ModelData.Models.RemoveAt(models.SelectedIndex);
 		}
 
-		public static IEnumerable<Model> Run(IEnumerable<Model> models)
+		public static ModelData Run(ModelData modelData)
 		{
-			var dialog = new EditModelsDialog(models);
-			return dialog.ShowDialog() == true ? dialog.Models : null;
+			modelData = modelData.Copy();
+			return new EditModelsDialog(modelData).ShowDialog() == true ? modelData : null;
 		}
 	}
 }

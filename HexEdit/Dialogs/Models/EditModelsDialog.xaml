@@ -17,7 +17,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Content="_Models:" Target="{Binding ElementName=models}"/>
-		<ListView Grid.Row="1" Grid.RowSpan="2" Name="models" MouseDoubleClick="EditModel" ItemsSource="{Binding Models, ElementName=self}" Width="200" Height="300" DisplayMemberPath="ModelName"/>
+		<ListView Grid.Row="1" Grid.RowSpan="2" Name="models" MouseDoubleClick="EditModel" ItemsSource="{Binding ModelData.Models, ElementName=self}" Width="400" Height="300" DisplayMemberPath="ModelName"/>
 		
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Left" Rows="1">
 			<Button Content="_New" Click="NewModel" Padding="10,1"/>

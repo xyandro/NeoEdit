@@ -108,6 +108,8 @@ namespace NeoEdit.HexEdit
 		double xTextViewEnd { get { return xTextViewStart + columns * Font.charWidth; } }
 		double xEnd { get { return xTextViewEnd; } }
 
+		ModelData modelData = new ModelData();
+
 		readonly UndoRedo undoRedo;
 		static HexEditor()
 		{
@@ -877,10 +879,11 @@ namespace NeoEdit.HexEdit
 			Replace(SelStart, SelEnd - SelStart, data);
 		}
 
-		internal void Command_Model_Define()
+		internal void Command_Data_Models_Define()
 		{
-			var models = new List<Model>();
-			EditModelsDialog.Run(models);
+			var result = EditModelsDialog.Run(modelData);
+			if (result != null)
+				modelData = result;
 		}
 
 		BinaryFindDialog.Result currentFind;

@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Misc.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="Models\ModelData.cs" />
     <Compile Include="Models\ModelAction.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
