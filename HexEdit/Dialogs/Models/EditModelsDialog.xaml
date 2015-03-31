@@ -2,7 +2,8 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
-	Title="Define Models" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=models}">
+	SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=models}"
+	Title="{Binding ModelData.Modified, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='\'Define Models\' t+ ([0] ? \' *\' : \'\')'}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>

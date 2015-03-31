@@ -13,6 +13,8 @@ namespace NeoEdit.HexEdit.Models
 		[DepProp]
 		public Model Default { get { return UIHelper<ModelData>.GetPropValue<Model>(this); } set { UIHelper<ModelData>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool Modified { get { return UIHelper<ModelData>.GetPropValue<bool>(this); } set { UIHelper<ModelData>.SetPropValue(this, value); } }
+		[DepProp]
 		public string FileName { get { return UIHelper<ModelData>.GetPropValue<string>(this); } set { UIHelper<ModelData>.SetPropValue(this, value); } }
 
 		static ModelData() { UIHelper<ModelData>.Register(); }
@@ -43,7 +45,7 @@ namespace NeoEdit.HexEdit.Models
 
 		internal ModelData Copy()
 		{
-			return new ModelData { Models = new ObservableCollection<Model>(Models), Default = Default, FileName = FileName };
+			return new ModelData { Models = new ObservableCollection<Model>(Models), Default = Default, Modified = Modified, FileName = FileName };
 		}
 	}
 }
