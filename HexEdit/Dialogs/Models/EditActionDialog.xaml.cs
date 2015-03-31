@@ -55,8 +55,8 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 		public static ModelAction Run(ModelData modelData, ModelAction action = null)
 		{
-			action = action == null ? new ModelAction() : action.Copy();
-			return new EditActionDialog(modelData, action).ShowDialog() == true ? action : null;
+			var dialog = new EditActionDialog(modelData, action == null ? new ModelAction() : action.Copy());
+			return dialog.ShowDialog() == true ? dialog.Action : null;
 		}
 	}
 }

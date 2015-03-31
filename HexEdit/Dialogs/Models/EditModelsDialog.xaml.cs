@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using System.Xml.Linq;
+using Microsoft.Win32;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.HexEdit.Models;
@@ -66,10 +68,40 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			ModelData.Models.RemoveAt(models.SelectedIndex);
 		}
 
+		void SaveModels(object sender, RoutedEventArgs e)
+		{
+			var dialog = new SaveFileDialog
+			{
+				DefaultExt = "xml",
+				Filter = "Model files|*.xml|All files|*.*",
+				FileName = ModelData.FileName,
+			};
+			if (dialog.ShowDialog() != true)
+				return;
+
+			ModelData.FileName = dialog.FileName;
+			ModelData.ToXML().Save(ModelData.FileName);
+		}
+
+		void LoadModels(object sender, RoutedEventArgs e)
+		{
+			var dialog = new OpenFileDialog
+			{
+				DefaultExt = "xml",
+				Filter = "Model files|*.xml|All files|*.*",
+				FileName = ModelData.FileName,
+			};
+			if (dialog.ShowDialog() != true)
+				return;
+
+			ModelData = ModelData.FromXML(XElement.Load(dialog.FileName));
+			ModelData.FileName = dialog.FileName;
+		}
+
 		public static ModelData Run(ModelData modelData)
 		{
-			modelData = modelData.Copy();
-			return new EditModelsDialog(modelData).ShowDialog() == true ? modelData : null;
+			var dialog = new EditModelsDialog(modelData.Copy());
+			return dialog.ShowDialog() == true ? dialog.ModelData : null;
 		}
 	}
 }

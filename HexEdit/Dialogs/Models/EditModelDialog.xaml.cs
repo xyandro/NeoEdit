@@ -53,8 +53,8 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 		public static Model Run(ModelData modelData, Model model = null)
 		{
-			model = model == null ? new Model() : model.Copy();
-			return new EditModelDialog(modelData, model).ShowDialog() == true ? model : null;
+			var dialog = new EditModelDialog(modelData, model == null ? new Model() : model.Copy());
+			return dialog.ShowDialog() == true ? dialog.Model : null;
 		}
 	}
 }

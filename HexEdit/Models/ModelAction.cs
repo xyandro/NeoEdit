@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Common;
 
@@ -86,14 +89,53 @@ namespace NeoEdit.HexEdit.Models
 			SaveName = null;
 		}
 
-		internal string ToXML()
+		internal XElement ToXML()
 		{
-			return XMLConverter.ToXML(this).ToString();
+			return new XElement("Action",
+				new XAttribute("Type", Type),
+				new XAttribute("CodePage", CodePage),
+				new XAttribute("StringType", StringType),
+				new XAttribute("Encoding", Encoding),
+				new XAttribute("FixedLength", FixedLength),
+				Model == null ? null : new XAttribute("Model", Model.GUID),
+				new XAttribute("Location", Location ?? ""),
+				new XAttribute("AlignmentBits", AlignmentBits),
+				new XAttribute("Repeat", Repeat ?? ""),
+				new XAttribute("SaveName", SaveName ?? "")
+			);
 		}
 
-		internal static ModelAction FromXML(string str)
+		static internal ModelAction FromXML(XElement xml)
 		{
-			return XMLConverter.FromXML<ModelAction>(XElement.Parse(str));
+			var action = new ModelAction
+			{
+				Type = Helpers.ParseEnum<ActionType>(xml.Attribute("Type").Value),
+				CodePage = Helpers.ParseEnum<Coder.CodePage>(xml.Attribute("CodePage").Value),
+				StringType = Helpers.ParseEnum<ActionStringType>(xml.Attribute("StringType").Value),
+				Encoding = Helpers.ParseEnum<Coder.CodePage>(xml.Attribute("Encoding").Value),
+				FixedLength = int.Parse(xml.Attribute("FixedLength").Value),
+				Location = xml.Attribute("Location").Value,
+				AlignmentBits = int.Parse(xml.Attribute("AlignmentBits").Value),
+				Repeat = xml.Attribute("Repeat").Value,
+				SaveName = xml.Attribute("SaveName").Value,
+			};
+			if (String.IsNullOrWhiteSpace(action.Location))
+				action.Location = null;
+			if (String.IsNullOrWhiteSpace(action.Repeat))
+				action.Repeat = null;
+			if (String.IsNullOrWhiteSpace(action.SaveName))
+				action.SaveName = null;
+			return action;
+		}
+
+		internal void FromXML(XElement xml, IEnumerable<Model> models)
+		{
+			var modelAttr = xml.Attribute("Model");
+			if (modelAttr != null)
+			{
+				var modelGUID = modelAttr.Value;
+				Model = models.FirstOrDefault(model => model.GUID == modelGUID);
+			}
 		}
 
 		internal ModelAction Copy()
