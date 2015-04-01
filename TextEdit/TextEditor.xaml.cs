@@ -1359,53 +1359,6 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Data_InsertGUID()
-		{
-			ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
-		}
-
-		internal RandomNumberDialog.Result Command_Data_InsertRandomNumber_Dialog()
-		{
-			return RandomNumberDialog.Run();
-		}
-
-		internal void Command_Data_InsertRandomNumber(RandomNumberDialog.Result result)
-		{
-			ReplaceSelections(Selections.AsParallel().Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
-		}
-
-		internal RandomDataDialog.Result Command_Data_InsertRandomData_Dialog()
-		{
-			var hasSelections = Selections.AsParallel().Any(range => range.HasSelection);
-			return RandomDataDialog.Run(hasSelections);
-		}
-
-		string GetRandomData(RandomDataDialog.Result result, int selectionLength, int clipboardLength)
-		{
-			int length;
-			switch (result.Type)
-			{
-				case RandomDataDialog.RandomDataType.Absolute: length = result.Value; break;
-				case RandomDataDialog.RandomDataType.SelectionLength: length = selectionLength; break;
-				case RandomDataDialog.RandomDataType.Clipboard: length = clipboardLength; break;
-				default: throw new ArgumentException("Invalid type");
-			}
-			return new string(Enumerable.Range(0, length).Select(num => result.Chars[random.Next(result.Chars.Length)]).ToArray());
-		}
-
-		internal void Command_Data_InsertRandomData(RandomDataDialog.Result result)
-		{
-			List<int> clipboardLens = null;
-			if (result.Type == RandomDataDialog.RandomDataType.Clipboard)
-			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard doesn't match number of selections.");
-				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
-			}
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => GetRandomData(result, range.Length, clipboardLens == null ? 0 : clipboardLens[num])).ToList());
-		}
-
 		internal void Command_Data_Escape_XML()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;")).ToList());
@@ -1448,6 +1401,53 @@ namespace NeoEdit.TextEdit
 				return;
 
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hash.Get(type, Coder.StringToBytes(str, result.CodePage))).ToList());
+		}
+
+		internal void Command_Insert_GUID()
+		{
+			ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
+		}
+
+		internal RandomNumberDialog.Result Command_Insert_RandomNumber_Dialog()
+		{
+			return RandomNumberDialog.Run();
+		}
+
+		internal void Command_Insert_RandomNumber(RandomNumberDialog.Result result)
+		{
+			ReplaceSelections(Selections.AsParallel().Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
+		}
+
+		internal RandomDataDialog.Result Command_Insert_RandomData_Dialog()
+		{
+			var hasSelections = Selections.AsParallel().Any(range => range.HasSelection);
+			return RandomDataDialog.Run(hasSelections);
+		}
+
+		string GetRandomData(RandomDataDialog.Result result, int selectionLength, int clipboardLength)
+		{
+			int length;
+			switch (result.Type)
+			{
+				case RandomDataDialog.RandomDataType.Absolute: length = result.Value; break;
+				case RandomDataDialog.RandomDataType.SelectionLength: length = selectionLength; break;
+				case RandomDataDialog.RandomDataType.Clipboard: length = clipboardLength; break;
+				default: throw new ArgumentException("Invalid type");
+			}
+			return new string(Enumerable.Range(0, length).Select(num => result.Chars[random.Next(result.Chars.Length)]).ToArray());
+		}
+
+		internal void Command_Insert_RandomData(RandomDataDialog.Result result)
+		{
+			List<int> clipboardLens = null;
+			if (result.Type == RandomDataDialog.RandomDataType.Clipboard)
+			{
+				var clipboardStrings = ClipboardWindow.GetStrings();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
+			}
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => GetRandomData(result, range.Length, clipboardLens == null ? 0 : clipboardLens[num])).ToList());
 		}
 
 		internal void Command_Keys_Set(int index)

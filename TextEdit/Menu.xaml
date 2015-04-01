@@ -47,7 +47,7 @@
 		<textEdit:TextEditMenuItem Header="Previous Bookmark" CommandEnum="Edit_PreviousBookmark"/>
 		<textEdit:TextEditMenuItem Header="Clear Bookmarks" CommandEnum="Edit_ClearBookmarks"/>
 	</MenuItem>
-	<MenuItem Header="F_iles">
+	<MenuItem Header="Fi_les">
 		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Copy"/>
 		<textEdit:TextEditMenuItem Header="C_ut" CommandEnum="Files_Cut"/>
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Files_Open"/>
@@ -141,10 +141,6 @@
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="_Repeat" CommandEnum="Data_Repeat"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Insert _GUID" CommandEnum="Data_InsertGUID"/>
-		<textEdit:TextEditMenuItem Header="Insert Random Number" CommandEnum="Data_InsertRandomNumber"/>
-		<textEdit:TextEditMenuItem Header="Insert Random Data" CommandEnum="Data_InsertRandomData"/>
-		<Separator/>
 		<MenuItem Header="Escape">
 			<textEdit:TextEditMenuItem Header="XML" CommandEnum="Data_Escape_XML"/>
 			<textEdit:TextEditMenuItem Header="Regex" CommandEnum="Data_Escape_Regex"/>
@@ -163,6 +159,11 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Sort" CommandEnum="Data_Sort"/>
+	</MenuItem>
+	<MenuItem Header="_Insert">
+		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>
+		<textEdit:TextEditMenuItem Header="Random _Number" CommandEnum="Insert_RandomNumber"/>
+		<textEdit:TextEditMenuItem Header="Random _Data" CommandEnum="Insert_RandomData"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">
