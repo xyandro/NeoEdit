@@ -76,6 +76,54 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
+		public static string MinValue(this CodePage codePage)
+		{
+			switch (codePage)
+			{
+				case CodePage.Int8: return sbyte.MinValue.ToString();
+				case CodePage.Int16LE: return Int16.MinValue.ToString();
+				case CodePage.Int16BE: return Int16.MinValue.ToString();
+				case CodePage.Int32LE: return Int32.MinValue.ToString();
+				case CodePage.Int32BE: return Int32.MinValue.ToString();
+				case CodePage.Int64LE: return Int64.MinValue.ToString();
+				case CodePage.Int64BE: return Int64.MinValue.ToString();
+				case CodePage.UInt8: return byte.MinValue.ToString();
+				case CodePage.UInt16LE: return UInt16.MinValue.ToString();
+				case CodePage.UInt16BE: return UInt16.MinValue.ToString();
+				case CodePage.UInt32LE: return UInt32.MinValue.ToString();
+				case CodePage.UInt32BE: return UInt32.MinValue.ToString();
+				case CodePage.UInt64LE: return UInt64.MinValue.ToString();
+				case CodePage.UInt64BE: return UInt64.MinValue.ToString();
+				case CodePage.Single: return Single.MinValue.ToString();
+				case CodePage.Double: return Double.MinValue.ToString();
+				default: throw new Exception("Invalid type");
+			}
+		}
+
+		public static string MaxValue(this CodePage codePage)
+		{
+			switch (codePage)
+			{
+				case CodePage.Int8: return sbyte.MaxValue.ToString();
+				case CodePage.Int16LE: return Int16.MaxValue.ToString();
+				case CodePage.Int16BE: return Int16.MaxValue.ToString();
+				case CodePage.Int32LE: return Int32.MaxValue.ToString();
+				case CodePage.Int32BE: return Int32.MaxValue.ToString();
+				case CodePage.Int64LE: return Int64.MaxValue.ToString();
+				case CodePage.Int64BE: return Int64.MaxValue.ToString();
+				case CodePage.UInt8: return byte.MaxValue.ToString();
+				case CodePage.UInt16LE: return UInt16.MaxValue.ToString();
+				case CodePage.UInt16BE: return UInt16.MaxValue.ToString();
+				case CodePage.UInt32LE: return UInt32.MaxValue.ToString();
+				case CodePage.UInt32BE: return UInt32.MaxValue.ToString();
+				case CodePage.UInt64LE: return UInt64.MaxValue.ToString();
+				case CodePage.UInt64BE: return UInt64.MaxValue.ToString();
+				case CodePage.Single: return Single.MaxValue.ToString();
+				case CodePage.Double: return Double.MaxValue.ToString();
+				default: throw new Exception("Invalid type");
+			}
+		}
+
 		static byte[] Resize(byte[] data, long count, bool littleEndian)
 		{
 			var ret = new byte[count];

@@ -164,38 +164,7 @@
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Insert_RandomNumber"/>
 		<textEdit:TextEditMenuItem Header="Random _Data" CommandEnum="Insert_RandomData"/>
-		<MenuItem Header="Mi_n">
-			<MenuItem Header="_Signed">
-				<textEdit:TextEditMenuItem Header="Int_8" CommandEnum="Insert_Min_Int8"/>
-				<textEdit:TextEditMenuItem Header="Int_16" CommandEnum="Insert_Min_Int16"/>
-				<textEdit:TextEditMenuItem Header="Int_32" CommandEnum="Insert_Min_Int32"/>
-				<textEdit:TextEditMenuItem Header="Int_64" CommandEnum="Insert_Min_Int64"/>
-			</MenuItem>
-			<MenuItem Header="_Unsigned">
-				<textEdit:TextEditMenuItem Header="UInt_8" CommandEnum="Insert_Min_UInt8"/>
-				<textEdit:TextEditMenuItem Header="UInt_16" CommandEnum="Insert_Min_UInt16"/>
-				<textEdit:TextEditMenuItem Header="UInt_32" CommandEnum="Insert_Min_UInt32"/>
-				<textEdit:TextEditMenuItem Header="UInt_64" CommandEnum="Insert_Min_UInt64"/>
-			</MenuItem>
-			<textEdit:TextEditMenuItem Header="S_ingle" CommandEnum="Insert_Min_Single"/>
-			<textEdit:TextEditMenuItem Header="_Double" CommandEnum="Insert_Min_Double"/>
-		</MenuItem>
-		<MenuItem Header="Ma_x">
-			<MenuItem Header="_Signed">
-				<textEdit:TextEditMenuItem Header="Int_8" CommandEnum="Insert_Max_Int8"/>
-				<textEdit:TextEditMenuItem Header="Int_16" CommandEnum="Insert_Max_Int16"/>
-				<textEdit:TextEditMenuItem Header="Int_32" CommandEnum="Insert_Max_Int32"/>
-				<textEdit:TextEditMenuItem Header="Int_64" CommandEnum="Insert_Max_Int64"/>
-			</MenuItem>
-			<MenuItem Header="_Unsigned">
-				<textEdit:TextEditMenuItem Header="UInt_8" CommandEnum="Insert_Max_UInt8"/>
-				<textEdit:TextEditMenuItem Header="UInt_16" CommandEnum="Insert_Max_UInt16"/>
-				<textEdit:TextEditMenuItem Header="UInt_32" CommandEnum="Insert_Max_UInt32"/>
-				<textEdit:TextEditMenuItem Header="UInt_64" CommandEnum="Insert_Max_UInt64"/>
-			</MenuItem>
-			<textEdit:TextEditMenuItem Header="S_ingle" CommandEnum="Insert_Max_Single"/>
-			<textEdit:TextEditMenuItem Header="_Double" CommandEnum="Insert_Max_Double"/>
-		</MenuItem>
+		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Insert_MinMaxValues"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">

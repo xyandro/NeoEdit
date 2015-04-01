@@ -1450,9 +1450,23 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => GetRandomData(result, range.Length, clipboardLens == null ? 0 : clipboardLens[num])).ToList());
 		}
 
-		internal void Command_Insert_MinMax<T>(bool max)
+		internal MinMaxValuesDialog.Result Command_Insert_MinMaxValues_Dialog()
 		{
-			var value = typeof(T).GetField(max ? "MaxValue" : "MinValue").GetRawConstantValue().ToString();
+			return MinMaxValuesDialog.Run();
+		}
+
+		internal void Command_Insert_MinMaxValues(MinMaxValuesDialog.Result result)
+		{
+			var value = "";
+			if (result.Min)
+			{
+				value += result.CodePage.MinValue();
+				if (result.Max)
+					value += " ";
+			}
+			if (result.Max)
+				value += result.CodePage.MaxValue();
+
 			ReplaceSelections(Selections.AsParallel().Select(range => value).ToList());
 		}
 
