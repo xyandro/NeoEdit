@@ -915,7 +915,6 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Models_ExtractData()
 		{
-			modelData = ModelData.Load(@"C:\Documents\Cpp\NeoEdit - Work\Model.xml");
 			var start = SelStart;
 			var end = SelEnd;
 			if (start == end)
