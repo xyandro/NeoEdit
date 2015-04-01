@@ -249,6 +249,7 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.Data_Models_Define: Active.Command_Data_Models_Define(); break;
 				case HexEditCommand.Data_Models_Save: Active.Command_Data_Models_Save(); break;
 				case HexEditCommand.Data_Models_Load: Active.Command_Data_Models_Load(); break;
+				case HexEditCommand.Data_Models_ExtractData: Active.Command_Data_Models_ExtractData(); break;
 			}
 		}
 	}

@@ -58,5 +58,6 @@ namespace NeoEdit.HexEdit
 		[KeyGesture(Key.D, ModifierKeys.Control)] Data_Models_Define,
 		Data_Models_Save,
 		Data_Models_Load,
+		[KeyGesture(Key.E, ModifierKeys.Control)] Data_Models_ExtractData,
 	}
 }

@@ -913,6 +913,18 @@ namespace NeoEdit.HexEdit
 			modelData = ModelData.Load(dialog.FileName);
 		}
 
+		internal void Command_Data_Models_ExtractData()
+		{
+			var start = SelStart;
+			var end = SelEnd;
+			if (start == end)
+			{
+				start = 0;
+				end = Data.Length;
+			}
+			var extractor = new ModelDataExtractor(Data, start, Pos1, end, modelData, modelData.Default);
+		}
+
 		BinaryFindDialog.Result currentFind;
 		void DoFind(bool shiftDown, bool forward = true)
 		{
