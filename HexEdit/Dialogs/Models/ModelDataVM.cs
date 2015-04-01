@@ -22,8 +22,6 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 		public ObservableCollection<ModelVM> Models { get { return models; } set { models = value; OnPropertyChanged(); } }
 		ModelVM _default;
 		public ModelVM Default { get { return _default; } set { _default = value; OnPropertyChanged(); } }
-		bool modified;
-		public bool Modified { get { return modified; } set { modified = value; OnPropertyChanged(); } }
 		string fileName;
 		public string FileName { get { return fileName; } set { fileName = value; OnPropertyChanged(); } }
 
@@ -33,7 +31,6 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			this.modelData = modelData;
 			Models = new ObservableCollection<ModelVM>(modelData.Models.Select(model => new ModelVM(this, model)));
 			Default = Models.FirstOrDefault(model => model.model.GUID == modelData.Default);
-			Modified = modelData.Modified;
 			FileName = modelData.FileName;
 		}
 
@@ -42,25 +39,20 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			modelData.Models.Clear();
 			modelData.Models.AddRange(Models.Select(model => model.model));
 			modelData.Default = Default == null ? null : Default.model.GUID;
-			modelData.Modified = Modified;
 			modelData.FileName = FileName;
 		}
 
 		public void NewModel()
 		{
 			var model = new ModelVM(this, new Model());
-			if (!model.EditDialog())
-				return;
-
-			Models.Add(model);
-			Modified = true;
+			if (model.EditDialog())
+				Models.Add(model);
 		}
 
 		public void EditModel(ModelVM model)
 		{
-			if ((model == null) || (!model.EditDialog()))
-				return;
-			Modified = true;
+			if (model != null)
+				model.EditDialog();
 		}
 
 		public void DeleteModel(IEnumerable<ModelVM> models)
@@ -80,16 +72,12 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 			foreach (var model in models)
 				Models.Remove(model);
-			Modified = true;
 		}
 
 		public void SetDefault(ModelVM model)
 		{
-			if ((model == null) || (Default == model))
-				return;
-
-			Default = model;
-			Modified = true;
+			if (model != null)
+				Default = model;
 		}
 
 		public bool EditDialog()

@@ -8,7 +8,6 @@ namespace NeoEdit.HexEdit.Models
 	{
 		public List<Model> Models { get; private set; }
 		public string Default { get; set; }
-		public bool Modified { get; set; }
 		public string FileName { get; set; }
 
 		public ModelData()
@@ -25,14 +24,12 @@ namespace NeoEdit.HexEdit.Models
 		{
 			FileName = fileName;
 			XMLConverter.Save(this, FileName);
-			Modified = false;
 		}
 
 		static public ModelData Load(string fileName)
 		{
 			var modelData = XMLConverter.Load<ModelData>(fileName);
 			modelData.FileName = fileName;
-			modelData.Modified = false;
 			return modelData;
 		}
 	}
