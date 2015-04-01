@@ -9,11 +9,11 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup>
-    <Page Include="Dialogs\Models\EditModelsDialog.xaml">
+    <Page Include="Dialogs\Models\ModelDataView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\Models\EditModelDialog.xaml">
+    <Page Include="Dialogs\Models\ModelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -21,7 +21,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\Models\EditActionDialog.xaml">
+    <Page Include="Dialogs\Models\ModelActionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -29,18 +29,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Dialogs\Models\EditModelsDialog.xaml.cs">
-      <DependentUpon>EditModelsDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Models\ModelDataView.xaml.cs">
+      <DependentUpon>ModelDataView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\Models\EditModelDialog.xaml.cs">
-      <DependentUpon>EditModelDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Models\ModelDataVM.cs" />
+    <Compile Include="Dialogs\Models\ModelView.xaml.cs">
+      <DependentUpon>ModelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\GotoDialog.xaml.cs">
       <DependentUpon>GotoDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\Models\EditActionDialog.xaml.cs">
-      <DependentUpon>EditActionDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Models\ModelActionView.xaml.cs">
+      <DependentUpon>ModelActionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\Models\ModelActionVM.cs" />
+    <Compile Include="Dialogs\Models\ModelVM.cs" />
     <Compile Include="HexEditor.xaml.cs">
       <DependentUpon>HexEditor.xaml</DependentUpon>
     </Compile>

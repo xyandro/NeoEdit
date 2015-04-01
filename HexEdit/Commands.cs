@@ -56,5 +56,7 @@ namespace NeoEdit.HexEdit
 		Data_Verify_DSA,
 		Data_Fill,
 		[KeyGesture(Key.D, ModifierKeys.Control)] Data_Models_Define,
+		Data_Models_Save,
+		Data_Models_Load,
 	}
 }

@@ -881,9 +881,36 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Models_Define()
 		{
-			var result = EditModelsDialog.Run(modelData);
-			if (result != null)
-				modelData = result;
+			if (new ModelDataVM(modelData).EditDialog())
+				Command_Data_Models_Save();
+		}
+
+		internal void Command_Data_Models_Save()
+		{
+			var dialog = new SaveFileDialog
+			{
+				DefaultExt = "xml",
+				Filter = "Model files|*.xml|All files|*.*",
+				FileName = modelData.FileName,
+			};
+			if (dialog.ShowDialog() != true)
+				return;
+
+			modelData.Save(dialog.FileName);
+		}
+
+		internal void Command_Data_Models_Load()
+		{
+			var dialog = new OpenFileDialog
+			{
+				DefaultExt = "xml",
+				Filter = "Model files|*.xml|All files|*.*",
+				FileName = modelData.FileName,
+			};
+			if (dialog.ShowDialog() != true)
+				return;
+
+			modelData = ModelData.Load(dialog.FileName);
 		}
 
 		BinaryFindDialog.Result currentFind;

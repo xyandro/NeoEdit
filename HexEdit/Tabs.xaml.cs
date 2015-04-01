@@ -247,6 +247,8 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.Data_Verify_DSA: Active.Command_Data_Sign(false, Crypto.Type.DSA); break;
 				case HexEditCommand.Data_Fill: Active.Command_Data_Fill(); break;
 				case HexEditCommand.Data_Models_Define: Active.Command_Data_Models_Define(); break;
+				case HexEditCommand.Data_Models_Save: Active.Command_Data_Models_Save(); break;
+				case HexEditCommand.Data_Models_Load: Active.Command_Data_Models_Load(); break;
 			}
 		}
 	}

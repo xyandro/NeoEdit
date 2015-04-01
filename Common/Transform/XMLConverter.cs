@@ -28,6 +28,11 @@ namespace NeoEdit.Common.Transform
 			return xml;
 		}
 
+		public static void Save<T>(T obj, string fileName, string name = null)
+		{
+			ToXML(obj, name).Save(fileName);
+		}
+
 		public static T FromXML<T>(XElement xml)
 		{
 			var nameMapping = xml.Element("NameMapping");
@@ -37,6 +42,11 @@ namespace NeoEdit.Common.Transform
 				typeNames = nameMapping.Element("TypeNames").Elements().ToDictionary(element => element.Attribute("Value").Value, element => element.Attribute("Key").Value),
 			};
 			return (T)converter.rFromXML(xml, typeof(T));
+		}
+
+		public static T Load<T>(string fileName)
+		{
+			return FromXML<T>(XElement.Load(fileName));
 		}
 
 		Dictionary<object, XElement> toXMLReferences = new Dictionary<object, XElement>();

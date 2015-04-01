@@ -1,51 +1,39 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using System.Xml.Linq;
-using NeoEdit.GUI.Common;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.HexEdit.Models
 {
-	class ModelData : DependencyObject
+	class ModelData
 	{
-		[DepProp]
-		public ObservableCollection<Model> Models { get { return UIHelper<ModelData>.GetPropValue<ObservableCollection<Model>>(this); } set { UIHelper<ModelData>.SetPropValue(this, value); } }
-		[DepProp]
-		public Model Default { get { return UIHelper<ModelData>.GetPropValue<Model>(this); } set { UIHelper<ModelData>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Modified { get { return UIHelper<ModelData>.GetPropValue<bool>(this); } set { UIHelper<ModelData>.SetPropValue(this, value); } }
-		[DepProp]
-		public string FileName { get { return UIHelper<ModelData>.GetPropValue<string>(this); } set { UIHelper<ModelData>.SetPropValue(this, value); } }
-
-		static ModelData() { UIHelper<ModelData>.Register(); }
+		public List<Model> Models { get; private set; }
+		public string Default { get; set; }
+		public bool Modified { get; set; }
+		public string FileName { get; set; }
 
 		public ModelData()
 		{
-			Models = new ObservableCollection<Model>();
+			Models = new List<Model>();
 		}
 
-		internal XElement ToXML()
+		public Model GetModel(string GUID)
 		{
-			return new XElement("ModelData",
-				new XElement("Models", Models.Select(model => model.ToXML())),
-				Default == null ? null : new XAttribute("Default", Default.GUID)
-			);
+			return Models.FirstOrDefault(model => model.GUID == GUID);
 		}
 
-		static internal ModelData FromXML(XElement xml)
+		public void Save(string fileName)
 		{
-			var modelXmls = xml.Elements("Models").SelectMany(modelsXml => modelsXml.Elements()).ToList();
-			var models = new ObservableCollection<Model>(modelXmls.Select(modelXml => Model.FromXML(modelXml)));
-			for (var ctr = 0; ctr < models.Count; ++ctr)
-				models[ctr].FromXML(modelXmls[ctr], models);
-			var defAttr = xml.Attribute("Default");
-			var defaultGUID = defAttr == null ? null : defAttr.Value;
-			return new ModelData { Models = models, Default = models.FirstOrDefault(model => model.GUID == defaultGUID) };
+			FileName = fileName;
+			XMLConverter.Save(this, FileName);
+			Modified = false;
 		}
 
-		internal ModelData Copy()
+		static public ModelData Load(string fileName)
 		{
-			return new ModelData { Models = new ObservableCollection<Model>(Models), Default = Default, Modified = Modified, FileName = FileName };
+			var modelData = XMLConverter.Load<ModelData>(fileName);
+			modelData.FileName = fileName;
+			modelData.Modified = false;
+			return modelData;
 		}
 	}
 }
