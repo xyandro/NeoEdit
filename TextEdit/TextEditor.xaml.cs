@@ -1450,6 +1450,12 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => GetRandomData(result, range.Length, clipboardLens == null ? 0 : clipboardLens[num])).ToList());
 		}
 
+		internal void Command_Insert_MinMax<T>(bool max)
+		{
+			var value = typeof(T).GetField(max ? "MaxValue" : "MinValue").GetRawConstantValue().ToString();
+			ReplaceSelections(Selections.AsParallel().Select(range => value).ToList());
+		}
+
 		internal void Command_Keys_Set(int index)
 		{
 			// Handles keys as well as values

@@ -35,7 +35,6 @@ Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Specify which accelerator to display in menu (currently picking one of available options at random)
 Copy line/column/index (one for each selection)
-Insert min/max for types (byte, int, long, etc.)
 
 View:
 Update as new lines are added
