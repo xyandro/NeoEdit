@@ -1336,6 +1336,26 @@ namespace NeoEdit.TextEdit
 			Clipboard.SetText(Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum().ToString());
 		}
 
+		internal void Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType gotoType)
+		{
+			var positions = Selections.Select(range => range.Start).ToList();
+			if (gotoType == GotoDialog.GotoType.Position)
+			{
+				ClipboardWindow.Set(positions.Select(pos => pos.ToString()).ToList());
+				return;
+			}
+
+			var lines = positions.Select(pos => Data.GetOffsetLine(pos)).ToList();
+			if (gotoType == GotoDialog.GotoType.Line)
+			{
+				ClipboardWindow.Set(lines.Select(pos => (pos + 1).ToString()).ToList());
+				return;
+			}
+
+			var indexes = positions.Select((pos, line) => Data.GetOffsetIndex(pos, lines[line])).ToList();
+			ClipboardWindow.Set(indexes.Select(pos => (pos + 1).ToString()).ToList());
+		}
+
 		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
 		{
 			return RepeatDialog.Run(Selections.Count == 1);

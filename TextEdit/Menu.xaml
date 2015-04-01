@@ -139,6 +139,9 @@
 				<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Data_Copy_Max_Length"/>
 			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Sum" CommandEnum="Data_Copy_Sum"/>
+			<textEdit:TextEditMenuItem Header="_Lines" CommandEnum="Data_Copy_Lines"/>
+			<textEdit:TextEditMenuItem Header="C_olumns" CommandEnum="Data_Copy_Columns"/>
+			<textEdit:TextEditMenuItem Header="_Positions" CommandEnum="Data_Copy_Positions"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="_Repeat" CommandEnum="Data_Repeat"/>
 		<Separator/>

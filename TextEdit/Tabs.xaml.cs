@@ -444,6 +444,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Copy_Max_Numeric: Active.Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Data_Copy_Max_Length: Active.Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
 				case TextEditCommand.Data_Copy_Sum: Active.Command_Data_Copy_Sum(); break;
+				case TextEditCommand.Data_Copy_Lines: Active.Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Line); break;
+				case TextEditCommand.Data_Copy_Columns: Active.Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Column); break;
+				case TextEditCommand.Data_Copy_Positions: Active.Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Position); break;
 				case TextEditCommand.Data_Repeat: Active.Command_Data_Repeat(dialogResult as RepeatDialog.Result); break;
 				case TextEditCommand.Data_Escape_XML: Active.Command_Data_Escape_XML(); break;
 				case TextEditCommand.Data_Escape_Regex: Active.Command_Data_Escape_Regex(); break;
