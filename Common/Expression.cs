@@ -14,14 +14,12 @@ namespace NeoEdit.Common
 		{
 			public List<object> values { get; private set; }
 			public List<object> results { get; private set; }
-			public Dictionary<string, List<string>> dict { get; private set; }
-			public int row { get; private set; }
+			public Dictionary<string, object> dict { get; private set; }
 
-			public EvaluationData(List<object> values, Dictionary<string, List<string>> dict, int row)
+			public EvaluationData(List<object> values, Dictionary<string, object> dict)
 			{
 				this.values = values;
 				this.dict = dict;
-				this.row = row;
 				results = new List<object>();
 			}
 
@@ -60,7 +58,7 @@ namespace NeoEdit.Common
 						case Term.TermType.Term: return term;
 						case Term.TermType.Value: return data.values[index];
 						case Term.TermType.Result: return data.results[index];
-						case TermType.Dictionary: return (data.dict != null) && (data.dict.ContainsKey(key)) && (data.row < data.dict[key].Count) ? data.dict[key][data.row] : null;
+						case TermType.Dictionary: return (data.dict != null) && data.dict.ContainsKey(key) ? data.dict[key] : null;
 					}
 
 					throw new Exception("Invalid term");
@@ -422,10 +420,16 @@ namespace NeoEdit.Common
 
 		public object Evaluate(params object[] values)
 		{
-			return EvaluateDict(null, 0, values);
+			return EvaluateDict(null, values);
 		}
 
-		public object EvaluateDict(Dictionary<string, List<string>> dict, int row, params object[] _values)
+		public object EvaluateDict(Dictionary<string, List<string>> dict, int row, params object[] values)
+		{
+			var rowDict = dict.ToDictionary(entry => entry.Key, entry => entry.Value.Count > row ? (object)entry.Value[row] : null);
+			return EvaluateDict(rowDict, values);
+		}
+
+		public object EvaluateDict(Dictionary<string, object> dict, params object[] _values)
 		{
 			if ((debug) && (Debugger.IsAttached))
 				Debugger.Break();
@@ -435,7 +439,7 @@ namespace NeoEdit.Common
 			if (liveExp != null)
 				return LiveValue(values);
 
-			var data = new EvaluationData(values, dict, row);
+			var data = new EvaluationData(values, dict);
 			foreach (var op in operations)
 			{
 				switch (op.operation)
