@@ -82,11 +82,8 @@ namespace NeoEdit.Common.UnitTest
 
 			using (var combined = File.Create(Path.Combine(dir, "Combined.txt")))
 			{
-				foreach (var codePage in GetValues<Coder.CodePage>())
+				foreach (var codePage in Coder.GetStringCodePages())
 				{
-					if (codePage <= 0)
-						continue;
-
 					for (var useBom = 0; useBom < 2; ++useBom)
 					{
 						var bom = useBom == 0;

@@ -583,12 +583,19 @@ namespace NeoEdit.Common.Transform
 				return CodePage.UTF16BE;
 		}
 
-		public static List<CodePage> GetCodePages(bool stringsOnly = true)
+		public static List<CodePage> GetAllCodePages()
 		{
-			var result = NEEncodings.Select(encoding => encoding.codePage).ToList();
-			if (stringsOnly)
-				result = result.Where(codePage => codePage >= CodePage.StartNonAutoString).ToList();
-			return result;
+			return NEEncodings.Select(encoding => encoding.codePage).ToList();
+		}
+
+		public static List<CodePage> GetStringCodePages()
+		{
+			return GetAllCodePages().Where(codePage => IsStr(codePage)).ToList();
+		}
+
+		public static List<CodePage> GetNumericCodePages()
+		{
+			return GetAllCodePages().Where(codePage => !IsStr(codePage)).ToList();
 		}
 
 		public static string GetDescription(CodePage codePage, bool shortDescription = false)

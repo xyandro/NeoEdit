@@ -32,7 +32,7 @@ namespace NeoEdit.HexEdit
 		EncodingsDialog(HashSet<Coder.CodePage> CodePages)
 		{
 			InitializeComponent();
-			CodePageItems = new ObservableCollection<CodePageItem>(Coder.GetCodePages().Select(codePage => new CodePageItem(codePage) { IsChecked = CodePages.Contains(codePage) }));
+			CodePageItems = new ObservableCollection<CodePageItem>(Coder.GetStringCodePages().Select(codePage => new CodePageItem(codePage) { IsChecked = CodePages.Contains(codePage) }));
 			codePages.PreviewKeyDown += (s, e) =>
 			{
 				if (e.Key == Key.Space)

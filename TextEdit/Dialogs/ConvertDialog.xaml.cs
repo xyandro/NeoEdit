@@ -30,7 +30,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			InitializeComponent();
 
-			var codePages = Coder.GetCodePages(false).ToDictionary(page => page, page => Coder.GetDescription(page));
+			var codePages = Coder.GetAllCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
 
 			inputType.ItemsSource = codePages;
 			inputType.SelectedValuePath = "Key";

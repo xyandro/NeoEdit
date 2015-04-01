@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -67,7 +66,7 @@ namespace NeoEdit.GUI.Dialogs
 		static bool savedMatchCase = false;
 		readonly static ObservableCollection<string> staticHistory = new ObservableCollection<string>();
 		readonly List<CodePageCheckBox> checkBoxes;
-		readonly static HashSet<Coder.CodePage> defaultCodePages = new HashSet<Coder.CodePage>(Helpers.GetValues<Coder.CodePage>().Where(codePage => !Coder.IsStr(codePage)).Concat(new Coder.CodePage[] { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE }));
+		readonly static HashSet<Coder.CodePage> defaultCodePages = new HashSet<Coder.CodePage>(Coder.GetNumericCodePages().Concat(new Coder.CodePage[] { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE }));
 		readonly static HashSet<Coder.CodePage> savedCodePages = new HashSet<Coder.CodePage>(defaultCodePages);
 
 		static BinaryFindDialog() { UIHelper<BinaryFindDialog>.Register(); }
@@ -77,7 +76,7 @@ namespace NeoEdit.GUI.Dialogs
 			InitializeComponent();
 
 			History = staticHistory;
-			EncodingCheckBoxes = new ObservableCollection<CodePageCheckBox>(Coder.GetCodePages().Select(codePage => new CodePageCheckBox { CodePage = codePage }));
+			EncodingCheckBoxes = new ObservableCollection<CodePageCheckBox>(Coder.GetStringCodePages().Select(codePage => new CodePageCheckBox { CodePage = codePage }));
 			checkBoxes = UIHelper<BinaryFindDialog>.FindLogicalChildren<CodePageCheckBox>(this).Concat(EncodingCheckBoxes).ToList();
 			codePages.PreviewKeyDown += (s, e) =>
 			{

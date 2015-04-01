@@ -26,7 +26,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 			BasicTypes = new List<Coder.CodePage>();
 			EncodingTypes = new Dictionary<Coder.CodePage, string>();
-			foreach (var codePage in Coder.GetCodePages(false))
+			foreach (var codePage in Coder.GetAllCodePages())
 			{
 				if (Coder.IsStr(codePage))
 					EncodingTypes[codePage] = Coder.GetDescription(codePage);
