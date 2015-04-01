@@ -57,6 +57,13 @@
 			</StatusBarItem>
 			<Separator/>
 			<StatusBarItem>
+				<TextBlock Text="Pos"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Position, ElementName=self, StringFormat=n0}"/>
+			</StatusBarItem>
+			<Separator/>
+			<StatusBarItem>
 				<TextBlock Text="Selections"/>
 			</StatusBarItem>
 			<StatusBarItem>

@@ -33,6 +33,7 @@ namespace NeoEdit.TextEdit
 		Edit_Replace,
 		[KeyGesture(Key.G, ModifierKeys.Control)] [KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Shift)] Edit_GotoLine,
 		Edit_GotoColumn,
+		Edit_GotoPosition,
 		[KeyGesture(Key.F2, ModifierKeys.Alt)] Edit_ToggleBookmark,
 		[KeyGesture(Key.F2)] [KeyGesture(Key.F2, ModifierKeys.Shift)] Edit_NextBookmark,
 		[KeyGesture(Key.F2, ModifierKeys.Control)] [KeyGesture(Key.F2, ModifierKeys.Control | ModifierKeys.Shift)] Edit_PreviousBookmark,

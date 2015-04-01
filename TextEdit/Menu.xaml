@@ -41,6 +41,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Goto _Line" CommandEnum="Edit_GotoLine"/>
 		<textEdit:TextEditMenuItem Header="Goto C_olumn" CommandEnum="Edit_GotoColumn"/>
+		<textEdit:TextEditMenuItem Header="Goto Pos_ition" CommandEnum="Edit_GotoPosition"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Toggle Bookmark" CommandEnum="Edit_ToggleBookmark"/>
 		<textEdit:TextEditMenuItem Header="Next Bookmark" CommandEnum="Edit_NextBookmark"/>

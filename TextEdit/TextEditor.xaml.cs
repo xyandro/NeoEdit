@@ -56,6 +56,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public int Index { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
+		public int Position { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int xScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -676,23 +678,21 @@ namespace NeoEdit.TextEdit
 			FindNext(next, selecting);
 		}
 
-		internal GotoDialog.Result Command_Edit_Goto_Dialog(bool isLine)
+		internal GotoDialog.Result Command_Edit_Goto_Dialog(GotoDialog.GotoType gotoType)
 		{
-			int line = 1, index = 1;
+			int line = 1, index = 1, position = 0;
 			var range = Selections.FirstOrDefault();
 			if (range != null)
 			{
-				line = Data.GetOffsetLine(range.Start);
-				index = Data.GetOffsetIndex(range.Start, line);
+				line = Data.GetOffsetLine(range.Start) + 1;
+				index = Data.GetOffsetIndex(range.Start, line - 1) + 1;
+				position = range.Start;
 			}
-			return GotoDialog.Run(isLine, isLine ? line : index);
+			return GotoDialog.Run(gotoType, gotoType == GotoDialog.GotoType.Line ? line : gotoType == GotoDialog.GotoType.Column ? index : position);
 		}
 
-		internal void Command_Edit_Goto(bool isLine, bool selecting, GotoDialog.Result result)
+		internal void Command_Edit_Goto(bool selecting, GotoDialog.Result result)
 		{
-			var lines = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
-			var indexes = Selections.AsParallel().AsOrdered().Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
-
 			List<int> offsets;
 			if (result.ClipboardValue)
 			{
@@ -706,13 +706,23 @@ namespace NeoEdit.TextEdit
 
 			if (result.Relative)
 			{
-				var list = isLine ? lines : indexes;
+				var lines = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
+				var indexes = Selections.AsParallel().AsOrdered().Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
+				var positions = Selections.Select(range => range.Start).ToList();
+
+				var list = result.GotoType == GotoDialog.GotoType.Line ? lines : result.GotoType == GotoDialog.GotoType.Column ? indexes : positions;
 				offsets = offsets.Select((ofs, ctr) => ofs + list[ctr]).ToList();
 			}
-			else
+			else if (result.GotoType != GotoDialog.GotoType.Position)
 				offsets = offsets.Select(ofs => ofs - 1).ToList();
 
-			Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], selecting, !isLine, isLine)).ToList());
+			if (result.GotoType == GotoDialog.GotoType.Position)
+				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], selecting)).ToList());
+			else
+			{
+				var isLine = result.GotoType == GotoDialog.GotoType.Line;
+				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], selecting, !isLine, isLine)).ToList());
+			}
 		}
 
 		internal void Command_Edit_ToggleBookmark()
@@ -1800,6 +1810,7 @@ namespace NeoEdit.TextEdit
 			var index = Data.GetOffsetIndex(range.Cursor, line);
 			Line = line + 1;
 			Index = index + 1;
+			Position = range.Cursor;
 			Column = Data.GetColumnFromIndex(line, index) + 1;
 			if (highlight)
 				yScrollValue = line - yScrollViewportFloor / 2;
@@ -2355,6 +2366,7 @@ namespace NeoEdit.TextEdit
 
 		Range MoveCursor(Range range, int cursor, bool selecting)
 		{
+			cursor = Math.Max(BeginOffset(), Math.Min(cursor, EndOffset()));
 			if (selecting)
 				if (range.Cursor == cursor)
 					return range;

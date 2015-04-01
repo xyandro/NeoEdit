@@ -7,9 +7,17 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
+			public GotoType GotoType { get; set; }
 			public int Value { get; set; }
 			public bool ClipboardValue { get; set; }
 			public bool Relative { get; set; }
+		}
+
+		internal enum GotoType
+		{
+			Line,
+			Column,
+			Position,
 		}
 
 		[DepProp]
@@ -27,12 +35,14 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<GotoDialog>.AddCallback(a => a.Relative, (obj, o, n) => obj.SetRelative(o, n));
 		}
 
+		readonly GotoType gotoType;
 		readonly int startValue;
-		GotoDialog(bool isLine, int _Value)
+		GotoDialog(GotoType gotoType, int _Value)
 		{
 			InitializeComponent();
 
-			var str = isLine ? "Line" : "Column";
+			this.gotoType = gotoType;
+			var str = gotoType.ToString();
 			DisplayString = "_" + str + ":";
 			Title = "Go To " + str;
 			Value = startValue = _Value;
@@ -52,13 +62,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Value = Value, ClipboardValue = ClipboardValue, Relative = Relative };
+			result = new Result { GotoType = gotoType, Value = Value, ClipboardValue = ClipboardValue, Relative = Relative };
 			DialogResult = true;
 		}
 
-		public static Result Run(bool isLine, int startValue)
+		public static Result Run(GotoType gotoType, int startValue)
 		{
-			var dialog = new GotoDialog(isLine, startValue);
+			var dialog = new GotoDialog(gotoType, startValue);
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}

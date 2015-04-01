@@ -309,8 +309,9 @@ namespace NeoEdit.TextEdit
 					case TextEditCommand.File_ReopenWithEncoding: dialogResult = Active.Command_File_ReopenWithEncoding_Dialog(); break;
 					case TextEditCommand.Edit_Find: dialogResult = Active.Command_Edit_FindReplace_Dialog(false); break;
 					case TextEditCommand.Edit_Replace: dialogResult = Active.Command_Edit_FindReplace_Dialog(true); break;
-					case TextEditCommand.Edit_GotoLine: dialogResult = Active.Command_Edit_Goto_Dialog(true); break;
-					case TextEditCommand.Edit_GotoColumn: dialogResult = Active.Command_Edit_Goto_Dialog(false); break;
+					case TextEditCommand.Edit_GotoLine: dialogResult = Active.Command_Edit_Goto_Dialog(GotoDialog.GotoType.Line); break;
+					case TextEditCommand.Edit_GotoColumn: dialogResult = Active.Command_Edit_Goto_Dialog(GotoDialog.GotoType.Column); break;
+					case TextEditCommand.Edit_GotoPosition: dialogResult = Active.Command_Edit_Goto_Dialog(GotoDialog.GotoType.Position); break;
 					case TextEditCommand.Files_Timestamp_Write:
 					case TextEditCommand.Files_Timestamp_Access:
 					case TextEditCommand.Files_Timestamp_Create:
@@ -377,8 +378,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true, shiftDown); break;
 				case TextEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false, shiftDown); break;
 				case TextEditCommand.Edit_Replace: Active.Command_Edit_FindReplace(true, shiftDown, dialogResult as GetRegExDialog.Result); break;
-				case TextEditCommand.Edit_GotoLine: Active.Command_Edit_Goto(true, shiftDown, dialogResult as GotoDialog.Result); break;
-				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_Goto(false, shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_GotoLine: Active.Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_GotoColumn: Active.Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_GotoPosition: Active.Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Edit_ToggleBookmark: Active.Command_Edit_ToggleBookmark(); break;
 				case TextEditCommand.Edit_NextBookmark: Active.Command_Edit_NextPreviousBookmark(true, shiftDown); break;
 				case TextEditCommand.Edit_PreviousBookmark: Active.Command_Edit_NextPreviousBookmark(false, shiftDown); break;
