@@ -193,6 +193,7 @@ namespace NeoEdit.HexEdit.Models
 											Array.Resize(ref resultBytes, resultBytes.Length + bytes.Length);
 											Array.Copy(bytes, 0, resultBytes, resultBytes.Length - bytes.Length, bytes.Length);
 										}
+										result = Coder.BytesToString(resultBytes, action.Encoding);
 									}
 									break;
 								case ModelAction.ActionStringType.StringFixedWidth:
