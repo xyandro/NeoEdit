@@ -437,6 +437,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Series: Active.Command_Data_Series(); break;
 				case TextEditCommand.Data_CopyDown: Active.Command_Data_CopyDown(); break;
 				case TextEditCommand.Data_Copy_Count: Active.Command_Data_Copy_Count(); break;
+				case TextEditCommand.Data_Copy_Length: Active.Command_Data_Copy_Length(); break;
 				case TextEditCommand.Data_Copy_Min_String: Active.Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
 				case TextEditCommand.Data_Copy_Min_Numeric: Active.Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Data_Copy_Min_Length: Active.Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Length); break;

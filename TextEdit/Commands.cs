@@ -90,6 +90,7 @@ namespace NeoEdit.TextEdit
 		Data_Series,
 		[KeyGesture(Key.D, ModifierKeys.Control)] Data_CopyDown,
 		Data_Copy_Count,
+		Data_Copy_Length,
 		Data_Copy_Min_String,
 		Data_Copy_Min_Numeric,
 		Data_Copy_Min_Length,

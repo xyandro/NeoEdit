@@ -1324,6 +1324,11 @@ namespace NeoEdit.TextEdit
 			Clipboard.SetText(Selections.Count.ToString());
 		}
 
+		internal void Command_Data_Copy_Length()
+		{
+			ClipboardWindow.Set(Selections.Select(range => range.Length.ToString()).ToList());
+		}
+
 		internal enum Command_MinMax_Type { String, Numeric, Length }
 		internal void DoCommand_Data_Copy_MinMax<T>(bool min, Func<Range, T> sortBy, Func<Range, string> value)
 		{

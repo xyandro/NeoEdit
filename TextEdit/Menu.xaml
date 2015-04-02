@@ -128,6 +128,7 @@
 		<textEdit:TextEditMenuItem Header="Copy Down" CommandEnum="Data_CopyDown"/>
 		<MenuItem Header="_Copy">
 			<textEdit:TextEditMenuItem Header="_Count" CommandEnum="Data_Copy_Count"/>
+			<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Data_Copy_Length"/>
 			<MenuItem Header="_Min">
 				<textEdit:TextEditMenuItem Header="_String" CommandEnum="Data_Copy_Min_String"/>
 				<textEdit:TextEditMenuItem Header="_Numeric" CommandEnum="Data_Copy_Min_Numeric"/>
