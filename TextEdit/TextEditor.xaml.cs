@@ -56,7 +56,9 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public int Index { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int Position { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int PositionMin { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int PositionMax { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -1830,7 +1832,8 @@ namespace NeoEdit.TextEdit
 			var index = Data.GetOffsetIndex(range.Cursor, line);
 			Line = line + 1;
 			Index = index + 1;
-			Position = range.Cursor;
+			PositionMin = range.Start;
+			PositionMax = range.End;
 			Column = Data.GetColumnFromIndex(line, index) + 1;
 			if (highlight)
 				yScrollValue = line - yScrollViewportFloor / 2;
