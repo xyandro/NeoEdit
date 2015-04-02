@@ -1190,7 +1190,16 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Convert(ConvertDialog.Result result)
 		{
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType, result.InputBOM), result.OutputType, result.OutputBOM)).ToList());
+			List<Coder.CodePage> clipboardCodePages = null;
+			if ((result.InputType == Coder.CodePage.Clipboard) || (result.OutputType == Coder.CodePage.Clipboard))
+			{
+				var clipboardStrings = ClipboardWindow.GetStrings();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard must match number of selections");
+				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
+			}
+
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.InputType, result.InputBOM), result.OutputType == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.OutputType, result.OutputBOM)).ToList());
 		}
 
 		internal void Command_Data_Length()
@@ -1489,17 +1498,30 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Insert_MinMaxValues(MinMaxValuesDialog.Result result)
 		{
-			var value = "";
-			if (result.Min)
+			List<Coder.CodePage> clipboardCodePages = null;
+			var codePageMinMaxValues = new Dictionary<Coder.CodePage, string> { { result.CodePage, "" } };
+			if (result.CodePage == Coder.CodePage.Clipboard)
 			{
-				value += result.CodePage.MinValue();
-				if (result.Max)
-					value += " ";
+				var clipboardStrings = ClipboardWindow.GetStrings();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard must match number of selections");
+				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
+				codePageMinMaxValues = clipboardCodePages.Distinct().ToDictionary(codePage => codePage, codePage => "");
 			}
-			if (result.Max)
-				value += result.CodePage.MaxValue();
 
-			ReplaceSelections(Selections.AsParallel().Select(range => value).ToList());
+			foreach (var codePage in codePageMinMaxValues.Keys.ToList())
+			{
+				if (result.Min)
+				{
+					codePageMinMaxValues[codePage] += codePage.MinValue();
+					if (result.Max)
+						codePageMinMaxValues[codePage] += " ";
+				}
+				if (result.Max)
+					codePageMinMaxValues[codePage] += codePage.MaxValue();
+			}
+
+			ReplaceSelections(Selections.AsParallel().Select((range, num) => codePageMinMaxValues[result.CodePage == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.CodePage]).ToList());
 		}
 
 		internal void Command_Keys_Set(int index)

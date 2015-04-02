@@ -34,6 +34,7 @@ Copy counts based on searches
 Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Specify which accelerator to display in menu (currently picking one of available options at random)
+Copy length
 
 View:
 Update as new lines are added
