@@ -10,8 +10,8 @@ namespace NeoEdit.HexEdit.Models
 	{
 		readonly BinaryData data;
 		readonly ModelData modelData;
-		Dictionary<string, object> values;
-		List<object> results;
+		Dictionary<string, object> values = new Dictionary<string, object>();
+		List<ModelResult> results = new List<ModelResult>();
 
 		string current
 		{
@@ -107,38 +107,44 @@ namespace NeoEdit.HexEdit.Models
 			return expressions[expression].EvaluateDict(values).ToString();
 		}
 
-		void SaveResult(ModelAction action, object result)
+		void SaveResult(ModelAction action, string value, long startByte, int startBit, long endByte, int endBit)
 		{
 			if (action.SaveName != null)
-				values[action.SaveName] = result;
-			results.Add(result);
+				values[action.SaveName] = value;
+			results.Add(new ModelResult(action, value, startByte, startBit, endByte, endBit));
 		}
 
 		bool HandleBit(ModelAction action)
 		{
+			var startByte = currentByte;
+			var startBit = currentBit;
 			var bit = currentBit;
 			var bytes = GetBytes(currentByte, 1, start, end);
 			++currentBit;
 			if (bytes == null)
 				return false;
-			SaveResult(action, (bytes[0] & (1 << (7 - bit))) == 0 ? "0" : "1");
+			SaveResult(action, (bytes[0] & (1 << (7 - bit))) == 0 ? "0" : "1", startByte, startBit, currentByte, currentBit);
 			return true;
 		}
 
 		bool HandleBasicType(ModelAction action)
 		{
+			var startByte = currentByte;
+			var startBit = currentBit;
 			var codePage = action.CodePage;
 			var count = Coder.BytesRequired(codePage);
 			var bytes = GetBytes(currentByte, count, start, end);
 			currentByte += count;
 			if (bytes == null)
 				return false;
-			SaveResult(action, Coder.BytesToString(bytes, codePage));
+			SaveResult(action, Coder.BytesToString(bytes, codePage), startByte, startBit, currentByte, currentBit);
 			return true;
 		}
 
 		bool HandleString(ModelAction action)
 		{
+			var startByte = currentByte;
+			var startBit = currentBit;
 			switch (action.StringType)
 			{
 				case ModelAction.ActionStringType.StringWithLength:
@@ -153,7 +159,7 @@ namespace NeoEdit.HexEdit.Models
 						currentByte += strLen;
 						if (bytes == null)
 							return false;
-						SaveResult(action, Coder.BytesToString(bytes, action.Encoding));
+						SaveResult(action, Coder.BytesToString(bytes, action.Encoding), startByte, startBit, currentByte, currentBit);
 					}
 					break;
 				case ModelAction.ActionStringType.StringNullTerminated:
@@ -178,7 +184,7 @@ namespace NeoEdit.HexEdit.Models
 							Array.Resize(ref resultBytes, resultBytes.Length + bytes.Length);
 							Array.Copy(bytes, 0, resultBytes, resultBytes.Length - bytes.Length, bytes.Length);
 						}
-						SaveResult(action, Coder.BytesToString(resultBytes, action.Encoding));
+						SaveResult(action, Coder.BytesToString(resultBytes, action.Encoding), startByte, startBit, currentByte, currentBit);
 					}
 					break;
 				case ModelAction.ActionStringType.StringFixedWidth:
@@ -189,15 +195,18 @@ namespace NeoEdit.HexEdit.Models
 						currentByte += fixedLength;
 						if (bytes == null)
 							return false;
-						SaveResult(action, Coder.BytesToString(bytes, action.Encoding));
+						SaveResult(action, Coder.BytesToString(bytes, action.Encoding), startByte, startBit, currentByte, currentBit);
 					}
 					break;
+				default: throw new Exception("Invalid string type");
 			}
 			return true;
 		}
 
 		bool HandleUnused(ModelAction action)
 		{
+			var startByte = currentByte;
+			var startBit = currentBit;
 			var fixedLength = Convert.ToInt64(EvalExpression(action.FixedWidth));
 			currentByte += fixedLength;
 			return true;
@@ -257,12 +266,9 @@ namespace NeoEdit.HexEdit.Models
 		public ModelDataExtractor(BinaryData data, long start, long current, long end, ModelData modelData, string model)
 		{
 			this.data = data;
-			values = new Dictionary<string, object>();
 			this.start = start;
 			this.end = end;
 			currentByte = current;
-			results = new List<object>();
-
 			this.modelData = modelData;
 			HandleModel(model);
 		}
