@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.ItemGridControl;
 using NeoEdit.HexEdit.Models;
@@ -70,24 +71,60 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 				changeSelection(0, 0);
 		}
 
-		void ModifyValues(object sender, RoutedEventArgs e)
+		void Replace(List<ModelResult> results, List<string> values)
 		{
+			if (results.Count != values.Count)
+				throw new Exception("Counts must match.");
+
 			try
 			{
-				string value = "";
-				var values = results.Selected.Select(result => result.Value).Distinct().ToList();
-				if (values.Count == 1)
-					value = values.Single();
-				value = ModelGetValue.Run(value);
-				if (value == null)
-					return;
-
-				foreach (var result in results.Selected)
-					ModifyValue(result, value);
+				for (var ctr = 0; ctr < results.Count; ++ctr)
+					ModifyValue(results[ctr], values[ctr]);
 
 				SelectionChanged(); // Update highlighting in case lengths changed
 			}
 			finally { Activate(); }
+		}
+
+		void Replace(List<ModelResult> results, string value)
+		{
+			var values = results.Select(result => value).ToList();
+			Replace(results, values);
+		}
+
+		void ModifyValues(object sender, RoutedEventArgs e)
+		{
+			var values = results.Selected.Select(result => result.Value).Distinct().ToList();
+			if (values.Count == 0)
+				return;
+
+			var value = values.Count == 1 ? values.Single() : "";
+			value = ModelGetValue.Run(value);
+			if (value == null)
+				return;
+
+			Replace(results.Selected.ToList(), value);
+		}
+
+		void RemoveValues(object sender, RoutedEventArgs e)
+		{
+			var removeItems = results.Selected.ToList();
+			foreach (var item in removeItems)
+				Results.Remove(item);
+		}
+
+		void CopyValues(object sender, RoutedEventArgs e)
+		{
+			var values = results.Selected.Select(item => item.Value).ToList();
+			if (values.Count == 0)
+				return;
+			ClipboardWindow.Set(values);
+		}
+
+		void PasteValues(object sender, RoutedEventArgs e)
+		{
+			var values = ClipboardWindow.GetStrings();
+			Replace(results.Selected.ToList(), values);
 		}
 
 		void ModifyBitValue(ModelResult result, string value)
@@ -132,9 +169,9 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 					bytes = Coder.StringToBytes(value + "\u0000", result.Action.Encoding);
 					break;
 				case ModelAction.ActionStringType.StringFixedWidth:
-					if (value.Length != oldLen)
-						throw new Exception("Can't change length of fixed-width string");
 					bytes = Coder.StringToBytes(value, result.Action.Encoding);
+					if (bytes.Length != oldLen)
+						throw new Exception("Can't change length of fixed-width string");
 					break;
 				default: throw new InvalidOperationException();
 			}
