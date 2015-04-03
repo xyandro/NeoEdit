@@ -107,11 +107,15 @@ namespace NeoEdit.HexEdit.Models
 			return expressions[expression].EvaluateDict(values).ToString();
 		}
 
+		Dictionary<string, int> nameCounts = new Dictionary<string, int>();
 		void SaveResult(ModelAction action, string value, long startByte, int startBit, long endByte, int endBit)
 		{
 			if (action.SaveName != null)
 				values[action.SaveName] = value;
-			results.Add(new ModelResult(action, value, startByte, startBit, endByte, endBit));
+			if (!nameCounts.ContainsKey(action.SaveName))
+				nameCounts[action.SaveName] = 0;
+			var name = String.Format("{0} #{1}", action.SaveName, ++nameCounts[action.SaveName]);
+			results.Add(new ModelResult(action, results.Count + 1, name, value, startByte, startBit, endByte, endBit));
 		}
 
 		bool HandleBit(ModelAction action)
@@ -263,14 +267,20 @@ namespace NeoEdit.HexEdit.Models
 			return true;
 		}
 
-		public ModelDataExtractor(BinaryData data, long start, long current, long end, ModelData modelData, string model)
+		ModelDataExtractor(BinaryData data, long start, long current, long end, ModelData modelData)
 		{
 			this.data = data;
 			this.start = start;
 			this.end = end;
 			currentByte = current;
 			this.modelData = modelData;
-			HandleModel(model);
+		}
+
+		static public List<ModelResult> ExtractData(BinaryData data, long start, long current, long end, ModelData modelData, string model)
+		{
+			var extractor = new ModelDataExtractor(data, start, current, end, modelData);
+			extractor.HandleModel(model);
+			return extractor.results;
 		}
 	}
 }
