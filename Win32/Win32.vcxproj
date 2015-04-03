@@ -2,7 +2,6 @@
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).vcxproj.props" />
   <PropertyGroup Label="Globals">
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <ProjectGuid>{95A660DC-FBFE-4560-A433-0B024494B213}</ProjectGuid>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>Win32</RootNamespace>

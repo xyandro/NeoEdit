@@ -43,4 +43,3 @@ Add cursor mouse navigation (currently no way to jump to middle of file)
 
 Hex:
 Fix backwards search
-Copy modeled data
