@@ -75,18 +75,21 @@ namespace NeoEdit.HexEdit.Models
 			set { values["End"] = value; }
 		}
 
-		void AlignCurrent(int alignmentBits)
+		void AlignCurrent(ModelAction action)
 		{
-			if (alignmentBits < 8)
-				currentBit += alignmentBits - 1 - (currentBit - 1) % alignmentBits;
+			if (action.AlignmentBits < 8)
+				currentBit += action.AlignmentBits - 1 - (currentBit - 1) % action.AlignmentBits;
 			else
 			{
 				if (currentBit != 0)
 					++currentByte;
 
-				var alignmentBytes = alignmentBits / 8;
+				var alignmentBytes = action.AlignmentBits / 8;
 				currentByte += alignmentBytes - 1 - (currentByte - 1) % alignmentBytes;
 			}
+
+			if ((action.Type != ModelAction.ActionType.Bit) && (currentBit != 0))
+				throw new Exception("All items (except for bits) must be byte-aligned");
 		}
 
 		byte[] GetBytes(long position, long count, long start, long end)
@@ -97,142 +100,156 @@ namespace NeoEdit.HexEdit.Models
 		}
 
 		Dictionary<string, Expression> expressions = new Dictionary<string, Expression>();
+		string EvalExpression(string expression)
+		{
+			if (!expressions.ContainsKey(expression))
+				expressions[expression] = new Expression(expression, values.Keys);
+			return expressions[expression].EvaluateDict(values).ToString();
+		}
+
+		void SaveResult(ModelAction action, object result)
+		{
+			if (action.SaveName != null)
+				values[action.SaveName] = result;
+			results.Add(result);
+		}
+
+		bool HandleBit(ModelAction action)
+		{
+			var bit = currentBit;
+			var bytes = GetBytes(currentByte, 1, start, end);
+			++currentBit;
+			if (bytes == null)
+				return false;
+			SaveResult(action, (bytes[0] & (1 << (7 - bit))) == 0 ? "0" : "1");
+			return true;
+		}
+
+		bool HandleBasicType(ModelAction action)
+		{
+			var codePage = action.CodePage;
+			var count = Coder.BytesRequired(codePage);
+			var bytes = GetBytes(currentByte, count, start, end);
+			currentByte += count;
+			if (bytes == null)
+				return false;
+			SaveResult(action, Coder.BytesToString(bytes, codePage));
+			return true;
+		}
+
+		bool HandleString(ModelAction action)
+		{
+			switch (action.StringType)
+			{
+				case ModelAction.ActionStringType.StringWithLength:
+					{
+						var count = Coder.BytesRequired(action.CodePage);
+						var bytes = GetBytes(currentByte, count, start, end);
+						currentByte += count;
+						if (bytes == null)
+							return false;
+						var strLen = long.Parse(Coder.BytesToString(bytes, action.CodePage));
+						bytes = GetBytes(currentByte, strLen, start, end);
+						currentByte += strLen;
+						if (bytes == null)
+							return false;
+						SaveResult(action, Coder.BytesToString(bytes, action.Encoding));
+					}
+					break;
+				case ModelAction.ActionStringType.StringNullTerminated:
+					{
+						var nullBytes = Coder.StringToBytes("\0", action.Encoding);
+						var resultBytes = new byte[0];
+						while (true)
+						{
+							var bytes = GetBytes(currentByte, nullBytes.Length, start, end);
+							currentByte += nullBytes.Length;
+							if (bytes == null)
+								return false;
+							var found = true;
+							for (var ctr = 0; ctr < nullBytes.Length; ++ctr)
+								if (bytes[ctr] != nullBytes[ctr])
+								{
+									found = false;
+									break;
+								}
+							if (found)
+								break;
+							Array.Resize(ref resultBytes, resultBytes.Length + bytes.Length);
+							Array.Copy(bytes, 0, resultBytes, resultBytes.Length - bytes.Length, bytes.Length);
+						}
+						SaveResult(action, Coder.BytesToString(resultBytes, action.Encoding));
+					}
+					break;
+				case ModelAction.ActionStringType.StringFixedWidth:
+					{
+						var fixedLength = Convert.ToInt64(EvalExpression(action.FixedWidth));
+
+						var bytes = GetBytes(currentByte, fixedLength, start, end);
+						currentByte += fixedLength;
+						if (bytes == null)
+							return false;
+						SaveResult(action, Coder.BytesToString(bytes, action.Encoding));
+					}
+					break;
+			}
+			return true;
+		}
+
+		bool HandleUnused(ModelAction action)
+		{
+			var fixedLength = Convert.ToInt64(EvalExpression(action.FixedWidth));
+			currentByte += fixedLength;
+			return true;
+		}
+
+		bool SaveResults(ModelAction action)
+		{
+			switch (action.Type)
+			{
+				case ModelAction.ActionType.Bit: if (!HandleBit(action)) return false; break;
+				case ModelAction.ActionType.BasicType: if (!HandleBasicType(action)) return false; break;
+				case ModelAction.ActionType.String: if (!HandleString(action)) return false; break;
+				case ModelAction.ActionType.Unused: if (!HandleUnused(action)) return false; break;
+				case ModelAction.ActionType.Model: if (!HandleModel(action.Model)) return false; break;
+			}
+			return true;
+		}
+
+		bool HandleAction(ModelAction action)
+		{
+			current = EvalExpression(action.Location);
+			var repeat = Convert.ToInt64(EvalExpression(action.Repeat));
+
+			var end = long.MaxValue;
+			if (action.RepeatType == ModelAction.ActionRepeatType.DataPosition)
+			{
+				end = repeat;
+				repeat = long.MaxValue;
+			}
+
+			while (repeat > 0)
+			{
+				if (currentByte >= end)
+					break;
+
+				--repeat;
+
+				AlignCurrent(action);
+
+				if (!SaveResults(action))
+					return false;
+			}
+
+			return true;
+		}
+
 		bool HandleModel(string guid)
 		{
 			var model = modelData.GetModel(guid);
 			foreach (var action in model.Actions)
-			{
-				if (!expressions.ContainsKey(action.Location))
-					expressions[action.Location] = new Expression(action.Location, values.Keys);
-				current = expressions[action.Location].EvaluateDict(values, 0).ToString();
-
-				var end = long.MaxValue;
-				if (!expressions.ContainsKey(action.Repeat))
-					expressions[action.Repeat] = new Expression(action.Repeat, values.Keys);
-				var repeat = Convert.ToInt64(expressions[action.Repeat].EvaluateDict(values, 0));
-
-				if (action.RepeatType == ModelAction.ActionRepeatType.DataPosition)
-				{
-					end = repeat;
-					repeat = long.MaxValue;
-				}
-
-				while (repeat > 0)
-				{
-					if (currentByte >= end)
-						break;
-
-					--repeat;
-
-					AlignCurrent(action.AlignmentBits);
-
-					if ((action.Type != ModelAction.ActionType.Bit) && (currentBit != 0))
-						throw new Exception("Can only handle byte-aligned data");
-
-					string result = null;
-					switch (action.Type)
-					{
-						case ModelAction.ActionType.Bit:
-							{
-								var bit = currentBit;
-								var bytes = GetBytes(currentByte, 1, start, end);
-								++currentBit;
-								if (bytes == null)
-									return false;
-								result = (bytes[0] & (1 << (7 - bit))) == 0 ? "0" : "1";
-							}
-							break;
-						case ModelAction.ActionType.BasicType:
-							{
-								var codePage = action.CodePage;
-								var count = Coder.BytesRequired(codePage);
-								var bytes = GetBytes(currentByte, count, start, end);
-								currentByte += count;
-								if (bytes == null)
-									return false;
-								result = Coder.BytesToString(bytes, codePage);
-							}
-							break;
-						case ModelAction.ActionType.String:
-							switch (action.StringType)
-							{
-								case ModelAction.ActionStringType.StringWithLength:
-									{
-										var count = Coder.BytesRequired(action.CodePage);
-										var bytes = GetBytes(currentByte, count, start, end);
-										currentByte += count;
-										if (bytes == null)
-											return false;
-										var strLen = long.Parse(Coder.BytesToString(bytes, action.CodePage));
-										bytes = GetBytes(currentByte, strLen, start, end);
-										currentByte += strLen;
-										if (bytes == null)
-											return false;
-										result = Coder.BytesToString(bytes, action.Encoding);
-									}
-									break;
-								case ModelAction.ActionStringType.StringNullTerminated:
-									{
-										var nullBytes = Coder.StringToBytes("\0", action.Encoding);
-										var resultBytes = new byte[0];
-										while (true)
-										{
-											var bytes = GetBytes(currentByte, nullBytes.Length, start, end);
-											currentByte += nullBytes.Length;
-											if (bytes == null)
-												return false;
-											var found = true;
-											for (var ctr = 0; ctr < nullBytes.Length; ++ctr)
-												if (bytes[ctr] != nullBytes[ctr])
-												{
-													found = false;
-													break;
-												}
-											if (found)
-												break;
-											Array.Resize(ref resultBytes, resultBytes.Length + bytes.Length);
-											Array.Copy(bytes, 0, resultBytes, resultBytes.Length - bytes.Length, bytes.Length);
-										}
-										result = Coder.BytesToString(resultBytes, action.Encoding);
-									}
-									break;
-								case ModelAction.ActionStringType.StringFixedWidth:
-									{
-										if (!expressions.ContainsKey(action.FixedWidth))
-											expressions[action.FixedWidth] = new Expression(action.FixedWidth, values.Keys);
-										var fixedLength = Convert.ToInt64(expressions[action.FixedWidth].EvaluateDict(values, 0));
-
-										var bytes = GetBytes(currentByte, fixedLength, start, end);
-										currentByte += fixedLength;
-										if (bytes == null)
-											return false;
-										result = Coder.BytesToString(bytes, action.Encoding);
-									}
-									break;
-							}
-							break;
-						case ModelAction.ActionType.Unused:
-							{
-								if (!expressions.ContainsKey(action.FixedWidth))
-									expressions[action.FixedWidth] = new Expression(action.FixedWidth, values.Keys);
-								var fixedLength = Convert.ToInt64(expressions[action.FixedWidth].EvaluateDict(values, 0));
-								currentByte += fixedLength;
-							}
-							break;
-						case ModelAction.ActionType.Model:
-							if (!HandleModel(action.Model))
-								return false;
-							break;
-					}
-
-					if (result != null)
-					{
-						if (action.SaveName != null)
-							values[action.SaveName] = result;
-						results.Add(result);
-					}
-				}
-			}
+				if (!HandleAction(action))
+					return false;
 
 			return true;
 		}
