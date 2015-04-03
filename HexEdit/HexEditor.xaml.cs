@@ -915,7 +915,11 @@ namespace NeoEdit.HexEdit
 				end = Data.Length;
 			}
 			var results = ModelDataExtractor.ExtractData(Data, start, Pos1, end, modelData, modelData.Default);
-			ModelResultsDialog.Run(results, (selStart, selEnd) => { MoveCursor(selStart, false, false); MoveCursor(selEnd, true, false); });
+			ModelResultsDialog.Run(results,
+				changeSelection: (selStart, selEnd) => { MoveCursor(selStart, false, false); MoveCursor(selEnd, true, false); },
+				getByte: Pos => Data[Pos],
+				changeBytes: (startPos, endPos, data) => Replace(startPos, endPos - startPos, data)
+			);
 		}
 
 		BinaryFindDialog.Result currentFind;
