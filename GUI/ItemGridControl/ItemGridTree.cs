@@ -65,7 +65,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			isInternal = false;
 		}
 
-		void ItemGridTree_Accept(object sender, RoutedEventArgs e)
+		void ItemGridTree_Accept(object sender)
 		{
 			if (Selected.Count != 1)
 				return;

@@ -17,8 +17,11 @@ namespace NeoEdit.GUI.ItemGridControl
 {
 	public class ItemGrid<ItemType> : Grid where ItemType : DependencyObject
 	{
-		RoutedEventHandler accept = (s, e) => { };
-		public event RoutedEventHandler Accept { add { accept += value; } remove { accept -= value; } }
+		public delegate void ItemGridEventHandler(object sender);
+		ItemGridEventHandler accept = s => { };
+		public event ItemGridEventHandler Accept { add { accept += value; } remove { accept -= value; } }
+		ItemGridEventHandler selectionChanged = s => { };
+		public event ItemGridEventHandler SelectionChanged { add { selectionChanged += value; } remove { selectionChanged -= value; } }
 
 		[DepProp]
 		public ObservableCollection<ItemType> Items { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
@@ -48,7 +51,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			UIHelper<ItemGrid<ItemType>>.Register();
 			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => { obj.verifyTimer.Start(); obj.sortTimer.Start(); });
 			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Columns, (obj, s, e) => obj.verifyTimer.Start());
-			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Selected, (obj, s, e) => obj.verifyTimer.Start());
+			UIHelper<ItemGrid<ItemType>>.AddObservableCallback(a => a.Selected, (obj, s, e) => { obj.verifyTimer.Start(); obj.selectionTimer.Start(); });
 			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortColumn, (obj, s, e) => { obj.SortAscending = obj.SortColumn != null ? obj.SortColumn.SortAscending : true; obj.verifyTimer.Start(); obj.sortTimer.Start(); });
 			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.SortAscending, (obj, s, e) => obj.sortTimer.Start());
 			UIHelper<ItemGrid<ItemType>>.AddCallback(a => a.Focused, (obj, s, e) => { obj.verifyTimer.Start(); obj.showFocus = true; });
@@ -88,7 +91,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		const double headerHeight = 21.96;
 		const double rowHeight = 19.96;
 
-		RunOnceTimer verifyTimer, sortTimer, drawTimer;
+		RunOnceTimer verifyTimer, sortTimer, drawTimer, selectionTimer;
 
 		ScrollViewer xScroll;
 		ScrollBar yScroll;
@@ -115,8 +118,10 @@ namespace NeoEdit.GUI.ItemGridControl
 			verifyTimer = new RunOnceTimer(() => VerifyParameters());
 			sortTimer = new RunOnceTimer(() => Sort());
 			drawTimer = new RunOnceTimer(() => Redraw());
+			selectionTimer = new RunOnceTimer(() => selectionChanged(this));
 			sortTimer.AddDependency(verifyTimer);
 			drawTimer.AddDependency(sortTimer, verifyTimer);
+			selectionTimer.AddDependency(verifyTimer);
 
 			Items = new ObservableCollection<ItemType>();
 			Columns = new ObservableCollection<ItemGridColumn>();
@@ -304,7 +309,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			base.OnMouseLeftButtonDown(e);
 			Focus();
 			if (e.ClickCount == 2)
-				accept(this, new RoutedEventArgs());
+				accept(this);
 			else
 			{
 				MoveFocus((int)((e.GetPosition(contents).Y - headerHeight) / rowHeight + yScroll.Value), false, true);
@@ -319,7 +324,7 @@ namespace NeoEdit.GUI.ItemGridControl
 			var keys = new KeySet
 			{
 				{ Key.Escape, () => lastTextInputTime = null },
-				{ Key.Enter, () => accept(this, new RoutedEventArgs()) },
+				{ Key.Enter, () => accept(this) },
 			};
 
 			if (keys.Run(e))

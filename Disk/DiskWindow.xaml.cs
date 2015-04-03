@@ -58,7 +58,7 @@ namespace NeoEdit.Disk
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => { location.Text = Location.FullName; };
 			location.PreviewKeyDown += LocationKeyDown;
-			files.Accept += (s, e) => OnAccept();
+			files.Accept += s => OnAccept();
 
 			Files = new ObservableCollection<DiskItem>();
 			Selected = new ObservableCollection<DiskItem>();

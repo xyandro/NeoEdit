@@ -5,6 +5,7 @@ Tabs: Ctrl-Tab to switch
 Add command prompt
 Diff?
 NumericUpDown won't accept control from accelerator
+Move to .Net 3.5
 
 Disk:
 Select by SVN ignore
