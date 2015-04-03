@@ -428,23 +428,12 @@ namespace NeoEdit.HexEdit
 		}
 
 		bool inHexEdit = false;
-		void Replace(byte[] bytes, bool useAllBytes = false)
+		void Replace(byte[] bytes)
 		{
 			if (bytes == null)
 				bytes = new byte[0];
 
-			long count;
-			if (Insert)
-				count = Length;
-			else
-			{
-				if ((useAllBytes) && (bytes.Length < Data.Length - SelStart))
-					throw new InvalidOperationException("This operation can only be done in insert mode.");
-				Array.Resize(ref bytes, (int)Math.Min(bytes.Length, Data.Length - SelStart));
-				count = bytes.Length;
-			}
-
-			Replace(SelStart, count, bytes);
+			Replace(SelStart, Insert ? Length : bytes.Length, bytes);
 
 			MoveCursor(SelStart, false, false);
 			MoveCursor(SelStart + bytes.Length, bytes.Length != 1, false);
@@ -452,6 +441,9 @@ namespace NeoEdit.HexEdit
 
 		void Replace(long index, long count, byte[] bytes, ReplaceType replaceType = ReplaceType.Normal)
 		{
+			if ((!Insert) && ((count != bytes.Length) || (index + count > Data.Length)))
+				throw new InvalidOperationException("This operation can only be done in insert mode.");
+
 			var undoRedoStep = new UndoRedo.UndoRedoStep(index, bytes.Length, Data.GetSubset(index, count));
 			switch (replaceType)
 			{
@@ -810,9 +802,9 @@ namespace NeoEdit.HexEdit
 				SelectAll();
 
 			if (compress)
-				Replace(Compression.Compress(type, Data.GetSubset(SelStart, SelEnd - SelStart)), true);
+				Replace(Compression.Compress(type, Data.GetSubset(SelStart, SelEnd - SelStart)));
 			else
-				Replace(Compression.Decompress(type, Data.GetSubset(SelStart, SelEnd - SelStart)), true);
+				Replace(Compression.Decompress(type, Data.GetSubset(SelStart, SelEnd - SelStart)));
 		}
 
 		internal void Command_Data_Encrypt(bool isEncrypt, Crypto.Type type)
@@ -840,9 +832,9 @@ namespace NeoEdit.HexEdit
 				SelectAll();
 
 			if (isEncrypt)
-				Replace(Crypto.Encrypt(type, Data.GetSubset(SelStart, SelEnd - SelStart), key), true);
+				Replace(Crypto.Encrypt(type, Data.GetSubset(SelStart, SelEnd - SelStart), key));
 			else
-				Replace(Crypto.Decrypt(type, Data.GetSubset(SelStart, SelEnd - SelStart), key), true);
+				Replace(Crypto.Decrypt(type, Data.GetSubset(SelStart, SelEnd - SelStart), key));
 		}
 
 		internal void Command_Data_Sign(bool sign, Crypto.Type type)
