@@ -129,7 +129,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 
 		void ModifyBitValue(ModelResult result, string value)
 		{
-			var bytePower = (byte)(1 << (7 - result.StartBit));
+			var bytePower = (byte)(1 << result.StartBit);
 			byte orMask;
 			switch (value)
 			{

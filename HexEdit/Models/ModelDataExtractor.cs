@@ -128,7 +128,7 @@ namespace NeoEdit.HexEdit.Models
 			++currentBit;
 			if (bytes == null)
 				return false;
-			SaveResult(action, (bytes[0] & (1 << (7 - bit))) == 0 ? "0" : "1", startByte, startBit, currentByte, currentBit);
+			SaveResult(action, (bytes[0] & (1 << bit)) == 0 ? "0" : "1", startByte, startBit, currentByte, currentBit);
 			return true;
 		}
 
