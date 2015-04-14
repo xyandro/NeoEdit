@@ -127,20 +127,6 @@ namespace NeoEdit.GUI.Common
 			});
 		}
 
-		public static void InvalidateBinding(DependencyObject obj, DependencyProperty prop)
-		{
-			BindingOperations.GetBindingExpressionBase(obj, prop).UpdateTarget();
-		}
-
-		public static void SetValidation(FrameworkElement obj, DependencyProperty prop, bool valid = true)
-		{
-			var bindingExpression = obj.GetBindingExpression(prop);
-			if (valid)
-				Validation.ClearInvalid(bindingExpression);
-			else
-				Validation.MarkInvalid(bindingExpression, new ValidationError(new ExceptionValidationRule(), bindingExpression));
-		}
-
 		public static T GetPropValue<T>(ControlType control, [CallerMemberName] string caller = "")
 		{
 			return (T)control.GetValue(dependencyProperty[caller]);
@@ -154,6 +140,24 @@ namespace NeoEdit.GUI.Common
 		public static ControlType GetNewest()
 		{
 			return Application.Current.Windows.OfType<ControlType>().Cast<ControlType>().LastOrDefault();
+		}
+
+	}
+
+	public static class UIHelper
+	{
+		public static void InvalidateBinding(DependencyObject obj, DependencyProperty prop)
+		{
+			BindingOperations.GetBindingExpressionBase(obj, prop).UpdateTarget();
+		}
+
+		public static void SetValidation(FrameworkElement obj, DependencyProperty prop, bool valid = true)
+		{
+			var bindingExpression = obj.GetBindingExpression(prop);
+			if (valid)
+				Validation.ClearInvalid(bindingExpression);
+			else
+				Validation.MarkInvalid(bindingExpression, new ValidationError(new ExceptionValidationRule(), bindingExpression));
 		}
 
 		public static T FindParent<T>(FrameworkElement obj) where T : DependencyObject

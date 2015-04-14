@@ -108,16 +108,16 @@ namespace NeoEdit.TextEdit.Dialogs
 				valid = false;
 			}
 
-			UIHelper<GetExpressionDialog>.SetValidation(example1Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example2Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example3Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example4Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example5Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example6Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example7Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example8Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example9Value, TextBox.TextProperty, valid);
-			UIHelper<GetExpressionDialog>.SetValidation(example10Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example1Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example2Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example3Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example4Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example5Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example6Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example7Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example8Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example9Value, TextBox.TextProperty, valid);
+			UIHelper.SetValidation(example10Value, TextBox.TextProperty, valid);
 		}
 
 		Result result;

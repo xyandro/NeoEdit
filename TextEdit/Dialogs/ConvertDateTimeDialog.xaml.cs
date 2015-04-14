@@ -83,14 +83,14 @@ namespace NeoEdit.TextEdit.Dialogs
 			ParsedExample = OutputExample = "";
 
 			var result = InterpretFormat(Example, InputFormat, InputUTC);
-			UIHelper<ConvertDateTimeDialog>.SetValidation(inputFormat, ComboBox.TextProperty, result != null);
+			UIHelper.SetValidation(inputFormat, ComboBox.TextProperty, result != null);
 			if (result == null)
 				return;
 
 			ParsedExample = result.Value.ToString("O");
 
 			var resultStr = InterpretFormat(result.Value, OutputFormat, OutputUTC);
-			UIHelper<ConvertDateTimeDialog>.SetValidation(outputFormat, ComboBox.TextProperty, result != null);
+			UIHelper.SetValidation(outputFormat, ComboBox.TextProperty, result != null);
 			if (resultStr == null)
 				return;
 

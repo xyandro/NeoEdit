@@ -31,7 +31,7 @@ namespace NeoEdit.Registry
 
 			localCallbacks = UIHelper<RegistryWindow>.GetLocalCallbacks(this);
 			location.GotFocus += (s, e) => location.SelectAll();
-			location.LostFocus += (s, e) => UIHelper<RegistryWindow>.InvalidateBinding(location, TextBox.TextProperty);
+			location.LostFocus += (s, e) => UIHelper.InvalidateBinding(location, TextBox.TextProperty);
 
 			foreach (var prop in UIHelper<RegistryItem>.GetProperties())
 			{

@@ -77,7 +77,7 @@ namespace NeoEdit.GUI.Dialogs
 
 			History = staticHistory;
 			EncodingCheckBoxes = new ObservableCollection<CodePageCheckBox>(Coder.GetStringCodePages().Select(codePage => new CodePageCheckBox { CodePage = codePage }));
-			checkBoxes = UIHelper<BinaryFindDialog>.FindLogicalChildren<CodePageCheckBox>(this).Concat(EncodingCheckBoxes).ToList();
+			checkBoxes = UIHelper.FindLogicalChildren<CodePageCheckBox>(this).Concat(EncodingCheckBoxes).ToList();
 			codePages.PreviewKeyDown += (s, e) =>
 			{
 				if (e.Key == Key.Space)
@@ -173,8 +173,8 @@ namespace NeoEdit.GUI.Dialogs
 			}
 			else
 			{
-				var parent = UIHelper<BinaryFindDialog>.FindParent<GroupBox>(e.Source as FrameworkElement);
-				var children = UIHelper<BinaryFindDialog>.FindLogicalChildren<CodePageCheckBox>(parent).ToList();
+				var parent = UIHelper.FindParent<GroupBox>(e.Source as FrameworkElement);
+				var children = UIHelper.FindLogicalChildren<CodePageCheckBox>(parent).ToList();
 				foreach (var child in children)
 					if (child.IsVisible)
 						child.IsChecked = all;
