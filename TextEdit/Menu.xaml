@@ -269,6 +269,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
 		<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>
+		<textEdit:TextEditMenuItem Header="_Count" CommandEnum="Select_Count"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Regions" CommandEnum="Select_Regions"/>
 		<textEdit:TextEditMenuItem Header="_Find Results" CommandEnum="Select_FindResults"/>

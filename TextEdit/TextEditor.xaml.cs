@@ -1736,6 +1736,25 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.AsParallel().AsOrdered().GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
 		}
 
+		internal CountDialog.Result Command_Select_Count_Dialog()
+		{
+			return CountDialog.Run();
+		}
+
+		internal void Command_Select_Count(CountDialog.Result result)
+		{
+			var strs = Selections.Select((range, index) => Tuple.Create(GetString(range), index)).ToList();
+			var counts = new Dictionary<string, int>(result.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
+			foreach (var tuple in strs)
+			{
+				if (!counts.ContainsKey(tuple.Item1))
+					counts[tuple.Item1] = 0;
+				++counts[tuple.Item1];
+			}
+			strs = strs.Where(tuple => (counts[tuple.Item1] >= result.MinCount) && (counts[tuple.Item1] <= result.MaxCount)).ToList();
+			Selections.Replace(strs.Select(tuple => Selections[tuple.Item2]).ToList());
+		}
+
 		internal void Command_Select_Regions()
 		{
 			Selections.Replace(Regions);

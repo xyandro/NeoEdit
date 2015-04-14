@@ -36,7 +36,6 @@ Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Specify which accelerator to display in menu (currently picking one of available options at random)
 Audit accelerators
-Show items that appear more than N times
 
 View:
 Update as new lines are added

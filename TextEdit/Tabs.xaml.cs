@@ -333,6 +333,7 @@ namespace NeoEdit.TextEdit
 					case TextEditCommand.Insert_MinMaxValues: dialogResult = Active.Command_Insert_MinMaxValues_Dialog(); break;
 					case TextEditCommand.Select_Limit: dialogResult = Active.Command_Select_Limit_Dialog(); break;
 					case TextEditCommand.Select_Width: dialogResult = Active.Command_Select_Width_Dialog(); break;
+					case TextEditCommand.Select_Count: dialogResult = Active.Command_Select_Count_Dialog(); break;
 					case TextEditCommand.Select_ExpressionMatches: dialogResult = Active.Command_Select_ExpressionMatches_Dialog(); break;
 					default: dialogResultSet = false; break;
 				}
@@ -542,6 +543,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Width: Active.Command_Select_Width(dialogResult as WidthDialog.Result); break;
 				case TextEditCommand.Select_Unique: Active.Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Active.Command_Select_Duplicates(); break;
+				case TextEditCommand.Select_Count: Active.Command_Select_Count(dialogResult as CountDialog.Result); break;
 				case TextEditCommand.Select_Regions: Active.Command_Select_Regions(); break;
 				case TextEditCommand.Select_FindResults: Active.Command_Select_FindResults(); break;
 				case TextEditCommand.Select_Min_String: Active.Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.String); break;

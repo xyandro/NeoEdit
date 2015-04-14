@@ -195,6 +195,7 @@ namespace NeoEdit.TextEdit
 		Select_Width,
 		Select_Unique,
 		Select_Duplicates,
+		Select_Count,
 		Select_Regions,
 		Select_FindResults,
 		Select_Min_String,
