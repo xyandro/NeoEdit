@@ -83,14 +83,14 @@ namespace NeoEdit.TextEdit.Dialogs
 			ParsedExample = OutputExample = "";
 
 			var result = InterpretFormat(Example, InputFormat, InputUTC);
-			UIHelper.SetValidation(inputFormat, ComboBox.TextProperty, result != null);
+			inputFormat.SetValidation(ComboBox.TextProperty, result != null);
 			if (result == null)
 				return;
 
 			ParsedExample = result.Value.ToString("O");
 
 			var resultStr = InterpretFormat(result.Value, OutputFormat, OutputUTC);
-			UIHelper.SetValidation(outputFormat, ComboBox.TextProperty, result != null);
+			outputFormat.SetValidation(ComboBox.TextProperty, result != null);
 			if (resultStr == null)
 				return;
 

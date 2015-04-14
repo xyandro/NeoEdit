@@ -146,12 +146,12 @@ namespace NeoEdit.GUI.Common
 
 	public static class UIHelper
 	{
-		public static void InvalidateBinding(DependencyObject obj, DependencyProperty prop)
+		public static void InvalidateBinding(this DependencyObject obj, DependencyProperty prop)
 		{
 			BindingOperations.GetBindingExpressionBase(obj, prop).UpdateTarget();
 		}
 
-		public static void SetValidation(FrameworkElement obj, DependencyProperty prop, bool valid = true)
+		public static void SetValidation(this FrameworkElement obj, DependencyProperty prop, bool valid = true)
 		{
 			var bindingExpression = obj.GetBindingExpression(prop);
 			if (valid)
@@ -160,7 +160,7 @@ namespace NeoEdit.GUI.Common
 				Validation.MarkInvalid(bindingExpression, new ValidationError(new ExceptionValidationRule(), bindingExpression));
 		}
 
-		public static T FindParent<T>(FrameworkElement obj) where T : DependencyObject
+		public static T FindParent<T>(this FrameworkElement obj) where T : DependencyObject
 		{
 			while (obj != null)
 			{
@@ -171,7 +171,7 @@ namespace NeoEdit.GUI.Common
 			return null;
 		}
 
-		public static IEnumerable<T> FindLogicalChildren<T>(DependencyObject obj) where T : DependencyObject
+		public static IEnumerable<T> FindLogicalChildren<T>(this DependencyObject obj) where T : DependencyObject
 		{
 			if (obj == null)
 				yield break;

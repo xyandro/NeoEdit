@@ -17,7 +17,7 @@ namespace NeoEdit.HexEdit
 		public DisplayValue()
 		{
 			InitializeComponent();
-			LostFocus += (s, e) => UIHelper.InvalidateBinding(this, TextProperty);
+			LostFocus += (s, e) => this.InvalidateBinding(TextProperty);
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
