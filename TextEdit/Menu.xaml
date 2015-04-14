@@ -70,10 +70,10 @@
 			<textEdit:TextEditMenuItem Header="A_ttributes" CommandEnum="Files_Information_Attributes"/>
 			<textEdit:TextEditMenuItem Header="_Read Only" CommandEnum="Files_Information_ReadOnly"/>
 		</MenuItem>
-		<MenuItem Header="Hash">
-			<textEdit:TextEditMenuItem Header="MD5" CommandEnum="Files_Hash_MD5"/>
-			<textEdit:TextEditMenuItem Header="SHA1" CommandEnum="Files_Hash_SHA1"/>
-			<textEdit:TextEditMenuItem Header="SHA256" CommandEnum="Files_Hash_SHA256"/>
+		<MenuItem Header="_Hash">
+			<textEdit:TextEditMenuItem Header="MD_5" CommandEnum="Files_Hash_MD5"/>
+			<textEdit:TextEditMenuItem Header="SHA_1" CommandEnum="Files_Hash_SHA1"/>
+			<textEdit:TextEditMenuItem Header="SHA_256" CommandEnum="Files_Hash_SHA256"/>
 		</MenuItem>
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="_File Name" CommandEnum="Files_Select_FileName"/>
