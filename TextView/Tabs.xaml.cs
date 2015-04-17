@@ -18,11 +18,11 @@ namespace NeoEdit.TextView
 	partial class TextViewerTabs
 	{
 		[DepProp]
-		public ObservableCollection<TextViewer> TextViewers { get { return UIHelper<TextViewerTabs>.GetPropValue<ObservableCollection<TextViewer>>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<TextViewer> TextViewers { get { return UIHelper<TextViewerTabs>.GetPropValue(() => this.TextViewers); } set { UIHelper<TextViewerTabs>.SetPropValue(() => this.TextViewers, value); } }
 		[DepProp]
-		public TextViewer Active { get { return UIHelper<TextViewerTabs>.GetPropValue<TextViewer>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
+		public TextViewer Active { get { return UIHelper<TextViewerTabs>.GetPropValue(() => this.Active); } set { UIHelper<TextViewerTabs>.SetPropValue(() => this.Active, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<TextViewerTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
+		public Tabs.ViewType View { get { return UIHelper<TextViewerTabs>.GetPropValue(() => this.View); } set { UIHelper<TextViewerTabs>.SetPropValue(() => this.View, value); } }
 
 		static TextViewerTabs() { UIHelper<TextViewerTabs>.Register(); }
 
@@ -146,7 +146,7 @@ namespace NeoEdit.TextView
 				return;
 
 			var start = DateTime.Now;
-			TextData.ReadFiles(fileNames, (data, cancelled) => Dispatcher.Invoke(() =>
+			TextData.ReadFiles(fileNames, (data, cancelled) => Dispatcher.Invoke(new Action(() =>
 			{
 				if (cancelled)
 				{
@@ -168,7 +168,7 @@ namespace NeoEdit.TextView
 				var textViewer = new TextViewer(data);
 				TextViewers.Add(textViewer);
 				Active = textViewer;
-			}));
+			})));
 		}
 
 		Label GetLabel(TextViewer textViewer)

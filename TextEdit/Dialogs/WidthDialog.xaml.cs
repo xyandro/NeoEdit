@@ -32,17 +32,17 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public WidthType Type { get { return UIHelper<WidthDialog>.GetPropValue<WidthType>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public WidthType Type { get { return UIHelper<WidthDialog>.GetPropValue(() => this.Type); } set { UIHelper<WidthDialog>.SetPropValue(() => this.Type, value); } }
 		[DepProp]
-		public int Value { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public int Value { get { return UIHelper<WidthDialog>.GetPropValue(() => this.Value); } set { UIHelper<WidthDialog>.SetPropValue(() => this.Value, value); } }
 		[DepProp]
-		public string PadChar { get { return UIHelper<WidthDialog>.GetPropValue<string>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public string PadChar { get { return UIHelper<WidthDialog>.GetPropValue(() => this.PadChar); } set { UIHelper<WidthDialog>.SetPropValue(() => this.PadChar, value); } }
 		[DepProp]
-		public TextLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<TextLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public TextLocation Location { get { return UIHelper<WidthDialog>.GetPropValue(() => this.Location); } set { UIHelper<WidthDialog>.SetPropValue(() => this.Location, value); } }
 		[DepProp]
-		public bool NeedValue { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public bool NeedValue { get { return UIHelper<WidthDialog>.GetPropValue(() => this.NeedValue); } set { UIHelper<WidthDialog>.SetPropValue(() => this.NeedValue, value); } }
 		[DepProp]
-		public bool IsSelect { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public bool IsSelect { get { return UIHelper<WidthDialog>.GetPropValue(() => this.IsSelect); } set { UIHelper<WidthDialog>.SetPropValue(() => this.IsSelect, value); } }
 
 		static WidthDialog()
 		{

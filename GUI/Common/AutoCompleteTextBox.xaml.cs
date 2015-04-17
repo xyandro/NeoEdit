@@ -8,7 +8,7 @@ namespace NeoEdit.GUI.Common
 	partial class AutoCompleteTextBox
 	{
 		[DepProp]
-		public ObservableCollection<string> AutoSuggestionList { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		public ObservableCollection<string> AutoSuggestionList { get { return UIHelper<AutoCompleteTextBox>.GetPropValue(() => this.AutoSuggestionList); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(() => this.AutoSuggestionList, value); } }
 
 		static AutoCompleteTextBox()
 		{

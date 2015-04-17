@@ -16,13 +16,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public Coder.CodePage InputType { get { return UIHelper<ConvertDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<ConvertDialog>.SetPropValue(this, value); } }
+		public Coder.CodePage InputType { get { return UIHelper<ConvertDialog>.GetPropValue(() => this.InputType); } set { UIHelper<ConvertDialog>.SetPropValue(() => this.InputType, value); } }
 		[DepProp]
-		public bool InputBOM { get { return UIHelper<ConvertDialog>.GetPropValue<bool>(this); } set { UIHelper<ConvertDialog>.SetPropValue(this, value); } }
+		public bool InputBOM { get { return UIHelper<ConvertDialog>.GetPropValue(() => this.InputBOM); } set { UIHelper<ConvertDialog>.SetPropValue(() => this.InputBOM, value); } }
 		[DepProp]
-		public Coder.CodePage OutputType { get { return UIHelper<ConvertDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<ConvertDialog>.SetPropValue(this, value); } }
+		public Coder.CodePage OutputType { get { return UIHelper<ConvertDialog>.GetPropValue(() => this.OutputType); } set { UIHelper<ConvertDialog>.SetPropValue(() => this.OutputType, value); } }
 		[DepProp]
-		public bool OutputBOM { get { return UIHelper<ConvertDialog>.GetPropValue<bool>(this); } set { UIHelper<ConvertDialog>.SetPropValue(this, value); } }
+		public bool OutputBOM { get { return UIHelper<ConvertDialog>.GetPropValue(() => this.OutputBOM); } set { UIHelper<ConvertDialog>.SetPropValue(() => this.OutputBOM, value); } }
 
 		static ConvertDialog() { UIHelper<ConvertDialog>.Register(); }
 

@@ -21,13 +21,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string DisplayString { get { return UIHelper<GotoDialog>.GetPropValue<string>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		public string DisplayString { get { return UIHelper<GotoDialog>.GetPropValue(() => this.DisplayString); } set { UIHelper<GotoDialog>.SetPropValue(() => this.DisplayString, value); } }
 		[DepProp]
-		public int Value { get { return UIHelper<GotoDialog>.GetPropValue<int>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		public int Value { get { return UIHelper<GotoDialog>.GetPropValue(() => this.Value); } set { UIHelper<GotoDialog>.SetPropValue(() => this.Value, value); } }
 		[DepProp]
-		public bool ClipboardValue { get { return UIHelper<GotoDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		public bool ClipboardValue { get { return UIHelper<GotoDialog>.GetPropValue(() => this.ClipboardValue); } set { UIHelper<GotoDialog>.SetPropValue(() => this.ClipboardValue, value); } }
 		[DepProp]
-		public bool Relative { get { return UIHelper<GotoDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		public bool Relative { get { return UIHelper<GotoDialog>.GetPropValue(() => this.Relative); } set { UIHelper<GotoDialog>.SetPropValue(() => this.Relative, value); } }
 
 		static GotoDialog()
 		{

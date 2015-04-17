@@ -383,7 +383,7 @@ namespace NeoEdit.Common
 			var field = obj.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			if (field == null)
 				return null;
-			return field.GetValue(obj);
+			return field.GetValue(obj, new object[] { });
 		}
 
 		bool ValidRE(string re)

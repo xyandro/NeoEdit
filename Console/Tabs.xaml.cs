@@ -9,11 +9,11 @@ namespace NeoEdit.Console
 	public partial class ConsoleTabs
 	{
 		[DepProp]
-		public ObservableCollection<Console> Consoles { get { return UIHelper<ConsoleTabs>.GetPropValue<ObservableCollection<Console>>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<Console> Consoles { get { return UIHelper<ConsoleTabs>.GetPropValue(() => this.Consoles); } set { UIHelper<ConsoleTabs>.SetPropValue(() => this.Consoles, value); } }
 		[DepProp]
-		public Console Active { get { return UIHelper<ConsoleTabs>.GetPropValue<Console>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
+		public Console Active { get { return UIHelper<ConsoleTabs>.GetPropValue(() => this.Active); } set { UIHelper<ConsoleTabs>.SetPropValue(() => this.Active, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<ConsoleTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
+		public Tabs.ViewType View { get { return UIHelper<ConsoleTabs>.GetPropValue(() => this.View); } set { UIHelper<ConsoleTabs>.SetPropValue(() => this.View, value); } }
 
 		static ConsoleTabs() { UIHelper<ConsoleTabs>.Register(); }
 

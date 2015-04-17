@@ -77,7 +77,7 @@ namespace NeoEdit.GUI.Common
 			if (targetType == typeof(Brush))
 			{
 				if (result is string)
-					result = typeof(Brushes).GetProperty(result as string).GetValue(null);
+					result = typeof(Brushes).GetProperty(result as string).GetValue(null, new object[] { });
 				if (!(result is Brush))
 					return null;
 				return result;

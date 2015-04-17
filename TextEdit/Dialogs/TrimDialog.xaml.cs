@@ -20,9 +20,9 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string TrimChars { get { return UIHelper<TrimDialog>.GetPropValue<string>(this); } set { UIHelper<TrimDialog>.SetPropValue(this, value); } }
+		public string TrimChars { get { return UIHelper<TrimDialog>.GetPropValue(() => this.TrimChars); } set { UIHelper<TrimDialog>.SetPropValue(() => this.TrimChars, value); } }
 		[DepProp]
-		public TrimLocation Location { get { return UIHelper<TrimDialog>.GetPropValue<TrimLocation>(this); } set { UIHelper<TrimDialog>.SetPropValue(this, value); } }
+		public TrimLocation Location { get { return UIHelper<TrimDialog>.GetPropValue(() => this.Location); } set { UIHelper<TrimDialog>.SetPropValue(() => this.Location, value); } }
 
 		static TrimDialog()
 		{

@@ -7,7 +7,7 @@ namespace NeoEdit.HexEdit
 	partial class HexEditMenu
 	{
 		[DepProp]
-		public new HexEditTabs Parent { get { return UIHelper<HexEditMenu>.GetPropValue<HexEditTabs>(this); } set { UIHelper<HexEditMenu>.SetPropValue(this, value); } }
+		public new HexEditTabs Parent { get { return UIHelper<HexEditMenu>.GetPropValue(() => this.Parent); } set { UIHelper<HexEditMenu>.SetPropValue(() => this.Parent, value); } }
 
 		static HexEditMenu() { UIHelper<HexEditMenu>.Register(); }
 

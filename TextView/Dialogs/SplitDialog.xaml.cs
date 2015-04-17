@@ -25,15 +25,15 @@ namespace NeoEdit.TextView.Dialogs
 		}
 
 		[DepProp]
-		public long Size { get { return UIHelper<SplitDialog>.GetPropValue<long>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
+		public long Size { get { return UIHelper<SplitDialog>.GetPropValue(() => this.Size); } set { UIHelper<SplitDialog>.SetPropValue(() => this.Size, value); } }
 		[DepProp]
-		public SizeTypeEnum SizeType { get { return UIHelper<SplitDialog>.GetPropValue<SizeTypeEnum>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
+		public SizeTypeEnum SizeType { get { return UIHelper<SplitDialog>.GetPropValue(() => this.SizeType); } set { UIHelper<SplitDialog>.SetPropValue(() => this.SizeType, value); } }
 		[DepProp]
-		public int NumFiles { get { return UIHelper<SplitDialog>.GetPropValue<int>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
+		public int NumFiles { get { return UIHelper<SplitDialog>.GetPropValue(() => this.NumFiles); } set { UIHelper<SplitDialog>.SetPropValue(() => this.NumFiles, value); } }
 		[DepProp]
-		public string OutputDir { get { return UIHelper<SplitDialog>.GetPropValue<string>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
+		public string OutputDir { get { return UIHelper<SplitDialog>.GetPropValue(() => this.OutputDir); } set { UIHelper<SplitDialog>.SetPropValue(() => this.OutputDir, value); } }
 		[DepProp]
-		public string OutputTemplate { get { return UIHelper<SplitDialog>.GetPropValue<string>(this); } set { UIHelper<SplitDialog>.SetPropValue(this, value); } }
+		public string OutputTemplate { get { return UIHelper<SplitDialog>.GetPropValue(() => this.OutputTemplate); } set { UIHelper<SplitDialog>.SetPropValue(() => this.OutputTemplate, value); } }
 
 		static SplitDialog()
 		{

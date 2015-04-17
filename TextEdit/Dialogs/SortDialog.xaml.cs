@@ -14,13 +14,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public TextEditor.SortScope SortScope { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortScope>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
+		public TextEditor.SortScope SortScope { get { return UIHelper<SortDialog>.GetPropValue(() => this.SortScope); } set { UIHelper<SortDialog>.SetPropValue(() => this.SortScope, value); } }
 		[DepProp]
-		public TextEditor.SortType SortType { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortType>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
+		public TextEditor.SortType SortType { get { return UIHelper<SortDialog>.GetPropValue(() => this.SortType); } set { UIHelper<SortDialog>.SetPropValue(() => this.SortType, value); } }
 		[DepProp]
-		public bool CaseSensitive { get { return UIHelper<SortDialog>.GetPropValue<bool>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
+		public bool CaseSensitive { get { return UIHelper<SortDialog>.GetPropValue(() => this.CaseSensitive); } set { UIHelper<SortDialog>.SetPropValue(() => this.CaseSensitive, value); } }
 		[DepProp]
-		public bool Ascending { get { return UIHelper<SortDialog>.GetPropValue<bool>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
+		public bool Ascending { get { return UIHelper<SortDialog>.GetPropValue(() => this.Ascending); } set { UIHelper<SortDialog>.SetPropValue(() => this.Ascending, value); } }
 
 		static SortDialog() { UIHelper<SortDialog>.Register(); }
 

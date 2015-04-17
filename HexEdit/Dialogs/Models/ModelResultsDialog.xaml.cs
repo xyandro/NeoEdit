@@ -20,7 +20,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 		Action<long, long, byte[]> changeBytes;
 
 		[DepProp]
-		public ObservableCollection<ModelResult> Results { get { return UIHelper<ModelResultsDialog>.GetPropValue<ObservableCollection<ModelResult>>(this); } set { UIHelper<ModelResultsDialog>.SetPropValue(this, value); } }
+		public ObservableCollection<ModelResult> Results { get { return UIHelper<ModelResultsDialog>.GetPropValue(() => this.Results); } set { UIHelper<ModelResultsDialog>.SetPropValue(() => this.Results, value); } }
 
 		static ModelResultsDialog() { UIHelper<ModelResultsDialog>.Register(); }
 

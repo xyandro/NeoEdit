@@ -7,7 +7,7 @@ namespace NeoEdit.Processes
 	partial class ProcessesMenu
 	{
 		[DepProp]
-		public new ProcessesWindow Parent { get { return UIHelper<ProcessesMenu>.GetPropValue<ProcessesWindow>(this); } set { UIHelper<ProcessesMenu>.SetPropValue(this, value); } }
+		public new ProcessesWindow Parent { get { return UIHelper<ProcessesMenu>.GetPropValue(() => this.Parent); } set { UIHelper<ProcessesMenu>.SetPropValue(() => this.Parent, value); } }
 
 		static ProcessesMenu() { UIHelper<ProcessesMenu>.Register(); }
 

@@ -14,9 +14,9 @@ namespace NeoEdit.Registry
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 
 		[DepProp]
-		string Location { get { return UIHelper<RegistryWindow>.GetPropValue<string>(this); } set { UIHelper<RegistryWindow>.SetPropValue(this, value); } }
+		string Location { get { return UIHelper<RegistryWindow>.GetPropValue(() => this.Location); } set { UIHelper<RegistryWindow>.SetPropValue(() => this.Location, value); } }
 		[DepProp]
-		ObservableCollection<RegistryItem> Keys { get { return UIHelper<RegistryWindow>.GetPropValue<ObservableCollection<RegistryItem>>(this); } set { UIHelper<RegistryWindow>.SetPropValue(this, value); } }
+		ObservableCollection<RegistryItem> Keys { get { return UIHelper<RegistryWindow>.GetPropValue(() => this.Keys); } set { UIHelper<RegistryWindow>.SetPropValue(() => this.Keys, value); } }
 
 		static RegistryWindow()
 		{

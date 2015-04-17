@@ -8,13 +8,13 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 	partial class ModelActionView
 	{
 		[DepProp]
-		public ModelActionVM ModelActionVM { get { return UIHelper<ModelActionView>.GetPropValue<ModelActionVM>(this); } set { UIHelper<ModelActionView>.SetPropValue(this, value); } }
+		public ModelActionVM ModelActionVM { get { return UIHelper<ModelActionView>.GetPropValue(() => this.ModelActionVM); } set { UIHelper<ModelActionView>.SetPropValue(() => this.ModelActionVM, value); } }
 		[DepProp]
-		public Dictionary<string, string> Models { get { return UIHelper<ModelActionView>.GetPropValue<Dictionary<string, string>>(this); } set { UIHelper<ModelActionView>.SetPropValue(this, value); } }
+		public Dictionary<string, string> Models { get { return UIHelper<ModelActionView>.GetPropValue(() => this.Models); } set { UIHelper<ModelActionView>.SetPropValue(() => this.Models, value); } }
 		[DepProp]
-		public List<Coder.CodePage> BasicTypes { get { return UIHelper<ModelActionView>.GetPropValue<List<Coder.CodePage>>(this); } set { UIHelper<ModelActionView>.SetPropValue(this, value); } }
+		public List<Coder.CodePage> BasicTypes { get { return UIHelper<ModelActionView>.GetPropValue(() => this.BasicTypes); } set { UIHelper<ModelActionView>.SetPropValue(() => this.BasicTypes, value); } }
 		[DepProp]
-		public Dictionary<Coder.CodePage, string> EncodingTypes { get { return UIHelper<ModelActionView>.GetPropValue<Dictionary<Coder.CodePage, string>>(this); } set { UIHelper<ModelActionView>.SetPropValue(this, value); } }
+		public Dictionary<Coder.CodePage, string> EncodingTypes { get { return UIHelper<ModelActionView>.GetPropValue(() => this.EncodingTypes); } set { UIHelper<ModelActionView>.SetPropValue(() => this.EncodingTypes, value); } }
 
 		static ModelActionView() { UIHelper<ModelActionView>.Register(); }
 

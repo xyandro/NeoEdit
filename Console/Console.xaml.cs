@@ -17,15 +17,15 @@ namespace NeoEdit.Console
 	public partial class Console
 	{
 		[DepProp]
-		string Location { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
+		string Location { get { return UIHelper<Console>.GetPropValue(() => this.Location); } set { UIHelper<Console>.SetPropValue(() => this.Location, value); } }
 		[DepProp(Default = "")]
-		string Command { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
+		string Command { get { return UIHelper<Console>.GetPropValue(() => this.Command); } set { UIHelper<Console>.SetPropValue(() => this.Command, value); } }
 		[DepProp(Default = true)]
-		bool CommandMode { get { return UIHelper<Console>.GetPropValue<bool>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
+		bool CommandMode { get { return UIHelper<Console>.GetPropValue(() => this.CommandMode); } set { UIHelper<Console>.SetPropValue(() => this.CommandMode, value); } }
 		[DepProp]
-		int yScrollValue { get { return UIHelper<Console>.GetPropValue<int>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
+		int yScrollValue { get { return UIHelper<Console>.GetPropValue(() => this.yScrollValue); } set { UIHelper<Console>.SetPropValue(() => this.yScrollValue, value); } }
 		[DepProp]
-		ObservableCollection<Line> Lines { get { return UIHelper<Console>.GetPropValue<ObservableCollection<Line>>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
+		ObservableCollection<Line> Lines { get { return UIHelper<Console>.GetPropValue(() => this.Lines); } set { UIHelper<Console>.SetPropValue(() => this.Lines, value); } }
 
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
@@ -392,7 +392,7 @@ namespace NeoEdit.Console
 
 		void DataReceived(ConsoleRunnerPipe.Type pipeType, byte[] data)
 		{
-			Dispatcher.Invoke(() =>
+			Dispatcher.Invoke(new Action(() =>
 			{
 				if (pipeType == ConsoleRunnerPipe.Type.None)
 				{
@@ -420,7 +420,7 @@ namespace NeoEdit.Console
 
 					index = endIndex + (newline ? 1 : 0);
 				}
-			});
+			}));
 		}
 
 		void Exited()
@@ -430,12 +430,12 @@ namespace NeoEdit.Console
 			CommandMode = true;
 			Command = "";
 
-			Dispatcher.Invoke(() =>
+			Dispatcher.Invoke(new Action(() =>
 			{
 				FinishAll();
 				Lines.Add(new Line(Line.LineType.Command).Finish());
 				Lines.Add(new Line("Program completed.", Line.LineType.Command).Finish());
-			});
+			}));
 		}
 
 		internal Label GetLabel()

@@ -5,9 +5,9 @@ namespace NeoEdit.TextView.Dialogs
 	partial class MultiProgressDialogProgress
 	{
 		[DepProp]
-		public string ItemName { get { return UIHelper<MultiProgressDialogProgress>.GetPropValue<string>(this); } set { UIHelper<MultiProgressDialogProgress>.SetPropValue(this, value); } }
+		public string ItemName { get { return UIHelper<MultiProgressDialogProgress>.GetPropValue(() => this.ItemName); } set { UIHelper<MultiProgressDialogProgress>.SetPropValue(() => this.ItemName, value); } }
 		[DepProp]
-		public int Progress { get { return UIHelper<MultiProgressDialogProgress>.GetPropValue<int>(this); } set { UIHelper<MultiProgressDialogProgress>.SetPropValue(this, value); } }
+		public int Progress { get { return UIHelper<MultiProgressDialogProgress>.GetPropValue(() => this.Progress); } set { UIHelper<MultiProgressDialogProgress>.SetPropValue(() => this.Progress, value); } }
 
 		static MultiProgressDialogProgress() { UIHelper<MultiProgressDialogProgress>.Register(); }
 

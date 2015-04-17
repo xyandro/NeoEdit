@@ -10,13 +10,13 @@ namespace NeoEdit.GUI.Dialogs
 	public partial class Message : Window
 	{
 		[DepProp]
-		public string Text { get { return UIHelper<Message>.GetPropValue<string>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
+		public string Text { get { return UIHelper<Message>.GetPropValue(() => this.Text); } set { UIHelper<Message>.SetPropValue(() => this.Text, value); } }
 		[DepProp]
-		public OptionsEnum Options { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
+		public OptionsEnum Options { get { return UIHelper<Message>.GetPropValue(() => this.Options); } set { UIHelper<Message>.SetPropValue(() => this.Options, value); } }
 		[DepProp]
-		public OptionsEnum DefaultAccept { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
+		public OptionsEnum DefaultAccept { get { return UIHelper<Message>.GetPropValue(() => this.DefaultAccept); } set { UIHelper<Message>.SetPropValue(() => this.DefaultAccept, value); } }
 		[DepProp]
-		public OptionsEnum DefaultCancel { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
+		public OptionsEnum DefaultCancel { get { return UIHelper<Message>.GetPropValue(() => this.DefaultCancel); } set { UIHelper<Message>.SetPropValue(() => this.DefaultCancel, value); } }
 
 		[Flags]
 		public enum OptionsEnum

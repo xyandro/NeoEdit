@@ -12,9 +12,9 @@ namespace NeoEdit.HexEdit.Dialogs
 		}
 
 		[DepProp]
-		public long Value { get { return UIHelper<GotoDialog>.GetPropValue<long>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		public long Value { get { return UIHelper<GotoDialog>.GetPropValue(() => this.Value); } set { UIHelper<GotoDialog>.SetPropValue(() => this.Value, value); } }
 		[DepProp]
-		public bool Relative { get { return UIHelper<GotoDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		public bool Relative { get { return UIHelper<GotoDialog>.GetPropValue(() => this.Relative); } set { UIHelper<GotoDialog>.SetPropValue(() => this.Relative, value); } }
 
 		static GotoDialog()
 		{

@@ -77,7 +77,7 @@ namespace NeoEdit.TextEdit
 			setPlayingStatus(true);
 			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
 			var ctr = 0;
-			timer.Tick += (s, e) => tabs.Dispatcher.Invoke(() =>
+			timer.Tick += (s, e) => tabs.Dispatcher.Invoke(new Action(() =>
 			{
 				if (ctr >= macroActions.Count)
 				{
@@ -113,7 +113,7 @@ namespace NeoEdit.TextEdit
 					setPlayingStatus(false);
 					throw;
 				}
-			});
+			}));
 			timer.Start();
 		}
 	}

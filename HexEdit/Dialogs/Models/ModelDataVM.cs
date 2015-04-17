@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Linq.Expressions;
+using System.Reflection;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.HexEdit.Models;
 
@@ -11,19 +13,20 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 	class ModelDataVM : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
-		protected void OnPropertyChanged([CallerMemberName] string name = "")
+		protected void OnPropertyChanged<T>(Expression<Func<ModelDataVM, T>> expression)
 		{
+			string name = ((expression.Body as MemberExpression).Member as PropertyInfo).Name;
 			var handler = PropertyChanged;
 			if (handler != null)
 				handler(this, new PropertyChangedEventArgs(name));
 		}
 
 		ObservableCollection<ModelVM> models;
-		public ObservableCollection<ModelVM> Models { get { return models; } set { models = value; OnPropertyChanged(); } }
+		public ObservableCollection<ModelVM> Models { get { return models; } set { models = value; OnPropertyChanged(a => a.Models); } }
 		ModelVM _default;
-		public ModelVM Default { get { return _default; } set { _default = value; OnPropertyChanged(); } }
+		public ModelVM Default { get { return _default; } set { _default = value; OnPropertyChanged(a => a.Default); } }
 		string fileName;
-		public string FileName { get { return fileName; } set { fileName = value; OnPropertyChanged(); } }
+		public string FileName { get { return fileName; } set { fileName = value; OnPropertyChanged(a => a.FileName); } }
 
 		public readonly ModelData modelData;
 		public ModelDataVM(ModelData modelData)

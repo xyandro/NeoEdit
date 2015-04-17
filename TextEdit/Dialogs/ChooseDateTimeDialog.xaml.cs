@@ -12,7 +12,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public DateTime Value { get { return UIHelper<ChooseDateTimeDialog>.GetPropValue<DateTime>(this); } set { UIHelper<ChooseDateTimeDialog>.SetPropValue(this, value); } }
+		public DateTime Value { get { return UIHelper<ChooseDateTimeDialog>.GetPropValue(() => this.Value); } set { UIHelper<ChooseDateTimeDialog>.SetPropValue(() => this.Value, value); } }
 
 		static ChooseDateTimeDialog() { UIHelper<ChooseDateTimeDialog>.Register(); }
 

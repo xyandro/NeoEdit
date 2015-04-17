@@ -71,9 +71,9 @@ namespace NeoEdit.TextEdit
 		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, Comparison<TKey> comparer = null)
 		{
 			if (ascending)
-				return comparer == null ? source.OrderBy(keySelector) : source.OrderBy(keySelector, Comparer<TKey>.Create(comparer));
+				return comparer == null ? source.OrderBy(keySelector) : source.OrderBy(keySelector, ComparerCreator<TKey>.Create(comparer));
 			else
-				return comparer == null ? source.OrderByDescending(keySelector) : source.OrderByDescending(keySelector, Comparer<TKey>.Create(comparer));
+				return comparer == null ? source.OrderByDescending(keySelector) : source.OrderByDescending(keySelector, ComparerCreator<TKey>.Create(comparer));
 		}
 
 		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)

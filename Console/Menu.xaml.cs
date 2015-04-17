@@ -7,7 +7,7 @@ namespace NeoEdit.Console
 	partial class ConsoleMenu
 	{
 		[DepProp]
-		public new ConsoleTabs Parent { get { return UIHelper<ConsoleMenu>.GetPropValue<ConsoleTabs>(this); } set { UIHelper<ConsoleMenu>.SetPropValue(this, value); } }
+		public new ConsoleTabs Parent { get { return UIHelper<ConsoleMenu>.GetPropValue(() => this.Parent); } set { UIHelper<ConsoleMenu>.SetPropValue(() => this.Parent, value); } }
 
 		static ConsoleMenu() { UIHelper<ConsoleMenu>.Register(); }
 

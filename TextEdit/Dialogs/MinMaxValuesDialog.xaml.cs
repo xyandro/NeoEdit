@@ -15,11 +15,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public Coder.CodePage CodePage { get { return UIHelper<MinMaxValuesDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<MinMaxValuesDialog>.SetPropValue(this, value); } }
+		public Coder.CodePage CodePage { get { return UIHelper<MinMaxValuesDialog>.GetPropValue(() => this.CodePage); } set { UIHelper<MinMaxValuesDialog>.SetPropValue(() => this.CodePage, value); } }
 		[DepProp]
-		public bool Min { get { return UIHelper<MinMaxValuesDialog>.GetPropValue<bool>(this); } set { UIHelper<MinMaxValuesDialog>.SetPropValue(this, value); } }
+		public bool Min { get { return UIHelper<MinMaxValuesDialog>.GetPropValue(() => this.Min); } set { UIHelper<MinMaxValuesDialog>.SetPropValue(() => this.Min, value); } }
 		[DepProp]
-		public bool Max { get { return UIHelper<MinMaxValuesDialog>.GetPropValue<bool>(this); } set { UIHelper<MinMaxValuesDialog>.SetPropValue(this, value); } }
+		public bool Max { get { return UIHelper<MinMaxValuesDialog>.GetPropValue(() => this.Max); } set { UIHelper<MinMaxValuesDialog>.SetPropValue(() => this.Max, value); } }
 
 		static MinMaxValuesDialog() { UIHelper<MinMaxValuesDialog>.Register(); }
 

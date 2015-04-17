@@ -42,31 +42,31 @@ namespace NeoEdit.TextEdit
 		readonly UndoRedo undoRedo;
 
 		[DepProp]
-		public string FileName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public string FileName { get { return UIHelper<TextEditor>.GetPropValue(() => this.FileName); } set { UIHelper<TextEditor>.SetPropValue(() => this.FileName, value); } }
 		[DepProp]
-		public bool IsModified { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public bool IsModified { get { return UIHelper<TextEditor>.GetPropValue(() => this.IsModified); } set { UIHelper<TextEditor>.SetPropValue(() => this.IsModified, value); } }
 		[DepProp]
-		public Highlighting.HighlightingType HighlightType { get { return UIHelper<TextEditor>.GetPropValue<Highlighting.HighlightingType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public Highlighting.HighlightingType HighlightType { get { return UIHelper<TextEditor>.GetPropValue(() => this.HighlightType); } set { UIHelper<TextEditor>.SetPropValue(() => this.HighlightType, value); } }
 		[DepProp]
-		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue(() => this.CodePage); } set { UIHelper<TextEditor>.SetPropValue(() => this.CodePage, value); } }
 		[DepProp]
-		public int Line { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int Line { get { return UIHelper<TextEditor>.GetPropValue(() => this.Line); } set { UIHelper<TextEditor>.SetPropValue(() => this.Line, value); } }
 		[DepProp]
-		public int Column { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int Column { get { return UIHelper<TextEditor>.GetPropValue(() => this.Column); } set { UIHelper<TextEditor>.SetPropValue(() => this.Column, value); } }
 		[DepProp]
-		public int Index { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int Index { get { return UIHelper<TextEditor>.GetPropValue(() => this.Index); } set { UIHelper<TextEditor>.SetPropValue(() => this.Index, value); } }
 		[DepProp]
-		public int PositionMin { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int PositionMin { get { return UIHelper<TextEditor>.GetPropValue(() => this.PositionMin); } set { UIHelper<TextEditor>.SetPropValue(() => this.PositionMin, value); } }
 		[DepProp]
-		public int PositionMax { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int PositionMax { get { return UIHelper<TextEditor>.GetPropValue(() => this.PositionMax); } set { UIHelper<TextEditor>.SetPropValue(() => this.PositionMax, value); } }
 		[DepProp]
-		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue(() => this.NumSelections); } set { UIHelper<TextEditor>.SetPropValue(() => this.NumSelections, value); } }
 		[DepProp]
-		public int xScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int xScrollValue { get { return UIHelper<TextEditor>.GetPropValue(() => this.xScrollValue); } set { UIHelper<TextEditor>.SetPropValue(() => this.xScrollValue, value); } }
 		[DepProp]
-		public int yScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int yScrollValue { get { return UIHelper<TextEditor>.GetPropValue(() => this.yScrollValue); } set { UIHelper<TextEditor>.SetPropValue(() => this.yScrollValue, value); } }
 		[DepProp]
-		public string LineEnding { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public string LineEnding { get { return UIHelper<TextEditor>.GetPropValue(() => this.LineEnding); } set { UIHelper<TextEditor>.SetPropValue(() => this.LineEnding, value); } }
 
 		int xScrollViewportFloor { get { return (int)Math.Floor(xScroll.ViewportSize); } }
 		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScroll.ViewportSize); } }
@@ -734,7 +734,7 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Selections must be on a single line.");
 
 			var lineRanges = linePairs.AsParallel().AsOrdered().Select(pair => new Range(Data.GetOffset(pair.start, 0))).ToList();
-			var comparer = Comparer<Range>.Create((r1, r2) => r1.Start.CompareTo(r2.Start));
+			var comparer = ComparerCreator<Range>.Create((r1, r2) => r1.Start.CompareTo(r2.Start));
 			var indexes = lineRanges.AsParallel().Select(range => new { range = range, index = Bookmarks.BinarySearch(range, comparer) }).Reverse().ToList();
 
 			if (indexes.Any(index => index.index < 0))

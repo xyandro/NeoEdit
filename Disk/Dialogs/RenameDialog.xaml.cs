@@ -9,7 +9,7 @@ namespace NeoEdit.Disk.Dialogs
 	partial class RenameDialog
 	{
 		[DepProp]
-		public string ItemName { get { return UIHelper<RenameDialog>.GetPropValue<string>(this); } private set { UIHelper<RenameDialog>.SetPropValue(this, value); } }
+		public string ItemName { get { return UIHelper<RenameDialog>.GetPropValue(() => this.ItemName); } private set { UIHelper<RenameDialog>.SetPropValue(() => this.ItemName, value); } }
 		public string FullName { get { return item.Path + @"\" + ItemName; } }
 
 		static RenameDialog() { UIHelper<RenameDialog>.Register(); }

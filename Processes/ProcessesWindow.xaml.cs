@@ -15,7 +15,7 @@ namespace NeoEdit.Processes
 	public partial class ProcessesWindow : Window
 	{
 		[DepProp]
-		ObservableCollection<ProcessItem> Processes { get { return UIHelper<ProcessesWindow>.GetPropValue<ObservableCollection<ProcessItem>>(this); } set { UIHelper<ProcessesWindow>.SetPropValue(this, value); } }
+		ObservableCollection<ProcessItem> Processes { get { return UIHelper<ProcessesWindow>.GetPropValue(() => this.Processes); } set { UIHelper<ProcessesWindow>.SetPropValue(() => this.Processes, value); } }
 
 		static ProcessesWindow() { UIHelper<ProcessesWindow>.Register(); }
 

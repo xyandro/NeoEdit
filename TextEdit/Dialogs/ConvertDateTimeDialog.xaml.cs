@@ -19,19 +19,19 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string InputFormat { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
+		public string InputFormat { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue(() => this.InputFormat); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(() => this.InputFormat, value); } }
 		[DepProp]
-		public bool InputUTC { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<bool>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
+		public bool InputUTC { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue(() => this.InputUTC); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(() => this.InputUTC, value); } }
 		[DepProp]
-		public string OutputFormat { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
+		public string OutputFormat { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue(() => this.OutputFormat); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(() => this.OutputFormat, value); } }
 		[DepProp]
-		public bool OutputUTC { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<bool>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
+		public bool OutputUTC { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue(() => this.OutputUTC); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(() => this.OutputUTC, value); } }
 		[DepProp]
-		public string Example { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
+		public string Example { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue(() => this.Example); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(() => this.Example, value); } }
 		[DepProp]
-		public string ParsedExample { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
+		public string ParsedExample { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue(() => this.ParsedExample); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(() => this.ParsedExample, value); } }
 		[DepProp]
-		public string OutputExample { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue<string>(this); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(this, value); } }
+		public string OutputExample { get { return UIHelper<ConvertDateTimeDialog>.GetPropValue(() => this.OutputExample); } set { UIHelper<ConvertDateTimeDialog>.SetPropValue(() => this.OutputExample, value); } }
 
 		static ConvertDateTimeDialog()
 		{

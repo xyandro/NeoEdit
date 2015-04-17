@@ -21,21 +21,21 @@ namespace NeoEdit.Disk
 	partial class DiskWindow
 	{
 		[DepProp]
-		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue(() => this.Location); } set { UIHelper<DiskWindow>.SetPropValue(() => this.Location, value); } }
 		[DepProp]
-		ObservableCollection<DiskItem> Files { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		ObservableCollection<DiskItem> Files { get { return UIHelper<DiskWindow>.GetPropValue(() => this.Files); } set { UIHelper<DiskWindow>.SetPropValue(() => this.Files, value); } }
 		[DepProp]
-		ObservableCollection<DiskItem> Selected { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		ObservableCollection<DiskItem> Selected { get { return UIHelper<DiskWindow>.GetPropValue(() => this.Selected); } set { UIHelper<DiskWindow>.SetPropValue(() => this.Selected, value); } }
 		[DepProp]
-		DiskItem Focused { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		DiskItem Focused { get { return UIHelper<DiskWindow>.GetPropValue(() => this.Focused); } set { UIHelper<DiskWindow>.SetPropValue(() => this.Focused, value); } }
 		[DepProp]
-		ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<DiskWindow>.GetPropValue(() => this.Columns); } set { UIHelper<DiskWindow>.SetPropValue(() => this.Columns, value); } }
 		[DepProp]
-		ItemGridColumn SortColumn { get { return UIHelper<DiskWindow>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		ItemGridColumn SortColumn { get { return UIHelper<DiskWindow>.GetPropValue(() => this.SortColumn); } set { UIHelper<DiskWindow>.SetPropValue(() => this.SortColumn, value); } }
 		[DepProp]
-		bool SortAscending { get { return UIHelper<DiskWindow>.GetPropValue<bool>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		bool SortAscending { get { return UIHelper<DiskWindow>.GetPropValue(() => this.SortAscending); } set { UIHelper<DiskWindow>.SetPropValue(() => this.SortAscending, value); } }
 		[DepProp]
-		int ColumnsChangeCount { get { return UIHelper<DiskWindow>.GetPropValue<int>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		int ColumnsChangeCount { get { return UIHelper<DiskWindow>.GetPropValue(() => this.ColumnsChangeCount); } set { UIHelper<DiskWindow>.SetPropValue(() => this.ColumnsChangeCount, value); } }
 
 		static DiskWindow()
 		{

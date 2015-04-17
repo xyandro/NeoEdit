@@ -13,9 +13,9 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public int MinValue { get { return UIHelper<RandomNumberDialog>.GetPropValue<int>(this); } set { UIHelper<RandomNumberDialog>.SetPropValue(this, value); } }
+		public int MinValue { get { return UIHelper<RandomNumberDialog>.GetPropValue(() => this.MinValue); } set { UIHelper<RandomNumberDialog>.SetPropValue(() => this.MinValue, value); } }
 		[DepProp]
-		public int MaxValue { get { return UIHelper<RandomNumberDialog>.GetPropValue<int>(this); } set { UIHelper<RandomNumberDialog>.SetPropValue(this, value); } }
+		public int MaxValue { get { return UIHelper<RandomNumberDialog>.GetPropValue(() => this.MaxValue); } set { UIHelper<RandomNumberDialog>.SetPropValue(() => this.MaxValue, value); } }
 
 		static RandomNumberDialog() { UIHelper<RandomNumberDialog>.Register(); }
 

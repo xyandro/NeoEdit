@@ -13,7 +13,7 @@ namespace NeoEdit.TextView.Dialogs
 		public delegate bool CancelDelegate(bool forceCancel = false);
 
 		[DepProp]
-		public string Status { get { return UIHelper<MultiProgressDialog>.GetPropValue<string>(this); } set { UIHelper<MultiProgressDialog>.SetPropValue(this, value); } }
+		public string Status { get { return UIHelper<MultiProgressDialog>.GetPropValue(() => this.Status); } set { UIHelper<MultiProgressDialog>.SetPropValue(() => this.Status, value); } }
 
 		static MultiProgressDialog() { UIHelper<MultiProgressDialog>.Register(); }
 

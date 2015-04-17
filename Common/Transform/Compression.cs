@@ -20,14 +20,14 @@ namespace NeoEdit.Common.Transform
 				case Type.GZip:
 					using (var ms = new MemoryStream())
 					{
-						using (var gz = new GZipStream(ms, CompressionLevel.Optimal, true))
+						using (var gz = new GZipStream(ms, CompressionMode.Compress, true))
 							gz.Write(data, 0, data.Length);
 						return ms.ToArray();
 					}
 				case Type.Deflate:
 					using (var ms = new MemoryStream())
 					{
-						using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, true))
+						using (var deflate = new DeflateStream(ms, CompressionMode.Decompress, true))
 							deflate.Write(data, 0, data.Length);
 						return ms.ToArray();
 					}

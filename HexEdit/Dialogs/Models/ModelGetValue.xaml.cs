@@ -6,7 +6,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 	partial class ModelGetValue
 	{
 		[DepProp]
-		public string Value { get { return UIHelper<ModelGetValue>.GetPropValue<string>(this); } set { UIHelper<ModelGetValue>.SetPropValue(this, value); } }
+		public string Value { get { return UIHelper<ModelGetValue>.GetPropValue(() => this.Value); } set { UIHelper<ModelGetValue>.SetPropValue(() => this.Value, value); } }
 
 		static ModelGetValue() { UIHelper<ModelGetValue>.Register(); }
 

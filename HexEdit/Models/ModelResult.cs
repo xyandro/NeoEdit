@@ -7,25 +7,25 @@ namespace NeoEdit.HexEdit.Models
 	class ModelResult : DependencyObject
 	{
 		[DepProp]
-		public ModelAction Action { get { return UIHelper<ModelResult>.GetPropValue<ModelAction>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public ModelAction Action { get { return UIHelper<ModelResult>.GetPropValue(() => this.Action); } set { UIHelper<ModelResult>.SetPropValue(() => this.Action, value); } }
 		[DepProp]
-		public int Num { get { return UIHelper<ModelResult>.GetPropValue<int>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public int Num { get { return UIHelper<ModelResult>.GetPropValue(() => this.Num); } set { UIHelper<ModelResult>.SetPropValue(() => this.Num, value); } }
 		[DepProp]
-		public string Name { get { return UIHelper<ModelResult>.GetPropValue<string>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public string Name { get { return UIHelper<ModelResult>.GetPropValue(() => this.Name); } set { UIHelper<ModelResult>.SetPropValue(() => this.Name, value); } }
 		[DepProp]
-		public string Value { get { return UIHelper<ModelResult>.GetPropValue<string>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public string Value { get { return UIHelper<ModelResult>.GetPropValue(() => this.Value); } set { UIHelper<ModelResult>.SetPropValue(() => this.Value, value); } }
 		[DepProp]
-		public long StartByte { get { return UIHelper<ModelResult>.GetPropValue<long>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public long StartByte { get { return UIHelper<ModelResult>.GetPropValue(() => this.StartByte); } set { UIHelper<ModelResult>.SetPropValue(() => this.StartByte, value); } }
 		[DepProp]
-		public int StartBit { get { return UIHelper<ModelResult>.GetPropValue<int>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public int StartBit { get { return UIHelper<ModelResult>.GetPropValue(() => this.StartBit); } set { UIHelper<ModelResult>.SetPropValue(() => this.StartBit, value); } }
 		[DepProp]
-		public long EndByte { get { return UIHelper<ModelResult>.GetPropValue<long>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public long EndByte { get { return UIHelper<ModelResult>.GetPropValue(() => this.EndByte); } set { UIHelper<ModelResult>.SetPropValue(() => this.EndByte, value); } }
 		[DepProp]
-		public int EndBit { get { return UIHelper<ModelResult>.GetPropValue<int>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public int EndBit { get { return UIHelper<ModelResult>.GetPropValue(() => this.EndBit); } set { UIHelper<ModelResult>.SetPropValue(() => this.EndBit, value); } }
 		[DepProp]
-		public string Location { get { return UIHelper<ModelResult>.GetPropValue<string>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public string Location { get { return UIHelper<ModelResult>.GetPropValue(() => this.Location); } set { UIHelper<ModelResult>.SetPropValue(() => this.Location, value); } }
 		[DepProp]
-		public string Length { get { return UIHelper<ModelResult>.GetPropValue<string>(this); } set { UIHelper<ModelResult>.SetPropValue(this, value); } }
+		public string Length { get { return UIHelper<ModelResult>.GetPropValue(() => this.Length); } set { UIHelper<ModelResult>.SetPropValue(() => this.Length, value); } }
 
 		static ModelResult() { UIHelper<ModelResult>.Register(); }
 

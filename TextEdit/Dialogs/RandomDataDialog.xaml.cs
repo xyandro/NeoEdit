@@ -24,11 +24,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public RandomDataType Type { get { return UIHelper<RandomDataDialog>.GetPropValue<RandomDataType>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
+		public RandomDataType Type { get { return UIHelper<RandomDataDialog>.GetPropValue(() => this.Type); } set { UIHelper<RandomDataDialog>.SetPropValue(() => this.Type, value); } }
 		[DepProp]
-		public int Value { get { return UIHelper<RandomDataDialog>.GetPropValue<int>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
+		public int Value { get { return UIHelper<RandomDataDialog>.GetPropValue(() => this.Value); } set { UIHelper<RandomDataDialog>.SetPropValue(() => this.Value, value); } }
 		[DepProp]
-		public string Chars { get { return UIHelper<RandomDataDialog>.GetPropValue<string>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
+		public string Chars { get { return UIHelper<RandomDataDialog>.GetPropValue(() => this.Chars); } set { UIHelper<RandomDataDialog>.SetPropValue(() => this.Chars, value); } }
 
 		static RandomDataDialog()
 		{

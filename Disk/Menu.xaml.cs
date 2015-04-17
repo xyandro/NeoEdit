@@ -22,7 +22,7 @@ namespace NeoEdit.Disk
 	partial class DiskMenu
 	{
 		[DepProp]
-		public new DiskTabs Parent { get { return UIHelper<DiskMenu>.GetPropValue<DiskTabs>(this); } set { UIHelper<DiskMenu>.SetPropValue(this, value); } }
+		public new DiskTabs Parent { get { return UIHelper<DiskMenu>.GetPropValue(() => this.Parent); } set { UIHelper<DiskMenu>.SetPropValue(() => this.Parent, value); } }
 
 		static DiskMenu() { UIHelper<DiskMenu>.Register(); }
 
