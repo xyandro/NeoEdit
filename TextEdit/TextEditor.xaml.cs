@@ -514,7 +514,7 @@ namespace NeoEdit.TextEdit
 
 		internal EncodingDialog.Result Command_File_Encoding_Dialog()
 		{
-			return EncodingDialog.Run(CodePage, lineEndings: LineEnding ?? "");
+			return EncodingDialog.Run(UIHelper.FindParent<Window>(this), CodePage, lineEndings: LineEnding ?? "");
 		}
 
 		internal void Command_File_Encoding(EncodingDialog.Result result)
@@ -539,7 +539,7 @@ namespace NeoEdit.TextEdit
 
 		internal EncodingDialog.Result Command_File_ReopenWithEncoding_Dialog()
 		{
-			return EncodingDialog.Run(CodePage);
+			return EncodingDialog.Run(UIHelper.FindParent<Window>(this), CodePage);
 		}
 
 		internal void Command_File_ReopenWithEncoding(EncodingDialog.Result result)
@@ -646,7 +646,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return GetRegExDialog.Run(isReplace, text, selectionOnly);
+			return GetRegExDialog.Run(UIHelper.FindParent<Window>(this), isReplace, text, selectionOnly);
 		}
 
 		internal void Command_Edit_FindReplace(bool replace, bool selecting, GetRegExDialog.Result result)
@@ -690,7 +690,7 @@ namespace NeoEdit.TextEdit
 				index = Data.GetOffsetIndex(range.Start, line - 1) + 1;
 				position = range.Start;
 			}
-			return GotoDialog.Run(gotoType, gotoType == GotoDialog.GotoType.Line ? line : gotoType == GotoDialog.GotoType.Column ? index : position);
+			return GotoDialog.Run(UIHelper.FindParent<Window>(this), gotoType, gotoType == GotoDialog.GotoType.Line ? line : gotoType == GotoDialog.GotoType.Column ? index : position);
 		}
 
 		internal void Command_Edit_Goto(bool selecting, GotoDialog.Result result)
@@ -826,7 +826,7 @@ namespace NeoEdit.TextEdit
 
 		internal ChooseDateTimeDialog.Result Command_Files_Timestamp_Dialog()
 		{
-			return ChooseDateTimeDialog.Run(DateTime.Now);
+			return ChooseDateTimeDialog.Run(UIHelper.FindParent<Window>(this), DateTime.Now);
 		}
 
 		internal void Command_Files_Timestamp(TimestampType type, ChooseDateTimeDialog.Result result)
@@ -1175,7 +1175,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count < 1)
 				return null;
 
-			return ConvertDateTimeDialog.Run(GetString(Selections.First()));
+			return ConvertDateTimeDialog.Run(UIHelper.FindParent<Window>(this), GetString(Selections.First()));
 		}
 
 		internal void Command_Data_DateTime_Convert(ConvertDateTimeDialog.Result result)
@@ -1185,7 +1185,7 @@ namespace NeoEdit.TextEdit
 
 		internal ConvertDialog.Result Command_Data_Convert_Dialog()
 		{
-			return ConvertDialog.Run();
+			return ConvertDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
 		internal void Command_Data_Convert(ConvertDialog.Result result)
@@ -1212,7 +1212,7 @@ namespace NeoEdit.TextEdit
 			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
 			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
 			var numeric = Selections.AsParallel().AsOrdered().All(range => GetString(range).IsNumeric());
-			return WidthDialog.Run(minLength, maxLength, numeric, false);
+			return WidthDialog.Run(UIHelper.FindParent<Window>(this), minLength, maxLength, numeric, false);
 		}
 
 		internal void Command_Data_Width(WidthDialog.Result result)
@@ -1232,7 +1232,7 @@ namespace NeoEdit.TextEdit
 		internal TrimDialog.Result Command_Data_Trim_Dialog()
 		{
 			var numeric = Selections.AsParallel().All(range => GetString(range).IsNumeric());
-			return TrimDialog.Run(numeric);
+			return TrimDialog.Run(UIHelper.FindParent<Window>(this), numeric);
 		}
 
 		string TrimString(string str, TrimDialog.Result result)
@@ -1287,7 +1287,7 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Data_EvaluateExpression_Dialog()
 		{
-			return GetExpressionDialog.Run(GetExpressionData(10));
+			return GetExpressionDialog.Run(UIHelper.FindParent<Window>(this), GetExpressionData(10));
 		}
 
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
@@ -1374,7 +1374,7 @@ namespace NeoEdit.TextEdit
 
 		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
 		{
-			return RepeatDialog.Run(Selections.Count == 1);
+			return RepeatDialog.Run(UIHelper.FindParent<Window>(this), Selections.Count == 1);
 		}
 
 		internal void Command_Data_Repeat(RepeatDialog.Result result)
@@ -1437,7 +1437,7 @@ namespace NeoEdit.TextEdit
 
 		internal EncodingDialog.Result Command_Data_Hash_Dialog()
 		{
-			return EncodingDialog.Run(CodePage);
+			return EncodingDialog.Run(UIHelper.FindParent<Window>(this), CodePage);
 		}
 
 		internal void Command_Data_Hash(Hash.Type type, EncodingDialog.Result result)
@@ -1456,7 +1456,7 @@ namespace NeoEdit.TextEdit
 
 		internal RandomNumberDialog.Result Command_Insert_RandomNumber_Dialog()
 		{
-			return RandomNumberDialog.Run();
+			return RandomNumberDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
 		internal void Command_Insert_RandomNumber(RandomNumberDialog.Result result)
@@ -1467,7 +1467,7 @@ namespace NeoEdit.TextEdit
 		internal RandomDataDialog.Result Command_Insert_RandomData_Dialog()
 		{
 			var hasSelections = Selections.AsParallel().Any(range => range.HasSelection);
-			return RandomDataDialog.Run(hasSelections);
+			return RandomDataDialog.Run(UIHelper.FindParent<Window>(this), hasSelections);
 		}
 
 		string GetRandomData(RandomDataDialog.Result result, int selectionLength, int clipboardLength)
@@ -1498,7 +1498,7 @@ namespace NeoEdit.TextEdit
 
 		internal MinMaxValuesDialog.Result Command_Insert_MinMaxValues_Dialog()
 		{
-			return MinMaxValuesDialog.Run();
+			return MinMaxValuesDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
 		internal void Command_Insert_MinMaxValues(MinMaxValuesDialog.Result result)
@@ -1642,7 +1642,7 @@ namespace NeoEdit.TextEdit
 
 		internal LimitDialog.Result Command_Select_Limit_Dialog()
 		{
-			return LimitDialog.Run(Selections.Count);
+			return LimitDialog.Run(UIHelper.FindParent<Window>(this), Selections.Count);
 		}
 
 		internal void Command_Select_Limit(LimitDialog.Result result)
@@ -1696,7 +1696,7 @@ namespace NeoEdit.TextEdit
 		{
 			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
 			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
-			return WidthDialog.Run(minLength, maxLength, false, true);
+			return WidthDialog.Run(UIHelper.FindParent<Window>(this), minLength, maxLength, false, true);
 		}
 
 		bool WidthMatch(string str, WidthDialog.Result result, int clipboardLen)
@@ -1738,7 +1738,7 @@ namespace NeoEdit.TextEdit
 
 		internal CountDialog.Result Command_Select_Count_Dialog()
 		{
-			return CountDialog.Run();
+			return CountDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
 		internal void Command_Select_Count(CountDialog.Result result)
@@ -1785,7 +1785,7 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Select_ExpressionMatches_Dialog()
 		{
-			return GetExpressionDialog.Run(GetExpressionData(10));
+			return GetExpressionDialog.Run(UIHelper.FindParent<Window>(this), GetExpressionData(10));
 		}
 
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)

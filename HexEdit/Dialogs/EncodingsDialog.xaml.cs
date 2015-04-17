@@ -51,10 +51,10 @@ namespace NeoEdit.HexEdit
 			DialogResult = true;
 		}
 
-		public static HashSet<Coder.CodePage> Run(HashSet<Coder.CodePage> codePages)
+		public static HashSet<Coder.CodePage> Run(Window parent, HashSet<Coder.CodePage> codePages)
 		{
-			var dialog = new EncodingsDialog(codePages);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new EncodingsDialog(codePages) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 
 		private void SelectAll(object sender, RoutedEventArgs e)

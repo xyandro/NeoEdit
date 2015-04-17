@@ -34,10 +34,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run()
+		static public Result Run(Window parent)
 		{
-			var dialog = new RandomNumberDialog();
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new RandomNumberDialog { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

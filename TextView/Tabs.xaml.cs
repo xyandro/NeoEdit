@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -78,7 +79,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_Combine()
 		{
-			var result = CombineDialog.Run(false);
+			var result = CombineDialog.Run(UIHelper.FindParent<Window>(this), false);
 			if (result == null)
 				return;
 
@@ -87,7 +88,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_Merge()
 		{
-			var result = CombineDialog.Run(true);
+			var result = CombineDialog.Run(UIHelper.FindParent<Window>(this), true);
 			if (result == null)
 				return;
 
@@ -96,7 +97,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_Encoding()
 		{
-			var result = ChangeEncodingDialog.Run();
+			var result = ChangeEncodingDialog.Run(UIHelper.FindParent<Window>(this));
 			if (result == null)
 				return;
 

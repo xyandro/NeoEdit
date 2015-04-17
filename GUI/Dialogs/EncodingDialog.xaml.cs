@@ -66,10 +66,10 @@ namespace NeoEdit.GUI.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Coder.CodePage codePage = Coder.CodePage.Default, Coder.CodePage detected = Coder.CodePage.None, string lineEndings = null)
+		public static Result Run(Window parent, Coder.CodePage codePage = Coder.CodePage.Default, Coder.CodePage detected = Coder.CodePage.None, string lineEndings = null)
 		{
-			var dialog = new EncodingDialog(codePage, detected, lineEndings);
-			if (dialog.ShowDialog() != true)
+			var dialog = new EncodingDialog(codePage, detected, lineEndings) { Owner = parent };
+			if (!dialog.ShowDialog())
 				return null;
 			return dialog.result;
 		}

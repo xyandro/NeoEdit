@@ -78,7 +78,7 @@ namespace NeoEdit
 				switch (args[0])
 				{
 					case "about":
-						new AboutWindow();
+						AboutWindow.Run();
 						return;
 					case "system":
 					case "systeminfo":

@@ -92,7 +92,7 @@ namespace NeoEdit.TextView
 
 		internal void Command_File_Split()
 		{
-			var result = SplitDialog.Run(data);
+			var result = SplitDialog.Run(UIHelper.FindParent<Window>(this), data);
 			if (result == null)
 				return;
 

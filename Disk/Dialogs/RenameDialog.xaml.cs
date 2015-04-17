@@ -39,10 +39,10 @@ namespace NeoEdit.Disk.Dialogs
 			DialogResult = true;
 		}
 
-		public static string Run(DiskItem item)
+		public static string Run(Window parent, DiskItem item)
 		{
-			var dialog = new RenameDialog(item);
-			if (dialog.ShowDialog() != true)
+			var dialog = new RenameDialog(item) { Owner = parent };
+			if (!dialog.ShowDialog())
 				return null;
 			return dialog.FullName;
 		}

@@ -60,10 +60,10 @@ namespace NeoEdit.TextView.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run()
+		static public Result Run(Window parent)
 		{
-			var dialog = new ChangeEncodingDialog();
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new ChangeEncodingDialog { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 
 		void BrowseInputFile(object sender, RoutedEventArgs e)

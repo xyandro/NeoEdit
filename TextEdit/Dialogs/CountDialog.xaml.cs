@@ -36,10 +36,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run()
+		public static Result Run(Window parent)
 		{
-			var dialog = new CountDialog();
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new CountDialog { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

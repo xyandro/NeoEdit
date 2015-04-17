@@ -54,10 +54,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run()
+		static public Result Run(Window parent)
 		{
-			var dialog = new ConvertDialog();
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new ConvertDialog { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

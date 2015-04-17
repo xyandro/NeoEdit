@@ -193,7 +193,7 @@ namespace NeoEdit.Disk
 			if (!Focused.CanRename)
 				throw new ArgumentException("Cannot rename this entry.");
 
-			var newName = RenameDialog.Run(Focused);
+			var newName = RenameDialog.Run(UIHelper.FindParent<Window>(this), Focused);
 			if (newName == null)
 				return;
 
@@ -317,7 +317,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Find()
 		{
-			var result = FindDialog.Run();
+			var result = FindDialog.Run(UIHelper.FindParent<Window>(this));
 			if (result == null)
 				return;
 
@@ -441,7 +441,7 @@ namespace NeoEdit.Disk
 		{
 			if (Selected.Count == 0)
 				return;
-			var search = BinaryFindDialog.Run();
+			var search = BinaryFindDialog.Run(UIHelper.FindParent<Window>(this));
 			if (search == null)
 				return;
 

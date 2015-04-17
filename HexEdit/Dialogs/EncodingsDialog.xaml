@@ -1,6 +1,7 @@
-﻿<Window Name="self" x:Class="NeoEdit.HexEdit.EncodingsDialog"
+﻿<guiCommon:ModalDialog Name="self" x:Class="NeoEdit.HexEdit.EncodingsDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
 	Title="Choose Encodings" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=codePages}">
 
 	<Grid Margin="10">
@@ -20,4 +21,4 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
-</Window>
+</guiCommon:ModalDialog>

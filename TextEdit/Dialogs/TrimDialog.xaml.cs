@@ -58,10 +58,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(bool numeric)
+		public static Result Run(Window parent, bool numeric)
 		{
-			var dialog = new TrimDialog(numeric);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new TrimDialog(numeric) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

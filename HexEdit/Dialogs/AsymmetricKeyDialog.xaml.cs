@@ -5,7 +5,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.HexEdit.Dialogs
 {
-	public partial class AsymmetricKeyDialog : Window
+	public partial class AsymmetricKeyDialog
 	{
 		Crypto.Type type;
 		public Crypto.Type Type

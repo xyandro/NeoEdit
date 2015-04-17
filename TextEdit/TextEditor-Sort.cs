@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using NeoEdit.Common;
+using NeoEdit.GUI.Common;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
@@ -115,7 +117,7 @@ namespace NeoEdit.TextEdit
 
 		internal SortDialog.Result Command_Data_Sort_Dialog()
 		{
-			return SortDialog.Run();
+			return SortDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
 		internal void Command_Data_Sort(SortDialog.Result result)

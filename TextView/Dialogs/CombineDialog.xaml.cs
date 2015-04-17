@@ -61,10 +61,10 @@ namespace NeoEdit.TextView.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(bool isMerge)
+		static public Result Run(Window parent, bool isMerge)
 		{
-			var dialog = new CombineDialog(isMerge);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new CombineDialog(isMerge) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 
 		void BrowseOutputFile(object sender, RoutedEventArgs e)

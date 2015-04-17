@@ -20,10 +20,10 @@ namespace NeoEdit.HexEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static byte? Run()
+		public static byte? Run(Window parent)
 		{
-			var dialog = new FillDialog();
-			return dialog.ShowDialog() == true ? (byte?)dialog.Fill : null;
+			var dialog = new FillDialog { Owner = parent };
+			return dialog.ShowDialog() ? (byte?)dialog.Fill : null;
 		}
 	}
 }

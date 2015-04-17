@@ -636,7 +636,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_File_Encoding()
 		{
-			var result = EncodingDialog.Run(CodePage, Data.CodePageFromBOM());
+			var result = EncodingDialog.Run(UIHelper.FindParent<Window>(this), CodePage, Data.CodePageFromBOM());
 			if (result == null)
 				return;
 			CodePage = result.CodePage;
@@ -723,7 +723,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Find(bool shiftDown)
 		{
-			var results = BinaryFindDialog.Run();
+			var results = BinaryFindDialog.Run(UIHelper.FindParent<Window>(this));
 			if (results != null)
 			{
 				currentFind = results;
@@ -739,7 +739,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Goto(bool shiftDown)
 		{
-			var position = GotoDialog.Run(Pos1);
+			var position = GotoDialog.Run(UIHelper.FindParent<Window>(this), Pos1);
 			if (position == null)
 				return;
 			if (position.Relative)
@@ -815,15 +815,15 @@ namespace NeoEdit.HexEdit
 			string key;
 			if (type.IsSymmetric())
 			{
-				var keyDialog = new SymmetricKeyDialog { Type = type };
-				if (keyDialog.ShowDialog() != true)
+				var keyDialog = new SymmetricKeyDialog { Owner = UIHelper.FindParent<Window>(this), Type = type };
+				if (!keyDialog.ShowDialog())
 					return;
 				key = keyDialog.Key;
 			}
 			else
 			{
-				var keyDialog = new AsymmetricKeyDialog { Type = type, Public = isEncrypt, CanGenerate = isEncrypt };
-				if (keyDialog.ShowDialog() != true)
+				var keyDialog = new AsymmetricKeyDialog { Owner = UIHelper.FindParent<Window>(this), Type = type, Public = isEncrypt, CanGenerate = isEncrypt };
+				if (!keyDialog.ShowDialog())
 					return;
 				key = keyDialog.Key;
 			}
@@ -839,8 +839,8 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Sign(bool sign, Crypto.Type type)
 		{
-			var keyDialog = new AsymmetricKeyDialog { Type = type, Public = !sign, GetHash = true, CanGenerate = sign, GetSignature = !sign };
-			if (keyDialog.ShowDialog() != true)
+			var keyDialog = new AsymmetricKeyDialog { Owner = UIHelper.FindParent<Window>(this), Type = type, Public = !sign, GetHash = true, CanGenerate = sign, GetSignature = !sign };
+			if (!keyDialog.ShowDialog())
 				return;
 
 			if (Length == 0)
@@ -864,7 +864,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Fill()
 		{
-			var fill = FillDialog.Run();
+			var fill = FillDialog.Run(UIHelper.FindParent<Window>(this));
 			if (fill == null)
 				return;
 			var data = Enumerable.Range(0, (int)(SelEnd - SelStart)).Select(a => fill.Value).ToArray();

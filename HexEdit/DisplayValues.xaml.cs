@@ -36,7 +36,7 @@ namespace NeoEdit.HexEdit
 
 		void ChooseEncodings(object sender, System.Windows.RoutedEventArgs e)
 		{
-			var result = EncodingsDialog.Run(codePages);
+			var result = EncodingsDialog.Run(UIHelper.FindParent<Window>(this), codePages);
 			if (result == null)
 				return;
 			ShowStr = true;

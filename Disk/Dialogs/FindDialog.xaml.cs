@@ -86,10 +86,10 @@ namespace NeoEdit.Disk.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run()
+		static public Result Run(Window parent)
 		{
-			var dialog = new FindDialog();
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new FindDialog { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

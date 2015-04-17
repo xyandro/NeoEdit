@@ -47,10 +47,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run()
+		static public Result Run(Window parent)
 		{
-			var dialog = new MinMaxValuesDialog();
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new MinMaxValuesDialog { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

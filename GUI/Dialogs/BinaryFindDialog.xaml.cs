@@ -153,10 +153,10 @@ namespace NeoEdit.GUI.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run()
+		public static Result Run(Window parent)
 		{
-			var find = new BinaryFindDialog();
-			if (find.ShowDialog() == false)
+			var find = new BinaryFindDialog { Owner = parent };
+			if (!find.ShowDialog())
 				return null;
 			return find.result;
 		}

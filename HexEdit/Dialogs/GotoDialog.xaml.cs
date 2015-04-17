@@ -47,10 +47,10 @@ namespace NeoEdit.HexEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(long value)
+		public static Result Run(Window parent, long value)
 		{
-			var dialog = new GotoDialog(value);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new GotoDialog(value) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

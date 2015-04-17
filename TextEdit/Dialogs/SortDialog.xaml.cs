@@ -40,10 +40,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run()
+		public static Result Run(Window parent)
 		{
-			var dialog = new SortDialog();
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new SortDialog { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

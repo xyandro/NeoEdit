@@ -124,10 +124,10 @@ namespace NeoEdit.TextView.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(TextData data)
+		static public Result Run(Window parent, TextData data)
 		{
-			var dialog = new SplitDialog(data);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new SplitDialog(data) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 
 		void BrowseOutputDir(object sender, RoutedEventArgs e)

@@ -132,10 +132,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(bool isReplace, string text = null, bool selectionOnly = false)
+		static public Result Run(Window parent, bool isReplace, string text = null, bool selectionOnly = false)
 		{
-			var dialog = new GetRegExDialog(isReplace, text, selectionOnly);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new GetRegExDialog(isReplace, text, selectionOnly) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 
 		void RegExHelp(object sender, RoutedEventArgs e)

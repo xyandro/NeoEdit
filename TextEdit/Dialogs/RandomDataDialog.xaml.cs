@@ -74,10 +74,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(bool hasSelections)
+		public static Result Run(Window parent, bool hasSelections)
 		{
-			var dialog = new RandomDataDialog(hasSelections);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new RandomDataDialog(hasSelections) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

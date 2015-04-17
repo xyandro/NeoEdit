@@ -6,7 +6,7 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.HexEdit.Dialogs
 {
-	public partial class SymmetricKeyDialog : Window
+	public partial class SymmetricKeyDialog
 	{
 		Crypto.Type type;
 		public Crypto.Type Type

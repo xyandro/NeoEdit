@@ -13,7 +13,7 @@ namespace NeoEdit.GUI.Common
 
 		void HelpAbout(object sender, RoutedEventArgs e)
 		{
-			new About.AboutWindow().ShowDialog();
+			About.AboutWindow.Run();
 		}
 
 		void RunGC(object sender, RoutedEventArgs e)

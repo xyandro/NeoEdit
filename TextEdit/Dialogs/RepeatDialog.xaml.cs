@@ -37,10 +37,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(bool selectRepetitions)
+		static public Result Run(Window parent, bool selectRepetitions)
 		{
-			var dialog = new RepeatDialog(selectRepetitions);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new RepeatDialog(selectRepetitions) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

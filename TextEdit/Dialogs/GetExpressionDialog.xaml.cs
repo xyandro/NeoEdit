@@ -127,10 +127,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static internal Result Run(Dictionary<string, List<string>> examples)
+		static internal Result Run(Window parent, Dictionary<string, List<string>> examples)
 		{
-			var dialog = new GetExpressionDialog(examples);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new GetExpressionDialog(examples) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

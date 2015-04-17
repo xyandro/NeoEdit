@@ -96,10 +96,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(int minLength, int maxLength, bool numeric, bool isSelect)
+		public static Result Run(Window parent, int minLength, int maxLength, bool numeric, bool isSelect)
 		{
-			var dialog = new WidthDialog(minLength, maxLength, numeric, isSelect);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new WidthDialog(minLength, maxLength, numeric, isSelect) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

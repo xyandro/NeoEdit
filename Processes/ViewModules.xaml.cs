@@ -81,7 +81,7 @@ namespace NeoEdit.Processes
 
 		private void GotoCommandExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{
-			var result = GotoDialog.Run();
+			var result = GotoDialog.Run(UIHelper.FindParent<Window>(this));
 			if (!result.HasValue)
 				return;
 

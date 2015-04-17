@@ -30,10 +30,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(DateTime datetime)
+		static public Result Run(Window parent, DateTime datetime)
 		{
-			var dialog = new ChooseDateTimeDialog(datetime);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new ChooseDateTimeDialog(datetime) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

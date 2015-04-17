@@ -25,10 +25,10 @@ namespace NeoEdit.Processes.Dialogs
 			DialogResult = true;
 		}
 
-		public static long? Run(long value = 0)
+		public static long? Run(Window parent, long value = 0)
 		{
-			var dialog = new GotoDialog(value);
-			return dialog.ShowDialog() == true ? dialog.Value : (long?)null;
+			var dialog = new GotoDialog(value) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.Value : (long?)null;
 		}
 	}
 }

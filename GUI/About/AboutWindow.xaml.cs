@@ -5,7 +5,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.About
 {
-	public partial class AboutWindow : Window
+	public partial class AboutWindow
 	{
 		[DepProp]
 		string Product { get { return UIHelper<AboutWindow>.GetPropValue(() => this.Product); } set { UIHelper<AboutWindow>.SetPropValue(() => this.Product, value); } }
@@ -16,7 +16,7 @@ namespace NeoEdit.GUI.About
 
 		static AboutWindow() { UIHelper<AboutWindow>.Register(); }
 
-		public AboutWindow()
+		AboutWindow()
 		{
 			InitializeComponent();
 
@@ -25,9 +25,14 @@ namespace NeoEdit.GUI.About
 			Copyright = ((AssemblyCopyrightAttribute)Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), true).First()).Copyright;
 		}
 
+		public static void Run()
+		{
+			new AboutWindow().Show();
+		}
+
 		void OKClick(object sender, RoutedEventArgs e)
 		{
-			DialogResult = true;
+			Close();
 		}
 	}
 }

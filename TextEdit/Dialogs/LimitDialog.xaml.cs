@@ -39,10 +39,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(int numSels)
+		public static Result Run(Window parent, int numSels)
 		{
-			var dialog = new LimitDialog(numSels);
-			if (dialog.ShowDialog() != true)
+			var dialog = new LimitDialog(numSels) { Owner = parent };
+			if (!dialog.ShowDialog())
 				return null;
 
 			return dialog.result;

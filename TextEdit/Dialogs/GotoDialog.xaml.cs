@@ -66,10 +66,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(GotoType gotoType, int startValue)
+		public static Result Run(Window parent, GotoType gotoType, int startValue)
 		{
-			var dialog = new GotoDialog(gotoType, startValue);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new GotoDialog(gotoType, startValue) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }

@@ -7,7 +7,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	public partial class Message : Window
+	public partial class Message
 	{
 		[DepProp]
 		public string Text { get { return UIHelper<Message>.GetPropValue(() => this.Text); } set { UIHelper<Message>.SetPropValue(() => this.Text, value); } }

@@ -183,10 +183,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(string example)
+		public static Result Run(Window parent, string example)
 		{
-			var dialog = new ConvertDateTimeDialog(example);
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			var dialog = new ConvertDateTimeDialog(example) { Owner = parent };
+			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
 }
