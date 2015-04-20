@@ -466,10 +466,26 @@ namespace NeoEdit.TextEdit
 			OpenFile(FileName);
 		}
 
+		void InsertFiles(IEnumerable<string> fileNames)
+		{
+			if ((Selections.Count != 1) && (Selections.Count != fileNames.Count()))
+				throw new Exception("Must have either one or equal number of selections.");
+
+			var strs = new List<string>();
+			foreach (var fileName in fileNames)
+			{
+				var bytes = File.ReadAllBytes(fileName);
+				strs.Add(Coder.BytesToString(bytes, Coder.CodePage.AutoByBOM, true));
+			}
+
+			if (Selections.Count == 1)
+				ReplaceOneWithMany(strs);
+			if (Selections.Count == fileNames.Count())
+				ReplaceSelections(strs);
+		}
+
 		internal void Command_File_InsertFiles()
 		{
-			var run = true;
-
 			if (Selections.Count != 1)
 			{
 				new Message
@@ -478,28 +494,42 @@ namespace NeoEdit.TextEdit
 					Text = "You have more than one selection.",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
-				run = false;
+				return;
 			}
 
-			if (run)
+			var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
+			if (dialog.ShowDialog() == true)
+				InsertFiles(dialog.FileNames);
+		}
+
+		internal void Command_File_InsertCopiedCutFiles()
+		{
+			if (Selections.Count != 1)
 			{
-				var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
-				if (dialog.ShowDialog() == true)
+				new Message
 				{
-					var str = "";
-					foreach (var filename in dialog.FileNames)
-					{
-						var bytes = File.ReadAllBytes(filename);
-						var data = new TextData(bytes, Coder.CodePage.AutoByBOM);
-
-						var beginOffset = data.GetOffset(0, 0);
-						var endOffset = data.GetOffset(data.NumLines - 1, data.GetLineLength(data.NumLines - 1));
-						str += data.GetString(beginOffset, endOffset - beginOffset);
-					}
-
-					ReplaceSelections(str);
-				}
+					Title = "Error",
+					Text = "You have more than one selection.",
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
+				return;
 			}
+
+			var files = ClipboardWindow.GetStrings();
+			if ((files == null) || (files.Count < 0))
+				return;
+
+			if ((files.Count > 5) && (new Message
+			{
+				Title = "Confirm",
+				Text = String.Format("Are you sure you want to insert these {0} files?", files.Count),
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show() != Message.OptionsEnum.Yes))
+				return;
+
+			InsertFiles(files);
 		}
 
 		internal void Command_File_CopyPath()
@@ -595,6 +625,23 @@ namespace NeoEdit.TextEdit
 				ReplaceSelections("");
 		}
 
+		void ReplaceOneWithMany(List<string> strs)
+		{
+			if (Selections.Count != 1)
+				throw new Exception(String.Format("You must have either 1 or the number copied selections ({0}).", strs.Count));
+
+			var text = new List<string> { String.Join("", strs) };
+
+			var offset = Selections.First().Start;
+			ReplaceSelections(text);
+			Selections.Clear();
+			foreach (var str in strs)
+			{
+				Selections.Add(Range.FromIndex(offset, str.Length - Data.DefaultEnding.Length));
+				offset += str.Length;
+			}
+		}
+
 		internal void Command_Edit_Paste(bool highlight)
 		{
 			var clipboardStrings = ClipboardWindow.GetStrings();
@@ -610,20 +657,8 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
-			if (Selections.Count != 1)
-				throw new Exception(String.Format("You must have either 1 or the number copied selections ({0}).", clipboardStrings.Count));
-
 			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n') + Data.DefaultEnding).ToList();
-			var replace = new List<string> { String.Join("", clipboardStrings) };
-
-			var offset = Selections.First().Start;
-			ReplaceSelections(replace);
-			Selections.Clear();
-			foreach (var str in clipboardStrings)
-			{
-				Selections.Add(Range.FromIndex(offset, str.Length - Data.DefaultEnding.Length));
-				offset += str.Length;
-			}
+			ReplaceOneWithMany(clipboardStrings);
 		}
 
 		internal void Command_Edit_ShowClipboard()
@@ -792,6 +827,11 @@ namespace NeoEdit.TextEdit
 			var files = GetSelectionStrings();
 			foreach (var file in files)
 				TextEditTabs.Create(file);
+		}
+
+		internal void Command_Files_Insert()
+		{
+			InsertFiles(GetSelectionStrings());
 		}
 
 		internal void Command_Files_Delete()

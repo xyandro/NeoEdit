@@ -364,6 +364,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Refresh: Active.Command_File_Refresh(); break;
 				case TextEditCommand.File_Revert: Active.Command_File_Revert(); break;
 				case TextEditCommand.File_InsertFiles: Active.Command_File_InsertFiles(); break;
+				case TextEditCommand.File_InsertCopiedCutFiles: Active.Command_File_InsertCopiedCutFiles(); break;
 				case TextEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
 				case TextEditCommand.File_Encoding: Active.Command_File_Encoding(dialogResult as EncodingDialog.Result); break;
@@ -389,6 +390,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Copy: Active.Command_Files_CutCopy(false); break;
 				case TextEditCommand.Files_Cut: Active.Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Open: Active.Command_Files_Open(); break;
+				case TextEditCommand.Files_Insert: Active.Command_Files_Insert(); break;
 				case TextEditCommand.Files_Delete: Active.Command_Files_Delete(); break;
 				case TextEditCommand.Files_Timestamp_Write: Active.Command_Files_Timestamp(TextEditor.TimestampType.Write, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Timestamp_Access: Active.Command_Files_Timestamp(TextEditor.TimestampType.Access, dialogResult as ChooseDateTimeDialog.Result); break;

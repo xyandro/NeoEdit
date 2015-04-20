@@ -15,6 +15,7 @@
 		<textEdit:TextEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Insert File(s)" CommandEnum="File_InsertFiles"/>
+		<textEdit:TextEditMenuItem Header="Insert Copied/Cut Files" CommandEnum="File_InsertCopiedCutFiles"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
 		<textEdit:TextEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
@@ -52,6 +53,7 @@
 		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Copy"/>
 		<textEdit:TextEditMenuItem Header="C_ut" CommandEnum="Files_Cut"/>
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Files_Open"/>
+		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
 		<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="Files_Delete"/>
 		<Separator/>
 		<MenuItem Header="_Timestamp">
