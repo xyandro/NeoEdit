@@ -420,6 +420,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_CreateFiles: Active.Command_Files_Files_Operations_CreateFiles(); break;
 				case TextEditCommand.Files_Operations_CopyKeysToSelections: Active.Command_Files_Operations_CopyMoveKeysToSelections(false); break;
 				case TextEditCommand.Files_Operations_MoveKeysToSelections: Active.Command_Files_Operations_CopyMoveKeysToSelections(true); break;
+				case TextEditCommand.Files_Operations_SaveSelectionsToClipboards: Active.Command_Files_Operations_SaveSelectionsToClipboards(); break;
 				case TextEditCommand.Data_Case_Upper: Active.Command_Data_Case_Upper(); break;
 				case TextEditCommand.Data_Case_Lower: Active.Command_Data_Case_Lower(); break;
 				case TextEditCommand.Data_Case_Proper: Active.Command_Data_Case_Proper(); break;

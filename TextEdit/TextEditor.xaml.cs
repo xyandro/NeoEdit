@@ -1175,6 +1175,20 @@ namespace NeoEdit.TextEdit
 				}
 		}
 
+		internal void Command_Files_Operations_SaveSelectionsToClipboards()
+		{
+			var clipboardStrings = ClipboardWindow.GetStrings();
+			if (clipboardStrings.Count != Selections.Count)
+				throw new Exception("Clipboard count must match selection count.");
+
+			for (var ctr = 0; ctr < clipboardStrings.Count; ++ctr)
+			{
+				var fileName = clipboardStrings[ctr];
+				var data = GetString(Selections[ctr]);
+				File.WriteAllText(fileName, data, Coder.GetEncoding(CodePage));
+			}
+		}
+
 		internal void Command_Data_Case_Upper()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());

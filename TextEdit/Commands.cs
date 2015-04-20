@@ -72,6 +72,7 @@ namespace NeoEdit.TextEdit
 		Files_Operations_CreateFiles,
 		Files_Operations_CopyKeysToSelections,
 		Files_Operations_MoveKeysToSelections,
+		Files_Operations_SaveSelectionsToClipboards,
 		[KeyGesture(Key.U, ModifierKeys.Control)] Data_Case_Upper,
 		[KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift)] Data_Case_Lower,
 		Data_Case_Proper,

@@ -94,6 +94,7 @@
 			<textEdit:TextEditMenuItem Header="Create Files" CommandEnum="Files_Operations_CreateFiles"/>
 			<textEdit:TextEditMenuItem Header="_Copy Keys To Selections" CommandEnum="Files_Operations_CopyKeysToSelections"/>
 			<textEdit:TextEditMenuItem Header="_Move Keys To Selections" CommandEnum="Files_Operations_MoveKeysToSelections"/>
+			<textEdit:TextEditMenuItem Header="_Save Selections To Clipboards" CommandEnum="Files_Operations_SaveSelectionsToClipboards"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Data">
