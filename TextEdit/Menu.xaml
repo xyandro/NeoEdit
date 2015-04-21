@@ -29,6 +29,7 @@
 	<MenuItem Header="_Edit">
 		<textEdit:TextEditMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
 		<textEdit:TextEditMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
+		<textEdit:TextEditMenuItem Header="Repea_t Last Action" CommandEnum="Edit_RepeatLastAction"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="C_ut" CommandEnum="Edit_Cut"/>
 		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>

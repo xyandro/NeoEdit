@@ -24,6 +24,7 @@ namespace NeoEdit.TextEdit
 		File_Exit,
 		[KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,
 		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,
+		[KeyGesture(Key.OemPeriod, ModifierKeys.Control)] Edit_RepeatLastAction,
 		[KeyGesture(Key.X, ModifierKeys.Control)] Edit_Cut,
 		[KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy,
 		[KeyGesture(Key.V, ModifierKeys.Control)] [KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Paste,

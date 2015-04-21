@@ -68,6 +68,9 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public string LineEnding { get { return UIHelper<TextEditor>.GetPropValue(() => this.LineEnding); } set { UIHelper<TextEditor>.SetPropValue(() => this.LineEnding, value); } }
 
+		TextEditTabs TabsParent { get { return UIHelper.FindParent<TextEditTabs>(this); } }
+		Window WindowParent { get { return UIHelper.FindParent<Window>(this); } }
+
 		int xScrollViewportFloor { get { return (int)Math.Floor(xScroll.ViewportSize); } }
 		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScroll.ViewportSize); } }
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
@@ -404,6 +407,285 @@ namespace NeoEdit.TextEdit
 			return Selections.AsParallel().AsOrdered().Select(range => GetString(range)).ToList();
 		}
 
+		internal bool GetDialogResult(TextEditCommand command, out object dialogResult)
+		{
+			dialogResult = null;
+
+			switch (command)
+			{
+				case TextEditCommand.File_Encoding: dialogResult = Command_File_Encoding_Dialog(); break;
+				case TextEditCommand.File_ReopenWithEncoding: dialogResult = Command_File_ReopenWithEncoding_Dialog(); break;
+				case TextEditCommand.Edit_Find: dialogResult = Command_Edit_FindReplace_Dialog(false); break;
+				case TextEditCommand.Edit_Replace: dialogResult = Command_Edit_FindReplace_Dialog(true); break;
+				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Line); break;
+				case TextEditCommand.Edit_GotoColumn: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Column); break;
+				case TextEditCommand.Edit_GotoPosition: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Position); break;
+				case TextEditCommand.Files_Timestamp_Write:
+				case TextEditCommand.Files_Timestamp_Access:
+				case TextEditCommand.Files_Timestamp_Create:
+				case TextEditCommand.Files_Timestamp_All:
+					dialogResult = Command_Files_Timestamp_Dialog();
+					break;
+				case TextEditCommand.Data_DateTime_Convert: dialogResult = Command_Data_DateTime_Convert_Dialog(); break;
+				case TextEditCommand.Data_Convert: dialogResult = Command_Data_Convert_Dialog(); break;
+				case TextEditCommand.Data_Width: dialogResult = Command_Data_Width_Dialog(); break;
+				case TextEditCommand.Data_Trim: dialogResult = Command_Data_Trim_Dialog(); break;
+				case TextEditCommand.Data_EvaluateExpression: dialogResult = Command_Data_EvaluateExpression_Dialog(); break;
+				case TextEditCommand.Data_Repeat: dialogResult = Command_Data_Repeat_Dialog(); break;
+				case TextEditCommand.Data_Hash_MD5: dialogResult = Command_Data_Hash_Dialog(); break;
+				case TextEditCommand.Data_Hash_SHA1: dialogResult = Command_Data_Hash_Dialog(); break;
+				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
+				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
+				case TextEditCommand.Insert_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
+				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;
+				case TextEditCommand.Insert_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
+				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
+				case TextEditCommand.Select_Width: dialogResult = Command_Select_Width_Dialog(); break;
+				case TextEditCommand.Select_Count: dialogResult = Command_Select_Count_Dialog(); break;
+				case TextEditCommand.Select_ExpressionMatches: dialogResult = Command_Select_ExpressionMatches_Dialog(); break;
+				default: return true;
+			}
+
+			return dialogResult != null;
+		}
+
+		class PreviousStruct
+		{
+			public TextEditCommand Command { get; set; }
+			public bool ShiftDown { get; set; }
+			public object DialogResult { get; set; }
+		}
+		PreviousStruct previous = null;
+
+		internal void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
+		{
+			if (command != TextEditCommand.Edit_RepeatLastAction)
+			{
+				previous = new PreviousStruct
+				{
+					Command = command,
+					ShiftDown = shiftDown,
+					DialogResult = dialogResult,
+				};
+			}
+
+			switch (command)
+			{
+				case TextEditCommand.File_Save: Command_File_Save(); break;
+				case TextEditCommand.File_SaveAs: Command_File_SaveAs(); break;
+				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
+				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
+				case TextEditCommand.File_Revert: Command_File_Revert(); break;
+				case TextEditCommand.File_InsertFiles: Command_File_InsertFiles(); break;
+				case TextEditCommand.File_InsertCopiedCutFiles: Command_File_InsertCopiedCutFiles(); break;
+				case TextEditCommand.File_CopyPath: Command_File_CopyPath(); break;
+				case TextEditCommand.File_CopyName: Command_File_CopyName(); break;
+				case TextEditCommand.File_Encoding: Command_File_Encoding(dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.File_ReopenWithEncoding: Command_File_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.File_HexEditor: if (Command_File_HexEditor()) { TabsParent.Remove(this, true); } break;
+				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
+				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
+				case TextEditCommand.Edit_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult); break;
+				case TextEditCommand.Edit_Cut: Command_Edit_CutCopy(true); break;
+				case TextEditCommand.Edit_Copy: Command_Edit_CutCopy(false); break;
+				case TextEditCommand.Edit_Paste: Command_Edit_Paste(shiftDown); break;
+				case TextEditCommand.Edit_ShowClipboard: Command_Edit_ShowClipboard(); break;
+				case TextEditCommand.Edit_Find: Command_Edit_FindReplace(false, shiftDown, dialogResult as GetRegExDialog.Result); break;
+				case TextEditCommand.Edit_FindNext: Command_Edit_FindNextPrev(true, shiftDown); break;
+				case TextEditCommand.Edit_FindPrev: Command_Edit_FindNextPrev(false, shiftDown); break;
+				case TextEditCommand.Edit_Replace: Command_Edit_FindReplace(true, shiftDown, dialogResult as GetRegExDialog.Result); break;
+				case TextEditCommand.Edit_GotoLine: Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_GotoColumn: Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_GotoPosition: Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_ToggleBookmark: Command_Edit_ToggleBookmark(); break;
+				case TextEditCommand.Edit_NextBookmark: Command_Edit_NextPreviousBookmark(true, shiftDown); break;
+				case TextEditCommand.Edit_PreviousBookmark: Command_Edit_NextPreviousBookmark(false, shiftDown); break;
+				case TextEditCommand.Edit_ClearBookmarks: Command_Edit_ClearBookmarks(); break;
+				case TextEditCommand.Files_Copy: Command_Files_CutCopy(false); break;
+				case TextEditCommand.Files_Cut: Command_Files_CutCopy(true); break;
+				case TextEditCommand.Files_Open: Command_Files_Open(); break;
+				case TextEditCommand.Files_Insert: Command_Files_Insert(); break;
+				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
+				case TextEditCommand.Files_Timestamp_Write: Command_Files_Timestamp(TextEditor.TimestampType.Write, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Timestamp_Access: Command_Files_Timestamp(TextEditor.TimestampType.Access, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Timestamp_Create: Command_Files_Timestamp(TextEditor.TimestampType.Create, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Timestamp_All: Command_Files_Timestamp(TextEditor.TimestampType.All, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Simplify: Command_Files_Simplify(); break;
+				case TextEditCommand.Files_CreateDirectory: Command_Files_CreateDirectory(); break;
+				case TextEditCommand.Files_Information_Size: Command_Files_Information_Size(); break;
+				case TextEditCommand.Files_Information_WriteTime: Command_Files_Information_WriteTime(); break;
+				case TextEditCommand.Files_Information_AccessTime: Command_Files_Information_AccessTime(); break;
+				case TextEditCommand.Files_Information_CreateTime: Command_Files_Information_CreateTime(); break;
+				case TextEditCommand.Files_Information_Attributes: Command_Files_Information_Attributes(); break;
+				case TextEditCommand.Files_Information_ReadOnly: Command_Files_Information_ReadOnly(); break;
+				case TextEditCommand.Files_Hash_MD5: Command_Files_Hash(Hash.Type.MD5); break;
+				case TextEditCommand.Files_Hash_SHA1: Command_Files_Hash(Hash.Type.SHA1); break;
+				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hash.Type.SHA256); break;
+				case TextEditCommand.Files_Select_FileName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileName); break;
+				case TextEditCommand.Files_Select_FileNamewoExtension: Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileNameWoExtension); break;
+				case TextEditCommand.Files_Select_DirectoryName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.Directory); break;
+				case TextEditCommand.Files_Select_Extension: Command_Files_Select_GetFilePath(TextEditor.GetPathType.Extension); break;
+				case TextEditCommand.Files_Select_Existing: Command_Files_Select_Existing(true); break;
+				case TextEditCommand.Files_Select_NonExisting: Command_Files_Select_Existing(false); break;
+				case TextEditCommand.Files_Select_Files: Command_Files_Select_Files(); break;
+				case TextEditCommand.Files_Select_Directories: Command_Files_Select_Directories(); break;
+				case TextEditCommand.Files_Select_Roots: Command_Files_Select_Roots(true); break;
+				case TextEditCommand.Files_Select_NonRoots: Command_Files_Select_Roots(false); break;
+				case TextEditCommand.Files_Operations_CreateFiles: Command_Files_Files_Operations_CreateFiles(); break;
+				case TextEditCommand.Files_Operations_CopyKeysToSelections: Command_Files_Operations_CopyMoveKeysToSelections(false); break;
+				case TextEditCommand.Files_Operations_MoveKeysToSelections: Command_Files_Operations_CopyMoveKeysToSelections(true); break;
+				case TextEditCommand.Files_Operations_SaveSelectionsToClipboards: Command_Files_Operations_SaveSelectionsToClipboards(); break;
+				case TextEditCommand.Data_Case_Upper: Command_Data_Case_Upper(); break;
+				case TextEditCommand.Data_Case_Lower: Command_Data_Case_Lower(); break;
+				case TextEditCommand.Data_Case_Proper: Command_Data_Case_Proper(); break;
+				case TextEditCommand.Data_Case_Toggle: Command_Data_Case_Toggle(); break;
+				case TextEditCommand.Data_Hex_ToHex: Command_Data_Hex_ToHex(); break;
+				case TextEditCommand.Data_Hex_FromHex: Command_Data_Hex_FromHex(); break;
+				case TextEditCommand.Data_DateTime_Insert: Command_Data_DateTime_Insert(); break;
+				case TextEditCommand.Data_DateTime_Convert: Command_Data_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
+				case TextEditCommand.Data_Convert: Command_Data_Convert(dialogResult as ConvertDialog.Result); break;
+				case TextEditCommand.Data_Length: Command_Data_Length(); break;
+				case TextEditCommand.Data_Width: Command_Data_Width(dialogResult as WidthDialog.Result); break;
+				case TextEditCommand.Data_Trim: Command_Data_Trim(dialogResult as TrimDialog.Result); break;
+				case TextEditCommand.Data_SingleLine: Command_Data_SingleLine(); break;
+				case TextEditCommand.Data_Table_ToTable: Command_Data_ToTable(); break;
+				case TextEditCommand.Data_Table_FromTable: Command_Data_FromTable(); break;
+				case TextEditCommand.Data_EvaluateExpression: Command_Data_EvaluateExpression(dialogResult as GetExpressionDialog.Result); break;
+				case TextEditCommand.Data_EvaluateSelectedExpression: Command_Data_EvaluateSelectedExpression(); break;
+				case TextEditCommand.Data_Series: Command_Data_Series(); break;
+				case TextEditCommand.Data_CopyDown: Command_Data_CopyDown(); break;
+				case TextEditCommand.Data_Copy_Count: Command_Data_Copy_Count(); break;
+				case TextEditCommand.Data_Copy_Length: Command_Data_Copy_Length(); break;
+				case TextEditCommand.Data_Copy_Min_String: Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
+				case TextEditCommand.Data_Copy_Min_Numeric: Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Data_Copy_Min_Length: Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Length); break;
+				case TextEditCommand.Data_Copy_Max_String: Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.String); break;
+				case TextEditCommand.Data_Copy_Max_Numeric: Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Data_Copy_Max_Length: Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
+				case TextEditCommand.Data_Copy_Sum: Command_Data_Copy_Sum(); break;
+				case TextEditCommand.Data_Copy_Lines: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Line); break;
+				case TextEditCommand.Data_Copy_Columns: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Column); break;
+				case TextEditCommand.Data_Copy_Positions: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Position); break;
+				case TextEditCommand.Data_Repeat: Command_Data_Repeat(dialogResult as RepeatDialog.Result); break;
+				case TextEditCommand.Data_Escape_XML: Command_Data_Escape_XML(); break;
+				case TextEditCommand.Data_Escape_Regex: Command_Data_Escape_Regex(); break;
+				case TextEditCommand.Data_Escape_URL: Command_Data_Escape_URL(); break;
+				case TextEditCommand.Data_Unescape_XML: Command_Data_Unescape_XML(); break;
+				case TextEditCommand.Data_Unescape_Regex: Command_Data_Unescape_Regex(); break;
+				case TextEditCommand.Data_Unescape_URL: Command_Data_Unescape_URL(); break;
+				case TextEditCommand.Data_Hash_MD5: Command_Data_Hash(Hash.Type.MD5, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Data_Hash_SHA1: Command_Data_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
+				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
+				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
+				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
+				case TextEditCommand.Insert_MinMaxValues: Command_Insert_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
+				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
+				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
+				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
+				case TextEditCommand.Keys_Set_Values3: Command_Keys_Set(3); break;
+				case TextEditCommand.Keys_Set_Values4: Command_Keys_Set(4); break;
+				case TextEditCommand.Keys_Set_Values5: Command_Keys_Set(5); break;
+				case TextEditCommand.Keys_Set_Values6: Command_Keys_Set(6); break;
+				case TextEditCommand.Keys_Set_Values7: Command_Keys_Set(7); break;
+				case TextEditCommand.Keys_Set_Values8: Command_Keys_Set(8); break;
+				case TextEditCommand.Keys_Set_Values9: Command_Keys_Set(9); break;
+				case TextEditCommand.Keys_SelectionReplace_Values1: Command_Keys_SelectionReplace(1); break;
+				case TextEditCommand.Keys_SelectionReplace_Values2: Command_Keys_SelectionReplace(2); break;
+				case TextEditCommand.Keys_SelectionReplace_Values3: Command_Keys_SelectionReplace(3); break;
+				case TextEditCommand.Keys_SelectionReplace_Values4: Command_Keys_SelectionReplace(4); break;
+				case TextEditCommand.Keys_SelectionReplace_Values5: Command_Keys_SelectionReplace(5); break;
+				case TextEditCommand.Keys_SelectionReplace_Values6: Command_Keys_SelectionReplace(6); break;
+				case TextEditCommand.Keys_SelectionReplace_Values7: Command_Keys_SelectionReplace(7); break;
+				case TextEditCommand.Keys_SelectionReplace_Values8: Command_Keys_SelectionReplace(8); break;
+				case TextEditCommand.Keys_SelectionReplace_Values9: Command_Keys_SelectionReplace(9); break;
+				case TextEditCommand.Keys_GlobalFind_Keys: Command_Keys_GlobalFind(0); break;
+				case TextEditCommand.Keys_GlobalFind_Values1: Command_Keys_GlobalFind(1); break;
+				case TextEditCommand.Keys_GlobalFind_Values2: Command_Keys_GlobalFind(2); break;
+				case TextEditCommand.Keys_GlobalFind_Values3: Command_Keys_GlobalFind(3); break;
+				case TextEditCommand.Keys_GlobalFind_Values4: Command_Keys_GlobalFind(4); break;
+				case TextEditCommand.Keys_GlobalFind_Values5: Command_Keys_GlobalFind(5); break;
+				case TextEditCommand.Keys_GlobalFind_Values6: Command_Keys_GlobalFind(6); break;
+				case TextEditCommand.Keys_GlobalFind_Values7: Command_Keys_GlobalFind(7); break;
+				case TextEditCommand.Keys_GlobalFind_Values8: Command_Keys_GlobalFind(8); break;
+				case TextEditCommand.Keys_GlobalFind_Values9: Command_Keys_GlobalFind(9); break;
+				case TextEditCommand.Keys_GlobalReplace_Values1: Command_Keys_GlobalReplace(1); break;
+				case TextEditCommand.Keys_GlobalReplace_Values2: Command_Keys_GlobalReplace(2); break;
+				case TextEditCommand.Keys_GlobalReplace_Values3: Command_Keys_GlobalReplace(3); break;
+				case TextEditCommand.Keys_GlobalReplace_Values4: Command_Keys_GlobalReplace(4); break;
+				case TextEditCommand.Keys_GlobalReplace_Values5: Command_Keys_GlobalReplace(5); break;
+				case TextEditCommand.Keys_GlobalReplace_Values6: Command_Keys_GlobalReplace(6); break;
+				case TextEditCommand.Keys_GlobalReplace_Values7: Command_Keys_GlobalReplace(7); break;
+				case TextEditCommand.Keys_GlobalReplace_Values8: Command_Keys_GlobalReplace(8); break;
+				case TextEditCommand.Keys_GlobalReplace_Values9: Command_Keys_GlobalReplace(9); break;
+				case TextEditCommand.Keys_Copy_Keys: Command_Keys_Copy(0); break;
+				case TextEditCommand.Keys_Copy_Values1: Command_Keys_Copy(1); break;
+				case TextEditCommand.Keys_Copy_Values2: Command_Keys_Copy(2); break;
+				case TextEditCommand.Keys_Copy_Values3: Command_Keys_Copy(3); break;
+				case TextEditCommand.Keys_Copy_Values4: Command_Keys_Copy(4); break;
+				case TextEditCommand.Keys_Copy_Values5: Command_Keys_Copy(5); break;
+				case TextEditCommand.Keys_Copy_Values6: Command_Keys_Copy(6); break;
+				case TextEditCommand.Keys_Copy_Values7: Command_Keys_Copy(7); break;
+				case TextEditCommand.Keys_Copy_Values8: Command_Keys_Copy(8); break;
+				case TextEditCommand.Keys_Copy_Values9: Command_Keys_Copy(9); break;
+				case TextEditCommand.Keys_Hits_Keys: Command_Keys_HitsMisses(0, true); break;
+				case TextEditCommand.Keys_Hits_Values1: Command_Keys_HitsMisses(1, true); break;
+				case TextEditCommand.Keys_Hits_Values2: Command_Keys_HitsMisses(2, true); break;
+				case TextEditCommand.Keys_Hits_Values3: Command_Keys_HitsMisses(3, true); break;
+				case TextEditCommand.Keys_Hits_Values4: Command_Keys_HitsMisses(4, true); break;
+				case TextEditCommand.Keys_Hits_Values5: Command_Keys_HitsMisses(5, true); break;
+				case TextEditCommand.Keys_Hits_Values6: Command_Keys_HitsMisses(6, true); break;
+				case TextEditCommand.Keys_Hits_Values7: Command_Keys_HitsMisses(7, true); break;
+				case TextEditCommand.Keys_Hits_Values8: Command_Keys_HitsMisses(8, true); break;
+				case TextEditCommand.Keys_Hits_Values9: Command_Keys_HitsMisses(9, true); break;
+				case TextEditCommand.Keys_Misses_Keys: Command_Keys_HitsMisses(0, false); break;
+				case TextEditCommand.Keys_Misses_Values1: Command_Keys_HitsMisses(1, false); break;
+				case TextEditCommand.Keys_Misses_Values2: Command_Keys_HitsMisses(2, false); break;
+				case TextEditCommand.Keys_Misses_Values3: Command_Keys_HitsMisses(3, false); break;
+				case TextEditCommand.Keys_Misses_Values4: Command_Keys_HitsMisses(4, false); break;
+				case TextEditCommand.Keys_Misses_Values5: Command_Keys_HitsMisses(5, false); break;
+				case TextEditCommand.Keys_Misses_Values6: Command_Keys_HitsMisses(6, false); break;
+				case TextEditCommand.Keys_Misses_Values7: Command_Keys_HitsMisses(7, false); break;
+				case TextEditCommand.Keys_Misses_Values8: Command_Keys_HitsMisses(8, false); break;
+				case TextEditCommand.Keys_Misses_Values9: Command_Keys_HitsMisses(9, false); break;
+				case TextEditCommand.Keys_CountstoKeysValues1: Command_Keys_CountstoKeysValues1(); break;
+				case TextEditCommand.SelectRegion_Toggle: Command_SelectRegion_Toggle(); break;
+				case TextEditCommand.Select_All: Command_Select_All(); break;
+				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
+				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
+				case TextEditCommand.Select_Empty: Command_Select_Empty(true); break;
+				case TextEditCommand.Select_NonEmpty: Command_Select_Empty(false); break;
+				case TextEditCommand.Select_Trim: Command_Select_Trim(); break;
+				case TextEditCommand.Select_Width: Command_Select_Width(dialogResult as WidthDialog.Result); break;
+				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
+				case TextEditCommand.Select_Duplicates: Command_Select_Duplicates(); break;
+				case TextEditCommand.Select_Count: Command_Select_Count(dialogResult as CountDialog.Result); break;
+				case TextEditCommand.Select_Regions: Command_Select_Regions(); break;
+				case TextEditCommand.Select_FindResults: Command_Select_FindResults(); break;
+				case TextEditCommand.Select_Min_String: Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
+				case TextEditCommand.Select_Min_Numeric: Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Select_Min_Length: Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.Length); break;
+				case TextEditCommand.Select_Max_String: Command_Select_MinMax(false, TextEditor.Command_MinMax_Type.String); break;
+				case TextEditCommand.Select_Max_Numeric: Command_Select_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Select_Max_Length: Command_Select_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
+				case TextEditCommand.Select_ExpressionMatches: Command_Select_ExpressionMatches(dialogResult as GetExpressionDialog.Result); break;
+				case TextEditCommand.Select_FirstSelection: Command_Select_FirstSelection(); break;
+				case TextEditCommand.Select_ShowCurrent: Command_Select_ShowCurrent(); break;
+				case TextEditCommand.Select_NextSelection: Command_Select_NextSelection(); break;
+				case TextEditCommand.Select_PrevSelection: Command_Select_PrevSelection(); break;
+				case TextEditCommand.Select_Single: Command_Select_Single(); break;
+				case TextEditCommand.Select_Remove: Command_Select_Remove(); break;
+				case TextEditCommand.Region_SetSelection: Command_Region_SetSelection(); break;
+				case TextEditCommand.Region_SetFindResults: Command_Region_SetFindResults(); break;
+				case TextEditCommand.Region_ClearRegions: Command_Region_ClearRegions(); break;
+				case TextEditCommand.Region_LimitToSelection: Command_Region_LimitToSelection(); break;
+				case TextEditCommand.View_Highlighting_None: HighlightType = Highlighting.HighlightingType.None; break;
+				case TextEditCommand.View_Highlighting_CSharp: HighlightType = Highlighting.HighlightingType.CSharp; break;
+				case TextEditCommand.View_Highlighting_CPlusPlus: HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
+			}
+		}
+
 		internal void Command_File_Save()
 		{
 			if (FileName == null)
@@ -544,7 +826,7 @@ namespace NeoEdit.TextEdit
 
 		internal EncodingDialog.Result Command_File_Encoding_Dialog()
 		{
-			return EncodingDialog.Run(UIHelper.FindParent<Window>(this), CodePage, lineEndings: LineEnding ?? "");
+			return EncodingDialog.Run(WindowParent, CodePage, lineEndings: LineEnding ?? "");
 		}
 
 		internal void Command_File_Encoding(EncodingDialog.Result result)
@@ -569,7 +851,7 @@ namespace NeoEdit.TextEdit
 
 		internal EncodingDialog.Result Command_File_ReopenWithEncoding_Dialog()
 		{
-			return EncodingDialog.Run(UIHelper.FindParent<Window>(this), CodePage);
+			return EncodingDialog.Run(WindowParent, CodePage);
 		}
 
 		internal void Command_File_ReopenWithEncoding(EncodingDialog.Result result)
@@ -681,7 +963,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return GetRegExDialog.Run(UIHelper.FindParent<Window>(this), isReplace, text, selectionOnly);
+			return GetRegExDialog.Run(WindowParent, isReplace, text, selectionOnly);
 		}
 
 		internal void Command_Edit_FindReplace(bool replace, bool selecting, GetRegExDialog.Result result)
@@ -725,7 +1007,7 @@ namespace NeoEdit.TextEdit
 				index = Data.GetOffsetIndex(range.Start, line - 1) + 1;
 				position = range.Start;
 			}
-			return GotoDialog.Run(UIHelper.FindParent<Window>(this), gotoType, gotoType == GotoDialog.GotoType.Line ? line : gotoType == GotoDialog.GotoType.Column ? index : position);
+			return GotoDialog.Run(WindowParent, gotoType, gotoType == GotoDialog.GotoType.Line ? line : gotoType == GotoDialog.GotoType.Column ? index : position);
 		}
 
 		internal void Command_Edit_Goto(bool selecting, GotoDialog.Result result)
@@ -866,7 +1148,7 @@ namespace NeoEdit.TextEdit
 
 		internal ChooseDateTimeDialog.Result Command_Files_Timestamp_Dialog()
 		{
-			return ChooseDateTimeDialog.Run(UIHelper.FindParent<Window>(this), DateTime.Now);
+			return ChooseDateTimeDialog.Run(WindowParent, DateTime.Now);
 		}
 
 		internal void Command_Files_Timestamp(TimestampType type, ChooseDateTimeDialog.Result result)
@@ -1229,7 +1511,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count < 1)
 				return null;
 
-			return ConvertDateTimeDialog.Run(UIHelper.FindParent<Window>(this), GetString(Selections.First()));
+			return ConvertDateTimeDialog.Run(WindowParent, GetString(Selections.First()));
 		}
 
 		internal void Command_Data_DateTime_Convert(ConvertDateTimeDialog.Result result)
@@ -1239,7 +1521,7 @@ namespace NeoEdit.TextEdit
 
 		internal ConvertDialog.Result Command_Data_Convert_Dialog()
 		{
-			return ConvertDialog.Run(UIHelper.FindParent<Window>(this));
+			return ConvertDialog.Run(WindowParent);
 		}
 
 		internal void Command_Data_Convert(ConvertDialog.Result result)
@@ -1266,7 +1548,7 @@ namespace NeoEdit.TextEdit
 			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
 			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
 			var numeric = Selections.AsParallel().AsOrdered().All(range => GetString(range).IsNumeric());
-			return WidthDialog.Run(UIHelper.FindParent<Window>(this), minLength, maxLength, numeric, false);
+			return WidthDialog.Run(WindowParent, minLength, maxLength, numeric, false);
 		}
 
 		internal void Command_Data_Width(WidthDialog.Result result)
@@ -1286,7 +1568,7 @@ namespace NeoEdit.TextEdit
 		internal TrimDialog.Result Command_Data_Trim_Dialog()
 		{
 			var numeric = Selections.AsParallel().All(range => GetString(range).IsNumeric());
-			return TrimDialog.Run(UIHelper.FindParent<Window>(this), numeric);
+			return TrimDialog.Run(WindowParent, numeric);
 		}
 
 		string TrimString(string str, TrimDialog.Result result)
@@ -1341,7 +1623,7 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Data_EvaluateExpression_Dialog()
 		{
-			return GetExpressionDialog.Run(UIHelper.FindParent<Window>(this), GetExpressionData(10));
+			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
 		}
 
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
@@ -1428,7 +1710,7 @@ namespace NeoEdit.TextEdit
 
 		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
 		{
-			return RepeatDialog.Run(UIHelper.FindParent<Window>(this), Selections.Count == 1);
+			return RepeatDialog.Run(WindowParent, Selections.Count == 1);
 		}
 
 		internal void Command_Data_Repeat(RepeatDialog.Result result)
@@ -1491,7 +1773,7 @@ namespace NeoEdit.TextEdit
 
 		internal EncodingDialog.Result Command_Data_Hash_Dialog()
 		{
-			return EncodingDialog.Run(UIHelper.FindParent<Window>(this), CodePage);
+			return EncodingDialog.Run(WindowParent, CodePage);
 		}
 
 		internal void Command_Data_Hash(Hash.Type type, EncodingDialog.Result result)
@@ -1510,7 +1792,7 @@ namespace NeoEdit.TextEdit
 
 		internal RandomNumberDialog.Result Command_Insert_RandomNumber_Dialog()
 		{
-			return RandomNumberDialog.Run(UIHelper.FindParent<Window>(this));
+			return RandomNumberDialog.Run(WindowParent);
 		}
 
 		internal void Command_Insert_RandomNumber(RandomNumberDialog.Result result)
@@ -1521,7 +1803,7 @@ namespace NeoEdit.TextEdit
 		internal RandomDataDialog.Result Command_Insert_RandomData_Dialog()
 		{
 			var hasSelections = Selections.AsParallel().Any(range => range.HasSelection);
-			return RandomDataDialog.Run(UIHelper.FindParent<Window>(this), hasSelections);
+			return RandomDataDialog.Run(WindowParent, hasSelections);
 		}
 
 		string GetRandomData(RandomDataDialog.Result result, int selectionLength, int clipboardLength)
@@ -1552,7 +1834,7 @@ namespace NeoEdit.TextEdit
 
 		internal MinMaxValuesDialog.Result Command_Insert_MinMaxValues_Dialog()
 		{
-			return MinMaxValuesDialog.Run(UIHelper.FindParent<Window>(this));
+			return MinMaxValuesDialog.Run(WindowParent);
 		}
 
 		internal void Command_Insert_MinMaxValues(MinMaxValuesDialog.Result result)
@@ -1696,7 +1978,7 @@ namespace NeoEdit.TextEdit
 
 		internal LimitDialog.Result Command_Select_Limit_Dialog()
 		{
-			return LimitDialog.Run(UIHelper.FindParent<Window>(this), Selections.Count);
+			return LimitDialog.Run(WindowParent, Selections.Count);
 		}
 
 		internal void Command_Select_Limit(LimitDialog.Result result)
@@ -1750,7 +2032,7 @@ namespace NeoEdit.TextEdit
 		{
 			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
 			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
-			return WidthDialog.Run(UIHelper.FindParent<Window>(this), minLength, maxLength, false, true);
+			return WidthDialog.Run(WindowParent, minLength, maxLength, false, true);
 		}
 
 		bool WidthMatch(string str, WidthDialog.Result result, int clipboardLen)
@@ -1792,7 +2074,7 @@ namespace NeoEdit.TextEdit
 
 		internal CountDialog.Result Command_Select_Count_Dialog()
 		{
-			return CountDialog.Run(UIHelper.FindParent<Window>(this));
+			return CountDialog.Run(WindowParent);
 		}
 
 		internal void Command_Select_Count(CountDialog.Result result)
@@ -1839,7 +2121,7 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Select_ExpressionMatches_Dialog()
 		{
-			return GetExpressionDialog.Run(UIHelper.FindParent<Window>(this), GetExpressionData(10));
+			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
 		}
 
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
