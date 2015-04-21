@@ -151,20 +151,42 @@ namespace NeoEdit.GUI.Common
 			label.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
-					DragDrop.DoDragDrop(label, new DataObject(typeof(ItemType), item), DragDropEffects.Move);
+				{
+					var dataObj = new DataObject();
+					dataObj.SetData(typeof(Label), label);
+					dataObj.SetData(typeof(ItemType), item);
+					DragDrop.DoDragDrop(label, dataObj, DragDropEffects.Move);
+				}
 			};
 
-			label.Drop += (s, e) =>
+			label.DragOver += (s, e) =>
 			{
-				var item2 = e.Data.GetData(typeof(ItemType)) as ItemType;
-				var fromIndex = Items.IndexOf(item2);
+				var fromLabel = e.Data.GetData(typeof(Label)) as Label;
+				var fromItem = e.Data.GetData(typeof(ItemType)) as ItemType;
+				if (item == fromItem)
+					return;
+
+				var fromIndex = Items.IndexOf(fromItem);
 				var toIndex = Items.IndexOf(item);
 				if ((fromIndex == toIndex) || (fromIndex == -1) || (toIndex == -1))
 					return;
 
+				// Only move tabs when they're in a place that won't immediately move back
+				var pos = e.GetPosition(label);
+				if (fromIndex < toIndex)
+				{
+					if (pos.X < label.ActualWidth - fromLabel.ActualWidth)
+						return;
+				}
+				else
+				{
+					if (pos.X > fromLabel.ActualWidth)
+						return;
+				}
+
 				Items.RemoveAt(fromIndex);
-				Items.Insert(toIndex, item2);
-				Active = item2;
+				Items.Insert(toIndex, fromItem);
+				Active = fromItem;
 			};
 
 			return label;
