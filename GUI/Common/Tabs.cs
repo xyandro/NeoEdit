@@ -28,6 +28,7 @@ namespace NeoEdit.GUI.Common
 		public Func<ItemType, Label> GetLabel { get; set; }
 
 		Dictionary<ItemType, Label> labels;
+		List<ItemType> itemOrder = new List<ItemType>();
 
 		static Tabs()
 		{
@@ -35,6 +36,7 @@ namespace NeoEdit.GUI.Common
 			UIHelper<Tabs<ItemType>>.AddCallback(a => a.View, (obj, o, n) => obj.Layout());
 			UIHelper<Tabs<ItemType>>.AddCallback(a => a.Active, (obj, o, n) => obj.ActiveChanged());
 			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.SetActive(e));
+			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.SetupOrdering());
 			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.Layout());
 			UIHelper<Tabs<ItemType>>.AddCoerce(a => a.Active, (obj, value) => (value == null) || ((obj.Items != null) && (obj.Items.Contains(value))) ? value : null);
 		}
@@ -42,8 +44,15 @@ namespace NeoEdit.GUI.Common
 		void ActiveChanged()
 		{
 			Layout();
-			if (Active != null)
-				Active.Focus();
+			if (Active == null)
+				return;
+
+			Active.Focus();
+			if (!controlDown)
+			{
+				itemOrder.Remove(Active);
+				itemOrder.Add(Active);
+			}
 		}
 
 		public Tabs()
@@ -62,22 +71,39 @@ namespace NeoEdit.GUI.Common
 			return new Label { Content = "Title" };
 		}
 
-		internal bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
+		bool controlDown = false;
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
 			base.OnPreviewKeyDown(e);
 
-			e.Handled = true;
-			switch (e.Key)
+			if (controlDown)
 			{
-				case Key.PageUp: if (controlDown) MovePrev(); else e.Handled = false; break;
-				case Key.PageDown: if (controlDown) MoveNext(); else e.Handled = false; break;
-				default: e.Handled = false; break;
+				e.Handled = true;
+				switch (e.Key)
+				{
+					case Key.PageUp: MovePrev(); break;
+					case Key.PageDown: MoveNext(); break;
+					case Key.Tab: MoveTabOrder(); break;
+					default: e.Handled = false; break;
+				}
+			}
+
+			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
+				controlDown = true;
+		}
+
+		protected override void OnPreviewKeyUp(KeyEventArgs e)
+		{
+			base.OnPreviewKeyUp(e);
+			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
+			{
+				controlDown = false;
+				ActiveChanged();
 			}
 		}
 
-		public void MovePrev()
+		void MovePrev()
 		{
 			var index = Items.IndexOf(Active) - 1;
 			if (index < 0)
@@ -86,13 +112,24 @@ namespace NeoEdit.GUI.Common
 				Active = Items[index];
 		}
 
-		public void MoveNext()
+		void MoveNext()
 		{
 			var index = Items.IndexOf(Active) + 1;
 			if (index >= Items.Count)
 				index = 0;
 			if (index < Items.Count)
 				Active = Items[index];
+		}
+
+		void MoveTabOrder()
+		{
+			var current = itemOrder.IndexOf(Active);
+			if (current == -1)
+				return;
+			--current;
+			if (current == -1)
+				current = itemOrder.Count - 1;
+			Active = itemOrder[current];
 		}
 
 		void SetActive(NotifyCollectionChangedEventArgs e)
@@ -135,6 +172,12 @@ namespace NeoEdit.GUI.Common
 				Active = null;
 			else
 				Active = Items[index];
+		}
+
+		void SetupOrdering()
+		{
+			if (Items != null)
+				itemOrder = itemOrder.Where(item => Items.Contains(item)).Concat(Items).Distinct().ToList();
 		}
 
 		protected override void OnPreviewGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
