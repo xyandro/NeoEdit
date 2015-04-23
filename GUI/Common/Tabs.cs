@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Windows.Media;
 
 namespace NeoEdit.GUI.Common
 {
-	public class Tabs<ItemType> : Grid where ItemType : UIElement
+	public class Tabs<ItemType> : Grid where ItemType : FrameworkElement
 	{
 		public enum ViewType
 		{
@@ -25,6 +26,8 @@ namespace NeoEdit.GUI.Common
 		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue(() => this.View); } set { UIHelper<Tabs<ItemType>>.SetPropValue(() => this.View, value); } }
 
 		public Func<ItemType, Label> GetLabel { get; set; }
+
+		Dictionary<ItemType, Label> labels;
 
 		static Tabs()
 		{
@@ -50,6 +53,8 @@ namespace NeoEdit.GUI.Common
 			GetLabel = DefaultGetLabel;
 			Background = Brushes.Gray;
 			Focusable = true;
+			AllowDrop = true;
+			DragOver += (s, e) => DoDragOver(s, e, null);
 		}
 
 		protected virtual Label DefaultGetLabel(ItemType item)
@@ -143,7 +148,7 @@ namespace NeoEdit.GUI.Common
 
 		Label GetMovableLabel(ItemType item, bool tiled)
 		{
-			var label = GetLabel(item);
+			var label = labels[item] = GetLabel(item);
 			label.Margin = new Thickness(0, 0, tiled ? 0 : 2, 1);
 			label.Background = item == Active ? Brushes.LightBlue : Brushes.LightGray;
 			label.AllowDrop = true;
@@ -151,31 +156,39 @@ namespace NeoEdit.GUI.Common
 			label.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
-				{
-					var dataObj = new DataObject();
-					dataObj.SetData(typeof(Label), label);
-					dataObj.SetData(typeof(ItemType), item);
-					DragDrop.DoDragDrop(label, dataObj, DragDropEffects.Move);
-				}
+					DragDrop.DoDragDrop(label, new DataObject(typeof(ItemType), item), DragDropEffects.Move);
 			};
 
-			label.DragOver += (s, e) =>
+			label.DragOver += (s, e) => DoDragOver(s, e, item);
+
+			return label;
+		}
+
+		void DoDragOver(object sender, DragEventArgs e, ItemType toItem)
+		{
+			e.Handled = true;
+
+			var fromItem = e.Data.GetData(typeof(ItemType)) as ItemType;
+			if (toItem == fromItem)
+				return;
+
+			var fromTabs = UIHelper.FindParent<Tabs<ItemType>>(fromItem);
+			if ((fromTabs == null) || ((fromTabs == this) && (toItem == null)))
+				return;
+
+			var fromIndex = fromTabs.Items.IndexOf(fromItem);
+			var toIndex = toItem == null ? Items.Count : Items.IndexOf(toItem);
+
+			if (fromTabs == this)
 			{
-				var fromLabel = e.Data.GetData(typeof(Label)) as Label;
-				var fromItem = e.Data.GetData(typeof(ItemType)) as ItemType;
-				if (item == fromItem)
-					return;
-
-				var fromIndex = Items.IndexOf(fromItem);
-				var toIndex = Items.IndexOf(item);
-				if ((fromIndex == toIndex) || (fromIndex == -1) || (toIndex == -1))
-					return;
-
 				// Only move tabs when they're in a place that won't immediately move back
-				var pos = e.GetPosition(label);
+				var toLabel = labels[toItem];
+				var fromLabel = fromTabs.labels[fromItem];
+
+				var pos = e.GetPosition(toLabel);
 				if (fromIndex < toIndex)
 				{
-					if (pos.X < label.ActualWidth - fromLabel.ActualWidth)
+					if (pos.X < toLabel.ActualWidth - fromLabel.ActualWidth)
 						return;
 				}
 				else
@@ -183,13 +196,11 @@ namespace NeoEdit.GUI.Common
 					if (pos.X > fromLabel.ActualWidth)
 						return;
 				}
+			}
 
-				Items.RemoveAt(fromIndex);
-				Items.Insert(toIndex, fromItem);
-				Active = fromItem;
-			};
-
-			return label;
+			fromTabs.Items.RemoveAt(fromIndex);
+			Items.Insert(toIndex, fromItem);
+			Active = fromItem;
 		}
 
 		void Layout()
@@ -197,6 +208,7 @@ namespace NeoEdit.GUI.Common
 			Children.Clear();
 			RowDefinitions.Clear();
 			ColumnDefinitions.Clear();
+			labels = new Dictionary<ItemType, Label>();
 
 			if ((Items == null) || (Items.Count == 0))
 				return;

@@ -145,7 +145,6 @@ namespace NeoEdit.GUI.Common
 		{
 			return Application.Current.Windows.OfType<ControlType>().Cast<ControlType>().LastOrDefault();
 		}
-
 	}
 
 	public static class UIHelper
