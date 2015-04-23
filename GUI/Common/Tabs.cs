@@ -169,7 +169,7 @@ namespace NeoEdit.GUI.Common
 			e.Handled = true;
 
 			var fromItem = e.Data.GetData(typeof(ItemType)) as ItemType;
-			if (toItem == fromItem)
+			if ((fromItem == null) || (toItem == fromItem))
 				return;
 
 			var fromTabs = UIHelper.FindParent<Tabs<ItemType>>(fromItem);
