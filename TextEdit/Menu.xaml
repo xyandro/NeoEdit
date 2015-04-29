@@ -53,35 +53,35 @@
 	<MenuItem Header="Fi_les">
 		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Copy"/>
 		<textEdit:TextEditMenuItem Header="C_ut" CommandEnum="Files_Cut"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Files_Open"/>
 		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="Create Files" CommandEnum="Files_CreateFiles"/>
+		<textEdit:TextEditMenuItem Header="Create Directories" CommandEnum="Files_CreateDirectories"/>
 		<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="Files_Delete"/>
 		<Separator/>
-		<MenuItem Header="_Timestamp">
-			<textEdit:TextEditMenuItem Header="_Write" CommandEnum="Files_Timestamp_Write"/>
-			<textEdit:TextEditMenuItem Header="_Access" CommandEnum="Files_Timestamp_Access"/>
-			<textEdit:TextEditMenuItem Header="_Create" CommandEnum="Files_Timestamp_Create"/>
-			<textEdit:TextEditMenuItem Header="A_ll" CommandEnum="Files_Timestamp_All"/>
-		</MenuItem>
 		<textEdit:TextEditMenuItem Header="Si_mplify" CommandEnum="Files_Simplify"/>
-		<textEdit:TextEditMenuItem Header="Create Directory" CommandEnum="Files_CreateDirectory"/>
-		<MenuItem Header="_Information">
-			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Information_Size"/>
-			<textEdit:TextEditMenuItem Header="_Write Time" CommandEnum="Files_Information_WriteTime"/>
-			<textEdit:TextEditMenuItem Header="_Access Time" CommandEnum="Files_Information_AccessTime"/>
-			<textEdit:TextEditMenuItem Header="_Create Time" CommandEnum="Files_Information_CreateTime"/>
-			<textEdit:TextEditMenuItem Header="A_ttributes" CommandEnum="Files_Information_Attributes"/>
-			<textEdit:TextEditMenuItem Header="_Read Only" CommandEnum="Files_Information_ReadOnly"/>
+		<Separator/>
+		<MenuItem Header="_Get">
+			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Get_Size"/>
+			<textEdit:TextEditMenuItem Header="_Write Time" CommandEnum="Files_Get_WriteTime"/>
+			<textEdit:TextEditMenuItem Header="_Access Time" CommandEnum="Files_Get_AccessTime"/>
+			<textEdit:TextEditMenuItem Header="_Create Time" CommandEnum="Files_Get_CreateTime"/>
+			<textEdit:TextEditMenuItem Header="A_ttributes" CommandEnum="Files_Get_Attributes"/>
+			<textEdit:TextEditMenuItem Header="_Read Only" CommandEnum="Files_Get_ReadOnly"/>
 		</MenuItem>
-		<MenuItem Header="_Hash">
-			<textEdit:TextEditMenuItem Header="MD_5" CommandEnum="Files_Hash_MD5"/>
-			<textEdit:TextEditMenuItem Header="SHA_1" CommandEnum="Files_Hash_SHA1"/>
-			<textEdit:TextEditMenuItem Header="SHA_256" CommandEnum="Files_Hash_SHA256"/>
+		<MenuItem Header="Set">
+			<textEdit:TextEditMenuItem Header="_Write Time" CommandEnum="Files_Set_WriteTime"/>
+			<textEdit:TextEditMenuItem Header="_Access Time" CommandEnum="Files_Set_AccessTime"/>
+			<textEdit:TextEditMenuItem Header="_Create Time" CommandEnum="Files_Set_CreateTime"/>
+			<textEdit:TextEditMenuItem Header="A_ll Times" CommandEnum="Files_Set_AllTimes"/>
 		</MenuItem>
+		<Separator/>
 		<MenuItem Header="_Select">
+			<textEdit:TextEditMenuItem Header="_Directory Name" CommandEnum="Files_Select_DirectoryName"/>
 			<textEdit:TextEditMenuItem Header="_File Name" CommandEnum="Files_Select_FileName"/>
 			<textEdit:TextEditMenuItem Header="File Name w/o Extension" CommandEnum="Files_Select_FileNamewoExtension"/>
-			<textEdit:TextEditMenuItem Header="_Directory Name" CommandEnum="Files_Select_DirectoryName"/>
 			<textEdit:TextEditMenuItem Header="_Extension" CommandEnum="Files_Select_Extension"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
@@ -91,8 +91,12 @@
 			<textEdit:TextEditMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
 			<textEdit:TextEditMenuItem Header="N_on-Roots" CommandEnum="Files_Select_NonRoots"/>
 		</MenuItem>
+		<MenuItem Header="_Hash">
+			<textEdit:TextEditMenuItem Header="MD_5" CommandEnum="Files_Hash_MD5"/>
+			<textEdit:TextEditMenuItem Header="SHA_1" CommandEnum="Files_Hash_SHA1"/>
+			<textEdit:TextEditMenuItem Header="SHA_256" CommandEnum="Files_Hash_SHA256"/>
+		</MenuItem>
 		<MenuItem Header="_Operations">
-			<textEdit:TextEditMenuItem Header="Create Files" CommandEnum="Files_Operations_CreateFiles"/>
 			<textEdit:TextEditMenuItem Header="_Copy Keys To Selections" CommandEnum="Files_Operations_CopyKeysToSelections"/>
 			<textEdit:TextEditMenuItem Header="_Move Keys To Selections" CommandEnum="Files_Operations_MoveKeysToSelections"/>
 			<textEdit:TextEditMenuItem Header="_Save Selections To Clipboards" CommandEnum="Files_Operations_SaveSelectionsToClipboards"/>

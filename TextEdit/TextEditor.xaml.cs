@@ -420,10 +420,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Line); break;
 				case TextEditCommand.Edit_GotoColumn: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Column); break;
 				case TextEditCommand.Edit_GotoPosition: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Position); break;
-				case TextEditCommand.Files_Timestamp_Write:
-				case TextEditCommand.Files_Timestamp_Access:
-				case TextEditCommand.Files_Timestamp_Create:
-				case TextEditCommand.Files_Timestamp_All:
+				case TextEditCommand.Files_Set_WriteTime:
+				case TextEditCommand.Files_Set_AccessTime:
+				case TextEditCommand.Files_Set_CreateTime:
+				case TextEditCommand.Files_Set_AllTimes:
 					dialogResult = Command_Files_Timestamp_Dialog();
 					break;
 				case TextEditCommand.Data_DateTime_Convert: dialogResult = Command_Data_DateTime_Convert_Dialog(); break;
@@ -505,25 +505,23 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Cut: Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Open: Command_Files_Open(); break;
 				case TextEditCommand.Files_Insert: Command_Files_Insert(); break;
+				case TextEditCommand.Files_CreateFiles: Command_Files_CreateFiles(); break;
+				case TextEditCommand.Files_CreateDirectories: Command_Files_CreateDirectories(); break;
 				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
-				case TextEditCommand.Files_Timestamp_Write: Command_Files_Timestamp(TextEditor.TimestampType.Write, dialogResult as ChooseDateTimeDialog.Result); break;
-				case TextEditCommand.Files_Timestamp_Access: Command_Files_Timestamp(TextEditor.TimestampType.Access, dialogResult as ChooseDateTimeDialog.Result); break;
-				case TextEditCommand.Files_Timestamp_Create: Command_Files_Timestamp(TextEditor.TimestampType.Create, dialogResult as ChooseDateTimeDialog.Result); break;
-				case TextEditCommand.Files_Timestamp_All: Command_Files_Timestamp(TextEditor.TimestampType.All, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Simplify: Command_Files_Simplify(); break;
-				case TextEditCommand.Files_CreateDirectory: Command_Files_CreateDirectory(); break;
-				case TextEditCommand.Files_Information_Size: Command_Files_Information_Size(); break;
-				case TextEditCommand.Files_Information_WriteTime: Command_Files_Information_WriteTime(); break;
-				case TextEditCommand.Files_Information_AccessTime: Command_Files_Information_AccessTime(); break;
-				case TextEditCommand.Files_Information_CreateTime: Command_Files_Information_CreateTime(); break;
-				case TextEditCommand.Files_Information_Attributes: Command_Files_Information_Attributes(); break;
-				case TextEditCommand.Files_Information_ReadOnly: Command_Files_Information_ReadOnly(); break;
-				case TextEditCommand.Files_Hash_MD5: Command_Files_Hash(Hash.Type.MD5); break;
-				case TextEditCommand.Files_Hash_SHA1: Command_Files_Hash(Hash.Type.SHA1); break;
-				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hash.Type.SHA256); break;
+				case TextEditCommand.Files_Get_Size: Command_Files_Get_Size(); break;
+				case TextEditCommand.Files_Get_WriteTime: Command_Files_Get_WriteTime(); break;
+				case TextEditCommand.Files_Get_AccessTime: Command_Files_Get_AccessTime(); break;
+				case TextEditCommand.Files_Get_CreateTime: Command_Files_Get_CreateTime(); break;
+				case TextEditCommand.Files_Get_Attributes: Command_Files_Get_Attributes(); break;
+				case TextEditCommand.Files_Get_ReadOnly: Command_Files_Get_ReadOnly(); break;
+				case TextEditCommand.Files_Set_WriteTime: Command_Files_Set_Time(TextEditor.TimestampType.Write, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Set_AccessTime: Command_Files_Set_Time(TextEditor.TimestampType.Access, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Set_CreateTime: Command_Files_Set_Time(TextEditor.TimestampType.Create, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Set_AllTimes: Command_Files_Set_Time(TextEditor.TimestampType.All, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Select_DirectoryName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.Directory); break;
 				case TextEditCommand.Files_Select_FileName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileName); break;
 				case TextEditCommand.Files_Select_FileNamewoExtension: Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileNameWoExtension); break;
-				case TextEditCommand.Files_Select_DirectoryName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.Directory); break;
 				case TextEditCommand.Files_Select_Extension: Command_Files_Select_GetFilePath(TextEditor.GetPathType.Extension); break;
 				case TextEditCommand.Files_Select_Existing: Command_Files_Select_Existing(true); break;
 				case TextEditCommand.Files_Select_NonExisting: Command_Files_Select_Existing(false); break;
@@ -531,7 +529,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Select_Directories: Command_Files_Select_Directories(); break;
 				case TextEditCommand.Files_Select_Roots: Command_Files_Select_Roots(true); break;
 				case TextEditCommand.Files_Select_NonRoots: Command_Files_Select_Roots(false); break;
-				case TextEditCommand.Files_Operations_CreateFiles: Command_Files_Files_Operations_CreateFiles(); break;
+				case TextEditCommand.Files_Hash_MD5: Command_Files_Hash(Hash.Type.MD5); break;
+				case TextEditCommand.Files_Hash_SHA1: Command_Files_Hash(Hash.Type.SHA1); break;
+				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hash.Type.SHA256); break;
 				case TextEditCommand.Files_Operations_CopyKeysToSelections: Command_Files_Operations_CopyMoveKeysToSelections(false); break;
 				case TextEditCommand.Files_Operations_MoveKeysToSelections: Command_Files_Operations_CopyMoveKeysToSelections(true); break;
 				case TextEditCommand.Files_Operations_SaveSelectionsToClipboards: Command_Files_Operations_SaveSelectionsToClipboards(); break;
@@ -548,8 +548,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Width: Command_Data_Width(dialogResult as WidthDialog.Result); break;
 				case TextEditCommand.Data_Trim: Command_Data_Trim(dialogResult as TrimDialog.Result); break;
 				case TextEditCommand.Data_SingleLine: Command_Data_SingleLine(); break;
-				case TextEditCommand.Data_Table_ToTable: Command_Data_ToTable(); break;
-				case TextEditCommand.Data_Table_FromTable: Command_Data_FromTable(); break;
+				case TextEditCommand.Data_Table_ToTable: Command_Data_Table_ToTable(); break;
+				case TextEditCommand.Data_Table_FromTable: Command_Data_Table_FromTable(); break;
 				case TextEditCommand.Data_EvaluateExpression: Command_Data_EvaluateExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Data_EvaluateSelectedExpression: Command_Data_EvaluateSelectedExpression(); break;
 				case TextEditCommand.Data_Series: Command_Data_Series(); break;
@@ -1116,6 +1116,38 @@ namespace NeoEdit.TextEdit
 			InsertFiles(GetSelectionStrings());
 		}
 
+		internal void Command_Files_CreateFiles()
+		{
+			var files = GetSelectionStrings();
+			if (files.Any(file => Directory.Exists(file)))
+				throw new Exception("Directory already exists");
+			files = files.Where(file => !File.Exists(file)).ToList();
+			var data = new byte[0];
+			foreach (var file in files)
+				File.WriteAllBytes(file, data);
+		}
+
+		[Flags]
+		internal enum TimestampType
+		{
+			Write = 1,
+			Access = 2,
+			Create = 4,
+			All = Write | Access | Create,
+		}
+
+		internal ChooseDateTimeDialog.Result Command_Files_Timestamp_Dialog()
+		{
+			return ChooseDateTimeDialog.Run(WindowParent, DateTime.Now);
+		}
+
+		internal void Command_Files_CreateDirectories()
+		{
+			var files = GetSelectionStrings();
+			foreach (var file in files)
+				Directory.CreateDirectory(file);
+		}
+
 		internal void Command_Files_Delete()
 		{
 			if (new Message
@@ -1137,61 +1169,9 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		[Flags]
-		internal enum TimestampType
-		{
-			Write = 1,
-			Access = 2,
-			Create = 4,
-			All = Write | Access | Create,
-		}
-
-		internal ChooseDateTimeDialog.Result Command_Files_Timestamp_Dialog()
-		{
-			return ChooseDateTimeDialog.Run(WindowParent, DateTime.Now);
-		}
-
-		internal void Command_Files_Timestamp(TimestampType type, ChooseDateTimeDialog.Result result)
-		{
-			var files = GetSelectionStrings();
-			foreach (var file in files)
-			{
-				if (!FileOrDirectoryExists(file))
-					File.WriteAllBytes(file, new byte[0]);
-
-				if (File.Exists(file))
-				{
-					var info = new FileInfo(file);
-					if (type.HasFlag(TimestampType.Write))
-						info.LastWriteTime = result.Value;
-					if (type.HasFlag(TimestampType.Access))
-						info.LastAccessTime = result.Value;
-					if (type.HasFlag(TimestampType.Create))
-						info.CreationTime = result.Value;
-				}
-				else if (Directory.Exists(file))
-				{
-					var info = new DirectoryInfo(file);
-					if (type.HasFlag(TimestampType.Write))
-						info.LastWriteTime = result.Value;
-					if (type.HasFlag(TimestampType.Access))
-						info.LastAccessTime = result.Value;
-					if (type.HasFlag(TimestampType.Create))
-						info.CreationTime = result.Value;
-				}
-			}
-		}
-
 		internal void Command_Files_Simplify()
 		{
 			ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
-		}
-
-		internal void Command_Files_CreateDirectory()
-		{
-			var files = GetSelectionStrings();
-			foreach (var file in files)
-				Directory.CreateDirectory(file);
 		}
 
 		string GetSize(string path)
@@ -1225,12 +1205,12 @@ namespace NeoEdit.TextEdit
 			return "INVALID";
 		}
 
-		internal void Command_Files_Information_Size()
+		internal void Command_Files_Get_Size()
 		{
 			ReplaceSelections(Selections.Select(range => GetSize(GetString(range))).ToList());
 		}
 
-		internal void Command_Files_Information_WriteTime()
+		internal void Command_Files_Get_WriteTime()
 		{
 			var files = GetSelectionStrings();
 			var strs = new List<string>();
@@ -1252,7 +1232,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Files_Information_AccessTime()
+		internal void Command_Files_Get_AccessTime()
 		{
 			var files = GetSelectionStrings();
 			var strs = new List<string>();
@@ -1274,7 +1254,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Files_Information_CreateTime()
+		internal void Command_Files_Get_CreateTime()
 		{
 			var files = GetSelectionStrings();
 			var strs = new List<string>();
@@ -1296,7 +1276,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Files_Information_Attributes()
+		internal void Command_Files_Get_Attributes()
 		{
 			var files = GetSelectionStrings();
 			var strs = new List<string>();
@@ -1318,7 +1298,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Files_Information_ReadOnly()
+		internal void Command_Files_Get_ReadOnly()
 		{
 			var files = GetSelectionStrings();
 			var strs = new List<string>();
@@ -1337,9 +1317,35 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Files_Hash(Hash.Type type)
+		internal void Command_Files_Set_Time(TimestampType type, ChooseDateTimeDialog.Result result)
 		{
-			ReplaceSelections(Selections.Select(range => Hash.Get(type, GetString(range))).ToList());
+			var files = GetSelectionStrings();
+			foreach (var file in files)
+			{
+				if (!FileOrDirectoryExists(file))
+					File.WriteAllBytes(file, new byte[0]);
+
+				if (File.Exists(file))
+				{
+					var info = new FileInfo(file);
+					if (type.HasFlag(TimestampType.Write))
+						info.LastWriteTime = result.Value;
+					if (type.HasFlag(TimestampType.Access))
+						info.LastAccessTime = result.Value;
+					if (type.HasFlag(TimestampType.Create))
+						info.CreationTime = result.Value;
+				}
+				else if (Directory.Exists(file))
+				{
+					var info = new DirectoryInfo(file);
+					if (type.HasFlag(TimestampType.Write))
+						info.LastWriteTime = result.Value;
+					if (type.HasFlag(TimestampType.Access))
+						info.LastAccessTime = result.Value;
+					if (type.HasFlag(TimestampType.Create))
+						info.CreationTime = result.Value;
+				}
+			}
 		}
 
 		internal void Command_Files_Select_GetFilePath(GetPathType type)
@@ -1385,15 +1391,9 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
 		}
 
-		internal void Command_Files_Files_Operations_CreateFiles()
+		internal void Command_Files_Hash(Hash.Type type)
 		{
-			var files = GetSelectionStrings();
-			if (files.Any(file => Directory.Exists(file)))
-				throw new Exception("Directory already exists");
-			files = files.Where(file => !File.Exists(file)).ToList();
-			var data = new byte[0];
-			foreach (var file in files)
-				File.WriteAllBytes(file, data);
+			ReplaceSelections(Selections.Select(range => Hash.Get(type, GetString(range))).ToList());
 		}
 
 		internal void Command_Files_Operations_CopyMoveKeysToSelections(bool move)
@@ -1592,7 +1592,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 		}
 
-		internal void Command_Data_ToTable()
+		internal void Command_Data_Table_ToTable()
 		{
 			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();
 			var numColumns = lines.Max(line => line.Count);
@@ -1604,7 +1604,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Data_FromTable()
+		internal void Command_Data_Table_FromTable()
 		{
 			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('|').Select(str => str.Trim()).ToList()).ToList();
 

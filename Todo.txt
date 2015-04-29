@@ -11,6 +11,7 @@ Select by SVN ignore
 Move timestamp (possibly others) from TextEditor
 Select readable
 Search by text (regex)
+Can push files to predefined lists (CTRL+1, CTRL+SHIFT+1)
 
 Text:
 Highlight clauses (if/else)
@@ -38,6 +39,7 @@ Audit accelerators
 Fetch URLs
 Make valid filenames from strings
 Make unique filenames
+Move between opening/closing tags
 
 View:
 Update as new lines are added
