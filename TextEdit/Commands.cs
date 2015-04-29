@@ -54,6 +54,7 @@ namespace NeoEdit.TextEdit
 		Files_Get_CreateTime,
 		Files_Get_Attributes,
 		Files_Get_ReadOnly,
+		Files_Set_Size,
 		Files_Set_WriteTime,
 		Files_Set_AccessTime,
 		Files_Set_CreateTime,

@@ -106,6 +106,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\SetSizeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\WidthDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -118,6 +122,9 @@
     </Compile>
     <Compile Include="Dialogs\CountDialog.xaml.cs">
       <DependentUpon>CountDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SetSizeDialog.xaml.cs">
+      <DependentUpon>SetSizeDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>

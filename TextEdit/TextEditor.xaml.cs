@@ -420,11 +420,12 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Line); break;
 				case TextEditCommand.Edit_GotoColumn: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Column); break;
 				case TextEditCommand.Edit_GotoPosition: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Position); break;
+				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
 				case TextEditCommand.Files_Set_WriteTime:
 				case TextEditCommand.Files_Set_AccessTime:
 				case TextEditCommand.Files_Set_CreateTime:
 				case TextEditCommand.Files_Set_AllTimes:
-					dialogResult = Command_Files_Timestamp_Dialog();
+					dialogResult = Command_Files_Set_Time_Dialog();
 					break;
 				case TextEditCommand.Data_DateTime_Convert: dialogResult = Command_Data_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Data_Convert: dialogResult = Command_Data_Convert_Dialog(); break;
@@ -515,6 +516,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Get_CreateTime: Command_Files_Get_CreateTime(); break;
 				case TextEditCommand.Files_Get_Attributes: Command_Files_Get_Attributes(); break;
 				case TextEditCommand.Files_Get_ReadOnly: Command_Files_Get_ReadOnly(); break;
+				case TextEditCommand.Files_Set_Size: Command_Files_Set_Size(dialogResult as SetSizeDialog.Result); break;
 				case TextEditCommand.Files_Set_WriteTime: Command_Files_Set_Time(TextEditor.TimestampType.Write, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_AccessTime: Command_Files_Set_Time(TextEditor.TimestampType.Access, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_CreateTime: Command_Files_Set_Time(TextEditor.TimestampType.Create, dialogResult as ChooseDateTimeDialog.Result); break;
@@ -1136,11 +1138,6 @@ namespace NeoEdit.TextEdit
 			All = Write | Access | Create,
 		}
 
-		internal ChooseDateTimeDialog.Result Command_Files_Timestamp_Dialog()
-		{
-			return ChooseDateTimeDialog.Run(WindowParent, DateTime.Now);
-		}
-
 		internal void Command_Files_CreateDirectories()
 		{
 			var files = GetSelectionStrings();
@@ -1315,6 +1312,58 @@ namespace NeoEdit.TextEdit
 					strs.Add("INVALID");
 			}
 			ReplaceSelections(strs);
+		}
+
+		internal SetSizeDialog.Result Command_Files_Set_Size_Dialog()
+		{
+			return SetSizeDialog.Run(WindowParent);
+		}
+
+		void SetFileSize(string fileName, SetSizeDialog.Result result, long clipboardLen)
+		{
+			var fileInfo = new FileInfo(fileName);
+			if (!fileInfo.Exists)
+				throw new Exception(String.Format("File doesn't exist: {0}", fileName));
+
+			long length;
+			switch (result.Type)
+			{
+				case SetSizeDialog.SizeType.Absolute: length = result.Value; break;
+				case SetSizeDialog.SizeType.Relative: length = fileInfo.Length + result.Value; break;
+				case SetSizeDialog.SizeType.Minimum: length = Math.Max(fileInfo.Length, result.Value); break;
+				case SetSizeDialog.SizeType.Maximum: length = Math.Min(fileInfo.Length, result.Value); break;
+				case SetSizeDialog.SizeType.Multiple: length = fileInfo.Length + result.Value - 1 - (fileInfo.Length + result.Value - 1) % result.Value; break;
+				case SetSizeDialog.SizeType.Clipboard: length = clipboardLen; break;
+				default: throw new ArgumentException("Invalid width type");
+			}
+
+			length = Math.Max(0, length);
+
+			if (fileInfo.Length == length)
+				return;
+
+			using (var file = File.Open(fileName, FileMode.Open))
+				file.SetLength(length);
+		}
+
+		internal void Command_Files_Set_Size(SetSizeDialog.Result result)
+		{
+			List<long> clipboardLens = null;
+			if (result.Type == SetSizeDialog.SizeType.Clipboard)
+			{
+				var clipboardStrings = ClipboardWindow.GetStrings();
+				if (clipboardStrings.Count != Selections.Count)
+					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => long.Parse(str)).ToList();
+			}
+
+			for (var ctr = 0; ctr < Selections.Count; ++ctr)
+				SetFileSize(GetString(Selections[ctr]), result, clipboardLens == null ? 0 : clipboardLens[ctr]);
+		}
+
+		internal ChooseDateTimeDialog.Result Command_Files_Set_Time_Dialog()
+		{
+			return ChooseDateTimeDialog.Run(WindowParent, DateTime.Now);
 		}
 
 		internal void Command_Files_Set_Time(TimestampType type, ChooseDateTimeDialog.Result result)
