@@ -22,6 +22,19 @@ namespace NeoEdit.Disk
 			File,
 		}
 
+		[Flags]
+		public enum SourceControlStatusEnum
+		{
+			Regular = 1,
+			Modified = 2,
+			Ignored = 4,
+			Unknown = 8,
+
+			Standard = Regular | Modified,
+			None = 0,
+			All = Regular | Modified | Ignored | Unknown,
+		}
+
 		[DepProp]
 		public BitmapSource Ico { get { return UIHelper<DiskItem>.GetPropValue(() => this.Ico); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Ico, value); } }
 		[DepProp]
@@ -54,6 +67,26 @@ namespace NeoEdit.Disk
 		public string Identity { get { return UIHelper<DiskItem>.GetPropValue(() => this.Identity); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Identity, value); } }
 		[DepProp]
 		public VersionControlStatus SvnStatus { get { return UIHelper<DiskItem>.GetPropValue(() => this.SvnStatus); } private set { UIHelper<DiskItem>.SetPropValue(() => this.SvnStatus, value); } }
+
+		public SourceControlStatusEnum SourceControlStatus
+		{
+			get
+			{
+				switch (SvnStatus)
+				{
+					case VersionControlStatus.Modified:
+						return SourceControlStatusEnum.Modified;
+					case VersionControlStatus.Ignored:
+						return SourceControlStatusEnum.Ignored;
+					case VersionControlStatus.None:
+					case VersionControlStatus.NotVersioned:
+					case VersionControlStatus.Unknown:
+						return SourceControlStatusEnum.Unknown;
+					default:
+						return SourceControlStatusEnum.Regular;
+				}
+			}
+		}
 
 		public bool HasChildren { get { return FileType != DiskItemType.File; } }
 		public DiskItem Parent { get { return new DiskItem(Path); } }

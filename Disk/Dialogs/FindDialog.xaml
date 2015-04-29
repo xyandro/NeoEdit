@@ -2,8 +2,13 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
+	xmlns:disk="clr-namespace:NeoEdit.Disk"
 	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
 	Title="Find By Expression" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=expression}">
+
+	<Window.Resources>
+		<guiCommon:CheckBitConverter x:Key="SourceControlStatusConverter" />
+	</Window.Resources>
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -58,10 +63,10 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Row="0" Grid.Column="0" Content="M_in Size:" Target="{Binding ElementName=minSize}" HorizontalAlignment="Right"/>
+				<Label Grid.Row="0" Grid.Column="0" Content="Min Size:" Target="{Binding ElementName=minSize}" HorizontalAlignment="Right"/>
 				<guiCommon:NumericUpDown Grid.Row="0" Grid.Column="1" Name="minSize" Value="{Binding MinSize, ElementName=self}" TextAlignment="Left"/>
 
-				<Label Grid.Row="1" Grid.Column="0" Content="Ma_x Size:" Target="{Binding ElementName=maxSize}" HorizontalAlignment="Right"/>
+				<Label Grid.Row="1" Grid.Column="0" Content="Max Size:" Target="{Binding ElementName=maxSize}" HorizontalAlignment="Right"/>
 				<guiCommon:NumericUpDown Grid.Row="1" Grid.Column="1" Name="maxSize" Value="{Binding MaxSize, ElementName=self}" TextAlignment="Left"/>
 			</Grid>
 		</GroupBox>
@@ -81,10 +86,10 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<Label Grid.Row="0" Grid.Column="0" Content="_Start:" Target="{Binding ElementName=startDate}" HorizontalAlignment="Right"/>
+				<Label Grid.Row="0" Grid.Column="0" Content="Start:" Target="{Binding ElementName=startDate}" HorizontalAlignment="Right"/>
 				<xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Name="startDate" Value="{Binding StartDate, ElementName=self}" Format="Custom" FormatString="yyyy/MM/dd hh:mm:ss tt" TextAlignment="Left"/>
 
-				<Label Grid.Row="1" Grid.Column="0" Content="En_d:" Target="{Binding ElementName=endDate}" HorizontalAlignment="Right"/>
+				<Label Grid.Row="1" Grid.Column="0" Content="End:" Target="{Binding ElementName=endDate}" HorizontalAlignment="Right"/>
 				<xctk:DateTimePicker Grid.Row="1" Grid.Column="1" Name="endDate" Value="{Binding EndDate, ElementName=self}" Format="Custom" FormatString="yyyy/MM/dd hh:mm:ss tt" TextAlignment="Left"/>
 			</Grid>
 		</GroupBox>
@@ -105,7 +110,31 @@
 				</Grid.RowDefinitions>
 
 				<Label Grid.Row="0" Grid.Column="0" Content="S_tatus" Target="{Binding ElementName=sourceControlStatus}" HorizontalAlignment="Right"/>
-				<ComboBox Grid.Row="0" Grid.Column="1" Name="sourceControlStatus" SelectedItem="{Binding SourceControlStatus, ElementName=self}"/>
+				<Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+
+					<UniformGrid Grid.Row="0" Grid.Column="0" Rows="1">
+						<CheckBox Content="Re_gular" Focusable="False" IsChecked="{Binding SourceControlStatus, ElementName=self, Converter={StaticResource SourceControlStatusConverter}, ConverterParameter={x:Static disk:DiskItem+SourceControlStatusEnum.Regular}}"/>
+						<CheckBox Content="_Modified" Focusable="False" IsChecked="{Binding SourceControlStatus, ElementName=self, Converter={StaticResource SourceControlStatusConverter}, ConverterParameter={x:Static disk:DiskItem+SourceControlStatusEnum.Modified}}"/>
+						<CheckBox Content="_Ignored" Focusable="False" IsChecked="{Binding SourceControlStatus, ElementName=self, Converter={StaticResource SourceControlStatusConverter}, ConverterParameter={x:Static disk:DiskItem+SourceControlStatusEnum.Ignored}}"/>
+						<CheckBox Content="_Unknown" Focusable="False" IsChecked="{Binding SourceControlStatus, ElementName=self, Converter={StaticResource SourceControlStatusConverter}, ConverterParameter={x:Static disk:DiskItem+SourceControlStatusEnum.Unknown}}"/>
+					</UniformGrid>
+
+					<UniformGrid Grid.Row="1" Grid.Column="0" Rows="1" HorizontalAlignment="Left">
+						<Button Name="svnAll" Content="All" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnStandard" Content="Standard" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnModified" Content="Modified" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnIgnored" Content="Ignored" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnUnknown" Content="Unknown" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnNone" Content="None" Click="SvnClick" Focusable="False"/>
+					</UniformGrid>
+				</Grid>
 			</Grid>
 		</GroupBox>
 

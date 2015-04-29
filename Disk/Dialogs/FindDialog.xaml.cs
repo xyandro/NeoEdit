@@ -1,27 +1,18 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Common;
 using NeoEdit.GUI.Common;
 
 namespace NeoEdit.Disk.Dialogs
 {
 	internal partial class FindDialog
 	{
-		internal enum SourceControlStatusEnum
-		{
-			None,
-			IgnoredItems,
-			Standard,
-			Modified,
-		};
-
 		internal class Result
 		{
 			public Regex Regex;
 			public bool FullPath;
 			public bool Recursive;
-			public SourceControlStatusEnum SourceControlStatus;
+			public DiskItem.SourceControlStatusEnum SourceControlStatus;
 			public long? MinSize;
 			public long? MaxSize;
 			public DateTime? StartDate;
@@ -37,7 +28,7 @@ namespace NeoEdit.Disk.Dialogs
 		[DepProp]
 		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue(() => this.Recursive); } private set { UIHelper<FindDialog>.SetPropValue(() => this.Recursive, value); } }
 		[DepProp]
-		public SourceControlStatusEnum SourceControlStatus { get { return UIHelper<FindDialog>.GetPropValue(() => this.SourceControlStatus); } private set { UIHelper<FindDialog>.SetPropValue(() => this.SourceControlStatus, value); } }
+		public DiskItem.SourceControlStatusEnum SourceControlStatus { get { return UIHelper<FindDialog>.GetPropValue(() => this.SourceControlStatus); } private set { UIHelper<FindDialog>.SetPropValue(() => this.SourceControlStatus, value); } }
 		[DepProp]
 		public long? MinSize { get { return UIHelper<FindDialog>.GetPropValue(() => this.MinSize); } private set { UIHelper<FindDialog>.SetPropValue(() => this.MinSize, value); } }
 		[DepProp]
@@ -54,9 +45,7 @@ namespace NeoEdit.Disk.Dialogs
 			InitializeComponent();
 			Expression = "*.*";
 			expression.SelectAll();
-
-			foreach (var status in Helpers.GetValues<SourceControlStatusEnum>())
-				sourceControlStatus.Items.Add(status);
+			SourceControlStatus = DiskItem.SourceControlStatusEnum.All;
 		}
 
 		Result result;
@@ -84,6 +73,23 @@ namespace NeoEdit.Disk.Dialogs
 			};
 
 			DialogResult = true;
+		}
+
+		void SvnClick(object sender, RoutedEventArgs e)
+		{
+			if (sender == svnAll)
+				SourceControlStatus = DiskItem.SourceControlStatusEnum.All;
+			else if (sender == svnStandard)
+				SourceControlStatus = DiskItem.SourceControlStatusEnum.Standard;
+			else if (sender == svnModified)
+				SourceControlStatus = DiskItem.SourceControlStatusEnum.Modified;
+			else if (sender == svnIgnored)
+				SourceControlStatus = DiskItem.SourceControlStatusEnum.Ignored;
+			else if (sender == svnUnknown)
+				SourceControlStatus = DiskItem.SourceControlStatusEnum.Unknown;
+			else if (sender == svnNone)
+				SourceControlStatus = DiskItem.SourceControlStatusEnum.None;
+
 		}
 
 		static public Result Run(Window parent)

@@ -1,28 +1,27 @@
-﻿using NeoEdit.GUI.Common;
-using SharpSvn;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NeoEdit.GUI.Common;
+using SharpSvn;
 
 namespace NeoEdit.Disk
 {
-	[Flags]
 	public enum VersionControlStatus
 	{
-		Unknown = 0,
-		None = 1,
-		NotVersioned = 2,
-		Normal = 4,
-		Added = 8,
-		Missing = 16,
-		Deleted = 32,
-		Replaced = 64,
-		Modified = 128,
-		Merged = 256,
-		Conflicted = 512,
-		Ignored = 1024,
-		Obstructed = 2048,
-		External = 4096,
-		Incomplete = 8192,
+		Unknown,
+		None,
+		NotVersioned,
+		Normal,
+		Added,
+		Missing,
+		Deleted,
+		Replaced,
+		Modified,
+		Merged,
+		Conflicted,
+		Ignored,
+		Obstructed,
+		External,
+		Incomplete,
 	}
 
 	public class SvnCache

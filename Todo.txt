@@ -4,7 +4,7 @@ Starting 2nd instance pops up in background
 Add command prompt
 Diff?
 NumericUpDown won't accept control from accelerator
-Move to .Net 3.5
+Ctrl used to open dialog doesn't register having been released; tabs interfere with pageup, pagedown
 
 Disk:
 Select by SVN ignore
@@ -35,6 +35,9 @@ Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Specify which accelerator to display in menu (currently picking one of available options at random)
 Audit accelerators
+Fetch URLs
+Make valid filenames from strings
+Make unique filenames
 
 View:
 Update as new lines are added
