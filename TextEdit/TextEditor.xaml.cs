@@ -507,6 +507,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Cut: Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Open: Command_Files_Open(); break;
 				case TextEditCommand.Files_Insert: Command_Files_Insert(); break;
+				case TextEditCommand.Files_SaveClipboards: Command_Files_SaveClipboards(); break;
 				case TextEditCommand.Files_CreateFiles: Command_Files_CreateFiles(); break;
 				case TextEditCommand.Files_CreateDirectories: Command_Files_CreateDirectories(); break;
 				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
@@ -535,9 +536,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Hash_MD5: Command_Files_Hash(Hash.Type.MD5); break;
 				case TextEditCommand.Files_Hash_SHA1: Command_Files_Hash(Hash.Type.SHA1); break;
 				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hash.Type.SHA256); break;
-				case TextEditCommand.Files_Operations_CopyKeysToSelections: Command_Files_Operations_CopyMoveKeysToSelections(false); break;
-				case TextEditCommand.Files_Operations_MoveKeysToSelections: Command_Files_Operations_CopyMoveKeysToSelections(true); break;
-				case TextEditCommand.Files_Operations_SaveSelectionsToClipboards: Command_Files_Operations_SaveSelectionsToClipboards(); break;
+				case TextEditCommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(false); break;
+				case TextEditCommand.Files_Operations_Move: Command_Files_Operations_CopyMove(true); break;
 				case TextEditCommand.Data_Case_Upper: Command_Data_Case_Upper(); break;
 				case TextEditCommand.Data_Case_Lower: Command_Data_Case_Lower(); break;
 				case TextEditCommand.Data_Case_Proper: Command_Data_Case_Proper(); break;
@@ -1119,6 +1119,20 @@ namespace NeoEdit.TextEdit
 			InsertFiles(GetSelectionStrings());
 		}
 
+		internal void Command_Files_SaveClipboards()
+		{
+			var clipboardStrings = ClipboardWindow.GetStrings();
+			if (clipboardStrings.Count != Selections.Count)
+				throw new Exception("Clipboard count must match selection count.");
+
+			for (var ctr = 0; ctr < clipboardStrings.Count; ++ctr)
+			{
+				var fileName = GetString(Selections[ctr]);
+				var data = clipboardStrings[ctr];
+				File.WriteAllText(fileName, data, Coder.GetEncoding(CodePage));
+			}
+		}
+
 		internal void Command_Files_CreateFiles()
 		{
 			var files = GetSelectionStrings();
@@ -1458,47 +1472,43 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.Select(range => Hash.Get(type, GetString(range))).ToList());
 		}
 
-		internal void Command_Files_Operations_CopyMoveKeysToSelections(bool move)
+		internal void Command_Files_Operations_CopyMove(bool move)
 		{
-			if ((keysAndValues[0].Count == 0) || (Selections.Count == 0))
-				throw new Exception("Keys and selections must be set");
+			var strs = Selections.Select(range => GetString(range).Split(new string[] { "=>" }, StringSplitOptions.None).Select(str => str.Trim()).ToList()).ToList();
+			if (strs.Any(pair => pair.Count != 2))
+				throw new Exception("Format: Source => Destination");
 
-			if (keysAndValues[0].Count != Selections.Count)
-				throw new Exception("Keys and selections count must match");
-
-			var sels = Selections.Select((range, index) => new { source = keysAndValues[0][index], dest = GetString(range) }).Where(pair => pair.source != pair.dest).ToList();
+			var sels = strs.Select(pair => new { source = pair[0], dest = pair[1] }).Where(pair => pair.source != pair.dest).ToList();
 			if (sels.Count == 0)
 				throw new Exception("Nothing to do!");
 
 			if (sels.Any(pair => (String.IsNullOrEmpty(pair.source)) || (String.IsNullOrEmpty(pair.dest))))
 				throw new Exception("Can't have empty items in list");
 
-			var invalid = sels.Select(pair => pair.source).FirstOrDefault(file => !FileOrDirectoryExists(file));
-			if (invalid != null)
-				throw new Exception(String.Format("Source file/directory doesn't exist: {0}", invalid));
+			const int invalidCount = 10;
+			var invalid = sels.Select(pair => pair.source).Concat(sels.Select(pair => pair.dest)).GroupBy(str => str).Where(group => group.Count() > 1).Select(group => group.Key).Distinct().Take(invalidCount);
+			if (invalid.Any())
+				throw new Exception(String.Format("Some items are listed more than once:\n{0}", String.Join("\n", invalid)));
 
-			invalid = sels.Select(pair => pair.dest).FirstOrDefault(pair => FileOrDirectoryExists(pair));
-			if (invalid != null)
-				throw new Exception(String.Format("Destination file/directory already exists: {0}", invalid));
+			invalid = sels.Select(pair => pair.source).Where(file => !FileOrDirectoryExists(file)).Take(invalidCount);
+			if (invalid.Any())
+				throw new Exception(String.Format("Source file/directory doesn't exist:\n{0}", String.Join("\n", invalid)));
 
-			var paths = sels.Select(pair => Path.GetDirectoryName(pair.dest)).Distinct().ToList();
-			invalid = paths.FirstOrDefault(dir => !Directory.Exists(dir));
-			if (invalid != null)
-				throw new Exception(String.Format("Directory doesn't exist: {0}", invalid));
+			invalid = sels.Select(pair => pair.dest).Where(pair => FileOrDirectoryExists(pair)).Take(invalidCount);
+			if (invalid.Any())
+				throw new Exception(String.Format("Destination file/directory already exist:\n{0}", String.Join("\n", invalid)));
 
-			const int numExamples = 10;
-			var examples = String.Join("", Enumerable.Range(0, Math.Min(numExamples, sels.Count)).Select(num => sels[num].source + " => " + sels[num].dest + "\n"));
-			if (sels.Count > numExamples)
-				examples += String.Format(" + {0} more\n", sels.Count - numExamples);
+			invalid = sels.Select(pair => Path.GetDirectoryName(pair.dest)).Distinct().Where(dir => !Directory.Exists(dir)).Take(invalidCount);
+			if (invalid.Any())
+				throw new Exception(String.Format("Directory doesn't exist:\n{0}", String.Join("\n", invalid)));
 
 			if (new Message
 			{
 				Title = "Confirm",
-				Text = "Are you sure you want to " + (move ? "move" : "copy") + " these files?\n" + examples,
+				Text = String.Format("Are you sure you want to " + (move ? "move" : "copy") + " these {0} file(s)?", sels.Count),
 				Options = Message.OptionsEnum.YesNo,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.No,
-				Width = 900,
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 
@@ -1517,20 +1527,6 @@ namespace NeoEdit.TextEdit
 					else
 						File.Copy(pair.source, pair.dest);
 				}
-		}
-
-		internal void Command_Files_Operations_SaveSelectionsToClipboards()
-		{
-			var clipboardStrings = ClipboardWindow.GetStrings();
-			if (clipboardStrings.Count != Selections.Count)
-				throw new Exception("Clipboard count must match selection count.");
-
-			for (var ctr = 0; ctr < clipboardStrings.Count; ++ctr)
-			{
-				var fileName = clipboardStrings[ctr];
-				var data = GetString(Selections[ctr]);
-				File.WriteAllText(fileName, data, Coder.GetEncoding(CodePage));
-			}
 		}
 
 		internal void Command_Data_Case_Upper()

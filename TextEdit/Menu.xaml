@@ -56,6 +56,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Files_Open"/>
 		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
+		<textEdit:TextEditMenuItem Header="S_ave Clipboards" CommandEnum="Files_SaveClipboards"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Create Files" CommandEnum="Files_CreateFiles"/>
 		<textEdit:TextEditMenuItem Header="Create Directories" CommandEnum="Files_CreateDirectories"/>
@@ -97,10 +98,9 @@
 			<textEdit:TextEditMenuItem Header="SHA_1" CommandEnum="Files_Hash_SHA1"/>
 			<textEdit:TextEditMenuItem Header="SHA_256" CommandEnum="Files_Hash_SHA256"/>
 		</MenuItem>
-		<MenuItem Header="_Operations">
-			<textEdit:TextEditMenuItem Header="_Copy Keys To Selections" CommandEnum="Files_Operations_CopyKeysToSelections"/>
-			<textEdit:TextEditMenuItem Header="_Move Keys To Selections" CommandEnum="Files_Operations_MoveKeysToSelections"/>
-			<textEdit:TextEditMenuItem Header="_Save Selections To Clipboards" CommandEnum="Files_Operations_SaveSelectionsToClipboards"/>
+		<MenuItem Header="O_perations">
+			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
+			<textEdit:TextEditMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Data">
