@@ -427,6 +427,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_AllTimes:
 					dialogResult = Command_Files_Set_Time_Dialog();
 					break;
+				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
 				case TextEditCommand.Data_DateTime_Convert: dialogResult = Command_Data_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Data_Convert: dialogResult = Command_Data_Convert_Dialog(); break;
 				case TextEditCommand.Data_Width: dialogResult = Command_Data_Width_Dialog(); break;
@@ -515,12 +516,12 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Get_AccessTime: Command_Files_Get_AccessTime(); break;
 				case TextEditCommand.Files_Get_CreateTime: Command_Files_Get_CreateTime(); break;
 				case TextEditCommand.Files_Get_Attributes: Command_Files_Get_Attributes(); break;
-				case TextEditCommand.Files_Get_ReadOnly: Command_Files_Get_ReadOnly(); break;
 				case TextEditCommand.Files_Set_Size: Command_Files_Set_Size(dialogResult as SetSizeDialog.Result); break;
 				case TextEditCommand.Files_Set_WriteTime: Command_Files_Set_Time(TextEditor.TimestampType.Write, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_AccessTime: Command_Files_Set_Time(TextEditor.TimestampType.Access, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_CreateTime: Command_Files_Set_Time(TextEditor.TimestampType.Create, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_AllTimes: Command_Files_Set_Time(TextEditor.TimestampType.All, dialogResult as ChooseDateTimeDialog.Result); break;
+				case TextEditCommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as SetAttributesDialog.Result); break;
 				case TextEditCommand.Files_Select_DirectoryName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.Directory); break;
 				case TextEditCommand.Files_Select_FileName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileName); break;
 				case TextEditCommand.Files_Select_FileNamewoExtension: Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileNameWoExtension); break;
@@ -1295,25 +1296,6 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Files_Get_ReadOnly()
-		{
-			var files = GetSelectionStrings();
-			var strs = new List<string>();
-			foreach (var file in files)
-			{
-				if (File.Exists(file))
-				{
-					var fileinfo = new FileInfo(file);
-					strs.Add(fileinfo.IsReadOnly.ToString());
-				}
-				else if (Directory.Exists(file))
-					strs.Add("Directory");
-				else
-					strs.Add("INVALID");
-			}
-			ReplaceSelections(strs);
-		}
-
 		internal SetSizeDialog.Result Command_Files_Set_Size_Dialog()
 		{
 			return SetSizeDialog.Run(WindowParent);
@@ -1395,6 +1377,37 @@ namespace NeoEdit.TextEdit
 						info.CreationTime = result.Value;
 				}
 			}
+		}
+
+		internal SetAttributesDialog.Result Command_Files_Set_Attributes_Dialog()
+		{
+			var filesAttrs = Selections.Select(range => GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
+			var availAttrs = Helpers.GetValues<FileAttributes>();
+			var current = new Dictionary<FileAttributes, bool?>();
+			foreach (var fileAttrs in filesAttrs)
+				foreach (var availAttr in availAttrs)
+				{
+					var fileHasAttr = fileAttrs.HasFlag(availAttr);
+					if (!current.ContainsKey(availAttr))
+						current[availAttr] = fileHasAttr;
+					if (current[availAttr] != fileHasAttr)
+						current[availAttr] = null;
+				}
+
+			return SetAttributesDialog.Run(WindowParent, current);
+		}
+
+		internal void Command_Files_Set_Attributes(SetAttributesDialog.Result result)
+		{
+			FileAttributes andMask = 0, orMask = 0;
+			foreach (var pair in result.Attributes)
+			{
+				andMask |= pair.Key;
+				if ((pair.Value.HasValue) && (pair.Value.Value))
+					orMask |= pair.Key;
+			}
+			foreach (var file in Selections.Select(range => GetString(range)))
+				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
 		internal void Command_Files_Select_GetFilePath(GetPathType type)

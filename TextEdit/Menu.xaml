@@ -69,7 +69,6 @@
 			<textEdit:TextEditMenuItem Header="_Access Time" CommandEnum="Files_Get_AccessTime"/>
 			<textEdit:TextEditMenuItem Header="_Create Time" CommandEnum="Files_Get_CreateTime"/>
 			<textEdit:TextEditMenuItem Header="A_ttributes" CommandEnum="Files_Get_Attributes"/>
-			<textEdit:TextEditMenuItem Header="_Read Only" CommandEnum="Files_Get_ReadOnly"/>
 		</MenuItem>
 		<MenuItem Header="S_et">
 			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>
@@ -77,6 +76,7 @@
 			<textEdit:TextEditMenuItem Header="_Access Time" CommandEnum="Files_Set_AccessTime"/>
 			<textEdit:TextEditMenuItem Header="_Create Time" CommandEnum="Files_Set_CreateTime"/>
 			<textEdit:TextEditMenuItem Header="A_ll Times" CommandEnum="Files_Set_AllTimes"/>
+			<textEdit:TextEditMenuItem Header="A_ttributes" CommandEnum="Files_Set_Attributes"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">

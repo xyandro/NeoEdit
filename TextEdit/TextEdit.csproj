@@ -87,10 +87,17 @@
     <Compile Include="Dialogs\RepeatDialog.xaml.cs">
       <DependentUpon>RepeatDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\SetAttributesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\SortDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\SetAttributesDialog.xaml.cs">
+      <DependentUpon>SetAttributesDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SortDialog.xaml.cs">
       <DependentUpon>SortDialog.xaml</DependentUpon>
     </Compile>
