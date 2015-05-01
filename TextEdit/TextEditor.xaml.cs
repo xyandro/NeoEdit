@@ -1193,12 +1193,12 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_GetUniqueNames(GetUniqueNamesDialog.Result result)
 		{
-			var used = new HashSet<string>();
+			var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			if (!result.Format.Contains("{Unique}"))
 				throw new Exception("Format must contain \"{Unique}\" tag");
 			var newNames = new List<string>();
 			var format = result.Format.Replace("{Path}", "{0}").Replace("{Name}", "{1}").Replace("{Unique}", "{2}").Replace("{Ext}", "{3}");
-			foreach (var fileName in Selections.Select(range => GetString(range)))
+			foreach (var fileName in GetSelectionStrings())
 			{
 				var path = Path.GetDirectoryName(fileName);
 				if (!String.IsNullOrEmpty(path))
