@@ -37,7 +37,6 @@ Allow user to disable undo/redo for faster performance
 Specify which accelerator to display in menu (currently picking one of available options at random)
 Audit accelerators
 Fetch URLs
-Make valid filenames from strings
 Move between opening/closing tags
 
 View:

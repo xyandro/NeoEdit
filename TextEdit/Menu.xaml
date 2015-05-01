@@ -64,6 +64,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Si_mplify" CommandEnum="Files_Simplify"/>
 		<textEdit:TextEditMenuItem Header="Get Un_ique Names" CommandEnum="Files_GetUniqueNames"/>
+		<textEdit:TextEditMenuItem Header="Sani_tize Names" CommandEnum="Files_SanitizeNames"/>
 		<Separator/>
 		<MenuItem Header="_Get">
 			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Get_Size"/>

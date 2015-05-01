@@ -512,6 +512,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
 				case TextEditCommand.Files_Simplify: Command_Files_Simplify(); break;
 				case TextEditCommand.Files_GetUniqueNames: Command_Files_GetUniqueNames(dialogResult as GetUniqueNamesDialog.Result); break;
+				case TextEditCommand.Files_SanitizeNames: Command_Files_SanitizeNames(); break;
 				case TextEditCommand.Files_Get_Size: Command_Files_Get_Size(); break;
 				case TextEditCommand.Files_Get_WriteTime: Command_Files_Get_WriteTime(); break;
 				case TextEditCommand.Files_Get_AccessTime: Command_Files_Get_AccessTime(); break;
@@ -1221,6 +1222,24 @@ namespace NeoEdit.TextEdit
 			}
 
 			ReplaceSelections(newNames);
+		}
+
+		string SanitizeFileName(string fileName)
+		{
+			fileName = fileName.Trim();
+			var start = "";
+			if ((fileName.Length >= 2) && (fileName[1] == ':'))
+				start = fileName.Substring(0, 2);
+			fileName = fileName.Replace("/", @"\");
+			fileName = Regex.Replace(fileName, "[<>:\"|?*\u0000-\u001f]", "_");
+			//fileName = fileName.Replace("<", "_").Replace(">", "_").Replace(":", "_").Replace("\"", "_").Replace("|", "_").Replace("?", "_").Replace("*", "_").Replace("\u0000", "_");
+			fileName = start + fileName.Substring(start.Length);
+			return fileName;
+		}
+
+		internal void Command_Files_SanitizeNames()
+		{
+			ReplaceSelections(Selections.Select(range => SanitizeFileName(GetString(range))).ToList());
 		}
 
 		string GetSize(string path)
