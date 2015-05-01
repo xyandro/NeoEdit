@@ -420,13 +420,12 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Line); break;
 				case TextEditCommand.Edit_GotoColumn: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Column); break;
 				case TextEditCommand.Edit_GotoPosition: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Position); break;
+				case TextEditCommand.Files_GetUniqueNames: dialogResult = Command_Files_GetUniqueNames_Dialog(); break;
 				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
-				case TextEditCommand.Files_Set_WriteTime:
-				case TextEditCommand.Files_Set_AccessTime:
-				case TextEditCommand.Files_Set_CreateTime:
-				case TextEditCommand.Files_Set_AllTimes:
-					dialogResult = Command_Files_Set_Time_Dialog();
-					break;
+				case TextEditCommand.Files_Set_WriteTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
+				case TextEditCommand.Files_Set_AccessTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
+				case TextEditCommand.Files_Set_CreateTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
+				case TextEditCommand.Files_Set_AllTimes: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
 				case TextEditCommand.Data_DateTime_Convert: dialogResult = Command_Data_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Data_Convert: dialogResult = Command_Data_Convert_Dialog(); break;
@@ -512,6 +511,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_CreateDirectories: Command_Files_CreateDirectories(); break;
 				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
 				case TextEditCommand.Files_Simplify: Command_Files_Simplify(); break;
+				case TextEditCommand.Files_GetUniqueNames: Command_Files_GetUniqueNames(dialogResult as GetUniqueNamesDialog.Result); break;
 				case TextEditCommand.Files_Get_Size: Command_Files_Get_Size(); break;
 				case TextEditCommand.Files_Get_WriteTime: Command_Files_Get_WriteTime(); break;
 				case TextEditCommand.Files_Get_AccessTime: Command_Files_Get_AccessTime(); break;
@@ -1184,6 +1184,43 @@ namespace NeoEdit.TextEdit
 		internal void Command_Files_Simplify()
 		{
 			ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
+		}
+
+		internal GetUniqueNamesDialog.Result Command_Files_GetUniqueNames_Dialog()
+		{
+			return GetUniqueNamesDialog.Run(WindowParent);
+		}
+
+		internal void Command_Files_GetUniqueNames(GetUniqueNamesDialog.Result result)
+		{
+			var used = new HashSet<string>();
+			if (!result.Format.Contains("{Unique}"))
+				throw new Exception("Format must contain \"{Unique}\" tag");
+			var newNames = new List<string>();
+			var format = result.Format.Replace("{Path}", "{0}").Replace("{Name}", "{1}").Replace("{Unique}", "{2}").Replace("{Ext}", "{3}");
+			foreach (var fileName in Selections.Select(range => GetString(range)))
+			{
+				var path = Path.GetDirectoryName(fileName);
+				if (!String.IsNullOrEmpty(path))
+					path += @"\";
+				var name = Path.GetFileNameWithoutExtension(fileName);
+				var ext = Path.GetExtension(fileName);
+				var newFileName = fileName;
+				for (var num = result.RenameAll ? 1 : 2; ; ++num)
+				{
+					if ((result.CheckExisting) && (FileOrDirectoryExists(newFileName)))
+						used.Add(newFileName);
+					if (((num != 1) || (!result.RenameAll)) && (!used.Contains(newFileName)))
+						break;
+					var unique = result.UseGUIDs ? Guid.NewGuid().ToString() : num.ToString();
+
+					newFileName = String.Format(format, path, name, unique, ext);
+				}
+				newNames.Add(newFileName);
+				used.Add(newFileName);
+			}
+
+			ReplaceSelections(newNames);
 		}
 
 		string GetSize(string path)

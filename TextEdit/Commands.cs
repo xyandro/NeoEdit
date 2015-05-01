@@ -49,6 +49,7 @@ namespace NeoEdit.TextEdit
 		Files_CreateDirectories,
 		Files_Delete,
 		Files_Simplify,
+		Files_GetUniqueNames,
 		Files_Get_Size,
 		Files_Get_WriteTime,
 		Files_Get_AccessTime,

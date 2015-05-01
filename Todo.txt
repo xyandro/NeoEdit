@@ -38,7 +38,6 @@ Specify which accelerator to display in menu (currently picking one of available
 Audit accelerators
 Fetch URLs
 Make valid filenames from strings
-Make unique filenames
 Move between opening/closing tags
 
 View:

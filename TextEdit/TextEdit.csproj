@@ -24,6 +24,10 @@
     <Compile Include="Dialogs\ConvertDateTimeDialog.xaml.cs">
       <DependentUpon>ConvertDateTimeDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\GetUniqueNamesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\MinMaxValuesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -32,6 +36,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\GetUniqueNamesDialog.xaml.cs">
+      <DependentUpon>GetUniqueNamesDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\MinMaxValuesDialog.xaml.cs">
       <DependentUpon>MinMaxValuesDialog.xaml</DependentUpon>
     </Compile>
