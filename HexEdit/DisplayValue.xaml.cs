@@ -8,9 +8,9 @@ namespace NeoEdit.HexEdit
 	partial class DisplayValue : TextBox
 	{
 		[DepProp]
-		public HexEditor HexEditor { get { return UIHelper<DisplayValue>.GetPropValue(() => this.HexEditor); } set { UIHelper<DisplayValue>.SetPropValue(() => this.HexEditor, value); } }
+		public HexEditor HexEditor { get { return UIHelper<DisplayValue>.GetPropValue<HexEditor>(this); } set { UIHelper<DisplayValue>.SetPropValue(this, value); } }
 		[DepProp]
-		public Coder.CodePage CodePage { get { return UIHelper<DisplayValue>.GetPropValue(() => this.CodePage); } set { UIHelper<DisplayValue>.SetPropValue(() => this.CodePage, value); } }
+		public Coder.CodePage CodePage { get { return UIHelper<DisplayValue>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<DisplayValue>.SetPropValue(this, value); } }
 
 		static DisplayValue() { UIHelper<DisplayValue>.Register(); }
 

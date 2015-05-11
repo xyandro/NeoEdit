@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
+using System.Runtime.CompilerServices;
 using NeoEdit.HexEdit.Models;
 
 namespace NeoEdit.HexEdit.Dialogs.Models
@@ -12,18 +10,17 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 	class ModelVM : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
-		protected void OnPropertyChanged<T>(Expression<Func<ModelVM, T>> expression)
+		protected void OnPropertyChanged([CallerMemberName] string name = "")
 		{
-			string name = ((expression.Body as MemberExpression).Member as PropertyInfo).Name;
 			var handler = PropertyChanged;
 			if (handler != null)
 				handler(this, new PropertyChangedEventArgs(name));
 		}
 
 		string modelName;
-		public string ModelName { get { return modelName; } set { modelName = value; OnPropertyChanged(a => a.ModelName); } }
+		public string ModelName { get { return modelName; } set { modelName = value; OnPropertyChanged(); } }
 		ObservableCollection<ModelActionVM> actions;
-		public ObservableCollection<ModelActionVM> Actions { get { return actions; } set { actions = value; OnPropertyChanged(a => a.Actions); } }
+		public ObservableCollection<ModelActionVM> Actions { get { return actions; } set { actions = value; OnPropertyChanged(); } }
 
 		readonly ModelDataVM modelDataVM;
 		public readonly Model model;

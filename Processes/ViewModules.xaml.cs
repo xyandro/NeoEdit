@@ -15,15 +15,15 @@ namespace NeoEdit.Processes
 	class ModuleItem : DependencyObject
 	{
 		[DepProp]
-		public string Name { get { return UIHelper<ModuleItem>.GetPropValue(() => this.Name); } set { UIHelper<ModuleItem>.SetPropValue(() => this.Name, value); } }
+		public string Name { get { return UIHelper<ModuleItem>.GetPropValue<string>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string FileName { get { return UIHelper<ModuleItem>.GetPropValue(() => this.FileName); } set { UIHelper<ModuleItem>.SetPropValue(() => this.FileName, value); } }
+		public string FileName { get { return UIHelper<ModuleItem>.GetPropValue<string>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public long StartAddress { get { return UIHelper<ModuleItem>.GetPropValue(() => this.StartAddress); } set { UIHelper<ModuleItem>.SetPropValue(() => this.StartAddress, value); } }
+		public long StartAddress { get { return UIHelper<ModuleItem>.GetPropValue<long>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public long EndAddress { get { return UIHelper<ModuleItem>.GetPropValue(() => this.EndAddress); } set { UIHelper<ModuleItem>.SetPropValue(() => this.EndAddress, value); } }
+		public long EndAddress { get { return UIHelper<ModuleItem>.GetPropValue<long>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public long Size { get { return UIHelper<ModuleItem>.GetPropValue(() => this.Size); } set { UIHelper<ModuleItem>.SetPropValue(() => this.Size, value); } }
+		public long Size { get { return UIHelper<ModuleItem>.GetPropValue<long>(this); } set { UIHelper<ModuleItem>.SetPropValue(this, value); } }
 
 		static ModuleItem() { UIHelper<ModuleItem>.Register(); }
 	}
@@ -31,13 +31,13 @@ namespace NeoEdit.Processes
 	partial class ViewModules
 	{
 		[DepProp]
-		public string ProcessName { get { return UIHelper<ViewModules>.GetPropValue(() => this.ProcessName); } set { UIHelper<ViewModules>.SetPropValue(() => this.ProcessName, value); } }
+		public string ProcessName { get { return UIHelper<ViewModules>.GetPropValue<string>(this); } set { UIHelper<ViewModules>.SetPropValue(this, value); } }
 		[DepProp]
-		public int PID { get { return UIHelper<ViewModules>.GetPropValue(() => this.PID); } set { UIHelper<ViewModules>.SetPropValue(() => this.PID, value); } }
+		public int PID { get { return UIHelper<ViewModules>.GetPropValue<int>(this); } set { UIHelper<ViewModules>.SetPropValue(this, value); } }
 		[DepProp]
-		ObservableCollection<ModuleItem> Modules { get { return UIHelper<ViewModules>.GetPropValue(() => this.Modules); } set { UIHelper<ViewModules>.SetPropValue(() => this.Modules, value); } }
+		ObservableCollection<ModuleItem> Modules { get { return UIHelper<ViewModules>.GetPropValue<ObservableCollection<ModuleItem>>(this); } set { UIHelper<ViewModules>.SetPropValue(this, value); } }
 		[DepProp]
-		public FontFamily ListFont { get { return UIHelper<ViewModules>.GetPropValue(() => this.ListFont); } set { UIHelper<ViewModules>.SetPropValue(() => this.ListFont, value); } }
+		public FontFamily ListFont { get { return UIHelper<ViewModules>.GetPropValue<FontFamily>(this); } set { UIHelper<ViewModules>.SetPropValue(this, value); } }
 
 		static ViewModules() { UIHelper<ViewModules>.Register(); }
 

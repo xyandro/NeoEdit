@@ -172,7 +172,7 @@ namespace NeoEdit.GUI
 		}
 
 		[DepProp]
-		ObservableCollection<ClipboardData> Records { get { return UIHelper<ClipboardWindow>.GetPropValue(() => this.Records); } set { UIHelper<ClipboardWindow>.SetPropValue(() => this.Records, value); } }
+		ObservableCollection<ClipboardData> Records { get { return UIHelper<ClipboardWindow>.GetPropValue<ObservableCollection<ClipboardData>>(this); } set { UIHelper<ClipboardWindow>.SetPropValue(this, value); } }
 
 		ClipboardWindow()
 		{

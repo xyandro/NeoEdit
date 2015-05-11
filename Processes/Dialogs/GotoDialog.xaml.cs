@@ -6,7 +6,7 @@ namespace NeoEdit.Processes.Dialogs
 	internal partial class GotoDialog
 	{
 		[DepProp]
-		public long Value { get { return UIHelper<GotoDialog>.GetPropValue(() => this.Value); } set { UIHelper<GotoDialog>.SetPropValue(() => this.Value, value); } }
+		public long Value { get { return UIHelper<GotoDialog>.GetPropValue<long>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
 
 		static GotoDialog()
 		{

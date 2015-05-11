@@ -15,7 +15,7 @@ namespace NeoEdit.SystemInfo
 		public static RoutedCommand Command_View_InstalledPrograms = new RoutedCommand();
 
 		[DepProp]
-		string Text { get { return UIHelper<SystemInfoWindow>.GetPropValue(() => this.Text); } set { UIHelper<SystemInfoWindow>.SetPropValue(() => this.Text, value); } }
+		string Text { get { return UIHelper<SystemInfoWindow>.GetPropValue<string>(this); } set { UIHelper<SystemInfoWindow>.SetPropValue(this, value); } }
 
 		static SystemInfoWindow() { UIHelper<SystemInfoWindow>.Register(); }
 

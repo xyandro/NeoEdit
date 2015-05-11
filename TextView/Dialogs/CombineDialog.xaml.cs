@@ -20,11 +20,11 @@ namespace NeoEdit.TextView.Dialogs
 		}
 
 		[DepProp]
-		public ObservableCollection<string> Files { get { return UIHelper<CombineDialog>.GetPropValue(() => this.Files); } set { UIHelper<CombineDialog>.SetPropValue(() => this.Files, value); } }
+		public ObservableCollection<string> Files { get { return UIHelper<CombineDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<CombineDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string OutputFile { get { return UIHelper<CombineDialog>.GetPropValue(() => this.OutputFile); } set { UIHelper<CombineDialog>.SetPropValue(() => this.OutputFile, value); } }
+		public string OutputFile { get { return UIHelper<CombineDialog>.GetPropValue<string>(this); } set { UIHelper<CombineDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool OpenFile { get { return UIHelper<CombineDialog>.GetPropValue(() => this.OpenFile); } set { UIHelper<CombineDialog>.SetPropValue(() => this.OpenFile, value); } }
+		public bool OpenFile { get { return UIHelper<CombineDialog>.GetPropValue<bool>(this); } set { UIHelper<CombineDialog>.SetPropValue(this, value); } }
 
 		static CombineDialog() { UIHelper<CombineDialog>.Register(); }
 

@@ -153,7 +153,7 @@ namespace NeoEdit.Common.Transform
 			if (!fieldNames.ContainsKey(field.Name))
 			{
 				var name = field.Name;
-				if ((field.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true) != null) && (name.Contains("BackingField")))
+				if ((field.GetCustomAttribute(typeof(CompilerGeneratedAttribute)) != null) && (name.Contains("BackingField")))
 				{
 					var start = name.IndexOf('<');
 					var end = name.IndexOf('>');

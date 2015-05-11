@@ -10,13 +10,13 @@ namespace NeoEdit.GUI.Common
 	partial class NumericUpDown
 	{
 		[DepProp]
-		public bool IsHex { get { return UIHelper<NumericUpDown>.GetPropValue(() => this.IsHex); } set { UIHelper<NumericUpDown>.SetPropValue(() => this.IsHex, value); } }
+		public bool IsHex { get { return UIHelper<NumericUpDown>.GetPropValue<bool>(this); } set { UIHelper<NumericUpDown>.SetPropValue(this, value); } }
 		[DepProp]
-		public long Minimum { get { return UIHelper<NumericUpDown>.GetPropValue(() => this.Minimum); } set { UIHelper<NumericUpDown>.SetPropValue(() => this.Minimum, value); } }
+		public long Minimum { get { return UIHelper<NumericUpDown>.GetPropValue<long>(this); } set { UIHelper<NumericUpDown>.SetPropValue(this, value); } }
 		[DepProp(BindsTwoWayByDefault = true)]
-		public long Value { get { return UIHelper<NumericUpDown>.GetPropValue(() => this.Value); } set { UIHelper<NumericUpDown>.SetPropValue(() => this.Value, value); } }
+		public long Value { get { return UIHelper<NumericUpDown>.GetPropValue<long>(this); } set { UIHelper<NumericUpDown>.SetPropValue(this, value); } }
 		[DepProp]
-		public long Maximum { get { return UIHelper<NumericUpDown>.GetPropValue(() => this.Maximum); } set { UIHelper<NumericUpDown>.SetPropValue(() => this.Maximum, value); } }
+		public long Maximum { get { return UIHelper<NumericUpDown>.GetPropValue<long>(this); } set { UIHelper<NumericUpDown>.SetPropValue(this, value); } }
 
 		public TextAlignment TextAlignment { set { this.value.TextAlignment = value; } }
 

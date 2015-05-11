@@ -14,25 +14,25 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public bool? ReadOnlyAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.ReadOnlyAttr); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.ReadOnlyAttr, value); } }
+		public bool? ReadOnlyAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool?>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ReadOnlyThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.ReadOnlyThreeState); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.ReadOnlyThreeState, value); } }
+		public bool ReadOnlyThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool? ArchiveAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.ArchiveAttr); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.ArchiveAttr, value); } }
+		public bool? ArchiveAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool?>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ArchiveThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.ArchiveThreeState); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.ArchiveThreeState, value); } }
+		public bool ArchiveThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool? SystemAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.SystemAttr); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.SystemAttr, value); } }
+		public bool? SystemAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool?>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool SystemThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.SystemThreeState); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.SystemThreeState, value); } }
+		public bool SystemThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool? HiddenAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.HiddenAttr); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.HiddenAttr, value); } }
+		public bool? HiddenAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool?>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool HiddenThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.HiddenThreeState); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.HiddenThreeState, value); } }
+		public bool HiddenThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool? NotContentIndexedAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.NotContentIndexedAttr); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.NotContentIndexedAttr, value); } }
+		public bool? NotContentIndexedAttr { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool?>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool NotContentIndexedThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue(() => this.NotContentIndexedThreeState); } set { UIHelper<SetAttributesDialog>.SetPropValue(() => this.NotContentIndexedThreeState, value); } }
+		public bool NotContentIndexedThreeState { get { return UIHelper<SetAttributesDialog>.GetPropValue<bool>(this); } set { UIHelper<SetAttributesDialog>.SetPropValue(this, value); } }
 
 		static SetAttributesDialog() { UIHelper<SetAttributesDialog>.Register(); }
 

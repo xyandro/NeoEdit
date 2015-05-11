@@ -14,7 +14,7 @@ namespace NeoEdit.GUI.Dialogs
 	internal class CodePageCheckBox : CheckBox
 	{
 		[DepProp]
-		public Coder.CodePage CodePage { get { return UIHelper<CodePageCheckBox>.GetPropValue(() => this.CodePage); } set { UIHelper<CodePageCheckBox>.SetPropValue(() => this.CodePage, value); } }
+		public Coder.CodePage CodePage { get { return UIHelper<CodePageCheckBox>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<CodePageCheckBox>.SetPropValue(this, value); } }
 
 		static CodePageCheckBox()
 		{
@@ -40,23 +40,23 @@ namespace NeoEdit.GUI.Dialogs
 		}
 
 		[DepProp]
-		public string FindText { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.FindText); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.FindText, value); } }
+		public string FindText { get { return UIHelper<BinaryFindDialog>.GetPropValue<string>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowLE { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.ShowLE); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.ShowLE, value); } }
+		public bool ShowLE { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowBE { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.ShowBE); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.ShowBE, value); } }
+		public bool ShowBE { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowInt { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.ShowInt); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.ShowInt, value); } }
+		public bool ShowInt { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowFloat { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.ShowFloat); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.ShowFloat, value); } }
+		public bool ShowFloat { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowStr { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.ShowStr); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.ShowStr, value); } }
+		public bool ShowStr { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MatchCase { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.MatchCase); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.MatchCase, value); } }
+		public bool MatchCase { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		ObservableCollection<CodePageCheckBox> EncodingCheckBoxes { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.EncodingCheckBoxes); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.EncodingCheckBoxes, value); } }
+		ObservableCollection<CodePageCheckBox> EncodingCheckBoxes { get { return UIHelper<BinaryFindDialog>.GetPropValue<ObservableCollection<CodePageCheckBox>>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<string> History { get { return UIHelper<BinaryFindDialog>.GetPropValue(() => this.History); } set { UIHelper<BinaryFindDialog>.SetPropValue(() => this.History, value); } }
+		public ObservableCollection<string> History { get { return UIHelper<BinaryFindDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
 
 		static bool savedShowLE = true;
 		static bool savedShowBE = false;

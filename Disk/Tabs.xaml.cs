@@ -11,11 +11,11 @@ namespace NeoEdit.Disk
 	public partial class DiskTabs
 	{
 		[DepProp]
-		public ObservableCollection<DiskWindow> DiskWindows { get { return UIHelper<DiskTabs>.GetPropValue(() => this.DiskWindows); } set { UIHelper<DiskTabs>.SetPropValue(() => this.DiskWindows, value); } }
+		public ObservableCollection<DiskWindow> DiskWindows { get { return UIHelper<DiskTabs>.GetPropValue<ObservableCollection<DiskWindow>>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public DiskWindow Active { get { return UIHelper<DiskTabs>.GetPropValue(() => this.Active); } set { UIHelper<DiskTabs>.SetPropValue(() => this.Active, value); } }
+		public DiskWindow Active { get { return UIHelper<DiskTabs>.GetPropValue<DiskWindow>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<DiskTabs>.GetPropValue(() => this.View); } set { UIHelper<DiskTabs>.SetPropValue(() => this.View, value); } }
+		public Tabs.ViewType View { get { return UIHelper<DiskTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 
 		static DiskTabs() { UIHelper<DiskTabs>.Register(); }
 

@@ -24,13 +24,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public SizeType Type { get { return UIHelper<SetSizeDialog>.GetPropValue(() => this.Type); } set { UIHelper<SetSizeDialog>.SetPropValue(() => this.Type, value); } }
+		public SizeType Type { get { return UIHelper<SetSizeDialog>.GetPropValue<SizeType>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long Value { get { return UIHelper<SetSizeDialog>.GetPropValue(() => this.Value); } set { UIHelper<SetSizeDialog>.SetPropValue(() => this.Value, value); } }
+		public long Value { get { return UIHelper<SetSizeDialog>.GetPropValue<long>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long ByteMult { get { return UIHelper<SetSizeDialog>.GetPropValue(() => this.ByteMult); } set { UIHelper<SetSizeDialog>.SetPropValue(() => this.ByteMult, value); } }
+		public long ByteMult { get { return UIHelper<SetSizeDialog>.GetPropValue<long>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public Dictionary<string, long> ByteMultDict { get { return UIHelper<SetSizeDialog>.GetPropValue(() => this.ByteMultDict); } set { UIHelper<SetSizeDialog>.SetPropValue(() => this.ByteMultDict, value); } }
+		public Dictionary<string, long> ByteMultDict { get { return UIHelper<SetSizeDialog>.GetPropValue<Dictionary<string, long>>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 
 		static SetSizeDialog() { UIHelper<SetSizeDialog>.Register(); }
 

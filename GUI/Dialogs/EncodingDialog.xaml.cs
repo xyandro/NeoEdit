@@ -16,11 +16,11 @@ namespace NeoEdit.GUI.Dialogs
 		}
 
 		[DepProp]
-		Coder.CodePage CodePage { get { return UIHelper<EncodingDialog>.GetPropValue(() => this.CodePage); } set { UIHelper<EncodingDialog>.SetPropValue(() => this.CodePage, value); } }
+		Coder.CodePage CodePage { get { return UIHelper<EncodingDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		string DetectedStr { get { return UIHelper<EncodingDialog>.GetPropValue(() => this.DetectedStr); } set { UIHelper<EncodingDialog>.SetPropValue(() => this.DetectedStr, value); } }
+		string DetectedStr { get { return UIHelper<EncodingDialog>.GetPropValue<string>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		string LineEndings { get { return UIHelper<EncodingDialog>.GetPropValue(() => this.LineEndings); } set { UIHelper<EncodingDialog>.SetPropValue(() => this.LineEndings, value); } }
+		string LineEndings { get { return UIHelper<EncodingDialog>.GetPropValue<string>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 
 		readonly Coder.CodePage Detected;
 

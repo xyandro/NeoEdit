@@ -15,19 +15,19 @@ namespace NeoEdit.TextView
 	partial class TextViewer : IDisposable
 	{
 		[DepProp]
-		public string FileName { get { return UIHelper<TextViewer>.GetPropValue(() => this.FileName); } set { UIHelper<TextViewer>.SetPropValue(() => this.FileName, value); } }
+		public string FileName { get { return UIHelper<TextViewer>.GetPropValue<string>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
-		public int xScrollValue { get { return UIHelper<TextViewer>.GetPropValue(() => this.xScrollValue); } set { UIHelper<TextViewer>.SetPropValue(() => this.xScrollValue, value); } }
+		public int xScrollValue { get { return UIHelper<TextViewer>.GetPropValue<int>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
-		public int yScrollValue { get { return UIHelper<TextViewer>.GetPropValue(() => this.yScrollValue); } set { UIHelper<TextViewer>.SetPropValue(() => this.yScrollValue, value); } }
+		public int yScrollValue { get { return UIHelper<TextViewer>.GetPropValue<int>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
-		public int selCursorLine { get { return UIHelper<TextViewer>.GetPropValue(() => this.selCursorLine); } set { UIHelper<TextViewer>.SetPropValue(() => this.selCursorLine, value); } }
+		public int selCursorLine { get { return UIHelper<TextViewer>.GetPropValue<int>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
-		public int selCursorColumn { get { return UIHelper<TextViewer>.GetPropValue(() => this.selCursorColumn); } set { UIHelper<TextViewer>.SetPropValue(() => this.selCursorColumn, value); } }
+		public int selCursorColumn { get { return UIHelper<TextViewer>.GetPropValue<int>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
-		public int selHighlightLine { get { return UIHelper<TextViewer>.GetPropValue(() => this.selHighlightLine); } set { UIHelper<TextViewer>.SetPropValue(() => this.selHighlightLine, value); } }
+		public int selHighlightLine { get { return UIHelper<TextViewer>.GetPropValue<int>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
-		public int selHighlightColumn { get { return UIHelper<TextViewer>.GetPropValue(() => this.selHighlightColumn); } set { UIHelper<TextViewer>.SetPropValue(() => this.selHighlightColumn, value); } }
+		public int selHighlightColumn { get { return UIHelper<TextViewer>.GetPropValue<int>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 
 		int xScrollViewportFloor { get { return (int)Math.Floor(xScroll.ViewportSize); } }
 		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScroll.ViewportSize); } }

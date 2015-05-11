@@ -6,7 +6,7 @@ namespace NeoEdit.HexEdit.Dialogs
 	partial class FillDialog
 	{
 		[DepProp]
-		public byte Fill { get { return UIHelper<FillDialog>.GetPropValue(() => this.Fill); } set { UIHelper<FillDialog>.SetPropValue(() => this.Fill, value); } }
+		public byte Fill { get { return UIHelper<FillDialog>.GetPropValue<byte>(this); } set { UIHelper<FillDialog>.SetPropValue(this, value); } }
 
 		static FillDialog() { UIHelper<FillDialog>.Register(); }
 

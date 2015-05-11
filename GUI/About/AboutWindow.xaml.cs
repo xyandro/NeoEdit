@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Windows;
 using NeoEdit.GUI.Common;
 
@@ -8,11 +7,11 @@ namespace NeoEdit.GUI.About
 	public partial class AboutWindow
 	{
 		[DepProp]
-		string Product { get { return UIHelper<AboutWindow>.GetPropValue(() => this.Product); } set { UIHelper<AboutWindow>.SetPropValue(() => this.Product, value); } }
+		string Product { get { return UIHelper<AboutWindow>.GetPropValue<string>(this); } set { UIHelper<AboutWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		string Version { get { return UIHelper<AboutWindow>.GetPropValue(() => this.Version); } set { UIHelper<AboutWindow>.SetPropValue(() => this.Version, value); } }
+		string Version { get { return UIHelper<AboutWindow>.GetPropValue<string>(this); } set { UIHelper<AboutWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		string Copyright { get { return UIHelper<AboutWindow>.GetPropValue(() => this.Copyright); } set { UIHelper<AboutWindow>.SetPropValue(() => this.Copyright, value); } }
+		string Copyright { get { return UIHelper<AboutWindow>.GetPropValue<string>(this); } set { UIHelper<AboutWindow>.SetPropValue(this, value); } }
 
 		static AboutWindow() { UIHelper<AboutWindow>.Register(); }
 
@@ -20,9 +19,9 @@ namespace NeoEdit.GUI.About
 		{
 			InitializeComponent();
 
-			Product = ((AssemblyProductAttribute)Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), true).First()).Product;
-			Version = ((AssemblyFileVersionAttribute)Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), true).First()).Version;
-			Copyright = ((AssemblyCopyrightAttribute)Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), true).First()).Copyright;
+			Product = ((AssemblyProductAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
+			Version = ((AssemblyFileVersionAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
+			Copyright = ((AssemblyCopyrightAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyCopyrightAttribute))).Copyright;
 		}
 
 		public static void Run()

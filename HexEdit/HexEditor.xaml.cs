@@ -23,29 +23,29 @@ namespace NeoEdit.HexEdit
 	partial class HexEditor
 	{
 		[DepProp]
-		public string FileTitle { get { return UIHelper<HexEditor>.GetPropValue(() => this.FileTitle); } set { UIHelper<HexEditor>.SetPropValue(() => this.FileTitle, value); } }
+		public string FileTitle { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public string FileName { get { return UIHelper<HexEditor>.GetPropValue(() => this.FileName); } set { UIHelper<HexEditor>.SetPropValue(() => this.FileName, value); } }
+		public string FileName { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsModified { get { return UIHelper<HexEditor>.GetPropValue(() => this.IsModified); } set { UIHelper<HexEditor>.SetPropValue(() => this.IsModified, value); } }
+		public bool IsModified { get { return UIHelper<HexEditor>.GetPropValue<bool>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public BinaryData Data { get { return UIHelper<HexEditor>.GetPropValue(() => this.Data); } set { UIHelper<HexEditor>.SetPropValue(() => this.Data, value); } }
+		public BinaryData Data { get { return UIHelper<HexEditor>.GetPropValue<BinaryData>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowValues { get { return UIHelper<HexEditor>.GetPropValue(() => this.ShowValues); } set { UIHelper<HexEditor>.SetPropValue(() => this.ShowValues, value); } }
+		public bool ShowValues { get { return UIHelper<HexEditor>.GetPropValue<bool>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public long ChangeCount { get { return UIHelper<HexEditor>.GetPropValue(() => this.ChangeCount); } set { UIHelper<HexEditor>.SetPropValue(() => this.ChangeCount, value); } }
+		public long ChangeCount { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public long SelStart { get { return UIHelper<HexEditor>.GetPropValue(() => this.SelStart); } set { ++internalChangeCount; UIHelper<HexEditor>.SetPropValue(() => this.SelStart, value); --internalChangeCount; } }
+		public long SelStart { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { ++internalChangeCount; UIHelper<HexEditor>.SetPropValue(this, value); --internalChangeCount; } }
 		[DepProp]
-		public long SelEnd { get { return UIHelper<HexEditor>.GetPropValue(() => this.SelEnd); } set { ++internalChangeCount; UIHelper<HexEditor>.SetPropValue(() => this.SelEnd, value); --internalChangeCount; } }
+		public long SelEnd { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { ++internalChangeCount; UIHelper<HexEditor>.SetPropValue(this, value); --internalChangeCount; } }
 		[DepProp]
-		public bool Insert { get { return UIHelper<HexEditor>.GetPropValue(() => this.Insert); } set { UIHelper<HexEditor>.SetPropValue(() => this.Insert, value); } }
+		public bool Insert { get { return UIHelper<HexEditor>.GetPropValue<bool>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public Coder.CodePage CodePage { get { return UIHelper<HexEditor>.GetPropValue(() => this.CodePage); } set { UIHelper<HexEditor>.SetPropValue(() => this.CodePage, value); } }
+		public Coder.CodePage CodePage { get { return UIHelper<HexEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public string FoundText { get { return UIHelper<HexEditor>.GetPropValue(() => this.FoundText); } set { UIHelper<HexEditor>.SetPropValue(() => this.FoundText, value); } }
+		public string FoundText { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public long yScrollValue { get { return UIHelper<HexEditor>.GetPropValue(() => this.yScrollValue); } set { UIHelper<HexEditor>.SetPropValue(() => this.yScrollValue, value); } }
+		public long yScrollValue { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 
 		long yScrollViewportFloor { get { return (long)Math.Floor(yScroll.ViewportSize); } }
 		long yScrollViewportCeiling { get { return (long)Math.Ceiling(yScroll.ViewportSize); } }

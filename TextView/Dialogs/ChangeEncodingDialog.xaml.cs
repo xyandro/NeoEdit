@@ -19,13 +19,13 @@ namespace NeoEdit.TextView.Dialogs
 		}
 
 		[DepProp]
-		public string InputFile { get { return UIHelper<ChangeEncodingDialog>.GetPropValue(() => this.InputFile); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(() => this.InputFile, value); } }
+		public string InputFile { get { return UIHelper<ChangeEncodingDialog>.GetPropValue<string>(this); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string InputCodePage { get { return UIHelper<ChangeEncodingDialog>.GetPropValue(() => this.InputCodePage); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(() => this.InputCodePage, value); } }
+		public string InputCodePage { get { return UIHelper<ChangeEncodingDialog>.GetPropValue<string>(this); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string OutputFile { get { return UIHelper<ChangeEncodingDialog>.GetPropValue(() => this.OutputFile); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(() => this.OutputFile, value); } }
+		public string OutputFile { get { return UIHelper<ChangeEncodingDialog>.GetPropValue<string>(this); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public Coder.CodePage OutputCodePage { get { return UIHelper<ChangeEncodingDialog>.GetPropValue(() => this.OutputCodePage); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(() => this.OutputCodePage, value); } }
+		public Coder.CodePage OutputCodePage { get { return UIHelper<ChangeEncodingDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<ChangeEncodingDialog>.SetPropValue(this, value); } }
 
 		static ChangeEncodingDialog()
 		{

@@ -13,11 +13,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public int MinCount { get { return UIHelper<CountDialog>.GetPropValue(() => this.MinCount); } set { UIHelper<CountDialog>.SetPropValue(() => this.MinCount, value); } }
+		public int MinCount { get { return UIHelper<CountDialog>.GetPropValue<int>(this); } set { UIHelper<CountDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MaxCount { get { return UIHelper<CountDialog>.GetPropValue(() => this.MaxCount); } set { UIHelper<CountDialog>.SetPropValue(() => this.MaxCount, value); } }
+		public int MaxCount { get { return UIHelper<CountDialog>.GetPropValue<int>(this); } set { UIHelper<CountDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool CaseSensitive { get { return UIHelper<CountDialog>.GetPropValue(() => this.CaseSensitive); } set { UIHelper<CountDialog>.SetPropValue(() => this.CaseSensitive, value); } }
+		public bool CaseSensitive { get { return UIHelper<CountDialog>.GetPropValue<bool>(this); } set { UIHelper<CountDialog>.SetPropValue(this, value); } }
 
 		static CountDialog() { UIHelper<CountDialog>.Register(); }
 

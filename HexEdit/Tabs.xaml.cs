@@ -20,11 +20,11 @@ namespace NeoEdit.HexEdit
 	public partial class HexEditTabs
 	{
 		[DepProp]
-		public ObservableCollection<HexEditor> HexEditors { get { return UIHelper<HexEditTabs>.GetPropValue(() => this.HexEditors); } set { UIHelper<HexEditTabs>.SetPropValue(() => this.HexEditors, value); } }
+		public ObservableCollection<HexEditor> HexEditors { get { return UIHelper<HexEditTabs>.GetPropValue<ObservableCollection<HexEditor>>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public HexEditor Active { get { return UIHelper<HexEditTabs>.GetPropValue(() => this.Active); } set { UIHelper<HexEditTabs>.SetPropValue(() => this.Active, value); } }
+		public HexEditor Active { get { return UIHelper<HexEditTabs>.GetPropValue<HexEditor>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<HexEditTabs>.GetPropValue(() => this.View); } set { UIHelper<HexEditTabs>.SetPropValue(() => this.View, value); } }
+		public Tabs.ViewType View { get { return UIHelper<HexEditTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
 
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 

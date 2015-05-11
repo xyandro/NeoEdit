@@ -23,7 +23,7 @@ namespace NeoEdit.HexEdit
 		}
 
 		[DepProp]
-		ObservableCollection<CodePageItem> CodePageItems { get { return UIHelper<EncodingsDialog>.GetPropValue(() => this.CodePageItems); } set { UIHelper<EncodingsDialog>.SetPropValue(() => this.CodePageItems, value); } }
+		ObservableCollection<CodePageItem> CodePageItems { get { return UIHelper<EncodingsDialog>.GetPropValue<ObservableCollection<CodePageItem>>(this); } set { UIHelper<EncodingsDialog>.SetPropValue(this, value); } }
 
 		static EncodingsDialog() { UIHelper<EncodingsDialog>.Register(); }
 

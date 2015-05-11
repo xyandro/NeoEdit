@@ -7,7 +7,7 @@ namespace NeoEdit.TextView
 	partial class TextViewMenu
 	{
 		[DepProp]
-		public new TextViewerTabs Parent { get { return UIHelper<TextViewMenu>.GetPropValue(() => this.Parent); } set { UIHelper<TextViewMenu>.SetPropValue(() => this.Parent, value); } }
+		public new TextViewerTabs Parent { get { return UIHelper<TextViewMenu>.GetPropValue<TextViewerTabs>(this); } set { UIHelper<TextViewMenu>.SetPropValue(this, value); } }
 
 		static TextViewMenu() { UIHelper<TextViewMenu>.Register(); }
 

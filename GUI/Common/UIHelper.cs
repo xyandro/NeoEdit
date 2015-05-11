@@ -31,7 +31,7 @@ namespace NeoEdit.GUI.Common
 			dependencyProperty = new Dictionary<string, DependencyProperty>();
 			foreach (var prop in typeof(ControlType).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
 			{
-				var attr = prop.GetCustomAttributes(typeof(DepPropAttribute), true).FirstOrDefault() as DepPropAttribute;
+				var attr = prop.GetCustomAttribute<DepPropAttribute>();
 				if (attr == null)
 					continue;
 				var def = attr.Default;
@@ -127,18 +127,14 @@ namespace NeoEdit.GUI.Common
 			});
 		}
 
-		public static T GetPropValue<T>(Expression<Func<T>> expression)
+		public static T GetPropValue<T>(ControlType control, [CallerMemberName] string caller = "")
 		{
-			var control = ((expression.Body as MemberExpression).Expression as ConstantExpression).Value as ControlType;
-			var property = dependencyProperty[((expression.Body as MemberExpression).Member as PropertyInfo).Name];
-			return (T)control.GetValue(property);
+			return (T)control.GetValue(dependencyProperty[caller]);
 		}
 
-		public static void SetPropValue<T>(Expression<Func<T>> expression, T value)
+		public static void SetPropValue<T>(ControlType control, T value, [CallerMemberName] string caller = "")
 		{
-			var control = ((expression.Body as MemberExpression).Expression as ConstantExpression).Value as ControlType;
-			var property = dependencyProperty[((expression.Body as MemberExpression).Member as PropertyInfo).Name];
-			control.SetValue(property, value);
+			control.SetValue(dependencyProperty[caller], value);
 		}
 
 		public static ControlType GetNewest()

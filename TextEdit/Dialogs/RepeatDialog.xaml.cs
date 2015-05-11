@@ -13,11 +13,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public int RepeatCount { get { return UIHelper<RepeatDialog>.GetPropValue(() => this.RepeatCount); } set { UIHelper<RepeatDialog>.SetPropValue(() => this.RepeatCount, value); } }
+		public int RepeatCount { get { return UIHelper<RepeatDialog>.GetPropValue<int>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ClipboardValue { get { return UIHelper<RepeatDialog>.GetPropValue(() => this.ClipboardValue); } set { UIHelper<RepeatDialog>.SetPropValue(() => this.ClipboardValue, value); } }
+		public bool ClipboardValue { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool SelectRepetitions { get { return UIHelper<RepeatDialog>.GetPropValue(() => this.SelectRepetitions); } set { UIHelper<RepeatDialog>.SetPropValue(() => this.SelectRepetitions, value); } }
+		public bool SelectRepetitions { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 
 		static RepeatDialog() { UIHelper<RepeatDialog>.Register(); }
 

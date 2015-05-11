@@ -240,23 +240,4 @@ namespace NeoEdit.Common
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern int memcmp(byte[] b1, byte[] b2, long count);
 	}
-
-	public class ComparerCreator<T> : Comparer<T>
-	{
-		readonly Comparison<T> func;
-		ComparerCreator(Comparison<T> _func)
-		{
-			func = _func;
-		}
-
-		public override int Compare(T x, T y)
-		{
-			return func(x, y);
-		}
-
-		public static ComparerCreator<T> Create(Comparison<T> func)
-		{
-			return new ComparerCreator<T>(func);
-		}
-	}
 }

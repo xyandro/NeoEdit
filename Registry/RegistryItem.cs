@@ -12,11 +12,11 @@ namespace NeoEdit.Registry
 	public class RegistryItem : ItemGridTreeItem
 	{
 		[DepProp]
-		public string Name { get { return UIHelper<RegistryItem>.GetPropValue(() => this.Name); } private set { UIHelper<RegistryItem>.SetPropValue(() => this.Name, value); } }
+		public string Name { get { return UIHelper<RegistryItem>.GetPropValue<string>(this); } private set { UIHelper<RegistryItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Type { get { return UIHelper<RegistryItem>.GetPropValue(() => this.Type); } private set { UIHelper<RegistryItem>.SetPropValue(() => this.Type, value); } }
+		public string Type { get { return UIHelper<RegistryItem>.GetPropValue<string>(this); } private set { UIHelper<RegistryItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Data { get { return UIHelper<RegistryItem>.GetPropValue(() => this.Data); } private set { UIHelper<RegistryItem>.SetPropValue(() => this.Data, value); } }
+		public string Data { get { return UIHelper<RegistryItem>.GetPropValue<string>(this); } private set { UIHelper<RegistryItem>.SetPropValue(this, value); } }
 
 		readonly bool isSubKey;
 

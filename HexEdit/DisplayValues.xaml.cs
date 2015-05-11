@@ -10,17 +10,17 @@ namespace NeoEdit.HexEdit
 	partial class DisplayValues
 	{
 		[DepProp]
-		public HexEditor HexEditor { get { return UIHelper<DisplayValues>.GetPropValue(() => this.HexEditor); } set { UIHelper<DisplayValues>.SetPropValue(() => this.HexEditor, value); } }
+		public HexEditor HexEditor { get { return UIHelper<DisplayValues>.GetPropValue<HexEditor>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowLE { get { return UIHelper<DisplayValues>.GetPropValue(() => this.ShowLE); } set { UIHelper<DisplayValues>.SetPropValue(() => this.ShowLE, value); } }
+		public bool ShowLE { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowBE { get { return UIHelper<DisplayValues>.GetPropValue(() => this.ShowBE); } set { UIHelper<DisplayValues>.SetPropValue(() => this.ShowBE, value); } }
+		public bool ShowBE { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowInt { get { return UIHelper<DisplayValues>.GetPropValue(() => this.ShowInt); } set { UIHelper<DisplayValues>.SetPropValue(() => this.ShowInt, value); } }
+		public bool ShowInt { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowFloat { get { return UIHelper<DisplayValues>.GetPropValue(() => this.ShowFloat); } set { UIHelper<DisplayValues>.SetPropValue(() => this.ShowFloat, value); } }
+		public bool ShowFloat { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowStr { get { return UIHelper<DisplayValues>.GetPropValue(() => this.ShowStr); } set { UIHelper<DisplayValues>.SetPropValue(() => this.ShowStr, value); } }
+		public bool ShowStr { get { return UIHelper<DisplayValues>.GetPropValue<bool>(this); } set { UIHelper<DisplayValues>.SetPropValue(this, value); } }
 
 		static DisplayValues() { UIHelper<DisplayValues>.Register(); }
 

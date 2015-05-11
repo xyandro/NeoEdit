@@ -19,11 +19,11 @@ namespace NeoEdit.GUI.Common
 		}
 
 		[DepProp]
-		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue(() => this.Items); } set { UIHelper<Tabs<ItemType>>.SetPropValue(() => this.Items, value); } }
+		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ItemType Active { get { return UIHelper<Tabs<ItemType>>.GetPropValue(() => this.Active); } set { UIHelper<Tabs<ItemType>>.SetPropValue(() => this.Active, value); } }
+		public ItemType Active { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue(() => this.View); } set { UIHelper<Tabs<ItemType>>.SetPropValue(() => this.View, value); } }
+		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ViewType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 
 		public Func<ItemType, Label> GetLabel { get; set; }
 

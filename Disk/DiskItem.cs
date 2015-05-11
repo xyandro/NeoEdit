@@ -36,37 +36,37 @@ namespace NeoEdit.Disk
 		}
 
 		[DepProp]
-		public BitmapSource Ico { get { return UIHelper<DiskItem>.GetPropValue(() => this.Ico); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Ico, value); } }
+		public BitmapSource Ico { get { return UIHelper<DiskItem>.GetPropValue<BitmapSource>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string FullName { get { return UIHelper<DiskItem>.GetPropValue(() => this.FullName); } set { UIHelper<DiskItem>.SetPropValue(() => this.FullName, value ?? ""); SetFullName(); } }
+		public string FullName { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } set { UIHelper<DiskItem>.SetPropValue(this, value ?? ""); SetFullName(); } }
 		[DepProp]
-		public string Path { get { return UIHelper<DiskItem>.GetPropValue(() => this.Path); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Path, value); } }
+		public string Path { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Name { get { return UIHelper<DiskItem>.GetPropValue(() => this.Name); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Name, value); } }
+		public string Name { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string NameWoExtension { get { return UIHelper<DiskItem>.GetPropValue(() => this.NameWoExtension); } private set { UIHelper<DiskItem>.SetPropValue(() => this.NameWoExtension, value); } }
+		public string NameWoExtension { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Extension { get { return UIHelper<DiskItem>.GetPropValue(() => this.Extension); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Extension, value); } }
+		public string Extension { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public long? Size { get { return UIHelper<DiskItem>.GetPropValue(() => this.Size); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Size, value); } }
+		public long? Size { get { return UIHelper<DiskItem>.GetPropValue<long?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public DateTime? WriteTime { get { return UIHelper<DiskItem>.GetPropValue(() => this.WriteTime); } private set { UIHelper<DiskItem>.SetPropValue(() => this.WriteTime, value); } }
+		public DateTime? WriteTime { get { return UIHelper<DiskItem>.GetPropValue<DateTime?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public DateTime? CreateTime { get { return UIHelper<DiskItem>.GetPropValue(() => this.CreateTime); } private set { UIHelper<DiskItem>.SetPropValue(() => this.CreateTime, value); } }
+		public DateTime? CreateTime { get { return UIHelper<DiskItem>.GetPropValue<DateTime?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public DateTime? AccessTime { get { return UIHelper<DiskItem>.GetPropValue(() => this.AccessTime); } private set { UIHelper<DiskItem>.SetPropValue(() => this.AccessTime, value); } }
+		public DateTime? AccessTime { get { return UIHelper<DiskItem>.GetPropValue<DateTime?>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public DiskItemType FileType { get { return UIHelper<DiskItem>.GetPropValue(() => this.FileType); } private set { UIHelper<DiskItem>.SetPropValue(() => this.FileType, value); } }
+		public DiskItemType FileType { get { return UIHelper<DiskItem>.GetPropValue<DiskItemType>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Type { get { return UIHelper<DiskItem>.GetPropValue(() => this.Type); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Type, value); } }
+		public string Type { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string MD5 { get { return UIHelper<DiskItem>.GetPropValue(() => this.MD5); } private set { UIHelper<DiskItem>.SetPropValue(() => this.MD5, value); } }
+		public string MD5 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string SHA1 { get { return UIHelper<DiskItem>.GetPropValue(() => this.SHA1); } private set { UIHelper<DiskItem>.SetPropValue(() => this.SHA1, value); } }
+		public string SHA1 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Identity { get { return UIHelper<DiskItem>.GetPropValue(() => this.Identity); } private set { UIHelper<DiskItem>.SetPropValue(() => this.Identity, value); } }
+		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public VersionControlStatus SvnStatus { get { return UIHelper<DiskItem>.GetPropValue(() => this.SvnStatus); } private set { UIHelper<DiskItem>.SetPropValue(() => this.SvnStatus, value); } }
+		public VersionControlStatus SvnStatus { get { return UIHelper<DiskItem>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
 		public SourceControlStatusEnum SourceControlStatus
 		{

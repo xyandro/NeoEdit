@@ -21,11 +21,11 @@ namespace NeoEdit.TextEdit
 	public partial class TextEditTabs
 	{
 		[DepProp]
-		public ObservableCollection<TextEditor> TextEditors { get { return UIHelper<TextEditTabs>.GetPropValue(() => this.TextEditors); } set { UIHelper<TextEditTabs>.SetPropValue(() => this.TextEditors, value); } }
+		public ObservableCollection<TextEditor> TextEditors { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextEditor Active { get { return UIHelper<TextEditTabs>.GetPropValue(() => this.Active); } set { UIHelper<TextEditTabs>.SetPropValue(() => this.Active, value); } }
+		public TextEditor Active { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditor>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<TextEditTabs>.GetPropValue(() => this.View); } set { UIHelper<TextEditTabs>.SetPropValue(() => this.View, value); } }
+		public Tabs.ViewType View { get { return UIHelper<TextEditTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 

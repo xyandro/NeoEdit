@@ -14,13 +14,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string Format { get { return UIHelper<GetUniqueNamesDialog>.GetPropValue(() => this.Format); } set { UIHelper<GetUniqueNamesDialog>.SetPropValue(() => this.Format, value); } }
+		public string Format { get { return UIHelper<GetUniqueNamesDialog>.GetPropValue<string>(this); } set { UIHelper<GetUniqueNamesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool CheckExisting { get { return UIHelper<GetUniqueNamesDialog>.GetPropValue(() => this.CheckExisting); } set { UIHelper<GetUniqueNamesDialog>.SetPropValue(() => this.CheckExisting, value); } }
+		public bool CheckExisting { get { return UIHelper<GetUniqueNamesDialog>.GetPropValue<bool>(this); } set { UIHelper<GetUniqueNamesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool RenameAll { get { return UIHelper<GetUniqueNamesDialog>.GetPropValue(() => this.RenameAll); } set { UIHelper<GetUniqueNamesDialog>.SetPropValue(() => this.RenameAll, value); } }
+		public bool RenameAll { get { return UIHelper<GetUniqueNamesDialog>.GetPropValue<bool>(this); } set { UIHelper<GetUniqueNamesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool UseGUIDs { get { return UIHelper<GetUniqueNamesDialog>.GetPropValue(() => this.UseGUIDs); } set { UIHelper<GetUniqueNamesDialog>.SetPropValue(() => this.UseGUIDs, value); } }
+		public bool UseGUIDs { get { return UIHelper<GetUniqueNamesDialog>.GetPropValue<bool>(this); } set { UIHelper<GetUniqueNamesDialog>.SetPropValue(this, value); } }
 
 		static GetUniqueNamesDialog() { UIHelper<GetUniqueNamesDialog>.Register(); }
 

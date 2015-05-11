@@ -13,13 +13,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public int SelMult { get { return UIHelper<LimitDialog>.GetPropValue(() => this.SelMult); } set { UIHelper<LimitDialog>.SetPropValue(() => this.SelMult, value); } }
+		public int SelMult { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IgnoreBlank { get { return UIHelper<LimitDialog>.GetPropValue(() => this.IgnoreBlank); } set { UIHelper<LimitDialog>.SetPropValue(() => this.IgnoreBlank, value); } }
+		public bool IgnoreBlank { get { return UIHelper<LimitDialog>.GetPropValue<bool>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int NumSels { get { return UIHelper<LimitDialog>.GetPropValue(() => this.NumSels); } set { UIHelper<LimitDialog>.SetPropValue(() => this.NumSels, value); } }
+		public int NumSels { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MaxSels { get { return UIHelper<LimitDialog>.GetPropValue(() => this.MaxSels); } set { UIHelper<LimitDialog>.SetPropValue(() => this.MaxSels, value); } }
+		public int MaxSels { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 
 		static LimitDialog() { UIHelper<LimitDialog>.Register(); }
 

@@ -20,23 +20,23 @@ namespace NeoEdit.Disk.Dialogs
 		}
 
 		[DepProp]
-		public string Expression { get { return UIHelper<FindDialog>.GetPropValue(() => this.Expression); } private set { UIHelper<FindDialog>.SetPropValue(() => this.Expression, value); } }
+		public string Expression { get { return UIHelper<FindDialog>.GetPropValue<string>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsRegEx { get { return UIHelper<FindDialog>.GetPropValue(() => this.IsRegEx); } private set { UIHelper<FindDialog>.SetPropValue(() => this.IsRegEx, value); } }
+		public bool IsRegEx { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool FullPath { get { return UIHelper<FindDialog>.GetPropValue(() => this.FullPath); } private set { UIHelper<FindDialog>.SetPropValue(() => this.FullPath, value); } }
+		public bool FullPath { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue(() => this.Recursive); } private set { UIHelper<FindDialog>.SetPropValue(() => this.Recursive, value); } }
+		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public DiskItem.SourceControlStatusEnum SourceControlStatus { get { return UIHelper<FindDialog>.GetPropValue(() => this.SourceControlStatus); } private set { UIHelper<FindDialog>.SetPropValue(() => this.SourceControlStatus, value); } }
+		public DiskItem.SourceControlStatusEnum SourceControlStatus { get { return UIHelper<FindDialog>.GetPropValue<DiskItem.SourceControlStatusEnum>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long? MinSize { get { return UIHelper<FindDialog>.GetPropValue(() => this.MinSize); } private set { UIHelper<FindDialog>.SetPropValue(() => this.MinSize, value); } }
+		public long? MinSize { get { return UIHelper<FindDialog>.GetPropValue<long?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long? MaxSize { get { return UIHelper<FindDialog>.GetPropValue(() => this.MaxSize); } private set { UIHelper<FindDialog>.SetPropValue(() => this.MaxSize, value); } }
+		public long? MaxSize { get { return UIHelper<FindDialog>.GetPropValue<long?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public DateTime? StartDate { get { return UIHelper<FindDialog>.GetPropValue(() => this.StartDate); } private set { UIHelper<FindDialog>.SetPropValue(() => this.StartDate, value); } }
+		public DateTime? StartDate { get { return UIHelper<FindDialog>.GetPropValue<DateTime?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public DateTime? EndDate { get { return UIHelper<FindDialog>.GetPropValue(() => this.EndDate); } private set { UIHelper<FindDialog>.SetPropValue(() => this.EndDate, value); } }
+		public DateTime? EndDate { get { return UIHelper<FindDialog>.GetPropValue<DateTime?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 
 		static FindDialog() { UIHelper<FindDialog>.Register(); }
 

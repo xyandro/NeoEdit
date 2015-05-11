@@ -27,29 +27,29 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string Text { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.Text); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.Text, value); } }
+		public string Text { get { return UIHelper<GetRegExDialog>.GetPropValue<string>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Replace { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.Replace); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.Replace, value); } }
+		public string Replace { get { return UIHelper<GetRegExDialog>.GetPropValue<string>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool WholeWords { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.WholeWords); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.WholeWords, value); } }
+		public bool WholeWords { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MatchCase { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.MatchCase); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.MatchCase, value); } }
+		public bool MatchCase { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsRegex { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.IsRegex); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.IsRegex, value); } }
+		public bool IsRegex { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool RegexGroups { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.RegexGroups); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.RegexGroups, value); } }
+		public bool RegexGroups { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool SelectionOnly { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.SelectionOnly); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.SelectionOnly, value); } }
+		public bool SelectionOnly { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool KeepMatching { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.KeepMatching); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.KeepMatching, value); } }
+		public bool KeepMatching { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool RemoveMatching { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.RemoveMatching); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.RemoveMatching, value); } }
+		public bool RemoveMatching { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IncludeEndings { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.IncludeEndings); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.IncludeEndings, value); } }
+		public bool IncludeEndings { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<string> History { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.History); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.History, value); } }
+		public ObservableCollection<string> History { get { return UIHelper<GetRegExDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<string> ReplaceHistory { get { return UIHelper<GetRegExDialog>.GetPropValue(() => this.ReplaceHistory); } set { UIHelper<GetRegExDialog>.SetPropValue(() => this.ReplaceHistory, value); } }
+		public ObservableCollection<string> ReplaceHistory { get { return UIHelper<GetRegExDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
 
 		readonly static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
 		readonly static ObservableCollection<string> StaticReplaceHistory = new ObservableCollection<string>();

@@ -24,25 +24,25 @@ namespace NeoEdit.GUI.ItemGridControl
 		public event ItemGridEventHandler SelectionChanged { add { selectionChanged += value; } remove { selectionChanged -= value; } }
 
 		[DepProp]
-		public ObservableCollection<ItemType> Items { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.Items); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.Items, value); } }
+		public ObservableCollection<ItemType> Items { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<ItemType> SortedItems { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.SortedItems); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.SortedItems, value); } }
+		public ObservableCollection<ItemType> SortedItems { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.Columns); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.Columns, value); } }
+		public ObservableCollection<ItemGridColumn> Columns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemGridColumn>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ItemGridColumn SortColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.SortColumn); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.SortColumn, value); } }
+		public ItemGridColumn SortColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool SortAscending { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.SortAscending); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.SortAscending, value); } }
+		public bool SortAscending { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<bool>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ItemType Focused { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.Focused); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.Focused, value); } }
+		public ItemType Focused { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool FocusColumns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.FocusColumns); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.FocusColumns, value); } }
+		public bool FocusColumns { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<bool>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ItemGridColumn FocusedColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.FocusedColumn); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.FocusedColumn, value); } }
+		public ItemGridColumn FocusedColumn { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ItemGridColumn>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<ItemType> Selected { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.Selected); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.Selected, value); } }
+		public ObservableCollection<ItemType> Selected { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 		[DepProp(Default = 500)]
-		public int TextInputDelay { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue(() => this.TextInputDelay); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(() => this.TextInputDelay, value); } }
+		public int TextInputDelay { get { return UIHelper<ItemGrid<ItemType>>.GetPropValue<int>(this); } set { UIHelper<ItemGrid<ItemType>>.SetPropValue(this, value); } }
 
 		static readonly Brush buttonBrush;
 		static readonly Style buttonStyle;
@@ -260,7 +260,7 @@ namespace NeoEdit.GUI.ItemGridControl
 		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
-		WeakReference lastShiftSel;
+		WeakReference<ItemType> lastShiftSel;
 		void MoveFocus(int offset, bool relative, bool select = false)
 		{
 			if (!SortedItems.Any())
@@ -283,7 +283,9 @@ namespace NeoEdit.GUI.ItemGridControl
 
 			if (shiftDown)
 			{
-				var lastSel = lastShiftSel == null ? null : lastShiftSel.Target as ItemType;
+				ItemType lastSel;
+				if ((lastShiftSel == null) || (!lastShiftSel.TryGetTarget(out lastSel)))
+					lastSel = null;
 				var lastSelIndex = Math.Max(0, SortedItems.IndexOf(lastSel));
 				var start = Math.Min(lastSelIndex, offset);
 				var end = Math.Max(lastSelIndex, offset);
@@ -297,7 +299,7 @@ namespace NeoEdit.GUI.ItemGridControl
 				else if (Focused != null)
 				{
 					Selected.Add(Focused);
-					lastShiftSel = new WeakReference(Focused);
+					lastShiftSel = new WeakReference<ItemType>(Focused);
 				}
 			}
 		}

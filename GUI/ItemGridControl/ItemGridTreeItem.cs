@@ -9,7 +9,7 @@ namespace NeoEdit.GUI.ItemGridControl
 	public abstract class ItemGridTreeItem : DependencyObject
 	{
 		[DepProp]
-		public string FullName { get { return UIHelper<ItemGridTreeItem>.GetPropValue(() => this.FullName); } private set { UIHelper<ItemGridTreeItem>.SetPropValue(() => this.FullName, value); } }
+		public string FullName { get { return UIHelper<ItemGridTreeItem>.GetPropValue<string>(this); } private set { UIHelper<ItemGridTreeItem>.SetPropValue(this, value); } }
 
 		public abstract ItemGridTreeItem GetParent();
 		public virtual bool CanGetChildren() { return false; }
