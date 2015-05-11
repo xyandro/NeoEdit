@@ -175,6 +175,8 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Sort" CommandEnum="Data_Sort"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Data_FetchURL"/>
 	</MenuItem>
 	<MenuItem Header="_Insert">
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>

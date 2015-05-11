@@ -191,5 +191,8 @@
       <Name>GUI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
 </Project>

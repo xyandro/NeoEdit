@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -581,6 +582,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA1: Command_Data_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
+				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
 				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
@@ -1897,6 +1899,20 @@ namespace NeoEdit.TextEdit
 				return;
 
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hash.Get(type, Coder.StringToBytes(str, result.CodePage))).ToList());
+		}
+
+		async Task<string> GetURL(string url)
+		{
+			using (var client = new HttpClient())
+				return await client.GetStringAsync(url);
+		}
+
+		internal async void Command_Data_FetchURL()
+		{
+			var urls = GetSelectionStrings();
+			var tasks = urls.Select(url => GetURL(url)).ToArray();
+			await Task.WhenAll(tasks);
+			ReplaceSelections(tasks.Select(task => task.Result).ToList());
 		}
 
 		internal void Command_Insert_GUID()
