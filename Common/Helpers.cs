@@ -206,7 +206,23 @@ namespace NeoEdit.Common
 		{
 			if (b1.Length != b2.Length)
 				return false;
-			return memcmp(b1, b2, b1.Length) == 0;
+			return Equal(b1, b2, 0, 0, b1.Length);
+		}
+
+		public static unsafe bool Equal(this byte[] b1, byte[] b2, int count)
+		{
+			return Equal(b1, b2, 0, 0, count);
+		}
+
+		public static unsafe bool Equal(this byte[] b1, byte[] b2, int offset1, int offset2, int count)
+		{
+			if (count == 0)
+				return true;
+			if ((offset1 + count > b1.Length) || (offset2 + count > b2.Length))
+				throw new ArgumentOutOfRangeException();
+			fixed (byte* p1 = &b1[0])
+			fixed (byte* p2 = &b2[0])
+				return memcmp(p1 + offset1, p2 + offset2, count) == 0;
 		}
 
 		public static void PartitionedParallelForEach(int count, int partitionSize, Action<int, int> action)
@@ -238,6 +254,6 @@ namespace NeoEdit.Common
 		}
 
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
-		static extern int memcmp(byte[] b1, byte[] b2, long count);
+		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 	}
 }

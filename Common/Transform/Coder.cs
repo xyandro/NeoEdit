@@ -400,10 +400,10 @@ namespace NeoEdit.Common.Transform
 					default:
 						{
 							var encoding = NEEncodingDictionary[codePage];
-							var result = encoding.encoding.GetString(data);
-							if ((stripBOM) && (encoding.preamble != null) && (result.StartsWith("\ufeff")))
-								result = result.Substring(1);
-							return result;
+							var start = 0;
+							if ((stripBOM) && (encoding.preamble != null) && (data.Length >= encoding.preamble.Length) && (data.Equal(encoding.preamble, encoding.preamble.Length)))
+								start = encoding.preamble.Length;
+							return encoding.encoding.GetString(data, start, data.Length - start);
 						}
 				}
 			}
