@@ -71,7 +71,7 @@ namespace NeoEdit.GUI.Common
 			return new Label { Content = "Title" };
 		}
 
-		bool controlDown = false;
+		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
@@ -88,19 +88,13 @@ namespace NeoEdit.GUI.Common
 					default: e.Handled = false; break;
 				}
 			}
-
-			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
-				controlDown = true;
 		}
 
 		protected override void OnPreviewKeyUp(KeyEventArgs e)
 		{
 			base.OnPreviewKeyUp(e);
 			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
-			{
-				controlDown = false;
 				ActiveChanged();
-			}
 		}
 
 		void MovePrev()
