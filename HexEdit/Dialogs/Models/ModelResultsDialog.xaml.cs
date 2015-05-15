@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.ItemGridControl;
 using NeoEdit.HexEdit.Models;
@@ -118,12 +118,12 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			var values = results.Selected.Select(item => item.Value).ToList();
 			if (values.Count == 0)
 				return;
-			ClipboardWindow.SetStrings(values);
+			NEClipboard.SetStrings(values);
 		}
 
 		void PasteValues(object sender, RoutedEventArgs e)
 		{
-			var values = ClipboardWindow.GetStrings();
+			var values = NEClipboard.GetStrings();
 			Replace(results.Selected.ToList(), values);
 		}
 

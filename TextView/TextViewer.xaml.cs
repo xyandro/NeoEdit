@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using NeoEdit.GUI;
+using NeoEdit.Common;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextView.Dialogs;
@@ -87,7 +87,7 @@ namespace NeoEdit.TextView
 
 		internal void Command_File_CopyPath()
 		{
-			ClipboardWindow.SetFiles(new List<string> { FileName }, false);
+			NEClipboard.SetFiles(new List<string> { FileName }, false);
 		}
 
 		internal void Command_File_Split()
@@ -129,7 +129,7 @@ namespace NeoEdit.TextView
 				result += str;
 			}
 			if (result.Length != 0)
-				ClipboardWindow.SetStrings(new List<string> { result });
+				NEClipboard.SetStrings(new List<string> { result });
 		}
 
 		void GetSel(out int startLine, out int startColumn, out int endLine, out int endColumn)

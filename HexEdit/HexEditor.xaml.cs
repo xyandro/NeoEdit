@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
@@ -626,7 +627,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_File_CopyPath()
 		{
-			ClipboardWindow.SetFiles(new List<string> { FileName }, false);
+			NEClipboard.SetFiles(new List<string> { FileName }, false);
 		}
 
 		internal void Command_File_CopyName()
@@ -702,7 +703,7 @@ namespace NeoEdit.HexEdit
 					sb[ctr] = (char)bytes[ctr];
 				str = new string(sb);
 			}
-			ClipboardWindow.SetBinary(bytes, str);
+			NEClipboard.SetBinary(bytes, str);
 			if ((isCut) && (Insert))
 				Replace(null);
 		}
@@ -710,10 +711,10 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Paste()
 		{
-			var bytes = ClipboardWindow.GetBytes();
+			var bytes = NEClipboard.GetBytes();
 			if (bytes == null)
 			{
-				var str = ClipboardWindow.GetString();
+				var str = NEClipboard.GetString();
 				if (str != null)
 					bytes = Coder.TryStringToBytes(str, CodePage);
 			}

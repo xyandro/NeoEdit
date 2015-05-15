@@ -8,8 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Microsoft.Win32;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 
@@ -108,7 +108,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_File_OpenCopiedCutFiles()
 		{
-			var files = ClipboardWindow.GetStrings();
+			var files = NEClipboard.GetStrings();
 			if ((files == null) || (files.Count < 0))
 				return;
 
@@ -223,7 +223,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_PlayOnCopiedFiles()
 		{
-			var files = new Queue<string>(ClipboardWindow.GetStrings());
+			var files = new Queue<string>(NEClipboard.GetStrings());
 			var macroFile = ChooseMacro();
 			if (macroFile == null)
 				return;

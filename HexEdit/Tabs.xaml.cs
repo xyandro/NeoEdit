@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
@@ -117,7 +118,7 @@ namespace NeoEdit.HexEdit
 
 		void Command_File_OpenCopiedCutFiles()
 		{
-			var files = ClipboardWindow.GetStrings();
+			var files = NEClipboard.GetStrings();
 			if ((files == null) || (files.Count < 0))
 				return;
 

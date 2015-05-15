@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
-using NeoEdit.GUI;
+using NeoEdit.Common;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextView.Dialogs;
@@ -65,7 +65,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_OpenCopiedCutFiles()
 		{
-			var files = ClipboardWindow.GetStrings();
+			var files = NEClipboard.GetStrings();
 			if ((files == null) || (files.Count < 0))
 				return;
 

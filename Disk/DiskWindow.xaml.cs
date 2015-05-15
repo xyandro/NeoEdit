@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using NeoEdit.Common;
 using NeoEdit.Disk.Dialogs;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
@@ -83,7 +84,7 @@ namespace NeoEdit.Disk
 		{
 			if ((e.Key == Key.V) && (controlDown))
 			{
-				var files = ClipboardWindow.GetStrings();
+				var files = NEClipboard.GetStrings();
 				if (files != null)
 				{
 					location.Text = files.First();
@@ -257,7 +258,7 @@ namespace NeoEdit.Disk
 		internal void Command_Edit_CutCopy(bool isCut)
 		{
 			if (Selected.Count != 0)
-				ClipboardWindow.SetFiles(Selected.Cast<DiskItem>().Select(item => item.FullName).ToList(), isCut);
+				NEClipboard.SetFiles(Selected.Cast<DiskItem>().Select(item => item.FullName).ToList(), isCut);
 		}
 
 		internal void Command_Edit_Paste()
@@ -268,7 +269,7 @@ namespace NeoEdit.Disk
 
 			//List<string> fileList;
 			//bool isCut;
-			//if (!ClipboardWindow.GetFiles(out fileList, out isCut))
+			//if (!NEClipboard.GetFiles(out fileList, out isCut))
 			//	return;
 
 			//var items = fileList.Select(file => DiskItem.GetRoot().GetChild(file)).Cast<DiskItem>().ToList();
@@ -493,7 +494,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_Select_AddCopiedCut()
 		{
-			var files = ClipboardWindow.GetStrings();
+			var files = NEClipboard.GetStrings();
 			if ((files == null) || (files.Count == 0))
 				return;
 

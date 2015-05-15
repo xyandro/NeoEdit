@@ -326,7 +326,7 @@ namespace NeoEdit.TextEdit
 		{
 			var sels = count == -1 ? Selections.ToList() : Selections.Take(Math.Min(count, Selections.Count)).ToList();
 			var strs = sels.Select(range => GetString(range)).ToList();
-			var c = ClipboardWindow.GetStrings();
+			var c = NEClipboard.GetStrings();
 			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? keysHash[str] : -1);
 
 			var parallelDataActions = new Dictionary<string[], Action<Action<string, List<string>>>>
@@ -801,7 +801,7 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
-			var files = ClipboardWindow.GetStrings();
+			var files = NEClipboard.GetStrings();
 			if ((files == null) || (files.Count < 0))
 				return;
 
@@ -820,7 +820,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_CopyPath()
 		{
-			ClipboardWindow.SetFiles(new List<string> { FileName }, false);
+			NEClipboard.SetFiles(new List<string> { FileName }, false);
 		}
 
 		internal void Command_File_CopyName()
@@ -907,10 +907,10 @@ namespace NeoEdit.TextEdit
 			var strs = GetSelectionStrings();
 
 			if (strs.All(str => str.IndexOfAny(Path.GetInvalidPathChars()) == -1) && strs.All(str => FileOrDirectoryExists(str)))
-				ClipboardWindow.SetFiles(strs, isCut);
+				NEClipboard.SetFiles(strs, isCut);
 			else
 			{
-				ClipboardWindow.SetStrings(strs);
+				NEClipboard.SetStrings(strs);
 				if (isCut)
 					ReplaceSelections("");
 			}
@@ -935,7 +935,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_Paste(bool highlight)
 		{
-			var clipboardStrings = ClipboardWindow.GetStrings();
+			var clipboardStrings = NEClipboard.GetStrings();
 			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
 				return;
 
@@ -1024,7 +1024,7 @@ namespace NeoEdit.TextEdit
 			List<int> offsets;
 			if (result.ClipboardValue)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
+				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				offsets = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
@@ -1120,7 +1120,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_SaveClipboards()
 		{
-			var clipboardStrings = ClipboardWindow.GetStrings();
+			var clipboardStrings = NEClipboard.GetStrings();
 			if (clipboardStrings.Count != Selections.Count)
 				throw new Exception("Clipboard count must match selection count.");
 
@@ -1401,7 +1401,7 @@ namespace NeoEdit.TextEdit
 			List<long> clipboardLens = null;
 			if (result.Type == SetSizeDialog.SizeType.Clipboard)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
+				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => long.Parse(str)).ToList();
@@ -1641,7 +1641,7 @@ namespace NeoEdit.TextEdit
 			List<Coder.CodePage> clipboardCodePages = null;
 			if ((result.InputType == Coder.CodePage.Clipboard) || (result.OutputType == Coder.CodePage.Clipboard))
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
+				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard must match number of selections");
 				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
@@ -1668,7 +1668,7 @@ namespace NeoEdit.TextEdit
 			List<int> clipboardLens = null;
 			if (result.Type == WidthDialog.WidthType.Clipboard)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
+				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
@@ -1774,7 +1774,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Copy_Length()
 		{
-			ClipboardWindow.SetStrings(Selections.Select(range => range.Length.ToString()).ToList());
+			NEClipboard.SetStrings(Selections.Select(range => range.Length.ToString()).ToList());
 		}
 
 		internal enum Command_MinMax_Type { String, Numeric, Length }
@@ -1805,19 +1805,19 @@ namespace NeoEdit.TextEdit
 			var positions = Selections.Select(range => range.Start).ToList();
 			if (gotoType == GotoDialog.GotoType.Position)
 			{
-				ClipboardWindow.SetStrings(positions.Select(pos => pos.ToString()).ToList());
+				NEClipboard.SetStrings(positions.Select(pos => pos.ToString()).ToList());
 				return;
 			}
 
 			var lines = positions.Select(pos => Data.GetOffsetLine(pos)).ToList();
 			if (gotoType == GotoDialog.GotoType.Line)
 			{
-				ClipboardWindow.SetStrings(lines.Select(pos => (pos + 1).ToString()).ToList());
+				NEClipboard.SetStrings(lines.Select(pos => (pos + 1).ToString()).ToList());
 				return;
 			}
 
 			var indexes = positions.Select((pos, line) => Data.GetOffsetIndex(pos, lines[line])).ToList();
-			ClipboardWindow.SetStrings(indexes.Select(pos => (pos + 1).ToString()).ToList());
+			NEClipboard.SetStrings(indexes.Select(pos => (pos + 1).ToString()).ToList());
 		}
 
 		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
@@ -1830,7 +1830,7 @@ namespace NeoEdit.TextEdit
 			List<int> repeatCounts;
 			if (result.ClipboardValue)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
+				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				repeatCounts = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
@@ -1950,7 +1950,7 @@ namespace NeoEdit.TextEdit
 			List<int> clipboardLens = null;
 			if (result.Type == RandomDataDialog.RandomDataType.Clipboard)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
+				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
@@ -1969,7 +1969,7 @@ namespace NeoEdit.TextEdit
 			var codePageMinMaxValues = new Dictionary<Coder.CodePage, string> { { result.CodePage, "" } };
 			if (result.CodePage == Coder.CodePage.Clipboard)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
+				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard must match number of selections");
 				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
@@ -2065,7 +2065,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Keys_Copy(int index)
 		{
-			ClipboardWindow.SetStrings(keysAndValues[index]);
+			NEClipboard.SetStrings(keysAndValues[index]);
 		}
 
 		internal void Command_Keys_HitsMisses(int index, bool hits)
@@ -2179,7 +2179,7 @@ namespace NeoEdit.TextEdit
 			List<int> clipboardLens = null;
 			if (result.Type == WidthDialog.WidthType.Clipboard)
 			{
-				var clipboardStrings = ClipboardWindow.GetStrings();
+				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard doesn't match number of selections.");
 				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
