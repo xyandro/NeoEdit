@@ -12,7 +12,6 @@ using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
-using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {

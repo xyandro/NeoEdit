@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -1903,8 +1903,8 @@ namespace NeoEdit.TextEdit
 
 		async Task<string> GetURL(string url)
 		{
-			using (var client = new HttpClient())
-				return await client.GetStringAsync(url);
+			using (var client = new WebClient())
+				return await client.DownloadStringTaskAsync(new Uri(url));
 		}
 
 		internal async void Command_Data_FetchURL()
