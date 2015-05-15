@@ -28,4 +28,6 @@
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextViewer" Header="Text _Viewer"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Header="_System Info"/>
 
+	<MenuItem Header="_Minimize to Tray" IsCheckable="True" IsChecked="{Binding Path=(guiCommon:NEWindow.MinimizeToTray), Mode=TwoWay}"/>
+
 </MenuItem>

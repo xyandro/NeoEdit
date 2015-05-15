@@ -1,11 +1,11 @@
-﻿<Window Name="self" x:Class="NeoEdit.TextEdit.TextEditTabs"
+﻿<guiCommon:NEWindow x:Name="self" x:Class="NeoEdit.TextEdit.TextEditTabs"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
 	xmlns:textEdit="clr-namespace:NeoEdit.TextEdit"
 	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
 
-	<Window.Title>
+    <Window.Title>
 		<!--A simple Binding doesn't give any title if [0] blank-->
 		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="StrFormat('{0} - NeoEdit Text Editor', [0])">
 			<Binding Path="Active.FileName" ElementName="self"/>
@@ -30,4 +30,4 @@
 		/>
 	</Grid>
 
-</Window>
+</guiCommon:NEWindow>

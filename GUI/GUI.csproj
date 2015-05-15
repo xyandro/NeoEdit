@@ -97,6 +97,7 @@
     <Compile Include="ItemGridControl\StringFormatConverter.cs" />
     <Compile Include="Launcher.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="Common\NEWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

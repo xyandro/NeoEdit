@@ -137,9 +137,14 @@ namespace NeoEdit.GUI.Common
 			control.SetValue(dependencyProperty[caller], value);
 		}
 
+		public static List<ControlType> GetAllWindows()
+		{
+			return Application.Current.Windows.OfType<ControlType>().Cast<ControlType>().ToList();
+		}
+
 		public static ControlType GetNewest()
 		{
-			return Application.Current.Windows.OfType<ControlType>().Cast<ControlType>().LastOrDefault();
+			return GetAllWindows().LastOrDefault();
 		}
 	}
 

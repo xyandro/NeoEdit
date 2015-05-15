@@ -11,6 +11,7 @@ using NeoEdit.Console;
 using NeoEdit.DBViewer;
 using NeoEdit.Disk;
 using NeoEdit.GUI.About;
+using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Handles;
 using NeoEdit.HexEdit;
@@ -68,6 +69,10 @@ namespace NeoEdit
 		{
 			try
 			{
+				var restore = UIHelper<NEWindow>.GetAllWindows().SingleOrDefault();
+				if ((restore != null) && (restore.Restore()))
+					return;
+
 				args = args.Where(arg => arg != "multi").ToArray();
 				if (args.Length == 0)
 				{
