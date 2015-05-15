@@ -8,7 +8,7 @@ namespace NeoEdit.TextView
 		None,
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open,
 		File_OpenCopiedCutFiles,
-		[KeyGesture(Key.F4, ModifierKeys.Control)] [KeyGesture(Key.W, ModifierKeys.Control)] File_Close,
+		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		File_CopyPath,
 		File_Split,
 		File_Combine,

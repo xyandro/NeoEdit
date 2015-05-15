@@ -12,7 +12,7 @@ namespace NeoEdit.HexEdit
 		File_OpenCopiedCutFiles,
 		[KeyGesture(Key.S, ModifierKeys.Control)] File_Save,
 		File_SaveAs,
-		[KeyGesture(Key.F4, ModifierKeys.Control)] [KeyGesture(Key.W, ModifierKeys.Control)] File_Close,
+		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		File_Revert,
 		File_CopyPath,
 		File_CopyName,

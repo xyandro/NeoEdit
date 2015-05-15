@@ -7,7 +7,7 @@ namespace NeoEdit.Disk
 	{
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control)] File_NewTab,
-		[KeyGesture(Key.F4, ModifierKeys.Control)] [KeyGesture(Key.W, ModifierKeys.Control)] File_Close,
+		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F2)] File_Rename,
 		[KeyGesture(Key.I, ModifierKeys.Control | ModifierKeys.Shift)] File_Identify,
 		[KeyGesture(Key.M, ModifierKeys.Control | ModifierKeys.Shift)] File_MD5,
