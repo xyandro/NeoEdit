@@ -12,7 +12,7 @@ namespace NeoEdit.Processes
 {
 	class ProcessItemGrid : ItemGrid<ProcessItem> { }
 
-	public partial class ProcessesWindow : Window
+	partial class ProcessesWindow
 	{
 		[DepProp]
 		ObservableCollection<ProcessItem> Processes { get { return UIHelper<ProcessesWindow>.GetPropValue<ObservableCollection<ProcessItem>>(this); } set { UIHelper<ProcessesWindow>.SetPropValue(this, value); } }

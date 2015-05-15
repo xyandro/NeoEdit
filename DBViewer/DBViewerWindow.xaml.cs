@@ -8,7 +8,7 @@ namespace NeoEdit.DBViewer
 	/// <summary>
 	/// Interaction logic for DBViewerWindow.xaml
 	/// </summary>
-	public partial class DBViewerWindow : Window
+	partial class DBViewerWindow
 	{
 		public DBViewerWindow()
 		{

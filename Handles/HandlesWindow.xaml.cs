@@ -14,7 +14,7 @@ namespace NeoEdit.Handles
 {
 	class HandlesItemGrid : ItemGrid<HandleItem> { }
 
-	public partial class HandlesWindow : Window
+	partial class HandlesWindow
 	{
 		public static RoutedCommand Command_View_Refresh = new RoutedCommand();
 		public static RoutedCommand Command_View_GotoProcess = new RoutedCommand();

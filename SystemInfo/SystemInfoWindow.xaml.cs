@@ -9,7 +9,7 @@ using NeoEdit.GUI.Common;
 
 namespace NeoEdit.SystemInfo
 {
-	public partial class SystemInfoWindow : Window
+	partial class SystemInfoWindow
 	{
 		public static RoutedCommand Command_File_Save = new RoutedCommand();
 		public static RoutedCommand Command_View_InstalledPrograms = new RoutedCommand();

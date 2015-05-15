@@ -1,4 +1,4 @@
-﻿<Window x:Class="NeoEdit.DBViewer.DBViewerWindow"
+﻿<guiCommon:NEWindow x:Class="NeoEdit.DBViewer.DBViewerWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
@@ -36,4 +36,4 @@
 		</ScrollViewer>
 	</Grid>
 
-</Window>
+</guiCommon:NEWindow>
