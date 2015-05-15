@@ -237,6 +237,9 @@ namespace NeoEdit
 			InitializeComponent();
 
 			NeoEdit.GUI.Launcher.Initialize(
+				getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray,
+				setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); },
+
 				systemInfo: () => new SystemInfoWindow(),
 				textEditor: (filename, bytes, encoding, createNew) => TextEditTabs.Create(filename, bytes, encoding, createNew: createNew),
 				textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew),

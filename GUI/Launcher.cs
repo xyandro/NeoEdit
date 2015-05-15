@@ -8,6 +8,9 @@ namespace NeoEdit.GUI
 		static Launcher launcher;
 		public static Launcher Static { get { return launcher; } }
 
+		Func<bool> getMinimizeToTrayLauncher;
+		Action<bool> setMinimizeToTrayLauncher;
+
 		protected Action systemInfoLauncher;
 		protected Action<string, byte[], Coder.CodePage, bool> textEditorLauncher;
 		protected Action<string, bool> textViewerLauncher;
@@ -19,7 +22,11 @@ namespace NeoEdit.GUI
 		protected Action<int?> handlesLauncher;
 		protected Action<string> registryLauncher;
 		protected Action dbViewerLauncher;
+
 		public static void Initialize(
+			Func<bool> getMinimizeToTray,
+			Action<bool> setMinimizeToTray,
+
 			Action systemInfo,
 			Action<string, byte[], Coder.CodePage, bool> textEditor,
 			Action<string, bool> textViewer,
@@ -35,6 +42,9 @@ namespace NeoEdit.GUI
 		{
 			launcher = new Launcher
 			{
+				getMinimizeToTrayLauncher = getMinimizeToTray,
+				setMinimizeToTrayLauncher = setMinimizeToTray,
+
 				systemInfoLauncher = systemInfo,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
@@ -47,6 +57,12 @@ namespace NeoEdit.GUI
 				registryLauncher = registry,
 				dbViewerLauncher = dbViewer,
 			};
+		}
+
+		public bool MinimizeToTray
+		{
+			get { return getMinimizeToTrayLauncher(); }
+			set { setMinimizeToTrayLauncher(value); }
 		}
 
 		public void LaunchSystemInfo()

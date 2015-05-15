@@ -7,17 +7,17 @@ namespace NeoEdit.GUI.Common
 {
 	public class NEWindow : Window
 	{
-		static bool minimizeToTray = false;
 		public static bool MinimizeToTray
 		{
 			get
 			{
-				return minimizeToTray;
+				return Launcher.Static.MinimizeToTray;
 			}
 			set
 			{
-				minimizeToTray = value;
-				minimizeToTrayChanged(null, new EventArgs());
+				Launcher.Static.MinimizeToTray = value;
+				if (minimizeToTrayChanged != null)
+					minimizeToTrayChanged(null, new EventArgs());
 			}
 		}
 
