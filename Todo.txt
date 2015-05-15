@@ -15,7 +15,6 @@ Highlight clauses (if/else)
 Text edit multiple files
 Comment/uncomment C#/C++/XML/etc. (ANTLR?)
 Format JSON/XML
-HTML/XML: Match closing tag
 Ctrl+M should move to "current" selection
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
@@ -24,13 +23,11 @@ Get directory files/dirs
 Translate HTML to table
 Distinct operations by marked region (sort/series/etc within region)
 Select square (right mouse button)
-Insert copied files
 Get enclosing region
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
-Specify which accelerator to display in menu (currently picking one of available options at random)
 Audit accelerators
 Move between opening/closing tags
 

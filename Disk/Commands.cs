@@ -6,7 +6,7 @@ namespace NeoEdit.Disk
 	enum DiskCommand
 	{
 		None,
-		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift)] File_NewTab,
+		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, false)] File_NewTab,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F2)] File_Rename,
 		[KeyGesture(Key.I, ModifierKeys.Control | ModifierKeys.Shift)] File_Identify,
@@ -27,9 +27,9 @@ namespace NeoEdit.Disk
 		[KeyGesture(Key.I, ModifierKeys.Control)] Select_Invert,
 		Select_Directories,
 		Select_Files,
-		[KeyGesture(Key.OemPlus, ModifierKeys.Alt)] [KeyGesture(Key.OemPlus, ModifierKeys.Control)] Select_AddCopiedCut,
-		[KeyGesture(Key.OemMinus, ModifierKeys.Alt)] [KeyGesture(Key.OemMinus, ModifierKeys.Control)] Select_Remove,
-		[KeyGesture(Key.OemMinus, ModifierKeys.Alt | ModifierKeys.Shift)] [KeyGesture(Key.OemMinus, ModifierKeys.Control | ModifierKeys.Shift)] Select_RemoveWithChildren,
+		[KeyGesture(Key.OemPlus, ModifierKeys.Alt)] [KeyGesture(Key.OemPlus, ModifierKeys.Control, false)] Select_AddCopiedCut,
+		[KeyGesture(Key.OemMinus, ModifierKeys.Alt)] [KeyGesture(Key.OemMinus, ModifierKeys.Control, false)] Select_Remove,
+		[KeyGesture(Key.OemMinus, ModifierKeys.Alt | ModifierKeys.Shift)] [KeyGesture(Key.OemMinus, ModifierKeys.Control | ModifierKeys.Shift, false)] Select_RemoveWithChildren,
 		View_Tiles,
 		[KeyGesture(Key.U, ModifierKeys.Control)] View_DiskUsage,
 	}

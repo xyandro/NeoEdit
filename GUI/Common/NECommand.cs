@@ -14,11 +14,13 @@ namespace NeoEdit.GUI.Common
 	{
 		public Key Key { get; private set; }
 		public ModifierKeys Modifiers { get; private set; }
+		public bool Primary { get; private set; }
 
-		public KeyGestureAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None)
+		public KeyGestureAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None, bool primary = true)
 		{
 			Key = key;
 			Modifiers = modifiers;
+			Primary = primary;
 		}
 	}
 
@@ -35,8 +37,8 @@ namespace NeoEdit.GUI.Common
 				Command = command;
 
 				var memberInfo = typeof(CommandEnumT).GetMember(command.ToString()).First();
-				var keyGestureAttrs = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false);
-				foreach (KeyGestureAttribute key in keyGestureAttrs)
+				var keyGestureAttrs = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false).Cast<KeyGestureAttribute>().OrderBy(key => !key.Primary).ToList();
+				foreach (var key in keyGestureAttrs)
 				{
 					var gesture = new KeyGesture(key.Key, key.Modifiers);
 					KeyGestures.Add(new Tuple<KeyGesture, string>(gesture, gesture.GetDisplayStringForCulture(CultureInfo.CurrentCulture)));
