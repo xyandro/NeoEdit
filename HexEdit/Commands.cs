@@ -6,7 +6,7 @@ namespace NeoEdit.HexEdit
 	enum HexEditCommand
 	{
 		None,
-		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control)] File_New,
+		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift)] File_New,
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open,
 		File_OpenDump,
 		File_OpenCopiedCutFiles,

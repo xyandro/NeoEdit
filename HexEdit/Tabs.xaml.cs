@@ -28,14 +28,18 @@ namespace NeoEdit.HexEdit
 
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 
-		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, bool createNew = false)
+		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, bool createNew = false, HexEditTabs hexEditTabs = null)
 		{
-			((!createNew ? UIHelper<HexEditTabs>.GetNewest() : null) ?? new HexEditTabs()).Add(new HexEditor(data, codePage, filename, filetitle, modified));
+			if ((hexEditTabs == null) && (!createNew))
+				hexEditTabs = UIHelper<HexEditTabs>.GetNewest();
+			if (hexEditTabs == null)
+				hexEditTabs = new HexEditTabs();
+			hexEditTabs.Add(new HexEditor(data, codePage, filename, filetitle, modified));
 		}
 
 		HexEditTabs()
 		{
-			HexEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			HexEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
 			InitializeComponent();
 
 			HexEditors = new ObservableCollection<HexEditor>();
@@ -82,9 +86,9 @@ namespace NeoEdit.HexEdit
 			return hexEditor.GetLabel();
 		}
 
-		void Command_File_New()
+		void Command_File_New(bool newWindow)
 		{
-			Add(new HexEditor(new MemoryBinaryData()));
+			Create(new MemoryBinaryData(), createNew: newWindow, hexEditTabs: newWindow ? null : this);
 		}
 
 		void Command_File_Open()
@@ -186,11 +190,11 @@ namespace NeoEdit.HexEdit
 			return Active.HandleText(text);
 		}
 
-		void RunCommand(HexEditCommand command)
+		void RunCommand(HexEditCommand command, bool shiftDown)
 		{
 			switch (command)
 			{
-				case HexEditCommand.File_New: Command_File_New(); break;
+				case HexEditCommand.File_New: Command_File_New(shiftDown); break;
 				case HexEditCommand.File_Open: Command_File_Open(); break;
 				case HexEditCommand.File_OpenDump: Command_File_OpenDump(); break;
 				case HexEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;

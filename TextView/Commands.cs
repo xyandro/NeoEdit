@@ -6,6 +6,7 @@ namespace NeoEdit.TextView
 	enum TextViewCommand
 	{
 		None,
+		[KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift)] File_NewWindow,
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open,
 		File_OpenCopiedCutFiles,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,

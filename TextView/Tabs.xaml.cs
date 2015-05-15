@@ -41,6 +41,11 @@ namespace NeoEdit.TextView
 			Show(); // Explicitly show because sometimes the loading file dialog will put up first and be hidden
 		}
 
+		void Command_File_NewWindow()
+		{
+			new TextViewerTabs();
+		}
+
 		void Command_File_Open()
 		{
 			var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
@@ -113,6 +118,7 @@ namespace NeoEdit.TextView
 
 			switch (command)
 			{
+				case TextViewCommand.File_NewWindow: Command_File_NewWindow(); break;
 				case TextViewCommand.File_Open: Command_File_Open(); break;
 				case TextViewCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextViewCommand.File_Combine: Command_File_Combine(); break;

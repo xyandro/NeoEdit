@@ -6,7 +6,7 @@ namespace NeoEdit.TextEdit
 	enum TextEditCommand
 	{
 		None,
-		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control)] File_New,
+		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift)] File_New,
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open,
 		File_OpenCopiedCutFiles,
 		[KeyGesture(Key.S, ModifierKeys.Control)] File_Save,
@@ -88,7 +88,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift)] Data_Convert,
 		Data_Length,
 		[KeyGesture(Key.W, ModifierKeys.Control)] Data_Width,
-		[KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift)] Data_Trim,
+		[KeyGesture(Key.T, ModifierKeys.Control)] Data_Trim,
 		Data_SingleLine,
 		Data_Table_ToTable,
 		Data_Table_FromTable,

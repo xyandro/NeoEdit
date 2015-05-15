@@ -3155,7 +3155,7 @@ namespace NeoEdit.TextEdit
 
 		internal bool Empty()
 		{
-			return (!IsModified) && (BeginOffset() == EndOffset());
+			return (FileName == null) && (!IsModified) && (BeginOffset() == EndOffset());
 		}
 
 		internal bool HandleText(string text)

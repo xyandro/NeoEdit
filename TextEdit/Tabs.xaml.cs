@@ -28,16 +28,7 @@ namespace NeoEdit.TextEdit
 
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
-		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false)
-		{
-			var textEditor = CreateTextEditor(filename, bytes, codePage, line, column);
-			if (textEditor == null)
-				return;
-
-			((!createNew ? UIHelper<TextEditTabs>.GetNewest() : null) ?? new TextEditTabs()).Add(textEditor);
-		}
-
-		static TextEditor CreateTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = -1, int column = -1)
+		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false, TextEditTabs textEditTabs = null)
 		{
 #if !DEBUG
 			if (filename != null)
@@ -56,16 +47,27 @@ namespace NeoEdit.TextEdit
 							DefaultCancel = Message.OptionsEnum.Cancel,
 						}.Show())
 						{
-							case Message.OptionsEnum.Yes: Launcher.Static.LaunchTextViewer(filename); return null;
+							case Message.OptionsEnum.Yes: Launcher.Static.LaunchTextViewer(filename); return;
 							case Message.OptionsEnum.No: break;
-							case Message.OptionsEnum.Cancel: return null;
+							case Message.OptionsEnum.Cancel: return;
 						}
 					}
 				}
 			}
 #endif
 
-			return new TextEditor(filename, bytes, codePage, line, column);
+			if ((textEditTabs == null) && (!createNew))
+				textEditTabs = UIHelper<TextEditTabs>.GetNewest();
+
+			if (textEditTabs == null)
+				textEditTabs = new TextEditTabs();
+
+			textEditTabs.Add(new TextEditor(filename, bytes, codePage, line, column));
+		}
+
+		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1)
+		{
+			Create(filename, bytes, codePage, line, column, false, this);
 		}
 
 		TextEditTabs()
@@ -101,7 +103,7 @@ namespace NeoEdit.TextEdit
 		void Command_File_Open(OpenFileDialogResult result)
 		{
 			foreach (var filename in result.files)
-				Add(CreateTextEditor(filename));
+				AddTextEditor(filename);
 		}
 
 		void Command_File_OpenCopiedCutFiles()
@@ -121,7 +123,7 @@ namespace NeoEdit.TextEdit
 				return;
 
 			foreach (var file in files)
-				Add(CreateTextEditor(file));
+				AddTextEditor(file);
 		}
 
 		const string quickMacroFilename = "Quick.xml";
@@ -232,7 +234,7 @@ namespace NeoEdit.TextEdit
 			{
 				if (!files.Any())
 					return;
-				Add(CreateTextEditor(files.Dequeue()));
+				AddTextEditor(files.Dequeue());
 				macro.Play(this, playing => macroPlaying = playing, startNext);
 			};
 			startNext();
@@ -305,7 +307,7 @@ namespace NeoEdit.TextEdit
 		{
 			switch (command)
 			{
-				case TextEditCommand.File_New: Add(CreateTextEditor()); break;
+				case TextEditCommand.File_New: Create(createNew: shiftDown, textEditTabs: shiftDown ? null : this); break;
 				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextEditCommand.File_Exit: Close(); break;
@@ -318,17 +320,10 @@ namespace NeoEdit.TextEdit
 
 		void Add(TextEditor textEditor)
 		{
-			if (textEditor == null)
-				return;
-
-			if ((Active != null) && (Active.FileName == null) && (Active.Empty()))
-			{
-				var index = TextEditors.IndexOf(Active);
-				Active = TextEditors[index] = textEditor;
-				return;
-			}
-
-			TextEditors.Add(textEditor);
+			if ((!textEditor.Empty()) && (Active != null) && (Active.Empty()))
+				TextEditors[TextEditors.IndexOf(Active)] = textEditor;
+			else
+				TextEditors.Add(textEditor);
 			Active = textEditor;
 		}
 

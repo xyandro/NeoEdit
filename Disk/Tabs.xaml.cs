@@ -21,7 +21,7 @@ namespace NeoEdit.Disk
 
 		public DiskTabs(string path = null)
 		{
-			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
 			InitializeComponent();
 
 			DiskWindows = new ObservableCollection<DiskWindow>();
@@ -30,11 +30,19 @@ namespace NeoEdit.Disk
 
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
-		void RunCommand(DiskCommand command)
+		void Command_File_New(bool newWindow)
+		{
+			if (newWindow)
+				new DiskTabs();
+			else
+				Add(new DiskWindow());
+		}
+
+		void RunCommand(DiskCommand command, bool shiftDown)
 		{
 			switch (command)
 			{
-				case DiskCommand.File_NewTab: Add(new DiskWindow()); break;
+				case DiskCommand.File_NewTab: Command_File_New(shiftDown); break;
 				case DiskCommand.File_Exit: Close(); break;
 				case DiskCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}

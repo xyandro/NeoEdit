@@ -1,10 +1,8 @@
 All:
-Control-N should bring up new version of current window
 Starting 2nd instance pops up in background
 Add command prompt
 Diff?
 NumericUpDown won't accept control from accelerator
-Ctrl used to open dialog doesn't register having been released; tabs interfere with pageup, pagedown
 
 Disk:
 Select by SVN ignore
@@ -37,6 +35,7 @@ Allow user to disable undo/redo for faster performance
 Specify which accelerator to display in menu (currently picking one of available options at random)
 Audit accelerators
 Move between opening/closing tags
+Move Files "Copy/Cut" to generic Copy/Cut
 
 View:
 Update as new lines are added
