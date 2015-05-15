@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace NeoEdit.Common
@@ -156,5 +157,34 @@ namespace NeoEdit.Common
 				Clipboard.SetDataObject(value.Data, true);
 			}
 		}
+
+		public static event EventHandler ClipboardChanged;
+
+		static ClipboardChangedNotifier clipboardChangedNotifier = new ClipboardChangedNotifier();
+		class ClipboardChangedNotifier : System.Windows.Forms.Form
+		{
+			public ClipboardChangedNotifier()
+			{
+				IntPtr HWND_MESSAGE = new IntPtr(-3);
+				SetParent(Handle, HWND_MESSAGE);
+				AddClipboardFormatListener(Handle);
+			}
+
+			protected override void WndProc(ref System.Windows.Forms.Message m)
+			{
+				const int WM_CLIPBOARDUPDATE = 0x031D;
+				if (m.Msg == WM_CLIPBOARDUPDATE)
+					if (ClipboardChanged != null)
+						ClipboardChanged(null, null);
+				base.WndProc(ref m);
+			}
+		}
+
+		[DllImport("user32.dll", SetLastError = true)]
+		public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
+		[DllImport("user32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool AddClipboardFormatListener(IntPtr hwnd);
 	}
 }

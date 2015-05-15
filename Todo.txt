@@ -17,7 +17,6 @@ Comment/uncomment C#/C++/XML/etc. (ANTLR?)
 Format JSON/XML
 HTML/XML: Match closing tag
 Ctrl+M should move to "current" selection
-Show number of items on clipboard on status bar
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)

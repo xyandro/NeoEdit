@@ -28,11 +28,11 @@
     <Compile Include="About\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="ClipboardWindow.xaml">
+    <Page Include="Common\ClipboardWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="ClipboardWindow.xaml.cs">
+    <Compile Include="Common\ClipboardWindow.xaml.cs">
       <DependentUpon>ClipboardWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Common\AutoCompleteTextBox.xaml">

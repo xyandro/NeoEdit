@@ -35,27 +35,34 @@
 		<Rectangle Grid.Row="3" Grid.Column="5" Fill="LightGray" Focusable="False"/>
 
 		<StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Background="LightGray" Focusable="False">
+
 			<StatusBarItem>
 				<TextBlock Text="Line"/>
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock Text="{Binding Line, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
+
 			<Separator/>
+
 			<StatusBarItem>
 				<TextBlock Text="Col"/>
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock Text="{Binding Column, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
+
 			<Separator/>
+
 			<StatusBarItem>
 				<TextBlock Text="Ch"/>
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock Text="{Binding Index, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
+
 			<Separator/>
+
 			<StatusBarItem>
 				<TextBlock Text="Pos"/>
 			</StatusBarItem>
@@ -69,14 +76,27 @@
 					</TextBlock.Text>
 				</TextBlock>
 			</StatusBarItem>
+
 			<Separator/>
+
 			<StatusBarItem>
 				<TextBlock Text="Selections"/>
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock Text="{Binding NumSelections, ElementName=self, StringFormat=n0}"/>
 			</StatusBarItem>
+
+			<Separator/>
+
 			<StatusBarItem>
+				<TextBlock Text="Clipboards"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Path=(guiCommon:ClipboardWindow.StringsCount), StringFormat=n0}"/>
+			</StatusBarItem>
+
+			<StatusBarItem>
+				<!--Sometimes the last one doesn't display-->
 				<TextBlock/>
 			</StatusBarItem>
 		</StatusBar>

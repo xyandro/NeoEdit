@@ -3,12 +3,23 @@ using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common;
-using NeoEdit.GUI.Common;
 
-namespace NeoEdit.GUI
+namespace NeoEdit.GUI.Common
 {
 	partial class ClipboardWindow
 	{
+		static int stringsCount;
+		public static int StringsCount
+		{
+			get { return stringsCount; }
+			private set
+			{
+				stringsCount = value; if (StringsCountChanged != null)
+					StringsCountChanged(null, new EventArgs());
+			}
+		}
+		public static event EventHandler StringsCountChanged;
+
 		static ClipboardWindow current;
 		public static new void Show()
 		{
@@ -21,6 +32,9 @@ namespace NeoEdit.GUI
 		{
 			UIHelper<ClipboardWindow>.Register();
 			UIHelper<ClipboardWindow>.AddObservableCallback(a => a.Records, (obj, s, e) => obj.items.SelectedItem = NEClipboard.Current);
+
+			StringsCount = NEClipboard.GetStrings().Count;
+			NEClipboard.ClipboardChanged += (s, e) => StringsCount = NEClipboard.GetStrings().Count;
 		}
 
 		[DepProp]
