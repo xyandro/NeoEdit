@@ -36,14 +36,14 @@
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0] t== false'}"/>
 		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0] t== false'}">
-			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-			<RadioButton GroupName="location" Content="M_iddle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
+			<RadioButton GroupName="location" Content="M_iddle" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
+			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiCommon:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1" Visibility="{Binding IsSelect, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0] t== false'}">
-			<Button Content="_Numeric" Padding="10,1" Click="NumericClick"/>
-			<Button Content="S_tring" Padding="10,1" Click="StringClick"/>
+			<Button Content="_Numeric" Padding="10,1" Click="NumericClick" Focusable="False"/>
+			<Button Content="S_tring" Padding="10,1" Click="StringClick" Focusable="False"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
