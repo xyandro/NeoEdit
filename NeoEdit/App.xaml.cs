@@ -69,8 +69,9 @@ namespace NeoEdit
 		{
 			try
 			{
-				var restore = UIHelper<NEWindow>.GetAllWindows().SingleOrDefault();
-				if ((restore != null) && (restore.Restore()))
+				var windows = UIHelper<NEWindow>.GetAllWindows();
+				var restored = windows.Count(window => window.Restore());
+				if ((restored > 0) && (args.Length == 0))
 					return;
 
 				args = args.Where(arg => arg != "multi").ToArray();
