@@ -491,7 +491,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Cut: Command_Edit_CutCopy(true); break;
 				case TextEditCommand.Edit_Copy: Command_Edit_CutCopy(false); break;
 				case TextEditCommand.Edit_Paste: Command_Edit_Paste(shiftDown); break;
-				case TextEditCommand.Edit_ShowClipboard: Command_Edit_ShowClipboard(); break;
 				case TextEditCommand.Edit_Find: Command_Edit_FindReplace(false, shiftDown, dialogResult as GetRegExDialog.Result); break;
 				case TextEditCommand.Edit_FindNext: Command_Edit_FindNextPrev(true, shiftDown); break;
 				case TextEditCommand.Edit_FindPrev: Command_Edit_FindNextPrev(false, shiftDown); break;
@@ -950,11 +949,6 @@ namespace NeoEdit.TextEdit
 
 			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n') + Data.DefaultEnding).ToList();
 			ReplaceOneWithMany(clipboardStrings);
-		}
-
-		internal void Command_Edit_ShowClipboard()
-		{
-			ClipboardWindow.Show();
 		}
 
 		internal GetRegExDialog.Result Command_Edit_FindReplace_Dialog(bool isReplace)

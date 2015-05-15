@@ -29,7 +29,6 @@
 		<hexEdit:HexEditMenuItem Header="Cu_t" CommandEnum="Edit_Cut"/>
 		<hexEdit:HexEditMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
 		<hexEdit:HexEditMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
-		<hexEdit:HexEditMenuItem Header="_Show Clipboard" CommandEnum="Edit_ShowClipboard"/>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
 		<hexEdit:HexEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>

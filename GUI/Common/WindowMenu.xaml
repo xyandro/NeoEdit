@@ -5,28 +5,30 @@
 	Header="_Window" Style="{StaticResource {x:Type MenuItem}}">
 
 	<MenuItem.CommandBindings>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Disk" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Clipboard" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Console" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Processes" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Registry" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_DBViewer" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Disk" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_HexEditor" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Processes" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Registry" Executed="CommandBinding_Executed"/>
+		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_TextEditor" Executed="CommandBinding_Executed"/>
 		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_TextViewer" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Executed="CommandBinding_Executed"/>
 	</MenuItem.CommandBindings>
 
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Disk" Header="_Disk"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Console" Header="_Console"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Processes" Header="_Processes"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Handles" Header="H_andles"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Registry" Header="_Registry"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Clipboard" Header="_Clipboard"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Console" Header="C_onsole"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_DBViewer" Header="DB Viewer"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Disk" Header="_Disk"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Handles" Header="H_andles"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_HexEditor" Header="_Hex Editor"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Processes" Header="_Processes"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Registry" Header="_Registry"/>
+	<MenuItem Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Header="_System Info"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextEditor" Header="_Text Editor"/>
 	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextViewer" Header="Text _Viewer"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Header="_System Info"/>
 
 	<MenuItem Header="_Minimize to Tray" IsCheckable="True" IsChecked="{Binding Path=(guiCommon:NEWindow.MinimizeToTray), Mode=TwoWay}"/>
 

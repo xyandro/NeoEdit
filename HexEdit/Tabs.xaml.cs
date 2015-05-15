@@ -9,7 +9,6 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.HexEdit.Data;
@@ -200,7 +199,6 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.File_OpenDump: Command_File_OpenDump(); break;
 				case HexEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case HexEditCommand.File_Exit: Close(); break;
-				case HexEditCommand.Edit_ShowClipboard: ClipboardWindow.Show(); break;
 				case HexEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
 
