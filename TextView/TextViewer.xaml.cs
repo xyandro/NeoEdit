@@ -129,7 +129,7 @@ namespace NeoEdit.TextView
 				result += str;
 			}
 			if (result.Length != 0)
-				ClipboardWindow.Set(new List<string> { result });
+				ClipboardWindow.SetStrings(new List<string> { result });
 		}
 
 		void GetSel(out int startLine, out int startColumn, out int endLine, out int endColumn)

@@ -697,12 +697,12 @@ namespace NeoEdit.HexEdit
 				str = Coder.BytesToString(bytes, Coder.CodePage.Hex);
 			else
 			{
-				var sb = new StringBuilder(bytes.Length);
+				var sb = new char[bytes.Length];
 				for (var ctr = 0; ctr < bytes.Length; ctr++)
-					sb.Append((char)bytes[ctr]);
-				str = sb.ToString();
+					sb[ctr] = (char)bytes[ctr];
+				str = new string(sb);
 			}
-			ClipboardWindow.Set(bytes, str);
+			ClipboardWindow.SetBinary(bytes, str);
 			if ((isCut) && (Insert))
 				Replace(null);
 		}

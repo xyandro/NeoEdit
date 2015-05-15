@@ -910,7 +910,7 @@ namespace NeoEdit.TextEdit
 				ClipboardWindow.SetFiles(strs, isCut);
 			else
 			{
-				ClipboardWindow.Set(strs);
+				ClipboardWindow.SetStrings(strs);
 				if (isCut)
 					ReplaceSelections("");
 			}
@@ -1774,7 +1774,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Copy_Length()
 		{
-			ClipboardWindow.Set(Selections.Select(range => range.Length.ToString()).ToList());
+			ClipboardWindow.SetStrings(Selections.Select(range => range.Length.ToString()).ToList());
 		}
 
 		internal enum Command_MinMax_Type { String, Numeric, Length }
@@ -1805,19 +1805,19 @@ namespace NeoEdit.TextEdit
 			var positions = Selections.Select(range => range.Start).ToList();
 			if (gotoType == GotoDialog.GotoType.Position)
 			{
-				ClipboardWindow.Set(positions.Select(pos => pos.ToString()).ToList());
+				ClipboardWindow.SetStrings(positions.Select(pos => pos.ToString()).ToList());
 				return;
 			}
 
 			var lines = positions.Select(pos => Data.GetOffsetLine(pos)).ToList();
 			if (gotoType == GotoDialog.GotoType.Line)
 			{
-				ClipboardWindow.Set(lines.Select(pos => (pos + 1).ToString()).ToList());
+				ClipboardWindow.SetStrings(lines.Select(pos => (pos + 1).ToString()).ToList());
 				return;
 			}
 
 			var indexes = positions.Select((pos, line) => Data.GetOffsetIndex(pos, lines[line])).ToList();
-			ClipboardWindow.Set(indexes.Select(pos => (pos + 1).ToString()).ToList());
+			ClipboardWindow.SetStrings(indexes.Select(pos => (pos + 1).ToString()).ToList());
 		}
 
 		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
@@ -2065,7 +2065,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Keys_Copy(int index)
 		{
-			ClipboardWindow.Set(keysAndValues[index]);
+			ClipboardWindow.SetStrings(keysAndValues[index]);
 		}
 
 		internal void Command_Keys_HitsMisses(int index, bool hits)

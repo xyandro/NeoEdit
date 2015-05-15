@@ -64,26 +64,24 @@ namespace NeoEdit.GUI
 			return found.Contents as T;
 		}
 
-		public static void SetFiles(IEnumerable<string> files, bool isCut)
+		public static void SetFiles(List<string> files, bool isCut)
 		{
-			var objs = new List<string>(files);
-
-			var data = new ClipboardData(objs, String.Join(" ", objs.Select(file => String.Format("\"{0}\"", file))));
+			var data = new ClipboardData(files, String.Join(" ", files.Select(file => String.Format("\"{0}\"", file))));
 
 			var dropList = new StringCollection();
-			objs.ForEach(file => dropList.Add(file));
+			dropList.AddRange(files.ToArray());
 			data.Data.SetFileDropList(dropList);
 
 			data.Data.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(isCut ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
 			Add(data);
 		}
 
-		public static void Set(byte[] bytes, string text)
+		public static void SetBinary(byte[] bytes, string text)
 		{
 			Add(new ClipboardData(bytes, text));
 		}
 
-		public static void Set(List<string> strings)
+		public static void SetStrings(List<string> strings)
 		{
 			Add(new ClipboardData(strings, String.Join(" ", strings)));
 		}

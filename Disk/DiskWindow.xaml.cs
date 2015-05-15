@@ -254,16 +254,10 @@ namespace NeoEdit.Disk
 			}
 		}
 
-		internal void Command_Edit_Cut()
+		internal void Command_Edit_CutCopy(bool isCut)
 		{
 			if (Selected.Count != 0)
-				ClipboardWindow.SetFiles(Selected.Cast<DiskItem>().Select(item => item.FullName), true);
-		}
-
-		internal void Command_Edit_Copy()
-		{
-			if (Selected.Count != 0)
-				ClipboardWindow.SetFiles(Selected.Cast<DiskItem>().Select(item => item.FullName), false);
+				ClipboardWindow.SetFiles(Selected.Cast<DiskItem>().Select(item => item.FullName).ToList(), isCut);
 		}
 
 		internal void Command_Edit_Paste()
