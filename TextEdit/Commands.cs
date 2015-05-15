@@ -40,8 +40,6 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.F2)] [KeyGesture(Key.F2, ModifierKeys.Shift)] Edit_NextBookmark,
 		[KeyGesture(Key.F2, ModifierKeys.Control)] [KeyGesture(Key.F2, ModifierKeys.Control | ModifierKeys.Shift)] Edit_PreviousBookmark,
 		Edit_ClearBookmarks,
-		Files_Copy,
-		Files_Cut,
 		Files_Open,
 		Files_Insert,
 		Files_SaveClipboards,

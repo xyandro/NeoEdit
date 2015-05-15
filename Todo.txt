@@ -34,7 +34,6 @@ Allow user to disable undo/redo for faster performance
 Specify which accelerator to display in menu (currently picking one of available options at random)
 Audit accelerators
 Move between opening/closing tags
-Move Files "Copy/Cut" to generic Copy/Cut
 
 View:
 Update as new lines are added

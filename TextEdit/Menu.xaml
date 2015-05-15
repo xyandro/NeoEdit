@@ -51,9 +51,6 @@
 		<textEdit:TextEditMenuItem Header="Clear Bookmarks" CommandEnum="Edit_ClearBookmarks"/>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
-		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Copy"/>
-		<textEdit:TextEditMenuItem Header="C_ut" CommandEnum="Files_Cut"/>
-		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Files_Open"/>
 		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
 		<textEdit:TextEditMenuItem Header="S_ave Clipboards" CommandEnum="Files_SaveClipboards"/>

@@ -503,8 +503,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_NextBookmark: Command_Edit_NextPreviousBookmark(true, shiftDown); break;
 				case TextEditCommand.Edit_PreviousBookmark: Command_Edit_NextPreviousBookmark(false, shiftDown); break;
 				case TextEditCommand.Edit_ClearBookmarks: Command_Edit_ClearBookmarks(); break;
-				case TextEditCommand.Files_Copy: Command_Files_CutCopy(false); break;
-				case TextEditCommand.Files_Cut: Command_Files_CutCopy(true); break;
 				case TextEditCommand.Files_Open: Command_Files_Open(); break;
 				case TextEditCommand.Files_Insert: Command_Files_Insert(); break;
 				case TextEditCommand.Files_SaveClipboards: Command_Files_SaveClipboards(); break;
@@ -906,11 +904,16 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_CutCopy(bool isCut)
 		{
-			var result = GetSelectionStrings();
-			if (result.Count != 0)
-				ClipboardWindow.Set(result);
-			if (isCut)
-				ReplaceSelections("");
+			var strs = GetSelectionStrings();
+
+			if (strs.All(str => str.IndexOfAny(Path.GetInvalidPathChars()) == -1) && strs.All(str => FileOrDirectoryExists(str)))
+				ClipboardWindow.SetFiles(strs, isCut);
+			else
+			{
+				ClipboardWindow.Set(strs);
+				if (isCut)
+					ReplaceSelections("");
+			}
 		}
 
 		void ReplaceOneWithMany(List<string> strs)
@@ -1101,13 +1104,6 @@ namespace NeoEdit.TextEdit
 		internal void Command_Edit_ClearBookmarks()
 		{
 			Bookmarks.Clear();
-		}
-
-		internal void Command_Files_CutCopy(bool isCut)
-		{
-			var result = GetSelectionStrings();
-			if (result.Count != 0)
-				ClipboardWindow.SetFiles(result, isCut);
 		}
 
 		internal void Command_Files_Open()
