@@ -171,8 +171,9 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Sort" CommandEnum="Data_Sort"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Data_FetchURL"/>
+	</MenuItem>
+	<MenuItem Header="_Markup">
+		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Markup_FetchURL"/>
 	</MenuItem>
 	<MenuItem Header="_Insert">
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>
@@ -333,7 +334,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0] t== \'Tiles\''}"/>
 	</MenuItem>
-	<MenuItem Header="_Macro">
+	<MenuItem Header="M_acro">
 		<textEdit:TextEditMenuItem Header="Quick Record" CommandEnum="Macro_QuickRecord"/>
 		<textEdit:TextEditMenuItem Header="Quick Play" CommandEnum="Macro_QuickPlay"/>
 		<textEdit:TextEditMenuItem Header="_Record" CommandEnum="Macro_Record"/>
