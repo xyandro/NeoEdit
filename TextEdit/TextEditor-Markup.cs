@@ -1,71 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows;
-using NeoEdit.Common;
-using NeoEdit.GUI.Common;
-using NeoEdit.TextEdit.Dialogs;
 using HtmlAgilityPack;
 
 namespace NeoEdit.TextEdit
 {
 	public partial class TextEditor
 	{
-		HtmlNode GetHTMLNode()
+		MarkupNode GetHTMLNode()
 		{
-			var data = Data.GetString(0, Data.NumChars);
-			var doc = new HtmlDocument();
-			doc.LoadHtml(data);
-			if (doc.DocumentNode.OuterHtml != data)
+			var allRange = new Range(BeginOffset(), EndOffset());
+			var data = GetString(allRange);
+			var mn = MarkupNode.FromHTML(data, BeginOffset());
+			if (data.Substring(mn.StartOuterPosition, mn.OuterLength) != data)
 				throw new Exception("Invalid data found; please validate.");
-			return doc.DocumentNode;
+			return mn;
 		}
 
-		HtmlNode GetInnerMostNode(HtmlNode node, Range range)
+		MarkupNode GetInnerMostNode(MarkupNode node, Range range)
 		{
-			foreach (var child in node.ChildNodes.Reverse())
+			foreach (var child in node.Children().Reverse())
 			{
 				var result = GetInnerMostNode(child, range);
 				if (result != null)
 					return result;
 			}
-			if ((range.Start >= node.StreamPosition) && (range.End <= node.StreamPosition + node.OuterHtml.Length))
+			if ((range.Start >= node.StartOuterPosition) && (range.End <= node.EndOuterPosition))
 				return node;
 			return null;
 		}
 
-		Range GetParent(HtmlNode node, Range range)
+		Range GetParent(MarkupNode node, Range range)
 		{
 			var innerMost = GetInnerMostNode(node, range);
 			if (innerMost != null)
-				innerMost = innerMost.ParentNode;
+				innerMost = innerMost.Parent;
 			if (innerMost == null)
 				return range;
-			return Range.FromIndex(innerMost.StreamPosition, innerMost.OuterHtml.Length);
+			return innerMost.OuterRange;
 		}
 
-		List<Range> GetChildren(HtmlNode node, Range range, bool allChildren)
+		List<Range> GetChildren(MarkupNode node, Range range, bool allChildren)
 		{
 			var innerMost = GetInnerMostNode(node, range);
 			if (innerMost == null)
 				return new List<Range>();
 
-			var children = innerMost.ChildNodes.ToList();
-			if ((!allChildren) && (children.Any(child => child.NodeType == HtmlNodeType.Element)))
-				children = children.Where(child => (child.NodeType != HtmlNodeType.Text) || (!String.IsNullOrWhiteSpace(child.InnerText))).ToList();
+			var children = innerMost.Children().ToList();
+			if ((!allChildren) && (children.Any(child => child.NodeType == MarkupNode.MarkupNodeType.Element)))
+				children = children.Where(child => (child.NodeType != MarkupNode.MarkupNodeType.Text) || (!String.IsNullOrWhiteSpace(child.GetInnerText(Data)))).ToList();
 
-			return children.Select(child => Range.FromIndex(child.StreamPosition, child.OuterHtml.Length)).ToList();
+			return children.Select(child => child.OuterRange).ToList();
 		}
 
-		List<Range> GetText(HtmlNode node, Range range, bool trimWhitespace)
+		List<Range> GetText(MarkupNode node, Range range, bool trimWhitespace)
 		{
 			var innerMost = GetInnerMostNode(node, range);
 			if (innerMost == null)
 				return new List<Range>();
 
-			var children = innerMost.DescendantsAndSelf().Where(child => child.NodeType == HtmlNodeType.Text).ToList();
-			var ranges = children.Select(child => Range.FromIndex(child.StreamPosition, child.OuterHtml.Length)).ToList();
+			var children = innerMost.DescendantsAndSelf().Where(child => child.NodeType == MarkupNode.MarkupNodeType.Text).ToList();
+			var ranges = children.Select(child => child.OuterRange).ToList();
 
 			if (trimWhitespace)
 				ranges = ranges.Select(child => TrimRange(child)).ToList();
@@ -74,36 +69,30 @@ namespace NeoEdit.TextEdit
 			return ranges;
 		}
 
-		Range GetOuterHtml(HtmlNode node, Range range)
+		Range GetOuterHtml(MarkupNode node, Range range)
 		{
 			var innerMost = GetInnerMostNode(node, range);
 			if (innerMost == null)
 				return range;
-			return Range.FromIndex(innerMost.StreamPosition, innerMost.OuterHtml.Length);
+			return innerMost.OuterRange;
 		}
 
-		Range GetInnerHtml(HtmlNode node, Range range)
+		Range GetInnerHtml(MarkupNode node, Range range)
 		{
 			var innerMost = GetInnerMostNode(node, range);
 			if (innerMost == null)
 				return range;
-			if (!innerMost.HasChildNodes)
-				return Range.FromIndex(innerMost.StreamPosition, innerMost.OuterHtml.Length);
-			return Range.FromIndex(innerMost.FirstChild.StreamPosition, innerMost.InnerHtml.Length);
+			if (!innerMost.Children().Any())
+				return innerMost.OuterRange;
+			return innerMost.InnerRange;
 		}
 
-		bool MarkupSelectByType(HtmlNode node, Range range, MarkupSelectType type)
+		bool MarkupSelectByType(MarkupNode node, Range range, MarkupNode.MarkupNodeType type)
 		{
 			var innerMost = GetInnerMostNode(node, range);
 			if (innerMost == null)
 				return false;
-			switch (type)
-			{
-				case MarkupSelectType.Elements: return innerMost.NodeType == HtmlNodeType.Element;
-				case MarkupSelectType.Comments: return innerMost.NodeType == HtmlNodeType.Comment;
-				case MarkupSelectType.Text: return innerMost.NodeType == HtmlNodeType.Text;
-				default: return false;
-			}
+			return innerMost.NodeType == type;
 		}
 
 		internal void Command_Markup_Tidy()
@@ -155,9 +144,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.Select(range => GetInnerHtml(docNode, range)).ToList());
 		}
 
-		internal enum MarkupSelectType { Elements, Text, Comments }
-
-		internal void Command_Markup_Select(MarkupSelectType type)
+		internal void Command_Markup_Select(MarkupNode.MarkupNodeType type)
 		{
 			var docNode = GetHTMLNode();
 			Selections.Replace(Selections.Where(range => MarkupSelectByType(docNode, range, type)).ToList());

@@ -143,6 +143,7 @@
     <Compile Include="Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MarkupNode.cs" />
     <Compile Include="RangeList.cs" />
     <Compile Include="Highlighting.cs" />
     <Page Include="Menu.xaml">

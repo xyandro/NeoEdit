@@ -589,9 +589,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_AllText: Command_Markup_Text(false); break;
 				case TextEditCommand.Markup_OuterTag: Command_Markup_OuterTag(); break;
 				case TextEditCommand.Markup_InnerTag: Command_Markup_InnerTag(); break;
-				case TextEditCommand.Markup_Select_Elements: Command_Markup_Select(MarkupSelectType.Elements); break;
-				case TextEditCommand.Markup_Select_Text: Command_Markup_Select(MarkupSelectType.Text); break;
-				case TextEditCommand.Markup_Select_Comments: Command_Markup_Select(MarkupSelectType.Comments); break;
+				case TextEditCommand.Markup_Select_Elements: Command_Markup_Select(MarkupNode.MarkupNodeType.Element); break;
+				case TextEditCommand.Markup_Select_Text: Command_Markup_Select(MarkupNode.MarkupNodeType.Text); break;
+				case TextEditCommand.Markup_Select_Comments: Command_Markup_Select(MarkupNode.MarkupNodeType.Comment); break;
 				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
