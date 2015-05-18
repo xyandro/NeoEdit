@@ -56,18 +56,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SolutionDir)\Lib\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="SharpSvn, Version=1.8991.3359.105, Culture=neutral, PublicKeyToken=d729672594885a28, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SolutionDir)\Lib\$(Platform)\SharpSvn.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(Platform)' == 'x86'">
-    <Reference Include="SharpSvn, Version=1.8991.3359.105, Culture=neutral, PublicKeyToken=d729672594885a28, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SolutionDir)\Lib\x86\SharpSvn.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition="'$(Platform)' == 'x64'">
-    <Reference Include="SharpSvn, Version=1.8991.3359.105, Culture=neutral, PublicKeyToken=d729672594885a28, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SolutionDir)\Lib\x64\SharpSvn.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
