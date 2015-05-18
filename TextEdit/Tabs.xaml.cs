@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI;
 using NeoEdit.GUI.Common;
 using NeoEdit.GUI.Dialogs;
 
@@ -30,8 +31,7 @@ namespace NeoEdit.TextEdit
 
 		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false, TextEditTabs textEditTabs = null)
 		{
-#if !DEBUG
-			if (filename != null)
+			if ((!Helpers.IsDebugBuild) && (filename != null))
 			{
 				var fileInfo = new FileInfo(filename);
 				if (fileInfo.Exists)
@@ -54,7 +54,6 @@ namespace NeoEdit.TextEdit
 					}
 				}
 			}
-#endif
 
 			if ((textEditTabs == null) && (!createNew))
 				textEditTabs = UIHelper<TextEditTabs>.GetNewest();

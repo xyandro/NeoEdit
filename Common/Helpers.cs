@@ -9,6 +9,17 @@ namespace NeoEdit.Common
 {
 	public static class Helpers
 	{
+		public static bool IsDebugBuild
+		{
+			get
+			{
+#if DEBUG
+				return true;
+#else
+				return false;
+#endif
+			}
+		}
 		public static bool IsIntegerType(this Type type)
 		{
 			if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
