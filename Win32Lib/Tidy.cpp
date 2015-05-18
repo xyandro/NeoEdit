@@ -19,7 +19,7 @@ namespace NeoEdit
 
 			int status = tidySetCharEncoding(tdoc, "UTF16LE");
 			tidyOptSetInt(tdoc, TidyIndentContent, TidyYesState);
-			tidyOptSetInt(tdoc, TidyWrapLen, 1000);
+			tidyOptSetInt(tdoc, TidyWrapLen, 2000000000);
 
 			TidyBuffer buf = { 0 };
 			tidyBufAttach(&buf, (byte*)input.c_str(), (uint)input.length() * sizeof(wchar_t));

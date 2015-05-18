@@ -118,6 +118,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Data_Sort,
 		Markup_FetchURL,
 		Markup_Tidy,
+		Markup_Validate,
 		Insert_GUID,
 		Insert_RandomNumber,
 		Insert_RandomData,

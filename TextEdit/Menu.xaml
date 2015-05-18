@@ -175,6 +175,7 @@
 	<MenuItem Header="_Markup">
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Markup_FetchURL"/>
 		<textEdit:TextEditMenuItem Header="_Tidy" CommandEnum="Markup_Tidy"/>
+		<textEdit:TextEditMenuItem Header="_Validate" CommandEnum="Markup_Validate"/>
 	</MenuItem>
 	<MenuItem Header="_Insert">
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>

@@ -581,6 +581,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Markup_FetchURL: Command_Markup_FetchURL(); break;
 				case TextEditCommand.Markup_Tidy: Command_Markup_Tidy(); break;
+				case TextEditCommand.Markup_Validate: Command_Markup_Validate(); break;
 				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
@@ -1913,6 +1914,11 @@ namespace NeoEdit.TextEdit
 				ranges = new List<Range> { new Range(BeginOffset(), EndOffset()) };
 			var strs = ranges.Select(range => GetString(range)).ToList();
 			Replace(ranges, strs.Select(str => Win32.Interop.HTMLTidy(str)).ToList());
+		}
+
+		internal void Command_Markup_Validate()
+		{
+			ValidateHTML();
 		}
 
 		internal void Command_Insert_GUID()

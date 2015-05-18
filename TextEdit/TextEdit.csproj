@@ -175,6 +175,9 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextEditor-Markup.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextEditor-Sort.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
