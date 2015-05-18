@@ -178,20 +178,17 @@
 		<textEdit:TextEditMenuItem Header="_Validate" CommandEnum="Markup_Validate"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Markup_Parent"/>
-		<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children"/>
-		<textEdit:TextEditMenuItem Header="_All Children" CommandEnum="Markup_AllChildren"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Text"/>
-		<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_AllText"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Outer Tag" CommandEnum="Markup_OuterTag"/>
-		<textEdit:TextEditMenuItem Header="_Inner Tag" CommandEnum="Markup_InnerTag"/>
-		<Separator/>
-		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Select_Elements"/>
-			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Select_Text"/>
-			<textEdit:TextEditMenuItem Header="_Comments" CommandEnum="Markup_Select_Comments"/>
+		<MenuItem Header="_Children">
+			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children"/>
+			<textEdit:TextEditMenuItem Header="_All Children" CommandEnum="Markup_Children_All"/>
+			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Children_Elements"/>
+			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Children_Text"/>
+			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Children_AllText"/>
+			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Children_Comments"/>
 		</MenuItem>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Outer" CommandEnum="Markup_Outer"/>
+		<textEdit:TextEditMenuItem Header="_Inner" CommandEnum="Markup_Inner"/>
 	</MenuItem>
 	<MenuItem Header="_Insert">
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>

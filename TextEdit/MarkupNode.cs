@@ -6,7 +6,7 @@ namespace NeoEdit.TextEdit
 {
 	class MarkupNode
 	{
-		public enum MarkupNodeType { Unknown, Element, Text, Comment }
+		public enum MarkupNodeType { Unknown, Element, Text, Comment, All }
 
 		public readonly MarkupNode Parent;
 
