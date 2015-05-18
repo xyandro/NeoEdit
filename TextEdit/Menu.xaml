@@ -183,6 +183,12 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Get _Outer Tag" CommandEnum="Markup_GetOuterTag"/>
 		<textEdit:TextEditMenuItem Header="Get _Inner Tag" CommandEnum="Markup_GetInnerTag"/>
+		<Separator/>
+		<MenuItem Header="_Select">
+			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Select_Elements"/>
+			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Select_Text"/>
+			<textEdit:TextEditMenuItem Header="_Comments" CommandEnum="Markup_Select_Comments"/>
+		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Insert">
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>

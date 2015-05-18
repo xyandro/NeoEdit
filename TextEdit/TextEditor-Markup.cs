@@ -76,6 +76,20 @@ namespace NeoEdit.TextEdit
 			return Range.FromIndex(innerMost.FirstChild.StreamPosition, innerMost.InnerHtml.Length);
 		}
 
+		bool MarkupSelectByType(HtmlNode node, Range range, MarkupSelectType type)
+		{
+			var innerMost = GetInnerMostNode(node, range);
+			if (innerMost == null)
+				return false;
+			switch (type)
+			{
+				case MarkupSelectType.Elements: return innerMost.NodeType == HtmlNodeType.Element;
+				case MarkupSelectType.Comments: return innerMost.NodeType == HtmlNodeType.Comment;
+				case MarkupSelectType.Text: return innerMost.NodeType == HtmlNodeType.Text;
+				default: return false;
+			}
+		}
+
 		internal void Command_Markup_Tidy()
 		{
 			// Validates too
@@ -117,6 +131,14 @@ namespace NeoEdit.TextEdit
 		{
 			var docNode = GetHTMLNode();
 			Selections.Replace(Selections.Select(range => GetInnerHtml(docNode, range)).ToList());
+		}
+
+		internal enum MarkupSelectType { Elements, Text, Comments }
+
+		internal void Command_Markup_Select(MarkupSelectType type)
+		{
+			var docNode = GetHTMLNode();
+			Selections.Replace(Selections.Where(range => MarkupSelectByType(docNode, range, type)).ToList());
 		}
 	}
 }
