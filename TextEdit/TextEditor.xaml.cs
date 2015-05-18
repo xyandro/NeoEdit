@@ -582,11 +582,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_FetchURL: Command_Markup_FetchURL(); break;
 				case TextEditCommand.Markup_Tidy: Command_Markup_Tidy(); break;
 				case TextEditCommand.Markup_Validate: Command_Markup_Validate(); break;
-				case TextEditCommand.Markup_GetParent: Command_Markup_GetParent(); break;
-				case TextEditCommand.Markup_GetChildren: Command_Markup_GetChildren(false); break;
-				case TextEditCommand.Markup_GetAllChildren: Command_Markup_GetChildren(true); break;
-				case TextEditCommand.Markup_GetOuterTag: Command_Markup_GetOuterTag(); break;
-				case TextEditCommand.Markup_GetInnerTag: Command_Markup_GetInnerTag(); break;
+				case TextEditCommand.Markup_Parent: Command_Markup_Parent(); break;
+				case TextEditCommand.Markup_Children: Command_Markup_Children(false); break;
+				case TextEditCommand.Markup_AllChildren: Command_Markup_Children(true); break;
+				case TextEditCommand.Markup_Text: Command_Markup_Text(true); break;
+				case TextEditCommand.Markup_AllText: Command_Markup_Text(false); break;
+				case TextEditCommand.Markup_OuterTag: Command_Markup_OuterTag(); break;
+				case TextEditCommand.Markup_InnerTag: Command_Markup_InnerTag(); break;
 				case TextEditCommand.Markup_Select_Elements: Command_Markup_Select(MarkupSelectType.Elements); break;
 				case TextEditCommand.Markup_Select_Text: Command_Markup_Select(MarkupSelectType.Text); break;
 				case TextEditCommand.Markup_Select_Comments: Command_Markup_Select(MarkupSelectType.Comments); break;

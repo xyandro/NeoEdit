@@ -174,15 +174,18 @@
 	</MenuItem>
 	<MenuItem Header="_Markup">
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Markup_FetchURL"/>
-		<textEdit:TextEditMenuItem Header="_Tidy" CommandEnum="Markup_Tidy"/>
+		<textEdit:TextEditMenuItem Header="Ti_dy" CommandEnum="Markup_Tidy"/>
 		<textEdit:TextEditMenuItem Header="_Validate" CommandEnum="Markup_Validate"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Get _Parent" CommandEnum="Markup_GetParent"/>
-		<textEdit:TextEditMenuItem Header="Get _Children" CommandEnum="Markup_GetChildren"/>
-		<textEdit:TextEditMenuItem Header="Get _All Children" CommandEnum="Markup_GetAllChildren"/>
+		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Markup_Parent"/>
+		<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children"/>
+		<textEdit:TextEditMenuItem Header="_All Children" CommandEnum="Markup_AllChildren"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Get _Outer Tag" CommandEnum="Markup_GetOuterTag"/>
-		<textEdit:TextEditMenuItem Header="Get _Inner Tag" CommandEnum="Markup_GetInnerTag"/>
+		<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Text"/>
+		<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_AllText"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Outer Tag" CommandEnum="Markup_OuterTag"/>
+		<textEdit:TextEditMenuItem Header="_Inner Tag" CommandEnum="Markup_InnerTag"/>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Select_Elements"/>

@@ -58,6 +58,22 @@ namespace NeoEdit.TextEdit
 			return children.Select(child => Range.FromIndex(child.StreamPosition, child.OuterHtml.Length)).ToList();
 		}
 
+		List<Range> GetText(HtmlNode node, Range range, bool trimWhitespace)
+		{
+			var innerMost = GetInnerMostNode(node, range);
+			if (innerMost == null)
+				return new List<Range>();
+
+			var children = innerMost.DescendantsAndSelf().Where(child => child.NodeType == HtmlNodeType.Text).ToList();
+			var ranges = children.Select(child => Range.FromIndex(child.StreamPosition, child.OuterHtml.Length)).ToList();
+
+			if (trimWhitespace)
+				ranges = ranges.Select(child => TrimRange(child)).ToList();
+
+			ranges = ranges.Where(child => child.HasSelection).ToList();
+			return ranges;
+		}
+
 		Range GetOuterHtml(HtmlNode node, Range range)
 		{
 			var innerMost = GetInnerMostNode(node, range);
@@ -109,25 +125,31 @@ namespace NeoEdit.TextEdit
 			Replace(new List<Range> { allRange }, new List<string> { doc.DocumentNode.OuterHtml });
 		}
 
-		internal void Command_Markup_GetParent()
+		internal void Command_Markup_Parent()
 		{
 			var docNode = GetHTMLNode();
 			Selections.Replace(Selections.Select(range => GetParent(docNode, range)).ToList());
 		}
 
-		internal void Command_Markup_GetChildren(bool allChildren)
+		internal void Command_Markup_Children(bool allChildren)
 		{
 			var docNode = GetHTMLNode();
 			Selections.Replace(Selections.SelectMany(range => GetChildren(docNode, range, allChildren)).ToList());
 		}
 
-		internal void Command_Markup_GetOuterTag()
+		internal void Command_Markup_Text(bool trimWhitespace)
+		{
+			var docNode = GetHTMLNode();
+			Selections.Replace(Selections.SelectMany(range => GetText(docNode, range, trimWhitespace)).ToList());
+		}
+
+		internal void Command_Markup_OuterTag()
 		{
 			var docNode = GetHTMLNode();
 			Selections.Replace(Selections.Select(range => GetOuterHtml(docNode, range)).ToList());
 		}
 
-		internal void Command_Markup_GetInnerTag()
+		internal void Command_Markup_InnerTag()
 		{
 			var docNode = GetHTMLNode();
 			Selections.Replace(Selections.Select(range => GetInnerHtml(docNode, range)).ToList());
