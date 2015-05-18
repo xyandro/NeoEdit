@@ -119,6 +119,8 @@ namespace NeoEdit.TextEdit
 		Markup_FetchURL,
 		Markup_Tidy,
 		Markup_Validate,
+		Markup_GetOuterTag,
+		Markup_GetInnerTag,
 		Insert_GUID,
 		Insert_RandomNumber,
 		Insert_RandomData,
