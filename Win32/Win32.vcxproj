@@ -35,6 +35,9 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <ProjectReference Include="..\Lib\HTMLTidy\HTMLTidy.vcxproj">
+      <Project>{1d41f384-8bc1-4989-af75-679c5d519fdf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Win32Lib\Win32Lib.vcxproj">
       <Project>{785c1014-852f-4ec1-a2d6-cdb52880b7ad}</Project>
     </ProjectReference>
