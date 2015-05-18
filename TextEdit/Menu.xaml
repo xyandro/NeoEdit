@@ -177,6 +177,10 @@
 		<textEdit:TextEditMenuItem Header="_Tidy" CommandEnum="Markup_Tidy"/>
 		<textEdit:TextEditMenuItem Header="_Validate" CommandEnum="Markup_Validate"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="Get _Parent" CommandEnum="Markup_GetParent"/>
+		<textEdit:TextEditMenuItem Header="Get _Children" CommandEnum="Markup_GetChildren"/>
+		<textEdit:TextEditMenuItem Header="Get _All Children" CommandEnum="Markup_GetAllChildren"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="Get _Outer Tag" CommandEnum="Markup_GetOuterTag"/>
 		<textEdit:TextEditMenuItem Header="Get _Inner Tag" CommandEnum="Markup_GetInnerTag"/>
 	</MenuItem>

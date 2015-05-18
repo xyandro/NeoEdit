@@ -24,7 +24,7 @@ namespace NeoEdit.TextEdit
 
 		HtmlNode GetInnerMostNode(HtmlNode node, Range range)
 		{
-			foreach (var child in node.ChildNodes)
+			foreach (var child in node.ChildNodes.Reverse())
 			{
 				var result = GetInnerMostNode(child, range);
 				if (result != null)
@@ -33,6 +33,29 @@ namespace NeoEdit.TextEdit
 			if ((range.Start >= node.StreamPosition) && (range.End <= node.StreamPosition + node.OuterHtml.Length))
 				return node;
 			return null;
+		}
+
+		Range GetParent(HtmlNode node, Range range)
+		{
+			var innerMost = GetInnerMostNode(node, range);
+			if (innerMost != null)
+				innerMost = innerMost.ParentNode;
+			if (innerMost == null)
+				return range;
+			return Range.FromIndex(innerMost.StreamPosition, innerMost.OuterHtml.Length);
+		}
+
+		List<Range> GetChildren(HtmlNode node, Range range, bool allChildren)
+		{
+			var innerMost = GetInnerMostNode(node, range);
+			if (innerMost == null)
+				return new List<Range>();
+
+			var children = innerMost.ChildNodes.ToList();
+			if ((!allChildren) && (children.Any(child => child.NodeType == HtmlNodeType.Element)))
+				children = children.Where(child => (child.NodeType != HtmlNodeType.Text) || (!String.IsNullOrWhiteSpace(child.InnerText))).ToList();
+
+			return children.Select(child => Range.FromIndex(child.StreamPosition, child.OuterHtml.Length)).ToList();
 		}
 
 		Range GetOuterHtml(HtmlNode node, Range range)
@@ -70,6 +93,18 @@ namespace NeoEdit.TextEdit
 			var doc = new HtmlDocument();
 			doc.LoadHtml(GetString(allRange));
 			Replace(new List<Range> { allRange }, new List<string> { doc.DocumentNode.OuterHtml });
+		}
+
+		internal void Command_Markup_GetParent()
+		{
+			var docNode = GetHTMLNode();
+			Selections.Replace(Selections.Select(range => GetParent(docNode, range)).ToList());
+		}
+
+		internal void Command_Markup_GetChildren(bool allChildren)
+		{
+			var docNode = GetHTMLNode();
+			Selections.Replace(Selections.SelectMany(range => GetChildren(docNode, range, allChildren)).ToList());
 		}
 
 		internal void Command_Markup_GetOuterTag()
