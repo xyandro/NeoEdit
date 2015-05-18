@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using HtmlAgilityPack;
+using NeoEdit.GUI.Common;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
@@ -58,7 +61,7 @@ namespace NeoEdit.TextEdit
 			return innerMost.InnerRange;
 		}
 
-		List<Range> MarkupGetChildrenAndDescendants(MarkupNode rootNode, Range findRange, bool children, MarkupNode.MarkupNodeType type, bool trimWhitespace)
+		List<Range> MarkupGetChildrenAndDescendants(MarkupNode rootNode, Range findRange, bool children, MarkupNode.MarkupNodeType type, bool trimWhitespace, FindElementByNameDialog.Result findByName)
 		{
 			var innerMost = GetInnerMostNode(rootNode, findRange);
 			if (innerMost == null)
@@ -67,6 +70,9 @@ namespace NeoEdit.TextEdit
 			var nodes = (children ? innerMost.Children().ToList() : innerMost.Descendants()).Select(node => new { Node = node, Range = node.OuterRange }).ToList();
 			if (type != MarkupNode.MarkupNodeType.All)
 				nodes = nodes.Where(child => child.Node.NodeType == type).ToList();
+
+			if (findByName != null)
+				nodes = nodes.Where(node => String.Equals(node.Node.Name, findByName.NameToFind, StringComparison.OrdinalIgnoreCase)).ToList();
 
 			if (trimWhitespace)
 			{
@@ -108,10 +114,15 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.Select(range => GetParent(docNode, range)).ToList());
 		}
 
-		internal void Command_Markup_ChildrenAndDescendants(bool children, MarkupNode.MarkupNodeType type, bool trimWhitespace = true)
+		internal FindElementByNameDialog.Result Command_Markup_ChildrenDescendents_ByName_Dialog()
+		{
+			return FindElementByNameDialog.Run(UIHelper.FindParent<Window>(this));
+		}
+
+		internal void Command_Markup_ChildrenAndDescendants(bool children, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All, bool trimWhitespace = true, FindElementByNameDialog.Result findByName = null)
 		{
 			var docNode = GetHTMLNode();
-			Selections.Replace(Selections.SelectMany(range => MarkupGetChildrenAndDescendants(docNode, range, children, type, trimWhitespace)).ToList());
+			Selections.Replace(Selections.SelectMany(range => MarkupGetChildrenAndDescendants(docNode, range, children, type, trimWhitespace, findByName)).ToList());
 		}
 
 		internal void Command_Markup_OuterTag()

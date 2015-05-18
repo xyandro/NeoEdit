@@ -18,6 +18,8 @@ namespace NeoEdit.TextEdit
 		public readonly int EndInnerPosition;
 		public readonly int InnerLength;
 
+		public readonly string Name;
+
 		public readonly MarkupNodeType NodeType;
 
 		public Range OuterRange { get { return new Range(StartOuterPosition, EndOuterPosition); } }
@@ -35,6 +37,7 @@ namespace NeoEdit.TextEdit
 		MarkupNode(HtmlNode node, MarkupNode parent, int position)
 		{
 			Parent = parent;
+			Name = node.Name;
 
 			StartOuterPosition = StartInnerPosition = position;
 			EndOuterPosition = EndInnerPosition = position + node.OuterHtml.Length;
