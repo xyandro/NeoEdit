@@ -2,7 +2,6 @@ All:
 Starting 2nd instance pops up in background
 Add command prompt
 Diff?
-Error isn't in taskbar; can't select to remove
 
 Disk:
 Select by SVN ignore

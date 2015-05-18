@@ -34,7 +34,6 @@ namespace NeoEdit.GUI.Common
 		public new bool ShowDialog()
 		{
 			WindowStyle = WindowStyle.ToolWindow;
-			ShowInTaskbar = false;
 
 			if (Owner == null)
 				return base.ShowDialog() == true;
