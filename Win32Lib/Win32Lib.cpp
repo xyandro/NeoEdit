@@ -4,6 +4,7 @@
 #include "Process.h"
 #include "Handle.h"
 #include "Window.h"
+#include "Tidy.h"
 
 namespace NeoEdit
 {
@@ -27,4 +28,6 @@ namespace NeoEdit
 
 	intptr_t (*Win32Lib::AllocConsole)() = Win32LibNS::Window::AllocConsole;
 	void (*Win32Lib::SendChar)(intptr_t handle, unsigned char ch) = Win32LibNS::Window::SendChar;
+
+	std::wstring (*Win32Lib::HTMLTidy)(std::wstring input) = Win32LibNS::Tidier::Tidy;
 }

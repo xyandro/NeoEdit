@@ -31,6 +31,7 @@ namespace NeoEdit
 			static void WriteSharedMemory(int pid, System::IntPtr handle, int64_t index, array<uint8_t> ^bytes);
 			static System::IntPtr AllocConsole();
 			static void SendChar(System::IntPtr handle, unsigned char ch);
+			static System::String ^HTMLTidy(System::String ^input);
 
 			enum class GetLinesEncoding
 			{

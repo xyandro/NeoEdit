@@ -580,6 +580,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Markup_FetchURL: Command_Markup_FetchURL(); break;
+				case TextEditCommand.Markup_Tidy: Command_Markup_Tidy(); break;
 				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
@@ -1903,6 +1904,15 @@ namespace NeoEdit.TextEdit
 			var tasks = urls.Select(url => GetURL(url)).ToArray();
 			await Task.WhenAll(tasks);
 			ReplaceSelections(tasks.Select(task => task.Result).ToList());
+		}
+
+		internal void Command_Markup_Tidy()
+		{
+			var ranges = Selections.ToList();
+			if ((ranges.Count == 1) && (!ranges[0].HasSelection))
+				ranges = new List<Range> { new Range(BeginOffset(), EndOffset()) };
+			var strs = ranges.Select(range => GetString(range)).ToList();
+			Replace(ranges, strs.Select(str => Win32.Interop.HTMLTidy(str)).ToList());
 		}
 
 		internal void Command_Insert_GUID()

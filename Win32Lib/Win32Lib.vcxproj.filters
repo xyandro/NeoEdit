@@ -34,6 +34,21 @@
     <Filter Include="Window">
       <UniqueIdentifier>{c0cf5dc0-d777-4d38-bc6a-9140b37e06df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HTMLTidy">
+      <UniqueIdentifier>{8a2ffc54-9c71-4e58-a176-7096178bca24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HTMLTidy\Tidy">
+      <UniqueIdentifier>{a96b5a6b-9f11-4ac1-a194-acd8acd2f31f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HTMLTidy\HTMLTidy">
+      <UniqueIdentifier>{6dc5c174-5452-415b-9b46-5fbbd1ed6e88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HTMLTidy\HTMLTidy\Headers">
+      <UniqueIdentifier>{e7ff521d-f160-4b7d-9779-482d9c3e3ffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HTMLTidy\HTMLTidy\Source">
+      <UniqueIdentifier>{06d1a0a2-e8cc-4e37-8b8d-6be4c3de80a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -62,6 +77,87 @@
     </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Tidy.cpp">
+      <Filter>HTMLTidy\Tidy</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\access.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\alloc.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\attrask.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\attrdict.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\attrget.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\attrs.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\buffio.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\charsets.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\clean.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\config.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\entities.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\fileio.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\iconvtc.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\istack.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\lexer.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\localize.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\mappedio.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\parser.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\pprint.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\streamio.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\tagask.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\tags.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\tidylib.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\tmbstr.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\utf8.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLTidy\win32tc.c">
+      <Filter>HTMLTidy\HTMLTidy\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +190,87 @@
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Tidy.h">
+      <Filter>HTMLTidy\Tidy</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\access.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\attrdict.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\attrs.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\charsets.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\clean.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\config.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\entities.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\fileio.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\forward.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\iconvtc.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\lexer.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\mappedio.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\message.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\parser.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\pprint.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\streamio.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\tags.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\tidy-int.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\tmbstr.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\utf8.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\version.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\win32tc.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\buffio.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\platform.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\tidy.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLTidy\tidyenum.h">
+      <Filter>HTMLTidy\HTMLTidy\Headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

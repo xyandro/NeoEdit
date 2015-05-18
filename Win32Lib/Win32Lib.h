@@ -38,5 +38,7 @@ namespace NeoEdit
 
 		static intptr_t (*AllocConsole)();
 		static void (*SendChar)(intptr_t handle, unsigned char ch);
+
+		static std::wstring (*HTMLTidy)(std::wstring input);
 	};
 }

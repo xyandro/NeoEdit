@@ -117,6 +117,7 @@ namespace NeoEdit.TextEdit
 		Data_Hash_SHA256,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Data_Sort,
 		Markup_FetchURL,
+		Markup_Tidy,
 		Insert_GUID,
 		Insert_RandomNumber,
 		Insert_RandomData,

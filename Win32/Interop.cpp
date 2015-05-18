@@ -191,6 +191,17 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
+		String ^Interop::HTMLTidy(String ^input)
+		{
+			try
+			{
+				wstring data = marshal_as<wstring>(input);
+				auto result = Win32Lib::HTMLTidy(data);
+				return gcnew String(result.c_str());
+			}
+			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
+		}
+
 #pragma warning( push )
 #pragma warning( disable : 4305)
 #pragma warning( disable : 4309)
