@@ -174,7 +174,7 @@
 	</MenuItem>
 	<MenuItem Header="_Markup">
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Markup_FetchURL"/>
-		<textEdit:TextEditMenuItem Header="Ti_dy" CommandEnum="Markup_Tidy"/>
+		<textEdit:TextEditMenuItem Header="_Tidy" CommandEnum="Markup_Tidy"/>
 		<textEdit:TextEditMenuItem Header="_Validate" CommandEnum="Markup_Validate"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Markup_Parent"/>
@@ -185,6 +185,14 @@
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Children_Text"/>
 			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Children_AllText"/>
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Children_Comments"/>
+		</MenuItem>
+		<MenuItem Header="_Descendants">
+			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Markup_Descendants"/>
+			<textEdit:TextEditMenuItem Header="_All Descendants" CommandEnum="Markup_Descendants_All"/>
+			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Descendants_Elements"/>
+			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Descendants_Text"/>
+			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Descendants_AllText"/>
+			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Descendants_Comments"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Outer" CommandEnum="Markup_Outer"/>
