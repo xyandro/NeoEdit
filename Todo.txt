@@ -2,7 +2,6 @@ All:
 Starting 2nd instance pops up in background
 Add command prompt
 Diff?
-Pretty menu items
 
 Disk:
 Select by SVN ignore
