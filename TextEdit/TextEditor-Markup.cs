@@ -114,6 +114,11 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Markup_InnerTag()
 		{
+			Selections.Replace(GetSelectionMarkupNodes().Select(node => TrimRange(node.RangeInnerFull)).ToList());
+		}
+
+		internal void Command_Markup_AllInnerTag()
+		{
 			Selections.Replace(GetSelectionMarkupNodes().Select(node => node.RangeInnerFull).ToList());
 		}
 

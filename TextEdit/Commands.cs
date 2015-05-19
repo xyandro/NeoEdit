@@ -141,6 +141,7 @@ namespace NeoEdit.TextEdit
 		Markup_Descendants_ByAttribute,
 		Markup_Outer,
 		Markup_Inner,
+		Markup_AllInner,
 		Markup_Select_Elements,
 		Markup_Select_Text,
 		Markup_Select_Comments,
