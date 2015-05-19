@@ -131,5 +131,33 @@ namespace NeoEdit.TextEdit
 		{
 			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttribute(result.Attribute, result.Value)).Select(node => node.RangeOuterStart).ToList());
 		}
+
+		internal void Command_Markup_Select_TopMost()
+		{
+			var nodes = GetSelectionMarkupNodes();
+			var targetDepth = nodes.Min(node => node.Depth);
+			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
+		}
+
+		internal void Command_Markup_Select_Deepest()
+		{
+			var nodes = GetSelectionMarkupNodes();
+			var targetDepth = nodes.Max(node => node.Depth);
+			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
+		}
+
+		internal void Command_Markup_Select_AllTopMost()
+		{
+			var nodes = GetSelectionMarkupNodes();
+			var descendants = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Descendants)));
+			Selections.Replace(Selections.Where((range, index) => !descendants.Contains(nodes[index])).ToList());
+		}
+
+		internal void Command_Markup_Select_AllDeepest()
+		{
+			var nodes = GetSelectionMarkupNodes();
+			var parents = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Parents)));
+			Selections.Replace(Selections.Where((range, index) => !parents.Contains(nodes[index])).ToList());
+		}
 	}
 }

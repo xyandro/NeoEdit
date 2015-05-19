@@ -212,6 +212,12 @@
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Select_Text"/>
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Select_Comments"/>
 			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Select_ByAttribute"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="To_pmost" CommandEnum="Markup_Select_TopMost"/>
+			<textEdit:TextEditMenuItem Header="_Deepest" CommandEnum="Markup_Select_Deepest"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="All Topmost" CommandEnum="Markup_Select_AllTopMost"/>
+			<textEdit:TextEditMenuItem Header="All Deepest" CommandEnum="Markup_Select_AllDeepest"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Insert">

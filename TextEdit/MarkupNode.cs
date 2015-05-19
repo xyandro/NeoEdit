@@ -24,8 +24,10 @@ namespace NeoEdit.TextEdit
 			Self = 1,
 			Children = 2,
 			Descendants = 4,
+			Parents = 8,
 			SelfAndChildren = Self | Children,
 			SelfAndDescendants = Self | Descendants,
+			SelfAndParents = Self | Parents,
 		}
 
 		public readonly MarkupNode Parent;
@@ -136,7 +138,13 @@ namespace NeoEdit.TextEdit
 		{
 			if (list.HasFlag(MarkupNodeList.Self))
 				yield return this;
+			if (list.HasFlag(MarkupNodeList.Parents))
+			{
+				for (var parent = this.Parent; parent != null; parent = parent.Parent)
+					yield return parent;
+			}
 			if ((list.HasFlag(MarkupNodeList.Children)) || (list.HasFlag(MarkupNodeList.Descendants)))
+			{
 				foreach (var child in children)
 				{
 					yield return child;
@@ -144,6 +152,7 @@ namespace NeoEdit.TextEdit
 						foreach (var childChild in child.List(MarkupNodeList.Descendants))
 							yield return childChild;
 				}
+			}
 		}
 
 		public bool HasAttribute(string name, string value)
