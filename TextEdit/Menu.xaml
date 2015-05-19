@@ -209,7 +209,7 @@
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Select_Elements"/>
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Select_Text"/>
-			<textEdit:TextEditMenuItem Header="_Comments" CommandEnum="Markup_Select_Comments"/>
+			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Select_Comments"/>
 			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Select_ByAttribute"/>
 		</MenuItem>
 	</MenuItem>

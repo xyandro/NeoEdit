@@ -38,6 +38,8 @@ namespace NeoEdit.TextEdit
 		public readonly int EndInnerPosition;
 		public readonly int InnerLength;
 
+		public readonly int Depth;
+
 		public readonly MarkupNodeType NodeType;
 
 		public readonly Dictionary<string, List<string>> Attributes = new Dictionary<string, List<string>>();
@@ -67,12 +69,13 @@ namespace NeoEdit.TextEdit
 		{
 			var doc = new HtmlDocument();
 			doc.LoadHtml(data);
-			return new MarkupNode(doc.DocumentNode, null, position, data);
+			return new MarkupNode(doc.DocumentNode, null, position, 0, data);
 		}
 
-		MarkupNode(HtmlNode node, MarkupNode parent, int position, string data)
+		MarkupNode(HtmlNode node, MarkupNode parent, int position, int depth, string data)
 		{
 			Parent = parent;
+			Depth = depth;
 
 			StartOuterPosition = StartInnerPosition = position;
 			EndOuterPosition = EndInnerPosition = position + node.OuterHtml.Length;
@@ -107,7 +110,7 @@ namespace NeoEdit.TextEdit
 					first = false;
 				}
 
-				children.Add(new MarkupNode(child, this, position, data));
+				children.Add(new MarkupNode(child, this, position, depth + 1, data));
 				position += child.OuterHtml.Length;
 			}
 
@@ -129,7 +132,7 @@ namespace NeoEdit.TextEdit
 			return data.GetString(StartInnerPosition, InnerLength);
 		}
 
-		public IEnumerable<MarkupNode> GetChildren(MarkupNodeList list)
+		public IEnumerable<MarkupNode> List(MarkupNodeList list)
 		{
 			if (list.HasFlag(MarkupNodeList.Self))
 				yield return this;
@@ -138,7 +141,7 @@ namespace NeoEdit.TextEdit
 				{
 					yield return child;
 					if (list.HasFlag(MarkupNodeList.Descendants))
-						foreach (var childChild in child.GetChildren(list))
+						foreach (var childChild in child.List(MarkupNodeList.Descendants))
 							yield return childChild;
 				}
 		}
@@ -148,6 +151,11 @@ namespace NeoEdit.TextEdit
 			if (!Attributes.ContainsKey(name))
 				return false;
 			return Attributes[name].Any(attr => attr == value);
+		}
+
+		public override string ToString()
+		{
+			return RangeOuterFull.ToString();
 		}
 	}
 }

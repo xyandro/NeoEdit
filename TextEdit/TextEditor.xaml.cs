@@ -440,9 +440,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA1: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
-				case TextEditCommand.Markup_Children_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByName_Dialog(); break;
-				case TextEditCommand.Markup_Descendants_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByName_Dialog(); break;
-				case TextEditCommand.Markup_Select_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByName_Dialog(); break;
+				case TextEditCommand.Markup_Children_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
+				case TextEditCommand.Markup_Descendants_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
+				case TextEditCommand.Markup_Select_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
 				case TextEditCommand.Insert_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
 				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;
 				case TextEditCommand.Insert_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
