@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HtmlAgilityPack;
 
 namespace NeoEdit.TextEdit
 {
@@ -30,21 +29,21 @@ namespace NeoEdit.TextEdit
 			SelfAndParents = Self | Parents,
 		}
 
-		public readonly MarkupNode Parent;
+		public MarkupNode Parent { get; set; }
 
-		public readonly int StartOuterPosition;
-		public readonly int EndOuterPosition;
-		public readonly int OuterLength;
+		public int StartOuterPosition { get; set; }
+		public int EndOuterPosition { get; set; }
+		public int OuterLength { get { return EndOuterPosition - StartOuterPosition; } }
 
-		public readonly int StartInnerPosition;
-		public readonly int EndInnerPosition;
-		public readonly int InnerLength;
+		public int StartInnerPosition { get; set; }
+		public int EndInnerPosition { get; set; }
+		public int InnerLength { get { return EndInnerPosition - StartInnerPosition; } }
 
-		public readonly int Depth;
+		public int Depth { get; set; }
 
-		public readonly MarkupNodeType NodeType;
+		public MarkupNodeType NodeType { get; set; }
 
-		public readonly Dictionary<string, List<string>> Attributes = new Dictionary<string, List<string>>();
+		readonly Dictionary<string, List<string>> attributes = new Dictionary<string, List<string>>();
 
 		public Range RangeOuter
 		{
@@ -67,61 +66,8 @@ namespace NeoEdit.TextEdit
 
 		readonly List<MarkupNode> children = new List<MarkupNode>();
 
-		static public MarkupNode FromHTML(string data, int position)
+		internal MarkupNode()
 		{
-			var doc = new HtmlDocument();
-			doc.LoadHtml(data);
-			return new MarkupNode(doc.DocumentNode, null, position, 0, data);
-		}
-
-		MarkupNode(HtmlNode node, MarkupNode parent, int position, int depth, string data)
-		{
-			Parent = parent;
-			Depth = depth;
-
-			StartOuterPosition = StartInnerPosition = position;
-			EndOuterPosition = EndInnerPosition = position + node.OuterHtml.Length;
-			OuterLength = InnerLength = EndOuterPosition - StartOuterPosition;
-
-			if (data.Substring(StartOuterPosition, OuterLength) != node.OuterHtml)
-				throw new Exception("Failed to parse HTML.");
-
-			switch (node.NodeType)
-			{
-				case HtmlNodeType.Document:
-				case HtmlNodeType.Element: NodeType = MarkupNodeType.Element; break;
-				case HtmlNodeType.Comment: NodeType = MarkupNodeType.Comment; break;
-				case HtmlNodeType.Text: NodeType = MarkupNodeType.Text; break;
-			}
-
-			Attributes = node.Attributes.GroupBy(attr => attr.Name).ToDictionary(group => group.Key, group => group.Select(attr => attr.Value).ToList());
-
-			if (!Attributes.ContainsKey("tag"))
-				Attributes["tag"] = new List<string>();
-			Attributes["tag"].Add(node.Name);
-
-			var first = true;
-			foreach (var child in node.ChildNodes)
-			{
-				if (first)
-				{
-					if (child.StreamPosition != 0)
-						position += child.StreamPosition - node.StreamPosition;
-					else
-						position += node.OuterHtml.LastIndexOf(child.OuterHtml);
-					first = false;
-				}
-
-				children.Add(new MarkupNode(child, this, position, depth + 1, data));
-				position += child.OuterHtml.Length;
-			}
-
-			if (children.Any())
-			{
-				StartInnerPosition = children.First().StartOuterPosition;
-				EndInnerPosition = children.Last().EndOuterPosition;
-				InnerLength = EndInnerPosition - StartInnerPosition;
-			}
 		}
 
 		public string GetOuterText(TextData data)
@@ -155,16 +101,49 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		public List<string> GetAttributes()
+		{
+			return attributes.Keys.ToList();
+		}
+
+		public string GetAttribute(string name)
+		{
+			if (!attributes.ContainsKey(name))
+				return null;
+			return attributes[name].FirstOrDefault();
+		}
+
+		public List<string> GetAllAttributes(string name)
+		{
+			if (!attributes.ContainsKey(name))
+				return new List<string>();
+			return attributes[name];
+		}
+
+		public void AddAttribute(string name, string value, int itemStart, int itemEnd)
+		{
+			if (!attributes.ContainsKey(name))
+				attributes[name] = new List<string>();
+			attributes[name].Add(value);
+		}
+
 		public bool HasAttribute(string name, string value)
 		{
-			if (!Attributes.ContainsKey(name))
+			if (!attributes.ContainsKey(name))
 				return false;
-			return Attributes[name].Any(attr => attr == value);
+			return attributes[name].Any(attr => attr == value);
+		}
+
+		public void AddChild(MarkupNode node)
+		{
+			node.Depth = Depth + 1;
+			node.Parent = this;
+			children.Add(node);
 		}
 
 		public override string ToString()
 		{
-			return RangeOuterFull.ToString();
+			return String.Format("{0} {1}: Outer: {2}, Inner: {3}", NodeType.ToString(), GetAttribute("Tag"), RangeOuterFull.ToString(), RangeInnerFull.ToString());
 		}
 	}
 }

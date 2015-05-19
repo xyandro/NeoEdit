@@ -118,7 +118,6 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Data_Sort,
 		Markup_FetchURL,
 		Markup_Tidy,
-		Markup_Validate,
 		[KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control)] [KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control | ModifierKeys.Shift, false)] Markup_ToggleTagPosition,
 		Markup_Parent,
 		Markup_Children_Children,

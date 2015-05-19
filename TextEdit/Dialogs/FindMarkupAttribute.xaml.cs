@@ -24,7 +24,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		FindMarkupAttribute()
 		{
 			InitializeComponent();
-			Attribute = "tag";
+			Attribute = "Tag";
 		}
 
 		Result result;

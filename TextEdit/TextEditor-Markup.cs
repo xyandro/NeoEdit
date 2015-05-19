@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using HtmlAgilityPack;
 using NeoEdit.GUI.Common;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -14,15 +13,13 @@ namespace NeoEdit.TextEdit
 		{
 			var allRange = new Range(BeginOffset(), EndOffset());
 			var data = GetString(allRange);
-			var mn = MarkupNode.FromHTML(data, BeginOffset());
-			if (data.Substring(mn.StartOuterPosition, mn.OuterLength) != data)
-				throw new Exception("Invalid data found; please validate.");
-			return mn;
+			return HTMLParser.ParseHTML(data, allRange.Start);
 		}
 
 		List<MarkupNode> GetSelectionMarkupNodes(MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All)
 		{
-			var nodes = HTMLRoot().List(MarkupNode.MarkupNodeList.SelfAndDescendants).Where(node => type.HasFlag(node.NodeType)).ToList();
+			var doc = HTMLRoot();
+			var nodes = doc.List(MarkupNode.MarkupNodeList.SelfAndDescendants).Where(node => type.HasFlag(node.NodeType)).ToList();
 			var location = nodes.GroupBy(node => node.StartOuterPosition).ToDictionary(group => group.Key, group => group.Last());
 
 			var result = new List<MarkupNode>();
@@ -68,21 +65,8 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Markup_Tidy()
 		{
-			// Validates too
 			var allRange = new Range(BeginOffset(), EndOffset());
-			var str = GetString(allRange);
-			str = Win32.Interop.HTMLTidy(str);
-			var doc = new HtmlDocument();
-			doc.LoadHtml(str);
-			Replace(new List<Range> { allRange }, new List<string> { doc.DocumentNode.OuterHtml });
-		}
-
-		internal void Command_Markup_Validate()
-		{
-			var allRange = new Range(BeginOffset(), EndOffset());
-			var doc = new HtmlDocument();
-			doc.LoadHtml(GetString(allRange));
-			Replace(new List<Range> { allRange }, new List<string> { doc.DocumentNode.OuterHtml });
+			Replace(new List<Range> { allRange }, new List<string> { Win32.Interop.HTMLTidy(GetString(allRange)) });
 		}
 
 		internal void Command_Markup_ToggleTagPosition(bool shiftDown)
