@@ -181,20 +181,26 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Markup_Parent"/>
 		<MenuItem Header="_Children">
-			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children"/>
-			<textEdit:TextEditMenuItem Header="_All Children" CommandEnum="Markup_Children_All"/>
+			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children_Children"/>
+			<textEdit:TextEditMenuItem Header="All Children" CommandEnum="Markup_Children_All"/>
+			<textEdit:TextEditMenuItem Header="_Self and Children" CommandEnum="Markup_Children_SelfAndChildren"/>
+			<textEdit:TextEditMenuItem Header="Self and All Children" CommandEnum="Markup_Children_SelfAndAll"/>
 			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Children_Elements"/>
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Children_Text"/>
 			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Children_AllText"/>
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Children_Comments"/>
+			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Children_ByAttribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
-			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Markup_Descendants"/>
-			<textEdit:TextEditMenuItem Header="_All Descendants" CommandEnum="Markup_Descendants_All"/>
+			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Markup_Descendants_Descendants"/>
+			<textEdit:TextEditMenuItem Header="All Descendants" CommandEnum="Markup_Descendants_All"/>
+			<textEdit:TextEditMenuItem Header="_Self and Descendants" CommandEnum="Markup_Descendants_SelfAndDescendants"/>
+			<textEdit:TextEditMenuItem Header="Self and All Descendants" CommandEnum="Markup_Descendants_SelfAndAll"/>
 			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Descendants_Elements"/>
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Descendants_Text"/>
 			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Descendants_AllText"/>
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Descendants_Comments"/>
+			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Descendants_ByAttribute"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Outer" CommandEnum="Markup_Outer"/>

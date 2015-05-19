@@ -17,6 +17,17 @@ namespace NeoEdit.TextEdit
 			All = Element | Text | Comment
 		}
 
+		[Flags]
+		public enum MarkupNodeList
+		{
+			None = 0,
+			Self = 1,
+			Children = 2,
+			Descendants = 4,
+			SelfAndChildren = Self | Children,
+			SelfAndDescendants = Self | Descendants,
+		}
+
 		public readonly MarkupNode Parent;
 
 		public readonly int StartOuterPosition;
@@ -118,33 +129,18 @@ namespace NeoEdit.TextEdit
 			return data.GetString(StartInnerPosition, InnerLength);
 		}
 
-		public IEnumerable<MarkupNode> Children()
+		public IEnumerable<MarkupNode> GetChildren(MarkupNodeList list)
 		{
-			return children;
-		}
-
-		public IEnumerable<MarkupNode> SelfAndChildren()
-		{
-			yield return this;
-			foreach (var child in Children())
-				yield return child;
-		}
-
-		public IEnumerable<MarkupNode> Descendants()
-		{
-			foreach (var child in children)
-			{
-				yield return child;
-				foreach (var childChild in child.Descendants())
-					yield return childChild;
-			}
-		}
-
-		public IEnumerable<MarkupNode> SelfAndDescendants()
-		{
-			yield return this;
-			foreach (var child in Descendants())
-				yield return child;
+			if (list.HasFlag(MarkupNodeList.Self))
+				yield return this;
+			if ((list.HasFlag(MarkupNodeList.Children)) || (list.HasFlag(MarkupNodeList.Descendants)))
+				foreach (var child in children)
+				{
+					yield return child;
+					if (list.HasFlag(MarkupNodeList.Descendants))
+						foreach (var childChild in child.GetChildren(list))
+							yield return childChild;
+				}
 		}
 
 		public bool HasAttribute(string name, string value)

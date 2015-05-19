@@ -22,7 +22,7 @@ namespace NeoEdit.TextEdit
 
 		MarkupNode GetInnerMostNode(MarkupNode node, Range range, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All)
 		{
-			var childInnerMost = node.Children().Select(child => GetInnerMostNode(child, range, type)).Where(child => child != null).ToList();
+			var childInnerMost = node.GetChildren(MarkupNode.MarkupNodeList.Children).Select(child => GetInnerMostNode(child, range, type)).Where(child => child != null).ToList();
 			MarkupNode found = null;
 			if (found == null)
 				found = childInnerMost.Where(child => child.StartOuterPosition == range.Start).FirstOrDefault();
@@ -71,27 +71,28 @@ namespace NeoEdit.TextEdit
 			var innerMost = GetInnerMostNode(node, range);
 			if (innerMost == null)
 				return range;
-			if (!innerMost.Children().Any())
-				return innerMost.RangeOuterFull;
 			return innerMost.RangeInnerFull;
 		}
 
-		List<Range> MarkupGetChildrenAndDescendants(MarkupNode rootNode, Range findRange, bool children, MarkupNode.MarkupNodeType type, bool trimWhitespace)
+		List<Range> MarkupGetChildrenAndDescendants(MarkupNode rootNode, Range findRange, MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type, bool trimWhitespace, FindMarkupAttribute.Result findAttr)
 		{
-			var innerMost = GetInnerMostNode(rootNode, findRange);
-			if (innerMost == null)
+			var node = GetInnerMostNode(rootNode, findRange);
+			if (node == null)
 				return new List<Range>();
 
-			var nodes = (children ? innerMost.Children().ToList() : innerMost.Descendants()).Select(node => new { Node = node, Range = node.RangeOuter }).ToList();
-			nodes = nodes.Where(child => type.HasFlag(child.Node.NodeType)).ToList();
+			var childNodes = node.GetChildren(list).Select(childNode => new { Node = childNode, Range = childNode.RangeOuter }).ToList();
+			childNodes = childNodes.Where(child => type.HasFlag(child.Node.NodeType)).ToList();
 
 			if (trimWhitespace)
 			{
-				nodes = nodes.Select(node => new { Node = node.Node, Range = node.Node.NodeType == MarkupNode.MarkupNodeType.Text ? TrimRange(node.Range) : node.Range }).ToList();
-				nodes = nodes.Where(node => (node.Node.NodeType != MarkupNode.MarkupNodeType.Text) || (node.Range.HasSelection)).ToList();
+				childNodes = childNodes.Select(childNode => new { Node = childNode.Node, Range = childNode.Node.NodeType == MarkupNode.MarkupNodeType.Text ? TrimRange(childNode.Range) : childNode.Range }).ToList();
+				childNodes = childNodes.Where(childNode => (childNode.Node.NodeType != MarkupNode.MarkupNodeType.Text) || (childNode.Range.HasSelection)).ToList();
 			}
 
-			var ranges = nodes.Select(node => node.Range).ToList();
+			if (findAttr != null)
+				childNodes = childNodes.Where(childNode => childNode.Node.HasAttribute(findAttr.Attribute, findAttr.Value)).ToList();
+
+			var ranges = childNodes.Select(childNode => childNode.Range).ToList();
 
 			return ranges;
 		}
@@ -148,10 +149,10 @@ namespace NeoEdit.TextEdit
 			return FindMarkupAttribute.Run(UIHelper.FindParent<Window>(this));
 		}
 
-		internal void Command_Markup_ChildrenAndDescendants(bool children, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All, bool trimWhitespace = true)
+		internal void Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All, bool trimWhitespace = true, FindMarkupAttribute.Result findAttr = null)
 		{
 			var docNode = GetHTMLNode();
-			Selections.Replace(Selections.SelectMany(range => MarkupGetChildrenAndDescendants(docNode, range, children, type, trimWhitespace)).ToList());
+			Selections.Replace(Selections.SelectMany(range => MarkupGetChildrenAndDescendants(docNode, range, list, type, trimWhitespace, findAttr)).ToList());
 		}
 
 		internal void Command_Markup_OuterTag()
