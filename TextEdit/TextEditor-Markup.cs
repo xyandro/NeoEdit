@@ -20,15 +20,15 @@ namespace NeoEdit.TextEdit
 			return mn;
 		}
 
-		MarkupNode GetInnerMostNode(MarkupNode node, Range range)
+		MarkupNode GetInnerMostNode(MarkupNode node, Range range, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All)
 		{
-			var childInnerMost = node.Children().Select(child => GetInnerMostNode(child, range)).Where(child => child != null).ToList();
+			var childInnerMost = node.Children().Select(child => GetInnerMostNode(child, range, type)).Where(child => child != null).ToList();
 			var elements = childInnerMost.Where(child => child.NodeType == MarkupNode.MarkupNodeType.Element).ToList();
 			if (elements.Any())
 				return elements.Last();
 			if (childInnerMost.Any())
 				return childInnerMost.Last();
-			if ((range.Start >= node.StartOuterPosition) && (range.End <= node.EndOuterPosition))
+			if ((type.HasFlag(node.NodeType)) && (range.Start >= node.StartOuterPosition) && (range.End <= node.EndOuterPosition))
 				return node;
 			return null;
 		}
@@ -45,7 +45,7 @@ namespace NeoEdit.TextEdit
 
 		Range GetToggleTagPosition(MarkupNode rootNode, Range range, bool shiftDown)
 		{
-			var innerMost = GetInnerMostNode(rootNode, range);
+			var innerMost = GetInnerMostNode(rootNode, range, MarkupNode.MarkupNodeType.Element | MarkupNode.MarkupNodeType.Comment);
 			if (innerMost == null)
 				return range;
 			var pos = innerMost.StartOuterPosition;
@@ -79,8 +79,7 @@ namespace NeoEdit.TextEdit
 				return new List<Range>();
 
 			var nodes = (children ? innerMost.Children().ToList() : innerMost.Descendants()).Select(node => new { Node = node, Range = node.RangeOuter }).ToList();
-			if (type != MarkupNode.MarkupNodeType.All)
-				nodes = nodes.Where(child => child.Node.NodeType == type).ToList();
+			nodes = nodes.Where(child => type.HasFlag(child.Node.NodeType)).ToList();
 
 			if (findByName != null)
 				nodes = nodes.Where(node => String.Equals(node.Node.Name, findByName.NameToFind, StringComparison.OrdinalIgnoreCase)).ToList();

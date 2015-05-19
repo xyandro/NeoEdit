@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
 
@@ -6,7 +7,15 @@ namespace NeoEdit.TextEdit
 {
 	class MarkupNode
 	{
-		public enum MarkupNodeType { Unknown, Element, Text, Comment, All }
+		[Flags]
+		public enum MarkupNodeType
+		{
+			None = 0,
+			Element = 1,
+			Text = 2,
+			Comment = 4,
+			All = Element | Text | Comment
+		}
 
 		public readonly MarkupNode Parent;
 
