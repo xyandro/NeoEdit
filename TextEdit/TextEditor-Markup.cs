@@ -40,7 +40,7 @@ namespace NeoEdit.TextEdit
 				innerMost = innerMost.Parent;
 			if (innerMost == null)
 				return range;
-			return innerMost.OuterRange;
+			return innerMost.RangeOuterStart;
 		}
 
 		Range GetOuterHtml(MarkupNode node, Range range)
@@ -48,7 +48,7 @@ namespace NeoEdit.TextEdit
 			var innerMost = GetInnerMostNode(node, range);
 			if (innerMost == null)
 				return range;
-			return innerMost.OuterRange;
+			return innerMost.RangeOuterFull;
 		}
 
 		Range GetInnerHtml(MarkupNode node, Range range)
@@ -57,8 +57,8 @@ namespace NeoEdit.TextEdit
 			if (innerMost == null)
 				return range;
 			if (!innerMost.Children().Any())
-				return innerMost.OuterRange;
-			return innerMost.InnerRange;
+				return innerMost.RangeOuterFull;
+			return innerMost.RangeInnerFull;
 		}
 
 		List<Range> MarkupGetChildrenAndDescendants(MarkupNode rootNode, Range findRange, bool children, MarkupNode.MarkupNodeType type, bool trimWhitespace, FindElementByNameDialog.Result findByName)
@@ -67,7 +67,7 @@ namespace NeoEdit.TextEdit
 			if (innerMost == null)
 				return new List<Range>();
 
-			var nodes = (children ? innerMost.Children().ToList() : innerMost.Descendants()).Select(node => new { Node = node, Range = node.OuterRange }).ToList();
+			var nodes = (children ? innerMost.Children().ToList() : innerMost.Descendants()).Select(node => new { Node = node, Range = node.RangeOuter }).ToList();
 			if (type != MarkupNode.MarkupNodeType.All)
 				nodes = nodes.Where(child => child.Node.NodeType == type).ToList();
 
@@ -81,10 +81,6 @@ namespace NeoEdit.TextEdit
 			}
 
 			var ranges = nodes.Select(node => node.Range).ToList();
-
-			// Since descendant elements can overlap, don't leave selections
-			if ((!children) && (type != MarkupNode.MarkupNodeType.Comment) && (type != MarkupNode.MarkupNodeType.Text))
-				ranges = ranges.Select(range => new Range(range.Start)).ToList();
 
 			return ranges;
 		}

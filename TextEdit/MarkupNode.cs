@@ -22,8 +22,24 @@ namespace NeoEdit.TextEdit
 
 		public readonly MarkupNodeType NodeType;
 
-		public Range OuterRange { get { return new Range(StartOuterPosition, EndOuterPosition); } }
-		public Range InnerRange { get { return new Range(StartInnerPosition, EndInnerPosition); } }
+		public Range RangeOuter
+		{
+			get
+			{
+				switch (NodeType)
+				{
+					case MarkupNodeType.Text:
+					case MarkupNodeType.Comment:
+						return RangeOuterFull;
+					default:
+						return RangeOuterStart;
+				}
+			}
+		}
+		public Range RangeOuterFull { get { return new Range(StartOuterPosition, EndOuterPosition); } }
+		public Range RangeOuterStart { get { return new Range(StartOuterPosition); } }
+		public Range RangeOuterEnd { get { return new Range(EndOuterPosition); } }
+		public Range RangeInnerFull { get { return new Range(StartInnerPosition, EndInnerPosition); } }
 
 		readonly List<MarkupNode> children = new List<MarkupNode>();
 
