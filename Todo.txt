@@ -29,7 +29,6 @@ Copy counts based on searches
 Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Audit accelerators
-Number of regions on statusbar
 
 View:
 Update as new lines are added

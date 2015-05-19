@@ -63,6 +63,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
+		public int NumRegions { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public int xScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int yScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -2416,6 +2418,7 @@ namespace NeoEdit.TextEdit
 			};
 
 			NumSelections = Selections.Count;
+			NumRegions = Regions.Count;
 
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + yScrollViewportCeiling);

@@ -89,6 +89,15 @@
 			<Separator/>
 
 			<StatusBarItem>
+				<TextBlock Text="Regions"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding NumRegions, ElementName=self, StringFormat=n0}"/>
+			</StatusBarItem>
+
+			<Separator/>
+
+			<StatusBarItem>
 				<TextBlock Text="Clipboards"/>
 			</StatusBarItem>
 			<StatusBarItem>
