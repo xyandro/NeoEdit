@@ -187,7 +187,6 @@
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Children_Text"/>
 			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Children_AllText"/>
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Children_Comments"/>
-			<textEdit:TextEditMenuItem Header="By _Name" CommandEnum="Markup_Children_ByName"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Markup_Descendants"/>
@@ -196,11 +195,17 @@
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Descendants_Text"/>
 			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Descendants_AllText"/>
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Descendants_Comments"/>
-			<textEdit:TextEditMenuItem Header="By _Name" CommandEnum="Markup_Descendants_ByName"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Outer" CommandEnum="Markup_Outer"/>
 		<textEdit:TextEditMenuItem Header="_Inner" CommandEnum="Markup_Inner"/>
+		<Separator/>
+		<MenuItem Header="_Select">
+			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Select_Elements"/>
+			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Select_Text"/>
+			<textEdit:TextEditMenuItem Header="_Comments" CommandEnum="Markup_Select_Comments"/>
+			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Select_ByAttribute"/>
+		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Insert">
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>

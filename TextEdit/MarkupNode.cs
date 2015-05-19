@@ -27,9 +27,9 @@ namespace NeoEdit.TextEdit
 		public readonly int EndInnerPosition;
 		public readonly int InnerLength;
 
-		public readonly string Name;
-
 		public readonly MarkupNodeType NodeType;
+
+		public readonly Dictionary<string, List<string>> Attributes = new Dictionary<string, List<string>>();
 
 		public Range RangeOuter
 		{
@@ -62,7 +62,6 @@ namespace NeoEdit.TextEdit
 		MarkupNode(HtmlNode node, MarkupNode parent, int position, string data)
 		{
 			Parent = parent;
-			Name = node.Name;
 
 			StartOuterPosition = StartInnerPosition = position;
 			EndOuterPosition = EndInnerPosition = position + node.OuterHtml.Length;
@@ -78,6 +77,12 @@ namespace NeoEdit.TextEdit
 				case HtmlNodeType.Comment: NodeType = MarkupNodeType.Comment; break;
 				case HtmlNodeType.Text: NodeType = MarkupNodeType.Text; break;
 			}
+
+			Attributes = node.Attributes.GroupBy(attr => attr.Name).ToDictionary(group => group.Key, group => group.Select(attr => attr.Value).ToList());
+
+			if (!Attributes.ContainsKey("tag"))
+				Attributes["tag"] = new List<string>();
+			Attributes["tag"].Add(node.Name);
 
 			var first = true;
 			foreach (var child in node.ChildNodes)
@@ -118,7 +123,7 @@ namespace NeoEdit.TextEdit
 			return children;
 		}
 
-		public IEnumerable<MarkupNode> ChildrenAndSelf()
+		public IEnumerable<MarkupNode> SelfAndChildren()
 		{
 			yield return this;
 			foreach (var child in Children())
@@ -135,11 +140,18 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		public IEnumerable<MarkupNode> DescendantsAndSelf()
+		public IEnumerable<MarkupNode> SelfAndDescendants()
 		{
 			yield return this;
 			foreach (var child in Descendants())
 				yield return child;
+		}
+
+		public bool HasAttribute(string name, string value)
+		{
+			if (!Attributes.ContainsKey(name))
+				return false;
+			return Attributes[name].Any(attr => attr == value);
 		}
 	}
 }
