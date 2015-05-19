@@ -592,6 +592,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Children_All: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, trimWhitespace: false); break;
 				case TextEditCommand.Markup_Children_SelfAndChildren: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.SelfAndChildren); break;
 				case TextEditCommand.Markup_Children_SelfAndAll: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.SelfAndChildren, trimWhitespace: false); break;
+				case TextEditCommand.Markup_Children_First: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, first: true); break;
 				case TextEditCommand.Markup_Children_Elements: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, MarkupNode.MarkupNodeType.Element); break;
 				case TextEditCommand.Markup_Children_Text: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, MarkupNode.MarkupNodeType.Text); break;
 				case TextEditCommand.Markup_Children_AllText: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, MarkupNode.MarkupNodeType.Text, false); break;
@@ -601,6 +602,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Descendants_All: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, trimWhitespace: false); break;
 				case TextEditCommand.Markup_Descendants_SelfAndDescendants: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.SelfAndDescendants); break;
 				case TextEditCommand.Markup_Descendants_SelfAndAll: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.SelfAndDescendants, trimWhitespace: false); break;
+				case TextEditCommand.Markup_Descendants_First: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, first: true); break;
 				case TextEditCommand.Markup_Descendants_Elements: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Element); break;
 				case TextEditCommand.Markup_Descendants_Text: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Text); break;
 				case TextEditCommand.Markup_Descendants_AllText: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Text, false); break;

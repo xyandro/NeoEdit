@@ -44,7 +44,7 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		List<Range> MarkupGetChildrenAndDescendants(MarkupNode node, MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type, bool trimWhitespace, FindMarkupAttribute.Result findAttr)
+		List<Range> MarkupGetChildrenAndDescendants(MarkupNode node, MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type, bool trimWhitespace, bool first, FindMarkupAttribute.Result findAttr)
 		{
 			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = childNode.RangeOuter }).ToList();
 			childNodes = childNodes.Where(child => type.HasFlag(child.Node.NodeType)).ToList();
@@ -57,6 +57,9 @@ namespace NeoEdit.TextEdit
 
 			if (findAttr != null)
 				childNodes = childNodes.Where(childNode => childNode.Node.HasAttribute(findAttr.Attribute, findAttr.Value)).ToList();
+
+			if (first)
+				childNodes = childNodes.Take(1).ToList();
 
 			var ranges = childNodes.Select(childNode => childNode.Range).ToList();
 
@@ -71,7 +74,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Markup_ToggleTagPosition(bool shiftDown)
 		{
-			var nodes = GetSelectionMarkupNodes(MarkupNode.MarkupNodeType.Element | MarkupNode.MarkupNodeType.Comment);
+			var nodes = GetSelectionMarkupNodes(~MarkupNode.MarkupNodeType.Text);
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.StartOuterPosition).All(b => b);
 			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.EndOuterPosition : node.StartOuterPosition, shiftDown)).ToList());
 		}
@@ -86,9 +89,11 @@ namespace NeoEdit.TextEdit
 			return FindMarkupAttribute.Run(UIHelper.FindParent<Window>(this));
 		}
 
-		internal void Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All, bool trimWhitespace = true, FindMarkupAttribute.Result findAttr = null)
+		internal void Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All, bool trimWhitespace = true, bool first = false, FindMarkupAttribute.Result findAttr = null)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().SelectMany(node => MarkupGetChildrenAndDescendants(node, list, type, trimWhitespace, findAttr)).ToList());
+			var newSels = GetSelectionMarkupNodes().SelectMany(node => MarkupGetChildrenAndDescendants(node, list, type, trimWhitespace, first, findAttr)).ToList();
+			if (newSels.Any())
+				Selections.Replace(newSels);
 		}
 
 		internal void Command_Markup_NextPrev(bool next)
