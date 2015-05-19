@@ -56,10 +56,10 @@ namespace NeoEdit.TextEdit
 		{
 			var doc = new HtmlDocument();
 			doc.LoadHtml(data);
-			return new MarkupNode(doc.DocumentNode, null, position);
+			return new MarkupNode(doc.DocumentNode, null, position, data);
 		}
 
-		MarkupNode(HtmlNode node, MarkupNode parent, int position)
+		MarkupNode(HtmlNode node, MarkupNode parent, int position, string data)
 		{
 			Parent = parent;
 			Name = node.Name;
@@ -67,6 +67,9 @@ namespace NeoEdit.TextEdit
 			StartOuterPosition = StartInnerPosition = position;
 			EndOuterPosition = EndInnerPosition = position + node.OuterHtml.Length;
 			OuterLength = InnerLength = EndOuterPosition - StartOuterPosition;
+
+			if (data.Substring(StartOuterPosition, OuterLength) != node.OuterHtml)
+				throw new Exception("Failed to parse HTML.");
 
 			switch (node.NodeType)
 			{
@@ -81,11 +84,14 @@ namespace NeoEdit.TextEdit
 			{
 				if (first)
 				{
-					position += node.OuterHtml.IndexOf(child.OuterHtml);
+					if (child.StreamPosition != 0)
+						position += child.StreamPosition - node.StreamPosition;
+					else
+						position += node.OuterHtml.LastIndexOf(child.OuterHtml);
 					first = false;
 				}
 
-				children.Add(new MarkupNode(child, this, position));
+				children.Add(new MarkupNode(child, this, position, data));
 				position += child.OuterHtml.Length;
 			}
 
