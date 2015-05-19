@@ -587,7 +587,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_FetchURL: Command_Markup_FetchURL(); break;
 				case TextEditCommand.Markup_Tidy: Command_Markup_Tidy(); break;
 				case TextEditCommand.Markup_ToggleTagPosition: Command_Markup_ToggleTagPosition(shiftDown); break;
-				case TextEditCommand.Markup_Parent: Command_Markup_Parent(); break;
+				case TextEditCommand.Markup_Parent: Command_Markup_Parent(shiftDown); break;
 				case TextEditCommand.Markup_Children_Children: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children); break;
 				case TextEditCommand.Markup_Children_All: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, trimWhitespace: false); break;
 				case TextEditCommand.Markup_Children_SelfAndChildren: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.SelfAndChildren); break;
@@ -608,8 +608,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Descendants_AllText: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Text, false); break;
 				case TextEditCommand.Markup_Descendants_Comments: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Comment); break;
 				case TextEditCommand.Markup_Descendants_ByAttribute: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, findAttr: dialogResult as FindMarkupAttribute.Result); break;
-				case TextEditCommand.Markup_Next: Command_Markup_NextPrev(true); break;
-				case TextEditCommand.Markup_Previous: Command_Markup_NextPrev(false); break;
+				case TextEditCommand.Markup_Next: Command_Markup_NextPrev(true, shiftDown); break;
+				case TextEditCommand.Markup_Previous: Command_Markup_NextPrev(false, shiftDown); break;
 				case TextEditCommand.Markup_Outer: Command_Markup_OuterTag(); break;
 				case TextEditCommand.Markup_Inner: Command_Markup_InnerTag(); break;
 				case TextEditCommand.Markup_AllInner: Command_Markup_AllInnerTag(); break;

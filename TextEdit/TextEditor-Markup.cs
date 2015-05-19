@@ -26,8 +26,8 @@ namespace NeoEdit.TextEdit
 			foreach (var range in Selections)
 			{
 				MarkupNode found = null;
-				if (location.ContainsKey(range.Start))
-					found = location[range.Start];
+				if (location.ContainsKey(range.Cursor))
+					found = location[range.Cursor];
 				else
 				{
 					var inRangeNodes = nodes.Where(node => (range.Start >= node.StartOuterPosition) && (range.End <= node.EndOuterPosition)).ToList();
@@ -79,9 +79,9 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.EndOuterPosition : node.StartOuterPosition, shiftDown)).ToList());
 		}
 
-		internal void Command_Markup_Parent()
+		internal void Command_Markup_Parent(bool shiftDown)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().Select(node => node.Parent).Where(node => node != null).Select(node => node.RangeOuterStart).ToList());
+			Selections.Replace(GetSelectionMarkupNodes().Select((node, index) => MoveCursor(Selections[index], (node.Parent ?? node).StartOuterPosition, shiftDown)).ToList());
 		}
 
 		internal FindMarkupAttribute.Result Command_Markup_ChildrenDescendents_ByAttribute_Dialog()
@@ -96,22 +96,23 @@ namespace NeoEdit.TextEdit
 				Selections.Replace(newSels);
 		}
 
-		internal void Command_Markup_NextPrev(bool next)
+		internal void Command_Markup_NextPrev(bool next, bool shiftDown)
 		{
 			var offset = next ? 1 : -1;
 			var nodes = GetSelectionMarkupNodes(~MarkupNode.MarkupNodeType.Text);
-			Selections.Replace(nodes.Select(node =>
+			Selections.Replace(nodes.Select((node, idx) =>
 			{
+				var range = Selections[idx];
 				var children = node.Parent.List(MarkupNode.MarkupNodeList.Children).Where(child => child.NodeType != MarkupNode.MarkupNodeType.Text).ToList();
 				if (!children.Any())
-					return node.RangeOuter;
+					return range;
 				var index = children.IndexOf(node);
 				index += offset;
 				if (index < 0)
 					index = children.Count - 1;
 				if (index >= children.Count)
 					index = 0;
-				return children[index].RangeOuter;
+				return MoveCursor(range, children[index].StartOuterPosition, shiftDown);
 			}).ToList());
 		}
 
