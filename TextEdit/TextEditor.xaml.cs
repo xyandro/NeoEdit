@@ -606,6 +606,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Descendants_AllText: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Text, false); break;
 				case TextEditCommand.Markup_Descendants_Comments: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Comment); break;
 				case TextEditCommand.Markup_Descendants_ByAttribute: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, findAttr: dialogResult as FindMarkupAttribute.Result); break;
+				case TextEditCommand.Markup_Next: Command_Markup_NextPrev(true); break;
+				case TextEditCommand.Markup_Previous: Command_Markup_NextPrev(false); break;
 				case TextEditCommand.Markup_Outer: Command_Markup_OuterTag(); break;
 				case TextEditCommand.Markup_Inner: Command_Markup_InnerTag(); break;
 				case TextEditCommand.Markup_AllInner: Command_Markup_AllInnerTag(); break;

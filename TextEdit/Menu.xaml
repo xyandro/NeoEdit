@@ -201,6 +201,8 @@
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Descendants_Comments"/>
 			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Descendants_ByAttribute"/>
 		</MenuItem>
+		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Markup_Next"/>
+		<textEdit:TextEditMenuItem Header="P_revious" CommandEnum="Markup_Previous"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Outer" CommandEnum="Markup_Outer"/>
 		<textEdit:TextEditMenuItem Header="_Inner" CommandEnum="Markup_Inner"/>

@@ -138,6 +138,8 @@ namespace NeoEdit.TextEdit
 		Markup_Descendants_AllText,
 		Markup_Descendants_Comments,
 		Markup_Descendants_ByAttribute,
+		Markup_Next,
+		Markup_Previous,
 		Markup_Outer,
 		Markup_Inner,
 		Markup_AllInner,

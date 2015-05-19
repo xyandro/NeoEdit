@@ -91,6 +91,25 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(GetSelectionMarkupNodes().SelectMany(node => MarkupGetChildrenAndDescendants(node, list, type, trimWhitespace, findAttr)).ToList());
 		}
 
+		internal void Command_Markup_NextPrev(bool next)
+		{
+			var offset = next ? 1 : -1;
+			var nodes = GetSelectionMarkupNodes(~MarkupNode.MarkupNodeType.Text);
+			Selections.Replace(nodes.Select(node =>
+			{
+				var children = node.Parent.List(MarkupNode.MarkupNodeList.Children).Where(child => child.NodeType != MarkupNode.MarkupNodeType.Text).ToList();
+				if (!children.Any())
+					return node.RangeOuter;
+				var index = children.IndexOf(node);
+				index += offset;
+				if (index < 0)
+					index = children.Count - 1;
+				if (index >= children.Count)
+					index = 0;
+				return children[index].RangeOuter;
+			}).ToList());
+		}
+
 		internal void Command_Markup_OuterTag()
 		{
 			Selections.Replace(GetSelectionMarkupNodes().Select(node => node.RangeOuterFull).ToList());
