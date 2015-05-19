@@ -2,6 +2,7 @@ All:
 Starting 2nd instance pops up in background
 Add command prompt
 Diff?
+Pretty menu items
 
 Disk:
 Select by SVN ignore
@@ -29,7 +30,6 @@ Copy counts based on searches
 Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Audit accelerators
-Move between opening/closing tags
 
 View:
 Update as new lines are added

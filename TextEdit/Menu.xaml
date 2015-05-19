@@ -177,6 +177,8 @@
 		<textEdit:TextEditMenuItem Header="_Tidy" CommandEnum="Markup_Tidy"/>
 		<textEdit:TextEditMenuItem Header="_Validate" CommandEnum="Markup_Validate"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="Toggle Tag Position" CommandEnum="Markup_ToggleTagPosition"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Markup_Parent"/>
 		<MenuItem Header="_Children">
 			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children"/>

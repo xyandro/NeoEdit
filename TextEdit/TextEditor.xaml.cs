@@ -584,6 +584,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_FetchURL: Command_Markup_FetchURL(); break;
 				case TextEditCommand.Markup_Tidy: Command_Markup_Tidy(); break;
 				case TextEditCommand.Markup_Validate: Command_Markup_Validate(); break;
+				case TextEditCommand.Markup_ToggleTagPosition: Command_Markup_ToggleTagPosition(shiftDown); break;
 				case TextEditCommand.Markup_Parent: Command_Markup_Parent(); break;
 				case TextEditCommand.Markup_Children: Command_Markup_ChildrenAndDescendants(true); break;
 				case TextEditCommand.Markup_Children_All: Command_Markup_ChildrenAndDescendants(true, trimWhitespace: false); break;

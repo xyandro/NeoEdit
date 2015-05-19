@@ -22,12 +22,12 @@ namespace NeoEdit.TextEdit
 
 		MarkupNode GetInnerMostNode(MarkupNode node, Range range)
 		{
-			foreach (var child in node.Children().Reverse())
-			{
-				var result = GetInnerMostNode(child, range);
-				if (result != null)
-					return result;
-			}
+			var childInnerMost = node.Children().Select(child => GetInnerMostNode(child, range)).Where(child => child != null).ToList();
+			var elements = childInnerMost.Where(child => child.NodeType == MarkupNode.MarkupNodeType.Element).ToList();
+			if (elements.Any())
+				return elements.Last();
+			if (childInnerMost.Any())
+				return childInnerMost.Last();
 			if ((range.Start >= node.StartOuterPosition) && (range.End <= node.EndOuterPosition))
 				return node;
 			return null;
@@ -41,6 +41,17 @@ namespace NeoEdit.TextEdit
 			if (innerMost == null)
 				return range;
 			return innerMost.RangeOuterStart;
+		}
+
+		Range GetToggleTagPosition(MarkupNode rootNode, Range range, bool shiftDown)
+		{
+			var innerMost = GetInnerMostNode(rootNode, range);
+			if (innerMost == null)
+				return range;
+			var pos = innerMost.StartOuterPosition;
+			if (pos == range.Cursor)
+				pos = innerMost.EndOuterPosition;
+			return MoveCursor(range, pos, shiftDown);
 		}
 
 		Range GetOuterHtml(MarkupNode node, Range range)
@@ -102,6 +113,12 @@ namespace NeoEdit.TextEdit
 			var doc = new HtmlDocument();
 			doc.LoadHtml(GetString(allRange));
 			Replace(new List<Range> { allRange }, new List<string> { doc.DocumentNode.OuterHtml });
+		}
+
+		internal void Command_Markup_ToggleTagPosition(bool shiftDown)
+		{
+			var docNode = GetHTMLNode();
+			Selections.Replace(Selections.Select(range => GetToggleTagPosition(docNode, range, shiftDown)).ToList());
 		}
 
 		internal void Command_Markup_Parent()
