@@ -320,8 +320,8 @@
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEdit:TextEditMenuItem Header="Lines" CommandEnum="Select_Lines"/>
-		<textEdit:TextEditMenuItem Header="Empty" CommandEnum="Select_Empty"/>
-		<textEdit:TextEditMenuItem Header="Non-Empty" CommandEnum="Select_NonEmpty"/>
+		<textEdit:TextEditMenuItem Header="E_mpty" CommandEnum="Select_Empty"/>
+		<textEdit:TextEditMenuItem Header="_Non-Empty" CommandEnum="Select_NonEmpty"/>
 		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Select_Trim"/>
 		<textEdit:TextEditMenuItem Header="_Width" CommandEnum="Select_Width"/>
 		<Separator/>
