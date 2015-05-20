@@ -158,7 +158,8 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public static event EventHandler ClipboardChanged;
+		public delegate void ClipboardStringCountHandler(int newCount);
+		public static event ClipboardStringCountHandler ClipboardStringCountChanged;
 
 		static ClipboardChangedNotifier clipboardChangedNotifier = new ClipboardChangedNotifier();
 		class ClipboardChangedNotifier : System.Windows.Forms.Form
@@ -174,8 +175,14 @@ namespace NeoEdit.Common
 			{
 				const int WM_CLIPBOARDUPDATE = 0x031D;
 				if (m.Msg == WM_CLIPBOARDUPDATE)
-					if (ClipboardChanged != null)
-						ClipboardChanged(null, null);
+					if (ClipboardStringCountChanged != null)
+						while (true)
+							try
+							{
+								ClipboardStringCountChanged(GetStrings().Count);
+								break;
+							}
+							catch { }
 				base.WndProc(ref m);
 			}
 		}

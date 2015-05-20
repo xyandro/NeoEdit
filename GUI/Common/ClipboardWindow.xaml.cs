@@ -14,7 +14,8 @@ namespace NeoEdit.GUI.Common
 			get { return stringsCount; }
 			private set
 			{
-				stringsCount = value; if (StringsCountChanged != null)
+				stringsCount = value;
+				if (StringsCountChanged != null)
 					StringsCountChanged(null, new EventArgs());
 			}
 		}
@@ -34,7 +35,7 @@ namespace NeoEdit.GUI.Common
 			UIHelper<ClipboardWindow>.AddObservableCallback(a => a.Records, (obj, s, e) => obj.items.SelectedItem = NEClipboard.Current);
 
 			StringsCount = NEClipboard.GetStrings().Count;
-			NEClipboard.ClipboardChanged += (s, e) => StringsCount = NEClipboard.GetStrings().Count;
+			NEClipboard.ClipboardStringCountChanged += newCount => StringsCount = newCount;
 		}
 
 		[DepProp]
