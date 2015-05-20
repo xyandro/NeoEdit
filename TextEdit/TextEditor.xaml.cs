@@ -585,7 +585,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Markup_FetchURL: Command_Markup_FetchURL(); break;
-				case TextEditCommand.Markup_Tidy: Command_Markup_Tidy(); break;
+				case TextEditCommand.Markup_Reformat: Command_Markup_Reformat(); break;
 				case TextEditCommand.Markup_ToggleTagPosition: Command_Markup_ToggleTagPosition(shiftDown); break;
 				case TextEditCommand.Markup_Parent: Command_Markup_Parent(shiftDown); break;
 				case TextEditCommand.Markup_Children_Children: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children); break;

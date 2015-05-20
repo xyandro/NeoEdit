@@ -31,7 +31,7 @@ Allow user to disable undo/redo for faster performance
 Audit accelerators
 Highlight attributes
 Attribute search by regex
-Replace HTMLTidy
+Submit forms
 
 View:
 Update as new lines are added

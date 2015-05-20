@@ -47,10 +47,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextView", "TextView\TextView.csproj", "{46568E12-8F80-492E-AED8-647C2386C3E9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{FA0FB809-7793-45F8-9E7F-A2FBC0E6A87E}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HTMLTidy", "Lib\HTMLTidy\HTMLTidy.vcxproj", "{1D41F384-8BC1-4989-AF75-679C5D519FDF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -187,19 +183,8 @@ Global
 		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x64.Build.0 = Release|x64
 		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x86.ActiveCfg = Release|x86
 		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x86.Build.0 = Release|x86
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF}.Debug|x64.ActiveCfg = Debug|x64
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF}.Debug|x64.Build.0 = Debug|x64
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF}.Debug|x86.ActiveCfg = Debug|Win32
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF}.Debug|x86.Build.0 = Debug|Win32
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF}.Release|x64.ActiveCfg = Release|x64
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF}.Release|x64.Build.0 = Release|x64
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF}.Release|x86.ActiveCfg = Release|Win32
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{1D41F384-8BC1-4989-AF75-679C5D519FDF} = {FA0FB809-7793-45F8-9E7F-A2FBC0E6A87E}
 	EndGlobalSection
 EndGlobal

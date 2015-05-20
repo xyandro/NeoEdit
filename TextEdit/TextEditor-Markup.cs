@@ -66,10 +66,12 @@ namespace NeoEdit.TextEdit
 			return ranges;
 		}
 
-		internal void Command_Markup_Tidy()
+		internal void Command_Markup_Reformat()
 		{
 			var allRange = new Range(BeginOffset(), EndOffset());
-			Replace(new List<Range> { allRange }, new List<string> { Win32.Interop.HTMLTidy(GetString(allRange)) });
+			var data = GetString(allRange);
+			var doc = HTMLParser.ParseHTML(data, allRange.Start);
+			Replace(new List<Range> { allRange }, new List<string> { HTMLParser.FormatHTML(doc, data) });
 		}
 
 		internal void Command_Markup_ToggleTagPosition(bool shiftDown)
