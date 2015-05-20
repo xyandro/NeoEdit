@@ -5,7 +5,9 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace NeoEdit.Common
 {
@@ -176,13 +178,27 @@ namespace NeoEdit.Common
 				const int WM_CLIPBOARDUPDATE = 0x031D;
 				if (m.Msg == WM_CLIPBOARDUPDATE)
 					if (ClipboardStringCountChanged != null)
-						while (true)
-							try
-							{
-								ClipboardStringCountChanged(GetStrings().Count);
-								break;
-							}
-							catch { }
+					{
+						var dispatcher = Dispatcher.CurrentDispatcher;
+						var thread = new Thread(() =>
+						{
+							int count;
+							while (true)
+								try
+								{
+									count = GetStrings().Count;
+									break;
+								}
+								catch
+								{
+									Thread.Sleep(100);
+								}
+
+							dispatcher.Invoke(() => ClipboardStringCountChanged(count));
+						});
+						thread.SetApartmentState(ApartmentState.STA);
+						thread.Start();
+					}
 				base.WndProc(ref m);
 			}
 		}
