@@ -16,7 +16,7 @@
 		</Grid.RowDefinitions>
 
 		<Menu Grid.Column="0" Grid.Row="0">
-			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
+			<guiCommon:WindowMenu/>
 			<guiCommon:HelpMenu/>
 		</Menu>
 

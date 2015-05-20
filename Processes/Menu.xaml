@@ -15,7 +15,7 @@
 		<processes:ProcessesMenuItem Header="_Resume" CommandEnum="Process_Resume"/>
 		<processes:ProcessesMenuItem Header="_Kill" CommandEnum="Process_Kill"/>
 	</MenuItem>
-	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
+	<guiCommon:WindowMenu/>
 	<guiCommon:HelpMenu/>
 
 </Menu>

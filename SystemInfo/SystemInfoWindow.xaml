@@ -31,7 +31,7 @@
 			<MenuItem Header="_View">
 				<MenuItem Command="systemInfo:SystemInfoWindow.Command_View_InstalledPrograms" Header="Installed _Programs"/>
 			</MenuItem>
-			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
+			<guiCommon:WindowMenu/>
 			<guiCommon:HelpMenu/>
 		</Menu>
 

@@ -59,28 +59,23 @@ namespace NeoEdit.GUI.Common
 		{
 			public readonly CommandEnumT Command;
 			public readonly string InputGestureText;
-			public readonly List<Tuple<KeyGesture, string>> KeyGestures = new List<Tuple<KeyGesture, string>>();
+			public readonly List<KeyGestureAttribute> KeyGestures = new List<KeyGestureAttribute>();
 
 			public NECommand(CommandEnumT command)
 			{
 				Command = command;
 
 				var memberInfo = typeof(CommandEnumT).GetMember(command.ToString()).First();
-				var keyGestureAttrs = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false).Cast<KeyGestureAttribute>().OrderBy(key => !key.Primary).ToList();
-				foreach (var key in keyGestureAttrs)
-				{
-					var gesture = new KeyGesture(key.Key, key.Modifiers);
-					KeyGestures.Add(new Tuple<KeyGesture, string>(gesture, key.GestureText));
-				}
+				KeyGestures = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false).Cast<KeyGestureAttribute>().OrderBy(key => !key.Primary).ToList();
 				if (KeyGestures.Any())
-					InputGestureText = KeyGestures.First().Item2;
+					InputGestureText = KeyGestures.First().GestureText;
 			}
 
 			public void RegisterCommand(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
 			{
 				window.CommandBindings.Add(new CommandBinding(this, (s, e) => handler(s, e, Command)));
-				foreach (var attr in KeyGestures)
-					window.InputBindings.Add(new KeyBinding(this, attr.Item1));
+				foreach (var keyGesture in KeyGestures)
+					window.InputBindings.Add(new KeyBinding(this, new KeyGesture(keyGesture.Key, keyGesture.Modifiers)));
 			}
 		}
 
@@ -122,10 +117,8 @@ namespace NeoEdit.GUI.Common
 		{
 			if (commands == null)
 			{
-				commands = new Dictionary<CommandEnumT, NECommand>();
-				foreach (CommandEnumT a in Enum.GetValues(typeof(CommandEnumT)))
-					commands[a] = new NECommand(a);
-				var duplicates = commands.Values.SelectMany(command => command.KeyGestures.Select(keyGesture => keyGesture.Item2)).GroupBy(key => key).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
+				commands = Enum.GetValues(typeof(CommandEnumT)).Cast<CommandEnumT>().ToDictionary(commandEnum => commandEnum, commandEnum => new NECommand(commandEnum));
+				var duplicates = commands.Values.SelectMany(command => command.KeyGestures).GroupBy(keyGesture => keyGesture.GestureText).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
 				if (duplicates.Any())
 					throw new Exception(String.Format("Duplicate hotkeys: {0}", String.Join(", ", duplicates)));
 			}

@@ -52,7 +52,6 @@
     <Compile Include="Common\HelpMenu.xaml.cs">
       <DependentUpon>HelpMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\InputGestureTextConverter.cs" />
     <Compile Include="Common\KeySet.cs" />
     <Compile Include="Common\NECommand.cs" />
     <Compile Include="Common\RadioConverter.cs" />

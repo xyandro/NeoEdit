@@ -2,33 +2,19 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common"
-	Header="_Window" Style="{StaticResource {x:Type MenuItem}}">
+	Header="_Window">
 
-	<MenuItem.CommandBindings>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Clipboard" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Console" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_DBViewer" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Disk" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Handles" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_HexEditor" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Processes" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_Registry" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_TextEditor" Executed="CommandBinding_Executed"/>
-		<CommandBinding Command="guiCommon:WindowMenu.Command_Window_TextViewer" Executed="CommandBinding_Executed"/>
-	</MenuItem.CommandBindings>
-
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Clipboard" Header="_Clipboard"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Console" Header="C_onsole"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_DBViewer" Header="DB Viewer"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Disk" Header="_Disk"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Handles" Header="H_andles"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_HexEditor" Header="_Hex Editor"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Processes" Header="_Processes"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_Registry" Header="_Registry"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_SystemInfo" Header="_System Info"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextEditor" Header="_Text Editor"/>
-	<MenuItem Command="guiCommon:WindowMenu.Command_Window_TextViewer" Header="Text _Viewer"/>
+	<guiCommon:WindowMenuItem Header="_Clipboard" CommandEnum="Window_Clipboard"/>
+	<guiCommon:WindowMenuItem Header="C_onsole" CommandEnum="Window_Console"/>
+	<guiCommon:WindowMenuItem Header="DB Viewer" CommandEnum="Window_DBViewer"/>
+	<guiCommon:WindowMenuItem Header="_Disk" CommandEnum="Window_Disk"/>
+	<guiCommon:WindowMenuItem Header="H_andles" CommandEnum="Window_Handles"/>
+	<guiCommon:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>
+	<guiCommon:WindowMenuItem Header="_Processes" CommandEnum="Window_Processes"/>
+	<guiCommon:WindowMenuItem Header="_Registry" CommandEnum="Window_Registry"/>
+	<guiCommon:WindowMenuItem Header="_System Info" CommandEnum="Window_SystemInfo"/>
+	<guiCommon:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>
+	<guiCommon:WindowMenuItem Header="Text _Viewer" CommandEnum="Window_TextViewer"/>
 
 	<MenuItem Header="_Minimize to Tray" IsCheckable="True" IsChecked="{Binding Path=(guiCommon:NEWindow.MinimizeToTray), Mode=TwoWay}"/>
 

@@ -1,24 +1,19 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-
-namespace NeoEdit.GUI.Common
+﻿namespace NeoEdit.GUI.Common
 {
-	partial class HelpMenu : MenuItem
+	enum HelpCommand
+	{
+		None,
+		Help_About,
+		Help_RunGC,
+	}
+
+	class HelpMenuItem : NEMenuItem<HelpCommand> { }
+
+	partial class HelpMenu
 	{
 		public HelpMenu()
 		{
 			InitializeComponent();
-		}
-
-		void HelpAbout(object sender, RoutedEventArgs e)
-		{
-			About.AboutWindow.Run();
-		}
-
-		void RunGC(object sender, RoutedEventArgs e)
-		{
-			GC.Collect();
 		}
 	}
 }

@@ -28,7 +28,7 @@
 			<MenuItem Header="_View">
 				<MenuItem Command="registry:RegistryWindow.Command_View_Refresh" Header="_Refresh"/>
 			</MenuItem>
-			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
+			<guiCommon:WindowMenu/>
 			<guiCommon:HelpMenu/>
 		</Menu>
 

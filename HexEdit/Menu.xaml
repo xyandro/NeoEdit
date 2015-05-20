@@ -86,7 +86,7 @@
 		<hexEdit:HexEditMenuItem Header="_Load" CommandEnum="Data_Models_Load"/>
 		<hexEdit:HexEditMenuItem Header="_Extract Data" CommandEnum="Data_Models_ExtractData"/>
 	</MenuItem>
-	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
+	<guiCommon:WindowMenu/>
 	<guiCommon:HelpMenu/>
 
 </Menu>

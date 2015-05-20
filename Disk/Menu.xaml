@@ -91,7 +91,7 @@
 		<Separator/>
 		<disk:DiskMenuItem Header="_Disk Usage" CommandEnum="View_DiskUsage"/>
 	</MenuItem>
-	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
+	<guiCommon:WindowMenu/>
 	<guiCommon:HelpMenu/>
 
 </Menu>

@@ -390,7 +390,7 @@
 		<textEdit:TextEditMenuItem Header="_Play" CommandEnum="Macro_Play"/>
 		<textEdit:TextEditMenuItem Header="Play On Copied _Files" CommandEnum="Macro_PlayOnCopiedFiles"/>
 	</MenuItem>
-	<guiCommon:WindowMenu ParentWindow="{Binding Parent, ElementName=self}"/>
+	<guiCommon:WindowMenu/>
 	<guiCommon:HelpMenu/>
 
 </Menu>

@@ -235,8 +235,6 @@ namespace NeoEdit
 
 		public App()
 		{
-			InitializeComponent();
-
 			NeoEdit.GUI.Launcher.Initialize(
 				getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray,
 				setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); },

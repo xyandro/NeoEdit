@@ -1,8 +1,9 @@
 ﻿<MenuItem x:Class="NeoEdit.GUI.Common.HelpMenu"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Header="_Help" Style="{StaticResource {x:Type MenuItem}}">
+	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common"
+	Header="_Help">
 
-	<MenuItem Header="_About" Click="HelpAbout"/>
-	<MenuItem Header="Run _GC" Click="RunGC"/>
+	<guiCommon:HelpMenuItem Header="_About" CommandEnum="Help_About"/>
+	<guiCommon:HelpMenuItem Header="Run _GC" CommandEnum="Help_RunGC"/>
 </MenuItem>

@@ -39,7 +39,7 @@
 				<MenuItem Command="handles:HandlesWindow.Command_View_GotoProcess" Header="Goto _process"/>
 				<MenuItem Command="handles:HandlesWindow.Command_View_FilterByType" Header="Goto _process"/>
 			</MenuItem>
-			<guiCommon:WindowMenu ParentWindow="{Binding ElementName=self}"/>
+			<guiCommon:WindowMenu/>
 			<guiCommon:HelpMenu/>
 		</Menu>
 		<handles:HandlesItemGrid x:Name="handles" Grid.Row="1" Items="{Binding Handles, ElementName=self}"/>
