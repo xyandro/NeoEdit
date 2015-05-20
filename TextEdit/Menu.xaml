@@ -154,14 +154,14 @@
 		<textEdit:TextEditMenuItem Header="_Repeat" CommandEnum="Data_Repeat"/>
 		<Separator/>
 		<MenuItem Header="Escape">
-			<textEdit:TextEditMenuItem Header="XML" CommandEnum="Data_Escape_XML"/>
-			<textEdit:TextEditMenuItem Header="Regex" CommandEnum="Data_Escape_Regex"/>
-			<textEdit:TextEditMenuItem Header="URL" CommandEnum="Data_Escape_URL"/>
+			<textEdit:TextEditMenuItem Header="_Markup" CommandEnum="Data_Escape_Markup"/>
+			<textEdit:TextEditMenuItem Header="_Regex" CommandEnum="Data_Escape_Regex"/>
+			<textEdit:TextEditMenuItem Header="_URL" CommandEnum="Data_Escape_URL"/>
 		</MenuItem>
 		<MenuItem Header="Unescape">
-			<textEdit:TextEditMenuItem Header="XML" CommandEnum="Data_Unescape_XML"/>
-			<textEdit:TextEditMenuItem Header="Regex" CommandEnum="Data_Unescape_Regex"/>
-			<textEdit:TextEditMenuItem Header="URL" CommandEnum="Data_Unescape_URL"/>
+			<textEdit:TextEditMenuItem Header="_Markup" CommandEnum="Data_Unescape_Markup"/>
+			<textEdit:TextEditMenuItem Header="_Regex" CommandEnum="Data_Unescape_Regex"/>
+			<textEdit:TextEditMenuItem Header="_URL" CommandEnum="Data_Unescape_URL"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Hash">

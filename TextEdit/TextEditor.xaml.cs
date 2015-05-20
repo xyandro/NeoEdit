@@ -574,10 +574,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Copy_Columns: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Column); break;
 				case TextEditCommand.Data_Copy_Positions: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Position); break;
 				case TextEditCommand.Data_Repeat: Command_Data_Repeat(dialogResult as RepeatDialog.Result); break;
-				case TextEditCommand.Data_Escape_XML: Command_Data_Escape_XML(); break;
+				case TextEditCommand.Data_Escape_Markup: Command_Data_Escape_XML(); break;
 				case TextEditCommand.Data_Escape_Regex: Command_Data_Escape_Regex(); break;
 				case TextEditCommand.Data_Escape_URL: Command_Data_Escape_URL(); break;
-				case TextEditCommand.Data_Unescape_XML: Command_Data_Unescape_XML(); break;
+				case TextEditCommand.Data_Unescape_Markup: Command_Data_Unescape_XML(); break;
 				case TextEditCommand.Data_Unescape_Regex: Command_Data_Unescape_Regex(); break;
 				case TextEditCommand.Data_Unescape_URL: Command_Data_Unescape_URL(); break;
 				case TextEditCommand.Data_Hash_MD5: Command_Data_Hash(Hash.Type.MD5, dialogResult as EncodingDialog.Result); break;
