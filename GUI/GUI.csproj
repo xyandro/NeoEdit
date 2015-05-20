@@ -42,7 +42,6 @@
     <Compile Include="Common\AutoCompleteTextBox.xaml.cs">
       <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\EventLogger.cs" />
     <Compile Include="Common\ExpressionConverter.cs" />
     <Compile Include="Common\Font.cs" />
     <Page Include="Common\HelpMenu.xaml">
