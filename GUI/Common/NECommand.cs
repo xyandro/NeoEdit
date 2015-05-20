@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -79,26 +78,12 @@ namespace NeoEdit.GUI.Common
 			}
 		}
 
-		public NEMenuItem()
+		static NEMenuItem()
 		{
-			// Allow right-click
-			SetValue(typeof(MenuItem).GetField("InsideContextMenuProperty", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null) as DependencyProperty, true);
-		}
-
-		MouseButton last = MouseButton.Left;
-		static public MouseButton LastClick { get; private set; }
-
-		protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
-		{
-			last = MouseButton.Right;
-			base.OnMouseRightButtonUp(e);
-			last = MouseButton.Left;
-		}
-
-		protected override void OnClick()
-		{
-			LastClick = last;
-			base.OnClick();
+			commands = Enum.GetValues(typeof(CommandEnumT)).Cast<CommandEnumT>().ToDictionary(commandEnum => commandEnum, commandEnum => new NECommand(commandEnum));
+			var duplicates = commands.Values.SelectMany(command => command.KeyGestures).GroupBy(keyGesture => keyGesture.GestureText).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
+			if (duplicates.Any())
+				throw new Exception(String.Format("Duplicate hotkeys: {0}", String.Join(", ", duplicates)));
 		}
 
 		public CommandEnumT CommandEnum
@@ -115,13 +100,6 @@ namespace NeoEdit.GUI.Common
 		static Dictionary<CommandEnumT, NECommand> commands;
 		static public void RegisterCommands(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
 		{
-			if (commands == null)
-			{
-				commands = Enum.GetValues(typeof(CommandEnumT)).Cast<CommandEnumT>().ToDictionary(commandEnum => commandEnum, commandEnum => new NECommand(commandEnum));
-				var duplicates = commands.Values.SelectMany(command => command.KeyGestures).GroupBy(keyGesture => keyGesture.GestureText).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
-				if (duplicates.Any())
-					throw new Exception(String.Format("Duplicate hotkeys: {0}", String.Join(", ", duplicates)));
-			}
 			foreach (var command in commands.Values)
 				command.RegisterCommand(window, handler);
 		}
