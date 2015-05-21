@@ -44,7 +44,7 @@ namespace NeoEdit.TextEdit
 
 		public MarkupNodeType NodeType { get; set; }
 
-		readonly Dictionary<string, List<string>> attributes = new Dictionary<string, List<string>>();
+		readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>();
 
 		public Range RangeOuter
 		{
@@ -111,28 +111,40 @@ namespace NeoEdit.TextEdit
 		{
 			if (!attributes.ContainsKey(name))
 				return null;
-			return attributes[name].FirstOrDefault();
+			return attributes[name].Select(attr => attr.Item1).FirstOrDefault();
 		}
 
 		public List<string> GetAllAttributes(string name)
 		{
 			if (!attributes.ContainsKey(name))
 				return new List<string>();
-			return attributes[name];
+			return attributes[name].Select(attr => attr.Item1).ToList();
 		}
 
 		public void AddAttribute(string name, string value, int itemStart, int itemEnd)
 		{
 			if (!attributes.ContainsKey(name))
-				attributes[name] = new List<string>();
-			attributes[name].Add(value);
+				attributes[name] = new List<Tuple<string, int, int>>();
+			attributes[name].Add(Tuple.Create(value, itemStart, itemEnd));
 		}
 
 		public bool HasAttribute(string name, Regex regex)
 		{
 			if (!attributes.ContainsKey(name))
 				return false;
-			return attributes[name].Any(attr => regex.IsMatch(attr));
+			return attributes[name].Any(attr => regex.IsMatch(attr.Item1));
+		}
+
+		public IEnumerable<Range> GetAttributeRanges(string name, bool firstOnly)
+		{
+			if (!attributes.ContainsKey(name))
+				yield break;
+			foreach (var attr in attributes[name])
+			{
+				yield return new Range(attr.Item2, attr.Item3);
+				if (firstOnly)
+					break;
+			}
 		}
 
 		public void AddChild(MarkupNode node)

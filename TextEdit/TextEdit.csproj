@@ -28,6 +28,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\SelectMarkupAttributeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\GetUniqueNamesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -42,6 +46,9 @@
     </Page>
     <Compile Include="Dialogs\CombinationsPermutationsDialog.xaml.cs">
       <DependentUpon>CombinationsPermutationsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SelectMarkupAttributeDialog.xaml.cs">
+      <DependentUpon>SelectMarkupAttributeDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\GetUniqueNamesDialog.xaml.cs">
       <DependentUpon>GetUniqueNamesDialog.xaml</DependentUpon>

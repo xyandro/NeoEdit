@@ -444,6 +444,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Children_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
 				case TextEditCommand.Markup_Descendants_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
 				case TextEditCommand.Markup_Select_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
+				case TextEditCommand.Markup_Select_Attribute: dialogResult = Command_Markup_Select_Attribute_Dialog(); break;
 				case TextEditCommand.Insert_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
 				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;
 				case TextEditCommand.Insert_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
@@ -631,6 +632,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Select_Deepest: Command_Markup_Select_Deepest(); break;
 				case TextEditCommand.Markup_Select_AllTopMost: Command_Markup_Select_AllTopMost(); break;
 				case TextEditCommand.Markup_Select_AllDeepest: Command_Markup_Select_AllDeepest(); break;
+				case TextEditCommand.Markup_Select_Attribute: Command_Markup_Select_Attribute(dialogResult as SelectMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;

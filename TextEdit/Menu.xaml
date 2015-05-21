@@ -224,6 +224,8 @@
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="All Topmost" CommandEnum="Markup_Select_AllTopMost"/>
 			<textEdit:TextEditMenuItem Header="All Deepest" CommandEnum="Markup_Select_AllDeepest"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="Att_ribute" CommandEnum="Markup_Select_Attribute"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Insert">

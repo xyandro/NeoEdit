@@ -33,6 +33,7 @@ Audit accelerators
 Highlight attributes
 Submit forms
 Multiple reformats change format
+Make markup relative paths absolute
 
 View:
 Update as new lines are added

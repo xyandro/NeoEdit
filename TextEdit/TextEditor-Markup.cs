@@ -170,5 +170,15 @@ namespace NeoEdit.TextEdit
 			var parents = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Parents)));
 			Selections.Replace(Selections.Where((range, index) => !parents.Contains(nodes[index])).ToList());
 		}
+
+		internal SelectMarkupAttributeDialog.Result Command_Markup_Select_Attribute_Dialog()
+		{
+			return SelectMarkupAttributeDialog.Run(UIHelper.FindParent<Window>(this));
+		}
+
+		internal void Command_Markup_Select_Attribute(SelectMarkupAttributeDialog.Result result)
+		{
+			Selections.Replace(GetSelectionMarkupNodes().SelectMany(node => node.GetAttributeRanges(result.Attribute, result.FirstOnly)).ToList());
+		}
 	}
 }

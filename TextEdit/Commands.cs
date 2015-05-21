@@ -154,6 +154,7 @@ namespace NeoEdit.TextEdit
 		Markup_Select_Deepest,
 		Markup_Select_AllTopMost,
 		Markup_Select_AllDeepest,
+		Markup_Select_Attribute,
 		Insert_GUID,
 		Insert_RandomNumber,
 		Insert_RandomData,
