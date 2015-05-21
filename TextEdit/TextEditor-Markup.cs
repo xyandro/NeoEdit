@@ -56,7 +56,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			if (findAttr != null)
-				childNodes = childNodes.Where(childNode => childNode.Node.HasAttribute(findAttr.Attribute, findAttr.Value)).ToList();
+				childNodes = childNodes.Where(childNode => childNode.Node.HasAttribute(findAttr.Attribute, findAttr.Regex)).ToList();
 
 			if (first)
 				childNodes = childNodes.Take(1).ToList();
@@ -140,7 +140,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Markup_Select_ByAttribute(FindMarkupAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttribute(result.Attribute, result.Value)).Select(node => node.RangeOuterStart).ToList());
+			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttribute(result.Attribute, result.Regex)).Select(node => node.RangeOuterStart).ToList());
 		}
 
 		internal void Command_Markup_Select_TopMost()

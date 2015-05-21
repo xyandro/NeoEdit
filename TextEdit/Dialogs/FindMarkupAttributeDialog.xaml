@@ -2,7 +2,7 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
-	Title="Find Element By Name" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=value}">
+	Title="Find Element By Name" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=text}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -12,6 +12,10 @@
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -19,10 +23,18 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="Attribute:" Target="{Binding ElementName=attribute}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Name="attribute" Width="200" HorizontalAlignment="Left" Text="{Binding Attribute, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Element name:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="value" Width="200" HorizontalAlignment="Left" Text="{Binding Value, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Element name:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Name="text" Width="200" HorizontalAlignment="Left" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<CheckBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Content="_All contents" IsChecked="{Binding AllContents, ElementName=self}"/>
+
+		<CheckBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}"/>
+
+		<CheckBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}"/>
+
+		<CheckBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

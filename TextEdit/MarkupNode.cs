@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace NeoEdit.TextEdit
 {
@@ -127,11 +128,11 @@ namespace NeoEdit.TextEdit
 			attributes[name].Add(value);
 		}
 
-		public bool HasAttribute(string name, string value)
+		public bool HasAttribute(string name, Regex regex)
 		{
 			if (!attributes.ContainsKey(name))
 				return false;
-			return attributes[name].Any(attr => attr == value);
+			return attributes[name].Any(attr => regex.IsMatch(attr));
 		}
 
 		public void AddChild(MarkupNode node)

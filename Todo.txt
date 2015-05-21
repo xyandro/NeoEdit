@@ -31,8 +31,8 @@ Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Audit accelerators
 Highlight attributes
-Attribute search by regex
 Submit forms
+Multiple reformats change format
 
 View:
 Update as new lines are added
