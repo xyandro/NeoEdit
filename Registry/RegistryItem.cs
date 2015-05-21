@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using NeoEdit.Common;
-using NeoEdit.GUI.Common;
-using NeoEdit.GUI.ItemGridControl;
+using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Controls.ItemGridControl;
 
 namespace NeoEdit.Registry
 {

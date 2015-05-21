@@ -10,7 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.Console
 {
@@ -441,7 +442,7 @@ namespace NeoEdit.Console
 		internal Label GetLabel()
 		{
 			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
-			label.SetBinding(Label.ContentProperty, new Binding("Location") { Source = this, Converter = new NeoEdit.GUI.Common.ExpressionConverter(), ConverterParameter = @"FileName([0])" });
+			label.SetBinding(Label.ContentProperty, new Binding("Location") { Source = this, Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"FileName([0])" });
 			return label;
 		}
 

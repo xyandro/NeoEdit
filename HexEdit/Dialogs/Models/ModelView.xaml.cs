@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Windows;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.HexEdit.Dialogs.Models
 {

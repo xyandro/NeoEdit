@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using NeoEdit.Common;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.TextView.Dialogs
 {

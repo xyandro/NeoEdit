@@ -1,4 +1,4 @@
-﻿using NeoEdit.GUI.Common;
+﻿using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Console
 {

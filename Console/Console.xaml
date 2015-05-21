@@ -1,7 +1,7 @@
 ﻿<UserControl Name="self" x:Class="NeoEdit.Console.Console"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
+    xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	Background="White" FocusManager.IsFocusScope="True">
 
 	<Grid>
@@ -14,7 +14,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<guiCommon:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10,5" ClipToBounds="True" Focusable="True" FocusVisualStyle="{x:Null}"/>
+		<guiControls:RenderCanvas x:Name="canvas" Grid.Row="0" Grid.Column="0" Background="Transparent" Margin="10,5" ClipToBounds="True" Focusable="True" FocusVisualStyle="{x:Null}"/>
 		<ScrollBar Name="yScroll" Grid.Row="0" Grid.Column="1" Value="{Binding yScrollValue, ElementName=self}"/>
 
 		<Grid Grid.Row="1" Grid.Column="0">

@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.HexEdit
 {

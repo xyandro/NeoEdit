@@ -1,12 +1,13 @@
-﻿<guiCommon:NEWindow Name="self" x:Class="NeoEdit.HexEdit.HexEditTabs"
+﻿<guiControls:NEWindow Name="self" x:Class="NeoEdit.HexEdit.HexEditTabs"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	xmlns:hexEdit="clr-namespace:NeoEdit.HexEdit"
 	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
 
 	<Window.Title>
-		<MultiBinding Converter="{guiCommon:ExpressionConverter}" ConverterParameter="StrFormat('{0}{1} - NeoEdit Hex Editor', [0], [1])">
+		<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="StrFormat('{0}{1} - NeoEdit Hex Editor', [0], [1])">
 			<Binding Path="Active.FileTitle" ElementName="self"/>
 			<Binding Path="Active.FileName" ElementName="self"/>
 		</MultiBinding>
@@ -30,4 +31,4 @@
 		/>
 	</Grid>
 
-</guiCommon:NEWindow>
+</guiControls:NEWindow>

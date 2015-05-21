@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

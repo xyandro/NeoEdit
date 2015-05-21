@@ -1,9 +1,9 @@
 ﻿<Window Name="self" x:Class="NeoEdit.Registry.RegistryWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:ig="clr-namespace:NeoEdit.GUI.Controls.ItemGridControl;assembly=NeoEdit.GUI"
 	xmlns:registry="clr-namespace:NeoEdit.Registry"
-	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
-	xmlns:ig="clr-namespace:NeoEdit.GUI.ItemGridControl;assembly=NeoEdit.GUI"
 	Title="NeoEdit Registry Viewer" Width="800" Height="600" Visibility="Visible" FocusManager.FocusedElement="{Binding ElementName=keys}">
 
 	<Window.CommandBindings>
@@ -28,8 +28,8 @@
 			<MenuItem Header="_View">
 				<MenuItem Command="registry:RegistryWindow.Command_View_Refresh" Header="_Refresh"/>
 			</MenuItem>
-			<guiCommon:WindowMenu/>
-			<guiCommon:HelpMenu/>
+			<guiControls:WindowMenu/>
+			<guiControls:HelpMenu/>
 		</Menu>
 
 		<DockPanel Grid.Row="1">

@@ -6,7 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.Disk
 {

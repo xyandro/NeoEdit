@@ -1,11 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 using NeoEdit.GUI;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Controls.ItemGridControl;
 using NeoEdit.GUI.Dialogs;
-using NeoEdit.GUI.ItemGridControl;
 using NeoEdit.Win32;
 
 namespace NeoEdit.Processes

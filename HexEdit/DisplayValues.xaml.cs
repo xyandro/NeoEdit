@@ -2,8 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Common;
-using NeoEdit.GUI.Dialogs;
+using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.HexEdit
 {

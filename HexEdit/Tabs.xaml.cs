@@ -9,7 +9,7 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.HexEdit.Data;
 

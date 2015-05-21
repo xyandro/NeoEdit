@@ -5,8 +5,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.GUI.Common;
-using NeoEdit.GUI.ItemGridControl;
+using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Controls.ItemGridControl;
 
 namespace NeoEdit.Disk
 {

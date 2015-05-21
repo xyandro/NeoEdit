@@ -11,7 +11,7 @@ using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEdit

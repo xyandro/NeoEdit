@@ -1,7 +1,8 @@
-﻿<guiCommon:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.RepeatDialog" x:ClassModifier="internal"
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.RepeatDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiCommon="clr-namespace:NeoEdit.GUI.Common;assembly=NeoEdit.GUI"
+    xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	Title="Repeat selections" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=repeatCount}">
 
 	<Grid Margin="10">
@@ -18,7 +19,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Repeat _count:" Target="{Binding ElementName=repeatCount}" HorizontalAlignment="Right"/>
-		<guiCommon:NumericUpDown Grid.Row="0" Grid.Column="1" Name="repeatCount" Value="{Binding RepeatCount, ElementName=self}" Minimum="1" VerticalAlignment="Center" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiCommon:ExpressionConverter}, ConverterParameter='[0] t== false'}"/>
+		<guiControls:NumericUpDown Grid.Row="0" Grid.Column="1" Name="repeatCount" Value="{Binding RepeatCount, ElementName=self}" Minimum="1" VerticalAlignment="Center" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== false'}"/>
 		<CheckBox Grid.Row="0" Grid.Column="2" Content="C_lipboard Value" IsChecked="{Binding ClipboardValue, ElementName=self}" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Select repetitions:" Target="{Binding ElementName=selectRepetitions}" HorizontalAlignment="Right"/>
@@ -29,4 +30,4 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
-</guiCommon:ModalDialog>
+</guiControls:ModalDialog>

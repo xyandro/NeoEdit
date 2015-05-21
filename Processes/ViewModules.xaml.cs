@@ -4,8 +4,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using NeoEdit.Common;
-using NeoEdit.GUI.Common;
-using NeoEdit.GUI.ItemGridControl;
+using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Controls.ItemGridControl;
+using NeoEdit.GUI.Misc;
 using NeoEdit.Processes.Dialogs;
 
 namespace NeoEdit.Processes

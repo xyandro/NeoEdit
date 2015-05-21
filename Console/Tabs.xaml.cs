@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Controls;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Console
 {
@@ -37,7 +37,7 @@ namespace NeoEdit.Console
 			switch (command)
 			{
 				case ConsoleCommand.File_New: Add(new Console()); break;
-				case ConsoleCommand.View_Tiles: View = View == GUI.Common.Tabs<Console>.ViewType.Tiles ? GUI.Common.Tabs<Console>.ViewType.Tabs : GUI.Common.Tabs<Console>.ViewType.Tiles; break;
+				case ConsoleCommand.View_Tiles: View = View == Tabs<Console>.ViewType.Tiles ? Tabs<Console>.ViewType.Tabs : Tabs<Console>.ViewType.Tiles; break;
 			}
 		}
 

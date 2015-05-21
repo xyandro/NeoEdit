@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Disk.Dialogs

@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.HexEdit.Data;
 using NeoEdit.Common.Transform;
+using NeoEdit.HexEdit.Data;
 
 namespace NeoEdit.HexEdit.Converters
 {

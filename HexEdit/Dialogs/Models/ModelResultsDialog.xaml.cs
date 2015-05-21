@@ -5,8 +5,8 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Common;
-using NeoEdit.GUI.ItemGridControl;
+using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Controls.ItemGridControl;
 using NeoEdit.HexEdit.Models;
 
 namespace NeoEdit.HexEdit.Dialogs.Models

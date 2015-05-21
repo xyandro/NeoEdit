@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.Win32;
 
 namespace NeoEdit.Handles

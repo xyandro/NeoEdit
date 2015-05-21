@@ -1,0 +1,21 @@
+﻿<MenuItem x:Class="NeoEdit.GUI.Controls.WindowMenu"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls"
+	Header="_Window">
+
+	<guiControls:WindowMenuItem Header="_Clipboard" CommandEnum="Window_Clipboard"/>
+	<guiControls:WindowMenuItem Header="C_onsole" CommandEnum="Window_Console"/>
+	<guiControls:WindowMenuItem Header="DB Viewer" CommandEnum="Window_DBViewer"/>
+	<guiControls:WindowMenuItem Header="_Disk" CommandEnum="Window_Disk"/>
+	<guiControls:WindowMenuItem Header="H_andles" CommandEnum="Window_Handles"/>
+	<guiControls:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>
+	<guiControls:WindowMenuItem Header="_Processes" CommandEnum="Window_Processes"/>
+	<guiControls:WindowMenuItem Header="_Registry" CommandEnum="Window_Registry"/>
+	<guiControls:WindowMenuItem Header="_System Info" CommandEnum="Window_SystemInfo"/>
+	<guiControls:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>
+	<guiControls:WindowMenuItem Header="Text _Viewer" CommandEnum="Window_TextViewer"/>
+
+	<MenuItem Header="_Minimize to Tray" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.MinimizeToTray), Mode=TwoWay}"/>
+
+</MenuItem>

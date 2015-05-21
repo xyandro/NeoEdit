@@ -11,7 +11,7 @@ using NeoEdit.Console;
 using NeoEdit.DBViewer;
 using NeoEdit.Disk;
 using NeoEdit.GUI.About;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Handles;
 using NeoEdit.HexEdit;

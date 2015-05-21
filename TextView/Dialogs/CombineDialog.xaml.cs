@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextView.Dialogs

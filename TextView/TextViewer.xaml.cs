@@ -6,8 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.GUI.Misc;
 using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Misc;
 using SharpSvn;
 
 namespace NeoEdit.Disk

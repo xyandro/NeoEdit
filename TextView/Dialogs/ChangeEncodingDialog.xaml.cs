@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Common;
+using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextView.Dialogs
 {
