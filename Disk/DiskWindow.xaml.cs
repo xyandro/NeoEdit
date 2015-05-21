@@ -61,6 +61,7 @@ namespace NeoEdit.Disk
 			location.LostFocus += (s, e) => { location.Text = Location.FullName; };
 			location.PreviewKeyDown += LocationKeyDown;
 			files.Accept += s => OnAccept();
+			files.MouseDrag += MouseDragFiles;
 
 			Files = new ObservableCollection<DiskItem>();
 			Selected = new ObservableCollection<DiskItem>();
@@ -154,6 +155,12 @@ namespace NeoEdit.Disk
 
 			files.BringFocusedIntoView();
 			filesChangedTimer.Stop();
+		}
+
+		void MouseDragFiles()
+		{
+			var paths = Selected.Select(diskItem => diskItem.FullName).ToArray();
+			DragDrop.DoDragDrop(this, new DataObject(DataFormats.FileDrop, paths), DragDropEffects.Copy);
 		}
 
 		void SyncFiles(List<DiskItem> items)

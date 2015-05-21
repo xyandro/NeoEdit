@@ -108,6 +108,9 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 
 			xScroll = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Visible, VerticalScrollBarVisibility = ScrollBarVisibility.Disabled, Focusable = false };
 			contents = new Grid();
+			contents.MouseLeftButtonDown += OnContentsMouseLeftButtonDown;
+			contents.MouseMove += OnContentsMouseMove;
+			contents.MouseLeftButtonUp += OnContentsMouseLeftButtonUp;
 			xScroll.Content = contents;
 			Children.Add(xScroll);
 
@@ -304,9 +307,38 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 			}
 		}
 
-		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+		public delegate void MouseDragDelegate();
+		public event MouseDragDelegate MouseDrag;
+
+		Point dragAnchor;
+		void OnContentsMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			base.OnMouseLeftButtonDown(e);
+			dragAnchor = e.GetPosition(contents);
+			contents.CaptureMouse();
+			e.Handled = true;
+		}
+
+		void OnContentsMouseMove(object sender, MouseEventArgs e)
+		{
+			if (!contents.IsMouseCaptured)
+				return;
+
+			var currentPoint = e.GetPosition(contents);
+			var diff = currentPoint - dragAnchor;
+			if (diff.Length > 20)
+			{
+				contents.ReleaseMouseCapture();
+				MouseDrag();
+			}
+		}
+
+		void OnContentsMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			if (!contents.IsMouseCaptured)
+				return;
+
+			contents.ReleaseMouseCapture();
+
 			Focus();
 			if (e.ClickCount == 2)
 				accept(this);
