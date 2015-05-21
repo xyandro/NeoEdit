@@ -32,7 +32,6 @@ Allow user to disable undo/redo for faster performance
 Audit accelerators
 Highlight attributes
 Submit forms
-Multiple reformats change format
 Make markup relative paths absolute
 
 View:

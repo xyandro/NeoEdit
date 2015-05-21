@@ -314,7 +314,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			var output = new List<string> { startTag };
-			output.AddRange(childrenOutput.Select(str => "\t" + str));
+			output.AddRange(childrenOutput.Select(str => "\t" + str.TrimStart(' ')));
 			if (!String.IsNullOrWhiteSpace(endTag))
 				output.Add(endTag);
 
