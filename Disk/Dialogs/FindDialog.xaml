@@ -128,11 +128,11 @@
 					</UniformGrid>
 
 					<UniformGrid Grid.Row="1" Grid.Column="0" Rows="1" HorizontalAlignment="Left">
-						<Button Name="svnAll" Content="All" Click="SvnClick" Focusable="False"/>
-						<Button Name="svnStandard" Content="Standard" Click="SvnClick" Focusable="False"/>
-						<Button Name="svnModified" Content="Modified" Click="SvnClick" Focusable="False"/>
-						<Button Name="svnIgnored" Content="Ignored" Click="SvnClick" Focusable="False"/>
-						<Button Name="svnUnknown" Content="Unknown" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnAll" Content="_All" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnStandard" Content="_Standard" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnModified" Content="M_odified" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnIgnored" Content="Ignore_d" Click="SvnClick" Focusable="False"/>
+						<Button Name="svnUnknown" Content="Un_known" Click="SvnClick" Focusable="False"/>
 						<Button Name="svnNone" Content="None" Click="SvnClick" Focusable="False"/>
 					</UniformGrid>
 				</Grid>
