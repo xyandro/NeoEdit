@@ -3,7 +3,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	internal partial class FindMarkupAttribute
+	internal partial class FindMarkupAttributeDialog
 	{
 		internal class Result
 		{
@@ -12,16 +12,16 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string Attribute { get { return UIHelper<FindMarkupAttribute>.GetPropValue<string>(this); } set { UIHelper<FindMarkupAttribute>.SetPropValue(this, value); } }
+		public string Attribute { get { return UIHelper<FindMarkupAttributeDialog>.GetPropValue<string>(this); } set { UIHelper<FindMarkupAttributeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Value { get { return UIHelper<FindMarkupAttribute>.GetPropValue<string>(this); } set { UIHelper<FindMarkupAttribute>.SetPropValue(this, value); } }
+		public string Value { get { return UIHelper<FindMarkupAttributeDialog>.GetPropValue<string>(this); } set { UIHelper<FindMarkupAttributeDialog>.SetPropValue(this, value); } }
 
-		static FindMarkupAttribute()
+		static FindMarkupAttributeDialog()
 		{
-			UIHelper<FindMarkupAttribute>.Register();
+			UIHelper<FindMarkupAttributeDialog>.Register();
 		}
 
-		FindMarkupAttribute()
+		FindMarkupAttributeDialog()
 		{
 			InitializeComponent();
 			Attribute = "Tag";
@@ -36,7 +36,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		public static Result Run(Window parent)
 		{
-			var dialog = new FindMarkupAttribute { Owner = parent };
+			var dialog = new FindMarkupAttributeDialog { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

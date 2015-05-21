@@ -119,7 +119,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\FindMarkupAttribute.xaml">
+    <Page Include="Dialogs\FindMarkupAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -142,8 +142,8 @@
     <Compile Include="Dialogs\RandomDataDialog.xaml.cs">
       <DependentUpon>RandomDataDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\FindMarkupAttribute.xaml.cs">
-      <DependentUpon>FindMarkupAttribute.xaml</DependentUpon>
+    <Compile Include="Dialogs\FindMarkupAttributeDialog.xaml.cs">
+      <DependentUpon>FindMarkupAttributeDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\TrimDialog.xaml.cs">
       <DependentUpon>TrimDialog.xaml</DependentUpon>

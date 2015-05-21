@@ -607,7 +607,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Children_Text: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, MarkupNode.MarkupNodeType.Text); break;
 				case TextEditCommand.Markup_Children_AllText: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, MarkupNode.MarkupNodeType.Text, false); break;
 				case TextEditCommand.Markup_Children_Comments: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, MarkupNode.MarkupNodeType.Comment); break;
-				case TextEditCommand.Markup_Children_ByAttribute: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, findAttr: dialogResult as FindMarkupAttribute.Result); break;
+				case TextEditCommand.Markup_Children_ByAttribute: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Markup_Descendants_Descendants: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants); break;
 				case TextEditCommand.Markup_Descendants_All: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, trimWhitespace: false); break;
 				case TextEditCommand.Markup_Descendants_SelfAndDescendants: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.SelfAndDescendants); break;
@@ -617,7 +617,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Descendants_Text: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Text); break;
 				case TextEditCommand.Markup_Descendants_AllText: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Text, false); break;
 				case TextEditCommand.Markup_Descendants_Comments: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, MarkupNode.MarkupNodeType.Comment); break;
-				case TextEditCommand.Markup_Descendants_ByAttribute: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, findAttr: dialogResult as FindMarkupAttribute.Result); break;
+				case TextEditCommand.Markup_Descendants_ByAttribute: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Descendants, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Markup_Next: Command_Markup_NextPrev(true, shiftDown); break;
 				case TextEditCommand.Markup_Previous: Command_Markup_NextPrev(false, shiftDown); break;
 				case TextEditCommand.Markup_Outer: Command_Markup_OuterTag(); break;
@@ -626,7 +626,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Select_Elements: Command_Markup_Select_Type(MarkupNode.MarkupNodeType.Element); break;
 				case TextEditCommand.Markup_Select_Text: Command_Markup_Select_Type(MarkupNode.MarkupNodeType.Text); break;
 				case TextEditCommand.Markup_Select_Comments: Command_Markup_Select_Type(MarkupNode.MarkupNodeType.Comment); break;
-				case TextEditCommand.Markup_Select_ByAttribute: Command_Markup_Select_ByAttribute(dialogResult as FindMarkupAttribute.Result); break;
+				case TextEditCommand.Markup_Select_ByAttribute: Command_Markup_Select_ByAttribute(dialogResult as FindMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Markup_Select_TopMost: Command_Markup_Select_TopMost(); break;
 				case TextEditCommand.Markup_Select_Deepest: Command_Markup_Select_Deepest(); break;
 				case TextEditCommand.Markup_Select_AllTopMost: Command_Markup_Select_AllTopMost(); break;

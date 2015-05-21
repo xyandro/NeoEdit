@@ -9,6 +9,7 @@ Move timestamp (possibly others) from TextEditor
 Select readable
 Search by text (regex)
 Can push files to predefined lists (CTRL+1, CTRL+SHIFT+1)
+Select unique/duplicates
 
 Text:
 Highlight clauses (if/else)

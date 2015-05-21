@@ -44,7 +44,7 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		List<Range> MarkupGetChildrenAndDescendants(MarkupNode node, MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type, bool trimWhitespace, bool first, FindMarkupAttribute.Result findAttr)
+		List<Range> MarkupGetChildrenAndDescendants(MarkupNode node, MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type, bool trimWhitespace, bool first, FindMarkupAttributeDialog.Result findAttr)
 		{
 			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = childNode.RangeOuter }).ToList();
 			childNodes = childNodes.Where(child => type.HasFlag(child.Node.NodeType)).ToList();
@@ -86,12 +86,12 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(GetSelectionMarkupNodes().Select((node, index) => MoveCursor(Selections[index], (node.Parent ?? node).StartOuterPosition, shiftDown)).ToList());
 		}
 
-		internal FindMarkupAttribute.Result Command_Markup_ChildrenDescendents_ByAttribute_Dialog()
+		internal FindMarkupAttributeDialog.Result Command_Markup_ChildrenDescendents_ByAttribute_Dialog()
 		{
-			return FindMarkupAttribute.Run(UIHelper.FindParent<Window>(this));
+			return FindMarkupAttributeDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
-		internal void Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All, bool trimWhitespace = true, bool first = false, FindMarkupAttribute.Result findAttr = null)
+		internal void Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All, bool trimWhitespace = true, bool first = false, FindMarkupAttributeDialog.Result findAttr = null)
 		{
 			var newSels = GetSelectionMarkupNodes().SelectMany(node => MarkupGetChildrenAndDescendants(node, list, type, trimWhitespace, first, findAttr)).ToList();
 			if (newSels.Any())
@@ -138,7 +138,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.NodeType == type).Select(node => node.RangeOuterStart).ToList());
 		}
 
-		internal void Command_Markup_Select_ByAttribute(FindMarkupAttribute.Result result)
+		internal void Command_Markup_Select_ByAttribute(FindMarkupAttributeDialog.Result result)
 		{
 			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttribute(result.Attribute, result.Value)).Select(node => node.RangeOuterStart).ToList());
 		}
