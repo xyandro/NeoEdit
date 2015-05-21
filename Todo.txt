@@ -32,7 +32,6 @@ Audit accelerators
 Highlight attributes
 Attribute search by regex
 Submit forms
-Combinations/permutations
 
 View:
 Update as new lines are added

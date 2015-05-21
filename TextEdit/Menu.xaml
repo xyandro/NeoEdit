@@ -231,6 +231,7 @@
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Insert_RandomNumber"/>
 		<textEdit:TextEditMenuItem Header="Random _Data" CommandEnum="Insert_RandomData"/>
 		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Insert_MinMaxValues"/>
+		<textEdit:TextEditMenuItem Header="_Combinations/Permutations" CommandEnum="Insert_CombinationsPermutations"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">

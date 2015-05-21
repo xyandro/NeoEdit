@@ -447,6 +447,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Insert_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
 				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;
 				case TextEditCommand.Insert_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
+				case TextEditCommand.Insert_CombinationsPermutations: dialogResult = Command_Insert_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_Width: dialogResult = Command_Select_Width_Dialog(); break;
 				case TextEditCommand.Select_Count: dialogResult = Command_Select_Count_Dialog(); break;
@@ -634,6 +635,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
 				case TextEditCommand.Insert_MinMaxValues: Command_Insert_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
+				case TextEditCommand.Insert_CombinationsPermutations: Command_Insert_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -2041,6 +2043,62 @@ namespace NeoEdit.TextEdit
 			}
 
 			ReplaceSelections(Selections.AsParallel().Select((range, num) => codePageMinMaxValues[result.CodePage == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.CodePage]).ToList());
+		}
+
+		internal CombinationsPermutationsDialog.Result Command_Insert_CombinationsPermutations_Dialog()
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Can only have one selection");
+			return CombinationsPermutationsDialog.Run(WindowParent);
+		}
+
+		internal void Command_Insert_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
+		{
+			var output = new List<string>();
+			var num = new int[result.UseCount];
+			var used = new bool[result.ItemCount + 1];
+			var onNum = 0;
+			while (true)
+			{
+				++num[onNum];
+				if (num[onNum] > result.ItemCount)
+				{
+					--onNum;
+					if (onNum < 0)
+						break;
+					used[num[onNum]] = false;
+					continue;
+				}
+				if ((!result.Repeat) && (used[num[onNum]]))
+					continue;
+
+				used[num[onNum]] = true;
+				++onNum;
+				if (onNum < result.UseCount)
+				{
+					if (result.Type == CombinationsPermutationsDialog.CombinationsPermutationsType.Combinations)
+						num[onNum] = num[onNum - 1] - 1;
+					else
+						num[onNum] = 0;
+				}
+				else
+				{
+					output.Add(String.Join("\t", num) + Data.DefaultEnding);
+					--onNum;
+					used[num[onNum]] = false;
+				}
+			}
+
+			ReplaceSelections(String.Join("", output));
+
+			var start = Selections.First().Start;
+			var sels = new List<Range>();
+			foreach (var str in output)
+			{
+				sels.Add(Range.FromIndex(start, str.Length - Data.DefaultEnding.Length));
+				start += str.Length;
+			}
+			Selections.Replace(sels);
 		}
 
 		internal void Command_Keys_Set(int index)

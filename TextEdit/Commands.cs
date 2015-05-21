@@ -158,6 +158,7 @@ namespace NeoEdit.TextEdit
 		Insert_RandomNumber,
 		Insert_RandomData,
 		Insert_MinMaxValues,
+		Insert_CombinationsPermutations,
 		[KeyGesture(Key.K, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Keys,
 		[KeyGesture(Key.D1, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Values1,
 		[KeyGesture(Key.D2, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Values2,
