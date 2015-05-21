@@ -45,6 +45,7 @@ namespace NeoEdit.TextEdit
 		Files_CreateFiles,
 		Files_CreateDirectories,
 		Files_Delete,
+		Files_DragDrop,
 		Files_Simplify,
 		Files_GetUniqueNames,
 		Files_SanitizeNames,

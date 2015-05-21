@@ -104,7 +104,7 @@ namespace NeoEdit.TextEdit
 			InitializeComponent();
 			bookmarks.Width = Font.lineHeight;
 
-			SetupDragDrop();
+			SetupDropAccept();
 
 			undoRedo = new UndoRedo(b => IsModified = b);
 			Selections = new RangeList(SelectionsInvalidated);
@@ -137,7 +137,7 @@ namespace NeoEdit.TextEdit
 			};
 		}
 
-		void SetupDragDrop()
+		void SetupDropAccept()
 		{
 			AllowDrop = true;
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
@@ -457,6 +457,11 @@ namespace NeoEdit.TextEdit
 			return dialogResult != null;
 		}
 
+		bool StringsAreFiles(List<string> strs)
+		{
+			return strs.All(str => str.IndexOfAny(Path.GetInvalidPathChars()) == -1) && strs.All(str => FileOrDirectoryExists(str));
+		}
+
 		class PreviousStruct
 		{
 			public TextEditCommand Command { get; set; }
@@ -467,6 +472,8 @@ namespace NeoEdit.TextEdit
 
 		internal void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
 		{
+			doDrag = false;
+
 			if (command != TextEditCommand.Edit_RepeatLastAction)
 			{
 				previous = new PreviousStruct
@@ -514,6 +521,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_CreateFiles: Command_Files_CreateFiles(); break;
 				case TextEditCommand.Files_CreateDirectories: Command_Files_CreateDirectories(); break;
 				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
+				case TextEditCommand.Files_DragDrop: Command_Files_DragDrop(); break;
 				case TextEditCommand.Files_Simplify: Command_Files_Simplify(); break;
 				case TextEditCommand.Files_GetUniqueNames: Command_Files_GetUniqueNames(dialogResult as GetUniqueNamesDialog.Result); break;
 				case TextEditCommand.Files_SanitizeNames: Command_Files_SanitizeNames(); break;
@@ -947,7 +955,7 @@ namespace NeoEdit.TextEdit
 		{
 			var strs = GetSelectionStrings();
 
-			if (strs.All(str => str.IndexOfAny(Path.GetInvalidPathChars()) == -1) && strs.All(str => FileOrDirectoryExists(str)))
+			if (StringsAreFiles(strs))
 				NEClipboard.SetFiles(strs, isCut);
 			else
 			{
@@ -1214,6 +1222,14 @@ namespace NeoEdit.TextEdit
 						Directory.Delete(file, true);
 				}
 			}
+		}
+
+		internal void Command_Files_DragDrop()
+		{
+			var strs = GetSelectionStrings();
+			if (!StringsAreFiles(strs))
+				throw new Exception("Selections must be files.");
+			doDrag = true;
 		}
 
 		internal void Command_Files_Simplify()
@@ -2671,6 +2687,7 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Escape:
 					Searches.Clear();
+					doDrag = false;
 					break;
 				case Key.Left:
 					{
@@ -2993,8 +3010,20 @@ namespace NeoEdit.TextEdit
 			visibleIndex = Selections.Count - 1;
 		}
 
+		bool doDrag = false;
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
+			if (doDrag)
+			{
+				var strs = GetSelectionStrings();
+				if (!StringsAreFiles(strs))
+					throw new Exception("Selections must be files.");
+
+				DragDrop.DoDragDrop(this, new DataObject(DataFormats.FileDrop, strs.ToArray()), DragDropEffects.Copy);
+				doDrag = false;
+				return;
+			}
+
 			MouseHandler(e.GetPosition(canvas), e.ClickCount, (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None);
 			canvas.CaptureMouse();
 			e.Handled = true;

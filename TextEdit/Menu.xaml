@@ -59,6 +59,8 @@
 		<textEdit:TextEditMenuItem Header="Create Directories" CommandEnum="Files_CreateDirectories"/>
 		<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="Files_Delete"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="D_rag/Drop" CommandEnum="Files_DragDrop"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="Si_mplify" CommandEnum="Files_Simplify"/>
 		<textEdit:TextEditMenuItem Header="Get Un_ique Names" CommandEnum="Files_GetUniqueNames"/>
 		<textEdit:TextEditMenuItem Header="Sani_tize Names" CommandEnum="Files_SanitizeNames"/>
