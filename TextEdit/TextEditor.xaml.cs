@@ -598,6 +598,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Markup_FetchURL: Command_Markup_FetchURL(); break;
 				case TextEditCommand.Markup_Reformat: Command_Markup_Reformat(); break;
+				case TextEditCommand.Markup_Comment: Command_Markup_Comment(); break;
+				case TextEditCommand.Markup_Uncomment: Command_Markup_Uncomment(); break;
 				case TextEditCommand.Markup_ToggleTagPosition: Command_Markup_ToggleTagPosition(shiftDown); break;
 				case TextEditCommand.Markup_Parent: Command_Markup_Parent(shiftDown); break;
 				case TextEditCommand.Markup_Ancestor: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Parents, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
