@@ -9,17 +9,17 @@
 		<hexEdit:HexEditMenuItem Header="_New" CommandEnum="File_New"/>
 		<hexEdit:HexEditMenuItem Header="_Open" CommandEnum="File_Open"/>
 		<hexEdit:HexEditMenuItem Header="Open _Dump" CommandEnum="File_OpenDump"/>
-		<hexEdit:HexEditMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
+		<hexEdit:HexEditMenuItem Header="Open Cop_ied/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
 		<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="File_Save"/>
 		<hexEdit:HexEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
 		<hexEdit:HexEditMenuItem Header="_Close" CommandEnum="File_Close"/>
 		<hexEdit:HexEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
-		<hexEdit:HexEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
+		<hexEdit:HexEditMenuItem Header="Copy Na_me" CommandEnum="File_CopyName"/>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
-		<hexEdit:HexEditMenuItem Header="Text Editor" CommandEnum="File_TextEditor"/>
+		<hexEdit:HexEditMenuItem Header="_Text Editor" CommandEnum="File_TextEditor"/>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
@@ -33,7 +33,7 @@
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
 		<hexEdit:HexEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>
-		<hexEdit:HexEditMenuItem Header="Find _Prev" CommandEnum="Edit_FindPrev"/>
+		<hexEdit:HexEditMenuItem Header="Find Pre_v" CommandEnum="Edit_FindPrev"/>
 		<hexEdit:HexEditMenuItem Header="_Goto" CommandEnum="Edit_Goto"/>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Parent.Active.Insert, ElementName=self}"/>
@@ -62,14 +62,14 @@
 			<hexEdit:HexEditMenuItem Header="_DES" CommandEnum="Data_Encrypt_DES"/>
 			<hexEdit:HexEditMenuItem Header="_3DES" CommandEnum="Data_Encrypt_3DES"/>
 			<hexEdit:HexEditMenuItem Header="_RSA" CommandEnum="Data_Encrypt_RSA"/>
-			<hexEdit:HexEditMenuItem Header="RSA/AES" CommandEnum="Data_Encrypt_RSAAES"/>
+			<hexEdit:HexEditMenuItem Header="R_SA/AES" CommandEnum="Data_Encrypt_RSAAES"/>
 		</MenuItem>
 		<MenuItem Header="Dec_rypt">
 			<hexEdit:HexEditMenuItem Header="_AES" CommandEnum="Data_Decrypt_AES"/>
 			<hexEdit:HexEditMenuItem Header="_DES" CommandEnum="Data_Decrypt_DES"/>
 			<hexEdit:HexEditMenuItem Header="_3DES" CommandEnum="Data_Decrypt_3DES"/>
 			<hexEdit:HexEditMenuItem Header="_RSA" CommandEnum="Data_Decrypt_RSA"/>
-			<hexEdit:HexEditMenuItem Header="RSA/AES" CommandEnum="Data_Decrypt_RSAAES"/>
+			<hexEdit:HexEditMenuItem Header="R_SA/AES" CommandEnum="Data_Decrypt_RSAAES"/>
 		</MenuItem>
 		<MenuItem Header="_Sign">
 			<hexEdit:HexEditMenuItem Header="_RSA" CommandEnum="Data_Sign_RSA"/>

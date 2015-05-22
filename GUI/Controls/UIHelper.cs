@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.GUI.Controls
@@ -190,6 +191,44 @@ namespace NeoEdit.GUI.Controls
 					foreach (var subChild in FindLogicalChildren<T>(child as DependencyObject))
 						yield return subChild;
 			}
+		}
+
+		static void AuditMenu(string path, ItemsControl menu, List<string> errors)
+		{
+			var children = menu.Items.OfType<MenuItem>().Cast<MenuItem>().ToList();
+			if (!children.Any())
+				return;
+
+			children.ForEach(child => AuditMenu(String.Format("{0} -> {1}", path, child.Header.ToString()), child, errors));
+
+			var headers = children.Select(child => child.Header.ToString()).ToList();
+
+			var dupHeaders = headers.GroupBy(header => header).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
+			errors.AddRange(dupHeaders.Select(header => String.Format("{0} -> {1}: Header used multiple times", path, header)));
+			headers = headers.Distinct().ToList();
+
+			var multipleAccels = headers.Where(header => header.Contains("_")).Where(header => header.Length - header.Replace("_", "").Length > 1).ToList();
+			errors.AddRange(multipleAccels.Select(header => String.Format("{0} -> {1}: Multiple accelerators", path, header)));
+
+			var accels = headers.Where(header => header.Contains("_")).ToDictionary(header => header, header => Char.ToUpper(header[header.IndexOf("_") + 1]));
+			var accelsUse = accels.Values.GroupBy(key => key).ToDictionary(group => group.Key, group => group.Count());
+
+			var headerAvail = headers.ToDictionary(header => header, header => String.Join("", header.Select(c => Char.ToUpper(c)).Distinct().Where(c => (c != '_') && (Char.IsLetterOrDigit(c))).Where(c => !accelsUse.ContainsKey(c)).ToList()));
+			var allAvail = String.Join("", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Where(c => !accelsUse.ContainsKey(c)).ToList());
+
+			var reusedAccels = accels.Where(pair => accelsUse[pair.Value] > 1).Select(pair => pair.Key).ToList();
+			errors.AddRange(reusedAccels.Select(header => String.Format("{0} -> {1}: Accelerator used multiple times ({2} / {3} available)", path, header, headerAvail[header], allAvail)));
+
+			var noAccel = headers.Where(header => !header.Contains("_")).ToList();
+			errors.AddRange(noAccel.Select(header => String.Format("{0} -> {1}: No accelerator ({2} / {3} available)", path, header, headerAvail[header], allAvail)));
+		}
+
+		public static void AuditMenu(Menu menu)
+		{
+			var errors = new List<string>();
+			AuditMenu("Menu", menu, errors);
+			if (errors.Any())
+				Message.Show("Menu errors:\r\n" + String.Join("\r\n", errors));
 		}
 	}
 }

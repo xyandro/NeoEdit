@@ -21,6 +21,7 @@ namespace NeoEdit.Console
 		{
 			ConsoleMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
+			UIHelper.AuditMenu(menu);
 
 			Consoles = new ObservableCollection<Console>();
 			Add(new Console());

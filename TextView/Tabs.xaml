@@ -22,7 +22,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<textView:TextViewMenu Parent="{Binding ElementName=self}"/>
+		<textView:TextViewMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
 		<textView:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" GetLabel="GetLabel" VerticalAlignment="Stretch"
 			Items="{Binding TextViewers, ElementName=self, Mode=TwoWay}"

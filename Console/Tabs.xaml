@@ -22,7 +22,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<console:ConsoleMenu Parent="{Binding ElementName=self}"/>
+		<console:ConsoleMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
 		<console:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" GetLabel="GetLabel" VerticalAlignment="Stretch"
 			Items="{Binding Consoles, ElementName=self, Mode=TwoWay}"

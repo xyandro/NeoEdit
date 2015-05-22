@@ -22,7 +22,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<textEdit:TextEditMenu Parent="{Binding ElementName=self}"/>
+		<textEdit:TextEditMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
 		<textEdit:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" GetLabel="GetLabel" VerticalAlignment="Stretch"
 			Items="{Binding TextEditors, ElementName=self, Mode=TwoWay}"

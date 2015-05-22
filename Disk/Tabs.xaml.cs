@@ -23,6 +23,7 @@ namespace NeoEdit.Disk
 		{
 			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
 			InitializeComponent();
+			UIHelper.AuditMenu(menu);
 
 			DiskWindows = new ObservableCollection<DiskWindow>();
 			Add(new DiskWindow(path));

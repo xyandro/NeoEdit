@@ -8,55 +8,55 @@
 	<MenuItem Header="_File">
 		<textEdit:TextEditMenuItem Header="_New" CommandEnum="File_New"/>
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="File_Open"/>
-		<textEdit:TextEditMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
+		<textEdit:TextEditMenuItem Header="Open Copied/C_ut Files" CommandEnum="File_OpenCopiedCutFiles"/>
 		<textEdit:TextEditMenuItem Header="_Save" CommandEnum="File_Save"/>
 		<textEdit:TextEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
 		<textEdit:TextEditMenuItem Header="_Close" CommandEnum="File_Close"/>
-		<textEdit:TextEditMenuItem Header="Refresh" CommandEnum="File_Refresh"/>
+		<textEdit:TextEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>
 		<textEdit:TextEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Insert File(s)" CommandEnum="File_InsertFiles"/>
-		<textEdit:TextEditMenuItem Header="Insert Copied/Cut Files" CommandEnum="File_InsertCopiedCutFiles"/>
+		<textEdit:TextEditMenuItem Header="Insert Copied/Cu_t Files" CommandEnum="File_InsertCopiedCutFiles"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
-		<textEdit:TextEditMenuItem Header="Copy Name" CommandEnum="File_CopyName"/>
+		<textEdit:TextEditMenuItem Header="Copy Na_me" CommandEnum="File_CopyName"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
 		<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_ReopenWithEncoding"/>
-		<textEdit:TextEditMenuItem Header="Hex Editor" CommandEnum="File_HexEditor"/>
+		<textEdit:TextEditMenuItem Header="_Hex Editor" CommandEnum="File_HexEditor"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
 		<textEdit:TextEditMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
 		<textEdit:TextEditMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
-		<textEdit:TextEditMenuItem Header="Repea_t Last Action" CommandEnum="Edit_RepeatLastAction"/>
+		<textEdit:TextEditMenuItem Header="Repeat La_st Action" CommandEnum="Edit_RepeatLastAction"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="C_ut" CommandEnum="Edit_Cut"/>
+		<textEdit:TextEditMenuItem Header="Cu_t" CommandEnum="Edit_Cut"/>
 		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
 		<textEdit:TextEditMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
 		<textEdit:TextEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>
-		<textEdit:TextEditMenuItem Header="Find _Prev" CommandEnum="Edit_FindPrev"/>
+		<textEdit:TextEditMenuItem Header="Find Pre_v" CommandEnum="Edit_FindPrev"/>
 		<textEdit:TextEditMenuItem Header="R_eplace" CommandEnum="Edit_Replace"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Goto _Line" CommandEnum="Edit_GotoLine"/>
 		<textEdit:TextEditMenuItem Header="Goto C_olumn" CommandEnum="Edit_GotoColumn"/>
 		<textEdit:TextEditMenuItem Header="Goto Pos_ition" CommandEnum="Edit_GotoPosition"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Toggle Bookmark" CommandEnum="Edit_ToggleBookmark"/>
-		<textEdit:TextEditMenuItem Header="Next Bookmark" CommandEnum="Edit_NextBookmark"/>
-		<textEdit:TextEditMenuItem Header="Previous Bookmark" CommandEnum="Edit_PreviousBookmark"/>
-		<textEdit:TextEditMenuItem Header="Clear Bookmarks" CommandEnum="Edit_ClearBookmarks"/>
+		<textEdit:TextEditMenuItem Header="Toggle _Bookmark" CommandEnum="Edit_ToggleBookmark"/>
+		<textEdit:TextEditMenuItem Header="Ne_xt Bookmark" CommandEnum="Edit_NextBookmark"/>
+		<textEdit:TextEditMenuItem Header="Previous Boo_kmark" CommandEnum="Edit_PreviousBookmark"/>
+		<textEdit:TextEditMenuItem Header="Cle_ar Bookmarks" CommandEnum="Edit_ClearBookmarks"/>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Files_Open"/>
 		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
 		<textEdit:TextEditMenuItem Header="S_ave Clipboards" CommandEnum="Files_SaveClipboards"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Create Files" CommandEnum="Files_CreateFiles"/>
-		<textEdit:TextEditMenuItem Header="Create Directories" CommandEnum="Files_CreateDirectories"/>
+		<textEdit:TextEditMenuItem Header="Create _Files" CommandEnum="Files_CreateFiles"/>
+		<textEdit:TextEditMenuItem Header="_Create Directories" CommandEnum="Files_CreateDirectories"/>
 		<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="Files_Delete"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="D_rag/Drop" CommandEnum="Files_DragDrop"/>
@@ -84,13 +84,13 @@
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="_Directory Name" CommandEnum="Files_Select_DirectoryName"/>
 			<textEdit:TextEditMenuItem Header="_File Name" CommandEnum="Files_Select_FileName"/>
-			<textEdit:TextEditMenuItem Header="File Name w/o Extension" CommandEnum="Files_Select_FileNamewoExtension"/>
+			<textEdit:TextEditMenuItem Header="File Name _w/o Extension" CommandEnum="Files_Select_FileNamewoExtension"/>
 			<textEdit:TextEditMenuItem Header="_Extension" CommandEnum="Files_Select_Extension"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
+			<textEdit:TextEditMenuItem Header="E_xisting" CommandEnum="Files_Select_Existing"/>
 			<textEdit:TextEditMenuItem Header="_Non-Existing" CommandEnum="Files_Select_NonExisting"/>
-			<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>
-			<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Select_Directories"/>
+			<textEdit:TextEditMenuItem Header="Fi_les" CommandEnum="Files_Select_Files"/>
+			<textEdit:TextEditMenuItem Header="D_irectories" CommandEnum="Files_Select_Directories"/>
 			<textEdit:TextEditMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
 			<textEdit:TextEditMenuItem Header="N_on-Roots" CommandEnum="Files_Select_NonRoots"/>
 		</MenuItem>
@@ -105,13 +105,13 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Data">
-		<MenuItem Header="Case">
+		<MenuItem Header="C_ase">
 			<textEdit:TextEditMenuItem Header="_Upper" CommandEnum="Data_Case_Upper"/>
 			<textEdit:TextEditMenuItem Header="_Lower" CommandEnum="Data_Case_Lower"/>
 			<textEdit:TextEditMenuItem Header="_Proper" CommandEnum="Data_Case_Proper"/>
 			<textEdit:TextEditMenuItem Header="_Toggle" CommandEnum="Data_Case_Toggle"/>
 		</MenuItem>
-		<MenuItem Header="_Hex">
+		<MenuItem Header="He_x">
 			<textEdit:TextEditMenuItem Header="_To Hex" CommandEnum="Data_Hex_ToHex"/>
 			<textEdit:TextEditMenuItem Header="_From Hex" CommandEnum="Data_Hex_FromHex"/>
 		</MenuItem>
@@ -120,22 +120,22 @@
 			<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Data_DateTime_Convert"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Data_Convert"/>
+		<textEdit:TextEditMenuItem Header="Co_nvert" CommandEnum="Data_Convert"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Data_Length"/>
 		<textEdit:TextEditMenuItem Header="_Width" CommandEnum="Data_Width"/>
 		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Data_Trim"/>
-		<textEdit:TextEditMenuItem Header="Single Line" CommandEnum="Data_SingleLine"/>
-		<MenuItem Header="Table">
+		<textEdit:TextEditMenuItem Header="S_ingle Line" CommandEnum="Data_SingleLine"/>
+		<MenuItem Header="Ta_ble">
 			<textEdit:TextEditMenuItem Header="_To Table" CommandEnum="Data_Table_ToTable"/>
 			<textEdit:TextEditMenuItem Header="_From Table" CommandEnum="Data_Table_FromTable"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Evaluate _Expression" CommandEnum="Data_EvaluateExpression"/>
-		<textEdit:TextEditMenuItem Header="Evaluate Selected Expression" CommandEnum="Data_EvaluateSelectedExpression"/>
+		<textEdit:TextEditMenuItem Header="E_valuate Selected Expression" CommandEnum="Data_EvaluateSelectedExpression"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Series" CommandEnum="Data_Series"/>
-		<textEdit:TextEditMenuItem Header="Copy Down" CommandEnum="Data_CopyDown"/>
+		<textEdit:TextEditMenuItem Header="Cop_y Down" CommandEnum="Data_CopyDown"/>
 		<MenuItem Header="_Copy">
 			<textEdit:TextEditMenuItem Header="_Count" CommandEnum="Data_Copy_Count"/>
 			<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Data_Copy_Length"/>
@@ -150,60 +150,60 @@
 				<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Data_Copy_Max_Length"/>
 			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Sum" CommandEnum="Data_Copy_Sum"/>
-			<textEdit:TextEditMenuItem Header="_Lines" CommandEnum="Data_Copy_Lines"/>
+			<textEdit:TextEditMenuItem Header="L_ines" CommandEnum="Data_Copy_Lines"/>
 			<textEdit:TextEditMenuItem Header="C_olumns" CommandEnum="Data_Copy_Columns"/>
 			<textEdit:TextEditMenuItem Header="_Positions" CommandEnum="Data_Copy_Positions"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="_Repeat" CommandEnum="Data_Repeat"/>
 		<Separator/>
-		<MenuItem Header="Escape">
+		<MenuItem Header="Esca_pe">
 			<textEdit:TextEditMenuItem Header="_Markup" CommandEnum="Data_Escape_Markup"/>
 			<textEdit:TextEditMenuItem Header="_Regex" CommandEnum="Data_Escape_Regex"/>
 			<textEdit:TextEditMenuItem Header="_URL" CommandEnum="Data_Escape_URL"/>
 		</MenuItem>
-		<MenuItem Header="Unescape">
+		<MenuItem Header="_Unescape">
 			<textEdit:TextEditMenuItem Header="_Markup" CommandEnum="Data_Unescape_Markup"/>
 			<textEdit:TextEditMenuItem Header="_Regex" CommandEnum="Data_Unescape_Regex"/>
 			<textEdit:TextEditMenuItem Header="_URL" CommandEnum="Data_Unescape_URL"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Hash">
+		<MenuItem Header="_Hash">
 			<textEdit:TextEditMenuItem Header="MD_5" CommandEnum="Data_Hash_MD5"/>
 			<textEdit:TextEditMenuItem Header="SHA_1" CommandEnum="Data_Hash_SHA1"/>
 			<textEdit:TextEditMenuItem Header="SHA_256" CommandEnum="Data_Hash_SHA256"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Sort" CommandEnum="Data_Sort"/>
+		<textEdit:TextEditMenuItem Header="S_ort" CommandEnum="Data_Sort"/>
 	</MenuItem>
 	<MenuItem Header="_Markup">
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Markup_FetchURL"/>
 		<textEdit:TextEditMenuItem Header="_Reformat" CommandEnum="Markup_Reformat"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Toggle Tag Position" CommandEnum="Markup_ToggleTagPosition"/>
+		<textEdit:TextEditMenuItem Header="To_ggle Tag Position" CommandEnum="Markup_ToggleTagPosition"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Markup_Parent"/>
 		<textEdit:TextEditMenuItem Header="_Ancestor" CommandEnum="Markup_Ancestor"/>
 		<MenuItem Header="_Children">
 			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children_Children"/>
-			<textEdit:TextEditMenuItem Header="All Children" CommandEnum="Markup_Children_All"/>
+			<textEdit:TextEditMenuItem Header="A_ll Children" CommandEnum="Markup_Children_All"/>
 			<textEdit:TextEditMenuItem Header="_Self and Children" CommandEnum="Markup_Children_SelfAndChildren"/>
-			<textEdit:TextEditMenuItem Header="Self and All Children" CommandEnum="Markup_Children_SelfAndAll"/>
+			<textEdit:TextEditMenuItem Header="Self a_nd All Children" CommandEnum="Markup_Children_SelfAndAll"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Markup_Children_First"/>
 			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Children_Elements"/>
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Children_Text"/>
-			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Children_AllText"/>
+			<textEdit:TextEditMenuItem Header="All Te_xt" CommandEnum="Markup_Children_AllText"/>
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Children_Comments"/>
 			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Children_ByAttribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Markup_Descendants_Descendants"/>
-			<textEdit:TextEditMenuItem Header="All Descendants" CommandEnum="Markup_Descendants_All"/>
+			<textEdit:TextEditMenuItem Header="A_ll Descendants" CommandEnum="Markup_Descendants_All"/>
 			<textEdit:TextEditMenuItem Header="_Self and Descendants" CommandEnum="Markup_Descendants_SelfAndDescendants"/>
-			<textEdit:TextEditMenuItem Header="Self and All Descendants" CommandEnum="Markup_Descendants_SelfAndAll"/>
+			<textEdit:TextEditMenuItem Header="Self a_nd All Descendants" CommandEnum="Markup_Descendants_SelfAndAll"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Markup_Descendants_First"/>
 			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Descendants_Elements"/>
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Markup_Descendants_Text"/>
-			<textEdit:TextEditMenuItem Header="All Text" CommandEnum="Markup_Descendants_AllText"/>
+			<textEdit:TextEditMenuItem Header="All Te_xt" CommandEnum="Markup_Descendants_AllText"/>
 			<textEdit:TextEditMenuItem Header="C_omments" CommandEnum="Markup_Descendants_Comments"/>
 			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Descendants_ByAttribute"/>
 		</MenuItem>
@@ -223,8 +223,8 @@
 			<textEdit:TextEditMenuItem Header="To_pmost" CommandEnum="Markup_Select_TopMost"/>
 			<textEdit:TextEditMenuItem Header="_Deepest" CommandEnum="Markup_Select_Deepest"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="All Topmost" CommandEnum="Markup_Select_AllTopMost"/>
-			<textEdit:TextEditMenuItem Header="All Deepest" CommandEnum="Markup_Select_AllDeepest"/>
+			<textEdit:TextEditMenuItem Header="All Top_most" CommandEnum="Markup_Select_AllTopMost"/>
+			<textEdit:TextEditMenuItem Header="All Deepe_st" CommandEnum="Markup_Select_AllDeepest"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="Att_ribute" CommandEnum="Markup_Select_Attribute"/>
 		</MenuItem>
@@ -319,17 +319,17 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Misses_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Misses_Values9"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="Counts to Keys/Values 1" CommandEnum="Keys_CountstoKeysValues1"/>
+		<textEdit:TextEditMenuItem Header="C_ounts to Keys/Values 1" CommandEnum="Keys_CountstoKeysValues1"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
-		<textEdit:TextEditMenuItem Header="Toggle Regions/Selections" CommandEnum="SelectRegion_Toggle"/>
+		<textEdit:TextEditMenuItem Header="Toggle Regions_/Selections" CommandEnum="SelectRegion_Toggle"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
-		<textEdit:TextEditMenuItem Header="Lines" CommandEnum="Select_Lines"/>
-		<textEdit:TextEditMenuItem Header="E_mpty" CommandEnum="Select_Empty"/>
-		<textEdit:TextEditMenuItem Header="_Non-Empty" CommandEnum="Select_NonEmpty"/>
-		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Select_Trim"/>
+		<textEdit:TextEditMenuItem Header="Line_s" CommandEnum="Select_Lines"/>
+		<textEdit:TextEditMenuItem Header="Empt_y" CommandEnum="Select_Empty"/>
+		<textEdit:TextEditMenuItem Header="N_on-Empty" CommandEnum="Select_NonEmpty"/>
+		<textEdit:TextEditMenuItem Header="Tri_m" CommandEnum="Select_Trim"/>
 		<textEdit:TextEditMenuItem Header="_Width" CommandEnum="Select_Width"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
@@ -339,12 +339,12 @@
 		<textEdit:TextEditMenuItem Header="_Regions" CommandEnum="Select_Regions"/>
 		<textEdit:TextEditMenuItem Header="_Find Results" CommandEnum="Select_FindResults"/>
 		<Separator/>
-		<MenuItem Header="Min">
+		<MenuItem Header="Mi_n">
 			<textEdit:TextEditMenuItem Header="_String" CommandEnum="Select_Min_String"/>
 			<textEdit:TextEditMenuItem Header="_Numeric" CommandEnum="Select_Min_Numeric"/>
 			<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Select_Min_Length"/>
 		</MenuItem>
-		<MenuItem Header="Max">
+		<MenuItem Header="Ma_x">
 			<textEdit:TextEditMenuItem Header="_String" CommandEnum="Select_Max_String"/>
 			<textEdit:TextEditMenuItem Header="_Numeric" CommandEnum="Select_Max_Numeric"/>
 			<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Select_Max_Length"/>
@@ -352,15 +352,15 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Expression Matches" CommandEnum="Select_ExpressionMatches"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="First Selection" CommandEnum="Select_FirstSelection"/>
-		<textEdit:TextEditMenuItem Header="Show Current" CommandEnum="Select_ShowCurrent"/>
-		<textEdit:TextEditMenuItem Header="Next Selection" CommandEnum="Select_NextSelection"/>
-		<textEdit:TextEditMenuItem Header="Prev Selection" CommandEnum="Select_PrevSelection"/>
-		<textEdit:TextEditMenuItem Header="S_ingle" CommandEnum="Select_Single"/>
-		<textEdit:TextEditMenuItem Header="Remove" CommandEnum="Select_Remove"/>
+		<textEdit:TextEditMenuItem Header="F_irst Selection" CommandEnum="Select_FirstSelection"/>
+		<textEdit:TextEditMenuItem Header="S_how Current" CommandEnum="Select_ShowCurrent"/>
+		<textEdit:TextEditMenuItem Header="Nex_t Selection" CommandEnum="Select_NextSelection"/>
+		<textEdit:TextEditMenuItem Header="_Prev Selection" CommandEnum="Select_PrevSelection"/>
+		<textEdit:TextEditMenuItem Header="Sin_gle" CommandEnum="Select_Single"/>
+		<textEdit:TextEditMenuItem Header="Remo_ve" CommandEnum="Select_Remove"/>
 	</MenuItem>
 	<MenuItem Header="_Region">
-		<textEdit:TextEditMenuItem Header="Toggle Regions/Selections" CommandEnum="SelectRegion_Toggle"/>
+		<textEdit:TextEditMenuItem Header="Toggle Regions_/Selections" CommandEnum="SelectRegion_Toggle"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Set _Selection" CommandEnum="Region_SetSelection"/>
 		<textEdit:TextEditMenuItem Header="Set _Find Results" CommandEnum="Region_SetFindResults"/>
@@ -382,16 +382,16 @@
 				</Style>
 			</MenuItem.ItemContainerStyle>
 
-			<textEdit:TextEditMenuItem Header="None" CommandEnum="View_Highlighting_None"/>
-			<textEdit:TextEditMenuItem Header="C#" CommandEnum="View_Highlighting_CSharp"/>
-			<textEdit:TextEditMenuItem Header="C++" CommandEnum="View_Highlighting_CPlusPlus"/>
+			<textEdit:TextEditMenuItem Header="_None" CommandEnum="View_Highlighting_None"/>
+			<textEdit:TextEditMenuItem Header="C_#" CommandEnum="View_Highlighting_CSharp"/>
+			<textEdit:TextEditMenuItem Header="C_++" CommandEnum="View_Highlighting_CPlusPlus"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== \'Tiles\''}"/>
 	</MenuItem>
 	<MenuItem Header="M_acro">
-		<textEdit:TextEditMenuItem Header="Quick Record" CommandEnum="Macro_QuickRecord"/>
-		<textEdit:TextEditMenuItem Header="Quick Play" CommandEnum="Macro_QuickPlay"/>
+		<textEdit:TextEditMenuItem Header="_Quick Record" CommandEnum="Macro_QuickRecord"/>
+		<textEdit:TextEditMenuItem Header="Q_uick Play" CommandEnum="Macro_QuickPlay"/>
 		<textEdit:TextEditMenuItem Header="_Record" CommandEnum="Macro_Record"/>
 		<textEdit:TextEditMenuItem Header="_Stop Recording" CommandEnum="Macro_StopRecording"/>
 		<textEdit:TextEditMenuItem Header="_Play" CommandEnum="Macro_Play"/>

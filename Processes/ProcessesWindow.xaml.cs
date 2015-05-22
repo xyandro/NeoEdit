@@ -23,6 +23,7 @@ namespace NeoEdit.Processes
 			ProcessManager.WindowCreated();
 			ProcessesMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
+			UIHelper.AuditMenu(menu);
 
 			foreach (var prop in UIHelper<ProcessItem>.GetProperties())
 			{

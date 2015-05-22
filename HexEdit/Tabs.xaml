@@ -22,7 +22,7 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
-		<hexEdit:HexEditMenu Parent="{Binding ElementName=self}"/>
+		<hexEdit:HexEditMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
 		<hexEdit:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" GetLabel="GetLabel" VerticalAlignment="Stretch"
 			Items="{Binding HexEditors, ElementName=self, Mode=TwoWay}"

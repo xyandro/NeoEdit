@@ -36,6 +36,7 @@ namespace NeoEdit.TextView
 		{
 			TextViewMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
+			UIHelper.AuditMenu(menu);
 
 			TextViewers = new ObservableCollection<TextViewer>();
 			Show(); // Explicitly show because sometimes the loading file dialog will put up first and be hidden

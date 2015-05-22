@@ -8,7 +8,7 @@
 	<MenuItem Header="_File">
 		<textView:TextViewMenuItem Header="_New Window" CommandEnum="File_NewWindow"/>
 		<textView:TextViewMenuItem Header="_Open" CommandEnum="File_Open"/>
-		<textView:TextViewMenuItem Header="Open Copied/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
+		<textView:TextViewMenuItem Header="Open Copie_d/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
 		<textView:TextViewMenuItem Header="_Close" CommandEnum="File_Close"/>
 		<Separator/>
 		<textView:TextViewMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>

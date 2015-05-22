@@ -24,10 +24,10 @@
 		<disk:DiskMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="_Find" CommandEnum="Edit_Find"/>
-		<disk:DiskMenuItem Header="Binary Find" CommandEnum="Edit_BinaryFind"/>
+		<disk:DiskMenuItem Header="_Binary Find" CommandEnum="Edit_BinaryFind"/>
 		<Separator/>
-		<disk:DiskMenuItem Header="Text Edit" CommandEnum="Edit_TextEdit"/>
-		<disk:DiskMenuItem Header="Hex Edit" CommandEnum="Edit_HexEdit"/>
+		<disk:DiskMenuItem Header="Te_xt Edit" CommandEnum="Edit_TextEdit"/>
+		<disk:DiskMenuItem Header="_Hex Edit" CommandEnum="Edit_HexEdit"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<disk:DiskMenuItem Header="_All" CommandEnum="Select_All"/>
@@ -37,9 +37,9 @@
 		<disk:DiskMenuItem Header="_Directories" CommandEnum="Select_Directories"/>
 		<disk:DiskMenuItem Header="_Files" CommandEnum="Select_Files"/>
 		<Separator/>
-		<disk:DiskMenuItem Header="Add Copied/Cut" CommandEnum="Select_AddCopiedCut"/>
+		<disk:DiskMenuItem Header="Add _Copied/Cut" CommandEnum="Select_AddCopiedCut"/>
 		<disk:DiskMenuItem Header="_Remove" CommandEnum="Select_Remove"/>
-		<disk:DiskMenuItem Header="_Remove With Children" CommandEnum="Select_RemoveWithChildren"/>
+		<disk:DiskMenuItem Header="R_emove With Children" CommandEnum="Select_RemoveWithChildren"/>
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Columns" ItemsSource="{Binding Converter={disk:ColumnsConverter}}">

@@ -73,6 +73,7 @@ namespace NeoEdit.TextEdit
 		{
 			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
+			UIHelper.AuditMenu(menu);
 
 			TextEditors = new ObservableCollection<TextEditor>();
 		}

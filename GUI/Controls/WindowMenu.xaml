@@ -6,7 +6,7 @@
 
 	<guiControls:WindowMenuItem Header="_Clipboard" CommandEnum="Window_Clipboard"/>
 	<guiControls:WindowMenuItem Header="C_onsole" CommandEnum="Window_Console"/>
-	<guiControls:WindowMenuItem Header="DB Viewer" CommandEnum="Window_DBViewer"/>
+	<guiControls:WindowMenuItem Header="D_B Viewer" CommandEnum="Window_DBViewer"/>
 	<guiControls:WindowMenuItem Header="_Disk" CommandEnum="Window_Disk"/>
 	<guiControls:WindowMenuItem Header="H_andles" CommandEnum="Window_Handles"/>
 	<guiControls:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>

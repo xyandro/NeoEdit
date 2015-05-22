@@ -41,6 +41,7 @@ namespace NeoEdit.HexEdit
 		{
 			HexEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
 			InitializeComponent();
+			UIHelper.AuditMenu(menu);
 
 			HexEditors = new ObservableCollection<HexEditor>();
 		}

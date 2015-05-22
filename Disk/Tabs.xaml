@@ -22,7 +22,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<disk:DiskMenu Parent="{Binding ElementName=self}"/>
+		<disk:DiskMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
 		<disk:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" GetLabel="GetLabel" VerticalAlignment="Stretch"
 			Items="{Binding DiskWindows, ElementName=self, Mode=TwoWay}"
