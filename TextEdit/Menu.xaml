@@ -182,6 +182,7 @@
 		<textEdit:TextEditMenuItem Header="Toggle Tag Position" CommandEnum="Markup_ToggleTagPosition"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Markup_Parent"/>
+		<textEdit:TextEditMenuItem Header="_Ancestor" CommandEnum="Markup_Ancestor"/>
 		<MenuItem Header="_Children">
 			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children_Children"/>
 			<textEdit:TextEditMenuItem Header="All Children" CommandEnum="Markup_Children_All"/>
@@ -211,7 +212,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Outer" CommandEnum="Markup_Outer"/>
 		<textEdit:TextEditMenuItem Header="_Inner" CommandEnum="Markup_Inner"/>
-		<textEdit:TextEditMenuItem Header="_All Inner" CommandEnum="Markup_AllInner"/>
+		<textEdit:TextEditMenuItem Header="A_ll Inner" CommandEnum="Markup_AllInner"/>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="_Elements" CommandEnum="Markup_Select_Elements"/>

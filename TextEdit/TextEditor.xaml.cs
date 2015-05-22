@@ -441,6 +441,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA1: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
+				case TextEditCommand.Markup_Ancestor: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
 				case TextEditCommand.Markup_Children_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
 				case TextEditCommand.Markup_Descendants_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
 				case TextEditCommand.Markup_Select_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
@@ -599,6 +600,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Reformat: Command_Markup_Reformat(); break;
 				case TextEditCommand.Markup_ToggleTagPosition: Command_Markup_ToggleTagPosition(shiftDown); break;
 				case TextEditCommand.Markup_Parent: Command_Markup_Parent(shiftDown); break;
+				case TextEditCommand.Markup_Ancestor: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Parents, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Markup_Children_Children: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children); break;
 				case TextEditCommand.Markup_Children_All: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.Children, trimWhitespace: false); break;
 				case TextEditCommand.Markup_Children_SelfAndChildren: Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList.SelfAndChildren); break;

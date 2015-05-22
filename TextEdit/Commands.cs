@@ -121,6 +121,7 @@ namespace NeoEdit.TextEdit
 		Markup_Reformat,
 		[KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift, false)] Markup_ToggleTagPosition,
 		[KeyGesture(Key.Left, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.Left, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift, false)] Markup_Parent,
+		Markup_Ancestor,
 		Markup_Children_Children,
 		Markup_Children_All,
 		Markup_Children_SelfAndChildren,
