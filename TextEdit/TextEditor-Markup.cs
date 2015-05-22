@@ -146,29 +146,29 @@ namespace NeoEdit.TextEdit
 		internal void Command_Markup_Select_TopMost()
 		{
 			var nodes = GetSelectionMarkupNodes();
-			var targetDepth = nodes.Min(node => node.Depth);
-			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
+			var descendants = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Descendants)));
+			Selections.Replace(Selections.Where((range, index) => !descendants.Contains(nodes[index])).ToList());
 		}
 
 		internal void Command_Markup_Select_Deepest()
 		{
 			var nodes = GetSelectionMarkupNodes();
-			var targetDepth = nodes.Max(node => node.Depth);
+			var parents = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Parents)));
+			Selections.Replace(Selections.Where((range, index) => !parents.Contains(nodes[index])).ToList());
+		}
+
+		internal void Command_Markup_Select_MaxTopMost()
+		{
+			var nodes = GetSelectionMarkupNodes();
+			var targetDepth = nodes.Min(node => node.Depth);
 			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
 		}
 
-		internal void Command_Markup_Select_AllTopMost()
+		internal void Command_Markup_Select_MaxDeepest()
 		{
 			var nodes = GetSelectionMarkupNodes();
-			var descendants = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Descendants)));
-			Selections.Replace(Selections.Where((range, index) => !descendants.Contains(nodes[index])).ToList());
-		}
-
-		internal void Command_Markup_Select_AllDeepest()
-		{
-			var nodes = GetSelectionMarkupNodes();
-			var parents = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Parents)));
-			Selections.Replace(Selections.Where((range, index) => !parents.Contains(nodes[index])).ToList());
+			var targetDepth = nodes.Max(node => node.Depth);
+			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
 		}
 
 		internal SelectMarkupAttributeDialog.Result Command_Markup_Select_Attribute_Dialog()

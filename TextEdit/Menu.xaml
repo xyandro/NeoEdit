@@ -223,8 +223,8 @@
 			<textEdit:TextEditMenuItem Header="To_pmost" CommandEnum="Markup_Select_TopMost"/>
 			<textEdit:TextEditMenuItem Header="_Deepest" CommandEnum="Markup_Select_Deepest"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="All Top_most" CommandEnum="Markup_Select_AllTopMost"/>
-			<textEdit:TextEditMenuItem Header="All Deepe_st" CommandEnum="Markup_Select_AllDeepest"/>
+			<textEdit:TextEditMenuItem Header="Max Top_most" CommandEnum="Markup_Select_MaxTopMost"/>
+			<textEdit:TextEditMenuItem Header="Max Deepe_st" CommandEnum="Markup_Select_MaxDeepest"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="Att_ribute" CommandEnum="Markup_Select_Attribute"/>
 		</MenuItem>
