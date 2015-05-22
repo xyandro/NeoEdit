@@ -75,7 +75,7 @@ namespace NeoEdit.TextEdit
 						++location;
 					}
 
-					var stop = (location >= str.Length) || ((inQuote == 0) && ((str[location] == '<') || (str[location] == '>') || (str.Substring(location).StartsWith("/>"))));
+					var stop = (location >= str.Length) || ((inQuote == 0) && ((str[location] == '<') || (str[location] == '>') || ((str[location] == '/') && (location != result.StartOuterPosition + 1))));
 					if ((itemStart == location) && (stop))
 					{
 						step = OpenCloseStep.End;
