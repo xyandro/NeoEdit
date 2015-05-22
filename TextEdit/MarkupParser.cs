@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.TextEdit
 {
-	static class HTMLParser
+	static class MarkupParser
 	{
 		static MarkupNode GetCommentNode(string str, ref int location)
 		{
@@ -15,7 +15,7 @@ namespace NeoEdit.TextEdit
 			if (endComment == 2) // IndexOf returned -1
 				endComment = str.Length;
 			location = endComment;
-			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, StartOuterPosition = startComment, EndOuterPosition = endComment, StartInnerPosition = startComment + 4, EndInnerPosition = endComment - 3 };
+			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, StartOuterPosition = startComment, EndOuterPosition = endComment, StartInnerPosition = startComment + 4, EndInnerPosition = endComment - 3, SelfClosing = true };
 		}
 
 		enum OpenCloseStep
@@ -75,7 +75,7 @@ namespace NeoEdit.TextEdit
 						++location;
 					}
 
-					var stop = (location >= str.Length) || ((inQuote == 0) && ((str[location] == '<') || (str[location] == '>')));
+					var stop = (location >= str.Length) || ((inQuote == 0) && ((str[location] == '<') || (str[location] == '>') || (str.Substring(location).StartsWith("/>"))));
 					if ((itemStart == location) && (stop))
 					{
 						step = OpenCloseStep.End;
@@ -91,13 +91,11 @@ namespace NeoEdit.TextEdit
 					var value = str.Substring(itemStart, location - itemStart);
 					if (step == OpenCloseStep.AttrName)
 					{
-						itemName = value.ToLower();
+						itemName = value;
 						step = OpenCloseStep.AfterAttrNameWS;
 					}
 					else
 					{
-						if (itemName == "Tag")
-							value = value.ToLower();
 						result.AddAttribute(itemName, value, itemStart, location);
 						step = OpenCloseStep.BeforeAttrNameWS;
 					}
@@ -121,6 +119,11 @@ namespace NeoEdit.TextEdit
 				}
 				else if (step == OpenCloseStep.End)
 				{
+					if ((location < str.Length) && (str[location] == '/'))
+					{
+						result.SelfClosing = true;
+						++location;
+					}
 					if ((location < str.Length) && (str[location] == '>'))
 						++location;
 					break;
@@ -130,7 +133,7 @@ namespace NeoEdit.TextEdit
 			if (result.GetAttribute("Tag") == "!doctype")
 				return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, StartOuterPosition = result.StartOuterPosition, StartInnerPosition = result.StartOuterPosition + 2, EndInnerPosition = location - 1, EndOuterPosition = location };
 
-			result.StartInnerPosition = location;
+			result.StartInnerPosition = result.EndInnerPosition = result.EndOuterPosition = location;
 			return result;
 		}
 
@@ -141,10 +144,10 @@ namespace NeoEdit.TextEdit
 			location = str.IndexOf(find, startLocation);
 			if (location == -1)
 				location = str.Length;
-			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Text, StartOuterPosition = startLocation, StartInnerPosition = startLocation, EndInnerPosition = location, EndOuterPosition = location };
+			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Text, StartOuterPosition = startLocation, StartInnerPosition = startLocation, EndInnerPosition = location, EndOuterPosition = location, SelfClosing = true };
 		}
 
-		static readonly HashSet<string> voidElements = new HashSet<string> { "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "menuitem", "meta", "param", "source", "track", "wbr" };
+		static readonly HashSet<string> voidElements = new HashSet<string> { "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
 		static readonly HashSet<string> rawTextElements = new HashSet<string> { "script", "style", "textarea", "title" };
 
 		static public MarkupNode ParseHTML(string str, int location)
@@ -164,41 +167,37 @@ namespace NeoEdit.TextEdit
 				if (node == null)
 					throw new ArgumentException("Failed to parse HTML");
 
-				switch (node.NodeType)
+				if (node.SelfClosing)
 				{
-					case MarkupNode.MarkupNodeType.Comment:
-					case MarkupNode.MarkupNodeType.Text:
-						topStack.AddChild(node);
-						break;
-					case MarkupNode.MarkupNodeType.Element:
-						var tag = node.GetAttribute("Tag");
-						if (!tag.StartsWith("/"))
+					topStack.AddChild(node);
+					continue;
+				}
+
+				var tag = node.GetAttribute("Tag");
+				if (!tag.StartsWith("/"))
+				{
+					topStack.AddChild(node);
+					if (voidElements.Contains(tag))
+						node.EndInnerPosition = node.EndOuterPosition = location;
+					else
+						stack.Push(Tuple.Create(tag, node));
+					continue;
+				}
+
+				tag = tag.Substring(1);
+				var toRemove = stack.FirstOrDefault(item => (item.Item1 == tag) && (item.Item2 != doc));
+				if (toRemove != null)
+				{
+					while (true)
+					{
+						var item = stack.Pop();
+						item.Item2.EndInnerPosition = item.Item2.EndOuterPosition = node.StartOuterPosition;
+						if (item == toRemove)
 						{
-							topStack.AddChild(node);
-							if (voidElements.Contains(tag))
-								node.EndInnerPosition = node.EndOuterPosition = location;
-							else
-								stack.Push(Tuple.Create(tag, node));
+							item.Item2.EndOuterPosition = node.StartInnerPosition;
+							break;
 						}
-						else
-						{
-							tag = tag.Substring(1);
-							var toRemove = stack.FirstOrDefault(item => (item.Item1 == tag) && (item.Item2 != doc));
-							if (toRemove != null)
-							{
-								while (true)
-								{
-									var item = stack.Pop();
-									item.Item2.EndInnerPosition = item.Item2.EndOuterPosition = node.StartOuterPosition;
-									if (item == toRemove)
-									{
-										item.Item2.EndOuterPosition = node.StartInnerPosition;
-										break;
-									}
-								}
-							}
-						}
-						break;
+					}
 				}
 			}
 			while (stack.Any())
@@ -231,8 +230,8 @@ namespace NeoEdit.TextEdit
 			return TrimBeginWS(TrimEndWS(str));
 		}
 
-		static HashSet<string> joinLeftSet = new HashSet<string> { "a", "b", "em", "i", "small", "strong", "sub", "sup", "ins", "del", "mark", "u", "br" };
-		static HashSet<string> joinRightSet = new HashSet<string> { "a", "b", "em", "i", "small", "strong", "sub", "sup", "ins", "del", "mark", "u", };
+		static HashSet<string> joinLeftSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "a", "b", "em", "i", "small", "strong", "sub", "sup", "ins", "del", "mark", "u", "br" };
+		static HashSet<string> joinRightSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "a", "b", "em", "i", "small", "strong", "sub", "sup", "ins", "del", "mark", "u", };
 		static Tuple<List<string>, bool, bool> rFormatHTML(MarkupNode node, string data)
 		{
 			if (node.NodeType != MarkupNode.MarkupNodeType.Element)
@@ -285,8 +284,8 @@ namespace NeoEdit.TextEdit
 						startTagItems.Add(String.Format("{0}=\"{1}\"", attr, value));
 				}
 			}
-			var startTag = "<" + String.Join(" ", startTagItems) + ">";
-			var endTag = voidElements.Contains(tag) ? "" : String.Format("</{0}>", tag);
+			var startTag = "<" + String.Join(" ", startTagItems) + (node.SelfClosing ? "/" : "") + ">";
+			var endTag = (voidElements.Contains(tag)) || (node.SelfClosing) ? "" : String.Format("</{0}>", tag);
 
 			var childrenOutput = new List<string>();
 			var children = node.List(MarkupNode.MarkupNodeList.Children).ToList();
@@ -332,8 +331,8 @@ namespace NeoEdit.TextEdit
 		static void Main()
 		{
 			var data = System.IO.File.ReadAllText(@"C:\Dev\NeoEdit - Work\a.htm");
-			var doc = HTMLParser.ParseHTML(data, 0);
-			var result = HTMLParser.FormatHTML(doc, data);
+			var doc = MarkupParser.ParseHTML(data, 0);
+			var result = MarkupParser.FormatHTML(doc, data);
 			System.IO.File.WriteAllText(@"C:\Dev\NeoEdit - Work\a2.htm", result);
 		}
 	}

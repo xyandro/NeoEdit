@@ -42,9 +42,11 @@ namespace NeoEdit.TextEdit
 
 		public int Depth { get; set; }
 
+		public bool SelfClosing { get; set; }
+
 		public MarkupNodeType NodeType { get; set; }
 
-		readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>();
+		readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>(StringComparer.OrdinalIgnoreCase);
 
 		public Range RangeOuter
 		{

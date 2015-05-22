@@ -13,7 +13,7 @@ namespace NeoEdit.TextEdit
 		{
 			var allRange = new Range(BeginOffset(), EndOffset());
 			var data = GetString(allRange);
-			return HTMLParser.ParseHTML(data, allRange.Start);
+			return MarkupParser.ParseHTML(data, allRange.Start);
 		}
 
 		List<MarkupNode> GetSelectionMarkupNodes(MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All)
@@ -70,8 +70,8 @@ namespace NeoEdit.TextEdit
 		{
 			var allRange = new Range(BeginOffset(), EndOffset());
 			var data = GetString(allRange);
-			var doc = HTMLParser.ParseHTML(data, allRange.Start);
-			Replace(new List<Range> { allRange }, new List<string> { HTMLParser.FormatHTML(doc, data) });
+			var doc = MarkupParser.ParseHTML(data, allRange.Start);
+			Replace(new List<Range> { allRange }, new List<string> { MarkupParser.FormatHTML(doc, data) });
 		}
 
 		internal void Command_Markup_ToggleTagPosition(bool shiftDown)

@@ -165,7 +165,7 @@
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="MarkupNode.cs" />
-    <Compile Include="HTMLParser.cs" />
+    <Compile Include="MarkupParser.cs" />
     <Compile Include="RangeList.cs" />
     <Compile Include="Highlighting.cs" />
     <Page Include="Menu.xaml">
