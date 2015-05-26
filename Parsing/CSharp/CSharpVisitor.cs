@@ -7,18 +7,18 @@ namespace NeoEdit
 	{
 		class CSharpVisitor : CSharp4BaseVisitor<object>
 		{
-			public CSharpNode Root { get; private set; }
-			readonly Stack<CSharpNode> stack = new Stack<CSharpNode>();
+			public ParserNode Root { get; private set; }
+			readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 			readonly string input;
 			public CSharpVisitor(string input)
 			{
 				this.input = input;
-				stack.Push(Root = new CSharpNode { NodeType = CSharpNodeType.Root });
+				stack.Push(Root = new ParserNode { Type = "Root" });
 			}
 
-			CSharpNode CreateNode(CSharpNodeType type, ParserRuleContext context)
+			ParserNode CreateNode(string type, ParserRuleContext context)
 			{
-				var node = new CSharpNode { NodeType = type, Parent = stack.Peek() };
+				var node = new ParserNode { Type = type, Parent = stack.Peek() };
 				node.LocationContext = context;
 				return node;
 			}
@@ -29,7 +29,7 @@ namespace NeoEdit
 				if (classDef == null)
 					return null;
 
-				var node = CreateNode(CSharpNodeType.Class, context);
+				var node = CreateNode("Class", context);
 				node.AddAttribute("Name", input, classDef.identifier());
 
 				stack.Push(node);
@@ -39,10 +39,10 @@ namespace NeoEdit
 				return null;
 			}
 
-			CSharpNode methodNode = null;
+			ParserNode methodNode = null;
 			public override object VisitClass_member_declaration(CSharp4Parser.Class_member_declarationContext context)
 			{
-				methodNode = CreateNode(CSharpNodeType.Method, context);
+				methodNode = CreateNode("Method", context);
 				return base.VisitClass_member_declaration(context);
 			}
 

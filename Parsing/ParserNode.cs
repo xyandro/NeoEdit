@@ -9,23 +9,10 @@ namespace NeoEdit
 {
 	namespace Parsing
 	{
-		[Flags]
-		public enum ParserNodeListType
+		public class ParserNode
 		{
-			None = 0,
-			Self = 1,
-			Children = 2,
-			Descendants = 4,
-			Parents = 8,
-			SelfAndChildren = Self | Children,
-			SelfAndDescendants = Self | Descendants,
-			SelfAndParents = Self | Parents,
-		}
-
-		public class ParserNode<T>
-		{
-			ParserNode<T> parent;
-			public ParserNode<T> Parent
+			ParserNode parent;
+			public ParserNode Parent
 			{
 				get { return parent; }
 				internal set
@@ -38,17 +25,30 @@ namespace NeoEdit
 					parent.children.Add(this);
 				}
 			}
-			public T NodeType { get; internal set; }
 
 			public Tuple<int, int> Location { get { return GetAttributeLocation("Location"); } }
 			internal ParserRuleContext LocationContext { set { AddAttribute("Location", null, value); } }
+			public string Type { get { return GetAttributeText("Type"); } internal set { AddAttribute("Type", value, -1, -1); } }
 
 			public int Depth { get; set; }
 
-			readonly List<ParserNode<T>> children = new List<ParserNode<T>>();
+			readonly List<ParserNode> children = new List<ParserNode>();
 			readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>();
 
-			public IEnumerable<ParserNode<T>> List(ParserNodeListType list)
+			[Flags]
+			public enum ParserNodeListType
+			{
+				None = 0,
+				Self = 1,
+				Children = 2,
+				Descendants = 4,
+				Parents = 8,
+				SelfAndChildren = Self | Children,
+				SelfAndDescendants = Self | Descendants,
+				SelfAndParents = Self | Parents,
+			}
+
+			public IEnumerable<ParserNode> List(ParserNodeListType list)
 			{
 				if (list.HasFlag(ParserNodeListType.Self))
 					yield return this;
@@ -157,7 +157,7 @@ namespace NeoEdit
 			{
 				var result = new List<string>();
 
-				var attrs = new List<string> { NodeType.ToString() };
+				var attrs = new List<string> { Type.ToString() };
 				attrs.AddRange(attributes.Select(attr => String.Format("{0}: {1}", attr.Key, String.Join(";", attr.Value.Select(tuple => String.Format("{0}-{1} ({2})", tuple.Item2, tuple.Item3, (tuple.Item1 ?? "").Replace("\r", "").Replace("\n", "")))))));
 				result.Add(String.Join(", ", attrs));
 

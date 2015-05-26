@@ -8,20 +8,20 @@ namespace NeoEdit
 	{
 		class GenericListener : IParseTreeListener
 		{
-			Stack<ParserNode<string>> stack = new Stack<ParserNode<string>>();
+			Stack<ParserNode> stack = new Stack<ParserNode>();
 
-			public ParserNode<string> Root { get { return stack.Peek(); } }
+			public ParserNode Root { get { return stack.Peek(); } }
 
 			readonly string input;
 			public GenericListener(string input)
 			{
-				stack.Push(new ParserNode<string> { NodeType = "Root" });
+				stack.Push(new ParserNode { Type = "Root" });
 				this.input = input;
 			}
 
 			public void EnterEveryRule(ParserRuleContext ctx)
 			{
-				var node = new ParserNode<string> { NodeType = ctx.GetType().ToString(), Parent = stack.Peek() };
+				var node = new ParserNode { Type = ctx.GetType().ToString(), Parent = stack.Peek() };
 				node.AddAttribute("Text", input, ctx);
 				stack.Push(node);
 			}

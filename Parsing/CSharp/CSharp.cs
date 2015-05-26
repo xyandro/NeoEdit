@@ -7,7 +7,7 @@ namespace NeoEdit
 	{
 		public static class CSharp
 		{
-			public static CSharpNode Parse(string data)
+			public static ParserNode Parse(string data)
 			{
 				var input = new AntlrInputStream(data);
 				var lexer = new CSharp4Lexer(input);

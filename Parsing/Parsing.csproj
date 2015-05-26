@@ -16,7 +16,6 @@
   </Target>
   <ItemGroup>
     <Compile Include="CSharp\CSharpVisitor.cs" />
-    <Compile Include="CSharp\CSharpNode.cs" />
     <Compile Include="CSharp\CSharp.cs" />
     <None Include="CSharp\Source\CSharp4.g4" />
     <None Include="CSharp\Source\CSharp4Lexer.g4" />
