@@ -5,176 +5,173 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 
-namespace NeoEdit
+namespace NeoEdit.Parsing
 {
-	namespace Parsing
+	public class ParserNode
 	{
-		public class ParserNode
+		ParserNode parent;
+		public ParserNode Parent
 		{
-			ParserNode parent;
-			public ParserNode Parent
+			get { return parent; }
+			internal set
 			{
-				get { return parent; }
-				internal set
-				{
-					if (value == null)
-						return;
+				if (value == null)
+					return;
 
-					parent = value;
-					Depth = value.Depth + 1;
-					parent.children.Add(this);
+				parent = value;
+				Depth = value.Depth + 1;
+				parent.children.Add(this);
+			}
+		}
+
+		public Tuple<int, int> Location { get { return GetAttributeLocation("Location"); } }
+		internal ParserRuleContext LocationContext { set { AddAttribute("Location", null, value); } }
+		public string Type { get { return GetAttributeText("Type"); } internal set { AddAttribute("Type", value, -1, -1); } }
+
+		public int Depth { get; set; }
+
+		readonly List<ParserNode> children = new List<ParserNode>();
+		readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>();
+
+		[Flags]
+		public enum ParserNodeListType
+		{
+			None = 0,
+			Self = 1,
+			Children = 2,
+			Descendants = 4,
+			Parents = 8,
+			SelfAndChildren = Self | Children,
+			SelfAndDescendants = Self | Descendants,
+			SelfAndParents = Self | Parents,
+		}
+
+		public IEnumerable<ParserNode> List(ParserNodeListType list)
+		{
+			if (list.HasFlag(ParserNodeListType.Self))
+				yield return this;
+			if (list.HasFlag(ParserNodeListType.Parents))
+			{
+				for (var parent = this.Parent; parent != null; parent = parent.Parent)
+					yield return parent;
+			}
+			if ((list.HasFlag(ParserNodeListType.Children)) || (list.HasFlag(ParserNodeListType.Descendants)))
+			{
+				foreach (var child in children)
+				{
+					yield return child;
+					if (list.HasFlag(ParserNodeListType.Descendants))
+						foreach (var childChild in child.List(ParserNodeListType.Descendants))
+							yield return childChild;
 				}
 			}
+		}
 
-			public Tuple<int, int> Location { get { return GetAttributeLocation("Location"); } }
-			internal ParserRuleContext LocationContext { set { AddAttribute("Location", null, value); } }
-			public string Type { get { return GetAttributeText("Type"); } internal set { AddAttribute("Type", value, -1, -1); } }
+		public List<string> GetAttributeNames()
+		{
+			return attributes.Keys.ToList();
+		}
 
-			public int Depth { get; set; }
+		public string GetAttributeText(string name)
+		{
+			if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
+				return null;
+			return attributes[name][0].Item1;
+		}
 
-			readonly List<ParserNode> children = new List<ParserNode>();
-			readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>();
+		public Tuple<int, int> GetAttributeLocation(string name)
+		{
+			if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
+				return null;
+			return Tuple.Create(attributes[name][0].Item2, attributes[name][0].Item3);
+		}
 
-			[Flags]
-			public enum ParserNodeListType
+		public IEnumerable<string> GetAttributesText(string name, bool firstOnly = false)
+		{
+			if (!attributes.ContainsKey(name))
+				yield break;
+			foreach (var attr in attributes[name])
 			{
-				None = 0,
-				Self = 1,
-				Children = 2,
-				Descendants = 4,
-				Parents = 8,
-				SelfAndChildren = Self | Children,
-				SelfAndDescendants = Self | Descendants,
-				SelfAndParents = Self | Parents,
+				yield return attr.Item1;
+				if (firstOnly)
+					break;
 			}
+		}
 
-			public IEnumerable<ParserNode> List(ParserNodeListType list)
+		public IEnumerable<Tuple<int, int>> GetAttributesLocation(string name, bool firstOnly = false)
+		{
+			if (!attributes.ContainsKey(name))
+				yield break;
+			foreach (var attr in attributes[name])
 			{
-				if (list.HasFlag(ParserNodeListType.Self))
-					yield return this;
-				if (list.HasFlag(ParserNodeListType.Parents))
-				{
-					for (var parent = this.Parent; parent != null; parent = parent.Parent)
-						yield return parent;
-				}
-				if ((list.HasFlag(ParserNodeListType.Children)) || (list.HasFlag(ParserNodeListType.Descendants)))
-				{
-					foreach (var child in children)
-					{
-						yield return child;
-						if (list.HasFlag(ParserNodeListType.Descendants))
-							foreach (var childChild in child.List(ParserNodeListType.Descendants))
-								yield return childChild;
-					}
-				}
+				yield return Tuple.Create(attr.Item2, attr.Item3);
+				if (firstOnly)
+					break;
 			}
+		}
 
-			public List<string> GetAttributeNames()
+		public Tuple<string, int, int> GetAttribute(string name)
+		{
+			if (!attributes.ContainsKey(name))
+				return null;
+			return attributes[name].FirstOrDefault();
+		}
+
+		public IEnumerable<Tuple<string, int, int>> GetAttributes(string name, bool firstOnly = false)
+		{
+			if (!attributes.ContainsKey(name))
+				yield break;
+			foreach (var attr in attributes[name])
 			{
-				return attributes.Keys.ToList();
+				yield return attr;
+				if (firstOnly)
+					break;
 			}
+		}
 
-			public string GetAttributeText(string name)
-			{
-				if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
-					return null;
-				return attributes[name][0].Item1;
-			}
+		public void AddAttribute(string name, string value, int start, int end)
+		{
+			if (!attributes.ContainsKey(name))
+				attributes[name] = new List<Tuple<string, int, int>>();
+			attributes[name].Add(Tuple.Create(value, start, end));
+		}
 
-			public Tuple<int, int> GetAttributeLocation(string name)
-			{
-				if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
-					return null;
-				return Tuple.Create(attributes[name][0].Item2, attributes[name][0].Item3);
-			}
+		internal void AddAttribute(string name, string input, ParserRuleContext ctx)
+		{
+			int start, end;
+			ctx.GetBounds(out start, out end);
+			var data = ctx.GetText(input);
+			AddAttribute(name, data, start, end);
+		}
 
-			public IEnumerable<string> GetAttributesText(string name, bool firstOnly = false)
-			{
-				if (!attributes.ContainsKey(name))
-					yield break;
-				foreach (var attr in attributes[name])
-				{
-					yield return attr.Item1;
-					if (firstOnly)
-						break;
-				}
-			}
+		public bool HasAttribute(string name, Regex regex)
+		{
+			if (!attributes.ContainsKey(name))
+				return false;
+			return attributes[name].Any(attr => regex.IsMatch(attr.Item1));
+		}
 
-			public IEnumerable<Tuple<int, int>> GetAttributesLocation(string name, bool firstOnly = false)
-			{
-				if (!attributes.ContainsKey(name))
-					yield break;
-				foreach (var attr in attributes[name])
-				{
-					yield return Tuple.Create(attr.Item2, attr.Item3);
-					if (firstOnly)
-						break;
-				}
-			}
+		List<string> rPrint()
+		{
+			var result = new List<string>();
 
-			public Tuple<string, int, int> GetAttribute(string name)
-			{
-				if (!attributes.ContainsKey(name))
-					return null;
-				return attributes[name].FirstOrDefault();
-			}
+			var attrs = new List<string> { Type.ToString() };
+			attrs.AddRange(attributes.Select(attr => String.Format("{0}: {1}", attr.Key, String.Join(";", attr.Value.Select(tuple => String.Format("{0}-{1} ({2})", tuple.Item2, tuple.Item3, (tuple.Item1 ?? "").Replace("\r", "").Replace("\n", "")))))));
+			result.Add(String.Join(", ", attrs));
 
-			public IEnumerable<Tuple<string, int, int>> GetAttributes(string name, bool firstOnly = false)
-			{
-				if (!attributes.ContainsKey(name))
-					yield break;
-				foreach (var attr in attributes[name])
-				{
-					yield return attr;
-					if (firstOnly)
-						break;
-				}
-			}
+			result.AddRange(children.SelectMany(child => child.rPrint()).Select(str => String.Format(" {0}", str)));
 
-			public void AddAttribute(string name, string value, int start, int end)
-			{
-				if (!attributes.ContainsKey(name))
-					attributes[name] = new List<Tuple<string, int, int>>();
-				attributes[name].Add(Tuple.Create(value, start, end));
-			}
+			return result;
+		}
 
-			internal void AddAttribute(string name, string input, ParserRuleContext ctx)
-			{
-				var start = ctx.Start.StartIndex;
-				var end = Math.Max(start, ctx.Stop == null ? 0 : ctx.Stop.StopIndex + 1);
-				var data = input == null ? null : input.Substring(start, end - start);
-				AddAttribute(name, data, start, end);
-			}
+		internal string Print()
+		{
+			return String.Join("", rPrint().Select(str => String.Format("{0}{1}", str, Environment.NewLine)));
+		}
 
-			public bool HasAttribute(string name, Regex regex)
-			{
-				if (!attributes.ContainsKey(name))
-					return false;
-				return attributes[name].Any(attr => regex.IsMatch(attr.Item1));
-			}
-
-			List<string> rPrint()
-			{
-				var result = new List<string>();
-
-				var attrs = new List<string> { Type.ToString() };
-				attrs.AddRange(attributes.Select(attr => String.Format("{0}: {1}", attr.Key, String.Join(";", attr.Value.Select(tuple => String.Format("{0}-{1} ({2})", tuple.Item2, tuple.Item3, (tuple.Item1 ?? "").Replace("\r", "").Replace("\n", "")))))));
-				result.Add(String.Join(", ", attrs));
-
-				result.AddRange(children.SelectMany(child => child.rPrint()).Select(str => String.Format(" {0}", str)));
-
-				return result;
-			}
-
-			internal string Print()
-			{
-				return String.Join("", rPrint().Select(str => String.Format("{0}{1}", str, Environment.NewLine)));
-			}
-
-			internal void Save(string outputFile)
-			{
-				File.WriteAllText(outputFile, Print());
-			}
+		internal void Save(string outputFile)
+		{
+			File.WriteAllText(outputFile, Print());
 		}
 	}
 }
