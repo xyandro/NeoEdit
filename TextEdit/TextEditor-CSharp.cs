@@ -14,8 +14,8 @@ namespace NeoEdit.TextEdit
 
 		Range GetNodeRange(CSharpNode node)
 		{
-			var location = node.GetAttribute("");
-			return new Range(location.Item2, location.Item3);
+			var location = node.Location;
+			return new Range(location.Item1, location.Item2);
 		}
 
 		internal void Command_CSharp_Methods()

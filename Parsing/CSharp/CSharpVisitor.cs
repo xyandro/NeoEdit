@@ -19,7 +19,7 @@ namespace NeoEdit
 			CSharpNode CreateNode(CSharpNodeType type, ParserRuleContext context)
 			{
 				var node = new CSharpNode { NodeType = type, Parent = stack.Peek() };
-				node.AddLocationAttribute("", context);
+				node.LocationContext = context;
 				return node;
 			}
 

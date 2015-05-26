@@ -40,6 +40,9 @@ namespace NeoEdit
 			}
 			public T NodeType { get; internal set; }
 
+			public Tuple<int, int> Location { get { return GetAttributeLocation("Location"); } }
+			internal ParserRuleContext LocationContext { set { AddAttribute("Location", null, value); } }
+
 			public int Depth { get; set; }
 
 			readonly List<ParserNode<T>> children = new List<ParserNode<T>>();
@@ -73,9 +76,16 @@ namespace NeoEdit
 
 			public string GetAttributeText(string name)
 			{
-				if (!attributes.ContainsKey(name))
+				if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
 					return null;
-				return attributes[name].Select(attr => attr.Item1).FirstOrDefault();
+				return attributes[name][0].Item1;
+			}
+
+			public Tuple<int, int> GetAttributeLocation(string name)
+			{
+				if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
+					return null;
+				return Tuple.Create(attributes[name][0].Item2, attributes[name][0].Item3);
 			}
 
 			public IEnumerable<string> GetAttributesText(string name, bool firstOnly = false)
@@ -85,6 +95,18 @@ namespace NeoEdit
 				foreach (var attr in attributes[name])
 				{
 					yield return attr.Item1;
+					if (firstOnly)
+						break;
+				}
+			}
+
+			public IEnumerable<Tuple<int, int>> GetAttributesLocation(string name, bool firstOnly = false)
+			{
+				if (!attributes.ContainsKey(name))
+					yield break;
+				foreach (var attr in attributes[name])
+				{
+					yield return Tuple.Create(attr.Item2, attr.Item3);
 					if (firstOnly)
 						break;
 				}
@@ -116,18 +138,12 @@ namespace NeoEdit
 				attributes[name].Add(Tuple.Create(value, start, end));
 			}
 
-			internal void AddLocationAttribute(string name, ParserRuleContext ctx)
-			{
-				var start = ctx.Start.StartIndex;
-				var end = Math.Max(start, ctx.Stop.StopIndex + 1);
-				AddAttribute(name, null, start, end);
-			}
-
 			internal void AddAttribute(string name, string input, ParserRuleContext ctx)
 			{
 				var start = ctx.Start.StartIndex;
-				var end = Math.Max(start, ctx.Stop.StopIndex + 1);
-				AddAttribute(name, input.Substring(start, end - start), start, end);
+				var end = Math.Max(start, ctx.Stop == null ? 0 : ctx.Stop.StopIndex + 1);
+				var data = input == null ? null : input.Substring(start, end - start);
+				AddAttribute(name, data, start, end);
 			}
 
 			public bool HasAttribute(string name, Regex regex)
