@@ -159,6 +159,7 @@ namespace NeoEdit.TextEdit
 		Markup_Select_MaxDeepest,
 		Markup_Select_Attribute,
 		Insert_GUID,
+		CSharp_Methods,
 		Insert_RandomNumber,
 		Insert_RandomData,
 		Insert_MinMaxValues,

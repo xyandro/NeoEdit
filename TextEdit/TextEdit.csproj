@@ -198,6 +198,9 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextEditor-CSharp.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextEditor-Markup.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -215,6 +218,10 @@
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Parsing\Parsing.csproj">
+      <Project>{4b3369ec-007a-4264-9d11-42c6f8a04739}</Project>
+      <Name>Parsing</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />

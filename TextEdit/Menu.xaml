@@ -232,6 +232,9 @@
 			<textEdit:TextEditMenuItem Header="Att_ribute" CommandEnum="Markup_Select_Attribute"/>
 		</MenuItem>
 	</MenuItem>
+	<MenuItem Header="_CSharp">
+		<textEdit:TextEditMenuItem Header="_Methods" CommandEnum="CSharp_Methods"/>
+	</MenuItem>
 	<MenuItem Header="_Insert">
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Insert_RandomNumber"/>

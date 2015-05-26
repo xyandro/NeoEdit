@@ -47,6 +47,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextView", "TextView\TextView.csproj", "{46568E12-8F80-492E-AED8-647C2386C3E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parsing", "Parsing\Parsing.csproj", "{4B3369EC-007A-4264-9D11-42C6F8A04739}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -183,6 +185,14 @@ Global
 		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x64.Build.0 = Release|x64
 		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x86.ActiveCfg = Release|x86
 		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|x86.Build.0 = Release|x86
+		{4B3369EC-007A-4264-9D11-42C6F8A04739}.Debug|x64.ActiveCfg = Debug|x64
+		{4B3369EC-007A-4264-9D11-42C6F8A04739}.Debug|x64.Build.0 = Debug|x64
+		{4B3369EC-007A-4264-9D11-42C6F8A04739}.Debug|x86.ActiveCfg = Debug|x86
+		{4B3369EC-007A-4264-9D11-42C6F8A04739}.Debug|x86.Build.0 = Debug|x86
+		{4B3369EC-007A-4264-9D11-42C6F8A04739}.Release|x64.ActiveCfg = Release|x64
+		{4B3369EC-007A-4264-9D11-42C6F8A04739}.Release|x64.Build.0 = Release|x64
+		{4B3369EC-007A-4264-9D11-42C6F8A04739}.Release|x86.ActiveCfg = Release|x86
+		{4B3369EC-007A-4264-9D11-42C6F8A04739}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
