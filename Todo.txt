@@ -31,7 +31,6 @@ Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Submit forms
 Make markup relative paths absolute
-Constant width on status bar items (scrolling changes columns, positioning)
 
 View:
 Update as new lines are added
