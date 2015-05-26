@@ -9,6 +9,13 @@ namespace NeoEdit.Parsing
 {
 	public class ParserNode
 	{
+		public class ParserNodeAttribute
+		{
+			public string Data { get; internal set; }
+			public int Start { get; internal set; }
+			public int End { get; internal set; }
+		}
+
 		ParserNode parent;
 		public ParserNode Parent
 		{
@@ -24,14 +31,42 @@ namespace NeoEdit.Parsing
 			}
 		}
 
-		public Tuple<int, int> Location { get { return GetAttributeLocation("Location"); } }
+		public ParserNodeAttribute Location { get { return GetAttribute("Location"); } }
+		public int LocationStart
+		{
+			get
+			{
+				var location = GetAttribute("Location");
+				if (location == null)
+					return -1;
+				return location.Start;
+			}
+			set
+			{
+				SetAttribute("Location", null, value, LocationEnd);
+			}
+		}
+		public int LocationEnd
+		{
+			get
+			{
+				var location = GetAttribute("Location");
+				if (location == null)
+					return -1;
+				return location.End;
+			}
+			set
+			{
+				SetAttribute("Location", null, LocationStart, value);
+			}
+		}
 		internal ParserRuleContext LocationContext { set { AddAttribute("Location", null, value); } }
 		public string Type { get { return GetAttributeText("Type"); } internal set { AddAttribute("Type", value, -1, -1); } }
 
 		public int Depth { get; set; }
 
 		readonly List<ParserNode> children = new List<ParserNode>();
-		readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>();
+		readonly Dictionary<string, List<ParserNodeAttribute>> attributes = new Dictionary<string, List<ParserNodeAttribute>>();
 
 		[Flags]
 		public enum ParserNodeListType
@@ -76,14 +111,7 @@ namespace NeoEdit.Parsing
 		{
 			if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
 				return null;
-			return attributes[name][0].Item1;
-		}
-
-		public Tuple<int, int> GetAttributeLocation(string name)
-		{
-			if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
-				return null;
-			return Tuple.Create(attributes[name][0].Item2, attributes[name][0].Item3);
+			return attributes[name][0].Data;
 		}
 
 		public IEnumerable<string> GetAttributesText(string name, bool firstOnly = false)
@@ -92,32 +120,20 @@ namespace NeoEdit.Parsing
 				yield break;
 			foreach (var attr in attributes[name])
 			{
-				yield return attr.Item1;
+				yield return attr.Data;
 				if (firstOnly)
 					break;
 			}
 		}
 
-		public IEnumerable<Tuple<int, int>> GetAttributesLocation(string name, bool firstOnly = false)
-		{
-			if (!attributes.ContainsKey(name))
-				yield break;
-			foreach (var attr in attributes[name])
-			{
-				yield return Tuple.Create(attr.Item2, attr.Item3);
-				if (firstOnly)
-					break;
-			}
-		}
-
-		public Tuple<string, int, int> GetAttribute(string name)
+		public ParserNodeAttribute GetAttribute(string name)
 		{
 			if (!attributes.ContainsKey(name))
 				return null;
 			return attributes[name].FirstOrDefault();
 		}
 
-		public IEnumerable<Tuple<string, int, int>> GetAttributes(string name, bool firstOnly = false)
+		public IEnumerable<ParserNodeAttribute> GetAttributes(string name, bool firstOnly = false)
 		{
 			if (!attributes.ContainsKey(name))
 				yield break;
@@ -129,11 +145,16 @@ namespace NeoEdit.Parsing
 			}
 		}
 
+		public void SetAttribute(string name, string value, int start, int end)
+		{
+			attributes[name] = new List<ParserNodeAttribute> { new ParserNodeAttribute { Data = value, Start = start, End = end } };
+		}
+
 		public void AddAttribute(string name, string value, int start, int end)
 		{
 			if (!attributes.ContainsKey(name))
-				attributes[name] = new List<Tuple<string, int, int>>();
-			attributes[name].Add(Tuple.Create(value, start, end));
+				attributes[name] = new List<ParserNodeAttribute>();
+			attributes[name].Add(new ParserNodeAttribute { Data = value, Start = start, End = end });
 		}
 
 		internal void AddAttribute(string name, string input, ParserRuleContext ctx)
@@ -148,7 +169,7 @@ namespace NeoEdit.Parsing
 		{
 			if (!attributes.ContainsKey(name))
 				return false;
-			return attributes[name].Any(attr => regex.IsMatch(attr.Item1));
+			return attributes[name].Any(attr => regex.IsMatch(attr.Data));
 		}
 
 		List<string> rPrint()
@@ -156,7 +177,7 @@ namespace NeoEdit.Parsing
 			var result = new List<string>();
 
 			var attrs = new List<string> { Type.ToString() };
-			attrs.AddRange(attributes.Select(attr => String.Format("{0}: {1}", attr.Key, String.Join(";", attr.Value.Select(tuple => String.Format("{0}-{1} ({2})", tuple.Item2, tuple.Item3, (tuple.Item1 ?? "").Replace("\r", "").Replace("\n", "")))))));
+			attrs.AddRange(attributes.Select(attr => String.Format("{0}: {1}", attr.Key, String.Join(";", attr.Value.Select(attrValue => String.Format("{0}-{1} ({2})", attrValue.Start, attrValue.End, (attrValue.Data ?? "").Replace("\r", "").Replace("\n", "")))))));
 			result.Add(String.Join(", ", attrs));
 
 			result.AddRange(children.SelectMany(child => child.rPrint()).Select(str => String.Format(" {0}", str)));
