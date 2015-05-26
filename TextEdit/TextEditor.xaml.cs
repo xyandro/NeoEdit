@@ -967,11 +967,9 @@ namespace NeoEdit.TextEdit
 			if (StringsAreFiles(strs))
 				NEClipboard.SetFiles(strs, isCut);
 			else
-			{
 				NEClipboard.SetStrings(strs);
-				if (isCut)
-					ReplaceSelections("");
-			}
+			if (isCut)
+				ReplaceSelections("");
 		}
 
 		void ReplaceOneWithMany(List<string> strs)
