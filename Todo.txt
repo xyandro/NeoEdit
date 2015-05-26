@@ -31,6 +31,7 @@ Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Submit forms
 Make markup relative paths absolute
+When opening files don't open the same one more than once
 
 View:
 Update as new lines are added

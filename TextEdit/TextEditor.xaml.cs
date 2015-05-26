@@ -290,6 +290,19 @@ namespace NeoEdit.TextEdit
 		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
 		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
 
+		static int[] keysAndValuesCount = new int[keysAndValues.Length];
+		public static int[] KeysAndValuesCount
+		{
+			get { return keysAndValuesCount; }
+			set
+			{
+				keysAndValuesCount = value;
+				if (KeysAndValuesCountChanged != null)
+					KeysAndValuesCountChanged(null, new EventArgs());
+			}
+		}
+		public static event EventHandler KeysAndValuesCountChanged;
+
 		bool ConfirmVerifyCanFullyEncode()
 		{
 			return new Message
@@ -2115,6 +2128,7 @@ namespace NeoEdit.TextEdit
 			keysAndValues[index] = values;
 			if (index == 0)
 				keysHash = values.Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
+			KeysAndValuesCount = keysAndValues.Select(list => list.Count).ToArray();
 		}
 
 		internal void Command_Keys_SelectionReplace(int index)
