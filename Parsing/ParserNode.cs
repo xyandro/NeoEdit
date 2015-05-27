@@ -8,27 +8,11 @@ using Antlr4.Runtime;
 
 namespace NeoEdit.Parsing
 {
-	public class ParserNode : IEnumerable
+	public class ParserNode
 	{
-		public const string TypeStr = "Type";
-		public const string LocationStr = "Location";
-
-		public class ParserNodeAttribute
+		public ParserNode(bool isAttr = false)
 		{
-			public string Text { get; internal set; }
-			public int? Start { get; internal set; }
-			public int? End { get; internal set; }
-		}
-
-		public ParserNode(string type, ParserNode parent = null)
-		{
-			Type = type;
-			Parent = parent;
-		}
-
-		public IEnumerator GetEnumerator()
-		{
-			return null;
+			IsAttr = isAttr;
 		}
 
 		ParserNode parent;
@@ -46,6 +30,9 @@ namespace NeoEdit.Parsing
 
 				if (value != null)
 				{
+					if (value.IsAttr)
+						throw new Exception("Attributes cannot have children");
+
 					parent = value;
 					Depth = parent.Depth + 1;
 					parent.children.Add(this);
@@ -53,22 +40,50 @@ namespace NeoEdit.Parsing
 			}
 		}
 
-		public int Start { get { return GetAttr(LocationStr).Start.Value; } }
-		public int End { get { return GetAttr(LocationStr).End.Value; } }
-		public string Type { get { return GetAttrText(TypeStr); } internal set { Set(TypeStr, value); } }
-		public int Depth { get; set; }
+		public readonly bool IsAttr;
+
+		int? start, end;
+		public int Start { get { return start.Value; } internal set { start = value; } }
+		public int End { get { return end.Value; } internal set { end = value; } }
+		public bool HasLocation { get { return (start.HasValue) && (end.HasValue); } }
+
+		internal ParserRuleContext LocationContext
+		{
+			set
+			{
+				int lStart, lEnd;
+				value.GetBounds(out lStart, out lEnd);
+				start = lStart;
+				end = lEnd;
+			}
+		}
+
+		string type;
+		public string Type
+		{
+			get { return IsAttr ? type : GetAttrText("Type"); }
+			internal set
+			{
+				if (IsAttr)
+					type = value;
+				else
+					SetAttr("Type", value);
+			}
+		}
+		public string Text { get; internal set; }
+		public int Depth { get; internal set; }
 
 		readonly List<ParserNode> children = new List<ParserNode>();
-		readonly Dictionary<string, List<ParserNodeAttribute>> attributes = new Dictionary<string, List<ParserNodeAttribute>>();
 
 		[Flags]
 		public enum ParserNodeListType
 		{
 			None = 0,
 			Self = 1,
-			Children = 2,
-			Descendants = 4,
-			Parents = 8,
+			Parents = 2,
+			Attributes = 4,
+			Children = 8,
+			Descendants = Children | 16,
 			SelfAndChildren = Self | Children,
 			SelfAndDescendants = Self | Descendants,
 			SelfAndParents = Self | Parents,
@@ -77,148 +92,154 @@ namespace NeoEdit.Parsing
 		public IEnumerable<ParserNode> List(ParserNodeListType list)
 		{
 			if (list.HasFlag(ParserNodeListType.Self))
+			{
 				yield return this;
-			if (list.HasFlag(ParserNodeListType.Parents))
-			{
-				for (var parent = this.Parent; parent != null; parent = parent.Parent)
-					yield return parent;
+				list &= ~ParserNodeListType.Self;
 			}
-			if ((list.HasFlag(ParserNodeListType.Children)) || (list.HasFlag(ParserNodeListType.Descendants)))
+
+			if ((list.HasFlag(ParserNodeListType.Parents)) && (Parent != null))
 			{
-				foreach (var child in children)
+				for (var parent = Parent; parent != null; parent = parent.Parent)
+					yield return parent;
+				list &= ~ParserNodeListType.Parents;
+			}
+
+			if (list == ParserNodeListType.None)
+				yield break;
+
+			foreach (var child in children)
+			{
+				if ((child.IsAttr) && (!list.HasFlag(ParserNodeListType.Attributes)))
+					continue;
+				if ((!child.IsAttr) && (!list.HasFlag(ParserNodeListType.Children)))
+					continue;
+
+				yield return child;
+
+				if (list.HasFlag(ParserNodeListType.Descendants))
 				{
-					yield return child;
-					if (list.HasFlag(ParserNodeListType.Descendants))
-						foreach (var childChild in child.List(ParserNodeListType.Descendants))
-							yield return childChild;
+					foreach (var childChild in child.List(list))
+						yield return childChild;
 				}
 			}
 		}
 
-		public List<string> GetAttrNames()
+		public IEnumerable<string> GetAttrTypes()
 		{
-			return attributes.Keys.ToList();
+			return List(ParserNodeListType.Attributes).Select(attr => attr.Type);
 		}
 
-		public ParserNodeAttribute GetAttr(string name)
+		public ParserNode GetAttr(string type)
 		{
-			if (!attributes.ContainsKey(name))
-				return null;
-			return attributes[name].FirstOrDefault();
+			return GetAttrs(type, true).FirstOrDefault();
 		}
 
-		public IEnumerable<ParserNodeAttribute> GetAttrs(string name, bool firstOnly = false)
+		public IEnumerable<ParserNode> GetAttrs(string type, bool firstOnly = false)
 		{
-			if (!attributes.ContainsKey(name))
-				yield break;
-			foreach (var attr in attributes[name])
-			{
-				yield return attr;
-				if (firstOnly)
-					break;
-			}
+			var result = List(ParserNodeListType.Attributes).Where(attr => attr.Type == type);
+			if (firstOnly)
+				result = result.Take(1);
+			return result;
 		}
 
-		public string GetAttrText(string name)
+		public string GetAttrText(string type)
 		{
-			var attr = GetAttr(name);
+			var attr = GetAttr(type);
 			return attr == null ? null : attr.Text;
 		}
 
-		public IEnumerable<string> GetAttrsText(string name, bool firstOnly = false)
+		public IEnumerable<string> GetAttrsText(string type, bool firstOnly = false)
 		{
-			return GetAttrs(name, firstOnly).Select(attr => attr.Text);
+			return GetAttrs(type, firstOnly).Select(attr => attr.Text);
 		}
 
-		void SetAttr(string name, string value, int? start, int? end)
+		void RemoveAttr(string type)
 		{
-			attributes[name] = new List<ParserNodeAttribute> { new ParserNodeAttribute { Text = value, Start = start, End = end } };
+			var toRemove = GetAttrs(type).ToList();
+			foreach (var item in toRemove)
+				children.Remove(item);
 		}
 
-		public void Set(string name, string value)
+		void SetAttrNode(string type, string value, int? start, int? end)
 		{
-			SetAttr(name, value, null, null);
+			RemoveAttr(type);
+			AddAttrNode(type, value, start, end);
 		}
 
-		public void Set(string name, int start, int end)
+		public void SetAttr(string type, string value)
 		{
-			SetAttr(name, null, start, end);
+			SetAttrNode(type, value, null, null);
 		}
 
-		public void Set(string name, string value, int start, int end)
+		public void SetAttr(string type, int start, int end)
 		{
-			SetAttr(name, value, start, end);
+			SetAttrNode(type, null, start, end);
 		}
 
-		internal void Set(string name, ParserRuleContext ctx)
+		public void SetAttr(string type, string value, int start, int end)
+		{
+			SetAttrNode(type, value, start, end);
+		}
+
+		internal void SetAttr(string type, ParserRuleContext ctx)
 		{
 			int start, end;
 			ctx.GetBounds(out start, out end);
-			SetAttr(name, null, start, end);
+			SetAttrNode(type, null, start, end);
 		}
 
-		internal void Set(string name, string input, ParserRuleContext ctx)
+		internal void SetAttr(string type, string input, ParserRuleContext ctx)
 		{
 			var text = ctx.GetText(input);
 			int start, end;
 			ctx.GetBounds(out start, out end);
-			SetAttr(name, text, start, end);
+			SetAttrNode(type, text, start, end);
 		}
 
-		void AddAttr(string name, string value, int? start, int? end)
+		void AddAttrNode(string type, string value, int? start, int? end)
 		{
-			if (!attributes.ContainsKey(name))
-				attributes[name] = new List<ParserNodeAttribute>();
-			attributes[name].Add(new ParserNodeAttribute { Text = value, Start = start, End = end });
+			children.Add(new ParserNode(true) { Type = type, Text = value, start = start, end = end });
 		}
 
-		public void Add(string name, string value)
+		public void AddAttr(string type, string value)
 		{
-			AddAttr(name, value, null, null);
+			AddAttrNode(type, value, null, null);
 		}
 
-		public void Add(string name, int start, int end)
+		public void AddAttr(string type, int start, int end)
 		{
-			AddAttr(name, null, start, end);
+			AddAttrNode(type, null, start, end);
 		}
 
-		public void Add(string name, string value, int start, int end)
+		public void AddAttr(string type, string value, int start, int end)
 		{
-			AddAttr(name, value, start, end);
+			AddAttrNode(type, value, start, end);
 		}
 
-		internal void Add(string name, ParserRuleContext ctx)
+		internal void AddAttr(string type, ParserRuleContext ctx)
 		{
 			int start, end;
 			ctx.GetBounds(out start, out end);
-			AddAttr(name, null, start, end);
+			AddAttrNode(type, null, start, end);
 		}
 
-		internal void Add(string name, string input, ParserRuleContext ctx)
+		internal void AddAttr(string type, string input, ParserRuleContext ctx)
 		{
 			var text = ctx.GetText(input);
 			int start, end;
 			ctx.GetBounds(out start, out end);
-			AddAttr(name, text, start, end);
+			AddAttrNode(type, text, start, end);
 		}
 
-		public bool HasAttr(string name, Regex regex)
+		public bool HasAttr(string type, Regex regex)
 		{
-			if (!attributes.ContainsKey(name))
-				return false;
-			return attributes[name].Any(attr => regex.IsMatch(attr.Text));
+			return List(ParserNodeListType.Attributes).Any(attr => regex.IsMatch(attr.Text));
 		}
 
 		List<string> rPrint()
 		{
-			var result = new List<string>();
-
-			var attrs = new List<string> { };
-			attrs.AddRange(attributes.Select(attr => String.Format("{0}: {1}", attr.Key, String.Join(";", attr.Value.Select(attrValue => String.Format("{0}-{1} ({2})", attrValue.Start, attrValue.End, (attrValue.Text ?? "").Replace("\r", "").Replace("\n", "")))))));
-			result.Add(String.Join(", ", attrs));
-
+			var result = new List<string> { String.Format("{0}: {1}: {2}-{3} ({4})", IsAttr ? "Attr" : "Child", Type, start, end, Text) };
 			result.AddRange(children.SelectMany(child => child.rPrint()).Select(str => String.Format(" {0}", str)));
-
 			return result;
 		}
 

@@ -18,7 +18,7 @@ namespace NeoEdit.TextEdit
 		List<ParserNode> GetSelectionNodes()
 		{
 			var doc = RootNode();
-			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAndDescendants).ToList();
+			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAndDescendants).Where(node => node.HasLocation).ToList();
 			var location = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
 
 			var result = new List<ParserNode>();
@@ -30,9 +30,12 @@ namespace NeoEdit.TextEdit
 				else
 				{
 					var inRangeNodes = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).ToList();
-					var maxDepth = inRangeNodes.Max(node => node.Depth);
-					inRangeNodes = inRangeNodes.Where(node => node.Depth == maxDepth).ToList();
-					found = inRangeNodes.LastOrDefault();
+					if (inRangeNodes.Any())
+					{
+						var maxDepth = inRangeNodes.Max(node => node.Depth);
+						inRangeNodes = inRangeNodes.Where(node => node.Depth == maxDepth).ToList();
+						found = inRangeNodes.LastOrDefault();
+					}
 				}
 				if (found == null)
 					throw new Exception("No node found");
@@ -164,7 +167,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Content_Select_Attribute(SelectContentAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly).Select(attr => new Range(attr.Start.Value))).ToList());
+			Selections.Replace(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly).Select(attr => new Range(attr.Start))).ToList());
 		}
 	}
 }

@@ -5,13 +5,16 @@ namespace NeoEdit.Parsing
 {
 	class CSharpVisitor : CSharp4BaseVisitor<object>
 	{
+		const string RootStr = "Root";
+		const string Name = "Name";
+
 		public ParserNode Root { get; private set; }
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;
 		public CSharpVisitor(string input)
 		{
 			this.input = input;
-			stack.Push(Root = new ParserNode("Root"));
+			stack.Push(Root = new ParserNode { Type = RootStr });
 		}
 
 		public override object VisitType_declaration(CSharp4Parser.Type_declarationContext ctx)
@@ -20,7 +23,9 @@ namespace NeoEdit.Parsing
 			if (classDefCtx == null)
 				return null;
 
-			stack.Push(new ParserNode("Class", stack.Peek()) { { ParserNode.LocationStr, ctx }, { "Name", input, classDefCtx.identifier() } });
+			var node = new ParserNode { Type = "Class", Parent = stack.Peek(), LocationContext = ctx };
+			node.AddAttr(Name, input, classDefCtx.identifier());
+			stack.Push(node);
 			base.VisitType_declaration(ctx);
 			stack.Pop();
 
@@ -30,7 +35,7 @@ namespace NeoEdit.Parsing
 		ParserNode methodNode = null;
 		public override object VisitClass_member_declaration(CSharp4Parser.Class_member_declarationContext ctx)
 		{
-			methodNode = new ParserNode("Method", stack.Peek()) { { ParserNode.LocationStr, ctx } };
+			methodNode = new ParserNode { Type = "Method", Parent = stack.Peek(), LocationContext = ctx };
 			return base.VisitClass_member_declaration(ctx);
 		}
 
@@ -38,7 +43,7 @@ namespace NeoEdit.Parsing
 		{
 			if (methodNode != null)
 			{
-				methodNode.Add("Name", input, ctx);
+				methodNode.AddAttr(Name, input, ctx);
 				methodNode = null;
 			}
 			return base.VisitMethod_member_name2(ctx);

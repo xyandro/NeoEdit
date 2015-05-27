@@ -31,7 +31,9 @@ namespace NeoEdit.Parsing
 			if (endComment == 2) // IndexOf returned -1
 				endComment = input.Length;
 			location = endComment;
-			return new ParserNode(Comment) { { ParserNode.LocationStr, startComment, endComment }, { SelfClosing, "true" } };
+			var node = new ParserNode { Type = Comment, Start = startComment, End = endComment };
+			node.AddAttr(SelfClosing, "true");
+			return node;
 		}
 
 		enum OpenCloseStep
@@ -53,7 +55,7 @@ namespace NeoEdit.Parsing
 			var step = OpenCloseStep.Start;
 			int itemStart = 0;
 			string itemName = null;
-			var result = new ParserNode(Element) { { ParserNode.LocationStr, location, location } };
+			var result = new ParserNode { Type = Element, Start = location };
 			var inQuote = (char)0;
 
 			while (true)
@@ -112,7 +114,7 @@ namespace NeoEdit.Parsing
 					}
 					else
 					{
-						result.Add(itemName, value, itemStart, location);
+						result.AddAttr(itemName, value, itemStart, location);
 						step = OpenCloseStep.BeforeAttrNameWS;
 					}
 
@@ -137,7 +139,7 @@ namespace NeoEdit.Parsing
 				{
 					if ((location < input.Length) && (input[location] == '/'))
 					{
-						result.Set(SelfClosing, "true");
+						result.SetAttr(SelfClosing, "true");
 						++location;
 					}
 					if ((location < input.Length) && (input[location] == '>'))
@@ -147,9 +149,9 @@ namespace NeoEdit.Parsing
 			}
 
 			if (result.GetAttrText(Name) == "!doctype")
-				return new ParserNode(Comment) { { ParserNode.LocationStr, result.Start, location } };
+				return new ParserNode { Type = Comment, Start = result.Start, End = location };
 
-			result.Set(ParserNode.LocationStr, result.Start, location);
+			result.End = location;
 			return result;
 		}
 
@@ -165,7 +167,9 @@ namespace NeoEdit.Parsing
 				++startLocation;
 			while ((endLocation > startLocation) && (Char.IsWhiteSpace(input[endLocation - 1])))
 				--endLocation;
-			return new ParserNode(Text) { { ParserNode.LocationStr, startLocation, endLocation }, { SelfClosing, "true" } };
+			var node = new ParserNode { Type = Text, Start = startLocation, End = endLocation };
+			node.AddAttr(SelfClosing, "true");
+			return node;
 		}
 
 		static readonly HashSet<string> voidElements = new HashSet<string> { "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
@@ -175,7 +179,8 @@ namespace NeoEdit.Parsing
 		{
 			if ((input.Length > 1) && (input[0] == '\ufeff'))
 				++location;
-			var doc = new ParserNode(Element) { { ParserNode.LocationStr, location, location }, { Name, Doc } };
+			var doc = new ParserNode { Type = Element, Start = location, End = location };
+			doc.AddAttr(Name, Doc);
 			var stack = new Stack<Tuple<string, ParserNode>>();
 			stack.Push(Tuple.Create(Doc, doc));
 			while (location < input.Length)
@@ -203,7 +208,7 @@ namespace NeoEdit.Parsing
 				{
 					node.Parent = topStack;
 					if (voidElements.Contains(name))
-						node.Set(ParserNode.LocationStr, node.Start, location);
+						node.End = location;
 					else
 						stack.Push(Tuple.Create(name, node));
 					continue;
@@ -216,7 +221,7 @@ namespace NeoEdit.Parsing
 					while (true)
 					{
 						var item = stack.Pop();
-						item.Item2.Set(ParserNode.LocationStr, item.Item2.Start, node.Start);
+						item.Item2.End = node.Start;
 						if (item == toRemove)
 							break;
 					}
@@ -225,7 +230,7 @@ namespace NeoEdit.Parsing
 			while (stack.Any())
 			{
 				var item = stack.Pop();
-				item.Item2.Set(ParserNode.LocationStr, item.Item2.Start, location);
+				item.Item2.End = location;
 			}
 
 			return doc;
