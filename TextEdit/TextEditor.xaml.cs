@@ -610,7 +610,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA1: Command_Data_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
-				case TextEditCommand.Markup_FetchURL: Command_Markup_FetchURL(); break;
+				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
 				case TextEditCommand.Markup_Comment: Command_Markup_Comment(); break;
 				case TextEditCommand.Markup_Uncomment: Command_Markup_Uncomment(); break;
 				case TextEditCommand.Markup_ToggleTagPosition: Command_Markup_ToggleTagPosition(shiftDown); break;
@@ -1957,7 +1957,7 @@ namespace NeoEdit.TextEdit
 				return await client.DownloadStringTaskAsync(new Uri(url));
 		}
 
-		internal async void Command_Markup_FetchURL()
+		internal async void Command_Data_FetchURL()
 		{
 			var urls = GetSelectionStrings();
 			var tasks = urls.Select(url => GetURL(url)).ToArray();

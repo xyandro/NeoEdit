@@ -117,7 +117,7 @@ namespace NeoEdit.TextEdit
 		Data_Hash_SHA1,
 		Data_Hash_SHA256,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Data_Sort,
-		Markup_FetchURL,
+		Data_FetchURL,
 		Markup_Comment,
 		Markup_Uncomment,
 		[KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift, false)] Markup_ToggleTagPosition,
