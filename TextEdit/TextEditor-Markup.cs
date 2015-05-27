@@ -150,11 +150,6 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(GetSelectionMarkupNodes().Select(node => node.RangeInnerFull).ToList());
 		}
 
-		internal void Command_Markup_Select_Type(MarkupNode.MarkupNodeType type)
-		{
-			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.NodeType == type).Select(node => node.RangeOuterStart).ToList());
-		}
-
 		internal void Command_Markup_Select_ByAttribute(FindMarkupAttributeDialog.Result result)
 		{
 			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttribute(result.Attribute, result.Regex)).Select(node => node.RangeOuterStart).ToList());

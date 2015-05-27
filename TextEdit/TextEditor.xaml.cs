@@ -629,9 +629,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Outer: Command_Markup_OuterTag(); break;
 				case TextEditCommand.Markup_Inner: Command_Markup_InnerTag(); break;
 				case TextEditCommand.Markup_AllInner: Command_Markup_AllInnerTag(); break;
-				case TextEditCommand.Markup_Select_Elements: Command_Markup_Select_Type(MarkupNode.MarkupNodeType.Element); break;
-				case TextEditCommand.Markup_Select_Text: Command_Markup_Select_Type(MarkupNode.MarkupNodeType.Text); break;
-				case TextEditCommand.Markup_Select_Comments: Command_Markup_Select_Type(MarkupNode.MarkupNodeType.Comment); break;
 				case TextEditCommand.Markup_Select_ByAttribute: Command_Markup_Select_ByAttribute(dialogResult as FindMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Markup_Select_TopMost: Command_Markup_Select_TopMost(); break;
 				case TextEditCommand.Markup_Select_Deepest: Command_Markup_Select_Deepest(); break;
