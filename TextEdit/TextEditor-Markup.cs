@@ -73,14 +73,6 @@ namespace NeoEdit.TextEdit
 			return str.Substring(4, str.Length - 7).Replace("--><!--", "-->");
 		}
 
-		internal void Command_Markup_Reformat()
-		{
-			var allRange = new Range(BeginOffset(), EndOffset());
-			var data = GetString(allRange);
-			var doc = MarkupParser.ParseHTML(data, allRange.Start);
-			Replace(new List<Range> { allRange }, new List<string> { MarkupParser.FormatHTML(doc, data) });
-		}
-
 		internal void Command_Markup_Comment()
 		{
 			ReplaceSelections(GetSelectionStrings().Select(str => CommentMarkup(str)).ToList());

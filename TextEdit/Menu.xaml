@@ -177,7 +177,6 @@
 	</MenuItem>
 	<MenuItem Header="_Markup">
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Markup_FetchURL"/>
-		<textEdit:TextEditMenuItem Header="_Reformat" CommandEnum="Markup_Reformat"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Co_mment" CommandEnum="Markup_Comment"/>
 		<textEdit:TextEditMenuItem Header="_Uncomment" CommandEnum="Markup_Uncomment"/>

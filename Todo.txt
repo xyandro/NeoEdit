@@ -33,6 +33,7 @@ Submit forms
 Make markup relative paths absolute
 When opening files don't open the same one more than once
 Override readonly, access denied (UAC required?)
+Readd reformat for html
 
 View:
 Update as new lines are added
