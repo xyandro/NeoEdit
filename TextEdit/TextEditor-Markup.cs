@@ -44,16 +44,9 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		List<Range> MarkupGetChildrenAndDescendants(MarkupNode node, MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type, bool trimWhitespace, bool first, FindMarkupAttributeDialog.Result findAttr)
+		List<Range> MarkupGetList(MarkupNode node, MarkupNode.MarkupNodeList list, bool first, FindMarkupAttributeDialog.Result findAttr)
 		{
 			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = childNode.RangeOuter }).ToList();
-			childNodes = childNodes.Where(child => type.HasFlag(child.Node.NodeType)).ToList();
-
-			if (trimWhitespace)
-			{
-				childNodes = childNodes.Select(childNode => new { Node = childNode.Node, Range = childNode.Node.NodeType == MarkupNode.MarkupNodeType.Text ? TrimRange(childNode.Range) : childNode.Range }).ToList();
-				childNodes = childNodes.Where(childNode => (childNode.Node.NodeType != MarkupNode.MarkupNodeType.Text) || (childNode.Range.HasSelection)).ToList();
-			}
 
 			if (findAttr != null)
 				childNodes = childNodes.Where(childNode => childNode.Node.HasAttribute(findAttr.Attribute, findAttr.Regex)).ToList();
@@ -115,9 +108,9 @@ namespace NeoEdit.TextEdit
 			return FindMarkupAttributeDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
-		internal void Command_Markup_ChildrenAndDescendants(MarkupNode.MarkupNodeList list, MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All, bool trimWhitespace = true, bool first = false, FindMarkupAttributeDialog.Result findAttr = null)
+		internal void Command_Markup_List(MarkupNode.MarkupNodeList list, bool first = false, FindMarkupAttributeDialog.Result findAttr = null)
 		{
-			var newSels = GetSelectionMarkupNodes().SelectMany(node => MarkupGetChildrenAndDescendants(node, list, type, trimWhitespace, first, findAttr)).ToList();
+			var newSels = GetSelectionMarkupNodes().SelectMany(node => MarkupGetList(node, list, first, findAttr)).ToList();
 			if (newSels.Any())
 				Selections.Replace(newSels);
 		}
