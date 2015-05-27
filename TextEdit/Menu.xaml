@@ -200,10 +200,6 @@
 		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Markup_Next"/>
 		<textEdit:TextEditMenuItem Header="Pr_evious" CommandEnum="Markup_Previous"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Outer" CommandEnum="Markup_Outer"/>
-		<textEdit:TextEditMenuItem Header="_Inner" CommandEnum="Markup_Inner"/>
-		<textEdit:TextEditMenuItem Header="A_ll Inner" CommandEnum="Markup_AllInner"/>
-		<Separator/>
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Select_ByAttribute"/>
 			<Separator/>

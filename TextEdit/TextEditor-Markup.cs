@@ -20,7 +20,7 @@ namespace NeoEdit.TextEdit
 		{
 			var doc = HTMLRoot();
 			var nodes = doc.List(MarkupNode.MarkupNodeList.SelfAndDescendants).Where(node => type.HasFlag(node.NodeType)).ToList();
-			var location = nodes.GroupBy(node => node.StartOuterPosition).ToDictionary(group => group.Key, group => group.Last());
+			var location = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
 
 			var result = new List<MarkupNode>();
 			foreach (var range in Selections)
@@ -30,7 +30,7 @@ namespace NeoEdit.TextEdit
 					found = location[range.Cursor];
 				else
 				{
-					var inRangeNodes = nodes.Where(node => (range.Start >= node.StartOuterPosition) && (range.End <= node.EndOuterPosition)).ToList();
+					var inRangeNodes = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).ToList();
 					var maxDepth = inRangeNodes.Max(node => node.Depth);
 					inRangeNodes = inRangeNodes.Where(node => node.Depth == maxDepth).ToList();
 					found = inRangeNodes.Where(child => child.NodeType == MarkupNode.MarkupNodeType.Element).LastOrDefault();
@@ -46,7 +46,7 @@ namespace NeoEdit.TextEdit
 
 		List<Range> MarkupGetList(MarkupNode node, MarkupNode.MarkupNodeList list, bool first, FindMarkupAttributeDialog.Result findAttr)
 		{
-			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = childNode.RangeOuter }).ToList();
+			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = childNode.Range }).ToList();
 
 			if (findAttr != null)
 				childNodes = childNodes.Where(childNode => childNode.Node.HasAttribute(findAttr.Attribute, findAttr.Regex)).ToList();
@@ -86,13 +86,13 @@ namespace NeoEdit.TextEdit
 		internal void Command_Markup_ToggleTagPosition(bool shiftDown)
 		{
 			var nodes = GetSelectionMarkupNodes(~MarkupNode.MarkupNodeType.Text);
-			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.StartOuterPosition).All(b => b);
-			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.EndOuterPosition : node.StartOuterPosition, shiftDown)).ToList());
+			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All(b => b);
+			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
 
 		internal void Command_Markup_Parent(bool shiftDown)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().Select((node, index) => MoveCursor(Selections[index], (node.Parent ?? node).StartOuterPosition, shiftDown)).ToList());
+			Selections.Replace(GetSelectionMarkupNodes().Select((node, index) => MoveCursor(Selections[index], (node.Parent ?? node).Start, shiftDown)).ToList());
 		}
 
 		internal FindMarkupAttributeDialog.Result Command_Markup_ChildrenDescendents_ByAttribute_Dialog()
@@ -123,28 +123,13 @@ namespace NeoEdit.TextEdit
 					index = children.Count - 1;
 				if (index >= children.Count)
 					index = 0;
-				return MoveCursor(range, children[index].StartOuterPosition, shiftDown);
+				return MoveCursor(range, children[index].Start, shiftDown);
 			}).ToList());
-		}
-
-		internal void Command_Markup_OuterTag()
-		{
-			Selections.Replace(GetSelectionMarkupNodes().Select(node => node.RangeOuterFull).ToList());
-		}
-
-		internal void Command_Markup_InnerTag()
-		{
-			Selections.Replace(GetSelectionMarkupNodes().Select(node => TrimRange(node.RangeInnerFull)).ToList());
-		}
-
-		internal void Command_Markup_AllInnerTag()
-		{
-			Selections.Replace(GetSelectionMarkupNodes().Select(node => node.RangeInnerFull).ToList());
 		}
 
 		internal void Command_Markup_Select_ByAttribute(FindMarkupAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttribute(result.Attribute, result.Regex)).Select(node => node.RangeOuterStart).ToList());
+			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttribute(result.Attribute, result.Regex)).Select(node => node.RangeStart).ToList());
 		}
 
 		internal void Command_Markup_Select_TopMost()

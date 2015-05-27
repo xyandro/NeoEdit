@@ -32,13 +32,9 @@ namespace NeoEdit.TextEdit
 
 		public MarkupNode Parent { get; set; }
 
-		public int StartOuterPosition { get; set; }
-		public int EndOuterPosition { get; set; }
-		public int OuterLength { get { return EndOuterPosition - StartOuterPosition; } }
-
-		public int StartInnerPosition { get; set; }
-		public int EndInnerPosition { get; set; }
-		public int InnerLength { get { return EndInnerPosition - StartInnerPosition; } }
+		public int Start { get; set; }
+		public int End { get; set; }
+		public int Length { get { return End - Start; } }
 
 		public int Depth { get; set; }
 
@@ -48,7 +44,7 @@ namespace NeoEdit.TextEdit
 
 		readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>(StringComparer.OrdinalIgnoreCase);
 
-		public Range RangeOuter
+		public Range Range
 		{
 			get
 			{
@@ -56,16 +52,15 @@ namespace NeoEdit.TextEdit
 				{
 					case MarkupNodeType.Text:
 					case MarkupNodeType.Comment:
-						return RangeOuterFull;
+						return RangeFull;
 					default:
-						return RangeOuterStart;
+						return RangeStart;
 				}
 			}
 		}
-		public Range RangeOuterFull { get { return new Range(StartOuterPosition, EndOuterPosition); } }
-		public Range RangeOuterStart { get { return new Range(StartOuterPosition); } }
-		public Range RangeOuterEnd { get { return new Range(EndOuterPosition); } }
-		public Range RangeInnerFull { get { return new Range(StartInnerPosition, EndInnerPosition); } }
+		public Range RangeFull { get { return new Range(Start, End); } }
+		public Range RangeStart { get { return new Range(Start); } }
+		public Range RangeEnd { get { return new Range(End); } }
 
 		readonly List<MarkupNode> children = new List<MarkupNode>();
 
@@ -73,14 +68,9 @@ namespace NeoEdit.TextEdit
 		{
 		}
 
-		public string GetOuterText(TextData data)
+		public string GetText(TextData data)
 		{
-			return data.GetString(StartOuterPosition, OuterLength);
-		}
-
-		public string GetInnerText(TextData data)
-		{
-			return data.GetString(StartInnerPosition, InnerLength);
+			return data.GetString(Start, Length);
 		}
 
 		public IEnumerable<MarkupNode> List(MarkupNodeList list)
@@ -158,7 +148,7 @@ namespace NeoEdit.TextEdit
 
 		public override string ToString()
 		{
-			return String.Format("{0} {1}: Outer: {2}, Inner: {3}", NodeType.ToString(), GetAttribute("Tag"), RangeOuterFull.ToString(), RangeInnerFull.ToString());
+			return String.Format("{0} {1}: {2}", NodeType.ToString(), GetAttribute("Tag"), RangeFull.ToString());
 		}
 	}
 }

@@ -15,7 +15,7 @@ namespace NeoEdit.TextEdit
 			if (endComment == 2) // IndexOf returned -1
 				endComment = str.Length;
 			location = endComment;
-			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, StartOuterPosition = startComment, EndOuterPosition = endComment, StartInnerPosition = startComment + 4, EndInnerPosition = endComment - 3, SelfClosing = true };
+			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, Start = startComment, End = endComment, SelfClosing = true };
 		}
 
 		enum OpenCloseStep
@@ -37,7 +37,7 @@ namespace NeoEdit.TextEdit
 			var step = OpenCloseStep.Start;
 			int itemStart = 0;
 			string itemName = null;
-			var result = new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Element, StartOuterPosition = location };
+			var result = new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Element, Start = location };
 			var inQuote = (char)0;
 
 			while (true)
@@ -75,7 +75,7 @@ namespace NeoEdit.TextEdit
 						++location;
 					}
 
-					var stop = (location >= str.Length) || ((inQuote == 0) && ((str[location] == '<') || (str[location] == '>') || ((str[location] == '/') && (location != result.StartOuterPosition + 1))));
+					var stop = (location >= str.Length) || ((inQuote == 0) && ((str[location] == '<') || (str[location] == '>') || ((str[location] == '/') && (location != result.Start + 1))));
 					if ((itemStart == location) && (stop))
 					{
 						step = OpenCloseStep.End;
@@ -131,9 +131,9 @@ namespace NeoEdit.TextEdit
 			}
 
 			if (result.GetAttribute("Tag") == "!doctype")
-				return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, StartOuterPosition = result.StartOuterPosition, StartInnerPosition = result.StartOuterPosition + 2, EndInnerPosition = location - 1, EndOuterPosition = location };
+				return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, Start = result.Start, End = location };
 
-			result.StartInnerPosition = result.EndInnerPosition = result.EndOuterPosition = location;
+			result.End = location;
 			return result;
 		}
 
@@ -144,7 +144,12 @@ namespace NeoEdit.TextEdit
 			location = str.IndexOf(find, startLocation);
 			if (location == -1)
 				location = str.Length;
-			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Text, StartOuterPosition = startLocation, StartInnerPosition = startLocation, EndInnerPosition = location, EndOuterPosition = location, SelfClosing = true };
+			var endLocation = location;
+			while ((startLocation < endLocation) && (Char.IsWhiteSpace(str[startLocation])))
+				++startLocation;
+			while ((endLocation > startLocation) && (Char.IsWhiteSpace(str[endLocation - 1])))
+				--endLocation;
+			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Text, Start = startLocation, End = endLocation, SelfClosing = true };
 		}
 
 		static readonly HashSet<string> voidElements = new HashSet<string> { "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
@@ -152,7 +157,7 @@ namespace NeoEdit.TextEdit
 
 		static public MarkupNode ParseHTML(string str, int location)
 		{
-			var doc = new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Element, StartOuterPosition = location, StartInnerPosition = location };
+			var doc = new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Element, Start = location };
 			doc.AddAttribute("Tag", "DOC", 0, 0);
 			var stack = new Stack<Tuple<string, MarkupNode>>();
 			stack.Push(Tuple.Create("DOC", doc));
@@ -167,6 +172,9 @@ namespace NeoEdit.TextEdit
 				if (node == null)
 					throw new ArgumentException("Failed to parse HTML");
 
+				if ((node.NodeType == MarkupNode.MarkupNodeType.Text) && (node.Start == node.End))
+					continue;
+
 				if (node.SelfClosing)
 				{
 					topStack.AddChild(node);
@@ -178,7 +186,7 @@ namespace NeoEdit.TextEdit
 				{
 					topStack.AddChild(node);
 					if (voidElements.Contains(tag))
-						node.EndInnerPosition = node.EndOuterPosition = location;
+						node.End = location;
 					else
 						stack.Push(Tuple.Create(tag, node));
 					continue;
@@ -191,19 +199,16 @@ namespace NeoEdit.TextEdit
 					while (true)
 					{
 						var item = stack.Pop();
-						item.Item2.EndInnerPosition = item.Item2.EndOuterPosition = node.StartOuterPosition;
+						item.Item2.End = node.Start;
 						if (item == toRemove)
-						{
-							item.Item2.EndOuterPosition = node.StartInnerPosition;
 							break;
-						}
 					}
 				}
 			}
 			while (stack.Any())
 			{
 				var item = stack.Pop();
-				item.Item2.EndInnerPosition = item.Item2.EndOuterPosition = location;
+				item.Item2.End = location;
 			}
 
 			return doc;

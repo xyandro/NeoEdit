@@ -625,9 +625,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Descendants_ByAttribute: Command_Markup_List(MarkupNode.MarkupNodeList.Descendants, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Markup_Next: Command_Markup_NextPrev(true, shiftDown); break;
 				case TextEditCommand.Markup_Previous: Command_Markup_NextPrev(false, shiftDown); break;
-				case TextEditCommand.Markup_Outer: Command_Markup_OuterTag(); break;
-				case TextEditCommand.Markup_Inner: Command_Markup_InnerTag(); break;
-				case TextEditCommand.Markup_AllInner: Command_Markup_AllInnerTag(); break;
 				case TextEditCommand.Markup_Select_ByAttribute: Command_Markup_Select_ByAttribute(dialogResult as FindMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Markup_Select_TopMost: Command_Markup_Select_TopMost(); break;
 				case TextEditCommand.Markup_Select_Deepest: Command_Markup_Select_Deepest(); break;
