@@ -51,6 +51,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public Highlighting.HighlightingType HighlightType { get { return UIHelper<TextEditor>.GetPropValue<Highlighting.HighlightingType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
+		public Parser.ParserType ContentType { get { return UIHelper<TextEditor>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int Line { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -206,6 +208,7 @@ namespace NeoEdit.TextEdit
 			Data = new TextData(bytes, codePage);
 			CodePage = codePage;
 			HighlightType = Highlighting.Get(FileName);
+			ContentType = Parser.GetParserType(FileName);
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
@@ -611,6 +614,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
+				case TextEditCommand.Content_Type_None: ContentType = Parser.ParserType.None; break;
+				case TextEditCommand.Content_Type_HTML: ContentType = Parser.ParserType.HTML; break;
+				case TextEditCommand.Content_Type_CSharp: ContentType = Parser.ParserType.CSharp; break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
 				case TextEditCommand.Content_TogglePosition: Command_Content_TogglePosition(shiftDown); break;

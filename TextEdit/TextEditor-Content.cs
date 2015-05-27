@@ -12,7 +12,7 @@ namespace NeoEdit.TextEdit
 	{
 		ParserNode RootNode()
 		{
-			return Parser.Parse(Data.Data, Parser.ParserType.HTML);
+			return Parser.Parse(Data.Data, ContentType);
 		}
 
 		List<ParserNode> GetSelectionNodes()

@@ -178,6 +178,24 @@
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Data_FetchURL"/>
 	</MenuItem>
 	<MenuItem Header="_Content">
+		<MenuItem Header="_Type">
+			<MenuItem.ItemContainerStyle>
+				<Style TargetType="MenuItem">
+					<Setter Property="IsChecked">
+						<Setter.Value>
+							<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="[0] t== 'Content_Type_' t+ [1]">
+								<Binding Path="CommandEnum" RelativeSource="{RelativeSource Self}"/>
+								<Binding Path="Parent.Active.ContentType" ElementName="self"/>
+							</MultiBinding>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</MenuItem.ItemContainerStyle>
+
+			<textEdit:TextEditMenuItem Header="_None" CommandEnum="Content_Type_None"/>
+			<textEdit:TextEditMenuItem Header="_HTML" CommandEnum="Content_Type_HTML"/>
+			<textEdit:TextEditMenuItem Header="C_#" CommandEnum="Content_Type_CSharp"/>
+		</MenuItem>
 		<textEdit:TextEditMenuItem Header="Co_mment" CommandEnum="Content_Comment"/>
 		<textEdit:TextEditMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
 		<Separator/>
