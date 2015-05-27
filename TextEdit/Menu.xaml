@@ -177,39 +177,39 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Data_FetchURL"/>
 	</MenuItem>
-	<MenuItem Header="_Markup">
-		<textEdit:TextEditMenuItem Header="Co_mment" CommandEnum="Markup_Comment"/>
-		<textEdit:TextEditMenuItem Header="_Uncomment" CommandEnum="Markup_Uncomment"/>
+	<MenuItem Header="_Content">
+		<textEdit:TextEditMenuItem Header="Co_mment" CommandEnum="Content_Comment"/>
+		<textEdit:TextEditMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="To_ggle Tag Position" CommandEnum="Markup_ToggleTagPosition"/>
+		<textEdit:TextEditMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Markup_Parent"/>
-		<textEdit:TextEditMenuItem Header="_Ancestor" CommandEnum="Markup_Ancestor"/>
+		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
+		<textEdit:TextEditMenuItem Header="_Ancestor" CommandEnum="Content_Ancestor"/>
 		<MenuItem Header="_Children">
-			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Markup_Children_Children"/>
-			<textEdit:TextEditMenuItem Header="_Self and Children" CommandEnum="Markup_Children_SelfAndChildren"/>
-			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Markup_Children_First"/>
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Children_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
+			<textEdit:TextEditMenuItem Header="_Self and Children" CommandEnum="Content_Children_SelfAndChildren"/>
+			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Children_First"/>
+			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Children_ByAttribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
-			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Markup_Descendants_Descendants"/>
-			<textEdit:TextEditMenuItem Header="_Self and Descendants" CommandEnum="Markup_Descendants_SelfAndDescendants"/>
-			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Markup_Descendants_First"/>
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Descendants_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
+			<textEdit:TextEditMenuItem Header="_Self and Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
+			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
+			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Descendants_ByAttribute"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Markup_Next"/>
-		<textEdit:TextEditMenuItem Header="Pr_evious" CommandEnum="Markup_Previous"/>
+		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Content_Next"/>
+		<textEdit:TextEditMenuItem Header="Pr_evious" CommandEnum="Content_Previous"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Markup_Select_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Select_ByAttribute"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Topmost" CommandEnum="Markup_Select_TopMost"/>
-			<textEdit:TextEditMenuItem Header="_Deepest" CommandEnum="Markup_Select_Deepest"/>
+			<textEdit:TextEditMenuItem Header="_Topmost" CommandEnum="Content_Select_TopMost"/>
+			<textEdit:TextEditMenuItem Header="_Deepest" CommandEnum="Content_Select_Deepest"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="Max To_pmost" CommandEnum="Markup_Select_MaxTopMost"/>
-			<textEdit:TextEditMenuItem Header="Max Deepe_st" CommandEnum="Markup_Select_MaxDeepest"/>
+			<textEdit:TextEditMenuItem Header="Max To_pmost" CommandEnum="Content_Select_MaxTopMost"/>
+			<textEdit:TextEditMenuItem Header="Max Deepe_st" CommandEnum="Content_Select_MaxDeepest"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="Att_ribute" CommandEnum="Markup_Select_Attribute"/>
+			<textEdit:TextEditMenuItem Header="Att_ribute" CommandEnum="Content_Select_Attribute"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_CSharp">

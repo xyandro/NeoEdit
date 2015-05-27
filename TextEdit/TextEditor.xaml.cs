@@ -455,11 +455,11 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA1: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
-				case TextEditCommand.Markup_Ancestor: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
-				case TextEditCommand.Markup_Children_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
-				case TextEditCommand.Markup_Descendants_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
-				case TextEditCommand.Markup_Select_ByAttribute: dialogResult = Command_Markup_ChildrenDescendents_ByAttribute_Dialog(); break;
-				case TextEditCommand.Markup_Select_Attribute: dialogResult = Command_Markup_Select_Attribute_Dialog(); break;
+				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_FindByAttribute_Dialog(); break;
+				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(); break;
+				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(); break;
+				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(); break;
+				case TextEditCommand.Content_Select_Attribute: dialogResult = Command_Content_Select_Attribute_Dialog(); break;
 				case TextEditCommand.Insert_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
 				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;
 				case TextEditCommand.Insert_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
@@ -600,10 +600,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Copy_Columns: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Column); break;
 				case TextEditCommand.Data_Copy_Positions: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Position); break;
 				case TextEditCommand.Data_Repeat: Command_Data_Repeat(dialogResult as RepeatDialog.Result); break;
-				case TextEditCommand.Data_Escape_Markup: Command_Data_Escape_XML(); break;
+				case TextEditCommand.Data_Escape_Markup: Command_Data_Escape_Markup(); break;
 				case TextEditCommand.Data_Escape_Regex: Command_Data_Escape_Regex(); break;
 				case TextEditCommand.Data_Escape_URL: Command_Data_Escape_URL(); break;
-				case TextEditCommand.Data_Unescape_Markup: Command_Data_Unescape_XML(); break;
+				case TextEditCommand.Data_Unescape_Markup: Command_Data_Unescape_Markup(); break;
 				case TextEditCommand.Data_Unescape_Regex: Command_Data_Unescape_Regex(); break;
 				case TextEditCommand.Data_Unescape_URL: Command_Data_Unescape_URL(); break;
 				case TextEditCommand.Data_Hash_MD5: Command_Data_Hash(Hash.Type.MD5, dialogResult as EncodingDialog.Result); break;
@@ -611,27 +611,27 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
-				case TextEditCommand.Markup_Comment: Command_Markup_Comment(); break;
-				case TextEditCommand.Markup_Uncomment: Command_Markup_Uncomment(); break;
-				case TextEditCommand.Markup_ToggleTagPosition: Command_Markup_ToggleTagPosition(shiftDown); break;
-				case TextEditCommand.Markup_Parent: Command_Markup_Parent(shiftDown); break;
-				case TextEditCommand.Markup_Ancestor: Command_Markup_List(ParserNode.ParserNodeListType.Parents, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
-				case TextEditCommand.Markup_Children_Children: Command_Markup_List(ParserNode.ParserNodeListType.Children); break;
-				case TextEditCommand.Markup_Children_SelfAndChildren: Command_Markup_List(ParserNode.ParserNodeListType.SelfAndChildren); break;
-				case TextEditCommand.Markup_Children_First: Command_Markup_List(ParserNode.ParserNodeListType.Children, first: true); break;
-				case TextEditCommand.Markup_Children_ByAttribute: Command_Markup_List(ParserNode.ParserNodeListType.Children, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
-				case TextEditCommand.Markup_Descendants_Descendants: Command_Markup_List(ParserNode.ParserNodeListType.Descendants); break;
-				case TextEditCommand.Markup_Descendants_SelfAndDescendants: Command_Markup_List(ParserNode.ParserNodeListType.SelfAndDescendants); break;
-				case TextEditCommand.Markup_Descendants_First: Command_Markup_List(ParserNode.ParserNodeListType.Children, first: true); break;
-				case TextEditCommand.Markup_Descendants_ByAttribute: Command_Markup_List(ParserNode.ParserNodeListType.Descendants, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
-				case TextEditCommand.Markup_Next: Command_Markup_NextPrev(true, shiftDown); break;
-				case TextEditCommand.Markup_Previous: Command_Markup_NextPrev(false, shiftDown); break;
-				case TextEditCommand.Markup_Select_ByAttribute: Command_Markup_Select_ByAttribute(dialogResult as FindMarkupAttributeDialog.Result); break;
-				case TextEditCommand.Markup_Select_TopMost: Command_Markup_Select_TopMost(); break;
-				case TextEditCommand.Markup_Select_Deepest: Command_Markup_Select_Deepest(); break;
-				case TextEditCommand.Markup_Select_MaxTopMost: Command_Markup_Select_MaxTopMost(); break;
-				case TextEditCommand.Markup_Select_MaxDeepest: Command_Markup_Select_MaxDeepest(); break;
-				case TextEditCommand.Markup_Select_Attribute: Command_Markup_Select_Attribute(dialogResult as SelectMarkupAttributeDialog.Result); break;
+				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
+				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
+				case TextEditCommand.Content_TogglePosition: Command_Content_TogglePosition(shiftDown); break;
+				case TextEditCommand.Content_Parent: Command_Content_Parent(shiftDown); break;
+				case TextEditCommand.Content_Ancestor: Command_Content_List(ParserNode.ParserNodeListType.Parents, findAttr: dialogResult as FindContentAttributeDialog.Result); break;
+				case TextEditCommand.Content_Children_Children: Command_Content_List(ParserNode.ParserNodeListType.Children); break;
+				case TextEditCommand.Content_Children_SelfAndChildren: Command_Content_List(ParserNode.ParserNodeListType.SelfAndChildren); break;
+				case TextEditCommand.Content_Children_First: Command_Content_List(ParserNode.ParserNodeListType.Children, first: true); break;
+				case TextEditCommand.Content_Children_ByAttribute: Command_Content_List(ParserNode.ParserNodeListType.Children, findAttr: dialogResult as FindContentAttributeDialog.Result); break;
+				case TextEditCommand.Content_Descendants_Descendants: Command_Content_List(ParserNode.ParserNodeListType.Descendants); break;
+				case TextEditCommand.Content_Descendants_SelfAndDescendants: Command_Content_List(ParserNode.ParserNodeListType.SelfAndDescendants); break;
+				case TextEditCommand.Content_Descendants_First: Command_Content_List(ParserNode.ParserNodeListType.Children, first: true); break;
+				case TextEditCommand.Content_Descendants_ByAttribute: Command_Content_List(ParserNode.ParserNodeListType.Descendants, findAttr: dialogResult as FindContentAttributeDialog.Result); break;
+				case TextEditCommand.Content_Next: Command_Content_NextPrev(true, shiftDown); break;
+				case TextEditCommand.Content_Previous: Command_Content_NextPrev(false, shiftDown); break;
+				case TextEditCommand.Content_Select_ByAttribute: Command_Content_Select_ByAttribute(dialogResult as FindContentAttributeDialog.Result); break;
+				case TextEditCommand.Content_Select_TopMost: Command_Content_Select_TopMost(); break;
+				case TextEditCommand.Content_Select_Deepest: Command_Content_Select_Deepest(); break;
+				case TextEditCommand.Content_Select_MaxTopMost: Command_Content_Select_MaxTopMost(); break;
+				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
+				case TextEditCommand.Content_Select_Attribute: Command_Content_Select_Attribute(dialogResult as SelectContentAttributeDialog.Result); break;
 				case TextEditCommand.CSharp_Methods: Command_CSharp_Methods(); break;
 				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
@@ -1907,7 +1907,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Data_Escape_XML()
+		internal void Command_Data_Escape_Markup()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;")).ToList());
 		}
@@ -1922,7 +1922,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Unescape_XML()
+		internal void Command_Data_Unescape_Markup()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("&apos;", "'").Replace("&quot;", "\"").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">")).ToList());
 		}

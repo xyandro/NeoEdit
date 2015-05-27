@@ -28,7 +28,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\SelectMarkupAttributeDialog.xaml">
+    <Page Include="Dialogs\SelectContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -47,8 +47,8 @@
     <Compile Include="Dialogs\CombinationsPermutationsDialog.xaml.cs">
       <DependentUpon>CombinationsPermutationsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SelectMarkupAttributeDialog.xaml.cs">
-      <DependentUpon>SelectMarkupAttributeDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\SelectContentAttributeDialog.xaml.cs">
+      <DependentUpon>SelectContentAttributeDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\GetUniqueNamesDialog.xaml.cs">
       <DependentUpon>GetUniqueNamesDialog.xaml</DependentUpon>
@@ -126,7 +126,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\FindMarkupAttributeDialog.xaml">
+    <Page Include="Dialogs\FindContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -149,8 +149,8 @@
     <Compile Include="Dialogs\RandomDataDialog.xaml.cs">
       <DependentUpon>RandomDataDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\FindMarkupAttributeDialog.xaml.cs">
-      <DependentUpon>FindMarkupAttributeDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\FindContentAttributeDialog.xaml.cs">
+      <DependentUpon>FindContentAttributeDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\TrimDialog.xaml.cs">
       <DependentUpon>TrimDialog.xaml</DependentUpon>
@@ -199,7 +199,7 @@
     <Compile Include="TextEditor-CSharp.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Markup.cs">
+    <Compile Include="TextEditor-Content.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Sort.cs">

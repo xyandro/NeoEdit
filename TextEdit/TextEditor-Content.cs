@@ -17,7 +17,7 @@ namespace NeoEdit.TextEdit
 			return HTML.ParseHTML(data, allRange.Start);
 		}
 
-		List<ParserNode> GetSelectionMarkupNodes()
+		List<ParserNode> GetSelectionNodes()
 		{
 			var doc = HTMLRoot();
 			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAndDescendants).ToList();
@@ -43,7 +43,7 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		List<Range> MarkupGetList(ParserNode node, ParserNode.ParserNodeListType list, bool first, FindMarkupAttributeDialog.Result findAttr)
+		List<Range> ContentGetList(ParserNode node, ParserNode.ParserNodeListType list, bool first, FindContentAttributeDialog.Result findAttr)
 		{
 			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = new Range(childNode.Start) }).ToList();
 
@@ -72,44 +72,44 @@ namespace NeoEdit.TextEdit
 			return str.Substring(4, str.Length - 7).Replace("--><!--", "-->");
 		}
 
-		internal void Command_Markup_Comment()
+		internal void Command_Content_Comment()
 		{
 			ReplaceSelections(GetSelectionStrings().Select(str => CommentMarkup(str)).ToList());
 		}
 
-		internal void Command_Markup_Uncomment()
+		internal void Command_Content_Uncomment()
 		{
 			ReplaceSelections(GetSelectionStrings().Select(str => UncommentMarkup(str)).ToList());
 		}
 
-		internal void Command_Markup_ToggleTagPosition(bool shiftDown)
+		internal void Command_Content_TogglePosition(bool shiftDown)
 		{
-			var nodes = GetSelectionMarkupNodes();
+			var nodes = GetSelectionNodes();
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All(b => b);
 			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
 
-		internal void Command_Markup_Parent(bool shiftDown)
+		internal void Command_Content_Parent(bool shiftDown)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().Select((node, index) => MoveCursor(Selections[index], (node.Parent ?? node).Start, shiftDown)).ToList());
+			Selections.Replace(GetSelectionNodes().Select((node, index) => MoveCursor(Selections[index], (node.Parent ?? node).Start, shiftDown)).ToList());
 		}
 
-		internal FindMarkupAttributeDialog.Result Command_Markup_ChildrenDescendents_ByAttribute_Dialog()
+		internal FindContentAttributeDialog.Result Command_Content_FindByAttribute_Dialog()
 		{
-			return FindMarkupAttributeDialog.Run(UIHelper.FindParent<Window>(this));
+			return FindContentAttributeDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
-		internal void Command_Markup_List(ParserNode.ParserNodeListType list, bool first = false, FindMarkupAttributeDialog.Result findAttr = null)
+		internal void Command_Content_List(ParserNode.ParserNodeListType list, bool first = false, FindContentAttributeDialog.Result findAttr = null)
 		{
-			var newSels = GetSelectionMarkupNodes().SelectMany(node => MarkupGetList(node, list, first, findAttr)).ToList();
+			var newSels = GetSelectionNodes().SelectMany(node => ContentGetList(node, list, first, findAttr)).ToList();
 			if (newSels.Any())
 				Selections.Replace(newSels);
 		}
 
-		internal void Command_Markup_NextPrev(bool next, bool shiftDown)
+		internal void Command_Content_NextPrev(bool next, bool shiftDown)
 		{
 			var offset = next ? 1 : -1;
-			var nodes = GetSelectionMarkupNodes();
+			var nodes = GetSelectionNodes();
 			Selections.Replace(nodes.Select((node, idx) =>
 			{
 				var range = Selections[idx];
@@ -126,47 +126,47 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		internal void Command_Markup_Select_ByAttribute(FindMarkupAttributeDialog.Result result)
+		internal void Command_Content_Select_ByAttribute(FindContentAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttr(result.Attribute, result.Regex)).Select(node => new Range(node.Start)).ToList());
+			Selections.Replace(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex)).Select(node => new Range(node.Start)).ToList());
 		}
 
-		internal void Command_Markup_Select_TopMost()
+		internal void Command_Content_Select_TopMost()
 		{
-			var nodes = GetSelectionMarkupNodes();
+			var nodes = GetSelectionNodes();
 			var descendants = new HashSet<ParserNode>(nodes.SelectMany(node => node.List(ParserNode.ParserNodeListType.Descendants)));
 			Selections.Replace(Selections.Where((range, index) => !descendants.Contains(nodes[index])).ToList());
 		}
 
-		internal void Command_Markup_Select_Deepest()
+		internal void Command_Content_Select_Deepest()
 		{
-			var nodes = GetSelectionMarkupNodes();
+			var nodes = GetSelectionNodes();
 			var parents = new HashSet<ParserNode>(nodes.SelectMany(node => node.List(ParserNode.ParserNodeListType.Parents)));
 			Selections.Replace(Selections.Where((range, index) => !parents.Contains(nodes[index])).ToList());
 		}
 
-		internal void Command_Markup_Select_MaxTopMost()
+		internal void Command_Content_Select_MaxTopMost()
 		{
-			var nodes = GetSelectionMarkupNodes();
+			var nodes = GetSelectionNodes();
 			var targetDepth = nodes.Min(node => node.Depth);
 			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
 		}
 
-		internal void Command_Markup_Select_MaxDeepest()
+		internal void Command_Content_Select_MaxDeepest()
 		{
-			var nodes = GetSelectionMarkupNodes();
+			var nodes = GetSelectionNodes();
 			var targetDepth = nodes.Max(node => node.Depth);
 			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
 		}
 
-		internal SelectMarkupAttributeDialog.Result Command_Markup_Select_Attribute_Dialog()
+		internal SelectContentAttributeDialog.Result Command_Content_Select_Attribute_Dialog()
 		{
-			return SelectMarkupAttributeDialog.Run(UIHelper.FindParent<Window>(this));
+			return SelectContentAttributeDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
-		internal void Command_Markup_Select_Attribute(SelectMarkupAttributeDialog.Result result)
+		internal void Command_Content_Select_Attribute(SelectContentAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly).Select(attr => new Range(attr.Start.Value))).ToList());
+			Selections.Replace(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly).Select(attr => new Range(attr.Start.Value))).ToList());
 		}
 	}
 }
