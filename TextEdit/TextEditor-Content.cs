@@ -10,9 +10,18 @@ namespace NeoEdit.TextEdit
 {
 	public partial class TextEditor
 	{
+		string ContentLastData;
+		Parser.ParserType ContentLastType;
+		ParserNode ContentLastRoot;
 		ParserNode RootNode()
 		{
-			return Parser.Parse(Data.Data, ContentType);
+			if ((ContentLastData != Data.Data) || (ContentLastType != ContentType))
+			{
+				ContentLastData = Data.Data;
+				ContentLastType = ContentType;
+				ContentLastRoot = Parser.Parse(Data.Data, ContentType);
+			}
+			return ContentLastRoot;
 		}
 
 		List<ParserNode> GetSelectionNodes()
