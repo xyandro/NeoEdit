@@ -3,29 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using NeoEdit.GUI.Controls;
+using NeoEdit.Parsing;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
 	public partial class TextEditor
 	{
-		MarkupNode HTMLRoot()
+		ParserNode HTMLRoot()
 		{
 			var allRange = new Range(BeginOffset(), EndOffset());
 			var data = GetString(allRange);
-			return MarkupParser.ParseHTML(data, allRange.Start);
+			return HTML.ParseHTML(data, allRange.Start);
 		}
 
-		List<MarkupNode> GetSelectionMarkupNodes()
+		List<ParserNode> GetSelectionMarkupNodes()
 		{
 			var doc = HTMLRoot();
-			var nodes = doc.List(MarkupNode.MarkupNodeList.SelfAndDescendants).ToList();
+			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAndDescendants).ToList();
 			var location = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
 
-			var result = new List<MarkupNode>();
+			var result = new List<ParserNode>();
 			foreach (var range in Selections)
 			{
-				MarkupNode found = null;
+				ParserNode found = null;
 				if (location.ContainsKey(range.Cursor))
 					found = location[range.Cursor];
 				else
@@ -42,12 +43,12 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		List<Range> MarkupGetList(MarkupNode node, MarkupNode.MarkupNodeList list, bool first, FindMarkupAttributeDialog.Result findAttr)
+		List<Range> MarkupGetList(ParserNode node, ParserNode.ParserNodeListType list, bool first, FindMarkupAttributeDialog.Result findAttr)
 		{
-			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = childNode.RangeStart }).ToList();
+			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = new Range(childNode.Start) }).ToList();
 
 			if (findAttr != null)
-				childNodes = childNodes.Where(childNode => childNode.Node.HasAttribute(findAttr.Attribute, findAttr.Regex)).ToList();
+				childNodes = childNodes.Where(childNode => childNode.Node.HasAttr(findAttr.Attribute, findAttr.Regex)).ToList();
 
 			if (first)
 				childNodes = childNodes.Take(1).ToList();
@@ -98,7 +99,7 @@ namespace NeoEdit.TextEdit
 			return FindMarkupAttributeDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
-		internal void Command_Markup_List(MarkupNode.MarkupNodeList list, bool first = false, FindMarkupAttributeDialog.Result findAttr = null)
+		internal void Command_Markup_List(ParserNode.ParserNodeListType list, bool first = false, FindMarkupAttributeDialog.Result findAttr = null)
 		{
 			var newSels = GetSelectionMarkupNodes().SelectMany(node => MarkupGetList(node, list, first, findAttr)).ToList();
 			if (newSels.Any())
@@ -112,7 +113,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(nodes.Select((node, idx) =>
 			{
 				var range = Selections[idx];
-				var children = node.Parent.List(MarkupNode.MarkupNodeList.Children).ToList();
+				var children = node.Parent.List(ParserNode.ParserNodeListType.Children).ToList();
 				if (!children.Any())
 					return range;
 				var index = children.IndexOf(node);
@@ -127,20 +128,20 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Markup_Select_ByAttribute(FindMarkupAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttribute(result.Attribute, result.Regex)).Select(node => node.RangeStart).ToList());
+			Selections.Replace(GetSelectionMarkupNodes().Where(node => node.HasAttr(result.Attribute, result.Regex)).Select(node => new Range(node.Start)).ToList());
 		}
 
 		internal void Command_Markup_Select_TopMost()
 		{
 			var nodes = GetSelectionMarkupNodes();
-			var descendants = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Descendants)));
+			var descendants = new HashSet<ParserNode>(nodes.SelectMany(node => node.List(ParserNode.ParserNodeListType.Descendants)));
 			Selections.Replace(Selections.Where((range, index) => !descendants.Contains(nodes[index])).ToList());
 		}
 
 		internal void Command_Markup_Select_Deepest()
 		{
 			var nodes = GetSelectionMarkupNodes();
-			var parents = new HashSet<MarkupNode>(nodes.SelectMany(node => node.List(MarkupNode.MarkupNodeList.Parents)));
+			var parents = new HashSet<ParserNode>(nodes.SelectMany(node => node.List(ParserNode.ParserNodeListType.Parents)));
 			Selections.Replace(Selections.Where((range, index) => !parents.Contains(nodes[index])).ToList());
 		}
 
@@ -165,7 +166,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Markup_Select_Attribute(SelectMarkupAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionMarkupNodes().SelectMany(node => node.GetAttributeRanges(result.Attribute, result.FirstOnly)).ToList());
+			Selections.Replace(GetSelectionMarkupNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly).Select(attr => new Range(attr.Start.Value))).ToList());
 		}
 	}
 }

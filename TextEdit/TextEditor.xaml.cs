@@ -20,6 +20,7 @@ using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
+using NeoEdit.Parsing;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
@@ -614,15 +615,15 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Markup_Uncomment: Command_Markup_Uncomment(); break;
 				case TextEditCommand.Markup_ToggleTagPosition: Command_Markup_ToggleTagPosition(shiftDown); break;
 				case TextEditCommand.Markup_Parent: Command_Markup_Parent(shiftDown); break;
-				case TextEditCommand.Markup_Ancestor: Command_Markup_List(MarkupNode.MarkupNodeList.Parents, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
-				case TextEditCommand.Markup_Children_Children: Command_Markup_List(MarkupNode.MarkupNodeList.Children); break;
-				case TextEditCommand.Markup_Children_SelfAndChildren: Command_Markup_List(MarkupNode.MarkupNodeList.SelfAndChildren); break;
-				case TextEditCommand.Markup_Children_First: Command_Markup_List(MarkupNode.MarkupNodeList.Children, first: true); break;
-				case TextEditCommand.Markup_Children_ByAttribute: Command_Markup_List(MarkupNode.MarkupNodeList.Children, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
-				case TextEditCommand.Markup_Descendants_Descendants: Command_Markup_List(MarkupNode.MarkupNodeList.Descendants); break;
-				case TextEditCommand.Markup_Descendants_SelfAndDescendants: Command_Markup_List(MarkupNode.MarkupNodeList.SelfAndDescendants); break;
-				case TextEditCommand.Markup_Descendants_First: Command_Markup_List(MarkupNode.MarkupNodeList.Children, first: true); break;
-				case TextEditCommand.Markup_Descendants_ByAttribute: Command_Markup_List(MarkupNode.MarkupNodeList.Descendants, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
+				case TextEditCommand.Markup_Ancestor: Command_Markup_List(ParserNode.ParserNodeListType.Parents, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
+				case TextEditCommand.Markup_Children_Children: Command_Markup_List(ParserNode.ParserNodeListType.Children); break;
+				case TextEditCommand.Markup_Children_SelfAndChildren: Command_Markup_List(ParserNode.ParserNodeListType.SelfAndChildren); break;
+				case TextEditCommand.Markup_Children_First: Command_Markup_List(ParserNode.ParserNodeListType.Children, first: true); break;
+				case TextEditCommand.Markup_Children_ByAttribute: Command_Markup_List(ParserNode.ParserNodeListType.Children, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
+				case TextEditCommand.Markup_Descendants_Descendants: Command_Markup_List(ParserNode.ParserNodeListType.Descendants); break;
+				case TextEditCommand.Markup_Descendants_SelfAndDescendants: Command_Markup_List(ParserNode.ParserNodeListType.SelfAndDescendants); break;
+				case TextEditCommand.Markup_Descendants_First: Command_Markup_List(ParserNode.ParserNodeListType.Children, first: true); break;
+				case TextEditCommand.Markup_Descendants_ByAttribute: Command_Markup_List(ParserNode.ParserNodeListType.Descendants, findAttr: dialogResult as FindMarkupAttributeDialog.Result); break;
 				case TextEditCommand.Markup_Next: Command_Markup_NextPrev(true, shiftDown); break;
 				case TextEditCommand.Markup_Previous: Command_Markup_NextPrev(false, shiftDown); break;
 				case TextEditCommand.Markup_Select_ByAttribute: Command_Markup_Select_ByAttribute(dialogResult as FindMarkupAttributeDialog.Result); break;

@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.TextEdit
+namespace NeoEdit.Parsing
 {
-	static class MarkupParser
+	public static class HTML
 	{
+		const string Name = "Name";
 		const string Element = "Element";
 		const string Comment = "Comment";
 		const string Text = "Text";
+		const string SelfClosing = "SelfClosing";
+		const string Doc = "DOC";
 
-		static MarkupNode GetCommentNode(string str, ref int location)
+		static ParserNode GetCommentNode(string str, ref int location)
 		{
 			if ((location >= str.Length - 7) || (str.Substring(location, 4) != "<!--"))
 				return null;
@@ -19,7 +22,7 @@ namespace NeoEdit.TextEdit
 			if (endComment == 2) // IndexOf returned -1
 				endComment = str.Length;
 			location = endComment;
-			return new MarkupNode { Type = Comment, Start = startComment, End = endComment, SelfClosing = true };
+			return new ParserNode(Comment) { { ParserNode.LocationStr, startComment, endComment }, { SelfClosing, "true" } };
 		}
 
 		enum OpenCloseStep
@@ -36,12 +39,12 @@ namespace NeoEdit.TextEdit
 
 		delegate bool CharLocPredicate(char? c, int location);
 		delegate Tuple<OpenCloseStep> CharLocAction(char? c, int location);
-		static MarkupNode GetOpenCloseNode(string str, ref int location)
+		static ParserNode GetOpenCloseNode(string str, ref int location)
 		{
 			var step = OpenCloseStep.Start;
 			int itemStart = 0;
 			string itemName = null;
-			var result = new MarkupNode { Type = Element, Start = location };
+			var result = new ParserNode(Element) { { ParserNode.LocationStr, location, location } };
 			var inQuote = (char)0;
 
 			while (true)
@@ -51,7 +54,7 @@ namespace NeoEdit.TextEdit
 					if ((location >= str.Length) || (str[location] != '<'))
 						return null;
 					++location;
-					itemName = "Tag";
+					itemName = Name;
 					step = OpenCloseStep.BeforeAttrValueWS;
 				}
 				else if ((step == OpenCloseStep.BeforeAttrNameWS) || (step == OpenCloseStep.AfterAttrNameWS) || (step == OpenCloseStep.BeforeAttrValueWS))
@@ -100,7 +103,7 @@ namespace NeoEdit.TextEdit
 					}
 					else
 					{
-						result.AddAttribute(itemName, value, itemStart, location);
+						result.Add(itemName, value, itemStart, location);
 						step = OpenCloseStep.BeforeAttrNameWS;
 					}
 
@@ -125,7 +128,7 @@ namespace NeoEdit.TextEdit
 				{
 					if ((location < str.Length) && (str[location] == '/'))
 					{
-						result.SelfClosing = true;
+						result.Set(SelfClosing, "true");
 						++location;
 					}
 					if ((location < str.Length) && (str[location] == '>'))
@@ -134,14 +137,14 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			if (result.GetAttribute("Tag") == "!doctype")
-				return new MarkupNode { Type = Comment, Start = result.Start, End = location };
+			if (result.GetAttrText(Name) == "!doctype")
+				return new ParserNode(Comment) { { ParserNode.LocationStr, result.Start, location } };
 
-			result.End = location;
+			result.Set(ParserNode.LocationStr, result.Start, location);
 			return result;
 		}
 
-		static MarkupNode GetTextNode(string str, ref int location, string rawName)
+		static ParserNode GetTextNode(string str, ref int location, string rawName)
 		{
 			var startLocation = location;
 			var find = rawName == null ? "<" : "</" + rawName;
@@ -153,23 +156,22 @@ namespace NeoEdit.TextEdit
 				++startLocation;
 			while ((endLocation > startLocation) && (Char.IsWhiteSpace(str[endLocation - 1])))
 				--endLocation;
-			return new MarkupNode { Type = Text, Start = startLocation, End = endLocation, SelfClosing = true };
+			return new ParserNode(Text) { { ParserNode.LocationStr, startLocation, endLocation }, { SelfClosing, "true" } };
 		}
 
 		static readonly HashSet<string> voidElements = new HashSet<string> { "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
 		static readonly HashSet<string> rawTextElements = new HashSet<string> { "script", "style", "textarea", "title" };
 
-		static public MarkupNode ParseHTML(string str, int location)
+		static public ParserNode ParseHTML(string str, int location)
 		{
-			var doc = new MarkupNode { Type = Element, Start = location };
-			doc.AddAttribute("Tag", "DOC", 0, 0);
-			var stack = new Stack<Tuple<string, MarkupNode>>();
-			stack.Push(Tuple.Create("DOC", doc));
+			var doc = new ParserNode(Element) { { ParserNode.LocationStr, location, location }, { Name, Doc } };
+			var stack = new Stack<Tuple<string, ParserNode>>();
+			stack.Push(Tuple.Create(Doc, doc));
 			while (location < str.Length)
 			{
 				var topStack = stack.Peek().Item2;
 
-				var textTag = topStack.GetAttribute("Tag");
+				var textTag = topStack.GetAttrText(Name);
 				var rawName = rawTextElements.Contains(textTag) ? textTag : null;
 
 				var node = GetCommentNode(str, ref location) ?? GetOpenCloseNode(str, ref location) ?? GetTextNode(str, ref location, rawName);
@@ -179,31 +181,31 @@ namespace NeoEdit.TextEdit
 				if ((node.Type == Text) && (node.Start == node.End))
 					continue;
 
-				if (node.SelfClosing)
+				if (node.GetAttrText(SelfClosing) == "true")
 				{
-					topStack.AddChild(node);
+					node.Parent = topStack;
 					continue;
 				}
 
-				var tag = node.GetAttribute("Tag");
-				if (!tag.StartsWith("/"))
+				var name = node.GetAttrText(Name);
+				if (!name.StartsWith("/"))
 				{
-					topStack.AddChild(node);
-					if (voidElements.Contains(tag))
-						node.End = location;
+					node.Parent = topStack;
+					if (voidElements.Contains(name))
+						node.Set(ParserNode.LocationStr, node.Start, location);
 					else
-						stack.Push(Tuple.Create(tag, node));
+						stack.Push(Tuple.Create(name, node));
 					continue;
 				}
 
-				tag = tag.Substring(1);
-				var toRemove = stack.FirstOrDefault(item => (item.Item1 == tag) && (item.Item2 != doc));
+				name = name.Substring(1);
+				var toRemove = stack.FirstOrDefault(item => (item.Item1 == name) && (item.Item2 != doc));
 				if (toRemove != null)
 				{
 					while (true)
 					{
 						var item = stack.Pop();
-						item.Item2.End = node.Start;
+						item.Item2.Set(ParserNode.LocationStr, item.Item2.Start, node.Start);
 						if (item == toRemove)
 							break;
 					}
@@ -212,7 +214,7 @@ namespace NeoEdit.TextEdit
 			while (stack.Any())
 			{
 				var item = stack.Pop();
-				item.Item2.End = location;
+				item.Item2.Set(ParserNode.LocationStr, item.Item2.Start, location);
 			}
 
 			return doc;

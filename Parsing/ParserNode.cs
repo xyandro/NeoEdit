@@ -53,16 +53,8 @@ namespace NeoEdit.Parsing
 			}
 		}
 
-		public int Start
-		{
-			get { return GetAttr(LocationStr).Start.Value; }
-			set { Set(LocationStr, null, value, End); }
-		}
-		public int End
-		{
-			get { return GetAttr(LocationStr).End.Value; }
-			set { Set(LocationStr, null, Start, value); }
-		}
+		public int Start { get { return GetAttr(LocationStr).Start.Value; } }
+		public int End { get { return GetAttr(LocationStr).End.Value; } }
 		public string Type { get { return GetAttrText(TypeStr); } internal set { Set(TypeStr, value); } }
 		public int Depth { get; set; }
 
@@ -138,7 +130,7 @@ namespace NeoEdit.Parsing
 			return GetAttrs(name, firstOnly).Select(attr => attr.Text);
 		}
 
-		public void SetAttr(string name, string value, int? start, int? end)
+		void SetAttr(string name, string value, int? start, int? end)
 		{
 			attributes[name] = new List<ParserNodeAttribute> { new ParserNodeAttribute { Text = value, Start = start, End = end } };
 		}
@@ -146,6 +138,11 @@ namespace NeoEdit.Parsing
 		public void Set(string name, string value)
 		{
 			SetAttr(name, value, null, null);
+		}
+
+		public void Set(string name, int start, int end)
+		{
+			SetAttr(name, null, start, end);
 		}
 
 		public void Set(string name, string value, int start, int end)
@@ -178,6 +175,11 @@ namespace NeoEdit.Parsing
 		public void Add(string name, string value)
 		{
 			AddAttr(name, value, null, null);
+		}
+
+		public void Add(string name, int start, int end)
+		{
+			AddAttr(name, null, start, end);
 		}
 
 		public void Add(string name, string value, int start, int end)

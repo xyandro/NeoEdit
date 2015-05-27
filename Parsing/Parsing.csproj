@@ -28,6 +28,7 @@
     <Compile Include="CSharp\Parser\CSharp4Visitor.cs" />
     <Compile Include="GenericListener.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="HTML\HTML.cs" />
     <Compile Include="ParserNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
