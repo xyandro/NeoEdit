@@ -3,7 +3,7 @@ using Antlr4.Runtime.Atn;
 
 namespace NeoEdit.Parsing
 {
-	public static class CSharp
+	static class CSharp
 	{
 		public static ParserNode Parse(string data)
 		{

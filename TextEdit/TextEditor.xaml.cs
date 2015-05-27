@@ -632,7 +632,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_MaxTopMost: Command_Content_Select_MaxTopMost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
 				case TextEditCommand.Content_Select_Attribute: Command_Content_Select_Attribute(dialogResult as SelectContentAttributeDialog.Result); break;
-				case TextEditCommand.CSharp_Methods: Command_CSharp_Methods(); break;
 				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;

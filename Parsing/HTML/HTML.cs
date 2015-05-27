@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.Parsing
 {
-	public static class HTML
+	class HTML
 	{
 		const string Name = "Name";
 		const string Element = "Element";
@@ -13,14 +13,23 @@ namespace NeoEdit.Parsing
 		const string SelfClosing = "SelfClosing";
 		const string Doc = "DOC";
 
-		static ParserNode GetCommentNode(string str, ref int location)
+		readonly string input;
+		int location;
+
+		public HTML(string input)
 		{
-			if ((location >= str.Length - 7) || (str.Substring(location, 4) != "<!--"))
+			this.input = input;
+			location = 0;
+		}
+
+		ParserNode GetCommentNode()
+		{
+			if ((location >= input.Length - 7) || (input.Substring(location, 4) != "<!--"))
 				return null;
 			var startComment = location;
-			var endComment = str.IndexOf("-->", location) + 3;
+			var endComment = input.IndexOf("-->", location) + 3;
 			if (endComment == 2) // IndexOf returned -1
-				endComment = str.Length;
+				endComment = input.Length;
 			location = endComment;
 			return new ParserNode(Comment) { { ParserNode.LocationStr, startComment, endComment }, { SelfClosing, "true" } };
 		}
@@ -39,7 +48,7 @@ namespace NeoEdit.Parsing
 
 		delegate bool CharLocPredicate(char? c, int location);
 		delegate Tuple<OpenCloseStep> CharLocAction(char? c, int location);
-		static ParserNode GetOpenCloseNode(string str, ref int location)
+		ParserNode GetOpenCloseNode()
 		{
 			var step = OpenCloseStep.Start;
 			int itemStart = 0;
@@ -51,7 +60,7 @@ namespace NeoEdit.Parsing
 			{
 				if (step == OpenCloseStep.Start)
 				{
-					if ((location >= str.Length) || (str[location] != '<'))
+					if ((location >= input.Length) || (input[location] != '<'))
 						return null;
 					++location;
 					itemName = Name;
@@ -59,7 +68,7 @@ namespace NeoEdit.Parsing
 				}
 				else if ((step == OpenCloseStep.BeforeAttrNameWS) || (step == OpenCloseStep.AfterAttrNameWS) || (step == OpenCloseStep.BeforeAttrValueWS))
 				{
-					if ((location < str.Length) && (Char.IsWhiteSpace(str[location])))
+					if ((location < input.Length) && (Char.IsWhiteSpace(input[location])))
 					{
 						++location;
 						continue;
@@ -75,27 +84,27 @@ namespace NeoEdit.Parsing
 				}
 				else if ((step == OpenCloseStep.AttrName) || (step == OpenCloseStep.AttrValue))
 				{
-					if ((step == OpenCloseStep.AttrValue) && (itemStart == location) && (location < str.Length) && ((str[location] == '"') || (str[location] == '\'')))
+					if ((step == OpenCloseStep.AttrValue) && (itemStart == location) && (location < input.Length) && ((input[location] == '"') || (input[location] == '\'')))
 					{
-						inQuote = str[location];
+						inQuote = input[location];
 						++itemStart;
 						++location;
 					}
 
-					var stop = (location >= str.Length) || ((inQuote == 0) && ((str[location] == '<') || (str[location] == '>') || ((str[location] == '/') && (location != result.Start + 1))));
+					var stop = (location >= input.Length) || ((inQuote == 0) && ((input[location] == '<') || (input[location] == '>') || ((input[location] == '/') && (location != result.Start + 1))));
 					if ((itemStart == location) && (stop))
 					{
 						step = OpenCloseStep.End;
 						continue;
 					}
 
-					if ((!stop) && ((inQuote != 0) || ((!Char.IsWhiteSpace(str[location])) && ((step == OpenCloseStep.AttrValue) || (str[location] != '=')))) && ((inQuote == 0) || (str[location] != inQuote)))
+					if ((!stop) && ((inQuote != 0) || ((!Char.IsWhiteSpace(input[location])) && ((step == OpenCloseStep.AttrValue) || (input[location] != '=')))) && ((inQuote == 0) || (input[location] != inQuote)))
 					{
 						++location;
 						continue;
 					}
 
-					var value = str.Substring(itemStart, location - itemStart);
+					var value = input.Substring(itemStart, location - itemStart);
 					if (step == OpenCloseStep.AttrName)
 					{
 						itemName = value;
@@ -109,14 +118,14 @@ namespace NeoEdit.Parsing
 
 					if (inQuote != 0)
 					{
-						if ((location < str.Length) && (str[location] == inQuote))
+						if ((location < input.Length) && (input[location] == inQuote))
 							++location;
 						inQuote = (char)0;
 					}
 				}
 				else if (step == OpenCloseStep.AttrEqual)
 				{
-					if ((location < str.Length) && (str[location] == '='))
+					if ((location < input.Length) && (input[location] == '='))
 					{
 						step = OpenCloseStep.BeforeAttrValueWS;
 						++location;
@@ -126,12 +135,12 @@ namespace NeoEdit.Parsing
 				}
 				else if (step == OpenCloseStep.End)
 				{
-					if ((location < str.Length) && (str[location] == '/'))
+					if ((location < input.Length) && (input[location] == '/'))
 					{
 						result.Set(SelfClosing, "true");
 						++location;
 					}
-					if ((location < str.Length) && (str[location] == '>'))
+					if ((location < input.Length) && (input[location] == '>'))
 						++location;
 					break;
 				}
@@ -144,17 +153,17 @@ namespace NeoEdit.Parsing
 			return result;
 		}
 
-		static ParserNode GetTextNode(string str, ref int location, string rawName)
+		ParserNode GetTextNode(string rawName)
 		{
 			var startLocation = location;
 			var find = rawName == null ? "<" : "</" + rawName;
-			location = str.IndexOf(find, startLocation);
+			location = input.IndexOf(find, startLocation);
 			if (location == -1)
-				location = str.Length;
+				location = input.Length;
 			var endLocation = location;
-			while ((startLocation < endLocation) && (Char.IsWhiteSpace(str[startLocation])))
+			while ((startLocation < endLocation) && (Char.IsWhiteSpace(input[startLocation])))
 				++startLocation;
-			while ((endLocation > startLocation) && (Char.IsWhiteSpace(str[endLocation - 1])))
+			while ((endLocation > startLocation) && (Char.IsWhiteSpace(input[endLocation - 1])))
 				--endLocation;
 			return new ParserNode(Text) { { ParserNode.LocationStr, startLocation, endLocation }, { SelfClosing, "true" } };
 		}
@@ -162,19 +171,21 @@ namespace NeoEdit.Parsing
 		static readonly HashSet<string> voidElements = new HashSet<string> { "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
 		static readonly HashSet<string> rawTextElements = new HashSet<string> { "script", "style", "textarea", "title" };
 
-		static public ParserNode ParseHTML(string str, int location)
+		public ParserNode Parse()
 		{
+			if ((input.Length > 1) && (input[0] == '\ufeff'))
+				++location;
 			var doc = new ParserNode(Element) { { ParserNode.LocationStr, location, location }, { Name, Doc } };
 			var stack = new Stack<Tuple<string, ParserNode>>();
 			stack.Push(Tuple.Create(Doc, doc));
-			while (location < str.Length)
+			while (location < input.Length)
 			{
 				var topStack = stack.Peek().Item2;
 
 				var textTag = topStack.GetAttrText(Name);
 				var rawName = rawTextElements.Contains(textTag) ? textTag : null;
 
-				var node = GetCommentNode(str, ref location) ?? GetOpenCloseNode(str, ref location) ?? GetTextNode(str, ref location, rawName);
+				var node = GetCommentNode() ?? GetOpenCloseNode() ?? GetTextNode(rawName);
 				if (node == null)
 					throw new ArgumentException("Failed to parse HTML");
 

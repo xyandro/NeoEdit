@@ -196,9 +196,6 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-CSharp.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Content.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>

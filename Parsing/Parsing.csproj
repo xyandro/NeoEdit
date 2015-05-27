@@ -29,6 +29,7 @@
     <Compile Include="GenericListener.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="HTML\HTML.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="ParserNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

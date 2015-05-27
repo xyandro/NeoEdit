@@ -10,16 +10,14 @@ namespace NeoEdit.TextEdit
 {
 	public partial class TextEditor
 	{
-		ParserNode HTMLRoot()
+		ParserNode RootNode()
 		{
-			var allRange = new Range(BeginOffset(), EndOffset());
-			var data = GetString(allRange);
-			return HTML.ParseHTML(data, allRange.Start);
+			return Parser.Parse(Data.Data, Parser.ParserType.HTML);
 		}
 
 		List<ParserNode> GetSelectionNodes()
 		{
-			var doc = HTMLRoot();
+			var doc = RootNode();
 			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAndDescendants).ToList();
 			var location = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
 

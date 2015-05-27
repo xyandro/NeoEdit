@@ -19,7 +19,7 @@ namespace NeoEdit.TextEdit
 	class TextData
 	{
 		string _data;
-		string data { get { return _data; } set { _data = value; RecalculateLines(); } }
+		public string Data { get { return _data; } private set { _data = value; RecalculateLines(); } }
 		List<int> lineOffset;
 		List<int> endingOffset;
 		public string OnlyEnding { get; private set; }
@@ -27,7 +27,7 @@ namespace NeoEdit.TextEdit
 		const int tabStop = 4;
 
 		public int NumLines { get { return endingOffset.Count; } }
-		public int NumChars { get { return data.Length; } }
+		public int NumChars { get { return Data.Length; } }
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
 
@@ -39,17 +39,17 @@ namespace NeoEdit.TextEdit
 			if (codePage == Coder.CodePage.None)
 				throw new Exception("No encoder specified");
 
-			data = Coder.BytesToString(bytes, codePage, true);
+			Data = Coder.BytesToString(bytes, codePage, true);
 		}
 
 		public bool CanFullyEncode(Coder.CodePage codePage)
 		{
-			return Coder.CanFullyEncode(data, codePage);
+			return Coder.CanFullyEncode(Data, codePage);
 		}
 
 		public byte[] GetBytes(Coder.CodePage codePage)
 		{
-			return Coder.StringToBytes(data, codePage, true);
+			return Coder.StringToBytes(Data, codePage, true);
 		}
 
 		void RecalculateLines()
@@ -67,15 +67,15 @@ namespace NeoEdit.TextEdit
 
 			var lineEndChars = new char[] { '\r', '\n' };
 
-			var chunkSize = Math.Max(65536, data.Length / 32);
+			var chunkSize = Math.Max(65536, Data.Length / 32);
 			var startChunk = 0;
 			var chunks = new List<Tuple<int, int>>();
-			while (startChunk < data.Length)
+			while (startChunk < Data.Length)
 			{
-				var endChunk = data.IndexOfAny(lineEndChars, Math.Min(data.Length, startChunk + chunkSize));
+				var endChunk = Data.IndexOfAny(lineEndChars, Math.Min(Data.Length, startChunk + chunkSize));
 				if (endChunk == -1)
-					endChunk = data.Length;
-				while ((endChunk < data.Length) && (lineEndChars.Contains(data[endChunk])))
+					endChunk = Data.Length;
+				while ((endChunk < Data.Length) && (lineEndChars.Contains(Data[endChunk])))
 					++endChunk;
 
 				chunks.Add(Tuple.Create(startChunk, endChunk));
@@ -98,7 +98,7 @@ namespace NeoEdit.TextEdit
 				var offset = chunk.Item1;
 				while (offset < chunk.Item2)
 				{
-					var endLine = data.IndexOfAny(lineEndChars, offset, chunk.Item2 - offset);
+					var endLine = Data.IndexOfAny(lineEndChars, offset, chunk.Item2 - offset);
 					var endLineLen = 1;
 					var ending = Ending_None;
 					if (endLine == -1)
@@ -106,13 +106,13 @@ namespace NeoEdit.TextEdit
 						endLine = chunk.Item2;
 						endLineLen = 0;
 					}
-					else if ((endLine + 1 < chunk.Item2) && (((data[endLine] == '\n') && (data[endLine + 1] == '\r')) || ((data[endLine] == '\r') && (data[endLine + 1] == '\n'))))
+					else if ((endLine + 1 < chunk.Item2) && (((Data[endLine] == '\n') && (Data[endLine + 1] == '\r')) || ((Data[endLine] == '\r') && (Data[endLine + 1] == '\n'))))
 					{
 						++endLineLen;
-						ending = data[endLine] == '\r' ? Ending_CRLF : Ending_LFCR;
+						ending = Data[endLine] == '\r' ? Ending_CRLF : Ending_LFCR;
 					}
 					else
-						ending = data[endLine] == '\r' ? Ending_CR : Ending_LF;
+						ending = Data[endLine] == '\r' ? Ending_CR : Ending_LF;
 
 					if (chunkDefaultEnding == Ending_None)
 						chunkDefaultEnding = ending;
@@ -142,14 +142,14 @@ namespace NeoEdit.TextEdit
 			chunkEndingOffsets.ForEach(values => endingOffset.AddRange(values));
 
 			// Always have an ending line
-			if ((endingOffset.Count == 0) || (endingOffset.Last() != data.Length))
+			if ((endingOffset.Count == 0) || (endingOffset.Last() != Data.Length))
 			{
-				lineOffset.Add(data.Length);
-				endingOffset.Add(data.Length);
+				lineOffset.Add(Data.Length);
+				endingOffset.Add(Data.Length);
 			}
 
 			// Used only for calculating length
-			lineOffset.Add(data.Length);
+			lineOffset.Add(Data.Length);
 
 			var endingText = new Dictionary<int, string>
 			{
@@ -177,7 +177,7 @@ namespace NeoEdit.TextEdit
 					throw new IndexOutOfRangeException();
 				if ((index < 0) || (index >= GetLineLength(line)))
 					throw new IndexOutOfRangeException();
-				return data[lineOffset[line] + index];
+				return Data[lineOffset[line] + index];
 			}
 		}
 
@@ -205,7 +205,7 @@ namespace NeoEdit.TextEdit
 			var columns = 0;
 			while (len > 0)
 			{
-				var find = data.IndexOf('\t', index, len);
+				var find = Data.IndexOf('\t', index, len);
 				if (find == index)
 				{
 					columns = (columns / tabStop + 1) * tabStop;
@@ -230,7 +230,7 @@ namespace NeoEdit.TextEdit
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return data.Substring(lineOffset[line], GetLineLength(line));
+			return Data.Substring(lineOffset[line], GetLineLength(line));
 		}
 
 		public string GetLineColumns(int line)
@@ -243,7 +243,7 @@ namespace NeoEdit.TextEdit
 			var sb = new StringBuilder();
 			while (len > 0)
 			{
-				var find = data.IndexOf('\t', index, len);
+				var find = Data.IndexOf('\t', index, len);
 				if (find == index)
 				{
 					sb.Append(' ', (sb.Length / tabStop + 1) * tabStop - sb.Length);
@@ -256,7 +256,7 @@ namespace NeoEdit.TextEdit
 					find = len;
 				else
 					find -= index;
-				sb.Append(data, index, find);
+				sb.Append(Data, index, find);
 				index += find;
 				len -= find;
 			}
@@ -268,7 +268,7 @@ namespace NeoEdit.TextEdit
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return data.Substring(endingOffset[line], GetEndingLength(line));
+			return Data.Substring(endingOffset[line], GetEndingLength(line));
 		}
 
 		public int GetOffset(int line, int index)
@@ -284,7 +284,7 @@ namespace NeoEdit.TextEdit
 
 		public int GetOffsetLine(int offset)
 		{
-			if ((offset < 0) || (offset > data.Length))
+			if ((offset < 0) || (offset > Data.Length))
 				throw new IndexOutOfRangeException();
 			var line = lineOffset.BinarySearch(offset);
 			if (line < 0)
@@ -318,7 +318,7 @@ namespace NeoEdit.TextEdit
 			var end = offset + GetLineLength(line);
 			while (offset < findOffset)
 			{
-				var find = data.IndexOf('\t', offset, end - offset);
+				var find = Data.IndexOf('\t', offset, end - offset);
 				if (find == offset)
 				{
 					column = (column / tabStop + 1) * tabStop;
@@ -349,7 +349,7 @@ namespace NeoEdit.TextEdit
 			var end = offset + GetLineLength(line);
 			while (column < findColumn)
 			{
-				var find = data.IndexOf('\t', offset, end - offset);
+				var find = Data.IndexOf('\t', offset, end - offset);
 				if (find == offset)
 				{
 					column = (column / tabStop + 1) * tabStop;
@@ -376,9 +376,9 @@ namespace NeoEdit.TextEdit
 
 		public string GetString(int start, int length)
 		{
-			if ((start < 0) || (length < 0) || (start + length > data.Length))
+			if ((start < 0) || (length < 0) || (start + length > Data.Length))
 				throw new IndexOutOfRangeException();
-			return data.Substring(start, length);
+			return Data.Substring(start, length);
 		}
 
 		public void Replace(List<int> offsets, List<int> lengths, List<string> text)
@@ -400,7 +400,7 @@ namespace NeoEdit.TextEdit
 			var dataPos = 0;
 			for (var listIndex = 0; listIndex <= text.Count; ++listIndex)
 			{
-				var offset = data.Length;
+				var offset = Data.Length;
 				var length = 0;
 				if (listIndex < offsets.Count)
 				{
@@ -408,7 +408,7 @@ namespace NeoEdit.TextEdit
 					length = lengths[listIndex];
 				}
 
-				sb.Append(data, dataPos, offset - dataPos);
+				sb.Append(Data, dataPos, offset - dataPos);
 				dataPos = offset;
 
 				if (listIndex < text.Count)
@@ -416,12 +416,12 @@ namespace NeoEdit.TextEdit
 				dataPos += length;
 			}
 
-			data = sb.ToString();
+			Data = sb.ToString();
 		}
 
 		public int GetOppositeBracket(int offset)
 		{
-			if ((offset < 0) || (offset > data.Length))
+			if ((offset < 0) || (offset > Data.Length))
 				return -1;
 
 			var dict = new Dictionary<char, char>
@@ -433,25 +433,25 @@ namespace NeoEdit.TextEdit
 			};
 
 			var found = default(KeyValuePair<char, char>);
-			if ((found.Key == 0) && (offset < data.Length))
-				found = dict.FirstOrDefault(entry => (entry.Key == data[offset]) || (entry.Value == data[offset]));
+			if ((found.Key == 0) && (offset < Data.Length))
+				found = dict.FirstOrDefault(entry => (entry.Key == Data[offset]) || (entry.Value == Data[offset]));
 			if (found.Key == 0)
 			{
 				if (--offset < 0)
 					return -1;
-				found = dict.FirstOrDefault(entry => (entry.Key == data[offset]) || (entry.Value == data[offset]));
+				found = dict.FirstOrDefault(entry => (entry.Key == Data[offset]) || (entry.Value == Data[offset]));
 			}
 			if (found.Key == 0)
 				return -1;
 
-			var direction = found.Key == data[offset] ? 1 : -1;
+			var direction = found.Key == Data[offset] ? 1 : -1;
 
 			var num = 0;
-			for (; offset < data.Length; offset += direction)
+			for (; offset < Data.Length; offset += direction)
 			{
-				if (data[offset] == found.Key)
+				if (Data[offset] == found.Key)
 					++num;
-				if (data[offset] == found.Value)
+				if (Data[offset] == found.Value)
 					--num;
 
 				if (num == 0)
@@ -475,7 +475,7 @@ namespace NeoEdit.TextEdit
 					nextOffset = Math.Min(endOffset, offset + length + GetEndingLength(line));
 				}
 
-				var matches = regex.Matches(data.Substring(offset, length)).Cast<Match>();
+				var matches = regex.Matches(Data.Substring(offset, length)).Cast<Match>();
 				foreach (var match in matches)
 				{
 					if ((!regexGroups) || (match.Groups.Count == 1))
@@ -509,7 +509,7 @@ namespace NeoEdit.TextEdit
 					break;
 
 				var matchLength = Math.Min(lineOffset[line] + GetLineLength(line), endOffset) - matchOffset;
-				result.AddRange(searcher.Find(data, matchOffset, matchLength));
+				result.AddRange(searcher.Find(Data, matchOffset, matchLength));
 				++line;
 				index = 0;
 				continue;
@@ -519,9 +519,9 @@ namespace NeoEdit.TextEdit
 
 		public void Trim(ref int offset, ref int length)
 		{
-			while ((length > 0) && (Char.IsWhiteSpace(data[offset + length - 1])))
+			while ((length > 0) && (Char.IsWhiteSpace(Data[offset + length - 1])))
 				--length;
-			while ((length > 0) && (Char.IsWhiteSpace(data[offset])))
+			while ((length > 0) && (Char.IsWhiteSpace(Data[offset])))
 			{
 				++offset;
 				--length;
