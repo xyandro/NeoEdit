@@ -8,16 +8,6 @@ namespace NeoEdit.TextEdit
 	class MarkupNode
 	{
 		[Flags]
-		public enum MarkupNodeType
-		{
-			None = 0,
-			Element = 1,
-			Text = 2,
-			Comment = 4,
-			All = Element | Text | Comment
-		}
-
-		[Flags]
 		public enum MarkupNodeList
 		{
 			None = 0,
@@ -40,24 +30,10 @@ namespace NeoEdit.TextEdit
 
 		public bool SelfClosing { get; set; }
 
-		public MarkupNodeType NodeType { get; set; }
+		public string Type { get; set; }
 
 		readonly Dictionary<string, List<Tuple<string, int, int>>> attributes = new Dictionary<string, List<Tuple<string, int, int>>>(StringComparer.OrdinalIgnoreCase);
 
-		public Range Range
-		{
-			get
-			{
-				switch (NodeType)
-				{
-					case MarkupNodeType.Text:
-					case MarkupNodeType.Comment:
-						return RangeFull;
-					default:
-						return RangeStart;
-				}
-			}
-		}
 		public Range RangeFull { get { return new Range(Start, End); } }
 		public Range RangeStart { get { return new Range(Start); } }
 		public Range RangeEnd { get { return new Range(End); } }
@@ -148,7 +124,7 @@ namespace NeoEdit.TextEdit
 
 		public override string ToString()
 		{
-			return String.Format("{0} {1}: {2}", NodeType.ToString(), GetAttribute("Tag"), RangeFull.ToString());
+			return String.Format("{0} {1}: {2}", Type.ToString(), GetAttribute("Tag"), RangeFull.ToString());
 		}
 	}
 }

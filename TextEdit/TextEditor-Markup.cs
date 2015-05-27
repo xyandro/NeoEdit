@@ -16,10 +16,10 @@ namespace NeoEdit.TextEdit
 			return MarkupParser.ParseHTML(data, allRange.Start);
 		}
 
-		List<MarkupNode> GetSelectionMarkupNodes(MarkupNode.MarkupNodeType type = MarkupNode.MarkupNodeType.All)
+		List<MarkupNode> GetSelectionMarkupNodes()
 		{
 			var doc = HTMLRoot();
-			var nodes = doc.List(MarkupNode.MarkupNodeList.SelfAndDescendants).Where(node => type.HasFlag(node.NodeType)).ToList();
+			var nodes = doc.List(MarkupNode.MarkupNodeList.SelfAndDescendants).ToList();
 			var location = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
 
 			var result = new List<MarkupNode>();
@@ -33,9 +33,7 @@ namespace NeoEdit.TextEdit
 					var inRangeNodes = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).ToList();
 					var maxDepth = inRangeNodes.Max(node => node.Depth);
 					inRangeNodes = inRangeNodes.Where(node => node.Depth == maxDepth).ToList();
-					found = inRangeNodes.Where(child => child.NodeType == MarkupNode.MarkupNodeType.Element).LastOrDefault();
-					if (found == null)
-						found = inRangeNodes.LastOrDefault();
+					found = inRangeNodes.LastOrDefault();
 				}
 				if (found == null)
 					throw new Exception("No node found");
@@ -46,7 +44,7 @@ namespace NeoEdit.TextEdit
 
 		List<Range> MarkupGetList(MarkupNode node, MarkupNode.MarkupNodeList list, bool first, FindMarkupAttributeDialog.Result findAttr)
 		{
-			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = childNode.Range }).ToList();
+			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = childNode.RangeStart }).ToList();
 
 			if (findAttr != null)
 				childNodes = childNodes.Where(childNode => childNode.Node.HasAttribute(findAttr.Attribute, findAttr.Regex)).ToList();
@@ -85,7 +83,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Markup_ToggleTagPosition(bool shiftDown)
 		{
-			var nodes = GetSelectionMarkupNodes(~MarkupNode.MarkupNodeType.Text);
+			var nodes = GetSelectionMarkupNodes();
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All(b => b);
 			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
@@ -110,11 +108,11 @@ namespace NeoEdit.TextEdit
 		internal void Command_Markup_NextPrev(bool next, bool shiftDown)
 		{
 			var offset = next ? 1 : -1;
-			var nodes = GetSelectionMarkupNodes(~MarkupNode.MarkupNodeType.Text);
+			var nodes = GetSelectionMarkupNodes();
 			Selections.Replace(nodes.Select((node, idx) =>
 			{
 				var range = Selections[idx];
-				var children = node.Parent.List(MarkupNode.MarkupNodeList.Children).Where(child => child.NodeType != MarkupNode.MarkupNodeType.Text).ToList();
+				var children = node.Parent.List(MarkupNode.MarkupNodeList.Children).ToList();
 				if (!children.Any())
 					return range;
 				var index = children.IndexOf(node);

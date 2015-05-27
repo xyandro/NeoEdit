@@ -6,6 +6,10 @@ namespace NeoEdit.TextEdit
 {
 	static class MarkupParser
 	{
+		const string Element = "Element";
+		const string Comment = "Comment";
+		const string Text = "Text";
+
 		static MarkupNode GetCommentNode(string str, ref int location)
 		{
 			if ((location >= str.Length - 7) || (str.Substring(location, 4) != "<!--"))
@@ -15,7 +19,7 @@ namespace NeoEdit.TextEdit
 			if (endComment == 2) // IndexOf returned -1
 				endComment = str.Length;
 			location = endComment;
-			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, Start = startComment, End = endComment, SelfClosing = true };
+			return new MarkupNode { Type = Comment, Start = startComment, End = endComment, SelfClosing = true };
 		}
 
 		enum OpenCloseStep
@@ -37,7 +41,7 @@ namespace NeoEdit.TextEdit
 			var step = OpenCloseStep.Start;
 			int itemStart = 0;
 			string itemName = null;
-			var result = new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Element, Start = location };
+			var result = new MarkupNode { Type = Element, Start = location };
 			var inQuote = (char)0;
 
 			while (true)
@@ -131,7 +135,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			if (result.GetAttribute("Tag") == "!doctype")
-				return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Comment, Start = result.Start, End = location };
+				return new MarkupNode { Type = Comment, Start = result.Start, End = location };
 
 			result.End = location;
 			return result;
@@ -149,7 +153,7 @@ namespace NeoEdit.TextEdit
 				++startLocation;
 			while ((endLocation > startLocation) && (Char.IsWhiteSpace(str[endLocation - 1])))
 				--endLocation;
-			return new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Text, Start = startLocation, End = endLocation, SelfClosing = true };
+			return new MarkupNode { Type = Text, Start = startLocation, End = endLocation, SelfClosing = true };
 		}
 
 		static readonly HashSet<string> voidElements = new HashSet<string> { "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
@@ -157,7 +161,7 @@ namespace NeoEdit.TextEdit
 
 		static public MarkupNode ParseHTML(string str, int location)
 		{
-			var doc = new MarkupNode { NodeType = MarkupNode.MarkupNodeType.Element, Start = location };
+			var doc = new MarkupNode { Type = Element, Start = location };
 			doc.AddAttribute("Tag", "DOC", 0, 0);
 			var stack = new Stack<Tuple<string, MarkupNode>>();
 			stack.Push(Tuple.Create("DOC", doc));
@@ -172,7 +176,7 @@ namespace NeoEdit.TextEdit
 				if (node == null)
 					throw new ArgumentException("Failed to parse HTML");
 
-				if ((node.NodeType == MarkupNode.MarkupNodeType.Text) && (node.Start == node.End))
+				if ((node.Type == Text) && (node.Start == node.End))
 					continue;
 
 				if (node.SelfClosing)
