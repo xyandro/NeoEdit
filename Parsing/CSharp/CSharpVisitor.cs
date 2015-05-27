@@ -11,47 +11,37 @@ namespace NeoEdit.Parsing
 		public CSharpVisitor(string input)
 		{
 			this.input = input;
-			stack.Push(Root = new ParserNode { Type = "Root" });
+			stack.Push(Root = new ParserNode("Root"));
 		}
 
-		ParserNode CreateNode(string type, ParserRuleContext context)
+		public override object VisitType_declaration(CSharp4Parser.Type_declarationContext ctx)
 		{
-			var node = new ParserNode { Type = type, Parent = stack.Peek() };
-			node.LocationContext = context;
-			return node;
-		}
-
-		public override object VisitType_declaration(CSharp4Parser.Type_declarationContext context)
-		{
-			var classDef = context.class_definition();
-			if (classDef == null)
+			var classDefCtx = ctx.class_definition();
+			if (classDefCtx == null)
 				return null;
 
-			var node = CreateNode("Class", context);
-			node.AddAttribute("Name", input, classDef.identifier());
-
-			stack.Push(node);
-			base.VisitType_declaration(context);
+			stack.Push(new ParserNode("Class", stack.Peek()) { { ParserNode.LocationStr, ctx }, { "Name", input, classDefCtx.identifier() } });
+			base.VisitType_declaration(ctx);
 			stack.Pop();
 
 			return null;
 		}
 
 		ParserNode methodNode = null;
-		public override object VisitClass_member_declaration(CSharp4Parser.Class_member_declarationContext context)
+		public override object VisitClass_member_declaration(CSharp4Parser.Class_member_declarationContext ctx)
 		{
-			methodNode = CreateNode("Method", context);
-			return base.VisitClass_member_declaration(context);
+			methodNode = new ParserNode("Method", stack.Peek()) { { ParserNode.LocationStr, ctx } };
+			return base.VisitClass_member_declaration(ctx);
 		}
 
-		public override object VisitMethod_member_name2(CSharp4Parser.Method_member_name2Context context)
+		public override object VisitMethod_member_name2(CSharp4Parser.Method_member_name2Context ctx)
 		{
 			if (methodNode != null)
 			{
-				methodNode.AddAttribute("Name", input, context);
+				methodNode.Add("Name", input, ctx);
 				methodNode = null;
 			}
-			return base.VisitMethod_member_name2(context);
+			return base.VisitMethod_member_name2(ctx);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,13 +8,27 @@ using Antlr4.Runtime;
 
 namespace NeoEdit.Parsing
 {
-	public class ParserNode
+	public class ParserNode : IEnumerable
 	{
+		public const string TypeStr = "Type";
+		public const string LocationStr = "Location";
+
 		public class ParserNodeAttribute
 		{
-			public string Data { get; internal set; }
-			public int Start { get; internal set; }
-			public int End { get; internal set; }
+			public string Text { get; internal set; }
+			public int? Start { get; internal set; }
+			public int? End { get; internal set; }
+		}
+
+		public ParserNode(string type, ParserNode parent = null)
+		{
+			Type = type;
+			Parent = parent;
+		}
+
+		public IEnumerator GetEnumerator()
+		{
+			return null;
 		}
 
 		ParserNode parent;
@@ -22,47 +37,33 @@ namespace NeoEdit.Parsing
 			get { return parent; }
 			internal set
 			{
-				if (value == null)
-					return;
+				if (parent != null)
+				{
+					parent.children.Remove(this);
+					parent = null;
+					Depth = 0;
+				}
 
-				parent = value;
-				Depth = value.Depth + 1;
-				parent.children.Add(this);
+				if (value != null)
+				{
+					parent = value;
+					Depth = parent.Depth + 1;
+					parent.children.Add(this);
+				}
 			}
 		}
 
-		public ParserNodeAttribute Location { get { return GetAttribute("Location"); } }
-		public int LocationStart
+		public int Start
 		{
-			get
-			{
-				var location = GetAttribute("Location");
-				if (location == null)
-					return -1;
-				return location.Start;
-			}
-			set
-			{
-				SetAttribute("Location", null, value, LocationEnd);
-			}
+			get { return GetAttr(LocationStr).Start.Value; }
+			set { Set(LocationStr, null, value, End); }
 		}
-		public int LocationEnd
+		public int End
 		{
-			get
-			{
-				var location = GetAttribute("Location");
-				if (location == null)
-					return -1;
-				return location.End;
-			}
-			set
-			{
-				SetAttribute("Location", null, LocationStart, value);
-			}
+			get { return GetAttr(LocationStr).End.Value; }
+			set { Set(LocationStr, null, Start, value); }
 		}
-		internal ParserRuleContext LocationContext { set { AddAttribute("Location", null, value); } }
-		public string Type { get { return GetAttributeText("Type"); } internal set { AddAttribute("Type", value, -1, -1); } }
-
+		public string Type { get { return GetAttrText(TypeStr); } internal set { Set(TypeStr, value); } }
 		public int Depth { get; set; }
 
 		readonly List<ParserNode> children = new List<ParserNode>();
@@ -102,38 +103,19 @@ namespace NeoEdit.Parsing
 			}
 		}
 
-		public List<string> GetAttributeNames()
+		public List<string> GetAttrNames()
 		{
 			return attributes.Keys.ToList();
 		}
 
-		public string GetAttributeText(string name)
-		{
-			if ((!attributes.ContainsKey(name)) || (attributes[name].Count == 0))
-				return null;
-			return attributes[name][0].Data;
-		}
-
-		public IEnumerable<string> GetAttributesText(string name, bool firstOnly = false)
-		{
-			if (!attributes.ContainsKey(name))
-				yield break;
-			foreach (var attr in attributes[name])
-			{
-				yield return attr.Data;
-				if (firstOnly)
-					break;
-			}
-		}
-
-		public ParserNodeAttribute GetAttribute(string name)
+		public ParserNodeAttribute GetAttr(string name)
 		{
 			if (!attributes.ContainsKey(name))
 				return null;
 			return attributes[name].FirstOrDefault();
 		}
 
-		public IEnumerable<ParserNodeAttribute> GetAttributes(string name, bool firstOnly = false)
+		public IEnumerable<ParserNodeAttribute> GetAttrs(string name, bool firstOnly = false)
 		{
 			if (!attributes.ContainsKey(name))
 				yield break;
@@ -145,39 +127,92 @@ namespace NeoEdit.Parsing
 			}
 		}
 
-		public void SetAttribute(string name, string value, int start, int end)
+		public string GetAttrText(string name)
 		{
-			attributes[name] = new List<ParserNodeAttribute> { new ParserNodeAttribute { Data = value, Start = start, End = end } };
+			var attr = GetAttr(name);
+			return attr == null ? null : attr.Text;
 		}
 
-		public void AddAttribute(string name, string value, int start, int end)
+		public IEnumerable<string> GetAttrsText(string name, bool firstOnly = false)
 		{
-			if (!attributes.ContainsKey(name))
-				attributes[name] = new List<ParserNodeAttribute>();
-			attributes[name].Add(new ParserNodeAttribute { Data = value, Start = start, End = end });
+			return GetAttrs(name, firstOnly).Select(attr => attr.Text);
 		}
 
-		internal void AddAttribute(string name, string input, ParserRuleContext ctx)
+		public void SetAttr(string name, string value, int? start, int? end)
+		{
+			attributes[name] = new List<ParserNodeAttribute> { new ParserNodeAttribute { Text = value, Start = start, End = end } };
+		}
+
+		public void Set(string name, string value)
+		{
+			SetAttr(name, value, null, null);
+		}
+
+		public void Set(string name, string value, int start, int end)
+		{
+			SetAttr(name, value, start, end);
+		}
+
+		internal void Set(string name, ParserRuleContext ctx)
 		{
 			int start, end;
 			ctx.GetBounds(out start, out end);
-			var data = ctx.GetText(input);
-			AddAttribute(name, data, start, end);
+			SetAttr(name, null, start, end);
 		}
 
-		public bool HasAttribute(string name, Regex regex)
+		internal void Set(string name, string input, ParserRuleContext ctx)
+		{
+			var text = ctx.GetText(input);
+			int start, end;
+			ctx.GetBounds(out start, out end);
+			SetAttr(name, text, start, end);
+		}
+
+		void AddAttr(string name, string value, int? start, int? end)
+		{
+			if (!attributes.ContainsKey(name))
+				attributes[name] = new List<ParserNodeAttribute>();
+			attributes[name].Add(new ParserNodeAttribute { Text = value, Start = start, End = end });
+		}
+
+		public void Add(string name, string value)
+		{
+			AddAttr(name, value, null, null);
+		}
+
+		public void Add(string name, string value, int start, int end)
+		{
+			AddAttr(name, value, start, end);
+		}
+
+		internal void Add(string name, ParserRuleContext ctx)
+		{
+			int start, end;
+			ctx.GetBounds(out start, out end);
+			AddAttr(name, null, start, end);
+		}
+
+		internal void Add(string name, string input, ParserRuleContext ctx)
+		{
+			var text = ctx.GetText(input);
+			int start, end;
+			ctx.GetBounds(out start, out end);
+			AddAttr(name, text, start, end);
+		}
+
+		public bool HasAttr(string name, Regex regex)
 		{
 			if (!attributes.ContainsKey(name))
 				return false;
-			return attributes[name].Any(attr => regex.IsMatch(attr.Data));
+			return attributes[name].Any(attr => regex.IsMatch(attr.Text));
 		}
 
 		List<string> rPrint()
 		{
 			var result = new List<string>();
 
-			var attrs = new List<string> { Type.ToString() };
-			attrs.AddRange(attributes.Select(attr => String.Format("{0}: {1}", attr.Key, String.Join(";", attr.Value.Select(attrValue => String.Format("{0}-{1} ({2})", attrValue.Start, attrValue.End, (attrValue.Data ?? "").Replace("\r", "").Replace("\n", "")))))));
+			var attrs = new List<string> { };
+			attrs.AddRange(attributes.Select(attr => String.Format("{0}: {1}", attr.Key, String.Join(";", attr.Value.Select(attrValue => String.Format("{0}-{1} ({2})", attrValue.Start, attrValue.End, (attrValue.Text ?? "").Replace("\r", "").Replace("\n", "")))))));
 			result.Add(String.Join(", ", attrs));
 
 			result.AddRange(children.SelectMany(child => child.rPrint()).Select(str => String.Format(" {0}", str)));

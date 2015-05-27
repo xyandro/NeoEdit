@@ -13,15 +13,13 @@ namespace NeoEdit.Parsing
 		readonly string input;
 		public GenericListener(string input)
 		{
-			stack.Push(new ParserNode { Type = "Root" });
+			stack.Push(new ParserNode("Root"));
 			this.input = input;
 		}
 
 		public void EnterEveryRule(ParserRuleContext ctx)
 		{
-			var node = new ParserNode { Type = ctx.GetType().ToString(), Parent = stack.Peek() };
-			node.AddAttribute("Text", input, ctx);
-			stack.Push(node);
+			stack.Push(new ParserNode(ctx.GetType().ToString(), stack.Peek()) { { "Text", input, ctx } });
 		}
 
 		public void ExitEveryRule(ParserRuleContext ctx)
