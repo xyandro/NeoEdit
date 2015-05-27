@@ -27,8 +27,9 @@ namespace NeoEdit.TextEdit
 		List<ParserNode> GetSelectionNodes()
 		{
 			var doc = RootNode();
-			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAndDescendants).Where(node => node.HasLocation).ToList();
+			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAttributesAndDescendants).Where(node => node.HasLocation).ToList();
 			var location = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
+			location[BeginOffset()] = doc;
 
 			var result = new List<ParserNode>();
 			foreach (var range in Selections)
@@ -104,9 +105,9 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(GetSelectionNodes().Select((node, index) => MoveCursor(Selections[index], (node.Parent ?? node).Start, shiftDown)).ToList());
 		}
 
-		internal FindContentAttributeDialog.Result Command_Content_FindByAttribute_Dialog()
+		internal FindContentAttributeDialog.Result Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType list)
 		{
-			return FindContentAttributeDialog.Run(UIHelper.FindParent<Window>(this));
+			return FindContentAttributeDialog.Run(UIHelper.FindParent<Window>(this), GetSelectionNodes().SelectMany(node => node.List(list)).Distinct().ToList());
 		}
 
 		internal void Command_Content_List(ParserNode.ParserNodeListType list, bool first = false, FindContentAttributeDialog.Result findAttr = null)
@@ -171,7 +172,7 @@ namespace NeoEdit.TextEdit
 
 		internal SelectContentAttributeDialog.Result Command_Content_Select_Attribute_Dialog()
 		{
-			return SelectContentAttributeDialog.Run(UIHelper.FindParent<Window>(this));
+			return SelectContentAttributeDialog.Run(UIHelper.FindParent<Window>(this), GetSelectionNodes());
 		}
 
 		internal void Command_Content_Select_Attribute(SelectContentAttributeDialog.Result result)

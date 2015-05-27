@@ -17,7 +17,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Attribute:" Target="{Binding ElementName=attribute}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Name="attribute" Width="200" HorizontalAlignment="Left" Text="{Binding Attribute, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<ComboBox Grid.Row="0" Grid.Column="1" Name="attribute" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Attributes, ElementName=self}" SelectedItem="{Binding Attribute, ElementName=self}"/>
 
 		<CheckBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Content="_First only" IsChecked="{Binding FirstOnly, ElementName=self}"/>
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace NeoEdit.Parsing
 {
@@ -33,6 +35,16 @@ namespace NeoEdit.Parsing
 				case ".cs": return ParserType.CSharp;
 				default: return ParserType.None;
 			}
+		}
+
+		static public List<string> GetAvailableAttrs(List<ParserNode> nodes)
+		{
+			return nodes.SelectMany(node => node.GetAttrTypes()).Distinct().OrderBy(str => str).ToList();
+		}
+
+		static public List<string> GetAvailableValues(List<ParserNode> nodes, string type)
+		{
+			return nodes.SelectMany(node => node.GetAttrsText(type)).Distinct().OrderBy(str => str).ToList();
 		}
 	}
 }

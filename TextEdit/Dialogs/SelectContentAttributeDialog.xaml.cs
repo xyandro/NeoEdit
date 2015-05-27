@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using NeoEdit.GUI.Controls;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -12,6 +15,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
+		public List<string> Attributes { get { return UIHelper<SelectContentAttributeDialog>.GetPropValue<List<string>>(this); } set { UIHelper<SelectContentAttributeDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public string Attribute { get { return UIHelper<SelectContentAttributeDialog>.GetPropValue<string>(this); } set { UIHelper<SelectContentAttributeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool FirstOnly { get { return UIHelper<SelectContentAttributeDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectContentAttributeDialog>.SetPropValue(this, value); } }
@@ -21,10 +26,11 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<SelectContentAttributeDialog>.Register();
 		}
 
-		SelectContentAttributeDialog()
+		SelectContentAttributeDialog(List<ParserNode> nodes)
 		{
 			InitializeComponent();
-			Attribute = "Tag";
+			Attributes = Parser.GetAvailableAttrs(nodes);
+			Attribute = Attributes.FirstOrDefault();
 		}
 
 		Result result;
@@ -34,9 +40,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static Result Run(Window parent, List<ParserNode> nodes)
 		{
-			var dialog = new SelectContentAttributeDialog { Owner = parent };
+			var dialog = new SelectContentAttributeDialog(nodes) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

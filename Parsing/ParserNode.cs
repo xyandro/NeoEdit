@@ -85,7 +85,9 @@ namespace NeoEdit.Parsing
 			Children = 8,
 			Descendants = Children | 16,
 			SelfAndChildren = Self | Children,
+			SelfAttributesAndChildren = Self | Attributes | Children,
 			SelfAndDescendants = Self | Descendants,
+			SelfAttributesAndDescendants = Self | Attributes | Descendants,
 			SelfAndParents = Self | Parents,
 		}
 

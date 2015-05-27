@@ -458,10 +458,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA1: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
-				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_FindByAttribute_Dialog(); break;
-				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(); break;
-				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(); break;
-				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(); break;
+				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Parents); break;
+				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Children); break;
+				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Descendants); break;
+				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Self); break;
 				case TextEditCommand.Content_Select_Attribute: dialogResult = Command_Content_Select_Attribute_Dialog(); break;
 				case TextEditCommand.Insert_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
 				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.GUI.Controls;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -14,9 +17,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
+		public List<string> Attributes { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<List<string>>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public string Attribute { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<string>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Text { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<string>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
+		public List<string> Values { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<List<string>>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public string Value { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<string>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool AllContents { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<bool>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -29,21 +36,31 @@ namespace NeoEdit.TextEdit.Dialogs
 		static FindContentAttributeDialog()
 		{
 			UIHelper<FindContentAttributeDialog>.Register();
+			UIHelper<FindContentAttributeDialog>.AddCallback(a => a.Attribute, (obj, o, n) => obj.UpdateAttrValues());
 		}
 
-		FindContentAttributeDialog()
+		readonly List<ParserNode> nodes;
+		FindContentAttributeDialog(List<ParserNode> nodes)
 		{
 			InitializeComponent();
-			Attribute = "Tag";
+			this.nodes = nodes;
+			Attributes = Parser.GetAvailableAttrs(nodes);
+			Attribute = Attributes.FirstOrDefault();
+		}
+
+		void UpdateAttrValues()
+		{
+			Values = Parser.GetAvailableValues(nodes, Attribute);
+			Value = Values.FirstOrDefault();
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(Text))
+			if (String.IsNullOrWhiteSpace(Value))
 				return;
 
-			var text = Text;
+			var text = Value;
 			if (!IsRegex)
 				text = Regex.Escape(text);
 			if (WholeWords)
@@ -58,9 +75,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static Result Run(Window parent, List<ParserNode> nodes)
 		{
-			var dialog = new FindContentAttributeDialog { Owner = parent };
+			var dialog = new FindContentAttributeDialog(nodes) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

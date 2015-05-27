@@ -6,7 +6,7 @@ namespace NeoEdit.Parsing
 {
 	class HTML
 	{
-		const string Name = "Name";
+		const string Tag = "Tag";
 		const string Element = "Element";
 		const string Comment = "Comment";
 		const string Text = "Text";
@@ -65,7 +65,7 @@ namespace NeoEdit.Parsing
 					if ((location >= input.Length) || (input[location] != '<'))
 						return null;
 					++location;
-					itemName = Name;
+					itemName = Tag;
 					step = OpenCloseStep.BeforeAttrValueWS;
 				}
 				else if ((step == OpenCloseStep.BeforeAttrNameWS) || (step == OpenCloseStep.AfterAttrNameWS) || (step == OpenCloseStep.BeforeAttrValueWS))
@@ -148,7 +148,7 @@ namespace NeoEdit.Parsing
 				}
 			}
 
-			if (result.GetAttrText(Name) == "!doctype")
+			if (result.GetAttrText(Tag) == "!doctype")
 				return new ParserNode { Type = Comment, Start = result.Start, End = location };
 
 			result.End = location;
@@ -179,15 +179,15 @@ namespace NeoEdit.Parsing
 		{
 			if ((input.Length > 1) && (input[0] == '\ufeff'))
 				++location;
-			var doc = new ParserNode { Type = Element, Start = location, End = location };
-			doc.AddAttr(Name, Doc);
+			var doc = new ParserNode { Type = Element, Start = location, End = input.Length};
+			doc.AddAttr(Tag, Doc);
 			var stack = new Stack<Tuple<string, ParserNode>>();
 			stack.Push(Tuple.Create(Doc, doc));
 			while (location < input.Length)
 			{
 				var topStack = stack.Peek().Item2;
 
-				var textTag = topStack.GetAttrText(Name);
+				var textTag = topStack.GetAttrText(Tag);
 				var rawName = rawTextElements.Contains(textTag) ? textTag : null;
 
 				var node = GetCommentNode() ?? GetOpenCloseNode() ?? GetTextNode(rawName);
@@ -203,19 +203,19 @@ namespace NeoEdit.Parsing
 					continue;
 				}
 
-				var name = node.GetAttrText(Name);
-				if (!name.StartsWith("/"))
+				var tag = node.GetAttrText(Tag);
+				if (!tag.StartsWith("/"))
 				{
 					node.Parent = topStack;
-					if (voidElements.Contains(name))
+					if (voidElements.Contains(tag))
 						node.End = location;
 					else
-						stack.Push(Tuple.Create(name, node));
+						stack.Push(Tuple.Create(tag, node));
 					continue;
 				}
 
-				name = name.Substring(1);
-				var toRemove = stack.FirstOrDefault(item => (item.Item1 == name) && (item.Item2 != doc));
+				tag = tag.Substring(1);
+				var toRemove = stack.FirstOrDefault(item => (item.Item1 == tag) && (item.Item2 != doc));
 				if (toRemove != null)
 				{
 					while (true)

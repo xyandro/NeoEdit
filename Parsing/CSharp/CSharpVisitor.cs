@@ -14,7 +14,7 @@ namespace NeoEdit.Parsing
 		public CSharpVisitor(string input)
 		{
 			this.input = input;
-			stack.Push(Root = new ParserNode { Type = RootStr });
+			stack.Push(Root = new ParserNode { Type = RootStr, Start = 0, End = input.Length });
 		}
 
 		public override object VisitType_declaration(CSharp4Parser.Type_declarationContext ctx)
