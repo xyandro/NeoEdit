@@ -143,10 +143,17 @@ namespace NeoEdit.TextEdit
 			var nodes = GetSelectionNodes();
 			ContentReplaceSelections(nodes.Select(node =>
 			{
+				if (node.Parent == null)
+					return node;
+
 				var children = node.Parent.List(ParserNode.ParserNodeListType.Children | ParserNode.ParserNodeListType.Attributes).Where(child => child.HasLocation).ToList();
 				if (!children.Any())
 					return node;
+
 				var index = children.IndexOf(node);
+				if (index == -1)
+					return node;
+
 				var found = index;
 				do
 				{

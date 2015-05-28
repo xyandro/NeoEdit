@@ -200,7 +200,7 @@ namespace NeoEdit.Parsing
 
 		void AddAttrNode(string type, string value, int? start, int? end)
 		{
-			children.Add(new ParserNode(true) { Type = type, Text = value, start = start, end = end });
+			new ParserNode(true) { Type = type, Parent = this, Text = value, start = start, end = end };
 		}
 
 		public void AddAttr(string type, string value)
