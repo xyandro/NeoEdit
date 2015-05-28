@@ -477,9 +477,16 @@ namespace NeoEdit.TextEdit
 			return dialogResult != null;
 		}
 
+		static HashSet<string> drives = new HashSet<string>(DriveInfo.GetDrives().Select(drive => drive.Name));
 		bool StringsAreFiles(List<string> strs)
 		{
-			return strs.All(str => str.IndexOfAny(Path.GetInvalidPathChars()) == -1) && strs.All(str => FileOrDirectoryExists(str));
+			if (strs.Any(str => str.IndexOfAny(Path.GetInvalidPathChars()) != -1))
+				return false;
+			if (strs.Any(str => !drives.Any(drive => str.StartsWith(drive))))
+				return false;
+			if (strs.Any(str => !FileOrDirectoryExists(str)))
+				return false;
+			return true;
 		}
 
 		class PreviousStruct
