@@ -14,6 +14,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			public string Attribute { get; set; }
 			public Regex Regex { get; set; }
+			public bool Invert { get; set; }
 		}
 
 		[DepProp]
@@ -32,6 +33,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		public bool MatchCase { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<bool>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsRegex { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<bool>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool Invert { get { return UIHelper<FindContentAttributeDialog>.GetPropValue<bool>(this); } set { UIHelper<FindContentAttributeDialog>.SetPropValue(this, value); } }
 
 		static FindContentAttributeDialog()
 		{
@@ -57,9 +60,6 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(Value))
-				return;
-
 			var text = Value;
 			if (!IsRegex)
 				text = Regex.Escape(text);
@@ -71,7 +71,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
 
-			result = new Result { Attribute = Attribute, Regex = new Regex(text, options) };
+			result = new Result { Attribute = Attribute, Regex = new Regex(text, options), Invert = Invert };
 			DialogResult = true;
 		}
 

@@ -61,7 +61,7 @@ namespace NeoEdit.TextEdit
 			var nodes = node.List(list).Where(child => child.HasLocation).ToList();
 
 			if (findAttr != null)
-				nodes = nodes.Where(child => child.HasAttr(findAttr.Attribute, findAttr.Regex)).ToList();
+				nodes = nodes.Where(child => child.HasAttr(findAttr.Attribute, findAttr.Regex, findAttr.Invert)).ToList();
 
 			if (first)
 				nodes = nodes.Take(1).ToList();
@@ -171,7 +171,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Content_Select_ByAttribute(FindContentAttributeDialog.Result result)
 		{
-			ContentReplaceSelections(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex)).ToList());
+			ContentReplaceSelections(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex, result.Invert)).ToList());
 		}
 
 		internal void Command_Content_Select_TopMost()

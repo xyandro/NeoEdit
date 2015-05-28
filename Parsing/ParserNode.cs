@@ -233,9 +233,12 @@ namespace NeoEdit.Parsing
 			AddAttrNode(type, text, start, end);
 		}
 
-		public bool HasAttr(string type, Regex regex)
+		public bool HasAttr(string type, Regex regex, bool invert)
 		{
-			return GetAttrs(type).Any(attr => regex.IsMatch(attr.Text));
+			var attrs = GetAttrs(type);
+			if (!attrs.Any())
+				return invert;
+			return attrs.Any(attr => regex.IsMatch(attr.Text) != invert);
 		}
 
 		List<string> rPrint()

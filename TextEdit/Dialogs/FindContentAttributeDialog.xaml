@@ -16,6 +16,7 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -26,15 +27,13 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="Element name:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
 		<ComboBox Grid.Row="1" Grid.Column="1" Name="text" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Values, ElementName=self}" SelectedItem="{Binding Value, ElementName=self}" IsEditable="True"/>
 
-		<CheckBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Content="_All contents" IsChecked="{Binding AllContents, ElementName=self}"/>
+		<CheckBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Content="_All contents" IsChecked="{Binding AllContents, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Content="_Invert" IsChecked="{Binding Invert, ElementName=self}" Focusable="False"/>
 
-		<CheckBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}"/>
-
-		<CheckBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}"/>
-
-		<CheckBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}"/>
-
-		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
