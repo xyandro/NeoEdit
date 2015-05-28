@@ -241,21 +241,22 @@ namespace NeoEdit.Parsing
 			return attrs.Any(attr => regex.IsMatch(attr.Text) != invert);
 		}
 
-		List<string> rPrint()
+		List<string> Print()
 		{
-			var result = new List<string> { String.Format("{0}: {1}: {2}-{3} ({4})", IsAttr ? "Attr" : "Child", Type, start, end, Text) };
-			result.AddRange(children.SelectMany(child => child.rPrint()).Select(str => String.Format(" {0}", str)));
+			var result = new List<string> { String.Format("[{0}-{1}: {2}", start, end, String.Join(", ", children.Where(child => child.IsAttr).Select(child => (String.Format("{0}-{1} {2} ({3})", child.start, child.end, child.type, (child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("[", "OPENBRACKET").Replace("]", "CLOSEBRACKET")))))) };
+			result.AddRange(children.Where(child => !child.IsAttr).SelectMany(child => child.Print()).Select(str => String.Format(" {0}", str)));
+			result[result.Count - 1] += "]";
 			return result;
 		}
 
-		internal string Print()
+		public override string ToString()
 		{
-			return String.Join("", rPrint().Select(str => String.Format("{0}{1}", str, Environment.NewLine)));
+			return String.Join("", Print().Select(str => String.Format("{0}{1}", str, Environment.NewLine)));
 		}
 
 		internal void Save(string outputFile)
 		{
-			File.WriteAllText(outputFile, Print());
+			File.WriteAllText(outputFile, ToString());
 		}
 	}
 }
