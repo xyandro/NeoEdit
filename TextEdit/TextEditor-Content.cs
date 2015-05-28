@@ -28,15 +28,17 @@ namespace NeoEdit.TextEdit
 		{
 			var doc = RootNode();
 			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAttributesAndDescendants).Where(node => node.HasLocation).ToList();
-			var location = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
-			location[BeginOffset()] = doc;
+			var fullLocation = nodes.GroupBy(node => node.Start).ToDictionary(startGroup => startGroup.Key, group => group.GroupBy(node => node.End).ToDictionary(endGroup => endGroup.Key, endGroup => endGroup.Last()));
+			var startLocation = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
 
 			var result = new List<ParserNode>();
 			foreach (var range in Selections)
 			{
 				ParserNode found = null;
-				if (location.ContainsKey(range.Cursor))
-					found = location[range.Cursor];
+				if ((fullLocation.ContainsKey(range.Start)) && (fullLocation[range.Start].ContainsKey(range.End)))
+					found = fullLocation[range.Start][range.End];
+				else if (startLocation.ContainsKey(range.Cursor))
+					found = startLocation[range.Cursor];
 				else
 				{
 					var inRangeNodes = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).ToList();
@@ -54,19 +56,37 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		List<Range> ContentGetList(ParserNode node, ParserNode.ParserNodeListType list, bool first, FindContentAttributeDialog.Result findAttr)
+		List<ParserNode> ContentGetList(ParserNode node, ParserNode.ParserNodeListType list, bool first, FindContentAttributeDialog.Result findAttr)
 		{
-			var childNodes = node.List(list).Select(childNode => new { Node = childNode, Range = new Range(childNode.Start) }).ToList();
+			var nodes = node.List(list).ToList();
 
 			if (findAttr != null)
-				childNodes = childNodes.Where(childNode => childNode.Node.HasAttr(findAttr.Attribute, findAttr.Regex)).ToList();
+				nodes = nodes.Where(childNode => childNode.HasAttr(findAttr.Attribute, findAttr.Regex)).ToList();
 
 			if (first)
-				childNodes = childNodes.Take(1).ToList();
+				nodes = nodes.Take(1).ToList();
 
-			var ranges = childNodes.Select(childNode => childNode.Range).ToList();
+			return nodes;
+		}
 
-			return ranges;
+		void ContentReplaceSelections(List<ParserNode> nodes)
+		{
+			nodes = nodes.Distinct().OrderBy(node => node.Start).ToList();
+			var overlap = false;
+			ParserNode last = null;
+			foreach (var node in nodes)
+			{
+				if (last != null)
+				{
+					if (node.Start < last.End)
+					{
+						overlap = true;
+						break;
+					}
+				}
+				last = node;
+			}
+			Selections.Replace(nodes.Select(node => new Range(node.Start, overlap ? node.Start : node.End)).ToList());
 		}
 
 		string CommentMarkup(string str)
@@ -100,9 +120,9 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
 
-		internal void Command_Content_Parent(bool shiftDown)
+		internal void Command_Content_Parent()
 		{
-			Selections.Replace(GetSelectionNodes().Select((node, index) => MoveCursor(Selections[index], (node.Parent ?? node).Start, shiftDown)).ToList());
+			ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node).Distinct().ToList());
 		}
 
 		internal FindContentAttributeDialog.Result Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType list)
@@ -112,34 +132,39 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Content_List(ParserNode.ParserNodeListType list, bool first = false, FindContentAttributeDialog.Result findAttr = null)
 		{
-			var newSels = GetSelectionNodes().SelectMany(node => ContentGetList(node, list, first, findAttr)).ToList();
-			if (newSels.Any())
-				Selections.Replace(newSels);
+			var nodes = GetSelectionNodes().SelectMany(node => ContentGetList(node, list, first, findAttr)).ToList();
+			if (nodes.Any())
+				ContentReplaceSelections(nodes);
 		}
 
-		internal void Command_Content_NextPrev(bool next, bool shiftDown)
+		internal void Command_Content_NextPrev(bool next)
 		{
 			var offset = next ? 1 : -1;
 			var nodes = GetSelectionNodes();
-			Selections.Replace(nodes.Select((node, idx) =>
+			ContentReplaceSelections(nodes.Select(node =>
 			{
-				var range = Selections[idx];
-				var children = node.Parent.List(ParserNode.ParserNodeListType.Children).ToList();
+				var children = node.Parent.List(ParserNode.ParserNodeListType.Children | ParserNode.ParserNodeListType.Attributes).Where(child => child.HasLocation).ToList();
 				if (!children.Any())
-					return range;
+					return node;
 				var index = children.IndexOf(node);
-				index += offset;
-				if (index < 0)
-					index = children.Count - 1;
-				if (index >= children.Count)
-					index = 0;
-				return MoveCursor(range, children[index].Start, shiftDown);
+				var found = index;
+				do
+				{
+					found += offset;
+					if (found < 0)
+						found = children.Count - 1;
+					if (found >= children.Count)
+						found = 0;
+					if (children[found].IsAttr == node.IsAttr)
+						break;
+				} while (index != found);
+				return children[found];
 			}).ToList());
 		}
 
 		internal void Command_Content_Select_ByAttribute(FindContentAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex)).Select(node => new Range(node.Start)).ToList());
+			ContentReplaceSelections(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex)).ToList());
 		}
 
 		internal void Command_Content_Select_TopMost()
@@ -177,7 +202,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Content_Select_Attribute(SelectContentAttributeDialog.Result result)
 		{
-			Selections.Replace(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly).Select(attr => new Range(attr.Start))).ToList());
+			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)).ToList());
 		}
 	}
 }

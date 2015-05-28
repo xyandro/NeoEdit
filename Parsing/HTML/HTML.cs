@@ -223,7 +223,10 @@ namespace NeoEdit.Parsing
 						var item = stack.Pop();
 						item.Item2.End = node.Start;
 						if (item == toRemove)
+						{
+							item.Item2.End = node.End;
 							break;
+						}
 					}
 				}
 			}

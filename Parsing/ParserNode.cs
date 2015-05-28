@@ -235,7 +235,7 @@ namespace NeoEdit.Parsing
 
 		public bool HasAttr(string type, Regex regex)
 		{
-			return List(ParserNodeListType.Attributes).Any(attr => regex.IsMatch(attr.Text));
+			return GetAttrs(type).Any(attr => regex.IsMatch(attr.Text));
 		}
 
 		List<string> rPrint()

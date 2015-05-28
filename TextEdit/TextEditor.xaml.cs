@@ -620,7 +620,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
 				case TextEditCommand.Content_TogglePosition: Command_Content_TogglePosition(shiftDown); break;
-				case TextEditCommand.Content_Parent: Command_Content_Parent(shiftDown); break;
+				case TextEditCommand.Content_Parent: Command_Content_Parent(); break;
 				case TextEditCommand.Content_Ancestor: Command_Content_List(ParserNode.ParserNodeListType.Parents, findAttr: dialogResult as FindContentAttributeDialog.Result); break;
 				case TextEditCommand.Content_Children_Children: Command_Content_List(ParserNode.ParserNodeListType.Children); break;
 				case TextEditCommand.Content_Children_SelfAndChildren: Command_Content_List(ParserNode.ParserNodeListType.SelfAndChildren); break;
@@ -630,8 +630,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Descendants_SelfAndDescendants: Command_Content_List(ParserNode.ParserNodeListType.SelfAndDescendants); break;
 				case TextEditCommand.Content_Descendants_First: Command_Content_List(ParserNode.ParserNodeListType.Children, first: true); break;
 				case TextEditCommand.Content_Descendants_ByAttribute: Command_Content_List(ParserNode.ParserNodeListType.Descendants, findAttr: dialogResult as FindContentAttributeDialog.Result); break;
-				case TextEditCommand.Content_Next: Command_Content_NextPrev(true, shiftDown); break;
-				case TextEditCommand.Content_Previous: Command_Content_NextPrev(false, shiftDown); break;
+				case TextEditCommand.Content_Next: Command_Content_NextPrev(true); break;
+				case TextEditCommand.Content_Previous: Command_Content_NextPrev(false); break;
 				case TextEditCommand.Content_Select_ByAttribute: Command_Content_Select_ByAttribute(dialogResult as FindContentAttributeDialog.Result); break;
 				case TextEditCommand.Content_Select_TopMost: Command_Content_Select_TopMost(); break;
 				case TextEditCommand.Content_Select_Deepest: Command_Content_Select_Deepest(); break;
