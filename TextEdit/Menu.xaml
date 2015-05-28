@@ -202,32 +202,35 @@
 		<textEdit:TextEditMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
-		<textEdit:TextEditMenuItem Header="_Ancestor" CommandEnum="Content_Ancestor"/>
+		<textEdit:TextEditMenuItem Header="Ancest_or" CommandEnum="Content_Ancestor"/>
+		<MenuItem Header="_Attributes">
+			<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Content_Attributes_Attributes"/>
+			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Attributes_First"/>
+			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Attributes_ByAttribute"/>
+		</MenuItem>
 		<MenuItem Header="_Children">
 			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
 			<textEdit:TextEditMenuItem Header="_Self and Children" CommandEnum="Content_Children_SelfAndChildren"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Children_First"/>
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Children_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Children_ByAttribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
 			<textEdit:TextEditMenuItem Header="_Self and Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Descendants_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Descendants_ByAttribute"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Content_Next"/>
 		<textEdit:TextEditMenuItem Header="Pr_evious" CommandEnum="Content_Previous"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Select_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Select_ByAttribute"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Topmost" CommandEnum="Content_Select_TopMost"/>
 			<textEdit:TextEditMenuItem Header="_Deepest" CommandEnum="Content_Select_Deepest"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="Max To_pmost" CommandEnum="Content_Select_MaxTopMost"/>
 			<textEdit:TextEditMenuItem Header="Max Deepe_st" CommandEnum="Content_Select_MaxDeepest"/>
-			<Separator/>
-			<textEdit:TextEditMenuItem Header="Att_ribute" CommandEnum="Content_Select_Attribute"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Insert">

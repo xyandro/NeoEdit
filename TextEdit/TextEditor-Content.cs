@@ -58,10 +58,10 @@ namespace NeoEdit.TextEdit
 
 		List<ParserNode> ContentGetList(ParserNode node, ParserNode.ParserNodeListType list, bool first, FindContentAttributeDialog.Result findAttr)
 		{
-			var nodes = node.List(list).ToList();
+			var nodes = node.List(list).Where(child => child.HasLocation).ToList();
 
 			if (findAttr != null)
-				nodes = nodes.Where(childNode => childNode.HasAttr(findAttr.Attribute, findAttr.Regex)).ToList();
+				nodes = nodes.Where(child => child.HasAttr(findAttr.Attribute, findAttr.Regex)).ToList();
 
 			if (first)
 				nodes = nodes.Take(1).ToList();
@@ -202,12 +202,12 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
 		}
 
-		internal SelectContentAttributeDialog.Result Command_Content_Select_Attribute_Dialog()
+		internal SelectContentAttributeDialog.Result Command_Content_Attributes_ByAttribute_Dialog()
 		{
 			return SelectContentAttributeDialog.Run(UIHelper.FindParent<Window>(this), GetSelectionNodes());
 		}
 
-		internal void Command_Content_Select_Attribute(SelectContentAttributeDialog.Result result)
+		internal void Command_Content_Attributes_ByAttribute(SelectContentAttributeDialog.Result result)
 		{
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)).ToList());
 		}

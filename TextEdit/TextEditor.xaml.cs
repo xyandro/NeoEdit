@@ -459,10 +459,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
 				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Parents); break;
+				case TextEditCommand.Content_Attributes_ByAttribute: dialogResult = Command_Content_Attributes_ByAttribute_Dialog(); break;
 				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Children); break;
 				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Descendants); break;
 				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Self); break;
-				case TextEditCommand.Content_Select_Attribute: dialogResult = Command_Content_Select_Attribute_Dialog(); break;
 				case TextEditCommand.Insert_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
 				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;
 				case TextEditCommand.Insert_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
@@ -622,6 +622,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_TogglePosition: Command_Content_TogglePosition(shiftDown); break;
 				case TextEditCommand.Content_Parent: Command_Content_Parent(); break;
 				case TextEditCommand.Content_Ancestor: Command_Content_List(ParserNode.ParserNodeListType.Parents, findAttr: dialogResult as FindContentAttributeDialog.Result); break;
+				case TextEditCommand.Content_Attributes_Attributes: Command_Content_List(ParserNode.ParserNodeListType.Attributes); break;
+				case TextEditCommand.Content_Attributes_First: Command_Content_List(ParserNode.ParserNodeListType.Attributes, true); break;
+				case TextEditCommand.Content_Attributes_ByAttribute: Command_Content_Attributes_ByAttribute(dialogResult as SelectContentAttributeDialog.Result); break;
 				case TextEditCommand.Content_Children_Children: Command_Content_List(ParserNode.ParserNodeListType.Children); break;
 				case TextEditCommand.Content_Children_SelfAndChildren: Command_Content_List(ParserNode.ParserNodeListType.SelfAndChildren); break;
 				case TextEditCommand.Content_Children_First: Command_Content_List(ParserNode.ParserNodeListType.Children, first: true); break;
@@ -637,7 +640,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_Deepest: Command_Content_Select_Deepest(); break;
 				case TextEditCommand.Content_Select_MaxTopMost: Command_Content_Select_MaxTopMost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
-				case TextEditCommand.Content_Select_Attribute: Command_Content_Select_Attribute(dialogResult as SelectContentAttributeDialog.Result); break;
 				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
 				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
