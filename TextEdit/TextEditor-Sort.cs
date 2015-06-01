@@ -18,7 +18,7 @@ namespace NeoEdit.TextEdit
 			return Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 		}
 
-		List<Range> GetSortRegions()
+		List<Range> GetEnclosingRegions()
 		{
 			var regions = new List<Range>();
 			foreach (var selection in Selections)
@@ -49,7 +49,7 @@ namespace NeoEdit.TextEdit
 			{
 				case SortScope.Selections: regions = Selections.ToList(); break;
 				case SortScope.Lines: regions = GetSortLines(); break;
-				case SortScope.Regions: regions = GetSortRegions(); break;
+				case SortScope.Regions: regions = GetEnclosingRegions(); break;
 				default: throw new Exception("Invalid sort type");
 			}
 

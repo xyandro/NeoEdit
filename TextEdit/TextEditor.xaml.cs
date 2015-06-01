@@ -751,6 +751,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_SetFindResults: Command_Region_SetFindResults(); break;
 				case TextEditCommand.Region_ClearRegions: Command_Region_ClearRegions(); break;
 				case TextEditCommand.Region_LimitToSelection: Command_Region_LimitToSelection(); break;
+				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
 				case TextEditCommand.View_Highlighting_None: HighlightType = Highlighting.HighlightingType.None; break;
 				case TextEditCommand.View_Highlighting_CSharp: HighlightType = Highlighting.HighlightingType.CSharp; break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
@@ -2451,6 +2452,11 @@ namespace NeoEdit.TextEdit
 		internal void Command_Region_LimitToSelection()
 		{
 			Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
+		}
+
+		internal void Command_Region_SelectEnclosingRegion()
+		{
+			Selections.Replace(GetEnclosingRegions());
 		}
 
 		int visibleIndex = 0;

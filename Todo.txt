@@ -24,7 +24,6 @@ Get directory files/dirs
 Translate HTML to table
 Distinct operations by marked region (sort/series/etc within region)
 Select square (right mouse button)
-Get enclosing region
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Expression: Hex-based math
@@ -34,7 +33,6 @@ Make markup relative paths absolute
 When opening files don't open the same one more than once
 Override readonly, access denied (UAC required?)
 Readd reformat for html
-Goto result has goto type
 
 View:
 Update as new lines are added
