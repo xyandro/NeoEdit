@@ -114,12 +114,15 @@ namespace NeoEdit.TextEdit
 					else
 						ending = Data[endLine] == '\r' ? Ending_CR : Ending_LF;
 
-					if (chunkDefaultEnding == Ending_None)
-						chunkDefaultEnding = ending;
-					if (chunkOnlyEnding == Ending_None)
-						chunkOnlyEnding = ending;
-					if (chunkOnlyEnding != ending)
-						chunkOnlyEnding = Ending_Mixed;
+					if (ending != Ending_None)
+					{
+						if (chunkDefaultEnding == Ending_None)
+							chunkDefaultEnding = ending;
+						if (chunkOnlyEnding == Ending_None)
+							chunkOnlyEnding = ending;
+						if (chunkOnlyEnding != ending)
+							chunkOnlyEnding = Ending_Mixed;
+					}
 					chunkLineOffset.Add(offset);
 					chunkEndingOffset.Add(endLine);
 					offset = endLine + endLineLen;
