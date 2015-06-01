@@ -83,16 +83,17 @@ namespace NeoEdit.TextEdit
 			public List<string> files { get; set; }
 		}
 
-		OpenFileDialogResult Command_File_Open_Dialog()
+		OpenFileDialogResult Command_File_Open_Dialog(string initialDirectory = null)
 		{
-			var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
+			if ((initialDirectory == null) && (Active != null))
+				initialDirectory = Path.GetDirectoryName(Active.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
 				Filter = "Text files|*.txt|All files|*.*",
 				FilterIndex = 2,
 				Multiselect = true,
-				InitialDirectory = dir,
+				InitialDirectory = initialDirectory,
 			};
 			if (dialog.ShowDialog() != true)
 				return null;
@@ -297,6 +298,7 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
+				case TextEditCommand.Macro_Edit: dialogResult = Command_File_Open_Dialog(macroDirectory); break;
 				default: return Active == null ? true : Active.GetDialogResult(command, out dialogResult);
 			}
 
@@ -311,6 +313,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextEditCommand.File_Exit: Close(); break;
+				case TextEditCommand.Macro_Edit: Command_File_Open(dialogResult as OpenFileDialogResult); return;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
 
