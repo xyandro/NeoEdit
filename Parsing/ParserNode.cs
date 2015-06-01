@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -243,9 +242,14 @@ namespace NeoEdit.Parsing
 
 		List<string> Print()
 		{
-			var result = new List<string> { String.Format("[{0}-{1}: {2}", start, end, String.Join(", ", children.Where(child => child.IsAttr).Select(child => (String.Format("{0}-{1} {2} ({3})", child.start, child.end, child.type, (child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("[", "OPENBRACKET").Replace("]", "CLOSEBRACKET")))))) };
+			var parents = new List<ParserNode>();
+			for (var parent = this; parent != null; parent = parent.Parent)
+				parents.Insert(0, parent);
+			var parentTypes = String.Join("->", parents.Select(node => node.Type));
+			var attrs = String.Join(", ", children.Where(child => child.IsAttr).Select(child => (String.Format("{0}-{1} {2} ({3})", child.start, child.end, child.type, (child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("[", "OPENBRACKET").Replace("]", "CLOSEBRACKET")))));
+			var result = new List<string> { String.Format("[{0}-{1}: {2} Path: {3}", start, end, attrs, parentTypes) };
 			result.AddRange(children.Where(child => !child.IsAttr).SelectMany(child => child.Print()).Select(str => String.Format(" {0}", str)));
-			result[result.Count - 1] += "]";
+			result.Add("]");
 			return result;
 		}
 

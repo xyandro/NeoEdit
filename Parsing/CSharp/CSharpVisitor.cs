@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 
 namespace NeoEdit.Parsing
 {
@@ -11,10 +11,17 @@ namespace NeoEdit.Parsing
 		public ParserNode Root { get; private set; }
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;
-		public CSharpVisitor(string input)
+		CSharpVisitor(string input)
 		{
 			this.input = input;
 			stack.Push(Root = new ParserNode { Type = RootStr, Start = 0, End = input.Length });
+		}
+
+		public static ParserNode Parse(string input, IParseTree tree)
+		{
+			var visitor = new CSharpVisitor(input);
+			visitor.Visit(tree);
+			return visitor.Root;
 		}
 
 		public override object VisitType_declaration(CSharp4Parser.Type_declarationContext ctx)

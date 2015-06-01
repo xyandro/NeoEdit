@@ -26,9 +26,7 @@ namespace NeoEdit.Parsing
 				tree = parser.compilation_unit();
 			}
 
-			var visitor = new CSharpVisitor(data);
-			visitor.Visit(tree);
-			return visitor.Root;
+			return CSharpVisitor.Parse(data, tree);
 		}
 	}
 }

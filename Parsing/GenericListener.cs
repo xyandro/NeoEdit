@@ -37,11 +37,11 @@ namespace NeoEdit.Parsing
 		{
 		}
 
-		internal static void SaveTree(string data, IParseTree tree, string outputFile)
+		internal static ParserNode Parse(string data, IParseTree tree)
 		{
 			var listener = new GenericListener(data);
 			new ParseTreeWalker().Walk(listener, tree);
-			listener.Root.Save(outputFile);
+			return listener.Root;
 		}
 	}
 }
