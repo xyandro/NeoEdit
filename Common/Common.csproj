@@ -29,6 +29,7 @@
     <Compile Include="Transform\Compression.cs" />
     <Compile Include="Transform\Crypto.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
+    <Compile Include="UnitTest\XMLConverterTest.cs" />
     <Compile Include="UnitTest\HashTest.cs" />
     <Compile Include="UnitTest\CoderTest.cs" />
     <Compile Include="UnitTest\CompressionTest.cs" />
