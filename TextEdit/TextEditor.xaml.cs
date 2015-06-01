@@ -438,9 +438,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_ReopenWithEncoding: dialogResult = Command_File_ReopenWithEncoding_Dialog(); break;
 				case TextEditCommand.Edit_Find: dialogResult = Command_Edit_FindReplace_Dialog(false); break;
 				case TextEditCommand.Edit_Replace: dialogResult = Command_Edit_FindReplace_Dialog(true); break;
-				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Line); break;
-				case TextEditCommand.Edit_GotoColumn: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Column); break;
-				case TextEditCommand.Edit_GotoPosition: dialogResult = Command_Edit_Goto_Dialog(GotoDialog.GotoType.Position); break;
+				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoType.Line); break;
+				case TextEditCommand.Edit_GotoColumn: dialogResult = Command_Edit_Goto_Dialog(GotoType.Column); break;
+				case TextEditCommand.Edit_GotoPosition: dialogResult = Command_Edit_Goto_Dialog(GotoType.Position); break;
 				case TextEditCommand.Files_GetUniqueNames: dialogResult = Command_Files_GetUniqueNames_Dialog(); break;
 				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
 				case TextEditCommand.Files_Set_WriteTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
@@ -535,9 +535,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_FindNext: Command_Edit_FindNextPrev(true, shiftDown); break;
 				case TextEditCommand.Edit_FindPrev: Command_Edit_FindNextPrev(false, shiftDown); break;
 				case TextEditCommand.Edit_Replace: Command_Edit_FindReplace(true, shiftDown, dialogResult as GetRegExDialog.Result); break;
-				case TextEditCommand.Edit_GotoLine: Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
-				case TextEditCommand.Edit_GotoColumn: Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
-				case TextEditCommand.Edit_GotoPosition: Command_Edit_Goto(shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_GotoLine: Command_Edit_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_GotoColumn: Command_Edit_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Edit_GotoPosition: Command_Edit_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Edit_ToggleBookmark: Command_Edit_ToggleBookmark(); break;
 				case TextEditCommand.Edit_NextBookmark: Command_Edit_NextPreviousBookmark(true, shiftDown); break;
 				case TextEditCommand.Edit_PreviousBookmark: Command_Edit_NextPreviousBookmark(false, shiftDown); break;
@@ -606,9 +606,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Copy_Max_Numeric: Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Data_Copy_Max_Length: Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
 				case TextEditCommand.Data_Copy_Sum: Command_Data_Copy_Sum(); break;
-				case TextEditCommand.Data_Copy_Lines: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Line); break;
-				case TextEditCommand.Data_Copy_Columns: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Column); break;
-				case TextEditCommand.Data_Copy_Positions: Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType.Position); break;
+				case TextEditCommand.Data_Copy_Lines: Command_Data_Copy_LinesColumnsPositions(GotoType.Line); break;
+				case TextEditCommand.Data_Copy_Columns: Command_Data_Copy_LinesColumnsPositions(GotoType.Column); break;
+				case TextEditCommand.Data_Copy_Positions: Command_Data_Copy_LinesColumnsPositions(GotoType.Position); break;
 				case TextEditCommand.Data_Repeat: Command_Data_Repeat(dialogResult as RepeatDialog.Result); break;
 				case TextEditCommand.Data_Escape_Markup: Command_Data_Escape_Markup(); break;
 				case TextEditCommand.Data_Escape_Regex: Command_Data_Escape_Regex(); break;
@@ -1067,7 +1067,7 @@ namespace NeoEdit.TextEdit
 			FindNext(next, selecting);
 		}
 
-		internal GotoDialog.Result Command_Edit_Goto_Dialog(GotoDialog.GotoType gotoType)
+		internal GotoDialog.Result Command_Edit_Goto_Dialog(GotoType gotoType)
 		{
 			int line = 1, index = 1, position = 0;
 			var range = Selections.FirstOrDefault();
@@ -1077,10 +1077,18 @@ namespace NeoEdit.TextEdit
 				index = Data.GetOffsetIndex(range.Start, line - 1) + 1;
 				position = range.Start;
 			}
-			return GotoDialog.Run(WindowParent, gotoType, gotoType == GotoDialog.GotoType.Line ? line : gotoType == GotoDialog.GotoType.Column ? index : position);
+			int startValue;
+			switch (gotoType)
+			{
+				case GotoType.Line: startValue = line; break;
+				case GotoType.Column: startValue = index; break;
+				case GotoType.Position: startValue = position; break;
+				default: throw new ArgumentException("GotoType invalid");
+			}
+			return GotoDialog.Run(WindowParent, gotoType, startValue);
 		}
 
-		internal void Command_Edit_Goto(bool selecting, GotoDialog.Result result)
+		internal void Command_Edit_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
 		{
 			List<int> offsets;
 			if (result.ClipboardValue)
@@ -1099,17 +1107,24 @@ namespace NeoEdit.TextEdit
 				var indexes = Selections.AsParallel().AsOrdered().Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
 				var positions = Selections.Select(range => range.Start).ToList();
 
-				var list = result.GotoType == GotoDialog.GotoType.Line ? lines : result.GotoType == GotoDialog.GotoType.Column ? indexes : positions;
+				List<int> list;
+				switch (gotoType)
+				{
+					case GotoType.Line: list = lines; break;
+					case GotoType.Column: list = indexes; break;
+					case GotoType.Position: list = positions; break;
+					default: throw new ArgumentException("GotoType invalid");
+				}
 				offsets = offsets.Select((ofs, ctr) => ofs + list[ctr]).ToList();
 			}
-			else if (result.GotoType != GotoDialog.GotoType.Position)
+			else if (gotoType != GotoType.Position)
 				offsets = offsets.Select(ofs => ofs - 1).ToList();
 
-			if (result.GotoType == GotoDialog.GotoType.Position)
+			if (gotoType == GotoType.Position)
 				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], selecting)).ToList());
 			else
 			{
-				var isLine = result.GotoType == GotoDialog.GotoType.Line;
+				var isLine = gotoType == GotoType.Line;
 				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], selecting, !isLine, isLine)).ToList());
 			}
 		}
@@ -1869,17 +1884,17 @@ namespace NeoEdit.TextEdit
 			Clipboard.SetText(Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum().ToString());
 		}
 
-		internal void Command_Data_Copy_LinesColumnsPositions(GotoDialog.GotoType gotoType)
+		internal void Command_Data_Copy_LinesColumnsPositions(GotoType gotoType)
 		{
 			var positions = Selections.Select(range => range.Start).ToList();
-			if (gotoType == GotoDialog.GotoType.Position)
+			if (gotoType == GotoType.Position)
 			{
 				NEClipboard.SetStrings(positions.Select(pos => pos.ToString()).ToList());
 				return;
 			}
 
 			var lines = positions.Select(pos => Data.GetOffsetLine(pos)).ToList();
-			if (gotoType == GotoDialog.GotoType.Line)
+			if (gotoType == GotoType.Line)
 			{
 				NEClipboard.SetStrings(lines.Select(pos => (pos + 1).ToString()).ToList());
 				return;

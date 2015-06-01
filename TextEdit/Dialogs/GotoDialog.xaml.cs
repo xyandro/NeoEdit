@@ -7,17 +7,9 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public GotoType GotoType { get; set; }
 			public int Value { get; set; }
 			public bool ClipboardValue { get; set; }
 			public bool Relative { get; set; }
-		}
-
-		internal enum GotoType
-		{
-			Line,
-			Column,
-			Position,
 		}
 
 		[DepProp]
@@ -62,7 +54,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { GotoType = gotoType, Value = Value, ClipboardValue = ClipboardValue, Relative = Relative };
+			result = new Result { Value = Value, ClipboardValue = ClipboardValue, Relative = Relative };
 			DialogResult = true;
 		}
 
