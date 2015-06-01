@@ -33,6 +33,7 @@ namespace NeoEdit.TextEdit
 			var doc = RootNode();
 			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAttributesAndDescendants).Where(node => node.HasLocation).ToList();
 			var fullLocation = nodes.GroupBy(node => node.Start).ToDictionary(startGroup => startGroup.Key, group => group.GroupBy(node => node.End).ToDictionary(endGroup => endGroup.Key, endGroup => endGroup.Last()));
+			nodes = nodes.Where(node => !node.IsAttr).ToList();
 			var startLocation = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
 
 			var result = new List<ParserNode>();
