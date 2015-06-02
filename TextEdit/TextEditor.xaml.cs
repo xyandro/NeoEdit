@@ -1886,21 +1886,21 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Copy_LinesColumnsPositions(GotoType gotoType)
 		{
-			var positions = Selections.Select(range => range.Start).ToList();
 			if (gotoType == GotoType.Position)
 			{
-				NEClipboard.SetStrings(positions.Select(pos => pos.ToString()).ToList());
+				NEClipboard.SetStrings(Selections.Select(range => range.Start.ToString() + (range.HasSelection ? "-" + range.End : "")).ToList());
 				return;
 			}
 
-			var lines = positions.Select(pos => Data.GetOffsetLine(pos)).ToList();
+			var starts = Selections.Select(range => range.Start).ToList();
+			var lines = starts.Select(pos => Data.GetOffsetLine(pos)).ToList();
 			if (gotoType == GotoType.Line)
 			{
 				NEClipboard.SetStrings(lines.Select(pos => (pos + 1).ToString()).ToList());
 				return;
 			}
 
-			var indexes = positions.Select((pos, line) => Data.GetOffsetIndex(pos, lines[line])).ToList();
+			var indexes = starts.Select((pos, line) => Data.GetOffsetIndex(pos, lines[line])).ToList();
 			NEClipboard.SetStrings(indexes.Select(pos => (pos + 1).ToString()).ToList());
 		}
 
