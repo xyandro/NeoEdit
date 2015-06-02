@@ -21,9 +21,9 @@ namespace NeoEdit.TextEdit
 		{
 			if ((previousContent.Data != Data.Data) || (previousContent.Type != ContentType))
 			{
+				previousContent.Root = Parser.Parse(Data.Data, ContentType);
 				previousContent.Data = Data.Data;
 				previousContent.Type = ContentType;
-				previousContent.Root = Parser.Parse(Data.Data, ContentType);
 			}
 			return previousContent.Root;
 		}

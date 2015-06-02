@@ -6,7 +6,7 @@ namespace NeoEdit.Parsing
 {
 	class HTML
 	{
-		const string Tag = "Tag";
+		const string Name = "Name";
 		const string Element = "Element";
 		const string Comment = "Comment";
 		const string Text = "Text";
@@ -65,7 +65,7 @@ namespace NeoEdit.Parsing
 					if ((location >= input.Length) || (input[location] != '<'))
 						return null;
 					++location;
-					itemName = Tag;
+					itemName = Name;
 					step = OpenCloseStep.BeforeAttrValueWS;
 				}
 				else if ((step == OpenCloseStep.BeforeAttrNameWS) || (step == OpenCloseStep.AfterAttrNameWS) || (step == OpenCloseStep.BeforeAttrValueWS))
@@ -148,7 +148,7 @@ namespace NeoEdit.Parsing
 				}
 			}
 
-			if (result.GetAttrText(Tag) == "!doctype")
+			if (result.GetAttrText(Name) == "!doctype")
 				return new ParserNode { Type = Comment, Start = result.Start, End = location };
 
 			result.End = location;
@@ -180,15 +180,15 @@ namespace NeoEdit.Parsing
 			if ((input.Length > 1) && (input[0] == '\ufeff'))
 				++location;
 			var doc = new ParserNode { Type = Element, Start = location, End = input.Length };
-			doc.AddAttr(Tag, Doc);
+			doc.AddAttr(Name, Doc);
 			var stack = new Stack<Tuple<string, ParserNode>>();
 			stack.Push(Tuple.Create(Doc, doc));
 			while (location < input.Length)
 			{
 				var topStack = stack.Peek().Item2;
 
-				var textTag = topStack.GetAttrText(Tag);
-				var rawName = rawTextElements.Contains(textTag) ? textTag : null;
+				var textName = topStack.GetAttrText(Name);
+				var rawName = rawTextElements.Contains(textName) ? textName : null;
 
 				var node = GetCommentNode() ?? GetOpenCloseNode() ?? GetTextNode(rawName);
 				if (node == null)
@@ -203,19 +203,19 @@ namespace NeoEdit.Parsing
 					continue;
 				}
 
-				var tag = node.GetAttrText(Tag);
-				if (!tag.StartsWith("/"))
+				var name = node.GetAttrText(Name) ?? "";
+				if (!name.StartsWith("/"))
 				{
 					node.Parent = topStack;
-					if (voidElements.Contains(tag))
+					if (voidElements.Contains(name))
 						node.End = location;
 					else
-						stack.Push(Tuple.Create(tag, node));
+						stack.Push(Tuple.Create(name, node));
 					continue;
 				}
 
-				tag = tag.Substring(1);
-				var toRemove = stack.FirstOrDefault(item => (item.Item1 == tag) && (item.Item2 != doc));
+				name = name.Substring(1);
+				var toRemove = stack.FirstOrDefault(item => (item.Item1 == name) && (item.Item2 != doc));
 				if (toRemove != null)
 				{
 					while (true)
@@ -301,11 +301,11 @@ namespace NeoEdit.Parsing
 			}
 
 			var startTagItems = new List<string>();
-			var tag = node.GetAttrText(Tag);
-			var attrs = node.GetAttrTypes().Where(attr => (attr != ParserNode.TYPE) && (attr != SelfClosing)).OrderBy(attr => attr != Tag).ToList();
+			var name = node.GetAttrText(Name);
+			var attrs = node.GetAttrTypes().Where(attr => (attr != ParserNode.TYPE) && (attr != SelfClosing)).OrderBy(attr => attr != Name).ToList();
 			foreach (var attr in attrs)
 			{
-				var isTag = attr == Tag;
+				var isTag = attr == Name;
 				foreach (var value in node.GetAttrsText(attr))
 				{
 					if (isTag)
@@ -315,7 +315,7 @@ namespace NeoEdit.Parsing
 				}
 			}
 			var startTag = "<" + String.Join(" ", startTagItems) + (node.HasAttr(SelfClosing) ? "/" : "") + ">";
-			var endTag = (voidElements.Contains(tag)) || (node.HasAttr(SelfClosing)) ? "" : String.Format("</{0}>", tag);
+			var endTag = (voidElements.Contains(name)) || (node.HasAttr(SelfClosing)) ? "" : String.Format("</{0}>", name);
 
 			var childrenOutput = new List<string>();
 			var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
@@ -332,14 +332,14 @@ namespace NeoEdit.Parsing
 				joinRight = childData.Item3;
 			}
 
-			if (tag == "DOC")
+			if (name == "DOC")
 				return Tuple.Create(childrenOutput, false, false);
 
 			if (childrenOutput.Count <= 1)
 			{
 				var resultStr = startTag + childrenOutput.FirstOrDefault() + endTag;
 				if ((childrenOutput.Count == 0) || (resultStr.Length < 200))
-					return Tuple.Create(new List<string> { resultStr }, joinLeftSet.Contains(tag), joinRightSet.Contains(tag));
+					return Tuple.Create(new List<string> { resultStr }, joinLeftSet.Contains(name), joinRightSet.Contains(name));
 			}
 
 			var output = new List<string> { startTag };

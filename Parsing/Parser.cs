@@ -20,7 +20,7 @@ namespace NeoEdit.Parsing
 			{
 				case ParserType.CSharp: return CSharp.Parse(data);
 				case ParserType.HTML: return new HTML(data).Parse();
-				default: throw new ArgumentException("Invalid parser value");
+				default: throw new ArgumentException("Unable to parse this type");
 			}
 		}
 
