@@ -2943,6 +2943,12 @@ namespace NeoEdit.TextEdit
 					else
 						ret = false;
 					break;
+				case Key.Space:
+					if (controlDown)
+						Selections.Replace(Selections.Select(range => new Range(range.Highlight, range.Cursor)).ToList());
+					else
+						ret = false;
+					break;
 				default: ret = false; break;
 			}
 
