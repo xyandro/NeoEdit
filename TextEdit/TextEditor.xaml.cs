@@ -624,6 +624,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Type_None: ContentType = Parser.ParserType.None; break;
 				case TextEditCommand.Content_Type_HTML: ContentType = Parser.ParserType.HTML; break;
 				case TextEditCommand.Content_Type_CSharp: ContentType = Parser.ParserType.CSharp; break;
+				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
 				case TextEditCommand.Content_TogglePosition: Command_Content_TogglePosition(shiftDown); break;

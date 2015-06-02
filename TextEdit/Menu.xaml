@@ -196,6 +196,9 @@
 			<textEdit:TextEditMenuItem Header="_HTML" CommandEnum="Content_Type_HTML"/>
 			<textEdit:TextEditMenuItem Header="C_#" CommandEnum="Content_Type_CSharp"/>
 		</MenuItem>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Reformat" CommandEnum="Content_Reformat"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="Co_mment" CommandEnum="Content_Comment"/>
 		<textEdit:TextEditMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
 		<Separator/>

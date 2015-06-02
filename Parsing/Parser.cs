@@ -37,6 +37,15 @@ namespace NeoEdit.Parsing
 			}
 		}
 
+		static public string Reformat(ParserNode node, string data, ParserType parserType)
+		{
+			switch (parserType)
+			{
+				case ParserType.HTML: return HTML.FormatHTML(node, data);
+				default: throw new Exception("Unable to reformat this type");
+			}
+		}
+
 		static public List<string> GetAvailableAttrs(List<ParserNode> nodes)
 		{
 			return nodes.SelectMany(node => node.GetAttrTypes()).Distinct().OrderBy(str => str).ToList();

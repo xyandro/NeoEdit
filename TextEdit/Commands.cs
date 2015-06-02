@@ -121,6 +121,7 @@ namespace NeoEdit.TextEdit
 		Content_Type_None,
 		Content_Type_HTML,
 		Content_Type_CSharp,
+		Content_Reformat,
 		Content_Comment,
 		Content_Uncomment,
 		[KeyGesture(Key.OemCloseBrackets, ModifierKeys.Alt)] [KeyGesture(Key.OemCloseBrackets, ModifierKeys.Alt | ModifierKeys.Shift)] Content_TogglePosition,

@@ -12,7 +12,6 @@ Can push files to predefined lists (CTRL+1, CTRL+SHIFT+1)
 Select unique/duplicates
 
 Text:
-Highlight clauses (if/else)
 Text edit multiple files
 Comment/uncomment C#/C++/etc. (ANTLR?)
 Format JSON/XML
@@ -32,7 +31,6 @@ Submit forms
 Make markup relative paths absolute
 When opening files don't open the same one more than once
 Override readonly, access denied (UAC required?)
-Readd reformat for html
 
 View:
 Update as new lines are added

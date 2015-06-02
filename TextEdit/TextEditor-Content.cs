@@ -108,6 +108,14 @@ namespace NeoEdit.TextEdit
 			return str.Substring(4, str.Length - 7).Replace("--><!--", "-->");
 		}
 
+		internal void Command_Content_Reformat()
+		{
+			var root = RootNode();
+			var allRange = new Range(BeginOffset(), EndOffset());
+			var str = Parser.Reformat(root, Data.Data, ContentType);
+			Replace(new List<Range> { allRange }, new List<string> { str });
+		}
+
 		internal void Command_Content_Comment()
 		{
 			ReplaceSelections(GetSelectionStrings().Select(str => CommentMarkup(str)).ToList());

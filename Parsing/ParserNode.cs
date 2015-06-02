@@ -47,6 +47,7 @@ namespace NeoEdit.Parsing
 		int? start, end;
 		public int Start { get { return start.Value; } internal set { start = value; } }
 		public int End { get { return end.Value; } internal set { end = value; } }
+		public int Length { get { return End - Start; } }
 		public bool HasLocation { get { return (start.HasValue) && (end.HasValue); } }
 
 		internal ParserRuleContext LocationContext
@@ -248,6 +249,11 @@ namespace NeoEdit.Parsing
 			int start, end;
 			token.GetBounds(out start, out end);
 			AddAttrNode(type, text, start, end);
+		}
+
+		public bool HasAttr(string type)
+		{
+			return GetAttrs(type).Any();
 		}
 
 		public bool HasAttr(string type, Regex regex, bool invert)
