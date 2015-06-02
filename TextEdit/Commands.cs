@@ -257,7 +257,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift)] Macro_QuickPlay,
 		Macro_Record,
 		Macro_StopRecording,
-		Macro_Edit,
+		Macro_Open,
 		Macro_Play,
 		Macro_PlayOnCopiedFiles,
 	}

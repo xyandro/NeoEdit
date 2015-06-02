@@ -298,7 +298,7 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
-				case TextEditCommand.Macro_Edit: dialogResult = Command_File_Open_Dialog(macroDirectory); break;
+				case TextEditCommand.Macro_Open: dialogResult = Command_File_Open_Dialog(macroDirectory); break;
 				default: return Active == null ? true : Active.GetDialogResult(command, out dialogResult);
 			}
 
@@ -313,7 +313,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextEditCommand.File_Exit: Close(); break;
-				case TextEditCommand.Macro_Edit: Command_File_Open(dialogResult as OpenFileDialogResult); return;
+				case TextEditCommand.Macro_Open: Command_File_Open(dialogResult as OpenFileDialogResult); return;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
 

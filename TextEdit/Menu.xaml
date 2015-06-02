@@ -395,14 +395,14 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== \'Tiles\''}"/>
 	</MenuItem>
-	<MenuItem Header="M_acro">
+	<MenuItem Header="_Macro">
 		<textEdit:TextEditMenuItem Header="_Quick Record" CommandEnum="Macro_QuickRecord"/>
 		<textEdit:TextEditMenuItem Header="Q_uick Play" CommandEnum="Macro_QuickPlay"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Record" CommandEnum="Macro_Record"/>
 		<textEdit:TextEditMenuItem Header="_Stop Recording" CommandEnum="Macro_StopRecording"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Edit" CommandEnum="Macro_Edit"/>
+		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Macro_Open"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Play" CommandEnum="Macro_Play"/>
 		<textEdit:TextEditMenuItem Header="Play On Copied _Files" CommandEnum="Macro_PlayOnCopiedFiles"/>
