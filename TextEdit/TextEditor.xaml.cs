@@ -2247,7 +2247,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count > 1)
 			{
 				Regions.AddRange(Selections);
-				Selections.Replace(Selections.First());
+				Selections.Replace(Selections[visibleIndex]);
 			}
 			else if (Regions.Count != 0)
 			{

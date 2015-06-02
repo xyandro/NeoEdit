@@ -15,7 +15,6 @@ Text:
 Text edit multiple files
 Comment/uncomment C#/C++/etc. (ANTLR?)
 Format JSON/XML
-Ctrl+M should move to "current" selection
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
