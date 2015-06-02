@@ -19,7 +19,7 @@ namespace NeoEdit.Parsing
 
 		public void EnterEveryRule(ParserRuleContext ctx)
 		{
-			var node = new ParserNode { Type = ctx.GetType().ToString(), Parent = stack.Peek() };
+			var node = new ParserNode { Type = ctx.GetType().ToString(), Parent = stack.Peek(), LocationContext = ctx };
 			node.AddAttr("Text", input, ctx);
 			stack.Push(node);
 		}

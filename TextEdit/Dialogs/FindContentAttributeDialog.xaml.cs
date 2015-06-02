@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -49,6 +48,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			this.nodes = nodes;
 			Attributes = Parser.GetAvailableAttrs(nodes);
 			Attribute = Attributes.FirstOrDefault();
+			AllContents = true;
 		}
 
 		void UpdateAttrValues()

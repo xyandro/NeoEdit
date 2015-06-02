@@ -24,8 +24,8 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="Attribute:" Target="{Binding ElementName=attribute}" HorizontalAlignment="Right"/>
 		<ComboBox Grid.Row="0" Grid.Column="1" Name="attribute" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Attributes, ElementName=self}" SelectedItem="{Binding Attribute, ElementName=self}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Element name:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
-		<ComboBox Grid.Row="1" Grid.Column="1" Name="text" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Values, ElementName=self}" SelectedItem="{Binding Value, ElementName=self}" IsEditable="True"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Text:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
+		<ComboBox Grid.Row="1" Grid.Column="1" Name="text" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Values, ElementName=self}" Text="{Binding Value, ElementName=self, UpdateSourceTrigger=PropertyChanged}" IsEditable="True"/>
 
 		<CheckBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Content="_All contents" IsChecked="{Binding AllContents, ElementName=self}" Focusable="False"/>
 		<CheckBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>

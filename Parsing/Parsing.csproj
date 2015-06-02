@@ -8,7 +8,7 @@
     <AssemblyName>Parsing</AssemblyName>
   </PropertyGroup>
   <PropertyGroup>
-    <NoWarn>1685</NoWarn>
+    <NoWarn>1685;3021</NoWarn>
   </PropertyGroup>
   <Target Name="BuildCSharp" Inputs="CSharp\Source\CSharp4Lexer.g4;CSharp\Source\CSharp4PreProcessor.g4;CSharp\Source\CSharp4.g4" Outputs="CSharp\Parser\CSharp4Visitor.cs;CSharp\Parser\CSharp4BaseVisitor.cs;CSharp\Parser\CSharp4Lexer.cs;CSharp\Parser\CSharp4Parser.cs;CSharp\Parser\CSharp4PreProcessor.cs">
     <Message Text="Building CSharp grammar" Importance="High" />

@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 
 namespace NeoEdit.Parsing
 {
 	public class ParserNode
 	{
+		public const string TYPE = "Type";
+
 		public ParserNode(bool isAttr = false)
 		{
 			IsAttr = isAttr;
@@ -60,13 +63,13 @@ namespace NeoEdit.Parsing
 		string type;
 		public string Type
 		{
-			get { return IsAttr ? type : GetAttrText("Type"); }
+			get { return IsAttr ? type : GetAttrText(TYPE); }
 			internal set
 			{
 				if (IsAttr)
 					type = value;
 				else
-					SetAttr("Type", value);
+					SetAttr(TYPE, value);
 			}
 		}
 		public string Text { get; internal set; }
@@ -224,11 +227,26 @@ namespace NeoEdit.Parsing
 			AddAttrNode(type, null, start, end);
 		}
 
+		internal void AddAttr(string type, ITerminalNode token)
+		{
+			int start, end;
+			token.GetBounds(out start, out end);
+			AddAttrNode(type, null, start, end);
+		}
+
 		internal void AddAttr(string type, string input, ParserRuleContext ctx)
 		{
 			var text = ctx.GetText(input);
 			int start, end;
 			ctx.GetBounds(out start, out end);
+			AddAttrNode(type, text, start, end);
+		}
+
+		internal void AddAttr(string type, string input, ITerminalNode token)
+		{
+			var text = token.GetText(input);
+			int start, end;
+			token.GetBounds(out start, out end);
 			AddAttrNode(type, text, start, end);
 		}
 
@@ -249,7 +267,10 @@ namespace NeoEdit.Parsing
 			var attrs = String.Join(", ", children.Where(child => child.IsAttr).Select(child => (String.Format("{0}-{1} {2} ({3})", child.start, child.end, child.type, (child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("[", "OPENBRACKET").Replace("]", "CLOSEBRACKET")))));
 			var result = new List<string> { String.Format("[{0}-{1}: {2} Path: {3}", start, end, attrs, parentTypes) };
 			result.AddRange(children.Where(child => !child.IsAttr).SelectMany(child => child.Print()).Select(str => String.Format(" {0}", str)));
-			result.Add("]");
+			if (result.Count == 1)
+				result[0] += "]";
+			else
+				result.Add("]");
 			return result;
 		}
 
