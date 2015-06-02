@@ -62,7 +62,7 @@ namespace NeoEdit.Parsing
 			return input.Select(item => func(item)).ToArray();
 		}
 
-		public static void Do<InputType>(this InputType input, Action<InputType> action) where InputType : ParserRuleContext
+		public static void Do<InputType>(this InputType input, Action<InputType> action) where InputType : IParseTree
 		{
 			if (input == null)
 				return;
@@ -70,7 +70,7 @@ namespace NeoEdit.Parsing
 			action(input);
 		}
 
-		public static void Do<InputType>(this InputType[] input, Action<InputType> action) where InputType : ParserRuleContext
+		public static void Do<InputType>(this InputType[] input, Action<InputType> action) where InputType : IParseTree
 		{
 			if (input == null)
 				return;

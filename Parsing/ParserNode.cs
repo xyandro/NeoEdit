@@ -50,7 +50,18 @@ namespace NeoEdit.Parsing
 		public int Length { get { return End - Start; } }
 		public bool HasLocation { get { return (start.HasValue) && (end.HasValue); } }
 
-		internal ParserRuleContext LocationContext
+		internal ParserRuleContext LocationParserRule
+		{
+			set
+			{
+				int lStart, lEnd;
+				value.GetBounds(out lStart, out lEnd);
+				start = lStart;
+				end = lEnd;
+			}
+		}
+
+		internal ITerminalNode LocationTerminalNode
 		{
 			set
 			{

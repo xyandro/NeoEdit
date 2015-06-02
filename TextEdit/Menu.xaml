@@ -193,8 +193,9 @@
 			</MenuItem.ItemContainerStyle>
 
 			<textEdit:TextEditMenuItem Header="_None" CommandEnum="Content_Type_None"/>
-			<textEdit:TextEditMenuItem Header="_HTML" CommandEnum="Content_Type_HTML"/>
 			<textEdit:TextEditMenuItem Header="C_#" CommandEnum="Content_Type_CSharp"/>
+			<textEdit:TextEditMenuItem Header="_HTML" CommandEnum="Content_Type_HTML"/>
+			<textEdit:TextEditMenuItem Header="_XML" CommandEnum="Content_Type_XML"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Reformat" CommandEnum="Content_Reformat"/>

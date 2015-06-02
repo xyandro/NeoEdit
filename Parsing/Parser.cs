@@ -12,6 +12,7 @@ namespace NeoEdit.Parsing
 			None,
 			CSharp,
 			HTML,
+			XML,
 		}
 
 		static public ParserNode Parse(string data, ParserType parserType)
@@ -20,6 +21,7 @@ namespace NeoEdit.Parsing
 			{
 				case ParserType.CSharp: return CSharp.Parse(data);
 				case ParserType.HTML: return new HTML(data).Parse();
+				case ParserType.XML: return XML.Parse(data);
 				default: throw new ArgumentException("Unable to parse this type");
 			}
 		}
@@ -30,9 +32,12 @@ namespace NeoEdit.Parsing
 				return ParserType.None;
 			switch (Path.GetExtension(fileName).ToLowerInvariant())
 			{
+				case ".cs": return ParserType.CSharp;
 				case ".htm":
 				case ".html": return ParserType.HTML;
-				case ".cs": return ParserType.CSharp;
+				case ".csproj":
+				case ".xml":
+				case ".xaml": return ParserType.XML;
 				default: return ParserType.None;
 			}
 		}
