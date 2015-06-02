@@ -13,6 +13,7 @@ namespace NeoEdit.Parsing
 		const string CONSTRUCTOR = "constructor";
 		const string DECLARATION = "declaration";
 		const string DESTRUCTOR = "destructor";
+		const string ENUM = "enum";
 		const string FIELD = "field";
 		const string INITIALIZER = "initializer";
 		const string INTERFACEMEMBER = "interfacemember";
@@ -149,6 +150,14 @@ namespace NeoEdit.Parsing
 		{
 			stack.Peek().AddAttr(ParserNode.TYPE, input, context.ENUM());
 			return base.VisitEnum_definition(context);
+		}
+
+		public override object VisitEnum_member_declaration(CSharp4Parser.Enum_member_declarationContext context)
+		{
+			stack.Push(new ParserNode { Type = ENUM, Parent = stack.Peek(), LocationContext = context });
+			base.VisitEnum_member_declaration(context);
+			stack.Pop();
+			return null;
 		}
 
 		public override object VisitEvent_declaration2(CSharp4Parser.Event_declaration2Context context)
