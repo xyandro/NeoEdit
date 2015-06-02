@@ -88,6 +88,8 @@ namespace NeoEdit.Common
 					return default(T);
 				if ((value == null) && (typeof(T) == typeof(string)))
 					value = "";
+				if ((value == null) && (typeof(T) == typeof(double)))
+					value = double.NaN.ToString();
 				if (value == null)
 					throw new Exception("Value is NULL");
 				if ((!(value is string)) && (typeof(T) == typeof(string)))

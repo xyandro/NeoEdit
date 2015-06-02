@@ -55,15 +55,15 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int Line { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int? Line { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int Column { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int? Column { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int Index { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int? Index { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int PositionMin { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int? PositionMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int PositionMax { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int? PositionMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -150,7 +150,7 @@ namespace NeoEdit.TextEdit
 				if (fileList != null)
 				{
 					if (Selections.Count != 1)
-						throw new Exception("Must have only 1 selection.");
+						throw new Exception("Must have one selection.");
 
 					if (fileList.Length == 1)
 					{
@@ -159,7 +159,7 @@ namespace NeoEdit.TextEdit
 					}
 
 					var files = fileList.Select(file => file + Data.DefaultEnding).ToList();
-					var offset = Selections.First().Start;
+					var offset = Selections.Single().Start;
 					ReplaceSelections(String.Join("", files));
 					Selections.Clear();
 					foreach (var str in files)
@@ -480,6 +480,8 @@ namespace NeoEdit.TextEdit
 		static HashSet<string> drives = new HashSet<string>(DriveInfo.GetDrives().Select(drive => drive.Name));
 		bool StringsAreFiles(List<string> strs)
 		{
+			if (!strs.Any())
+				return false;
 			if (strs.Any(str => str.IndexOfAny(Path.GetInvalidPathChars()) != -1))
 				return false;
 			if (strs.Any(str => !drives.Any(drive => str.StartsWith(drive))))
@@ -847,7 +849,7 @@ namespace NeoEdit.TextEdit
 				new Message
 				{
 					Title = "Error",
-					Text = "You have more than one selection.",
+					Text = "Must have one selection.",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 				return;
@@ -865,7 +867,7 @@ namespace NeoEdit.TextEdit
 				new Message
 				{
 					Title = "Error",
-					Text = "You have more than one selection.",
+					Text = "Must have one selection.",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 				return;
@@ -987,11 +989,11 @@ namespace NeoEdit.TextEdit
 		void ReplaceOneWithMany(List<string> strs)
 		{
 			if (Selections.Count != 1)
-				throw new Exception(String.Format("You must have either 1 or the number copied selections ({0}).", strs.Count));
+				throw new Exception("Must have one selection.");
 
 			var text = new List<string> { String.Join("", strs) };
 
-			var offset = Selections.First().Start;
+			var offset = Selections.Single().Start;
 			ReplaceSelections(text);
 			Selections.Clear();
 			foreach (var str in strs)
@@ -1010,6 +1012,9 @@ namespace NeoEdit.TextEdit
 			if (clipboardStrings.Count == 1)
 				clipboardStrings = Selections.Select(str => clipboardStrings[0]).ToList();
 
+			if ((Selections.Count != 1) && (Selections.Count != clipboardStrings.Count()))
+				throw new Exception("Must have either one or equal number of selections.");
+
 			if (Selections.Count == clipboardStrings.Count)
 			{
 				ReplaceSelections(clipboardStrings, highlight);
@@ -1027,7 +1032,7 @@ namespace NeoEdit.TextEdit
 
 			if (Selections.Count == 1)
 			{
-				var sel = Selections.First();
+				var sel = Selections.Single();
 				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
@@ -1051,8 +1056,7 @@ namespace NeoEdit.TextEdit
 
 			if ((replace) || (result.ResultType == GetRegExDialog.GetRegExResultType.All))
 			{
-				if (Searches.Count != 0)
-					Selections.Replace(Searches);
+				Selections.Replace(Searches);
 				Searches.Clear();
 
 				if (replace)
@@ -1729,7 +1733,7 @@ namespace NeoEdit.TextEdit
 			{
 				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard must match number of selections");
+					throw new Exception("Number of items on clipboard must match number of selections.");
 				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
 			}
 
@@ -1743,9 +1747,9 @@ namespace NeoEdit.TextEdit
 
 		internal WidthDialog.Result Command_Data_Width_Dialog()
 		{
-			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
-			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
-			var numeric = Selections.AsParallel().AsOrdered().All(range => GetString(range).IsNumeric());
+			var minLength = Selections.Any() ? Selections.AsParallel().AsOrdered().Min(range => range.Length) : 0;
+			var maxLength = Selections.Any() ? Selections.AsParallel().AsOrdered().Max(range => range.Length) : 0;
+			var numeric = Selections.Any() ? Selections.AsParallel().AsOrdered().All(range => GetString(range).IsNumeric()) : false;
 			return WidthDialog.Run(WindowParent, minLength, maxLength, numeric, false);
 		}
 
@@ -1756,7 +1760,7 @@ namespace NeoEdit.TextEdit
 			{
 				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+					throw new Exception("Number of items on clipboard must match number of selections.");
 				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
 			}
 
@@ -1792,6 +1796,9 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Table_ToTable()
 		{
+			if (!Selections.Any())
+				return;
+
 			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();
 			var numColumns = lines.Max(line => line.Count);
 			foreach (var line in lines)
@@ -1804,6 +1811,9 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Table_FromTable()
 		{
+			if (!Selections.Any())
+				return;
+
 			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('|').Select(str => str.Trim()).ToList()).ToList();
 
 			// Strip leading tabs if all lines have them
@@ -1866,6 +1876,8 @@ namespace NeoEdit.TextEdit
 		internal enum Command_MinMax_Type { String, Numeric, Length }
 		internal void DoCommand_Data_Copy_MinMax<T>(bool min, Func<Range, T> sortBy, Func<Range, string> value)
 		{
+			if (!Selections.Any())
+				throw new Exception("No selections");
 			var strs = Selections.AsParallel().AsOrdered().Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
 			var found = min ? strs.First().range : strs.Last().range;
 			Clipboard.SetText(value(found));
@@ -1918,7 +1930,7 @@ namespace NeoEdit.TextEdit
 			{
 				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+					throw new Exception("Number of items on clipboard must match number of selections.");
 				repeatCounts = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
 			}
 			else
@@ -2038,7 +2050,7 @@ namespace NeoEdit.TextEdit
 			{
 				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+					throw new Exception("Number of items on clipboard must match number of selections.");
 				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
 			}
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => GetRandomData(result, range.Length, clipboardLens == null ? 0 : clipboardLens[num])).ToList());
@@ -2057,7 +2069,7 @@ namespace NeoEdit.TextEdit
 			{
 				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard must match number of selections");
+					throw new Exception("Number of items on clipboard must match number of selections.");
 				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
 				codePageMinMaxValues = clipboardCodePages.Distinct().ToDictionary(codePage => codePage, codePage => "");
 			}
@@ -2080,12 +2092,16 @@ namespace NeoEdit.TextEdit
 		internal CombinationsPermutationsDialog.Result Command_Insert_CombinationsPermutations_Dialog()
 		{
 			if (Selections.Count != 1)
-				throw new Exception("Can only have one selection");
+				throw new Exception("Must have one selection.");
+
 			return CombinationsPermutationsDialog.Run(WindowParent);
 		}
 
 		internal void Command_Insert_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
 		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection.");
+
 			var output = new List<string>();
 			var num = new int[result.UseCount];
 			var used = new bool[result.ItemCount + 1];
@@ -2123,7 +2139,7 @@ namespace NeoEdit.TextEdit
 
 			ReplaceSelections(String.Join("", output));
 
-			var start = Selections.First().Start;
+			var start = Selections.Single().Start;
 			var sels = new List<Range>();
 			foreach (var str in output)
 			{
@@ -2299,8 +2315,8 @@ namespace NeoEdit.TextEdit
 
 		internal WidthDialog.Result Command_Select_Width_Dialog()
 		{
-			var minLength = Selections.AsParallel().AsOrdered().Min(range => range.Length);
-			var maxLength = Selections.AsParallel().AsOrdered().Max(range => range.Length);
+			var minLength = Selections.Any() ? Selections.AsParallel().AsOrdered().Min(range => range.Length) : 0;
+			var maxLength = Selections.Any() ? Selections.AsParallel().AsOrdered().Max(range => range.Length) : 0;
 			return WidthDialog.Run(WindowParent, minLength, maxLength, false, true);
 		}
 
@@ -2324,7 +2340,7 @@ namespace NeoEdit.TextEdit
 			{
 				var clipboardStrings = NEClipboard.GetStrings();
 				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+					throw new Exception("Number of items on clipboard must match number of selections.");
 				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
 			}
 
@@ -2373,6 +2389,8 @@ namespace NeoEdit.TextEdit
 
 		void DoCommand_Select_MinMax<T>(bool min, Func<Range, T> sortBy)
 		{
+			if (!Selections.Any())
+				throw new Exception("No selections");
 			var selections = Selections.AsParallel().AsOrdered().Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
 			var found = min ? selections.First().sort : selections.Last().sort;
 			Selections.Replace(selections.AsParallel().AsOrdered().Where(obj => obj.sort.Equals(found)).Select(obj => obj.range).ToList());
@@ -2431,6 +2449,8 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Single()
 		{
+			if (!Selections.Any())
+				return;
 			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
 			Selections.Replace(Selections[visibleIndex]);
 			visibleIndex = 0;
@@ -2438,6 +2458,8 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Remove()
 		{
+			if (!Selections.Any())
+				return;
 			Selections.RemoveAt(visibleIndex);
 		}
 
@@ -2479,10 +2501,13 @@ namespace NeoEdit.TextEdit
 		int visibleIndex = 0;
 		internal void EnsureVisible(bool highlight = false)
 		{
-			if (Selections.Count == 0)
-				return;
-
 			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
+			if (!Selections.Any())
+			{
+				Line = Index = PositionMin = PositionMax = Column = null;
+				return;
+			}
+
 			var range = Selections[visibleIndex];
 			var line = Data.GetOffsetLine(range.Cursor);
 			var index = Data.GetOffsetIndex(range.Cursor, line);
@@ -2500,8 +2525,6 @@ namespace NeoEdit.TextEdit
 
 		void SelectionsInvalidated()
 		{
-			if (Selections.Count == 0)
-				Selections.Add(new Range(BeginOffset()));
 			var visible = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
 			Selections.DeOverlap();
 			if (visible != null)
@@ -2837,7 +2860,12 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Home:
 					if (controlDown)
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginOffset(), shiftDown)).ToList()); // Have to use MoveCursor for selection
+					{
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginOffset(), shiftDown)).ToList(); // Have to use MoveCursor for selection
+						if ((!sels.Any()) && (!shiftDown))
+							sels.Add(new Range(BeginOffset()));
+						Selections.Replace(sels);
+					}
 					else
 					{
 						bool changed = false;
@@ -2869,7 +2897,12 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.End:
 					if (controlDown)
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndOffset(), shiftDown)).ToList()); // Have to use MoveCursor for selection
+					{
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndOffset(), shiftDown)).ToList(); // Have to use MoveCursor for selection
+						if ((!sels.Any()) && (!shiftDown))
+							sels.Add(new Range(EndOffset()));
+						Selections.Replace(sels);
+					}
 					else
 						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, Int32.MaxValue, shiftDown, indexRel: false)).ToList());
 					break;
@@ -2947,7 +2980,15 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Space:
 					if (controlDown)
-						Selections.Replace(Selections.Select(range => new Range(range.Highlight, range.Cursor)).ToList());
+					{
+						if (Selections.Any())
+							Selections.Replace(Selections.Select(range => new Range(range.Highlight, range.Cursor)).ToList());
+						else
+						{
+							var line = Math.Min(yScrollValue, Data.NumLines - 1);
+							Selections.Replace(new Range(Data.GetOffset(line, 0)));
+						}
+					}
 					else
 						ret = false;
 					break;
@@ -3088,13 +3129,16 @@ namespace NeoEdit.TextEdit
 			var line = Math.Min(Data.NumLines - 1, (int)(mousePos.Y / Font.lineHeight) + yScrollValue);
 			var index = Math.Min(Data.GetLineLength(line), Data.GetIndexFromColumn(line, (int)(mousePos.X / Font.charWidth) + xScrollValue, true));
 			var offset = Data.GetOffset(line, index);
-			var mouseRange = Selections[visibleIndex];
+			var mouseRange = visibleIndex < Selections.Count ? Selections[visibleIndex] : null;
 
 			if (selecting)
 			{
-				Selections.Remove(mouseRange);
-				Selections.Add(MoveCursor(mouseRange, offset, true));
-				visibleIndex = Selections.Count - 1;
+				if (mouseRange != null)
+				{
+					Selections.Remove(mouseRange);
+					Selections.Add(MoveCursor(mouseRange, offset, true));
+					visibleIndex = Selections.Count - 1;
+				}
 				return;
 			}
 
@@ -3236,7 +3280,10 @@ namespace NeoEdit.TextEdit
 		void FindNext(bool forward, bool selecting)
 		{
 			if (Searches.Count == 0)
+			{
+				Selections.Clear();
 				return;
+			}
 
 			for (var ctr = 0; ctr < Selections.Count; ++ctr)
 			{
