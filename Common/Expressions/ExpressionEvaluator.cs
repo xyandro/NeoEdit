@@ -170,25 +170,24 @@ namespace NeoEdit.Common.Expressions
 			return Visit(context.form());
 		}
 
-		public override object VisitShortFormExpression(ExpressionParser.ShortFormExpressionContext context)
+		object GetShortForm(string op)
 		{
-			var op = context.op.Text;
 			var values = new Queue<object>(this.values);
-			object val1 = null;
+			object result = null;
 			bool first = true;
 			while (values.Any())
 			{
 				if (first)
 				{
-					val1 = values.Dequeue();
+					result = values.Dequeue();
 					first = false;
 					continue;
 				}
 
 				var val2 = values.Dequeue();
-				val1 = DoBinaryOp(op, val1, val2);
+				result = DoBinaryOp(op, result, val2);
 			}
-			return val1;
+			return result;
 		}
 
 		public override object VisitMethod(ExpressionParser.MethodContext context)
@@ -207,6 +206,8 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
+		public override object VisitShortForm(ExpressionParser.ShortFormContext context) { return GetShortForm(context.op.Text); }
+		public override object VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) { return GetShortForm("&&"); }
 		public override object VisitDot(ExpressionParser.DotContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitUnary(ExpressionParser.UnaryContext context) { return DoUnaryOp(context.op.Text, Visit(context.val)); }
 		public override object VisitCast(ExpressionParser.CastContext context) { return ToType(Visit(context.val), GetType(context.type.Text)); }

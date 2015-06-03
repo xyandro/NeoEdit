@@ -32,6 +32,7 @@ Override readonly, access denied (UAC required?)
 Group by selection
 In search box add buttons to escape/unescape regex
 Add word list
+Add/subtract chars in expressions
 
 View:
 Update as new lines are added

@@ -3,8 +3,9 @@ grammar Expression;
 expr : DEBUG? form EOF;
 
 form
-	: e # LongFormExpression
-	| op=(MULTOP | ADDOP | SHIFTOP | RELATIONALOP | EQUALITYOP | LOGICALAND | LOGICALXOR | LOGICALOR | CONDITIONALAND | CONDITIONALOR) # ShortFormExpression
+	: e # LongForm
+	| op=(MULTOP | ADDOP | SHIFTOP | RELATIONALOP | EQUALITYOP | LOGICALAND | LOGICALXOR | LOGICALOR | CONDITIONALAND | CONDITIONALOR) # ShortForm
+	| # DefaultOpForm
 	;
 
 e
