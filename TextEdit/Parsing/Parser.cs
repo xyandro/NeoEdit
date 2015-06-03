@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing
 {
 	static public class Parser
 	{

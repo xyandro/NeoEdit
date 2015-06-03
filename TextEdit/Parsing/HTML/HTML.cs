@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing
 {
 	class HTML
 	{

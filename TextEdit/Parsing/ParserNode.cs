@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing
 {
 	public class ParserNode
 	{

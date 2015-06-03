@@ -1,7 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing
 {
 	static class CSharp
 	{

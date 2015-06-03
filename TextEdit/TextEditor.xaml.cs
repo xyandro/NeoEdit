@@ -20,8 +20,8 @@ using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
-using NeoEdit.Parsing;
 using NeoEdit.TextEdit.Dialogs;
+using NeoEdit.TextEdit.Parsing;
 
 namespace NeoEdit.TextEdit
 {

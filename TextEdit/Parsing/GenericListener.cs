@@ -2,7 +2,7 @@
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing
 {
 	class GenericListener : IParseTreeListener
 	{

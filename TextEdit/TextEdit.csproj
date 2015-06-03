@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" InitialTargets="BuildCSharp;BuildXML" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{9A35AB82-2481-4C44-B51E-66DF7D248EAD}</ProjectGuid>
@@ -8,6 +8,14 @@
     <AssemblyName>NeoEdit.TextEdit</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
+  <Target Name="BuildCSharp" Inputs="Parsing\CSharp\Source\CSharp4Lexer.g4;Parsing\CSharp\Source\CSharp4PreProcessor.g4;Parsing\CSharp\Source\CSharp4.g4" Outputs="Parsing\CSharp\Parser\CSharp4Visitor.cs;Parsing\CSharp\Parser\CSharp4BaseVisitor.cs;Parsing\CSharp\Parser\CSharp4Lexer.cs;Parsing\CSharp\Parser\CSharp4Parser.cs;Parsing\CSharp\Parser\CSharp4PreProcessor.cs">
+    <Message Text="Building CSharp grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -o &quot;$(ProjectDir)Parsing\CSharp\Parser&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4Lexer.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4PreProcessor.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4.g4&quot;" />
+  </Target>
+  <Target Name="BuildXML" Inputs="Parsing\XML\Source\XMLLexer.g4;Parsing\XML\Source\XMLParser.g4" Outputs="Parsing\XML\Parser\XMLLexer.cs;Parsing\XML\Parser\XMLParser.cs;Parsing\XML\Parser\XMLParserBaseVisitor.cs;Parsing\XML\Parser\XMLParserVisitor.cs">
+    <Message Text="Building XML grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -o &quot;$(ProjectDir)Parsing\XML\Parser&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLParser.g4&quot;" />
+  </Target>
   <ItemGroup>
     <Compile Include="GotoType.cs" />
     <Compile Include="Commands.cs" />
@@ -205,6 +213,29 @@
     </Compile>
     <Compile Include="UndoRedo.cs" />
     <Compile Include="UnitTest\TextDataTest.cs" />
+    <Compile Include="Parsing\CSharp\CSharpVisitor.cs" />
+    <Compile Include="Parsing\CSharp\CSharp.cs" />
+    <Compile Include="Parsing\XML\XML.cs" />
+    <Compile Include="Parsing\XML\XMLVisitor.cs" />
+    <Compile Include="Parsing\XML\Parser\XMLLexer.cs" />
+    <Compile Include="Parsing\XML\Parser\XMLParser.cs" />
+    <Compile Include="Parsing\XML\Parser\XMLParserBaseVisitor.cs" />
+    <Compile Include="Parsing\XML\Parser\XMLParserVisitor.cs" />
+    <None Include="Parsing\CSharp\Source\CSharp4.g4" />
+    <None Include="Parsing\CSharp\Source\CSharp4Lexer.g4" />
+    <None Include="Parsing\CSharp\Source\CSharp4PreProcessor.g4" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4BaseVisitor.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4Lexer.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4Parser.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4PreProcessor.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4Visitor.cs" />
+    <Compile Include="Parsing\GenericListener.cs" />
+    <Compile Include="Parsing\ParsingExtensions.cs" />
+    <Compile Include="Parsing\HTML\HTML.cs" />
+    <Compile Include="Parsing\Parser.cs" />
+    <Compile Include="Parsing\ParserNode.cs" />
+    <None Include="Parsing\XML\Source\XMLLexer.g4" />
+    <None Include="Parsing\XML\Source\XMLParser.g4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -214,10 +245,6 @@
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Parsing\Parsing.csproj">
-      <Project>{4b3369ec-007a-4264-9d11-42c6f8a04739}</Project>
-      <Name>Parsing</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />

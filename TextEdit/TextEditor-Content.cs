@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using NeoEdit.GUI.Controls;
-using NeoEdit.Parsing;
 using NeoEdit.TextEdit.Dialogs;
+using NeoEdit.TextEdit.Parsing;
 
 namespace NeoEdit.TextEdit
 {
