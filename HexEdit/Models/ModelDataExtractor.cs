@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.HexEdit.Data;
 
@@ -99,11 +99,11 @@ namespace NeoEdit.HexEdit.Models
 			return data.GetSubset(position, count);
 		}
 
-		Dictionary<string, Expression> expressions = new Dictionary<string, Expression>();
+		Dictionary<string, NEExpression> expressions = new Dictionary<string, NEExpression>();
 		string EvalExpression(string expression)
 		{
 			if (!expressions.ContainsKey(expression))
-				expressions[expression] = new Expression(expression, values.Keys);
+				expressions[expression] = new NEExpression(expression);
 			return expressions[expression].EvaluateDict(values).ToString();
 		}
 

@@ -19,7 +19,7 @@
 		</Grid.RowDefinitions>
 		
 		<Label Grid.Row="0" Grid.Column="0" Content="{Binding DisplayString, ElementName=self}" HorizontalAlignment="Right"/>
-		<guiControls:NumericUpDown Grid.Row="0" Grid.Column="1" Name="value" Width="150" Value="{Binding Value, ElementName=self}" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== false'}"/>
+		<guiControls:NumericUpDown Grid.Row="0" Grid.Column="1" Name="value" Width="150" Value="{Binding Value, ElementName=self}" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='![0]'}"/>
 		<CheckBox Grid.Row="0" Grid.Column="2" Content="C_lipboard Value" IsChecked="{Binding ClipboardValue, ElementName=self}" VerticalAlignment="Center" Margin="10,0,0,0" Focusable="False"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Relative" Target="{Binding ElementName=relative}" HorizontalAlignment="Right"/>

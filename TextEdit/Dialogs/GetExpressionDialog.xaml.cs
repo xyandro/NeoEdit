@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -9,7 +10,7 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public NeoEdit.Common.Expression Expression { get; set; }
+			public NEExpression Expression { get; set; }
 		}
 
 		[DepProp]
@@ -64,12 +65,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		readonly Dictionary<string, List<string>> expressionData;
 		GetExpressionDialog(Dictionary<string, List<string>> expressionData)
 		{
-			InitializeComponent();
-
 			this.expressionData = expressionData;
 
-			Expression = "x";
-			var list = expressionData[Expression];
+			InitializeComponent();
+
+			var list = expressionData["x"];
 			Example1 = list.Count > 0 ? list[0] : null;
 			Example2 = list.Count > 1 ? list[1] : null;
 			Example3 = list.Count > 2 ? list[2] : null;
@@ -81,6 +81,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Example9 = list.Count > 8 ? list[8] : null;
 			Example10 = list.Count > 9 ? list[9] : null;
 
+			Expression = "x";
 			expression.CaretIndex = 1;
 		}
 
@@ -89,7 +90,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			bool valid = true;
 			try
 			{
-				var expression = new NeoEdit.Common.Expression(Expression, expressionData.Keys);
+				var expression = new NEExpression(Expression);
 				if (Example1 != null) Example1Value = expression.EvaluateDict(expressionData, 0);
 				if (Example2 != null) Example2Value = expression.EvaluateDict(expressionData, 1);
 				if (Example3 != null) Example3Value = expression.EvaluateDict(expressionData, 2);
@@ -123,7 +124,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = new Common.Expression(Expression, expressionData.Keys) };
+			result = new Result { Expression = new NEExpression(Expression) };
 			DialogResult = true;
 		}
 

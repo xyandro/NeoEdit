@@ -19,7 +19,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Repeat _count:" Target="{Binding ElementName=repeatCount}" HorizontalAlignment="Right"/>
-		<guiControls:NumericUpDown Grid.Row="0" Grid.Column="1" Name="repeatCount" Value="{Binding RepeatCount, ElementName=self}" Minimum="1" VerticalAlignment="Center" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== false'}"/>
+		<guiControls:NumericUpDown Grid.Row="0" Grid.Column="1" Name="repeatCount" Value="{Binding RepeatCount, ElementName=self}" Minimum="1" VerticalAlignment="Center" IsEnabled="{Binding ClipboardValue, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='![0]'}"/>
 		<CheckBox Grid.Row="0" Grid.Column="2" Content="C_lipboard Value" IsChecked="{Binding ClipboardValue, ElementName=self}" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Select repetitions:" Target="{Binding ElementName=selectRepetitions}" HorizontalAlignment="Right"/>

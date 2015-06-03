@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" InitialTargets="BuildExpression" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{1C928016-0E00-4125-80A5-458B82F1EC0D}</ProjectGuid>
@@ -8,9 +8,20 @@
     <AssemblyName>NeoEdit.Common</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <Target Name="BuildExpression" Inputs="Expressions\Source\Expression.g4" Outputs="Expressions\Parser\ExpressionVisitor.cs;Expressions\Parser\ExpressionBaseVisitor.cs;Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs">
+    <Message Text="Building expression grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.Common.Expressions.Parser&quot; -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\Expression.g4&quot;" />
+  </Target>
   <ItemGroup>
     <Compile Include="Clipboard.cs" />
-    <Compile Include="Expression.cs" />
+    <Compile Include="Expressions\NEExpression.cs" />
+    <Compile Include="Expressions\VariableFinder.cs" />
+    <Compile Include="Expressions\ExpressionEvaluator.cs" />
+    <Compile Include="Expressions\Parser\ExpressionBaseVisitor.cs" />
+    <Compile Include="Expressions\Parser\ExpressionLexer.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParser.cs" />
+    <Compile Include="Expressions\Parser\ExpressionVisitor.cs" />
+    <None Include="Expressions\Source\Expression.g4" />
     <Compile Include="Helpers.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

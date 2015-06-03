@@ -55,7 +55,7 @@
 			</Grid>
 		</GroupBox>
 
-		<GroupBox Header="Basic Type" Visibility="{Binding ModelActionVM.Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== \'BasicType\''}">
+		<GroupBox Header="Basic Type" Visibility="{Binding ModelActionVM.Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] == \'BasicType\''}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="{StaticResource DescWidth}"/>
@@ -70,7 +70,7 @@
 			</Grid>
 		</GroupBox>
 
-		<GroupBox Header="String" Visibility="{Binding ModelActionVM.Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== \'String\''}">
+		<GroupBox Header="String" Visibility="{Binding ModelActionVM.Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] == \'String\''}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="{StaticResource DescWidth}"/>
@@ -94,14 +94,14 @@
 				<ComboBox Grid.Row="1" Grid.Column="1" Name="encoding" ItemsSource="{Binding EncodingTypes, ElementName=self}" SelectedValue="{Binding ModelActionVM.Encoding, ElementName=self}" DisplayMemberPath="Value" SelectedValuePath="Key"/>
 
 				<Label Grid.Row="2" Grid.Column="0" Content="_Length:" HorizontalContentAlignment="Right" Target="{Binding ElementName=varLength}" Visibility="{Binding Visibility, ElementName=varLength}"/>
-				<ComboBox Grid.Row="2" Grid.Column="1" Name="varLength" ItemsSource="{Binding BasicTypes, ElementName=self}" SelectedValue="{Binding ModelActionVM.CodePage, ElementName=self, Mode=TwoWay}" Visibility="{Binding ModelActionVM.StringType, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== \'StringWithLength\''}"/>
+				<ComboBox Grid.Row="2" Grid.Column="1" Name="varLength" ItemsSource="{Binding BasicTypes, ElementName=self}" SelectedValue="{Binding ModelActionVM.CodePage, ElementName=self, Mode=TwoWay}" Visibility="{Binding ModelActionVM.StringType, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] == \'StringWithLength\''}"/>
 
 				<Label Grid.Row="3" Grid.Column="0" Content="_Length:" HorizontalContentAlignment="Right" Target="{Binding ElementName=fixedWidth}" Visibility="{Binding Visibility, ElementName=fixedWidth}"/>
-				<TextBox Grid.Row="3" Grid.Column="1" Name="fixedWidth" Text="{Binding ModelActionVM.FixedWidth, ElementName=self, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding ModelActionVM.StringType, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== \'StringFixedWidth\''}"/>
+				<TextBox Grid.Row="3" Grid.Column="1" Name="fixedWidth" Text="{Binding ModelActionVM.FixedWidth, ElementName=self, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding ModelActionVM.StringType, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] == \'StringFixedWidth\''}"/>
 			</Grid>
 		</GroupBox>
 
-		<GroupBox Header="Unused" Visibility="{Binding ModelActionVM.Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== \'Unused\''}">
+		<GroupBox Header="Unused" Visibility="{Binding ModelActionVM.Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] == \'Unused\''}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="{StaticResource DescWidth}"/>
@@ -116,7 +116,7 @@
 			</Grid>
 		</GroupBox>
 
-		<GroupBox Header="Model" Visibility="{Binding ModelActionVM.Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t== \'Model\''}">
+		<GroupBox Header="Model" Visibility="{Binding ModelActionVM.Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] == \'Model\''}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="{StaticResource DescWidth}"/>

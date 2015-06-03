@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NeoEdit.Common.Expressions;
 
 namespace NeoEdit.Common.UnitTest
 {
@@ -16,48 +18,75 @@ namespace NeoEdit.Common.UnitTest
 		[TestMethod]
 		public void ExpressionTest()
 		{
-			Assert.AreEqual(new Expression("2 << 2").Evaluate().ToString(), "8");
-			Assert.AreEqual(new Expression("1048576 >> 10").Evaluate().ToString(), "1024");
+			Assert.AreEqual(new NEExpression("2 << 2").Evaluate().ToString(), "8");
+			Assert.AreEqual(new NEExpression("1048576 >> 10").Evaluate().ToString(), "1024");
 
-			Assert.AreEqual(new Expression("&").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "179154957");
-			Assert.AreEqual(new Expression("^").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3573567202");
-			Assert.AreEqual(new Expression("|").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3752722159");
+			Assert.AreEqual(new NEExpression("&").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "179154957");
+			Assert.AreEqual(new NEExpression("^").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3573567202");
+			Assert.AreEqual(new NEExpression("|").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3752722159");
 
-			Assert.AreEqual(new Expression("TRUE").Evaluate().ToString(), "True");
-			Assert.AreEqual(new Expression("FaLsE").Evaluate().ToString(), "False");
+			Assert.AreEqual(new NEExpression("TRUE").Evaluate(), true);
+			Assert.AreEqual(new NEExpression("FaLsE").Evaluate(), false);
 
-			Assert.AreEqual(new Expression("5.0 + 2.1").Evaluate().ToString(), "7.1");
-			Assert.AreEqual(new Expression("3.6 + 2.1 * 5.0").Evaluate().ToString(), "14.1");
-			Assert.AreEqual(new Expression("(3.6 + 2.1) * 5.0").Evaluate().ToString(), "28.5");
-			Assert.AreEqual(new Expression("[0] + [1]").Evaluate(5.4, 6.7).ToString(), "12.1");
+			Assert.AreEqual(new NEExpression("5.0 + 2.1").Evaluate().ToString(), "7.1");
+			Assert.AreEqual(new NEExpression("3.6 + 2.1 * 5.0").Evaluate().ToString(), "14.1");
+			Assert.AreEqual(new NEExpression("(3.6 + 2.1) * 5.0").Evaluate().ToString(), "28.5");
+			Assert.AreEqual(new NEExpression("[0] + [1]").Evaluate(5.4, 6.7).ToString(), "12.1");
 
-			Assert.AreEqual(new Expression("[0] IS 'Int32'").Evaluate((object)5).ToString(), "True");
+			Assert.AreEqual(new NEExpression("[0] is 'Int32'").Evaluate((object)5), true);
 
-			Assert.AreEqual(new Expression("'5a' t== '5a'").Evaluate((object)5).ToString(), "True");
-			Assert.AreEqual(new Expression("'5a' t== '5A'").Evaluate((object)5).ToString(), "False");
-			Assert.AreEqual(new Expression("'5a' ti== '5a'").Evaluate((object)5).ToString(), "True");
-			Assert.AreEqual(new Expression("'5a' ti== '5A'").Evaluate((object)5).ToString(), "True");
-			Assert.AreEqual(new Expression("'5a' t!= '5a'").Evaluate((object)5).ToString(), "False");
-			Assert.AreEqual(new Expression("'5a' t!= '5A'").Evaluate((object)5).ToString(), "True");
-			Assert.AreEqual(new Expression("'5a' ti!= '5a'").Evaluate((object)5).ToString(), "False");
-			Assert.AreEqual(new Expression("'5a' ti!= '5A'").Evaluate((object)5).ToString(), "False");
+			Assert.AreEqual(new NEExpression("'5a' == '5a'").Evaluate((object)5), true);
+			Assert.AreEqual(new NEExpression("'5a' == '5A'").Evaluate((object)5), false);
+			Assert.AreEqual(new NEExpression("'5a' i== '5a'").Evaluate((object)5), true);
+			Assert.AreEqual(new NEExpression("'5a' i== '5A'").Evaluate((object)5), true);
+			Assert.AreEqual(new NEExpression("'5a' != '5a'").Evaluate((object)5), false);
+			Assert.AreEqual(new NEExpression("'5a' != '5A'").Evaluate((object)5), true);
+			Assert.AreEqual(new NEExpression("'5a' i!= '5a'").Evaluate((object)5), false);
+			Assert.AreEqual(new NEExpression("'5a' i!= '5A'").Evaluate((object)5), false);
 
-			Assert.AreEqual(new Expression("[0].'value'").Evaluate(new ExpressionDotTest(5)).ToString(), "5");
+			Assert.AreEqual(new NEExpression("[0].'value'").Evaluate(new ExpressionDotTest(5)).ToString(), "5");
 
-			Assert.AreEqual(new Expression("Type([0]).'FullName'").Evaluate(new ExpressionDotTest(5)).ToString(), typeof(ExpressionDotTest).FullName);
+			Assert.AreEqual(new NEExpression("Type([0]).'FullName'").Evaluate(new ExpressionDotTest(5)).ToString(), typeof(ExpressionDotTest).FullName);
 
-			Assert.AreEqual(new Expression("ValidRE([0])").Evaluate(@"\d+").ToString(), "True");
-			Assert.AreEqual(new Expression("ValidRE([0])").Evaluate(@"[").ToString(), "False");
+			Assert.AreEqual(new NEExpression("ValidRE([0])").Evaluate(@"\d+"), true);
+			Assert.AreEqual(new NEExpression("ValidRE([0])").Evaluate(@"["), false);
 
-			Assert.AreEqual(new Expression("+").Evaluate(1, 2, 3, 4, 5.5).ToString(), "15.5");
-			Assert.AreEqual(new Expression("||").Evaluate(false, false, true, false).ToString(), "True");
-			Assert.AreEqual(new Expression("*").Evaluate(4, 5, 6).ToString(), "120");
+			Assert.AreEqual(new NEExpression("+").Evaluate(1, 2, 3, 4, 5.5).ToString(), "15.5");
+			Assert.AreEqual(new NEExpression("||").Evaluate(false, false, true, false), true);
+			Assert.AreEqual(new NEExpression("*").Evaluate(4, 5, 6).ToString(), "120");
 
-			Assert.AreEqual(new Expression("([0] || [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString(), "5");
+			Assert.AreEqual(new NEExpression("([0] || [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString(), "5");
 
-			Assert.AreEqual(new Expression("t+").Evaluate("I", "Can", null, "Join", "Strings").ToString(), "ICanJoinStrings");
+			Assert.AreEqual(new NEExpression("+").Evaluate("I", "Can", null, "Join", "Strings").ToString(), "ICanJoinStrings");
 
-			Assert.AreEqual(new Expression("StrFormat('[0]{0}+{1} is {2}', [0], [1], ([0]+[1]))").Evaluate(5, 7).ToString(), "[0]5+7 is 12");
+			Assert.AreEqual(new NEExpression("StrFormat('[0]{0}+{1} is {2}', [0], [1], [0] + [1])").Evaluate(5, 7).ToString(), "[0]5+7 is 12");
+
+			Assert.AreEqual(new NEExpression("StrFormat()").Evaluate().ToString(), "");
+			Assert.AreEqual(new NEExpression("StrFormat('Test')").Evaluate().ToString(), "Test");
+			Assert.AreEqual(new NEExpression("StrFormat('Test {0}', 5)").Evaluate().ToString(), "Test 5");
+			Assert.AreEqual(new NEExpression("StrFormat('Test {0} {1}', 5, 7)").Evaluate().ToString(), "Test 5 7");
+
+			Assert.AreEqual(new NEExpression("!true").Evaluate(), false);
+			Assert.AreEqual(new NEExpression("![0]").Evaluate(false), true);
+			Assert.AreEqual(new NEExpression("![0]").Evaluate("true"), false);
+			Assert.AreEqual(new NEExpression("-4").Evaluate().ToString(), "-4");
+
+			Assert.AreEqual(new NEExpression("Type((long)[0])").Evaluate((byte)0), typeof(long));
+
+			Assert.AreEqual(new NEExpression("0xdeadbeef + [0]").Evaluate(0x0badf00d).ToString(), "3931877116");
+
+			var dict = new Dictionary<string, object>
+			{
+				{ "x", 0xdeadbeef },
+				{ "y", 0x0badf00d },
+				{ "z", 0x0defaced },
+			};
+			var expr = new NEExpression("x - y + [0]");
+			var vars = expr.Variables;
+			Assert.AreEqual(vars.Count, 2);
+			Assert.IsTrue(vars.Contains("x"));
+			Assert.IsTrue(vars.Contains("y"));
+			Assert.AreEqual(expr.EvaluateDict(dict, 0xfeedface).ToString(), "7816989104");
 		}
 	}
 }

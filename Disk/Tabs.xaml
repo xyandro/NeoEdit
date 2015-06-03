@@ -8,7 +8,7 @@
 
 	<Window.Title>
 		<!--A simple Binding doesn't give any title if [0] blank-->
-		<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="([0] t== '' ? 'Custom File List' : [0]) t+ ' - NeoEdit Disk Viewer'">
+		<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="([0] == '' ? 'Custom File List' : [0]) + ' - NeoEdit Disk Viewer'">
 			<Binding Path="Active.Location" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>

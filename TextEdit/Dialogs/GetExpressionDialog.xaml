@@ -84,14 +84,15 @@
 			x: <Italic>selection</Italic>, y: <Italic>order (1-based)</Italic>, z: <Italic>order (0-based)</Italic>, n: <Italic>count</Italic>, c: <Italic>clipboard</Italic>, v1-v9: <Italic>values</Italic>, rk/rv1-rv9: <Italic>raw keys/values</Italic><LineBreak/>
 			xl: <Italic>selection length</Italic>, cl: <Italic>clipboard length</Italic>, v1l-v9l: <Italic>values length</Italic>, rkl/rv1l-rv9l: <Italic>raw keys/values length</Italic><LineBreak/>
 			<Italic>Evaluate parameter as expression:</Italic> Eval(x)<LineBreak/>
-			<Italic>Force to integer:</Italic> Int(x/2)<LineBreak/>
-			<Italic>Grouping operator:</Italic> ()<LineBreak/>
+			<Italic>Force to type:</Italic> (bool)x (long)(x/2) (double)y (string)7<LineBreak/>
 			<Italic>Mathematical operators:</Italic> * / % + -<LineBreak/>
-			<Italic>Text operators:</Italic> t+<LineBreak/>
-			<Italic>Comparison operators:</Italic> &lt; &lt;= &gt; &gt;= t&lt; t&lt;= t&gt; t&gt;= ti&lt; ti&lt;= ti&gt; ti&gt;=<LineBreak/>
-			<Italic>Equality operators:</Italic> == != t== t!= ti== ti!=<LineBreak/>
+			<Italic>Text operators:</Italic> +<LineBreak/>
+			<Italic>Comparison operators:</Italic> &lt; &lt;= &gt; &gt;= i&lt; i&lt;= i&gt; i&gt;=<LineBreak/>
+			<Italic>Equality operators:</Italic> == != i== i!=<LineBreak/>
+			<Italic>Bitwise operators:</Italic> &amp; ^ |<LineBreak/>
 			<Italic>Boolean operators:</Italic> &amp;&amp; ||<LineBreak/>
-			<Italic>Ternary operator:</Italic> ? :
+			<Italic>Ternary operator:</Italic> ? :<LineBreak/>
+			<Italic>Literal:</Italic> 5 7.2 0x0abcdefg 'Test'
 		</TextBlock>
 	</Grid>
 </guiControls:ModalDialog>

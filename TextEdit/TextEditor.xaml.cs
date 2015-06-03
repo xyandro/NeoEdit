@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
@@ -184,7 +185,7 @@ namespace NeoEdit.TextEdit
 		internal Label GetLabel()
 		{
 			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"([0] t== ''?'[Untitled]':FileName([0]))t+([1]?'*':'')" };
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
 			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
 			label.SetBinding(Label.ContentProperty, multiBinding);
@@ -342,7 +343,7 @@ namespace NeoEdit.TextEdit
 			return data.Select(a => Coder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
 		}
 
-		Dictionary<string, List<string>> GetExpressionData(int count = -1, NeoEdit.Common.Expression expression = null)
+		Dictionary<string, List<string>> GetExpressionData(int count = -1, NEExpression expression = null)
 		{
 			var sels = count == -1 ? Selections.ToList() : Selections.Take(Math.Min(count, Selections.Count)).ToList();
 			var strs = sels.Select(range => GetString(range)).ToList();
@@ -379,7 +380,7 @@ namespace NeoEdit.TextEdit
 				});
 			}
 
-			var used = expression != null ? expression.DictValues() : null;
+			var used = expression != null ? expression.Variables : null;
 			var data = new Dictionary<string, List<string>>();
 			data["x"] = strs;
 			Parallel.ForEach(parallelDataActions, pair =>
@@ -1859,7 +1860,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_EvaluateSelectedExpression()
 		{
-			var expression = new NeoEdit.Common.Expression("Eval([0])");
+			var expression = new NEExpression("Eval([0])");
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
 		}
 

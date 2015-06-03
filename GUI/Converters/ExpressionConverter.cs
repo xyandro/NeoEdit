@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
+using NeoEdit.Common.Expressions;
 
 namespace NeoEdit.GUI.Converters
 {
@@ -18,13 +19,13 @@ namespace NeoEdit.GUI.Converters
 			return converter;
 		}
 
-		static Dictionary<string, NeoEdit.Common.Expression> expressionUsed = new Dictionary<string, NeoEdit.Common.Expression>();
-		NeoEdit.Common.Expression GetExpression(string expression)
+		static Dictionary<string, NEExpression> expressionUsed = new Dictionary<string, NEExpression>();
+		NEExpression GetExpression(string expression)
 		{
 			if (expression == null)
 				expression = "";
 			if (!expressionUsed.ContainsKey(expression))
-				expressionUsed[expression] = new NeoEdit.Common.Expression(expression);
+				expressionUsed[expression] = new NEExpression(expression);
 			return expressionUsed[expression];
 		}
 

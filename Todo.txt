@@ -24,13 +24,14 @@ Distinct operations by marked region (sort/series/etc within region)
 Select square (right mouse button)
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
-Expression: Hex-based math
 Allow user to disable undo/redo for faster performance
 Submit forms
 Make markup relative paths absolute
 When opening files don't open the same one more than once
 Override readonly, access denied (UAC required?)
 Group by selection
+In search box add buttons to escape/unescape regex
+Add word list
 
 View:
 Update as new lines are added

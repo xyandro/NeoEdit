@@ -29,7 +29,7 @@
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Value:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-			<guiControls:NumericUpDown Name="value"  Width="150" Value="{Binding Value, ElementName=self}" IsEnabled="{Binding Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] t!= \'Clipboard\''}"/>
+			<guiControls:NumericUpDown Name="value"  Width="150" Value="{Binding Value, ElementName=self}" IsEnabled="{Binding Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] != \'Clipboard\''}"/>
 			<ComboBox ItemsSource="{Binding ByteMultDict, ElementName=self}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding ByteMult, ElementName=self}"/>
 		</StackPanel>
 
