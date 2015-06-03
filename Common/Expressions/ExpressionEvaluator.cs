@@ -14,12 +14,17 @@ namespace NeoEdit.Common.Expressions
 	{
 		readonly string expression;
 		readonly Dictionary<string, object> dict;
-		readonly object[] values;
+		readonly List<object> values;
 		public ExpressionEvaluator(string expression, Dictionary<string, object> dict, params object[] values)
 		{
 			this.expression = expression;
 			this.dict = dict;
-			this.values = values;
+			this.values = values.Select(value => CheckUnset(value)).ToList();
+		}
+
+		object CheckUnset(object val)
+		{
+			return (val != null) && (val.GetType().FullName == "MS.Internal.NamedObject") && (val.ToString() == "{DependencyProperty.UnsetValue}") ? null : val;
 		}
 
 		bool IsIntType(Type type)
