@@ -410,6 +410,8 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Play" CommandEnum="Macro_Play"/>
 		<textEdit:TextEditMenuItem Header="Play On Copied _Files" CommandEnum="Macro_PlayOnCopiedFiles"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>

@@ -499,10 +499,12 @@ namespace NeoEdit.TextEdit
 		}
 		PreviousStruct previous = null;
 
+		bool timeNext = false;
 		internal void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
 		{
 			doDrag = false;
 
+			var start = DateTime.UtcNow;
 			if (command != TextEditCommand.Edit_RepeatLastAction)
 			{
 				previous = new PreviousStruct
@@ -759,6 +761,21 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.View_Highlighting_None: HighlightType = Highlighting.HighlightingType.None; break;
 				case TextEditCommand.View_Highlighting_CSharp: HighlightType = Highlighting.HighlightingType.CSharp; break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
+				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
+			}
+
+			var end = DateTime.UtcNow;
+			var elapsed = (end - start).TotalMilliseconds;
+
+			if ((command != TextEditCommand.Macro_TimeNextAction) && (timeNext))
+			{
+				timeNext = false;
+				new Message
+				{
+					Title = "Timer",
+					Text = String.Format("Elapsed time: {0:n} ms", elapsed),
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
 			}
 		}
 
