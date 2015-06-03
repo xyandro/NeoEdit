@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.TextEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing.HTML
 {
-	class HTML
+	class HTMLEntry
 	{
 		const string Name = "Name";
 		const string Element = "Element";
@@ -16,7 +16,7 @@ namespace NeoEdit.TextEdit.Parsing
 		readonly string input;
 		int location;
 
-		public HTML(string input)
+		public HTMLEntry(string input)
 		{
 			this.input = input;
 			location = 0;

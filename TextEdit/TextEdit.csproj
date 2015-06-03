@@ -10,11 +10,11 @@
   </PropertyGroup>
   <Target Name="BuildCSharp" Inputs="Parsing\CSharp\Source\CSharp4Lexer.g4;Parsing\CSharp\Source\CSharp4PreProcessor.g4;Parsing\CSharp\Source\CSharp4.g4" Outputs="Parsing\CSharp\Parser\CSharp4Visitor.cs;Parsing\CSharp\Parser\CSharp4BaseVisitor.cs;Parsing\CSharp\Parser\CSharp4Lexer.cs;Parsing\CSharp\Parser\CSharp4Parser.cs;Parsing\CSharp\Parser\CSharp4PreProcessor.cs">
     <Message Text="Building CSharp grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -o &quot;$(ProjectDir)Parsing\CSharp\Parser&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4Lexer.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4PreProcessor.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.CSharp.Parser -o &quot;$(ProjectDir)Parsing\CSharp\Parser&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4Lexer.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4PreProcessor.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4.g4&quot;" />
   </Target>
   <Target Name="BuildXML" Inputs="Parsing\XML\Source\XMLLexer.g4;Parsing\XML\Source\XMLParser.g4" Outputs="Parsing\XML\Parser\XMLLexer.cs;Parsing\XML\Parser\XMLParser.cs;Parsing\XML\Parser\XMLParserBaseVisitor.cs;Parsing\XML\Parser\XMLParserVisitor.cs">
     <Message Text="Building XML grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -o &quot;$(ProjectDir)Parsing\XML\Parser&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLParser.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.XML.Parser -o &quot;$(ProjectDir)Parsing\XML\Parser&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLParser.g4&quot;" />
   </Target>
   <ItemGroup>
     <Compile Include="GotoType.cs" />
@@ -214,8 +214,8 @@
     <Compile Include="UndoRedo.cs" />
     <Compile Include="UnitTest\TextDataTest.cs" />
     <Compile Include="Parsing\CSharp\CSharpVisitor.cs" />
-    <Compile Include="Parsing\CSharp\CSharp.cs" />
-    <Compile Include="Parsing\XML\XML.cs" />
+    <Compile Include="Parsing\CSharp\CSharpEntry.cs" />
+    <Compile Include="Parsing\XML\XMLEntry.cs" />
     <Compile Include="Parsing\XML\XMLVisitor.cs" />
     <Compile Include="Parsing\XML\Parser\XMLLexer.cs" />
     <Compile Include="Parsing\XML\Parser\XMLParser.cs" />
@@ -231,7 +231,7 @@
     <Compile Include="Parsing\CSharp\Parser\CSharp4Visitor.cs" />
     <Compile Include="Parsing\GenericListener.cs" />
     <Compile Include="Parsing\ParsingExtensions.cs" />
-    <Compile Include="Parsing\HTML\HTML.cs" />
+    <Compile Include="Parsing\HTML\HTMLEntry.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parsing\ParserNode.cs" />
     <None Include="Parsing\XML\Source\XMLLexer.g4" />

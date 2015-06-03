@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime.Tree;
+using NeoEdit.TextEdit.Parsing.CSharp.Parser;
 
-namespace NeoEdit.TextEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing.CSharp
 {
 	class CSharpVisitor : CSharp4BaseVisitor<object>
 	{

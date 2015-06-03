@@ -1,9 +1,10 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
+using NeoEdit.TextEdit.Parsing.XML.Parser;
 
-namespace NeoEdit.TextEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing.XML
 {
-	static class XML
+	static class XMLEntry
 	{
 		public static ParserNode Parse(string data)
 		{

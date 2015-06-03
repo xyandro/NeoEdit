@@ -1,9 +1,10 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
+using NeoEdit.TextEdit.Parsing.CSharp.Parser;
 
-namespace NeoEdit.TextEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing.CSharp
 {
-	static class CSharp
+	static class CSharpEntry
 	{
 		public static ParserNode Parse(string data)
 		{

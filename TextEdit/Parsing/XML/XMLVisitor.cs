@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime.Tree;
+using NeoEdit.TextEdit.Parsing.XML.Parser;
 
-namespace NeoEdit.TextEdit.Parsing
+namespace NeoEdit.TextEdit.Parsing.XML
 {
 	class XMLVisitor : XMLParserBaseVisitor<object>
 	{

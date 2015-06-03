@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NeoEdit.TextEdit.Parsing.CSharp;
+using NeoEdit.TextEdit.Parsing.HTML;
+using NeoEdit.TextEdit.Parsing.XML;
 
 namespace NeoEdit.TextEdit.Parsing
 {
@@ -19,9 +22,9 @@ namespace NeoEdit.TextEdit.Parsing
 		{
 			switch (parserType)
 			{
-				case ParserType.CSharp: return CSharp.Parse(data);
-				case ParserType.HTML: return new HTML(data).Parse();
-				case ParserType.XML: return XML.Parse(data);
+				case ParserType.CSharp: return CSharpEntry.Parse(data);
+				case ParserType.HTML: return new HTMLEntry(data).Parse();
+				case ParserType.XML: return XMLEntry.Parse(data);
 				default: throw new ArgumentException("Unable to parse this type");
 			}
 		}
@@ -46,7 +49,7 @@ namespace NeoEdit.TextEdit.Parsing
 		{
 			switch (parserType)
 			{
-				case ParserType.HTML: return HTML.FormatHTML(node, data);
+				case ParserType.HTML: return HTMLEntry.FormatHTML(node, data);
 				default: throw new Exception("Unable to reformat this type");
 			}
 		}
