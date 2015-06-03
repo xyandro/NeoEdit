@@ -379,6 +379,7 @@ namespace NeoEdit.TextEdit.Parsing.CSharp
 
 		public override object VisitSwitch_label(CSharp4Parser.Switch_labelContext context)
 		{
+			Parent.AddAttr(LABEL, input, context);
 			context.Take(c => c.constant_expression()).Do(c => Parent.AddAttr(CONDITION, input, c));
 			return null;
 		}
