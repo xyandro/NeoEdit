@@ -688,15 +688,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_GlobalFind_Values7: Command_Keys_GlobalFind(7); break;
 				case TextEditCommand.Keys_GlobalFind_Values8: Command_Keys_GlobalFind(8); break;
 				case TextEditCommand.Keys_GlobalFind_Values9: Command_Keys_GlobalFind(9); break;
-				case TextEditCommand.Keys_GlobalReplace_Values1: Command_Keys_GlobalReplace(1); break;
-				case TextEditCommand.Keys_GlobalReplace_Values2: Command_Keys_GlobalReplace(2); break;
-				case TextEditCommand.Keys_GlobalReplace_Values3: Command_Keys_GlobalReplace(3); break;
-				case TextEditCommand.Keys_GlobalReplace_Values4: Command_Keys_GlobalReplace(4); break;
-				case TextEditCommand.Keys_GlobalReplace_Values5: Command_Keys_GlobalReplace(5); break;
-				case TextEditCommand.Keys_GlobalReplace_Values6: Command_Keys_GlobalReplace(6); break;
-				case TextEditCommand.Keys_GlobalReplace_Values7: Command_Keys_GlobalReplace(7); break;
-				case TextEditCommand.Keys_GlobalReplace_Values8: Command_Keys_GlobalReplace(8); break;
-				case TextEditCommand.Keys_GlobalReplace_Values9: Command_Keys_GlobalReplace(9); break;
 				case TextEditCommand.Keys_Copy_Keys: Command_Keys_Copy(0); break;
 				case TextEditCommand.Keys_Copy_Values1: Command_Keys_Copy(1); break;
 				case TextEditCommand.Keys_Copy_Values2: Command_Keys_Copy(2); break;
@@ -2211,33 +2202,6 @@ namespace NeoEdit.TextEdit
 
 			ranges = ranges.OrderBy(range => range.Start).ToList();
 			Selections.Replace(ranges);
-		}
-
-		internal void Command_Keys_GlobalReplace(int index)
-		{
-			if (keysAndValues[0].Count != keysAndValues[index].Count)
-				throw new Exception("Keys and values count must match");
-
-			var searcher = new Searcher(keysAndValues[0], true);
-			var ranges = new List<Range>();
-			var selections = Selections.ToList();
-			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
-				selections = new List<Range> { new Range(BeginOffset(), EndOffset()) };
-			foreach (var selection in selections)
-				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
-
-			ranges = ranges.OrderBy(range => range.Start).ToList();
-
-			var strs = new List<string>();
-			foreach (var range in ranges)
-			{
-				var str = GetString(range);
-				if (!keysHash.ContainsKey(str))
-					strs.Add(str);
-				else
-					strs.Add(keysAndValues[index][keysHash[str]]);
-			}
-			Replace(ranges, strs);
 		}
 
 		internal void Command_Keys_Copy(int index)

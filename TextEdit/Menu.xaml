@@ -280,17 +280,6 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_GlobalFind_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_GlobalFind_Values9"/>
 		</MenuItem>
-		<MenuItem Header="_Global Replace">
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_GlobalReplace_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_GlobalReplace_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_GlobalReplace_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_GlobalReplace_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_GlobalReplace_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_GlobalReplace_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_GlobalReplace_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_GlobalReplace_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_GlobalReplace_Values9"/>
-		</MenuItem>
 		<MenuItem Header="_Copy">
 			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Copy_Keys"/>
 			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Copy_Values1"/>
