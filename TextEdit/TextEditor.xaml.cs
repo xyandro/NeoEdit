@@ -2020,12 +2020,11 @@ namespace NeoEdit.TextEdit
 				return await client.DownloadStringTaskAsync(new Uri(url));
 		}
 
-		internal async void Command_Data_FetchURL()
+		internal void Command_Data_FetchURL()
 		{
 			var urls = GetSelectionStrings();
-			var tasks = urls.Select(url => GetURL(url)).ToArray();
-			await Task.WhenAll(tasks);
-			ReplaceSelections(tasks.Select(task => task.Result).ToList());
+			var strs = Task.Run(() => Task.WhenAll(urls.Select(task => GetURL(task)).ToArray())).Result;
+			ReplaceSelections(strs.ToList());
 		}
 
 		internal void Command_Insert_GUID()
