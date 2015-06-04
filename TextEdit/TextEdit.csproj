@@ -188,6 +188,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="Misc\Words.txt.gz" />
     <None Include="Properties\AssemblyInfo.Template.cs" />
     <Compile Include="Range.cs" />
     <Page Include="Tabs.xaml">

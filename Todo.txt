@@ -31,12 +31,12 @@ When opening files don't open the same one more than once
 Override readonly, access denied (UAC required?)
 Group by selection
 In search box add buttons to escape/unescape regex
-Add word list
 Add/subtract chars in expressions
 Go back to last selections
 Aggregate data (counts/group by field/etc.)
 Add CSV/TSV
 Specify data for combinations/permutations (instead of numbers)
+Allow files to be unmodified on open (coming from hexedit/wordlist)
 
 View:
 Update as new lines are added

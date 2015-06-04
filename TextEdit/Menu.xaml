@@ -399,6 +399,8 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] == \'Tiles\''}"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<textEdit:TextEditMenuItem Header="_Quick Record" CommandEnum="Macro_QuickRecord"/>

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -125,6 +126,22 @@ namespace NeoEdit.TextEdit
 
 			foreach (var file in files)
 				AddTextEditor(file);
+		}
+
+		void Command_View_WordList()
+		{
+			var type = GetType();
+			byte[] data;
+			using (var stream = type.Assembly.GetManifestResourceStream(type.Namespace + ".Misc.Words.txt.gz"))
+			using (var ms = new MemoryStream())
+			{
+				stream.CopyTo(ms);
+				data = ms.ToArray();
+			}
+
+			data = Compression.Decompress(Compression.Type.GZip, data);
+			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace(" ", "\r\n") + "\r\n");
+			AddTextEditor(bytes: data);
 		}
 
 		const string quickMacroFilename = "Quick.xml";
@@ -315,6 +332,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Macro_Open: Command_File_Open(dialogResult as OpenFileDialogResult); return;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
+				case TextEditCommand.View_WordList: Command_View_WordList(); break;
 			}
 
 			if (Active != null)
