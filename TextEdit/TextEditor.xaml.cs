@@ -103,7 +103,7 @@ namespace NeoEdit.TextEdit
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 
-		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = -1, int column = -1)
+		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = -1, int column = -1)
 		{
 			InitializeComponent();
 			bookmarks.Width = Font.lineHeight;
@@ -120,7 +120,7 @@ namespace NeoEdit.TextEdit
 			canvasRenderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
 			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 
-			OpenFile(filename, bytes, codePage);
+			OpenFile(filename, bytes, codePage, modified);
 			Goto(line, column);
 
 			localCallbacks = UIHelper<TextEditor>.GetLocalCallbacks(this);
@@ -193,10 +193,10 @@ namespace NeoEdit.TextEdit
 		}
 
 		DateTime fileLastWrite;
-		internal void OpenFile(string filename, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM)
+		internal void OpenFile(string filename, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null)
 		{
 			FileName = filename;
-			var modified = bytes != null;
+			var isModified = modified ?? bytes != null;
 			if (bytes == null)
 			{
 				if (FileName == null)
@@ -214,10 +214,10 @@ namespace NeoEdit.TextEdit
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
 			// If encoding can't exactly express bytes mark as modified (only for < 50 MB)
-			if ((!modified) && ((bytes.Length >> 20) < 50))
-				modified = !Coder.CanFullyEncode(bytes, CodePage);
+			if ((!isModified) && ((bytes.Length >> 20) < 50))
+				isModified = !Coder.CanFullyEncode(bytes, CodePage);
 
-			undoRedo.SetModified(modified);
+			undoRedo.SetModified(isModified);
 		}
 
 		int BeginOffset()
@@ -971,7 +971,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (!VerifyCanFullyEncode())
 				return false;
-			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage, true);
+			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
 			return true;
 		}
 

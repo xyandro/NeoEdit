@@ -240,7 +240,7 @@ namespace NeoEdit
 				setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); },
 
 				systemInfo: () => new SystemInfoWindow(),
-				textEditor: (filename, bytes, encoding, createNew) => TextEditTabs.Create(filename, bytes, encoding, createNew: createNew),
+				textEditor: (filename, bytes, encoding, modified, createNew) => TextEditTabs.Create(filename, bytes, encoding, modified, createNew: createNew),
 				textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew),
 				fileHexEditor: (filename, binarydata, encoder, modified, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, createNew),
 				processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid),

@@ -12,7 +12,7 @@ namespace NeoEdit.GUI
 		Action<bool> setMinimizeToTrayLauncher;
 
 		protected Action systemInfoLauncher;
-		protected Action<string, byte[], Coder.CodePage, bool> textEditorLauncher;
+		protected Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
 		protected Action<string, bool> textViewerLauncher;
 		protected Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
 		protected Action<int> processHexEditorLauncher;
@@ -28,7 +28,7 @@ namespace NeoEdit.GUI
 			Action<bool> setMinimizeToTray,
 
 			Action systemInfo,
-			Action<string, byte[], Coder.CodePage, bool> textEditor,
+			Action<string, byte[], Coder.CodePage, bool?, bool> textEditor,
 			Action<string, bool> textViewer,
 			Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor,
 			Action<int> processHexEditor,
@@ -70,9 +70,9 @@ namespace NeoEdit.GUI
 			systemInfoLauncher();
 		}
 
-		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool createNew = false)
+		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool createNew = false)
 		{
-			textEditorLauncher(filename, bytes, codePage, createNew);
+			textEditorLauncher(filename, bytes, codePage, modified, createNew);
 		}
 
 		public void LaunchTextViewer(string filename = null, bool createNew = false)

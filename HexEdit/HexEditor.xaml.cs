@@ -660,7 +660,7 @@ namespace NeoEdit.HexEdit
 					return false;
 			}
 
-			Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), CodePage);
+			Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), CodePage, IsModified);
 			return true;
 		}
 

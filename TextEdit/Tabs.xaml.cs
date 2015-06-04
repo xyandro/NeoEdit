@@ -30,7 +30,7 @@ namespace NeoEdit.TextEdit
 
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
-		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool createNew = false, TextEditTabs textEditTabs = null)
+		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, bool createNew = false, TextEditTabs textEditTabs = null)
 		{
 			if ((!Helpers.IsDebugBuild) && (filename != null))
 			{
@@ -62,12 +62,12 @@ namespace NeoEdit.TextEdit
 			if (textEditTabs == null)
 				textEditTabs = new TextEditTabs();
 
-			textEditTabs.Add(new TextEditor(filename, bytes, codePage, line, column));
+			textEditTabs.Add(new TextEditor(filename, bytes, codePage, modified, line, column));
 		}
 
-		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1)
+		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null)
 		{
-			Create(filename, bytes, codePage, line, column, false, this);
+			Create(filename, bytes, codePage, modified, line, column, false, this);
 		}
 
 		TextEditTabs()
@@ -141,7 +141,7 @@ namespace NeoEdit.TextEdit
 
 			data = Compression.Decompress(Compression.Type.GZip, data);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace(" ", "\r\n") + "\r\n");
-			AddTextEditor(bytes: data);
+			AddTextEditor(bytes: data, modified: false);
 		}
 
 		const string quickMacroFilename = "Quick.xml";
