@@ -257,6 +257,18 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
 		</MenuItem>
+		<MenuItem Header="_Add">
+			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Add_Keys"/>
+			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Add_Values1"/>
+			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Add_Values2"/>
+			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Add_Values3"/>
+			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Add_Values4"/>
+			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Add_Values5"/>
+			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Add_Values6"/>
+			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Add_Values7"/>
+			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Add_Values8"/>
+			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Add_Values9"/>
+		</MenuItem>
 		<MenuItem Header="_Replace">
 			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1"/>
 			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Replace_Values2"/>

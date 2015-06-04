@@ -669,6 +669,16 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Set_Values7: Command_Keys_Set(7); break;
 				case TextEditCommand.Keys_Set_Values8: Command_Keys_Set(8); break;
 				case TextEditCommand.Keys_Set_Values9: Command_Keys_Set(9); break;
+				case TextEditCommand.Keys_Add_Keys: Command_Keys_Add(0); break;
+				case TextEditCommand.Keys_Add_Values1: Command_Keys_Add(1); break;
+				case TextEditCommand.Keys_Add_Values2: Command_Keys_Add(2); break;
+				case TextEditCommand.Keys_Add_Values3: Command_Keys_Add(3); break;
+				case TextEditCommand.Keys_Add_Values4: Command_Keys_Add(4); break;
+				case TextEditCommand.Keys_Add_Values5: Command_Keys_Add(5); break;
+				case TextEditCommand.Keys_Add_Values6: Command_Keys_Add(6); break;
+				case TextEditCommand.Keys_Add_Values7: Command_Keys_Add(7); break;
+				case TextEditCommand.Keys_Add_Values8: Command_Keys_Add(8); break;
+				case TextEditCommand.Keys_Add_Values9: Command_Keys_Add(9); break;
 				case TextEditCommand.Keys_Replace_Values1: Command_Keys_Replace(1); break;
 				case TextEditCommand.Keys_Replace_Values2: Command_Keys_Replace(2); break;
 				case TextEditCommand.Keys_Replace_Values3: Command_Keys_Replace(3); break;
@@ -2166,7 +2176,19 @@ namespace NeoEdit.TextEdit
 				throw new ArgumentException("Cannot have duplicate keys");
 			keysAndValues[index] = values;
 			if (index == 0)
-				keysHash = values.Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
+				keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
+			KeysAndValuesCount = keysAndValues.Select(list => list.Count).ToArray();
+		}
+
+		internal void Command_Keys_Add(int index)
+		{
+			// Handles keys as well as values
+			var values = GetSelectionStrings();
+			if ((index == 0) && (keysAndValues[0].Concat(values).GroupBy(key => key).Any(group => group.Count() > 1)))
+				throw new ArgumentException("Cannot have duplicate keys");
+			keysAndValues[index].AddRange(values);
+			if (index == 0)
+				keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
 			KeysAndValuesCount = keysAndValues.Select(list => list.Count).ToArray();
 		}
 
