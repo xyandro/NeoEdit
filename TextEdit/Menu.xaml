@@ -257,28 +257,28 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
 		</MenuItem>
-		<MenuItem Header="Selection _Replace">
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_SelectionReplace_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_SelectionReplace_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_SelectionReplace_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_SelectionReplace_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_SelectionReplace_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_SelectionReplace_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_SelectionReplace_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_SelectionReplace_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_SelectionReplace_Values9"/>
+		<MenuItem Header="_Replace">
+			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1"/>
+			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Replace_Values2"/>
+			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Replace_Values3"/>
+			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Replace_Values4"/>
+			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Replace_Values5"/>
+			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Replace_Values6"/>
+			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Replace_Values7"/>
+			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8"/>
+			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9"/>
 		</MenuItem>
-		<MenuItem Header="Global _Find">
-			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_GlobalFind_Keys"/>
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_GlobalFind_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_GlobalFind_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_GlobalFind_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_GlobalFind_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_GlobalFind_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_GlobalFind_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_GlobalFind_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_GlobalFind_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_GlobalFind_Values9"/>
+		<MenuItem Header="_Find">
+			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Find_Keys"/>
+			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Find_Values1"/>
+			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Find_Values2"/>
+			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Find_Values3"/>
+			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Find_Values4"/>
+			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Find_Values5"/>
+			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Find_Values6"/>
+			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Find_Values7"/>
+			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Find_Values8"/>
+			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Find_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
 			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Copy_Keys"/>

@@ -669,25 +669,25 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Set_Values7: Command_Keys_Set(7); break;
 				case TextEditCommand.Keys_Set_Values8: Command_Keys_Set(8); break;
 				case TextEditCommand.Keys_Set_Values9: Command_Keys_Set(9); break;
-				case TextEditCommand.Keys_SelectionReplace_Values1: Command_Keys_SelectionReplace(1); break;
-				case TextEditCommand.Keys_SelectionReplace_Values2: Command_Keys_SelectionReplace(2); break;
-				case TextEditCommand.Keys_SelectionReplace_Values3: Command_Keys_SelectionReplace(3); break;
-				case TextEditCommand.Keys_SelectionReplace_Values4: Command_Keys_SelectionReplace(4); break;
-				case TextEditCommand.Keys_SelectionReplace_Values5: Command_Keys_SelectionReplace(5); break;
-				case TextEditCommand.Keys_SelectionReplace_Values6: Command_Keys_SelectionReplace(6); break;
-				case TextEditCommand.Keys_SelectionReplace_Values7: Command_Keys_SelectionReplace(7); break;
-				case TextEditCommand.Keys_SelectionReplace_Values8: Command_Keys_SelectionReplace(8); break;
-				case TextEditCommand.Keys_SelectionReplace_Values9: Command_Keys_SelectionReplace(9); break;
-				case TextEditCommand.Keys_GlobalFind_Keys: Command_Keys_GlobalFind(0); break;
-				case TextEditCommand.Keys_GlobalFind_Values1: Command_Keys_GlobalFind(1); break;
-				case TextEditCommand.Keys_GlobalFind_Values2: Command_Keys_GlobalFind(2); break;
-				case TextEditCommand.Keys_GlobalFind_Values3: Command_Keys_GlobalFind(3); break;
-				case TextEditCommand.Keys_GlobalFind_Values4: Command_Keys_GlobalFind(4); break;
-				case TextEditCommand.Keys_GlobalFind_Values5: Command_Keys_GlobalFind(5); break;
-				case TextEditCommand.Keys_GlobalFind_Values6: Command_Keys_GlobalFind(6); break;
-				case TextEditCommand.Keys_GlobalFind_Values7: Command_Keys_GlobalFind(7); break;
-				case TextEditCommand.Keys_GlobalFind_Values8: Command_Keys_GlobalFind(8); break;
-				case TextEditCommand.Keys_GlobalFind_Values9: Command_Keys_GlobalFind(9); break;
+				case TextEditCommand.Keys_Replace_Values1: Command_Keys_Replace(1); break;
+				case TextEditCommand.Keys_Replace_Values2: Command_Keys_Replace(2); break;
+				case TextEditCommand.Keys_Replace_Values3: Command_Keys_Replace(3); break;
+				case TextEditCommand.Keys_Replace_Values4: Command_Keys_Replace(4); break;
+				case TextEditCommand.Keys_Replace_Values5: Command_Keys_Replace(5); break;
+				case TextEditCommand.Keys_Replace_Values6: Command_Keys_Replace(6); break;
+				case TextEditCommand.Keys_Replace_Values7: Command_Keys_Replace(7); break;
+				case TextEditCommand.Keys_Replace_Values8: Command_Keys_Replace(8); break;
+				case TextEditCommand.Keys_Replace_Values9: Command_Keys_Replace(9); break;
+				case TextEditCommand.Keys_Find_Keys: Command_Keys_Find(0); break;
+				case TextEditCommand.Keys_Find_Values1: Command_Keys_Find(1); break;
+				case TextEditCommand.Keys_Find_Values2: Command_Keys_Find(2); break;
+				case TextEditCommand.Keys_Find_Values3: Command_Keys_Find(3); break;
+				case TextEditCommand.Keys_Find_Values4: Command_Keys_Find(4); break;
+				case TextEditCommand.Keys_Find_Values5: Command_Keys_Find(5); break;
+				case TextEditCommand.Keys_Find_Values6: Command_Keys_Find(6); break;
+				case TextEditCommand.Keys_Find_Values7: Command_Keys_Find(7); break;
+				case TextEditCommand.Keys_Find_Values8: Command_Keys_Find(8); break;
+				case TextEditCommand.Keys_Find_Values9: Command_Keys_Find(9); break;
 				case TextEditCommand.Keys_Copy_Keys: Command_Keys_Copy(0); break;
 				case TextEditCommand.Keys_Copy_Values1: Command_Keys_Copy(1); break;
 				case TextEditCommand.Keys_Copy_Values2: Command_Keys_Copy(2); break;
@@ -2170,7 +2170,7 @@ namespace NeoEdit.TextEdit
 			KeysAndValuesCount = keysAndValues.Select(list => list.Count).ToArray();
 		}
 
-		internal void Command_Keys_SelectionReplace(int index)
+		internal void Command_Keys_Replace(int index)
 		{
 			if (keysAndValues[0].Count != keysAndValues[index].Count)
 				throw new Exception("Keys and values count must match");
@@ -2187,7 +2187,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Keys_GlobalFind(int index)
+		internal void Command_Keys_Find(int index)
 		{
 			if (keysAndValues[0].Count != keysAndValues[index].Count)
 				throw new Exception("Keys and values count must match");
