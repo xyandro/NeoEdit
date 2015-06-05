@@ -15,14 +15,18 @@ namespace NeoEdit.Common.Transform
 	{
 		const string typeTag = "Type";
 		const string guidTag = "GUID";
-		const string listItemTag = "Item";
+		const string itemTag = "Item";
 		const string referenceType = "Reference";
 		const string nullType = "NULL";
+		const string rootName = "Root";
+		const string optionsTag = "Options";
+		const string keyTag = "Key";
+		const string valueTag = "Value";
 
 		public static XElement ToXML(object obj)
 		{
-			var name = obj == null ? "Root" : obj.GetType().Name;
-			return rToXML(name, obj, null, new Dictionary<object, XElement>()) as XElement;
+			var name = obj == null ? rootName : obj.GetType().Name;
+			return rToXML(name, obj, null, true, new Dictionary<object, XElement>()) as XElement;
 		}
 
 		public static void Save(object obj, string fileName)
@@ -44,7 +48,7 @@ namespace NeoEdit.Common.Transform
 			while (name.StartsWith("_"))
 				name = name.Substring(1);
 
-			var reserved = new HashSet<string> { "Type", "GUID", "Reference" };
+			var reserved = new HashSet<string> { typeTag, guidTag, referenceType };
 
 			string useName;
 			for (var ctr = 0; ; ++ctr)
@@ -57,14 +61,18 @@ namespace NeoEdit.Common.Transform
 			return useName;
 		}
 
-		public static XObject rToXML(string name, object obj, Type expectedType, Dictionary<object, XElement> references)
+		public static XObject rToXML(string name, object obj, Type expectedType, bool createElement, Dictionary<object, XElement> references)
 		{
 			if (obj == null)
 				return new XElement(name, new XAttribute(typeTag, nullType));
 
 			var type = obj.GetType();
 			if ((type.IsPrimitive) || (type.IsEnum) || (type == typeof(string)))
-				return new XAttribute(name, obj.ToString());
+			{
+				if (createElement)
+					return new XElement(name, obj);
+				return new XAttribute(name, obj);
+			}
 
 			if (references.ContainsKey(obj))
 			{
@@ -79,18 +87,41 @@ namespace NeoEdit.Common.Transform
 			if (type != expectedType)
 				xml.Add(new XAttribute(typeTag, type.FullName));
 
-			if (obj is Regex)
+			if (type == typeof(Regex))
 			{
 				var regex = obj as Regex;
-				xml.Add(regex.ToString(), new XAttribute("Options", regex.Options));
+				xml.Add(regex.ToString(), new XAttribute(optionsTag, regex.Options));
 			}
-			else if (obj is IList)
+			else if (type.IsArray)
 			{
-				var list = obj as IList;
-				var listType = type.GetGenericArguments()[0];
-				if (list != null)
-					foreach (var item in list)
-						xml.Add(rToXML(listItemTag, item, listType, references));
+				var itemType = type.GetElementType();
+				if (itemType == typeof(byte))
+					xml.Add(Coder.BytesToString(obj as byte[], Coder.CodePage.Hex));
+				else
+				{
+					var items = obj as Array;
+					foreach (var item in items)
+						xml.Add(rToXML(itemTag, item, itemType, true, references));
+				}
+			}
+			else if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(List<>)))
+			{
+				var items = obj as IList;
+				var itemType = type.GetGenericArguments()[0];
+				foreach (var item in items)
+					xml.Add(rToXML(itemTag, item, itemType, true, references));
+			}
+			else if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
+			{
+				var items = obj as IDictionary;
+				var keyType = type.GetGenericArguments()[0];
+				var valueType = type.GetGenericArguments()[1];
+				foreach (DictionaryEntry item in items)
+					xml.Add(
+						new XElement(itemTag,
+							rToXML(keyTag, item.Key, keyType, false, references),
+							rToXML(valueTag, item.Value, valueType, false, references))
+					);
 			}
 			else
 			{
@@ -104,7 +135,7 @@ namespace NeoEdit.Common.Transform
 					if (value == null)
 						continue;
 
-					xml.Add(rToXML(fieldName, value, field.FieldType, references));
+					xml.Add(rToXML(fieldName, value, field.FieldType, false, references));
 				}
 			}
 
@@ -132,35 +163,60 @@ namespace NeoEdit.Common.Transform
 				return TypeDescriptor.GetConverter(type).ConvertFrom((xObj as XAttribute).Value);
 
 			var xml = xObj as XElement;
+			if ((type.IsPrimitive) || (type.IsEnum) || (type == typeof(string)))
+				return TypeDescriptor.GetConverter(type).ConvertFrom(xml.Value);
+
 			var typeValue = xml.Attribute(typeTag).Next(a => a.Value);
 			if (typeValue == referenceType)
 				return references[xml.Attribute(guidTag).Value];
 			if (typeValue == nullType)
 				return null;
 
+			var guid = xml.Attribute(guidTag).Next(a => a.Value) ?? "";
+
 			type = typeValue.Next(a => AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(a)).First(val => val != null)) ?? type;
-			var obj = FormatterServices.GetUninitializedObject(type);
-			if (obj is IList)
-				obj = Activator.CreateInstance(type);
-			else if (obj is Regex)
-				obj = new Regex(xml.Value, (RegexOptions)Enum.Parse(typeof(RegexOptions), xml.Attribute("Options").Value));
-
-			var guid = xml.Attribute(guidTag).Next(a => a.Value);
-			if (guid != null)
-				references[guid] = obj;
-
-			if (obj is Regex)
-			{ }
-			else if (obj is IList)
+			if (type == typeof(Regex))
+				return references[guid] = new Regex(xml.Value, (RegexOptions)Enum.Parse(typeof(RegexOptions), xml.Attribute(optionsTag).Value));
+			else if (type.IsArray)
 			{
+				if (type.GetElementType() == typeof(byte))
+					return references[guid] = Coder.StringToBytes(xml.Value, Coder.CodePage.Hex);
+
+				var elements = xml.Elements(itemTag).ToList();
+				var obj = references[guid] = type.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { elements.Count });
+				var array = obj as Array;
+				var itemType = type.GetElementType();
+				for (var ctr = 0; ctr < elements.Count; ++ctr)
+					array.SetValue(rFromXML(elements[ctr], itemType, references), ctr);
+				return obj;
+			}
+			else if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(List<>)))
+			{
+				var obj = references[guid] = type.GetConstructor(Type.EmptyTypes).Invoke(null);
 				var list = obj as IList;
 
-				var listType = type.GetGenericArguments()[0];
-				foreach (var element in xml.Elements(listItemTag))
-					list.Add(rFromXML(element, listType, references));
+				var itemType = type.GetGenericArguments()[0];
+				foreach (var element in xml.Elements(itemTag))
+					list.Add(rFromXML(element, itemType, references));
+				return obj;
+			}
+			else if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
+			{
+				var obj = references[guid] = type.GetConstructor(Type.EmptyTypes).Invoke(null);
+				var items = obj as IDictionary;
+				var keyType = type.GetGenericArguments()[0];
+				var valueType = type.GetGenericArguments()[1];
+				foreach (var element in xml.Elements(itemTag))
+				{
+					var key = element.Element(keyTag) as XObject ?? element.Attribute(keyTag) as XObject;
+					var value = element.Element(valueTag) as XObject ?? element.Attribute(valueTag) as XObject;
+					items.Add(rFromXML(key, keyType, references), rFromXML(value, valueType, references));
+				}
+				return obj;
 			}
 			else
 			{
+				var obj = references[guid] = FormatterServices.GetUninitializedObject(type);
 				var found = new HashSet<string>();
 				var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 				foreach (var field in fields)
@@ -170,9 +226,8 @@ namespace NeoEdit.Common.Transform
 					if (value != null)
 						field.SetValue(obj, rFromXML(value, field.FieldType, references));
 				}
+				return obj;
 			}
-
-			return obj;
 		}
 	}
 }
