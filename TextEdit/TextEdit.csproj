@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" InitialTargets="BuildCSharp;BuildXML" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" InitialTargets="BuildCSharp;BuildTCSV;BuildXML" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{9A35AB82-2481-4C44-B51E-66DF7D248EAD}</ProjectGuid>
@@ -11,6 +11,10 @@
   <Target Name="BuildCSharp" Inputs="Parsing\CSharp\Source\CSharp4Lexer.g4;Parsing\CSharp\Source\CSharp4PreProcessor.g4;Parsing\CSharp\Source\CSharp4.g4" Outputs="Parsing\CSharp\Parser\CSharp4Visitor.cs;Parsing\CSharp\Parser\CSharp4BaseVisitor.cs;Parsing\CSharp\Parser\CSharp4Lexer.cs;Parsing\CSharp\Parser\CSharp4Parser.cs;Parsing\CSharp\Parser\CSharp4PreProcessor.cs">
     <Message Text="Building CSharp grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.CSharp.Parser -o &quot;$(ProjectDir)Parsing\CSharp\Parser&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4Lexer.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4PreProcessor.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4.g4&quot;" />
+  </Target>
+  <Target Name="BuildTCSV" Inputs="Parsing\TCSV\Source\CSV.g4;Parsing\TCSV\Source\TSV.g4" Outputs="Parsing\TCSV\Parser\CSVBaseVisitor.cs;Parsing\TCSV\Parser\CSVLexer.cs;Parsing\TCSV\Parser\CSVParser.cs;Parsing\TCSV\Parser\CSVVisitor.cs;Parsing\TCSV\Parser\TSVBaseVisitor.cs;Parsing\TCSV\Parser\TSVLexer.cs;Parsing\TCSV\Parser\TSVParser.cs;Parsing\TCSV\Parser\TSVVisitor.cs">
+    <Message Text="Building TCSV grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.TCSV.Parser -o &quot;$(ProjectDir)Parsing\TCSV\Parser&quot; &quot;$(ProjectDir)Parsing\TCSV\Source\CSV.g4&quot; &quot;$(ProjectDir)Parsing\TCSV\Source\TSV.g4&quot;" />
   </Target>
   <Target Name="BuildXML" Inputs="Parsing\XML\Source\XMLLexer.g4;Parsing\XML\Source\XMLParser.g4" Outputs="Parsing\XML\Parser\XMLLexer.cs;Parsing\XML\Parser\XMLParser.cs;Parsing\XML\Parser\XMLParserBaseVisitor.cs;Parsing\XML\Parser\XMLParserVisitor.cs">
     <Message Text="Building XML grammar" Importance="High" />
@@ -173,6 +177,17 @@
     <Compile Include="Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Parsing\TCSV\TSVVisitor.cs" />
+    <Compile Include="Parsing\TCSV\Parser\CSVBaseVisitor.cs" />
+    <Compile Include="Parsing\TCSV\Parser\CSVLexer.cs" />
+    <Compile Include="Parsing\TCSV\Parser\CSVParser.cs" />
+    <Compile Include="Parsing\TCSV\Parser\CSVVisitor.cs" />
+    <Compile Include="Parsing\TCSV\Parser\TSVBaseVisitor.cs" />
+    <Compile Include="Parsing\TCSV\Parser\TSVLexer.cs" />
+    <Compile Include="Parsing\TCSV\Parser\TSVParser.cs" />
+    <Compile Include="Parsing\TCSV\Parser\TSVVisitor.cs" />
+    <Compile Include="Parsing\TCSV\TCSVEntry.cs" />
+    <Compile Include="Parsing\TCSV\CSVVisitor.cs" />
     <Compile Include="RangeList.cs" />
     <Compile Include="Highlighting.cs" />
     <Page Include="Menu.xaml">
@@ -189,6 +204,8 @@
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="Misc\Words.txt.gz" />
+    <None Include="Parsing\TCSV\Source\TSV.g4" />
+    <None Include="Parsing\TCSV\Source\CSV.g4" />
     <None Include="Properties\AssemblyInfo.Template.cs" />
     <Compile Include="Range.cs" />
     <Page Include="Tabs.xaml">

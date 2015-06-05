@@ -13,7 +13,7 @@ namespace NeoEdit.TextEdit.Parsing.XML
 		const string ROOTSTR = "root";
 		const string TEXT = "text";
 
-		ParserNode Root { get; set; }
+		readonly ParserNode Root;
 		ParserNode Parent { get { return stack.Peek(); } }
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;

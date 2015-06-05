@@ -32,7 +32,7 @@ namespace NeoEdit.TextEdit.Parsing.CSharp
 		const string USING = "using";
 		const string USINGS = "usings";
 
-		ParserNode Root { get; set; }
+		readonly ParserNode Root;
 		ParserNode Parent { get { return stack.Peek(); } }
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;

@@ -628,7 +628,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
 				case TextEditCommand.Content_Type_None: ContentType = Parser.ParserType.None; break;
 				case TextEditCommand.Content_Type_CSharp: ContentType = Parser.ParserType.CSharp; break;
+				case TextEditCommand.Content_Type_CSV: ContentType = Parser.ParserType.CSV; break;
 				case TextEditCommand.Content_Type_HTML: ContentType = Parser.ParserType.HTML; break;
+				case TextEditCommand.Content_Type_TSV: ContentType = Parser.ParserType.TSV; break;
 				case TextEditCommand.Content_Type_XML: ContentType = Parser.ParserType.XML; break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;

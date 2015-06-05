@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NeoEdit.TextEdit.Parsing.CSharp;
 using NeoEdit.TextEdit.Parsing.HTML;
+using NeoEdit.TextEdit.Parsing.TCSV;
 using NeoEdit.TextEdit.Parsing.XML;
 
 namespace NeoEdit.TextEdit.Parsing
@@ -14,7 +15,9 @@ namespace NeoEdit.TextEdit.Parsing
 		{
 			None,
 			CSharp,
+			CSV,
 			HTML,
+			TSV,
 			XML,
 		}
 
@@ -23,7 +26,9 @@ namespace NeoEdit.TextEdit.Parsing
 			switch (parserType)
 			{
 				case ParserType.CSharp: return CSharpEntry.Parse(data);
+				case ParserType.CSV: return TCSVEntry.ParseCSV(data);
 				case ParserType.HTML: return new HTMLEntry(data).Parse();
+				case ParserType.TSV: return TCSVEntry.ParseTSV(data);
 				case ParserType.XML: return XMLEntry.Parse(data);
 				default: throw new ArgumentException("Unable to parse this type");
 			}
@@ -36,8 +41,10 @@ namespace NeoEdit.TextEdit.Parsing
 			switch (Path.GetExtension(fileName).ToLowerInvariant())
 			{
 				case ".cs": return ParserType.CSharp;
+				case ".csv": return ParserType.CSV;
 				case ".htm":
 				case ".html": return ParserType.HTML;
+				case ".tsv": return ParserType.TSV;
 				case ".csproj":
 				case ".xml":
 				case ".xaml": return ParserType.XML;
