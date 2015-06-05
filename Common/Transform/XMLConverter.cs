@@ -13,6 +13,15 @@ namespace NeoEdit.Common.Transform
 {
 	public static class XMLConverter
 	{
+		[AttributeUsage(AttributeTargets.Method)]
+		public class ToXMLAttribute : Attribute { }
+		[AttributeUsage(AttributeTargets.Method)]
+		public class FromXMLAttribute : Attribute
+		{
+			internal string name { get; private set; }
+			public FromXMLAttribute(string name = null) { this.name = name; }
+		}
+
 		const string typeTag = "Type";
 		const string guidTag = "GUID";
 		const string itemTag = "Item";
@@ -125,17 +134,23 @@ namespace NeoEdit.Common.Transform
 			}
 			else
 			{
-				var found = new HashSet<string>();
-				var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-				foreach (var field in fields)
+				var toXML = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Where(method => method.GetCustomAttribute<ToXMLAttribute>() != null).FirstOrDefault();
+				if (toXML != null)
+					xml.Add(toXML.Invoke(obj, new object[0]));
+				else
 				{
-					var fieldName = EscapeField(field, found);
+					var found = new HashSet<string>();
+					var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+					foreach (var field in fields)
+					{
+						var fieldName = EscapeField(field, found);
 
-					var value = field.GetValue(obj);
-					if (value == null)
-						continue;
+						var value = field.GetValue(obj);
+						if (value == null)
+							continue;
 
-					xml.Add(rToXML(fieldName, value, field.FieldType, false, references));
+						xml.Add(rToXML(fieldName, value, field.FieldType, false, references));
+					}
 				}
 			}
 
@@ -216,6 +231,14 @@ namespace NeoEdit.Common.Transform
 			}
 			else
 			{
+				var fromXML = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static).Where(method => method.GetCustomAttribute<FromXMLAttribute>() != null).FirstOrDefault();
+				if (fromXML != null)
+				{
+					var attr = fromXML.GetCustomAttribute<FromXMLAttribute>();
+					var value = String.IsNullOrWhiteSpace(attr.name) ? (object)xml.Value : (object)xml.Element(attr.name) ?? (object)xml.Attribute(attr.name);
+					return references[guid] = fromXML.Invoke(null, new object[] { value });
+				}
+
 				var obj = references[guid] = FormatterServices.GetUninitializedObject(type);
 				var found = new HashSet<string>();
 				var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);

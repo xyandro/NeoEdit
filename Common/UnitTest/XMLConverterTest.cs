@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common.Transform;
 
@@ -7,6 +8,15 @@ namespace NeoEdit.Common.UnitTest
 {
 	public partial class UnitTest
 	{
+		class XMLConverterCustomExporter
+		{
+			public string MyStr { get; set; }
+			[XMLConverter.ToXML]
+			XElement ToXML() { return new XElement("Value", MyStr); }
+			[XMLConverter.FromXML]
+			static XMLConverterCustomExporter FromXML(XElement xml) { return new XMLConverterCustomExporter { MyStr = xml.Value }; }
+		}
+
 		class XMLConverterGenericBase<T>
 		{
 			public T Val1, Val2;
@@ -30,6 +40,7 @@ namespace NeoEdit.Common.UnitTest
 		{
 			public List<XMLConverterBase> Children { get; set; }
 			public XMLConverterGenericBase<float?> Generic { get; set; }
+			public XMLConverterCustomExporter Exporter { get; set; }
 			public XMLConverterDerived Self { get; set; }
 		}
 
@@ -64,7 +75,8 @@ namespace NeoEdit.Common.UnitTest
 						{ "Test2", 5.6F },
 					},
 					Dict3 = null,
-				}
+				},
+				Exporter = new XMLConverterCustomExporter { MyStr = "Test string" },
 			};
 			test1.ByteArray2 = test1.ByteArray1;
 			test1.IntArray2 = test1.IntArray1;
@@ -135,6 +147,7 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(test2.Generic.Dict1, test2.Generic.Dict2);
 			Assert.IsNull(test1.Generic.Dict3);
 			Assert.IsNull(test2.Generic.Dict3);
+			Assert.AreEqual(test1.Exporter.MyStr, test2.Exporter.MyStr);
 			Assert.AreEqual(test1, test1.Self);
 			Assert.AreEqual(test2, test2.Self);
 		}
