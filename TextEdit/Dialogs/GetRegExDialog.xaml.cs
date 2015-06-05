@@ -94,6 +94,18 @@ namespace NeoEdit.TextEdit.Dialogs
 				replaceLabel.Visibility = replace.Visibility = replaceButton.Visibility = Visibility.Collapsed;
 		}
 
+		void Escape(object sender, RoutedEventArgs e)
+		{
+			Text = Regex.Escape(Text);
+			IsRegex = true;
+		}
+
+		void Unescape(object sender, RoutedEventArgs e)
+		{
+			Text = Regex.Unescape(Text);
+			IsRegex = false;
+		}
+
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
