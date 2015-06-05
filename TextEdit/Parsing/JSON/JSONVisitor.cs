@@ -50,6 +50,18 @@ namespace NeoEdit.TextEdit.Parsing.JSON
 		public override object VisitPair(JSONParser.PairContext context) { return AddNode(context, PAIR); }
 		public override object VisitValue(JSONParser.ValueContext context) { return AddNode(context, VALUE, context.str != null); }
 
+		public override object VisitObject(JSONParser.ObjectContext context)
+		{
+			Parent.Type = OBJECT;
+			return base.VisitObject(context);
+		}
+
+		public override object VisitArray(JSONParser.ArrayContext context)
+		{
+			Parent.Type = ARRAY;
+			return base.VisitArray(context);
+		}
+
 		public override object VisitPairid(JSONParser.PairidContext context)
 		{
 			int start, end;
