@@ -29,16 +29,16 @@
     <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\zlib1.dll.gz&quot; &quot;$(ProjectDir)Magic\zlib1.dll&quot;" />
   </Target>
   <ItemGroup>
+    <Page Include="Chart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Compile Include="Chart.xaml.cs">
       <DependentUpon>Chart.xaml</DependentUpon>
     </Compile>
     <Compile Include="ColumnCheckedConverter.cs" />
     <Compile Include="ColumnsConverter.cs" />
     <Compile Include="Commands.cs" />
-    <Page Include="Chart.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialogs\FindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -53,9 +53,8 @@
     <Compile Include="Dialogs\RenameDialog.xaml.cs">
       <DependentUpon>RenameDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DiskItemDataProvider.cs" />
-    <Compile Include="SvnCache.cs" />
     <Compile Include="DiskItem.cs" />
+    <Compile Include="DiskItemDataProvider.cs" />
     <Page Include="DiskWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -87,6 +86,7 @@
       <SubType>Code</SubType>
     </Compile>
     <None Include="Properties\AssemblyInfo.Template.cs" />
+    <Compile Include="SvnCache.cs" />
     <Page Include="Tabs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

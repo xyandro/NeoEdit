@@ -14,16 +14,15 @@
   </Target>
   <ItemGroup>
     <Compile Include="Clipboard.cs" />
-    <Compile Include="Expressions\NEExpression.cs" />
-    <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
+    <Compile Include="Expressions\NEExpression.cs" />
     <Compile Include="Expressions\Parser\ExpressionBaseVisitor.cs" />
     <Compile Include="Expressions\Parser\ExpressionLexer.cs" />
     <Compile Include="Expressions\Parser\ExpressionParser.cs" />
     <Compile Include="Expressions\Parser\ExpressionVisitor.cs" />
     <None Include="Expressions\Source\Expression.g4" />
+    <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\AssemblyInfo.Template.cs" />
     <Compile Include="Searcher.cs">
@@ -35,20 +34,21 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Searcher.cs</LastGenOutput>
     </None>
-    <Compile Include="Transform\Hash.cs" />
+    <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />
     <Compile Include="Transform\Compression.cs" />
     <Compile Include="Transform\Crypto.cs" />
+    <Compile Include="Transform\Hash.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
-    <Compile Include="UnitTest\XMLConverterTest.cs" />
-    <Compile Include="UnitTest\HashTest.cs" />
     <Compile Include="UnitTest\CoderTest.cs" />
     <Compile Include="UnitTest\CompressionTest.cs" />
     <Compile Include="UnitTest\CryptoTest.cs" />
     <Compile Include="UnitTest\ExpressionTest.cs" />
+    <Compile Include="UnitTest\HashTest.cs" />
     <Compile Include="UnitTest\SearcherTest.cs" />
     <Compile Include="UnitTest\UnicodeTest.cs" />
     <Compile Include="UnitTest\UnitTest.cs" />
+    <Compile Include="UnitTest\XMLConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

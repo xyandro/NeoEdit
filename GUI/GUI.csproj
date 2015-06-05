@@ -9,15 +9,6 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Converters\CheckBitConverter.cs" />
-    <Compile Include="Controls\ModalDialog.cs" />
-    <Compile Include="Controls\NumericUpDown.xaml.cs">
-      <DependentUpon>NumericUpDown.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Controls\NumericUpDown.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Resource Include="..\Photoshop\NeoEdit.png">
       <Link>About\NeoEdit.png</Link>
     </Resource>
@@ -42,8 +33,6 @@
     <Compile Include="Controls\AutoCompleteTextBox.xaml.cs">
       <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\ExpressionConverter.cs" />
-    <Compile Include="Misc\Font.cs" />
     <Page Include="Controls\HelpMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -51,13 +40,23 @@
     <Compile Include="Controls\HelpMenu.xaml.cs">
       <DependentUpon>HelpMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Misc\KeySet.cs" />
+    <Compile Include="Controls\ItemGridControl\ItemGrid.cs" />
+    <Compile Include="Controls\ItemGridControl\ItemGridColumn.cs" />
+    <Compile Include="Controls\ItemGridControl\ItemGridTree.cs" />
+    <Compile Include="Controls\ItemGridControl\ItemGridTreeItem.cs" />
+    <Compile Include="Controls\ItemGridControl\StringFormatConverter.cs" />
+    <Compile Include="Controls\ModalDialog.cs" />
     <Compile Include="Controls\NECommand.cs" />
-    <Compile Include="Converters\RadioConverter.cs" />
+    <Compile Include="Controls\NEWindow.cs" />
+    <Page Include="Controls\NumericUpDown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Controls\NumericUpDown.xaml.cs">
+      <DependentUpon>NumericUpDown.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RenderCanvas.cs" />
-    <Compile Include="Misc\RunOnceTimer.cs" />
     <Compile Include="Controls\Tabs.cs" />
-    <Compile Include="Misc\PropertyChangeNotifier.cs" />
     <Compile Include="Controls\UIHelper.cs" />
     <Page Include="Controls\WindowMenu.xaml">
       <SubType>Designer</SubType>
@@ -66,6 +65,10 @@
     <Compile Include="Controls\WindowMenu.xaml.cs">
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\CheckBitConverter.cs" />
+    <Compile Include="Converters\ExpressionConverter.cs" />
+    <Compile Include="Converters\RadioConverter.cs" />
+    <Compile Include="Converters\ValidValueConverter.cs" />
     <Page Include="Dialogs\BinaryFindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,15 +90,12 @@
     <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\ValidValueConverter.cs" />
-    <Compile Include="Controls\ItemGridControl\ItemGrid.cs" />
-    <Compile Include="Controls\ItemGridControl\ItemGridColumn.cs" />
-    <Compile Include="Controls\ItemGridControl\ItemGridTree.cs" />
-    <Compile Include="Controls\ItemGridControl\ItemGridTreeItem.cs" />
-    <Compile Include="Controls\ItemGridControl\StringFormatConverter.cs" />
     <Compile Include="Launcher.cs" />
+    <Compile Include="Misc\Font.cs" />
+    <Compile Include="Misc\KeySet.cs" />
+    <Compile Include="Misc\PropertyChangeNotifier.cs" />
+    <Compile Include="Misc\RunOnceTimer.cs" />
     <AppDesigner Include="Properties\" />
-    <Compile Include="Controls\NEWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

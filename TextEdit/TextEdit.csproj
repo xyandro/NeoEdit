@@ -29,7 +29,6 @@
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.XML.Parser -o &quot;$(ProjectDir)Parsing\XML\Parser&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLParser.g4&quot;" />
   </Target>
   <ItemGroup>
-    <Compile Include="GotoType.cs" />
     <Compile Include="Commands.cs" />
     <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -38,6 +37,13 @@
     <Compile Include="Dialogs\ChooseDateTimeDialog.xaml.cs">
       <DependentUpon>ChooseDateTimeDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\CombinationsPermutationsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CombinationsPermutationsDialog.xaml.cs">
+      <DependentUpon>CombinationsPermutationsDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ConvertDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -45,38 +51,31 @@
     <Compile Include="Dialogs\ConvertDateTimeDialog.xaml.cs">
       <DependentUpon>ConvertDateTimeDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\CombinationsPermutationsDialog.xaml">
+    <Page Include="Dialogs\ConvertDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\SelectContentAttributeDialog.xaml">
+    <Compile Include="Dialogs\ConvertDialog.xaml.cs">
+      <DependentUpon>ConvertDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\CountDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\GetUniqueNamesDialog.xaml">
+    <Compile Include="Dialogs\CountDialog.xaml.cs">
+      <DependentUpon>CountDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FindContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\MinMaxValuesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="Dialogs\FindContentAttributeDialog.xaml.cs">
+      <DependentUpon>FindContentAttributeDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\GetExpressionDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\CombinationsPermutationsDialog.xaml.cs">
-      <DependentUpon>CombinationsPermutationsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\SelectContentAttributeDialog.xaml.cs">
-      <DependentUpon>SelectContentAttributeDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\GetUniqueNamesDialog.xaml.cs">
-      <DependentUpon>GetUniqueNamesDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\MinMaxValuesDialog.xaml.cs">
-      <DependentUpon>MinMaxValuesDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\GetExpressionDialog.xaml.cs">
       <DependentUpon>GetExpressionDialog.xaml</DependentUpon>
     </Compile>
@@ -86,6 +85,13 @@
     </Page>
     <Compile Include="Dialogs\GetRegExDialog.xaml.cs">
       <DependentUpon>GetRegExDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\GetUniqueNamesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GetUniqueNamesDialog.xaml.cs">
+      <DependentUpon>GetUniqueNamesDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\GotoDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -101,6 +107,20 @@
     <Compile Include="Dialogs\LimitDialog.xaml.cs">
       <DependentUpon>LimitDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\MinMaxValuesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\MinMaxValuesDialog.xaml.cs">
+      <DependentUpon>MinMaxValuesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\RandomDataDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\RandomDataDialog.xaml.cs">
+      <DependentUpon>RandomDataDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\RandomNumberDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -115,83 +135,91 @@
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ConvertDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Dialogs\RepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\ConvertDialog.xaml.cs">
-      <DependentUpon>ConvertDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\RepeatDialog.xaml.cs">
       <DependentUpon>RepeatDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\SetAttributesDialog.xaml">
+    <Page Include="Dialogs\SelectContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\SortDialog.xaml">
+    <Compile Include="Dialogs\SelectContentAttributeDialog.xaml.cs">
+      <DependentUpon>SelectContentAttributeDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\SetAttributesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\SetAttributesDialog.xaml.cs">
       <DependentUpon>SetAttributesDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SortDialog.xaml.cs">
-      <DependentUpon>SortDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\RandomDataDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\FindContentAttributeDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\TrimDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\CountDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Dialogs\SetSizeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\SetSizeDialog.xaml.cs">
+      <DependentUpon>SetSizeDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\SortDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\SortDialog.xaml.cs">
+      <DependentUpon>SortDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TrimDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TrimDialog.xaml.cs">
+      <DependentUpon>TrimDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\WidthDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\RandomDataDialog.xaml.cs">
-      <DependentUpon>RandomDataDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FindContentAttributeDialog.xaml.cs">
-      <DependentUpon>FindContentAttributeDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\TrimDialog.xaml.cs">
-      <DependentUpon>TrimDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\CountDialog.xaml.cs">
-      <DependentUpon>CountDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\SetSizeDialog.xaml.cs">
-      <DependentUpon>SetSizeDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\WidthDialog.xaml.cs">
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GotoType.cs" />
+    <Compile Include="Highlighting.cs" />
+    <Compile Include="Macro.cs" />
+    <Page Include="Menu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Menu.xaml.cs">
+      <DependentUpon>Menu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Misc.cs" />
+    <None Include="Misc\Words.txt" />
+    <EmbeddedResource Include="Misc\Words.txt.gz" />
+    <Compile Include="Parsing\CSharp\CSharpEntry.cs" />
+    <Compile Include="Parsing\CSharp\CSharpVisitor.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4BaseVisitor.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4Lexer.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4Parser.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4PreProcessor.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharp4Visitor.cs" />
+    <None Include="Parsing\CSharp\Source\CSharp4.g4" />
+    <None Include="Parsing\CSharp\Source\CSharp4Lexer.g4" />
+    <None Include="Parsing\CSharp\Source\CSharp4PreProcessor.g4" />
+    <Compile Include="Parsing\GenericListener.cs" />
+    <Compile Include="Parsing\HTML\HTMLEntry.cs" />
+    <Compile Include="Parsing\JSON\JSONEntry.cs" />
     <Compile Include="Parsing\JSON\JSONVisitor.cs" />
     <Compile Include="Parsing\JSON\Parser\JSONBaseVisitor.cs" />
     <Compile Include="Parsing\JSON\Parser\JSONLexer.cs" />
     <Compile Include="Parsing\JSON\Parser\JSONParser.cs" />
     <Compile Include="Parsing\JSON\Parser\JSONVisitor.cs" />
-    <Compile Include="Parsing\JSON\JSONEntry.cs" />
-    <Compile Include="Parsing\TCSV\TSVVisitor.cs" />
+    <None Include="Parsing\JSON\Source\JSON.g4" />
+    <Compile Include="Parsing\Parser.cs" />
+    <Compile Include="Parsing\ParserNode.cs" />
+    <Compile Include="Parsing\ParsingExtensions.cs" />
+    <Compile Include="Parsing\TCSV\CSVVisitor.cs" />
     <Compile Include="Parsing\TCSV\Parser\CSVBaseVisitor.cs" />
     <Compile Include="Parsing\TCSV\Parser\CSVLexer.cs" />
     <Compile Include="Parsing\TCSV\Parser\CSVParser.cs" />
@@ -200,29 +228,25 @@
     <Compile Include="Parsing\TCSV\Parser\TSVLexer.cs" />
     <Compile Include="Parsing\TCSV\Parser\TSVParser.cs" />
     <Compile Include="Parsing\TCSV\Parser\TSVVisitor.cs" />
+    <None Include="Parsing\TCSV\Source\CSV.g4" />
+    <None Include="Parsing\TCSV\Source\TSV.g4" />
     <Compile Include="Parsing\TCSV\TCSVEntry.cs" />
-    <Compile Include="Parsing\TCSV\CSVVisitor.cs" />
-    <Compile Include="RangeList.cs" />
-    <Compile Include="Highlighting.cs" />
-    <Page Include="Menu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Menu.xaml.cs">
-      <DependentUpon>Menu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Macro.cs" />
-    <Compile Include="Misc.cs" />
+    <Compile Include="Parsing\TCSV\TSVVisitor.cs" />
+    <Compile Include="Parsing\XML\Parser\XMLLexer.cs" />
+    <Compile Include="Parsing\XML\Parser\XMLParser.cs" />
+    <Compile Include="Parsing\XML\Parser\XMLParserBaseVisitor.cs" />
+    <Compile Include="Parsing\XML\Parser\XMLParserVisitor.cs" />
+    <None Include="Parsing\XML\Source\XMLLexer.g4" />
+    <None Include="Parsing\XML\Source\XMLParser.g4" />
+    <Compile Include="Parsing\XML\XMLEntry.cs" />
+    <Compile Include="Parsing\XML\XMLVisitor.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Misc\Words.txt.gz" />
-    <None Include="Parsing\JSON\Source\JSON.g4" />
-    <None Include="Parsing\TCSV\Source\TSV.g4" />
-    <None Include="Parsing\TCSV\Source\CSV.g4" />
     <None Include="Properties\AssemblyInfo.Template.cs" />
     <Compile Include="Range.cs" />
+    <Compile Include="RangeList.cs" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -246,30 +270,6 @@
     </Compile>
     <Compile Include="UndoRedo.cs" />
     <Compile Include="UnitTest\TextDataTest.cs" />
-    <Compile Include="Parsing\CSharp\CSharpVisitor.cs" />
-    <Compile Include="Parsing\CSharp\CSharpEntry.cs" />
-    <Compile Include="Parsing\XML\XMLEntry.cs" />
-    <Compile Include="Parsing\XML\XMLVisitor.cs" />
-    <Compile Include="Parsing\XML\Parser\XMLLexer.cs" />
-    <Compile Include="Parsing\XML\Parser\XMLParser.cs" />
-    <Compile Include="Parsing\XML\Parser\XMLParserBaseVisitor.cs" />
-    <Compile Include="Parsing\XML\Parser\XMLParserVisitor.cs" />
-    <None Include="Parsing\CSharp\Source\CSharp4.g4" />
-    <None Include="Parsing\CSharp\Source\CSharp4Lexer.g4" />
-    <None Include="Parsing\CSharp\Source\CSharp4PreProcessor.g4" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4BaseVisitor.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4Lexer.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4Parser.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4PreProcessor.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4Visitor.cs" />
-    <Compile Include="Parsing\GenericListener.cs" />
-    <Compile Include="Parsing\ParsingExtensions.cs" />
-    <Compile Include="Parsing\HTML\HTMLEntry.cs" />
-    <Compile Include="Parsing\Parser.cs" />
-    <Compile Include="Parsing\ParserNode.cs" />
-    <None Include="Parsing\XML\Source\XMLLexer.g4" />
-    <None Include="Parsing\XML\Source\XMLParser.g4" />
-    <None Include="Misc\Words.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

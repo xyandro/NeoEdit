@@ -9,58 +9,6 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup>
-    <Page Include="Dialogs\Models\ModelGetValue.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\Models\ModelResultsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\Models\ModelDataView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\Models\ModelView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\GotoDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\Models\ModelActionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="HexEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Dialogs\Models\ModelGetValue.xaml.cs">
-      <DependentUpon>ModelGetValue.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Models\ModelResultsDialog.xaml.cs">
-      <DependentUpon>ModelResultsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Models\ModelDataView.xaml.cs">
-      <DependentUpon>ModelDataView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Models\ModelDataVM.cs" />
-    <Compile Include="Dialogs\Models\ModelView.xaml.cs">
-      <DependentUpon>ModelView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\GotoDialog.xaml.cs">
-      <DependentUpon>GotoDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Models\ModelActionView.xaml.cs">
-      <DependentUpon>ModelActionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Models\ModelActionVM.cs" />
-    <Compile Include="Dialogs\Models\ModelVM.cs" />
-    <Compile Include="HexEditor.xaml.cs">
-      <DependentUpon>HexEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Commands.cs" />
     <Compile Include="Converters\DisplayValueConverter.cs" />
     <Compile Include="Data\BinaryData.cs" />
@@ -89,6 +37,51 @@
     <Compile Include="Dialogs\FillDialog.xaml.cs">
       <DependentUpon>FillDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\GotoDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GotoDialog.xaml.cs">
+      <DependentUpon>GotoDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Models\ModelActionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Dialogs\Models\ModelActionView.xaml.cs">
+      <DependentUpon>ModelActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Models\ModelActionVM.cs" />
+    <Page Include="Dialogs\Models\ModelDataView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Models\ModelDataView.xaml.cs">
+      <DependentUpon>ModelDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Models\ModelDataVM.cs" />
+    <Page Include="Dialogs\Models\ModelGetValue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Models\ModelGetValue.xaml.cs">
+      <DependentUpon>ModelGetValue.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Models\ModelResultsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Models\ModelResultsDialog.xaml.cs">
+      <DependentUpon>ModelResultsDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Models\ModelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Models\ModelView.xaml.cs">
+      <DependentUpon>ModelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Models\ModelVM.cs" />
     <Page Include="Dialogs\SymmetricKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -110,6 +103,13 @@
     <Compile Include="DisplayValues.xaml.cs">
       <DependentUpon>DisplayValues.xaml</DependentUpon>
     </Compile>
+    <Page Include="HexEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="HexEditor.xaml.cs">
+      <DependentUpon>HexEditor.xaml</DependentUpon>
+    </Compile>
     <Page Include="Menu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -118,12 +118,12 @@
       <DependentUpon>Menu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Misc.cs" />
-    <AppDesigner Include="Properties\" />
-    <Compile Include="Models\ModelResult.cs" />
-    <Compile Include="Models\ModelDataExtractor.cs" />
-    <Compile Include="Models\ModelData.cs" />
-    <Compile Include="Models\ModelAction.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\ModelAction.cs" />
+    <Compile Include="Models\ModelData.cs" />
+    <Compile Include="Models\ModelDataExtractor.cs" />
+    <Compile Include="Models\ModelResult.cs" />
+    <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
