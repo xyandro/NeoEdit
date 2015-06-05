@@ -58,8 +58,10 @@ namespace NeoEdit.Common.Expressions
 
 		T ToType<T>(object val)
 		{
+			if (typeof(T) == typeof(string))
+				return (T)(object)(val == null ? "" : val.ToString());
 			if (val == null)
-				return typeof(T) == typeof(string) ? (T)(object)"" : default(T);
+				return default(T);
 			return (T)Convert.ChangeType(val, typeof(T));
 		}
 
