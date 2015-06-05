@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" InitialTargets="MagicFileExe;MagicMagicMgc;MagicMagic1Dll;MagicRegex2Dll;MagicZlib1Dll" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{839C668B-921C-4A33-91CD-0D8131FFACFC}</ProjectGuid>
@@ -8,6 +8,26 @@
     <AssemblyName>NeoEdit.Disk</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
+  <Target Name="MagicFileExe" Inputs="Magic\file.exe" Outputs="Magic\file.exe.gz">
+    <Message Text="Compressing MagicFileExe" Importance="High" />
+    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\file.exe.gz&quot; &quot;$(ProjectDir)Magic\file.exe&quot;" />
+  </Target>
+  <Target Name="MagicMagicMgc" Inputs="Magic\magic.mgc" Outputs="Magic\magic.mgc.gz">
+    <Message Text="Compressing MagicMagicMgc" Importance="High" />
+    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\magic.mgc.gz&quot; &quot;$(ProjectDir)Magic\magic.mgc&quot;" />
+  </Target>
+  <Target Name="MagicMagic1Dll" Inputs="Magic\magic1.dll" Outputs="Magic\magic1.dll.gz">
+    <Message Text="Compressing MagicMagic1Dll" Importance="High" />
+    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\magic1.dll.gz&quot; &quot;$(ProjectDir)Magic\magic1.dll&quot;" />
+  </Target>
+  <Target Name="MagicRegex2Dll" Inputs="Magic\regex2.dll" Outputs="Magic\regex2.dll.gz">
+    <Message Text="Compressing MagicRegex2Dll" Importance="High" />
+    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\regex2.dll.gz&quot; &quot;$(ProjectDir)Magic\regex2.dll&quot;" />
+  </Target>
+  <Target Name="MagicZlib1Dll" Inputs="Magic\zlib1.dll" Outputs="Magic\zlib1.dll.gz">
+    <Message Text="Compressing MagicZlib1Dll" Importance="High" />
+    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\zlib1.dll.gz&quot; &quot;$(ProjectDir)Magic\zlib1.dll&quot;" />
+  </Target>
   <ItemGroup>
     <Compile Include="Chart.xaml.cs">
       <DependentUpon>Chart.xaml</DependentUpon>
@@ -45,11 +65,16 @@
     </Compile>
     <Compile Include="FilePath.cs" />
     <Compile Include="Identifier.cs" />
-    <EmbeddedResource Include="Magic\file.exe" />
-    <EmbeddedResource Include="Magic\magic.mgc" />
-    <EmbeddedResource Include="Magic\magic1.dll" />
-    <EmbeddedResource Include="Magic\regex2.dll" />
-    <EmbeddedResource Include="Magic\zlib1.dll" />
+    <None Include="Magic\file.exe" />
+    <EmbeddedResource Include="Magic\file.exe.gz" />
+    <None Include="Magic\magic.mgc" />
+    <EmbeddedResource Include="Magic\magic.mgc.gz" />
+    <None Include="Magic\magic1.dll" />
+    <EmbeddedResource Include="Magic\magic1.dll.gz" />
+    <None Include="Magic\regex2.dll" />
+    <EmbeddedResource Include="Magic\regex2.dll.gz" />
+    <None Include="Magic\zlib1.dll" />
+    <EmbeddedResource Include="Magic\zlib1.dll.gz" />
     <Page Include="Menu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

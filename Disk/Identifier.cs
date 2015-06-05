@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using NeoEdit.Common.Transform;
 
@@ -11,15 +12,12 @@ namespace NeoEdit.Disk
 		static string magicPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Magic");
 		static Identifier()
 		{
-			string Header = "NeoEdit.Disk.Magic.";
-
+			string Header = typeof(Identifier).Namespace + ".Magic.";
+			var resources = typeof(Identifier).Assembly.GetManifestResourceNames().Where(name => name.StartsWith(Header)).ToList();
 			Directory.CreateDirectory(magicPath);
-			foreach (var file in typeof(Identifier).Assembly.GetManifestResourceNames())
+			foreach (var resource in resources)
 			{
-				if (!file.StartsWith(Header))
-					continue;
-
-				using (var stream = typeof(Identifier).Assembly.GetManifestResourceStream(file))
+				using (var stream = typeof(Identifier).Assembly.GetManifestResourceStream(resource))
 				{
 					byte[] data;
 					using (var ms = new MemoryStream())
@@ -28,7 +26,8 @@ namespace NeoEdit.Disk
 						data = ms.ToArray();
 					}
 					data = Compression.Decompress(Compression.Type.GZip, data);
-					File.WriteAllBytes(Path.Combine(magicPath, file.Substring(Header.Length)), data);
+					var fileName = resource.Substring(Header.Length, resource.Length - Header.Length - ".gz".Length);
+					File.WriteAllBytes(Path.Combine(magicPath, fileName), data);
 				}
 			}
 		}
