@@ -51,6 +51,8 @@ namespace NeoEdit.TextEdit.Parsing
 				case ".json": return ParserType.JSON;
 				case ".tsv": return ParserType.TSV;
 				case ".csproj":
+				case ".vbproj":
+				case ".vcxproj":
 				case ".xml":
 				case ".xaml": return ParserType.XML;
 				default: return ParserType.None;
