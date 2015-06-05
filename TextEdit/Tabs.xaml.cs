@@ -140,7 +140,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			data = Compression.Decompress(Compression.Type.GZip, data);
-			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace(" ", "\r\n") + "\r\n");
+			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
 			AddTextEditor(bytes: data, modified: false);
 		}
 
