@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows;
+﻿using System.Windows;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -20,7 +16,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			public RandomDataType Type { get; set; }
 			public int Value { get; set; }
-			public char[] Chars { get; set; }
+			public string Chars { get; set; }
 		}
 
 		[DepProp]
@@ -47,30 +43,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (Chars.Length == 0)
+			var chars = Misc.GetCharsFromRegexString(Chars);
+			if (chars.Length == 0)
 				return;
 
-			var chars = new List<char>();
-			var matches = Regex.Matches(Regex.Unescape(Chars), "(.)-(.)|(.)", RegexOptions.Singleline);
-			foreach (Match match in matches)
-			{
-				if (match.Groups[1].Success)
-				{
-					var v0 = match.Groups[1].Value[0];
-					var v1 = match.Groups[2].Value[0];
-					var start = (char)Math.Min(v0, v1);
-					var end = (char)Math.Max(v0, v1);
-					for (var c = start; c <= end; ++c)
-						chars.Add(c);
-				}
-				else if (match.Groups[3].Success)
-					chars.Add(match.Groups[3].Value[0]);
-			}
-
-			if (!chars.Any())
-				return;
-
-			result = new Result { Type = Type, Value = Value, Chars = chars.ToArray() };
+			result = new Result { Type = Type, Value = Value, Chars = chars };
 			DialogResult = true;
 		}
 

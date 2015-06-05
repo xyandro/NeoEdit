@@ -2121,37 +2121,37 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Must have one selection.");
 
 			var output = new List<string>();
-			var num = new int[result.UseCount];
-			var used = new bool[result.ItemCount + 1];
+			var nums = new int[result.UseCount];
+			var used = new bool[result.Items.Length + 1];
 			var onNum = 0;
 			while (true)
 			{
-				++num[onNum];
-				if (num[onNum] > result.ItemCount)
+				++nums[onNum];
+				if (nums[onNum] > result.Items.Length)
 				{
 					--onNum;
 					if (onNum < 0)
 						break;
-					used[num[onNum]] = false;
+					used[nums[onNum]] = false;
 					continue;
 				}
-				if ((!result.Repeat) && (used[num[onNum]]))
+				if ((!result.Repeat) && (used[nums[onNum]]))
 					continue;
 
-				used[num[onNum]] = true;
+				used[nums[onNum]] = true;
 				++onNum;
 				if (onNum < result.UseCount)
 				{
 					if (result.Type == CombinationsPermutationsDialog.CombinationsPermutationsType.Combinations)
-						num[onNum] = num[onNum - 1] - 1;
+						nums[onNum] = nums[onNum - 1] - 1;
 					else
-						num[onNum] = 0;
+						nums[onNum] = 0;
 				}
 				else
 				{
-					output.Add(String.Join("\t", num) + Data.DefaultEnding);
+					output.Add(String.Concat(nums.Select(num => result.Items[num - 1])) + Data.DefaultEnding);
 					--onNum;
-					used[num[onNum]] = false;
+					used[nums[onNum]] = false;
 				}
 			}
 

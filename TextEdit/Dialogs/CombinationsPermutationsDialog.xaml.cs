@@ -14,14 +14,16 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		internal class Result
 		{
-			public int ItemCount { get; set; }
+			public string Items { get; set; }
 			public int UseCount { get; set; }
 			public CombinationsPermutationsType Type { get; set; }
 			public bool Repeat { get; set; }
 		}
 
 		[DepProp]
-		public int ItemCount { get { return UIHelper<CombinationsPermutationsDialog>.GetPropValue<int>(this); } set { UIHelper<CombinationsPermutationsDialog>.SetPropValue(this, value); } }
+		public string ItemsRE { get { return UIHelper<CombinationsPermutationsDialog>.GetPropValue<string>(this); } set { UIHelper<CombinationsPermutationsDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public string Items { get { return UIHelper<CombinationsPermutationsDialog>.GetPropValue<string>(this); } set { UIHelper<CombinationsPermutationsDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public int UseCount { get { return UIHelper<CombinationsPermutationsDialog>.GetPropValue<int>(this); } set { UIHelper<CombinationsPermutationsDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,7 +36,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		static CombinationsPermutationsDialog()
 		{
 			UIHelper<CombinationsPermutationsDialog>.Register();
-			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.ItemCount, (obj, o, n) => obj.CalculateItems());
+			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.ItemsRE, (obj, o, n) => obj.CalculateItems());
 			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.UseCount, (obj, o, n) => obj.CalculateItems());
 			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.Type, (obj, o, n) => obj.CalculateItems());
 			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.Repeat, (obj, o, n) => obj.CalculateItems());
@@ -43,14 +45,15 @@ namespace NeoEdit.TextEdit.Dialogs
 		CombinationsPermutationsDialog()
 		{
 			InitializeComponent();
+			ItemsRE = "";
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (UseCount > ItemCount)
+			if (UseCount > Items.Length)
 				return;
-			result = new Result { ItemCount = ItemCount, UseCount = UseCount, Type = Type, Repeat = Repeat };
+			result = new Result { Items = Items, UseCount = UseCount, Type = Type, Repeat = Repeat };
 			DialogResult = true;
 		}
 
@@ -83,7 +86,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		double GetNumResults()
 		{
-			if (UseCount > ItemCount)
+			if (UseCount > Items.Length)
 				return Double.NaN;
 
 			switch (Type)
@@ -91,15 +94,15 @@ namespace NeoEdit.TextEdit.Dialogs
 				case CombinationsPermutationsType.Combinations:
 					switch (Repeat)
 					{
-						case true: return CalculateFactorial(ItemCount + UseCount - 1, UseCount, ItemCount - 1);
-						case false: return CalculateFactorial(ItemCount, ItemCount - UseCount, UseCount);
+						case true: return CalculateFactorial(Items.Length + UseCount - 1, UseCount, Items.Length - 1);
+						case false: return CalculateFactorial(Items.Length, Items.Length - UseCount, UseCount);
 					}
 					break;
 				case CombinationsPermutationsType.Permutations:
 					switch (Repeat)
 					{
-						case true: return Math.Pow(ItemCount, UseCount);
-						case false: return CalculateFactorial(ItemCount, ItemCount - UseCount);
+						case true: return Math.Pow(Items.Length, UseCount);
+						case false: return CalculateFactorial(Items.Length, Items.Length - UseCount);
 					}
 					break;
 			}
@@ -109,6 +112,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void CalculateItems()
 		{
+			Items = Misc.GetCharsFromRegexString(ItemsRE);
 			NumResults = GetNumResults();
 		}
 

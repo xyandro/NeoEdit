@@ -35,7 +35,6 @@ Add/subtract chars in expressions
 Go back to last selections
 Aggregate data (counts/group by field/etc.)
 Add CSV/TSV
-Specify data for combinations/permutations (instead of numbers)
 
 View:
 Update as new lines are added
