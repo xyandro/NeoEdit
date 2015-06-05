@@ -29242,6 +29242,7 @@ gazump
 gazumped
 gazumping
 gazumps
+gb
 gba
 gbp
 gcc
@@ -33834,6 +33835,7 @@ hrs
 ht
 html
 http
+https
 huarache
 huaraches
 hub
@@ -38424,6 +38426,7 @@ kayos
 kazakhstan
 kazoo
 kazoos
+kb
 kc
 kde
 kebab
@@ -42680,6 +42683,7 @@ maze
 mazes
 mazurka
 mazurkas
+mb
 mba
 mcdonald
 mcgarry
@@ -70975,6 +70979,7 @@ taxpayer
 taxpayers
 taxpaying
 taylor
+tb
 tba
 tbs
 tbsp
