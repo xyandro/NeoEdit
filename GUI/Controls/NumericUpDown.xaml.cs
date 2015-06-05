@@ -38,7 +38,6 @@ namespace NeoEdit.GUI.Controls
 
 		void Validate()
 		{
-			Minimum = Math.Min(Minimum, Maximum);
 			Value = Math.Max(Minimum, Math.Min(Maximum, Value));
 		}
 

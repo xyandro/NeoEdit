@@ -39,7 +39,7 @@
 		</Label>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Use:" Target="{Binding ElementName=useCount}" HorizontalAlignment="Right"/>
-		<guiControls:NumericUpDown Grid.Row="2" Grid.Column="1" Name="useCount" Value="{Binding UseCount, ElementName=self}" Minimum="1"/>
+		<guiControls:NumericUpDown Grid.Row="2" Grid.Column="1" Name="useCount" Value="{Binding UseCount, ElementName=self}" Minimum="1" Maximum="{Binding Items.Length, ElementName=self}"/>
 
 		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
 			<RadioButton GroupName="type" Content="_Combinations" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Combinations}" Focusable="False" Margin="0,0,10,0" VerticalAlignment="Center"/>
