@@ -1,14 +1,14 @@
 grammar TSV;
 
-tsv: (fields CR? LF)* EOF ;
-fields: field (TAB field)* ;
-field
-	: TEXT   # Text
-	| STRING # String
-	|        # Empty;
+doc    : (row CR? LF)* row? EOF ;
+row    : field (SPLIT field)* ;
+field  : TEXT   # Text
+       | STRING # String
+       |        # Empty
+       ;
 
-TAB: '\t';
-CR: '\r';
-LF: '\n';
-TEXT: ~[\t\n\r"]+;
-STRING: '"' ('""'|~'"')* '"';
+SPLIT  : '\t' ;
+CR     : '\r' ;
+LF     : '\n' ;
+STRING : '"' ('""'|~'"')* '"' ;
+TEXT   : ~[\t\n\r"]+ ;

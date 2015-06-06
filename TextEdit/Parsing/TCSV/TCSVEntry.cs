@@ -14,17 +14,17 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 			var parser = new CSVParser(tokens);
 			parser.Interpreter.PredictionMode = PredictionMode.Sll;
 
-			CSVParser.CsvContext tree;
+			CSVParser.DocContext tree;
 			try
 			{
-				tree = parser.csv();
+				tree = parser.doc();
 			}
 			catch
 			{
 				tokens.Reset();
 				parser.Reset();
 				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.csv();
+				tree = parser.doc();
 			}
 
 			return CSVVisitor.Parse(data, tree);
@@ -38,17 +38,17 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 			var parser = new TSVParser(tokens);
 			parser.Interpreter.PredictionMode = PredictionMode.Sll;
 
-			TSVParser.TsvContext tree;
+			TSVParser.DocContext tree;
 			try
 			{
-				tree = parser.tsv();
+				tree = parser.doc();
 			}
 			catch
 			{
 				tokens.Reset();
 				parser.Reset();
 				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.tsv();
+				tree = parser.doc();
 			}
 
 			return TSVVisitor.Parse(data, tree);

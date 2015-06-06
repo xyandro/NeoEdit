@@ -1,14 +1,14 @@
 grammar CSV;
 
-csv: (fields CR? LF)* EOF ;
-fields: field (COMMA field)* ;
-field
-	: TEXT   # Text
-	| STRING # String
-	|        # Empty;
+doc    : (row CR? LF)* row? EOF ;
+row    : field (SPLIT field)* ;
+field  : TEXT   # Text
+       | STRING # String
+       |        # Empty
+       ;
 
-COMMA: ',';
-CR: '\r';
-LF: '\n';
-TEXT: ~[,\n\r"]+;
-STRING: '"' ('""'|~'"')* '"';
+SPLIT  : ',' ;
+CR     : '\r' ;
+LF     : '\n' ;
+STRING : '"' ('""'|~'"')* '"' ;
+TEXT   : ~[,\n\r"]+ ;

@@ -8,7 +8,7 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 	class TSVVisitor : TSVBaseVisitor<object>
 	{
 		const string PAGE = "Page";
-		const string LINE = "Line";
+		const string ROW = "Row";
 		const string FIELD = "Field";
 
 		readonly ParserNode Root;
@@ -28,10 +28,12 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 			return visitor.Root;
 		}
 
-		object AddNode(ParserRuleContext context, string type, bool skipQuotes = false)
+		object AddNode(ParserRuleContext context, string type, bool skipQuotes = false, bool skipEmpty = false)
 		{
 			int start, end;
 			context.GetBounds(out start, out end);
+			if ((skipEmpty) && (start == end))
+				return null;
 			if (skipQuotes)
 			{
 				++start;
@@ -44,9 +46,9 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 			return null;
 		}
 
-		public override object VisitFields(TSVParser.FieldsContext context) { return AddNode(context, LINE); }
-		public override object VisitText(TSVParser.TextContext context) { return AddNode(context, LINE); }
-		public override object VisitString(TSVParser.StringContext context) { return AddNode(context, LINE, true); }
-		public override object VisitEmpty(TSVParser.EmptyContext context) { return AddNode(context, LINE); }
+		public override object VisitRow(TSVParser.RowContext context) { return AddNode(context, ROW, skipEmpty: true); }
+		public override object VisitText(TSVParser.TextContext context) { return AddNode(context, FIELD); }
+		public override object VisitString(TSVParser.StringContext context) { return AddNode(context, FIELD, true); }
+		public override object VisitEmpty(TSVParser.EmptyContext context) { return AddNode(context, FIELD); }
 	}
 }
