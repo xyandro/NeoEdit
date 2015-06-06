@@ -238,7 +238,6 @@
     <Compile Include="Parsing\XML\Parser\XMLParserVisitor.cs" />
     <None Include="Parsing\XML\Source\XMLLexer.g4" />
     <None Include="Parsing\XML\Source\XMLParser.g4" />
-    <Compile Include="Parsing\XML\XMLEntry.cs" />
     <Compile Include="Parsing\XML\XMLVisitor.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">

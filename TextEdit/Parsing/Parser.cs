@@ -32,7 +32,7 @@ namespace NeoEdit.TextEdit.Parsing
 				case ParserType.HTML: return new HTMLEntry(data).Parse();
 				case ParserType.JSON: return JSONEntry.Parse(data);
 				case ParserType.TSV: return TCSVEntry.ParseTSV(data);
-				case ParserType.XML: return XMLEntry.Parse(data);
+				case ParserType.XML: return XMLVisitor.Parse(data);
 				default: throw new ArgumentException("Unable to parse this type");
 			}
 		}

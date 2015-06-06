@@ -1,91 +1,99 @@
-﻿using System.Collections.Generic;
-using Antlr4.Runtime.Tree;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Atn;
 using NeoEdit.TextEdit.Parsing.XML.Parser;
 
 namespace NeoEdit.TextEdit.Parsing.XML
 {
-	class XMLVisitor : XMLParserBaseVisitor<object>
+	class XMLVisitor : XMLParserBaseVisitor<ParserNode>
 	{
-		const string COMMENT = "comment";
-		const string DOCUMENT = "document";
-		const string ELEMENT = "element";
-		const string NAME = "name";
-		const string ROOTSTR = "root";
-		const string TEXT = "text";
+		public static ParserNode Parse(string input)
+		{
+			var inputStream = new AntlrInputStream(input);
+			var lexer = new XMLLexer(inputStream);
+			var tokens = new CommonTokenStream(lexer);
+			var parser = new XMLParser(tokens);
+			parser.Interpreter.PredictionMode = PredictionMode.Sll;
 
-		readonly ParserNode Root;
-		ParserNode Parent { get { return stack.Peek(); } }
+			XMLParser.DocumentContext tree;
+			try
+			{
+				tree = parser.document();
+			}
+			catch
+			{
+				tokens.Reset();
+				parser.Reset();
+				parser.Interpreter.PredictionMode = PredictionMode.Ll;
+				tree = parser.document();
+			}
+
+			var visitor = new XMLVisitor(input);
+			return visitor.Visit(tree);
+		}
+
+		const string DOCUMENT = "Document";
+		const string COMMENT = "Comment";
+		const string MISC = "Misc";
+		const string TEXT = "Text";
+		const string ELEMENT = "Element";
+		const string NAME = "Name";
+
+		ParserNode Parent { get { return stack.FirstOrDefault(); } }
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;
 		XMLVisitor(string input)
 		{
 			this.input = input;
-			stack.Push(Root = new ParserNode { Type = ROOTSTR, Start = 0, End = input.Length });
 		}
 
-		public static ParserNode Parse(string input, IParseTree tree)
+		ParserNode HandleContext(ParserRuleContext context, string type)
 		{
-			var visitor = new XMLVisitor(input);
-			visitor.Visit(tree);
-			return visitor.Root;
+			ParserNode node = null;
+			if (type != null)
+			{
+				int start, end;
+				context.GetBounds(out start, out end);
+				if (type == TEXT)
+				{
+					while ((start < end) && (Char.IsWhiteSpace(input[start])))
+						++start;
+					while ((end > start) && (Char.IsWhiteSpace(input[end - 1])))
+						--end;
+				}
+				if (start != end)
+				{
+					node = new ParserNode { Type = type, Parent = Parent, Start = start, End = end };
+					stack.Push(node);
+				}
+			}
+
+			VisitChildren(context);
+			if (node != null)
+				stack.Pop();
+			return node;
 		}
 
-		public override object VisitAttribute(XMLParser.AttributeContext context)
+		public override ParserNode VisitDocument(XMLParser.DocumentContext context) { return HandleContext(context, DOCUMENT); }
+		public override ParserNode VisitComment(XMLParser.CommentContext context) { return HandleContext(context, COMMENT); }
+		public override ParserNode VisitMisc(XMLParser.MiscContext context) { return HandleContext(context, MISC); }
+		public override ParserNode VisitText(XMLParser.TextContext context) { return HandleContext(context, TEXT); }
+		public override ParserNode VisitElement(XMLParser.ElementContext context) { return HandleContext(context, ELEMENT); }
+
+		public override ParserNode VisitAttribute(XMLParser.AttributeContext context)
 		{
-			int start, end;
-			context.STRING().GetBounds(out start, out end);
-			++start;
-			--end;
-			Parent.AddAttr(context.Name().GetText(input), input.Substring(start, end - start), start, end);
+			var start = context.value.StartIndex + 1;
+			var end = context.value.StopIndex;
+			Parent.AddAttr(context.name.Text, input.Substring(start, end - start), start, end);
 			return base.VisitAttribute(context);
 		}
 
-		public override object VisitChardata(XMLParser.ChardataContext context)
+		public override ParserNode VisitTagname(XMLParser.TagnameContext context)
 		{
-			context.Take(c => c.TEXT()).Do(c => new ParserNode { Type = TEXT, Parent = Parent, LocationTerminalNode = c });
-			return null;
-		}
-
-		public override object VisitContent(XMLParser.ContentContext context)
-		{
-			context.Take(c => c.COMMENT()).Do(c => new ParserNode { Type = COMMENT, Parent = Parent, LocationTerminalNode = c });
-			context.Take(c => c.PI()).Do(c => new ParserNode { Type = COMMENT, Parent = Parent, LocationTerminalNode = c });
-			context.Take(c => c.CDATA()).Do(c => new ParserNode { Type = COMMENT, Parent = Parent, LocationTerminalNode = c });
-			return base.VisitContent(context);
-		}
-
-		public override object VisitDocument(XMLParser.DocumentContext context)
-		{
-			stack.Push(new ParserNode { Type = DOCUMENT, Parent = Parent, LocationParserRule = context });
-			base.VisitDocument(context);
-			stack.Pop();
-			return null;
-		}
-
-		public override object VisitElement(XMLParser.ElementContext context)
-		{
-			var node = new ParserNode { Type = ELEMENT, Parent = Parent, LocationParserRule = context };
-			node.AddAttr(NAME, input, context.Name()[0]);
-
-			stack.Push(node);
-			base.VisitElement(context);
-			stack.Pop();
-			return null;
-		}
-
-		public override object VisitMisc(XMLParser.MiscContext context)
-		{
-			context.Take(c => c.COMMENT()).Do(c => new ParserNode { Type = COMMENT, Parent = Parent, LocationTerminalNode = c });
-			context.Take(c => c.PI()).Do(c => new ParserNode { Type = COMMENT, Parent = Parent, LocationTerminalNode = c });
-			return null;
-		}
-
-		public override object VisitProlog(XMLParser.PrologContext context)
-		{
-			stack.Push(new ParserNode { Type = COMMENT, Parent = Parent, LocationParserRule = context });
-			base.VisitProlog(context);
-			stack.Pop();
-			return null;
+			Parent.AddAttr(NAME, input, context);
+			return base.VisitTagname(context);
 		}
 	}
 }
