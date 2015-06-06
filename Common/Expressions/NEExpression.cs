@@ -10,14 +10,6 @@ namespace NeoEdit.Common.Expressions
 {
 	public class NEExpression
 	{
-		class ErrorListener<T> : IAntlrErrorListener<T>
-		{
-			public void SyntaxError(IRecognizer recognizer, T offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
-			{
-				throw e;
-			}
-		}
-
 		readonly string expression;
 		readonly ExpressionParser.ExprContext tree;
 		public NEExpression(string expression)
@@ -26,13 +18,9 @@ namespace NeoEdit.Common.Expressions
 
 			var input = new AntlrInputStream(expression);
 			var lexer = new ExpressionLexer(input);
-			lexer.RemoveErrorListeners();
-			lexer.AddErrorListener(new ErrorListener<int>());
 
 			var tokens = new CommonTokenStream(lexer);
 			var parser = new ExpressionParser(tokens);
-			parser.RemoveErrorListeners();
-			parser.AddErrorListener(new ErrorListener<IToken>());
 			parser.ErrorHandler = new BailErrorStrategy();
 
 			parser.Interpreter.PredictionMode = PredictionMode.Sll;
