@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" InitialTargets="CompressWords;BuildCSharp;BuildJSON;BuildTCSV;BuildXML" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" InitialTargets="CompressWords;BuildCSharp;BuildJSON;BuildHTML;BuildTCSV;BuildXML" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{9A35AB82-2481-4C44-B51E-66DF7D248EAD}</ProjectGuid>
@@ -15,6 +15,10 @@
   <Target Name="BuildCSharp" Inputs="Parsing\CSharp\Source\CSharp4Lexer.g4;Parsing\CSharp\Source\CSharp4PreProcessor.g4;Parsing\CSharp\Source\CSharp4.g4" Outputs="Parsing\CSharp\Parser\CSharp4Visitor.cs;Parsing\CSharp\Parser\CSharp4BaseVisitor.cs;Parsing\CSharp\Parser\CSharp4Lexer.cs;Parsing\CSharp\Parser\CSharp4Parser.cs;Parsing\CSharp\Parser\CSharp4PreProcessor.cs">
     <Message Text="Building CSharp grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.CSharp.Parser -o &quot;$(ProjectDir)Parsing\CSharp\Parser&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4Lexer.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4PreProcessor.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4.g4&quot;" />
+  </Target>
+  <Target Name="BuildHTML" Inputs="Parsing\HTML\Source\HTMLLexer.g4;Parsing\HTML\Source\HTMLParser.g4" Outputs="Parsing\HTML\Parser\HTMLLexer.cs;Parsing\HTML\Parser\HTMLParser.cs;Parsing\HTML\Parser\HTMLParserBaseVisitor.cs;Parsing\HTML\Parser\HTMLParserVisitor.cs">
+    <Message Text="Building HTML grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.HTML.Parser -o &quot;$(ProjectDir)Parsing\HTML\Parser&quot; &quot;$(ProjectDir)Parsing\HTML\Source\HTMLLexer.g4&quot; &quot;$(ProjectDir)Parsing\HTML\Source\HTMLParser.g4&quot;" />
   </Target>
   <Target Name="BuildJSON" Inputs="Parsing\JSON\Source\JSON.g4" Outputs="Parsing\JSON\Parser\JSONBaseVisitor.cs;Parsing\JSON\Parser\JSONLexer.cs;Parsing\JSON\Parser\JSONParser.cs;Parsing\JSON\Parser\JSONVisitor.cs">
     <Message Text="Building JSON grammar" Importance="High" />
@@ -207,8 +211,13 @@
     <None Include="Parsing\CSharp\Source\CSharp4.g4" />
     <None Include="Parsing\CSharp\Source\CSharp4Lexer.g4" />
     <None Include="Parsing\CSharp\Source\CSharp4PreProcessor.g4" />
-    <Compile Include="Parsing\GenericListener.cs" />
-    <Compile Include="Parsing\HTML\HTMLEntry.cs" />
+    <Compile Include="Parsing\HTML\HTMLVisitor.cs" />
+    <Compile Include="Parsing\HTML\Parser\HTMLLexer.cs" />
+    <Compile Include="Parsing\HTML\Parser\HTMLParser.cs" />
+    <Compile Include="Parsing\HTML\Parser\HTMLParserBaseVisitor.cs" />
+    <Compile Include="Parsing\HTML\Parser\HTMLParserVisitor.cs" />
+    <None Include="Parsing\HTML\Source\HTMLLexer.g4" />
+    <None Include="Parsing\HTML\Source\HTMLParser.g4" />
     <Compile Include="Parsing\JSON\JSONEntry.cs" />
     <Compile Include="Parsing\JSON\JSONVisitor.cs" />
     <Compile Include="Parsing\JSON\Parser\JSONBaseVisitor.cs" />
@@ -217,6 +226,7 @@
     <Compile Include="Parsing\JSON\Parser\JSONVisitor.cs" />
     <None Include="Parsing\JSON\Source\JSON.g4" />
     <Compile Include="Parsing\Parser.cs" />
+    <Compile Include="Parsing\ParserHelper.cs" />
     <Compile Include="Parsing\ParserNode.cs" />
     <Compile Include="Parsing\ParsingExtensions.cs" />
     <Compile Include="Parsing\TCSV\CSVVisitor.cs" />

@@ -74,7 +74,7 @@ namespace NeoEdit.TextEdit.Parsing.XML
 							}
 							else
 							{
-								result.AddRange(childData.Select(str => "  " + str));
+								result.AddRange(childData.Select(str => "\t" + str));
 								result.Add(close);
 							}
 						}

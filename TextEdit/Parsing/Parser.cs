@@ -29,7 +29,7 @@ namespace NeoEdit.TextEdit.Parsing
 			{
 				case ParserType.CSharp: return CSharpEntry.Parse(data);
 				case ParserType.CSV: return CSVVisitor.Parse(data);
-				case ParserType.HTML: return new HTMLEntry(data).Parse();
+				case ParserType.HTML: return HTMLVisitor.Parse(data);
 				case ParserType.JSON: return JSONEntry.Parse(data);
 				case ParserType.TSV: return TSVVisitor.Parse(data);
 				case ParserType.XML: return XMLVisitor.Parse(data);
@@ -63,7 +63,7 @@ namespace NeoEdit.TextEdit.Parsing
 		{
 			switch (parserType)
 			{
-				case ParserType.HTML: return HTMLEntry.FormatHTML(node, input);
+				case ParserType.HTML: return HTMLVisitor.Format(node, input);
 				case ParserType.XML: return XMLVisitor.Format(node, input);
 				default: throw new Exception("Unable to reformat this type");
 			}
