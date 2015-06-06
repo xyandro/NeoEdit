@@ -59,11 +59,12 @@ namespace NeoEdit.TextEdit.Parsing
 			}
 		}
 
-		static public string Reformat(ParserNode node, string data, ParserType parserType)
+		static public string Reformat(ParserNode node, string input, ParserType parserType)
 		{
 			switch (parserType)
 			{
-				case ParserType.HTML: return HTMLEntry.FormatHTML(node, data);
+				case ParserType.HTML: return HTMLEntry.FormatHTML(node, input);
+				case ParserType.XML: return XMLVisitor.Format(node, input);
 				default: throw new Exception("Unable to reformat this type");
 			}
 		}

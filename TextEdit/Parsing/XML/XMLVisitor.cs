@@ -34,6 +34,65 @@ namespace NeoEdit.TextEdit.Parsing.XML
 			return visitor.Visit(tree);
 		}
 
+		public static List<string> rFormat(ParserNode node, string input)
+		{
+			switch (node.Type)
+			{
+				case DOCUMENT:
+					{
+						var result = new List<string>();
+						var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
+						foreach (var child in children)
+							result.AddRange(rFormat(child, input));
+						return result;
+					}
+				case MISC:
+				case COMMENT:
+				case TEXT: return input.Substring(node.Start, node.Length).Split('\n').Select(str => str.TrimEnd('\r').Trim()).ToList();
+				case ELEMENT:
+					{
+						var result = new List<string>();
+
+						var attributes = node.List(ParserNode.ParserNodeListType.Attributes).Where(attr => attr.HasLocation).ToList();
+						var name = attributes.Where(attr => attr.Type == NAME).Single();
+						attributes = attributes.Where(attr => attr != name).ToList(); ;
+
+						var attrs = new List<string> { name.Text };
+						attrs.AddRange(attributes.Select(attr => String.Format("{0}=\"{1}\"", attr.Type, input.Substring(attr.Start, attr.Length))));
+						var open = String.Join(" ", attrs);
+
+						var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
+						if (children.Any())
+						{
+							result.Add("<" + open + ">");
+							var close = "</" + name.Text + ">";
+							var childData = children.SelectMany(child => rFormat(child, input)).ToList();
+							if ((children.Count == 1) && (childData.Count == 1) && (children[0].Type == TEXT))
+							{
+								result[result.Count - 1] += childData[0];
+								result[result.Count - 1] += close;
+							}
+							else
+							{
+								result.AddRange(childData.Select(str => "  " + str));
+								result.Add(close);
+							}
+						}
+						else
+							result.Add("<" + open + " />");
+
+
+						return result;
+					}
+				default: throw new ArgumentException("Unable to interpret XML");
+			}
+		}
+
+		public static string Format(ParserNode document, string input)
+		{
+			return String.Join("", rFormat(document, input).Select(str => str + "\r\n"));
+		}
+
 		const string DOCUMENT = "Document";
 		const string COMMENT = "Comment";
 		const string MISC = "Misc";

@@ -10,7 +10,7 @@ comment   : COMMENT ;
 
 misc      : COMMENT | DTD | SPECIAL ;
 
-text      : TEXT | WS | CHARREF | ENTITYREF ;
+text      : (TEXT | WS | CHARREF | ENTITYREF)+ ;
 
 element   : OPEN tagname attribute* CLOSE content* OPEN SLASH NAME CLOSE
           | OPEN tagname attribute* SLASH_CLOSE
