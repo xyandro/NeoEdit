@@ -230,7 +230,6 @@
     <Compile Include="Parsing\TCSV\Parser\TSVVisitor.cs" />
     <None Include="Parsing\TCSV\Source\CSV.g4" />
     <None Include="Parsing\TCSV\Source\TSV.g4" />
-    <Compile Include="Parsing\TCSV\TCSVEntry.cs" />
     <Compile Include="Parsing\TCSV\TSVVisitor.cs" />
     <Compile Include="Parsing\XML\Parser\XMLLexer.cs" />
     <Compile Include="Parsing\XML\Parser\XMLParser.cs" />

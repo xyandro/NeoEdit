@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 using NeoEdit.TextEdit.Parsing.TCSV.Parser;
 
@@ -7,6 +8,30 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 {
 	class CSVVisitor : CSVBaseVisitor<object>
 	{
+		public static ParserNode Parse(string input)
+		{
+			var inputStream = new AntlrInputStream(input);
+			var lexer = new CSVLexer(inputStream);
+			var tokens = new CommonTokenStream(lexer);
+			var parser = new CSVParser(tokens);
+			parser.Interpreter.PredictionMode = PredictionMode.Sll;
+
+			CSVParser.DocContext tree;
+			try
+			{
+				tree = parser.doc();
+			}
+			catch
+			{
+				tokens.Reset();
+				parser.Reset();
+				parser.Interpreter.PredictionMode = PredictionMode.Ll;
+				tree = parser.doc();
+			}
+
+			return CSVVisitor.Parse(input, tree);
+		}
+
 		const string PAGE = "Page";
 		const string ROW = "Row";
 		const string FIELD = "Field";

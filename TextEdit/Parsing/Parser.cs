@@ -28,10 +28,10 @@ namespace NeoEdit.TextEdit.Parsing
 			switch (parserType)
 			{
 				case ParserType.CSharp: return CSharpEntry.Parse(data);
-				case ParserType.CSV: return TCSVEntry.ParseCSV(data);
+				case ParserType.CSV: return CSVVisitor.Parse(data);
 				case ParserType.HTML: return new HTMLEntry(data).Parse();
 				case ParserType.JSON: return JSONEntry.Parse(data);
-				case ParserType.TSV: return TCSVEntry.ParseTSV(data);
+				case ParserType.TSV: return TSVVisitor.Parse(data);
 				case ParserType.XML: return XMLVisitor.Parse(data);
 				default: throw new ArgumentException("Unable to parse this type");
 			}
