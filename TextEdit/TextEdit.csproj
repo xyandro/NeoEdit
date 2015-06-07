@@ -218,7 +218,6 @@
     <Compile Include="Parsing\HTML\Parser\HTMLParserVisitor.cs" />
     <None Include="Parsing\HTML\Source\HTMLLexer.g4" />
     <None Include="Parsing\HTML\Source\HTMLParser.g4" />
-    <Compile Include="Parsing\JSON\JSONEntry.cs" />
     <Compile Include="Parsing\JSON\JSONVisitor.cs" />
     <Compile Include="Parsing\JSON\Parser\JSONBaseVisitor.cs" />
     <Compile Include="Parsing\JSON\Parser\JSONLexer.cs" />
