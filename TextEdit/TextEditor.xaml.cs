@@ -2028,11 +2028,43 @@ namespace NeoEdit.TextEdit
 				return await client.DownloadStringTaskAsync(new Uri(url));
 		}
 
+		async Task<List<Tuple<string, string, bool>>> GetURLs(List<string> urls)
+		{
+			var tasks = urls.Select(url => GetURL(url)).ToList();
+			var results = new List<Tuple<string, string, bool>>();
+			for (var ctr = 0; ctr < tasks.Count; ++ctr)
+			{
+				string data;
+				bool error = false;
+				try { data = await tasks[ctr]; }
+				catch (Exception ex)
+				{
+					error = true;
+					data = "<error>" + Data.DefaultEnding;
+					data += "\t<url>" + urls[ctr] + "</url>" + Data.DefaultEnding;
+					data += "\t<data>" + Data.DefaultEnding;
+					for (; ex != null; ex = ex.InnerException)
+						data += "\t\t" + ex.Message + Data.DefaultEnding;
+					data += "\t</data>" + Data.DefaultEnding;
+					data += "</error>" + Data.DefaultEnding;
+				}
+				results.Add(Tuple.Create(urls[ctr], data, error));
+			}
+			return results;
+		}
+
 		internal void Command_Data_FetchURL()
 		{
 			var urls = GetSelectionStrings();
-			var strs = Task.Run(() => Task.WhenAll(urls.Select(task => GetURL(task)).ToArray())).Result;
-			ReplaceSelections(strs.ToList());
+			var results = Task.Run(() => GetURLs(urls).Result).Result;
+			if (results.Any(result => result.Item3))
+				new Message
+				{
+					Title = "Error",
+					Text = "Failed to fetch the URLS:\n" + String.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1)),
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
+			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
 		internal void Command_Insert_GUID()
