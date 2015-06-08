@@ -1123,11 +1123,14 @@ namespace NeoEdit.TextEdit
 			if (result.ClipboardValue)
 			{
 				var clipboardStrings = NEClipboard.GetStrings();
-				sels = sels.SetSize(clipboardStrings.Count, new Range(BeginOffset())).ToList();
+				sels = sels.Resize(clipboardStrings.Count, new Range(BeginOffset())).ToList();
 				offsets = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
 			}
 			else
+			{
+				sels = sels.Expand(1, new Range(BeginOffset())).ToList();
 				offsets = sels.Select(range => result.Value).ToList();
+			}
 
 			if (result.Relative)
 			{
