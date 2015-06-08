@@ -50,6 +50,8 @@ namespace NeoEdit.TextEdit.Parsing.HTML
 				case MISC:
 				case COMMENT:
 				case TEXT:
+				case SCRIPT:
+				case STYLE:
 					{
 						var result = input.Substring(node.Start, node.Length).Split('\n').Select(str => str.TrimEnd('\r').Trim()).ToList();
 						return Tuple.Create(result, result.Count <= 1, result.Count <= 1);
@@ -117,6 +119,8 @@ namespace NeoEdit.TextEdit.Parsing.HTML
 		const string COMMENT = "Comment";
 		const string MISC = "Misc";
 		const string TEXT = "Text";
+		const string SCRIPT = "Script";
+		const string STYLE = "Style";
 		const string ELEMENT = "Element";
 		const string NAME = "Name";
 		const string SELFCLOSING = "SelfClosing";
@@ -172,8 +176,9 @@ namespace NeoEdit.TextEdit.Parsing.HTML
 			if (context.tag != null)
 			{
 				var start = context.tag.StartIndex + 1; ;
-				var end = context.tag.StopIndex + 1; ;
-				node.AddAttr(NAME, input.Substring(start, end - start), start, end);
+				var end = context.tag.StopIndex + 1;
+				var tag = input.Substring(start, end - start);
+				node.AddAttr(NAME, tag, start, end);
 
 				context.GetBounds(out start, out end);
 				start = context.body.StartIndex;
@@ -182,7 +187,13 @@ namespace NeoEdit.TextEdit.Parsing.HTML
 					--end;
 				while ((start < end) && (Char.IsWhiteSpace(input[start])))
 					++start;
-				new ParserNode { Type = TEXT, Parent = node, Start = start, End = end };
+				var type = TEXT;
+				switch (tag.ToLower())
+				{
+					case "script": type = SCRIPT; break;
+					case "style": type = STYLE; break;
+				}
+				new ParserNode { Type = type, Parent = node, Start = start, End = end };
 			}
 
 			base.VisitElement(context);

@@ -5,10 +5,10 @@ DTD           : '<!' .*? '>' ;
 
 SPECIAL       : '<?' .*? '?>' ;
 
-SCRIPT        : '<script' -> pushMode(SCRIPTMODE), pushMode(TAGMODE) ;
-STYLE         : '<style' -> pushMode(STYLEMODE), pushMode(TAGMODE) ;
-TEXTAREA      : '<textarea' -> pushMode(TEXTAREAMODE), pushMode(TAGMODE) ;
-TITLE         : '<title' -> pushMode(TITLEMODE), pushMode(TAGMODE) ;
+OPENSCRIPT    : '<script' -> pushMode(SCRIPTMODE), pushMode(TAGMODE) ;
+OPENSTYLE     : '<style' -> pushMode(STYLEMODE), pushMode(TAGMODE) ;
+OPENTEXTAREA  : '<textarea' -> pushMode(TEXTAREAMODE), pushMode(TAGMODE) ;
+OPENTITLE     : '<title' -> pushMode(TITLEMODE), pushMode(TAGMODE) ;
 
 OPEN          : '<' -> pushMode(TAGMODE) ;
 
