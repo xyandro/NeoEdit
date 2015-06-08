@@ -58,8 +58,7 @@ namespace NeoEdit.TextEdit
 			const int Ending_CR = 1;
 			const int Ending_LF = 2;
 			const int Ending_CRLF = 3;
-			const int Ending_LFCR = 4;
-			const int Ending_Mixed = 5;
+			const int Ending_Mixed = 4;
 
 			lineOffset = new List<int>();
 			endingOffset = new List<int>();
@@ -106,10 +105,10 @@ namespace NeoEdit.TextEdit
 						endLine = chunk.Item2;
 						endLineLen = 0;
 					}
-					else if ((endLine + 1 < chunk.Item2) && (((Data[endLine] == '\n') && (Data[endLine + 1] == '\r')) || ((Data[endLine] == '\r') && (Data[endLine + 1] == '\n'))))
+					else if ((endLine + 1 < chunk.Item2) && (Data[endLine] == '\r') && (Data[endLine + 1] == '\n'))
 					{
 						++endLineLen;
-						ending = Data[endLine] == '\r' ? Ending_CRLF : Ending_LFCR;
+						ending = Ending_CRLF;
 					}
 					else
 						ending = Data[endLine] == '\r' ? Ending_CR : Ending_LF;
@@ -160,7 +159,6 @@ namespace NeoEdit.TextEdit
 				{ Ending_CR, "\r" },
 				{ Ending_LF, "\n" },
 				{ Ending_CRLF, "\r\n" },
-				{ Ending_LFCR, "\n\r" },
 				{ Ending_Mixed, null },
 			};
 
