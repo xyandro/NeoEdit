@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
@@ -47,6 +48,19 @@ namespace NeoEdit.TextEdit
 			}
 
 			return sb.ToString();
+		}
+
+		static internal IEnumerable<TSource> SetSize<TSource>(this IEnumerable<TSource> source, int count, TSource item)
+		{
+			using (var list = source.GetEnumerator())
+				while (count > 0)
+				{
+					if (list.MoveNext())
+						yield return list.Current;
+					else
+						yield return item;
+					--count;
+				}
 		}
 	}
 }

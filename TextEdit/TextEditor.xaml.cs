@@ -1118,22 +1118,22 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
 		{
+			var sels = Selections.ToList();
 			List<int> offsets;
 			if (result.ClipboardValue)
 			{
 				var clipboardStrings = NEClipboard.GetStrings();
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard doesn't match number of selections.");
+				sels = sels.SetSize(clipboardStrings.Count, new Range(BeginOffset())).ToList();
 				offsets = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
 			}
 			else
-				offsets = Selections.Select(range => result.Value).ToList();
+				offsets = sels.Select(range => result.Value).ToList();
 
 			if (result.Relative)
 			{
-				var lines = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
-				var indexes = Selections.AsParallel().AsOrdered().Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
-				var positions = Selections.Select(range => range.Start).ToList();
+				var lines = sels.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
+				var indexes = sels.AsParallel().AsOrdered().Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
+				var positions = sels.Select(range => range.Start).ToList();
 
 				List<int> list;
 				switch (gotoType)
@@ -1148,12 +1148,17 @@ namespace NeoEdit.TextEdit
 			else if (gotoType != GotoType.Position)
 				offsets = offsets.Select(ofs => ofs - 1).ToList();
 
-			if (gotoType == GotoType.Position)
-				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], selecting)).ToList());
-			else
+			switch (gotoType)
 			{
-				var isLine = gotoType == GotoType.Line;
-				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, isLine ? offsets[ctr] : 0, isLine ? 0 : offsets[ctr], selecting, !isLine, isLine)).ToList());
+				case GotoType.Line:
+					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], 0, selecting, false, true)).ToList());
+					break;
+				case GotoType.Column:
+					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, 0, offsets[ctr], selecting, true, false)).ToList());
+					break;
+				case GotoType.Position:
+					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], selecting)).ToList());
+					break;
 			}
 		}
 
