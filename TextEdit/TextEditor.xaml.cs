@@ -1980,7 +1980,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Escape_Markup()
 		{
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;")).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Escape_Regex()
@@ -1995,7 +1995,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Unescape_Markup()
 		{
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("&apos;", "'").Replace("&quot;", "\"").Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">")).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(GetString(range))).ToList());
 		}
 
 		internal void Command_Data_Unescape_Regex()
