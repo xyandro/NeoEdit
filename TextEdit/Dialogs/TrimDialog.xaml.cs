@@ -54,7 +54,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { TrimChars = Regex.Unescape(TrimChars).ToCharArray(), Location = Location };
+			result = new Result { TrimChars = Misc.GetCharsFromRegexString(TrimChars).ToCharArray(), Location = Location };
 			DialogResult = true;
 		}
 

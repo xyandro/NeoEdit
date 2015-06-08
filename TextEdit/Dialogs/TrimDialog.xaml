@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Trim" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=value}">
+	Title="Trim" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=trimChars}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
