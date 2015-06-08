@@ -97,13 +97,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		void Escape(object sender, RoutedEventArgs e)
 		{
 			Text = Regex.Escape(Text);
-			IsRegex = true;
 		}
 
 		void Unescape(object sender, RoutedEventArgs e)
 		{
 			Text = Regex.Unescape(Text);
-			IsRegex = false;
 		}
 
 		Result result;
