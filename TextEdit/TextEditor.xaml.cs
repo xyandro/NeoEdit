@@ -2213,10 +2213,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Keys_Find(int index)
 		{
-			if (keysAndValues[0].Count != keysAndValues[index].Count)
-				throw new Exception("Keys and values count must match");
-
-			var searcher = new Searcher(keysAndValues[0], true);
+			var searcher = new Searcher(keysAndValues[index], true);
 			var ranges = new List<Range>();
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
