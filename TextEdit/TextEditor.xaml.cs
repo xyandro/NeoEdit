@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -527,6 +528,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_InsertCopiedCutFiles: Command_File_InsertCopiedCutFiles(); break;
 				case TextEditCommand.File_CopyPath: Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Command_File_CopyName(); break;
+				case TextEditCommand.File_Explore: Command_File_Explore(); break;
 				case TextEditCommand.File_Encoding: Command_File_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_ReopenWithEncoding: Command_File_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_HexEditor: if (Command_File_HexEditor()) { TabsParent.Remove(this, true); } break;
@@ -920,6 +922,11 @@ namespace NeoEdit.TextEdit
 		internal void Command_File_CopyName()
 		{
 			Clipboard.SetText(Path.GetFileName(FileName));
+		}
+
+		internal void Command_File_Explore()
+		{
+			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
 		}
 
 		internal EncodingDialog.Result Command_File_Encoding_Dialog()

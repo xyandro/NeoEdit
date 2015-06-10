@@ -34,7 +34,6 @@ Go back to last selections
 Aggregate data (counts/group by field/etc.)
 Accept expressions in dialog boxes
 Make keys/values observable so counts can be updated automatically
-Show file in explorer
 
 View:
 Update as new lines are added

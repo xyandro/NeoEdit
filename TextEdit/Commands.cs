@@ -18,6 +18,7 @@ namespace NeoEdit.TextEdit
 		File_InsertCopiedCutFiles,
 		File_CopyPath,
 		File_CopyName,
+		File_Explore,
 		File_Encoding,
 		File_ReopenWithEncoding,
 		[KeyGesture(Key.H, ModifierKeys.Control | ModifierKeys.Alt)] File_HexEditor,
