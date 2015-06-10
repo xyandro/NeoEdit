@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -89,6 +91,8 @@ namespace NeoEdit.TextEdit
 
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
+		public static ObservableCollection<ObservableCollection<string>> keysAndValues { get; private set; }
+		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
@@ -99,6 +103,17 @@ namespace NeoEdit.TextEdit
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
+
+			keysAndValues = new ObservableCollection<ObservableCollection<string>> { null, null, null, null, null, null, null, null, null, null };
+			keysAndValues.CollectionChanged += keysAndValues_CollectionChanged;
+			for (var ctr = 0; ctr < keysAndValues.Count; ++ctr)
+				keysAndValues[ctr] = new ObservableCollection<string>();
+		}
+
+		static void keysAndValues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			if ((e.Action == NotifyCollectionChangedAction.Replace) && (e.NewStartingIndex == 0))
+				keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
 		}
 
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
@@ -293,22 +308,6 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		static List<string>[] keysAndValues = new List<string>[10] { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
-		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
-
-		static int[] keysAndValuesCount = new int[keysAndValues.Length];
-		public static int[] KeysAndValuesCount
-		{
-			get { return keysAndValuesCount; }
-			set
-			{
-				keysAndValuesCount = value;
-				if (KeysAndValuesCountChanged != null)
-					KeysAndValuesCountChanged(null, new EventArgs());
-			}
-		}
-		public static event EventHandler KeysAndValuesCountChanged;
-
 		bool ConfirmVerifyCanFullyEncode()
 		{
 			return new Message
@@ -359,14 +358,14 @@ namespace NeoEdit.TextEdit
 				{ new string[] { "z" }, addData => addData("z", strs.Select((str, order) => order.ToString()).ToList()) },
 				{ new string[] { "c" }, addData => addData("c", c) },
 				{ new string[] { "cl" }, addData => addData("cl", c.Select(str => str.Length.ToString()).ToList()) },
-				{ new string[] { "rk" }, addData => addData("rk", keysAndValues[0]) },
+				{ new string[] { "rk" }, addData => addData("rk", keysAndValues[0].ToList()) },
 				{ new string[] { "rkl" }, addData => addData("rkl", keysAndValues[0].Select(str => str.Length.ToString()).ToList()) },
 			};
 
 			for (var ctr = 1; ctr <= 9; ++ctr)
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
-				parallelDataActions.Add(new string[] { String.Format("rv{0}", num) }, addData => addData(String.Format("rv{0}", num), keysAndValues[num]));
+				parallelDataActions.Add(new string[] { String.Format("rv{0}", num) }, addData => addData(String.Format("rv{0}", num), keysAndValues[num].ToList()));
 				parallelDataActions.Add(new string[] { String.Format("rv{0}l", num) }, addData => addData(String.Format("rv{0}l", num), keysAndValues[num].Select(str => str.Length.ToString()).ToList()));
 				parallelDataActions.Add(new string[] { String.Format("v{0}", num), String.Format("v{0}l", num) }, addData =>
 				{
@@ -2223,10 +2222,7 @@ namespace NeoEdit.TextEdit
 			var values = GetSelectionStrings();
 			if ((index == 0) && (values.Distinct().Count() != values.Count))
 				throw new ArgumentException("Cannot have duplicate keys");
-			keysAndValues[index] = values;
-			if (index == 0)
-				keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
-			KeysAndValuesCount = keysAndValues.Select(list => list.Count).ToArray();
+			keysAndValues[index] = new ObservableCollection<string>(values);
 		}
 
 		internal void Command_Keys_Add(int index)
@@ -2235,10 +2231,8 @@ namespace NeoEdit.TextEdit
 			var values = GetSelectionStrings();
 			if ((index == 0) && (keysAndValues[0].Concat(values).GroupBy(key => key).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Cannot have duplicate keys");
-			keysAndValues[index].AddRange(values);
-			if (index == 0)
-				keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
-			KeysAndValuesCount = keysAndValues.Select(list => list.Count).ToArray();
+			foreach (var value in values)
+				keysAndValues[index].Add(value);
 		}
 
 		internal void Command_Keys_Replace(int index)
@@ -2260,7 +2254,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Keys_Find(int index)
 		{
-			var searcher = new Searcher(keysAndValues[index], true);
+			var searcher = new Searcher(keysAndValues[index].ToList(), true);
 			var ranges = new List<Range>();
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
@@ -2274,7 +2268,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Keys_Copy(int index)
 		{
-			NEClipboard.SetStrings(keysAndValues[index]);
+			NEClipboard.SetStrings(keysAndValues[index].ToList());
 		}
 
 		internal void Command_Keys_HitsMisses(int index, bool hits)
@@ -2287,9 +2281,8 @@ namespace NeoEdit.TextEdit
 		{
 			var strs = GetSelectionStrings();
 			var group = strs.GroupBy(a => a).Select(a => new { key = a.Key, count = a.Count() }).OrderBy(a => a.count).ToList();
-			keysAndValues[0] = group.Select(a => a.key).ToList();
-			keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
-			keysAndValues[1] = group.Select(a => a.count.ToString()).ToList();
+			keysAndValues[0] = new ObservableCollection<string>(group.Select(a => a.key));
+			keysAndValues[1] = new ObservableCollection<string>(group.Select(a => a.count.ToString()));
 		}
 
 		internal void Command_SelectRegion_Toggle()
