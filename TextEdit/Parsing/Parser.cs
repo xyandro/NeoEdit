@@ -27,7 +27,7 @@ namespace NeoEdit.TextEdit.Parsing
 		{
 			switch (parserType)
 			{
-				case ParserType.CSharp: return CSharpEntry.Parse(data);
+				case ParserType.CSharp: return CSharpVisitor.Parse(data);
 				case ParserType.CSV: return CSVVisitor.Parse(data);
 				case ParserType.HTML: return HTMLVisitor.Parse(data);
 				case ParserType.JSON: return JSONVisitor.Parse(data);

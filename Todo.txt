@@ -33,6 +33,9 @@ Add/subtract chars in expressions (a+1=b)
 Go back to last selections
 Aggregate data (counts/group by field/etc.)
 Accept expressions in dialog boxes
+Make keys/values observable so counts can be updated automatically
+Convert strings passed to expression to types
+Show file in explorer
 
 View:
 Update as new lines are added

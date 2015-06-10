@@ -15,8 +15,13 @@ namespace NeoEdit.TextEdit.Parsing
 
 		public static void GetBounds(this ITerminalNode token, out int start, out int end)
 		{
-			start = token.Symbol.StartIndex;
-			end = token.Symbol.StopIndex + 1;
+			token.Symbol.GetBounds(out start, out end);
+		}
+
+		public static void GetBounds(this IToken token, out int start, out int end)
+		{
+			start = token.StartIndex;
+			end = token.StopIndex + 1;
 		}
 
 		public static string GetText(this ParserRuleContext ctx, string input)

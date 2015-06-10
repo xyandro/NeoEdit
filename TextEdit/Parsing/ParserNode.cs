@@ -246,6 +246,13 @@ namespace NeoEdit.TextEdit.Parsing
 			AddAttrNode(type, null, start, end);
 		}
 
+		internal void AddAttr(string type, IToken token)
+		{
+			int start, end;
+			token.GetBounds(out start, out end);
+			AddAttrNode(type, null, start, end);
+		}
+
 		internal void AddAttr(string type, string input, ParserRuleContext ctx)
 		{
 			var text = ctx.GetText(input);
@@ -256,7 +263,12 @@ namespace NeoEdit.TextEdit.Parsing
 
 		internal void AddAttr(string type, string input, ITerminalNode token)
 		{
-			var text = token.GetText(input);
+			AddAttr(type, input, token.Symbol);
+		}
+
+		internal void AddAttr(string type, string input, IToken token)
+		{
+			var text = token.Text;
 			int start, end;
 			token.GetBounds(out start, out end);
 			AddAttrNode(type, text, start, end);

@@ -12,9 +12,9 @@
     <Message Text="Compressing word list" Importance="High" />
     <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Misc\Words.txt.gz&quot; &quot;$(ProjectDir)Misc\Words.txt&quot;" />
   </Target>
-  <Target Name="BuildCSharp" Inputs="Parsing\CSharp\Source\CSharp4Lexer.g4;Parsing\CSharp\Source\CSharp4PreProcessor.g4;Parsing\CSharp\Source\CSharp4.g4" Outputs="Parsing\CSharp\Parser\CSharp4Visitor.cs;Parsing\CSharp\Parser\CSharp4BaseVisitor.cs;Parsing\CSharp\Parser\CSharp4Lexer.cs;Parsing\CSharp\Parser\CSharp4Parser.cs;Parsing\CSharp\Parser\CSharp4PreProcessor.cs">
+  <Target Name="BuildCSharp" Inputs="Parsing\CSharp\Source\CSharpLexer.g4;Parsing\CSharp\Source\CSharpParser.g4" Outputs="Parsing\CSharp\Parser\CSharpParserBaseVisitor.cs;Parsing\CSharp\Parser\CSharpParserVisitor.cs;Parsing\CSharp\Parser\CSharpLexer.cs;Parsing\CSharp\Parser\CSharpParser.cs">
     <Message Text="Building CSharp grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.CSharp.Parser -o &quot;$(ProjectDir)Parsing\CSharp\Parser&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4Lexer.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4PreProcessor.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharp4.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.CSharp.Parser -o &quot;$(ProjectDir)Parsing\CSharp\Parser&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharpLexer.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharpParser.g4&quot;" />
   </Target>
   <Target Name="BuildHTML" Inputs="Parsing\HTML\Source\HTMLLexer.g4;Parsing\HTML\Source\HTMLParser.g4" Outputs="Parsing\HTML\Parser\HTMLLexer.cs;Parsing\HTML\Parser\HTMLParser.cs;Parsing\HTML\Parser\HTMLParserBaseVisitor.cs;Parsing\HTML\Parser\HTMLParserVisitor.cs">
     <Message Text="Building HTML grammar" Importance="High" />
@@ -201,16 +201,13 @@
     <Compile Include="Misc.cs" />
     <None Include="Misc\Words.txt" />
     <EmbeddedResource Include="Misc\Words.txt.gz" />
-    <Compile Include="Parsing\CSharp\CSharpEntry.cs" />
     <Compile Include="Parsing\CSharp\CSharpVisitor.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4BaseVisitor.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4Lexer.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4Parser.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4PreProcessor.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharp4Visitor.cs" />
-    <None Include="Parsing\CSharp\Source\CSharp4.g4" />
-    <None Include="Parsing\CSharp\Source\CSharp4Lexer.g4" />
-    <None Include="Parsing\CSharp\Source\CSharp4PreProcessor.g4" />
+    <Compile Include="Parsing\CSharp\Parser\CSharpLexer.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharpParser.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharpParserBaseVisitor.cs" />
+    <Compile Include="Parsing\CSharp\Parser\CSharpParserVisitor.cs" />
+    <None Include="Parsing\CSharp\Source\CSharpLexer.g4" />
+    <None Include="Parsing\CSharp\Source\CSharpParser.g4" />
     <Compile Include="Parsing\HTML\HTMLVisitor.cs" />
     <Compile Include="Parsing\HTML\Parser\HTMLLexer.cs" />
     <Compile Include="Parsing\HTML\Parser\HTMLParser.cs" />
