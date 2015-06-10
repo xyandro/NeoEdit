@@ -169,12 +169,6 @@ namespace NeoEdit.TextEdit
 					if (Selections.Count != 1)
 						throw new Exception("Must have one selection.");
 
-					if (fileList.Length == 1)
-					{
-						ReplaceSelections(fileList[0]);
-						return;
-					}
-
 					var files = fileList.Select(file => file + Data.DefaultEnding).ToList();
 					var offset = Selections.Single().Start;
 					ReplaceSelections(String.Join("", files));

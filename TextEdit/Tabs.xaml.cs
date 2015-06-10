@@ -77,6 +77,16 @@ namespace NeoEdit.TextEdit
 			UIHelper.AuditMenu(menu);
 
 			TextEditors = new ObservableCollection<TextEditor>();
+			AllowDrop = true;
+			Drop += TextEditTabs_Drop;
+		}
+
+		void TextEditTabs_Drop(object sender, System.Windows.DragEventArgs e)
+		{
+			var fileList = e.Data.GetData("FileDrop") as string[];
+			foreach (var file in fileList)
+				Create(file);
+			e.Handled = true;
 		}
 
 		class OpenFileDialogResult
@@ -357,7 +367,9 @@ namespace NeoEdit.TextEdit
 
 		Label GetLabel(TextEditor textEditor)
 		{
-			return textEditor.GetLabel();
+			var label = textEditor.GetLabel();
+			label.Drop += TextEditTabs_Drop;
+			return label;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
