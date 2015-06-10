@@ -1867,13 +1867,13 @@ namespace NeoEdit.TextEdit
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
 			var expressionData = GetExpressionData(expression: result.Expression);
-			ReplaceSelections(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Select(index => result.Expression.EvaluateDict(expressionData, index).ToString()).ToList());
+			ReplaceSelections(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Select(index => result.Expression.EvaluateDictInterpret(expressionData, index).ToString()).ToList());
 		}
 
 		internal void Command_Data_EvaluateSelectedExpression()
 		{
 			var expression = new NEExpression("Eval([0])");
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => expression.EvaluateInterpret(GetString(range)).ToString()).ToList());
 		}
 
 		internal void Command_Data_Series()
@@ -2457,7 +2457,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
 		{
 			var expressionData = GetExpressionData(expression: result.Expression);
-			Selections.Replace(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Where(num => (bool)result.Expression.EvaluateDict(expressionData, num)).Select(num => Selections[num]).ToList());
+			Selections.Replace(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Where(num => (bool)result.Expression.EvaluateDictInterpret(expressionData, num)).Select(num => Selections[num]).ToList());
 		}
 
 		internal void Command_Select_FirstSelection()
