@@ -164,6 +164,7 @@
     <Compile Include="Dialogs\GotoDialog.xaml.cs">
       <DependentUpon>GotoDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\HelpItems.cs" />
     <Page Include="Dialogs\LimitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
