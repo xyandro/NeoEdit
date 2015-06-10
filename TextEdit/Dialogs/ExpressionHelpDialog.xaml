@@ -1,0 +1,128 @@
+﻿<Window Name="self" x:Class="NeoEdit.TextEdit.Dialogs.ExpressionHelpDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:textEditDialogs="clr-namespace:NeoEdit.TextEdit.Dialogs"
+	Title="Expression Reference" SizeToContent="WidthAndHeight">
+
+	<Window.Resources>
+		<DataTemplate x:Key="helpItemTemplate">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="{Binding Name}" FontWeight="Bold" Width="{Binding DataContext.NameWidth, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"/>
+				<TextBlock Text="{Binding Description}" Width="{Binding DataContext.DescWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+			</StackPanel>
+		</DataTemplate>
+
+		<DataTemplate x:Key="helpItemsTemplate">
+			<GroupBox>
+				<GroupBox.Header>
+					<TextBlock Text="{Binding Name}" FontStyle="Italic"/>
+				</GroupBox.Header>
+
+				<ItemsControl ItemTemplate="{StaticResource helpItemTemplate}" ItemsSource="{Binding Items}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<UniformGrid Columns="{Binding Columns}"/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+				</ItemsControl>
+			</GroupBox>
+		</DataTemplate>
+	</Window.Resources>
+
+	<StackPanel Margin="10" Orientation="Vertical">
+		<StackPanel.Style>
+			<Style>
+				<Style.Resources>
+					<Style TargetType="Label">
+						<Setter Property="Margin" Value="0"/>
+						<Setter Property="Padding" Value="2,0"/>
+					</Style>
+				</Style.Resources>
+			</Style>
+		</StackPanel.Style>
+
+		<TextBlock Margin="0,0,0,10">
+			<Italic>Expression Reference</Italic>
+		</TextBlock>
+
+		<ItemsControl ItemTemplate="{StaticResource helpItemsTemplate}">
+			<ItemsControl.Items>
+
+				<textEditDialogs:HelpItems Name="Literals" Columns="4" NameWidth="90" DescWidth="150">
+					<textEditDialogs:HelpItems.Items>
+						<textEditDialogs:HelpItem Name="5" Description="Long"/>
+						<textEditDialogs:HelpItem Name="5.5" Description="Double"/>
+						<textEditDialogs:HelpItem Name="false" Description="Boolean"/>
+						<textEditDialogs:HelpItem Name="0x12345" Description="Hex"/>
+						<textEditDialogs:HelpItem Name="'Test'" Description="String"/>
+					</textEditDialogs:HelpItems.Items>
+				</textEditDialogs:HelpItems>
+
+				<textEditDialogs:HelpItems Name="Variables" Columns="4" NameWidth="90" DescWidth="150">
+					<textEditDialogs:HelpItems.Items>
+						<textEditDialogs:HelpItem Name="x" Description="Selection"/>
+						<textEditDialogs:HelpItem Name="xl" Description="Selection length"/>
+						<textEditDialogs:HelpItem Name="c" Description="Clipboard"/>
+						<textEditDialogs:HelpItem Name="cl" Description="Clipboard length"/>
+						<textEditDialogs:HelpItem Name="k / v1-v9" Description="Keys/values"/>
+						<textEditDialogs:HelpItem Name="kl / v1l-v9l" Description="Keys/values length"/>
+						<textEditDialogs:HelpItem Name="rk / rv1-rv9" Description="Raw keys/values"/>
+						<textEditDialogs:HelpItem Name="rkl / rv1l-rv9l" Description="Raw keys/values length"/>
+						<textEditDialogs:HelpItem Name="y" Description="Order (1-based)"/>
+						<textEditDialogs:HelpItem Name="z" Description="Order (0-based)"/>
+						<textEditDialogs:HelpItem Name="n" Description="Count"/>
+					</textEditDialogs:HelpItems.Items>
+				</textEditDialogs:HelpItems>
+
+				<textEditDialogs:HelpItems Name="Operators" Columns="4" NameWidth="40" DescWidth="200">
+					<textEditDialogs:HelpItems.Items>
+						<textEditDialogs:HelpItem Name="*" Description="Multiply"/>
+						<textEditDialogs:HelpItem Name="/" Description="Divide"/>
+						<textEditDialogs:HelpItem Name="%" Description="Modulo"/>
+						<textEditDialogs:HelpItem/>
+						<textEditDialogs:HelpItem Name="+" Description="Add/concat"/>
+						<textEditDialogs:HelpItem Name="-" Description="Subtract"/>
+						<textEditDialogs:HelpItem/>
+						<textEditDialogs:HelpItem/>
+						<textEditDialogs:HelpItem Name="&lt;" Description="Less than"/>
+						<textEditDialogs:HelpItem Name="i&lt;" Description="Less than (case insensitive)"/>
+						<textEditDialogs:HelpItem Name="&lt;=" Description="Less/equal"/>
+						<textEditDialogs:HelpItem Name="i&lt;=" Description="Less/equal (case insensitive)"/>
+						<textEditDialogs:HelpItem Name="&gt;" Description="Greater than"/>
+						<textEditDialogs:HelpItem Name="i&gt;" Description="Greater than (case insensitive)"/>
+						<textEditDialogs:HelpItem Name="&gt;=" Description="Greater/equal"/>
+						<textEditDialogs:HelpItem Name="i&gt;=" Description="Greater/equal (case insensitive)"/>
+						<textEditDialogs:HelpItem Name="==" Description="Equal"/>
+						<textEditDialogs:HelpItem Name="i==" Description="Equal (case insensitive)"/>
+						<textEditDialogs:HelpItem Name="!=" Description="Not equal"/>
+						<textEditDialogs:HelpItem Name="i!=" Description="Not equal (case insensitive)"/>
+						<textEditDialogs:HelpItem Name="&amp;" Description="Bitwise AND"/>
+						<textEditDialogs:HelpItem Name="|" Description="Bitwise OR"/>
+						<textEditDialogs:HelpItem Name="^" Description="Bitwise XOR"/>
+						<textEditDialogs:HelpItem/>
+						<textEditDialogs:HelpItem Name="&amp;&amp;" Description="Logical AND"/>
+						<textEditDialogs:HelpItem Name="||" Description="Logical OR"/>
+						<textEditDialogs:HelpItem Name="!" Description="Logical NOT"/>
+						<textEditDialogs:HelpItem Name="?:" Description="Conditional"/>
+					</textEditDialogs:HelpItems.Items>
+				</textEditDialogs:HelpItems>
+
+				<textEditDialogs:HelpItems Name="Functions" Columns="2" NameWidth="160" DescWidth="320">
+					<textEditDialogs:HelpItems.Items>
+						<textEditDialogs:HelpItem Name="Type(x)" Description="Get type"/>
+						<textEditDialogs:HelpItem Name="ValidRE(x)" Description="Check whether RegEx is valid"/>
+						<textEditDialogs:HelpItem Name="Eval(x)" Description="Evalulate expression"/>
+						<textEditDialogs:HelpItem Name="FileName(x)" Description="Get filename from path"/>
+						<textEditDialogs:HelpItem Name="(bool)x" Description="Cast"/>
+						<textEditDialogs:HelpItem Name="StrFormat(&quot;Value: {0}&quot;, x)" Description="Format string"/>
+					</textEditDialogs:HelpItems.Items>
+				</textEditDialogs:HelpItems>
+
+			</ItemsControl.Items>
+		</ItemsControl>
+
+		<Button Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Margin="0,10,0,0" Padding="20,1" HorizontalAlignment="Right"/>
+	</StackPanel>
+
+</Window>

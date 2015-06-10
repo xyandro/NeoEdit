@@ -121,6 +121,11 @@ namespace NeoEdit.TextEdit.Dialogs
 			example10Value.SetValidation(TextBox.TextProperty, valid);
 		}
 
+		void ExpressionHelp(object sender, RoutedEventArgs e)
+		{
+			ExpressionHelpDialog.Display();
+		}
+
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
