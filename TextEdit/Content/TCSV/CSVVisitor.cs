@@ -2,21 +2,21 @@
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
-using NeoEdit.TextEdit.Parsing.TCSV.Parser;
+using NeoEdit.TextEdit.Content.TCSV.Parser;
 
-namespace NeoEdit.TextEdit.Parsing.TCSV
+namespace NeoEdit.TextEdit.Content.TCSV
 {
-	class TSVVisitor : TSVBaseVisitor<object>
+	class CSVVisitor : CSVBaseVisitor<object>
 	{
 		public static ParserNode Parse(string input)
 		{
 			var inputStream = new AntlrInputStream(input);
-			var lexer = new TSVLexer(inputStream);
+			var lexer = new CSVLexer(inputStream);
 			var tokens = new CommonTokenStream(lexer);
-			var parser = new TSVParser(tokens);
+			var parser = new CSVParser(tokens);
 			parser.Interpreter.PredictionMode = PredictionMode.Sll;
 
-			TSVParser.DocContext tree;
+			CSVParser.DocContext tree;
 			try
 			{
 				tree = parser.doc();
@@ -29,7 +29,7 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 				tree = parser.doc();
 			}
 
-			return TSVVisitor.Parse(input, tree);
+			return CSVVisitor.Parse(input, tree);
 		}
 
 		const string PAGE = "Page";
@@ -40,7 +40,7 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 		ParserNode Parent { get { return stack.Peek(); } }
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;
-		TSVVisitor(string input)
+		CSVVisitor(string input)
 		{
 			this.input = input;
 			stack.Push(Root = new ParserNode { Type = PAGE, Start = 0, End = input.Length });
@@ -48,7 +48,7 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 
 		public static ParserNode Parse(string input, IParseTree tree)
 		{
-			var visitor = new TSVVisitor(input);
+			var visitor = new CSVVisitor(input);
 			visitor.Visit(tree);
 			return visitor.Root;
 		}
@@ -71,9 +71,9 @@ namespace NeoEdit.TextEdit.Parsing.TCSV
 			return null;
 		}
 
-		public override object VisitRow(TSVParser.RowContext context) { return AddNode(context, ROW, skipEmpty: true); }
-		public override object VisitText(TSVParser.TextContext context) { return AddNode(context, FIELD); }
-		public override object VisitString(TSVParser.StringContext context) { return AddNode(context, FIELD, true); }
-		public override object VisitEmpty(TSVParser.EmptyContext context) { return AddNode(context, FIELD); }
+		public override object VisitRow(CSVParser.RowContext context) { return AddNode(context, ROW, skipEmpty: true); }
+		public override object VisitText(CSVParser.TextContext context) { return AddNode(context, FIELD); }
+		public override object VisitString(CSVParser.StringContext context) { return AddNode(context, FIELD, true); }
+		public override object VisitEmpty(CSVParser.EmptyContext context) { return AddNode(context, FIELD); }
 	}
 }

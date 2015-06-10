@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.GUI.Controls;
-using NeoEdit.TextEdit.Parsing;
+using NeoEdit.TextEdit.Content;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

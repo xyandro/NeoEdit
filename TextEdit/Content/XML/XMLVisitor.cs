@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
-using NeoEdit.TextEdit.Parsing.XML.Parser;
+using NeoEdit.TextEdit.Content.XML.Parser;
 
-namespace NeoEdit.TextEdit.Parsing.XML
+namespace NeoEdit.TextEdit.Content.XML
 {
 	class XMLVisitor : XMLParserBaseVisitor<ParserNode>
 	{

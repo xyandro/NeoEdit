@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit.TextEdit.Parsing.CSharp;
-using NeoEdit.TextEdit.Parsing.HTML;
-using NeoEdit.TextEdit.Parsing.JSON;
-using NeoEdit.TextEdit.Parsing.TCSV;
-using NeoEdit.TextEdit.Parsing.XML;
+using NeoEdit.TextEdit.Content.CSharp;
+using NeoEdit.TextEdit.Content.HTML;
+using NeoEdit.TextEdit.Content.JSON;
+using NeoEdit.TextEdit.Content.TCSV;
+using NeoEdit.TextEdit.Content.XML;
 
-namespace NeoEdit.TextEdit.Parsing
+namespace NeoEdit.TextEdit.Content
 {
 	static public class Parser
 	{

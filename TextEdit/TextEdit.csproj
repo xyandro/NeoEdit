@@ -12,28 +12,71 @@
     <Message Text="Compressing word list" Importance="High" />
     <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Misc\Words.txt.gz&quot; &quot;$(ProjectDir)Misc\Words.txt&quot;" />
   </Target>
-  <Target Name="BuildCSharp" Inputs="Parsing\CSharp\Source\CSharpLexer.g4;Parsing\CSharp\Source\CSharpParser.g4" Outputs="Parsing\CSharp\Parser\CSharpParserBaseVisitor.cs;Parsing\CSharp\Parser\CSharpParserVisitor.cs;Parsing\CSharp\Parser\CSharpLexer.cs;Parsing\CSharp\Parser\CSharpParser.cs">
+  <Target Name="BuildCSharp" Inputs="Content\CSharp\Source\CSharpLexer.g4;Content\CSharp\Source\CSharpParser.g4" Outputs="Content\CSharp\Parser\CSharpParserBaseVisitor.cs;Content\CSharp\Parser\CSharpParserVisitor.cs;Content\CSharp\Parser\CSharpLexer.cs;Content\CSharp\Parser\CSharpParser.cs">
     <Message Text="Building CSharp grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.CSharp.Parser -o &quot;$(ProjectDir)Parsing\CSharp\Parser&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharpLexer.g4&quot; &quot;$(ProjectDir)Parsing\CSharp\Source\CSharpParser.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.CSharp.Parser -o &quot;$(ProjectDir)Content\CSharp\Parser&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpLexer.g4&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpParser.g4&quot;" />
   </Target>
-  <Target Name="BuildHTML" Inputs="Parsing\HTML\Source\HTMLLexer.g4;Parsing\HTML\Source\HTMLParser.g4" Outputs="Parsing\HTML\Parser\HTMLLexer.cs;Parsing\HTML\Parser\HTMLParser.cs;Parsing\HTML\Parser\HTMLParserBaseVisitor.cs;Parsing\HTML\Parser\HTMLParserVisitor.cs">
+  <Target Name="BuildHTML" Inputs="Content\HTML\Source\HTMLLexer.g4;Content\HTML\Source\HTMLParser.g4" Outputs="Content\HTML\Parser\HTMLLexer.cs;Content\HTML\Parser\HTMLParser.cs;Content\HTML\Parser\HTMLParserBaseVisitor.cs;Content\HTML\Parser\HTMLParserVisitor.cs">
     <Message Text="Building HTML grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.HTML.Parser -o &quot;$(ProjectDir)Parsing\HTML\Parser&quot; &quot;$(ProjectDir)Parsing\HTML\Source\HTMLLexer.g4&quot; &quot;$(ProjectDir)Parsing\HTML\Source\HTMLParser.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.HTML.Parser -o &quot;$(ProjectDir)Content\HTML\Parser&quot; &quot;$(ProjectDir)Content\HTML\Source\HTMLLexer.g4&quot; &quot;$(ProjectDir)Content\HTML\Source\HTMLParser.g4&quot;" />
   </Target>
-  <Target Name="BuildJSON" Inputs="Parsing\JSON\Source\JSON.g4" Outputs="Parsing\JSON\Parser\JSONBaseVisitor.cs;Parsing\JSON\Parser\JSONLexer.cs;Parsing\JSON\Parser\JSONParser.cs;Parsing\JSON\Parser\JSONVisitor.cs">
+  <Target Name="BuildJSON" Inputs="Content\JSON\Source\JSON.g4" Outputs="Content\JSON\Parser\JSONBaseVisitor.cs;Content\JSON\Parser\JSONLexer.cs;Content\JSON\Parser\JSONParser.cs;Content\JSON\Parser\JSONVisitor.cs">
     <Message Text="Building JSON grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.JSON.Parser -o &quot;$(ProjectDir)Parsing\JSON\Parser&quot; &quot;$(ProjectDir)Parsing\JSON\Source\JSON.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.JSON.Parser -o &quot;$(ProjectDir)Content\JSON\Parser&quot; &quot;$(ProjectDir)Content\JSON\Source\JSON.g4&quot;" />
   </Target>
-  <Target Name="BuildTCSV" Inputs="Parsing\TCSV\Source\CSV.g4;Parsing\TCSV\Source\TSV.g4" Outputs="Parsing\TCSV\Parser\CSVBaseVisitor.cs;Parsing\TCSV\Parser\CSVLexer.cs;Parsing\TCSV\Parser\CSVParser.cs;Parsing\TCSV\Parser\CSVVisitor.cs;Parsing\TCSV\Parser\TSVBaseVisitor.cs;Parsing\TCSV\Parser\TSVLexer.cs;Parsing\TCSV\Parser\TSVParser.cs;Parsing\TCSV\Parser\TSVVisitor.cs">
+  <Target Name="BuildTCSV" Inputs="Content\TCSV\Source\CSV.g4;Content\TCSV\Source\TSV.g4" Outputs="Content\TCSV\Parser\CSVBaseVisitor.cs;Content\TCSV\Parser\CSVLexer.cs;Content\TCSV\Parser\CSVParser.cs;Content\TCSV\Parser\CSVVisitor.cs;Content\TCSV\Parser\TSVBaseVisitor.cs;Content\TCSV\Parser\TSVLexer.cs;Content\TCSV\Parser\TSVParser.cs;Content\TCSV\Parser\TSVVisitor.cs">
     <Message Text="Building TCSV grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.TCSV.Parser -o &quot;$(ProjectDir)Parsing\TCSV\Parser&quot; &quot;$(ProjectDir)Parsing\TCSV\Source\CSV.g4&quot; &quot;$(ProjectDir)Parsing\TCSV\Source\TSV.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.TCSV.Parser -o &quot;$(ProjectDir)Content\TCSV\Parser&quot; &quot;$(ProjectDir)Content\TCSV\Source\CSV.g4&quot; &quot;$(ProjectDir)Content\TCSV\Source\TSV.g4&quot;" />
   </Target>
-  <Target Name="BuildXML" Inputs="Parsing\XML\Source\XMLLexer.g4;Parsing\XML\Source\XMLParser.g4" Outputs="Parsing\XML\Parser\XMLLexer.cs;Parsing\XML\Parser\XMLParser.cs;Parsing\XML\Parser\XMLParserBaseVisitor.cs;Parsing\XML\Parser\XMLParserVisitor.cs">
+  <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs">
     <Message Text="Building XML grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Parsing.XML.Parser -o &quot;$(ProjectDir)Parsing\XML\Parser&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Parsing\XML\Source\XMLParser.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
   </Target>
   <ItemGroup>
     <Compile Include="Commands.cs" />
+    <Compile Include="Content\CSharp\CSharpVisitor.cs" />
+    <Compile Include="Content\CSharp\Parser\CSharpLexer.cs" />
+    <Compile Include="Content\CSharp\Parser\CSharpParser.cs" />
+    <Compile Include="Content\CSharp\Parser\CSharpParserBaseVisitor.cs" />
+    <Compile Include="Content\CSharp\Parser\CSharpParserVisitor.cs" />
+    <None Include="Content\CSharp\Source\CSharpLexer.g4" />
+    <None Include="Content\CSharp\Source\CSharpParser.g4" />
+    <Compile Include="Content\HTML\HTMLVisitor.cs" />
+    <Compile Include="Content\HTML\Parser\HTMLLexer.cs" />
+    <Compile Include="Content\HTML\Parser\HTMLParser.cs" />
+    <Compile Include="Content\HTML\Parser\HTMLParserBaseVisitor.cs" />
+    <Compile Include="Content\HTML\Parser\HTMLParserVisitor.cs" />
+    <None Include="Content\HTML\Source\HTMLLexer.g4" />
+    <None Include="Content\HTML\Source\HTMLParser.g4" />
+    <Compile Include="Content\JSON\JSONVisitor.cs" />
+    <Compile Include="Content\JSON\Parser\JSONBaseVisitor.cs" />
+    <Compile Include="Content\JSON\Parser\JSONLexer.cs" />
+    <Compile Include="Content\JSON\Parser\JSONParser.cs" />
+    <Compile Include="Content\JSON\Parser\JSONVisitor.cs" />
+    <None Include="Content\JSON\Source\JSON.g4" />
+    <Compile Include="Content\Parser.cs" />
+    <Compile Include="Content\ParserHelper.cs" />
+    <Compile Include="Content\ParserNode.cs" />
+    <Compile Include="Content\ParsingExtensions.cs" />
+    <Compile Include="Content\TCSV\CSVVisitor.cs" />
+    <Compile Include="Content\TCSV\Parser\CSVBaseVisitor.cs" />
+    <Compile Include="Content\TCSV\Parser\CSVLexer.cs" />
+    <Compile Include="Content\TCSV\Parser\CSVParser.cs" />
+    <Compile Include="Content\TCSV\Parser\CSVVisitor.cs" />
+    <Compile Include="Content\TCSV\Parser\TSVBaseVisitor.cs" />
+    <Compile Include="Content\TCSV\Parser\TSVLexer.cs" />
+    <Compile Include="Content\TCSV\Parser\TSVParser.cs" />
+    <Compile Include="Content\TCSV\Parser\TSVVisitor.cs" />
+    <None Include="Content\TCSV\Source\CSV.g4" />
+    <None Include="Content\TCSV\Source\TSV.g4" />
+    <Compile Include="Content\TCSV\TSVVisitor.cs" />
+    <Compile Include="Content\XML\Parser\XMLLexer.cs" />
+    <Compile Include="Content\XML\Parser\XMLParser.cs" />
+    <Compile Include="Content\XML\Parser\XMLParserBaseVisitor.cs" />
+    <Compile Include="Content\XML\Parser\XMLParserVisitor.cs" />
+    <None Include="Content\XML\Source\XMLLexer.g4" />
+    <None Include="Content\XML\Source\XMLParser.g4" />
+    <Compile Include="Content\XML\XMLVisitor.cs" />
     <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -201,49 +244,6 @@
     <Compile Include="Misc.cs" />
     <None Include="Misc\Words.txt" />
     <EmbeddedResource Include="Misc\Words.txt.gz" />
-    <Compile Include="Parsing\CSharp\CSharpVisitor.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharpLexer.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharpParser.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharpParserBaseVisitor.cs" />
-    <Compile Include="Parsing\CSharp\Parser\CSharpParserVisitor.cs" />
-    <None Include="Parsing\CSharp\Source\CSharpLexer.g4" />
-    <None Include="Parsing\CSharp\Source\CSharpParser.g4" />
-    <Compile Include="Parsing\HTML\HTMLVisitor.cs" />
-    <Compile Include="Parsing\HTML\Parser\HTMLLexer.cs" />
-    <Compile Include="Parsing\HTML\Parser\HTMLParser.cs" />
-    <Compile Include="Parsing\HTML\Parser\HTMLParserBaseVisitor.cs" />
-    <Compile Include="Parsing\HTML\Parser\HTMLParserVisitor.cs" />
-    <None Include="Parsing\HTML\Source\HTMLLexer.g4" />
-    <None Include="Parsing\HTML\Source\HTMLParser.g4" />
-    <Compile Include="Parsing\JSON\JSONVisitor.cs" />
-    <Compile Include="Parsing\JSON\Parser\JSONBaseVisitor.cs" />
-    <Compile Include="Parsing\JSON\Parser\JSONLexer.cs" />
-    <Compile Include="Parsing\JSON\Parser\JSONParser.cs" />
-    <Compile Include="Parsing\JSON\Parser\JSONVisitor.cs" />
-    <None Include="Parsing\JSON\Source\JSON.g4" />
-    <Compile Include="Parsing\Parser.cs" />
-    <Compile Include="Parsing\ParserHelper.cs" />
-    <Compile Include="Parsing\ParserNode.cs" />
-    <Compile Include="Parsing\ParsingExtensions.cs" />
-    <Compile Include="Parsing\TCSV\CSVVisitor.cs" />
-    <Compile Include="Parsing\TCSV\Parser\CSVBaseVisitor.cs" />
-    <Compile Include="Parsing\TCSV\Parser\CSVLexer.cs" />
-    <Compile Include="Parsing\TCSV\Parser\CSVParser.cs" />
-    <Compile Include="Parsing\TCSV\Parser\CSVVisitor.cs" />
-    <Compile Include="Parsing\TCSV\Parser\TSVBaseVisitor.cs" />
-    <Compile Include="Parsing\TCSV\Parser\TSVLexer.cs" />
-    <Compile Include="Parsing\TCSV\Parser\TSVParser.cs" />
-    <Compile Include="Parsing\TCSV\Parser\TSVVisitor.cs" />
-    <None Include="Parsing\TCSV\Source\CSV.g4" />
-    <None Include="Parsing\TCSV\Source\TSV.g4" />
-    <Compile Include="Parsing\TCSV\TSVVisitor.cs" />
-    <Compile Include="Parsing\XML\Parser\XMLLexer.cs" />
-    <Compile Include="Parsing\XML\Parser\XMLParser.cs" />
-    <Compile Include="Parsing\XML\Parser\XMLParserBaseVisitor.cs" />
-    <Compile Include="Parsing\XML\Parser\XMLParserVisitor.cs" />
-    <None Include="Parsing\XML\Source\XMLLexer.g4" />
-    <None Include="Parsing\XML\Source\XMLParser.g4" />
-    <Compile Include="Parsing\XML\XMLVisitor.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -3,7 +3,7 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-namespace NeoEdit.TextEdit.Parsing
+namespace NeoEdit.TextEdit.Content
 {
 	static class ParsingExtensions
 	{

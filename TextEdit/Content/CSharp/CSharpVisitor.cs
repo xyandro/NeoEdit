@@ -4,11 +4,9 @@ using System.Reflection;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
-using NeoEdit.TextEdit.Parsing.CSharp.Parser;
+using NeoEdit.TextEdit.Content.CSharp.Parser;
 
-[assembly: AssemblyFlags(AssemblyNameFlags.None)]
-
-namespace NeoEdit.TextEdit.Parsing.CSharp
+namespace NeoEdit.TextEdit.Content.CSharp
 {
 	class CSharpVisitor : CSharpParserBaseVisitor<object>
 	{
