@@ -628,6 +628,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
 				case TextEditCommand.Content_Type_None: ContentType = Parser.ParserType.None; break;
+				case TextEditCommand.Content_Type_Balanced: ContentType = Parser.ParserType.Balanced; break;
 				case TextEditCommand.Content_Type_CSharp: ContentType = Parser.ParserType.CSharp; break;
 				case TextEditCommand.Content_Type_CSV: ContentType = Parser.ParserType.CSV; break;
 				case TextEditCommand.Content_Type_HTML: ContentType = Parser.ParserType.HTML; break;

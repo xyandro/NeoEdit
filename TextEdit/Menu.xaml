@@ -195,6 +195,7 @@
 			</MenuItem.ItemContainerStyle>
 
 			<textEdit:TextEditMenuItem Header="_None" CommandEnum="Content_Type_None"/>
+			<textEdit:TextEditMenuItem Header="_Balanced" CommandEnum="Content_Type_Balanced"/>
 			<textEdit:TextEditMenuItem Header="C_#" CommandEnum="Content_Type_CSharp"/>
 			<textEdit:TextEditMenuItem Header="_CSV" CommandEnum="Content_Type_CSV"/>
 			<textEdit:TextEditMenuItem Header="_HTML" CommandEnum="Content_Type_HTML"/>

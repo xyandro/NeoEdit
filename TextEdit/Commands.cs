@@ -120,6 +120,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Data_Sort,
 		Data_FetchURL,
 		Content_Type_None,
+		Content_Type_Balanced,
 		Content_Type_CSharp,
 		Content_Type_CSV,
 		Content_Type_HTML,

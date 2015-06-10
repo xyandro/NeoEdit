@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NeoEdit.TextEdit.Content.Balanced;
 using NeoEdit.TextEdit.Content.CSharp;
 using NeoEdit.TextEdit.Content.HTML;
 using NeoEdit.TextEdit.Content.JSON;
@@ -15,6 +16,7 @@ namespace NeoEdit.TextEdit.Content
 		public enum ParserType
 		{
 			None,
+			Balanced,
 			CSharp,
 			CSV,
 			HTML,
@@ -27,6 +29,7 @@ namespace NeoEdit.TextEdit.Content
 		{
 			switch (parserType)
 			{
+				case ParserType.Balanced: return BalancedVisitor.Parse(data);
 				case ParserType.CSharp: return CSharpVisitor.Parse(data);
 				case ParserType.CSV: return CSVVisitor.Parse(data);
 				case ParserType.HTML: return HTMLVisitor.Parse(data);
