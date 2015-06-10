@@ -68,6 +68,7 @@
     <Compile Include="Converters\CheckBitConverter.cs" />
     <Compile Include="Converters\ExpressionConverter.cs" />
     <Compile Include="Converters\RadioConverter.cs" />
+    <Compile Include="Converters\SingleLineConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
     <Page Include="Dialogs\BinaryFindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
