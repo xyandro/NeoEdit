@@ -1983,29 +1983,20 @@ namespace NeoEdit.TextEdit
 
 		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
 		{
-			return RepeatDialog.Run(WindowParent, Selections.Count == 1);
+			return RepeatDialog.Run(WindowParent, Selections.Count == 1, GetExpressionData(count: 10));
 		}
 
 		internal void Command_Data_Repeat(RepeatDialog.Result result)
 		{
-			List<int> repeatCounts;
-			if (result.ClipboardValue)
-			{
-				var clipboardStrings = NEClipboard.GetStrings();
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard must match number of selections.");
-				repeatCounts = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
-			}
-			else
-				repeatCounts = Enumerable.Range(0, Selections.Count).Select(range => result.RepeatCount).ToList();
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), repeatCounts[index])).ToList());
+			var results = GetExpressionResults<int>(result.Expression);
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), results[index])).ToList());
 			if (result.SelectRepetitions)
 			{
 				var sels = new List<Range>();
 				for (var ctr = 0; ctr < Selections.Count; ++ctr)
 				{
 					var selection = Selections[ctr];
-					var repeatCount = repeatCounts[ctr];
+					var repeatCount = results[ctr];
 					var len = selection.Length / repeatCount;
 					for (var index = selection.Start; index < selection.End; index += len)
 						sels.Add(new Range(index + len, index));

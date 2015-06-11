@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -7,39 +8,42 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public int RepeatCount { get; set; }
-			public bool ClipboardValue { get; set; }
+			public string Expression { get; set; }
 			public bool SelectRepetitions { get; set; }
 		}
 
 		[DepProp]
-		public int RepeatCount { get { return UIHelper<RepeatDialog>.GetPropValue<int>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool ClipboardValue { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
+		public string Expression { get { return UIHelper<RepeatDialog>.GetPropValue<string>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool SelectRepetitions { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
+		public Dictionary<string, List<object>> ExpressionData { get; private set; }
 
 		static RepeatDialog() { UIHelper<RepeatDialog>.Register(); }
 
-		RepeatDialog(bool selectRepetitions)
+		RepeatDialog(bool selectRepetitions, Dictionary<string, List<object>> expressionData)
 		{
+			ExpressionData = expressionData;
 			InitializeComponent();
 
-			RepeatCount = 1;
-			ClipboardValue = false;
+			Expression = "1";
 			SelectRepetitions = selectRepetitions;
+		}
+
+		private void ExpressionHelp(object sender, RoutedEventArgs e)
+		{
+			ExpressionHelpDialog.Display();
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { RepeatCount = RepeatCount, ClipboardValue = ClipboardValue, SelectRepetitions = SelectRepetitions };
+			result = new Result { Expression = Expression, SelectRepetitions = SelectRepetitions };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, bool selectRepetitions)
+		static public Result Run(Window parent, bool selectRepetitions, Dictionary<string, List<object>> expressionData)
 		{
-			var dialog = new RepeatDialog(selectRepetitions) { Owner = parent };
+			var dialog = new RepeatDialog(selectRepetitions, expressionData) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
