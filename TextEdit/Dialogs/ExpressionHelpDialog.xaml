@@ -72,6 +72,10 @@
 						<textEditDialogs:HelpItem Name="y" Description="Order (1-based)"/>
 						<textEditDialogs:HelpItem Name="z" Description="Order (0-based)"/>
 						<textEditDialogs:HelpItem Name="n" Description="Count"/>
+						<textEditDialogs:HelpItem/>
+						<textEditDialogs:HelpItem Name="line" Description="Selection line"/>
+						<textEditDialogs:HelpItem Name="col" Description="Selection column"/>
+						<textEditDialogs:HelpItem Name="pos" Description="Selection position"/>
 					</textEditDialogs:HelpItems.Items>
 				</textEditDialogs:HelpItems>
 

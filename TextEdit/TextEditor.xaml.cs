@@ -371,6 +371,15 @@ namespace NeoEdit.TextEdit
 			parallelDataActions.Add(new HashSet<string> { "z" }, (items, addData) => addData("z", Enumerable.Range(0, sels.Count).Cast<object>().ToList()));
 			parallelDataActions.Add(new HashSet<string> { "c" }, (items, addData) => addData("c", InterpretValues(c)));
 			parallelDataActions.Add(new HashSet<string> { "cl" }, (items, addData) => addData("cl", c.Select(str => str.Length).Cast<object>().ToList()));
+			parallelDataActions.Add(new HashSet<string> { "line", "col" }, (items, addData) =>
+			{
+				var lines = sels.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
+				if (items.Contains("line"))
+					addData("line", lines.Select(line => line + 1).Cast<object>().ToList());
+				if (items.Contains("col"))
+					addData("col", sels.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.Start, lines[index]) + 1).Cast<object>().ToList());
+			});
+			parallelDataActions.Add(new HashSet<string> { "pos" }, (items, addData) => addData("pos", sels.Select(range => range.Start).Cast<object>().ToList()));
 			for (var ctr = 0; ctr <= 9; ++ctr)
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
