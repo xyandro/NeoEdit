@@ -91,16 +91,16 @@ namespace NeoEdit.TextEdit.Dialogs
 			try
 			{
 				var expression = new NEExpression(Expression);
-				if (Example1 != null) Example1Value = expression.EvaluateDict(expressionData, 0);
-				if (Example2 != null) Example2Value = expression.EvaluateDict(expressionData, 1);
-				if (Example3 != null) Example3Value = expression.EvaluateDict(expressionData, 2);
-				if (Example4 != null) Example4Value = expression.EvaluateDict(expressionData, 3);
-				if (Example5 != null) Example5Value = expression.EvaluateDict(expressionData, 4);
-				if (Example6 != null) Example6Value = expression.EvaluateDict(expressionData, 5);
-				if (Example7 != null) Example7Value = expression.EvaluateDict(expressionData, 6);
-				if (Example8 != null) Example8Value = expression.EvaluateDict(expressionData, 7);
-				if (Example9 != null) Example9Value = expression.EvaluateDict(expressionData, 8);
-				if (Example10 != null) Example10Value = expression.EvaluateDict(expressionData, 9);
+				if (Example1 != null) Example1Value = expression.EvaluateRow(expressionData, 0);
+				if (Example2 != null) Example2Value = expression.EvaluateRow(expressionData, 1);
+				if (Example3 != null) Example3Value = expression.EvaluateRow(expressionData, 2);
+				if (Example4 != null) Example4Value = expression.EvaluateRow(expressionData, 3);
+				if (Example5 != null) Example5Value = expression.EvaluateRow(expressionData, 4);
+				if (Example6 != null) Example6Value = expression.EvaluateRow(expressionData, 5);
+				if (Example7 != null) Example7Value = expression.EvaluateRow(expressionData, 6);
+				if (Example8 != null) Example8Value = expression.EvaluateRow(expressionData, 7);
+				if (Example9 != null) Example9Value = expression.EvaluateRow(expressionData, 8);
+				if (Example10 != null) Example10Value = expression.EvaluateRow(expressionData, 9);
 				valid = true;
 			}
 			catch

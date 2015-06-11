@@ -47,16 +47,16 @@ namespace NeoEdit.Common.Expressions
 
 		public object Evaluate(params object[] values)
 		{
-			return EvaluateDict(null, values);
+			return Evaluate(default(Dictionary<string, object>), values);
 		}
 
-		public object EvaluateDict(Dictionary<string, List<object>> dict, int row, params object[] values)
+		public object EvaluateRow(Dictionary<string, List<object>> dict, int row, params object[] values)
 		{
 			var rowDict = dict.ToDictionary(entry => entry.Key, entry => entry.Value.Count > row ? entry.Value[row] : null);
-			return EvaluateDict(rowDict, values);
+			return Evaluate(rowDict, values);
 		}
 
-		public object EvaluateDict(Dictionary<string, object> dict, params object[] values)
+		public object Evaluate(Dictionary<string, object> dict, params object[] values)
 		{
 			return new ExpressionEvaluator(expression, dict, values).Visit(tree);
 		}

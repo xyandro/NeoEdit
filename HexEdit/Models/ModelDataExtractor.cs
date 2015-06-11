@@ -104,7 +104,7 @@ namespace NeoEdit.HexEdit.Models
 		{
 			if (!expressions.ContainsKey(expression))
 				expressions[expression] = new NEExpression(expression);
-			return expressions[expression].EvaluateDict(values).ToString();
+			return expressions[expression].Evaluate(values).ToString();
 		}
 
 		Dictionary<string, int> nameCounts = new Dictionary<string, int>();

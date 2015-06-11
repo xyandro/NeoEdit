@@ -86,7 +86,7 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(vars.Count, 2);
 			Assert.IsTrue(vars.Contains("x"));
 			Assert.IsTrue(vars.Contains("y"));
-			Assert.AreEqual(expr.EvaluateDict(dict, 0xfeedface).ToString(), "7816989104");
+			Assert.AreEqual(expr.Evaluate(dict, 0xfeedface).ToString(), "7816989104");
 		}
 	}
 }
