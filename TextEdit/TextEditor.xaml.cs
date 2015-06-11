@@ -1899,8 +1899,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
 			var expression = new NEExpression(result.Expression);
-			var expressionData = GetExpressionData(expression: expression);
-			var results = expression.Evaluate<string>(expressionData);
+			var results = expression.Evaluate<string>(GetExpressionData(expression: expression));
 			if (results.Count == 1)
 				results = results.Expand(Selections.Count, results[0]).ToList();
 			if (results.Count != Selections.Count)
@@ -2125,34 +2124,23 @@ namespace NeoEdit.TextEdit
 
 		internal RandomDataDialog.Result Command_Insert_RandomData_Dialog()
 		{
-			var hasSelections = Selections.AsParallel().Any(range => range.HasSelection);
-			return RandomDataDialog.Run(WindowParent, hasSelections);
+			return RandomDataDialog.Run(GetExpressionData(count: 10), WindowParent);
 		}
 
-		string GetRandomData(RandomDataDialog.Result result, int selectionLength, int clipboardLength)
+		string GetRandomData(string chars, int length)
 		{
-			int length;
-			switch (result.Type)
-			{
-				case RandomDataDialog.RandomDataType.Absolute: length = result.Value; break;
-				case RandomDataDialog.RandomDataType.SelectionLength: length = selectionLength; break;
-				case RandomDataDialog.RandomDataType.Clipboard: length = clipboardLength; break;
-				default: throw new ArgumentException("Invalid type");
-			}
-			return new string(Enumerable.Range(0, length).Select(num => result.Chars[random.Next(result.Chars.Length)]).ToArray());
+			return new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 		}
 
 		internal void Command_Insert_RandomData(RandomDataDialog.Result result)
 		{
-			List<int> clipboardLens = null;
-			if (result.Type == RandomDataDialog.RandomDataType.Clipboard)
-			{
-				var clipboardStrings = NEClipboard.GetStrings();
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard must match number of selections.");
-				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
-			}
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => GetRandomData(result, range.Length, clipboardLens == null ? 0 : clipboardLens[num])).ToList());
+			var expression = new NEExpression(result.Expression);
+			var results = expression.Evaluate<int>(GetExpressionData(expression: expression));
+			if (results.Count == 1)
+				results = results.Expand(Selections.Count, results[0]).ToList();
+			if (results.Count != Selections.Count)
+				throw new Exception("Expression count doesn't match selection count");
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
 		internal MinMaxValuesDialog.Result Command_Insert_MinMaxValues_Dialog()
@@ -2489,8 +2477,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
 		{
 			var expression = new NEExpression(result.Expression);
-			var expressionData = GetExpressionData(expression: expression);
-			var results = expression.Evaluate<bool>(expressionData);
+			var results = expression.Evaluate<bool>(GetExpressionData(expression: expression));
 			if (results.Count == 1)
 				results = results.Expand(Selections.Count, results[0]).ToList();
 			if (results.Count != Selections.Count)

@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Random Data" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=chars}">
+	Title="Random Data" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=expression}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -19,15 +19,18 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Type:" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-			<RadioButton GroupName="type" Content="_Absolute" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Absolute}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-			<RadioButton GroupName="type" Content="C_lipboard" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Clipboard}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-			<RadioButton GroupName="type" Content="_Selection Length" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=SelectionLength}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-		</StackPanel>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="0" Grid.Column="1" Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Value:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
-		<guiControls:NumericUpDown Grid.Row="1" Grid.Column="1" Name="value" Value="{Binding Value, ElementName=self}" Minimum="0"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Results:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="1">
+			<Label.Content>
+				<MultiBinding Converter="{guiConverters:ExpressionResultListConverter}" ConverterParameter="System.Int32">
+					<Binding Path="Expression" ElementName="self"/>
+					<Binding Path="ExpressionData" ElementName="self"/>
+				</MultiBinding>
+			</Label.Content>
+		</Label>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Chars:" Target="{Binding ElementName=chars}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="2" Grid.Column="1" Name="chars" Text="{Binding Chars, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>

@@ -1,42 +1,29 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	internal partial class RandomDataDialog
+	partial class RandomDataDialog
 	{
-		public enum RandomDataType
-		{
-			Absolute,
-			Clipboard,
-			SelectionLength,
-		}
-
 		internal class Result
 		{
-			public RandomDataType Type { get; set; }
-			public int Value { get; set; }
+			public string Expression { get; set; }
 			public string Chars { get; set; }
 		}
 
 		[DepProp]
-		public RandomDataType Type { get { return UIHelper<RandomDataDialog>.GetPropValue<RandomDataType>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public int Value { get { return UIHelper<RandomDataDialog>.GetPropValue<int>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
+		public string Expression { get { return UIHelper<RandomDataDialog>.GetPropValue<string>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Chars { get { return UIHelper<RandomDataDialog>.GetPropValue<string>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
+		public Dictionary<string, List<object>> ExpressionData { get; private set; }
 
-		static RandomDataDialog()
-		{
-			UIHelper<RandomDataDialog>.Register();
-			UIHelper<RandomDataDialog>.AddCallback(a => a.Value, (obj, o, n) => obj.Type = RandomDataType.Absolute);
-		}
+		static RandomDataDialog() { UIHelper<RandomDataDialog>.Register(); }
 
-		RandomDataDialog(bool hasSelections)
+		RandomDataDialog(Dictionary<string, List<object>> expressionData)
 		{
+			ExpressionData = expressionData;
 			InitializeComponent();
-
-			Type = hasSelections ? RandomDataType.SelectionLength : RandomDataType.Absolute;
 			Chars = "a-zA-Z";
 		}
 
@@ -47,13 +34,13 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (chars.Length == 0)
 				return;
 
-			result = new Result { Type = Type, Value = Value, Chars = chars };
+			result = new Result { Expression = Expression, Chars = chars };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, bool hasSelections)
+		public static Result Run(Dictionary<string, List<object>> expressionData, Window parent)
 		{
-			var dialog = new RandomDataDialog(hasSelections) { Owner = parent };
+			var dialog = new RandomDataDialog(expressionData) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
