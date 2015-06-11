@@ -337,50 +337,73 @@ namespace NeoEdit.TextEdit
 			return data.Select(a => Coder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
 		}
 
-		Dictionary<string, List<string>> GetExpressionData(int count = -1, NEExpression expression = null)
+		delegate bool TryParse<T>(string str, out T value);
+		List<object> InterpretType<T>(IEnumerable<string> strs, TryParse<T> tryParse)
 		{
-			var sels = count == -1 ? Selections.ToList() : Selections.Take(Math.Min(count, Selections.Count)).ToList();
-			var strs = sels.Select(range => GetString(range)).ToList();
-			var c = NEClipboard.GetStrings();
-			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? keysHash[str] : -1);
-
-			var parallelDataActions = new Dictionary<string[], Action<Action<string, List<string>>>>
+			var result = new List<object>();
+			T value;
+			foreach (var str in strs)
 			{
-				{ new string[] { "xl" }, addData => addData("xl", strs.Select(str => str.Length.ToString()).ToList()) },
-				{ new string[] { "n" }, addData => addData("n", Enumerable.Repeat(Selections.Count.ToString(), sels.Count).ToList()) },
-				{ new string[] { "y" }, addData => addData("y", strs.Select((str, order) => (order + 1).ToString()).ToList()) },
-				{ new string[] { "z" }, addData => addData("z", strs.Select((str, order) => order.ToString()).ToList()) },
-				{ new string[] { "c" }, addData => addData("c", c) },
-				{ new string[] { "cl" }, addData => addData("cl", c.Select(str => str.Length.ToString()).ToList()) },
-				{ new string[] { "rk" }, addData => addData("rk", keysAndValues[0].ToList()) },
-				{ new string[] { "rkl" }, addData => addData("rkl", keysAndValues[0].Select(str => str.Length.ToString()).ToList()) },
-			};
+				if (!tryParse(str, out value))
+					return null;
+				result.Add(value);
+			}
+			return result;
+		}
 
-			for (var ctr = 1; ctr <= 9; ++ctr)
+		List<object> InterpretValues(IEnumerable<string> strs)
+		{
+			return InterpretType<bool>(strs, bool.TryParse) ?? InterpretType<long>(strs, long.TryParse) ?? InterpretType<double>(strs, double.TryParse) ?? strs.Cast<object>().ToList();
+		}
+
+		Dictionary<string, List<object>> GetExpressionData(int? count = null, NEExpression expression = null)
+		{
+			var sels = Selections.Take(count ?? Selections.Count).ToList();
+			var strs = sels.Select(range => GetString(range)).ToList();
+			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? (int?)keysHash[str] : null).ToList();
+			var c = new List<string>(); // Have to declare this here because we need apartment state STA
+
+			var parallelDataActions = new Dictionary<HashSet<string>, Action<HashSet<string>, Action<string, List<object>>>>();
+			parallelDataActions.Add(new HashSet<string> { "x" }, (items, addData) => addData("x", InterpretValues(strs)));
+			parallelDataActions.Add(new HashSet<string> { "xl" }, (items, addData) => addData("xl", strs.Select(str => str.Length).Cast<object>().ToList()));
+			parallelDataActions.Add(new HashSet<string> { "n" }, (items, addData) => addData("n", Enumerable.Repeat(sels.Count, sels.Count).Cast<object>().ToList()));
+			parallelDataActions.Add(new HashSet<string> { "y" }, (items, addData) => addData("y", Enumerable.Range(1, sels.Count).Cast<object>().ToList()));
+			parallelDataActions.Add(new HashSet<string> { "z" }, (items, addData) => addData("z", Enumerable.Range(0, sels.Count).Cast<object>().ToList()));
+			parallelDataActions.Add(new HashSet<string> { "c" }, (items, addData) => addData("c", InterpretValues(c)));
+			parallelDataActions.Add(new HashSet<string> { "cl" }, (items, addData) => addData("cl", c.Select(str => str.Length).Cast<object>().ToList()));
+			for (var ctr = 0; ctr <= 9; ++ctr)
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
-				parallelDataActions.Add(new string[] { String.Format("rv{0}", num) }, addData => addData(String.Format("rv{0}", num), keysAndValues[num].ToList()));
-				parallelDataActions.Add(new string[] { String.Format("rv{0}l", num) }, addData => addData(String.Format("rv{0}l", num), keysAndValues[num].Select(str => str.Length.ToString()).ToList()));
-				parallelDataActions.Add(new string[] { String.Format("v{0}", num), String.Format("v{0}l", num) }, addData =>
+				var prefix = ctr == 0 ? "k" : "v" + ctr;
+				var kvName = prefix;
+				var kvlName = prefix + "l";
+				var rkrName = "r" + prefix;
+				var rkvlName = "r" + prefix + "l";
+				parallelDataActions.Add(new HashSet<string> { rkrName }, (items, addData) => addData(rkrName, InterpretValues(keysAndValues[num])));
+				parallelDataActions.Add(new HashSet<string> { rkvlName }, (items, addData) => addData(rkvlName, keysAndValues[num].Select(str => str.Length).Cast<object>().ToList()));
+				parallelDataActions.Add(new HashSet<string> { kvName, kvlName }, (items, addData) =>
 				{
 					List<string> values;
 					if (keysAndValues[0].Count == keysAndValues[num].Count)
-						values = keyOrdering.Select(order => order == -1 ? "" : keysAndValues[num][order]).ToList();
+						values = keyOrdering.Select(order => order.HasValue ? keysAndValues[num][order.Value] : "").ToList();
 					else
 						values = new List<string>();
 
-					addData(String.Format("v{0}", num), values);
-					addData(String.Format("v{0}l", num), values.Select(str => str.Length.ToString()).ToList());
+					if (items.Contains(kvName))
+						addData(kvName, InterpretValues(values));
+					if (items.Contains(kvlName))
+						addData(kvlName, values.Select(str => str.Length).Cast<object>().ToList());
 				});
 			}
 
-			var used = expression != null ? expression.Variables : null;
-			var data = new Dictionary<string, List<string>>();
-			data["x"] = strs;
+			var used = expression != null ? expression.Variables : new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
+			if ((used.Contains("c")) || (used.Contains("cl")))
+				c.AddRange(NEClipboard.GetStrings());
+			var data = new Dictionary<string, List<object>>();
 			Parallel.ForEach(parallelDataActions, pair =>
 			{
-				if (pair.Key.Any(key => (used == null) || (used.Contains(key))))
-					pair.Value((key, value) =>
+				if (pair.Key.Any(key => used.Contains(key)))
+					pair.Value(used, (key, value) =>
 					{
 						lock (data)
 							data[key] = value;
@@ -1868,13 +1891,13 @@ namespace NeoEdit.TextEdit
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
 			var expressionData = GetExpressionData(expression: result.Expression);
-			ReplaceSelections(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Select(index => result.Expression.EvaluateDictInterpret(expressionData, index).ToString()).ToList());
+			ReplaceSelections(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Select(index => result.Expression.EvaluateDict(expressionData, index).ToString()).ToList());
 		}
 
 		internal void Command_Data_EvaluateSelectedExpression()
 		{
 			var expression = new NEExpression("Eval([0])");
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => expression.EvaluateInterpret(GetString(range)).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
 		}
 
 		internal void Command_Data_Series()
@@ -2452,7 +2475,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
 		{
 			var expressionData = GetExpressionData(expression: result.Expression);
-			Selections.Replace(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Where(num => (bool)result.Expression.EvaluateDictInterpret(expressionData, num)).Select(num => Selections[num]).ToList());
+			Selections.Replace(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Where(num => (bool)result.Expression.EvaluateDict(expressionData, num)).Select(num => Selections[num]).ToList());
 		}
 
 		internal void Command_Select_FirstSelection()

@@ -62,24 +62,24 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<GetExpressionDialog>.AddCallback(a => a.Expression, (obj, o, n) => obj.EvaluateExamples());
 		}
 
-		readonly Dictionary<string, List<string>> expressionData;
-		GetExpressionDialog(Dictionary<string, List<string>> expressionData)
+		readonly Dictionary<string, List<object>> expressionData;
+		GetExpressionDialog(Dictionary<string, List<object>> expressionData)
 		{
 			this.expressionData = expressionData;
 
 			InitializeComponent();
 
 			var list = expressionData["x"];
-			Example1 = list.Count > 0 ? list[0] : null;
-			Example2 = list.Count > 1 ? list[1] : null;
-			Example3 = list.Count > 2 ? list[2] : null;
-			Example4 = list.Count > 3 ? list[3] : null;
-			Example5 = list.Count > 4 ? list[4] : null;
-			Example6 = list.Count > 5 ? list[5] : null;
-			Example7 = list.Count > 6 ? list[6] : null;
-			Example8 = list.Count > 7 ? list[7] : null;
-			Example9 = list.Count > 8 ? list[8] : null;
-			Example10 = list.Count > 9 ? list[9] : null;
+			Example1 = (list.Count > 0) && (list[0] != null) ? list[0].ToString() : null;
+			Example2 = (list.Count > 1) && (list[1] != null) ? list[1].ToString() : null;
+			Example3 = (list.Count > 2) && (list[2] != null) ? list[2].ToString() : null;
+			Example4 = (list.Count > 3) && (list[3] != null) ? list[3].ToString() : null;
+			Example5 = (list.Count > 4) && (list[4] != null) ? list[4].ToString() : null;
+			Example6 = (list.Count > 5) && (list[5] != null) ? list[5].ToString() : null;
+			Example7 = (list.Count > 6) && (list[6] != null) ? list[6].ToString() : null;
+			Example8 = (list.Count > 7) && (list[7] != null) ? list[7].ToString() : null;
+			Example9 = (list.Count > 8) && (list[8] != null) ? list[8].ToString() : null;
+			Example10 = (list.Count > 9) && (list[9] != null) ? list[9].ToString() : null;
 
 			Expression = "x";
 			expression.CaretIndex = 1;
@@ -91,16 +91,16 @@ namespace NeoEdit.TextEdit.Dialogs
 			try
 			{
 				var expression = new NEExpression(Expression);
-				if (Example1 != null) Example1Value = expression.EvaluateDictInterpret(expressionData, 0);
-				if (Example2 != null) Example2Value = expression.EvaluateDictInterpret(expressionData, 1);
-				if (Example3 != null) Example3Value = expression.EvaluateDictInterpret(expressionData, 2);
-				if (Example4 != null) Example4Value = expression.EvaluateDictInterpret(expressionData, 3);
-				if (Example5 != null) Example5Value = expression.EvaluateDictInterpret(expressionData, 4);
-				if (Example6 != null) Example6Value = expression.EvaluateDictInterpret(expressionData, 5);
-				if (Example7 != null) Example7Value = expression.EvaluateDictInterpret(expressionData, 6);
-				if (Example8 != null) Example8Value = expression.EvaluateDictInterpret(expressionData, 7);
-				if (Example9 != null) Example9Value = expression.EvaluateDictInterpret(expressionData, 8);
-				if (Example10 != null) Example10Value = expression.EvaluateDictInterpret(expressionData, 9);
+				if (Example1 != null) Example1Value = expression.EvaluateDict(expressionData, 0);
+				if (Example2 != null) Example2Value = expression.EvaluateDict(expressionData, 1);
+				if (Example3 != null) Example3Value = expression.EvaluateDict(expressionData, 2);
+				if (Example4 != null) Example4Value = expression.EvaluateDict(expressionData, 3);
+				if (Example5 != null) Example5Value = expression.EvaluateDict(expressionData, 4);
+				if (Example6 != null) Example6Value = expression.EvaluateDict(expressionData, 5);
+				if (Example7 != null) Example7Value = expression.EvaluateDict(expressionData, 6);
+				if (Example8 != null) Example8Value = expression.EvaluateDict(expressionData, 7);
+				if (Example9 != null) Example9Value = expression.EvaluateDict(expressionData, 8);
+				if (Example10 != null) Example10Value = expression.EvaluateDict(expressionData, 9);
 				valid = true;
 			}
 			catch
@@ -133,7 +133,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static internal Result Run(Window parent, Dictionary<string, List<string>> examples)
+		static internal Result Run(Window parent, Dictionary<string, List<object>> examples)
 		{
 			var dialog = new GetExpressionDialog(examples) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;

@@ -17,11 +17,11 @@ namespace NeoEdit.Common.Expressions
 			return base.VisitVariable(context);
 		}
 
-		public static List<string> GetVariables(IParseTree tree)
+		public static HashSet<string> GetVariables(IParseTree tree)
 		{
 			var finder = new VariableFinder();
 			finder.Visit(tree);
-			return finder.variables.OrderBy(name => name).ToList();
+			return finder.variables;
 		}
 	}
 }
