@@ -422,6 +422,17 @@ namespace NeoEdit.TextEdit
 			return data;
 		}
 
+		List<T> GetExpressionResults<T>(string expression, bool resizeToSelections = true, bool matchToSelections = true)
+		{
+			var neExpression = new NEExpression(expression);
+			var results = neExpression.Evaluate<T>(GetExpressionData(expression: neExpression));
+			if ((resizeToSelections) && (results.Count == 1))
+				results = results.Resize(Selections.Count, results[0]).ToList();
+			if ((matchToSelections) && (results.Count != Selections.Count))
+				throw new Exception("Expression count doesn't match selection count");
+			return results;
+		}
+
 		void CopyDirectory(string src, string dest)
 		{
 			var srcDirs = new List<string> { src };
@@ -1151,9 +1162,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
 		{
-			var expression = new NEExpression(result.Expression);
-			var results = expression.Evaluate(GetExpressionData(expression: expression));
-			var offsets = results.Select(val => Convert.ToInt32(val)).ToList();
+			var offsets = GetExpressionResults<int>(result.Expression, false, false);
 			var sels = Selections.ToList();
 
 			if (sels.Count == 1)
@@ -1809,24 +1818,16 @@ namespace NeoEdit.TextEdit
 
 		internal WidthDialog.Result Command_Data_Width_Dialog()
 		{
-			var minLength = Selections.Any() ? Selections.AsParallel().AsOrdered().Min(range => range.Length) : 0;
-			var maxLength = Selections.Any() ? Selections.AsParallel().AsOrdered().Max(range => range.Length) : 0;
-			var numeric = Selections.Any() ? Selections.AsParallel().AsOrdered().All(range => GetString(range).IsNumeric()) : false;
-			return WidthDialog.Run(WindowParent, minLength, maxLength, numeric, false);
+			var minLength = Selections.Any() ? Selections.AsParallel().Min(range => range.Length) : 0;
+			var maxLength = Selections.Any() ? Selections.AsParallel().Max(range => range.Length) : 0;
+			var numeric = Selections.Any() ? Selections.AsParallel().All(range => GetString(range).IsNumeric()) : false;
+			return WidthDialog.Run(WindowParent, minLength, maxLength, numeric, false, GetExpressionData(count: 10));
 		}
 
 		internal void Command_Data_Width(WidthDialog.Result result)
 		{
-			List<int> clipboardLens = null;
-			if (result.Type == WidthDialog.WidthType.Clipboard)
-			{
-				var clipboardStrings = NEClipboard.GetStrings();
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard must match number of selections.");
-				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
-			}
-
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, clipboardLens == null ? 0 : clipboardLens[index])).ToList());
+			var results = GetExpressionResults<int>(result.Expression);
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, results[index])).ToList());
 		}
 
 		internal TrimDialog.Result Command_Data_Trim_Dialog()
@@ -1898,12 +1899,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
-			var expression = new NEExpression(result.Expression);
-			var results = expression.Evaluate<string>(GetExpressionData(expression: expression));
-			if (results.Count == 1)
-				results = results.Expand(Selections.Count, results[0]).ToList();
-			if (results.Count != Selections.Count)
-				throw new Exception("Expression count doesn't match selection count");
+			var results = GetExpressionResults<string>(result.Expression);
 			ReplaceSelections(results);
 		}
 
@@ -2134,12 +2130,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Insert_RandomData(RandomDataDialog.Result result)
 		{
-			var expression = new NEExpression(result.Expression);
-			var results = expression.Evaluate<int>(GetExpressionData(expression: expression));
-			if (results.Count == 1)
-				results = results.Expand(Selections.Count, results[0]).ToList();
-			if (results.Count != Selections.Count)
-				throw new Exception("Expression count doesn't match selection count");
+			var results = GetExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
@@ -2378,36 +2369,27 @@ namespace NeoEdit.TextEdit
 
 		internal WidthDialog.Result Command_Select_Width_Dialog()
 		{
-			var minLength = Selections.Any() ? Selections.AsParallel().AsOrdered().Min(range => range.Length) : 0;
-			var maxLength = Selections.Any() ? Selections.AsParallel().AsOrdered().Max(range => range.Length) : 0;
-			return WidthDialog.Run(WindowParent, minLength, maxLength, false, true);
+			var minLength = Selections.Any() ? Selections.AsParallel().Min(range => range.Length) : 0;
+			var maxLength = Selections.Any() ? Selections.AsParallel().Max(range => range.Length) : 0;
+			return WidthDialog.Run(WindowParent, minLength, maxLength, false, true, GetExpressionData(count: 10));
 		}
 
-		bool WidthMatch(string str, WidthDialog.Result result, int clipboardLen)
+		bool WidthMatch(string str, WidthDialog.Result result, int value)
 		{
 			switch (result.Type)
 			{
-				case WidthDialog.WidthType.Absolute: return str.Length == result.Value;
-				case WidthDialog.WidthType.Minimum: return str.Length >= result.Value;
-				case WidthDialog.WidthType.Maximum: return str.Length <= result.Value;
-				case WidthDialog.WidthType.Multiple: return str.Length % result.Value == 0;
-				case WidthDialog.WidthType.Clipboard: return str.Length == clipboardLen;
+				case WidthDialog.WidthType.Absolute: return str.Length == value;
+				case WidthDialog.WidthType.Minimum: return str.Length >= value;
+				case WidthDialog.WidthType.Maximum: return str.Length <= value;
+				case WidthDialog.WidthType.Multiple: return str.Length % value == 0;
 				default: throw new ArgumentException("Invalid width type");
 			}
 		}
 
 		internal void Command_Select_Width(WidthDialog.Result result)
 		{
-			List<int> clipboardLens = null;
-			if (result.Type == WidthDialog.WidthType.Clipboard)
-			{
-				var clipboardStrings = NEClipboard.GetStrings();
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard must match number of selections.");
-				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => Int32.Parse(str)).ToList();
-			}
-
-			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => WidthMatch(GetString(range), result, clipboardLens == null ? 0 : clipboardLens[index])).ToList());
+			var results = GetExpressionResults<int>(result.Expression);
+			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => WidthMatch(GetString(range), result, results[index])).ToList());
 		}
 
 		internal void Command_Select_Unique()
@@ -2476,12 +2458,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
 		{
-			var expression = new NEExpression(result.Expression);
-			var results = expression.Evaluate<bool>(GetExpressionData(expression: expression));
-			if (results.Count == 1)
-				results = results.Expand(Selections.Count, results[0]).ToList();
-			if (results.Count != Selections.Count)
-				throw new Exception("Expression count doesn't match selection count");
+			var results = GetExpressionResults<bool>(result.Expression);
 			Selections.Replace(Selections.Where((str, num) => results[num]).ToList());
 		}
 
@@ -3378,17 +3355,16 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		string SetWidth(string str, WidthDialog.Result result, int clipboardLen)
+		string SetWidth(string str, WidthDialog.Result result, int value)
 		{
 			int length;
 			switch (result.Type)
 			{
-				case WidthDialog.WidthType.Absolute: length = result.Value; break;
-				case WidthDialog.WidthType.Relative: length = Math.Max(0, str.Length + result.Value); break;
-				case WidthDialog.WidthType.Minimum: length = Math.Max(str.Length, result.Value); break;
-				case WidthDialog.WidthType.Maximum: length = Math.Min(str.Length, result.Value); break;
-				case WidthDialog.WidthType.Multiple: length = str.Length + result.Value - 1 - (str.Length + result.Value - 1) % result.Value; break;
-				case WidthDialog.WidthType.Clipboard: length = clipboardLen; break;
+				case WidthDialog.WidthType.Absolute: length = value; break;
+				case WidthDialog.WidthType.Relative: length = Math.Max(0, str.Length + value); break;
+				case WidthDialog.WidthType.Minimum: length = Math.Max(str.Length, value); break;
+				case WidthDialog.WidthType.Maximum: length = Math.Min(str.Length, value); break;
+				case WidthDialog.WidthType.Multiple: length = str.Length + value - 1 - (str.Length + value - 1) % value; break;
 				default: throw new ArgumentException("Invalid width type");
 			}
 

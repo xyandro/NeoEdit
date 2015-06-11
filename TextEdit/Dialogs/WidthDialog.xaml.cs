@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -7,13 +10,11 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		public enum WidthType
 		{
-			None,
 			Absolute,
 			Relative,
 			Minimum,
 			Maximum,
 			Multiple,
-			Clipboard,
 		}
 
 		public enum TextLocation
@@ -26,7 +27,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		internal class Result
 		{
 			public WidthType Type { get; set; }
-			public int Value { get; set; }
+			public string Expression { get; set; }
 			public char PadChar { get; set; }
 			public TextLocation Location { get; set; }
 		}
@@ -34,15 +35,14 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public WidthType Type { get { return UIHelper<WidthDialog>.GetPropValue<WidthType>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int Value { get { return UIHelper<WidthDialog>.GetPropValue<int>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public string Expression { get { return UIHelper<WidthDialog>.GetPropValue<string>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string PadChar { get { return UIHelper<WidthDialog>.GetPropValue<string>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public TextLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<TextLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool NeedValue { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
-		[DepProp]
 		public bool IsSelect { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
+		public Dictionary<string, List<object>> ExpressionData { get; private set; }
 
 		static WidthDialog()
 		{
@@ -51,8 +51,9 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		readonly int minLength, maxLength;
-		WidthDialog(int minLength, int maxLength, bool numeric, bool isSelect)
+		WidthDialog(int minLength, int maxLength, bool numeric, bool isSelect, Dictionary<string, List<object>> expressionData)
 		{
+			ExpressionData = expressionData;
 			InitializeComponent();
 
 			this.minLength = minLength;
@@ -62,6 +63,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			IsSelect = isSelect;
 
 			Type = WidthType.Absolute;
+			Expression = maxLength.ToString();
 			if (numeric)
 				NumericClick(null, null);
 			else
@@ -70,9 +72,8 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void SetValueParams()
 		{
-			NeedValue = Type != WidthType.Clipboard;
-			value.Minimum = Type == WidthType.Multiple ? 1 : Type == WidthType.Relative ? int.MinValue : 0;
-			Value = Type == WidthType.Multiple ? 1 : Type == WidthType.Relative ? 0 : Type == WidthType.Minimum ? minLength : maxLength;
+			if ((String.IsNullOrWhiteSpace(Expression)) || (Expression.IsNumeric()))
+				Expression = (Type == WidthType.Multiple ? 1 : Type == WidthType.Relative ? 0 : Type == WidthType.Minimum ? minLength : maxLength).ToString();
 		}
 
 		void NumericClick(object sender, RoutedEventArgs e)
@@ -87,18 +88,23 @@ namespace NeoEdit.TextEdit.Dialogs
 			Location = TextLocation.Start;
 		}
 
+		private void ExpressionHelp(object sender, RoutedEventArgs e)
+		{
+			ExpressionHelpDialog.Display();
+		}
+
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (PadChar.Length != 1)
 				return;
-			result = new Result { Type = Type, Value = Value, PadChar = PadChar[0], Location = Location };
+			result = new Result { Type = Type, Expression = Expression, PadChar = PadChar[0], Location = Location };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, int minLength, int maxLength, bool numeric, bool isSelect)
+		public static Result Run(Window parent, int minLength, int maxLength, bool numeric, bool isSelect, Dictionary<string, List<object>> expressionData)
 		{
-			var dialog = new WidthDialog(minLength, maxLength, numeric, isSelect) { Owner = parent };
+			var dialog = new WidthDialog(minLength, maxLength, numeric, isSelect, expressionData) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
