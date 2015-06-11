@@ -33,7 +33,6 @@ Add/subtract chars in expressions (a+1=b)
 Go back to last selections
 Aggregate data (counts/group by field/etc.)
 Accept expressions in dialog boxes
-Evaluate "z" doesn't stand alone
 Expression: add "l" for line (index, position, too)
 
 View:

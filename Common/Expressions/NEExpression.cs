@@ -4,7 +4,6 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using NeoEdit.Common.Expressions.Parser;
-using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Common.Expressions
 {
@@ -81,10 +80,5 @@ namespace NeoEdit.Common.Expressions
 
 		HashSet<string> variables;
 		public HashSet<string> Variables { get { return variables = variables ?? VariableFinder.GetVariables(tree); } }
-
-		[XMLConverter.ToXML]
-		object ToXML() { return expression; }
-		[XMLConverter.FromXML]
-		static NEExpression FromXML(string expression) { return new NEExpression(expression); }
 	}
 }

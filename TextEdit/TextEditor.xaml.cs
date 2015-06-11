@@ -1152,7 +1152,7 @@ namespace NeoEdit.TextEdit
 			if (offsets.Count == 1)
 				offsets = offsets.Expand(sels.Count, offsets[0]).ToList();
 			if (offsets.Count != sels.Count)
-				throw new Exception("Result and selection count don't match");
+				throw new Exception("Expression count doesn't match selection count");
 
 			if (result.Relative)
 			{
@@ -1889,8 +1889,14 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
 		{
-			var expressionData = GetExpressionData(expression: result.Expression);
-			ReplaceSelections(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Select(index => result.Expression.EvaluateRow(expressionData, index).ToString()).ToList());
+			var expression = new NEExpression(result.Expression);
+			var expressionData = GetExpressionData(expression: expression);
+			var results = expression.Evaluate<string>(expressionData);
+			if (results.Count == 1)
+				results = results.Expand(Selections.Count, results[0]).ToList();
+			if (results.Count != Selections.Count)
+				throw new Exception("Expression count doesn't match selection count");
+			ReplaceSelections(results);
 		}
 
 		internal void Command_Data_EvaluateSelectedExpression()
@@ -2473,8 +2479,14 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
 		{
-			var expressionData = GetExpressionData(expression: result.Expression);
-			Selections.Replace(ParallelEnumerable.Range(0, expressionData["x"].Count).AsOrdered().Where(num => (bool)result.Expression.EvaluateRow(expressionData, num)).Select(num => Selections[num]).ToList());
+			var expression = new NEExpression(result.Expression);
+			var expressionData = GetExpressionData(expression: expression);
+			var results = expression.Evaluate<bool>(expressionData);
+			if (results.Count == 1)
+				results = results.Expand(Selections.Count, results[0]).ToList();
+			if (results.Count != Selections.Count)
+				throw new Exception("Expression count doesn't match selection count");
+			Selections.Replace(Selections.Where((str, num) => results[num]).ToList());
 		}
 
 		internal void Command_Select_FirstSelection()

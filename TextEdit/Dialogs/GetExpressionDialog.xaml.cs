@@ -10,7 +10,7 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public NEExpression Expression { get; set; }
+			public string Expression { get; set; }
 		}
 
 		[DepProp]
@@ -129,7 +129,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = new NEExpression(Expression) };
+			result = new Result { Expression = Expression };
 			DialogResult = true;
 		}
 
