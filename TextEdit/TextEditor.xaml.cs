@@ -1137,24 +1137,22 @@ namespace NeoEdit.TextEdit
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return GotoDialog.Run(WindowParent, gotoType, startValue);
+			return GotoDialog.Run(WindowParent, gotoType, startValue, GetExpressionData(count: 10));
 		}
 
 		internal void Command_Edit_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
 		{
+			var expression = new NEExpression(result.Expression);
+			var results = expression.Evaluate(GetExpressionData(expression: expression));
+			var offsets = results.Select(val => Convert.ToInt32(val)).ToList();
 			var sels = Selections.ToList();
-			List<int> offsets;
-			if (result.ClipboardValue)
-			{
-				var clipboardStrings = NEClipboard.GetStrings();
-				sels = sels.Resize(clipboardStrings.Count, new Range(BeginOffset())).ToList();
-				offsets = new List<int>(clipboardStrings.Select(str => Int32.Parse(str)));
-			}
-			else
-			{
-				sels = sels.Expand(1, new Range(BeginOffset())).ToList();
-				offsets = sels.Select(range => result.Value).ToList();
-			}
+
+			if (sels.Count == 1)
+				sels = sels.Resize(offsets.Count, sels[0]).ToList();
+			if (offsets.Count == 1)
+				offsets = offsets.Expand(sels.Count, offsets[0]).ToList();
+			if (offsets.Count != sels.Count)
+				throw new Exception("Result and selection count don't match");
 
 			if (result.Relative)
 			{
@@ -1170,6 +1168,7 @@ namespace NeoEdit.TextEdit
 					case GotoType.Position: list = positions; break;
 					default: throw new ArgumentException("GotoType invalid");
 				}
+
 				offsets = offsets.Select((ofs, ctr) => ofs + list[ctr]).ToList();
 			}
 			else if (gotoType != GotoType.Position)
@@ -1178,7 +1177,7 @@ namespace NeoEdit.TextEdit
 			switch (gotoType)
 			{
 				case GotoType.Line:
-					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], 0, selecting, false, true)).ToList());
+					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], 0, selecting, false, false)).ToList());
 					break;
 				case GotoType.Column:
 					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, 0, offsets[ctr], selecting, true, false)).ToList());

@@ -61,6 +61,24 @@ namespace NeoEdit.Common.Expressions
 			return new ExpressionEvaluator(expression, dict, values).Visit(tree);
 		}
 
+		public List<object> Evaluate(Dictionary<string, List<object>> dict, params object[] values)
+		{
+			var count = 1;
+			if (Variables.Any())
+				count = Variables.Max(var => dict[var].Count);
+			return Enumerable.Range(0, count).Select(row => EvaluateRow(dict, row, values)).ToList();
+		}
+
+		public List<T> Evaluate<T>(Dictionary<string, List<object>> dict, params object[] values)
+		{
+			return Evaluate(dict, values).Select(val => (T)System.Convert.ChangeType(val, typeof(T))).ToList();
+		}
+
+		public List<object> EvaluateToType(Type type, Dictionary<string, List<object>> dict, params object[] values)
+		{
+			return Evaluate(dict, values).Select(val => System.Convert.ChangeType(val, type)).ToList();
+		}
+
 		HashSet<string> variables;
 		public HashSet<string> Variables { get { return variables = variables ?? VariableFinder.GetVariables(tree); } }
 

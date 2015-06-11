@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -7,60 +8,42 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public int Value { get; set; }
-			public bool ClipboardValue { get; set; }
+			public string Expression { get; set; }
 			public bool Relative { get; set; }
 		}
 
 		[DepProp]
-		public string DisplayString { get { return UIHelper<GotoDialog>.GetPropValue<string>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public int Value { get { return UIHelper<GotoDialog>.GetPropValue<int>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool ClipboardValue { get { return UIHelper<GotoDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		public string Expression { get { return UIHelper<GotoDialog>.GetPropValue<string>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool Relative { get { return UIHelper<GotoDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
+		public Dictionary<string, List<object>> ExpressionData { get; private set; }
 
-		static GotoDialog()
-		{
-			UIHelper<GotoDialog>.Register();
-			UIHelper<GotoDialog>.AddCallback(a => a.Relative, (obj, o, n) => obj.SetRelative(o, n));
-		}
+		static GotoDialog() { UIHelper<GotoDialog>.Register(); }
 
-		readonly GotoType gotoType;
-		readonly int startValue;
-		GotoDialog(GotoType gotoType, int _Value)
+		GotoDialog(GotoType gotoType, int value, Dictionary<string, List<object>> expressionData)
 		{
+			ExpressionData = expressionData;
 			InitializeComponent();
 
-			this.gotoType = gotoType;
-			var str = gotoType.ToString();
-			DisplayString = "_" + str + ":";
-			Title = "Go To " + str;
-			Value = startValue = _Value;
+			Title = "Go To " + gotoType.ToString();
+			Expression = value.ToString();
 		}
 
-		void SetRelative(bool oldValue, bool newValue)
+		void ExpressionHelp(object sender, RoutedEventArgs e)
 		{
-			if (oldValue == newValue)
-				return;
-
-			if (newValue)
-				Value -= startValue;
-			else
-				Value += startValue;
+			ExpressionHelpDialog.Display();
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Value = Value, ClipboardValue = ClipboardValue, Relative = Relative };
+			result = new Result { Expression = Expression, Relative = Relative };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, GotoType gotoType, int startValue)
+		public static Result Run(Window parent, GotoType gotoType, int startValue, Dictionary<string, List<object>> expressionData)
 		{
-			var dialog = new GotoDialog(gotoType, startValue) { Owner = parent };
+			var dialog = new GotoDialog(gotoType, startValue, expressionData) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
