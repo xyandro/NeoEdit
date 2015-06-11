@@ -105,6 +105,17 @@ namespace NeoEdit.TextEdit.Content
 			SelfAndParents = Self | Parents,
 		}
 
+		public List<ParserNode> GetAllNodes()
+		{
+			var result = new List<ParserNode> { this };
+			for (var ctr = 0; ctr < result.Count; ++ctr)
+			{
+				foreach (var child in result[ctr].children)
+					result.Add(child);
+			}
+			return result;
+		}
+
 		public IEnumerable<ParserNode> List(ParserNodeListType list)
 		{
 			if (list.HasFlag(ParserNodeListType.Self))

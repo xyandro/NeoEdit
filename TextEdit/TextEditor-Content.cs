@@ -31,10 +31,23 @@ namespace NeoEdit.TextEdit
 		List<ParserNode> GetSelectionNodes()
 		{
 			var doc = RootNode();
-			var nodes = doc.List(ParserNode.ParserNodeListType.SelfAttributesAndDescendants).Where(node => node.HasLocation).ToList();
-			var fullLocation = nodes.OrderBy(node => !node.IsAttr).GroupBy(node => node.Start).ToDictionary(startGroup => startGroup.Key, group => group.GroupBy(node => node.End).ToDictionary(endGroup => endGroup.Key, endGroup => endGroup.Last()));
-			nodes = nodes.Where(node => !node.IsAttr).ToList();
-			var startLocation = nodes.GroupBy(node => node.Start).ToDictionary(group => group.Key, group => group.Last());
+			var fullLocation = new Dictionary<int, Dictionary<int, ParserNode>>();
+			var startLocation = new Dictionary<int, ParserNode>();
+			var nodes = doc.GetAllNodes();
+			foreach (var node in nodes)
+			{
+				if (!node.HasLocation)
+					continue;
+
+				if (!fullLocation.ContainsKey(node.Start))
+					fullLocation[node.Start] = new Dictionary<int, ParserNode>();
+				fullLocation[node.Start][node.End] = node;
+
+				if (node.IsAttr)
+					continue;
+
+				startLocation[node.Start] = node;
+			}
 
 			var result = new List<ParserNode>();
 			foreach (var range in Selections)
