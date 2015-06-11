@@ -32,7 +32,7 @@ Override readonly, access denied (UAC required?)
 Add/subtract chars in expressions (a+1=b)
 Go back to last selections
 Aggregate data (counts/group by field/etc.)
-Accept expressions in dialog boxes
+Refactor menu (more subtrees, less accel reuse)
 
 View:
 Update as new lines are added

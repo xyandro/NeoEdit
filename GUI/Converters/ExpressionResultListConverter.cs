@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
@@ -24,13 +23,12 @@ namespace NeoEdit.GUI.Converters
 			if (value.Length < 2)
 				throw new ArgumentNullException();
 
-			var type = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType(parameter as string)).First(val => val != null);
 			var expression = value[0] as string;
 			var expressionData = value[1] as Dictionary<string, List<object>>;
 			if ((expression == null) || (expressionData == null))
 				return DependencyProperty.UnsetValue;
 
-			try { return String.Join(", ", new NEExpression(expression).EvaluateToType(type, expressionData)); }
+			try { return String.Join(", ", new NEExpression(expression).Evaluate(expressionData)); }
 			catch { return DependencyProperty.UnsetValue; }
 		}
 

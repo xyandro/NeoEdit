@@ -8,56 +8,56 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		public enum SizeType
 		{
-			None,
 			Absolute,
 			Relative,
 			Minimum,
 			Maximum,
 			Multiple,
-			Clipboard,
 		}
 
 		internal class Result
 		{
 			public SizeType Type { get; set; }
-			public long Value { get; set; }
+			public string Expression { get; set; }
+			public long Factor { get; set; }
 		}
 
 		[DepProp]
 		public SizeType Type { get { return UIHelper<SetSizeDialog>.GetPropValue<SizeType>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long Value { get { return UIHelper<SetSizeDialog>.GetPropValue<long>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
+		public string Expression { get { return UIHelper<SetSizeDialog>.GetPropValue<string>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public long ByteMult { get { return UIHelper<SetSizeDialog>.GetPropValue<long>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public Dictionary<string, long> ByteMultDict { get { return UIHelper<SetSizeDialog>.GetPropValue<Dictionary<string, long>>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
+		public long Factor { get { return UIHelper<SetSizeDialog>.GetPropValue<long>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
+		public Dictionary<string, long> FactorDict { get; private set; }
+		public Dictionary<string, List<object>> ExpressionData { get; private set; }
 
 		static SetSizeDialog() { UIHelper<SetSizeDialog>.Register(); }
 
-		SetSizeDialog()
+		SetSizeDialog(Dictionary<string, List<object>> expressionData)
 		{
-			InitializeComponent();
-			Type = SizeType.Absolute;
-			ByteMultDict = new Dictionary<string, long> 
+			FactorDict = new Dictionary<string, long> 
 			{
 				{ "GB", 1 << 30 },
 				{ "MB", 1 << 20 },
 				{ "KB", 1 << 10 },
 				{ "bytes", 1 << 0 },
 			};
-			ByteMult = 1;
+			ExpressionData = expressionData;
+			InitializeComponent();
+			Type = SizeType.Absolute;
+			Factor = 1;
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Type = Type, Value = Value * ByteMult };
+			result = new Result { Type = Type, Expression = Expression, Factor = Factor };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static Result Run(Window parent, Dictionary<string, List<object>> expressionData)
 		{
-			var dialog = new SetSizeDialog() { Owner = parent };
+			var dialog = new SetSizeDialog(expressionData) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

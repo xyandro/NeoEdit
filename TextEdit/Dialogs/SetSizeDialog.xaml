@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Set Size" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=value}">
+	Title="Set Size" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=expression}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -11,6 +11,7 @@
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition Height="10"/>
@@ -24,16 +25,25 @@
 			<RadioButton GroupName="type" Content="_Minimum" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Minimum}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="Ma_ximum" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Maximum}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="Multi_ple" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
-			<RadioButton GroupName="type" Content="C_lipboard" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Clipboard}" Margin="0,0,10,0" Focusable="False"/>
 		</StackPanel>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Value:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-			<guiControls:NumericUpDown Name="value"  Width="150" Value="{Binding Value, ElementName=self}" IsEnabled="{Binding Type, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] != \'Clipboard\''}"/>
-			<ComboBox ItemsSource="{Binding ByteMultDict, ElementName=self}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding ByteMult, ElementName=self}"/>
+			<TextBox Name="expression" Width="200" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+			<ComboBox ItemsSource="{Binding FactorDict, ElementName=self}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Factor, ElementName=self}"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<Label Grid.Row="2" Grid.Column="0" Content="Value(s):" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="2" Grid.Column="1">
+			<Label.Content>
+				<MultiBinding Converter="{guiConverters:ExpressionResultListConverter}" ConverterParameter="System.Int32">
+					<Binding Path="Expression" ElementName="self"/>
+					<Binding Path="ExpressionData" ElementName="self"/>
+				</MultiBinding>
+			</Label.Content>
+		</Label>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

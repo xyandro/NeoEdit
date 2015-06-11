@@ -73,11 +73,6 @@ namespace NeoEdit.Common.Expressions
 			return Evaluate(dict, values).Select(val => (T)System.Convert.ChangeType(val, typeof(T))).ToList();
 		}
 
-		public List<object> EvaluateToType(Type type, Dictionary<string, List<object>> dict, params object[] values)
-		{
-			return Evaluate(dict, values).Select(val => System.Convert.ChangeType(val, type)).ToList();
-		}
-
 		HashSet<string> variables;
 		public HashSet<string> Variables { get { return variables = variables ?? VariableFinder.GetVariables(tree); } }
 	}

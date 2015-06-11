@@ -1527,24 +1527,23 @@ namespace NeoEdit.TextEdit
 
 		internal SetSizeDialog.Result Command_Files_Set_Size_Dialog()
 		{
-			return SetSizeDialog.Run(WindowParent);
+			return SetSizeDialog.Run(WindowParent, GetExpressionData(count: 10));
 		}
 
-		void SetFileSize(string fileName, SetSizeDialog.Result result, long clipboardLen)
+		void SetFileSize(string fileName, SetSizeDialog.SizeType type, long value)
 		{
 			var fileInfo = new FileInfo(fileName);
 			if (!fileInfo.Exists)
 				throw new Exception(String.Format("File doesn't exist: {0}", fileName));
 
 			long length;
-			switch (result.Type)
+			switch (type)
 			{
-				case SetSizeDialog.SizeType.Absolute: length = result.Value; break;
-				case SetSizeDialog.SizeType.Relative: length = fileInfo.Length + result.Value; break;
-				case SetSizeDialog.SizeType.Minimum: length = Math.Max(fileInfo.Length, result.Value); break;
-				case SetSizeDialog.SizeType.Maximum: length = Math.Min(fileInfo.Length, result.Value); break;
-				case SetSizeDialog.SizeType.Multiple: length = fileInfo.Length + result.Value - 1 - (fileInfo.Length + result.Value - 1) % result.Value; break;
-				case SetSizeDialog.SizeType.Clipboard: length = clipboardLen; break;
+				case SetSizeDialog.SizeType.Absolute: length = value; break;
+				case SetSizeDialog.SizeType.Relative: length = fileInfo.Length + value; break;
+				case SetSizeDialog.SizeType.Minimum: length = Math.Max(fileInfo.Length, value); break;
+				case SetSizeDialog.SizeType.Maximum: length = Math.Min(fileInfo.Length, value); break;
+				case SetSizeDialog.SizeType.Multiple: length = fileInfo.Length + value - 1 - (fileInfo.Length + value - 1) % value; break;
 				default: throw new ArgumentException("Invalid width type");
 			}
 
@@ -1559,17 +1558,9 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Set_Size(SetSizeDialog.Result result)
 		{
-			List<long> clipboardLens = null;
-			if (result.Type == SetSizeDialog.SizeType.Clipboard)
-			{
-				var clipboardStrings = NEClipboard.GetStrings();
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard doesn't match number of selections.");
-				clipboardLens = clipboardStrings.AsParallel().AsOrdered().Select(str => long.Parse(str)).ToList();
-			}
-
+			var results = GetExpressionResults<long>(result.Expression).Select(size => size * result.Factor).ToList();
 			for (var ctr = 0; ctr < Selections.Count; ++ctr)
-				SetFileSize(GetString(Selections[ctr]), result, clipboardLens == null ? 0 : clipboardLens[ctr]);
+				SetFileSize(GetString(Selections[ctr]), result.Type, results[ctr]);
 		}
 
 		internal ChooseDateTimeDialog.Result Command_Files_Set_Time_Dialog()
