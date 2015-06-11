@@ -22,7 +22,7 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Results:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Value(s):" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
 		<Label Grid.Row="1" Grid.Column="1">
 			<Label.Content>
 				<MultiBinding Converter="{guiConverters:ExpressionResultListConverter}" ConverterParameter="System.Int32">
