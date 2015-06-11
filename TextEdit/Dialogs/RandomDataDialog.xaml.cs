@@ -38,6 +38,11 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
+		private void ExpressionHelp(object sender, RoutedEventArgs e)
+		{
+			ExpressionHelpDialog.Display();
+		}
+
 		public static Result Run(Dictionary<string, List<object>> expressionData, Window parent)
 		{
 			var dialog = new RandomDataDialog(expressionData) { Owner = parent };
