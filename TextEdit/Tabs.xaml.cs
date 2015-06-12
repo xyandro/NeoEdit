@@ -84,6 +84,8 @@ namespace NeoEdit.TextEdit
 		void TextEditTabs_Drop(object sender, System.Windows.DragEventArgs e)
 		{
 			var fileList = e.Data.GetData("FileDrop") as string[];
+			if (fileList == null)
+				return;
 			foreach (var file in fileList)
 				Create(file);
 			e.Handled = true;
