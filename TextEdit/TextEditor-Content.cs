@@ -33,7 +33,7 @@ namespace NeoEdit.TextEdit
 			var doc = RootNode();
 			var fullLocation = new Dictionary<int, Dictionary<int, ParserNode>>();
 			var startLocation = new Dictionary<int, ParserNode>();
-			var nodes = doc.GetAllNodes();
+			var nodes = doc.GetAllNodes().Where(node => node.HasLocation).ToList();
 			foreach (var node in nodes)
 			{
 				if (!node.HasLocation)
