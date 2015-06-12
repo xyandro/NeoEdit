@@ -107,20 +107,6 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(nodes.Select(node => new Range(node.Start, overlap ? node.Start : node.End)).ToList());
 		}
 
-		string CommentMarkup(string str)
-		{
-			if (String.IsNullOrWhiteSpace(str))
-				return str;
-			return String.Format("<!--{0}-->", str.Replace("-->", "--><!--"));
-		}
-
-		string UncommentMarkup(string str)
-		{
-			if ((String.IsNullOrWhiteSpace(str)) || (!str.StartsWith("<!--")) || (!str.EndsWith("-->")))
-				return str;
-			return str.Substring(4, str.Length - 7).Replace("--><!--", "-->");
-		}
-
 		internal void Command_Content_Reformat()
 		{
 			var root = RootNode();
@@ -131,12 +117,12 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Content_Comment()
 		{
-			ReplaceSelections(GetSelectionStrings().Select(str => CommentMarkup(str)).ToList());
+			ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Data, range)).ToList());
 		}
 
 		internal void Command_Content_Uncomment()
 		{
-			ReplaceSelections(GetSelectionStrings().Select(str => UncommentMarkup(str)).ToList());
+			ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Data, range)).ToList());
 		}
 
 		internal void Command_Content_TogglePosition(bool shiftDown)

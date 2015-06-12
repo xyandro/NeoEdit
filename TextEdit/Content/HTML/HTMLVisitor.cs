@@ -115,6 +115,22 @@ namespace NeoEdit.TextEdit.Content.HTML
 			return String.Join("", rFormat(document, input).Item1.Select(str => str.TrimEnd() + "\r\n"));
 		}
 
+		public static string Comment(TextData data, Range range)
+		{
+			var str = data.GetString(range.Start, range.Length);
+			if (String.IsNullOrWhiteSpace(str))
+				return str;
+			return String.Format("<!--{0}-->", str.Replace("-->", "--><!--"));
+		}
+
+		public static string Uncomment(TextData data, Range range)
+		{
+			var str = data.GetString(range.Start, range.Length);
+			if ((String.IsNullOrWhiteSpace(str)) || (!str.StartsWith("<!--")) || (!str.EndsWith("-->")))
+				return str;
+			return str.Substring(4, str.Length - 7).Replace("--><!--", "-->");
+		}
+
 		const string DOCUMENT = "Document";
 		const string COMMENT = "Comment";
 		const string MISC = "Misc";

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
@@ -33,6 +32,48 @@ namespace NeoEdit.TextEdit.Content.CSharp
 			var visitor = new CSharpVisitor(input);
 			visitor.Visit(tree);
 			return visitor.Root;
+		}
+
+		public static string Comment(TextData data, Range range)
+		{
+			var startLine = data.GetOffsetLine(range.Start);
+			var startIndex = data.GetOffsetIndex(range.Start, startLine);
+			var endLine = data.GetOffsetLine(range.End);
+			var endIndex = data.GetOffsetIndex(range.End, endLine);
+			var result = "";
+			for (var line = startLine; line <= endLine; ++line)
+			{
+				var lineOffset = data.GetOffset(line, 0);
+				var start = line == startLine ? startIndex : 0;
+				var contentEnd = line == endLine ? endIndex : data.GetLineLength(line);
+				var end = line == endLine ? endIndex : contentEnd + data.GetEndingLength(line);
+				var str = data.GetString(lineOffset + start, end - start);
+				if (start != contentEnd)
+					str = "//" + str;
+				result += str;
+			}
+			return result;
+		}
+
+		public static string Uncomment(TextData data, Range range)
+		{
+			var startLine = data.GetOffsetLine(range.Start);
+			var startIndex = data.GetOffsetIndex(range.Start, startLine);
+			var endLine = data.GetOffsetLine(range.End);
+			var endIndex = data.GetOffsetIndex(range.End, endLine);
+			var result = "";
+			for (var line = startLine; line <= endLine; ++line)
+			{
+				var lineOffset = data.GetOffset(line, 0);
+				var start = line == startLine ? startIndex : 0;
+				var contentEnd = line == endLine ? endIndex : data.GetLineLength(line);
+				var end = line == endLine ? endIndex : contentEnd + data.GetEndingLength(line);
+				var str = data.GetString(lineOffset + start, end - start);
+				if (str.StartsWith("//"))
+					str = str.Substring(2);
+				result += str;
+			}
+			return result;
 		}
 
 		const string ROOT = "Root";
