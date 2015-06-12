@@ -320,11 +320,11 @@ namespace NeoEdit.TextEdit
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
 		Macro recordingMacro;
-		internal bool macroPlaying = false;
+		internal Macro macroPlaying = null;
 
 		internal void RunCommand(TextEditCommand command)
 		{
-			if (macroPlaying)
+			if (macroPlaying != null)
 				return;
 
 			switch (command)
@@ -406,8 +406,12 @@ namespace NeoEdit.TextEdit
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			if (macroPlaying)
+			if (macroPlaying != null)
+			{
+				if (e.Key == Key.Escape)
+					macroPlaying.Stop();
 				return;
+			}
 
 			base.OnKeyDown(e);
 			if (e.Handled)
@@ -431,7 +435,7 @@ namespace NeoEdit.TextEdit
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
-			if (macroPlaying)
+			if (macroPlaying != null)
 				return;
 
 			base.OnTextInput(e);

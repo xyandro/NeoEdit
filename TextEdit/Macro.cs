@@ -48,6 +48,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		bool stop = false;
 		readonly List<MacroAction> macroActions = new List<MacroAction>();
 
 		public void AddKey(Key key, bool shiftDown, bool controlDown)
@@ -72,24 +73,27 @@ namespace NeoEdit.TextEdit
 			macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult));
 		}
 
-		public void Play(TextEditTabs tabs, Action<bool> setPlayingStatus, Action finished = null)
+		public void Play(TextEditTabs tabs, Action<Macro> setMacroPlaying, Action finished = null)
 		{
-			setPlayingStatus(true);
+			setMacroPlaying(this);
 			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
 			var ctr = 0;
 			timer.Tick += (s, e) => tabs.Dispatcher.Invoke(() =>
 			{
-				if (ctr >= macroActions.Count)
-				{
-					timer.Stop();
-					setPlayingStatus(false);
-					if (finished != null)
-						finished();
-					return;
-				}
-
 				try
 				{
+					if (stop)
+						throw new Exception("Macro processing aborted.");
+
+					if (ctr >= macroActions.Count)
+					{
+						timer.Stop();
+						setMacroPlaying(null);
+						if (finished != null)
+							finished();
+						return;
+					}
+
 					var action = macroActions[ctr++];
 					if (action is MacroActionKey)
 					{
@@ -110,11 +114,16 @@ namespace NeoEdit.TextEdit
 				catch
 				{
 					timer.Stop();
-					setPlayingStatus(false);
+					setMacroPlaying(null);
 					throw;
 				}
 			});
 			timer.Start();
+		}
+
+		public void Stop()
+		{
+			stop = true;
 		}
 	}
 }
