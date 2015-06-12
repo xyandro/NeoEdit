@@ -10,10 +10,12 @@ using System.Windows.Input;
 using System.Xml.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
@@ -270,6 +272,33 @@ namespace NeoEdit.TextEdit
 			startNext();
 		}
 
+		void Command_Macro_Repeat()
+		{
+			var result = MacroRepeatDialog.Run(this, ChooseMacro);
+			if (result == null)
+				return;
+
+			var macro = XMLConverter.FromXML<Macro>(XElement.Load(result.Macro));
+			var expression = new NEExpression(result.Expression);
+			var count = int.MaxValue;
+			if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Number)
+				count = expression.Evaluate<int>();
+
+			Action startNext = null;
+			startNext = () =>
+			{
+				if ((Active == null) || (--count < 0))
+					return;
+
+				if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Condition)
+					if (!expression.EvaluateRow<bool>(Active.GetExpressionData(expression: expression), 0))
+						return;
+
+				macro.Play(this, playing => macroPlaying = playing, startNext);
+			};
+			startNext();
+		}
+
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			var answer = Message.OptionsEnum.None;
@@ -306,6 +335,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Macro_StopRecording: Command_Macro_StopRecording(); return;
 				case TextEditCommand.Macro_Play: Command_Macro_Play(); return;
 				case TextEditCommand.Macro_PlayOnCopiedFiles: Command_Macro_PlayOnCopiedFiles(); return;
+				case TextEditCommand.Macro_Repeat: Command_Macro_Repeat(); return;
 			}
 
 			var shiftDown = this.shiftDown;

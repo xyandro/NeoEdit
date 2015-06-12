@@ -356,7 +356,7 @@ namespace NeoEdit.TextEdit
 			return InterpretType<bool>(strs, bool.TryParse) ?? InterpretType<long>(strs, long.TryParse) ?? InterpretType<double>(strs, double.TryParse) ?? strs.Cast<object>().ToList();
 		}
 
-		Dictionary<string, List<object>> GetExpressionData(int? count = null, NEExpression expression = null)
+		internal Dictionary<string, List<object>> GetExpressionData(int? count = null, NEExpression expression = null)
 		{
 			var sels = Selections.Take(count ?? Selections.Count).ToList();
 			var strs = sels.Select(range => GetString(range)).ToList();

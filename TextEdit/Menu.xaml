@@ -420,6 +420,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Play" CommandEnum="Macro_Play"/>
 		<textEdit:TextEditMenuItem Header="Play On Copied _Files" CommandEnum="Macro_PlayOnCopiedFiles"/>
+		<textEdit:TextEditMenuItem Header="R_epeat" CommandEnum="Macro_Repeat"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
 	</MenuItem>

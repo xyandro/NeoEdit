@@ -270,6 +270,7 @@ namespace NeoEdit.TextEdit
 		Macro_Open,
 		Macro_Play,
 		Macro_PlayOnCopiedFiles,
+		Macro_Repeat,
 		Macro_TimeNextAction,
 	}
 }
