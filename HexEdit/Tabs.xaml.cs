@@ -34,6 +34,7 @@ namespace NeoEdit.HexEdit
 				hexEditTabs = UIHelper<HexEditTabs>.GetNewest();
 			if (hexEditTabs == null)
 				hexEditTabs = new HexEditTabs();
+			hexEditTabs.Activate();
 			hexEditTabs.Add(new HexEditor(data, codePage, filename, filetitle, modified));
 		}
 

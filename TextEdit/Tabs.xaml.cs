@@ -64,6 +64,7 @@ namespace NeoEdit.TextEdit
 			if (textEditTabs == null)
 				textEditTabs = new TextEditTabs();
 
+			textEditTabs.Activate();
 			textEditTabs.Add(new TextEditor(filename, bytes, codePage, modified, line, column));
 		}
 
