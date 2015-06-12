@@ -2314,7 +2314,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Lines()
 		{
-			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(Math.Max(BeginOffset(), range.End - 1)) }).ToList();
+			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
 			var hasLine = new bool[Data.NumLines];
 			foreach (var set in lineSets)
