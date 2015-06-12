@@ -600,6 +600,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Get_AccessTime: Command_Files_Get_AccessTime(); break;
 				case TextEditCommand.Files_Get_CreateTime: Command_Files_Get_CreateTime(); break;
 				case TextEditCommand.Files_Get_Attributes: Command_Files_Get_Attributes(); break;
+				case TextEditCommand.Files_Get_DirectoryContents: Command_Files_Get_DirectoryContents(); break;
 				case TextEditCommand.Files_Set_Size: Command_Files_Set_Size(dialogResult as SetSizeDialog.Result); break;
 				case TextEditCommand.Files_Set_WriteTime: Command_Files_Set_Time(TextEditor.TimestampType.Write, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_AccessTime: Command_Files_Set_Time(TextEditor.TimestampType.Access, dialogResult as ChooseDateTimeDialog.Result); break;
@@ -1521,6 +1522,20 @@ namespace NeoEdit.TextEdit
 				}
 				else
 					strs.Add("INVALID");
+			}
+			ReplaceSelections(strs);
+		}
+
+		internal void Command_Files_Get_DirectoryContents()
+		{
+			var dirs = GetSelectionStrings();
+			var strs = new List<string>();
+			foreach (var dir in dirs)
+			{
+				if (!Directory.Exists(dir))
+					throw new Exception(String.Format("Invalid directory: {0}", dir));
+				var files = Directory.EnumerateFileSystemEntries(dir).ToList();
+				strs.Add(String.Join(Data.DefaultEnding, files));
 			}
 			ReplaceSelections(strs);
 		}

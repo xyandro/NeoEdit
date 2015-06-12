@@ -73,6 +73,7 @@
 			<textEdit:TextEditMenuItem Header="_Access Time" CommandEnum="Files_Get_AccessTime"/>
 			<textEdit:TextEditMenuItem Header="_Create Time" CommandEnum="Files_Get_CreateTime"/>
 			<textEdit:TextEditMenuItem Header="A_ttributes" CommandEnum="Files_Get_Attributes"/>
+			<textEdit:TextEditMenuItem Header="_Directory Contents" CommandEnum="Files_Get_DirectoryContents"/>
 		</MenuItem>
 		<MenuItem Header="S_et">
 			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>
