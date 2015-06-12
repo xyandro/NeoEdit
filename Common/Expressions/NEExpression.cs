@@ -49,10 +49,20 @@ namespace NeoEdit.Common.Expressions
 			return Evaluate(default(Dictionary<string, object>), values);
 		}
 
+		public T Evaluate<T>(params object[] values)
+		{
+			return (T)Convert.ChangeType(Evaluate(values), typeof(T));
+		}
+
 		public object EvaluateRow(Dictionary<string, List<object>> dict, int row, params object[] values)
 		{
 			var rowDict = dict.ToDictionary(entry => entry.Key, entry => entry.Value.Count > row ? entry.Value[row] : null);
 			return Evaluate(rowDict, values);
+		}
+
+		public T EvaluateRow<T>(Dictionary<string, List<object>> dict, int row, params object[] values)
+		{
+			return (T)Convert.ChangeType(EvaluateRow(dict, row, values), typeof(T));
 		}
 
 		public object Evaluate(Dictionary<string, object> dict, params object[] values)
