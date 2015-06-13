@@ -33,6 +33,10 @@
 					<RadioButton GroupName="aggregateType" Content="C_oncat: " IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Concat}"/>
 					<TextBox Text="{Binding ConcatText, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Margin="10,0"/>
 				</DockPanel>
+				<RadioButton GroupName="aggregateType" Content="Mi_n Numeric" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=MinNumeric}"/>
+				<RadioButton GroupName="aggregateType" Content="Min String" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=MinString}"/>
+				<RadioButton GroupName="aggregateType" Content="Ma_x Numeric" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=MaxNumeric}"/>
+				<RadioButton GroupName="aggregateType" Content="Max String" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=MaxString}"/>
 			</UniformGrid>
 		</GroupBox>
 

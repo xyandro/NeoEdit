@@ -13,7 +13,7 @@ namespace NeoEdit.TextEdit
 	{
 		internal enum SortAggregationScope { Selections, Lines, Regions }
 		internal enum SortType { String, StringRaw, Numeric, DateTime, Keys, Reverse, Randomize, Length, Frequency }
-		internal enum AggregateType { Count, Sum, Average, Concat }
+		internal enum AggregateType { Count, Sum, Average, Concat, MinNumeric, MinString, MaxNumeric, MaxString }
 
 		List<Range> GetSortLines()
 		{
@@ -172,7 +172,7 @@ namespace NeoEdit.TextEdit
 			return str;
 		}
 
-		internal void Command_Data_Aggregate(AggregateDialog.Result dialogResult)
+		Dictionary<string, List<string>> GetAggregate(AggregateDialog.Result dialogResult)
 		{
 			var regions = GetRegions(dialogResult.AggregateScope, true).Select((region, index) => GetRegionString(dialogResult.RemoveSelection, dialogResult.TrimWhitespace, region, Selections[index])).ToList(); ;
 			var sels = GetSelectionStrings();
@@ -186,28 +186,34 @@ namespace NeoEdit.TextEdit
 					aggregate[sels[ctr]] = new List<string>();
 				aggregate[sels[ctr]].Add(regions[ctr]);
 			}
+			return aggregate;
+		}
 
-			Dictionary<string, string> results;
+		Dictionary<string, string> GetAggregateResults(AggregateDialog.Result dialogResult, Dictionary<string, List<string>> aggregate)
+		{
 			switch (dialogResult.AggregateType)
 			{
-				case AggregateType.Count:
-					results = aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Count.ToString());
-					break;
-				case AggregateType.Sum:
-					results = aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Sum(value => Convert.ToInt64(value)).ToString());
-					break;
+				case AggregateType.Count: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Count.ToString());
+				case AggregateType.Sum: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Sum(value => Convert.ToInt64(value)).ToString());
 				case AggregateType.Average:
 					{
 						var count = aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
 						var sum = aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Sum(value => Convert.ToInt64(value)));
-						results = aggregate.ToDictionary(pair => pair.Key, pair => ((decimal)sum[pair.Key] / count[pair.Key]).ToString());
+						return aggregate.ToDictionary(pair => pair.Key, pair => ((decimal)sum[pair.Key] / count[pair.Key]).ToString());
 					}
-					break;
-				case AggregateType.Concat:
-					results = aggregate.ToDictionary(pair => pair.Key, pair => String.Join(dialogResult.ConcatText, pair.Value));
-					break;
+				case AggregateType.Concat: return aggregate.ToDictionary(pair => pair.Key, pair => String.Join(dialogResult.ConcatText, pair.Value));
+				case AggregateType.MinNumeric: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Min(value => Convert.ToInt64(value)).ToString());
+				case AggregateType.MinString: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Min().ToString());
+				case AggregateType.MaxNumeric: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Max(value => Convert.ToInt64(value)).ToString());
+				case AggregateType.MaxString: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Max().ToString());
 				default: throw new Exception("Invalid aggregate type");
 			}
+		}
+
+		internal void Command_Data_Aggregate(AggregateDialog.Result dialogResult)
+		{
+			var aggregate = GetAggregate(dialogResult);
+			var results = GetAggregateResults(dialogResult, aggregate);
 
 			var location = Selections.Any() ? Selections[0].Start : BeginOffset();
 			var sb = new StringBuilder();
