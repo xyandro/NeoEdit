@@ -217,6 +217,7 @@ namespace NeoEdit.TextEdit
 			var results = GetAggregateResults(dialogResult, aggregate);
 
 			var location = Selections.Any() ? Selections[0].Start : BeginOffset();
+			location = Data.GetOffset(Data.GetOffsetLine(location), 0);
 			var sb = new StringBuilder();
 			var newSels = new List<Range>();
 			foreach (var pair in results)
