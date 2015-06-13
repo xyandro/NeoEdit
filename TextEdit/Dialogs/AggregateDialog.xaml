@@ -21,6 +21,7 @@
 				<RadioButton GroupName="aggregateScope" Content="_Selections" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Selections}"/>
 				<RadioButton GroupName="aggregateScope" Content="_Lines" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Lines}"/>
 				<RadioButton GroupName="aggregateScope" Content="_Regions" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Regions}"/>
+				<RadioButton GroupName="aggregateScope" Content="Cli_pboards" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Clipboards}"/>
 			</UniformGrid>
 		</GroupBox>
 

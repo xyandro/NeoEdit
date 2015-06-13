@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -11,7 +12,7 @@ namespace NeoEdit.TextEdit
 {
 	public partial class TextEditor
 	{
-		internal enum SortAggregationScope { Selections, Lines, Regions }
+		internal enum SortAggregationScope { Selections, Lines, Regions, Clipboards }
 		internal enum SortType { String, StringRaw, Numeric, DateTime, Keys, Reverse, Randomize, Length, Frequency }
 		internal enum AggregateType { Count, Sum, Average, Concat, MinNumeric, MinString, MaxNumeric, MaxString }
 
@@ -44,7 +45,7 @@ namespace NeoEdit.TextEdit
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
-		List<Range> GetRegions(SortAggregationScope scope, bool checkAllSels = false)
+		List<Range> GetRegions(SortAggregationScope scope)
 		{
 			List<Range> regions = null;
 			switch (scope)
@@ -55,7 +56,6 @@ namespace NeoEdit.TextEdit
 				default: throw new Exception("Invalid sort type");
 			}
 
-			// Sanity check; soundn't happen
 			if (Selections.Count != regions.Count)
 				throw new Exception("Selections and regions counts must match");
 
@@ -68,13 +68,10 @@ namespace NeoEdit.TextEdit
 				pos = range.End;
 			}
 
-			if (checkAllSels)
+			for (var ctr = 0; ctr < Selections.Count; ++ctr)
 			{
-				for (var ctr = 0; ctr < Selections.Count; ++ctr)
-				{
-					if ((Selections[ctr].Start < regions[ctr].Start) || (Selections[ctr].End > regions[ctr].End))
-						throw new Exception("All selections must be a region");
-				}
+				if ((Selections[ctr].Start < regions[ctr].Start) || (Selections[ctr].End > regions[ctr].End))
+					throw new Exception("All selections must be a region");
 			}
 
 			return regions;
@@ -132,7 +129,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Sort(SortDialog.Result result)
 		{
-			var regions = GetRegions(result.SortScope, true);
+			var regions = GetRegions(result.SortScope);
 			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
 				throw new Exception("Ordering misaligned");
@@ -174,7 +171,11 @@ namespace NeoEdit.TextEdit
 
 		Dictionary<string, List<string>> GetAggregate(AggregateDialog.Result dialogResult)
 		{
-			var regions = GetRegions(dialogResult.AggregateScope, true).Select((region, index) => GetRegionString(dialogResult.RemoveSelection, dialogResult.TrimWhitespace, region, Selections[index])).ToList(); ;
+			List<string> regions;
+			if (dialogResult.AggregateScope == SortAggregationScope.Clipboards)
+				regions = NEClipboard.GetStrings();
+			else
+				regions = GetRegions(dialogResult.AggregateScope).Select((region, index) => GetRegionString(dialogResult.RemoveSelection, dialogResult.TrimWhitespace, region, Selections[index])).ToList(); ;
 			var sels = GetSelectionStrings();
 			if (regions.Count != sels.Count)
 				throw new Exception("Aggregate count mismatch");
