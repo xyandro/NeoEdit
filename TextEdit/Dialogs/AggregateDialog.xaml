@@ -1,0 +1,51 @@
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.AggregateDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
+	Title="Aggregate" SizeToContent="WidthAndHeight">
+
+	<StackPanel Margin="10" Width="300">
+		<StackPanel.Style>
+			<Style>
+				<Style.Resources>
+					<Style TargetType="RadioButton">
+						<Setter Property="VerticalAlignment" Value="Center"/>
+					</Style>
+				</Style.Resources>
+			</Style>
+		</StackPanel.Style>
+
+		<GroupBox Header="What to aggregate:">
+			<UniformGrid Columns="3">
+				<RadioButton GroupName="aggregateScope" Content="_Selections" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Selections}"/>
+				<RadioButton GroupName="aggregateScope" Content="_Lines" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Lines}"/>
+				<RadioButton GroupName="aggregateScope" Content="_Regions" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Regions}"/>
+			</UniformGrid>
+		</GroupBox>
+
+		<GroupBox Header="How to aggregate it:">
+			<UniformGrid Columns="3">
+				<RadioButton GroupName="aggregateType" Content="_Count" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Count}"/>
+				<RadioButton GroupName="aggregateType" Content="S_um" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Sum}"/>
+				<RadioButton GroupName="aggregateType" Content="_Average" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Average}"/>
+				<DockPanel>
+					<RadioButton GroupName="aggregateType" Content="C_oncat: " IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Concat}"/>
+					<TextBox Text="{Binding ConcatText, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Margin="10,0"/>
+				</DockPanel>
+			</UniformGrid>
+		</GroupBox>
+
+		<GroupBox Header="Options:">
+			<UniformGrid Columns="1">
+				<CheckBox Content="R_emove selection" IsChecked="{Binding RemoveSelection, ElementName=self}"/>
+				<CheckBox Content="_Trim whitespace" IsChecked="{Binding TrimWhitespace, ElementName=self}"/>
+			</UniformGrid>
+		</GroupBox>
+
+		<UniformGrid HorizontalAlignment="Right" Rows="1" Margin="0,10,0,0">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</StackPanel>
+</guiControls:ModalDialog>

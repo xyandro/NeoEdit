@@ -178,6 +178,8 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="S_ort" CommandEnum="Data_Sort"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="A_ggregate" CommandEnum="Data_Aggregate"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Data_FetchURL"/>
 	</MenuItem>
 	<MenuItem Header="_Content">
@@ -335,7 +337,6 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Misses_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Misses_Values9"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="C_ounts to Keys/Values 1" CommandEnum="Keys_CountstoKeysValues1"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="Toggle Regions_/Selections" CommandEnum="SelectRegion_Toggle"/>

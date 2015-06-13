@@ -7,14 +7,14 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public TextEditor.SortScope SortScope { get; set; }
+			public TextEditor.SortAggregationScope SortScope { get; set; }
 			public TextEditor.SortType SortType { get; set; }
 			public bool CaseSensitive { get; set; }
 			public bool Ascending { get; set; }
 		}
 
 		[DepProp]
-		public TextEditor.SortScope SortScope { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortScope>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
+		public TextEditor.SortAggregationScope SortScope { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortAggregationScope>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public TextEditor.SortType SortType { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortType>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -28,7 +28,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			InitializeComponent();
 
-			SortScope = TextEditor.SortScope.Selections;
+			SortScope = TextEditor.SortAggregationScope.Selections;
 			SortType = TextEditor.SortType.String;
 			ascending.IsChecked = true;
 		}

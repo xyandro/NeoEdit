@@ -496,6 +496,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA1: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
+				case TextEditCommand.Data_Aggregate: dialogResult = Command_Data_Aggregate_Dialog(); break;
 				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Parents); break;
 				case TextEditCommand.Content_Attributes_ByAttribute: dialogResult = Command_Content_Attributes_ByAttribute_Dialog(); break;
 				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Children); break;
@@ -664,6 +665,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA1: Command_Data_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
+				case TextEditCommand.Data_Aggregate: Command_Data_Aggregate(dialogResult as AggregateDialog.Result); break;
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
 				case TextEditCommand.Content_Type_None: ContentType = Parser.ParserType.None; break;
 				case TextEditCommand.Content_Type_Balanced: ContentType = Parser.ParserType.Balanced; break;
@@ -771,7 +773,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Misses_Values7: Command_Keys_HitsMisses(7, false); break;
 				case TextEditCommand.Keys_Misses_Values8: Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Command_Keys_HitsMisses(9, false); break;
-				case TextEditCommand.Keys_CountstoKeysValues1: Command_Keys_CountstoKeysValues1(); break;
 				case TextEditCommand.SelectRegion_Toggle: Command_SelectRegion_Toggle(); break;
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
@@ -2283,14 +2284,6 @@ namespace NeoEdit.TextEdit
 		{
 			var set = new HashSet<string>(keysAndValues[index]);
 			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == hits).ToList());
-		}
-
-		internal void Command_Keys_CountstoKeysValues1()
-		{
-			var strs = GetSelectionStrings();
-			var group = strs.GroupBy(a => a).Select(a => new { key = a.Key, count = a.Count() }).OrderBy(a => a.count).ToList();
-			keysAndValues[0] = new ObservableCollection<string>(group.Select(a => a.key));
-			keysAndValues[1] = new ObservableCollection<string>(group.Select(a => a.count.ToString()));
 		}
 
 		internal void Command_SelectRegion_Toggle()
