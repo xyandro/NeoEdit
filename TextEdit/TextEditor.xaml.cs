@@ -78,6 +78,10 @@ namespace NeoEdit.TextEdit
 		public int yScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string LineEnding { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public ObservableCollection<ObservableCollection<string>> keysAndValues { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollection<ObservableCollection<string>>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool ShareKeys { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditTabs TabsParent { get { return UIHelper.FindParent<TextEditTabs>(this); } }
 		Window WindowParent { get { return UIHelper.FindParent<Window>(this); } }
@@ -91,8 +95,11 @@ namespace NeoEdit.TextEdit
 
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
-		public static ObservableCollection<ObservableCollection<string>> keysAndValues { get; private set; }
-		static Dictionary<string, int> keysHash = new Dictionary<string, int>();
+		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; set; }
+		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; set; }
+		Dictionary<string, int> keysHash;
+		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
+		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
@@ -101,19 +108,24 @@ namespace NeoEdit.TextEdit
 			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
+			UIHelper<TextEditor>.AddCallback(a => a.ShareKeys, (obj, o, n) => obj.SetupStaticOrLocalKeys());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 
-			keysAndValues = new ObservableCollection<ObservableCollection<string>> { null, null, null, null, null, null, null, null, null, null };
-			keysAndValues.CollectionChanged += keysAndValues_CollectionChanged;
-			for (var ctr = 0; ctr < keysAndValues.Count; ++ctr)
-				keysAndValues[ctr] = new ObservableCollection<string>();
+			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>> { null, null, null, null, null, null, null, null, null, null };
+			staticKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(staticKeysAndValues, staticKeysHash, e);
+			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
+				staticKeysAndValues[ctr] = new ObservableCollection<string>();
 		}
 
-		static void keysAndValues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		static void keysAndValues_CollectionChanged(ObservableCollection<ObservableCollection<string>> data, Dictionary<string, int> hash, NotifyCollectionChangedEventArgs e)
 		{
-			if ((e.Action == NotifyCollectionChangedAction.Replace) && (e.NewStartingIndex == 0))
-				keysHash = keysAndValues[0].Select((key, pos) => new { key = key, pos = pos }).ToDictionary(entry => entry.key, entry => entry.pos);
+			if ((e.Action != NotifyCollectionChangedAction.Replace) || (e.NewStartingIndex != 0))
+				return;
+
+			hash.Clear();
+			for (var pos = 0; pos < data[0].Count; ++pos)
+				hash[data[0][pos]] = pos;
 		}
 
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
@@ -121,9 +133,16 @@ namespace NeoEdit.TextEdit
 
 		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = -1, int column = -1)
 		{
+			localKeysAndValues = new ObservableCollection<ObservableCollection<string>> { null, null, null, null, null, null, null, null, null, null };
+			localKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(localKeysAndValues, localKeysHash, e);
+			for (var ctr = 0; ctr < localKeysAndValues.Count; ++ctr)
+				localKeysAndValues[ctr] = new ObservableCollection<string>();
+
 			InitializeComponent();
 			bookmarks.Width = Font.lineHeight;
 
+			ShareKeys = true;
+			SetupStaticOrLocalKeys();
 			SetupDropAccept();
 
 			undoRedo = new UndoRedo(b => IsModified = b);
@@ -155,6 +174,20 @@ namespace NeoEdit.TextEdit
 				EnsureVisible();
 				canvasRenderTimer.Start();
 			};
+		}
+
+		void SetupStaticOrLocalKeys()
+		{
+			if (ShareKeys)
+			{
+				keysAndValues = staticKeysAndValues;
+				keysHash = staticKeysHash;
+			}
+			else
+			{
+				keysAndValues = localKeysAndValues;
+				keysHash = localKeysHash;
+			}
 		}
 
 		void SetupDropAccept()
@@ -773,6 +806,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Misses_Values7: Command_Keys_HitsMisses(7, false); break;
 				case TextEditCommand.Keys_Misses_Values8: Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Command_Keys_HitsMisses(9, false); break;
+				case TextEditCommand.Keys_Share_Keys: Command_Keys_HitsMisses(9, false); break;
 				case TextEditCommand.SelectRegion_Toggle: Command_SelectRegion_Toggle(); break;
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
