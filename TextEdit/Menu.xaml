@@ -337,7 +337,7 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Misses_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Misses_Values9"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="Shar_e Keys" CommandEnum="Keys_Share_Keys" IsCheckable="True" IsChecked="{Binding Parent.Active.ShareKeys, ElementName=self, Mode=TwoWay}"/>
+		<MenuItem Header="Shar_e Keys" IsCheckable="True" IsChecked="{Binding Parent.Active.ShareKeys, ElementName=self, Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="Toggle Regions_/Selections" CommandEnum="SelectRegion_Toggle"/>

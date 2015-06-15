@@ -806,7 +806,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Misses_Values7: Command_Keys_HitsMisses(7, false); break;
 				case TextEditCommand.Keys_Misses_Values8: Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Command_Keys_HitsMisses(9, false); break;
-				case TextEditCommand.Keys_Share_Keys: Command_Keys_HitsMisses(9, false); break;
 				case TextEditCommand.SelectRegion_Toggle: Command_SelectRegion_Toggle(); break;
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
