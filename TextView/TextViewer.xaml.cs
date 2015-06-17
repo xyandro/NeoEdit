@@ -130,7 +130,7 @@ namespace NeoEdit.TextView
 				result += str;
 			}
 			if (result.Length != 0)
-				NEClipboard.SetStrings(new List<string> { result });
+				NEClipboard.Strings = new List<string> { result };
 		}
 
 		void GetSel(out int startLine, out int startColumn, out int endLine, out int endColumn)

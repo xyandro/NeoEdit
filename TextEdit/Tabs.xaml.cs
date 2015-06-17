@@ -125,9 +125,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_File_OpenCopiedCutFiles()
 		{
-			var files = NEClipboard.GetStrings();
-			if ((files == null) || (files.Count < 0))
-				return;
+			var files = NEClipboard.Strings;
 
 			if ((files.Count > 5) && (new Message
 			{
@@ -256,7 +254,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_PlayOnCopiedFiles()
 		{
-			var files = new Queue<string>(NEClipboard.GetStrings());
+			var files = new Queue<string>(NEClipboard.Strings);
 			var macroFile = ChooseMacro();
 			if (macroFile == null)
 				return;

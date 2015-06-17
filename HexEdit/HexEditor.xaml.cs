@@ -704,7 +704,7 @@ namespace NeoEdit.HexEdit
 					sb[ctr] = (char)bytes[ctr];
 				str = new string(sb);
 			}
-			NEClipboard.SetBinary(bytes, str);
+			NEClipboard.Set(bytes, str);
 			if ((isCut) && (Insert))
 				Replace(null);
 		}
@@ -712,10 +712,10 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Paste()
 		{
-			var bytes = NEClipboard.GetBytes();
+			var bytes = NEClipboard.Data as byte[];
 			if (bytes == null)
 			{
-				var str = NEClipboard.GetString();
+				var str = NEClipboard.Text;
 				if (str != null)
 					bytes = Coder.TryStringToBytes(str, CodePage);
 			}

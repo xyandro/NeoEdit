@@ -173,7 +173,7 @@ namespace NeoEdit.TextEdit
 		{
 			List<string> regions;
 			if (dialogResult.AggregateScope == SortAggregationScope.Clipboards)
-				regions = NEClipboard.GetStrings();
+				regions = NEClipboard.Strings;
 			else
 				regions = GetRegions(dialogResult.AggregateScope).Select((region, index) => GetRegionString(dialogResult.RemoveSelection, dialogResult.TrimWhitespace, region, Selections[index])).ToList(); ;
 			var sels = GetSelectionStrings();

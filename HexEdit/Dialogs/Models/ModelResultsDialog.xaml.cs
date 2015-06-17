@@ -118,12 +118,12 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			var values = results.Selected.Select(item => item.Value).ToList();
 			if (values.Count == 0)
 				return;
-			NEClipboard.SetStrings(values);
+			NEClipboard.Strings = values;
 		}
 
 		void PasteValues(object sender, RoutedEventArgs e)
 		{
-			var values = NEClipboard.GetStrings();
+			var values = NEClipboard.Strings;
 			Replace(results.Selected.ToList(), values);
 		}
 

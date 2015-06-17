@@ -19,13 +19,6 @@
     <Compile Include="About\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Clipboard\ClipboardWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Clipboard\ClipboardWindow.xaml.cs">
-      <DependentUpon>ClipboardWindow.xaml</DependentUpon>
-    </Compile>
     <Page Include="Controls\AutoCompleteTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

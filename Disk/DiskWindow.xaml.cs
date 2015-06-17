@@ -86,8 +86,8 @@ namespace NeoEdit.Disk
 		{
 			if ((e.Key == Key.V) && (controlDown))
 			{
-				var files = NEClipboard.GetStrings();
-				if (files != null)
+				var files = NEClipboard.Strings;
+				if (files.Count != 0)
 				{
 					location.Text = files.First();
 					location.CaretIndex = location.Text.Length;
@@ -502,8 +502,8 @@ namespace NeoEdit.Disk
 
 		internal void Command_Select_AddCopiedCut()
 		{
-			var files = NEClipboard.GetStrings();
-			if ((files == null) || (files.Count == 0))
+			var files = NEClipboard.Strings;
+			if (files.Count == 0)
 				return;
 
 			Selected.Clear();

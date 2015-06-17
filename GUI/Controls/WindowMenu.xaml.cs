@@ -3,7 +3,6 @@
 	enum WindowCommand
 	{
 		None,
-		Window_Clipboard,
 		Window_Console,
 		Window_DBViewer,
 		Window_Disk,

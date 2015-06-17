@@ -440,7 +440,7 @@ namespace NeoEdit.TextEdit
 
 			var used = expression != null ? expression.Variables : new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
 			if ((used.Contains("c")) || (used.Contains("cl")))
-				c.AddRange(NEClipboard.GetStrings());
+				c.AddRange(NEClipboard.Strings);
 			var data = new Dictionary<string, List<object>>();
 			Parallel.ForEach(parallelDataActions, pair =>
 			{
@@ -969,8 +969,8 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
-			var files = NEClipboard.GetStrings();
-			if ((files == null) || (files.Count < 0))
+			var files = NEClipboard.Strings;
+			if (files.Count == 0)
 				return;
 
 			if ((files.Count > 5) && (new Message
@@ -1082,7 +1082,7 @@ namespace NeoEdit.TextEdit
 			if (StringsAreFiles(strs))
 				NEClipboard.SetFiles(strs, isCut);
 			else
-				NEClipboard.SetStrings(strs);
+				NEClipboard.Strings = strs;
 			if (isCut)
 				ReplaceSelections("");
 		}
@@ -1106,8 +1106,8 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_Paste(bool highlight)
 		{
-			var clipboardStrings = NEClipboard.GetStrings();
-			if ((clipboardStrings == null) || (clipboardStrings.Count == 0))
+			var clipboardStrings = NEClipboard.Strings;
+			if (clipboardStrings.Count == 0)
 				return;
 
 			if (clipboardStrings.Count == 1)
@@ -1308,7 +1308,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_SaveClipboards()
 		{
-			var clipboardStrings = NEClipboard.GetStrings();
+			var clipboardStrings = NEClipboard.Strings;
 			if (clipboardStrings.Count != Selections.Count)
 				throw new Exception("Clipboard count must match selection count.");
 
@@ -1842,7 +1842,7 @@ namespace NeoEdit.TextEdit
 			List<Coder.CodePage> clipboardCodePages = null;
 			if ((result.InputType == Coder.CodePage.Clipboard) || (result.OutputType == Coder.CodePage.Clipboard))
 			{
-				var clipboardStrings = NEClipboard.GetStrings();
+				var clipboardStrings = NEClipboard.Strings;
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard must match number of selections.");
 				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
@@ -1973,7 +1973,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Data_Copy_Length()
 		{
-			NEClipboard.SetStrings(Selections.Select(range => range.Length.ToString()).ToList());
+			NEClipboard.Strings = Selections.Select(range => range.Length.ToString()).ToList();
 		}
 
 		internal enum Command_MinMax_Type { String, Numeric, Length }
@@ -2005,7 +2005,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (gotoType == GotoType.Position)
 			{
-				NEClipboard.SetStrings(Selections.Select(range => range.Start.ToString() + (range.HasSelection ? "-" + range.End : "")).ToList());
+				NEClipboard.Strings = Selections.Select(range => range.Start.ToString() + (range.HasSelection ? "-" + range.End : "")).ToList();
 				return;
 			}
 
@@ -2013,12 +2013,12 @@ namespace NeoEdit.TextEdit
 			var lines = starts.Select(pos => Data.GetOffsetLine(pos)).ToList();
 			if (gotoType == GotoType.Line)
 			{
-				NEClipboard.SetStrings(lines.Select(pos => (pos + 1).ToString()).ToList());
+				NEClipboard.Strings = lines.Select(pos => (pos + 1).ToString()).ToList();
 				return;
 			}
 
 			var indexes = starts.Select((pos, line) => Data.GetOffsetIndex(pos, lines[line])).ToList();
-			NEClipboard.SetStrings(indexes.Select(pos => (pos + 1).ToString()).ToList());
+			NEClipboard.Strings = indexes.Select(pos => (pos + 1).ToString()).ToList();
 		}
 
 		internal RepeatDialog.Result Command_Data_Repeat_Dialog()
@@ -2176,7 +2176,7 @@ namespace NeoEdit.TextEdit
 			var codePageMinMaxValues = new Dictionary<Coder.CodePage, string> { { result.CodePage, "" } };
 			if (result.CodePage == Coder.CodePage.Clipboard)
 			{
-				var clipboardStrings = NEClipboard.GetStrings();
+				var clipboardStrings = NEClipboard.Strings;
 				if (clipboardStrings.Count != Selections.Count)
 					throw new Exception("Number of items on clipboard must match number of selections.");
 				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
@@ -2310,7 +2310,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Keys_Copy(int index)
 		{
-			NEClipboard.SetStrings(keysAndValues[index].ToList());
+			NEClipboard.Strings = keysAndValues[index].ToList();
 		}
 
 		internal void Command_Keys_HitsMisses(int index, bool hits)

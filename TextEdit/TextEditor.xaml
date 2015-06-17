@@ -3,7 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-	xmlns:guiClipboard="clr-namespace:NeoEdit.GUI.Clipboard;assembly=NeoEdit.GUI"
     xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	mc:Ignorable="d" Focusable="True" FocusVisualStyle="{x:Null}"
@@ -103,7 +102,7 @@
 				<TextBlock Text="Clipboards"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Path=(guiClipboard:ClipboardWindow.StringsCount), StringFormat=n0}" MinWidth="50"/>
+				<!--<TextBlock Text="{Binding Path=(guiClipboard:ClipboardWindow.StringsCount), StringFormat=n0}" MinWidth="50"/>-->
 			</StatusBarItem>
 
 			<Separator/>

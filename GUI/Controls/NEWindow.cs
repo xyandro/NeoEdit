@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows;
-using NeoEdit.GUI.Clipboard;
 
 namespace NeoEdit.GUI.Controls
 {
@@ -26,7 +25,6 @@ namespace NeoEdit.GUI.Controls
 		{
 			switch (command)
 			{
-				case WindowCommand.Window_Clipboard: ClipboardWindow.Show(); break;
 				case WindowCommand.Window_Console: Launcher.Static.LaunchConsole(); break;
 				case WindowCommand.Window_DBViewer: Launcher.Static.LaunchDBViewer(); break;
 				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(); break;
