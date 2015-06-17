@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.GUI.Controls;
 
@@ -95,11 +94,6 @@ namespace NeoEdit.Disk
 		{
 			DiskWindows.Add(diskWindow);
 			Active = diskWindow;
-		}
-
-		Label GetLabel(DiskWindow diskWindow)
-		{
-			return diskWindow.GetLabel();
 		}
 	}
 }

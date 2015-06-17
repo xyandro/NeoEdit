@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
@@ -15,6 +16,8 @@ namespace NeoEdit.TextView
 {
 	partial class TextViewer : IDisposable
 	{
+		[DepProp]
+		public string TabLabel { get { return UIHelper<TextViewer>.GetPropValue<string>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
 		public string FileName { get { return UIHelper<TextViewer>.GetPropValue<string>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
@@ -62,6 +65,8 @@ namespace NeoEdit.TextView
 		{
 			InitializeComponent();
 
+			SetBinding(UIHelper<TextViewer>.GetProperty(a => a.TabLabel), new Binding("FileName") { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"FileName([0])", Source = this });
+
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
 			data = _data;
@@ -74,11 +79,6 @@ namespace NeoEdit.TextView
 			canvas.Render += OnCanvasRender;
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
-		}
-
-		internal Label GetLabel()
-		{
-			return new Label { Padding = new Thickness(10, 2, 10, 2), Content = Path.GetFileName(FileName) };
 		}
 
 		public void Dispose()

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Common;
@@ -22,6 +21,8 @@ namespace NeoEdit.Disk
 
 	partial class DiskWindow
 	{
+		[DepProp]
+		string TabLabel { get { return UIHelper<DiskWindow>.GetPropValue<string>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
@@ -57,6 +58,11 @@ namespace NeoEdit.Disk
 
 
 			InitializeComponent();
+
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"[0] == '' ? 'Custom' : FileName([0])" };
+			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
+			SetBinding(UIHelper<DiskWindow>.GetProperty(a => a.TabLabel), multiBinding);
+
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => { location.Text = Location.FullName; };
 			location.PreviewKeyDown += LocationKeyDown;
@@ -599,15 +605,6 @@ namespace NeoEdit.Disk
 					break;
 				default: e.Handled = false; break;
 			}
-		}
-
-		internal Label GetLabel()
-		{
-			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"[0] == '' ? 'Custom' : FileName([0])" };
-			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
-			label.SetBinding(Label.ContentProperty, multiBinding);
-			return label;
 		}
 	}
 }

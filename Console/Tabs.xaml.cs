@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Controls;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Console
@@ -40,11 +39,6 @@ namespace NeoEdit.Console
 				case ConsoleCommand.File_New: Add(new Console()); break;
 				case ConsoleCommand.View_Tiles: View = View == Tabs<Console>.ViewType.Tiles ? Tabs<Console>.ViewType.Tabs : Tabs<Console>.ViewType.Tiles; break;
 			}
-		}
-
-		Label GetLabel(Console console)
-		{
-			return console.GetLabel();
 		}
 	}
 }

@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -24,8 +25,8 @@ namespace NeoEdit.GUI.Controls
 		public ItemType Active { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ViewType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
-
-		public Func<ItemType, Label> GetLabel { get; set; }
+		[DepProp]
+		public string TabLabelPath { get { return UIHelper<Tabs<ItemType>>.GetPropValue<string>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 
 		Dictionary<ItemType, Label> labels;
 		List<ItemType> itemOrder = new List<ItemType>();
@@ -59,16 +60,10 @@ namespace NeoEdit.GUI.Controls
 		{
 			Items = new ObservableCollection<ItemType>();
 			View = ViewType.Tabs;
-			GetLabel = DefaultGetLabel;
 			Background = Brushes.Gray;
 			Focusable = true;
 			AllowDrop = true;
 			DragOver += (s, e) => DoDragOver(s, e, null);
-		}
-
-		protected virtual Label DefaultGetLabel(ItemType item)
-		{
-			return new Label { Content = "Title" };
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
@@ -185,7 +180,8 @@ namespace NeoEdit.GUI.Controls
 
 		Label GetMovableLabel(ItemType item, bool tiled)
 		{
-			var label = labels[item] = GetLabel(item);
+			var label = new Label() { Padding = new Thickness(10, 2, 10, 2) };
+			label.SetBinding(Label.ContentProperty, new Binding(TabLabelPath) { Source = item });
 			label.Margin = new Thickness(0, 0, tiled ? 0 : 2, 1);
 			label.Background = item == Active ? Brushes.LightBlue : Brushes.LightGray;
 			label.AllowDrop = true;
@@ -197,6 +193,7 @@ namespace NeoEdit.GUI.Controls
 			};
 
 			label.DragOver += (s, e) => DoDragOver(s, e, item);
+			labels[item] = label;
 
 			return label;
 		}

@@ -25,6 +25,8 @@ namespace NeoEdit.HexEdit
 	partial class HexEditor
 	{
 		[DepProp]
+		public string TabLabel { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public string FileTitle { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string FileName { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
@@ -133,6 +135,11 @@ namespace NeoEdit.HexEdit
 		{
 			InitializeComponent();
 
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
+			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
+			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
+			SetBinding(UIHelper<HexEditor>.GetProperty(a => a.TabLabel), multiBinding);
+
 			undoRedo = new UndoRedo(b => IsModified = b);
 
 			localCallbacks = UIHelper<HexEditor>.GetLocalCallbacks(this);
@@ -153,16 +160,6 @@ namespace NeoEdit.HexEdit
 			undoRedo.SetModified(modified);
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
-		}
-
-		internal Label GetLabel()
-		{
-			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
-			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
-			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
-			label.SetBinding(Label.ContentProperty, multiBinding);
-			return label;
 		}
 
 		internal bool CanClose()

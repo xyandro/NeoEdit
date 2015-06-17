@@ -179,11 +179,6 @@ namespace NeoEdit.TextView
 			}));
 		}
 
-		Label GetLabel(TextViewer textViewer)
-		{
-			return textViewer.GetLabel();
-		}
-
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);

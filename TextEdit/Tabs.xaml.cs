@@ -396,13 +396,6 @@ namespace NeoEdit.TextEdit
 				Close();
 		}
 
-		Label GetLabel(TextEditor textEditor)
-		{
-			var label = textEditor.GetLabel();
-			label.Drop += TextEditTabs_Drop;
-			return label;
-		}
-
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			if (macroPlaying != null)

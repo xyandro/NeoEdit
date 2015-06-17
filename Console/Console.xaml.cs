@@ -18,6 +18,8 @@ namespace NeoEdit.Console
 	public partial class Console
 	{
 		[DepProp]
+		string TabLabel { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
+		[DepProp]
 		string Location { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
 		[DepProp(Default = "")]
 		string Command { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
@@ -53,6 +55,8 @@ namespace NeoEdit.Console
 		public Console(string path = null)
 		{
 			InitializeComponent();
+
+			SetBinding(UIHelper<Console>.GetProperty(a => a.TabLabel), new Binding("Location") { Source = this, Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"FileName([0])" });
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
@@ -437,13 +441,6 @@ namespace NeoEdit.Console
 				Lines.Add(new Line(Line.LineType.Command).Finish());
 				Lines.Add(new Line("Program completed.", Line.LineType.Command).Finish());
 			});
-		}
-
-		internal Label GetLabel()
-		{
-			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
-			label.SetBinding(Label.ContentProperty, new Binding("Location") { Source = this, Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"FileName([0])" });
-			return label;
 		}
 
 		void OnCanvasRender(object sender, DrawingContext dc)

@@ -83,11 +83,6 @@ namespace NeoEdit.HexEdit
 			Create(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName), createNew: createNew);
 		}
 
-		Label GetLabel(HexEditor hexEditor)
-		{
-			return hexEditor.GetLabel();
-		}
-
 		void Command_File_New(bool newWindow)
 		{
 			Create(new MemoryBinaryData(), createNew: newWindow, hexEditTabs: newWindow ? null : this);

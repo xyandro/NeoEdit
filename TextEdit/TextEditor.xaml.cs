@@ -49,6 +49,8 @@ namespace NeoEdit.TextEdit
 		readonly UndoRedo undoRedo;
 
 		[DepProp]
+		public string TabLabel { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public string FileName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsModified { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -164,6 +166,8 @@ namespace NeoEdit.TextEdit
 			InitializeComponent();
 			bookmarks.Width = Font.lineHeight;
 
+			SetupTabLabel();
+
 			ShareKeys = ShareClipboard = true;
 			SetupStaticOrLocalData();
 			SetupDropAccept();
@@ -197,6 +201,14 @@ namespace NeoEdit.TextEdit
 				EnsureVisible();
 				canvasRenderTimer.Start();
 			};
+		}
+
+		void SetupTabLabel()
+		{
+			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
+			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
+			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
+			SetBinding(UIHelper<TextEditor>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
 		void SetupStaticOrLocalData()
@@ -272,16 +284,6 @@ namespace NeoEdit.TextEdit
 			var index = Data.GetIndexFromColumn(line, Math.Max(0, column - 1), true);
 			Selections.Add(new Range(Data.GetOffset(line, index)));
 
-		}
-
-		internal Label GetLabel()
-		{
-			var label = new Label { Padding = new Thickness(10, 2, 10, 2) };
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
-			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
-			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
-			label.SetBinding(Label.ContentProperty, multiBinding);
-			return label;
 		}
 
 		DateTime fileLastWrite;
