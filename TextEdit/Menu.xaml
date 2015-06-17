@@ -51,6 +51,8 @@
 		<textEdit:TextEditMenuItem Header="Ne_xt Bookmark" CommandEnum="Edit_NextBookmark"/>
 		<textEdit:TextEditMenuItem Header="Previous Boo_kmark" CommandEnum="Edit_PreviousBookmark"/>
 		<textEdit:TextEditMenuItem Header="Cle_ar Bookmarks" CommandEnum="Edit_ClearBookmarks"/>
+		<Separator/>
+		<MenuItem Header="S_hare Clipboard" IsCheckable="True" IsChecked="{Binding Parent.Active.ShareClipboard, ElementName=self, Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Files_Open"/>

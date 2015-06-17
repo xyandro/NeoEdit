@@ -15,13 +15,15 @@ namespace NeoEdit.Common
 		public static event ClipboardChangedDelegate ClipboardChanged;
 
 		public static object Data { get; private set; }
+		public static string Text { get; private set; }
+		public static bool? IsCut { get; private set; }
+		public static object Extra { get; private set; }
+
 		public static List<string> Strings
 		{
 			get { return Data as List<string> ?? (Text != null ? new List<string> { Text } : new List<string>()); }
 			set { Set(value, String.Join(" ", value)); }
 		}
-		public static string Text { get; private set; }
-		public static bool? IsCut { get; private set; }
 
 		static void SetClipboard(DataObject dataObj)
 		{
@@ -31,22 +33,27 @@ namespace NeoEdit.Common
 				ClipboardChanged();
 		}
 
-		public static void Set(object data, string text)
+		public static void Set(object data, string text = null, object extra = null)
 		{
+			if (String.IsNullOrWhiteSpace(text))
+				text = data.ToString();
+
 			Data = data;
 			Text = text;
 			IsCut = null;
+			Extra = extra;
 
 			var dataObj = new DataObject();
 			dataObj.SetText(text);
 			SetClipboard(dataObj);
 		}
 
-		public static void SetFiles(IEnumerable<string> files, bool isCut)
+		public static void SetFiles(IEnumerable<string> files, bool isCut, object extra = null)
 		{
 			Data = files.ToList();
 			Text = String.Join(" ", files.Select(file => String.Format("\"{0}\"", file)));
 			IsCut = isCut;
+			Extra = extra;
 
 			var dataObj = new DataObject();
 
@@ -69,6 +76,7 @@ namespace NeoEdit.Common
 
 			Data = Text = dataObj.GetData(typeof(string)) as string;
 			IsCut = null;
+			Extra = null;
 
 			var dropList = Clipboard.GetFileDropList();
 			if ((dropList != null) && (dropList.Count != 0))
