@@ -23,7 +23,7 @@
 					<Style.Triggers>
 						<DataTrigger Value="True">
 							<DataTrigger.Binding>
-								<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="[0] == [1]">
+								<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="[0] == [1]">
 									<Binding/>
 									<Binding Path="ModelDataVM.Default" ElementName="self"/>
 								</MultiBinding>

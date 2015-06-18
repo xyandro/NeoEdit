@@ -36,7 +36,7 @@
 		<Label Grid.Row="2" Grid.Column="0" Content="Value(s):" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
 		<Label Grid.Row="2" Grid.Column="1">
 			<Label.Content>
-				<MultiBinding Converter="{guiConverters:ExpressionResultListConverter}" ConverterParameter="System.Int32">
+				<MultiBinding Converter="{guiConverters:NEExpressionResultListConverter}" ConverterParameter="System.Int32">
 					<Binding Path="Expression" ElementName="self"/>
 					<Binding Path="ExpressionData" ElementName="self"/>
 				</MultiBinding>

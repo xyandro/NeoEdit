@@ -190,7 +190,7 @@
 				<Style TargetType="MenuItem">
 					<Setter Property="IsChecked">
 						<Setter.Value>
-							<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="[0] == 'Content_Type_' + [1]">
+							<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="[0] == 'Content_Type_' + [1]">
 								<Binding Path="CommandEnum" RelativeSource="{RelativeSource Self}"/>
 								<Binding Path="Parent.Active.ContentType" ElementName="self"/>
 							</MultiBinding>
@@ -395,7 +395,7 @@
 				<Style TargetType="MenuItem">
 					<Setter Property="IsChecked">
 						<Setter.Value>
-							<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="[0] == 'View_Highlighting_' + [1]">
+							<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="[0] == 'View_Highlighting_' + [1]">
 								<Binding Path="CommandEnum" RelativeSource="{RelativeSource Self}"/>
 								<Binding Path="Parent.Active.HighlightType" ElementName="self"/>
 							</MultiBinding>
@@ -409,7 +409,7 @@
 			<textEdit:TextEditMenuItem Header="C_++" CommandEnum="View_Highlighting_CPlusPlus"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='[0] == \'Tiles\''}"/>
+		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] == \'Tiles\''}"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>

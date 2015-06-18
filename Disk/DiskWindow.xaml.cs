@@ -12,6 +12,7 @@ using NeoEdit.Disk.Dialogs;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Controls.ItemGridControl;
+using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 
@@ -59,7 +60,7 @@ namespace NeoEdit.Disk
 
 			InitializeComponent();
 
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"[0] == '' ? 'Custom' : FileName([0])" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"[0] == '' ? 'Custom' : FileName([0])" };
 			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
 			SetBinding(UIHelper<DiskWindow>.GetProperty(a => a.TabLabel), multiBinding);
 

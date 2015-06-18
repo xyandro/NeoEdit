@@ -22,6 +22,7 @@ using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 using NeoEdit.TextEdit.Content;
@@ -205,7 +206,7 @@ namespace NeoEdit.TextEdit
 
 		void SetupTabLabel()
 		{
-			var multiBinding = new MultiBinding { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
 			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
 			SetBinding(UIHelper<TextEditor>.GetProperty(a => a.TabLabel), multiBinding);

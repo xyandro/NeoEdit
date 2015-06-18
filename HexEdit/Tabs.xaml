@@ -7,7 +7,7 @@
 	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
 
 	<Window.Title>
-		<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="StrFormat('{0}{1} - NeoEdit Hex Editor', [0], [1])">
+		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="StrFormat('{0}{1} - NeoEdit Hex Editor', [0], [1])">
 			<Binding Path="Active.FileTitle" ElementName="self"/>
 			<Binding Path="Active.FileName" ElementName="self"/>
 		</MultiBinding>

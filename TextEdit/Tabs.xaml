@@ -8,7 +8,7 @@
 
     <Window.Title>
 		<!--A simple Binding doesn't give any title if [0] blank-->
-		<MultiBinding Converter="{guiConverters:ExpressionConverter}" ConverterParameter="StrFormat('{0} - NeoEdit Text Editor', [0])">
+		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="StrFormat('{0} - NeoEdit Text Editor', [0])">
 			<Binding Path="Active.FileName" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>

@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.Console
@@ -56,7 +57,7 @@ namespace NeoEdit.Console
 		{
 			InitializeComponent();
 
-			SetBinding(UIHelper<Console>.GetProperty(a => a.TabLabel), new Binding("Location") { Source = this, Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"FileName([0])" });
+			SetBinding(UIHelper<Console>.GetProperty(a => a.TabLabel), new Binding("Location") { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])" });
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 

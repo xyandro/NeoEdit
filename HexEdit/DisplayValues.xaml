@@ -44,7 +44,7 @@
 			<!--UnsignedLE-->
 			<RowDefinition>
 				<RowDefinition.Height>
-					<MultiBinding Converter="{guiConverters:ExpressionConverter}">
+					<MultiBinding Converter="{guiConverters:NEExpressionConverter}">
 						<Binding Path="ShowLE" ElementName="self"/>
 						<Binding Path="ShowInt" ElementName="self"/>
 					</MultiBinding>
@@ -53,7 +53,7 @@
 			<!--SignedLE-->
 			<RowDefinition>
 				<RowDefinition.Height>
-					<MultiBinding Converter="{guiConverters:ExpressionConverter}">
+					<MultiBinding Converter="{guiConverters:NEExpressionConverter}">
 						<Binding Path="ShowLE" ElementName="self"/>
 						<Binding Path="ShowInt" ElementName="self"/>
 					</MultiBinding>
@@ -62,7 +62,7 @@
 			<!--UnsignedBE-->
 			<RowDefinition>
 				<RowDefinition.Height>
-					<MultiBinding Converter="{guiConverters:ExpressionConverter}">
+					<MultiBinding Converter="{guiConverters:NEExpressionConverter}">
 						<Binding Path="ShowBE" ElementName="self"/>
 						<Binding Path="ShowInt" ElementName="self"/>
 					</MultiBinding>
@@ -71,7 +71,7 @@
 			<!--SignedBE-->
 			<RowDefinition>
 				<RowDefinition.Height>
-					<MultiBinding Converter="{guiConverters:ExpressionConverter}">
+					<MultiBinding Converter="{guiConverters:NEExpressionConverter}">
 						<Binding Path="ShowBE" ElementName="self"/>
 						<Binding Path="ShowInt" ElementName="self"/>
 					</MultiBinding>
@@ -104,13 +104,13 @@
 		<hexEdit:DisplayValue Grid.Row="3" Grid.Column="4" CodePage="Int64BE"/>
 	</Grid>
 
-	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowFloat, ElementName=self, Converter={guiConverters:ExpressionConverter}}">
+	<StackPanel Orientation="Horizontal" Visibility="{Binding ShowFloat, ElementName=self, Converter={guiConverters:NEExpressionConverter}}">
 		<Label Content="Float:"/>
 		<hexEdit:DisplayValue CodePage="Single"/>
 		<hexEdit:DisplayValue CodePage="Double"/>
 	</StackPanel>
 
-	<Grid Name="strings" Visibility="{Binding ShowStr, ElementName=self, Converter={guiConverters:ExpressionConverter}}">
+	<Grid Name="strings" Visibility="{Binding ShowStr, ElementName=self, Converter={guiConverters:NEExpressionConverter}}">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="*"/>

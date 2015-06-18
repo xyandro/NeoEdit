@@ -8,13 +8,13 @@ using NeoEdit.Common.Expressions;
 
 namespace NeoEdit.GUI.Converters
 {
-	public class ExpressionResultListConverter : MarkupExtension, IMultiValueConverter
+	public class NEExpressionResultListConverter : MarkupExtension, IMultiValueConverter
 	{
-		static ExpressionResultListConverter converter;
+		static NEExpressionResultListConverter converter;
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (converter == null)
-				converter = new ExpressionResultListConverter();
+				converter = new NEExpressionResultListConverter();
 			return converter;
 		}
 

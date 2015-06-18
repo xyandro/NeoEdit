@@ -9,13 +9,13 @@ using NeoEdit.Common.Expressions;
 
 namespace NeoEdit.GUI.Converters
 {
-	public class ExpressionConverter : MarkupExtension, IMultiValueConverter, IValueConverter
+	public class NEExpressionConverter : MarkupExtension, IMultiValueConverter, IValueConverter
 	{
-		static ExpressionConverter converter;
+		static NEExpressionConverter converter;
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (converter == null)
-				converter = new ExpressionConverter();
+				converter = new NEExpressionConverter();
 			return converter;
 		}
 

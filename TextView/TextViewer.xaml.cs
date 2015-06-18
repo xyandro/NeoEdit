@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 using NeoEdit.TextView.Dialogs;
@@ -65,7 +66,7 @@ namespace NeoEdit.TextView
 		{
 			InitializeComponent();
 
-			SetBinding(UIHelper<TextViewer>.GetProperty(a => a.TabLabel), new Binding("FileName") { Converter = new NeoEdit.GUI.Converters.ExpressionConverter(), ConverterParameter = @"FileName([0])", Source = this });
+			SetBinding(UIHelper<TextViewer>.GetProperty(a => a.TabLabel), new Binding("FileName") { Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])", Source = this });
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 

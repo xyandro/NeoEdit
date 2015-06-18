@@ -27,7 +27,7 @@
 		<TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Type:" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:ExpressionConverter}, ConverterParameter='![0]'}">
+		<StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}">
 			<RadioButton GroupName="repeatType" Content="_Number" IsChecked="{Binding RepeatType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Number}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 			<RadioButton GroupName="repeatType" Content="_Condition" IsChecked="{Binding RepeatType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Condition}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 		</StackPanel>
