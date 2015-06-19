@@ -447,6 +447,7 @@ namespace NeoEdit.TextEdit
 			var strs = sels.Select(range => GetString(range)).ToList();
 			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? (int?)keysHash[str] : null).ToList();
 			var c = new List<string>(); // Have to declare this here because we need apartment state STA
+			var keysAndValues = this.keysAndValues; // Can't access DependencyProperties from other threads; grab a copy
 
 			var parallelDataActions = new Dictionary<HashSet<string>, Action<HashSet<string>, Action<string, List<object>>>>();
 			parallelDataActions.Add(new HashSet<string> { "x" }, (items, addData) => addData("x", InterpretValues(strs)));
