@@ -446,7 +446,7 @@ namespace NeoEdit.TextEdit
 			var sels = Selections.Take(count ?? Selections.Count).ToList();
 			var strs = sels.Select(range => GetString(range)).ToList();
 			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? (int?)keysHash[str] : null).ToList();
-			var c = new List<string>(); // Have to declare this here because we need apartment state STA
+			var Clipboard = this.Clipboard; // Can't access DependencyProperties from other threads; grab a copy
 			var keysAndValues = this.keysAndValues; // Can't access DependencyProperties from other threads; grab a copy
 
 			var parallelDataActions = new Dictionary<HashSet<string>, Action<HashSet<string>, Action<string, List<object>>>>();
@@ -455,8 +455,8 @@ namespace NeoEdit.TextEdit
 			parallelDataActions.Add(new HashSet<string> { "n" }, (items, addData) => addData("n", Enumerable.Repeat(sels.Count, sels.Count).Cast<object>().ToList()));
 			parallelDataActions.Add(new HashSet<string> { "y" }, (items, addData) => addData("y", Enumerable.Range(1, sels.Count).Cast<object>().ToList()));
 			parallelDataActions.Add(new HashSet<string> { "z" }, (items, addData) => addData("z", Enumerable.Range(0, sels.Count).Cast<object>().ToList()));
-			parallelDataActions.Add(new HashSet<string> { "c" }, (items, addData) => addData("c", InterpretValues(c)));
-			parallelDataActions.Add(new HashSet<string> { "cl" }, (items, addData) => addData("cl", c.Select(str => str.Length).Cast<object>().ToList()));
+			parallelDataActions.Add(new HashSet<string> { "c" }, (items, addData) => addData("c", InterpretValues(Clipboard)));
+			parallelDataActions.Add(new HashSet<string> { "cl" }, (items, addData) => addData("cl", Clipboard.Select(str => str.Length).Cast<object>().ToList()));
 			parallelDataActions.Add(new HashSet<string> { "line", "col" }, (items, addData) =>
 			{
 				var lines = sels.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
@@ -492,8 +492,6 @@ namespace NeoEdit.TextEdit
 			}
 
 			var used = expression != null ? expression.Variables : new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
-			if ((used.Contains("c")) || (used.Contains("cl")))
-				c.AddRange(Clipboard);
 			var data = new Dictionary<string, List<object>>();
 			Parallel.ForEach(parallelDataActions, pair =>
 			{
