@@ -40,6 +40,7 @@
     <Compile Include="Controls\ItemGridControl\ItemGridTreeItem.cs" />
     <Compile Include="Controls\ItemGridControl\StringFormatConverter.cs" />
     <Compile Include="Controls\ModalDialog.cs" />
+    <Compile Include="Controls\MultiMenuItem.cs" />
     <Compile Include="Controls\NECommand.cs" />
     <Compile Include="Controls\NEWindow.cs" />
     <Page Include="Controls\NumericUpDown.xaml">

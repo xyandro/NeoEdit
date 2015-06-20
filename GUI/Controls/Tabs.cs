@@ -88,7 +88,7 @@ namespace NeoEdit.GUI.Controls
 		{
 			foreach (var data in Data)
 			{
-				var newValue = Active.Contains(data.Item);
+				var newValue = (Active != null) && (Active.Contains(data.Item));
 				if (data.Active == newValue)
 					continue;
 				data.Active = newValue;
@@ -113,6 +113,8 @@ namespace NeoEdit.GUI.Controls
 			if (!controlDown)
 				item.ItemOrder = ++itemOrder;
 
+			UpdateActive();
+
 			Dispatcher.BeginInvoke((Action)(() =>
 			{
 				UpdateLayout();
@@ -128,7 +130,9 @@ namespace NeoEdit.GUI.Controls
 
 		void UpdateTopMost()
 		{
-			var item = Data.Where(itemData => itemData.Active).OrderByDescending(itemData => itemData.ItemOrder).FirstOrDefault();
+			var item = Data.Where(itemData => (itemData.Active) && (itemData.Item == TopMost)).FirstOrDefault();
+			if (item == null)
+				item = Data.Where(itemData => itemData.Active).OrderByDescending(itemData => itemData.ItemOrder).FirstOrDefault();
 			if (item == null)
 				item = Data.OrderByDescending(itemData => itemData.ItemOrder).FirstOrDefault();
 			if (item == null)
@@ -165,7 +169,11 @@ namespace NeoEdit.GUI.Controls
 		{
 			base.OnPreviewKeyUp(e);
 			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
-				TopMostChanged();
+			{
+				var data = Data.Where(itemData => itemData.Item == TopMost).FirstOrDefault();
+				if (data != null)
+					data.ItemOrder = ++itemOrder;
+			}
 		}
 
 		void MovePrev()

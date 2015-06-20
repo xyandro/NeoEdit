@@ -751,14 +751,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Data_Aggregate: Command_Data_Aggregate(dialogResult as AggregateDialog.Result); break;
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
-				case TextEditCommand.Content_Type_None: ContentType = Parser.ParserType.None; break;
-				case TextEditCommand.Content_Type_Balanced: ContentType = Parser.ParserType.Balanced; break;
-				case TextEditCommand.Content_Type_CSharp: ContentType = Parser.ParserType.CSharp; break;
-				case TextEditCommand.Content_Type_CSV: ContentType = Parser.ParserType.CSV; break;
-				case TextEditCommand.Content_Type_HTML: ContentType = Parser.ParserType.HTML; break;
-				case TextEditCommand.Content_Type_JSON: ContentType = Parser.ParserType.JSON; break;
-				case TextEditCommand.Content_Type_TSV: ContentType = Parser.ParserType.TSV; break;
-				case TextEditCommand.Content_Type_XML: ContentType = Parser.ParserType.XML; break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
@@ -888,9 +880,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_ClearRegions: Command_Region_ClearRegions(); break;
 				case TextEditCommand.Region_LimitToSelection: Command_Region_LimitToSelection(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
-				case TextEditCommand.View_Highlighting_None: HighlightType = Highlighting.HighlightingType.None; break;
-				case TextEditCommand.View_Highlighting_CSharp: HighlightType = Highlighting.HighlightingType.CSharp; break;
-				case TextEditCommand.View_Highlighting_CPlusPlus: HighlightType = Highlighting.HighlightingType.CPlusPlus; break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
 

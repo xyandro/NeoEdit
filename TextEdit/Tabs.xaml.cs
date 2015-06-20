@@ -26,7 +26,9 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public ObservableCollection<TextEditor> TextEditors { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextEditor Active { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditor>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<TextEditor> Active { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public TextEditor TopMost { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditor>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public Tabs.ViewType View { get { return UIHelper<TextEditTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 
@@ -101,8 +103,8 @@ namespace NeoEdit.TextEdit
 
 		OpenFileDialogResult Command_File_Open_Dialog(string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (Active != null))
-				initialDirectory = Path.GetDirectoryName(Active.FileName);
+			if ((initialDirectory == null) && (TopMost != null))
+				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
@@ -286,11 +288,11 @@ namespace NeoEdit.TextEdit
 			Action startNext = null;
 			startNext = () =>
 			{
-				if ((Active == null) || (--count < 0))
+				if ((TopMost == null) || (--count < 0))
 					return;
 
 				if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.EvaluateRow<bool>(Active.GetExpressionData(expression: expression), 0))
+					if (!expression.EvaluateRow<bool>(TopMost.GetExpressionData(expression: expression), 0))
 						return;
 
 				macro.Play(this, playing => macroPlaying = playing, startNext);
@@ -301,17 +303,17 @@ namespace NeoEdit.TextEdit
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			var answer = Message.OptionsEnum.None;
-			var active = Active;
+			var active = TopMost;
 			foreach (var textEditor in TextEditors)
 			{
-				Active = textEditor;
+				TopMost = textEditor;
 				if (!textEditor.CanClose(ref answer))
 				{
 					e.Cancel = true;
 					return;
 				}
 			}
-			Active = active;
+			TopMost = active;
 			base.OnClosing(e);
 		}
 
@@ -357,7 +359,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
 				case TextEditCommand.Macro_Open: dialogResult = Command_File_Open_Dialog(macroDirectory); break;
-				default: return Active == null ? true : Active.GetDialogResult(command, out dialogResult);
+				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult);
 			}
 
 			return dialogResult != null;
@@ -376,17 +378,17 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
 			}
 
-			if (Active != null)
-				Active.HandleCommand(command, shiftDown, dialogResult);
+			foreach (var active in Active)
+				active.HandleCommand(command, shiftDown, dialogResult);
 		}
 
 		void Add(TextEditor textEditor)
 		{
-			if ((!textEditor.Empty()) && (Active != null) && (Active.Empty()))
-				TextEditors[TextEditors.IndexOf(Active)] = textEditor;
+			if ((!textEditor.Empty()) && (TopMost != null) && (TopMost.Empty()))
+				TextEditors[TextEditors.IndexOf(TopMost)] = textEditor;
 			else
 				TextEditors.Add(textEditor);
-			Active = textEditor;
+			TopMost = textEditor;
 		}
 
 		internal void Remove(TextEditor textEditor, bool closeIfLast = false)
@@ -420,9 +422,10 @@ namespace NeoEdit.TextEdit
 
 		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
-			if (Active == null)
-				return false;
-			return Active.HandleKey(key, shiftDown, controlDown);
+			var result = true;
+			foreach (var active in Active)
+				result = active.HandleKey(key, shiftDown, controlDown) && result;
+			return result;
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -445,9 +448,10 @@ namespace NeoEdit.TextEdit
 
 		internal bool HandleText(string text)
 		{
-			if (Active == null)
-				return false;
-			return Active.HandleText(text);
+			var result = true;
+			foreach (var active in Active)
+				result = active.HandleText(text) && result;
+			return result;
 		}
 	}
 }
