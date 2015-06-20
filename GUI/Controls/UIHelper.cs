@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 
@@ -172,7 +173,7 @@ namespace NeoEdit.GUI.Controls
 			{
 				if (obj is T)
 					return obj as T;
-				obj = obj.Parent as FrameworkElement;
+				obj = VisualTreeHelper.GetParent(obj) as FrameworkElement;
 			}
 			return null;
 		}

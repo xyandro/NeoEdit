@@ -26,7 +26,7 @@
 
 		<console:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" TabLabelPath="TabLabel" VerticalAlignment="Stretch"
 			Items="{Binding Consoles, ElementName=self, Mode=TwoWay}"
-			Active="{Binding Active, ElementName=self, Mode=TwoWay}"
+			TopMost="{Binding Active, ElementName=self, Mode=TwoWay}"
 			View="{Binding View, ElementName=self, Mode=TwoWay}"
 		/>
 	</Grid>

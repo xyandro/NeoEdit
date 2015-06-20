@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using NeoEdit.GUI.Converters;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class Tabs<ItemType> : Grid where ItemType : FrameworkElement
+	public class Tabs<ItemType> : UserControl where ItemType : FrameworkElement
 	{
 		public enum ViewType
 		{
@@ -19,54 +20,129 @@ namespace NeoEdit.GUI.Controls
 			Tiles,
 		}
 
+		class ItemData : DependencyObject
+		{
+			[DepProp]
+			public ItemType Item { get { return UIHelper<ItemData>.GetPropValue<ItemType>(this); } set { UIHelper<ItemData>.SetPropValue(this, value); } }
+			[DepProp]
+			public int ItemOrder { get { return UIHelper<ItemData>.GetPropValue<int>(this); } set { UIHelper<ItemData>.SetPropValue(this, value); } }
+			[DepProp]
+			public bool Active { get { return UIHelper<ItemData>.GetPropValue<bool>(this); } set { UIHelper<ItemData>.SetPropValue(this, value); } }
+
+			static ItemData() { UIHelper<ItemData>.Register(); }
+		}
+
 		[DepProp]
 		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ItemType Active { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemType> Active { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		[DepProp]
+		public ItemType TopMost { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ViewType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public string TabLabelPath { get { return UIHelper<Tabs<ItemType>>.GetPropValue<string>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
-
-		Dictionary<ItemType, Label> labels;
-		List<ItemType> itemOrder = new List<ItemType>();
+		[DepProp]
+		ObservableCollection<ItemData> Data { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemData>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 
 		static Tabs()
 		{
 			UIHelper<Tabs<ItemType>>.Register();
-			UIHelper<Tabs<ItemType>>.AddCallback(a => a.View, (obj, o, n) => obj.Layout());
-			UIHelper<Tabs<ItemType>>.AddCallback(a => a.Active, (obj, o, n) => obj.ActiveChanged());
-			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.SetActive(e));
-			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.SetupOrdering());
-			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.Layout());
-			UIHelper<Tabs<ItemType>>.AddCoerce(a => a.Active, (obj, value) => (value == null) || ((obj.Items != null) && (obj.Items.Contains(value))) ? value : null);
+			UIHelper<Tabs<ItemType>>.AddCallback(a => a.TabLabelPath, (obj, o, n) => obj.SetupLayout());
+			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
+			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Active, (obj, s, e) => obj.ActiveChanged());
+			UIHelper<Tabs<ItemType>>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
+			UIHelper<Tabs<ItemType>>.AddCoerce(a => a.TopMost, (obj, value) => (value == null) || ((obj.Items != null) && (obj.Items.Contains(value))) ? value : null);
+		}
+
+		int itemOrder = 0;
+		public Tabs()
+		{
+			SetupLayout();
+
+			Data = new ObservableCollection<ItemData>();
+			Items = new ObservableCollection<ItemType>();
+			Active = new ObservableCollection<ItemType>();
+
+			View = ViewType.Tabs;
+			Focusable = true;
+			FocusVisualStyle = null;
+			AllowDrop = true;
+			Drop += (s, e) => OnDrop(e, null);
+		}
+
+		void ItemsChanged()
+		{
+			if (Items == null)
+				Data = new ObservableCollection<ItemData>();
+			else
+				Data = new ObservableCollection<ItemData>(Items.Distinct().Select(item => Data.FirstOrDefault(itemData => itemData.Item == item) ?? new ItemData { Item = item, ItemOrder = ++itemOrder }));
+
+			foreach (var itemData in Data)
+				EnhancedFocusManager.SetIsEnhancedFocusScope(itemData.Item, true);
+
+			UpdateActive();
 		}
 
 		void ActiveChanged()
 		{
-			Layout();
-			if (Active == null)
-				return;
-
-			Active.Focus();
-			if (!controlDown)
+			foreach (var data in Data)
 			{
-				itemOrder.Remove(Active);
-				itemOrder.Add(Active);
+				var newValue = Active.Contains(data.Item);
+				if (data.Active == newValue)
+					continue;
+				data.Active = newValue;
 			}
 		}
 
-		public Tabs()
+		void TopMostChanged()
 		{
-			Items = new ObservableCollection<ItemType>();
-			View = ViewType.Tabs;
-			Background = Brushes.Gray;
-			Focusable = true;
-			AllowDrop = true;
-			DragOver += (s, e) => DoDragOver(s, e, null);
+			var item = Data.FirstOrDefault(itemData => itemData.Item == TopMost);
+			if (item == null)
+			{
+				UpdateTopMost();
+				return;
+			}
+
+			if (!shiftDown)
+				foreach (var itemData in Data)
+					itemData.Active = false;
+
+			TopMost = item.Item;
+			item.Active = true;
+			if (!controlDown)
+				item.ItemOrder = ++itemOrder;
+
+			Dispatcher.BeginInvoke((Action)(() =>
+			{
+				UpdateLayout();
+				TopMost.Focus();
+			}));
+		}
+
+		void UpdateActive()
+		{
+			Active = new ObservableCollection<ItemType>(Data.Where(itemData => itemData.Active).Select(itemData => itemData.Item));
+			UpdateTopMost();
+		}
+
+		void UpdateTopMost()
+		{
+			var item = Data.Where(itemData => itemData.Active).OrderByDescending(itemData => itemData.ItemOrder).FirstOrDefault();
+			if (item == null)
+				item = Data.OrderByDescending(itemData => itemData.ItemOrder).FirstOrDefault();
+			if (item == null)
+			{
+				TopMost = null;
+				return;
+			}
+
+			item.Active = true;
+			TopMost = item.Item;
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
+		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
@@ -89,226 +165,214 @@ namespace NeoEdit.GUI.Controls
 		{
 			base.OnPreviewKeyUp(e);
 			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
-				ActiveChanged();
+				TopMostChanged();
 		}
 
 		void MovePrev()
 		{
-			var index = Items.IndexOf(Active) - 1;
+			var index = Items.IndexOf(TopMost) - 1;
 			if (index < 0)
 				index = Items.Count - 1;
 			if (index >= 0)
-				Active = Items[index];
+				TopMost = Items[index];
 		}
 
 		void MoveNext()
 		{
-			var index = Items.IndexOf(Active) + 1;
+			var index = Items.IndexOf(TopMost) + 1;
 			if (index >= Items.Count)
 				index = 0;
 			if (index < Items.Count)
-				Active = Items[index];
+				TopMost = Items[index];
 		}
 
 		void MoveTabOrder()
 		{
-			var current = itemOrder.IndexOf(Active);
+			var ordering = Data.OrderBy(itemData => itemData.ItemOrder).Select(itemData => itemData.Item).ToList();
+			var current = ordering.IndexOf(TopMost);
 			if (current == -1)
 				return;
 			--current;
 			if (current == -1)
-				current = itemOrder.Count - 1;
-			Active = itemOrder[current];
+				current = ordering.Count - 1;
+			TopMost = ordering[current];
 		}
 
-		void SetActive(NotifyCollectionChangedEventArgs e)
+		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
 		{
-			if (Items == null)
-			{
-				Active = null;
-				return;
-			}
-
-			if (e == null)
-			{
-				Active = Items.FirstOrDefault();
-				return;
-			}
-
-			if (Active == null)
-			{
-				Active = Items.FirstOrDefault();
-				return;
-			}
-
-			if (e.Action == NotifyCollectionChangedAction.Move)
-				return;
-			if (e.Action == NotifyCollectionChangedAction.Reset)
-			{
-				Active = null;
-				return;
-			}
-
-			if (e.OldItems == null)
-				return;
-			int index = e.OldItems.IndexOf(Active);
-			if (index == -1)
-				return;
-
-			index += e.OldStartingIndex;
-			index = Math.Min(index, Items.Count - 1);
-			if (index < 0)
-				Active = null;
-			else
-				Active = Items[index];
-		}
-
-		void SetupOrdering()
-		{
-			if (Items != null)
-				itemOrder = itemOrder.Where(item => Items.Contains(item)).Concat(Items).Distinct().ToList();
-		}
-
-		protected override void OnPreviewGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
-		{
-			base.OnPreviewGotKeyboardFocus(e);
-			var focus = e.NewFocus as DependencyObject;
+			base.OnMouseLeftButtonDown(e);
+			var source = e.OriginalSource as DependencyObject;
 			foreach (var item in Items)
-				if (item.IsAncestorOf(focus))
-					Active = item;
+				if (item.IsAncestorOf(source))
+					TopMost = item;
 		}
 
-		Label GetMovableLabel(ItemType item, bool tiled)
+		void OnDrop(DragEventArgs e, Label toLabel)
 		{
-			var label = new Label() { Padding = new Thickness(10, 2, 10, 2) };
-			label.SetBinding(Label.ContentProperty, new Binding(TabLabelPath) { Source = item });
-			label.Margin = new Thickness(0, 0, tiled ? 0 : 2, 1);
-			label.Background = item == Active ? Brushes.LightBlue : Brushes.LightGray;
-			label.AllowDrop = true;
-			label.MouseLeftButtonDown += (s, e) => Active = item;
-			label.MouseMove += (s, e) =>
+			e.Handled = true;
+
+			var fromLabel = e.Data.GetData(typeof(Label)) as Label;
+			if ((fromLabel == null) || (toLabel == fromLabel))
+				return;
+
+			var toData = toLabel == null ? null : toLabel.DataContext as ItemData;
+			var fromData = fromLabel.DataContext as ItemData;
+
+			var fromTabs = UIHelper.FindParent<Tabs<ItemType>>(fromData.Item);
+			if ((fromTabs == null) || ((fromTabs == this) && (toLabel == null)))
+				return;
+
+			var fromIndex = fromTabs.Data.IndexOf(fromData);
+			var toIndex = toLabel == null ? Items.Count : Data.IndexOf(toData);
+
+			fromTabs.Data.RemoveAt(fromIndex);
+			Data.Insert(toIndex, fromData);
+			Items = new ObservableCollection<ItemType>(Data.Select(itemData => itemData.Item));
+			if (fromTabs != this)
+				fromTabs.Items = new ObservableCollection<ItemType>(fromTabs.Data.Select(itemData => itemData.Item));
+		}
+
+		class AllItemsControl : ItemsControl
+		{
+			public AllItemsControl() { Focusable = false; }
+			protected override bool IsItemItsOwnContainerOverride(object item) { return false; }
+		}
+
+		class ColumnCountConverter : IValueConverter
+		{
+			public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+			{
+				var count = value as int?;
+				return count.HasValue ? (int)Math.Ceiling(Math.Sqrt(count.Value)) : 1;
+			}
+
+			public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
+		}
+
+		FrameworkElementFactory GetLabel(ViewType view)
+		{
+			var label = new FrameworkElementFactory(typeof(Label));
+			if (view == ViewType.Tiles)
+				label.SetValue(DockPanel.DockProperty, Dock.Top);
+			label.SetBinding(Label.ContentProperty, new Binding("Item." + TabLabelPath));
+			label.SetValue(Label.PaddingProperty, new Thickness(10, 2, 10, 2));
+			label.SetValue(Label.MarginProperty, new Thickness(0, 0, view == ViewType.Tabs ? 2 : 0, 1));
+
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [2] ? 'CadetBlue' : ([1] ? 'LightBlue' : 'LightGray')" };
+			multiBinding.Bindings.Add(new Binding("Item"));
+			multiBinding.Bindings.Add(new Binding("Active"));
+			multiBinding.Bindings.Add(new Binding("TopMost") { Source = this });
+			label.SetBinding(Label.BackgroundProperty, multiBinding);
+
+			label.SetValue(Label.AllowDropProperty, true);
+			label.AddHandler(Label.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = ((s as Label).DataContext as ItemData).Item));
+			label.AddHandler(Label.MouseMoveEvent, (MouseEventHandler)((s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
-					DragDrop.DoDragDrop(label, new DataObject(typeof(ItemType), item), DragDropEffects.Move);
-			};
+					DragDrop.DoDragDrop(s as Label, new DataObject(typeof(Label), s as Label), DragDropEffects.Move);
+			}));
 
-			label.DragOver += (s, e) => DoDragOver(s, e, item);
-			labels[item] = label;
+			label.AddHandler(Label.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as Label)));
 
 			return label;
 		}
 
-		void DoDragOver(object sender, DragEventArgs e, ItemType toItem)
+		void SetupLayout()
 		{
-			e.Handled = true;
-
-			var fromItem = e.Data.GetData(typeof(ItemType)) as ItemType;
-			if ((fromItem == null) || (toItem == fromItem))
-				return;
-
-			var fromTabs = UIHelper.FindParent<Tabs<ItemType>>(fromItem);
-			if ((fromTabs == null) || ((fromTabs == this) && (toItem == null)))
-				return;
-
-			var fromIndex = fromTabs.Items.IndexOf(fromItem);
-			var toIndex = toItem == null ? Items.Count : Items.IndexOf(toItem);
-
-			if (fromTabs == this)
+			var style = new Style();
 			{
-				// Only move tabs when they're in a place that won't immediately move back
-				var toLabel = labels[toItem];
-				var fromLabel = fromTabs.labels[fromItem];
-
-				var pos = e.GetPosition(toLabel);
-				if (fromIndex < toIndex)
+				var tabsTemplate = new ControlTemplate();
 				{
-					if (pos.X < toLabel.ActualWidth - fromLabel.ActualWidth)
-						return;
+					var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
+
+					{
+						var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
+						itemsControl.SetValue(DockPanel.DockProperty, Dock.Top);
+						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding("Data") { Source = this });
+						itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, new DataTemplate { VisualTree = GetLabel(ViewType.Tabs) });
+
+						{
+							var itemsPanel = new ItemsPanelTemplate();
+							{
+								var stackPanel = new FrameworkElementFactory(typeof(StackPanel));
+								stackPanel.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
+								itemsPanel.VisualTree = stackPanel;
+							}
+							itemsControl.SetValue(AllItemsControl.ItemsPanelProperty, itemsPanel);
+						}
+						dockPanel.AppendChild(itemsControl);
+					}
+					{
+						var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
+						itemsControl.SetValue(DockPanel.DockProperty, Dock.Bottom);
+						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding("Data") { Source = this });
+						{
+							var itemTemplate = new DataTemplate();
+							{
+								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
+								contentControl.SetBinding(ContentControl.ContentProperty, new Binding("Item"));
+								var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [1] ? True : False" };
+								multiBinding.Bindings.Add(new Binding("Item"));
+								multiBinding.Bindings.Add(new Binding("TopMost") { Source = this });
+								contentControl.SetBinding(ContentControl.VisibilityProperty, multiBinding);
+								contentControl.SetValue(ContentControl.FocusVisualStyleProperty, null);
+								itemTemplate.VisualTree = contentControl;
+							}
+							itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, itemTemplate);
+						}
+						itemsControl.SetValue(AllItemsControl.ItemsPanelProperty, new ItemsPanelTemplate { VisualTree = new FrameworkElementFactory(typeof(Grid)) });
+						dockPanel.AppendChild(itemsControl);
+					}
+					dockPanel.SetValue(Window.BackgroundProperty, Brushes.Gray);
+
+					tabsTemplate.VisualTree = dockPanel;
+
 				}
-				else
+
+				style.Setters.Add(new Setter(AllItemsControl.TemplateProperty, tabsTemplate));
+			}
+
+			{
+				var tilesTemplate = new ControlTemplate();
 				{
-					if (pos.X > fromLabel.ActualWidth)
-						return;
+					var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
+					itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding("Data") { Source = this });
+					{
+						var itemTemplate = new DataTemplate();
+						{
+							var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
+							dockPanel.SetValue(DockPanel.MarginProperty, new Thickness(0, 0, 2, 2));
+							dockPanel.AppendChild(GetLabel(ViewType.Tiles));
+							{
+								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
+								contentControl.SetValue(DockPanel.DockProperty, Dock.Bottom);
+								contentControl.SetBinding(ContentControl.ContentProperty, new Binding("Item"));
+								contentControl.SetValue(ContentControl.FocusVisualStyleProperty, null);
+								dockPanel.AppendChild(contentControl);
+							}
+							itemTemplate.VisualTree = dockPanel;
+						}
+						itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, itemTemplate);
+					}
+					{
+						var itemsPanel = new ItemsPanelTemplate();
+						{
+							var uniformGrid = new FrameworkElementFactory(typeof(UniformGrid));
+							uniformGrid.SetBinding(UniformGrid.ColumnsProperty, new Binding("Items.Count") { Source = this, Converter = new ColumnCountConverter() });
+							uniformGrid.SetValue(UniformGrid.MarginProperty, new Thickness(0, 0, -2, -2));
+							itemsPanel.VisualTree = uniformGrid;
+						}
+						itemsControl.SetValue(AllItemsControl.ItemsPanelProperty, itemsPanel);
+					}
+					tilesTemplate.VisualTree = itemsControl;
+					itemsControl.SetValue(Window.BackgroundProperty, Brushes.Gray);
 				}
+
+				var dataTrigger = new DataTrigger { Binding = new Binding("View") { Source = this }, Value = ViewType.Tiles };
+				dataTrigger.Setters.Add(new Setter(AllItemsControl.TemplateProperty, tilesTemplate));
+				style.Triggers.Add(dataTrigger);
 			}
-
-			fromTabs.Items.RemoveAt(fromIndex);
-			Items.Insert(toIndex, fromItem);
-			Active = fromItem;
-		}
-
-		void Layout()
-		{
-			Children.Clear();
-			RowDefinitions.Clear();
-			ColumnDefinitions.Clear();
-			labels = new Dictionary<ItemType, Label>();
-
-			if ((Items == null) || (Items.Count == 0))
-				return;
-
-			if (View == ViewType.Tiles)
-				LayoutTiles();
-			else
-				LayoutTabs();
-		}
-
-		void LayoutTiles()
-		{
-			const double border = 2;
-
-			var columns = (int)Math.Ceiling(Math.Sqrt(Items.Count));
-			var rows = (Items.Count + columns - 1) / columns;
-
-			for (var ctr = 0; ctr < columns; ++ctr)
-			{
-				if (ctr != 0)
-					ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(border) });
-				ColumnDefinitions.Add(new ColumnDefinition());
-			}
-
-			for (var ctr = 0; ctr < rows; ++ctr)
-			{
-				if (ctr != 0)
-					RowDefinitions.Add(new RowDefinition { Height = new GridLength(border) });
-				RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
-				RowDefinitions.Add(new RowDefinition());
-			}
-
-			int count = 0;
-			foreach (var item in Items)
-			{
-				var column = count % columns * 2;
-				var row = count / columns * 3;
-
-				var label = GetMovableLabel(item, true);
-				SetColumn(label, column);
-				SetRow(label, row);
-				Children.Add(label);
-
-				SetColumn(item, column);
-				SetRow(item, row + 1);
-				Children.Add(item);
-
-				++count;
-			}
-		}
-
-		void LayoutTabs()
-		{
-			ColumnDefinitions.Add(new ColumnDefinition());
-			RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
-			RowDefinitions.Add(new RowDefinition());
-
-			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
-			foreach (var item in Items)
-				stackPanel.Children.Add(GetMovableLabel(item, false));
-			SetRow(stackPanel, 0);
-			Children.Add(stackPanel);
-
-			SetRow(Active, 1);
-			SetColumn(Active, 0);
-			Children.Add(Active);
+			Style = style;
 		}
 	}
 }

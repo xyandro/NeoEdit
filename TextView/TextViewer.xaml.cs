@@ -272,12 +272,6 @@ namespace NeoEdit.TextView
 			return true;
 		}
 
-		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
-		{
-			base.OnPreviewMouseLeftButtonDown(e);
-			Focus();
-		}
-
 		internal bool HandleText(string text)
 		{
 			return false;

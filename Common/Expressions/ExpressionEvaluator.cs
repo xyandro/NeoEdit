@@ -65,7 +65,7 @@ namespace NeoEdit.Common.Expressions
 			return (T)Convert.ChangeType(val, typeof(T));
 		}
 
-		object OpByType(object val1, object val2, Func<bool, bool, object> boolFunc = null, Func<long, long, object> longFunc = null, Func<double, double, object> doubleFunc = null, Func<string, string, object> stringFunc = null)
+		object OpByType(object val1, object val2, Func<bool, bool, object> boolFunc = null, Func<long, long, object> longFunc = null, Func<double, double, object> doubleFunc = null, Func<string, string, object> stringFunc = null, Func<object, object, object> objFunc = null)
 		{
 			if ((val1 == null) && (val2 == null))
 				return null;
@@ -81,6 +81,8 @@ namespace NeoEdit.Common.Expressions
 				return doubleFunc(ToType<double>(val1), ToType<double>(val2));
 			else if ((longFunc != null) && ((IsIntType(type1)) || (IsIntType(type2))))
 				return longFunc(ToType<long>(val1), ToType<long>(val2));
+			else if (objFunc != null)
+				return objFunc(val1, val2);
 
 			throw new ArgumentException("Invalid operation");
 		}
@@ -146,10 +148,10 @@ namespace NeoEdit.Common.Expressions
 				case ">=": return OpByType(val1, val2, longFunc: (a, b) => a >= b, doubleFunc: (a, b) => a >= b, stringFunc: (a, b) => String.Compare(a, b) >= 0);
 				case "i>=": return OpByType(val1, val2, longFunc: (a, b) => a >= b, doubleFunc: (a, b) => a >= b, stringFunc: (a, b) => String.Compare(a, b, true) >= 0);
 				case "is": return val1 == null ? false : val1.GetType().Name == (val2 ?? "").ToString();
-				case "==": return OpByType(val1, val2, boolFunc: (a, b) => a == b, longFunc: (a, b) => a == b, doubleFunc: (a, b) => a == b, stringFunc: (a, b) => String.Compare(a, b) == 0);
-				case "i==": return OpByType(val1, val2, boolFunc: (a, b) => a == b, longFunc: (a, b) => a == b, doubleFunc: (a, b) => a == b, stringFunc: (a, b) => String.Compare(a, b, true) == 0);
-				case "!=": return OpByType(val1, val2, boolFunc: (a, b) => a != b, longFunc: (a, b) => a != b, doubleFunc: (a, b) => a != b, stringFunc: (a, b) => String.Compare(a, b) != 0);
-				case "i!=": return OpByType(val1, val2, boolFunc: (a, b) => a != b, longFunc: (a, b) => a != b, doubleFunc: (a, b) => a != b, stringFunc: (a, b) => String.Compare(a, b, true) != 0);
+				case "==": return OpByType(val1, val2, boolFunc: (a, b) => a == b, longFunc: (a, b) => a == b, doubleFunc: (a, b) => a == b, stringFunc: (a, b) => String.Compare(a, b) == 0, objFunc: (a, b) => a == b);
+				case "i==": return OpByType(val1, val2, boolFunc: (a, b) => a == b, longFunc: (a, b) => a == b, doubleFunc: (a, b) => a == b, stringFunc: (a, b) => String.Compare(a, b, true) == 0, objFunc: (a, b) => a == b);
+				case "!=": return OpByType(val1, val2, boolFunc: (a, b) => a != b, longFunc: (a, b) => a != b, doubleFunc: (a, b) => a != b, stringFunc: (a, b) => String.Compare(a, b) != 0, objFunc: (a, b) => a != b);
+				case "i!=": return OpByType(val1, val2, boolFunc: (a, b) => a != b, longFunc: (a, b) => a != b, doubleFunc: (a, b) => a != b, stringFunc: (a, b) => String.Compare(a, b, true) != 0, objFunc: (a, b) => a != b);
 				case "&": return ToType<long>(val1) & ToType<long>(val2);
 				case "^": return ToType<long>(val1) ^ ToType<long>(val2);
 				case "|": return ToType<long>(val1) | ToType<long>(val2);

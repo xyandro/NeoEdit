@@ -3476,12 +3476,6 @@ namespace NeoEdit.TextEdit
 			return builder.ToString();
 		}
 
-		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
-		{
-			base.OnPreviewMouseLeftButtonDown(e);
-			Focus();
-		}
-
 		internal bool Empty()
 		{
 			return (FileName == null) && (!IsModified) && (BeginOffset() == EndOffset());
