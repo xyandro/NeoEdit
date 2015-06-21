@@ -422,9 +422,9 @@ namespace NeoEdit.TextEdit
 
 		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
-			var result = true;
+			var result = false;
 			foreach (var active in Active)
-				result = active.HandleKey(key, shiftDown, controlDown) && result;
+				result = active.HandleKey(key, shiftDown, controlDown) || result;
 			return result;
 		}
 
@@ -448,9 +448,9 @@ namespace NeoEdit.TextEdit
 
 		internal bool HandleText(string text)
 		{
-			var result = true;
+			var result = false;
 			foreach (var active in Active)
-				result = active.HandleText(text) && result;
+				result = active.HandleText(text) || result;
 			return result;
 		}
 	}
