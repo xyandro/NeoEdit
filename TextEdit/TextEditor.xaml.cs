@@ -90,7 +90,7 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool ShareClipboard { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
-		TextEditTabs TabsParent { get { return UIHelper.FindParent<TextEditTabs>(this); } }
+		TextEditTabs TabsParent { get { return UIHelper.FindParent<TextEditTabs>(GetValue(Tabs.TabParentProperty) as Tabs); } }
 		Window WindowParent { get { return UIHelper.FindParent<Window>(this); } }
 
 		int xScrollViewportFloor { get { return (int)Math.Floor(xScroll.ViewportSize); } }

@@ -14,6 +14,8 @@ namespace NeoEdit.GUI.Controls
 {
 	public class Tabs<ItemType> : UserControl where ItemType : FrameworkElement
 	{
+		static public DependencyProperty TabParentProperty = DependencyProperty.RegisterAttached("TabParent", typeof(Tabs<ItemType>), typeof(Tabs<ItemType>));
+
 		public enum ViewType
 		{
 			Tabs,
@@ -79,7 +81,10 @@ namespace NeoEdit.GUI.Controls
 				Data = new ObservableCollection<ItemData>(Items.Distinct().Select(item => Data.FirstOrDefault(itemData => itemData.Item == item) ?? new ItemData { Item = item, ItemOrder = ++itemOrder }));
 
 			foreach (var itemData in Data)
+			{
 				EnhancedFocusManager.SetIsEnhancedFocusScope(itemData.Item, true);
+				itemData.Item.SetValue(TabParentProperty, this);
+			}
 
 			UpdateActive();
 		}
