@@ -563,6 +563,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoType.Line); break;
 				case TextEditCommand.Edit_GotoColumn: dialogResult = Command_Edit_Goto_Dialog(GotoType.Column); break;
 				case TextEditCommand.Edit_GotoPosition: dialogResult = Command_Edit_Goto_Dialog(GotoType.Position); break;
+				case TextEditCommand.Files_MakeAbsolute: dialogResult = Command_Files_MakeAbsolute_Dialog(); break;
 				case TextEditCommand.Files_GetUniqueNames: dialogResult = Command_Files_GetUniqueNames_Dialog(); break;
 				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
 				case TextEditCommand.Files_Set_WriteTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
@@ -678,6 +679,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
 				case TextEditCommand.Files_DragDrop: Command_Files_DragDrop(); break;
 				case TextEditCommand.Files_Simplify: Command_Files_Simplify(); break;
+				case TextEditCommand.Files_MakeAbsolute: Command_Files_MakeAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
 				case TextEditCommand.Files_GetUniqueNames: Command_Files_GetUniqueNames(dialogResult as GetUniqueNamesDialog.Result); break;
 				case TextEditCommand.Files_SanitizeNames: Command_Files_SanitizeNames(); break;
 				case TextEditCommand.Files_Get_Size: Command_Files_Get_Size(); break;
@@ -1419,6 +1421,17 @@ namespace NeoEdit.TextEdit
 		internal void Command_Files_Simplify()
 		{
 			ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
+		}
+
+		internal MakeAbsoluteDialog.Result Command_Files_MakeAbsolute_Dialog()
+		{
+			return MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10));
+		}
+
+		internal void Command_Files_MakeAbsolute(MakeAbsoluteDialog.Result result)
+		{
+			var results = GetExpressionResults<string>(result.Expression);
+			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == MakeAbsoluteDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
 		internal GetUniqueNamesDialog.Result Command_Files_GetUniqueNames_Dialog()
