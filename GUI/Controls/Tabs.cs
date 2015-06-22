@@ -70,6 +70,12 @@ namespace NeoEdit.GUI.Controls
 			Drop += (s, e) => OnDrop(e, null);
 		}
 
+		public void ShowActiveTabsDialog()
+		{
+			ActiveTabsDialog<ItemType>.Run(UIHelper.FindParent<Window>(this), Items, TabLabelPath);
+			UpdateTopMost();
+		}
+
 		void ItemsChanged()
 		{
 			if (Items == null)

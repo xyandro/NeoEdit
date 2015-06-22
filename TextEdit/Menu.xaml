@@ -393,6 +393,7 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] == \'Tiles\''}"/>
+		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>

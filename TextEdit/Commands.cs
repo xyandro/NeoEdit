@@ -253,6 +253,7 @@ namespace NeoEdit.TextEdit
 		Region_LimitToSelection,
 		Region_SelectEnclosingRegion,
 		View_Tiles,
+		View_ActiveTabs,
 		View_WordList,
 		[KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Shift)] Macro_QuickRecord,
 		[KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift)] Macro_QuickPlay,

@@ -19,6 +19,7 @@
     <Compile Include="About\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ActiveTabsDialog.cs" />
     <Page Include="Controls\AutoCompleteTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

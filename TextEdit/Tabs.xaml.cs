@@ -150,6 +150,11 @@ namespace NeoEdit.TextEdit
 			NEClipboard.Set(data, String.Join(" ", data));
 		}
 
+		void Command_View_ActiveTabs()
+		{
+			tabs.ShowActiveTabsDialog();
+		}
+
 		void Command_View_WordList()
 		{
 			var type = GetType();
@@ -383,6 +388,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_CopyAll: Command_Edit_CopyAll(); break;
 				case TextEditCommand.Macro_Open: Command_File_Open(dialogResult as OpenFileDialogResult); return;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
+				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
 			}
 
