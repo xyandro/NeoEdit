@@ -62,11 +62,17 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? Line { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int? LineMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? Column { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int? LineMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? Index { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int? ColumnMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int? ColumnMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int? IndexMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int? IndexMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int? PositionMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -2631,18 +2637,25 @@ namespace NeoEdit.TextEdit
 			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
 			if (!Selections.Any())
 			{
-				Line = Index = PositionMin = PositionMax = Column = null;
+				LineMin = LineMax = IndexMin = IndexMax = PositionMin = PositionMax = ColumnMin = ColumnMax = null;
 				return;
 			}
 
 			var range = Selections[visibleIndex];
-			var line = Data.GetOffsetLine(range.Cursor);
-			var index = Data.GetOffsetIndex(range.Cursor, line);
-			Line = line + 1;
-			Index = index + 1;
+			var lineMin = Data.GetOffsetLine(range.Start);
+			var lineMax = Data.GetOffsetLine(range.End);
+			var indexMin = Data.GetOffsetIndex(range.Start, lineMin);
+			var indexMax = Data.GetOffsetIndex(range.End, lineMax);
+			LineMin = lineMin + 1;
+			LineMax = lineMax + 1;
+			IndexMin = indexMin + 1;
+			IndexMax = indexMax + 1;
 			PositionMin = range.Start;
 			PositionMax = range.End;
-			Column = Data.GetColumnFromIndex(line, index) + 1;
+			ColumnMin = Data.GetColumnFromIndex(lineMin, indexMin) + 1;
+			ColumnMax = Data.GetColumnFromIndex(lineMax, indexMax) + 1;
+			var line = Data.GetOffsetLine(range.Cursor);
+			var index = Data.GetOffsetIndex(range.Cursor, line);
 			if (highlight)
 				yScrollValue = line - yScrollViewportFloor / 2;
 			yScrollValue = Math.Min(line, Math.Max(line - yScrollViewportFloor + 1, yScrollValue));

@@ -41,7 +41,14 @@
 				<TextBlock Text="Line"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Line, ElementName=self, StringFormat=n0}" MinWidth="50"/>
+				<TextBlock MinWidth="50">
+					<TextBlock.Text>
+						<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="{}StrFormat([0] == [1] ? '{0:n0}' : '{0:n0} - {1:n0}', [0], [1])">
+							<Binding Path="LineMin" ElementName="self"/>
+							<Binding Path="LineMax" ElementName="self"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
 			</StatusBarItem>
 
 			<Separator/>
@@ -50,7 +57,14 @@
 				<TextBlock Text="Col"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Column, ElementName=self, StringFormat=n0}" MinWidth="50"/>
+				<TextBlock MinWidth="30">
+					<TextBlock.Text>
+						<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="{}StrFormat([0] == [1] ? '{0:n0}' : '{0:n0} - {1:n0}', [0], [1])">
+							<Binding Path="ColumnMin" ElementName="self"/>
+							<Binding Path="ColumnMax" ElementName="self"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
 			</StatusBarItem>
 
 			<Separator/>
@@ -59,7 +73,14 @@
 				<TextBlock Text="Ch"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Index, ElementName=self, StringFormat=n0}" MinWidth="50"/>
+				<TextBlock MinWidth="30">
+					<TextBlock.Text>
+						<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="{}StrFormat([0] == [1] ? '{0:n0}' : '{0:n0} - {1:n0}', [0], [1])">
+							<Binding Path="IndexMin" ElementName="self"/>
+							<Binding Path="IndexMax" ElementName="self"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
 			</StatusBarItem>
 
 			<Separator/>
