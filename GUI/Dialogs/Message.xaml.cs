@@ -42,7 +42,7 @@ namespace NeoEdit.GUI.Dialogs
 			{ OptionsEnum.Yes, "_Yes" },
 			{ OptionsEnum.No, "_No" },
 			{ OptionsEnum.YesToAll, "Yes to _all" },
-			{ OptionsEnum.NoToAll, "No to all" },
+			{ OptionsEnum.NoToAll, "No to a_ll" },
 			{ OptionsEnum.Ok, "Ok" },
 			{ OptionsEnum.Cancel, "_Cancel" },
 		};
