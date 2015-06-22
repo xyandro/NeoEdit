@@ -63,19 +63,24 @@
 					<textEditDialogs:HelpItems.Items>
 						<textEditDialogs:HelpItem Name="x" Description="Selection"/>
 						<textEditDialogs:HelpItem Name="xl" Description="Selection length"/>
+						<textEditDialogs:HelpItem Name="xn" Description="Selection count"/>
+						<textEditDialogs:HelpItem Name="y" Description="Order (1-based)"/>
 						<textEditDialogs:HelpItem Name="c" Description="Clipboard"/>
 						<textEditDialogs:HelpItem Name="cl" Description="Clipboard length"/>
+						<textEditDialogs:HelpItem Name="cn" Description="Clipboard count"/>
+						<textEditDialogs:HelpItem Name="z" Description="Order (0-based)"/>
 						<textEditDialogs:HelpItem Name="k / v1-v9" Description="Keys/values"/>
 						<textEditDialogs:HelpItem Name="kl / v1l-v9l" Description="Keys/values length"/>
+						<textEditDialogs:HelpItem/>
+						<textEditDialogs:HelpItem/>
 						<textEditDialogs:HelpItem Name="rk / rv1-rv9" Description="Raw keys/values"/>
 						<textEditDialogs:HelpItem Name="rkl / rv1l-rv9l" Description="Raw keys/values length"/>
-						<textEditDialogs:HelpItem Name="y" Description="Order (1-based)"/>
-						<textEditDialogs:HelpItem Name="z" Description="Order (0-based)"/>
-						<textEditDialogs:HelpItem Name="n" Description="Count"/>
+						<textEditDialogs:HelpItem Name="rkn / rv1n-rv9n" Description="Raw keys/values count"/>
 						<textEditDialogs:HelpItem/>
 						<textEditDialogs:HelpItem Name="line" Description="Selection line"/>
 						<textEditDialogs:HelpItem Name="col" Description="Selection column"/>
 						<textEditDialogs:HelpItem Name="pos" Description="Selection position"/>
+						<textEditDialogs:HelpItem Name="f" Description="File name"/>
 					</textEditDialogs:HelpItems.Items>
 				</textEditDialogs:HelpItems>
 

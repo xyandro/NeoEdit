@@ -445,17 +445,22 @@ namespace NeoEdit.TextEdit
 			var sels = Selections.Take(count ?? Selections.Count).ToList();
 			var strs = sels.Select(range => GetString(range)).ToList();
 			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? (int?)keysHash[str] : null).ToList();
-			var Clipboard = this.Clipboard; // Can't access DependencyProperties from other threads; grab a copy
-			var keysAndValues = this.keysAndValues; // Can't access DependencyProperties from other threads; grab a copy
+
+			// Can't access DependencyProperties from other threads; grab a copy:
+			var FileName = this.FileName;
+			var Clipboard = this.Clipboard;
+			var keysAndValues = this.keysAndValues;
 
 			var parallelDataActions = new Dictionary<HashSet<string>, Action<HashSet<string>, Action<string, List<object>>>>();
+			parallelDataActions.Add(new HashSet<string> { "f" }, (items, addData) => addData("f", new List<object> { FileName }));
 			parallelDataActions.Add(new HashSet<string> { "x" }, (items, addData) => addData("x", InterpretValues(strs)));
 			parallelDataActions.Add(new HashSet<string> { "xl" }, (items, addData) => addData("xl", strs.Select(str => str.Length).Cast<object>().ToList()));
-			parallelDataActions.Add(new HashSet<string> { "n" }, (items, addData) => addData("n", Enumerable.Repeat(sels.Count, sels.Count).Cast<object>().ToList()));
+			parallelDataActions.Add(new HashSet<string> { "xn" }, (items, addData) => addData("xn", new List<object> { sels.Count }.ToList()));
 			parallelDataActions.Add(new HashSet<string> { "y" }, (items, addData) => addData("y", Enumerable.Range(1, sels.Count).Cast<object>().ToList()));
 			parallelDataActions.Add(new HashSet<string> { "z" }, (items, addData) => addData("z", Enumerable.Range(0, sels.Count).Cast<object>().ToList()));
 			parallelDataActions.Add(new HashSet<string> { "c" }, (items, addData) => addData("c", InterpretValues(Clipboard)));
 			parallelDataActions.Add(new HashSet<string> { "cl" }, (items, addData) => addData("cl", Clipboard.Select(str => str.Length).Cast<object>().ToList()));
+			parallelDataActions.Add(new HashSet<string> { "cn" }, (items, addData) => addData("cn", new List<object> { Clipboard.Count }));
 			parallelDataActions.Add(new HashSet<string> { "line", "col" }, (items, addData) =>
 			{
 				var lines = sels.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
@@ -471,10 +476,12 @@ namespace NeoEdit.TextEdit
 				var prefix = ctr == 0 ? "k" : "v" + ctr;
 				var kvName = prefix;
 				var kvlName = prefix + "l";
-				var rkrName = "r" + prefix;
+				var rkvName = "r" + prefix;
 				var rkvlName = "r" + prefix + "l";
-				parallelDataActions.Add(new HashSet<string> { rkrName }, (items, addData) => addData(rkrName, InterpretValues(keysAndValues[num])));
+				var rkvnName = "r" + prefix + "n";
+				parallelDataActions.Add(new HashSet<string> { rkvName }, (items, addData) => addData(rkvName, InterpretValues(keysAndValues[num])));
 				parallelDataActions.Add(new HashSet<string> { rkvlName }, (items, addData) => addData(rkvlName, keysAndValues[num].Select(str => str.Length).Cast<object>().ToList()));
+				parallelDataActions.Add(new HashSet<string> { rkvnName }, (items, addData) => addData(rkvnName, new List<object> { keysAndValues[num].Count }));
 				parallelDataActions.Add(new HashSet<string> { kvName, kvlName }, (items, addData) =>
 				{
 					List<string> values;
