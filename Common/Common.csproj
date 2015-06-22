@@ -23,6 +23,7 @@
     <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="NEClipboard.cs" />
+    <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\AssemblyInfo.Template.cs" />
     <Compile Include="Searcher.cs">

@@ -86,7 +86,7 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool ShareKeys { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<string> Clipboard { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public ObservableCollectionEx<string> Clipboard { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollectionEx<string>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool ShareClipboard { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
@@ -107,8 +107,8 @@ namespace NeoEdit.TextEdit
 		Dictionary<string, int> keysHash;
 		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
 		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
-		static ObservableCollection<string> staticClipboard { get; set; }
-		ObservableCollection<string> localClipboard { get; set; }
+		static ObservableCollectionEx<string> staticClipboard { get; set; }
+		ObservableCollectionEx<string> localClipboard { get; set; }
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
@@ -127,7 +127,7 @@ namespace NeoEdit.TextEdit
 			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
 				staticKeysAndValues[ctr] = new ObservableCollection<string>();
 
-			staticClipboard = new ObservableCollection<string>();
+			staticClipboard = new ObservableCollectionEx<string>();
 			NEClipboard.ClipboardChanged += () => ClipboardChanged(staticClipboard);
 		}
 
@@ -141,15 +141,14 @@ namespace NeoEdit.TextEdit
 				hash[data[0][pos]] = pos;
 		}
 
-		static void ClipboardChanged(ObservableCollection<string> clipboard)
+		static void ClipboardChanged(ObservableCollectionEx<string> clipboard)
 		{
 			// This is only for data coming from external sources
 			if (NEClipboard.Extra as Type == typeof(TextEditor))
 				return;
 
 			clipboard.Clear();
-			foreach (var str in NEClipboard.Strings)
-				clipboard.Add(str);
+			clipboard.AddRange(NEClipboard.Strings);
 		}
 
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
@@ -161,7 +160,7 @@ namespace NeoEdit.TextEdit
 			localKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(localKeysAndValues, localKeysHash, e);
 			for (var ctr = 0; ctr < localKeysAndValues.Count; ++ctr)
 				localKeysAndValues[ctr] = new ObservableCollection<string>();
-			localClipboard = new ObservableCollection<string>();
+			localClipboard = new ObservableCollectionEx<string>();
 			NEClipboard.ClipboardChanged += () => ClipboardChanged(localClipboard);
 
 			InitializeComponent();
