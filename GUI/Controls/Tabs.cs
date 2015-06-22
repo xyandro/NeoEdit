@@ -190,8 +190,6 @@ namespace NeoEdit.GUI.Controls
 
 		void OnDrop(DragEventArgs e, Label toLabel)
 		{
-			e.Handled = true;
-
 			var fromLabel = e.Data.GetData(typeof(Label)) as Label;
 			if ((fromLabel == null) || (toLabel == fromLabel))
 				return;
@@ -208,6 +206,10 @@ namespace NeoEdit.GUI.Controls
 
 			fromTabs.Items.RemoveAt(fromIndex);
 			Items.Insert(toIndex, fromData);
+
+			TopMost = fromData;
+
+			e.Handled = true;
 		}
 
 		class AllItemsControl : ItemsControl
