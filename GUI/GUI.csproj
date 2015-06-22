@@ -97,7 +97,10 @@
       <SubType>Code</SubType>
     </Compile>
     <None Include="Properties\AssemblyInfo.Template.cs" />
+    <Resource Include="Resources\Checked.png" />
     <Resource Include="Resources\DejaVuSansMono.ttf" />
+    <Resource Include="Resources\Indeterminate.png" />
+    <Resource Include="Resources\Unchecked.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

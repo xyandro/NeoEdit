@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media.Imaging;
 
 namespace NeoEdit.GUI.Controls
 {
@@ -18,25 +19,23 @@ namespace NeoEdit.GUI.Controls
 		public object TrueValue { get { return UIHelper<MultiMenuItem>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public object FalseValue { get { return UIHelper<MultiMenuItem>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool? MultiChecked { get { return UIHelper<MultiMenuItem>.GetPropValue<bool?>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }
 
 		static MultiMenuItem()
 		{
 			UIHelper<MultiMenuItem>.Register();
-			UIHelper<MultiMenuItem>.AddCallback(a => a.Objects, (obj, o, n) => obj.Setup());
-			UIHelper<MultiMenuItem>.AddCallback(a => a.Property, (obj, o, n) => obj.Setup());
-			UIHelper<MultiMenuItem>.AddCallback(a => a.TrueValue, (obj, o, n) => obj.Setup());
-			UIHelper<MultiMenuItem>.AddCallback(a => a.FalseValue, (obj, o, n) => obj.Setup());
+			UIHelper<MultiMenuItem>.AddCallback(a => a.Objects, (obj, o, n) => obj.SetupMultiCheckedBinding());
+			UIHelper<MultiMenuItem>.AddCallback(a => a.Property, (obj, o, n) => obj.SetupMultiCheckedBinding());
+			UIHelper<MultiMenuItem>.AddCallback(a => a.TrueValue, (obj, o, n) => obj.SetupMultiCheckedBinding());
+			UIHelper<MultiMenuItem>.AddCallback(a => a.FalseValue, (obj, o, n) => obj.SetupMultiCheckedBinding());
 		}
 
 		public MultiMenuItem()
 		{
-			Click += (s, e) =>
-			{
-				var checkBox = Icon as CheckBox;
-				if (checkBox != null)
-					checkBox.IsChecked = !checkBox.IsChecked;
-			};
-			Setup();
+			Click += (s, e) => MultiChecked = !MultiChecked;
+			SetupMultiCheckedBinding();
+			SetupStyle();
 		}
 
 		class MultiConverter : IMultiValueConverter
@@ -71,9 +70,8 @@ namespace NeoEdit.GUI.Controls
 			}
 		}
 
-		void Setup()
+		void SetupMultiCheckedBinding()
 		{
-			Icon = null;
 			if (Property == null)
 				return;
 
@@ -83,9 +81,32 @@ namespace NeoEdit.GUI.Controls
 				foreach (var item in Objects)
 					multiBinding.Bindings.Add(new Binding(Property) { Source = item, Converter = converter, Mode = BindingMode.TwoWay });
 
-			var cb = new CheckBox { BorderThickness = new Thickness(5, 10, 15, 20) };
-			cb.SetBinding(CheckBox.IsCheckedProperty, multiBinding);
-			Icon = cb;
+			SetBinding(UIHelper<MultiMenuItem>.GetProperty(a => a.MultiChecked), multiBinding);
+		}
+
+		void SetupStyle()
+		{
+			var style = new Style();
+
+			{
+				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = true };
+				trigger.Setters.Add(new Setter { Property = MultiMenuItem.IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.GUI;component/Resources/Checked.png")) } });
+				style.Triggers.Add(trigger);
+			}
+
+			{
+				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = false };
+				trigger.Setters.Add(new Setter { Property = MultiMenuItem.IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.GUI;component/Resources/Unchecked.png")) } });
+				style.Triggers.Add(trigger);
+			}
+
+			{
+				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = null };
+				trigger.Setters.Add(new Setter { Property = MultiMenuItem.IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.GUI;component/Resources/Indeterminate.png")) } });
+				style.Triggers.Add(trigger);
+			}
+
+			Style = style;
 		}
 	}
 }
