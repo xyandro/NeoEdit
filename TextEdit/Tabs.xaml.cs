@@ -141,12 +141,12 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(file);
 		}
 
-		void Command_Edit_CopyAllClipboards()
+		void Command_Edit_CopyAll()
 		{
 			var data = new List<string>();
 			foreach (var textEditorData in TextEditors)
 				if (textEditorData.Active)
-					data.AddRange(textEditorData.Item.Clipboard);
+					data.AddRange(textEditorData.Item.GetSelectionStrings());
 			NEClipboard.Set(data, String.Join(" ", data));
 		}
 
@@ -380,7 +380,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextEditCommand.File_Exit: Close(); break;
-				case TextEditCommand.Edit_CopyAllClipboards: Command_Edit_CopyAllClipboards(); break;
+				case TextEditCommand.Edit_CopyAll: Command_Edit_CopyAll(); break;
 				case TextEditCommand.Macro_Open: Command_File_Open(dialogResult as OpenFileDialogResult); return;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;

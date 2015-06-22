@@ -545,7 +545,7 @@ namespace NeoEdit.TextEdit
 			FileName = fileName;
 		}
 
-		List<string> GetSelectionStrings()
+		internal List<string> GetSelectionStrings()
 		{
 			return Selections.AsParallel().AsOrdered().Select(range => GetString(range)).ToList();
 		}
