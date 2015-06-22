@@ -12,7 +12,16 @@ namespace NeoEdit.Common
 	public static class NEClipboard
 	{
 		public delegate void ClipboardChangedDelegate();
-		public static event ClipboardChangedDelegate ClipboardChanged;
+		static ClipboardChangedDelegate clipboardChanged = null;
+		public static event ClipboardChangedDelegate ClipboardChanged
+		{
+			add
+			{
+				clipboardChanged += value;
+				OnClipboardChanged();
+			}
+			remove { clipboardChanged -= value; }
+		}
 
 		public static object Data { get; private set; }
 		public static string Text { get; private set; }
@@ -29,8 +38,8 @@ namespace NeoEdit.Common
 		{
 			dataObj.SetData(typeof(NEClipboard), true);
 			Clipboard.SetDataObject(dataObj, true);
-			if (ClipboardChanged != null)
-				ClipboardChanged();
+			if (clipboardChanged != null)
+				clipboardChanged();
 		}
 
 		public static void Set(object data, string text = null, object extra = null)
@@ -94,8 +103,8 @@ namespace NeoEdit.Common
 				}
 			}
 
-			if (ClipboardChanged != null)
-				ClipboardChanged();
+			if (clipboardChanged != null)
+				clipboardChanged();
 		}
 
 		static ClipboardChangedNotifier clipboardChangedNotifier = new ClipboardChangedNotifier();
