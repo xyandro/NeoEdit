@@ -43,6 +43,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Cu_t" CommandEnum="Edit_Cut"/>
 		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
+		<textEdit:TextEditMenuItem Header="Cop_y All Clipboards" CommandEnum="Edit_CopyAllClipboards"/>
 		<textEdit:TextEditMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
