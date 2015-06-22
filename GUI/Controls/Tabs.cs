@@ -22,37 +22,37 @@ namespace NeoEdit.GUI.Controls
 			Tiles,
 		}
 
-		class ItemData : DependencyObject
+		public class ItemData : DependencyObject
 		{
 			[DepProp]
-			public ItemType Item { get { return UIHelper<ItemData>.GetPropValue<ItemType>(this); } set { UIHelper<ItemData>.SetPropValue(this, value); } }
+			public ItemType Item { get { return UIHelper<ItemData>.GetPropValue<ItemType>(this); } private set { UIHelper<ItemData>.SetPropValue(this, value); } }
 			[DepProp]
 			public int ItemOrder { get { return UIHelper<ItemData>.GetPropValue<int>(this); } set { UIHelper<ItemData>.SetPropValue(this, value); } }
 			[DepProp]
 			public bool Active { get { return UIHelper<ItemData>.GetPropValue<bool>(this); } set { UIHelper<ItemData>.SetPropValue(this, value); } }
 
 			static ItemData() { UIHelper<ItemData>.Register(); }
+
+			public ItemData(ItemType item)
+			{
+				Item = item;
+			}
 		}
 
 		[DepProp]
-		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemData> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemData>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<ItemType> Active { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
-		[DepProp]
-		public ItemType TopMost { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		public ItemData TopMost { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemData>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ViewType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public string TabLabelPath { get { return UIHelper<Tabs<ItemType>>.GetPropValue<string>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
-		[DepProp]
-		ObservableCollection<ItemData> Data { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemData>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 
 		static Tabs()
 		{
 			UIHelper<Tabs<ItemType>>.Register();
 			UIHelper<Tabs<ItemType>>.AddCallback(a => a.TabLabelPath, (obj, o, n) => obj.SetupLayout());
 			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
-			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Active, (obj, s, e) => obj.ActiveChanged());
 			UIHelper<Tabs<ItemType>>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
 			UIHelper<Tabs<ItemType>>.AddCoerce(a => a.TopMost, (obj, value) => (value == null) || ((obj.Items != null) && (obj.Items.Contains(value))) ? value : null);
 		}
@@ -62,10 +62,7 @@ namespace NeoEdit.GUI.Controls
 		{
 			SetupLayout();
 
-			Data = new ObservableCollection<ItemData>();
-			Items = new ObservableCollection<ItemType>();
-			Active = new ObservableCollection<ItemType>();
-
+			Items = new ObservableCollection<ItemData>();
 			View = ViewType.Tabs;
 			Focusable = true;
 			FocusVisualStyle = null;
@@ -76,78 +73,53 @@ namespace NeoEdit.GUI.Controls
 		void ItemsChanged()
 		{
 			if (Items == null)
-				Data = new ObservableCollection<ItemData>();
-			else
-				Data = new ObservableCollection<ItemData>(Items.Distinct().Select(item => Data.FirstOrDefault(itemData => itemData.Item == item) ?? new ItemData { Item = item, ItemOrder = ++itemOrder }));
+				return;
 
-			foreach (var itemData in Data)
+			foreach (var item in Items)
 			{
-				EnhancedFocusManager.SetIsEnhancedFocusScope(itemData.Item, true);
-				itemData.Item.SetValue(TabParentProperty, this);
+				EnhancedFocusManager.SetIsEnhancedFocusScope(item.Item, true);
+				item.Item.SetValue(TabParentProperty, this);
 			}
 
-			UpdateActive();
-		}
-
-		void ActiveChanged()
-		{
-			foreach (var data in Data)
-			{
-				var newValue = (Active != null) && (Active.Contains(data.Item));
-				if (data.Active == newValue)
-					continue;
-				data.Active = newValue;
-			}
+			UpdateTopMost();
 		}
 
 		void TopMostChanged()
 		{
-			var item = Data.FirstOrDefault(itemData => itemData.Item == TopMost);
-			if (item == null)
+			if (TopMost == null)
 			{
 				UpdateTopMost();
 				return;
 			}
 
 			if (!shiftDown)
-				foreach (var itemData in Data)
-					itemData.Active = false;
+				foreach (var item in Items)
+					item.Active = false;
 
-			TopMost = item.Item;
-			item.Active = true;
+			TopMost.Active = true;
 			if (!controlDown)
-				item.ItemOrder = ++itemOrder;
-
-			UpdateActive();
+				TopMost.ItemOrder = ++itemOrder;
 
 			Dispatcher.BeginInvoke((Action)(() =>
 			{
 				UpdateLayout();
-				TopMost.Focus();
+				if (TopMost != null)
+					TopMost.Item.Focus();
 			}));
-		}
-
-		void UpdateActive()
-		{
-			Active = new ObservableCollection<ItemType>(Data.Where(itemData => itemData.Active).Select(itemData => itemData.Item));
-			UpdateTopMost();
 		}
 
 		void UpdateTopMost()
 		{
-			var item = Data.Where(itemData => (itemData.Active) && (itemData.Item == TopMost)).FirstOrDefault();
-			if (item == null)
-				item = Data.Where(itemData => itemData.Active).OrderByDescending(itemData => itemData.ItemOrder).FirstOrDefault();
-			if (item == null)
-				item = Data.OrderByDescending(itemData => itemData.ItemOrder).FirstOrDefault();
-			if (item == null)
-			{
-				TopMost = null;
-				return;
-			}
-
-			item.Active = true;
-			TopMost = item.Item;
+			var topMost = TopMost;
+			if ((topMost == null) || (!topMost.Active))
+				topMost = null;
+			if (topMost == null)
+				topMost = Items.Where(item => item.Active).OrderByDescending(item => item.ItemOrder).FirstOrDefault();
+			if (topMost == null)
+				topMost = Items.OrderByDescending(item => item.ItemOrder).FirstOrDefault();
+			if (topMost != null)
+				topMost.Active = true;
+			TopMost = topMost;
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
@@ -174,11 +146,8 @@ namespace NeoEdit.GUI.Controls
 		{
 			base.OnPreviewKeyUp(e);
 			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
-			{
-				var data = Data.Where(itemData => itemData.Item == TopMost).FirstOrDefault();
-				if (data != null)
-					data.ItemOrder = ++itemOrder;
-			}
+				if (TopMost != null)
+					TopMost.ItemOrder = ++itemOrder;
 		}
 
 		void MovePrev()
@@ -201,11 +170,10 @@ namespace NeoEdit.GUI.Controls
 
 		void MoveTabOrder()
 		{
-			var ordering = Data.OrderBy(itemData => itemData.ItemOrder).Select(itemData => itemData.Item).ToList();
-			var current = ordering.IndexOf(TopMost);
-			if (current == -1)
+			var ordering = Items.OrderBy(item => item.ItemOrder).ToList();
+			var current = ordering.IndexOf(TopMost) - 1;
+			if (current == -2) // Not found
 				return;
-			--current;
 			if (current == -1)
 				current = ordering.Count - 1;
 			TopMost = ordering[current];
@@ -216,7 +184,7 @@ namespace NeoEdit.GUI.Controls
 			base.OnMouseLeftButtonDown(e);
 			var source = e.OriginalSource as DependencyObject;
 			foreach (var item in Items)
-				if (item.IsAncestorOf(source))
+				if (item.Item.IsAncestorOf(source))
 					TopMost = item;
 		}
 
@@ -231,18 +199,15 @@ namespace NeoEdit.GUI.Controls
 			var toData = toLabel == null ? null : toLabel.DataContext as ItemData;
 			var fromData = fromLabel.DataContext as ItemData;
 
-			var fromTabs = UIHelper.FindParent<Tabs<ItemType>>(fromData.Item);
+			var fromTabs = fromData.Item.GetValue(TabParentProperty) as Tabs<ItemType>;
 			if ((fromTabs == null) || ((fromTabs == this) && (toLabel == null)))
 				return;
 
-			var fromIndex = fromTabs.Data.IndexOf(fromData);
-			var toIndex = toLabel == null ? Items.Count : Data.IndexOf(toData);
+			var fromIndex = fromTabs.Items.IndexOf(fromData);
+			var toIndex = toLabel == null ? Items.Count : Items.IndexOf(toData);
 
-			fromTabs.Data.RemoveAt(fromIndex);
-			Data.Insert(toIndex, fromData);
-			Items = new ObservableCollection<ItemType>(Data.Select(itemData => itemData.Item));
-			if (fromTabs != this)
-				fromTabs.Items = new ObservableCollection<ItemType>(fromTabs.Data.Select(itemData => itemData.Item));
+			fromTabs.Items.RemoveAt(fromIndex);
+			Items.Insert(toIndex, fromData);
 		}
 
 		class AllItemsControl : ItemsControl
@@ -267,18 +232,18 @@ namespace NeoEdit.GUI.Controls
 			var label = new FrameworkElementFactory(typeof(Label));
 			if (view == ViewType.Tiles)
 				label.SetValue(DockPanel.DockProperty, Dock.Top);
-			label.SetBinding(Label.ContentProperty, new Binding("Item." + TabLabelPath));
+			label.SetBinding(Label.ContentProperty, new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name + "." + TabLabelPath));
 			label.SetValue(Label.PaddingProperty, new Thickness(10, 2, 10, 2));
 			label.SetValue(Label.MarginProperty, new Thickness(0, 0, view == ViewType.Tabs ? 2 : 0, 1));
 
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [2] ? 'CadetBlue' : ([1] ? 'LightBlue' : 'LightGray')" };
-			multiBinding.Bindings.Add(new Binding("Item"));
-			multiBinding.Bindings.Add(new Binding("Active"));
-			multiBinding.Bindings.Add(new Binding("TopMost") { Source = this });
+			multiBinding.Bindings.Add(new Binding());
+			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Active).Name));
+			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
 			label.SetBinding(Label.BackgroundProperty, multiBinding);
 
 			label.SetValue(Label.AllowDropProperty, true);
-			label.AddHandler(Label.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = ((s as Label).DataContext as ItemData).Item));
+			label.AddHandler(Label.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = (s as Label).DataContext as ItemData));
 			label.AddHandler(Label.MouseMoveEvent, (MouseEventHandler)((s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
@@ -301,7 +266,7 @@ namespace NeoEdit.GUI.Controls
 					{
 						var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
 						itemsControl.SetValue(DockPanel.DockProperty, Dock.Top);
-						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding("Data") { Source = this });
+						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Items).Name) { Source = this });
 						itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, new DataTemplate { VisualTree = GetLabel(ViewType.Tabs) });
 
 						{
@@ -318,15 +283,15 @@ namespace NeoEdit.GUI.Controls
 					{
 						var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
 						itemsControl.SetValue(DockPanel.DockProperty, Dock.Bottom);
-						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding("Data") { Source = this });
+						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Items).Name) { Source = this });
 						{
 							var itemTemplate = new DataTemplate();
 							{
 								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
-								contentControl.SetBinding(ContentControl.ContentProperty, new Binding("Item"));
-								var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [1] ? True : False" };
-								multiBinding.Bindings.Add(new Binding("Item"));
-								multiBinding.Bindings.Add(new Binding("TopMost") { Source = this });
+								contentControl.SetBinding(ContentControl.ContentProperty, new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name));
+								var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [1]" };
+								multiBinding.Bindings.Add(new Binding());
+								multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
 								contentControl.SetBinding(ContentControl.VisibilityProperty, multiBinding);
 								contentControl.SetValue(ContentControl.FocusVisualStyleProperty, null);
 								itemTemplate.VisualTree = contentControl;
@@ -349,7 +314,7 @@ namespace NeoEdit.GUI.Controls
 				var tilesTemplate = new ControlTemplate();
 				{
 					var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
-					itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding("Data") { Source = this });
+					itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Items).Name) { Source = this });
 					{
 						var itemTemplate = new DataTemplate();
 						{
@@ -359,7 +324,7 @@ namespace NeoEdit.GUI.Controls
 							{
 								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
 								contentControl.SetValue(DockPanel.DockProperty, Dock.Bottom);
-								contentControl.SetBinding(ContentControl.ContentProperty, new Binding("Item"));
+								contentControl.SetBinding(ContentControl.ContentProperty, new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name));
 								contentControl.SetValue(ContentControl.FocusVisualStyleProperty, null);
 								dockPanel.AppendChild(contentControl);
 							}
@@ -371,7 +336,7 @@ namespace NeoEdit.GUI.Controls
 						var itemsPanel = new ItemsPanelTemplate();
 						{
 							var uniformGrid = new FrameworkElementFactory(typeof(UniformGrid));
-							uniformGrid.SetBinding(UniformGrid.ColumnsProperty, new Binding("Items.Count") { Source = this, Converter = new ColumnCountConverter() });
+							uniformGrid.SetBinding(UniformGrid.ColumnsProperty, new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Items) + ".Count") { Source = this, Converter = new ColumnCountConverter() });
 							uniformGrid.SetValue(UniformGrid.MarginProperty, new Thickness(0, 0, -2, -2));
 							itemsPanel.VisualTree = uniformGrid;
 						}
@@ -381,7 +346,7 @@ namespace NeoEdit.GUI.Controls
 					itemsControl.SetValue(Window.BackgroundProperty, Brushes.Gray);
 				}
 
-				var dataTrigger = new DataTrigger { Binding = new Binding("View") { Source = this }, Value = ViewType.Tiles };
+				var dataTrigger = new DataTrigger { Binding = new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.View).Name) { Source = this }, Value = ViewType.Tiles };
 				dataTrigger.Setters.Add(new Setter(AllItemsControl.TemplateProperty, tilesTemplate));
 				style.Triggers.Add(dataTrigger);
 			}

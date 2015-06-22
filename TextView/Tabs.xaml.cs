@@ -19,9 +19,9 @@ namespace NeoEdit.TextView
 	partial class TextViewerTabs
 	{
 		[DepProp]
-		public ObservableCollection<TextViewer> TextViewers { get { return UIHelper<TextViewerTabs>.GetPropValue<ObservableCollection<TextViewer>>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<Tabs.ItemData> TextViewers { get { return UIHelper<TextViewerTabs>.GetPropValue<ObservableCollection<Tabs.ItemData>>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextViewer Active { get { return UIHelper<TextViewerTabs>.GetPropValue<TextViewer>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
+		public Tabs.ItemData Active { get { return UIHelper<TextViewerTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public Tabs.ViewType View { get { return UIHelper<TextViewerTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
 
@@ -38,7 +38,7 @@ namespace NeoEdit.TextView
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
-			TextViewers = new ObservableCollection<TextViewer>();
+			TextViewers = new ObservableCollection<Tabs<TextViewer>.ItemData>();
 			Show(); // Explicitly show because sometimes the loading file dialog will put up first and be hidden
 		}
 
@@ -49,7 +49,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_Open()
 		{
-			var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
+			var dir = Active != null ? Path.GetDirectoryName(Active.Item.FileName) : null;
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
@@ -134,10 +134,10 @@ namespace NeoEdit.TextView
 
 			switch (command)
 			{
-				case TextViewCommand.File_Close: Active.Dispose(); TextViewers.Remove(Active); break;
-				case TextViewCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
-				case TextViewCommand.File_Split: Active.Command_File_Split(); break;
-				case TextViewCommand.Edit_Copy: Active.Command_Edit_Copy(); break;
+				case TextViewCommand.File_Close: Active.Item.Dispose(); TextViewers.Remove(Active); break;
+				case TextViewCommand.File_CopyPath: Active.Item.Command_File_CopyPath(); break;
+				case TextViewCommand.File_Split: Active.Item.Command_File_Split(); break;
+				case TextViewCommand.Edit_Copy: Active.Item.Command_Edit_Copy(); break;
 			}
 		}
 
@@ -173,9 +173,9 @@ namespace NeoEdit.TextView
 					}
 				}
 
-				var textViewer = new TextViewer(data);
-				TextViewers.Add(textViewer);
-				Active = textViewer;
+				var add = new Tabs.ItemData(new TextViewer(data));
+				TextViewers.Add(add);
+				Active = add;
 			}));
 		}
 
@@ -195,7 +195,7 @@ namespace NeoEdit.TextView
 		{
 			if (Active == null)
 				return false;
-			return Active.HandleKey(key, shiftDown, controlDown);
+			return Active.Item.HandleKey(key, shiftDown, controlDown);
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -214,7 +214,7 @@ namespace NeoEdit.TextView
 		{
 			if (Active == null)
 				return false;
-			return Active.HandleText(text);
+			return Active.Item.HandleText(text);
 		}
 	}
 }

@@ -3,6 +3,7 @@
 namespace NeoEdit.TextEdit
 {
 	class TextEditMenuItem : NEMenuItem<TextEditCommand> { }
+	class MultiMenuItem : MultiMenuItem<TextEditor> { }
 
 	partial class TextEditMenu
 	{

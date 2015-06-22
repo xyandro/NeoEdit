@@ -10,9 +10,9 @@ namespace NeoEdit.Disk
 	public partial class DiskTabs
 	{
 		[DepProp]
-		public ObservableCollection<DiskWindow> DiskWindows { get { return UIHelper<DiskTabs>.GetPropValue<ObservableCollection<DiskWindow>>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<Tabs.ItemData> DiskWindows { get { return UIHelper<DiskTabs>.GetPropValue<ObservableCollection<Tabs.ItemData>>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public DiskWindow Active { get { return UIHelper<DiskTabs>.GetPropValue<DiskWindow>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
+		public Tabs.ItemData Active { get { return UIHelper<DiskTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public Tabs.ViewType View { get { return UIHelper<DiskTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 
@@ -24,7 +24,7 @@ namespace NeoEdit.Disk
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
-			DiskWindows = new ObservableCollection<DiskWindow>();
+			DiskWindows = new ObservableCollection<Tabs<DiskWindow>.ItemData>();
 			Add(new DiskWindow(path));
 		}
 
@@ -53,47 +53,48 @@ namespace NeoEdit.Disk
 			switch (command)
 			{
 				case DiskCommand.File_Close: DiskWindows.Remove(Active); break;
-				case DiskCommand.File_Rename: Active.Command_File_Rename(); break;
-				case DiskCommand.File_Identify: Active.Command_File_Identify(); break;
-				case DiskCommand.File_MD5: Active.Command_File_MD5(); break;
-				case DiskCommand.File_SHA1: Active.Command_File_SHA1(); break;
-				case DiskCommand.File_Svn: Active.Command_File_Svn(); break;
-				case DiskCommand.File_Delete: Active.Command_File_Delete(); break;
-				case DiskCommand.Edit_Cut: Active.Command_Edit_CutCopy(true); break;
-				case DiskCommand.Edit_Copy: Active.Command_Edit_CutCopy(false); break;
-				case DiskCommand.Edit_Paste: Active.Command_Edit_Paste(); break;
-				case DiskCommand.Edit_Find: Active.Command_Edit_Find(); break;
-				case DiskCommand.Edit_BinaryFind: Active.Command_Edit_BinaryFind(); break;
-				case DiskCommand.Edit_TextEdit: Active.Command_Edit_TextEdit(); break;
-				case DiskCommand.Edit_HexEdit: Active.Command_Edit_HexEdit(); break;
-				case DiskCommand.Select_All: Active.Command_Select_All(); break;
-				case DiskCommand.Select_None: Active.Command_Select_None(); break;
-				case DiskCommand.Select_Invert: Active.Command_Select_Invert(); break;
-				case DiskCommand.Select_Directories: Active.Command_Select_Directories(); break;
-				case DiskCommand.Select_Files: Active.Command_Select_Files(); break;
-				case DiskCommand.Select_AddCopiedCut: Active.Command_Select_AddCopiedCut(); break;
-				case DiskCommand.Select_Remove: Active.Command_Select_Remove(); break;
-				case DiskCommand.Select_RemoveWithChildren: Active.Command_Select_RemoveWithChildren(); break;
-				case DiskCommand.View_DiskUsage: Active.Command_View_DiskUsage(); break;
+				case DiskCommand.File_Rename: Active.Item.Command_File_Rename(); break;
+				case DiskCommand.File_Identify: Active.Item.Command_File_Identify(); break;
+				case DiskCommand.File_MD5: Active.Item.Command_File_MD5(); break;
+				case DiskCommand.File_SHA1: Active.Item.Command_File_SHA1(); break;
+				case DiskCommand.File_Svn: Active.Item.Command_File_Svn(); break;
+				case DiskCommand.File_Delete: Active.Item.Command_File_Delete(); break;
+				case DiskCommand.Edit_Cut: Active.Item.Command_Edit_CutCopy(true); break;
+				case DiskCommand.Edit_Copy: Active.Item.Command_Edit_CutCopy(false); break;
+				case DiskCommand.Edit_Paste: Active.Item.Command_Edit_Paste(); break;
+				case DiskCommand.Edit_Find: Active.Item.Command_Edit_Find(); break;
+				case DiskCommand.Edit_BinaryFind: Active.Item.Command_Edit_BinaryFind(); break;
+				case DiskCommand.Edit_TextEdit: Active.Item.Command_Edit_TextEdit(); break;
+				case DiskCommand.Edit_HexEdit: Active.Item.Command_Edit_HexEdit(); break;
+				case DiskCommand.Select_All: Active.Item.Command_Select_All(); break;
+				case DiskCommand.Select_None: Active.Item.Command_Select_None(); break;
+				case DiskCommand.Select_Invert: Active.Item.Command_Select_Invert(); break;
+				case DiskCommand.Select_Directories: Active.Item.Command_Select_Directories(); break;
+				case DiskCommand.Select_Files: Active.Item.Command_Select_Files(); break;
+				case DiskCommand.Select_AddCopiedCut: Active.Item.Command_Select_AddCopiedCut(); break;
+				case DiskCommand.Select_Remove: Active.Item.Command_Select_Remove(); break;
+				case DiskCommand.Select_RemoveWithChildren: Active.Item.Command_Select_RemoveWithChildren(); break;
+				case DiskCommand.View_DiskUsage: Active.Item.Command_View_DiskUsage(); break;
 			}
 		}
 
 		internal void ToggleColumn(DependencyProperty property)
 		{
 			if (Active != null)
-				Active.ToggleColumn(property);
+				Active.Item.ToggleColumn(property);
 		}
 
 		internal void SetSort(DependencyProperty property)
 		{
 			if (Active != null)
-				Active.SetSort(property);
+				Active.Item.SetSort(property);
 		}
 
 		void Add(DiskWindow diskWindow)
 		{
-			DiskWindows.Add(diskWindow);
-			Active = diskWindow;
+			var add = new Tabs.ItemData(diskWindow);
+			DiskWindows.Add(add);
+			Active = add;
 		}
 	}
 }

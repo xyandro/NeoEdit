@@ -24,11 +24,9 @@ namespace NeoEdit.TextEdit
 	public partial class TextEditTabs
 	{
 		[DepProp]
-		public ObservableCollection<TextEditor> TextEditors { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<Tabs.ItemData> TextEditors { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<Tabs.ItemData>>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<TextEditor> Active { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public TextEditor TopMost { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditor>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public Tabs.ItemData TopMost { get { return UIHelper<TextEditTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public Tabs.ViewType View { get { return UIHelper<TextEditTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 
@@ -81,7 +79,7 @@ namespace NeoEdit.TextEdit
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
-			TextEditors = new ObservableCollection<TextEditor>();
+			TextEditors = new ObservableCollection<Tabs.ItemData>();
 			AllowDrop = true;
 			Drop += TextEditTabs_Drop;
 		}
@@ -104,7 +102,7 @@ namespace NeoEdit.TextEdit
 		OpenFileDialogResult Command_File_Open_Dialog(string initialDirectory = null)
 		{
 			if ((initialDirectory == null) && (TopMost != null))
-				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
+				initialDirectory = Path.GetDirectoryName(TopMost.Item.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
@@ -292,7 +290,7 @@ namespace NeoEdit.TextEdit
 					return;
 
 				if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.EvaluateRow<bool>(TopMost.GetExpressionData(expression: expression), 0))
+					if (!expression.EvaluateRow<bool>(TopMost.Item.GetExpressionData(expression: expression), 0))
 						return;
 
 				macro.Play(this, playing => macroPlaying = playing, startNext);
@@ -307,7 +305,7 @@ namespace NeoEdit.TextEdit
 			foreach (var textEditor in TextEditors)
 			{
 				TopMost = textEditor;
-				if (!textEditor.CanClose(ref answer))
+				if (!textEditor.Item.CanClose(ref answer))
 				{
 					e.Cancel = true;
 					return;
@@ -359,7 +357,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
 				case TextEditCommand.Macro_Open: dialogResult = Command_File_Open_Dialog(macroDirectory); break;
-				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult);
+				default: return TopMost == null ? true : TopMost.Item.GetDialogResult(command, out dialogResult);
 			}
 
 			return dialogResult != null;
@@ -378,22 +376,23 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
 			}
 
-			foreach (var active in Active)
-				active.HandleCommand(command, shiftDown, dialogResult);
+			foreach (var textEditorItem in TextEditors.Where(item => item.Active).ToList())
+				textEditorItem.Item.HandleCommand(command, shiftDown, dialogResult);
 		}
 
 		void Add(TextEditor textEditor)
 		{
-			if ((!textEditor.Empty()) && (TopMost != null) && (TopMost.Empty()))
-				TextEditors[TextEditors.IndexOf(TopMost)] = textEditor;
+			var item = new Tabs.ItemData(textEditor);
+			if ((!textEditor.Empty()) && (TopMost != null) && (TopMost.Item.Empty()))
+				TextEditors[TextEditors.IndexOf(TopMost)] = item;
 			else
-				TextEditors.Add(textEditor);
-			TopMost = textEditor;
+				TextEditors.Add(item);
+			TopMost = item;
 		}
 
 		internal void Remove(TextEditor textEditor, bool closeIfLast = false)
 		{
-			TextEditors.Remove(textEditor);
+			TextEditors.Remove(TextEditors.Single(item => item.Item == textEditor));
 			if ((closeIfLast) && (TextEditors.Count == 0))
 				Close();
 		}
@@ -423,8 +422,8 @@ namespace NeoEdit.TextEdit
 		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
 			var result = false;
-			foreach (var active in Active)
-				result = active.HandleKey(key, shiftDown, controlDown) || result;
+			foreach (var textEditorItems in TextEditors.Where(item => item.Active).ToList())
+				result = textEditorItems.Item.HandleKey(key, shiftDown, controlDown) || result;
 			return result;
 		}
 
@@ -449,8 +448,8 @@ namespace NeoEdit.TextEdit
 		internal bool HandleText(string text)
 		{
 			var result = false;
-			foreach (var active in Active)
-				result = active.HandleText(text) || result;
+			foreach (var textEditorItems in TextEditors.Where(item => item.Active).ToList())
+				result = textEditorItems.Item.HandleText(text) || result;
 			return result;
 		}
 	}

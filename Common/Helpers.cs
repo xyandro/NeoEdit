@@ -264,6 +264,20 @@ namespace NeoEdit.Common
 			return result;
 		}
 
+		public static IEnumerable<TResult> GetNth<TResult>(this IEnumerable<TResult> source, int n)
+		{
+			var ctr = 0;
+			foreach (var item in source)
+			{
+				if (ctr == 0)
+				{
+					yield return item;
+					ctr = n;
+				}
+				--ctr;
+			}
+		}
+
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 	}

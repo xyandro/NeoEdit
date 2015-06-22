@@ -59,7 +59,7 @@
 		<textEdit:TextEditMenuItem Header="Previous Boo_kmark" CommandEnum="Edit_PreviousBookmark"/>
 		<textEdit:TextEditMenuItem Header="Cle_ar Bookmarks" CommandEnum="Edit_ClearBookmarks"/>
 		<Separator/>
-		<guiControls:MultiMenuItem Header="S_hare Clipboard" Objects="{Binding Parent.Active, ElementName=self}" Property="ShareClipboard" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
+		<textEdit:MultiMenuItem Header="S_hare Clipboard" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ShareClipboard" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Files_Open"/>
@@ -194,14 +194,14 @@
 	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
-			<guiControls:MultiMenuItem Header="_None" Objects="{Binding Parent.Active, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.None}" FalseValue="{x:Static content:Parser+ParserType.None}"/>
-			<guiControls:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.Active, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.Balanced}" FalseValue="{x:Static content:Parser+ParserType.Balanced}"/>
-			<guiControls:MultiMenuItem Header="C_#" Objects="{Binding Parent.Active, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.CSharp}" FalseValue="{x:Static content:Parser+ParserType.CSharp}"/>
-			<guiControls:MultiMenuItem Header="_CSV" Objects="{Binding Parent.Active, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.CSV}" FalseValue="{x:Static content:Parser+ParserType.CSV}"/>
-			<guiControls:MultiMenuItem Header="_HTML" Objects="{Binding Parent.Active, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.HTML}" FalseValue="{x:Static content:Parser+ParserType.HTML}"/>
-			<guiControls:MultiMenuItem Header="_JSON" Objects="{Binding Parent.Active, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.JSON}" FalseValue="{x:Static content:Parser+ParserType.JSON}"/>
-			<guiControls:MultiMenuItem Header="_TSV" Objects="{Binding Parent.Active, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.TSV}" FalseValue="{x:Static content:Parser+ParserType.TSV}"/>
-			<guiControls:MultiMenuItem Header="_XML" Objects="{Binding Parent.Active, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.XML}" FalseValue="{x:Static content:Parser+ParserType.XML}"/>
+			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.None}" FalseValue="{x:Static content:Parser+ParserType.None}"/>
+			<textEdit:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.Balanced}" FalseValue="{x:Static content:Parser+ParserType.Balanced}"/>
+			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.CSharp}" FalseValue="{x:Static content:Parser+ParserType.CSharp}"/>
+			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.CSV}" FalseValue="{x:Static content:Parser+ParserType.CSV}"/>
+			<textEdit:MultiMenuItem Header="_HTML" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.HTML}" FalseValue="{x:Static content:Parser+ParserType.HTML}"/>
+			<textEdit:MultiMenuItem Header="_JSON" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.JSON}" FalseValue="{x:Static content:Parser+ParserType.JSON}"/>
+			<textEdit:MultiMenuItem Header="_TSV" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.TSV}" FalseValue="{x:Static content:Parser+ParserType.TSV}"/>
+			<textEdit:MultiMenuItem Header="_XML" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.XML}" FalseValue="{x:Static content:Parser+ParserType.XML}"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Reformat" CommandEnum="Content_Reformat"/>
@@ -334,7 +334,7 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Misses_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Misses_Values9"/>
 		</MenuItem>
-		<guiControls:MultiMenuItem Header="Shar_e Keys" Objects="{Binding Parent.Active, ElementName=self}" Property="ShareKeys" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
+		<textEdit:MultiMenuItem Header="Shar_e Keys" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ShareKeys" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="Toggle Regions_/Selections" CommandEnum="SelectRegion_Toggle"/>
@@ -386,9 +386,9 @@
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Highlighting">
-			<guiControls:MultiMenuItem Header="_None" Objects="{Binding Parent.Active, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.None}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.None}"/>
-			<guiControls:MultiMenuItem Header="C_#" Objects="{Binding Parent.Active, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.CSharp}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.CSharp}"/>
-			<guiControls:MultiMenuItem Header="C_++" Objects="{Binding Parent.Active, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}"/>
+			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.None}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.None}"/>
+			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.CSharp}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.CSharp}"/>
+			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] == \'Tiles\''}"/>
