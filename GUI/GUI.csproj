@@ -67,13 +67,6 @@
     <Compile Include="Converters\SingleLineConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
     <Compile Include="Dialogs\ActiveTabsDialog.cs" />
-    <Page Include="Dialogs\BinaryFindDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\BinaryFindDialog.xaml.cs">
-      <DependentUpon>BinaryFindDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\EncodingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -81,12 +74,34 @@
     <Compile Include="Dialogs\EncodingDialog.xaml.cs">
       <DependentUpon>EncodingDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FindBinaryDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FindBinaryDialog.xaml.cs">
+      <DependentUpon>FindBinaryDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FindTextDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FindTextDialog.xaml.cs">
+      <DependentUpon>FindTextDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\HelpItems.cs" />
     <Page Include="Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\RegExHelpDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
+      <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Launcher.cs" />
     <Compile Include="Misc\Font.cs" />

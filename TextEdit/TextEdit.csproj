@@ -150,13 +150,6 @@
     <Compile Include="Dialogs\GetExpressionDialog.xaml.cs">
       <DependentUpon>GetExpressionDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\GetRegExDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\GetRegExDialog.xaml.cs">
-      <DependentUpon>GetRegExDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\GetUniqueNamesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -171,7 +164,6 @@
     <Compile Include="Dialogs\GotoDialog.xaml.cs">
       <DependentUpon>GotoDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\HelpItems.cs" />
     <Page Include="Dialogs\LimitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -213,13 +205,6 @@
     </Page>
     <Compile Include="Dialogs\RandomNumberDialog.xaml.cs">
       <DependentUpon>RandomNumberDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\RegExHelpDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
-      <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\RepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

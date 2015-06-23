@@ -25,7 +25,7 @@ namespace NeoEdit.GUI.Dialogs
 		public CodePageCheckBox() { CodePage = Coder.CodePage.None; }
 	}
 
-	partial class BinaryFindDialog
+	partial class FindBinaryDialog
 	{
 		public class Result
 		{
@@ -40,23 +40,23 @@ namespace NeoEdit.GUI.Dialogs
 		}
 
 		[DepProp]
-		public string FindText { get { return UIHelper<BinaryFindDialog>.GetPropValue<string>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		public string FindText { get { return UIHelper<FindBinaryDialog>.GetPropValue<string>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowLE { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		public bool ShowLE { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowBE { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		public bool ShowBE { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowInt { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		public bool ShowInt { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowFloat { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		public bool ShowFloat { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowStr { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		public bool ShowStr { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MatchCase { get { return UIHelper<BinaryFindDialog>.GetPropValue<bool>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		public bool MatchCase { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		ObservableCollection<CodePageCheckBox> EncodingCheckBoxes { get { return UIHelper<BinaryFindDialog>.GetPropValue<ObservableCollection<CodePageCheckBox>>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		ObservableCollection<CodePageCheckBox> EncodingCheckBoxes { get { return UIHelper<FindBinaryDialog>.GetPropValue<ObservableCollection<CodePageCheckBox>>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<string> History { get { return UIHelper<BinaryFindDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<BinaryFindDialog>.SetPropValue(this, value); } }
+		public ObservableCollection<string> History { get { return UIHelper<FindBinaryDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 
 		static bool savedShowLE = true;
 		static bool savedShowBE = false;
@@ -69,9 +69,9 @@ namespace NeoEdit.GUI.Dialogs
 		readonly static HashSet<Coder.CodePage> defaultCodePages = new HashSet<Coder.CodePage>(Coder.GetNumericCodePages().Concat(new Coder.CodePage[] { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE }));
 		readonly static HashSet<Coder.CodePage> savedCodePages = new HashSet<Coder.CodePage>(defaultCodePages);
 
-		static BinaryFindDialog() { UIHelper<BinaryFindDialog>.Register(); }
+		static FindBinaryDialog() { UIHelper<FindBinaryDialog>.Register(); }
 
-		BinaryFindDialog()
+		FindBinaryDialog()
 		{
 			InitializeComponent();
 
@@ -155,7 +155,7 @@ namespace NeoEdit.GUI.Dialogs
 
 		public static Result Run(Window parent)
 		{
-			var find = new BinaryFindDialog { Owner = parent };
+			var find = new FindBinaryDialog { Owner = parent };
 			if (!find.ShowDialog())
 				return null;
 			return find.result;

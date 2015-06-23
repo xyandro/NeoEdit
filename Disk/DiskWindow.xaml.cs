@@ -409,7 +409,7 @@ namespace NeoEdit.Disk
 				Focused = Selected.FirstOrDefault();
 		}
 
-		bool SearchFile(DiskItem file, BinaryFindDialog.Result search)
+		bool SearchFile(DiskItem file, FindBinaryDialog.Result search)
 		{
 			if ((file.FileType != DiskItem.DiskItemType.File) || (!file.Exists))
 				return false;
@@ -441,7 +441,7 @@ namespace NeoEdit.Disk
 		{
 			if (Selected.Count == 0)
 				return;
-			var search = BinaryFindDialog.Run(UIHelper.FindParent<Window>(this));
+			var search = FindBinaryDialog.Run(UIHelper.FindParent<Window>(this));
 			if (search == null)
 				return;
 

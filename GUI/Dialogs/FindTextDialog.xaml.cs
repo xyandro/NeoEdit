@@ -4,17 +4,17 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.GUI.Controls;
 
-namespace NeoEdit.TextEdit.Dialogs
+namespace NeoEdit.GUI.Dialogs
 {
-	partial class GetRegExDialog
+	partial class FindTextDialog
 	{
-		internal enum GetRegExResultType
+		public enum GetRegExResultType
 		{
 			Next,
 			All,
 		}
 
-		internal class Result
+		public class Result
 		{
 			public Regex Regex { get; set; }
 			public string Replace { get; set; }
@@ -27,45 +27,45 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string Text { get { return UIHelper<GetRegExDialog>.GetPropValue<string>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public string Text { get { return UIHelper<FindTextDialog>.GetPropValue<string>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Replace { get { return UIHelper<GetRegExDialog>.GetPropValue<string>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public string Replace { get { return UIHelper<FindTextDialog>.GetPropValue<string>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool WholeWords { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool WholeWords { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MatchCase { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool MatchCase { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsRegex { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool IsRegex { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool RegexGroups { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool RegexGroups { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool SelectionOnly { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool SelectionOnly { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool KeepMatching { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool KeepMatching { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool RemoveMatching { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool RemoveMatching { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IncludeEndings { get { return UIHelper<GetRegExDialog>.GetPropValue<bool>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public bool IncludeEndings { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<string> History { get { return UIHelper<GetRegExDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public ObservableCollection<string> History { get { return UIHelper<FindTextDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<string> ReplaceHistory { get { return UIHelper<GetRegExDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<GetRegExDialog>.SetPropValue(this, value); } }
+		public ObservableCollection<string> ReplaceHistory { get { return UIHelper<FindTextDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 
 		readonly static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
 		readonly static ObservableCollection<string> StaticReplaceHistory = new ObservableCollection<string>();
 		static bool wholeWordsVal, matchCaseVal, isRegexVal, regexGroupsVal, includeEndingsVal;
 
-		static GetRegExDialog()
+		static FindTextDialog()
 		{
-			UIHelper<GetRegExDialog>.Register();
-			UIHelper<GetRegExDialog>.AddCallback(a => a.IsRegex, (obj, o, n) => { if (!obj.IsRegex) obj.RegexGroups = false; });
-			UIHelper<GetRegExDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) => { if (obj.RegexGroups) obj.IsRegex = true; });
-			UIHelper<GetRegExDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.KeepMatching = obj.RemoveMatching = false; });
-			UIHelper<GetRegExDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) => { if (obj.KeepMatching) { obj.SelectionOnly = true; obj.RemoveMatching = false; } });
-			UIHelper<GetRegExDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
+			UIHelper<FindTextDialog>.Register();
+			UIHelper<FindTextDialog>.AddCallback(a => a.IsRegex, (obj, o, n) => { if (!obj.IsRegex) obj.RegexGroups = false; });
+			UIHelper<FindTextDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) => { if (obj.RegexGroups) obj.IsRegex = true; });
+			UIHelper<FindTextDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.KeepMatching = obj.RemoveMatching = false; });
+			UIHelper<FindTextDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) => { if (obj.KeepMatching) { obj.SelectionOnly = true; obj.RemoveMatching = false; } });
+			UIHelper<FindTextDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
 		}
 
-		GetRegExDialog(bool isReplace, string _Text, bool _SelectionOnly)
+		FindTextDialog(bool isReplace, string _Text, bool _SelectionOnly)
 		{
 			InitializeComponent();
 
@@ -144,7 +144,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		static public Result Run(Window parent, bool isReplace, string text = null, bool selectionOnly = false)
 		{
-			var dialog = new GetRegExDialog(isReplace, text, selectionOnly) { Owner = parent };
+			var dialog = new FindTextDialog(isReplace, text, selectionOnly) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 

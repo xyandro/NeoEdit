@@ -53,7 +53,7 @@ namespace NeoEdit.HexEdit.Data
 
 		public long Length { get; protected set; }
 
-		public virtual bool Find(BinaryFindDialog.Result currentFind, long index, out long start, out long end, bool forward = true)
+		public virtual bool Find(FindBinaryDialog.Result currentFind, long index, out long start, out long end, bool forward = true)
 		{
 			start = end = -1;
 			if (!forward)

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.TextEdit.Dialogs
+namespace NeoEdit.GUI.Dialogs
 {
-	class HelpItems
+	public class HelpItems
 	{
 		public string Name { get; set; }
 		public List<HelpItem> Items { get; set; }
@@ -12,7 +12,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		public HelpItems() { Items = new List<HelpItem>(); }
 	}
 
-	class HelpItem
+	public class HelpItem
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }

@@ -111,7 +111,7 @@ namespace NeoEdit.HexEdit.Data
 			}
 		}
 
-		public override bool Find(BinaryFindDialog.Result currentFind, long index, out long start, out long end, bool forward = true)
+		public override bool Find(FindBinaryDialog.Result currentFind, long index, out long start, out long end, bool forward = true)
 		{
 			using (Suspend())
 			using (Open())

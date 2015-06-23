@@ -672,10 +672,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Cut: Command_Edit_CutCopy(true); break;
 				case TextEditCommand.Edit_Copy: Command_Edit_CutCopy(false); break;
 				case TextEditCommand.Edit_Paste: Command_Edit_Paste(shiftDown); break;
-				case TextEditCommand.Edit_Find: Command_Edit_FindReplace(false, shiftDown, dialogResult as GetRegExDialog.Result); break;
+				case TextEditCommand.Edit_Find: Command_Edit_FindReplace(false, shiftDown, dialogResult as FindTextDialog.Result); break;
 				case TextEditCommand.Edit_FindNext: Command_Edit_FindNextPrev(true, shiftDown); break;
 				case TextEditCommand.Edit_FindPrev: Command_Edit_FindNextPrev(false, shiftDown); break;
-				case TextEditCommand.Edit_Replace: Command_Edit_FindReplace(true, shiftDown, dialogResult as GetRegExDialog.Result); break;
+				case TextEditCommand.Edit_Replace: Command_Edit_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
 				case TextEditCommand.Edit_GotoLine: Command_Edit_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Edit_GotoColumn: Command_Edit_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Edit_GotoPosition: Command_Edit_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
@@ -1180,7 +1180,7 @@ namespace NeoEdit.TextEdit
 			ReplaceOneWithMany(clipboardStrings);
 		}
 
-		internal GetRegExDialog.Result Command_Edit_FindReplace_Dialog(bool isReplace)
+		internal FindTextDialog.Result Command_Edit_FindReplace_Dialog(bool isReplace)
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().AsOrdered().Any(range => range.HasSelection);
@@ -1195,10 +1195,10 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return GetRegExDialog.Run(WindowParent, isReplace, text, selectionOnly);
+			return FindTextDialog.Run(WindowParent, isReplace, text, selectionOnly);
 		}
 
-		internal void Command_Edit_FindReplace(bool replace, bool selecting, GetRegExDialog.Result result)
+		internal void Command_Edit_FindReplace(bool replace, bool selecting, FindTextDialog.Result result)
 		{
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
@@ -1209,7 +1209,7 @@ namespace NeoEdit.TextEdit
 
 			RunSearch(result);
 
-			if ((replace) || (result.ResultType == GetRegExDialog.GetRegExResultType.All))
+			if ((replace) || (result.ResultType == FindTextDialog.GetRegExResultType.All))
 			{
 				Selections.Replace(Searches);
 				Searches.Clear();
@@ -3330,7 +3330,7 @@ namespace NeoEdit.TextEdit
 			e.Handled = true;
 		}
 
-		void RunSearch(GetRegExDialog.Result result)
+		void RunSearch(FindTextDialog.Result result)
 		{
 			if ((result == null) || (result.Regex == null))
 				return;

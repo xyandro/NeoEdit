@@ -723,7 +723,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Find(bool shiftDown)
 		{
-			var results = BinaryFindDialog.Run(UIHelper.FindParent<Window>(this));
+			var results = FindBinaryDialog.Run(UIHelper.FindParent<Window>(this));
 			if (results != null)
 			{
 				currentFind = results;
@@ -922,7 +922,7 @@ namespace NeoEdit.HexEdit
 			);
 		}
 
-		BinaryFindDialog.Result currentFind;
+		FindBinaryDialog.Result currentFind;
 		void DoFind(bool shiftDown, bool forward = true)
 		{
 			if (currentFind == null)
