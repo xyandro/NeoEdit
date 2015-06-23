@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.TextEdit.UnitTest

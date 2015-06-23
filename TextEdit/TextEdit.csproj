@@ -282,7 +282,6 @@
     <Compile Include="Tabs.xaml.cs">
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextData.cs" />
     <Page Include="TextEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.TextEdit
+namespace NeoEdit.Common
 {
 	// Offsets: absolute positions in data
 	// Lines/indexes: positions in data as broken into lines
@@ -16,7 +15,7 @@ namespace NeoEdit.TextEdit
 	// 0 is before first character
 	// lineLength is after last character
 	// lineLength+1 includes line ending
-	class TextData
+	public class TextData
 	{
 		string _data;
 		public string Data { get { return _data; } private set { _data = value; RecalculateLines(); } }

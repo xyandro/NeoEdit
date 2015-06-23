@@ -35,6 +35,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Searcher.cs</LastGenOutput>
     </None>
+    <Compile Include="TextData.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />
     <Compile Include="Transform\Compression.cs" />
