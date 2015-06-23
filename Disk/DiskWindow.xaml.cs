@@ -534,6 +534,42 @@ namespace NeoEdit.Disk
 				Focused = Selected.FirstOrDefault();
 		}
 
+		Dictionary<string, List<DiskItem>> GetFilesByHash()
+		{
+			var selected = Selected.Where(item => item.FileType == DiskItem.DiskItemType.File).ToList();
+			Selected.Clear();
+			foreach (var item in selected)
+				Selected.Add(item);
+
+			if (selected.All(item => !String.IsNullOrWhiteSpace(item.SHA1)))
+				return selected.GroupBy(item => item.SHA1).ToDictionary(group => group.Key, group => group.ToList());
+			if (selected.All(item => !String.IsNullOrWhiteSpace(item.MD5)))
+				return selected.GroupBy(item => item.MD5).ToDictionary(group => group.Key, group => group.ToList());
+			Command_File_SHA1();
+			return selected.GroupBy(item => item.SHA1).ToDictionary(group => group.Key, group => group.ToList());
+		}
+
+		internal void Command_Select_Unique()
+		{
+			var byHash = GetFilesByHash();
+			Selected.Clear();
+			foreach (var pair in byHash)
+				Selected.Add(pair.Value.First());
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
+		}
+
+		internal void Command_Select_Duplicates()
+		{
+			var byHash = GetFilesByHash();
+			Selected.Clear();
+			foreach (var pair in byHash)
+				foreach (var item in pair.Value.Skip(1))
+					Selected.Add(item);
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
+		}
+
 		internal void Command_Select_AddCopiedCut()
 		{
 			var files = NEClipboard.Strings;

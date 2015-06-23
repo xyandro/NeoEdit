@@ -38,6 +38,9 @@
 		<disk:DiskMenuItem Header="_Directories" CommandEnum="Select_Directories"/>
 		<disk:DiskMenuItem Header="_Files" CommandEnum="Select_Files"/>
 		<Separator/>
+		<disk:DiskMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
+		<disk:DiskMenuItem Header="Du_plicates" CommandEnum="Select_Duplicates"/>
+		<Separator/>
 		<disk:DiskMenuItem Header="Add _Copied/Cut" CommandEnum="Select_AddCopiedCut"/>
 		<disk:DiskMenuItem Header="_Remove" CommandEnum="Select_Remove"/>
 		<disk:DiskMenuItem Header="R_emove With Children" CommandEnum="Select_RemoveWithChildren"/>

@@ -72,6 +72,8 @@ namespace NeoEdit.Disk
 				case DiskCommand.Select_Invert: Active.Item.Command_Select_Invert(); break;
 				case DiskCommand.Select_Directories: Active.Item.Command_Select_Directories(); break;
 				case DiskCommand.Select_Files: Active.Item.Command_Select_Files(); break;
+				case DiskCommand.Select_Unique: Active.Item.Command_Select_Unique(); break;
+				case DiskCommand.Select_Duplicates: Active.Item.Command_Select_Duplicates(); break;
 				case DiskCommand.Select_AddCopiedCut: Active.Item.Command_Select_AddCopiedCut(); break;
 				case DiskCommand.Select_Remove: Active.Item.Command_Select_Remove(); break;
 				case DiskCommand.Select_RemoveWithChildren: Active.Item.Command_Select_RemoveWithChildren(); break;
