@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.GUI.Converters;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.Controls
 {

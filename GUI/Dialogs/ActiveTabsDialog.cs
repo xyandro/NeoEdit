@@ -7,8 +7,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using NeoEdit.GUI.Controls;
 
-namespace NeoEdit.GUI.Controls
+namespace NeoEdit.GUI.Dialogs
 {
 	class ActiveTabsDialog<ItemType> : ModalDialog where ItemType : FrameworkElement
 	{
@@ -61,6 +62,18 @@ namespace NeoEdit.GUI.Controls
 			listView.SelectedItems.Clear();
 			foreach (var item in original)
 				listView.SelectedItems.Add(item);
+
+			listView.Loaded += (s, e) =>
+			{
+				var focusItem = original.FirstOrDefault();
+				if (focusItem != null)
+				{
+					listView.ScrollIntoView(focusItem);
+					var item = listView.ItemContainerGenerator.ContainerFromItem(focusItem) as ListBoxItem;
+					if (item != null)
+						item.Focus();
+				}
+			};
 		}
 
 		void SyncItems(IEnumerable<Tabs<ItemType>.ItemData> active)
