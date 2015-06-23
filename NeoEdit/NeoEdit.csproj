@@ -44,10 +44,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HexEdit\HexEdit.csproj">
-      <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
-      <Name>HexEdit</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>
@@ -71,6 +67,10 @@
     <ProjectReference Include="..\Handles\Handles.csproj">
       <Project>{20cb32e5-9b1d-4c78-8126-20367398001c}</Project>
       <Name>Handles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HexEdit\HexEdit.csproj">
+      <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
+      <Name>HexEdit</Name>
     </ProjectReference>
     <ProjectReference Include="..\Processes\Processes.csproj">
       <Project>{c65dd007-a448-49f5-b813-372c53d374c3}</Project>
