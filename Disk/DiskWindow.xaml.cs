@@ -409,7 +409,7 @@ namespace NeoEdit.Disk
 				Focused = Selected.FirstOrDefault();
 		}
 
-		bool SearchFile(DiskItem file, FindBinaryDialog.Result search)
+		bool BinarySearchFile(DiskItem file, FindBinaryDialog.Result search)
 		{
 			if ((file.FileType != DiskItem.DiskItemType.File) || (!file.Exists))
 				return false;
@@ -437,7 +437,17 @@ namespace NeoEdit.Disk
 			return false;
 		}
 
-		internal void Command_Edit_BinaryFind()
+		bool TextSearchFile(DiskItem file, FindTextDialog.Result search)
+		{
+			if ((file.FileType != DiskItem.DiskItemType.File) || (!file.Exists))
+				return false;
+
+			var data = new TextData(File.ReadAllBytes(file.FullName), Common.Transform.Coder.CodePage.AutoByBOM);
+			var start = data.GetOffset(0, 0);
+			return data.RegexMatches(search.Regex, start, data.NumChars - start, search.IncludeEndings, false, true).Any();
+		}
+
+		internal void Command_Edit_FindBinary()
 		{
 			if (Selected.Count == 0)
 				return;
@@ -448,7 +458,24 @@ namespace NeoEdit.Disk
 			var files = Selected.ToList();
 			Selected.Clear();
 			foreach (var file in files)
-				if (SearchFile(file, search))
+				if (BinarySearchFile(file, search))
+					Selected.Add(file);
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
+		}
+
+		internal void Command_Edit_FindText()
+		{
+			if (Selected.Count == 0)
+				return;
+			var search = FindTextDialog.Run(UIHelper.FindParent<Window>(this), FindTextDialog.FindTextType.Single);
+			if (search == null)
+				return;
+
+			var files = Selected.ToList();
+			Selected.Clear();
+			foreach (var file in files)
+				if (TextSearchFile(file, search))
 					Selected.Add(file);
 			if (!Selected.Contains(Focused))
 				Focused = Selected.FirstOrDefault();

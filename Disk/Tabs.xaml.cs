@@ -63,7 +63,8 @@ namespace NeoEdit.Disk
 				case DiskCommand.Edit_Copy: Active.Item.Command_Edit_CutCopy(false); break;
 				case DiskCommand.Edit_Paste: Active.Item.Command_Edit_Paste(); break;
 				case DiskCommand.Edit_Find: Active.Item.Command_Edit_Find(); break;
-				case DiskCommand.Edit_BinaryFind: Active.Item.Command_Edit_BinaryFind(); break;
+				case DiskCommand.Edit_FindBinary: Active.Item.Command_Edit_FindBinary(); break;
+				case DiskCommand.Edit_FindText: Active.Item.Command_Edit_FindText(); break;
 				case DiskCommand.Edit_TextEdit: Active.Item.Command_Edit_TextEdit(); break;
 				case DiskCommand.Edit_HexEdit: Active.Item.Command_Edit_HexEdit(); break;
 				case DiskCommand.Select_All: Active.Item.Command_Select_All(); break;

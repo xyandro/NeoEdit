@@ -461,7 +461,7 @@ namespace NeoEdit.Common
 			return -1;
 		}
 
-		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool includeEndings, bool regexGroups)
+		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool includeEndings, bool regexGroups, bool firstOnly)
 		{
 			var result = new List<Tuple<int, int>>();
 			var endOffset = offset + length;
@@ -486,6 +486,8 @@ namespace NeoEdit.Common
 							if (match.Groups[ctr].Success)
 								result.Add(new Tuple<int, int>(offset + match.Groups[ctr].Index, match.Groups[ctr].Length));
 					}
+					if ((firstOnly) && (result.Count != 0))
+						return result;
 				}
 				offset = nextOffset;
 			}

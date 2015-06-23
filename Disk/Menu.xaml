@@ -19,12 +19,13 @@
 		<disk:DiskMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
-		<disk:DiskMenuItem Header="Cu_t" CommandEnum="Edit_Cut"/>
+		<disk:DiskMenuItem Header="C_ut" CommandEnum="Edit_Cut"/>
 		<disk:DiskMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
 		<disk:DiskMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="_Find" CommandEnum="Edit_Find"/>
-		<disk:DiskMenuItem Header="_Binary Find" CommandEnum="Edit_BinaryFind"/>
+		<disk:DiskMenuItem Header="_Binary Find" CommandEnum="Edit_FindBinary"/>
+		<disk:DiskMenuItem Header="_Text Find" CommandEnum="Edit_FindText"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="Te_xt Edit" CommandEnum="Edit_TextEdit"/>
 		<disk:DiskMenuItem Header="_Hex Edit" CommandEnum="Edit_HexEdit"/>

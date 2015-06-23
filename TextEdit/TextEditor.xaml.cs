@@ -1195,7 +1195,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return FindTextDialog.Run(WindowParent, isReplace, text, selectionOnly);
+			return FindTextDialog.Run(WindowParent, isReplace ? FindTextDialog.FindTextType.Replace : FindTextDialog.FindTextType.Selections, text, selectionOnly);
 		}
 
 		internal void Command_Edit_FindReplace(bool replace, bool selecting, FindTextDialog.Result result)
@@ -3339,7 +3339,7 @@ namespace NeoEdit.TextEdit
 
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { new Range(EndOffset(), BeginOffset()) };
 			foreach (var region in regions)
-				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.IncludeEndings, result.RegexGroups).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.IncludeEndings, result.RegexGroups, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 		}
 
 		string GetString(Range range)

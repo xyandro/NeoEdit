@@ -8,6 +8,13 @@ namespace NeoEdit.GUI.Dialogs
 {
 	partial class FindTextDialog
 	{
+		public enum FindTextType
+		{
+			Single,
+			Selections,
+			Replace,
+		}
+
 		public enum GetRegExResultType
 		{
 			Next,
@@ -65,7 +72,7 @@ namespace NeoEdit.GUI.Dialogs
 			UIHelper<FindTextDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
 		}
 
-		FindTextDialog(bool isReplace, string _Text, bool _SelectionOnly)
+		FindTextDialog(FindTextType findType, string _Text, bool _SelectionOnly)
 		{
 			InitializeComponent();
 
@@ -83,15 +90,21 @@ namespace NeoEdit.GUI.Dialogs
 			if ((String.IsNullOrEmpty(Text)) && (History.Count != 0))
 				Text = History[0];
 
-			if (isReplace)
+			switch (findType)
 			{
-				if (ReplaceHistory.Count != 0)
-					Replace = ReplaceHistory[0];
-				byGroup.Visibility = find.Visibility = selectAll.Visibility = keepMatching.Visibility = removeMatching.Visibility = Visibility.Collapsed;
-				RegexGroups = false;
+				case FindTextType.Single:
+					byGroup.Visibility = selectionOnly.Visibility = keepMatching.Visibility = removeMatching.Visibility = selectAll.Visibility = Visibility.Collapsed;
+					goto case FindTextType.Selections;
+				case FindTextType.Selections:
+					replaceLabel.Visibility = replace.Visibility = replaceButton.Visibility = Visibility.Collapsed;
+					break;
+				case FindTextType.Replace:
+					if (ReplaceHistory.Count != 0)
+						Replace = ReplaceHistory[0];
+					byGroup.Visibility = find.Visibility = selectAll.Visibility = keepMatching.Visibility = removeMatching.Visibility = Visibility.Collapsed;
+					RegexGroups = false;
+					break;
 			}
-			else
-				replaceLabel.Visibility = replace.Visibility = replaceButton.Visibility = Visibility.Collapsed;
 		}
 
 		void Escape(object sender, RoutedEventArgs e)
@@ -142,9 +155,9 @@ namespace NeoEdit.GUI.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, bool isReplace, string text = null, bool selectionOnly = false)
+		static public Result Run(Window parent, FindTextType findType, string text = null, bool selectionOnly = false)
 		{
-			var dialog = new FindTextDialog(isReplace, text, selectionOnly) { Owner = parent };
+			var dialog = new FindTextDialog(findType, text, selectionOnly) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 
