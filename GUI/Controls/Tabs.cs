@@ -73,7 +73,7 @@ namespace NeoEdit.GUI.Controls
 
 		public void ShowActiveTabsDialog()
 		{
-			ActiveTabsDialog<ItemType>.Run(UIHelper.FindParent<Window>(this), Items, TabLabelPath);
+			ActiveTabsDialog<ItemType>.Run(this);
 			UpdateTopMost();
 		}
 
@@ -102,8 +102,8 @@ namespace NeoEdit.GUI.Controls
 			if (!shiftDown)
 				foreach (var item in Items)
 					item.Active = false;
-
 			TopMost.Active = true;
+
 			if (!controlDown)
 				TopMost.ItemOrder = ++itemOrder;
 
@@ -124,8 +124,6 @@ namespace NeoEdit.GUI.Controls
 				topMost = Items.Where(item => item.Active).OrderByDescending(item => item.ItemOrder).FirstOrDefault();
 			if (topMost == null)
 				topMost = Items.OrderByDescending(item => item.ItemOrder).FirstOrDefault();
-			if (topMost != null)
-				topMost.Active = true;
 			TopMost = topMost;
 		}
 

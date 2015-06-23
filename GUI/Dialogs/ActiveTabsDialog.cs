@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -13,25 +12,28 @@ namespace NeoEdit.GUI.Dialogs
 {
 	class ActiveTabsDialog<ItemType> : ModalDialog where ItemType : FrameworkElement
 	{
-		readonly List<Tabs<ItemType>.ItemData> original;
-		readonly ObservableCollection<Tabs<ItemType>.ItemData> items;
-		public ActiveTabsDialog(ObservableCollection<Tabs<ItemType>.ItemData> items, string tabLabelPath)
+		readonly List<Tabs<ItemType>.ItemData> originalActive;
+		readonly Tabs<ItemType>.ItemData originalTopMost;
+		readonly Tabs<ItemType> tabs;
+		public ActiveTabsDialog(Tabs<ItemType> tabs)
 		{
-			this.items = items;
-			original = items.Where(item => item.Active).ToList();
-			Setup(tabLabelPath);
+			this.tabs = tabs;
+			originalActive = tabs.Items.Where(item => item.Active).ToList();
+			originalTopMost = tabs.TopMost;
+			Setup();
 		}
 
-		void Setup(string tabLabelPath)
+		void Setup()
 		{
 			Title = "Active Tabs";
 			ListView listView;
 			var stackPanel = new StackPanel { Margin = new Thickness(10) };
 			{
-				listView = new ListView { ItemsSource = items, Height = 400, SelectionMode = SelectionMode.Extended };
+				// Use a copy of Items list because events were still firing after window was closed
+				listView = new ListView { ItemsSource = tabs.Items.ToList(), Height = 400, SelectionMode = SelectionMode.Extended };
 				{
 					var gridView = new GridView();
-					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name) { Converter = new GetLabelConverter(tabLabelPath) }, Width = 500 });
+					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name) { Converter = new GetLabelConverter(tabs.TabLabelPath) }, Width = 500 });
 					listView.View = gridView;
 				}
 				listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<Tabs<ItemType>.ItemData>());
@@ -48,7 +50,8 @@ namespace NeoEdit.GUI.Dialogs
 					var cancelButton = new Button { IsCancel = true, Content = "Cancel", Padding = new Thickness(10, 1, 10, 1) };
 					cancelButton.Click += (s, e) =>
 					{
-						SyncItems(original);
+						SyncItems(originalActive);
+						tabs.TopMost = originalTopMost;
 						DialogResult = false;
 					};
 					uniformGrid.Children.Add(cancelButton);
@@ -60,12 +63,12 @@ namespace NeoEdit.GUI.Dialogs
 			SizeToContent = SizeToContent.WidthAndHeight;
 
 			listView.SelectedItems.Clear();
-			foreach (var item in original)
+			foreach (var item in originalActive)
 				listView.SelectedItems.Add(item);
 
 			listView.Loaded += (s, e) =>
 			{
-				var focusItem = original.FirstOrDefault();
+				var focusItem = originalActive.FirstOrDefault();
 				if (focusItem != null)
 				{
 					listView.ScrollIntoView(focusItem);
@@ -79,13 +82,18 @@ namespace NeoEdit.GUI.Dialogs
 		void SyncItems(IEnumerable<Tabs<ItemType>.ItemData> active)
 		{
 			var activeHash = new HashSet<Tabs<ItemType>.ItemData>(active);
-			foreach (var item in items)
+			foreach (var item in tabs.Items)
 				item.Active = activeHash.Contains(item);
+			var topMost = tabs.TopMost;
+			if (!activeHash.Contains(topMost))
+				topMost = active.FirstOrDefault();
+			if (topMost != null)
+				tabs.TopMost = topMost;
 		}
 
-		public static void Run(Window parent, ObservableCollection<Tabs<ItemType>.ItemData> items, string tabLabelPath)
+		public static void Run(Tabs<ItemType> tabs)
 		{
-			new ActiveTabsDialog<ItemType>(items, tabLabelPath) { Owner = parent }.ShowDialog();
+			new ActiveTabsDialog<ItemType>(tabs) { Owner = UIHelper.FindParent<Window>(tabs) }.ShowDialog();
 		}
 
 		public class GetLabelConverter : IValueConverter
