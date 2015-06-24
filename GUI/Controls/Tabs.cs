@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.GUI.Controls
 {
@@ -48,6 +49,10 @@ namespace NeoEdit.GUI.Controls
 		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ViewType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public string TabLabelPath { get { return UIHelper<Tabs<ItemType>>.GetPropValue<string>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		[DepProp]
+		public double TabsScroll { get { return UIHelper<Tabs<ItemType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		[DepProp]
+		public double TabsScrollMax { get { return UIHelper<Tabs<ItemType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 
 		static Tabs()
 		{
@@ -223,6 +228,33 @@ namespace NeoEdit.GUI.Controls
 			protected override bool IsItemItsOwnContainerOverride(object item) { return false; }
 		}
 
+		class NotifierLabel : Label
+		{
+			public static readonly RoutedEvent ItemMatchEvent = EventManager.RegisterRoutedEvent("ItemMatch", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NotifierLabel));
+
+			[DepProp]
+			public object Item { get { return UIHelper<NotifierLabel>.GetPropValue<object>(this); } private set { UIHelper<NotifierLabel>.SetPropValue(this, value); } }
+
+			public event RoutedEventHandler ItemMatch
+			{
+				add { AddHandler(ItemMatchEvent, value); }
+				remove { RemoveHandler(ItemMatchEvent, value); }
+			}
+
+			static NotifierLabel() { UIHelper<NotifierLabel>.Register(); }
+
+			PropertyChangeNotifier notifier;
+			public NotifierLabel()
+			{
+				Focusable = false;
+				notifier = new PropertyChangeNotifier(this, UIHelper<NotifierLabel>.GetProperty(a => a.Item), () =>
+				{
+					if (Item == DataContext)
+						Dispatcher.BeginInvoke((Action)(() => RaiseEvent(new RoutedEventArgs(ItemMatchEvent))));
+				});
+			}
+		}
+
 		class ColumnCountConverter : IValueConverter
 		{
 			public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -236,7 +268,7 @@ namespace NeoEdit.GUI.Controls
 
 		FrameworkElementFactory GetLabel(ViewType view)
 		{
-			var label = new FrameworkElementFactory(typeof(Label));
+			var label = new FrameworkElementFactory(typeof(NotifierLabel));
 			if (view == ViewType.Tiles)
 				label.SetValue(DockPanel.DockProperty, Dock.Top);
 			label.SetBinding(Label.ContentProperty, new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name + "." + TabLabelPath));
@@ -274,7 +306,21 @@ namespace NeoEdit.GUI.Controls
 						var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
 						itemsControl.SetValue(DockPanel.DockProperty, Dock.Top);
 						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Items).Name) { Source = this });
-						itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, new DataTemplate { VisualTree = GetLabel(ViewType.Tabs) });
+						{
+							var notifierLabel = GetLabel(ViewType.Tabs);
+							notifierLabel.SetBinding(UIHelper<NotifierLabel>.GetProperty(a => a.Item), new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
+							notifierLabel.AddHandler(NotifierLabel.ItemMatchEvent, (RoutedEventHandler)((s, e) =>
+							{
+								var label = s as NotifierLabel;
+								var scrollViewer = UIHelper.FindParent<ScrollViewer>(label);
+								var left = label.TranslatePoint(new Point(0, 0), scrollViewer).X + TabsScroll;
+								var right = label.TranslatePoint(new Point(label.ActualWidth, 0), scrollViewer).X + TabsScroll;
+								TabsScroll = Math.Min(left, Math.Max(TabsScroll, right - scrollViewer.ViewportWidth));
+								TabsScroll = Math.Max(0, Math.Min(TabsScroll, TabsScrollMax));
+							}));
+							var itemTemplate = new DataTemplate { VisualTree = notifierLabel };
+							itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, itemTemplate);
+						}
 
 						{
 							var itemsPanel = new ItemsPanelTemplate();
@@ -284,6 +330,42 @@ namespace NeoEdit.GUI.Controls
 								itemsPanel.VisualTree = stackPanel;
 							}
 							itemsControl.SetValue(AllItemsControl.ItemsPanelProperty, itemsPanel);
+							{
+								var template = new ControlTemplate();
+								{
+									var dockPanel2 = new FrameworkElementFactory(typeof(DockPanel));
+
+									{
+										var repeatButton = new FrameworkElementFactory(typeof(RepeatButton));
+										repeatButton.SetValue(DockPanel.DockProperty, Dock.Left);
+										repeatButton.SetValue(RepeatButton.ContentProperty, "<");
+										repeatButton.SetValue(RepeatButton.MarginProperty, new Thickness(0, 0, 4, 0));
+										repeatButton.SetValue(RepeatButton.PaddingProperty, new Thickness(5, 0, 5, 0));
+										repeatButton.AddHandler(RepeatButton.ClickEvent, (RoutedEventHandler)((s, e) => TabsScroll = Math.Max(0, Math.Min(TabsScroll - 50, TabsScrollMax))));
+										dockPanel2.AppendChild(repeatButton);
+									}
+									{
+										var repeatButton = new FrameworkElementFactory(typeof(RepeatButton));
+										repeatButton.SetValue(DockPanel.DockProperty, Dock.Right);
+										repeatButton.SetValue(RepeatButton.ContentProperty, ">");
+										repeatButton.SetValue(RepeatButton.MarginProperty, new Thickness(2, 0, 0, 0));
+										repeatButton.SetValue(RepeatButton.PaddingProperty, new Thickness(5, 0, 5, 0));
+										repeatButton.AddHandler(RepeatButton.ClickEvent, (RoutedEventHandler)((s, e) => TabsScroll = Math.Max(0, Math.Min(TabsScroll + 50, TabsScrollMax))));
+										dockPanel2.AppendChild(repeatButton);
+									}
+									{
+										var scrollViewer = new FrameworkElementFactory(typeof(BindableScrollViewer));
+										scrollViewer.SetValue(BindableScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
+										scrollViewer.SetValue(BindableScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
+										scrollViewer.SetBinding(UIHelper<BindableScrollViewer>.GetProperty(a => a.HorizontalPosition), new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TabsScroll).Name) { Source = this, Mode = BindingMode.TwoWay });
+										scrollViewer.SetBinding(UIHelper<BindableScrollViewer>.GetProperty(a => a.HorizontalMax), new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TabsScrollMax).Name) { Source = this, Mode = BindingMode.OneWayToSource });
+										scrollViewer.AppendChild(new FrameworkElementFactory(typeof(ItemsPresenter)));
+										dockPanel2.AppendChild(scrollViewer);
+									}
+									template.VisualTree = dockPanel2;
+								}
+								itemsControl.SetValue(AllItemsControl.TemplateProperty, template);
+							}
 						}
 						dockPanel.AppendChild(itemsControl);
 					}
