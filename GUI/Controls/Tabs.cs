@@ -313,6 +313,8 @@ namespace NeoEdit.GUI.Controls
 							{
 								var label = s as NotifierLabel;
 								var scrollViewer = UIHelper.FindParent<ScrollViewer>(label);
+								if (scrollViewer == null)
+									return;
 								var left = label.TranslatePoint(new Point(0, 0), scrollViewer).X + TabsScroll;
 								var right = label.TranslatePoint(new Point(label.ActualWidth, 0), scrollViewer).X + TabsScroll;
 								TabsScroll = Math.Min(left, Math.Max(TabsScroll, right - scrollViewer.ViewportWidth));
