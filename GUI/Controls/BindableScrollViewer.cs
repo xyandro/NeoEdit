@@ -19,8 +19,8 @@ namespace NeoEdit.GUI.Controls
 			UIHelper<BindableScrollViewer>.Register();
 			UIHelper<BindableScrollViewer>.AddCallback(a => a.HorizontalPosition, (obj, o, n) => obj.ScrollToHorizontalOffset(obj.HorizontalPosition));
 			UIHelper<BindableScrollViewer>.AddCallback(a => a.VerticalPosition, (obj, o, n) => obj.ScrollToHorizontalOffset(obj.VerticalPosition));
-			UIHelper<BindableScrollViewer>.AddCoerce(a => a.HorizontalPosition, (obj, value) => Math.Max(0, Math.Min(value, obj.ViewportWidth)));
-			UIHelper<BindableScrollViewer>.AddCoerce(a => a.VerticalPosition, (obj, value) => Math.Max(0, Math.Min(value, obj.ViewportHeight)));
+			UIHelper<BindableScrollViewer>.AddCoerce(a => a.HorizontalPosition, (obj, value) => Math.Max(0, Math.Min(value, obj.ScrollableWidth)));
+			UIHelper<BindableScrollViewer>.AddCoerce(a => a.VerticalPosition, (obj, value) => Math.Max(0, Math.Min(value, obj.ScrollableHeight)));
 		}
 
 		protected override void OnScrollChanged(ScrollChangedEventArgs e)
