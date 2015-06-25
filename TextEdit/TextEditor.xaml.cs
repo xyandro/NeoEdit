@@ -2846,8 +2846,8 @@ namespace NeoEdit.TextEdit
 
 				foreach (var tuple in Data.GetLineColumnDiffs(line))
 				{
-					var start = tuple.Item1 - startColumn;
-					var len = tuple.Item2 + Math.Min(start, 0);
+					var start = Math.Max(0, tuple.Item1 - startColumn);
+					var len = tuple.Item2 + Math.Min(0, tuple.Item1 - startColumn);
 					if (len > 0)
 						dc.DrawRectangle(Misc.diffMajorBrush, null, new Rect(Font.charWidth * start, y[line], len * Font.charWidth, Font.lineHeight));
 				}
