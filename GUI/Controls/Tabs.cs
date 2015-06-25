@@ -198,9 +198,9 @@ namespace NeoEdit.GUI.Controls
 					TopMost = item;
 		}
 
-		void OnDrop(DragEventArgs e, Label toLabel)
+		void OnDrop(DragEventArgs e, TabLabel toLabel)
 		{
-			var fromLabel = e.Data.GetData(typeof(Label)) as Label;
+			var fromLabel = e.Data.GetData(typeof(TabLabel)) as TabLabel;
 			if ((fromLabel == null) || (toLabel == fromLabel))
 				return;
 
@@ -228,12 +228,12 @@ namespace NeoEdit.GUI.Controls
 			protected override bool IsItemItsOwnContainerOverride(object item) { return false; }
 		}
 
-		class NotifierLabel : Label
+		class TabLabel : TextBlock
 		{
-			public static readonly RoutedEvent ItemMatchEvent = EventManager.RegisterRoutedEvent("ItemMatch", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NotifierLabel));
+			public static readonly RoutedEvent ItemMatchEvent = EventManager.RegisterRoutedEvent("ItemMatch", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(TabLabel));
 
 			[DepProp]
-			public object Item { get { return UIHelper<NotifierLabel>.GetPropValue<object>(this); } private set { UIHelper<NotifierLabel>.SetPropValue(this, value); } }
+			public object Item { get { return UIHelper<TabLabel>.GetPropValue<object>(this); } private set { UIHelper<TabLabel>.SetPropValue(this, value); } }
 
 			public event RoutedEventHandler ItemMatch
 			{
@@ -241,13 +241,13 @@ namespace NeoEdit.GUI.Controls
 				remove { RemoveHandler(ItemMatchEvent, value); }
 			}
 
-			static NotifierLabel() { UIHelper<NotifierLabel>.Register(); }
+			static TabLabel() { UIHelper<TabLabel>.Register(); }
 
 			PropertyChangeNotifier notifier;
-			public NotifierLabel()
+			public TabLabel()
 			{
 				Focusable = false;
-				notifier = new PropertyChangeNotifier(this, UIHelper<NotifierLabel>.GetProperty(a => a.Item), () =>
+				notifier = new PropertyChangeNotifier(this, UIHelper<TabLabel>.GetProperty(a => a.Item), () =>
 				{
 					if (Item == DataContext)
 						Dispatcher.BeginInvoke((Action)(() => RaiseEvent(new RoutedEventArgs(ItemMatchEvent))));
@@ -268,28 +268,28 @@ namespace NeoEdit.GUI.Controls
 
 		FrameworkElementFactory GetLabel(ViewType view)
 		{
-			var label = new FrameworkElementFactory(typeof(NotifierLabel));
+			var label = new FrameworkElementFactory(typeof(TabLabel));
 			if (view == ViewType.Tiles)
 				label.SetValue(DockPanel.DockProperty, Dock.Top);
-			label.SetBinding(Label.ContentProperty, new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name + "." + TabLabelPath));
-			label.SetValue(Label.PaddingProperty, new Thickness(10, 2, 10, 2));
-			label.SetValue(Label.MarginProperty, new Thickness(0, 0, view == ViewType.Tabs ? 2 : 0, 1));
+			label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name + "." + TabLabelPath));
+			label.SetValue(TabLabel.PaddingProperty, new Thickness(10, 2, 10, 2));
+			label.SetValue(TabLabel.MarginProperty, new Thickness(0, 0, view == ViewType.Tabs ? 2 : 0, 1));
 
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [2] ? 'CadetBlue' : ([1] ? 'LightBlue' : 'LightGray')" };
 			multiBinding.Bindings.Add(new Binding());
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Active).Name));
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
-			label.SetBinding(Label.BackgroundProperty, multiBinding);
+			label.SetBinding(TabLabel.BackgroundProperty, multiBinding);
 
-			label.SetValue(Label.AllowDropProperty, true);
-			label.AddHandler(Label.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = (s as Label).DataContext as ItemData));
-			label.AddHandler(Label.MouseMoveEvent, (MouseEventHandler)((s, e) =>
+			label.SetValue(TabLabel.AllowDropProperty, true);
+			label.AddHandler(TabLabel.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = (s as TabLabel).DataContext as ItemData));
+			label.AddHandler(TabLabel.MouseMoveEvent, (MouseEventHandler)((s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
-					DragDrop.DoDragDrop(s as Label, new DataObject(typeof(Label), s as Label), DragDropEffects.Move);
+					DragDrop.DoDragDrop(s as TabLabel, new DataObject(typeof(TabLabel), s as TabLabel), DragDropEffects.Move);
 			}));
 
-			label.AddHandler(Label.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as Label)));
+			label.AddHandler(TabLabel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as TabLabel)));
 
 			return label;
 		}
@@ -308,10 +308,10 @@ namespace NeoEdit.GUI.Controls
 						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Items).Name) { Source = this });
 						{
 							var notifierLabel = GetLabel(ViewType.Tabs);
-							notifierLabel.SetBinding(UIHelper<NotifierLabel>.GetProperty(a => a.Item), new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
-							notifierLabel.AddHandler(NotifierLabel.ItemMatchEvent, (RoutedEventHandler)((s, e) =>
+							notifierLabel.SetBinding(UIHelper<TabLabel>.GetProperty(a => a.Item), new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
+							notifierLabel.AddHandler(TabLabel.ItemMatchEvent, (RoutedEventHandler)((s, e) =>
 							{
-								var label = s as NotifierLabel;
+								var label = s as TabLabel;
 								var scrollViewer = UIHelper.FindParent<ScrollViewer>(label);
 								if (scrollViewer == null)
 									return;
