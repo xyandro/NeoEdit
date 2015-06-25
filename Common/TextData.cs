@@ -166,6 +166,8 @@ namespace NeoEdit.Common
 
 			// Calculate max index/columns
 			MaxColumn = Enumerable.Range(0, NumLines).AsParallel().Max(line => GetLineColumnsLength(line));
+
+			diffData = null;
 		}
 
 		public string this[int line] { get { return GetLine(line); } }
@@ -289,6 +291,8 @@ namespace NeoEdit.Common
 			var line = lineOffset.BinarySearch(offset);
 			if (line < 0)
 				line = ~line - 1;
+			while ((line < lineOffset.Count - 2) && (lineOffset[line] == lineOffset[line + 1]))
+				++line;
 			if (line == lineOffset.Count - 1)
 				--line;
 			return line;
@@ -528,6 +532,146 @@ namespace NeoEdit.Common
 				++offset;
 				--length;
 			}
+		}
+
+		class DiffData
+		{
+			public string Data;
+			public List<LCS.MatchType> LineCompare;
+			public List<Tuple<int, int>>[] ColCompare;
+			public Dictionary<int, int> LineMap, LineRevMap;
+
+			public DiffData(string data) { Data = data; }
+		}
+		DiffData diffData;
+
+		public static void CalculateDiff(TextData data0, TextData data1)
+		{
+			if ((data0.diffData != null) && (data1.diffData != null) && (data0.diffData.Data == data0.Data) && (data1.diffData.Data == data1.Data))
+				return;
+
+			data0.ClearDiff();
+			data1.ClearDiff();
+
+			data0.diffData = new DiffData(data0.Data);
+			data1.diffData = new DiffData(data1.Data);
+
+			var lines0 = Enumerable.Range(0, data0.NumLines).Select(line => data0.GetLine(line)).ToList();
+			var lines1 = Enumerable.Range(0, data1.NumLines).Select(line => data1.GetLine(line)).ToList();
+			LCS.GetLCS(lines0, lines1, out data0.diffData.LineCompare, out data1.diffData.LineCompare);
+
+			for (var pass = 0; pass < 2; ++pass)
+			{
+				var passData = pass == 0 ? data0 : data1;
+				for (var ctr = 0; ctr < passData.diffData.LineCompare.Count; ++ctr)
+				{
+					if (passData.diffData.LineCompare[ctr] == LCS.MatchType.Gap)
+					{
+						passData.lineOffset.Insert(ctr, passData.lineOffset[ctr]);
+						passData.endingOffset.Insert(ctr, passData.lineOffset[ctr]);
+					}
+				}
+			}
+
+			if (data0.diffData.LineCompare.Count != data1.diffData.LineCompare.Count)
+				throw new Exception("Diff count assertion failure");
+
+			for (var pass = 0; pass < 2; ++pass)
+			{
+				var passData = pass == 0 ? data0 : data1;
+				passData.diffData.LineMap = new Dictionary<int, int>();
+				var pos = -1;
+				for (var line = 0; line < passData.diffData.LineCompare.Count; ++line)
+				{
+					if (passData.diffData.LineCompare[line] != LCS.MatchType.Gap)
+						++pos;
+
+					passData.diffData.LineMap[line] = pos;
+				}
+				passData.diffData.LineRevMap = passData.diffData.LineMap.GroupBy(pair => pair.Value).ToDictionary(group => group.Key, group => group.Min(pair => pair.Key));
+			}
+
+			data0.diffData.ColCompare = new List<Tuple<int, int>>[data0.diffData.LineCompare.Count];
+			data1.diffData.ColCompare = new List<Tuple<int, int>>[data0.diffData.LineCompare.Count];
+			for (var line = 0; line < data0.diffData.ColCompare.Length; ++line)
+			{
+				if ((data0.diffData.LineCompare[line] == LCS.MatchType.Mismatch) && (data1.diffData.LineCompare[line] == LCS.MatchType.Mismatch))
+				{
+					var line0 = data0.GetLineColumns(line);
+					var line1 = data1.GetLineColumns(line);
+					List<LCS.MatchType> cols0, cols1;
+					LCS.GetLCS(line0.ToList(), line1.ToList(), out cols0, out cols1);
+
+					for (var pass = 0; pass < 2; ++pass)
+					{
+						var passData = pass == 0 ? data0 : data1;
+						var cols = pass == 0 ? cols0 : cols1;
+						int? start = null;
+						int pos = 0;
+						passData.diffData.ColCompare[line] = new List<Tuple<int, int>>();
+						for (var ctr = 0; ctr <= cols.Count; ++ctr, ++pos)
+						{
+							if ((ctr == cols.Count) || (cols[ctr] == LCS.MatchType.Match))
+							{
+								if (start.HasValue)
+									passData.diffData.ColCompare[line].Add(Tuple.Create(start.Value, pos - start.Value));
+								start = null;
+								continue;
+							}
+
+							if (cols[ctr] != LCS.MatchType.Mismatch)
+							{
+								--pos;
+								continue;
+							}
+
+							start = start ?? pos;
+						}
+					}
+				}
+			}
+		}
+
+		public void ClearDiff()
+		{
+			if (diffData == null)
+				return;
+
+			for (var line = diffData.LineCompare.Count - 1; line >= 0; --line)
+				if (diffData.LineCompare[line] == LCS.MatchType.Gap)
+				{
+					lineOffset.RemoveAt(line);
+					endingOffset.RemoveAt(line);
+				}
+
+			diffData = null;
+		}
+
+		public int GetDiffLine(int line)
+		{
+			return (diffData == null) || (line >= diffData.LineMap.Count) ? line : diffData.LineMap[line];
+		}
+
+		public int GetNonDiffLine(int line)
+		{
+			return (diffData == null) || (line >= diffData.LineRevMap.Count) ? line : diffData.LineRevMap[line];
+		}
+
+		public LCS.MatchType GetLineDiffStatus(int line)
+		{
+			return diffData == null ? LCS.MatchType.Match : diffData.LineCompare[line];
+		}
+
+		public List<Tuple<int, int>> GetLineColumnDiffs(int line)
+		{
+			return (diffData == null ? null : diffData.ColCompare[line]) ?? new List<Tuple<int, int>>();
+		}
+
+		public int SkipDiffGaps(int line, int direction)
+		{
+			while ((diffData != null) && (line >= 0) && (line < diffData.LineCompare.Count) && (diffData.LineCompare[line] == LCS.MatchType.Gap))
+				line += direction;
+			return line;
 		}
 	}
 }

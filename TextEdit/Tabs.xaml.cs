@@ -141,6 +141,14 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(file);
 		}
 
+		void Command_File_Diff()
+		{
+			var active = TextEditors.Where(data => data.Active).ToList();
+			if (active.Count != 2)
+				throw new Exception("Must have two files active for diff.");
+			active[0].Item.DiffTarget = active[1].Item;
+		}
+
 		void Command_Edit_CopyAll()
 		{
 			var data = new List<string>();
@@ -384,12 +392,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_New: Create(createNew: shiftDown, textEditTabs: shiftDown ? null : this); break;
 				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
+				case TextEditCommand.File_Diff: Command_File_Diff(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_CopyAll: Command_Edit_CopyAll(); break;
-				case TextEditCommand.Macro_Open: Command_File_Open(dialogResult as OpenFileDialogResult); return;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
+				case TextEditCommand.Macro_Open: Command_File_Open(dialogResult as OpenFileDialogResult); return;
 			}
 
 			foreach (var textEditorItem in TextEditors.Where(item => item.Active).ToList())
@@ -409,6 +418,7 @@ namespace NeoEdit.TextEdit
 		internal void Remove(TextEditor textEditor, bool closeIfLast = false)
 		{
 			TextEditors.Remove(TextEditors.Single(item => item.Item == textEditor));
+			textEditor.Closed();
 			if ((closeIfLast) && (TextEditors.Count == 0))
 				Close();
 		}

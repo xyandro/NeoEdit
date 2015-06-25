@@ -19,6 +19,8 @@ namespace NeoEdit.TextEdit
 		File_CopyPath,
 		File_CopyName,
 		File_Explore,
+		File_Diff,
+		File_BreakDiff,
 		File_Encoding,
 		File_ReopenWithEncoding,
 		[KeyGesture(Key.H, ModifierKeys.Control | ModifierKeys.Alt)] File_HexEditor,

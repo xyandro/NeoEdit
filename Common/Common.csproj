@@ -22,6 +22,7 @@
     <None Include="Expressions\Source\Expression.g4" />
     <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="LCS.cs" />
     <Compile Include="NEClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,6 +1,5 @@
 All:
 Add command prompt
-Diff?
 
 Disk:
 Select by SVN ignore

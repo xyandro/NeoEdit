@@ -30,6 +30,9 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Exp_lore" CommandEnum="File_Explore"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="File_Diff"/>
+		<textEdit:TextEditMenuItem Header="_Break Diff" CommandEnum="File_BreakDiff"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
 		<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_ReopenWithEncoding"/>
 		<textEdit:TextEditMenuItem Header="_Hex Editor" CommandEnum="File_HexEditor"/>

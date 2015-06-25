@@ -44,6 +44,7 @@ namespace NeoEdit.TextEdit
 				Searches.Clear();
 				Bookmarks.Clear();
 				undoRedo.Clear();
+				CalculateDiff();
 				CalculateBoundaries();
 			}
 		}
@@ -98,6 +99,38 @@ namespace NeoEdit.TextEdit
 
 		TextEditTabs TabsParent { get { return UIHelper.FindParent<TextEditTabs>(GetValue(Tabs.TabParentProperty) as Tabs); } }
 		Window WindowParent { get { return UIHelper.FindParent<Window>(this); } }
+		TextEditor diffTarget;
+		public TextEditor DiffTarget
+		{
+			get { return diffTarget; }
+			set
+			{
+				if (value == this)
+					value = null;
+
+				if (diffTarget != null)
+				{
+					BindingOperations.ClearBinding(this, UIHelper<TextEditor>.GetProperty(a => a.yScrollValue));
+					BindingOperations.ClearBinding(diffTarget, UIHelper<TextEditor>.GetProperty(a => a.yScrollValue));
+					Data.ClearDiff();
+					diffTarget.Data.ClearDiff();
+					CalculateBoundaries();
+					diffTarget.CalculateBoundaries();
+					diffTarget.diffTarget = null;
+					diffTarget = null;
+				}
+
+				if (value != null)
+				{
+					value.DiffTarget = null;
+					diffTarget = value;
+					value.diffTarget = this;
+					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue), new Binding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue).Name) { Source = value, Mode = BindingMode.TwoWay });
+				}
+
+				CalculateDiff();
+			}
+		}
 
 		int xScrollViewportFloor { get { return (int)Math.Floor(xScroll.ViewportSize); } }
 		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScroll.ViewportSize); } }
@@ -363,6 +396,11 @@ namespace NeoEdit.TextEdit
 					return !IsModified;
 			}
 			return false;
+		}
+
+		internal void Closed()
+		{
+			DiffTarget = null;
 		}
 
 		internal enum GetPathType
@@ -663,6 +701,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_CopyPath: Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Command_File_CopyName(); break;
 				case TextEditCommand.File_Explore: Command_File_Explore(); break;
+				case TextEditCommand.File_BreakDiff: Command_File_BreakDiff(); break;
 				case TextEditCommand.File_Encoding: Command_File_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_ReopenWithEncoding: Command_File_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_HexEditor: if (Command_File_HexEditor()) { TabsParent.Remove(this, true); } break;
@@ -1055,6 +1094,11 @@ namespace NeoEdit.TextEdit
 			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
 		}
 
+		internal void Command_File_BreakDiff()
+		{
+			DiffTarget = null;
+		}
+
 		internal EncodingDialog.Result Command_File_Encoding_Dialog()
 		{
 			return EncodingDialog.Run(WindowParent, CodePage, lineEndings: LineEnding ?? "");
@@ -1241,7 +1285,7 @@ namespace NeoEdit.TextEdit
 			int startValue;
 			switch (gotoType)
 			{
-				case GotoType.Line: startValue = line; break;
+				case GotoType.Line: startValue = Data.GetDiffLine(line - 1) + 1; break;
 				case GotoType.Column: startValue = index; break;
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
@@ -1284,7 +1328,7 @@ namespace NeoEdit.TextEdit
 			switch (gotoType)
 			{
 				case GotoType.Line:
-					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], 0, selecting, false, false)).ToList());
+					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, Data.GetNonDiffLine(offsets[ctr]), 0, selecting, false, false)).ToList());
 					break;
 				case GotoType.Column:
 					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, 0, offsets[ctr], selecting, true, false)).ToList());
@@ -2078,7 +2122,7 @@ namespace NeoEdit.TextEdit
 			var lines = starts.Select(pos => Data.GetOffsetLine(pos)).ToList();
 			if (gotoType == GotoType.Line)
 			{
-				SetClipboard(lines.Select(pos => (pos + 1).ToString()).ToList());
+				SetClipboard(lines.Select(pos => (Data.GetDiffLine(pos) + 1).ToString()).ToList());
 				return;
 			}
 
@@ -2646,8 +2690,8 @@ namespace NeoEdit.TextEdit
 			var lineMax = Data.GetOffsetLine(range.End);
 			var indexMin = Data.GetOffsetIndex(range.Start, lineMin);
 			var indexMax = Data.GetOffsetIndex(range.End, lineMax);
-			LineMin = lineMin + 1;
-			LineMax = lineMax + 1;
+			LineMin = Data.GetDiffLine(lineMin) + 1;
+			LineMax = Data.GetDiffLine(lineMax) + 1;
 			IndexMin = indexMin + 1;
 			IndexMax = indexMax + 1;
 			PositionMin = range.Start;
@@ -2790,6 +2834,24 @@ namespace NeoEdit.TextEdit
 
 			for (var line = startLine; line < endLine; ++line)
 			{
+				var lineDiffStatus = Data.GetLineDiffStatus(line);
+				Brush brush = null;
+				switch (lineDiffStatus)
+				{
+					case LCS.MatchType.Gap: brush = Misc.diffMajorBrush; break;
+					case LCS.MatchType.Mismatch: brush = Misc.diffMinorBrush; break;
+				}
+				if (brush != null)
+					dc.DrawRectangle(brush, null, new Rect(0, y[line], canvas.ActualWidth, Font.lineHeight));
+
+				foreach (var tuple in Data.GetLineColumnDiffs(line))
+				{
+					var start = tuple.Item1 - startColumn;
+					var len = tuple.Item2 + Math.Min(start, 0);
+					if (len > 0)
+						dc.DrawRectangle(Misc.diffMajorBrush, null, new Rect(Font.charWidth * start, y[line], len * Font.charWidth, Font.lineHeight));
+				}
+
 				var str = Data.GetLineColumns(line);
 				if (str.Length <= startColumn)
 					continue;
@@ -3254,7 +3316,7 @@ namespace NeoEdit.TextEdit
 				var startIndex = Data.GetOffsetIndex(range.Cursor, startLine);
 
 				if (lineRel)
-					line += startLine;
+					line = Data.SkipDiffGaps(line + startLine, line > 0 ? 1 : -1);
 				if (indexRel)
 					index += startIndex;
 			}
@@ -3369,6 +3431,17 @@ namespace NeoEdit.TextEdit
 				Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
+		void CalculateDiff()
+		{
+			if (diffTarget == null)
+				return;
+
+			TextData.CalculateDiff(Data, diffTarget.Data);
+
+			CalculateBoundaries();
+			diffTarget.CalculateBoundaries();
+		}
+
 		void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			if (!ranges.Any())
@@ -3405,6 +3478,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
+			CalculateDiff();
 
 			var translateMap = RangeList.GetTranslateMap(ranges, strs, Selections, Regions, Searches, Bookmarks);
 			Selections.Translate(translateMap);
