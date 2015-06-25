@@ -48,16 +48,16 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ViewType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public string TabLabelPath { get { return UIHelper<Tabs<ItemType>>.GetPropValue<string>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
-		[DepProp]
 		public double TabsScroll { get { return UIHelper<Tabs<ItemType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public double TabsScrollMax { get { return UIHelper<Tabs<ItemType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 
+		BindingBase tabLabelBinding;
+		public BindingBase TabLabelBinding { get { return tabLabelBinding; } set { tabLabelBinding = value; SetupLayout(); } }
+
 		static Tabs()
 		{
 			UIHelper<Tabs<ItemType>>.Register();
-			UIHelper<Tabs<ItemType>>.AddCallback(a => a.TabLabelPath, (obj, o, n) => obj.SetupLayout());
 			UIHelper<Tabs<ItemType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
 			UIHelper<Tabs<ItemType>>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
 			UIHelper<Tabs<ItemType>>.AddCoerce(a => a.TopMost, (obj, value) => (value == null) || ((obj.Items != null) && (obj.Items.Contains(value))) ? value : null);
@@ -266,12 +266,12 @@ namespace NeoEdit.GUI.Controls
 			public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
 		}
 
-		FrameworkElementFactory GetLabel(ViewType view)
+		FrameworkElementFactory GetTabLabel(ViewType view)
 		{
 			var label = new FrameworkElementFactory(typeof(TabLabel));
 			if (view == ViewType.Tiles)
 				label.SetValue(DockPanel.DockProperty, Dock.Top);
-			label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name + "." + TabLabelPath));
+			label.SetBinding(TabLabel.TextProperty, tabLabelBinding);
 			label.SetValue(TabLabel.PaddingProperty, new Thickness(10, 2, 10, 2));
 			label.SetValue(TabLabel.MarginProperty, new Thickness(0, 0, view == ViewType.Tabs ? 2 : 0, 1));
 
@@ -307,7 +307,7 @@ namespace NeoEdit.GUI.Controls
 						itemsControl.SetValue(DockPanel.DockProperty, Dock.Top);
 						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Items).Name) { Source = this });
 						{
-							var notifierLabel = GetLabel(ViewType.Tabs);
+							var notifierLabel = GetTabLabel(ViewType.Tabs);
 							notifierLabel.SetBinding(UIHelper<TabLabel>.GetProperty(a => a.Item), new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
 							notifierLabel.AddHandler(TabLabel.ItemMatchEvent, (RoutedEventHandler)((s, e) =>
 							{
@@ -411,7 +411,7 @@ namespace NeoEdit.GUI.Controls
 						{
 							var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
 							dockPanel.SetValue(DockPanel.MarginProperty, new Thickness(0, 0, 2, 2));
-							dockPanel.AppendChild(GetLabel(ViewType.Tiles));
+							dockPanel.AppendChild(GetTabLabel(ViewType.Tiles));
 							{
 								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
 								contentControl.SetValue(DockPanel.DockProperty, Dock.Bottom);

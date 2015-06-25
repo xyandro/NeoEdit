@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.GUI.Dialogs
@@ -33,7 +30,7 @@ namespace NeoEdit.GUI.Dialogs
 				listView = new ListView { ItemsSource = tabs.Items.ToList(), Height = 400, SelectionMode = SelectionMode.Extended };
 				{
 					var gridView = new GridView();
-					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Item).Name) { Converter = new GetLabelConverter(tabs.TabLabelPath) }, Width = 500 });
+					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = tabs.TabLabelBinding, Width = 500 });
 					listView.View = gridView;
 				}
 				listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<Tabs<ItemType>.ItemData>());
@@ -94,29 +91,6 @@ namespace NeoEdit.GUI.Dialogs
 		public static void Run(Tabs<ItemType> tabs)
 		{
 			new ActiveTabsDialog<ItemType>(tabs) { Owner = UIHelper.FindParent<Window>(tabs) }.ShowDialog();
-		}
-
-		public class GetLabelConverter : IValueConverter
-		{
-			readonly string tabLabelPath;
-			public GetLabelConverter(string tabLabelPath)
-			{
-				this.tabLabelPath = tabLabelPath;
-			}
-
-			public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if (value == null)
-					return null;
-
-				return value.GetType().GetProperty(tabLabelPath).GetValue(value);
-			}
-
-			public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				throw new NotImplementedException();
-			}
-
 		}
 	}
 }

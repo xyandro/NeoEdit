@@ -24,7 +24,7 @@
 
 		<console:ConsoleMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
-		<console:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" TabLabelPath="TabLabel" VerticalAlignment="Stretch"
+		<console:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" TabLabelBinding="{Binding Item.TabLabel}" VerticalAlignment="Stretch"
 			Items="{Binding Consoles, ElementName=self, Mode=TwoWay}"
 			TopMost="{Binding Active, ElementName=self, Mode=TwoWay}"
 			View="{Binding View, ElementName=self, Mode=TwoWay}"

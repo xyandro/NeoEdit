@@ -24,7 +24,7 @@
 
 		<disk:DiskMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
-		<disk:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" TabLabelPath="TabLabel" VerticalAlignment="Stretch"
+		<disk:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" TabLabelBinding="{Binding Item.TabLabel}" VerticalAlignment="Stretch"
 			Items="{Binding DiskWindows, ElementName=self, Mode=TwoWay}"
 			TopMost="{Binding Active, ElementName=self, Mode=TwoWay}"
 			View="{Binding View, ElementName=self, Mode=TwoWay}"
