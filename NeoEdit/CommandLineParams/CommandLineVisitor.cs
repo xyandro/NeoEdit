@@ -7,7 +7,7 @@ using NeoEdit.CommandLineParams.Parser;
 
 namespace NeoEdit.CommandLineParams
 {
-	class CommandLineVisitor : CommandLineParamsBaseVisitor<object>
+	class CommandLineVisitor : CommandLineParamsParserBaseVisitor<object>
 	{
 		public static List<Param> GetCommandLineParams()
 		{
@@ -42,48 +42,33 @@ namespace NeoEdit.CommandLineParams
 
 		public override object VisitExpr(CommandLineParamsParser.ExprContext context) { return context.parameter().Select(parameter => VisitParameter(parameter)).Where(param => param != null).Cast<Param>().ToList(); }
 		public override object VisitAbout(CommandLineParamsParser.AboutContext context) { return new AboutParam(); }
-		public override object VisitSysteminfo(CommandLineParamsParser.SysteminfoContext context) { return new SystemInfoParam(); }
 		public override object VisitConsole(CommandLineParamsParser.ConsoleContext context) { return new ConsoleParam(); }
 		public override object VisitDbviewer(CommandLineParamsParser.DbviewerContext context) { return new DBViewerParam(); }
+		public override object VisitGunzip(CommandLineParamsParser.GunzipContext context) { return new GUnZipParam(context.input.GetText(), context.output.GetText()); }
+		public override object VisitGzip(CommandLineParamsParser.GzipContext context) { return new GZipParam(context.input.GetText(), context.output.GetText()); }
+		public override object VisitSysteminfo(CommandLineParamsParser.SysteminfoContext context) { return new SystemInfoParam(); }
+
+		public override object VisitConsolerunner(CommandLineParamsParser.ConsolerunnerContext context)
+		{
+			var param = new ConsoleRunnerParam();
+			foreach (var file in context.param())
+				param.AddParam(file.GetText());
+			return param;
+		}
+
 		public override object VisitDisk(CommandLineParamsParser.DiskContext context)
 		{
 			var param = new DiskParam();
 			if (context.file != null)
-				param.Location = context.file.GetText().Trim('"');
+				param.Location = context.file.GetText();
 			return param;
 		}
 
-		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context)
+		public override object VisitHandles(CommandLineParamsParser.HandlesContext context)
 		{
-			var param = new TextEditParam();
-			foreach (var textEditFile in context.texteditfile())
-				param.AddFile(VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile);
-			return param;
-		}
-
-		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context)
-		{
-			var param = new TextEditParam.TextEditFile(context.file.GetText().Trim('"'));
-			if (context.line != null)
-				param.Line = int.Parse(context.line.Text);
-			if (context.column != null)
-				param.Column = int.Parse(context.column.Text);
-			return param;
-		}
-
-		public override object VisitTextview(CommandLineParamsParser.TextviewContext context)
-		{
-			var param = new TextViewParam();
-			foreach (var file in context.param())
-				param.AddFile(file.GetText().Trim('"'));
-			return param;
-		}
-
-		public override object VisitHexedit(CommandLineParamsParser.HexeditContext context)
-		{
-			var param = new HexEditParam();
-			foreach (var file in context.param())
-				param.AddFile(file.GetText().Trim('"'));
+			var param = new HandlesParam();
+			if (context.pid != null)
+				param.PID = int.Parse(context.pid.Text);
 			return param;
 		}
 
@@ -91,7 +76,15 @@ namespace NeoEdit.CommandLineParams
 		{
 			var param = new HexDumpParam();
 			foreach (var file in context.param())
-				param.AddFile(file.GetText().Trim('"'));
+				param.AddFile(file.GetText());
+			return param;
+		}
+
+		public override object VisitHexedit(CommandLineParamsParser.HexeditContext context)
+		{
+			var param = new HexEditParam();
+			foreach (var file in context.param())
+				param.AddFile(file.GetText());
 			return param;
 		}
 
@@ -111,31 +104,38 @@ namespace NeoEdit.CommandLineParams
 			return param;
 		}
 
-		public override object VisitHandles(CommandLineParamsParser.HandlesContext context)
-		{
-			var param = new HandlesParam();
-			if (context.pid != null)
-				param.PID = int.Parse(context.pid.Text);
-			return param;
-		}
-
 		public override object VisitRegistry(CommandLineParamsParser.RegistryContext context)
 		{
 			var param = new RegistryParam();
 			if (context.key != null)
-				param.Key = context.key.GetText().Trim('"');
+				param.Key = context.key.GetText();
 			return param;
 		}
 
-		public override object VisitConsolerunner(CommandLineParamsParser.ConsolerunnerContext context)
+		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context)
 		{
-			var param = new ConsoleRunnerParam();
-			foreach (var file in context.param())
-				param.AddParam(file.GetText().Trim('"'));
+			var param = new TextEditParam();
+			foreach (var textEditFile in context.texteditfile())
+				param.AddFile(VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile);
 			return param;
 		}
 
-		public override object VisitGzip(CommandLineParamsParser.GzipContext context) { return new GZipParam(context.input.GetText().Trim('"'), context.output.GetText().Trim('"')); }
-		public override object VisitGunzip(CommandLineParamsParser.GunzipContext context) { return new GUnZipParam(context.input.GetText().Trim('"'), context.output.GetText().Trim('"')); }
+		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context)
+		{
+			var param = new TextEditParam.TextEditFile(context.file.GetText());
+			if (context.line != null)
+				param.Line = int.Parse(context.line.Text);
+			if (context.column != null)
+				param.Column = int.Parse(context.column.Text);
+			return param;
+		}
+
+		public override object VisitTextview(CommandLineParamsParser.TextviewContext context)
+		{
+			var param = new TextViewParam();
+			foreach (var file in context.param())
+				param.AddFile(file.GetText());
+			return param;
+		}
 	}
 }
