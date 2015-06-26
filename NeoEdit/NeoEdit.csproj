@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" InitialTargets="BuildCommandLineParams" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
@@ -8,6 +8,10 @@
     <AssemblyName>NeoEdit</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
+  <Target Name="BuildCommandLineParams" Inputs="CommandLineParams\Source\CommandLineParams.g4" Outputs="CommandLineParams\Parser\CommandLineParamsBaseVisitor.cs;CommandLineParams\Parser\CommandLineParamsLexer.cs;CommandLineParams\Parser\CommandLineParamsParser.cs;CommandLineParams\Parser\CommandLineParamsVisitor.cs">
+    <Message Text="Building CommandLineParams grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.CommandLineParams.Parser&quot; -o &quot;$(ProjectDir)CommandLineParams\Parser&quot; &quot;$(ProjectDir)CommandLineParams\Source\CommandLineParams.g4&quot;" />
+  </Target>
   <PropertyGroup>
     <ApplicationIcon>..\Photoshop\NeoEdit.ico</ApplicationIcon>
   </PropertyGroup>
@@ -27,7 +31,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CommandLineParams\CommandLineVisitor.cs" />
+    <Compile Include="CommandLineParams\Parser\CommandLineParamsBaseVisitor.cs" />
+    <Compile Include="CommandLineParams\Parser\CommandLineParamsLexer.cs" />
+    <Compile Include="CommandLineParams\Parser\CommandLineParamsParser.cs" />
+    <Compile Include="CommandLineParams\Parser\CommandLineParamsVisitor.cs" />
+    <None Include="CommandLineParams\Source\CommandLineParams.g4" />
     <Compile Include="InstanceManager.cs" />
+    <Compile Include="Params.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

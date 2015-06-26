@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.Common.Transform;
 using NeoEdit.Console;
 using NeoEdit.DBViewer;
 using NeoEdit.Disk;
-using NeoEdit.GUI.About;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Handles;
@@ -31,7 +28,7 @@ namespace NeoEdit
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
-			CreateWindowFromArgs(e.Args);
+			CreateWindowsFromArgs();
 			ShutdownMode = ShutdownMode.OnLastWindowClose;
 			if (Application.Current.Windows.Count == 0)
 				Application.Current.Shutdown();
@@ -65,170 +62,21 @@ namespace NeoEdit
 
 		}
 
-		public void CreateWindowFromArgs(string[] args)
+		public void CreateWindowsFromArgs()
 		{
 			try
 			{
+				var paramList = CommandLineParams.CommandLineVisitor.GetCommandLineParams();
+
 				var windows = UIHelper<NEWindow>.GetAllWindows();
 				var restored = windows.Count(window => window.Restore());
-				if ((restored > 0) && (args.Length == 0))
+				if ((restored > 0) && (!paramList.Any()))
 					return;
 
-				args = args.Where(arg => arg != "multi").ToArray();
-				if (args.Length == 0)
-				{
+				if (!paramList.Any())
 					TextEditTabs.Create();
-					return;
-				}
-
-				switch (args[0])
-				{
-					case "about":
-						AboutWindow.Run();
-						return;
-					case "system":
-					case "systeminfo":
-						new SystemInfoWindow();
-						return;
-					case "console":
-						new ConsoleTabs();
-						return;
-					case "consolerunner":
-						new Console.ConsoleRunner(args.Skip(1).ToArray());
-						return;
-					case "disk":
-					case "disks":
-						{
-							string location = null;
-							if (args.Length > 1)
-								location = args[1];
-							new DiskTabs(location);
-							return;
-						}
-					case "edit":
-					case "text":
-					case "textedit":
-					case "texteditor":
-						{
-							string filename = null;
-							if (args.Length > 1)
-							{
-								filename = args[1];
-								if (!File.Exists(filename))
-									throw new ArgumentException("Invalid file.");
-							}
-
-							int line = 1;
-							if (args.Length > 2)
-								line = Convert.ToInt32(args[2]);
-
-							int column = 1;
-							if (args.Length > 3)
-								column = Convert.ToInt32(args[3]);
-
-							TextEditTabs.Create(filename, line: line, column: column);
-							return;
-						}
-					case "view":
-					case "textview":
-					case "textviewer":
-						{
-							string filename = null;
-							if (args.Length > 1)
-							{
-								filename = args[1];
-								if (!File.Exists(filename))
-									throw new ArgumentException("Invalid file.");
-							}
-
-							TextViewerTabs.Create(filename);
-							return;
-						}
-					case "binary":
-					case "binaryedit":
-					case "binaryeditor":
-					case "hex":
-					case "hexedit":
-					case "hexeditor":
-						{
-							string filename = null;
-							if (args.Length > 1)
-							{
-								filename = args[1];
-								if (!File.Exists(filename))
-									throw new ArgumentException("Invalid file.");
-							}
-
-							HexEditTabs.CreateFromFile(filename);
-							return;
-						}
-					case "binarypid":
-					case "hexpid":
-						{
-							if (args.Length < 2)
-								throw new ArgumentException("Not enough parameters.");
-
-							HexEditTabs.CreateFromProcess(Convert.ToInt32(args[1]));
-							return;
-						}
-					case "dump":
-					case "binarydump":
-					case "hexdump":
-						{
-							if (args.Length < 2)
-								throw new ArgumentException("Not enough parameters.");
-
-							HexEditTabs.CreateFromDump(args[1]);
-							return;
-						}
-					case "pid":
-					case "process":
-					case "processes":
-						{
-							int? pid = null;
-							if (args.Length > 1)
-								pid = Convert.ToInt32(args[1]);
-							new ProcessesWindow(pid);
-							return;
-						}
-					case "handle":
-					case "handles":
-						{
-							int? pid = null;
-							if (args.Length > 1)
-								pid = Convert.ToInt32(args[1]);
-							new HandlesWindow(pid);
-							return;
-						}
-					case "registry":
-						{
-							string key = null;
-							if (args.Length > 1)
-								key = args[1];
-							new RegistryWindow(key);
-							return;
-						}
-					case "db":
-					case "dbview":
-					case "dbviewer":
-						new DBViewerWindow();
-						return;
-					case "gzip":
-						{
-							var data = File.ReadAllBytes(args[1]);
-							data = Compression.Compress(Compression.Type.GZip, data);
-							File.WriteAllBytes(args[2], data);
-						}
-						break;
-					case "gunzip":
-						{
-							var data = File.ReadAllBytes(args[1]);
-							data = Compression.Decompress(Compression.Type.GZip, data);
-							File.WriteAllBytes(args[2], data);
-						}
-						break;
-					default: throw new Exception("Invalid argument");
-				}
+				foreach (var param in paramList)
+					param.Execute();
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }
 		}

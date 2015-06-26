@@ -9,7 +9,6 @@ Can push files to predefined lists (CTRL+1, CTRL+SHIFT+1)
 
 Text:
 Continue after error deleting files (perhaps with dialog Yes/No/All)
-Open more than one file at startup
 Files: Select/etc on svn status (ignore/modified)
 Translate HTML to table
 Distinct operations by marked region (sort/series/etc within region)

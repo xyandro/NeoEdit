@@ -8,7 +8,7 @@ namespace NeoEdit
 		[STAThread]
 		static void Main(string[] args)
 		{
-			if (args.Any(arg => arg == "multi"))
+			if (args.Any(arg => arg == "-multi"))
 				new App().Run();
 			else
 				new InstanceManager().Run(args);
@@ -27,7 +27,7 @@ namespace NeoEdit
 		protected override void OnStartupNextInstance(Microsoft.VisualBasic.ApplicationServices.StartupNextInstanceEventArgs e)
 		{
 			base.OnStartupNextInstance(e);
-			app.CreateWindowFromArgs(e.CommandLine.ToArray());
+			app.CreateWindowsFromArgs();
 		}
 	}
 }

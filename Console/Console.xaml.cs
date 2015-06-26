@@ -387,7 +387,7 @@ namespace NeoEdit.Console
 			using (var proc = new Process())
 			{
 				proc.StartInfo.FileName = name;
-				proc.StartInfo.Arguments = "multi consolerunner " + pipeName + " " + String.Join(" ", commands.Select(command => "\"" + command.Item1.Replace("\"", "\"\"") + "\""));
+				proc.StartInfo.Arguments = "-multi -consolerunner " + pipeName + " " + String.Join(" ", commands.Select(command => "\"" + command.Item1.Replace("\"", "\"\"") + "\""));
 				proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 				proc.Start();
 			}
