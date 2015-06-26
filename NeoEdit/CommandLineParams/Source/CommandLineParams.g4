@@ -20,13 +20,13 @@ processes     : PROCESSES pid=NUMBER? ;
 registry      : REGISTRY key=param? ;
 systeminfo    : SYSTEMINFO ;
 textedit      : TEXTEDIT texteditfile* ;
-texteditfile  : file=param (LINE EQUALS line=NUMBER)? (COLUMN EQUALS column=NUMBER)? ;
+texteditfile  : file=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? ;
 textview      : TEXTVIEW param* ;
 
 param         : STRING | PARAM ;
 
 ABOUT         : '-about' ;
-COLUMN        : '-column' ;
+COLUMN        : '-col' | '-column' ;
 CONSOLE       : '-console' ;
 CONSOLERUNNER : '-consolerunner' ;
 DBVIEWER      : '-db' | '-dbview' | '-dbviewer' ;
@@ -48,4 +48,4 @@ TEXTVIEW      : '-textview' | '-textviewer' | '-view' ;
 EQUALS        : '=' ;
 NUMBER        : [0-9]+ ;
 STRING        : '"' ~'"'* '"' ;
-PARAM         : ~[ \r\n\r]+ ;
+PARAM         : ~[-= \r\n\r] ~[ \r\n\r]* ;
