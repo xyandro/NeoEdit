@@ -158,6 +158,16 @@ namespace NeoEdit.TextEdit
 			NEClipboard.Set(data, String.Join(" ", data));
 		}
 
+		void Command_Edit_PasteAll()
+		{
+			var strs = NEClipboard.Strings;
+			var active = TextEditors.Where(data => data.Active).ToList(); ;
+			if (strs.Count != active.Count)
+				throw new Exception("Clipboard count and active editor count must match");
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+				active[ctr].Item.Command_Edit_PasteAll(strs[ctr], shiftDown);
+		}
+
 		void Command_View_ActiveTabs()
 		{
 			tabs.ShowActiveTabsDialog();
@@ -395,6 +405,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Diff: Command_File_Diff(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_CopyAll: Command_Edit_CopyAll(); break;
+				case TextEditCommand.Edit_PasteAll: Command_Edit_PasteAll(); break;
 				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;

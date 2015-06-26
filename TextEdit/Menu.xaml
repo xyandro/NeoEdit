@@ -47,6 +47,7 @@
 		<textEdit:TextEditMenuItem Header="Cu_t" CommandEnum="Edit_Cut"/>
 		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
 		<textEdit:TextEditMenuItem Header="Cop_y All" CommandEnum="Edit_CopyAll"/>
+		<textEdit:TextEditMenuItem Header="P_aste All" CommandEnum="Edit_PasteAll"/>
 		<textEdit:TextEditMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
@@ -61,7 +62,7 @@
 		<textEdit:TextEditMenuItem Header="Toggle _Bookmark" CommandEnum="Edit_ToggleBookmark"/>
 		<textEdit:TextEditMenuItem Header="Ne_xt Bookmark" CommandEnum="Edit_NextBookmark"/>
 		<textEdit:TextEditMenuItem Header="Previous Boo_kmark" CommandEnum="Edit_PreviousBookmark"/>
-		<textEdit:TextEditMenuItem Header="Cle_ar Bookmarks" CommandEnum="Edit_ClearBookmarks"/>
+		<textEdit:TextEditMenuItem Header="Clear Book_marks" CommandEnum="Edit_ClearBookmarks"/>
 		<Separator/>
 		<textEdit:MultiMenuItem Header="S_hare Clipboard" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ShareClipboard" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
 	</MenuItem>

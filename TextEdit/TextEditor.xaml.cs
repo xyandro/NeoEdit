@@ -1224,6 +1224,11 @@ namespace NeoEdit.TextEdit
 			ReplaceOneWithMany(clipboardStrings);
 		}
 
+		internal void Command_Edit_PasteAll(string str, bool highlight)
+		{
+			ReplaceSelections(Selections.Select(value => str).ToList(), highlight);
+		}
+
 		internal FindTextDialog.Result Command_Edit_FindReplace_Dialog(bool isReplace)
 		{
 			string text = null;
