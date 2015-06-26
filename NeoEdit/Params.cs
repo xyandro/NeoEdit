@@ -33,9 +33,9 @@ namespace NeoEdit
 
 	class ConsoleRunnerParam : Param
 	{
-		readonly List<string> paramList = new List<string>();
-		public void AddParam(string param) { paramList.Add(param); }
-		public override void Execute() { new Console.ConsoleRunner(paramList.ToArray()); }
+		readonly string[] ParamList;
+		public ConsoleRunnerParam(string[] paramList) { ParamList = paramList; }
+		public override void Execute() { new Console.ConsoleRunner(ParamList); }
 	}
 
 	class DBViewerParam : Param
@@ -45,14 +45,19 @@ namespace NeoEdit
 
 	class DiskParam : Param
 	{
-		public string Location { get; set; }
+		readonly string Location;
+		public DiskParam(string location) { Location = location; }
 		public override void Execute() { new DiskTabs(Location); }
 	}
 
 	class GUnZipParam : Param
 	{
 		readonly string Input, Output;
-		public GUnZipParam(string input, string output) { Input = input; Output = output; }
+		public GUnZipParam(string input, string output)
+		{
+			Input = input;
+			Output = output;
+		}
 		public override void Execute()
 		{
 			var data = File.ReadAllBytes(Input);
@@ -64,7 +69,11 @@ namespace NeoEdit
 	class GZipParam : Param
 	{
 		readonly string Input, Output;
-		public GZipParam(string input, string output) { Input = input; Output = output; }
+		public GZipParam(string input, string output)
+		{
+			Input = input;
+			Output = output;
+		}
 		public override void Execute()
 		{
 			var data = File.ReadAllBytes(Input);
@@ -75,60 +84,57 @@ namespace NeoEdit
 
 	class HandlesParam : Param
 	{
-		public int? PID { get; set; }
+		readonly int? PID;
+		public HandlesParam(int? pid) { PID = pid; }
 		public override void Execute() { new HandlesWindow(PID); }
 	}
 
 	class HexDumpParam : Param
 	{
-		readonly List<string> files = new List<string>();
-
-		public void AddFile(string file) { files.Add(file); }
-
+		readonly List<string> Files;
+		public HexDumpParam(List<string> files) { Files = files; }
 		public override void Execute()
 		{
-			foreach (var file in files)
+			foreach (var file in Files)
 				HexEditTabs.CreateFromDump(file);
 		}
 	}
 
 	class HexEditParam : Param
 	{
-		readonly List<string> files = new List<string>();
-
-		public void AddFile(string file) { files.Add(file); }
-
+		readonly List<string> Files;
+		public HexEditParam(List<string> files) { Files = files; }
 		public override void Execute()
 		{
-			if (!files.Any())
+			if (!Files.Any())
 				HexEditTabs.CreateFromFile();
-			foreach (var file in files)
+			foreach (var file in Files)
 				HexEditTabs.CreateFromFile(file);
 		}
 	}
 
 	class HexPidParam : Param
 	{
-		readonly List<int> pids = new List<int>();
-
-		public void AddPID(int pid) { pids.Add(pid); }
-
+		readonly List<int> PIDs;
+		public HexPidParam(List<int> pids) { PIDs = pids; }
 		public override void Execute()
 		{
-			foreach (var pid in pids)
+			foreach (var pid in PIDs)
 				HexEditTabs.CreateFromProcess(pid);
 		}
 	}
 
 	class ProcessesParam : Param
 	{
-		public int? PID { get; set; }
+		readonly int? PID;
+		public ProcessesParam(int? pid) { PID = pid; }
 		public override void Execute() { new ProcessesWindow(PID); }
 	}
 
 	class RegistryParam : Param
 	{
-		public string Key { get; set; }
+		readonly string Key;
+		public RegistryParam(string key) { Key = key; }
 		public override void Execute() { new RegistryWindow(Key); }
 	}
 
@@ -141,37 +147,38 @@ namespace NeoEdit
 	{
 		public class TextEditFile
 		{
-			public string FileName;
-			public int Line = 1;
-			public int Column = 1;
+			public readonly string FileName;
+			public readonly int Line = 1;
+			public readonly int Column = 1;
 
-			public TextEditFile(string fileName) { FileName = fileName; }
+			public TextEditFile(string fileName, int? line, int? column)
+			{
+				FileName = fileName;
+				Line = line ?? Line;
+				Column = column ?? Column;
+			}
 		}
 
-		readonly List<TextEditFile> files = new List<TextEditFile>();
-
-		public void AddFile(TextEditFile file) { files.Add(file); }
-
+		readonly List<TextEditFile> Files;
+		public TextEditParam(List<TextEditFile> files) { Files = files; }
 		public override void Execute()
 		{
-			if (!files.Any())
+			if (!Files.Any())
 				TextEditTabs.Create();
-			foreach (var file in files)
+			foreach (var file in Files)
 				TextEditTabs.Create(file.FileName, line: file.Line, column: file.Column);
 		}
 	}
 
 	class TextViewParam : Param
 	{
-		readonly List<string> files = new List<string>();
-
-		public void AddFile(string file) { files.Add(file); }
-
+		readonly List<string> Files;
+		public TextViewParam(List<string> files) { Files = files; }
 		public override void Execute()
 		{
-			if (!files.Any())
+			if (!Files.Any())
 				TextViewerTabs.Create();
-			foreach (var file in files)
+			foreach (var file in Files)
 				TextViewerTabs.Create(file);
 		}
 	}

@@ -43,99 +43,20 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitExpr(CommandLineParamsParser.ExprContext context) { return context.parameter().Select(parameter => VisitParameter(parameter)).Where(param => param != null).Cast<Param>().ToList(); }
 		public override object VisitAbout(CommandLineParamsParser.AboutContext context) { return new AboutParam(); }
 		public override object VisitConsole(CommandLineParamsParser.ConsoleContext context) { return new ConsoleParam(); }
+		public override object VisitConsolerunner(CommandLineParamsParser.ConsolerunnerContext context) { return new ConsoleRunnerParam(context.param().Select(param => param.GetText()).ToArray()); }
 		public override object VisitDbviewer(CommandLineParamsParser.DbviewerContext context) { return new DBViewerParam(); }
+		public override object VisitDisk(CommandLineParamsParser.DiskContext context) { return new DiskParam(context.file == null ? null : context.file.GetText()); }
 		public override object VisitGunzip(CommandLineParamsParser.GunzipContext context) { return new GUnZipParam(context.input.GetText(), context.output.GetText()); }
 		public override object VisitGzip(CommandLineParamsParser.GzipContext context) { return new GZipParam(context.input.GetText(), context.output.GetText()); }
+		public override object VisitHandles(CommandLineParamsParser.HandlesContext context) { return new HandlesParam(context.pid == null ? default(int?) : int.Parse(context.pid.Text)); }
+		public override object VisitHexdump(CommandLineParamsParser.HexdumpContext context) { return new HexDumpParam(context.param().Select(file => file.GetText()).ToList()); }
+		public override object VisitHexedit(CommandLineParamsParser.HexeditContext context) { return new HexEditParam(context.param().Select(file => file.GetText()).ToList()); }
+		public override object VisitHexpid(CommandLineParamsParser.HexpidContext context) { return new HexPidParam(context.NUMBER().Select(pid => int.Parse(pid.GetText())).ToList()); }
+		public override object VisitProcesses(CommandLineParamsParser.ProcessesContext context) { return new ProcessesParam(context.pid == null ? default(int?) : int.Parse(context.pid.Text)); }
+		public override object VisitRegistry(CommandLineParamsParser.RegistryContext context) { return new RegistryParam(context.key == null ? null : context.key.GetText()); }
 		public override object VisitSysteminfo(CommandLineParamsParser.SysteminfoContext context) { return new SystemInfoParam(); }
-
-		public override object VisitConsolerunner(CommandLineParamsParser.ConsolerunnerContext context)
-		{
-			var param = new ConsoleRunnerParam();
-			foreach (var file in context.param())
-				param.AddParam(file.GetText());
-			return param;
-		}
-
-		public override object VisitDisk(CommandLineParamsParser.DiskContext context)
-		{
-			var param = new DiskParam();
-			if (context.file != null)
-				param.Location = context.file.GetText();
-			return param;
-		}
-
-		public override object VisitHandles(CommandLineParamsParser.HandlesContext context)
-		{
-			var param = new HandlesParam();
-			if (context.pid != null)
-				param.PID = int.Parse(context.pid.Text);
-			return param;
-		}
-
-		public override object VisitHexdump(CommandLineParamsParser.HexdumpContext context)
-		{
-			var param = new HexDumpParam();
-			foreach (var file in context.param())
-				param.AddFile(file.GetText());
-			return param;
-		}
-
-		public override object VisitHexedit(CommandLineParamsParser.HexeditContext context)
-		{
-			var param = new HexEditParam();
-			foreach (var file in context.param())
-				param.AddFile(file.GetText());
-			return param;
-		}
-
-		public override object VisitHexpid(CommandLineParamsParser.HexpidContext context)
-		{
-			var param = new HexPidParam();
-			foreach (var pid in context.NUMBER())
-				param.AddPID(int.Parse(pid.GetText()));
-			return param;
-		}
-
-		public override object VisitProcesses(CommandLineParamsParser.ProcessesContext context)
-		{
-			var param = new ProcessesParam();
-			if (context.pid != null)
-				param.PID = int.Parse(context.pid.Text);
-			return param;
-		}
-
-		public override object VisitRegistry(CommandLineParamsParser.RegistryContext context)
-		{
-			var param = new RegistryParam();
-			if (context.key != null)
-				param.Key = context.key.GetText();
-			return param;
-		}
-
-		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context)
-		{
-			var param = new TextEditParam();
-			foreach (var textEditFile in context.texteditfile())
-				param.AddFile(VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile);
-			return param;
-		}
-
-		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context)
-		{
-			var param = new TextEditParam.TextEditFile(context.file.GetText());
-			if (context.line != null)
-				param.Line = int.Parse(context.line.Text);
-			if (context.column != null)
-				param.Column = int.Parse(context.column.Text);
-			return param;
-		}
-
-		public override object VisitTextview(CommandLineParamsParser.TextviewContext context)
-		{
-			var param = new TextViewParam();
-			foreach (var file in context.param())
-				param.AddFile(file.GetText());
-			return param;
-		}
+		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context) { return new TextEditParam(context.texteditfile().Select(textEditFile => VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile).ToList()); }
+		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context) { return new TextEditParam.TextEditFile(context.file.GetText(), context.line == null ? default(int?) : int.Parse(context.line.Text), context.column == null ? default(int?) : int.Parse(context.column.Text)); }
+		public override object VisitTextview(CommandLineParamsParser.TextviewContext context) { return new TextViewParam(context.param().Select(file => file.GetText()).ToList()); }
 	}
 }
