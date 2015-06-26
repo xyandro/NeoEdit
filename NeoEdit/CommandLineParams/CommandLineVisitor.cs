@@ -9,9 +9,8 @@ namespace NeoEdit.CommandLineParams
 {
 	class CommandLineVisitor : CommandLineParamsParserBaseVisitor<object>
 	{
-		public static List<Param> GetCommandLineParams()
+		public static List<Param> GetCommandLineParams(string input)
 		{
-			var input = Environment.CommandLine;
 			var inputStream = new AntlrInputStream(input);
 			var lexer = new CommandLineParamsLexer(inputStream);
 			var tokens = new CommonTokenStream(lexer);

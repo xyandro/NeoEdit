@@ -2,7 +2,7 @@ parser grammar CommandLineParamsParser;
 
 options { tokenVocab = CommandLineParamsLexer; }
 
-expr          : param parameter* EOF ;
+expr          : parameter* EOF ;
 
 parameter     : about | console | consolerunner | dbviewer | disk | gunzip | gzip | handles | hexdump | hexedit | hexpid | multi | processes | registry | systeminfo | textedit | textview ;
 
