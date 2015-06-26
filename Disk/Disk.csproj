@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" InitialTargets="MagicFileExe;MagicMagicMgc;MagicMagic1Dll;MagicRegex2Dll;MagicZlib1Dll" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="MagicFileExe;MagicMagicMgc;MagicMagic1Dll;MagicRegex2Dll;MagicZlib1Dll;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{839C668B-921C-4A33-91CD-0D8131FFACFC}</ProjectGuid>
