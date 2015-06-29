@@ -196,6 +196,7 @@
 		<textEdit:TextEditMenuItem Header="A_ggregate" CommandEnum="Data_Aggregate"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Data_FetchURL"/>
+		<textEdit:TextEditMenuItem Header="_Make URL Absolute" CommandEnum="Data_MakeURLAbsolute"/>
 	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">

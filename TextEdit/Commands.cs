@@ -126,6 +126,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Data_Sort,
 		[KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Shift)] Data_Aggregate,
 		Data_FetchURL,
+		Data_MakeURLAbsolute,
 		Content_Reformat,
 		Content_Comment,
 		Content_Uncomment,

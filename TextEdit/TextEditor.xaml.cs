@@ -632,6 +632,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
 				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
 				case TextEditCommand.Data_Aggregate: dialogResult = Command_Data_Aggregate_Dialog(); break;
+				case TextEditCommand.Data_MakeURLAbsolute: dialogResult = Command_Data_MakeURLAbsolute_Dialog(); break;
 				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Parents); break;
 				case TextEditCommand.Content_Attributes_ByAttribute: dialogResult = Command_Content_Attributes_ByAttribute_Dialog(); break;
 				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Children); break;
@@ -804,6 +805,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Data_Aggregate: Command_Data_Aggregate(dialogResult as AggregateDialog.Result); break;
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
+				case TextEditCommand.Data_MakeURLAbsolute: Command_Data_MakeURLAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
@@ -1486,7 +1488,7 @@ namespace NeoEdit.TextEdit
 
 		internal MakeAbsoluteDialog.Result Command_Files_MakeAbsolute_Dialog()
 		{
-			return MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10));
+			return MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10), true);
 		}
 
 		internal void Command_Files_MakeAbsolute(MakeAbsoluteDialog.Result result)
@@ -2246,6 +2248,21 @@ namespace NeoEdit.TextEdit
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
+		}
+
+		internal MakeAbsoluteDialog.Result Command_Data_MakeURLAbsolute_Dialog()
+		{
+			return MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10), false);
+		}
+
+		internal void Command_Data_MakeURLAbsolute(MakeAbsoluteDialog.Result result)
+		{
+			var results = GetExpressionResults<string>(result.Expression);
+			ReplaceSelections(GetSelectionStrings().Select((str, index) =>
+			{
+				var uri = new Uri(new Uri(results[index]), str);
+				return uri.AbsoluteUri;
+			}).ToList());
 		}
 
 		internal void Command_Insert_GUID()

@@ -10,6 +10,7 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal enum ResultType
 		{
+			None,
 			File,
 			Directory,
 		}
@@ -24,6 +25,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string Expression { get { return UIHelper<MakeAbsoluteDialog>.GetPropValue<string>(this); } set { UIHelper<MakeAbsoluteDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public ResultType Type { get { return UIHelper<MakeAbsoluteDialog>.GetPropValue<ResultType>(this); } set { UIHelper<MakeAbsoluteDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool CheckType { get { return UIHelper<MakeAbsoluteDialog>.GetPropValue<bool>(this); } set { UIHelper<MakeAbsoluteDialog>.SetPropValue(this, value); } }
 		public Dictionary<string, List<object>> ExpressionData { get; private set; }
 
 		static MakeAbsoluteDialog()
@@ -32,14 +35,18 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<MakeAbsoluteDialog>.AddCallback(a => a.Expression, (obj, o, n) => obj.SetIsFile());
 		}
 
-		MakeAbsoluteDialog(Dictionary<string, List<object>> expressionData)
+		MakeAbsoluteDialog(Dictionary<string, List<object>> expressionData, bool getType)
 		{
 			ExpressionData = expressionData;
 			InitializeComponent();
+			CheckType = getType;
 		}
 
 		void SetIsFile()
 		{
+			if (!CheckType)
+				return;
+
 			try
 			{
 				var neExpression = new NEExpression(Expression);
@@ -62,9 +69,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Dictionary<string, List<object>> expressionData)
+		public static Result Run(Window parent, Dictionary<string, List<object>> expressionData, bool getType)
 		{
-			var dialog = new MakeAbsoluteDialog(expressionData) { Owner = parent };
+			var dialog = new MakeAbsoluteDialog(expressionData, getType) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

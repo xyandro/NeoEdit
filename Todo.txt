@@ -17,7 +17,6 @@ Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Allow user to disable undo/redo for faster performance
 Submit forms
-Make markup relative paths absolute
 When opening files don't open the same one more than once
 Override readonly, access denied (UAC required?)
 Add/subtract chars in expressions (a+1=b)
