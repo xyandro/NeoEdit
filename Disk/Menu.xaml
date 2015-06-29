@@ -56,8 +56,8 @@
 								<Setter.Value>
 									<MultiBinding Converter="{disk:ColumnCheckedConverter}">
 										<Binding RelativeSource="{RelativeSource Self}" Mode="OneWay"/>
-										<Binding Path="Parent.Active.Columns" ElementName="self"/>
-										<Binding Path="Parent.Active.ColumnsChangeCount" ElementName="self"/>
+										<Binding Path="Parent.TopMost.Item.Columns" ElementName="self"/>
+										<Binding Path="Parent.TopMost.Item.ColumnsChangeCount" ElementName="self"/>
 									</MultiBinding>
 								</Setter.Value>
 							</Setter>
@@ -69,8 +69,8 @@
 		<MenuItem Header="_Sort">
 			<MenuItem.ItemsSource>
 				<MultiBinding Converter="{disk:ColumnsConverter}">
-					<Binding Path="Parent.Active.Columns" ElementName="self"/>
-					<Binding Path="Parent.Active.ColumnsChangeCount" ElementName="self"/>
+					<Binding Path="Parent.TopMost.Item.Columns" ElementName="self"/>
+					<Binding Path="Parent.TopMost.Item.ColumnsChangeCount" ElementName="self"/>
 				</MultiBinding>
 			</MenuItem.ItemsSource>
 			<MenuItem.Style>
@@ -82,7 +82,7 @@
 								<Setter.Value>
 									<MultiBinding Converter="{disk:ColumnCheckedConverter}">
 										<Binding RelativeSource="{RelativeSource Self}" Mode="OneWay"/>
-										<Binding Path="Parent.Active.SortColumn" ElementName="self"/>
+										<Binding Path="Parent.TopMost.Item.SortColumn" ElementName="self"/>
 									</MultiBinding>
 								</Setter.Value>
 							</Setter>

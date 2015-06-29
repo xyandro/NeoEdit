@@ -9,7 +9,7 @@
 	<Window.Title>
 		<!--A simple Binding doesn't give any title if [0] blank-->
 		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="([0] == '' ? 'Custom File List' : [0]) + ' - NeoEdit Disk Viewer'">
-			<Binding Path="Active.Location" ElementName="self"/>
+			<Binding Path="TopMost.Item.Location" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>
 
@@ -26,7 +26,7 @@
 
 		<disk:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" TabLabelBinding="{Binding Item.TabLabel}" VerticalAlignment="Stretch"
 			Items="{Binding DiskWindows, ElementName=self, Mode=TwoWay}"
-			TopMost="{Binding Active, ElementName=self, Mode=TwoWay}"
+			TopMost="{Binding TopMost, ElementName=self, Mode=TwoWay}"
 			View="{Binding View, ElementName=self, Mode=TwoWay}"
 		/>
 	</Grid>
