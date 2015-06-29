@@ -36,7 +36,7 @@
     <Message Text="Building XML grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
   </Target>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildTextEdit)' != ''">
     <Compile Include="Commands.cs" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
@@ -298,7 +298,7 @@
     <Compile Include="UndoRedo.cs" />
     <Compile Include="UnitTest\TextDataTest.cs" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildTextEdit)' != ''">
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>

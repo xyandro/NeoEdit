@@ -5,18 +5,38 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+#if BuildConsole
 using NeoEdit.Console;
+#endif
+#if BuildDBViewer
 using NeoEdit.DBViewer;
+#endif
+#if BuildDisk
 using NeoEdit.Disk;
+#endif
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
+#if BuildHandles
 using NeoEdit.Handles;
+#endif
+#if BuildHexEdit
 using NeoEdit.HexEdit;
+#endif
+#if BuildProcesses
 using NeoEdit.Processes;
+#endif
+#if BuildRegistry
 using NeoEdit.Registry;
+#endif
+#if BuildSystemInfo
 using NeoEdit.SystemInfo;
+#endif
+#if BuildTextEdit
 using NeoEdit.TextEdit;
+#endif
+#if BuildTextView
 using NeoEdit.TextView;
+#endif
 
 namespace NeoEdit
 {
@@ -73,8 +93,10 @@ namespace NeoEdit
 				if ((restored > 0) && (!paramList.Any()))
 					return;
 
+#if BuildTextEdit
 				if (!paramList.Any())
 					TextEditTabs.Create();
+#endif
 				foreach (var param in paramList)
 					param.Execute();
 			}
@@ -84,20 +106,40 @@ namespace NeoEdit
 		public App()
 		{
 			NeoEdit.GUI.Launcher.Initialize(
-				getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray,
-				setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); },
+				getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray
+				, setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); }
 
-				systemInfo: () => new SystemInfoWindow(),
-				textEditor: (filename, bytes, encoding, modified, createNew) => TextEditTabs.Create(filename, bytes, encoding, modified, createNew: createNew),
-				textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew),
-				fileHexEditor: (filename, binarydata, encoder, modified, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, createNew),
-				processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid),
-				disk: () => new DiskTabs(),
-				console: () => new ConsoleTabs(),
-				processes: (pid) => new ProcessesWindow(pid),
-				handles: (pid) => new HandlesWindow(pid),
-				registry: (key) => new RegistryWindow(key),
-				dbViewer: () => new DBViewerWindow()
+#if BuildSystemInfo
+				, systemInfo: () => new SystemInfoWindow()
+#endif
+#if BuildTextEdit
+				, textEditor: (filename, bytes, encoding, modified, createNew) => TextEditTabs.Create(filename, bytes, encoding, modified, createNew: createNew)
+#endif
+#if BuildTextView
+				, textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew)
+#endif
+#if BuildHexEdit
+				, fileHexEditor: (filename, binarydata, encoder, modified, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, createNew)
+				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
+#endif
+#if BuildDisk
+				, disk: () => new DiskTabs()
+#endif
+#if BuildConsole
+				, console: () => new ConsoleTabs()
+#endif
+#if BuildProcesses
+				, processes: (pid) => new ProcessesWindow(pid)
+#endif
+#if BuildHandles
+				, handles: (pid) => new HandlesWindow(pid)
+#endif
+#if BuildRegistry
+				, registry: (key) => new RegistryWindow(key)
+#endif
+#if BuildDBViewer
+				, dbViewer: () => new DBViewerWindow()
+#endif
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

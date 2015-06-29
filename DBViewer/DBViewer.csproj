@@ -8,7 +8,7 @@
     <AssemblyName>NeoEdit.DBViewer</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildDBViewer)' != ''">
     <Page Include="DBViewerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -22,7 +22,7 @@
     </Compile>
     <None Include="Properties\AssemblyInfo.Template.cs" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildDBViewer)' != ''">
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>
@@ -30,10 +30,6 @@
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Win32\Win32.vcxproj">
-      <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
-      <Name>Win32</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />

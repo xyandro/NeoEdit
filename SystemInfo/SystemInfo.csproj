@@ -8,7 +8,7 @@
     <AssemblyName>NeoEdit.SystemInfo</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildSystemInfo)' != ''">
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -22,7 +22,7 @@
       <DependentUpon>SystemInfoWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildSystemInfo)' != ''">
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>

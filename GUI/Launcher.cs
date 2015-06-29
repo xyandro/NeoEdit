@@ -24,20 +24,40 @@ namespace NeoEdit.GUI
 		protected Action dbViewerLauncher;
 
 		public static void Initialize(
-			Func<bool> getMinimizeToTray,
-			Action<bool> setMinimizeToTray,
+			Func<bool> getMinimizeToTray
+			, Action<bool> setMinimizeToTray
 
-			Action systemInfo,
-			Action<string, byte[], Coder.CodePage, bool?, bool> textEditor,
-			Action<string, bool> textViewer,
-			Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor,
-			Action<int> processHexEditor,
-			Action disk,
-			Action console,
-			Action<int?> processes,
-			Action<int?> handles,
-			Action<string> registry,
-			Action dbViewer
+#if BuildSystemInfo
+			, Action systemInfo
+#endif
+#if BuildTextEdit
+			, Action<string, byte[], Coder.CodePage, bool?, bool> textEditor
+#endif
+#if BuildTextView
+			, Action<string, bool> textViewer
+#endif
+#if BuildHexEdit
+			, Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor
+			, Action<int> processHexEditor
+#endif
+#if BuildDisk
+			, Action disk
+#endif
+#if BuildConsole
+			, Action console
+#endif
+#if BuildProcesses
+			, Action<int?> processes
+#endif
+#if BuildHandles
+			, Action<int?> handles
+#endif
+#if BuildRegistry
+			, Action<string> registry
+#endif
+#if BuildDBViewer
+			, Action dbViewer
+#endif
 		)
 		{
 			launcher = new Launcher
@@ -45,17 +65,37 @@ namespace NeoEdit.GUI
 				getMinimizeToTrayLauncher = getMinimizeToTray,
 				setMinimizeToTrayLauncher = setMinimizeToTray,
 
+#if BuildSystemInfo
 				systemInfoLauncher = systemInfo,
+#endif
+#if BuildTextEdit
 				textEditorLauncher = textEditor,
+#endif
+#if BuildTextView
 				textViewerLauncher = textViewer,
+#endif
+#if BuildHexEdit
 				fileHexEditorLauncher = fileHexEditor,
 				processHexEditorLauncher = processHexEditor,
+#endif
+#if BuildDisk
 				diskLauncher = disk,
+#endif
+#if BuildConsole
 				consoleLauncher = console,
+#endif
+#if BuildProcesses
 				processesLauncher = processes,
+#endif
+#if BuildHandles
 				handlesLauncher = handles,
+#endif
+#if BuildRegistry
 				registryLauncher = registry,
+#endif
+#if BuildDBViewer
 				dbViewerLauncher = dbViewer,
+#endif
 			};
 		}
 

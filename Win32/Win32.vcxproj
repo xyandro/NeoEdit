@@ -7,7 +7,7 @@
     <RootNamespace>Win32</RootNamespace>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildConsole)$(BuildHandles)$(BuildHexEdit)$(BuildProcesses)$(BuildTextView)' != ''">
     <ClCompile Include="Handle.cpp" />
     <ClInclude Include="Handle.h" />
     <ClCompile Include="HandleInfo.cpp" />
@@ -33,7 +33,7 @@
     <ClCompile Include="VirtualQueryInfo.cpp" />
     <ClInclude Include="VirtualQueryInfo.h" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildConsole)$(BuildHandles)$(BuildHexEdit)$(BuildProcesses)$(BuildTextView)' != ''">
     <Reference Include="System" />
     <ProjectReference Include="..\Win32Lib\Win32Lib.vcxproj">
       <Project>{785c1014-852f-4ec1-a2d6-cdb52880b7ad}</Project>

@@ -6,7 +6,7 @@
     <RootNamespace>Win32Lib</RootNamespace>
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(BuildConsole)$(BuildHandles)$(BuildHexEdit)$(BuildProcesses)$(BuildTextView)$(BuildNEWin32)' != ''">
     <ClCompile Include="Handle.cpp" />
     <ClInclude Include="Handle.h" />
     <ClCompile Include="HandleInfo.cpp" />
