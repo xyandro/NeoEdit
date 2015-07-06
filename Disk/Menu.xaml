@@ -27,6 +27,18 @@
 		<disk:DiskMenuItem Header="_Binary Find" CommandEnum="Edit_FindBinary"/>
 		<disk:DiskMenuItem Header="_Text Find" CommandEnum="Edit_FindText"/>
 		<Separator/>
+		<MenuItem Header="To _List">
+			<disk:DiskMenuItem Header="To List _1" CommandEnum="Edit_ToList1"/>
+			<disk:DiskMenuItem Header="To List _2" CommandEnum="Edit_ToList2"/>
+			<disk:DiskMenuItem Header="To List _3" CommandEnum="Edit_ToList3"/>
+			<disk:DiskMenuItem Header="To List _4" CommandEnum="Edit_ToList4"/>
+			<disk:DiskMenuItem Header="To List _5" CommandEnum="Edit_ToList5"/>
+			<disk:DiskMenuItem Header="To List _6" CommandEnum="Edit_ToList6"/>
+			<disk:DiskMenuItem Header="To List _7" CommandEnum="Edit_ToList7"/>
+			<disk:DiskMenuItem Header="To List _8" CommandEnum="Edit_ToList8"/>
+			<disk:DiskMenuItem Header="To List _9" CommandEnum="Edit_ToList9"/>
+		</MenuItem>
+		<Separator/>
 		<disk:DiskMenuItem Header="Te_xt Edit" CommandEnum="Edit_TextEdit"/>
 		<disk:DiskMenuItem Header="_Hex Edit" CommandEnum="Edit_HexEdit"/>
 	</MenuItem>
@@ -94,6 +106,18 @@
 		<disk:DiskMenuItem Header="_Tiles" CommandEnum="View_Tiles"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="_Disk Usage" CommandEnum="View_DiskUsage"/>
+		<Separator/>
+		<MenuItem Header="_List">
+			<disk:DiskMenuItem Header="List _1" CommandEnum="View_List1"/>
+			<disk:DiskMenuItem Header="List _2" CommandEnum="View_List2"/>
+			<disk:DiskMenuItem Header="List _3" CommandEnum="View_List3"/>
+			<disk:DiskMenuItem Header="List _4" CommandEnum="View_List4"/>
+			<disk:DiskMenuItem Header="List _5" CommandEnum="View_List5"/>
+			<disk:DiskMenuItem Header="List _6" CommandEnum="View_List6"/>
+			<disk:DiskMenuItem Header="List _7" CommandEnum="View_List7"/>
+			<disk:DiskMenuItem Header="List _8" CommandEnum="View_List8"/>
+			<disk:DiskMenuItem Header="List _9" CommandEnum="View_List9"/>
+		</MenuItem>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>

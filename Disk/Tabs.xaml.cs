@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using NeoEdit.GUI.Controls;
@@ -18,6 +21,8 @@ namespace NeoEdit.Disk
 
 		static DiskTabs() { UIHelper<DiskTabs>.Register(); }
 
+		static List<DiskWindow> Lists = new List<DiskWindow> { new DiskWindow(list: 1), new DiskWindow(list: 2), new DiskWindow(list: 3), new DiskWindow(list: 4), new DiskWindow(list: 5), new DiskWindow(list: 6), new DiskWindow(list: 7), new DiskWindow(list: 8), new DiskWindow(list: 9) };
+
 		public DiskTabs(string path = null)
 		{
 			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
@@ -28,6 +33,11 @@ namespace NeoEdit.Disk
 			Add(new DiskWindow(path));
 		}
 
+		public static DiskWindow GetList(int list)
+		{
+			return Lists[list - 1];
+		}
+
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 
 		void Command_File_New(bool newWindow)
@@ -35,7 +45,21 @@ namespace NeoEdit.Disk
 			if (newWindow)
 				new DiskTabs();
 			else
-				Add(new DiskWindow());
+				Add(new DiskWindow(Directory.GetCurrentDirectory()));
+		}
+
+		void Command_View_List(int list)
+		{
+			var listObj = GetList(list);
+			var parent = listObj.GetValue(Tabs.TabParentProperty) as Tabs;
+			if (parent != null)
+			{
+				var itemData = parent.Items.Where(item => item.Item == listObj).SingleOrDefault();
+				if (itemData != null)
+					parent.Items.Remove(itemData);
+			}
+
+			Add(listObj);
 		}
 
 		void RunCommand(DiskCommand command, bool shiftDown)
@@ -45,6 +69,15 @@ namespace NeoEdit.Disk
 				case DiskCommand.File_NewTab: Command_File_New(shiftDown); break;
 				case DiskCommand.File_Exit: Close(); break;
 				case DiskCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
+				case DiskCommand.View_List1: Command_View_List(1); break;
+				case DiskCommand.View_List2: Command_View_List(2); break;
+				case DiskCommand.View_List3: Command_View_List(3); break;
+				case DiskCommand.View_List4: Command_View_List(4); break;
+				case DiskCommand.View_List5: Command_View_List(5); break;
+				case DiskCommand.View_List6: Command_View_List(6); break;
+				case DiskCommand.View_List7: Command_View_List(7); break;
+				case DiskCommand.View_List8: Command_View_List(8); break;
+				case DiskCommand.View_List9: Command_View_List(9); break;
 			}
 
 			if (TopMost == null)
@@ -65,6 +98,15 @@ namespace NeoEdit.Disk
 				case DiskCommand.Edit_Find: TopMost.Item.Command_Edit_Find(); break;
 				case DiskCommand.Edit_FindBinary: TopMost.Item.Command_Edit_FindBinary(); break;
 				case DiskCommand.Edit_FindText: TopMost.Item.Command_Edit_FindText(); break;
+				case DiskCommand.Edit_ToList1: TopMost.Item.Command_Edit_ToList(1); break;
+				case DiskCommand.Edit_ToList2: TopMost.Item.Command_Edit_ToList(2); break;
+				case DiskCommand.Edit_ToList3: TopMost.Item.Command_Edit_ToList(3); break;
+				case DiskCommand.Edit_ToList4: TopMost.Item.Command_Edit_ToList(4); break;
+				case DiskCommand.Edit_ToList5: TopMost.Item.Command_Edit_ToList(5); break;
+				case DiskCommand.Edit_ToList6: TopMost.Item.Command_Edit_ToList(6); break;
+				case DiskCommand.Edit_ToList7: TopMost.Item.Command_Edit_ToList(7); break;
+				case DiskCommand.Edit_ToList8: TopMost.Item.Command_Edit_ToList(8); break;
+				case DiskCommand.Edit_ToList9: TopMost.Item.Command_Edit_ToList(9); break;
 				case DiskCommand.Edit_TextEdit: TopMost.Item.Command_Edit_TextEdit(); break;
 				case DiskCommand.Edit_HexEdit: TopMost.Item.Command_Edit_HexEdit(); break;
 				case DiskCommand.Select_All: TopMost.Item.Command_Select_All(); break;

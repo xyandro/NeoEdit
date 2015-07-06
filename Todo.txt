@@ -5,7 +5,6 @@ Disk:
 Select by SVN ignore
 Move timestamp (possibly others) from TextEditor
 Select readable
-Can push files to predefined lists (CTRL+1, CTRL+SHIFT+1)
 
 Text:
 Continue after error deleting files (perhaps with dialog Yes/No/All)

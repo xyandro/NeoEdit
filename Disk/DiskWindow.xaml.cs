@@ -27,6 +27,8 @@ namespace NeoEdit.Disk
 		[DepProp]
 		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
+		int? ConstantList { get { return UIHelper<DiskWindow>.GetPropValue<int?>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
+		[DepProp]
 		ObservableCollection<DiskItem> Files { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		ObservableCollection<DiskItem> Selected { get { return UIHelper<DiskWindow>.GetPropValue<ObservableCollection<DiskItem>>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
@@ -50,22 +52,23 @@ namespace NeoEdit.Disk
 
 		RunOnceTimer filesChangedTimer;
 
-		public DiskWindow(string path = null)
+		public DiskWindow(string path = null, int? list = null)
 		{
-			if (String.IsNullOrEmpty(path))
+			if ((String.IsNullOrEmpty(path)) && (!list.HasValue))
 				path = Directory.GetCurrentDirectory();
 
 			filesChangedTimer = new RunOnceTimer(() => FilesChanged());
 
-
 			InitializeComponent();
+			ConstantList = list;
 
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"[0] == '' ? 'Custom' : FileName([0])" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"[0] == null ? ([1] == '' ? 'Custom' : FileName([1])) : StrFormat('List {0}', [0])" };
+			multiBinding.Bindings.Add(new Binding("ConstantList") { Source = this });
 			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
 			SetBinding(UIHelper<DiskWindow>.GetProperty(a => a.TabLabel), multiBinding);
 
 			location.GotFocus += (s, e) => location.SelectAll();
-			location.LostFocus += (s, e) => { location.Text = Location.FullName; };
+			location.LostFocus += (s, e) => { location.Text = Location == null ? "" : Location.FullName; };
 			location.PreviewKeyDown += LocationKeyDown;
 			files.Accept += s => OnAccept();
 			files.MouseDrag += MouseDragFiles;
@@ -105,6 +108,9 @@ namespace NeoEdit.Disk
 
 		void SetLocation(string path)
 		{
+			if (ConstantList.HasValue)
+				return;
+
 			var diskItem = DiskItem.Get(path);
 			if (diskItem == null)
 				throw new Exception("Invalid path.");
@@ -113,6 +119,9 @@ namespace NeoEdit.Disk
 
 		void SetLocation(DiskItem item)
 		{
+			if (ConstantList.HasValue)
+				return;
+
 			Location = item;
 
 			DiskItem selectedFile = null;
@@ -477,6 +486,19 @@ namespace NeoEdit.Disk
 			foreach (var file in files)
 				if (TextSearchFile(file, search))
 					Selected.Add(file);
+			if (!Selected.Contains(Focused))
+				Focused = Selected.FirstOrDefault();
+		}
+
+		internal void Command_Edit_ToList(int list)
+		{
+			var toList = DiskTabs.GetList(list);
+
+			foreach (var item in Selected)
+			{
+				toList.Files.Add(item);
+				toList.Selected.Add(item);
+			}
 			if (!Selected.Contains(Focused))
 				Focused = Selected.FirstOrDefault();
 		}

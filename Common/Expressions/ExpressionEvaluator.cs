@@ -127,6 +127,27 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
+		bool OpEquals(object val1, object val2, bool caseSensitive)
+		{
+			if ((val1 == null) && (val2 == null))
+				return true;
+			if ((val1 == null) || (val2 == null))
+				return false;
+			var type1 = val1.GetType();
+			var type2 = val2.GetType();
+			if (type1 != type2)
+				return false;
+			if (type1 == typeof(char))
+			{
+				if (caseSensitive)
+					return Char.Equals((char)val1, (char)val2);
+				return Char.Equals(Char.ToUpperInvariant((char)val1), Char.ToUpperInvariant((char)val2));
+			}
+			if (type1 == typeof(string))
+				return String.Equals(val1 as string, val2 as string, caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
+			return val1.Equals(val2);
+		}
+
 		object DoBinaryOp(string op, object val1, object val2)
 		{
 			switch (op)
@@ -148,10 +169,10 @@ namespace NeoEdit.Common.Expressions
 				case ">=": return OpByType(val1, val2, longFunc: (a, b) => a >= b, doubleFunc: (a, b) => a >= b, stringFunc: (a, b) => String.Compare(a, b) >= 0);
 				case "i>=": return OpByType(val1, val2, longFunc: (a, b) => a >= b, doubleFunc: (a, b) => a >= b, stringFunc: (a, b) => String.Compare(a, b, true) >= 0);
 				case "is": return val1 == null ? false : val1.GetType().Name == (val2 ?? "").ToString();
-				case "==": return OpByType(val1, val2, boolFunc: (a, b) => a == b, longFunc: (a, b) => a == b, doubleFunc: (a, b) => a == b, stringFunc: (a, b) => String.Compare(a, b) == 0, objFunc: (a, b) => a == b);
-				case "i==": return OpByType(val1, val2, boolFunc: (a, b) => a == b, longFunc: (a, b) => a == b, doubleFunc: (a, b) => a == b, stringFunc: (a, b) => String.Compare(a, b, true) == 0, objFunc: (a, b) => a == b);
-				case "!=": return OpByType(val1, val2, boolFunc: (a, b) => a != b, longFunc: (a, b) => a != b, doubleFunc: (a, b) => a != b, stringFunc: (a, b) => String.Compare(a, b) != 0, objFunc: (a, b) => a != b);
-				case "i!=": return OpByType(val1, val2, boolFunc: (a, b) => a != b, longFunc: (a, b) => a != b, doubleFunc: (a, b) => a != b, stringFunc: (a, b) => String.Compare(a, b, true) != 0, objFunc: (a, b) => a != b);
+				case "==": return OpEquals(val1, val2, true);
+				case "i==": return OpEquals(val1, val2, false);
+				case "!=": return !OpEquals(val1, val2, true);
+				case "i!=": return !OpEquals(val1, val2, false);
 				case "&": return ToType<long>(val1) & ToType<long>(val2);
 				case "^": return ToType<long>(val1) ^ ToType<long>(val2);
 				case "|": return ToType<long>(val1) | ToType<long>(val2);
