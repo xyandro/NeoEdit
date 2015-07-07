@@ -31,7 +31,6 @@ namespace NeoEdit.HexEdit
 		[KeyGesture(Key.Insert)] Edit_Insert,
 		View_Values,
 		[KeyGesture(Key.F5)] View_Refresh,
-		View_Tiles,
 		Data_Hash_MD5,
 		Data_Hash_SHA1,
 		Data_Hash_SHA256,

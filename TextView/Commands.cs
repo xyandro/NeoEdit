@@ -17,6 +17,5 @@ namespace NeoEdit.TextView
 		File_Encoding,
 		File_Exit,
 		[KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy,
-		View_Tiles,
 	}
 }

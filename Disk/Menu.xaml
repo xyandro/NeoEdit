@@ -103,7 +103,7 @@
 				</Style>
 			</MenuItem.Style>
 		</MenuItem>
-		<disk:DiskMenuItem Header="_Tiles" CommandEnum="View_Tiles"/>
+		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.Tiles, ElementName=self}"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="_Disk Usage" CommandEnum="View_DiskUsage"/>
 		<Separator/>

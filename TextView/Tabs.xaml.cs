@@ -23,7 +23,7 @@ namespace NeoEdit.TextView
 		[DepProp]
 		public Tabs.ItemData Active { get { return UIHelper<TextViewerTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<TextViewerTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
+		public bool Tiles { get { return UIHelper<TextViewerTabs>.GetPropValue<bool>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
 
 		static TextViewerTabs() { UIHelper<TextViewerTabs>.Register(); }
 
@@ -126,7 +126,6 @@ namespace NeoEdit.TextView
 				case TextViewCommand.File_Merge: Command_File_Merge(); break;
 				case TextViewCommand.File_Encoding: Command_File_Encoding(); break;
 				case TextViewCommand.File_Exit: Close(); break;
-				case TextViewCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
 
 			if (Active == null)

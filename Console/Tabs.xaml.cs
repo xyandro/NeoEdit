@@ -12,7 +12,7 @@ namespace NeoEdit.Console
 		[DepProp]
 		public Tabs.ItemData Active { get { return UIHelper<ConsoleTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<ConsoleTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
+		public bool Tiles { get { return UIHelper<ConsoleTabs>.GetPropValue<bool>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
 
 		static ConsoleTabs() { UIHelper<ConsoleTabs>.Register(); }
 
@@ -38,7 +38,6 @@ namespace NeoEdit.Console
 			switch (command)
 			{
 				case ConsoleCommand.File_New: Add(new Console()); break;
-				case ConsoleCommand.View_Tiles: View = View == Tabs<Console>.ViewType.Tiles ? Tabs<Console>.ViewType.Tabs : Tabs<Console>.ViewType.Tiles; break;
 			}
 		}
 	}

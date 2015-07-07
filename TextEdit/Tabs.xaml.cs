@@ -28,7 +28,7 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public Tabs.ItemData TopMost { get { return UIHelper<TextEditTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<TextEditTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public bool Tiles { get { return UIHelper<TextEditTabs>.GetPropValue<bool>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
@@ -406,7 +406,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_CopyAll: Command_Edit_CopyAll(); break;
 				case TextEditCommand.Edit_PasteAll: Command_Edit_PasteAll(); break;
-				case TextEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
 				case TextEditCommand.Macro_Open: Command_File_Open(dialogResult as OpenFileDialogResult); return;

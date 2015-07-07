@@ -17,7 +17,7 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public Tabs.ItemData TopMost { get { return UIHelper<DiskTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<DiskTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
+		public bool Tiles { get { return UIHelper<DiskTabs>.GetPropValue<bool>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
 
 		static DiskTabs() { UIHelper<DiskTabs>.Register(); }
 
@@ -68,7 +68,6 @@ namespace NeoEdit.Disk
 			{
 				case DiskCommand.File_NewTab: Command_File_New(shiftDown); break;
 				case DiskCommand.File_Exit: Close(); break;
-				case DiskCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 				case DiskCommand.View_List1: Command_View_List(1); break;
 				case DiskCommand.View_List2: Command_View_List(2); break;
 				case DiskCommand.View_List3: Command_View_List(3); break;

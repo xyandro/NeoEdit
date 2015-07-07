@@ -27,7 +27,7 @@
 		<hexEdit:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" TabLabelBinding="{Binding Item.TabLabel}" VerticalAlignment="Stretch"
 			Items="{Binding HexEditors, ElementName=self, Mode=TwoWay}"
 			TopMost="{Binding Active, ElementName=self, Mode=TwoWay}"
-			View="{Binding View, ElementName=self, Mode=TwoWay}"
+			Tiles="{Binding Tiles, ElementName=self, Mode=TwoWay}"
 		/>
 	</Grid>
 

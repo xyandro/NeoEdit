@@ -18,12 +18,6 @@ namespace NeoEdit.GUI.Controls
 	{
 		static public DependencyProperty TabParentProperty = DependencyProperty.RegisterAttached("TabParent", typeof(Tabs<ItemType>), typeof(Tabs<ItemType>));
 
-		public enum ViewType
-		{
-			Tabs,
-			Tiles,
-		}
-
 		public class ItemData : DependencyObject
 		{
 			[DepProp]
@@ -46,7 +40,7 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public ItemData TopMost { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemData>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public ViewType View { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ViewType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		public bool Tiles { get { return UIHelper<Tabs<ItemType>>.GetPropValue<bool>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public double TabsScroll { get { return UIHelper<Tabs<ItemType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
@@ -69,7 +63,7 @@ namespace NeoEdit.GUI.Controls
 			SetupLayout();
 
 			Items = new ObservableCollection<ItemData>();
-			View = ViewType.Tabs;
+			Tiles = false;
 			Focusable = true;
 			FocusVisualStyle = null;
 			AllowDrop = true;
@@ -266,14 +260,14 @@ namespace NeoEdit.GUI.Controls
 			public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
 		}
 
-		FrameworkElementFactory GetTabLabel(ViewType view)
+		FrameworkElementFactory GetTabLabel(bool tiles)
 		{
 			var label = new FrameworkElementFactory(typeof(TabLabel));
-			if (view == ViewType.Tiles)
+			if (tiles)
 				label.SetValue(DockPanel.DockProperty, Dock.Top);
 			label.SetBinding(TabLabel.TextProperty, tabLabelBinding);
 			label.SetValue(TabLabel.PaddingProperty, new Thickness(10, 2, 10, 2));
-			label.SetValue(TabLabel.MarginProperty, new Thickness(0, 0, view == ViewType.Tabs ? 2 : 0, 1));
+			label.SetValue(TabLabel.MarginProperty, new Thickness(0, 0, tiles ? 0 : 2, 1));
 
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [2] ? \"CadetBlue\" : ([1] ? \"LightBlue\" : \"LightGray\")" };
 			multiBinding.Bindings.Add(new Binding());
@@ -307,7 +301,7 @@ namespace NeoEdit.GUI.Controls
 						itemsControl.SetValue(DockPanel.DockProperty, Dock.Top);
 						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Items).Name) { Source = this });
 						{
-							var notifierLabel = GetTabLabel(ViewType.Tabs);
+							var notifierLabel = GetTabLabel(false);
 							notifierLabel.SetBinding(UIHelper<TabLabel>.GetProperty(a => a.Item), new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
 							notifierLabel.AddHandler(TabLabel.ItemMatchEvent, (RoutedEventHandler)((s, e) =>
 							{
@@ -411,7 +405,7 @@ namespace NeoEdit.GUI.Controls
 						{
 							var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
 							dockPanel.SetValue(DockPanel.MarginProperty, new Thickness(0, 0, 2, 2));
-							dockPanel.AppendChild(GetTabLabel(ViewType.Tiles));
+							dockPanel.AppendChild(GetTabLabel(true));
 							{
 								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
 								contentControl.SetValue(DockPanel.DockProperty, Dock.Bottom);
@@ -437,7 +431,7 @@ namespace NeoEdit.GUI.Controls
 					itemsControl.SetValue(Window.BackgroundProperty, Brushes.Gray);
 				}
 
-				var dataTrigger = new DataTrigger { Binding = new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.View).Name) { Source = this }, Value = ViewType.Tiles };
+				var dataTrigger = new DataTrigger { Binding = new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.Tiles).Name) { Source = this }, Value = true };
 				dataTrigger.Setters.Add(new Setter(AllItemsControl.TemplateProperty, tilesTemplate));
 				style.Triggers.Add(dataTrigger);
 			}

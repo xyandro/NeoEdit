@@ -24,7 +24,7 @@ namespace NeoEdit.HexEdit
 		[DepProp]
 		public Tabs.ItemData Active { get { return UIHelper<HexEditTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ViewType View { get { return UIHelper<HexEditTabs>.GetPropValue<Tabs.ViewType>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
+		public bool Tiles { get { return UIHelper<HexEditTabs>.GetPropValue<bool>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
 
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 
@@ -195,7 +195,6 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.File_OpenDump: Command_File_OpenDump(); break;
 				case HexEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case HexEditCommand.File_Exit: Close(); break;
-				case HexEditCommand.View_Tiles: View = View == Tabs.ViewType.Tiles ? Tabs.ViewType.Tabs : Tabs.ViewType.Tiles; break;
 			}
 
 			if (Active == null)
