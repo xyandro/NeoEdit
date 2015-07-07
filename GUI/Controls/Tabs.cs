@@ -275,7 +275,7 @@ namespace NeoEdit.GUI.Controls
 			label.SetValue(TabLabel.PaddingProperty, new Thickness(10, 2, 10, 2));
 			label.SetValue(TabLabel.MarginProperty, new Thickness(0, 0, view == ViewType.Tabs ? 2 : 0, 1));
 
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [2] ? 'CadetBlue' : ([1] ? 'LightBlue' : 'LightGray')" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [2] ? \"CadetBlue\" : ([1] ? \"LightBlue\" : \"LightGray\")" };
 			multiBinding.Bindings.Add(new Binding());
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>.ItemData>.GetProperty(a => a.Active).Name));
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });

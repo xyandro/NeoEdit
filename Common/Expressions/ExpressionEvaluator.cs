@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using NeoEdit.Common.Expressions.Parser;
 
@@ -15,7 +16,7 @@ namespace NeoEdit.Common.Expressions
 		readonly string expression;
 		readonly Dictionary<string, object> dict;
 		readonly List<object> values;
-		public ExpressionEvaluator(string expression, Dictionary<string, object> dict, params object[] values)
+		internal ExpressionEvaluator(string expression, Dictionary<string, object> dict, params object[] values)
 		{
 			this.expression = expression;
 			this.dict = dict;
@@ -27,14 +28,24 @@ namespace NeoEdit.Common.Expressions
 			return (val != null) && (val.GetType().FullName == "MS.Internal.NamedObject") && (val.ToString() == "{DependencyProperty.UnsetValue}") ? null : val;
 		}
 
-		bool IsIntType(Type type)
+		bool IsIntType(object obj)
 		{
-			return (type == typeof(sbyte)) || (type == typeof(byte)) || (type == typeof(char)) || (type == typeof(short)) || (type == typeof(ushort)) || (type == typeof(int)) || (type == typeof(uint)) || (type == typeof(long)) || (type == typeof(ulong));
+			return (obj is sbyte) || (obj is byte) || (obj is short) || (obj is ushort) || (obj is int) || (obj is uint) || (obj is long) || (obj is ulong);
 		}
 
-		bool IsFloatType(Type type)
+		bool IsFloatType(object obj)
 		{
-			return (type == typeof(float)) || (type == typeof(double)) || (type == typeof(decimal));
+			return (obj is float) || (obj is double) || (obj is decimal);
+		}
+
+		bool IsNumericType(object obj)
+		{
+			return (IsIntType(obj)) || (IsFloatType(obj));
+		}
+
+		bool IsCharacterType(object obj)
+		{
+			return (obj is char) || (obj is string);
 		}
 
 		Type GetType(string type)
@@ -42,71 +53,39 @@ namespace NeoEdit.Common.Expressions
 			switch (type)
 			{
 				case "bool": return typeof(bool);
+				case "char": return typeof(char);
+				case "sbyte": return typeof(sbyte);
+				case "byte": return typeof(byte);
+				case "short": return typeof(short);
+				case "ushort": return typeof(ushort);
+				case "int": return typeof(int);
+				case "uint": return typeof(uint);
 				case "long": return typeof(long);
+				case "ulong": return typeof(ulong);
+				case "float": return typeof(float);
 				case "double": return typeof(double);
 				case "string": return typeof(string);
 				default: throw new ArgumentException(String.Format("Invalid cast: {0}", type));
 			}
 		}
 
-		object ToType(object val, Type type)
+		object CastValue(object val, Type type)
 		{
 			if (val == null)
-				return type.IsValueType ? Activator.CreateInstance(type) : null;
+			{
+				if (!type.IsValueType)
+					return null;
+				throw new Exception("NULL value");
+			}
 			return Convert.ChangeType(val, type);
 		}
 
 		T ToType<T>(object val)
 		{
-			if (typeof(T) == typeof(string))
-				return (T)(object)(val == null ? "" : val.ToString());
-			if (val == null)
-				return default(T);
-			return (T)Convert.ChangeType(val, typeof(T));
+			return (T)CastValue(val, typeof(T));
 		}
 
-		object OpByType(object val1, object val2, Func<bool, bool, object> boolFunc = null, Func<long, long, object> longFunc = null, Func<double, double, object> doubleFunc = null, Func<string, string, object> stringFunc = null, Func<object, object, object> objFunc = null)
-		{
-			if ((val1 == null) && (val2 == null))
-				return null;
-
-			var type1 = val1 == null ? null : val1.GetType();
-			var type2 = val2 == null ? null : val2.GetType();
-
-			if ((stringFunc != null) && ((type1 == typeof(string)) || (type2 == typeof(string))))
-				return stringFunc(ToType<string>(val1), ToType<string>(val2));
-			else if ((boolFunc != null) && ((type1 == typeof(bool)) || (type2 == typeof(bool))))
-				return boolFunc(ToType<bool>(val1), ToType<bool>(val2));
-			else if ((doubleFunc != null) && ((IsFloatType(type1)) || (IsFloatType(type2))))
-				return doubleFunc(ToType<double>(val1), ToType<double>(val2));
-			else if ((longFunc != null) && ((IsIntType(type1)) || (IsIntType(type2))))
-				return longFunc(ToType<long>(val1), ToType<long>(val2));
-			else if (objFunc != null)
-				return objFunc(val1, val2);
-
-			throw new ArgumentException("Invalid operation");
-		}
-
-		object OpByType(object val, Func<bool, object> boolFunc = null, Func<long, object> longFunc = null, Func<double, object> doubleFunc = null, Func<string, object> stringFunc = null)
-		{
-			if (val == null)
-				return null;
-
-			var type = val.GetType();
-
-			if ((stringFunc != null) && (type == typeof(string)))
-				return stringFunc(ToType<string>(val));
-			else if ((boolFunc != null) && (type == typeof(bool)))
-				return boolFunc(ToType<bool>(val));
-			else if ((doubleFunc != null) && (IsFloatType(type)))
-				return doubleFunc(ToType<double>(val));
-			else if ((longFunc != null) && (IsIntType(type)))
-				return longFunc(ToType<long>(val));
-
-			throw new ArgumentException("Invalid operation");
-		}
-
-		object GetDotOp(object obj, string fieldName)
+		object DotOp(object obj, string fieldName)
 		{
 			if (obj == null)
 				return null;
@@ -116,68 +95,229 @@ namespace NeoEdit.Common.Expressions
 			return field.GetValue(obj);
 		}
 
-		object DoUnaryOp(string op, object val)
+		object PosOp(object val)
+		{
+			if (val == null)
+				throw new Exception("NULL value");
+
+			if (IsNumericType(val))
+			{
+				if (IsFloatType(val))
+					return ToType<double>(val);
+				return ToType<long>(val);
+			}
+
+			throw new Exception("Invalid operation");
+		}
+
+		object NegOp(object val)
+		{
+			if (val == null)
+				throw new Exception("NULL value");
+
+			if (IsNumericType(val))
+			{
+				if (IsFloatType(val))
+					return -ToType<double>(val);
+				return -ToType<long>(val);
+			}
+
+			throw new Exception("Invalid operation");
+		}
+
+		object UnaryOp(string op, object val)
 		{
 			switch (op)
 			{
-				case "+": return OpByType(val, longFunc: a => +a, doubleFunc: a => +a);
-				case "-": return OpByType(val, longFunc: a => -a, doubleFunc: a => -a);
+				case "+": return PosOp(val);
+				case "-": return NegOp(val);
 				case "!": return !ToType<bool>(val);
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
 		}
 
-		bool OpEquals(object val1, object val2, bool caseSensitive)
+		object MultOp(object val1, object val2)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((IsCharacterType(val1)) && (IsIntType(val2)))
+			{
+				var str = val1.ToString();
+				var count = ToType<int>(val2);
+				var sb = new StringBuilder(str.Length * count);
+				for (var ctr = 0; ctr < count; ++ctr)
+					sb.Append(str);
+				return sb.ToString();
+			}
+
+			if ((IsNumericType(val1)) && (IsNumericType(val2)))
+			{
+				if ((IsFloatType(val1)) || (IsFloatType(val2)))
+					return ToType<double>(val1) * ToType<double>(val2);
+				return ToType<long>(val1) * ToType<long>(val2);
+			}
+
+			throw new Exception("Invalid operation");
+		}
+
+		object DivOp(object val1, object val2)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((IsNumericType(val1)) && (IsNumericType(val2)))
+			{
+				if ((IsFloatType(val1)) || (IsFloatType(val2)))
+					return ToType<double>(val1) / ToType<double>(val2);
+				return ToType<long>(val1) / ToType<long>(val2);
+			}
+
+			throw new Exception("Invalid operation");
+		}
+
+		object ModOp(object val1, object val2)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((IsIntType(val1)) && (IsIntType(val2)))
+				return ToType<long>(val1) / ToType<long>(val2);
+
+			throw new Exception("Invalid operation");
+		}
+
+		object AddOp(object val1, object val2)
+		{
+			if ((val1 == null) || (val2 == null))
+			{
+				var val = val1 ?? val2;
+				if (IsCharacterType(val))
+					return val;
+				throw new Exception("NULL value");
+			}
+
+			if ((val1 is char) && (IsIntType(val2)))
+				return (char)((int)ToType<char>(val1) + ToType<int>(val2));
+
+			if ((IsCharacterType(val1)) || (IsCharacterType(val2)))
+				return val1.ToString() + val2.ToString();
+
+			if ((IsNumericType(val1)) && (IsNumericType(val2)))
+			{
+				if ((IsFloatType(val1)) || (IsFloatType(val2)))
+					return ToType<double>(val1) + ToType<double>(val2);
+				return ToType<long>(val1) + ToType<long>(val2);
+			}
+
+			throw new Exception("Invalid operation");
+		}
+
+		object SubOp(object val1, object val2)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((val1 is char) && (IsIntType(val2)))
+				return (char)((int)ToType<char>(val1) - ToType<int>(val2));
+
+			if ((IsNumericType(val1)) && (IsNumericType(val2)))
+			{
+				if ((IsFloatType(val1)) || (IsFloatType(val2)))
+					return ToType<double>(val1) - ToType<double>(val2);
+				return ToType<long>(val1) - ToType<long>(val2);
+			}
+
+			throw new Exception("Invalid operation");
+		}
+
+		bool EqualsOp(object val1, object val2, bool ignoreCase)
 		{
 			if ((val1 == null) && (val2 == null))
 				return true;
 			if ((val1 == null) || (val2 == null))
 				return false;
-			var type1 = val1.GetType();
-			var type2 = val2.GetType();
-			if (type1 != type2)
-				return false;
-			if (type1 == typeof(char))
+
+			if ((IsNumericType(val1)) && (IsNumericType(val2)))
 			{
-				if (caseSensitive)
-					return Char.Equals((char)val1, (char)val2);
-				return Char.Equals(Char.ToUpperInvariant((char)val1), Char.ToUpperInvariant((char)val2));
+				if ((IsFloatType(val1)) || (IsFloatType(val2)))
+					return ToType<double>(val1) == ToType<double>(val2);
+				return ToType<long>(val1) == ToType<long>(val2);
 			}
-			if (type1 == typeof(string))
-				return String.Equals(val1 as string, val2 as string, caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
+
+			if ((IsCharacterType(val1)) && (IsCharacterType(val2)))
+				return val1.ToString().Equals(val2.ToString(), ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+
 			return val1.Equals(val2);
 		}
 
-		object DoBinaryOp(string op, object val1, object val2)
+		bool LessThanOp(object val1, object val2, bool ignoreCase)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((IsCharacterType(val1)) && (IsCharacterType(val2)))
+				return String.Compare(val1.ToString(), val2.ToString(), ignoreCase) < 0;
+
+			if ((IsNumericType(val1)) && (IsNumericType(val2)))
+			{
+				if ((IsFloatType(val1)) || (IsFloatType(val2)))
+					return ToType<double>(val1) < ToType<double>(val2);
+				return ToType<long>(val1) < ToType<long>(val2);
+			}
+
+			throw new Exception("Invalid operation");
+		}
+
+		bool GreaterThanOp(object val1, object val2, bool ignoreCase)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((IsCharacterType(val1)) && (IsCharacterType(val2)))
+				return String.Compare(val1.ToString(), val2.ToString(), ignoreCase) > 0;
+
+			if ((IsNumericType(val1)) && (IsNumericType(val2)))
+			{
+				if ((IsFloatType(val1)) || (IsFloatType(val2)))
+					return ToType<double>(val1) > ToType<double>(val2);
+				return ToType<long>(val1) > ToType<long>(val2);
+			}
+
+			throw new Exception("Invalid operation");
+		}
+
+		object BinaryOp(string op, object val1, object val2)
 		{
 			switch (op)
 			{
-				case ".": return GetDotOp(val1, (val2 ?? "").ToString());
-				case "*": return OpByType(val1, val2, longFunc: (a, b) => a * b, doubleFunc: (a, b) => a * b);
-				case "/": return OpByType(val1, val2, longFunc: (a, b) => a / b, doubleFunc: (a, b) => a / b);
-				case "%": return OpByType(val1, val2, longFunc: (a, b) => a % b, doubleFunc: (a, b) => a % b);
-				case "+": return OpByType(val1, val2, longFunc: (a, b) => a + b, doubleFunc: (a, b) => a + b, stringFunc: (a, b) => (a ?? "") + (b ?? ""));
-				case "-": return OpByType(val1, val2, longFunc: (a, b) => a - b, doubleFunc: (a, b) => a - b);
+				case ".": return DotOp(val1, (val2 ?? "").ToString());
+				case "*": return MultOp(val1, val2);
+				case "/": return DivOp(val1, val2);
+				case "%": return ModOp(val1, val2);
+				case "+": return AddOp(val1, val2);
+				case "-": return SubOp(val1, val2);
 				case "<<": return ToType<long>(val1) << ToType<int>(val2);
 				case ">>": return ToType<long>(val1) >> ToType<int>(val2);
-				case "<": return OpByType(val1, val2, longFunc: (a, b) => a < b, doubleFunc: (a, b) => a < b, stringFunc: (a, b) => String.Compare(a, b) < 0);
-				case "i<": return OpByType(val1, val2, longFunc: (a, b) => a < b, doubleFunc: (a, b) => a < b, stringFunc: (a, b) => String.Compare(a, b, true) < 0);
-				case ">": return OpByType(val1, val2, longFunc: (a, b) => a > b, doubleFunc: (a, b) => a > b, stringFunc: (a, b) => String.Compare(a, b) > 0);
-				case "i>": return OpByType(val1, val2, longFunc: (a, b) => a > b, doubleFunc: (a, b) => a > b, stringFunc: (a, b) => String.Compare(a, b, true) > 0);
-				case "<=": return OpByType(val1, val2, longFunc: (a, b) => a <= b, doubleFunc: (a, b) => a <= b, stringFunc: (a, b) => String.Compare(a, b) <= 0);
-				case "i<=": return OpByType(val1, val2, longFunc: (a, b) => a <= b, doubleFunc: (a, b) => a <= b, stringFunc: (a, b) => String.Compare(a, b, true) <= 0);
-				case ">=": return OpByType(val1, val2, longFunc: (a, b) => a >= b, doubleFunc: (a, b) => a >= b, stringFunc: (a, b) => String.Compare(a, b) >= 0);
-				case "i>=": return OpByType(val1, val2, longFunc: (a, b) => a >= b, doubleFunc: (a, b) => a >= b, stringFunc: (a, b) => String.Compare(a, b, true) >= 0);
+				case "<": return LessThanOp(val1, val2, false);
+				case "i<": return LessThanOp(val1, val2, true);
+				case ">": return GreaterThanOp(val1, val2, false);
+				case "i>": return GreaterThanOp(val1, val2, true);
+				case "<=": return !GreaterThanOp(val1, val2, false);
+				case "i<=": return !GreaterThanOp(val1, val2, true);
+				case ">=": return !LessThanOp(val1, val2, false);
+				case "i>=": return !LessThanOp(val1, val2, true);
 				case "is": return val1 == null ? false : val1.GetType().Name == (val2 ?? "").ToString();
-				case "==": return OpEquals(val1, val2, true);
-				case "i==": return OpEquals(val1, val2, false);
-				case "!=": return !OpEquals(val1, val2, true);
-				case "i!=": return !OpEquals(val1, val2, false);
+				case "==": return EqualsOp(val1, val2, false);
+				case "i==": return EqualsOp(val1, val2, true);
+				case "!=": return !EqualsOp(val1, val2, false);
+				case "i!=": return !EqualsOp(val1, val2, true);
 				case "&": return ToType<long>(val1) & ToType<long>(val2);
 				case "^": return ToType<long>(val1) ^ ToType<long>(val2);
 				case "|": return ToType<long>(val1) | ToType<long>(val2);
 				case "&&": return ToType<bool>(val1) && ToType<bool>(val2);
 				case "||": return ToType<bool>(val1) || ToType<bool>(val2);
+				case "??": return val1 ?? val2;
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
 		}
@@ -210,7 +350,7 @@ namespace NeoEdit.Common.Expressions
 				}
 
 				var val2 = values.Dequeue();
-				result = DoBinaryOp(op, result, val2);
+				result = BinaryOp(op, result, val2);
 			}
 			return result;
 		}
@@ -223,9 +363,9 @@ namespace NeoEdit.Common.Expressions
 			switch (method)
 			{
 				case "Type": return paramList.Single().GetType();
-				case "ValidRE": return ValidRE(ToType<string>(paramList.Single()));
-				case "Eval": return new NEExpression(ToType<string>(paramList.Single())).Evaluate();
-				case "FileName": return Path.GetFileName(ToType<string>(paramList.Single()));
+				case "ValidRE": return ValidRE(paramList.Single().ToString());
+				case "Eval": return new NEExpression(paramList.Single().ToString()).Evaluate();
+				case "FileName": return Path.GetFileName((paramList.Single() ?? "").ToString());
 				case "StrFormat": return String.Format(paramList.Select(arg => arg == null ? "" : arg.ToString()).FirstOrDefault() ?? "", paramList.Skip(1).Select(arg => arg ?? "").ToArray());
 				default: throw new ArgumentException(String.Format("Invalid method: {0}", method));
 			}
@@ -233,23 +373,25 @@ namespace NeoEdit.Common.Expressions
 
 		public override object VisitShortForm(ExpressionParser.ShortFormContext context) { return GetShortForm(context.op.Text); }
 		public override object VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) { return GetShortForm("&&"); }
-		public override object VisitDot(ExpressionParser.DotContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitUnary(ExpressionParser.UnaryContext context) { return DoUnaryOp(context.op.Text, Visit(context.val)); }
-		public override object VisitCast(ExpressionParser.CastContext context) { return ToType(Visit(context.val), GetType(context.type.Text)); }
-		public override object VisitMult(ExpressionParser.MultContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitAdd(ExpressionParser.AddContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitShift(ExpressionParser.ShiftContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitRelational(ExpressionParser.RelationalContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitEquality(ExpressionParser.EqualityContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitLogicalAnd(ExpressionParser.LogicalAndContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitLogicalXor(ExpressionParser.LogicalXorContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitLogicalOr(ExpressionParser.LogicalOrContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitConditionalAnd(ExpressionParser.ConditionalAndContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitConditionalOr(ExpressionParser.ConditionalOrContext context) { return DoBinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitDot(ExpressionParser.DotContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitUnary(ExpressionParser.UnaryContext context) { return UnaryOp(context.op.Text, Visit(context.val)); }
+		public override object VisitCast(ExpressionParser.CastContext context) { return CastValue(Visit(context.val), GetType(context.type.Text)); }
+		public override object VisitMult(ExpressionParser.MultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitAdd(ExpressionParser.AddContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitShift(ExpressionParser.ShiftContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitRelational(ExpressionParser.RelationalContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitEquality(ExpressionParser.EqualityContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitLogicalAnd(ExpressionParser.LogicalAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitLogicalXor(ExpressionParser.LogicalXorContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitLogicalOr(ExpressionParser.LogicalOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitConditionalAnd(ExpressionParser.ConditionalAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitConditionalOr(ExpressionParser.ConditionalOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitNullCoalesce(ExpressionParser.NullCoalesceContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitTernary(ExpressionParser.TernaryContext context) { return ToType<bool>(Visit(context.condition)) ? Visit(context.trueval) : Visit(context.falseval); }
 		public override object VisitExpression(ExpressionParser.ExpressionContext context) { return Visit(context.val); }
 		public override object VisitParam(ExpressionParser.ParamContext context) { return values[int.Parse(context.val.Text.Trim('[', ']'))]; }
 		public override object VisitString(ExpressionParser.StringContext context) { return context.val.Text.Substring(1, context.val.Text.Length - 2); }
+		public override object VisitChar(ExpressionParser.CharContext context) { return context.val.Text[1]; }
 		public override object VisitTrue(ExpressionParser.TrueContext context) { return true; }
 		public override object VisitFalse(ExpressionParser.FalseContext context) { return false; }
 		public override object VisitNull(ExpressionParser.NullContext context) { return null; }

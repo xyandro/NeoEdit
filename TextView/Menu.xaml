@@ -25,7 +25,7 @@
 		<textView:TextViewMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<textView:TextViewMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] == \'Tiles\''}"/>
+		<textView:TextViewMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='(string)[0] == &quot;Tiles&quot;'}"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>

@@ -18,7 +18,6 @@ Allow user to disable undo/redo for faster performance
 Submit forms
 When opening files don't open the same one more than once
 Override readonly, access denied (UAC required?)
-Add/subtract chars in expressions (a+1=b)
 Go back to last selections
 Refactor menu (more subtrees, less accel reuse)
 

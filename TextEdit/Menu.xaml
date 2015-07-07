@@ -397,7 +397,7 @@
 			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] == \'Tiles\''}"/>
+		<textEdit:TextEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='(string)[0] == &quot;Tiles&quot;'}"/>
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>

@@ -244,7 +244,7 @@ namespace NeoEdit.TextEdit
 
 		void SetupTabLabel()
 		{
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
 			SetBinding(UIHelper<TextEditor>.GetProperty(a => a.TabLabel), multiBinding);

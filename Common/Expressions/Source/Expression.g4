@@ -4,7 +4,7 @@ expr : DEBUG? form EOF;
 
 form
 	: e # LongForm
-	| op=(MULTOP | ADDOP | SHIFTOP | RELATIONALOP | EQUALITYOP | LOGICALAND | LOGICALXOR | LOGICALOR | CONDITIONALAND | CONDITIONALOR) # ShortForm
+	| op=(MULTOP | ADDOP | SHIFTOP | RELATIONALOP | EQUALITYOP | LOGICALAND | LOGICALXOR | LOGICALOR | CONDITIONALAND | CONDITIONALOR | NULLCOALESCE) # ShortForm
 	| # DefaultOpForm
 	;
 
@@ -23,6 +23,7 @@ e
 	| val1=e op=LOGICALOR val2=e # LogicalOr
 	| val1=e op=CONDITIONALAND val2=e # ConditionalAnd
 	| val1=e op=CONDITIONALOR val2=e # ConditionalOr
+	| val1=e op=NULLCOALESCE val2=e # NullCoalesce
 	| condition=e CONDITIONAL trueval=e ELSE falseval=e # Ternary
 	| value # Simple
     ;
@@ -31,6 +32,7 @@ value
 	: LPAREN val=e RPAREN # Expression
 	| val=PARAM # Param
 	| val=STRING # String
+	| val=CHAR # Char
 	| TRUE # True
 	| FALSE # False
 	| NULL # Null
@@ -45,7 +47,7 @@ RPAREN: ')';
 COMMA: ',';
 METHOD: 'Type' | 'ValidRE' | 'Eval' | 'FileName' | 'StrFormat';
 NOTOP: '!';
-CASTTYPE: 'bool' | 'long' | 'double' | 'string';
+CASTTYPE: 'bool' | 'char' | 'sbyte' | 'byte' | 'short' | 'ushort' | 'int' | 'uint' | 'long' | 'ulong' | 'float' | 'double' | 'string';
 MULTOP: [*/%];
 ADDOP: '+' | '-';
 SHIFTOP: '<<' | '>>';
@@ -56,13 +58,15 @@ LOGICALXOR: '^';
 LOGICALOR: '|';
 CONDITIONALAND: '&&';
 CONDITIONALOR: '||';
+NULLCOALESCE: '??';
 CONDITIONAL: '?';
 ELSE: ':';
 DOT: '.';
 PARAM: '[' [0-9]+ ']';
-STRING: '\'' .*? '\'';
-TRUE: [Tt][Rr][Uu][Ee];
-FALSE: [Ff][Aa][Ll][Ss][Ee];
+STRING: '"' ~'"'* '"';
+CHAR: '\'' . '\'';
+TRUE: [Tt]'rue' | 'TRUE';
+FALSE: [Ff]'alse' | 'FALSE';
 NULL: [Nn][Uu][Ll][Ll];
 FLOAT: [0-9]* '.'? [0-9]+ ([eE][-+]?[0-9]+)?;
 HEX: '0x' [0-9a-fA-F]+;

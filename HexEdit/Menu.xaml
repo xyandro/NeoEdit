@@ -41,7 +41,7 @@
 	<MenuItem Header="_View">
 		<hexEdit:HexEditMenuItem Header="_Values" CommandEnum="View_Values" IsChecked="{Binding Parent.Active.ShowValues, ElementName=self}"/>
 		<hexEdit:HexEditMenuItem Header="_Refresh" CommandEnum="View_Refresh"/>
-		<hexEdit:HexEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] == \'Tiles\''}"/>
+		<hexEdit:HexEditMenuItem Header="_Tiles" CommandEnum="View_Tiles" IsChecked="{Binding Parent.View, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='(string)[0] == &quot;Tiles&quot;'}"/>
 	</MenuItem>
 	<MenuItem Header="_Data">
 		<MenuItem Header="_Hash">

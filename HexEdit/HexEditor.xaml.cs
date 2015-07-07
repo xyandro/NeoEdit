@@ -136,7 +136,7 @@ namespace NeoEdit.HexEdit
 		{
 			InitializeComponent();
 
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == ''?'[Untitled]':FileName([0]))+([1]?'*':'')" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
 			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
 			SetBinding(UIHelper<HexEditor>.GetProperty(a => a.TabLabel), multiBinding);
