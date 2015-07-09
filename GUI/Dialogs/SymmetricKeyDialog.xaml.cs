@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Dialogs;
 
-namespace NeoEdit.HexEdit.Dialogs
+namespace NeoEdit.GUI.Dialogs
 {
 	public partial class SymmetricKeyDialog
 	{
+		public class Result
+		{
+			public string Key { get; set; }
+		}
+
 		Crypto.Type type;
-		public Crypto.Type Type
+		Crypto.Type Type
 		{
 			get { return type; }
 			set
@@ -27,10 +31,9 @@ namespace NeoEdit.HexEdit.Dialogs
 				}
 			}
 		}
+		bool AcceptEmpty { get; set; }
 
-		public string Key { get; private set; }
-
-		public SymmetricKeyDialog()
+		SymmetricKeyDialog()
 		{
 			InitializeComponent();
 
@@ -55,13 +58,14 @@ namespace NeoEdit.HexEdit.Dialogs
 			salt.Text = Convert.ToBase64String(bytes);
 		}
 
+		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			Generate();
-			if (String.IsNullOrEmpty(key.Text))
+			if ((String.IsNullOrEmpty(key.Text)) && (!AcceptEmpty))
 				return;
 
-			Key = key.Text;
+			result = new Result { Key = key.Text };
 			DialogResult = true;
 		}
 
@@ -76,6 +80,14 @@ namespace NeoEdit.HexEdit.Dialogs
 		void GenerateKey(object sender, RoutedEventArgs e)
 		{
 			Generate();
+		}
+
+		public static Result Run(Window owner, Crypto.Type type, bool acceptEmpty = false)
+		{
+			var dialog = new SymmetricKeyDialog { Owner = owner, Type = type, AcceptEmpty = acceptEmpty };
+			if (!dialog.ShowDialog())
+				return null;
+			return dialog.result;
 		}
 	}
 }

@@ -16,13 +16,6 @@
     <Compile Include="Data\MemoryBinaryData.cs" />
     <Compile Include="Data\ProcessBinaryData.cs" />
     <Compile Include="Data\SharedMemoryBinaryData.cs" />
-    <Page Include="Dialogs\AsymmetricKeyDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\AsymmetricKeyDialog.xaml.cs">
-      <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\EncodingsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -82,13 +75,6 @@
       <DependentUpon>ModelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Models\ModelVM.cs" />
-    <Page Include="Dialogs\SymmetricKeyDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\SymmetricKeyDialog.xaml.cs">
-      <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="DisplayValue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -63,6 +63,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
+		public string AESKey { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public int? LineMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int? LineMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -136,6 +138,10 @@ namespace NeoEdit.TextEdit
 		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScroll.ViewportSize); } }
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
+
+		readonly static byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
+		readonly static byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
+		readonly static HashSet<string> EncryptionKeys = new HashSet<string>();
 
 		readonly RangeList Selections, Searches, Regions, Bookmarks;
 
@@ -325,6 +331,59 @@ namespace NeoEdit.TextEdit
 
 		}
 
+		byte[] Encrypt(byte[] data)
+		{
+			if (AESKey == null)
+				return data;
+
+			EncryptionKeys.Add(AESKey);
+			return EncryptedHeader.Concat(Crypto.Encrypt(Crypto.Type.AES, EncryptedValidate.Concat(data).ToArray(), AESKey)).ToArray();
+		}
+
+		static byte[] Decrypt(byte[] data, string key)
+		{
+			try
+			{
+				data = Crypto.Decrypt(Crypto.Type.AES, data, key);
+				if ((data.Length < EncryptedValidate.Length) || (!data.Equal(EncryptedValidate, EncryptedValidate.Length)))
+					return null;
+				data = data.Skip(EncryptedValidate.Length).ToArray();
+				return data;
+			}
+			catch { return null; }
+		}
+
+		void HandleDecrypt(ref byte[] bytes)
+		{
+			AESKey = null;
+			if ((bytes.Length < EncryptedHeader.Length) || (!bytes.Equal(EncryptedHeader, EncryptedHeader.Length)))
+				return;
+
+			bytes = bytes.Skip(EncryptedHeader.Length).ToArray();
+			foreach (var key in EncryptionKeys)
+			{
+				var result = Decrypt(bytes, key);
+				if (result != null)
+				{
+					AESKey = key;
+					bytes = result;
+					return;
+				}
+			}
+
+			var dialogResult = SymmetricKeyDialog.Run(WindowParent, Crypto.Type.AES);
+			if (dialogResult == null)
+				throw new Exception("Failed to decrypt file");
+
+			var result2 = Decrypt(bytes, dialogResult.Key);
+			if (result2 == null)
+				throw new Exception("Failed to decrypt file");
+
+			bytes = result2;
+			AESKey = dialogResult.Key;
+			EncryptionKeys.Add(AESKey);
+		}
+
 		DateTime fileLastWrite;
 		internal void OpenFile(string filename, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null)
 		{
@@ -337,6 +396,9 @@ namespace NeoEdit.TextEdit
 				else
 					bytes = File.ReadAllBytes(FileName);
 			}
+
+			HandleDecrypt(ref bytes);
+
 			if (codePage == Coder.CodePage.AutoByBOM)
 				codePage = Coder.CodePageFromBOM(bytes);
 			Data = new TextData(bytes, codePage);
@@ -589,7 +651,7 @@ namespace NeoEdit.TextEdit
 			if (((Data.NumChars >> 20) < 50) && (!VerifyCanFullyEncode()))
 				return;
 
-			File.WriteAllBytes(fileName, Data.GetBytes(CodePage));
+			File.WriteAllBytes(fileName, Encrypt(Data.GetBytes(CodePage)));
 			fileLastWrite = new FileInfo(fileName).LastWriteTime;
 			undoRedo.SetModified(false);
 			FileName = fileName;
@@ -608,6 +670,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_Encoding: dialogResult = Command_File_Encoding_Dialog(); break;
 				case TextEditCommand.File_ReopenWithEncoding: dialogResult = Command_File_ReopenWithEncoding_Dialog(); break;
+				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TextEditCommand.Edit_Find: dialogResult = Command_Edit_FindReplace_Dialog(false); break;
 				case TextEditCommand.Edit_Replace: dialogResult = Command_Edit_FindReplace_Dialog(true); break;
 				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoType.Line); break;
@@ -705,6 +768,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_BreakDiff: Command_File_BreakDiff(); break;
 				case TextEditCommand.File_Encoding: Command_File_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_ReopenWithEncoding: Command_File_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as SymmetricKeyDialog.Result); break;
 				case TextEditCommand.File_HexEditor: if (Command_File_HexEditor()) { TabsParent.Remove(this, true); } break;
 				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
@@ -1147,6 +1211,16 @@ namespace NeoEdit.TextEdit
 			}
 
 			OpenFile(FileName, codePage: result.CodePage);
+		}
+
+		internal SymmetricKeyDialog.Result Command_File_Encryption_Dialog()
+		{
+			return SymmetricKeyDialog.Run(WindowParent, Crypto.Type.AES, true);
+		}
+
+		internal void Command_File_Encryption(SymmetricKeyDialog.Result result)
+		{
+			AESKey = String.IsNullOrEmpty(result.Key) ? null : result.Key;
 		}
 
 		internal bool Command_File_HexEditor()

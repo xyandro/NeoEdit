@@ -815,17 +815,17 @@ namespace NeoEdit.HexEdit
 			string key;
 			if (type.IsSymmetric())
 			{
-				var keyDialog = new SymmetricKeyDialog { Owner = UIHelper.FindParent<Window>(this), Type = type };
-				if (!keyDialog.ShowDialog())
+				var result = SymmetricKeyDialog.Run(UIHelper.FindParent<Window>(this), type);
+				if (result == null)
 					return;
-				key = keyDialog.Key;
+				key = result.Key;
 			}
 			else
 			{
-				var keyDialog = new AsymmetricKeyDialog { Owner = UIHelper.FindParent<Window>(this), Type = type, Public = isEncrypt, CanGenerate = isEncrypt };
-				if (!keyDialog.ShowDialog())
+				var result = AsymmetricKeyDialog.Run(UIHelper.FindParent<Window>(this), type, isEncrypt, isEncrypt);
+				if (result == null)
 					return;
-				key = keyDialog.Key;
+				key = result.Key;
 			}
 
 			if (Length == 0)
@@ -839,8 +839,8 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Sign(bool sign, Crypto.Type type)
 		{
-			var keyDialog = new AsymmetricKeyDialog { Owner = UIHelper.FindParent<Window>(this), Type = type, Public = !sign, GetHash = true, CanGenerate = sign, GetSignature = !sign };
-			if (!keyDialog.ShowDialog())
+			var keyResult = AsymmetricKeyDialog.Run(UIHelper.FindParent<Window>(this), type, !sign, sign, true, !sign);
+			if (keyResult == null)
 				return;
 
 			if (Length == 0)
@@ -848,8 +848,8 @@ namespace NeoEdit.HexEdit
 
 			string text;
 			if (sign)
-				text = Crypto.Sign(type, Data.GetSubset(SelStart, SelEnd - SelStart), keyDialog.Key, keyDialog.Hash);
-			else if (Crypto.Verify(type, Data.GetSubset(SelStart, SelEnd - SelStart), keyDialog.Key, keyDialog.Hash, keyDialog.Signature))
+				text = Crypto.Sign(type, Data.GetSubset(SelStart, SelEnd - SelStart), keyResult.Key, keyResult.Hash);
+			else if (Crypto.Verify(type, Data.GetSubset(SelStart, SelEnd - SelStart), keyResult.Key, keyResult.Hash, keyResult.Signature))
 				text = "Matched.";
 			else
 				text = "ERROR: Signature DOES NOT match.";

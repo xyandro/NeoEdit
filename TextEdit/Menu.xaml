@@ -35,6 +35,9 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
 		<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_ReopenWithEncoding"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Hex Editor" CommandEnum="File_HexEditor"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>

@@ -68,6 +68,13 @@
     <Compile Include="Converters\SingleLineConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
     <Compile Include="Dialogs\ActiveTabsDialog.cs" />
+    <Page Include="Dialogs\AsymmetricKeyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\AsymmetricKeyDialog.xaml.cs">
+      <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\EncodingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,6 +110,13 @@
     </Page>
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\SymmetricKeyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\SymmetricKeyDialog.xaml.cs">
+      <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Launcher.cs" />
     <Compile Include="Misc\Font.cs" />
