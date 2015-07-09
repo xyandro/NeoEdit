@@ -70,6 +70,16 @@ namespace NeoEdit.TextEdit
 			textEditTabs.Add(textEditor);
 		}
 
+		public static void CreateDiff(string filename1, string filename2)
+		{
+			var textEdit1 = new TextEditor(filename1);
+			var textEdit2 = new TextEditor(filename2);
+			var textEditTabs = new TextEditTabs { Tiles = true };
+			textEditTabs.Add(textEdit1);
+			textEditTabs.Add(textEdit2);
+			textEdit1.DiffTarget = textEdit2;
+		}
+
 		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null)
 		{
 			Create(filename, bytes, codePage, modified, line, column, false, this);

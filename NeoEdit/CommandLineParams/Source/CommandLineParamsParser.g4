@@ -4,12 +4,13 @@ options { tokenVocab = CommandLineParamsLexer; }
 
 expr          : parameter* EOF ;
 
-parameter     : about | console | consolerunner | dbviewer | disk | gunzip | gzip | handles | hexdump | hexedit | hexpid | multi | processes | registry | systeminfo | textedit | textview ;
+parameter     : about | console | consolerunner | dbviewer | diff | disk | gunzip | gzip | handles | hexdump | hexedit | hexpid | multi | processes | registry | systeminfo | textedit | textview ;
 
 about         : ABOUT ;
 console       : CONSOLE ;
 consolerunner : CONSOLERUNNER param* ;
 dbviewer      : DBVIEWER ;
+diff          : DIFF file1=param? file2=param? ;
 disk          : DISK file=param? ;
 gunzip        : GUNZIP input=param output=param ;
 gzip          : GZIP input=param output=param ;

@@ -78,6 +78,18 @@ namespace NeoEdit
 		}
 	}
 
+	class DiffParam : Param
+	{
+		readonly string File1, File2;
+		public DiffParam(string file1, string file2) { File1 = file1; File2 = file2; }
+		public override void Execute()
+		{
+#if BuildTextEdit
+			TextEditTabs.CreateDiff(File1, File2);
+#endif
+		}
+	}
+
 	class DiskParam : Param
 	{
 		readonly string Location;

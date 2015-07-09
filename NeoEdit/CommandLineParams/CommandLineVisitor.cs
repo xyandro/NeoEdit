@@ -43,6 +43,7 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitAbout(CommandLineParamsParser.AboutContext context) { return new AboutParam(); }
 		public override object VisitConsole(CommandLineParamsParser.ConsoleContext context) { return new ConsoleParam(); }
 		public override object VisitConsolerunner(CommandLineParamsParser.ConsolerunnerContext context) { return new ConsoleRunnerParam(context.param().Select(param => param.GetText()).ToArray()); }
+		public override object VisitDiff(CommandLineParamsParser.DiffContext context) { return new DiffParam(context.file1 == null ? null : context.file1.GetText(), context.file2 == null ? null : context.file2.GetText()); }
 		public override object VisitDbviewer(CommandLineParamsParser.DbviewerContext context) { return new DBViewerParam(); }
 		public override object VisitDisk(CommandLineParamsParser.DiskContext context) { return new DiskParam(context.file == null ? null : context.file.GetText()); }
 		public override object VisitGunzip(CommandLineParamsParser.GunzipContext context) { return new GUnZipParam(context.input.GetText(), context.output.GetText()); }
