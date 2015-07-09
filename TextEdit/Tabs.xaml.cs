@@ -431,7 +431,10 @@ namespace NeoEdit.TextEdit
 		{
 			var item = new Tabs.ItemData(textEditor);
 			if ((!textEditor.Empty()) && (TopMost != null) && (TopMost.Item.Empty()))
+			{
+				textEditor.DiffTarget = TopMost.Item.DiffTarget;
 				TextEditors[TextEditors.IndexOf(TopMost)] = item;
+			}
 			else
 				TextEditors.Add(item);
 			TopMost = item;
