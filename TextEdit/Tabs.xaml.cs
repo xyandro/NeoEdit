@@ -58,6 +58,8 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
+			var textEditor = new TextEditor(filename, bytes, codePage, modified, line, column);
+
 			if ((textEditTabs == null) && (!createNew))
 				textEditTabs = UIHelper<TextEditTabs>.GetNewest();
 
@@ -65,7 +67,7 @@ namespace NeoEdit.TextEdit
 				textEditTabs = new TextEditTabs();
 
 			textEditTabs.Activate();
-			textEditTabs.Add(new TextEditor(filename, bytes, codePage, modified, line, column));
+			textEditTabs.Add(textEditor);
 		}
 
 		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null)
