@@ -78,6 +78,7 @@ namespace NeoEdit.TextEdit
 			textEditTabs.Add(textEdit1);
 			textEditTabs.Add(textEdit2);
 			textEdit1.DiffTarget = textEdit2;
+			TextEditMenuItem.RegisterInputBindings(textEditTabs, (int)TextEditCommandSet.Diff);
 		}
 
 		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null)
