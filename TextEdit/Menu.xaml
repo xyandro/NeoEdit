@@ -30,9 +30,6 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Exp_lore" CommandEnum="File_Explore"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="File_Diff"/>
-		<textEdit:TextEditMenuItem Header="_Break Diff" CommandEnum="File_BreakDiff"/>
-		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
 		<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_ReopenWithEncoding"/>
 		<Separator/>
@@ -201,6 +198,10 @@
 		<textEdit:TextEditMenuItem Header="_Fetch URL" CommandEnum="Data_FetchURL"/>
 		<textEdit:TextEditMenuItem Header="_Make URL Absolute" CommandEnum="Data_MakeURLAbsolute"/>
 	</MenuItem>
+	<MenuItem Header="D_iff">
+		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
+		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
+	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
 			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.None}" FalseValue="{x:Static content:Parser+ParserType.None}"/>
@@ -252,7 +253,7 @@
 			<textEdit:TextEditMenuItem Header="Max Deepe_st" CommandEnum="Content_Select_MaxDeepest"/>
 		</MenuItem>
 	</MenuItem>
-	<MenuItem Header="_Insert">
+	<MenuItem Header="I_nsert">
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Insert_GUID"/>
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Insert_RandomNumber"/>
 		<textEdit:TextEditMenuItem Header="Random _Data" CommandEnum="Insert_RandomData"/>

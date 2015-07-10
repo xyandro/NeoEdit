@@ -765,7 +765,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_CopyPath: Command_File_CopyPath(); break;
 				case TextEditCommand.File_CopyName: Command_File_CopyName(); break;
 				case TextEditCommand.File_Explore: Command_File_Explore(); break;
-				case TextEditCommand.File_BreakDiff: Command_File_BreakDiff(); break;
 				case TextEditCommand.File_Encoding: Command_File_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_ReopenWithEncoding: Command_File_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as SymmetricKeyDialog.Result); break;
@@ -870,6 +869,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Aggregate: Command_Data_Aggregate(dialogResult as AggregateDialog.Result); break;
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
 				case TextEditCommand.Data_MakeURLAbsolute: Command_Data_MakeURLAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
+				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
@@ -1158,11 +1158,6 @@ namespace NeoEdit.TextEdit
 		internal void Command_File_Explore()
 		{
 			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
-		}
-
-		internal void Command_File_BreakDiff()
-		{
-			DiffTarget = null;
 		}
 
 		internal EncodingDialog.Result Command_File_Encoding_Dialog()
@@ -2337,6 +2332,11 @@ namespace NeoEdit.TextEdit
 				var uri = new Uri(new Uri(results[index]), str);
 				return uri.AbsoluteUri;
 			}).ToList());
+		}
+
+		internal void Command_Diff_Break()
+		{
+			DiffTarget = null;
 		}
 
 		internal void Command_Insert_GUID()
