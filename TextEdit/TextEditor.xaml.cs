@@ -870,6 +870,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
 				case TextEditCommand.Data_MakeURLAbsolute: Command_Data_MakeURLAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
 				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
+				case TextEditCommand.Diff_Next: Command_Diff_NextPrevious(true); break;
+				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
+				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
+				case TextEditCommand.Diff_CopyRight: Command_Diff_CopyLeftRight(false); break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
@@ -2337,6 +2341,65 @@ namespace NeoEdit.TextEdit
 		internal void Command_Diff_Break()
 		{
 			DiffTarget = null;
+		}
+
+		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
+		{
+			var offset = next ? range.End : Math.Max(0, range.Start - 1);
+			var line = Data.GetOffsetLine(offset);
+			var delta = next ? 1 : -1;
+			int? start = null;
+			while (true)
+			{
+				line += delta;
+				if ((line < 0) || (line >= Data.NumLines) || ((start.HasValue) && (Data.GetLineDiffStatus(line) == LCS.MatchType.Match)))
+				{
+					line = Math.Max(-1, Math.Min(line, Data.NumLines - 1));
+					if (!start.HasValue)
+						start = line;
+					if (next)
+						return Tuple.Create(start.Value, line);
+					return Tuple.Create(line + 1, start.Value + 1);
+				}
+				if ((!start.HasValue) && (Data.GetLineDiffStatus(line) != LCS.MatchType.Match))
+					start = line;
+			}
+		}
+
+		internal void Command_Diff_NextPrevious(bool next)
+		{
+			if (DiffTarget == null)
+				return;
+
+			var lines = Selections.AsParallel().AsOrdered().Select(range => GetDiffNextPrevious(range, next)).ToList();
+			for (var pass = 0; pass < 2; ++pass)
+			{
+				var target = pass == 0 ? this : DiffTarget;
+				target.Selections.Replace(lines.Select(tuple => new Range(target.Data.GetOffset(tuple.Item1, 0), target.Data.GetOffset(tuple.Item2, 0))).ToList());
+			}
+		}
+
+		internal void Command_Diff_CopyLeftRight(bool moveLeft)
+		{
+			if (DiffTarget == null)
+				return;
+
+			TextEditor left, right;
+			if (TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget))
+			{
+				left = this;
+				right = DiffTarget;
+			}
+			else
+			{
+				left = DiffTarget;
+				right = this;
+			}
+
+			if (moveLeft)
+				left.ReplaceSelections(right.GetSelectionStrings());
+			else
+				right.ReplaceSelections(left.GetSelectionStrings());
 		}
 
 		internal void Command_Insert_GUID()

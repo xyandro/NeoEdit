@@ -452,6 +452,14 @@ namespace NeoEdit.TextEdit
 				Close();
 		}
 
+		public int GetIndex(TextEditor textEditor)
+		{
+			var found = TextEditors.SingleOrDefault(item => item.Item == textEditor);
+			if (found == null)
+				throw new ArgumentException("Not found");
+			return TextEditors.IndexOf(found);
+		}
+
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			if (macroPlaying != null)
