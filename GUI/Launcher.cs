@@ -13,6 +13,7 @@ namespace NeoEdit.GUI
 
 		protected Action systemInfoLauncher;
 		protected Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
+		protected Action<string, string> diffLauncher;
 		protected Action<string, bool> textViewerLauncher;
 		protected Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
 		protected Action<int> processHexEditorLauncher;
@@ -32,6 +33,7 @@ namespace NeoEdit.GUI
 #endif
 #if BuildTextEdit
 			, Action<string, byte[], Coder.CodePage, bool?, bool> textEditor
+			, Action<string, string> diff
 #endif
 #if BuildTextView
 			, Action<string, bool> textViewer
@@ -70,6 +72,7 @@ namespace NeoEdit.GUI
 #endif
 #if BuildTextEdit
 				textEditorLauncher = textEditor,
+				diffLauncher = diff,
 #endif
 #if BuildTextView
 				textViewerLauncher = textViewer,
@@ -113,6 +116,11 @@ namespace NeoEdit.GUI
 		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool createNew = false)
 		{
 			textEditorLauncher(filename, bytes, codePage, modified, createNew);
+		}
+
+		public void LaunchDiff(string filename1 = null, string filename2 = null)
+		{
+			diffLauncher(filename1, filename2);
 		}
 
 		public void LaunchTextViewer(string filename = null, bool createNew = false)

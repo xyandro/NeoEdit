@@ -27,6 +27,7 @@ namespace NeoEdit.GUI.Controls
 			{
 				case WindowCommand.Window_Console: Launcher.Static.LaunchConsole(); break;
 				case WindowCommand.Window_DBViewer: Launcher.Static.LaunchDBViewer(); break;
+				case WindowCommand.Window_Diff: Launcher.Static.LaunchDiff(); break;
 				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(); break;
 				case WindowCommand.Window_Handles: Launcher.Static.LaunchHandles(); break;
 				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditor(createNew: true); break;

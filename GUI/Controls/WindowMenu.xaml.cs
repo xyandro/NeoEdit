@@ -5,6 +5,7 @@
 		None,
 		Window_Console,
 		Window_DBViewer,
+		Window_Diff,
 		Window_Disk,
 		Window_Handles,
 		Window_HexEditor,

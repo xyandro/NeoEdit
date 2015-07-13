@@ -77,6 +77,7 @@ namespace NeoEdit.TextEdit
 			var textEditTabs = new TextEditTabs { Tiles = true };
 			textEditTabs.Add(textEdit1);
 			textEditTabs.Add(textEdit2);
+			textEditTabs.TopMost = textEditTabs.TextEditors.FirstOrDefault(item => item.Item == textEdit1);
 			textEdit1.DiffTarget = textEdit2;
 			TextEditMenuItem.RegisterInputBindings(textEditTabs, (int)TextEditCommandSet.Diff);
 		}

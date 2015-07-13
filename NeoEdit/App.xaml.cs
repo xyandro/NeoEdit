@@ -114,6 +114,7 @@ namespace NeoEdit
 #endif
 #if BuildTextEdit
 				, textEditor: (filename, bytes, encoding, modified, createNew) => TextEditTabs.Create(filename, bytes, encoding, modified, createNew: createNew)
+				, diff: (filename1, filename2) => TextEditTabs.CreateDiff(filename1, filename2)
 #endif
 #if BuildTextView
 				, textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew)
