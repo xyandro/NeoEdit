@@ -137,6 +137,12 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(filename);
 		}
 
+		void Command_File_CopyAllPaths()
+		{
+			var names = TextEditors.Select(editor => editor.Item.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
+			NEClipboard.Set(names, String.Join(" ", names));
+		}
+
 		void Command_File_OpenCopiedCutFiles()
 		{
 			var files = NEClipboard.Strings;
@@ -419,6 +425,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_New: Create(createNew: shiftDown, textEditTabs: shiftDown ? null : this); break;
 				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
+				case TextEditCommand.File_CopyAllPaths: Command_File_CopyAllPaths(); break;
 				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_CopyAll: Command_Edit_CopyAll(); break;

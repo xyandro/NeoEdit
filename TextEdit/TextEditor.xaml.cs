@@ -761,6 +761,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(); break;
+				case TextEditCommand.File_Delete: Command_File_Delete(); break;
 				case TextEditCommand.File_InsertFiles: Command_File_InsertFiles(); break;
 				case TextEditCommand.File_InsertCopiedCutFiles: Command_File_InsertCopiedCutFiles(); break;
 				case TextEditCommand.File_CopyPath: Command_File_CopyPath(); break;
@@ -1106,6 +1107,24 @@ namespace NeoEdit.TextEdit
 			}
 
 			OpenFile(FileName);
+		}
+
+		internal void Command_File_Delete()
+		{
+			if (FileName == null)
+				throw new Exception("No filename.");
+
+			if (new Message
+			{
+				Title = "Confirm",
+				Text = "Are you sure you want to delete this file?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			File.Delete(FileName);
 		}
 
 		void InsertFiles(IEnumerable<string> fileNames)

@@ -22,16 +22,18 @@
 		<textEdit:TextEditMenuItem Header="_Close" CommandEnum="File_Close"/>
 		<textEdit:TextEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>
 		<textEdit:TextEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
+		<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="File_Delete"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Insert File(s)" CommandEnum="File_InsertFiles"/>
 		<textEdit:TextEditMenuItem Header="Insert Copied/Cu_t Files" CommandEnum="File_InsertCopiedCutFiles"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
 		<textEdit:TextEditMenuItem Header="Copy Na_me" CommandEnum="File_CopyName"/>
+		<textEdit:TextEditMenuItem Header="Copy A_ll Paths" CommandEnum="File_CopyAllPaths"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Exp_lore" CommandEnum="File_Explore"/>
+		<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="File_Explore"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
+		<textEdit:TextEditMenuItem Header="Encodin_g" CommandEnum="File_Encoding"/>
 		<textEdit:TextEditMenuItem Header="Reopen _With Encoding" CommandEnum="File_ReopenWithEncoding"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
