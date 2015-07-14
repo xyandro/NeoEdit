@@ -757,6 +757,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_Save: Command_File_Save(); break;
 				case TextEditCommand.File_SaveAs: Command_File_SaveAs(); break;
+				case TextEditCommand.File_Rename: Command_File_Rename(); break;
 				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(); break;
@@ -1029,7 +1030,7 @@ namespace NeoEdit.TextEdit
 				Save(FileName);
 		}
 
-		internal void Command_File_SaveAs()
+		string GetSaveFileName()
 		{
 			var dialog = new SaveFileDialog
 			{
@@ -1037,14 +1038,38 @@ namespace NeoEdit.TextEdit
 				FileName = Path.GetFileName(FileName),
 				InitialDirectory = Path.GetDirectoryName(FileName),
 			};
-			if (dialog.ShowDialog() == true)
+			if (dialog.ShowDialog() != true)
+				return null;
+
+			if (Directory.Exists(dialog.FileName))
+				throw new Exception("A directory by that name already exists");
+			if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+				throw new Exception("Directory doesn't exist");
+			return dialog.FileName;
+		}
+
+		internal void Command_File_SaveAs()
+		{
+			var fileName = GetSaveFileName();
+			if (fileName != null)
+				Save(fileName);
+		}
+
+		internal void Command_File_Rename()
+		{
+			if (String.IsNullOrEmpty(FileName))
 			{
-				if (Directory.Exists(dialog.FileName))
-					throw new Exception("A directory by that name already exists");
-				if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
-					throw new Exception("Directory doesn't exist");
-				Save(dialog.FileName);
+				Command_File_SaveAs();
+				return;
 			}
+
+			var fileName = GetSaveFileName();
+			if (fileName == null)
+				return;
+
+			File.Delete(fileName);
+			File.Move(FileName, fileName);
+			FileName = fileName;
 		}
 
 		internal void Command_File_Refresh()

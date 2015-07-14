@@ -19,6 +19,7 @@ namespace NeoEdit.TextEdit
 		File_OpenCopiedCutFiles,
 		[KeyGesture(Key.S, ModifierKeys.Control)] File_Save,
 		File_SaveAs,
+		File_Rename,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F5)] File_Refresh,
 		File_Revert,

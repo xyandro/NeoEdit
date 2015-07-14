@@ -18,6 +18,7 @@
 		<textEdit:TextEditMenuItem Header="Open Copied/C_ut Files" CommandEnum="File_OpenCopiedCutFiles"/>
 		<textEdit:TextEditMenuItem Header="_Save" CommandEnum="File_Save"/>
 		<textEdit:TextEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
+		<textEdit:TextEditMenuItem Header="_Rename" CommandEnum="File_Rename"/>
 		<textEdit:TextEditMenuItem Header="_Close" CommandEnum="File_Close"/>
 		<textEdit:TextEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>
 		<textEdit:TextEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
@@ -31,7 +32,7 @@
 		<textEdit:TextEditMenuItem Header="Exp_lore" CommandEnum="File_Explore"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
-		<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_ReopenWithEncoding"/>
+		<textEdit:TextEditMenuItem Header="Reopen _With Encoding" CommandEnum="File_ReopenWithEncoding"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
 		<Separator/>
