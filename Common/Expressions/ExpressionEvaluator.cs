@@ -39,22 +39,26 @@ namespace NeoEdit.Common.Expressions
 			return (obj is char) || (obj is string);
 		}
 
-		const double rounding = 1e-15;
+		Complex RoundComplex(Complex complex)
+		{
+			var real = Math.Round(complex.Real, 10);
+			var imaginary = Math.Round(complex.Imaginary, 12);
+			if (Math.Abs(real) < 1e-10)
+				real = 0;
+			if (Math.Abs(imaginary) < 1e-10)
+				imaginary = 0;
+			return new Complex(real, imaginary);
+		}
+
 		object SimplifyComplex(object value)
 		{
 			if (!(value is Complex))
 				return value;
 
-			var complex = (Complex)value;
-			var real = complex.Real;
-			var imaginary = complex.Imaginary;
-			if (Math.Abs(real) < rounding)
-				real = 0;
-			if (Math.Abs(imaginary) < rounding)
-				imaginary = 0;
-			if (imaginary == 0)
-				return real;
-			return new Complex(real, imaginary);
+			var complex = RoundComplex((Complex)value);
+			if (complex.Imaginary == 0)
+				return complex.Real;
+			return complex;
 		}
 
 		Complex GetComplex(object val)
@@ -319,6 +323,19 @@ namespace NeoEdit.Common.Expressions
 			return result;
 		}
 
+		Complex GetRoot(Complex val, Complex root)
+		{
+			if ((root.Imaginary != 0) || (root.Real <= 1) || (root.Real - Math.Floor(root.Real) != 0))
+				return Complex.Pow(val, Complex.Reciprocal(root));
+
+			var power = (int)GetLong(root);
+			var phase = val.Phase;
+			var magnitude = val.Magnitude;
+			var nthRootOfMagnitude = Math.Pow(magnitude, 1.0 / power);
+			var options = Enumerable.Range(0, power).Select(k => RoundComplex(Complex.FromPolarCoordinates(nthRootOfMagnitude, phase / power + k * 2 * Math.PI / power))).ToList();
+			return options.OrderBy(complex => Math.Abs(complex.Imaginary)).FirstOrDefault();
+		}
+
 		public override object VisitMethod(ExpressionParser.MethodContext context)
 		{
 			var method = context.method.Text;
@@ -335,7 +352,7 @@ namespace NeoEdit.Common.Expressions
 				case "cosh": return Complex.Cosh(GetComplex(paramList[0]));
 				case "eval": return new NEExpression(GetString(paramList[0])).Evaluate();
 				case "filename": return Path.GetFileName(GetString(paramList[0]));
-				case "frompolarcoordinates": return Complex.FromPolarCoordinates(GetDouble(paramList[0]), GetDouble(paramList[1]));
+				case "frompolar": return Complex.FromPolarCoordinates(GetDouble(paramList[0]), GetDouble(paramList[1]));
 				case "imaginary": return GetComplex(paramList[0]).Imaginary;
 				case "ln": return Complex.Log(GetComplex(paramList[0]));
 				case "log": return paramList.Count == 1 ? Complex.Log10(GetComplex(paramList[0])) : Complex.Log(GetComplex(paramList[0]), GetDouble(paramList[2]));
@@ -345,7 +362,7 @@ namespace NeoEdit.Common.Expressions
 				case "phase": return GetComplex(paramList[0]).Phase;
 				case "real": return GetComplex(paramList[0]).Real;
 				case "reciprocal": return Complex.Reciprocal(GetComplex(paramList[0]));
-				case "root": return Complex.Pow(GetComplex(paramList[0]), Complex.Reciprocal(GetComplex(paramList[1])));
+				case "root": return GetRoot(GetComplex(paramList[0]), GetComplex(paramList[1]));
 				case "sin": return Complex.Sin(GetComplex(paramList[0]));
 				case "sinh": return Complex.Sinh(GetComplex(paramList[0]));
 				case "sqrt": return Complex.Sqrt(GetComplex(paramList[0]));
@@ -361,7 +378,7 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitConstant(ExpressionParser.ConstantContext context)
 		{
 			var constant = context.constant.Text;
-			switch (constant)
+			switch (constant.ToLowerInvariant())
 			{
 				case "pi": return Math.PI;
 				case "e": return Math.E;

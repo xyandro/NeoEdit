@@ -80,7 +80,7 @@ RPAREN: ')' ;
 COMMA: ',' ;
 METHOD1: A B S | A C O S | A S I N | A T A N | C O N J U G A T E | C O S | C O S H | E V A L | F I L E N A M E | I M A G I N A R Y | L N | L O G | M A G N I T U D E | P H A S E | R E A L | R E C I P R O C A L | S I N | S I N H | S Q R T | T A N | T A N H | T Y P E | V A L I D R E ;
 METHOD1VAR: S T R F O R M A T;
-METHOD2: F R O M P O L A R C O O R D I N A T E S | L O G | R O O T ;
+METHOD2: F R O M P O L A R | L O G | R O O T ;
 METHODVAR: M A X | M I N ;
 NOTOP: '!' ;
 EXPOP: '^' ;
