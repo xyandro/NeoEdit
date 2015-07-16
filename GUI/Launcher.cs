@@ -110,62 +110,74 @@ namespace NeoEdit.GUI
 
 		public void LaunchSystemInfo()
 		{
-			systemInfoLauncher();
+			if (systemInfoLauncher != null)
+				systemInfoLauncher();
 		}
 
 		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool createNew = false)
 		{
-			textEditorLauncher(filename, bytes, codePage, modified, createNew);
+			if (textEditorLauncher != null)
+				textEditorLauncher(filename, bytes, codePage, modified, createNew);
 		}
 
 		public void LaunchDiff(string filename1 = null, string filename2 = null)
 		{
-			diffLauncher(filename1, filename2);
+			if (diffLauncher != null)
+				diffLauncher(filename1, filename2);
 		}
 
 		public void LaunchTextViewer(string filename = null, bool createNew = false)
 		{
-			textViewerLauncher(filename, createNew);
+			if (textViewerLauncher != null)
+				textViewerLauncher(filename, createNew);
 		}
 
 		public void LaunchHexEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool createNew = false)
 		{
-			fileHexEditorLauncher(filename, bytes, codePage, modified, createNew);
+			if (fileHexEditorLauncher != null)
+				fileHexEditorLauncher(filename, bytes, codePage, modified, createNew);
 		}
 
 		public void LaunchHexEditor(int pid)
 		{
-			processHexEditorLauncher(pid);
+			if (processHexEditorLauncher != null)
+				processHexEditorLauncher(pid);
 		}
 
 		public void LaunchDisk()
 		{
-			diskLauncher();
+			if (diskLauncher != null)
+				diskLauncher();
 		}
 
 		public void LaunchConsole()
 		{
-			consoleLauncher();
+			if (consoleLauncher != null)
+				consoleLauncher();
 		}
 
 		public void LaunchProcesses(int? pid = null)
 		{
-			processesLauncher(pid);
+			if (processesLauncher != null)
+				processesLauncher(pid);
 		}
 
 		public void LaunchHandles(int? pid = null)
 		{
-			handlesLauncher(pid);
+			if (handlesLauncher != null)
+				handlesLauncher(pid);
 		}
 
 		public void LaunchRegistry(string key = null)
 		{
-			registryLauncher(key);
+			if (registryLauncher != null)
+				registryLauncher(key);
 		}
 
 		public void LaunchDBViewer()
 		{
-			dbViewerLauncher();
+			if (dbViewerLauncher != null)
+				dbViewerLauncher();
 		}
 	}
 }
