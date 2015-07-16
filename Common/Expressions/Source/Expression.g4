@@ -26,6 +26,7 @@ e
 	| val1=e op=LOGICALOR val2=e # LogicalOr
 	| val1=e op=NULLCOALESCE val2=e # NullCoalesce
 	| condition=e CONDITIONAL trueval=e ELSE falseval=e # Ternary
+	| constant=CONSTANT # Constant
 	| value # Simple
     ;
 
@@ -65,6 +66,7 @@ NULLCOALESCE: '??';
 CONDITIONAL: '?';
 ELSE: ':';
 DOT: '.';
+CONSTANT: 'pi' | 'e';
 PARAM: '[' [0-9]+ ']';
 STRING: '"' ~'"'* '"';
 CHAR: '\'' . '\'';

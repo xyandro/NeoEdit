@@ -390,6 +390,17 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
+		public override object VisitConstant(ExpressionParser.ConstantContext context)
+		{
+			var constant = context.constant.Text;
+			switch (constant)
+			{
+				case "pi": return Math.PI;
+				case "e": return Math.E;
+				default: throw new ArgumentException(String.Format("Invalid constant: {0}", constant));
+			}
+		}
+
 		public override object VisitShortForm(ExpressionParser.ShortFormContext context) { return GetShortForm(context.op.Text); }
 		public override object VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) { return GetShortForm("&&"); }
 		public override object VisitDot(ExpressionParser.DotContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
