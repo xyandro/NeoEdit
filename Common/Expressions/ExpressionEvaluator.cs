@@ -129,11 +129,27 @@ namespace NeoEdit.Common.Expressions
 		{
 			switch (op)
 			{
+				case "~": return ~ToType<long>(val);
 				case "+": return PosOp(val);
 				case "-": return NegOp(val);
 				case "!": return !ToType<bool>(val);
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
+		}
+
+		object ExpOp(object val1, object val2)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((IsNumericType(val1)) && (IsNumericType(val2)))
+			{
+				if ((IsFloatType(val1)) || (IsFloatType(val2)))
+					return Math.Pow(ToType<double>(val1), ToType<double>(val2));
+				return Convert.ToInt64(Math.Pow(ToType<long>(val1), ToType<long>(val2)));
+			}
+
+			throw new Exception("Invalid operation");
 		}
 
 		object MultOp(object val1, object val2)
@@ -292,6 +308,7 @@ namespace NeoEdit.Common.Expressions
 			switch (op)
 			{
 				case ".": return DotOp(val1, (val2 ?? "").ToString());
+				case "^": return ExpOp(val1, val2);
 				case "*": return MultOp(val1, val2);
 				case "/": return DivOp(val1, val2);
 				case "%": return ModOp(val1, val2);
@@ -313,7 +330,7 @@ namespace NeoEdit.Common.Expressions
 				case "!=": return !EqualsOp(val1, val2, false);
 				case "i!=": return !EqualsOp(val1, val2, true);
 				case "&": return ToType<long>(val1) & ToType<long>(val2);
-				case "^": return ToType<long>(val1) ^ ToType<long>(val2);
+				case "^^": return ToType<long>(val1) ^ ToType<long>(val2);
 				case "|": return ToType<long>(val1) | ToType<long>(val2);
 				case "&&": return ToType<bool>(val1) && ToType<bool>(val2);
 				case "||": return ToType<bool>(val1) || ToType<bool>(val2);
@@ -376,16 +393,17 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitDot(ExpressionParser.DotContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitUnary(ExpressionParser.UnaryContext context) { return UnaryOp(context.op.Text, Visit(context.val)); }
 		public override object VisitCast(ExpressionParser.CastContext context) { return CastValue(Visit(context.val), GetType(context.type.Text)); }
+		public override object VisitExp(ExpressionParser.ExpContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitMult(ExpressionParser.MultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitAdd(ExpressionParser.AddContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitShift(ExpressionParser.ShiftContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitRelational(ExpressionParser.RelationalContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitEquality(ExpressionParser.EqualityContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitBitwiseAnd(ExpressionParser.BitwiseAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitBitwiseXor(ExpressionParser.BitwiseXorContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override object VisitBitwiseOr(ExpressionParser.BitwiseOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitLogicalAnd(ExpressionParser.LogicalAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitLogicalXor(ExpressionParser.LogicalXorContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitLogicalOr(ExpressionParser.LogicalOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitConditionalAnd(ExpressionParser.ConditionalAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitConditionalOr(ExpressionParser.ConditionalOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitNullCoalesce(ExpressionParser.NullCoalesceContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitTernary(ExpressionParser.TernaryContext context) { return ToType<bool>(Visit(context.condition)) ? Visit(context.trueval) : Visit(context.falseval); }
 		public override object VisitExpression(ExpressionParser.ExpressionContext context) { return Visit(context.val); }

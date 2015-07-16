@@ -18,15 +18,7 @@ namespace NeoEdit.Common.UnitTest
 		[TestMethod]
 		public void ExpressionTest()
 		{
-			Assert.AreEqual(new NEExpression("5.4 * 2").Evaluate().ToString(), "10.8");
-			Assert.AreEqual(new NEExpression("5 * 2.1").Evaluate().ToString(), "10.5");
-			Assert.AreEqual(new NEExpression("5 * (int)2.1").Evaluate().ToString(), "10");
-			Assert.AreEqual(new NEExpression("\"ok\" * 4").Evaluate().ToString(), "okokokok");
-			Assert.AreEqual(new NEExpression("'o' * 4").Evaluate().ToString(), "oooo");
-
-			Assert.AreEqual(new NEExpression("5 / 2").Evaluate().ToString(), "2");
-			Assert.AreEqual(new NEExpression("5.0 / 2").Evaluate().ToString(), "2.5");
-			Assert.AreEqual(new NEExpression("5 / 2.0").Evaluate().ToString(), "2.5");
+			Assert.AreEqual(new NEExpression("-(-4)").Evaluate().ToString(), "4");
 
 			Assert.AreEqual(new NEExpression("2 + 2").Evaluate().ToString(), "4");
 			Assert.AreEqual(new NEExpression("5.1 + 2").Evaluate().ToString(), "7.1");
@@ -43,11 +35,26 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new NEExpression("5.1 - .1").Evaluate().ToString(), "5");
 			Assert.AreEqual(new NEExpression("'b' - 1").Evaluate().ToString(), "a");
 
+			Assert.AreEqual(new NEExpression("5.4 * 2").Evaluate().ToString(), "10.8");
+			Assert.AreEqual(new NEExpression("5 * 2.1").Evaluate().ToString(), "10.5");
+			Assert.AreEqual(new NEExpression("5 * (int)2.1").Evaluate().ToString(), "10");
+			Assert.AreEqual(new NEExpression("\"ok\" * 4").Evaluate().ToString(), "okokokok");
+			Assert.AreEqual(new NEExpression("'o' * 4").Evaluate().ToString(), "oooo");
+
+			Assert.AreEqual(new NEExpression("5 / 2").Evaluate().ToString(), "2");
+			Assert.AreEqual(new NEExpression("5.0 / 2").Evaluate().ToString(), "2.5");
+			Assert.AreEqual(new NEExpression("5 / 2.0").Evaluate().ToString(), "2.5");
+
+			Assert.AreEqual(new NEExpression("4 ^ 3").Evaluate().ToString(), "64");
+			Assert.AreEqual(new NEExpression("64 ^ (1 / 3.0)").Evaluate().ToString(), "4");
+			Assert.AreEqual(new NEExpression("410.0625 ^ .25").Evaluate().ToString(), "4.5");
+
 			Assert.AreEqual(new NEExpression("2 << 2").Evaluate().ToString(), "8");
 			Assert.AreEqual(new NEExpression("1048576 >> 10").Evaluate().ToString(), "1024");
 
+			Assert.AreEqual(new NEExpression("~[0]").Evaluate(0xdeadbeef).ToString(), "-3735928560");
 			Assert.AreEqual(new NEExpression("&").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "179154957");
-			Assert.AreEqual(new NEExpression("^").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3573567202");
+			Assert.AreEqual(new NEExpression("^^").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3573567202");
 			Assert.AreEqual(new NEExpression("|").Evaluate(0xdeadbeef, 0x0badf00d).ToString(), "3752722159");
 
 			Assert.AreEqual(new NEExpression("TRUE").Evaluate(), true);
