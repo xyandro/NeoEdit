@@ -1,6 +1,6 @@
-grammar Expression;
+grammar Expression ;
 
-expr : DEBUG? form EOF;
+expr : DEBUG? form EOF ;
 
 form
 	: e # LongForm
@@ -9,10 +9,14 @@ form
 	;
 
 e
-	: method=METHOD LPAREN (e (COMMA e)*)? RPAREN # Method
+	:	(
+			method=METHOD1 LPAREN e RPAREN | 
+			method=METHOD1VAR LPAREN e (COMMA e)* RPAREN | 
+			method=METHOD2 LPAREN e COMMA e RPAREN | 
+			method=METHODVAR LPAREN (e (COMMA e)*)? RPAREN
+		) # Method
 	| val1=e op=DOT val2=e # Dot
 	| op=(BITWISENOT | ADDOP | NOTOP) val=value # Unary
-	| LPAREN type=CASTTYPE RPAREN val=value # Cast
 	| val1=e op=EXPOP val2=e # Exp
 	| val1=e op=MULTOP val2=e # Mult
 	| val1=e op=ADDOP val2=e # Add
@@ -28,7 +32,7 @@ e
 	| condition=e CONDITIONAL trueval=e ELSE falseval=e # Ternary
 	| constant=CONSTANT # Constant
 	| value # Simple
-    ;
+	;
 
 value
 	: LPAREN val=e RPAREN # Expression
@@ -43,37 +47,66 @@ value
 	| val=VARIABLE # Variable
 	;
 
-DEBUG: '@';
-LPAREN: '(';
-RPAREN: ')';
-COMMA: ',';
-METHOD: 'Type' | 'ValidRE' | 'Eval' | 'FileName' | 'StrFormat' | 'Min' | 'Max';
-NOTOP: '!';
-CASTTYPE: 'bool' | 'char' | 'sbyte' | 'byte' | 'short' | 'ushort' | 'int' | 'uint' | 'long' | 'ulong' | 'float' | 'double' | 'string';
-EXPOP: '^';
-MULTOP: [*/%];
-ADDOP: [-+];
-SHIFTOP: '<<' | '>>';
-RELATIONALOP: '<' | '>' | '<=' | '>=' | 'i<' | 'i>' | 'i<=' | 'i>=' | 'is';
-EQUALITYOP: '==' | '!=' | 'i==' | 'i!=';
-BITWISENOT: '~';
-BITWISEAND: '&';
-BITWISEXOR: '^^';
-BITWISEOR: '|';
-LOGICALAND: '&&';
-LOGICALOR: '||';
-NULLCOALESCE: '??';
-CONDITIONAL: '?';
-ELSE: ':';
-DOT: '.';
-CONSTANT: 'pi' | 'e';
-PARAM: '[' [0-9]+ ']';
-STRING: '"' ~'"'* '"';
-CHAR: '\'' . '\'';
-TRUE: [Tt]'rue' | 'TRUE';
-FALSE: [Ff]'alse' | 'FALSE';
-NULL: [Nn][Uu][Ll][Ll];
-FLOAT: [0-9]* '.'? [0-9]+ ([eE][-+]?[0-9]+)?;
-HEX: '0x' [0-9a-fA-F]+;
-VARIABLE: [a-zA-Z][a-zA-Z0-9_]*;
-WHITESPACE: [ \n\t\r]+ -> skip;
+fragment A: [Aa] ;
+fragment B: [Bb] ;
+fragment C: [Cc] ;
+fragment D: [Dd] ;
+fragment E: [Ee] ;
+fragment F: [Ff] ;
+fragment G: [Gg] ;
+fragment H: [Hh] ;
+fragment I: [Ii] ;
+fragment J: [Jj] ;
+fragment K: [Kk] ;
+fragment L: [Ll] ;
+fragment M: [Mm] ;
+fragment N: [Nn] ;
+fragment O: [Oo] ;
+fragment P: [Pp] ;
+fragment Q: [Qq] ;
+fragment R: [Rr] ;
+fragment S: [Ss] ;
+fragment T: [Tt] ;
+fragment U: [Uu] ;
+fragment V: [Vv] ;
+fragment W: [Ww] ;
+fragment X: [Xx] ;
+fragment Y: [Yy] ;
+fragment Z: [Zz] ;
+
+DEBUG: '@' ;
+LPAREN: '(' ;
+RPAREN: ')' ;
+COMMA: ',' ;
+METHOD1: A B S | A C O S | A S I N | A T A N | C O N J U G A T E | C O S | C O S H | E V A L | F I L E N A M E | I M A G I N A R Y | L N | L O G | M A G N I T U D E | P H A S E | R E A L | R E C I P R O C A L | S I N | S I N H | S Q R T | T A N | T A N H | T Y P E | V A L I D R E ;
+METHOD1VAR: S T R F O R M A T;
+METHOD2: F R O M P O L A R C O O R D I N A T E S | L O G | R O O T ;
+METHODVAR: M A X | M I N ;
+NOTOP: '!' ;
+EXPOP: '^' ;
+MULTOP: [*/%] ;
+ADDOP: [-+] ;
+SHIFTOP: '<<' | '>>' ;
+RELATIONALOP: '<' | '>' | '<=' | '>=' | 'i<' | 'i>' | 'i<=' | 'i>=' | I S ;
+EQUALITYOP: '==' | '!=' | 'i==' | 'i!=' ;
+BITWISENOT: '~' ;
+BITWISEAND: '&' ;
+BITWISEXOR: '^^' ;
+BITWISEOR: '|' ;
+LOGICALAND: '&&' ;
+LOGICALOR: '||' ;
+NULLCOALESCE: '??' ;
+CONDITIONAL: '?' ;
+ELSE: ':' ;
+DOT: '.' ;
+CONSTANT: P I | E ;
+PARAM: '[' [0-9]+ ']' ;
+STRING: '"' ~'"'* '"' ;
+CHAR: '\'' . '\'' ;
+TRUE: T R U E ;
+FALSE: F A L S E ;
+NULL: N U L L ;
+FLOAT: I | [0-9]* '.'? [0-9]+ ([eE][-+]?[0-9]+)? I ? ;
+HEX: '0x' [0-9a-fA-F]+ ;
+VARIABLE: [a-zA-Z][a-zA-Z0-9_]* ;
+WHITESPACE: [ \n\t\r]+ -> skip ;

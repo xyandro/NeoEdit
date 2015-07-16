@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -28,61 +29,107 @@ namespace NeoEdit.Common.Expressions
 			return (val != null) && (val.GetType().FullName == "MS.Internal.NamedObject") && (val.ToString() == "{DependencyProperty.UnsetValue}") ? null : val;
 		}
 
-		bool IsIntType(object obj)
+		bool IsNumeric(object obj)
 		{
-			return (obj is sbyte) || (obj is byte) || (obj is short) || (obj is ushort) || (obj is int) || (obj is uint) || (obj is long) || (obj is ulong);
+			return (obj is sbyte) || (obj is byte) || (obj is short) || (obj is ushort) || (obj is int) || (obj is uint) || (obj is long) || (obj is ulong) || (obj is float) || (obj is double) || (obj is decimal) || (obj is Complex);
 		}
 
-		bool IsFloatType(object obj)
-		{
-			return (obj is float) || (obj is double) || (obj is decimal);
-		}
-
-		bool IsNumericType(object obj)
-		{
-			return (IsIntType(obj)) || (IsFloatType(obj));
-		}
-
-		bool IsCharacterType(object obj)
+		bool IsCharacter(object obj)
 		{
 			return (obj is char) || (obj is string);
 		}
 
-		Type GetType(string type)
+		const double rounding = 1e-15;
+		object SimplifyComplex(object value)
 		{
-			switch (type)
-			{
-				case "bool": return typeof(bool);
-				case "char": return typeof(char);
-				case "sbyte": return typeof(sbyte);
-				case "byte": return typeof(byte);
-				case "short": return typeof(short);
-				case "ushort": return typeof(ushort);
-				case "int": return typeof(int);
-				case "uint": return typeof(uint);
-				case "long": return typeof(long);
-				case "ulong": return typeof(ulong);
-				case "float": return typeof(float);
-				case "double": return typeof(double);
-				case "string": return typeof(string);
-				default: throw new ArgumentException(String.Format("Invalid cast: {0}", type));
-			}
+			if (!(value is Complex))
+				return value;
+
+			var complex = (Complex)value;
+			var real = complex.Real;
+			var imaginary = complex.Imaginary;
+			if (Math.Abs(real) < rounding)
+				real = 0;
+			if (Math.Abs(imaginary) < rounding)
+				imaginary = 0;
+			if (imaginary == 0)
+				return real;
+			return new Complex(real, imaginary);
 		}
 
-		object CastValue(object val, Type type)
+		Complex GetComplex(object val)
 		{
 			if (val == null)
-			{
-				if (!type.IsValueType)
-					return null;
 				throw new Exception("NULL value");
-			}
-			return Convert.ChangeType(val, type);
+			if (val is Complex)
+				return (Complex)val;
+			return new Complex((double)Convert.ChangeType(val, typeof(double)), 0);
 		}
 
-		T ToType<T>(object val)
+		double GetDouble(object val)
 		{
-			return (T)CastValue(val, typeof(T));
+			if (val == null)
+				throw new Exception("NULL value");
+			if (val is Complex)
+			{
+				var complex = (Complex)val;
+				if (complex.Imaginary != 0)
+					throw new Exception("Can't convert complex to double");
+				return complex.Real;
+			}
+			return (double)Convert.ChangeType(val, typeof(double));
+		}
+
+		bool GetBool(object val)
+		{
+			if (val == null)
+				throw new Exception("NULL value");
+			return (bool)Convert.ChangeType(val, typeof(bool));
+		}
+
+		char GetChar(object val)
+		{
+			if (val == null)
+				throw new Exception("NULL value");
+			return (char)Convert.ChangeType(val, typeof(char));
+		}
+
+		long GetLong(object val)
+		{
+			if (val == null)
+				throw new Exception("NULL value");
+			if (val is Complex)
+			{
+				var complex = (Complex)val;
+				if (complex.Imaginary != 0)
+					throw new Exception("Can't convert complex to double");
+				val = complex.Real;
+			}
+			return (long)Convert.ChangeType(val, typeof(long));
+		}
+
+		string GetString(object val)
+		{
+			if (val == null)
+				throw new Exception("NULL value");
+			if (val is Complex)
+			{
+				var complex = (Complex)val;
+				if (complex.Imaginary == 0)
+					return complex.Real.ToString();
+
+				var result = "";
+				if (complex.Real != 0)
+					result += complex.Real.ToString();
+				if ((complex.Real != 0) || (complex.Imaginary < 0))
+					result += complex.Imaginary < 0 ? "-" : "+";
+				var absImag = Math.Abs(complex.Imaginary);
+				if (absImag != 1)
+					result += absImag.ToString();
+				result += "i";
+				return result;
+			}
+			return val.ToString();
 		}
 
 		object DotOp(object obj, string fieldName)
@@ -95,61 +142,23 @@ namespace NeoEdit.Common.Expressions
 			return field.GetValue(obj);
 		}
 
-		object PosOp(object val)
-		{
-			if (val == null)
-				throw new Exception("NULL value");
-
-			if (IsNumericType(val))
-			{
-				if (IsFloatType(val))
-					return ToType<double>(val);
-				return ToType<long>(val);
-			}
-
-			throw new Exception("Invalid operation");
-		}
-
-		object NegOp(object val)
-		{
-			if (val == null)
-				throw new Exception("NULL value");
-
-			if (IsNumericType(val))
-			{
-				if (IsFloatType(val))
-					return -ToType<double>(val);
-				return -ToType<long>(val);
-			}
-
-			throw new Exception("Invalid operation");
-		}
-
 		object UnaryOp(string op, object val)
 		{
 			switch (op)
 			{
-				case "~": return ~ToType<long>(val);
-				case "+": return PosOp(val);
-				case "-": return NegOp(val);
-				case "!": return !ToType<bool>(val);
+				case "~": return ~GetLong(val);
+				case "+": return GetComplex(val);
+				case "-": return -GetComplex(val);
+				case "!": return !GetBool(val);
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
 		}
 
-		object ExpOp(object val1, object val2)
+		void Swap(ref object obj1, ref object obj2)
 		{
-			if ((val1 == null) || (val2 == null))
-				throw new Exception("NULL value");
-
-			if ((IsNumericType(val1)) && (IsNumericType(val2)))
-			{
-				if ((IsFloatType(val1)) || (IsFloatType(val2)))
-					return Math.Pow(ToType<double>(val1), ToType<double>(val2));
-				return Convert.ToInt64(Math.Pow(ToType<long>(val1), ToType<long>(val2)));
-			}
-
-			throw new Exception("Invalid operation");
+			var tmp = obj1;
+			obj1 = obj2;
+			obj2 = tmp;
 		}
 
 		object MultOp(object val1, object val2)
@@ -157,50 +166,19 @@ namespace NeoEdit.Common.Expressions
 			if ((val1 == null) || (val2 == null))
 				throw new Exception("NULL value");
 
-			if ((IsCharacterType(val1)) && (IsIntType(val2)))
+			if ((IsCharacter(val2)) && (IsNumeric(val1)))
+				Swap(ref val1, ref val2);
+			if ((IsCharacter(val1)) && (IsNumeric(val2)))
 			{
-				var str = val1.ToString();
-				var count = ToType<int>(val2);
+				var str = GetString(val1);
+				var count = (int)GetLong(val2);
 				var sb = new StringBuilder(str.Length * count);
 				for (var ctr = 0; ctr < count; ++ctr)
 					sb.Append(str);
 				return sb.ToString();
 			}
 
-			if ((IsNumericType(val1)) && (IsNumericType(val2)))
-			{
-				if ((IsFloatType(val1)) || (IsFloatType(val2)))
-					return ToType<double>(val1) * ToType<double>(val2);
-				return ToType<long>(val1) * ToType<long>(val2);
-			}
-
-			throw new Exception("Invalid operation");
-		}
-
-		object DivOp(object val1, object val2)
-		{
-			if ((val1 == null) || (val2 == null))
-				throw new Exception("NULL value");
-
-			if ((IsNumericType(val1)) && (IsNumericType(val2)))
-			{
-				if ((IsFloatType(val1)) || (IsFloatType(val2)))
-					return ToType<double>(val1) / ToType<double>(val2);
-				return ToType<long>(val1) / ToType<long>(val2);
-			}
-
-			throw new Exception("Invalid operation");
-		}
-
-		object ModOp(object val1, object val2)
-		{
-			if ((val1 == null) || (val2 == null))
-				throw new Exception("NULL value");
-
-			if ((IsIntType(val1)) && (IsIntType(val2)))
-				return ToType<long>(val1) / ToType<long>(val2);
-
-			throw new Exception("Invalid operation");
+			return GetComplex(val1) * GetComplex(val2);
 		}
 
 		object AddOp(object val1, object val2)
@@ -208,25 +186,20 @@ namespace NeoEdit.Common.Expressions
 			if ((val1 == null) || (val2 == null))
 			{
 				var val = val1 ?? val2;
-				if (IsCharacterType(val))
+				if (IsCharacter(val))
 					return val;
 				throw new Exception("NULL value");
 			}
 
-			if ((val1 is char) && (IsIntType(val2)))
-				return (char)((int)ToType<char>(val1) + ToType<int>(val2));
+			if ((val2 is char) && (IsNumeric(val1)))
+				Swap(ref val1, ref val2);
+			if ((val1 is char) && (IsNumeric(val2)))
+				return (char)((long)GetChar(val1) + GetLong(val2));
 
-			if ((IsCharacterType(val1)) || (IsCharacterType(val2)))
-				return val1.ToString() + val2.ToString();
+			if ((IsCharacter(val1)) || (IsCharacter(val2)))
+				return GetString(val1) + GetString(val2);
 
-			if ((IsNumericType(val1)) && (IsNumericType(val2)))
-			{
-				if ((IsFloatType(val1)) || (IsFloatType(val2)))
-					return ToType<double>(val1) + ToType<double>(val2);
-				return ToType<long>(val1) + ToType<long>(val2);
-			}
-
-			throw new Exception("Invalid operation");
+			return GetComplex(val1) + GetComplex(val2);
 		}
 
 		object SubOp(object val1, object val2)
@@ -234,17 +207,12 @@ namespace NeoEdit.Common.Expressions
 			if ((val1 == null) || (val2 == null))
 				throw new Exception("NULL value");
 
-			if ((val1 is char) && (IsIntType(val2)))
-				return (char)((int)ToType<char>(val1) - ToType<int>(val2));
+			if ((val2 is char) && (IsNumeric(val1)))
+				Swap(ref val1, ref val2);
+			if ((val1 is char) && (IsNumeric(val2)))
+				return (char)((long)GetChar(val1) - GetLong(val2));
 
-			if ((IsNumericType(val1)) && (IsNumericType(val2)))
-			{
-				if ((IsFloatType(val1)) || (IsFloatType(val2)))
-					return ToType<double>(val1) - ToType<double>(val2);
-				return ToType<long>(val1) - ToType<long>(val2);
-			}
-
-			throw new Exception("Invalid operation");
+			return GetComplex(val1) - GetComplex(val2);
 		}
 
 		bool EqualsOp(object val1, object val2, bool ignoreCase)
@@ -254,15 +222,11 @@ namespace NeoEdit.Common.Expressions
 			if ((val1 == null) || (val2 == null))
 				return false;
 
-			if ((IsNumericType(val1)) && (IsNumericType(val2)))
-			{
-				if ((IsFloatType(val1)) || (IsFloatType(val2)))
-					return ToType<double>(val1) == ToType<double>(val2);
-				return ToType<long>(val1) == ToType<long>(val2);
-			}
+			if ((IsNumeric(val1)) && (IsNumeric(val2)))
+				return GetComplex(val1) == GetComplex(val2);
 
-			if ((IsCharacterType(val1)) && (IsCharacterType(val2)))
-				return val1.ToString().Equals(val2.ToString(), ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+			if ((IsCharacter(val1)) && (IsCharacter(val2)))
+				return GetString(val1).Equals(GetString(val2), ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
 
 			return val1.Equals(val2);
 		}
@@ -272,17 +236,10 @@ namespace NeoEdit.Common.Expressions
 			if ((val1 == null) || (val2 == null))
 				throw new Exception("NULL value");
 
-			if ((IsCharacterType(val1)) && (IsCharacterType(val2)))
-				return String.Compare(val1.ToString(), val2.ToString(), ignoreCase) < 0;
+			if ((IsCharacter(val1)) && (IsCharacter(val2)))
+				return String.Compare(GetString(val1), GetString(val2), ignoreCase) < 0;
 
-			if ((IsNumericType(val1)) && (IsNumericType(val2)))
-			{
-				if ((IsFloatType(val1)) || (IsFloatType(val2)))
-					return ToType<double>(val1) < ToType<double>(val2);
-				return ToType<long>(val1) < ToType<long>(val2);
-			}
-
-			throw new Exception("Invalid operation");
+			return GetDouble(val1) < GetDouble(val2);
 		}
 
 		bool GreaterThanOp(object val1, object val2, bool ignoreCase)
@@ -290,17 +247,10 @@ namespace NeoEdit.Common.Expressions
 			if ((val1 == null) || (val2 == null))
 				throw new Exception("NULL value");
 
-			if ((IsCharacterType(val1)) && (IsCharacterType(val2)))
-				return String.Compare(val1.ToString(), val2.ToString(), ignoreCase) > 0;
+			if ((IsCharacter(val1)) && (IsCharacter(val2)))
+				return String.Compare(GetString(val1), GetString(val2), ignoreCase) > 0;
 
-			if ((IsNumericType(val1)) && (IsNumericType(val2)))
-			{
-				if ((IsFloatType(val1)) || (IsFloatType(val2)))
-					return ToType<double>(val1) > ToType<double>(val2);
-				return ToType<long>(val1) > ToType<long>(val2);
-			}
-
-			throw new Exception("Invalid operation");
+			return GetDouble(val1) > GetDouble(val2);
 		}
 
 		object BinaryOp(string op, object val1, object val2)
@@ -308,14 +258,14 @@ namespace NeoEdit.Common.Expressions
 			switch (op)
 			{
 				case ".": return DotOp(val1, (val2 ?? "").ToString());
-				case "^": return ExpOp(val1, val2);
+				case "^": return Complex.Pow(GetComplex(val1), GetComplex(val2));
 				case "*": return MultOp(val1, val2);
-				case "/": return DivOp(val1, val2);
-				case "%": return ModOp(val1, val2);
+				case "/": return GetComplex(val1) / GetComplex(val2);
+				case "%": return GetDouble(val1) % GetDouble(val2);
 				case "+": return AddOp(val1, val2);
 				case "-": return SubOp(val1, val2);
-				case "<<": return ToType<long>(val1) << ToType<int>(val2);
-				case ">>": return ToType<long>(val1) >> ToType<int>(val2);
+				case "<<": return GetLong(val1) << (int)GetLong(val2);
+				case ">>": return GetLong(val1) >> (int)GetLong(val2);
 				case "<": return LessThanOp(val1, val2, false);
 				case "i<": return LessThanOp(val1, val2, true);
 				case ">": return GreaterThanOp(val1, val2, false);
@@ -329,11 +279,11 @@ namespace NeoEdit.Common.Expressions
 				case "i==": return EqualsOp(val1, val2, true);
 				case "!=": return !EqualsOp(val1, val2, false);
 				case "i!=": return !EqualsOp(val1, val2, true);
-				case "&": return ToType<long>(val1) & ToType<long>(val2);
-				case "^^": return ToType<long>(val1) ^ ToType<long>(val2);
-				case "|": return ToType<long>(val1) | ToType<long>(val2);
-				case "&&": return ToType<bool>(val1) && ToType<bool>(val2);
-				case "||": return ToType<bool>(val1) || ToType<bool>(val2);
+				case "&": return GetLong(val1) & GetLong(val2);
+				case "^^": return GetLong(val1) ^ GetLong(val2);
+				case "|": return GetLong(val1) | GetLong(val2);
+				case "&&": return GetBool(val1) && GetBool(val2);
+				case "||": return GetBool(val1) || GetBool(val2);
 				case "??": return val1 ?? val2;
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
@@ -349,7 +299,10 @@ namespace NeoEdit.Common.Expressions
 		{
 			if ((context.DEBUG() != null) && (Debugger.IsAttached))
 				Debugger.Break();
-			return Visit(context.form());
+			var val = SimplifyComplex(Visit(context.form()));
+			if (val is Complex)
+				return GetString(val);
+			return val;
 		}
 
 		object GetShortForm(string op)
@@ -359,15 +312,9 @@ namespace NeoEdit.Common.Expressions
 			bool first = true;
 			while (values.Any())
 			{
-				if (first)
-				{
-					result = values.Dequeue();
-					first = false;
-					continue;
-				}
-
 				var val2 = values.Dequeue();
-				result = BinaryOp(op, result, val2);
+				result = first ? val2 : BinaryOp(op, result, val2);
+				first = false;
 			}
 			return result;
 		}
@@ -377,15 +324,36 @@ namespace NeoEdit.Common.Expressions
 			var method = context.method.Text;
 			var paramList = context.e().Select(c => Visit(c)).ToList();
 
-			switch (method)
+			switch (method.ToLowerInvariant())
 			{
-				case "Type": return paramList.Single().GetType();
-				case "ValidRE": return ValidRE(paramList.Single().ToString());
-				case "Eval": return new NEExpression(paramList.Single().ToString()).Evaluate();
-				case "FileName": return Path.GetFileName((paramList.Single() ?? "").ToString());
-				case "StrFormat": return String.Format(paramList.Select(arg => arg == null ? "" : arg.ToString()).FirstOrDefault() ?? "", paramList.Skip(1).Select(arg => arg ?? "").ToArray());
-				case "Min": return paramList.Min();
-				case "Max": return paramList.Max();
+				case "abs": return Complex.Abs(GetComplex(paramList[0]));
+				case "acos": return Complex.Acos(GetComplex(paramList[0]));
+				case "asin": return Complex.Asin(GetComplex(paramList[0]));
+				case "atan": return Complex.Atan(GetComplex(paramList[0]));
+				case "conjugate": return Complex.Conjugate(GetComplex(paramList[0]));
+				case "cos": return Complex.Cos(GetComplex(paramList[0]));
+				case "cosh": return Complex.Cosh(GetComplex(paramList[0]));
+				case "eval": return new NEExpression(GetString(paramList[0])).Evaluate();
+				case "filename": return Path.GetFileName(GetString(paramList[0]));
+				case "frompolarcoordinates": return Complex.FromPolarCoordinates(GetDouble(paramList[0]), GetDouble(paramList[1]));
+				case "imaginary": return GetComplex(paramList[0]).Imaginary;
+				case "ln": return Complex.Log(GetComplex(paramList[0]));
+				case "log": return paramList.Count == 1 ? Complex.Log10(GetComplex(paramList[0])) : Complex.Log(GetComplex(paramList[0]), GetDouble(paramList[2]));
+				case "magnitude": return GetComplex(paramList[0]).Magnitude;
+				case "max": return paramList.Select(val => SimplifyComplex(val)).Max();
+				case "min": return paramList.Select(val => SimplifyComplex(val)).Min();
+				case "phase": return GetComplex(paramList[0]).Phase;
+				case "real": return GetComplex(paramList[0]).Real;
+				case "reciprocal": return Complex.Reciprocal(GetComplex(paramList[0]));
+				case "root": return Complex.Pow(GetComplex(paramList[0]), Complex.Reciprocal(GetComplex(paramList[1])));
+				case "sin": return Complex.Sin(GetComplex(paramList[0]));
+				case "sinh": return Complex.Sinh(GetComplex(paramList[0]));
+				case "sqrt": return Complex.Sqrt(GetComplex(paramList[0]));
+				case "strformat": return String.Format(GetString(paramList[0]), paramList.Skip(1).Select(arg => SimplifyComplex(arg) ?? "").ToArray());
+				case "tan": return Complex.Tan(GetComplex(paramList[0]));
+				case "tanh": return Complex.Tanh(GetComplex(paramList[0]));
+				case "type": return paramList[0].GetType();
+				case "validre": return ValidRE(GetString(paramList[0]));
 				default: throw new ArgumentException(String.Format("Invalid method: {0}", method));
 			}
 		}
@@ -405,7 +373,6 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) { return GetShortForm("&&"); }
 		public override object VisitDot(ExpressionParser.DotContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitUnary(ExpressionParser.UnaryContext context) { return UnaryOp(context.op.Text, Visit(context.val)); }
-		public override object VisitCast(ExpressionParser.CastContext context) { return CastValue(Visit(context.val), GetType(context.type.Text)); }
 		public override object VisitExp(ExpressionParser.ExpContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitMult(ExpressionParser.MultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitAdd(ExpressionParser.AddContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
@@ -418,7 +385,7 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitLogicalAnd(ExpressionParser.LogicalAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitLogicalOr(ExpressionParser.LogicalOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitNullCoalesce(ExpressionParser.NullCoalesceContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override object VisitTernary(ExpressionParser.TernaryContext context) { return ToType<bool>(Visit(context.condition)) ? Visit(context.trueval) : Visit(context.falseval); }
+		public override object VisitTernary(ExpressionParser.TernaryContext context) { return GetBool(Visit(context.condition)) ? Visit(context.trueval) : Visit(context.falseval); }
 		public override object VisitExpression(ExpressionParser.ExpressionContext context) { return Visit(context.val); }
 		public override object VisitParam(ExpressionParser.ParamContext context) { return values[int.Parse(context.val.Text.Trim('[', ']'))]; }
 		public override object VisitString(ExpressionParser.StringContext context) { return context.val.Text.Substring(1, context.val.Text.Length - 2); }
@@ -426,7 +393,15 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitTrue(ExpressionParser.TrueContext context) { return true; }
 		public override object VisitFalse(ExpressionParser.FalseContext context) { return false; }
 		public override object VisitNull(ExpressionParser.NullContext context) { return null; }
-		public override object VisitFloat(ExpressionParser.FloatContext context) { return context.val.Text.Contains(".") ? (object)double.Parse(context.val.Text) : (object)long.Parse(context.val.Text); }
+		public override object VisitFloat(ExpressionParser.FloatContext context)
+		{
+			var text = context.val.Text;
+			var imaginary = text.EndsWith("i", StringComparison.OrdinalIgnoreCase);
+			if (imaginary)
+				text = text.Substring(0, text.Length - 1);
+			var value = text.Length == 0 ? 1 : double.Parse(text);
+			return new Complex(imaginary ? 0 : value, imaginary ? value : 0);
+		}
 		public override object VisitHex(ExpressionParser.HexContext context) { return long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber); }
 		public override object VisitVariable(ExpressionParser.VariableContext context) { return dict.ContainsKey(context.val.Text) ? dict[context.val.Text] : null; }
 	}

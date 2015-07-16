@@ -37,11 +37,11 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new NEExpression("5.4 * 2").Evaluate().ToString(), "10.8");
 			Assert.AreEqual(new NEExpression("5 * 2.1").Evaluate().ToString(), "10.5");
-			Assert.AreEqual(new NEExpression("5 * (int)2.1").Evaluate().ToString(), "10");
+			Assert.AreEqual(new NEExpression("5 * 2.1").Evaluate().ToString(), "10.5");
 			Assert.AreEqual(new NEExpression("\"ok\" * 4").Evaluate().ToString(), "okokokok");
 			Assert.AreEqual(new NEExpression("'o' * 4").Evaluate().ToString(), "oooo");
 
-			Assert.AreEqual(new NEExpression("5 / 2").Evaluate().ToString(), "2");
+			Assert.AreEqual(new NEExpression("5 / 2").Evaluate().ToString(), "2.5");
 			Assert.AreEqual(new NEExpression("5.0 / 2").Evaluate().ToString(), "2.5");
 			Assert.AreEqual(new NEExpression("5 / 2.0").Evaluate().ToString(), "2.5");
 
@@ -93,7 +93,6 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new NEExpression("StrFormat(\"[0]{0}+{1} is {2}\", [0], [1], [0] + [1])").Evaluate(5, 7).ToString(), "[0]5+7 is 12");
 
-			Assert.AreEqual(new NEExpression("StrFormat()").Evaluate().ToString(), "");
 			Assert.AreEqual(new NEExpression("StrFormat(\"Test\")").Evaluate().ToString(), "Test");
 			Assert.AreEqual(new NEExpression("StrFormat(\"Test {0}\", 5)").Evaluate().ToString(), "Test 5");
 			Assert.AreEqual(new NEExpression("StrFormat(\"Test {0} {1}\", 5, 7)").Evaluate().ToString(), "Test 5 7");
@@ -102,7 +101,7 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new NEExpression("![0]").Evaluate(false), true);
 			Assert.AreEqual(new NEExpression("-4").Evaluate().ToString(), "-4");
 
-			Assert.AreEqual(new NEExpression("Type((long)[0])").Evaluate((byte)0), typeof(long));
+			Assert.AreEqual(new NEExpression("Type([0])").Evaluate((byte)0), typeof(byte));
 
 			Assert.AreEqual(new NEExpression("0xdeadbeef + [0]").Evaluate(0x0badf00d).ToString(), "3931877116");
 
@@ -111,6 +110,9 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new NEExpression("pi").Evaluate().ToString(), "3.14159265358979");
 			Assert.AreEqual(new NEExpression("e").Evaluate().ToString(), "2.71828182845905");
+			Assert.AreEqual(new NEExpression("i").Evaluate().ToString(), "(0, 1)");
+
+			Assert.AreEqual(new NEExpression("i*2i").Evaluate().ToString(), "-2");
 
 			var dict = new Dictionary<string, object>
 			{
