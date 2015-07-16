@@ -1035,9 +1035,10 @@ namespace NeoEdit.TextEdit
 		{
 			var dialog = new SaveFileDialog
 			{
-				Filter = "Text files|*.txt|All files|*.*",
+				Filter = "All files|*.*",
 				FileName = Path.GetFileName(FileName),
 				InitialDirectory = Path.GetDirectoryName(FileName),
+				DefaultExt = "txt",
 			};
 			if (dialog.ShowDialog() != true)
 				return null;
