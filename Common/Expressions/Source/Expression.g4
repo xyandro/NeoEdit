@@ -73,5 +73,5 @@ FALSE: [Ff]'alse' | 'FALSE';
 NULL: [Nn][Uu][Ll][Ll];
 FLOAT: [0-9]* '.'? [0-9]+ ([eE][-+]?[0-9]+)?;
 HEX: '0x' [0-9a-fA-F]+;
-VARIABLE: [a-zA-z][a-zA-Z0-9_]*;
+VARIABLE: [a-zA-Z][a-zA-Z0-9_]*;
 WHITESPACE: [ \n\t\r]+ -> skip;
