@@ -106,6 +106,9 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new NEExpression("0xdeadbeef + [0]").Evaluate(0x0badf00d).ToString(), "3931877116");
 
+			Assert.AreEqual(new NEExpression("Min(3,4,2)").Evaluate().ToString(), "2");
+			Assert.AreEqual(new NEExpression("Max(3,4,2)").Evaluate().ToString(), "4");
+
 			var dict = new Dictionary<string, object>
 			{
 				{ "x", 0xdeadbeef },

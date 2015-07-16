@@ -384,6 +384,8 @@ namespace NeoEdit.Common.Expressions
 				case "Eval": return new NEExpression(paramList.Single().ToString()).Evaluate();
 				case "FileName": return Path.GetFileName((paramList.Single() ?? "").ToString());
 				case "StrFormat": return String.Format(paramList.Select(arg => arg == null ? "" : arg.ToString()).FirstOrDefault() ?? "", paramList.Skip(1).Select(arg => arg ?? "").ToArray());
+				case "Min": return paramList.Min();
+				case "Max": return paramList.Max();
 				default: throw new ArgumentException(String.Format("Invalid method: {0}", method));
 			}
 		}

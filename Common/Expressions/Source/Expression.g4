@@ -46,7 +46,7 @@ DEBUG: '@';
 LPAREN: '(';
 RPAREN: ')';
 COMMA: ',';
-METHOD: 'Type' | 'ValidRE' | 'Eval' | 'FileName' | 'StrFormat';
+METHOD: 'Type' | 'ValidRE' | 'Eval' | 'FileName' | 'StrFormat' | 'Min' | 'Max';
 NOTOP: '!';
 CASTTYPE: 'bool' | 'char' | 'sbyte' | 'byte' | 'short' | 'ushort' | 'int' | 'uint' | 'long' | 'ulong' | 'float' | 'double' | 'string';
 EXPOP: '^';
