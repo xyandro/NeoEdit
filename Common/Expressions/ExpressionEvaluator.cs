@@ -158,6 +158,23 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
+		long Factorial(long num)
+		{
+			long result = 1;
+			for (var ctr = 2; ctr <= num; ++ctr)
+				result *= ctr;
+			return result;
+		}
+
+		object UnaryOpEnd(string op, object val)
+		{
+			switch (op)
+			{
+				case "!": return Factorial(GetLong(val));
+				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
+			}
+		}
+
 		void Swap(ref object obj1, ref object obj2)
 		{
 			var tmp = obj1;
@@ -391,6 +408,7 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) { return GetShortForm("&&"); }
 		public override object VisitDot(ExpressionParser.DotContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitUnary(ExpressionParser.UnaryContext context) { return UnaryOp(context.op.Text, Visit(context.val)); }
+		public override object VisitUnaryEnd(ExpressionParser.UnaryEndContext context) { return UnaryOpEnd(context.op.Text, Visit(context.val)); }
 		public override object VisitExp(ExpressionParser.ExpContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitMult(ExpressionParser.MultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override object VisitAdd(ExpressionParser.AddContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }

@@ -110,9 +110,11 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new NEExpression("pi").Evaluate().ToString(), "3.14159265358979");
 			Assert.AreEqual(new NEExpression("e").Evaluate().ToString(), "2.71828182845905");
-			Assert.AreEqual(new NEExpression("i").Evaluate().ToString(), "(0, 1)");
+			Assert.AreEqual(new NEExpression("i").Evaluate().ToString(), "i");
 
-			Assert.AreEqual(new NEExpression("i*2i").Evaluate().ToString(), "-2");
+			Assert.AreEqual(new NEExpression("i*2*i").Evaluate().ToString(), "-2");
+
+			Assert.AreEqual(new NEExpression("5!").Evaluate().ToString(), "120");
 
 			var dict = new Dictionary<string, object>
 			{

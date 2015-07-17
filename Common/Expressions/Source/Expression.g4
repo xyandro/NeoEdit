@@ -16,7 +16,8 @@ e
 			method=METHODVAR LPAREN (e (COMMA e)*)? RPAREN
 		) # Method
 	| val1=e op=DOT val2=e # Dot
-	| op=(BITWISENOT | ADDOP | NOTOP) val=value # Unary
+	| op=(BITWISENOT | ADDOP | BANG) val=value # Unary
+	| val=value op=BANG # UnaryEnd
 	| val1=e op=EXPOP val2=e # Exp
 	| val1=e op=MULTOP val2=e # Mult
 	| val1=e op=ADDOP val2=e # Add
@@ -82,7 +83,7 @@ METHOD1: A B S | A C O S | A S I N | A T A N | C O N J U G A T E | C O S | C O S
 METHOD1VAR: S T R F O R M A T;
 METHOD2: F R O M P O L A R | L O G | R O O T ;
 METHODVAR: M A X | M I N ;
-NOTOP: '!' ;
+BANG: '!' ;
 EXPOP: '^' ;
 MULTOP: [*/%] ;
 ADDOP: [-+] ;
