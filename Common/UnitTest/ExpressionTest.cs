@@ -18,6 +18,8 @@ namespace NeoEdit.Common.UnitTest
 		[TestMethod]
 		public void ExpressionTest()
 		{
+			Assert.AreEqual(new NEExpression("2^50").Evaluate().ToString(), "1125899906842624");
+
 			Assert.AreEqual(new NEExpression("-(-4)").Evaluate().ToString(), "4");
 
 			Assert.AreEqual(new NEExpression("2 + 2").Evaluate().ToString(), "4");

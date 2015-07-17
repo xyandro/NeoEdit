@@ -29,9 +29,19 @@ namespace NeoEdit.Common.Expressions
 			return (val != null) && (val.GetType().FullName == "MS.Internal.NamedObject") && (val.ToString() == "{DependencyProperty.UnsetValue}") ? null : val;
 		}
 
-		bool IsNumeric(object obj)
+		bool IsInteger(object obj)
 		{
-			return (obj is sbyte) || (obj is byte) || (obj is short) || (obj is ushort) || (obj is int) || (obj is uint) || (obj is long) || (obj is ulong) || (obj is float) || (obj is double) || (obj is decimal) || (obj is Complex);
+			return (obj is sbyte) || (obj is byte) || (obj is short) || (obj is ushort) || (obj is int) || (obj is uint) || (obj is long) || (obj is ulong) || (obj is BigInteger);
+		}
+
+		bool IsFloat(object obj)
+		{
+			return (IsInteger(obj)) || (obj is float) || (obj is double) || (obj is decimal);
+		}
+
+		bool IsComplex(object obj)
+		{
+			return (IsFloat(obj)) || (obj is Complex);
 		}
 
 		bool IsCharacter(object obj)
@@ -42,7 +52,7 @@ namespace NeoEdit.Common.Expressions
 		Complex RoundComplex(Complex complex)
 		{
 			var real = Math.Round(complex.Real, 10);
-			var imaginary = Math.Round(complex.Imaginary, 12);
+			var imaginary = Math.Round(complex.Imaginary, 10);
 			if (Math.Abs(real) < 1e-10)
 				real = 0;
 			if (Math.Abs(imaginary) < 1e-10)
@@ -50,38 +60,22 @@ namespace NeoEdit.Common.Expressions
 			return new Complex(real, imaginary);
 		}
 
-		object SimplifyComplex(object value)
+		object Simplify(object value)
 		{
-			if (!(value is Complex))
-				return value;
-
-			var complex = RoundComplex((Complex)value);
-			if (complex.Imaginary == 0)
-				return complex.Real;
-			return complex;
-		}
-
-		Complex GetComplex(object val)
-		{
-			if (val == null)
-				throw new Exception("NULL value");
-			if (val is Complex)
-				return (Complex)val;
-			return new Complex((double)Convert.ChangeType(val, typeof(double)), 0);
-		}
-
-		double GetDouble(object val)
-		{
-			if (val == null)
-				throw new Exception("NULL value");
-			if (val is Complex)
+			if (value is Complex)
 			{
-				var complex = (Complex)val;
-				if (complex.Imaginary != 0)
-					throw new Exception("Can't convert complex to double");
-				return complex.Real;
+				var complex = RoundComplex((Complex)value);
+				value = complex.Imaginary == 0 ? complex.Real : complex;
 			}
-			return (double)Convert.ChangeType(val, typeof(double));
+
+			if (value is double)
+			{
+				var d = (double)value;
+				if ((!Double.IsInfinity(d)) && (!Double.IsNaN(d)) && (Math.Floor(d) == d))
+					value = new BigInteger(d);
+			}
+
+			return value;
 		}
 
 		bool GetBool(object val)
@@ -91,14 +85,23 @@ namespace NeoEdit.Common.Expressions
 			return (bool)Convert.ChangeType(val, typeof(bool));
 		}
 
-		char GetChar(object val)
+		BigInteger GetInteger(object val)
 		{
 			if (val == null)
 				throw new Exception("NULL value");
-			return (char)Convert.ChangeType(val, typeof(char));
+			if (val is BigInteger)
+				return (BigInteger)val;
+			if (val is Complex)
+			{
+				var complex = (Complex)val;
+				if (complex.Imaginary != 0)
+					throw new Exception("Can't convert complex to double");
+				val = complex.Real;
+			}
+			return new BigInteger((long)Convert.ChangeType(val, typeof(long)));
 		}
 
-		long GetLong(object val)
+		double GetFloat(object val)
 		{
 			if (val == null)
 				throw new Exception("NULL value");
@@ -107,9 +110,29 @@ namespace NeoEdit.Common.Expressions
 				var complex = (Complex)val;
 				if (complex.Imaginary != 0)
 					throw new Exception("Can't convert complex to double");
-				val = complex.Real;
+				return complex.Real;
 			}
-			return (long)Convert.ChangeType(val, typeof(long));
+			if (val is BigInteger)
+				return (double)(BigInteger)val;
+			return (double)Convert.ChangeType(val, typeof(double));
+		}
+
+		Complex GetComplex(object val)
+		{
+			if (val == null)
+				throw new Exception("NULL value");
+			if (val is Complex)
+				return (Complex)val;
+			if (val is BigInteger)
+				return (Complex)(BigInteger)val;
+			return new Complex((double)Convert.ChangeType(val, typeof(double)), 0);
+		}
+
+		char GetChar(object val)
+		{
+			if (val == null)
+				throw new Exception("NULL value");
+			return (char)Convert.ChangeType(val, typeof(char));
 		}
 
 		string GetString(object val)
@@ -146,21 +169,32 @@ namespace NeoEdit.Common.Expressions
 			return field.GetValue(obj);
 		}
 
+		object NegateOp(object obj)
+		{
+			if (IsInteger(obj))
+				return -GetInteger(obj);
+			if (IsFloat(obj))
+				return -GetFloat(obj);
+			if (IsComplex(obj))
+				return -GetComplex(obj);
+			throw new Exception("Invalid operation");
+		}
+
 		object UnaryOp(string op, object val)
 		{
 			switch (op)
 			{
-				case "~": return ~GetLong(val);
-				case "+": return GetComplex(val);
-				case "-": return -GetComplex(val);
+				case "~": return ~GetInteger(val);
+				case "+": return val;
+				case "-": return NegateOp(val);
 				case "!": return !GetBool(val);
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
 		}
 
-		long Factorial(long num)
+		BigInteger Factorial(BigInteger num)
 		{
-			long result = 1;
+			BigInteger result = 1;
 			for (var ctr = 2; ctr <= num; ++ctr)
 				result *= ctr;
 			return result;
@@ -170,7 +204,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			switch (op)
 			{
-				case "!": return Factorial(GetLong(val));
+				case "!": return Factorial(GetInteger(val));
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
 		}
@@ -182,24 +216,74 @@ namespace NeoEdit.Common.Expressions
 			obj2 = tmp;
 		}
 
+		object ExpOp(object val1, object val2)
+		{
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+				return BigInteger.Pow(GetInteger(val1), (int)GetInteger(val2));
+			if ((IsFloat(val1)) && (IsFloat(val2)))
+			{
+				var val = Math.Pow(GetFloat(val1), GetFloat(val2));
+				if (!double.IsNaN(val))
+					return val;
+			}
+
+			return Complex.Pow(GetComplex(val1), GetComplex(val2));
+		}
+
 		object MultOp(object val1, object val2)
 		{
 			if ((val1 == null) || (val2 == null))
 				throw new Exception("NULL value");
 
-			if ((IsCharacter(val2)) && (IsNumeric(val1)))
+			if ((IsCharacter(val2)) && (IsComplex(val1)))
 				Swap(ref val1, ref val2);
-			if ((IsCharacter(val1)) && (IsNumeric(val2)))
+			if ((IsCharacter(val1)) && (IsComplex(val2)))
 			{
 				var str = GetString(val1);
-				var count = (int)GetLong(val2);
+				var count = (int)GetInteger(val2);
 				var sb = new StringBuilder(str.Length * count);
 				for (var ctr = 0; ctr < count; ++ctr)
 					sb.Append(str);
 				return sb.ToString();
 			}
 
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+				return GetInteger(val1) * GetInteger(val2);
+
+			if ((IsFloat(val1)) && (IsFloat(val2)))
+				return GetFloat(val1) * GetFloat(val2);
+
 			return GetComplex(val1) * GetComplex(val2);
+		}
+
+		object DivOp(object val1, object val2)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+			{
+				var int1 = GetInteger(val1);
+				var int2 = GetInteger(val2);
+				if ((int2 != 0) && ((int1 % int2) == 0))
+					return int1 / int2;
+			}
+
+			if ((IsFloat(val1)) && (IsFloat(val2)))
+				return GetFloat(val1) / GetFloat(val2);
+
+			return GetComplex(val1) / GetComplex(val2);
+		}
+
+		object ModOp(object val1, object val2)
+		{
+			if ((val1 == null) || (val2 == null))
+				throw new Exception("NULL value");
+
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+				return GetInteger(val1) % GetInteger(val2);
+
+			return GetFloat(val1) % GetFloat(val2);
 		}
 
 		object AddOp(object val1, object val2)
@@ -212,13 +296,19 @@ namespace NeoEdit.Common.Expressions
 				throw new Exception("NULL value");
 			}
 
-			if ((val2 is char) && (IsNumeric(val1)))
+			if ((val2 is char) && (IsComplex(val1)))
 				Swap(ref val1, ref val2);
-			if ((val1 is char) && (IsNumeric(val2)))
-				return (char)((long)GetChar(val1) + GetLong(val2));
+			if ((val1 is char) && (IsComplex(val2)))
+				return (char)((long)GetChar(val1) + GetInteger(val2));
 
 			if ((IsCharacter(val1)) || (IsCharacter(val2)))
 				return GetString(val1) + GetString(val2);
+
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+				return GetInteger(val1) + GetInteger(val2);
+
+			if ((IsFloat(val1)) && (IsFloat(val2)))
+				return GetFloat(val1) + GetFloat(val2);
 
 			return GetComplex(val1) + GetComplex(val2);
 		}
@@ -228,10 +318,16 @@ namespace NeoEdit.Common.Expressions
 			if ((val1 == null) || (val2 == null))
 				throw new Exception("NULL value");
 
-			if ((val2 is char) && (IsNumeric(val1)))
+			if ((val2 is char) && (IsComplex(val1)))
 				Swap(ref val1, ref val2);
-			if ((val1 is char) && (IsNumeric(val2)))
-				return (char)((long)GetChar(val1) - GetLong(val2));
+			if ((val1 is char) && (IsComplex(val2)))
+				return (char)((long)GetChar(val1) - GetInteger(val2));
+
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+				return GetInteger(val1) - GetInteger(val2);
+
+			if ((IsFloat(val1)) && (IsFloat(val2)))
+				return GetFloat(val1) - GetFloat(val2);
 
 			return GetComplex(val1) - GetComplex(val2);
 		}
@@ -243,7 +339,13 @@ namespace NeoEdit.Common.Expressions
 			if ((val1 == null) || (val2 == null))
 				return false;
 
-			if ((IsNumeric(val1)) && (IsNumeric(val2)))
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+				return GetInteger(val1) == GetInteger(val2);
+
+			if ((IsFloat(val1)) && (IsFloat(val2)))
+				return GetFloat(val1) == GetFloat(val2);
+
+			if ((IsComplex(val1)) && (IsComplex(val2)))
 				return GetComplex(val1) == GetComplex(val2);
 
 			if ((IsCharacter(val1)) && (IsCharacter(val2)))
@@ -260,7 +362,10 @@ namespace NeoEdit.Common.Expressions
 			if ((IsCharacter(val1)) && (IsCharacter(val2)))
 				return String.Compare(GetString(val1), GetString(val2), ignoreCase) < 0;
 
-			return GetDouble(val1) < GetDouble(val2);
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+				return GetInteger(val1) < GetInteger(val2);
+
+			return GetFloat(val1) < GetFloat(val2);
 		}
 
 		bool GreaterThanOp(object val1, object val2, bool ignoreCase)
@@ -271,7 +376,10 @@ namespace NeoEdit.Common.Expressions
 			if ((IsCharacter(val1)) && (IsCharacter(val2)))
 				return String.Compare(GetString(val1), GetString(val2), ignoreCase) > 0;
 
-			return GetDouble(val1) > GetDouble(val2);
+			if ((IsInteger(val1)) && (IsInteger(val2)))
+				return GetInteger(val1) > GetInteger(val2);
+
+			return GetFloat(val1) > GetFloat(val2);
 		}
 
 		object BinaryOp(string op, object val1, object val2)
@@ -279,14 +387,14 @@ namespace NeoEdit.Common.Expressions
 			switch (op)
 			{
 				case ".": return DotOp(val1, (val2 ?? "").ToString());
-				case "^": return Complex.Pow(GetComplex(val1), GetComplex(val2));
+				case "^": return ExpOp(val1, val2);
 				case "*": return MultOp(val1, val2);
-				case "/": return GetComplex(val1) / GetComplex(val2);
-				case "%": return GetDouble(val1) % GetDouble(val2);
+				case "/": return DivOp(val1, val2);
+				case "%": return ModOp(val1, val2);
 				case "+": return AddOp(val1, val2);
 				case "-": return SubOp(val1, val2);
-				case "<<": return GetLong(val1) << (int)GetLong(val2);
-				case ">>": return GetLong(val1) >> (int)GetLong(val2);
+				case "<<": return GetInteger(val1) << (int)GetInteger(val2);
+				case ">>": return GetInteger(val1) >> (int)GetInteger(val2);
 				case "<": return LessThanOp(val1, val2, false);
 				case "i<": return LessThanOp(val1, val2, true);
 				case ">": return GreaterThanOp(val1, val2, false);
@@ -300,9 +408,9 @@ namespace NeoEdit.Common.Expressions
 				case "i==": return EqualsOp(val1, val2, true);
 				case "!=": return !EqualsOp(val1, val2, false);
 				case "i!=": return !EqualsOp(val1, val2, true);
-				case "&": return GetLong(val1) & GetLong(val2);
-				case "^^": return GetLong(val1) ^ GetLong(val2);
-				case "|": return GetLong(val1) | GetLong(val2);
+				case "&": return GetInteger(val1) & GetInteger(val2);
+				case "^^": return GetInteger(val1) ^ GetInteger(val2);
+				case "|": return GetInteger(val1) | GetInteger(val2);
 				case "&&": return GetBool(val1) && GetBool(val2);
 				case "||": return GetBool(val1) || GetBool(val2);
 				case "??": return val1 ?? val2;
@@ -320,7 +428,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			if ((context.DEBUG() != null) && (Debugger.IsAttached))
 				Debugger.Break();
-			var val = SimplifyComplex(Visit(context.form()));
+			var val = Simplify(Visit(context.form()));
 			if (val is Complex)
 				return GetString(val);
 			return val;
@@ -340,17 +448,124 @@ namespace NeoEdit.Common.Expressions
 			return result;
 		}
 
-		Complex GetRoot(Complex val, Complex root)
+		object AbsMethod(object val)
 		{
-			if ((root.Imaginary != 0) || (root.Real <= 1) || (root.Real - Math.Floor(root.Real) != 0))
-				return Complex.Pow(val, Complex.Reciprocal(root));
+			if (IsInteger(val))
+				return BigInteger.Abs(GetInteger(val));
+			if (IsFloat(val))
+				return Math.Abs(GetFloat(val));
+			return Complex.Abs(GetComplex(val));
+		}
 
-			var power = (int)GetLong(root);
-			var phase = val.Phase;
-			var magnitude = val.Magnitude;
-			var nthRootOfMagnitude = Math.Pow(magnitude, 1.0 / power);
-			var options = Enumerable.Range(0, power).Select(k => RoundComplex(Complex.FromPolarCoordinates(nthRootOfMagnitude, phase / power + k * 2 * Math.PI / power))).ToList();
+		object AcosMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Acos(GetFloat(val));
+			return Complex.Abs(GetComplex(val));
+		}
+
+		object AsinMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Asin(GetFloat(val));
+			return Complex.Asin(GetComplex(val));
+		}
+
+		object AtanMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Atan(GetFloat(val));
+			return Complex.Atan(GetComplex(val));
+		}
+
+		object CoshMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Cosh(GetFloat(val));
+			return Complex.Cosh(GetComplex(val));
+		}
+
+		object CosMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Cos(GetFloat(val));
+			return Complex.Cos(GetComplex(val));
+		}
+
+		object LnMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Log(GetFloat(val));
+			return Complex.Log(GetComplex(val));
+		}
+
+		object LogMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Log10(GetFloat(val));
+			return Complex.Log10(GetComplex(val));
+		}
+
+		object LogMethod(object val, object newBase)
+		{
+			if ((IsFloat(val)) && (IsFloat(newBase)))
+				return Math.Log(GetFloat(val), GetFloat(newBase));
+			return Complex.Log(GetComplex(val), GetFloat(newBase));
+		}
+
+		object ReciprocalMethod(object val)
+		{
+			if (IsFloat(val))
+				return 1.0 / GetFloat(val);
+			return Complex.Reciprocal(GetComplex(val));
+		}
+
+		object RootMethod(object val, object rootObj)
+		{
+			var root = (int)GetInteger(rootObj);
+			if (IsFloat(val))
+			{
+				var f = GetFloat(val);
+				if (root % 2 == 1) // Odd roots
+					return f >= 0 ? Math.Pow(f, 1.0 / root) : -Math.Pow(-f, 1.0 / root);
+				else if (f >= 0) // Even roots, val >= 0
+					return Math.Pow(f, 1.0 / root);
+			}
+
+			var complexVal = GetComplex(val);
+			var phase = complexVal.Phase;
+			var magnitude = complexVal.Magnitude;
+			var nthRootOfMagnitude = Math.Pow(magnitude, 1.0 / root);
+			var options = Enumerable.Range(0, root).Select(k => RoundComplex(Complex.FromPolarCoordinates(nthRootOfMagnitude, phase / root + k * 2 * Math.PI / root))).ToList();
 			return options.OrderBy(complex => Math.Abs(complex.Imaginary)).ThenByDescending(complex => complex.Real).ThenByDescending(complex => complex.Imaginary).FirstOrDefault();
+		}
+
+		object SinhMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Sinh(GetFloat(val));
+			return Complex.Sinh(GetComplex(val));
+		}
+
+		object SinMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Sin(GetFloat(val));
+			return Complex.Sin(GetComplex(val));
+		}
+
+		object TanhMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Tanh(GetFloat(val));
+			return Complex.Tanh(GetComplex(val));
+		}
+
+		object TanMethod(object val)
+		{
+			if (IsFloat(val))
+				return Math.Tan(GetFloat(val));
+			return Complex.Tan(GetComplex(val));
 		}
 
 		public override object VisitMethod(ExpressionParser.MethodContext context)
@@ -360,32 +575,32 @@ namespace NeoEdit.Common.Expressions
 
 			switch (method.ToLowerInvariant())
 			{
-				case "abs": return Complex.Abs(GetComplex(paramList[0]));
-				case "acos": return Complex.Acos(GetComplex(paramList[0]));
-				case "asin": return Complex.Asin(GetComplex(paramList[0]));
-				case "atan": return Complex.Atan(GetComplex(paramList[0]));
+				case "abs": return AbsMethod(paramList[0]);
+				case "acos": return AcosMethod(paramList[0]);
+				case "asin": return AsinMethod(paramList[0]);
+				case "atan": return AtanMethod(paramList[0]);
 				case "conjugate": return Complex.Conjugate(GetComplex(paramList[0]));
-				case "cos": return Complex.Cos(GetComplex(paramList[0]));
-				case "cosh": return Complex.Cosh(GetComplex(paramList[0]));
+				case "cos": return CosMethod(paramList[0]);
+				case "cosh": return CoshMethod(paramList[0]);
 				case "eval": return new NEExpression(GetString(paramList[0])).Evaluate();
 				case "filename": return Path.GetFileName(GetString(paramList[0]));
-				case "frompolar": return Complex.FromPolarCoordinates(GetDouble(paramList[0]), GetDouble(paramList[1]));
+				case "frompolar": return Complex.FromPolarCoordinates(GetFloat(paramList[0]), GetFloat(paramList[1]));
 				case "imaginary": return GetComplex(paramList[0]).Imaginary;
-				case "ln": return Complex.Log(GetComplex(paramList[0]));
-				case "log": return paramList.Count == 1 ? Complex.Log10(GetComplex(paramList[0])) : Complex.Log(GetComplex(paramList[0]), GetDouble(paramList[2]));
+				case "ln": return LnMethod(paramList[0]);
+				case "log": return paramList.Count == 1 ? LogMethod(paramList[0]) : LogMethod(paramList[0], paramList[2]);
 				case "magnitude": return GetComplex(paramList[0]).Magnitude;
-				case "max": return paramList.Select(val => SimplifyComplex(val)).Max();
-				case "min": return paramList.Select(val => SimplifyComplex(val)).Min();
+				case "max": return paramList.Select(val => Simplify(val)).Max();
+				case "min": return paramList.Select(val => Simplify(val)).Min();
 				case "phase": return GetComplex(paramList[0]).Phase;
 				case "real": return GetComplex(paramList[0]).Real;
-				case "reciprocal": return Complex.Reciprocal(GetComplex(paramList[0]));
-				case "root": return GetRoot(GetComplex(paramList[0]), GetComplex(paramList[1]));
-				case "sin": return Complex.Sin(GetComplex(paramList[0]));
-				case "sinh": return Complex.Sinh(GetComplex(paramList[0]));
-				case "sqrt": return GetRoot(GetComplex(paramList[0]), 2);
-				case "strformat": return String.Format(GetString(paramList[0]), paramList.Skip(1).Select(arg => SimplifyComplex(arg) ?? "").ToArray());
-				case "tan": return Complex.Tan(GetComplex(paramList[0]));
-				case "tanh": return Complex.Tanh(GetComplex(paramList[0]));
+				case "reciprocal": return ReciprocalMethod(paramList[0]);
+				case "root": return RootMethod(paramList[0], paramList[1]);
+				case "sin": return SinMethod(paramList[0]);
+				case "sinh": return SinhMethod(paramList[0]);
+				case "sqrt": return RootMethod(paramList[0], 2);
+				case "strformat": return String.Format(GetString(paramList[0]), paramList.Skip(1).Select(arg => Simplify(arg) ?? "").ToArray());
+				case "tan": return TanMethod(paramList[0]);
+				case "tanh": return TanhMethod(paramList[0]);
 				case "type": return paramList[0].GetType();
 				case "validre": return ValidRE(GetString(paramList[0]));
 				default: throw new ArgumentException(String.Format("Invalid method: {0}", method));
@@ -429,7 +644,12 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitTrue(ExpressionParser.TrueContext context) { return true; }
 		public override object VisitFalse(ExpressionParser.FalseContext context) { return false; }
 		public override object VisitNull(ExpressionParser.NullContext context) { return null; }
-		public override object VisitFloat(ExpressionParser.FloatContext context) { return double.Parse(context.val.Text); }
+		public override object VisitFloat(ExpressionParser.FloatContext context)
+		{
+			if (context.val.Text.Contains("."))
+				return Simplify(double.Parse(context.val.Text));
+			return Simplify(BigInteger.Parse(context.val.Text));
+		}
 		public override object VisitHex(ExpressionParser.HexContext context) { return long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber); }
 		public override object VisitVariable(ExpressionParser.VariableContext context) { return dict.ContainsKey(context.val.Text) ? dict[context.val.Text] : null; }
 	}
