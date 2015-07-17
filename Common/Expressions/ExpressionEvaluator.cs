@@ -129,7 +129,7 @@ namespace NeoEdit.Common.Expressions
 					result += complex.Imaginary < 0 ? "-" : "+";
 				var absImag = Math.Abs(complex.Imaginary);
 				if (absImag != 1)
-					result += absImag.ToString();
+					result += absImag.ToString() + "*";
 				result += "i";
 				return result;
 			}
@@ -333,7 +333,7 @@ namespace NeoEdit.Common.Expressions
 			var magnitude = val.Magnitude;
 			var nthRootOfMagnitude = Math.Pow(magnitude, 1.0 / power);
 			var options = Enumerable.Range(0, power).Select(k => RoundComplex(Complex.FromPolarCoordinates(nthRootOfMagnitude, phase / power + k * 2 * Math.PI / power))).ToList();
-			return options.OrderBy(complex => Math.Abs(complex.Imaginary)).FirstOrDefault();
+			return options.OrderBy(complex => Math.Abs(complex.Imaginary)).ThenByDescending(complex => complex.Real).ThenByDescending(complex => complex.Imaginary).FirstOrDefault();
 		}
 
 		public override object VisitMethod(ExpressionParser.MethodContext context)
@@ -365,7 +365,7 @@ namespace NeoEdit.Common.Expressions
 				case "root": return GetRoot(GetComplex(paramList[0]), GetComplex(paramList[1]));
 				case "sin": return Complex.Sin(GetComplex(paramList[0]));
 				case "sinh": return Complex.Sinh(GetComplex(paramList[0]));
-				case "sqrt": return Complex.Sqrt(GetComplex(paramList[0]));
+				case "sqrt": return GetRoot(GetComplex(paramList[0]), 2);
 				case "strformat": return String.Format(GetString(paramList[0]), paramList.Skip(1).Select(arg => SimplifyComplex(arg) ?? "").ToArray());
 				case "tan": return Complex.Tan(GetComplex(paramList[0]));
 				case "tanh": return Complex.Tanh(GetComplex(paramList[0]));
@@ -382,6 +382,7 @@ namespace NeoEdit.Common.Expressions
 			{
 				case "pi": return Math.PI;
 				case "e": return Math.E;
+				case "i": return Complex.ImaginaryOne;
 				default: throw new ArgumentException(String.Format("Invalid constant: {0}", constant));
 			}
 		}
@@ -410,15 +411,7 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitTrue(ExpressionParser.TrueContext context) { return true; }
 		public override object VisitFalse(ExpressionParser.FalseContext context) { return false; }
 		public override object VisitNull(ExpressionParser.NullContext context) { return null; }
-		public override object VisitFloat(ExpressionParser.FloatContext context)
-		{
-			var text = context.val.Text;
-			var imaginary = text.EndsWith("i", StringComparison.OrdinalIgnoreCase);
-			if (imaginary)
-				text = text.Substring(0, text.Length - 1);
-			var value = text.Length == 0 ? 1 : double.Parse(text);
-			return new Complex(imaginary ? 0 : value, imaginary ? value : 0);
-		}
+		public override object VisitFloat(ExpressionParser.FloatContext context) { return double.Parse(context.val.Text); }
 		public override object VisitHex(ExpressionParser.HexContext context) { return long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber); }
 		public override object VisitVariable(ExpressionParser.VariableContext context) { return dict.ContainsKey(context.val.Text) ? dict[context.val.Text] : null; }
 	}
