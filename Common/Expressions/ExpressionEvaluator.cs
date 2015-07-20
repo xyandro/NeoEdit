@@ -424,6 +424,70 @@ namespace NeoEdit.Common.Expressions
 			catch { return false; }
 		}
 
+		string WordsMethod(BigInteger num)
+		{
+			var negative = num < 0;
+			if (negative)
+				num = -num;
+			var ones = new List<string> { null, "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", null, "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
+			var tens = new List<string> { null, "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+			var magnitudes = new List<string> { null, "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sexdecillion", "septdecillion", "octodecillion", "novemdecillion", "vigintillion", "unvigintillion", "duovigintillion", "trevigintillion", "quattuorvigintillion", "quinvigintillion", "sexvigintillion", "septvigintillion", "octovigintillion", "novemvigintillion", "trigintillion", "untrigintillion", "duotrigintillion", "googol", "tretrigintillion", "quattuortrigintillion", "quintrigintillion", "sextrigintillion", "septtrigintillion", "octotrigintillion", "novemtrigintillion", "quadragintillion", "unquadragintillion", "duoquadragintillion", "trequadragintillion", "quattuorquadragintillion", "quinquadragintillion", "sexquadragintillion", "septquadragintillion", "octoquadragintillion", "novemquadragintillion", "quinquagintillion", "unquinquagintillion", "duoquinquagintillion", "trequinquagintillion", "quattuorquinquagintillion", "quinquinquagintillion", "sexquinquagintillion", "septquinquagintillion", "octoquinquagintillion", "novemquinquagintillion", "sexagintillion", "unsexagintillion", "duosexagintillion", "tresexagintillion", "quattuorsexagintillion", "quinsexagintillion", "sexsexagintillion", "septsexagintillion", "octosexagintillion", "novemsexagintillion", "septuagintillion", "unseptuagintillion", "duoseptuagintillion", "treseptuagintillion", "quattuorseptuagintillion", "quinseptuagintillion", "sexseptuagintillion", "septseptuagintillion", "octoseptuagintillion", "novemseptuagintillion", "octogintillion", "unoctogintillion", "duooctogintillion", "treoctogintillion", "quattuoroctogintillion", "quinoctogintillion", "sexoctogintillion", "septoctogintillion", "octooctogintillion", "novemoctogintillion", "nonagintillion", "unnonagintillion", "duononagintillion", "trenonagintillion", "quattuornonagintillion", "quinnonagintillion", "sexnonagintillion", "septnonagintillion", "octononagintillion", "novemnonagintillion", "centillion" };
+			var magnitude = new List<string>();
+			while (num > 0)
+			{
+				var strs = new List<string>();
+
+				var current = (int)(num % 1000);
+				num /= 1000;
+
+				while (current != 0)
+				{
+					var hundred = current / 100;
+					if (hundred != 0)
+					{
+						strs.Add(ones[hundred]);
+						strs.Add("hundred");
+						current %= 100;
+					}
+
+					if ((current < ones.Count) && (ones[current] != null))
+					{
+						strs.Add(ones[current]);
+						current = 0;
+					}
+
+					var ten = current / 10;
+					if (ten != 0)
+					{
+						strs.Add(tens[ten]);
+						current %= 10;
+					}
+				}
+
+				magnitude.Add(String.Join(" ", strs));
+			}
+
+			var result = new List<string>();
+			if (negative)
+				result.Add("negative");
+
+			for (var ctr = magnitude.Count - 1; ctr >= 0; --ctr)
+			{
+				if (String.IsNullOrEmpty(magnitude[ctr]))
+					continue;
+				result.Add(magnitude[ctr]);
+				if (magnitudes[ctr] != null)
+					result.Add(magnitudes[ctr]);
+			}
+
+			if (result.Count == 0)
+				result.Add("zero");
+
+			var resultStr = String.Join(" ", result);
+			resultStr = Char.ToUpperInvariant(resultStr[0]) + resultStr.Substring(1);
+			return resultStr;
+		}
+
 		public override object VisitExpr(ExpressionParser.ExprContext context)
 		{
 			if ((context.DEBUG() != null) && (Debugger.IsAttached))
@@ -603,6 +667,7 @@ namespace NeoEdit.Common.Expressions
 				case "tanh": return TanhMethod(paramList[0]);
 				case "type": return paramList[0].GetType();
 				case "validre": return ValidRE(GetString(paramList[0]));
+				case "words": return WordsMethod(GetInteger(paramList[0]));
 				default: throw new ArgumentException(String.Format("Invalid method: {0}", method));
 			}
 		}
