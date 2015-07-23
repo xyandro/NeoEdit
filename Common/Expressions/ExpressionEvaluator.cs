@@ -75,6 +75,13 @@ namespace NeoEdit.Common.Expressions
 					value = new BigInteger(d);
 			}
 
+			if (value is BigInteger)
+			{
+				var bigint = (BigInteger)value;
+				if ((bigint >= long.MinValue) && (bigint <= long.MaxValue))
+					value = (long)bigint;
+			}
+
 			return value;
 		}
 
