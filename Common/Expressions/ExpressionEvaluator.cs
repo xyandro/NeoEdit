@@ -431,7 +431,7 @@ namespace NeoEdit.Common.Expressions
 			catch { return false; }
 		}
 
-		string WordsMethod(BigInteger num)
+		string ToWordsMethod(BigInteger num)
 		{
 			var negative = num < 0;
 			if (negative)
@@ -493,6 +493,79 @@ namespace NeoEdit.Common.Expressions
 			var resultStr = String.Join(" ", result);
 			resultStr = Char.ToUpperInvariant(resultStr[0]) + resultStr.Substring(1);
 			return resultStr;
+		}
+
+		object FromWordsMethod(string words)
+		{
+			var ones = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", null, "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
+			var tens = new List<string> { null, "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+			var magnitudes = new List<string> { null, "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sexdecillion", "septdecillion", "octodecillion", "novemdecillion", "vigintillion", "unvigintillion", "duovigintillion", "trevigintillion", "quattuorvigintillion", "quinvigintillion", "sexvigintillion", "septvigintillion", "octovigintillion", "novemvigintillion", "trigintillion", "untrigintillion", "duotrigintillion", "googol", "tretrigintillion", "quattuortrigintillion", "quintrigintillion", "sextrigintillion", "septtrigintillion", "octotrigintillion", "novemtrigintillion", "quadragintillion", "unquadragintillion", "duoquadragintillion", "trequadragintillion", "quattuorquadragintillion", "quinquadragintillion", "sexquadragintillion", "septquadragintillion", "octoquadragintillion", "novemquadragintillion", "quinquagintillion", "unquinquagintillion", "duoquinquagintillion", "trequinquagintillion", "quattuorquinquagintillion", "quinquinquagintillion", "sexquinquagintillion", "septquinquagintillion", "octoquinquagintillion", "novemquinquagintillion", "sexagintillion", "unsexagintillion", "duosexagintillion", "tresexagintillion", "quattuorsexagintillion", "quinsexagintillion", "sexsexagintillion", "septsexagintillion", "octosexagintillion", "novemsexagintillion", "septuagintillion", "unseptuagintillion", "duoseptuagintillion", "treseptuagintillion", "quattuorseptuagintillion", "quinseptuagintillion", "sexseptuagintillion", "septseptuagintillion", "octoseptuagintillion", "novemseptuagintillion", "octogintillion", "unoctogintillion", "duooctogintillion", "treoctogintillion", "quattuoroctogintillion", "quinoctogintillion", "sexoctogintillion", "septoctogintillion", "octooctogintillion", "novemoctogintillion", "nonagintillion", "unnonagintillion", "duononagintillion", "trenonagintillion", "quattuornonagintillion", "quinnonagintillion", "sexnonagintillion", "septnonagintillion", "octononagintillion", "novemnonagintillion", "centillion" };
+
+			words = Regex.Replace(Regex.Replace(words.ToLowerInvariant(), "[^0-9.a-z]", " "), "\\s+", " ").Trim();
+			var tokens = words.Split(' ').Where(str => !String.IsNullOrWhiteSpace(str)).ToList();
+
+			double current = 0;
+			object result = BigInteger.Zero;
+			bool negative = false;
+			using (var itr = tokens.GetEnumerator())
+			{
+				while (true)
+				{
+					var token = itr.MoveNext() ? itr.Current : null;
+
+					if (token == "negative")
+					{
+						negative = !negative;
+						continue;
+					}
+
+					double tokenValue;
+					if ((token != null) && (Double.TryParse(token, out tokenValue)))
+					{
+						current += tokenValue;
+						continue;
+					}
+
+					var onesIndex = token == null ? -1 : ones.IndexOf(token);
+					if (onesIndex != -1)
+					{
+						current += onesIndex;
+						continue;
+					}
+
+					var tensIndex = token == null ? -1 : tens.IndexOf(token);
+					if (tensIndex != -1)
+					{
+						current += tensIndex * 10;
+						continue;
+					}
+
+					if (token == "hundred")
+					{
+						current *= 100;
+						continue;
+					}
+
+					var magnitudesIndex = token == null ? 0 : magnitudes.IndexOf(token);
+					if ((token == null) || (magnitudesIndex != -1))
+					{
+						object value = Simplify(current);
+						for (var ctr = 0; ctr < magnitudesIndex; ++ctr)
+							value = Simplify(MultOp(value, 1000));
+						result = Simplify(AddOp(result, value));
+						current = 0;
+						if (token == null)
+							break;
+						continue;
+					}
+
+					throw new Exception("Invalid input");
+				}
+			}
+
+			if (negative)
+				result = NegateOp(result);
+			return result;
 		}
 
 		public override object VisitExpr(ExpressionParser.ExprContext context)
@@ -656,6 +729,7 @@ namespace NeoEdit.Common.Expressions
 				case "eval": return new NEExpression(GetString(paramList[0])).Evaluate();
 				case "filename": return Path.GetFileName(GetString(paramList[0]));
 				case "frompolar": return Complex.FromPolarCoordinates(GetFloat(paramList[0]), GetFloat(paramList[1]));
+				case "fromwords": return FromWordsMethod(GetString(paramList[0]));
 				case "imaginary": return GetComplex(paramList[0]).Imaginary;
 				case "ln": return LnMethod(paramList[0]);
 				case "log": return paramList.Count == 1 ? LogMethod(paramList[0]) : LogMethod(paramList[0], paramList[2]);
@@ -672,9 +746,9 @@ namespace NeoEdit.Common.Expressions
 				case "strformat": return String.Format(GetString(paramList[0]), paramList.Skip(1).Select(arg => Simplify(arg) ?? "").ToArray());
 				case "tan": return TanMethod(paramList[0]);
 				case "tanh": return TanhMethod(paramList[0]);
+				case "towords": return ToWordsMethod(GetInteger(paramList[0]));
 				case "type": return paramList[0].GetType();
 				case "validre": return ValidRE(GetString(paramList[0]));
-				case "words": return WordsMethod(GetInteger(paramList[0]));
 				default: throw new ArgumentException(String.Format("Invalid method: {0}", method));
 			}
 		}

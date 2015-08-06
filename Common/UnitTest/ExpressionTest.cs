@@ -118,9 +118,15 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(new NEExpression("5!").Evaluate().ToString(), "120");
 
-			Assert.AreEqual(new NEExpression("words(411000045312)").Evaluate().ToString(), "Four hundred eleven billion forty five thousand three hundred twelve");
-			Assert.AreEqual(new NEExpression("words(0)").Evaluate().ToString(), "Zero");
-			Assert.AreEqual(new NEExpression("words(-5)").Evaluate().ToString(), "Negative five");
+			Assert.AreEqual(new NEExpression("towords(411000045312)").Evaluate().ToString(), "Four hundred eleven billion forty five thousand three hundred twelve");
+			Assert.AreEqual(new NEExpression("towords(0)").Evaluate().ToString(), "Zero");
+			Assert.AreEqual(new NEExpression("towords(-5)").Evaluate().ToString(), "Negative five");
+
+			Assert.AreEqual(new NEExpression("fromwords(\" five -hundred-fifty-four		 million, two hundred twelve thousand, nineteen  \")").Evaluate().ToString(), "554212019");
+			Assert.AreEqual(new NEExpression("fromwords(\"5.11 million\")").Evaluate().ToString(), "5110000");
+			Assert.AreEqual(new NEExpression("fromwords(\"Four hundred eleven billion forty five thousand three hundred twelve\")").Evaluate().ToString(), "411000045312");
+			Assert.AreEqual(new NEExpression("fromwords(\"Zero\")").Evaluate().ToString(), "0");
+			Assert.AreEqual(new NEExpression("fromwords(\"Negative five\")").Evaluate().ToString(), "-5");
 
 			var dict = new Dictionary<string, object>
 			{
