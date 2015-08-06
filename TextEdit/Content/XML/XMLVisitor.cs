@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
+using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.XML.Parser;
 
 namespace NeoEdit.TextEdit.Content.XML

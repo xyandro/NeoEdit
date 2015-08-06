@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.Balanced;
 using NeoEdit.TextEdit.Content.CSharp;
 using NeoEdit.TextEdit.Content.HTML;

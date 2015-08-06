@@ -65,9 +65,6 @@
     <Compile Include="Content\JSON\Parser\JSONVisitor.cs" />
     <None Include="Content\JSON\Source\JSON.g4" />
     <Compile Include="Content\Parser.cs" />
-    <Compile Include="Content\ParserHelper.cs" />
-    <Compile Include="Content\ParserNode.cs" />
-    <Compile Include="Content\ParsingExtensions.cs" />
     <Compile Include="Content\TCSV\CSVVisitor.cs" />
     <Compile Include="Content\TCSV\Parser\CSVBaseVisitor.cs" />
     <Compile Include="Content\TCSV\Parser\CSVLexer.cs" />

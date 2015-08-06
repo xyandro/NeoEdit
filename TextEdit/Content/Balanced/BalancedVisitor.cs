@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
+using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.Balanced.Parser;
 
 namespace NeoEdit.TextEdit.Content.Balanced

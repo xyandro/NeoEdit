@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-namespace NeoEdit.TextEdit.Content
+namespace NeoEdit.Common.Parsing
 {
 	public class ParserNode
 	{
@@ -21,7 +21,7 @@ namespace NeoEdit.TextEdit.Content
 		public ParserNode Parent
 		{
 			get { return parent; }
-			internal set
+			set
 			{
 				if (parent != null)
 				{
@@ -45,12 +45,12 @@ namespace NeoEdit.TextEdit.Content
 		public readonly bool IsAttr;
 
 		int? start, end;
-		public int Start { get { return start.Value; } internal set { start = value; } }
-		public int End { get { return end.Value; } internal set { end = value; } }
+		public int Start { get { return start.Value; } set { start = value; } }
+		public int End { get { return end.Value; } set { end = value; } }
 		public int Length { get { return End - Start; } }
 		public bool HasLocation { get { return (start.HasValue) && (end.HasValue); } }
 
-		internal ParserRuleContext LocationParserRule
+		public ParserRuleContext LocationParserRule
 		{
 			set
 			{
@@ -61,7 +61,7 @@ namespace NeoEdit.TextEdit.Content
 			}
 		}
 
-		internal ITerminalNode LocationTerminalNode
+		public ITerminalNode LocationTerminalNode
 		{
 			set
 			{
@@ -76,7 +76,7 @@ namespace NeoEdit.TextEdit.Content
 		public string Type
 		{
 			get { return IsAttr ? type : GetAttrText(TYPE); }
-			internal set
+			set
 			{
 				if (IsAttr)
 					type = value;
@@ -84,8 +84,8 @@ namespace NeoEdit.TextEdit.Content
 					SetAttr(TYPE, value);
 			}
 		}
-		public string Text { get; internal set; }
-		public int Depth { get; internal set; }
+		public string Text { get; set; }
+		public int Depth { get; set; }
 
 		readonly List<ParserNode> children = new List<ParserNode>();
 
@@ -208,14 +208,14 @@ namespace NeoEdit.TextEdit.Content
 			SetAttrNode(type, value, start, end);
 		}
 
-		internal void SetAttr(string type, ParserRuleContext ctx)
+		public void SetAttr(string type, ParserRuleContext ctx)
 		{
 			int start, end;
 			ctx.GetBounds(out start, out end);
 			SetAttrNode(type, null, start, end);
 		}
 
-		internal void SetAttr(string type, string input, ParserRuleContext ctx)
+		public void SetAttr(string type, string input, ParserRuleContext ctx)
 		{
 			var text = ctx.GetText(input);
 			int start, end;
@@ -243,28 +243,28 @@ namespace NeoEdit.TextEdit.Content
 			AddAttrNode(type, value, start, end);
 		}
 
-		internal void AddAttr(string type, ParserRuleContext ctx)
+		public void AddAttr(string type, ParserRuleContext ctx)
 		{
 			int start, end;
 			ctx.GetBounds(out start, out end);
 			AddAttrNode(type, null, start, end);
 		}
 
-		internal void AddAttr(string type, ITerminalNode token)
+		public void AddAttr(string type, ITerminalNode token)
 		{
 			int start, end;
 			token.GetBounds(out start, out end);
 			AddAttrNode(type, null, start, end);
 		}
 
-		internal void AddAttr(string type, IToken token)
+		public void AddAttr(string type, IToken token)
 		{
 			int start, end;
 			token.GetBounds(out start, out end);
 			AddAttrNode(type, null, start, end);
 		}
 
-		internal void AddAttr(string type, string input, ParserRuleContext ctx)
+		public void AddAttr(string type, string input, ParserRuleContext ctx)
 		{
 			var text = ctx.GetText(input);
 			int start, end;
@@ -272,12 +272,12 @@ namespace NeoEdit.TextEdit.Content
 			AddAttrNode(type, text, start, end);
 		}
 
-		internal void AddAttr(string type, string input, ITerminalNode token)
+		public void AddAttr(string type, string input, ITerminalNode token)
 		{
 			AddAttr(type, input, token.Symbol);
 		}
 
-		internal void AddAttr(string type, string input, IToken token)
+		public void AddAttr(string type, string input, IToken token)
 		{
 			var text = token.Text;
 			int start, end;
@@ -319,7 +319,7 @@ namespace NeoEdit.TextEdit.Content
 			return String.Join("", Print().Select(str => String.Format("{0}{1}", str, Environment.NewLine)));
 		}
 
-		internal void Save(string outputFile)
+		public void Save(string outputFile)
 		{
 			File.WriteAllText(outputFile, ToString());
 		}

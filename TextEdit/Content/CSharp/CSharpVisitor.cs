@@ -4,6 +4,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.CSharp.Parser;
 
 namespace NeoEdit.TextEdit.Content.CSharp

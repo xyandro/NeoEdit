@@ -10,25 +10,11 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 
-namespace NeoEdit.TextEdit.Content
+namespace NeoEdit.Common.Parsing
 {
-
 	static class ParserHelper
 	{
-		public class CaseInsensitiveInputStream : AntlrInputStream
-		{
-			public CaseInsensitiveInputStream(string input) : base(input) { }
-
-			public override int La(int i)
-			{
-				var value = base.La(i);
-				if ((value >= Char.MinValue) && (value <= Char.MaxValue))
-					value = Char.ToLower((char)value);
-				return value;
-			}
-		}
-
-		public class ErrorListener<T> : IAntlrErrorListener<T>
+		class ErrorListener<T> : IAntlrErrorListener<T>
 		{
 			bool found = false;
 			public void SyntaxError(IRecognizer recognizer, T offendingSymbol, int line, int pos, string msg, RecognitionException e)

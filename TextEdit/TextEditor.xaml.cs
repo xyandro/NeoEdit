@@ -19,6 +19,7 @@ using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;

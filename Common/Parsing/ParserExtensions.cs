@@ -3,9 +3,9 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-namespace NeoEdit.TextEdit.Content
+namespace NeoEdit.Common.Parsing
 {
-	static class ParsingExtensions
+	public static class ParserExtensions
 	{
 		public static void GetBounds(this ParserRuleContext ctx, out int start, out int end)
 		{

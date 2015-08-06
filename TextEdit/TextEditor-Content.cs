@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common.Parsing;
 using NeoEdit.GUI.Controls;
-using NeoEdit.TextEdit.Dialogs;
 using NeoEdit.TextEdit.Content;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
