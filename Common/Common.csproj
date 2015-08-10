@@ -13,6 +13,9 @@
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.Common.Expressions.Parser&quot; -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\Expression.g4&quot;" />
   </Target>
   <ItemGroup>
+    <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\NEExpression.cs" />
     <Compile Include="Expressions\Parser\ExpressionBaseVisitor.cs" />
@@ -30,7 +33,6 @@
     <Compile Include="Parsing\ParserHelper.cs" />
     <Compile Include="Parsing\ParserNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Properties\AssemblyInfo.Template.cs" />
     <Compile Include="Searcher.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

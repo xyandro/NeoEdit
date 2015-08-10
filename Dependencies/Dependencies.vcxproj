@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\$(SolutionName).vcxproj.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}</ProjectGuid>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <NMakeBuildCommandLine>SubWCRev "$(SolutionDir)." GlobalAssemblyInfo.Template.cs GlobalAssemblyInfo.cs -q
+SubWCRev "$(SolutionDir)." GlobalVersionInfo.Template.h GlobalVersionInfo.h -q</NMakeBuildCommandLine>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeCleanCommandLine>del GlobalAssemblyInfo.cs GlobalVersionInfo.h</NMakeCleanCommandLine>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="GlobalAssemblyInfo.cs" />
+    <None Include="GlobalAssemblyInfo.Template.cs" />
+    <None Include="GlobalVersionInfo.h" />
+    <None Include="GlobalVersionInfo.Template.h" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\$(SolutionName).vcxproj2.props" />
+</Project>

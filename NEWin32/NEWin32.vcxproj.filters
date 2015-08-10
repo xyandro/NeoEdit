@@ -15,9 +15,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="SVNInfo.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -32,10 +29,5 @@
     <ResourceCompile Include="Resource.rc">
       <Filter>Resource</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="SVNInfo.Template.h">
-      <Filter>Resource</Filter>
-    </CustomBuild>
   </ItemGroup>
 </Project>

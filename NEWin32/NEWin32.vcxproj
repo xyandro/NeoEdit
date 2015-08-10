@@ -14,12 +14,6 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SVNInfo.h" />
-    <CustomBuild Include="SVNInfo.Template.h">
-      <Command>SubWCRev "$(ProjectDir)." "$(ProjectDir)SVNInfo.Template.h" "$(ProjectDir)SVNInfo.h" -q</Command>
-      <Message>Getting SVN info...</Message>
-      <Outputs>$(ProjectDir)SVNInfo.h</Outputs>
-    </CustomBuild>
     <ClCompile Include="Win32.cpp" />
   </ItemGroup>
   <ItemGroup Condition="'$(BuildNEWin32)' != ''">

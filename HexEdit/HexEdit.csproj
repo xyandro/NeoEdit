@@ -9,6 +9,9 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup Condition="'$(BuildHexEdit)' != ''">
+    <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Commands.cs" />
     <Compile Include="Converters\DisplayValueConverter.cs" />
     <Compile Include="Data\BinaryData.cs" />
@@ -113,7 +116,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="Properties\AssemblyInfo.Template.cs" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
