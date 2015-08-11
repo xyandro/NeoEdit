@@ -11,8 +11,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <NMakeBuildCommandLine>GitInfo.bat GlobalAssemblyInfo.Template.cs GlobalAssemblyInfo.cs &amp;&amp; GitInfo.bat GlobalVersionInfo.Template.h GlobalVersionInfo.h</NMakeBuildCommandLine>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeCleanCommandLine>del GlobalAssemblyInfo.cs GlobalVersionInfo.h</NMakeCleanCommandLine>
   </PropertyGroup>
   <ItemGroup>
