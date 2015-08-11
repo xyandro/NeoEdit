@@ -1,0 +1,31 @@
+# Global
+*.aps
+*.opensdf
+*.sdf
+*.suo
+*.tmp_proj
+*.user
+*.log
+TestResults
+bin
+ipch
+obj
+
+# Specific
+/Common/Expressions/Parser
+/Dependencies/GlobalAssemblyInfo.cs
+/Dependencies/GlobalVersionInfo.h
+/Disk/Magic/file.exe.gz
+/Disk/Magic/magic.mgc.gz
+/Disk/Magic/magic1.dll.gz
+/Disk/Magic/regex2.dll.gz
+/Disk/Magic/zlib1.dll.gz
+/Locations.txt
+/NeoEdit/CommandLineParams/Parser
+/TextEdit/Content/Balanced/Parser
+/TextEdit/Content/CSharp/Parser
+/TextEdit/Content/HTML/Parser
+/TextEdit/Content/JSON/Parser
+/TextEdit/Content/TCSV/Parser
+/TextEdit/Content/XML/Parser
+/TextEdit/Misc/Words.txt.gz

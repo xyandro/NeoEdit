@@ -8,28 +8,28 @@ Function Fail ($error)
 	exit
 }
 
-Function SvnCleanAndUpdate ()
+Function GitCleanAndUpdate ()
 {
 	$fail = 0;
-	$status = @(svn status --no-ignore)
+	$status = @(git status -s --ignored)
 	if ($status)
 	{
 		ForEach ($line in $status)
 		{
-			if ($line -NotMatch '^i')
+			if ($line -NotMatch '^!!')
 			{
-				#Write-Host("$line")
+				Write-Host("Invalid: $line")
 				$fail = 1;
 			}
 		}
 
 		if (($fail) -and (!$debug)) { Fail("Invalid files present") }
 
-		$status -Match '^i' -Replace '^i\s+' -NotMatch '^Locations.txt$' | rm -recurse -force
+		$status -Match '^!!' -Replace '^!!\s+' -NotMatch '^Locations.txt$' | rm -recurse -force
 		if (!$?) { Fail("Failed to delete files.") }
 	}
-	svn up --non-interactive
-	svn cleanup --non-interactive
+	git checkout master
+	git pull
 }
 
 Function Build ()
@@ -62,7 +62,7 @@ Function Build ()
 	}
 }
 
-SvnCleanAndUpdate
+GitCleanAndUpdate
 Build
 
 Write-Host("Success!")
