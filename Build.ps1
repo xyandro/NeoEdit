@@ -34,7 +34,7 @@ Function GitCleanAndUpdate ()
 
 Function Build ()
 {
-	$devenv = "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.com"
+	$devenv = "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.com"
 	$solution = "NeoEdit.sln"
 	$configuration = "Release"
 	$platform = "x64"

@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="BuildExpression;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="BuildExpression;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{1C928016-0E00-4125-80A5-458B82F1EC0D}</ProjectGuid>
-    <OutputType>Library</OutputType>
     <RootNamespace>NeoEdit.Common</RootNamespace>
     <AssemblyName>NeoEdit.Common</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -38,10 +37,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Searcher.tt</DependentUpon>
     </Compile>
-    <None Include="Searcher.tt">
+    <Content Include="Searcher.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Searcher.cs</LastGenOutput>
-    </None>
+    </Content>
     <Compile Include="TextData.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />

@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{95B303BD-7FEC-4523-92E6-C8E8DC0D32B8}</ProjectGuid>
-    <OutputType>Library</OutputType>
     <RootNamespace>NeoEdit.DBViewer</RootNamespace>
     <AssemblyName>NeoEdit.DBViewer</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -25,10 +24,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="'$(BuildDBViewer)' != ''">
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
