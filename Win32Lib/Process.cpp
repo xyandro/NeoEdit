@@ -3,7 +3,7 @@
 
 #include <Windows.h>
 #include <TlHelp32.h>
-#include <hash_set>
+#include <unordered_set>
 
 #include "Win32Exception.h"
 
@@ -11,9 +11,9 @@ using namespace std;
 
 namespace
 {
-	shared_ptr<const hash_set<int32_t>> GetThreadIDs(int32_t pid)
+	shared_ptr<const unordered_set<int32_t>> GetThreadIDs(int32_t pid)
 	{
-		shared_ptr<hash_set<int32_t>> threadSet(new hash_set<int32_t>);
+		shared_ptr<unordered_set<int32_t>> threadSet(new unordered_set<int32_t>);
 
 		HANDLE toolHelp = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
 		if (toolHelp == INVALID_HANDLE_VALUE)
@@ -46,7 +46,7 @@ namespace NeoEdit
 		{
 			void Process::SuspendProcess(int32_t pid)
 			{
-				hash_set<int32_t> suspended;
+				unordered_set<int32_t> suspended;
 
 				// Keep going until we get them all; more might pop up as we're working
 				while (true)

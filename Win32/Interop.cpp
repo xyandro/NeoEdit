@@ -69,7 +69,7 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		void Interop::ReadProcessMemory(Handle ^handle, int64_t index, array<uint8_t> ^bytes, int bytesIndex, int numBytes)
+		void Interop::ReadProcessMemory(Handle ^handle, int64_t index, cli::array<uint8_t> ^bytes, int bytesIndex, int numBytes)
 		{
 			try
 			{
@@ -79,7 +79,7 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		void Interop::WriteProcessMemory(Handle ^handle, int64_t index, array<uint8_t> ^bytes, int numBytes)
+		void Interop::WriteProcessMemory(Handle ^handle, int64_t index, cli::array<uint8_t> ^bytes, int numBytes)
 		{
 			try
 			{
@@ -153,7 +153,7 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		void Interop::ReadSharedMemory(int pid, IntPtr handle, int64_t index, array<uint8_t> ^bytes, int bytesIndex, int numBytes)
+		void Interop::ReadSharedMemory(int pid, IntPtr handle, int64_t index, cli::array<uint8_t> ^bytes, int bytesIndex, int numBytes)
 		{
 			try
 			{
@@ -163,7 +163,7 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		void Interop::WriteSharedMemory(int pid, IntPtr handle, int64_t index, array<uint8_t> ^bytes)
+		void Interop::WriteSharedMemory(int pid, IntPtr handle, int64_t index, cli::array<uint8_t> ^bytes)
 		{
 			try
 			{
@@ -195,7 +195,7 @@ namespace NeoEdit
 #pragma warning( disable : 4305)
 #pragma warning( disable : 4309)
 
-		template <typename type> System::Collections::Generic::List<int64_t> ^GetLinesTemplate(Interop::GetLinesEncoding encoding, array<uint8_t>^ data, int %lineLength, int %maxLine)
+		template <typename type> System::Collections::Generic::List<int64_t> ^GetLinesTemplate(Interop::GetLinesEncoding encoding, cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
 		{
 			bool bigEndian = (encoding == Interop::GetLinesEncoding::UTF16BE) || (encoding == Interop::GetLinesEncoding::UTF32BE);
 			type cr = !bigEndian ? 0x0d : sizeof(type) == 2 ? 0x0d00 : 0x0d000000;
@@ -241,7 +241,7 @@ namespace NeoEdit
 		}
 #pragma warning( pop ) 
 
-		System::Collections::Generic::List<int64_t> ^Interop::GetLines(GetLinesEncoding encoding, array<uint8_t>^ data, int %lineLength, int %maxLine)
+		System::Collections::Generic::List<int64_t> ^Interop::GetLines(GetLinesEncoding encoding, cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
 		{
 			try
 			{
@@ -260,7 +260,7 @@ namespace NeoEdit
 			return nullptr;
 		}
 
-		void Interop::ConvertEncoding(array<uint8_t>^ inputArray, int inputSize, GetLinesEncoding inputEncoding, array<uint8_t>^ outputArray, GetLinesEncoding outputEncoding, [Out]int %inputUsed, [Out]int %outputUsed)
+		void Interop::ConvertEncoding(cli::array<uint8_t>^ inputArray, int inputSize, GetLinesEncoding inputEncoding, cli::array<uint8_t>^ outputArray, GetLinesEncoding outputEncoding, [Out]int %inputUsed, [Out]int %outputUsed)
 		{
 			inputUsed = outputUsed = 0;
 			if (inputSize == 0)
