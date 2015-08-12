@@ -10,14 +10,4 @@ $count = & git rev-list HEAD --count
 $input = $input -replace '%YEAR%', $year
 $input = $input -replace '%NUMREVS%', $count
 
-$output = ""
-if (Test-Path $outputfile)
-{
-	$output = [System.IO.File]::ReadAllText($outputfile)
-}
-
-if (!$input.Equals($output))
-{
-	[System.IO.File]::WriteAllText($outputfile, $input, $encoding)
-	Write-Host("GitInfo: $outputfile updated.")
-}
+[System.IO.File]::WriteAllText($outputfile, $input, $encoding)

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="BuildGlobalAssemblyInfo;BuildGlobalVersionInfo;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <PropertyGroup>
+    <ProjectGuid>{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}</ProjectGuid>
+    <RootNamespace>NeoEdit.Dependencies</RootNamespace>
+    <AssemblyName>NeoEdit.Dependencies</AssemblyName>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <OutputPath>bin\$(Configuration).$(Platform)\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="GitInfo.bat" />
+    <None Include="GitInfo.ps1" />
+    <None Include="GlobalAssemblyInfo.cs" />
+    <None Include="GlobalAssemblyInfo.Template.cs" />
+    <None Include="GlobalVersionInfo.h" />
+    <None Include="GlobalVersionInfo.Template.h" />
+  </ItemGroup>
+  <Target Name="BuildGlobalAssemblyInfo" Inputs="GlobalAssemblyInfo.Template.cs" Outputs="GlobalAssemblyInfo.cs">
+    <Message Text="Building GlobalAssemblyInfo" Importance="High" />
+    <Exec Command="GitInfo.bat GlobalAssemblyInfo.Template.cs GlobalAssemblyInfo.cs" />
+  </Target>
+  <Target Name="BuildGlobalVersionInfo" Inputs="GlobalVersionInfo.Template.h" Outputs="GlobalVersionInfo.h">
+    <Message Text="Building GlobalVersionInfo" Importance="High" />
+    <Exec Command="GitInfo.bat GlobalVersionInfo.Template.h GlobalVersionInfo.h" />
+  </Target>
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+</Project>
