@@ -67,6 +67,11 @@ namespace NeoEdit.Common.Expressions
 
 		public object Evaluate(Dictionary<string, object> dict, params object[] values)
 		{
+			return InternalEvaluate(dict, values).GetResult();
+		}
+
+		internal ExpressionResult InternalEvaluate(Dictionary<string, object> dict, params object[] values)
+		{
 			return new ExpressionEvaluator(expression, dict, values).Visit(tree);
 		}
 
