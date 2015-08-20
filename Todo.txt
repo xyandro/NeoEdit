@@ -22,7 +22,6 @@ Override readonly, access denied (UAC required?)
 Go back to last selections
 Refactor menu (more subtrees, less accel reuse)
 Resolve hostnames
-Add units to expressions
 Unit conversion
 Expressions can do date/time math (using units)
 Combinations/permutations: model regex and give all possibilities [a-c][de]{2} = add, ade, aed, aee, bdd, bde, bed, bee, cdd, cde, ced, cee

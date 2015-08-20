@@ -15,8 +15,9 @@ e
 			method=METHOD2 LPAREN e COMMA e RPAREN | 
 			method=METHODVAR LPAREN (e (COMMA e)*)? RPAREN
 		) # Method
+	| LPAREN val=e RPAREN # Parens
 	| val1=e op=DOT val2=e # Dot
-	| op=(BITWISENOT | ADDOP | BANG) val=value # Unary
+	| op=(BITWISENOT | ADDOP | BANG) val=e # Unary
 	| val=value op=BANG # UnaryEnd
 	| val1=e op=EXPOP val2=e # Exp
 	| val1=e op=MULTOP val2=e # Mult
@@ -36,17 +37,26 @@ e
 	;
 
 value
-	: LPAREN val=e RPAREN # Expression
-	| val=PARAM # Param
+	: val=PARAM # Param
 	| val=STRING # String
 	| val=CHAR # Char
 	| TRUE # True
 	| FALSE # False
 	| NULL # Null
-	| val=FLOAT # Float
-	| val=HEX # Hex
+	| val=INTEGER unitsVal=units? # Integer
+	| val=FLOAT unitsVal=units? # Float
+	| val=HEX unitsVal=units? # Hex
 	| val=VARIABLE # Variable
 	;
+
+units
+	: base1=units op=EXPOP power=INTEGER # UnitExp
+	| val1=units op=MULTOP val2=units # UnitMult
+	| LPAREN units RPAREN # UnitParen
+	| unit # UnitSimple
+	;
+
+unit : val=(CONSTANT | FALSE | METHOD1 | METHOD1VAR | METHOD2 | METHODVAR | NULL | TRUE | VARIABLE) ;
 
 fragment A: [Aa] ;
 fragment B: [Bb] ;
@@ -107,6 +117,7 @@ CHAR: '\'' . '\'' ;
 TRUE: T R U E ;
 FALSE: F A L S E ;
 NULL: N U L L ;
+INTEGER: [0-9]+ ;
 FLOAT: [0-9]* '.'? [0-9]+ ([eE][-+]?[0-9]+)? ;
 HEX: '0x' [0-9a-fA-F]+ ;
 VARIABLE: [a-zA-Z][a-zA-Z0-9_]* ;

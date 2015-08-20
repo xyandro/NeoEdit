@@ -128,6 +128,8 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new NEExpression("fromwords(\"Zero\")").Evaluate().ToString(), "0");
 			Assert.AreEqual(new NEExpression("fromwords(\"Negative five\")").Evaluate().ToString(), "-5");
 
+			Assert.AreEqual(new NEExpression("5.5 m/(s^2)/s*s *  2 s").Evaluate().ToString(), "11 m/s");
+
 			var dict = new Dictionary<string, object>
 			{
 				{ "x", 0xdeadbeef },
