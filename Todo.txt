@@ -30,6 +30,7 @@ Change tab order when doc closed (match visual studio or something)
 TSV: Fix embedded spaces (1\t2\t3\r\n1\ta"c\t3\r\n1\t2\t3\r\n)
 Aggregate by table
 Time zones
+Copy between instances (separate processes)
 
 View:
 Update as new lines are added

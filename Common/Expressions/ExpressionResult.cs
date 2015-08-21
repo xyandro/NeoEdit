@@ -223,16 +223,20 @@ namespace NeoEdit.Common.Expressions
 			if (exponentVal.units.Any())
 				throw new Exception("Exponent cannot have units.");
 
-			if ((baseVal.IsInteger) && (exponentVal.IsInteger))
+			if ((baseVal.IsFloat) && (exponentVal.IsInteger))
 			{
 				var exponent = (int)exponentVal.GetInteger;
-				var value = BigInteger.Pow(baseVal.GetInteger, exponent);
+				object value;
+				if ((exponent >= 0) && (baseVal.IsInteger))
+					value = BigInteger.Pow(baseVal.GetInteger, exponent);
+				else
+					value = Math.Pow(baseVal.GetFloat, exponent);
 				var units = baseVal.units.ToDictionary(pair => pair.Key, pair => pair.Value * exponent);
 				return new ExpressionResult(value, units);
 			}
 
 			if (baseVal.units.Any())
-				throw new Exception("Base can only have units in integer exponentiation.");
+				throw new Exception("Invalid base units.");
 
 			if ((baseVal.IsFloat) && (exponentVal.IsFloat))
 			{
