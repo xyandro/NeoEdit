@@ -12,14 +12,14 @@ namespace NeoEdit.Common.Expressions
 	public class ExpressionResult : IComparable
 	{
 		object value;
-		Dictionary<string, int> units;
+		ExpressionUnits units;
 
 		public ExpressionResult(object _value, ExpressionResult units = null) : this(_value, units == null ? null : units.units) { }
 
-		public ExpressionResult(object _value, Dictionary<string, int> _units)
+		public ExpressionResult(object _value, ExpressionUnits _units)
 		{
 			value = _value;
-			units = _units == null ? new Dictionary<string, int>() : new Dictionary<string, int>(_units);
+			units = _units == null ? new ExpressionUnits() : _units;
 
 			if ((value != null) && (value.GetType().FullName == "MS.Internal.NamedObject") && (value.ToString() == "{DependencyProperty.UnsetValue}"))
 				value = null;
@@ -43,8 +43,6 @@ namespace NeoEdit.Common.Expressions
 				if ((bigint >= long.MinValue) && (bigint <= long.MaxValue))
 					value = (long)bigint;
 			}
-
-			units.Where(pair => pair.Value == 0).Select(pair => pair.Key).ToList().ForEach(key => units.Remove(key));
 		}
 
 		bool IsInteger { get { return (value is sbyte) || (value is byte) || (value is short) || (value is ushort) || (value is int) || (value is uint) || (value is long) || (value is ulong) || (value is BigInteger); } }
@@ -167,7 +165,7 @@ namespace NeoEdit.Common.Expressions
 		public static ExpressionResult DotOp(ExpressionResult obj, ExpressionResult fileName)
 		{
 			string fieldNameStr = (fileName.value ?? "").ToString();
-			if (obj.units.Any())
+			if (obj.units.HasUnits)
 				throw new Exception("Can't do dot operator with units.");
 			if (obj.value == null)
 				return null;
@@ -205,7 +203,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult Factorial(ExpressionResult obj)
 		{
-			if (obj.units.Count != 0)
+			if (obj.units.HasUnits)
 				throw new Exception("Cannot do factorial with units");
 
 			if (!obj.IsInteger)
@@ -220,7 +218,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult Exp(ExpressionResult baseVal, ExpressionResult exponentVal)
 		{
-			if (exponentVal.units.Any())
+			if (exponentVal.units.HasUnits)
 				throw new Exception("Exponent cannot have units.");
 
 			if ((baseVal.IsFloat) && (exponentVal.IsInteger))
@@ -231,11 +229,11 @@ namespace NeoEdit.Common.Expressions
 					value = BigInteger.Pow(baseVal.GetInteger, exponent);
 				else
 					value = Math.Pow(baseVal.GetFloat, exponent);
-				var units = baseVal.units.ToDictionary(pair => pair.Key, pair => pair.Value * exponent);
+				var units = baseVal.units ^ exponent;
 				return new ExpressionResult(value, units);
 			}
 
-			if (baseVal.units.Any())
+			if (baseVal.units.HasUnits)
 				throw new Exception("Invalid base units.");
 
 			if ((baseVal.IsFloat) && (exponentVal.IsFloat))
@@ -260,7 +258,7 @@ namespace NeoEdit.Common.Expressions
 			if ((factor1.value == null) || (factor2.value == null))
 				throw new Exception("NULL value");
 
-			var units = factor1.units.Concat(factor2.units).GroupBy(pair => pair.Key).ToDictionary(group => group.Key, group => group.Sum(pair => pair.Value)).Where(pair => pair.Value != 0).ToDictionary(pair => pair.Key, pair => pair.Value);
+			var units = factor1.units * factor2.units;
 
 			if ((factor2.IsString) && (factor1.IsComplex))
 				Swap(ref factor1, ref factor2);
@@ -288,7 +286,7 @@ namespace NeoEdit.Common.Expressions
 			if ((dividend.value == null) || (divisor.value == null))
 				throw new Exception("NULL value");
 
-			var units = dividend.units.Concat(divisor.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).ToDictionary(group => group.Key, group => group.Sum(pair => pair.Value)).Where(pair => pair.Value != 0).ToDictionary(pair => pair.Key, pair => pair.Value);
+			var units = dividend.units / divisor.units;
 
 			if ((dividend.IsInteger) && (divisor.IsInteger))
 			{
@@ -306,7 +304,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator %(ExpressionResult dividend, ExpressionResult divisor)
 		{
-			var units = dividend.units.Concat(divisor.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).ToDictionary(group => group.Key, group => group.Sum(pair => pair.Value)).Where(pair => pair.Value != 0).ToDictionary(pair => pair.Key, pair => pair.Value);
+			var units = dividend.units / divisor.units;
 
 			if ((dividend.value == null) || (divisor.value == null))
 				throw new Exception("NULL value");
@@ -328,7 +326,7 @@ namespace NeoEdit.Common.Expressions
 				throw new Exception("NULL value");
 			}
 
-			if (addend1.units.Concat(addend2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (addend1.units != addend2.units)
 				throw new Exception("Units must match");
 
 			if ((addend2.IsCharacter) && (addend1.IsComplex))
@@ -353,7 +351,7 @@ namespace NeoEdit.Common.Expressions
 			if ((minuend.value == null) || (subtrahend.value == null))
 				throw new Exception("NULL value");
 
-			if (minuend.units.Concat(subtrahend.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (minuend.units != subtrahend.units)
 				throw new Exception("Units must match");
 
 			if ((subtrahend.IsCharacter) && (minuend.IsComplex))
@@ -372,21 +370,21 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult ShiftLeft(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val2.units.Any())
+			if (val2.units.HasUnits)
 				throw new Exception("Shift value cannot have units");
 			return new ExpressionResult(val1.GetInteger << (int)val2.GetInteger, val1.units);
 		}
 
 		public static ExpressionResult ShiftRight(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val2.units.Any())
+			if (val2.units.HasUnits)
 				throw new Exception("Shift value cannot have units");
 			return new ExpressionResult(val1.GetInteger >> (int)val2.GetInteger, val1.units);
 		}
 
 		public static ExpressionResult EqualsOp(ExpressionResult val1, ExpressionResult val2, bool ignoreCase)
 		{
-			if (val1.units.Concat(val2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (val1.units != val2.units)
 				return new ExpressionResult(false); // Units don't match
 
 			if ((val1.value == null) && (val2.value == null))
@@ -414,7 +412,7 @@ namespace NeoEdit.Common.Expressions
 			if ((val1.value == null) || (val2.value == null))
 				throw new Exception("NULL value");
 
-			if (val1.units.Concat(val2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (val1.units != val2.units)
 				throw new Exception("Units don't match");
 
 			if ((val1.IsString) && (val2.IsString))
@@ -431,7 +429,7 @@ namespace NeoEdit.Common.Expressions
 			if ((val1.value == null) || (val2.value == null))
 				throw new Exception("NULL value");
 
-			if (val1.units.Concat(val2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (val1.units != val2.units)
 				throw new Exception("Units don't match");
 
 			if ((val1.IsString) && (val2.IsString))
@@ -445,42 +443,42 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult Is(ExpressionResult val1, ExpressionResult val2)
 		{
-			if ((val1.units.Any()) || (val2.units.Any()))
+			if ((val1.units.HasUnits) || (val2.units.HasUnits))
 				throw new Exception("Is cannot have units");
 			return new ExpressionResult(val1.value == null ? false : val1.value.GetType().Name == (val2.value ?? "").ToString());
 		}
 
 		public static ExpressionResult operator &(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units.Concat(val2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (val1.units != val2.units)
 				throw new Exception("Units must match");
 			return new ExpressionResult(val1.GetInteger & val2.GetInteger, val1.units);
 		}
 
 		public static ExpressionResult operator ^(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units.Concat(val2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (val1.units != val2.units)
 				throw new Exception("Units must match");
 			return new ExpressionResult(val1.GetInteger ^ val2.GetInteger, val1.units);
 		}
 
 		public static ExpressionResult operator |(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units.Concat(val2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (val1.units != val2.units)
 				throw new Exception("Units must match");
 			return new ExpressionResult(val1.GetInteger | val2.GetInteger, val1.units);
 		}
 
 		public static ExpressionResult AndOp(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units.Concat(val2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (val1.units != val2.units)
 				throw new Exception("Units must match");
 			return new ExpressionResult(val1.GetBool && val2.GetBool);
 		}
 
 		public static ExpressionResult OrOp(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units.Concat(val2.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).Select(group => group.Sum(pair => pair.Value)).Where(val => val != 0).Any())
+			if (val1.units != val2.units)
 				throw new Exception("Units must match");
 			return new ExpressionResult(val1.GetBool || val2.GetBool);
 		}
@@ -695,7 +693,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult Log(ExpressionResult val, ExpressionResult newBase)
 		{
-			if (newBase.units.Any())
+			if (newBase.units.HasUnits)
 				throw new Exception("Log cannot have units.");
 			if ((val.IsFloat) && (newBase.IsFloat))
 				return new ExpressionResult(Math.Log(val.GetFloat, newBase.GetFloat), val.units);
@@ -711,7 +709,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult Root(ExpressionResult val, ExpressionResult rootObj)
 		{
-			if (rootObj.units.Any())
+			if (rootObj.units.HasUnits)
 				throw new Exception("Root cannot have units.");
 
 			var root = (int)rootObj.GetInteger;
@@ -762,7 +760,7 @@ namespace NeoEdit.Common.Expressions
 
 		public ExpressionResult GetFileName()
 		{
-			if (units.Any())
+			if (units.HasUnits)
 				throw new Exception("Can't do FileName with units.");
 			return new ExpressionResult(Path.GetFileName(GetString));
 		}
@@ -820,20 +818,9 @@ namespace NeoEdit.Common.Expressions
 			else
 				result = value;
 
-			if (units.Where(pair => pair.Value != 0).Any())
-			{
-				var posUnits = units.Where(pair => pair.Value > 0).Select(pair => pair.Key + (pair.Value > 1 ? "^" + pair.Value.ToString() : "")).ToList();
-				var negUnits = units.Where(pair => pair.Value < 0).Select(pair => pair.Key + (pair.Value < -1 ? "^" + (-pair.Value).ToString() : "")).ToList();
-				var posStr = String.Join(" * ", posUnits);
-				var negStr = String.Join(" * ", negUnits);
-				if (negUnits.Count > 1)
-					negStr = "(" + negStr + ")";
-				if ((String.IsNullOrWhiteSpace(posStr)) && (!String.IsNullOrWhiteSpace(negStr)))
-					posUnits.Add("1");
-				if (!String.IsNullOrWhiteSpace(negStr))
-					posStr += "/" + negStr;
-				result = result.ToString() + " " + posStr;
-			}
+			var unitsStr = units.ToString();
+			if (unitsStr != null)
+				result = result.ToString() + " " + unitsStr;
 
 			return result;
 		}

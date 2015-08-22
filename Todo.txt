@@ -31,6 +31,7 @@ TSV: Fix embedded spaces (1\t2\t3\r\n1\ta"c\t3\r\n1\t2\t3\r\n)
 Aggregate by table
 Time zones
 Copy between instances (separate processes)
+Remove "relative" option for goto (relative can be done by l/p/o+x)
 
 View:
 Update as new lines are added

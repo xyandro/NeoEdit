@@ -185,6 +185,6 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitUnitExp(ExpressionParser.UnitExpContext context) { return ExpressionResult.Exp(Visit(context.base1), new ExpressionResult(int.Parse(context.power.Text))); }
 		public override ExpressionResult VisitUnitMult(ExpressionParser.UnitMultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override ExpressionResult VisitUnitParen(ExpressionParser.UnitParenContext context) { return Visit(context.units()); }
-		public override ExpressionResult VisitUnit(ExpressionParser.UnitContext context) { return new ExpressionResult(1, new Dictionary<string, int> { { context.val.Text, 1 } }); }
+		public override ExpressionResult VisitUnit(ExpressionParser.UnitContext context) { return new ExpressionResult(1, new ExpressionUnits(context.val.Text)); }
 	}
 }

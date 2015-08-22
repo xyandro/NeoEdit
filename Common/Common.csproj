@@ -16,6 +16,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
+    <Compile Include="Expressions\ExpressionUnits.cs" />
     <Compile Include="Expressions\ExpressionResult.cs" />
     <Compile Include="Expressions\NEExpression.cs" />
     <Compile Include="Expressions\Parser\ExpressionBaseVisitor.cs" />
