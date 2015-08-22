@@ -90,5 +90,55 @@ namespace NeoEdit.Common.Expressions
 				posStr += "/" + negStr;
 			return posStr;
 		}
+
+		public void GetConversion(out double conversion, out ExpressionUnits units)
+		{
+			conversion = 1;
+			units = this;
+
+			while (true)
+			{
+				var done = true;
+				var unitList = units.units.ToList();
+				units = new ExpressionUnits();
+				foreach (var unit in unitList)
+				{
+					double unitConversion;
+					ExpressionUnits unitUnits;
+					if (ExpressionUnitConstants.GetConversion(unit.Key, out unitConversion, out unitUnits))
+						done = false;
+
+					conversion *= Math.Pow(unitConversion, unit.Value);
+					units *= unitUnits ^ unit.Value;
+				}
+				if (done)
+					break;
+			}
+		}
+
+		public static ExpressionResult GetConversion(ExpressionUnits units1, ExpressionUnits units2)
+		{
+			double conversion1, conversion2;
+			ExpressionUnits newUnits1, newUnits2;
+			units1.GetConversion(out conversion1, out newUnits1);
+			units2.GetConversion(out conversion2, out newUnits2);
+			if (newUnits1 != newUnits2)
+				throw new Exception("Cannot convert types");
+			return new ExpressionResult(conversion1 / conversion2, units2 / units1);
+		}
+
+		public Func<ExpressionResult, ExpressionResult> GetToBase()
+		{
+			if ((!HasUnits) || (units.Count > 1) || (units.First().Value != 1))
+				return null;
+			return ExpressionUnitConstants.GetToBase(units.First().Key);
+		}
+
+		public Func<ExpressionResult, ExpressionResult> GetFromBase()
+		{
+			if ((!HasUnits) || (units.Count > 1) || (units.First().Value != 1))
+				return null;
+			return ExpressionUnitConstants.GetFromBase(units.First().Key);
+		}
 	}
 }

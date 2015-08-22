@@ -63,6 +63,7 @@ namespace NeoEdit.Common.Expressions
 				case ">=": return !ExpressionResult.LessThanOp(val1, val2, false);
 				case "i>=": return !ExpressionResult.LessThanOp(val1, val2, true);
 				case "is": return ExpressionResult.Is(val1, val2);
+				case "=":
 				case "==": return ExpressionResult.EqualsOp(val1, val2, false);
 				case "i==": return ExpressionResult.EqualsOp(val1, val2, true);
 				case "!=": return !ExpressionResult.EqualsOp(val1, val2, false);
@@ -73,6 +74,7 @@ namespace NeoEdit.Common.Expressions
 				case "&&": return ExpressionResult.AndOp(val1, val2);
 				case "||": return ExpressionResult.OrOp(val1, val2);
 				case "??": return ExpressionResult.NullCoalesceOp(val1, val2);
+				case "=>": return ExpressionResult.UnitConvertOp(val1, val2);
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
 		}
@@ -171,6 +173,7 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitLogicalAnd(ExpressionParser.LogicalAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override ExpressionResult VisitLogicalOr(ExpressionParser.LogicalOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override ExpressionResult VisitNullCoalesce(ExpressionParser.NullCoalesceContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
+		public override ExpressionResult VisitUnitConversion(ExpressionParser.UnitConversionContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override ExpressionResult VisitTernary(ExpressionParser.TernaryContext context) { return Visit(context.condition).True ? Visit(context.trueval) : Visit(context.falseval); }
 		public override ExpressionResult VisitParam(ExpressionParser.ParamContext context) { return values[int.Parse(context.val.Text.Trim('[', ']'))]; }
 		public override ExpressionResult VisitString(ExpressionParser.StringContext context) { return new ExpressionResult(context.val.Text.Substring(1, context.val.Text.Length - 2)); }

@@ -31,6 +31,7 @@ e
 	| val1=e op=LOGICALAND val2=e # LogicalAnd
 	| val1=e op=LOGICALOR val2=e # LogicalOr
 	| val1=e op=NULLCOALESCE val2=e # NullCoalesce
+	| val1=e op=CONVERSION val2=units # UnitConversion
 	| condition=e CONDITIONAL trueval=e ELSE falseval=e # Ternary
 	| constant=CONSTANT # Constant
 	| value # Simple
@@ -99,7 +100,8 @@ MULTOP: [*/%] ;
 ADDOP: [-+] ;
 SHIFTOP: '<<' | '>>' ;
 RELATIONALOP: '<' | '>' | '<=' | '>=' | 'i<' | 'i>' | 'i<=' | 'i>=' | I S ;
-EQUALITYOP: '==' | '!=' | 'i==' | 'i!=' ;
+EQUALITYOP: '=' | '==' | '!=' | 'i==' | 'i!=' ;
+CONVERSION: '=>' ;
 BITWISENOT: '~' ;
 BITWISEAND: '&' ;
 BITWISEXOR: '^^' ;

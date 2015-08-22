@@ -327,7 +327,7 @@ namespace NeoEdit.Common.Expressions
 			}
 
 			if (addend1.units != addend2.units)
-				throw new Exception("Units must match");
+				addend2 = UnitConvertOp(addend2, addend1);
 
 			if ((addend2.IsCharacter) && (addend1.IsComplex))
 				Swap(ref addend1, ref addend2);
@@ -352,7 +352,7 @@ namespace NeoEdit.Common.Expressions
 				throw new Exception("NULL value");
 
 			if (minuend.units != subtrahend.units)
-				throw new Exception("Units must match");
+				subtrahend = UnitConvertOp(subtrahend, minuend);
 
 			if ((subtrahend.IsCharacter) && (minuend.IsComplex))
 				Swap(ref minuend, ref subtrahend);
@@ -385,7 +385,15 @@ namespace NeoEdit.Common.Expressions
 		public static ExpressionResult EqualsOp(ExpressionResult val1, ExpressionResult val2, bool ignoreCase)
 		{
 			if (val1.units != val2.units)
-				return new ExpressionResult(false); // Units don't match
+			{
+				double conversion1, conversion2;
+				ExpressionUnits units1, units2;
+				val1.units.GetConversion(out conversion1, out units1);
+				val2.units.GetConversion(out conversion2, out units2);
+				if (units1 != units2)
+					return new ExpressionResult(false); // Units don't match
+				val2 = UnitConvertOp(val2, val1);
+			}
 
 			if ((val1.value == null) && (val2.value == null))
 				return new ExpressionResult(true);
@@ -413,7 +421,7 @@ namespace NeoEdit.Common.Expressions
 				throw new Exception("NULL value");
 
 			if (val1.units != val2.units)
-				throw new Exception("Units don't match");
+				val2 = UnitConvertOp(val2, val1);
 
 			if ((val1.IsString) && (val2.IsString))
 				return new ExpressionResult(String.Compare(val1.GetString, val2.GetString, ignoreCase) < 0);
@@ -430,7 +438,7 @@ namespace NeoEdit.Common.Expressions
 				throw new Exception("NULL value");
 
 			if (val1.units != val2.units)
-				throw new Exception("Units don't match");
+				val2 = UnitConvertOp(val2, val1);
 
 			if ((val1.IsString) && (val2.IsString))
 				return new ExpressionResult(String.Compare(val1.GetString, val2.GetString, ignoreCase) > 0);
@@ -451,41 +459,52 @@ namespace NeoEdit.Common.Expressions
 		public static ExpressionResult operator &(ExpressionResult val1, ExpressionResult val2)
 		{
 			if (val1.units != val2.units)
-				throw new Exception("Units must match");
+				val2 = UnitConvertOp(val2, val1);
 			return new ExpressionResult(val1.GetInteger & val2.GetInteger, val1.units);
 		}
 
 		public static ExpressionResult operator ^(ExpressionResult val1, ExpressionResult val2)
 		{
 			if (val1.units != val2.units)
-				throw new Exception("Units must match");
+				val2 = UnitConvertOp(val2, val1);
 			return new ExpressionResult(val1.GetInteger ^ val2.GetInteger, val1.units);
 		}
 
 		public static ExpressionResult operator |(ExpressionResult val1, ExpressionResult val2)
 		{
 			if (val1.units != val2.units)
-				throw new Exception("Units must match");
+				val2 = UnitConvertOp(val2, val1);
 			return new ExpressionResult(val1.GetInteger | val2.GetInteger, val1.units);
 		}
 
 		public static ExpressionResult AndOp(ExpressionResult val1, ExpressionResult val2)
 		{
 			if (val1.units != val2.units)
-				throw new Exception("Units must match");
+				val2 = UnitConvertOp(val2, val1);
 			return new ExpressionResult(val1.GetBool && val2.GetBool);
 		}
 
 		public static ExpressionResult OrOp(ExpressionResult val1, ExpressionResult val2)
 		{
 			if (val1.units != val2.units)
-				throw new Exception("Units must match");
+				val2 = UnitConvertOp(val2, val1);
 			return new ExpressionResult(val1.GetBool || val2.GetBool);
 		}
 
 		public static ExpressionResult NullCoalesceOp(ExpressionResult val1, ExpressionResult val2)
 		{
 			return val1.value != null ? val1 : val2;
+		}
+
+		public static ExpressionResult UnitConvertOp(ExpressionResult val1, ExpressionResult val2)
+		{
+			var toBase = val1.units.GetToBase();
+			var fromBase = val2.units.GetFromBase();
+			if ((toBase != null) && (fromBase != null))
+				return fromBase(toBase(val1));
+
+			var conversion = ExpressionUnits.GetConversion(val1.units, val2.units);
+			return val1 * conversion;
 		}
 
 		public ExpressionResult ToWords()
@@ -823,6 +842,11 @@ namespace NeoEdit.Common.Expressions
 				result = result.ToString() + " " + unitsStr;
 
 			return result;
+		}
+
+		public override string ToString()
+		{
+			return GetResult().ToString();
 		}
 
 		public int CompareTo(object obj)

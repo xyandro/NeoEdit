@@ -129,6 +129,17 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new NEExpression("fromwords(\"Negative five\")").Evaluate().ToString(), "-5");
 
 			Assert.AreEqual(new NEExpression("5.5 m/(s^2)/s*s *  2 s").Evaluate().ToString(), "11 m/s");
+			Assert.AreEqual(new NEExpression("1 day => minutes").Evaluate().ToString(), "1440 minutes");
+			Assert.AreEqual(new NEExpression("5 miles * 7 feet => m^2").Evaluate().ToString(), "17168.481792 m^2");
+			Assert.AreEqual(new NEExpression("5 ml => cm^3").Evaluate().ToString(), "5 cm^3");
+			Assert.AreEqual(new NEExpression("1 mile => feet").Evaluate().ToString(), "5280 feet");
+			Assert.AreEqual(new NEExpression("1 mile^3 => feet^3").Evaluate().ToString(), "147197952000 feet^3");
+			Assert.AreEqual(new NEExpression("55 degc => K").Evaluate().ToString(), "328.15 K");
+			Assert.AreEqual(new NEExpression("328.15 K => degc").Evaluate().ToString(), "55 degc");
+			Assert.AreEqual(new NEExpression("59 degf => degc").Evaluate().ToString(), "15.0000000000001 degc");
+			Assert.AreEqual(new NEExpression("15 degc => degf").Evaluate().ToString(), "58.9999999999999 degf");
+			Assert.AreEqual(new NEExpression("2 in + 2 ft").Evaluate().ToString(), "26 in");
+			Assert.AreEqual(new NEExpression("5 km = 5000000 mm").Evaluate(), true);
 
 			var dict = new Dictionary<string, object>
 			{
