@@ -1422,8 +1422,13 @@ namespace NeoEdit.TextEdit
 		internal void Command_Edit_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
 		{
 			var offsets = GetExpressionResults<int>(result.Expression, false, false);
+			if (!offsets.Any())
+				return;
+
 			var sels = Selections.ToList();
 
+			if ((sels.Count == 0) && (gotoType == GotoType.Line))
+				sels.Add(new Range(BeginOffset()));
 			if (sels.Count == 1)
 				sels = sels.Resize(offsets.Count, sels[0]).ToList();
 			if (offsets.Count == 1)
@@ -1431,24 +1436,7 @@ namespace NeoEdit.TextEdit
 			if (offsets.Count != sels.Count)
 				throw new Exception("Expression count doesn't match selection count");
 
-			if (result.Relative)
-			{
-				var lines = sels.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
-				var indexes = sels.AsParallel().AsOrdered().Select((range, ctr) => Data.GetOffsetIndex(range.Start, lines[ctr])).ToList();
-				var positions = sels.Select(range => range.Start).ToList();
-
-				List<int> list;
-				switch (gotoType)
-				{
-					case GotoType.Line: list = lines; break;
-					case GotoType.Column: list = indexes; break;
-					case GotoType.Position: list = positions; break;
-					default: throw new ArgumentException("GotoType invalid");
-				}
-
-				offsets = offsets.Select((ofs, ctr) => ofs + list[ctr]).ToList();
-			}
-			else if (gotoType != GotoType.Position)
+			if (gotoType != GotoType.Position)
 				offsets = offsets.Select(ofs => ofs - 1).ToList();
 
 			switch (gotoType)

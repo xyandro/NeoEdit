@@ -9,13 +9,10 @@ namespace NeoEdit.TextEdit.Dialogs
 		internal class Result
 		{
 			public string Expression { get; set; }
-			public bool Relative { get; set; }
 		}
 
 		[DepProp]
 		public string Expression { get { return UIHelper<GotoDialog>.GetPropValue<string>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Relative { get { return UIHelper<GotoDialog>.GetPropValue<bool>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
 		public Dictionary<string, List<object>> ExpressionData { get; private set; }
 
 		static GotoDialog() { UIHelper<GotoDialog>.Register(); }
@@ -37,7 +34,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = Expression, Relative = Relative };
+			result = new Result { Expression = Expression };
 			DialogResult = true;
 		}
 

@@ -31,7 +31,7 @@
 			</Label.Content>
 		</Label>
 
-		<CheckBox Grid.Row="2" Grid.Column="1" Content="_Relative" IsChecked="{Binding Relative, ElementName=self}" Focusable="False"/>
+		<Label Grid.Row="2" Grid.Column="1" Content="Relative: line/col/pos + number"/>
 
 		<UniformGrid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
 			<Button Click="ExpressionHelp" Content="Expression _Help"/>
