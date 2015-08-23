@@ -140,6 +140,9 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new NEExpression("15 degc => degf").Evaluate().ToString(), "58.9999999999999 degf");
 			Assert.AreEqual(new NEExpression("2 in + 2 ft").Evaluate().ToString(), "26 in");
 			Assert.AreEqual(new NEExpression("5 km = 5000000 mm").Evaluate(), true);
+			Assert.AreEqual(new NEExpression("5 kJ => SI").Evaluate().ToString(), "5000 m^2*kg/s^2");
+			Assert.AreEqual(new NEExpression("1 mL => SI").Evaluate().ToString(), "1E-06 m^3");
+			Assert.AreEqual(new NEExpression("10 J/s => Simple").Evaluate().ToString(), "10 W");
 
 			var dict = new Dictionary<string, object>
 			{

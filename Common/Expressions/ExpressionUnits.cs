@@ -23,6 +23,8 @@ namespace NeoEdit.Common.Expressions
 		}
 
 		public bool HasUnits { get { return units.Any(); } }
+		public bool IsSI { get { return (units.Count == 1) && (units.First().Key.ToLowerInvariant() == "si") && (units.First().Value == 1); } }
+		public bool IsSimple { get { return (units.Count == 1) && (units.First().Key.ToLowerInvariant() == "simple") && (units.First().Value == 1); } }
 
 		public static ExpressionUnits operator *(ExpressionUnits factor1, ExpressionUnits factor2)
 		{
@@ -48,6 +50,8 @@ namespace NeoEdit.Common.Expressions
 				return false;
 			if (Object.ReferenceEquals(units1, null))
 				return true;
+			if (units1.units.Count != units2.units.Count)
+				return false;
 			return !(units1 / units2).HasUnits;
 		}
 
@@ -121,6 +125,11 @@ namespace NeoEdit.Common.Expressions
 			double conversion1, conversion2;
 			ExpressionUnits newUnits1, newUnits2;
 			units1.GetConversion(out conversion1, out newUnits1);
+			if (units2.IsSI)
+				units2 = newUnits1;
+			else if (units2.IsSimple)
+				units2 = ExpressionUnitConstants.GetSimple(newUnits1);
+
 			units2.GetConversion(out conversion2, out newUnits2);
 			if (newUnits1 != newUnits2)
 				throw new Exception("Cannot convert types");

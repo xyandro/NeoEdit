@@ -35,18 +35,22 @@ namespace NeoEdit.Common.Expressions
 		{
 			public readonly double conversion;
 			public readonly ExpressionUnits units;
+			public readonly bool isBase;
+			public ExpressionUnits baseUnits;
 			public readonly Func<ExpressionResult, ExpressionResult> toBase, fromBase;
 
-			public UnitData(double conversion = 0, ExpressionUnits units = null)
+			public UnitData(double conversion, ExpressionUnits units, bool isBase = false)
 			{
 				this.conversion = conversion;
 				this.units = units;
+				this.isBase = isBase;
 			}
 
 			public UnitData(Func<ExpressionResult, ExpressionResult> toBase, Func<ExpressionResult, ExpressionResult> fromBase)
 			{
 				this.toBase = toBase;
 				this.fromBase = fromBase;
+				this.isBase = true;
 			}
 		}
 
@@ -57,7 +61,7 @@ namespace NeoEdit.Common.Expressions
 			data[new ConstantData("tick", "ticks", TypeAttrs.Primary)] = new UnitData(1E-07, new ExpressionUnits("seconds"));
 			data[new ConstantData("second", "seconds", TypeAttrs.SILongPrefix)] =
 			data[new ConstantData("sec", "secs")] =
-			data[new ConstantData("s", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData();
+			data[new ConstantData("s", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData(1, new ExpressionUnits("s"), true);
 			data[new ConstantData("minute", "minutes")] =
 			data[new ConstantData("min", "mins", TypeAttrs.Primary)] = new UnitData(60, new ExpressionUnits("seconds"));
 			data[new ConstantData("hour", "hours")] =
@@ -108,7 +112,7 @@ namespace NeoEdit.Common.Expressions
 			data[new ConstantData("nmi", TypeAttrs.Primary)] = new UnitData(1852, new ExpressionUnits("m"));
 			data[new ConstantData("meter", "meters", TypeAttrs.SILongPrefix)] =
 			data[new ConstantData("metre", "metres", TypeAttrs.SILongPrefix)] =
-			data[new ConstantData("m", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData();
+			data[new ConstantData("m", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData(1, new ExpressionUnits("m"), true);
 			data[new ConstantData("AU")] =
 			data[new ConstantData("au")] =
 			data[new ConstantData("ua", TypeAttrs.Primary)] = new UnitData(149597870700, new ExpressionUnits("m"));
@@ -167,7 +171,7 @@ namespace NeoEdit.Common.Expressions
 			data[new ConstantData("bushel", "bushels")] =
 			data[new ConstantData("bu", TypeAttrs.Primary)] = new UnitData(4, new ExpressionUnits("pecks"));
 			data[new ConstantData("gram", "grams", TypeAttrs.SILongPrefix)] =
-			data[new ConstantData("g", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData();
+			data[new ConstantData("g", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData(1, new ExpressionUnits("g"), true);
 			data[new ConstantData("grain", "grains")] =
 			data[new ConstantData("gr", TypeAttrs.Primary)] = new UnitData(0.06479891, new ExpressionUnits("g"));
 			data[new ConstantData("dram", "drams")] =
@@ -203,11 +207,11 @@ namespace NeoEdit.Common.Expressions
 			data[new ConstantData("degk")] =
 			data[new ConstantData("K", TypeAttrs.Primary)] = new UnitData(a => a, a => a);
 			data[new ConstantData("ampere", "amperes", TypeAttrs.SILongPrefix)] =
-			data[new ConstantData("A", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData();
+			data[new ConstantData("A", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData(1, new ExpressionUnits("A"), true);
 			data[new ConstantData("mole", "moles", TypeAttrs.SILongPrefix)] =
-			data[new ConstantData("mol", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData();
+			data[new ConstantData("mol", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData(1, new ExpressionUnits("mol"), true);
 			data[new ConstantData("candela", "candelas", TypeAttrs.SILongPrefix)] =
-			data[new ConstantData("cd", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData();
+			data[new ConstantData("cd", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData(1, new ExpressionUnits("cd"), true);
 			data[new ConstantData("britishthermalunit", "britishthermalunits")] =
 			data[new ConstantData("btu", "btus", TypeAttrs.Primary)] = new UnitData(1055, new ExpressionUnits("J"));
 			data[new ConstantData("calorie", "calories")] =
@@ -252,18 +256,22 @@ namespace NeoEdit.Common.Expressions
 			data[new ConstantData("lux", TypeAttrs.SILongPrefix)] =
 			data[new ConstantData("lx", TypeAttrs.Primary | TypeAttrs.SIPrefix)] = new UnitData(1, new ExpressionUnits("lm") / (new ExpressionUnits("m") ^ 2));
 			data[new ConstantData("radian", "radians")] =
-			data[new ConstantData("rad", TypeAttrs.Primary)] = new UnitData();
+			data[new ConstantData("rad", TypeAttrs.Primary)] = new UnitData(1, new ExpressionUnits("rad"), true);
 			data[new ConstantData("degree", "degrees")] =
 			data[new ConstantData("deg", TypeAttrs.Primary)] = new UnitData(0.0174532925199433, new ExpressionUnits("radians"));
 			data[new ConstantData("byte", "bytes", TypeAttrs.CLongPrefix)] =
 			data[new ConstantData("b", TypeAttrs.Primary | TypeAttrs.CPrefix)] =
-			data[new ConstantData("B", TypeAttrs.Primary | TypeAttrs.CPrefix)] = new UnitData();
-			data[new ConstantData("MPH")] = new UnitData();
+			data[new ConstantData("B", TypeAttrs.Primary | TypeAttrs.CPrefix)] = new UnitData(1, new ExpressionUnits("B"), true);
+			data[new ConstantData("MPH")] =
 			data[new ConstantData("mph", TypeAttrs.Primary)] = new UnitData(1, new ExpressionUnits("miles") / new ExpressionUnits("hour"));
-			data[new ConstantData("KPH")] = new UnitData();
+			data[new ConstantData("KPH")] =
 			data[new ConstantData("kph", TypeAttrs.Primary)] = new UnitData(1, new ExpressionUnits("km") / new ExpressionUnits("hour"));
 
 			AddPrefixes();
+
+			SetKGAsSI();
+
+			SetBaseUnits();
 
 			ValidateData();
 		}
@@ -372,6 +380,23 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
+		static void SetKGAsSI()
+		{
+			data[data.Single(pair => pair.Key.singular == "g").Key] =
+			data[data.Single(pair => pair.Key.singular == "gram").Key] = new UnitData(.001, new ExpressionUnits("kg"));
+			data[data.Single(pair => pair.Key.singular == "kg").Key] =
+			data[data.Single(pair => pair.Key.singular == "kilogram").Key] = new UnitData(1, new ExpressionUnits("kg"), true);
+		}
+
+		static void SetBaseUnits()
+		{
+			foreach (var value in data.Values.Distinct().Where(value => value.units != null))
+			{
+				double conversion;
+				value.units.GetConversion(out conversion, out value.baseUnits);
+			}
+		}
+
 		static void ValidateData()
 		{
 			var units = data.SelectMany(item => new List<string> { item.Key.singular, item.Key.singular == item.Key.plural ? null : item.Key.plural }).Where(unit => unit != null).ToList();
@@ -383,7 +408,7 @@ namespace NeoEdit.Common.Expressions
 		public static bool GetConversion(string unit, out double conversion, out ExpressionUnits units)
 		{
 			var found = data.Where(pair => (pair.Key.singular == unit) || (pair.Key.plural == unit)).Select(pair => pair.Value).FirstOrDefault();
-			if ((found == null) || (found.units == null))
+			if (found == null)
 			{
 				conversion = 1;
 				units = new ExpressionUnits(unit);
@@ -391,7 +416,15 @@ namespace NeoEdit.Common.Expressions
 			}
 			conversion = found.conversion;
 			units = found.units;
-			return true;
+			return !found.isBase;
+		}
+
+		public static ExpressionUnits GetSimple(ExpressionUnits units)
+		{
+			var matches = data.Where(pair => pair.Value.baseUnits == units).OrderBy(pair => !pair.Key.attrs.HasFlag(TypeAttrs.SIPrefix)).ToList();
+			if (!matches.Any())
+				return units;
+			return new ExpressionUnits(matches.First().Key.plural);
 		}
 
 		public static Func<ExpressionResult, ExpressionResult> GetToBase(string unit)
