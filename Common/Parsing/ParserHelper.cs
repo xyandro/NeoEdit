@@ -12,7 +12,7 @@ using Antlr4.Runtime.Tree;
 
 namespace NeoEdit.Common.Parsing
 {
-	static class ParserHelper
+	public static class ParserHelper
 	{
 		class ErrorListener<T> : IAntlrErrorListener<T>
 		{

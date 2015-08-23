@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="CompressWords;BuildBalanced;BuildCSharp;BuildJSON;BuildHTML;BuildTCSV;BuildXML;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="CompressWords;BuildBalanced;BuildCSharp;BuildJSON;BuildHTML;BuildTCSV;BuildXML;BuildRevRegEx;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{9A35AB82-2481-4C44-B51E-66DF7D248EAD}</ProjectGuid>
@@ -34,6 +34,10 @@
   <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs">
     <Message Text="Building XML grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
+  </Target>
+  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegEx.g4" Outputs="RevRegEx\Parser\RevRegExBaseVisitor.cs;RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExVisitor.cs">
+    <Message Text="Building Combintaions grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegEx.g4&quot;" />
   </Target>
   <ItemGroup Condition="'$(BuildTextEdit)' != ''">
     <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
@@ -212,6 +216,13 @@
     <Compile Include="Dialogs\RepeatDialog.xaml.cs">
       <DependentUpon>RepeatDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\RevRegExDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\RevRegExDialog.xaml.cs">
+      <DependentUpon>RevRegExDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\SelectContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -273,6 +284,12 @@
     </Compile>
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExBaseVisitor.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExVisitor.cs" />
+    <Compile Include="RevRegEx\RevRegExVisitor.cs" />
+    <None Include="RevRegEx\Source\RevRegEx.g4" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

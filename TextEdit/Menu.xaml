@@ -267,6 +267,7 @@
 		<textEdit:TextEditMenuItem Header="Random _Data" CommandEnum="Insert_RandomData"/>
 		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Insert_MinMaxValues"/>
 		<textEdit:TextEditMenuItem Header="_Combinations/Permutations" CommandEnum="Insert_CombinationsPermutations"/>
+		<textEdit:TextEditMenuItem Header="Reverse RegE_x" CommandEnum="Insert_RevRegEx"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">

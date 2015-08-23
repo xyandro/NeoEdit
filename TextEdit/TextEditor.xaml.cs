@@ -706,6 +706,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;
 				case TextEditCommand.Insert_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
 				case TextEditCommand.Insert_CombinationsPermutations: dialogResult = Command_Insert_CombinationsPermutations_Dialog(); break;
+				case TextEditCommand.Insert_RevRegEx: dialogResult = Command_Insert_RevRegEx_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_Width: dialogResult = Command_Select_Width_Dialog(); break;
 				case TextEditCommand.Select_Count: dialogResult = Command_Select_Count_Dialog(); break;
@@ -906,6 +907,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
 				case TextEditCommand.Insert_MinMaxValues: Command_Insert_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
 				case TextEditCommand.Insert_CombinationsPermutations: Command_Insert_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
+				case TextEditCommand.Insert_RevRegEx: Command_Insert_RevRegEx(dialogResult as RevRegExDialog.Result); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -2545,6 +2547,55 @@ namespace NeoEdit.TextEdit
 					output.Add(String.Concat(nums.Select(num => result.Items[num - 1])) + Data.DefaultEnding);
 					--onNum;
 					used[nums[onNum]] = false;
+				}
+			}
+
+			ReplaceSelections(String.Join("", output));
+
+			var start = Selections.Single().Start;
+			var sels = new List<Range>();
+			foreach (var str in output)
+			{
+				sels.Add(Range.FromIndex(start, str.Length - Data.DefaultEnding.Length));
+				start += str.Length;
+			}
+			Selections.Replace(sels);
+		}
+
+		internal RevRegExDialog.Result Command_Insert_RevRegEx_Dialog()
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection.");
+
+			return RevRegExDialog.Run(WindowParent);
+		}
+
+		internal void Command_Insert_RevRegEx(RevRegExDialog.Result result)
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection.");
+
+			var output = new List<string>();
+			var pos = new int[result.Items.Count];
+			var onNum = 0;
+			while (true)
+			{
+				++pos[onNum];
+				if (pos[onNum] > result.Items[onNum].Length)
+				{
+					--onNum;
+					if (onNum < 0)
+						break;
+					continue;
+				}
+
+				++onNum;
+				if (onNum < result.Items.Count)
+					pos[onNum] = 0;
+				else
+				{
+					output.Add(String.Concat(pos.Select((num, index) => result.Items[index][num - 1])) + Data.DefaultEnding);
+					--onNum;
 				}
 			}
 

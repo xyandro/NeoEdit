@@ -23,7 +23,6 @@ Go back to last selections
 Refactor menu (more subtrees, less accel reuse)
 Resolve hostnames
 Expressions can do date/time math (using units)
-Combinations/permutations: model regex and give all possibilities [a-c][de]{2} = add, ade, aed, aee, bdd, bde, bed, bee, cdd, cde, ced, cee
 Open copied shortcut: Add CTRL+ALT+O (CTRL+SHIFT+O will open leaving selected)
 Change tab order when doc closed (match visual studio or something)
 TSV: Fix embedded spaces (1\t2\t3\r\n1\ta"c\t3\r\n1\t2\t3\r\n)
