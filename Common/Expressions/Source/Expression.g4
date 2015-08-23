@@ -16,6 +16,7 @@ e
 			method=METHODVAR LPAREN (e (COMMA e)*)? RPAREN
 		) # Method
 	| LPAREN val=e RPAREN # Parens
+	| val1=e unitsVal=units # AddUnits
 	| val1=e op=DOT val2=e # Dot
 	| op=(BITWISENOT | ADDOP | BANG) val=e # Unary
 	| val=value op=BANG # UnaryEnd
@@ -44,9 +45,9 @@ value
 	| TRUE # True
 	| FALSE # False
 	| NULL # Null
-	| val=INTEGER unitsVal=units? # Integer
-	| val=FLOAT unitsVal=units? # Float
-	| val=HEX unitsVal=units? # Hex
+	| val=INTEGER # Integer
+	| val=FLOAT # Float
+	| val=HEX # Hex
 	| val=VARIABLE # Variable
 	;
 

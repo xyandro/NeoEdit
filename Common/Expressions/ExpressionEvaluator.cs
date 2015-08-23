@@ -153,11 +153,10 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
-		ExpressionResult GetUnits(ExpressionParser.UnitsContext context) { return context == null ? null : Visit(context); }
-
 		public override ExpressionResult VisitShortForm(ExpressionParser.ShortFormContext context) { return GetShortForm(context.op.Text); }
 		public override ExpressionResult VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) { return GetShortForm("&&"); }
 		public override ExpressionResult VisitParens(ExpressionParser.ParensContext context) { return Visit(context.val); }
+		public override ExpressionResult VisitAddUnits(ExpressionParser.AddUnitsContext context) { return Visit(context.val1).SetUnits(Visit(context.unitsVal)); }
 		public override ExpressionResult VisitDot(ExpressionParser.DotContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override ExpressionResult VisitUnary(ExpressionParser.UnaryContext context) { return UnaryOp(context.op.Text, Visit(context.val)); }
 		public override ExpressionResult VisitUnaryEnd(ExpressionParser.UnaryEndContext context) { return UnaryOpEnd(context.op.Text, Visit(context.val)); }
@@ -181,9 +180,9 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitTrue(ExpressionParser.TrueContext context) { return new ExpressionResult(true); }
 		public override ExpressionResult VisitFalse(ExpressionParser.FalseContext context) { return new ExpressionResult(false); }
 		public override ExpressionResult VisitNull(ExpressionParser.NullContext context) { return new ExpressionResult(null); }
-		public override ExpressionResult VisitInteger(ExpressionParser.IntegerContext context) { return new ExpressionResult(BigInteger.Parse(context.val.Text), GetUnits(context.unitsVal)); }
-		public override ExpressionResult VisitFloat(ExpressionParser.FloatContext context) { return new ExpressionResult(double.Parse(context.val.Text), GetUnits(context.unitsVal)); }
-		public override ExpressionResult VisitHex(ExpressionParser.HexContext context) { return new ExpressionResult(long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber), GetUnits(context.unitsVal)); }
+		public override ExpressionResult VisitInteger(ExpressionParser.IntegerContext context) { return new ExpressionResult(BigInteger.Parse(context.val.Text)); }
+		public override ExpressionResult VisitFloat(ExpressionParser.FloatContext context) { return new ExpressionResult(double.Parse(context.val.Text)); }
+		public override ExpressionResult VisitHex(ExpressionParser.HexContext context) { return new ExpressionResult(long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber)); }
 		public override ExpressionResult VisitVariable(ExpressionParser.VariableContext context) { return dict.ContainsKey(context.val.Text) ? dict[context.val.Text] : null; }
 		public override ExpressionResult VisitUnitExp(ExpressionParser.UnitExpContext context) { return ExpressionResult.Exp(Visit(context.base1), new ExpressionResult(int.Parse(context.power.Text))); }
 		public override ExpressionResult VisitUnitMult(ExpressionParser.UnitMultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }

@@ -507,6 +507,11 @@ namespace NeoEdit.Common.Expressions
 			return val1 * conversion;
 		}
 
+		public ExpressionResult SetUnits(ExpressionResult units)
+		{
+			return new ExpressionResult(value, units.units);
+		}
+
 		public ExpressionResult ToWords()
 		{
 			var num = GetInteger;
