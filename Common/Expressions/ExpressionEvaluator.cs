@@ -108,12 +108,12 @@ namespace NeoEdit.Common.Expressions
 			switch (method.ToLowerInvariant())
 			{
 				case "abs": return paramList[0].Abs();
-				case "acos": return paramList[0].Acos();
-				case "asin": return paramList[0].Asin();
-				case "atan": return paramList[0].Atan();
+				case "acos": return ExpressionResult.Acos(paramList[0]);
+				case "asin": return ExpressionResult.Asin(paramList[0]);
+				case "atan": return ExpressionResult.Atan(paramList[0]);
 				case "conjugate": return paramList[0].Conjugate();
-				case "cos": return paramList[0].Cos();
-				case "cosh": return paramList[0].Cosh();
+				case "cos": return ExpressionResult.Cos(paramList[0]);
+				case "cosh": return ExpressionResult.Cosh(paramList[0]);
 				case "eval": return new NEExpression(paramList[0].GetString).InternalEvaluate(null);
 				case "filename": return paramList[0].GetFileName();
 				case "frompolar": return ExpressionResult.FromPolar(paramList[0], paramList[1]);
@@ -128,12 +128,12 @@ namespace NeoEdit.Common.Expressions
 				case "real": return paramList[0].Real();
 				case "reciprocal": return paramList[0].Reciprocal();
 				case "root": return ExpressionResult.Root(paramList[0], paramList[1]);
-				case "sin": return paramList[0].Sin();
-				case "sinh": return paramList[0].Sinh();
+				case "sin": return ExpressionResult.Sin(paramList[0]);
+				case "sinh": return ExpressionResult.Sinh(paramList[0]);
 				case "sqrt": return ExpressionResult.Root(paramList[0], new ExpressionResult(2));
 				case "strformat": return ExpressionResult.StrFormat(paramList[0], paramList.Skip(1).ToArray());
-				case "tan": return paramList[0].Tan();
-				case "tanh": return paramList[0].Tanh();
+				case "tan": return ExpressionResult.Tan(paramList[0]);
+				case "tanh": return ExpressionResult.Tanh(paramList[0]);
 				case "towords": return paramList[0].ToWords();
 				case "type": return paramList[0].Type();
 				case "validre": return paramList[0].ValidRE();

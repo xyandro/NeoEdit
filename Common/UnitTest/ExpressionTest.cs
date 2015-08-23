@@ -144,6 +144,13 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new NEExpression("1 mL => SI").Evaluate().ToString(), "1E-06 m^3");
 			Assert.AreEqual(new NEExpression("10 J/s => Simple").Evaluate().ToString(), "10 W");
 
+			Assert.AreEqual(new NEExpression("cos(pi)").Evaluate().ToString(), "-1");
+			Assert.AreEqual(new NEExpression("cos(pi rad)").Evaluate().ToString(), "-1");
+			Assert.AreEqual(new NEExpression("cos(180 deg)").Evaluate().ToString(), "-1");
+
+			Assert.AreEqual(new NEExpression("acos(-1)").Evaluate().ToString(), "3.14159265358979 rad");
+			Assert.AreEqual(new NEExpression("acos(-1) => deg").Evaluate().ToString(), "180 deg");
+
 			var dict = new Dictionary<string, object>
 			{
 				{ "x", 0xdeadbeef },

@@ -652,6 +652,13 @@ namespace NeoEdit.Common.Expressions
 			return result;
 		}
 
+		ExpressionResult ToRad()
+		{
+			if (!units.HasUnits)
+				return new ExpressionResult(value, new ExpressionUnits("rad"));
+			return UnitConvertOp(this, new ExpressionResult(1, new ExpressionUnits("rad")));
+		}
+
 		public ExpressionResult Abs()
 		{
 			if (IsInteger)
@@ -661,25 +668,31 @@ namespace NeoEdit.Common.Expressions
 			return new ExpressionResult(Complex.Abs(GetComplex), units);
 		}
 
-		public ExpressionResult Acos()
+		public static ExpressionResult Acos(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Acos(GetFloat), units);
-			return new ExpressionResult(Complex.Abs(GetComplex), units);
+			if (value.units.HasUnits)
+				throw new ArgumentException("Cannot have units.");
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Acos(value.GetFloat), new ExpressionUnits("rad"));
+			return new ExpressionResult(Complex.Acos(value.GetComplex), new ExpressionUnits("rad"));
 		}
 
-		public ExpressionResult Asin()
+		public static ExpressionResult Asin(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Asin(GetFloat), units);
-			return new ExpressionResult(Complex.Asin(GetComplex), units);
+			if (value.units.HasUnits)
+				throw new ArgumentException("Cannot have units.");
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Asin(value.GetFloat), new ExpressionUnits("rad"));
+			return new ExpressionResult(Complex.Asin(value.GetComplex), new ExpressionUnits("rad"));
 		}
 
-		public ExpressionResult Atan()
+		public static ExpressionResult Atan(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Atan(GetFloat), units);
-			return new ExpressionResult(Complex.Atan(GetComplex), units);
+			if (value.units.HasUnits)
+				throw new ArgumentException("Cannot have units.");
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Atan(value.GetFloat), new ExpressionUnits("rad"));
+			return new ExpressionResult(Complex.Atan(value.GetComplex), new ExpressionUnits("rad"));
 		}
 
 		public ExpressionResult Conjugate()
@@ -687,18 +700,20 @@ namespace NeoEdit.Common.Expressions
 			return new ExpressionResult(Complex.Conjugate(GetComplex));
 		}
 
-		public ExpressionResult Cosh()
+		public static ExpressionResult Cosh(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Cosh(GetFloat), units);
-			return new ExpressionResult(Complex.Cosh(GetComplex), units);
+			value = value.ToRad();
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Cosh(value.GetFloat));
+			return new ExpressionResult(Complex.Cosh(value.GetComplex));
 		}
 
-		public ExpressionResult Cos()
+		public static ExpressionResult Cos(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Cos(GetFloat), units);
-			return new ExpressionResult(Complex.Cos(GetComplex), units);
+			value = value.ToRad();
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Cos(value.GetFloat));
+			return new ExpressionResult(Complex.Cos(value.GetComplex));
 		}
 
 		public ExpressionResult Ln()
@@ -754,32 +769,36 @@ namespace NeoEdit.Common.Expressions
 			return new ExpressionResult(options.OrderBy(complex => Math.Abs(complex.Imaginary)).ThenByDescending(complex => complex.Real).ThenByDescending(complex => complex.Imaginary).FirstOrDefault(), val.units);
 		}
 
-		public ExpressionResult Sinh()
+		public static ExpressionResult Sinh(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Sinh(GetFloat), units);
-			return new ExpressionResult(Complex.Sinh(GetComplex), units);
+			value = value.ToRad();
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Sinh(value.GetFloat));
+			return new ExpressionResult(Complex.Sinh(value.GetComplex));
 		}
 
-		public ExpressionResult Sin()
+		public static ExpressionResult Sin(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Sin(GetFloat), units);
-			return new ExpressionResult(Complex.Sin(GetComplex), units);
+			value = value.ToRad();
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Sin(value.GetFloat));
+			return new ExpressionResult(Complex.Sin(value.GetComplex));
 		}
 
-		public ExpressionResult Tanh()
+		public static ExpressionResult Tanh(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Tanh(GetFloat), units);
-			return new ExpressionResult(Complex.Tanh(GetComplex), units);
+			value = value.ToRad();
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Tanh(value.GetFloat));
+			return new ExpressionResult(Complex.Tanh(value.GetComplex));
 		}
 
-		public ExpressionResult Tan()
+		public static ExpressionResult Tan(ExpressionResult value)
 		{
-			if (IsFloat)
-				return new ExpressionResult(Math.Tan(GetFloat), units);
-			return new ExpressionResult(Complex.Tan(GetComplex), units);
+			value = value.ToRad();
+			if (value.IsFloat)
+				return new ExpressionResult(Math.Tan(value.GetFloat));
+			return new ExpressionResult(Complex.Tan(value.GetComplex));
 		}
 
 		public ExpressionResult GetFileName()

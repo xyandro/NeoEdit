@@ -23,8 +23,20 @@ namespace NeoEdit.Common.Expressions
 		}
 
 		public bool HasUnits { get { return units.Any(); } }
-		public bool IsSI { get { return (units.Count == 1) && (units.First().Key.ToLowerInvariant() == "si") && (units.First().Value == 1); } }
-		public bool IsSimple { get { return (units.Count == 1) && (units.First().Key.ToLowerInvariant() == "simple") && (units.First().Value == 1); } }
+		public string Single
+		{
+			get
+			{
+				if (units.Count != 1)
+					return null;
+				var first = units.First();
+				if (first.Value != 1)
+					return null;
+				return first.Key;
+			}
+		}
+		public bool IsSI { get { return (Single ?? "").ToLowerInvariant() == "si"; } }
+		public bool IsSimple { get { return (Single ?? "").ToLowerInvariant() == "simple"; } }
 
 		public static ExpressionUnits operator *(ExpressionUnits factor1, ExpressionUnits factor2)
 		{
