@@ -136,12 +136,13 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(new NEExpression("1 mile^3 => feet^3").Evaluate().ToString(), "147197952000 feet^3");
 			Assert.AreEqual(new NEExpression("55 degc => K").Evaluate().ToString(), "328.15 K");
 			Assert.AreEqual(new NEExpression("328.15 K => degc").Evaluate().ToString(), "55 degc");
-			Assert.AreEqual(new NEExpression("59 degf => degc").Evaluate().ToString(), "15.0000000000001 degc");
-			Assert.AreEqual(new NEExpression("15 degc => degf").Evaluate().ToString(), "58.9999999999999 degf");
+			Assert.AreEqual(new NEExpression("59 degf => degc").Evaluate().ToString(), "15 degc");
+			Assert.AreEqual(new NEExpression("15 degc => degf").Evaluate().ToString(), "59 degf");
 			Assert.AreEqual(new NEExpression("2 in + 2 ft").Evaluate().ToString(), "26 in");
 			Assert.AreEqual(new NEExpression("5 km = 5000000 mm").Evaluate(), true);
-			Assert.AreEqual(new NEExpression("5 kJ => SI").Evaluate().ToString(), "5000 m^2*kg/s^2");
+			Assert.AreEqual(new NEExpression("5 kJ => SI").Evaluate().ToString(), "5000 kg*m^2/s^2");
 			Assert.AreEqual(new NEExpression("1 mL => SI").Evaluate().ToString(), "1E-06 m^3");
+			Assert.AreEqual(new NEExpression("1 MHz => SI").Evaluate().ToString(), "1000000 s^-1");
 			Assert.AreEqual(new NEExpression("10 J/s => Simple").Evaluate().ToString(), "10 W");
 
 			Assert.AreEqual(new NEExpression("cos(pi)").Evaluate().ToString(), "-1");

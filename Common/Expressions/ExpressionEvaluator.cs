@@ -74,7 +74,7 @@ namespace NeoEdit.Common.Expressions
 				case "&&": return ExpressionResult.AndOp(val1, val2);
 				case "||": return ExpressionResult.OrOp(val1, val2);
 				case "??": return ExpressionResult.NullCoalesceOp(val1, val2);
-				case "=>": return ExpressionResult.UnitConvertOp(val1, val2);
+				case "=>": return ExpressionResult.UnitConvertOp(val1, val2.Units);
 				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
 			}
 		}
@@ -187,6 +187,6 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitUnitExp(ExpressionParser.UnitExpContext context) { return ExpressionResult.Exp(Visit(context.base1), new ExpressionResult(int.Parse(context.power.Text))); }
 		public override ExpressionResult VisitUnitMult(ExpressionParser.UnitMultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
 		public override ExpressionResult VisitUnitParen(ExpressionParser.UnitParenContext context) { return Visit(context.units()); }
-		public override ExpressionResult VisitUnit(ExpressionParser.UnitContext context) { return new ExpressionResult(1, new ExpressionUnits(context.val.Text)); }
+		public override ExpressionResult VisitUnit(ExpressionParser.UnitContext context) { return new ExpressionResult(1, context.val.Text); }
 	}
 }

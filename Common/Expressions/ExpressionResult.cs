@@ -11,46 +11,47 @@ namespace NeoEdit.Common.Expressions
 {
 	public class ExpressionResult : IComparable
 	{
-		object value;
-		ExpressionUnits units;
+		public object Value { get; private set; }
+		public ExpressionUnits Units { get; private set; }
 
-		public ExpressionResult(object _value, ExpressionResult units = null) : this(_value, units == null ? null : units.units) { }
+		public ExpressionResult(object value) : this(value, new ExpressionUnits()) { }
+		public ExpressionResult(object value, string unit, int exp = 1) : this(value, new ExpressionUnits(unit, exp)) { }
 
-		public ExpressionResult(object _value, ExpressionUnits _units)
+		public ExpressionResult(object value, ExpressionUnits units)
 		{
-			value = _value;
-			units = _units == null ? new ExpressionUnits() : _units;
+			Value = value;
+			Units = units;
 
-			if ((value != null) && (value.GetType().FullName == "MS.Internal.NamedObject") && (value.ToString() == "{DependencyProperty.UnsetValue}"))
-				value = null;
+			if ((Value != null) && (Value.GetType().FullName == "MS.Internal.NamedObject") && (Value.ToString() == "{DependencyProperty.UnsetValue}"))
+				Value = null;
 
-			if (value is Complex)
+			if (Value is Complex)
 			{
-				var complex = RoundComplex((Complex)value);
-				value = complex.Imaginary == 0 ? complex.Real : complex;
+				var complex = RoundComplex((Complex)Value);
+				Value = complex.Imaginary == 0 ? complex.Real : complex;
 			}
 
-			if (value is double)
+			if (Value is double)
 			{
-				var d = (double)value;
+				var d = (double)Value;
 				if ((!Double.IsInfinity(d)) && (!Double.IsNaN(d)) && (Math.Floor(d) == d))
-					value = new BigInteger(d);
+					Value = new BigInteger(d);
 			}
 
-			if (value is BigInteger)
+			if (Value is BigInteger)
 			{
-				var bigint = (BigInteger)value;
+				var bigint = (BigInteger)Value;
 				if ((bigint >= long.MinValue) && (bigint <= long.MaxValue))
-					value = (long)bigint;
+					Value = (long)bigint;
 			}
 		}
 
-		bool IsInteger { get { return (value is sbyte) || (value is byte) || (value is short) || (value is ushort) || (value is int) || (value is uint) || (value is long) || (value is ulong) || (value is BigInteger); } }
-		bool IsFloat { get { return (IsInteger) || (value is float) || (value is double) || (value is decimal); } }
-		bool IsComplex { get { return (IsFloat) || (value is Complex); } }
-		bool IsCharacter { get { return value is char; } }
-		bool IsString { get { return (IsCharacter) || (value is string); } }
-		public bool True { get { return (value is bool) && ((bool)value); } }
+		bool IsInteger { get { return (Value is sbyte) || (Value is byte) || (Value is short) || (Value is ushort) || (Value is int) || (Value is uint) || (Value is long) || (Value is ulong) || (Value is BigInteger); } }
+		bool IsFloat { get { return (IsInteger) || (Value is float) || (Value is double) || (Value is decimal); } }
+		bool IsComplex { get { return (IsFloat) || (Value is Complex); } }
+		bool IsCharacter { get { return Value is char; } }
+		bool IsString { get { return (IsCharacter) || (Value is string); } }
+		public bool True { get { return (Value is bool) && ((bool)Value); } }
 
 		static Complex RoundComplex(Complex complex)
 		{
@@ -67,9 +68,9 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (value == null)
+				if (Value == null)
 					throw new Exception("NULL value");
-				return (bool)Convert.ChangeType(value, typeof(bool));
+				return (bool)Convert.ChangeType(Value, typeof(bool));
 			}
 		}
 
@@ -77,18 +78,18 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (value == null)
+				if (Value == null)
 					throw new Exception("NULL value");
-				if (value is BigInteger)
-					return (BigInteger)value;
-				if (value is Complex)
+				if (Value is BigInteger)
+					return (BigInteger)Value;
+				if (Value is Complex)
 				{
-					var complex = (Complex)value;
+					var complex = (Complex)Value;
 					if (complex.Imaginary != 0)
 						throw new Exception("Can't convert complex to double");
-					value = complex.Real;
+					Value = complex.Real;
 				}
-				return new BigInteger((long)Convert.ChangeType(value, typeof(long)));
+				return new BigInteger((long)Convert.ChangeType(Value, typeof(long)));
 			}
 		}
 
@@ -96,18 +97,18 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (value == null)
+				if (Value == null)
 					throw new Exception("NULL value");
-				if (value is Complex)
+				if (Value is Complex)
 				{
-					var complex = (Complex)value;
+					var complex = (Complex)Value;
 					if (complex.Imaginary != 0)
 						throw new Exception("Can't convert complex to double");
 					return complex.Real;
 				}
-				if (value is BigInteger)
-					return (double)(BigInteger)value;
-				return (double)Convert.ChangeType(value, typeof(double));
+				if (Value is BigInteger)
+					return (double)(BigInteger)Value;
+				return (double)Convert.ChangeType(Value, typeof(double));
 			}
 		}
 
@@ -115,13 +116,13 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (value == null)
+				if (Value == null)
 					throw new Exception("NULL value");
-				if (value is Complex)
-					return (Complex)value;
-				if (value is BigInteger)
-					return (Complex)(BigInteger)value;
-				return new Complex((double)Convert.ChangeType(value, typeof(double)), 0);
+				if (Value is Complex)
+					return (Complex)Value;
+				if (Value is BigInteger)
+					return (Complex)(BigInteger)Value;
+				return new Complex((double)Convert.ChangeType(Value, typeof(double)), 0);
 			}
 		}
 
@@ -129,9 +130,9 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (value == null)
+				if (Value == null)
 					throw new Exception("NULL value");
-				return (char)Convert.ChangeType(value, typeof(char));
+				return (char)Convert.ChangeType(Value, typeof(char));
 			}
 		}
 
@@ -139,11 +140,11 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (value == null)
+				if (Value == null)
 					throw new Exception("NULL value");
-				if (value is Complex)
+				if (Value is Complex)
 				{
-					var complex = (Complex)value;
+					var complex = (Complex)Value;
 					if (complex.Imaginary == 0)
 						return complex.Real.ToString();
 
@@ -158,31 +159,31 @@ namespace NeoEdit.Common.Expressions
 					result += "i";
 					return result;
 				}
-				return value.ToString();
+				return Value.ToString();
 			}
 		}
 
 		public static ExpressionResult DotOp(ExpressionResult obj, ExpressionResult fileName)
 		{
-			string fieldNameStr = (fileName.value ?? "").ToString();
-			if (obj.units.HasUnits)
+			string fieldNameStr = (fileName.Value ?? "").ToString();
+			if (obj.Units.HasUnits)
 				throw new Exception("Can't do dot operator with units.");
-			if (obj.value == null)
+			if (obj.Value == null)
 				return null;
-			var field = obj.value.GetType().GetProperty(fieldNameStr, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			var field = obj.Value.GetType().GetProperty(fieldNameStr, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			if (field == null)
 				return null;
-			return new ExpressionResult(field.GetValue(obj.value));
+			return new ExpressionResult(field.GetValue(obj.Value));
 		}
 
 		public static ExpressionResult operator !(ExpressionResult obj)
 		{
-			return new ExpressionResult(!obj.GetBool, obj.units);
+			return new ExpressionResult(!obj.GetBool, obj.Units);
 		}
 
 		public static ExpressionResult operator ~(ExpressionResult obj)
 		{
-			return new ExpressionResult(~obj.GetInteger, obj.units);
+			return new ExpressionResult(~obj.GetInteger, obj.Units);
 		}
 
 		public static ExpressionResult operator +(ExpressionResult obj)
@@ -193,17 +194,17 @@ namespace NeoEdit.Common.Expressions
 		public static ExpressionResult operator -(ExpressionResult obj)
 		{
 			if (obj.IsInteger)
-				return new ExpressionResult(-obj.GetInteger, obj.units);
+				return new ExpressionResult(-obj.GetInteger, obj.Units);
 			if (obj.IsFloat)
-				return new ExpressionResult(-obj.GetFloat, obj.units);
+				return new ExpressionResult(-obj.GetFloat, obj.Units);
 			if (obj.IsComplex)
-				return new ExpressionResult(-obj.GetComplex, obj.units);
+				return new ExpressionResult(-obj.GetComplex, obj.Units);
 			throw new Exception("Invalid operation");
 		}
 
 		public static ExpressionResult Factorial(ExpressionResult obj)
 		{
-			if (obj.units.HasUnits)
+			if (obj.Units.HasUnits)
 				throw new Exception("Cannot do factorial with units");
 
 			if (!obj.IsInteger)
@@ -218,7 +219,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult Exp(ExpressionResult baseVal, ExpressionResult exponentVal)
 		{
-			if (exponentVal.units.HasUnits)
+			if (exponentVal.Units.HasUnits)
 				throw new Exception("Exponent cannot have units.");
 
 			if ((baseVal.IsFloat) && (exponentVal.IsInteger))
@@ -229,11 +230,11 @@ namespace NeoEdit.Common.Expressions
 					value = BigInteger.Pow(baseVal.GetInteger, exponent);
 				else
 					value = Math.Pow(baseVal.GetFloat, exponent);
-				var units = baseVal.units ^ exponent;
+				var units = baseVal.Units ^ exponent;
 				return new ExpressionResult(value, units);
 			}
 
-			if (baseVal.units.HasUnits)
+			if (baseVal.Units.HasUnits)
 				throw new Exception("Invalid base units.");
 
 			if ((baseVal.IsFloat) && (exponentVal.IsFloat))
@@ -255,10 +256,10 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator *(ExpressionResult factor1, ExpressionResult factor2)
 		{
-			if ((factor1.value == null) || (factor2.value == null))
+			if ((factor1.Value == null) || (factor2.Value == null))
 				throw new Exception("NULL value");
 
-			var units = factor1.units * factor2.units;
+			var units = factor1.Units * factor2.Units;
 
 			if ((factor2.IsString) && (factor1.IsComplex))
 				Swap(ref factor1, ref factor2);
@@ -283,10 +284,10 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator /(ExpressionResult dividend, ExpressionResult divisor)
 		{
-			if ((dividend.value == null) || (divisor.value == null))
+			if ((dividend.Value == null) || (divisor.Value == null))
 				throw new Exception("NULL value");
 
-			var units = dividend.units / divisor.units;
+			var units = dividend.Units / divisor.Units;
 
 			if ((dividend.IsInteger) && (divisor.IsInteger))
 			{
@@ -304,9 +305,9 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator %(ExpressionResult dividend, ExpressionResult divisor)
 		{
-			var units = dividend.units / divisor.units;
+			var units = dividend.Units / divisor.Units;
 
-			if ((dividend.value == null) || (divisor.value == null))
+			if ((dividend.Value == null) || (divisor.Value == null))
 				throw new Exception("NULL value");
 
 			if ((dividend.IsInteger) && (divisor.IsInteger))
@@ -317,7 +318,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator +(ExpressionResult addend1, ExpressionResult addend2)
 		{
-			if ((addend1.value == null) || (addend2.value == null))
+			if ((addend1.Value == null) || (addend2.Value == null))
 			{
 				if (addend1.IsString)
 					return addend1;
@@ -326,78 +327,76 @@ namespace NeoEdit.Common.Expressions
 				throw new Exception("NULL value");
 			}
 
-			if (addend1.units != addend2.units)
-				addend2 = UnitConvertOp(addend2, addend1);
+			if (!addend1.Units.Equals(addend2.Units))
+				addend2 = UnitConvertOp(addend2, addend1.Units);
 
 			if ((addend2.IsCharacter) && (addend1.IsComplex))
 				Swap(ref addend1, ref addend2);
 			if ((addend1.IsCharacter) && (addend2.IsComplex))
-				return new ExpressionResult((char)((long)addend1.GetChar + addend2.GetInteger), addend1.units);
+				return new ExpressionResult((char)((long)addend1.GetChar + addend2.GetInteger), addend1.Units);
 
 			if ((addend1.IsString) || (addend2.IsString))
-				return new ExpressionResult(addend1.GetString + addend2.GetString, addend1.units);
+				return new ExpressionResult(addend1.GetString + addend2.GetString, addend1.Units);
 
 			if ((addend1.IsInteger) && (addend2.IsInteger))
-				return new ExpressionResult(addend1.GetInteger + addend2.GetInteger, addend1.units);
+				return new ExpressionResult(addend1.GetInteger + addend2.GetInteger, addend1.Units);
 
 			if ((addend1.IsFloat) && (addend2.IsFloat))
-				return new ExpressionResult(addend1.GetFloat + addend2.GetFloat, addend1.units);
+				return new ExpressionResult(addend1.GetFloat + addend2.GetFloat, addend1.Units);
 
-			return new ExpressionResult(addend1.GetComplex + addend2.GetComplex, addend1.units);
+			return new ExpressionResult(addend1.GetComplex + addend2.GetComplex, addend1.Units);
 		}
 
 		public static ExpressionResult operator -(ExpressionResult minuend, ExpressionResult subtrahend)
 		{
-			if ((minuend.value == null) || (subtrahend.value == null))
+			if ((minuend.Value == null) || (subtrahend.Value == null))
 				throw new Exception("NULL value");
 
-			if (minuend.units != subtrahend.units)
-				subtrahend = UnitConvertOp(subtrahend, minuend);
+			if (!minuend.Units.Equals(subtrahend.Units))
+				subtrahend = UnitConvertOp(subtrahend, minuend.Units);
 
 			if ((subtrahend.IsCharacter) && (minuend.IsComplex))
 				Swap(ref minuend, ref subtrahend);
 			if ((minuend.IsCharacter) && (subtrahend.IsComplex))
-				return new ExpressionResult((char)((long)minuend.GetChar - subtrahend.GetInteger), minuend.units);
+				return new ExpressionResult((char)((long)minuend.GetChar - subtrahend.GetInteger), minuend.Units);
 
 			if ((minuend.IsInteger) && (subtrahend.IsInteger))
-				return new ExpressionResult(minuend.GetInteger - subtrahend.GetInteger, minuend.units);
+				return new ExpressionResult(minuend.GetInteger - subtrahend.GetInteger, minuend.Units);
 
 			if ((minuend.IsFloat) && (subtrahend.IsFloat))
-				return new ExpressionResult(minuend.GetFloat - subtrahend.GetFloat, minuend.units);
+				return new ExpressionResult(minuend.GetFloat - subtrahend.GetFloat, minuend.Units);
 
-			return new ExpressionResult(minuend.GetComplex - subtrahend.GetComplex, minuend.units);
+			return new ExpressionResult(minuend.GetComplex - subtrahend.GetComplex, minuend.Units);
 		}
 
 		public static ExpressionResult ShiftLeft(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val2.units.HasUnits)
+			if (val2.Units.HasUnits)
 				throw new Exception("Shift value cannot have units");
-			return new ExpressionResult(val1.GetInteger << (int)val2.GetInteger, val1.units);
+			return new ExpressionResult(val1.GetInteger << (int)val2.GetInteger, val1.Units);
 		}
 
 		public static ExpressionResult ShiftRight(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val2.units.HasUnits)
+			if (val2.Units.HasUnits)
 				throw new Exception("Shift value cannot have units");
-			return new ExpressionResult(val1.GetInteger >> (int)val2.GetInteger, val1.units);
+			return new ExpressionResult(val1.GetInteger >> (int)val2.GetInteger, val1.Units);
 		}
 
 		public static ExpressionResult EqualsOp(ExpressionResult val1, ExpressionResult val2, bool ignoreCase)
 		{
-			if (val1.units != val2.units)
+			if (!val1.Units.Equals(val2.Units))
 			{
-				double conversion1, conversion2;
-				ExpressionUnits units1, units2;
-				val1.units.GetConversion(out conversion1, out units1);
-				val2.units.GetConversion(out conversion2, out units2);
-				if (units1 != units2)
+				var conversion1 = ExpressionUnitsConversion.GetBaseConversion(val1.Units);
+				var conversion2 = ExpressionUnitsConversion.GetBaseConversion(val2.Units);
+				if (!conversion1.toUnits.Equals(conversion2.toUnits))
 					return new ExpressionResult(false); // Units don't match
-				val2 = UnitConvertOp(val2, val1);
+				val2 = UnitConvertOp(val2, val1.Units);
 			}
 
-			if ((val1.value == null) && (val2.value == null))
+			if ((val1.Value == null) && (val2.Value == null))
 				return new ExpressionResult(true);
-			if ((val1.value == null) || (val2.value == null))
+			if ((val1.Value == null) || (val2.Value == null))
 				return new ExpressionResult(false);
 
 			if ((val1.IsInteger) && (val2.IsInteger))
@@ -412,16 +411,16 @@ namespace NeoEdit.Common.Expressions
 			if ((val1.IsString) && (val2.IsString))
 				return new ExpressionResult(val1.GetString.Equals(val2.GetString, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
 
-			return new ExpressionResult(val1.value.Equals(val2.value));
+			return new ExpressionResult(val1.Value.Equals(val2.Value));
 		}
 
 		public static ExpressionResult LessThanOp(ExpressionResult val1, ExpressionResult val2, bool ignoreCase)
 		{
-			if ((val1.value == null) || (val2.value == null))
+			if ((val1.Value == null) || (val2.Value == null))
 				throw new Exception("NULL value");
 
-			if (val1.units != val2.units)
-				val2 = UnitConvertOp(val2, val1);
+			if (val1.Units != val2.Units)
+				val2 = UnitConvertOp(val2, val1.Units);
 
 			if ((val1.IsString) && (val2.IsString))
 				return new ExpressionResult(String.Compare(val1.GetString, val2.GetString, ignoreCase) < 0);
@@ -434,11 +433,11 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult GreaterThanOp(ExpressionResult val1, ExpressionResult val2, bool ignoreCase)
 		{
-			if ((val1.value == null) || (val2.value == null))
+			if ((val1.Value == null) || (val2.Value == null))
 				throw new Exception("NULL value");
 
-			if (val1.units != val2.units)
-				val2 = UnitConvertOp(val2, val1);
+			if (val1.Units != val2.Units)
+				val2 = UnitConvertOp(val2, val1.Units);
 
 			if ((val1.IsString) && (val2.IsString))
 				return new ExpressionResult(String.Compare(val1.GetString, val2.GetString, ignoreCase) > 0);
@@ -451,65 +450,62 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult Is(ExpressionResult val1, ExpressionResult val2)
 		{
-			if ((val1.units.HasUnits) || (val2.units.HasUnits))
+			if ((val1.Units.HasUnits) || (val2.Units.HasUnits))
 				throw new Exception("Is cannot have units");
-			return new ExpressionResult(val1.value == null ? false : val1.value.GetType().Name == (val2.value ?? "").ToString());
+			return new ExpressionResult(val1.Value == null ? false : val1.Value.GetType().Name == (val2.Value ?? "").ToString());
 		}
 
 		public static ExpressionResult operator &(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units != val2.units)
-				val2 = UnitConvertOp(val2, val1);
-			return new ExpressionResult(val1.GetInteger & val2.GetInteger, val1.units);
+			if (!val1.Units.Equals(val2.Units))
+				val2 = UnitConvertOp(val2, val1.Units);
+			return new ExpressionResult(val1.GetInteger & val2.GetInteger, val1.Units);
 		}
 
 		public static ExpressionResult operator ^(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units != val2.units)
-				val2 = UnitConvertOp(val2, val1);
-			return new ExpressionResult(val1.GetInteger ^ val2.GetInteger, val1.units);
+			if (!val1.Units.Equals(val2.Units))
+				val2 = UnitConvertOp(val2, val1.Units);
+			return new ExpressionResult(val1.GetInteger ^ val2.GetInteger, val1.Units);
 		}
 
 		public static ExpressionResult operator |(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units != val2.units)
-				val2 = UnitConvertOp(val2, val1);
-			return new ExpressionResult(val1.GetInteger | val2.GetInteger, val1.units);
+			if (!val1.Units.Equals(val2.Units))
+				val2 = UnitConvertOp(val2, val1.Units);
+			return new ExpressionResult(val1.GetInteger | val2.GetInteger, val1.Units);
 		}
 
 		public static ExpressionResult AndOp(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units != val2.units)
-				val2 = UnitConvertOp(val2, val1);
+			if (val1.Units != val2.Units)
+				val2 = UnitConvertOp(val2, val1.Units);
 			return new ExpressionResult(val1.GetBool && val2.GetBool);
 		}
 
 		public static ExpressionResult OrOp(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.units != val2.units)
-				val2 = UnitConvertOp(val2, val1);
+			if (!val1.Units.Equals(val2.Units))
+				val2 = UnitConvertOp(val2, val1.Units);
 			return new ExpressionResult(val1.GetBool || val2.GetBool);
 		}
 
 		public static ExpressionResult NullCoalesceOp(ExpressionResult val1, ExpressionResult val2)
 		{
-			return val1.value != null ? val1 : val2;
+			return val1.Value != null ? val1 : val2;
 		}
 
-		public static ExpressionResult UnitConvertOp(ExpressionResult val1, ExpressionResult val2)
+		public static ExpressionResult UnitConvertOp(ExpressionResult value, ExpressionUnits units)
 		{
-			var toBase = val1.units.GetToBase();
-			var fromBase = val2.units.GetFromBase();
-			if ((toBase != null) && (fromBase != null))
-				return fromBase(toBase(val1));
-
-			var conversion = ExpressionUnits.GetConversion(val1.units, val2.units);
-			return val1 * conversion;
+			var conversion = ExpressionUnitsConversion.GetConversion(value.Units, units);
+			var mult = new ExpressionResult(conversion.mult, conversion.toUnits / conversion.fromUnits);
+			var add = new ExpressionResult(conversion.add, conversion.toUnits);
+			return value * mult + add;
 		}
 
 		public ExpressionResult SetUnits(ExpressionResult units)
 		{
-			return new ExpressionResult(value, units.units);
+			return new ExpressionResult(Value, units.Units);
 		}
 
 		public ExpressionResult ToWords()
@@ -654,45 +650,45 @@ namespace NeoEdit.Common.Expressions
 
 		ExpressionResult ToRad()
 		{
-			if (!units.HasUnits)
-				return new ExpressionResult(value, new ExpressionUnits("rad"));
-			return UnitConvertOp(this, new ExpressionResult(1, new ExpressionUnits("rad")));
+			if (!Units.HasUnits)
+				return new ExpressionResult(Value, "rad");
+			return UnitConvertOp(this, new ExpressionUnits("rad"));
 		}
 
 		public ExpressionResult Abs()
 		{
 			if (IsInteger)
-				return new ExpressionResult(BigInteger.Abs(GetInteger), units);
+				return new ExpressionResult(BigInteger.Abs(GetInteger), Units);
 			if (IsFloat)
-				return new ExpressionResult(Math.Abs(GetFloat), units);
-			return new ExpressionResult(Complex.Abs(GetComplex), units);
+				return new ExpressionResult(Math.Abs(GetFloat), Units);
+			return new ExpressionResult(Complex.Abs(GetComplex), Units);
 		}
 
 		public static ExpressionResult Acos(ExpressionResult value)
 		{
-			if (value.units.HasUnits)
+			if (value.Units.HasUnits)
 				throw new ArgumentException("Cannot have units.");
 			if (value.IsFloat)
-				return new ExpressionResult(Math.Acos(value.GetFloat), new ExpressionUnits("rad"));
-			return new ExpressionResult(Complex.Acos(value.GetComplex), new ExpressionUnits("rad"));
+				return new ExpressionResult(Math.Acos(value.GetFloat), "rad");
+			return new ExpressionResult(Complex.Acos(value.GetComplex), "rad");
 		}
 
 		public static ExpressionResult Asin(ExpressionResult value)
 		{
-			if (value.units.HasUnits)
+			if (value.Units.HasUnits)
 				throw new ArgumentException("Cannot have units.");
 			if (value.IsFloat)
-				return new ExpressionResult(Math.Asin(value.GetFloat), new ExpressionUnits("rad"));
-			return new ExpressionResult(Complex.Asin(value.GetComplex), new ExpressionUnits("rad"));
+				return new ExpressionResult(Math.Asin(value.GetFloat), "rad");
+			return new ExpressionResult(Complex.Asin(value.GetComplex), "rad");
 		}
 
 		public static ExpressionResult Atan(ExpressionResult value)
 		{
-			if (value.units.HasUnits)
+			if (value.Units.HasUnits)
 				throw new ArgumentException("Cannot have units.");
 			if (value.IsFloat)
-				return new ExpressionResult(Math.Atan(value.GetFloat), new ExpressionUnits("rad"));
-			return new ExpressionResult(Complex.Atan(value.GetComplex), new ExpressionUnits("rad"));
+				return new ExpressionResult(Math.Atan(value.GetFloat), "rad");
+			return new ExpressionResult(Complex.Atan(value.GetComplex), "rad");
 		}
 
 		public ExpressionResult Conjugate()
@@ -719,36 +715,36 @@ namespace NeoEdit.Common.Expressions
 		public ExpressionResult Ln()
 		{
 			if (IsFloat)
-				return new ExpressionResult(Math.Log(GetFloat), units);
-			return new ExpressionResult(Complex.Log(GetComplex), units);
+				return new ExpressionResult(Math.Log(GetFloat), Units);
+			return new ExpressionResult(Complex.Log(GetComplex), Units);
 		}
 
 		public ExpressionResult Log()
 		{
 			if (IsFloat)
-				return new ExpressionResult(Math.Log10(GetFloat), units);
-			return new ExpressionResult(Complex.Log10(GetComplex), units);
+				return new ExpressionResult(Math.Log10(GetFloat), Units);
+			return new ExpressionResult(Complex.Log10(GetComplex), Units);
 		}
 
 		public static ExpressionResult Log(ExpressionResult val, ExpressionResult newBase)
 		{
-			if (newBase.units.HasUnits)
+			if (newBase.Units.HasUnits)
 				throw new Exception("Log cannot have units.");
 			if ((val.IsFloat) && (newBase.IsFloat))
-				return new ExpressionResult(Math.Log(val.GetFloat, newBase.GetFloat), val.units);
-			return new ExpressionResult(Complex.Log(val.GetComplex, newBase.GetFloat), val.units);
+				return new ExpressionResult(Math.Log(val.GetFloat, newBase.GetFloat), val.Units);
+			return new ExpressionResult(Complex.Log(val.GetComplex, newBase.GetFloat), val.Units);
 		}
 
 		public ExpressionResult Reciprocal()
 		{
 			if (IsFloat)
-				return new ExpressionResult(1.0 / GetFloat, units);
-			return new ExpressionResult(Complex.Reciprocal(GetComplex), units);
+				return new ExpressionResult(1.0 / GetFloat, Units);
+			return new ExpressionResult(Complex.Reciprocal(GetComplex), Units);
 		}
 
 		public static ExpressionResult Root(ExpressionResult val, ExpressionResult rootObj)
 		{
-			if (rootObj.units.HasUnits)
+			if (rootObj.Units.HasUnits)
 				throw new Exception("Root cannot have units.");
 
 			var root = (int)rootObj.GetInteger;
@@ -756,9 +752,9 @@ namespace NeoEdit.Common.Expressions
 			{
 				var f = val.GetFloat;
 				if (root % 2 == 1) // Odd roots
-					return new ExpressionResult(f >= 0 ? Math.Pow(f, 1.0 / root) : -Math.Pow(-f, 1.0 / root), val.units);
+					return new ExpressionResult(f >= 0 ? Math.Pow(f, 1.0 / root) : -Math.Pow(-f, 1.0 / root), val.Units);
 				else if (f >= 0) // Even roots, val >= 0
-					return new ExpressionResult(Math.Pow(f, 1.0 / root), val.units);
+					return new ExpressionResult(Math.Pow(f, 1.0 / root), val.Units);
 			}
 
 			var complexVal = val.GetComplex;
@@ -766,7 +762,7 @@ namespace NeoEdit.Common.Expressions
 			var magnitude = complexVal.Magnitude;
 			var nthRootOfMagnitude = Math.Pow(magnitude, 1.0 / root);
 			var options = Enumerable.Range(0, root).Select(k => RoundComplex(Complex.FromPolarCoordinates(nthRootOfMagnitude, phase / root + k * 2 * Math.PI / root))).ToList();
-			return new ExpressionResult(options.OrderBy(complex => Math.Abs(complex.Imaginary)).ThenByDescending(complex => complex.Real).ThenByDescending(complex => complex.Imaginary).FirstOrDefault(), val.units);
+			return new ExpressionResult(options.OrderBy(complex => Math.Abs(complex.Imaginary)).ThenByDescending(complex => complex.Real).ThenByDescending(complex => complex.Imaginary).FirstOrDefault(), val.Units);
 		}
 
 		public static ExpressionResult Sinh(ExpressionResult value)
@@ -803,44 +799,44 @@ namespace NeoEdit.Common.Expressions
 
 		public ExpressionResult GetFileName()
 		{
-			if (units.HasUnits)
+			if (Units.HasUnits)
 				throw new Exception("Can't do FileName with units.");
 			return new ExpressionResult(Path.GetFileName(GetString));
 		}
 
 		public static ExpressionResult FromPolar(ExpressionResult val1, ExpressionResult val2)
 		{
-			return new ExpressionResult(Complex.FromPolarCoordinates(val1.GetFloat, val2.GetFloat), val1.units);
+			return new ExpressionResult(Complex.FromPolarCoordinates(val1.GetFloat, val2.GetFloat), val1.Units);
 		}
 
 		public ExpressionResult GetImaginary()
 		{
-			return new ExpressionResult(GetComplex.Imaginary, units);
+			return new ExpressionResult(GetComplex.Imaginary, Units);
 		}
 
 		public ExpressionResult Magnitude()
 		{
-			return new ExpressionResult(GetComplex.Magnitude, units);
+			return new ExpressionResult(GetComplex.Magnitude, Units);
 		}
 
 		public ExpressionResult Phase()
 		{
-			return new ExpressionResult(GetComplex.Phase, units);
+			return new ExpressionResult(GetComplex.Phase, Units);
 		}
 
 		public ExpressionResult Real()
 		{
-			return new ExpressionResult(GetComplex.Real, units);
+			return new ExpressionResult(GetComplex.Real, Units);
 		}
 
 		public static ExpressionResult StrFormat(ExpressionResult format, params ExpressionResult[] paramList)
 		{
-			return new ExpressionResult(String.Format(format.GetString, paramList.Select(arg => arg.value ?? "").ToArray()));
+			return new ExpressionResult(String.Format(format.GetString, paramList.Select(arg => arg.Value ?? "").ToArray()));
 		}
 
 		public ExpressionResult Type()
 		{
-			return new ExpressionResult(value.GetType());
+			return new ExpressionResult(Value.GetType());
 		}
 
 		public ExpressionResult ValidRE()
@@ -859,9 +855,9 @@ namespace NeoEdit.Common.Expressions
 			if (IsComplex)
 				result = GetString;
 			else
-				result = value;
+				result = Value;
 
-			var unitsStr = units.ToString();
+			var unitsStr = Units.ToString();
 			if (unitsStr != null)
 				result = result.ToString() + " " + unitsStr;
 

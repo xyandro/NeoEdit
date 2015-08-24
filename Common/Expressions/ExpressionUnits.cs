@@ -1,92 +1,69 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace NeoEdit.Common.Expressions
 {
-	public class ExpressionUnits
+	public class ExpressionUnits : IEnumerable<ExpressionUnit>
 	{
-		readonly ReadOnlyDictionary<string, int> units;
+		readonly ReadOnlyCollection<ExpressionUnit> units;
 
-		public ExpressionUnits(string unit = null)
+		public ExpressionUnits()
 		{
-			var units = new Dictionary<string, int>();
-			if (unit != null)
-				units[unit] = 1;
-			this.units = new ReadOnlyDictionary<string, int>(units);
+			units = new ReadOnlyCollection<ExpressionUnit>(new List<ExpressionUnit>());
 		}
 
-		ExpressionUnits(ReadOnlyDictionary<string, int> units)
+		public ExpressionUnits(ExpressionUnit unit)
 		{
-			this.units = units;
+			units = new ReadOnlyCollection<ExpressionUnit>(new List<ExpressionUnit> { unit });
+		}
+
+		public ExpressionUnits(string unit, int exp = 1)
+		{
+			units = new ReadOnlyCollection<ExpressionUnit>(new List<ExpressionUnit> { new ExpressionUnit(unit, exp) });
+		}
+
+		ExpressionUnits(IEnumerable<ExpressionUnit> units)
+		{
+			this.units = new ReadOnlyCollection<ExpressionUnit>(units.GroupBy(unit => unit.Unit).Select(group => new ExpressionUnit(group.Key, group.Sum(unit => unit.Exp))).Where(unit => unit.Exp != 0).OrderBy(unit => unit.Exp < 0).ThenBy(unit => unit.Unit).ToList());
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		public IEnumerator<ExpressionUnit> GetEnumerator()
+		{
+			return units.GetEnumerator();
 		}
 
 		public bool HasUnits { get { return units.Any(); } }
-		public string Single
-		{
-			get
-			{
-				if (units.Count != 1)
-					return null;
-				var first = units.First();
-				if (first.Value != 1)
-					return null;
-				return first.Key;
-			}
-		}
-		public bool IsSI { get { return (Single ?? "").ToLowerInvariant() == "si"; } }
-		public bool IsSimple { get { return (Single ?? "").ToLowerInvariant() == "simple"; } }
+		public bool IsSI { get { return (this.Count() == 1) && (units[0].Exp == 1) && (units[0].Unit.ToLowerInvariant()) == "si"; } }
+		public bool IsSimple { get { return (this.Count() == 1) && (units[0].Exp == 1) && (units[0].Unit.ToLowerInvariant()) == "simple"; } }
 
 		public static ExpressionUnits operator *(ExpressionUnits factor1, ExpressionUnits factor2)
 		{
-			var units = factor1.units.Concat(factor2.units).GroupBy(pair => pair.Key).ToDictionary(group => group.Key, group => group.Sum(pair => pair.Value)).Where(pair => pair.Value != 0).ToDictionary(pair => pair.Key, pair => pair.Value);
-			return new ExpressionUnits(new ReadOnlyDictionary<string, int>(units));
+			return new ExpressionUnits(factor1.units.Concat(factor2.units));
 		}
 
 		public static ExpressionUnits operator /(ExpressionUnits dividend, ExpressionUnits divisor)
 		{
-			var units = dividend.units.Concat(divisor.units.ToDictionary(pair => pair.Key, pair => -pair.Value)).GroupBy(pair => pair.Key).ToDictionary(group => group.Key, group => group.Sum(pair => pair.Value)).Where(pair => pair.Value != 0).ToDictionary(pair => pair.Key, pair => pair.Value);
-			return new ExpressionUnits(new ReadOnlyDictionary<string, int>(units));
+			return new ExpressionUnits(dividend.units.Concat(divisor.units.Select(unit => new ExpressionUnit(unit.Unit, -unit.Exp))));
 		}
 
 		public static ExpressionUnits operator ^(ExpressionUnits units1, int power)
 		{
-			var units = units1.units.ToDictionary(pair => pair.Key, pair => pair.Value * power);
-			return new ExpressionUnits(new ReadOnlyDictionary<string, int>(units));
+			return new ExpressionUnits(units1.units.Select(unit => new ExpressionUnit(unit.Unit, unit.Exp * power)));
 		}
 
-		public static bool operator ==(ExpressionUnits units1, ExpressionUnits units2)
+		public bool Equals(ExpressionUnits testObj)
 		{
-			if ((Object.ReferenceEquals(units1, null)) != (Object.ReferenceEquals(units2, null)))
+			if (units.Count != testObj.units.Count)
 				return false;
-			if (Object.ReferenceEquals(units1, null))
-				return true;
-			if (units1.units.Count != units2.units.Count)
-				return false;
-			return !(units1 / units2).HasUnits;
-		}
-
-		public static bool operator !=(ExpressionUnits units1, ExpressionUnits units2)
-		{
-			return !(units1 == units2);
-		}
-
-		public bool Equals(ExpressionUnits expressionUnits)
-		{
-			return this == expressionUnits;
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (!(obj is ExpressionUnits))
-				return false;
-			return Equals(obj as ExpressionUnits);
-		}
-
-		public override int GetHashCode()
-		{
-			return units.GetHashCode();
+			return !(this / testObj).HasUnits;
 		}
 
 		public override string ToString()
@@ -94,72 +71,23 @@ namespace NeoEdit.Common.Expressions
 			if (!HasUnits)
 				return null;
 
-			var posUnits = units.Where(pair => pair.Value > 0).Select(pair => pair.Key + (pair.Value > 1 ? "^" + pair.Value.ToString() : "")).ToList();
-			var negUnits = units.Where(pair => pair.Value < 0).Select(pair => pair.Key + (pair.Value < -1 ? "^" + (-pair.Value).ToString() : "")).ToList();
-			var posStr = String.Join("*", posUnits);
-			var negStr = String.Join("*", negUnits);
-			if (negUnits.Count > 1)
-				negStr = "(" + negStr + ")";
-			if ((String.IsNullOrWhiteSpace(posStr)) && (!String.IsNullOrWhiteSpace(negStr)))
-				posUnits.Add("1");
-			if (!String.IsNullOrWhiteSpace(negStr))
-				posStr += "/" + negStr;
-			return posStr;
-		}
-
-		public void GetConversion(out double conversion, out ExpressionUnits units)
-		{
-			conversion = 1;
-			units = this;
-
-			while (true)
+			var numeratorUnits = units.Where(unit => unit.Exp > 0).ToList();
+			var denominatorUnits = units.Where(unit => unit.Exp < 0).ToList();
+			if (numeratorUnits.Count == 0)
 			{
-				var done = true;
-				var unitList = units.units.ToList();
-				units = new ExpressionUnits();
-				foreach (var unit in unitList)
-				{
-					double unitConversion;
-					ExpressionUnits unitUnits;
-					if (ExpressionUnitConstants.GetConversion(unit.Key, out unitConversion, out unitUnits))
-						done = false;
-
-					conversion *= Math.Pow(unitConversion, unit.Value);
-					units *= unitUnits ^ unit.Value;
-				}
-				if (done)
-					break;
+				numeratorUnits = denominatorUnits;
+				denominatorUnits = new List<ExpressionUnit>();
 			}
-		}
+			else
+				denominatorUnits = denominatorUnits.Select(unit => new ExpressionUnit(unit.Unit, -unit.Exp)).ToList();
 
-		public static ExpressionResult GetConversion(ExpressionUnits units1, ExpressionUnits units2)
-		{
-			double conversion1, conversion2;
-			ExpressionUnits newUnits1, newUnits2;
-			units1.GetConversion(out conversion1, out newUnits1);
-			if (units2.IsSI)
-				units2 = newUnits1;
-			else if (units2.IsSimple)
-				units2 = ExpressionUnitConstants.GetSimple(newUnits1);
-
-			units2.GetConversion(out conversion2, out newUnits2);
-			if (newUnits1 != newUnits2)
-				throw new Exception("Cannot convert types");
-			return new ExpressionResult(conversion1 / conversion2, units2 / units1);
-		}
-
-		public Func<ExpressionResult, ExpressionResult> GetToBase()
-		{
-			if ((!HasUnits) || (units.Count > 1) || (units.First().Value != 1))
-				return null;
-			return ExpressionUnitConstants.GetToBase(units.First().Key);
-		}
-
-		public Func<ExpressionResult, ExpressionResult> GetFromBase()
-		{
-			if ((!HasUnits) || (units.Count > 1) || (units.First().Value != 1))
-				return null;
-			return ExpressionUnitConstants.GetFromBase(units.First().Key);
+			var numeratorStr = String.Join("*", numeratorUnits.Select(unit => unit.ToString()));
+			var denominatorStr = String.Join("*", denominatorUnits.Select(unit => unit.ToString()));
+			if (denominatorUnits.Count > 1)
+				denominatorStr = "(" + denominatorStr + ")";
+			if (!String.IsNullOrWhiteSpace(denominatorStr))
+				numeratorStr += "/" + denominatorStr;
+			return numeratorStr;
 		}
 	}
 }
