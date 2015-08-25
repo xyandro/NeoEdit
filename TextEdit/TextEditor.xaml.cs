@@ -2575,30 +2575,8 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var output = new List<string>();
-			var pos = new int[result.Items.Count];
-			var onNum = 0;
-			while (true)
-			{
-				++pos[onNum];
-				if (pos[onNum] > result.Items[onNum].Length)
-				{
-					--onNum;
-					if (onNum < 0)
-						break;
-					continue;
-				}
-
-				++onNum;
-				if (onNum < result.Items.Count)
-					pos[onNum] = 0;
-				else
-				{
-					output.Add(String.Concat(pos.Select((num, index) => result.Items[index][num - 1])) + Data.DefaultEnding);
-					--onNum;
-				}
-			}
-
+			var data = RevRegEx.RevRegExVisitor.Parse(result.RegEx);
+			var output = data.GetPossibilities().Select(str => str + Data.DefaultEnding).ToList();
 			ReplaceSelections(String.Join("", output));
 
 			var start = Selections.Single().Start;

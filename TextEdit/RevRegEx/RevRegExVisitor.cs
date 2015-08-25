@@ -2,14 +2,13 @@
 using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
-using Antlr4.Runtime.Misc;
 using NeoEdit.TextEdit.RevRegEx.Parser;
 
 namespace NeoEdit.TextEdit.RevRegEx
 {
-	class RevRegExVisitor : RevRegExBaseVisitor<List<string>>
+	class RevRegExVisitor : RevRegExParserBaseVisitor<RevRegExData>
 	{
-		public static List<string> Parse(string input)
+		public static RevRegExData Parse(string input)
 		{
 			var inputStream = new AntlrInputStream(input);
 			var lexer = new RevRegExLexer(inputStream);
@@ -35,45 +34,46 @@ namespace NeoEdit.TextEdit.RevRegEx
 			return new RevRegExVisitor().Visit(tree);
 		}
 
-		public override List<string> VisitRevregex([NotNull] RevRegExParser.RevregexContext context) { return Visit(context.items()); }
-		public override List<string> VisitParens([NotNull] RevRegExParser.ParensContext context) { return Visit(context.items()); }
-		public override List<string> VisitItems([NotNull] RevRegExParser.ItemsContext context) { return context.item().SelectMany(item => Visit(item)).ToList(); }
-
-		public override List<string> VisitRepeat([NotNull] RevRegExParser.RepeatContext context)
+		public override RevRegExData VisitRevregex(RevRegExParser.RevregexContext context) { return Visit(context.items()); }
+		public override RevRegExData VisitItems(RevRegExParser.ItemsContext context) { return RevRegExDataJoin.Create(context.itemsList().Select(item => Visit(item))); }
+		public override RevRegExData VisitItemsList(RevRegExParser.ItemsListContext context) { return RevRegExDataList.Create(context.item().Select(item => Visit(item))); }
+		public override RevRegExData VisitParens(RevRegExParser.ParensContext context) { return Visit(context.items()); }
+		public override RevRegExData VisitRepeat(RevRegExParser.RepeatContext context)
 		{
-			var data = Visit(context.item());
-			var count = int.Parse(context.count.GetText());
-			return Enumerable.Range(0, count).SelectMany(ctr => data).ToList();
+			var max = int.Parse(context.maxcount.Text);
+			var min = context.COMMA() == null ? max : context.mincount == null ? 0 : int.Parse(context.mincount.Text);
+			return new RevRegExDataRepeat(Visit(context.item()), min, max);
 		}
-
-		public override List<string> VisitRange([NotNull] RevRegExParser.RangeContext context)
+		public override RevRegExData VisitChar(RevRegExParser.CharContext context) { return new RevRegExDataChar(context.val.Text.Last()); }
+		public override RevRegExData VisitRange(RevRegExParser.RangeContext context)
 		{
-			var chars = new List<char>();
+			var list = new List<RevRegExDataChar>();
 			if (context.HYPHEN() != null)
-				chars.Add('-');
-			foreach (var rangeitem in context.rangeItem())
+				list.Add(new RevRegExDataChar('-'));
+			foreach (var item in context.rangeItem().Select(item => Visit(item)))
 			{
-				var item = Visit(rangeitem);
-				chars.AddRange(item[0]);
+				if (item is RevRegExDataChar)
+					list.Add(item as RevRegExDataChar);
+				if (item is RevRegExDataJoin)
+					list.AddRange((item as RevRegExDataJoin).List.Cast<RevRegExDataChar>());
 			}
-			return new List<string> { new string(chars.ToArray()) };
+			return RevRegExDataJoin.Create(list);
 		}
-		public override List<string> VisitChar([NotNull] RevRegExParser.CharContext context) { return new List<string> { context.charval.Text }; }
-		public override List<string> VisitRangeChar([NotNull] RevRegExParser.RangeCharContext context) { return new List<string> { context.charval.Text }; }
-		public override List<string> VisitRangeStartEnd([NotNull] RevRegExParser.RangeStartEndContext context)
+		public override RevRegExData VisitRangeChar(RevRegExParser.RangeCharContext context) { return new RevRegExDataChar(context.val.Text.Last()); }
+		public override RevRegExData VisitRangeStartEnd(RevRegExParser.RangeStartEndContext context)
 		{
-			var start = Visit(context.startchar)[0][0];
-			var end = Visit(context.endchar)[0][0];
+			var start = (Visit(context.startchar) as RevRegExDataChar).Value;
+			var end = (Visit(context.endchar) as RevRegExDataChar).Value;
 			if (start > end)
 			{
 				var tmp = start;
 				start = end;
 				end = tmp;
 			}
-			var chars = new List<char>();
+			var chars = new List<RevRegExDataChar>();
 			for (var ch = start; ch <= end; ++ch)
-				chars.Add(ch);
-			return new List<string> { new string(chars.ToArray()) };
+				chars.Add(new RevRegExDataChar(ch));
+			return RevRegExDataJoin.Create(chars);
 		}
 	}
 }

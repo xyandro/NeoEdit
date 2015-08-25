@@ -35,9 +35,9 @@
     <Message Text="Building XML grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
   </Target>
-  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegEx.g4" Outputs="RevRegEx\Parser\RevRegExBaseVisitor.cs;RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExVisitor.cs">
-    <Message Text="Building Combintaions grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegEx.g4&quot;" />
+  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs">
+    <Message Text="Building RevRegEx grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
   </Target>
   <ItemGroup Condition="'$(BuildTextEdit)' != ''">
     <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
@@ -284,12 +284,18 @@
     </Compile>
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExBaseVisitor.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExVisitor.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParserVisitor.cs" />
+    <Compile Include="RevRegEx\RevRegExData.cs" />
+    <Compile Include="RevRegEx\RevRegExDataChar.cs" />
+    <Compile Include="RevRegEx\RevRegExDataJoin.cs" />
+    <Compile Include="RevRegEx\RevRegExDataList.cs" />
+    <Compile Include="RevRegEx\RevRegExDataRepeat.cs" />
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
-    <None Include="RevRegEx\Source\RevRegEx.g4" />
+    <None Include="RevRegEx\Source\RevRegExLexer.g4" />
+    <None Include="RevRegEx\Source\RevRegExParser.g4" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -13,7 +13,6 @@
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition/>
-			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -21,12 +20,10 @@
         <Label Grid.Row="0" Grid.Column="0" Content="_RegEx:" Target="{Binding ElementName=regex}" HorizontalAlignment="Right"/>
         <TextBox Grid.Row="0" Grid.Column="1" Width="300" Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="1" Grid.Column="1" Content="{Binding RegExDesc, ElementName=self}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
-		<Label Grid.Row="2" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>
-
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

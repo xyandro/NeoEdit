@@ -28,8 +28,8 @@ TSV: Fix embedded spaces (1\t2\t3\r\n1\ta"c\t3\r\n1\t2\t3\r\n)
 Aggregate by table
 Time zones
 Copy between instances (separate processes)
-RevRegEx: Add |
 Make keys/values available for expressions
+Undo revert
 
 View:
 Update as new lines are added
