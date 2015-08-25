@@ -149,6 +149,10 @@ namespace NeoEdit.Common.Expressions
 				case "pi": return new ExpressionResult(Math.PI);
 				case "e": return new ExpressionResult(Math.E);
 				case "i": return new ExpressionResult(Complex.ImaginaryOne);
+				case "now": return new ExpressionResult(DateTimeOffset.Now);
+				case "utcnow": return new ExpressionResult(DateTimeOffset.UtcNow);
+				case "today": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Now.Date, DateTimeKind.Local)));
+				case "utctoday": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc)));
 				default: throw new ArgumentException(String.Format("Invalid constant: {0}", constant));
 			}
 		}
@@ -176,6 +180,15 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitTernary(ExpressionParser.TernaryContext context) { return Visit(context.condition).True ? Visit(context.trueval) : Visit(context.falseval); }
 		public override ExpressionResult VisitParam(ExpressionParser.ParamContext context) { return values[int.Parse(context.val.Text.Trim('[', ']'))]; }
 		public override ExpressionResult VisitString(ExpressionParser.StringContext context) { return new ExpressionResult(context.val.Text.Substring(1, context.val.Text.Length - 2)); }
+		public override ExpressionResult VisitDate(ExpressionParser.DateContext context) { return new ExpressionResult(DateTimeOffset.Parse(context.GetText().Trim('\''), CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces)); }
+		public override ExpressionResult VisitTime(ExpressionParser.TimeContext context)
+		{
+			var str = context.GetText().Trim('\'').ToLowerInvariant();
+			var timeSpan = TimeSpan.Parse(str.Replace("am", "").Replace("pm", ""));
+			if (str.Contains("pm"))
+				timeSpan += TimeSpan.FromHours(12);
+			return new ExpressionResult(timeSpan);
+		}
 		public override ExpressionResult VisitChar(ExpressionParser.CharContext context) { return new ExpressionResult(context.val.Text[1]); }
 		public override ExpressionResult VisitTrue(ExpressionParser.TrueContext context) { return new ExpressionResult(true); }
 		public override ExpressionResult VisitFalse(ExpressionParser.FalseContext context) { return new ExpressionResult(false); }

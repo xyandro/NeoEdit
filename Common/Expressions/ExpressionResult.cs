@@ -51,6 +51,8 @@ namespace NeoEdit.Common.Expressions
 		bool IsComplex { get { return (IsFloat) || (Value is Complex); } }
 		bool IsCharacter { get { return Value is char; } }
 		bool IsString { get { return (IsCharacter) || (Value is string); } }
+		bool IsDateTime { get { return (Value is DateTime) || (Value is DateTimeOffset); } }
+		bool IsTimeSpan { get { return (Value is TimeSpan); } }
 		public bool True { get { return (Value is bool) && ((bool)Value); } }
 
 		static Complex RoundComplex(Complex complex)
@@ -162,6 +164,18 @@ namespace NeoEdit.Common.Expressions
 				return Value.ToString();
 			}
 		}
+
+		public DateTimeOffset GetDateTime
+		{
+			get
+			{
+				if (Value is DateTime)
+					return new DateTimeOffset((DateTime)Value);
+				return (DateTimeOffset)Value;
+			}
+		}
+
+		public TimeSpan GetTimeSpan { get { return (TimeSpan)Value; } }
 
 		public static ExpressionResult DotOp(ExpressionResult obj, ExpressionResult fileName)
 		{
@@ -327,6 +341,64 @@ namespace NeoEdit.Common.Expressions
 				throw new Exception("NULL value");
 			}
 
+			if ((addend2.IsDateTime) && (!addend1.IsDateTime))
+				Swap(ref addend1, ref addend2);
+			if (addend1.IsDateTime)
+			{
+				var datetime1 = addend1.GetDateTime;
+				if (addend2.IsTimeSpan)
+					return new ExpressionResult(datetime1 + addend2.GetTimeSpan, addend1.Units);
+				if (addend2.IsFloat)
+				{
+					if (!addend2.Units.HasUnits)
+						addend2 = new ExpressionResult(addend2.Value, "days");
+					var unit = addend2.Units.Single();
+					if (unit.Exp != 1)
+						throw new Exception("Invalid unit");
+					if (addend2.IsInteger)
+					{
+						switch (unit.Unit)
+						{
+							case "month":
+							case "months":
+							case "mon":
+							case "mons":
+								return new ExpressionResult(datetime1.AddMonths((int)addend2.GetInteger), addend1.Units);
+							case "year":
+							case "years":
+							case "yr":
+							case "yrs":
+							case "y":
+								return new ExpressionResult(datetime1.AddYears((int)addend2.GetInteger), addend1.Units);
+						}
+					}
+
+					addend2 = UnitConvertOp(addend2, new ExpressionUnits("ticks"));
+					return new ExpressionResult(datetime1 + TimeSpan.FromTicks((long)addend2.GetInteger), addend1.Units);
+				}
+				throw new ArgumentException("Operation failed");
+			}
+
+			if ((addend2.IsTimeSpan) && (!addend1.IsTimeSpan))
+				Swap(ref addend1, ref addend2);
+			if (addend1.IsTimeSpan)
+			{
+				var timespan1 = addend1.GetTimeSpan;
+				if (addend2.IsTimeSpan)
+					return new ExpressionResult(timespan1 + addend2.GetTimeSpan, addend1.Units);
+				if (addend2.IsFloat)
+				{
+					if (!addend2.Units.HasUnits)
+						addend2 = new ExpressionResult(addend2.Value, "minutes");
+					var unit = addend2.Units.Single();
+					if (unit.Exp != 1)
+						throw new Exception("Invalid unit");
+					addend2 = UnitConvertOp(addend2, new ExpressionUnits("ticks"));
+					return new ExpressionResult(timespan1 + TimeSpan.FromTicks((long)addend2.GetInteger), addend1.Units);
+				}
+				throw new ArgumentException("Operation failed");
+			}
+
 			if (!addend1.Units.Equals(addend2.Units))
 				addend2 = UnitConvertOp(addend2, addend1.Units);
 
@@ -351,6 +423,62 @@ namespace NeoEdit.Common.Expressions
 		{
 			if ((minuend.Value == null) || (subtrahend.Value == null))
 				throw new Exception("NULL value");
+
+			if (minuend.IsDateTime)
+			{
+				var datetime1 = minuend.GetDateTime;
+				if (subtrahend.IsDateTime)
+					return new ExpressionResult(datetime1 - subtrahend.GetDateTime, minuend.Units);
+				if (subtrahend.IsTimeSpan)
+					return new ExpressionResult(datetime1 - subtrahend.GetTimeSpan, minuend.Units);
+				if (subtrahend.IsFloat)
+				{
+					if (!subtrahend.Units.HasUnits)
+						subtrahend = new ExpressionResult(subtrahend.Value, "days");
+					var unit = subtrahend.Units.Single();
+					if (unit.Exp != 1)
+						throw new Exception("Invalid unit");
+					if (subtrahend.IsInteger)
+					{
+						switch (unit.Unit)
+						{
+							case "month":
+							case "months":
+							case "mon":
+							case "mons":
+								return new ExpressionResult(datetime1.AddMonths(-(int)subtrahend.GetInteger), minuend.Units);
+							case "year":
+							case "years":
+							case "yr":
+							case "yrs":
+							case "y":
+								return new ExpressionResult(datetime1.AddYears(-(int)subtrahend.GetInteger), minuend.Units);
+						}
+					}
+
+					subtrahend = UnitConvertOp(subtrahend, new ExpressionUnits("ticks"));
+					return new ExpressionResult(datetime1 - TimeSpan.FromTicks((long)subtrahend.GetInteger), minuend.Units);
+				}
+				throw new ArgumentException("Operation failed");
+			}
+
+			if (minuend.IsTimeSpan)
+			{
+				var timespan1 = minuend.GetTimeSpan;
+				if (subtrahend.IsTimeSpan)
+					return new ExpressionResult(timespan1 - subtrahend.GetTimeSpan, minuend.Units);
+				if (subtrahend.IsFloat)
+				{
+					if (!subtrahend.Units.HasUnits)
+						subtrahend = new ExpressionResult(subtrahend.Value, "minutes");
+					var unit = subtrahend.Units.Single();
+					if (unit.Exp != 1)
+						throw new Exception("Invalid unit");
+					subtrahend = UnitConvertOp(subtrahend, new ExpressionUnits("ticks"));
+					return new ExpressionResult(timespan1 - TimeSpan.FromTicks((long)subtrahend.GetInteger), minuend.Units);
+				}
+				throw new ArgumentException("Operation failed");
+			}
 
 			if (!minuend.Units.Equals(subtrahend.Units))
 				subtrahend = UnitConvertOp(subtrahend, minuend.Units);
@@ -497,6 +625,8 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult UnitConvertOp(ExpressionResult value, ExpressionUnits units)
 		{
+			if (value.IsTimeSpan)
+				value = new ExpressionResult(value.GetTimeSpan.Ticks, "ticks");
 			var conversion = ExpressionUnitsConversion.GetConversion(value.Units, units);
 			var mult = new ExpressionResult(conversion.mult, conversion.toUnits / conversion.fromUnits);
 			var add = new ExpressionResult(conversion.add, conversion.toUnits);
@@ -854,6 +984,10 @@ namespace NeoEdit.Common.Expressions
 			object result = null;
 			if (IsComplex)
 				result = GetString;
+			else if (IsDateTime)
+				result = String.Format("'{0}'", GetDateTime.ToString("o"));
+			else if (IsTimeSpan)
+				result = String.Format("'{0}'", GetTimeSpan.ToString("g"));
 			else
 				result = Value;
 

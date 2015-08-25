@@ -41,6 +41,8 @@ e
 value
 	: val=PARAM # Param
 	| val=STRING # String
+	| val=(DATE | DATETIME) # Date
+	| val=TIME # Time
 	| val=CHAR # Char
 	| TRUE # True
 	| FALSE # False
@@ -113,10 +115,13 @@ NULLCOALESCE: '??' ;
 CONDITIONAL: '?' ;
 ELSE: ':' ;
 DOT: '.' ;
-CONSTANT: P I | E | I ;
+CONSTANT: P I | E | I | N O W | U T C N O W | T O D A Y | U T C T O D A Y ;
 PARAM: '[' [0-9]+ ']' ;
 STRING: '"' ~'"'* '"' ;
 CHAR: '\'' . '\'' ;
+DATE: '\'' ([0-9][0-9][0-9][0-9] [-/])? [01]?[0-9] [-/] [0-3]?[0-9] '\'' ;
+TIME: '\'' '-'? ([0-9]+ ':')? [0-2]?[0-9] ':' [0-5][0-9] (':' [0-5][0-9] ('.' [0-9]+)?)? ([ \t]* (A M | P M))? '\'' ;
+DATETIME: '\'' [0-9][0-9][0-9][0-9] [-/] [01]?[0-9] [-/] [0-3]?[0-9] [ \tT]+ [0-2]?[0-9] ':' [0-5]?[0-9] (':' [0-5]?[0-9] ('.' [0-9]+)?)? ([-+] [0-2]?[0-9] (':' [0-5]?[0-9])? )? ([ \t]* (A M | P M))? '\'' ;
 TRUE: T R U E ;
 FALSE: F A L S E ;
 NULL: N U L L ;
