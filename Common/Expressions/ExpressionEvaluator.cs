@@ -49,7 +49,8 @@ namespace NeoEdit.Common.Expressions
 				case "^": return ExpressionResult.Exp(val1, val2);
 				case "*": return val1 * val2;
 				case "/": return val1 / val2;
-				case "%": return val1 % val2;
+				case "//": return ExpressionResult.IntDiv(val1, val2);
+                case "%": return val1 % val2;
 				case "+": return val1 + val2;
 				case "-": return val1 - val2;
 				case "<<": return ExpressionResult.ShiftLeft(val1, val2);
@@ -66,8 +67,10 @@ namespace NeoEdit.Common.Expressions
 				case "=":
 				case "==": return ExpressionResult.EqualsOp(val1, val2, false);
 				case "i==": return ExpressionResult.EqualsOp(val1, val2, true);
-				case "!=": return !ExpressionResult.EqualsOp(val1, val2, false);
-				case "i!=": return !ExpressionResult.EqualsOp(val1, val2, true);
+				case "!=":
+				case "<>": return !ExpressionResult.EqualsOp(val1, val2, false);
+				case "i!=":
+				case "i<>": return !ExpressionResult.EqualsOp(val1, val2, true);
 				case "&": return val1 & val2;
 				case "^^": return val1 ^ val2;
 				case "|": return val1 | val2;

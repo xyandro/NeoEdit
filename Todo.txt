@@ -29,6 +29,7 @@ Aggregate by table
 Time zones
 Copy between instances (separate processes)
 RevRegEx: Add |
+Make keys/values available for expressions
 
 View:
 Update as new lines are added

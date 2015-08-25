@@ -317,6 +317,14 @@ namespace NeoEdit.Common.Expressions
 			return new ExpressionResult(dividend.GetComplex / divisor.GetComplex, units);
 		}
 
+		public static ExpressionResult IntDiv(ExpressionResult dividend, ExpressionResult divisor)
+		{
+			if ((dividend.Value == null) || (divisor.Value == null))
+				throw new Exception("NULL value");
+
+			return new ExpressionResult(dividend.GetInteger / divisor.GetInteger, dividend.Units / divisor.Units);
+		}
+
 		public static ExpressionResult operator %(ExpressionResult dividend, ExpressionResult divisor)
 		{
 			var units = dividend.Units / divisor.Units;
@@ -547,7 +555,7 @@ namespace NeoEdit.Common.Expressions
 			if ((val1.Value == null) || (val2.Value == null))
 				throw new Exception("NULL value");
 
-			if (val1.Units != val2.Units)
+			if (!val1.Units.Equals(val2.Units))
 				val2 = UnitConvertOp(val2, val1.Units);
 
 			if ((val1.IsString) && (val2.IsString))
@@ -564,7 +572,7 @@ namespace NeoEdit.Common.Expressions
 			if ((val1.Value == null) || (val2.Value == null))
 				throw new Exception("NULL value");
 
-			if (val1.Units != val2.Units)
+			if (!val1.Units.Equals(val2.Units))
 				val2 = UnitConvertOp(val2, val1.Units);
 
 			if ((val1.IsString) && (val2.IsString))
@@ -606,7 +614,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult AndOp(ExpressionResult val1, ExpressionResult val2)
 		{
-			if (val1.Units != val2.Units)
+			if (!val1.Units.Equals(val2.Units))
 				val2 = UnitConvertOp(val2, val1.Units);
 			return new ExpressionResult(val1.GetBool && val2.GetBool);
 		}
