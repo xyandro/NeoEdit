@@ -310,10 +310,10 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Content.cs">
+    <Compile Include="TextEditor-Content.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-SortAggregate.cs">
+    <Compile Include="TextEditor-SortAggregate.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="UndoRedo.cs" />
