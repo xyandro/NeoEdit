@@ -7,11 +7,15 @@
 
 	<StackPanel Margin="10" Width="300">
 		<GroupBox Header="What to sort:">
-			<UniformGrid Columns="3">
-				<RadioButton GroupName="sortScope" Content="_Selections" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Selections}"/>
-				<RadioButton GroupName="sortScope" Content="_Lines" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Lines}"/>
-				<RadioButton GroupName="sortScope" Content="_Regions" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Regions}"/>
-			</UniformGrid>
+			<StackPanel>
+				<UniformGrid Columns="3">
+					<RadioButton GroupName="sortScope" Content="_Selections" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Selections}"/>
+					<RadioButton GroupName="sortScope" Content="_Lines" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Lines}"/>
+					<RadioButton GroupName="sortScope" Content="_Regions" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Regions}" IsEnabled="{Binding WithinRegions, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
+				</UniformGrid>
+
+				<CheckBox Content="_Within Regions" IsChecked="{Binding WithinRegions, ElementName=self}" Margin="0,5,0,0"/>
+			</StackPanel>
 		</GroupBox>
 
 		<GroupBox Header="_How to sort it:">

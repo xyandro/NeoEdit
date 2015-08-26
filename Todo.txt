@@ -11,7 +11,7 @@ Text:
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Files: Select/etc on svn status (ignore/modified)
 Translate HTML to table
-Distinct operations by marked region (sort/series/etc within region)
+Distinct operations by marked region (series/etc within region)
 Select square (right mouse button)
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
@@ -30,6 +30,8 @@ Time zones
 Copy between instances (separate processes)
 Make keys/values available for expressions
 Undo revert
+Can't copy spaces (gives System.Collections.Generic.List`1[System.String])
+Only tab indent a single multiline selection
 
 View:
 Update as new lines are added
