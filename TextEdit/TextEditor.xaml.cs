@@ -3350,7 +3350,7 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Tab:
 					{
-						if (!Selections.Any(range => range.HasSelection))
+						if (Selections.AsParallel().All(range => (!range.HasSelection) || (Data.GetOffsetLine(range.Start) == Data.GetOffsetLine(range.End))))
 						{
 							if (!shiftDown)
 								HandleText("\t");

@@ -31,7 +31,6 @@ Copy between instances (separate processes)
 Make keys/values available for expressions
 Undo revert
 Can't copy spaces (gives System.Collections.Generic.List`1[System.String])
-Only tab indent a single multiline selection
 
 View:
 Update as new lines are added
