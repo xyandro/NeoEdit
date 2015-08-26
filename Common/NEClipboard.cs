@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -28,6 +29,8 @@ namespace NeoEdit.Common
 		public static bool? IsCut { get; private set; }
 		public static object Extra { get; private set; }
 
+		static int PID = Process.GetCurrentProcess().Id;
+
 		public static List<string> Strings
 		{
 			get { return Data as List<string> ?? (Text != null ? new List<string> { Text } : new List<string>()); }
@@ -36,7 +39,7 @@ namespace NeoEdit.Common
 
 		static void SetClipboard(DataObject dataObj)
 		{
-			dataObj.SetData(typeof(NEClipboard), true);
+			dataObj.SetData(typeof(NEClipboard), PID);
 			Clipboard.SetDataObject(dataObj, true);
 			if (clipboardChanged != null)
 				clipboardChanged();
@@ -44,7 +47,7 @@ namespace NeoEdit.Common
 
 		public static void Set(object data, string text = null, object extra = null)
 		{
-			if (String.IsNullOrWhiteSpace(text))
+			if (text == null)
 				text = data.ToString();
 
 			Data = data;
@@ -79,8 +82,7 @@ namespace NeoEdit.Common
 		{
 			var dataObj = Clipboard.GetDataObject();
 
-			var isLocal = dataObj.GetData(typeof(NEClipboard)) as bool?;
-			if (isLocal == true)
+			if (dataObj.GetData(typeof(NEClipboard)) as int? == PID) // Local change
 				return;
 
 			Data = Text = dataObj.GetData(typeof(string)) as string;
