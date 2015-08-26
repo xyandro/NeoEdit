@@ -24,17 +24,24 @@ namespace NeoEdit.TextEdit
 		List<Range> GetEnclosingRegions(bool useAllRegions = false)
 		{
 			var regions = new List<Range>();
+			var currentRegion = 0;
+			var used = false;
 			foreach (var selection in Selections)
 			{
-				var selectionRegion = Regions.Where(region => (selection.Start >= region.Start) && (selection.End <= region.End)).ToList();
-				if (selectionRegion.Count == 0)
+				while ((currentRegion < Regions.Count) && (Regions[currentRegion].End <= selection.Start))
+				{
+					if ((useAllRegions) && (!used))
+						throw new Exception("Extra regions found.");
+					used = false;
+					++currentRegion;
+				}
+				if ((currentRegion >= Regions.Count) || (selection.Start < Regions[currentRegion].Start) || (selection.End > Regions[currentRegion].End))
 					throw new Exception("No region found.  All selections must be inside a region.");
-				if (selectionRegion.Count != 1)
-					throw new Exception("Multiple regions found.  All selections must be inside a single region.");
-				regions.Add(selectionRegion.Single());
-			}
 
-			if ((useAllRegions) && (Regions.Count != regions.Count))
+				regions.Add(Regions[currentRegion]);
+				used = true;
+			}
+			if ((useAllRegions) && (currentRegion != Regions.Count - 1))
 				throw new Exception("Extra regions found.");
 
 			return regions;
