@@ -604,6 +604,15 @@ namespace NeoEdit.TextEdit
 				});
 			}
 
+			// Add any keys/values that match count and aren't already defined
+			if (keysAndValues[0].Count == keysAndValues[1].Count)
+			{
+				var availableVars = new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
+				var keyVars = Enumerable.Range(0, keysAndValues[0].Count).Where(index => !availableVars.Contains(keysAndValues[0][index])).ToDictionary(index => keysAndValues[0][index], index => keysAndValues[1][index]);
+				foreach (var pair in keyVars)
+					parallelDataActions.Add(new HashSet<string> { pair.Key }, (items, addData) => addData(pair.Key, InterpretValues(new List<string> { pair.Value })));
+			}
+
 			var used = expression != null ? expression.Variables : new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
 			var data = new Dictionary<string, List<object>>();
 			Parallel.ForEach(parallelDataActions, pair =>
