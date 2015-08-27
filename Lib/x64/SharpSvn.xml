@@ -15,6 +15,13 @@
       <summary>Extended Parameter container of <see cref="M:SharpSvn.SvnClient.Commit(System.String,SharpSvn.SvnCommitArgs)" /></summary>
       <threadsafety static="true" instance="false" />
     </member>
+    <member name="P:SharpSvn.SvnDiffSummaryArgs.ChangeLists">
+      <summary>Gets the list of changelist-names</summary>
+    </member>
+    <member name="T:SharpSvn.SvnDiffSummaryArgs">
+      <summary>Extended Parameter container for SvnClient.DiffSummary</summary>
+      <threadsafety static="true" instance="false" />
+    </member>
     <member name="P:SharpSvn.SvnMergesEligibleArgs.RetrieveProperties">
       <summary>Gets the list of properties to retrieve. Only SVN 1.5+ repositories allow adding custom properties to this list</summary>
     </member>
@@ -212,10 +219,6 @@ latest.</summary>
     </member>
     <member name="P:SharpSvn.SvnWorkingCopyEntriesArgs.RetrieveHidden">
       <summary>Gets or sets a boolean indicating whether to return deleted or absent entries</summary>
-    </member>
-    <member name="T:SharpSvn.SvnWorkingCopyRestoreArgs">
-      <summary>Extended Parameter container of <see cref="M:SharpSvn.SvnWorkingCopyClient.Restore(System.String,SharpSvn.SvnWorkingCopyRestoreArgs)" />.</summary>
-      <threadsafety static="true" instance="false" />
     </member>
     <member name="P:SharpSvn.SvnHotCopyRepositoryArgs.CleanLogFiles">
       <summary>Gets or sets a value indicating whether to clean the database logfiles after the hotcopy</summary>
@@ -1552,6 +1555,18 @@ All members must be of the same type.</remarks>
       <exception type="SvnException">Operation failed</exception>
       <exception type="ArgumentException">Parameters invalid</exception>
     </member>
+    <member name="M:SharpSvn.SvnClient.Vacuum(System.String,SharpSvn.SvnVacuumArgs)">
+      <summary>Vacuums the specified path</summary>
+      <returns>true if the operation succeeded; false if it did not</returns>
+      <exception type="SvnException">Operation failed and args.ThrowOnError = true</exception>
+      <exception type="ArgumentException">Parameters invalid</exception>
+    </member>
+    <member name="M:SharpSvn.SvnClient.Vacuum(System.String)">
+      <overloads> Vacuums the working copy (via <c>svn cleanup</c>)</overloads>
+      <summary>Vacuums the specified path</summary>
+      <exception type="SvnException">Operation failed</exception>
+      <exception type="ArgumentException">Parameters invalid</exception>
+    </member>
     <member name="M:SharpSvn.SvnClient.CleanUp(System.String,SharpSvn.SvnCleanUpArgs)">
       <summary>Cleans up the specified path, removing all workingcopy locks left behind by crashed clients</summary>
       <returns>true if the operation succeeded; false if it did not</returns>
@@ -2056,12 +2071,9 @@ instead of the user configured diff tools</summary>
       <remarks>The default value of this property is true; to allow parsing the output of the diff library</remarks>
       <value>true if subversions internal diff must be used, otherwise false</value>
     </member>
-    <member name="P:SharpSvn.SvnClientConfiguration.DisableBuiltinSsh">
-      <summary />
-    </member>
     <member name="P:SharpSvn.SvnClientConfiguration.EnableSharpPlink">
       <summary>This property used to get a boolean indicating whether to enable the SharpPlink handler when no
-other valid handler for svn+ssh:// was registered. It is now mapped to the inverse of <see cref="P:SharpSvn.SvnClientConfiguration.DisableBuiltinSsh" /></summary>
+other valid handler for svn+ssh:// was registered. It is now mapped to <see cref="P:SharpSvn.SvnClientConfiguration.SshOverride" />'s disabled option</summary>
     </member>
     <member name="P:SharpSvn.SvnClientConfiguration.LoadSvnMimeTypes">
       <summary>Gets or sets a boolean indicating whether to load the svn mimetypes file when calling Add or Import the first time</summary>
@@ -2141,6 +2153,9 @@ other valid handler for svn+ssh:// was registered. It is now mapped to the inver
       <overloads>Write the file contents to the specified file/stream (Only valid in EventHandler)</overloads>
       <summary>Write the file contents to the specified file/stream (Only valid in EventHandler)</summary>
       <exception cref="T:System.InvalidOperationException">Not in the EventHandler</exception>
+    </member>
+    <member name="M:SharpSvn.SvnLookInheritedPropertyListEventArgs.GetHashCode">
+      <summary>Serves as a hashcode for the specified type</summary>
     </member>
     <member name="P:SharpSvn.SvnChangeInfoEventArgs.BaseRevision">
       <summary>Gets the revision the change is based on</summary>
@@ -2618,6 +2633,9 @@ specifies a <see cref="T:SharpSvn.SvnPathTarget" /></summary>
     <member name="P:SharpSvn.SvnClientContext.Authentication">
       <summary>Gets the <see cref="T:SharpSvn.Security.SvnAuthentication" /> instance managing authentication on behalf of this client</summary>
     </member>
+    <member name="P:SharpSvn.SvnClientContext.PlinkPath">
+      <summary>Gets the path to SharpSvn's plink. The path is encoded to be safe for subversion configuration settings</summary>
+    </member>
     <member name="M:SharpSvn.SvnClientContext.UseDefaultConfiguration">
       <summary>Initializes a default configuration. Avoids loading a configuration at a later time</summary>
     </member>
@@ -2636,6 +2654,24 @@ specifies a <see cref="T:SharpSvn.SvnPathTarget" /></summary>
     <member name="T:SharpSvn.SvnClientContext">
       <summary>Subversion Client Context wrapper; base class of objects using client context</summary>
       <threadsafety static="true" instance="false" />
+    </member>
+    <member name="F:SharpSvn.Implementation.SvnSshOverride.ForceInternalAfterConfig">
+      <summary>Like ForceSharpPlink, but checks TortoiseSVN config first</summary>
+    </member>
+    <member name="F:SharpSvn.Implementation.SvnSshOverride.ForceSharpPlinkAfterConfig">
+      <summary>Like ForceSharpPlink, but checks TortoiseSVN config first</summary>
+    </member>
+    <member name="F:SharpSvn.Implementation.SvnSshOverride.ForceSharpPlink">
+      <summary>Use SharpPlink</summary>
+    </member>
+    <member name="F:SharpSvn.Implementation.SvnSshOverride.ForceInternal">
+      <summary>Use internal SSH client (currently based on LibSSH2)</summary>
+    </member>
+    <member name="F:SharpSvn.Implementation.SvnSshOverride.Disabled">
+      <summary>Disable all SSH support. Fall back to Subversion conflict</summary>
+    </member>
+    <member name="F:SharpSvn.Implementation.SvnSshOverride.Automatic">
+      <summary>Automatic handling: Similar to ForceInternalAfterConfig</summary>
     </member>
     <member name="M:SharpSvn.SvnEventArgs.Detach(System.Boolean)">
       <summary>Detaches the SvnEventArgs from the unmanaged storage; optionally keeping the property values for later use</summary>
@@ -24144,6 +24180,9 @@ sequence of whitespace characters as a single space</summary>
     <member name="F:SharpSvn.SvnDiffKind.Normal">
       <summary>An item with no text modifications</summary>
     </member>
+    <member name="F:SharpSvn.SvnRepositoryCompatibility.Subversion19">
+      <summary>Create a repository in Subversion 1.9 compatible format</summary>
+    </member>
     <member name="F:SharpSvn.SvnRepositoryCompatibility.Subversion18">
       <summary>Create a repository in Subversion 1.8 compatible format</summary>
     </member>
@@ -24245,6 +24284,19 @@ sequence of whitespace characters as a single space</summary>
     </member>
     <member name="F:SharpSvn.SvnStatus.Zero">
       <summary>Zero value. Never used by Subversion</summary>
+    </member>
+    <member name="F:SharpSvn.SvnNotifyAction.CommitFinalizing">
+      <summary>Finalizing commit.</summary>
+    </member>
+    <member name="F:SharpSvn.SvnNotifyAction.InfoExternal">
+      <summary>Running info on an external module.</summary>
+    </member>
+    <member name="F:SharpSvn.SvnNotifyAction.OperationRequiresTarget">
+      <summary>The operation failed because the operation (E.g. commit) is only valid
+if the operation includes this path.</summary>
+    </member>
+    <member name="F:SharpSvn.SvnNotifyAction.CleanupExternal">
+      <summary>Running cleanup on an external module.</summary>
     </member>
     <member name="F:SharpSvn.SvnNotifyAction.MoveBroken">
       <summary>A move in the working copy has been broken, i.e. degraded into a
@@ -24359,6 +24411,10 @@ copy, not the source).</summary>
     <member name="F:SharpSvn.SvnNotifyAction.UpdateStarted">
       <summary>Starting an update operation.</summary>
     </member>
+    <member name="F:SharpSvn.SvnRepositoryNotifyAction.HotcopiedRevisionRange" />
+    <member name="F:SharpSvn.SvnRepositoryNotifyAction.FormatBumped" />
+    <member name="F:SharpSvn.SvnRepositoryNotifyAction.CleanupRevisionProperties" />
+    <member name="F:SharpSvn.SvnRepositoryNotifyAction.PackRevisionProperties" />
     <member name="F:SharpSvn.SvnRepositoryNotifyAction.VerifyStructure">
       <summary> The structure of a revision is being verified.  @since New in 1.8. </summary>
     </member>
@@ -24976,15 +25032,16 @@ verification data is available.</summary>
       <summary>Detaches the SvnEventArgs from the unmanaged storage; optionally keeping the property values for later use</summary>
       <description>After this method is called all properties are either stored managed, or are no longer readable</description>
     </member>
+    <member name="T:SharpSvn.SvnGetAppliedMergeInfoArgs">
+      <summary>Extended Parameter container of <see cref="T:SharpSvn.SvnClient" />'s GetAppliedMergeInfo method</summary>
+      <threadsafety static="true" instance="false" />
+    </member>
     <member name="T:SharpSvn.SvnMergeArgs">
       <summary>Extended Parameter container of <see cref="M:SharpSvn.SvnClient.Merge(System.String,SharpSvn.SvnTarget,SharpSvn.SvnRevisionRange,SharpSvn.SvnMergeArgs)" /></summary>
       <threadsafety static="true" instance="false" />
     </member>
-    <member name="P:SharpSvn.SvnDiffSummaryArgs.ChangeLists">
-      <summary>Gets the list of changelist-names</summary>
-    </member>
-    <member name="T:SharpSvn.SvnDiffSummaryArgs">
-      <summary>Extended Parameter container for SvnClient.DiffSummary</summary>
+    <member name="T:SharpSvn.SvnWorkingCopyRestoreArgs">
+      <summary>Extended Parameter container of <see cref="M:SharpSvn.SvnWorkingCopyClient.Restore(System.String,SharpSvn.SvnWorkingCopyRestoreArgs)" />.</summary>
       <threadsafety static="true" instance="false" />
     </member>
     <member name="P:SharpSvn.SvnRevertArgs.ChangeLists">
@@ -25056,10 +25113,6 @@ verification data is available.</summary>
     </member>
     <member name="T:SharpSvn.SvnLockArgs">
       <summary>Extended Parameter container of <see cref="M:SharpSvn.SvnClient.Lock(System.String,SharpSvn.SvnLockArgs)" /></summary>
-      <threadsafety static="true" instance="false" />
-    </member>
-    <member name="T:SharpSvn.SvnGetAppliedMergeInfoArgs">
-      <summary>Extended Parameter container of <see cref="T:SharpSvn.SvnClient" />'s GetAppliedMergeInfo method</summary>
       <threadsafety static="true" instance="false" />
     </member>
     <member name="T:SharpSvn.SvnDeleteRepositoryArgs">
@@ -25163,6 +25216,10 @@ not be traversed while harvesting revision logs for each target. </remarks>
       <summary>Subversion Client Context wrapper; base class of objects using client context</summary>
       <threadsafety static="true" instance="false" />
     </member>
+    <member name="T:SharpSvn.SvnChangedArgs">
+      <summary>Extended Parameter container of <see cref="T:SharpSvn.SvnLookClient" />'s Changed method</summary>
+      <threadsafety static="true" instance="false" />
+    </member>
     <member name="T:SharpSvn.SvnResolveArgs">
       <summary>Extended Parameter container of <see cref="M:SharpSvn.SvnClient.Resolved(System.String)" /></summary>
       <threadsafety static="true" instance="false" />
@@ -25194,6 +25251,10 @@ and/or unversioned items. If Force is set such items will be deleted.</summary>
       <summary>Extended Parameter container of <see cref="M:SharpSvn.SvnClient.Delete(System.String,SharpSvn.SvnDeleteArgs)" /> and <see cref="M:SharpSvn.SvnClient.RemoteDelete(System.Uri,SharpSvn.SvnDeleteArgs)" /></summary>
       <threadsafety static="true" instance="false" />
     </member>
+    <member name="T:SharpSvn.SvnLookInheritedPropertyListArgs">
+      <summary>Extended Parameter container of <see cref="T:SharpSvn.SvnLookClient" />'s InheritedPropertyList method</summary>
+      <threadsafety static="true" instance="false" />
+    </member>
     <member name="P:SharpSvn.SvnCopyArgs.IgnoreExternals">
       <summary>Gets or sets a boolean that if set to true tells copy not to process
 externals definitions as part of this operation.</summary>
@@ -25215,6 +25276,10 @@ externals definitions as part of this operation.</summary>
     </member>
     <member name="T:SharpSvn.SvnVerifyRepositoryArgs">
       <summary>Extended Parameter container of <see cref="T:SharpSvn.SvnRepositoryClient" />'s DeleteRepository method</summary>
+      <threadsafety static="true" instance="false" />
+    </member>
+    <member name="T:SharpSvn.SvnVacuumArgs">
+      <summary>Extended parameter container for <see cref="T:SharpSvn.SvnClient" />Cleanup</summary>
       <threadsafety static="true" instance="false" />
     </member>
     <member name="T:SharpSvn.SvnDumpRepositoryArgs">
@@ -25551,10 +25616,6 @@ if there are any unversioned obstructing items
     </member>
     <member name="T:SharpSvn.SvnCheckOutArgs">
       <summary>Extended Parameter container of <see cref="M:SharpSvn.SvnClient.CheckOut(SharpSvn.SvnUriTarget,System.String,SharpSvn.SvnCheckOutArgs)" /></summary>
-      <threadsafety static="true" instance="false" />
-    </member>
-    <member name="T:SharpSvn.SvnChangedArgs">
-      <summary>Extended Parameter container of <see cref="T:SharpSvn.SvnLookClient" />'s Changed method</summary>
       <threadsafety static="true" instance="false" />
     </member>
     <member name="T:SharpSvn.SvnPatchArgs">

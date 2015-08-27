@@ -9,7 +9,7 @@
   </PropertyGroup>
   <Target Name="BuildExpression" Inputs="Expressions\Source\Expression.g4" Outputs="Expressions\Parser\ExpressionVisitor.cs;Expressions\Parser\ExpressionBaseVisitor.cs;Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs">
     <Message Text="Building expression grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.Common.Expressions.Parser&quot; -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\Expression.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.1-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.Common.Expressions.Parser&quot; -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\Expression.g4&quot;" />
   </Target>
   <ItemGroup>
     <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
