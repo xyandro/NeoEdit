@@ -23,7 +23,7 @@ namespace NeoEdit.Disk.VCS
 
 	public class VCSCache : IVCSCache
 	{
-		readonly List<IVCSCache> caches = new List<IVCSCache> { new SvnCache() };
+		readonly List<IVCSCache> caches = new List<IVCSCache> { new GitCache(), new SvnCache() };
 		readonly RunOnceTimer cacheClearTimer;
 
 		static VCSCache vcsCache = new VCSCache();

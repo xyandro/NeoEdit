@@ -5,6 +5,7 @@ Add GIT
 Disk:
 Move timestamp (possibly others) from TextEditor
 Select readable
+Can't open any window if current directory is invalid (like when running off a network drive)
 
 Text:
 Continue after error deleting files (perhaps with dialog Yes/No/All)

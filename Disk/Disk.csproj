@@ -94,6 +94,7 @@
     <Compile Include="Tabs.xaml.cs">
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VCS\GitCache.cs" />
     <Compile Include="VCS\SvnCache.cs" />
     <Compile Include="VCS\VCSCache.cs" />
   </ItemGroup>

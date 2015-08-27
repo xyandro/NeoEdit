@@ -14,7 +14,8 @@ namespace NeoEdit.Disk.VCS
 		{
 			svnStatusCache.Clear();
 			svnPathRepoCache.Clear();
-			svnClient.Dispose();
+			if (svnClient != null)
+				svnClient.Dispose();
 			svnClient = null;
 		}
 
