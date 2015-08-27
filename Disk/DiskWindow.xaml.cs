@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Disk.Dialogs;
+using NeoEdit.Disk.VCS;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Controls.ItemGridControl;
@@ -249,11 +250,11 @@ namespace NeoEdit.Disk
 			ShowColumn(a => a.SHA1);
 		}
 
-		internal void Command_File_Svn()
+		internal void Command_File_VCS()
 		{
 			foreach (DiskItem selected in Selected)
-				selected.SetSvnStatus();
-			ShowColumn(a => a.SvnStatus);
+				selected.SetVCSStatus();
+			ShowColumn(a => a.VCSStatus);
 		}
 
 		internal void Command_File_Delete()
@@ -361,10 +362,10 @@ namespace NeoEdit.Disk
 					if (file.HasChildren)
 					{
 						var add = true;
-						if (result.SourceControlStatus != DiskItem.SourceControlStatusEnum.All)
+						if (result.VCSStatus != VersionControlStatus.All)
 						{
-							file.SetSvnStatus();
-							if ((file.SvnStatus == VersionControlStatus.None) || (file.SvnStatus == VersionControlStatus.Ignored))
+							file.SetVCSStatus();
+							if ((file.VCSStatus == VersionControlStatus.None) || (file.VCSStatus == VersionControlStatus.Ignored))
 								add = false;
 						}
 
@@ -394,14 +395,14 @@ namespace NeoEdit.Disk
 			if (result.EndDate.HasValue)
 				selected = selected.Where(file => file.WriteTime <= result.EndDate.Value).ToList();
 
-			if (result.SourceControlStatus != DiskItem.SourceControlStatusEnum.All)
+			if (result.VCSStatus != VersionControlStatus.All)
 			{
 				foreach (var file in selected)
-					file.SetSvnStatus();
+					file.SetVCSStatus();
 
-				selected = selected.Where(file => result.SourceControlStatus.HasFlag(file.SourceControlStatus)).ToList();
+				selected = selected.Where(file => result.VCSStatus.HasFlag(file.VCSStatus)).ToList();
 
-				ShowColumn(a => a.SvnStatus);
+				ShowColumn(a => a.VCSStatus);
 			}
 
 			if (result.Recursive)

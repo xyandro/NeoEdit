@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
+using NeoEdit.Disk.VCS;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Disk.Dialogs
@@ -12,7 +13,7 @@ namespace NeoEdit.Disk.Dialogs
 			public Regex Regex;
 			public bool FullPath;
 			public bool Recursive;
-			public DiskItem.SourceControlStatusEnum SourceControlStatus;
+			public VersionControlStatus VCSStatus;
 			public long? MinSize;
 			public long? MaxSize;
 			public DateTime? StartDate;
@@ -28,7 +29,7 @@ namespace NeoEdit.Disk.Dialogs
 		[DepProp]
 		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public DiskItem.SourceControlStatusEnum SourceControlStatus { get { return UIHelper<FindDialog>.GetPropValue<DiskItem.SourceControlStatusEnum>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
+		public VersionControlStatus VCSStatus { get { return UIHelper<FindDialog>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public long? MinSize { get { return UIHelper<FindDialog>.GetPropValue<long?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -45,7 +46,7 @@ namespace NeoEdit.Disk.Dialogs
 			InitializeComponent();
 			Expression = "*.*";
 			expression.SelectAll();
-			SourceControlStatus = DiskItem.SourceControlStatusEnum.All;
+			VCSStatus = VersionControlStatus.All;
 		}
 
 		Result result;
@@ -65,7 +66,7 @@ namespace NeoEdit.Disk.Dialogs
 				Regex = regex,
 				FullPath = FullPath,
 				Recursive = Recursive,
-				SourceControlStatus = SourceControlStatus,
+				VCSStatus = VCSStatus,
 				MinSize = MinSize,
 				MaxSize = MaxSize,
 				StartDate = StartDate,
@@ -75,20 +76,20 @@ namespace NeoEdit.Disk.Dialogs
 			DialogResult = true;
 		}
 
-		void SvnClick(object sender, RoutedEventArgs e)
+		void VCSClick(object sender, RoutedEventArgs e)
 		{
-			if (sender == svnAll)
-				SourceControlStatus = DiskItem.SourceControlStatusEnum.All;
-			else if (sender == svnStandard)
-				SourceControlStatus = DiskItem.SourceControlStatusEnum.Standard;
-			else if (sender == svnModified)
-				SourceControlStatus = DiskItem.SourceControlStatusEnum.Modified;
-			else if (sender == svnIgnored)
-				SourceControlStatus = DiskItem.SourceControlStatusEnum.Ignored;
-			else if (sender == svnUnknown)
-				SourceControlStatus = DiskItem.SourceControlStatusEnum.Unknown;
-			else if (sender == svnNone)
-				SourceControlStatus = DiskItem.SourceControlStatusEnum.None;
+			if (sender == vcsAll)
+				VCSStatus = VersionControlStatus.All;
+			else if (sender == vcsStandard)
+				VCSStatus = VersionControlStatus.Standard;
+			else if (sender == vcsModified)
+				VCSStatus = VersionControlStatus.Modified;
+			else if (sender == vcsIgnored)
+				VCSStatus = VersionControlStatus.Ignored;
+			else if (sender == vcsUnknown)
+				VCSStatus = VersionControlStatus.Unknown;
+			else if (sender == vcsNone)
+				VCSStatus = VersionControlStatus.None;
 
 		}
 

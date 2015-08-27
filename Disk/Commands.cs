@@ -12,7 +12,7 @@ namespace NeoEdit.Disk
 		[KeyGesture(Key.I, ModifierKeys.Control | ModifierKeys.Shift)] File_Identify,
 		[KeyGesture(Key.M, ModifierKeys.Control | ModifierKeys.Shift)] File_MD5,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] File_SHA1,
-		[KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift)] File_Svn,
+		[KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift)] File_VCS,
 		[KeyGesture(Key.Delete)] File_Delete,
 		File_Exit,
 		[KeyGesture(Key.X, ModifierKeys.Control)] Edit_Cut,

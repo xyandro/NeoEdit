@@ -3,7 +3,6 @@ Add command prompt
 Add GIT
 
 Disk:
-Select by SVN ignore
 Move timestamp (possibly others) from TextEditor
 Select readable
 
@@ -17,7 +16,6 @@ Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Allow user to disable undo/redo for faster performance
 Submit forms
-When opening files don't open the same one more than once
 Override readonly, access denied (UAC required?)
 Go back to last selections
 Refactor menu (more subtrees, less accel reuse)
@@ -28,6 +26,7 @@ TSV: Fix embedded spaces (1\t2\t3\r\n1\ta"c\t3\r\n1\t2\t3\r\n)
 Aggregate by table
 Time zones
 Undo revert
+Nest macros
 
 View:
 Update as new lines are added

@@ -13,7 +13,7 @@
 		<disk:DiskMenuItem Header="_Identify" CommandEnum="File_Identify"/>
 		<disk:DiskMenuItem Header="_MD5" CommandEnum="File_MD5"/>
 		<disk:DiskMenuItem Header="_SHA1" CommandEnum="File_SHA1"/>
-		<disk:DiskMenuItem Header="S_vn" CommandEnum="File_Svn"/>
+		<disk:DiskMenuItem Header="_VCS" CommandEnum="File_VCS"/>
 		<disk:DiskMenuItem Header="_Delete" CommandEnum="File_Delete"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="E_xit" CommandEnum="File_Exit"/>

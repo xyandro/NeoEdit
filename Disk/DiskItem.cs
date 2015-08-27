@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using NeoEdit.Common.Transform;
+using NeoEdit.Disk.VCS;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Disk
@@ -20,19 +21,6 @@ namespace NeoEdit.Disk
 			Share,
 			Directory,
 			File,
-		}
-
-		[Flags]
-		public enum SourceControlStatusEnum
-		{
-			Regular = 1,
-			Modified = 2,
-			Ignored = 4,
-			Unknown = 8,
-
-			Standard = Regular | Modified,
-			None = 0,
-			All = Regular | Modified | Ignored | Unknown,
 		}
 
 		[DepProp]
@@ -66,27 +54,7 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public VersionControlStatus SvnStatus { get { return UIHelper<DiskItem>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
-
-		public SourceControlStatusEnum SourceControlStatus
-		{
-			get
-			{
-				switch (SvnStatus)
-				{
-					case VersionControlStatus.Modified:
-						return SourceControlStatusEnum.Modified;
-					case VersionControlStatus.Ignored:
-						return SourceControlStatusEnum.Ignored;
-					case VersionControlStatus.None:
-					case VersionControlStatus.NotVersioned:
-					case VersionControlStatus.Unknown:
-						return SourceControlStatusEnum.Unknown;
-					default:
-						return SourceControlStatusEnum.Regular;
-				}
-			}
-		}
+		public VersionControlStatus VCSStatus { get { return UIHelper<DiskItem>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
 		public bool HasChildren { get { return FileType != DiskItemType.File; } }
 		public DiskItem Parent { get { return new DiskItem(Path); } }
@@ -271,10 +239,9 @@ namespace NeoEdit.Disk
 			SHA1 = Hash.Get(Hash.Type.SHA1, FullName);
 		}
 
-		static SvnCache svnCache = new SvnCache();
-		public void SetSvnStatus()
+		public void SetVCSStatus()
 		{
-			SvnStatus = svnCache.GetStatus(FullName, Path);
+			VCSStatus = VCSCache.Single.GetStatus(FullName, Path);
 		}
 
 		public void Rename(string newName)
