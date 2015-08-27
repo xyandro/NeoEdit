@@ -43,7 +43,7 @@ namespace NeoEdit.Common.Expressions
 
 		public override string ToString()
 		{
-			return String.Format("From: {0} To: {1}, Mult: {2}, Add {3}", fromUnits, toUnits, mult, add);
+			return String.Format("From: {0} To: {1}, Mult: {2:R}, Add {3:R}", fromUnits, toUnits, mult, add);
 		}
 
 		public override int GetHashCode()
@@ -256,6 +256,9 @@ namespace NeoEdit.Common.Expressions
 			AddConversionConstant("nauticalmiles", new ExpressionUnits("m"), 1852);
 			AddConversionConstant("NM", new ExpressionUnits("m"), 1852);
 			AddConversionConstant("nmi", new ExpressionUnits("m"), 1852);
+			AddConversionConstant("knot", new ExpressionUnits("nmiles") / new ExpressionUnits("hour"), 1);
+			AddConversionConstant("knots", new ExpressionUnits("nmiles") / new ExpressionUnits("hour"), 1);
+			AddConversionConstant("kn", new ExpressionUnits("nmiles") / new ExpressionUnits("hour"), 1);
 			AddConversionConstant("meter", new ExpressionUnits("m"), 1, attr: ConversionConstantAttr.SILongPrefix);
 			AddConversionConstant("meters", new ExpressionUnits("m"), 1, attr: ConversionConstantAttr.SILongPrefix);
 			AddConversionConstant("metre", new ExpressionUnits("m"), 1, attr: ConversionConstantAttr.SILongPrefix);
@@ -572,6 +575,11 @@ namespace NeoEdit.Common.Expressions
 			if (match == null)
 				return units;
 			return match.fromUnits;
+		}
+
+		public bool Equals(ExpressionUnitsConversion obj)
+		{
+			return (fromUnits.Equals(obj.fromUnits)) && (toUnits.Equals(obj.toUnits)) && (mult == obj.mult) && (add == obj.add);
 		}
 	}
 }
