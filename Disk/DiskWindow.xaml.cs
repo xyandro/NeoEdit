@@ -53,9 +53,11 @@ namespace NeoEdit.Disk
 
 		RunOnceTimer filesChangedTimer;
 
-		public DiskWindow(string path = null, int? list = null)
+		public DiskWindow(string path = null, int? list = null, IEnumerable<string> listFiles = null)
 		{
-			if ((String.IsNullOrEmpty(path)) && (!list.HasValue))
+			if (listFiles == null)
+				listFiles = new List<string>();
+			if ((String.IsNullOrEmpty(path)) && (!list.HasValue) && (!listFiles.Any()))
 				path = Directory.GetCurrentDirectory();
 
 			filesChangedTimer = new RunOnceTimer(() => FilesChanged());
@@ -84,7 +86,26 @@ namespace NeoEdit.Disk
 			ShowColumn(a => a.WriteTime);
 			ShowColumn(a => a.Type);
 			SetSort(a => a.Name);
-			SetLocation(path ?? "");
+
+			if (listFiles.Any())
+			{
+				ShowColumn(a => a.Path);
+				Selected.Clear();
+				foreach (var file in listFiles)
+				{
+					var diskItem = DiskItem.Get(file);
+					if (diskItem == null)
+						continue;
+					Files.Add(diskItem);
+					Selected.Add(diskItem);
+				}
+				if (!Selected.Contains(Focused))
+					Focused = Selected.FirstOrDefault();
+			}
+			else
+			{
+				SetLocation(path ?? "");
+			}
 
 			Loaded += (s, e) => files.Focus();
 		}

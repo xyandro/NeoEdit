@@ -124,7 +124,8 @@
 			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
 			<textEdit:TextEditMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
 		</MenuItem>
-	</MenuItem>
+        <textEdit:TextEditMenuItem Header="Open Dis_k" CommandEnum="Files_OpenDisk"/>
+    </MenuItem>
 	<MenuItem Header="_Data">
 		<MenuItem Header="C_ase">
 			<textEdit:TextEditMenuItem Header="_Upper" CommandEnum="Data_Case_Upper"/>

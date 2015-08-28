@@ -23,14 +23,14 @@ namespace NeoEdit.Disk
 
 		static List<DiskWindow> Lists = new List<DiskWindow> { new DiskWindow(list: 1), new DiskWindow(list: 2), new DiskWindow(list: 3), new DiskWindow(list: 4), new DiskWindow(list: 5), new DiskWindow(list: 6), new DiskWindow(list: 7), new DiskWindow(list: 8), new DiskWindow(list: 9) };
 
-		public DiskTabs(string path = null)
+		public DiskTabs(string path = null, IEnumerable<string> files = null)
 		{
 			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
 			DiskWindows = new ObservableCollection<Tabs<DiskWindow>.ItemData>();
-			Add(new DiskWindow(path));
+			Add(new DiskWindow(path, listFiles: files));
 		}
 
 		public static DiskWindow GetList(int list)

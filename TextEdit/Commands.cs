@@ -92,6 +92,7 @@ namespace NeoEdit.TextEdit
 		Files_Hash_SHA256,
 		Files_Operations_Copy,
 		Files_Operations_Move,
+		Files_OpenDisk,
 		[KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift)] Data_Case_Upper,
 		[KeyGesture(Key.U, ModifierKeys.Control)] Data_Case_Lower,
 		Data_Case_Proper,

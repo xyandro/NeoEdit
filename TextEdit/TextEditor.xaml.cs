@@ -837,6 +837,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hash.Type.SHA256); break;
 				case TextEditCommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(false); break;
 				case TextEditCommand.Files_Operations_Move: Command_Files_Operations_CopyMove(true); break;
+				case TextEditCommand.Files_OpenDisk: Command_Files_OpenDisk(); break;
 				case TextEditCommand.Data_Case_Upper: Command_Data_Case_Upper(); break;
 				case TextEditCommand.Data_Case_Lower: Command_Data_Case_Lower(); break;
 				case TextEditCommand.Data_Case_Proper: Command_Data_Case_Proper(); break;
@@ -2017,6 +2018,11 @@ namespace NeoEdit.TextEdit
 						File.Copy(pair.source, pair.dest);
 				}
 		}
+
+		internal void Command_Files_OpenDisk()
+		{
+			Launcher.Static.LaunchDisk(Selections.Select(range => GetString(range)));
+        }
 
 		internal void Command_Data_Case_Upper()
 		{
