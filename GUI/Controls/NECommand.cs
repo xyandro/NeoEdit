@@ -13,15 +13,13 @@ namespace NeoEdit.GUI.Controls
 		internal Key Key { get; private set; }
 		internal ModifierKeys Modifiers { get; private set; }
 		internal bool Primary { get; private set; }
-		internal int CommandSet { get; private set; }
 		internal string GestureText { get; private set; }
 
-		public KeyGestureAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None, bool primary = true, int commandSet = 0)
+		public KeyGestureAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None, bool primary = true)
 		{
 			Key = key;
 			Modifiers = modifiers;
 			Primary = primary;
-			CommandSet = commandSet;
 			var mods = new List<string>();
 			if ((modifiers & ModifierKeys.Control) != 0)
 				mods.Add("Ctrl");
@@ -75,20 +73,15 @@ namespace NeoEdit.GUI.Controls
 			public void RegisterCommand(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
 			{
 				window.CommandBindings.Add(new CommandBinding(this, (s, e) => handler(s, e, Command)));
-			}
-
-			public void RegisterInputBindings(UIElement window, int commandSet)
-			{
 				foreach (var keyGesture in KeyGestures)
-					if ((keyGesture.CommandSet == 0) || ((keyGesture.CommandSet & commandSet) != 0))
-						window.InputBindings.Add(new KeyBinding(this, new KeyGesture(keyGesture.Key, keyGesture.Modifiers)));
+					window.InputBindings.Add(new KeyBinding(this, new KeyGesture(keyGesture.Key, keyGesture.Modifiers)));
 			}
 		}
 
 		static NEMenuItem()
 		{
 			commands = Enum.GetValues(typeof(CommandEnumT)).Cast<CommandEnumT>().ToDictionary(commandEnum => commandEnum, commandEnum => new NECommand(commandEnum));
-			var duplicates = commands.Values.SelectMany(command => command.KeyGestures).GroupBy(keyGesture => keyGesture.GestureText + keyGesture.CommandSet.ToString()).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
+			var duplicates = commands.Values.SelectMany(command => command.KeyGestures).GroupBy(keyGesture => keyGesture.GestureText).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
 			if (duplicates.Any())
 				throw new Exception(String.Format("Duplicate hotkeys: {0}", String.Join(", ", duplicates)));
 		}
@@ -105,18 +98,10 @@ namespace NeoEdit.GUI.Controls
 		}
 
 		static Dictionary<CommandEnumT, NECommand> commands;
-		static public void RegisterCommands(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler, int commandSet = 1)
+		static public void RegisterCommands(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
 		{
 			foreach (var command in commands.Values)
 				command.RegisterCommand(window, handler);
-			RegisterInputBindings(window, commandSet);
-		}
-
-		static public void RegisterInputBindings(UIElement window, int commandSet = 1)
-		{
-			window.InputBindings.Clear();
-			foreach (var command in commands.Values)
-				command.RegisterInputBindings(window, commandSet);
 		}
 	}
 }

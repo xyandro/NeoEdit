@@ -4,13 +4,6 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit
 {
-	[Flags]
-	enum TextEditCommandSet
-	{
-		Content = 1,
-		Diff = 2,
-	}
-
 	enum TextEditCommand
 	{
 		None,
@@ -139,29 +132,29 @@ namespace NeoEdit.TextEdit
 		Data_MakeURLAbsolute,
 		Diff_Diff,
 		Diff_Break,
-		[KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,
-		[KeyGesture(Key.Up, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Previous,
-		[KeyGesture(Key.Left, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_CopyLeft,
-		[KeyGesture(Key.Right, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_CopyRight,
+		[KeyGesture(Key.Down, ModifierKeys.Alt)] Diff_Next,
+		[KeyGesture(Key.Up, ModifierKeys.Alt)] Diff_Previous,
+		[KeyGesture(Key.Left, ModifierKeys.Alt)] Diff_CopyLeft,
+		[KeyGesture(Key.Right, ModifierKeys.Alt)] Diff_CopyRight,
 		Content_Reformat,
 		Content_Comment,
 		Content_Uncomment,
-		[KeyGesture(Key.OemCloseBrackets, ModifierKeys.Alt)] [KeyGesture(Key.OemCloseBrackets, ModifierKeys.Alt | ModifierKeys.Shift)] Content_TogglePosition,
-		[KeyGesture(Key.Left, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Diff)] [KeyGesture(Key.Left, ModifierKeys.Alt | ModifierKeys.Shift, false, (int)~TextEditCommandSet.Diff)] Content_Parent,
+		[KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Content_TogglePosition,
+		[KeyGesture(Key.Left, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.Left, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift, false)] Content_Parent,
 		Content_Ancestor,
-		[KeyGesture(Key.Right, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Content_Attributes_Attributes,
-		[KeyGesture(Key.Right, ModifierKeys.Control | ModifierKeys.Alt)] Content_Attributes_First,
+		Content_Attributes_Attributes,
+		Content_Attributes_First,
 		Content_Attributes_ByAttribute,
-		[KeyGesture(Key.Right, ModifierKeys.Alt | ModifierKeys.Shift, commandSet: (int)~TextEditCommandSet.Diff)] Content_Children_Children,
+		[KeyGesture(Key.Right, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Content_Children_Children,
 		Content_Children_SelfAndChildren,
-		[KeyGesture(Key.Right, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Diff)] Content_Children_First,
+		[KeyGesture(Key.Right, ModifierKeys.Control | ModifierKeys.Alt)] Content_Children_First,
 		Content_Children_ByAttribute,
 		Content_Descendants_Descendants,
 		Content_Descendants_SelfAndDescendants,
 		Content_Descendants_First,
 		Content_Descendants_ByAttribute,
-		[KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Diff)] [KeyGesture(Key.Down, ModifierKeys.Alt | ModifierKeys.Shift, false, (int)~TextEditCommandSet.Diff)] Content_Next,
-		[KeyGesture(Key.Up, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Diff)] [KeyGesture(Key.Up, ModifierKeys.Alt | ModifierKeys.Shift, false, (int)~TextEditCommandSet.Diff)] Content_Previous,
+		[KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift, false)] Content_Next,
+		[KeyGesture(Key.Up, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.Up, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift, false)] Content_Previous,
 		Content_Select_ByAttribute,
 		Content_Select_TopMost,
 		Content_Select_Deepest,
