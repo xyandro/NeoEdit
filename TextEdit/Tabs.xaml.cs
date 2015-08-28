@@ -157,6 +157,8 @@ namespace NeoEdit.TextEdit
 			}.Show() != Message.OptionsEnum.Yes))
 				return;
 
+			foreach (var item in TextEditors)
+				item.Active = false;
 			foreach (var file in files)
 				AddTextEditor(file);
 		}
