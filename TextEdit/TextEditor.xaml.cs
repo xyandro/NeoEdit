@@ -851,6 +851,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Data_Trim: Command_Data_Trim(dialogResult as TrimDialog.Result); break;
 				case TextEditCommand.Data_SingleLine: Command_Data_SingleLine(); break;
 				case TextEditCommand.Data_Table_ToTable: Command_Data_Table_ToTable(); break;
+				case TextEditCommand.Data_Table_RegionsSelectionsToTable: Command_Data_Table_RegionsSelectionsToTable(); break;
 				case TextEditCommand.Data_Table_FromTable: Command_Data_Table_FromTable(); break;
 				case TextEditCommand.Data_EvaluateExpression: Command_Data_EvaluateExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Data_EvaluateSelectedExpression: Command_Data_EvaluateSelectedExpression(); break;
@@ -2007,7 +2008,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Files_OpenDisk()
 		{
 			Launcher.Static.LaunchDisk(Selections.Select(range => GetString(range)));
-        }
+		}
 
 		internal void Command_Data_Case_Upper()
 		{
@@ -2122,19 +2123,37 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 		}
 
-		internal void Command_Data_Table_ToTable()
+		List<string> LinesToTable(List<List<string>> lines)
 		{
-			if (!Selections.Any())
-				return;
-
-			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();
 			var numColumns = lines.Max(line => line.Count);
 			foreach (var line in lines)
 				line.AddRange(Enumerable.Range(0, numColumns - line.Count).Select(a => ""));
 			var columnWidths = Enumerable.Range(0, numColumns).Select(column => lines.Max(line => line[column].Length)).ToList();
 			var columns = Enumerable.Range(0, numColumns).Where(column => columnWidths[column] != 0).ToList();
 			var strs = lines.AsParallel().AsOrdered().Select(line => "|" + String.Join("|", columns.Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + "|").ToList();
-			ReplaceSelections(strs);
+			return strs;
+		}
+
+		internal void Command_Data_Table_ToTable()
+		{
+			if (!Selections.Any())
+				return;
+
+			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();
+			ReplaceSelections(LinesToTable(lines));
+		}
+
+		internal void Command_Data_Table_RegionsSelectionsToTable()
+		{
+			if (!Selections.Any())
+				return;
+
+			var regions = GetEnclosingRegions();
+			var lines = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => group.Select(index => GetString(Selections[index])).ToList()).ToList();
+			var table = LinesToTable(lines);
+			Replace(Regions, table);
+			Selections.Replace(Regions);
+			Regions.Clear();
 		}
 
 		internal void Command_Data_Table_FromTable()

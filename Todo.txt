@@ -9,7 +9,6 @@ Can't open any window if current directory is invalid (like when running off a n
 Text:
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Files: Select/etc on svn status (ignore/modified)
-Translate HTML to table
 Distinct operations by marked region (series/etc within region)
 Select square (right mouse button)
 Select based on type (int, double, datetime, etc)

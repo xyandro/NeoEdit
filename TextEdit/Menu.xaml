@@ -123,8 +123,8 @@
 			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
 			<textEdit:TextEditMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
 		</MenuItem>
-        <textEdit:TextEditMenuItem Header="Open Dis_k" CommandEnum="Files_OpenDisk"/>
-    </MenuItem>
+		<textEdit:TextEditMenuItem Header="Open Dis_k" CommandEnum="Files_OpenDisk"/>
+	</MenuItem>
 	<MenuItem Header="_Data">
 		<MenuItem Header="C_ase">
 			<textEdit:TextEditMenuItem Header="_Upper" CommandEnum="Data_Case_Upper"/>
@@ -149,6 +149,7 @@
 		<textEdit:TextEditMenuItem Header="S_ingle Line" CommandEnum="Data_SingleLine"/>
 		<MenuItem Header="Ta_ble">
 			<textEdit:TextEditMenuItem Header="_To Table" CommandEnum="Data_Table_ToTable"/>
+			<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Data_Table_RegionsSelectionsToTable"/>
 			<textEdit:TextEditMenuItem Header="_From Table" CommandEnum="Data_Table_FromTable"/>
 		</MenuItem>
 		<Separator/>

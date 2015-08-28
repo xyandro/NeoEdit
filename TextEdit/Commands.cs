@@ -99,6 +99,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.T, ModifierKeys.Control)] Data_Trim,
 		Data_SingleLine,
 		Data_Table_ToTable,
+		Data_Table_RegionsSelectionsToTable,
 		Data_Table_FromTable,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Data_EvaluateExpression,
 		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Data_EvaluateSelectedExpression,
