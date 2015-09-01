@@ -112,7 +112,7 @@ namespace NeoEdit.TextEdit
 			public List<string> files { get; set; }
 		}
 
-		OpenFileDialogResult Command_File_Open_Dialog(string initialDirectory = null)
+		OpenFileDialogResult Command_File_Open_Open_Dialog(string initialDirectory = null)
 		{
 			if ((initialDirectory == null) && (TopMost != null))
 				initialDirectory = Path.GetDirectoryName(TopMost.Item.FileName);
@@ -130,19 +130,19 @@ namespace NeoEdit.TextEdit
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
-		void Command_File_Open(OpenFileDialogResult result)
+		void Command_File_Open_Open(OpenFileDialogResult result)
 		{
 			foreach (var filename in result.files)
 				AddTextEditor(filename);
 		}
 
-		void Command_File_CopyAllPaths()
+		void Command_File_Copy_AllPaths()
 		{
 			var names = TextEditors.Select(editor => editor.Item.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
 			NEClipboard.Set(names, String.Join(" ", names));
 		}
 
-		void Command_File_OpenCopiedCutFiles()
+		void Command_File_Open_CopiedCut()
 		{
 			var files = NEClipboard.Strings;
 
@@ -162,7 +162,7 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(file);
 		}
 
-		void Command_Edit_CopyAll()
+		void Command_Edit_Copy_AllFiles()
 		{
 			var data = new List<string>();
 			foreach (var textEditorData in TextEditors)
@@ -171,17 +171,17 @@ namespace NeoEdit.TextEdit
 			NEClipboard.Set(data, String.Join(" ", data));
 		}
 
-		void Command_Edit_PasteAll()
+		void Command_Edit_Paste_AllFiles()
 		{
 			var strs = NEClipboard.Strings;
 			var active = TextEditors.Where(data => data.Active).ToList(); ;
 			if (strs.Count != active.Count)
 				throw new Exception("Clipboard count and active editor count must match");
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
-				active[ctr].Item.Command_Edit_PasteAll(strs[ctr], shiftDown);
+				active[ctr].Item.Command_Edit_Paste_AllFiles(strs[ctr], shiftDown);
 		}
 
-		void Command_File_Diff()
+		void Command_Edit_Diff_Diff()
 		{
 			List<Tabs<TextEditor>.ItemData> diffTargets;
 			if (TextEditors.Count == 2)
@@ -215,20 +215,20 @@ namespace NeoEdit.TextEdit
 		}
 
 		const string quickMacroFilename = "Quick.xml";
-		void Command_Macro_QuickRecord()
+		void Command_Macro_Record_QuickRecord()
 		{
 			if (recordingMacro == null)
-				Command_Macro_Record();
+				Command_Macro_Record_Record();
 			else
-				Command_Macro_StopRecording(quickMacroFilename);
+				Command_Macro_Record_StopRecording(quickMacroFilename);
 		}
 
-		void Command_Macro_QuickPlay()
+		void Command_Macro_Play_QuickPlay()
 		{
-			Command_Macro_Play(quickMacroFilename);
+			Command_Macro_Play_Play(quickMacroFilename);
 		}
 
-		void Command_Macro_Record()
+		void Command_Macro_Record_Record()
 		{
 			if (recordingMacro != null)
 			{
@@ -245,7 +245,7 @@ namespace NeoEdit.TextEdit
 		}
 
 		string macroDirectory = Path.Combine(Path.GetDirectoryName(typeof(TextEditTabs).Assembly.Location), "Macro");
-		void Command_Macro_StopRecording(string fileName = null)
+		void Command_Macro_Record_StopRecording(string fileName = null)
 		{
 			if (recordingMacro == null)
 			{
@@ -295,7 +295,7 @@ namespace NeoEdit.TextEdit
 			return dialog.FileName;
 		}
 
-		void Command_Macro_Play(string macroFile = null)
+		void Command_Macro_Play_Play(string macroFile = null)
 		{
 			if (macroFile == null)
 			{
@@ -309,7 +309,7 @@ namespace NeoEdit.TextEdit
 			XMLConverter.FromXML<Macro>(XElement.Load(macroFile)).Play(this, playing => macroPlaying = playing);
 		}
 
-		void Command_Macro_PlayOnCopiedFiles()
+		void Command_Macro_Play_PlayOnCopiedFiles()
 		{
 			var files = new Queue<string>(NEClipboard.Strings);
 			var macroFile = ChooseMacro();
@@ -328,7 +328,7 @@ namespace NeoEdit.TextEdit
 			startNext();
 		}
 
-		void Command_Macro_Repeat()
+		void Command_Macro_Play_Repeat()
 		{
 			var result = MacroRepeatDialog.Run(this, ChooseMacro);
 			if (result == null)
@@ -385,13 +385,13 @@ namespace NeoEdit.TextEdit
 
 			switch (command)
 			{
-				case TextEditCommand.Macro_QuickRecord: Command_Macro_QuickRecord(); return;
-				case TextEditCommand.Macro_QuickPlay: Command_Macro_QuickPlay(); return;
-				case TextEditCommand.Macro_Record: Command_Macro_Record(); return;
-				case TextEditCommand.Macro_StopRecording: Command_Macro_StopRecording(); return;
-				case TextEditCommand.Macro_Play: Command_Macro_Play(); return;
-				case TextEditCommand.Macro_PlayOnCopiedFiles: Command_Macro_PlayOnCopiedFiles(); return;
-				case TextEditCommand.Macro_Repeat: Command_Macro_Repeat(); return;
+				case TextEditCommand.Macro_Record_QuickRecord: Command_Macro_Record_QuickRecord(); return;
+				case TextEditCommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
+				case TextEditCommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
+				case TextEditCommand.Macro_Play_QuickPlay: Command_Macro_Play_QuickPlay(); return;
+				case TextEditCommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
+				case TextEditCommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
+				case TextEditCommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
 			}
 
 			var shiftDown = this.shiftDown;
@@ -412,8 +412,8 @@ namespace NeoEdit.TextEdit
 
 			switch (command)
 			{
-				case TextEditCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
-				case TextEditCommand.Macro_Open: dialogResult = Command_File_Open_Dialog(macroDirectory); break;
+				case TextEditCommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
+				case TextEditCommand.Macro_Open: dialogResult = Command_File_Open_Open_Dialog(macroDirectory); break;
 				default: return TopMost == null ? true : TopMost.Item.GetDialogResult(command, out dialogResult);
 			}
 
@@ -425,16 +425,16 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_New: Create(createNew: shiftDown, textEditTabs: shiftDown ? null : this); break;
-				case TextEditCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
-				case TextEditCommand.File_CopyAllPaths: Command_File_CopyAllPaths(); break;
-				case TextEditCommand.File_OpenCopiedCutFiles: Command_File_OpenCopiedCutFiles(); break;
+				case TextEditCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
+				case TextEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
+				case TextEditCommand.File_Copy_AllPaths: Command_File_Copy_AllPaths(); break;
 				case TextEditCommand.File_Exit: Close(); break;
-				case TextEditCommand.Edit_CopyAll: Command_Edit_CopyAll(); break;
-				case TextEditCommand.Edit_PasteAll: Command_Edit_PasteAll(); break;
-				case TextEditCommand.Diff_Diff: Command_File_Diff(); break;
+				case TextEditCommand.Edit_Copy_AllFiles: Command_Edit_Copy_AllFiles(); break;
+				case TextEditCommand.Edit_Paste_AllFiles: Command_Edit_Paste_AllFiles(); break;
+				case TextEditCommand.Edit_Diff_Diff: Command_Edit_Diff_Diff(); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
-				case TextEditCommand.Macro_Open: Command_File_Open(dialogResult as OpenFileDialogResult); return;
+				case TextEditCommand.Macro_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return;
 			}
 
 			foreach (var textEditorItem in TextEditors.Where(item => item.Active).ToList())

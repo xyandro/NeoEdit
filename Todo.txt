@@ -17,7 +17,6 @@ Allow user to disable undo/redo for faster performance
 Submit forms
 Override readonly, access denied (UAC required?)
 Go back to last selections
-Refactor menu (more subtrees, less accel reuse)
 Resolve hostnames
 Change tab order when doc closed (match visual studio or something)
 TSV: Fix embedded spaces (1\t2\t3\r\n1\ta"c\t3\r\n1\t2\t3\r\n)
@@ -26,6 +25,8 @@ Time zones
 Undo revert
 Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
+Copy expression result without modifying text
+Macro->Open->Quick
 
 View:
 Update as new lines are added

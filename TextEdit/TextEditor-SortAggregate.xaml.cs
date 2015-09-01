@@ -136,12 +136,12 @@ namespace NeoEdit.TextEdit
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		internal SortDialog.Result Command_Data_Sort_Dialog()
+		internal SortDialog.Result Command_Edit_Sort_Dialog()
 		{
 			return SortDialog.Run(UIHelper.FindParent<Window>(this));
 		}
 
-		internal void Command_Data_Sort(SortDialog.Result result)
+		internal void Command_Edit_Sort(SortDialog.Result result)
 		{
 			var regions = GetSortSource(result.SortScope);
 			var ordering = GetOrdering(result.WithinRegions, result.SortType, result.CaseSensitive, result.Ascending);
@@ -170,7 +170,7 @@ namespace NeoEdit.TextEdit
 				Regions.Replace(newRegions);
 		}
 
-		internal AggregateDialog.Result Command_Data_Aggregate_Dialog()
+		internal AggregateDialog.Result Command_Edit_Aggregate_Dialog()
 		{
 			return AggregateDialog.Run(UIHelper.FindParent<Window>(this));
 		}
@@ -225,7 +225,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Data_Aggregate(AggregateDialog.Result dialogResult)
+		internal void Command_Edit_Aggregate(AggregateDialog.Result dialogResult)
 		{
 			var aggregate = GetAggregate(dialogResult);
 			var results = GetAggregateResults(dialogResult, aggregate);

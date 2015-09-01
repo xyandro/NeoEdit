@@ -150,7 +150,7 @@ namespace NeoEdit.TextEdit
 				ContentReplaceSelections(nodes);
 		}
 
-		internal void Command_Content_NextPrev(bool next)
+		internal void Command_Content_NextPrevious(bool next)
 		{
 			var offset = next ? 1 : -1;
 			var nodes = GetSelectionNodes();
@@ -187,7 +187,7 @@ namespace NeoEdit.TextEdit
 			ContentReplaceSelections(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex, result.Invert)).ToList());
 		}
 
-		internal void Command_Content_Select_TopMost()
+		internal void Command_Content_Select_Topmost()
 		{
 			var nodes = GetSelectionNodes();
 			var descendants = new HashSet<ParserNode>(nodes.SelectMany(node => node.List(ParserNode.ParserNodeListType.Descendants)));
@@ -201,7 +201,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.Where((range, index) => !parents.Contains(nodes[index])).ToList());
 		}
 
-		internal void Command_Content_Select_MaxTopMost()
+		internal void Command_Content_Select_MaxTopmost()
 		{
 			var nodes = GetSelectionNodes();
 			var targetDepth = nodes.Min(node => node.Depth);

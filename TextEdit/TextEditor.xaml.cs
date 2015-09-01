@@ -455,7 +455,7 @@ namespace NeoEdit.TextEdit
 					return true;
 				case Message.OptionsEnum.Yes:
 				case Message.OptionsEnum.YesToAll:
-					Command_File_Save();
+					Command_File_Save_Save();
 					return !IsModified;
 			}
 			return false;
@@ -678,48 +678,48 @@ namespace NeoEdit.TextEdit
 
 			switch (command)
 			{
-				case TextEditCommand.File_Encoding: dialogResult = Command_File_Encoding_Dialog(); break;
-				case TextEditCommand.File_ReopenWithEncoding: dialogResult = Command_File_ReopenWithEncoding_Dialog(); break;
-				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
-				case TextEditCommand.Edit_Find: dialogResult = Command_Edit_FindReplace_Dialog(false); break;
-				case TextEditCommand.Edit_Replace: dialogResult = Command_Edit_FindReplace_Dialog(true); break;
-				case TextEditCommand.Edit_GotoLine: dialogResult = Command_Edit_Goto_Dialog(GotoType.Line); break;
-				case TextEditCommand.Edit_GotoColumn: dialogResult = Command_Edit_Goto_Dialog(GotoType.Column); break;
-				case TextEditCommand.Edit_GotoPosition: dialogResult = Command_Edit_Goto_Dialog(GotoType.Position); break;
-				case TextEditCommand.Files_MakeAbsolute: dialogResult = Command_Files_MakeAbsolute_Dialog(); break;
-				case TextEditCommand.Files_GetUniqueNames: dialogResult = Command_Files_GetUniqueNames_Dialog(); break;
+				case TextEditCommand.File_Operations_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
+				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Dialog(); break;
+				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_ReopenWithEncoding_Dialog(); break;
+				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
+				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
+				case TextEditCommand.Edit_Repeat: dialogResult = Command_Data_Repeat_Dialog(); break;
+				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Data_MakeURLAbsolute_Dialog(); break;
+				case TextEditCommand.Edit_Hash_MD5: dialogResult = Command_Edit_Hash_Dialog(); break;
+				case TextEditCommand.Edit_Hash_SHA1: dialogResult = Command_Edit_Hash_Dialog(); break;
+				case TextEditCommand.Edit_Hash_SHA256: dialogResult = Command_Edit_Hash_Dialog(); break;
+				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
+				case TextEditCommand.Edit_Aggregate: dialogResult = Command_Edit_Aggregate_Dialog(); break;
+				case TextEditCommand.Edit_Convert: dialogResult = Command_Data_Convert_Dialog(); break;
+				case TextEditCommand.Files_Names_MakeAbsolute: dialogResult = Command_Files_MakeAbsolute_Dialog(); break;
+				case TextEditCommand.Files_Names_GetUnique: dialogResult = Command_Files_GetUniqueNames_Dialog(); break;
 				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
 				case TextEditCommand.Files_Set_WriteTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_AccessTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_CreateTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_AllTimes: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
-				case TextEditCommand.Data_DateTime_Convert: dialogResult = Command_Data_DateTime_Convert_Dialog(); break;
-				case TextEditCommand.Data_Convert: dialogResult = Command_Data_Convert_Dialog(); break;
-				case TextEditCommand.Data_Width: dialogResult = Command_Data_Width_Dialog(); break;
-				case TextEditCommand.Data_Trim: dialogResult = Command_Data_Trim_Dialog(); break;
-				case TextEditCommand.Data_EvaluateExpression: dialogResult = Command_Data_EvaluateExpression_Dialog(); break;
-				case TextEditCommand.Data_Repeat: dialogResult = Command_Data_Repeat_Dialog(); break;
-				case TextEditCommand.Data_Hash_MD5: dialogResult = Command_Data_Hash_Dialog(); break;
-				case TextEditCommand.Data_Hash_SHA1: dialogResult = Command_Data_Hash_Dialog(); break;
-				case TextEditCommand.Data_Hash_SHA256: dialogResult = Command_Data_Hash_Dialog(); break;
-				case TextEditCommand.Data_Sort: dialogResult = Command_Data_Sort_Dialog(); break;
-				case TextEditCommand.Data_Aggregate: dialogResult = Command_Data_Aggregate_Dialog(); break;
-				case TextEditCommand.Data_MakeURLAbsolute: dialogResult = Command_Data_MakeURLAbsolute_Dialog(); break;
+				case TextEditCommand.Expression_Expression: dialogResult = Command_Data_EvaluateExpression_Dialog(); break;
+				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Select_ExpressionMatches_Dialog(); break;
+				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Select_Width_Dialog(); break;
+				case TextEditCommand.Text_Width: dialogResult = Command_Data_Width_Dialog(); break;
+				case TextEditCommand.Text_Trim: dialogResult = Command_Data_Trim_Dialog(); break;
+				case TextEditCommand.Text_RandomText: dialogResult = Command_Insert_RandomData_Dialog(); break;
+				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Insert_RevRegEx_Dialog(); break;
+				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
+				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Insert_CombinationsPermutations_Dialog(); break;
+				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
+				case TextEditCommand.DateTime_Convert: dialogResult = Command_Data_DateTime_Convert_Dialog(); break;
+				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
+				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
+				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
 				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Parents); break;
 				case TextEditCommand.Content_Attributes_ByAttribute: dialogResult = Command_Content_Attributes_ByAttribute_Dialog(); break;
 				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Children); break;
 				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Descendants); break;
 				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Self); break;
-				case TextEditCommand.Insert_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
-				case TextEditCommand.Insert_RandomData: dialogResult = Command_Insert_RandomData_Dialog(); break;
-				case TextEditCommand.Insert_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
-				case TextEditCommand.Insert_CombinationsPermutations: dialogResult = Command_Insert_CombinationsPermutations_Dialog(); break;
-				case TextEditCommand.Insert_RevRegEx: dialogResult = Command_Insert_RevRegEx_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
-				case TextEditCommand.Select_Width: dialogResult = Command_Select_Width_Dialog(); break;
-				case TextEditCommand.Select_Count: dialogResult = Command_Select_Count_Dialog(); break;
-				case TextEditCommand.Select_ExpressionMatches: dialogResult = Command_Select_ExpressionMatches_Dialog(); break;
+				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_Count_Dialog(); break;
 				default: return true;
 			}
 
@@ -754,7 +754,7 @@ namespace NeoEdit.TextEdit
 			doDrag = false;
 
 			var start = DateTime.UtcNow;
-			if (command != TextEditCommand.Edit_RepeatLastAction)
+			if (command != TextEditCommand.Macro_RepeatLastAction)
 			{
 				previous = new PreviousStruct
 				{
@@ -766,50 +766,68 @@ namespace NeoEdit.TextEdit
 
 			switch (command)
 			{
-				case TextEditCommand.File_Save: Command_File_Save(); break;
-				case TextEditCommand.File_SaveAs: Command_File_SaveAs(); break;
-				case TextEditCommand.File_Rename: Command_File_Rename(); break;
+				case TextEditCommand.File_Open_Selected: Command_File_Open_Selected(); break;
+				case TextEditCommand.File_Save_Save: Command_File_Save_Save(); break;
+				case TextEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
+				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
+				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
+				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
+				case TextEditCommand.File_Operations_Encryption: Command_File_Operations_Encryption(dialogResult as SymmetricKeyDialog.Result); break;
 				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(); break;
-				case TextEditCommand.File_Delete: Command_File_Delete(); break;
-				case TextEditCommand.File_InsertFiles: Command_File_InsertFiles(); break;
-				case TextEditCommand.File_InsertCopiedCutFiles: Command_File_InsertCopiedCutFiles(); break;
-				case TextEditCommand.File_CopyPath: Command_File_CopyPath(); break;
-				case TextEditCommand.File_CopyName: Command_File_CopyName(); break;
-				case TextEditCommand.File_Explore: Command_File_Explore(); break;
-				case TextEditCommand.File_Encoding: Command_File_Encoding(dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.File_ReopenWithEncoding: Command_File_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as SymmetricKeyDialog.Result); break;
+				case TextEditCommand.File_Insert_Files: Command_File_Insert_Files(); break;
+				case TextEditCommand.File_Insert_CopiedCut: Command_File_Insert_CopiedCut(); break;
+				case TextEditCommand.File_Insert_Selected: Command_File_Insert_Selected(); break;
+				case TextEditCommand.File_Copy_Path: Command_File_Copy_Path(); break;
+				case TextEditCommand.File_Copy_Name: Command_File_Copy_Name(); break;
+				case TextEditCommand.File_Copy_Count: Command_File_Copy_Count(); break;
+				case TextEditCommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_HexEditor: if (Command_File_HexEditor()) { TabsParent.Remove(this, true); } break;
 				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
-				case TextEditCommand.Edit_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult); break;
-				case TextEditCommand.Edit_Cut: Command_Edit_CutCopy(true); break;
-				case TextEditCommand.Edit_Copy: Command_Edit_CutCopy(false); break;
-				case TextEditCommand.Edit_Paste: Command_Edit_Paste(shiftDown); break;
-				case TextEditCommand.Edit_Find: Command_Edit_FindReplace(false, shiftDown, dialogResult as FindTextDialog.Result); break;
-				case TextEditCommand.Edit_FindNext: Command_Edit_FindNextPrev(true, shiftDown); break;
-				case TextEditCommand.Edit_FindPrev: Command_Edit_FindNextPrev(false, shiftDown); break;
-				case TextEditCommand.Edit_Replace: Command_Edit_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
-				case TextEditCommand.Edit_GotoLine: Command_Edit_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
-				case TextEditCommand.Edit_GotoColumn: Command_Edit_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
-				case TextEditCommand.Edit_GotoPosition: Command_Edit_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
-				case TextEditCommand.Edit_ToggleBookmark: Command_Edit_ToggleBookmark(); break;
-				case TextEditCommand.Edit_NextBookmark: Command_Edit_NextPreviousBookmark(true, shiftDown); break;
-				case TextEditCommand.Edit_PreviousBookmark: Command_Edit_NextPreviousBookmark(false, shiftDown); break;
-				case TextEditCommand.Edit_ClearBookmarks: Command_Edit_ClearBookmarks(); break;
-				case TextEditCommand.Files_Open: Command_Files_Open(); break;
-				case TextEditCommand.Files_Insert: Command_Files_Insert(); break;
-				case TextEditCommand.Files_SaveClipboards: Command_Files_SaveClipboards(); break;
-				case TextEditCommand.Files_CreateFiles: Command_Files_CreateFiles(); break;
-				case TextEditCommand.Files_CreateDirectories: Command_Files_CreateDirectories(); break;
-				case TextEditCommand.Files_Delete: Command_Files_Delete(); break;
-				case TextEditCommand.Files_DragDrop: Command_Files_DragDrop(); break;
-				case TextEditCommand.Files_Simplify: Command_Files_Simplify(); break;
-				case TextEditCommand.Files_MakeAbsolute: Command_Files_MakeAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
-				case TextEditCommand.Files_GetUniqueNames: Command_Files_GetUniqueNames(dialogResult as GetUniqueNamesDialog.Result); break;
-				case TextEditCommand.Files_SanitizeNames: Command_Files_SanitizeNames(); break;
+				case TextEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;
+				case TextEditCommand.Edit_Copy_Cut: Command_Edit_Copy_CutCopy(true); break;
+				case TextEditCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(shiftDown); break;
+				case TextEditCommand.Edit_Diff_Break: Command_Edit_Diff_Break(); break;
+				case TextEditCommand.Edit_Diff_Next: Command_Edit_Diff_NextPrevious(true); break;
+				case TextEditCommand.Edit_Diff_Previous: Command_Edit_Diff_NextPrevious(false); break;
+				case TextEditCommand.Edit_Diff_CopyLeft: Command_Edit_Diff_CopyLeftRight(true); break;
+				case TextEditCommand.Edit_Diff_CopyRight: Command_Edit_Diff_CopyLeftRight(false); break;
+				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_FindReplace(false, shiftDown, dialogResult as FindTextDialog.Result); break;
+				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_FindNextPrevious(true, shiftDown); break;
+				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_FindNextPrevious(false, shiftDown); break;
+				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
+				case TextEditCommand.Edit_Table_ToTable: Command_Edit_Table_ToTable(); break;
+				case TextEditCommand.Edit_Table_RegionsSelectionsToTable: Command_Edit_Table_RegionsSelectionsToTable(); break;
+				case TextEditCommand.Edit_Table_FromTable: Command_Edit_Table_FromTable(); break;
+				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
+				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
+				case TextEditCommand.Edit_Markup_Escape: Command_Edit_Markup_Escape(); break;
+				case TextEditCommand.Edit_Markup_Unescape: Command_Edit_Markup_Unescape(); break;
+				case TextEditCommand.Edit_RegEx_Escape: Command_Edit_RegEx_Escape(); break;
+				case TextEditCommand.Edit_RegEx_Unescape: Command_Edit_RegEx_Unescape(); break;
+				case TextEditCommand.Edit_URL_Escape: Command_Edit_URL_Escape(); break;
+				case TextEditCommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(); break;
+				case TextEditCommand.Edit_URL_Fetch: Command_Edit_URL_Fetch(); break;
+				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as MakeAbsoluteDialog.Result); break;
+				case TextEditCommand.Edit_Hash_MD5: Command_Edit_Hash(Hash.Type.MD5, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Edit_Hash_SHA1: Command_Edit_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Edit_Hash_SHA256: Command_Edit_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Edit_Sort: Command_Edit_Sort(dialogResult as SortDialog.Result); break;
+				case TextEditCommand.Edit_Aggregate: Command_Edit_Aggregate(dialogResult as AggregateDialog.Result); break;
+				case TextEditCommand.Edit_Convert: Command_Edit_Convert(dialogResult as ConvertDialog.Result); break;
+				case TextEditCommand.Edit_Bookmarks_Toggle: Command_Edit_Bookmarks_Toggle(); break;
+				case TextEditCommand.Edit_Bookmarks_Next: Command_Edit_Bookmarks_NextPreviousBookmark(true, shiftDown); break;
+				case TextEditCommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
+				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
+				case TextEditCommand.Files_Create_Files: Command_Files_Create_Files(); break;
+				case TextEditCommand.Files_Create_Directories: Command_Files_Create_Directories(); break;
+				case TextEditCommand.Files_Names_Simplify: Command_Files_Names_Simplify(); break;
+				case TextEditCommand.Files_Names_MakeAbsolute: Command_Files_Names_MakeAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
+				case TextEditCommand.Files_Names_GetUnique: Command_Files_Names_GetUnique(dialogResult as GetUniqueNamesDialog.Result); break;
+				case TextEditCommand.Files_Names_Sanitize: Command_Files_Names_Sanitize(); break;
 				case TextEditCommand.Files_Get_Size: Command_Files_Get_Size(); break;
 				case TextEditCommand.Files_Get_WriteTime: Command_Files_Get_WriteTime(); break;
 				case TextEditCommand.Files_Get_AccessTime: Command_Files_Get_AccessTime(); break;
@@ -821,14 +839,14 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_CreateTime: Command_Files_Set_Time(TextEditor.TimestampType.Create, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_AllTimes: Command_Files_Set_Time(TextEditor.TimestampType.All, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as SetAttributesDialog.Result); break;
-				case TextEditCommand.Files_Select_DirectoryName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.Directory); break;
-				case TextEditCommand.Files_Select_FileName: Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileName); break;
-				case TextEditCommand.Files_Select_FileNamewoExtension: Command_Files_Select_GetFilePath(TextEditor.GetPathType.FileNameWoExtension); break;
-				case TextEditCommand.Files_Select_Extension: Command_Files_Select_GetFilePath(TextEditor.GetPathType.Extension); break;
-				case TextEditCommand.Files_Select_Existing: Command_Files_Select_Existing(true); break;
-				case TextEditCommand.Files_Select_NonExisting: Command_Files_Select_Existing(false); break;
+				case TextEditCommand.Files_Select_Name_Directory: Command_Files_Select_Path(TextEditor.GetPathType.Directory); break;
+				case TextEditCommand.Files_Select_Name_Name: Command_Files_Select_Path(TextEditor.GetPathType.FileName); break;
+				case TextEditCommand.Files_Select_Name_FileNamewoExtension: Command_Files_Select_Path(TextEditor.GetPathType.FileNameWoExtension); break;
+				case TextEditCommand.Files_Select_Name_Extension: Command_Files_Select_Path(TextEditor.GetPathType.Extension); break;
 				case TextEditCommand.Files_Select_Files: Command_Files_Select_Files(); break;
 				case TextEditCommand.Files_Select_Directories: Command_Files_Select_Directories(); break;
+				case TextEditCommand.Files_Select_Existing: Command_Files_Select_Existing(true); break;
+				case TextEditCommand.Files_Select_NonExisting: Command_Files_Select_Existing(false); break;
 				case TextEditCommand.Files_Select_Roots: Command_Files_Select_Roots(true); break;
 				case TextEditCommand.Files_Select_NonRoots: Command_Files_Select_Roots(false); break;
 				case TextEditCommand.Files_Hash_MD5: Command_Files_Hash(Hash.Type.MD5); break;
@@ -836,58 +854,54 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hash.Type.SHA256); break;
 				case TextEditCommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(false); break;
 				case TextEditCommand.Files_Operations_Move: Command_Files_Operations_CopyMove(true); break;
-				case TextEditCommand.Files_OpenDisk: Command_Files_OpenDisk(); break;
-				case TextEditCommand.Data_Case_Upper: Command_Data_Case_Upper(); break;
-				case TextEditCommand.Data_Case_Lower: Command_Data_Case_Lower(); break;
-				case TextEditCommand.Data_Case_Proper: Command_Data_Case_Proper(); break;
-				case TextEditCommand.Data_Case_Toggle: Command_Data_Case_Toggle(); break;
-				case TextEditCommand.Data_Hex_ToHex: Command_Data_Hex_ToHex(); break;
-				case TextEditCommand.Data_Hex_FromHex: Command_Data_Hex_FromHex(); break;
-				case TextEditCommand.Data_DateTime_Insert: Command_Data_DateTime_Insert(); break;
-				case TextEditCommand.Data_DateTime_Convert: Command_Data_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
-				case TextEditCommand.Data_Convert: Command_Data_Convert(dialogResult as ConvertDialog.Result); break;
-				case TextEditCommand.Data_Length: Command_Data_Length(); break;
-				case TextEditCommand.Data_Width: Command_Data_Width(dialogResult as WidthDialog.Result); break;
-				case TextEditCommand.Data_Trim: Command_Data_Trim(dialogResult as TrimDialog.Result); break;
-				case TextEditCommand.Data_SingleLine: Command_Data_SingleLine(); break;
-				case TextEditCommand.Data_Table_ToTable: Command_Data_Table_ToTable(); break;
-				case TextEditCommand.Data_Table_RegionsSelectionsToTable: Command_Data_Table_RegionsSelectionsToTable(); break;
-				case TextEditCommand.Data_Table_FromTable: Command_Data_Table_FromTable(); break;
-				case TextEditCommand.Data_EvaluateExpression: Command_Data_EvaluateExpression(dialogResult as GetExpressionDialog.Result); break;
-				case TextEditCommand.Data_EvaluateSelectedExpression: Command_Data_EvaluateSelectedExpression(); break;
-				case TextEditCommand.Data_Series: Command_Data_Series(); break;
-				case TextEditCommand.Data_CopyDown: Command_Data_CopyDown(); break;
-				case TextEditCommand.Data_Copy_Count: Command_Data_Copy_Count(); break;
-				case TextEditCommand.Data_Copy_Length: Command_Data_Copy_Length(); break;
-				case TextEditCommand.Data_Copy_Min_String: Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
-				case TextEditCommand.Data_Copy_Min_Numeric: Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
-				case TextEditCommand.Data_Copy_Min_Length: Command_Data_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Length); break;
-				case TextEditCommand.Data_Copy_Max_String: Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.String); break;
-				case TextEditCommand.Data_Copy_Max_Numeric: Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
-				case TextEditCommand.Data_Copy_Max_Length: Command_Data_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
-				case TextEditCommand.Data_Copy_Sum: Command_Data_Copy_Sum(); break;
-				case TextEditCommand.Data_Copy_Lines: Command_Data_Copy_LinesColumnsPositions(GotoType.Line); break;
-				case TextEditCommand.Data_Copy_Columns: Command_Data_Copy_LinesColumnsPositions(GotoType.Column); break;
-				case TextEditCommand.Data_Copy_Positions: Command_Data_Copy_LinesColumnsPositions(GotoType.Position); break;
-				case TextEditCommand.Data_Repeat: Command_Data_Repeat(dialogResult as RepeatDialog.Result); break;
-				case TextEditCommand.Data_Escape_Markup: Command_Data_Escape_Markup(); break;
-				case TextEditCommand.Data_Escape_Regex: Command_Data_Escape_Regex(); break;
-				case TextEditCommand.Data_Escape_URL: Command_Data_Escape_URL(); break;
-				case TextEditCommand.Data_Unescape_Markup: Command_Data_Unescape_Markup(); break;
-				case TextEditCommand.Data_Unescape_Regex: Command_Data_Unescape_Regex(); break;
-				case TextEditCommand.Data_Unescape_URL: Command_Data_Unescape_URL(); break;
-				case TextEditCommand.Data_Hash_MD5: Command_Data_Hash(Hash.Type.MD5, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Data_Hash_SHA1: Command_Data_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Data_Hash_SHA256: Command_Data_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Data_Sort: Command_Data_Sort(dialogResult as SortDialog.Result); break;
-				case TextEditCommand.Data_Aggregate: Command_Data_Aggregate(dialogResult as AggregateDialog.Result); break;
-				case TextEditCommand.Data_FetchURL: Command_Data_FetchURL(); break;
-				case TextEditCommand.Data_MakeURLAbsolute: Command_Data_MakeURLAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
-				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
-				case TextEditCommand.Diff_Next: Command_Diff_NextPrevious(true); break;
-				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
-				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
-				case TextEditCommand.Diff_CopyRight: Command_Diff_CopyLeftRight(false); break;
+				case TextEditCommand.Files_Operations_Delete: Command_Files_Operations_Delete(); break;
+				case TextEditCommand.Files_Operations_SaveClipboards: Command_Files_Operations_SaveClipboards(); break;
+				case TextEditCommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
+				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
+				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
+				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
+				case TextEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
+				case TextEditCommand.Text_Copy_Length: Command_Text_Copy_Length(); break;
+				case TextEditCommand.Text_Copy_Min_Text: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
+				case TextEditCommand.Text_Copy_Min_Length: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Length); break;
+				case TextEditCommand.Text_Copy_Max_Text: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.String); break;
+				case TextEditCommand.Text_Copy_Max_Length: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
+				case TextEditCommand.Text_Select_Trim: Command_Text_Select_Trim(); break;
+				case TextEditCommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as WidthDialog.Result); break;
+				case TextEditCommand.Text_Select_Min_Text: Command_Type_Select_Min(true, TextEditor.Command_MinMax_Type.String); break;
+				case TextEditCommand.Text_Select_Min_Length: Command_Type_Select_Min(true, TextEditor.Command_MinMax_Type.Length); break;
+				case TextEditCommand.Text_Select_Max_Text: Command_Type_Select_Min(false, TextEditor.Command_MinMax_Type.String); break;
+				case TextEditCommand.Text_Select_Max_Length: Command_Type_Select_Min(false, TextEditor.Command_MinMax_Type.Length); break;
+				case TextEditCommand.Text_Case_Upper: Command_Text_Case_Upper(); break;
+				case TextEditCommand.Text_Case_Lower: Command_Text_Case_Lower(); break;
+				case TextEditCommand.Text_Case_Proper: Command_Text_Case_Proper(); break;
+				case TextEditCommand.Text_Case_Toggle: Command_Text_Case_Toggle(); break;
+				case TextEditCommand.Text_Length: Command_Text_Length(); break;
+				case TextEditCommand.Text_Width: Command_Text_Width(dialogResult as WidthDialog.Result); break;
+				case TextEditCommand.Text_Trim: Command_Text_Trim(dialogResult as TrimDialog.Result); break;
+				case TextEditCommand.Text_SingleLine: Command_Text_SingleLine(); break;
+				case TextEditCommand.Text_GUID: Command_Text_GUID(); break;
+				case TextEditCommand.Text_RandomText: Command_Text_RandomText(dialogResult as RandomDataDialog.Result); break;
+				case TextEditCommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(dialogResult as RevRegExDialog.Result); break;
+				case TextEditCommand.Numeric_Copy_Min: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Numeric_Copy_Max: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Numeric_Copy_Sum: Command_Numeric_Copy_Sum(); break;
+				case TextEditCommand.Numeric_Select_Min: Command_Type_Select_Min(true, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Numeric_Select_Max: Command_Type_Select_Min(false, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Numeric_Hex_ToHex: Command_Numeric_Hex_ToHex(); break;
+				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
+				case TextEditCommand.Numeric_Series: Command_Numeric_Series(); break;
+				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
+				case TextEditCommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
+				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
+				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
+				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
+				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Position_Goto_Columns: Command_Position_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Position_Goto_Positions: Command_Position_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Position_Copy_Lines: Command_Position_Copy(GotoType.Line); break;
+				case TextEditCommand.Position_Copy_Columns: Command_Position_Copy(GotoType.Column); break;
+				case TextEditCommand.Position_Copy_Positions: Command_Position_Copy(GotoType.Position); break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
@@ -905,19 +919,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Descendants_SelfAndDescendants: Command_Content_List(ParserNode.ParserNodeListType.SelfAndDescendants); break;
 				case TextEditCommand.Content_Descendants_First: Command_Content_List(ParserNode.ParserNodeListType.Children, first: true); break;
 				case TextEditCommand.Content_Descendants_ByAttribute: Command_Content_List(ParserNode.ParserNodeListType.Descendants, findAttr: dialogResult as FindContentAttributeDialog.Result); break;
-				case TextEditCommand.Content_Next: Command_Content_NextPrev(true); break;
-				case TextEditCommand.Content_Previous: Command_Content_NextPrev(false); break;
+				case TextEditCommand.Content_Next: Command_Content_NextPrevious(true); break;
+				case TextEditCommand.Content_Previous: Command_Content_NextPrevious(false); break;
 				case TextEditCommand.Content_Select_ByAttribute: Command_Content_Select_ByAttribute(dialogResult as FindContentAttributeDialog.Result); break;
-				case TextEditCommand.Content_Select_TopMost: Command_Content_Select_TopMost(); break;
+				case TextEditCommand.Content_Select_Topmost: Command_Content_Select_Topmost(); break;
 				case TextEditCommand.Content_Select_Deepest: Command_Content_Select_Deepest(); break;
-				case TextEditCommand.Content_Select_MaxTopMost: Command_Content_Select_MaxTopMost(); break;
+				case TextEditCommand.Content_Select_MaxTopmost: Command_Content_Select_MaxTopmost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
-				case TextEditCommand.Insert_GUID: Command_Insert_GUID(); break;
-				case TextEditCommand.Insert_RandomNumber: Command_Insert_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
-				case TextEditCommand.Insert_RandomData: Command_Insert_RandomData(dialogResult as RandomDataDialog.Result); break;
-				case TextEditCommand.Insert_MinMaxValues: Command_Insert_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
-				case TextEditCommand.Insert_CombinationsPermutations: Command_Insert_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
-				case TextEditCommand.Insert_RevRegEx: Command_Insert_RevRegEx(dialogResult as RevRegExDialog.Result); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -987,37 +995,29 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Misses_Values7: Command_Keys_HitsMisses(7, false); break;
 				case TextEditCommand.Keys_Misses_Values8: Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Command_Keys_HitsMisses(9, false); break;
-				case TextEditCommand.SelectRegion_Toggle: Command_SelectRegion_Toggle(); break;
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
 				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
 				case TextEditCommand.Select_Empty: Command_Select_Empty(true); break;
 				case TextEditCommand.Select_NonEmpty: Command_Select_Empty(false); break;
-				case TextEditCommand.Select_Trim: Command_Select_Trim(); break;
-				case TextEditCommand.Select_Width: Command_Select_Width(dialogResult as WidthDialog.Result); break;
 				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Command_Select_Duplicates(); break;
-				case TextEditCommand.Select_Count: Command_Select_Count(dialogResult as CountDialog.Result); break;
+				case TextEditCommand.Select_ByCount: Command_Select_ByCount(dialogResult as CountDialog.Result); break;
 				case TextEditCommand.Select_Regions: Command_Select_Regions(); break;
 				case TextEditCommand.Select_FindResults: Command_Select_FindResults(); break;
-				case TextEditCommand.Select_Min_String: Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
-				case TextEditCommand.Select_Min_Numeric: Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
-				case TextEditCommand.Select_Min_Length: Command_Select_MinMax(true, TextEditor.Command_MinMax_Type.Length); break;
-				case TextEditCommand.Select_Max_String: Command_Select_MinMax(false, TextEditor.Command_MinMax_Type.String); break;
-				case TextEditCommand.Select_Max_Numeric: Command_Select_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
-				case TextEditCommand.Select_Max_Length: Command_Select_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
-				case TextEditCommand.Select_ExpressionMatches: Command_Select_ExpressionMatches(dialogResult as GetExpressionDialog.Result); break;
-				case TextEditCommand.Select_FirstSelection: Command_Select_FirstSelection(); break;
-				case TextEditCommand.Select_ShowCurrent: Command_Select_ShowCurrent(); break;
-				case TextEditCommand.Select_NextSelection: Command_Select_NextSelection(); break;
-				case TextEditCommand.Select_PrevSelection: Command_Select_PrevSelection(); break;
-				case TextEditCommand.Select_Single: Command_Select_Single(); break;
-				case TextEditCommand.Select_Remove: Command_Select_Remove(); break;
+				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
+				case TextEditCommand.Select_Selection_ShowCurrent: Command_Select_Selection_ShowCurrent(); break;
+				case TextEditCommand.Select_Selection_Next: Command_Select_Selection_Next(); break;
+				case TextEditCommand.Select_Selection_Previous: Command_Select_Selection_Previous(); break;
+				case TextEditCommand.Select_Selection_Single: Command_Select_Selection_Single(); break;
+				case TextEditCommand.Select_Selection_Remove: Command_Select_Selection_Remove(); break;
+				case TextEditCommand.Region_ToggleRegionsSelections: Command_Region_ToggleRegionsSelections(); break;
 				case TextEditCommand.Region_SetSelection: Command_Region_SetSelection(); break;
 				case TextEditCommand.Region_SetFindResults: Command_Region_SetFindResults(); break;
 				case TextEditCommand.Region_ClearRegions: Command_Region_ClearRegions(); break;
 				case TextEditCommand.Region_LimitToSelection: Command_Region_LimitToSelection(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
+				case TextEditCommand.Macro_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
 
@@ -1036,10 +1036,10 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_File_Save()
+		internal void Command_File_Save_Save()
 		{
 			if (FileName == null)
-				Command_File_SaveAs();
+				Command_File_Save_SaveAs();
 			else
 				Save(FileName);
 		}
@@ -1063,18 +1063,18 @@ namespace NeoEdit.TextEdit
 			return dialog.FileName;
 		}
 
-		internal void Command_File_SaveAs()
+		internal void Command_File_Save_SaveAs()
 		{
 			var fileName = GetSaveFileName();
 			if (fileName != null)
 				Save(fileName);
 		}
 
-		internal void Command_File_Rename()
+		internal void Command_File_Operations_Rename()
 		{
 			if (String.IsNullOrEmpty(FileName))
 			{
-				Command_File_SaveAs();
+				Command_File_Save_SaveAs();
 				return;
 			}
 
@@ -1123,7 +1123,7 @@ namespace NeoEdit.TextEdit
 			OpenFile(FileName);
 		}
 
-		internal void Command_File_Delete()
+		internal void Command_File_Operations_Delete()
 		{
 			if (FileName == null)
 				throw new Exception("No filename.");
@@ -1159,7 +1159,7 @@ namespace NeoEdit.TextEdit
 				ReplaceSelections(strs);
 		}
 
-		internal void Command_File_InsertFiles()
+		internal void Command_File_Insert_Files()
 		{
 			if (Selections.Count != 1)
 			{
@@ -1177,7 +1177,7 @@ namespace NeoEdit.TextEdit
 				InsertFiles(dialog.FileNames);
 		}
 
-		internal void Command_File_InsertCopiedCutFiles()
+		internal void Command_File_Insert_CopiedCut()
 		{
 			if (Selections.Count != 1)
 			{
@@ -1207,17 +1207,17 @@ namespace NeoEdit.TextEdit
 			InsertFiles(files);
 		}
 
-		internal void Command_File_CopyPath()
+		internal void Command_File_Copy_Path()
 		{
 			SetClipboardFiles(new List<string> { FileName }, false);
 		}
 
-		internal void Command_File_CopyName()
+		internal void Command_File_Copy_Name()
 		{
 			SetClipboard(Path.GetFileName(FileName));
 		}
 
-		internal void Command_File_Explore()
+		internal void Command_File_Operations_Explore()
 		{
 			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
 		}
@@ -1227,7 +1227,7 @@ namespace NeoEdit.TextEdit
 			return EncodingDialog.Run(WindowParent, CodePage, lineEndings: LineEnding ?? "");
 		}
 
-		internal void Command_File_Encoding(EncodingDialog.Result result)
+		internal void Command_File_Encoding_Encoding(EncodingDialog.Result result)
 		{
 			CodePage = result.CodePage;
 
@@ -1252,7 +1252,7 @@ namespace NeoEdit.TextEdit
 			return EncodingDialog.Run(WindowParent, CodePage);
 		}
 
-		internal void Command_File_ReopenWithEncoding(EncodingDialog.Result result)
+		internal void Command_File_Encoding_ReopenWithEncoding(EncodingDialog.Result result)
 		{
 			if (IsModified)
 			{
@@ -1275,7 +1275,7 @@ namespace NeoEdit.TextEdit
 			return SymmetricKeyDialog.Run(WindowParent, Crypto.Type.AES, true);
 		}
 
-		internal void Command_File_Encryption(SymmetricKeyDialog.Result result)
+		internal void Command_File_Operations_Encryption(SymmetricKeyDialog.Result result)
 		{
 			AESKey = String.IsNullOrEmpty(result.Key) ? null : result.Key;
 		}
@@ -1306,7 +1306,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(redo.text, replaceType: ReplaceType.Redo);
 		}
 
-		internal void Command_Edit_CutCopy(bool isCut)
+		internal void Command_Edit_Copy_CutCopy(bool isCut)
 		{
 			var strs = GetSelectionStrings();
 
@@ -1335,7 +1335,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Edit_Paste(bool highlight)
+		internal void Command_Edit_Paste_Paste(bool highlight)
 		{
 			var clipboardStrings = Clipboard.ToList();
 			if (clipboardStrings.Count == 0)
@@ -1357,12 +1357,12 @@ namespace NeoEdit.TextEdit
 			ReplaceOneWithMany(clipboardStrings);
 		}
 
-		internal void Command_Edit_PasteAll(string str, bool highlight)
+		internal void Command_Edit_Paste_AllFiles(string str, bool highlight)
 		{
 			ReplaceSelections(Selections.Select(value => str).ToList(), highlight);
 		}
 
-		internal FindTextDialog.Result Command_Edit_FindReplace_Dialog(bool isReplace)
+		internal FindTextDialog.Result Command_Edit_Find_FindReplace_Dialog(bool isReplace)
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().AsOrdered().Any(range => range.HasSelection);
@@ -1380,7 +1380,7 @@ namespace NeoEdit.TextEdit
 			return FindTextDialog.Run(WindowParent, isReplace ? FindTextDialog.FindTextType.Replace : FindTextDialog.FindTextType.Selections, text, selectionOnly);
 		}
 
-		internal void Command_Edit_FindReplace(bool replace, bool selecting, FindTextDialog.Result result)
+		internal void Command_Edit_Find_FindReplace(bool replace, bool selecting, FindTextDialog.Result result)
 		{
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
@@ -1405,12 +1405,12 @@ namespace NeoEdit.TextEdit
 			FindNext(true, selecting);
 		}
 
-		internal void Command_Edit_FindNextPrev(bool next, bool selecting)
+		internal void Command_Edit_Find_FindNextPrevious(bool next, bool selecting)
 		{
 			FindNext(next, selecting);
 		}
 
-		internal GotoDialog.Result Command_Edit_Goto_Dialog(GotoType gotoType)
+		internal GotoDialog.Result Command_Position_Goto_Dialog(GotoType gotoType)
 		{
 			int line = 1, index = 1, position = 0;
 			var range = Selections.FirstOrDefault();
@@ -1431,7 +1431,7 @@ namespace NeoEdit.TextEdit
 			return GotoDialog.Run(WindowParent, gotoType, startValue, GetExpressionData(count: 10));
 		}
 
-		internal void Command_Edit_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
+		internal void Command_Position_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
 		{
 			var offsets = GetExpressionResults<int>(result.Expression, false, false);
 			if (!offsets.Any())
@@ -1465,7 +1465,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Edit_ToggleBookmark()
+		internal void Command_Edit_Bookmarks_Toggle()
 		{
 			var linePairs = Selections.AsParallel().AsOrdered().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
 			if (linePairs.Any(pair => pair.start != pair.end))
@@ -1506,31 +1506,31 @@ namespace NeoEdit.TextEdit
 			return MoveCursor(range, Bookmarks[index].Start, selecting);
 		}
 
-		internal void Command_Edit_NextPreviousBookmark(bool next, bool selecting)
+		internal void Command_Edit_Bookmarks_NextPreviousBookmark(bool next, bool selecting)
 		{
 			if (!Bookmarks.Any())
 				return;
 			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetNextPrevBookmark(range, next, selecting)).ToList());
 		}
 
-		internal void Command_Edit_ClearBookmarks()
+		internal void Command_Edit_Bookmarks_Clear()
 		{
 			Bookmarks.Clear();
 		}
 
-		internal void Command_Files_Open()
+		internal void Command_File_Open_Selected()
 		{
 			var files = GetSelectionStrings();
 			foreach (var file in files)
 				TextEditTabs.Create(file);
 		}
 
-		internal void Command_Files_Insert()
+		internal void Command_File_Insert_Selected()
 		{
 			InsertFiles(GetSelectionStrings());
 		}
 
-		internal void Command_Files_SaveClipboards()
+		internal void Command_Files_Operations_SaveClipboards()
 		{
 			var clipboardStrings = Clipboard;
 			if (clipboardStrings.Count != Selections.Count)
@@ -1544,7 +1544,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Files_CreateFiles()
+		internal void Command_Files_Create_Files()
 		{
 			var files = GetSelectionStrings();
 			if (files.Any(file => Directory.Exists(file)))
@@ -1564,14 +1564,14 @@ namespace NeoEdit.TextEdit
 			All = Write | Access | Create,
 		}
 
-		internal void Command_Files_CreateDirectories()
+		internal void Command_Files_Create_Directories()
 		{
 			var files = GetSelectionStrings();
 			foreach (var file in files)
 				Directory.CreateDirectory(file);
 		}
 
-		internal void Command_Files_Delete()
+		internal void Command_Files_Operations_Delete()
 		{
 			if (new Message
 			{
@@ -1592,7 +1592,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Files_DragDrop()
+		internal void Command_Files_Operations_DragDrop()
 		{
 			var strs = GetSelectionStrings();
 			if (!StringsAreFiles(strs))
@@ -1600,7 +1600,7 @@ namespace NeoEdit.TextEdit
 			doDrag = true;
 		}
 
-		internal void Command_Files_Simplify()
+		internal void Command_Files_Names_Simplify()
 		{
 			ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
 		}
@@ -1610,7 +1610,7 @@ namespace NeoEdit.TextEdit
 			return MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10), true);
 		}
 
-		internal void Command_Files_MakeAbsolute(MakeAbsoluteDialog.Result result)
+		internal void Command_Files_Names_MakeAbsolute(MakeAbsoluteDialog.Result result)
 		{
 			var results = GetExpressionResults<string>(result.Expression);
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == MakeAbsoluteDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
@@ -1621,7 +1621,7 @@ namespace NeoEdit.TextEdit
 			return GetUniqueNamesDialog.Run(WindowParent);
 		}
 
-		internal void Command_Files_GetUniqueNames(GetUniqueNamesDialog.Result result)
+		internal void Command_Files_Names_GetUnique(GetUniqueNamesDialog.Result result)
 		{
 			var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			if (!result.Format.Contains("{Unique}"))
@@ -1666,7 +1666,7 @@ namespace NeoEdit.TextEdit
 			return fileName;
 		}
 
-		internal void Command_Files_SanitizeNames()
+		internal void Command_Files_Names_Sanitize()
 		{
 			ReplaceSelections(Selections.Select(range => SanitizeFileName(GetString(range))).ToList());
 		}
@@ -1900,7 +1900,7 @@ namespace NeoEdit.TextEdit
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		internal void Command_Files_Select_GetFilePath(GetPathType type)
+		internal void Command_Files_Select_Path(GetPathType type)
 		{
 			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());
 		}
@@ -2005,42 +2005,42 @@ namespace NeoEdit.TextEdit
 				}
 		}
 
-		internal void Command_Files_OpenDisk()
+		internal void Command_Files_Operations_OpenDisk()
 		{
 			Launcher.Static.LaunchDisk(Selections.Select(range => GetString(range)));
 		}
 
-		internal void Command_Data_Case_Upper()
+		internal void Command_Text_Case_Upper()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());
 		}
 
-		internal void Command_Data_Case_Lower()
+		internal void Command_Text_Case_Lower()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToLowerInvariant()).ToList());
 		}
 
-		internal void Command_Data_Case_Proper()
+		internal void Command_Text_Case_Proper()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToProper()).ToList());
 		}
 
-		internal void Command_Data_Case_Toggle()
+		internal void Command_Text_Case_Toggle()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToToggled()).ToList());
 		}
 
-		internal void Command_Data_Hex_ToHex()
+		internal void Command_Numeric_Hex_ToHex()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList());
 		}
 
-		internal void Command_Data_Hex_FromHex()
+		internal void Command_Numeric_Hex_FromHex()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 		}
 
-		internal void Command_Data_DateTime_Insert()
+		internal void Command_DateTime_Now()
 		{
 			ReplaceSelections(DateTime.Now.ToString("O"));
 		}
@@ -2053,7 +2053,7 @@ namespace NeoEdit.TextEdit
 			return ConvertDateTimeDialog.Run(WindowParent, GetString(Selections.First()));
 		}
 
-		internal void Command_Data_DateTime_Convert(ConvertDateTimeDialog.Result result)
+		internal void Command_DateTime_Convert(ConvertDateTimeDialog.Result result)
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ConvertDateTimeDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList());
 		}
@@ -2063,7 +2063,7 @@ namespace NeoEdit.TextEdit
 			return ConvertDialog.Run(WindowParent);
 		}
 
-		internal void Command_Data_Convert(ConvertDialog.Result result)
+		internal void Command_Edit_Convert(ConvertDialog.Result result)
 		{
 			List<Coder.CodePage> clipboardCodePages = null;
 			if ((result.InputType == Coder.CodePage.Clipboard) || (result.OutputType == Coder.CodePage.Clipboard))
@@ -2077,7 +2077,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.InputType, result.InputBOM), result.OutputType == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.OutputType, result.OutputBOM)).ToList());
 		}
 
-		internal void Command_Data_Length()
+		internal void Command_Text_Length()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
 		}
@@ -2090,7 +2090,7 @@ namespace NeoEdit.TextEdit
 			return WidthDialog.Run(WindowParent, minLength, maxLength, numeric, false, GetExpressionData(count: 10));
 		}
 
-		internal void Command_Data_Width(WidthDialog.Result result)
+		internal void Command_Text_Width(WidthDialog.Result result)
 		{
 			var results = GetExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, results[index])).ToList());
@@ -2113,12 +2113,12 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Data_Trim(TrimDialog.Result result)
+		internal void Command_Text_Trim(TrimDialog.Result result)
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(GetString(str), result)).ToList());
 		}
 
-		internal void Command_Data_SingleLine()
+		internal void Command_Text_SingleLine()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 		}
@@ -2134,7 +2134,7 @@ namespace NeoEdit.TextEdit
 			return strs;
 		}
 
-		internal void Command_Data_Table_ToTable()
+		internal void Command_Edit_Table_ToTable()
 		{
 			if (!Selections.Any())
 				return;
@@ -2143,7 +2143,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(LinesToTable(lines));
 		}
 
-		internal void Command_Data_Table_RegionsSelectionsToTable()
+		internal void Command_Edit_Table_RegionsSelectionsToTable()
 		{
 			if (!Selections.Any())
 				return;
@@ -2156,7 +2156,7 @@ namespace NeoEdit.TextEdit
 			Regions.Clear();
 		}
 
-		internal void Command_Data_Table_FromTable()
+		internal void Command_Edit_Table_FromTable()
 		{
 			if (!Selections.Any())
 				return;
@@ -2181,24 +2181,24 @@ namespace NeoEdit.TextEdit
 			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
 		}
 
-		internal void Command_Data_EvaluateExpression(GetExpressionDialog.Result result)
+		internal void Command_Expression_Expression(GetExpressionDialog.Result result)
 		{
 			var results = GetExpressionResults<string>(result.Expression);
 			ReplaceSelections(results);
 		}
 
-		internal void Command_Data_EvaluateSelectedExpression()
+		internal void Command_Expression_EvaluateSelected()
 		{
 			var expression = new NEExpression("Eval([0])");
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
 		}
 
-		internal void Command_Data_Series()
+		internal void Command_Numeric_Series()
 		{
 			ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
 		}
 
-		internal void Command_Data_CopyDown()
+		internal void Command_Edit_CopyDown()
 		{
 			var strs = GetSelectionStrings();
 			var index = 0;
@@ -2210,18 +2210,18 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal void Command_Data_Copy_Count()
+		internal void Command_File_Copy_Count()
 		{
 			SetClipboard(Selections.Count);
 		}
 
-		internal void Command_Data_Copy_Length()
+		internal void Command_Text_Copy_Length()
 		{
 			SetClipboard(Selections.Select(range => range.Length.ToString()).ToList());
 		}
 
 		internal enum Command_MinMax_Type { String, Numeric, Length }
-		internal void DoCommand_Data_Copy_MinMax<T>(bool min, Func<Range, T> sortBy, Func<Range, string> value)
+		internal void DoCommand_Type_Copy_MinMax<T>(bool min, Func<Range, T> sortBy, Func<Range, string> value)
 		{
 			if (!Selections.Any())
 				throw new Exception("No selections");
@@ -2230,22 +2230,22 @@ namespace NeoEdit.TextEdit
 			SetClipboard(value(found));
 		}
 
-		internal void Command_Data_Copy_MinMax(bool min, Command_MinMax_Type type)
+		internal void Command_Type_Copy_MinMax(bool min, Command_MinMax_Type type)
 		{
 			switch (type)
 			{
-				case Command_MinMax_Type.String: DoCommand_Data_Copy_MinMax(min, range => GetString(range), range => GetString(range)); break;
-				case Command_MinMax_Type.Numeric: DoCommand_Data_Copy_MinMax(min, range => NumericSort(GetString(range)), range => GetString(range)); break;
-				case Command_MinMax_Type.Length: DoCommand_Data_Copy_MinMax(min, range => range.Length, range => range.Length.ToString()); break;
+				case Command_MinMax_Type.String: DoCommand_Type_Copy_MinMax(min, range => GetString(range), range => GetString(range)); break;
+				case Command_MinMax_Type.Numeric: DoCommand_Type_Copy_MinMax(min, range => NumericSort(GetString(range)), range => GetString(range)); break;
+				case Command_MinMax_Type.Length: DoCommand_Type_Copy_MinMax(min, range => range.Length, range => range.Length.ToString()); break;
 			}
 		}
 
-		internal void Command_Data_Copy_Sum()
+		internal void Command_Numeric_Copy_Sum()
 		{
 			SetClipboard(Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum());
 		}
 
-		internal void Command_Data_Copy_LinesColumnsPositions(GotoType gotoType)
+		internal void Command_Position_Copy(GotoType gotoType)
 		{
 			if (gotoType == GotoType.Position)
 			{
@@ -2270,7 +2270,7 @@ namespace NeoEdit.TextEdit
 			return RepeatDialog.Run(WindowParent, Selections.Count == 1, GetExpressionData(count: 10));
 		}
 
-		internal void Command_Data_Repeat(RepeatDialog.Result result)
+		internal void Command_Edit_Repeat(RepeatDialog.Result result)
 		{
 			var results = GetExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), results[index])).ToList());
@@ -2289,42 +2289,42 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Data_Escape_Markup()
+		internal void Command_Edit_Markup_Escape()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Escape_Regex()
+		internal void Command_Edit_RegEx_Escape()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Escape_URL()
+		internal void Command_Edit_URL_Escape()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Unescape_Markup()
+		internal void Command_Edit_Markup_Unescape()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Unescape_Regex()
+		internal void Command_Edit_RegEx_Unescape()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(GetString(range))).ToList());
 		}
 
-		internal void Command_Data_Unescape_URL()
+		internal void Command_Edit_URL_Unescape()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 		}
 
-		internal EncodingDialog.Result Command_Data_Hash_Dialog()
+		internal EncodingDialog.Result Command_Edit_Hash_Dialog()
 		{
 			return EncodingDialog.Run(WindowParent, CodePage);
 		}
 
-		internal void Command_Data_Hash(Hash.Type type, EncodingDialog.Result result)
+		internal void Command_Edit_Hash(Hash.Type type, EncodingDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
@@ -2364,7 +2364,7 @@ namespace NeoEdit.TextEdit
 			return results;
 		}
 
-		internal void Command_Data_FetchURL()
+		internal void Command_Edit_URL_Fetch()
 		{
 			var urls = GetSelectionStrings();
 			var results = Task.Run(() => GetURLs(urls).Result).Result;
@@ -2383,7 +2383,7 @@ namespace NeoEdit.TextEdit
 			return MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10), false);
 		}
 
-		internal void Command_Data_MakeURLAbsolute(MakeAbsoluteDialog.Result result)
+		internal void Command_Edit_URL_Absolute(MakeAbsoluteDialog.Result result)
 		{
 			var results = GetExpressionResults<string>(result.Expression);
 			ReplaceSelections(GetSelectionStrings().Select((str, index) =>
@@ -2393,7 +2393,7 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		internal void Command_Diff_Break()
+		internal void Command_Edit_Diff_Break()
 		{
 			DiffTarget = null;
 		}
@@ -2421,7 +2421,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Diff_NextPrevious(bool next)
+		internal void Command_Edit_Diff_NextPrevious(bool next)
 		{
 			if (DiffTarget == null)
 				return;
@@ -2434,7 +2434,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Diff_CopyLeftRight(bool moveLeft)
+		internal void Command_Edit_Diff_CopyLeftRight(bool moveLeft)
 		{
 			if (DiffTarget == null)
 				return;
@@ -2457,7 +2457,7 @@ namespace NeoEdit.TextEdit
 				right.ReplaceSelections(left.GetSelectionStrings());
 		}
 
-		internal void Command_Insert_GUID()
+		internal void Command_Text_GUID()
 		{
 			ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 		}
@@ -2467,7 +2467,7 @@ namespace NeoEdit.TextEdit
 			return RandomNumberDialog.Run(WindowParent);
 		}
 
-		internal void Command_Insert_RandomNumber(RandomNumberDialog.Result result)
+		internal void Command_Numeric_RandomNumber(RandomNumberDialog.Result result)
 		{
 			ReplaceSelections(Selections.AsParallel().Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
 		}
@@ -2482,7 +2482,7 @@ namespace NeoEdit.TextEdit
 			return new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 		}
 
-		internal void Command_Insert_RandomData(RandomDataDialog.Result result)
+		internal void Command_Text_RandomText(RandomDataDialog.Result result)
 		{
 			var results = GetExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
@@ -2493,7 +2493,7 @@ namespace NeoEdit.TextEdit
 			return MinMaxValuesDialog.Run(WindowParent);
 		}
 
-		internal void Command_Insert_MinMaxValues(MinMaxValuesDialog.Result result)
+		internal void Command_Numeric_MinMaxValues(MinMaxValuesDialog.Result result)
 		{
 			List<Coder.CodePage> clipboardCodePages = null;
 			var codePageMinMaxValues = new Dictionary<Coder.CodePage, string> { { result.CodePage, "" } };
@@ -2529,7 +2529,7 @@ namespace NeoEdit.TextEdit
 			return CombinationsPermutationsDialog.Run(WindowParent);
 		}
 
-		internal void Command_Insert_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
+		internal void Command_Numeric_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -2589,7 +2589,7 @@ namespace NeoEdit.TextEdit
 			return RevRegExDialog.Run(WindowParent);
 		}
 
-		internal void Command_Insert_RevRegEx(RevRegExDialog.Result result)
+		internal void Command_Text_ReverseRegEx(RevRegExDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -2669,7 +2669,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == hits).ToList());
 		}
 
-		internal void Command_SelectRegion_Toggle()
+		internal void Command_Region_ToggleRegionsSelections()
 		{
 			if (Selections.Count > 1)
 			{
@@ -2735,7 +2735,7 @@ namespace NeoEdit.TextEdit
 			return Range.FromIndex(index, length);
 		}
 
-		internal void Command_Select_Trim()
+		internal void Command_Text_Select_Trim()
 		{
 			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range)).ToList());
 		}
@@ -2759,7 +2759,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Select_Width(WidthDialog.Result result)
+		internal void Command_Text_Select_ByWidth(WidthDialog.Result result)
 		{
 			var results = GetExpressionResults<int>(result.Expression);
 			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => WidthMatch(GetString(range), result, results[index])).ToList());
@@ -2780,7 +2780,7 @@ namespace NeoEdit.TextEdit
 			return CountDialog.Run(WindowParent);
 		}
 
-		internal void Command_Select_Count(CountDialog.Result result)
+		internal void Command_Select_ByCount(CountDialog.Result result)
 		{
 			var strs = Selections.Select((range, index) => Tuple.Create(GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(result.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
@@ -2805,7 +2805,7 @@ namespace NeoEdit.TextEdit
 			Searches.Clear();
 		}
 
-		void DoCommand_Select_MinMax<T>(bool min, Func<Range, T> sortBy)
+		void DoCommand_Type_Select_Min<T>(bool min, Func<Range, T> sortBy)
 		{
 			if (!Selections.Any())
 				throw new Exception("No selections");
@@ -2814,13 +2814,13 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(selections.AsParallel().AsOrdered().Where(obj => obj.sort.Equals(found)).Select(obj => obj.range).ToList());
 		}
 
-		internal void Command_Select_MinMax(bool min, Command_MinMax_Type type)
+		internal void Command_Type_Select_Min(bool min, Command_MinMax_Type type)
 		{
 			switch (type)
 			{
-				case Command_MinMax_Type.String: DoCommand_Select_MinMax(min, range => GetString(range)); break;
-				case Command_MinMax_Type.Numeric: DoCommand_Select_MinMax(min, range => NumericSort(GetString(range))); break;
-				case Command_MinMax_Type.Length: DoCommand_Select_MinMax(min, range => range.Length); break;
+				case Command_MinMax_Type.String: DoCommand_Type_Select_Min(min, range => GetString(range)); break;
+				case Command_MinMax_Type.Numeric: DoCommand_Type_Select_Min(min, range => NumericSort(GetString(range))); break;
+				case Command_MinMax_Type.Length: DoCommand_Type_Select_Min(min, range => range.Length); break;
 			}
 		}
 
@@ -2829,25 +2829,25 @@ namespace NeoEdit.TextEdit
 			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
 		}
 
-		internal void Command_Select_ExpressionMatches(GetExpressionDialog.Result result)
+		internal void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
 		{
 			var results = GetExpressionResults<bool>(result.Expression);
 			Selections.Replace(Selections.Where((str, num) => results[num]).ToList());
 		}
 
-		internal void Command_Select_FirstSelection()
+		internal void Command_Select_Selection_First()
 		{
 			visibleIndex = 0;
 			EnsureVisible(true);
 			canvasRenderTimer.Start();
 		}
 
-		internal void Command_Select_ShowCurrent()
+		internal void Command_Select_Selection_ShowCurrent()
 		{
 			EnsureVisible(true);
 		}
 
-		internal void Command_Select_NextSelection()
+		internal void Command_Select_Selection_Next()
 		{
 			++visibleIndex;
 			if (visibleIndex >= Selections.Count)
@@ -2856,7 +2856,7 @@ namespace NeoEdit.TextEdit
 			canvasRenderTimer.Start();
 		}
 
-		internal void Command_Select_PrevSelection()
+		internal void Command_Select_Selection_Previous()
 		{
 			--visibleIndex;
 			if (visibleIndex < 0)
@@ -2865,7 +2865,7 @@ namespace NeoEdit.TextEdit
 			canvasRenderTimer.Start();
 		}
 
-		internal void Command_Select_Single()
+		internal void Command_Select_Selection_Single()
 		{
 			if (!Selections.Any())
 				return;
@@ -2874,7 +2874,7 @@ namespace NeoEdit.TextEdit
 			visibleIndex = 0;
 		}
 
-		internal void Command_Select_Remove()
+		internal void Command_Select_Selection_Remove()
 		{
 			if (!Selections.Any())
 				return;
