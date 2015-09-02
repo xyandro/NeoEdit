@@ -192,6 +192,7 @@
 	</MenuItem>
 	<MenuItem Header="E_xpression">
 		<textEdit:TextEditMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
+		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Expression_Copy"/>
 		<textEdit:TextEditMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected"/>
 		<textEdit:TextEditMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
 	</MenuItem>

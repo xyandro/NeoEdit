@@ -108,6 +108,7 @@ namespace NeoEdit.TextEdit
 		Files_Operations_DragDrop,
 		Files_Operations_OpenDisk,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Expression_Expression,
+		Expression_Copy,
 		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Expression_EvaluateSelected,
 		Expression_SelectByExpression,
 		Text_Copy_Length,

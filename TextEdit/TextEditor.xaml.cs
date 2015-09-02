@@ -700,6 +700,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_AllTimes: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Data_EvaluateExpression_Dialog(); break;
+				case TextEditCommand.Expression_Copy: dialogResult = Command_Data_EvaluateExpression_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Select_ExpressionMatches_Dialog(); break;
 				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Select_Width_Dialog(); break;
 				case TextEditCommand.Text_Width: dialogResult = Command_Data_Width_Dialog(); break;
@@ -859,6 +860,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
 				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
 				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
+				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
 				case TextEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Text_Copy_Length: Command_Text_Copy_Length(); break;
@@ -2185,6 +2187,12 @@ namespace NeoEdit.TextEdit
 		{
 			var results = GetExpressionResults<string>(result.Expression);
 			ReplaceSelections(results);
+		}
+
+		internal void Command_Expression_Copy(GetExpressionDialog.Result result)
+		{
+			var results = GetExpressionResults<string>(result.Expression);
+			SetClipboard(results);
 		}
 
 		internal void Command_Expression_EvaluateSelected()
