@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
-using Antlr4.Runtime.Tree;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.TCSV.Parser;
 
 namespace NeoEdit.TextEdit.Content.TCSV
 {
-	class TSVVisitor : TSVBaseVisitor<object>
+	class TSVVisitor : TSVBaseVisitor<ParserNode>
 	{
 		public static ParserNode Parse(string input)
 		{
@@ -30,51 +28,43 @@ namespace NeoEdit.TextEdit.Content.TCSV
 				tree = parser.doc();
 			}
 
-			return TSVVisitor.Parse(input, tree);
+			return new TSVVisitor().Visit(tree);
 		}
 
 		const string PAGE = "Page";
 		const string ROW = "Row";
 		const string FIELD = "Field";
 
-		readonly ParserNode Root;
-		ParserNode Parent { get { return stack.Peek(); } }
-		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
-		readonly string input;
-		TSVVisitor(string input)
-		{
-			this.input = input;
-			stack.Push(Root = new ParserNode { Type = PAGE, Start = 0, End = input.Length });
-		}
-
-		public static ParserNode Parse(string input, IParseTree tree)
-		{
-			var visitor = new TSVVisitor(input);
-			visitor.Visit(tree);
-			return visitor.Root;
-		}
-
-		object AddNode(ParserRuleContext context, string type, bool skipQuotes = false, bool skipEmpty = false)
+		ParserNode GetNode(ParserRuleContext context, string type)
 		{
 			int start, end;
 			context.GetBounds(out start, out end);
-			if ((skipEmpty) && (start == end))
-				return null;
-			if (skipQuotes)
-			{
-				++start;
-				--end;
-			}
-
-			stack.Push(new ParserNode { Type = type, Parent = Parent, Start = start, End = end });
-			VisitChildren(context);
-			stack.Pop();
-			return null;
+			return new ParserNode { Type = type, Start = start, End = end };
 		}
 
-		public override object VisitRow(TSVParser.RowContext context) { return AddNode(context, ROW, skipEmpty: true); }
-		public override object VisitText(TSVParser.TextContext context) { return AddNode(context, FIELD); }
-		public override object VisitString(TSVParser.StringContext context) { return AddNode(context, FIELD, true); }
-		public override object VisitEmpty(TSVParser.EmptyContext context) { return AddNode(context, FIELD); }
+		public override ParserNode VisitDoc(TSVParser.DocContext context)
+		{
+			var node = GetNode(context, PAGE);
+			foreach (var row in context.row())
+			{
+				var rowNode = Visit(row);
+				if (rowNode == null)
+					continue;
+				rowNode.Parent = node;
+			}
+			return node;
+		}
+
+		public override ParserNode VisitRow(TSVParser.RowContext context)
+		{
+			var node = GetNode(context, ROW);
+			if (node.Start == node.End)
+				return null;
+			foreach (var field in context.field())
+				Visit(field).Parent = node;
+			return node;
+		}
+
+		public override ParserNode VisitField(TSVParser.FieldContext context) { return GetNode(context, FIELD); }
 	}
 }

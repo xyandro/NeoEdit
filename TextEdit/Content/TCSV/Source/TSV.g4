@@ -2,13 +2,9 @@ grammar TSV;
 
 doc    : (row CR? LF)* row? EOF ;
 row    : field (SPLIT field)* ;
-field  : TEXT   # Text
-       | STRING # String
-       |        # Empty
-       ;
+field  : STRING? ;
 
 SPLIT  : '\t' ;
 CR     : '\r' ;
 LF     : '\n' ;
-STRING : '"' ('""'|~'"')* '"' ;
-TEXT   : ~[\t\n\r"]+ ;
+STRING : ('"' ('""'|~'"')* '"' | ~[\t\n\r"]) ~[\t\n\r]* ;
