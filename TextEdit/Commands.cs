@@ -275,7 +275,8 @@ namespace NeoEdit.TextEdit
 		Macro_Play_Play,
 		Macro_Play_Repeat,
 		Macro_Play_PlayOnCopiedFiles,
-		Macro_Open,
+		Macro_Open_Quick,
+		Macro_Open_Open,
 		[KeyGesture(Key.OemPeriod, ModifierKeys.Control)] Macro_RepeatLastAction,
 		Macro_TimeNextAction,
 	}

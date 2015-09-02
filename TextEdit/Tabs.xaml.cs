@@ -214,6 +214,11 @@ namespace NeoEdit.TextEdit
 			AddTextEditor(bytes: data, modified: false);
 		}
 
+		void Command_Macro_Open_Quick()
+		{
+			AddTextEditor(Path.Combine(macroDirectory, quickMacroFilename));
+		}
+
 		const string quickMacroFilename = "Quick.xml";
 		void Command_Macro_Record_QuickRecord()
 		{
@@ -413,7 +418,7 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
-				case TextEditCommand.Macro_Open: dialogResult = Command_File_Open_Open_Dialog(macroDirectory); break;
+				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(macroDirectory); break;
 				default: return TopMost == null ? true : TopMost.Item.GetDialogResult(command, out dialogResult);
 			}
 
@@ -434,7 +439,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Diff_Diff: Command_Edit_Diff_Diff(); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
-				case TextEditCommand.Macro_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return;
+				case TextEditCommand.Macro_Open_Quick: Command_Macro_Open_Quick(); return;
+				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return;
 			}
 
 			foreach (var textEditorItem in TextEditors.Where(item => item.Active).ToList())

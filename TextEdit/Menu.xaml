@@ -473,7 +473,10 @@
 			<textEdit:TextEditMenuItem Header="Play On Copied _Files" CommandEnum="Macro_Play_PlayOnCopiedFiles"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Macro_Open"/>
+		<MenuItem Header="_Open">
+			<textEdit:TextEditMenuItem Header="_Quick" CommandEnum="Macro_Open_Quick"/>
+			<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Macro_Open_Open"/>
+		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="R_epeat Last Action" CommandEnum="Macro_RepeatLastAction"/>
 		<textEdit:TextEditMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
