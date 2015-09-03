@@ -80,12 +80,12 @@ namespace NeoEdit.Common.Expressions
 			var count = 1;
 			if (Variables.Any())
 				count = Variables.Max(var => dict[var].Count);
-			return Enumerable.Range(0, count).Select(row => EvaluateRow(dict, row, values)).ToList();
+			return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(row => EvaluateRow(dict, row, values)).ToList();
 		}
 
 		public List<T> Evaluate<T>(Dictionary<string, List<object>> dict, params object[] values)
 		{
-			return Evaluate(dict, values).Select(val => (T)System.Convert.ChangeType(val, typeof(T))).ToList();
+			return Evaluate(dict, values).AsParallel().AsOrdered().Select(val => (T)System.Convert.ChangeType(val, typeof(T))).ToList();
 		}
 
 		HashSet<string> variables;
