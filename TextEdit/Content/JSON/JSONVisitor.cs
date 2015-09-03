@@ -8,7 +8,7 @@ using NeoEdit.TextEdit.Content.JSON.Parser;
 
 namespace NeoEdit.TextEdit.Content.JSON
 {
-	class JSONVisitor : JSONBaseVisitor<object>
+	class JSONVisitor : JSONBaseVisitor<ParserNode>
 	{
 		public static ParserNode Parse(string input)
 		{
@@ -31,9 +31,7 @@ namespace NeoEdit.TextEdit.Content.JSON
 				tree = parser.json();
 			}
 
-			var visitor = new JSONVisitor(input);
-			visitor.Visit(tree);
-			return visitor.Doc;
+			return new JSONVisitor().Visit(tree);
 		}
 
 		public static List<string> rFormat(ParserNode node, string input)
@@ -124,17 +122,7 @@ namespace NeoEdit.TextEdit.Content.JSON
 		const string NUMBER = "Number";
 		const string CONSTANT = "Constant";
 
-		readonly ParserNode Doc;
-		ParserNode Parent { get { return stack.Peek(); } }
-		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
-		readonly string input;
-		JSONVisitor(string input)
-		{
-			this.input = input;
-			stack.Push(Doc = new ParserNode { Type = DOC, Start = 0, End = input.Length });
-		}
-
-		ParserNode AddNode(ParserRuleContext context, string type)
+		ParserNode GetNode(ParserRuleContext context, string type, IEnumerable<ParserRuleContext> children = null)
 		{
 			int start, end;
 			context.GetBounds(out start, out end);
@@ -144,26 +132,32 @@ namespace NeoEdit.TextEdit.Content.JSON
 				--end;
 			}
 
-			var node = new ParserNode { Type = type, Parent = Parent, Start = start, End = end };
-			stack.Push(node);
-			VisitChildren(context);
-			stack.Pop();
+			var node = new ParserNode { Type = type, Start = start, End = end };
+			if (children != null)
+				foreach (var child in children)
+					Visit(child).Parent = node;
 			return node;
 		}
 
-		public override object VisitObject(JSONParser.ObjectContext context) { return AddNode(context, OBJECT); }
-		public override object VisitArray(JSONParser.ArrayContext context) { return AddNode(context, ARRAY); }
-		public override object VisitString(JSONParser.StringContext context) { return AddNode(context, STRING); }
-		public override object VisitNumber(JSONParser.NumberContext context) { return AddNode(context, NUMBER); }
-		public override object VisitConstant(JSONParser.ConstantContext context) { return AddNode(context, CONSTANT); }
 
-		public override object VisitPair(JSONParser.PairContext context)
+		public override ParserNode VisitPair(JSONParser.PairContext context)
 		{
-			var node = AddNode(context, PAIR);
-			var start = context.name.StartIndex + 1;
-			var end = context.name.StopIndex;
-			node.AddAttr(ID, input.Substring(start, end - start), start, end);
+			var node = GetNode(context, PAIR);
+			int start, end;
+			context.name.GetBounds(out start, out end);
+			++start;
+			--end;
+			var id = context.name.Text.Substring(1, context.name.Text.Length - 2);
+			node.AddAttr(ID, id, start, end);
+			Visit(context.item()).Parent = node;
 			return node;
 		}
+
+		public override ParserNode VisitJson(JSONParser.JsonContext context) { return GetNode(context, DOC, context.item()); }
+		public override ParserNode VisitObject(JSONParser.ObjectContext context) { return GetNode(context, OBJECT, context.pair()); }
+		public override ParserNode VisitArray(JSONParser.ArrayContext context) { return GetNode(context, ARRAY, context.item()); }
+		public override ParserNode VisitString(JSONParser.StringContext context) { return GetNode(context, STRING); }
+		public override ParserNode VisitNumber(JSONParser.NumberContext context) { return GetNode(context, NUMBER); }
+		public override ParserNode VisitConstant(JSONParser.ConstantContext context) { return GetNode(context, CONSTANT); }
 	}
 }
