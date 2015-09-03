@@ -18,7 +18,7 @@ namespace NeoEdit.GUI
 		protected Action<string, bool> textViewerLauncher;
 		protected Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
 		protected Action<int> processHexEditorLauncher;
-		protected Action<IEnumerable<string>> diskLauncher;
+		protected Action<string, IEnumerable<string>> diskLauncher;
 		protected Action consoleLauncher;
 		protected Action<int?> processesLauncher;
 		protected Action<int?> handlesLauncher;
@@ -44,7 +44,7 @@ namespace NeoEdit.GUI
 			, Action<int> processHexEditor
 #endif
 #if BuildDisk
-			, Action<IEnumerable<string>> disk
+			, Action<string, IEnumerable<string>> disk
 #endif
 #if BuildConsole
 			, Action console
@@ -145,10 +145,10 @@ namespace NeoEdit.GUI
 				processHexEditorLauncher(pid);
 		}
 
-		public void LaunchDisk(IEnumerable<string> files = null)
+		public void LaunchDisk(string path = null, IEnumerable<string> files = null)
 		{
 			if (diskLauncher != null)
-				diskLauncher(files);
+				diskLauncher(path, files);
 		}
 
 		public void LaunchConsole()

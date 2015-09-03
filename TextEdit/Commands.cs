@@ -17,6 +17,7 @@ namespace NeoEdit.TextEdit
 		File_Operations_Delete,
 		File_Operations_Explore,
 		File_Operations_Encryption,
+		File_Operations_OpenDisk,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F5)] File_Refresh,
 		File_Revert,

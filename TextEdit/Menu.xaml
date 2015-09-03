@@ -28,6 +28,7 @@
 			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
 			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
 			<textEdit:TextEditMenuItem Header="E_ncryption" CommandEnum="File_Operations_Encryption"/>
+			<textEdit:TextEditMenuItem Header="Open D_isk" CommandEnum="File_Operations_OpenDisk"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<textEdit:TextEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>

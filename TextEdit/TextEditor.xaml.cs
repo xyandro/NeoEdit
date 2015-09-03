@@ -774,6 +774,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
 				case TextEditCommand.File_Operations_Encryption: Command_File_Operations_Encryption(dialogResult as SymmetricKeyDialog.Result); break;
+				case TextEditCommand.File_Operations_OpenDisk: Command_File_Operations_OpenDisk(); break;
 				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(); break;
@@ -1280,6 +1281,11 @@ namespace NeoEdit.TextEdit
 		internal void Command_File_Operations_Encryption(SymmetricKeyDialog.Result result)
 		{
 			AESKey = String.IsNullOrEmpty(result.Key) ? null : result.Key;
+		}
+
+		internal void Command_File_Operations_OpenDisk()
+		{
+			Launcher.Static.LaunchDisk(FileName);
 		}
 
 		internal bool Command_File_HexEditor()
@@ -2009,7 +2015,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Operations_OpenDisk()
 		{
-			Launcher.Static.LaunchDisk(Selections.Select(range => GetString(range)));
+			Launcher.Static.LaunchDisk(files: Selections.Select(range => GetString(range)));
 		}
 
 		internal void Command_Text_Case_Upper()

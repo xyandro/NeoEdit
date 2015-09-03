@@ -124,7 +124,7 @@ namespace NeoEdit
 				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
 #endif
 #if BuildDisk
-				, disk: files => new DiskTabs(null, files)
+				, disk: (path, files) => new DiskTabs(path, files)
 #endif
 #if BuildConsole
 				, console: () => new ConsoleTabs()
