@@ -707,8 +707,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_Trim: dialogResult = Command_Data_Trim_Dialog(); break;
 				case TextEditCommand.Text_RandomText: dialogResult = Command_Insert_RandomData_Dialog(); break;
 				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Insert_RevRegEx_Dialog(); break;
+				case TextEditCommand.Text_CombinationsPermutations: dialogResult = Command_Text_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Insert_RandomNumber_Dialog(); break;
-				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Insert_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Insert_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_Data_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
@@ -885,6 +885,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_GUID: Command_Text_GUID(); break;
 				case TextEditCommand.Text_RandomText: Command_Text_RandomText(dialogResult as RandomDataDialog.Result); break;
 				case TextEditCommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(dialogResult as RevRegExDialog.Result); break;
+				case TextEditCommand.Text_CombinationsPermutations: Command_Text_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Numeric_Copy_Min: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Max: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Sum: Command_Numeric_Copy_Sum(); break;
@@ -894,7 +895,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
 				case TextEditCommand.Numeric_Series: Command_Numeric_Series(); break;
 				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
-				case TextEditCommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
@@ -2529,7 +2529,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().Select((range, num) => codePageMinMaxValues[result.CodePage == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.CodePage]).ToList());
 		}
 
-		internal CombinationsPermutationsDialog.Result Command_Insert_CombinationsPermutations_Dialog()
+		internal CombinationsPermutationsDialog.Result Command_Text_CombinationsPermutations_Dialog()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -2537,7 +2537,7 @@ namespace NeoEdit.TextEdit
 			return CombinationsPermutationsDialog.Run(WindowParent);
 		}
 
-		internal void Command_Numeric_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
+		internal void Command_Text_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");

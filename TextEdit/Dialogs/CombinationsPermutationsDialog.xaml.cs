@@ -51,8 +51,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (UseCount > Items.Length)
+			if (!(NumResults > 0))
+			{
+				MessageBox.Show("No results.");
 				return;
+			}
 			result = new Result { Items = Items, UseCount = UseCount, Type = Type, Repeat = Repeat };
 			DialogResult = true;
 		}
@@ -86,7 +89,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		double GetNumResults()
 		{
-			if (UseCount > Items.Length)
+			if ((UseCount > Items.Length) && (!Repeat))
 				return Double.NaN;
 
 			switch (Type)
