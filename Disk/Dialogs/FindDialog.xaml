@@ -121,19 +121,19 @@
 					</Grid.RowDefinitions>
 
 					<UniformGrid Grid.Row="0" Grid.Column="0" Rows="1">
-                        <CheckBox Content="Re_gular" Focusable="False" IsChecked="{Binding VCSStatus, ElementName=self, Converter={StaticResource VCSStatusConverter}, ConverterParameter={x:Static diskVCS:VersionControlStatus.Regular}}"/>
-                        <CheckBox Content="_Modified" Focusable="False" IsChecked="{Binding VCSStatus, ElementName=self, Converter={StaticResource VCSStatusConverter}, ConverterParameter={x:Static diskVCS:VersionControlStatus.Modified}}"/>
-                        <CheckBox Content="_Ignored" Focusable="False" IsChecked="{Binding VCSStatus, ElementName=self, Converter={StaticResource VCSStatusConverter}, ConverterParameter={x:Static diskVCS:VersionControlStatus.Ignored}}"/>
-                        <CheckBox Content="_Unknown" Focusable="False" IsChecked="{Binding VCSStatus, ElementName=self, Converter={StaticResource VCSStatusConverter}, ConverterParameter={x:Static diskVCS:VersionControlStatus.Unknown}}"/>
+						<CheckBox Content="Re_gular" Focusable="False" IsChecked="{Binding VCSStatus, ElementName=self, Converter={StaticResource VCSStatusConverter}, ConverterParameter={x:Static diskVCS:VersionControlStatus.Regular}}"/>
+						<CheckBox Content="_Modified" Focusable="False" IsChecked="{Binding VCSStatus, ElementName=self, Converter={StaticResource VCSStatusConverter}, ConverterParameter={x:Static diskVCS:VersionControlStatus.Modified}}"/>
+						<CheckBox Content="_Ignored" Focusable="False" IsChecked="{Binding VCSStatus, ElementName=self, Converter={StaticResource VCSStatusConverter}, ConverterParameter={x:Static diskVCS:VersionControlStatus.Ignored}}"/>
+						<CheckBox Content="_Unknown" Focusable="False" IsChecked="{Binding VCSStatus, ElementName=self, Converter={StaticResource VCSStatusConverter}, ConverterParameter={x:Static diskVCS:VersionControlStatus.Unknown}}"/>
 					</UniformGrid>
 
 					<UniformGrid Grid.Row="1" Grid.Column="0" Rows="1" HorizontalAlignment="Left">
 						<Button Name="vcsAll" Content="_All" Click="VCSClick" Focusable="False"/>
-                        <Button Name="vcsStandard" Content="_Standard" Click="VCSClick" Focusable="False"/>
-                        <Button Name="vcsModified" Content="M_odified" Click="VCSClick" Focusable="False"/>
-                        <Button Name="vcsIgnored" Content="Ignore_d" Click="VCSClick" Focusable="False"/>
-                        <Button Name="vcsUnknown" Content="Un_known" Click="VCSClick" Focusable="False"/>
-                        <Button Name="vcsNone" Content="None" Click="VCSClick" Focusable="False"/>
+						<Button Name="vcsStandard" Content="_Standard" Click="VCSClick" Focusable="False"/>
+						<Button Name="vcsModified" Content="M_odified" Click="VCSClick" Focusable="False"/>
+						<Button Name="vcsIgnored" Content="Ignore_d" Click="VCSClick" Focusable="False"/>
+						<Button Name="vcsUnknown" Content="Un_known" Click="VCSClick" Focusable="False"/>
+						<Button Name="vcsNone" Content="None" Click="VCSClick" Focusable="False"/>
 					</UniformGrid>
 				</Grid>
 			</Grid>

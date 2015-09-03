@@ -1,7 +1,7 @@
 ﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.RandomDataDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	Title="Random Data" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=expression}">
 

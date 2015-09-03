@@ -6,7 +6,7 @@
 	xmlns:textEdit="clr-namespace:NeoEdit.TextEdit"
 	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
 
-    <Window.Title>
+	<Window.Title>
 		<!--A simple Binding doesn't give any title if [0] blank-->
 		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="StrFormat(&quot;{0} - NeoEdit Text Editor&quot;, [0])">
 			<Binding Path="TopMost.Item.FileName" ElementName="self"/>
