@@ -7,7 +7,7 @@ using NeoEdit.TextEdit.Content.Balanced.Parser;
 
 namespace NeoEdit.TextEdit.Content.Balanced
 {
-	class BalancedVisitor : BalancedBaseVisitor<object>
+	class BalancedVisitor : BalancedBaseVisitor<ParserNode>
 	{
 		public class BalancedErrorListener : IAntlrErrorListener<IToken>
 		{
@@ -40,9 +40,7 @@ namespace NeoEdit.TextEdit.Content.Balanced
 				tree = parser.balanced();
 			}
 
-			var visitor = new BalancedVisitor(input);
-			visitor.Visit(tree);
-			return visitor.Root;
+			return new BalancedVisitor().Visit(tree);
 		}
 
 		const string ROOT = "Root";
@@ -51,27 +49,19 @@ namespace NeoEdit.TextEdit.Content.Balanced
 		const string BRACKETS = "Brackets";
 		const string PARENS = "Parens";
 
-		readonly ParserNode Root;
-		ParserNode Parent { get { return stack.Peek(); } }
-		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
-		readonly string input;
-		BalancedVisitor(string input)
+		ParserNode GetNode(ParserRuleContext context, string type, IEnumerable<ParserRuleContext> nodes)
 		{
-			this.input = input;
-			stack.Push(Root = new ParserNode { Type = ROOT, Start = 0, End = input.Length });
+			var node = new ParserNode { Type = type, LocationParserRule = context };
+			if (nodes != null)
+				foreach (var child in nodes)
+					Visit(child).Parent = node;
+			return node;
 		}
 
-		ParserNode AddNode(ParserRuleContext context, string type)
-		{
-			stack.Push(new ParserNode { Type = type, Parent = Parent, LocationParserRule = context });
-			VisitChildren(context);
-			stack.Pop();
-			return null;
-		}
-
-		public override object VisitAngles(BalancedParser.AnglesContext context) { return AddNode(context, ANGLES); }
-		public override object VisitBraces(BalancedParser.BracesContext context) { return AddNode(context, BRACES); }
-		public override object VisitBrackets(BalancedParser.BracketsContext context) { return AddNode(context, BRACKETS); }
-		public override object VisitParens(BalancedParser.ParensContext context) { return AddNode(context, PARENS); }
+		public override ParserNode VisitBalanced(BalancedParser.BalancedContext context) { return GetNode(context, ROOT, context.data()); }
+		public override ParserNode VisitAngles(BalancedParser.AnglesContext context) { return GetNode(context, ANGLES, context.data()); }
+		public override ParserNode VisitBraces(BalancedParser.BracesContext context) { return GetNode(context, BRACES, context.data()); }
+		public override ParserNode VisitBrackets(BalancedParser.BracketsContext context) { return GetNode(context, BRACKETS, context.data()); }
+		public override ParserNode VisitParens(BalancedParser.ParensContext context) { return GetNode(context, PARENS, context.data()); }
 	}
 }
