@@ -12,9 +12,8 @@ namespace NeoEdit.TextEdit
 {
 	public partial class TextEditor
 	{
-		internal enum SortAggregationScope { Selections, Lines, Regions, Clipboards }
+		internal enum SortScope { Selections, Lines, Regions }
 		internal enum SortType { String, StringRaw, Numeric, DateTime, Keys, Reverse, Randomize, Length, Frequency }
-		internal enum AggregateType { Count, Sum, Average, Concat, MinNumeric, MinString, MaxNumeric, MaxString }
 
 		List<Range> GetSortLines()
 		{
@@ -52,14 +51,14 @@ namespace NeoEdit.TextEdit
 			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 		}
 
-		List<Range> GetSortSource(SortAggregationScope scope)
+		List<Range> GetSortSource(SortScope scope)
 		{
 			List<Range> sortSource = null;
 			switch (scope)
 			{
-				case SortAggregationScope.Selections: sortSource = Selections.ToList(); break;
-				case SortAggregationScope.Lines: sortSource = GetSortLines(); break;
-				case SortAggregationScope.Regions: sortSource = GetEnclosingRegions(true); break;
+				case SortScope.Selections: sortSource = Selections.ToList(); break;
+				case SortScope.Lines: sortSource = GetSortLines(); break;
+				case SortScope.Regions: sortSource = GetEnclosingRegions(true); break;
 				default: throw new Exception("Invalid sort type");
 			}
 
@@ -166,85 +165,8 @@ namespace NeoEdit.TextEdit
 			newSelections = ordering.Select(num => newSelections[num]).ToList();
 
 			Selections.Replace(newSelections);
-			if (result.SortScope == SortAggregationScope.Regions)
+			if (result.SortScope == SortScope.Regions)
 				Regions.Replace(newRegions);
-		}
-
-		internal AggregateDialog.Result Command_Edit_Aggregate_Dialog()
-		{
-			return AggregateDialog.Run(UIHelper.FindParent<Window>(this));
-		}
-
-		string GetRegionString(bool removeSelection, bool trimWhitespace, Range region, Range selection)
-		{
-			var str = removeSelection ? Data.GetString(region.Start, selection.Start - region.Start) + Data.GetString(selection.End, region.End - selection.End) : Data.GetString(region.Start, region.Length);
-			if (trimWhitespace)
-				str = str.Trim();
-			return str;
-		}
-
-		Dictionary<string, List<string>> GetAggregate(AggregateDialog.Result dialogResult)
-		{
-			List<string> regions;
-			if (dialogResult.AggregateScope == SortAggregationScope.Clipboards)
-				regions = Clipboard.ToList();
-			else
-				regions = GetSortSource(dialogResult.AggregateScope).Select((region, index) => GetRegionString(dialogResult.RemoveSelection, dialogResult.TrimWhitespace, region, Selections[index])).ToList(); ;
-			var sels = GetSelectionStrings();
-			if (regions.Count != sels.Count)
-				throw new Exception("Aggregate count mismatch");
-
-			var aggregate = new Dictionary<string, List<string>>();
-			for (var ctr = 0; ctr < sels.Count; ++ctr)
-			{
-				if (!aggregate.ContainsKey(sels[ctr]))
-					aggregate[sels[ctr]] = new List<string>();
-				aggregate[sels[ctr]].Add(regions[ctr]);
-			}
-			return aggregate;
-		}
-
-		Dictionary<string, string> GetAggregateResults(AggregateDialog.Result dialogResult, Dictionary<string, List<string>> aggregate)
-		{
-			switch (dialogResult.AggregateType)
-			{
-				case AggregateType.Count: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Count.ToString());
-				case AggregateType.Sum: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Sum(value => Convert.ToInt64(value)).ToString());
-				case AggregateType.Average:
-					{
-						var count = aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
-						var sum = aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Sum(value => Convert.ToInt64(value)));
-						return aggregate.ToDictionary(pair => pair.Key, pair => ((decimal)sum[pair.Key] / count[pair.Key]).ToString());
-					}
-				case AggregateType.Concat: return aggregate.ToDictionary(pair => pair.Key, pair => String.Join(dialogResult.ConcatText, pair.Value));
-				case AggregateType.MinNumeric: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Min(value => Convert.ToInt64(value)).ToString());
-				case AggregateType.MinString: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Min().ToString());
-				case AggregateType.MaxNumeric: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Max(value => Convert.ToInt64(value)).ToString());
-				case AggregateType.MaxString: return aggregate.ToDictionary(pair => pair.Key, pair => pair.Value.Max().ToString());
-				default: throw new Exception("Invalid aggregate type");
-			}
-		}
-
-		internal void Command_Edit_Aggregate(AggregateDialog.Result dialogResult)
-		{
-			var aggregate = GetAggregate(dialogResult);
-			var results = GetAggregateResults(dialogResult, aggregate);
-
-			var location = Selections.Any() ? Selections[0].Start : BeginOffset();
-			location = Data.GetOffset(Data.GetOffsetLine(location), 0);
-			var sb = new StringBuilder();
-			var newSels = new List<Range>();
-			foreach (var pair in results)
-			{
-				newSels.Add(Range.FromIndex(location + sb.Length, pair.Key.Length));
-				sb.Append(pair.Key);
-				sb.Append(": ");
-				sb.Append(pair.Value);
-				sb.Append(Data.DefaultEnding);
-			}
-			sb.Append(Data.DefaultEnding);
-			Replace(new List<Range> { new Range(location) }, new List<string> { sb.ToString() });
-			Selections.Replace(newSels);
 		}
 	}
 }

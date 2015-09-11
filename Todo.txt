@@ -19,7 +19,6 @@ Override readonly, access denied (UAC required?)
 Go back to last selections
 Resolve hostnames
 Change tab order when doc closed (match visual studio or something)
-Aggregate by table
 Time zones
 Undo revert
 Nest macros

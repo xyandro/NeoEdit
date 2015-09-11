@@ -5,52 +5,38 @@
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	Title="Aggregate" SizeToContent="WidthAndHeight">
 
-	<StackPanel Margin="10" Width="300">
-		<StackPanel.Style>
-			<Style>
-				<Style.Resources>
-					<Style TargetType="RadioButton">
-						<Setter Property="VerticalAlignment" Value="Center"/>
-					</Style>
-				</Style.Resources>
-			</Style>
-		</StackPanel.Style>
+    <StackPanel Margin="10">
+        <GroupBox Header="Input:">
+            <StackPanel>
+                <UniformGrid Columns="3">
+                    <RadioButton GroupName="inputType" Content="_TSV" IsChecked="{Binding InputType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=TSV}" Focusable="False"/>
+                    <RadioButton GroupName="inputType" Content="_CSV" IsChecked="{Binding InputType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=CSV}" Focusable="False"/>
+                    <RadioButton GroupName="inputType" Content="_Piped" IsChecked="{Binding InputType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Piped}" Focusable="False"/>
+                </UniformGrid>
 
-		<GroupBox Header="What to aggregate:">
-			<UniformGrid Columns="3">
-				<RadioButton GroupName="aggregateScope" Content="_Selections" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Selections}"/>
-				<RadioButton GroupName="aggregateScope" Content="_Lines" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Lines}"/>
-				<RadioButton GroupName="aggregateScope" Content="_Regions" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Regions}"/>
-				<RadioButton GroupName="aggregateScope" Content="Cli_pboards" IsChecked="{Binding AggregateScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Clipboards}"/>
-			</UniformGrid>
-		</GroupBox>
+                <CheckBox Content="Has _Headers" IsChecked="{Binding HasHeaders, ElementName=self}" Margin="0,5,0,0" Focusable="False"/>
+            </StackPanel>
+        </GroupBox>
 
-		<GroupBox Header="How to aggregate it:">
-			<UniformGrid Columns="3">
-				<RadioButton GroupName="aggregateType" Content="_Count" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Count}"/>
-				<RadioButton GroupName="aggregateType" Content="S_um" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Sum}"/>
-				<RadioButton GroupName="aggregateType" Content="_Average" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Average}"/>
-				<DockPanel>
-					<RadioButton GroupName="aggregateType" Content="C_oncat: " IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Concat}"/>
-					<TextBox Text="{Binding ConcatText, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Margin="10,0"/>
-				</DockPanel>
-				<RadioButton GroupName="aggregateType" Content="Mi_n Numeric" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=MinNumeric}"/>
-				<RadioButton GroupName="aggregateType" Content="Min String" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=MinString}"/>
-				<RadioButton GroupName="aggregateType" Content="Ma_x Numeric" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=MaxNumeric}"/>
-				<RadioButton GroupName="aggregateType" Content="Max String" IsChecked="{Binding AggregateType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=MaxString}"/>
-			</UniformGrid>
-		</GroupBox>
+        <GroupBox Header="Data:">
+            <DataGrid Name="dataGrid" Width="800" Height="500" ItemsSource="{Binding Data, ElementName=self}" AutoGenerateColumns="False" CanUserResizeRows="False" IsReadOnly="True" RowHeaderWidth="0" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" SelectionUnit="Cell" ColumnReordered="ColumnReorderedEvent" PreviewKeyDown="DataGridKeyDown" CanUserSortColumns="False" IsSynchronizedWithCurrentItem="True" SelectionMode="Single">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <EventSetter Event="Click" Handler="ColumnHeaderClick" />
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+            </DataGrid>
+        </GroupBox>
 
-		<GroupBox Header="Options:">
-			<UniformGrid Columns="1">
-				<CheckBox Content="R_emove selection" IsChecked="{Binding RemoveSelection, ElementName=self}"/>
-				<CheckBox Content="_Trim whitespace" IsChecked="{Binding TrimWhitespace, ElementName=self}"/>
-			</UniformGrid>
-		</GroupBox>
-
-		<UniformGrid HorizontalAlignment="Right" Rows="1" Margin="0,10,0,0">
-			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
-			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
-		</UniformGrid>
-	</StackPanel>
+        <DockPanel>
+            <UniformGrid HorizontalAlignment="Left" Rows="1" Margin="0,10,0,0">
+                <Button Click="ResetClick" Content="_Reset" Padding="10,1"/>
+            </UniformGrid>
+            <UniformGrid HorizontalAlignment="Right" Rows="1" Margin="0,10,0,0">
+                <Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+                <Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+            </UniformGrid>
+        </DockPanel>
+    </StackPanel>
 </guiControls:ModalDialog>

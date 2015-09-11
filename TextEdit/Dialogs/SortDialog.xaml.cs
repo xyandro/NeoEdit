@@ -7,7 +7,7 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public TextEditor.SortAggregationScope SortScope { get; set; }
+			public TextEditor.SortScope SortScope { get; set; }
 			public bool WithinRegions { get; set; }
 			public TextEditor.SortType SortType { get; set; }
 			public bool CaseSensitive { get; set; }
@@ -15,7 +15,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public TextEditor.SortAggregationScope SortScope { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortAggregationScope>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
+		public TextEditor.SortScope SortScope { get { return UIHelper<SortDialog>.GetPropValue<TextEditor.SortScope>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool WithinRegions { get { return UIHelper<SortDialog>.GetPropValue<bool>(this); } set { UIHelper<SortDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -28,14 +28,14 @@ namespace NeoEdit.TextEdit.Dialogs
 		static SortDialog()
 		{
 			UIHelper<SortDialog>.Register();
-			UIHelper<SortDialog>.AddCallback(a => a.WithinRegions, (obj, o, n) => { if ((obj.WithinRegions) && (obj.SortScope == TextEditor.SortAggregationScope.Regions)) obj.SortScope = TextEditor.SortAggregationScope.Selections; });
+			UIHelper<SortDialog>.AddCallback(a => a.WithinRegions, (obj, o, n) => { if ((obj.WithinRegions) && (obj.SortScope == TextEditor.SortScope.Regions)) obj.SortScope = TextEditor.SortScope.Selections; });
 		}
 
 		SortDialog()
 		{
 			InitializeComponent();
 
-			SortScope = TextEditor.SortAggregationScope.Selections;
+			SortScope = TextEditor.SortScope.Selections;
 			SortType = TextEditor.SortType.String;
 			ascending.IsChecked = true;
 		}

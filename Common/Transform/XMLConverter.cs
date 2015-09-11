@@ -76,7 +76,7 @@ namespace NeoEdit.Common.Transform
 				return new XElement(name, new XAttribute(typeTag, nullType));
 
 			var type = obj.GetType();
-			if ((type.IsPrimitive) || (type.IsEnum) || (type == typeof(string)))
+			if ((type.IsPrimitive) || (type.IsEnum) || (type == typeof(string)) || (obj is Type))
 			{
 				if (createElement)
 					return new XElement(name, obj);
@@ -205,6 +205,8 @@ namespace NeoEdit.Common.Transform
 					array.SetValue(rFromXML(elements[ctr], itemType, references), ctr);
 				return obj;
 			}
+			else if (type == typeof(Type))
+				return Type.GetType(xml.Value);
 			else if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(List<>)))
 			{
 				var obj = references[guid] = type.GetConstructor(Type.EmptyTypes).Invoke(null);

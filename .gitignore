@@ -12,6 +12,7 @@ ipch
 obj
 
 # Specific
+/.vs
 /Common/Expressions/Parser
 /Dependencies/GlobalAssemblyInfo.cs
 /Dependencies/GlobalVersionInfo.h
