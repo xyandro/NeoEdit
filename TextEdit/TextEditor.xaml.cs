@@ -801,7 +801,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
-				case TextEditCommand.Edit_Table_Edit: Command_Edit_Table_Edit(dialogResult as EditTableDialog.Result); break;
+				case TextEditCommand.Edit_Table_Edit: Command_Edit_Table_Edit(dialogResult as EditTablesDialog.Result); break;
 				case TextEditCommand.Edit_Table_RegionsSelectionsToTable: Command_Edit_Table_RegionsSelectionsToTable(); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
@@ -1413,26 +1413,28 @@ namespace NeoEdit.TextEdit
 
 		void SetTableSelection()
 		{
-			if (Selections.Count > 1)
-				throw new Exception("Must have one selection.");
-
-			if ((Selections.Count == 0) || (!Selections[0].HasSelection))
+			if ((Selections.Count == 0) || ((Selections.Count == 1) && (!Selections[0].HasSelection)))
 				Selections.Replace(new Range(BeginOffset(), EndOffset()));
 		}
 
-		internal EditTableDialog.Result Command_Edit_Table_Edit_Dialog()
+		internal EditTablesDialog.Result Command_Edit_Table_Edit_Dialog()
 		{
 			SetTableSelection();
-			return EditTableDialog.Run(UIHelper.FindParent<Window>(this), GetString(Selections[0]));
+			return EditTablesDialog.Run(UIHelper.FindParent<Window>(this), GetSelectionStrings());
 		}
 
-		internal void Command_Edit_Table_Edit(EditTableDialog.Result result)
+		internal void Command_Edit_Table_Edit(EditTablesDialog.Result result)
 		{
 			SetTableSelection();
-			var input = new Table(GetString(Selections[0]), result.InputTableType, result.InputHasHeaders);
-			input = input.Aggregate(result.GroupByColumns, result.AggregateColumns);
-			input = input.Sort(result.SortColumns);
-			var output = input.ToString(result.OutputTableType, result.OutputHasHeaders, Data.DefaultEnding);
+			var output = new List<string>();
+			for (var ctr = 0; ctr < result.Results.Count; ++ctr)
+			{
+				var tableResult = result.Results[ctr];
+				var input = new Table(GetString(Selections[ctr]), tableResult.InputTableType, tableResult.InputHasHeaders);
+				input = input.Aggregate(tableResult.GroupByColumns, tableResult.AggregateColumns);
+				input = input.Sort(tableResult.SortColumns);
+				output.Add(input.ToString(tableResult.OutputTableType, tableResult.OutputHasHeaders, Data.DefaultEnding));
+			}
 			ReplaceSelections(output);
 		}
 

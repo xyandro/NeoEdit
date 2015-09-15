@@ -125,12 +125,19 @@
     <Compile Include="Dialogs\CountDialog.xaml.cs">
       <DependentUpon>CountDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\EditTableDialog.xaml">
+    <Page Include="Dialogs\EditTablesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Dialogs\EditTablesDialog.xaml.cs">
+      <DependentUpon>EditTablesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\EditTableTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\EditTableDialog.xaml.cs">
-      <DependentUpon>EditTableDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\EditTableTab.xaml.cs">
+      <DependentUpon>EditTableTab.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\ExpressionHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

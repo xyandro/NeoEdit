@@ -13,7 +13,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	partial class EditTableDialog
+	partial class EditTableTab
 	{
 		class DisplayColumn
 		{
@@ -43,31 +43,32 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public Table.TableType InputTableType { get { return UIHelper<EditTableDialog>.GetPropValue<Table.TableType>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		public Table.TableType InputTableType { get { return UIHelper<EditTableTab>.GetPropValue<Table.TableType>(this); } set { UIHelper<EditTableTab>.SetPropValue(this, value); } }
 		[DepProp]
-		public Table.TableType OutputTableType { get { return UIHelper<EditTableDialog>.GetPropValue<Table.TableType>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		public Table.TableType OutputTableType { get { return UIHelper<EditTableTab>.GetPropValue<Table.TableType>(this); } set { UIHelper<EditTableTab>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool InputHasHeaders { get { return UIHelper<EditTableDialog>.GetPropValue<bool>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		public bool InputHasHeaders { get { return UIHelper<EditTableTab>.GetPropValue<bool>(this); } set { UIHelper<EditTableTab>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool OutputHasHeaders { get { return UIHelper<EditTableDialog>.GetPropValue<bool>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		public bool OutputHasHeaders { get { return UIHelper<EditTableTab>.GetPropValue<bool>(this); } set { UIHelper<EditTableTab>.SetPropValue(this, value); } }
 		[DepProp]
-		public Table Table { get { return UIHelper<EditTableDialog>.GetPropValue<Table>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		public Table Table { get { return UIHelper<EditTableTab>.GetPropValue<Table>(this); } set { UIHelper<EditTableTab>.SetPropValue(this, value); } }
 
-		static EditTableDialog()
+		static EditTableTab()
 		{
-			UIHelper<EditTableDialog>.Register();
-			UIHelper<EditTableDialog>.AddCallback(a => a.InputTableType, (obj, o, n) => { obj.InputUpdated(true); obj.OutputTableType = obj.InputTableType; });
-			UIHelper<EditTableDialog>.AddCallback(a => a.InputHasHeaders, (obj, o, n) => obj.InputUpdated(false));
+			UIHelper<EditTableTab>.Register();
+			UIHelper<EditTableTab>.AddCallback(a => a.InputTableType, (obj, o, n) => { obj.InputUpdated(true); obj.OutputTableType = obj.InputTableType; });
+			UIHelper<EditTableTab>.AddCallback(a => a.InputHasHeaders, (obj, o, n) => obj.InputUpdated(false));
 		}
 
-		readonly string inputStr;
+		readonly string input;
 		Table inputTable;
 		List<int> groupByColumns = new List<int>();
 		List<DisplayColumn> displayColumns = new List<DisplayColumn>();
 
-		EditTableDialog(string inputStr)
+		internal EditTableTab(string tabName, string input)
 		{
-			this.inputStr = inputStr;
+			Header = tabName;
+			this.input = input;
 			InitializeComponent();
 			inputType.ItemsSource = outputType.ItemsSource = Enum.GetValues(typeof(Table.TableType)).Cast<Table.TableType>().Where(value => value != Table.TableType.None).ToList();
 			OutputHasHeaders = true;
@@ -80,7 +81,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (inInputUpdated)
 				return;
 
-			inputTable = new Table(inputStr, InputTableType, calcHasHeaders ? default(bool?) : InputHasHeaders);
+			inputTable = new Table(input, InputTableType, calcHasHeaders ? default(bool?) : InputHasHeaders);
 			inInputUpdated = true;
 			InputTableType = inputTable.OriginalTableType;
 			InputHasHeaders = inputTable.HasHeaders;
@@ -163,22 +164,31 @@ namespace NeoEdit.TextEdit.Dialogs
 				dataGrid.Columns.Add(column);
 			}
 
+			var selectColumn = displayColumns.FirstOrDefault(column => (inputTable.Headers[column.InputColumn] == currentColumnName) && ((currentType == Table.AggregateType.None) || (column.AggregateType == currentType)));
+			if ((selectColumn == null) && (displayColumns.Count != 0))
+				selectColumn = displayColumns[Math.Max(0, Math.Min(currentColumnIndex, displayColumns.Count - 1))];
+
+			if ((selectColumn != null) && (dataGrid.Items.Count > 0))
+			{
+				dataGrid.SelectedCells.Clear();
+				dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[0], dataGrid.Columns.Cast<AggregateColumn>().Single(column => column.DisplayColumn == selectColumn));
+				dataGrid.SelectedCells.Add(dataGrid.CurrentCell);
+			}
+		}
+
+		internal void SetFocus()
+		{
 			var timer = new DispatcherTimer();
 			timer.Tick += (s, e) =>
 			{
 				timer.Stop();
 
-				var selectColumn = displayColumns.FirstOrDefault(column => (inputTable.Headers[column.InputColumn] == currentColumnName) && ((currentType == Table.AggregateType.None) || (column.AggregateType == currentType)));
-				if ((selectColumn == null) && (displayColumns.Count != 0))
-					selectColumn = displayColumns[Math.Max(0, Math.Min(currentColumnIndex, displayColumns.Count - 1))];
+				if (!dataGrid.SelectedCells.Any(selected => (selected != null) && (selected.IsValid)))
+					dataGrid.SelectedCells.Add(new DataGridCellInfo(dataGrid.Items.Cast<object>().FirstOrDefault(), dataGrid.Columns.FirstOrDefault()));
 
-				if ((selectColumn != null) && (dataGrid.Items.Count > 0))
-				{
-					dataGrid.SelectedCells.Clear();
-					dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[0], dataGrid.Columns.Cast<AggregateColumn>().Single(column => column.DisplayColumn == selectColumn));
-					dataGrid.SelectedCells.Add(dataGrid.CurrentCell);
-					(dataGrid.CurrentCell.Column.GetCellContent(dataGrid.CurrentCell.Item).Parent as IInputElement).Focus();
-				}
+				var cell2 = dataGrid.SelectedCells.First(selected => (selected != null) && (selected.IsValid));
+				dataGrid.Focus();
+				dataGrid.CurrentCell = cell2;
 			};
 			timer.Start();
 		}
@@ -303,7 +313,6 @@ namespace NeoEdit.TextEdit.Dialogs
 					break;
 				case Key.G: GroupByColumn(column.InputColumn); break;
 				case Key.Space: SortByColumn(column); break;
-				case Key.Enter: OkClick(null, null); break;
 				case Key.D: ToggleAggregateType(column, Table.AggregateType.Distinct); break;
 				case Key.O: ToggleAggregateType(column, Table.AggregateType.Concat); break;
 				case Key.N: ToggleAggregateType(column, Table.AggregateType.Min); break;
@@ -323,13 +332,12 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void ResetClick(object sender, RoutedEventArgs e)
 		{
-			InputUpdated(true);
+			InputTableType = Table.TableType.None; // Will call InputUpdated
 		}
 
-		Result result;
-		void OkClick(object sender, RoutedEventArgs e)
+		internal Result GetResult()
 		{
-			result = new Result
+			return new Result
 			{
 				InputTableType = InputTableType,
 				OutputTableType = OutputTableType,
@@ -339,13 +347,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				AggregateColumns = displayColumns.Select(column => Tuple.Create(column.InputColumn, column.AggregateType)).ToList(),
 				SortColumns = displayColumns.Where(column => column.SortOrder.HasValue).OrderBy(column => column.SortOrder.Value).Select(column => Tuple.Create(displayColumns.IndexOf(column), column.SortAscending)).ToList(),
 			};
-			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, string table)
-		{
-			var dialog = new EditTableDialog(table) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
-		}
 	}
 }
