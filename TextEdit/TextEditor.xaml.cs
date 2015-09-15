@@ -1411,6 +1411,43 @@ namespace NeoEdit.TextEdit
 			FindNext(true, selecting);
 		}
 
+		void SetTableSelection()
+		{
+			if (Selections.Count > 1)
+				throw new Exception("Must have one selection.");
+
+			if ((Selections.Count == 0) || (!Selections[0].HasSelection))
+				Selections.Replace(new Range(BeginOffset(), EndOffset()));
+		}
+
+		internal EditTableDialog.Result Command_Edit_Table_Edit_Dialog()
+		{
+			SetTableSelection();
+			return EditTableDialog.Run(UIHelper.FindParent<Window>(this), GetString(Selections[0]));
+		}
+
+		internal void Command_Edit_Table_Edit(EditTableDialog.Result result)
+		{
+			SetTableSelection();
+			var input = new Table(GetString(Selections[0]), result.InputTableType, result.InputHasHeaders);
+			input = input.Aggregate(result.GroupByColumns, result.AggregateColumns);
+			input = input.Sort(result.SortColumns);
+			var output = input.ToString(result.OutputTableType, result.OutputHasHeaders, Data.DefaultEnding);
+			ReplaceSelections(output);
+		}
+
+		internal void Command_Edit_Table_RegionsSelectionsToTable()
+		{
+			if (!Selections.Any())
+				return;
+
+			var regions = GetEnclosingRegions();
+			var lines = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => String.Join("\t", group.Select(index => Table.ToTCSV(GetString(Selections[index]), '\t')))).ToList();
+			Selections.Replace(Regions);
+			Regions.Clear();
+			ReplaceSelections(lines);
+		}
+
 		internal void Command_Edit_Find_NextPrevious(bool next, bool selecting)
 		{
 			FindNext(next, selecting);

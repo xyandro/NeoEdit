@@ -15,60 +15,43 @@ namespace NeoEdit.TextEdit.Dialogs
 {
 	partial class EditTableDialog
 	{
-		class ColumnInfo
-		{
-			public string Name { get; set; }
-			public Type Type { get; set; }
-			public int? GroupOrder { get; set; }
-
-			public ColumnInfo(string name, Type type)
-			{
-				Name = name;
-				Type = type;
-			}
-
-			public override string ToString() { return Name; }
-		}
-
 		class DisplayColumn
 		{
-			public ColumnInfo ColumnInfo { get; set; }
-			public TextEditor.AggregateType AggregateType { get; set; }
+			public int InputColumn { get; set; }
+			public Table.AggregateType AggregateType { get; set; }
 			public int? SortOrder { get; set; }
 			public bool SortAscending { get; set; }
 
-			public DisplayColumn(ColumnInfo columnInfo, TextEditor.AggregateType aggregateType)
+			public DisplayColumn(int inputColumn, Table.AggregateType aggregateType)
 			{
-				ColumnInfo = columnInfo;
+				InputColumn = inputColumn;
 				AggregateType = aggregateType;
 			}
 
-			public override string ToString() { return String.Format("{0}: {1}", ColumnInfo.Name, AggregateType); }
+			public override string ToString() { return String.Format("{0}: {1}", InputColumn, AggregateType); }
 		}
 
 		internal class Result
 		{
-			public TextEditor.TableType InputTableType { get; set; }
-			public TextEditor.TableType OutputTableType { get; set; }
+			public Table.TableType InputTableType { get; set; }
+			public Table.TableType OutputTableType { get; set; }
 			public bool InputHasHeaders { get; set; }
 			public bool OutputHasHeaders { get; set; }
-			public List<Type> Types { get; set; }
 			public List<int> GroupByColumns { get; set; }
-			public List<Tuple<int, TextEditor.AggregateType>> AggregateColumns { get; set; }
+			public List<Tuple<int, Table.AggregateType>> AggregateColumns { get; set; }
 			public List<Tuple<int, bool>> SortColumns { get; set; }
-			public List<string> ColumnHeaders { get; set; }
 		}
 
 		[DepProp]
-		public TextEditor.TableType InputTableType { get { return UIHelper<EditTableDialog>.GetPropValue<TextEditor.TableType>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		public Table.TableType InputTableType { get { return UIHelper<EditTableDialog>.GetPropValue<Table.TableType>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextEditor.TableType OutputTableType { get { return UIHelper<EditTableDialog>.GetPropValue<TextEditor.TableType>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		public Table.TableType OutputTableType { get { return UIHelper<EditTableDialog>.GetPropValue<Table.TableType>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool InputHasHeaders { get { return UIHelper<EditTableDialog>.GetPropValue<bool>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool OutputHasHeaders { get { return UIHelper<EditTableDialog>.GetPropValue<bool>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public List<List<object>> Data { get { return UIHelper<EditTableDialog>.GetPropValue<List<List<object>>>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		public Table Table { get { return UIHelper<EditTableDialog>.GetPropValue<Table>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 
 		static EditTableDialog()
 		{
@@ -77,44 +60,18 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<EditTableDialog>.AddCallback(a => a.InputHasHeaders, (obj, o, n) => obj.InputUpdated(false));
 		}
 
-		readonly string table;
-		List<List<object>> rawData;
-		List<ColumnInfo> columnInfos = new List<ColumnInfo>();
+		readonly string inputStr;
+		Table inputTable;
+		List<int> groupByColumns = new List<int>();
 		List<DisplayColumn> displayColumns = new List<DisplayColumn>();
 
-		EditTableDialog(string table)
+		EditTableDialog(string inputStr)
 		{
-			this.table = table;
+			this.inputStr = inputStr;
 			InitializeComponent();
-			inputType.ItemsSource = outputType.ItemsSource = Enum.GetValues(typeof(TextEditor.TableType)).Cast<TextEditor.TableType>().Where(value => value != TextEditor.TableType.None).ToList();
+			inputType.ItemsSource = outputType.ItemsSource = Enum.GetValues(typeof(Table.TableType)).Cast<Table.TableType>().Where(value => value != Table.TableType.None).ToList();
 			OutputHasHeaders = true;
-
-			InputTableType = TextEditor.DetectTableType(table);
-			if (InputTableType == TextEditor.TableType.None)
-				InputTableType = TextEditor.TableType.TSV;
-		}
-
-		delegate bool TryParseDelegate<T>(string str, out T result);
-		bool ColumnIsType<T>(List<List<string>> data, int column, TryParseDelegate<T> parse)
-		{
-			foreach (var items in data)
-			{
-				T obj;
-				if (!parse(items[column], out obj))
-					return false;
-			}
-			return true;
-		}
-
-		Type GetColumnType(List<List<string>> data, int column)
-		{
-			if (ColumnIsType<long>(data, column, long.TryParse))
-				return typeof(long);
-			if (ColumnIsType<double>(data, column, double.TryParse))
-				return typeof(double);
-			if (ColumnIsType<DateTime>(data, column, DateTime.TryParse))
-				return typeof(DateTime);
-			return typeof(string);
+			InputUpdated(true);
 		}
 
 		bool inInputUpdated = false;
@@ -123,54 +80,29 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (inInputUpdated)
 				return;
 
-			Data = new List<List<object>>();
-			columnInfos = new List<ColumnInfo>();
+			inputTable = new Table(inputStr, InputTableType, calcHasHeaders ? default(bool?) : InputHasHeaders);
+			inInputUpdated = true;
+			InputTableType = inputTable.OriginalTableType;
+			InputHasHeaders = inputTable.HasHeaders;
+			inInputUpdated = false;
 
-			var input = TextEditor.GetTableStrings(table, InputTableType, 10000);
-			if (!input.Any())
-				return;
-
-			var numColumns = input.First().Count;
-
-			if (calcHasHeaders)
-			{
-				var headers = Enumerable.Take(input, 1).ToList();
-				var rows = Enumerable.Skip(input, 1).ToList();
-				var headerTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(headers, column)).ToList();
-				var dataTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(rows, column)).ToList();
-				inInputUpdated = true;
-				InputHasHeaders = (headerTypes.All(type => type == typeof(string))) && (Enumerable.Range(0, numColumns).Any(column => headerTypes[column] != dataTypes[column]));
-				inInputUpdated = false;
-			}
-
-			var columnNames = Enumerable.Range(0, numColumns).Select(index => String.Format("Column {0}", index + 1)).ToList();
-			if (InputHasHeaders)
-			{
-				columnNames = input[0].Select(obj => (obj ?? "").ToString()).ToList();
-				input.RemoveAt(0);
-			}
-
-			var columnTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(input, column)).ToList();
-
-			columnInfos = columnNames.Select((column, index) => new ColumnInfo(column, columnTypes[index])).ToList();
-			rawData = TextEditor.GetTableObjects(input, columnInfos.Select(column => column.Type).ToList());
-			displayColumns = columnInfos.Select(col => new DisplayColumn(col, TextEditor.AggregateType.None)).ToList();
+			groupByColumns = new List<int>();
+			displayColumns = Enumerable.Range(0, inputTable.NumColumns).Select(column => new DisplayColumn(column, Table.AggregateType.None)).ToList();
 
 			AggregateData();
 		}
 
 		void AggregateData()
 		{
-			var groupByIndexes = columnInfos.Where(column => column.GroupOrder.HasValue).OrderBy(column => column.GroupOrder.Value).Select(column => columnInfos.IndexOf(column)).ToList();
-			var aggregateTypes = displayColumns.Select(column => Tuple.Create(columnInfos.IndexOf(column.ColumnInfo), column.AggregateType)).ToList();
-			Data = TextEditor.AggregateByColumn(rawData, groupByIndexes, aggregateTypes);
+			var aggregateTypes = displayColumns.Select(column => Tuple.Create(column.InputColumn, column.AggregateType)).ToList();
+			Table = inputTable.Aggregate(groupByColumns, aggregateTypes);
 			SortData();
 		}
 
 		void SortData()
 		{
 			var sortOrder = displayColumns.Where(column => column.SortOrder.HasValue).OrderBy(column => column.SortOrder.Value).Select(column => Tuple.Create(displayColumns.IndexOf(column), column.SortAscending)).ToList();
-			Data = TextEditor.SortAggregateData(Data, sortOrder);
+			Table = Table.Sort(sortOrder);
 			SetupLayout();
 		}
 
@@ -186,30 +118,31 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			var currentColumnName = "";
 			var currentColumnIndex = 0;
-			var currentType = TextEditor.AggregateType.None;
+			var currentType = Table.AggregateType.None;
 			if ((dataGrid.CurrentCell != null) && (dataGrid.CurrentCell.IsValid))
 			{
 				var column = dataGrid.CurrentCell.Column as AggregateColumn;
-				currentColumnName = column.DisplayColumn.ColumnInfo.Name;
+				currentColumnName = inputTable.Headers[column.DisplayColumn.InputColumn];
 				currentColumnIndex = dataGrid.Columns.IndexOf(column);
 				currentType = column.DisplayColumn.AggregateType;
 			}
 
 			dataGrid.Columns.Clear();
-			var grouped = columnInfos.Any(column => column.GroupOrder.HasValue);
-			foreach (var displayColumn in displayColumns)
+			for (var index = 0; index < displayColumns.Count; ++index)
 			{
+				var displayColumn = displayColumns[index];
+
 				var columnHeader = new StackPanel { Orientation = Orientation.Vertical, HorizontalAlignment = HorizontalAlignment.Center };
 
 				var columnName = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
 
-				if (displayColumn.ColumnInfo.GroupOrder.HasValue)
+				if (groupByColumns.Contains(displayColumn.InputColumn))
 					columnName.Children.Add(new Path { Fill = Brushes.Black, StrokeThickness = 1, Data = _aggregate, VerticalAlignment = VerticalAlignment.Center });
 
-				columnName.Children.Add(new Label { Content = displayColumn.ColumnInfo.Name + (grouped ? " (" + displayColumn.AggregateType + ")" : "") });
+				columnName.Children.Add(new Label { Content = Table.Headers[index] });
 
 				columnHeader.Children.Add(columnName);
-				columnHeader.Children.Add(new Label { Content = displayColumn.ColumnInfo.Type.Name, HorizontalAlignment = HorizontalAlignment.Center });
+				columnHeader.Children.Add(new Label { Content = Table.Types[index].Name, HorizontalAlignment = HorizontalAlignment.Center });
 
 				if (displayColumn.SortOrder.HasValue)
 				{
@@ -220,7 +153,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 				var column = new AggregateColumn { Header = columnHeader, Binding = new Binding(String.Format("[{0}]", displayColumns.IndexOf(displayColumn))), DisplayColumn = displayColumn };
 
-				if (displayColumn.ColumnInfo.Type == typeof(long))
+				if (Table.Types[index] == typeof(long))
 				{
 					var rightAlignCellStyle = new Style(typeof(TextBlock));
 					rightAlignCellStyle.Setters.Add(new Setter(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Right));
@@ -235,14 +168,14 @@ namespace NeoEdit.TextEdit.Dialogs
 			{
 				timer.Stop();
 
-				var selectColumn = displayColumns.FirstOrDefault(column => (column.ColumnInfo.Name == currentColumnName) && ((currentType == TextEditor.AggregateType.None) || (column.AggregateType == currentType)));
+				var selectColumn = displayColumns.FirstOrDefault(column => (inputTable.Headers[column.InputColumn] == currentColumnName) && ((currentType == Table.AggregateType.None) || (column.AggregateType == currentType)));
 				if ((selectColumn == null) && (displayColumns.Count != 0))
 					selectColumn = displayColumns[Math.Max(0, Math.Min(currentColumnIndex, displayColumns.Count - 1))];
 
 				if ((selectColumn != null) && (dataGrid.Items.Count > 0))
 				{
 					dataGrid.SelectedCells.Clear();
-					dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[0], dataGrid.Columns.Cast<AggregateColumn>().Single(col => col.DisplayColumn == selectColumn));
+					dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[0], dataGrid.Columns.Cast<AggregateColumn>().Single(column => column.DisplayColumn == selectColumn));
 					dataGrid.SelectedCells.Add(dataGrid.CurrentCell);
 					(dataGrid.CurrentCell.Column.GetCellContent(dataGrid.CurrentCell.Item).Parent as IInputElement).Focus();
 				}
@@ -252,75 +185,70 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void ColumnReorderedEvent(object sender, DataGridColumnEventArgs e)
 		{
-			displayColumns = dataGrid.Columns.Cast<AggregateColumn>().OrderBy(col => col.DisplayIndex).Select(col => col.DisplayColumn).ToList();
+			displayColumns = dataGrid.Columns.Cast<AggregateColumn>().OrderBy(column => column.DisplayIndex).Select(column => column.DisplayColumn).ToList();
 			AggregateData();
 		}
 
-		Dictionary<Type, List<TextEditor.AggregateType>> DefaultAggregateTypesByType = new Dictionary<Type, List<TextEditor.AggregateType>>
+		Dictionary<Type, List<Table.AggregateType>> DefaultAggregateTypesByType = new Dictionary<Type, List<Table.AggregateType>>
 		{
-			{  typeof(long), new List<TextEditor.AggregateType> { TextEditor.AggregateType.Sum } },
-			{  typeof(double), new List<TextEditor.AggregateType> { TextEditor.AggregateType.Sum } },
-			{  typeof(DateTime), new List<TextEditor.AggregateType> { TextEditor.AggregateType.Min, TextEditor.AggregateType.Max } },
-			{  typeof(string), new List<TextEditor.AggregateType> { TextEditor.AggregateType.Distinct } },
+			{  typeof(long), new List<Table.AggregateType> { Table.AggregateType.Sum } },
+			{  typeof(double), new List<Table.AggregateType> { Table.AggregateType.Sum } },
+			{  typeof(DateTime), new List<Table.AggregateType> { Table.AggregateType.Min, Table.AggregateType.Max } },
+			{  typeof(string), new List<Table.AggregateType> { Table.AggregateType.Distinct } },
 		};
-		void SetGroupOrder(ColumnInfo columnInfo, bool grouped)
+		void SetGroupOrder(int inputColumn, bool grouped)
 		{
-			var cols = displayColumns.Where(col => col.ColumnInfo == columnInfo).ToList();
-			var index = Math.Max(0, displayColumns.IndexOf(cols.FirstOrDefault()));
-			cols.ForEach(col => displayColumns.Remove(col));
+			displayColumns = displayColumns.Where(column => column.InputColumn != inputColumn).ToList();
+			groupByColumns = groupByColumns.Where(column => column != inputColumn).ToList();
 
 			var add = new List<DisplayColumn>();
 			if (grouped)
 			{
-				columnInfo.GroupOrder = (columnInfos.Max(col => col.GroupOrder) ?? -1) + 1;
-				add.Add(new DisplayColumn(columnInfo, TextEditor.AggregateType.Distinct));
+				groupByColumns.Add(inputColumn);
+				add.Add(new DisplayColumn(inputColumn, Table.AggregateType.Distinct));
 				if (displayColumns.Count == 0)
-					add.Add(new DisplayColumn(columnInfo, TextEditor.AggregateType.Count));
+					add.Add(new DisplayColumn(inputColumn, Table.AggregateType.Count));
 			}
 			else
-			{
-				columnInfo.GroupOrder = null;
-				add.AddRange(DefaultAggregateTypesByType[columnInfo.Type].Select(aggType => new DisplayColumn(columnInfo, aggType)));
-			}
-			displayColumns.InsertRange(index, add);
-			displayColumns = displayColumns.OrderBy(col => col.ColumnInfo.GroupOrder ?? int.MaxValue).ToList();
+				add.AddRange(DefaultAggregateTypesByType[inputTable.Types[inputColumn]].Select(aggType => new DisplayColumn(inputColumn, aggType)));
+
+			displayColumns.InsertRange(0, add);
+			displayColumns = displayColumns.OrderBy(column => !groupByColumns.Contains(column.InputColumn)).ThenBy(column => groupByColumns.IndexOf(column.InputColumn)).ToList();
 		}
 
-		void GroupByColumn(ColumnInfo column)
+		void GroupByColumn(int inputColumn)
 		{
-			var contains = column.GroupOrder.HasValue;
+			var contains = groupByColumns.Contains(inputColumn);
 			if (!ShiftDown)
-				columnInfos.Where(col => col.GroupOrder.HasValue).ToList().ForEach(col => SetGroupOrder(col, false));
+				groupByColumns.ToList().ForEach(column => SetGroupOrder(column, false));
 
-			SetGroupOrder(column, !contains);
+			SetGroupOrder(inputColumn, !contains);
 
-			var grouped = columnInfos.Any(col => col.GroupOrder.HasValue);
-
-			if (grouped)
-				displayColumns = displayColumns.SelectMany(displayColumn => displayColumn.AggregateType == TextEditor.AggregateType.None ? DefaultAggregateTypesByType[displayColumn.ColumnInfo.Type].Select(aggType => new DisplayColumn(displayColumn.ColumnInfo, aggType)) : new List<DisplayColumn> { displayColumn }).ToList();
+			if (groupByColumns.Any())
+				displayColumns = displayColumns.SelectMany(displayColumn => displayColumn.AggregateType == Table.AggregateType.None ? DefaultAggregateTypesByType[inputTable.Types[displayColumn.InputColumn]].Select(aggType => new DisplayColumn(displayColumn.InputColumn, aggType)) : new List<DisplayColumn> { displayColumn }).ToList();
 			else
-				displayColumns = displayColumns.Select(displayColumn => displayColumn.AggregateType != TextEditor.AggregateType.None ? new DisplayColumn(displayColumn.ColumnInfo, TextEditor.AggregateType.None) : displayColumn).GroupBy(col => col.ColumnInfo.Name + col.AggregateType).Select(group => group.First()).ToList();
+				displayColumns = displayColumns.Select(displayColumn => displayColumn.AggregateType != Table.AggregateType.None ? new DisplayColumn(displayColumn.InputColumn, Table.AggregateType.None) : displayColumn).GroupBy(column => column.InputColumn.ToString() + column.AggregateType).Select(group => group.First()).ToList();
 
 			AggregateData();
 		}
 
-		void SortByColumn(DisplayColumn column)
+		void SortByColumn(DisplayColumn displayColumn)
 		{
 			if (!ShiftDown)
 			{
-				if (!column.SortOrder.HasValue)
-					column.SortAscending = false;
-				displayColumns.ForEach(col => col.SortOrder = null);
-				column.SortOrder = 0;
+				if (!displayColumn.SortOrder.HasValue)
+					displayColumn.SortAscending = false;
+				displayColumns.ForEach(column => column.SortOrder = null);
+				displayColumn.SortOrder = 0;
 			}
 
-			if (column.SortOrder == null)
+			if (displayColumn.SortOrder == null)
 			{
-				column.SortOrder = (displayColumns.Max(col => col.SortOrder) ?? -1) + 1;
-				column.SortAscending = true;
+				displayColumn.SortOrder = (displayColumns.Max(column => column.SortOrder) ?? -1) + 1;
+				displayColumn.SortAscending = true;
 			}
 			else
-				column.SortAscending = !column.SortAscending;
+				displayColumn.SortAscending = !displayColumn.SortAscending;
 
 			SortData();
 		}
@@ -332,18 +260,18 @@ namespace NeoEdit.TextEdit.Dialogs
 			var column = ((e.OriginalSource as DataGridColumnHeader).Column as AggregateColumn).DisplayColumn;
 
 			if (ControlDown)
-				GroupByColumn(column.ColumnInfo);
+				GroupByColumn(column.InputColumn);
 			else
 				SortByColumn(column);
 		}
 
-		void ToggleAggregateType(DisplayColumn displayColumn, TextEditor.AggregateType type)
+		void ToggleAggregateType(DisplayColumn displayColumn, Table.AggregateType type)
 		{
-			if (displayColumns.Any(col => (col.ColumnInfo == displayColumn.ColumnInfo) && (col.AggregateType == type)))
+			if (displayColumns.Any(column => (column.InputColumn == displayColumn.InputColumn) && (column.AggregateType == type)))
 				return;
 
 			if (ShiftDown)
-				displayColumns.Insert(displayColumns.IndexOf(displayColumn) + 1, new DisplayColumn(displayColumn.ColumnInfo, type));
+				displayColumns.Insert(displayColumns.IndexOf(displayColumn) + 1, new DisplayColumn(displayColumn.InputColumn, type));
 			else
 				displayColumn.AggregateType = type;
 			AggregateData();
@@ -373,16 +301,16 @@ namespace NeoEdit.TextEdit.Dialogs
 					else
 						e.Handled = false;
 					break;
-				case Key.G: GroupByColumn(column.ColumnInfo); break;
+				case Key.G: GroupByColumn(column.InputColumn); break;
 				case Key.Space: SortByColumn(column); break;
 				case Key.Enter: OkClick(null, null); break;
-				case Key.D: ToggleAggregateType(column, TextEditor.AggregateType.Distinct); break;
-				case Key.O: ToggleAggregateType(column, TextEditor.AggregateType.Concat); break;
-				case Key.N: ToggleAggregateType(column, TextEditor.AggregateType.Min); break;
-				case Key.X: ToggleAggregateType(column, TextEditor.AggregateType.Max); break;
-				case Key.S: ToggleAggregateType(column, TextEditor.AggregateType.Sum); break;
-				case Key.A: ToggleAggregateType(column, TextEditor.AggregateType.Average); break;
-				case Key.C: ToggleAggregateType(column, TextEditor.AggregateType.Count); break;
+				case Key.D: ToggleAggregateType(column, Table.AggregateType.Distinct); break;
+				case Key.O: ToggleAggregateType(column, Table.AggregateType.Concat); break;
+				case Key.N: ToggleAggregateType(column, Table.AggregateType.Min); break;
+				case Key.X: ToggleAggregateType(column, Table.AggregateType.Max); break;
+				case Key.S: ToggleAggregateType(column, Table.AggregateType.Sum); break;
+				case Key.A: ToggleAggregateType(column, Table.AggregateType.Average); break;
+				case Key.C: ToggleAggregateType(column, Table.AggregateType.Count); break;
 				case Key.Delete:
 					displayColumns.Remove(column);
 					AggregateData();
@@ -401,18 +329,15 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var multiple = displayColumns.GroupBy(column => column.ColumnInfo).ToDictionary(group => group.Key, group => group.Count() > 1);
 			result = new Result
 			{
 				InputTableType = InputTableType,
 				OutputTableType = OutputTableType,
 				InputHasHeaders = InputHasHeaders,
 				OutputHasHeaders = OutputHasHeaders,
-				Types = columnInfos.Select(col => col.Type).ToList(),
-				GroupByColumns = columnInfos.Where(column => column.GroupOrder.HasValue).OrderBy(column => column.GroupOrder.Value).Select(column => columnInfos.IndexOf(column)).ToList(),
-				AggregateColumns = displayColumns.Select(column => Tuple.Create(columnInfos.IndexOf(column.ColumnInfo), column.AggregateType)).ToList(),
+				GroupByColumns = groupByColumns,
+				AggregateColumns = displayColumns.Select(column => Tuple.Create(column.InputColumn, column.AggregateType)).ToList(),
 				SortColumns = displayColumns.Where(column => column.SortOrder.HasValue).OrderBy(column => column.SortOrder.Value).Select(column => Tuple.Create(displayColumns.IndexOf(column), column.SortAscending)).ToList(),
-				ColumnHeaders = displayColumns.Select(column => column.ColumnInfo.Name + (multiple[column.ColumnInfo] ? " (" + column.AggregateType + ")" : "")).ToList(),
 			};
 			DialogResult = true;
 		}

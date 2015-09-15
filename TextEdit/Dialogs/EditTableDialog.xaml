@@ -29,7 +29,7 @@
 		</GroupBox>
 
 		<GroupBox Header="_Data:">
-			<DataGrid Name="dataGrid" Width="800" Height="500" ItemsSource="{Binding Data, ElementName=self}" AutoGenerateColumns="False" CanUserResizeRows="False" IsReadOnly="True" RowHeaderWidth="0" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" SelectionUnit="Cell" ColumnReordered="ColumnReorderedEvent" PreviewKeyDown="DataGridKeyDown" CanUserSortColumns="False" IsSynchronizedWithCurrentItem="True" SelectionMode="Single">
+			<DataGrid Name="dataGrid" Width="800" Height="500" ItemsSource="{Binding Table.Rows, ElementName=self}" AutoGenerateColumns="False" CanUserResizeRows="False" IsReadOnly="True" RowHeaderWidth="0" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" SelectionUnit="Cell" ColumnReordered="ColumnReorderedEvent" PreviewKeyDown="DataGridKeyDown" CanUserSortColumns="False" IsSynchronizedWithCurrentItem="True" SelectionMode="Single">
 				<DataGrid.ColumnHeaderStyle>
 					<Style TargetType="DataGridColumnHeader">
 						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
