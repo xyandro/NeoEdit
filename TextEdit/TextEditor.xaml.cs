@@ -683,13 +683,14 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
+				case TextEditCommand.Edit_Table_Convert: dialogResult = Command_Edit_Table_Convert_Dialog(); break;
+				case TextEditCommand.Edit_Table_Aggregate: dialogResult = Command_Edit_Table_Aggregate_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
 				case TextEditCommand.Edit_Hash_MD5: dialogResult = Command_Edit_Hash_Dialog(); break;
 				case TextEditCommand.Edit_Hash_SHA1: dialogResult = Command_Edit_Hash_Dialog(); break;
 				case TextEditCommand.Edit_Hash_SHA256: dialogResult = Command_Edit_Hash_Dialog(); break;
 				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
-				case TextEditCommand.Edit_Aggregate: dialogResult = Command_Edit_Aggregate_Dialog(); break;
 				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
 				case TextEditCommand.Files_Names_MakeAbsolute: dialogResult = Command_Files_Names_MakeAbsolute_Dialog(); break;
 				case TextEditCommand.Files_Names_GetUnique: dialogResult = Command_Files_Names_GetUnique_Dialog(); break;
@@ -801,9 +802,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
-				case TextEditCommand.Edit_Table_ToTable: Command_Edit_Table_ToTable(); break;
+				case TextEditCommand.Edit_Table_Convert: Command_Edit_Table_Convert(dialogResult as ConvertTableDialog.Result); break;
 				case TextEditCommand.Edit_Table_RegionsSelectionsToTable: Command_Edit_Table_RegionsSelectionsToTable(); break;
-				case TextEditCommand.Edit_Table_FromTable: Command_Edit_Table_FromTable(); break;
+				case TextEditCommand.Edit_Table_Aggregate: Command_Edit_Table_Aggregate(dialogResult as AggregateDialog.Result); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
 				case TextEditCommand.Edit_Markup_Escape: Command_Edit_Markup_Escape(); break;
@@ -818,7 +819,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Hash_SHA1: Command_Edit_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Edit_Hash_SHA256: Command_Edit_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Edit_Sort: Command_Edit_Sort(dialogResult as SortDialog.Result); break;
-				case TextEditCommand.Edit_Aggregate: Command_Edit_Aggregate(dialogResult as AggregateDialog.Result); break;
 				case TextEditCommand.Edit_Convert: Command_Edit_Convert(dialogResult as ConvertDialog.Result); break;
 				case TextEditCommand.Edit_Bookmarks_Toggle: Command_Edit_Bookmarks_Toggle(); break;
 				case TextEditCommand.Edit_Bookmarks_Next: Command_Edit_Bookmarks_NextPreviousBookmark(true, shiftDown); break;
@@ -1669,7 +1669,6 @@ namespace NeoEdit.TextEdit
 				start = fileName.Substring(0, 2);
 			fileName = fileName.Replace("/", @"\");
 			fileName = Regex.Replace(fileName, "[<>:\"|?*\u0000-\u001f]", "_");
-			//fileName = fileName.Replace("<", "_").Replace(">", "_").Replace(":", "_").Replace("\"", "_").Replace("|", "_").Replace("?", "_").Replace("*", "_").Replace("\u0000", "_");
 			fileName = start + fileName.Substring(start.Length);
 			return fileName;
 		}
@@ -2129,59 +2128,6 @@ namespace NeoEdit.TextEdit
 		internal void Command_Text_SingleLine()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
-		}
-
-		List<string> LinesToTable(List<List<string>> lines)
-		{
-			var numColumns = lines.Max(line => line.Count);
-			foreach (var line in lines)
-				line.AddRange(Enumerable.Range(0, numColumns - line.Count).Select(a => ""));
-			var columnWidths = Enumerable.Range(0, numColumns).Select(column => lines.Max(line => line[column].Length)).ToList();
-			var columns = Enumerable.Range(0, numColumns).Where(column => columnWidths[column] != 0).ToList();
-			var strs = lines.AsParallel().AsOrdered().Select(line => "|" + String.Join("|", columns.Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + "|").ToList();
-			return strs;
-		}
-
-		internal void Command_Edit_Table_ToTable()
-		{
-			if (!Selections.Any())
-				return;
-
-			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('\t', '|', ',').Select(str => str.Trim()).ToList()).ToList();
-			ReplaceSelections(LinesToTable(lines));
-		}
-
-		internal void Command_Edit_Table_RegionsSelectionsToTable()
-		{
-			if (!Selections.Any())
-				return;
-
-			var regions = GetEnclosingRegions();
-			var lines = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => group.Select(index => GetString(Selections[index])).ToList()).ToList();
-			var table = LinesToTable(lines);
-			Replace(Regions, table);
-			Selections.Replace(Regions);
-			Regions.Clear();
-		}
-
-		internal void Command_Edit_Table_FromTable()
-		{
-			if (!Selections.Any())
-				return;
-
-			var lines = Selections.AsParallel().AsOrdered().Select(range => GetString(range).Split('|').Select(str => str.Trim()).ToList()).ToList();
-
-			// Strip leading tabs if all lines have them
-			while (lines.All(line => (line.Count != 0) && (line[0].Length == 0)))
-				lines.ForEach(line => line.RemoveAt(0));
-
-			// Strip trailing tabs from each line
-			foreach (var line in lines)
-				while ((line.Count != 0) && (String.IsNullOrEmpty(line[line.Count - 1])))
-					line.RemoveAt(line.Count - 1);
-
-			var strs = lines.AsParallel().AsOrdered().Select(line => String.Join("\t", line)).ToList();
-			ReplaceSelections(strs);
 		}
 
 		internal GetExpressionDialog.Result Command_Expression_Expression_Dialog()

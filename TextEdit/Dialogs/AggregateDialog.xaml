@@ -9,9 +9,9 @@
         <GroupBox Header="Input:">
             <StackPanel>
                 <UniformGrid Columns="3">
-                    <RadioButton GroupName="inputType" Content="_TSV" IsChecked="{Binding InputType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=TSV}" Focusable="False"/>
-                    <RadioButton GroupName="inputType" Content="_CSV" IsChecked="{Binding InputType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=CSV}" Focusable="False"/>
-                    <RadioButton GroupName="inputType" Content="_Piped" IsChecked="{Binding InputType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Piped}" Focusable="False"/>
+                    <RadioButton GroupName="tableType" Content="_TSV" IsChecked="{Binding TableType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=TSV}" Focusable="False"/>
+                    <RadioButton GroupName="tableType" Content="_CSV" IsChecked="{Binding TableType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=CSV}" Focusable="False"/>
+                    <RadioButton GroupName="tableType" Content="_Piped" IsChecked="{Binding TableType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Piped}" Focusable="False"/>
                 </UniformGrid>
 
                 <CheckBox Content="Has _Headers" IsChecked="{Binding HasHeaders, ElementName=self}" Margin="0,5,0,0" Focusable="False"/>

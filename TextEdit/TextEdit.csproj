@@ -125,6 +125,13 @@
     <Compile Include="Dialogs\ConvertDialog.xaml.cs">
       <DependentUpon>ConvertDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ConvertTableDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ConvertTableDialog.xaml.cs">
+      <DependentUpon>ConvertTableDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\CountDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -310,13 +317,13 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Aggregate.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Content.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Sort.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Table.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="UndoRedo.cs" />

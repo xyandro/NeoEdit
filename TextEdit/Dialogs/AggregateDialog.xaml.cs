@@ -48,7 +48,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		internal class Result
 		{
-			public TextEditor.AggregateInputType InputType { get; set; }
+			public TextEditor.TableType TableType { get; set; }
 			public bool HasHeaders { get; set; }
 			public List<Type> Types { get; set; }
 			public List<int> GroupByColumns { get; set; }
@@ -58,7 +58,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public TextEditor.AggregateInputType InputType { get { return UIHelper<AggregateDialog>.GetPropValue<TextEditor.AggregateInputType>(this); } set { UIHelper<AggregateDialog>.SetPropValue(this, value); } }
+		public TextEditor.TableType TableType { get { return UIHelper<AggregateDialog>.GetPropValue<TextEditor.TableType>(this); } set { UIHelper<AggregateDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool HasHeaders { get { return UIHelper<AggregateDialog>.GetPropValue<bool>(this); } set { UIHelper<AggregateDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -67,36 +67,23 @@ namespace NeoEdit.TextEdit.Dialogs
 		static AggregateDialog()
 		{
 			UIHelper<AggregateDialog>.Register();
-			UIHelper<AggregateDialog>.AddCallback(a => a.InputType, (obj, o, n) => obj.InputUpdated(true));
+			UIHelper<AggregateDialog>.AddCallback(a => a.TableType, (obj, o, n) => obj.InputUpdated(true));
 			UIHelper<AggregateDialog>.AddCallback(a => a.HasHeaders, (obj, o, n) => obj.InputUpdated(false));
 		}
 
-		List<string> input;
+		readonly string table;
 		List<List<object>> rawData;
 		List<ColumnInfo> columnInfos = new List<ColumnInfo>();
 		List<DisplayColumn> displayColumns = new List<DisplayColumn>();
 
-		AggregateDialog(List<string> input)
+		AggregateDialog(string table)
 		{
-			this.input = input;
+			this.table = table;
 			InitializeComponent();
 
-			if (input.Any())
-			{
-				var str = input.First();
-				var tabCount = str.Length - str.Replace("\t", "").Length;
-				var commaCount = str.Length - str.Replace(",", "").Length;
-				var pipeCount = str.Length - str.Replace("|", "").Length;
-				if ((tabCount >= commaCount) && (tabCount >= pipeCount))
-					InputType = TextEditor.AggregateInputType.TSV;
-				else if (commaCount >= pipeCount)
-					InputType = TextEditor.AggregateInputType.CSV;
-				else
-					InputType = TextEditor.AggregateInputType.Piped;
-			}
-
-			if (InputType == TextEditor.AggregateInputType.None)
-				InputType = TextEditor.AggregateInputType.TSV;
+			TableType = TextEditor.DetectTableType(table);
+			if (TableType == TextEditor.TableType.None)
+				TableType = TextEditor.TableType.TSV;
 		}
 
 		delegate bool TryParseDelegate<T>(string str, out T result);
@@ -131,16 +118,16 @@ namespace NeoEdit.TextEdit.Dialogs
 			Data = new List<List<object>>();
 			columnInfos = new List<ColumnInfo>();
 
-			var strData = TextEditor.GetAggregateStrings(input, InputType);
-			if (!strData.Any())
+			var input = TextEditor.GetTableStrings(table, TableType, 10000);
+			if (!input.Any())
 				return;
 
-			var numColumns = strData.First().Count;
+			var numColumns = input.First().Count;
 
 			if (calcHasHeaders)
 			{
-				var headers = Enumerable.Take(strData, 1).ToList();
-				var rows = Enumerable.Skip(strData, 1).ToList();
+				var headers = Enumerable.Take(input, 1).ToList();
+				var rows = Enumerable.Skip(input, 1).ToList();
 				var headerTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(headers, column)).ToList();
 				var dataTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(rows, column)).ToList();
 				inInputUpdated = true;
@@ -151,14 +138,14 @@ namespace NeoEdit.TextEdit.Dialogs
 			var columnNames = Enumerable.Range(0, numColumns).Select(index => String.Format("Column {0}", index + 1)).ToList();
 			if (HasHeaders)
 			{
-				columnNames = strData[0].Select(obj => (obj ?? "").ToString()).ToList();
-				strData.RemoveAt(0);
+				columnNames = input[0].Select(obj => (obj ?? "").ToString()).ToList();
+				input.RemoveAt(0);
 			}
 
-			var columnTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(strData, column)).ToList();
+			var columnTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(input, column)).ToList();
 
 			columnInfos = columnNames.Select((column, index) => new ColumnInfo(column, columnTypes[index])).ToList();
-			rawData = TextEditor.GetAggregateObjects(strData, columnInfos.Select(column => column.Type).ToList());
+			rawData = TextEditor.GetTableObjects(input, columnInfos.Select(column => column.Type).ToList());
 			displayColumns = columnInfos.Select(col => new DisplayColumn(col, TextEditor.AggregateType.None)).ToList();
 
 			AggregateData();
@@ -279,7 +266,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			{
 				columnInfo.GroupOrder = (columnInfos.Max(col => col.GroupOrder) ?? -1) + 1;
 				add.Add(new DisplayColumn(columnInfo, TextEditor.AggregateType.Distinct));
-				if (columnInfos.Count == 1)
+				if (displayColumns.Count == 0)
 					add.Add(new DisplayColumn(columnInfo, TextEditor.AggregateType.Count));
 			}
 			else
@@ -403,13 +390,13 @@ namespace NeoEdit.TextEdit.Dialogs
 			InputUpdated(true);
 		}
 
-        Result result;
+		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var multiple = displayColumns.GroupBy(column => column.ColumnInfo).ToDictionary(group => group.Key, group => group.Count() > 1);
 			result = new Result
 			{
-				InputType = InputType,
+				TableType = TableType,
 				HasHeaders = HasHeaders,
 				Types = columnInfos.Select(col => col.Type).ToList(),
 				GroupByColumns = columnInfos.Where(column => column.GroupOrder.HasValue).OrderBy(column => column.GroupOrder.Value).Select(column => columnInfos.IndexOf(column)).ToList(),
@@ -420,9 +407,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, List<string> input)
+		public static Result Run(Window parent, string table)
 		{
-			var dialog = new AggregateDialog(input) { Owner = parent };
+			var dialog = new AggregateDialog(table) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

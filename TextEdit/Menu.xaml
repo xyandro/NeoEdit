@@ -89,11 +89,12 @@
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Table">
-			<textEdit:TextEditMenuItem Header="_To Table" CommandEnum="Edit_Table_ToTable"/>
+			<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Edit_Table_Convert"/>
 			<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Edit_Table_RegionsSelectionsToTable"/>
-			<textEdit:TextEditMenuItem Header="_From Table" CommandEnum="Edit_Table_FromTable"/>
+			<textEdit:TextEditMenuItem Header="_Aggregate" CommandEnum="Edit_Table_Aggregate"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="Cop_y Down" CommandEnum="Edit_CopyDown"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
 		<Separator/>
 		<MenuItem Header="_Markup">
@@ -118,7 +119,6 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
-		<textEdit:TextEditMenuItem Header="A_ggregate" CommandEnum="Edit_Aggregate"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="C_onvert" CommandEnum="Edit_Convert"/>
 		<Separator/>

@@ -71,31 +71,29 @@ namespace NeoEdit.TextEdit
 				yield return expandWith;
 		}
 
-		static internal IEnumerable<string> SplitByLine(this IEnumerable<string> source)
+		static internal IEnumerable<string> SplitByLine(this string item)
 		{
 			var lineBreakChars = new char[] { '\r', '\n' };
-			foreach (var item in source)
+			var pos = 0;
+			while (pos < item.Length)
 			{
-				var pos = 0;
-				while (pos < item.Length)
-				{
-					var index = item.IndexOfAny(lineBreakChars, pos);
-					if (index == -1)
-						index = item.Length;
-					yield return item.Substring(pos, index - pos);
-					if ((index + 1 < item.Length) && (item[index] == '\r') && (item[index + 1] == '\n'))
-						++index;
-					pos = index + 1;
-				}
+				var index = item.IndexOfAny(lineBreakChars, pos);
+				if (index == -1)
+					index = item.Length;
+				yield return item.Substring(pos, index - pos);
+				if ((index + 1 < item.Length) && (item[index] == '\r') && (item[index + 1] == '\n'))
+					++index;
+				pos = index + 1;
 			}
 		}
 
-		static internal IEnumerable<string> SplitTCSV(this string source, char splitChar)
+		static List<string> SplitTCSV(string source, char splitChar, ref int pos)
 		{
-			var pos = 0;
+			var findChars = new char[] { splitChar, '\r', '\n' };
+			var result = new List<string>();
 			while (true)
 			{
-				var result = "";
+				var item = "";
 				if ((pos < source.Length) && (source[pos] == '"'))
 				{
 					var quoteIndex = pos + 1;
@@ -104,7 +102,7 @@ namespace NeoEdit.TextEdit
 						quoteIndex = source.IndexOf('"', quoteIndex);
 						if (quoteIndex == -1)
 						{
-							result += source.Substring(pos + 1).Replace(@"""""", @"""");
+							item += source.Substring(pos + 1).Replace(@"""""", @"""");
 							pos = source.Length;
 							break;
 						}
@@ -115,23 +113,40 @@ namespace NeoEdit.TextEdit
 							continue;
 						}
 
-						result += source.Substring(pos + 1, quoteIndex - pos - 1).Replace(@"""""", @"""");
+						item += source.Substring(pos + 1, quoteIndex - pos - 1).Replace(@"""""", @"""");
 						pos = quoteIndex + 1;
 						break;
 					}
 				}
 
-				var splitIndex = source.IndexOf(splitChar, pos);
-				var end = splitIndex == -1;
-				if (end)
+				var splitIndex = source.IndexOfAny(findChars, pos);
+				var end = (splitIndex == -1) || (source[splitIndex] != splitChar);
+				if (splitIndex == -1)
 					splitIndex = source.Length;
-				result += source.Substring(pos, splitIndex - pos);
-				yield return result;
+				item += source.Substring(pos, splitIndex - pos);
+				result.Add(item);
+
+				pos = splitIndex;
 
 				if (end)
+				{
+					if ((pos + 1 < source.Length) && (source[pos] == '\r') && (source[pos + 1] == '\n'))
+						pos += 2;
+					else if (pos < source.Length)
+						++pos;
 					break;
-				pos = splitIndex + 1;
+				}
+				++pos;
 			}
+			return result;
+		}
+
+		static internal IEnumerable<List<string>> SplitTCSV(this string source, char splitChar)
+		{
+			var pos = 0;
+			while (pos < source.Length)
+				yield return SplitTCSV(source, splitChar, ref pos);
+			yield break;
 		}
 	}
 }
