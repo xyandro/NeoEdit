@@ -26,7 +26,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		EditTablesDialog(List<string> tables)
 		{
 			InitializeComponent();
-			Tabs = new ObservableCollection<EditTableTab>(tables.Select((table, index) => new EditTableTab(String.Format("Table {0}", index + 1), table)));
+			Tabs = new ObservableCollection<EditTableTab>(tables.Select((table, index) => new EditTableTab(this, String.Format("Table {0}", index + 1), table)));
 		}
 
 		bool ControlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != 0; } }
@@ -75,6 +75,27 @@ namespace NeoEdit.TextEdit.Dialogs
 		void TabControlSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			CurrentTab.SetFocus();
+		}
+
+		int? joinTable, joinColumn;
+		internal bool GetJoin(out int joinTable, out int joinColumn)
+		{
+			joinTable = this.joinTable ?? -1;
+			joinColumn = this.joinColumn ?? -1;
+			var result = this.joinTable.HasValue;
+			this.joinTable = this.joinColumn = null;
+			return result;
+		}
+
+		internal void SetJoin(EditTableTab tab, int joinColumn)
+		{
+			this.joinTable = Tabs.IndexOf(tab);
+			this.joinColumn = joinColumn;
+		}
+
+		internal EditTableTab GetTab(int index)
+		{
+			return Tabs[index];
 		}
 
 		Result result;

@@ -7,6 +7,7 @@ namespace NeoEdit.TextEdit
 	class Table
 	{
 		internal enum TableType { None, TSV, CSV, Columns }
+		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
 		[Flags]
 		public enum AggregateType
 		{
@@ -177,6 +178,32 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		static public Table Join(Table leftTable, Table rightTable, int leftColumn, int rightColumn, JoinType joinType)
+		{
+			var left = leftTable.Rows.GroupBy(row => row[leftColumn] ?? new object()).ToDictionary(group => group.Key, group => group.ToList());
+			var right = rightTable.Rows.GroupBy(row => row[rightColumn] ?? new object()).ToDictionary(group => group.Key, group => group.ToList());
+
+			List<object> keys;
+			switch (joinType)
+			{
+				case JoinType.Inner: keys = left.Keys.Where(key => right.ContainsKey(key)).ToList(); break;
+				case JoinType.LeftOuter: keys = left.Keys.ToList(); break;
+				case JoinType.RightOuter: keys = right.Keys.ToList(); break;
+				case JoinType.FullOuter: keys = left.Keys.Concat(right.Keys).Distinct().ToList(); break;
+				default: throw new ArgumentException("Invalid join");
+			}
+
+			var emptyLeft = new List<List<object>> { Enumerable.Range(0, leftTable.NumColumns).Select(column => default(object)).ToList() };
+			var emptyRight = new List<List<object>> { Enumerable.Range(0, rightTable.NumColumns).Select(column => default(object)).ToList() };
+			return new Table(leftTable)
+			{
+				Types = leftTable.Types.Concat(rightTable.Types).ToList(),
+				Headers = leftTable.Headers.Concat(rightTable.Headers).ToList(),
+				AggregateTypes = leftTable.AggregateTypes.Concat(rightTable.AggregateTypes).ToList(),
+				Rows = keys.SelectMany(key => (left.ContainsKey(key) ? left[key] : emptyLeft).SelectMany(leftValue => (right.ContainsKey(key) ? right[key] : emptyRight).Select(rightValue => leftValue.Concat(rightValue).ToList()))).ToList(),
+			};
+		}
+
 		public Table Aggregate(List<int> groupByColumns, List<Tuple<int, AggregateType>> aggregateTypes)
 		{
 			List<List<List<object>>> groupedRows;
@@ -237,12 +264,12 @@ namespace NeoEdit.TextEdit
 			return str;
 		}
 
-		public string ToString(TableType tableType, bool hasHeaders, string ending)
+		public string ConvertToString(TableType tableType = TableType.Columns, bool hasHeaders = true, string ending = "\r\n")
 		{
 			var result = new List<List<string>>();
 			if (hasHeaders)
 				result.Add(Headers);
-			result.AddRange(Rows.Select(row => row.Select(item => (item ?? "").ToString()).ToList()));
+			result.AddRange(Rows.Select(row => row.Select(item => (item ?? "NULL").ToString()).ToList()));
 
 			switch (tableType)
 			{

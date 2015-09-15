@@ -1427,14 +1427,25 @@ namespace NeoEdit.TextEdit
 		{
 			SetTableSelection();
 			var output = new List<string>();
+			var inputs = result.Results.Select((tableResult, index) => new Table(GetString(Selections[index]), tableResult.InputTableType, tableResult.InputHasHeaders)).ToList();
 			for (var ctr = 0; ctr < result.Results.Count; ++ctr)
 			{
 				var tableResult = result.Results[ctr];
-				var input = new Table(GetString(Selections[ctr]), tableResult.InputTableType, tableResult.InputHasHeaders);
-				input = input.Aggregate(tableResult.GroupByColumns, tableResult.AggregateColumns);
-				input = input.Sort(tableResult.SortColumns);
-				output.Add(input.ToString(tableResult.OutputTableType, tableResult.OutputHasHeaders, Data.DefaultEnding));
+				if (tableResult.OutputTableType == Table.TableType.None)
+				{
+					output.Add("");
+					continue;
+				}
+
+				var outputTable = inputs[ctr];
+				foreach (var joinInfo in tableResult.JoinInfos)
+					outputTable = Table.Join(outputTable, inputs[joinInfo.RightTable], joinInfo.LeftColumn, joinInfo.RightColumn, joinInfo.JoinType);
+
+				outputTable = outputTable.Aggregate(tableResult.GroupByColumns, tableResult.AggregateColumns);
+				outputTable = outputTable.Sort(tableResult.SortColumns);
+				output.Add(outputTable.ConvertToString(tableResult.OutputTableType, tableResult.OutputHasHeaders, Data.DefaultEnding));
 			}
+
 			ReplaceSelections(output);
 		}
 

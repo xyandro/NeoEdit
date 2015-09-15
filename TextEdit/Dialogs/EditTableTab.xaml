@@ -3,8 +3,17 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI">
 
-	<StackPanel Margin="10">
-		<GroupBox Header="Convert:">
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		
+		<GroupBox Grid.Row="0" Grid.Column="0" Header="Convert:">
 			<Grid HorizontalAlignment="Left">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition/>
@@ -26,8 +35,8 @@
 			</Grid>
 		</GroupBox>
 
-		<GroupBox Header="_Data:">
-			<DataGrid Name="dataGrid" Width="800" Height="500" ItemsSource="{Binding Table.Rows, ElementName=self}" AutoGenerateColumns="False" CanUserResizeRows="False" IsReadOnly="True" RowHeaderWidth="0" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" SelectionUnit="Cell" ColumnReordered="ColumnReorderedEvent" PreviewKeyDown="DataGridKeyDown" CanUserSortColumns="False" IsSynchronizedWithCurrentItem="True" SelectionMode="Single">
+		<GroupBox Grid.Row="1" Grid.Column="0" Header="_Data:">
+			<DataGrid Name="dataGrid" ItemsSource="{Binding Table.Rows, ElementName=self}" AutoGenerateColumns="False" CanUserResizeRows="False" IsReadOnly="True" RowHeaderWidth="0" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" SelectionUnit="Cell" ColumnReordered="ColumnReorderedEvent" PreviewKeyDown="DataGridKeyDown" CanUserSortColumns="False" IsSynchronizedWithCurrentItem="True" SelectionMode="Single">
 				<DataGrid.ColumnHeaderStyle>
 					<Style TargetType="DataGridColumnHeader">
 						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -37,8 +46,8 @@
 			</DataGrid>
 		</GroupBox>
 
-		<UniformGrid HorizontalAlignment="Left" Rows="1" Margin="0,10,0,0">
+		<UniformGrid Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Rows="1" Margin="0,10,0,0">
 			<Button Click="ResetClick" Content="_Reset" Padding="10,1"/>
 		</UniformGrid>
-	</StackPanel>
+	</Grid>
 </TabItem>
