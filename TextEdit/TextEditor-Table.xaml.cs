@@ -155,17 +155,25 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal ConvertTableDialog.Result Command_Edit_Table_Convert_Dialog()
+		internal EditTableDialog.Result Command_Edit_Table_Edit_Dialog()
 		{
 			SetTableSelection();
-			return ConvertTableDialog.Run(UIHelper.FindParent<Window>(this), DetectTableType(GetString(Selections[0])));
+			return EditTableDialog.Run(UIHelper.FindParent<Window>(this), GetString(Selections[0]));
 		}
 
-		internal void Command_Edit_Table_Convert(ConvertTableDialog.Result result)
+		internal void Command_Edit_Table_Edit(EditTableDialog.Result result)
 		{
 			SetTableSelection();
-			var input = GetTableStrings(GetString(Selections[0]), result.InputType);
-			var output = GetOutput(input, result.OutputType);
+			var strings = GetTableStrings(GetString(Selections[0]), result.InputTableType);
+			if (result.InputHasHeaders)
+				strings = strings.Skip(1).ToList();
+			var data = GetTableObjects(strings, result.Types);
+			data = AggregateByColumn(data, result.GroupByColumns, result.AggregateColumns);
+			data = SortAggregateData(data, result.SortColumns);
+			strings = data.Select(items => items.Select(item => (item ?? "").ToString()).ToList()).ToList();
+			if (result.OutputHasHeaders)
+				strings.Insert(0, result.ColumnHeaders);
+			var output = GetOutput(strings, result.OutputTableType);
 			ReplaceSelections(output);
 		}
 
@@ -179,27 +187,6 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Regions);
 			Regions.Clear();
 			ReplaceSelections(lines);
-		}
-
-		internal AggregateDialog.Result Command_Edit_Table_Aggregate_Dialog()
-		{
-			SetTableSelection();
-			return AggregateDialog.Run(UIHelper.FindParent<Window>(this), GetString(Selections[0]));
-		}
-
-		internal void Command_Edit_Table_Aggregate(AggregateDialog.Result result)
-		{
-			SetTableSelection();
-			var strings = GetTableStrings(GetString(Selections[0]), result.TableType);
-			if (result.HasHeaders)
-				strings = strings.Skip(1).ToList();
-			var data = GetTableObjects(strings, result.Types);
-			data = AggregateByColumn(data, result.GroupByColumns, result.AggregateColumns);
-			data = SortAggregateData(data, result.SortColumns);
-			strings = data.Select(items => items.Select(item => (item ?? "").ToString()).ToList()).ToList();
-			strings.Insert(0, result.ColumnHeaders);
-			var output = GetOutput(strings, result.TableType);
-			ReplaceSelections(output);
 		}
 	}
 }

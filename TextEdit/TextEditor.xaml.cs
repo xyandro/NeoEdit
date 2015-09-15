@@ -683,8 +683,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
-				case TextEditCommand.Edit_Table_Convert: dialogResult = Command_Edit_Table_Convert_Dialog(); break;
-				case TextEditCommand.Edit_Table_Aggregate: dialogResult = Command_Edit_Table_Aggregate_Dialog(); break;
+				case TextEditCommand.Edit_Table_Edit: dialogResult = Command_Edit_Table_Edit_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
 				case TextEditCommand.Edit_Hash_MD5: dialogResult = Command_Edit_Hash_Dialog(); break;
@@ -802,9 +801,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
-				case TextEditCommand.Edit_Table_Convert: Command_Edit_Table_Convert(dialogResult as ConvertTableDialog.Result); break;
+				case TextEditCommand.Edit_Table_Edit: Command_Edit_Table_Edit(dialogResult as EditTableDialog.Result); break;
 				case TextEditCommand.Edit_Table_RegionsSelectionsToTable: Command_Edit_Table_RegionsSelectionsToTable(); break;
-				case TextEditCommand.Edit_Table_Aggregate: Command_Edit_Table_Aggregate(dialogResult as AggregateDialog.Result); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
 				case TextEditCommand.Edit_Markup_Escape: Command_Edit_Markup_Escape(); break;

@@ -90,13 +90,6 @@
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
-    <Page Include="Dialogs\AggregateDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\AggregateDialog.xaml.cs">
-      <DependentUpon>AggregateDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -125,19 +118,19 @@
     <Compile Include="Dialogs\ConvertDialog.xaml.cs">
       <DependentUpon>ConvertDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ConvertTableDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ConvertTableDialog.xaml.cs">
-      <DependentUpon>ConvertTableDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\CountDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\CountDialog.xaml.cs">
       <DependentUpon>CountDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\EditTableDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EditTableDialog.xaml.cs">
+      <DependentUpon>EditTableDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\ExpressionHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

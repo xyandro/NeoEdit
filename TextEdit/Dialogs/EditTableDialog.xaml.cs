@@ -13,7 +13,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	partial class AggregateDialog
+	partial class EditTableDialog
 	{
 		class ColumnInfo
 		{
@@ -48,8 +48,10 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		internal class Result
 		{
-			public TextEditor.TableType TableType { get; set; }
-			public bool HasHeaders { get; set; }
+			public TextEditor.TableType InputTableType { get; set; }
+			public TextEditor.TableType OutputTableType { get; set; }
+			public bool InputHasHeaders { get; set; }
+			public bool OutputHasHeaders { get; set; }
 			public List<Type> Types { get; set; }
 			public List<int> GroupByColumns { get; set; }
 			public List<Tuple<int, TextEditor.AggregateType>> AggregateColumns { get; set; }
@@ -58,17 +60,21 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public TextEditor.TableType TableType { get { return UIHelper<AggregateDialog>.GetPropValue<TextEditor.TableType>(this); } set { UIHelper<AggregateDialog>.SetPropValue(this, value); } }
+		public TextEditor.TableType InputTableType { get { return UIHelper<EditTableDialog>.GetPropValue<TextEditor.TableType>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool HasHeaders { get { return UIHelper<AggregateDialog>.GetPropValue<bool>(this); } set { UIHelper<AggregateDialog>.SetPropValue(this, value); } }
+		public TextEditor.TableType OutputTableType { get { return UIHelper<EditTableDialog>.GetPropValue<TextEditor.TableType>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public List<List<object>> Data { get { return UIHelper<AggregateDialog>.GetPropValue<List<List<object>>>(this); } set { UIHelper<AggregateDialog>.SetPropValue(this, value); } }
+		public bool InputHasHeaders { get { return UIHelper<EditTableDialog>.GetPropValue<bool>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool OutputHasHeaders { get { return UIHelper<EditTableDialog>.GetPropValue<bool>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public List<List<object>> Data { get { return UIHelper<EditTableDialog>.GetPropValue<List<List<object>>>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 
-		static AggregateDialog()
+		static EditTableDialog()
 		{
-			UIHelper<AggregateDialog>.Register();
-			UIHelper<AggregateDialog>.AddCallback(a => a.TableType, (obj, o, n) => obj.InputUpdated(true));
-			UIHelper<AggregateDialog>.AddCallback(a => a.HasHeaders, (obj, o, n) => obj.InputUpdated(false));
+			UIHelper<EditTableDialog>.Register();
+			UIHelper<EditTableDialog>.AddCallback(a => a.InputTableType, (obj, o, n) => { obj.InputUpdated(true); obj.OutputTableType = obj.InputTableType; });
+			UIHelper<EditTableDialog>.AddCallback(a => a.InputHasHeaders, (obj, o, n) => obj.InputUpdated(false));
 		}
 
 		readonly string table;
@@ -76,14 +82,16 @@ namespace NeoEdit.TextEdit.Dialogs
 		List<ColumnInfo> columnInfos = new List<ColumnInfo>();
 		List<DisplayColumn> displayColumns = new List<DisplayColumn>();
 
-		AggregateDialog(string table)
+		EditTableDialog(string table)
 		{
 			this.table = table;
 			InitializeComponent();
+			inputType.ItemsSource = outputType.ItemsSource = Enum.GetValues(typeof(TextEditor.TableType)).Cast<TextEditor.TableType>().Where(value => value != TextEditor.TableType.None).ToList();
+			OutputHasHeaders = true;
 
-			TableType = TextEditor.DetectTableType(table);
-			if (TableType == TextEditor.TableType.None)
-				TableType = TextEditor.TableType.TSV;
+			InputTableType = TextEditor.DetectTableType(table);
+			if (InputTableType == TextEditor.TableType.None)
+				InputTableType = TextEditor.TableType.TSV;
 		}
 
 		delegate bool TryParseDelegate<T>(string str, out T result);
@@ -118,7 +126,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Data = new List<List<object>>();
 			columnInfos = new List<ColumnInfo>();
 
-			var input = TextEditor.GetTableStrings(table, TableType, 10000);
+			var input = TextEditor.GetTableStrings(table, InputTableType, 10000);
 			if (!input.Any())
 				return;
 
@@ -131,12 +139,12 @@ namespace NeoEdit.TextEdit.Dialogs
 				var headerTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(headers, column)).ToList();
 				var dataTypes = Enumerable.Range(0, numColumns).Select(column => GetColumnType(rows, column)).ToList();
 				inInputUpdated = true;
-				HasHeaders = (headerTypes.All(type => type == typeof(string))) && (Enumerable.Range(0, numColumns).Any(column => headerTypes[column] != dataTypes[column]));
+				InputHasHeaders = (headerTypes.All(type => type == typeof(string))) && (Enumerable.Range(0, numColumns).Any(column => headerTypes[column] != dataTypes[column]));
 				inInputUpdated = false;
 			}
 
 			var columnNames = Enumerable.Range(0, numColumns).Select(index => String.Format("Column {0}", index + 1)).ToList();
-			if (HasHeaders)
+			if (InputHasHeaders)
 			{
 				columnNames = input[0].Select(obj => (obj ?? "").ToString()).ToList();
 				input.RemoveAt(0);
@@ -396,8 +404,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			var multiple = displayColumns.GroupBy(column => column.ColumnInfo).ToDictionary(group => group.Key, group => group.Count() > 1);
 			result = new Result
 			{
-				TableType = TableType,
-				HasHeaders = HasHeaders,
+				InputTableType = InputTableType,
+				OutputTableType = OutputTableType,
+				InputHasHeaders = InputHasHeaders,
+				OutputHasHeaders = OutputHasHeaders,
 				Types = columnInfos.Select(col => col.Type).ToList(),
 				GroupByColumns = columnInfos.Where(column => column.GroupOrder.HasValue).OrderBy(column => column.GroupOrder.Value).Select(column => columnInfos.IndexOf(column)).ToList(),
 				AggregateColumns = displayColumns.Select(column => Tuple.Create(columnInfos.IndexOf(column.ColumnInfo), column.AggregateType)).ToList(),
@@ -409,7 +419,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		public static Result Run(Window parent, string table)
 		{
-			var dialog = new AggregateDialog(table) { Owner = parent };
+			var dialog = new EditTableDialog(table) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
