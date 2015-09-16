@@ -34,7 +34,7 @@ namespace NeoEdit.Common.Transform
 
 		public static XElement ToXML(object obj)
 		{
-			var name = obj == null ? rootName : obj.GetType().Name;
+			var name = obj == null ? rootName : obj.GetType().Name.Replace("`", "");
 			return rToXML(name, obj, null, true, new Dictionary<object, XElement>()) as XElement;
 		}
 

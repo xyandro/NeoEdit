@@ -90,6 +90,7 @@
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
+    <Compile Include="DBConnectInfo.cs" />
     <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -124,6 +125,20 @@
     </Page>
     <Compile Include="Dialogs\CountDialog.xaml.cs">
       <DependentUpon>CountDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\DatabaseConnectDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\DatabaseConnectDialog.xaml.cs">
+      <DependentUpon>DatabaseConnectDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\EditDatabaseConnectDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EditDatabaseConnectDialog.xaml.cs">
+      <DependentUpon>EditDatabaseConnectDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\EditTablesDialog.xaml">
       <SubType>Designer</SubType>

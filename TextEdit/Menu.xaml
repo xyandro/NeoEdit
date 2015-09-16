@@ -329,6 +329,9 @@
 			<textEdit:TextEditMenuItem Header="Max Deepe_st" CommandEnum="Content_Select_MaxDeepest"/>
 		</MenuItem>
 	</MenuItem>
+	<MenuItem Header="D_atabase">
+		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
+	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">
 			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Set_Keys"/>

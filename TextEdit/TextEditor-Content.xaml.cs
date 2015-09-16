@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using NeoEdit.Common.Parsing;
-using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -140,7 +138,7 @@ namespace NeoEdit.TextEdit
 
 		internal FindContentAttributeDialog.Result Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType list)
 		{
-			return FindContentAttributeDialog.Run(UIHelper.FindParent<Window>(this), GetSelectionNodes().SelectMany(node => node.List(list)).Distinct().ToList());
+			return FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.List(list)).Distinct().ToList());
 		}
 
 		internal void Command_Content_List(ParserNode.ParserNodeListType list, bool first = false, FindContentAttributeDialog.Result findAttr = null)
@@ -217,7 +215,7 @@ namespace NeoEdit.TextEdit
 
 		internal SelectContentAttributeDialog.Result Command_Content_Attributes_ByAttribute_Dialog()
 		{
-			return SelectContentAttributeDialog.Run(UIHelper.FindParent<Window>(this), GetSelectionNodes());
+			return SelectContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
 		}
 
 		internal void Command_Content_Attributes_ByAttribute(SelectContentAttributeDialog.Result result)

@@ -719,6 +719,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Children); break;
 				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Descendants); break;
 				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Self); break;
+				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
 				default: return true;
@@ -927,6 +928,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_Deepest: Command_Content_Select_Deepest(); break;
 				case TextEditCommand.Content_Select_MaxTopmost: Command_Content_Select_MaxTopmost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
+				case TextEditCommand.Database_Connect: Command_Database_Connect(); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -1420,7 +1422,7 @@ namespace NeoEdit.TextEdit
 		internal EditTablesDialog.Result Command_Edit_Table_Edit_Dialog()
 		{
 			SetTableSelection();
-			return EditTablesDialog.Run(UIHelper.FindParent<Window>(this), GetSelectionStrings());
+			return EditTablesDialog.Run(WindowParent, GetSelectionStrings());
 		}
 
 		internal void Command_Edit_Table_Edit(EditTablesDialog.Result result)
@@ -2614,6 +2616,15 @@ namespace NeoEdit.TextEdit
 				start += str.Length;
 			}
 			Selections.Replace(sels);
+		}
+
+		internal DatabaseConnectDialog.Result Command_Database_Connect_Dialog()
+		{
+			return DatabaseConnectDialog.Run(WindowParent);
+		}
+
+		internal void Command_Database_Connect()
+		{
 		}
 
 		internal void Command_Keys_Set(int index)

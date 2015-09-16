@@ -1,0 +1,34 @@
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.DatabaseConnectDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	Title="Connect to Database" Width="600" Height="400" FocusManager.FocusedElement="{Binding ElementName=options}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<ListBox Name="options" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding DBConnectInfos, ElementName=self}" DisplayMemberPath="Name" SelectedValue="{Binding DBConnectInfo, ElementName=self}"/>
+		<DockPanel Grid.Row="0" Grid.Column="1">
+			<Button DockPanel.Dock="Top" Click="AddClick" Content="_Add" Focusable="False"/>
+			<Button DockPanel.Dock="Top" Click="EditClick" Content="_Edit" Focusable="False"/>
+			<Button DockPanel.Dock="Top" Click="DeleteClick" Content="De_lete" Focusable="False"/>
+			<Button DockPanel.Dock="Top" Click="MoveUpClick" Content="Move _Up" Focusable="False"/>
+			<Button DockPanel.Dock="Top" Click="MoveDownClick" Content="Move _Down" Focusable="False"/>
+			<Button Name="test" DockPanel.Dock="Bottom" Click="TestClick" Content="_Test" Focusable="False"/>
+			<Label/>
+		</DockPanel>
+		
+		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Width="{Binding ActualWidth, ElementName=test}" Focusable="False"/>
+			<Button IsCancel="True" Content="Cancel" Focusable="False"/>
+		</UniformGrid>
+	</Grid>
+</guiControls:ModalDialog>
