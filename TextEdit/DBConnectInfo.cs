@@ -10,6 +10,7 @@ namespace NeoEdit.TextEdit
 	{
 		public enum DBType
 		{
+			None,
 			MySQL,
 			MSSQL,
 		}
@@ -23,14 +24,23 @@ namespace NeoEdit.TextEdit
 			get { return Coder.BytesToString(Crypto.Decrypt(Crypto.Type.RSAAES, Coder.StringToBytes(connectionString, Coder.CodePage.Base64), encryptionKey), Coder.CodePage.UTF8); }
 			set { connectionString = Coder.BytesToString(Crypto.Encrypt(Crypto.Type.RSAAES, Coder.StringToBytes(value, Coder.CodePage.UTF8), encryptionKey), Coder.CodePage.Base64); }
 		}
-
-		public DBConnectInfo Copy()
+		public DbConnectionStringBuilder ConnectionStringBuilder
 		{
-			return new DBConnectInfo
+			get
 			{
-				Name = Name,
-				connectionString = connectionString,
-			};
+				switch (Type)
+				{
+					case DBType.MySQL: return new MySqlConnectionStringBuilder(ConnectionString);
+					case DBType.MSSQL: return new SqlConnectionStringBuilder(ConnectionString);
+					default: throw new ArgumentException("Invalid database type");
+				}
+			}
+			set { ConnectionString = value.ConnectionString; }
+		}
+
+		public DBConnectInfo()
+		{
+			ConnectionString = "";
 		}
 
 		public DbConnection GetConnection()

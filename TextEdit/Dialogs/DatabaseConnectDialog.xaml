@@ -19,9 +19,9 @@
 		<DockPanel Grid.Row="0" Grid.Column="1">
 			<Button DockPanel.Dock="Top" Click="AddClick" Content="_Add" Focusable="False"/>
 			<Button DockPanel.Dock="Top" Click="EditClick" Content="_Edit" Focusable="False"/>
-			<Button DockPanel.Dock="Top" Click="DeleteClick" Content="De_lete" Focusable="False"/>
+			<Button DockPanel.Dock="Top" Click="DeleteClick" Content="_Delete" Focusable="False"/>
 			<Button DockPanel.Dock="Top" Click="MoveUpClick" Content="Move _Up" Focusable="False"/>
-			<Button DockPanel.Dock="Top" Click="MoveDownClick" Content="Move _Down" Focusable="False"/>
+			<Button DockPanel.Dock="Top" Click="MoveDownClick" Content="Move D_own" Focusable="False"/>
 			<Button Name="test" DockPanel.Dock="Bottom" Click="TestClick" Content="_Test" Focusable="False"/>
 			<Label/>
 		</DockPanel>
