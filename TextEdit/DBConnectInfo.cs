@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Common;
+using MySql.Data.MySqlClient;
 
 namespace NeoEdit.TextEdit
 {
@@ -22,20 +24,28 @@ namespace NeoEdit.TextEdit
 			};
 		}
 
-		public string Test()
+		public DbConnection GetConnection()
 		{
 			switch (Type)
 			{
 				case DBType.MySQL:
-					try
 					{
-						var conn = new MySql.Data.MySqlClient.MySqlConnection(ConnectionString);
+						var conn = new MySqlConnection(ConnectionString);
 						conn.Open();
-						return null;
+						return conn;
 					}
-					catch (Exception ex) { return "Connection failed: " + ex.Message; }
 				default: throw new ArgumentException("Invalid database type");
 			}
+		}
+
+		public string Test()
+		{
+			try
+			{
+				GetConnection();
+				return null;
+			}
+			catch (Exception ex) { return "Connection failed: " + ex.Message; }
 		}
 	}
 }

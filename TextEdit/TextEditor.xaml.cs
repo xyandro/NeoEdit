@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -928,7 +929,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_Deepest: Command_Content_Select_Deepest(); break;
 				case TextEditCommand.Content_Select_MaxTopmost: Command_Content_Select_MaxTopmost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
-				case TextEditCommand.Database_Connect: Command_Database_Connect(); break;
+				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
+				case TextEditCommand.Database_Select: Command_Database_Select(); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -2623,8 +2625,36 @@ namespace NeoEdit.TextEdit
 			return DatabaseConnectDialog.Run(WindowParent);
 		}
 
-		internal void Command_Database_Connect()
+		DbConnection dbConnection;
+		internal void Command_Database_Connect(DatabaseConnectDialog.Result result)
 		{
+			if (dbConnection != null)
+			{
+				dbConnection.Dispose();
+				dbConnection = null;
+			}
+			dbConnection = result.DBConnectInfo.GetConnection();
+		}
+
+		Table RunDBSelect(string commandText)
+		{
+			using (var command = dbConnection.CreateCommand())
+			{
+				command.CommandText = commandText;
+				using (var reader = command.ExecuteReader())
+					return new Table(reader);
+			}
+		}
+
+		internal void Command_Database_Select()
+		{
+			if (dbConnection == null)
+			{
+				MessageBox.Show("No connection.");
+				return;
+			}
+
+			ReplaceSelections(GetSelectionStrings().AsParallel().AsOrdered().Select(str => RunDBSelect(str).ConvertToString(Table.TableType.TSV)).ToList());
 		}
 
 		internal void Command_Keys_Set(int index)

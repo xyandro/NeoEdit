@@ -175,6 +175,7 @@ namespace NeoEdit.TextEdit
 		Content_Select_MaxTopmost,
 		Content_Select_MaxDeepest,
 		[KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift)] Database_Connect,
+		Database_Select,
 		[KeyGesture(Key.K, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Keys,
 		[KeyGesture(Key.D1, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Values1,
 		[KeyGesture(Key.D2, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Values2,

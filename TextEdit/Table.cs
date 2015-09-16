@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 
 namespace NeoEdit.TextEdit
@@ -57,6 +58,19 @@ namespace NeoEdit.TextEdit
 			OriginalTableType = tableType;
 			ProcessInput(input, tableType);
 			SetTypesAndHeaders(hasHeaders);
+		}
+
+		public Table(DbDataReader reader)
+		{
+			Headers = Enumerable.Range(0, reader.FieldCount).Select(column => reader.GetName(column)).ToList();
+			AggregateTypes = Enumerable.Range(0, reader.FieldCount).Select(column => AggregateType.None).ToList();
+			Types = Enumerable.Range(0, reader.FieldCount).Select(column => reader.GetFieldType(column)).ToList();
+			HasHeaders = true;
+			OriginalTableType = TableType.TSV;
+
+			Rows = new List<List<object>>();
+			while (reader.Read())
+				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => value == DBNull.Value ? null : value).ToList());
 		}
 
 		public static TableType GuessTableType(string table)
