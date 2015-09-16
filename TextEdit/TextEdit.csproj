@@ -306,6 +306,7 @@
     </Compile>
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
+    <Compile Include="ResultsViewConverter.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />

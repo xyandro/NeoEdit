@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -17,16 +17,20 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public ObservableCollection<EditTableTab> Tabs { get { return UIHelper<EditTablesDialog>.GetPropValue<ObservableCollection<EditTableTab>>(this); } set { UIHelper<EditTablesDialog>.SetPropValue(this, value); } }
+		public ObservableCollectionEx<EditTableTab> Tabs { get { return UIHelper<EditTablesDialog>.GetPropValue<ObservableCollectionEx<EditTableTab>>(this); } set { UIHelper<EditTablesDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public EditTableTab CurrentTab { get { return UIHelper<EditTablesDialog>.GetPropValue<EditTableTab>(this); } set { UIHelper<EditTablesDialog>.SetPropValue(this, value); } }
 
 		static EditTablesDialog() { UIHelper<EditTablesDialog>.Register(); }
 
-		EditTablesDialog(List<string> tables)
+		EditTablesDialog(List<string> tablesStr, List<Table> tables)
 		{
 			InitializeComponent();
-			Tabs = new ObservableCollection<EditTableTab>(tables.Select((table, index) => new EditTableTab(this, String.Format("Table {0}", index + 1), table)));
+			Tabs = new ObservableCollectionEx<EditTableTab>();
+			if (tablesStr != null)
+				Tabs.AddRange(tablesStr.Select((table, index) => new EditTableTab(this, String.Format("Table {0}", index + 1), table, null)));
+			if (tables != null)
+				Tabs.AddRange(tables.Select((table, index) => new EditTableTab(this, String.Format("Table {0}", index + 1), null, table)));
 		}
 
 		bool ControlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != 0; } }
@@ -105,9 +109,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, List<string> table)
+		public static Result Run(Window parent, List<string> tableStr, List<Table> tables)
 		{
-			var dialog = new EditTablesDialog(table) { Owner = parent };
+			var dialog = new EditTablesDialog(tableStr, tables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

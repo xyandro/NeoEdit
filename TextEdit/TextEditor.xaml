@@ -5,37 +5,70 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
+	xmlns:textEdit="clr-namespace:NeoEdit.TextEdit"
 	mc:Ignorable="d" Focusable="True" FocusVisualStyle="{x:Null}"
 	d:DesignWidth="300" d:DesignHeight="300" Background="White">
 
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="0"/>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="5"/>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="5"/>
-			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="5"/>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="5"/>
-			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="{Binding Results.Count, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] == 0 ? 0 : 5'}"/>
+			<RowDefinition Height="{Binding Results.Count, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] == 0 ? 0 : 500'}"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Canvas Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Background="LightGray"/>
-		<guiControls:RenderCanvas x:Name="bookmarks" Grid.Row="1" Grid.Column="1"/>
+		<Grid Grid.Row="0" Grid.Column="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="0"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="5"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="5"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="5"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="5"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
 
-		<guiControls:RenderCanvas x:Name="canvas" Grid.Row="1" Grid.Column="3" Background="Transparent" ClipToBounds="True"/>
+			<Canvas Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Background="LightGray"/>
+			<guiControls:RenderCanvas x:Name="bookmarks" Grid.Row="1" Grid.Column="1"/>
 
-		<ScrollBar Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="5" Value="{Binding yScrollValue, ElementName=self}"/>
-		<ScrollBar Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
+			<guiControls:RenderCanvas x:Name="canvas" Grid.Row="1" Grid.Column="3" Background="Transparent" ClipToBounds="True"/>
 
-		<Rectangle Grid.Row="3" Grid.Column="5" Fill="LightGray" Focusable="False"/>
+			<ScrollBar Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="5" Value="{Binding yScrollValue, ElementName=self}"/>
+			<ScrollBar Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
 
-		<StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Background="LightGray" Focusable="False">
+			<Rectangle Grid.Row="3" Grid.Column="5" Fill="LightGray" Focusable="False"/>
+		</Grid>
+
+		<GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Focusable="False"/>
+
+		<DataGrid Grid.Row="2" Grid.Column="0" ItemsSource="{Binding Results, ElementName=self}" IsReadOnly="True" CanUserResizeRows="True" CanUserSortColumns="False" RowHeaderWidth="20" AutoGenerateColumns="False">
+			<DataGrid.Columns>
+				<DataGridTemplateColumn Width="*">
+					<DataGridTemplateColumn.Header>
+						<StackPanel Orientation="Horizontal">
+							<Label Content="Results:"/>
+							<Button Click="ResultsEditClick" Content="Edit" Focusable="False"/>
+							<Button Click="ResultsCopyClick" Content="Copy" Focusable="False"/>
+						</StackPanel>
+					</DataGridTemplateColumn.Header>
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<ListView ItemsSource="{Binding Rows}" View="{Binding Converter={textEdit:ResultsViewConverter}}" Height="200"/>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+		
+		<StatusBar Grid.Row="3" Grid.Column="0" Background="LightGray" Focusable="False">
 
 			<StatusBarItem>
 				<TextBlock Text="Line"/>

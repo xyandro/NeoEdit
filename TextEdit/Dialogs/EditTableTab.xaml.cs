@@ -70,17 +70,19 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		readonly EditTablesDialog parent;
-		readonly string input;
+		readonly string stringInput;
+		readonly Table tableInput;
 		Table inputTable, joinTable;
 		List<JoinInfo> joinInfos = new List<JoinInfo>();
 		List<int> groupByColumns = new List<int>();
 		List<DisplayColumn> displayColumns = new List<DisplayColumn>();
 
-		internal EditTableTab(EditTablesDialog parent, string tabName, string input)
+		internal EditTableTab(EditTablesDialog parent, string tabName, string stringInput, Table tableInput)
 		{
 			this.parent = parent;
 			Header = tabName;
-			this.input = input;
+			this.stringInput = stringInput;
+			this.tableInput = tableInput;
 			InitializeComponent();
 			var tableTypes = Enum.GetValues(typeof(Table.TableType)).Cast<Table.TableType>().ToList();
 			inputType.ItemsSource = tableTypes.Where(value => value != Table.TableType.None).ToList();
@@ -95,7 +97,11 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (inInputUpdated)
 				return;
 
-			inputTable = new Table(input, InputTableType, calcHasHeaders ? default(bool?) : InputHasHeaders);
+			if (tableInput != null)
+				inputTable = tableInput;
+			else
+				inputTable = new Table(stringInput, InputTableType, calcHasHeaders ? default(bool?) : InputHasHeaders);
+
 			inInputUpdated = true;
 			InputTableType = inputTable.OriginalTableType;
 			InputHasHeaders = inputTable.HasHeaders;
@@ -173,7 +179,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				if (groupByColumns.Contains(displayColumn.InputColumn))
 					columnName.Children.Add(new Path { Fill = Brushes.Black, StrokeThickness = 1, Data = aggregate, VerticalAlignment = VerticalAlignment.Center });
 
-				columnName.Children.Add(new Label { Content = Table.Headers[index] });
+				columnName.Children.Add(new Label { Content = Table.Headers[index].Replace("_", "__") });
 
 				columnHeader.Children.Add(columnName);
 				columnHeader.Children.Add(new Label { Content = Table.Types[index].Name, HorizontalAlignment = HorizontalAlignment.Center });

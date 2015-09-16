@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace NeoEdit.TextEdit
 {
-	class Table
+	public class Table
 	{
-		internal enum TableType { None, TSV, CSV, Columns }
+		public enum TableType { None, TSV, CSV, Columns }
 		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
 		[Flags]
 		public enum AggregateType
@@ -278,7 +278,7 @@ namespace NeoEdit.TextEdit
 			return str;
 		}
 
-		public string ConvertToString(TableType tableType = TableType.Columns, bool hasHeaders = true, string ending = "\r\n")
+		public string ConvertToString(string ending, TableType tableType = TableType.TSV, bool hasHeaders = true)
 		{
 			var result = new List<List<string>>();
 			if (hasHeaders)

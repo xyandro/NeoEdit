@@ -100,6 +100,8 @@ namespace NeoEdit.TextEdit
 		public ObservableCollectionEx<string> Clipboard { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollectionEx<string>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool ShareClipboard { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public ObservableCollectionEx<Table> Results { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollectionEx<Table>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditTabs TabsParent { get { return UIHelper.FindParent<TextEditTabs>(GetValue(Tabs.TabParentProperty) as Tabs); } }
 		Window WindowParent { get { return UIHelper.FindParent<Window>(this); } }
@@ -224,6 +226,8 @@ namespace NeoEdit.TextEdit
 			Searches = new RangeList(SearchesInvalidated);
 			Regions = new RangeList(RegionsInvalidated);
 			Bookmarks = new RangeList(BookmarksInvalidated);
+
+			Results = new ObservableCollectionEx<Table>();
 
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 			canvasRenderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
@@ -931,6 +935,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_Select: Command_Database_Select(); break;
+				case TextEditCommand.Database_ClearResults: Command_Database_ClearResults(); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -1424,7 +1429,7 @@ namespace NeoEdit.TextEdit
 		internal EditTablesDialog.Result Command_Edit_Table_Edit_Dialog()
 		{
 			SetTableSelection();
-			return EditTablesDialog.Run(WindowParent, GetSelectionStrings());
+			return EditTablesDialog.Run(WindowParent, GetSelectionStrings(), null);
 		}
 
 		internal void Command_Edit_Table_Edit(EditTablesDialog.Result result)
@@ -1447,7 +1452,7 @@ namespace NeoEdit.TextEdit
 
 				outputTable = outputTable.Aggregate(tableResult.GroupByColumns, tableResult.AggregateColumns);
 				outputTable = outputTable.Sort(tableResult.SortColumns);
-				output.Add(outputTable.ConvertToString(tableResult.OutputTableType, tableResult.OutputHasHeaders, Data.DefaultEnding));
+				output.Add(outputTable.ConvertToString(Data.DefaultEnding, tableResult.OutputTableType, tableResult.OutputHasHeaders));
 			}
 
 			ReplaceSelections(output);
@@ -2654,7 +2659,13 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
-			ReplaceSelections(GetSelectionStrings().AsParallel().AsOrdered().Select(str => RunDBSelect(str).ConvertToString(Table.TableType.TSV)).ToList());
+			Results.Clear();
+			Results.AddRange(GetSelectionStrings().Select(str => RunDBSelect(str)));
+		}
+
+		internal void Command_Database_ClearResults()
+		{
+			Results.Clear();
 		}
 
 		internal void Command_Keys_Set(int index)
@@ -3899,6 +3910,35 @@ namespace NeoEdit.TextEdit
 			LineEnding = Data.OnlyEnding;
 
 			canvasRenderTimer.Start();
+		}
+
+		void ResultsEditClick(object sender, RoutedEventArgs e)
+		{
+			var inputs = Results.ToList();
+			var result = EditTablesDialog.Run(WindowParent, null, inputs);
+			var outputs = new List<Table>();
+			for (var ctr = 0; ctr < result.Results.Count; ++ctr)
+			{
+				var tableResult = result.Results[ctr];
+				if (tableResult.OutputTableType == Table.TableType.None)
+					continue;
+
+				var outputTable = inputs[ctr];
+				foreach (var joinInfo in tableResult.JoinInfos)
+					outputTable = Table.Join(outputTable, inputs[joinInfo.RightTable], joinInfo.LeftColumn, joinInfo.RightColumn, joinInfo.JoinType);
+
+				outputTable = outputTable.Aggregate(tableResult.GroupByColumns, tableResult.AggregateColumns);
+				outputTable = outputTable.Sort(tableResult.SortColumns);
+				outputs.Add(outputTable);
+			}
+
+			Results.Clear();
+			Results.AddRange(outputs);
+		}
+
+		void ResultsCopyClick(object sender, RoutedEventArgs e)
+		{
+			SetClipboard(Results.Select(result => result.ConvertToString(Data.DefaultEnding)).ToList());
 		}
 
 		public override string ToString()

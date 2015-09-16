@@ -58,6 +58,11 @@ namespace NeoEdit.Common
 			Notify();
 		}
 
+		public int IndexOf(T item)
+		{
+			return list.IndexOf(item);
+		}
+
 		void Notify()
 		{
 			if (CollectionChanged != null)
