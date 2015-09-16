@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using MySql.Data.MySqlClient;
 using NeoEdit.Common.Transform;
 
@@ -13,6 +14,7 @@ namespace NeoEdit.TextEdit
 			None,
 			MySQL,
 			MSSQL,
+			SQLite,
 		}
 
 		public string Name { get; set; }
@@ -32,6 +34,7 @@ namespace NeoEdit.TextEdit
 				{
 					case DBType.MySQL: return new MySqlConnectionStringBuilder(ConnectionString);
 					case DBType.MSSQL: return new SqlConnectionStringBuilder(ConnectionString);
+					case DBType.SQLite: return new SQLiteConnectionStringBuilder(ConnectionString);
 					default: throw new ArgumentException("Invalid database type");
 				}
 			}
@@ -50,6 +53,7 @@ namespace NeoEdit.TextEdit
 			{
 				case DBType.MySQL: conn = new MySqlConnection(ConnectionString); break;
 				case DBType.MSSQL: conn = new SqlConnection(ConnectionString); break;
+				case DBType.SQLite: conn = new SQLiteConnection(ConnectionString); break;
 				default: throw new ArgumentException("Invalid database type");
 			}
 			conn.Open();

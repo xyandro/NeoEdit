@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Common;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 
@@ -64,7 +66,13 @@ namespace NeoEdit.TextEdit.Dialogs
 			var defaultBuilder = new DBConnectInfo { Type = Database }.ConnectionStringBuilder;
 			var baseProps = new HashSet<string>(typeof(DbConnectionStringBuilder).GetProperties().Select(prop => prop.Name));
 			var props = itemBuilder.GetType().GetProperties().Where(prop => !baseProps.Contains(prop.Name)).Where(prop => prop.CanWrite).Where(prop => prop.GetIndexParameters().Length == 0).ToDictionary(prop => prop.Name);
-			Params = new ObservableCollection<DBParam>(props.Values.Select(prop => new DBParam(prop.Name, prop.GetValue(itemBuilder), prop.GetValue(defaultBuilder), prop.PropertyType)).OrderBy(dbParam => (dbParam.Value ?? "").Equals(dbParam.Default ?? "")));
+			Params = new ObservableCollection<DBParam>(props.Values.Select(prop =>
+			{
+				object itemValue = null, defaultValue = null;
+				try { itemValue = prop.GetValue(itemBuilder); } catch { }
+				try { defaultValue = prop.GetValue(defaultBuilder); } catch { }
+				return new DBParam(prop.Name, itemValue, defaultValue, prop.PropertyType);
+			}).OrderBy(dbParam => (dbParam.Value ?? "").Equals(dbParam.Default ?? "")));
 		}
 
 		DBConnectInfo Result
@@ -124,11 +132,13 @@ namespace NeoEdit.TextEdit.Dialogs
 				checkbox.SetBinding(CheckBox.IsCheckedProperty, binding);
 				return new DataTemplate { VisualTree = checkbox };
 			}
-			if ((dbParam.Type == typeof(string)) || (dbParam.Type == typeof(int)) || (dbParam.Type == typeof(int?)) || (dbParam.Type == typeof(uint)))
+			if ((dbParam.Type == typeof(string)) || (dbParam.Type == typeof(int)) || (dbParam.Type == typeof(int?)) || (dbParam.Type == typeof(uint)) || (dbParam.Type == typeof(byte[])))
 			{
 				var textbox = new FrameworkElementFactory(typeof(TextBox));
 				textbox.SetValue(TextBox.IsReadOnlyProperty, Default);
 				textbox.SetValue(TextBox.BorderThicknessProperty, new Thickness(0));
+				if (dbParam.Type == typeof(byte[]))
+					binding.Converter = new HexConverter();
 				textbox.SetBinding(TextBox.TextProperty, binding);
 				return new DataTemplate { VisualTree = textbox };
 			}
@@ -137,8 +147,12 @@ namespace NeoEdit.TextEdit.Dialogs
 				var combobox = new FrameworkElementFactory(typeof(ComboBox));
 				combobox.SetValue(ComboBox.IsEnabledProperty, !Default);
 				combobox.SetBinding(ComboBox.SelectedValueProperty, binding);
-				var values = Enum.GetValues(dbParam.Type).Cast<object>().Distinct().ToList();
+				var values = Enum.GetValues(dbParam.Type).Cast<object>().Distinct().ToDictionary(value => value.ToString(), value => value);
+				if (!values.ContainsValue(dbParam.Default))
+					values["<NONE>"] = dbParam.Default;
 				combobox.SetValue(ComboBox.ItemsSourceProperty, values);
+				combobox.SetValue(ComboBox.DisplayMemberPathProperty, "Key");
+				combobox.SetValue(ComboBox.SelectedValuePathProperty, "Value");
 				return new DataTemplate { VisualTree = combobox };
 			}
 			if (dbParam.Type == typeof(object))
@@ -150,6 +164,37 @@ namespace NeoEdit.TextEdit.Dialogs
 			}
 
 			return base.SelectTemplate(item, container);
+		}
+	}
+
+	class HexConverter : IValueConverter
+	{
+		string lastValue = null;
+
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var bytes = value as byte[];
+			if (bytes == null)
+				return null;
+
+			if (lastValue == null)
+				lastValue = Coder.BytesToString(bytes, Coder.CodePage.Hex);
+			return lastValue;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			lastValue = value as string;
+			if (String.IsNullOrEmpty(lastValue))
+			{
+				lastValue = null;
+				return null;
+			}
+
+			var bytes = Coder.TryStringToBytes(lastValue, Coder.CodePage.Hex);
+			if (bytes == null)
+				return DependencyProperty.UnsetValue;
+			return bytes;
 		}
 	}
 }

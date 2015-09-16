@@ -24,7 +24,6 @@ namespace NeoEdit.TextEdit.Dialogs
 		DBConnectInfo DBConnectInfo { get { return UIHelper<DatabaseConnectDialog>.GetPropValue<DBConnectInfo>(this); } set { UIHelper<DatabaseConnectDialog>.SetPropValue(this, value); } }
 
 		static DatabaseConnectDialog() { UIHelper<DatabaseConnectDialog>.Register(); }
-
 		readonly string dbConfigFile = Path.Combine(Path.GetDirectoryName(typeof(TextEditTabs).Assembly.Location), "DBConfig.xml");
 
 		DatabaseConnectDialog()
@@ -45,6 +44,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			if (DBConnectInfo == null)
 				return;
+
 			var result = EditDatabaseConnectDialog.Run(Owner, DBConnectInfo);
 			if (result != null)
 				DBConnectInfos[DBConnectInfos.IndexOf(DBConnectInfo)] = result;
@@ -54,6 +54,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			if (DBConnectInfo == null)
 				return;
+
 			if (new Message
 			{
 				Title = "Confirm",
@@ -70,6 +71,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			if (DBConnectInfo == null)
 				return;
+
 			var oldIndex = DBConnectInfos.IndexOf(DBConnectInfo);
 			var newIndex = Math.Max(0, oldIndex - 1);
 			if (oldIndex != newIndex)
@@ -80,6 +82,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			if (DBConnectInfo == null)
 				return;
+
 			var oldIndex = DBConnectInfos.IndexOf(DBConnectInfo);
 			var newIndex = Math.Min(DBConnectInfos.Count - 1, oldIndex + 1);
 			if (oldIndex != newIndex)
@@ -88,6 +91,9 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void TestClick(object sender, RoutedEventArgs e)
 		{
+			if (DBConnectInfo == null)
+				return;
+
 			new Message
 			{
 				Title = "Information",

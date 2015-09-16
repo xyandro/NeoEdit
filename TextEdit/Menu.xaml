@@ -331,8 +331,8 @@
 	</MenuItem>
 	<MenuItem Header="D_atabase">
 		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
-		<textEdit:TextEditMenuItem Header="_Select" CommandEnum="Database_Select"/>
-		<textEdit:TextEditMenuItem Header="Clear _Results" CommandEnum="Database_ClearResults"/>
+		<textEdit:TextEditMenuItem Header="_Execute" CommandEnum="Database_Execute"/>
+		<textEdit:TextEditMenuItem Header="C_lear Results" CommandEnum="Database_ClearResults"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">

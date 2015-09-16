@@ -35,6 +35,9 @@
     <None Include="$(SolutionDir)\Lib\$(Platform)\git2-e0902fb.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="$(SolutionDir)\Lib\$(Platform)\SQLite.Interop.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Reference Include="Antlr4.Runtime">
       <HintPath>$(SolutionDir)\Lib\ANTLR\Antlr4.Runtime.dll</HintPath>
     </Reference>
@@ -55,6 +58,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+        <HintPath>$(SolutionDir)\Lib\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />

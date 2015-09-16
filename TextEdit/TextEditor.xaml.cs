@@ -934,7 +934,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_MaxTopmost: Command_Content_Select_MaxTopmost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
-				case TextEditCommand.Database_Select: Command_Database_Select(); break;
+				case TextEditCommand.Database_Execute: Command_Database_Execute(); break;
 				case TextEditCommand.Database_ClearResults: Command_Database_ClearResults(); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
@@ -2651,7 +2651,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Database_Select()
+		internal void Command_Database_Execute()
 		{
 			if (dbConnection == null)
 			{
@@ -2659,8 +2659,10 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
+			var results = GetSelectionStrings().Select(str => RunDBSelect(str)).Where(table => table.Headers.Count != 0).ToList();
+
 			Results.Clear();
-			Results.AddRange(GetSelectionStrings().Select(str => RunDBSelect(str)));
+			Results.AddRange(results);
 		}
 
 		internal void Command_Database_ClearResults()

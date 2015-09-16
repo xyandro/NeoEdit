@@ -30,19 +30,19 @@
 		<ComboBox Name="type" Grid.Row="1" Grid.Column="1" Text="{Binding Database, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Connection:" Target="{Binding ElementName=connection}" HorizontalAlignment="Right"/>
-		<DataGrid Name="connection" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Params, ElementName=self}" RowHeaderWidth="0" Height="200" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+		<DataGrid Name="connection" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Params, ElementName=self}" RowHeaderWidth="0" Height="200" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
 			<DataGrid.Columns>
-				<DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
+				<DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
 				<DataGridTemplateColumn Header="Value" Width="*" CellTemplateSelector="{StaticResource dbParamTemplateSelectorValue}"/>
-				<DataGridTemplateColumn Header="Default" IsReadOnly="True" Width="*" CellTemplateSelector="{StaticResource dbParamTemplateSelectorDefault}"/>
+				<DataGridTemplateColumn Header="Default" Width="*" CellTemplateSelector="{StaticResource dbParamTemplateSelectorDefault}"/>
 			</DataGrid.Columns>
 		</DataGrid>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
-			<Button Name="testButton" Click="TestClick" DockPanel.Dock="Bottom" Content="_Test" Width="{Binding ActualWidth, ElementName=okButton}"/>
+		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
+			<Button Name="testButton" Click="TestClick" Content="_Test" Width="{Binding ActualWidth, ElementName=okButton}"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" Rows="1">
 			<Button Name="okButton" Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
