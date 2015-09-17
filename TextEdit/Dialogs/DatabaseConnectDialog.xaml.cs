@@ -98,7 +98,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			new Message
 			{
 				Title = "Information",
-				Text = DBConnectInfo.Test() ?? "Connection successful",
+				Text = DBConnectInfo.Test() ?? "Connection successful.",
 				Options = Message.OptionsEnum.Ok,
 				DefaultAccept = Message.OptionsEnum.Ok,
 				DefaultCancel = Message.OptionsEnum.Ok,

@@ -177,6 +177,7 @@ namespace NeoEdit.TextEdit
 		Database_Connect,
 		[KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift)] Database_Execute,
 		Database_ClearResults,
+		Database_Examine,
 		[KeyGesture(Key.K, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Keys,
 		[KeyGesture(Key.D1, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Values1,
 		[KeyGesture(Key.D2, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Values2,

@@ -164,6 +164,13 @@
     <Compile Include="Dialogs\EditTableTab.xaml.cs">
       <DependentUpon>EditTableTab.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ExamineDatabaseDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExamineDatabaseDialog.xaml.cs">
+      <DependentUpon>ExamineDatabaseDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ExpressionHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

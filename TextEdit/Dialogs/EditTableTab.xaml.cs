@@ -291,6 +291,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		void JoinByColumn(int inputColumn)
 		{
 			var joinInfo = joinedCols.ContainsKey(inputColumn) ? joinedCols[inputColumn].LastOrDefault() : null;
+			int joinTable, joinColumn;
+			var hasJoin = parent.GetJoin(out joinTable, out joinColumn);
 
 			if (ShiftDown)
 			{
@@ -301,8 +303,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				return;
 			}
 
-			int joinTable, joinColumn;
-			if (!parent.GetJoin(out joinTable, out joinColumn))
+			if (!hasJoin)
 			{
 				if (joinInfo != null)
 				{

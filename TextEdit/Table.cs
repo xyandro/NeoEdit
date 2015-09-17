@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 
@@ -71,6 +72,16 @@ namespace NeoEdit.TextEdit
 			Rows = new List<List<object>>();
 			while (reader.Read())
 				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => value == DBNull.Value ? null : value).ToList());
+		}
+
+		public Table(DataTable table)
+		{
+			Headers = table.Columns.Cast<DataColumn>().Select(column => column.ColumnName).ToList();
+			AggregateTypes = Headers.Select(column => AggregateType.None).ToList();
+			Types = table.Columns.Cast<DataColumn>().Select(column => column.DataType).ToList();
+			HasHeaders = true;
+			OriginalTableType = TableType.TSV;
+			Rows = table.AsEnumerable().Select(row => Headers.Select((header, index) => row[index]).ToList()).ToList();
 		}
 
 		public static TableType GuessTableType(string table)

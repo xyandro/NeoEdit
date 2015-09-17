@@ -334,6 +334,7 @@
 		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
 		<textEdit:TextEditMenuItem Header="_Execute" CommandEnum="Database_Execute"/>
 		<textEdit:TextEditMenuItem Header="C_lear Results" CommandEnum="Database_ClearResults"/>
+		<textEdit:TextEditMenuItem Header="E_xamine" CommandEnum="Database_Examine"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">

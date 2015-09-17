@@ -725,6 +725,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Descendants); break;
 				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Self); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
+				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
 				default: return true;
@@ -2651,13 +2652,15 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Database_Execute()
+		void ValidateConnection()
 		{
 			if (dbConnection == null)
-			{
-				MessageBox.Show("No connection.");
-				return;
-			}
+				throw new Exception("No connection.");
+		}
+
+		internal void Command_Database_Execute()
+		{
+			ValidateConnection();
 
 			var results = GetSelectionStrings().Select(str => RunDBSelect(str)).Where(table => table.Headers.Count != 0).ToList();
 
@@ -2668,6 +2671,12 @@ namespace NeoEdit.TextEdit
 		internal void Command_Database_ClearResults()
 		{
 			Results.Clear();
+		}
+
+		internal void Command_Database_Examine_Dialog()
+		{
+			ValidateConnection();
+			ExamineDatabaseDialog.Run(WindowParent, dbConnection);
 		}
 
 		internal void Command_Keys_Set(int index)
