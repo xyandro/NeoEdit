@@ -8,7 +8,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
+    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Commands.cs" />
@@ -43,11 +43,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GUI\GUI.csproj">
+    <ProjectReference Include="$(SolutionDir)\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Win32\Win32.vcxproj">
+    <ProjectReference Include="$(SolutionDir)\Win32\Win32.vcxproj">
       <Project>{95a660dc-fbfe-4560-a433-0b024494b213}</Project>
       <Name>Win32</Name>
     </ProjectReference>
