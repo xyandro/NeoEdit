@@ -74,6 +74,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		readonly Table tableInput;
 		Table inputTable, joinTable;
 		List<JoinInfo> joinInfos = new List<JoinInfo>();
+		Dictionary<int, List<JoinInfo>> joinedCols = new Dictionary<int, List<JoinInfo>>();
 		List<int> groupByColumns = new List<int>();
 		List<DisplayColumn> displayColumns = new List<DisplayColumn>();
 
@@ -116,8 +117,19 @@ namespace NeoEdit.TextEdit.Dialogs
 		void JoinData()
 		{
 			joinTable = inputTable;
+			joinedCols = new Dictionary<int, List<JoinInfo>>();
 			foreach (var joinInfo in joinInfos)
+			{
+				var rightColumn = joinTable.NumColumns + joinInfo.RightColumn;
+				if (!joinedCols.ContainsKey(joinInfo.LeftColumn))
+					joinedCols[joinInfo.LeftColumn] = new List<JoinInfo>();
+				joinedCols[joinInfo.LeftColumn].Add(joinInfo);
+				if (!joinedCols.ContainsKey(rightColumn))
+					joinedCols[rightColumn] = new List<JoinInfo>();
+				joinedCols[rightColumn].Add(joinInfo);
+
 				joinTable = Table.Join(joinTable, parent.GetTab(joinInfo.RightTable).inputTable, joinInfo.LeftColumn, joinInfo.RightColumn, joinInfo.JoinType);
+			}
 			displayColumns = Enumerable.Range(0, joinTable.NumColumns).Select(column => new DisplayColumn(column, Table.AggregateType.None)).ToList();
 			AggregateData();
 		}
@@ -156,13 +168,18 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 		void SetupLayout()
 		{
+			var random = new Random(19);
+			var brushProps = typeof(Brushes).GetProperties().OrderBy(brush => random.Next()).Select(prop => prop.GetValue(null, null) as Brush);
+			var brushes = joinInfos.Zip(brushProps, (joinInfo, brush) => new { joinInfo, brush }).ToDictionary(obj => obj.joinInfo, obj => obj.brush);
+
 			var currentColumnName = "";
 			var currentColumnIndex = 0;
 			var currentType = Table.AggregateType.None;
 			if ((dataGrid.CurrentCell != null) && (dataGrid.CurrentCell.IsValid))
 			{
 				var column = dataGrid.CurrentCell.Column as AggregateColumn;
-				currentColumnName = joinTable.Headers[column.DisplayColumn.InputColumn];
+				if (column.DisplayColumn.InputColumn < joinTable.Headers.Count)
+					currentColumnName = joinTable.Headers[column.DisplayColumn.InputColumn];
 				currentColumnIndex = dataGrid.Columns.IndexOf(column);
 				currentType = column.DisplayColumn.AggregateType;
 			}
@@ -184,8 +201,9 @@ namespace NeoEdit.TextEdit.Dialogs
 				columnHeader.Children.Add(columnName);
 				columnHeader.Children.Add(new Label { Content = Table.Types[index].Name, HorizontalAlignment = HorizontalAlignment.Center });
 
-				foreach (var joinInfo in joinInfos.Where(joinInfo => joinInfo.LeftColumn == displayColumn.InputColumn))
-					columnName.Children.Add(new Path { Fill = Brushes.Black, Stroke = Brushes.Gray, StrokeThickness = 1, Data = joinGeometries[joinInfo.JoinType], VerticalAlignment = VerticalAlignment.Center });
+				if (joinedCols.ContainsKey(displayColumn.InputColumn))
+					foreach (var joinInfo in joinedCols[displayColumn.InputColumn])
+						columnName.Children.Add(new Path { Fill = brushes[joinInfo], Stroke = Brushes.Black, StrokeThickness = 1, Data = joinGeometries[joinInfo.JoinType], VerticalAlignment = VerticalAlignment.Center });
 
 				if (displayColumn.SortOrder.HasValue)
 				{
@@ -272,9 +290,13 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void JoinByColumn(int inputColumn)
 		{
+			var joinInfo = joinedCols.ContainsKey(inputColumn) ? joinedCols[inputColumn].LastOrDefault() : null;
+
 			if (ShiftDown)
 			{
-				joinInfos = joinInfos.Where(joinInfo => joinInfo.LeftColumn != inputColumn).ToList();
+				if (joinInfo == null)
+					return;
+				joinInfos.Remove(joinInfo);
 				JoinData();
 				return;
 			}
@@ -282,7 +304,6 @@ namespace NeoEdit.TextEdit.Dialogs
 			int joinTable, joinColumn;
 			if (!parent.GetJoin(out joinTable, out joinColumn))
 			{
-				var joinInfo = joinInfos.LastOrDefault(joinData => joinData.LeftColumn == inputColumn);
 				if (joinInfo != null)
 				{
 					var joinTypes = Enum.GetValues(typeof(Table.JoinType)).Cast<Table.JoinType>().ToList();
