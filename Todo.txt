@@ -23,7 +23,6 @@ Time zones
 Undo revert
 Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
-Save macros to user-based directory
 
 View:
 Update as new lines are added

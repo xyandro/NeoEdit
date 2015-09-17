@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
@@ -24,7 +25,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		DBConnectInfo DBConnectInfo { get { return UIHelper<DatabaseConnectDialog>.GetPropValue<DBConnectInfo>(this); } set { UIHelper<DatabaseConnectDialog>.SetPropValue(this, value); } }
 
 		static DatabaseConnectDialog() { UIHelper<DatabaseConnectDialog>.Register(); }
-		readonly string dbConfigFile = Path.Combine(Path.GetDirectoryName(typeof(TextEditTabs).Assembly.Location), "DBConfig.xml");
+		readonly string dbConfigFile = Path.Combine(Helpers.NeoEditAppData, "DBConfig.xml");
 
 		DatabaseConnectDialog()
 		{

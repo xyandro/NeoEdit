@@ -249,7 +249,7 @@ namespace NeoEdit.TextEdit
 			recordingMacro = new Macro();
 		}
 
-		string macroDirectory = Path.Combine(Path.GetDirectoryName(typeof(TextEditTabs).Assembly.Location), "Macro");
+		readonly string macroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
 		void Command_Macro_Record_StopRecording(string fileName = null)
 		{
 			if (recordingMacro == null)

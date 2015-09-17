@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -239,7 +240,7 @@ namespace NeoEdit.Common
 		public static void PartitionedParallelForEach(int count, int partitionSize, Action<int, int> action)
 		{
 			var chunks = new List<Tuple<int, int>>();
-			for (var start = 0; start < count; )
+			for (var start = 0; start < count;)
 			{
 				var end = Math.Min(count, start + partitionSize);
 				chunks.Add(Tuple.Create(start, end));
@@ -251,7 +252,7 @@ namespace NeoEdit.Common
 		public static List<TResult> PartitionedParallelForEach<TResult>(int count, int partitionSize, Action<int, int, List<TResult>> action)
 		{
 			var chunks = new List<Tuple<int, int>>();
-			for (var start = 0; start < count; )
+			for (var start = 0; start < count;)
 			{
 				var end = Math.Min(count, start + partitionSize);
 				chunks.Add(Tuple.Create(start, end));
@@ -280,5 +281,9 @@ namespace NeoEdit.Common
 
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
+
+		public static string NeoEditAppData { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NeoEdit"); } }
+
+		static Helpers() { Directory.CreateDirectory(NeoEditAppData); }
 	}
 }
