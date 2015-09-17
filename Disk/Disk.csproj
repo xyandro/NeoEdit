@@ -27,7 +27,7 @@
     <Message Text="Compressing MagicZlib1Dll" Importance="High" />
     <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\zlib1.dll.gz&quot; &quot;$(ProjectDir)Magic\zlib1.dll&quot;" />
   </Target>
-  <ItemGroup Condition="'$(BuildDisk)' != ''">
+  <ItemGroup>
     <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
@@ -98,7 +98,7 @@
     <Compile Include="VCS\SvnCache.cs" />
     <Compile Include="VCS\VCSCache.cs" />
   </ItemGroup>
-  <ItemGroup Condition="'$(BuildDisk)' != ''">
+  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>

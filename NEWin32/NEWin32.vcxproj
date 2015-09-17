@@ -6,7 +6,7 @@
     <RootNamespace>NEWin32</RootNamespace>
     <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
-  <ItemGroup Condition="'$(BuildNEWin32)' != ''">
+  <ItemGroup>
     <Image Include="..\Photoshop\NeoEdit.ico" />
     <ClInclude Include="Resource.h" />
     <ResourceCompile Include="Resource.rc" />
@@ -16,7 +16,7 @@
     <ClInclude Include="stdafx.h" />
     <ClCompile Include="Win32.cpp" />
   </ItemGroup>
-  <ItemGroup Condition="'$(BuildNEWin32)' != ''">
+  <ItemGroup>
     <ProjectReference Include="..\Win32Lib\Win32Lib.vcxproj">
       <Project>{785c1014-852f-4ec1-a2d6-cdb52880b7ad}</Project>
     </ProjectReference>

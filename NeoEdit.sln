@@ -26,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-4
 		NeoEdit.csproj2.props = NeoEdit.csproj2.props
 		NeoEdit.vcxproj.props = NeoEdit.vcxproj.props
 		NeoEdit.vcxproj2.props = NeoEdit.vcxproj2.props
-		Targets.props = Targets.props
 		Todo.txt = Todo.txt
 	EndProjectSection
 EndProject

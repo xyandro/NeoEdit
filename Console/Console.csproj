@@ -7,7 +7,7 @@
     <AssemblyName>NeoEdit.Console</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  <ItemGroup Condition="'$(BuildConsole)' != ''">
+  <ItemGroup>
     <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
@@ -42,7 +42,7 @@
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup Condition="'$(BuildConsole)' != ''">
+  <ItemGroup>
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>

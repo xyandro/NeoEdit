@@ -7,7 +7,7 @@
     <AssemblyName>NeoEdit.HexEdit</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  <ItemGroup Condition="'$(BuildHexEdit)' != ''">
+  <ItemGroup>
     <Compile Include="..\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
@@ -124,7 +124,7 @@
     </Compile>
     <Compile Include="UndoRedo.cs" />
   </ItemGroup>
-  <ItemGroup Condition="'$(BuildHexEdit)' != ''">
+  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>

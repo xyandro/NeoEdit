@@ -2,34 +2,16 @@
 using System.IO;
 using System.Linq;
 using NeoEdit.Common.Transform;
-#if BuildConsole
 using NeoEdit.Console;
-#endif
-#if BuildDisk
 using NeoEdit.Disk;
-#endif
 using NeoEdit.GUI.About;
-#if BuildHandles
 using NeoEdit.Handles;
-#endif
-#if BuildHexEdit
 using NeoEdit.HexEdit;
-#endif
-#if BuildProcesses
 using NeoEdit.Processes;
-#endif
-#if BuildRegistry
 using NeoEdit.Registry;
-#endif
-#if BuildSystemInfo
 using NeoEdit.SystemInfo;
-#endif
-#if BuildTextEdit
 using NeoEdit.TextEdit;
-#endif
-#if BuildTextView
 using NeoEdit.TextView;
-#endif
 
 namespace NeoEdit
 {
@@ -47,9 +29,7 @@ namespace NeoEdit
 	{
 		public override void Execute()
 		{
-#if BuildConsole
 			new ConsoleTabs();
-#endif
 		}
 	}
 
@@ -59,9 +39,7 @@ namespace NeoEdit
 		public ConsoleRunnerParam(string[] paramList) { ParamList = paramList; }
 		public override void Execute()
 		{
-#if BuildConsole
 			new Console.ConsoleRunner(ParamList);
-#endif
 		}
 	}
 
@@ -71,9 +49,7 @@ namespace NeoEdit
 		public DiffParam(string file1, string file2) { File1 = file1; File2 = file2; }
 		public override void Execute()
 		{
-#if BuildTextEdit
 			TextEditTabs.CreateDiff(File1, File2);
-#endif
 		}
 	}
 
@@ -83,9 +59,7 @@ namespace NeoEdit
 		public DiskParam(string location) { Location = location; }
 		public override void Execute()
 		{
-#if BuildDisk
 			new DiskTabs(Location);
-#endif
 		}
 	}
 
@@ -127,9 +101,7 @@ namespace NeoEdit
 		public HandlesParam(int? pid) { PID = pid; }
 		public override void Execute()
 		{
-#if BuildHandles
 			new HandlesWindow(PID);
-#endif
 		}
 	}
 
@@ -139,10 +111,8 @@ namespace NeoEdit
 		public HexDumpParam(List<string> files) { Files = files; }
 		public override void Execute()
 		{
-#if BuildHexEdit
 			foreach (var file in Files)
 				HexEditTabs.CreateFromDump(file);
-#endif
 		}
 	}
 
@@ -152,12 +122,10 @@ namespace NeoEdit
 		public HexEditParam(List<string> files) { Files = files; }
 		public override void Execute()
 		{
-#if BuildHexEdit
 			if (!Files.Any())
 				HexEditTabs.CreateFromFile();
 			foreach (var file in Files)
 				HexEditTabs.CreateFromFile(file);
-#endif
 		}
 	}
 
@@ -167,10 +135,8 @@ namespace NeoEdit
 		public HexPidParam(List<int> pids) { PIDs = pids; }
 		public override void Execute()
 		{
-#if BuildHexEdit
 			foreach (var pid in PIDs)
 				HexEditTabs.CreateFromProcess(pid);
-#endif
 		}
 	}
 
@@ -180,9 +146,7 @@ namespace NeoEdit
 		public ProcessesParam(int? pid) { PID = pid; }
 		public override void Execute()
 		{
-#if BuildProcesses
 			new ProcessesWindow(PID);
-#endif
 		}
 	}
 
@@ -192,9 +156,7 @@ namespace NeoEdit
 		public RegistryParam(string key) { Key = key; }
 		public override void Execute()
 		{
-#if BuildRegistry
 			new RegistryWindow(Key);
-#endif
 		}
 	}
 
@@ -202,9 +164,7 @@ namespace NeoEdit
 	{
 		public override void Execute()
 		{
-#if BuildSystemInfo
 			new SystemInfoWindow();
-#endif
 		}
 	}
 
@@ -228,12 +188,10 @@ namespace NeoEdit
 		public TextEditParam(List<TextEditFile> files) { Files = files; }
 		public override void Execute()
 		{
-#if BuildTextEdit
 			if (!Files.Any())
 				TextEditTabs.Create();
 			foreach (var file in Files)
 				TextEditTabs.Create(file.FileName, line: file.Line, column: file.Column);
-#endif
 		}
 	}
 
@@ -243,12 +201,10 @@ namespace NeoEdit
 		public TextViewParam(List<string> files) { Files = files; }
 		public override void Execute()
 		{
-#if BuildTextView
 			if (!Files.Any())
 				TextViewerTabs.Create();
 			foreach (var file in Files)
 				TextViewerTabs.Create(file);
-#endif
 		}
 	}
 }
