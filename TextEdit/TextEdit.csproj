@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="CompressWords;BuildBalanced;BuildCSharp;BuildJSON;BuildHTML;BuildTCSV;BuildXML;BuildRevRegEx;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="CompressWords;BuildBalanced;BuildColumns;BuildCSharp;BuildJSON;BuildHTML;BuildTCSV;BuildXML;BuildRevRegEx;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{9A35AB82-2481-4C44-B51E-66DF7D248EAD}</ProjectGuid>
@@ -14,6 +14,10 @@
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs">
     <Message Text="Building Balanced grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.1-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.Balanced.Parser -o &quot;$(ProjectDir)Content\Balanced\Parser&quot; &quot;$(ProjectDir)Content\Balanced\Source\Balanced.g4&quot;" />
+  </Target>
+  <Target Name="BuildColumns" Inputs="Content\Columns\Source\Columns.g4" Outputs="Content\Columns\Parser\ColumnsBaseVisitor.cs;Content\Columns\Parser\ColumnsLexer.cs;Content\Columns\Parser\ColumnsParser.cs;Content\Columns\Parser\ColumnsVisitor.cs">
+    <Message Text="Building Columns grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.1-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.Columns.Parser -o &quot;$(ProjectDir)Content\Columns\Parser&quot; &quot;$(ProjectDir)Content\Columns\Source\Columns.g4&quot;" />
   </Target>
   <Target Name="BuildCSharp" Inputs="Content\CSharp\Source\CSharpLexer.g4;Content\CSharp\Source\CSharpParser.g4" Outputs="Content\CSharp\Parser\CSharpParserBaseVisitor.cs;Content\CSharp\Parser\CSharpParserVisitor.cs;Content\CSharp\Parser\CSharpLexer.cs;Content\CSharp\Parser\CSharpParser.cs">
     <Message Text="Building CSharp grammar" Importance="High" />
@@ -50,6 +54,12 @@
     <Compile Include="Content\Balanced\Parser\BalancedParser.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedVisitor.cs" />
     <None Include="Content\Balanced\Source\Balanced.g4" />
+    <Compile Include="Content\Columns\ColumnsVisitor.cs" />
+    <Compile Include="Content\Columns\Parser\ColumnsBaseVisitor.cs" />
+    <Compile Include="Content\Columns\Parser\ColumnsLexer.cs" />
+    <Compile Include="Content\Columns\Parser\ColumnsParser.cs" />
+    <Compile Include="Content\Columns\Parser\ColumnsVisitor.cs" />
+    <None Include="Content\Columns\Source\Columns.g4" />
     <Compile Include="Content\CSharp\CSharpVisitor.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpLexer.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParser.cs" />

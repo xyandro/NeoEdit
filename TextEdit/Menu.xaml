@@ -282,6 +282,7 @@
 		<MenuItem Header="_Type">
 			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.None}" FalseValue="{x:Static content:Parser+ParserType.None}"/>
 			<textEdit:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.Balanced}" FalseValue="{x:Static content:Parser+ParserType.Balanced}"/>
+			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.Columns}" FalseValue="{x:Static content:Parser+ParserType.Columns}"/>
 			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.CSharp}" FalseValue="{x:Static content:Parser+ParserType.CSharp}"/>
 			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.CSV}" FalseValue="{x:Static content:Parser+ParserType.CSV}"/>
 			<textEdit:MultiMenuItem Header="_HTML" Objects="{Binding Parent.TextEditors, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.HTML}" FalseValue="{x:Static content:Parser+ParserType.HTML}"/>
