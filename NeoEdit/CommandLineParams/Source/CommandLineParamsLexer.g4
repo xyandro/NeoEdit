@@ -6,7 +6,6 @@ ABOUT          : '-about'                                                       
 COLUMN         : '-col' | '-column'                                                               ;
 CONSOLE        : '-console'                                                                       ;
 CONSOLERUNNER  : '-consolerunner'                                                                 ;
-DBVIEWER       : '-db' | '-dbview' | '-dbviewer'                                                  ;
 DIFF           : '-diff'                                                                          ;
 DISK           : '-disk' | '-disks'                                                               ;
 GUNZIP         : '-gunzip'                                                                        ;
@@ -35,7 +34,6 @@ ABOUT2         : ABOUT         -> type(ABOUT)         ;
 COLUMN2        : COLUMN        -> type(COLUMN)        ;
 CONSOLE2       : CONSOLE       -> type(CONSOLE)       ;
 CONSOLERUNNER2 : CONSOLERUNNER -> type(CONSOLERUNNER) ;
-DBVIEWER2      : DBVIEWER      -> type(DBVIEWER)      ;
 DIFF2          : DIFF          -> type(DIFF)          ;
 DISK2          : DISK          -> type(DISK)          ;
 GUNZIP2        : GUNZIP        -> type(GUNZIP)        ;

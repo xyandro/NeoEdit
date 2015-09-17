@@ -67,10 +67,6 @@
       <Project>{f70679bc-150e-4daa-85c9-fdc4a0c49a6b}</Project>
       <Name>Console</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DBViewer\DBViewer.csproj">
-      <Project>{95b303bd-7fec-4523-92e6-c8e8dc0d32b8}</Project>
-      <Name>DBViewer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Disk\Disk.csproj">
       <Project>{839c668b-921c-4a33-91cd-0d8131ffacfc}</Project>
       <Name>Disk</Name>

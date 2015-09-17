@@ -23,7 +23,6 @@ namespace NeoEdit.GUI
 		protected Action<int?> processesLauncher;
 		protected Action<int?> handlesLauncher;
 		protected Action<string> registryLauncher;
-		protected Action dbViewerLauncher;
 
 		public static void Initialize(
 			Func<bool> getMinimizeToTray
@@ -57,9 +56,6 @@ namespace NeoEdit.GUI
 #endif
 #if BuildRegistry
 			, Action<string> registry
-#endif
-#if BuildDBViewer
-			, Action dbViewer
 #endif
 		)
 		{
@@ -96,9 +92,6 @@ namespace NeoEdit.GUI
 #endif
 #if BuildRegistry
 				registryLauncher = registry,
-#endif
-#if BuildDBViewer
-				dbViewerLauncher = dbViewer,
 #endif
 			};
 		}
@@ -173,12 +166,6 @@ namespace NeoEdit.GUI
 		{
 			if (registryLauncher != null)
 				registryLauncher(key);
-		}
-
-		public void LaunchDBViewer()
-		{
-			if (dbViewerLauncher != null)
-				dbViewerLauncher();
 		}
 	}
 }

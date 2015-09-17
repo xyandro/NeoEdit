@@ -8,9 +8,6 @@ using System.Windows.Threading;
 #if BuildConsole
 using NeoEdit.Console;
 #endif
-#if BuildDBViewer
-using NeoEdit.DBViewer;
-#endif
 #if BuildDisk
 using NeoEdit.Disk;
 #endif
@@ -137,9 +134,6 @@ namespace NeoEdit
 #endif
 #if BuildRegistry
 				, registry: (key) => new RegistryWindow(key)
-#endif
-#if BuildDBViewer
-				, dbViewer: () => new DBViewerWindow()
 #endif
 			);
 

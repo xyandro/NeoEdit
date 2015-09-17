@@ -5,9 +5,6 @@ using NeoEdit.Common.Transform;
 #if BuildConsole
 using NeoEdit.Console;
 #endif
-#if BuildDBViewer
-using NeoEdit.DBViewer;
-#endif
 #if BuildDisk
 using NeoEdit.Disk;
 #endif
@@ -64,16 +61,6 @@ namespace NeoEdit
 		{
 #if BuildConsole
 			new Console.ConsoleRunner(ParamList);
-#endif
-		}
-	}
-
-	class DBViewerParam : Param
-	{
-		public override void Execute()
-		{
-#if BuildDBViewer
-			new DBViewerWindow();
 #endif
 		}
 	}
