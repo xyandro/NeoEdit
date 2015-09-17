@@ -2,7 +2,8 @@ grammar Columns;
 
 columns : line* EOF;
 line    : items EOL ;
-items   : item WS? (EOC item WS?)* ;
+items   : itemws  (EOC itemws )* ;
+itemws  : WS? item WS? ;
 item    : DATA (WS DATA)* | ;
 
 DATA    : ~[\t \u2502\r\n]+ ;
