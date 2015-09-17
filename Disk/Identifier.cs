@@ -2,14 +2,14 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Disk
 {
 	class Identifier
 	{
-		static string magicPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Magic");
+		static string magicPath = Path.Combine(Helpers.NeoEditAppData, "Magic");
 		static Identifier()
 		{
 			string Header = typeof(Identifier).Namespace + ".Magic.";
