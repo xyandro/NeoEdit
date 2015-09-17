@@ -39,7 +39,8 @@
 		</DataGrid>
 
 		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
-			<Button Name="testButton" Click="TestClick" Content="_Test" Width="{Binding ActualWidth, ElementName=okButton}"/>
+			<Button Click="CreateClick" Content="_Create" Width="{Binding ActualWidth, ElementName=okButton}"/>
+			<Button Click="TestClick" Content="_Test"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" Rows="1">

@@ -89,12 +89,27 @@ namespace NeoEdit.TextEdit.Dialogs
 				return result;
 			}
 		}
+
+		void CreateClick(object sender, RoutedEventArgs e)
+		{
+			Result.CreateDatabase();
+
+			new Message
+			{
+				Title = "Information",
+				Text = Result.Test() ?? "Database created.",
+				Options = Message.OptionsEnum.Ok,
+				DefaultAccept = Message.OptionsEnum.Ok,
+				DefaultCancel = Message.OptionsEnum.Ok,
+			}.Show();
+		}
+
 		void TestClick(object sender, RoutedEventArgs e)
 		{
 			new Message
 			{
 				Title = "Information",
-				Text = Result.Test() ?? "Connection successful",
+				Text = Result.Test() ?? "Connection successful.",
 				Options = Message.OptionsEnum.Ok,
 				DefaultAccept = Message.OptionsEnum.Ok,
 				DefaultCancel = Message.OptionsEnum.Ok,
