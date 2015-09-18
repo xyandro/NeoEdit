@@ -271,6 +271,20 @@ namespace NeoEdit.Disk
 			ShowColumn(a => a.SHA1);
 		}
 
+		internal void Command_File_SHA256()
+		{
+			foreach (DiskItem selected in Selected)
+				selected.SetSHA256();
+			ShowColumn(a => a.SHA256);
+		}
+
+		internal void Command_File_QuickHash()
+		{
+			foreach (DiskItem selected in Selected)
+				selected.SetQuickHash();
+			ShowColumn(a => a.QuickHash);
+		}
+
 		internal void Command_File_VCS()
 		{
 			foreach (DiskItem selected in Selected)
@@ -585,12 +599,16 @@ namespace NeoEdit.Disk
 			foreach (var item in selected)
 				Selected.Add(item);
 
+			if (selected.All(item => !String.IsNullOrWhiteSpace(item.SHA256)))
+				return selected.GroupBy(item => item.SHA256).ToDictionary(group => group.Key, group => group.ToList());
 			if (selected.All(item => !String.IsNullOrWhiteSpace(item.SHA1)))
 				return selected.GroupBy(item => item.SHA1).ToDictionary(group => group.Key, group => group.ToList());
 			if (selected.All(item => !String.IsNullOrWhiteSpace(item.MD5)))
 				return selected.GroupBy(item => item.MD5).ToDictionary(group => group.Key, group => group.ToList());
-			Command_File_SHA1();
-			return selected.GroupBy(item => item.SHA1).ToDictionary(group => group.Key, group => group.ToList());
+			if (selected.All(item => !String.IsNullOrWhiteSpace(item.QuickHash)))
+				return selected.GroupBy(item => item.QuickHash).ToDictionary(group => group.Key, group => group.ToList());
+			Command_File_QuickHash();
+			return selected.GroupBy(item => item.QuickHash).ToDictionary(group => group.Key, group => group.ToList());
 		}
 
 		internal void Command_Select_Unique()

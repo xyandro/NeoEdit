@@ -52,6 +52,10 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public string SHA1 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
+		public string SHA256 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		[DepProp]
+		public string QuickHash { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		[DepProp]
 		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public VersionControlStatus VCSStatus { get { return UIHelper<DiskItem>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
@@ -237,6 +241,22 @@ namespace NeoEdit.Disk
 				return;
 
 			SHA1 = Hash.Get(Hash.Type.SHA1, FullName);
+		}
+
+		public void SetSHA256()
+		{
+			if (FileType != DiskItemType.File)
+				return;
+
+			SHA256 = Hash.Get(Hash.Type.SHA256, FullName);
+		}
+
+		public void SetQuickHash()
+		{
+			if (FileType != DiskItemType.File)
+				return;
+
+			QuickHash = Hash.Get(Hash.Type.QuickHash, FullName);
 		}
 
 		public void SetVCSStatus()

@@ -89,6 +89,8 @@ namespace NeoEdit.Disk
 				case DiskCommand.File_Identify: TopMost.Item.Command_File_Identify(); break;
 				case DiskCommand.File_MD5: TopMost.Item.Command_File_MD5(); break;
 				case DiskCommand.File_SHA1: TopMost.Item.Command_File_SHA1(); break;
+				case DiskCommand.File_SHA256: TopMost.Item.Command_File_SHA256(); break;
+				case DiskCommand.File_QuickHash: TopMost.Item.Command_File_QuickHash(); break;
 				case DiskCommand.File_VCS: TopMost.Item.Command_File_VCS(); break;
 				case DiskCommand.File_Delete: TopMost.Item.Command_File_Delete(); break;
 				case DiskCommand.Edit_Cut: TopMost.Item.Command_Edit_CutCopy(true); break;
