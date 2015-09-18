@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -11,6 +12,7 @@ using System.Windows;
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(false)]
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
+[assembly: NeutralResourcesLanguageAttribute("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 
-[assembly: AssemblyVersion("2.0.1.%NUMREVS%")]
-[assembly: AssemblyFileVersion("2.0.1.%NUMREVS%")]
+[assembly: AssemblyVersion("2.1.1.%NUMREVS%")]
+[assembly: AssemblyFileVersion("2.1.1.%NUMREVS%")]
