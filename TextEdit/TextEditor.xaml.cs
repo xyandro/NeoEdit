@@ -725,6 +725,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Children_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Children); break;
 				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Descendants); break;
 				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Self); break;
+				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
 				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
@@ -937,6 +938,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
 				case TextEditCommand.Network_Lookup_IP: Command_Network_Lookup_IP(); break;
 				case TextEditCommand.Network_Lookup_HostName: Command_Network_Lookup_HostName(); break;
+				case TextEditCommand.Network_Ping: Command_Network_Ping(dialogResult as PingDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_Execute: Command_Database_Execute(); break;
 				case TextEditCommand.Database_ClearResults: Command_Database_ClearResults(); break;
@@ -2637,6 +2639,35 @@ namespace NeoEdit.TextEdit
 		internal void Command_Network_Lookup_HostName()
 		{
 			ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList());
+		}
+
+		internal PingDialog.Result Command_Network_Ping_Dialog()
+		{
+			return PingDialog.Run(WindowParent);
+		}
+
+		internal void Command_Network_Ping(PingDialog.Result result)
+		{
+			var replies = Task.Run(async () =>
+			{
+				var strs = GetSelectionStrings().Select(async str =>
+				{
+					try
+					{
+						using (var ping = new Ping())
+						{
+							var reply = await ping.SendPingAsync(IPAddress.Parse(str), result.Timeout);
+							return str + ": " + reply.Status.ToString() + (reply.Status == IPStatus.Success ? ": " + reply.RoundtripTime + " ms" : "");
+						}
+					}
+					catch (Exception ex)
+					{
+						return str + ": " + ex.Message;
+					}
+				}).ToList();
+				return await Task.WhenAll(strs);
+			}).Result.ToList();
+			ReplaceSelections(replies);
 		}
 
 		internal DatabaseConnectDialog.Result Command_Database_Connect_Dialog()
