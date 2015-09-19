@@ -18,6 +18,7 @@ Submit forms
 Override readonly, access denied (UAC required?)
 Go back to last selections
 Resolve hostnames
+Ping IPs
 Change tab order when doc closed (match visual studio or something)
 Time zones
 Undo revert

@@ -818,7 +818,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_RegEx_Unescape: Command_Edit_RegEx_Unescape(); break;
 				case TextEditCommand.Edit_URL_Escape: Command_Edit_URL_Escape(); break;
 				case TextEditCommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(); break;
-				case TextEditCommand.Edit_URL_Fetch: Command_Edit_URL_Fetch(); break;
 				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as MakeAbsoluteDialog.Result); break;
 				case TextEditCommand.Edit_Hash_MD5: Command_Edit_Hash(Hash.Type.MD5, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Edit_Hash_SHA1: Command_Edit_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
@@ -934,6 +933,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_Deepest: Command_Content_Select_Deepest(); break;
 				case TextEditCommand.Content_Select_MaxTopmost: Command_Content_Select_MaxTopmost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
+				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_Execute: Command_Database_Execute(); break;
 				case TextEditCommand.Database_ClearResults: Command_Database_ClearResults(); break;
@@ -2382,20 +2382,6 @@ namespace NeoEdit.TextEdit
 			return results;
 		}
 
-		internal void Command_Edit_URL_Fetch()
-		{
-			var urls = GetSelectionStrings();
-			var results = Task.Run(() => GetURLs(urls).Result).Result;
-			if (results.Any(result => result.Item3))
-				new Message
-				{
-					Title = "Error",
-					Text = "Failed to fetch the URLS:\n" + String.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1)),
-					Options = Message.OptionsEnum.Ok,
-				}.Show();
-			ReplaceSelections(results.Select(result => result.Item2).ToList());
-		}
-
 		internal MakeAbsoluteDialog.Result Command_Edit_URL_Absolute_Dialog()
 		{
 			return MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10), false);
@@ -2624,6 +2610,20 @@ namespace NeoEdit.TextEdit
 				start += str.Length;
 			}
 			Selections.Replace(sels);
+		}
+
+		internal void Command_Network_Fetch()
+		{
+			var urls = GetSelectionStrings();
+			var results = Task.Run(() => GetURLs(urls).Result).Result;
+			if (results.Any(result => result.Item3))
+				new Message
+				{
+					Title = "Error",
+					Text = "Failed to fetch the URLs:\n" + String.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1)),
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
+			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
 		internal DatabaseConnectDialog.Result Command_Database_Connect_Dialog()

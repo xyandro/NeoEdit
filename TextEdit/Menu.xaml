@@ -107,7 +107,6 @@
 		<MenuItem Header="UR_L">
 			<textEdit:TextEditMenuItem Header="_Escape" CommandEnum="Edit_URL_Escape"/>
 			<textEdit:TextEditMenuItem Header="_Unescape" CommandEnum="Edit_URL_Unescape"/>
-			<textEdit:TextEditMenuItem Header="_Fetch" CommandEnum="Edit_URL_Fetch"/>
 			<textEdit:TextEditMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
 		</MenuItem>
 		<Separator/>
@@ -329,6 +328,9 @@
 			<textEdit:TextEditMenuItem Header="Max To_pmost" CommandEnum="Content_Select_MaxTopmost"/>
 			<textEdit:TextEditMenuItem Header="Max Deepe_st" CommandEnum="Content_Select_MaxDeepest"/>
 		</MenuItem>
+	</MenuItem>
+	<MenuItem Header="Netw_ork">
+		<textEdit:TextEditMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
 	</MenuItem>
 	<MenuItem Header="D_atabase">
 		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
