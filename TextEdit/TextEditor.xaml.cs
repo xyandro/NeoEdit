@@ -938,6 +938,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
 				case TextEditCommand.Network_Lookup_IP: Command_Network_Lookup_IP(); break;
 				case TextEditCommand.Network_Lookup_HostName: Command_Network_Lookup_HostName(); break;
+				case TextEditCommand.Network_AdaptersInfo: Command_Network_AdaptersInfo(); break;
 				case TextEditCommand.Network_Ping: Command_Network_Ping(dialogResult as PingDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_Execute: Command_Database_Execute(); break;
@@ -2639,6 +2640,36 @@ namespace NeoEdit.TextEdit
 		internal void Command_Network_Lookup_HostName()
 		{
 			ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList());
+		}
+
+		internal void Command_Network_AdaptersInfo()
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection.");
+
+			var data = new List<List<string>>();
+			data.Add(new List<string>
+			{
+				"Name",
+				"Desc",
+				"Status",
+				"Type",
+				"IPs"
+			});
+			foreach (var networkInterface in NetworkInterface.GetAllNetworkInterfaces().OrderBy(inter => inter.OperationalStatus).ThenBy(inter => inter.Name))
+			{
+				var props = networkInterface.GetIPProperties();
+				data.Add(new List<string>
+				{
+					networkInterface.Name,
+					networkInterface.Description,
+					networkInterface.OperationalStatus.ToString(),
+					networkInterface.NetworkInterfaceType.ToString(),
+					String.Join(" / ", props.UnicastAddresses.Select(info=>info.Address)),
+				});
+			}
+			var columnLens = data[0].Select((item, column) => data.Max(row => row[column].Length)).ToList();
+			ReplaceOneWithMany(data.Select(row => String.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length))) + Data.DefaultEnding).ToList());
 		}
 
 		internal PingDialog.Result Command_Network_Ping_Dialog()

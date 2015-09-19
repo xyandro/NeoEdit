@@ -176,6 +176,7 @@ namespace NeoEdit.TextEdit
 		Network_Fetch,
 		Network_Lookup_IP,
 		Network_Lookup_HostName,
+		Network_AdaptersInfo,
 		Network_Ping,
 		Database_Connect,
 		[KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift)] Database_Execute,

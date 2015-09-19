@@ -337,6 +337,8 @@
 			<textEdit:TextEditMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName"/>
 		</MenuItem>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Adapters Info" CommandEnum="Network_AdaptersInfo"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Ping" CommandEnum="Network_Ping"/>
 	</MenuItem>
 	<MenuItem Header="D_atabase">
