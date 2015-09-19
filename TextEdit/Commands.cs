@@ -174,6 +174,8 @@ namespace NeoEdit.TextEdit
 		Content_Select_MaxTopmost,
 		Content_Select_MaxDeepest,
 		Network_Fetch,
+		Network_Lookup_IP,
+		Network_Lookup_HostName,
 		Database_Connect,
 		[KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift)] Database_Execute,
 		Database_ClearResults,

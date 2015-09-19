@@ -1,5 +1,6 @@
 All:
 Add command prompt
+Add data set/table viewer
 
 Disk:
 Move timestamp (possibly others) from TextEditor
@@ -17,7 +18,6 @@ Allow user to disable undo/redo for faster performance
 Submit forms
 Override readonly, access denied (UAC required?)
 Go back to last selections
-Resolve hostnames
 Ping IPs
 Change tab order when doc closed (match visual studio or something)
 Time zones

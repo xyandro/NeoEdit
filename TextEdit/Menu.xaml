@@ -331,6 +331,11 @@
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
 		<textEdit:TextEditMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
+		<Separator/>
+		<MenuItem Header="_Lookup">
+			<textEdit:TextEditMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>
+			<textEdit:TextEditMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName"/>
+		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="D_atabase">
 		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>

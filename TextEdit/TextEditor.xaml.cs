@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -934,6 +935,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_MaxTopmost: Command_Content_Select_MaxTopmost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
+				case TextEditCommand.Network_Lookup_IP: Command_Network_Lookup_IP(); break;
+				case TextEditCommand.Network_Lookup_HostName: Command_Network_Lookup_HostName(); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_Execute: Command_Database_Execute(); break;
 				case TextEditCommand.Database_ClearResults: Command_Database_ClearResults(); break;
@@ -2624,6 +2627,16 @@ namespace NeoEdit.TextEdit
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
+		}
+
+		internal void Command_Network_Lookup_IP()
+		{
+			ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return String.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList());
+		}
+
+		internal void Command_Network_Lookup_HostName()
+		{
+			ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList());
 		}
 
 		internal DatabaseConnectDialog.Result Command_Database_Connect_Dialog()
