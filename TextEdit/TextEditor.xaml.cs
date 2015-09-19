@@ -726,6 +726,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Descendants_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Descendants); break;
 				case TextEditCommand.Content_Select_ByAttribute: dialogResult = Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType.Self); break;
 				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
+				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
 				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
@@ -940,6 +941,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_Lookup_HostName: Command_Network_Lookup_HostName(); break;
 				case TextEditCommand.Network_AdaptersInfo: Command_Network_AdaptersInfo(); break;
 				case TextEditCommand.Network_Ping: Command_Network_Ping(dialogResult as PingDialog.Result); break;
+				case TextEditCommand.Network_ScanPorts: Command_Network_ScanPorts(dialogResult as ScanPortsDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_Execute: Command_Database_Execute(); break;
 				case TextEditCommand.Database_ClearResults: Command_Database_ClearResults(); break;
@@ -2699,6 +2701,18 @@ namespace NeoEdit.TextEdit
 				return await Task.WhenAll(strs);
 			}).Result.ToList();
 			ReplaceSelections(replies);
+		}
+
+		internal ScanPortsDialog.Result Command_Network_ScanPorts_Dialog()
+		{
+			return ScanPortsDialog.Run(WindowParent);
+		}
+
+		internal void Command_Network_ScanPorts(ScanPortsDialog.Result result)
+		{
+			var strs = GetSelectionStrings();
+			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
+			ReplaceSelections(strs.Zip(results, (str, strResult) => str + ": " + String.Join(", ", strResult)).ToList());
 		}
 
 		internal DatabaseConnectDialog.Result Command_Database_Connect_Dialog()

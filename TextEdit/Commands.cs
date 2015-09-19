@@ -178,6 +178,7 @@ namespace NeoEdit.TextEdit
 		Network_Lookup_HostName,
 		Network_AdaptersInfo,
 		Network_Ping,
+		Network_ScanPorts,
 		Database_Connect,
 		[KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift)] Database_Execute,
 		Database_ClearResults,

@@ -269,6 +269,13 @@
     <Compile Include="Dialogs\RevRegExDialog.xaml.cs">
       <DependentUpon>RevRegExDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ScanPortsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ScanPortsDialog.xaml.cs">
+      <DependentUpon>ScanPortsDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\SelectContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -324,6 +331,7 @@
     <Compile Include="Misc.cs" />
     <None Include="Misc\Words.txt" />
     <EmbeddedResource Include="Misc\Words.txt.gz" />
+    <Compile Include="PortScanner.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
