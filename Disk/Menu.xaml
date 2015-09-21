@@ -11,10 +11,7 @@
 		<Separator/>
 		<disk:DiskMenuItem Header="_Rename" CommandEnum="File_Rename"/>
 		<disk:DiskMenuItem Header="_Identify" CommandEnum="File_Identify"/>
-		<disk:DiskMenuItem Header="MD_5" CommandEnum="File_MD5"/>
-		<disk:DiskMenuItem Header="SHA_1" CommandEnum="File_SHA1"/>
-		<disk:DiskMenuItem Header="SHA_256" CommandEnum="File_SHA256"/>
-		<disk:DiskMenuItem Header="_Quick Hash" CommandEnum="File_QuickHash"/>
+		<disk:DiskMenuItem Header="_Hash" CommandEnum="File_Hash"/>
 		<disk:DiskMenuItem Header="_VCS" CommandEnum="File_VCS"/>
 		<disk:DiskMenuItem Header="_Delete" CommandEnum="File_Delete"/>
 		<Separator/>

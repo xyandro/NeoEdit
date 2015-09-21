@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Common;
-using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -179,37 +178,6 @@ namespace NeoEdit.TextEdit.Dialogs
 			}
 
 			return base.SelectTemplate(item, container);
-		}
-	}
-
-	class HexConverter : IValueConverter
-	{
-		string lastValue = null;
-
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			var bytes = value as byte[];
-			if (bytes == null)
-				return null;
-
-			if (lastValue == null)
-				lastValue = Coder.BytesToString(bytes, Coder.CodePage.Hex);
-			return lastValue;
-		}
-
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			lastValue = value as string;
-			if (String.IsNullOrEmpty(lastValue))
-			{
-				lastValue = null;
-				return null;
-			}
-
-			var bytes = Coder.TryStringToBytes(lastValue, Coder.CodePage.Hex);
-			if (bytes == null)
-				return DependencyProperty.UnsetValue;
-			return bytes;
 		}
 	}
 }

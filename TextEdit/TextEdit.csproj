@@ -206,6 +206,13 @@
     <Compile Include="Dialogs\GotoDialog.xaml.cs">
       <DependentUpon>GotoDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\HashTextDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\HashTextDialog.xaml.cs">
+      <DependentUpon>HashTextDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\LimitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

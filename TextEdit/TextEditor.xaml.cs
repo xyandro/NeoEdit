@@ -692,9 +692,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Table_Edit: dialogResult = Command_Edit_Table_Edit_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
-				case TextEditCommand.Edit_Hash_MD5: dialogResult = Command_Edit_Hash_Dialog(); break;
-				case TextEditCommand.Edit_Hash_SHA1: dialogResult = Command_Edit_Hash_Dialog(); break;
-				case TextEditCommand.Edit_Hash_SHA256: dialogResult = Command_Edit_Hash_Dialog(); break;
+				case TextEditCommand.Edit_Hash: dialogResult = Command_Edit_Hash_Dialog(); break;
 				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
 				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
 				case TextEditCommand.Files_Names_MakeAbsolute: dialogResult = Command_Files_Names_MakeAbsolute_Dialog(); break;
@@ -705,6 +703,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_CreateTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_AllTimes: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
+				case TextEditCommand.Files_Hash: dialogResult = Command_Files_Hash_Dialog(); break;
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
@@ -822,9 +821,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_URL_Escape: Command_Edit_URL_Escape(); break;
 				case TextEditCommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(); break;
 				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as MakeAbsoluteDialog.Result); break;
-				case TextEditCommand.Edit_Hash_MD5: Command_Edit_Hash(Hasher.Type.MD5, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Edit_Hash_SHA1: Command_Edit_Hash(Hasher.Type.SHA1, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Edit_Hash_SHA256: Command_Edit_Hash(Hasher.Type.SHA256, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Edit_Hash: Command_Edit_Hash(dialogResult as HashTextDialog.Result); break;
 				case TextEditCommand.Edit_Sort: Command_Edit_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Edit_Convert: Command_Edit_Convert(dialogResult as ConvertDialog.Result); break;
 				case TextEditCommand.Edit_Bookmarks_Toggle: Command_Edit_Bookmarks_Toggle(); break;
@@ -858,9 +855,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Select_NonExisting: Command_Files_Select_Existing(false); break;
 				case TextEditCommand.Files_Select_Roots: Command_Files_Select_Roots(true); break;
 				case TextEditCommand.Files_Select_NonRoots: Command_Files_Select_Roots(false); break;
-				case TextEditCommand.Files_Hash_MD5: Command_Files_Hash(Hasher.Type.MD5); break;
-				case TextEditCommand.Files_Hash_SHA1: Command_Files_Hash(Hasher.Type.SHA1); break;
-				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hasher.Type.SHA256); break;
+				case TextEditCommand.Files_Hash: Command_Files_Hash(dialogResult as HashDialog.Result); break;
 				case TextEditCommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(false); break;
 				case TextEditCommand.Files_Operations_Move: Command_Files_Operations_CopyMove(true); break;
 				case TextEditCommand.Files_Operations_Delete: Command_Files_Operations_Delete(); break;
@@ -2016,9 +2011,14 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
 		}
 
-		internal void Command_Files_Hash(Hasher.Type type)
+		internal HashDialog.Result Command_Files_Hash_Dialog()
 		{
-			ReplaceSelections(Selections.Select(range => Hasher.Get(GetString(range), type)).ToList());
+			return HashDialog.Run(WindowParent);
+		}
+
+		internal void Command_Files_Hash(HashDialog.Result result)
+		{
+			ReplaceSelections(Selections.Select(range => Hasher.Get(GetString(range), result.HashType)).ToList());
 		}
 
 		internal void Command_Files_Operations_CopyMove(bool move)
@@ -2336,18 +2336,18 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 		}
 
-		internal EncodingDialog.Result Command_Edit_Hash_Dialog()
+		internal HashTextDialog.Result Command_Edit_Hash_Dialog()
 		{
-			return EncodingDialog.Run(WindowParent, CodePage);
+			return HashTextDialog.Run(WindowParent, CodePage);
 		}
 
-		internal void Command_Edit_Hash(Hasher.Type type, EncodingDialog.Result result)
+		internal void Command_Edit_Hash(HashTextDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
 				return;
 
-			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), type)).ToList());
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType)).ToList());
 		}
 
 		async Task<string> GetURL(string url)

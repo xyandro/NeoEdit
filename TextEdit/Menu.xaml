@@ -110,11 +110,7 @@
 			<textEdit:TextEditMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="_Hash">
-			<textEdit:TextEditMenuItem Header="MD_5" CommandEnum="Edit_Hash_MD5"/>
-			<textEdit:TextEditMenuItem Header="SHA_1" CommandEnum="Edit_Hash_SHA1"/>
-			<textEdit:TextEditMenuItem Header="SHA_256" CommandEnum="Edit_Hash_SHA256"/>
-		</MenuItem>
+		<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Edit_Hash"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
 		<Separator/>
@@ -174,11 +170,7 @@
 			<textEdit:TextEditMenuItem Header="Non-R_oots" CommandEnum="Files_Select_NonRoots"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="_Hash">
-			<textEdit:TextEditMenuItem Header="MD_5" CommandEnum="Files_Hash_MD5"/>
-			<textEdit:TextEditMenuItem Header="SHA_1" CommandEnum="Files_Hash_SHA1"/>
-			<textEdit:TextEditMenuItem Header="SHA_256" CommandEnum="Files_Hash_SHA256"/>
-		</MenuItem>
+		<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Files_Hash"/>
 		<Separator/>
 		<MenuItem Header="O_perations">
 			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>

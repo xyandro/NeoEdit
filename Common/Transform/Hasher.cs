@@ -51,6 +51,23 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
+		public static bool NeedsKey(Type type)
+		{
+			switch (type)
+			{
+				case Type.HMACMD5:
+				case Type.HMACRIPEMD160:
+				case Type.HMACSHA1:
+				case Type.HMACSHA256:
+				case Type.HMACSHA384:
+				case Type.HMACSHA512:
+				case Type.MACTripleDES:
+					return true;
+				default:
+					return false;
+			}
+		}
+
 		public static string Get(byte[] data, Type type, byte[] key = null)
 		{
 			switch (type)

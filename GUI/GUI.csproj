@@ -64,6 +64,7 @@
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\CheckBitConverter.cs" />
+    <Compile Include="Converters\HexConverter.cs" />
     <Compile Include="Converters\NEExpressionConverter.cs" />
     <Compile Include="Converters\NEExpressionResultListConverter.cs" />
     <Compile Include="Converters\RadioConverter.cs" />
@@ -97,6 +98,13 @@
     </Page>
     <Compile Include="Dialogs\FindTextDialog.xaml.cs">
       <DependentUpon>FindTextDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\HashDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\HashDialog.xaml.cs">
+      <DependentUpon>HashDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\HelpItems.cs" />
     <Page Include="Dialogs\Message.xaml">

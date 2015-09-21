@@ -48,13 +48,7 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public string Type { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public string MD5 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
-		[DepProp]
-		public string SHA1 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
-		[DepProp]
-		public string SHA256 { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
-		[DepProp]
-		public string QuickHash { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		public string Hash { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
@@ -227,36 +221,12 @@ namespace NeoEdit.Disk
 			Identity = Identifier.Identify(FullName);
 		}
 
-		public void SetMD5()
+		public void SetHash(Hasher.Type hashType, byte[] key)
 		{
 			if (FileType != DiskItemType.File)
 				return;
 
-			MD5 = Hasher.Get(FullName, Hasher.Type.MD5);
-		}
-
-		public void SetSHA1()
-		{
-			if (FileType != DiskItemType.File)
-				return;
-
-			SHA1 = Hasher.Get(FullName, Hasher.Type.SHA1);
-		}
-
-		public void SetSHA256()
-		{
-			if (FileType != DiskItemType.File)
-				return;
-
-			SHA256 = Hasher.Get(FullName, Hasher.Type.SHA256);
-		}
-
-		public void SetQuickHash()
-		{
-			if (FileType != DiskItemType.File)
-				return;
-
-			QuickHash = Hasher.Get(FullName, Hasher.Type.QuickHash);
+			Hash = Hasher.Get(FullName, hashType, key);
 		}
 
 		public void SetVCSStatus()
