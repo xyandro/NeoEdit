@@ -779,7 +779,7 @@ namespace NeoEdit.HexEdit
 			}
 		}
 
-		internal void Command_Data_Hash(Hash.Type type)
+		internal void Command_Data_Hash(Hasher.Type type)
 		{
 			if (Length == 0)
 				SelectAll();
@@ -788,12 +788,12 @@ namespace NeoEdit.HexEdit
 			new Message
 			{
 				Title = "Result",
-				Text = Hash.Get(type, data),
+				Text = Hasher.Get(data, type),
 				Options = Message.OptionsEnum.Ok
 			}.Show();
 		}
 
-		internal void Command_Data_Compress(bool compress, Compression.Type type)
+		internal void Command_Data_Compress(bool compress, Compressor.Type type)
 		{
 			if (!VerifyInsert())
 				return;
@@ -802,12 +802,12 @@ namespace NeoEdit.HexEdit
 				SelectAll();
 
 			if (compress)
-				Replace(Compression.Compress(type, Data.GetSubset(SelStart, SelEnd - SelStart)));
+				Replace(Compressor.Compress(Data.GetSubset(SelStart, SelEnd - SelStart), type));
 			else
-				Replace(Compression.Decompress(type, Data.GetSubset(SelStart, SelEnd - SelStart)));
+				Replace(Compressor.Decompress(Data.GetSubset(SelStart, SelEnd - SelStart), type));
 		}
 
-		internal void Command_Data_Encrypt(bool isEncrypt, Crypto.Type type)
+		internal void Command_Data_Encrypt(bool isEncrypt, Cryptor.Type type)
 		{
 			if (!VerifyInsert())
 				return;
@@ -832,12 +832,12 @@ namespace NeoEdit.HexEdit
 				SelectAll();
 
 			if (isEncrypt)
-				Replace(Crypto.Encrypt(type, Data.GetSubset(SelStart, SelEnd - SelStart), key));
+				Replace(Cryptor.Encrypt(Data.GetSubset(SelStart, SelEnd - SelStart), type, key));
 			else
-				Replace(Crypto.Decrypt(type, Data.GetSubset(SelStart, SelEnd - SelStart), key));
+				Replace(Cryptor.Decrypt(Data.GetSubset(SelStart, SelEnd - SelStart), type, key));
 		}
 
-		internal void Command_Data_Sign(bool sign, Crypto.Type type)
+		internal void Command_Data_Sign(bool sign, Cryptor.Type type)
 		{
 			var keyResult = AsymmetricKeyDialog.Run(UIHelper.FindParent<Window>(this), type, !sign, sign, true, !sign);
 			if (keyResult == null)
@@ -848,8 +848,8 @@ namespace NeoEdit.HexEdit
 
 			string text;
 			if (sign)
-				text = Crypto.Sign(type, Data.GetSubset(SelStart, SelEnd - SelStart), keyResult.Key, keyResult.Hash);
-			else if (Crypto.Verify(type, Data.GetSubset(SelStart, SelEnd - SelStart), keyResult.Key, keyResult.Hash, keyResult.Signature))
+				text = Cryptor.Sign(Data.GetSubset(SelStart, SelEnd - SelStart), type, keyResult.Key, keyResult.Hash);
+			else if (Cryptor.Verify(Data.GetSubset(SelStart, SelEnd - SelStart), type, keyResult.Key, keyResult.Hash, keyResult.Signature))
 				text = "Matched.";
 			else
 				text = "ERROR: Signature DOES NOT match.";

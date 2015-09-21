@@ -4,7 +4,7 @@ using System.IO.Compression;
 
 namespace NeoEdit.Common.Transform
 {
-	public static class Compression
+	public static class Compressor
 	{
 		public enum Type
 		{
@@ -13,7 +13,7 @@ namespace NeoEdit.Common.Transform
 			Deflate,
 		}
 
-		public static byte[] Compress(Type type, byte[] data)
+		public static byte[] Compress(byte[] data, Type type)
 		{
 			switch (type)
 			{
@@ -35,7 +35,7 @@ namespace NeoEdit.Common.Transform
 			throw new InvalidOperationException();
 		}
 
-		public static byte[] Decompress(Type type, byte[] data)
+		public static byte[] Decompress(byte[] data, Type type)
 		{
 			switch (type)
 			{

@@ -4,31 +4,31 @@ using System.Security.Cryptography;
 
 namespace NeoEdit.Common.Transform
 {
-	abstract class Hasher
+	abstract class HasherBase
 	{
 		public abstract byte[] ComputeHash(byte[] data);
 		public abstract byte[] ComputeHash(Stream stream);
 	}
 
-	class MD5Hasher : Hasher
+	class MD5Hasher : HasherBase
 	{
 		public override byte[] ComputeHash(byte[] data) { return MD5.Create().ComputeHash(data); }
 		public override byte[] ComputeHash(Stream stream) { return MD5.Create().ComputeHash(stream); }
 	}
 
-	class SHA1Hasher : Hasher
+	class SHA1Hasher : HasherBase
 	{
 		public override byte[] ComputeHash(byte[] data) { return SHA1.Create().ComputeHash(data); }
 		public override byte[] ComputeHash(Stream stream) { return SHA1.Create().ComputeHash(stream); }
 	}
 
-	class SHA256Hasher : Hasher
+	class SHA256Hasher : HasherBase
 	{
 		public override byte[] ComputeHash(byte[] data) { return SHA256.Create().ComputeHash(data); }
 		public override byte[] ComputeHash(Stream stream) { return SHA256.Create().ComputeHash(stream); }
 	}
 
-	class QuickHasher : Hasher
+	class QuickHasher : HasherBase
 	{
 		const int BlockSize = 2048;
 
@@ -73,7 +73,7 @@ namespace NeoEdit.Common.Transform
 		}
 	}
 
-	public static class Hash
+	public static class Hasher
 	{
 		public enum Type
 		{
@@ -84,7 +84,7 @@ namespace NeoEdit.Common.Transform
 			QuickHash,
 		}
 
-		static Hasher GetHasher(Type type)
+		static HasherBase GetHasher(Type type)
 		{
 			switch (type)
 			{
@@ -96,20 +96,20 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		public static string Get(Type type, byte[] data)
+		public static string Get(byte[] data, Type type)
 		{
 			return Coder.BytesToString(GetHasher(type).ComputeHash(data), Coder.CodePage.Hex);
 		}
 
-		public static string Get(Type type, Stream stream)
+		public static string Get(Stream stream, Type type)
 		{
 			return Coder.BytesToString(GetHasher(type).ComputeHash(stream), Coder.CodePage.Hex);
 		}
 
-		public static string Get(Type type, string fileName)
+		public static string Get(string fileName, Type type)
 		{
 			using (var stream = File.OpenRead(fileName))
-				return Get(type, stream);
+				return Get(stream, type);
 		}
 	}
 }

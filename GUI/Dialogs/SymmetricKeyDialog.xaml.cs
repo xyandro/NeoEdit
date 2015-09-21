@@ -12,8 +12,8 @@ namespace NeoEdit.GUI.Dialogs
 			public string Key { get; set; }
 		}
 
-		Crypto.Type type;
-		Crypto.Type Type
+		Cryptor.Type type;
+		Cryptor.Type Type
 		{
 			get { return type; }
 			set
@@ -22,7 +22,7 @@ namespace NeoEdit.GUI.Dialogs
 				keySize.Items.Clear();
 				IEnumerable<int> keySizes;
 				int defaultSize;
-				Crypto.GetKeySizeInfo(type, out keySizes, out defaultSize);
+				Cryptor.GetKeySizeInfo(type, out keySizes, out defaultSize);
 				foreach (var size in keySizes)
 				{
 					if (size == defaultSize)
@@ -37,7 +37,7 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			InitializeComponent();
 
-			Type = Crypto.Type.AES;
+			Type = Cryptor.Type.AES;
 			salt.Text = "AWdSJ9hs72TXUUqaKpYIbU2v/YONdOxf";
 		}
 
@@ -74,7 +74,7 @@ namespace NeoEdit.GUI.Dialogs
 			if ((String.IsNullOrEmpty(password.Text)) || (String.IsNullOrEmpty(salt.Text)))
 				return;
 
-			key.Text = Crypto.GetRfc2898Key(password.Text, salt.Text, Int32.Parse(keySize.Text));
+			key.Text = Cryptor.GetRfc2898Key(password.Text, salt.Text, Int32.Parse(keySize.Text));
 		}
 
 		void GenerateKey(object sender, RoutedEventArgs e)
@@ -82,7 +82,7 @@ namespace NeoEdit.GUI.Dialogs
 			Generate();
 		}
 
-		public static Result Run(Window owner, Crypto.Type type, bool acceptEmpty = false)
+		public static Result Run(Window owner, Cryptor.Type type, bool acceptEmpty = false)
 		{
 			var dialog = new SymmetricKeyDialog { Owner = owner, Type = type, AcceptEmpty = acceptEmpty };
 			if (!dialog.ShowDialog())

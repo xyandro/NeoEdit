@@ -25,7 +25,7 @@ namespace NeoEdit.Disk
 						stream.CopyTo(ms);
 						data = ms.ToArray();
 					}
-					data = Compression.Decompress(Compression.Type.GZip, data);
+					data = Compressor.Decompress(data, Compressor.Type.GZip);
 					var fileName = resource.Substring(Header.Length, resource.Length - Header.Length - ".gz".Length);
 					File.WriteAllBytes(Path.Combine(magicPath, fileName), data);
 				}

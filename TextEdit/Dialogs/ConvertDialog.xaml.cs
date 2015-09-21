@@ -31,7 +31,6 @@ namespace NeoEdit.TextEdit.Dialogs
 			InitializeComponent();
 
 			var codePages = Coder.GetAllCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
-			codePages[Coder.CodePage.Clipboard] = "<Clipboard value>";
 
 			inputType.ItemsSource = codePages;
 			inputType.SelectedValuePath = "Key";

@@ -344,14 +344,14 @@ namespace NeoEdit.TextEdit
 				return data;
 
 			EncryptionKeys.Add(AESKey);
-			return EncryptedHeader.Concat(Crypto.Encrypt(Crypto.Type.AES, EncryptedValidate.Concat(data).ToArray(), AESKey)).ToArray();
+			return EncryptedHeader.Concat(Cryptor.Encrypt(EncryptedValidate.Concat(data).ToArray(), Cryptor.Type.AES, AESKey)).ToArray();
 		}
 
 		static byte[] Decrypt(byte[] data, string key)
 		{
 			try
 			{
-				data = Crypto.Decrypt(Crypto.Type.AES, data, key);
+				data = Cryptor.Decrypt(data, Cryptor.Type.AES, key);
 				if ((data.Length < EncryptedValidate.Length) || (!data.Equal(EncryptedValidate, EncryptedValidate.Length)))
 					return null;
 				data = data.Skip(EncryptedValidate.Length).ToArray();
@@ -378,7 +378,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			var dialogResult = SymmetricKeyDialog.Run(WindowParent, Crypto.Type.AES);
+			var dialogResult = SymmetricKeyDialog.Run(WindowParent, Cryptor.Type.AES);
 			if (dialogResult == null)
 				throw new Exception("Failed to decrypt file");
 
@@ -822,9 +822,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_URL_Escape: Command_Edit_URL_Escape(); break;
 				case TextEditCommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(); break;
 				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as MakeAbsoluteDialog.Result); break;
-				case TextEditCommand.Edit_Hash_MD5: Command_Edit_Hash(Hash.Type.MD5, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Edit_Hash_SHA1: Command_Edit_Hash(Hash.Type.SHA1, dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.Edit_Hash_SHA256: Command_Edit_Hash(Hash.Type.SHA256, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Edit_Hash_MD5: Command_Edit_Hash(Hasher.Type.MD5, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Edit_Hash_SHA1: Command_Edit_Hash(Hasher.Type.SHA1, dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.Edit_Hash_SHA256: Command_Edit_Hash(Hasher.Type.SHA256, dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.Edit_Sort: Command_Edit_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Edit_Convert: Command_Edit_Convert(dialogResult as ConvertDialog.Result); break;
 				case TextEditCommand.Edit_Bookmarks_Toggle: Command_Edit_Bookmarks_Toggle(); break;
@@ -858,9 +858,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Select_NonExisting: Command_Files_Select_Existing(false); break;
 				case TextEditCommand.Files_Select_Roots: Command_Files_Select_Roots(true); break;
 				case TextEditCommand.Files_Select_NonRoots: Command_Files_Select_Roots(false); break;
-				case TextEditCommand.Files_Hash_MD5: Command_Files_Hash(Hash.Type.MD5); break;
-				case TextEditCommand.Files_Hash_SHA1: Command_Files_Hash(Hash.Type.SHA1); break;
-				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hash.Type.SHA256); break;
+				case TextEditCommand.Files_Hash_MD5: Command_Files_Hash(Hasher.Type.MD5); break;
+				case TextEditCommand.Files_Hash_SHA1: Command_Files_Hash(Hasher.Type.SHA1); break;
+				case TextEditCommand.Files_Hash_SHA256: Command_Files_Hash(Hasher.Type.SHA256); break;
 				case TextEditCommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(false); break;
 				case TextEditCommand.Files_Operations_Move: Command_Files_Operations_CopyMove(true); break;
 				case TextEditCommand.Files_Operations_Delete: Command_Files_Operations_Delete(); break;
@@ -1291,7 +1291,7 @@ namespace NeoEdit.TextEdit
 
 		internal SymmetricKeyDialog.Result Command_File_Operations_Encryption_Dialog()
 		{
-			return SymmetricKeyDialog.Run(WindowParent, Crypto.Type.AES, true);
+			return SymmetricKeyDialog.Run(WindowParent, Cryptor.Type.AES, true);
 		}
 
 		internal void Command_File_Operations_Encryption(SymmetricKeyDialog.Result result)
@@ -2016,9 +2016,9 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
 		}
 
-		internal void Command_Files_Hash(Hash.Type type)
+		internal void Command_Files_Hash(Hasher.Type type)
 		{
-			ReplaceSelections(Selections.Select(range => Hash.Get(type, GetString(range))).ToList());
+			ReplaceSelections(Selections.Select(range => Hasher.Get(GetString(range), type)).ToList());
 		}
 
 		internal void Command_Files_Operations_CopyMove(bool move)
@@ -2138,16 +2138,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_Convert(ConvertDialog.Result result)
 		{
-			List<Coder.CodePage> clipboardCodePages = null;
-			if ((result.InputType == Coder.CodePage.Clipboard) || (result.OutputType == Coder.CodePage.Clipboard))
-			{
-				var clipboardStrings = Clipboard;
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard must match number of selections.");
-				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
-			}
-
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.InputType, result.InputBOM), result.OutputType == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.OutputType, result.OutputBOM)).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, num) => Coder.BytesToString(Coder.StringToBytes(GetString(range), result.InputType, result.InputBOM), result.OutputType, result.OutputBOM)).ToList());
 		}
 
 		internal void Command_Text_Length()
@@ -2350,13 +2341,13 @@ namespace NeoEdit.TextEdit
 			return EncodingDialog.Run(WindowParent, CodePage);
 		}
 
-		internal void Command_Edit_Hash(Hash.Type type, EncodingDialog.Result result)
+		internal void Command_Edit_Hash(Hasher.Type type, EncodingDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
 				return;
 
-			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hash.Get(type, Coder.StringToBytes(str, result.CodePage))).ToList());
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), type)).ToList());
 		}
 
 		async Task<string> GetURL(string url)
@@ -2507,30 +2498,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Numeric_MinMaxValues(MinMaxValuesDialog.Result result)
 		{
-			List<Coder.CodePage> clipboardCodePages = null;
-			var codePageMinMaxValues = new Dictionary<Coder.CodePage, string> { { result.CodePage, "" } };
-			if (result.CodePage == Coder.CodePage.Clipboard)
-			{
-				var clipboardStrings = Clipboard;
-				if (clipboardStrings.Count != Selections.Count)
-					throw new Exception("Number of items on clipboard must match number of selections.");
-				clipboardCodePages = clipboardStrings.Select(codePageStr => Helpers.ParseEnum<Coder.CodePage>(codePageStr)).ToList();
-				codePageMinMaxValues = clipboardCodePages.Distinct().ToDictionary(codePage => codePage, codePage => "");
-			}
-
-			foreach (var codePage in codePageMinMaxValues.Keys.ToList())
-			{
-				if (result.Min)
-				{
-					codePageMinMaxValues[codePage] += codePage.MinValue();
-					if (result.Max)
-						codePageMinMaxValues[codePage] += " ";
-				}
-				if (result.Max)
-					codePageMinMaxValues[codePage] += codePage.MaxValue();
-			}
-
-			ReplaceSelections(Selections.AsParallel().Select((range, num) => codePageMinMaxValues[result.CodePage == Coder.CodePage.Clipboard ? clipboardCodePages[num] : result.CodePage]).ToList());
+			ReplaceSelections(String.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !String.IsNullOrEmpty(str))));
 		}
 
 		internal CombinationsPermutationsDialog.Result Command_Text_CombinationsPermutations_Dialog()

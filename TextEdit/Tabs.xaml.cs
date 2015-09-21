@@ -209,7 +209,7 @@ namespace NeoEdit.TextEdit
 				data = ms.ToArray();
 			}
 
-			data = Compression.Decompress(Compression.Type.GZip, data);
+			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
 			AddTextEditor(bytes: data, modified: false);
 		}

@@ -74,7 +74,7 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			var data = File.ReadAllBytes(Input);
-			data = Compression.Decompress(Compression.Type.GZip, data);
+			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			File.WriteAllBytes(Output, data);
 		}
 	}
@@ -90,7 +90,7 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			var data = File.ReadAllBytes(Input);
-			data = Compression.Compress(Compression.Type.GZip, data);
+			data = Compressor.Compress(data, Compressor.Type.GZip);
 			File.WriteAllBytes(Output, data);
 		}
 	}

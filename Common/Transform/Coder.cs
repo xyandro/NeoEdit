@@ -12,8 +12,6 @@ namespace NeoEdit.Common.Transform
 		{
 			None = -1000,
 
-			Clipboard = -5000, // This is a placeholder, to be handled in appropriate situations (but not here)
-
 			StartNum = -100,
 			Int8 = -101,
 			Int16LE = -102,

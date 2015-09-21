@@ -15,8 +15,8 @@ namespace NeoEdit.GUI.Dialogs
 		}
 
 		readonly bool IsPublic;
-		readonly Crypto.Type Type;
-		AsymmetricKeyDialog(Crypto.Type type, bool isPublic, bool canGenerate, bool getHash, bool getSignature)
+		readonly Cryptor.Type Type;
+		AsymmetricKeyDialog(Cryptor.Type type, bool isPublic, bool canGenerate, bool getHash, bool getSignature)
 		{
 			InitializeComponent();
 
@@ -25,7 +25,7 @@ namespace NeoEdit.GUI.Dialogs
 
 			IEnumerable<int> keySizes;
 			int defaultSize;
-			Crypto.GetKeySizeInfo(type, out keySizes, out defaultSize);
+			Cryptor.GetKeySizeInfo(type, out keySizes, out defaultSize);
 			keySize.Items.Clear();
 			foreach (var size in keySizes)
 			{
@@ -61,12 +61,12 @@ namespace NeoEdit.GUI.Dialogs
 		void GenerateKey(object sender, RoutedEventArgs e)
 		{
 			if (String.IsNullOrEmpty(privateKey.Text))
-				privateKey.Text = Crypto.GenerateKey(Type, Int32.Parse(keySize.Text));
-			publicKey.Text = Crypto.GetPublicKey(Type, privateKey.Text);
+				privateKey.Text = Cryptor.GenerateKey(Type, Int32.Parse(keySize.Text));
+			publicKey.Text = Cryptor.GetPublicKey(Type, privateKey.Text);
 			key.Text = IsPublic ? publicKey.Text : privateKey.Text;
 		}
 
-		public static Result Run(Window owner, Crypto.Type type, bool isPublic = true, bool canGenerate = false, bool getHash = false, bool getSignature = false)
+		public static Result Run(Window owner, Cryptor.Type type, bool isPublic = true, bool canGenerate = false, bool getHash = false, bool getSignature = false)
 		{
 			var dialog = new AsymmetricKeyDialog(type, isPublic, getHash, canGenerate, getSignature) { Owner = owner };
 			if (!dialog.ShowDialog())

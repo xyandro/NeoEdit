@@ -48,9 +48,9 @@
     <Compile Include="TextData.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />
-    <Compile Include="Transform\Compression.cs" />
-    <Compile Include="Transform\Crypto.cs" />
-    <Compile Include="Transform\Hash.cs" />
+    <Compile Include="Transform\Compressor.cs" />
+    <Compile Include="Transform\Cryptor.cs" />
+    <Compile Include="Transform\Hasher.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
     <Compile Include="UnitTest\CoderTest.cs" />
     <Compile Include="UnitTest\CompressionTest.cs" />

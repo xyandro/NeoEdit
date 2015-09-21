@@ -7,7 +7,7 @@ using System.Text;
 
 namespace NeoEdit.Common.Transform
 {
-	public static class Crypto
+	public static class Cryptor
 	{
 		public enum Type
 		{
@@ -69,7 +69,7 @@ namespace NeoEdit.Common.Transform
 				return Convert.ToBase64String(byteGenerator.GetBytes(keySize / 8));
 		}
 
-		public static byte[] Encrypt(Type type, byte[] data, string key)
+		public static byte[] Encrypt(byte[] data, Type type, string key)
 		{
 			switch (type)
 			{
@@ -96,7 +96,7 @@ namespace NeoEdit.Common.Transform
 			throw new Exception("Failed to encrypt");
 		}
 
-		public static byte[] Decrypt(Type type, byte[] data, string key)
+		public static byte[] Decrypt(byte[] data, Type type, string key)
 		{
 			try
 			{
@@ -203,8 +203,8 @@ namespace NeoEdit.Common.Transform
 			var aesKey = GenerateKey(Type.AES, 0);
 			using (var ms = new MemoryStream())
 			{
-				var encryptedAesKey = Encrypt(Type.RSA, Encoding.UTF8.GetBytes(aesKey), pubKey);
-				var encryptedData = Encrypt(Type.AES, data, aesKey);
+				var encryptedAesKey = Encrypt(Encoding.UTF8.GetBytes(aesKey), Type.RSA, pubKey);
+				var encryptedData = Encrypt(data, Type.AES, aesKey);
 
 				ms.Write(BitConverter.GetBytes(encryptedAesKey.Length), 0, sizeof(int));
 				ms.Write(encryptedAesKey, 0, encryptedAesKey.Length);
@@ -218,9 +218,9 @@ namespace NeoEdit.Common.Transform
 		{
 			var encryptedAesKey = new byte[BitConverter.ToInt32(data, 0)];
 			Array.Copy(data, sizeof(int), encryptedAesKey, 0, encryptedAesKey.Length);
-			var aesKey = Encoding.UTF8.GetString(Decrypt(Type.RSA, encryptedAesKey, privKey));
+			var aesKey = Encoding.UTF8.GetString(Decrypt(encryptedAesKey, Type.RSA, privKey));
 			var encryptedData = data.Skip(sizeof(int) + encryptedAesKey.Length).ToArray();
-			return Decrypt(Type.AES, encryptedData, aesKey);
+			return Decrypt(encryptedData, Type.AES, aesKey);
 		}
 
 		public static IEnumerable<string> SigningHashes(this Type type)
@@ -233,7 +233,7 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		public static string Sign(Type type, byte[] data, string privKey, string hash)
+		public static string Sign(byte[] data, Type type, string privKey, string hash)
 		{
 			var alg = GetAsymmetricAlgorithm(type);
 			alg.FromXmlString(privKey);
@@ -247,7 +247,7 @@ namespace NeoEdit.Common.Transform
 			throw new Exception("Unable to sign");
 		}
 
-		public static bool Verify(Type type, byte[] data, string pubKey, string hash, string signature)
+		public static bool Verify(byte[] data, Type type, string pubKey, string hash, string signature)
 		{
 			var alg = GetAsymmetricAlgorithm(type);
 			alg.FromXmlString(pubKey);

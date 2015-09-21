@@ -232,7 +232,7 @@ namespace NeoEdit.Disk
 			if (FileType != DiskItemType.File)
 				return;
 
-			MD5 = Hash.Get(Hash.Type.MD5, FullName);
+			MD5 = Hasher.Get(FullName, Hasher.Type.MD5);
 		}
 
 		public void SetSHA1()
@@ -240,7 +240,7 @@ namespace NeoEdit.Disk
 			if (FileType != DiskItemType.File)
 				return;
 
-			SHA1 = Hash.Get(Hash.Type.SHA1, FullName);
+			SHA1 = Hasher.Get(FullName, Hasher.Type.SHA1);
 		}
 
 		public void SetSHA256()
@@ -248,7 +248,7 @@ namespace NeoEdit.Disk
 			if (FileType != DiskItemType.File)
 				return;
 
-			SHA256 = Hash.Get(Hash.Type.SHA256, FullName);
+			SHA256 = Hasher.Get(FullName, Hasher.Type.SHA256);
 		}
 
 		public void SetQuickHash()
@@ -256,7 +256,7 @@ namespace NeoEdit.Disk
 			if (FileType != DiskItemType.File)
 				return;
 
-			QuickHash = Hash.Get(Hash.Type.QuickHash, FullName);
+			QuickHash = Hasher.Get(FullName, Hasher.Type.QuickHash);
 		}
 
 		public void SetVCSStatus()
