@@ -1,115 +1,88 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using NeoEdit.Common.Transform.Hashes;
 
 namespace NeoEdit.Common.Transform
 {
-	abstract class HasherBase
-	{
-		public abstract byte[] ComputeHash(byte[] data);
-		public abstract byte[] ComputeHash(Stream stream);
-	}
-
-	class MD5Hasher : HasherBase
-	{
-		public override byte[] ComputeHash(byte[] data) { return MD5.Create().ComputeHash(data); }
-		public override byte[] ComputeHash(Stream stream) { return MD5.Create().ComputeHash(stream); }
-	}
-
-	class SHA1Hasher : HasherBase
-	{
-		public override byte[] ComputeHash(byte[] data) { return SHA1.Create().ComputeHash(data); }
-		public override byte[] ComputeHash(Stream stream) { return SHA1.Create().ComputeHash(stream); }
-	}
-
-	class SHA256Hasher : HasherBase
-	{
-		public override byte[] ComputeHash(byte[] data) { return SHA256.Create().ComputeHash(data); }
-		public override byte[] ComputeHash(Stream stream) { return SHA256.Create().ComputeHash(stream); }
-	}
-
-	class QuickHasher : HasherBase
-	{
-		const int BlockSize = 2048;
-
-		public override byte[] ComputeHash(byte[] data)
-		{
-			var hash = SHA256.Create();
-			hash.Initialize();
-
-			var blockSize = (int)Math.Min(data.LongLength, BlockSize);
-
-			var length = BitConverter.GetBytes(data.LongLength);
-			hash.TransformBlock(length, 0, length.Length, null, 0);
-
-			hash.TransformBlock(data, 0, blockSize, null, 0); // First block
-			hash.TransformFinalBlock(data, data.Length - blockSize, blockSize); // Last block
-
-			return hash.Hash;
-		}
-
-		public override byte[] ComputeHash(Stream stream)
-		{
-			var hash = SHA256.Create();
-			hash.Initialize();
-
-			var blockSize = (int)Math.Min(stream.Length, BlockSize);
-			var buffer = new byte[blockSize];
-
-			var length = BitConverter.GetBytes(stream.Length);
-			hash.TransformBlock(length, 0, length.Length, null, 0);
-
-			// First block
-			stream.Position = 0;
-			stream.Read(buffer, 0, blockSize);
-			hash.TransformBlock(buffer, 0, buffer.Length, null, 0);
-
-			// Last block
-			stream.Position = stream.Length - blockSize;
-			stream.Read(buffer, 0, blockSize);
-			hash.TransformFinalBlock(buffer, 0, buffer.Length);
-
-			return hash.Hash;
-		}
-	}
-
 	public static class Hasher
 	{
 		public enum Type
 		{
 			None,
+			MD2,
+			MD4,
 			MD5,
 			SHA1,
 			SHA256,
+			SHA384,
+			SHA512,
+			HMACMD5,
+			HMACRIPEMD160,
+			HMACSHA1,
+			HMACSHA256,
+			HMACSHA384,
+			HMACSHA512,
+			MACTripleDES,
+			RIPEMD160,
 			QuickHash,
 		}
 
-		static HasherBase GetHasher(Type type)
+		static HashAlgorithm GetHashAlgorithm(Type type, byte[] key)
 		{
 			switch (type)
 			{
-				case Type.MD5: return new MD5Hasher();
-				case Type.SHA1: return new SHA1Hasher();
-				case Type.SHA256: return new SHA256Hasher();
-				case Type.QuickHash: return new QuickHasher();
-				default: throw new InvalidOperationException();
+				case Type.MD2: return new MD2();
+				case Type.MD4: return new MD4();
+				case Type.MD5: return MD5.Create();
+				case Type.SHA1: return SHA1.Create();
+				case Type.SHA256: return SHA256.Create();
+				case Type.SHA384: return SHA384.Create();
+				case Type.SHA512: return SHA512.Create();
+				case Type.HMACMD5: return new HMACMD5(key);
+				case Type.HMACRIPEMD160: return new HMACRIPEMD160(key);
+				case Type.HMACSHA1: return new HMACSHA1(key);
+				case Type.HMACSHA256: return new HMACSHA256(key);
+				case Type.HMACSHA384: return new HMACSHA384(key);
+				case Type.HMACSHA512: return new HMACSHA512(key);
+				case Type.MACTripleDES: return new MACTripleDES(key);
+				case Type.RIPEMD160: return RIPEMD160.Create();
+				default: return null;
 			}
 		}
 
-		public static string Get(byte[] data, Type type)
+		public static string Get(byte[] data, Type type, byte[] key = null)
 		{
-			return Coder.BytesToString(GetHasher(type).ComputeHash(data), Coder.CodePage.Hex);
+			switch (type)
+			{
+				case Type.QuickHash: return Coder.BytesToString(QuickHash.ComputeHash(data), Coder.CodePage.Hex);
+			}
+
+			var hashAlg = GetHashAlgorithm(type, key);
+			if (hashAlg != null)
+				return Coder.BytesToString(hashAlg.ComputeHash(data), Coder.CodePage.Hex);
+
+			throw new NotImplementedException();
 		}
 
-		public static string Get(Stream stream, Type type)
+		public static string Get(Stream stream, Type type, byte[] key = null)
 		{
-			return Coder.BytesToString(GetHasher(type).ComputeHash(stream), Coder.CodePage.Hex);
+			switch (type)
+			{
+				case Type.QuickHash: return Coder.BytesToString(QuickHash.ComputeHash(stream), Coder.CodePage.Hex);
+			}
+
+			var hashAlg = GetHashAlgorithm(type, key);
+			if (hashAlg != null)
+				return Coder.BytesToString(hashAlg.ComputeHash(stream), Coder.CodePage.Hex);
+
+			throw new NotImplementedException();
 		}
 
-		public static string Get(string fileName, Type type)
+		public static string Get(string fileName, Type type, byte[] key = null)
 		{
 			using (var stream = File.OpenRead(fileName))
-				return Get(stream, type);
+				return Get(stream, type, key);
 		}
 	}
 }
