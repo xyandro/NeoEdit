@@ -25,7 +25,7 @@
 			<Button Name="test" DockPanel.Dock="Bottom" Click="TestClick" Content="_Test" Focusable="False"/>
 			<Label/>
 		</DockPanel>
-		
+
 		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Width="{Binding ActualWidth, ElementName=test}" Focusable="False"/>
 			<Button IsCancel="True" Content="Cancel" Focusable="False"/>

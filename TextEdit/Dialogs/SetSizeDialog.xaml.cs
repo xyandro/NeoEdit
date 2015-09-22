@@ -35,7 +35,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		SetSizeDialog(Dictionary<string, List<object>> expressionData)
 		{
-			FactorDict = new Dictionary<string, long> 
+			FactorDict = new Dictionary<string, long>
 			{
 				{ "GB", 1 << 30 },
 				{ "MB", 1 << 20 },

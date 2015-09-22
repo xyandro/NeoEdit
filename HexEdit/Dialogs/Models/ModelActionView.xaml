@@ -132,7 +132,7 @@
 		</GroupBox>
 
 		<StackPanel Height="10"/>
-		
+
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>

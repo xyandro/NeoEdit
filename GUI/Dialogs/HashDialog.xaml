@@ -9,7 +9,7 @@
 		<Grid.Resources>
 			<guiConverters:HexConverter x:Key="hexConverter"/>
 		</Grid.Resources>
-		
+
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
 			<ColumnDefinition Width="400"/>

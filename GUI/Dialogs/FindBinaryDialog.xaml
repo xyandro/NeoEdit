@@ -33,7 +33,7 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
-		
+
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
@@ -43,7 +43,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		
+
 		<Label Grid.Row="0" Content="Search for:"/>
 		<guiControls:AutoCompleteTextBox Grid.Row="1" x:Name="findText" Margin="0,0,0,10" Text="{Binding FindText, ElementName=self, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" AutoSuggestionList="{Binding History, ElementName=self}"/>
 

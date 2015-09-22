@@ -15,7 +15,7 @@
 		</Grid.RowDefinitions>
 
 		<processes:ProcessesMenu x:Name="menu" Parent="{Binding ElementName=self}" Focusable="False"/>
-		
+
 		<processes:ProcessItemGrid x:Name="processes" Grid.Row="1" Items="{Binding Processes, ElementName=self}"/>
 	</Grid>
 

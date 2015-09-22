@@ -12,7 +12,7 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		
+
 		<GroupBox Grid.Row="0" Grid.Column="0" Header="Convert:">
 			<Grid HorizontalAlignment="Left">
 				<Grid.ColumnDefinitions>

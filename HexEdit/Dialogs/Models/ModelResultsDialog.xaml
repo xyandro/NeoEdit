@@ -14,7 +14,7 @@
 		</Grid.RowDefinitions>
 
 		<models:ModelResultGrid Grid.Row="0" Grid.Column="0" x:Name="results" Width="600" Height="300" Items="{Binding Results, ElementName=self}" SelectionChanged="SelectionChanged"/>
-		
+
 		<UniformGrid Grid.Row="1" Grid.Column="0" Rows="1" HorizontalAlignment="Left">
 			<Button Click="ModifyValues" Content="_Modify" Padding="10,1"/>
 			<Button Click="RemoveValues" Content="_Remove" Padding="10,1"/>
