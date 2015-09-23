@@ -1,7 +1,6 @@
 All:
 Add command prompt
 Add data set/table viewer
-Coder: Convert a series of numbers instead of one only
 
 Disk:
 Move timestamp (possibly others) from TextEditor
@@ -24,6 +23,7 @@ Time zones
 Undo revert
 Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
+Get DLL/EXE version info
 
 View:
 Update as new lines are added

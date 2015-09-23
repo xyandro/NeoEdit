@@ -124,16 +124,6 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		static byte[] Resize(byte[] data, long count, bool littleEndian)
-		{
-			var ret = new byte[count];
-			count = Math.Min(count, data.Length);
-			Array.Copy(data, 0, ret, 0, count);
-			if (!littleEndian)
-				Array.Reverse(ret, 0, (int)count);
-			return ret;
-		}
-
 		class NEEncoding
 		{
 			public CodePage codePage { get; private set; }
@@ -364,6 +354,20 @@ namespace NeoEdit.Common.Transform
 			return bytes;
 		}
 
+		static string BytesToNum<T>(byte[] data, int size, Func<byte[], T> converter, bool reverse) where T : struct
+		{
+			var current = new byte[size];
+			var result = new List<T>();
+			for (var index = 0; index < data.Length; index += size)
+			{
+				Array.Copy(data, index, current, 0, size);
+				if (reverse)
+					Array.Reverse(current);
+				result.Add(converter(current));
+			}
+			return String.Join(" ", result);
+		}
+
 		public static string TryBytesToString(byte[] data, CodePage codePage, bool stripBOM = false)
 		{
 			try
@@ -375,22 +379,22 @@ namespace NeoEdit.Common.Transform
 
 				switch (codePage)
 				{
-					case CodePage.Int8: return ((sbyte)Resize(data, 1, true)[0]).ToString();
-					case CodePage.Int16LE: return BitConverter.ToInt16(Resize(data, 2, true), 0).ToString();
-					case CodePage.Int16BE: return BitConverter.ToInt16(Resize(data, 2, false), 0).ToString();
-					case CodePage.Int32LE: return BitConverter.ToInt32(Resize(data, 4, true), 0).ToString();
-					case CodePage.Int32BE: return BitConverter.ToInt32(Resize(data, 4, false), 0).ToString();
-					case CodePage.Int64LE: return BitConverter.ToInt64(Resize(data, 8, true), 0).ToString();
-					case CodePage.Int64BE: return BitConverter.ToInt64(Resize(data, 8, false), 0).ToString();
-					case CodePage.UInt8: return Resize(data, 1, true)[0].ToString();
-					case CodePage.UInt16LE: return BitConverter.ToUInt16(Resize(data, 2, true), 0).ToString();
-					case CodePage.UInt16BE: return BitConverter.ToUInt16(Resize(data, 2, false), 0).ToString();
-					case CodePage.UInt32LE: return BitConverter.ToUInt32(Resize(data, 4, true), 0).ToString();
-					case CodePage.UInt32BE: return BitConverter.ToUInt32(Resize(data, 4, false), 0).ToString();
-					case CodePage.UInt64LE: return BitConverter.ToUInt64(Resize(data, 8, true), 0).ToString();
-					case CodePage.UInt64BE: return BitConverter.ToUInt64(Resize(data, 8, false), 0).ToString();
-					case CodePage.Single: return BitConverter.ToSingle(Resize(data, 4, true), 0).ToString();
-					case CodePage.Double: return BitConverter.ToDouble(Resize(data, 8, true), 0).ToString();
+					case CodePage.Int8: return BytesToNum(data, sizeof(sbyte), bytes => (sbyte)bytes[0], false);
+					case CodePage.Int16LE: return BytesToNum(data, sizeof(Int16), bytes => BitConverter.ToInt16(bytes, 0), false);
+					case CodePage.Int16BE: return BytesToNum(data, sizeof(Int16), bytes => BitConverter.ToInt16(bytes, 0), true);
+					case CodePage.Int32LE: return BytesToNum(data, sizeof(Int32), bytes => BitConverter.ToInt32(bytes, 0), false);
+					case CodePage.Int32BE: return BytesToNum(data, sizeof(Int32), bytes => BitConverter.ToInt32(bytes, 0), true);
+					case CodePage.Int64LE: return BytesToNum(data, sizeof(Int64), bytes => BitConverter.ToInt64(bytes, 0), false);
+					case CodePage.Int64BE: return BytesToNum(data, sizeof(Int64), bytes => BitConverter.ToInt64(bytes, 0), true);
+					case CodePage.UInt8: return BytesToNum(data, sizeof(byte), bytes => bytes[0], false);
+					case CodePage.UInt16LE: return BytesToNum(data, sizeof(UInt16), bytes => BitConverter.ToUInt16(bytes, 0), false);
+					case CodePage.UInt16BE: return BytesToNum(data, sizeof(UInt16), bytes => BitConverter.ToUInt16(bytes, 0), true);
+					case CodePage.UInt32LE: return BytesToNum(data, sizeof(UInt32), bytes => BitConverter.ToUInt32(bytes, 0), false);
+					case CodePage.UInt32BE: return BytesToNum(data, sizeof(UInt32), bytes => BitConverter.ToUInt32(bytes, 0), true);
+					case CodePage.UInt64LE: return BytesToNum(data, sizeof(UInt64), bytes => BitConverter.ToUInt64(bytes, 0), false);
+					case CodePage.UInt64BE: return BytesToNum(data, sizeof(UInt64), bytes => BitConverter.ToUInt64(bytes, 0), true);
+					case CodePage.Single: return BytesToNum(data, sizeof(Single), bytes => BitConverter.ToSingle(bytes, 0), false);
+					case CodePage.Double: return BytesToNum(data, sizeof(Double), bytes => BitConverter.ToDouble(bytes, 0), false);
 					case CodePage.Base64: return Convert.ToBase64String(data);
 					case CodePage.Hex: return ToHexString(data);
 					case CodePage.HexRev: return ToHexRevString(data);
@@ -447,15 +451,24 @@ namespace NeoEdit.Common.Transform
 		}
 
 		delegate bool TryParseHandler<T>(string value, out T result);
-		static byte[] NumToBytes<T>(string str, TryParseHandler<T> tryParse, Func<T, byte[]> converter, bool reverse)
+		static byte[] NumToBytes<T>(string input, TryParseHandler<T> tryParse, Func<T, byte[]> converter, bool reverse)
 		{
-			T value;
-			if (!tryParse(str, out value))
-				return null;
-			var data = converter(value);
-			if (reverse)
-				Array.Reverse(data);
-			return data;
+			var strs = input.Split(',', ' ', '\t', '\r', '\n').Where(str => !String.IsNullOrWhiteSpace(str)).ToList();
+			byte[] result = null;
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+			{
+				T value;
+				if (!tryParse(strs[ctr], out value))
+					return null;
+				var bytes = converter(value);
+				if (reverse)
+					Array.Reverse(bytes);
+
+				if (result == null)
+					result = new byte[strs.Count * bytes.Length];
+				Array.Copy(bytes, 0, result, ctr * bytes.Length, bytes.Length);
+			}
+			return result ?? new byte[0];
 		}
 
 		public static byte[] TryStringToBytes(string value, CodePage codePage, bool addBOM = false)
