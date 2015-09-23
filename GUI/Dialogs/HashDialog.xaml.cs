@@ -11,21 +11,15 @@ namespace NeoEdit.GUI.Dialogs
 		public class Result
 		{
 			public Hasher.Type HashType { get; set; }
-			public byte[] Key { get; set; }
+			public byte[] HMACKey { get; set; }
 		}
 
 		[DepProp]
 		Hasher.Type HashType { get { return UIHelper<HashDialog>.GetPropValue<Hasher.Type>(this); } set { UIHelper<HashDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		byte[] Key { get { return UIHelper<HashDialog>.GetPropValue<byte[]>(this); } set { UIHelper<HashDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		bool NeedsKey { get { return UIHelper<HashDialog>.GetPropValue<bool>(this); } set { UIHelper<HashDialog>.SetPropValue(this, value); } }
+		byte[] HMACKey { get { return UIHelper<HashDialog>.GetPropValue<byte[]>(this); } set { UIHelper<HashDialog>.SetPropValue(this, value); } }
 
-		static HashDialog()
-		{
-			UIHelper<HashDialog>.Register();
-			UIHelper<HashDialog>.AddCallback(a => a.HashType, (obj, o, n) => obj.NeedsKey = Hasher.NeedsKey(obj.HashType));
-		}
+		static HashDialog() { UIHelper<HashDialog>.Register(); }
 
 		HashDialog()
 		{
@@ -37,7 +31,7 @@ namespace NeoEdit.GUI.Dialogs
 		Result result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { HashType = HashType, Key = Key };
+			result = new Result { HashType = HashType, HMACKey = HMACKey };
 			DialogResult = true;
 		}
 

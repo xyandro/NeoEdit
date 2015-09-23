@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Hash Text" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=codePage}">
+	Title="Hash Text" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=hashType}">
 
 	<Grid Margin="10" Name="content">
 		<Grid.Resources>
@@ -28,8 +28,8 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="_Hash:" Target="{Binding ElementName=hashType}" HorizontalAlignment="Right"/>
 		<ComboBox Grid.Row="1" Grid.Column="1" Name="hashType" SelectedValue="{Binding HashType, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_Key:" Target="{Binding ElementName=key}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="2" Grid.Column="1" Name="key" Text="{Binding Key, ElementName=self, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource hexConverter}}" IsEnabled="{Binding NeedsKey, ElementName=self}"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="HMAC _Key:" Target="{Binding ElementName=hmacKey}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="hmacKey" Text="{Binding HMACKey, ElementName=self, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource hexConverter}}"/>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

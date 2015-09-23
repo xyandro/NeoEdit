@@ -53,6 +53,9 @@
     <Reference Include="Antlr4.Runtime">
       <HintPath>$(SolutionDir)\Lib\ANTLR\Antlr4.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Classless.Hasher">
+      <HintPath>$(SolutionDir)\Lib\Classless.Hasher.dll</HintPath>
+    </Reference>
     <Reference Include="LibGit2Sharp">
       <HintPath>$(SolutionDir)\Lib\LibGit2Sharp.dll</HintPath>
     </Reference>

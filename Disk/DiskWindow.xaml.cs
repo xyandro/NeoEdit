@@ -264,7 +264,7 @@ namespace NeoEdit.Disk
 				return;
 
 			foreach (DiskItem selected in Selected)
-				selected.SetHash(result.HashType, result.Key);
+				selected.SetHash(result.HashType, result.HMACKey);
 			ShowColumn(a => a.Hash);
 		}
 

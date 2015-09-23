@@ -1,6 +1,7 @@
 All:
 Add command prompt
 Add data set/table viewer
+Coder: Convert a series of numbers instead of one only
 
 Disk:
 Move timestamp (possibly others) from TextEditor

@@ -2347,7 +2347,7 @@ namespace NeoEdit.TextEdit
 			if (!VerifyCanFullyEncode(strs, result.CodePage))
 				return;
 
-			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType)).ToList());
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
 		async Task<string> GetURL(string url)

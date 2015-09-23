@@ -12,7 +12,7 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			public Coder.CodePage CodePage { get; set; }
 			public Hasher.Type HashType { get; set; }
-			public byte[] Key { get; set; }
+			public byte[] HMACKey { get; set; }
 		}
 
 		[DepProp]
@@ -20,15 +20,9 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		Hasher.Type HashType { get { return UIHelper<HashTextDialog>.GetPropValue<Hasher.Type>(this); } set { UIHelper<HashTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		byte[] Key { get { return UIHelper<HashTextDialog>.GetPropValue<byte[]>(this); } set { UIHelper<HashTextDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		bool NeedsKey { get { return UIHelper<HashTextDialog>.GetPropValue<bool>(this); } set { UIHelper<HashTextDialog>.SetPropValue(this, value); } }
+		byte[] HMACKey { get { return UIHelper<HashTextDialog>.GetPropValue<byte[]>(this); } set { UIHelper<HashTextDialog>.SetPropValue(this, value); } }
 
-		static HashTextDialog()
-		{
-			UIHelper<HashTextDialog>.Register();
-			UIHelper<HashTextDialog>.AddCallback(a => a.HashType, (obj, o, n) => obj.NeedsKey = Hasher.NeedsKey(obj.HashType));
-		}
+		static HashTextDialog() { UIHelper<HashTextDialog>.Register(); }
 
 		HashTextDialog(Coder.CodePage _codePage)
 		{
@@ -46,7 +40,7 @@ namespace NeoEdit.GUI.Dialogs
 		Result result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { CodePage = CodePage, HashType = HashType, Key = Key };
+			result = new Result { CodePage = CodePage, HashType = HashType, HMACKey = HMACKey };
 			DialogResult = true;
 		}
 

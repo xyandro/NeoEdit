@@ -226,7 +226,7 @@ namespace NeoEdit.Disk
 			if (FileType != DiskItemType.File)
 				return;
 
-			Hash = Hasher.Get(FullName, hashType, key);
+			Hash = hashType.ToString() + ": " + Hasher.Get(FullName, hashType, key);
 		}
 
 		public void SetVCSStatus()
