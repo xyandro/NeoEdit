@@ -45,7 +45,7 @@ Function GitUpdate ()
 Function Build ()
 {
 	$devenv = "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.com"
-	Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|$platform" /project NeoEdit.Loader /out Build.log'
+	Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|$platform" /project Loader /out Build.log'
 	if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
 }
 
