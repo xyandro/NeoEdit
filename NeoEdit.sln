@@ -20,6 +20,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handles", "Handles\Handles.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexEdit", "HexEdit\HexEdit.csproj", "{6EAB3C48-87BF-4F98-972E-1D0C8B7E03A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "Loader\Loader.csproj", "{770DFCD1-C149-40E4-B1A1-76D06465A57C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DB80FD39-0222-4591-B224-833259BAC943} = {DB80FD39-0222-4591-B224-833259BAC943}
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-400C-4A95-B92C-95DF0146B2F4}"
 	ProjectSection(SolutionItems) = preProject
 		NeoEdit.csproj.props = NeoEdit.csproj.props
@@ -27,11 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-4
 		NeoEdit.vcxproj.props = NeoEdit.vcxproj.props
 		NeoEdit.vcxproj2.props = NeoEdit.vcxproj2.props
 		Todo.txt = Todo.txt
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit.Loader", "NeoEdit.Loader\NeoEdit.Loader.csproj", "{770DFCD1-C149-40E4-B1A1-76D06465A57C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DB80FD39-0222-4591-B224-833259BAC943} = {DB80FD39-0222-4591-B224-833259BAC943}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit", "NeoEdit\NeoEdit.csproj", "{DB80FD39-0222-4591-B224-833259BAC943}"
