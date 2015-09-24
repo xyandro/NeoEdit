@@ -45,8 +45,6 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitConsolerunner(CommandLineParamsParser.ConsolerunnerContext context) { return new ConsoleRunnerParam(context.param().Select(param => param.GetText()).ToArray()); }
 		public override object VisitDiff(CommandLineParamsParser.DiffContext context) { return new DiffParam(context.file1 == null ? null : context.file1.GetText(), context.file2 == null ? null : context.file2.GetText()); }
 		public override object VisitDisk(CommandLineParamsParser.DiskContext context) { return new DiskParam(context.file == null ? null : context.file.GetText()); }
-		public override object VisitGunzip(CommandLineParamsParser.GunzipContext context) { return new GUnZipParam(context.input.GetText(), context.output.GetText()); }
-		public override object VisitGzip(CommandLineParamsParser.GzipContext context) { return new GZipParam(context.input.GetText(), context.output.GetText()); }
 		public override object VisitHandles(CommandLineParamsParser.HandlesContext context) { return new HandlesParam(context.pid == null ? default(int?) : int.Parse(context.pid.Text)); }
 		public override object VisitHexdump(CommandLineParamsParser.HexdumpContext context) { return new HexDumpParam(context.param().Select(file => file.GetText()).ToList()); }
 		public override object VisitHexedit(CommandLineParamsParser.HexeditContext context) { return new HexEditParam(context.param().Select(file => file.GetText()).ToList()); }

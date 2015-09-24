@@ -63,38 +63,6 @@ namespace NeoEdit
 		}
 	}
 
-	class GUnZipParam : Param
-	{
-		readonly string Input, Output;
-		public GUnZipParam(string input, string output)
-		{
-			Input = input;
-			Output = output;
-		}
-		public override void Execute()
-		{
-			var data = File.ReadAllBytes(Input);
-			data = Compressor.Decompress(data, Compressor.Type.GZip);
-			File.WriteAllBytes(Output, data);
-		}
-	}
-
-	class GZipParam : Param
-	{
-		readonly string Input, Output;
-		public GZipParam(string input, string output)
-		{
-			Input = input;
-			Output = output;
-		}
-		public override void Execute()
-		{
-			var data = File.ReadAllBytes(Input);
-			data = Compressor.Compress(data, Compressor.Type.GZip);
-			File.WriteAllBytes(Output, data);
-		}
-	}
-
 	class HandlesParam : Param
 	{
 		readonly int? PID;

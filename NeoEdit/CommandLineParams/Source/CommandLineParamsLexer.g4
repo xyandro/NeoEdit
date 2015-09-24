@@ -8,8 +8,6 @@ CONSOLE        : '-console'                                                     
 CONSOLERUNNER  : '-consolerunner'                                                                 ;
 DIFF           : '-diff'                                                                          ;
 DISK           : '-disk' | '-disks'                                                               ;
-GUNZIP         : '-gunzip'                                                                        ;
-GZIP           : '-gzip'                                                                          ;
 HANDLES        : '-handle' | '-handles'                                                           ;
 HEXDUMP        : '-binarydump' | '-dump' | '-hexdump'                                             ;
 HEXEDIT        : '-binary' | '-binaryedit' | '-binaryeditor' | '-hex' | '-hexedit' | '-hexeditor' ;
@@ -36,8 +34,6 @@ CONSOLE2       : CONSOLE       -> type(CONSOLE)       ;
 CONSOLERUNNER2 : CONSOLERUNNER -> type(CONSOLERUNNER) ;
 DIFF2          : DIFF          -> type(DIFF)          ;
 DISK2          : DISK          -> type(DISK)          ;
-GUNZIP2        : GUNZIP        -> type(GUNZIP)        ;
-GZIP2          : GZIP          -> type(GZIP)          ;
 HANDLES2       : HANDLES       -> type(HANDLES)       ;
 HEXDUMP2       : HEXDUMP       -> type(HEXDUMP)       ;
 HEXEDIT2       : HEXEDIT       -> type(HEXEDIT)       ;
