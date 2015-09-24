@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using NeoEdit.Common.Transform;
 using NeoEdit.Console;
 using NeoEdit.Disk;
 using NeoEdit.GUI.About;
@@ -10,6 +8,7 @@ using NeoEdit.HexEdit;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
+using NeoEdit.Tables;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
 
@@ -133,6 +132,19 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			new SystemInfoWindow();
+		}
+	}
+
+	class TablesParam : Param
+	{
+		readonly List<string> FileNames;
+		public TablesParam(List<string> fileNames) { FileNames = fileNames; }
+		public override void Execute()
+		{
+			if (!FileNames.Any())
+				TablesTabs.Create();
+			foreach (var fileName in FileNames)
+				TablesTabs.Create(fileName);
 		}
 	}
 

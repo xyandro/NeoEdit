@@ -11,6 +11,7 @@
 		Window_Processes,
 		Window_Registry,
 		Window_SystemInfo,
+		Window_Tables,
 		Window_TextEditor,
 		Window_TextViewer,
 	}

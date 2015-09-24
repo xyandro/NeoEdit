@@ -17,6 +17,7 @@ MULTI          : '-multi'                                                       
 PROCESSES      : '-pid' | '-process' | '-processes'                                               ;
 REGISTRY       : '-registry'                                                                      ;
 SYSTEMINFO     : '-system' | '-systeminfo'                                                        ;
+TABLES         : '-table' | '-tables'                                                             ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                  ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                            ;
 
@@ -43,6 +44,7 @@ MULTI2         : MULTI         -> type(MULTI)         ;
 PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
 REGISTRY2      : REGISTRY      -> type(REGISTRY)      ;
 SYSTEMINFO2    : SYSTEMINFO    -> type(SYSTEMINFO)    ;
+TABLES2        : TABLES        -> type(TABLES)        ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;
 

@@ -14,6 +14,7 @@ using NeoEdit.HexEdit;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
+using NeoEdit.Tables;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
 
@@ -86,17 +87,18 @@ namespace NeoEdit
 				getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray
 				, setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); }
 
-				, systemInfo: () => new SystemInfoWindow()
-				, textEditor: (filename, bytes, encoding, modified, createNew) => TextEditTabs.Create(filename, bytes, encoding, modified, createNew: createNew)
-				, diff: (filename1, filename2) => TextEditTabs.CreateDiff(filename1, filename2)
-				, textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew)
-				, fileHexEditor: (filename, binarydata, encoder, modified, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, createNew)
-				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
-				, disk: (path, files) => new DiskTabs(path, files)
 				, console: () => new ConsoleTabs()
-				, processes: (pid) => new ProcessesWindow(pid)
+				, diff: (filename1, filename2) => TextEditTabs.CreateDiff(filename1, filename2)
+				, disk: (path, files) => new DiskTabs(path, files)
+				, fileHexEditor: (filename, binarydata, encoder, modified, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, createNew)
 				, handles: (pid) => new HandlesWindow(pid)
+				, processes: (pid) => new ProcessesWindow(pid)
+				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
 				, registry: (key) => new RegistryWindow(key)
+				, systemInfo: () => new SystemInfoWindow()
+				, tables: (filename, createNew) => TablesTabs.Create(filename, createNew: createNew)
+				, textEditor: (filename, bytes, encoding, modified, createNew) => TextEditTabs.Create(filename, bytes, encoding, modified, createNew: createNew)
+				, textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew)
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

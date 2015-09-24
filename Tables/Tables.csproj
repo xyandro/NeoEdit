@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <PropertyGroup>
+    <ProjectGuid>{AC1B92BD-99C4-4EC1-BB02-842AD65BBCEB}</ProjectGuid>
+    <RootNamespace>NeoEdit.Tables</RootNamespace>
+    <AssemblyName>NeoEdit.Tables</AssemblyName>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Commands.cs" />
+    <Compile Include="DataGridColumnsBinder.cs" />
+    <Page Include="Menu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Menu.xaml.cs">
+      <DependentUpon>Menu.xaml</DependentUpon>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Table.cs" />
+    <Page Include="TableEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="TableEditor.xaml.cs">
+      <DependentUpon>TableEditor.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Tabs.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Tabs.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)\Common\Common.csproj">
+      <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(SolutionDir)\GUI\GUI.csproj">
+      <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
+      <Name>GUI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+</Project>

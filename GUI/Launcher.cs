@@ -12,33 +12,35 @@ namespace NeoEdit.GUI
 		Func<bool> getMinimizeToTrayLauncher;
 		Action<bool> setMinimizeToTrayLauncher;
 
-		protected Action systemInfoLauncher;
-		protected Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
-		protected Action<string, string> diffLauncher;
-		protected Action<string, bool> textViewerLauncher;
-		protected Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
-		protected Action<int> processHexEditorLauncher;
-		protected Action<string, IEnumerable<string>> diskLauncher;
 		protected Action consoleLauncher;
-		protected Action<int?> processesLauncher;
+		protected Action<string, string> diffLauncher;
+		protected Action<string, IEnumerable<string>> diskLauncher;
+		protected Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
 		protected Action<int?> handlesLauncher;
+		protected Action<int?> processesLauncher;
+		protected Action<int> processHexEditorLauncher;
 		protected Action<string> registryLauncher;
+		protected Action systemInfoLauncher;
+		protected Action<string, bool> tablesLauncher;
+		protected Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
+		protected Action<string, bool> textViewerLauncher;
 
 		public static void Initialize(
 			Func<bool> getMinimizeToTray
 			, Action<bool> setMinimizeToTray
 
-			, Action systemInfo
-			, Action<string, byte[], Coder.CodePage, bool?, bool> textEditor
-			, Action<string, string> diff
-			, Action<string, bool> textViewer
-			, Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor
-			, Action<int> processHexEditor
-			, Action<string, IEnumerable<string>> disk
 			, Action console
-			, Action<int?> processes
+			, Action<string, string> diff
+			, Action<string, IEnumerable<string>> disk
+			, Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor
 			, Action<int?> handles
+			, Action<int?> processes
+			, Action<int> processHexEditor
 			, Action<string> registry
+			, Action systemInfo
+			, Action<string, bool> tables
+			, Action<string, byte[], Coder.CodePage, bool?, bool> textEditor
+			, Action<string, bool> textViewer
 		)
 		{
 			launcher = new Launcher
@@ -46,17 +48,18 @@ namespace NeoEdit.GUI
 				getMinimizeToTrayLauncher = getMinimizeToTray,
 				setMinimizeToTrayLauncher = setMinimizeToTray,
 
-				systemInfoLauncher = systemInfo,
-				textEditorLauncher = textEditor,
-				diffLauncher = diff,
-				textViewerLauncher = textViewer,
-				fileHexEditorLauncher = fileHexEditor,
-				processHexEditorLauncher = processHexEditor,
-				diskLauncher = disk,
 				consoleLauncher = console,
-				processesLauncher = processes,
+				diffLauncher = diff,
+				diskLauncher = disk,
+				fileHexEditorLauncher = fileHexEditor,
 				handlesLauncher = handles,
+				processesLauncher = processes,
+				processHexEditorLauncher = processHexEditor,
 				registryLauncher = registry,
+				systemInfoLauncher = systemInfo,
+				tablesLauncher = tables,
+				textEditorLauncher = textEditor,
+				textViewerLauncher = textViewer,
 			};
 		}
 
@@ -70,6 +73,12 @@ namespace NeoEdit.GUI
 		{
 			if (systemInfoLauncher != null)
 				systemInfoLauncher();
+		}
+
+		public void LaunchTables(string filename = null, bool createNew = false)
+		{
+			if (tablesLauncher != null)
+				tablesLauncher(filename, createNew);
 		}
 
 		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool createNew = false)

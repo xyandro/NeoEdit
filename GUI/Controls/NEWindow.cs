@@ -33,6 +33,7 @@ namespace NeoEdit.GUI.Controls
 				case WindowCommand.Window_Processes: Launcher.Static.LaunchProcesses(); break;
 				case WindowCommand.Window_Registry: Launcher.Static.LaunchRegistry(); break;
 				case WindowCommand.Window_SystemInfo: Launcher.Static.LaunchSystemInfo(); break;
+				case WindowCommand.Window_Tables: Launcher.Static.LaunchTables(); break;
 				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditor(createNew: true); break;
 				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(); break;
 			}
