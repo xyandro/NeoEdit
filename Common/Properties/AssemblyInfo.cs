@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("Common")]
+[assembly: AssemblyTitle("NeoEdit.Common.dll")]

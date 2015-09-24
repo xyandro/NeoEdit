@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("HexEdit")]
+[assembly: AssemblyTitle("NeoEdit.HexEdit.dll")]

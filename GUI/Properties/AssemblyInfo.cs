@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("GUI")]
+[assembly: AssemblyTitle("NeoEdit.GUI.dll")]

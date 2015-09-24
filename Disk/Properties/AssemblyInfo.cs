@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("Disk")]
+[assembly: AssemblyTitle("NeoEdit.Disk.dll")]

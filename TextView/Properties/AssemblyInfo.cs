@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("TextViewer")]
+[assembly: AssemblyTitle("NeoEdit.TextViewer.dll")]
