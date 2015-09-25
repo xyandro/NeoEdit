@@ -430,13 +430,7 @@ namespace NeoEdit.TextEdit
 			return Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
 		}
 
-		internal bool CanClose()
-		{
-			var answer = Message.OptionsEnum.None;
-			return CanClose(ref answer);
-		}
-
-		internal bool CanClose(ref Message.OptionsEnum answer)
+		public override bool CanClose(ref Message.OptionsEnum answer)
 		{
 			if (!IsModified)
 				return true;
@@ -465,9 +459,10 @@ namespace NeoEdit.TextEdit
 			return false;
 		}
 
-		internal void Closed()
+		public override void Closed()
 		{
 			DiffTarget = null;
+			base.Closed();
 		}
 
 		internal enum GetPathType

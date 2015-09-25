@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Tables
 {
@@ -37,23 +35,6 @@ namespace NeoEdit.Tables
 			UIHelper.AuditMenu(menu);
 
 			TableEditors = new ObservableCollection<TableEditor>();
-		}
-
-		protected override void OnClosing(CancelEventArgs e)
-		{
-			var answer = Message.OptionsEnum.None;
-			var active = TopMost;
-			foreach (var tableEditor in TableEditors)
-			{
-				TopMost = tableEditor;
-				if (!tableEditor.CanClose(ref answer))
-				{
-					e.Cancel = true;
-					return;
-				}
-			}
-			TopMost = active;
-			base.OnClosing(e);
 		}
 
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
@@ -123,14 +104,6 @@ namespace NeoEdit.Tables
 
 			foreach (var textEditorItem in TableEditors.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
-		}
-
-		internal void Remove(TableEditor tableEditor, bool closeIfLast = false)
-		{
-			TableEditors.Remove(tableEditor);
-			tableEditor.Closed();
-			if ((closeIfLast) && (TableEditors.Count == 0))
-				Close();
 		}
 	}
 }

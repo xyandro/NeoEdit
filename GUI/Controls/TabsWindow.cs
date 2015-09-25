@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.Controls
 {
@@ -17,6 +20,32 @@ namespace NeoEdit.GUI.Controls
 			classItem.Activate();
 
 			classItem.ItemTabs.CreateTab(item);
+		}
+
+		public void Remove(ItemType item, bool closeIfLast = false)
+		{
+			ItemTabs.Items.Remove(item);
+			item.Closed();
+			if ((closeIfLast) && (ItemTabs.Items.Count == 0))
+				Close();
+		}
+
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			var answer = Message.OptionsEnum.None;
+			var topMost = ItemTabs.TopMost;
+			foreach (var item in ItemTabs.Items)
+			{
+				ItemTabs.TopMost = item;
+				if (!item.CanClose(ref answer))
+				{
+					e.Cancel = true;
+					return;
+				}
+			}
+			ItemTabs.TopMost = topMost;
+			ItemTabs.Items.ToList().ForEach(item => item.Closed());
+			base.OnClosing(e);
 		}
 	}
 }

@@ -161,7 +161,7 @@ namespace NeoEdit.HexEdit
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 		}
 
-		internal bool CanClose()
+		public override bool CanClose(ref Message.OptionsEnum answer)
 		{
 			if (!IsModified)
 				return true;
@@ -181,10 +181,6 @@ namespace NeoEdit.HexEdit
 					return !IsModified;
 			}
 			return false;
-		}
-
-		internal void Close()
-		{
 		}
 
 		void EnsureVisible(long position)

@@ -47,13 +47,7 @@ namespace NeoEdit.Tables
 			SetBinding(UIHelper<TableEditor>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
-		bool CanClose()
-		{
-			Message.OptionsEnum answer = Message.OptionsEnum.None;
-			return CanClose(ref answer);
-		}
-
-		internal bool CanClose(ref Message.OptionsEnum answer)
+		public override bool CanClose(ref Message.OptionsEnum answer)
 		{
 			if (!IsModified)
 				return true;
@@ -159,10 +153,6 @@ namespace NeoEdit.Tables
 		public override bool Empty()
 		{
 			return (FileName == null) && (!IsModified) && (!Table.Headers.Any());
-		}
-
-		internal void Closed()
-		{
 		}
 	}
 }

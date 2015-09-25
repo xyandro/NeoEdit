@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -354,23 +353,6 @@ namespace NeoEdit.TextEdit
 			startNext();
 		}
 
-		protected override void OnClosing(CancelEventArgs e)
-		{
-			var answer = Message.OptionsEnum.None;
-			var active = TopMost;
-			foreach (var textEditor in TextEditors)
-			{
-				TopMost = textEditor;
-				if (!textEditor.CanClose(ref answer))
-				{
-					e.Cancel = true;
-					return;
-				}
-			}
-			TopMost = active;
-			base.OnClosing(e);
-		}
-
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
@@ -439,14 +421,6 @@ namespace NeoEdit.TextEdit
 
 			foreach (var textEditorItem in TextEditors.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
-		}
-
-		internal void Remove(TextEditor textEditor, bool closeIfLast = false)
-		{
-			TextEditors.Remove(textEditor);
-			textEditor.Closed();
-			if ((closeIfLast) && (TextEditors.Count == 0))
-				Close();
 		}
 
 		public int GetIndex(TextEditor textEditor)

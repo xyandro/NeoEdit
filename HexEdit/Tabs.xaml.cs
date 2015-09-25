@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -121,23 +119,6 @@ namespace NeoEdit.HexEdit
 				tabs.CreateTab(new HexEditor(new MemoryBinaryData(File.ReadAllBytes(file)), filename: file));
 		}
 
-		protected override void OnClosing(CancelEventArgs e)
-		{
-			var active = Active;
-			foreach (var hexEditor in HexEditors)
-			{
-				Active = hexEditor;
-				if (!hexEditor.CanClose())
-				{
-					e.Cancel = true;
-					return;
-				}
-			}
-			Active = active;
-			HexEditors.ToList().ForEach(hexEditor => hexEditor.Close());
-			base.OnClosing(e);
-		}
-
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
@@ -194,7 +175,7 @@ namespace NeoEdit.HexEdit
 			{
 				case HexEditCommand.File_Save: Active.Command_File_Save(); break;
 				case HexEditCommand.File_SaveAs: Active.Command_File_SaveAs(); break;
-				case HexEditCommand.File_Close: if (Active.CanClose()) { Active.Close(); HexEditors.Remove(Active); } break;
+				case HexEditCommand.File_Close: if (Active.CanClose()) Remove(Active); break;
 				case HexEditCommand.File_Revert: Active.Command_File_Revert(); break;
 				case HexEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
 				case HexEditCommand.File_CopyName: Active.Command_File_CopyName(); break;

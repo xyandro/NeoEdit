@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.Controls
 {
@@ -16,6 +17,21 @@ namespace NeoEdit.GUI.Controls
 		public virtual bool Empty()
 		{
 			return false;
+		}
+
+		public bool CanClose()
+		{
+			Message.OptionsEnum answer = Message.OptionsEnum.None;
+			return CanClose(ref answer);
+		}
+
+		public virtual bool CanClose(ref Message.OptionsEnum answer)
+		{
+			return true;
+		}
+
+		public virtual void Closed()
+		{
 		}
 	}
 }
