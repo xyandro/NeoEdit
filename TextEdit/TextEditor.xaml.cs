@@ -2017,28 +2017,21 @@ namespace NeoEdit.TextEdit
 		internal void Command_Files_Operations_CopyMove(bool move)
 		{
 			var strs = Selections.Select(range => GetString(range).Split(new string[] { "=>" }, StringSplitOptions.None).Select(str => str.Trim()).ToList()).ToList();
-			if (strs.Any(pair => pair.Count != 2))
+			if (strs.Any(pair => (pair.Count != 2) || (pair.Any(item => String.IsNullOrEmpty(item)))))
 				throw new Exception("Format: Source => Destination");
 
 			var sels = strs.Select(pair => new { source = pair[0], dest = pair[1] }).Where(pair => pair.source != pair.dest).ToList();
 			if (sels.Count == 0)
 				throw new Exception("Nothing to do!");
 
-			if (sels.Any(pair => (String.IsNullOrEmpty(pair.source)) || (String.IsNullOrEmpty(pair.dest))))
-				throw new Exception("Can't have empty items in list");
-
 			const int invalidCount = 10;
-			var invalid = sels.Select(pair => pair.source).Concat(sels.Select(pair => pair.dest)).GroupBy(str => str).Where(group => group.Count() > 1).Select(group => group.Key).Distinct().Take(invalidCount);
-			if (invalid.Any())
-				throw new Exception(String.Format("Some items are listed more than once:\n{0}", String.Join("\n", invalid)));
-
-			invalid = sels.Select(pair => pair.source).Where(file => !FileOrDirectoryExists(file)).Take(invalidCount);
+			var invalid = sels.Select(pair => pair.source).Where(file => !FileOrDirectoryExists(file)).Take(invalidCount);
 			if (invalid.Any())
 				throw new Exception(String.Format("Source file/directory doesn't exist:\n{0}", String.Join("\n", invalid)));
 
 			invalid = sels.Select(pair => pair.dest).Where(pair => FileOrDirectoryExists(pair)).Take(invalidCount);
 			if (invalid.Any())
-				throw new Exception(String.Format("Destination file/directory already exist:\n{0}", String.Join("\n", invalid)));
+				throw new Exception(String.Format("Destination file/directory already exists:\n{0}", String.Join("\n", invalid)));
 
 			invalid = sels.Select(pair => Path.GetDirectoryName(pair.dest)).Distinct().Where(dir => !Directory.Exists(dir)).Take(invalidCount);
 			if (invalid.Any())
