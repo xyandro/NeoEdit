@@ -28,7 +28,7 @@ namespace NeoEdit
 	{
 		public override void Execute()
 		{
-			new ConsoleTabs();
+			ConsoleTabs.Create();
 		}
 	}
 
@@ -58,7 +58,7 @@ namespace NeoEdit
 		public DiskParam(string location) { Location = location; }
 		public override void Execute()
 		{
-			new DiskTabs(Location);
+			DiskTabs.Create(Location);
 		}
 	}
 

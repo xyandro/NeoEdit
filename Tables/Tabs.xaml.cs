@@ -11,6 +11,7 @@ using NeoEdit.GUI.Dialogs;
 namespace NeoEdit.Tables
 {
 	public class Tabs : Tabs<TableEditor> { }
+	public class TabsWindow : TabsWindow<TableEditor> { }
 
 	partial class TablesTabs
 	{
@@ -23,28 +24,19 @@ namespace NeoEdit.Tables
 
 		static TablesTabs() { UIHelper<TablesTabs>.Register(); }
 
-		public static void Create(string fileName = null, bool createNew = false, TablesTabs tableEditTabs = null)
+		public static void Create(string fileName = null, TablesTabs tableEditTabs = null, bool forceCreate = false)
 		{
-			var tableEditor = new TableEditor(fileName);
-
-			if ((tableEditTabs == null) && (!createNew))
-				tableEditTabs = UIHelper<TablesTabs>.GetNewest();
-
-			if (tableEditTabs == null)
-				tableEditTabs = new TablesTabs();
-
-			tableEditTabs.Activate();
-			tableEditTabs.Add(tableEditor);
+			CreateTab(new TableEditor(fileName), tableEditTabs, forceCreate);
 		}
 
 		TablesTabs()
 		{
 			TablesMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
+			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
 
 			TableEditors = new ObservableCollection<TableEditor>();
-			AllowDrop = true;
 		}
 
 		protected override void OnClosing(CancelEventArgs e)
@@ -104,7 +96,7 @@ namespace NeoEdit.Tables
 		void Command_File_Open(OpenFileDialogResult result)
 		{
 			foreach (var filename in result.files)
-				Create(filename, false, this);
+				Create(filename, this);
 		}
 
 		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
@@ -124,22 +116,13 @@ namespace NeoEdit.Tables
 		{
 			switch (command)
 			{
-				case TablesCommand.File_New: Create(createNew: shiftDown, tableEditTabs: shiftDown ? null : this); break;
+				case TablesCommand.File_New: Create(tableEditTabs: this, forceCreate: shiftDown); break;
 				case TablesCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
 				case TablesCommand.File_Exit: Close(); break;
 			}
 
 			foreach (var textEditorItem in TableEditors.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
-		}
-
-		void Add(TableEditor tableEditor)
-		{
-			if ((!tableEditor.Empty()) && (TopMost != null) && (TopMost.Empty()))
-				TableEditors[TableEditors.IndexOf(TopMost)] = tableEditor;
-			else
-				TableEditors.Add(tableEditor);
-			TopMost = tableEditor;
 		}
 
 		internal void Remove(TableEditor tableEditor, bool closeIfLast = false)

@@ -985,6 +985,11 @@ namespace NeoEdit.HexEdit
 			}
 		}
 
+		public override bool Empty()
+		{
+			return (FileName == null) && (!IsModified) && (Data.Length == 0);
+		}
+
 		public override string ToString()
 		{
 			return FileName;

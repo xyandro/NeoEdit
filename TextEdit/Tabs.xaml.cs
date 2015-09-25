@@ -20,6 +20,7 @@ using NeoEdit.TextEdit.Dialogs;
 namespace NeoEdit.TextEdit
 {
 	public class Tabs : Tabs<TextEditor> { }
+	public class TabsWindow : TabsWindow<TextEditor> { }
 
 	public partial class TextEditTabs
 	{
@@ -32,7 +33,7 @@ namespace NeoEdit.TextEdit
 
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
-		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, bool createNew = false, TextEditTabs textEditTabs = null)
+		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false)
 		{
 			if ((!Helpers.IsDebugBuild) && (filename != null))
 			{
@@ -59,15 +60,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			var textEditor = new TextEditor(filename, bytes, codePage, modified, line, column);
-
-			if ((textEditTabs == null) && (!createNew))
-				textEditTabs = UIHelper<TextEditTabs>.GetNewest();
-
-			if (textEditTabs == null)
-				textEditTabs = new TextEditTabs();
-
-			textEditTabs.Activate();
-			textEditTabs.Add(textEditor);
+			CreateTab(textEditor, textEditTabs, forceCreate);
 		}
 
 		public static void CreateDiff(string filename1, string filename2)
@@ -75,21 +68,22 @@ namespace NeoEdit.TextEdit
 			var textEdit1 = new TextEditor(filename1);
 			var textEdit2 = new TextEditor(filename2);
 			var textEditTabs = new TextEditTabs { Tiles = true };
-			textEditTabs.Add(textEdit1);
-			textEditTabs.Add(textEdit2);
+			textEditTabs.tabs.CreateTab(textEdit1);
+			textEditTabs.tabs.CreateTab(textEdit2);
 			textEditTabs.TopMost = textEdit1;
 			textEdit1.DiffTarget = textEdit2;
 		}
 
 		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null)
 		{
-			Create(filename, bytes, codePage, modified, line, column, false, this);
+			Create(filename, bytes, codePage, modified, line, column, this);
 		}
 
 		TextEditTabs()
 		{
 			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
+			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
 
 			TextEditors = new ObservableCollection<TextEditor>();
@@ -429,7 +423,7 @@ namespace NeoEdit.TextEdit
 		{
 			switch (command)
 			{
-				case TextEditCommand.File_New: Create(createNew: shiftDown, textEditTabs: shiftDown ? null : this); break;
+				case TextEditCommand.File_New: Create(textEditTabs: this, forceCreate: shiftDown); break;
 				case TextEditCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
 				case TextEditCommand.File_Copy_AllPaths: Command_File_Copy_AllPaths(); break;
@@ -445,18 +439,6 @@ namespace NeoEdit.TextEdit
 
 			foreach (var textEditorItem in TextEditors.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
-		}
-
-		void Add(TextEditor textEditor)
-		{
-			if ((!textEditor.Empty()) && (TopMost != null) && (TopMost.Empty()))
-			{
-				textEditor.DiffTarget = TopMost.DiffTarget;
-				TextEditors[TextEditors.IndexOf(TopMost)] = textEditor;
-			}
-			else
-				TextEditors.Add(textEditor);
-			TopMost = textEditor;
 		}
 
 		internal void Remove(TextEditor textEditor, bool closeIfLast = false)

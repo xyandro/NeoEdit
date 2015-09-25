@@ -12,9 +12,9 @@ namespace NeoEdit.GUI
 		Func<bool> getMinimizeToTrayLauncher;
 		Action<bool> setMinimizeToTrayLauncher;
 
-		protected Action consoleLauncher;
+		protected Action<bool> consoleLauncher;
 		protected Action<string, string> diffLauncher;
-		protected Action<string, IEnumerable<string>> diskLauncher;
+		protected Action<string, IEnumerable<string>, bool> diskLauncher;
 		protected Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
 		protected Action<int?> handlesLauncher;
 		protected Action<int?> processesLauncher;
@@ -29,9 +29,9 @@ namespace NeoEdit.GUI
 			Func<bool> getMinimizeToTray
 			, Action<bool> setMinimizeToTray
 
-			, Action console
+			, Action<bool> console
 			, Action<string, string> diff
-			, Action<string, IEnumerable<string>> disk
+			, Action<string, IEnumerable<string>, bool> disk
 			, Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor
 			, Action<int?> handles
 			, Action<int?> processes
@@ -75,16 +75,16 @@ namespace NeoEdit.GUI
 				systemInfoLauncher();
 		}
 
-		public void LaunchTables(string filename = null, bool createNew = false)
+		public void LaunchTables(string filename = null, bool forceCreate = false)
 		{
 			if (tablesLauncher != null)
-				tablesLauncher(filename, createNew);
+				tablesLauncher(filename, forceCreate);
 		}
 
-		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool createNew = false)
+		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool forceCreate = false)
 		{
 			if (textEditorLauncher != null)
-				textEditorLauncher(filename, bytes, codePage, modified, createNew);
+				textEditorLauncher(filename, bytes, codePage, modified, forceCreate);
 		}
 
 		public void LaunchDiff(string filename1 = null, string filename2 = null)
@@ -93,16 +93,16 @@ namespace NeoEdit.GUI
 				diffLauncher(filename1, filename2);
 		}
 
-		public void LaunchTextViewer(string filename = null, bool createNew = false)
+		public void LaunchTextViewer(string filename = null, bool forceCreate = false)
 		{
 			if (textViewerLauncher != null)
-				textViewerLauncher(filename, createNew);
+				textViewerLauncher(filename, forceCreate);
 		}
 
-		public void LaunchHexEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool createNew = false)
+		public void LaunchHexEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false)
 		{
 			if (fileHexEditorLauncher != null)
-				fileHexEditorLauncher(filename, bytes, codePage, modified, createNew);
+				fileHexEditorLauncher(filename, bytes, codePage, modified, forceCreate);
 		}
 
 		public void LaunchHexEditor(int pid)
@@ -111,16 +111,16 @@ namespace NeoEdit.GUI
 				processHexEditorLauncher(pid);
 		}
 
-		public void LaunchDisk(string path = null, IEnumerable<string> files = null)
+		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false)
 		{
 			if (diskLauncher != null)
-				diskLauncher(path, files);
+				diskLauncher(path, files, forceCreate);
 		}
 
-		public void LaunchConsole()
+		public void LaunchConsole(bool forceCreate = false)
 		{
 			if (consoleLauncher != null)
-				consoleLauncher();
+				consoleLauncher(forceCreate);
 		}
 
 		public void LaunchProcesses(int? pid = null)

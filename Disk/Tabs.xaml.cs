@@ -8,6 +8,7 @@ using NeoEdit.GUI.Controls;
 namespace NeoEdit.Disk
 {
 	public class Tabs : Tabs<DiskWindow> { }
+	public class TabsWindow : TabsWindow<DiskWindow> { }
 
 	public partial class DiskTabs
 	{
@@ -22,14 +23,19 @@ namespace NeoEdit.Disk
 
 		static List<DiskWindow> Lists = new List<DiskWindow> { new DiskWindow(list: 1), new DiskWindow(list: 2), new DiskWindow(list: 3), new DiskWindow(list: 4), new DiskWindow(list: 5), new DiskWindow(list: 6), new DiskWindow(list: 7), new DiskWindow(list: 8), new DiskWindow(list: 9) };
 
-		public DiskTabs(string path = null, IEnumerable<string> files = null)
+		public static void Create(string path = null, IEnumerable<string> files = null, DiskTabs diskTabs = null, bool forceCreate = false)
+		{
+			CreateTab(new DiskWindow(path, listFiles: files), diskTabs, forceCreate);
+		}
+
+		DiskTabs()
 		{
 			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
 			InitializeComponent();
+			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
 
 			DiskWindows = new ObservableCollection<DiskWindow>();
-			Add(new DiskWindow(path, listFiles: files));
 		}
 
 		public static DiskWindow GetList(int list)
@@ -44,7 +50,7 @@ namespace NeoEdit.Disk
 			if (newWindow)
 				new DiskTabs();
 			else
-				Add(new DiskWindow(Directory.GetCurrentDirectory()));
+				CreateTab(new DiskWindow(Directory.GetCurrentDirectory()), this, newWindow);
 		}
 
 		void Command_View_List(int list)
@@ -54,7 +60,7 @@ namespace NeoEdit.Disk
 			if (parent != null)
 				parent.Items.Remove(listObj);
 
-			Add(listObj);
+			tabs.CreateTab(listObj);
 		}
 
 		void RunCommand(DiskCommand command, bool shiftDown)
@@ -126,12 +132,6 @@ namespace NeoEdit.Disk
 		{
 			if (TopMost != null)
 				TopMost.SetSort(property);
-		}
-
-		void Add(DiskWindow diskWindow)
-		{
-			DiskWindows.Add(diskWindow);
-			TopMost = diskWindow;
 		}
 	}
 }

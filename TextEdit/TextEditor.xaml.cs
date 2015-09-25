@@ -3938,7 +3938,7 @@ namespace NeoEdit.TextEdit
 			return builder.ToString();
 		}
 
-		internal bool Empty()
+		public override bool Empty()
 		{
 			return (FileName == null) && (!IsModified) && (BeginOffset() == EndOffset());
 		}

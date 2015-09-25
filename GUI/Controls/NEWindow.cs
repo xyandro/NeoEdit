@@ -25,17 +25,17 @@ namespace NeoEdit.GUI.Controls
 		{
 			switch (command)
 			{
-				case WindowCommand.Window_Console: Launcher.Static.LaunchConsole(); break;
+				case WindowCommand.Window_Console: Launcher.Static.LaunchConsole(forceCreate: true); break;
 				case WindowCommand.Window_Diff: Launcher.Static.LaunchDiff(); break;
-				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(); break;
+				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(forceCreate: true); break;
 				case WindowCommand.Window_Handles: Launcher.Static.LaunchHandles(); break;
-				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditor(createNew: true); break;
+				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditor(forceCreate: true); break;
 				case WindowCommand.Window_Processes: Launcher.Static.LaunchProcesses(); break;
 				case WindowCommand.Window_Registry: Launcher.Static.LaunchRegistry(); break;
 				case WindowCommand.Window_SystemInfo: Launcher.Static.LaunchSystemInfo(); break;
-				case WindowCommand.Window_Tables: Launcher.Static.LaunchTables(); break;
-				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditor(createNew: true); break;
-				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(); break;
+				case WindowCommand.Window_Tables: Launcher.Static.LaunchTables(forceCreate: true); break;
+				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditor(forceCreate: true); break;
+				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(forceCreate: true); break;
 			}
 		}
 

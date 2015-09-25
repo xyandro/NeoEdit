@@ -27,9 +27,9 @@ namespace NeoEdit.TextView
 
 		static TextViewerTabs() { UIHelper<TextViewerTabs>.Register(); }
 
-		public static void Create(string filename = null, bool createNew = false)
+		public static void Create(string filename = null, bool forceCreate = false)
 		{
-			((!createNew ? UIHelper<TextViewerTabs>.GetNewest() : null) ?? new TextViewerTabs()).Add(filename);
+			((!forceCreate ? UIHelper<TextViewerTabs>.GetNewest() : null) ?? new TextViewerTabs()).Add(filename);
 		}
 
 		TextViewerTabs()

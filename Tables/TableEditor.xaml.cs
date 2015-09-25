@@ -156,7 +156,7 @@ namespace NeoEdit.Tables
 			}
 		}
 
-		internal bool Empty()
+		public override bool Empty()
 		{
 			return (FileName == null) && (!IsModified) && (!Table.Headers.Any());
 		}

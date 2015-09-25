@@ -87,18 +87,18 @@ namespace NeoEdit
 				getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray
 				, setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); }
 
-				, console: () => new ConsoleTabs()
+				, console: (forceCreate) => ConsoleTabs.Create(forceCreate: forceCreate)
 				, diff: (filename1, filename2) => TextEditTabs.CreateDiff(filename1, filename2)
-				, disk: (path, files) => new DiskTabs(path, files)
-				, fileHexEditor: (filename, binarydata, encoder, modified, createNew) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, createNew)
+				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
+				, fileHexEditor: (filename, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, forceCreate)
 				, handles: (pid) => new HandlesWindow(pid)
 				, processes: (pid) => new ProcessesWindow(pid)
 				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
 				, registry: (key) => new RegistryWindow(key)
 				, systemInfo: () => new SystemInfoWindow()
-				, tables: (filename, createNew) => TablesTabs.Create(filename, createNew: createNew)
-				, textEditor: (filename, bytes, encoding, modified, createNew) => TextEditTabs.Create(filename, bytes, encoding, modified, createNew: createNew)
-				, textViewer: (filename, createNew) => TextViewerTabs.Create(filename, createNew)
+				, tables: (filename, forceCreate) => TablesTabs.Create(filename, forceCreate: forceCreate)
+				, textEditor: (filename, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(filename, bytes, encoding, modified, forceCreate: forceCreate)
+				, textViewer: (filename, forceCreate) => TextViewerTabs.Create(filename, forceCreate)
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

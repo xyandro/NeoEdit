@@ -16,6 +16,7 @@ using NeoEdit.HexEdit.Data;
 namespace NeoEdit.HexEdit
 {
 	public class Tabs : Tabs<HexEditor> { }
+	public class TabsWindow : TabsWindow<HexEditor> { }
 
 	public partial class HexEditTabs
 	{
@@ -28,20 +29,16 @@ namespace NeoEdit.HexEdit
 
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 
-		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, bool createNew = false, HexEditTabs hexEditTabs = null)
+		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, HexEditTabs hexEditTabs = null, bool forceCreate = false)
 		{
-			if ((hexEditTabs == null) && (!createNew))
-				hexEditTabs = UIHelper<HexEditTabs>.GetNewest();
-			if (hexEditTabs == null)
-				hexEditTabs = new HexEditTabs();
-			hexEditTabs.Activate();
-			hexEditTabs.Add(new HexEditor(data, codePage, filename, filetitle, modified));
+			CreateTab(new HexEditor(data, codePage, filename, filetitle, modified), hexEditTabs, forceCreate);
 		}
 
 		HexEditTabs()
 		{
 			HexEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
 			InitializeComponent();
+			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
 
 			HexEditors = new ObservableCollection<HexEditor>();
@@ -50,13 +47,7 @@ namespace NeoEdit.HexEdit
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
-		void Add(HexEditor hexEditor)
-		{
-			HexEditors.Add(hexEditor);
-			Active = hexEditor;
-		}
-
-		public static void CreateFromFile(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool createNew = false)
+		public static void CreateFromFile(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false)
 		{
 			if (bytes == null)
 			{
@@ -65,27 +56,27 @@ namespace NeoEdit.HexEdit
 				else
 					bytes = File.ReadAllBytes(filename);
 			}
-			Create(new MemoryBinaryData(bytes), codePage, filename, modified: modified, createNew: createNew);
+			Create(new MemoryBinaryData(bytes), codePage, filename, modified: modified, forceCreate: forceCreate);
 		}
 
-		public static void CreateFromDump(string filename, bool createNew = false)
+		public static void CreateFromDump(string filename, bool forceCreate = false)
 		{
-			Create(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ", createNew: createNew);
+			Create(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ", forceCreate: forceCreate);
 		}
 
-		public static void CreateFromProcess(int pid, bool createNew = false)
+		public static void CreateFromProcess(int pid, bool forceCreate = false)
 		{
 			var process = Process.GetProcessById(pid);
 			if (process == null)
 				throw new ArgumentException("Process doesn't exist.");
 			if (process.Id == Process.GetCurrentProcess().Id)
 				throw new ArgumentException("Can't open current process.");
-			Create(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName), createNew: createNew);
+			Create(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName), forceCreate: forceCreate);
 		}
 
 		void Command_File_New(bool newWindow)
 		{
-			Create(new MemoryBinaryData(), createNew: newWindow, hexEditTabs: newWindow ? null : this);
+			Create(new MemoryBinaryData(), hexEditTabs: this, forceCreate: newWindow);
 		}
 
 		void Command_File_Open()
@@ -100,7 +91,7 @@ namespace NeoEdit.HexEdit
 				return;
 
 			foreach (var filename in dialog.FileNames)
-				Add(new HexEditor(new MemoryBinaryData(File.ReadAllBytes(filename)), filename: filename));
+				tabs.CreateTab(new HexEditor(new MemoryBinaryData(File.ReadAllBytes(filename)), filename: filename));
 		}
 
 		void Command_File_OpenDump()
@@ -109,7 +100,7 @@ namespace NeoEdit.HexEdit
 			if (dialog.ShowDialog() != true)
 				return;
 
-			Add(new HexEditor(new DumpBinaryData(dialog.FileName), filetitle: "Dump: ", filename: dialog.FileName));
+			tabs.CreateTab(new HexEditor(new DumpBinaryData(dialog.FileName), filetitle: "Dump: ", filename: dialog.FileName));
 		}
 
 		void Command_File_OpenCopiedCutFiles()
@@ -127,7 +118,7 @@ namespace NeoEdit.HexEdit
 				return;
 
 			foreach (var file in files)
-				Add(new HexEditor(new MemoryBinaryData(File.ReadAllBytes(file)), filename: file));
+				tabs.CreateTab(new HexEditor(new MemoryBinaryData(File.ReadAllBytes(file)), filename: file));
 		}
 
 		protected override void OnClosing(CancelEventArgs e)

@@ -14,7 +14,7 @@ using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class Tabs<ItemType> : UserControl where ItemType : TabElement
+	public class Tabs<ItemType> : UserControl where ItemType : TabsControl
 	{
 		static public DependencyProperty TabParentProperty = DependencyProperty.RegisterAttached("TabParent", typeof(Tabs<ItemType>), typeof(Tabs<ItemType>));
 
@@ -48,6 +48,15 @@ namespace NeoEdit.GUI.Controls
 			FocusVisualStyle = null;
 			AllowDrop = true;
 			Drop += (s, e) => OnDrop(e, null);
+		}
+
+		public void CreateTab(ItemType item)
+		{
+			if ((!item.Empty()) && (TopMost != null) && (TopMost.Empty()))
+				Items[Items.IndexOf(TopMost)] = item;
+			else
+				Items.Add(item);
+			TopMost = item;
 		}
 
 		public void ShowActiveTabsDialog()
@@ -245,7 +254,7 @@ namespace NeoEdit.GUI.Controls
 			var label = new FrameworkElementFactory(typeof(TabLabel));
 			if (tiles)
 				label.SetValue(DockPanel.DockProperty, Dock.Top);
-			label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<TabElement>.GetProperty(a => a.TabLabel).Name));
+			label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel).Name));
 			label.SetValue(TabLabel.PaddingProperty, new Thickness(10, 2, 10, 2));
 			label.SetValue(TabLabel.MarginProperty, new Thickness(0, 0, tiles ? 0 : 2, 1));
 

@@ -1,4 +1,4 @@
-﻿<guiControls:NEWindow Name="self" x:Class="NeoEdit.Console.ConsoleTabs"
+﻿<console:TabsWindow x:Name="self" x:Class="NeoEdit.Console.ConsoleTabs"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:console="clr-namespace:NeoEdit.Console"
@@ -31,4 +31,4 @@
 		/>
 	</Grid>
 
-</guiControls:NEWindow>
+</console:TabsWindow>

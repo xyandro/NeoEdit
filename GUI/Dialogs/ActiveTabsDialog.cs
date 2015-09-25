@@ -8,7 +8,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	class ActiveTabsDialog<ItemType> : ModalDialog where ItemType : TabElement
+	class ActiveTabsDialog<ItemType> : ModalDialog where ItemType : TabsControl
 	{
 		readonly List<ItemType> originalActive;
 		readonly ItemType originalTopMost;
@@ -31,7 +31,7 @@ namespace NeoEdit.GUI.Dialogs
 				listView = new ListView { ItemsSource = tabs.Items.ToList(), Height = 400, SelectionMode = SelectionMode.Extended };
 				{
 					var gridView = new GridView();
-					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(UIHelper<TabElement>.GetProperty(a => a.TabLabel).Name), Width = 500 });
+					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel).Name), Width = 500 });
 					listView.View = gridView;
 				}
 				listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<ItemType>());
