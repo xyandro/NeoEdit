@@ -19,8 +19,6 @@ namespace NeoEdit.Console
 	public partial class Console
 	{
 		[DepProp]
-		string TabLabel { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
-		[DepProp]
 		string Location { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
 		[DepProp(Default = "")]
 		string Command { get { return UIHelper<Console>.GetPropValue<string>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }

@@ -9,7 +9,7 @@
 	<Window.Title>
 		<!--A simple Binding doesn't give any title if [0] blank-->
 		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="StrFormat(&quot;{0} - NeoEdit Table Editor&quot;, [0])">
-			<Binding Path="TopMost.Item.FileName" ElementName="self"/>
+			<Binding Path="TopMost.FileName" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>
 
@@ -24,7 +24,7 @@
 
 		<tables:TablesMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
-		<tables:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" TabLabelBinding="{Binding Item.TabLabel}" VerticalAlignment="Stretch"
+		<tables:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" VerticalAlignment="Stretch"
 			Items="{Binding TableEditors, ElementName=self, Mode=TwoWay}"
 			TopMost="{Binding TopMost, ElementName=self, Mode=TwoWay}"
 			Tiles="{Binding Tiles, ElementName=self, Mode=TwoWay}"

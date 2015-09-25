@@ -54,6 +54,7 @@
       <DependentUpon>NumericUpDown.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RenderCanvas.cs" />
+    <Compile Include="Controls\TabElement.cs" />
     <Compile Include="Controls\Tabs.cs" />
     <Compile Include="Controls\UIHelper.cs" />
     <Page Include="Controls\WindowMenu.xaml">

@@ -3,14 +3,15 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	class ActiveTabsDialog<ItemType> : ModalDialog where ItemType : FrameworkElement
+	class ActiveTabsDialog<ItemType> : ModalDialog where ItemType : TabElement
 	{
-		readonly List<Tabs<ItemType>.ItemData> originalActive;
-		readonly Tabs<ItemType>.ItemData originalTopMost;
+		readonly List<ItemType> originalActive;
+		readonly ItemType originalTopMost;
 		readonly Tabs<ItemType> tabs;
 		public ActiveTabsDialog(Tabs<ItemType> tabs)
 		{
@@ -30,10 +31,10 @@ namespace NeoEdit.GUI.Dialogs
 				listView = new ListView { ItemsSource = tabs.Items.ToList(), Height = 400, SelectionMode = SelectionMode.Extended };
 				{
 					var gridView = new GridView();
-					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = tabs.TabLabelBinding, Width = 500 });
+					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(UIHelper<TabElement>.GetProperty(a => a.TabLabel).Name), Width = 500 });
 					listView.View = gridView;
 				}
-				listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<Tabs<ItemType>.ItemData>());
+				listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<ItemType>());
 				stackPanel.Children.Add(listView);
 			}
 			{
@@ -76,9 +77,9 @@ namespace NeoEdit.GUI.Dialogs
 			};
 		}
 
-		void SyncItems(IEnumerable<Tabs<ItemType>.ItemData> active)
+		void SyncItems(IEnumerable<ItemType> active)
 		{
-			var activeHash = new HashSet<Tabs<ItemType>.ItemData>(active);
+			var activeHash = new HashSet<ItemType>(active);
 			foreach (var item in tabs.Items)
 				item.Active = activeHash.Contains(item);
 			var topMost = tabs.TopMost;

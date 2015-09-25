@@ -18,8 +18,6 @@ namespace NeoEdit.TextView
 	partial class TextViewer : IDisposable
 	{
 		[DepProp]
-		public string TabLabel { get { return UIHelper<TextViewer>.GetPropValue<string>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
-		[DepProp]
 		public string FileName { get { return UIHelper<TextViewer>.GetPropValue<string>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 		[DepProp]
 		public int xScrollValue { get { return UIHelper<TextViewer>.GetPropValue<int>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }

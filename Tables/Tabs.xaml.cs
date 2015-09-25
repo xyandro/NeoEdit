@@ -15,9 +15,9 @@ namespace NeoEdit.Tables
 	partial class TablesTabs
 	{
 		[DepProp]
-		public ObservableCollection<Tabs.ItemData> TableEditors { get { return UIHelper<TablesTabs>.GetPropValue<ObservableCollection<Tabs.ItemData>>(this); } set { UIHelper<TablesTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<TableEditor> TableEditors { get { return UIHelper<TablesTabs>.GetPropValue<ObservableCollection<TableEditor>>(this); } set { UIHelper<TablesTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ItemData TopMost { get { return UIHelper<TablesTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<TablesTabs>.SetPropValue(this, value); } }
+		public TableEditor TopMost { get { return UIHelper<TablesTabs>.GetPropValue<TableEditor>(this); } set { UIHelper<TablesTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool Tiles { get { return UIHelper<TablesTabs>.GetPropValue<bool>(this); } set { UIHelper<TablesTabs>.SetPropValue(this, value); } }
 
@@ -43,7 +43,7 @@ namespace NeoEdit.Tables
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
-			TableEditors = new ObservableCollection<Tabs.ItemData>();
+			TableEditors = new ObservableCollection<TableEditor>();
 			AllowDrop = true;
 		}
 
@@ -54,7 +54,7 @@ namespace NeoEdit.Tables
 			foreach (var tableEditor in TableEditors)
 			{
 				TopMost = tableEditor;
-				if (!tableEditor.Item.CanClose(ref answer))
+				if (!tableEditor.CanClose(ref answer))
 				{
 					e.Cancel = true;
 					return;
@@ -86,7 +86,7 @@ namespace NeoEdit.Tables
 		OpenFileDialogResult Command_File_Open_Dialog(string initialDirectory = null)
 		{
 			if ((initialDirectory == null) && (TopMost != null))
-				initialDirectory = Path.GetDirectoryName(TopMost.Item.FileName);
+				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "tsv",
@@ -114,7 +114,7 @@ namespace NeoEdit.Tables
 			switch (command)
 			{
 				case TablesCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
-				default: return TopMost == null ? true : TopMost.Item.GetDialogResult(command, out dialogResult);
+				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult);
 			}
 
 			return dialogResult != null;
@@ -130,22 +130,21 @@ namespace NeoEdit.Tables
 			}
 
 			foreach (var textEditorItem in TableEditors.Where(item => item.Active).ToList())
-				textEditorItem.Item.HandleCommand(command, shiftDown, dialogResult);
+				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
 		}
 
 		void Add(TableEditor tableEditor)
 		{
-			var item = new Tabs.ItemData(tableEditor);
-			if ((!tableEditor.Empty()) && (TopMost != null) && (TopMost.Item.Empty()))
-				TableEditors[TableEditors.IndexOf(TopMost)] = item;
+			if ((!tableEditor.Empty()) && (TopMost != null) && (TopMost.Empty()))
+				TableEditors[TableEditors.IndexOf(TopMost)] = tableEditor;
 			else
-				TableEditors.Add(item);
-			TopMost = item;
+				TableEditors.Add(tableEditor);
+			TopMost = tableEditor;
 		}
 
 		internal void Remove(TableEditor tableEditor, bool closeIfLast = false)
 		{
-			TableEditors.Remove(TableEditors.Single(item => item.Item == tableEditor));
+			TableEditors.Remove(tableEditor);
 			tableEditor.Closed();
 			if ((closeIfLast) && (TableEditors.Count == 0))
 				Close();

@@ -26,8 +26,6 @@ namespace NeoEdit.HexEdit
 	partial class HexEditor
 	{
 		[DepProp]
-		public string TabLabel { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
-		[DepProp]
 		public string FileTitle { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string FileName { get { return UIHelper<HexEditor>.GetPropValue<string>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }

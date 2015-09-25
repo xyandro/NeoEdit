@@ -24,8 +24,6 @@ namespace NeoEdit.Disk
 	partial class DiskWindow
 	{
 		[DepProp]
-		string TabLabel { get { return UIHelper<DiskWindow>.GetPropValue<string>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
-		[DepProp]
 		DiskItem Location { get { return UIHelper<DiskWindow>.GetPropValue<DiskItem>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		int? ConstantList { get { return UIHelper<DiskWindow>.GetPropValue<int?>(this); } set { UIHelper<DiskWindow>.SetPropValue(this, value); } }

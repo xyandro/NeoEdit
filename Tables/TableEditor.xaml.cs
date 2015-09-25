@@ -18,8 +18,6 @@ namespace NeoEdit.Tables
 		public string FileName { get { return UIHelper<TableEditor>.GetPropValue<string>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsModified { get { return UIHelper<TableEditor>.GetPropValue<bool>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public string TabLabel { get { return UIHelper<TableEditor>.GetPropValue<string>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 
 		TablesTabs TabsParent { get { return UIHelper.FindParent<TablesTabs>(GetValue(Tabs.TabParentProperty) as Tabs); } }
 

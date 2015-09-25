@@ -9,10 +9,10 @@ using System.Windows.Media.Imaging;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class MultiMenuItem<ItemType> : MenuItem where ItemType : FrameworkElement
+	public class MultiMenuItem<ItemType> : MenuItem where ItemType : TabElement
 	{
 		[DepProp]
-		public ObservableCollection<Tabs<ItemType>.ItemData> Objects { get { return UIHelper<MultiMenuItem<ItemType>>.GetPropValue<ObservableCollection<Tabs<ItemType>.ItemData>>(this); } set { UIHelper<MultiMenuItem<ItemType>>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemType> Objects { get { return UIHelper<MultiMenuItem<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<MultiMenuItem<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Property { get { return UIHelper<MultiMenuItem<ItemType>>.GetPropValue<string>(this); } set { UIHelper<MultiMenuItem<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
@@ -41,7 +41,7 @@ namespace NeoEdit.GUI.Controls
 			var property = typeof(ItemType).GetProperty(Property);
 			foreach (var obj in Objects)
 				if (obj.Active)
-					property.SetValue(obj.Item, newValue ? TrueValue : FalseValue);
+					property.SetValue(obj, newValue ? TrueValue : FalseValue);
 			base.OnClick();
 		}
 
@@ -54,7 +54,7 @@ namespace NeoEdit.GUI.Controls
 			}
 
 			var property = typeof(ItemType).GetProperty(Property);
-			var match = Objects.Where(obj => obj.Active).Select(obj => property.GetValue(obj.Item).Equals(TrueValue)).Distinct().ToList();
+			var match = Objects.Where(obj => obj.Active).Select(obj => property.GetValue(obj).Equals(TrueValue)).Distinct().ToList();
 			MultiChecked = match.Count == 1 ? (bool?)match.First() : default(bool?);
 		}
 

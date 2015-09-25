@@ -8,9 +8,9 @@ namespace NeoEdit.Console
 	public partial class ConsoleTabs
 	{
 		[DepProp]
-		public ObservableCollection<Tabs.ItemData> Consoles { get { return UIHelper<ConsoleTabs>.GetPropValue<ObservableCollection<Tabs.ItemData>>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<Console> Consoles { get { return UIHelper<ConsoleTabs>.GetPropValue<ObservableCollection<Console>>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs.ItemData Active { get { return UIHelper<ConsoleTabs>.GetPropValue<Tabs.ItemData>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
+		public Console Active { get { return UIHelper<ConsoleTabs>.GetPropValue<Console>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool Tiles { get { return UIHelper<ConsoleTabs>.GetPropValue<bool>(this); } set { UIHelper<ConsoleTabs>.SetPropValue(this, value); } }
 
@@ -22,15 +22,14 @@ namespace NeoEdit.Console
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
-			Consoles = new ObservableCollection<Tabs<Console>.ItemData>();
+			Consoles = new ObservableCollection<Console>();
 			Add(new Console());
 		}
 
 		void Add(Console console)
 		{
-			var add = new Tabs.ItemData(console);
-			Consoles.Add(add);
-			Active = add;
+			Consoles.Add(console);
+			Active = console;
 		}
 
 		void RunCommand(ConsoleCommand command)
