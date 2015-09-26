@@ -33,6 +33,8 @@ using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
+	public class TabsControl : TabsControl<TextEditor> { }
+
 	public partial class TextEditor
 	{
 		TextData _data = new TextData();
@@ -102,8 +104,6 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public ObservableCollectionEx<Table> Results { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollectionEx<Table>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
-		TextEditTabs TabsParent { get { return UIHelper.FindParent<TextEditTabs>(GetValue(Tabs.TabParentProperty) as Tabs); } }
-		Window WindowParent { get { return UIHelper.FindParent<Window>(this); } }
 		TextEditor diffTarget;
 		public TextEditor DiffTarget
 		{
@@ -258,7 +258,7 @@ namespace NeoEdit.TextEdit
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
-			SetBinding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<TextEditor>>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
 		void SetupStaticOrLocalData()
@@ -788,7 +788,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Copy_Count: Command_File_Copy_Count(); break;
 				case TextEditCommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.File_HexEditor: if (Command_File_HexEditor()) { TabsParent.Remove(this, true); } break;
+				case TextEditCommand.File_HexEditor: if (Command_File_HexEditor()) { WindowParent.Remove(this, true); } break;
 				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
 				case TextEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;

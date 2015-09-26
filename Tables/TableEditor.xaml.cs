@@ -10,6 +10,8 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Tables
 {
+	public class TabsControl : TabsControl<TableEditor> { }
+
 	partial class TableEditor
 	{
 		[DepProp]
@@ -18,8 +20,6 @@ namespace NeoEdit.Tables
 		public string FileName { get { return UIHelper<TableEditor>.GetPropValue<string>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsModified { get { return UIHelper<TableEditor>.GetPropValue<bool>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
-
-		TablesTabs TabsParent { get { return UIHelper.FindParent<TablesTabs>(GetValue(Tabs.TabParentProperty) as Tabs); } }
 
 		static TableEditor() { UIHelper<TableEditor>.Register(); }
 
@@ -44,7 +44,7 @@ namespace NeoEdit.Tables
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TableEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TableEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
-			SetBinding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<TableEditor>>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
 		public override bool CanClose(ref Message.OptionsEnum answer)
@@ -146,7 +146,7 @@ namespace NeoEdit.Tables
 			{
 				case TablesCommand.File_Save: Command_File_Save(); break;
 				case TablesCommand.File_SaveAs: Command_File_SaveAs(); break;
-				case TablesCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
+				case TablesCommand.File_Close: if (CanClose()) TabsParent.Remove(this); break;
 			}
 		}
 

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-using System.Windows.Input;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Disk
@@ -33,8 +32,6 @@ namespace NeoEdit.Disk
 			return Lists[list - 1];
 		}
 
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
-
 		void Command_File_New(bool newWindow)
 		{
 			if (newWindow)
@@ -46,7 +43,7 @@ namespace NeoEdit.Disk
 		void Command_View_List(int list)
 		{
 			var listObj = GetList(list);
-			var parent = listObj.GetValue(Tabs.TabParentProperty) as Tabs;
+			var parent = listObj.TabsParent;
 			if (parent != null)
 				parent.Items.Remove(listObj);
 

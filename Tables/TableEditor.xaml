@@ -1,4 +1,4 @@
-﻿<guiControls:TabsControl Name="self" x:Class="NeoEdit.Tables.TableEditor"
+﻿<tables:TabsControl x:Name="self" x:Class="NeoEdit.Tables.TableEditor"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
@@ -27,4 +27,4 @@
 		</DataGrid.ColumnHeaderStyle>
 	</DataGrid>
 
-</guiControls:TabsControl>
+</tables:TabsControl>

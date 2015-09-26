@@ -20,6 +20,7 @@ using NeoEdit.GUI.Misc;
 namespace NeoEdit.Disk
 {
 	class DiskItemGrid : ItemGrid<DiskItem> { }
+	public class TabsControl : TabsControl<DiskWindow> { }
 
 	partial class DiskWindow
 	{
@@ -66,7 +67,7 @@ namespace NeoEdit.Disk
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"[0] == null ? ([1] == null ? ""Custom"" : FileName([1])) : StrFormat(""List {0}"", [0])" };
 			multiBinding.Bindings.Add(new Binding("ConstantList") { Source = this });
 			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
-			SetBinding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<DiskWindow>>.GetProperty(a => a.TabLabel), multiBinding);
 
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => { location.Text = Location == null ? "" : Location.FullName; };
@@ -238,7 +239,7 @@ namespace NeoEdit.Disk
 			if (!Focused.CanRename)
 				throw new ArgumentException("Cannot rename this entry.");
 
-			var newName = RenameDialog.Run(UIHelper.FindParent<Window>(this), Focused);
+			var newName = RenameDialog.Run(WindowParent, Focused);
 			if (newName == null)
 				return;
 
@@ -257,7 +258,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_File_Hash()
 		{
-			var result = HashDialog.Run(UIHelper.FindParent<Window>(this));
+			var result = HashDialog.Run(WindowParent);
 			if (result == null)
 				return;
 
@@ -353,7 +354,7 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_Find()
 		{
-			var result = FindDialog.Run(UIHelper.FindParent<Window>(this));
+			var result = FindDialog.Run(WindowParent);
 			if (result == null)
 				return;
 
@@ -477,7 +478,7 @@ namespace NeoEdit.Disk
 		{
 			if (Selected.Count == 0)
 				return;
-			var search = FindBinaryDialog.Run(UIHelper.FindParent<Window>(this));
+			var search = FindBinaryDialog.Run(WindowParent);
 			if (search == null)
 				return;
 
@@ -494,7 +495,7 @@ namespace NeoEdit.Disk
 		{
 			if (Selected.Count == 0)
 				return;
-			var search = FindTextDialog.Run(UIHelper.FindParent<Window>(this), FindTextDialog.FindTextType.Single);
+			var search = FindTextDialog.Run(WindowParent, FindTextDialog.FindTextType.Single);
 			if (search == null)
 				return;
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -14,17 +12,11 @@ using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
+	public class TabsWindow : TabsWindow<TextViewer> { }
 	public class Tabs : Tabs<TextViewer> { }
 
 	partial class TextViewerTabs
 	{
-		[DepProp]
-		public ObservableCollection<TextViewer> TextViewers { get { return UIHelper<TextViewerTabs>.GetPropValue<ObservableCollection<TextViewer>>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public TextViewer Active { get { return UIHelper<TextViewerTabs>.GetPropValue<TextViewer>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Tiles { get { return UIHelper<TextViewerTabs>.GetPropValue<bool>(this); } set { UIHelper<TextViewerTabs>.SetPropValue(this, value); } }
-
 		static TextViewerTabs() { UIHelper<TextViewerTabs>.Register(); }
 
 		public static void Create(string filename = null, bool forceCreate = false)
@@ -38,7 +30,6 @@ namespace NeoEdit.TextView
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
-			TextViewers = new ObservableCollection<TextViewer>();
 			Show(); // Explicitly show because sometimes the loading file dialog will put up first and be hidden
 		}
 
@@ -49,7 +40,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_Open()
 		{
-			var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
+			var dir = ItemTabs.TopMost != null ? Path.GetDirectoryName(ItemTabs.TopMost.FileName) : null;
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
@@ -85,7 +76,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_Combine()
 		{
-			var result = CombineDialog.Run(UIHelper.FindParent<Window>(this), false);
+			var result = CombineDialog.Run(this, false);
 			if (result == null)
 				return;
 
@@ -94,7 +85,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_Merge()
 		{
-			var result = CombineDialog.Run(UIHelper.FindParent<Window>(this), true);
+			var result = CombineDialog.Run(this, true);
 			if (result == null)
 				return;
 
@@ -103,15 +94,12 @@ namespace NeoEdit.TextView
 
 		void Command_File_Encoding()
 		{
-			var result = ChangeEncodingDialog.Run(UIHelper.FindParent<Window>(this));
+			var result = ChangeEncodingDialog.Run(this);
 			if (result == null)
 				return;
 
 			TextData.SaveEncoding(result.InputFile, result.OutputFile, result.OutputCodePage);
 		}
-
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
 		internal void RunCommand(TextViewCommand command)
 		{
@@ -128,15 +116,15 @@ namespace NeoEdit.TextView
 				case TextViewCommand.File_Exit: Close(); break;
 			}
 
-			if (Active == null)
+			if (ItemTabs.TopMost == null)
 				return;
 
 			switch (command)
 			{
-				case TextViewCommand.File_Close: Active.Dispose(); TextViewers.Remove(Active); break;
-				case TextViewCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
-				case TextViewCommand.File_Split: Active.Command_File_Split(); break;
-				case TextViewCommand.Edit_Copy: Active.Command_Edit_Copy(); break;
+				case TextViewCommand.File_Close: Remove(ItemTabs.TopMost); break;
+				case TextViewCommand.File_CopyPath: ItemTabs.TopMost.Command_File_CopyPath(); break;
+				case TextViewCommand.File_Split: ItemTabs.TopMost.Command_File_Split(); break;
+				case TextViewCommand.Edit_Copy: ItemTabs.TopMost.Command_Edit_Copy(); break;
 			}
 		}
 
@@ -173,8 +161,8 @@ namespace NeoEdit.TextView
 				}
 
 				var add = new TextViewer(data);
-				TextViewers.Add(add);
-				Active = add;
+				ItemTabs.Items.Add(add);
+				ItemTabs.TopMost = add;
 			}));
 		}
 
@@ -192,9 +180,9 @@ namespace NeoEdit.TextView
 
 		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
-			if (Active == null)
+			if (ItemTabs.TopMost == null)
 				return false;
-			return Active.HandleKey(key, shiftDown, controlDown);
+			return ItemTabs.TopMost.HandleKey(key, shiftDown, controlDown);
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -211,9 +199,9 @@ namespace NeoEdit.TextView
 
 		internal bool HandleText(string text)
 		{
-			if (Active == null)
+			if (ItemTabs.TopMost == null)
 				return false;
-			return Active.HandleText(text);
+			return ItemTabs.TopMost.HandleText(text);
 		}
 	}
 }

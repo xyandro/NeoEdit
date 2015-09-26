@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.GUI.Controls;
 
@@ -26,9 +25,6 @@ namespace NeoEdit.Tables
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
 		}
-
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 
 		internal void RunCommand(TablesCommand command)
 		{

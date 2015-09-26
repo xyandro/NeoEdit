@@ -23,6 +23,8 @@ using NeoEdit.HexEdit.Models;
 
 namespace NeoEdit.HexEdit
 {
+	public class TabsControl : TabsControl<HexEditor> { }
+
 	partial class HexEditor
 	{
 		[DepProp]
@@ -137,7 +139,7 @@ namespace NeoEdit.HexEdit
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
 			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
-			SetBinding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<HexEditor>>.GetProperty(a => a.TabLabel), multiBinding);
 
 			undoRedo = new UndoRedo(b => IsModified = b);
 
@@ -630,7 +632,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_File_Encoding()
 		{
-			var result = EncodingDialog.Run(UIHelper.FindParent<Window>(this), CodePage, Data.CodePageFromBOM());
+			var result = EncodingDialog.Run(WindowParent, CodePage, Data.CodePageFromBOM());
 			if (result == null)
 				return;
 			CodePage = result.CodePage;
@@ -717,7 +719,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Find(bool shiftDown)
 		{
-			var results = FindBinaryDialog.Run(UIHelper.FindParent<Window>(this));
+			var results = FindBinaryDialog.Run(WindowParent);
 			if (results != null)
 			{
 				currentFind = results;
@@ -733,7 +735,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Goto(bool shiftDown)
 		{
-			var position = GotoDialog.Run(UIHelper.FindParent<Window>(this), Pos1);
+			var position = GotoDialog.Run(WindowParent, Pos1);
 			if (position == null)
 				return;
 			if (position.Relative)
@@ -809,14 +811,14 @@ namespace NeoEdit.HexEdit
 			string key;
 			if (type.IsSymmetric())
 			{
-				var result = SymmetricKeyDialog.Run(UIHelper.FindParent<Window>(this), type);
+				var result = SymmetricKeyDialog.Run(WindowParent, type);
 				if (result == null)
 					return;
 				key = result.Key;
 			}
 			else
 			{
-				var result = AsymmetricKeyDialog.Run(UIHelper.FindParent<Window>(this), type, isEncrypt, isEncrypt);
+				var result = AsymmetricKeyDialog.Run(WindowParent, type, isEncrypt, isEncrypt);
 				if (result == null)
 					return;
 				key = result.Key;
@@ -833,7 +835,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Sign(bool sign, Cryptor.Type type)
 		{
-			var keyResult = AsymmetricKeyDialog.Run(UIHelper.FindParent<Window>(this), type, !sign, sign, true, !sign);
+			var keyResult = AsymmetricKeyDialog.Run(WindowParent, type, !sign, sign, true, !sign);
 			if (keyResult == null)
 				return;
 
@@ -858,7 +860,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Fill()
 		{
-			var fill = FillDialog.Run(UIHelper.FindParent<Window>(this));
+			var fill = FillDialog.Run(WindowParent);
 			if (fill == null)
 				return;
 			var data = Enumerable.Range(0, (int)(SelEnd - SelStart)).Select(a => fill.Value).ToArray();

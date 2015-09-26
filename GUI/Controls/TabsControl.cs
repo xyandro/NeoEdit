@@ -3,16 +3,19 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class TabsControl : UserControl
+	public class TabsControl<ItemType> : UserControl where ItemType : TabsControl<ItemType>
 	{
 		[DepProp]
-		public int ItemOrder { get { return UIHelper<TabsControl>.GetPropValue<int>(this); } set { UIHelper<TabsControl>.SetPropValue(this, value); } }
+		public int ItemOrder { get { return UIHelper<TabsControl<ItemType>>.GetPropValue<int>(this); } set { UIHelper<TabsControl<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Active { get { return UIHelper<TabsControl>.GetPropValue<bool>(this); } set { UIHelper<TabsControl>.SetPropValue(this, value); } }
+		public bool Active { get { return UIHelper<TabsControl<ItemType>>.GetPropValue<bool>(this); } set { UIHelper<TabsControl<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public string TabLabel { get { return UIHelper<TabsControl>.GetPropValue<string>(this); } set { UIHelper<TabsControl>.SetPropValue(this, value); } }
+		public string TabLabel { get { return UIHelper<TabsControl<ItemType>>.GetPropValue<string>(this); } set { UIHelper<TabsControl<ItemType>>.SetPropValue(this, value); } }
 
-		static TabsControl() { UIHelper<TabsControl>.Register(); }
+		public Tabs<ItemType> TabsParent { get; internal set; }
+		public TabsWindow<ItemType> WindowParent { get { return TabsParent.WindowParent; } }
+
+		static TabsControl() { UIHelper<TabsControl<ItemType>>.Register(); }
 
 		public virtual bool Empty()
 		{

@@ -14,10 +14,8 @@ using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class Tabs<ItemType> : UserControl where ItemType : TabsControl
+	public class Tabs<ItemType> : UserControl where ItemType : TabsControl<ItemType>
 	{
-		static public DependencyProperty TabParentProperty = DependencyProperty.RegisterAttached("TabParent", typeof(Tabs<ItemType>), typeof(Tabs<ItemType>));
-
 		[DepProp]
 		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } private set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
@@ -28,6 +26,8 @@ namespace NeoEdit.GUI.Controls
 		public double TabsScroll { get { return UIHelper<Tabs<ItemType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public double TabsScrollMax { get { return UIHelper<Tabs<ItemType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		[DepProp]
+		public TabsWindow<ItemType> WindowParent { get { return UIHelper<Tabs<ItemType>>.GetPropValue<TabsWindow<ItemType>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 
 		static Tabs()
 		{
@@ -74,7 +74,7 @@ namespace NeoEdit.GUI.Controls
 			foreach (var item in Items)
 			{
 				EnhancedFocusManager.SetIsEnhancedFocusScope(item, true);
-				item.SetValue(TabParentProperty, this);
+				item.TabsParent = this;
 			}
 
 			UpdateTopMost();
@@ -114,6 +114,20 @@ namespace NeoEdit.GUI.Controls
 			if (topMost == null)
 				topMost = Items.OrderByDescending(item => item.ItemOrder).FirstOrDefault();
 			TopMost = topMost;
+		}
+
+		public int GetIndex(ItemType item)
+		{
+			var index = Items.IndexOf(item);
+			if (index == -1)
+				throw new ArgumentException("Not found");
+			return index;
+		}
+
+		public void Remove(ItemType item)
+		{
+			Items.Remove(item);
+			item.Closed();
 		}
 
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
@@ -191,7 +205,7 @@ namespace NeoEdit.GUI.Controls
 			var toData = toLabel == null ? null : toLabel.DataContext as ItemType;
 			var fromData = fromLabel.DataContext as ItemType;
 
-			var fromTabs = fromData.GetValue(TabParentProperty) as Tabs<ItemType>;
+			var fromTabs = fromData.TabsParent;
 			if ((fromTabs == null) || ((fromTabs == this) && (toLabel == null)))
 				return;
 
@@ -255,13 +269,13 @@ namespace NeoEdit.GUI.Controls
 			var label = new FrameworkElementFactory(typeof(TabLabel));
 			if (tiles)
 				label.SetValue(DockPanel.DockProperty, Dock.Top);
-			label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel).Name));
+			label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<TabsControl<ItemType>>.GetProperty(a => a.TabLabel).Name));
 			label.SetValue(TabLabel.PaddingProperty, new Thickness(10, 2, 10, 2));
 			label.SetValue(TabLabel.MarginProperty, new Thickness(0, 0, tiles ? 0 : 2, 1));
 
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [2] ? \"CadetBlue\" : ([1] ? \"LightBlue\" : \"LightGray\")" };
 			multiBinding.Bindings.Add(new Binding());
-			multiBinding.Bindings.Add(new Binding(UIHelper<TabsControl>.GetProperty(a => a.Active).Name));
+			multiBinding.Bindings.Add(new Binding(UIHelper<TabsControl<ItemType>>.GetProperty(a => a.Active).Name));
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
 			label.SetBinding(TabLabel.BackgroundProperty, multiBinding);
 

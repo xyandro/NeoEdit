@@ -345,9 +345,6 @@ namespace NeoEdit.TextEdit
 			startNext();
 		}
 
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
-
 		Macro recordingMacro;
 		internal Macro macroPlaying = null;
 
@@ -413,14 +410,6 @@ namespace NeoEdit.TextEdit
 
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
-		}
-
-		public int GetIndex(TextEditor textEditor)
-		{
-			var index = ItemTabs.Items.IndexOf(textEditor);
-			if (index == -1)
-				throw new ArgumentException("Not found");
-			return index;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

@@ -15,6 +15,8 @@ using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
+	public class TabsControl : TabsControl<TextViewer> { }
+
 	partial class TextViewer : IDisposable
 	{
 		[DepProp]
@@ -64,7 +66,7 @@ namespace NeoEdit.TextView
 		{
 			InitializeComponent();
 
-			SetBinding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel), new Binding("FileName") { Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])", Source = this });
+			SetBinding(UIHelper<TabsControl<TextViewer>>.GetProperty(a => a.TabLabel), new Binding("FileName") { Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])", Source = this });
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
@@ -92,7 +94,7 @@ namespace NeoEdit.TextView
 
 		internal void Command_File_Split()
 		{
-			var result = SplitDialog.Run(UIHelper.FindParent<Window>(this), data);
+			var result = SplitDialog.Run(WindowParent, data);
 			if (result == null)
 				return;
 

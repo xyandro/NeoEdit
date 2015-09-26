@@ -1,16 +1,25 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class TabsWindow<ItemType> : NEWindow where ItemType : TabsControl
+	public class TabsWindow<ItemType> : NEWindow where ItemType : TabsControl<ItemType>
 	{
 		[DepProp]
 		public Tabs<ItemType> ItemTabs { get { return UIHelper<TabsWindow<ItemType>>.GetPropValue<Tabs<ItemType>>(this); } protected set { UIHelper<TabsWindow<ItemType>>.SetPropValue(this, value); } }
 
-		static TabsWindow() { UIHelper<TabsWindow<ItemType>>.Register(); }
+		static TabsWindow()
+		{
+			UIHelper<TabsWindow<ItemType>>.Register();
+			UIHelper<TabsWindow<ItemType>>.AddCallback(a => a.ItemTabs, (obj, o, n) => obj.ItemTabs.WindowParent = obj);
+		}
+
+		protected bool shiftDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift); } }
+		protected bool controlDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Control); } }
+		protected bool altDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Alt); } }
 
 		public static void CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType>
 		{
@@ -27,8 +36,7 @@ namespace NeoEdit.GUI.Controls
 
 		public void Remove(ItemType item, bool closeIfLast = false)
 		{
-			ItemTabs.Items.Remove(item);
-			item.Closed();
+			ItemTabs.Remove(item);
 			if ((closeIfLast) && (ItemTabs.Items.Count == 0))
 				Close();
 		}
