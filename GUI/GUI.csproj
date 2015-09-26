@@ -101,6 +101,13 @@
     <Compile Include="Dialogs\FindTextDialog.xaml.cs">
       <DependentUpon>FindTextDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\GetExpressionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GetExpressionDialog.xaml.cs">
+      <DependentUpon>GetExpressionDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\HashDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
-namespace NeoEdit.TextEdit.Dialogs
+namespace NeoEdit.GUI.Dialogs
 {
 	partial class GetExpressionDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Expression { get; set; }
 		}
@@ -63,9 +64,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		readonly Dictionary<string, List<object>> expressionData;
-		GetExpressionDialog(Dictionary<string, List<object>> expressionData)
+		readonly Action helpDialog;
+		GetExpressionDialog(Dictionary<string, List<object>> expressionData, Action helpDialog)
 		{
 			this.expressionData = expressionData;
+			this.helpDialog = helpDialog;
 
 			InitializeComponent();
 
@@ -123,7 +126,8 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e)
 		{
-			ExpressionHelpDialog.Display();
+			if (helpDialog != null)
+				helpDialog();
 		}
 
 		Result result;
@@ -133,9 +137,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static internal Result Run(Window parent, Dictionary<string, List<object>> examples)
+		static public Result Run(Window parent, Dictionary<string, List<object>> examples, Action helpDialog = null)
 		{
-			var dialog = new GetExpressionDialog(examples) { Owner = parent };
+			var dialog = new GetExpressionDialog(examples, helpDialog) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

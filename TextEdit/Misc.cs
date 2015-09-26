@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
@@ -53,22 +51,6 @@ namespace NeoEdit.TextEdit
 			}
 
 			return sb.ToString();
-		}
-
-		static internal IEnumerable<TSource> Resize<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith)
-		{
-			return source.Take(count).Expand(count, expandWith);
-		}
-
-		static internal IEnumerable<TSource> Expand<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith)
-		{
-			foreach (var item in source)
-			{
-				yield return item;
-				--count;
-			}
-			for (; count > 0; --count)
-				yield return expandWith;
 		}
 	}
 }

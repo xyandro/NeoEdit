@@ -2175,7 +2175,7 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Expression_Expression_Dialog()
 		{
-			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
+			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10), () => ExpressionHelpDialog.Display());
 		}
 
 		internal void Command_Expression_Expression(GetExpressionDialog.Result result)
@@ -2940,7 +2940,7 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog()
 		{
-			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
+			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10), () => ExpressionHelpDialog.Display());
 		}
 
 		internal void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)

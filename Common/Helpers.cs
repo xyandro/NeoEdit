@@ -294,6 +294,22 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public static IEnumerable<TSource> Resize<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith)
+		{
+			return source.Take(count).Expand(count, expandWith);
+		}
+
+		public static IEnumerable<TSource> Expand<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith)
+		{
+			foreach (var item in source)
+			{
+				yield return item;
+				--count;
+			}
+			for (; count > 0; --count)
+				yield return expandWith;
+		}
+
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 
