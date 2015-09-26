@@ -16,6 +16,9 @@
 		<tables:TablesMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
 		<tables:TablesMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
 	</MenuItem>
+	<MenuItem Header="E_xpression">
+		<tables:TablesMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
+	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
 	</MenuItem>

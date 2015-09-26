@@ -4,10 +4,13 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Win32;
+using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
@@ -128,6 +131,55 @@ namespace NeoEdit.Tables
 			undoRedo.SetModified(false);
 		}
 
+		internal Dictionary<string, List<object>> GetExpressionData(int? count = null, NEExpression expression = null)
+		{
+			var sels = GetSelectedCells();
+
+			// Can't access DependencyProperties from other threads; grab a copy:
+			var Table = this.Table;
+
+			var parallelDataActions = new Dictionary<HashSet<string>, Action<HashSet<string>, Action<string, List<object>>>>();
+			parallelDataActions.Add(new HashSet<string> { "x" }, (items, addData) => addData("x", sels.Select(cell => Table[cell]).ToList()));
+			parallelDataActions.Add(new HashSet<string> { "y" }, (items, addData) => addData("y", sels.Select((cell, index) => (object)(index + 1)).ToList()));
+			parallelDataActions.Add(new HashSet<string> { "z" }, (items, addData) => addData("z", sels.Select((cell, index) => (object)index).ToList()));
+			parallelDataActions.Add(new HashSet<string> { "row" }, (items, addData) => addData("row", sels.Select(cell => (object)cell.Row).ToList()));
+			parallelDataActions.Add(new HashSet<string> { "column" }, (items, addData) => addData("column", sels.Select(cell => (object)cell.Row).ToList()));
+			for (var ctr = 0; ctr < Table.Headers.Count; ++ctr)
+			{
+				var num = ctr; // If we don't copy this the threads get the wrong value
+				var columnName = Table.Headers[num].Name;
+				var columnNameLen = columnName + "l";
+				var columnNum = String.Format("c{0}", ctr + 1);
+				var columnNumLen = columnNum + "l";
+				parallelDataActions.Add(new HashSet<string> { columnName, columnNum }, (items, addData) =>
+				{
+					var columnData = sels.Select(cell => Table[cell.Row, num]).ToList();
+					addData(columnName, columnData);
+					addData(columnNum, columnData);
+				});
+				parallelDataActions.Add(new HashSet<string> { columnNameLen, columnNumLen }, (items, addData) =>
+				{
+					var columnLens = sels.Select(cell => (object)(Table[cell.Row, num] ?? "").ToString().Length).ToList();
+					addData(columnNameLen, columnLens);
+					addData(columnNumLen, columnLens);
+				});
+			}
+
+			var used = expression != null ? expression.Variables : new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
+			var data = new Dictionary<string, List<object>>();
+			Parallel.ForEach(parallelDataActions, pair =>
+			{
+				if (pair.Key.Any(key => used.Contains(key)))
+					pair.Value(used, (key, value) =>
+					{
+						lock (data)
+							data[key] = value;
+					});
+			});
+
+			return data;
+		}
+
 		void Command_File_Save()
 		{
 			if (FileName == null)
@@ -194,16 +246,39 @@ namespace NeoEdit.Tables
 			SetSelectedCells(columns.Select(column => new CellLocation(0, column)));
 		}
 
+		GetExpressionDialog.Result Command_Edit_Expression_Dialog()
+		{
+			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
+		}
+
+		List<T> GetExpressionResults<T>(string expression, bool resizeToSelections = true, bool matchToSelections = true)
+		{
+			var neExpression = new NEExpression(expression);
+			var results = neExpression.Evaluate<T>(GetExpressionData(expression: neExpression));
+			if ((resizeToSelections) && (results.Count == 1))
+				results = results.Expand(selectedCells.Count, results[0]).ToList();
+			if ((matchToSelections) && (results.Count != selectedCells.Count))
+				throw new Exception("Expression count doesn't match selection count");
+			return results;
+		}
+
+		void Command_Edit_Expression(GetExpressionDialog.Result result)
+		{
+			var results = GetExpressionResults<object>(result.Expression);
+			ReplaceCells(GetSelectedCells(), results);
+		}
+
 		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
 		{
 			dialogResult = null;
 
 			switch (command)
 			{
+				case TablesCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
 				default: return true;
 			}
 
-			//return dialogResult != null;
+			return dialogResult != null;
 		}
 
 		internal void HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
@@ -216,6 +291,7 @@ namespace NeoEdit.Tables
 				case TablesCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
 				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
 				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
+				case TablesCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
 			}
 		}
 

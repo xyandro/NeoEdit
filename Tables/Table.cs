@@ -20,14 +20,17 @@ namespace NeoEdit.Tables
 
 		public enum TableTypeEnum { None, TSV, CSV, Columns }
 
+		ObservableCollection<ObservableCollection<object>> rows;
 		[DepProp]
-		public ObservableCollection<ObservableCollection<object>> Rows { get { return UIHelper<Table>.GetPropValue<ObservableCollection<ObservableCollection<object>>>(this); } set { UIHelper<Table>.SetPropValue(this, value); } }
+		public ObservableCollection<ObservableCollection<object>> Rows { get { return rows; } private set { rows = value; UIHelper<Table>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<Header> Headers { get { return UIHelper<Table>.GetPropValue<ObservableCollection<Header>>(this); } set { UIHelper<Table>.SetPropValue(this, value); } }
+		public ObservableCollection<Header> Headers { get { return UIHelper<Table>.GetPropValue<ObservableCollection<Header>>(this); } private set { UIHelper<Table>.SetPropValue(this, value); } }
 		[DepProp]
 		public TableTypeEnum TableType { get { return UIHelper<Table>.GetPropValue<TableTypeEnum>(this); } set { UIHelper<Table>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool HasHeaders { get { return UIHelper<Table>.GetPropValue<bool>(this); } set { UIHelper<Table>.SetPropValue(this, value); } }
+
+		static Table() { UIHelper<Table>.Register(); }
 
 		public Table()
 		{
