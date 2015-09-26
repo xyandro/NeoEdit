@@ -143,7 +143,7 @@ namespace NeoEdit.Common.Expressions
 			get
 			{
 				if (Value == null)
-					throw new Exception("NULL value");
+					return "";
 				if (Value is Complex)
 				{
 					var complex = (Complex)Value;

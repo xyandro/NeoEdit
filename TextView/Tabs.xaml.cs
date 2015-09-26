@@ -28,6 +28,7 @@ namespace NeoEdit.TextView
 		{
 			TextViewMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
+			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
 
 			Show(); // Explicitly show because sometimes the loading file dialog will put up first and be hidden
