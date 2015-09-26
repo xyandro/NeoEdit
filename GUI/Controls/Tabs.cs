@@ -19,7 +19,7 @@ namespace NeoEdit.GUI.Controls
 		static public DependencyProperty TabParentProperty = DependencyProperty.RegisterAttached("TabParent", typeof(Tabs<ItemType>), typeof(Tabs<ItemType>));
 
 		[DepProp]
-		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } private set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public ItemType TopMost { get { return UIHelper<Tabs<ItemType>>.GetPropValue<ItemType>(this); } set { UIHelper<Tabs<ItemType>>.SetPropValue(this, value); } }
 		[DepProp]
@@ -47,6 +47,7 @@ namespace NeoEdit.GUI.Controls
 			Focusable = true;
 			FocusVisualStyle = null;
 			AllowDrop = true;
+			VerticalAlignment = VerticalAlignment.Stretch;
 			Drop += (s, e) => OnDrop(e, null);
 		}
 
@@ -260,7 +261,7 @@ namespace NeoEdit.GUI.Controls
 
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] == [2] ? \"CadetBlue\" : ([1] ? \"LightBlue\" : \"LightGray\")" };
 			multiBinding.Bindings.Add(new Binding());
-			multiBinding.Bindings.Add(new Binding(UIHelper<ItemType>.GetProperty(a => a.Active).Name));
+			multiBinding.Bindings.Add(new Binding(UIHelper<TabsControl>.GetProperty(a => a.Active).Name));
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType>>.GetProperty(a => a.TopMost).Name) { Source = this });
 			label.SetBinding(TabLabel.BackgroundProperty, multiBinding);
 

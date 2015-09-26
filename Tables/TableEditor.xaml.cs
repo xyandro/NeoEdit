@@ -44,7 +44,7 @@ namespace NeoEdit.Tables
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TableEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TableEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
-			SetBinding(UIHelper<TableEditor>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
 		public override bool CanClose(ref Message.OptionsEnum answer)

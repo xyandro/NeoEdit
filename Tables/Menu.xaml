@@ -13,7 +13,7 @@
 		<tables:TablesMenuItem Header="_Exit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.Tiles, ElementName=self}"/>
+		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>

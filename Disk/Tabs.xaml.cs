@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -12,13 +11,6 @@ namespace NeoEdit.Disk
 
 	public partial class DiskTabs
 	{
-		[DepProp]
-		public ObservableCollection<DiskWindow> DiskWindows { get { return UIHelper<DiskTabs>.GetPropValue<ObservableCollection<DiskWindow>>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public DiskWindow TopMost { get { return UIHelper<DiskTabs>.GetPropValue<DiskWindow>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Tiles { get { return UIHelper<DiskTabs>.GetPropValue<bool>(this); } set { UIHelper<DiskTabs>.SetPropValue(this, value); } }
-
 		static DiskTabs() { UIHelper<DiskTabs>.Register(); }
 
 		static List<DiskWindow> Lists = new List<DiskWindow> { new DiskWindow(list: 1), new DiskWindow(list: 2), new DiskWindow(list: 3), new DiskWindow(list: 4), new DiskWindow(list: 5), new DiskWindow(list: 6), new DiskWindow(list: 7), new DiskWindow(list: 8), new DiskWindow(list: 9) };
@@ -34,8 +26,6 @@ namespace NeoEdit.Disk
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
-
-			DiskWindows = new ObservableCollection<DiskWindow>();
 		}
 
 		public static DiskWindow GetList(int list)
@@ -80,58 +70,58 @@ namespace NeoEdit.Disk
 				case DiskCommand.View_List9: Command_View_List(9); break;
 			}
 
-			if (TopMost == null)
+			if (ItemTabs.TopMost == null)
 				return;
 
 			switch (command)
 			{
-				case DiskCommand.File_Close: DiskWindows.Remove(TopMost); break;
-				case DiskCommand.File_Rename: TopMost.Command_File_Rename(); break;
-				case DiskCommand.File_Identify: TopMost.Command_File_Identify(); break;
-				case DiskCommand.File_Hash: TopMost.Command_File_Hash(); break;
-				case DiskCommand.File_VCS: TopMost.Command_File_VCS(); break;
-				case DiskCommand.File_Delete: TopMost.Command_File_Delete(); break;
-				case DiskCommand.Edit_Cut: TopMost.Command_Edit_CutCopy(true); break;
-				case DiskCommand.Edit_Copy: TopMost.Command_Edit_CutCopy(false); break;
-				case DiskCommand.Edit_Paste: TopMost.Command_Edit_Paste(); break;
-				case DiskCommand.Edit_Find: TopMost.Command_Edit_Find(); break;
-				case DiskCommand.Edit_FindBinary: TopMost.Command_Edit_FindBinary(); break;
-				case DiskCommand.Edit_FindText: TopMost.Command_Edit_FindText(); break;
-				case DiskCommand.Edit_ToList1: TopMost.Command_Edit_ToList(1); break;
-				case DiskCommand.Edit_ToList2: TopMost.Command_Edit_ToList(2); break;
-				case DiskCommand.Edit_ToList3: TopMost.Command_Edit_ToList(3); break;
-				case DiskCommand.Edit_ToList4: TopMost.Command_Edit_ToList(4); break;
-				case DiskCommand.Edit_ToList5: TopMost.Command_Edit_ToList(5); break;
-				case DiskCommand.Edit_ToList6: TopMost.Command_Edit_ToList(6); break;
-				case DiskCommand.Edit_ToList7: TopMost.Command_Edit_ToList(7); break;
-				case DiskCommand.Edit_ToList8: TopMost.Command_Edit_ToList(8); break;
-				case DiskCommand.Edit_ToList9: TopMost.Command_Edit_ToList(9); break;
-				case DiskCommand.Edit_TextEdit: TopMost.Command_Edit_TextEdit(); break;
-				case DiskCommand.Edit_HexEdit: TopMost.Command_Edit_HexEdit(); break;
-				case DiskCommand.Select_All: TopMost.Command_Select_All(); break;
-				case DiskCommand.Select_None: TopMost.Command_Select_None(); break;
-				case DiskCommand.Select_Invert: TopMost.Command_Select_Invert(); break;
-				case DiskCommand.Select_Directories: TopMost.Command_Select_Directories(); break;
-				case DiskCommand.Select_Files: TopMost.Command_Select_Files(); break;
-				case DiskCommand.Select_Unique: TopMost.Command_Select_Unique(); break;
-				case DiskCommand.Select_Duplicates: TopMost.Command_Select_Duplicates(); break;
-				case DiskCommand.Select_AddCopiedCut: TopMost.Command_Select_AddCopiedCut(); break;
-				case DiskCommand.Select_Remove: TopMost.Command_Select_Remove(); break;
-				case DiskCommand.Select_RemoveWithChildren: TopMost.Command_Select_RemoveWithChildren(); break;
-				case DiskCommand.View_DiskUsage: TopMost.Command_View_DiskUsage(); break;
+				case DiskCommand.File_Close: ItemTabs.Items.Remove(ItemTabs.TopMost); break;
+				case DiskCommand.File_Rename: ItemTabs.TopMost.Command_File_Rename(); break;
+				case DiskCommand.File_Identify: ItemTabs.TopMost.Command_File_Identify(); break;
+				case DiskCommand.File_Hash: ItemTabs.TopMost.Command_File_Hash(); break;
+				case DiskCommand.File_VCS: ItemTabs.TopMost.Command_File_VCS(); break;
+				case DiskCommand.File_Delete: ItemTabs.TopMost.Command_File_Delete(); break;
+				case DiskCommand.Edit_Cut: ItemTabs.TopMost.Command_Edit_CutCopy(true); break;
+				case DiskCommand.Edit_Copy: ItemTabs.TopMost.Command_Edit_CutCopy(false); break;
+				case DiskCommand.Edit_Paste: ItemTabs.TopMost.Command_Edit_Paste(); break;
+				case DiskCommand.Edit_Find: ItemTabs.TopMost.Command_Edit_Find(); break;
+				case DiskCommand.Edit_FindBinary: ItemTabs.TopMost.Command_Edit_FindBinary(); break;
+				case DiskCommand.Edit_FindText: ItemTabs.TopMost.Command_Edit_FindText(); break;
+				case DiskCommand.Edit_ToList1: ItemTabs.TopMost.Command_Edit_ToList(1); break;
+				case DiskCommand.Edit_ToList2: ItemTabs.TopMost.Command_Edit_ToList(2); break;
+				case DiskCommand.Edit_ToList3: ItemTabs.TopMost.Command_Edit_ToList(3); break;
+				case DiskCommand.Edit_ToList4: ItemTabs.TopMost.Command_Edit_ToList(4); break;
+				case DiskCommand.Edit_ToList5: ItemTabs.TopMost.Command_Edit_ToList(5); break;
+				case DiskCommand.Edit_ToList6: ItemTabs.TopMost.Command_Edit_ToList(6); break;
+				case DiskCommand.Edit_ToList7: ItemTabs.TopMost.Command_Edit_ToList(7); break;
+				case DiskCommand.Edit_ToList8: ItemTabs.TopMost.Command_Edit_ToList(8); break;
+				case DiskCommand.Edit_ToList9: ItemTabs.TopMost.Command_Edit_ToList(9); break;
+				case DiskCommand.Edit_TextEdit: ItemTabs.TopMost.Command_Edit_TextEdit(); break;
+				case DiskCommand.Edit_HexEdit: ItemTabs.TopMost.Command_Edit_HexEdit(); break;
+				case DiskCommand.Select_All: ItemTabs.TopMost.Command_Select_All(); break;
+				case DiskCommand.Select_None: ItemTabs.TopMost.Command_Select_None(); break;
+				case DiskCommand.Select_Invert: ItemTabs.TopMost.Command_Select_Invert(); break;
+				case DiskCommand.Select_Directories: ItemTabs.TopMost.Command_Select_Directories(); break;
+				case DiskCommand.Select_Files: ItemTabs.TopMost.Command_Select_Files(); break;
+				case DiskCommand.Select_Unique: ItemTabs.TopMost.Command_Select_Unique(); break;
+				case DiskCommand.Select_Duplicates: ItemTabs.TopMost.Command_Select_Duplicates(); break;
+				case DiskCommand.Select_AddCopiedCut: ItemTabs.TopMost.Command_Select_AddCopiedCut(); break;
+				case DiskCommand.Select_Remove: ItemTabs.TopMost.Command_Select_Remove(); break;
+				case DiskCommand.Select_RemoveWithChildren: ItemTabs.TopMost.Command_Select_RemoveWithChildren(); break;
+				case DiskCommand.View_DiskUsage: ItemTabs.TopMost.Command_View_DiskUsage(); break;
 			}
 		}
 
 		internal void ToggleColumn(DependencyProperty property)
 		{
-			if (TopMost != null)
-				TopMost.ToggleColumn(property);
+			if (ItemTabs.TopMost != null)
+				ItemTabs.TopMost.ToggleColumn(property);
 		}
 
 		internal void SetSort(DependencyProperty property)
 		{
-			if (TopMost != null)
-				TopMost.SetSort(property);
+			if (ItemTabs.TopMost != null)
+				ItemTabs.TopMost.SetSort(property);
 		}
 	}
 }

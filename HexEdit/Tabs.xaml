@@ -8,8 +8,8 @@
 
 	<Window.Title>
 		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="StrFormat(&quot;{0}{1} - NeoEdit Hex Editor&quot;, [0], [1])">
-			<Binding Path="Active.FileTitle" ElementName="self"/>
-			<Binding Path="Active.FileName" ElementName="self"/>
+			<Binding Path="ItemTabs.TopMost.FileTitle" ElementName="self"/>
+			<Binding Path="ItemTabs.TopMost.FileName" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>
 
@@ -24,11 +24,7 @@
 
 		<hexEdit:HexEditMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
-		<hexEdit:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" VerticalAlignment="Stretch"
-			Items="{Binding HexEditors, ElementName=self, Mode=TwoWay}"
-			TopMost="{Binding Active, ElementName=self, Mode=TwoWay}"
-			Tiles="{Binding Tiles, ElementName=self, Mode=TwoWay}"
-		/>
+		<hexEdit:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs"/>
 	</Grid>
 
 </hexEdit:TabsWindow>

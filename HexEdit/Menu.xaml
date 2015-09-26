@@ -36,12 +36,12 @@
 		<hexEdit:HexEditMenuItem Header="Find Pre_v" CommandEnum="Edit_FindPrev"/>
 		<hexEdit:HexEditMenuItem Header="_Goto" CommandEnum="Edit_Goto"/>
 		<Separator/>
-		<hexEdit:HexEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Parent.Active.Insert, ElementName=self}"/>
+		<hexEdit:HexEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Parent.ItemTabs.TopMost.Insert, ElementName=self}"/>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<hexEdit:HexEditMenuItem Header="_Values" CommandEnum="View_Values" IsChecked="{Binding Parent.Active.ShowValues, ElementName=self}"/>
+		<hexEdit:HexEditMenuItem Header="_Values" CommandEnum="View_Values" IsChecked="{Binding Parent.ItemTabs.TopMost.ShowValues, ElementName=self}"/>
 		<hexEdit:HexEditMenuItem Header="_Refresh" CommandEnum="View_Refresh"/>
-		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.Tiles, ElementName=self}"/>
+		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
 	</MenuItem>
 	<MenuItem Header="_Data">
 		<MenuItem Header="_Hash">

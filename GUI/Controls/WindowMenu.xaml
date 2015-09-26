@@ -4,7 +4,7 @@
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls"
 	Header="_Window">
 
-	<guiControls:WindowMenuItem Header="C_onsole" CommandEnum="Window_Console"/>
+	<guiControls:WindowMenuItem Header="_Console" CommandEnum="Window_Console"/>
 	<guiControls:WindowMenuItem Header="D_iff" CommandEnum="Window_Diff"/>
 	<guiControls:WindowMenuItem Header="_Disk" CommandEnum="Window_Disk"/>
 	<guiControls:WindowMenuItem Header="H_andles" CommandEnum="Window_Handles"/>

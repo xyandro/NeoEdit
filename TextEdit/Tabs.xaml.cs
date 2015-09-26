@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,13 +22,6 @@ namespace NeoEdit.TextEdit
 
 	public partial class TextEditTabs
 	{
-		[DepProp]
-		public ObservableCollection<TextEditor> TextEditors { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public TextEditor TopMost { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditor>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Tiles { get { return UIHelper<TextEditTabs>.GetPropValue<bool>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
-
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
 		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false)
@@ -66,10 +58,11 @@ namespace NeoEdit.TextEdit
 		{
 			var textEdit1 = new TextEditor(filename1);
 			var textEdit2 = new TextEditor(filename2);
-			var textEditTabs = new TextEditTabs { Tiles = true };
+			var textEditTabs = new TextEditTabs();
+			textEditTabs.ItemTabs.Tiles = true;
 			textEditTabs.tabs.CreateTab(textEdit1);
 			textEditTabs.tabs.CreateTab(textEdit2);
-			textEditTabs.TopMost = textEdit1;
+			textEditTabs.ItemTabs.TopMost = textEdit1;
 			textEdit1.DiffTarget = textEdit2;
 		}
 
@@ -85,7 +78,6 @@ namespace NeoEdit.TextEdit
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
 
-			TextEditors = new ObservableCollection<TextEditor>();
 			AllowDrop = true;
 			Drop += TextEditTabs_Drop;
 		}
@@ -107,8 +99,8 @@ namespace NeoEdit.TextEdit
 
 		OpenFileDialogResult Command_File_Open_Open_Dialog(string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (TopMost != null))
-				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
+			if ((initialDirectory == null) && (ItemTabs.TopMost != null))
+				initialDirectory = Path.GetDirectoryName(ItemTabs.TopMost.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
@@ -131,7 +123,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_File_Copy_AllPaths()
 		{
-			var names = TextEditors.Select(editor => editor.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
+			var names = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
 			NEClipboard.Set(names, String.Join(" ", names));
 		}
 
@@ -149,7 +141,7 @@ namespace NeoEdit.TextEdit
 			}.Show() != Message.OptionsEnum.Yes))
 				return;
 
-			foreach (var item in TextEditors)
+			foreach (var item in ItemTabs.Items)
 				item.Active = false;
 			foreach (var file in files)
 				AddTextEditor(file);
@@ -158,7 +150,7 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Copy_AllFiles()
 		{
 			var data = new List<string>();
-			foreach (var textEditorData in TextEditors)
+			foreach (var textEditorData in ItemTabs.Items)
 				if (textEditorData.Active)
 					data.AddRange(textEditorData.GetSelectionStrings());
 			NEClipboard.Set(data, String.Join(" ", data));
@@ -167,7 +159,7 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Paste_AllFiles()
 		{
 			var strs = NEClipboard.Strings;
-			var active = TextEditors.Where(data => data.Active).ToList(); ;
+			var active = ItemTabs.Items.Where(data => data.Active).ToList(); ;
 			if (strs.Count != active.Count)
 				throw new Exception("Clipboard count and active editor count must match");
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
@@ -177,10 +169,10 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Diff_Diff()
 		{
 			List<TextEditor> diffTargets;
-			if (TextEditors.Count == 2)
-				diffTargets = TextEditors.ToList();
+			if (ItemTabs.Items.Count == 2)
+				diffTargets = ItemTabs.Items.ToList();
 			else
-				diffTargets = TextEditors.Where(data => data.Active).ToList();
+				diffTargets = ItemTabs.Items.Where(data => data.Active).ToList();
 			if (diffTargets.Count != 2)
 				throw new Exception("Must have two files active for diff.");
 			diffTargets[0].DiffTarget = diffTargets[1];
@@ -341,11 +333,11 @@ namespace NeoEdit.TextEdit
 			Action startNext = null;
 			startNext = () =>
 			{
-				if ((TopMost == null) || (--count < 0))
+				if ((ItemTabs.TopMost == null) || (--count < 0))
 					return;
 
 				if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.EvaluateRow<bool>(TopMost.GetExpressionData(expression: expression), 0))
+					if (!expression.EvaluateRow<bool>(ItemTabs.TopMost.GetExpressionData(expression: expression), 0))
 						return;
 
 				macro.Play(this, playing => macroPlaying = playing, startNext);
@@ -395,7 +387,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
 				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(macroDirectory); break;
-				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult);
+				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult);
 			}
 
 			return dialogResult != null;
@@ -419,13 +411,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return;
 			}
 
-			foreach (var textEditorItem in TextEditors.Where(item => item.Active).ToList())
+			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
 		}
 
 		public int GetIndex(TextEditor textEditor)
 		{
-			var index = TextEditors.IndexOf(textEditor);
+			var index = ItemTabs.Items.IndexOf(textEditor);
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
@@ -456,7 +448,7 @@ namespace NeoEdit.TextEdit
 		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
 			var result = false;
-			foreach (var textEditorItems in TextEditors.Where(item => item.Active).ToList())
+			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
 				result = textEditorItems.HandleKey(key, shiftDown, controlDown) || result;
 			return result;
 		}
@@ -482,7 +474,7 @@ namespace NeoEdit.TextEdit
 		internal bool HandleText(string text)
 		{
 			var result = false;
-			foreach (var textEditorItems in TextEditors.Where(item => item.Active).ToList())
+			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
 				result = textEditorItems.HandleText(text) || result;
 			return result;
 		}

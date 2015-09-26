@@ -55,7 +55,7 @@ namespace NeoEdit.Console
 		{
 			InitializeComponent();
 
-			SetBinding(UIHelper<Console>.GetProperty(a => a.TabLabel), new Binding("Location") { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])" });
+			SetBinding(UIHelper<TabsControl>.GetProperty(a => a.TabLabel), new Binding("Location") { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])" });
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 

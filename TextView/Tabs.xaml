@@ -24,11 +24,7 @@
 
 		<textView:TextViewMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
-		<textView:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs" VerticalAlignment="Stretch"
-			Items="{Binding TextViewers, ElementName=self, Mode=TwoWay}"
-			TopMost="{Binding Active, ElementName=self, Mode=TwoWay}"
-			Tiles="{Binding Tiles, ElementName=self, Mode=TwoWay}"
-		/>
+		<textView:Tabs Grid.Row="1" Grid.Column="0" x:Name="tabs"/>
 	</Grid>
 
 </guiControls:NEWindow>

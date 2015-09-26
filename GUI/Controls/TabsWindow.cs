@@ -7,7 +7,10 @@ namespace NeoEdit.GUI.Controls
 {
 	public class TabsWindow<ItemType> : NEWindow where ItemType : TabsControl
 	{
-		public Tabs<ItemType> ItemTabs { get; protected set; }
+		[DepProp]
+		public Tabs<ItemType> ItemTabs { get { return UIHelper<TabsWindow<ItemType>>.GetPropValue<Tabs<ItemType>>(this); } protected set { UIHelper<TabsWindow<ItemType>>.SetPropValue(this, value); } }
+
+		static TabsWindow() { UIHelper<TabsWindow<ItemType>>.Register(); }
 
 		public static void CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType>
 		{

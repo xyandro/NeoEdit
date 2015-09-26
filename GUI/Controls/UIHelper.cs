@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using NeoEdit.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 
@@ -31,8 +32,13 @@ namespace NeoEdit.GUI.Controls
 		static Dictionary<string, DependencyProperty> dependencyProperty;
 		static UIHelper()
 		{
+			// Ensure base class UIHelper constructors called first
+			var baseTypes = typeof(ControlType).Recurse(type => type.BaseType).Reverse().ToList();
+			var uiHelperTypes = baseTypes.Where(type => typeof(DependencyObject).IsAssignableFrom(type)).Select(type => typeof(UIHelper<>).MakeGenericType(type)).ToList();
+			uiHelperTypes.ForEach(type => RuntimeHelpers.RunClassConstructor(type.TypeHandle));
+
 			dependencyProperty = new Dictionary<string, DependencyProperty>();
-			foreach (var prop in typeof(ControlType).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+			foreach (var prop in typeof(ControlType).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
 			{
 				var attr = prop.GetCustomAttribute<DepPropAttribute>();
 				if (attr == null)

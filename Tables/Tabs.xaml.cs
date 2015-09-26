@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -13,13 +12,6 @@ namespace NeoEdit.Tables
 
 	partial class TablesTabs
 	{
-		[DepProp]
-		public ObservableCollection<TableEditor> TableEditors { get { return UIHelper<TablesTabs>.GetPropValue<ObservableCollection<TableEditor>>(this); } set { UIHelper<TablesTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public TableEditor TopMost { get { return UIHelper<TablesTabs>.GetPropValue<TableEditor>(this); } set { UIHelper<TablesTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Tiles { get { return UIHelper<TablesTabs>.GetPropValue<bool>(this); } set { UIHelper<TablesTabs>.SetPropValue(this, value); } }
-
 		static TablesTabs() { UIHelper<TablesTabs>.Register(); }
 
 		public static void Create(string fileName = null, TablesTabs tableEditTabs = null, bool forceCreate = false)
@@ -33,8 +25,6 @@ namespace NeoEdit.Tables
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
-
-			TableEditors = new ObservableCollection<TableEditor>();
 		}
 
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
@@ -58,8 +48,8 @@ namespace NeoEdit.Tables
 
 		OpenFileDialogResult Command_File_Open_Dialog(string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (TopMost != null))
-				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
+			if ((initialDirectory == null) && (ItemTabs.TopMost != null))
+				initialDirectory = Path.GetDirectoryName(ItemTabs.TopMost.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "tsv",
@@ -87,7 +77,7 @@ namespace NeoEdit.Tables
 			switch (command)
 			{
 				case TablesCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
-				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult);
+				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult);
 			}
 
 			return dialogResult != null;
@@ -102,7 +92,7 @@ namespace NeoEdit.Tables
 				case TablesCommand.File_Exit: Close(); break;
 			}
 
-			foreach (var textEditorItem in TableEditors.Where(item => item.Active).ToList())
+			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
 		}
 	}

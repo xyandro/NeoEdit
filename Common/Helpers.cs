@@ -279,6 +279,21 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public static IEnumerable<TSource> Recurse<TSource>(this TSource source, Func<TSource, TSource> recurse)
+		{
+			var items = new Queue<TSource>();
+			if (source != null)
+				items.Enqueue(source);
+			while (items.Any())
+			{
+				var item = items.Dequeue();
+				yield return item;
+				var child = recurse(item);
+				if (child != null)
+					items.Enqueue(child);
+			}
+		}
+
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 

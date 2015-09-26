@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Controls;
@@ -18,13 +17,6 @@ namespace NeoEdit.HexEdit
 
 	public partial class HexEditTabs
 	{
-		[DepProp]
-		public ObservableCollection<HexEditor> HexEditors { get { return UIHelper<HexEditTabs>.GetPropValue<ObservableCollection<HexEditor>>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public HexEditor Active { get { return UIHelper<HexEditTabs>.GetPropValue<HexEditor>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Tiles { get { return UIHelper<HexEditTabs>.GetPropValue<bool>(this); } set { UIHelper<HexEditTabs>.SetPropValue(this, value); } }
-
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 
 		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, HexEditTabs hexEditTabs = null, bool forceCreate = false)
@@ -38,8 +30,6 @@ namespace NeoEdit.HexEdit
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
-
-			HexEditors = new ObservableCollection<HexEditor>();
 		}
 
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
@@ -79,7 +69,7 @@ namespace NeoEdit.HexEdit
 
 		void Command_File_Open()
 		{
-			var dir = Active != null ? Path.GetDirectoryName(Active.FileName) : null;
+			var dir = ItemTabs.TopMost != null ? Path.GetDirectoryName(ItemTabs.TopMost.FileName) : null;
 			var dialog = new OpenFileDialog
 			{
 				Multiselect = true,
@@ -133,9 +123,9 @@ namespace NeoEdit.HexEdit
 
 		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
 		{
-			if (Active == null)
+			if (ItemTabs.TopMost == null)
 				return false;
-			return Active.HandleKey(key, shiftDown, controlDown);
+			return ItemTabs.TopMost.HandleKey(key, shiftDown, controlDown);
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -152,9 +142,9 @@ namespace NeoEdit.HexEdit
 
 		internal bool HandleText(string text)
 		{
-			if (Active == null)
+			if (ItemTabs.TopMost == null)
 				return false;
-			return Active.HandleText(text);
+			return ItemTabs.TopMost.HandleText(text);
 		}
 
 		void RunCommand(HexEditCommand command, bool shiftDown)
@@ -168,57 +158,57 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.File_Exit: Close(); break;
 			}
 
-			if (Active == null)
+			if (ItemTabs.TopMost == null)
 				return;
 
 			switch (command)
 			{
-				case HexEditCommand.File_Save: Active.Command_File_Save(); break;
-				case HexEditCommand.File_SaveAs: Active.Command_File_SaveAs(); break;
-				case HexEditCommand.File_Close: if (Active.CanClose()) Remove(Active); break;
-				case HexEditCommand.File_Revert: Active.Command_File_Revert(); break;
-				case HexEditCommand.File_CopyPath: Active.Command_File_CopyPath(); break;
-				case HexEditCommand.File_CopyName: Active.Command_File_CopyName(); break;
-				case HexEditCommand.File_Encoding: Active.Command_File_Encoding(); break;
-				case HexEditCommand.File_TextEditor: if (Active.Command_File_TextEditor()) { HexEditors.Remove(Active); if (HexEditors.Count == 0) Close(); } break;
-				case HexEditCommand.Edit_Undo: Active.Command_Edit_Undo(); break;
-				case HexEditCommand.Edit_Redo: Active.Command_Edit_Redo(); break;
-				case HexEditCommand.Edit_Cut: Active.Command_Edit_CutCopy(true); break;
-				case HexEditCommand.Edit_Copy: Active.Command_Edit_CutCopy(false); break;
-				case HexEditCommand.Edit_Paste: Active.Command_Edit_Paste(); break;
-				case HexEditCommand.Edit_Find: Active.Command_Edit_Find(shiftDown); break;
-				case HexEditCommand.Edit_FindNext: Active.Command_Edit_FindNextPrev(true, shiftDown); break;
-				case HexEditCommand.Edit_FindPrev: Active.Command_Edit_FindNextPrev(false, shiftDown); break;
-				case HexEditCommand.Edit_Goto: Active.Command_Edit_Goto(shiftDown); break;
-				case HexEditCommand.Edit_Insert: Active.Command_Edit_Insert(); break;
-				case HexEditCommand.View_Values: Active.Command_View_Values(); break;
-				case HexEditCommand.View_Refresh: Active.Command_View_Refresh(); break;
-				case HexEditCommand.Data_Hash_MD5: Active.Command_Data_Hash(Hasher.Type.MD5); break;
-				case HexEditCommand.Data_Hash_SHA1: Active.Command_Data_Hash(Hasher.Type.SHA1); break;
-				case HexEditCommand.Data_Hash_SHA256: Active.Command_Data_Hash(Hasher.Type.SHA256); break;
-				case HexEditCommand.Data_Compress_GZip: Active.Command_Data_Compress(true, Compressor.Type.GZip); break;
-				case HexEditCommand.Data_Compress_Deflate: Active.Command_Data_Compress(true, Compressor.Type.Deflate); break;
-				case HexEditCommand.Data_Decompress_GZip: Active.Command_Data_Compress(false, Compressor.Type.GZip); break;
-				case HexEditCommand.Data_Decompress_Inflate: Active.Command_Data_Compress(false, Compressor.Type.Deflate); break;
-				case HexEditCommand.Data_Encrypt_AES: Active.Command_Data_Encrypt(true, Cryptor.Type.AES); break;
-				case HexEditCommand.Data_Encrypt_DES: Active.Command_Data_Encrypt(true, Cryptor.Type.DES); break;
-				case HexEditCommand.Data_Encrypt_3DES: Active.Command_Data_Encrypt(true, Cryptor.Type.DES3); break;
-				case HexEditCommand.Data_Encrypt_RSA: Active.Command_Data_Encrypt(true, Cryptor.Type.RSA); break;
-				case HexEditCommand.Data_Encrypt_RSAAES: Active.Command_Data_Encrypt(true, Cryptor.Type.RSAAES); break;
-				case HexEditCommand.Data_Decrypt_AES: Active.Command_Data_Encrypt(false, Cryptor.Type.AES); break;
-				case HexEditCommand.Data_Decrypt_DES: Active.Command_Data_Encrypt(false, Cryptor.Type.DES); break;
-				case HexEditCommand.Data_Decrypt_3DES: Active.Command_Data_Encrypt(false, Cryptor.Type.DES3); break;
-				case HexEditCommand.Data_Decrypt_RSA: Active.Command_Data_Encrypt(false, Cryptor.Type.RSA); break;
-				case HexEditCommand.Data_Decrypt_RSAAES: Active.Command_Data_Encrypt(false, Cryptor.Type.RSAAES); break;
-				case HexEditCommand.Data_Sign_RSA: Active.Command_Data_Sign(true, Cryptor.Type.RSA); break;
-				case HexEditCommand.Data_Sign_DSA: Active.Command_Data_Sign(true, Cryptor.Type.DSA); break;
-				case HexEditCommand.Data_Verify_RSA: Active.Command_Data_Sign(false, Cryptor.Type.RSA); break;
-				case HexEditCommand.Data_Verify_DSA: Active.Command_Data_Sign(false, Cryptor.Type.DSA); break;
-				case HexEditCommand.Data_Fill: Active.Command_Data_Fill(); break;
-				case HexEditCommand.Data_Models_Define: Active.Command_Data_Models_Define(); break;
-				case HexEditCommand.Data_Models_Save: Active.Command_Data_Models_Save(); break;
-				case HexEditCommand.Data_Models_Load: Active.Command_Data_Models_Load(); break;
-				case HexEditCommand.Data_Models_ExtractData: Active.Command_Data_Models_ExtractData(); break;
+				case HexEditCommand.File_Save: ItemTabs.TopMost.Command_File_Save(); break;
+				case HexEditCommand.File_SaveAs: ItemTabs.TopMost.Command_File_SaveAs(); break;
+				case HexEditCommand.File_Close: if (ItemTabs.TopMost.CanClose()) Remove(ItemTabs.TopMost); break;
+				case HexEditCommand.File_Revert: ItemTabs.TopMost.Command_File_Revert(); break;
+				case HexEditCommand.File_CopyPath: ItemTabs.TopMost.Command_File_CopyPath(); break;
+				case HexEditCommand.File_CopyName: ItemTabs.TopMost.Command_File_CopyName(); break;
+				case HexEditCommand.File_Encoding: ItemTabs.TopMost.Command_File_Encoding(); break;
+				case HexEditCommand.File_TextEditor: if (ItemTabs.TopMost.Command_File_TextEditor()) { ItemTabs.Items.Remove(ItemTabs.TopMost); if (ItemTabs.Items.Count == 0) Close(); } break;
+				case HexEditCommand.Edit_Undo: ItemTabs.TopMost.Command_Edit_Undo(); break;
+				case HexEditCommand.Edit_Redo: ItemTabs.TopMost.Command_Edit_Redo(); break;
+				case HexEditCommand.Edit_Cut: ItemTabs.TopMost.Command_Edit_CutCopy(true); break;
+				case HexEditCommand.Edit_Copy: ItemTabs.TopMost.Command_Edit_CutCopy(false); break;
+				case HexEditCommand.Edit_Paste: ItemTabs.TopMost.Command_Edit_Paste(); break;
+				case HexEditCommand.Edit_Find: ItemTabs.TopMost.Command_Edit_Find(shiftDown); break;
+				case HexEditCommand.Edit_FindNext: ItemTabs.TopMost.Command_Edit_FindNextPrev(true, shiftDown); break;
+				case HexEditCommand.Edit_FindPrev: ItemTabs.TopMost.Command_Edit_FindNextPrev(false, shiftDown); break;
+				case HexEditCommand.Edit_Goto: ItemTabs.TopMost.Command_Edit_Goto(shiftDown); break;
+				case HexEditCommand.Edit_Insert: ItemTabs.TopMost.Command_Edit_Insert(); break;
+				case HexEditCommand.View_Values: ItemTabs.TopMost.Command_View_Values(); break;
+				case HexEditCommand.View_Refresh: ItemTabs.TopMost.Command_View_Refresh(); break;
+				case HexEditCommand.Data_Hash_MD5: ItemTabs.TopMost.Command_Data_Hash(Hasher.Type.MD5); break;
+				case HexEditCommand.Data_Hash_SHA1: ItemTabs.TopMost.Command_Data_Hash(Hasher.Type.SHA1); break;
+				case HexEditCommand.Data_Hash_SHA256: ItemTabs.TopMost.Command_Data_Hash(Hasher.Type.SHA256); break;
+				case HexEditCommand.Data_Compress_GZip: ItemTabs.TopMost.Command_Data_Compress(true, Compressor.Type.GZip); break;
+				case HexEditCommand.Data_Compress_Deflate: ItemTabs.TopMost.Command_Data_Compress(true, Compressor.Type.Deflate); break;
+				case HexEditCommand.Data_Decompress_GZip: ItemTabs.TopMost.Command_Data_Compress(false, Compressor.Type.GZip); break;
+				case HexEditCommand.Data_Decompress_Inflate: ItemTabs.TopMost.Command_Data_Compress(false, Compressor.Type.Deflate); break;
+				case HexEditCommand.Data_Encrypt_AES: ItemTabs.TopMost.Command_Data_Encrypt(true, Cryptor.Type.AES); break;
+				case HexEditCommand.Data_Encrypt_DES: ItemTabs.TopMost.Command_Data_Encrypt(true, Cryptor.Type.DES); break;
+				case HexEditCommand.Data_Encrypt_3DES: ItemTabs.TopMost.Command_Data_Encrypt(true, Cryptor.Type.DES3); break;
+				case HexEditCommand.Data_Encrypt_RSA: ItemTabs.TopMost.Command_Data_Encrypt(true, Cryptor.Type.RSA); break;
+				case HexEditCommand.Data_Encrypt_RSAAES: ItemTabs.TopMost.Command_Data_Encrypt(true, Cryptor.Type.RSAAES); break;
+				case HexEditCommand.Data_Decrypt_AES: ItemTabs.TopMost.Command_Data_Encrypt(false, Cryptor.Type.AES); break;
+				case HexEditCommand.Data_Decrypt_DES: ItemTabs.TopMost.Command_Data_Encrypt(false, Cryptor.Type.DES); break;
+				case HexEditCommand.Data_Decrypt_3DES: ItemTabs.TopMost.Command_Data_Encrypt(false, Cryptor.Type.DES3); break;
+				case HexEditCommand.Data_Decrypt_RSA: ItemTabs.TopMost.Command_Data_Encrypt(false, Cryptor.Type.RSA); break;
+				case HexEditCommand.Data_Decrypt_RSAAES: ItemTabs.TopMost.Command_Data_Encrypt(false, Cryptor.Type.RSAAES); break;
+				case HexEditCommand.Data_Sign_RSA: ItemTabs.TopMost.Command_Data_Sign(true, Cryptor.Type.RSA); break;
+				case HexEditCommand.Data_Sign_DSA: ItemTabs.TopMost.Command_Data_Sign(true, Cryptor.Type.DSA); break;
+				case HexEditCommand.Data_Verify_RSA: ItemTabs.TopMost.Command_Data_Sign(false, Cryptor.Type.RSA); break;
+				case HexEditCommand.Data_Verify_DSA: ItemTabs.TopMost.Command_Data_Sign(false, Cryptor.Type.DSA); break;
+				case HexEditCommand.Data_Fill: ItemTabs.TopMost.Command_Data_Fill(); break;
+				case HexEditCommand.Data_Models_Define: ItemTabs.TopMost.Command_Data_Models_Define(); break;
+				case HexEditCommand.Data_Models_Save: ItemTabs.TopMost.Command_Data_Models_Save(); break;
+				case HexEditCommand.Data_Models_Load: ItemTabs.TopMost.Command_Data_Models_Load(); break;
+				case HexEditCommand.Data_Models_ExtractData: ItemTabs.TopMost.Command_Data_Models_ExtractData(); break;
 			}
 		}
 	}
