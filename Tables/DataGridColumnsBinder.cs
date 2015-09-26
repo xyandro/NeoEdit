@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace NeoEdit.Tables
 {
@@ -27,16 +25,7 @@ namespace NeoEdit.Tables
 				return;
 
 			for (var column = 0; column < columns.Count; ++column)
-			{
-				var dataGridColumn = new DataGridTextColumn { Header = columns[column].Name, Binding = new Binding(String.Format("[{0}]", column)) };
-				if (columns[column].Type == typeof(long))
-				{
-					var rightAlignCellStyle = new Style(typeof(TextBlock));
-					rightAlignCellStyle.Setters.Add(new Setter(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Right));
-					dataGridColumn.ElementStyle = rightAlignCellStyle;
-				}
-				dataGrid.Columns.Add(dataGridColumn);
-			}
+				dataGrid.Columns.Add(new TableColumn(column, columns[column]));
 		}
 
 		public static void SetColumns(DependencyObject element, ObservableCollection<Table.Header> value)

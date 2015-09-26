@@ -8,17 +8,18 @@
 		ItemsSource="{Binding Table.Rows, ElementName=self}"
 		AutoGenerateColumns="False"
 		CanUserResizeRows="False"
-		IsReadOnly="True" 
+		CanUserAddRows="False"
 		RowHeaderWidth="0" 
 		HorizontalGridLinesBrush="LightGray" 
 		VerticalGridLinesBrush="LightGray" 
 		SelectionUnit="Cell" 
 		CanUserSortColumns="False" 
 		IsSynchronizedWithCurrentItem="True" 
-		SelectionMode="Single"
-		tables:DataGridColumnsBinder.Columns="{Binding Table.Headers, ElementName=self}">
+		tables:DataGridColumnsBinder.Columns="{Binding Table.Headers, ElementName=self}"
+		CellEditEnding="CellEditEnding"
+		PreviewKeyDown="DataGridPreviewKeyDown">
 
-		<!--ColumnReordered="ColumnReorderedEvent" PreviewKeyDown="DataGridKeyDown" -->
+		<!--ColumnReordered="ColumnReorderedEvent" -->
 		<DataGrid.ColumnHeaderStyle>
 			<Style TargetType="DataGridColumnHeader">
 				<Setter Property="HorizontalContentAlignment" Value="Stretch"/>

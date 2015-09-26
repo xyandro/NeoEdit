@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
@@ -15,11 +19,20 @@ namespace NeoEdit.Tables
 	partial class TableEditor
 	{
 		[DepProp]
-		public Table Table { get { return UIHelper<TableEditor>.GetPropValue<Table>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		public Table Table
+		{
+			get { return UIHelper<TableEditor>.GetPropValue<Table>(this); }
+			set
+			{
+				UIHelper<TableEditor>.SetPropValue(this, value);
+				undoRedo.Clear();
+			}
+		}
 		[DepProp]
 		public string FileName { get { return UIHelper<TableEditor>.GetPropValue<string>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsModified { get { return UIHelper<TableEditor>.GetPropValue<bool>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		readonly UndoRedo undoRedo;
 
 		static TableEditor() { UIHelper<TableEditor>.Register(); }
 
@@ -27,6 +40,7 @@ namespace NeoEdit.Tables
 		{
 			InitializeComponent();
 			FileName = fileName;
+			undoRedo = new UndoRedo(b => IsModified = b);
 
 			if (fileName != null)
 			{
@@ -111,6 +125,7 @@ namespace NeoEdit.Tables
 			var data = Table.ConvertToString("\r\n", GetFileTableType(fileName));
 			File.WriteAllText(fileName, data, Encoding.UTF8);
 			FileName = fileName;
+			undoRedo.SetModified(false);
 		}
 
 		void Command_File_Save()
@@ -128,6 +143,41 @@ namespace NeoEdit.Tables
 				Save(fileName);
 		}
 
+		List<CellLocation> GetSelectedCells()
+		{
+			return dataGrid.SelectedCells.Select(cell => GetCellLocation(cell)).ToList();
+		}
+
+		void SetSelectedCells(IEnumerable<CellLocation> cells)
+		{
+			dataGrid.SelectedCells.Clear();
+			foreach (var cell in cells)
+				dataGrid.SelectedCells.Add(new DataGridCellInfo(dataGrid.Items[cell.Row], dataGrid.Columns[cell.Column]));
+			dataGrid.CurrentCell = dataGrid.SelectedCells.LastOrDefault();
+		}
+
+		void SetHome()
+		{
+			dataGrid.SelectedCells.Clear();
+			if ((dataGrid.Items.Count != 0) && (dataGrid.Columns.Count != 0))
+				dataGrid.SelectedCells.Add(new DataGridCellInfo(dataGrid.Items[0], dataGrid.Columns[0]));
+			dataGrid.CurrentCell = dataGrid.SelectedCells.LastOrDefault();
+		}
+
+		void Command_Edit_UndoRedo(ReplaceType replaceType)
+		{
+			var undoRedoStep = replaceType == ReplaceType.Undo ? undoRedo.GetUndo() : undoRedo.GetRedo();
+			if (undoRedoStep == null)
+				return;
+
+			Replace(undoRedoStep, replaceType);
+			switch (undoRedoStep.Action)
+			{
+				case UndoRedoAction.ChangeCells: SetSelectedCells(undoRedoStep.Cells); break;
+				default: SetHome(); break;
+			}
+		}
+
 		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
 		{
 			dialogResult = null;
@@ -137,7 +187,7 @@ namespace NeoEdit.Tables
 				default: return true;
 			}
 
-			return dialogResult != null;
+			//return dialogResult != null;
 		}
 
 		internal void HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
@@ -147,12 +197,93 @@ namespace NeoEdit.Tables
 				case TablesCommand.File_Save: Command_File_Save(); break;
 				case TablesCommand.File_SaveAs: Command_File_SaveAs(); break;
 				case TablesCommand.File_Close: if (CanClose()) TabsParent.Remove(this); break;
+				case TablesCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
+				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
 			}
 		}
 
 		public override bool Empty()
 		{
 			return (FileName == null) && (!IsModified) && (!Table.Headers.Any());
+		}
+
+		CellLocation GetCellLocation(DataGridCellInfo cellInfo)
+		{
+			return new CellLocation(Table.GetRow(cellInfo.Item as ObservableCollection<object>), (cellInfo.Column as TableColumn).Column);
+		}
+
+		List<object> GetValues(IEnumerable<CellLocation> cells)
+		{
+			return cells.Select(cell => Table[cell]).ToList();
+		}
+
+		void CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+		{
+			if (e.EditAction != DataGridEditAction.Commit)
+				return;
+
+			var newValue = ((TextBox)e.EditingElement).Text;
+			if (String.IsNullOrEmpty(newValue))
+				newValue = null;
+			dataGrid.CancelEdit();
+
+			var cellLocations = GetSelectedCells();
+			var types = cellLocations.Select(cell => cell.Column).Distinct().Select(index => Table.Headers[index].Type).Distinct().ToList();
+			var typeValues = types.ToDictionary(type => type, type => Convert.ChangeType(newValue, type));
+			var values = cellLocations.Select(cell => typeValues[Table.Headers[cell.Column].Type]).ToList();
+
+			ReplaceCells(cellLocations, values);
+		}
+
+		void DataGridPreviewKeyDown(object sender, KeyEventArgs e)
+		{
+			e.Handled = true;
+			switch (e.Key)
+			{
+				case Key.Enter: dataGrid.CommitEdit(); break;
+				default: e.Handled = false; break;
+			}
+		}
+
+		UndoRedoStep GetUndo(UndoRedoStep step)
+		{
+			switch (step.Action)
+			{
+				case UndoRedoAction.ChangeCells: return UndoRedoStep.CreateChangeCells(step.Cells, step.Cells.Select(cell => Table[cell]).ToList());
+				default: throw new NotImplementedException();
+			}
+		}
+
+		void Replace(UndoRedoStep step, ReplaceType replaceType = ReplaceType.Normal)
+		{
+			var undoStep = GetUndo(step);
+
+			switch (replaceType)
+			{
+				case ReplaceType.Undo: undoRedo.AddUndone(undoStep); break;
+				case ReplaceType.Redo: undoRedo.AddRedone(undoStep); break;
+				case ReplaceType.Normal: undoRedo.AddUndo(undoStep); break;
+			}
+
+			switch (step.Action)
+			{
+				case UndoRedoAction.ChangeCells: Table.ChangeCells(step.Cells, step.Values); break;
+			}
+		}
+
+		void ReplaceCells(List<CellLocation> cells, List<object> values)
+		{
+			if (!cells.Any())
+				return;
+			if (values == null)
+				values = Enumerable.Repeat(default(object), cells.Count).ToList();
+			if (cells.Count != values.Count)
+				throw new Exception("Invalid value count");
+
+			if (Enumerable.Range(0, cells.Count).All(ctr => (Table[cells[ctr]] ?? "").Equals(values[ctr] ?? "")))
+				return;
+
+			Replace(UndoRedoStep.CreateChangeCells(cells, values));
 		}
 	}
 }

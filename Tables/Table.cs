@@ -135,7 +135,7 @@ namespace NeoEdit.Tables
 			{
 				Headers.Add(new Header { Name = String.Format("Column {0}", column + 1) });
 				var match = parsers.First(pair => Rows.Skip(hasHeaders == false ? 0 : 1).All(row => (row[column] == null) || (pair.Value((string)row[column]) != null)));
-				if ((!hasHeaders.HasValue) && (match.Value((string)Rows[0][column]) == null))
+				if ((!hasHeaders.HasValue) && (match.Value((string)this[0, column]) == null))
 					hasHeaders = true;
 				Headers[column].Type = match.Key;
 			}
@@ -144,13 +144,18 @@ namespace NeoEdit.Tables
 			if (HasHeaders)
 			{
 				for (var column = 0; column < Headers.Count; ++column)
-					Headers[column].Name = (string)Rows[0][column];
+					Headers[column].Name = (string)this[0, column];
 				Rows.RemoveAt(0);
 			}
 
 			foreach (var row in Rows)
 				for (var column = 0; column < Headers.Count; ++column)
 					row[column] = parsers[Headers[column].Type]((string)row[column]);
+		}
+
+		public int GetRow(ObservableCollection<object> row)
+		{
+			return Rows.IndexOf(row);
 		}
 
 		public static string ToTCSV(string str, char split)
@@ -179,6 +184,26 @@ namespace NeoEdit.Tables
 					}
 				default: throw new ArgumentException("Invalid output type");
 			}
+		}
+
+		public object this[CellLocation cell]
+		{
+			get { return this[cell.Row, cell.Column]; }
+			set { this[cell.Row, cell.Column] = value; }
+		}
+
+		public object this[int row, int column]
+		{
+			get { return Rows[row][column]; }
+			set { Rows[row][column] = value; }
+		}
+
+		public void ChangeCells(List<CellLocation> cells, List<object> values)
+		{
+			if (cells.Count != values.Count)
+				throw new ArgumentException("Cells and values counts must match");
+			for (var ctr = 0; ctr < cells.Count; ++ctr)
+				this[cells[ctr]] = values[ctr];
 		}
 	}
 

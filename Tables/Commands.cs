@@ -12,5 +12,7 @@ namespace NeoEdit.Tables
 		File_SaveAs,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		File_Exit,
+		[KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,
+		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,
 	}
 }

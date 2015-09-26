@@ -12,6 +12,10 @@
 		<Separator/>
 		<tables:TablesMenuItem Header="_Exit" CommandEnum="File_Exit"/>
 	</MenuItem>
+	<MenuItem Header="_Edit">
+		<tables:TablesMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
+		<tables:TablesMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
+	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
 	</MenuItem>
