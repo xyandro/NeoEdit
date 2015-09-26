@@ -145,7 +145,7 @@ namespace NeoEdit.Tables
 
 		List<CellLocation> GetSelectedCells()
 		{
-			return dataGrid.SelectedCells.Select(cell => GetCellLocation(cell)).ToList();
+			return selectedCells.Select(cell => GetCellLocation(cell)).ToList();
 		}
 
 		void SetSelectedCells(IEnumerable<CellLocation> cells)
@@ -178,6 +178,22 @@ namespace NeoEdit.Tables
 			}
 		}
 
+		void Command_Edit_Sort()
+		{
+			var columns = GetSelectedCells().Select(cell => cell.Column).Distinct().ToList();
+			if (!columns.Any())
+				return;
+			var sortOrder = Table.GetSortOrder(columns);
+			if (!sortOrder.Any())
+				return;
+			if (sortOrder.Select((val, index) => val == index).All(b => b))
+				sortOrder.Reverse();
+
+			Sort(sortOrder);
+
+			SetSelectedCells(columns.Select(column => new CellLocation(0, column)));
+		}
+
 		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
 		{
 			dialogResult = null;
@@ -199,6 +215,7 @@ namespace NeoEdit.Tables
 				case TablesCommand.File_Close: if (CanClose()) TabsParent.Remove(this); break;
 				case TablesCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
 				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
+				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
 			}
 		}
 
@@ -245,11 +262,28 @@ namespace NeoEdit.Tables
 			}
 		}
 
+		List<DataGridCellInfo> selectedCells = new List<DataGridCellInfo>();
+		void DataGridSelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+		{
+			var cells = new HashSet<DataGridCellInfo>(dataGrid.SelectedCells);
+			selectedCells = selectedCells.Where(cell => cells.Contains(cell)).Concat(e.AddedCells).ToList();
+		}
+
+		List<int> GetListReverse(List<int> list)
+		{
+			var sortOrderDict = new Dictionary<int, int>();
+			for (var ctr = 0; ctr < list.Count; ++ctr)
+				sortOrderDict[list[ctr]] = ctr;
+			var reverse = Enumerable.Range(0, list.Count).Select(index => sortOrderDict[index]).ToList();
+			return reverse;
+		}
+
 		UndoRedoStep GetUndo(UndoRedoStep step)
 		{
 			switch (step.Action)
 			{
 				case UndoRedoAction.ChangeCells: return UndoRedoStep.CreateChangeCells(step.Cells, step.Cells.Select(cell => Table[cell]).ToList());
+				case UndoRedoAction.Sort: return UndoRedoStep.CreateSort(GetListReverse(step.SortOrder));
 				default: throw new NotImplementedException();
 			}
 		}
@@ -268,6 +302,7 @@ namespace NeoEdit.Tables
 			switch (step.Action)
 			{
 				case UndoRedoAction.ChangeCells: Table.ChangeCells(step.Cells, step.Values); break;
+				case UndoRedoAction.Sort: Table.Sort(step.SortOrder); break;
 			}
 		}
 
@@ -284,6 +319,14 @@ namespace NeoEdit.Tables
 				return;
 
 			Replace(UndoRedoStep.CreateChangeCells(cells, values));
+		}
+
+		void Sort(List<int> sortOrder)
+		{
+			if (!sortOrder.Any())
+				return;
+
+			Replace(UndoRedoStep.CreateSort(sortOrder));
 		}
 	}
 }

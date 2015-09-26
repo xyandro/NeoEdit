@@ -153,6 +153,15 @@ namespace NeoEdit.Tables
 					row[column] = parsers[Headers[column].Type]((string)row[column]);
 		}
 
+		public List<int> GetSortOrder(List<int> columns)
+		{
+			var order = Enumerable.Range(0, Rows.Count).ToList();
+			var ordering = order.OrderBy(rowIndex => 0);
+			foreach (var column in columns)
+				ordering = ordering.ThenBy(rowIndex => this[rowIndex, column]);
+			return ordering.ToList();
+		}
+
 		public int GetRow(ObservableCollection<object> row)
 		{
 			return Rows.IndexOf(row);
@@ -204,6 +213,11 @@ namespace NeoEdit.Tables
 				throw new ArgumentException("Cells and values counts must match");
 			for (var ctr = 0; ctr < cells.Count; ++ctr)
 				this[cells[ctr]] = values[ctr];
+		}
+
+		public void Sort(List<int> sortOrder)
+		{
+			Rows = new ObservableCollection<ObservableCollection<object>>(sortOrder.Select(index => Rows[index]));
 		}
 	}
 

@@ -17,7 +17,8 @@
 		IsSynchronizedWithCurrentItem="True" 
 		tables:DataGridColumnsBinder.Columns="{Binding Table.Headers, ElementName=self}"
 		CellEditEnding="CellEditEnding"
-		PreviewKeyDown="DataGridPreviewKeyDown">
+		PreviewKeyDown="DataGridPreviewKeyDown"
+		SelectedCellsChanged="DataGridSelectedCellsChanged">
 
 		<!--ColumnReordered="ColumnReorderedEvent" -->
 		<DataGrid.ColumnHeaderStyle>

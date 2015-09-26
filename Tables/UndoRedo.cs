@@ -14,12 +14,14 @@ namespace NeoEdit.Tables
 	internal enum UndoRedoAction
 	{
 		ChangeCells,
+		Sort,
 	}
 
 	class UndoRedoStep
 	{
 		public List<CellLocation> Cells { get; private set; }
 		public List<object> Values { get; private set; }
+		public List<int> SortOrder { get; private set; }
 		public UndoRedoAction Action { get; private set; }
 
 		UndoRedoStep() { }
@@ -31,6 +33,15 @@ namespace NeoEdit.Tables
 				Cells = cells,
 				Values = values,
 				Action = UndoRedoAction.ChangeCells,
+			};
+		}
+
+		static public UndoRedoStep CreateSort(List<int> sortOrder)
+		{
+			return new UndoRedoStep
+			{
+				SortOrder = sortOrder,
+				Action = UndoRedoAction.Sort,
 			};
 		}
 	}

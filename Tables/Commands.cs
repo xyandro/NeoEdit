@@ -14,5 +14,6 @@ namespace NeoEdit.Tables
 		File_Exit,
 		[KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,
 		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,
+		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Sort,
 	}
 }
