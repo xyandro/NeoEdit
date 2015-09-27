@@ -54,7 +54,12 @@ namespace NeoEdit.Tables
 			Table = Table ?? new Table();
 
 			SetupTabLabel();
+
+			dataGrid.PreparingCellForEdit += (s, e) => isEditing = true;
+			dataGrid.CellEditEnding += (s, e) => isEditing = false;
 		}
+
+		bool isEditing = false;
 
 		void SetupTabLabel()
 		{
@@ -197,7 +202,17 @@ namespace NeoEdit.Tables
 
 		List<CellLocation> GetSelectedCells()
 		{
-			return selectedCells.Select(cell => GetCellLocation(cell)).ToList();
+			return selectedCells.Select(cell => new CellLocation(Table.GetRowIndex(cell.Item as ObservableCollection<object>), (cell.Column as TableColumn).Column)).Distinct().ToList();
+		}
+
+		List<int> GetSelectedColumns()
+		{
+			return selectedCells.Select(cell => (cell.Column as TableColumn).Column).Distinct().ToList();
+		}
+
+		List<int> GetSelectedRows()
+		{
+			return selectedCells.Select(cell => Table.GetRowIndex(cell.Item as ObservableCollection<object>)).Distinct().ToList();
 		}
 
 		void SetSelectedCells(IEnumerable<CellLocation> cells)
@@ -232,7 +247,7 @@ namespace NeoEdit.Tables
 
 		void Command_Edit_Sort()
 		{
-			var columns = GetSelectedCells().Select(cell => cell.Column).Distinct().ToList();
+			var columns = GetSelectedColumns();
 			if (!columns.Any())
 				return;
 			var sortOrder = Table.GetSortOrder(columns);
@@ -300,11 +315,6 @@ namespace NeoEdit.Tables
 			return (FileName == null) && (!IsModified) && (!Table.Headers.Any());
 		}
 
-		CellLocation GetCellLocation(DataGridCellInfo cellInfo)
-		{
-			return new CellLocation(Table.GetRow(cellInfo.Item as ObservableCollection<object>), (cellInfo.Column as TableColumn).Column);
-		}
-
 		List<object> GetValues(IEnumerable<CellLocation> cells)
 		{
 			return cells.Select(cell => Table[cell]).ToList();
@@ -328,12 +338,31 @@ namespace NeoEdit.Tables
 			ReplaceCells(cellLocations, values);
 		}
 
+		protected bool shiftDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift); } }
+		protected bool controlDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Control); } }
+
 		void DataGridPreviewKeyDown(object sender, KeyEventArgs e)
 		{
 			e.Handled = true;
 			switch (e.Key)
 			{
-				case Key.Enter: dataGrid.CommitEdit(); break;
+				case Key.Enter:
+					if (isEditing)
+					{
+						dataGrid.CommitEdit();
+						e.Handled = true;
+					}
+					else
+						e.Handled = false;
+					break;
+				case Key.Delete:
+					if (shiftDown)
+						DeleteRows();
+					else if (controlDown)
+						DeleteColumns();
+					else
+						ReplaceCells(GetSelectedCells(), null);
+					break;
 				default: e.Handled = false; break;
 			}
 		}
@@ -354,19 +383,33 @@ namespace NeoEdit.Tables
 			return reverse;
 		}
 
-		UndoRedoStep GetUndo(UndoRedoStep step)
+		List<int> GetInsertPositions(List<int> deleted)
+		{
+			return deleted.Select((index, offset) => index - offset).ToList();
+		}
+
+		List<int> GetDeletePositions(List<int> inserted)
+		{
+			return inserted.Select((index, offset) => index + offset).ToList();
+		}
+
+		UndoRedoStep GetUndoStep(UndoRedoStep step)
 		{
 			switch (step.Action)
 			{
 				case UndoRedoAction.ChangeCells: return UndoRedoStep.CreateChangeCells(step.Cells, step.Cells.Select(cell => Table[cell]).ToList());
-				case UndoRedoAction.Sort: return UndoRedoStep.CreateSort(GetListReverse(step.SortOrder));
+				case UndoRedoAction.Sort: return UndoRedoStep.CreateSort(GetListReverse(step.Positions));
+				case UndoRedoAction.DeleteRows: return UndoRedoStep.CreateInsertRows(GetInsertPositions(step.Positions), Table.GetRowData(step.Positions));
+				case UndoRedoAction.InsertRows: return UndoRedoStep.CreateDeleteRows(GetDeletePositions(step.Positions));
+				case UndoRedoAction.DeleteColumns: return UndoRedoStep.CreateInsertColumns(GetInsertPositions(step.Positions), step.Positions.Select(index => Table.Headers[index]).ToList(), Table.GetColumnData(step.Positions));
+				case UndoRedoAction.InsertColumns: return UndoRedoStep.CreateDeleteColumns(GetDeletePositions(step.Positions));
 				default: throw new NotImplementedException();
 			}
 		}
 
 		void Replace(UndoRedoStep step, ReplaceType replaceType = ReplaceType.Normal)
 		{
-			var undoStep = GetUndo(step);
+			var undoStep = GetUndoStep(step);
 
 			switch (replaceType)
 			{
@@ -378,8 +421,33 @@ namespace NeoEdit.Tables
 			switch (step.Action)
 			{
 				case UndoRedoAction.ChangeCells: Table.ChangeCells(step.Cells, step.Values); break;
-				case UndoRedoAction.Sort: Table.Sort(step.SortOrder); break;
+				case UndoRedoAction.Sort: Table.Sort(step.Positions); break;
+				case UndoRedoAction.DeleteRows: Table.DeleteRows(step.Positions); break;
+				case UndoRedoAction.InsertRows: Table.InsertRows(step.Positions, step.InsertData); break;
+				case UndoRedoAction.DeleteColumns: Table.DeleteColumns(step.Positions); break;
+				case UndoRedoAction.InsertColumns: Table.InsertColumns(step.Positions, step.Headers, step.InsertData); break;
 			}
+		}
+
+		void DeleteRows()
+		{
+			var rows = GetSelectedRows().OrderBy(row => row).ToList();
+			if (!rows.Any())
+				return;
+			Replace(UndoRedoStep.CreateDeleteRows(rows));
+		}
+
+		void DeleteColumns()
+		{
+			var columns = GetSelectedColumns().OrderBy(row => row).ToList();
+			if (!columns.Any())
+				return;
+			Replace(UndoRedoStep.CreateDeleteColumns(columns));
+		}
+
+		void ReplaceCells(List<CellLocation> cells, object value)
+		{
+			ReplaceCells(cells, Enumerable.Repeat(value, cells.Count).ToList());
 		}
 
 		void ReplaceCells(List<CellLocation> cells, List<object> values)

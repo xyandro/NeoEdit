@@ -165,7 +165,7 @@ namespace NeoEdit.Tables
 			return ordering.ToList();
 		}
 
-		public int GetRow(ObservableCollection<object> row)
+		public int GetRowIndex(ObservableCollection<object> row)
 		{
 			return Rows.IndexOf(row);
 		}
@@ -221,6 +221,51 @@ namespace NeoEdit.Tables
 		public void Sort(List<int> sortOrder)
 		{
 			Rows = new ObservableCollection<ObservableCollection<object>>(sortOrder.Select(index => Rows[index]));
+		}
+
+		public List<List<object>> GetRowData(List<int> rows)
+		{
+			return rows.Select(row => Rows[row].ToList()).ToList();
+		}
+
+		public List<List<object>> GetColumnData(List<int> columns)
+		{
+			return columns.Select(column => Rows.Select(row => row[column]).ToList()).ToList();
+		}
+
+		public void DeleteRows(List<int> rows)
+		{
+			var rowsHash = new HashSet<int>(rows);
+			Rows = new ObservableCollection<ObservableCollection<object>>(Rows.Where((row, index) => !rowsHash.Contains(index)));
+		}
+
+		public void InsertRows(List<int> rows, List<List<object>> insertData)
+		{
+			if (rows.Count != insertData.Count)
+				throw new ArgumentException("Rows and data counts must match");
+
+			for (var ctr = 0; ctr < rows.Count; ++ctr)
+				Rows.Insert(rows[ctr] + ctr, new ObservableCollection<object>(insertData[ctr]));
+		}
+
+		public void DeleteColumns(List<int> columns)
+		{
+			var columnsHash = new HashSet<int>(columns);
+			Headers = new ObservableCollection<Header>(Headers.Where((header, index) => !columnsHash.Contains(index)));
+			Rows = new ObservableCollection<ObservableCollection<object>>(Rows.Select(row => new ObservableCollection<object>(row.Where((item, index) => !columnsHash.Contains(index)))));
+		}
+
+		public void InsertColumns(List<int> columns, List<Table.Header> headers, List<List<object>> insertData)
+		{
+			if ((columns.Count != insertData.Count) || (columns.Count != headers.Count))
+				throw new ArgumentException("Columns, data, and headers counts must match");
+
+			for (var column = 0; column < columns.Count; ++column)
+			{
+				Headers.Insert(columns[column] + column, headers[column]);
+				for (var row = 0; row < Rows.Count; ++row)
+					Rows[row].Insert(columns[column] + column, insertData[column][row]);
+			}
 		}
 	}
 

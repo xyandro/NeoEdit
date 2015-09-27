@@ -15,13 +15,19 @@ namespace NeoEdit.Tables
 	{
 		ChangeCells,
 		Sort,
+		InsertRows,
+		DeleteRows,
+		InsertColumns,
+		DeleteColumns,
 	}
 
 	class UndoRedoStep
 	{
 		public List<CellLocation> Cells { get; private set; }
 		public List<object> Values { get; private set; }
-		public List<int> SortOrder { get; private set; }
+		public List<int> Positions { get; private set; }
+		public List<List<object>> InsertData { get; private set; }
+		public List<Table.Header> Headers { get; private set; }
 		public UndoRedoAction Action { get; private set; }
 
 		UndoRedoStep() { }
@@ -40,8 +46,47 @@ namespace NeoEdit.Tables
 		{
 			return new UndoRedoStep
 			{
-				SortOrder = sortOrder,
+				Positions = sortOrder,
 				Action = UndoRedoAction.Sort,
+			};
+		}
+
+		static public UndoRedoStep CreateInsertRows(List<int> rows, List<List<object>> insertData)
+		{
+			return new UndoRedoStep
+			{
+				Positions = rows,
+				InsertData = insertData,
+				Action = UndoRedoAction.InsertRows,
+			};
+		}
+
+		static public UndoRedoStep CreateInsertColumns(List<int> columns, List<Table.Header> headers, List<List<object>> insertData)
+		{
+			return new UndoRedoStep
+			{
+				Positions = columns,
+				InsertData = insertData,
+				Headers = headers,
+				Action = UndoRedoAction.InsertColumns,
+			};
+		}
+
+		static public UndoRedoStep CreateDeleteRows(List<int> rows)
+		{
+			return new UndoRedoStep
+			{
+				Positions = rows,
+				Action = UndoRedoAction.DeleteRows,
+			};
+		}
+
+		static public UndoRedoStep CreateDeleteColumns(List<int> columns)
+		{
+			return new UndoRedoStep
+			{
+				Positions = columns,
+				Action = UndoRedoAction.DeleteColumns,
 			};
 		}
 	}
