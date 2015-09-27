@@ -57,6 +57,8 @@ namespace NeoEdit.Tables
 
 			dataGrid.PreparingCellForEdit += (s, e) => isEditing = true;
 			dataGrid.CellEditEnding += (s, e) => isEditing = false;
+
+			Loaded += (s, e) => SetHome();
 		}
 
 		bool isEditing = false;
@@ -241,6 +243,8 @@ namespace NeoEdit.Tables
 			switch (undoRedoStep.Action)
 			{
 				case UndoRedoAction.ChangeCells: SetSelectedCells(undoRedoStep.Cells); break;
+				case UndoRedoAction.InsertRows: SetSelectedCells(undoRedoStep.Positions.Select((row, index) => new CellLocation(row + index, 0))); break;
+				case UndoRedoAction.InsertColumns: SetSelectedCells(undoRedoStep.Positions.Select((column, index) => new CellLocation(0, column + index))); break;
 				default: SetHome(); break;
 			}
 		}
@@ -355,6 +359,12 @@ namespace NeoEdit.Tables
 					else
 						e.Handled = false;
 					break;
+				case Key.Insert:
+					if (shiftDown)
+						InsertRows();
+					else if (controlDown)
+						InsertColumns();
+					break;
 				case Key.Delete:
 					if (shiftDown)
 						DeleteRows();
@@ -429,12 +439,53 @@ namespace NeoEdit.Tables
 			}
 		}
 
+		object DefaultFor(Type type)
+		{
+			return type.IsValueType ? Activator.CreateInstance(type) : null;
+		}
+
+		void InsertRows()
+		{
+			var rows = GetSelectedRows().OrderBy(row => row).ToList();
+			if (!rows.Any())
+				return;
+			var columns = Table.Headers.Select(header => DefaultFor(header.Type)).ToList();
+			Replace(UndoRedoStep.CreateInsertRows(rows, Enumerable.Repeat(columns, rows.Count).ToList()));
+			SetSelectedCells(rows.Select((row, index) => new CellLocation(row + index, 0)));
+		}
+
+		void InsertColumns()
+		{
+			var columns = GetSelectedColumns().OrderBy(column => column).ToList();
+			if (!columns.Any())
+				return;
+
+			var headers = new List<Table.Header>();
+			var headersUsed = new HashSet<string>(Table.Headers.Select(header => header.Name));
+			var columnNum = 0;
+			while (headers.Count < columns.Count)
+			{
+				var header = String.Format("Column {0}", ++columnNum);
+				if (headersUsed.Contains(header))
+					continue;
+
+				headersUsed.Add(header);
+				headers.Add(new Table.Header { Name = header, Type = typeof(long) });
+			}
+
+			var emptyColumn = Enumerable.Repeat(default(object), Table.Rows.Count).ToList();
+			var data = Enumerable.Repeat(emptyColumn, columns.Count).ToList();
+			Replace(UndoRedoStep.CreateInsertColumns(columns, headers, data));
+			SetSelectedCells(columns.Select((column, index) => new CellLocation(0, column + index)));
+		}
+
 		void DeleteRows()
 		{
 			var rows = GetSelectedRows().OrderBy(row => row).ToList();
 			if (!rows.Any())
 				return;
 			Replace(UndoRedoStep.CreateDeleteRows(rows));
+			SetHome();
 		}
 
 		void DeleteColumns()
@@ -443,6 +494,7 @@ namespace NeoEdit.Tables
 			if (!columns.Any())
 				return;
 			Replace(UndoRedoStep.CreateDeleteColumns(columns));
+			SetHome();
 		}
 
 		void ReplaceCells(List<CellLocation> cells, object value)
