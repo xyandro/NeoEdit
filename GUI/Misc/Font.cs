@@ -28,6 +28,7 @@ namespace NeoEdit.GUI.Misc
 		}
 
 		public static FontFamily FontFamily { get { return fontFamily; } }
+		public static double Size { get { return fontSize; } }
 
 		public static FormattedText GetText(string str, Brush brush = null)
 		{

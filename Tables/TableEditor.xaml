@@ -4,29 +4,18 @@
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:tables="clr-namespace:NeoEdit.Tables">
 
-	<DataGrid Name="dataGrid"
-		ItemsSource="{Binding Table.Rows, ElementName=self}"
-		AutoGenerateColumns="False"
-		CanUserResizeRows="False"
-		CanUserAddRows="False"
-		RowHeaderWidth="0" 
-		HorizontalGridLinesBrush="LightGray" 
-		VerticalGridLinesBrush="LightGray" 
-		SelectionUnit="Cell" 
-		CanUserSortColumns="False" 
-		IsSynchronizedWithCurrentItem="True" 
-		tables:DataGridColumnsBinder.Columns="{Binding Table.Headers, ElementName=self}"
-		CellEditEnding="CellEditEnding"
-		PreviewKeyDown="DataGridPreviewKeyDown"
-		SelectedCellsChanged="DataGridSelectedCellsChanged">
-
-		<!--ColumnReordered="ColumnReorderedEvent" -->
-		<DataGrid.ColumnHeaderStyle>
-			<Style TargetType="DataGridColumnHeader">
-				<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-				<!--<EventSetter Event="Click" Handler="ColumnHeaderClick" />-->
-			</Style>
-		</DataGrid.ColumnHeaderStyle>
-	</DataGrid>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<guiControls:RenderCanvas Grid.Row="0" Grid.Column="0" Name="canvas" Background="White" ClipToBounds="True" Render="OnCanvasRender" MouseLeftButtonDown="OnCanvasMouseLeftButtonDown" MouseMove="OnCanvasMouseMove" MouseLeftButtonUp="OnCanvasMouseLeftButtonUp"/>
+		<ScrollBar Grid.Row="0" Grid.Column="1" Name="yScroll" Orientation="Vertical" Value="{Binding yScrollValue, ElementName=self}"/>
+		<ScrollBar Grid.Row="1" Grid.Column="0" Name="xScroll" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
+	</Grid>
 
 </tables:TabsControl>

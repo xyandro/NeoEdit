@@ -1,49 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
-using NeoEdit.Common.Parsing;
-using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Tables
 {
-	public class Table : DependencyObject
+	public class Table
 	{
-		public class Header : DependencyObject
+		public class Header
 		{
-			[DepProp]
-			public string Name { get { return UIHelper<Header>.GetPropValue<string>(this); } set { UIHelper<Header>.SetPropValue(this, value); } }
-			[DepProp]
-			public Type Type { get { return UIHelper<Header>.GetPropValue<Type>(this); } set { UIHelper<Header>.SetPropValue(this, value); } }
+			public string Name { get; set; }
+			public Type Type { get; set; }
+			public double Width { get; set; }
+
+			public Header Copy()
+			{
+				return new Header
+				{
+					Name = Name,
+					Type = Type,
+					Width = Width,
+				};
+			}
 		}
 
 		public enum TableTypeEnum { None, TSV, CSV, Columns }
 
-		ObservableCollection<ObservableCollection<object>> rows;
-		[DepProp]
-		public ObservableCollection<ObservableCollection<object>> Rows { get { return rows; } private set { rows = value; UIHelper<Table>.SetPropValue(this, value); } }
-		[DepProp]
-		public ObservableCollection<Header> Headers { get { return UIHelper<Table>.GetPropValue<ObservableCollection<Header>>(this); } private set { UIHelper<Table>.SetPropValue(this, value); } }
-		[DepProp]
-		public TableTypeEnum TableType { get { return UIHelper<Table>.GetPropValue<TableTypeEnum>(this); } set { UIHelper<Table>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool HasHeaders { get { return UIHelper<Table>.GetPropValue<bool>(this); } set { UIHelper<Table>.SetPropValue(this, value); } }
+		List<List<object>> Rows { get; set; }
+		List<List<bool>> Selected { get; set; }
+		public List<Header> Headers { get; private set; }
+		public TableTypeEnum TableType { get; set; }
+		public bool HasHeaders { get; set; }
 
-		static Table() { UIHelper<Table>.Register(); }
+		public int NumRows { get { return Rows.Count; } }
+		public int NumColumns { get { return Headers.Count; } }
 
 		public Table()
 		{
-			Rows = new ObservableCollection<ObservableCollection<object>>();
-			Headers = new ObservableCollection<Header>();
+			Rows = new List<List<object>>();
+			Selected = new List<List<bool>>();
+			Headers = new List<Header>();
 			TableType = TableTypeEnum.TSV;
 			HasHeaders = false;
 		}
 
 		Table(Table table)
 		{
-			Rows = table.Rows;
-			Headers = table.Headers;
+			Rows = table.Rows.Select(row => row.ToList()).ToList();
+			Selected = table.Selected.Select(row => row.ToList()).ToList();
+			Headers = table.Headers.Select(header => header.Copy()).ToList();
 			TableType = table.TableType;
 			HasHeaders = table.HasHeaders;
 		}
@@ -54,6 +58,7 @@ namespace NeoEdit.Tables
 				tableType = GuessTableType(input);
 			ProcessInput(input, tableType);
 			SetHeadersAndTypes(hasHeaders);
+			Selected = Rows.Select(row => row.Select(item => false).ToList()).ToList();
 		}
 
 		public static TableTypeEnum GuessTableType(string table)
@@ -74,13 +79,13 @@ namespace NeoEdit.Tables
 			return TableTypeEnum.Columns;
 		}
 
-		void ProcessInput(string table, TableTypeEnum tableType, int count = int.MaxValue)
+		void ProcessInput(string table, TableTypeEnum tableType)
 		{
 			switch (tableType)
 			{
-				case TableTypeEnum.TSV: Rows = new ObservableCollection<ObservableCollection<object>>(table.SplitTCSV('\t').Take(count)); break;
-				case TableTypeEnum.CSV: Rows = new ObservableCollection<ObservableCollection<object>>(table.SplitTCSV(',').Take(count)); break;
-				case TableTypeEnum.Columns: Rows = new ObservableCollection<ObservableCollection<object>>(table.SplitByLine().Select(line => new ObservableCollection<object>(line.Split('│').Select(item => item.TrimEnd() as object)))); break;
+				case TableTypeEnum.TSV: Rows = table.SplitTCSV('\t').ToList(); break;
+				case TableTypeEnum.CSV: Rows = table.SplitTCSV(',').ToList(); break;
+				case TableTypeEnum.Columns: Rows = table.SplitByLine().Select(line => line.Split('│').Select(item => item.TrimEnd() as object).ToList()).ToList(); break;
 				default: throw new ArgumentException("Invalid input type");
 			}
 
@@ -128,7 +133,7 @@ namespace NeoEdit.Tables
 		};
 		void SetHeadersAndTypes(bool? hasHeaders)
 		{
-			Headers = new ObservableCollection<Header>();
+			Headers = new List<Header>();
 
 			if ((!hasHeaders.HasValue) && ((!Rows.Any()) || (Rows[0].Any(item => item == null))))
 				hasHeaders = false;
@@ -165,7 +170,7 @@ namespace NeoEdit.Tables
 			return ordering.ToList();
 		}
 
-		public int GetRowIndex(ObservableCollection<object> row)
+		public int GetRowIndex(List<object> row)
 		{
 			return Rows.IndexOf(row);
 		}
@@ -200,8 +205,8 @@ namespace NeoEdit.Tables
 
 		public object this[CellLocation cell]
 		{
-			get { return this[cell.Row, cell.Column]; }
-			set { this[cell.Row, cell.Column] = value; }
+			get { return Rows[cell.Row][cell.Column]; }
+			set { Rows[cell.Row][cell.Column] = value; }
 		}
 
 		public object this[int row, int column]
@@ -210,17 +215,40 @@ namespace NeoEdit.Tables
 			set { Rows[row][column] = value; }
 		}
 
-		public void ChangeCells(List<CellLocation> cells, List<object> values)
+		public bool GetSelected(CellLocation cell)
 		{
+			return Selected[cell.Row][cell.Column];
+		}
+
+		public void SetSelected(CellLocation cell, bool value)
+		{
+			Selected[cell.Row][cell.Column] = value;
+		}
+
+		public bool GetSelected(int row, int column)
+		{
+			return Selected[row][column];
+		}
+
+		public void SetSelected(int row, int column, bool value)
+		{
+			Selected[row][column] = value;
+		}
+
+		public void ChangeCells(CellRanges ranges, List<object> values)
+		{
+			var cells = ranges.GetCells(NumRows, NumColumns).ToList();
 			if (cells.Count != values.Count)
 				throw new ArgumentException("Cells and values counts must match");
+
 			for (var ctr = 0; ctr < cells.Count; ++ctr)
 				this[cells[ctr]] = values[ctr];
 		}
 
 		public void Sort(List<int> sortOrder)
 		{
-			Rows = new ObservableCollection<ObservableCollection<object>>(sortOrder.Select(index => Rows[index]));
+			Rows = sortOrder.Select(index => Rows[index]).ToList();
+			Selected = sortOrder.Select(index => Selected[index]).ToList();
 		}
 
 		public List<List<object>> GetRowData(List<int> rows)
@@ -236,26 +264,31 @@ namespace NeoEdit.Tables
 		public void DeleteRows(List<int> rows)
 		{
 			var rowsHash = new HashSet<int>(rows);
-			Rows = new ObservableCollection<ObservableCollection<object>>(Rows.Where((row, index) => !rowsHash.Contains(index)));
+			Rows = Rows.Where((row, index) => !rowsHash.Contains(index)).ToList();
+			Selected = Selected.Where((row, index) => !rowsHash.Contains(index)).ToList();
 		}
 
-		public void InsertRows(List<int> rows, List<List<object>> insertData)
+		public void InsertRows(List<int> rows, List<List<object>> insertData, bool selected)
 		{
 			if (rows.Count != insertData.Count)
 				throw new ArgumentException("Rows and data counts must match");
 
 			for (var ctr = 0; ctr < rows.Count; ++ctr)
-				Rows.Insert(rows[ctr] + ctr, new ObservableCollection<object>(insertData[ctr]));
+			{
+				Rows.Insert(rows[ctr] + ctr, insertData[ctr]);
+				Selected.Insert(rows[ctr] + ctr, Enumerable.Repeat(selected, NumColumns).ToList());
+			}
 		}
 
 		public void DeleteColumns(List<int> columns)
 		{
 			var columnsHash = new HashSet<int>(columns);
-			Headers = new ObservableCollection<Header>(Headers.Where((header, index) => !columnsHash.Contains(index)));
-			Rows = new ObservableCollection<ObservableCollection<object>>(Rows.Select(row => new ObservableCollection<object>(row.Where((item, index) => !columnsHash.Contains(index)))));
+			Headers = new List<Header>(Headers.Where((header, index) => !columnsHash.Contains(index)));
+			Rows = Rows.Select(row => row.Where((item, index) => !columnsHash.Contains(index)).ToList()).ToList();
+			Selected = Selected.Select(row => row.Where((item, index) => !columnsHash.Contains(index)).ToList()).ToList();
 		}
 
-		public void InsertColumns(List<int> columns, List<Table.Header> headers, List<List<object>> insertData)
+		public void InsertColumns(List<int> columns, List<Table.Header> headers, List<List<object>> insertData, bool selected)
 		{
 			if ((columns.Count != insertData.Count) || (columns.Count != headers.Count))
 				throw new ArgumentException("Columns, data, and headers counts must match");
@@ -264,7 +297,10 @@ namespace NeoEdit.Tables
 			{
 				Headers.Insert(columns[column] + column, headers[column]);
 				for (var row = 0; row < Rows.Count; ++row)
+				{
 					Rows[row].Insert(columns[column] + column, insertData[column][row]);
+					Selected[row].Insert(columns[column] + column, selected);
+				}
 			}
 		}
 	}
@@ -287,7 +323,7 @@ namespace NeoEdit.Tables
 			}
 		}
 
-		static ObservableCollection<object> SplitTCSV(string source, char splitChar, ref int pos)
+		static List<object> SplitTCSV(string source, char splitChar, ref int pos)
 		{
 			var findChars = new char[] { splitChar, '\r', '\n' };
 			var result = new List<object>();
@@ -338,10 +374,10 @@ namespace NeoEdit.Tables
 				}
 				++pos;
 			}
-			return new ObservableCollection<object>(result);
+			return result;
 		}
 
-		static internal IEnumerable<ObservableCollection<object>> SplitTCSV(this string source, char splitChar)
+		static internal IEnumerable<List<object>> SplitTCSV(this string source, char splitChar)
 		{
 			var pos = 0;
 			while (pos < source.Length)

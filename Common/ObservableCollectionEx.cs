@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -38,7 +39,15 @@ namespace NeoEdit.Common
 
 		public int Count { get { return list.Count; } }
 
-		public T this[int index] { get { return list[index]; } }
+		public T this[int index]
+		{
+			get { return list[index]; }
+			set
+			{
+				list[index] = value;
+				Notify();
+			}
+		}
 
 		public void Clear()
 		{
@@ -56,6 +65,41 @@ namespace NeoEdit.Common
 		{
 			list.AddRange(items);
 			Notify();
+		}
+
+		public void Replace(IEnumerable<T> items)
+		{
+			list.Clear();
+			list.AddRange(items);
+			Notify();
+		}
+
+		public void Replace(Func<T, T> selector)
+		{
+			for (var ctr = 0; ctr < list.Count; ++ctr)
+				list[ctr] = selector(list[ctr]);
+			Notify();
+		}
+
+		public void RemoveDups()
+		{
+			var changed = false;
+			var seen = new HashSet<T>();
+			for (var ctr = 0; ctr < list.Count;)
+			{
+				if (seen.Contains(list[ctr]))
+				{
+					list.RemoveAt(ctr);
+					changed = true;
+				}
+				else
+				{
+					seen.Add(list[ctr]);
+					++ctr;
+				}
+			}
+			if (changed)
+				Notify();
 		}
 
 		public int IndexOf(T item)
