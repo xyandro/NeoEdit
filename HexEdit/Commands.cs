@@ -3,7 +3,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.HexEdit
 {
-	enum HexEditCommand
+	public enum HexEditCommand
 	{
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, false)] File_New,

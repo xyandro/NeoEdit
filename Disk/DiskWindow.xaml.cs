@@ -20,7 +20,7 @@ using NeoEdit.GUI.Misc;
 namespace NeoEdit.Disk
 {
 	class DiskItemGrid : ItemGrid<DiskItem> { }
-	public class TabsControl : TabsControl<DiskWindow> { }
+	public class TabsControl : TabsControl<DiskWindow, DiskCommand> { }
 
 	partial class DiskWindow
 	{
@@ -67,7 +67,7 @@ namespace NeoEdit.Disk
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"[0] == null ? ([1] == null ? ""Custom"" : FileName([1])) : StrFormat(""List {0}"", [0])" };
 			multiBinding.Bindings.Add(new Binding("ConstantList") { Source = this });
 			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
-			SetBinding(UIHelper<TabsControl<DiskWindow>>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<DiskWindow, DiskCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 
 			location.GotFocus += (s, e) => location.SelectAll();
 			location.LostFocus += (s, e) => { location.Text = Location == null ? "" : Location.FullName; };

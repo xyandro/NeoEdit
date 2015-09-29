@@ -33,7 +33,7 @@ using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
-	public class TabsControl : TabsControl<TextEditor> { }
+	public class TabsControl : TabsControl<TextEditor, TextEditCommand> { }
 
 	public partial class TextEditor
 	{
@@ -258,7 +258,7 @@ namespace NeoEdit.TextEdit
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
-			SetBinding(UIHelper<TabsControl<TextEditor>>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<TextEditor, TextEditCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
 		void SetupStaticOrLocalData()
@@ -3304,7 +3304,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels);
 		}
 
-		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
+		internal bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
 			var ret = true;
 			switch (key)

@@ -22,7 +22,7 @@ using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.Tables
 {
-	public class TabsControl : TabsControl<TableEditor> { }
+	public class TabsControl : TabsControl<TableEditor, TablesCommand> { }
 
 	partial class TableEditor
 	{
@@ -267,9 +267,10 @@ namespace NeoEdit.Tables
 			return result;
 		}
 
-		public void HandleCellValue(string value)
+		public bool HandleText(string value)
 		{
 			ReplaceCells(Selections, defaultValue: value);
+			return true;
 		}
 
 		readonly static double rowHeight = Font.lineHeight + RowSpacing * 2;
@@ -375,7 +376,7 @@ namespace NeoEdit.Tables
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TableEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TableEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
-			SetBinding(UIHelper<TabsControl<TableEditor>>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<TableEditor, TablesCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
 		public override bool CanClose(ref Message.OptionsEnum answer)

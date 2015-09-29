@@ -9,20 +9,20 @@ using System.Windows.Media.Imaging;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class MultiMenuItem<ItemType> : MenuItem where ItemType : TabsControl<ItemType>
+	public class MultiMenuItem<ItemType, CommandType> : MenuItem where ItemType : TabsControl<ItemType, CommandType>
 	{
 		[DepProp]
-		public ObservableCollection<ItemType> Objects { get { return UIHelper<MultiMenuItem<ItemType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<MultiMenuItem<ItemType>>.SetPropValue(this, value); } }
+		public ObservableCollection<ItemType> Objects { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Property { get { return UIHelper<MultiMenuItem<ItemType>>.GetPropValue<string>(this); } set { UIHelper<MultiMenuItem<ItemType>>.SetPropValue(this, value); } }
+		public string Property { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<string>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public object TrueValue { get { return UIHelper<MultiMenuItem<ItemType>>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem<ItemType>>.SetPropValue(this, value); } }
+		public object TrueValue { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public object FalseValue { get { return UIHelper<MultiMenuItem<ItemType>>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem<ItemType>>.SetPropValue(this, value); } }
+		public object FalseValue { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool? MultiChecked { get { return UIHelper<MultiMenuItem<ItemType>>.GetPropValue<bool?>(this); } set { UIHelper<MultiMenuItem<ItemType>>.SetPropValue(this, value); } }
+		public bool? MultiChecked { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<bool?>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 
-		static MultiMenuItem() { UIHelper<MultiMenuItem<ItemType>>.Register(); }
+		static MultiMenuItem() { UIHelper<MultiMenuItem<ItemType, CommandType>>.Register(); }
 
 		public MultiMenuItem()
 		{

@@ -15,7 +15,7 @@ using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
-	public class TabsControl : TabsControl<TextViewer> { }
+	public class TabsControl : TabsControl<TextViewer, TextViewCommand> { }
 
 	partial class TextViewer : IDisposable
 	{
@@ -66,7 +66,7 @@ namespace NeoEdit.TextView
 		{
 			InitializeComponent();
 
-			SetBinding(UIHelper<TabsControl<TextViewer>>.GetProperty(a => a.TabLabel), new Binding("FileName") { Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])", Source = this });
+			SetBinding(UIHelper<TabsControl<TextViewer, TextViewCommand>>.GetProperty(a => a.TabLabel), new Binding("FileName") { Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])", Source = this });
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
@@ -231,7 +231,7 @@ namespace NeoEdit.TextView
 			EnsureVisible();
 		}
 
-		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
+		internal bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
 			switch (key)
 			{

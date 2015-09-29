@@ -2,8 +2,8 @@
 
 namespace NeoEdit.Console
 {
-	public class Tabs : Tabs<Console> { }
-	public class TabsWindow : TabsWindow<Console> { }
+	public class Tabs : Tabs<Console, ConsoleCommand> { }
+	public class TabsWindow : TabsWindow<Console, ConsoleCommand> { }
 
 	public partial class ConsoleTabs
 	{

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Xml.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
@@ -13,12 +12,13 @@ using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.GUI.Misc;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
-	public class Tabs : Tabs<TextEditor> { }
-	public class TabsWindow : TabsWindow<TextEditor> { }
+	public class Tabs : Tabs<TextEditor, TextEditCommand> { }
+	public class TabsWindow : TabsWindow<TextEditor, TextEditCommand> { }
 
 	public partial class TextEditTabs
 	{
@@ -201,10 +201,10 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_Open_Quick()
 		{
-			AddTextEditor(Path.Combine(macroDirectory, quickMacroFilename));
+			AddTextEditor(Path.Combine(Macro<TextEditCommand>.MacroDirectory, quickMacroFilename));
 		}
 
-		const string quickMacroFilename = "Quick.xml";
+		const string quickMacroFilename = "QuickText.xml";
 		void Command_Macro_Record_QuickRecord()
 		{
 			if (recordingMacro == null)
@@ -215,7 +215,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_Play_QuickPlay()
 		{
-			Command_Macro_Play_Play(quickMacroFilename);
+			Macro<TextEditCommand>.Load(quickMacroFilename, true).Play(this, playing => macroPlaying = playing);
 		}
 
 		void Command_Macro_Record_Record()
@@ -231,10 +231,9 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
-			recordingMacro = new Macro();
+			recordingMacro = new Macro<TextEditCommand>();
 		}
 
-		readonly string macroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
 		void Command_Macro_Record_StopRecording(string fileName = null)
 		{
 			if (recordingMacro == null)
@@ -250,63 +249,18 @@ namespace NeoEdit.TextEdit
 
 			var macro = recordingMacro;
 			recordingMacro = null;
-
-			Directory.CreateDirectory(macroDirectory);
-			if (fileName == null)
-			{
-				var dialog = new SaveFileDialog
-				{
-					DefaultExt = "xml",
-					Filter = "Macro files|*.xml|All files|*.*",
-					FileName = "Macro.xml",
-					InitialDirectory = macroDirectory,
-				};
-				if (dialog.ShowDialog() != true)
-					return;
-
-				fileName = dialog.FileName;
-			}
-			else
-				fileName = Path.Combine(macroDirectory, fileName);
-
-			XMLConverter.ToXML(macro).Save(fileName);
+			macro.Save(fileName, true);
 		}
 
-		string ChooseMacro()
+		void Command_Macro_Play_Play()
 		{
-			var dialog = new OpenFileDialog
-			{
-				DefaultExt = "xml",
-				Filter = "Macro files|*.xml|All files|*.*",
-				InitialDirectory = macroDirectory,
-			};
-			if (dialog.ShowDialog() != true)
-				return null;
-			return dialog.FileName;
-		}
-
-		void Command_Macro_Play_Play(string macroFile = null)
-		{
-			if (macroFile == null)
-			{
-				macroFile = ChooseMacro();
-				if (macroFile == null)
-					return;
-			}
-			else
-				macroFile = Path.Combine(macroDirectory, macroFile);
-
-			XMLConverter.FromXML<Macro>(XElement.Load(macroFile)).Play(this, playing => macroPlaying = playing);
+			Macro<TextEditCommand>.Load().Play(this, playing => macroPlaying = playing);
 		}
 
 		void Command_Macro_Play_PlayOnCopiedFiles()
 		{
 			var files = new Queue<string>(NEClipboard.Strings);
-			var macroFile = ChooseMacro();
-			if (macroFile == null)
-				return;
-
-			var macro = XMLConverter.FromXML<Macro>(XElement.Load(macroFile));
+			var macro = Macro<TextEditCommand>.Load();
 			Action startNext = null;
 			startNext = () =>
 			{
@@ -320,11 +274,11 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_Play_Repeat()
 		{
-			var result = MacroRepeatDialog.Run(this, ChooseMacro);
+			var result = MacroRepeatDialog.Run(this, Macro<TextEditCommand>.ChooseMacro);
 			if (result == null)
 				return;
 
-			var macro = XMLConverter.FromXML<Macro>(XElement.Load(result.Macro));
+			var macro = Macro<TextEditCommand>.Load(result.Macro);
 			var expression = new NEExpression(result.Expression);
 			var count = int.MaxValue;
 			if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Number)
@@ -345,8 +299,8 @@ namespace NeoEdit.TextEdit
 			startNext();
 		}
 
-		Macro recordingMacro;
-		internal Macro macroPlaying = null;
+		Macro<TextEditCommand> recordingMacro;
+		internal Macro<TextEditCommand> macroPlaying = null;
 
 		internal void RunCommand(TextEditCommand command)
 		{
@@ -383,14 +337,14 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
-				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(macroDirectory); break;
+				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro<TextEditCommand>.MacroDirectory); break;
 				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult);
 			}
 
 			return dialogResult != null;
 		}
 
-		internal void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
+		public override bool HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
 		{
 			switch (command)
 			{
@@ -404,12 +358,14 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Diff_Diff: Command_Edit_Diff_Diff(); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
-				case TextEditCommand.Macro_Open_Quick: Command_Macro_Open_Quick(); return;
-				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return;
+				case TextEditCommand.Macro_Open_Quick: Command_Macro_Open_Quick(); return true;
+				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
 			}
 
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
+
+			return true;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -427,18 +383,19 @@ namespace NeoEdit.TextEdit
 
 			var shiftDown = this.shiftDown;
 			var controlDown = this.controlDown;
+			var altDown = this.altDown;
 
-			e.Handled = HandleKey(e.Key, shiftDown, controlDown);
+			e.Handled = HandleKey(e.Key, shiftDown, controlDown, altDown);
 
 			if ((recordingMacro != null) && (e.Handled))
-				recordingMacro.AddKey(e.Key, shiftDown, controlDown);
+				recordingMacro.AddKey(e.Key, shiftDown, controlDown, altDown);
 		}
 
-		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
+		public override bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
 			var result = false;
 			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
-				result = textEditorItems.HandleKey(key, shiftDown, controlDown) || result;
+				result = textEditorItems.HandleKey(key, shiftDown, controlDown, altDown) || result;
 			return result;
 		}
 
@@ -460,7 +417,7 @@ namespace NeoEdit.TextEdit
 				recordingMacro.AddText(e.Text);
 		}
 
-		internal bool HandleText(string text)
+		public override bool HandleText(string text)
 		{
 			var result = false;
 			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())

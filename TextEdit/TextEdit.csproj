@@ -320,7 +320,6 @@
     </Compile>
     <Compile Include="GotoType.cs" />
     <Compile Include="Highlighting.cs" />
-    <Compile Include="Macro.cs" />
     <Page Include="Menu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -12,8 +12,8 @@ using NeoEdit.TextView.Dialogs;
 
 namespace NeoEdit.TextView
 {
-	public class TabsWindow : TabsWindow<TextViewer> { }
-	public class Tabs : Tabs<TextViewer> { }
+	public class TabsWindow : TabsWindow<TextViewer, TextViewCommand> { }
+	public class Tabs : Tabs<TextViewer, TextViewCommand> { }
 
 	partial class TextViewerTabs
 	{
@@ -175,15 +175,16 @@ namespace NeoEdit.TextView
 
 			var shiftDown = this.shiftDown;
 			var controlDown = this.controlDown;
+			var altDown = this.altDown;
 
-			e.Handled = HandleKey(e.Key, shiftDown, controlDown);
+			e.Handled = HandleKey(e.Key, shiftDown, controlDown, altDown);
 		}
 
-		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
+		public override bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
 			if (ItemTabs.TopMost == null)
 				return false;
-			return ItemTabs.TopMost.HandleKey(key, shiftDown, controlDown);
+			return ItemTabs.TopMost.HandleKey(key, shiftDown, controlDown, altDown);
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -198,7 +199,7 @@ namespace NeoEdit.TextView
 			e.Handled = HandleText(e.Text);
 		}
 
-		internal bool HandleText(string text)
+		public override bool HandleText(string text)
 		{
 			if (ItemTabs.TopMost == null)
 				return false;

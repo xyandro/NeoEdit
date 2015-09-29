@@ -5,8 +5,8 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Disk
 {
-	public class Tabs : Tabs<DiskWindow> { }
-	public class TabsWindow : TabsWindow<DiskWindow> { }
+	public class Tabs : Tabs<DiskWindow, DiskCommand> { }
+	public class TabsWindow : TabsWindow<DiskWindow, DiskCommand> { }
 
 	public partial class DiskTabs
 	{

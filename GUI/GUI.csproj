@@ -140,6 +140,7 @@
     <Compile Include="Launcher.cs" />
     <Compile Include="Misc\Font.cs" />
     <Compile Include="Misc\KeySet.cs" />
+    <Compile Include="Misc\Macro.cs" />
     <Compile Include="Misc\PropertyChangeNotifier.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <AppDesigner Include="Properties\" />

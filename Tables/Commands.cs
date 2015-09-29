@@ -3,7 +3,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Tables
 {
-	enum TablesCommand
+	public enum TablesCommand
 	{
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control, false)] File_New,

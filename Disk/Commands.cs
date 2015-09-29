@@ -3,7 +3,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Disk
 {
-	enum DiskCommand
+	public enum DiskCommand
 	{
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, false)] File_NewTab,

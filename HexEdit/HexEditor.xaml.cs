@@ -23,7 +23,7 @@ using NeoEdit.HexEdit.Models;
 
 namespace NeoEdit.HexEdit
 {
-	public class TabsControl : TabsControl<HexEditor> { }
+	public class TabsControl : TabsControl<HexEditor, HexEditCommand> { }
 
 	partial class HexEditor
 	{
@@ -139,7 +139,7 @@ namespace NeoEdit.HexEdit
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding("FileName") { Source = this });
 			multiBinding.Bindings.Add(new Binding("IsModified") { Source = this });
-			SetBinding(UIHelper<TabsControl<HexEditor>>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<HexEditor, HexEditCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 
 			undoRedo = new UndoRedo(b => IsModified = b);
 
@@ -321,7 +321,7 @@ namespace NeoEdit.HexEdit
 			}
 		}
 
-		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
+		internal bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
 			var ret = true;
 			switch (key)

@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using System.Xml.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
+using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.Tables
 {
-	public class Tabs : Tabs<TableEditor> { }
-	public class TabsWindow : TabsWindow<TableEditor> { }
+	public class Tabs : Tabs<TableEditor, TablesCommand> { }
+	public class TabsWindow : TabsWindow<TableEditor, TablesCommand> { }
 
 	partial class TablesTabs
 	{
@@ -136,7 +139,7 @@ namespace NeoEdit.Tables
 					case Key.Escape:
 						var result = topMost.EndEdit(e.Key == Key.Enter);
 						if (result != null)
-							HandleCellValue(result);
+							DoHandleText(result);
 						e.Handled = true;
 						return;
 				}
@@ -152,21 +155,28 @@ namespace NeoEdit.Tables
 			e.Handled = HandleKey(e.Key, shiftDown, controlDown, altDown);
 		}
 
-		void HandleCellValue(string result)
+		bool DoHandleText(string text)
 		{
-			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
-				textEditorItems.HandleCellValue(result);
+			return HandleText(text);
 		}
 
-		bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
+		public override bool HandleText(string text)
 		{
 			var result = false;
-			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
-				result = textEditorItems.HandleKey(key, shiftDown, controlDown, altDown) || result;
+			foreach (var tableEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
+				result = tableEditorItems.HandleText(text) || result;
 			return result;
 		}
 
-		void HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
+		public override bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
+		{
+			var result = false;
+			foreach (var tableEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
+				result = tableEditorItems.HandleKey(key, shiftDown, controlDown, altDown) || result;
+			return result;
+		}
+
+		public override bool HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
 		{
 			switch (command)
 			{
@@ -178,6 +188,8 @@ namespace NeoEdit.Tables
 
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
+
+			return true;
 		}
 	}
 }

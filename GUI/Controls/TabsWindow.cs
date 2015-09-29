@@ -6,22 +6,22 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class TabsWindow<ItemType> : NEWindow where ItemType : TabsControl<ItemType>
+	public class TabsWindow<ItemType, CommandType> : NEWindow where ItemType : TabsControl<ItemType, CommandType>
 	{
 		[DepProp]
-		public Tabs<ItemType> ItemTabs { get { return UIHelper<TabsWindow<ItemType>>.GetPropValue<Tabs<ItemType>>(this); } protected set { UIHelper<TabsWindow<ItemType>>.SetPropValue(this, value); } }
+		public Tabs<ItemType, CommandType> ItemTabs { get { return UIHelper<TabsWindow<ItemType, CommandType>>.GetPropValue<Tabs<ItemType, CommandType>>(this); } protected set { UIHelper<TabsWindow<ItemType, CommandType>>.SetPropValue(this, value); } }
 
 		static TabsWindow()
 		{
-			UIHelper<TabsWindow<ItemType>>.Register();
-			UIHelper<TabsWindow<ItemType>>.AddCallback(a => a.ItemTabs, (obj, o, n) => obj.ItemTabs.WindowParent = obj);
+			UIHelper<TabsWindow<ItemType, CommandType>>.Register();
+			UIHelper<TabsWindow<ItemType, CommandType>>.AddCallback(a => a.ItemTabs, (obj, o, n) => obj.ItemTabs.WindowParent = obj);
 		}
 
 		protected bool shiftDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift); } }
 		protected bool controlDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Control); } }
 		protected bool altDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Alt); } }
 
-		public static void CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType>
+		public static void CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType, CommandType>
 		{
 			if ((classItem == null) && (!forceCreate))
 				classItem = UIHelper<ClassType>.GetNewest();
@@ -58,5 +58,9 @@ namespace NeoEdit.GUI.Controls
 			ItemTabs.Items.ToList().ForEach(item => item.Closed());
 			base.OnClosing(e);
 		}
+
+		public virtual bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown) { return false; }
+		public virtual bool HandleText(string text) { return false; }
+		public virtual bool HandleCommand(CommandType command, bool shiftDown, object dialogResult) { return false; }
 	}
 }

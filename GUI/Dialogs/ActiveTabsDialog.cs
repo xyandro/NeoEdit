@@ -8,12 +8,12 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	class ActiveTabsDialog<ItemType> : ModalDialog where ItemType : TabsControl<ItemType>
+	class ActiveTabsDialog<ItemType, CommandType> : ModalDialog where ItemType : TabsControl<ItemType, CommandType>
 	{
 		readonly List<ItemType> originalActive;
 		readonly ItemType originalTopMost;
-		readonly Tabs<ItemType> tabs;
-		public ActiveTabsDialog(Tabs<ItemType> tabs)
+		readonly Tabs<ItemType, CommandType> tabs;
+		public ActiveTabsDialog(Tabs<ItemType, CommandType> tabs)
 		{
 			this.tabs = tabs;
 			originalActive = tabs.Items.Where(item => item.Active).ToList();
@@ -31,7 +31,7 @@ namespace NeoEdit.GUI.Dialogs
 				listView = new ListView { ItemsSource = tabs.Items.ToList(), Height = 400, SelectionMode = SelectionMode.Extended };
 				{
 					var gridView = new GridView();
-					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(UIHelper<TabsControl<ItemType>>.GetProperty(a => a.TabLabel).Name), Width = 500 });
+					gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(UIHelper<TabsControl<ItemType, CommandType>>.GetProperty(a => a.TabLabel).Name), Width = 500 });
 					listView.View = gridView;
 				}
 				listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<ItemType>());
@@ -89,9 +89,9 @@ namespace NeoEdit.GUI.Dialogs
 				tabs.TopMost = topMost;
 		}
 
-		public static void Run(Tabs<ItemType> tabs)
+		public static void Run(Tabs<ItemType, CommandType> tabs)
 		{
-			new ActiveTabsDialog<ItemType>(tabs) { Owner = tabs.WindowParent }.ShowDialog();
+			new ActiveTabsDialog<ItemType, CommandType>(tabs) { Owner = tabs.WindowParent }.ShowDialog();
 		}
 	}
 }

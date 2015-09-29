@@ -3,7 +3,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextView
 {
-	enum TextViewCommand
+	public enum TextViewCommand
 	{
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift)] File_NewWindow,

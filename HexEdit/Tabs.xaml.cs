@@ -12,8 +12,8 @@ using NeoEdit.HexEdit.Data;
 
 namespace NeoEdit.HexEdit
 {
-	public class Tabs : Tabs<HexEditor> { }
-	public class TabsWindow : TabsWindow<HexEditor> { }
+	public class Tabs : Tabs<HexEditor, HexEditCommand> { }
+	public class TabsWindow : TabsWindow<HexEditor, HexEditCommand> { }
 
 	public partial class HexEditTabs
 	{
@@ -114,15 +114,16 @@ namespace NeoEdit.HexEdit
 
 			var shiftDown = this.shiftDown;
 			var controlDown = this.controlDown;
+			var altDown = this.altDown;
 
-			e.Handled = HandleKey(e.Key, shiftDown, controlDown);
+			e.Handled = HandleKey(e.Key, shiftDown, controlDown, altDown);
 		}
 
-		internal bool HandleKey(Key key, bool shiftDown, bool controlDown)
+		public override bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
 			if (ItemTabs.TopMost == null)
 				return false;
-			return ItemTabs.TopMost.HandleKey(key, shiftDown, controlDown);
+			return ItemTabs.TopMost.HandleKey(key, shiftDown, controlDown, altDown);
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -137,7 +138,7 @@ namespace NeoEdit.HexEdit
 			e.Handled = HandleText(e.Text);
 		}
 
-		internal bool HandleText(string text)
+		public override bool HandleText(string text)
 		{
 			if (ItemTabs.TopMost == null)
 				return false;

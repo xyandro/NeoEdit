@@ -16,7 +16,7 @@ using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.Console
 {
-	public class TabsControl : TabsControl<Console> { }
+	public class TabsControl : TabsControl<Console, ConsoleCommand> { }
 
 	partial class Console
 	{
@@ -57,7 +57,7 @@ namespace NeoEdit.Console
 		{
 			InitializeComponent();
 
-			SetBinding(UIHelper<TabsControl<Console>>.GetProperty(a => a.TabLabel), new Binding("Location") { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])" });
+			SetBinding(UIHelper<TabsControl<Console, ConsoleCommand>>.GetProperty(a => a.TabLabel), new Binding("Location") { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = @"FileName([0])" });
 
 			renderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
