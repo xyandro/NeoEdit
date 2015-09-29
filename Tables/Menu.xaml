@@ -37,6 +37,7 @@
 	</MenuItem>
 	<MenuItem Header="E_xpression">
 		<tables:TablesMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
+		<tables:TablesMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<tables:TablesMenuItem Header="_All" CommandEnum="Select_All"/>

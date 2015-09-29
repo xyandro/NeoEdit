@@ -668,6 +668,17 @@ namespace NeoEdit.Tables
 			ReplaceCells(Selections, results);
 		}
 
+		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog()
+		{
+			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
+		}
+
+		void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
+		{
+			var results = GetExpressionResults<bool>(result.Expression);
+			Selections.Replace(GetSelectedCells().Where((str, num) => results[num]).ToList());
+		}
+
 		void Command_Select_All()
 		{
 			Selections.Replace(new CellRange(endRow: Table.NumRows - 1, endColumn: Table.NumColumns - 1));
@@ -703,6 +714,7 @@ namespace NeoEdit.Tables
 			switch (command)
 			{
 				case TablesCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
+				case TablesCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
 				default: return true;
 			}
 
@@ -728,6 +740,7 @@ namespace NeoEdit.Tables
 				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
 				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
 				case TablesCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
+				case TablesCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TablesCommand.Select_All: Command_Select_All(); break;
 				case TablesCommand.Select_Cells: Command_Select_Cells(); break;
 				case TablesCommand.Select_Null: Command_Select_NullNotNull(true); break;
