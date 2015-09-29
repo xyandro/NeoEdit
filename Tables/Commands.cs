@@ -32,5 +32,6 @@ namespace NeoEdit.Tables
 		Select_NonNull,
 		Select_Unique,
 		Select_Duplicates,
+		View_ActiveTabs,
 	}
 }

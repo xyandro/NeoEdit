@@ -50,6 +50,7 @@
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
+		<tables:TablesMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>

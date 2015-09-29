@@ -89,6 +89,11 @@ namespace NeoEdit.Tables
 				Create(file, this);
 		}
 
+		void Command_View_ActiveTabs()
+		{
+			tabs.ShowActiveTabsDialog();
+		}
+
 		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
 		{
 			dialogResult = null;
