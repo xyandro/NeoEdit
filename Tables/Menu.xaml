@@ -6,11 +6,30 @@
 
 	<MenuItem Header="_File">
 		<tables:TablesMenuItem Header="_New" CommandEnum="File_New"/>
-		<tables:TablesMenuItem Header="_Save" CommandEnum="File_Save"/>
-		<tables:TablesMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
-		<tables:TablesMenuItem Header="_Close" CommandEnum="File_Close"/>
+		<MenuItem Header="_Open">
+			<tables:TablesMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
+			<tables:TablesMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
+		</MenuItem>
+		<MenuItem Header="_Save">
+			<tables:TablesMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
+			<tables:TablesMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
+		</MenuItem>
+		<MenuItem Header="O_perations">
+			<tables:TablesMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
+			<tables:TablesMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
+			<tables:TablesMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
+			<tables:TablesMenuItem Header="Open D_isk" CommandEnum="File_Operations_OpenDisk"/>
+		</MenuItem>
+		<tables:TablesMenuItem Header="C_lose" CommandEnum="File_Close"/>
+		<tables:TablesMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>
+		<tables:TablesMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
-		<tables:TablesMenuItem Header="_Exit" CommandEnum="File_Exit"/>
+		<MenuItem Header="_Copy">
+			<tables:TablesMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
+			<tables:TablesMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
+		</MenuItem>
+		<Separator/>
+		<tables:TablesMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
 		<tables:TablesMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>

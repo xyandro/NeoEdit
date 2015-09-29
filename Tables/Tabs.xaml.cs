@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Win32;
+using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Tables
 {
@@ -13,9 +16,9 @@ namespace NeoEdit.Tables
 	{
 		static TablesTabs() { UIHelper<TablesTabs>.Register(); }
 
-		public static void Create(string fileName = null, TablesTabs tableEditTabs = null, bool forceCreate = false)
+		public static void Create(string fileName = null, TablesTabs tablesTabs = null, bool forceCreate = false)
 		{
-			CreateTab(new TableEditor(fileName), tableEditTabs, forceCreate);
+			CreateTab(new TableEditor(fileName), tablesTabs, forceCreate);
 		}
 
 		TablesTabs()
@@ -60,10 +63,30 @@ namespace NeoEdit.Tables
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
-		void Command_File_Open(OpenFileDialogResult result)
+		void Command_File_Open_Open(OpenFileDialogResult result)
 		{
 			foreach (var filename in result.files)
 				Create(filename, this);
+		}
+
+		void Command_File_Open_CopiedCut()
+		{
+			var files = NEClipboard.Strings;
+
+			if ((files.Count > 5) && (new Message
+			{
+				Title = "Confirm",
+				Text = String.Format("Are you sure you want to open these {0} files?", files.Count),
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show() != Message.OptionsEnum.Yes))
+				return;
+
+			foreach (var item in ItemTabs.Items)
+				item.Active = false;
+			foreach (var file in files)
+				Create(file, this);
 		}
 
 		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
@@ -72,7 +95,7 @@ namespace NeoEdit.Tables
 
 			switch (command)
 			{
-				case TablesCommand.File_Open: dialogResult = Command_File_Open_Dialog(); break;
+				case TablesCommand.File_Open_Open: dialogResult = Command_File_Open_Dialog(); break;
 				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult);
 			}
 
@@ -83,8 +106,9 @@ namespace NeoEdit.Tables
 		{
 			switch (command)
 			{
-				case TablesCommand.File_New: Create(tableEditTabs: this, forceCreate: shiftDown); break;
-				case TablesCommand.File_Open: Command_File_Open(dialogResult as OpenFileDialogResult); break;
+				case TablesCommand.File_New: Create(tablesTabs: this, forceCreate: shiftDown); break;
+				case TablesCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
+				case TablesCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
 				case TablesCommand.File_Exit: Close(); break;
 			}
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Parsing;
+using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
@@ -58,18 +61,27 @@ namespace NeoEdit.Tables
 			UIHelper<TableEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TableEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.canvasRenderTimer.Start());
 			UIHelper<TableEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.canvasRenderTimer.Start());
+
+			NEClipboard.ClipboardChanged += () => { };
 		}
 
 		public TableEditor(string fileName)
 		{
 			InitializeComponent();
-			FileName = fileName;
 			undoRedo = new UndoRedo(b => IsModified = b);
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
+			OpenFile(fileName);
+
 			Selections.Add(new CellRange(0, 0));
 			Selections.CollectionChanged += (s, e) => { MakeActiveVisible(); canvasRenderTimer.Start(); };
+			SetupTabLabel();
+		}
 
+		DateTime fileLastWrite;
+		void OpenFile(string fileName)
+		{
+			FileName = fileName;
 			if (fileName != null)
 			{
 				var text = File.ReadAllText(fileName);
@@ -78,7 +90,10 @@ namespace NeoEdit.Tables
 
 			Table = Table ?? new Table();
 
-			SetupTabLabel();
+			if (File.Exists(FileName))
+				fileLastWrite = new FileInfo(FileName).LastWriteTime;
+
+			undoRedo.SetModified(false);
 		}
 
 		CellRange MoveSelection(CellRange range, int row, int column, bool selecting, bool rowRel = true, bool columnRel = true)
@@ -380,7 +395,7 @@ namespace NeoEdit.Tables
 					return true;
 				case Message.OptionsEnum.Yes:
 				case Message.OptionsEnum.YesToAll:
-					Command_File_Save();
+					Command_File_Save_Save();
 					return !IsModified;
 			}
 			return false;
@@ -420,8 +435,9 @@ namespace NeoEdit.Tables
 		{
 			var data = Table.ConvertToString("\r\n", GetFileTableType(fileName));
 			File.WriteAllText(fileName, data, Encoding.UTF8);
-			FileName = fileName;
+			fileLastWrite = new FileInfo(fileName).LastWriteTime;
 			undoRedo.SetModified(false);
+			FileName = fileName;
 		}
 
 		internal Dictionary<string, List<object>> GetExpressionData(int? count = null, NEExpression expression = null)
@@ -470,19 +486,120 @@ namespace NeoEdit.Tables
 			return data;
 		}
 
-		void Command_File_Save()
+		void Command_File_Save_Save()
 		{
 			if (FileName == null)
-				Command_File_SaveAs();
+				Command_File_Save_SaveAs();
 			else
 				Save(FileName);
 		}
 
-		void Command_File_SaveAs()
+		void Command_File_Save_SaveAs()
 		{
 			var fileName = GetSaveFileName();
 			if (fileName != null)
 				Save(fileName);
+		}
+
+		void Command_File_Operations_Rename()
+		{
+			if (String.IsNullOrEmpty(FileName))
+			{
+				Command_File_Save_SaveAs();
+				return;
+			}
+
+			var fileName = GetSaveFileName();
+			if (fileName == null)
+				return;
+
+			File.Delete(fileName);
+			File.Move(FileName, fileName);
+			FileName = fileName;
+		}
+
+		void Command_File_Operations_Delete()
+		{
+			if (FileName == null)
+				throw new Exception("No filename.");
+
+			if (new Message
+			{
+				Title = "Confirm",
+				Text = "Are you sure you want to delete this file?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			File.Delete(FileName);
+		}
+
+		void Command_File_Operations_Explore()
+		{
+			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
+		}
+
+		void Command_File_Operations_OpenDisk()
+		{
+			Launcher.Static.LaunchDisk(FileName);
+		}
+
+		void Command_File_Refresh()
+		{
+			if (String.IsNullOrEmpty(FileName))
+				return;
+			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = "This file has been updated on disk.  Reload?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() == Message.OptionsEnum.Yes)
+					Command_File_Revert();
+			}
+		}
+
+		void Command_File_Revert()
+		{
+			if (IsModified)
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = "You have unsaved changes.  Are you sure you want to reload?",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() != Message.OptionsEnum.Yes)
+					return;
+			}
+
+			OpenFile(FileName);
+		}
+
+		void SetClipboardFiles(List<string> data, bool isCut)
+		{
+			NEClipboard.SetFiles(data, isCut, typeof(TableEditor));
+		}
+
+		void SetClipboard(object data)
+		{
+			NEClipboard.Set(data, data.ToString(), typeof(TableEditor));
+		}
+
+		void Command_File_Copy_Path()
+		{
+			SetClipboardFiles(new List<string> { FileName }, false);
+		}
+
+		void Command_File_Copy_Name()
+		{
+			SetClipboard(Path.GetFileName(FileName));
 		}
 
 		List<CellLocation> GetSelectedCells(bool preserveOrder = false)
@@ -563,9 +680,17 @@ namespace NeoEdit.Tables
 		{
 			switch (command)
 			{
-				case TablesCommand.File_Save: Command_File_Save(); break;
-				case TablesCommand.File_SaveAs: Command_File_SaveAs(); break;
+				case TablesCommand.File_Save_Save: Command_File_Save_Save(); break;
+				case TablesCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
+				case TablesCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
+				case TablesCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
+				case TablesCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
+				case TablesCommand.File_Operations_OpenDisk: Command_File_Operations_OpenDisk(); break;
 				case TablesCommand.File_Close: if (CanClose()) TabsParent.Remove(this); break;
+				case TablesCommand.File_Refresh: Command_File_Refresh(); break;
+				case TablesCommand.File_Revert: Command_File_Revert(); break;
+				case TablesCommand.File_Copy_Path: Command_File_Copy_Path(); break;
+				case TablesCommand.File_Copy_Name: Command_File_Copy_Name(); break;
 				case TablesCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
 				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
 				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
