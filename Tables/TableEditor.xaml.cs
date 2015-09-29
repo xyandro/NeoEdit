@@ -95,7 +95,7 @@ namespace NeoEdit.Tables
 
 			var text = Coder.BytesToString(bytes, Coder.CodePage.AutoByBOM, true);
 
-			Table = new Table(text);
+			Table = String.IsNullOrEmpty(text) ? new Table() : Table = new Table(text);
 
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
@@ -280,9 +280,9 @@ namespace NeoEdit.Tables
 			return true;
 		}
 
-		bool IsInteger(object value)
+		bool IsInteger(Type type)
 		{
-			return (value is sbyte) || (value is byte) || (value is short) || (value is ushort) || (value is int) || (value is uint) || (value is long) || (value is ulong);
+			return (type == typeof(sbyte)) || (type == typeof(byte)) || (type == typeof(short)) || (type == typeof(ushort)) || (type == typeof(int)) || (type == typeof(uint)) || (type == typeof(long)) || (type == typeof(ulong));
 		}
 
 		readonly static double rowHeight = Font.lineHeight + RowSpacing * 2;
@@ -943,7 +943,7 @@ namespace NeoEdit.Tables
 					continue;
 
 				headersUsed.Add(header);
-				headers.Add(new Table.Header { Name = header, Type = typeof(long) });
+				headers.Add(new Table.Header { Name = header, Type = typeof(string), Nullable = true });
 			}
 
 			var data = headers.Select(header => Enumerable.Repeat(header.GetDefault(), Table.NumRows).ToList()).ToList();
@@ -999,8 +999,7 @@ namespace NeoEdit.Tables
 			var values = column.EnumerateCells(Table.NumRows, Table.NumColumns).Select(cell => Table[cell]).ToList();
 			if (expression != null)
 				values = GetExpressionResults<object>(expression);
-			var valuesMap = values.Distinct().ToDictionary(value => value, value => header.GetValue(value));
-			values = values.Select(value => valuesMap[value]).ToList();
+			values = values.Select(value => header.GetValue(value)).ToList();
 			Replace(UndoRedoStep.CreateChangeHeader(column, header, values));
 		}
 

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
-using System.Xml.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common;
-using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
@@ -229,10 +227,11 @@ namespace NeoEdit.Tables
 			var controlDown = this.controlDown;
 			var altDown = this.altDown;
 
-			e.Handled = HandleKey(e.Key, shiftDown, controlDown, altDown);
+			var key = e.Key == Key.System ? e.SystemKey : e.Key;
+			e.Handled = HandleKey(key, shiftDown, controlDown, altDown);
 
 			if ((recordingMacro != null) && (e.Handled))
-				recordingMacro.AddKey(e.Key, shiftDown, controlDown, altDown);
+				recordingMacro.AddKey(key, shiftDown, controlDown, altDown);
 		}
 
 		bool DoHandleText(string text)

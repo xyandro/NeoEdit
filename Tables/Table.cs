@@ -147,6 +147,7 @@ namespace NeoEdit.Tables
 		{
 			{  typeof(long), str => CanParseValue<long>(str, long.TryParse) },
 			{  typeof(double), str => CanParseValue<double>(str, double.TryParse) },
+			{  typeof(bool), str => CanParseValue<bool>(str, bool.TryParse) },
 			{  typeof(DateTime), str => CanParseValue<DateTime>(str, DateTime.TryParse) },
 			{  typeof(string), str => true },
 		};
@@ -168,7 +169,7 @@ namespace NeoEdit.Tables
 				Headers[column].Nullable = Rows.Any(row => row[column] == null);
 			}
 
-			HasHeaders = hasHeaders == true;
+			HasHeaders = hasHeaders != false;
 			if (HasHeaders)
 			{
 				for (var column = 0; column < Headers.Count; ++column)
