@@ -31,6 +31,20 @@ namespace NeoEdit.Common
 
 		static int PID = Process.GetCurrentProcess().Id;
 
+		public static List<object> Objects
+		{
+			get
+			{
+				var objs = Data as List<object>;
+				if (objs != null)
+					return objs;
+				var strs = Data as List<string>;
+				if (strs != null)
+					return strs.Cast<object>().ToList();
+				return new List<object> { Text };
+			}
+		}
+
 		public static List<string> Strings
 		{
 			get { return Data as List<string> ?? (Text != null ? new List<string> { Text } : new List<string>()); }

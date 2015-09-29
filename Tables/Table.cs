@@ -260,6 +260,16 @@ namespace NeoEdit.Tables
 			return ranges.GetDeleteColumns().Select(column => Rows.Select(row => row[column]).ToList()).ToList();
 		}
 
+		public string GetTableData(CellRanges ranges)
+		{
+			return String.Join("\r\n", ranges.Select(range => GetTableData(range)));
+		}
+
+		public string GetTableData(CellRange range)
+		{
+			return String.Join("\r\n", Enumerable.Range(range.MinRow, range.NumRows).Select(row => String.Join("\t", Enumerable.Range(range.MinColumn, range.NumColumns).Select(column => (this[row, column] ?? "<NULL>").ToString()))));
+		}
+
 		public void DeleteRows(CellRanges ranges)
 		{
 			var rowsHash = new HashSet<int>(ranges.GetDeleteRows());

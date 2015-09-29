@@ -632,6 +632,29 @@ namespace NeoEdit.Tables
 			Replace(undoRedoStep, replaceType);
 		}
 
+		void Command_Edit_Copy_Copy(bool headers)
+		{
+			var values = GetSelectedCells().Select(cell => Table[cell]).ToList();
+			var data = Table.GetTableData(Selections);
+			NEClipboard.Set(values, data);
+		}
+
+		void Command_Edit_Paste_Paste(bool headers)
+		{
+			var cells = GetSelectedCells();
+			var clipboardValues = NEClipboard.Objects;
+			if (cells.Count % clipboardValues.Count != 0)
+				throw new Exception("Cells and clipboard counts must be divisible");
+
+			var values = new List<object>();
+			while (values.Count < cells.Count)
+				values.AddRange(clipboardValues);
+
+			values = values.Select((value, index) => Table.Headers[cells[index].Column].GetValue(value)).ToList();
+
+			ReplaceCells(Selections, values);
+		}
+
 		void Command_Edit_Sort()
 		{
 			var columns = Selections.EnumerateColumns(Table.NumColumns, true).ToList();
@@ -744,6 +767,10 @@ namespace NeoEdit.Tables
 				case TablesCommand.File_Copy_Name: Command_File_Copy_Name(); break;
 				case TablesCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
 				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
+				case TablesCommand.Edit_Copy_Copy: Command_Edit_Copy_Copy(false); break;
+				case TablesCommand.Edit_Copy_CopyWithHeaders: Command_Edit_Copy_Copy(true); break;
+				case TablesCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(true); break;
+				case TablesCommand.Edit_Paste_PasteWithoutHeaders: Command_Edit_Paste_Paste(false); break;
 				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
 				case TablesCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
 				case TablesCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
