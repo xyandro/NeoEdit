@@ -33,5 +33,11 @@ namespace NeoEdit.Tables
 		Select_Unique,
 		Select_Duplicates,
 		View_ActiveTabs,
+		[KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Shift)] Macro_Record_QuickRecord,
+		Macro_Record_Record,
+		Macro_Record_StopRecording,
+		[KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift)] Macro_Play_QuickPlay,
+		Macro_Play_Play,
+		Macro_TimeNextAction,
 	}
 }

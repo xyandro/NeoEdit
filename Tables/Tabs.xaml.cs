@@ -33,13 +33,83 @@ namespace NeoEdit.Tables
 			UIHelper.AuditMenu(menu);
 		}
 
+		const string quickMacroFilename = "QuickTable.xml";
+		void Command_Macro_Record_QuickRecord()
+		{
+			if (recordingMacro == null)
+				Command_Macro_Record_Record();
+			else
+				Command_Macro_Record_StopRecording(quickMacroFilename);
+		}
+
+		void Command_Macro_Record_Record()
+		{
+			if (recordingMacro != null)
+			{
+				new Message
+				{
+					Title = "Error",
+					Text = String.Format("Cannot start recording; recording is already in progess."),
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
+				return;
+			}
+
+			recordingMacro = new Macro<TablesCommand>();
+		}
+
+		void Command_Macro_Record_StopRecording(string fileName = null)
+		{
+			if (recordingMacro == null)
+			{
+				new Message
+				{
+					Title = "Error",
+					Text = String.Format("Cannot stop recording; recording not in progess."),
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
+				return;
+			}
+
+			var macro = recordingMacro;
+			recordingMacro = null;
+			macro.Save(fileName, true);
+		}
+
+		void Command_Macro_Play_QuickPlay()
+		{
+			Macro<TablesCommand>.Load(quickMacroFilename, true).Play(this, playing => macroPlaying = playing);
+		}
+
+		void Command_Macro_Play_Play(string macroFile = null)
+		{
+			Macro<TablesCommand>.Load().Play(this, playing => macroPlaying = playing);
+		}
+
+		Macro<TablesCommand> recordingMacro = null, macroPlaying = null;
+
 		void RunCommand(TablesCommand command)
 		{
+			if (macroPlaying != null)
+				return;
+
+			switch (command)
+			{
+				case TablesCommand.Macro_Record_QuickRecord: Command_Macro_Record_QuickRecord(); return;
+				case TablesCommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
+				case TablesCommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
+				case TablesCommand.Macro_Play_QuickPlay: Command_Macro_Play_QuickPlay(); return;
+				case TablesCommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
+			}
+
 			var shiftDown = this.shiftDown;
 
 			object dialogResult;
 			if (!GetDialogResult(command, out dialogResult))
 				return;
+
+			if (recordingMacro != null)
+				recordingMacro.AddCommand(command, shiftDown, dialogResult);
 
 			HandleCommand(command, shiftDown, dialogResult);
 		}
@@ -113,6 +183,13 @@ namespace NeoEdit.Tables
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
+			if (macroPlaying != null)
+			{
+				if (e.Key == Key.Escape)
+					macroPlaying.Stop();
+				return;
+			}
+
 			base.OnKeyDown(e);
 			if (e.Handled)
 				return;
@@ -153,10 +230,15 @@ namespace NeoEdit.Tables
 			var altDown = this.altDown;
 
 			e.Handled = HandleKey(e.Key, shiftDown, controlDown, altDown);
+
+			if ((recordingMacro != null) && (e.Handled))
+				recordingMacro.AddKey(e.Key, shiftDown, controlDown, altDown);
 		}
 
 		bool DoHandleText(string text)
 		{
+			if (recordingMacro != null)
+				recordingMacro.AddText(text);
 			return HandleText(text);
 		}
 

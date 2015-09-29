@@ -724,8 +724,11 @@ namespace NeoEdit.Tables
 			return dialogResult != null;
 		}
 
+		bool timeNext = false;
 		internal void HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
 		{
+			var start = DateTime.UtcNow;
+
 			switch (command)
 			{
 				case TablesCommand.File_Save_Save: Command_File_Save_Save(); break;
@@ -750,6 +753,21 @@ namespace NeoEdit.Tables
 				case TablesCommand.Select_NonNull: Command_Select_NullNotNull(false); break;
 				case TablesCommand.Select_Unique: Command_Select_UniqueDuplicates(true); break;
 				case TablesCommand.Select_Duplicates: Command_Select_UniqueDuplicates(false); break;
+				case TablesCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
+			}
+
+			var end = DateTime.UtcNow;
+			var elapsed = (end - start).TotalMilliseconds;
+
+			if ((command != TablesCommand.Macro_TimeNextAction) && (timeNext))
+			{
+				timeNext = false;
+				new Message
+				{
+					Title = "Timer",
+					Text = String.Format("Elapsed time: {0:n} ms", elapsed),
+					Options = Message.OptionsEnum.Ok,
+				}.Show();
 			}
 		}
 

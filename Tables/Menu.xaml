@@ -52,6 +52,20 @@
 		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
 		<tables:TablesMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
 	</MenuItem>
+	<MenuItem Header="_Macro">
+		<MenuItem Header="_Record">
+			<tables:TablesMenuItem Header="_Quick Record" CommandEnum="Macro_Record_QuickRecord"/>
+			<tables:TablesMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
+			<tables:TablesMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
+		</MenuItem>
+		<Separator/>
+		<MenuItem Header="_Play">
+			<tables:TablesMenuItem Header="_Quick Play" CommandEnum="Macro_Play_QuickPlay"/>
+			<tables:TablesMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
+		</MenuItem>
+		<Separator/>
+		<tables:TablesMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
+	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>
 
