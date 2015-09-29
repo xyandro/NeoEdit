@@ -29,6 +29,8 @@
 			<tables:TablesMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
 		</MenuItem>
 		<Separator/>
+		<tables:TablesMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
+		<Separator/>
 		<tables:TablesMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +13,7 @@ using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
@@ -50,6 +50,8 @@ namespace NeoEdit.Tables
 			}
 		}
 
+		string AESKey = null;
+
 		readonly CellRanges Selections = new CellRanges();
 
 		readonly UndoRedo undoRedo;
@@ -83,13 +85,17 @@ namespace NeoEdit.Tables
 		void OpenFile(string fileName)
 		{
 			FileName = fileName;
+			var bytes = new byte[0];
 			if (fileName != null)
-			{
-				var text = File.ReadAllText(fileName);
-				Table = new Table(text);
-			}
+				bytes = File.ReadAllBytes(fileName);
 
-			Table = Table ?? new Table();
+			string aesKey;
+			FileEncryptor.HandleDecrypt(ref bytes, out aesKey);
+			AESKey = aesKey;
+
+			var text = Coder.BytesToString(bytes, Coder.CodePage.AutoByBOM, true);
+
+			Table = new Table(text);
 
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
@@ -447,7 +453,9 @@ namespace NeoEdit.Tables
 		void Save(string fileName)
 		{
 			var data = Table.ConvertToString("\r\n", GetFileTableType(fileName));
-			File.WriteAllText(fileName, data, Encoding.UTF8);
+			var bytes = Coder.StringToBytes(data, Coder.CodePage.UTF8, true);
+			bytes = FileEncryptor.Encrypt(bytes, AESKey);
+			File.WriteAllBytes(fileName, bytes);
 			fileLastWrite = new FileInfo(fileName).LastWriteTime;
 			undoRedo.SetModified(false);
 			FileName = fileName;
@@ -616,6 +624,18 @@ namespace NeoEdit.Tables
 			SetClipboard(Path.GetFileName(FileName));
 		}
 
+		string Command_File_Encryption_Dialog()
+		{
+			return FileEncryptor.GetKey(WindowParent);
+		}
+
+		void Command_File_Encryption(string result)
+		{
+			if (result == null)
+				return;
+			AESKey = result == "" ? null : result;
+		}
+
 		List<CellLocation> GetSelectedCells(bool preserveOrder = false)
 		{
 			return Selections.EnumerateCells(Table.NumRows, Table.NumColumns, preserveOrder).ToList();
@@ -763,6 +783,7 @@ namespace NeoEdit.Tables
 			{
 				case TablesCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
 				case TablesCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
+				case TablesCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TablesCommand.Edit_Header: dialogResult = Command_Edit_Header_Dialog(); break;
 				default: return true;
 			}
@@ -788,6 +809,7 @@ namespace NeoEdit.Tables
 				case TablesCommand.File_Revert: Command_File_Revert(); break;
 				case TablesCommand.File_Copy_Path: Command_File_Copy_Path(); break;
 				case TablesCommand.File_Copy_Name: Command_File_Copy_Name(); break;
+				case TablesCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
 				case TablesCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
 				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
 				case TablesCommand.Edit_Copy_Copy: Command_Edit_Copy_Copy(false); break;

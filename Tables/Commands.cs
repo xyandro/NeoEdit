@@ -20,6 +20,7 @@ namespace NeoEdit.Tables
 		File_Revert,
 		File_Copy_Path,
 		File_Copy_Name,
+		File_Encryption,
 		File_Exit,
 		[KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,
 		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,
