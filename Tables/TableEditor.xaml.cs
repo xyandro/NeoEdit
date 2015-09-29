@@ -283,7 +283,7 @@ namespace NeoEdit.Tables
 
 			foreach (var header in Table.Headers)
 				if (header.Width == 0)
-					header.Width = Font.GetText(header.Type.Name).Width + ColumnSpacing * 2;
+					header.Width = Font.GetText(header.TypeName).Width + ColumnSpacing * 2;
 
 			xScroll.Minimum = 0;
 			xScroll.ViewportSize = xScroll.LargeChange = canvas.ActualWidth;
@@ -322,7 +322,7 @@ namespace NeoEdit.Tables
 				var isActive = new bool[numRows];
 
 				text[0] = Font.GetText(header.Name);
-				text[1] = Font.GetText(header.Type.Name);
+				text[1] = Font.GetText(header.TypeName);
 				alignment[0] = alignment[1] = HorizontalAlignment.Center;
 				background[0] = background[1] = Misc.headersBrush;
 
@@ -584,6 +584,7 @@ namespace NeoEdit.Tables
 			}
 
 			OpenFile(FileName);
+			canvasRenderTimer.Start();
 		}
 
 		void SetClipboardFiles(List<string> data, bool isCut)
@@ -805,18 +806,13 @@ namespace NeoEdit.Tables
 			canvasRenderTimer.Start();
 		}
 
-		object DefaultFor(Type type)
-		{
-			return type.IsValueType ? Activator.CreateInstance(type) : null;
-		}
-
 		void InsertRows(bool after)
 		{
 			if (!Selections.Any())
 				return;
 
 			var ranges = Selections.SimplifyToRows(after);
-			var data = Enumerable.Repeat(Table.Headers.Select(header => DefaultFor(header.Type)).ToList(), ranges.TotalNumRows);
+			var data = Enumerable.Repeat(Table.Headers.Select(header => header.GetDefault()).ToList(), ranges.TotalNumRows);
 			Replace(UndoRedoStep.CreateInsertRows(ranges, data.ToList()));
 		}
 
@@ -841,7 +837,7 @@ namespace NeoEdit.Tables
 				headers.Add(new Table.Header { Name = header, Type = typeof(long) });
 			}
 
-			var data = Enumerable.Repeat(Enumerable.Repeat(default(object), Table.NumRows).ToList(), totalCount).ToList();
+			var data = headers.Select(header => Enumerable.Repeat(header.GetDefault(), Table.NumRows).ToList()).ToList();
 			Replace(UndoRedoStep.CreateInsertColumns(ranges, headers, data));
 		}
 
@@ -869,13 +865,13 @@ namespace NeoEdit.Tables
 			var cells = ranges.EnumerateCells(Table.NumRows, Table.NumColumns).ToList();
 			if (values == null)
 			{
-				var columnValues = cells.Select(cell => cell.Column).Distinct().ToDictionary(column => column, column => defaultValue == null ? DefaultFor(Table.Headers[column].Type) : Convert.ChangeType(defaultValue, Table.Headers[column].Type));
+				var columnValues = cells.Select(cell => cell.Column).Distinct().ToDictionary(column => column, column => defaultValue == null ? Table.Headers[column].GetDefault() : Table.Headers[column].GetValue(defaultValue));
 				values = cells.Select(cell => columnValues[cell.Column]).ToList();
 			}
 			if (cells.Count != values.Count)
 				throw new Exception("Invalid value count");
 
-			if (Enumerable.Range(0, cells.Count).All(ctr => (Table[cells[ctr]] ?? "").Equals(values[ctr] ?? "")))
+			if (Enumerable.Range(0, cells.Count).All(ctr => Object.Equals(Table[cells[ctr]], values[ctr])))
 				return;
 
 			Replace(UndoRedoStep.CreateChangeCells(ranges, values));

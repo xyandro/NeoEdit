@@ -10,7 +10,9 @@ namespace NeoEdit.Tables
 		{
 			public string Name { get; set; }
 			public Type Type { get; set; }
+			public bool Nullable { get; set; }
 			public double Width { get; set; }
+			public string TypeName { get { return Type.Name + (Nullable ? "?" : ""); } }
 
 			public Header Copy()
 			{
@@ -18,8 +20,31 @@ namespace NeoEdit.Tables
 				{
 					Name = Name,
 					Type = Type,
+					Nullable = Nullable,
 					Width = Width,
 				};
+			}
+
+			public object GetDefault()
+			{
+				if (Nullable)
+					return null;
+				if (Type.IsValueType)
+					return Activator.CreateInstance(Type);
+				if (Type == typeof(string))
+					return "";
+				throw new Exception("Unknown type");
+			}
+
+			public object GetValue(object value)
+			{
+				if (value == null)
+				{
+					if (!Nullable)
+						throw new Exception("Value cannot be NULL");
+					return null;
+				}
+				return Convert.ChangeType(value, Type);
 			}
 		}
 
@@ -109,23 +134,21 @@ namespace NeoEdit.Tables
 		}
 
 		delegate bool TryParseDelegate<T>(string obj, out T result);
-		static object ParseValue<T>(string str, TryParseDelegate<T> tryParse)
+		static bool CanParseValue<T>(string str, TryParseDelegate<T> tryParse)
 		{
 			if (str == null)
-				return null;
+				return false;
 
 			T result;
-			if (!tryParse(str, out result))
-				return null;
-			return result;
+			return tryParse(str, out result);
 		}
 
-		static Dictionary<Type, Func<string, object>> parsers = new Dictionary<Type, Func<string, object>>
+		static Dictionary<Type, Func<string, bool>> parsers = new Dictionary<Type, Func<string, bool>>
 		{
-			{  typeof(long), str => ParseValue<long>(str, long.TryParse) },
-			{  typeof(double), str => ParseValue<double>(str, double.TryParse) },
-			{  typeof(DateTime), str => ParseValue<DateTime>(str, DateTime.TryParse) },
-			{  typeof(string), str => str },
+			{  typeof(long), str => CanParseValue<long>(str, long.TryParse) },
+			{  typeof(double), str => CanParseValue<double>(str, double.TryParse) },
+			{  typeof(DateTime), str => CanParseValue<DateTime>(str, DateTime.TryParse) },
+			{  typeof(string), str => true },
 		};
 		void SetHeadersAndTypes(bool? hasHeaders)
 		{
@@ -138,10 +161,11 @@ namespace NeoEdit.Tables
 			for (var column = 0; column < count; ++column)
 			{
 				Headers.Add(new Header { Name = String.Format("Column {0}", column + 1) });
-				var match = parsers.First(pair => Rows.Skip(hasHeaders == false ? 0 : 1).All(row => (row[column] == null) || (pair.Value((string)row[column]) != null)));
-				if ((!hasHeaders.HasValue) && (match.Value((string)this[0, column]) == null))
+				var match = parsers.First(pair => Rows.Skip(hasHeaders == false ? 0 : 1).All(row => (row[column] == null) || (pair.Value((string)row[column]))));
+				if ((!hasHeaders.HasValue) && (!match.Value((string)this[0, column])))
 					hasHeaders = true;
 				Headers[column].Type = match.Key;
+				Headers[column].Nullable = Rows.Any(row => row[column] == null);
 			}
 
 			HasHeaders = hasHeaders == true;
@@ -154,7 +178,7 @@ namespace NeoEdit.Tables
 
 			foreach (var row in Rows)
 				for (var column = 0; column < Headers.Count; ++column)
-					row[column] = parsers[Headers[column].Type]((string)row[column]);
+					row[column] = Headers[column].GetValue(row[column]);
 		}
 
 		public List<int> GetSortOrder(List<int> columns)
