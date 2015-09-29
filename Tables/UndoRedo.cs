@@ -51,41 +51,41 @@ namespace NeoEdit.Tables
 			};
 		}
 
-		static public UndoRedoStep CreateInsertRows(List<int> rows, List<List<object>> insertData)
+		static public UndoRedoStep CreateInsertRows(CellRanges ranges, List<List<object>> insertData)
 		{
 			return new UndoRedoStep
 			{
-				Positions = rows,
+				Ranges = ranges,
 				InsertData = insertData,
 				Action = UndoRedoAction.InsertRows,
 			};
 		}
 
-		static public UndoRedoStep CreateInsertColumns(List<int> columns, List<Table.Header> headers, List<List<object>> insertData)
+		static public UndoRedoStep CreateInsertColumns(CellRanges ranges, List<Table.Header> headers, List<List<object>> insertData)
 		{
 			return new UndoRedoStep
 			{
-				Positions = columns,
+				Ranges = ranges,
 				InsertData = insertData,
 				Headers = headers,
 				Action = UndoRedoAction.InsertColumns,
 			};
 		}
 
-		static public UndoRedoStep CreateDeleteRows(List<int> rows)
+		static public UndoRedoStep CreateDeleteRows(CellRanges ranges)
 		{
 			return new UndoRedoStep
 			{
-				Positions = rows,
+				Ranges = ranges,
 				Action = UndoRedoAction.DeleteRows,
 			};
 		}
 
-		static public UndoRedoStep CreateDeleteColumns(List<int> columns)
+		static public UndoRedoStep CreateDeleteColumns(CellRanges ranges)
 		{
 			return new UndoRedoStep
 			{
-				Positions = columns,
+				Ranges = ranges,
 				Action = UndoRedoAction.DeleteColumns,
 			};
 		}

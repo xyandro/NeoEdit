@@ -121,9 +121,10 @@ namespace NeoEdit.Tables
 		{
 			e.Handled = true;
 
+			var key = e.Key == Key.System ? e.SystemKey : e.Key;
 			if (isEditing)
 			{
-				switch (e.Key)
+				switch (key)
 				{
 					case Key.Escape: EndEdit(false); break;
 					case Key.Enter: EndEdit(true); break;
@@ -132,7 +133,7 @@ namespace NeoEdit.Tables
 			}
 			else
 			{
-				switch (e.Key)
+				switch (key)
 				{
 					case Key.Up:
 						if (controlDown)
@@ -186,9 +187,9 @@ namespace NeoEdit.Tables
 					case Key.F2: StartEdit(false); break;
 					case Key.Insert:
 						if (shiftDown)
-							InsertRows();
+							InsertRows(altDown);
 						else if (controlDown)
-							InsertColumns();
+							InsertColumns(altDown);
 						break;
 					case Key.Delete:
 						if (shiftDown)
@@ -427,9 +428,6 @@ namespace NeoEdit.Tables
 		{
 			var sels = GetSelectedCells();
 
-			// Can't access DependencyProperties from other threads; grab a copy:
-			var Table = this.Table;
-
 			var parallelDataActions = new Dictionary<HashSet<string>, Action<HashSet<string>, Action<string, List<object>>>>();
 			parallelDataActions.Add(new HashSet<string> { "x" }, (items, addData) => addData("x", sels.Select(cell => Table[cell]).ToList()));
 			parallelDataActions.Add(new HashSet<string> { "y" }, (items, addData) => addData("y", sels.Select((cell, index) => (object)(index + 1)).ToList()));
@@ -489,22 +487,7 @@ namespace NeoEdit.Tables
 
 		List<CellLocation> GetSelectedCells(bool preserveOrder = false)
 		{
-			return Selections.GetCells(Table.NumRows, Table.NumColumns, preserveOrder).ToList();
-		}
-
-		List<int> GetSelectedColumns(bool preserveOrder = false)
-		{
-			return Selections.GetColumns(Table.NumColumns, preserveOrder).ToList();
-		}
-
-		List<int> GetSelectedRows(bool preserveOrder = false)
-		{
-			return Selections.GetRows(Table.NumRows, preserveOrder).ToList();
-		}
-
-		void SetSelectedCells(IEnumerable<CellRange> ranges)
-		{
-			Selections.Replace(ranges);
+			return Selections.EnumerateCells(Table.NumRows, Table.NumColumns, preserveOrder).ToList();
 		}
 
 		void SetHome()
@@ -522,18 +505,11 @@ namespace NeoEdit.Tables
 				return;
 
 			Replace(undoRedoStep, replaceType);
-			switch (undoRedoStep.Action)
-			{
-				case UndoRedoAction.ChangeCells: SetSelectedCells(undoRedoStep.Ranges); break;
-				case UndoRedoAction.InsertRows: SetSelectedCells(undoRedoStep.Positions.Select((row, index) => new CellRange(row + index, 0, allRows: true))); break;
-				case UndoRedoAction.InsertColumns: SetSelectedCells(undoRedoStep.Positions.Select((column, index) => new CellRange(0, column + index, allColumns: true))); break;
-				default: SetHome(); break;
-			}
 		}
 
 		void Command_Edit_Sort()
 		{
-			var columns = GetSelectedColumns();
+			var columns = Selections.EnumerateColumns(Table.NumColumns, true).ToList();
 			if (!columns.Any())
 				return;
 			var sortOrder = Table.GetSortOrder(columns);
@@ -544,7 +520,7 @@ namespace NeoEdit.Tables
 
 			Sort(sortOrder);
 
-			SetSelectedCells(columns.Select(column => new CellRange(0, column, allColumns: true)));
+			Selections.Replace(columns.Select(column => new CellRange(0, column, allColumns: true)));
 		}
 
 		GetExpressionDialog.Result Command_Edit_Expression_Dialog()
@@ -609,6 +585,7 @@ namespace NeoEdit.Tables
 
 		protected bool shiftDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift); } }
 		protected bool controlDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Control); } }
+		protected bool altDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Alt); } }
 
 		List<int> GetListReverse(List<int> list)
 		{
@@ -619,26 +596,16 @@ namespace NeoEdit.Tables
 			return reverse;
 		}
 
-		List<int> GetInsertPositions(List<int> deleted)
-		{
-			return deleted.Select((index, offset) => index - offset).ToList();
-		}
-
-		List<int> GetDeletePositions(List<int> inserted)
-		{
-			return inserted.Select((index, offset) => index + offset).ToList();
-		}
-
 		UndoRedoStep GetUndoStep(UndoRedoStep step)
 		{
 			switch (step.Action)
 			{
-				case UndoRedoAction.ChangeCells: return UndoRedoStep.CreateChangeCells(step.Ranges, step.Ranges.GetCells(Table.NumRows, Table.NumColumns).Select(cell => Table[cell]).ToList());
+				case UndoRedoAction.ChangeCells: return UndoRedoStep.CreateChangeCells(step.Ranges, step.Ranges.EnumerateCells(Table.NumRows, Table.NumColumns).Select(cell => Table[cell]).ToList());
 				case UndoRedoAction.Sort: return UndoRedoStep.CreateSort(GetListReverse(step.Positions));
-				case UndoRedoAction.DeleteRows: return UndoRedoStep.CreateInsertRows(GetInsertPositions(step.Positions), Table.GetRowData(step.Positions));
-				case UndoRedoAction.InsertRows: return UndoRedoStep.CreateDeleteRows(GetDeletePositions(step.Positions));
-				case UndoRedoAction.DeleteColumns: return UndoRedoStep.CreateInsertColumns(GetInsertPositions(step.Positions), step.Positions.Select(index => Table.Headers[index]).ToList(), Table.GetColumnData(step.Positions));
-				case UndoRedoAction.InsertColumns: return UndoRedoStep.CreateDeleteColumns(GetDeletePositions(step.Positions));
+				case UndoRedoAction.DeleteRows: return UndoRedoStep.CreateInsertRows(step.Ranges.DeleteToInsertRows(), Table.GetRowData(step.Ranges));
+				case UndoRedoAction.InsertRows: return UndoRedoStep.CreateDeleteRows(step.Ranges.InsertToDeleteRows());
+				case UndoRedoAction.DeleteColumns: return UndoRedoStep.CreateInsertColumns(step.Ranges.DeleteToInsertColumns(), step.Ranges.GetDeleteColumns().Select(index => Table.Headers[index]).ToList(), Table.GetColumnData(step.Ranges));
+				case UndoRedoAction.InsertColumns: return UndoRedoStep.CreateDeleteColumns(step.Ranges.InsertToDeleteColumns());
 				default: throw new NotImplementedException();
 			}
 		}
@@ -658,13 +625,20 @@ namespace NeoEdit.Tables
 			{
 				case UndoRedoAction.ChangeCells: Table.ChangeCells(step.Ranges, step.Values); break;
 				case UndoRedoAction.Sort: Table.Sort(step.Positions); break;
-				case UndoRedoAction.DeleteRows: Table.DeleteRows(step.Positions); break;
-				case UndoRedoAction.InsertRows: Table.InsertRows(step.Positions, step.InsertData, true); break;
-				case UndoRedoAction.DeleteColumns: Table.DeleteColumns(step.Positions); break;
-				case UndoRedoAction.InsertColumns: Table.InsertColumns(step.Positions, step.Headers, step.InsertData, true); break;
+				case UndoRedoAction.DeleteRows: Table.DeleteRows(step.Ranges); break;
+				case UndoRedoAction.InsertRows: Table.InsertRows(step.Ranges, step.InsertData, true); break;
+				case UndoRedoAction.DeleteColumns: Table.DeleteColumns(step.Ranges); break;
+				case UndoRedoAction.InsertColumns: Table.InsertColumns(step.Ranges, step.Headers, step.InsertData, true); break;
 			}
 
-			Selections.Replace(selection => MoveSelection(selection, 0, 0, true));
+			switch (step.Action)
+			{
+				case UndoRedoAction.ChangeCells: Selections.Replace(step.Ranges); break;
+				case UndoRedoAction.InsertRows: Selections.Replace(step.Ranges.ToOffsetRows()); break;
+				case UndoRedoAction.InsertColumns: Selections.Replace(step.Ranges.ToOffsetColumns()); break;
+				default: SetHome(); break;
+			}
+
 			canvasRenderTimer.Start();
 		}
 
@@ -673,26 +647,28 @@ namespace NeoEdit.Tables
 			return type.IsValueType ? Activator.CreateInstance(type) : null;
 		}
 
-		void InsertRows()
+		void InsertRows(bool after)
 		{
-			var rows = GetSelectedRows();
-			if (!rows.Any())
+			if (!Selections.Any())
 				return;
-			var columns = Table.Headers.Select(header => DefaultFor(header.Type)).ToList();
-			Replace(UndoRedoStep.CreateInsertRows(rows, Enumerable.Repeat(columns, rows.Count).ToList()));
-			SetSelectedCells(rows.Select((row, index) => new CellRange(row + index, 0, allRows: true)));
+
+			var ranges = Selections.SimplifyToRows(after);
+			var data = Enumerable.Repeat(Table.Headers.Select(header => DefaultFor(header.Type)).ToList(), ranges.TotalNumRows);
+			Replace(UndoRedoStep.CreateInsertRows(ranges, data.ToList()));
 		}
 
-		void InsertColumns()
+		void InsertColumns(bool after)
 		{
-			var columns = GetSelectedColumns();
-			if (!columns.Any())
+			if (!Selections.Any())
 				return;
+
+			var ranges = Selections.SimplifyToColumns(after);
+			var totalCount = ranges.TotalColumnCount;
 
 			var headers = new List<Table.Header>();
 			var headersUsed = new HashSet<string>(Table.Headers.Select(header => header.Name));
 			var columnNum = 0;
-			while (headers.Count < columns.Count)
+			while (headers.Count < totalCount)
 			{
 				var header = String.Format("Column {0}", ++columnNum);
 				if (headersUsed.Contains(header))
@@ -702,28 +678,24 @@ namespace NeoEdit.Tables
 				headers.Add(new Table.Header { Name = header, Type = typeof(long) });
 			}
 
-			var emptyColumn = Enumerable.Repeat(default(object), Table.NumRows).ToList();
-			var data = Enumerable.Repeat(emptyColumn, columns.Count).ToList();
-			Replace(UndoRedoStep.CreateInsertColumns(columns, headers, data));
-			SetSelectedCells(columns.Select((column, index) => new CellRange(0, column + index, allColumns: true)));
+			var data = Enumerable.Repeat(Enumerable.Repeat(default(object), Table.NumRows).ToList(), totalCount).ToList();
+			Replace(UndoRedoStep.CreateInsertColumns(ranges, headers, data));
 		}
 
 		void DeleteRows()
 		{
-			var rows = GetSelectedRows();
-			if (!rows.Any())
+			if (!Selections.Any())
 				return;
-			Replace(UndoRedoStep.CreateDeleteRows(rows));
-			SetHome();
+
+			Replace(UndoRedoStep.CreateDeleteRows(Selections.SimplifyToRows()));
 		}
 
 		void DeleteColumns()
 		{
-			var columns = GetSelectedColumns();
-			if (!columns.Any())
+			if (!Selections.Any())
 				return;
-			Replace(UndoRedoStep.CreateDeleteColumns(columns));
-			SetHome();
+
+			Replace(UndoRedoStep.CreateDeleteColumns(Selections.SimplifyToColumns()));
 		}
 
 		void ReplaceCells(CellRanges ranges, List<object> values = null, string defaultValue = null)
@@ -731,11 +703,11 @@ namespace NeoEdit.Tables
 			if (!ranges.Any())
 				return;
 
-			var cells = ranges.GetCells(Table.NumRows, Table.NumColumns).ToList();
+			var cells = ranges.EnumerateCells(Table.NumRows, Table.NumColumns).ToList();
 			if (values == null)
 			{
-				var typeValues = ranges.GetColumns(Table.NumColumns).ToDictionary(column => column, column => defaultValue == null ? DefaultFor(Table.Headers[column].Type) : Convert.ChangeType(defaultValue, Table.Headers[column].Type));
-				values = cells.Select(cell => typeValues[cell.Column]).ToList();
+				var columnValues = cells.Select(cell => cell.Column).Distinct().ToDictionary(column => column, column => defaultValue == null ? DefaultFor(Table.Headers[column].Type) : Convert.ChangeType(defaultValue, Table.Headers[column].Type));
+				values = cells.Select(cell => columnValues[cell.Column]).ToList();
 			}
 			if (cells.Count != values.Count)
 				throw new Exception("Invalid value count");

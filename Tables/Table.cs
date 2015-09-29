@@ -26,7 +26,6 @@ namespace NeoEdit.Tables
 		public enum TableTypeEnum { None, TSV, CSV, Columns }
 
 		List<List<object>> Rows { get; set; }
-		List<List<bool>> Selected { get; set; }
 		public List<Header> Headers { get; private set; }
 		public TableTypeEnum TableType { get; set; }
 		public bool HasHeaders { get; set; }
@@ -37,7 +36,6 @@ namespace NeoEdit.Tables
 		public Table()
 		{
 			Rows = new List<List<object>>();
-			Selected = new List<List<bool>>();
 			Headers = new List<Header>();
 			TableType = TableTypeEnum.TSV;
 			HasHeaders = false;
@@ -46,7 +44,6 @@ namespace NeoEdit.Tables
 		Table(Table table)
 		{
 			Rows = table.Rows.Select(row => row.ToList()).ToList();
-			Selected = table.Selected.Select(row => row.ToList()).ToList();
 			Headers = table.Headers.Select(header => header.Copy()).ToList();
 			TableType = table.TableType;
 			HasHeaders = table.HasHeaders;
@@ -58,7 +55,6 @@ namespace NeoEdit.Tables
 				tableType = GuessTableType(input);
 			ProcessInput(input, tableType);
 			SetHeadersAndTypes(hasHeaders);
-			Selected = Rows.Select(row => row.Select(item => false).ToList()).ToList();
 		}
 
 		public static TableTypeEnum GuessTableType(string table)
@@ -215,29 +211,9 @@ namespace NeoEdit.Tables
 			set { Rows[row][column] = value; }
 		}
 
-		public bool GetSelected(CellLocation cell)
-		{
-			return Selected[cell.Row][cell.Column];
-		}
-
-		public void SetSelected(CellLocation cell, bool value)
-		{
-			Selected[cell.Row][cell.Column] = value;
-		}
-
-		public bool GetSelected(int row, int column)
-		{
-			return Selected[row][column];
-		}
-
-		public void SetSelected(int row, int column, bool value)
-		{
-			Selected[row][column] = value;
-		}
-
 		public void ChangeCells(CellRanges ranges, List<object> values)
 		{
-			var cells = ranges.GetCells(NumRows, NumColumns).ToList();
+			var cells = ranges.EnumerateCells(NumRows, NumColumns).ToList();
 			if (cells.Count != values.Count)
 				throw new ArgumentException("Cells and values counts must match");
 
@@ -248,59 +224,52 @@ namespace NeoEdit.Tables
 		public void Sort(List<int> sortOrder)
 		{
 			Rows = sortOrder.Select(index => Rows[index]).ToList();
-			Selected = sortOrder.Select(index => Selected[index]).ToList();
 		}
 
-		public List<List<object>> GetRowData(List<int> rows)
+		public List<List<object>> GetRowData(CellRanges ranges)
 		{
-			return rows.Select(row => Rows[row].ToList()).ToList();
+			return ranges.GetDeleteRows().Select(row => Rows[row].ToList()).ToList();
 		}
 
-		public List<List<object>> GetColumnData(List<int> columns)
+		public List<List<object>> GetColumnData(CellRanges ranges)
 		{
-			return columns.Select(column => Rows.Select(row => row[column]).ToList()).ToList();
+			return ranges.GetDeleteColumns().Select(column => Rows.Select(row => row[column]).ToList()).ToList();
 		}
 
-		public void DeleteRows(List<int> rows)
+		public void DeleteRows(CellRanges ranges)
 		{
-			var rowsHash = new HashSet<int>(rows);
+			var rowsHash = new HashSet<int>(ranges.GetDeleteRows());
 			Rows = Rows.Where((row, index) => !rowsHash.Contains(index)).ToList();
-			Selected = Selected.Where((row, index) => !rowsHash.Contains(index)).ToList();
 		}
 
-		public void InsertRows(List<int> rows, List<List<object>> insertData, bool selected)
+		public void InsertRows(CellRanges ranges, List<List<object>> insertData, bool selected)
 		{
+			var rows = ranges.GetInsertRows().ToList();
 			if (rows.Count != insertData.Count)
 				throw new ArgumentException("Rows and data counts must match");
 
-			for (var ctr = 0; ctr < rows.Count; ++ctr)
-			{
-				Rows.Insert(rows[ctr] + ctr, insertData[ctr]);
-				Selected.Insert(rows[ctr] + ctr, Enumerable.Repeat(selected, NumColumns).ToList());
-			}
+			for (var row = 0; row < rows.Count; ++row)
+				Rows.Insert(rows[row], insertData[row]);
 		}
 
-		public void DeleteColumns(List<int> columns)
+		public void DeleteColumns(CellRanges ranges)
 		{
-			var columnsHash = new HashSet<int>(columns);
+			var columnsHash = new HashSet<int>(ranges.GetDeleteColumns());
 			Headers = new List<Header>(Headers.Where((header, index) => !columnsHash.Contains(index)));
 			Rows = Rows.Select(row => row.Where((item, index) => !columnsHash.Contains(index)).ToList()).ToList();
-			Selected = Selected.Select(row => row.Where((item, index) => !columnsHash.Contains(index)).ToList()).ToList();
 		}
 
-		public void InsertColumns(List<int> columns, List<Table.Header> headers, List<List<object>> insertData, bool selected)
+		public void InsertColumns(CellRanges ranges, List<Table.Header> headers, List<List<object>> insertData, bool selected)
 		{
+			var columns = ranges.GetInsertColumns().ToList();
 			if ((columns.Count != insertData.Count) || (columns.Count != headers.Count))
 				throw new ArgumentException("Columns, data, and headers counts must match");
 
 			for (var column = 0; column < columns.Count; ++column)
 			{
-				Headers.Insert(columns[column] + column, headers[column]);
+				Headers.Insert(columns[column], headers[column]);
 				for (var row = 0; row < Rows.Count; ++row)
-				{
-					Rows[row].Insert(columns[column] + column, insertData[column][row]);
-					Selected[row].Insert(columns[column] + column, selected);
-				}
+					Rows[row].Insert(columns[column], insertData[column][row]);
 			}
 		}
 	}

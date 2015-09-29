@@ -25,6 +25,5 @@ namespace NeoEdit.Tables
 		{
 			return cells.OrderBy(cell => cell.Row).ThenBy(cell => cell.Column);
 		}
-
 	}
 }
