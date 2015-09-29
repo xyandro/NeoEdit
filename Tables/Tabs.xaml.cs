@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
@@ -29,7 +30,7 @@ namespace NeoEdit.Tables
 			UIHelper.AuditMenu(menu);
 		}
 
-		internal void RunCommand(TablesCommand command)
+		void RunCommand(TablesCommand command)
 		{
 			var shiftDown = this.shiftDown;
 
@@ -94,7 +95,7 @@ namespace NeoEdit.Tables
 			tabs.ShowActiveTabsDialog();
 		}
 
-		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
+		bool GetDialogResult(TablesCommand command, out object dialogResult)
 		{
 			dialogResult = null;
 
@@ -107,7 +108,65 @@ namespace NeoEdit.Tables
 			return dialogResult != null;
 		}
 
-		internal void HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
+		protected override void OnKeyDown(KeyEventArgs e)
+		{
+			base.OnKeyDown(e);
+			if (e.Handled)
+				return;
+
+			var topMost = ItemTabs.TopMost;
+			if (topMost == null)
+				return;
+
+			if (!topMost.IsEditing)
+			{
+				switch (e.Key)
+				{
+					case Key.F2:
+						topMost.StartEdit(false);
+						e.Handled = true;
+						return;
+				}
+			}
+			else
+			{
+				switch (e.Key)
+				{
+					case Key.Enter:
+					case Key.Escape:
+						var result = topMost.EndEdit(e.Key == Key.Enter);
+						if (result != null)
+							HandleCellValue(result);
+						e.Handled = true;
+						return;
+				}
+			}
+
+			if (topMost.IsEditing)
+				return;
+
+			var shiftDown = this.shiftDown;
+			var controlDown = this.controlDown;
+			var altDown = this.altDown;
+
+			e.Handled = HandleKey(e.Key, shiftDown, controlDown, altDown);
+		}
+
+		void HandleCellValue(string result)
+		{
+			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
+				textEditorItems.HandleCellValue(result);
+		}
+
+		bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
+		{
+			var result = false;
+			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
+				result = textEditorItems.HandleKey(key, shiftDown, controlDown, altDown) || result;
+			return result;
+		}
+
+		void HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
 		{
 			switch (command)
 			{

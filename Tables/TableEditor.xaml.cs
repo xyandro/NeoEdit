@@ -132,18 +132,17 @@ namespace NeoEdit.Tables
 			base.OnPreviewTextInput(e);
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		internal bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
-			e.Handled = true;
+			var result = true;
 
-			var key = e.Key == Key.System ? e.SystemKey : e.Key;
-			if (isEditing)
+			if (IsEditing)
 			{
 				switch (key)
 				{
 					case Key.Escape: EndEdit(false); break;
 					case Key.Enter: EndEdit(true); break;
-					default: e.Handled = false; break;
+					default: result = false; break;
 				}
 			}
 			else
@@ -201,7 +200,7 @@ namespace NeoEdit.Tables
 						if ((allRows.HasValue) || (allColumns.HasValue))
 							Selections.Replace(selection => new CellRange(selection, allRows: allRows, allColumns: allColumns));
 						else
-							e.Handled = false;
+							result = false;
 						break;
 					case Key.F2: StartEdit(false); break;
 					case Key.Insert:
@@ -218,21 +217,19 @@ namespace NeoEdit.Tables
 						else
 							ReplaceCells(Selections, null);
 						break;
-					default: e.Handled = false; break;
+					default: result = false; break;
 				}
-
-				if (!e.Handled)
-					base.OnKeyDown(e);
 			}
+			return result;
 		}
 
-		bool isEditing = false;
-		void StartEdit(bool empty)
+		public bool IsEditing { get; private set; }
+		public void StartEdit(bool empty)
 		{
-			if ((isEditing) || (!Selections.Any()))
+			if ((IsEditing) || (!Selections.Any()))
 				return;
 
-			isEditing = true;
+			IsEditing = true;
 			var cell = Selections.Last().End;
 
 			var x = Enumerable.Range(0, cell.Column).Sum(column => Table.Headers[column].Width) - xScrollValue;
@@ -254,20 +251,25 @@ namespace NeoEdit.Tables
 			tb.Focus();
 		}
 
-		void EndEdit(bool success)
+		public string EndEdit(bool success)
 		{
-			if (!isEditing)
-				return;
+			if (!IsEditing)
+				return null;
 
 			var result = canvas.Children.Cast<TextBox>().First().Text;
-			isEditing = false;
+			IsEditing = false;
 			canvas.Children.Clear();
 			Focus();
 
 			if (!success)
-				return;
+				return null;
 
-			ReplaceCells(Selections, defaultValue: result);
+			return result;
+		}
+
+		public void HandleCellValue(string value)
+		{
+			ReplaceCells(Selections, defaultValue: value);
 		}
 
 		readonly static double rowHeight = Font.lineHeight + RowSpacing * 2;
