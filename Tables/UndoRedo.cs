@@ -19,6 +19,7 @@ namespace NeoEdit.Tables
 		DeleteRows,
 		InsertColumns,
 		DeleteColumns,
+		ChangeHeader,
 	}
 
 	class UndoRedoStep
@@ -89,6 +90,17 @@ namespace NeoEdit.Tables
 				Action = UndoRedoAction.DeleteColumns,
 			};
 		}
+		static public UndoRedoStep CreateChangeHeader(CellRange column, Table.Header header, List<object> values)
+		{
+			return new UndoRedoStep
+			{
+				Ranges = new CellRanges { column },
+				Headers = new List<Table.Header> { header },
+				Values = values,
+				Action = UndoRedoAction.ChangeHeader,
+			};
+		}
+
 	}
 
 	class UndoRedo

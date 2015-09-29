@@ -28,6 +28,7 @@ namespace NeoEdit.Tables
 		[KeyGesture(Key.V, ModifierKeys.Control)] Edit_Paste_Paste,
 		[KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Paste_PasteWithoutHeaders,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Sort,
+		[KeyGesture(Key.H, ModifierKeys.Control)] Edit_Header,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Expression_Expression,
 		Expression_SelectByExpression,
 		[KeyGesture(Key.A, ModifierKeys.Control)] Select_All,

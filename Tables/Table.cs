@@ -306,6 +306,18 @@ namespace NeoEdit.Tables
 					Rows[row].Insert(columns[column], insertData[column][row]);
 			}
 		}
+
+		public void ChangeHeader(CellRange range, Header header, List<object> values)
+		{
+			var cells = range.EnumerateCells(NumRows, NumColumns).ToList();
+			if (cells.Count != values.Count)
+				throw new ArgumentException("Cells and values counts must match");
+
+			for (var ctr = 0; ctr < cells.Count; ++ctr)
+				this[cells[ctr]] = values[ctr];
+
+			Headers[range.MinColumn] = header;
+		}
 	}
 
 	static class TableExtensions

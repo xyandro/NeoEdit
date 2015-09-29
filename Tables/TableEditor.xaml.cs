@@ -19,6 +19,7 @@ using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
+using NeoEdit.Tables.Dialogs;
 
 namespace NeoEdit.Tables
 {
@@ -273,6 +274,11 @@ namespace NeoEdit.Tables
 			return true;
 		}
 
+		bool IsInteger(object value)
+		{
+			return (value is sbyte) || (value is byte) || (value is short) || (value is ushort) || (value is int) || (value is uint) || (value is long) || (value is ulong);
+		}
+
 		readonly static double rowHeight = Font.lineHeight + RowSpacing * 2;
 		const double RowSpacing = 2;
 		const double ColumnSpacing = 8;
@@ -334,7 +340,7 @@ namespace NeoEdit.Tables
 					var value = Table[row, column];
 					var display = value == null ? "<NULL>" : value.ToString();
 					var item = text[row - startRow + HeaderRows] = Font.GetText(display);
-					alignment[row - startRow + HeaderRows] = header.Type == typeof(long) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+					alignment[row - startRow + HeaderRows] = IsInteger(header.Type) ? HorizontalAlignment.Right : HorizontalAlignment.Left;
 					if (value == null)
 					{
 						item.SetForegroundBrush(Misc.nullBrush);
@@ -671,6 +677,22 @@ namespace NeoEdit.Tables
 			Selections.Replace(columns.Select(column => new CellRange(0, column, allColumns: true)));
 		}
 
+		EditHeaderDialog.Result Command_Edit_Header_Dialog()
+		{
+			Selections.Replace(Selections.SimplifyToColumns());
+			if ((Selections.Count != 1) || (Selections[0].NumColumns != 1))
+				throw new Exception("Must have single column selected");
+			return EditHeaderDialog.Run(WindowParent, Table.Headers[Selections[0].MinColumn], GetExpressionData(10));
+		}
+
+		void Command_Edit_Header(EditHeaderDialog.Result result)
+		{
+			Selections.Replace(Selections.SimplifyToColumns());
+			if ((Selections.Count != 1) || (Selections[0].NumColumns != 1))
+				throw new Exception("Must have single column selected");
+			ReplaceHeader(Selections.Single(), result.Header, result.Expression);
+		}
+
 		GetExpressionDialog.Result Command_Edit_Expression_Dialog()
 		{
 			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
@@ -741,6 +763,7 @@ namespace NeoEdit.Tables
 			{
 				case TablesCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
 				case TablesCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
+				case TablesCommand.Edit_Header: dialogResult = Command_Edit_Header_Dialog(); break;
 				default: return true;
 			}
 
@@ -772,6 +795,7 @@ namespace NeoEdit.Tables
 				case TablesCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(true); break;
 				case TablesCommand.Edit_Paste_PasteWithoutHeaders: Command_Edit_Paste_Paste(false); break;
 				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
+				case TablesCommand.Edit_Header: Command_Edit_Header(dialogResult as EditHeaderDialog.Result); break;
 				case TablesCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
 				case TablesCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TablesCommand.Select_All: Command_Select_All(); break;
@@ -831,6 +855,7 @@ namespace NeoEdit.Tables
 				case UndoRedoAction.InsertRows: return UndoRedoStep.CreateDeleteRows(step.Ranges.InsertToDeleteRows());
 				case UndoRedoAction.DeleteColumns: return UndoRedoStep.CreateInsertColumns(step.Ranges.DeleteToInsertColumns(), step.Ranges.GetDeleteColumns().Select(index => Table.Headers[index]).ToList(), Table.GetColumnData(step.Ranges));
 				case UndoRedoAction.InsertColumns: return UndoRedoStep.CreateDeleteColumns(step.Ranges.InsertToDeleteColumns());
+				case UndoRedoAction.ChangeHeader: return UndoRedoStep.CreateChangeHeader(step.Ranges.Single(), Table.Headers[step.Ranges.Single().MinColumn], step.Ranges.Single().EnumerateCells(Table.NumRows, Table.NumColumns).Select(cell => Table[cell]).ToList());
 				default: throw new NotImplementedException();
 			}
 		}
@@ -854,6 +879,7 @@ namespace NeoEdit.Tables
 				case UndoRedoAction.InsertRows: Table.InsertRows(step.Ranges, step.InsertData, true); break;
 				case UndoRedoAction.DeleteColumns: Table.DeleteColumns(step.Ranges); break;
 				case UndoRedoAction.InsertColumns: Table.InsertColumns(step.Ranges, step.Headers, step.InsertData, true); break;
+				case UndoRedoAction.ChangeHeader: Table.ChangeHeader(step.Ranges[0], step.Headers[0], step.Values); break;
 			}
 
 			switch (step.Action)
@@ -944,6 +970,16 @@ namespace NeoEdit.Tables
 				return;
 
 			Replace(UndoRedoStep.CreateSort(sortOrder));
+		}
+
+		void ReplaceHeader(CellRange column, Table.Header header, string expression)
+		{
+			var values = column.EnumerateCells(Table.NumRows, Table.NumColumns).Select(cell => Table[cell]).ToList();
+			if (expression != null)
+				values = GetExpressionResults<object>(expression);
+			var valuesMap = values.Distinct().ToDictionary(value => value, value => header.GetValue(value));
+			values = values.Select(value => valuesMap[value]).ToList();
+			Replace(UndoRedoStep.CreateChangeHeader(column, header, values));
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

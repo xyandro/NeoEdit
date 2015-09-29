@@ -43,6 +43,10 @@
 			<tables:TablesMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
 			<tables:TablesMenuItem Header="Paste Without _Headers" CommandEnum="Edit_Paste_PasteWithoutHeaders"/>
 		</MenuItem>
+		<Separator/>
+		<tables:TablesMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
+		<Separator/>
+		<tables:TablesMenuItem Header="_Header" CommandEnum="Edit_Header"/>
 	</MenuItem>
 	<MenuItem Header="E_xpression">
 		<tables:TablesMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>

@@ -16,6 +16,13 @@
     <Compile Include="CellRanges.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="DataGridColumnsBinder.cs" />
+    <Page Include="Dialogs\EditHeaderDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EditHeaderDialog.xaml.cs">
+      <DependentUpon>EditHeaderDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Menu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
