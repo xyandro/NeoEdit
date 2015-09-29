@@ -138,6 +138,7 @@
       <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Launcher.cs" />
+    <Compile Include="Misc\FileEncryptor.cs" />
     <Compile Include="Misc\Font.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\Macro.cs" />

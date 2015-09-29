@@ -27,7 +27,6 @@
 			<textEdit:TextEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
 			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
 			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
-			<textEdit:TextEditMenuItem Header="E_ncryption" CommandEnum="File_Operations_Encryption"/>
 			<textEdit:TextEditMenuItem Header="Open D_isk" CommandEnum="File_Operations_OpenDisk"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
@@ -51,6 +50,8 @@
 			<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding_Encoding"/>
 			<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_Encoding_ReopenWithEncoding"/>
 		</MenuItem>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Hex Editor" CommandEnum="File_HexEditor"/>
 		<Separator/>
