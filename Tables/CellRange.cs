@@ -120,7 +120,7 @@ namespace NeoEdit.Tables
 
 		public bool Equals(CellRange range)
 		{
-			return (Start.Equals(range.Start)) && (End.Equals(range.End)) && (AllRows.Equals(range.AllRows)) && (AllColumns.Equals(range.AllColumns));
+			return (MinColumn.Equals(range.MinColumn)) && (MaxColumn.Equals(range.MaxColumn)) && (MinRow.Equals(range.MinRow)) && (MaxRow.Equals(range.MaxRow)) && (AllRows.Equals(range.AllRows)) && (AllColumns.Equals(range.AllColumns));
 		}
 
 		public override bool Equals(object obj)
@@ -132,7 +132,7 @@ namespace NeoEdit.Tables
 
 		public override int GetHashCode()
 		{
-			return Start.GetHashCode() + End.GetHashCode();
+			return (MinColumn << 0) + (MaxColumn << 8) + (MinRow << 16) + (MaxRow << 24);
 		}
 
 		public override string ToString()

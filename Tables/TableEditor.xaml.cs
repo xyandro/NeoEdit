@@ -175,16 +175,20 @@ namespace NeoEdit.Tables
 							MoveSelections(0, 1, shiftDown);
 						break;
 					case Key.Home:
-						if (controlDown)
+						if (!controlDown)
+							MoveSelections(0, 0, shiftDown, columnRel: false);
+						else if (shiftDown)
 							MoveSelections(0, 0, shiftDown, false, false);
 						else
-							MoveSelections(0, 0, shiftDown, columnRel: false);
+							Selections.Replace(new CellRange());
 						break;
 					case Key.End:
-						if (controlDown)
+						if (!controlDown)
+							MoveSelections(0, int.MaxValue, shiftDown, columnRel: false);
+						else if (shiftDown)
 							MoveSelections(int.MaxValue, int.MaxValue, shiftDown, false, false);
 						else
-							MoveSelections(0, int.MaxValue, shiftDown, columnRel: false);
+							Selections.Replace(new CellRange(Table.NumRows - 1, Table.NumColumns - 1));
 						break;
 					case Key.PageUp: MoveSelections(1 - yScrollViewportFloor, 0, shiftDown); break;
 					case Key.PageDown: MoveSelections(yScrollViewportFloor - 1, 0, shiftDown); break;
@@ -663,6 +667,34 @@ namespace NeoEdit.Tables
 			ReplaceCells(Selections, results);
 		}
 
+		void Command_Select_All()
+		{
+			Selections.Replace(new CellRange(endRow: Table.NumRows - 1, endColumn: Table.NumColumns - 1));
+		}
+
+		void Command_Select_Cells()
+		{
+			Selections.Replace(GetSelectedCells());
+		}
+
+		void Command_Select_NullNotNull(bool isNull)
+		{
+			Selections.Replace(GetSelectedCells().Where(cell => (Table[cell] == null) == isNull));
+		}
+
+		void Command_Select_UniqueDuplicates(bool unique)
+		{
+			var found = new HashSet<object>();
+			Selections.Replace(GetSelectedCells().Where(cell =>
+			{
+				var value = Table[cell];
+				var contains = found.Contains(value);
+				if (!contains)
+					found.Add(value);
+				return contains != unique;
+			}));
+		}
+
 		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
 		{
 			dialogResult = null;
@@ -695,6 +727,12 @@ namespace NeoEdit.Tables
 				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
 				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
 				case TablesCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
+				case TablesCommand.Select_All: Command_Select_All(); break;
+				case TablesCommand.Select_Cells: Command_Select_Cells(); break;
+				case TablesCommand.Select_Null: Command_Select_NullNotNull(true); break;
+				case TablesCommand.Select_NonNull: Command_Select_NullNotNull(false); break;
+				case TablesCommand.Select_Unique: Command_Select_UniqueDuplicates(true); break;
+				case TablesCommand.Select_Duplicates: Command_Select_UniqueDuplicates(false); break;
 			}
 		}
 

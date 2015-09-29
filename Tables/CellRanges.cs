@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 
@@ -8,6 +9,11 @@ namespace NeoEdit.Tables
 	{
 		public CellRanges() { }
 		public CellRanges(IEnumerable<CellRange> collection) : base(collection) { }
+
+		public void Replace(IEnumerable<CellLocation> cellLocations)
+		{
+			Replace(cellLocations.Select(cellLocation => new CellRange(cellLocation)));
+		}
 
 		public IEnumerable<CellLocation> EnumerateCells(int numRows, int numColumns, bool preserveOrder = false)
 		{

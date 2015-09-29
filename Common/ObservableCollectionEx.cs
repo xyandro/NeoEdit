@@ -67,6 +67,13 @@ namespace NeoEdit.Common
 			Notify();
 		}
 
+		public void Replace(T item)
+		{
+			list.Clear();
+			list.Add(item);
+			Notify();
+		}
+
 		public void Replace(IEnumerable<T> items)
 		{
 			list.Clear();
