@@ -3,8 +3,8 @@
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{AC1B92BD-99C4-4EC1-BB02-842AD65BBCEB}</ProjectGuid>
-    <RootNamespace>NeoEdit.Tables</RootNamespace>
-    <AssemblyName>NeoEdit.Tables</AssemblyName>
+    <RootNamespace>NeoEdit.TableEdit</RootNamespace>
+    <AssemblyName>NeoEdit.TableEdit</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <ItemGroup>

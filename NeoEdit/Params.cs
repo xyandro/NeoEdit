@@ -8,7 +8,7 @@ using NeoEdit.HexEdit;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
-using NeoEdit.Tables;
+using NeoEdit.TableEdit;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
 
@@ -135,16 +135,16 @@ namespace NeoEdit
 		}
 	}
 
-	class TablesParam : Param
+	class TableEditParam : Param
 	{
 		readonly List<string> FileNames;
-		public TablesParam(List<string> fileNames) { FileNames = fileNames; }
+		public TableEditParam(List<string> fileNames) { FileNames = fileNames; }
 		public override void Execute()
 		{
 			if (!FileNames.Any())
-				TablesTabs.Create();
+				TableEditTabs.Create();
 			foreach (var fileName in FileNames)
-				TablesTabs.Create(fileName);
+				TableEditTabs.Create(fileName);
 		}
 	}
 

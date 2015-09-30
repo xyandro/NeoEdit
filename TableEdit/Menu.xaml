@@ -1,0 +1,94 @@
+﻿<Menu Name="self" x:Class="NeoEdit.TableEdit.TableEditMenu"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:tableEdit="clr-namespace:NeoEdit.TableEdit">
+
+	<MenuItem Header="_File">
+		<tableEdit:TableEditMenuItem Header="_New" CommandEnum="File_New"/>
+		<MenuItem Header="_Open">
+			<tableEdit:TableEditMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
+			<tableEdit:TableEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
+		</MenuItem>
+		<MenuItem Header="_Save">
+			<tableEdit:TableEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
+			<tableEdit:TableEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
+		</MenuItem>
+		<MenuItem Header="O_perations">
+			<tableEdit:TableEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
+			<tableEdit:TableEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
+			<tableEdit:TableEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
+			<tableEdit:TableEditMenuItem Header="Open D_isk" CommandEnum="File_Operations_OpenDisk"/>
+		</MenuItem>
+		<tableEdit:TableEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
+		<tableEdit:TableEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>
+		<tableEdit:TableEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
+		<Separator/>
+		<MenuItem Header="_Copy">
+			<tableEdit:TableEditMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
+			<tableEdit:TableEditMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
+		</MenuItem>
+		<Separator/>
+		<tableEdit:TableEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
+		<Separator/>
+		<tableEdit:TableEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>
+	</MenuItem>
+	<MenuItem Header="_Edit">
+		<tableEdit:TableEditMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
+		<tableEdit:TableEditMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
+		<Separator/>
+		<MenuItem Header="_Copy">
+			<tableEdit:TableEditMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
+			<tableEdit:TableEditMenuItem Header="Copy With _Headers" CommandEnum="Edit_Copy_CopyWithHeaders"/>
+		</MenuItem>
+		<MenuItem Header="_Paste">
+			<tableEdit:TableEditMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
+			<tableEdit:TableEditMenuItem Header="Paste Without _Headers" CommandEnum="Edit_Paste_PasteWithoutHeaders"/>
+		</MenuItem>
+		<Separator/>
+		<MenuItem Header="_Find">
+			<tableEdit:TableEditMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
+			<tableEdit:TableEditMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
+			<tableEdit:TableEditMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
+			<tableEdit:TableEditMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
+		</MenuItem>
+		<Separator/>
+		<tableEdit:TableEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
+		<Separator/>
+		<tableEdit:TableEditMenuItem Header="_Header" CommandEnum="Edit_Header"/>
+	</MenuItem>
+	<MenuItem Header="E_xpression">
+		<tableEdit:TableEditMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
+		<tableEdit:TableEditMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
+	</MenuItem>
+	<MenuItem Header="_Select">
+		<tableEdit:TableEditMenuItem Header="_All" CommandEnum="Select_All"/>
+		<tableEdit:TableEditMenuItem Header="_Cells" CommandEnum="Select_Cells"/>
+		<tableEdit:TableEditMenuItem Header="_Null" CommandEnum="Select_Null"/>
+		<tableEdit:TableEditMenuItem Header="N_on-Null" CommandEnum="Select_NonNull"/>
+		<Separator/>
+		<tableEdit:TableEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
+		<tableEdit:TableEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>
+	</MenuItem>
+	<MenuItem Header="_View">
+		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
+		<tableEdit:TableEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
+	</MenuItem>
+	<MenuItem Header="_Macro">
+		<MenuItem Header="_Record">
+			<tableEdit:TableEditMenuItem Header="_Quick Record" CommandEnum="Macro_Record_QuickRecord"/>
+			<tableEdit:TableEditMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
+			<tableEdit:TableEditMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
+		</MenuItem>
+		<Separator/>
+		<MenuItem Header="_Play">
+			<tableEdit:TableEditMenuItem Header="_Quick Play" CommandEnum="Macro_Play_QuickPlay"/>
+			<tableEdit:TableEditMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
+		</MenuItem>
+		<Separator/>
+		<tableEdit:TableEditMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
+	</MenuItem>
+	<guiControls:WindowMenu/>
+	<guiControls:HelpMenu/>
+
+</Menu>

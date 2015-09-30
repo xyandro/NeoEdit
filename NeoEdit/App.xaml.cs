@@ -14,7 +14,7 @@ using NeoEdit.HexEdit;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
-using NeoEdit.Tables;
+using NeoEdit.TableEdit;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
 
@@ -96,7 +96,7 @@ namespace NeoEdit
 				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
 				, registry: (key) => new RegistryWindow(key)
 				, systemInfo: () => new SystemInfoWindow()
-				, tables: (filename, forceCreate) => TablesTabs.Create(filename, forceCreate: forceCreate)
+				, tableEditor: (filename, forceCreate) => TableEditTabs.Create(filename, forceCreate: forceCreate)
 				, textEditor: (filename, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(filename, bytes, encoding, modified, forceCreate: forceCreate)
 				, textViewer: (filename, forceCreate) => TextViewerTabs.Create(filename, forceCreate)
 			);

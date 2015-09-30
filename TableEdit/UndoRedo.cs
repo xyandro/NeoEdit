@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.Tables
+namespace NeoEdit.TableEdit
 {
 	enum ReplaceType
 	{

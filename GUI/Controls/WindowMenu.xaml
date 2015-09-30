@@ -12,7 +12,7 @@
 	<guiControls:WindowMenuItem Header="_Processes" CommandEnum="Window_Processes"/>
 	<guiControls:WindowMenuItem Header="_Registry" CommandEnum="Window_Registry"/>
 	<guiControls:WindowMenuItem Header="_System Info" CommandEnum="Window_SystemInfo"/>
-	<guiControls:WindowMenuItem Header="Ta_bles" CommandEnum="Window_Tables"/>
+	<guiControls:WindowMenuItem Header="Ta_ble Editor" CommandEnum="Window_TableEditor"/>
 	<guiControls:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>
 	<guiControls:WindowMenuItem Header="Text _Viewer" CommandEnum="Window_TextViewer"/>
 

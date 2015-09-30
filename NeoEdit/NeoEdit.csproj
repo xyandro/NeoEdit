@@ -95,9 +95,9 @@
       <Project>{5fc0fbff-7ce1-4540-9e41-d757d0d9708d}</Project>
       <Name>SystemInfo</Name>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)\Tables\Tables.csproj">
+    <ProjectReference Include="$(SolutionDir)\TableEdit\TableEdit.csproj">
       <Project>{ac1b92bd-99c4-4ec1-bb02-842ad65bbceb}</Project>
-      <Name>Tables</Name>
+      <Name>TableEdit</Name>
     </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\TextEdit\TextEdit.csproj">
       <Project>{9a35ab82-2481-4c44-b51e-66df7d248ead}</Project>

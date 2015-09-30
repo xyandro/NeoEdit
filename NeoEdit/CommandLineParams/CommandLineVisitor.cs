@@ -52,7 +52,7 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitProcesses(CommandLineParamsParser.ProcessesContext context) { return new ProcessesParam(context.pid == null ? default(int?) : int.Parse(context.pid.Text)); }
 		public override object VisitRegistry(CommandLineParamsParser.RegistryContext context) { return new RegistryParam(context.key == null ? null : context.key.GetText()); }
 		public override object VisitSysteminfo(CommandLineParamsParser.SysteminfoContext context) { return new SystemInfoParam(); }
-		public override object VisitTables(CommandLineParamsParser.TablesContext context) { return new TablesParam(context.param().Select(file => file.GetText()).ToList()); }
+		public override object VisitTableedit(CommandLineParamsParser.TableeditContext context) { return new TableEditParam(context.param().Select(file => file.GetText()).ToList()); }
 		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context) { return new TextEditParam(context.texteditfile().Select(textEditFile => VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile).ToList()); }
 		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context) { return new TextEditParam.TextEditFile(context.file.GetText(), context.line == null ? default(int?) : int.Parse(context.line.Text), context.column == null ? default(int?) : int.Parse(context.column.Text)); }
 		public override object VisitTextview(CommandLineParamsParser.TextviewContext context) { return new TextViewParam(context.param().Select(file => file.GetText()).ToList()); }

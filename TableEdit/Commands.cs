@@ -1,9 +1,9 @@
 ﻿using System.Windows.Input;
 using NeoEdit.GUI.Controls;
 
-namespace NeoEdit.Tables
+namespace NeoEdit.TableEdit
 {
-	public enum TablesCommand
+	public enum TableEditCommand
 	{
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control, false)] File_New,

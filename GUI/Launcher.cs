@@ -21,7 +21,7 @@ namespace NeoEdit.GUI
 		protected Action<int> processHexEditorLauncher;
 		protected Action<string> registryLauncher;
 		protected Action systemInfoLauncher;
-		protected Action<string, bool> tablesLauncher;
+		protected Action<string, bool> tableEditorLauncher;
 		protected Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
 		protected Action<string, bool> textViewerLauncher;
 
@@ -38,7 +38,7 @@ namespace NeoEdit.GUI
 			, Action<int> processHexEditor
 			, Action<string> registry
 			, Action systemInfo
-			, Action<string, bool> tables
+			, Action<string, bool> tableEditor
 			, Action<string, byte[], Coder.CodePage, bool?, bool> textEditor
 			, Action<string, bool> textViewer
 		)
@@ -57,7 +57,7 @@ namespace NeoEdit.GUI
 				processHexEditorLauncher = processHexEditor,
 				registryLauncher = registry,
 				systemInfoLauncher = systemInfo,
-				tablesLauncher = tables,
+				tableEditorLauncher = tableEditor,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
 			};
@@ -75,10 +75,10 @@ namespace NeoEdit.GUI
 				systemInfoLauncher();
 		}
 
-		public void LaunchTables(string filename = null, bool forceCreate = false)
+		public void LaunchTableEditor(string filename = null, bool forceCreate = false)
 		{
-			if (tablesLauncher != null)
-				tablesLauncher(filename, forceCreate);
+			if (tableEditorLauncher != null)
+				tableEditorLauncher(filename, forceCreate);
 		}
 
 		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool forceCreate = false)

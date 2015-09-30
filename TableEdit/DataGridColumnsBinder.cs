@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace NeoEdit.Tables
+namespace NeoEdit.TableEdit
 {
 	public class DataGridColumnsBinder
 	{

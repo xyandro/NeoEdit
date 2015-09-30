@@ -9,23 +9,23 @@ using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 
-namespace NeoEdit.Tables
+namespace NeoEdit.TableEdit
 {
-	public class Tabs : Tabs<TableEditor, TablesCommand> { }
-	public class TabsWindow : TabsWindow<TableEditor, TablesCommand> { }
+	public class Tabs : Tabs<TableEditor, TableEditCommand> { }
+	public class TabsWindow : TabsWindow<TableEditor, TableEditCommand> { }
 
-	partial class TablesTabs
+	partial class TableEditTabs
 	{
-		static TablesTabs() { UIHelper<TablesTabs>.Register(); }
+		static TableEditTabs() { UIHelper<TableEditTabs>.Register(); }
 
-		public static void Create(string fileName = null, TablesTabs tablesTabs = null, bool forceCreate = false)
+		public static void Create(string fileName = null, TableEditTabs tableEditTabs = null, bool forceCreate = false)
 		{
-			CreateTab(new TableEditor(fileName), tablesTabs, forceCreate);
+			CreateTab(new TableEditor(fileName), tableEditTabs, forceCreate);
 		}
 
-		TablesTabs()
+		TableEditTabs()
 		{
-			TablesMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			TableEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
@@ -53,7 +53,7 @@ namespace NeoEdit.Tables
 				return;
 			}
 
-			recordingMacro = new Macro<TablesCommand>();
+			recordingMacro = new Macro<TableEditCommand>();
 		}
 
 		void Command_Macro_Record_StopRecording(string fileName = null)
@@ -76,28 +76,28 @@ namespace NeoEdit.Tables
 
 		void Command_Macro_Play_QuickPlay()
 		{
-			Macro<TablesCommand>.Load(quickMacroFilename, true).Play(this, playing => macroPlaying = playing);
+			Macro<TableEditCommand>.Load(quickMacroFilename, true).Play(this, playing => macroPlaying = playing);
 		}
 
 		void Command_Macro_Play_Play(string macroFile = null)
 		{
-			Macro<TablesCommand>.Load().Play(this, playing => macroPlaying = playing);
+			Macro<TableEditCommand>.Load().Play(this, playing => macroPlaying = playing);
 		}
 
-		Macro<TablesCommand> recordingMacro = null, macroPlaying = null;
+		Macro<TableEditCommand> recordingMacro = null, macroPlaying = null;
 
-		void RunCommand(TablesCommand command)
+		void RunCommand(TableEditCommand command)
 		{
 			if (macroPlaying != null)
 				return;
 
 			switch (command)
 			{
-				case TablesCommand.Macro_Record_QuickRecord: Command_Macro_Record_QuickRecord(); return;
-				case TablesCommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
-				case TablesCommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
-				case TablesCommand.Macro_Play_QuickPlay: Command_Macro_Play_QuickPlay(); return;
-				case TablesCommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
+				case TableEditCommand.Macro_Record_QuickRecord: Command_Macro_Record_QuickRecord(); return;
+				case TableEditCommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
+				case TableEditCommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
+				case TableEditCommand.Macro_Play_QuickPlay: Command_Macro_Play_QuickPlay(); return;
+				case TableEditCommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
 			}
 
 			var shiftDown = this.shiftDown;
@@ -166,13 +166,13 @@ namespace NeoEdit.Tables
 			tabs.ShowActiveTabsDialog();
 		}
 
-		bool GetDialogResult(TablesCommand command, out object dialogResult)
+		bool GetDialogResult(TableEditCommand command, out object dialogResult)
 		{
 			dialogResult = null;
 
 			switch (command)
 			{
-				case TablesCommand.File_Open_Open: dialogResult = Command_File_Open_Dialog(); break;
+				case TableEditCommand.File_Open_Open: dialogResult = Command_File_Open_Dialog(); break;
 				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult);
 			}
 
@@ -257,14 +257,14 @@ namespace NeoEdit.Tables
 			return result;
 		}
 
-		public override bool HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
+		public override bool HandleCommand(TableEditCommand command, bool shiftDown, object dialogResult)
 		{
 			switch (command)
 			{
-				case TablesCommand.File_New: Create(tablesTabs: this, forceCreate: shiftDown); break;
-				case TablesCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
-				case TablesCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
-				case TablesCommand.File_Exit: Close(); break;
+				case TableEditCommand.File_New: Create(tableEditTabs: this, forceCreate: shiftDown); break;
+				case TableEditCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
+				case TableEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
+				case TableEditCommand.File_Exit: Close(); break;
 			}
 
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())

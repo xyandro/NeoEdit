@@ -19,11 +19,11 @@ using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
-using NeoEdit.Tables.Dialogs;
+using NeoEdit.TableEdit.Dialogs;
 
-namespace NeoEdit.Tables
+namespace NeoEdit.TableEdit
 {
-	public class TabsControl : TabsControl<TableEditor, TablesCommand> { }
+	public class TabsControl : TabsControl<TableEditor, TableEditCommand> { }
 
 	partial class TableEditor
 	{
@@ -419,7 +419,7 @@ namespace NeoEdit.Tables
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TableEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TableEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
-			SetBinding(UIHelper<TabsControl<TableEditor, TablesCommand>>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TabsControl<TableEditor, TableEditCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
 		public override bool CanClose(ref Message.OptionsEnum answer)
@@ -890,18 +890,18 @@ namespace NeoEdit.Tables
 			}));
 		}
 
-		internal bool GetDialogResult(TablesCommand command, out object dialogResult)
+		internal bool GetDialogResult(TableEditCommand command, out object dialogResult)
 		{
 			dialogResult = null;
 
 			switch (command)
 			{
-				case TablesCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
-				case TablesCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
-				case TablesCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
-				case TablesCommand.Edit_Header: dialogResult = Command_Edit_Header_Dialog(); break;
-				case TablesCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
-				case TablesCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
+				case TableEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
+				case TableEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
+				case TableEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
+				case TableEditCommand.Edit_Header: dialogResult = Command_Edit_Header_Dialog(); break;
+				case TableEditCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
+				case TableEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
 				default: return true;
 			}
 
@@ -909,51 +909,51 @@ namespace NeoEdit.Tables
 		}
 
 		bool timeNext = false;
-		internal void HandleCommand(TablesCommand command, bool shiftDown, object dialogResult)
+		internal void HandleCommand(TableEditCommand command, bool shiftDown, object dialogResult)
 		{
 			var start = DateTime.UtcNow;
 
 			switch (command)
 			{
-				case TablesCommand.File_Save_Save: Command_File_Save_Save(); break;
-				case TablesCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
-				case TablesCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
-				case TablesCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
-				case TablesCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
-				case TablesCommand.File_Operations_OpenDisk: Command_File_Operations_OpenDisk(); break;
-				case TablesCommand.File_Close: if (CanClose()) TabsParent.Remove(this); break;
-				case TablesCommand.File_Refresh: Command_File_Refresh(); break;
-				case TablesCommand.File_Revert: Command_File_Revert(); break;
-				case TablesCommand.File_Copy_Path: Command_File_Copy_Path(); break;
-				case TablesCommand.File_Copy_Name: Command_File_Copy_Name(); break;
-				case TablesCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
-				case TablesCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
-				case TablesCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
-				case TablesCommand.Edit_Copy_Copy: Command_Edit_Copy_Copy(false); break;
-				case TablesCommand.Edit_Copy_CopyWithHeaders: Command_Edit_Copy_Copy(true); break;
-				case TablesCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(true); break;
-				case TablesCommand.Edit_Paste_PasteWithoutHeaders: Command_Edit_Paste_Paste(false); break;
-				case TablesCommand.Edit_Find_Find: Command_Edit_Find_FindReplace(false, dialogResult as FindTextDialog.Result); break;
-				case TablesCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true); break;
-				case TablesCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false); break;
-				case TablesCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, dialogResult as FindTextDialog.Result); break;
-				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
-				case TablesCommand.Edit_Header: Command_Edit_Header(dialogResult as EditHeaderDialog.Result); break;
-				case TablesCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
-				case TablesCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
-				case TablesCommand.Select_All: Command_Select_All(); break;
-				case TablesCommand.Select_Cells: Command_Select_Cells(); break;
-				case TablesCommand.Select_Null: Command_Select_NullNotNull(true); break;
-				case TablesCommand.Select_NonNull: Command_Select_NullNotNull(false); break;
-				case TablesCommand.Select_Unique: Command_Select_UniqueDuplicates(true); break;
-				case TablesCommand.Select_Duplicates: Command_Select_UniqueDuplicates(false); break;
-				case TablesCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
+				case TableEditCommand.File_Save_Save: Command_File_Save_Save(); break;
+				case TableEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
+				case TableEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
+				case TableEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
+				case TableEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
+				case TableEditCommand.File_Operations_OpenDisk: Command_File_Operations_OpenDisk(); break;
+				case TableEditCommand.File_Close: if (CanClose()) TabsParent.Remove(this); break;
+				case TableEditCommand.File_Refresh: Command_File_Refresh(); break;
+				case TableEditCommand.File_Revert: Command_File_Revert(); break;
+				case TableEditCommand.File_Copy_Path: Command_File_Copy_Path(); break;
+				case TableEditCommand.File_Copy_Name: Command_File_Copy_Name(); break;
+				case TableEditCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
+				case TableEditCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
+				case TableEditCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
+				case TableEditCommand.Edit_Copy_Copy: Command_Edit_Copy_Copy(false); break;
+				case TableEditCommand.Edit_Copy_CopyWithHeaders: Command_Edit_Copy_Copy(true); break;
+				case TableEditCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(true); break;
+				case TableEditCommand.Edit_Paste_PasteWithoutHeaders: Command_Edit_Paste_Paste(false); break;
+				case TableEditCommand.Edit_Find_Find: Command_Edit_Find_FindReplace(false, dialogResult as FindTextDialog.Result); break;
+				case TableEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true); break;
+				case TableEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false); break;
+				case TableEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, dialogResult as FindTextDialog.Result); break;
+				case TableEditCommand.Edit_Sort: Command_Edit_Sort(); break;
+				case TableEditCommand.Edit_Header: Command_Edit_Header(dialogResult as EditHeaderDialog.Result); break;
+				case TableEditCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
+				case TableEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
+				case TableEditCommand.Select_All: Command_Select_All(); break;
+				case TableEditCommand.Select_Cells: Command_Select_Cells(); break;
+				case TableEditCommand.Select_Null: Command_Select_NullNotNull(true); break;
+				case TableEditCommand.Select_NonNull: Command_Select_NullNotNull(false); break;
+				case TableEditCommand.Select_Unique: Command_Select_UniqueDuplicates(true); break;
+				case TableEditCommand.Select_Duplicates: Command_Select_UniqueDuplicates(false); break;
+				case TableEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
 
 			var end = DateTime.UtcNow;
 			var elapsed = (end - start).TotalMilliseconds;
 
-			if ((command != TablesCommand.Macro_TimeNextAction) && (timeNext))
+			if ((command != TableEditCommand.Macro_TimeNextAction) && (timeNext))
 			{
 				timeNext = false;
 				new Message

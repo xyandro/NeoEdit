@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 
-namespace NeoEdit.Tables
+namespace NeoEdit.TableEdit
 {
 	public class Table
 	{

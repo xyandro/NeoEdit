@@ -4,7 +4,7 @@ using System.Windows;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 
-namespace NeoEdit.Tables.Dialogs
+namespace NeoEdit.TableEdit.Dialogs
 {
 	internal partial class EditHeaderDialog
 	{

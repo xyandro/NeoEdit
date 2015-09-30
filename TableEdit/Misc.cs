@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Media;
 using NeoEdit.Common;
 
-namespace NeoEdit.Tables
+namespace NeoEdit.TableEdit
 {
 	static class Misc
 	{

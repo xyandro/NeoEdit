@@ -44,7 +44,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Registry", "Registry\Regist
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemInfo", "SystemInfo\SystemInfo.csproj", "{5FC0FBFF-7CE1-4540-9E41-D757D0D9708D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables", "Tables\Tables.csproj", "{AC1B92BD-99C4-4EC1-BB02-842AD65BBCEB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableEdit", "TableEdit\TableEdit.csproj", "{AC1B92BD-99C4-4EC1-BB02-842AD65BBCEB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEdit", "TextEdit\TextEdit.csproj", "{9A35AB82-2481-4C44-B51E-66DF7D248EAD}"
 EndProject

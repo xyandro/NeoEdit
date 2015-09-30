@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.Tables
+namespace NeoEdit.TableEdit
 {
 	public struct Cell : IComparable<Cell>
 	{
