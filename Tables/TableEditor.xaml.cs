@@ -52,7 +52,7 @@ namespace NeoEdit.Tables
 
 		string AESKey = null;
 
-		readonly CellRanges Selections = new CellRanges();
+		readonly ObservableCollectionEx<CellRange> Selections = new ObservableCollectionEx<CellRange>();
 
 		readonly UndoRedo undoRedo;
 		readonly RunOnceTimer canvasRenderTimer;
@@ -770,7 +770,7 @@ namespace NeoEdit.Tables
 		void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
 		{
 			var results = GetExpressionResults<bool>(result.Expression);
-			Selections.Replace(GetSelectedCells().Where((str, num) => results[num]).ToList());
+			Selections.Replace(GetSelectedCells().Where((str, num) => results[num]));
 		}
 
 		void Command_Select_All()
@@ -1001,7 +1001,7 @@ namespace NeoEdit.Tables
 			Replace(UndoRedoStep.CreateDeleteColumns(Selections.EnumerateColumns(Table.NumColumns).ToList()));
 		}
 
-		void ReplaceCells(CellRanges ranges, List<object> values = null, string defaultValue = null)
+		void ReplaceCells(ObservableCollectionEx<CellRange> ranges, List<object> values = null, string defaultValue = null)
 		{
 			if (!ranges.Any())
 				return;

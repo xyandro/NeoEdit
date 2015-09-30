@@ -44,6 +44,11 @@ namespace NeoEdit.Tables
 			CalculateBounds();
 		}
 
+		public static implicit operator CellRange(Cell cell)
+		{
+			return new CellRange(cell);
+		}
+
 		void CalculateBounds()
 		{
 			if (Active)

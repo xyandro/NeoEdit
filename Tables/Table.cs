@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Common;
 
 namespace NeoEdit.Tables
 {
@@ -260,7 +261,7 @@ namespace NeoEdit.Tables
 			return ranges.Select(column => Rows.Select(row => row[column]).ToList()).ToList();
 		}
 
-		public string GetTableData(CellRanges ranges)
+		public string GetTableData(ObservableCollectionEx<CellRange> ranges)
 		{
 			return String.Join("\r\n", ranges.Select(range => GetTableData(range)));
 		}

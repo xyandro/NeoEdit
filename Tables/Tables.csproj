@@ -13,7 +13,6 @@
     </Compile>
     <Compile Include="Cell.cs" />
     <Compile Include="CellRange.cs" />
-    <Compile Include="CellRanges.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="DataGridColumnsBinder.cs" />
     <Page Include="Dialogs\EditHeaderDialog.xaml">

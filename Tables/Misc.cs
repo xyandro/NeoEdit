@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+using NeoEdit.Common;
 
 namespace NeoEdit.Tables
 {
@@ -24,6 +25,35 @@ namespace NeoEdit.Tables
 		static internal IOrderedEnumerable<Cell> OrderCells(this IEnumerable<Cell> cells)
 		{
 			return cells.OrderBy(cell => cell.Row).ThenBy(cell => cell.Column);
+		}
+
+		static internal void Replace(this ObservableCollectionEx<CellRange> ranges, IEnumerable<Cell> cells)
+		{
+			ranges.Replace(cells.Select(cell => (CellRange)cell));
+		}
+
+		static internal IEnumerable<Cell> EnumerateCells(this ObservableCollectionEx<CellRange> ranges, int numRows, int numColumns, bool preserveOrder = false)
+		{
+			var cells = ranges.SelectMany(selection => selection.EnumerateCells(numRows, numColumns)).Distinct();
+			if (!preserveOrder)
+				cells = cells.OrderCells();
+			return cells;
+		}
+
+		static internal IEnumerable<int> EnumerateColumns(this ObservableCollectionEx<CellRange> ranges, int numColumns, bool preserveOrder = false)
+		{
+			var cells = ranges.SelectMany(selection => selection.EnumerateColumns(numColumns)).Distinct();
+			if (!preserveOrder)
+				cells = cells.OrderBy(column => column);
+			return cells;
+		}
+
+		static internal IEnumerable<int> EnumerateRows(this ObservableCollectionEx<CellRange> ranges, int numRows, bool preserveOrder = false)
+		{
+			var cells = ranges.SelectMany(selection => selection.EnumerateRows(numRows)).Distinct();
+			if (!preserveOrder)
+				cells = cells.OrderBy(row => row);
+			return cells;
 		}
 	}
 }
