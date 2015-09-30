@@ -189,6 +189,12 @@ namespace NeoEdit.Tables
 			var ordering = order.OrderBy(rowIndex => 0);
 			foreach (var column in columns)
 				ordering = ordering.ThenBy(rowIndex => this[rowIndex, column]);
+			if (ordering.InOrder())
+			{
+				ordering = order.OrderBy(rowIndex => 0);
+				foreach (var column in columns)
+					ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, column]);
+			}
 			return ordering.ToList();
 		}
 

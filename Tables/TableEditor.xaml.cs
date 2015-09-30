@@ -806,8 +806,6 @@ namespace NeoEdit.Tables
 			var sortOrder = Table.GetSortOrder(columns);
 			if (!sortOrder.Any())
 				return;
-			if (sortOrder.Select((val, index) => val == index).All(b => b))
-				sortOrder.Reverse();
 
 			Sort(sortOrder);
 
