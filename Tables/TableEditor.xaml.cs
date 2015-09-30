@@ -112,7 +112,7 @@ namespace NeoEdit.Tables
 			row = Math.Max(0, Math.Min(row, Table.NumRows - 1));
 			column = Math.Max(0, Math.Min(column, Table.NumColumns - 1));
 			var location = new Cell(row, column);
-			return new CellRange(range, selecting ? default(Cell?) : location, location, selecting ? default(bool?) : false, selecting ? default(bool?) : false);
+			return new CellRange(range, selecting ? default(Cell?) : location, location);
 		}
 
 		void MoveSelections(int row, int column, bool selecting, bool disjoint, bool rowRel = true, bool columnRel = true)
@@ -214,13 +214,13 @@ namespace NeoEdit.Tables
 					case Key.PageUp: MoveSelections(1 - yScrollViewportFloor, 0, shiftDown, altDown); break;
 					case Key.PageDown: MoveSelections(yScrollViewportFloor - 1, 0, shiftDown, altDown); break;
 					case Key.Space:
-						bool? allRows = null, allColumns = null;
+						bool allRows = false, allColumns = false;
 						if (shiftDown)
-							allRows = !Selections.All(selection => selection.AllRows);
+							allRows = true;
 						if (controlDown)
-							allColumns = !Selections.All(selection => selection.AllColumns);
-						if ((allRows.HasValue) || (allColumns.HasValue))
-							Selections.Replace(selection => new CellRange(selection, allRows: allRows, allColumns: allColumns));
+							allColumns = true;
+						if ((allColumns) || (allRows))
+							Selections.Replace(range => new CellRange(allColumns ? 0 : range.StartRow, allRows ? 0 : range.StartColumn, allColumns ? Table.NumRows - 1 : range.EndRow, allRows ? Table.NumColumns - 1 : range.EndColumn));
 						else if (!altDown)
 							result = false;
 						else if (Selections.Count != 0)
@@ -664,7 +664,7 @@ namespace NeoEdit.Tables
 
 		List<Cell> GetSelectedCells(bool preserveOrder = false)
 		{
-			return Selections.EnumerateCells(Table.NumRows, Table.NumColumns, preserveOrder).ToList();
+			return Selections.EnumerateCells(preserveOrder).ToList();
 		}
 
 		void SetHome()
@@ -709,7 +709,7 @@ namespace NeoEdit.Tables
 
 		void Command_Edit_Sort()
 		{
-			var columns = Selections.EnumerateColumns(Table.NumColumns, true).ToList();
+			var columns = Selections.EnumerateColumns(true).ToList();
 			if (!columns.Any())
 				return;
 			var sortOrder = Table.GetSortOrder(columns);
@@ -720,7 +720,7 @@ namespace NeoEdit.Tables
 
 			Sort(sortOrder);
 
-			Selections.Replace(columns.Select(column => new CellRange(0, column, allColumns: true)));
+			Selections.Replace(columns.Select(column => new CellRange(0, column, Table.NumRows - 1)));
 		}
 
 		EditHeaderDialog.Result Command_Edit_Header_Dialog()
@@ -943,8 +943,8 @@ namespace NeoEdit.Tables
 			switch (step.Action)
 			{
 				case UndoRedoAction.ChangeCells: Selections.Replace(step.Cells); break;
-				case UndoRedoAction.InsertRows: Selections.Replace(step.Positions.Select((row, index) => new CellRange(startRow: row + index, allRows: true))); break;
-				case UndoRedoAction.InsertColumns: Selections.Replace(step.Positions.Select((column, index) => new CellRange(startColumn: column + index, allColumns: true))); break;
+				case UndoRedoAction.InsertRows: Selections.Replace(step.Positions.Select((row, index) => new CellRange(row + index, 0, endColumn: Table.NumColumns - 1))); break;
+				case UndoRedoAction.InsertColumns: Selections.Replace(step.Positions.Select((column, index) => new CellRange(0, column + index, endRow: Table.NumRows - 1))); break;
 				default: SetHome(); break;
 			}
 
@@ -990,7 +990,7 @@ namespace NeoEdit.Tables
 			if (!Selections.Any())
 				return;
 
-			Replace(UndoRedoStep.CreateDeleteRows(Selections.EnumerateRows(Table.NumRows).ToList()));
+			Replace(UndoRedoStep.CreateDeleteRows(Selections.EnumerateRows().ToList()));
 		}
 
 		void DeleteColumns()
@@ -998,7 +998,7 @@ namespace NeoEdit.Tables
 			if (!Selections.Any())
 				return;
 
-			Replace(UndoRedoStep.CreateDeleteColumns(Selections.EnumerateColumns(Table.NumColumns).ToList()));
+			Replace(UndoRedoStep.CreateDeleteColumns(Selections.EnumerateColumns().ToList()));
 		}
 
 		void ReplaceCells(ObservableCollectionEx<CellRange> ranges, List<object> values = null, string defaultValue = null)
@@ -1006,7 +1006,7 @@ namespace NeoEdit.Tables
 			if (!ranges.Any())
 				return;
 
-			var cells = ranges.EnumerateCells(Table.NumRows, Table.NumColumns).ToList();
+			var cells = ranges.EnumerateCells().ToList();
 			if (values == null)
 			{
 				var columnValues = cells.Select(cell => cell.Column).Distinct().ToDictionary(column => column, column => defaultValue == null ? Table.Headers[column].GetDefault() : Table.Headers[column].GetValue(defaultValue));

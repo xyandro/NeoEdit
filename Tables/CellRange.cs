@@ -7,8 +7,6 @@ namespace NeoEdit.Tables
 	{
 		readonly public Cell Start;
 		readonly public Cell End;
-		readonly public bool AllRows;
-		readonly public bool AllColumns;
 		readonly public bool Active;
 		public int StartRow { get; private set; }
 		public int EndRow { get; private set; }
@@ -22,24 +20,20 @@ namespace NeoEdit.Tables
 		public int NumRows { get { return MaxRow - MinRow + 1; } }
 		public int NumColumns { get { return MaxColumn - MinColumn + 1; } }
 
-		public CellRange(int startRow = 0, int startColumn = 0, int? endRow = null, int? endColumn = null, bool allRows = false, bool allColumns = false, bool active = true) : this(new Cell(startRow, startColumn), new Cell(endRow ?? startRow, endColumn ?? startColumn), allRows, allColumns, active) { }
+		public CellRange(int startRow = 0, int startColumn = 0, int? endRow = null, int? endColumn = null, bool active = true) : this(new Cell(startRow, startColumn), new Cell(endRow ?? startRow, endColumn ?? startColumn), active) { }
 
-		public CellRange(Cell start, Cell? end = null, bool allRows = false, bool allColumns = false, bool active = true)
+		public CellRange(Cell start, Cell? end = null, bool active = true)
 		{
 			Start = start;
 			End = end ?? start;
-			AllRows = allRows;
-			AllColumns = allColumns;
 			Active = active;
 			CalculateBounds();
 		}
 
-		public CellRange(CellRange range, Cell? start = null, Cell? end = null, bool? allRows = null, bool? allColumns = null, bool? active = null)
+		public CellRange(CellRange range, Cell? start = null, Cell? end = null, bool? active = null)
 		{
 			Start = start ?? range.Start;
 			End = end ?? range.End;
-			AllRows = allRows ?? range.AllRows;
-			AllColumns = allColumns ?? range.AllColumns;
 			Active = active ?? range.Active;
 			CalculateBounds();
 		}
@@ -53,30 +47,15 @@ namespace NeoEdit.Tables
 		{
 			if (Active)
 			{
-				if (AllColumns)
-				{
-					StartRow = MinRow = 0;
-					EndRow = MaxRow = int.MaxValue;
-				}
-				else
-				{
-					StartRow = Start.Row;
-					EndRow = End.Row;
-					MinRow = Math.Min(StartRow, EndRow);
-					MaxRow = Math.Max(StartRow, EndRow);
-				}
-				if (AllRows)
-				{
-					StartColumn = MinColumn = 0;
-					EndColumn = MaxColumn = int.MaxValue;
-				}
-				else
-				{
-					StartColumn = Start.Column;
-					EndColumn = End.Column;
-					MinColumn = Math.Min(StartColumn, EndColumn);
-					MaxColumn = Math.Max(StartColumn, EndColumn);
-				}
+				StartRow = Start.Row;
+				EndRow = End.Row;
+				MinRow = Math.Min(StartRow, EndRow);
+				MaxRow = Math.Max(StartRow, EndRow);
+
+				StartColumn = Start.Column;
+				EndColumn = End.Column;
+				MinColumn = Math.Min(StartColumn, EndColumn);
+				MaxColumn = Math.Max(StartColumn, EndColumn);
 			}
 			else
 			{
@@ -95,48 +74,32 @@ namespace NeoEdit.Tables
 			return (row >= MinRow) && (row <= MaxRow) && (column >= MinColumn) && (column <= MaxColumn);
 		}
 
-		public IEnumerable<Cell> EnumerateCells(int numRows, int numColumns)
+		public IEnumerable<Cell> EnumerateCells()
 		{
-			var startRow = Math.Min(numRows - 1, StartRow);
-			var endRow = Math.Min(numRows - 1, EndRow);
-			var deltaRow = startRow > endRow ? -1 : 1;
-			endRow += deltaRow;
-
-			var startColumn = Math.Min(numColumns - 1, StartColumn);
-			var endColumn = Math.Min(numColumns - 1, EndColumn);
-			var deltaColumn = startColumn > endColumn ? -1 : 1;
-			endColumn += deltaColumn;
-
-			for (var row = startRow; row != endRow; row += deltaRow)
-				for (var column = startColumn; column != endColumn; column += deltaColumn)
+			var deltaRow = StartRow > EndRow ? -1 : 1;
+			var deltaColumn = StartColumn > EndColumn ? -1 : 1;
+			for (var row = StartRow; row != EndRow + deltaRow; row += deltaRow)
+				for (var column = StartColumn; column != EndColumn + deltaColumn; column += deltaColumn)
 					yield return new Cell(row, column);
 		}
 
-		public IEnumerable<int> EnumerateColumns(int numColumns)
+		public IEnumerable<int> EnumerateColumns()
 		{
-			var startColumn = Math.Min(numColumns - 1, StartColumn);
-			var endColumn = Math.Min(numColumns - 1, EndColumn);
-			var deltaColumn = startColumn > endColumn ? -1 : 1;
-			endColumn += deltaColumn;
-
-			for (var column = startColumn; column != endColumn; column += deltaColumn)
+			var deltaColumn = StartColumn > EndColumn ? -1 : 1;
+			for (var column = StartColumn; column != EndColumn + deltaColumn; column += deltaColumn)
 				yield return column;
 		}
 
-		public IEnumerable<int> EnumerateRows(int numRows)
+		public IEnumerable<int> EnumerateRows()
 		{
-			var startRow = Math.Min(numRows - 1, StartRow);
-			var endRow = Math.Min(numRows - 1, EndRow);
-			var deltaRow = startRow > endRow ? -1 : 1;
-			endRow += deltaRow;
-
-			for (var row = startRow; row != endRow; row += deltaRow)
+			var deltaRow = StartRow > EndRow ? -1 : 1;
+			for (var row = StartRow; row != EndRow + deltaRow; row += deltaRow)
 				yield return row;
 		}
 
 		public bool Equals(CellRange range)
 		{
-			return (MinColumn.Equals(range.MinColumn)) && (MaxColumn.Equals(range.MaxColumn)) && (MinRow.Equals(range.MinRow)) && (MaxRow.Equals(range.MaxRow)) && (AllRows.Equals(range.AllRows)) && (AllColumns.Equals(range.AllColumns)) && (Active.Equals(range.Active));
+			return (MinColumn.Equals(range.MinColumn)) && (MaxColumn.Equals(range.MaxColumn)) && (MinRow.Equals(range.MinRow)) && (MaxRow.Equals(range.MaxRow)) && (Active.Equals(range.Active));
 		}
 
 		public override bool Equals(object obj)
@@ -153,7 +116,7 @@ namespace NeoEdit.Tables
 
 		public override string ToString()
 		{
-			return String.Format("Start: {0}, End: {1}, AllRows {2}, AllColumns {3}, Active {4}", Start, End, AllRows, AllColumns, Active);
+			return String.Format("Start: {0}, End: {1}, Active {2}", Start, End, Active);
 		}
 	}
 }

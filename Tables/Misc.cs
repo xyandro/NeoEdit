@@ -32,25 +32,25 @@ namespace NeoEdit.Tables
 			ranges.Replace(cells.Select(cell => (CellRange)cell));
 		}
 
-		static internal IEnumerable<Cell> EnumerateCells(this ObservableCollectionEx<CellRange> ranges, int numRows, int numColumns, bool preserveOrder = false)
+		static internal IEnumerable<Cell> EnumerateCells(this ObservableCollectionEx<CellRange> ranges, bool preserveOrder = false)
 		{
-			var cells = ranges.SelectMany(selection => selection.EnumerateCells(numRows, numColumns)).Distinct();
+			var cells = ranges.SelectMany(selection => selection.EnumerateCells()).Distinct();
 			if (!preserveOrder)
 				cells = cells.OrderCells();
 			return cells;
 		}
 
-		static internal IEnumerable<int> EnumerateColumns(this ObservableCollectionEx<CellRange> ranges, int numColumns, bool preserveOrder = false)
+		static internal IEnumerable<int> EnumerateColumns(this ObservableCollectionEx<CellRange> ranges, bool preserveOrder = false)
 		{
-			var cells = ranges.SelectMany(selection => selection.EnumerateColumns(numColumns)).Distinct();
+			var cells = ranges.SelectMany(selection => selection.EnumerateColumns()).Distinct();
 			if (!preserveOrder)
 				cells = cells.OrderBy(column => column);
 			return cells;
 		}
 
-		static internal IEnumerable<int> EnumerateRows(this ObservableCollectionEx<CellRange> ranges, int numRows, bool preserveOrder = false)
+		static internal IEnumerable<int> EnumerateRows(this ObservableCollectionEx<CellRange> ranges, bool preserveOrder = false)
 		{
-			var cells = ranges.SelectMany(selection => selection.EnumerateRows(numRows)).Distinct();
+			var cells = ranges.SelectMany(selection => selection.EnumerateRows()).Distinct();
 			if (!preserveOrder)
 				cells = cells.OrderBy(row => row);
 			return cells;
