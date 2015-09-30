@@ -129,7 +129,7 @@ namespace NeoEdit.GUI.Dialogs
 				data.Add(Tuple.Create(Coder.StringToBytes(FindText, checkBox.CodePage), (!str) || (MatchCase) || (Coder.AlwaysCaseSensitive(checkBox.CodePage))));
 			}
 
-			data = data.GroupBy(tuple => String.Format("{0}-{1}", Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex), tuple.Item2)).Select(item => item.First()).ToList();
+			data = data.Distinct(tuple => String.Format("{0}-{1}", Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex), tuple.Item2)).ToList();
 
 			if (data.Count == 0)
 				return;

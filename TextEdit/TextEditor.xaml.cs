@@ -2833,7 +2833,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Unique()
 		{
-			Selections.Replace(Selections.AsParallel().AsOrdered().GroupBy(range => GetString(range)).Select(list => list.First()).ToList());
+			Selections.Replace(Selections.AsParallel().AsOrdered().Distinct(range => GetString(range)).ToList());
 		}
 
 		internal void Command_Select_Duplicates()

@@ -310,6 +310,42 @@ namespace NeoEdit.Common
 				yield return expandWith;
 		}
 
+		public static IEnumerable<TSource> Distinct<TSource, TData>(this IEnumerable<TSource> source, Func<TSource, TData> selector)
+		{
+			var seen = new HashSet<TData>();
+			foreach (var item in source)
+			{
+				var data = selector(item);
+				if (seen.Contains(data))
+					continue;
+				seen.Add(data);
+				yield return item;
+			}
+		}
+
+		public static bool InOrder<TSource>(this IEnumerable<TSource> source, bool ascending = true, bool equal = false) where TSource : IComparable
+		{
+			var prev = default(TSource);
+			bool hasPrev = false;
+			foreach (var current in source)
+			{
+				if (hasPrev)
+				{
+					var compare = current.CompareTo(prev);
+					if ((compare < 0) && (ascending))
+						return false;
+					if ((compare == 0) && (!equal))
+						return false;
+					if ((compare > 0) && (!ascending))
+						return false;
+				}
+
+				prev = current;
+				hasPrev = true;
+			}
+			return true;
+		}
+
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -336,7 +337,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (groupByColumns.Any())
 				displayColumns = displayColumns.SelectMany(displayColumn => displayColumn.AggregateType == Table.AggregateType.None ? DefaultAggregateTypesByType[joinTable.Types[displayColumn.InputColumn]].Select(aggType => new DisplayColumn(displayColumn.InputColumn, aggType)) : new List<DisplayColumn> { displayColumn }).ToList();
 			else
-				displayColumns = displayColumns.Select(displayColumn => displayColumn.AggregateType != Table.AggregateType.None ? new DisplayColumn(displayColumn.InputColumn, Table.AggregateType.None) : displayColumn).GroupBy(column => column.InputColumn.ToString() + column.AggregateType).Select(group => group.First()).ToList();
+				displayColumns = displayColumns.Select(displayColumn => displayColumn.AggregateType != Table.AggregateType.None ? new DisplayColumn(displayColumn.InputColumn, Table.AggregateType.None) : displayColumn).Distinct(column => column.InputColumn.ToString() + column.AggregateType).ToList();
 
 			AggregateData();
 		}
