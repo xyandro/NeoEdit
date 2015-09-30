@@ -103,7 +103,7 @@ namespace NeoEdit.Tables
 			undoRedo.SetModified(false);
 		}
 
-		CellRange MoveSelection(CellRange range, int row, int column, bool selecting, bool rowRel = true, bool columnRel = true)
+		CellRange MoveSelection(CellRange range, int row, int column, bool selecting, bool disjoint, bool rowRel = true, bool columnRel = true)
 		{
 			if (rowRel)
 				row += range.End.Row;
@@ -115,9 +115,24 @@ namespace NeoEdit.Tables
 			return new CellRange(range, selecting ? null : location, location, selecting ? default(bool?) : false, selecting ? default(bool?) : false);
 		}
 
-		void MoveSelections(int row, int column, bool selecting, bool rowRel = true, bool columnRel = true)
+		void MoveSelections(int row, int column, bool selecting, bool disjoint, bool rowRel = true, bool columnRel = true)
 		{
-			Selections.Replace(selection => MoveSelection(selection, row, column, selecting, rowRel, columnRel));
+			if (!disjoint)
+			{
+				// Make inactive active
+				if ((Selections.Count != 0) && (!Selections[Selections.Count - 1].Active))
+					Selections[Selections.Count - 1] = new CellRange(Selections[Selections.Count - 1], active: true);
+
+				Selections.Replace(selection => MoveSelection(selection, row, column, selecting, disjoint, rowRel, columnRel));
+				return;
+			}
+
+			if ((selecting) && (!Selections[Selections.Count - 1].Active))
+				Selections[Selections.Count - 1] = new CellRange(Selections[Selections.Count - 1], active: true);
+			if ((!selecting) && (Selections[Selections.Count - 1].Active))
+				Selections.Add(new CellRange(Selections[Selections.Count - 1], active: false));
+
+			Selections[Selections.Count - 1] = MoveSelection(Selections[Selections.Count - 1], row, column, selecting, disjoint, rowRel, columnRel);
 		}
 
 		void MakeActiveVisible()
@@ -125,7 +140,7 @@ namespace NeoEdit.Tables
 			if (!Selections.Any())
 				return;
 
-			var cursor = Selections.First().End;
+			var cursor = Selections.Last().End;
 			var xStart = Enumerable.Range(0, cursor.Column).Sum(column => Table.Headers[column].Width);
 			var xEnd = xStart + Table.Headers[cursor.Column].Width;
 			xScrollValue = Math.Min(xStart, Math.Max(xEnd - xScroll.ViewportSize, xScrollValue));
@@ -158,46 +173,46 @@ namespace NeoEdit.Tables
 				{
 					case Key.Up:
 						if (controlDown)
-							MoveSelections(0, 0, shiftDown, rowRel: false);
+							MoveSelections(0, 0, shiftDown, altDown, rowRel: false);
 						else
-							MoveSelections(-1, 0, shiftDown);
+							MoveSelections(-1, 0, shiftDown, altDown);
 						break;
 					case Key.Down:
 						if (controlDown)
-							MoveSelections(int.MaxValue, 0, shiftDown, rowRel: false);
+							MoveSelections(int.MaxValue, 0, shiftDown, altDown, rowRel: false);
 						else
-							MoveSelections(1, 0, shiftDown);
+							MoveSelections(1, 0, shiftDown, altDown);
 						break;
 					case Key.Left:
 						if (controlDown)
-							MoveSelections(0, 0, shiftDown, columnRel: false);
+							MoveSelections(0, 0, shiftDown, altDown, columnRel: false);
 						else
-							MoveSelections(0, -1, shiftDown);
+							MoveSelections(0, -1, shiftDown, altDown);
 						break;
 					case Key.Right:
 						if (controlDown)
-							MoveSelections(0, int.MaxValue, shiftDown, columnRel: false);
+							MoveSelections(0, int.MaxValue, shiftDown, altDown, columnRel: false);
 						else
-							MoveSelections(0, 1, shiftDown);
+							MoveSelections(0, 1, shiftDown, altDown);
 						break;
 					case Key.Home:
 						if (!controlDown)
-							MoveSelections(0, 0, shiftDown, columnRel: false);
-						else if (shiftDown)
-							MoveSelections(0, 0, shiftDown, false, false);
+							MoveSelections(0, 0, shiftDown, altDown, columnRel: false);
+						else if ((shiftDown) || (altDown))
+							MoveSelections(0, 0, shiftDown, altDown, false, false);
 						else
 							Selections.Replace(new CellRange());
 						break;
 					case Key.End:
 						if (!controlDown)
-							MoveSelections(0, int.MaxValue, shiftDown, columnRel: false);
-						else if (shiftDown)
-							MoveSelections(int.MaxValue, int.MaxValue, shiftDown, false, false);
+							MoveSelections(0, int.MaxValue, shiftDown, altDown, columnRel: false);
+						else if ((shiftDown) || (altDown))
+							MoveSelections(int.MaxValue, int.MaxValue, shiftDown, altDown, false, false);
 						else
 							Selections.Replace(new CellRange(Table.NumRows - 1, Table.NumColumns - 1));
 						break;
-					case Key.PageUp: MoveSelections(1 - yScrollViewportFloor, 0, shiftDown); break;
-					case Key.PageDown: MoveSelections(yScrollViewportFloor - 1, 0, shiftDown); break;
+					case Key.PageUp: MoveSelections(1 - yScrollViewportFloor, 0, shiftDown, altDown); break;
+					case Key.PageDown: MoveSelections(yScrollViewportFloor - 1, 0, shiftDown, altDown); break;
 					case Key.Space:
 						bool? allRows = null, allColumns = null;
 						if (shiftDown)
@@ -206,8 +221,19 @@ namespace NeoEdit.Tables
 							allColumns = !Selections.All(selection => selection.AllColumns);
 						if ((allRows.HasValue) || (allColumns.HasValue))
 							Selections.Replace(selection => new CellRange(selection, allRows: allRows, allColumns: allColumns));
-						else
+						else if (!altDown)
 							result = false;
+						else if (Selections.Count != 0)
+						{
+							if (Selections[Selections.Count - 1].Active)
+								Selections.InsertAt(Selections.Count, new CellRange(Selections[Selections.Count - 1].End, active: false));
+							var cursor = Selections[Selections.Count - 1].End;
+							var cellRange = Selections.FirstOrDefault(range => (range.Active) && (range.Contains(cursor)));
+							if (cellRange != null)
+								Selections.Remove(cellRange);
+							else
+								Selections.InsertAt(Selections.Count - 1, new CellRange(Selections[Selections.Count - 1], active: true));
+						}
 						break;
 					case Key.F2: StartEdit(false); break;
 					case Key.Insert:

@@ -9,6 +9,7 @@ namespace NeoEdit.Tables
 		readonly public CellLocation End;
 		readonly public bool AllRows;
 		readonly public bool AllColumns;
+		readonly public bool Active;
 		public int StartRow { get; private set; }
 		public int EndRow { get; private set; }
 		public int StartColumn { get; private set; }
@@ -21,51 +22,61 @@ namespace NeoEdit.Tables
 		public int NumRows { get { return MaxRow - MinRow + 1; } }
 		public int NumColumns { get { return MaxColumn - MinColumn + 1; } }
 
-		public CellRange(int startRow = 0, int startColumn = 0, int? endRow = null, int? endColumn = null, bool allRows = false, bool allColumns = false) : this(new CellLocation(startRow, startColumn), new CellLocation(endRow ?? startRow, endColumn ?? startColumn), allRows, allColumns) { }
+		public CellRange(int startRow = 0, int startColumn = 0, int? endRow = null, int? endColumn = null, bool allRows = false, bool allColumns = false, bool active = true) : this(new CellLocation(startRow, startColumn), new CellLocation(endRow ?? startRow, endColumn ?? startColumn), allRows, allColumns, active) { }
 
-		public CellRange(CellLocation start, CellLocation end = null, bool allRows = false, bool allColumns = false)
+		public CellRange(CellLocation start, CellLocation end = null, bool allRows = false, bool allColumns = false, bool active = true)
 		{
 			Start = start;
 			End = end ?? start;
 			AllRows = allRows;
 			AllColumns = allColumns;
+			Active = active;
 			CalculateBounds();
 		}
 
-		public CellRange(CellRange range, CellLocation start = null, CellLocation end = null, bool? allRows = null, bool? allColumns = null)
+		public CellRange(CellRange range, CellLocation start = null, CellLocation end = null, bool? allRows = null, bool? allColumns = null, bool? active = null)
 		{
 			Start = start ?? range.Start;
 			End = end ?? range.End;
 			AllRows = allRows ?? range.AllRows;
 			AllColumns = allColumns ?? range.AllColumns;
+			Active = active ?? range.Active;
 			CalculateBounds();
 		}
 
 		void CalculateBounds()
 		{
-			if (AllColumns)
+			if (Active)
 			{
-				StartRow = MinRow = 0;
-				EndRow = MaxRow = int.MaxValue;
+				if (AllColumns)
+				{
+					StartRow = MinRow = 0;
+					EndRow = MaxRow = int.MaxValue;
+				}
+				else
+				{
+					StartRow = Start.Row;
+					EndRow = End.Row;
+					MinRow = Math.Min(StartRow, EndRow);
+					MaxRow = Math.Max(StartRow, EndRow);
+				}
+				if (AllRows)
+				{
+					StartColumn = MinColumn = 0;
+					EndColumn = MaxColumn = int.MaxValue;
+				}
+				else
+				{
+					StartColumn = Start.Column;
+					EndColumn = End.Column;
+					MinColumn = Math.Min(StartColumn, EndColumn);
+					MaxColumn = Math.Max(StartColumn, EndColumn);
+				}
 			}
 			else
 			{
-				StartRow = Start.Row;
-				EndRow = End.Row;
-				MinRow = Math.Min(StartRow, EndRow);
-				MaxRow = Math.Max(StartRow, EndRow);
-			}
-			if (AllRows)
-			{
-				StartColumn = MinColumn = 0;
-				EndColumn = MaxColumn = int.MaxValue;
-			}
-			else
-			{
-				StartColumn = Start.Column;
-				EndColumn = End.Column;
-				MinColumn = Math.Min(StartColumn, EndColumn);
-				MaxColumn = Math.Max(StartColumn, EndColumn);
+				StartRow = StartColumn = MinRow = MinColumn = -1;
+				EndRow = EndColumn = MaxRow = MaxColumn = -2;
 			}
 		}
 
@@ -120,7 +131,7 @@ namespace NeoEdit.Tables
 
 		public bool Equals(CellRange range)
 		{
-			return (MinColumn.Equals(range.MinColumn)) && (MaxColumn.Equals(range.MaxColumn)) && (MinRow.Equals(range.MinRow)) && (MaxRow.Equals(range.MaxRow)) && (AllRows.Equals(range.AllRows)) && (AllColumns.Equals(range.AllColumns));
+			return (MinColumn.Equals(range.MinColumn)) && (MaxColumn.Equals(range.MaxColumn)) && (MinRow.Equals(range.MinRow)) && (MaxRow.Equals(range.MaxRow)) && (AllRows.Equals(range.AllRows)) && (AllColumns.Equals(range.AllColumns)) && (Active.Equals(range.Active));
 		}
 
 		public override bool Equals(object obj)
@@ -137,7 +148,7 @@ namespace NeoEdit.Tables
 
 		public override string ToString()
 		{
-			return String.Format("Start: {0}, End: {1}, AllRows {2}, AllColumns {3}", Start, End, AllRows, AllColumns);
+			return String.Format("Start: {0}, End: {1}, AllRows {2}, AllColumns {3}, Active {4}", Start, End, AllRows, AllColumns, Active);
 		}
 	}
 }

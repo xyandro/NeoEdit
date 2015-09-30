@@ -34,6 +34,5 @@ namespace NeoEdit.Tables
 				cells = cells.OrderBy(row => row);
 			return cells;
 		}
-
 	}
 }

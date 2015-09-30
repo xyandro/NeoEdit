@@ -88,6 +88,20 @@ namespace NeoEdit.Common
 			Notify();
 		}
 
+		public bool Remove(T item)
+		{
+			if (!list.Remove(item))
+				return false;
+			Notify();
+			return true;
+		}
+
+		public void RemoveAt(int index)
+		{
+			list.RemoveAt(index);
+			Notify();
+		}
+
 		public void RemoveDups()
 		{
 			var changed = false;
@@ -112,6 +126,12 @@ namespace NeoEdit.Common
 		public int IndexOf(T item)
 		{
 			return list.IndexOf(item);
+		}
+
+		public void InsertAt(int index, T item)
+		{
+			list.Insert(index, item);
+			Notify();
 		}
 
 		void Notify()
