@@ -277,7 +277,7 @@ namespace NeoEdit.Tables
 				MinWidth = Table.Headers[cell.Column].Width,
 				Height = rowHeight,
 				BorderThickness = new Thickness(0),
-				Padding = new Thickness(ColumnSpacing, RowSpacing, ColumnSpacing, RowSpacing),
+				Padding = new Thickness(ColumnSpacing, RowTopSpacing, ColumnSpacing, RowTopSpacing),
 				Margin = new Thickness(0),
 			};
 			Canvas.SetLeft(tb, x);
@@ -313,10 +313,11 @@ namespace NeoEdit.Tables
 			return (type == typeof(sbyte)) || (type == typeof(byte)) || (type == typeof(short)) || (type == typeof(ushort)) || (type == typeof(int)) || (type == typeof(uint)) || (type == typeof(long)) || (type == typeof(ulong));
 		}
 
-		readonly static double rowHeight = Font.lineHeight + RowSpacing * 2;
-		const double RowSpacing = 2;
+		const double RowTopSpacing = 1;
+		const double RowBottomSpacing = 3;
 		const double ColumnSpacing = 8;
 		const int HeaderRows = 2;
+		readonly static double rowHeight = Font.lineHeight + RowTopSpacing + RowBottomSpacing;
 		void OnCanvasRender(object s, DrawingContext dc)
 		{
 			if ((Table == null) || (canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
@@ -405,7 +406,7 @@ namespace NeoEdit.Tables
 						case HorizontalAlignment.Right: position = xOffset - ColumnSpacing - text[row].Width; break;
 						default: throw new NotImplementedException();
 					}
-					dc.DrawText(text[row], new Point(position, y[row] + RowSpacing));
+					dc.DrawText(text[row], new Point(position, y[row] + RowTopSpacing));
 				}
 
 			}
@@ -750,7 +751,7 @@ namespace NeoEdit.Tables
 
 			values = values.Select((value, index) => Table.Headers[cells[index].Column].GetValue(value)).ToList();
 
-			ReplaceCells(Selections, values);
+			ReplaceCells(cells, values);
 		}
 
 		FindTextDialog.Result Command_Edit_Find_FindReplace_Dialog(bool isReplace)
