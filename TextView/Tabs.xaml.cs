@@ -15,16 +15,16 @@ namespace NeoEdit.TextView
 	public class TabsWindow : TabsWindow<TextViewer, TextViewCommand> { }
 	public class Tabs : Tabs<TextViewer, TextViewCommand> { }
 
-	partial class TextViewerTabs
+	partial class TextViewTabs
 	{
-		static TextViewerTabs() { UIHelper<TextViewerTabs>.Register(); }
+		static TextViewTabs() { UIHelper<TextViewTabs>.Register(); }
 
 		public static void Create(string filename = null, bool forceCreate = false)
 		{
-			((!forceCreate ? UIHelper<TextViewerTabs>.GetNewest() : null) ?? new TextViewerTabs()).Add(filename);
+			((!forceCreate ? UIHelper<TextViewTabs>.GetNewest() : null) ?? new TextViewTabs()).Add(filename);
 		}
 
-		TextViewerTabs()
+		TextViewTabs()
 		{
 			TextViewMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
 			InitializeComponent();
@@ -36,7 +36,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_NewWindow()
 		{
-			new TextViewerTabs();
+			new TextViewTabs();
 		}
 
 		void Command_File_Open()

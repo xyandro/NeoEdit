@@ -98,7 +98,7 @@ namespace NeoEdit
 				, systemInfo: () => new SystemInfoWindow()
 				, tableEditor: (filename, forceCreate) => TableEditTabs.Create(filename, forceCreate: forceCreate)
 				, textEditor: (filename, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(filename, bytes, encoding, modified, forceCreate: forceCreate)
-				, textViewer: (filename, forceCreate) => TextViewerTabs.Create(filename, forceCreate)
+				, textViewer: (filename, forceCreate) => TextViewTabs.Create(filename, forceCreate)
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

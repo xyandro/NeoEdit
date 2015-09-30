@@ -1,4 +1,4 @@
-﻿<textView:TabsWindow x:Name="self" x:Class="NeoEdit.TextView.TextViewerTabs"
+﻿<textView:TabsWindow x:Name="self" x:Class="NeoEdit.TextView.TextViewTabs"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"

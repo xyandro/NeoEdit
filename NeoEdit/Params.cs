@@ -182,9 +182,9 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			if (!Files.Any())
-				TextViewerTabs.Create();
+				TextViewTabs.Create();
 			foreach (var file in Files)
-				TextViewerTabs.Create(file);
+				TextViewTabs.Create(file);
 		}
 	}
 }
