@@ -159,7 +159,7 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Paste_AllFiles()
 		{
 			var strs = NEClipboard.Strings;
-			var active = ItemTabs.Items.Where(data => data.Active).ToList(); ;
+			var active = ItemTabs.Items.Where(data => data.Active).ToList();
 			if (strs.Count != active.Count)
 				throw new Exception("Clipboard count and active editor count must match");
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
@@ -168,14 +168,18 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Diff_Diff()
 		{
-			List<TextEditor> diffTargets;
-			if (ItemTabs.Items.Count == 2)
-				diffTargets = ItemTabs.Items.ToList();
+			var diffTargets = ItemTabs.Items.Count == 2 ? ItemTabs.Items.ToList() : ItemTabs.Items.Where(data => data.Active).ToList();
+			if ((diffTargets.Count == 2) && (diffTargets[0].DiffTarget != diffTargets[1]))
+			{
+				ItemTabs.Items.Move(ItemTabs.Items.IndexOf(diffTargets[0]), 0);
+				ItemTabs.Items.Move(ItemTabs.Items.IndexOf(diffTargets[1]), 1);
+				ItemTabs.Tiles = true;
+				diffTargets[0].DiffTarget = diffTargets[1];
+			}
+			else if (diffTargets.Any(item => item.DiffTarget != null))
+				diffTargets.ForEach(item => item.DiffTarget = null);
 			else
-				diffTargets = ItemTabs.Items.Where(data => data.Active).ToList();
-			if (diffTargets.Count != 2)
 				throw new Exception("Must have two files active for diff.");
-			diffTargets[0].DiffTarget = diffTargets[1];
 		}
 
 		void Command_View_ActiveTabs()

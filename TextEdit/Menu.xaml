@@ -93,7 +93,7 @@
 			<textEdit:TextEditMenuItem Header="_Edit" CommandEnum="Edit_Table_Edit"/>
 			<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Edit_Table_RegionsSelectionsToTable"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="Cop_y Down" CommandEnum="Edit_CopyDown"/>
+		<textEdit:TextEditMenuItem Header="Copy _Down" CommandEnum="Edit_CopyDown"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
 		<Separator/>
