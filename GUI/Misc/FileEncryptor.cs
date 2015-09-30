@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -13,7 +12,6 @@ namespace NeoEdit.GUI.Misc
 	{
 		readonly static byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
 		readonly static byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
-		readonly static HashSet<string> EncryptionKeys = new HashSet<string>();
 
 		public static string GetKey(Window windowParent = null)
 		{
@@ -28,7 +26,6 @@ namespace NeoEdit.GUI.Misc
 			if (String.IsNullOrEmpty(AESKey))
 				return data;
 
-			EncryptionKeys.Add(AESKey);
 			return EncryptedHeader.Concat(Cryptor.Encrypt(EncryptedValidate.Concat(data).ToArray(), Cryptor.Type.AES, AESKey)).ToArray();
 		}
 
@@ -52,28 +49,16 @@ namespace NeoEdit.GUI.Misc
 				return;
 
 			bytes = bytes.Skip(EncryptedHeader.Length).ToArray();
-			foreach (var key in EncryptionKeys)
-			{
-				var result = Decrypt(bytes, key);
-				if (result != null)
-				{
-					AESKey = key;
-					bytes = result;
-					return;
-				}
-			}
-
-			var key2 = GetKey();
-			if (String.IsNullOrEmpty(key2))
+			var key = GetKey();
+			if (String.IsNullOrEmpty(key))
 				throw new Exception("Failed to decrypt file");
 
-			var result2 = Decrypt(bytes, key2);
-			if (result2 == null)
+			var result = Decrypt(bytes, key);
+			if (result == null)
 				throw new Exception("Failed to decrypt file");
 
-			bytes = result2;
-			AESKey = key2;
-			EncryptionKeys.Add(AESKey);
+			bytes = result;
+			AESKey = key;
 		}
 	}
 }
