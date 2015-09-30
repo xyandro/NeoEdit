@@ -47,7 +47,6 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Commands.cs" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />
@@ -320,13 +319,6 @@
     </Compile>
     <Compile Include="GotoType.cs" />
     <Compile Include="Highlighting.cs" />
-    <Page Include="Menu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Menu.xaml.cs">
-      <DependentUpon>Menu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Misc.cs" />
     <None Include="Misc\Words.txt" />
     <EmbeddedResource Include="Misc\Words.txt.gz" />
@@ -351,12 +343,13 @@
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
     <Compile Include="Table.cs" />
-    <Page Include="Tabs.xaml">
+    <Compile Include="TextEditCommand.cs" />
+    <Page Include="TextEditMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Tabs.xaml.cs">
-      <DependentUpon>Tabs.xaml</DependentUpon>
+    <Compile Include="TextEditMenu.xaml.cs">
+      <DependentUpon>TextEditMenu.xaml</DependentUpon>
     </Compile>
     <Page Include="TextEditor.xaml">
       <SubType>Designer</SubType>
@@ -370,6 +363,13 @@
     </Compile>
     <Compile Include="TextEditor-Sort.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Page Include="TextEditTabs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="TextEditTabs.xaml.cs">
+      <DependentUpon>TextEditTabs.xaml</DependentUpon>
     </Compile>
     <Compile Include="UndoRedo.cs" />
     <Compile Include="UnitTest\TextDataTest.cs" />

@@ -13,7 +13,6 @@
     </Compile>
     <Compile Include="Cell.cs" />
     <Compile Include="CellRange.cs" />
-    <Compile Include="Commands.cs" />
     <Compile Include="DataGridColumnsBinder.cs" />
     <Page Include="Dialogs\EditHeaderDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -22,13 +21,6 @@
     <Compile Include="Dialogs\EditHeaderDialog.xaml.cs">
       <DependentUpon>EditHeaderDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Menu.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Menu.xaml.cs">
-      <DependentUpon>Menu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Misc.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -36,6 +28,14 @@
     </Compile>
     <Compile Include="Table.cs" />
     <Compile Include="TableColumn.cs" />
+    <Compile Include="TableEditCommand.cs" />
+    <Page Include="TableEditMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="TableEditMenu.xaml.cs">
+      <DependentUpon>TableEditMenu.xaml</DependentUpon>
+    </Compile>
     <Page Include="TableEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -43,12 +43,12 @@
     <Compile Include="TableEditor.xaml.cs">
       <DependentUpon>TableEditor.xaml</DependentUpon>
     </Compile>
-    <Page Include="Tabs.xaml">
+    <Page Include="TableEditTabs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Tabs.xaml.cs">
-      <DependentUpon>Tabs.xaml</DependentUpon>
+    <Compile Include="TableEditTabs.xaml.cs">
+      <DependentUpon>TableEditTabs.xaml</DependentUpon>
     </Compile>
     <Compile Include="UndoRedo.cs" />
   </ItemGroup>
