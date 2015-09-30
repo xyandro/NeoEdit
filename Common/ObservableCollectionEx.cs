@@ -49,6 +49,34 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public int BinaryFindFirst(Predicate<T> predicate)
+		{
+			int min = 0, max = Count;
+			while (min < max)
+			{
+				int mid = (min + max) / 2;
+				if (predicate(list[mid]))
+					max = mid;
+				else
+					min = mid + 1;
+			}
+			return min == Count ? -1 : min;
+		}
+
+		public int BinaryFindLast(Predicate<T> predicate)
+		{
+			int min = -1, max = Count - 1;
+			while (min < max)
+			{
+				int mid = (min + max + 1) / 2;
+				if (predicate(list[mid]))
+					min = mid;
+				else
+					max = mid - 1;
+			}
+			return min;
+		}
+
 		public void Clear()
 		{
 			list.Clear();
@@ -86,6 +114,24 @@ namespace NeoEdit.Common
 			for (var ctr = 0; ctr < list.Count; ++ctr)
 				list[ctr] = selector(list[ctr]);
 			Notify();
+		}
+
+		public void Limit(Predicate<T> predicate)
+		{
+			var changed = false;
+			for (var ctr = 0; ctr < list.Count;)
+			{
+				var keep = predicate(list[ctr]);
+				if (!keep)
+				{
+					list.RemoveAt(ctr);
+					changed = true;
+				}
+				else
+					++ctr;
+			}
+			if (changed)
+				Notify();
 		}
 
 		public bool Remove(T item)
@@ -128,7 +174,7 @@ namespace NeoEdit.Common
 			return list.IndexOf(item);
 		}
 
-		public void InsertAt(int index, T item)
+		public void Insert(int index, T item)
 		{
 			list.Insert(index, item);
 			Notify();

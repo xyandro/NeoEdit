@@ -246,6 +246,16 @@ namespace NeoEdit.Tables
 				this[cells[ctr]] = values[ctr];
 		}
 
+		public string GetString(Cell cell)
+		{
+			return (Rows[cell.Row][cell.Column] ?? "<NULL>").ToString();
+		}
+
+		public string GetString(int row, int column)
+		{
+			return (Rows[row][column] ?? "<NULL>").ToString();
+		}
+
 		public void Sort(List<int> sortOrder)
 		{
 			Rows = sortOrder.Select(index => Rows[index]).ToList();

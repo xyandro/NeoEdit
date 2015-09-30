@@ -19,6 +19,7 @@ namespace NeoEdit.Tables
 
 		public int NumRows { get { return MaxRow - MinRow + 1; } }
 		public int NumColumns { get { return MaxColumn - MinColumn + 1; } }
+		public int NumCells { get { return NumRows * NumColumns; } }
 
 		public CellRange(int startRow = 0, int startColumn = 0, int? endRow = null, int? endColumn = null, bool active = true) : this(new Cell(startRow, startColumn), new Cell(endRow ?? startRow, endColumn ?? startColumn), active) { }
 

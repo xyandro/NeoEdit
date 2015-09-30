@@ -46,6 +46,13 @@
 			<tables:TablesMenuItem Header="Paste Without _Headers" CommandEnum="Edit_Paste_PasteWithoutHeaders"/>
 		</MenuItem>
 		<Separator/>
+		<MenuItem Header="_Find">
+			<tables:TablesMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
+			<tables:TablesMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
+			<tables:TablesMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
+			<tables:TablesMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
+		</MenuItem>
+		<Separator/>
 		<tables:TablesMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
 		<Separator/>
 		<tables:TablesMenuItem Header="_Header" CommandEnum="Edit_Header"/>

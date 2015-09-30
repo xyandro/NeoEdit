@@ -53,6 +53,7 @@ namespace NeoEdit.Tables
 		string AESKey = null;
 
 		readonly ObservableCollectionEx<CellRange> Selections = new ObservableCollectionEx<CellRange>();
+		readonly ObservableCollectionEx<Cell> Searches = new ObservableCollectionEx<Cell>();
 
 		readonly UndoRedo undoRedo;
 		readonly RunOnceTimer canvasRenderTimer;
@@ -78,6 +79,7 @@ namespace NeoEdit.Tables
 
 			Selections.Add(new CellRange(0, 0));
 			Selections.CollectionChanged += (s, e) => { MakeActiveVisible(); canvasRenderTimer.Start(); };
+			Searches.CollectionChanged += (s, e) => canvasRenderTimer.Start();
 			SetupTabLabel();
 		}
 
@@ -226,13 +228,13 @@ namespace NeoEdit.Tables
 						else if (Selections.Count != 0)
 						{
 							if (Selections[Selections.Count - 1].Active)
-								Selections.InsertAt(Selections.Count, new CellRange(Selections[Selections.Count - 1].End, active: false));
+								Selections.Insert(Selections.Count, new CellRange(Selections[Selections.Count - 1].End, active: false));
 							var cursor = Selections[Selections.Count - 1].End;
 							var cellRange = Selections.FirstOrDefault(range => (range.Active) && (range.Contains(cursor)));
 							if (cellRange != null)
 								Selections.Remove(cellRange);
 							else
-								Selections.InsertAt(Selections.Count - 1, new CellRange(Selections[Selections.Count - 1], active: true));
+								Selections.Insert(Selections.Count - 1, new CellRange(Selections[Selections.Count - 1], active: true));
 						}
 						break;
 					case Key.F2: StartEdit(false); break;
@@ -321,6 +323,8 @@ namespace NeoEdit.Tables
 				return;
 
 			Selections.RemoveDups();
+			Searches.RemoveDups();
+			canvasRenderTimer.Stop();
 
 			foreach (var header in Table.Headers)
 				if (header.Width == 0)
@@ -533,6 +537,48 @@ namespace NeoEdit.Tables
 			return data;
 		}
 
+		CellRange AllCells()
+		{
+			return new CellRange(endRow: Table.NumRows - 1, endColumn: Table.NumColumns - 1);
+		}
+
+		void RunSearch(FindTextDialog.Result result)
+		{
+			if ((result == null) || (result.Regex == null))
+				return;
+
+			var cells = result.SelectionOnly ? Selections.EnumerateCells() : AllCells().EnumerateCells();
+			Searches.Replace(cells.Where(cell => result.Regex.IsMatch(Table.GetString(cell))));
+		}
+
+		void FindNext(bool forward)
+		{
+			if (Searches.Count == 0)
+			{
+				Selections.Clear();
+				return;
+			}
+
+			for (var ctr = 0; ctr < Selections.Count; ++ctr)
+			{
+				int index;
+				if (forward)
+				{
+					index = Searches.BinaryFindFirst(cell => cell > Selections[ctr].End);
+					if (index == -1)
+						index = 0;
+				}
+				else
+				{
+					index = Searches.BinaryFindLast(cell => cell < Selections[ctr].Start);
+					if (index == -1)
+						index = Searches.Count - 1;
+				}
+
+				Selections[ctr] = Searches[index];
+			}
+		}
+
 		void Command_File_Save_Save()
 		{
 			if (FileName == null)
@@ -707,6 +753,50 @@ namespace NeoEdit.Tables
 			ReplaceCells(Selections, values);
 		}
 
+		FindTextDialog.Result Command_Edit_Find_FindReplace_Dialog(bool isReplace)
+		{
+			string text = null;
+			var selectionOnly = (Selections.Count > 1) || (Selections.Any(range => range.NumCells > 1));
+
+			if ((Selections.Count == 1) && (Selections[0].NumCells == 1))
+				text = Table.GetString(Selections[0].EnumerateCells().First());
+
+			return FindTextDialog.Run(WindowParent, isReplace ? FindTextDialog.FindTextType.Replace : FindTextDialog.FindTextType.Selections, text, selectionOnly);
+		}
+
+		void Command_Edit_Find_FindReplace(bool replace, FindTextDialog.Result result)
+		{
+			if ((result.KeepMatching) || (result.RemoveMatching))
+			{
+				Selections.Replace(Selections.EnumerateCells().Where(cell => result.Regex.IsMatch(Table.GetString(cell)) == result.KeepMatching));
+				return;
+			}
+
+			RunSearch(result);
+
+			if ((replace) || (result.ResultType == FindTextDialog.GetRegExResultType.All))
+			{
+				Selections.Replace(Searches);
+				Searches.Clear();
+
+				if (replace)
+				{
+					var cells = Selections.EnumerateCells().ToList();
+					var values = cells.Select(cell => result.Regex.Replace(Table.GetString(cell), result.Replace) as object).ToList();
+					ReplaceCells(cells, values);
+				}
+
+				return;
+			}
+
+			FindNext(true);
+		}
+
+		void Command_Edit_Find_NextPrevious(bool next)
+		{
+			FindNext(next);
+		}
+
 		void Command_Edit_Sort()
 		{
 			var columns = Selections.EnumerateColumns(true).ToList();
@@ -775,7 +865,7 @@ namespace NeoEdit.Tables
 
 		void Command_Select_All()
 		{
-			Selections.Replace(new CellRange(endRow: Table.NumRows - 1, endColumn: Table.NumColumns - 1));
+			Selections.Replace(AllCells());
 		}
 
 		void Command_Select_Cells()
@@ -808,6 +898,8 @@ namespace NeoEdit.Tables
 			switch (command)
 			{
 				case TablesCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
+				case TablesCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
+				case TablesCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
 				case TablesCommand.Edit_Header: dialogResult = Command_Edit_Header_Dialog(); break;
 				case TablesCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
 				case TablesCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
@@ -842,6 +934,10 @@ namespace NeoEdit.Tables
 				case TablesCommand.Edit_Copy_CopyWithHeaders: Command_Edit_Copy_Copy(true); break;
 				case TablesCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(true); break;
 				case TablesCommand.Edit_Paste_PasteWithoutHeaders: Command_Edit_Paste_Paste(false); break;
+				case TablesCommand.Edit_Find_Find: Command_Edit_Find_FindReplace(false, dialogResult as FindTextDialog.Result); break;
+				case TablesCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true); break;
+				case TablesCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false); break;
+				case TablesCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, dialogResult as FindTextDialog.Result); break;
 				case TablesCommand.Edit_Sort: Command_Edit_Sort(); break;
 				case TablesCommand.Edit_Header: Command_Edit_Header(dialogResult as EditHeaderDialog.Result); break;
 				case TablesCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
@@ -1003,10 +1099,13 @@ namespace NeoEdit.Tables
 
 		void ReplaceCells(ObservableCollectionEx<CellRange> ranges, List<object> values = null, string defaultValue = null)
 		{
-			if (!ranges.Any())
-				return;
+			ReplaceCells(ranges.EnumerateCells().ToList(), values, defaultValue);
+		}
 
-			var cells = ranges.EnumerateCells().ToList();
+		void ReplaceCells(List<Cell> cells, List<object> values = null, string defaultValue = null)
+		{
+			if (!cells.Any())
+				return;
 			if (values == null)
 			{
 				var columnValues = cells.Select(cell => cell.Column).Distinct().ToDictionary(column => column, column => defaultValue == null ? Table.Headers[column].GetDefault() : Table.Headers[column].GetValue(defaultValue));
