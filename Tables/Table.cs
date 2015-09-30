@@ -236,9 +236,8 @@ namespace NeoEdit.Tables
 			set { Rows[row][column] = value; }
 		}
 
-		public void ChangeCells(CellRanges ranges, List<object> values)
+		public void ChangeCells(List<CellLocation> cells, List<object> values)
 		{
-			var cells = ranges.EnumerateCells(NumRows, NumColumns).ToList();
 			if (cells.Count != values.Count)
 				throw new ArgumentException("Cells and values counts must match");
 
@@ -251,14 +250,14 @@ namespace NeoEdit.Tables
 			Rows = sortOrder.Select(index => Rows[index]).ToList();
 		}
 
-		public List<List<object>> GetRowData(CellRanges ranges)
+		public List<List<object>> GetRowData(List<int> rows)
 		{
-			return ranges.GetDeleteRows().Select(row => Rows[row].ToList()).ToList();
+			return rows.Select(row => Rows[row].ToList()).ToList();
 		}
 
-		public List<List<object>> GetColumnData(CellRanges ranges)
+		public List<List<object>> GetColumnData(List<int> ranges)
 		{
-			return ranges.GetDeleteColumns().Select(column => Rows.Select(row => row[column]).ToList()).ToList();
+			return ranges.Select(column => Rows.Select(row => row[column]).ToList()).ToList();
 		}
 
 		public string GetTableData(CellRanges ranges)
@@ -271,53 +270,50 @@ namespace NeoEdit.Tables
 			return String.Join("\r\n", Enumerable.Range(range.MinRow, range.NumRows).Select(row => String.Join("\t", Enumerable.Range(range.MinColumn, range.NumColumns).Select(column => (this[row, column] ?? "<NULL>").ToString()))));
 		}
 
-		public void DeleteRows(CellRanges ranges)
+		public void DeleteRows(List<int> rows)
 		{
-			var rowsHash = new HashSet<int>(ranges.GetDeleteRows());
+			var rowsHash = new HashSet<int>(rows);
 			Rows = Rows.Where((row, index) => !rowsHash.Contains(index)).ToList();
 		}
 
-		public void InsertRows(CellRanges ranges, List<List<object>> insertData, bool selected)
+		public void InsertRows(List<int> rows, List<List<object>> insertData, bool selected)
 		{
-			var rows = ranges.GetInsertRows().ToList();
 			if (rows.Count != insertData.Count)
 				throw new ArgumentException("Rows and data counts must match");
 
 			for (var row = 0; row < rows.Count; ++row)
-				Rows.Insert(rows[row], insertData[row]);
+				Rows.Insert(rows[row] + row, insertData[row]);
 		}
 
-		public void DeleteColumns(CellRanges ranges)
+		public void DeleteColumns(List<int> columns)
 		{
-			var columnsHash = new HashSet<int>(ranges.GetDeleteColumns());
+			var columnsHash = new HashSet<int>(columns);
 			Headers = new List<Header>(Headers.Where((header, index) => !columnsHash.Contains(index)));
 			Rows = Rows.Select(row => row.Where((item, index) => !columnsHash.Contains(index)).ToList()).ToList();
 		}
 
-		public void InsertColumns(CellRanges ranges, List<Table.Header> headers, List<List<object>> insertData, bool selected)
+		public void InsertColumns(List<int> columns, List<Table.Header> headers, List<List<object>> insertData, bool selected)
 		{
-			var columns = ranges.GetInsertColumns().ToList();
 			if ((columns.Count != insertData.Count) || (columns.Count != headers.Count))
 				throw new ArgumentException("Columns, data, and headers counts must match");
 
 			for (var column = 0; column < columns.Count; ++column)
 			{
-				Headers.Insert(columns[column], headers[column]);
+				Headers.Insert(columns[column] + column, headers[column]);
 				for (var row = 0; row < Rows.Count; ++row)
-					Rows[row].Insert(columns[column], insertData[column][row]);
+					Rows[row].Insert(columns[column] + column, insertData[column][row]);
 			}
 		}
 
-		public void ChangeHeader(CellRange range, Header header, List<object> values)
+		public void ChangeHeader(int column, Header header, List<object> values)
 		{
-			var cells = range.EnumerateCells(NumRows, NumColumns).ToList();
-			if (cells.Count != values.Count)
-				throw new ArgumentException("Cells and values counts must match");
+			if (NumRows != values.Count)
+				throw new ArgumentException("Values must match row count");
 
-			for (var ctr = 0; ctr < cells.Count; ++ctr)
-				this[cells[ctr]] = values[ctr];
+			for (var row = 0; row < NumRows; ++row)
+				this[row, column] = values[row];
 
-			Headers[range.MinColumn] = header;
+			Headers[column] = header;
 		}
 	}
 

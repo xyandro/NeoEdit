@@ -24,7 +24,7 @@ namespace NeoEdit.Tables
 
 	class UndoRedoStep
 	{
-		public CellRanges Ranges { get; private set; }
+		public List<CellLocation> Cells { get; private set; }
 		public List<object> Values { get; private set; }
 		public List<int> Positions { get; private set; }
 		public List<List<object>> InsertData { get; private set; }
@@ -33,11 +33,11 @@ namespace NeoEdit.Tables
 
 		UndoRedoStep() { }
 
-		static public UndoRedoStep CreateChangeCells(CellRanges ranges, List<object> values)
+		static public UndoRedoStep CreateChangeCells(List<CellLocation> cells, List<object> values)
 		{
 			return new UndoRedoStep
 			{
-				Ranges = ranges.Copy(),
+				Cells = cells.ToList(),
 				Values = values,
 				Action = UndoRedoAction.ChangeCells,
 			};
@@ -52,49 +52,49 @@ namespace NeoEdit.Tables
 			};
 		}
 
-		static public UndoRedoStep CreateInsertRows(CellRanges ranges, List<List<object>> insertData)
+		static public UndoRedoStep CreateInsertRows(List<int> positions, List<List<object>> insertData)
 		{
 			return new UndoRedoStep
 			{
-				Ranges = ranges,
+				Positions = positions,
 				InsertData = insertData,
 				Action = UndoRedoAction.InsertRows,
 			};
 		}
 
-		static public UndoRedoStep CreateInsertColumns(CellRanges ranges, List<Table.Header> headers, List<List<object>> insertData)
+		static public UndoRedoStep CreateInsertColumns(List<int> positions, List<Table.Header> headers, List<List<object>> insertData)
 		{
 			return new UndoRedoStep
 			{
-				Ranges = ranges,
+				Positions = positions,
 				InsertData = insertData,
 				Headers = headers,
 				Action = UndoRedoAction.InsertColumns,
 			};
 		}
 
-		static public UndoRedoStep CreateDeleteRows(CellRanges ranges)
+		static public UndoRedoStep CreateDeleteRows(List<int> positions)
 		{
 			return new UndoRedoStep
 			{
-				Ranges = ranges,
+				Positions = positions,
 				Action = UndoRedoAction.DeleteRows,
 			};
 		}
 
-		static public UndoRedoStep CreateDeleteColumns(CellRanges ranges)
+		static public UndoRedoStep CreateDeleteColumns(List<int> positions)
 		{
 			return new UndoRedoStep
 			{
-				Ranges = ranges,
+				Positions = positions,
 				Action = UndoRedoAction.DeleteColumns,
 			};
 		}
-		static public UndoRedoStep CreateChangeHeader(CellRange column, Table.Header header, List<object> values)
+		static public UndoRedoStep CreateChangeHeader(int column, Table.Header header, List<object> values)
 		{
 			return new UndoRedoStep
 			{
-				Ranges = new CellRanges { column },
+				Positions = new List<int> { column },
 				Headers = new List<Table.Header> { header },
 				Values = values,
 				Action = UndoRedoAction.ChangeHeader,
