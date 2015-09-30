@@ -224,7 +224,7 @@ namespace NeoEdit.Tables
 			}
 		}
 
-		public object this[CellLocation cell]
+		public object this[Cell cell]
 		{
 			get { return Rows[cell.Row][cell.Column]; }
 			set { Rows[cell.Row][cell.Column] = value; }
@@ -236,7 +236,7 @@ namespace NeoEdit.Tables
 			set { Rows[row][column] = value; }
 		}
 
-		public void ChangeCells(List<CellLocation> cells, List<object> values)
+		public void ChangeCells(List<Cell> cells, List<object> values)
 		{
 			if (cells.Count != values.Count)
 				throw new ArgumentException("Cells and values counts must match");

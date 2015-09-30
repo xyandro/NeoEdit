@@ -21,7 +21,7 @@ namespace NeoEdit.Tables
 		static internal readonly Pen linesPen = new Pen(new SolidColorBrush(Color.FromArgb(32, 0, 0, 0)), 1);
 		static internal readonly Pen activePen = new Pen(new SolidColorBrush(Color.FromArgb(255, 0, 0, 0)), 1);
 
-		static internal IOrderedEnumerable<CellLocation> OrderCells(this IEnumerable<CellLocation> cells)
+		static internal IOrderedEnumerable<Cell> OrderCells(this IEnumerable<Cell> cells)
 		{
 			return cells.OrderBy(cell => cell.Row).ThenBy(cell => cell.Column);
 		}

@@ -111,8 +111,8 @@ namespace NeoEdit.Tables
 				column += range.End.Column;
 			row = Math.Max(0, Math.Min(row, Table.NumRows - 1));
 			column = Math.Max(0, Math.Min(column, Table.NumColumns - 1));
-			var location = new CellLocation(row, column);
-			return new CellRange(range, selecting ? null : location, location, selecting ? default(bool?) : false, selecting ? default(bool?) : false);
+			var location = new Cell(row, column);
+			return new CellRange(range, selecting ? default(Cell?) : location, location, selecting ? default(bool?) : false, selecting ? default(bool?) : false);
 		}
 
 		void MoveSelections(int row, int column, bool selecting, bool disjoint, bool rowRel = true, bool columnRel = true)
@@ -662,7 +662,7 @@ namespace NeoEdit.Tables
 			AESKey = result == "" ? null : result;
 		}
 
-		List<CellLocation> GetSelectedCells(bool preserveOrder = false)
+		List<Cell> GetSelectedCells(bool preserveOrder = false)
 		{
 			return Selections.EnumerateCells(Table.NumRows, Table.NumColumns, preserveOrder).ToList();
 		}
@@ -807,10 +807,10 @@ namespace NeoEdit.Tables
 
 			switch (command)
 			{
-				case TablesCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
-				case TablesCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
 				case TablesCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TablesCommand.Edit_Header: dialogResult = Command_Edit_Header_Dialog(); break;
+				case TablesCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
+				case TablesCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
 				default: return true;
 			}
 
@@ -875,7 +875,7 @@ namespace NeoEdit.Tables
 			return (FileName == null) && (!IsModified) && (!Table.Headers.Any());
 		}
 
-		List<object> GetValues(IEnumerable<CellLocation> cells)
+		List<object> GetValues(IEnumerable<Cell> cells)
 		{
 			return cells.Select(cell => Table[cell]).ToList();
 		}
@@ -1088,7 +1088,7 @@ namespace NeoEdit.Tables
 			if ((selecting) && (Selections.Any()))
 				Selections[Selections.Count - 1] = MoveSelection(Selections.Last(), row, column, true, false, false);
 			else
-				Selections.Add(new CellRange(new CellLocation(row, column)));
+				Selections.Add(new CellRange(new Cell(row, column)));
 		}
 	}
 }

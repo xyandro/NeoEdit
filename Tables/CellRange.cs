@@ -5,8 +5,8 @@ namespace NeoEdit.Tables
 {
 	public class CellRange
 	{
-		readonly public CellLocation Start;
-		readonly public CellLocation End;
+		readonly public Cell Start;
+		readonly public Cell End;
 		readonly public bool AllRows;
 		readonly public bool AllColumns;
 		readonly public bool Active;
@@ -22,9 +22,9 @@ namespace NeoEdit.Tables
 		public int NumRows { get { return MaxRow - MinRow + 1; } }
 		public int NumColumns { get { return MaxColumn - MinColumn + 1; } }
 
-		public CellRange(int startRow = 0, int startColumn = 0, int? endRow = null, int? endColumn = null, bool allRows = false, bool allColumns = false, bool active = true) : this(new CellLocation(startRow, startColumn), new CellLocation(endRow ?? startRow, endColumn ?? startColumn), allRows, allColumns, active) { }
+		public CellRange(int startRow = 0, int startColumn = 0, int? endRow = null, int? endColumn = null, bool allRows = false, bool allColumns = false, bool active = true) : this(new Cell(startRow, startColumn), new Cell(endRow ?? startRow, endColumn ?? startColumn), allRows, allColumns, active) { }
 
-		public CellRange(CellLocation start, CellLocation end = null, bool allRows = false, bool allColumns = false, bool active = true)
+		public CellRange(Cell start, Cell? end = null, bool allRows = false, bool allColumns = false, bool active = true)
 		{
 			Start = start;
 			End = end ?? start;
@@ -34,7 +34,7 @@ namespace NeoEdit.Tables
 			CalculateBounds();
 		}
 
-		public CellRange(CellRange range, CellLocation start = null, CellLocation end = null, bool? allRows = null, bool? allColumns = null, bool? active = null)
+		public CellRange(CellRange range, Cell? start = null, Cell? end = null, bool? allRows = null, bool? allColumns = null, bool? active = null)
 		{
 			Start = start ?? range.Start;
 			End = end ?? range.End;
@@ -80,9 +80,9 @@ namespace NeoEdit.Tables
 			}
 		}
 
-		public bool Contains(CellLocation cellLocation)
+		public bool Contains(Cell cell)
 		{
-			return (cellLocation.Row >= MinRow) && (cellLocation.Row <= MaxRow) && (cellLocation.Column >= MinColumn) && (cellLocation.Column <= MaxColumn);
+			return (cell.Row >= MinRow) && (cell.Row <= MaxRow) && (cell.Column >= MinColumn) && (cell.Column <= MaxColumn);
 		}
 
 		public bool Contains(int row, int column)
@@ -90,7 +90,7 @@ namespace NeoEdit.Tables
 			return (row >= MinRow) && (row <= MaxRow) && (column >= MinColumn) && (column <= MaxColumn);
 		}
 
-		public IEnumerable<CellLocation> EnumerateCells(int numRows, int numColumns)
+		public IEnumerable<Cell> EnumerateCells(int numRows, int numColumns)
 		{
 			var startRow = Math.Min(numRows - 1, StartRow);
 			var endRow = Math.Min(numRows - 1, EndRow);
@@ -104,7 +104,7 @@ namespace NeoEdit.Tables
 
 			for (var row = startRow; row != endRow; row += deltaRow)
 				for (var column = startColumn; column != endColumn; column += deltaColumn)
-					yield return new CellLocation(row, column);
+					yield return new Cell(row, column);
 		}
 
 		public IEnumerable<int> EnumerateColumns(int numColumns)

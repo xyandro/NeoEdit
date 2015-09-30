@@ -11,7 +11,7 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CellLocation.cs" />
+    <Compile Include="Cell.cs" />
     <Compile Include="CellRange.cs" />
     <Compile Include="CellRanges.cs" />
     <Compile Include="Commands.cs" />

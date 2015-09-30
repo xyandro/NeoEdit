@@ -24,7 +24,7 @@ namespace NeoEdit.Tables
 
 	class UndoRedoStep
 	{
-		public List<CellLocation> Cells { get; private set; }
+		public List<Cell> Cells { get; private set; }
 		public List<object> Values { get; private set; }
 		public List<int> Positions { get; private set; }
 		public List<List<object>> InsertData { get; private set; }
@@ -33,7 +33,7 @@ namespace NeoEdit.Tables
 
 		UndoRedoStep() { }
 
-		static public UndoRedoStep CreateChangeCells(List<CellLocation> cells, List<object> values)
+		static public UndoRedoStep CreateChangeCells(List<Cell> cells, List<object> values)
 		{
 			return new UndoRedoStep
 			{

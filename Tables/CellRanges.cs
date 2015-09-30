@@ -6,12 +6,12 @@ namespace NeoEdit.Tables
 {
 	public class CellRanges : ObservableCollectionEx<CellRange>
 	{
-		public void Replace(IEnumerable<CellLocation> cellLocations)
+		public void Replace(IEnumerable<Cell> cells)
 		{
-			Replace(cellLocations.Select(cellLocation => new CellRange(cellLocation)));
+			Replace(cells.Select(cell => new CellRange(cell)));
 		}
 
-		public IEnumerable<CellLocation> EnumerateCells(int numRows, int numColumns, bool preserveOrder = false)
+		public IEnumerable<Cell> EnumerateCells(int numRows, int numColumns, bool preserveOrder = false)
 		{
 			var cells = this.SelectMany(selection => selection.EnumerateCells(numRows, numColumns)).Distinct();
 			if (!preserveOrder)
