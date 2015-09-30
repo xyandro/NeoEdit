@@ -229,7 +229,6 @@
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Text_GUID"/>
 		<textEdit:TextEditMenuItem Header="_Random Text" CommandEnum="Text_RandomText"/>
 		<textEdit:TextEditMenuItem Header="Reverse R_egEx" CommandEnum="Text_ReverseRegEx"/>
-		<textEdit:TextEditMenuItem Header="C_ombinations/Permutations" CommandEnum="Text_CombinationsPermutations"/>
 	</MenuItem>
 	<MenuItem Header="_Numeric">
 		<MenuItem Header="_Copy">
@@ -251,7 +250,7 @@
 		<textEdit:TextEditMenuItem Header="S_eries" CommandEnum="Numeric_Series"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
-		<Separator/>
+		<textEdit:TextEditMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
 		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
 	</MenuItem>
 	<MenuItem Header="_Date/Time">

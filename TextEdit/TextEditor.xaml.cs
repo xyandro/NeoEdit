@@ -650,8 +650,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
 				case TextEditCommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(); break;
 				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(); break;
-				case TextEditCommand.Text_CombinationsPermutations: dialogResult = Command_Text_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(); break;
+				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Text_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
@@ -826,7 +826,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_GUID: Command_Text_GUID(); break;
 				case TextEditCommand.Text_RandomText: Command_Text_RandomText(dialogResult as RandomDataDialog.Result); break;
 				case TextEditCommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(dialogResult as RevRegExDialog.Result); break;
-				case TextEditCommand.Text_CombinationsPermutations: Command_Text_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Numeric_Copy_Min: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Max: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Sum: Command_Numeric_Copy_Sum(); break;
@@ -836,6 +835,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
 				case TextEditCommand.Numeric_Series: Command_Numeric_Series(); break;
 				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
+				case TextEditCommand.Numeric_CombinationsPermutations: Command_Text_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
@@ -2447,14 +2447,15 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var output = new List<string>();
+			var output = new List<List<string>>();
 			var nums = new int[result.UseCount];
-			var used = new bool[result.Items.Length + 1];
+			var used = new bool[result.ItemCount];
+			nums[0] = -1;
 			var onNum = 0;
 			while (true)
 			{
 				++nums[onNum];
-				if (nums[onNum] > result.Items.Length)
+				if (nums[onNum] >= result.ItemCount)
 				{
 					--onNum;
 					if (onNum < 0)
@@ -2472,24 +2473,28 @@ namespace NeoEdit.TextEdit
 					if (result.Type == CombinationsPermutationsDialog.CombinationsPermutationsType.Combinations)
 						nums[onNum] = nums[onNum - 1] - 1;
 					else
-						nums[onNum] = 0;
+						nums[onNum] = -1;
 				}
 				else
 				{
-					output.Add(String.Concat(nums.Select(num => result.Items[num - 1])) + Data.DefaultEnding);
+					output.Add(nums.Select(num => (num + 1).ToString()).ToList());
 					--onNum;
 					used[nums[onNum]] = false;
 				}
 			}
 
-			ReplaceSelections(String.Join("", output));
+			ReplaceSelections(String.Join("", output.Select(row => String.Join(" ", row) + Data.DefaultEnding)));
 
 			var start = Selections.Single().Start;
 			var sels = new List<Range>();
-			foreach (var str in output)
+			foreach (var row in output)
 			{
-				sels.Add(Range.FromIndex(start, str.Length - Data.DefaultEnding.Length));
-				start += str.Length;
+				foreach (var str in row)
+				{
+					sels.Add(Range.FromIndex(start, str.Length));
+					start += str.Length + 1; // +1 is for space
+				}
+				start += Data.DefaultEnding.Length - 1; // -1 is for space added before
 			}
 			Selections.Replace(sels);
 		}

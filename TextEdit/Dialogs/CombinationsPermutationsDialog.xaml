@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Combinations/Permutations" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=itemsRE}">
+	Title="Combinations/Permutations" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=itemCount}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -16,42 +16,27 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Items:" Target="{Binding ElementName=itemsRE}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Width="300" Name="itemsRE" Text="{Binding ItemsRE, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Items:" Target="{Binding ElementName=itemCount}" HorizontalAlignment="Right"/>
+		<guiControls:NumericUpDown Grid.Row="0" Grid.Column="1" Name="itemCount" Value="{Binding ItemCount, ElementName=self}" Minimum="1"/>
 
-		<Label Grid.Row="1" Grid.Column="1">
-			<Label.Content>
-				<TextBlock>
-					<TextBlock.Text>
-						<MultiBinding StringFormat="{}{0} ({1})">
-							<Binding Path="Items" ElementName="self"/>
-							<Binding Path="Items.Length" ElementName="self"/>
-						</MultiBinding>
-					</TextBlock.Text>
-				</TextBlock>
-			</Label.Content>
-		</Label>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Use:" Target="{Binding ElementName=useCount}" HorizontalAlignment="Right"/>
+		<guiControls:NumericUpDown Grid.Row="1" Grid.Column="1" Name="useCount" Value="{Binding UseCount, ElementName=self}" Minimum="1"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_Use:" Target="{Binding ElementName=useCount}" HorizontalAlignment="Right"/>
-		<guiControls:NumericUpDown Grid.Row="2" Grid.Column="1" Name="useCount" Value="{Binding UseCount, ElementName=self}" Minimum="1"/>
-
-		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
 			<RadioButton GroupName="type" Content="_Combinations" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Combinations}" Focusable="False" Margin="0,0,10,0" VerticalAlignment="Center"/>
 			<RadioButton GroupName="type" Content="_Permutations" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Permutations}" Focusable="False" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<CheckBox Grid.Row="5" Grid.Column="1" Content="_Repeat Items" IsChecked="{Binding Repeat, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Repeat Items" IsChecked="{Binding Repeat, ElementName=self}" Focusable="False"/>
 
-		<Label Grid.Row="6" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
-		<Label Grid.Row="6" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>
+		<Label Grid.Row="4" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
+		<Label Grid.Row="4" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>
 
-		<UniformGrid Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
