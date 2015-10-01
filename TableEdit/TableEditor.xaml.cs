@@ -1058,7 +1058,7 @@ namespace NeoEdit.TableEdit
 				return;
 
 			var rows = Selections.SelectMany(range => Enumerable.Repeat(after ? range.MaxRow + 1 : range.MinRow, range.NumRows)).ToList();
-			var data = Enumerable.Repeat(table.Headers.Select(header => header.GetDefault()).ToList(), rows.Count);
+			var data = rows.Select(row => table.Headers.Select(header => header.GetDefault()).ToList()).ToList();
 			Replace(UndoRedoStep.CreateInsertRows(rows, data.ToList()));
 		}
 
