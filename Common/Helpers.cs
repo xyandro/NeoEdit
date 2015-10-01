@@ -378,7 +378,7 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public static bool Matches<T>(this IEnumerable<T> source1, IEnumerable<T> source2)
+		public static bool Matches<TSource>(this IEnumerable<TSource> source1, IEnumerable<TSource> source2)
 		{
 			using (var enum1 = source1.GetEnumerator())
 			using (var enum2 = source2.GetEnumerator())
@@ -396,6 +396,13 @@ namespace NeoEdit.Common
 						return false;
 				}
 			}
+		}
+
+		public static IEnumerable<TSource> Concat<TSource>(this IEnumerable<TSource> source, TSource item)
+		{
+			foreach (var i in source)
+				yield return i;
+			yield return item;
 		}
 
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]

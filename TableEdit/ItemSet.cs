@@ -5,6 +5,7 @@ namespace NeoEdit.TableEdit
 {
 	class ItemSet<T> : List<T>
 	{
+		public ItemSet() { }
 		public ItemSet(IEnumerable<T> items) : base(items) { }
 
 		public override bool Equals(object obj)
@@ -23,7 +24,7 @@ namespace NeoEdit.TableEdit
 		{
 			var code = 0;
 			foreach (var item in this)
-				code += item.GetHashCode();
+				code ^= item == null ? 0x0badf00d : item.GetHashCode();
 			return code;
 		}
 	}

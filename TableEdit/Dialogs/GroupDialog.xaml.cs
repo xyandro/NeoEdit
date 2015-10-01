@@ -45,7 +45,7 @@ namespace NeoEdit.TableEdit.Dialogs
 
 			void SetAggregateType()
 			{
-				Aggregation = Group ? Table.AggregateType.Distinct : type.IsNumericType() ? Table.AggregateType.Sum : type.IsDateType() ? Table.AggregateType.Min | Table.AggregateType.Max : Table.AggregateType.Distinct;
+				Aggregation = Group ? Table.AggregateType.Value : type.IsNumericType() ? Table.AggregateType.Sum : type.IsDateType() ? Table.AggregateType.Min | Table.AggregateType.Max : Table.AggregateType.Distinct;
 			}
 		}
 
@@ -73,6 +73,7 @@ namespace NeoEdit.TableEdit.Dialogs
 					selected.ForEach(column => column.Group = all);
 					break;
 				case Key.E: ToggleAggregateType(Table.AggregateType.None); break;
+				case Key.V: ToggleAggregateType(Table.AggregateType.Value); break;
 				case Key.D: ToggleAggregateType(Table.AggregateType.Distinct); break;
 				case Key.O: ToggleAggregateType(Table.AggregateType.Concat); break;
 				case Key.N: ToggleAggregateType(Table.AggregateType.Min); break;

@@ -11,13 +11,14 @@ namespace NeoEdit.TableEdit
 		public enum AggregateType
 		{
 			None = 0,
-			Distinct = 1,
-			Concat = 2,
-			Min = 4,
-			Max = 8,
-			Sum = 16,
-			Average = 32,
-			Count = 64,
+			Value = 1,
+			Distinct = 2,
+			Concat = 4,
+			Min = 8,
+			Max = 16,
+			Sum = 32,
+			Average = 64,
+			Count = 128,
 		}
 
 		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
@@ -250,7 +251,7 @@ namespace NeoEdit.TableEdit
 		{
 			switch (aggType)
 			{
-				case AggregateType.None: return values.Distinct().Single();
+				case AggregateType.Value: return values.Distinct().Single();
 				case AggregateType.Distinct: return String.Join(", ", values.Distinct().OrderBy(a => a));
 				case AggregateType.Concat: return String.Join(", ", values.OrderBy(a => a));
 				case AggregateType.Min: return values.Min();
@@ -264,10 +265,10 @@ namespace NeoEdit.TableEdit
 
 		public Table Aggregate(List<int> groupByColumns, List<Tuple<int, AggregateType>> aggregateData)
 		{
-			var groupMap = new Dictionary<string, List<List<object>>> { { "", Rows } };
+			var groupMap = Rows.GroupBy(row => new ItemSet<object>());
 			foreach (var column in groupByColumns)
-				groupMap = groupMap.SelectMany(pair => pair.Value.GroupBy(items => pair.Key + "," + (items[column] ?? "").ToString())).ToDictionary(group => group.Key, group => group.ToList());
-			var groupedRows = groupMap.Values.ToList();
+				groupMap = groupMap.SelectMany(group => group.GroupBy(items => group.Key.Concat(items[column]).ToItemSet()));
+			var groupedRows = groupMap.Select(group => group.ToList()).ToList();
 
 			var newHeaders = new List<Header>();
 			var newRows = groupedRows.Select(item => new List<object>()).ToList();
