@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -578,18 +579,67 @@ namespace NeoEdit.HexEdit
 			}
 		}
 
-		internal void Command_File_Save_SaveAs()
+		string GetSaveFileName()
 		{
 			var dialog = new SaveFileDialog();
 			if (dialog.ShowDialog() != true)
-				return;
+				return null;
 
 			if (Directory.Exists(dialog.FileName))
 				throw new Exception("A directory by that name already exists.");
 			if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
 				throw new Exception("Directory doesn't exist.");
-			FileName = dialog.FileName;
+			return dialog.FileName;
+		}
+
+		internal void Command_File_Save_SaveAs()
+		{
+			var fileName = GetSaveFileName();
+			if (fileName == null)
+				return;
+
+			FileName = fileName;
 			Command_File_Save_Save();
+		}
+
+		internal void Command_File_Operations_Rename()
+		{
+			if (String.IsNullOrEmpty(FileName))
+			{
+				Command_File_Save_SaveAs();
+				return;
+			}
+
+			var fileName = GetSaveFileName();
+			if (fileName == null)
+				return;
+
+			File.Delete(fileName);
+			File.Move(FileName, fileName);
+			FileName = fileName;
+		}
+
+		internal void Command_File_Operations_Delete()
+		{
+			if (FileName == null)
+				throw new Exception("No filename.");
+
+			if (new Message
+			{
+				Title = "Confirm",
+				Text = "Are you sure you want to delete this file?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			File.Delete(FileName);
+		}
+
+		internal void Command_File_Operations_Explore()
+		{
+			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
 		}
 
 		internal void Command_File_Revert()

@@ -163,6 +163,9 @@ namespace NeoEdit.HexEdit
 			{
 				case HexEditCommand.File_Save_Save: ItemTabs.TopMost.Command_File_Save_Save(); break;
 				case HexEditCommand.File_Save_SaveAs: ItemTabs.TopMost.Command_File_Save_SaveAs(); break;
+				case HexEditCommand.File_Operations_Rename: ItemTabs.TopMost.Command_File_Operations_Rename(); break;
+				case HexEditCommand.File_Operations_Delete: ItemTabs.TopMost.Command_File_Operations_Delete(); break;
+				case HexEditCommand.File_Operations_Explore: ItemTabs.TopMost.Command_File_Operations_Explore(); break;
 				case HexEditCommand.File_Close: if (ItemTabs.TopMost.CanClose()) Remove(ItemTabs.TopMost); break;
 				case HexEditCommand.File_Refresh: ItemTabs.TopMost.Command_File_Refresh(); break;
 				case HexEditCommand.File_Revert: ItemTabs.TopMost.Command_File_Revert(); break;

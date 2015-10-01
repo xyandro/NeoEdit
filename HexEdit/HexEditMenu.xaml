@@ -16,6 +16,11 @@
 			<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<hexEdit:HexEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
 		</MenuItem>
+		<MenuItem Header="O_perations">
+			<hexEdit:HexEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
+			<hexEdit:HexEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
+			<hexEdit:HexEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
+		</MenuItem>
 		<hexEdit:HexEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<hexEdit:HexEditMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
 		<hexEdit:HexEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
