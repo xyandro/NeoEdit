@@ -20,6 +20,8 @@ namespace NeoEdit.TableEdit
 			Count = 64,
 		}
 
+		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
+
 		public class Header
 		{
 			public string Name { get; set; }
@@ -289,6 +291,35 @@ namespace NeoEdit.TableEdit
 				Rows = newRows,
 				HasHeaders = HasHeaders,
 				TableType = TableType,
+			};
+		}
+
+		static public Table Join(Table leftTable, Table rightTable, List<int> leftColumns, List<int> rightColumns, JoinType joinType)
+		{
+			if ((leftColumns.Count != rightColumns.Count))
+				throw new ArgumentException("Column counts must match to join");
+
+			var left = leftTable.Rows.GroupBy(row => leftColumns.Select(column => row[column] ?? new object()).ToItemSet()).ToDictionary(group => group.Key, group => group.ToList());
+			var right = rightTable.Rows.GroupBy(row => rightColumns.Select(column => row[column] ?? new object()).ToItemSet()).ToDictionary(group => group.Key, group => group.ToList());
+
+			List<ItemSet<object>> keys;
+			switch (joinType)
+			{
+				case JoinType.Inner: keys = left.Keys.Where(key => right.ContainsKey(key)).ToList(); break;
+				case JoinType.LeftOuter: keys = left.Keys.ToList(); break;
+				case JoinType.RightOuter: keys = right.Keys.ToList(); break;
+				case JoinType.FullOuter: keys = left.Keys.Concat(right.Keys).Distinct().ToList(); break;
+				default: throw new ArgumentException("Invalid join");
+			}
+
+			var emptyLeft = new List<List<object>> { Enumerable.Range(0, leftTable.NumColumns).Select(column => default(object)).ToList() };
+			var emptyRight = new List<List<object>> { Enumerable.Range(0, rightTable.NumColumns).Select(column => default(object)).ToList() };
+			return new Table(leftTable)
+			{
+				Headers = leftTable.Headers.Concat(rightTable.Headers).ToList(),
+				Rows = keys.SelectMany(key => (left.ContainsKey(key) ? left[key] : emptyLeft).SelectMany(leftValue => (right.ContainsKey(key) ? right[key] : emptyRight).Select(rightValue => leftValue.Concat(rightValue).ToList()))).ToList(),
+				HasHeaders = leftTable.HasHeaders,
+				TableType = leftTable.TableType,
 			};
 		}
 

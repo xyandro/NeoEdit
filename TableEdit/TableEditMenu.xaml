@@ -56,6 +56,9 @@
 		<tableEdit:TableEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
 		<tableEdit:TableEditMenuItem Header="_Group" CommandEnum="Edit_Group"/>
 		<Separator/>
+		<tableEdit:TableEditMenuItem Header="_Join" CommandEnum="Edit_Join"/>
+		<tableEdit:TableEditMenuItem Header="Se_t Join Source" CommandEnum="Edit_SetJoinSource"/>
+		<Separator/>
 		<tableEdit:TableEditMenuItem Header="_Header" CommandEnum="Edit_Header"/>
 	</MenuItem>
 	<MenuItem Header="E_xpression">

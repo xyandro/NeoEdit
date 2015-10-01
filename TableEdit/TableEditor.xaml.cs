@@ -813,6 +813,28 @@ namespace NeoEdit.TableEdit
 			ReplaceTable(table.Aggregate(result.AggregateColumns, result.AggregateData));
 		}
 
+		static Table joinSourceTable = null;
+		static List<int> joinSourceColumns = null;
+		JoinDialog.Result Command_Edit_Join_Dialog()
+		{
+			if ((joinSourceTable == null) || (joinSourceColumns == null))
+				throw new ArgumentException("Must set join source first");
+			return JoinDialog.Run(WindowParent);
+		}
+
+		void Command_Edit_Join(JoinDialog.Result result)
+		{
+			if ((joinSourceTable == null) || (joinSourceColumns == null))
+				throw new ArgumentException("Must set join source first");
+			ReplaceTable(Table.Join(table, joinSourceTable, Selections.EnumerateColumns(true).ToList(), joinSourceColumns, result.Type));
+		}
+
+		void Command_Edit_SetJoinSource()
+		{
+			joinSourceTable = table;
+			joinSourceColumns = Selections.EnumerateColumns(true).ToList();
+		}
+
 		EditHeaderDialog.Result Command_Edit_Header_Dialog()
 		{
 			if ((Selections.Count != 1) || (Selections[0].NumColumns != 1))
@@ -901,6 +923,7 @@ namespace NeoEdit.TableEdit
 				case TableEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
 				case TableEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
 				case TableEditCommand.Edit_Group: dialogResult = Command_Edit_Group_Dialog(); break;
+				case TableEditCommand.Edit_Join: dialogResult = Command_Edit_Join_Dialog(); break;
 				case TableEditCommand.Edit_Header: dialogResult = Command_Edit_Header_Dialog(); break;
 				case TableEditCommand.Expression_Expression: dialogResult = Command_Edit_Expression_Dialog(); break;
 				case TableEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
@@ -941,6 +964,8 @@ namespace NeoEdit.TableEdit
 				case TableEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, dialogResult as FindTextDialog.Result); break;
 				case TableEditCommand.Edit_Sort: Command_Edit_Sort(); break;
 				case TableEditCommand.Edit_Group: Command_Edit_Group(dialogResult as GroupDialog.Result); break;
+				case TableEditCommand.Edit_Join: Command_Edit_Join(dialogResult as JoinDialog.Result); break;
+				case TableEditCommand.Edit_SetJoinSource: Command_Edit_SetJoinSource(); break;
 				case TableEditCommand.Edit_Header: Command_Edit_Header(dialogResult as EditHeaderDialog.Result); break;
 				case TableEditCommand.Expression_Expression: Command_Edit_Expression(dialogResult as GetExpressionDialog.Result); break;
 				case TableEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;

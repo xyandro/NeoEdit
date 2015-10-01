@@ -34,6 +34,8 @@ namespace NeoEdit.TableEdit
 		Edit_Find_Replace,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Sort,
 		[KeyGesture(Key.G, ModifierKeys.Control)] Edit_Group,
+		[KeyGesture(Key.J, ModifierKeys.Control)] Edit_Join,
+		[KeyGesture(Key.J, ModifierKeys.Control | ModifierKeys.Shift)] Edit_SetJoinSource,
 		[KeyGesture(Key.H, ModifierKeys.Control)] Edit_Header,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Expression_Expression,
 		Expression_SelectByExpression,

@@ -378,6 +378,26 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public static bool Matches<T>(this IEnumerable<T> source1, IEnumerable<T> source2)
+		{
+			using (var enum1 = source1.GetEnumerator())
+			using (var enum2 = source2.GetEnumerator())
+			{
+				while (true)
+				{
+					var move1 = enum1.MoveNext();
+					var move2 = enum2.MoveNext();
+					if (move1 != move2)
+						return false;
+					if (!move1)
+						return true;
+
+					if (!Object.Equals(enum1.Current, enum2.Current))
+						return false;
+				}
+			}
+		}
+
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 
