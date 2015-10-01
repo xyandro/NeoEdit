@@ -44,7 +44,7 @@ namespace NeoEdit.TableEdit
 		{
 			var cells = ranges.SelectMany(selection => selection.EnumerateColumns()).Distinct();
 			if (!preserveOrder)
-				cells = cells.OrderBy(column => column);
+				cells = cells.OrderBy();
 			return cells;
 		}
 
@@ -52,7 +52,7 @@ namespace NeoEdit.TableEdit
 		{
 			var cells = ranges.SelectMany(selection => selection.EnumerateRows()).Distinct();
 			if (!preserveOrder)
-				cells = cells.OrderBy(row => row);
+				cells = cells.OrderBy();
 			return cells;
 		}
 	}

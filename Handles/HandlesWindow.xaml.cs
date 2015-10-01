@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
+using NeoEdit.Common;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Controls.ItemGridControl;
@@ -41,7 +42,7 @@ namespace NeoEdit.Handles
 
 			InitializeComponent();
 
-			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy(type => type).ToList();
+			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy().ToList();
 			HandleTypes.Insert(0, "");
 
 			foreach (var prop in UIHelper<HandleItem>.GetProperties())

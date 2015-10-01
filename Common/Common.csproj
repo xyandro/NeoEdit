@@ -29,6 +29,7 @@
     <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="LCS.cs" />
+    <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />

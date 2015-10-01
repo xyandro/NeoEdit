@@ -1936,7 +1936,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Files_Select_Roots(bool include)
 		{
 			var sels = Selections.Select(range => new { range = range, str = GetString(range).ToLower().Replace(@"\\", @"\").TrimEnd('\\') }).ToList();
-			var files = sels.Select(obj => obj.str).Distinct().OrderBy(str => str).ToList();
+			var files = sels.Select(obj => obj.str).Distinct().OrderBy().ToList();
 			var roots = new HashSet<string>();
 			string root = null;
 			foreach (var file in files)
@@ -3448,7 +3448,7 @@ namespace NeoEdit.TextEdit
 						}
 
 						var selLines = Selections.AsParallel().AsOrdered().Where(a => a.HasSelection).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
-						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy(line => line).ToDictionary(line => line, line => Data.GetOffset(line, 0));
+						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy().ToDictionary(line => line, line => Data.GetOffset(line, 0));
 						int offset;
 						string replace;
 						if (shiftDown)

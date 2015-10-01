@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using NeoEdit.Common;
 using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.GUI.Controls.ItemGridControl
@@ -215,7 +216,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 			if ((Columns == null) || (Items == null) || (SortColumn == null))
 				return;
 
-			SortedItems = new ObservableCollection<ItemType>(Items.OrderBy(a => a, new Comparer(SortColumn.DepProp, SortAscending, (Items.Count <= 500) && (SortColumn.NumericStrings))));
+			SortedItems = new ObservableCollection<ItemType>(Items.OrderBy(new Comparer(SortColumn.DepProp, SortAscending, (Items.Count <= 500) && (SortColumn.NumericStrings))));
 			sortTimer.Stop();
 			verifyTimer.Stop(); // Since verify is a dependency of sort, this was already done
 

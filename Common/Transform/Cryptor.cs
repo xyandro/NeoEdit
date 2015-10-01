@@ -181,7 +181,7 @@ namespace NeoEdit.Common.Transform
 				for (var size = keySize.MinSize; size <= keySize.MaxSize; size += skip)
 					keySet.Add(size);
 			}
-			keySizes = keySet.OrderBy(size => size).ToList();
+			keySizes = keySet.OrderBy().ToList();
 		}
 
 		static byte[] EncryptRSA(byte[] data, string pubKey)

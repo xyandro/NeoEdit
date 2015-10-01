@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.TextEdit
@@ -216,7 +217,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			var scanInfoByHost = scanInfo.GroupBy(item => item.Host).ToDictionary(group => group.Key);
-			return hosts.Select(host => scanInfoByHost[host].Where(item => item.Success).Select(item => item.Port).OrderBy(port => port).ToList()).ToList();
+			return hosts.Select(host => scanInfoByHost[host].Where(item => item.Success).Select(item => item.Port).OrderBy().ToList()).ToList();
 		}
 	}
 }

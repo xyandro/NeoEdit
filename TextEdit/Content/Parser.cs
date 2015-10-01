@@ -104,12 +104,12 @@ namespace NeoEdit.TextEdit.Content
 
 		static public List<string> GetAvailableAttrs(List<ParserNode> nodes)
 		{
-			return nodes.SelectMany(node => node.GetAttrTypes()).Distinct().OrderBy(str => str).ToList();
+			return nodes.SelectMany(node => node.GetAttrTypes()).Distinct().OrderBy().ToList();
 		}
 
 		static public List<string> GetAvailableValues(List<ParserNode> nodes, string type)
 		{
-			return nodes.SelectMany(node => node.GetAttrsText(type)).Distinct().OrderBy(str => str).ToList();
+			return nodes.SelectMany(node => node.GetAttrsText(type)).Distinct().OrderBy().ToList();
 		}
 	}
 }

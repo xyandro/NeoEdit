@@ -252,8 +252,8 @@ namespace NeoEdit.TableEdit
 			switch (aggType)
 			{
 				case AggregateType.Value: return values.Distinct().Single();
-				case AggregateType.Distinct: return String.Join(", ", values.Distinct().OrderBy(a => a));
-				case AggregateType.Concat: return String.Join(", ", values.OrderBy(a => a));
+				case AggregateType.Distinct: return String.Join(", ", values.Distinct().OrderBy());
+				case AggregateType.Concat: return String.Join(", ", values.OrderBy());
 				case AggregateType.Min: return values.Min();
 				case AggregateType.Max: return values.Max();
 				case AggregateType.Sum: return values.Select(value => Convert.ToDouble(value)).Sum();

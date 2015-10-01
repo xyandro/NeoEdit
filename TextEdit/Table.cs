@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using NeoEdit.Common;
 
 namespace NeoEdit.TextEdit
 {
@@ -192,8 +193,8 @@ namespace NeoEdit.TextEdit
 			switch (aggType)
 			{
 				case AggregateType.None: return values.Distinct().Single();
-				case AggregateType.Distinct: return String.Join(", ", values.Distinct().OrderBy(a => a));
-				case AggregateType.Concat: return String.Join(", ", values.OrderBy(a => a));
+				case AggregateType.Distinct: return String.Join(", ", values.Distinct().OrderBy());
+				case AggregateType.Concat: return String.Join(", ", values.OrderBy());
 				case AggregateType.Min: return values.Min();
 				case AggregateType.Max: return values.Max();
 				case AggregateType.Sum: return values.Select(value => Convert.ToDouble(value)).Sum();
