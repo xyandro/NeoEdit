@@ -39,11 +39,6 @@ namespace NeoEdit.TableEdit
 			CalculateBounds();
 		}
 
-		public static implicit operator CellRange(Cell cell)
-		{
-			return new CellRange(cell);
-		}
-
 		void CalculateBounds()
 		{
 			if (Active)
@@ -67,16 +62,19 @@ namespace NeoEdit.TableEdit
 
 		public bool Contains(Cell cell)
 		{
-			return (cell.Row >= MinRow) && (cell.Row <= MaxRow) && (cell.Column >= MinColumn) && (cell.Column <= MaxColumn);
+			return (Active) && (cell.Row >= MinRow) && (cell.Row <= MaxRow) && (cell.Column >= MinColumn) && (cell.Column <= MaxColumn);
 		}
 
 		public bool Contains(int row, int column)
 		{
-			return (row >= MinRow) && (row <= MaxRow) && (column >= MinColumn) && (column <= MaxColumn);
+			return (Active) && (row >= MinRow) && (row <= MaxRow) && (column >= MinColumn) && (column <= MaxColumn);
 		}
 
 		public IEnumerable<Cell> EnumerateCells()
 		{
+			if (!Active)
+				yield break;
+
 			var deltaRow = StartRow > EndRow ? -1 : 1;
 			var deltaColumn = StartColumn > EndColumn ? -1 : 1;
 			for (var row = StartRow; row != EndRow + deltaRow; row += deltaRow)
@@ -86,6 +84,9 @@ namespace NeoEdit.TableEdit
 
 		public IEnumerable<int> EnumerateColumns()
 		{
+			if (!Active)
+				yield break;
+
 			var deltaColumn = StartColumn > EndColumn ? -1 : 1;
 			for (var column = StartColumn; column != EndColumn + deltaColumn; column += deltaColumn)
 				yield return column;
@@ -93,6 +94,9 @@ namespace NeoEdit.TableEdit
 
 		public IEnumerable<int> EnumerateRows()
 		{
+			if (!Active)
+				yield break;
+
 			var deltaRow = StartRow > EndRow ? -1 : 1;
 			for (var row = StartRow; row != EndRow + deltaRow; row += deltaRow)
 				yield return row;

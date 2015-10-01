@@ -29,7 +29,7 @@ namespace NeoEdit.TableEdit
 
 		static internal void Replace(this ObservableCollectionEx<CellRange> ranges, IEnumerable<Cell> cells)
 		{
-			ranges.Replace(cells.Select(cell => (CellRange)cell));
+			ranges.Replace(cells.Select(cell => new CellRange(cell)));
 		}
 
 		static internal IEnumerable<Cell> EnumerateCells(this ObservableCollectionEx<CellRange> ranges, bool preserveOrder = false)

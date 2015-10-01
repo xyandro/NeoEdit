@@ -221,18 +221,18 @@ namespace NeoEdit.TableEdit
 							allColumns = true;
 						if ((allColumns) || (allRows))
 							Selections.Replace(range => new CellRange(allColumns ? 0 : range.StartRow, allRows ? 0 : range.StartColumn, allColumns ? table.NumRows - 1 : range.EndRow, allRows ? table.NumColumns - 1 : range.EndColumn));
-						else if (!altDown)
+						else if ((!altDown) || (Selections.Count == 0))
 							result = false;
-						else if (Selections.Count != 0)
+						else if (Selections.Last().Active)
+							Selections[Selections.Count - 1] = new CellRange(Selections[Selections.Count - 1].End, active: false);
+						else
 						{
-							if (Selections[Selections.Count - 1].Active)
-								Selections.Insert(Selections.Count, new CellRange(Selections[Selections.Count - 1].End, active: false));
 							var cursor = Selections[Selections.Count - 1].End;
-							var cellRange = Selections.FirstOrDefault(range => (range.Active) && (range.Contains(cursor)));
+							var cellRange = Selections.LastOrDefault(range => (range.Active) && (range.Contains(cursor)));
 							if (cellRange != null)
 								Selections.Remove(cellRange);
 							else
-								Selections.Insert(Selections.Count - 1, new CellRange(Selections[Selections.Count - 1], active: true));
+								Selections[Selections.Count - 1] = new CellRange(Selections[Selections.Count - 1].End);
 						}
 						break;
 					case Key.F2: StartEdit(false); break;
@@ -569,7 +569,7 @@ namespace NeoEdit.TableEdit
 						index = Searches.Count - 1;
 				}
 
-				Selections[ctr] = Searches[index];
+				Selections[ctr] = new CellRange(Searches[index]);
 			}
 		}
 
