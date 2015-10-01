@@ -1,0 +1,70 @@
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TableEdit.Dialogs.GroupDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	Title="Group" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=columns}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<ListView Grid.Row="0" Name="columns" ItemsSource="{Binding Columns, ElementName=self}" KeyDown="ColumnsKeyDown">
+			<ListView.Resources>
+				<Style TargetType="{x:Type ListViewItem}">
+					<Setter Property="IsSelected" Value="{Binding Selected, Mode=TwoWay}"/>
+				</Style>
+			</ListView.Resources>
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="Group" Width="Auto">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<CheckBox IsChecked="{Binding Group}"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Column" Width="Auto" DisplayMemberBinding="{Binding ColumnName}"/>
+					<GridViewColumn Header="Aggregation" Width="500" DisplayMemberBinding="{Binding Aggregation}"/>
+				</GridView>
+			</ListView.View>
+		</ListView>
+
+		<GroupBox Grid.Row="1" Header="Controls:">
+			<StackPanel>
+				<UniformGrid Columns="6">
+					<Label Content="G" HorizontalAlignment="Right"/>
+					<Label Content="Group"/>
+					<Label Content="D" HorizontalAlignment="Right"/>
+					<Label Content="Distinct"/>
+					<Label Content="O" HorizontalAlignment="Right"/>
+					<Label Content="Concat"/>
+					<Label Content="C" HorizontalAlignment="Right"/>
+					<Label Content="Count"/>
+					<Label Content="N" HorizontalAlignment="Right"/>
+					<Label Content="Min"/>
+					<Label Content="X" HorizontalAlignment="Right"/>
+					<Label Content="Max"/>
+					<Label Content="S" HorizontalAlignment="Right"/>
+					<Label Content="Sum"/>
+					<Label Content="A" HorizontalAlignment="Right"/>
+					<Label Content="Average"/>
+					<Label Content="E" HorizontalAlignment="Right"/>
+					<Label Content="None"/>
+				</UniformGrid>
+				<Label Content="Hold shift for multiples." HorizontalAlignment="Center"/>
+			</StackPanel>
+		</GroupBox>
+
+		<UniformGrid Grid.Row="3" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+</guiControls:ModalDialog>

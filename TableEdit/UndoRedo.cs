@@ -20,6 +20,7 @@ namespace NeoEdit.TableEdit
 		InsertColumns,
 		DeleteColumns,
 		ChangeHeader,
+		ChangeTable,
 	}
 
 	class UndoRedoStep
@@ -30,6 +31,7 @@ namespace NeoEdit.TableEdit
 		public List<List<object>> InsertData { get; private set; }
 		public List<Table.Header> Headers { get; private set; }
 		public UndoRedoAction Action { get; private set; }
+		public Table Table { get; private set; }
 
 		UndoRedoStep() { }
 
@@ -101,6 +103,14 @@ namespace NeoEdit.TableEdit
 			};
 		}
 
+		static public UndoRedoStep CreateChangeTable(Table table)
+		{
+			return new UndoRedoStep
+			{
+				Table = table,
+				Action = UndoRedoAction.ChangeTable,
+			};
+		}
 	}
 
 	class UndoRedo

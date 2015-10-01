@@ -21,6 +21,13 @@
     <Compile Include="Dialogs\EditHeaderDialog.xaml.cs">
       <DependentUpon>EditHeaderDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\GroupDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GroupDialog.xaml.cs">
+      <DependentUpon>GroupDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Misc.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">

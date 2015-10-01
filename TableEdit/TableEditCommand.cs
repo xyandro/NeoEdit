@@ -33,6 +33,7 @@ namespace NeoEdit.TableEdit
 		[KeyGesture(Key.F3, ModifierKeys.Control)] Edit_Find_Previous,
 		Edit_Find_Replace,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Sort,
+		[KeyGesture(Key.G, ModifierKeys.Control)] Edit_Group,
 		[KeyGesture(Key.H, ModifierKeys.Control)] Edit_Header,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Expression_Expression,
 		Expression_SelectByExpression,

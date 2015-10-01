@@ -188,4 +188,12 @@ namespace NeoEdit.Common
 				PropertyChanged(this, new PropertyChangedEventArgs("Count"));
 		}
 	}
+
+	public static class ObservableCollectionExExtensions
+	{
+		public static ObservableCollectionEx<Type> ToObservableCollectionEx<Type>(this IEnumerable<Type> source)
+		{
+			return new ObservableCollectionEx<Type>(source);
+		}
+	}
 }

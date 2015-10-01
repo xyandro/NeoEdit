@@ -31,15 +31,36 @@ namespace NeoEdit.Common
 				case TypeCode.Byte:
 				case TypeCode.SByte:
 				case TypeCode.UInt16:
-				case TypeCode.UInt32:
-				case TypeCode.UInt64:
 				case TypeCode.Int16:
+				case TypeCode.UInt32:
 				case TypeCode.Int32:
+				case TypeCode.UInt64:
 				case TypeCode.Int64:
 					return true;
 				default:
 					return false;
 			}
+		}
+
+		public static bool IsFloatType(this Type type)
+		{
+			if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
+				type = Nullable.GetUnderlyingType(type);
+
+			switch (Type.GetTypeCode(type))
+			{
+				case TypeCode.Single:
+				case TypeCode.Double:
+				case TypeCode.Decimal:
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		public static bool IsNumericType(this Type type)
+		{
+			return (IsIntegerType(type)) || (IsFloatType(type));
 		}
 
 		public static bool IsDateType(this Type type)
@@ -344,6 +365,17 @@ namespace NeoEdit.Common
 				hasPrev = true;
 			}
 			return true;
+		}
+
+		public static IEnumerable<int> Indexes<TSource>(this IEnumerable<TSource> source, Predicate<TSource> predicate)
+		{
+			var index = 0;
+			foreach (var item in source)
+			{
+				if (predicate(item))
+					yield return index;
+				++index;
+			}
 		}
 
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]

@@ -7,6 +7,19 @@ namespace NeoEdit.TableEdit
 {
 	public class Table
 	{
+		[Flags]
+		public enum AggregateType
+		{
+			None = 0,
+			Distinct = 1,
+			Concat = 2,
+			Min = 4,
+			Max = 8,
+			Sum = 16,
+			Average = 32,
+			Count = 64,
+		}
+
 		public class Header
 		{
 			public string Name { get; set; }
@@ -229,6 +242,54 @@ namespace NeoEdit.TableEdit
 					}
 				default: throw new ArgumentException("Invalid output type");
 			}
+		}
+
+		object GetAggregateValue(AggregateType aggType, List<object> values)
+		{
+			switch (aggType)
+			{
+				case AggregateType.None: return values.Distinct().Single();
+				case AggregateType.Distinct: return String.Join(", ", values.Distinct().OrderBy(a => a));
+				case AggregateType.Concat: return String.Join(", ", values.OrderBy(a => a));
+				case AggregateType.Min: return values.Min();
+				case AggregateType.Max: return values.Max();
+				case AggregateType.Sum: return values.Select(value => Convert.ToDouble(value)).Sum();
+				case AggregateType.Count: return values.Count;
+				case AggregateType.Average: return values.Select(value => Convert.ToDouble(value)).Sum() / values.Count;
+				default: throw new Exception("Invalid table type");
+			}
+		}
+
+		public Table Aggregate(List<int> groupByColumns, List<Tuple<int, AggregateType>> aggregateData)
+		{
+			var groupMap = new Dictionary<string, List<List<object>>> { { "", Rows } };
+			foreach (var column in groupByColumns)
+				groupMap = groupMap.SelectMany(pair => pair.Value.GroupBy(items => pair.Key + "," + (items[column] ?? "").ToString())).ToDictionary(group => group.Key, group => group.ToList());
+			var groupedRows = groupMap.Values.ToList();
+
+			var newHeaders = new List<Header>();
+			var newRows = groupedRows.Select(item => new List<object>()).ToList();
+
+			foreach (var tuple in aggregateData)
+			{
+				for (var ctr = 0; ctr < groupedRows.Count; ++ctr)
+					newRows[ctr].Add(GetAggregateValue(tuple.Item2, groupedRows[ctr].Select(item => item[tuple.Item1]).ToList()));
+
+				newHeaders.Add(new Header
+				{
+					Name = Headers[tuple.Item1].Name + (tuple.Item2 == AggregateType.None ? "" : " (" + tuple.Item2 + ")"),
+					Type = newRows.Select(row => row.Last()).Where(item => item != null).Select(item => item.GetType()).FirstOrDefault() ?? typeof(string),
+					Nullable = Headers[tuple.Item1].Nullable,
+				});
+			}
+
+			return new Table(this)
+			{
+				Headers = newHeaders,
+				Rows = newRows,
+				HasHeaders = HasHeaders,
+				TableType = TableType,
+			};
 		}
 
 		public object this[Cell cell]
