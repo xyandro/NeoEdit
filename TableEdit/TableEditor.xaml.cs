@@ -96,7 +96,7 @@ namespace NeoEdit.TableEdit
 			undoRedo.SetModified(false);
 		}
 
-		CellRange MoveSelection(CellRange range, int row, int column, bool selecting, bool disjoint, bool rowRel = true, bool columnRel = true)
+		CellRange MoveSelection(CellRange range, int row, int column, bool selecting, bool rowRel = true, bool columnRel = true)
 		{
 			if (rowRel)
 				row += range.End.Row;
@@ -116,7 +116,7 @@ namespace NeoEdit.TableEdit
 				if ((Selections.Count != 0) && (!Selections[Selections.Count - 1].Active))
 					Selections[Selections.Count - 1] = new CellRange(Selections[Selections.Count - 1], active: true);
 
-				Selections.Replace(selection => MoveSelection(selection, row, column, selecting, disjoint, rowRel, columnRel));
+				Selections.Replace(selection => MoveSelection(selection, row, column, selecting, rowRel, columnRel));
 				return;
 			}
 
@@ -125,7 +125,7 @@ namespace NeoEdit.TableEdit
 			if ((!selecting) && (Selections[Selections.Count - 1].Active))
 				Selections.Add(new CellRange(Selections[Selections.Count - 1], active: false));
 
-			Selections[Selections.Count - 1] = MoveSelection(Selections[Selections.Count - 1], row, column, selecting, disjoint, rowRel, columnRel);
+			Selections[Selections.Count - 1] = MoveSelection(Selections[Selections.Count - 1], row, column, selecting, rowRel, columnRel);
 		}
 
 		void MakeActiveVisible()
