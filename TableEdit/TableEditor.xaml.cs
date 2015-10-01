@@ -67,6 +67,7 @@ namespace NeoEdit.TableEdit
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
 			OpenFile(fileName);
+			undoRedo.Clear();
 
 			SetHome();
 			Selections.CollectionChanged += (s, e) => { MakeActiveVisible(); canvasRenderTimer.Start(); };
@@ -88,7 +89,7 @@ namespace NeoEdit.TableEdit
 
 			var text = Coder.BytesToString(bytes, Coder.CodePage.AutoByBOM, true);
 
-			table = String.IsNullOrEmpty(text) ? new Table() : new Table(text);
+			ReplaceTable(String.IsNullOrEmpty(text) ? new Table() : new Table(text));
 
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
@@ -134,10 +135,16 @@ namespace NeoEdit.TableEdit
 				return;
 
 			var cursor = Selections.Last().End;
-			var xStart = Enumerable.Range(0, cursor.Column).Sum(column => table.Headers[column].Width);
-			var xEnd = xStart + table.Headers[cursor.Column].Width;
+			var column = Math.Min(cursor.Column, table.NumColumns - 1);
+			var row = Math.Min(cursor.Row, table.NumRows - 1);
+
+			if ((column < 0) || (row < 0))
+				return;
+
+			var xStart = Enumerable.Range(0, column).Sum(column2 => table.Headers[column2].Width);
+			var xEnd = xStart + table.Headers[column].Width;
 			xScrollValue = Math.Min(xStart, Math.Max(xEnd - xScroll.ViewportSize, xScrollValue));
-			yScrollValue = Math.Min(cursor.Row, Math.Max(cursor.Row - yScrollViewportFloor + 1, yScrollValue));
+			yScrollValue = Math.Min(row, Math.Max(row - yScrollViewportFloor + 1, yScrollValue));
 		}
 
 		protected override void OnPreviewTextInput(TextCompositionEventArgs e)
@@ -902,15 +909,15 @@ namespace NeoEdit.TableEdit
 
 		void Command_Select_UniqueDuplicates(bool unique)
 		{
-			var found = new HashSet<object>();
-			Selections.Replace(GetSelectedCells().Where(cell =>
+			var found = new HashSet<ItemSet<object>>();
+			Selections.Limit(range =>
 			{
-				var value = table[cell];
+				var value = range.EnumerateCells().Select(cell => table[cell]).ToItemSet();
 				var contains = found.Contains(value);
 				if (!contains)
 					found.Add(value);
 				return contains != unique;
-			}));
+			});
 		}
 
 		internal bool GetDialogResult(TableEditCommand command, out object dialogResult)
