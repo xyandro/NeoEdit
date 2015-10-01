@@ -179,7 +179,7 @@ namespace NeoEdit.HexEdit
 				case Message.OptionsEnum.Cancel: return false;
 				case Message.OptionsEnum.No: return true;
 				case Message.OptionsEnum.Yes:
-					Command_File_Save();
+					Command_File_Save_Save();
 					return !IsModified;
 			}
 			return false;
@@ -567,10 +567,10 @@ namespace NeoEdit.HexEdit
 			return false;
 		}
 
-		internal void Command_File_Save()
+		internal void Command_File_Save_Save()
 		{
 			if (FileName == null)
-				Command_File_SaveAs();
+				Command_File_Save_SaveAs();
 			else
 			{
 				Data.Save(FileName);
@@ -578,7 +578,7 @@ namespace NeoEdit.HexEdit
 			}
 		}
 
-		internal void Command_File_SaveAs()
+		internal void Command_File_Save_SaveAs()
 		{
 			var dialog = new SaveFileDialog();
 			if (dialog.ShowDialog() != true)
@@ -589,7 +589,7 @@ namespace NeoEdit.HexEdit
 			if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
 				throw new Exception("Directory doesn't exist.");
 			FileName = dialog.FileName;
-			Command_File_Save();
+			Command_File_Save_Save();
 		}
 
 		internal void Command_File_Revert()
@@ -620,12 +620,12 @@ namespace NeoEdit.HexEdit
 			++ChangeCount;
 		}
 
-		internal void Command_File_CopyPath()
+		internal void Command_File_Copy_CopyPath()
 		{
 			NEClipboard.SetFiles(new List<string> { FileName }, false);
 		}
 
-		internal void Command_File_CopyName()
+		internal void Command_File_Copy_CopyName()
 		{
 			Clipboard.SetText(Path.GetFileName(FileName));
 		}
@@ -654,7 +654,7 @@ namespace NeoEdit.HexEdit
 					return false;
 			}
 
-			Launcher.Static.LaunchTextEditor(FileName, Data.GetAllBytes(), CodePage, IsModified);
+			Launcher.Static.LaunchTextEditor(FileName, bytes, CodePage, IsModified);
 			return true;
 		}
 
@@ -717,7 +717,7 @@ namespace NeoEdit.HexEdit
 				Replace(bytes);
 		}
 
-		internal void Command_Edit_Find(bool shiftDown)
+		internal void Command_Edit_Find_Find(bool shiftDown)
 		{
 			var results = FindBinaryDialog.Run(WindowParent);
 			if (results != null)
@@ -754,7 +754,7 @@ namespace NeoEdit.HexEdit
 			ShowValues = !ShowValues;
 		}
 
-		internal void Command_View_Refresh()
+		internal void Command_File_Refresh()
 		{
 			Data.Refresh();
 			++ChangeCount;
@@ -867,13 +867,13 @@ namespace NeoEdit.HexEdit
 			Replace(SelStart, SelEnd - SelStart, data);
 		}
 
-		internal void Command_Data_Models_Define()
+		internal void Command_Models_Define()
 		{
 			if (new ModelDataVM(modelData).EditDialog())
-				Command_Data_Models_Save();
+				Command_Models_Save();
 		}
 
-		internal void Command_Data_Models_Save()
+		internal void Command_Models_Save()
 		{
 			var dialog = new SaveFileDialog
 			{
@@ -887,7 +887,7 @@ namespace NeoEdit.HexEdit
 			modelData.Save(dialog.FileName);
 		}
 
-		internal void Command_Data_Models_Load()
+		internal void Command_Models_Load()
 		{
 			var dialog = new OpenFileDialog
 			{
@@ -901,7 +901,7 @@ namespace NeoEdit.HexEdit
 			modelData = ModelData.Load(dialog.FileName);
 		}
 
-		internal void Command_Data_Models_ExtractData()
+		internal void Command_Models_ExtractData()
 		{
 			var start = SelStart;
 			var end = SelEnd;

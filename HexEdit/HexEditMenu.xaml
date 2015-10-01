@@ -7,16 +7,23 @@
 
 	<MenuItem Header="_File">
 		<hexEdit:HexEditMenuItem Header="_New" CommandEnum="File_New"/>
-		<hexEdit:HexEditMenuItem Header="_Open" CommandEnum="File_Open"/>
-		<hexEdit:HexEditMenuItem Header="Open _Dump" CommandEnum="File_OpenDump"/>
-		<hexEdit:HexEditMenuItem Header="Open Cop_ied/Cut Files" CommandEnum="File_OpenCopiedCutFiles"/>
-		<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="File_Save"/>
-		<hexEdit:HexEditMenuItem Header="Save _As" CommandEnum="File_SaveAs"/>
-		<hexEdit:HexEditMenuItem Header="_Close" CommandEnum="File_Close"/>
+		<MenuItem Header="_Open">
+			<hexEdit:HexEditMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
+			<hexEdit:HexEditMenuItem Header="Open _Copied/Cut Files" CommandEnum="File_Open_OpenCopiedCutFiles"/>
+			<hexEdit:HexEditMenuItem Header="Open _Dump" CommandEnum="File_Open_OpenDump"/>
+		</MenuItem>
+		<MenuItem Header="_Save">
+			<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
+			<hexEdit:HexEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
+		</MenuItem>
+		<hexEdit:HexEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
+		<hexEdit:HexEditMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
 		<hexEdit:HexEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
-		<hexEdit:HexEditMenuItem Header="Copy _Path" CommandEnum="File_CopyPath"/>
-		<hexEdit:HexEditMenuItem Header="Copy Na_me" CommandEnum="File_CopyName"/>
+		<MenuItem Header="_Copy">
+			<hexEdit:HexEditMenuItem Header="Copy _Path" CommandEnum="File_Copy_CopyPath"/>
+			<hexEdit:HexEditMenuItem Header="Copy Na_me" CommandEnum="File_Copy_CopyName"/>
+		</MenuItem>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
 		<hexEdit:HexEditMenuItem Header="_Text Editor" CommandEnum="File_TextEditor"/>
@@ -31,16 +38,18 @@
 		<hexEdit:HexEditMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
 		<hexEdit:HexEditMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 		<Separator/>
-		<hexEdit:HexEditMenuItem Header="_Find" CommandEnum="Edit_Find"/>
-		<hexEdit:HexEditMenuItem Header="Find _Next" CommandEnum="Edit_FindNext"/>
-		<hexEdit:HexEditMenuItem Header="Find Pre_v" CommandEnum="Edit_FindPrev"/>
+		<MenuItem Header="_Find">
+			<hexEdit:HexEditMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
+			<hexEdit:HexEditMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
+			<hexEdit:HexEditMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
+		</MenuItem>
+		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Goto" CommandEnum="Edit_Goto"/>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Parent.ItemTabs.TopMost.Insert, ElementName=self}"/>
 	</MenuItem>
 	<MenuItem Header="_View">
 		<hexEdit:HexEditMenuItem Header="_Values" CommandEnum="View_Values" IsChecked="{Binding Parent.ItemTabs.TopMost.ShowValues, ElementName=self}"/>
-		<hexEdit:HexEditMenuItem Header="_Refresh" CommandEnum="View_Refresh"/>
 		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
 	</MenuItem>
 	<MenuItem Header="_Data">
@@ -82,10 +91,10 @@
 		<hexEdit:HexEditMenuItem Header="_Fill" CommandEnum="Data_Fill"/>
 	</MenuItem>
 	<MenuItem Header="_Models">
-		<hexEdit:HexEditMenuItem Header="_Define" CommandEnum="Data_Models_Define"/>
-		<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="Data_Models_Save"/>
-		<hexEdit:HexEditMenuItem Header="_Load" CommandEnum="Data_Models_Load"/>
-		<hexEdit:HexEditMenuItem Header="_Extract Data" CommandEnum="Data_Models_ExtractData"/>
+		<hexEdit:HexEditMenuItem Header="_Define" CommandEnum="Models_Define"/>
+		<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="Models_Save"/>
+		<hexEdit:HexEditMenuItem Header="_Load" CommandEnum="Models_Load"/>
+		<hexEdit:HexEditMenuItem Header="_Extract Data" CommandEnum="Models_ExtractData"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>
