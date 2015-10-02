@@ -60,12 +60,12 @@ namespace NeoEdit.Common.Expressions
 			CLongPrefix,
 		}
 
-		static List<ExpressionUnitsConversion> conversionConstants = new List<ExpressionUnitsConversion>();
+		static Dictionary<string, ExpressionUnitsConversion> conversionConstants = new Dictionary<string, ExpressionUnitsConversion>();
 
 		static void AddConversionConstant(string fromUnitStr, ExpressionUnits toUnit, double mult, double add = 0, ConversionConstantAttr attr = ConversionConstantAttr.None)
 		{
 			var fromUnit = new ExpressionUnits(fromUnitStr);
-			conversionConstants.Add(new ExpressionUnitsConversion(fromUnit, toUnit, mult, add));
+			conversionConstants[fromUnitStr] = new ExpressionUnitsConversion(fromUnit, toUnit, mult, add);
 
 			List<Tuple<string, double>> addList = null;
 			switch (attr)
@@ -161,7 +161,10 @@ namespace NeoEdit.Common.Expressions
 			}
 
 			foreach (var tuple in addList)
-				conversionConstants.Add(new ExpressionUnitsConversion(new ExpressionUnits(tuple.Item1 + fromUnitStr), fromUnit, tuple.Item2, add));
+			{
+				var newFromUnit = new ExpressionUnits(tuple.Item1 + fromUnitStr);
+				conversionConstants[newFromUnit.Single().Unit] = new ExpressionUnitsConversion(newFromUnit, fromUnit, tuple.Item2, add);
+			}
 		}
 
 		static ExpressionUnitsConversion()
@@ -493,12 +496,10 @@ namespace NeoEdit.Common.Expressions
 			AddConversionConstant("kph", new ExpressionUnits("km") / new ExpressionUnits("hour"), 1);
 
 			// Set kg as base unit instead of g
-			var gValue = conversionConstants.Single(conv => conv.fromUnits.Single().Unit == "g");
-			var kgValue = conversionConstants.Single(conv => conv.fromUnits.Single().Unit == "kg");
-			conversionConstants.Remove(gValue);
-			conversionConstants.Remove(kgValue);
-			conversionConstants.Add(new ExpressionUnitsConversion(gValue.fromUnits, kgValue.fromUnits, gValue.mult / kgValue.mult, 0));
-			conversionConstants.Add(new ExpressionUnitsConversion(kgValue.fromUnits, kgValue.fromUnits, 1, 0));
+			var gValue = conversionConstants["g"];
+			var kgValue = conversionConstants["kg"];
+			conversionConstants["g"] = new ExpressionUnitsConversion(gValue.fromUnits, kgValue.fromUnits, gValue.mult / kgValue.mult, 0);
+			conversionConstants["kg"] = new ExpressionUnitsConversion(kgValue.fromUnits, kgValue.fromUnits, 1, 0);
 
 			SetConstantBaseUnits();
 			ValidateData();
@@ -510,21 +511,20 @@ namespace NeoEdit.Common.Expressions
 			while (true)
 			{
 				var stop = true;
-				foreach (var conv in conversionConstants.ToList())
+				foreach (var pair in conversionConstants.ToList())
 				{
-					var unitStr = conv.fromUnits.Single().Unit;
+					var unitStr = pair.Key;
 					if (done.Contains(unitStr))
 						continue;
 
-					var baseConv = GetBaseConversion(conv.toUnits);
-					if (conv.toUnits.Equals(baseConv.toUnits))
+					var baseConv = GetBaseConversion(pair.Value.toUnits);
+					if (pair.Value.toUnits.Equals(baseConv.toUnits))
 					{
 						done.Add(unitStr);
 						continue;
 					}
 
-					conversionConstants.Remove(conv);
-					conversionConstants.Add(conv * baseConv);
+					conversionConstants[pair.Key] = pair.Value * baseConv;
 					stop = false;
 				}
 				if (stop)
@@ -534,10 +534,10 @@ namespace NeoEdit.Common.Expressions
 
 		static void ValidateData()
 		{
-			var repeats = conversionConstants.GroupBy(conv => conv.fromUnits.ToString()).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
+			var repeats = conversionConstants.Values.GroupBy(conv => conv.fromUnits.ToString()).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
 			if (repeats.Any())
 				throw new Exception("Units repeated: " + String.Join(", ", repeats));
-			var invalidBase = conversionConstants.Where(conv => conv.fromUnits.Equals(conv.toUnits)).Where(conv => (conv.mult != 1) || (conv.add != 0)).Select(conv => conv.fromUnits.Single().Unit).ToList();
+			var invalidBase = conversionConstants.Values.Where(conv => conv.fromUnits.Equals(conv.toUnits)).Where(conv => (conv.mult != 1) || (conv.add != 0)).Select(conv => conv.fromUnits.Single().Unit).ToList();
 			if (invalidBase.Any())
 				throw new Exception("Units has no base: " + String.Join(", ", invalidBase));
 		}
@@ -547,7 +547,7 @@ namespace NeoEdit.Common.Expressions
 			var conversion = new ExpressionUnitsConversion(units);
 			foreach (var unit in units)
 			{
-				var unitConversion = conversionConstants.SingleOrDefault(conv => conv.fromUnits.Single().Unit == unit.Unit) ?? new ExpressionUnitsConversion(new ExpressionUnits(unit.Unit));
+				var unitConversion = conversionConstants.ContainsKey(unit.Unit) ? conversionConstants[unit.Unit] : new ExpressionUnitsConversion(new ExpressionUnits(unit.Unit));
 				conversion *= unitConversion ^ unit.Exp;
 			}
 			return conversion;
@@ -556,12 +556,7 @@ namespace NeoEdit.Common.Expressions
 		public static ExpressionUnitsConversion GetConversion(ExpressionUnits units1, ExpressionUnits units2)
 		{
 			var conversion1 = ExpressionUnitsConversion.GetBaseConversion(units1);
-
-			if (units2.IsSI)
-				units2 = conversion1.toUnits;
-			else if (units2.IsSimple)
-				units2 = ExpressionUnitsConversion.GetSimple(conversion1.toUnits);
-			var conversion2 = ExpressionUnitsConversion.GetBaseConversion(units2);
+			var conversion2 = ExpressionUnitsConversion.GetBaseConversion(units2.IsSI ? conversion1.toUnits : units2.IsSimple ? ExpressionUnitsConversion.GetSimple(conversion1.toUnits) : units2);
 
 			if (!conversion1.toUnits.Equals(conversion2.toUnits))
 				throw new Exception("Cannot convert types");
@@ -571,7 +566,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionUnits GetSimple(ExpressionUnits units)
 		{
-			var match = conversionConstants.Where(pair => pair.toUnits.Equals(units)).OrderBy(pair => pair.fromUnits.ToString().Length).FirstOrDefault();
+			var match = conversionConstants.Values.Where(pair => pair.toUnits.Equals(units)).OrderBy(pair => pair.fromUnits.ToString().Length).FirstOrDefault();
 			if (match == null)
 				return units;
 			return match.fromUnits;
