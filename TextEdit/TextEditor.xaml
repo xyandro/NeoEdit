@@ -156,7 +156,7 @@
 				<TextBlock Text="Clipboards"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding Path=Clipboard.Count, ElementName=self, StringFormat=n0}" MinWidth="50"/>
+				<TextBlock Text="{Binding Path=ClipboardCount, ElementName=self, StringFormat=n0}" MinWidth="50"/>
 			</StatusBarItem>
 
 			<Separator/>

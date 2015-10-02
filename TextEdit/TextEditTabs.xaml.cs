@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
+using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
@@ -123,8 +124,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_File_Copy_AllPaths()
 		{
-			var names = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
-			NEClipboard.Set(names, String.Join(" ", names));
+			NEClipboard.CopiedFiles = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
 		}
 
 		void Command_File_Open_CopiedCut()
@@ -153,7 +153,7 @@ namespace NeoEdit.TextEdit
 			foreach (var textEditorData in ItemTabs.Items)
 				if (textEditorData.Active)
 					data.AddRange(textEditorData.GetSelectionStrings());
-			NEClipboard.Set(data, String.Join(" ", data));
+			NEClipboard.Strings = data;
 		}
 
 		void Command_Edit_Paste_AllFiles()

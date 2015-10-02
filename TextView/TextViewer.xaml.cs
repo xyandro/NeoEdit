@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using NeoEdit.Common;
+using NeoEdit.Common.NEClipboards;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
@@ -89,7 +89,7 @@ namespace NeoEdit.TextView
 
 		internal void Command_File_CopyPath()
 		{
-			NEClipboard.SetFiles(new List<string> { FileName }, false);
+			NEClipboard.CopiedFile = FileName;
 		}
 
 		internal void Command_File_Split()

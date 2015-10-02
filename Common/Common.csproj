@@ -30,7 +30,10 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="MoreLinq.cs" />
-    <Compile Include="NEClipboard.cs" />
+    <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
+    <Compile Include="NEClipboards\INEClipboardEnabled.cs" />
+    <Compile Include="NEClipboards\NEClipboard.cs" />
+    <Compile Include="NEClipboards\NELocalClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
     <Compile Include="Parsing\ParserExtensions.cs" />

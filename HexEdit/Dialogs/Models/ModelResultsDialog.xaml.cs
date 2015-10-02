@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using NeoEdit.Common;
+using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Controls.ItemGridControl;

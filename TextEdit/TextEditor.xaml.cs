@@ -21,6 +21,7 @@ using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
+using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
@@ -35,7 +36,7 @@ namespace NeoEdit.TextEdit
 {
 	public class TabsControl : TabsControl<TextEditor, TextEditCommand> { }
 
-	public partial class TextEditor
+	public partial class TextEditor : IClipboardEnabled
 	{
 		TextData _data = new TextData();
 		TextData Data
@@ -98,9 +99,9 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool ShareKeys { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollectionEx<string> Clipboard { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollectionEx<string>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int ClipboardCount { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShareClipboard { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public bool UseLocalClipboard { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public ObservableCollectionEx<Table> Results { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollectionEx<Table>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
@@ -146,13 +147,14 @@ namespace NeoEdit.TextEdit
 
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
+		public object LocalClipboardData { get; set; }
+		readonly NELocalClipboard clipboard;
+
 		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; set; }
 		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; set; }
 		Dictionary<string, int> keysHash;
 		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
 		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
-		static ObservableCollectionEx<string> staticClipboard { get; set; }
-		ObservableCollectionEx<string> localClipboard { get; set; }
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
@@ -162,7 +164,7 @@ namespace NeoEdit.TextEdit
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(a => a.ShareKeys, (obj, o, n) => obj.SetupStaticOrLocalData());
-			UIHelper<TextEditor>.AddCallback(a => a.ShareClipboard, (obj, o, n) => obj.SetupStaticOrLocalData());
+			UIHelper<TextEditor>.AddCallback(a => a.UseLocalClipboard, (obj, o, n) => obj.SetClipboardCount());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 
@@ -170,9 +172,6 @@ namespace NeoEdit.TextEdit
 			staticKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(staticKeysAndValues, staticKeysHash, e);
 			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
 				staticKeysAndValues[ctr] = new ObservableCollection<string>();
-
-			staticClipboard = new ObservableCollectionEx<string>();
-			NEClipboard.ClipboardChanged += () => ClipboardChanged(staticClipboard);
 		}
 
 		static void keysAndValues_CollectionChanged(ObservableCollection<ObservableCollection<string>> data, Dictionary<string, int> hash, NotifyCollectionChangedEventArgs e)
@@ -185,16 +184,6 @@ namespace NeoEdit.TextEdit
 				hash[data[0][pos]] = pos;
 		}
 
-		static void ClipboardChanged(ObservableCollectionEx<string> clipboard)
-		{
-			// This is only for data coming from external sources
-			if (NEClipboard.Extra as Type == typeof(TextEditor))
-				return;
-
-			clipboard.Clear();
-			clipboard.AddRange(NEClipboard.Strings);
-		}
-
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 
@@ -204,15 +193,16 @@ namespace NeoEdit.TextEdit
 			localKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(localKeysAndValues, localKeysHash, e);
 			for (var ctr = 0; ctr < localKeysAndValues.Count; ++ctr)
 				localKeysAndValues[ctr] = new ObservableCollection<string>();
-			localClipboard = new ObservableCollectionEx<string>();
-			NEClipboard.ClipboardChanged += () => ClipboardChanged(localClipboard);
+			clipboard = new NELocalClipboard(this);
 
 			InitializeComponent();
 			bookmarks.Width = Font.lineHeight;
 
 			SetupTabLabel();
 
-			ShareKeys = ShareClipboard = true;
+			ShareKeys = true;
+			UseLocalClipboard = false;
+			NEClipboard.ClipboardChanged += SetClipboardCount;
 			SetupStaticOrLocalData();
 			SetupDropAccept();
 
@@ -269,8 +259,11 @@ namespace NeoEdit.TextEdit
 				keysAndValues = localKeysAndValues;
 				keysHash = localKeysHash;
 			}
+		}
 
-			Clipboard = ShareClipboard ? staticClipboard : localClipboard;
+		void SetClipboardCount()
+		{
+			ClipboardCount = clipboard.Strings.Count;
 		}
 
 		void SetupDropAccept()
@@ -298,30 +291,6 @@ namespace NeoEdit.TextEdit
 					e.Handled = true;
 				}
 			};
-		}
-
-		void SetClipboard(object data)
-		{
-			var str = data.ToString();
-			Clipboard.Clear();
-			Clipboard.Add(str);
-			NEClipboard.Set(data, str, typeof(TextEditor));
-		}
-
-		void SetClipboard(List<string> data)
-		{
-			Clipboard.Clear();
-			foreach (var str in data)
-				Clipboard.Add(str);
-			NEClipboard.Set(data, String.Join(" ", data), typeof(TextEditor));
-		}
-
-		void SetClipboardFiles(List<string> data, bool isCut)
-		{
-			Clipboard.Clear();
-			foreach (var str in data)
-				Clipboard.Add(str);
-			NEClipboard.SetFiles(data, isCut, typeof(TextEditor));
 		}
 
 		internal void Goto(int line, int column)
@@ -497,9 +466,9 @@ namespace NeoEdit.TextEdit
 			var strs = sels.Select(range => GetString(range)).ToList();
 			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? (int?)keysHash[str] : null).ToList();
 
-			// Can't access DependencyProperties from other threads; grab a copy:
+			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
 			var FileName = this.FileName;
-			var Clipboard = this.Clipboard;
+			var Clipboard = clipboard.Strings;
 			var keysAndValues = this.keysAndValues;
 
 			var parallelDataActions = new Dictionary<HashSet<string>, Action<HashSet<string>, Action<string, List<object>>>>();
@@ -1142,7 +1111,7 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
-			var files = Clipboard;
+			var files = clipboard.Strings;
 			if (files.Count == 0)
 				return;
 
@@ -1161,12 +1130,12 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Copy_Path()
 		{
-			SetClipboardFiles(new List<string> { FileName }, false);
+			clipboard.CopiedFile = FileName;
 		}
 
 		internal void Command_File_Copy_Name()
 		{
-			SetClipboard(Path.GetFileName(FileName));
+			clipboard.Text = Path.GetFileName(FileName);
 		}
 
 		internal void Command_File_Operations_Explore()
@@ -1269,10 +1238,12 @@ namespace NeoEdit.TextEdit
 		{
 			var strs = GetSelectionStrings();
 
-			if (StringsAreFiles(strs))
-				SetClipboardFiles(strs, isCut);
+			if (!StringsAreFiles(strs))
+				clipboard.Strings = strs;
+			else if (isCut)
+				clipboard.CutFiles = strs;
 			else
-				SetClipboard(strs);
+				clipboard.CopiedFiles = strs;
 			if (isCut)
 				ReplaceSelections("");
 		}
@@ -1296,7 +1267,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_Paste_Paste(bool highlight)
 		{
-			var clipboardStrings = Clipboard.ToList();
+			var clipboardStrings = clipboard.Strings;
 			if (clipboardStrings.Count == 0)
 				return;
 
@@ -1541,7 +1512,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Operations_SaveClipboards()
 		{
-			var clipboardStrings = Clipboard;
+			var clipboardStrings = clipboard.Strings;
 			if (clipboardStrings.Count != Selections.Count)
 				throw new Exception("Clipboard count must match selection count.");
 
@@ -2134,7 +2105,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Expression_Copy(GetExpressionDialog.Result result)
 		{
 			var results = GetExpressionResults<string>(result.Expression);
-			SetClipboard(results);
+			clipboard.Strings = results;
 		}
 
 		internal void Command_Expression_EvaluateSelected()
@@ -2162,12 +2133,12 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Copy_Count()
 		{
-			SetClipboard(Selections.Count);
+			clipboard.Text = Selections.Count.ToString();
 		}
 
 		internal void Command_Text_Copy_Length()
 		{
-			SetClipboard(Selections.Select(range => range.Length.ToString()).ToList());
+			clipboard.Strings = Selections.Select(range => range.Length.ToString()).ToList();
 		}
 
 		internal enum Command_MinMax_Type { String, Numeric, Length }
@@ -2177,7 +2148,7 @@ namespace NeoEdit.TextEdit
 				throw new Exception("No selections");
 			var strs = Selections.AsParallel().AsOrdered().Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
 			var found = min ? strs.First().range : strs.Last().range;
-			SetClipboard(value(found));
+			clipboard.Text = value(found);
 		}
 
 		internal void Command_Type_Copy_MinMax(bool min, Command_MinMax_Type type)
@@ -2192,14 +2163,14 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Numeric_Copy_Sum()
 		{
-			SetClipboard(Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum());
+			clipboard.Text = Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum().ToString();
 		}
 
 		internal void Command_Position_Copy(GotoType gotoType)
 		{
 			if (gotoType == GotoType.Position)
 			{
-				SetClipboard(Selections.Select(range => range.Start.ToString() + (range.HasSelection ? "-" + range.End : "")).ToList());
+				clipboard.Strings = Selections.Select(range => range.Start.ToString() + (range.HasSelection ? "-" + range.End : "")).ToList();
 				return;
 			}
 
@@ -2207,12 +2178,12 @@ namespace NeoEdit.TextEdit
 			var lines = starts.Select(pos => Data.GetOffsetLine(pos)).ToList();
 			if (gotoType == GotoType.Line)
 			{
-				SetClipboard(lines.Select(pos => (Data.GetDiffLine(pos) + 1).ToString()).ToList());
+				clipboard.Strings = lines.Select(pos => (Data.GetDiffLine(pos) + 1).ToString()).ToList();
 				return;
 			}
 
 			var indexes = starts.Select((pos, line) => Data.GetOffsetIndex(pos, lines[line])).ToList();
-			SetClipboard(indexes.Select(pos => (pos + 1).ToString()).ToList());
+			clipboard.Strings = indexes.Select(pos => (pos + 1).ToString()).ToList();
 		}
 
 		internal RepeatDialog.Result Command_Edit_Repeat_Dialog()
@@ -2726,7 +2697,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Keys_Copy(int index)
 		{
-			SetClipboard(keysAndValues[index].ToList());
+			clipboard.Strings = keysAndValues[index].ToList();
 		}
 
 		internal void Command_Keys_HitsMisses(int index, bool hits)
@@ -3944,7 +3915,7 @@ namespace NeoEdit.TextEdit
 
 		void ResultsCopyClick(object sender, RoutedEventArgs e)
 		{
-			SetClipboard(Results.Select(result => result.ConvertToString(Data.DefaultEnding)).ToList());
+			clipboard.Strings = Results.Select(result => result.ConvertToString(Data.DefaultEnding)).ToList();
 		}
 
 		public override string ToString()

@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
-using NeoEdit.Common;
+using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;

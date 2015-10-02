@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.NEClipboards;
 using NeoEdit.Disk.Dialogs;
 using NeoEdit.Disk.VCS;
 using NeoEdit.GUI;
@@ -299,8 +300,13 @@ namespace NeoEdit.Disk
 
 		internal void Command_Edit_CutCopy(bool isCut)
 		{
-			if (Selected.Count != 0)
-				NEClipboard.SetFiles(Selected.Cast<DiskItem>().Select(item => item.FullName).ToList(), isCut);
+			if (Selected.Count == 0)
+				return;
+			var files = Selected.Cast<DiskItem>().Select(item => item.FullName).ToList();
+			if (isCut)
+				NEClipboard.CutFiles = files;
+			else
+				NEClipboard.CopiedFiles = files;
 		}
 
 		internal void Command_Edit_Paste()
