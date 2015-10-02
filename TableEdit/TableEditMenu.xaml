@@ -40,6 +40,8 @@
 		<MenuItem Header="_Copy">
 			<tableEdit:TableEditMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
 			<tableEdit:TableEditMenuItem Header="Copy With _Headers" CommandEnum="Edit_Copy_CopyWithHeaders"/>
+			<tableEdit:TableEditMenuItem Header="C_ut" CommandEnum="Edit_Copy_Cut"/>
+			<tableEdit:TableEditMenuItem Header="Cut With H_eaders" CommandEnum="Edit_Copy_CutWithHeaders"/>
 		</MenuItem>
 		<MenuItem Header="_Paste">
 			<tableEdit:TableEditMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>

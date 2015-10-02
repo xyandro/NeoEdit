@@ -733,11 +733,15 @@ namespace NeoEdit.TableEdit
 			Replace(undoRedoStep, replaceType);
 		}
 
-		void Command_Edit_Copy_Copy(bool headers)
+		void Command_Edit_Copy_CopyCut(bool cut, bool headers)
 		{
-			var values = GetSelectedCells().Select(cell => table[cell]).ToList();
+			var cells = GetSelectedCells();
+			var values = cells.Select(cell => table[cell]).ToList();
 			var data = table.GetTableData(Selections);
 			NEClipboard.SetObjects(values, data);
+			if (cut)
+				ReplaceCells(cells, null);
+
 		}
 
 		void Command_Edit_Paste_Paste(bool headers)
@@ -973,8 +977,10 @@ namespace NeoEdit.TableEdit
 				case TableEditCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
 				case TableEditCommand.Edit_Undo: Command_Edit_UndoRedo(ReplaceType.Undo); break;
 				case TableEditCommand.Edit_Redo: Command_Edit_UndoRedo(ReplaceType.Redo); break;
-				case TableEditCommand.Edit_Copy_Copy: Command_Edit_Copy_Copy(false); break;
-				case TableEditCommand.Edit_Copy_CopyWithHeaders: Command_Edit_Copy_Copy(true); break;
+				case TableEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CopyCut(false, false); break;
+				case TableEditCommand.Edit_Copy_CopyWithHeaders: Command_Edit_Copy_CopyCut(false, true); break;
+				case TableEditCommand.Edit_Copy_Cut: Command_Edit_Copy_CopyCut(true, false); break;
+				case TableEditCommand.Edit_Copy_CutWithHeaders: Command_Edit_Copy_CopyCut(true, true); break;
 				case TableEditCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(true); break;
 				case TableEditCommand.Edit_Paste_PasteWithoutHeaders: Command_Edit_Paste_Paste(false); break;
 				case TableEditCommand.Edit_Find_Find: Command_Edit_Find_FindReplace(false, dialogResult as FindTextDialog.Result); break;

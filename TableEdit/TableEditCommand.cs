@@ -26,6 +26,8 @@ namespace NeoEdit.TableEdit
 		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,
 		[KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy_Copy,
 		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Copy_CopyWithHeaders,
+		[KeyGesture(Key.X, ModifierKeys.Control)] Edit_Copy_Cut,
+		[KeyGesture(Key.X, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Copy_CutWithHeaders,
 		[KeyGesture(Key.V, ModifierKeys.Control)] Edit_Paste_Paste,
 		[KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Paste_PasteWithoutHeaders,
 		[KeyGesture(Key.F, ModifierKeys.Control)] Edit_Find_Find,
