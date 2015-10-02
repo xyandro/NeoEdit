@@ -12,6 +12,7 @@ using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
+using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
@@ -35,6 +36,18 @@ namespace NeoEdit.TableEdit
 		public double xScrollValue { get { return UIHelper<TableEditor>.GetPropValue<double>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int yScrollValue { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int SelectedRow { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int SelectedColumn { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int SelectedCells { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int SelectedRows { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int SelectedColumns { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int ClipboardCount { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 
 		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize) - HeaderRows; } }
 		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize) - HeaderRows; } }
@@ -56,23 +69,32 @@ namespace NeoEdit.TableEdit
 			UIHelper<TableEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TableEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.canvasRenderTimer.Start());
 			UIHelper<TableEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.canvasRenderTimer.Start());
-
-			NEClipboard.ClipboardChanged += () => { };
 		}
 
 		public TableEditor(string fileName)
 		{
 			InitializeComponent();
+			NEClipboard.ClipboardChanged += () => ClipboardCount = NEClipboard.Objects.Count;
 			undoRedo = new UndoRedo(b => IsModified = b);
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
 			OpenFile(fileName);
 			undoRedo.Clear();
 
-			SetHome();
-			Selections.CollectionChanged += (s, e) => { MakeActiveVisible(); canvasRenderTimer.Start(); };
+			Selections.CollectionChanged += (s, e) =>
+			{
+				SelectedRow = Selections.Last().End.Row + 1;
+				SelectedColumn = Selections.Last().End.Column + 1;
+				SelectedCells = Selections.EnumerateCells().Distinct().Count();
+				SelectedRows = Selections.EnumerateRows().Distinct().Count();
+				SelectedColumns = Selections.EnumerateColumns().Distinct().Count();
+				MakeActiveVisible();
+				canvasRenderTimer.Start();
+			};
 			Searches.CollectionChanged += (s, e) => canvasRenderTimer.Start();
 			SetupTabLabel();
+
+			SetHome();
 		}
 
 		DateTime fileLastWrite;
@@ -670,24 +692,14 @@ namespace NeoEdit.TableEdit
 			canvasRenderTimer.Start();
 		}
 
-		void SetClipboardFiles(List<string> data, bool isCut)
-		{
-			NEClipboard.SetFiles(data, isCut, typeof(TableEditor));
-		}
-
-		void SetClipboard(object data)
-		{
-			NEClipboard.Set(data, data.ToString(), typeof(TableEditor));
-		}
-
 		void Command_File_Copy_Path()
 		{
-			SetClipboardFiles(new List<string> { FileName }, false);
+			NEClipboard.CopiedFile = FileName;
 		}
 
 		void Command_File_Copy_Name()
 		{
-			SetClipboard(Path.GetFileName(FileName));
+			NEClipboard.Text = Path.GetFileName(FileName);
 		}
 
 		string Command_File_Encryption_Dialog()
@@ -725,7 +737,7 @@ namespace NeoEdit.TableEdit
 		{
 			var values = GetSelectedCells().Select(cell => table[cell]).ToList();
 			var data = table.GetTableData(Selections);
-			NEClipboard.Set(values, data);
+			NEClipboard.SetObjects(values, data);
 		}
 
 		void Command_Edit_Paste_Paste(bool headers)
