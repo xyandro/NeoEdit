@@ -37,15 +37,15 @@ namespace NeoEdit.TableEdit
 		[DepProp]
 		public int yScrollValue { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int SelectedRow { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		public int? SelectedRow { get { return UIHelper<TableEditor>.GetPropValue<int?>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int SelectedColumn { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		public int? SelectedColumn { get { return UIHelper<TableEditor>.GetPropValue<int?>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int SelectedCells { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		public int? SelectedCells { get { return UIHelper<TableEditor>.GetPropValue<int?>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int SelectedRows { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		public int? SelectedRows { get { return UIHelper<TableEditor>.GetPropValue<int?>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int SelectedColumns { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
+		public int? SelectedColumns { get { return UIHelper<TableEditor>.GetPropValue<int?>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int ClipboardCount { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 
@@ -83,11 +83,17 @@ namespace NeoEdit.TableEdit
 
 			Selections.CollectionChanged += (s, e) =>
 			{
-				SelectedRow = Selections.Last().End.Row + 1;
-				SelectedColumn = Selections.Last().End.Column + 1;
-				SelectedCells = Selections.EnumerateCells().Distinct().Count();
-				SelectedRows = Selections.EnumerateRows().Distinct().Count();
-				SelectedColumns = Selections.EnumerateColumns().Distinct().Count();
+				if (Selections.Any())
+				{
+					SelectedRow = Selections.Last().End.Row + 1;
+					SelectedColumn = Selections.Last().End.Column + 1;
+					SelectedCells = Selections.EnumerateCells().Distinct().Count();
+					SelectedRows = Selections.EnumerateRows().Distinct().Count();
+					SelectedColumns = Selections.EnumerateColumns().Distinct().Count();
+				}
+				else
+					SelectedRow = SelectedColumn = SelectedCells = SelectedRows = SelectedColumns = null;
+
 				MakeActiveVisible();
 				canvasRenderTimer.Start();
 			};
