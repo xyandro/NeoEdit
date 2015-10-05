@@ -8,11 +8,8 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
 			<ColumnDefinition/>
-			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
@@ -21,15 +18,7 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="_Name:" Target="{Binding ElementName=name}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="name" Text="{Binding ColumnName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Type:" Target="{Binding ElementName=type}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-		<ComboBox Grid.Row="1" Grid.Column="1" Name="type" SelectedValue="{Binding Type, ElementName=self}" VerticalAlignment="Center"/>
-		<CheckBox Grid.Row="1" Grid.Column="2" Content="N_ullable" IsChecked="{Binding Nullable, ElementName=self}" VerticalAlignment="Center"/>
-
-		<Label Grid.Row="2" Grid.Column="0" Content="Expression:" HorizontalAlignment="Right"/>
-		<Label Grid.Row="2" Grid.Column="1" Content="{Binding Expression, ElementName=self}"/>
-		<Button Grid.Row="2" Grid.Column="2" Content="_Edit" Click="EditExpression"/>
-
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

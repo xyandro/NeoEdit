@@ -35,11 +35,12 @@ namespace NeoEdit.TableEdit.Dialogs
 				UIHelper<ColumnData>.AddCallback(a => a.Group, (obj, o, n) => obj.SetAggregateType());
 			}
 
-			public ColumnData(Table.Header header, bool group)
+			public ColumnData(string header, Table table, int column, bool group)
 			{
-				ColumnName = header.Name;
-				type = header.Type;
+				ColumnName = header;
 				Group = group;
+				type = Enumerable.Range(0, table.NumRows).Select(row => table[row, column]).Where(value => value != null).Select(value => value.GetType()).FirstOrDefault();
+
 				SetAggregateType();
 			}
 
@@ -59,7 +60,7 @@ namespace NeoEdit.TableEdit.Dialogs
 		{
 			this.table = table;
 			InitializeComponent();
-			Columns = table.Headers.Select((header, index) => new ColumnData(header, groupColumns.Contains(index))).ToObservableCollectionEx();
+			Columns = table.Headers.Select((header, column) => new ColumnData(header, table, column, groupColumns.Contains(column))).ToObservableCollectionEx();
 		}
 
 		void ColumnsKeyDown(object sender, KeyEventArgs e)

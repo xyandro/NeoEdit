@@ -13,7 +13,6 @@
     </Compile>
     <Compile Include="Cell.cs" />
     <Compile Include="CellRange.cs" />
-    <Compile Include="DataGridColumnsBinder.cs" />
     <Page Include="Dialogs\EditHeaderDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -42,7 +41,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Table.cs" />
-    <Compile Include="TableColumn.cs" />
     <Compile Include="TableEditCommand.cs" />
     <Page Include="TableEditMenu.xaml">
       <Generator>MSBuild:Compile</Generator>

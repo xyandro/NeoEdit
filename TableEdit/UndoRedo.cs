@@ -19,7 +19,7 @@ namespace NeoEdit.TableEdit
 		DeleteRows,
 		InsertColumns,
 		DeleteColumns,
-		ChangeHeader,
+		RenameHeader,
 		ChangeTable,
 	}
 
@@ -29,7 +29,7 @@ namespace NeoEdit.TableEdit
 		public List<object> Values { get; private set; }
 		public List<int> Positions { get; private set; }
 		public List<List<object>> InsertData { get; private set; }
-		public List<Table.Header> Headers { get; private set; }
+		public List<string> Headers { get; private set; }
 		public UndoRedoAction Action { get; private set; }
 		public Table Table { get; private set; }
 
@@ -64,7 +64,7 @@ namespace NeoEdit.TableEdit
 			};
 		}
 
-		static public UndoRedoStep CreateInsertColumns(List<int> positions, List<Table.Header> headers, List<List<object>> insertData)
+		static public UndoRedoStep CreateInsertColumns(List<int> positions, List<string> headers, List<List<object>> insertData)
 		{
 			return new UndoRedoStep
 			{
@@ -92,14 +92,13 @@ namespace NeoEdit.TableEdit
 				Action = UndoRedoAction.DeleteColumns,
 			};
 		}
-		static public UndoRedoStep CreateChangeHeader(int column, Table.Header header, List<object> values)
+		static public UndoRedoStep CreateRenameHeader(int column, string newName)
 		{
 			return new UndoRedoStep
 			{
 				Positions = new List<int> { column },
-				Headers = new List<Table.Header> { header },
-				Values = values,
-				Action = UndoRedoAction.ChangeHeader,
+				Headers = new List<string> { newName },
+				Action = UndoRedoAction.RenameHeader,
 			};
 		}
 

@@ -23,52 +23,10 @@ namespace NeoEdit.TableEdit
 
 		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
 
-		public class Header
-		{
-			public string Name { get; set; }
-			public Type Type { get; set; }
-			public bool Nullable { get; set; }
-			public double Width { get; set; }
-			public string TypeName { get { return Type.Name + (Nullable ? "?" : ""); } }
-
-			public Header Copy()
-			{
-				return new Header
-				{
-					Name = Name,
-					Type = Type,
-					Nullable = Nullable,
-					Width = Width,
-				};
-			}
-
-			public object GetDefault()
-			{
-				if (Nullable)
-					return null;
-				if (Type.IsValueType)
-					return Activator.CreateInstance(Type);
-				if (Type == typeof(string))
-					return "";
-				throw new Exception("Unknown type");
-			}
-
-			public object GetValue(object value)
-			{
-				if (value == null)
-				{
-					if (!Nullable)
-						throw new Exception("Value cannot be NULL");
-					return null;
-				}
-				return Convert.ChangeType(value, Type);
-			}
-		}
-
 		public enum TableTypeEnum { None, TSV, CSV, Columns }
 
 		List<List<object>> Rows { get; set; }
-		public List<Header> Headers { get; private set; }
+		public List<string> Headers { get; private set; }
 		public TableTypeEnum TableType { get; set; }
 		public bool HasHeaders { get; set; }
 
@@ -78,7 +36,7 @@ namespace NeoEdit.TableEdit
 		public Table()
 		{
 			Rows = new List<List<object>>();
-			Headers = new List<Header>();
+			Headers = new List<string>();
 			TableType = TableTypeEnum.TSV;
 			HasHeaders = false;
 		}
@@ -86,7 +44,7 @@ namespace NeoEdit.TableEdit
 		Table(Table table)
 		{
 			Rows = table.Rows.Select(row => row.ToList()).ToList();
-			Headers = table.Headers.Select(header => header.Copy()).ToList();
+			Headers = table.Headers.ToList();
 			TableType = table.TableType;
 			HasHeaders = table.HasHeaders;
 		}
@@ -151,52 +109,49 @@ namespace NeoEdit.TableEdit
 		}
 
 		delegate bool TryParseDelegate<T>(string obj, out T result);
-		static bool CanParseValue<T>(string str, TryParseDelegate<T> tryParse)
+		static T? TypeParser<T>(string str, TryParseDelegate<T> tryParse) where T : struct
 		{
 			if (str == null)
-				return false;
+				return null;
 
 			T result;
-			return tryParse(str, out result);
+			if (!tryParse(str, out result))
+				return null;
+			return result;
 		}
 
-		static Dictionary<Type, Func<string, bool>> parsers = new Dictionary<Type, Func<string, bool>>
+		static Dictionary<Type, Func<string, object>> parsers = new Dictionary<Type, Func<string, object>>
 		{
-			{  typeof(long), str => CanParseValue<long>(str, long.TryParse) },
-			{  typeof(double), str => CanParseValue<double>(str, double.TryParse) },
-			{  typeof(bool), str => CanParseValue<bool>(str, bool.TryParse) },
-			{  typeof(DateTime), str => CanParseValue<DateTime>(str, DateTime.TryParse) },
-			{  typeof(string), str => true },
+			{  typeof(long), str => TypeParser<long>(str, long.TryParse) },
+			{  typeof(double), str => TypeParser<double>(str, double.TryParse) },
+			{  typeof(bool), str => TypeParser<bool>(str, bool.TryParse) },
+			{  typeof(DateTime), str => TypeParser<DateTime>(str, DateTime.TryParse) },
+			{  typeof(string), str => str },
 		};
+
+		public static object GetValue(string value)
+		{
+			if (value == null)
+				return null;
+			return parsers.Select(parser => parser.Value(value)).Where(str => str != null).First();
+		}
+
 		void SetHeadersAndTypes(bool? hasHeaders)
 		{
-			Headers = new List<Header>();
-
 			if ((!hasHeaders.HasValue) && ((!Rows.Any()) || (Rows[0].Any(item => item == null))))
 				hasHeaders = false;
-
-			var count = Rows.Any() ? Rows[0].Count : 0;
-			for (var column = 0; column < count; ++column)
-			{
-				Headers.Add(new Header { Name = String.Format("Column {0}", column + 1) });
-				var match = parsers.First(pair => Rows.Skip(hasHeaders == false ? 0 : 1).All(row => (row[column] == null) || (pair.Value((string)row[column]))));
-				if ((!hasHeaders.HasValue) && (!match.Value((string)this[0, column])))
-					hasHeaders = true;
-				Headers[column].Type = match.Key;
-				Headers[column].Nullable = Rows.Any(row => row[column] == null);
-			}
-
 			HasHeaders = hasHeaders != false;
+
+			Headers = Enumerable.Range(1, Rows.Any() ? Rows[0].Count : 0).Select(column => String.Format("Column {0}", column)).ToList();
 			if (HasHeaders)
 			{
-				for (var column = 0; column < Headers.Count; ++column)
-					Headers[column].Name = (string)this[0, column];
+				Headers = Headers.Select((header, column) => (string)this[0, column]).ToList();
 				Rows.RemoveAt(0);
 			}
 
 			foreach (var row in Rows)
 				for (var column = 0; column < Headers.Count; ++column)
-					row[column] = Headers[column].GetValue(row[column]);
+					row[column] = GetValue(row[column] as string);
 		}
 
 		public List<int> GetSortOrder(List<int> columns)
@@ -230,7 +185,7 @@ namespace NeoEdit.TableEdit
 		{
 			var result = new List<List<string>>();
 			if (hasHeaders)
-				result.Add(Headers.Select(header => header.Name).ToList());
+				result.Add(Headers.ToList());
 			result.AddRange(Rows.Select(row => row.Select(item => (item ?? "NULL").ToString()).ToList()));
 
 			switch (tableType)
@@ -270,7 +225,7 @@ namespace NeoEdit.TableEdit
 				groupMap = groupMap.SelectMany(group => group.GroupBy(items => group.Key.Concat(items[column]).ToItemSet()));
 			var groupedRows = groupMap.Select(group => group.ToList()).ToList();
 
-			var newHeaders = new List<Header>();
+			var newHeaders = new List<string>();
 			var newRows = groupedRows.Select(item => new List<object>()).ToList();
 
 			foreach (var tuple in aggregateData)
@@ -278,12 +233,7 @@ namespace NeoEdit.TableEdit
 				for (var ctr = 0; ctr < groupedRows.Count; ++ctr)
 					newRows[ctr].Add(GetAggregateValue(tuple.Item2, groupedRows[ctr].Select(item => item[tuple.Item1]).ToList()));
 
-				newHeaders.Add(new Header
-				{
-					Name = Headers[tuple.Item1].Name + (tuple.Item2 == AggregateType.None ? "" : " (" + tuple.Item2 + ")"),
-					Type = newRows.Select(row => row.Last()).Where(item => item != null).Select(item => item.GetType()).FirstOrDefault() ?? typeof(string),
-					Nullable = Headers[tuple.Item1].Nullable,
-				});
+				newHeaders.Add(Headers[tuple.Item1] + (tuple.Item2 == AggregateType.None ? "" : " (" + tuple.Item2 + ")"));
 			}
 
 			return new Table(this)
@@ -398,11 +348,11 @@ namespace NeoEdit.TableEdit
 		public void DeleteColumns(List<int> columns)
 		{
 			var columnsHash = new HashSet<int>(columns);
-			Headers = new List<Header>(Headers.Where((header, index) => !columnsHash.Contains(index)));
+			Headers = new List<string>(Headers.Where((header, index) => !columnsHash.Contains(index)));
 			Rows = Rows.Select(row => row.Where((item, index) => !columnsHash.Contains(index)).ToList()).ToList();
 		}
 
-		public void InsertColumns(List<int> columns, List<Table.Header> headers, List<List<object>> insertData, bool selected)
+		public void InsertColumns(List<int> columns, List<string> headers, List<List<object>> insertData, bool selected)
 		{
 			if ((columns.Count != insertData.Count) || (columns.Count != headers.Count))
 				throw new ArgumentException("Columns, data, and headers counts must match");
@@ -415,15 +365,9 @@ namespace NeoEdit.TableEdit
 			}
 		}
 
-		public void ChangeHeader(int column, Header header, List<object> values)
+		public void RenameHeader(int column, string newName)
 		{
-			if (NumRows != values.Count)
-				throw new ArgumentException("Values must match row count");
-
-			for (var row = 0; row < NumRows; ++row)
-				this[row, column] = values[row];
-
-			Headers[column] = header;
+			Headers[column] = newName;
 		}
 	}
 

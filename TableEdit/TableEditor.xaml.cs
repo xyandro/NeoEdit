@@ -54,6 +54,27 @@ namespace NeoEdit.TableEdit
 
 		Table table;
 
+		class ColumnWidth
+		{
+			List<double> widths = new List<double>();
+			public double this[int column]
+			{
+				get
+				{
+					if ((column < 0) || (column >= widths.Count))
+						return 0;
+					return widths[column];
+				}
+				set
+				{
+					while (widths.Count <= column)
+						widths.Add(column);
+					widths[column] = value;
+				}
+			}
+		}
+		ColumnWidth columnWidth = new ColumnWidth();
+
 		string AESKey = null;
 
 		readonly ObservableCollectionEx<CellRange> Selections = new ObservableCollectionEx<CellRange>();
@@ -169,8 +190,8 @@ namespace NeoEdit.TableEdit
 			if ((column < 0) || (row < 0))
 				return;
 
-			var xStart = Enumerable.Range(0, column).Sum(column2 => table.Headers[column2].Width);
-			var xEnd = xStart + table.Headers[column].Width;
+			var xStart = Enumerable.Range(0, column).Sum(column2 => columnWidth[column2]);
+			var xEnd = xStart + columnWidth[column];
 			xScrollValue = Math.Min(xStart, Math.Max(xEnd - xScroll.ViewportSize, xScrollValue));
 			yScrollValue = Math.Min(row, Math.Max(row - yScrollViewportFloor + 1, yScrollValue));
 		}
@@ -293,14 +314,14 @@ namespace NeoEdit.TableEdit
 			IsEditing = true;
 			var cell = Selections.Last().End;
 
-			var x = Enumerable.Range(0, cell.Column).Sum(column => table.Headers[column].Width) - xScrollValue;
+			var x = Enumerable.Range(0, cell.Column).Sum(column => columnWidth[column]) - xScrollValue;
 			var y = (cell.Row + HeaderRows - yScrollValue) * rowHeight;
 			var tb = new TextBox
 			{
 				Text = empty ? "" : (table[cell] ?? "").ToString(),
 				FontFamily = Font.FontFamily,
 				FontSize = Font.Size,
-				MinWidth = table.Headers[cell.Column].Width,
+				MinWidth = columnWidth[cell.Column],
 				Height = rowHeight,
 				BorderThickness = new Thickness(0),
 				Padding = new Thickness(ColumnSpacing, RowTopSpacing, ColumnSpacing, RowTopSpacing),
@@ -337,7 +358,7 @@ namespace NeoEdit.TableEdit
 		const double RowTopSpacing = 1;
 		const double RowBottomSpacing = 3;
 		const double ColumnSpacing = 8;
-		const int HeaderRows = 2;
+		const int HeaderRows = 1;
 		readonly static double rowHeight = Font.lineHeight + RowTopSpacing + RowBottomSpacing;
 		void OnCanvasRender(object s, DrawingContext dc)
 		{
@@ -348,9 +369,9 @@ namespace NeoEdit.TableEdit
 			Searches.RemoveDups();
 			canvasRenderTimer.Stop();
 
-			foreach (var header in table.Headers)
-				if (header.Width == 0)
-					header.Width = Font.GetText(header.TypeName).Width + ColumnSpacing * 2;
+			for (var ctr = 0; ctr < table.Headers.Count; ++ctr)
+				if (columnWidth[ctr] == 0)
+					columnWidth[ctr] = Font.GetText(table.Headers[ctr]).Width + ColumnSpacing * 2;
 
 			xScroll.Minimum = 0;
 			xScroll.ViewportSize = xScroll.LargeChange = canvas.ActualWidth;
@@ -379,7 +400,7 @@ namespace NeoEdit.TableEdit
 
 				var header = table.Headers[column];
 				var xStart = xOffset;
-				xOffset += header.Width;
+				xOffset += columnWidth[column];
 				if (xOffset < 0)
 					continue;
 
@@ -388,17 +409,16 @@ namespace NeoEdit.TableEdit
 				var background = new Brush[numRows];
 				var isActive = new bool[numRows];
 
-				text[0] = Font.GetText(header.Name);
-				text[1] = Font.GetText(header.TypeName);
-				alignment[0] = alignment[1] = HorizontalAlignment.Center;
-				background[0] = background[1] = Misc.headersBrush;
+				text[0] = Font.GetText(header);
+				alignment[0] = HorizontalAlignment.Center;
+				background[0] = Misc.headersBrush;
 
 				for (var row = startRow; row < endRow; ++row)
 				{
 					var value = table[row, column];
 					var display = value == null ? "<NULL>" : value.ToString();
 					var item = text[row - startRow + HeaderRows] = Font.GetText(display);
-					alignment[row - startRow + HeaderRows] = header.Type.IsIntegerType() ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+					alignment[row - startRow + HeaderRows] = HorizontalAlignment.Left;
 					if (value == null)
 					{
 						item.SetForegroundBrush(Misc.nullBrush);
@@ -409,12 +429,12 @@ namespace NeoEdit.TableEdit
 					isActive[row - startRow + HeaderRows] = active.Any(cell => cell.Equals(row, column));
 				}
 
-				header.Width = Math.Max(header.Width, text.Max(formattedText => formattedText.Width) + ColumnSpacing * 2);
-				xOffset = xStart + header.Width;
+				columnWidth[column] = Math.Max(columnWidth[column], text.Max(formattedText => formattedText.Width) + ColumnSpacing * 2);
+				xOffset = xStart + columnWidth[column];
 
 				for (var row = 0; row < numRows; ++row)
 				{
-					var rect = new Rect(xStart, y[row], header.Width, rowHeight);
+					var rect = new Rect(xStart, y[row], columnWidth[column], rowHeight);
 					dc.DrawRectangle(background[row], Misc.linesPen, rect);
 					if (isActive[row])
 						dc.DrawRectangle(null, Misc.activePen, rect);
@@ -432,7 +452,7 @@ namespace NeoEdit.TableEdit
 
 			}
 
-			xScroll.Maximum = table.Headers.Sum(header => header.Width) - xScroll.ViewportSize;
+			xScroll.Maximum = Enumerable.Range(0, table.NumColumns).Select(column => columnWidth[column]).Sum() - xScroll.ViewportSize;
 		}
 
 		void SetupTabLabel()
@@ -526,7 +546,7 @@ namespace NeoEdit.TableEdit
 			for (var ctr = 0; ctr < table.Headers.Count; ++ctr)
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
-				var columnName = table.Headers[num].Name;
+				var columnName = table.Headers[num];
 				var columnNameLen = columnName + "l";
 				var columnNum = String.Format("c{0}", ctr + 1);
 				var columnNumLen = columnNum + "l";
@@ -761,7 +781,8 @@ namespace NeoEdit.TableEdit
 			while (values.Count < cells.Count)
 				values.AddRange(clipboardValues);
 
-			values = values.Select((value, index) => table.Headers[cells[index].Column].GetValue(value)).ToList();
+			if (values.All(value => (value == null) || (value is string)))
+				values = values.Select(value => Table.GetValue((string)value)).ToList();
 
 			ReplaceCells(cells, values);
 		}
@@ -869,7 +890,7 @@ namespace NeoEdit.TableEdit
 			if ((Selections.Count != 1) || (Selections[0].NumColumns != 1))
 				throw new Exception("Must have single column selected");
 			var column = Selections[0].MinColumn;
-			return EditHeaderDialog.Run(WindowParent, table.Headers[column], GetExpressionData(10));
+			return EditHeaderDialog.Run(WindowParent, table.Headers[column]);
 		}
 
 		void Command_Edit_Header(EditHeaderDialog.Result result)
@@ -877,7 +898,7 @@ namespace NeoEdit.TableEdit
 			if ((Selections.Count != 1) || (Selections[0].NumColumns != 1))
 				throw new Exception("Must have single column selected");
 			var column = Selections[0].MinColumn;
-			ReplaceHeader(column, result.Header, result.Expression);
+			RenameHeader(column, result.Name);
 		}
 
 		GetExpressionDialog.Result Command_Edit_Expression_Dialog()
@@ -1067,7 +1088,7 @@ namespace NeoEdit.TableEdit
 				case UndoRedoAction.InsertRows: return UndoRedoStep.CreateDeleteRows(InsertToDelete(step.Positions));
 				case UndoRedoAction.DeleteColumns: return UndoRedoStep.CreateInsertColumns(DeleteToInsert(step.Positions), step.Positions.Select(index => table.Headers[index]).ToList(), table.GetColumnData(step.Positions));
 				case UndoRedoAction.InsertColumns: return UndoRedoStep.CreateDeleteColumns(InsertToDelete(step.Positions));
-				case UndoRedoAction.ChangeHeader: return UndoRedoStep.CreateChangeHeader(step.Positions.Single(), table.Headers[step.Positions.Single()], table.GetColumnData(step.Positions).First());
+				case UndoRedoAction.RenameHeader: return UndoRedoStep.CreateRenameHeader(step.Positions.Single(), table.Headers[step.Positions.Single()]);
 				case UndoRedoAction.ChangeTable: return UndoRedoStep.CreateChangeTable(table);
 				default: throw new NotImplementedException();
 			}
@@ -1092,7 +1113,7 @@ namespace NeoEdit.TableEdit
 				case UndoRedoAction.InsertRows: table.InsertRows(step.Positions, step.InsertData, true); break;
 				case UndoRedoAction.DeleteColumns: table.DeleteColumns(step.Positions); break;
 				case UndoRedoAction.InsertColumns: table.InsertColumns(step.Positions, step.Headers, step.InsertData, true); break;
-				case UndoRedoAction.ChangeHeader: table.ChangeHeader(step.Positions[0], step.Headers[0], step.Values); break;
+				case UndoRedoAction.RenameHeader: table.RenameHeader(step.Positions[0], step.Headers[0] as string); break;
 				case UndoRedoAction.ChangeTable: table = step.Table; break;
 			}
 
@@ -1114,7 +1135,7 @@ namespace NeoEdit.TableEdit
 				return;
 
 			var rows = Selections.SelectMany(range => Enumerable.Repeat(after ? range.MaxRow + 1 : range.MinRow, range.NumRows)).ToList();
-			var data = rows.Select(row => table.Headers.Select(header => header.GetDefault()).ToList()).ToList();
+			var data = rows.Select(row => Enumerable.Repeat(default(object), table.NumColumns).ToList()).ToList();
 			Replace(UndoRedoStep.CreateInsertRows(rows, data.ToList()));
 		}
 
@@ -1125,8 +1146,8 @@ namespace NeoEdit.TableEdit
 
 			var columns = Selections.SelectMany(range => Enumerable.Repeat(after ? range.MaxColumn + 1 : range.MinColumn, range.NumColumns)).ToList();
 
-			var headers = new List<Table.Header>();
-			var headersUsed = new HashSet<string>(table.Headers.Select(header => header.Name));
+			var headers = new List<string>();
+			var headersUsed = new HashSet<string>(table.Headers);
 			var columnNum = 0;
 			while (headers.Count < columns.Count)
 			{
@@ -1135,10 +1156,10 @@ namespace NeoEdit.TableEdit
 					continue;
 
 				headersUsed.Add(header);
-				headers.Add(new Table.Header { Name = header, Type = typeof(string), Nullable = true });
+				headers.Add(header);
 			}
 
-			var data = headers.Select(header => Enumerable.Repeat(header.GetDefault(), table.NumRows).ToList()).ToList();
+			var data = headers.Select(header => Enumerable.Repeat(default(object), table.NumRows).ToList()).ToList();
 			Replace(UndoRedoStep.CreateInsertColumns(columns, headers, data));
 		}
 
@@ -1168,10 +1189,7 @@ namespace NeoEdit.TableEdit
 			if (!cells.Any())
 				return;
 			if (values == null)
-			{
-				var columnValues = cells.Select(cell => cell.Column).Distinct().ToDictionary(column => column, column => defaultValue == null ? table.Headers[column].GetDefault() : table.Headers[column].GetValue(defaultValue));
-				values = cells.Select(cell => columnValues[cell.Column]).ToList();
-			}
+				values = Enumerable.Repeat(Table.GetValue(defaultValue), cells.Count).ToList();
 			if (cells.Count != values.Count)
 				throw new Exception("Invalid value count");
 
@@ -1194,13 +1212,9 @@ namespace NeoEdit.TableEdit
 			Replace(UndoRedoStep.CreateSort(sortOrder));
 		}
 
-		void ReplaceHeader(int column, Table.Header header, string expression)
+		void RenameHeader(int column, string newName)
 		{
-			var values = table.GetColumnData(new List<int> { column }).First();
-			if (expression != null)
-				values = GetExpressionResults<object>(expression);
-			values = values.Select(value => header.GetValue(value)).ToList();
-			Replace(UndoRedoStep.CreateChangeHeader(column, header, values));
+			Replace(UndoRedoStep.CreateRenameHeader(column, newName));
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1239,7 +1253,7 @@ namespace NeoEdit.TableEdit
 				if (column >= table.Headers.Count)
 					return;
 
-				var width = table.Headers[column].Width;
+				var width = columnWidth[column];
 				if (xPos < width)
 					break;
 
