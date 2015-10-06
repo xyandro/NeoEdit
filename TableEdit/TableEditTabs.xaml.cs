@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using Microsoft.Win32;
 using NeoEdit.Common.NEClipboards;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
@@ -18,9 +19,9 @@ namespace NeoEdit.TableEdit
 	{
 		static TableEditTabs() { UIHelper<TableEditTabs>.Register(); }
 
-		public static void Create(string fileName = null, TableEditTabs tableEditTabs = null, bool forceCreate = false)
+		public static void Create(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, TableEditTabs tableEditTabs = null, bool forceCreate = false)
 		{
-			CreateTab(new TableEditor(fileName), tableEditTabs, forceCreate);
+			CreateTab(new TableEditor(fileName, bytes, codePage, modified), tableEditTabs, forceCreate);
 		}
 
 		TableEditTabs()
@@ -138,7 +139,7 @@ namespace NeoEdit.TableEdit
 		void Command_File_Open_Open(OpenFileDialogResult result)
 		{
 			foreach (var filename in result.files)
-				Create(filename, this);
+				Create(filename, tableEditTabs: this);
 		}
 
 		void Command_File_Open_CopiedCut()
@@ -158,7 +159,7 @@ namespace NeoEdit.TableEdit
 			foreach (var item in ItemTabs.Items)
 				item.Active = false;
 			foreach (var file in files)
-				Create(file, this);
+				Create(file, tableEditTabs: this);
 		}
 
 		void Command_View_ActiveTabs()

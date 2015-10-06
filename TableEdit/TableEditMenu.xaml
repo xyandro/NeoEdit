@@ -10,6 +10,11 @@
 			<tableEdit:TableEditMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
 			<tableEdit:TableEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
 		</MenuItem>
+		<MenuItem Header="Open _With">
+			<tableEdit:TableEditMenuItem Header="_Disk" CommandEnum="File_OpenWith_Disk"/>
+			<tableEdit:TableEditMenuItem Header="_Hex Editor" CommandEnum="File_OpenWith_HexEditor"/>
+			<tableEdit:TableEditMenuItem Header="_Text Editor" CommandEnum="File_OpenWith_TextEditor"/>
+		</MenuItem>
 		<MenuItem Header="_Save">
 			<tableEdit:TableEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<tableEdit:TableEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
@@ -18,7 +23,6 @@
 			<tableEdit:TableEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
 			<tableEdit:TableEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
 			<tableEdit:TableEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
-			<tableEdit:TableEditMenuItem Header="Open D_isk" CommandEnum="File_Operations_OpenDisk"/>
 		</MenuItem>
 		<tableEdit:TableEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<tableEdit:TableEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>

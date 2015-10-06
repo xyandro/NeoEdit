@@ -96,7 +96,7 @@ namespace NeoEdit
 				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
 				, registry: (key) => new RegistryWindow(key)
 				, systemInfo: () => new SystemInfoWindow()
-				, tableEditor: (filename, forceCreate) => TableEditTabs.Create(filename, forceCreate: forceCreate)
+				, tableEditor: (filename, bytes, encoding, modified, forceCreate) => TableEditTabs.Create(filename, bytes, encoding, modified, forceCreate: forceCreate)
 				, textEditor: (filename, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(filename, bytes, encoding, modified, forceCreate: forceCreate)
 				, textViewer: (filename, forceCreate) => TextViewTabs.Create(filename, forceCreate)
 			);

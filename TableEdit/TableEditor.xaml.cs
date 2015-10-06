@@ -92,14 +92,14 @@ namespace NeoEdit.TableEdit
 			UIHelper<TableEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.canvasRenderTimer.Start());
 		}
 
-		public TableEditor(string fileName)
+		public TableEditor(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null)
 		{
 			InitializeComponent();
 			NEClipboard.ClipboardChanged += () => ClipboardCount = NEClipboard.Objects.Count;
 			undoRedo = new UndoRedo(b => IsModified = b);
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
-			OpenFile(fileName);
+			OpenFile(fileName, bytes, codePage, modified);
 			undoRedo.Clear();
 
 			Selections.CollectionChanged += (s, e) =>
@@ -125,25 +125,27 @@ namespace NeoEdit.TableEdit
 		}
 
 		DateTime fileLastWrite;
-		void OpenFile(string fileName)
+		void OpenFile(string fileName, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null)
 		{
 			FileName = fileName;
-			var bytes = new byte[0];
-			if (fileName != null)
+			var isModified = modified ?? bytes != null;
+			if (bytes == null)
+				bytes = new byte[0];
+			if ((bytes.Length == 0) && (fileName != null))
 				bytes = File.ReadAllBytes(fileName);
 
 			string aesKey;
 			FileEncryptor.HandleDecrypt(ref bytes, out aesKey);
 			AESKey = aesKey;
 
-			var text = Coder.BytesToString(bytes, Coder.CodePage.AutoByBOM, true);
+			var text = Coder.BytesToString(bytes, codePage, true);
 
 			ReplaceTable(String.IsNullOrEmpty(text) ? new Table() : new Table(text));
 
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
-			undoRedo.SetModified(false);
+			undoRedo.SetModified(isModified);
 		}
 
 		CellRange MoveSelection(CellRange range, int row, int column, bool selecting, bool rowRel = true, bool columnRel = true)
@@ -621,6 +623,29 @@ namespace NeoEdit.TableEdit
 			}
 		}
 
+		void Command_File_OpenWith_Disk()
+		{
+			Launcher.Static.LaunchDisk(FileName);
+		}
+
+		void Command_File_OpenWith_HexEditor()
+		{
+			var data = table.ConvertToString("\r\n", Table.TableTypeEnum.TSV);
+			var codePage = Coder.CodePage.UTF8;
+			var bytes = Coder.StringToBytes(data, codePage, true);
+			Launcher.Static.LaunchHexEditor(FileName, bytes, codePage, IsModified);
+			WindowParent.Remove(this, true);
+		}
+
+		void Command_File_OpenWith_TextEditor()
+		{
+			var data = table.ConvertToString("\r\n", Table.TableTypeEnum.TSV);
+			var codePage = Coder.CodePage.UTF8;
+			var bytes = Coder.StringToBytes(data, codePage, true);
+			Launcher.Static.LaunchTextEditor(FileName, bytes, codePage, IsModified);
+			WindowParent.Remove(this, true);
+		}
+
 		void Command_File_Save_Save()
 		{
 			if (FileName == null)
@@ -674,11 +699,6 @@ namespace NeoEdit.TableEdit
 		void Command_File_Operations_Explore()
 		{
 			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
-		}
-
-		void Command_File_Operations_OpenDisk()
-		{
-			Launcher.Static.LaunchDisk(FileName);
 		}
 
 		void Command_File_Refresh()
@@ -990,12 +1010,14 @@ namespace NeoEdit.TableEdit
 
 			switch (command)
 			{
+				case TableEditCommand.File_OpenWith_Disk: Command_File_OpenWith_Disk(); break;
+				case TableEditCommand.File_OpenWith_HexEditor: Command_File_OpenWith_HexEditor(); break;
+				case TableEditCommand.File_OpenWith_TextEditor: Command_File_OpenWith_TextEditor(); break;
 				case TableEditCommand.File_Save_Save: Command_File_Save_Save(); break;
 				case TableEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
 				case TableEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
 				case TableEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
 				case TableEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
-				case TableEditCommand.File_Operations_OpenDisk: Command_File_Operations_OpenDisk(); break;
 				case TableEditCommand.File_Close: if (CanClose()) TabsParent.Remove(this); break;
 				case TableEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TableEditCommand.File_Revert: Command_File_Revert(); break;
