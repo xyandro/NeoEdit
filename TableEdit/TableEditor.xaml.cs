@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -92,14 +93,14 @@ namespace NeoEdit.TableEdit
 			UIHelper<TableEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.canvasRenderTimer.Start());
 		}
 
-		public TableEditor(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null)
+		public TableEditor(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, DbDataReader reader = null, bool? modified = null)
 		{
 			InitializeComponent();
 			NEClipboard.ClipboardChanged += () => ClipboardCount = NEClipboard.Objects.Count;
 			undoRedo = new UndoRedo(b => IsModified = b);
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 
-			OpenFile(fileName, bytes, codePage, modified);
+			OpenFile(fileName, bytes, codePage, reader, modified);
 			undoRedo.Clear();
 
 			Selections.CollectionChanged += (s, e) =>
@@ -125,7 +126,7 @@ namespace NeoEdit.TableEdit
 		}
 
 		DateTime fileLastWrite;
-		void OpenFile(string fileName, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null)
+		void OpenFile(string fileName, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, DbDataReader reader = null, bool? modified = null)
 		{
 			FileName = fileName;
 			var isModified = modified ?? bytes != null;
@@ -139,8 +140,9 @@ namespace NeoEdit.TableEdit
 			AESKey = aesKey;
 
 			var text = Coder.BytesToString(bytes, codePage, true);
+			var table = !String.IsNullOrEmpty(text) ? new Table(text) : reader != null ? new Table(reader) : new Table();
 
-			ReplaceTable(String.IsNullOrEmpty(text) ? new Table() : new Table(text));
+			ReplaceTable(table);
 
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;

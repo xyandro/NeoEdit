@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using NeoEdit.Common;
 
@@ -55,6 +56,17 @@ namespace NeoEdit.TableEdit
 				tableType = GuessTableType(input);
 			ProcessInput(input, tableType);
 			SetHeadersAndTypes(hasHeaders);
+		}
+
+		public Table(DbDataReader reader)
+		{
+			Headers = Enumerable.Range(0, reader.FieldCount).Select(column => reader.GetName(column)).ToList();
+			HasHeaders = true;
+			TableType = TableTypeEnum.TSV;
+
+			Rows = new List<List<object>>();
+			while (reader.Read())
+				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => value == DBNull.Value ? null : value).ToList());
 		}
 
 		public static TableTypeEnum GuessTableType(string table)

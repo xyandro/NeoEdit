@@ -130,6 +130,14 @@ namespace NeoEdit.GUI.Controls
 			item.Closed();
 		}
 
+		public void RemoveAll()
+		{
+			var items = Items.ToList();
+			Items.Clear();
+			foreach (var item in items)
+				item.Closed();
+		}
+
 		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
 		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
 

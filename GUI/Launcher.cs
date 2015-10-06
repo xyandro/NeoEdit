@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.GUI
@@ -12,18 +13,19 @@ namespace NeoEdit.GUI
 		Func<bool> getMinimizeToTrayLauncher;
 		Action<bool> setMinimizeToTrayLauncher;
 
-		protected Action<bool> consoleLauncher;
-		protected Action<string, string> diffLauncher;
-		protected Action<string, IEnumerable<string>, bool> diskLauncher;
-		protected Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
-		protected Action<int?> handlesLauncher;
-		protected Action<int?> processesLauncher;
-		protected Action<int> processHexEditorLauncher;
-		protected Action<string> registryLauncher;
-		protected Action systemInfoLauncher;
-		protected Action<string, byte[], Coder.CodePage, bool?, bool> tableEditorLauncher;
-		protected Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
-		protected Action<string, bool> textViewerLauncher;
+		Action<bool> consoleLauncher;
+		Action<string, string> diffLauncher;
+		Action<string, IEnumerable<string>, bool> diskLauncher;
+		Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
+		Action<int?> handlesLauncher;
+		Action<int?> processesLauncher;
+		Action<int> processHexEditorLauncher;
+		Action<string> registryLauncher;
+		Action systemInfoLauncher;
+		Action<string, byte[], Coder.CodePage, bool?, bool> tableEditorLauncher;
+		Func<object, List<DbDataReader>, object> tableDBEditorLauncher;
+		Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
+		Action<string, bool> textViewerLauncher;
 
 		public static void Initialize(
 			Func<bool> getMinimizeToTray
@@ -39,6 +41,7 @@ namespace NeoEdit.GUI
 			, Action<string> registry
 			, Action systemInfo
 			, Action<string, byte[], Coder.CodePage, bool?, bool> tableEditor
+			, Func<object, List<DbDataReader>, object> tableDBEditor
 			, Action<string, byte[], Coder.CodePage, bool?, bool> textEditor
 			, Action<string, bool> textViewer
 		)
@@ -58,6 +61,7 @@ namespace NeoEdit.GUI
 				registryLauncher = registry,
 				systemInfoLauncher = systemInfo,
 				tableEditorLauncher = tableEditor,
+				tableDBEditorLauncher = tableDBEditor,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
 			};
@@ -79,6 +83,13 @@ namespace NeoEdit.GUI
 		{
 			if (tableEditorLauncher != null)
 				tableEditorLauncher(filename, bytes, codePage, modified, forceCreate);
+		}
+
+		public object LaunchDBTableEditor(object tableViewer, List<DbDataReader> results)
+		{
+			if (tableDBEditorLauncher == null)
+				return null;
+			return tableDBEditorLauncher(tableViewer, results);
 		}
 
 		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool forceCreate = false)

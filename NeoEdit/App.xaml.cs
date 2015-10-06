@@ -97,6 +97,7 @@ namespace NeoEdit
 				, registry: (key) => new RegistryWindow(key)
 				, systemInfo: () => new SystemInfoWindow()
 				, tableEditor: (filename, bytes, encoding, modified, forceCreate) => TableEditTabs.Create(filename, bytes, encoding, modified, forceCreate: forceCreate)
+				, tableDBEditor: (tableViewer, readers) => TableEditTabs.Create(tableViewer, readers)
 				, textEditor: (filename, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(filename, bytes, encoding, modified, forceCreate: forceCreate)
 				, textViewer: (filename, forceCreate) => TextViewTabs.Create(filename, forceCreate)
 			);

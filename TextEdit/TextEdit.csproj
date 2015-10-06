@@ -149,20 +149,6 @@
     <Compile Include="Dialogs\EditDatabaseConnectDialog.xaml.cs">
       <DependentUpon>EditDatabaseConnectDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\EditTablesDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Dialogs\EditTablesDialog.xaml.cs">
-      <DependentUpon>EditTablesDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\EditTableTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\EditTableTab.xaml.cs">
-      <DependentUpon>EditTableTab.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\ExamineDatabaseDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -329,7 +315,6 @@
     </Compile>
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
-    <Compile Include="ResultsViewConverter.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
@@ -342,7 +327,6 @@
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
-    <Compile Include="Table.cs" />
     <Compile Include="TextEditCommand.cs" />
     <Page Include="TextEditMenu.xaml">
       <SubType>Designer</SubType>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -21,7 +22,27 @@ namespace NeoEdit.TableEdit
 
 		public static void Create(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, TableEditTabs tableEditTabs = null, bool forceCreate = false)
 		{
-			CreateTab(new TableEditor(fileName, bytes, codePage, modified), tableEditTabs, forceCreate);
+			CreateTab(new TableEditor(fileName, bytes, codePage, modified: modified), tableEditTabs, forceCreate);
+		}
+
+		public static object Create(object tableViewer, List<DbDataReader> readers)
+		{
+			if (!readers.Any())
+				return tableViewer;
+
+			var tableEditTabs = tableViewer as TableEditTabs;
+			if ((tableEditTabs != null) && (!tableEditTabs.IsLoaded))
+				tableEditTabs = null;
+			if (tableEditTabs == null)
+				tableEditTabs = new TableEditTabs();
+
+			tableEditTabs.ItemTabs.RemoveAll();
+			tableEditTabs.ItemTabs.Tiles = true;
+
+			foreach (var reader in readers)
+				CreateTab(new TableEditor(reader: reader), tableEditTabs);
+
+			return tableEditTabs;
 		}
 
 		TableEditTabs()

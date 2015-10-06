@@ -102,8 +102,6 @@ namespace NeoEdit.TextEdit
 		public int ClipboardCount { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool UseLocalClipboard { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public ObservableCollectionEx<Table> Results { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollectionEx<Table>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditor diffTarget;
 		public TextEditor DiffTarget
@@ -211,8 +209,6 @@ namespace NeoEdit.TextEdit
 			Searches = new RangeList(SearchesInvalidated);
 			Regions = new RangeList(RegionsInvalidated);
 			Bookmarks = new RangeList(BookmarksInvalidated);
-
-			Results = new ObservableCollectionEx<Table>();
 
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 			canvasRenderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
@@ -596,7 +592,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
-				case TextEditCommand.Edit_Table_Edit: dialogResult = Command_Edit_Table_Edit_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
 				case TextEditCommand.Edit_Hash: dialogResult = Command_Edit_Hash_Dialog(); break;
@@ -718,7 +713,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
-				case TextEditCommand.Edit_Table_Edit: Command_Edit_Table_Edit(dialogResult as EditTablesDialog.Result); break;
 				case TextEditCommand.Edit_Table_RegionsSelectionsToTable: Command_Edit_Table_RegionsSelectionsToTable(); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
@@ -847,7 +841,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_ScanPorts: Command_Network_ScanPorts(dialogResult as ScanPortsDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_Execute: Command_Database_Execute(); break;
-				case TextEditCommand.Database_ClearResults: Command_Database_ClearResults(); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -1350,45 +1343,13 @@ namespace NeoEdit.TextEdit
 				Selections.Replace(new Range(BeginOffset(), EndOffset()));
 		}
 
-		internal EditTablesDialog.Result Command_Edit_Table_Edit_Dialog()
-		{
-			SetTableSelection();
-			return EditTablesDialog.Run(WindowParent, GetSelectionStrings(), null);
-		}
-
-		internal void Command_Edit_Table_Edit(EditTablesDialog.Result result)
-		{
-			SetTableSelection();
-			var output = new List<string>();
-			var inputs = result.Results.Select((tableResult, index) => new Table(GetString(Selections[index]), tableResult.InputTableType, tableResult.InputHasHeaders)).ToList();
-			for (var ctr = 0; ctr < result.Results.Count; ++ctr)
-			{
-				var tableResult = result.Results[ctr];
-				if (tableResult.OutputTableType == Table.TableType.None)
-				{
-					output.Add("");
-					continue;
-				}
-
-				var outputTable = inputs[ctr];
-				foreach (var joinInfo in tableResult.JoinInfos)
-					outputTable = Table.Join(outputTable, inputs[joinInfo.RightTable], joinInfo.LeftColumn, joinInfo.RightColumn, joinInfo.JoinType);
-
-				outputTable = outputTable.Aggregate(tableResult.GroupByColumns, tableResult.AggregateColumns);
-				outputTable = outputTable.Sort(tableResult.SortColumns);
-				output.Add(outputTable.ConvertToString(Data.DefaultEnding, tableResult.OutputTableType, tableResult.OutputHasHeaders));
-			}
-
-			ReplaceSelections(output);
-		}
-
 		internal void Command_Edit_Table_RegionsSelectionsToTable()
 		{
 			if (!Selections.Any())
 				return;
 
 			var regions = GetEnclosingRegions();
-			var lines = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => String.Join("\t", group.Select(index => Table.ToTCSV(GetString(Selections[index]), '\t')))).ToList();
+			var lines = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => String.Join("\t", group.Select(index => @"""" + GetString(Selections[index]).Replace(@"""", @"""""") + @""""))).ToList();
 			Selections.Replace(Regions);
 			Regions.Clear();
 			ReplaceSelections(lines);
@@ -2617,13 +2578,22 @@ namespace NeoEdit.TextEdit
 			dbConnection = result.DBConnectInfo.GetConnection();
 		}
 
-		Table RunDBSelect(string commandText)
+		DbDataReader RunDBSelect(string commandText)
 		{
-			using (var command = dbConnection.CreateCommand())
+			var command = dbConnection.CreateCommand();
+			try
 			{
 				command.CommandText = commandText;
-				using (var reader = command.ExecuteReader())
-					return new Table(reader);
+				var reader = command.ExecuteReader();
+				if (reader.FieldCount != 0)
+					return reader;
+				command.Dispose();
+				return null;
+			}
+			catch
+			{
+				command.Dispose();
+				throw;
 			}
 		}
 
@@ -2633,19 +2603,16 @@ namespace NeoEdit.TextEdit
 				throw new Exception("No connection.");
 		}
 
+		object tableViewer;
 		internal void Command_Database_Execute()
 		{
 			ValidateConnection();
-
-			var results = GetSelectionStrings().Select(str => RunDBSelect(str)).Where(table => table.Headers.Count != 0).ToList();
-
-			Results.Clear();
-			Results.AddRange(results);
-		}
-
-		internal void Command_Database_ClearResults()
-		{
-			Results.Clear();
+			var selections = Selections.ToList();
+			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
+				selections = new List<Range> { new Range(BeginOffset(), EndOffset()) };
+			var results = selections.Select(range => RunDBSelect(GetString(range))).Where(reader => reader != null).ToList();
+			if (results.Any())
+				tableViewer = Launcher.Static.LaunchDBTableEditor(tableViewer, results);
 		}
 
 		internal void Command_Database_Examine_Dialog()
@@ -3896,35 +3863,6 @@ namespace NeoEdit.TextEdit
 			LineEnding = Data.OnlyEnding;
 
 			canvasRenderTimer.Start();
-		}
-
-		void ResultsEditClick(object sender, RoutedEventArgs e)
-		{
-			var inputs = Results.ToList();
-			var result = EditTablesDialog.Run(WindowParent, null, inputs);
-			var outputs = new List<Table>();
-			for (var ctr = 0; ctr < result.Results.Count; ++ctr)
-			{
-				var tableResult = result.Results[ctr];
-				if (tableResult.OutputTableType == Table.TableType.None)
-					continue;
-
-				var outputTable = inputs[ctr];
-				foreach (var joinInfo in tableResult.JoinInfos)
-					outputTable = Table.Join(outputTable, inputs[joinInfo.RightTable], joinInfo.LeftColumn, joinInfo.RightColumn, joinInfo.JoinType);
-
-				outputTable = outputTable.Aggregate(tableResult.GroupByColumns, tableResult.AggregateColumns);
-				outputTable = outputTable.Sort(tableResult.SortColumns);
-				outputs.Add(outputTable);
-			}
-
-			Results.Clear();
-			Results.AddRange(outputs);
-		}
-
-		void ResultsCopyClick(object sender, RoutedEventArgs e)
-		{
-			clipboard.Strings = Results.Select(result => result.ConvertToString(Data.DefaultEnding)).ToList();
 		}
 
 		public override string ToString()
