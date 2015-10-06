@@ -568,6 +568,44 @@ namespace NeoEdit.HexEdit
 			return false;
 		}
 
+		bool CanFullyEncode(byte[] bytes)
+		{
+			if (Coder.CanFullyEncode(bytes, CodePage))
+				return true;
+
+			return new Message
+			{
+				Title = "Confirm",
+				Text = String.Format("The current encoding cannot represent all bytes.  Continue anyway?"),
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show() == GUI.Dialogs.Message.OptionsEnum.Yes;
+		}
+
+		internal void Command_File_OpenWith_Disk()
+		{
+			Launcher.Static.LaunchDisk(FileName);
+		}
+
+		internal void Command_File_OpenWith_TableEditor()
+		{
+			var bytes = Data.GetAllBytes();
+			if (!CanFullyEncode(bytes))
+				return;
+			Launcher.Static.LaunchTableEditor(FileName, bytes, CodePage, IsModified);
+			WindowParent.Remove(this, true);
+		}
+
+		internal void Command_File_OpenWith_TextEditor()
+		{
+			var bytes = Data.GetAllBytes();
+			if (!CanFullyEncode(bytes))
+				return;
+			Launcher.Static.LaunchTextEditor(FileName, bytes, CodePage, IsModified);
+			WindowParent.Remove(this, true);
+		}
+
 		internal void Command_File_Save_Save()
 		{
 			if (FileName == null)
@@ -686,26 +724,6 @@ namespace NeoEdit.HexEdit
 			if (result == null)
 				return;
 			CodePage = result.CodePage;
-		}
-
-		internal bool Command_File_TextEditor()
-		{
-			var bytes = Data.GetAllBytes();
-			if (!Coder.CanFullyEncode(bytes, CodePage))
-			{
-				if (new Message
-				{
-					Title = "Confirm",
-					Text = String.Format("The current encoding cannot represent all bytes.  Continue anyway?"),
-					Options = Message.OptionsEnum.YesNoCancel,
-					DefaultAccept = Message.OptionsEnum.Yes,
-					DefaultCancel = Message.OptionsEnum.Cancel,
-				}.Show() != GUI.Dialogs.Message.OptionsEnum.Yes)
-					return false;
-			}
-
-			Launcher.Static.LaunchTextEditor(FileName, bytes, CodePage, IsModified);
-			return true;
 		}
 
 		internal void Command_Edit_Undo()

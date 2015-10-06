@@ -19,6 +19,11 @@
 			<textEdit:TextEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
 			<textEdit:TextEditMenuItem Header="_Selected" CommandEnum="File_Open_Selected"/>
 		</MenuItem>
+		<MenuItem Header="Open _With">
+			<textEdit:TextEditMenuItem Header="_Disk" CommandEnum="File_OpenWith_Disk"/>
+			<textEdit:TextEditMenuItem Header="_Hex Editor" CommandEnum="File_OpenWith_HexEditor"/>
+			<textEdit:TextEditMenuItem Header="Ta_ble Editor" CommandEnum="File_OpenWith_TableEditor"/>
+		</MenuItem>
 		<MenuItem Header="_Save">
 			<textEdit:TextEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<textEdit:TextEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
@@ -27,7 +32,6 @@
 			<textEdit:TextEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
 			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
 			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
-			<textEdit:TextEditMenuItem Header="Open D_isk" CommandEnum="File_Operations_OpenDisk"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<textEdit:TextEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>
@@ -52,8 +56,6 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Hex Editor" CommandEnum="File_HexEditor"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>

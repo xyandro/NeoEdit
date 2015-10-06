@@ -161,6 +161,9 @@ namespace NeoEdit.HexEdit
 
 			switch (command)
 			{
+				case HexEditCommand.File_OpenWith_Disk: ItemTabs.TopMost.Command_File_OpenWith_Disk(); break;
+				case HexEditCommand.File_OpenWith_TableEditor: ItemTabs.TopMost.Command_File_OpenWith_TableEditor(); break;
+				case HexEditCommand.File_OpenWith_TextEditor: ItemTabs.TopMost.Command_File_OpenWith_TextEditor(); break;
 				case HexEditCommand.File_Save_Save: ItemTabs.TopMost.Command_File_Save_Save(); break;
 				case HexEditCommand.File_Save_SaveAs: ItemTabs.TopMost.Command_File_Save_SaveAs(); break;
 				case HexEditCommand.File_Operations_Rename: ItemTabs.TopMost.Command_File_Operations_Rename(); break;
@@ -172,7 +175,6 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.File_Copy_CopyPath: ItemTabs.TopMost.Command_File_Copy_CopyPath(); break;
 				case HexEditCommand.File_Copy_CopyName: ItemTabs.TopMost.Command_File_Copy_CopyName(); break;
 				case HexEditCommand.File_Encoding: ItemTabs.TopMost.Command_File_Encoding(); break;
-				case HexEditCommand.File_TextEditor: if (ItemTabs.TopMost.Command_File_TextEditor()) { ItemTabs.Items.Remove(ItemTabs.TopMost); if (ItemTabs.Items.Count == 0) Close(); } break;
 				case HexEditCommand.Edit_Undo: ItemTabs.TopMost.Command_Edit_Undo(); break;
 				case HexEditCommand.Edit_Redo: ItemTabs.TopMost.Command_Edit_Redo(); break;
 				case HexEditCommand.Edit_Cut: ItemTabs.TopMost.Command_Edit_CutCopy(true); break;

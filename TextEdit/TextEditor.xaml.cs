@@ -684,12 +684,14 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_Open_Selected: Command_File_Open_Selected(); break;
+				case TextEditCommand.File_OpenWith_Disk: Command_File_OpenWith_Disk(); break;
+				case TextEditCommand.File_OpenWith_HexEditor: Command_File_OpenWith_HexEditor(); break;
+				case TextEditCommand.File_OpenWith_TableEditor: Command_File_OpenWith_TableEditor(); break;
 				case TextEditCommand.File_Save_Save: Command_File_Save_Save(); break;
 				case TextEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
 				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
-				case TextEditCommand.File_Operations_OpenDisk: Command_File_Operations_OpenDisk(); break;
 				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(); break;
@@ -702,7 +704,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
-				case TextEditCommand.File_HexEditor: if (Command_File_HexEditor()) { WindowParent.Remove(this, true); } break;
 				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
 				case TextEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;
@@ -965,6 +966,27 @@ namespace NeoEdit.TextEdit
 				Save(FileName);
 		}
 
+		internal void Command_File_OpenWith_Disk()
+		{
+			Launcher.Static.LaunchDisk(FileName);
+		}
+
+		internal void Command_File_OpenWith_HexEditor()
+		{
+			if (!VerifyCanFullyEncode())
+				return;
+			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
+			WindowParent.Remove(this, true);
+		}
+
+		internal void Command_File_OpenWith_TableEditor()
+		{
+			if (!VerifyCanFullyEncode())
+				return;
+			Launcher.Static.LaunchTableEditor(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
+			WindowParent.Remove(this, true);
+		}
+
 		string GetSaveFileName()
 		{
 			var dialog = new SaveFileDialog
@@ -1201,19 +1223,6 @@ namespace NeoEdit.TextEdit
 			if (result == null)
 				return;
 			AESKey = result == "" ? null : result;
-		}
-
-		internal void Command_File_Operations_OpenDisk()
-		{
-			Launcher.Static.LaunchDisk(FileName);
-		}
-
-		internal bool Command_File_HexEditor()
-		{
-			if (!VerifyCanFullyEncode())
-				return false;
-			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
-			return true;
 		}
 
 		internal void Command_Edit_Undo()
