@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.RevRegEx;
 
@@ -15,6 +16,10 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string RegEx { get { return UIHelper<RevRegExDialog>.GetPropValue<string>(this); } set { UIHelper<RevRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public long NumResults { get { return UIHelper<RevRegExDialog>.GetPropValue<long>(this); } set { UIHelper<RevRegExDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public ObservableCollection<string> History { get { return UIHelper<RevRegExDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<RevRegExDialog>.SetPropValue(this, value); } }
+
+		readonly static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
 
 		static RevRegExDialog()
 		{
@@ -25,22 +30,17 @@ namespace NeoEdit.TextEdit.Dialogs
 		RevRegExDialog()
 		{
 			InitializeComponent();
-			RegEx = "";
+			History = StaticHistory;
+			RegEx = History.Count == 0 ? "" : History[0];
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			result = new Result { RegEx = RegEx };
+			History.Remove(RegEx);
+			History.Insert(0, RegEx);
 			DialogResult = true;
-		}
-
-		int Factorial(int val)
-		{
-			int result = 1;
-			for (var ctr = 2; ctr <= val; ++ctr)
-				result *= ctr;
-			return result;
 		}
 
 		void CalculateItems()

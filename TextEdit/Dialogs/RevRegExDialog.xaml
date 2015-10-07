@@ -18,7 +18,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_RegEx:" Target="{Binding ElementName=regex}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Width="300" Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Width="600" Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}" AutoSuggestionList="{Binding History, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
 		<Label Grid.Row="1" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>

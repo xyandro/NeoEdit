@@ -38,6 +38,7 @@ namespace NeoEdit.TextEdit.RevRegEx
 		public override RevRegExData VisitItems(RevRegExParser.ItemsContext context) { return RevRegExDataJoin.Create(context.itemsList().Select(item => Visit(item))); }
 		public override RevRegExData VisitItemsList(RevRegExParser.ItemsListContext context) { return RevRegExDataList.Create(context.item().Select(item => Visit(item))); }
 		public override RevRegExData VisitParens(RevRegExParser.ParensContext context) { return Visit(context.items()); }
+		public override RevRegExData VisitOptional(RevRegExParser.OptionalContext context) { return new RevRegExDataRepeat(Visit(context.item()), 0, 1); }
 		public override RevRegExData VisitRepeat(RevRegExParser.RepeatContext context)
 		{
 			var max = int.Parse(context.maxcount.Text);

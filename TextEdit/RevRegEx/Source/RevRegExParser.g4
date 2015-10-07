@@ -8,6 +8,7 @@ revregex      : items EOF;
 items         : itemsList (PIPE itemsList)*;
 itemsList     : item* ;
 item          : LPAREN items RPAREN # Parens
+              | item QUESTION # Optional
               | item LBRACE (mincount=COUNT? COMMA)? maxcount=COUNT RBRACE # Repeat
               | (char | range) # Simple
               ;
