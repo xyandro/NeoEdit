@@ -162,14 +162,11 @@ namespace NeoEdit.Loader
 		}
 
 		static Dictionary<string, Assembly> resolved = new Dictionary<string, Assembly>();
-		static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+		static Assembly AssemblyResolve(ResolveEventArgs args, Func<string, Assembly> resolver)
 		{
 			var name = new AssemblyName(args.Name).Name;
 			if (!resolved.ContainsKey(name))
-			{
-				var resource = Resources.FirstOrDefault(res => res.NameMatch(name));
-				resolved[name] = resource == null ? null : resource.Assembly;
-			}
+				resolved[name] = resolver(name);
 
 			return resolved[name];
 		}
@@ -185,11 +182,47 @@ namespace NeoEdit.Loader
 				resource.WriteToPath(dllPath);
 			SetDllDirectory(dllPath);
 
-			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+			AppDomain.CurrentDomain.AssemblyResolve += (s, args) => AssemblyResolve(args, name => Resources.Where(res => res.NameMatch(name)).Select(res => res.Assembly).FirstOrDefault());
 
 			try { AppDomain.CurrentDomain.ExecuteAssemblyByName("NeoEdit.exe"); } catch { }
 
 			DeleteDelayed(dllPath);
+		}
+
+		static void RunLive()
+		{
+			var dir = Directory.GetCurrentDirectory();
+			foreach (var file in Directory.EnumerateFiles(dir))
+			{
+				var ext = Path.GetExtension(file).ToLowerInvariant();
+				if ((ext != ".exe") && (ext != ".dll"))
+					continue;
+				var managed = false;
+				try
+				{
+					AssemblyName.GetAssemblyName(file);
+					managed = true;
+				}
+				catch { }
+				if (managed)
+				{
+					var newFile = file + ".data";
+					File.Delete(newFile);
+					File.Move(file, newFile);
+				}
+			}
+			AppDomain.CurrentDomain.AssemblyResolve += (s, args) => AssemblyResolve(args, name =>
+			{
+				var findNames = new List<string> { name + ".data", name + ".dll.data" };
+				var found = findNames.FirstOrDefault(file => File.Exists(file));
+				if (found == null)
+					return null;
+
+				var bytes = File.ReadAllBytes(found);
+				return Assembly.Load(bytes);
+			});
+
+			try { AppDomain.CurrentDomain.ExecuteAssemblyByName("NeoEdit.exe"); } catch { }
 		}
 
 		[STAThread]
@@ -197,7 +230,9 @@ namespace NeoEdit.Loader
 		{
 			try
 			{
-				if (!Resources.Any())
+				if (args.Any(arg => arg == "-live"))
+					RunLive();
+				else if (!Resources.Any())
 					SaveResources();
 				else if (Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location).EndsWith(ExtractorSuffix))
 					Extractor(int.Parse(args[0]), args[1]);

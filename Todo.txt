@@ -1,6 +1,5 @@
 All:
 Add command prompt
-Add data set/table viewer
 
 Disk:
 Move timestamp (possibly others) from TextEditor

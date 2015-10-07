@@ -4,7 +4,7 @@ options { tokenVocab = CommandLineParamsLexer; }
 
 expr          : parameter* EOF ;
 
-parameter     : about | console | consolerunner | diff | disk | handles | hexdump | hexedit | hexpid | multi | processes | registry | systeminfo | tableedit | textedit | textview ;
+parameter     : LIVE | about | console | consolerunner | diff | disk | handles | hexdump | hexedit | hexpid | multi | processes | registry | systeminfo | tableedit | textedit | textview ;
 
 about         : ABOUT ;
 console       : CONSOLE ;
