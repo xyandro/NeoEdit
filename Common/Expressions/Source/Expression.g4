@@ -125,8 +125,8 @@ DATETIME: '\'' [0-9][0-9][0-9][0-9] [-/] [01]?[0-9] [-/] [0-3]?[0-9] [ \tT]+ [0-
 TRUE: T R U E ;
 FALSE: F A L S E ;
 NULL: N U L L ;
-INTEGER: [0-9]+ ;
-FLOAT: [0-9]* '.'? [0-9]+ ([eE][-+]?[0-9]+)? ;
+INTEGER: [0-9]+ [0-9,]* ;
+FLOAT: [0-9,]* '.'? [0-9]+ ([eE][-+]?[0-9]+)? ;
 HEX: '0x' [0-9a-fA-F]+ ;
 VARIABLE: [a-zA-Z][a-zA-Z0-9_]* ;
 WHITESPACE: [ \n\t\r]+ -> skip ;

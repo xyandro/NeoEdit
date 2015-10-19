@@ -50,7 +50,7 @@ namespace NeoEdit.Common.Expressions
 				case "*": return val1 * val2;
 				case "/": return val1 / val2;
 				case "//": return ExpressionResult.IntDiv(val1, val2);
-                case "%": return val1 % val2;
+				case "%": return val1 % val2;
 				case "+": return val1 + val2;
 				case "-": return val1 - val2;
 				case "<<": return ExpressionResult.ShiftLeft(val1, val2);
@@ -196,8 +196,8 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitTrue(ExpressionParser.TrueContext context) { return new ExpressionResult(true); }
 		public override ExpressionResult VisitFalse(ExpressionParser.FalseContext context) { return new ExpressionResult(false); }
 		public override ExpressionResult VisitNull(ExpressionParser.NullContext context) { return new ExpressionResult(null); }
-		public override ExpressionResult VisitInteger(ExpressionParser.IntegerContext context) { return new ExpressionResult(BigInteger.Parse(context.val.Text)); }
-		public override ExpressionResult VisitFloat(ExpressionParser.FloatContext context) { return new ExpressionResult(double.Parse(context.val.Text)); }
+		public override ExpressionResult VisitInteger(ExpressionParser.IntegerContext context) { return new ExpressionResult(BigInteger.Parse(context.val.Text.Replace(",", ""))); }
+		public override ExpressionResult VisitFloat(ExpressionParser.FloatContext context) { return new ExpressionResult(double.Parse(context.val.Text.Replace(",", ""))); }
 		public override ExpressionResult VisitHex(ExpressionParser.HexContext context) { return new ExpressionResult(long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber)); }
 		public override ExpressionResult VisitVariable(ExpressionParser.VariableContext context) { return dict.ContainsKey(context.val.Text) ? dict[context.val.Text] : null; }
 		public override ExpressionResult VisitUnitExp(ExpressionParser.UnitExpContext context) { return ExpressionResult.Exp(Visit(context.base1), new ExpressionResult(int.Parse(context.power.Text))); }
