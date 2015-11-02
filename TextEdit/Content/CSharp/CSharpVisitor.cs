@@ -94,6 +94,7 @@ namespace NeoEdit.TextEdit.Content.CSharp
 		const string NAME = "Name";
 		const string PROPERTY = "Property";
 		const string USINGS = "Usings";
+		const string METHODPARAM = "MethodParam";
 
 
 		readonly ParserNode Root;
@@ -169,6 +170,7 @@ namespace NeoEdit.TextEdit.Content.CSharp
 		public override object VisitPropertyaccess(CSharpParser.PropertyaccessContext context) { return AddNode(context, context.GET() ?? context.SET()); }
 		public override object VisitSavesemicolon(CSharpParser.SavesemicolonContext context) { return AddNode(context, EMPTY); }
 		public override object VisitCases(CSharpParser.CasesContext context) { return AddNode(context, CASES); }
+		public override object VisitMethodcallparam(CSharpParser.MethodcallparamContext context) { return AddNode(context, METHODPARAM); }
 
 		public override object VisitSavename(CSharpParser.SavenameContext context) { return AddAttribute(NAME, context); }
 		public override object VisitSavebase(CSharpParser.SavebaseContext context) { return AddAttribute(BASE, context); }
