@@ -130,5 +130,29 @@ namespace NeoEdit.Common
 		{
 			return source.OrderByDescending(a => a, comparer);
 		}
+
+		public static bool All<TSource>(this IEnumerable<TSource> source, Func<TSource, int, bool> predicate)
+		{
+			var index = 0;
+			foreach (var item in source)
+			{
+				if (!predicate(item, index))
+					return false;
+				++index;
+			}
+			return true;
+		}
+
+		public static bool Any<TSource>(this IEnumerable<TSource> source, Func<TSource, int, bool> predicate)
+		{
+			var index = 0;
+			foreach (var item in source)
+			{
+				if (predicate(item, index))
+					return true;
+				++index;
+			}
+			return false;
+		}
 	}
 }

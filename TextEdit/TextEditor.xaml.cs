@@ -806,6 +806,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Columns: Command_Position_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Positions: Command_Position_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
+				case TextEditCommand.Position_Goto_FilesLines: Command_Position_Goto_FilesLines(); break;
 				case TextEditCommand.Position_Copy_Lines: Command_Position_Copy(GotoType.Line); break;
 				case TextEditCommand.Position_Copy_Columns: Command_Position_Copy(GotoType.Column); break;
 				case TextEditCommand.Position_Copy_Positions: Command_Position_Copy(GotoType.Position); break;
@@ -1412,6 +1413,23 @@ namespace NeoEdit.TextEdit
 				case GotoType.Position:
 					Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => MoveCursor(range, offsets[ctr], selecting)).ToList());
 					break;
+			}
+		}
+
+		internal void Command_Position_Goto_FilesLines()
+		{
+			var strs = GetSelectionStrings();
+			var startPos = strs.Select(str => str.LastIndexOf("(")).ToList();
+			if ((strs.Any(str => String.IsNullOrWhiteSpace(str))) || (startPos.Any(val => val == -1)) || (strs.Any(str => str[str.Length - 1] != ')')))
+				throw new Exception("Format: FileName(Line)");
+			var files = strs.Select((str, index) => str.Substring(0, startPos[index]).Trim()).ToList();
+			var lines = strs.Select((str, index) => int.Parse(str.Substring(startPos[index] + 1, str.Length - startPos[index] - 2))).ToList();
+			var data = files.Zip(lines, (file, line) => new { file, line }).GroupBy(obj => obj.file).ToDictionary(group => group.Key, group => group.Select(obj => obj.line).ToList());
+			foreach (var pair in data)
+			{
+				var textEditor = new TextEditor(pair.Key);
+				textEditor.Selections.Replace(pair.Value.Select(line => new Range(textEditor.Data.GetOffset(line - 1, 0))));
+				TabsParent.CreateTab(textEditor);
 			}
 		}
 

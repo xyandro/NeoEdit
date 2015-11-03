@@ -142,6 +142,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.G, ModifierKeys.Control)] [KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Shift, false)] Position_Goto_Lines,
 		Position_Goto_Columns,
 		Position_Goto_Positions,
+		Position_Goto_FilesLines,
 		Position_Copy_Lines,
 		Position_Copy_Columns,
 		Position_Copy_Positions,
