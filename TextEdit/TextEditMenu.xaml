@@ -475,20 +475,44 @@
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
-			<textEdit:TextEditMenuItem Header="_Quick Record" CommandEnum="Macro_Record_QuickRecord"/>
+			<MenuItem Header="_Quick">
+				<textEdit:TextEditMenuItem Header="Record _1" CommandEnum="Macro_Record_Quick_1"/>
+				<textEdit:TextEditMenuItem Header="Record _2" CommandEnum="Macro_Record_Quick_2"/>
+				<textEdit:TextEditMenuItem Header="Record _3" CommandEnum="Macro_Record_Quick_3"/>
+				<textEdit:TextEditMenuItem Header="Record _4" CommandEnum="Macro_Record_Quick_4"/>
+				<textEdit:TextEditMenuItem Header="Record _5" CommandEnum="Macro_Record_Quick_5"/>
+				<textEdit:TextEditMenuItem Header="Record _6" CommandEnum="Macro_Record_Quick_6"/>
+				<textEdit:TextEditMenuItem Header="Record _7" CommandEnum="Macro_Record_Quick_7"/>
+			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
 			<textEdit:TextEditMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Play">
-			<textEdit:TextEditMenuItem Header="_Quick Play" CommandEnum="Macro_Play_QuickPlay"/>
+			<MenuItem Header="_Quick">
+				<textEdit:TextEditMenuItem Header="Play _1" CommandEnum="Macro_Play_Quick_1"/>
+				<textEdit:TextEditMenuItem Header="Play _2" CommandEnum="Macro_Play_Quick_2"/>
+				<textEdit:TextEditMenuItem Header="Play _3" CommandEnum="Macro_Play_Quick_3"/>
+				<textEdit:TextEditMenuItem Header="Play _4" CommandEnum="Macro_Play_Quick_4"/>
+				<textEdit:TextEditMenuItem Header="Play _5" CommandEnum="Macro_Play_Quick_5"/>
+				<textEdit:TextEditMenuItem Header="Play _6" CommandEnum="Macro_Play_Quick_6"/>
+				<textEdit:TextEditMenuItem Header="Play _7" CommandEnum="Macro_Play_Quick_7"/>
+			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
 			<textEdit:TextEditMenuItem Header="_Repeat" CommandEnum="Macro_Play_Repeat"/>
 			<textEdit:TextEditMenuItem Header="Play On Copied _Files" CommandEnum="Macro_Play_PlayOnCopiedFiles"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Open">
-			<textEdit:TextEditMenuItem Header="_Quick" CommandEnum="Macro_Open_Quick"/>
+			<MenuItem Header="_Quick">
+				<textEdit:TextEditMenuItem Header="Open _1" CommandEnum="Macro_Open_Quick_1"/>
+				<textEdit:TextEditMenuItem Header="Open _2" CommandEnum="Macro_Open_Quick_2"/>
+				<textEdit:TextEditMenuItem Header="Open _3" CommandEnum="Macro_Open_Quick_3"/>
+				<textEdit:TextEditMenuItem Header="Open _4" CommandEnum="Macro_Open_Quick_4"/>
+				<textEdit:TextEditMenuItem Header="Open _5" CommandEnum="Macro_Open_Quick_5"/>
+				<textEdit:TextEditMenuItem Header="Open _6" CommandEnum="Macro_Open_Quick_6"/>
+				<textEdit:TextEditMenuItem Header="Open _7" CommandEnum="Macro_Open_Quick_7"/>
+			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Macro_Open_Open"/>
 		</MenuItem>
 		<Separator/>

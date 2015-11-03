@@ -203,23 +203,23 @@ namespace NeoEdit.TextEdit
 			AddTextEditor(bytes: data, modified: false);
 		}
 
-		void Command_Macro_Open_Quick()
+		const string quickMacroTemplate = "QuickText{0}.xml";
+		void Macro_Open_Quick(int quickNum)
 		{
-			AddTextEditor(Path.Combine(Macro<TextEditCommand>.MacroDirectory, quickMacroFilename));
+			AddTextEditor(Path.Combine(Macro<TextEditCommand>.MacroDirectory, String.Format(quickMacroTemplate, quickNum)));
 		}
 
-		const string quickMacroFilename = "QuickText.xml";
-		void Command_Macro_Record_QuickRecord()
+		void Command_Macro_Record_Quick(int quickNum)
 		{
 			if (recordingMacro == null)
 				Command_Macro_Record_Record();
 			else
-				Command_Macro_Record_StopRecording(quickMacroFilename);
+				Command_Macro_Record_StopRecording(String.Format(quickMacroTemplate, quickNum));
 		}
 
-		void Command_Macro_Play_QuickPlay()
+		void Command_Macro_Play_Quick(int quickNum)
 		{
-			Macro<TextEditCommand>.Load(quickMacroFilename, true).Play(this, playing => macroPlaying = playing);
+			Macro<TextEditCommand>.Load(String.Format(quickMacroTemplate, quickNum), true).Play(this, playing => macroPlaying = playing);
 		}
 
 		void Command_Macro_Record_Record()
@@ -313,10 +313,22 @@ namespace NeoEdit.TextEdit
 
 			switch (command)
 			{
-				case TextEditCommand.Macro_Record_QuickRecord: Command_Macro_Record_QuickRecord(); return;
+				case TextEditCommand.Macro_Record_Quick_1: Command_Macro_Record_Quick(1); return;
+				case TextEditCommand.Macro_Record_Quick_2: Command_Macro_Record_Quick(2); return;
+				case TextEditCommand.Macro_Record_Quick_3: Command_Macro_Record_Quick(3); return;
+				case TextEditCommand.Macro_Record_Quick_4: Command_Macro_Record_Quick(4); return;
+				case TextEditCommand.Macro_Record_Quick_5: Command_Macro_Record_Quick(5); return;
+				case TextEditCommand.Macro_Record_Quick_6: Command_Macro_Record_Quick(6); return;
+				case TextEditCommand.Macro_Record_Quick_7: Command_Macro_Record_Quick(7); return;
 				case TextEditCommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
 				case TextEditCommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
-				case TextEditCommand.Macro_Play_QuickPlay: Command_Macro_Play_QuickPlay(); return;
+				case TextEditCommand.Macro_Play_Quick_1: Command_Macro_Play_Quick(1); return;
+				case TextEditCommand.Macro_Play_Quick_2: Command_Macro_Play_Quick(2); return;
+				case TextEditCommand.Macro_Play_Quick_3: Command_Macro_Play_Quick(3); return;
+				case TextEditCommand.Macro_Play_Quick_4: Command_Macro_Play_Quick(4); return;
+				case TextEditCommand.Macro_Play_Quick_5: Command_Macro_Play_Quick(5); return;
+				case TextEditCommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
+				case TextEditCommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
 				case TextEditCommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
 				case TextEditCommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
 				case TextEditCommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
@@ -362,7 +374,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Diff_Diff: Command_Edit_Diff_Diff(); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
-				case TextEditCommand.Macro_Open_Quick: Command_Macro_Open_Quick(); return true;
+				case TextEditCommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
+				case TextEditCommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
+				case TextEditCommand.Macro_Open_Quick_3: Macro_Open_Quick(3); return true;
+				case TextEditCommand.Macro_Open_Quick_4: Macro_Open_Quick(4); return true;
+				case TextEditCommand.Macro_Open_Quick_5: Macro_Open_Quick(5); return true;
+				case TextEditCommand.Macro_Open_Quick_6: Macro_Open_Quick(6); return true;
+				case TextEditCommand.Macro_Open_Quick_7: Macro_Open_Quick(7); return true;
 				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
 			}
 
