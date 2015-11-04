@@ -12,32 +12,14 @@ namespace NeoEdit.Common
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		readonly List<T> list;
-		public ObservableCollectionEx()
-		{
-			list = new List<T>();
-		}
+		public ObservableCollectionEx() { list = new List<T>(); }
+		public ObservableCollectionEx(IEnumerable<T> collection) { list = new List<T>(collection); }
+		public ObservableCollectionEx(List<T> list) { list = new List<T>(list); }
 
-		public ObservableCollectionEx(IEnumerable<T> collection)
-		{
-			list = new List<T>(collection);
-		}
+		public IEnumerator<T> GetEnumerator() => list.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-		public ObservableCollectionEx(List<T> list)
-		{
-			list = new List<T>(list);
-		}
-
-		public IEnumerator<T> GetEnumerator()
-		{
-			return list.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
-
-		public int Count { get { return list.Count; } }
+		public int Count => list.Count;
 
 		public T this[int index]
 		{
@@ -169,10 +151,7 @@ namespace NeoEdit.Common
 				Notify();
 		}
 
-		public int IndexOf(T item)
-		{
-			return list.IndexOf(item);
-		}
+		public int IndexOf(T item) => list.IndexOf(item);
 
 		public void Insert(int index, T item)
 		{
@@ -191,9 +170,6 @@ namespace NeoEdit.Common
 
 	public static class ObservableCollectionExExtensions
 	{
-		public static ObservableCollectionEx<Type> ToObservableCollectionEx<Type>(this IEnumerable<Type> source)
-		{
-			return new ObservableCollectionEx<Type>(source);
-		}
+		public static ObservableCollectionEx<Type> ToObservableCollectionEx<Type>(this IEnumerable<Type> source) => new ObservableCollectionEx<Type>(source);
 	}
 }

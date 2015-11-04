@@ -44,9 +44,6 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			DialogResult = true;
 		}
 
-		static public bool Run(ModelDataVM modelDataVM, ModelActionVM action)
-		{
-			return new ModelActionView(modelDataVM, action).ShowDialog() == true;
-		}
+		static public bool Run(ModelDataVM modelDataVM, ModelActionVM action) => new ModelActionView(modelDataVM, action).ShowDialog() == true;
 	}
 }

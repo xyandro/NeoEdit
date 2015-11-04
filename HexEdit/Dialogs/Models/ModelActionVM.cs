@@ -76,9 +76,6 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			Description = null; // Flag for reevaluation
 		}
 
-		public bool EditDialog()
-		{
-			return ModelActionView.Run(modelDataVM, this);
-		}
+		public bool EditDialog() => ModelActionView.Run(modelDataVM, this);
 	}
 }

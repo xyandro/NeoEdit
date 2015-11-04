@@ -31,8 +31,8 @@ namespace NeoEdit.TableEdit
 		public TableTypeEnum TableType { get; set; }
 		public bool HasHeaders { get; set; }
 
-		public int NumRows { get { return Rows.Count; } }
-		public int NumColumns { get { return Headers.Count; } }
+		public int NumRows => Rows.Count;
+		public int NumColumns => Headers.Count;
 
 		public Table()
 		{
@@ -134,11 +134,11 @@ namespace NeoEdit.TableEdit
 
 		static Dictionary<Type, Func<string, object>> parsers = new Dictionary<Type, Func<string, object>>
 		{
-			{  typeof(long), str => TypeParser<long>(str, long.TryParse) },
-			{  typeof(double), str => TypeParser<double>(str, double.TryParse) },
-			{  typeof(bool), str => TypeParser<bool>(str, bool.TryParse) },
-			{  typeof(DateTime), str => TypeParser<DateTime>(str, DateTime.TryParse) },
-			{  typeof(string), str => str },
+			[typeof(long)] = str => TypeParser<long>(str, long.TryParse),
+			[typeof(double)] = str => TypeParser<double>(str, double.TryParse),
+			[typeof(bool)] = str => TypeParser<bool>(str, bool.TryParse),
+			[typeof(DateTime)] = str => TypeParser<DateTime>(str, DateTime.TryParse),
+			[typeof(string)] = str => str,
 		};
 
 		public static object GetValue(string value)
@@ -154,7 +154,7 @@ namespace NeoEdit.TableEdit
 				hasHeaders = false;
 			HasHeaders = hasHeaders != false;
 
-			Headers = Enumerable.Range(1, Rows.Any() ? Rows[0].Count : 0).Select(column => String.Format("Column {0}", column)).ToList();
+			Headers = Enumerable.Range(1, Rows.Any() ? Rows[0].Count : 0).Select(column => $"Column {column}").ToList();
 			if (HasHeaders)
 			{
 				Headers = Headers.Select((header, column) => (string)this[0, column]).ToList();
@@ -181,15 +181,12 @@ namespace NeoEdit.TableEdit
 			return ordering.ToList();
 		}
 
-		public int GetRowIndex(List<object> row)
-		{
-			return Rows.IndexOf(row);
-		}
+		public int GetRowIndex(List<object> row) => Rows.IndexOf(row);
 
 		public static string ToTCSV(string str, char split)
 		{
 			if (str.IndexOfAny(new char[] { split, '"' }) != -1)
-				return String.Format("\"{0}\"", str.Replace("\"", "\"\""));
+				return $"\"{str.Replace("\"", "\"\"")}\"";
 			return str;
 		}
 
@@ -245,7 +242,7 @@ namespace NeoEdit.TableEdit
 				for (var ctr = 0; ctr < groupedRows.Count; ++ctr)
 					newRows[ctr].Add(GetAggregateValue(tuple.Item2, groupedRows[ctr].Select(item => item[tuple.Item1]).ToList()));
 
-				newHeaders.Add(Headers[tuple.Item1] + (tuple.Item2 == AggregateType.None ? "" : " (" + tuple.Item2 + ")"));
+				newHeaders.Add($"{Headers[tuple.Item1]}{(tuple.Item2 == AggregateType.None ? "" : $" ({tuple.Item2})")}");
 			}
 
 			return new Table(this)
@@ -307,40 +304,13 @@ namespace NeoEdit.TableEdit
 				this[cells[ctr]] = values[ctr];
 		}
 
-		public string GetString(Cell cell)
-		{
-			return (Rows[cell.Row][cell.Column] ?? "<NULL>").ToString();
-		}
-
-		public string GetString(int row, int column)
-		{
-			return (Rows[row][column] ?? "<NULL>").ToString();
-		}
-
-		public void Sort(List<int> sortOrder)
-		{
-			Rows = sortOrder.Select(index => Rows[index]).ToList();
-		}
-
-		public List<List<object>> GetRowData(List<int> rows)
-		{
-			return rows.Select(row => Rows[row].ToList()).ToList();
-		}
-
-		public List<List<object>> GetColumnData(List<int> ranges)
-		{
-			return ranges.Select(column => Rows.Select(row => row[column]).ToList()).ToList();
-		}
-
-		public string GetTableData(ObservableCollectionEx<CellRange> ranges)
-		{
-			return String.Join("\r\n", ranges.Select(range => GetTableData(range)));
-		}
-
-		public string GetTableData(CellRange range)
-		{
-			return String.Join("\r\n", Enumerable.Range(range.MinRow, range.NumRows).Select(row => String.Join("\t", Enumerable.Range(range.MinColumn, range.NumColumns).Select(column => (this[row, column] ?? "<NULL>").ToString()))));
-		}
+		public string GetString(Cell cell) => (Rows[cell.Row][cell.Column] ?? "<NULL>").ToString();
+		public string GetString(int row, int column) => (Rows[row][column] ?? "<NULL>").ToString();
+		public void Sort(List<int> sortOrder) => Rows = sortOrder.Select(index => Rows[index]).ToList();
+		public List<List<object>> GetRowData(List<int> rows) => rows.Select(row => Rows[row].ToList()).ToList();
+		public List<List<object>> GetColumnData(List<int> ranges) => ranges.Select(column => Rows.Select(row => row[column]).ToList()).ToList();
+		public string GetTableData(ObservableCollectionEx<CellRange> ranges) => String.Join("\r\n", ranges.Select(range => GetTableData(range)));
+		public string GetTableData(CellRange range) => String.Join("\r\n", Enumerable.Range(range.MinRow, range.NumRows).Select(row => String.Join("\t", Enumerable.Range(range.MinColumn, range.NumColumns).Select(column => (this[row, column] ?? "<NULL>").ToString()))));
 
 		public void DeleteRows(List<int> rows)
 		{
@@ -377,10 +347,7 @@ namespace NeoEdit.TableEdit
 			}
 		}
 
-		public void RenameHeader(int column, string newName)
-		{
-			Headers[column] = newName;
-		}
+		public void RenameHeader(int column, string newName) => Headers[column] = newName;
 	}
 
 	static class TableExtensions

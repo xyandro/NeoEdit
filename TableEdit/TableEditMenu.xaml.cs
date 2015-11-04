@@ -11,9 +11,6 @@ namespace NeoEdit.TableEdit
 
 		static TableEditMenu() { UIHelper<TableEditMenu>.Register(); }
 
-		public TableEditMenu()
-		{
-			InitializeComponent();
-		}
+		public TableEditMenu() { InitializeComponent(); }
 	}
 }

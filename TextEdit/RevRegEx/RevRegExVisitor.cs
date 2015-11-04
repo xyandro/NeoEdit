@@ -34,18 +34,18 @@ namespace NeoEdit.TextEdit.RevRegEx
 			return new RevRegExVisitor().Visit(tree);
 		}
 
-		public override RevRegExData VisitRevregex(RevRegExParser.RevregexContext context) { return Visit(context.items()); }
-		public override RevRegExData VisitItems(RevRegExParser.ItemsContext context) { return RevRegExDataJoin.Create(context.itemsList().Select(item => Visit(item))); }
-		public override RevRegExData VisitItemsList(RevRegExParser.ItemsListContext context) { return RevRegExDataList.Create(context.item().Select(item => Visit(item))); }
-		public override RevRegExData VisitParens(RevRegExParser.ParensContext context) { return Visit(context.items()); }
-		public override RevRegExData VisitOptional(RevRegExParser.OptionalContext context) { return new RevRegExDataRepeat(Visit(context.item()), 0, 1); }
+		public override RevRegExData VisitRevregex(RevRegExParser.RevregexContext context) => Visit(context.items());
+		public override RevRegExData VisitItems(RevRegExParser.ItemsContext context) => RevRegExDataJoin.Create(context.itemsList().Select(item => Visit(item)));
+		public override RevRegExData VisitItemsList(RevRegExParser.ItemsListContext context) => RevRegExDataList.Create(context.item().Select(item => Visit(item)));
+		public override RevRegExData VisitParens(RevRegExParser.ParensContext context) => Visit(context.items());
+		public override RevRegExData VisitOptional(RevRegExParser.OptionalContext context) => new RevRegExDataRepeat(Visit(context.item()), 0, 1);
 		public override RevRegExData VisitRepeat(RevRegExParser.RepeatContext context)
 		{
 			var max = int.Parse(context.maxcount.Text);
 			var min = context.COMMA() == null ? max : context.mincount == null ? 0 : int.Parse(context.mincount.Text);
 			return new RevRegExDataRepeat(Visit(context.item()), min, max);
 		}
-		public override RevRegExData VisitChar(RevRegExParser.CharContext context) { return new RevRegExDataChar(context.val.Text.Last()); }
+		public override RevRegExData VisitChar(RevRegExParser.CharContext context) => new RevRegExDataChar(context.val.Text.Last());
 		public override RevRegExData VisitRange(RevRegExParser.RangeContext context)
 		{
 			var list = new List<RevRegExDataChar>();
@@ -60,7 +60,7 @@ namespace NeoEdit.TextEdit.RevRegEx
 			}
 			return RevRegExDataJoin.Create(list);
 		}
-		public override RevRegExData VisitRangeChar(RevRegExParser.RangeCharContext context) { return new RevRegExDataChar(context.val.Text.Last()); }
+		public override RevRegExData VisitRangeChar(RevRegExParser.RangeCharContext context) => new RevRegExDataChar(context.val.Text.Last());
 		public override RevRegExData VisitRangeStartEnd(RevRegExParser.RangeStartEndContext context)
 		{
 			var start = (Visit(context.startchar) as RevRegExDataChar).Value;

@@ -12,9 +12,6 @@ namespace NeoEdit.TextEdit
 
 		static TextEditMenu() { UIHelper<TextEditMenu>.Register(); }
 
-		public TextEditMenu()
-		{
-			InitializeComponent();
-		}
+		public TextEditMenu() { InitializeComponent(); }
 	}
 }

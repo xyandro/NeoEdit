@@ -11,15 +11,9 @@ namespace NeoEdit.HexEdit.Data
 		class OnCloseAction : IDisposable
 		{
 			Action closeAction;
-			public OnCloseAction(Action _closeAction)
-			{
-				closeAction = _closeAction;
-			}
+			public OnCloseAction(Action _closeAction) { closeAction = _closeAction; }
 
-			public void Dispose()
-			{
-				closeAction();
-			}
+			public void Dispose() => closeAction();
 		}
 
 		OnCloseAction Suspend()

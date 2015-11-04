@@ -10,8 +10,8 @@ namespace NeoEdit.TextEdit
 	{
 		readonly RunOnceTimer timer;
 
-		public RunOnceTimer Timer { get { return timer; } }
-		public bool Changed { get { return timer.Started; } }
+		public RunOnceTimer Timer => timer;
+		public bool Changed => timer.Started;
 
 		public RangeList(Action callback)
 		{
@@ -22,10 +22,7 @@ namespace NeoEdit.TextEdit
 			});
 		}
 
-		void Signal()
-		{
-			timer.Start();
-		}
+		void Signal() => timer.Start();
 
 		public new Range this[int index]
 		{

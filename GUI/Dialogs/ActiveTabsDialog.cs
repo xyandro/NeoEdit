@@ -89,9 +89,6 @@ namespace NeoEdit.GUI.Dialogs
 				tabs.TopMost = topMost;
 		}
 
-		public static void Run(Tabs<ItemType, CommandType> tabs)
-		{
-			new ActiveTabsDialog<ItemType, CommandType>(tabs) { Owner = tabs.WindowParent }.ShowDialog();
-		}
+		public static void Run(Tabs<ItemType, CommandType> tabs) => new ActiveTabsDialog<ItemType, CommandType>(tabs) { Owner = tabs.WindowParent }.ShowDialog();
 	}
 }

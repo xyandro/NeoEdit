@@ -50,8 +50,8 @@ namespace NeoEdit.TableEdit
 		[DepProp]
 		public int ClipboardCount { get { return UIHelper<TableEditor>.GetPropValue<int>(this); } set { UIHelper<TableEditor>.SetPropValue(this, value); } }
 
-		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize) - HeaderRows; } }
-		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize) - HeaderRows; } }
+		int yScrollViewportFloor => (int)Math.Floor(yScroll.ViewportSize) - HeaderRows;
+		int yScrollViewportCeiling => (int)Math.Ceiling(yScroll.ViewportSize) - HeaderRows;
 
 		Table table;
 
@@ -551,9 +551,9 @@ namespace NeoEdit.TableEdit
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
 				var columnName = table.Headers[num];
-				var columnNameLen = columnName + "l";
-				var columnNum = String.Format("c{0}", ctr + 1);
-				var columnNumLen = columnNum + "l";
+				var columnNameLen = $"{columnName}l";
+				var columnNum = $"c{ctr + 1}";
+				var columnNumLen = $"{columnNum}l";
 				parallelDataActions.Add(new HashSet<string> { columnName, columnNum }, (items, addData) =>
 				{
 					var columnData = sels.Select(cell => table[cell.Row, num]).ToList();
@@ -583,10 +583,7 @@ namespace NeoEdit.TableEdit
 			return data;
 		}
 
-		CellRange AllCells()
-		{
-			return new CellRange(endRow: table.NumRows - 1, endColumn: table.NumColumns - 1);
-		}
+		CellRange AllCells() => new CellRange(endRow: table.NumRows - 1, endColumn: table.NumColumns - 1);
 
 		void RunSearch(FindTextDialog.Result result)
 		{
@@ -625,10 +622,7 @@ namespace NeoEdit.TableEdit
 			}
 		}
 
-		void Command_File_OpenWith_Disk()
-		{
-			Launcher.Static.LaunchDisk(FileName);
-		}
+		void Command_File_OpenWith_Disk() => Launcher.Static.LaunchDisk(FileName);
 
 		void Command_File_OpenWith_HexEditor()
 		{
@@ -698,10 +692,7 @@ namespace NeoEdit.TableEdit
 			File.Delete(FileName);
 		}
 
-		void Command_File_Operations_Explore()
-		{
-			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
-		}
+		void Command_File_Operations_Explore() => Process.Start("explorer.exe", $"/select,\"{FileName}\"");
 
 		void Command_File_Refresh()
 		{
@@ -740,20 +731,11 @@ namespace NeoEdit.TableEdit
 			canvasRenderTimer.Start();
 		}
 
-		void Command_File_Copy_Path()
-		{
-			NEClipboard.CopiedFile = FileName;
-		}
+		void Command_File_Copy_Path() => NEClipboard.CopiedFile = FileName;
 
-		void Command_File_Copy_Name()
-		{
-			NEClipboard.Text = Path.GetFileName(FileName);
-		}
+		void Command_File_Copy_Name() => NEClipboard.Text = Path.GetFileName(FileName);
 
-		string Command_File_Encryption_Dialog()
-		{
-			return FileEncryptor.GetKey(WindowParent);
-		}
+		string Command_File_Encryption_Dialog() => FileEncryptor.GetKey(WindowParent);
 
 		void Command_File_Encryption(string result)
 		{
@@ -762,15 +744,9 @@ namespace NeoEdit.TableEdit
 			AESKey = result == "" ? null : result;
 		}
 
-		List<Cell> GetSelectedCells(bool preserveOrder = false)
-		{
-			return Selections.EnumerateCells(preserveOrder).ToList();
-		}
+		List<Cell> GetSelectedCells(bool preserveOrder = false) => Selections.EnumerateCells(preserveOrder).ToList();
 
-		void SetHome()
-		{
-			Selections.Replace(new CellRange(0, 0));
-		}
+		void SetHome() => Selections.Replace(new CellRange(0, 0));
 
 		void Command_Edit_UndoRedo(ReplaceType replaceType)
 		{
@@ -848,10 +824,7 @@ namespace NeoEdit.TableEdit
 			FindNext(true);
 		}
 
-		void Command_Edit_Find_NextPrevious(bool next)
-		{
-			FindNext(next);
-		}
+		void Command_Edit_Find_NextPrevious(bool next) => FindNext(next);
 
 		void Command_Edit_Sort()
 		{
@@ -923,10 +896,7 @@ namespace NeoEdit.TableEdit
 			RenameHeader(column, result.Name);
 		}
 
-		GetExpressionDialog.Result Command_Edit_Expression_Dialog()
-		{
-			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
-		}
+		GetExpressionDialog.Result Command_Edit_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
 
 		List<T> GetExpressionResults<T>(string expression, bool resizeToSelections = true, bool matchToSelections = true)
 		{
@@ -946,10 +916,7 @@ namespace NeoEdit.TableEdit
 			ReplaceCells(Selections, results);
 		}
 
-		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog()
-		{
-			return GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
-		}
+		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetExpressionData(10));
 
 		void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
 		{
@@ -957,20 +924,11 @@ namespace NeoEdit.TableEdit
 			Selections.Replace(GetSelectedCells().Where((str, num) => results[num]));
 		}
 
-		void Command_Select_All()
-		{
-			Selections.Replace(AllCells());
-		}
+		void Command_Select_All() => Selections.Replace(AllCells());
 
-		void Command_Select_Cells()
-		{
-			Selections.Replace(GetSelectedCells());
-		}
+		void Command_Select_Cells() => Selections.Replace(GetSelectedCells());
 
-		void Command_Select_NullNotNull(bool isNull)
-		{
-			Selections.Replace(GetSelectedCells().Where(cell => (table[cell] == null) == isNull));
-		}
+		void Command_Select_NullNotNull(bool isNull) => Selections.Replace(GetSelectedCells().Where(cell => (table[cell] == null) == isNull));
 
 		void Command_Select_UniqueDuplicates(bool unique)
 		{
@@ -1063,25 +1021,19 @@ namespace NeoEdit.TableEdit
 				new Message
 				{
 					Title = "Timer",
-					Text = String.Format("Elapsed time: {0:n} ms", elapsed),
+					Text = $"Elapsed time: {elapsed:n} ms",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 			}
 		}
 
-		public override bool Empty()
-		{
-			return (FileName == null) && (!IsModified) && (!table.Headers.Any());
-		}
+		public override bool Empty() => (FileName == null) && (!IsModified) && (!table.Headers.Any());
 
-		List<object> GetValues(IEnumerable<Cell> cells)
-		{
-			return cells.Select(cell => table[cell]).ToList();
-		}
+		List<object> GetValues(IEnumerable<Cell> cells) => cells.Select(cell => table[cell]).ToList();
 
-		protected bool shiftDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift); } }
-		protected bool controlDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Control); } }
-		protected bool altDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Alt); } }
+		protected bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+		protected bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+		protected bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
 		List<int> GetListReverse(List<int> list)
 		{
@@ -1092,15 +1044,8 @@ namespace NeoEdit.TableEdit
 			return reverse;
 		}
 
-		List<int> DeleteToInsert(List<int> values)
-		{
-			return values.Select((value, index) => value - index).ToList();
-		}
-
-		List<int> InsertToDelete(List<int> values)
-		{
-			return values.Select((value, index) => value + index).ToList();
-		}
+		List<int> DeleteToInsert(List<int> values) => values.Select((value, index) => value - index).ToList();
+		List<int> InsertToDelete(List<int> values) => values.Select((value, index) => value + index).ToList();
 
 		UndoRedoStep GetUndoStep(UndoRedoStep step)
 		{
@@ -1175,7 +1120,7 @@ namespace NeoEdit.TableEdit
 			var columnNum = 0;
 			while (headers.Count < columns.Count)
 			{
-				var header = String.Format("Column {0}", ++columnNum);
+				var header = $"Column {++columnNum}";
 				if (headersUsed.Contains(header))
 					continue;
 
@@ -1203,10 +1148,7 @@ namespace NeoEdit.TableEdit
 			Replace(UndoRedoStep.CreateDeleteColumns(Selections.EnumerateColumns().ToList()));
 		}
 
-		void ReplaceCells(ObservableCollectionEx<CellRange> ranges, List<object> values = null, string defaultValue = null)
-		{
-			ReplaceCells(ranges.EnumerateCells().ToList(), values, defaultValue);
-		}
+		void ReplaceCells(ObservableCollectionEx<CellRange> ranges, List<object> values = null, string defaultValue = null) => ReplaceCells(ranges.EnumerateCells().ToList(), values, defaultValue);
 
 		void ReplaceCells(List<Cell> cells, List<object> values = null, string defaultValue = null)
 		{
@@ -1223,10 +1165,7 @@ namespace NeoEdit.TableEdit
 			Replace(UndoRedoStep.CreateChangeCells(cells, values));
 		}
 
-		void ReplaceTable(Table table)
-		{
-			Replace(UndoRedoStep.CreateChangeTable(table));
-		}
+		void ReplaceTable(Table table) => Replace(UndoRedoStep.CreateChangeTable(table));
 
 		void Sort(List<int> sortOrder)
 		{
@@ -1236,10 +1175,7 @@ namespace NeoEdit.TableEdit
 			Replace(UndoRedoStep.CreateSort(sortOrder));
 		}
 
-		void RenameHeader(int column, string newName)
-		{
-			Replace(UndoRedoStep.CreateRenameHeader(column, newName));
-		}
+		void RenameHeader(int column, string newName) => Replace(UndoRedoStep.CreateRenameHeader(column, newName));
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{

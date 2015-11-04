@@ -11,12 +11,11 @@ namespace NeoEdit.Console
 			StdErr,
 		}
 
-		public string Str { get; private set; }
-		public LineType Type { get; private set; }
-		public bool Finished { get; private set; }
+		public string Str { get; }
+		public LineType Type { get; }
+		public bool Finished { get; }
 
 		public Line(LineType Type) : this(String.Empty, Type, false) { }
-
 		public Line(string Str, LineType Type) : this(Str, Type, false) { }
 
 		Line(string Str, LineType Type, bool Finished)

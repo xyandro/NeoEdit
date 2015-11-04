@@ -16,10 +16,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 		Stack<ItemGridTreeItem> lastLocation = new Stack<ItemGridTreeItem>();
 		Stack<ItemGridTreeItem> nextLocation = new Stack<ItemGridTreeItem>();
 
-		public ItemGridTree()
-		{
-			Accept += ItemGridTree_Accept;
-		}
+		public ItemGridTree() { Accept += ItemGridTree_Accept; }
 
 		protected override void OnPreviewKeyDown(System.Windows.Input.KeyEventArgs e)
 		{
@@ -90,7 +87,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 				return;
 			}
 
-			var oldLocation = last == null ? null : last.FullName;
+			var oldLocation = last?.FullName;
 			Items = new ObservableCollection<ItemGridTreeItem>(Location.GetChildren());
 			ResetScroll();
 			if (oldLocation == null)
@@ -101,9 +98,6 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 			Selected.Add(Focused);
 		}
 
-		public void Refresh()
-		{
-			SyncItems(Location.GetChildren(), UIHelper<ItemGridTreeItem>.GetProperty(a => a.FullName));
-		}
+		public void Refresh() => SyncItems(Location.GetChildren(), UIHelper<ItemGridTreeItem>.GetProperty(a => a.FullName));
 	}
 }

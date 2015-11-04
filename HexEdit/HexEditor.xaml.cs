@@ -53,8 +53,8 @@ namespace NeoEdit.HexEdit
 		[DepProp]
 		public long yScrollValue { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 
-		long yScrollViewportFloor { get { return (long)Math.Floor(yScroll.ViewportSize); } }
-		long yScrollViewportCeiling { get { return (long)Math.Ceiling(yScroll.ViewportSize); } }
+		long yScrollViewportFloor => (long)Math.Floor(yScroll.ViewportSize);
+		long yScrollViewportCeiling => (long)Math.Ceiling(yScroll.ViewportSize);
 
 		int internalChangeCount = 0;
 
@@ -62,8 +62,8 @@ namespace NeoEdit.HexEdit
 
 		long _pos1, _pos2;
 
-		long Pos1 { get { return _pos1; } }
-		long Pos2 { get { return _pos2; } }
+		long Pos1 => _pos1;
+		long Pos2 => _pos2;
 
 		void MoveCursor(long value, bool selecting, bool rel = true)
 		{
@@ -82,7 +82,7 @@ namespace NeoEdit.HexEdit
 			canvas.InvalidateVisual();
 		}
 
-		long Length { get { return SelEnd - SelStart; } }
+		long Length => SelEnd - SelStart;
 		bool sexHex;
 		bool SelHex
 		{
@@ -107,12 +107,12 @@ namespace NeoEdit.HexEdit
 		const int xHexSpacing = 1;
 		const int xHexGap = 2;
 
-		double xPosition { get { return 0; } }
-		double xHexViewStart { get { return xPosition + (xPosColumns + xPosGap) * Font.charWidth; } }
-		double xHexViewEnd { get { return xHexViewStart + (columns * (2 + xHexSpacing) - xHexSpacing) * Font.charWidth; } }
-		double xTextViewStart { get { return xHexViewEnd + xHexGap * Font.charWidth; } }
-		double xTextViewEnd { get { return xTextViewStart + columns * Font.charWidth; } }
-		double xEnd { get { return xTextViewEnd; } }
+		double xPosition => 0;
+		double xHexViewStart => xPosition + (xPosColumns + xPosGap) * Font.charWidth;
+		double xHexViewEnd => xHexViewStart + (columns * (2 + xHexSpacing) - xHexSpacing) * Font.charWidth;
+		double xTextViewStart => xHexViewEnd + xHexGap * Font.charWidth;
+		double xTextViewEnd => xTextViewStart + columns * Font.charWidth;
+		double xEnd => xTextViewEnd;
 
 		ModelData modelData = new ModelData();
 
@@ -192,25 +192,10 @@ namespace NeoEdit.HexEdit
 			yScrollValue = Math.Min(row, Math.Max(row - yScrollViewportFloor + 1, yScrollValue));
 		}
 
-		double GetXHexFromColumn(int column)
-		{
-			return xHexViewStart + (column * (2 + xHexSpacing) + (inHexEdit ? 1 : 0)) * Font.charWidth;
-		}
-
-		int GetColumnFromXHex(double x)
-		{
-			return (int)((x - xHexViewStart) / (2 + xHexSpacing) / Font.charWidth);
-		}
-
-		double GetXTextFromColumn(int column)
-		{
-			return xTextViewStart + column * Font.charWidth;
-		}
-
-		int GetColumnFromXText(double x)
-		{
-			return (int)((x - xTextViewStart) / Font.charWidth);
-		}
+		double GetXHexFromColumn(int column) => xHexViewStart + (column * (2 + xHexSpacing) + (inHexEdit ? 1 : 0)) * Font.charWidth;
+		int GetColumnFromXHex(double x) => (int)((x - xHexViewStart) / (2 + xHexSpacing) / Font.charWidth);
+		double GetXTextFromColumn(int column) => xTextViewStart + column * Font.charWidth;
+		int GetColumnFromXText(double x) => (int)((x - xTextViewStart) / Font.charWidth);
 
 		void CalculateBoundaries()
 		{
@@ -267,7 +252,7 @@ namespace NeoEdit.HexEdit
 		void DrawPos(DrawingContext dc, long row)
 		{
 			var y = (row - yScrollValue) * Font.lineHeight;
-			var posText = Font.GetText(String.Format("{0:x" + xPosColumns.ToString() + "}", row * columns));
+			var posText = Font.GetText(String.Format($"{{0:x{xPosColumns}}}", row * columns));
 			dc.DrawText(posText, new Point(xPosition, y));
 		}
 
@@ -576,17 +561,14 @@ namespace NeoEdit.HexEdit
 			return new Message
 			{
 				Title = "Confirm",
-				Text = String.Format("The current encoding cannot represent all bytes.  Continue anyway?"),
+				Text = $"The current encoding cannot represent all bytes.  Continue anyway?",
 				Options = Message.OptionsEnum.YesNoCancel,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.Cancel,
 			}.Show() == GUI.Dialogs.Message.OptionsEnum.Yes;
 		}
 
-		internal void Command_File_OpenWith_Disk()
-		{
-			Launcher.Static.LaunchDisk(FileName);
-		}
+		internal void Command_File_OpenWith_Disk() => Launcher.Static.LaunchDisk(FileName);
 
 		internal void Command_File_OpenWith_TableEditor()
 		{
@@ -675,10 +657,7 @@ namespace NeoEdit.HexEdit
 			File.Delete(FileName);
 		}
 
-		internal void Command_File_Operations_Explore()
-		{
-			Process.Start("explorer.exe", "/select,\"" + FileName + "\"");
-		}
+		internal void Command_File_Operations_Explore() => Process.Start("explorer.exe", $"/select,\"{FileName}\"");
 
 		internal void Command_File_Revert()
 		{
@@ -708,15 +687,9 @@ namespace NeoEdit.HexEdit
 			++ChangeCount;
 		}
 
-		internal void Command_File_Copy_CopyPath()
-		{
-			NEClipboard.CopiedFile = FileName;
-		}
+		internal void Command_File_Copy_CopyPath() => NEClipboard.CopiedFile = FileName;
 
-		internal void Command_File_Copy_CopyName()
-		{
-			Clipboard.SetText(Path.GetFileName(FileName));
-		}
+		internal void Command_File_Copy_CopyName() => Clipboard.SetText(Path.GetFileName(FileName));
 
 		internal void Command_File_Encoding()
 		{
@@ -797,10 +770,7 @@ namespace NeoEdit.HexEdit
 			}
 		}
 
-		internal void Command_Edit_FindNextPrev(bool forward, bool shiftDown)
-		{
-			DoFind(shiftDown, forward);
-		}
+		internal void Command_Edit_FindNextPrev(bool forward, bool shiftDown) => DoFind(shiftDown, forward);
 
 		internal void Command_Edit_Goto(bool shiftDown)
 		{
@@ -818,10 +788,7 @@ namespace NeoEdit.HexEdit
 				Insert = !Insert;
 		}
 
-		internal void Command_View_Values()
-		{
-			ShowValues = !ShowValues;
-		}
+		internal void Command_View_Values() => ShowValues = !ShowValues;
 
 		internal void Command_File_Refresh()
 		{
@@ -1052,14 +1019,8 @@ namespace NeoEdit.HexEdit
 			}
 		}
 
-		public override bool Empty()
-		{
-			return (FileName == null) && (!IsModified) && (Data.Length == 0);
-		}
+		public override bool Empty() => (FileName == null) && (!IsModified) && (Data.Length == 0);
 
-		public override string ToString()
-		{
-			return FileName;
-		}
+		public override string ToString() => FileName;
 	}
 }

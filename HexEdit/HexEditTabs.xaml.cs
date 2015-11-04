@@ -19,10 +19,7 @@ namespace NeoEdit.HexEdit
 	{
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 
-		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, HexEditTabs hexEditTabs = null, bool forceCreate = false)
-		{
-			CreateTab(new HexEditor(data, codePage, filename, filetitle, modified), hexEditTabs, forceCreate);
-		}
+		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, HexEditTabs hexEditTabs = null, bool forceCreate = false) => CreateTab(new HexEditor(data, codePage, filename, filetitle, modified), hexEditTabs, forceCreate);
 
 		HexEditTabs()
 		{
@@ -44,10 +41,7 @@ namespace NeoEdit.HexEdit
 			Create(new MemoryBinaryData(bytes), codePage, filename, modified: modified, forceCreate: forceCreate);
 		}
 
-		public static void CreateFromDump(string filename, bool forceCreate = false)
-		{
-			Create(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ", forceCreate: forceCreate);
-		}
+		public static void CreateFromDump(string filename, bool forceCreate = false) => Create(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ", forceCreate: forceCreate);
 
 		public static void CreateFromProcess(int pid, bool forceCreate = false)
 		{
@@ -56,13 +50,10 @@ namespace NeoEdit.HexEdit
 				throw new ArgumentException("Process doesn't exist.");
 			if (process.Id == Process.GetCurrentProcess().Id)
 				throw new ArgumentException("Can't open current process.");
-			Create(new ProcessBinaryData(pid), filetitle: String.Format("Process {0} ({1}) - ", pid, process.ProcessName), forceCreate: forceCreate);
+			Create(new ProcessBinaryData(pid), filetitle: $"Process {pid} ({process.ProcessName}) - ", forceCreate: forceCreate);
 		}
 
-		void Command_File_New(bool newWindow)
-		{
-			Create(new MemoryBinaryData(), hexEditTabs: this, forceCreate: newWindow);
-		}
+		void Command_File_New(bool newWindow) => Create(new MemoryBinaryData(), hexEditTabs: this, forceCreate: newWindow);
 
 		void Command_File_Open_Open()
 		{
@@ -95,7 +86,7 @@ namespace NeoEdit.HexEdit
 			if ((files.Count > 5) && (new Message
 			{
 				Title = "Confirm",
-				Text = String.Format("Are you sure you want to open these {0} files?", files.Count),
+				Text = $"Are you sure you want to open these {files.Count} files?",
 				Options = Message.OptionsEnum.YesNoCancel,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.Cancel,

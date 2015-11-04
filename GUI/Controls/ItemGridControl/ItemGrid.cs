@@ -76,7 +76,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 				return idx;
 			}
 		}
-		public int FocusedColumnIndex { get { return Columns.IndexOf(FocusedColumn); } }
+		public int FocusedColumnIndex => Columns.IndexOf(FocusedColumn);
 
 		int lastFocusedIndex = -1;
 		void SetLastFocusedIndex()
@@ -181,10 +181,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 				numericStrings = _numericStrings;
 			}
 
-			string SortStr(string str)
-			{
-				return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
-			}
+			string SortStr(string str) => Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 
 			public int Compare(ItemType o1, ItemType o2)
 			{
@@ -234,7 +231,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 		public void SyncItems(IEnumerable<ItemType> items, DependencyProperty prop)
 		{
 			var scrollPos = yScroll.Value;
-			var focused = Focused == null ? null : Focused.GetValue(prop) as IComparable;
+			var focused = Focused?.GetValue(prop) as IComparable;
 			var selected = Selected.Select(item => item.GetValue(prop) as IComparable).ToList();
 
 			Items.Clear();
@@ -260,9 +257,9 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 			drawTimer.Start();
 		}
 
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
-		bool altDown { get { return (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None; } }
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
+		bool altDown => (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None;
+		bool shiftDown => (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None;
 
 		WeakReference<ItemType> lastShiftSel;
 		void MoveFocus(int offset, bool relative, bool select = false)

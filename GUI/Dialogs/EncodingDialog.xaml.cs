@@ -36,10 +36,10 @@ namespace NeoEdit.GUI.Dialogs
 
 			lineEndings.ItemsSource = new Dictionary<string, string>
 			{
-				{ "Mixed", "" },
-				{ "Windows (CRLF)", "\r\n" },
-				{ "Unix (LF)", "\n" },
-				{ "Mac (CR)", "\r" },
+				["Mixed"] = "",
+				["Windows (CRLF)"] = "\r\n",
+				["Unix (LF)"] = "\n",
+				["Mac (CR)"] = "\r",
 			};
 			lineEndings.DisplayMemberPath = "Key";
 			lineEndings.SelectedValuePath = "Value";
@@ -74,9 +74,6 @@ namespace NeoEdit.GUI.Dialogs
 			return dialog.result;
 		}
 
-		void SetDetected(object sender, RoutedEventArgs e)
-		{
-			CodePage = Detected;
-		}
+		void SetDetected(object sender, RoutedEventArgs e) => CodePage = Detected;
 	}
 }

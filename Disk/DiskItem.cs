@@ -54,10 +54,10 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public VersionControlStatus VCSStatus { get { return UIHelper<DiskItem>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
-		public bool HasChildren { get { return FileType != DiskItemType.File; } }
-		public DiskItem Parent { get { return new DiskItem(Path); } }
+		public bool HasChildren => FileType != DiskItemType.File;
+		public DiskItem Parent => new DiskItem(Path);
 
-		public bool CanRename { get { return (FileType == DiskItemType.File) || (FileType == DiskItemType.Directory); } }
+		public bool CanRename => (FileType == DiskItemType.File) || (FileType == DiskItemType.Directory);
 
 		public bool Exists
 		{
@@ -172,7 +172,7 @@ namespace NeoEdit.Disk
 			path = Regex.Replace(path.Trim().Trim('"'), @"[\\/]+", @"\").TrimEnd('\\');
 			if (network)
 			{
-				path = @"\\" + path.TrimStart('\\');
+				path = $"\\\\{path.TrimStart('\\')}";
 				EnsureShareExists(path);
 			}
 			return path;
@@ -201,7 +201,7 @@ namespace NeoEdit.Disk
 		{
 			using (var shares = new ManagementClass(FullName + @"\root\cimv2", "Win32_Share", new ObjectGetOptions()))
 				foreach (var share in shares.GetInstances())
-					yield return new DiskItem(FullName + @"\" + share["Name"]);
+					yield return new DiskItem($"{FullName}\\{share["Name"]}");
 		}
 
 		IEnumerable<DiskItem> GetDirectoryChildren()
@@ -226,13 +226,10 @@ namespace NeoEdit.Disk
 			if (FileType != DiskItemType.File)
 				return;
 
-			Hash = hashType.ToString() + ": " + Hasher.Get(FullName, hashType, key);
+			Hash = $"{hashType}: {Hasher.Get(FullName, hashType, key)}";
 		}
 
-		public void SetVCSStatus()
-		{
-			VCSStatus = VCSCache.Single.GetStatus(FullName, Path);
-		}
+		public void SetVCSStatus() => VCSStatus = VCSCache.Single.GetStatus(FullName, Path);
 
 		public void Rename(string newName)
 		{
@@ -249,21 +246,14 @@ namespace NeoEdit.Disk
 			FullName = newName;
 		}
 
-		public bool IsChildOf(DiskItem item)
-		{
-			return IsChildOf(item.FullName);
-		}
-
-		public bool IsChildOf(string path)
-		{
-			return FullName.StartsWith(path + @"\");
-		}
+		public bool IsChildOf(DiskItem item) => IsChildOf(item.FullName);
+		public bool IsChildOf(string path) => FullName.StartsWith(path + @"\");
 
 		public void Relocate(string oldPath, string newPath)
 		{
 			oldPath += @"\";
 			if (FullName.StartsWith(oldPath))
-				FullName = newPath + @"\" + FullName.Substring(oldPath.Length);
+				FullName = $"{newPath}\\{FullName.Substring(oldPath.Length)}";
 		}
 
 		string GetKey()
@@ -272,7 +262,7 @@ namespace NeoEdit.Disk
 			var time = WriteTime;
 			if (time.HasValue)
 				ticks = time.Value.Ticks;
-			return String.Format("{0}-{1}-{2}-{3}", FileType, Name, Size, ticks);
+			return $"{FileType}-{Name}-{Size}-{ticks}";
 		}
 
 		public void Delete()
@@ -319,7 +309,7 @@ namespace NeoEdit.Disk
 			return result;
 		}
 
-		public override string ToString() { return FullName; }
-		public bool Equals(DiskItem item) { return FullName == item.FullName; }
+		public override string ToString() => FullName;
+		public bool Equals(DiskItem item) => FullName == item.FullName;
 	}
 }

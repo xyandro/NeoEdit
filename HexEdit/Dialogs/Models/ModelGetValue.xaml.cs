@@ -16,10 +16,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			Value = value;
 		}
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			DialogResult = true;
-		}
+		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
 
 		public static string Run(string value)
 		{

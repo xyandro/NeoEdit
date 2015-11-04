@@ -50,7 +50,7 @@ namespace NeoEdit.TextView.Dialogs
 				canClose = true;
 				Close();
 				if (e.Error != null)
-					throw new Exception(String.Format("Background task failed: ", e.Error.Message), e.Error);
+					throw new Exception($"Background task failed: {e.Error.Message}", e.Error);
 				if ((!e.Cancelled) && (finished != null))
 					finished();
 			};
@@ -98,14 +98,8 @@ namespace NeoEdit.TextView.Dialogs
 			e.Cancel = !canClose;
 		}
 
-		private void CancelClick(object sender, RoutedEventArgs e)
-		{
-			worker.CancelAsync();
-		}
+		private void CancelClick(object sender, RoutedEventArgs e) => worker.CancelAsync();
 
-		public static void Run(string status, List<string> names, Action<ProgressDelegate, CancelDelegate> work, Action finished = null)
-		{
-			new MultiProgressDialog(status, names, work, finished).Show();
-		}
+		public static void Run(string status, List<string> names, Action<ProgressDelegate, CancelDelegate> work, Action finished = null) => new MultiProgressDialog(status, names, work, finished).Show();
 	}
 }

@@ -22,10 +22,10 @@ namespace NeoEdit.TableEdit.Dialogs
 
 			type.ItemsSource = new Dictionary<Table.JoinType, string>
 			{
-				{ Table.JoinType.Inner, "Inner" },
-				{ Table.JoinType.LeftOuter, "Left Outer" },
-				{ Table.JoinType.RightOuter, "Right Outer" },
-				{ Table.JoinType.FullOuter, "Full Outer" },
+				[Table.JoinType.Inner] = "Inner",
+				[Table.JoinType.LeftOuter] = "Left Outer",
+				[Table.JoinType.RightOuter] = "Right Outer",
+				[Table.JoinType.FullOuter] = "Full Outer",
 			};
 			type.SelectedValuePath = "Key";
 			type.DisplayMemberPath = "Value";

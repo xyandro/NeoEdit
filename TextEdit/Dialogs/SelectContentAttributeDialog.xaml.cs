@@ -22,10 +22,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public bool FirstOnly { get { return UIHelper<SelectContentAttributeDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectContentAttributeDialog>.SetPropValue(this, value); } }
 
-		static SelectContentAttributeDialog()
-		{
-			UIHelper<SelectContentAttributeDialog>.Register();
-		}
+		static SelectContentAttributeDialog() { UIHelper<SelectContentAttributeDialog>.Register(); }
 
 		SelectContentAttributeDialog(List<ParserNode> nodes)
 		{

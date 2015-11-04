@@ -8,7 +8,7 @@ namespace NeoEdit.GUI
 	public class Launcher
 	{
 		static Launcher launcher;
-		public static Launcher Static { get { return launcher; } }
+		public static Launcher Static => launcher;
 
 		Func<bool> getMinimizeToTrayLauncher;
 		Action<bool> setMinimizeToTrayLauncher;

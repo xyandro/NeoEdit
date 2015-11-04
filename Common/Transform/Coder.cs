@@ -126,11 +126,11 @@ namespace NeoEdit.Common.Transform
 
 		class NEEncoding
 		{
-			public CodePage codePage { get; private set; }
-			public string shortDescription { get; private set; }
-			public string description { get; private set; }
-			public Encoding encoding { get; private set; }
-			public byte[] preamble { get; private set; }
+			public CodePage codePage { get; }
+			public string shortDescription { get; }
+			public string description { get; }
+			public Encoding encoding { get; }
+			public byte[] preamble { get; }
 
 			internal NEEncoding(EncodingInfo encoding) : this((CodePage)encoding.CodePage, encoding.DisplayName) { }
 
@@ -142,7 +142,7 @@ namespace NeoEdit.Common.Transform
 				if (codePage >= 0)
 				{
 					if (codePage > 0)
-						description += " - Codepage " + (int)codePage;
+						description += $" - Codepage {(int)codePage}";
 					encoding = Encoding.GetEncoding((int)codePage);
 					preamble = encoding.GetPreamble();
 					if ((preamble != null) && (preamble.Length == 0))
@@ -150,7 +150,7 @@ namespace NeoEdit.Common.Transform
 				}
 			}
 
-			public override string ToString() { return description; }
+			public override string ToString() => description;
 		}
 
 		static readonly List<NEEncoding> NEEncodings;
@@ -596,20 +596,9 @@ namespace NeoEdit.Common.Transform
 				return CodePage.UTF16BE;
 		}
 
-		public static List<CodePage> GetAllCodePages()
-		{
-			return NEEncodings.Select(encoding => encoding.codePage).ToList();
-		}
-
-		public static List<CodePage> GetStringCodePages()
-		{
-			return GetAllCodePages().Where(codePage => IsStr(codePage)).ToList();
-		}
-
-		public static List<CodePage> GetNumericCodePages()
-		{
-			return GetAllCodePages().Where(codePage => !IsStr(codePage)).ToList();
-		}
+		public static List<CodePage> GetAllCodePages() => NEEncodings.Select(encoding => encoding.codePage).ToList();
+		public static List<CodePage> GetStringCodePages() => GetAllCodePages().Where(codePage => IsStr(codePage)).ToList();
+		public static List<CodePage> GetNumericCodePages() => GetAllCodePages().Where(codePage => !IsStr(codePage)).ToList();
 
 		public static string GetDescription(CodePage codePage, bool shortDescription = false)
 		{
@@ -618,20 +607,11 @@ namespace NeoEdit.Common.Transform
 			return NEEncodingDictionary[codePage].description;
 		}
 
-		public static bool AlwaysCaseSensitive(CodePage codePage)
-		{
-			return (codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Base64);
-		}
+		public static bool AlwaysCaseSensitive(CodePage codePage) => (codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Base64);
 
-		public static Encoding GetEncoding(CodePage codePage)
-		{
-			return NEEncodingDictionary[codePage].encoding;
-		}
+		public static Encoding GetEncoding(CodePage codePage) => NEEncodingDictionary[codePage].encoding;
 
-		public static bool IsStr(CodePage codePage)
-		{
-			return codePage >= CodePage.StartString;
-		}
+		public static bool IsStr(CodePage codePage) => codePage >= CodePage.StartString;
 
 		public static int PreambleSize(CodePage codePage)
 		{

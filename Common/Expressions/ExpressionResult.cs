@@ -12,7 +12,7 @@ namespace NeoEdit.Common.Expressions
 	public class ExpressionResult : IComparable
 	{
 		public object Value { get; private set; }
-		public ExpressionUnits Units { get; private set; }
+		public ExpressionUnits Units { get; }
 
 		public ExpressionResult(object value) : this(value, new ExpressionUnits()) { }
 		public ExpressionResult(object value, string unit, int exp = 1) : this(value, new ExpressionUnits(unit, exp)) { }
@@ -46,14 +46,14 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
-		bool IsInteger { get { return (Value is sbyte) || (Value is byte) || (Value is short) || (Value is ushort) || (Value is int) || (Value is uint) || (Value is long) || (Value is ulong) || (Value is BigInteger); } }
-		bool IsFloat { get { return (IsInteger) || (Value is float) || (Value is double) || (Value is decimal); } }
-		bool IsComplex { get { return (IsFloat) || (Value is Complex); } }
-		bool IsCharacter { get { return Value is char; } }
-		bool IsString { get { return (IsCharacter) || (Value is string); } }
-		bool IsDateTime { get { return (Value is DateTime) || (Value is DateTimeOffset); } }
-		bool IsTimeSpan { get { return (Value is TimeSpan); } }
-		public bool True { get { return (Value is bool) && ((bool)Value); } }
+		bool IsInteger => (Value is sbyte) || (Value is byte) || (Value is short) || (Value is ushort) || (Value is int) || (Value is uint) || (Value is long) || (Value is ulong) || (Value is BigInteger);
+		bool IsFloat => (IsInteger) || (Value is float) || (Value is double) || (Value is decimal);
+		bool IsComplex => (IsFloat) || (Value is Complex);
+		bool IsCharacter => Value is char;
+		bool IsString => (IsCharacter) || (Value is string);
+		bool IsDateTime => (Value is DateTime) || (Value is DateTimeOffset);
+		bool IsTimeSpan => (Value is TimeSpan);
+		public bool True => (Value is bool) && ((bool)Value);
 
 		static Complex RoundComplex(Complex complex)
 		{
@@ -157,7 +157,7 @@ namespace NeoEdit.Common.Expressions
 						result += complex.Imaginary < 0 ? "-" : "+";
 					var absImag = Math.Abs(complex.Imaginary);
 					if (absImag != 1)
-						result += absImag.ToString() + "*";
+						result += $"{absImag}*";
 					result += "i";
 					return result;
 				}
@@ -175,35 +175,22 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
-		public TimeSpan GetTimeSpan { get { return (TimeSpan)Value; } }
+		public TimeSpan GetTimeSpan => (TimeSpan)Value;
 
 		public static ExpressionResult DotOp(ExpressionResult obj, ExpressionResult fileName)
 		{
 			string fieldNameStr = (fileName.Value ?? "").ToString();
 			if (obj.Units.HasUnits)
 				throw new Exception("Can't do dot operator with units.");
-			if (obj.Value == null)
-				return null;
-			var field = obj.Value.GetType().GetProperty(fieldNameStr, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			var field = obj.Value?.GetType().GetProperty(fieldNameStr, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			if (field == null)
 				return null;
 			return new ExpressionResult(field.GetValue(obj.Value));
 		}
 
-		public static ExpressionResult operator !(ExpressionResult obj)
-		{
-			return new ExpressionResult(!obj.GetBool, obj.Units);
-		}
-
-		public static ExpressionResult operator ~(ExpressionResult obj)
-		{
-			return new ExpressionResult(~obj.GetInteger, obj.Units);
-		}
-
-		public static ExpressionResult operator +(ExpressionResult obj)
-		{
-			return obj;
-		}
+		public static ExpressionResult operator !(ExpressionResult obj) => new ExpressionResult(!obj.GetBool, obj.Units);
+		public static ExpressionResult operator ~(ExpressionResult obj) => new ExpressionResult(~obj.GetInteger, obj.Units);
+		public static ExpressionResult operator +(ExpressionResult obj) => obj;
 
 		public static ExpressionResult operator -(ExpressionResult obj)
 		{
@@ -588,7 +575,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			if ((val1.Units.HasUnits) || (val2.Units.HasUnits))
 				throw new Exception("Is cannot have units");
-			return new ExpressionResult(val1.Value == null ? false : val1.Value.GetType().Name == (val2.Value ?? "").ToString());
+			return new ExpressionResult(val1.Value?.GetType().Name.Equals(val2.Value as string) ?? false);
 		}
 
 		public static ExpressionResult operator &(ExpressionResult val1, ExpressionResult val2)
@@ -626,10 +613,7 @@ namespace NeoEdit.Common.Expressions
 			return new ExpressionResult(val1.GetBool || val2.GetBool);
 		}
 
-		public static ExpressionResult NullCoalesceOp(ExpressionResult val1, ExpressionResult val2)
-		{
-			return val1.Value != null ? val1 : val2;
-		}
+		public static ExpressionResult NullCoalesceOp(ExpressionResult val1, ExpressionResult val2) => val1.Value != null ? val1 : val2;
 
 		public static ExpressionResult UnitConvertOp(ExpressionResult value, ExpressionUnits units)
 		{
@@ -641,10 +625,7 @@ namespace NeoEdit.Common.Expressions
 			return value * mult + add;
 		}
 
-		public ExpressionResult SetUnits(ExpressionResult units)
-		{
-			return new ExpressionResult(Value, units.Units);
-		}
+		public ExpressionResult SetUnits(ExpressionResult units) => new ExpressionResult(Value, units.Units);
 
 		public ExpressionResult ToWords()
 		{
@@ -829,10 +810,7 @@ namespace NeoEdit.Common.Expressions
 			return new ExpressionResult(Complex.Atan(value.GetComplex), "rad");
 		}
 
-		public ExpressionResult Conjugate()
-		{
-			return new ExpressionResult(Complex.Conjugate(GetComplex));
-		}
+		public ExpressionResult Conjugate() => new ExpressionResult(Complex.Conjugate(GetComplex));
 
 		public static ExpressionResult Cosh(ExpressionResult value)
 		{
@@ -942,40 +920,13 @@ namespace NeoEdit.Common.Expressions
 			return new ExpressionResult(Path.GetFileName(GetString));
 		}
 
-		public static ExpressionResult FromPolar(ExpressionResult val1, ExpressionResult val2)
-		{
-			return new ExpressionResult(Complex.FromPolarCoordinates(val1.GetFloat, val2.GetFloat), val1.Units);
-		}
-
-		public ExpressionResult GetImaginary()
-		{
-			return new ExpressionResult(GetComplex.Imaginary, Units);
-		}
-
-		public ExpressionResult Magnitude()
-		{
-			return new ExpressionResult(GetComplex.Magnitude, Units);
-		}
-
-		public ExpressionResult Phase()
-		{
-			return new ExpressionResult(GetComplex.Phase, Units);
-		}
-
-		public ExpressionResult Real()
-		{
-			return new ExpressionResult(GetComplex.Real, Units);
-		}
-
-		public static ExpressionResult StrFormat(ExpressionResult format, params ExpressionResult[] paramList)
-		{
-			return new ExpressionResult(String.Format(format.GetString, paramList.Select(arg => arg.Value ?? "").ToArray()));
-		}
-
-		public ExpressionResult Type()
-		{
-			return new ExpressionResult(Value.GetType());
-		}
+		public static ExpressionResult FromPolar(ExpressionResult val1, ExpressionResult val2) => new ExpressionResult(Complex.FromPolarCoordinates(val1.GetFloat, val2.GetFloat), val1.Units);
+		public ExpressionResult GetImaginary() => new ExpressionResult(GetComplex.Imaginary, Units);
+		public ExpressionResult Magnitude() => new ExpressionResult(GetComplex.Magnitude, Units);
+		public ExpressionResult Phase() => new ExpressionResult(GetComplex.Phase, Units);
+		public ExpressionResult Real() => new ExpressionResult(GetComplex.Real, Units);
+		public static ExpressionResult StrFormat(ExpressionResult format, params ExpressionResult[] paramList) => new ExpressionResult(String.Format(format.GetString, paramList.Select(arg => arg.Value ?? "").ToArray()));
+		public ExpressionResult Type() => new ExpressionResult(Value.GetType());
 
 		public ExpressionResult ValidRE()
 		{
@@ -993,23 +944,20 @@ namespace NeoEdit.Common.Expressions
 			if (IsComplex)
 				result = GetString;
 			else if (IsDateTime)
-				result = String.Format("'{0}'", GetDateTime.ToString("o"));
+				result = $"'{GetDateTime.ToString("o")}'";
 			else if (IsTimeSpan)
-				result = String.Format("'{0}'", GetTimeSpan.ToString("g"));
+				result = $"'{GetTimeSpan.ToString("g")}'";
 			else
 				result = Value;
 
 			var unitsStr = Units.ToString();
 			if (unitsStr != null)
-				result = result.ToString() + " " + unitsStr;
+				result = $"{result} {unitsStr}";
 
 			return result;
 		}
 
-		public override string ToString()
-		{
-			return GetResult().ToString();
-		}
+		public override string ToString() => GetResult().ToString();
 
 		public int CompareTo(object obj)
 		{

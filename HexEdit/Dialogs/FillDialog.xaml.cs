@@ -10,15 +10,9 @@ namespace NeoEdit.HexEdit.Dialogs
 
 		static FillDialog() { UIHelper<FillDialog>.Register(); }
 
-		FillDialog()
-		{
-			InitializeComponent();
-		}
+		FillDialog() { InitializeComponent(); }
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			DialogResult = true;
-		}
+		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
 
 		public static byte? Run(Window parent)
 		{

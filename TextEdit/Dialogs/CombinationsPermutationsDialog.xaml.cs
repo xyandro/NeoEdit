@@ -40,10 +40,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.Repeat, (obj, o, n) => obj.CalculateItems());
 		}
 
-		CombinationsPermutationsDialog()
-		{
-			InitializeComponent();
-		}
+		CombinationsPermutationsDialog() { InitializeComponent(); }
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
@@ -102,10 +99,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			return Double.NaN;
 		}
 
-		void CalculateItems()
-		{
-			NumResults = GetNumResults();
-		}
+		void CalculateItems() => NumResults = GetNumResults();
 
 		public static Result Run(Window parent)
 		{

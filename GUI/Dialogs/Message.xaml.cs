@@ -39,12 +39,12 @@ namespace NeoEdit.GUI.Dialogs
 
 		static Dictionary<OptionsEnum, string> buttonContent = new Dictionary<OptionsEnum, string>()
 		{
-			{ OptionsEnum.Yes, "_Yes" },
-			{ OptionsEnum.No, "_No" },
-			{ OptionsEnum.YesToAll, "Yes to _all" },
-			{ OptionsEnum.NoToAll, "No to a_ll" },
-			{ OptionsEnum.Ok, "Ok" },
-			{ OptionsEnum.Cancel, "_Cancel" },
+			[OptionsEnum.Yes] = "_Yes",
+			[OptionsEnum.No] = "_No",
+			[OptionsEnum.YesToAll] = "Yes to _all",
+			[OptionsEnum.NoToAll] = "No to a_ll",
+			[OptionsEnum.Ok] = "Ok",
+			[OptionsEnum.Cancel] = "_Cancel",
 		};
 
 		public new OptionsEnum Show()
@@ -68,10 +68,7 @@ namespace NeoEdit.GUI.Dialogs
 		Dictionary<Button, OptionsEnum> buttonActions = new Dictionary<Button, OptionsEnum>();
 		OptionsEnum Answer { get; set; }
 
-		static bool IsPowerOfTwo(int x)
-		{
-			return (x & (x - 1)) == 0;
-		}
+		static bool IsPowerOfTwo(int x) => (x & (x - 1)) == 0;
 
 		static Message()
 		{

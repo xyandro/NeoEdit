@@ -31,8 +31,8 @@ namespace NeoEdit.Console
 		[DepProp]
 		ObservableCollection<Line> Lines { get { return UIHelper<Console>.GetPropValue<ObservableCollection<Line>>(this); } set { UIHelper<Console>.SetPropValue(this, value); } }
 
-		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
-		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
+		int yScrollViewportFloor => (int)Math.Floor(yScroll.ViewportSize);
+		int yScrollViewportCeiling => (int)Math.Ceiling(yScroll.ViewportSize);
 
 		int currentHistory = -1;
 		List<string> history = new List<string>();
@@ -113,7 +113,7 @@ namespace NeoEdit.Console
 			e.Handled = true;
 		}
 
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
+		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
 
 		void CanvasKeyDown(object sender, KeyEventArgs e)
 		{
@@ -209,7 +209,7 @@ namespace NeoEdit.Console
 			{
 				if ((fullPath) && (entries.ContainsKey(common)))
 					common = entries[common];
-				common = "\"" + common.Replace("\"", "\"\"") + "\"";
+				common = $"\"{common.Replace("\"", "\"\"")}\"";
 				Command = Command.Substring(0, commands[selCommand].Item2) + common + Command.Substring(commands[selCommand].Item2 + commands[selCommand].Item3);
 				command.CaretIndex = commands[selCommand].Item2 + common.Length - 1;
 				return;
@@ -217,12 +217,12 @@ namespace NeoEdit.Console
 
 			var display = entries.Keys.Take(50).ToList();
 			if (entries.Count != display.Count)
-				display.Add(String.Format("+ {0} more", entries.Count - display.Count));
+				display.Add($"+ {entries.Count - display.Count} more");
 
 			if (display.Count > 1)
 			{
 				Lines.Add(new Line(Line.LineType.Command).Finish());
-				Lines.Add(new Line(String.Format("Completions for {0}:", commands[selCommand].Item1), Line.LineType.Command).Finish());
+				Lines.Add(new Line($"Completions for {commands[selCommand].Item1}:", Line.LineType.Command).Finish());
 				foreach (var entry in display)
 					Lines.Add(new Line(entry, Line.LineType.Command).Finish());
 			}
@@ -329,7 +329,7 @@ namespace NeoEdit.Console
 			count = Math.Min(count, history.Count);
 
 			for (var ctr = count - 1; ctr >= 0; --ctr)
-				Lines.Add(new Line(String.Format("{0}: {1}", history.Count - ctr, history[ctr]), Line.LineType.Command).Finish());
+				Lines.Add(new Line($"{history.Count - ctr}: {history[ctr]}", Line.LineType.Command).Finish());
 		}
 
 		ConsoleRunnerPipe pipe = null;
@@ -357,7 +357,7 @@ namespace NeoEdit.Console
 			currentHistory = -1;
 
 			Lines.Add(new Line(Line.LineType.Command).Finish());
-			Lines.Add(new Line(String.Format("{0}:", Command), Line.LineType.Command).Finish());
+			Lines.Add(new Line($"{Command}:", Line.LineType.Command).Finish());
 
 			switch (commands[0])
 			{
@@ -376,7 +376,7 @@ namespace NeoEdit.Console
 
 			var commands = ParseCommand();
 
-			var pipeName = @"\\.\NeoEdit-Console-" + Guid.NewGuid().ToString();
+			var pipeName = $"\\\\.\\NeoEdit-Console-{Guid.NewGuid()}";
 
 			pipe = new ConsoleRunnerPipe(pipeName, true);
 			pipe.Read += DataReceived;
@@ -387,7 +387,7 @@ namespace NeoEdit.Console
 			using (var proc = new Process())
 			{
 				proc.StartInfo.FileName = name;
-				proc.StartInfo.Arguments = "-multi -consolerunner " + pipeName + " " + String.Join(" ", commands.Select(command => "\"" + command.Item1.Replace("\"", "\"\"") + "\""));
+				proc.StartInfo.Arguments = $"-multi -consolerunner {pipeName} {String.Join(" ", commands.Select(command => $"\"{command.Item1.Replace("\"", "\"\"")}\""))}";
 				proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 				proc.Start();
 			}
@@ -448,9 +448,9 @@ namespace NeoEdit.Console
 		{
 			var brushes = new Dictionary<Line.LineType, Brush>
 			{
-				{ Line.LineType.Command, Misc.CommandBrush },
-				{ Line.LineType.StdOut, Misc.OutputBrush },
-				{ Line.LineType.StdErr, Misc.ErrorBrush },
+				[Line.LineType.Command] = Misc.CommandBrush,
+				[Line.LineType.StdOut] = Misc.OutputBrush,
+				[Line.LineType.StdErr] = Misc.ErrorBrush,
 			};
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Lines.Count, startLine + yScrollViewportCeiling);

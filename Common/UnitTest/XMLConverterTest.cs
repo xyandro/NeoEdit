@@ -12,9 +12,9 @@ namespace NeoEdit.Common.UnitTest
 		{
 			public string MyStr { get; set; }
 			[XMLConverter.ToXML]
-			XElement ToXML() { return new XElement("Value", MyStr); }
+			XElement ToXML() => new XElement("Value", MyStr);
 			[XMLConverter.FromXML]
-			static XMLConverterCustomExporter FromXML(XElement xml) { return new XMLConverterCustomExporter { MyStr = xml.Value }; }
+			static XMLConverterCustomExporter FromXML(XElement xml) => new XMLConverterCustomExporter { MyStr = xml.Value };
 		}
 
 		class XMLConverterGenericBase<T>
@@ -71,8 +71,8 @@ namespace NeoEdit.Common.UnitTest
 					Val2 = null,
 					Dict1 = new Dictionary<string, float?>
 					{
-						{ "Test1", 5.4F },
-						{ "Test2", 5.6F },
+						["Test1"] = 5.4F,
+						["Test2"] = 5.6F,
 					},
 					Dict3 = null,
 				},

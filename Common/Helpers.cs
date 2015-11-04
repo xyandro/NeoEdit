@@ -59,10 +59,7 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public static bool IsNumericType(this Type type)
-		{
-			return (IsIntegerType(type)) || (IsFloatType(type));
-		}
+		public static bool IsNumericType(this Type type) => (IsIntegerType(type)) || (IsFloatType(type));
 
 		public static bool IsDateType(this Type type)
 		{
@@ -72,15 +69,9 @@ namespace NeoEdit.Common
 			return Type.GetTypeCode(type) == TypeCode.DateTime;
 		}
 
-		public static IEnumerable<T> GetValues<T>()
-		{
-			return Enum.GetValues(typeof(T)).Cast<T>();
-		}
+		public static IEnumerable<T> GetValues<T>() => Enum.GetValues(typeof(T)).Cast<T>();
 
-		public static T ParseEnum<T>(string str)
-		{
-			return (T)Enum.Parse(typeof(T), str);
-		}
+		public static T ParseEnum<T>(string str) => (T)Enum.Parse(typeof(T), str);
 
 		public static unsafe long ForwardArraySearch(byte[] data, long index, byte[] find, bool ignoreCase)
 		{
@@ -232,7 +223,7 @@ namespace NeoEdit.Common
 		{
 			var format = String.Format(String.Format("{{0:X{0}}}", len), input);
 			for (var space = len - spacing; space > 0; space -= spacing)
-				format = format.Substring(0, space) + " " + format.Substring(space);
+				format = $"{format.Substring(0, space)} {format.Substring(space)}";
 			return format;
 		}
 
@@ -243,10 +234,7 @@ namespace NeoEdit.Common
 			return Equal(b1, b2, 0, 0, b1.Length);
 		}
 
-		public static unsafe bool Equal(this byte[] b1, byte[] b2, int count)
-		{
-			return Equal(b1, b2, 0, 0, count);
-		}
+		public static unsafe bool Equal(this byte[] b1, byte[] b2, int count) => Equal(b1, b2, 0, 0, count);
 
 		public static unsafe bool Equal(this byte[] b1, byte[] b2, int offset1, int offset2, int count)
 		{
@@ -290,7 +278,7 @@ namespace NeoEdit.Common
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 
-		public static string NeoEditAppData { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NeoEdit"); } }
+		public static string NeoEditAppData => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NeoEdit");
 
 		static Helpers() { Directory.CreateDirectory(NeoEditAppData); }
 	}

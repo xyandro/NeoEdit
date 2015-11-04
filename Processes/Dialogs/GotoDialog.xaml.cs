@@ -8,10 +8,7 @@ namespace NeoEdit.Processes.Dialogs
 		[DepProp]
 		public long Value { get { return UIHelper<GotoDialog>.GetPropValue<long>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
 
-		static GotoDialog()
-		{
-			UIHelper<GotoDialog>.Register();
-		}
+		static GotoDialog() { UIHelper<GotoDialog>.Register(); }
 
 		GotoDialog(long _Value)
 		{
@@ -20,10 +17,7 @@ namespace NeoEdit.Processes.Dialogs
 			Value = _Value;
 		}
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			DialogResult = true;
-		}
+		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
 
 		public static long? Run(Window parent, long value = 0)
 		{

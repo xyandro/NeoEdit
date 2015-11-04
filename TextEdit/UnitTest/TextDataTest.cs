@@ -19,10 +19,7 @@ namespace NeoEdit.TextEdit.UnitTest
 			"{Asdf}\r\n";
 		const int numLines = 7;
 
-		TextData GetTextData()
-		{
-			return new TextData(Encoding.UTF8.GetBytes(TestString), Coder.CodePage.UTF8);
-		}
+		TextData GetTextData() => new TextData(Encoding.UTF8.GetBytes(TestString), Coder.CodePage.UTF8);
 
 		[TestMethod]
 		public void LimitsTest()

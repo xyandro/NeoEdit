@@ -59,14 +59,14 @@ namespace NeoEdit.TextEdit.Content.XML
 						attributes = attributes.Where(attr => attr != name).ToList(); ;
 
 						var attrs = new List<string> { name.Text };
-						attrs.AddRange(attributes.Select(attr => String.Format("{0}=\"{1}\"", attr.Type, input.Substring(attr.Start, attr.Length))));
+						attrs.AddRange(attributes.Select(attr => $"{attr.Type}=\"{input.Substring(attr.Start, attr.Length)}\""));
 						var open = String.Join(" ", attrs);
 
 						var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
 						if (children.Any())
 						{
-							result.Add("<" + open + ">");
-							var close = "</" + name.Text + ">";
+							result.Add($"<{open}>");
+							var close = $"</{name.Text}>";
 							var childData = children.SelectMany(child => rFormat(child, input)).ToList();
 							if ((children.Count == 1) && (childData.Count == 1) && (children[0].Type == TEXT))
 							{
@@ -75,12 +75,12 @@ namespace NeoEdit.TextEdit.Content.XML
 							}
 							else
 							{
-								result.AddRange(childData.Select(str => "\t" + str));
+								result.AddRange(childData.Select(str => $"\t{str}"));
 								result.Add(close);
 							}
 						}
 						else
-							result.Add("<" + open + " />");
+							result.Add($"<{open} />");
 
 
 						return result;
@@ -89,10 +89,7 @@ namespace NeoEdit.TextEdit.Content.XML
 			}
 		}
 
-		public static string Format(ParserNode document, string input)
-		{
-			return String.Join("", rFormat(document, input).Select(str => str + "\r\n"));
-		}
+		public static string Format(ParserNode document, string input) => String.Join("", rFormat(document, input).Select(str => $"{str}\r\n"));
 
 		const string DOCUMENT = "Document";
 		const string COMMENT = "Comment";
@@ -101,13 +98,10 @@ namespace NeoEdit.TextEdit.Content.XML
 		const string ELEMENT = "Element";
 		const string NAME = "Name";
 
-		ParserNode Parent { get { return stack.FirstOrDefault(); } }
+		ParserNode Parent => stack.FirstOrDefault();
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;
-		XMLVisitor(string input)
-		{
-			this.input = input;
-		}
+		XMLVisitor(string input) { this.input = input; }
 
 		ParserNode HandleContext(ParserRuleContext context, string type)
 		{
@@ -136,11 +130,11 @@ namespace NeoEdit.TextEdit.Content.XML
 			return node;
 		}
 
-		public override ParserNode VisitDocument(XMLParser.DocumentContext context) { return HandleContext(context, DOCUMENT); }
-		public override ParserNode VisitComment(XMLParser.CommentContext context) { return HandleContext(context, COMMENT); }
-		public override ParserNode VisitMisc(XMLParser.MiscContext context) { return HandleContext(context, MISC); }
-		public override ParserNode VisitText(XMLParser.TextContext context) { return HandleContext(context, TEXT); }
-		public override ParserNode VisitElement(XMLParser.ElementContext context) { return HandleContext(context, ELEMENT); }
+		public override ParserNode VisitDocument(XMLParser.DocumentContext context) => HandleContext(context, DOCUMENT);
+		public override ParserNode VisitComment(XMLParser.CommentContext context) => HandleContext(context, COMMENT);
+		public override ParserNode VisitMisc(XMLParser.MiscContext context) => HandleContext(context, MISC);
+		public override ParserNode VisitText(XMLParser.TextContext context) => HandleContext(context, TEXT);
+		public override ParserNode VisitElement(XMLParser.ElementContext context) => HandleContext(context, ELEMENT);
 
 		public override ParserNode VisitAttribute(XMLParser.AttributeContext context)
 		{

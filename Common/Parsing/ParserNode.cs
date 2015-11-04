@@ -12,10 +12,7 @@ namespace NeoEdit.Common.Parsing
 	{
 		public const string TYPE = "Type";
 
-		public ParserNode(bool isAttr = false)
-		{
-			IsAttr = isAttr;
-		}
+		public ParserNode(bool isAttr = false) { IsAttr = isAttr; }
 
 		ParserNode parent;
 		public ParserNode Parent
@@ -47,8 +44,8 @@ namespace NeoEdit.Common.Parsing
 		int? start, end;
 		public int Start { get { return start.Value; } set { start = value; } }
 		public int End { get { return end.Value; } set { end = value; } }
-		public int Length { get { return End - Start; } }
-		public bool HasLocation { get { return (start.HasValue) && (end.HasValue); } }
+		public int Length => End - Start;
+		public bool HasLocation => (start.HasValue) && (end.HasValue);
 
 		public ParserRuleContext LocationParserRule
 		{
@@ -151,15 +148,9 @@ namespace NeoEdit.Common.Parsing
 			}
 		}
 
-		public IEnumerable<string> GetAttrTypes()
-		{
-			return List(ParserNodeListType.Attributes).Select(attr => attr.Type);
-		}
+		public IEnumerable<string> GetAttrTypes() => List(ParserNodeListType.Attributes).Select(attr => attr.Type);
 
-		public ParserNode GetAttr(string type)
-		{
-			return GetAttrs(type, true).FirstOrDefault();
-		}
+		public ParserNode GetAttr(string type) => GetAttrs(type, true).FirstOrDefault();
 
 		public IEnumerable<ParserNode> GetAttrs(string type, bool firstOnly = false)
 		{
@@ -169,16 +160,9 @@ namespace NeoEdit.Common.Parsing
 			return result;
 		}
 
-		public string GetAttrText(string type)
-		{
-			var attr = GetAttr(type);
-			return attr == null ? null : attr.Text;
-		}
+		public string GetAttrText(string type) => GetAttr(type)?.Text;
 
-		public IEnumerable<string> GetAttrsText(string type, bool firstOnly = false)
-		{
-			return GetAttrs(type, firstOnly).Select(attr => attr.Text);
-		}
+		public IEnumerable<string> GetAttrsText(string type, bool firstOnly = false) => GetAttrs(type, firstOnly).Select(attr => attr.Text);
 
 		void RemoveAttr(string type)
 		{
@@ -193,20 +177,9 @@ namespace NeoEdit.Common.Parsing
 			AddAttrNode(type, value, start, end);
 		}
 
-		public void SetAttr(string type, string value)
-		{
-			SetAttrNode(type, value, null, null);
-		}
-
-		public void SetAttr(string type, int start, int end)
-		{
-			SetAttrNode(type, null, start, end);
-		}
-
-		public void SetAttr(string type, string value, int start, int end)
-		{
-			SetAttrNode(type, value, start, end);
-		}
+		public void SetAttr(string type, string value) => SetAttrNode(type, value, null, null);
+		public void SetAttr(string type, int start, int end) => SetAttrNode(type, null, start, end);
+		public void SetAttr(string type, string value, int start, int end) => SetAttrNode(type, value, start, end);
 
 		public void SetAttr(string type, ParserRuleContext ctx)
 		{
@@ -223,25 +196,10 @@ namespace NeoEdit.Common.Parsing
 			SetAttrNode(type, text, start, end);
 		}
 
-		void AddAttrNode(string type, string value, int? start, int? end)
-		{
-			new ParserNode(true) { Type = type, Parent = this, Text = value, start = start, end = end };
-		}
-
-		public void AddAttr(string type, string value)
-		{
-			AddAttrNode(type, value, null, null);
-		}
-
-		public void AddAttr(string type, int start, int end)
-		{
-			AddAttrNode(type, null, start, end);
-		}
-
-		public void AddAttr(string type, string value, int start, int end)
-		{
-			AddAttrNode(type, value, start, end);
-		}
+		void AddAttrNode(string type, string value, int? start, int? end) => new ParserNode(true) { Type = type, Parent = this, Text = value, start = start, end = end };
+		public void AddAttr(string type, string value) => AddAttrNode(type, value, null, null);
+		public void AddAttr(string type, int start, int end) => AddAttrNode(type, null, start, end);
+		public void AddAttr(string type, string value, int start, int end) => AddAttrNode(type, value, start, end);
 
 		public void AddAttr(string type, ParserRuleContext ctx)
 		{
@@ -272,10 +230,7 @@ namespace NeoEdit.Common.Parsing
 			AddAttrNode(type, text, start, end);
 		}
 
-		public void AddAttr(string type, string input, ITerminalNode token)
-		{
-			AddAttr(type, input, token.Symbol);
-		}
+		public void AddAttr(string type, string input, ITerminalNode token) => AddAttr(type, input, token.Symbol);
 
 		public void AddAttr(string type, string input, IToken token)
 		{
@@ -285,10 +240,7 @@ namespace NeoEdit.Common.Parsing
 			AddAttrNode(type, text, start, end);
 		}
 
-		public bool HasAttr(string type)
-		{
-			return GetAttrs(type).Any();
-		}
+		public bool HasAttr(string type) => GetAttrs(type).Any();
 
 		public bool HasAttr(string type, Regex regex, bool invert)
 		{
@@ -304,9 +256,9 @@ namespace NeoEdit.Common.Parsing
 			for (var parent = this; parent != null; parent = parent.Parent)
 				parents.Insert(0, parent);
 			var parentTypes = String.Join("->", parents.Select(node => node.Type));
-			var attrs = String.Join(", ", children.Where(child => child.IsAttr).Select(child => (String.Format("{0}-{1} {2} \"{3}\"", child.start, child.end, child.type, (child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("\"", "\"\"")))));
-			var result = new List<string> { String.Format("[{0}-{1}: {2} Path: \"{3}\"", start, end, attrs, parentTypes) };
-			result.AddRange(children.Where(child => !child.IsAttr).SelectMany(child => child.Print()).Select(str => String.Format(" {0}", str)));
+			var attrs = String.Join(", ", children.Where(child => child.IsAttr).Select(child => ($"{child.start}-{child.end} {child.type} \"{(child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("\"", "\"\"")}\"")));
+			var result = new List<string> { $"[{start}-{end}: {attrs} Path: \"{parentTypes}\"" };
+			result.AddRange(children.Where(child => !child.IsAttr).SelectMany(child => child.Print()).Select(str => $" {str}"));
 			if (result.Count == 1)
 				result[0] += "]";
 			else
@@ -314,14 +266,8 @@ namespace NeoEdit.Common.Parsing
 			return result;
 		}
 
-		public override string ToString()
-		{
-			return String.Join("", Print().Select(str => String.Format("{0}{1}", str, Environment.NewLine)));
-		}
+		public override string ToString() => String.Join("", Print().Select(str => $"{str}{Environment.NewLine}"));
 
-		public void Save(string outputFile)
-		{
-			File.WriteAllText(outputFile, ToString());
-		}
+		public void Save(string outputFile) => File.WriteAllText(outputFile, ToString());
 	}
 }

@@ -4,8 +4,8 @@ namespace NeoEdit.Common.Expressions
 {
 	public class ExpressionUnit
 	{
-		public string Unit { get; private set; }
-		public int Exp { get; private set; }
+		public string Unit { get; }
+		public int Exp { get; }
 
 		public ExpressionUnit(string unit, int exp = 1)
 		{
@@ -13,9 +13,6 @@ namespace NeoEdit.Common.Expressions
 			Exp = exp;
 		}
 
-		public override string ToString()
-		{
-			return Exp == 1 ? Unit : String.Format("{0}^{1}", Unit, Exp);
-		}
+		public override string ToString() => Exp == 1 ? Unit : $"{Unit}^{Exp}";
 	}
 }

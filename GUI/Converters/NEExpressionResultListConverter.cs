@@ -32,9 +32,6 @@ namespace NeoEdit.GUI.Converters
 			catch { return DependencyProperty.UnsetValue; }
 		}
 
-		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotImplementedException();
-		}
+		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
 	}
 }

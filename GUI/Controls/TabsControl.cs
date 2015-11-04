@@ -13,14 +13,11 @@ namespace NeoEdit.GUI.Controls
 		public string TabLabel { get { return UIHelper<TabsControl<ItemType, CommandType>>.GetPropValue<string>(this); } set { UIHelper<TabsControl<ItemType, CommandType>>.SetPropValue(this, value); } }
 
 		public Tabs<ItemType, CommandType> TabsParent { get; internal set; }
-		public TabsWindow<ItemType, CommandType> WindowParent { get { return TabsParent.WindowParent; } }
+		public TabsWindow<ItemType, CommandType> WindowParent => TabsParent.WindowParent;
 
 		static TabsControl() { UIHelper<TabsControl<ItemType, CommandType>>.Register(); }
 
-		public virtual bool Empty()
-		{
-			return false;
-		}
+		public virtual bool Empty() => false;
 
 		public bool CanClose()
 		{
@@ -28,13 +25,8 @@ namespace NeoEdit.GUI.Controls
 			return CanClose(ref answer);
 		}
 
-		public virtual bool CanClose(ref Message.OptionsEnum answer)
-		{
-			return true;
-		}
+		public virtual bool CanClose(ref Message.OptionsEnum answer) => true;
 
-		public virtual void Closed()
-		{
-		}
+		public virtual void Closed() { }
 	}
 }

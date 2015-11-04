@@ -65,6 +65,6 @@ namespace NeoEdit.TextEdit.Content.TCSV
 			return node;
 		}
 
-		public override ParserNode VisitField(CSVParser.FieldContext context) { return GetNode(context, FIELD); }
+		public override ParserNode VisitField(CSVParser.FieldContext context) => GetNode(context, FIELD);
 	}
 }

@@ -22,15 +22,12 @@ namespace NeoEdit.GUI.Misc
 			return foundKey.Item3;
 		}
 
-		public void Add(Key key, Action action)
-		{
-			Add(ModifierKeys.None, key, action);
-		}
+		public void Add(Key key, Action action) => Add(ModifierKeys.None, key, action);
 
 		public void Add(ModifierKeys modifiers, Key key, Action action)
 		{
 			if (GetAction(modifiers, key) != null)
-				throw new ArgumentException("Duplicate key: " + modifiers + "+" + key);
+				throw new ArgumentException($"Duplicate key: {modifiers}+{key}");
 			this.Add(Tuple.Create(modifiers, key, action));
 		}
 
@@ -43,9 +40,6 @@ namespace NeoEdit.GUI.Misc
 			return true;
 		}
 
-		public bool Run(KeyEventArgs e)
-		{
-			return Run(Keyboard.Modifiers, e.Key, e.SystemKey);
-		}
+		public bool Run(KeyEventArgs e) => Run(Keyboard.Modifiers, e.Key, e.SystemKey);
 	}
 }

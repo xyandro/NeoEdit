@@ -28,7 +28,7 @@ namespace NeoEdit.Common
 	{
 		class FindData
 		{
-			public int[] CharMap { get; private set; }
+			public int[] CharMap { get; }
 			public int NumChars { get; private set; }
 			readonly bool matchCase;
 
@@ -228,20 +228,9 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public List<Tuple<int, int>> Find(String input)
-		{
-			return Find(input, 0, input.Length);
-		}
-
-		public List<Tuple<int, int>> Find(Char[] input)
-		{
-			return Find(input, 0, input.Count());
-		}
-
-		public List<Tuple<int, int>> Find(Byte[] input)
-		{
-			return Find(input, 0, input.Count());
-		}
+		public List<Tuple<int, int>> Find(String input) => Find(input, 0, input.Length);
+		public List<Tuple<int, int>> Find(Char[] input) => Find(input, 0, input.Count());
+		public List<Tuple<int, int>> Find(Byte[] input) => Find(input, 0, input.Count());
 
 		public List<Tuple<int, int>> Find(String input, int index, int length, bool firstOnly = false)
 		{

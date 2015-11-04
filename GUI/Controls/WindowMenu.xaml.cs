@@ -20,9 +20,6 @@
 
 	partial class WindowMenu
 	{
-		public WindowMenu()
-		{
-			InitializeComponent();
-		}
+		public WindowMenu() { InitializeComponent(); }
 	}
 }

@@ -44,10 +44,7 @@ namespace NeoEdit.TableEdit.Dialogs
 				SetAggregateType();
 			}
 
-			void SetAggregateType()
-			{
-				Aggregation = Group ? Table.AggregateType.Value : type.IsNumericType() ? Table.AggregateType.Sum : type.IsDateType() ? Table.AggregateType.Min | Table.AggregateType.Max : Table.AggregateType.Distinct;
-			}
+			void SetAggregateType() => Aggregation = Group ? Table.AggregateType.Value : type.IsNumericType() ? Table.AggregateType.Sum : type.IsDateType() ? Table.AggregateType.Min | Table.AggregateType.Max : Table.AggregateType.Distinct;
 		}
 
 		[DepProp]
@@ -86,7 +83,7 @@ namespace NeoEdit.TableEdit.Dialogs
 			}
 		}
 
-		bool shiftDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift); } }
+		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
 
 		void ToggleAggregateType(Table.AggregateType type)
 		{

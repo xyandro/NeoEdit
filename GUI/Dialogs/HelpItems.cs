@@ -5,11 +5,10 @@ namespace NeoEdit.GUI.Dialogs
 	public class HelpItems
 	{
 		public string Name { get; set; }
-		public List<HelpItem> Items { get; set; }
+		public List<HelpItem> Items { get; } = new List<HelpItem>();
 		public int Columns { get; set; }
 		public int NameWidth { get; set; }
 		public int DescWidth { get; set; }
-		public HelpItems() { Items = new List<HelpItem>(); }
 	}
 
 	public class HelpItem

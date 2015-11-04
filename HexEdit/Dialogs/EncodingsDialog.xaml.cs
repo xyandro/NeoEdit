@@ -57,14 +57,7 @@ namespace NeoEdit.HexEdit
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 
-		private void SelectAll(object sender, RoutedEventArgs e)
-		{
-			CodePageItems.ToList().ForEach(item => item.IsChecked = true);
-		}
-
-		private void SelectNone(object sender, RoutedEventArgs e)
-		{
-			CodePageItems.ToList().ForEach(item => item.IsChecked = false);
-		}
+		private void SelectAll(object sender, RoutedEventArgs e) => CodePageItems.ToList().ForEach(item => item.IsChecked = true);
+		private void SelectNone(object sender, RoutedEventArgs e) => CodePageItems.ToList().ForEach(item => item.IsChecked = false);
 	}
 }

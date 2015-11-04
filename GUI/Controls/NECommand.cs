@@ -10,10 +10,10 @@ namespace NeoEdit.GUI.Controls
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
 	public class KeyGestureAttribute : Attribute
 	{
-		internal Key Key { get; private set; }
-		internal ModifierKeys Modifiers { get; private set; }
-		internal bool Primary { get; private set; }
-		internal string GestureText { get; private set; }
+		internal Key Key { get; }
+		internal ModifierKeys Modifiers { get; }
+		internal bool Primary { get; }
+		internal string GestureText { get; }
 
 		public KeyGestureAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None, bool primary = true)
 		{
@@ -83,7 +83,7 @@ namespace NeoEdit.GUI.Controls
 			commands = Enum.GetValues(typeof(CommandEnumT)).Cast<CommandEnumT>().ToDictionary(commandEnum => commandEnum, commandEnum => new NECommand(commandEnum));
 			var duplicates = commands.Values.SelectMany(command => command.KeyGestures).GroupBy(keyGesture => keyGesture.GestureText).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
 			if (duplicates.Any())
-				throw new Exception(String.Format("Duplicate hotkeys: {0}", String.Join(", ", duplicates)));
+				throw new Exception($"Duplicate hotkeys: {String.Join(", ", duplicates)}");
 		}
 
 		public CommandEnumT CommandEnum

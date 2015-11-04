@@ -8,10 +8,7 @@ namespace NeoEdit.GUI.Misc
 	{
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(object), typeof(PropertyChangeNotifier), new PropertyMetadata(null, OnPropertyChanged));
 
-		static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			(d as PropertyChangeNotifier).callback();
-		}
+		static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as PropertyChangeNotifier).callback();
 
 		Action callback;
 

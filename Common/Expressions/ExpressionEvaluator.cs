@@ -16,8 +16,8 @@ namespace NeoEdit.Common.Expressions
 		internal ExpressionEvaluator(string expression, Dictionary<string, object> dict, params object[] values)
 		{
 			this.expression = expression;
-			this.dict = dict == null ? null : dict.ToDictionary(pair => pair.Key, pair => new ExpressionResult(pair.Value));
-			this.values = values == null ? null : values.Select(value => new ExpressionResult(value)).ToList();
+			this.dict = dict?.ToDictionary(pair => pair.Key, pair => new ExpressionResult(pair.Value));
+			this.values = values?.Select(value => new ExpressionResult(value)).ToList();
 		}
 
 		ExpressionResult UnaryOp(string op, ExpressionResult val)
@@ -28,7 +28,7 @@ namespace NeoEdit.Common.Expressions
 				case "+": return +val;
 				case "-": return -val;
 				case "!": return !val;
-				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
+				default: throw new ArgumentException($"Invalid operation: {op}");
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace NeoEdit.Common.Expressions
 			switch (op)
 			{
 				case "!": return ExpressionResult.Factorial(val);
-				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
+				default: throw new ArgumentException($"Invalid operation: {op}");
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace NeoEdit.Common.Expressions
 				case "||": return ExpressionResult.OrOp(val1, val2);
 				case "??": return ExpressionResult.NullCoalesceOp(val1, val2);
 				case "=>": return ExpressionResult.UnitConvertOp(val1, val2.Units);
-				default: throw new ArgumentException(String.Format("Invalid operation: {0}", op));
+				default: throw new ArgumentException($"Invalid operation: {op}");
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace NeoEdit.Common.Expressions
 				case "towords": return paramList[0].ToWords();
 				case "type": return paramList[0].Type();
 				case "validre": return paramList[0].ValidRE();
-				default: throw new ArgumentException(String.Format("Invalid method: {0}", method));
+				default: throw new ArgumentException($"Invalid method: {method}");
 			}
 		}
 
@@ -156,34 +156,34 @@ namespace NeoEdit.Common.Expressions
 				case "utcnow": return new ExpressionResult(DateTimeOffset.UtcNow);
 				case "today": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Now.Date, DateTimeKind.Local)));
 				case "utctoday": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc)));
-				default: throw new ArgumentException(String.Format("Invalid constant: {0}", constant));
+				default: throw new ArgumentException($"Invalid constant: {constant}");
 			}
 		}
 
-		public override ExpressionResult VisitShortForm(ExpressionParser.ShortFormContext context) { return GetShortForm(context.op.Text); }
-		public override ExpressionResult VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) { return GetShortForm("&&"); }
-		public override ExpressionResult VisitParens(ExpressionParser.ParensContext context) { return Visit(context.val); }
-		public override ExpressionResult VisitAddUnits(ExpressionParser.AddUnitsContext context) { return Visit(context.val1).SetUnits(Visit(context.unitsVal)); }
-		public override ExpressionResult VisitDot(ExpressionParser.DotContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitUnary(ExpressionParser.UnaryContext context) { return UnaryOp(context.op.Text, Visit(context.val)); }
-		public override ExpressionResult VisitUnaryEnd(ExpressionParser.UnaryEndContext context) { return UnaryOpEnd(context.op.Text, Visit(context.val)); }
-		public override ExpressionResult VisitExp(ExpressionParser.ExpContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitMult(ExpressionParser.MultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitAdd(ExpressionParser.AddContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitShift(ExpressionParser.ShiftContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitRelational(ExpressionParser.RelationalContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitEquality(ExpressionParser.EqualityContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitBitwiseAnd(ExpressionParser.BitwiseAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitBitwiseXor(ExpressionParser.BitwiseXorContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitBitwiseOr(ExpressionParser.BitwiseOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitLogicalAnd(ExpressionParser.LogicalAndContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitLogicalOr(ExpressionParser.LogicalOrContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitNullCoalesce(ExpressionParser.NullCoalesceContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitUnitConversion(ExpressionParser.UnitConversionContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitTernary(ExpressionParser.TernaryContext context) { return Visit(context.condition).True ? Visit(context.trueval) : Visit(context.falseval); }
-		public override ExpressionResult VisitParam(ExpressionParser.ParamContext context) { return values[int.Parse(context.val.Text.Trim('[', ']'))]; }
-		public override ExpressionResult VisitString(ExpressionParser.StringContext context) { return new ExpressionResult(context.val.Text.Substring(1, context.val.Text.Length - 2)); }
-		public override ExpressionResult VisitDate(ExpressionParser.DateContext context) { return new ExpressionResult(DateTimeOffset.Parse(context.GetText().Trim('\''), CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces)); }
+		public override ExpressionResult VisitShortForm(ExpressionParser.ShortFormContext context) => GetShortForm(context.op.Text);
+		public override ExpressionResult VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) => GetShortForm("&&");
+		public override ExpressionResult VisitParens(ExpressionParser.ParensContext context) => Visit(context.val);
+		public override ExpressionResult VisitAddUnits(ExpressionParser.AddUnitsContext context) => Visit(context.val1).SetUnits(Visit(context.unitsVal));
+		public override ExpressionResult VisitDot(ExpressionParser.DotContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitUnary(ExpressionParser.UnaryContext context) => UnaryOp(context.op.Text, Visit(context.val));
+		public override ExpressionResult VisitUnaryEnd(ExpressionParser.UnaryEndContext context) => UnaryOpEnd(context.op.Text, Visit(context.val));
+		public override ExpressionResult VisitExp(ExpressionParser.ExpContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitMult(ExpressionParser.MultContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitAdd(ExpressionParser.AddContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitShift(ExpressionParser.ShiftContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitRelational(ExpressionParser.RelationalContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitEquality(ExpressionParser.EqualityContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitBitwiseAnd(ExpressionParser.BitwiseAndContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitBitwiseXor(ExpressionParser.BitwiseXorContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitBitwiseOr(ExpressionParser.BitwiseOrContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitLogicalAnd(ExpressionParser.LogicalAndContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitLogicalOr(ExpressionParser.LogicalOrContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitNullCoalesce(ExpressionParser.NullCoalesceContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitUnitConversion(ExpressionParser.UnitConversionContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitTernary(ExpressionParser.TernaryContext context) => Visit(context.condition).True ? Visit(context.trueval) : Visit(context.falseval);
+		public override ExpressionResult VisitParam(ExpressionParser.ParamContext context) => values[int.Parse(context.val.Text.Trim('[', ']'))];
+		public override ExpressionResult VisitString(ExpressionParser.StringContext context) => new ExpressionResult(context.val.Text.Substring(1, context.val.Text.Length - 2));
+		public override ExpressionResult VisitDate(ExpressionParser.DateContext context) => new ExpressionResult(DateTimeOffset.Parse(context.GetText().Trim('\''), CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces));
 		public override ExpressionResult VisitTime(ExpressionParser.TimeContext context)
 		{
 			var str = context.GetText().Trim('\'').ToLowerInvariant();
@@ -192,17 +192,17 @@ namespace NeoEdit.Common.Expressions
 				timeSpan += TimeSpan.FromHours(12);
 			return new ExpressionResult(timeSpan);
 		}
-		public override ExpressionResult VisitChar(ExpressionParser.CharContext context) { return new ExpressionResult(context.val.Text[1]); }
-		public override ExpressionResult VisitTrue(ExpressionParser.TrueContext context) { return new ExpressionResult(true); }
-		public override ExpressionResult VisitFalse(ExpressionParser.FalseContext context) { return new ExpressionResult(false); }
-		public override ExpressionResult VisitNull(ExpressionParser.NullContext context) { return new ExpressionResult(null); }
-		public override ExpressionResult VisitInteger(ExpressionParser.IntegerContext context) { return new ExpressionResult(BigInteger.Parse(context.val.Text.Replace(",", ""))); }
-		public override ExpressionResult VisitFloat(ExpressionParser.FloatContext context) { return new ExpressionResult(double.Parse(context.val.Text.Replace(",", ""))); }
-		public override ExpressionResult VisitHex(ExpressionParser.HexContext context) { return new ExpressionResult(long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber)); }
-		public override ExpressionResult VisitVariable(ExpressionParser.VariableContext context) { return dict.ContainsKey(context.val.Text) ? dict[context.val.Text] : null; }
-		public override ExpressionResult VisitUnitExp(ExpressionParser.UnitExpContext context) { return ExpressionResult.Exp(Visit(context.base1), new ExpressionResult(int.Parse(context.power.Text))); }
-		public override ExpressionResult VisitUnitMult(ExpressionParser.UnitMultContext context) { return BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2)); }
-		public override ExpressionResult VisitUnitParen(ExpressionParser.UnitParenContext context) { return Visit(context.units()); }
-		public override ExpressionResult VisitUnit(ExpressionParser.UnitContext context) { return new ExpressionResult(1, context.val.Text); }
+		public override ExpressionResult VisitChar(ExpressionParser.CharContext context) => new ExpressionResult(context.val.Text[1]);
+		public override ExpressionResult VisitTrue(ExpressionParser.TrueContext context) => new ExpressionResult(true);
+		public override ExpressionResult VisitFalse(ExpressionParser.FalseContext context) => new ExpressionResult(false);
+		public override ExpressionResult VisitNull(ExpressionParser.NullContext context) => new ExpressionResult(null);
+		public override ExpressionResult VisitInteger(ExpressionParser.IntegerContext context) => new ExpressionResult(BigInteger.Parse(context.val.Text.Replace(",", "")));
+		public override ExpressionResult VisitFloat(ExpressionParser.FloatContext context) => new ExpressionResult(double.Parse(context.val.Text.Replace(",", "")));
+		public override ExpressionResult VisitHex(ExpressionParser.HexContext context) => new ExpressionResult(long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber));
+		public override ExpressionResult VisitVariable(ExpressionParser.VariableContext context) => dict.ContainsKey(context.val.Text) ? dict[context.val.Text] : null;
+		public override ExpressionResult VisitUnitExp(ExpressionParser.UnitExpContext context) => ExpressionResult.Exp(Visit(context.base1), new ExpressionResult(int.Parse(context.power.Text)));
+		public override ExpressionResult VisitUnitMult(ExpressionParser.UnitMultContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
+		public override ExpressionResult VisitUnitParen(ExpressionParser.UnitParenContext context) => Visit(context.units());
+		public override ExpressionResult VisitUnit(ExpressionParser.UnitContext context) => new ExpressionResult(1, context.val.Text);
 	}
 }

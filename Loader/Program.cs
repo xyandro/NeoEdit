@@ -117,10 +117,7 @@ namespace NeoEdit.Loader
 			Process.Start(newLocation, String.Format(@"{0} ""{1}""", Process.GetCurrentProcess().Id, location));
 		}
 
-		static void WaitForParentExit(int pid)
-		{
-			try { Process.GetProcessById(pid).WaitForExit(); } catch { }
-		}
+		static void WaitForParentExit(int pid) { try { Process.GetProcessById(pid).WaitForExit(); } catch { } }
 
 		static void RunNGen()
 		{
@@ -206,14 +203,14 @@ namespace NeoEdit.Loader
 				catch { }
 				if (managed)
 				{
-					var newFile = file + ".data";
+					var newFile = $"{file}.data";
 					File.Delete(newFile);
 					File.Move(file, newFile);
 				}
 			}
 			AppDomain.CurrentDomain.AssemblyResolve += (s, args) => AssemblyResolve(args, name =>
 			{
-				var findNames = new List<string> { name + ".data", name + ".dll.data" };
+				var findNames = new List<string> { $"{name}.data", $"{name}.dll.data" };
 				var found = findNames.FirstOrDefault(file => File.Exists(file));
 				if (found == null)
 					return null;

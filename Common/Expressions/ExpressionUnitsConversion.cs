@@ -9,10 +9,7 @@ namespace NeoEdit.Common.Expressions
 		public readonly ExpressionUnits fromUnits, toUnits;
 		public readonly double mult = 1, add = 0;
 
-		public ExpressionUnitsConversion(ExpressionUnits units)
-		{
-			fromUnits = toUnits = units;
-		}
+		public ExpressionUnitsConversion(ExpressionUnits units) { fromUnits = toUnits = units; }
 
 		public ExpressionUnitsConversion(ExpressionUnits fromUnits, ExpressionUnits toUnits, double mult, double add)
 		{
@@ -41,15 +38,9 @@ namespace NeoEdit.Common.Expressions
 			return result;
 		}
 
-		public override string ToString()
-		{
-			return String.Format("From: {0} To: {1}, Mult: {2:R}, Add {3:R}", fromUnits, toUnits, mult, add);
-		}
+		public override string ToString() => $"From: {fromUnits} To: {toUnits}, Mult: {mult:R}, Add {add:R}";
 
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
+		public override int GetHashCode() => base.GetHashCode();
 
 		enum ConversionConstantAttr
 		{
@@ -536,10 +527,10 @@ namespace NeoEdit.Common.Expressions
 		{
 			var repeats = conversionConstants.Values.GroupBy(conv => conv.fromUnits.ToString()).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
 			if (repeats.Any())
-				throw new Exception("Units repeated: " + String.Join(", ", repeats));
+				throw new Exception($"Units repeated: {String.Join(", ", repeats)}");
 			var invalidBase = conversionConstants.Values.Where(conv => conv.fromUnits.Equals(conv.toUnits)).Where(conv => (conv.mult != 1) || (conv.add != 0)).Select(conv => conv.fromUnits.Single().Unit).ToList();
 			if (invalidBase.Any())
-				throw new Exception("Units has no base: " + String.Join(", ", invalidBase));
+				throw new Exception($"Unit has no base: {String.Join(", ", invalidBase)}");
 		}
 
 		public static ExpressionUnitsConversion GetBaseConversion(ExpressionUnits units)
@@ -572,9 +563,6 @@ namespace NeoEdit.Common.Expressions
 			return match.fromUnits;
 		}
 
-		public bool Equals(ExpressionUnitsConversion obj)
-		{
-			return (fromUnits.Equals(obj.fromUnits)) && (toUnits.Equals(obj.toUnits)) && (mult == obj.mult) && (add == obj.add);
-		}
+		public bool Equals(ExpressionUnitsConversion obj) => (fromUnits.Equals(obj.fromUnits)) && (toUnits.Equals(obj.toUnits)) && (mult == obj.mult) && (add == obj.add);
 	}
 }

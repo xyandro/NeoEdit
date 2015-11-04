@@ -11,13 +11,13 @@ namespace NeoEdit.TextView
 {
 	class TextData : IDisposable
 	{
-		public string FileName { get; private set; }
+		public string FileName { get; }
 		public int NumLines { get; private set; }
 		public int NumColumns { get; private set; }
-		public long Size { get; private set; }
+		public long Size { get; }
 		FileStream file { get; set; }
 		List<long> lineStart { get; set; }
-		Coder.CodePage codePage { get; set; }
+		Coder.CodePage codePage { get; }
 		static public void ReadFiles(List<string> fileNames, Action<TextData, bool> onFileScanComplete = null, Action<List<TextData>> onAllScanComplete = null)
 		{
 			if (onFileScanComplete == null) onFileScanComplete = (result, cancelled) => { };
@@ -154,10 +154,7 @@ namespace NeoEdit.TextView
 				return Read(file, position, size, buffer);
 		}
 
-		public string GetLine(int line)
-		{
-			return GetLines(line, line + 1).First();
-		}
+		public string GetLine(int line) => GetLines(line, line + 1).First();
 
 		string FormatLine(string str)
 		{
@@ -202,10 +199,7 @@ namespace NeoEdit.TextView
 			return result;
 		}
 
-		public long GetSizeEstimate(int startLine, int endLine)
-		{
-			return lineStart[endLine] - lineStart[startLine];
-		}
+		public long GetSizeEstimate(int startLine, int endLine) => lineStart[endLine] - lineStart[startLine];
 
 		public void Dispose()
 		{
@@ -490,9 +484,6 @@ namespace NeoEdit.TextView
 			});
 		}
 
-		public override string ToString()
-		{
-			return FileName;
-		}
+		public override string ToString() => FileName;
 	}
 }

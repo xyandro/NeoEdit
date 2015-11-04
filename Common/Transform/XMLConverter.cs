@@ -18,7 +18,7 @@ namespace NeoEdit.Common.Transform
 		[AttributeUsage(AttributeTargets.Method)]
 		public class FromXMLAttribute : Attribute
 		{
-			internal string name { get; private set; }
+			internal string name { get; }
 			public FromXMLAttribute(string name = null) { this.name = name; }
 		}
 
@@ -38,10 +38,7 @@ namespace NeoEdit.Common.Transform
 			return rToXML(name, obj, null, true, new Dictionary<object, XElement>()) as XElement;
 		}
 
-		public static void Save(object obj, string fileName)
-		{
-			ToXML(obj).Save(fileName);
-		}
+		public static void Save(object obj, string fileName) => ToXML(obj).Save(fileName);
 
 		static string EscapeField(MemberInfo field, HashSet<string> found)
 		{
@@ -157,20 +154,11 @@ namespace NeoEdit.Common.Transform
 			return xml;
 		}
 
-		public static T FromXML<T>(XElement xml)
-		{
-			return (T)(rFromXML(xml, typeof(T), new Dictionary<string, object>()));
-		}
+		public static T FromXML<T>(XElement xml) => (T)(rFromXML(xml, typeof(T), new Dictionary<string, object>()));
 
-		public static T Load<T>(string fileName)
-		{
-			return FromXML<T>(XElement.Load(fileName));
-		}
+		public static T Load<T>(string fileName) => FromXML<T>(XElement.Load(fileName));
 
-		public static OutputType Next<InputType, OutputType>(this InputType input, Func<InputType, OutputType> func)
-		{
-			return input == null ? default(OutputType) : func(input);
-		}
+		public static OutputType Next<InputType, OutputType>(this InputType input, Func<InputType, OutputType> func) => input == null ? default(OutputType) : func(input);
 
 		public static object rFromXML(XObject xObj, Type type, Dictionary<string, object> references)
 		{

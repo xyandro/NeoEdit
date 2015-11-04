@@ -38,7 +38,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 		{
 			modelData.Models.Clear();
 			modelData.Models.AddRange(Models.Select(model => model.model));
-			modelData.Default = Default == null ? null : Default.model.GUID;
+			modelData.Default = Default?.model.GUID;
 			modelData.FileName = FileName;
 		}
 
@@ -80,14 +80,8 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 				Default = model;
 		}
 
-		public bool EditDialog()
-		{
-			return ModelDataView.Run(this);
-		}
+		public bool EditDialog() => ModelDataView.Run(this);
 
-		public ModelVM GetModelVM(string GUID)
-		{
-			return Models.FirstOrDefault(model => model.model.GUID == GUID);
-		}
+		public ModelVM GetModelVM(string GUID) => Models.FirstOrDefault(model => model.model.GUID == GUID);
 	}
 }

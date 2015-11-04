@@ -42,7 +42,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		public TextLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<TextLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsSelect { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; private set; }
+		public Dictionary<string, List<object>> ExpressionData { get; }
 
 		static WidthDialog()
 		{
@@ -88,10 +88,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Location = TextLocation.Start;
 		}
 
-		private void ExpressionHelp(object sender, RoutedEventArgs e)
-		{
-			ExpressionHelpDialog.Display();
-		}
+		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display();
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)

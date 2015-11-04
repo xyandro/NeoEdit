@@ -75,10 +75,7 @@ namespace NeoEdit.Processes
 			}
 		}
 
-		static public void Run(int pid)
-		{
-			new ViewModules(pid).ShowDialog();
-		}
+		static public void Run(int pid) => new ViewModules(pid).ShowDialog();
 
 		private void GotoCommandExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{

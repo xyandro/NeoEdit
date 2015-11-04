@@ -13,7 +13,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		[DepProp]
 		public string Expression { get { return UIHelper<GotoDialog>.GetPropValue<string>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; private set; }
+		public Dictionary<string, List<object>> ExpressionData { get; }
 
 		static GotoDialog() { UIHelper<GotoDialog>.Register(); }
 
@@ -22,14 +22,11 @@ namespace NeoEdit.TextEdit.Dialogs
 			ExpressionData = expressionData;
 			InitializeComponent();
 
-			Title = "Go To " + gotoType.ToString();
+			Title = $"Go To {gotoType}";
 			Expression = value.ToString();
 		}
 
-		void ExpressionHelp(object sender, RoutedEventArgs e)
-		{
-			ExpressionHelpDialog.Display();
-		}
+		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display();
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)

@@ -11,9 +11,6 @@ namespace NeoEdit.HexEdit
 
 		static HexEditMenu() { UIHelper<HexEditMenu>.Register(); }
 
-		public HexEditMenu()
-		{
-			InitializeComponent();
-		}
+		public HexEditMenu() { InitializeComponent(); }
 	}
 }

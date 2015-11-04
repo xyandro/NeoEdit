@@ -12,7 +12,7 @@ namespace NeoEdit.Disk
 		public ColumnMenuItem(DependencyProperty property)
 		{
 			Property = property;
-			Header = "_" + property.Name;
+			Header = $"_{property.Name}";
 			// These next 2 lines make it so a bunch of warnings don't show at runtime
 			HorizontalContentAlignment = HorizontalAlignment.Left;
 			VerticalContentAlignment = VerticalAlignment.Top;
@@ -26,15 +26,9 @@ namespace NeoEdit.Disk
 
 		static DiskMenu() { UIHelper<DiskMenu>.Register(); }
 
-		public DiskMenu()
-		{
-			InitializeComponent();
-		}
+		public DiskMenu() { InitializeComponent(); }
 
-		void ToggleColumn(object sender, RoutedEventArgs e)
-		{
-			Parent.ToggleColumn((e.OriginalSource as ColumnMenuItem).Property);
-		}
+		void ToggleColumn(object sender, RoutedEventArgs e) => Parent.ToggleColumn((e.OriginalSource as ColumnMenuItem).Property);
 
 		void SetSort(object sender, RoutedEventArgs e)
 		{

@@ -58,7 +58,7 @@ namespace NeoEdit.Handles
 			if (pid.HasValue)
 			{
 				var process = Process.GetProcessById(pid.Value);
-				SubTitle = String.Format("{0} ({1}) Process {2}", process.ProcessName, process.MainWindowTitle, pid.Value);
+				SubTitle = $"{process.ProcessName} ({process.MainWindowTitle}) Process {pid.Value}";
 			}
 			else
 				SubTitle = "All handles";

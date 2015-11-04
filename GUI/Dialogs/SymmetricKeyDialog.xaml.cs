@@ -77,10 +77,7 @@ namespace NeoEdit.GUI.Dialogs
 			key.Text = Cryptor.GetRfc2898Key(password.Text, salt.Text, Int32.Parse(keySize.Text));
 		}
 
-		void GenerateKey(object sender, RoutedEventArgs e)
-		{
-			Generate();
-		}
+		void GenerateKey(object sender, RoutedEventArgs e) => Generate();
 
 		public static Result Run(Window owner, Cryptor.Type type, bool acceptEmpty = false)
 		{

@@ -27,7 +27,7 @@ namespace NeoEdit.Console
 
 				process = new Process();
 				process.StartInfo.FileName = args[1];
-				process.StartInfo.Arguments = String.Join(" ", args.Skip(2).Select(arg => "\"" + arg.Replace("\"", "\"\"") + "\""));
+				process.StartInfo.Arguments = String.Join(" ", args.Skip(2).Select(arg => $"\"{arg.Replace("\"", "\"\"")}\""));
 				process.StartInfo.UseShellExecute = false;
 				process.StartInfo.RedirectStandardOutput = true;
 				process.StartInfo.RedirectStandardError = true;

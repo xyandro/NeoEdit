@@ -40,7 +40,7 @@ namespace NeoEdit.Common.Parsing
 		{
 			Stack<ParserNode> stack = new Stack<ParserNode>();
 
-			public ParserNode Root { get { return stack.Peek(); } }
+			public ParserNode Root => stack.Peek();
 
 			readonly string input;
 			public GenericListener(string input)
@@ -56,18 +56,9 @@ namespace NeoEdit.Common.Parsing
 				stack.Push(node);
 			}
 
-			public void ExitEveryRule(ParserRuleContext ctx)
-			{
-				stack.Pop();
-			}
-
-			public void VisitErrorNode(IErrorNode node)
-			{
-			}
-
-			public void VisitTerminal(ITerminalNode node)
-			{
-			}
+			public void ExitEveryRule(ParserRuleContext ctx) => stack.Pop();
+			public void VisitErrorNode(IErrorNode node) { }
+			public void VisitTerminal(ITerminalNode node) { }
 		}
 
 		private static string ToLiteral(string input)
@@ -98,7 +89,7 @@ namespace NeoEdit.Common.Parsing
 				var token = lexer.NextToken();
 				if (token.Type == Lexer.Eof)
 					break;
-				tokenText.Add(String.Format("{0} {1:00000000}-{2:00000000} ({3:000}) {4} : {5}\n", modes[mode], token.StartIndex, token.StopIndex + 1, token.Type, names[token.Type], ToLiteral(token.Text)));
+				tokenText.Add($"{modes[mode]} {token.StartIndex:00000000}-{token.StopIndex + 1:00000000} ({token.Type:000}) {names[token.Type]} : {ToLiteral(token.Text)}\n");
 			}
 			File.WriteAllText(fileName, String.Join("", tokenText));
 			lexer.Reset();

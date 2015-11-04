@@ -23,13 +23,13 @@ namespace NeoEdit.Console
 		{
 			if (server)
 			{
-				readPipe = new NamedPipeServerStream(name + "-read");
-				writePipe = new NamedPipeServerStream(name + "-write");
+				readPipe = new NamedPipeServerStream($"{name}-read");
+				writePipe = new NamedPipeServerStream($"{name}-write");
 			}
 			else
 			{
-				readPipe = new NamedPipeClientStream(name + "-write");
-				writePipe = new NamedPipeClientStream(name + "-read");
+				readPipe = new NamedPipeClientStream($"{name}-write");
+				writePipe = new NamedPipeClientStream($"{name}-read");
 				(readPipe as NamedPipeClientStream).Connect();
 				(writePipe as NamedPipeClientStream).Connect();
 				SetupReader();

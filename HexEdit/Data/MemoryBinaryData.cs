@@ -19,8 +19,8 @@ namespace NeoEdit.HexEdit.Data
 			blockEnd = data.Length;
 		}
 
-		public override bool CanInsert() { return true; }
-		public override bool CanReload() { return true; }
+		public override bool CanInsert() => true;
+		public override bool CanReload() => true;
 
 		protected override void VirtWrite(long index, long count, byte[] bytes)
 		{
@@ -31,14 +31,8 @@ namespace NeoEdit.HexEdit.Data
 			Length = data.Length;
 		}
 
-		public override byte[] GetAllBytes()
-		{
-			return data;
-		}
+		public override byte[] GetAllBytes() => data;
 
-		public override void Save(string filename)
-		{
-			File.WriteAllBytes(filename, data);
-		}
+		public override void Save(string filename) => File.WriteAllBytes(filename, data);
 	}
 }

@@ -64,15 +64,12 @@ namespace NeoEdit.Common.UnitTest
 
 			result = result.Replace("<Encoding>", codePage.ToString()).Replace("<BOM>", bom.ToString()).Replace("<Ending>", ending.ToString());
 			if (bom)
-				result = "\ufeff" + result;
+				result = $"\ufeff{result}";
 
 			return result;
 		}
 
-		List<T> GetValues<T>()
-		{
-			return Enum.GetValues(typeof(T)).Cast<T>().ToList();
-		}
+		List<T> GetValues<T>() => Enum.GetValues(typeof(T)).Cast<T>().ToList();
 
 		[TestMethod]
 		public void TestUnicode()
@@ -106,7 +103,7 @@ namespace NeoEdit.Common.UnitTest
 								default:
 									throw new Exception("No encoder found");
 							}
-							var filename = Path.Combine(dir, String.Format("{0}-{1}-{2}.txt", codePage, bom, ending));
+							var filename = Path.Combine(dir, $"{codePage}-{bom}-{ending}.txt");
 							var str = GetText(codePage, bom, ending);
 							File.WriteAllText(filename, str, encoder);
 

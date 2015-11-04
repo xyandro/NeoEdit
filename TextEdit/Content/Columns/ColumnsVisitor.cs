@@ -11,10 +11,7 @@ namespace NeoEdit.TextEdit.Content.Columns
 	{
 		public class ColumnsErrorListener : IAntlrErrorListener<IToken>
 		{
-			public void SyntaxError(IRecognizer recognizer, IToken token, int line, int pos, string msg, RecognitionException e)
-			{
-				throw new Exception(String.Format("Error: Token mistmatch at position {0}", token.StartIndex));
-			}
+			public void SyntaxError(IRecognizer recognizer, IToken token, int line, int pos, string msg, RecognitionException e) { throw new Exception($"Error: Token mistmatch at position {token.StartIndex}"); }
 		}
 
 		public static ParserNode Parse(string input)
@@ -56,10 +53,10 @@ namespace NeoEdit.TextEdit.Content.Columns
 			return node;
 		}
 
-		public override ParserNode VisitColumns(ColumnsParser.ColumnsContext context) { return GetNode(context, ROOT, context.line()); }
-		public override ParserNode VisitLine(ColumnsParser.LineContext context) { return Visit(context.items()); }
-		public override ParserNode VisitItems(ColumnsParser.ItemsContext context) { return GetNode(context, LINE, context.itemws()); }
-		public override ParserNode VisitItemws(ColumnsParser.ItemwsContext context) { return Visit(context.item()); }
-		public override ParserNode VisitItem(ColumnsParser.ItemContext context) { return GetNode(context, ITEM, null); }
+		public override ParserNode VisitColumns(ColumnsParser.ColumnsContext context) => GetNode(context, ROOT, context.line());
+		public override ParserNode VisitLine(ColumnsParser.LineContext context) => Visit(context.items());
+		public override ParserNode VisitItems(ColumnsParser.ItemsContext context) => GetNode(context, LINE, context.itemws());
+		public override ParserNode VisitItemws(ColumnsParser.ItemwsContext context) => Visit(context.item());
+		public override ParserNode VisitItem(ColumnsParser.ItemContext context) => GetNode(context, ITEM, null);
 	}
 }

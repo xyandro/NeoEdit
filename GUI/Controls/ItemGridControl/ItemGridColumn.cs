@@ -5,8 +5,8 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 {
 	public class ItemGridColumn
 	{
-		public string Header { get; set; }
-		public DependencyProperty DepProp { get; set; }
+		public string Header { get; }
+		public DependencyProperty DepProp { get; }
 		public object StringFormat { get; set; }
 		public HorizontalAlignment HorizontalAlignment { get; set; }
 		public bool SortAscending { get; set; }
@@ -23,9 +23,6 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 			NumericStrings = true;
 		}
 
-		public override string ToString()
-		{
-			return Header + ": " + DepProp.Name;
-		}
+		public override string ToString() => $"{Header}: {DepProp.Name}";
 	}
 }

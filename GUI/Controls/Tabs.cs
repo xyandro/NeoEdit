@@ -34,7 +34,7 @@ namespace NeoEdit.GUI.Controls
 			UIHelper<Tabs<ItemType, CommandType>>.Register();
 			UIHelper<Tabs<ItemType, CommandType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
 			UIHelper<Tabs<ItemType, CommandType>>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
-			UIHelper<Tabs<ItemType, CommandType>>.AddCoerce(a => a.TopMost, (obj, value) => (value == null) || ((obj.Items != null) && (obj.Items.Contains(value))) ? value : null);
+			UIHelper<Tabs<ItemType, CommandType>>.AddCoerce(a => a.TopMost, (obj, value) => (value != null) && (obj.Items?.Contains(value) == true) ? value : null);
 		}
 
 		int itemOrder = 0;
@@ -138,8 +138,8 @@ namespace NeoEdit.GUI.Controls
 				item.Closed();
 		}
 
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None; } }
-		bool shiftDown { get { return (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None; } }
+		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
+		bool shiftDown => (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None;
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
@@ -210,7 +210,7 @@ namespace NeoEdit.GUI.Controls
 			if ((fromLabel == null) || (toLabel == fromLabel))
 				return;
 
-			var toData = toLabel == null ? null : toLabel.DataContext as ItemType;
+			var toData = toLabel?.DataContext as ItemType;
 			var fromData = fromLabel.DataContext as ItemType;
 
 			var fromTabs = fromData.TabsParent;
@@ -231,7 +231,7 @@ namespace NeoEdit.GUI.Controls
 		class AllItemsControl : ItemsControl
 		{
 			public AllItemsControl() { Focusable = false; }
-			protected override bool IsItemItsOwnContainerOverride(object item) { return false; }
+			protected override bool IsItemItsOwnContainerOverride(object item) => false;
 		}
 
 		class TabLabel : TextBlock
@@ -433,7 +433,7 @@ namespace NeoEdit.GUI.Controls
 						var itemsPanel = new ItemsPanelTemplate();
 						{
 							var uniformGrid = new FrameworkElementFactory(typeof(UniformGrid));
-							uniformGrid.SetBinding(UniformGrid.ColumnsProperty, new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items) + ".Count") { Source = this, Converter = new ColumnCountConverter() });
+							uniformGrid.SetBinding(UniformGrid.ColumnsProperty, new Binding($"{UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items)}.Count") { Source = this, Converter = new ColumnCountConverter() });
 							uniformGrid.SetValue(UniformGrid.MarginProperty, new Thickness(0, 0, -2, -2));
 							itemsPanel.VisualTree = uniformGrid;
 						}

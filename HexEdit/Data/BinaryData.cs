@@ -6,8 +6,8 @@ namespace NeoEdit.HexEdit.Data
 {
 	public abstract class BinaryData
 	{
-		public virtual bool CanInsert() { return false; }
-		public virtual bool CanReload() { return false; }
+		public virtual bool CanInsert() => false;
+		public virtual bool CanReload() => false;
 
 		byte[] cache = null;
 		long cacheStart = -1, cacheEnd = -1;
@@ -49,7 +49,7 @@ namespace NeoEdit.HexEdit.Data
 			return cacheEnd;
 		}
 
-		public byte this[long index] { get { return Read(index, 1)[0]; } }
+		public byte this[long index] => Read(index, 1)[0];
 
 		public long Length { get; protected set; }
 
@@ -91,10 +91,7 @@ namespace NeoEdit.HexEdit.Data
 			return false;
 		}
 
-		protected virtual void VirtWrite(long index, long count, byte[] bytes)
-		{
-			throw new NotImplementedException();
-		}
+		protected virtual void VirtWrite(long index, long count, byte[] bytes) { throw new NotImplementedException(); }
 
 		public void Replace(long index, long count, byte[] bytes)
 		{
@@ -125,24 +122,12 @@ namespace NeoEdit.HexEdit.Data
 			cacheStart = cacheEnd = -1;
 		}
 
-		public virtual byte[] GetAllBytes()
-		{
-			throw new NotImplementedException();
-		}
+		public virtual byte[] GetAllBytes() { throw new NotImplementedException(); }
 
-		public virtual byte[] GetSubset(long index, long count)
-		{
-			return Read(index, count);
-		}
+		public virtual byte[] GetSubset(long index, long count) => Read(index, count);
 
-		public Coder.CodePage CodePageFromBOM()
-		{
-			return Coder.CodePageFromBOM(GetSubset(0, Math.Min(10, Length)));
-		}
+		public Coder.CodePage CodePageFromBOM() => Coder.CodePageFromBOM(GetSubset(0, Math.Min(10, Length)));
 
-		public virtual void Save(string filename)
-		{
-			throw new NotImplementedException();
-		}
+		public virtual void Save(string filename) { throw new NotImplementedException(); }
 	}
 }

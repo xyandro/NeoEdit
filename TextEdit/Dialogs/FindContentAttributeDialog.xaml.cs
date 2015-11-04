@@ -65,9 +65,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (!IsRegex)
 				text = Regex.Escape(text);
 			if (WholeWords)
-				text = @"\b" + text + @"\b";
+				text = $"\\b{text}\\b";
 			if (AllContents)
-				text = "^" + text + "$";
+				text = $"^{text}$";
 			var options = RegexOptions.Compiled | RegexOptions.Singleline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;

@@ -27,7 +27,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		public ResultType Type { get { return UIHelper<MakeAbsoluteDialog>.GetPropValue<ResultType>(this); } set { UIHelper<MakeAbsoluteDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool CheckType { get { return UIHelper<MakeAbsoluteDialog>.GetPropValue<bool>(this); } set { UIHelper<MakeAbsoluteDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; private set; }
+		public Dictionary<string, List<object>> ExpressionData { get; }
 
 		static MakeAbsoluteDialog()
 		{

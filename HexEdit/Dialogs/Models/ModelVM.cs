@@ -84,9 +84,6 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 					Actions.Move(ctr, ctr + 1);
 		}
 
-		public bool EditDialog()
-		{
-			return ModelView.Run(this);
-		}
+		public bool EditDialog() => ModelView.Run(this);
 	}
 }

@@ -21,10 +21,7 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public static IEnumerable<TSource> Resize<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith)
-		{
-			return source.Take(count).Expand(count, expandWith);
-		}
+		public static IEnumerable<TSource> Resize<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith) => source.Take(count).Expand(count, expandWith);
 
 		public static IEnumerable<TSource> Expand<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith)
 		{
@@ -111,25 +108,10 @@ namespace NeoEdit.Common
 			yield return item;
 		}
 
-		public static IOrderedEnumerable<TSource> OrderBy<TSource>(this IEnumerable<TSource> source)
-		{
-			return source.OrderBy(a => a);
-		}
-
-		public static IOrderedEnumerable<TSource> OrderBy<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer)
-		{
-			return source.OrderBy(a => a, comparer);
-		}
-
-		public static IOrderedEnumerable<TSource> OrderByDescending<TSource>(this IEnumerable<TSource> source)
-		{
-			return source.OrderByDescending(a => a);
-		}
-
-		public static IOrderedEnumerable<TSource> OrderByDescending<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer)
-		{
-			return source.OrderByDescending(a => a, comparer);
-		}
+		public static IOrderedEnumerable<TSource> OrderBy<TSource>(this IEnumerable<TSource> source) => source.OrderBy(a => a);
+		public static IOrderedEnumerable<TSource> OrderBy<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer) => source.OrderBy(a => a, comparer);
+		public static IOrderedEnumerable<TSource> OrderByDescending<TSource>(this IEnumerable<TSource> source) => source.OrderByDescending(a => a);
+		public static IOrderedEnumerable<TSource> OrderByDescending<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer) => source.OrderByDescending(a => a, comparer);
 
 		public static bool All<TSource>(this IEnumerable<TSource> source, Func<TSource, int, bool> predicate)
 		{

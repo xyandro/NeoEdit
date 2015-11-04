@@ -39,7 +39,7 @@ namespace NeoEdit.TextEdit
 			}
 			return null;
 		}
-		public virtual Dictionary<Regex, Brush> GetDictionary() { return new Dictionary<Regex, Brush>(); }
+		public virtual Dictionary<Regex, Brush> GetDictionary() => new Dictionary<Regex, Brush>();
 	}
 
 	class HighlightingNone : Highlighting { }
@@ -52,7 +52,7 @@ namespace NeoEdit.TextEdit
 
 		static string stringEsc = @"@""([^""]|"""")*""";
 		static string stringReg = @"""([^\\""]|\\.)*""";
-		static Regex stringRE = new Regex(stringEsc + "|" + stringReg);
+		static Regex stringRE = new Regex($"{stringEsc}|{stringReg}");
 		static Brush stringBrush = new SolidColorBrush(Color.FromRgb(163, 21, 21));
 
 		static Regex commentRE = new Regex("//.*?$");
@@ -69,9 +69,9 @@ namespace NeoEdit.TextEdit
 		{
 			return new Dictionary<Regex, Brush>
 			{
-				{ keyWordsRE, keywordsBrush },
-				{ stringRE, stringBrush },
-				{ commentRE, commentBrush },
+				[keyWordsRE] = keywordsBrush,
+				[stringRE] = stringBrush,
+				[commentRE] = commentBrush,
 			};
 		}
 	}
@@ -104,10 +104,10 @@ namespace NeoEdit.TextEdit
 		{
 			return new Dictionary<Regex, Brush>
 			{
-				{ keyWordsRE, keywordsBrush },
-				{ directivesRE, directivesBrush },
-				{ stringRE, stringBrush },
-				{ commentRE, commentBrush },
+				[keyWordsRE] = keywordsBrush,
+				[directivesRE] = directivesBrush,
+				[stringRE] = stringBrush,
+				[commentRE] = commentBrush,
 			};
 		}
 	}

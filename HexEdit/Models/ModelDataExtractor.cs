@@ -22,7 +22,7 @@ namespace NeoEdit.HexEdit.Models
 				{
 					value = currentByte.ToString();
 					if (currentBit != 0)
-						value += "." + currentBit.ToString();
+						value += $".{currentBit}";
 					values["Current"] = value;
 					return;
 				}
@@ -115,7 +115,7 @@ namespace NeoEdit.HexEdit.Models
 			values[action.SaveName] = value;
 			if (!nameCounts.ContainsKey(action.SaveName))
 				nameCounts[action.SaveName] = 0;
-			var name = String.Format("{0} #{1}", action.SaveName, ++nameCounts[action.SaveName]);
+			var name = $"{action.SaveName} #{++nameCounts[action.SaveName]}";
 			results.Add(new ModelResult(action, results.Count + 1, name, value, startByte, startBit, endByte, endBit));
 		}
 

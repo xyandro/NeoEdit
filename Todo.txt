@@ -1,5 +1,6 @@
 All:
 Add command prompt
+In active list add number of selections, allow sort, allow typing to find file
 
 Disk:
 Move timestamp (possibly others) from TextEditor

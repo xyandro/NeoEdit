@@ -35,7 +35,7 @@ namespace NeoEdit.Loader
 				}
 			}
 		}
-		public Assembly Assembly { get { return Assembly.Load(UncompressedData); } }
+		public Assembly Assembly => Assembly.Load(UncompressedData);
 		public byte[] SerializedData
 		{
 			get
@@ -65,15 +65,9 @@ namespace NeoEdit.Loader
 
 		Resource() { }
 
-		public static bool IsAssembly(string fileName)
-		{
-			return (fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) || (fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase));
-		}
+		public static bool IsAssembly(string fileName) => (fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) || (fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase));
 
-		public bool NameMatch(string name)
-		{
-			return (Name.Equals(name, StringComparison.OrdinalIgnoreCase)) || (Name.Equals(name + ".exe", StringComparison.OrdinalIgnoreCase)) || (Name.Equals(name + ".dll", StringComparison.OrdinalIgnoreCase));
-		}
+		public bool NameMatch(string name) => (Name.Equals(name, StringComparison.OrdinalIgnoreCase)) || (Name.Equals($"{name}.exe", StringComparison.OrdinalIgnoreCase)) || (Name.Equals($"{name}.dll", StringComparison.OrdinalIgnoreCase));
 
 		public static Resource CreateFromFile(string fileName)
 		{
@@ -89,10 +83,7 @@ namespace NeoEdit.Loader
 			return new Resource { Name = name, Managed = managed, WriteTime = File.GetLastWriteTimeUtc(fileName), UncompressedData = File.ReadAllBytes(fileName) };
 		}
 
-		public static Resource CreateFromSerialized(byte[] data)
-		{
-			return new Resource { SerializedData = data };
-		}
+		public static Resource CreateFromSerialized(byte[] data) => new Resource { SerializedData = data };
 
 		public void WriteToPath(string path)
 		{
@@ -101,9 +92,6 @@ namespace NeoEdit.Loader
 			File.SetLastWriteTimeUtc(outputFile, WriteTime);
 		}
 
-		public override string ToString()
-		{
-			return Name;
-		}
+		public override string ToString() => Name;
 	}
 }

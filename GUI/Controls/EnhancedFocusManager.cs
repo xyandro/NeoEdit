@@ -8,15 +8,8 @@ namespace NeoEdit.GUI.Controls
 	{
 		private static bool SettingKeyboardFocus { get; set; }
 
-		public static bool GetIsEnhancedFocusScope(DependencyObject element)
-		{
-			return (bool)element.GetValue(IsEnhancedFocusScopeProperty);
-		}
-
-		public static void SetIsEnhancedFocusScope(DependencyObject element, bool value)
-		{
-			element.SetValue(IsEnhancedFocusScopeProperty, value);
-		}
+		public static bool GetIsEnhancedFocusScope(DependencyObject element) => (bool)element.GetValue(IsEnhancedFocusScopeProperty);
+		public static void SetIsEnhancedFocusScope(DependencyObject element, bool value) => element.SetValue(IsEnhancedFocusScopeProperty, value);
 
 		public static readonly DependencyProperty IsEnhancedFocusScopeProperty = DependencyProperty.RegisterAttached("IsEnhancedFocusScope", typeof(bool), typeof(EnhancedFocusManager), new UIPropertyMetadata(false, OnIsEnhancedFocusScopeChanged));
 

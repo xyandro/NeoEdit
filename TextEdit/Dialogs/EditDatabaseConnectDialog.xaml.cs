@@ -16,10 +16,10 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		public class DBParam
 		{
-			public string Name { get; set; }
-			public object Value { get; set; }
-			public object Default { get; set; }
-			public Type Type { get; set; }
+			public string Name { get; }
+			public object Value { get; }
+			public object Default { get; }
+			public Type Type { get; }
 
 			public DBParam(string name, object value, object _default, Type type)
 			{
@@ -29,7 +29,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				Type = type;
 			}
 
-			public override string ToString() { return String.Format("{0} = {1}", Name, Value); }
+			public override string ToString() => $"{Name} = {Value}";
 		}
 
 		[DepProp]
@@ -115,10 +115,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			}.Show();
 		}
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			DialogResult = true;
-		}
+		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
 
 		public static DBConnectInfo Run(Window parent, DBConnectInfo dbConnectInfo)
 		{

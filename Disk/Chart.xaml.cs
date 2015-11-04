@@ -42,10 +42,7 @@ namespace NeoEdit.Disk
 			localCallbacks = UIHelper<Chart>.GetLocalCallbacks(this);
 		}
 
-		Point GetPoint(Point center, double radius, double angle)
-		{
-			return center + new Vector(Math.Sin(angle), -Math.Cos(angle)) * radius;
-		}
+		Point GetPoint(Point center, double radius, double angle) => center + new Vector(Math.Sin(angle), -Math.Cos(angle)) * radius;
 
 		string GetSize(long size)
 		{
@@ -60,7 +57,7 @@ namespace NeoEdit.Disk
 				mySize /= 1024;
 				++useSuffix;
 			}
-			return String.Format("{0:0.0}{1}", mySize, suffix[useSuffix]);
+			return $"{mySize:0.0}{suffix[useSuffix]}";
 		}
 
 		Path GetArc(Point center, double radius, double startAngle, double endAngle, Brush fillBrush, string name, long size)
@@ -71,7 +68,7 @@ namespace NeoEdit.Disk
 				new LineSegment { Point = GetPoint(center, radius, startAngle) },
 				new ArcSegment { Size = new Size(radius, radius), Point = GetPoint(center, radius, endAngle), SweepDirection = SweepDirection.Clockwise, IsLargeArc = (endAngle - startAngle) > Math.PI },
 			}, true));
-			return new Path { Fill = fillBrush, Stroke = Brushes.Black, Data = pathGeometry, ToolTip = name + ": " + GetSize(size) };
+			return new Path { Fill = fillBrush, Stroke = Brushes.Black, Data = pathGeometry, ToolTip = $"{name}: {GetSize(size)}" };
 		}
 
 		Grid GetKey(string name, Brush brush, long size)

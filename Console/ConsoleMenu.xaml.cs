@@ -11,9 +11,6 @@ namespace NeoEdit.Console
 
 		static ConsoleMenu() { UIHelper<ConsoleMenu>.Register(); }
 
-		public ConsoleMenu()
-		{
-			InitializeComponent();
-		}
+		public ConsoleMenu() { InitializeComponent(); }
 	}
 }

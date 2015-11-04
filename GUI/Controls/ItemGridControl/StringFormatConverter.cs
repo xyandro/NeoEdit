@@ -9,7 +9,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 	class StringFormatConverter : IValueConverter
 	{
 		static StringFormatConverter converter = new StringFormatConverter();
-		public static StringFormatConverter Converter { get { return converter; } }
+		public static StringFormatConverter Converter => converter;
 
 		StringFormatConverter() { }
 
@@ -18,15 +18,12 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 			if ((value == null) || (parameter == null))
 				return value;
 			if (parameter is string)
-				return String.Format("{0:" + (string)parameter + "}", value);
+				return String.Format($"{{0:{parameter}}}", value);
 			if (parameter is StringFormatDelegate)
 				return (parameter as StringFormatDelegate)(value);
 			return value;
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotImplementedException();
-		}
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
 	}
 }

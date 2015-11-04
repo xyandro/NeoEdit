@@ -23,34 +23,12 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			DialogResult = true;
 		}
 
-		void NewAction(object sender, RoutedEventArgs e)
-		{
-			ModelVM.NewAction();
-		}
+		void NewAction(object sender, RoutedEventArgs e) => ModelVM.NewAction();
+		void EditAction(object sender, RoutedEventArgs e) => ModelVM.EditAction(actions.SelectedItem as ModelActionVM);
+		void DeleteAction(object sender, RoutedEventArgs e) => ModelVM.DeleteAction(actions.SelectedItems.Cast<ModelActionVM>().ToList());
+		void MoveActionUp(object sender, RoutedEventArgs e) => ModelVM.MoveActionUp(actions.SelectedItems.Cast<ModelActionVM>().ToList());
+		void MoveActionDown(object sender, RoutedEventArgs e) => ModelVM.MoveActionDown(actions.SelectedItems.Cast<ModelActionVM>().ToList());
 
-		void EditAction(object sender, RoutedEventArgs e)
-		{
-			ModelVM.EditAction(actions.SelectedItem as ModelActionVM);
-		}
-
-		void DeleteAction(object sender, RoutedEventArgs e)
-		{
-			ModelVM.DeleteAction(actions.SelectedItems.Cast<ModelActionVM>().ToList());
-		}
-
-		void MoveActionUp(object sender, RoutedEventArgs e)
-		{
-			ModelVM.MoveActionUp(actions.SelectedItems.Cast<ModelActionVM>().ToList());
-		}
-
-		void MoveActionDown(object sender, RoutedEventArgs e)
-		{
-			ModelVM.MoveActionDown(actions.SelectedItems.Cast<ModelActionVM>().ToList());
-		}
-
-		static public bool Run(ModelVM modelVM)
-		{
-			return new ModelView(modelVM).ShowDialog() == true;
-		}
+		static public bool Run(ModelVM modelVM) => new ModelView(modelVM).ShowDialog() == true;
 	}
 }

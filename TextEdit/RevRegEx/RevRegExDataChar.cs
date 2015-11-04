@@ -4,10 +4,10 @@ namespace NeoEdit.TextEdit.RevRegEx
 {
 	class RevRegExDataChar : RevRegExData
 	{
-		public char Value { get; private set; }
+		public char Value { get; }
 		public RevRegExDataChar(char value) { Value = value; }
-		public override List<string> GetPossibilities() { return new List<string> { new string(Value, 1) }; }
-		public override long Count() { return 1; }
-		public override string ToString() { return Value.ToString(); }
+		public override List<string> GetPossibilities() => new List<string> { new string(Value, 1) };
+		public override long Count() => 1;
+		public override string ToString() => Value.ToString();
 	}
 }

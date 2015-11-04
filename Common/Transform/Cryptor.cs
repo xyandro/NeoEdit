@@ -121,7 +121,7 @@ namespace NeoEdit.Common.Transform
 				}
 				throw new Exception("Failed to decrypt");
 			}
-			catch (Exception ex) { throw new Exception(String.Format("Decryption failed: {0}", ex.Message), ex); }
+			catch (Exception ex) { throw new Exception($"Decryption failed: {ex.Message}", ex); }
 		}
 
 		public static string GenerateKey(Type type, int keySize)

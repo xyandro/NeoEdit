@@ -16,7 +16,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string Expression { get { return UIHelper<RepeatDialog>.GetPropValue<string>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool SelectRepetitions { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; private set; }
+		public Dictionary<string, List<object>> ExpressionData { get; }
 
 		static RepeatDialog() { UIHelper<RepeatDialog>.Register(); }
 
@@ -29,10 +29,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			SelectRepetitions = selectRepetitions;
 		}
 
-		private void ExpressionHelp(object sender, RoutedEventArgs e)
-		{
-			ExpressionHelpDialog.Display();
-		}
+		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display();
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)

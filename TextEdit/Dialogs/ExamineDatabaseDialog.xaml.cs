@@ -31,15 +31,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			Collections = new ObservableCollection<string>(dbConnection.GetSchema().AsEnumerable().Select(row => row["CollectionName"]).Cast<string>());
 		}
 
-		void UpdateData()
-		{
-			Data = dbConnection.GetSchema(Collection);
-		}
+		void UpdateData() => Data = dbConnection.GetSchema(Collection);
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			DialogResult = true;
-		}
+		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
 
 		static public void Run(Window parent, DbConnection dbConnection)
 		{

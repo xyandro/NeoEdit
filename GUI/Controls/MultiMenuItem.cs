@@ -24,10 +24,7 @@ namespace NeoEdit.GUI.Controls
 
 		static MultiMenuItem() { UIHelper<MultiMenuItem<ItemType, CommandType>>.Register(); }
 
-		public MultiMenuItem()
-		{
-			SetupStyle();
-		}
+		public MultiMenuItem() { SetupStyle(); }
 
 		protected override Visual GetVisualChild(int index)
 		{

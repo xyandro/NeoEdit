@@ -6,10 +6,7 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		static ExpressionHelpDialog singleton = null;
 
-		ExpressionHelpDialog()
-		{
-			InitializeComponent();
-		}
+		ExpressionHelpDialog() { InitializeComponent(); }
 
 		protected override void OnClosed(System.EventArgs e)
 		{
@@ -17,10 +14,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			base.OnClosed(e);
 		}
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			Close();
-		}
+		void OkClick(object sender, RoutedEventArgs e) => Close();
 
 		public static void Display()
 		{

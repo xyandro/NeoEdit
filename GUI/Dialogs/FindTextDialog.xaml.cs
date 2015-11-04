@@ -107,15 +107,8 @@ namespace NeoEdit.GUI.Dialogs
 			}
 		}
 
-		void Escape(object sender, RoutedEventArgs e)
-		{
-			Text = Regex.Escape(Text);
-		}
-
-		void Unescape(object sender, RoutedEventArgs e)
-		{
-			Text = Regex.Unescape(Text);
-		}
+		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
+		void Unescape(object sender, RoutedEventArgs e) => Text = Regex.Unescape(Text);
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
@@ -131,7 +124,7 @@ namespace NeoEdit.GUI.Dialogs
 				replace = replace.Replace("$", "$$");
 			}
 			if (WholeWords)
-				text = @"\b" + text + @"\b";
+				text = $"\\b{text}\\b";
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
@@ -161,9 +154,6 @@ namespace NeoEdit.GUI.Dialogs
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 
-		void RegExHelp(object sender, RoutedEventArgs e)
-		{
-			RegExHelpDialog.Display();
-		}
+		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 	}
 }

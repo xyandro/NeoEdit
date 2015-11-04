@@ -44,10 +44,7 @@ namespace NeoEdit.TextView.Dialogs
 			OutputCodePage = Coder.CodePage.UTF8;
 		}
 
-		void SetInputCodePage()
-		{
-			InputCodePage = Coder.GetDescription(Coder.CodePageFromBOM(InputFile));
-		}
+		void SetInputCodePage() => InputCodePage = Coder.GetDescription(Coder.CodePageFromBOM(InputFile));
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)

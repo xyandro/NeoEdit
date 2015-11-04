@@ -51,7 +51,7 @@ namespace NeoEdit.TextEdit.Content.CSharp
 				var end = line == endLine ? endIndex : contentEnd + data.GetEndingLength(line);
 				var str = data.GetString(lineOffset + start, end - start);
 				if (start != contentEnd)
-					str = "//" + str;
+					str = $"//{str}";
 				result += str;
 			}
 			return result;
@@ -98,7 +98,7 @@ namespace NeoEdit.TextEdit.Content.CSharp
 
 
 		readonly ParserNode Root;
-		ParserNode Parent { get { return stack.Peek(); } }
+		ParserNode Parent => stack.Peek();
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;
 		CSharpVisitor(string input)
@@ -137,45 +137,45 @@ namespace NeoEdit.TextEdit.Content.CSharp
 			return null;
 		}
 
-		public override object VisitSaveblock(CSharpParser.SaveblockContext context) { return AddNode(context, BLOCK); }
-		public override object VisitContentExpression(CSharpParser.ContentExpressionContext context) { return AddNode(context, EXPRESSION); }
-		public override object VisitNamespace(CSharpParser.NamespaceContext context) { return AddNode(context, context.NAMESPACE()); }
-		public override object VisitClass(CSharpParser.ClassContext context) { return AddNode(context, context.CLASS()); }
-		public override object VisitEnum(CSharpParser.EnumContext context) { return AddNode(context, context.ENUM()); }
-		public override object VisitMethod(CSharpParser.MethodContext context) { return AddNode(context, METHOD); }
-		public override object VisitIndexer(CSharpParser.IndexerContext context) { return AddNode(context, INDEXER); }
-		public override object VisitDelegate(CSharpParser.DelegateContext context) { return AddNode(context, context.DELEGATE()); }
-		public override object VisitEvent(CSharpParser.EventContext context) { return AddNode(context, context.EVENT()); }
-		public override object VisitProperty(CSharpParser.PropertyContext context) { return AddNode(context, PROPERTY); }
-		public override object VisitSwitch(CSharpParser.SwitchContext context) { return AddNode(context, context.SWITCH()); }
-		public override object VisitReturn(CSharpParser.ReturnContext context) { return AddNode(context, context.RETURN()); }
-		public override object VisitThrow(CSharpParser.ThrowContext context) { return AddNode(context, context.THROW()); }
-		public override object VisitDeclaration(CSharpParser.DeclarationContext context) { return AddNode(context, DECLARATION); }
-		public override object VisitIf(CSharpParser.IfContext context) { return AddNode(context, context.type); }
-		public override object VisitLabel(CSharpParser.LabelContext context) { return AddNode(context, LABEL); }
-		public override object VisitGoto(CSharpParser.GotoContext context) { return AddNode(context, context.GOTO()); }
-		public override object VisitFixed(CSharpParser.FixedContext context) { return AddNode(context, context.FIXED()); }
-		public override object VisitChecked(CSharpParser.CheckedContext context) { return AddNode(context, context.CHECKED() ?? context.UNCHECKED()); }
-		public override object VisitUsing(CSharpParser.UsingContext context) { return AddNode(context, context.USING()); }
-		public override object VisitLock(CSharpParser.LockContext context) { return AddNode(context, context.LOCK()); }
-		public override object VisitFor(CSharpParser.ForContext context) { return AddNode(context, context.FOR()); }
-		public override object VisitForeach(CSharpParser.ForeachContext context) { return AddNode(context, context.FOREACH()); }
-		public override object VisitWhile(CSharpParser.WhileContext context) { return AddNode(context, context.WHILE()); }
-		public override object VisitDo(CSharpParser.DoContext context) { return AddNode(context, context.DO()); }
-		public override object VisitBreak(CSharpParser.BreakContext context) { return AddNode(context, context.BREAK()); }
-		public override object VisitContinue(CSharpParser.ContinueContext context) { return AddNode(context, context.CONTINUE()); }
-		public override object VisitTry(CSharpParser.TryContext context) { return AddNode(context, context.TRY()); }
-		public override object VisitGlobalAttr(CSharpParser.GlobalAttrContext context) { return AddNode(context, GLOBALATTR); }
-		public override object VisitUsingns(CSharpParser.UsingnsContext context) { return AddNode(context, context.USING()); }
-		public override object VisitPropertyaccess(CSharpParser.PropertyaccessContext context) { return AddNode(context, context.GET() ?? context.SET()); }
-		public override object VisitSavesemicolon(CSharpParser.SavesemicolonContext context) { return AddNode(context, EMPTY); }
-		public override object VisitCases(CSharpParser.CasesContext context) { return AddNode(context, CASES); }
-		public override object VisitMethodcallparam(CSharpParser.MethodcallparamContext context) { return AddNode(context, METHODPARAM); }
+		public override object VisitSaveblock(CSharpParser.SaveblockContext context) => AddNode(context, BLOCK);
+		public override object VisitContentExpression(CSharpParser.ContentExpressionContext context) => AddNode(context, EXPRESSION);
+		public override object VisitNamespace(CSharpParser.NamespaceContext context) => AddNode(context, context.NAMESPACE());
+		public override object VisitClass(CSharpParser.ClassContext context) => AddNode(context, context.CLASS());
+		public override object VisitEnum(CSharpParser.EnumContext context) => AddNode(context, context.ENUM());
+		public override object VisitMethod(CSharpParser.MethodContext context) => AddNode(context, METHOD);
+		public override object VisitIndexer(CSharpParser.IndexerContext context) => AddNode(context, INDEXER);
+		public override object VisitDelegate(CSharpParser.DelegateContext context) => AddNode(context, context.DELEGATE());
+		public override object VisitEvent(CSharpParser.EventContext context) => AddNode(context, context.EVENT());
+		public override object VisitProperty(CSharpParser.PropertyContext context) => AddNode(context, PROPERTY);
+		public override object VisitSwitch(CSharpParser.SwitchContext context) => AddNode(context, context.SWITCH());
+		public override object VisitReturn(CSharpParser.ReturnContext context) => AddNode(context, context.RETURN());
+		public override object VisitThrow(CSharpParser.ThrowContext context) => AddNode(context, context.THROW());
+		public override object VisitDeclaration(CSharpParser.DeclarationContext context) => AddNode(context, DECLARATION);
+		public override object VisitIf(CSharpParser.IfContext context) => AddNode(context, context.type);
+		public override object VisitLabel(CSharpParser.LabelContext context) => AddNode(context, LABEL);
+		public override object VisitGoto(CSharpParser.GotoContext context) => AddNode(context, context.GOTO());
+		public override object VisitFixed(CSharpParser.FixedContext context) => AddNode(context, context.FIXED());
+		public override object VisitChecked(CSharpParser.CheckedContext context) => AddNode(context, context.CHECKED() ?? context.UNCHECKED());
+		public override object VisitUsing(CSharpParser.UsingContext context) => AddNode(context, context.USING());
+		public override object VisitLock(CSharpParser.LockContext context) => AddNode(context, context.LOCK());
+		public override object VisitFor(CSharpParser.ForContext context) => AddNode(context, context.FOR());
+		public override object VisitForeach(CSharpParser.ForeachContext context) => AddNode(context, context.FOREACH());
+		public override object VisitWhile(CSharpParser.WhileContext context) => AddNode(context, context.WHILE());
+		public override object VisitDo(CSharpParser.DoContext context) => AddNode(context, context.DO());
+		public override object VisitBreak(CSharpParser.BreakContext context) => AddNode(context, context.BREAK());
+		public override object VisitContinue(CSharpParser.ContinueContext context) => AddNode(context, context.CONTINUE());
+		public override object VisitTry(CSharpParser.TryContext context) => AddNode(context, context.TRY());
+		public override object VisitGlobalAttr(CSharpParser.GlobalAttrContext context) => AddNode(context, GLOBALATTR);
+		public override object VisitUsingns(CSharpParser.UsingnsContext context) => AddNode(context, context.USING());
+		public override object VisitPropertyaccess(CSharpParser.PropertyaccessContext context) => AddNode(context, context.GET() ?? context.SET());
+		public override object VisitSavesemicolon(CSharpParser.SavesemicolonContext context) => AddNode(context, EMPTY);
+		public override object VisitCases(CSharpParser.CasesContext context) => AddNode(context, CASES);
+		public override object VisitMethodcallparam(CSharpParser.MethodcallparamContext context) => AddNode(context, METHODPARAM);
 
-		public override object VisitSavename(CSharpParser.SavenameContext context) { return AddAttribute(NAME, context); }
-		public override object VisitSavebase(CSharpParser.SavebaseContext context) { return AddAttribute(BASE, context); }
-		public override object VisitModifier(CSharpParser.ModifierContext context) { return AddAttribute(MODIFIER, context); }
-		public override object VisitSaveconditionexpression(CSharpParser.SaveconditionexpressionContext context) { return AddAttribute(CONDITION, context); }
+		public override object VisitSavename(CSharpParser.SavenameContext context) => AddAttribute(NAME, context);
+		public override object VisitSavebase(CSharpParser.SavebaseContext context) => AddAttribute(BASE, context);
+		public override object VisitModifier(CSharpParser.ModifierContext context) => AddAttribute(MODIFIER, context);
+		public override object VisitSaveconditionexpression(CSharpParser.SaveconditionexpressionContext context) => AddAttribute(CONDITION, context);
 
 		public override object VisitUsings(CSharpParser.UsingsContext context)
 		{

@@ -12,7 +12,8 @@ namespace NeoEdit.Common
 		{
 			if (threadRandom == null)
 				lock (mainRandom)
-					threadRandom = new Random(mainRandom.Next());
+					if (threadRandom == null)
+						threadRandom = new Random(mainRandom.Next());
 			return threadRandom.Next();
 		}
 
@@ -20,7 +21,8 @@ namespace NeoEdit.Common
 		{
 			if (threadRandom == null)
 				lock (mainRandom)
-					threadRandom = new Random(mainRandom.Next());
+					if (threadRandom == null)
+						threadRandom = new Random(mainRandom.Next());
 			return threadRandom.Next(maxValue);
 		}
 
@@ -28,7 +30,8 @@ namespace NeoEdit.Common
 		{
 			if (threadRandom == null)
 				lock (mainRandom)
-					threadRandom = new Random(mainRandom.Next());
+					if (threadRandom == null)
+						threadRandom = new Random(mainRandom.Next());
 			return threadRandom.Next(minValue, maxValue);
 		}
 	}

@@ -99,10 +99,7 @@ namespace NeoEdit.Common.NEClipboards
 			SetClipboard(control, data);
 		}
 
-		internal static void SetFileInternal(IClipboardEnabled control, string fileName, bool isCut)
-		{
-			SetFilesInternal(control, new List<string> { fileName }, isCut);
-		}
+		internal static void SetFileInternal(IClipboardEnabled control, string fileName, bool isCut) => SetFilesInternal(control, new List<string> { fileName }, isCut);
 
 		internal static void SetFilesInternal(IClipboardEnabled control, IEnumerable<string> fileNames, bool isCut)
 		{
@@ -131,7 +128,7 @@ namespace NeoEdit.Common.NEClipboards
 
 		static void SetClipboard(IClipboardEnabled control, ClipboardData data, DataObject dataObj = null)
 		{
-			var type = control == null ? null : control.GetType();
+			var type = control?.GetType();
 			if ((type == null) || (LastType != type))
 				++ExternalRevision;
 			LastType = type;
@@ -161,20 +158,20 @@ namespace NeoEdit.Common.NEClipboards
 			return data;
 		}
 
-		internal static string GetTextInternal(IClipboardEnabled control) { return GetData(control).Text; }
-		internal static List<string> GetStringsInternal(IClipboardEnabled control) { return GetData(control).Strings; }
-		internal static List<object> GetObjectsInternal(IClipboardEnabled control) { return GetData(control).Objects; }
+		internal static string GetTextInternal(IClipboardEnabled control) => GetData(control).Text;
+		internal static List<string> GetStringsInternal(IClipboardEnabled control) => GetData(control).Strings;
+		internal static List<object> GetObjectsInternal(IClipboardEnabled control) => GetData(control).Objects;
 
 
-		public static string GetText() { return GetTextInternal(null); }
-		public static List<string> GetStrings() { return GetStringsInternal(null); }
-		public static List<object> GetObjects() { return GetObjectsInternal(null); }
+		public static string GetText() => GetTextInternal(null);
+		public static List<string> GetStrings() => GetStringsInternal(null);
+		public static List<object> GetObjects() => GetObjectsInternal(null);
 
-		public static void SetText(string text) { SetTextInternal(null, text); }
-		public static void SetFile(string fileName, bool isCut) { SetFileInternal(null, fileName, isCut); }
-		public static void SetFiles(IEnumerable<string> fileNames, bool isCut) { SetFilesInternal(null, fileNames, isCut); }
-		public static void SetStrings(IEnumerable<string> strings) { SetStringsInternal(null, strings); }
-		public static void SetObjects(IEnumerable<object> objects, string text = null) { SetObjectsInternal(null, objects, text); }
+		public static void SetText(string text) => SetTextInternal(null, text);
+		public static void SetFile(string fileName, bool isCut) => SetFileInternal(null, fileName, isCut);
+		public static void SetFiles(IEnumerable<string> fileNames, bool isCut) => SetFilesInternal(null, fileNames, isCut);
+		public static void SetStrings(IEnumerable<string> strings) => SetStringsInternal(null, strings);
+		public static void SetObjects(IEnumerable<object> objects, string text = null) => SetObjectsInternal(null, objects, text);
 
 		public static string Text { get { return GetTextInternal(null); } set { SetTextInternal(null, value); } }
 		public static string CopiedFile { set { SetFileInternal(null, value, false); } }

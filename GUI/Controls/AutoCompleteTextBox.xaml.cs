@@ -59,7 +59,7 @@ namespace NeoEdit.GUI.Controls
 				return;
 
 			Items.Clear();
-			var find = textBox != null ? textBox.Text : null ?? Text ?? "";
+			var find = textBox?.Text ?? Text ?? "";
 			foreach (string str in AutoSuggestionList)
 				if (str.StartsWith(find, StringComparison.InvariantCultureIgnoreCase))
 					Items.Add(str);

@@ -11,10 +11,7 @@ namespace NeoEdit.TextEdit
 		internal enum SortScope { Selections, Lines, Regions }
 		internal enum SortType { String, StringRaw, Numeric, DateTime, Keys, Reverse, Randomize, Length, Frequency }
 
-		List<Range> GetSortLines()
-		{
-			return Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
-		}
+		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 
 		List<Range> GetEnclosingRegions(bool useAllRegions = false)
 		{
@@ -42,10 +39,7 @@ namespace NeoEdit.TextEdit
 			return regions;
 		}
 
-		string NumericSort(string str)
-		{
-			return Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
-		}
+		string NumericSort(string str) => Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
 
 		List<Range> GetSortSource(SortScope scope)
 		{
@@ -131,10 +125,7 @@ namespace NeoEdit.TextEdit
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		internal SortDialog.Result Command_Edit_Sort_Dialog()
-		{
-			return SortDialog.Run(WindowParent);
-		}
+		internal SortDialog.Result Command_Edit_Sort_Dialog() => SortDialog.Run(WindowParent);
 
 		internal void Command_Edit_Sort(SortDialog.Result result)
 		{

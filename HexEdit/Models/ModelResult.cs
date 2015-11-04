@@ -43,10 +43,10 @@ namespace NeoEdit.HexEdit.Models
 			Location = "";
 			Location += startByte;
 			if (startBit != 0)
-				Location += "." + startBit;
-			Location += " - " + endByte;
+				Location += $".{startBit}";
+			Location += $" - {endByte}";
 			if (endBit != 0)
-				Location += "." + endBit;
+				Location += $".{endBit}";
 
 			Length = GetLength(startByte, startBit, endByte, endBit);
 		}
@@ -60,13 +60,10 @@ namespace NeoEdit.HexEdit.Models
 			}
 			var length = (endByte - startByte).ToString();
 			if (endBit - startBit != 0)
-				length += "." + (endBit - startBit);
+				length += $".{endBit - startBit}";
 			return length;
 		}
 
-		public override string ToString()
-		{
-			return String.Format("{1}: {2}.{3} - {4}.{5}", Name, Value, StartByte, StartBit, EndByte, EndBit);
-		}
+		public override string ToString() => $"{Value}: {StartByte}.{StartBit} - {EndByte}.{EndBit}";
 	}
 }

@@ -10,7 +10,7 @@ namespace NeoEdit.Disk.Dialogs
 	{
 		[DepProp]
 		public string ItemName { get { return UIHelper<RenameDialog>.GetPropValue<string>(this); } private set { UIHelper<RenameDialog>.SetPropValue(this, value); } }
-		public string FullName { get { return item.Path + @"\" + ItemName; } }
+		public string FullName => $"{item.Path}\\{ItemName}";
 
 		static RenameDialog() { UIHelper<RenameDialog>.Register(); }
 
@@ -19,7 +19,7 @@ namespace NeoEdit.Disk.Dialogs
 		{
 			InitializeComponent();
 
-			label.Content = String.Format("Please enter new name for {0}:", item.Name);
+			label.Content = $"Please enter new name for {item.Name}:";
 			this.item = item;
 			ItemName = item.Name;
 

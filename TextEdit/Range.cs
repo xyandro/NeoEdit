@@ -15,18 +15,15 @@ namespace NeoEdit.TextEdit
 			Length = End - Start;
 			HasSelection = Length != 0;
 		}
-		public static Range FromIndex(int index, int length) { return new Range(index + length, index); }
+		public static Range FromIndex(int index, int length) => new Range(index + length, index);
 
-		public int Cursor { get; private set; }
-		public int Highlight { get; private set; }
-		public int Start { get; private set; }
-		public int End { get; private set; }
-		public int Length { get; private set; }
-		public bool HasSelection { get; private set; }
+		public int Cursor { get; }
+		public int Highlight { get; }
+		public int Start { get; }
+		public int End { get; }
+		public int Length { get; }
+		public bool HasSelection { get; }
 
-		public override string ToString()
-		{
-			return String.Format("({0:0000000000})->({1:0000000000})", Start, End);
-		}
+		public override string ToString() => $"({Start:0000000000})->({End:0000000000})";
 	}
 }

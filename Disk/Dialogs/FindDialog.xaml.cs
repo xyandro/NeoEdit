@@ -57,7 +57,7 @@ namespace NeoEdit.Disk.Dialogs
 			{
 				var expr = Expression;
 				if (!IsRegEx)
-					expr = "^(" + Regex.Escape(expr).Replace(@"\*", @".*").Replace(@"\?", ".?").Replace(";", "|") + ")$";
+					expr = $"^({Regex.Escape(expr).Replace(@"\*", ".*").Replace(@"\?", ".?").Replace(";", "|")})$";
 				regex = new Regex(expr, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			}
 

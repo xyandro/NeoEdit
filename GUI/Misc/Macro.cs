@@ -18,10 +18,10 @@ namespace NeoEdit.GUI.Misc
 
 		class MacroActionKey : MacroAction
 		{
-			public Key key { get; private set; }
-			public bool shiftDown { get; private set; }
-			public bool controlDown { get; private set; }
-			public bool altDown { get; private set; }
+			public Key key { get; }
+			public bool shiftDown { get; }
+			public bool controlDown { get; }
+			public bool altDown { get; }
 
 			public MacroActionKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 			{
@@ -34,19 +34,16 @@ namespace NeoEdit.GUI.Misc
 
 		class MacroActionText : MacroAction
 		{
-			public string text { get; private set; }
+			public string text { get; }
 
-			public MacroActionText(string text)
-			{
-				this.text = text;
-			}
+			public MacroActionText(string text) { this.text = text; }
 		}
 
 		class MacroActionCommand : MacroAction
 		{
-			public CommandType command { get; private set; }
-			public bool shiftDown { get; private set; }
-			public object dialogResult { get; private set; }
+			public CommandType command { get; }
+			public bool shiftDown { get; }
+			public object dialogResult { get; }
 
 			public MacroActionCommand(CommandType command, bool shiftDown, object dialogResult)
 			{
@@ -59,10 +56,7 @@ namespace NeoEdit.GUI.Misc
 		bool stop = false;
 		readonly List<MacroAction> macroActions = new List<MacroAction>();
 
-		public void AddKey(Key key, bool shiftDown, bool controlDown, bool altDown)
-		{
-			macroActions.Add(new MacroActionKey(key, shiftDown, controlDown, altDown));
-		}
+		public void AddKey(Key key, bool shiftDown, bool controlDown, bool altDown) => macroActions.Add(new MacroActionKey(key, shiftDown, controlDown, altDown));
 
 		public void AddText(string text)
 		{
@@ -76,10 +70,7 @@ namespace NeoEdit.GUI.Misc
 			macroActions.Add(new MacroActionText(text));
 		}
 
-		public void AddCommand(CommandType command, bool shiftDown, object dialogResult)
-		{
-			macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult));
-		}
+		public void AddCommand(CommandType command, bool shiftDown, object dialogResult) => macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult));
 
 		public void Play<ItemType>(TabsWindow<ItemType, CommandType> tabs, Action<Macro<CommandType>> setMacroPlaying, Action finished = null) where ItemType : TabsControl<ItemType, CommandType>
 		{
@@ -129,10 +120,7 @@ namespace NeoEdit.GUI.Misc
 			timer.Start();
 		}
 
-		public void Stop()
-		{
-			stop = true;
-		}
+		public void Stop() => stop = true;
 
 		public readonly static string MacroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
 

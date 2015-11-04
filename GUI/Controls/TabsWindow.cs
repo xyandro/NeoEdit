@@ -17,9 +17,9 @@ namespace NeoEdit.GUI.Controls
 			UIHelper<TabsWindow<ItemType, CommandType>>.AddCallback(a => a.ItemTabs, (obj, o, n) => obj.ItemTabs.WindowParent = obj);
 		}
 
-		protected bool shiftDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift); } }
-		protected bool controlDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Control); } }
-		protected bool altDown { get { return Keyboard.Modifiers.HasFlag(ModifierKeys.Alt); } }
+		protected bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+		protected bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+		protected bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
 		public static void CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType, CommandType>
 		{
@@ -59,8 +59,8 @@ namespace NeoEdit.GUI.Controls
 			base.OnClosing(e);
 		}
 
-		public virtual bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown) { return false; }
-		public virtual bool HandleText(string text) { return false; }
-		public virtual bool HandleCommand(CommandType command, bool shiftDown, object dialogResult) { return false; }
+		public virtual bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown) => false;
+		public virtual bool HandleText(string text) => false;
+		public virtual bool HandleCommand(CommandType command, bool shiftDown, object dialogResult) => false;
 	}
 }

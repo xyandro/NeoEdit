@@ -22,15 +22,9 @@ namespace NeoEdit.TableEdit
 		static internal readonly Pen linesPen = new Pen(new SolidColorBrush(Color.FromArgb(32, 0, 0, 0)), 1);
 		static internal readonly Pen activePen = new Pen(new SolidColorBrush(Color.FromArgb(255, 0, 0, 0)), 1);
 
-		static internal IOrderedEnumerable<Cell> OrderCells(this IEnumerable<Cell> cells)
-		{
-			return cells.OrderBy(cell => cell.Row).ThenBy(cell => cell.Column);
-		}
+		static internal IOrderedEnumerable<Cell> OrderCells(this IEnumerable<Cell> cells) => cells.OrderBy(cell => cell.Row).ThenBy(cell => cell.Column);
 
-		static internal void Replace(this ObservableCollectionEx<CellRange> ranges, IEnumerable<Cell> cells)
-		{
-			ranges.Replace(cells.Select(cell => new CellRange(cell)));
-		}
+		static internal void Replace(this ObservableCollectionEx<CellRange> ranges, IEnumerable<Cell> cells) => ranges.Replace(cells.Select(cell => new CellRange(cell)));
 
 		static internal IEnumerable<Cell> EnumerateCells(this ObservableCollectionEx<CellRange> ranges, bool preserveOrder = false)
 		{

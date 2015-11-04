@@ -53,7 +53,7 @@ namespace NeoEdit.TextEdit.Content.JSON
 							var lines = rFormat(child, input);
 							if (child != last)
 								lines[lines.Count - 1] += ",";
-							result.AddRange(lines.Select(str => "\t" + str));
+							result.AddRange(lines.Select(str => $"\t{str}"));
 						}
 						result.Add("}");
 					}
@@ -78,21 +78,21 @@ namespace NeoEdit.TextEdit.Content.JSON
 						}
 
 						if (childResult != null)
-							result.Add("[" + childResult + "]");
+							result.Add($"[{childResult}]");
 						else
 						{
 							result.Add("[");
-							result.AddRange(childResults.SelectMany(list => list).Select(str => "\t" + str));
+							result.AddRange(childResults.SelectMany(list => list).Select(str => $"\t{str}"));
 							result.Add("]");
 						}
 					}
 					break;
 				case PAIR:
-					result.Add("\"" + node.GetAttrText(ID) + "\":");
+					result.Add($"\"{node.GetAttrText(ID)}\":");
 					var childData = children.SelectMany(child => rFormat(child, input)).ToList();
 					if (childData.Any())
 					{
-						result[result.Count - 1] += " " + childData[0];
+						result[result.Count - 1] += $" {childData[0]}";
 						childData.RemoveAt(0);
 					}
 					result.AddRange(childData);
@@ -102,16 +102,13 @@ namespace NeoEdit.TextEdit.Content.JSON
 					result.Add(input.Substring(node.Start, node.Length));
 					break;
 				case STRING:
-					result.Add("\"" + input.Substring(node.Start, node.Length) + "\"");
+					result.Add($"\"{input.Substring(node.Start, node.Length)}\"");
 					break;
 			}
 			return result;
 		}
 
-		public static string Format(ParserNode node, string input)
-		{
-			return String.Join("", rFormat(node, input).Select(str => str + "\r\n"));
-		}
+		public static string Format(ParserNode node, string input) => String.Join("", rFormat(node, input).Select(str => $"{str}\r\n"));
 
 		const string DOC = "Doc";
 		const string OBJECT = "Object";
@@ -153,11 +150,11 @@ namespace NeoEdit.TextEdit.Content.JSON
 			return node;
 		}
 
-		public override ParserNode VisitJson(JSONParser.JsonContext context) { return GetNode(context, DOC, context.item()); }
-		public override ParserNode VisitObject(JSONParser.ObjectContext context) { return GetNode(context, OBJECT, context.pair()); }
-		public override ParserNode VisitArray(JSONParser.ArrayContext context) { return GetNode(context, ARRAY, context.item()); }
-		public override ParserNode VisitString(JSONParser.StringContext context) { return GetNode(context, STRING); }
-		public override ParserNode VisitNumber(JSONParser.NumberContext context) { return GetNode(context, NUMBER); }
-		public override ParserNode VisitConstant(JSONParser.ConstantContext context) { return GetNode(context, CONSTANT); }
+		public override ParserNode VisitJson(JSONParser.JsonContext context) => GetNode(context, DOC, context.item());
+		public override ParserNode VisitObject(JSONParser.ObjectContext context) => GetNode(context, OBJECT, context.pair());
+		public override ParserNode VisitArray(JSONParser.ArrayContext context) => GetNode(context, ARRAY, context.item());
+		public override ParserNode VisitString(JSONParser.StringContext context) => GetNode(context, STRING);
+		public override ParserNode VisitNumber(JSONParser.NumberContext context) => GetNode(context, NUMBER);
+		public override ParserNode VisitConstant(JSONParser.ConstantContext context) => GetNode(context, CONSTANT);
 	}
 }

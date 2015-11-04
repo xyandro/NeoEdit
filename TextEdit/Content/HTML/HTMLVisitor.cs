@@ -68,11 +68,11 @@ namespace NeoEdit.TextEdit.Content.HTML
 						attributes = attributes.Where(attr => attr != nameTag).ToList(); ;
 
 						var attrs = new List<string> { name };
-						attrs.AddRange(attributes.Select(attr => String.Format("{0}=\"{1}\"", attr.Type, input.Substring(attr.Start, attr.Length))));
+						attrs.AddRange(attributes.Select(attr => $"{attr.Type}=\"{input.Substring(attr.Start, attr.Length)}\""));
 						var open = String.Join(" ", attrs);
 
-						var startTag = "<" + open + (node.HasAttr(SELFCLOSING) ? "/" : "") + ">";
-						var endTag = "</" + name + ">";
+						var startTag = $"<{open}{(node.HasAttr(SELFCLOSING) ? "/" : "")}>";
+						var endTag = $"</{name}>";
 
 						if ((node.HasAttr(SELFCLOSING)) || (node.HasAttr(ISVOID)))
 							return Tuple.Create(new List<string> { startTag }, joinLeftSet.Contains(name), joinRightSet.Contains(name));
@@ -102,7 +102,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 						}
 
 						var output = new List<string> { startTag };
-						output.AddRange(childrenOutput.Select(str => "\t" + str.TrimStart(' ')));
+						output.AddRange(childrenOutput.Select(str => $"\t{str.TrimStart(' ')}"));
 						if (!String.IsNullOrWhiteSpace(endTag))
 							output.Add(endTag);
 
@@ -112,17 +112,14 @@ namespace NeoEdit.TextEdit.Content.HTML
 			}
 		}
 
-		public static string Format(ParserNode document, string input)
-		{
-			return String.Join("", rFormat(document, input).Item1.Select(str => str.TrimEnd() + "\r\n"));
-		}
+		public static string Format(ParserNode document, string input) => String.Join("", rFormat(document, input).Item1.Select(str => $"{str.TrimEnd()}\r\n"));
 
 		public static string Comment(TextData data, Range range)
 		{
 			var str = data.GetString(range.Start, range.Length);
 			if (String.IsNullOrWhiteSpace(str))
 				return str;
-			return String.Format("<!--{0}-->", str.Replace("-->", "--><!--"));
+			return $"<!--{str.Replace("-->", "--><!--")}-->";
 		}
 
 		public static string Uncomment(TextData data, Range range)
@@ -144,13 +141,10 @@ namespace NeoEdit.TextEdit.Content.HTML
 		const string SELFCLOSING = "SelfClosing";
 		const string ISVOID = "IsVoid";
 
-		ParserNode Parent { get { return stack.FirstOrDefault(); } }
+		ParserNode Parent => stack.FirstOrDefault();
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
 		readonly string input;
-		HTMLVisitor(string input)
-		{
-			this.input = input;
-		}
+		HTMLVisitor(string input) { this.input = input; }
 
 		ParserNode HandleContext(ParserRuleContext context, string type)
 		{
@@ -179,10 +173,10 @@ namespace NeoEdit.TextEdit.Content.HTML
 			return node;
 		}
 
-		public override ParserNode VisitDocument(HTMLParser.DocumentContext context) { return HandleContext(context, DOCUMENT); }
-		public override ParserNode VisitComment(HTMLParser.CommentContext context) { return HandleContext(context, COMMENT); }
-		public override ParserNode VisitMisc(HTMLParser.MiscContext context) { return HandleContext(context, MISC); }
-		public override ParserNode VisitText(HTMLParser.TextContext context) { return HandleContext(context, TEXT); }
+		public override ParserNode VisitDocument(HTMLParser.DocumentContext context) => HandleContext(context, DOCUMENT);
+		public override ParserNode VisitComment(HTMLParser.CommentContext context) => HandleContext(context, COMMENT);
+		public override ParserNode VisitMisc(HTMLParser.MiscContext context) => HandleContext(context, MISC);
+		public override ParserNode VisitText(HTMLParser.TextContext context) => HandleContext(context, TEXT);
 
 		public override ParserNode VisitElement(HTMLParser.ElementContext context)
 		{

@@ -71,7 +71,7 @@ namespace NeoEdit.Disk
 			SetBinding(UIHelper<TabsControl<DiskWindow, DiskCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 
 			location.GotFocus += (s, e) => location.SelectAll();
-			location.LostFocus += (s, e) => { location.Text = Location == null ? "" : Location.FullName; };
+			location.LostFocus += (s, e) => { location.Text = Location?.FullName ?? ""; };
 			location.PreviewKeyDown += LocationKeyDown;
 			files.Accept += s => OnAccept();
 			files.MouseDrag += MouseDragFiles;
@@ -110,9 +110,9 @@ namespace NeoEdit.Disk
 			Loaded += (s, e) => files.Focus();
 		}
 
-		bool controlDown { get { return (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control; } }
-		bool altOnly { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt; } }
-		bool noModifiers { get { return (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.None; } }
+		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+		bool altOnly => (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt)) == ModifierKeys.Alt;
+		bool noModifiers => (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)) == ModifierKeys.None;
 
 		void LocationKeyDown(object sender, KeyEventArgs e)
 		{
@@ -177,7 +177,7 @@ namespace NeoEdit.Disk
 			if (duplicates.Any())
 			{
 				var selected = new HashSet<string>(Selected.Select(file => file.FullName));
-				var focused = Focused == null ? null : Focused.FullName;
+				var focused = Focused?.FullName;
 
 				foreach (var dup in duplicates)
 					Files.Remove(dup);
@@ -210,10 +210,7 @@ namespace NeoEdit.Disk
 			filesDict.Where(pair => itemsDict.ContainsKey(pair.Key)).ToList().ForEach(pair => pair.Value.Refresh());
 		}
 
-		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression)
-		{
-			ShowColumn(UIHelper<DiskItem>.GetProperty(expression));
-		}
+		void ShowColumn<T>(Expression<Func<DiskItem, T>> expression) => ShowColumn(UIHelper<DiskItem>.GetProperty(expression));
 
 		void ShowColumn(DependencyProperty prop)
 		{
@@ -345,7 +342,7 @@ namespace NeoEdit.Disk
 			//	string newName;
 			//	for (var num = 1; ; ++num)
 			//	{
-			//		var extra = num == 1 ? "" : String.Format(" ({0})", num);
+			//		var extra = num == 1 ? "" : $" ({num})";
 			//		newName = name + extra + item.Extension;
 			//		if (locationFiles.Contains(newName))
 			//			continue;
@@ -546,10 +543,7 @@ namespace NeoEdit.Disk
 				Selected.Add(file);
 		}
 
-		internal void Command_Select_None()
-		{
-			Selected.Clear();
-		}
+		internal void Command_Select_None() => Selected.Clear();
 
 		internal void Command_Select_Invert()
 		{
@@ -633,10 +627,7 @@ namespace NeoEdit.Disk
 				Focused = Selected.FirstOrDefault();
 		}
 
-		internal void Command_Select_Remove()
-		{
-			Selected.ToList().ForEach(file => Files.Remove(file));
-		}
+		internal void Command_Select_Remove() => Selected.ToList().ForEach(file => Files.Remove(file));
 
 		internal void Command_Select_RemoveWithChildren()
 		{
@@ -663,10 +654,7 @@ namespace NeoEdit.Disk
 				ShowColumn(property);
 		}
 
-		void SetSort<T>(Expression<Func<DiskItem, T>> expression)
-		{
-			SetSort(UIHelper<DiskItem>.GetProperty(expression));
-		}
+		void SetSort<T>(Expression<Func<DiskItem, T>> expression) => SetSort(UIHelper<DiskItem>.GetProperty(expression));
 
 		internal void SetSort(DependencyProperty property)
 		{

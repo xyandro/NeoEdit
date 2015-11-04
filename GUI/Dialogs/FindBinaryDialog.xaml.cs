@@ -29,8 +29,8 @@ namespace NeoEdit.GUI.Dialogs
 	{
 		public class Result
 		{
-			public string Text { get; private set; }
-			public Searcher Searcher { get; private set; }
+			public string Text { get; }
+			public Searcher Searcher { get; }
 
 			internal Result(string text, Searcher searcher)
 			{
@@ -129,7 +129,7 @@ namespace NeoEdit.GUI.Dialogs
 				data.Add(Tuple.Create(Coder.StringToBytes(FindText, checkBox.CodePage), (!str) || (MatchCase) || (Coder.AlwaysCaseSensitive(checkBox.CodePage))));
 			}
 
-			data = data.Distinct(tuple => String.Format("{0}-{1}", Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex), tuple.Item2)).ToList();
+			data = data.Distinct(tuple => $"{Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex)}-{tuple.Item2}").ToList();
 
 			if (data.Count == 0)
 				return;

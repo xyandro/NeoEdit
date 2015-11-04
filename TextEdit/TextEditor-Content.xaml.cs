@@ -114,15 +114,9 @@ namespace NeoEdit.TextEdit
 			Replace(new List<Range> { allRange }, new List<string> { str });
 		}
 
-		internal void Command_Content_Comment()
-		{
-			ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Data, range)).ToList());
-		}
+		internal void Command_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Data, range)).ToList());
 
-		internal void Command_Content_Uncomment()
-		{
-			ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Data, range)).ToList());
-		}
+		internal void Command_Content_Uncomment() => ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Data, range)).ToList());
 
 		internal void Command_Content_TogglePosition(bool shiftDown)
 		{
@@ -131,20 +125,11 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
 
-		internal void Command_Content_Parent()
-		{
-			ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node).Distinct().ToList());
-		}
+		internal void Command_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node).Distinct().ToList());
 
-		internal FindContentAttributeDialog.Result Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType list)
-		{
-			return FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.List(list)).Distinct().ToList());
-		}
+		internal FindContentAttributeDialog.Result Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType list) => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.List(list)).Distinct().ToList());
 
-		internal void Command_Content_List(ParserNode.ParserNodeListType list, bool first = false, FindContentAttributeDialog.Result findAttr = null)
-		{
-			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => ContentGetList(node, list, first, findAttr)).ToList());
-		}
+		internal void Command_Content_List(ParserNode.ParserNodeListType list, bool first = false, FindContentAttributeDialog.Result findAttr = null) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => ContentGetList(node, list, first, findAttr)).ToList());
 
 		internal void Command_Content_NextPrevious(bool next)
 		{
@@ -178,10 +163,7 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		internal void Command_Content_Select_ByAttribute(FindContentAttributeDialog.Result result)
-		{
-			ContentReplaceSelections(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex, result.Invert)).ToList());
-		}
+		internal void Command_Content_Select_ByAttribute(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex, result.Invert)).ToList());
 
 		internal void Command_Content_Select_Topmost()
 		{
@@ -211,14 +193,8 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
 		}
 
-		internal SelectContentAttributeDialog.Result Command_Content_Attributes_ByAttribute_Dialog()
-		{
-			return SelectContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
-		}
+		internal SelectContentAttributeDialog.Result Command_Content_Attributes_ByAttribute_Dialog() => SelectContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
 
-		internal void Command_Content_Attributes_ByAttribute(SelectContentAttributeDialog.Result result)
-		{
-			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)).ToList());
-		}
+		internal void Command_Content_Attributes_ByAttribute(SelectContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)).ToList());
 	}
 }

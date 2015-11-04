@@ -27,9 +27,6 @@ namespace NeoEdit.Disk
 			return columns.Any(column => column.DepProp == menuitem.Property);
 		}
 
-		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotImplementedException();
-		}
+		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
 	}
 }

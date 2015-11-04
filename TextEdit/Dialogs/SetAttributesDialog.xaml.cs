@@ -63,11 +63,11 @@ namespace NeoEdit.TextEdit.Dialogs
 			{
 				Attributes = new Dictionary<FileAttributes, bool?>
 				{
-					{ FileAttributes.ReadOnly, ReadOnlyAttr },
-					{ FileAttributes.Archive, ArchiveAttr },
-					{ FileAttributes.System, SystemAttr },
-					{ FileAttributes.Hidden, HiddenAttr },
-					{ FileAttributes.NotContentIndexed, NotContentIndexedAttr },
+					[FileAttributes.ReadOnly] = ReadOnlyAttr,
+					[FileAttributes.Archive] = ArchiveAttr,
+					[FileAttributes.System] = SystemAttr,
+					[FileAttributes.Hidden] = HiddenAttr,
+					[FileAttributes.NotContentIndexed] = NotContentIndexedAttr,
 				}
 			};
 

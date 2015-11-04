@@ -172,7 +172,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			var value = InterpretFormat(input, inputFormat, inputUTC);
 			if (value == null)
-				throw new Exception(String.Format("Can't interpret time: {0}", input));
+				throw new Exception($"Can't interpret time: {input}");
 			return InterpretFormat(value.Value, outputFormat, outputUTC);
 		}
 

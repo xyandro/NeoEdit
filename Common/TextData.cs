@@ -25,8 +25,8 @@ namespace NeoEdit.Common
 		public string DefaultEnding { get; private set; }
 		const int tabStop = 4;
 
-		public int NumLines { get { return endingOffset.Count; } }
-		public int NumChars { get { return Data.Length; } }
+		public int NumLines => endingOffset.Count;
+		public int NumChars => Data.Length;
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
 
@@ -41,15 +41,9 @@ namespace NeoEdit.Common
 			Data = Coder.BytesToString(bytes, codePage, true);
 		}
 
-		public bool CanFullyEncode(Coder.CodePage codePage)
-		{
-			return Coder.CanFullyEncode(Data, codePage);
-		}
+		public bool CanFullyEncode(Coder.CodePage codePage) => Coder.CanFullyEncode(Data, codePage);
 
-		public byte[] GetBytes(Coder.CodePage codePage)
-		{
-			return Coder.StringToBytes(Data, codePage, true);
-		}
+		public byte[] GetBytes(Coder.CodePage codePage) => Coder.StringToBytes(Data, codePage, true);
 
 		void RecalculateLines()
 		{
@@ -154,11 +148,11 @@ namespace NeoEdit.Common
 
 			var endingText = new Dictionary<int, string>
 			{
-				{ Ending_None, "\r\n" },
-				{ Ending_CR, "\r" },
-				{ Ending_LF, "\n" },
-				{ Ending_CRLF, "\r\n" },
-				{ Ending_Mixed, null },
+				[Ending_None] = "\r\n",
+				[Ending_CR] = "\r",
+				[Ending_LF] = "\n",
+				[Ending_CRLF] = "\r\n",
+				[Ending_Mixed] = null,
 			};
 
 			DefaultEnding = endingText[defaultEnding];
@@ -170,7 +164,7 @@ namespace NeoEdit.Common
 			diffData = null;
 		}
 
-		public string this[int line] { get { return GetLine(line); } }
+		public string this[int line] => GetLine(line);
 		public char this[int line, int index]
 		{
 			get
@@ -647,25 +641,10 @@ namespace NeoEdit.Common
 			diffData = null;
 		}
 
-		public int GetDiffLine(int line)
-		{
-			return (diffData == null) || (line >= diffData.LineMap.Count) ? line : diffData.LineMap[line];
-		}
-
-		public int GetNonDiffLine(int line)
-		{
-			return (diffData == null) || (line >= diffData.LineRevMap.Count) ? line : diffData.LineRevMap[line];
-		}
-
-		public LCS.MatchType GetLineDiffStatus(int line)
-		{
-			return diffData == null ? LCS.MatchType.Match : diffData.LineCompare[line];
-		}
-
-		public List<Tuple<int, int>> GetLineColumnDiffs(int line)
-		{
-			return (diffData == null ? null : diffData.ColCompare[line]) ?? new List<Tuple<int, int>>();
-		}
+		public int GetDiffLine(int line) => (diffData == null) || (line >= diffData.LineMap.Count) ? line : diffData.LineMap[line];
+		public int GetNonDiffLine(int line) => (diffData == null) || (line >= diffData.LineRevMap.Count) ? line : diffData.LineRevMap[line];
+		public LCS.MatchType GetLineDiffStatus(int line) => diffData == null ? LCS.MatchType.Match : diffData.LineCompare[line];
+		public List<Tuple<int, int>> GetLineColumnDiffs(int line) => diffData?.ColCompare[line] ?? new List<Tuple<int, int>>();
 
 		public int SkipDiffGaps(int line, int direction)
 		{

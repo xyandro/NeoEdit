@@ -1332,7 +1332,7 @@ namespace NeoEdit.Common.UnitTest
 			foreach (var tuple in correctHash)
 			{
 				var value = Hasher.Get(tuple.Item2, tuple.Item1, tuple.Item3);
-				Trace.WriteLine(String.Format("Hash: {0}; expecting {1}, got {2}", tuple.Item1, tuple.Item4, value));
+				Trace.WriteLine($"Hash: {tuple.Item1}; expecting {tuple.Item4}, got {value}");
 				Assert.AreEqual(tuple.Item4, value);
 			}
 		}

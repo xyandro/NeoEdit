@@ -11,9 +11,6 @@ namespace NeoEdit.Processes
 
 		static ProcessesMenu() { UIHelper<ProcessesMenu>.Register(); }
 
-		public ProcessesMenu()
-		{
-			InitializeComponent();
-		}
+		public ProcessesMenu() { InitializeComponent(); }
 	}
 }

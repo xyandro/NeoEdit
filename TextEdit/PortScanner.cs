@@ -126,8 +126,8 @@ namespace NeoEdit.TextEdit
 
 		class ScanInfo
 		{
-			public IPAddress Host { get; private set; }
-			public int Port { get; private set; }
+			public IPAddress Host { get; }
+			public int Port { get; }
 			public DateTime Timeout { get; set; }
 			public int Attempts { get; set; }
 			public IntPtr Socket { get; set; }

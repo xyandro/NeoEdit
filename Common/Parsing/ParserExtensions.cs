@@ -10,13 +10,10 @@ namespace NeoEdit.Common.Parsing
 		public static void GetBounds(this ParserRuleContext ctx, out int start, out int end)
 		{
 			start = ctx.Start.StartIndex;
-			end = Math.Max(start, ctx.Stop == null ? 0 : ctx.Stop.StopIndex + 1);
+			end = Math.Max(start, (ctx.Stop?.StopIndex + 1) ?? 0);
 		}
 
-		public static void GetBounds(this ITerminalNode token, out int start, out int end)
-		{
-			token.Symbol.GetBounds(out start, out end);
-		}
+		public static void GetBounds(this ITerminalNode token, out int start, out int end) => token.Symbol.GetBounds(out start, out end);
 
 		public static void GetBounds(this IToken token, out int start, out int end)
 		{
@@ -42,10 +39,7 @@ namespace NeoEdit.Common.Parsing
 			return input.Substring(start, end - start);
 		}
 
-		public static T Cast<T>(this object input) where T : class
-		{
-			return input as T;
-		}
+		public static T Cast<T>(this object input) where T : class => input as T;
 
 		public static ResultType ParentAs<ResultType>(this ParserRuleContext input) where ResultType : ParserRuleContext
 		{
@@ -54,10 +48,7 @@ namespace NeoEdit.Common.Parsing
 			return input.Parent as ResultType;
 		}
 
-		public static ResultType Take<InputType, ResultType>(this InputType input, Func<InputType, ResultType> func) where InputType : ParserRuleContext
-		{
-			return input == null ? default(ResultType) : func(input);
-		}
+		public static ResultType Take<InputType, ResultType>(this InputType input, Func<InputType, ResultType> func) where InputType : ParserRuleContext => input == null ? default(ResultType) : func(input);
 
 		public static ResultType[] Take<InputType, ResultType>(this InputType[] input, Func<InputType, ResultType> func) where InputType : ParserRuleContext
 		{

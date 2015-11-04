@@ -5,10 +5,7 @@ namespace NeoEdit.Common.NEClipboards
 	public class NELocalClipboard
 	{
 		readonly IClipboardEnabled control;
-		public NELocalClipboard(IClipboardEnabled control)
-		{
-			this.control = control;
-		}
+		public NELocalClipboard(IClipboardEnabled control) { this.control = control; }
 
 		public string Text { get { return NEClipboard.GetTextInternal(control); } set { NEClipboard.SetTextInternal(control, value); } }
 		public string CopiedFile { set { NEClipboard.SetFileInternal(control, value, false); } }

@@ -20,10 +20,7 @@ namespace NeoEdit.TableEdit
 	{
 		static TableEditTabs() { UIHelper<TableEditTabs>.Register(); }
 
-		public static void Create(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, TableEditTabs tableEditTabs = null, bool forceCreate = false)
-		{
-			CreateTab(new TableEditor(fileName, bytes, codePage, modified: modified), tableEditTabs, forceCreate);
-		}
+		public static void Create(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, TableEditTabs tableEditTabs = null, bool forceCreate = false) => CreateTab(new TableEditor(fileName, bytes, codePage, modified: modified), tableEditTabs, forceCreate);
 
 		public static object Create(object tableViewer, List<DbDataReader> readers)
 		{
@@ -69,7 +66,7 @@ namespace NeoEdit.TableEdit
 				new Message
 				{
 					Title = "Error",
-					Text = String.Format("Cannot start recording; recording is already in progess."),
+					Text = $"Cannot start recording; recording is already in progess.",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 				return;
@@ -85,7 +82,7 @@ namespace NeoEdit.TableEdit
 				new Message
 				{
 					Title = "Error",
-					Text = String.Format("Cannot stop recording; recording not in progess."),
+					Text = $"Cannot stop recording; recording not in progess.",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 				return;
@@ -96,15 +93,8 @@ namespace NeoEdit.TableEdit
 			macro.Save(fileName, true);
 		}
 
-		void Command_Macro_Play_QuickPlay()
-		{
-			Macro<TableEditCommand>.Load(quickMacroFilename, true).Play(this, playing => macroPlaying = playing);
-		}
-
-		void Command_Macro_Play_Play(string macroFile = null)
-		{
-			Macro<TableEditCommand>.Load().Play(this, playing => macroPlaying = playing);
-		}
+		void Command_Macro_Play_QuickPlay() => Macro<TableEditCommand>.Load(quickMacroFilename, true).Play(this, playing => macroPlaying = playing);
+		void Command_Macro_Play_Play(string macroFile = null) => Macro<TableEditCommand>.Load().Play(this, playing => macroPlaying = playing);
 
 		Macro<TableEditCommand> recordingMacro = null, macroPlaying = null;
 
@@ -170,7 +160,7 @@ namespace NeoEdit.TableEdit
 			if ((files.Count > 5) && (new Message
 			{
 				Title = "Confirm",
-				Text = String.Format("Are you sure you want to open these {0} files?", files.Count),
+				Text = $"Are you sure you want to open these {files.Count} files?",
 				Options = Message.OptionsEnum.YesNoCancel,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.Cancel,
@@ -183,10 +173,7 @@ namespace NeoEdit.TableEdit
 				Create(file, tableEditTabs: this);
 		}
 
-		void Command_View_ActiveTabs()
-		{
-			tabs.ShowActiveTabsDialog();
-		}
+		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
 
 		bool GetDialogResult(TableEditCommand command, out object dialogResult)
 		{

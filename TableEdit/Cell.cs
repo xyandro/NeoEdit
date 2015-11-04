@@ -26,15 +26,8 @@ namespace NeoEdit.TableEdit
 			return 0;
 		}
 
-		public bool Equals(Cell cell)
-		{
-			return (cell.Row == Row) && (cell.Column == Column);
-		}
-
-		public bool Equals(int row, int column)
-		{
-			return (row == Row) && (column == Column);
-		}
+		public bool Equals(Cell cell) => (cell.Row == Row) && (cell.Column == Column);
+		public bool Equals(int row, int column) => (row == Row) && (column == Column);
 
 		public override bool Equals(object obj)
 		{
@@ -43,44 +36,15 @@ namespace NeoEdit.TableEdit
 			return Equals((Cell)obj);
 		}
 
-		public static bool operator <(Cell left, Cell right)
-		{
-			return left.CompareTo(right) < 0;
-		}
+		public static bool operator <(Cell left, Cell right) => left.CompareTo(right) < 0;
+		public static bool operator >(Cell left, Cell right) => left.CompareTo(right) > 0;
+		public static bool operator <=(Cell left, Cell right) => left.CompareTo(right) <= 0;
+		public static bool operator >=(Cell left, Cell right) => left.CompareTo(right) >= 0;
+		public static bool operator ==(Cell left, Cell right) => left.CompareTo(right) == 0;
+		public static bool operator !=(Cell left, Cell right) => left.CompareTo(right) != 0;
 
-		public static bool operator >(Cell left, Cell right)
-		{
-			return left.CompareTo(right) > 0;
-		}
+		public override int GetHashCode() => (Row << 16) | Column;
 
-		public static bool operator <=(Cell left, Cell right)
-		{
-			return left.CompareTo(right) <= 0;
-		}
-
-		public static bool operator >=(Cell left, Cell right)
-		{
-			return left.CompareTo(right) >= 0;
-		}
-
-		public static bool operator ==(Cell left, Cell right)
-		{
-			return left.CompareTo(right) == 0;
-		}
-
-		public static bool operator !=(Cell left, Cell right)
-		{
-			return left.CompareTo(right) != 0;
-		}
-
-		public override int GetHashCode()
-		{
-			return (Row << 16) | Column;
-		}
-
-		public override string ToString()
-		{
-			return String.Format("Row {0}, Column {1}", Row, Column);
-		}
+		public override string ToString() => $"Row {Row}, Column {Column}";
 	}
 }

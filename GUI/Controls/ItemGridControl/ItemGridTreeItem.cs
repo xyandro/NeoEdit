@@ -11,15 +11,12 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 		public string FullName { get { return UIHelper<ItemGridTreeItem>.GetPropValue<string>(this); } private set { UIHelper<ItemGridTreeItem>.SetPropValue(this, value); } }
 
 		public abstract ItemGridTreeItem GetParent();
-		public virtual bool CanGetChildren() { return false; }
+		public virtual bool CanGetChildren() => false;
 		public virtual IEnumerable<ItemGridTreeItem> GetChildren() { throw new NotImplementedException(); }
 
 		static ItemGridTreeItem() { UIHelper<ItemGridTreeItem>.Register(); }
 
-		protected ItemGridTreeItem(string FullName)
-		{
-			this.FullName = FullName;
-		}
+		protected ItemGridTreeItem(string FullName) { this.FullName = FullName; }
 
 		protected virtual string GetPath(string fullName)
 		{
@@ -48,7 +45,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 			var result = this;
 			foreach (var part in parts)
 			{
-				if ((result == null) || (!result.CanGetChildren()))
+				if (result?.CanGetChildren() != true)
 					return null;
 				result = result.GetChildren().FirstOrDefault(child => (child as ItemGridTreeItem).FullName.Equals(part, StringComparison.InvariantCultureIgnoreCase)) as ItemGridTreeItem;
 			}

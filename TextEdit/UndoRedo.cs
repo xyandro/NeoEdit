@@ -8,9 +8,9 @@ namespace NeoEdit.TextEdit
 	{
 		internal class UndoRedoStep
 		{
-			internal List<Range> ranges { get; private set; }
-			internal List<string> text { get; private set; }
-			internal bool tryJoinLast { get; private set; }
+			internal List<Range> ranges { get; }
+			internal List<string> text { get; }
+			internal bool tryJoinLast { get; }
 
 			internal UndoRedoStep(List<Range> _ranges, List<string> _text, bool _tryJoinLast)
 			{
@@ -36,15 +36,9 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal UndoRedo(Action<bool> _setChanged)
-		{
-			setChanged = _setChanged;
-		}
+		internal UndoRedo(Action<bool> _setChanged) { setChanged = _setChanged; }
 
-		internal void SetModified(bool modified = true)
-		{
-			modifiedSteps = modified ? Int32.MinValue / 2 : 0;
-		}
+		internal void SetModified(bool modified = true) => modifiedSteps = modified ? Int32.MinValue / 2 : 0;
 
 		internal void Clear()
 		{

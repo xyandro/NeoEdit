@@ -24,14 +24,8 @@ namespace NeoEdit.GUI.About
 			Copyright = ((AssemblyCopyrightAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyCopyrightAttribute))).Copyright;
 		}
 
-		public static void Run()
-		{
-			new AboutWindow().Show();
-		}
+		public static void Run() => new AboutWindow().Show();
 
-		void OKClick(object sender, RoutedEventArgs e)
-		{
-			Close();
-		}
+		void OKClick(object sender, RoutedEventArgs e) => Close();
 	}
 }

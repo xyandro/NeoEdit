@@ -15,10 +15,7 @@ namespace NeoEdit.TableEdit
 			return false;
 		}
 
-		public bool Equals(ItemSet<T> items)
-		{
-			return this.Matches(items);
-		}
+		public bool Equals(ItemSet<T> items) => this.Matches(items);
 
 		public override int GetHashCode()
 		{
@@ -31,9 +28,6 @@ namespace NeoEdit.TableEdit
 
 	static class ItemSetExtensions
 	{
-		public static ItemSet<TSource> ToItemSet<TSource>(this IEnumerable<TSource> source)
-		{
-			return new ItemSet<TSource>(source);
-		}
+		public static ItemSet<TSource> ToItemSet<TSource>(this IEnumerable<TSource> source) => new ItemSet<TSource>(source);
 	}
 }

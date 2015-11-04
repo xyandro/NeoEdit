@@ -11,10 +11,7 @@ namespace NeoEdit.GUI.Misc
 		readonly Action action;
 		readonly HashSet<RunOnceTimer> dependencies = new HashSet<RunOnceTimer>();
 		DispatcherTimer timer = null;
-		public RunOnceTimer(Action action)
-		{
-			this.action = action;
-		}
+		public RunOnceTimer(Action action) { this.action = action; }
 
 		public void AddDependency(params RunOnceTimer[] timers)
 		{
@@ -25,7 +22,7 @@ namespace NeoEdit.GUI.Misc
 					dependencies.Add(timer);
 		}
 
-		public bool Started { get { return timer != null; } }
+		public bool Started => timer != null;
 
 		public void Start()
 		{

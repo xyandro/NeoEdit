@@ -28,8 +28,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string Expression { get { return UIHelper<SetSizeDialog>.GetPropValue<string>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public long Factor { get { return UIHelper<SetSizeDialog>.GetPropValue<long>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, long> FactorDict { get; private set; }
-		public Dictionary<string, List<object>> ExpressionData { get; private set; }
+		public Dictionary<string, long> FactorDict { get; }
+		public Dictionary<string, List<object>> ExpressionData { get; }
 
 		static SetSizeDialog() { UIHelper<SetSizeDialog>.Register(); }
 
@@ -37,10 +37,10 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			FactorDict = new Dictionary<string, long>
 			{
-				{ "GB", 1 << 30 },
-				{ "MB", 1 << 20 },
-				{ "KB", 1 << 10 },
-				{ "bytes", 1 << 0 },
+				["GB"] = 1 << 30,
+				["MB"] = 1 << 20,
+				["KB"] = 1 << 10,
+				["bytes"] = 1 << 0,
 			};
 			ExpressionData = expressionData;
 			InitializeComponent();

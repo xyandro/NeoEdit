@@ -39,19 +39,16 @@ namespace NeoEdit.Registry
 				else if (value is string[])
 					value = string.Join(" ", value as string[]);
 				else if (value is int)
-					value = String.Format("0x{0:x8} / {1} / {2}", value, value, (uint)(int)value);
+					value = $"0x{value:x8} / {value} / {(uint)(int)value}";
 				else if (value is long)
-					value = String.Format("0x{0:x16} / {1} / {2}", value, value, (ulong)(long)value);
+					value = $"0x{value:x16} / {value} / {(ulong)(long)value}";
 
 				Type = key.GetValueKind(name).ToString();
 				Data = value.ToString();
 			}
 		}
 
-		public static string Simplify(string location)
-		{
-			return Regex.Replace(location.Trim().Trim('"'), @"[\\/]+", @"\");
-		}
+		public static string Simplify(string location) => Regex.Replace(location.Trim().Trim('"'), @"[\\/]+", @"\");
 
 		public override ItemGridTreeItem GetParent()
 		{
@@ -63,10 +60,7 @@ namespace NeoEdit.Registry
 			return new RegistryItem().GetChild(fullName);
 		}
 
-		public override bool CanGetChildren()
-		{
-			return isSubKey;
-		}
+		public override bool CanGetChildren() => isSubKey;
 
 		static Dictionary<string, RegistryKey> RootKeys = Helpers.GetValues<RegistryHive>().Select(a => RegistryKey.OpenBaseKey(a, RegistryView.Registry64)).ToDictionary(value => value.Name, value => value);
 		public override IEnumerable<ItemGridTreeItem> GetChildren()
@@ -85,7 +79,7 @@ namespace NeoEdit.Registry
 				{
 					key = key.OpenSubKey(FullName.Substring(idx + 1));
 					if (key == null)
-						throw new ArgumentException("Invalid key: " + FullName);
+						throw new ArgumentException($"Invalid key: {FullName}");
 				}
 
 				foreach (var child in key.GetSubKeyNames())
@@ -95,9 +89,6 @@ namespace NeoEdit.Registry
 			}
 		}
 
-		public override string ToString()
-		{
-			return FullName;
-		}
+		public override string ToString() => FullName;
 	}
 }

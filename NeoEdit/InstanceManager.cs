@@ -27,7 +27,7 @@ namespace NeoEdit
 		protected override void OnStartupNextInstance(Microsoft.VisualBasic.ApplicationServices.StartupNextInstanceEventArgs e)
 		{
 			base.OnStartupNextInstance(e);
-			app.CreateWindowsFromArgs(String.Join(" ", e.CommandLine.Select(str => "\"" + str + "\"")));
+			app.CreateWindowsFromArgs(String.Join(" ", e.CommandLine.Select(str => $"\"{str}\"")));
 		}
 	}
 }

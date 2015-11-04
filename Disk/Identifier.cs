@@ -12,7 +12,7 @@ namespace NeoEdit.Disk
 		static string magicPath = Path.Combine(Helpers.NeoEditAppData, "Magic");
 		static Identifier()
 		{
-			string Header = typeof(Identifier).Namespace + ".Magic.";
+			string Header = $"{typeof(Identifier).Namespace}.Magic.";
 			var resources = typeof(Identifier).Assembly.GetManifestResourceNames().Where(name => name.StartsWith(Header)).ToList();
 			Directory.CreateDirectory(magicPath);
 			foreach (var resource in resources)
@@ -36,7 +36,7 @@ namespace NeoEdit.Disk
 		{
 			var process = new Process
 			{
-				StartInfo = new ProcessStartInfo(Path.Combine(magicPath, "file.exe"), String.Format("-m \"{0}\" -0 \"{1}\"", Path.Combine(magicPath, "magic.mgc"), fileName))
+				StartInfo = new ProcessStartInfo(Path.Combine(magicPath, "file.exe"), $"-m \"{Path.Combine(magicPath, "magic.mgc")}\" -0 \"{fileName}\"")
 				{
 					UseShellExecute = false,
 					RedirectStandardOutput = true,

@@ -24,10 +24,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public TrimLocation Location { get { return UIHelper<TrimDialog>.GetPropValue<TrimLocation>(this); } set { UIHelper<TrimDialog>.SetPropValue(this, value); } }
 
-		static TrimDialog()
-		{
-			UIHelper<TrimDialog>.Register();
-		}
+		static TrimDialog() { UIHelper<TrimDialog>.Register(); }
 
 		TrimDialog(bool numeric)
 		{

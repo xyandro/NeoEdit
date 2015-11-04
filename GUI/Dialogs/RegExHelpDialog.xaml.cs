@@ -6,10 +6,7 @@ namespace NeoEdit.GUI.Dialogs
 	{
 		static RegExHelpDialog singleton = null;
 
-		RegExHelpDialog()
-		{
-			InitializeComponent();
-		}
+		RegExHelpDialog() { InitializeComponent(); }
 
 		protected override void OnClosed(System.EventArgs e)
 		{
@@ -17,10 +14,7 @@ namespace NeoEdit.GUI.Dialogs
 			singleton = null;
 		}
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			Close();
-		}
+		void OkClick(object sender, RoutedEventArgs e) => Close();
 
 		public static void Display()
 		{

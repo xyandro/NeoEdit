@@ -9,10 +9,7 @@ namespace NeoEdit.Console
 	{
 		static ConsoleTabs() { UIHelper<ConsoleTabs>.Register(); }
 
-		public static void Create(string path = null, ConsoleTabs consoleTabs = null, bool forceCreate = false)
-		{
-			CreateTab(new Console(path), consoleTabs, forceCreate);
-		}
+		public static void Create(string path = null, ConsoleTabs consoleTabs = null, bool forceCreate = false) => CreateTab(new Console(path), consoleTabs, forceCreate);
 
 		ConsoleTabs()
 		{

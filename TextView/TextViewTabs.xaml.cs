@@ -19,10 +19,7 @@ namespace NeoEdit.TextView
 	{
 		static TextViewTabs() { UIHelper<TextViewTabs>.Register(); }
 
-		public static void Create(string filename = null, bool forceCreate = false)
-		{
-			((!forceCreate ? UIHelper<TextViewTabs>.GetNewest() : null) ?? new TextViewTabs()).Add(filename);
-		}
+		public static void Create(string filename = null, bool forceCreate = false) => ((!forceCreate ? UIHelper<TextViewTabs>.GetNewest() : null) ?? new TextViewTabs()).Add(filename);
 
 		TextViewTabs()
 		{
@@ -34,10 +31,7 @@ namespace NeoEdit.TextView
 			Show(); // Explicitly show because sometimes the loading file dialog will put up first and be hidden
 		}
 
-		void Command_File_NewWindow()
-		{
-			new TextViewTabs();
-		}
+		void Command_File_NewWindow() => new TextViewTabs();
 
 		void Command_File_Open()
 		{
@@ -65,7 +59,7 @@ namespace NeoEdit.TextView
 			if ((files.Count > 5) && (new Message
 			{
 				Title = "Confirm",
-				Text = String.Format("Are you sure you want to open these {0} files?", files.Count),
+				Text = $"Are you sure you want to open these {files.Count} files?",
 				Options = Message.OptionsEnum.YesNoCancel,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.Cancel,

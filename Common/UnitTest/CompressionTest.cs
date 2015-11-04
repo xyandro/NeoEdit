@@ -11,8 +11,8 @@ namespace NeoEdit.Common.UnitTest
 		{
 			var hash = new Dictionary<Compressor.Type, string>
 			{
-				{ Compressor.Type.GZip, "1552138f83454e9026acdbd74fc9ae1c8c0d9656" },
-				{ Compressor.Type.Deflate, "9e3a8cc0d4d7e26ca28256a7859419255862f9fb" },
+				[Compressor.Type.GZip] = "1552138f83454e9026acdbd74fc9ae1c8c0d9656",
+				[Compressor.Type.Deflate] = "9e3a8cc0d4d7e26ca28256a7859419255862f9fb",
 			};
 
 			foreach (var type in Helpers.GetValues<Compressor.Type>())
@@ -36,8 +36,8 @@ namespace NeoEdit.Common.UnitTest
 		{
 			var hash = new Dictionary<Compressor.Type, string>
 			{
-				{ Compressor.Type.GZip, "465a4bed533d8c9273c5a0bd8dd8fe76876b2d26" },
-				{ Compressor.Type.Deflate, "92b5bbdf0c9f7793f4c8c4b1b494d511bead2074" },
+				[Compressor.Type.GZip] = "465a4bed533d8c9273c5a0bd8dd8fe76876b2d26",
+				[Compressor.Type.Deflate] = "92b5bbdf0c9f7793f4c8c4b1b494d511bead2074",
 			};
 
 			foreach (var type in Helpers.GetValues<Compressor.Type>())

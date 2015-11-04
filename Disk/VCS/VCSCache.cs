@@ -27,12 +27,9 @@ namespace NeoEdit.Disk.VCS
 		readonly RunOnceTimer cacheClearTimer;
 
 		static VCSCache vcsCache = new VCSCache();
-		public static VCSCache Single { get { return vcsCache; } }
+		public static VCSCache Single => vcsCache;
 
-		VCSCache()
-		{
-			cacheClearTimer = new RunOnceTimer(Clear);
-		}
+		VCSCache() { cacheClearTimer = new RunOnceTimer(Clear); }
 
 		public VersionControlStatus GetStatus(string FullName, string Path)
 		{

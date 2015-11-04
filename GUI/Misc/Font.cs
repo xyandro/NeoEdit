@@ -27,8 +27,8 @@ namespace NeoEdit.GUI.Misc
 			charWidth = formattedText.Width / example.Length;
 		}
 
-		public static FontFamily FontFamily { get { return fontFamily; } }
-		public static double Size { get { return fontSize; } }
+		public static FontFamily FontFamily => fontFamily;
+		public static double Size => fontSize;
 
 		public static FormattedText GetText(string str, Brush brush = null)
 		{

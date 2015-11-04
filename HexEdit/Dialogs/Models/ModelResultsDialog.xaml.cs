@@ -42,10 +42,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			results.Accept += s => ModifyValues(s, null);
 		}
 
-		void OkClick(object sender, RoutedEventArgs e)
-		{
-			Close();
-		}
+		void OkClick(object sender, RoutedEventArgs e) => Close();
 
 		public void SelectionChanged(object sender = null)
 		{
@@ -167,7 +164,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 					}
 					break;
 				case ModelAction.ActionStringType.StringNullTerminated:
-					bytes = Coder.StringToBytes(value + "\u0000", result.Action.Encoding);
+					bytes = Coder.StringToBytes($"{value}\u0000", result.Action.Encoding);
 					break;
 				case ModelAction.ActionStringType.StringFixedWidth:
 					bytes = Coder.StringToBytes(value, result.Action.Encoding);
@@ -203,9 +200,6 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			}
 		}
 
-		public static void Run(List<ModelResult> results, Action<long, long> changeSelection, Func<long, byte> getByte, Action<long, long, byte[]> changeBytes)
-		{
-			new ModelResultsDialog(results, changeSelection, getByte, changeBytes).Show();
-		}
+		public static void Run(List<ModelResult> results, Action<long, long> changeSelection, Func<long, byte> getByte, Action<long, long, byte[]> changeBytes) => new ModelResultsDialog(results, changeSelection, getByte, changeBytes).Show();
 	}
 }

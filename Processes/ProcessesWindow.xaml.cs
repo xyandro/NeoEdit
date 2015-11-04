@@ -43,15 +43,9 @@ namespace NeoEdit.Processes
 			}
 		}
 
-		~ProcessesWindow()
-		{
-			ProcessManager.WindowDestroyed();
-		}
+		~ProcessesWindow() { ProcessManager.WindowDestroyed(); }
 
-		void Refresh()
-		{
-			processes.SyncItems(ProcessManager.GetProcesses(), UIHelper<ProcessItem>.GetProperty(a => a.PID));
-		}
+		void Refresh() => processes.SyncItems(ProcessManager.GetProcesses(), UIHelper<ProcessItem>.GetProperty(a => a.PID));
 
 		internal void RunCommand(ProcessesCommand command)
 		{

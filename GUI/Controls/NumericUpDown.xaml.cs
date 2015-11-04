@@ -36,10 +36,7 @@ namespace NeoEdit.GUI.Controls
 			Maximum = long.MaxValue;
 		}
 
-		void Validate()
-		{
-			Value = Math.Max(Minimum, Math.Min(Maximum, Value));
-		}
+		void Validate() => Value = Math.Max(Minimum, Math.Min(Maximum, Value));
 
 		protected override void OnGotFocus(RoutedEventArgs e)
 		{
@@ -81,7 +78,7 @@ namespace NeoEdit.GUI.Controls
 			long value = (long)_values[0];
 			bool isHex = (bool)_values[1];
 			if (isHex)
-				return String.Format("0x{0:x}", value);
+				return $"0x{value:x}";
 			else
 				return value.ToString("n0");
 		}

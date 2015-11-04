@@ -18,7 +18,7 @@ namespace NeoEdit.HexEdit
 		File_Operations_Rename,
 		File_Operations_Delete,
 		File_Operations_Explore,
-        [KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
+		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F5)] File_Refresh,
 		File_Revert,
 		File_Copy_CopyPath,

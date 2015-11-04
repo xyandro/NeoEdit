@@ -11,9 +11,6 @@
 
 	partial class HelpMenu
 	{
-		public HelpMenu()
-		{
-			InitializeComponent();
-		}
+		public HelpMenu() { InitializeComponent(); }
 	}
 }

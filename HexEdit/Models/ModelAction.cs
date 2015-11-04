@@ -53,13 +53,13 @@ namespace NeoEdit.HexEdit.Models
 						var encoding = Coder.GetDescription(Encoding, true);
 						switch (StringType)
 						{
-							case ActionStringType.StringWithLength: return String.Format("Variable length string ({0} length, {1})", CodePage.ToString(), encoding);
-							case ActionStringType.StringNullTerminated: return String.Format("Null-terminated string ({0})", encoding);
-							case ActionStringType.StringFixedWidth: return String.Format("Fixed width string ({0} bytes, {1})", FixedWidth, encoding);
+							case ActionStringType.StringWithLength: return $"Variable length string ({CodePage.ToString()} length, {encoding})";
+							case ActionStringType.StringNullTerminated: return $"Null-terminated string ({encoding})";
+							case ActionStringType.StringFixedWidth: return $"Fixed width string ({FixedWidth} bytes, {encoding})";
 						}
 					}
 					break;
-				case ActionType.Unused: return String.Format("Unused ({0} bytes)", FixedWidth);
+				case ActionType.Unused: return $"Unused ({FixedWidth} bytes)";
 				case ActionType.Model:
 					{
 						var model = models.FirstOrDefault(a => a.GUID == Model);

@@ -40,7 +40,7 @@ namespace NeoEdit.GUI.Dialogs
 				hash.Items.Add(item);
 			hash.SelectedIndex = 0;
 
-			keyLabel.Content = String.Format("{0} key (XML):", IsPublic ? "Public" : "Private");
+			keyLabel.Content = $"{(IsPublic ? "Public" : "Private")} key (XML):";
 			generateBox.Visibility = canGenerate ? Visibility.Visible : Visibility.Collapsed;
 			hashPanel.Visibility = getHash ? Visibility.Visible : Visibility.Collapsed;
 			signaturePanel.Visibility = getSignature ? Visibility.Visible : Visibility.Collapsed;

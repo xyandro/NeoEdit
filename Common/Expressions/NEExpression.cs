@@ -44,15 +44,8 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
-		public object Evaluate(params object[] values)
-		{
-			return Evaluate(default(Dictionary<string, object>), values);
-		}
-
-		public T Evaluate<T>(params object[] values)
-		{
-			return (T)Convert.ChangeType(Evaluate(values), typeof(T));
-		}
+		public object Evaluate(params object[] values) => Evaluate(default(Dictionary<string, object>), values);
+		public T Evaluate<T>(params object[] values) => (T)Convert.ChangeType(Evaluate(values), typeof(T));
 
 		public object EvaluateRow(Dictionary<string, List<object>> dict, int row, params object[] values)
 		{
@@ -60,20 +53,9 @@ namespace NeoEdit.Common.Expressions
 			return Evaluate(rowDict, values);
 		}
 
-		public T EvaluateRow<T>(Dictionary<string, List<object>> dict, int row, params object[] values)
-		{
-			return (T)Convert.ChangeType(EvaluateRow(dict, row, values), typeof(T));
-		}
-
-		public object Evaluate(Dictionary<string, object> dict, params object[] values)
-		{
-			return InternalEvaluate(dict, values).GetResult();
-		}
-
-		internal ExpressionResult InternalEvaluate(Dictionary<string, object> dict, params object[] values)
-		{
-			return new ExpressionEvaluator(expression, dict, values).Visit(tree);
-		}
+		public T EvaluateRow<T>(Dictionary<string, List<object>> dict, int row, params object[] values) => (T)Convert.ChangeType(EvaluateRow(dict, row, values), typeof(T));
+		public object Evaluate(Dictionary<string, object> dict, params object[] values) => InternalEvaluate(dict, values).GetResult();
+		internal ExpressionResult InternalEvaluate(Dictionary<string, object> dict, params object[] values) => new ExpressionEvaluator(expression, dict, values).Visit(tree);
 
 		public List<object> Evaluate(Dictionary<string, List<object>> dict, params object[] values)
 		{
@@ -83,12 +65,9 @@ namespace NeoEdit.Common.Expressions
 			return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(row => EvaluateRow(dict, row, values)).ToList();
 		}
 
-		public List<T> Evaluate<T>(Dictionary<string, List<object>> dict, params object[] values)
-		{
-			return Evaluate(dict, values).AsParallel().AsOrdered().Select(val => (T)System.Convert.ChangeType(val, typeof(T))).ToList();
-		}
+		public List<T> Evaluate<T>(Dictionary<string, List<object>> dict, params object[] values) => Evaluate(dict, values).AsParallel().AsOrdered().Select(val => (T)System.Convert.ChangeType(val, typeof(T))).ToList();
 
 		HashSet<string> variables;
-		public HashSet<string> Variables { get { return variables = variables ?? VariableFinder.GetVariables(tree); } }
+		public HashSet<string> Variables => variables = variables ?? VariableFinder.GetVariables(tree);
 	}
 }

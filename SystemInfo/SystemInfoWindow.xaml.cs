@@ -39,10 +39,10 @@ namespace NeoEdit.SystemInfo
 
 		class InstalledProgram
 		{
-			public string Name { get; set; }
-			public string BitDepth { get; set; }
-			public string Version { get; set; }
-			public string Publisher { get; set; }
+			public string Name { get; }
+			public string BitDepth { get; }
+			public string Version { get; }
+			public string Publisher { get; }
 
 			public InstalledProgram(RegistryKey key, string bitDepth)
 			{
@@ -60,20 +60,17 @@ namespace NeoEdit.SystemInfo
 				return value.ToString().Trim();
 			}
 
-			public bool HasData()
-			{
-				return (!String.IsNullOrWhiteSpace(Name)) || (!String.IsNullOrWhiteSpace(Version)) || (!String.IsNullOrWhiteSpace(Publisher));
-			}
+			public bool HasData() => (!String.IsNullOrWhiteSpace(Name)) || (!String.IsNullOrWhiteSpace(Version)) || (!String.IsNullOrWhiteSpace(Publisher));
 
 			public override string ToString()
 			{
 				var result = Name;
 				if (!String.IsNullOrWhiteSpace(BitDepth))
-					result += String.Format(" {0}", BitDepth);
+					result += $" {BitDepth}";
 				if (!String.IsNullOrWhiteSpace(Version))
-					result += String.Format(" (Version: {0})", Version);
+					result += $" (Version: {Version})";
 				if (!String.IsNullOrWhiteSpace(Publisher))
-					result += String.Format(" ({0})", Publisher);
+					result += $" ({Publisher})";
 				return result;
 			}
 		}
@@ -83,15 +80,15 @@ namespace NeoEdit.SystemInfo
 			var programs = new List<InstalledProgram>();
 			var keys = new Dictionary<string, string>
 			{
-				{ @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", "64-bit" },
-				{ @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", "32-bit" },
+				[@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"] = "64-bit",
+				[@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"] = "32-bit",
 			};
 			foreach (var bitDepth in keys)
 				using (var key = Registry.LocalMachine.OpenSubKey(bitDepth.Key))
 					foreach (var subKeyName in key.GetSubKeyNames())
 						using (var subkey = key.OpenSubKey(subKeyName))
 							programs.Add(new InstalledProgram(subkey, bitDepth.Value));
-			Text = String.Join("", programs.Where(prog => prog.HasData()).OrderBy(prog => prog.Name).Select(prog => prog.ToString() + "\r\n"));
+			Text = String.Join("", programs.Where(prog => prog.HasData()).OrderBy(prog => prog.Name).Select(prog => $"{prog}\r\n"));
 		}
 	}
 }

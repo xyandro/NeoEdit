@@ -16,7 +16,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string Expression { get { return UIHelper<RandomDataDialog>.GetPropValue<string>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Chars { get { return UIHelper<RandomDataDialog>.GetPropValue<string>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; private set; }
+		public Dictionary<string, List<object>> ExpressionData { get; }
 
 		static RandomDataDialog() { UIHelper<RandomDataDialog>.Register(); }
 
@@ -38,10 +38,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		private void ExpressionHelp(object sender, RoutedEventArgs e)
-		{
-			ExpressionHelpDialog.Display();
-		}
+		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display();
 
 		public static Result Run(Dictionary<string, List<object>> expressionData, Window parent)
 		{

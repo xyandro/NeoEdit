@@ -22,9 +22,6 @@ namespace NeoEdit.HexEdit.Data
 			Interop.ReadSharedMemory(pid, handle, blockStart, block, 0, block.Length);
 		}
 
-		protected override void VirtWrite(long index, long count, byte[] bytes)
-		{
-			Interop.WriteSharedMemory(pid, handle, index, bytes);
-		}
+		protected override void VirtWrite(long index, long count, byte[] bytes) => Interop.WriteSharedMemory(pid, handle, index, bytes);
 	}
 }

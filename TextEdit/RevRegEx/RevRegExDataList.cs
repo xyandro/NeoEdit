@@ -7,8 +7,8 @@ namespace NeoEdit.TextEdit.RevRegEx
 {
 	class RevRegExDataList : RevRegExData
 	{
-		public ReadOnlyCollection<RevRegExData> List { get; private set; }
-		public static RevRegExData Create(IEnumerable<RevRegExData> list) { return list.Count() == 1 ? list.First() : new RevRegExDataList(list); }
+		public ReadOnlyCollection<RevRegExData> List { get; }
+		public static RevRegExData Create(IEnumerable<RevRegExData> list) => list.Count() == 1 ? list.First() : new RevRegExDataList(list);
 		RevRegExDataList(IEnumerable<RevRegExData> list) { List = new ReadOnlyCollection<RevRegExData>(list.ToList()); }
 
 		public override List<string> GetPossibilities()
@@ -53,6 +53,6 @@ namespace NeoEdit.TextEdit.RevRegEx
 			return result;
 		}
 
-		public override string ToString() { return "(" + String.Join("", List.Select(item => item.ToString())) + ")"; }
+		public override string ToString() => $"({String.Join("", List.Select(item => item.ToString()))})";
 	}
 }

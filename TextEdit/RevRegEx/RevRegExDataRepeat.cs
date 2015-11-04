@@ -6,9 +6,9 @@ namespace NeoEdit.TextEdit.RevRegEx
 {
 	class RevRegExDataRepeat : RevRegExData
 	{
-		public RevRegExData Value { get; private set; }
-		public int Min { get; private set; }
-		public int Max { get; private set; }
+		public RevRegExData Value { get; }
+		public int Min { get; }
+		public int Max { get; }
 
 		public RevRegExDataRepeat(RevRegExData value, int min, int max) { Value = value; Min = min; Max = max; }
 		public override List<string> GetPossibilities()
@@ -68,6 +68,6 @@ namespace NeoEdit.TextEdit.RevRegEx
 			return result;
 		}
 
-		public override string ToString() { return String.Format("{0}{{{1},{2}}}", Value, Min, Max); }
+		public override string ToString() => $"{Value}{{{Min},{Max}}}";
 	}
 }

@@ -6,19 +6,11 @@ namespace NeoEdit.HexEdit.Models
 {
 	class ModelData
 	{
-		public List<Model> Models { get; private set; }
+		public List<Model> Models { get; } = new List<Model>();
 		public string Default { get; set; }
 		public string FileName { get; set; }
 
-		public ModelData()
-		{
-			Models = new List<Model>();
-		}
-
-		public Model GetModel(string GUID)
-		{
-			return Models.FirstOrDefault(model => model.GUID == GUID);
-		}
+		public Model GetModel(string GUID) => Models.FirstOrDefault(model => model.GUID == GUID);
 
 		public void Save(string fileName)
 		{

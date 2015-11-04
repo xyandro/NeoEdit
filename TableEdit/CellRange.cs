@@ -17,9 +17,9 @@ namespace NeoEdit.TableEdit
 		public int MinColumn { get; private set; }
 		public int MaxColumn { get; private set; }
 
-		public int NumRows { get { return MaxRow - MinRow + 1; } }
-		public int NumColumns { get { return MaxColumn - MinColumn + 1; } }
-		public int NumCells { get { return NumRows * NumColumns; } }
+		public int NumRows => MaxRow - MinRow + 1;
+		public int NumColumns => MaxColumn - MinColumn + 1;
+		public int NumCells => NumRows * NumColumns;
 
 		public CellRange(int startRow = 0, int startColumn = 0, int? endRow = null, int? endColumn = null, bool active = true) : this(new Cell(startRow, startColumn), new Cell(endRow ?? startRow, endColumn ?? startColumn), active) { }
 
@@ -60,15 +60,8 @@ namespace NeoEdit.TableEdit
 			}
 		}
 
-		public bool Contains(Cell cell)
-		{
-			return (Active) && (cell.Row >= MinRow) && (cell.Row <= MaxRow) && (cell.Column >= MinColumn) && (cell.Column <= MaxColumn);
-		}
-
-		public bool Contains(int row, int column)
-		{
-			return (Active) && (row >= MinRow) && (row <= MaxRow) && (column >= MinColumn) && (column <= MaxColumn);
-		}
+		public bool Contains(Cell cell) => (Active) && (cell.Row >= MinRow) && (cell.Row <= MaxRow) && (cell.Column >= MinColumn) && (cell.Column <= MaxColumn);
+		public bool Contains(int row, int column) => (Active) && (row >= MinRow) && (row <= MaxRow) && (column >= MinColumn) && (column <= MaxColumn);
 
 		public IEnumerable<Cell> EnumerateCells()
 		{
@@ -102,10 +95,7 @@ namespace NeoEdit.TableEdit
 				yield return row;
 		}
 
-		public bool Equals(CellRange range)
-		{
-			return (MinColumn.Equals(range.MinColumn)) && (MaxColumn.Equals(range.MaxColumn)) && (MinRow.Equals(range.MinRow)) && (MaxRow.Equals(range.MaxRow)) && (Active.Equals(range.Active));
-		}
+		public bool Equals(CellRange range) => (MinColumn.Equals(range.MinColumn)) && (MaxColumn.Equals(range.MaxColumn)) && (MinRow.Equals(range.MinRow)) && (MaxRow.Equals(range.MaxRow)) && (Active.Equals(range.Active));
 
 		public override bool Equals(object obj)
 		{
@@ -114,14 +104,8 @@ namespace NeoEdit.TableEdit
 			return Equals(obj as CellRange);
 		}
 
-		public override int GetHashCode()
-		{
-			return (MinColumn << 0) + (MaxColumn << 8) + (MinRow << 16) + (MaxRow << 24);
-		}
+		public override int GetHashCode() => (MinColumn << 0) + (MaxColumn << 8) + (MinRow << 16) + (MaxRow << 24);
 
-		public override string ToString()
-		{
-			return String.Format("Start: {0}, End: {1}, Active {2}", Start, End, Active);
-		}
+		public override string ToString() => $"Start: {Start}, End: {End}, Active {Active}";
 	}
 }

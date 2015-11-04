@@ -34,10 +34,10 @@ namespace NeoEdit.TextView
 		[DepProp]
 		public int selHighlightColumn { get { return UIHelper<TextViewer>.GetPropValue<int>(this); } set { UIHelper<TextViewer>.SetPropValue(this, value); } }
 
-		int xScrollViewportFloor { get { return (int)Math.Floor(xScroll.ViewportSize); } }
-		int xScrollViewportCeiling { get { return (int)Math.Ceiling(xScroll.ViewportSize); } }
-		int yScrollViewportFloor { get { return (int)Math.Floor(yScroll.ViewportSize); } }
-		int yScrollViewportCeiling { get { return (int)Math.Ceiling(yScroll.ViewportSize); } }
+		int xScrollViewportFloor => (int)Math.Floor(xScroll.ViewportSize);
+		int xScrollViewportCeiling => (int)Math.Ceiling(xScroll.ViewportSize);
+		int yScrollViewportFloor => (int)Math.Floor(yScroll.ViewportSize);
+		int yScrollViewportCeiling => (int)Math.Ceiling(yScroll.ViewportSize);
 
 		static TextViewer()
 		{
@@ -73,7 +73,7 @@ namespace NeoEdit.TextView
 			data = _data;
 			FileName = data.FileName;
 			if (!File.Exists(FileName))
-				throw new Exception(String.Format("File {0} doesn't exist.", FileName));
+				throw new Exception($"File {FileName} doesn't exist.");
 
 			localCallbacks = UIHelper<TextViewer>.GetLocalCallbacks(this);
 
@@ -82,15 +82,9 @@ namespace NeoEdit.TextView
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 		}
 
-		public void Dispose()
-		{
-			data.Dispose();
-		}
+		public void Dispose() => data.Dispose();
 
-		internal void Command_File_CopyPath()
-		{
-			NEClipboard.CopiedFile = FileName;
-		}
+		internal void Command_File_CopyPath() => NEClipboard.CopiedFile = FileName;
 
 		internal void Command_File_Split()
 		{
@@ -111,7 +105,7 @@ namespace NeoEdit.TextView
 				if (new Message
 				{
 					Title = "Confirm",
-					Text = String.Format("The data you are attempting to copy is roughly {0:n0} bytes.  Are you sure you want to do this?", estimate),
+					Text = $"The data you are attempting to copy is roughly {estimate:n0} bytes.  Are you sure you want to do this?",
 					Options = Message.OptionsEnum.YesNo,
 					DefaultAccept = Message.OptionsEnum.No,
 					DefaultCancel = Message.OptionsEnum.No,
@@ -272,10 +266,7 @@ namespace NeoEdit.TextView
 			return true;
 		}
 
-		internal bool HandleText(string text)
-		{
-			return false;
-		}
+		internal bool HandleText(string text) => false;
 
 		void CalculateBoundaries()
 		{
@@ -299,9 +290,6 @@ namespace NeoEdit.TextView
 			renderTimer.Start();
 		}
 
-		public override string ToString()
-		{
-			return FileName;
-		}
+		public override string ToString() => FileName;
 	}
 }

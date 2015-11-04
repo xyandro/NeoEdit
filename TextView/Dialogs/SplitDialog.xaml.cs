@@ -53,7 +53,7 @@ namespace NeoEdit.TextView.Dialogs
 			calcSize = new RunOnceTimer(() => CalculateSize());
 			this.data = data;
 			OutputDir = Path.GetDirectoryName(data.FileName);
-			OutputTemplate = Path.GetFileNameWithoutExtension(data.FileName) + " - {0}" + Path.GetExtension(data.FileName);
+			OutputTemplate = $"{Path.GetFileNameWithoutExtension(data.FileName)} - {{0}}{Path.GetExtension(data.FileName)}";
 
 			foreach (var value in Helpers.GetValues<SizeTypeEnum>())
 				sizeType.Items.Add(value);
@@ -112,7 +112,7 @@ namespace NeoEdit.TextView.Dialogs
 				if (new Message
 				{
 					Title = "Confirm",
-					Text = "The following files already exist:\n\n" + String.Join("\n", existing) + "\n\nAre you sure you want to overwrite them?",
+					Text = $"The following files already exist:\n\n{String.Join("\n", existing)}\n\nAre you sure you want to overwrite them?",
 					Options = Message.OptionsEnum.YesNoCancel,
 					DefaultAccept = Message.OptionsEnum.No,
 					DefaultCancel = Message.OptionsEnum.Cancel,

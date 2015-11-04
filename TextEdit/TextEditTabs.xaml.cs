@@ -67,10 +67,7 @@ namespace NeoEdit.TextEdit
 			textEdit1.DiffTarget = textEdit2;
 		}
 
-		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null)
-		{
-			Create(filename, bytes, codePage, modified, line, column, this);
-		}
+		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null) => Create(filename, bytes, codePage, modified, line, column, this);
 
 		TextEditTabs()
 		{
@@ -122,10 +119,7 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(filename);
 		}
 
-		void Command_File_Copy_AllPaths()
-		{
-			NEClipboard.CopiedFiles = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
-		}
+		void Command_File_Copy_AllPaths() => NEClipboard.CopiedFiles = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
 
 		void Command_File_Open_CopiedCut()
 		{
@@ -134,7 +128,7 @@ namespace NeoEdit.TextEdit
 			if ((files.Count > 5) && (new Message
 			{
 				Title = "Confirm",
-				Text = String.Format("Are you sure you want to open these {0} files?", files.Count),
+				Text = $"Are you sure you want to open these {files.Count} files?",
 				Options = Message.OptionsEnum.YesNoCancel,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.Cancel,
@@ -182,16 +176,13 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Must have two files active for diff.");
 		}
 
-		void Command_View_ActiveTabs()
-		{
-			tabs.ShowActiveTabsDialog();
-		}
+		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
 
 		void Command_View_WordList()
 		{
 			var type = GetType();
 			byte[] data;
-			using (var stream = type.Assembly.GetManifestResourceStream(type.Namespace + ".Misc.Words.txt.gz"))
+			using (var stream = type.Assembly.GetManifestResourceStream($"{type.Namespace}.Misc.Words.txt.gz"))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);
@@ -204,10 +195,7 @@ namespace NeoEdit.TextEdit
 		}
 
 		const string quickMacroTemplate = "QuickText{0}.xml";
-		void Macro_Open_Quick(int quickNum)
-		{
-			AddTextEditor(Path.Combine(Macro<TextEditCommand>.MacroDirectory, String.Format(quickMacroTemplate, quickNum)));
-		}
+		void Macro_Open_Quick(int quickNum) => AddTextEditor(Path.Combine(Macro<TextEditCommand>.MacroDirectory, String.Format(quickMacroTemplate, quickNum)));
 
 		void Command_Macro_Record_Quick(int quickNum)
 		{
@@ -217,10 +205,7 @@ namespace NeoEdit.TextEdit
 				Command_Macro_Record_StopRecording(String.Format(quickMacroTemplate, quickNum));
 		}
 
-		void Command_Macro_Play_Quick(int quickNum)
-		{
-			Macro<TextEditCommand>.Load(String.Format(quickMacroTemplate, quickNum), true).Play(this, playing => macroPlaying = playing);
-		}
+		void Command_Macro_Play_Quick(int quickNum) => Macro<TextEditCommand>.Load(String.Format(quickMacroTemplate, quickNum), true).Play(this, playing => macroPlaying = playing);
 
 		void Command_Macro_Record_Record()
 		{
@@ -229,7 +214,7 @@ namespace NeoEdit.TextEdit
 				new Message
 				{
 					Title = "Error",
-					Text = String.Format("Cannot start recording; recording is already in progess."),
+					Text = $"Cannot start recording; recording is already in progess.",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 				return;
@@ -245,7 +230,7 @@ namespace NeoEdit.TextEdit
 				new Message
 				{
 					Title = "Error",
-					Text = String.Format("Cannot stop recording; recording not in progess."),
+					Text = $"Cannot stop recording; recording not in progess.",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 				return;
@@ -256,10 +241,7 @@ namespace NeoEdit.TextEdit
 			macro.Save(fileName, true);
 		}
 
-		void Command_Macro_Play_Play()
-		{
-			Macro<TextEditCommand>.Load().Play(this, playing => macroPlaying = playing);
-		}
+		void Command_Macro_Play_Play() => Macro<TextEditCommand>.Load().Play(this, playing => macroPlaying = playing);
 
 		void Command_Macro_Play_PlayOnCopiedFiles()
 		{

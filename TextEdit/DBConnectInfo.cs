@@ -44,10 +44,7 @@ namespace NeoEdit.TextEdit
 			set { ConnectionString = value.ConnectionString; }
 		}
 
-		public DBConnectInfo()
-		{
-			ConnectionString = "";
-		}
+		public DBConnectInfo() { ConnectionString = ""; }
 
 		public void CreateDatabase()
 		{
@@ -81,7 +78,7 @@ namespace NeoEdit.TextEdit
 				GetConnection();
 				return null;
 			}
-			catch (Exception ex) { return "Connection failed: " + ex.Message; }
+			catch (Exception ex) { return $"Connection failed: {ex.Message}"; }
 		}
 	}
 }

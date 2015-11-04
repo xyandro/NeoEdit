@@ -28,7 +28,7 @@ namespace NeoEdit
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
-			CreateWindowsFromArgs(String.Join(" ", e.Args.Select(str => "\"" + str + "\"")));
+			CreateWindowsFromArgs(String.Join(" ", e.Args.Select(str => $"\"{str}\"")));
 			ShutdownMode = ShutdownMode.OnLastWindowClose;
 			if (Application.Current.Windows.Count == 0)
 				Application.Current.Shutdown();
@@ -38,7 +38,7 @@ namespace NeoEdit
 		{
 			var message = "";
 			for (var ex2 = ex; ex2 != null; ex2 = ex2.InnerException)
-				message += ex2.Message + "\n";
+				message += $"{ex2.Message}\n";
 			Message.Show(message, "Error");
 #if DEBUG
 			if ((Debugger.IsAttached) && ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None))
@@ -53,7 +53,7 @@ namespace NeoEdit
 					if (idx != -1)
 						er = er.Substring(idx + 4);
 					idx = er.IndexOf(":line ");
-					er = er.Substring(0, idx) + " " + er.Substring(idx + 6);
+					er = $"{er.Substring(0, idx)} {er.Substring(idx + 6)}";
 					Clipboard.SetText(er, TextDataFormat.Text);
 				}
 				System.Diagnostics.Debugger.Break();

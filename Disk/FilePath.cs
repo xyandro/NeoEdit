@@ -20,6 +20,6 @@ namespace NeoEdit.Disk
 				Stream.Dispose();
 		}
 
-		public override string ToString() { return Path; }
+		public override string ToString() => Path;
 	}
 }

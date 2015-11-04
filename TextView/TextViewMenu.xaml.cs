@@ -11,9 +11,6 @@ namespace NeoEdit.TextView
 
 		static TextViewMenu() { UIHelper<TextViewMenu>.Register(); }
 
-		public TextViewMenu()
-		{
-			InitializeComponent();
-		}
+		public TextViewMenu() { InitializeComponent(); }
 	}
 }

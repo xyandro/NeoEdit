@@ -35,15 +35,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			InitializeComponent();
 		}
 
-		void ChooseMacro(object sender, RoutedEventArgs e)
-		{
-			Macro = chooseMacro();
-		}
+		void ChooseMacro(object sender, RoutedEventArgs e) => Macro = chooseMacro();
 
-		private void ExpressionHelp(object sender, RoutedEventArgs e)
-		{
-			ExpressionHelpDialog.Display();
-		}
+		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display();
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)

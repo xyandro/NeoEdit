@@ -21,55 +21,40 @@ namespace NeoEdit
 
 	class AboutParam : Param
 	{
-		public override void Execute() { AboutWindow.Run(); }
+		public override void Execute() => AboutWindow.Run();
 	}
 
 	class ConsoleParam : Param
 	{
-		public override void Execute()
-		{
-			ConsoleTabs.Create();
-		}
+		public override void Execute() => ConsoleTabs.Create();
 	}
 
 	class ConsoleRunnerParam : Param
 	{
 		readonly string[] ParamList;
 		public ConsoleRunnerParam(string[] paramList) { ParamList = paramList; }
-		public override void Execute()
-		{
-			new Console.ConsoleRunner(ParamList);
-		}
+		public override void Execute() => new Console.ConsoleRunner(ParamList);
 	}
 
 	class DiffParam : Param
 	{
 		readonly string File1, File2;
 		public DiffParam(string file1, string file2) { File1 = file1; File2 = file2; }
-		public override void Execute()
-		{
-			TextEditTabs.CreateDiff(File1, File2);
-		}
+		public override void Execute() => TextEditTabs.CreateDiff(File1, File2);
 	}
 
 	class DiskParam : Param
 	{
 		readonly string Location;
 		public DiskParam(string location) { Location = location; }
-		public override void Execute()
-		{
-			DiskTabs.Create(Location);
-		}
+		public override void Execute() => DiskTabs.Create(Location);
 	}
 
 	class HandlesParam : Param
 	{
 		readonly int? PID;
 		public HandlesParam(int? pid) { PID = pid; }
-		public override void Execute()
-		{
-			new HandlesWindow(PID);
-		}
+		public override void Execute() => new HandlesWindow(PID);
 	}
 
 	class HexDumpParam : Param
@@ -111,28 +96,19 @@ namespace NeoEdit
 	{
 		readonly int? PID;
 		public ProcessesParam(int? pid) { PID = pid; }
-		public override void Execute()
-		{
-			new ProcessesWindow(PID);
-		}
+		public override void Execute() => new ProcessesWindow(PID);
 	}
 
 	class RegistryParam : Param
 	{
 		readonly string Key;
 		public RegistryParam(string key) { Key = key; }
-		public override void Execute()
-		{
-			new RegistryWindow(Key);
-		}
+		public override void Execute() => new RegistryWindow(Key);
 	}
 
 	class SystemInfoParam : Param
 	{
-		public override void Execute()
-		{
-			new SystemInfoWindow();
-		}
+		public override void Execute() => new SystemInfoWindow();
 	}
 
 	class TableEditParam : Param

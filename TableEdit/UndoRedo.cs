@@ -130,15 +130,9 @@ namespace NeoEdit.TableEdit
 			}
 		}
 
-		internal UndoRedo(Action<bool> _setChanged)
-		{
-			setChanged = _setChanged;
-		}
+		internal UndoRedo(Action<bool> _setChanged) { setChanged = _setChanged; }
 
-		internal void SetModified(bool modified = true)
-		{
-			modifiedSteps = modified ? Int32.MinValue / 2 : 0;
-		}
+		internal void SetModified(bool modified = true) => modifiedSteps = modified ? Int32.MinValue / 2 : 0;
 
 		internal void Clear()
 		{
