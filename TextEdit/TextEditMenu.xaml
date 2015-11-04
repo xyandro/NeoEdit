@@ -303,19 +303,19 @@
 			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
 			<textEdit:TextEditMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Children_First"/>
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Children_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Children_ByAttribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
 			<textEdit:TextEditMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Descendants_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Descendants_ByAttribute"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Content_Next"/>
 		<textEdit:TextEditMenuItem Header="Pr_evious" CommandEnum="Content_Previous"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="By _Attribute" CommandEnum="Content_Select_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Select_ByAttribute"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Topmost" CommandEnum="Content_Select_Topmost"/>
 			<textEdit:TextEditMenuItem Header="_Deepest" CommandEnum="Content_Select_Deepest"/>

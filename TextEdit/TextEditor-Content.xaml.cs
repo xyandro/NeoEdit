@@ -143,9 +143,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Content_List(ParserNode.ParserNodeListType list, bool first = false, FindContentAttributeDialog.Result findAttr = null)
 		{
-			var nodes = GetSelectionNodes().SelectMany(node => ContentGetList(node, list, first, findAttr)).ToList();
-			if (nodes.Any())
-				ContentReplaceSelections(nodes);
+			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => ContentGetList(node, list, first, findAttr)).ToList());
 		}
 
 		internal void Command_Content_NextPrevious(bool next)
