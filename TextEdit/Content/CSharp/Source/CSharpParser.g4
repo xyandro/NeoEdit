@@ -9,11 +9,11 @@ content : block # ContentBlock
         | NAMESPACE savename block # Namespace
         | attribute* modifier* type=(CLASS | INTERFACE | STRUCT) savename (COLON savebase (COMMA savebase)*)? generic_constraints block # Class
         | attribute* modifier* ENUM savename (COLON name)? LBRACE (enumvalue (COMMA enumvalue)* COMMA?)? RBRACE # Enum
-        | attribute* modifier* (name | TILDE)? (savename | OPERATOR (name | binary_operator)) LPAREN methoddeclparams RPAREN (COLON (THIS | BASE) LPAREN expressionlist RPAREN)? generic_constraints (block | SEMICOLON) # Method
+        | attribute* modifier* (name | TILDE)? (savename | OPERATOR (name | operator)) LPAREN methoddeclparams RPAREN (COLON (THIS | BASE) LPAREN expressionlist RPAREN)? generic_constraints (block | expressionbody | SEMICOLON) # Method
         | attribute* modifier* name THIS LBRACKET methoddeclparams RBRACKET LBRACE ((GET | SET) content)* RBRACE # Indexer
         | attribute* modifier* DELEGATE name savename LPAREN methoddeclparams RPAREN SEMICOLON # Delegate
         | attribute* modifier* EVENT name savename (LBRACE ((ADD | REMOVE) block)* RBRACE | SEMICOLON) # Event
-        | attribute* modifier* name savename LBRACE propertyaccess* RBRACE # Property
+        | attribute* modifier* name savename (expressionbody | LBRACE propertyaccess* RBRACE) # Property
         | SWITCH LPAREN saveconditionexpression RPAREN LBRACE cases* RBRACE # Switch
         | YIELD? RETURN expression? SEMICOLON # Return
         | THROW expression? SEMICOLON # Throw
@@ -53,6 +53,7 @@ fordecl : name? name ASSIGN expression ;
 assignedname : name (ASSIGN expression)? ;
 saveassignedname : savename (ASSIGN expression)? ;
 block : LBRACE content* RBRACE ;
+expressionbody : LAMBDA expression SEMICOLON ;
 saveblock : block ;
 enumvalue : attribute* assignedname ;
 generic_constraint : name | CLASS | STRUCT | NEW LPAREN RPAREN ;
@@ -62,7 +63,7 @@ methoddeclparams : (methoddeclparam (COMMA methoddeclparam)*)? ;
 expression : LPAREN expression RPAREN
            | LPAREN expression RPAREN expression
            | (name | LPAREN (name? name (COMMA name? name)*)? RPAREN) LAMBDA (expression | block)
-           | (DEC | INC | MULT | BANG | MINUS | PLUS | TILDE | AND) expression
+           | unary_operator expression
            | expression (DEC | INC)
            | expression binary_operator expression
            | name
@@ -75,10 +76,12 @@ expression : LPAREN expression RPAREN
            | (CHECKED | UNCHECKED) LPAREN expression RPAREN
            | linq
            | inline
-           | NUMBER | CHARACTER | STR | NULL | TRUE | FALSE
+           | NUMBER | CHARACTER | STR | INTERPOLATED_STR | NULL | TRUE | FALSE
            ;
 expressionlist: (expression (COMMA expression)*)? ;
+unary_operator : DEC | INC | MULT | BANG | MINUS | PLUS | TILDE | AND ;
 binary_operator : AS | IS | AND | OR | XOR | DIV | GT | LT | MINUS | LAND | EQ | GE | LE | LEFT_SHIFT | GT GT | NE | LOR | MOD | PLUS | MULT | DOT | PTR | ASSIGN | PLUS_ASSIGN | AND_ASSIGN | DIV_ASSIGN | LEFT_SHIFT_ASSIGN | GT GE | MOD_ASSIGN | MULT_ASSIGN | OR_ASSIGN | MINUS_ASSIGN | XOR_ASSIGN | COALESCE ;
+operator : unary_operator | binary_operator ;
 inline : LBRACE expressionlist COMMA? RBRACE ;
 methodcallparam : OUT? REF? (name COLON)? expression ;
 methodcallparams : LPAREN (methodcallparam (COMMA methodcallparam)*)? RPAREN ;

@@ -138,8 +138,8 @@ fragment SINGLE_COMMENT    : '//' ~[\r\n\u0085\u2028\u2029]* ;
 fragment DELIMITED_COMMENT : '/*' .*? '*/' ;
 
 IDENTIFIER                 : '@'? IDFIRST IDNEXT* ;
-fragment IDFIRST           : '\u0041'..'\u005a'| '\u0061'..'\u007a'| '\u00c0'..'\u00de'| '\u01bb'| '\u01c0'..'\u01c3'| '\u01c5'| '\u01c8'| '\u01cb'| '\u01f2'| '\u0294'| '\u02b0'..'\u02ee'| '\u16ee'..'\u16f0'| '\u2160'..'\u216f'| '\u005f';
-fragment IDNEXT            : IDFIRST | '\u0030'..'\u0039'| '\u00ad'| '\u0300'..'\u0310'| '\u0600'..'\u0603'| '\u06dd'| '\u0903'| '\u093e'..'\u0940'| '\u0949'..'\u094c'| '\u203f'..'\u2040'| '\u2054'| '\ufe33'..'\ufe34'| '\ufe4d'..'\ufe4f'| '\uff3f';
+fragment IDFIRST           : '\u0041'..'\u005a'| '\u0061'..'\u007a'| '\u00c0'..'\u00de'| '\u01bb'| '\u01c0'..'\u01c3'| '\u01c5'| '\u01c8'| '\u01cb'| '\u01f2'| '\u0294'| '\u02b0'..'\u02ee'| '\u16ee'..'\u16f0'| '\u2160'..'\u216f'| '\u005f' ;
+fragment IDNEXT            : IDFIRST | '\u0030'..'\u0039'| '\u00ad'| '\u0300'..'\u0310'| '\u0600'..'\u0603'| '\u06dd'| '\u0903'| '\u093e'..'\u0940'| '\u0949'..'\u094c'| '\u203f'..'\u2040'| '\u2054'| '\ufe33'..'\ufe34'| '\ufe4d'..'\ufe4f'| '\uff3f' ;
 
 NUMBER                     : (DECIMAL_DIGIT* DOT? DECIMAL_DIGIT+ ([Ee] [-+]? DECIMAL_DIGIT+)? | '0' [Xx] HEX_DIGIT+) [UuLlFfDdMm]* ;
 fragment DECIMAL_DIGIT     : '0'..'9' ;
@@ -150,6 +150,25 @@ fragment REGULAR_STRING    : '"' (~["\\\r\n\u0085\u2028\u2029] | ESCAPE)* '"' ;
 fragment VERBATIM_STRING   : '@' '"' (~["] | '""')* '"' ;
 fragment ESCAPE            : '\\' ~[xUu] | '\\x' HEX_DIGIT+ | '\\u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT | '\\U' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT ;
 
+INTERPOLATED_START         : '$"' -> more, pushMode(INTERPOLATED) ;
+
 CHARACTER                  : '\'' (~['\\\r\n\u0085\u2028\u2029] | ESCAPE) '\'' ;
 
-PREPROCESSOR               : '#' (~[\r\n\u0085\u2028\u2029])* NEWLINE -> skip;
+PREPROCESSOR               : '#' (~[\r\n\u0085\u2028\u2029])* NEWLINE -> skip ;
+
+mode INTERPOLATED;
+INTERPOLATED_BRACES        : '{{' -> more ;
+INTERPOLATED_BRACE         : '{' -> more, pushMode(INTERPOLATED_EXP) ;
+INTERPOLATED_CHARS         : (~["{\\\r\n\u0085\u2028\u2029] | ESCAPE)+ -> more ;
+INTERPOLATED_STR           : '"' -> popMode ;
+
+mode INTERPOLATED_SUB;
+INTERPOLATED_SUB_BRACE     : '{' -> more, pushMode(INTERPOLATED_EXP) ;
+INTERPOLATED_SUB_CHARS     : (~["{\\\r\n\u0085\u2028\u2029] | ESCAPE)+ -> more ;
+INTERPOLATED_SUB_STRING    : '"' -> more, popMode ;
+
+mode INTERPOLATED_EXP;
+INTERPOLATED_EXP_BRACE     : '{' -> more, pushMode(INTERPOLATED_EXP) ;
+INTERPOLATED_EXP_CHARS     : (STR | ~["@${}]+) -> more ;
+INTERPOLATED_EXP_START     : '$"' -> more, pushMode(INTERPOLATED_SUB) ;
+INTERPOLATED_EXP_END       : '}' -> more, popMode;
