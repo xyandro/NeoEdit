@@ -81,6 +81,8 @@ namespace NeoEdit.Common.UnitTest
 			{
 				foreach (var codePage in Coder.GetStringCodePages())
 				{
+					if (Coder.PreambleSize(codePage) == 0)
+						continue;
 					for (var useBom = 0; useBom < 2; ++useBom)
 					{
 						var bom = useBom == 0;

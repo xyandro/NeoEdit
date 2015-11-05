@@ -13,7 +13,7 @@ namespace NeoEdit.TextEdit.UnitTest
 			"Line 0\r\n" +
 			"Line 1\n" +
 			"Line 2\r" +
-			"Line 3\n\r" +
+			"Line 3\r\n" +
 			"Line 4\r\n" +
 			"\tLine\t5\t\r\n" +
 			"{Asdf}\r\n";
@@ -74,7 +74,7 @@ namespace NeoEdit.TextEdit.UnitTest
 			try { var test = textData.GetEnding(-1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 			Assert.AreEqual(textData.GetEnding(0), "\r\n");
-			Assert.AreEqual(textData.GetEnding(3), "\n\r");
+			Assert.AreEqual(textData.GetEnding(3), "\r\n");
 			try { var test = textData.GetEnding(numLines + 1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 

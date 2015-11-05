@@ -16,11 +16,7 @@ namespace NeoEdit.Common.Transform
 		[AttributeUsage(AttributeTargets.Method)]
 		public class ToXMLAttribute : Attribute { }
 		[AttributeUsage(AttributeTargets.Method)]
-		public class FromXMLAttribute : Attribute
-		{
-			internal string name { get; }
-			public FromXMLAttribute(string name = null) { this.name = name; }
-		}
+		public class FromXMLAttribute : Attribute { }
 
 		const string typeTag = "Type";
 		const string guidTag = "GUID";
@@ -223,11 +219,7 @@ namespace NeoEdit.Common.Transform
 			{
 				var fromXML = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static).Where(method => method.GetCustomAttribute<FromXMLAttribute>() != null).FirstOrDefault();
 				if (fromXML != null)
-				{
-					var attr = fromXML.GetCustomAttribute<FromXMLAttribute>();
-					var value = String.IsNullOrWhiteSpace(attr.name) ? (object)xml.Value : (object)xml.Element(attr.name) ?? (object)xml.Attribute(attr.name);
-					return references[guid] = fromXML.Invoke(null, new object[] { value });
-				}
+					return references[guid] = fromXML.Invoke(null, new object[] { xml });
 
 				var obj = references[guid] = FormatterServices.GetUninitializedObject(type);
 				var found = new HashSet<string>();

@@ -33,7 +33,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt8, "200", new byte[] { 200 }, false);
 			VerifyCoder(Coder.CodePage.UInt8, "255", new byte[] { 255 }, false);
 			VerifyCoder(Coder.CodePage.UInt8, "180 230 134", new byte[] { 180, 230, 134 }, false);
-			VerifyCoder(Coder.CodePage.UInt8, "", null, false);
+			VerifyCoder(Coder.CodePage.UInt8, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.UInt8, "-1", null, false);
 			VerifyCoder(Coder.CodePage.UInt8, "256", null, false);
 			VerifyCoder(Coder.CodePage.UInt8, "Whee", null, false);
@@ -44,7 +44,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt16LE, "40000", new byte[] { 64, 156 }, false);
 			VerifyCoder(Coder.CodePage.UInt16LE, "65535", new byte[] { 255, 255 }, false);
 			VerifyCoder(Coder.CodePage.UInt16LE, "58938 29268 48883", new byte[] { 58, 230, 84, 114, 243, 190 }, false);
-			VerifyCoder(Coder.CodePage.UInt16LE, "", null, false);
+			VerifyCoder(Coder.CodePage.UInt16LE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.UInt16LE, "-1", null, false);
 			VerifyCoder(Coder.CodePage.UInt16LE, "65536", null, false);
 			VerifyCoder(Coder.CodePage.UInt16LE, "Whee", null, false);
@@ -55,7 +55,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt32LE, "3000000000", new byte[] { 0, 94, 208, 178 }, false);
 			VerifyCoder(Coder.CodePage.UInt32LE, "4294967295", new byte[] { 255, 255, 255, 255 }, false);
 			VerifyCoder(Coder.CodePage.UInt32LE, "502326096 349128254 87642076", new byte[] { 80, 227, 240, 29, 62, 70, 207, 20, 220, 79, 57, 5 }, false);
-			VerifyCoder(Coder.CodePage.UInt32LE, "", null, false);
+			VerifyCoder(Coder.CodePage.UInt32LE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.UInt32LE, "-1", null, false);
 			VerifyCoder(Coder.CodePage.UInt32LE, "4294967296", null, false);
 			VerifyCoder(Coder.CodePage.UInt32LE, "Whee", null, false);
@@ -66,7 +66,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt64LE, "12000000000000000000", new byte[] { 0, 0, 176, 216, 107, 144, 136, 166 }, false);
 			VerifyCoder(Coder.CodePage.UInt64LE, "18446744073709551615", new byte[] { 255, 255, 255, 255, 255, 255, 255, 255 }, false);
 			VerifyCoder(Coder.CodePage.UInt64LE, "5529324512211775585 7759772867682036333 6572006540597709296", new byte[] { 97, 48, 62, 38, 89, 27, 188, 76, 109, 234, 230, 99, 79, 64, 176, 107, 240, 201, 222, 241, 32, 117, 52, 91 }, false);
-			VerifyCoder(Coder.CodePage.UInt64LE, "", null, false);
+			VerifyCoder(Coder.CodePage.UInt64LE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.UInt64LE, "-1", null, false);
 			VerifyCoder(Coder.CodePage.UInt64LE, "18446744073709551616", null, false);
 			VerifyCoder(Coder.CodePage.UInt64LE, "Whee", null, false);
@@ -77,7 +77,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Int8, "72", new byte[] { 72 }, false);
 			VerifyCoder(Coder.CodePage.Int8, "127", new byte[] { 127 }, false);
 			VerifyCoder(Coder.CodePage.Int8, "23\t-33", new byte[] { 23, 223 }, false, "23 -33");
-			VerifyCoder(Coder.CodePage.Int8, "", null, false);
+			VerifyCoder(Coder.CodePage.Int8, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Int8, "-129", null, false);
 			VerifyCoder(Coder.CodePage.Int8, "128", null, false);
 			VerifyCoder(Coder.CodePage.Int8, "Whee", null, false);
@@ -88,7 +88,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Int16LE, "7232", new byte[] { 64, 28 }, false);
 			VerifyCoder(Coder.CodePage.Int16LE, "32767", new byte[] { 255, 127 }, false);
 			VerifyCoder(Coder.CodePage.Int16LE, "5282 -26865 11608", new byte[] { 162, 20, 15, 151, 88, 45 }, false);
-			VerifyCoder(Coder.CodePage.Int16LE, "", null, false);
+			VerifyCoder(Coder.CodePage.Int16LE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Int16LE, "-32769", null, false);
 			VerifyCoder(Coder.CodePage.Int16LE, "32768", null, false);
 			VerifyCoder(Coder.CodePage.Int16LE, "Whee", null, false);
@@ -99,7 +99,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Int32LE, "852516352", new byte[] { 0, 94, 208, 50 }, false);
 			VerifyCoder(Coder.CodePage.Int32LE, "2147483647", new byte[] { 255, 255, 255, 127 }, false);
 			VerifyCoder(Coder.CodePage.Int32LE, "1387477915 -2064890447 2136415377", new byte[] { 155, 59, 179, 82, 177, 69, 236, 132, 145, 28, 87, 127 }, false);
-			VerifyCoder(Coder.CodePage.Int32LE, "", null, false);
+			VerifyCoder(Coder.CodePage.Int32LE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Int32LE, "-2147483649", null, false);
 			VerifyCoder(Coder.CodePage.Int32LE, "2147483648", null, false);
 			VerifyCoder(Coder.CodePage.Int32LE, "Whee", null, false);
@@ -110,7 +110,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Int64LE, "2776627963145224192", new byte[] { 0, 0, 176, 216, 107, 144, 136, 38 }, false);
 			VerifyCoder(Coder.CodePage.Int64LE, "9223372036854775807", new byte[] { 255, 255, 255, 255, 255, 255, 255, 127 }, false);
 			VerifyCoder(Coder.CodePage.Int64LE, "5603948564873056495 -3225847061438761581 1084590168216077244", new byte[] { 239, 144, 209, 92, 135, 57, 197, 77, 147, 117, 52, 91, 48, 125, 59, 211, 188, 131, 102, 247, 2, 61, 13, 15 }, false);
-			VerifyCoder(Coder.CodePage.Int64LE, "", null, false);
+			VerifyCoder(Coder.CodePage.Int64LE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Int64LE, "-9223372036854775809", null, false);
 			VerifyCoder(Coder.CodePage.Int64LE, "9223372036854775808", null, false);
 			VerifyCoder(Coder.CodePage.Int64LE, "Whee", null, false);
@@ -121,7 +121,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt16BE, "40000", new byte[] { 156, 64 }, false);
 			VerifyCoder(Coder.CodePage.UInt16BE, "65535", new byte[] { 255, 255 }, false);
 			VerifyCoder(Coder.CodePage.UInt16BE, "45679 33057 54528", new byte[] { 178, 111, 129, 33, 213, 0 }, false);
-			VerifyCoder(Coder.CodePage.UInt16BE, "", null, false);
+			VerifyCoder(Coder.CodePage.UInt16BE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.UInt16BE, "-1", null, false);
 			VerifyCoder(Coder.CodePage.UInt16BE, "65536", null, false);
 			VerifyCoder(Coder.CodePage.UInt16BE, "Whee", null, false);
@@ -132,7 +132,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt32BE, "3000000000", new byte[] { 178, 208, 94, 0 }, false);
 			VerifyCoder(Coder.CodePage.UInt32BE, "4294967295", new byte[] { 255, 255, 255, 255 }, false);
 			VerifyCoder(Coder.CodePage.UInt32BE, "3780308447 2635936151 3530580886", new byte[] { 225, 82, 237, 223, 157, 29, 49, 151, 210, 112, 99, 150 }, false);
-			VerifyCoder(Coder.CodePage.UInt32BE, "", null, false);
+			VerifyCoder(Coder.CodePage.UInt32BE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.UInt32BE, "-1", null, false);
 			VerifyCoder(Coder.CodePage.UInt32BE, "4294967296", null, false);
 			VerifyCoder(Coder.CodePage.UInt32BE, "Whee", null, false);
@@ -143,7 +143,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UInt64BE, "12000000000000000000", new byte[] { 166, 136, 144, 107, 216, 176, 0, 0 }, false);
 			VerifyCoder(Coder.CodePage.UInt64BE, "18446744073709551615", new byte[] { 255, 255, 255, 255, 255, 255, 255, 255 }, false);
 			VerifyCoder(Coder.CodePage.UInt64BE, "17824946424400120411 6514206364314995226 12728849806597405327", new byte[] { 247, 94, 238, 85, 22, 189, 10, 91, 90, 103, 28, 44, 178, 149, 138, 26, 176, 165, 245, 117, 113, 137, 186, 143 }, false);
-			VerifyCoder(Coder.CodePage.UInt64BE, "", null, false);
+			VerifyCoder(Coder.CodePage.UInt64BE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.UInt64BE, "-1", null, false);
 			VerifyCoder(Coder.CodePage.UInt64BE, "18446744073709551616", null, false);
 			VerifyCoder(Coder.CodePage.UInt64BE, "Whee", null, false);
@@ -154,7 +154,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Int16BE, "7232", new byte[] { 28, 64 }, false);
 			VerifyCoder(Coder.CodePage.Int16BE, "32767", new byte[] { 127, 255 }, false);
 			VerifyCoder(Coder.CodePage.Int16BE, "11714 -29454 12412", new byte[] { 45, 194, 140, 242, 48, 124 }, false);
-			VerifyCoder(Coder.CodePage.Int16BE, "", null, false);
+			VerifyCoder(Coder.CodePage.Int16BE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Int16BE, "-32769", null, false);
 			VerifyCoder(Coder.CodePage.Int16BE, "32768", null, false);
 			VerifyCoder(Coder.CodePage.Int16BE, "Whee", null, false);
@@ -165,7 +165,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Int32BE, "852516352", new byte[] { 50, 208, 94, 0 }, false);
 			VerifyCoder(Coder.CodePage.Int32BE, "2147483647", new byte[] { 127, 255, 255, 255 }, false);
 			VerifyCoder(Coder.CodePage.Int32BE, "2083528577 -2139949104 575535353", new byte[] { 124, 48, 31, 129, 128, 114, 247, 208, 34, 77, 248, 249 }, false);
-			VerifyCoder(Coder.CodePage.Int32BE, "", null, false);
+			VerifyCoder(Coder.CodePage.Int32BE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Int32BE, "-2147483649", null, false);
 			VerifyCoder(Coder.CodePage.Int32BE, "2147483648", null, false);
 			VerifyCoder(Coder.CodePage.Int32BE, "Whee", null, false);
@@ -176,7 +176,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Int64BE, "2776627963145224192", new byte[] { 38, 136, 144, 107, 216, 176, 0, 0 }, false);
 			VerifyCoder(Coder.CodePage.Int64BE, "9223372036854775807", new byte[] { 127, 255, 255, 255, 255, 255, 255, 255 }, false);
 			VerifyCoder(Coder.CodePage.Int64BE, "4661815790766985193 -4928550129601778329 2627481701813862033", new byte[] { 64, 178, 24, 195, 40, 249, 15, 233, 187, 154, 69, 197, 11, 97, 109, 103, 36, 118, 176, 175, 210, 116, 62, 145 }, false);
-			VerifyCoder(Coder.CodePage.Int64BE, "", null, false);
+			VerifyCoder(Coder.CodePage.Int64BE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Int64BE, "-9223372036854775809", null, false);
 			VerifyCoder(Coder.CodePage.Int64BE, "9223372036854775808", null, false);
 			VerifyCoder(Coder.CodePage.Int64BE, "Whee", null, false);
@@ -191,7 +191,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Single, "1.134274E+38", new byte[] { 165, 170, 170, 126 }, false);
 			VerifyCoder(Coder.CodePage.Single, "3.402823E+38", new byte[] { 253, 255, 127, 127 }, false);
 			VerifyCoder(Coder.CodePage.Single, "6.343272E+24 -4.067692E-14 3.170289E+12", new byte[] { 175, 231, 167, 104, 76, 49, 55, 169, 253, 136, 56, 84 }, false);
-			VerifyCoder(Coder.CodePage.Single, "", null, false);
+			VerifyCoder(Coder.CodePage.Single, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Single, "-3.402824E+38", null, false);
 			VerifyCoder(Coder.CodePage.Single, "3.402824E+38", null, false);
 			VerifyCoder(Coder.CodePage.Single, "Whee", null, false);
@@ -202,7 +202,7 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Double, "5.99231044954107E+307", new byte[] { 102, 85, 85, 85, 85, 85, 213, 127 }, false);
 			VerifyCoder(Coder.CodePage.Double, "1.79769313486231E+308", new byte[] { 226, 255, 255, 255, 255, 255, 239, 127 }, false);
 			VerifyCoder(Coder.CodePage.Double, "8.89584492479304E-157 -9.57253643279842E+88 2.55292594410904E+209", new byte[] { 173, 6, 238, 147, 97, 109, 136, 31, 126, 201, 146, 215, 101, 15, 104, 210, 4, 118, 90, 173, 96, 217, 104, 107 }, false);
-			VerifyCoder(Coder.CodePage.Double, "", null, false);
+			VerifyCoder(Coder.CodePage.Double, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.Double, "-1.79769313486232E+308", null, false);
 			VerifyCoder(Coder.CodePage.Double, "1.79769313486232E+308", null, false);
 			VerifyCoder(Coder.CodePage.Double, "Whee", null, false);

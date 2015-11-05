@@ -12,9 +12,9 @@ namespace NeoEdit.Common.UnitTest
 		{
 			public string MyStr { get; set; }
 			[XMLConverter.ToXML]
-			XElement ToXML() => new XElement("Value", MyStr);
+			XElement ToXML() => new XElement("Value", new XElement("Nested", MyStr));
 			[XMLConverter.FromXML]
-			static XMLConverterCustomExporter FromXML(XElement xml) => new XMLConverterCustomExporter { MyStr = xml.Value };
+			static XMLConverterCustomExporter FromXML(XElement xml) => new XMLConverterCustomExporter { MyStr = xml.Element("Value")?.Element("Nested")?.Value };
 		}
 
 		class XMLConverterGenericBase<T>
