@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Tables;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TableEdit.Dialogs

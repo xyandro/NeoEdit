@@ -11,8 +11,6 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Cell.cs" />
-    <Compile Include="CellRange.cs" />
     <Page Include="Dialogs\EditHeaderDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -34,13 +32,11 @@
     <Compile Include="Dialogs\JoinDialog.xaml.cs">
       <DependentUpon>JoinDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ItemSet.cs" />
     <Compile Include="Misc.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Table.cs" />
     <Compile Include="TableEditCommand.cs" />
     <Page Include="TableEditMenu.xaml">
       <Generator>MSBuild:Compile</Generator>

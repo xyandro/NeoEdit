@@ -28,6 +28,7 @@
     <None Include="Expressions\Source\Expression.g4" />
     <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="ItemSet.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
@@ -49,6 +50,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Searcher.cs</LastGenOutput>
     </Content>
+    <Compile Include="Tables\Cell.cs" />
+    <Compile Include="Tables\CellRange.cs" />
+    <Compile Include="Tables\Table.cs" />
     <Compile Include="TextData.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />

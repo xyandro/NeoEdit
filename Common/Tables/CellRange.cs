@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NeoEdit.TableEdit
+namespace NeoEdit.Common.Tables
 {
 	public class CellRange
 	{

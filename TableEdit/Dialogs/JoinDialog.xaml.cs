@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using NeoEdit.Common.Tables;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TableEdit.Dialogs

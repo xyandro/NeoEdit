@@ -4,7 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using NeoEdit.Common;
 
-namespace NeoEdit.TableEdit
+namespace NeoEdit.Common.Tables
 {
 	public class Table
 	{

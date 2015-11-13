@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using NeoEdit.Common;
 
-namespace NeoEdit.TableEdit
+namespace NeoEdit.Common
 {
-	class ItemSet<T> : List<T>
+	public class ItemSet<T> : List<T>
 	{
 		public ItemSet() { }
 		public ItemSet(IEnumerable<T> items) : base(items) { }
@@ -26,7 +25,7 @@ namespace NeoEdit.TableEdit
 		}
 	}
 
-	static class ItemSetExtensions
+	public static class ItemSetExtensions
 	{
 		public static ItemSet<TSource> ToItemSet<TSource>(this IEnumerable<TSource> source) => new ItemSet<TSource>(source);
 	}

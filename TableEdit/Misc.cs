@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Media;
 using NeoEdit.Common;
+using NeoEdit.Common.Tables;
 
 namespace NeoEdit.TableEdit
 {
