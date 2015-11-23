@@ -13,8 +13,7 @@ namespace NeoEdit.TableEdit.Dialogs
 	{
 		internal class Result
 		{
-			public List<int> AggregateColumns;
-			public List<Tuple<int, Table.AggregateType>> AggregateData;
+			public List<Table.AggregateData> AggregateData;
 		}
 
 		class ColumnData : DependencyObject
@@ -22,30 +21,19 @@ namespace NeoEdit.TableEdit.Dialogs
 			[DepProp]
 			public string ColumnName { get { return UIHelper<ColumnData>.GetPropValue<string>(this); } set { UIHelper<ColumnData>.SetPropValue(this, value); } }
 			[DepProp]
-			public bool Group { get { return UIHelper<ColumnData>.GetPropValue<bool>(this); } set { UIHelper<ColumnData>.SetPropValue(this, value); } }
-			[DepProp]
 			public Table.AggregateType Aggregation { get { return UIHelper<ColumnData>.GetPropValue<Table.AggregateType>(this); } set { UIHelper<ColumnData>.SetPropValue(this, value); } }
 			[DepProp]
 			public bool Selected { get { return UIHelper<ColumnData>.GetPropValue<bool>(this); } set { UIHelper<ColumnData>.SetPropValue(this, value); } }
 
-			readonly Type type;
-
-			static ColumnData()
-			{
-				UIHelper<ColumnData>.Register();
-				UIHelper<ColumnData>.AddCallback(a => a.Group, (obj, o, n) => obj.SetAggregateType());
-			}
+			static ColumnData() { UIHelper<ColumnData>.Register(); }
 
 			public ColumnData(string header, Table table, int column, bool group)
 			{
 				ColumnName = header;
-				Group = group;
-				type = Enumerable.Range(0, table.NumRows).Select(row => table[row, column]).Where(value => value != null).Select(value => value.GetType()).FirstOrDefault();
-
-				SetAggregateType();
+				var type = Enumerable.Range(0, table.NumRows).Select(row => table[row, column]).Where(value => value != null).Select(value => value.GetType()).FirstOrDefault();
+				Aggregation = group ? Table.AggregateType.Group : type.IsNumericType() ? Table.AggregateType.Sum : type.IsDateType() ? Table.AggregateType.Min | Table.AggregateType.Max : Table.AggregateType.Distinct;
 			}
 
-			void SetAggregateType() => Aggregation = Group ? Table.AggregateType.Value : type.IsNumericType() ? Table.AggregateType.Sum : type.IsDateType() ? Table.AggregateType.Min | Table.AggregateType.Max : Table.AggregateType.Distinct;
 		}
 
 		[DepProp]
@@ -66,19 +54,14 @@ namespace NeoEdit.TableEdit.Dialogs
 			e.Handled = true;
 			switch (e.Key)
 			{
-				case Key.G:
-					var selected = Columns.Where(column => column.Selected).ToList();
-					var all = !selected.All(column => column.Group);
-					selected.ForEach(column => column.Group = all);
-					break;
 				case Key.E: ToggleAggregateType(Table.AggregateType.None); break;
-				case Key.V: ToggleAggregateType(Table.AggregateType.Value); break;
+				case Key.G: ToggleAggregateType(Table.AggregateType.Group); break;
+				case Key.A: ToggleAggregateType(Table.AggregateType.All); break;
 				case Key.D: ToggleAggregateType(Table.AggregateType.Distinct); break;
-				case Key.O: ToggleAggregateType(Table.AggregateType.Concat); break;
 				case Key.N: ToggleAggregateType(Table.AggregateType.Min); break;
 				case Key.X: ToggleAggregateType(Table.AggregateType.Max); break;
 				case Key.S: ToggleAggregateType(Table.AggregateType.Sum); break;
-				case Key.A: ToggleAggregateType(Table.AggregateType.Average); break;
+				case Key.V: ToggleAggregateType(Table.AggregateType.Average); break;
 				case Key.C: ToggleAggregateType(Table.AggregateType.Count); break;
 				default: e.Handled = false; break;
 			}
@@ -104,8 +87,7 @@ namespace NeoEdit.TableEdit.Dialogs
 			var aggregateTypes = Enum.GetValues(typeof(Table.AggregateType)).Cast<Table.AggregateType>().Where(value => value != Table.AggregateType.None).ToList();
 			result = new Result
 			{
-				AggregateColumns = Columns.Indexes(column => column.Group).ToList(),
-				AggregateData = Columns.SelectMany((column, index) => aggregateTypes.Where(aggregateType => column.Aggregation.HasFlag(aggregateType)).Select(aggregateType => Tuple.Create(index, aggregateType))).OrderBy(tuple => !Columns[tuple.Item1].Group).ToList(),
+				AggregateData = Columns.SelectMany((column, index) => aggregateTypes.Where(aggregateType => column.Aggregation.HasFlag(aggregateType)).Select(aggregateType => new Table.AggregateData(index, aggregateType))).OrderBy(tuple => !tuple.Aggregation.HasFlag(Table.AggregateType.Group)).ToList(),
 			};
 			DialogResult = true;
 		}

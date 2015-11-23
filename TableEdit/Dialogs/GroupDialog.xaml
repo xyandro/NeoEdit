@@ -23,13 +23,6 @@
 			</ListView.Resources>
 			<ListView.View>
 				<GridView>
-					<GridViewColumn Header="Group" Width="Auto">
-						<GridViewColumn.CellTemplate>
-							<DataTemplate>
-								<CheckBox IsChecked="{Binding Group}"/>
-							</DataTemplate>
-						</GridViewColumn.CellTemplate>
-					</GridViewColumn>
 					<GridViewColumn Header="Column" Width="Auto" DisplayMemberBinding="{Binding ColumnName}"/>
 					<GridViewColumn Header="Aggregation" Width="500" DisplayMemberBinding="{Binding Aggregation}"/>
 				</GridView>
@@ -41,26 +34,28 @@
 				<UniformGrid Columns="6">
 					<Label Content="G" HorizontalAlignment="Right"/>
 					<Label Content="Group"/>
-					<Label Content="V" HorizontalAlignment="Right"/>
-					<Label Content="Value"/>
-					<Label Content="E" HorizontalAlignment="Right"/>
-					<Label Content="None"/>
+					<Label/>
+					<Label/>
+					<Label/>
+					<Label/>
+					<Label Content="A" HorizontalAlignment="Right"/>
+					<Label Content="All"/>
 					<Label Content="D" HorizontalAlignment="Right"/>
 					<Label Content="Distinct"/>
-					<Label Content="O" HorizontalAlignment="Right"/>
-					<Label Content="Concat"/>
+					<Label Content="E" HorizontalAlignment="Right"/>
+					<Label Content="None"/>
 					<Label Content="C" HorizontalAlignment="Right"/>
 					<Label Content="Count"/>
 					<Label Content="S" HorizontalAlignment="Right"/>
 					<Label Content="Sum"/>
 					<Label Content="A" HorizontalAlignment="Right"/>
 					<Label Content="Average"/>
-					<Label/>
-					<Label/>
 					<Label Content="N" HorizontalAlignment="Right"/>
 					<Label Content="Min"/>
 					<Label Content="X" HorizontalAlignment="Right"/>
 					<Label Content="Max"/>
+					<Label/>
+					<Label/>
 				</UniformGrid>
 				<Label Content="Hold shift for multiples." HorizontalAlignment="Center"/>
 			</StackPanel>

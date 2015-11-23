@@ -15,7 +15,6 @@ namespace NeoEdit.TableEdit
 	internal enum UndoRedoAction
 	{
 		ChangeCells,
-		Sort,
 		InsertRows,
 		DeleteRows,
 		InsertColumns,
@@ -43,15 +42,6 @@ namespace NeoEdit.TableEdit
 				Cells = cells.ToList(),
 				Values = values,
 				Action = UndoRedoAction.ChangeCells,
-			};
-		}
-
-		static public UndoRedoStep CreateSort(List<int> sortOrder)
-		{
-			return new UndoRedoStep
-			{
-				Positions = sortOrder,
-				Action = UndoRedoAction.Sort,
 			};
 		}
 

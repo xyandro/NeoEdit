@@ -832,11 +832,7 @@ namespace NeoEdit.TableEdit
 			var columns = Selections.EnumerateColumns(true).ToList();
 			if (!columns.Any())
 				throw new ArgumentException("No columns selected.");
-			var sortOrder = table.GetSortOrder(columns);
-			if (!sortOrder.Any())
-				return;
-
-			Sort(sortOrder);
+			ReplaceTable(table.Sort(columns.Select(column => new Table.SortData(column, true)).ToList(), true));
 
 			Selections.Replace(columns.Select(column => new CellRange(0, column, table.NumRows - 1)));
 		}
@@ -856,7 +852,7 @@ namespace NeoEdit.TableEdit
 			if (!columns.Any())
 				throw new ArgumentException("No columns selected.");
 
-			ReplaceTable(table.Aggregate(result.AggregateColumns, result.AggregateData));
+			ReplaceTable(table.Aggregate(result.AggregateData));
 		}
 
 		static Table joinSourceTable = null;
@@ -1053,7 +1049,6 @@ namespace NeoEdit.TableEdit
 			switch (step.Action)
 			{
 				case UndoRedoAction.ChangeCells: return UndoRedoStep.CreateChangeCells(step.Cells, step.Cells.Select(cell => table[cell]).ToList());
-				case UndoRedoAction.Sort: return UndoRedoStep.CreateSort(GetListReverse(step.Positions));
 				case UndoRedoAction.DeleteRows: return UndoRedoStep.CreateInsertRows(DeleteToInsert(step.Positions), table.GetRowData(step.Positions));
 				case UndoRedoAction.InsertRows: return UndoRedoStep.CreateDeleteRows(InsertToDelete(step.Positions));
 				case UndoRedoAction.DeleteColumns: return UndoRedoStep.CreateInsertColumns(DeleteToInsert(step.Positions), step.Positions.Select(index => table.Headers[index]).ToList(), table.GetColumnData(step.Positions));
@@ -1078,7 +1073,6 @@ namespace NeoEdit.TableEdit
 			switch (step.Action)
 			{
 				case UndoRedoAction.ChangeCells: table.ChangeCells(step.Cells, step.Values); break;
-				case UndoRedoAction.Sort: table.Sort(step.Positions); break;
 				case UndoRedoAction.DeleteRows: table.DeleteRows(step.Positions); break;
 				case UndoRedoAction.InsertRows: table.InsertRows(step.Positions, step.InsertData, true); break;
 				case UndoRedoAction.DeleteColumns: table.DeleteColumns(step.Positions); break;
@@ -1167,14 +1161,6 @@ namespace NeoEdit.TableEdit
 		}
 
 		void ReplaceTable(Table table) => Replace(UndoRedoStep.CreateChangeTable(table));
-
-		void Sort(List<int> sortOrder)
-		{
-			if (!sortOrder.Any())
-				return;
-
-			Replace(UndoRedoStep.CreateSort(sortOrder));
-		}
 
 		void RenameHeader(int column, string newName) => Replace(UndoRedoStep.CreateRenameHeader(column, newName));
 

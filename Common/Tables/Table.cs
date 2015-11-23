@@ -12,9 +12,9 @@ namespace NeoEdit.Common.Tables
 		public enum AggregateType
 		{
 			None = 0,
-			Value = 1,
-			Distinct = 2,
-			Concat = 4,
+			Group = 1,
+			All = 2,
+			Distinct = 4,
 			Min = 8,
 			Max = 16,
 			Sum = 32,
@@ -166,21 +166,6 @@ namespace NeoEdit.Common.Tables
 					row[column] = GetValue(row[column] as string);
 		}
 
-		public List<int> GetSortOrder(List<int> columns)
-		{
-			var order = Enumerable.Range(0, Rows.Count).ToList();
-			var ordering = order.OrderBy(rowIndex => 0);
-			foreach (var column in columns)
-				ordering = ordering.ThenBy(rowIndex => this[rowIndex, column]);
-			if (ordering.InOrder())
-			{
-				ordering = order.OrderBy(rowIndex => 0);
-				foreach (var column in columns)
-					ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, column]);
-			}
-			return ordering.ToList();
-		}
-
 		public int GetRowIndex(List<object> row) => Rows.IndexOf(row);
 
 		public static string ToTCSV(string str, char split)
@@ -215,9 +200,9 @@ namespace NeoEdit.Common.Tables
 		{
 			switch (aggType)
 			{
-				case AggregateType.Value: return values.Distinct().Single();
+				case AggregateType.Group: return values.Distinct().Single();
+				case AggregateType.All: return String.Join(", ", values);
 				case AggregateType.Distinct: return String.Join(", ", values.Distinct().OrderBy());
-				case AggregateType.Concat: return String.Join(", ", values.OrderBy());
 				case AggregateType.Min: return values.Min();
 				case AggregateType.Max: return values.Max();
 				case AggregateType.Sum: return values.Select(value => Convert.ToDouble(value)).Sum();
@@ -227,22 +212,44 @@ namespace NeoEdit.Common.Tables
 			}
 		}
 
-		public Table Aggregate(List<int> groupByColumns, List<Tuple<int, AggregateType>> aggregateData)
+		public class AggregateData
 		{
-			var groupMap = Rows.GroupBy(row => new ItemSet<object>());
-			foreach (var column in groupByColumns)
-				groupMap = groupMap.SelectMany(group => group.GroupBy(items => group.Key.Concat(items[column]).ToItemSet()));
-			var groupedRows = groupMap.Select(group => group.ToList()).ToList();
+			public int Column { get; set; }
+			public AggregateType Aggregation { get; set; }
+			public AggregateData(int column, AggregateType aggregation = AggregateType.All)
+			{
+				Column = column;
+				Aggregation = aggregation;
+			}
+		}
+
+		public Table Aggregate(List<AggregateData> aggregateData, bool fullAggregateOnNoGroups = true)
+		{
+			var changeHeaders = true;
+			var groupByColumns = aggregateData.Where(data => data.Aggregation.HasFlag(AggregateType.Group)).Select(data => data.Column).ToList();
+			List<List<List<object>>> groupedRows;
+			if ((!groupByColumns.Any()) && (!fullAggregateOnNoGroups))
+			{
+				groupedRows = Rows.Select(row => new List<List<object>> { row }).ToList();
+				changeHeaders = false;
+			}
+			else
+			{
+				var groupMap = Rows.GroupBy(row => new ItemSet<object>());
+				foreach (var column in groupByColumns)
+					groupMap = groupMap.SelectMany(group => group.GroupBy(items => group.Key.Concat(items[column]).ToItemSet()));
+				groupedRows = groupMap.Select(group => group.ToList()).ToList();
+			}
 
 			var newHeaders = new List<string>();
 			var newRows = groupedRows.Select(item => new List<object>()).ToList();
 
-			foreach (var tuple in aggregateData)
+			foreach (var data in aggregateData)
 			{
 				for (var ctr = 0; ctr < groupedRows.Count; ++ctr)
-					newRows[ctr].Add(GetAggregateValue(tuple.Item2, groupedRows[ctr].Select(item => item[tuple.Item1]).ToList()));
+					newRows[ctr].Add(GetAggregateValue(data.Aggregation, groupedRows[ctr].Select(item => item[data.Column]).ToList()));
 
-				newHeaders.Add($"{Headers[tuple.Item1]}{(tuple.Item2 == AggregateType.None ? "" : $" ({tuple.Item2})")}");
+				newHeaders.Add($"{Headers[data.Column]}{((data.Aggregation == AggregateType.None) || (!changeHeaders) ? "" : $" ({data.Aggregation})")}");
 			}
 
 			return new Table(this)
@@ -283,6 +290,39 @@ namespace NeoEdit.Common.Tables
 			};
 		}
 
+		public class SortData
+		{
+			public int Column { get; set; }
+			public bool Ascending { get; set; }
+			public SortData(int column, bool ascending)
+			{
+				Column = column;
+				Ascending = ascending;
+			}
+		}
+
+		public Table Sort(List<SortData> sortData, bool reverseOnNoOp = false)
+		{
+			var order = Enumerable.Range(0, Rows.Count).ToList();
+			var ordering = order.OrderBy(rowIndex => 0);
+			foreach (var data in sortData)
+				if (data.Ascending)
+					ordering = ordering.ThenBy(rowIndex => this[rowIndex, data.Column]);
+				else
+					ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, data.Column]);
+			if ((reverseOnNoOp) && (ordering.InOrder()))
+			{
+				ordering = order.OrderBy(rowIndex => 0);
+				foreach (var data in sortData)
+					if (data.Ascending)
+						ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, data.Column]);
+					else
+						ordering = ordering.ThenBy(rowIndex => this[rowIndex, data.Column]);
+			}
+
+			return new Table(this) { Rows = ordering.Select(index => Rows[index]).ToList() };
+		}
+
 		public object this[Cell cell]
 		{
 			get { return Rows[cell.Row][cell.Column]; }
@@ -306,7 +346,6 @@ namespace NeoEdit.Common.Tables
 
 		public string GetString(Cell cell) => (Rows[cell.Row][cell.Column] ?? "<NULL>").ToString();
 		public string GetString(int row, int column) => (Rows[row][column] ?? "<NULL>").ToString();
-		public void Sort(List<int> sortOrder) => Rows = sortOrder.Select(index => Rows[index]).ToList();
 		public List<List<object>> GetRowData(List<int> rows) => rows.Select(row => Rows[row].ToList()).ToList();
 		public List<List<object>> GetColumnData(List<int> ranges) => ranges.Select(column => Rows.Select(row => row[column]).ToList()).ToList();
 		public string GetTableData(ObservableCollectionEx<CellRange> ranges) => String.Join("\r\n", ranges.Select(range => GetTableData(range)));
