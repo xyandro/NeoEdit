@@ -29,16 +29,11 @@ namespace NeoEdit.Common
 		public int NumChars => Data.Length;
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
+		public string UTF8MD5 => Hasher.Get(Coder.StringToBytes(Data, Coder.CodePage.UTF8), Hasher.Type.MD5);
 
-		public TextData() : this(null, Coder.CodePage.UTF8) { }
-		public TextData(byte[] bytes, Coder.CodePage codePage)
+		public TextData(string data = "")
 		{
-			if (bytes == null)
-				bytes = new byte[0];
-			if (codePage == Coder.CodePage.None)
-				throw new Exception("No encoder specified");
-
-			Data = Coder.BytesToString(bytes, codePage, true);
+			Data = data;
 		}
 
 		public bool CanFullyEncode(Coder.CodePage codePage) => Coder.CanFullyEncode(Data, codePage);

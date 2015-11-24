@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.NEClipboards;
+using NeoEdit.Common.Transform;
 using NeoEdit.Disk.Dialogs;
 using NeoEdit.Disk.VCS;
 using NeoEdit.GUI;
@@ -472,7 +473,7 @@ namespace NeoEdit.Disk
 			if ((file.FileType != DiskItem.DiskItemType.File) || (!file.Exists))
 				return false;
 
-			var data = new TextData(File.ReadAllBytes(file.FullName), Common.Transform.Coder.CodePage.AutoByBOM);
+			var data = new TextData(Coder.BytesToString(File.ReadAllBytes(file.FullName), Common.Transform.Coder.CodePage.AutoByBOM, true));
 			var start = data.GetOffset(0, 0);
 			return data.RegexMatches(search.Regex, start, data.NumChars - start, search.IncludeEndings, false, true).Any();
 		}

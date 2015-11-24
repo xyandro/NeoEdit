@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace NeoEdit.TextEdit
@@ -22,29 +21,13 @@ namespace NeoEdit.TextEdit
 
 		readonly List<UndoRedoStep> undo = new List<UndoRedoStep>();
 		readonly List<UndoRedoStep> redo = new List<UndoRedoStep>();
-		readonly Action<bool> setChanged;
-		int _modifiedSteps = 0;
-		int modifiedSteps
-		{
-			get { return _modifiedSteps; }
-			set
-			{
-				if (value == _modifiedSteps)
-					return;
-				_modifiedSteps = value;
-				setChanged(_modifiedSteps != 0);
-			}
-		}
 
-		internal UndoRedo(Action<bool> _setChanged) { setChanged = _setChanged; }
-
-		internal void SetModified(bool modified = true) => modifiedSteps = modified ? Int32.MinValue / 2 : 0;
+		internal UndoRedo() { }
 
 		internal void Clear()
 		{
 			undo.Clear();
 			redo.Clear();
-			modifiedSteps = 0;
 		}
 
 		internal UndoRedoStep GetUndo()
@@ -70,26 +53,21 @@ namespace NeoEdit.TextEdit
 		internal void AddUndone(UndoRedoStep current)
 		{
 			redo.Add(current);
-			--modifiedSteps;
 		}
 
 		internal void AddRedone(UndoRedoStep current)
 		{
 			undo.Add(current);
-			++modifiedSteps;
 		}
 
 		const int maxUndo = 1048576 * 10;
-		internal void AddUndo(UndoRedoStep current)
+		internal void AddUndo(UndoRedoStep current, bool modified)
 		{
-			if (modifiedSteps < 0)
-				modifiedSteps = Int32.MinValue / 2; // Never reach 0 again
-
 			redo.Clear();
 
 			// See if we can add this one to the last one
 			var done = false;
-			if ((current.tryJoinLast) && (modifiedSteps != 0) && (undo.Count != 0))
+			if ((current.tryJoinLast) && (!modified) && (undo.Count != 0))
 			{
 				var last = undo.Last();
 				if ((last.tryJoinLast) && (last.ranges.Count == current.ranges.Count))
@@ -122,7 +100,6 @@ namespace NeoEdit.TextEdit
 			if (!done)
 			{
 				undo.Add(current);
-				++modifiedSteps;
 			}
 
 			// Limit undo buffer

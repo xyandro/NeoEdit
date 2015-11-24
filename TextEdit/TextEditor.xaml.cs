@@ -205,7 +205,7 @@ namespace NeoEdit.TextEdit
 			SetupStaticOrLocalData();
 			SetupDropAccept();
 
-			undoRedo = new UndoRedo(b => IsModified = b);
+			undoRedo = new UndoRedo();
 			Selections = new RangeList(SelectionsInvalidated);
 			Searches = new RangeList(SearchesInvalidated);
 			Regions = new RangeList(RegionsInvalidated);
@@ -287,6 +287,20 @@ namespace NeoEdit.TextEdit
 			};
 		}
 
+		string modifiedChecksum;
+		void SetModifiedFlag(bool? newValue = null)
+		{
+			var checksum = Data.UTF8MD5;
+			if (newValue.HasValue)
+			{
+				if (newValue == false)
+					modifiedChecksum = checksum;
+				else
+					modifiedChecksum = "INVALIDMD5"; // Invalid MD5: Nothing will match, file will be perpetually modified
+			}
+			IsModified = modifiedChecksum != checksum;
+		}
+
 		internal void Goto(int line, int column)
 		{
 			line = Math.Max(0, Math.Min(line, Data.NumLines) - 1);
@@ -296,7 +310,7 @@ namespace NeoEdit.TextEdit
 		}
 
 		DateTime fileLastWrite;
-		internal void OpenFile(string filename, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null)
+		internal void OpenFile(string filename, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool keepUndo = false)
 		{
 			FileName = filename;
 			var isModified = modified ?? bytes != null;
@@ -314,7 +328,8 @@ namespace NeoEdit.TextEdit
 
 			if (codePage == Coder.CodePage.AutoByBOM)
 				codePage = Coder.CodePageFromBOM(bytes);
-			Data = new TextData(bytes, codePage);
+			var data = Coder.BytesToString(bytes, codePage, true);
+			Replace(new List<Range> { new Range(EndOffset(), BeginOffset()) }, new List<string> { data });
 			CodePage = codePage;
 			HighlightType = Highlighting.Get(FileName);
 			ContentType = Parser.GetParserType(FileName);
@@ -325,7 +340,9 @@ namespace NeoEdit.TextEdit
 			if ((!isModified) && ((bytes.Length >> 20) < 50))
 				isModified = !Coder.CanFullyEncode(bytes, CodePage);
 
-			undoRedo.SetModified(isModified);
+			if (!keepUndo)
+				undoRedo.Clear();
+			SetModifiedFlag(isModified);
 		}
 
 		int BeginOffset() => Data.GetOffset(0, 0);
@@ -549,7 +566,7 @@ namespace NeoEdit.TextEdit
 
 			File.WriteAllBytes(fileName, FileEncryptor.Encrypt(Data.GetBytes(CodePage), AESKey));
 			fileLastWrite = new FileInfo(fileName).LastWriteTime;
-			undoRedo.SetModified(false);
+			SetModifiedFlag(false);
 			FileName = fileName;
 		}
 
@@ -1030,7 +1047,7 @@ namespace NeoEdit.TextEdit
 					return;
 			}
 
-			OpenFile(FileName);
+			OpenFile(FileName, keepUndo: true);
 		}
 
 		internal void Command_File_Operations_Delete()
@@ -3497,10 +3514,11 @@ namespace NeoEdit.TextEdit
 			{
 				case ReplaceType.Undo: undoRedo.AddUndone(textCanvasUndoRedo); break;
 				case ReplaceType.Redo: undoRedo.AddRedone(textCanvasUndoRedo); break;
-				case ReplaceType.Normal: undoRedo.AddUndo(textCanvasUndoRedo); break;
+				case ReplaceType.Normal: undoRedo.AddUndo(textCanvasUndoRedo, IsModified); break;
 			}
 
 			Data.Replace(ranges.Select(range => range.Start).ToList(), ranges.Select(range => range.Length).ToList(), strs);
+			SetModifiedFlag();
 			CalculateDiff();
 
 			var translateMap = RangeList.GetTranslateMap(ranges, strs, Selections, Regions, Searches, Bookmarks);

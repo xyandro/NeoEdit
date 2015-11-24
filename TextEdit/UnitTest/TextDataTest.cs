@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common;
-using NeoEdit.Common.Transform;
 
 namespace NeoEdit.TextEdit.UnitTest
 {
@@ -19,7 +17,7 @@ namespace NeoEdit.TextEdit.UnitTest
 			"{Asdf}\r\n";
 		const int numLines = 7;
 
-		TextData GetTextData() => new TextData(Encoding.UTF8.GetBytes(TestString), Coder.CodePage.UTF8);
+		TextData GetTextData() => new TextData(TestString);
 
 		[TestMethod]
 		public void LimitsTest()
