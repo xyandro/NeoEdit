@@ -294,7 +294,7 @@ namespace NeoEdit.Common.Tables
 		{
 			public int Column { get; set; }
 			public bool Ascending { get; set; }
-			public SortData(int column, bool ascending)
+			public SortData(int column, bool ascending = true)
 			{
 				Column = column;
 				Ascending = ascending;

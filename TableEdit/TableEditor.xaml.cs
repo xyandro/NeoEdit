@@ -832,7 +832,7 @@ namespace NeoEdit.TableEdit
 			var columns = Selections.EnumerateColumns(true).ToList();
 			if (!columns.Any())
 				throw new ArgumentException("No columns selected.");
-			ReplaceTable(table.Sort(columns.Select(column => new Table.SortData(column, true)).ToList(), true));
+			ReplaceTable(table.Sort(columns.Select(column => new Table.SortData(column)).ToList(), true));
 
 			Selections.Replace(columns.Select(column => new CellRange(0, column, table.NumRows - 1)));
 		}

@@ -23,6 +23,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Tables;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
@@ -565,6 +566,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
+				case TextEditCommand.Edit_Table_Aggregate: dialogResult = Command_Edit_Table_Aggregate_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
 				case TextEditCommand.Edit_Hash: dialogResult = Command_Edit_Hash_Dialog(); break;
@@ -686,6 +688,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
+				case TextEditCommand.Edit_Table_Aggregate: Command_Edit_Table_Aggregate(dialogResult as AggregateTableDialog.Result); break;
 				case TextEditCommand.Edit_Table_RegionsSelectionsToTable: Command_Edit_Table_RegionsSelectionsToTable(); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
@@ -1293,13 +1296,34 @@ namespace NeoEdit.TextEdit
 				Selections.Replace(new Range(BeginOffset(), EndOffset()));
 		}
 
+		internal AggregateTableDialog.Result Command_Edit_Table_Aggregate_Dialog()
+		{
+			SetTableSelection();
+			return AggregateTableDialog.Run(WindowParent, GetString(Selections[0]));
+		}
+
+		string GetTableAggregate(string input, AggregateTableDialog.Result result)
+		{
+			var table = new Table(input, result.InputType, result.InputHeaders);
+			table = table.Aggregate(result.AggregateData, false);
+			table = table.Sort(result.SortData);
+			return table.ConvertToString(Data.DefaultEnding, result.OutputType, result.OutputHeaders);
+		}
+
+		internal void Command_Edit_Table_Aggregate(AggregateTableDialog.Result result)
+		{
+			SetTableSelection();
+			var outputs = GetSelectionStrings().Select(str => GetTableAggregate(str, result)).ToList();
+			ReplaceSelections(outputs);
+		}
+
 		internal void Command_Edit_Table_RegionsSelectionsToTable()
 		{
 			if (!Selections.Any())
 				return;
 
 			var regions = GetEnclosingRegions();
-			var lines = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => String.Join("\t", group.Select(index => @"""" + GetString(Selections[index]).Replace(@"""", @"""""") + @""""))).ToList();
+			var lines = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => String.Join("\t", group.Select(index => Table.ToTCSV(GetString(Selections[index]), '\t')))).ToList();
 			Selections.Replace(Regions);
 			Regions.Clear();
 			ReplaceSelections(lines);

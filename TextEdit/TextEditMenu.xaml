@@ -92,6 +92,7 @@
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Table">
+			<textEdit:TextEditMenuItem Header="_Aggregate" CommandEnum="Edit_Table_Aggregate"/>
 			<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Edit_Table_RegionsSelectionsToTable"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="Copy _Down" CommandEnum="Edit_CopyDown"/>

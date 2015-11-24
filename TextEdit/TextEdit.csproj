@@ -100,6 +100,20 @@
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
     <Compile Include="DBConnectInfo.cs" />
+    <Page Include="Dialogs\AggregateTableDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\AggregateTableDialog.xaml.cs">
+      <DependentUpon>AggregateTableDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\AggregateTableDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\AggregateTableDisplay.xaml.cs">
+      <DependentUpon>AggregateTableDisplay.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

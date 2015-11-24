@@ -49,6 +49,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.F3)] [KeyGesture(Key.F3, ModifierKeys.Shift, false)] Edit_Find_Next,
 		[KeyGesture(Key.F3, ModifierKeys.Control)] [KeyGesture(Key.F3, ModifierKeys.Control | ModifierKeys.Shift, false)] Edit_Find_Previous,
 		Edit_Find_Replace,
+		[KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Table_Aggregate,
 		Edit_Table_RegionsSelectionsToTable,
 		Edit_CopyDown,
 		[KeyGesture(Key.R, ModifierKeys.Control)] Edit_Repeat,
