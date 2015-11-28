@@ -28,7 +28,7 @@ namespace NeoEdit.Common
 	{
 		class FindData
 		{
-			public int[] CharMap { get; private set; }
+			public int[] CharMap { get; }
 			public int NumChars { get; private set; }
 			readonly bool matchCase;
 <# for (var ctr = 0; ctr < types.Length; ++ctr) { #>
@@ -121,12 +121,9 @@ namespace NeoEdit.Common
 			}
 		}
 <# } #>
-<# for (var ctr = 0; ctr < types.Length; ++ctr) { #>
 
-		public List<Tuple<int, int>> Find(<#= types[ctr].Name #> input)
-		{
-			return Find(input, 0, input<#= length[ctr] #>);
-		}
+<# for (var ctr = 0; ctr < types.Length; ++ctr) { #>
+		public List<Tuple<int, int>> Find(<#= types[ctr].Name #> input) => Find(input, 0, input<#= length[ctr] #>);
 <# } #>
 <# for (var ctr = 0; ctr < types.Length; ++ctr) { #>
 
@@ -175,12 +172,23 @@ namespace NeoEdit.Common
 						result.Add(new Tuple<int, int>(inputPos - newWorker.length + 1, newWorker.length));
 						if (firstOnly)
 							return result;
-						newWorking.Clear();
-						break;
 					}
 				}
 				working = newWorking;
 			}
+
+			// Take longest values
+			result = result.GroupBy(value => value.Item1).Select(group => group.OrderByDescending(value => value.Item2).First()).OrderBy(value => value.Item1).ToList();
+
+			// Remove overlapping values
+			for (var idx = 0; idx < result.Count();)
+			{
+				if ((idx == 0) || (result[idx].Item1 >= result[idx - 1].Item1 + result[idx - 1].Item2))
+					++idx;
+				else
+					result.RemoveAt(idx);
+			}
+
 			return result;
 		}
 <# } #>

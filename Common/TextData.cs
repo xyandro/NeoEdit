@@ -490,27 +490,8 @@ namespace NeoEdit.Common
 
 		public List<Tuple<int, int>> StringMatches(Searcher searcher, int offset, int length)
 		{
-			var result = new List<Tuple<int, int>>();
-
-			var endOffset = offset + length;
-			var line = GetOffsetLine(offset);
-			var index = GetOffsetIndex(offset, line);
-			while (true)
-			{
-				if (line >= NumLines)
-					break;
-				var matchOffset = lineOffset[line] + index;
-				if (matchOffset >= endOffset)
-					break;
-
-				var matchLength = Math.Min(lineOffset[line] + GetLineLength(line), endOffset) - matchOffset;
-				result.AddRange(searcher.Find(Data, matchOffset, matchLength));
-				++line;
-				index = 0;
-				continue;
-			}
-			return result;
-		}
+			return searcher.Find(Data, offset, length);
+        }
 
 		public void Trim(ref int offset, ref int length)
 		{

@@ -25,7 +25,6 @@ Time zones
 Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
 Get DLL/EXE version info
-Find longest matching key ("aa" instead of "a")
 
 View:
 Update as new lines are added

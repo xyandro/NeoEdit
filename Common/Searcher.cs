@@ -277,12 +277,23 @@ namespace NeoEdit.Common
 						result.Add(new Tuple<int, int>(inputPos - newWorker.length + 1, newWorker.length));
 						if (firstOnly)
 							return result;
-						newWorking.Clear();
-						break;
 					}
 				}
 				working = newWorking;
 			}
+
+			// Take longest values
+			result = result.GroupBy(value => value.Item1).Select(group => group.OrderByDescending(value => value.Item2).First()).OrderBy(value => value.Item1).ToList();
+
+			// Remove overlapping values
+			for (var idx = 0; idx < result.Count();)
+			{
+				if ((idx == 0) || (result[idx].Item1 >= result[idx - 1].Item1 + result[idx - 1].Item2))
+					++idx;
+				else
+					result.RemoveAt(idx);
+			}
+
 			return result;
 		}
 
@@ -331,12 +342,23 @@ namespace NeoEdit.Common
 						result.Add(new Tuple<int, int>(inputPos - newWorker.length + 1, newWorker.length));
 						if (firstOnly)
 							return result;
-						newWorking.Clear();
-						break;
 					}
 				}
 				working = newWorking;
 			}
+
+			// Take longest values
+			result = result.GroupBy(value => value.Item1).Select(group => group.OrderByDescending(value => value.Item2).First()).OrderBy(value => value.Item1).ToList();
+
+			// Remove overlapping values
+			for (var idx = 0; idx < result.Count();)
+			{
+				if ((idx == 0) || (result[idx].Item1 >= result[idx - 1].Item1 + result[idx - 1].Item2))
+					++idx;
+				else
+					result.RemoveAt(idx);
+			}
+
 			return result;
 		}
 
@@ -385,12 +407,23 @@ namespace NeoEdit.Common
 						result.Add(new Tuple<int, int>(inputPos - newWorker.length + 1, newWorker.length));
 						if (firstOnly)
 							return result;
-						newWorking.Clear();
-						break;
 					}
 				}
 				working = newWorking;
 			}
+
+			// Take longest values
+			result = result.GroupBy(value => value.Item1).Select(group => group.OrderByDescending(value => value.Item2).First()).OrderBy(value => value.Item1).ToList();
+
+			// Remove overlapping values
+			for (var idx = 0; idx < result.Count();)
+			{
+				if ((idx == 0) || (result[idx].Item1 >= result[idx - 1].Item1 + result[idx - 1].Item2))
+					++idx;
+				else
+					result.RemoveAt(idx);
+			}
+
 			return result;
 		}
 	}
