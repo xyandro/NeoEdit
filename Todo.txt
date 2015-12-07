@@ -25,6 +25,8 @@ Time zones
 Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
 Get DLL/EXE version info
+Diff: Ignore whitespace
+Diff: Copy unchanged lines over (will fix whitespace changes)
 
 View:
 Update as new lines are added

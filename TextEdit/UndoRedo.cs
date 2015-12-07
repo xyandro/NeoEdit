@@ -67,7 +67,7 @@ namespace NeoEdit.TextEdit
 
 			// See if we can add this one to the last one
 			var done = false;
-			if ((current.tryJoinLast) && (!modified) && (undo.Count != 0))
+			if ((current.tryJoinLast) && (modified) && (undo.Count != 0))
 			{
 				var last = undo.Last();
 				if ((last.tryJoinLast) && (last.ranges.Count == current.ranges.Count))
