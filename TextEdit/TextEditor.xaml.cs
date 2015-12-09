@@ -107,6 +107,8 @@ namespace NeoEdit.TextEdit
 		public bool DiffIgnoreWhitespace { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool DiffIgnoreCase { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool IsDiff { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditor diffTarget;
 		public TextEditor DiffTarget
@@ -117,8 +119,11 @@ namespace NeoEdit.TextEdit
 				if (value == this)
 					value = null;
 
+				IsDiff = false;
+
 				if (diffTarget != null)
 				{
+					diffTarget.IsDiff = false;
 					BindingOperations.ClearBinding(this, UIHelper<TextEditor>.GetProperty(a => a.yScrollValue));
 					BindingOperations.ClearBinding(diffTarget, UIHelper<TextEditor>.GetProperty(a => a.yScrollValue));
 					Data.ClearDiff();
@@ -135,6 +140,7 @@ namespace NeoEdit.TextEdit
 					diffTarget = value;
 					value.diffTarget = this;
 					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue), new Binding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue).Name) { Source = value, Mode = BindingMode.TwoWay });
+					IsDiff = diffTarget.IsDiff = true;
 				}
 
 				CalculateDiff();
@@ -242,9 +248,10 @@ namespace NeoEdit.TextEdit
 
 		void SetupTabLabel()
 		{
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")+([2]?"" (Diff)"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
+			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsDiff).Name) { Source = this });
 			SetBinding(UIHelper<TabsControl<TextEditor, TextEditCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
