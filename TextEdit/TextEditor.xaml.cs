@@ -696,11 +696,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;
 				case TextEditCommand.Edit_Copy_Cut: Command_Edit_Copy_CutCopy(true); break;
 				case TextEditCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(shiftDown); break;
-				case TextEditCommand.Edit_Diff_Break: Command_Edit_Diff_Break(); break;
-				case TextEditCommand.Edit_Diff_Next: Command_Edit_Diff_NextPrevious(true); break;
-				case TextEditCommand.Edit_Diff_Previous: Command_Edit_Diff_NextPrevious(false); break;
-				case TextEditCommand.Edit_Diff_CopyLeft: Command_Edit_Diff_CopyLeftRight(true); break;
-				case TextEditCommand.Edit_Diff_CopyRight: Command_Edit_Diff_CopyLeftRight(false); break;
 				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_FindReplace(false, shiftDown, dialogResult as FindTextDialog.Result); break;
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
@@ -723,6 +718,11 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Bookmarks_Next: Command_Edit_Bookmarks_NextPreviousBookmark(true, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
+				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
+				case TextEditCommand.Diff_Next: Command_Diff_NextPrevious(true); break;
+				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
+				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
+				case TextEditCommand.Diff_CopyRight: Command_Diff_CopyLeftRight(false); break;
 				case TextEditCommand.Files_Create_Files: Command_Files_Create_Files(); break;
 				case TextEditCommand.Files_Create_Directories: Command_Files_Create_Directories(); break;
 				case TextEditCommand.Files_Names_Simplify: Command_Files_Names_Simplify(); break;
@@ -2143,7 +2143,7 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		internal void Command_Edit_Diff_Break() => DiffTarget = null;
+		internal void Command_Diff_Break() => DiffTarget = null;
 
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
@@ -2168,7 +2168,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Edit_Diff_NextPrevious(bool next)
+		internal void Command_Diff_NextPrevious(bool next)
 		{
 			if (DiffTarget == null)
 				return;
@@ -2181,7 +2181,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Edit_Diff_CopyLeftRight(bool moveLeft)
+		internal void Command_Diff_CopyLeftRight(bool moveLeft)
 		{
 			if (DiffTarget == null)
 				return;

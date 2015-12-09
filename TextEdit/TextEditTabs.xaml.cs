@@ -160,7 +160,7 @@ namespace NeoEdit.TextEdit
 				active[ctr].Command_Edit_Paste_AllFiles(strs[ctr], shiftDown);
 		}
 
-		void Command_Edit_Diff_Diff()
+		void Command_Diff_Diff()
 		{
 			var diffTargets = ItemTabs.Items.Count == 2 ? ItemTabs.Items.ToList() : ItemTabs.Items.Where(data => data.Active).ToList();
 			if ((diffTargets.Count == 2) && (diffTargets[0].DiffTarget != diffTargets[1]))
@@ -353,7 +353,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_Copy_AllFiles: Command_Edit_Copy_AllFiles(); break;
 				case TextEditCommand.Edit_Paste_AllFiles: Command_Edit_Paste_AllFiles(); break;
-				case TextEditCommand.Edit_Diff_Diff: Command_Edit_Diff_Diff(); break;
+				case TextEditCommand.Diff_Diff: Command_Diff_Diff(); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
 				case TextEditCommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;

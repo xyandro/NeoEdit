@@ -74,16 +74,6 @@
 		</MenuItem>
 		<textEdit:MultiMenuItem Header="Loc_al Clipboard" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="UseLocalClipboard" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
 		<Separator/>
-		<MenuItem Header="D_iff">
-			<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Edit_Diff_Diff"/>
-			<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Edit_Diff_Break"/>
-			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Edit_Diff_Next"/>
-			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Edit_Diff_Previous"/>
-			<textEdit:TextEditMenuItem Header="Copy _Left" CommandEnum="Edit_Diff_CopyLeft"/>
-			<textEdit:TextEditMenuItem Header="Copy _Right" CommandEnum="Edit_Diff_CopyRight"/>
-		</MenuItem>
-		<Separator/>
 		<MenuItem Header="_Find">
 			<textEdit:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
 			<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
@@ -125,6 +115,15 @@
 			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Edit_Bookmarks_Previous"/>
 			<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Edit_Bookmarks_Clear"/>
 		</MenuItem>
+	</MenuItem>
+	<MenuItem Header="D_iff">
+		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
+		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Diff_Next"/>
+		<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
+		<textEdit:TextEditMenuItem Header="Copy _Left" CommandEnum="Diff_CopyLeft"/>
+		<textEdit:TextEditMenuItem Header="Copy _Right" CommandEnum="Diff_CopyRight"/>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<MenuItem Header="_Create">

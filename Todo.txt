@@ -1,11 +1,11 @@
 All:
 Add command prompt
-In active list add number of selections, allow sort, allow typing to find file
 
 Disk:
 Move timestamp (possibly others) from TextEditor
 Select readable
 Can't open any window if current directory is invalid (like when running off a network drive)
+In active list add number of selections, allow sort, allow typing to find file
 
 Tables:
 
@@ -27,6 +27,7 @@ Nest macros
 Get DLL/EXE version info
 Diff: Ignore whitespace
 Diff: Copy unchanged lines over (will fix whitespace changes)
+Multiple selections on aggregation should create one table
 
 View:
 Update as new lines are added
