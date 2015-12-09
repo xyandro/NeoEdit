@@ -476,6 +476,8 @@
 		<Separator/>
 		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
+		<textEdit:TextEditMenuItem Header="Select Tabs With _Selections" CommandEnum="View_SelectTabsWithSelections"/>
+		<textEdit:TextEditMenuItem Header="Select Tabs Without S_elections" CommandEnum="View_SelectTabsWithoutSelections"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>

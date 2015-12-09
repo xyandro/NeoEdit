@@ -178,6 +178,13 @@ namespace NeoEdit.TextEdit
 
 		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
 
+		void Command_View_SelectTabsWithSelections(bool hasSelections)
+		{
+			ItemTabs.Items.Where(tab => (tab.Active) && (tab.NumSelections == 0 == hasSelections)).ToList().ForEach(tab => tab.Active = false);
+			if (!ItemTabs.TopMost.Active)
+				ItemTabs.TopMost = ItemTabs.Items.FirstOrDefault(tab => tab.Active) ?? ItemTabs.TopMost;
+		}
+
 		void Command_View_WordList()
 		{
 			var type = GetType();
@@ -355,6 +362,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Paste_AllFiles: Command_Edit_Paste_AllFiles(); break;
 				case TextEditCommand.Diff_Diff: Command_Diff_Diff(); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
+				case TextEditCommand.View_SelectTabsWithSelections: Command_View_SelectTabsWithSelections(true); break;
+				case TextEditCommand.View_SelectTabsWithoutSelections: Command_View_SelectTabsWithSelections(false); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
 				case TextEditCommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
 				case TextEditCommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
