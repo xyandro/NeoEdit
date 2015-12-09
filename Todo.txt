@@ -25,7 +25,6 @@ Time zones
 Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
 Get DLL/EXE version info
-Diff: Copy unchanged lines over (will fix whitespace changes)
 Multiple selections on aggregation should create one table
 
 View:

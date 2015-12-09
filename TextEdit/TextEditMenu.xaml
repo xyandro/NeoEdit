@@ -127,6 +127,9 @@
 		<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
 		<textEdit:TextEditMenuItem Header="Copy _Left" CommandEnum="Diff_CopyLeft"/>
 		<textEdit:TextEditMenuItem Header="Copy _Right" CommandEnum="Diff_CopyRight"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="Select _Match" CommandEnum="Diff_SelectMatch"/>
+		<textEdit:TextEditMenuItem Header="Select Non M_atch" CommandEnum="Diff_SelectNonMatch"/>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<MenuItem Header="_Create">

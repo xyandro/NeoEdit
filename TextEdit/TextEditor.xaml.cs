@@ -729,6 +729,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
 				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
 				case TextEditCommand.Diff_CopyRight: Command_Diff_CopyLeftRight(false); break;
+				case TextEditCommand.Diff_SelectMatch: Command_Diff_SelectMatch(true); break;
+				case TextEditCommand.Diff_SelectNonMatch: Command_Diff_SelectMatch(false); break;
 				case TextEditCommand.Files_Create_Files: Command_Files_Create_Files(); break;
 				case TextEditCommand.Files_Create_Directories: Command_Files_Create_Directories(); break;
 				case TextEditCommand.Files_Names_Simplify: Command_Files_Names_Simplify(); break;
@@ -2212,6 +2214,14 @@ namespace NeoEdit.TextEdit
 				left.ReplaceSelections(right.GetSelectionStrings());
 			else
 				right.ReplaceSelections(left.GetSelectionStrings());
+		}
+
+		internal void Command_Diff_SelectMatch(bool matching)
+		{
+			if (DiffTarget == null)
+				return;
+
+			Selections.Replace(Data.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)));
 		}
 
 		internal void Command_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());

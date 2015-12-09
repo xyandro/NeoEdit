@@ -649,5 +649,33 @@ namespace NeoEdit.Common
 				line += direction;
 			return line;
 		}
+
+		public List<Tuple<int, int>> GetDiffMatches(bool match)
+		{
+			if (diffData == null)
+				throw new ArgumentException("No diff in progress");
+
+			var result = new List<Tuple<int, int>>();
+			var matchTuple = default(Tuple<int, int>);
+			var line = 0;
+			while (true)
+			{
+				var end = line >= diffData.LineCompare.Count;
+
+				if ((!end) && ((diffData.LineCompare[line] == LCS.MatchType.Match) == match))
+					matchTuple = Tuple.Create(matchTuple?.Item1 ?? lineOffset[line], lineOffset[line + 1]);
+				else if (matchTuple != null)
+				{
+					result.Add(matchTuple);
+					matchTuple = null;
+				}
+
+				if (end)
+					break;
+
+				++line;
+			}
+			return result;
+		}
 	}
 }

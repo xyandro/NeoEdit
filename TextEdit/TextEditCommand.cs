@@ -69,6 +69,8 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.Up, ModifierKeys.Alt)] Diff_Previous,
 		[KeyGesture(Key.Left, ModifierKeys.Alt)] Diff_CopyLeft,
 		[KeyGesture(Key.Right, ModifierKeys.Alt)] Diff_CopyRight,
+		Diff_SelectMatch,
+		Diff_SelectNonMatch,
 		Files_Create_Files,
 		Files_Create_Directories,
 		Files_Names_Simplify,
