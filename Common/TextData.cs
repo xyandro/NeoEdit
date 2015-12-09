@@ -491,7 +491,7 @@ namespace NeoEdit.Common
 		public List<Tuple<int, int>> StringMatches(Searcher searcher, int offset, int length)
 		{
 			return searcher.Find(Data, offset, length);
-        }
+		}
 
 		public void Trim(ref int offset, ref int length)
 		{
@@ -507,27 +507,48 @@ namespace NeoEdit.Common
 		class DiffData
 		{
 			public string Data;
+			public bool IgnoreWhitespace, IgnoreCase;
 			public List<LCS.MatchType> LineCompare;
 			public List<Tuple<int, int>>[] ColCompare;
 			public Dictionary<int, int> LineMap, LineRevMap;
 
-			public DiffData(string data) { Data = data; }
+			public DiffData(string data, bool ignoreWhitespace, bool ignoreCase)
+			{
+				Data = data;
+				IgnoreWhitespace = ignoreWhitespace;
+				IgnoreCase = ignoreCase;
+			}
 		}
 		DiffData diffData;
 
-		public static void CalculateDiff(TextData data0, TextData data1)
+		static string FormatDiffLine(string line, bool ignoreWhitespace, bool ignoreCase)
 		{
-			if ((data0.diffData != null) && (data1.diffData != null) && (data0.diffData.Data == data0.Data) && (data1.diffData.Data == data1.Data))
+			if (ignoreWhitespace)
+			{
+				var sb = new StringBuilder(line.Length);
+				foreach (var c in line)
+					if (!Char.IsWhiteSpace(c))
+						sb.Append(c);
+				line = sb.ToString();
+			}
+			if (ignoreCase)
+				line = line.ToLowerInvariant();
+			return line;
+		}
+
+		public static void CalculateDiff(TextData data0, TextData data1, bool ignoreWhitespace, bool ignoreCase)
+		{
+			if ((data0.diffData != null) && (data1.diffData != null) && (data0.diffData.Data == data0.Data) && (data1.diffData.Data == data1.Data) && (data0.diffData.IgnoreWhitespace == ignoreWhitespace) && (data1.diffData.IgnoreWhitespace == ignoreWhitespace) && (data0.diffData.IgnoreCase == ignoreCase) && (data1.diffData.IgnoreCase == ignoreCase))
 				return;
 
 			data0.ClearDiff();
 			data1.ClearDiff();
 
-			data0.diffData = new DiffData(data0.Data);
-			data1.diffData = new DiffData(data1.Data);
+			data0.diffData = new DiffData(data0.Data, ignoreWhitespace, ignoreCase);
+			data1.diffData = new DiffData(data1.Data, ignoreWhitespace, ignoreCase);
 
-			var lines0 = Enumerable.Range(0, data0.NumLines).Select(line => data0.GetLine(line)).ToList();
-			var lines1 = Enumerable.Range(0, data1.NumLines).Select(line => data1.GetLine(line)).ToList();
+			var lines0 = Enumerable.Range(0, data0.NumLines).Select(line => data0.GetLine(line)).Select(line => FormatDiffLine(line, ignoreWhitespace, ignoreCase)).ToList();
+			var lines1 = Enumerable.Range(0, data1.NumLines).Select(line => data1.GetLine(line)).Select(line => FormatDiffLine(line, ignoreWhitespace, ignoreCase)).ToList();
 			LCS.GetLCS(lines0, lines1, out data0.diffData.LineCompare, out data1.diffData.LineCompare);
 
 			for (var pass = 0; pass < 2; ++pass)

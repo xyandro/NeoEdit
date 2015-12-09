@@ -120,6 +120,9 @@
 		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
 		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
+		<textEdit:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreWhitespace" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}" CommandEnum="Diff_IgnoreWhitespace"/>
+		<textEdit:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreCase" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}" CommandEnum="Diff_IgnoreCase"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Diff_Next"/>
 		<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
 		<textEdit:TextEditMenuItem Header="Copy _Left" CommandEnum="Diff_CopyLeft"/>

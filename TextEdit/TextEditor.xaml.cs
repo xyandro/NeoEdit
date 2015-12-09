@@ -103,6 +103,10 @@ namespace NeoEdit.TextEdit
 		public int ClipboardCount { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool UseLocalClipboard { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool DiffIgnoreWhitespace { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool DiffIgnoreCase { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditor diffTarget;
 		public TextEditor DiffTarget
@@ -719,6 +723,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
 				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
+				case TextEditCommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(); break;
+				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(); break;
 				case TextEditCommand.Diff_Next: Command_Diff_NextPrevious(true); break;
 				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
 				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
@@ -2145,6 +2151,10 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Diff_Break() => DiffTarget = null;
 
+		internal void Command_Diff_IgnoreWhitespace() => CalculateDiff();
+
+		internal void Command_Diff_IgnoreCase() => CalculateDiff();
+
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
 			var offset = next ? range.End : Math.Max(0, range.Start - 1);
@@ -3476,7 +3486,9 @@ namespace NeoEdit.TextEdit
 			if (diffTarget == null)
 				return;
 
-			TextData.CalculateDiff(Data, diffTarget.Data);
+			diffTarget.DiffIgnoreWhitespace = DiffIgnoreWhitespace;
+			diffTarget.DiffIgnoreCase = DiffIgnoreCase;
+			TextData.CalculateDiff(Data, diffTarget.Data, DiffIgnoreWhitespace, DiffIgnoreCase);
 
 			CalculateBoundaries();
 			diffTarget.CalculateBoundaries();

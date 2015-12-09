@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace NeoEdit.GUI.Controls
 {
-	public class MultiMenuItem<ItemType, CommandType> : MenuItem where ItemType : TabsControl<ItemType, CommandType>
+	public class MultiMenuItem<ItemType, CommandType> : NEMenuItem<CommandType> where ItemType : TabsControl<ItemType, CommandType>
 	{
 		[DepProp]
 		public ObservableCollection<ItemType> Objects { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<ObservableCollection<ItemType>>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
