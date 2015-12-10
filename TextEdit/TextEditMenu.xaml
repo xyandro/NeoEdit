@@ -32,6 +32,7 @@
 			<textEdit:TextEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
 			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
 			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
+			<textEdit:TextEditMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<textEdit:TextEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>

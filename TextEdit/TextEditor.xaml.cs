@@ -666,7 +666,7 @@ namespace NeoEdit.TextEdit
 		bool timeNext = false;
 		internal void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
 		{
-			doDrag = false;
+			doDrag = DragType.None;
 
 			var start = DateTime.UtcNow;
 			if (command != TextEditCommand.Macro_RepeatLastAction)
@@ -690,6 +690,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
 				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
+				case TextEditCommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
 				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(); break;
@@ -1155,6 +1156,15 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Operations_Explore() => Process.Start("explorer.exe", $"/select,\"{FileName}\"");
 
+		internal void Command_File_Operations_DragDrop()
+		{
+			if (String.IsNullOrWhiteSpace(FileName))
+				throw new Exception("No current file.");
+			if (!File.Exists(FileName))
+				throw new Exception("Current file does not exist.");
+			doDrag = DragType.CurrentFile;
+		}
+
 		internal EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage, lineEndings: LineEnding ?? "");
 
 		internal void Command_File_Encoding_Encoding(EncodingDialog.Result result)
@@ -1561,7 +1571,7 @@ namespace NeoEdit.TextEdit
 			var strs = GetSelectionStrings();
 			if (!StringsAreFiles(strs))
 				throw new Exception("Selections must be files.");
-			doDrag = true;
+			doDrag = DragType.Selections;
 		}
 
 		internal void Command_Files_Names_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
@@ -3081,7 +3091,7 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Escape:
 					Searches.Clear();
-					doDrag = false;
+					doDrag = DragType.None;
 					break;
 				case Key.Left:
 					{
@@ -3431,17 +3441,30 @@ namespace NeoEdit.TextEdit
 			visibleIndex = Selections.Count - 1;
 		}
 
-		bool doDrag = false;
+		enum DragType
+		{
+			None,
+			CurrentFile,
+			Selections,
+		}
+
+		DragType doDrag = DragType.None;
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (doDrag)
+			if (doDrag != DragType.None)
 			{
-				var strs = GetSelectionStrings();
+				List<string> strs;
+				switch (doDrag)
+				{
+					case DragType.CurrentFile: strs = new List<string> { FileName }; break;
+					case DragType.Selections: strs = GetSelectionStrings(); break;
+					default: throw new Exception("Invalid drag type");
+				}
 				if (!StringsAreFiles(strs))
 					throw new Exception("Selections must be files.");
 
 				DragDrop.DoDragDrop(this, new DataObject(DataFormats.FileDrop, strs.ToArray()), DragDropEffects.Copy);
-				doDrag = false;
+				doDrag = DragType.None;
 				return;
 			}
 

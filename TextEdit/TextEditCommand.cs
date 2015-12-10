@@ -18,6 +18,7 @@ namespace NeoEdit.TextEdit
 		File_Operations_Rename,
 		File_Operations_Delete,
 		File_Operations_Explore,
+		File_Operations_DragDrop,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F5)] File_Refresh,
 		File_Revert,
