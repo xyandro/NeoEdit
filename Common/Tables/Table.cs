@@ -50,11 +50,13 @@ namespace NeoEdit.Common.Tables
 			HasHeaders = table.HasHeaders;
 		}
 
-		public Table(string input, TableTypeEnum tableType = TableTypeEnum.None, bool? hasHeaders = null)
+		public Table(string input, TableTypeEnum tableType = TableTypeEnum.None, bool? hasHeaders = null) : this(new List<string> { input }, tableType, hasHeaders) { }
+
+		public Table(List<string> inputs, TableTypeEnum tableType = TableTypeEnum.None, bool? hasHeaders = null)
 		{
 			if (tableType == TableTypeEnum.None)
-				tableType = GuessTableType(input);
-			ProcessInput(input, tableType);
+				tableType = GuessTableType(inputs);
+			ProcessInputs(inputs, tableType);
 			SetHeadersAndTypes(hasHeaders);
 		}
 
@@ -69,12 +71,16 @@ namespace NeoEdit.Common.Tables
 				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => value == DBNull.Value ? null : value).ToList());
 		}
 
-		public static TableTypeEnum GuessTableType(string table)
+		public static TableTypeEnum GuessTableType(List<string> inputs)
 		{
-			var endLine = table.IndexOfAny(new char[] { '\r', '\n' });
+			if (inputs.Count == 0)
+				return TableTypeEnum.None;
+
+			var firstInput = inputs.First();
+			var endLine = firstInput.IndexOfAny(new char[] { '\r', '\n' });
 			if (endLine == -1)
-				endLine = table.Length;
-			var firstRow = table.Substring(0, endLine);
+				endLine = firstInput.Length;
+			var firstRow = firstInput.Substring(0, endLine);
 			if (String.IsNullOrWhiteSpace(firstRow))
 				return TableTypeEnum.None;
 			var tabCount = firstRow.Length - firstRow.Replace("\t", "").Length;
@@ -87,13 +93,13 @@ namespace NeoEdit.Common.Tables
 			return TableTypeEnum.Columns;
 		}
 
-		void ProcessInput(string table, TableTypeEnum tableType)
+		void ProcessInputs(List<string> inputs, TableTypeEnum tableType)
 		{
 			switch (tableType)
 			{
-				case TableTypeEnum.TSV: Rows = table.SplitTCSV('\t').ToList(); break;
-				case TableTypeEnum.CSV: Rows = table.SplitTCSV(',').ToList(); break;
-				case TableTypeEnum.Columns: Rows = table.SplitByLine().Select(line => line.Split('│').Select(item => item.TrimEnd() as object).ToList()).ToList(); break;
+				case TableTypeEnum.TSV: Rows = inputs.SelectMany(input => input.SplitTCSV('\t')).ToList(); break;
+				case TableTypeEnum.CSV: Rows = inputs.SelectMany(input => input.SplitTCSV(',')).ToList(); break;
+				case TableTypeEnum.Columns: Rows = inputs.SelectMany(input => input.SplitByLine()).Select(line => line.Split('│').Select(item => item.TrimEnd() as object).ToList()).ToList(); break;
 				default: throw new ArgumentException("Invalid input type");
 			}
 

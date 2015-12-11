@@ -45,21 +45,21 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<AggregateTableDialog>.AddCallback(a => a.InputHeaders, (obj, o, n) => { obj.OutputHeaders = obj.InputHeaders; obj.InitialSetup(); });
 		}
 
-		readonly string example;
-		AggregateTableDialog(string example)
+		readonly List<string> examples;
+		AggregateTableDialog(List<string> examples)
 		{
-			this.example = example;
+			this.examples = examples;
 			DataTypes = Enum.GetValues(typeof(Table.TableTypeEnum)).Cast<Table.TableTypeEnum>().Where(a => a != Table.TableTypeEnum.None).ToList();
 			InitializeComponent();
 
-			InputType = OutputType = Table.GuessTableType(example);
-			InputHeaders = OutputHeaders = true;
+			InputType = OutputType = Table.GuessTableType(examples);
+			InputHeaders = OutputHeaders = false;
 		}
 
 		Table exampleTable;
 		void InitialSetup()
 		{
-			exampleTable = new Table(example, InputType, InputHeaders);
+			exampleTable = new Table(examples, InputType, InputHeaders);
 			AggregateData = new List<Table.AggregateData>();
 			for (var column = 0; column < exampleTable.NumColumns; ++column)
 			{
@@ -181,9 +181,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, string example)
+		static public Result Run(Window parent, List<string> examples)
 		{
-			var dialog = new AggregateTableDialog(example) { Owner = parent };
+			var dialog = new AggregateTableDialog(examples) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

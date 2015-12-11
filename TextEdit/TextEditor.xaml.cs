@@ -1341,22 +1341,21 @@ namespace NeoEdit.TextEdit
 		internal AggregateTableDialog.Result Command_Edit_Table_Aggregate_Dialog()
 		{
 			SetTableSelection();
-			return AggregateTableDialog.Run(WindowParent, GetString(Selections[0]));
-		}
-
-		string GetTableAggregate(string input, AggregateTableDialog.Result result)
-		{
-			var table = new Table(input, result.InputType, result.InputHeaders);
-			table = table.Aggregate(result.AggregateData, false);
-			table = table.Sort(result.SortData);
-			return table.ConvertToString(Data.DefaultEnding, result.OutputType, result.OutputHeaders);
+			return AggregateTableDialog.Run(WindowParent, GetSelectionStrings());
 		}
 
 		internal void Command_Edit_Table_Aggregate(AggregateTableDialog.Result result)
 		{
 			SetTableSelection();
-			var outputs = GetSelectionStrings().Select(str => GetTableAggregate(str, result)).ToList();
-			ReplaceSelections(outputs);
+
+			var table = new Table(GetSelectionStrings(), result.InputType, result.InputHeaders);
+			table = table.Aggregate(result.AggregateData, false);
+			table = table.Sort(result.SortData);
+			var output = table.ConvertToString(Data.DefaultEnding, result.OutputType, result.OutputHeaders);
+
+			var location = Data.GetOffset(Data.GetOffsetLine(Selections[0].Start), 0);
+			Replace(new List<Range> { new Range(location) }, new List<string> { output + Data.DefaultEnding });
+			Selections.Replace(Range.FromIndex(location, output.Length));
 		}
 
 		internal void Command_Edit_Table_RegionsSelectionsToTable()
