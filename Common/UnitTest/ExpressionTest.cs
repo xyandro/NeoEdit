@@ -126,6 +126,10 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("0", new NEExpression("fromwords(\"Zero\")").Evaluate().ToString());
 			Assert.AreEqual("-5", new NEExpression("fromwords(\"Negative five\")").Evaluate().ToString());
 
+			Assert.AreEqual("5", new NEExpression("gcf(30,20,15)").Evaluate().ToString());
+			Assert.AreEqual("60", new NEExpression("lcm(30,20,15)").Evaluate().ToString());
+			Assert.AreEqual("1/5", new NEExpression("reduce(20,100)").Evaluate().ToString());
+
 			Assert.AreEqual("11 m/s", new NEExpression("5.5 m/(s^2)/s*s *  2 s").Evaluate().ToString());
 			Assert.AreEqual("1440 minutes", new NEExpression("1 day => minutes").Evaluate().ToString());
 			Assert.AreEqual("17168.481792 m^2", new NEExpression("5 miles * 7 feet => m^2").Evaluate().ToString());

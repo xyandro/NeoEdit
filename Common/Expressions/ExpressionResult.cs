@@ -928,6 +928,64 @@ namespace NeoEdit.Common.Expressions
 		public static ExpressionResult StrFormat(ExpressionResult format, params ExpressionResult[] paramList) => new ExpressionResult(String.Format(format.GetString, paramList.Select(arg => arg.Value ?? "").ToArray()));
 		public ExpressionResult Type() => new ExpressionResult(Value.GetType());
 
+		static BigInteger CalcGCF(BigInteger value1, BigInteger value2)
+		{
+			while (value2 != 0)
+			{
+				var newValue = value1 % value2;
+				value1 = value2;
+				value2 = newValue;
+			}
+			return value1;
+		}
+
+		public static ExpressionResult GCF(List<ExpressionResult> inputs)
+		{
+			if (inputs.Count == 0)
+				throw new Exception("Must provide inputs");
+			if (inputs.Any(input => input.Units.HasUnits))
+				throw new Exception("Inputs cannot have units");
+
+			var factors = inputs.Select(factor => factor.Abs().GetInteger).ToList();
+			if (factors.Any(factor => factor == 0))
+				throw new Exception("Factors cannot be 0");
+
+			var gcf = factors[0];
+			for (var ctr = 1; ctr < factors.Count; ++ctr)
+				gcf = CalcGCF(gcf, factors[ctr]);
+			return new ExpressionResult(gcf);
+		}
+
+		public static ExpressionResult LCM(List<ExpressionResult> inputs)
+		{
+			if (inputs.Count == 0)
+				throw new Exception("Must provide inputs");
+			if (inputs.Any(input => input.Units.HasUnits))
+				throw new Exception("Inputs cannot have units");
+
+			var factors = inputs.Select(factor => factor.Abs().GetInteger).ToList();
+			if (factors.Any(factor => factor == 0))
+				throw new Exception("Factors cannot be 0");
+
+			var lcm = factors[0];
+			for (var ctr = 1; ctr < factors.Count; ++ctr)
+				lcm *= factors[ctr] / CalcGCF(lcm, factors[ctr]);
+			return new ExpressionResult(lcm);
+		}
+
+		public static ExpressionResult Reduce(ExpressionResult numerator, ExpressionResult denominator)
+		{
+			if ((numerator.Units.HasUnits) || (numerator.Units.HasUnits))
+				throw new Exception("Inputs cannot have units");
+			var num = numerator.Abs().GetInteger;
+			var den = denominator.Abs().GetInteger;
+			if ((num == 0) || (den == 0))
+				throw new Exception("Factors cannot be 0");
+
+			var gcf = CalcGCF(num, den);
+			return new ExpressionResult($"{num / gcf}/{den / gcf}");
+		}
+
 		public ExpressionResult ValidRE()
 		{
 			try

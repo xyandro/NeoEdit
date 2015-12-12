@@ -121,7 +121,9 @@ namespace NeoEdit.Common.Expressions
 				case "filename": return paramList[0].GetFileName();
 				case "frompolar": return ExpressionResult.FromPolar(paramList[0], paramList[1]);
 				case "fromwords": return paramList[0].FromWords();
+				case "gcf": return ExpressionResult.GCF(paramList);
 				case "imaginary": return paramList[0].GetImaginary();
+				case "lcm": return ExpressionResult.LCM(paramList);
 				case "ln": return paramList[0].Ln();
 				case "log": return paramList.Count == 1 ? paramList[0].Log() : ExpressionResult.Log(paramList[0], paramList[2]);
 				case "magnitude": return paramList[0].Magnitude();
@@ -130,6 +132,7 @@ namespace NeoEdit.Common.Expressions
 				case "phase": return paramList[0].Phase();
 				case "real": return paramList[0].Real();
 				case "reciprocal": return paramList[0].Reciprocal();
+				case "reduce": return ExpressionResult.Reduce(paramList[0], paramList[1]);
 				case "root": return ExpressionResult.Root(paramList[0], paramList[1]);
 				case "sin": return ExpressionResult.Sin(paramList[0]);
 				case "sinh": return ExpressionResult.Sinh(paramList[0]);
