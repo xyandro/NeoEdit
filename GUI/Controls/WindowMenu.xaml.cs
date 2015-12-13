@@ -14,6 +14,7 @@
 		Window_TableEditor,
 		Window_TextEditor,
 		Window_TextViewer,
+		Window_Tools,
 	}
 
 	class WindowMenuItem : NEMenuItem<WindowCommand> { }

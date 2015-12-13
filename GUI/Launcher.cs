@@ -26,6 +26,7 @@ namespace NeoEdit.GUI
 		Func<object, List<DbDataReader>, object> tableDBEditorLauncher;
 		Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
 		Action<string, bool> textViewerLauncher;
+		Action toolsLauncher;
 
 		public static void Initialize(
 			Func<bool> getMinimizeToTray
@@ -44,6 +45,7 @@ namespace NeoEdit.GUI
 			, Func<object, List<DbDataReader>, object> tableDBEditor
 			, Action<string, byte[], Coder.CodePage, bool?, bool> textEditor
 			, Action<string, bool> textViewer
+			, Action tools
 		)
 		{
 			launcher = new Launcher
@@ -64,6 +66,7 @@ namespace NeoEdit.GUI
 				tableDBEditorLauncher = tableDBEditor,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
+				toolsLauncher = tools,
 			};
 		}
 
@@ -108,6 +111,12 @@ namespace NeoEdit.GUI
 		{
 			if (textViewerLauncher != null)
 				textViewerLauncher(filename, forceCreate);
+		}
+
+		public void LaunchTools()
+		{
+			if (toolsLauncher != null)
+				toolsLauncher();
 		}
 
 		public void LaunchHexEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false)

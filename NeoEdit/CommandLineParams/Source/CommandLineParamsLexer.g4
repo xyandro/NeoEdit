@@ -21,6 +21,7 @@ SYSTEMINFO     : '-system' | '-systeminfo'                                      
 TABLEEDIT      : '-table' | '-tables' | '-tableedit' | '-tablesedit' | '-tableeditor' | '-tableseditor' ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
+TOOLS          : '-tool' | '-tools'                                                                     ;
 
 EQUALS         : '=' ;
 NUMBER         : [0-9]+ ;
@@ -49,6 +50,7 @@ SYSTEMINFO2    : SYSTEMINFO    -> type(SYSTEMINFO)    ;
 TABLEEDIT2     : TABLEEDIT     -> type(TABLEEDIT)     ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;
+TOOLS2         : TOOLS         -> type(TOOLS)         ;
 
 EQUALS2        : EQUALS        -> type(EQUALS)        ;
 NUMBER2        : NUMBER        -> type(NUMBER)        ;

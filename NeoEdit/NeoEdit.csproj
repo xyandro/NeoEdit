@@ -107,6 +107,10 @@
       <Project>{46568e12-8f80-492e-aed8-647c2386c3e9}</Project>
       <Name>TextView</Name>
     </ProjectReference>
+    <ProjectReference Include="$(SolutionDir)\Tools\Tools.csproj">
+      <Project>{55dc5287-f414-4680-83c4-80d0e0b8937f}</Project>
+      <Name>Tools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
 </Project>

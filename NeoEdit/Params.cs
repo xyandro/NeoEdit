@@ -11,6 +11,7 @@ using NeoEdit.SystemInfo;
 using NeoEdit.TableEdit;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
+using NeoEdit.Tools;
 
 namespace NeoEdit
 {
@@ -162,5 +163,10 @@ namespace NeoEdit
 			foreach (var file in Files)
 				TextViewTabs.Create(file);
 		}
+	}
+
+	class ToolsParam : Param
+	{
+		public override void Execute() => new ToolsMain();
 	}
 }

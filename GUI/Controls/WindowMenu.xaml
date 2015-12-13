@@ -15,6 +15,7 @@
 	<guiControls:WindowMenuItem Header="Ta_ble Editor" CommandEnum="Window_TableEditor"/>
 	<guiControls:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>
 	<guiControls:WindowMenuItem Header="Text _Viewer" CommandEnum="Window_TextViewer"/>
+	<guiControls:WindowMenuItem Header="T_ools" CommandEnum="Window_Tools"/>
 
 	<MenuItem Header="_Minimize to Tray" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.MinimizeToTray), Mode=TwoWay}"/>
 
