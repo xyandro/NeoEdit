@@ -1,4 +1,5 @@
 ﻿using NeoEdit.GUI.Controls;
+using NeoEdit.Tools.Dialogs;
 
 namespace NeoEdit.Tools
 {
@@ -17,7 +18,13 @@ namespace NeoEdit.Tools
 			switch (command)
 			{
 				case ToolsCommand.File_Exit: Close(); break;
+				case ToolsCommand.Tools_NSRLTool: Command_Tools_NSRLTool(); break;
 			}
+		}
+
+		void Command_Tools_NSRLTool()
+		{
+			NSRLToolDialog.Run();
 		}
 	}
 }

@@ -275,6 +275,84 @@ namespace NeoEdit.Common
 			return result;
 		}
 
+		static public IEnumerable<string> SplitByLine(this string item)
+		{
+			var lineBreakChars = new char[] { '\r', '\n' };
+			var pos = 0;
+			while (pos < item.Length)
+			{
+				var index = item.IndexOfAny(lineBreakChars, pos);
+				if (index == -1)
+					index = item.Length;
+				yield return item.Substring(pos, index - pos);
+				if ((index + 1 < item.Length) && (item[index] == '\r') && (item[index + 1] == '\n'))
+					++index;
+				pos = index + 1;
+			}
+		}
+
+		static List<string> SplitTCSV(string source, char splitChar, ref int pos)
+		{
+			var findChars = new char[] { splitChar, '\r', '\n' };
+			var result = new List<string>();
+			while (true)
+			{
+				var item = "";
+				if ((pos < source.Length) && (source[pos] == '"'))
+				{
+					var quoteIndex = pos + 1;
+					while (true)
+					{
+						quoteIndex = source.IndexOf('"', quoteIndex);
+						if (quoteIndex == -1)
+						{
+							item += source.Substring(pos + 1).Replace(@"""""", @"""");
+							pos = source.Length;
+							break;
+						}
+
+						if ((quoteIndex + 1 < source.Length) && (source[quoteIndex + 1] == '"'))
+						{
+							quoteIndex += 2;
+							continue;
+						}
+
+						item += source.Substring(pos + 1, quoteIndex - pos - 1).Replace(@"""""", @"""");
+						pos = quoteIndex + 1;
+						break;
+					}
+				}
+
+				var splitIndex = source.IndexOfAny(findChars, pos);
+				var end = (splitIndex == -1) || (source[splitIndex] != splitChar);
+				if (splitIndex == -1)
+					splitIndex = source.Length;
+				item += source.Substring(pos, splitIndex - pos);
+				result.Add(item);
+
+				pos = splitIndex;
+
+				if (end)
+				{
+					if ((pos + 1 < source.Length) && (source[pos] == '\r') && (source[pos + 1] == '\n'))
+						pos += 2;
+					else if (pos < source.Length)
+						++pos;
+					break;
+				}
+				++pos;
+			}
+			return result;
+		}
+
+		static public IEnumerable<List<string>> SplitTCSV(this string source, char splitChar)
+		{
+			var pos = 0;
+			while (pos < source.Length)
+				yield return SplitTCSV(source, splitChar, ref pos);
+			yield break;
+		}
+
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 

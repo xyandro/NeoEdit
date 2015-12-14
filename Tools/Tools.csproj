@@ -11,24 +11,52 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Page Include="Dialogs\CreateNSRLIndexDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CreateNSRLIndexDialog.xaml.cs">
+      <DependentUpon>CreateNSRLIndexDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\LookupNSRLValuesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\LookupNSRLValuesDialog.xaml.cs">
+      <DependentUpon>LookupNSRLValuesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\NSRLToolDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NSRLToolDialog.xaml.cs">
+      <DependentUpon>NSRLToolDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ProgressDialog.xaml.cs">
+      <DependentUpon>ProgressDialog.xaml</DependentUpon>
+    </Compile>
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ToolsCommand.cs" />
+    <Page Include="ToolsMain.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="ToolsMain.xaml.cs">
+      <DependentUpon>ToolsMain.xaml</DependentUpon>
     </Compile>
     <Page Include="ToolsMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ToolsMain.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="ToolsCommand.cs" />
     <Compile Include="ToolsMenu.xaml.cs">
       <DependentUpon>ToolsMenu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ToolsMain.xaml.cs">
-      <DependentUpon>ToolsMain.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,9 @@
 	<MenuItem Header="_File">
 		<tools:ToolsMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
+	<MenuItem Header="_Tools">
+		<tools:ToolsMenuItem Header="_NSRL Tool" CommandEnum="Tools_NSRLTool"/>
+	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>
 
