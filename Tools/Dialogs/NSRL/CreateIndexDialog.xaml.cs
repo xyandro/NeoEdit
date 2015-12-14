@@ -9,18 +9,18 @@ using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
-namespace NeoEdit.Tools.Dialogs
+namespace NeoEdit.Tools.Dialogs.NSRLTool
 {
-	partial class CreateNSRLIndexDialog
+	partial class CreateIndexDialog
 	{
 		[DepProp]
-		public string NSRLFile { get { return UIHelper<CreateNSRLIndexDialog>.GetPropValue<string>(this); } set { UIHelper<CreateNSRLIndexDialog>.SetPropValue(this, value); } }
+		public string NSRLFile { get { return UIHelper<CreateIndexDialog>.GetPropValue<string>(this); } set { UIHelper<CreateIndexDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string IndexFile { get { return UIHelper<CreateNSRLIndexDialog>.GetPropValue<string>(this); } set { UIHelper<CreateNSRLIndexDialog>.SetPropValue(this, value); } }
+		public string IndexFile { get { return UIHelper<CreateIndexDialog>.GetPropValue<string>(this); } set { UIHelper<CreateIndexDialog>.SetPropValue(this, value); } }
 
-		static CreateNSRLIndexDialog() { UIHelper<CreateNSRLIndexDialog>.Register(); }
+		static CreateIndexDialog() { UIHelper<CreateIndexDialog>.Register(); }
 
-		CreateNSRLIndexDialog()
+		CreateIndexDialog()
 		{
 			InitializeComponent();
 		}
@@ -140,6 +140,6 @@ namespace NeoEdit.Tools.Dialogs
 			xml.Save(indexFile);
 		}
 
-		public static void Run() => new CreateNSRLIndexDialog().ShowDialog();
+		public static void Run() => new CreateIndexDialog().ShowDialog();
 	}
 }

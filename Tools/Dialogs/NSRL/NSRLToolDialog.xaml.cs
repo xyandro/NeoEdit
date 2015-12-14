@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace NeoEdit.Tools.Dialogs
+namespace NeoEdit.Tools.Dialogs.NSRLTool
 {
 	partial class NSRLToolDialog
 	{
@@ -11,9 +11,9 @@ namespace NeoEdit.Tools.Dialogs
 
 		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
 
-		private void CreateIndex(object sender, RoutedEventArgs e) => CreateNSRLIndexDialog.Run();
+		private void CreateIndex(object sender, RoutedEventArgs e) => CreateIndexDialog.Run();
 
-		private void LookupValues(object sender, RoutedEventArgs e) => LookupNSRLValuesDialog.Run();
+		private void LookupValues(object sender, RoutedEventArgs e) => LookupValuesDialog.Run();
 
 		public static void Run()
 		{

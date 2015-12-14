@@ -1,5 +1,5 @@
 ﻿using NeoEdit.GUI.Controls;
-using NeoEdit.Tools.Dialogs;
+using NeoEdit.Tools.Dialogs.NSRLTool;
 
 namespace NeoEdit.Tools
 {

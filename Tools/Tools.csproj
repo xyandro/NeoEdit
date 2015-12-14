@@ -11,25 +11,25 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Page Include="Dialogs\CreateNSRLIndexDialog.xaml">
+    <Page Include="Dialogs\NSRL\CreateIndexDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\CreateNSRLIndexDialog.xaml.cs">
-      <DependentUpon>CreateNSRLIndexDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\NSRL\CreateIndexDialog.xaml.cs">
+      <DependentUpon>CreateIndexDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\LookupNSRLValuesDialog.xaml">
+    <Page Include="Dialogs\NSRL\LookupValuesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\LookupNSRLValuesDialog.xaml.cs">
-      <DependentUpon>LookupNSRLValuesDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\NSRL\LookupValuesDialog.xaml.cs">
+      <DependentUpon>LookupValuesDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\NSRLToolDialog.xaml">
+    <Page Include="Dialogs\NSRL\NSRLToolDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\NSRLToolDialog.xaml.cs">
+    <Compile Include="Dialogs\NSRL\NSRLToolDialog.xaml.cs">
       <DependentUpon>NSRLToolDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\ProgressDialog.xaml">

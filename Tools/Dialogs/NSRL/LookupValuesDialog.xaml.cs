@@ -9,20 +9,20 @@ using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
-namespace NeoEdit.Tools.Dialogs
+namespace NeoEdit.Tools.Dialogs.NSRLTool
 {
-	partial class LookupNSRLValuesDialog
+	partial class LookupValuesDialog
 	{
 		[DepProp]
-		public string NSRLFile { get { return UIHelper<LookupNSRLValuesDialog>.GetPropValue<string>(this); } set { UIHelper<LookupNSRLValuesDialog>.SetPropValue(this, value); } }
+		public string NSRLFile { get { return UIHelper<LookupValuesDialog>.GetPropValue<string>(this); } set { UIHelper<LookupValuesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string IndexFile { get { return UIHelper<LookupNSRLValuesDialog>.GetPropValue<string>(this); } set { UIHelper<LookupNSRLValuesDialog>.SetPropValue(this, value); } }
+		public string IndexFile { get { return UIHelper<LookupValuesDialog>.GetPropValue<string>(this); } set { UIHelper<LookupValuesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string HashFile { get { return UIHelper<LookupNSRLValuesDialog>.GetPropValue<string>(this); } set { UIHelper<LookupNSRLValuesDialog>.SetPropValue(this, value); } }
+		public string HashFile { get { return UIHelper<LookupValuesDialog>.GetPropValue<string>(this); } set { UIHelper<LookupValuesDialog>.SetPropValue(this, value); } }
 
-		static LookupNSRLValuesDialog() { UIHelper<LookupNSRLValuesDialog>.Register(); }
+		static LookupValuesDialog() { UIHelper<LookupValuesDialog>.Register(); }
 
-		LookupNSRLValuesDialog()
+		LookupValuesDialog()
 		{
 			InitializeComponent();
 		}
@@ -112,6 +112,6 @@ namespace NeoEdit.Tools.Dialogs
 			HashFile = dialog.FileName;
 		}
 
-		public static void Run() => new LookupNSRLValuesDialog().ShowDialog();
+		public static void Run() => new LookupValuesDialog().ShowDialog();
 	}
 }
