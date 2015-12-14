@@ -15,6 +15,8 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 
 		private void LookupValues(object sender, RoutedEventArgs e) => LookupValuesDialog.Run();
 
+		private void LookupFiles(object sender, RoutedEventArgs e) => LookupFilesDialog.Run();
+
 		public static void Run()
 		{
 			new NSRLToolDialog().ShowDialog();

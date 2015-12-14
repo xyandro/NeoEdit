@@ -15,16 +15,19 @@ namespace NeoEdit.Tools.Dialogs
 		static ProgressDialog() { UIHelper<ProgressDialog>.Register(); }
 
 		BackgroundWorker worker;
-		ProgressDialog(string title, Action<Func<int, bool, bool>> work)
+		ProgressDialog(string title)
 		{
 			InitializeComponent();
 			DialogTitle = title;
+		}
 
+		void DoWork<T>(Func<Func<int, bool, bool>, T> work)
+		{
 			worker = new BackgroundWorker { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
 			worker.ProgressChanged += (s, e) => Progress = e.ProgressPercentage;
 			worker.DoWork += (s, e) =>
 			{
-				work((percent, finished) =>
+				Result = work((percent, finished) =>
 				{
 					worker.ReportProgress(percent);
 					if (finished)
@@ -38,8 +41,16 @@ namespace NeoEdit.Tools.Dialogs
 			worker.RunWorkerAsync();
 		}
 
+		object Result { get; set; }
+
 		void CancelClick(object sender, RoutedEventArgs e) => worker.CancelAsync();
 
-		public static void Run(Window owner, string title, Action<Func<int, bool, bool>> work) => new ProgressDialog(title, work) { Owner = owner }.ShowDialog();
+		public static T Run<T>(Window owner, string title, Func<Func<int, bool, bool>, T> work)
+		{
+			var dialog = new ProgressDialog(title) { Owner = owner };
+			dialog.DoWork(work);
+			dialog.ShowDialog();
+			return (T)dialog.Result;
+		}
 	}
 }

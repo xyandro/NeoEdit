@@ -1,9 +1,9 @@
-﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.Tools.Dialogs.NSRLTool.CreateIndexDialog" x:ClassModifier="internal"
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.Tools.Dialogs.NSRLTool.LookupFilesDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	SizeToContent="WidthAndHeight" Visibility="Visible"
-	Title="Create NSRL Index - NeoEdit">
+	Title="Lookup NSRL Files - NeoEdit">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -14,6 +14,8 @@
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -22,14 +24,19 @@
 		<TextBox Grid.Row="0" Grid.Column="1" Name="nsrlFile" Text="{Binding NSRLFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<Button Grid.Row="0" Grid.Column="2" Content="_Browse" Click="BrowseNSRLFile"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Index file:" Target="indexFile" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Index File:" Target="indexFile" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="1" Grid.Column="1" Name="indexFile" Text="{Binding IndexFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<Button Grid.Row="1" Grid.Column="2" Content="B_rowse" Click="BrowseIndexFile"/>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
-			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
-			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
-		</UniformGrid>
+		<Label Grid.Row="2" Grid.Column="0" Content="Root _Dir:" Target="rootDir" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="rootDir" Text="{Binding RootDir, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Button Grid.Row="2" Grid.Column="2" Content="Br_owse" Click="BrowseRootDir"/>
+
+		<Label Grid.Row="3" Grid.Column="0" Content="_Output:" Target="outputFile" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="3" Grid.Column="1" Name="outputFile" Text="{Binding OutputFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Button Grid.Row="3" Grid.Column="2" Content="Br_owse" Click="BrowseOutputFile"/>
+
+		<Button Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Right" Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 	</Grid>
 
 </guiControls:ModalDialog>

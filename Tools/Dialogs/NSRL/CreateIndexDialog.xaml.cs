@@ -115,14 +115,14 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 			ProgressDialog.Run(this, "Reading NSRL data...", callback => ReadNSRLData(nsrlFile, indexFile, callback));
 		}
 
-		void ReadNSRLData(string nsrlFile, string indexFile, Func<int, bool, bool> callback)
+		bool ReadNSRLData(string nsrlFile, string indexFile, Func<int, bool, bool> callback)
 		{
 			var headers = default(Dictionary<string, int>);
 			var result = new Dictionary<string, long>();
 			foreach (var tuple in GetFileLines(nsrlFile, callback))
 			{
 				if (tuple == null)
-					return;
+					return false;
 
 				var fields = tuple.Item1.SplitTCSV(',').First().ToList();
 				if (headers == null)
@@ -138,6 +138,7 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 
 			var xml = new XElement("Index", result.Select(pair => new XElement("Value", new XAttribute("Key", pair.Key), new XAttribute("Start", pair.Value))));
 			xml.Save(indexFile);
+			return true;
 		}
 
 		public static void Run() => new CreateIndexDialog().ShowDialog();

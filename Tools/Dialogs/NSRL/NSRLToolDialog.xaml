@@ -12,12 +12,14 @@
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
 		<Button Grid.Row="0" Content="_Create Index" Click="CreateIndex"/>
-		<Button Grid.Row="1" Content="_Lookup Values" Click="LookupValues"/>
+		<Button Grid.Row="1" Content="Lookup _Values" Click="LookupValues"/>
+		<Button Grid.Row="2" Content="Lookup _Files" Click="LookupFiles"/>
 
 		<Button Grid.Row="4" Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Padding="10,1"/>
 	</Grid>

@@ -20,15 +20,15 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_NSRL File:" Target="nsrlFile" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Name="nsrlFile" Text="{Binding NSRLFile, ElementName=self}"/>
+		<TextBox Grid.Row="0" Grid.Column="1" Name="nsrlFile" Text="{Binding NSRLFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<Button Grid.Row="0" Grid.Column="2" Content="_Browse" Click="BrowseNSRLFile"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Index File:" Target="indexFile" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="indexFile" Text="{Binding IndexFile, ElementName=self}"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Name="indexFile" Text="{Binding IndexFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<Button Grid.Row="1" Grid.Column="2" Content="B_rowse" Click="BrowseIndexFile"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Hash File:" Target="hashFile" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="2" Grid.Column="1" Name="hashFile" Text="{Binding HashFile, ElementName=self}"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="hashFile" Text="{Binding HashFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 		<Button Grid.Row="2" Grid.Column="2" Content="Br_owse" Click="BrowseHashFile"/>
 
 		<Button Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

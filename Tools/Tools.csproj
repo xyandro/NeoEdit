@@ -18,6 +18,13 @@
     <Compile Include="Dialogs\NSRL\CreateIndexDialog.xaml.cs">
       <DependentUpon>CreateIndexDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NSRL\LookupFilesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NSRL\LookupFilesDialog.xaml.cs">
+      <DependentUpon>LookupFilesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\NSRL\LookupValuesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
