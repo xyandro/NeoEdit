@@ -1,15 +1,16 @@
 # Global
 *.aps
+*.log
+*.opendb
 *.opensdf
 *.sdf
 *.suo
 *.tmp_proj
 *.user
-*.log
-TestResults
 bin
 ipch
 obj
+TestResults
 
 # Specific
 /.vs
