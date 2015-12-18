@@ -9,6 +9,7 @@
 	<guiControls:WindowMenuItem Header="_Disk" CommandEnum="Window_Disk"/>
 	<guiControls:WindowMenuItem Header="H_andles" CommandEnum="Window_Handles"/>
 	<guiControls:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>
+	<guiControls:WindowMenuItem Header="_Network" CommandEnum="Window_Network"/>
 	<guiControls:WindowMenuItem Header="_Processes" CommandEnum="Window_Processes"/>
 	<guiControls:WindowMenuItem Header="_Registry" CommandEnum="Window_Registry"/>
 	<guiControls:WindowMenuItem Header="_System Info" CommandEnum="Window_SystemInfo"/>

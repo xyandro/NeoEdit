@@ -83,6 +83,10 @@
       <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
       <Name>HexEdit</Name>
     </ProjectReference>
+    <ProjectReference Include="$(SolutionDir)\Network\Network.csproj">
+      <Project>{64b9f21b-a7fe-4cf9-b764-948505dace60}</Project>
+      <Name>Network</Name>
+    </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\Processes\Processes.csproj">
       <Project>{c65dd007-a448-49f5-b813-372c53d374c3}</Project>
       <Name>Processes</Name>

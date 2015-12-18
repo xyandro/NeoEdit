@@ -15,6 +15,7 @@ HEXPID         : '-binarypid' | '-hexpid'                                       
 LINE           : '-line'                                                                                ;
 LIVE           : '-live'                                                                                ;
 MULTI          : '-multi'                                                                               ;
+NETWORK        : '-socket' | '-sockets' | '-network'                                                                ;
 PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
 REGISTRY       : '-registry'                                                                            ;
 SYSTEMINFO     : '-system' | '-systeminfo'                                                              ;
@@ -44,6 +45,7 @@ HEXPID2        : HEXPID        -> type(HEXPID)        ;
 LINE2          : LINE          -> type(LINE)          ;
 LIVE2          : LIVE          -> type(LIVE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;
+NETWORK2       : NETWORK       -> type(NETWORK)       ;
 PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
 REGISTRY2      : REGISTRY      -> type(REGISTRY)      ;
 SYSTEMINFO2    : SYSTEMINFO    -> type(SYSTEMINFO)    ;

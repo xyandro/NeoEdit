@@ -18,6 +18,7 @@ namespace NeoEdit.GUI
 		Action<string, IEnumerable<string>, bool> diskLauncher;
 		Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
 		Action<int?> handlesLauncher;
+		Action networkLauncher;
 		Action<int?> processesLauncher;
 		Action<int> processHexEditorLauncher;
 		Action<string> registryLauncher;
@@ -37,6 +38,7 @@ namespace NeoEdit.GUI
 			, Action<string, IEnumerable<string>, bool> disk
 			, Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor
 			, Action<int?> handles
+			, Action network
 			, Action<int?> processes
 			, Action<int> processHexEditor
 			, Action<string> registry
@@ -58,6 +60,7 @@ namespace NeoEdit.GUI
 				diskLauncher = disk,
 				fileHexEditorLauncher = fileHexEditor,
 				handlesLauncher = handles,
+				networkLauncher = network,
 				processesLauncher = processes,
 				processHexEditorLauncher = processHexEditor,
 				registryLauncher = registry,
@@ -141,6 +144,12 @@ namespace NeoEdit.GUI
 		{
 			if (consoleLauncher != null)
 				consoleLauncher(forceCreate);
+		}
+
+		public void LaunchNetwork()
+		{
+			if (networkLauncher != null)
+				networkLauncher();
 		}
 
 		public void LaunchProcesses(int? pid = null)

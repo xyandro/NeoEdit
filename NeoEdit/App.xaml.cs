@@ -11,6 +11,7 @@ using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Handles;
 using NeoEdit.HexEdit;
+using NeoEdit.Network;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
@@ -93,6 +94,7 @@ namespace NeoEdit
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
 				, fileHexEditor: (filename, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, forceCreate)
 				, handles: (pid) => new HandlesWindow(pid)
+				, network: () => new NetworkWindow()
 				, processes: (pid) => new ProcessesWindow(pid)
 				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
 				, registry: (key) => new RegistryWindow(key)

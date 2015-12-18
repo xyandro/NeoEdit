@@ -5,6 +5,7 @@ using NeoEdit.Disk;
 using NeoEdit.GUI.About;
 using NeoEdit.Handles;
 using NeoEdit.HexEdit;
+using NeoEdit.Network;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
@@ -91,6 +92,11 @@ namespace NeoEdit
 			foreach (var pid in PIDs)
 				HexEditTabs.CreateFromProcess(pid);
 		}
+	}
+
+	class NetworkParam : Param
+	{
+		public override void Execute() => new NetworkWindow();
 	}
 
 	class ProcessesParam : Param

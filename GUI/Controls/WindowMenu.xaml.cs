@@ -8,6 +8,7 @@
 		Window_Disk,
 		Window_Handles,
 		Window_HexEditor,
+		Window_Network,
 		Window_Processes,
 		Window_Registry,
 		Window_SystemInfo,
