@@ -8,6 +8,9 @@
 	<MenuItem Header="_File">
 		<network:NetworkMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
+	<MenuItem Header="_Socket">
+		<network:NetworkMenuItem Header="_Forward" CommandEnum="Socket_Forward"/>
+	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>
 
