@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Threading;
 using NeoEdit.GUI.Controls;
 using NeoEdit.Network.Dialogs;
@@ -22,6 +21,7 @@ namespace NeoEdit.Network
 			{
 				case NetworkCommand.File_Exit: Close(); break;
 				case NetworkCommand.Socket_Forward: Command_Socket_Forward(); break;
+				case NetworkCommand.Socket_Bridge: Command_Socket_Bridge(); break;
 			}
 		}
 
@@ -34,6 +34,15 @@ namespace NeoEdit.Network
 			new Thread(obj => StartForwarder(result)).Start();
 		}
 
+		void Command_Socket_Bridge()
+		{
+			var result = BridgeDialog.Run(this);
+			if (result == null)
+				return;
+
+			new Thread(obj => StartBridge(result)).Start();
+		}
+
 		void StartForwarder(ForwarderDialog.Result result)
 		{
 			var server = new TcpListener(result.Source);
@@ -44,8 +53,29 @@ namespace NeoEdit.Network
 				try
 				{
 					client1 = server.AcceptTcpClient();
-					client2 = new TcpClient();
+					client2 = new TcpClient(result.Dest.AddressFamily);
 					client2.Connect(result.Dest);
+					Connect(client1, client2);
+				}
+				catch
+				{
+					client1?.Dispose();
+					client2?.Dispose();
+				}
+			}
+		}
+
+		void StartBridge(BridgeDialog.Result result)
+		{
+			var server = new TcpListener(result.EndPoint);
+			server.Start();
+			while (true)
+			{
+				TcpClient client1 = null, client2 = null;
+				try
+				{
+					client1 = server.AcceptTcpClient();
+					client2 = server.AcceptTcpClient();
 					Connect(client1, client2);
 				}
 				catch

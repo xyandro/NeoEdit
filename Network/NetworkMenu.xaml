@@ -10,6 +10,7 @@
 	</MenuItem>
 	<MenuItem Header="_Socket">
 		<network:NetworkMenuItem Header="_Forward" CommandEnum="Socket_Forward"/>
+		<network:NetworkMenuItem Header="_Bridge" CommandEnum="Socket_Bridge"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>

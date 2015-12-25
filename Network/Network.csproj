@@ -11,6 +11,13 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Page Include="Dialogs\BridgeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\BridgeDialog.xaml.cs">
+      <DependentUpon>BridgeDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ForwarderDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

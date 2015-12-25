@@ -8,5 +8,6 @@ namespace NeoEdit.Network
 		None,
 		File_Exit,
 		[KeyGesture(Key.F, ModifierKeys.Control)] Socket_Forward,
+		[KeyGesture(Key.B, ModifierKeys.Control)] Socket_Bridge,
 	}
 }
