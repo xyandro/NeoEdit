@@ -17,8 +17,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		public class DBParam
 		{
 			public string Name { get; }
-			public object Value { get; }
-			public object Default { get; }
+			public object Value { get; set; }
+			public object Default { get; set; }
 			public Type Type { get; }
 
 			public DBParam(string name, object value, object _default, Type type)

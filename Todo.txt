@@ -8,6 +8,7 @@ Can't open any window if current directory is invalid (like when running off a n
 In active list add number of selections, allow sort, allow typing to find file
 
 Tables:
+Move to text
 
 Text:
 Continue after error deleting files (perhaps with dialog Yes/No/All)
@@ -26,6 +27,11 @@ Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
 Get DLL/EXE version info
 Multiple selections on aggregation should create one table
+Pull directory contents, including sizes/times (useful for diffing, others)
+Diff: If both files are selected, alt-up/down moves 2 diffs
+Add tables
+Table: Reformat
+Verify DB execute closes statements/commands
 
 View:
 Update as new lines are added
