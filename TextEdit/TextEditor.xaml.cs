@@ -594,7 +594,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
-				case TextEditCommand.Edit_Table_Aggregate: dialogResult = Command_Edit_Table_Aggregate_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
 				case TextEditCommand.Edit_Hash: dialogResult = Command_Edit_Hash_Dialog(); break;
@@ -621,6 +620,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Text_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
+				case TextEditCommand.Table_Aggregate: dialogResult = Command_Table_Aggregate_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
 				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
 				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
@@ -712,8 +712,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
-				case TextEditCommand.Edit_Table_Aggregate: Command_Edit_Table_Aggregate(dialogResult as AggregateTableDialog.Result); break;
-				case TextEditCommand.Edit_Table_RegionsSelectionsToTable: Command_Edit_Table_RegionsSelectionsToTable(); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
 				case TextEditCommand.Edit_Markup_Escape: Command_Edit_Markup_Escape(); break;
@@ -812,6 +810,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
+				case TextEditCommand.Table_Aggregate: Command_Table_Aggregate(dialogResult as AggregateTableDialog.Result); break;
+				case TextEditCommand.Table_RegionsSelectionsToTable: Command_Table_RegionsSelectionsToTable(); break;
 				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Columns: Command_Position_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Positions: Command_Position_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
@@ -1336,38 +1336,6 @@ namespace NeoEdit.TextEdit
 		{
 			if ((Selections.Count == 0) || ((Selections.Count == 1) && (!Selections[0].HasSelection)))
 				Selections.Replace(new Range(BeginOffset(), EndOffset()));
-		}
-
-		internal AggregateTableDialog.Result Command_Edit_Table_Aggregate_Dialog()
-		{
-			SetTableSelection();
-			return AggregateTableDialog.Run(WindowParent, GetSelectionStrings());
-		}
-
-		internal void Command_Edit_Table_Aggregate(AggregateTableDialog.Result result)
-		{
-			SetTableSelection();
-
-			var table = new Table(GetSelectionStrings(), result.InputType, result.InputHeaders);
-			table = table.Aggregate(result.AggregateData, false);
-			table = table.Sort(result.SortData);
-			var output = table.ConvertToString(Data.DefaultEnding, result.OutputType, result.OutputHeaders);
-
-			var location = Data.GetOffset(Data.GetOffsetLine(Selections[0].Start), 0);
-			Replace(new List<Range> { new Range(location) }, new List<string> { output + Data.DefaultEnding });
-			Selections.Replace(Range.FromIndex(location, output.Length));
-		}
-
-		internal void Command_Edit_Table_RegionsSelectionsToTable()
-		{
-			if (!Selections.Any())
-				return;
-
-			var regions = GetEnclosingRegions();
-			var lines = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => String.Join("\t", group.Select(index => Table.ToTCSV(GetString(Selections[index]), '\t')))).ToList();
-			Selections.Replace(Regions);
-			Regions.Clear();
-			ReplaceSelections(lines);
 		}
 
 		internal void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);

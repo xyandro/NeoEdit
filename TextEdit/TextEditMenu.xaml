@@ -82,10 +82,6 @@
 			<textEdit:TextEditMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="_Table">
-			<textEdit:TextEditMenuItem Header="_Aggregate" CommandEnum="Edit_Table_Aggregate"/>
-			<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Edit_Table_RegionsSelectionsToTable"/>
-		</MenuItem>
 		<textEdit:TextEditMenuItem Header="Copy _Down" CommandEnum="Edit_CopyDown"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
@@ -264,6 +260,10 @@
 	<MenuItem Header="_Date/Time">
 		<textEdit:TextEditMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
+	</MenuItem>
+	<MenuItem Header="Ta_ble">
+		<textEdit:TextEditMenuItem Header="_Aggregate" CommandEnum="Table_Aggregate"/>
+		<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Table_RegionsSelectionsToTable"/>
 	</MenuItem>
 	<MenuItem Header="_Position">
 		<MenuItem Header="_Goto">
