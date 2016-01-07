@@ -94,7 +94,7 @@ namespace NeoEdit.Common.NEClipboards
 		{
 			var data = new ClipboardData();
 			data.Strings = strings.ToList();
-			data.Text = String.Join(" ", data.Strings.Select(str => str ?? "<NULL>"));
+			data.Text = String.Join("\r\n", data.Strings.Select(str => str ?? "<NULL>"));
 			data.Objects = data.Strings.Cast<object>().ToList();
 			SetClipboard(control, data);
 		}
