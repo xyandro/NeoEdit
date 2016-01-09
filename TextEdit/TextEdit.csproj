@@ -107,6 +107,20 @@
     <Compile Include="Dialogs\ChooseDateTimeDialog.xaml.cs">
       <DependentUpon>ChooseDateTimeDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ChooseJoinTypeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ChooseJoinTypeDialog.xaml.cs">
+      <DependentUpon>ChooseJoinTypeDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ChooseTableColumnsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ChooseTableColumnsDialog.xaml.cs">
+      <DependentUpon>ChooseTableColumnsDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\CombinationsPermutationsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

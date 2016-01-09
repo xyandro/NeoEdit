@@ -26,10 +26,10 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		static EditTableDialog() { UIHelper<EditTableDialog>.Register(); }
 
-		readonly Table inputTable;
-		EditTableDialog(string input, Table.TableType tableType, bool hasHeaders)
+		readonly Table input;
+		EditTableDialog(Table input)
 		{
-			inputTable = new Table(input, tableType, hasHeaders);
+			this.input = input;
 			Reset();
 			InitializeComponent();
 		}
@@ -37,10 +37,10 @@ namespace NeoEdit.TextEdit.Dialogs
 		void Reset()
 		{
 			AggregateData = new List<Table.AggregateData>();
-			for (var column = 0; column < inputTable.NumColumns; ++column)
+			for (var column = 0; column < input.NumColumns; ++column)
 			{
 				var aggregateData = new Table.AggregateData(column);
-				var firstType = Enumerable.Range(0, inputTable.NumRows).Select(row => inputTable[row, column]).Where(value => value != null).Select(value => value.GetType()).FirstOrDefault();
+				var firstType = Enumerable.Range(0, input.NumRows).Select(row => input[row, column]).Where(value => value != null).Select(value => value.GetType()).FirstOrDefault();
 				if (firstType == null)
 					aggregateData.Aggregation = Table.AggregateType.All;
 				else if (firstType.IsNumericType())
@@ -56,7 +56,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			SetupTable();
 		}
 
-		void SetupTable() => Table = inputTable.Aggregate(AggregateData).Sort(SortData);
+		void SetupTable() => Table = input.Aggregate(AggregateData).Sort(SortData);
 
 		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
 		bool altDown => (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None;
@@ -154,9 +154,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, string input, Table.TableType tableType, bool hasHeaders)
+		static public Result Run(Window parent, Table input)
 		{
-			var dialog = new EditTableDialog(input, tableType, hasHeaders) { Owner = parent };
+			var dialog = new EditTableDialog(input) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

@@ -146,6 +146,8 @@ namespace NeoEdit.TextEdit
 		Table_RegionsSelectionsToTable,
 		Table_Type_Detect,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift)] Table_EditTable,
+		[KeyGesture(Key.J, ModifierKeys.Control | ModifierKeys.Shift)] Table_SetJoinSource,
+		[KeyGesture(Key.J, ModifierKeys.Control)] Table_Join,
 		Table_Transpose,
 		[KeyGesture(Key.G, ModifierKeys.Control)] [KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Shift, false)] Position_Goto_Lines,
 		Position_Goto_Columns,

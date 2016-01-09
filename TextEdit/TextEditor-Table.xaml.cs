@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
@@ -20,6 +21,13 @@ namespace NeoEdit.TextEdit
 			TabsParent.CreateTab(textEditor);
 		}
 
+		void SetText(Table table)
+		{
+			var output = table.ToString(Data.DefaultEnding, TableType);
+			Replace(new List<Range> { FullRange }, new List<string> { output });
+			Selections.Replace(FullRange);
+		}
+
 		internal void Command_Table_Type_Detect() => TableType = Table.GuessTableType(AllText);
 
 		internal void Command_Table_RegionsSelectionsToTable()
@@ -33,26 +41,45 @@ namespace NeoEdit.TextEdit
 			OpenTable(new Table(rows, false));
 		}
 
-		internal EditTableDialog.Result Command_Table_EditTable_Dialog() => EditTableDialog.Run(WindowParent, AllText, TableType, HasHeaders);
+		internal EditTableDialog.Result Command_Table_EditTable_Dialog() => EditTableDialog.Run(WindowParent, new Table(AllText, TableType, HasHeaders));
 
-		internal void Command_Table_EditTable(EditTableDialog.Result result)
+		internal void Command_Table_EditTable(EditTableDialog.Result result) => SetText(new Table(AllText, TableType, HasHeaders).Aggregate(result.AggregateData).Sort(result.SortData));
+
+		static Table JoinTable;
+		static List<int> JoinColumns;
+		internal void Command_Table_SetJoinSource()
 		{
 			var table = new Table(AllText, TableType, HasHeaders);
-			table = table.Aggregate(result.AggregateData);
-			table = table.Sort(result.SortData);
-			var output = table.ToString(Data.DefaultEnding, TableType);
+			var result = ChooseTableColumnsDialog.Run(WindowParent, table);
+			if (result == null)
+				return;
 
-			Replace(new List<Range> { FullRange }, new List<string> { output });
-			Selections.Replace(FullRange);
+			if (result.Columns.Count == 0)
+				throw new Exception("No columns selected.");
+
+			JoinTable = table;
+			JoinColumns = result.Columns;
 		}
 
-		internal void Command_Table_Transpose()
+		internal void Command_Table_Join()
 		{
-			var table = new Table(AllText, TableType, true);
-			table = table.Transpose();
-			var output = table.ToString(Data.DefaultEnding, TableType);
-			Replace(new List<Range> { FullRange }, new List<string> { output });
-			Selections.Replace(FullRange);
+			if (JoinTable == null)
+				throw new Exception("You must first set a join source.");
+
+			var table = new Table(AllText, TableType, HasHeaders);
+			var result = ChooseTableColumnsDialog.Run(WindowParent, new Table(AllText, TableType, HasHeaders));
+			if (result == null)
+				return;
+			if (JoinColumns.Count != result.Columns.Count)
+				throw new Exception("Column counts must match.");
+
+			var joinTypeResult = ChooseJoinTypeDialog.Run(WindowParent);
+			if (joinTypeResult == null)
+				return;
+
+			SetText(Table.Join(table, JoinTable, result.Columns, JoinColumns, joinTypeResult.JoinType));
 		}
+
+		internal void Command_Table_Transpose() => SetText(new Table(AllText, TableType, true).Transpose());
 	}
 }

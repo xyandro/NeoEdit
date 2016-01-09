@@ -274,6 +274,8 @@
 		<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Table_RegionsSelectionsToTable"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Edit Table" CommandEnum="Table_EditTable"/>
+		<textEdit:TextEditMenuItem Header="_Set Join Source" CommandEnum="Table_SetJoinSource"/>
+		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Table_Join"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Tr_anspose" CommandEnum="Table_Transpose"/>
 	</MenuItem>
