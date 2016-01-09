@@ -268,6 +268,7 @@
 			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.Columns}" FalseValue="{x:Static textEdit:Table+TableType.Columns}"/>
 			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.CSV}" FalseValue="{x:Static textEdit:Table+TableType.CSV}"/>
 			<textEdit:MultiMenuItem Header="_TSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.TSV}" FalseValue="{x:Static textEdit:Table+TableType.TSV}"/>
+			<textEdit:TextEditMenuItem Header="Con_vert" CommandEnum="Table_Type_Convert"/>
 		</MenuItem>
 		<textEdit:MultiMenuItem Header="_Headers" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HasHeaders" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
 		<Separator/>

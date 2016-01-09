@@ -30,6 +30,15 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Table_Type_Detect() => TableType = Table.GuessTableType(AllText);
 
+		internal ChooseTableTypeDialog.Result Command_Table_Type_Convert_Dialog() => ChooseTableTypeDialog.Run(WindowParent, TableType);
+
+		internal void Command_Table_Type_Convert(ChooseTableTypeDialog.Result result)
+		{
+			var table = new Table(AllText, TableType, HasHeaders);
+			TableType = result.TableType;
+			SetText(table);
+		}
+
 		internal void Command_Table_RegionsSelectionsToTable()
 		{
 			if (!Selections.Any())

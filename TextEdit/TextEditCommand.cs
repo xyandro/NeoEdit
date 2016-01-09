@@ -145,6 +145,7 @@ namespace NeoEdit.TextEdit
 		DateTime_Convert,
 		Table_RegionsSelectionsToTable,
 		Table_Type_Detect,
+		Table_Type_Convert,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift)] Table_EditTable,
 		[KeyGesture(Key.J, ModifierKeys.Control | ModifierKeys.Shift)] Table_SetJoinSource,
 		[KeyGesture(Key.J, ModifierKeys.Control)] Table_Join,

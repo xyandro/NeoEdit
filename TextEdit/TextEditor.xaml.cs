@@ -624,6 +624,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Text_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
+				case TextEditCommand.Table_Type_Convert: dialogResult = Command_Table_Type_Convert_Dialog(); break;
 				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
 				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
@@ -815,6 +816,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
 				case TextEditCommand.Table_Type_Detect: Command_Table_Type_Detect(); break;
+				case TextEditCommand.Table_Type_Convert: Command_Table_Type_Convert(dialogResult as ChooseTableTypeDialog.Result); break;
 				case TextEditCommand.Table_RegionsSelectionsToTable: Command_Table_RegionsSelectionsToTable(); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;
 				case TextEditCommand.Table_SetJoinSource: Command_Table_SetJoinSource(); break;
