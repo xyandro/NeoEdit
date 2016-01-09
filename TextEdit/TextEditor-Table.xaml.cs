@@ -2,27 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
 	public partial class TextEditor
 	{
-		internal AggregateTableDialog.Result Command_Table_Aggregate_Dialog()
-		{
-			return AggregateTableDialog.Run(WindowParent, AllText);
-		}
+		[DepProp]
+		public Table.TableType TableType { get { return UIHelper<TextEditor>.GetPropValue<Table.TableType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool HasHeaders { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+
+		internal AggregateTableDialog.Result Command_Table_Aggregate_Dialog() => AggregateTableDialog.Run(WindowParent, AllText, TableType, HasHeaders);
 
 		internal void Command_Table_Aggregate(AggregateTableDialog.Result result)
 		{
-			var table = new Table(AllText, result.InputType, result.InputHeaders);
-			table = table.Aggregate(result.AggregateData, false);
+			var table = new Table(AllText, TableType, HasHeaders);
+			table = table.Aggregate(result.AggregateData);
 			table = table.Sort(result.SortData);
-			var output = table.ToString(Data.DefaultEnding, result.OutputType);
+			var output = table.ToString(Data.DefaultEnding, TableType);
 
-			var location = Data.GetOffset(Data.GetOffsetLine(Selections[0].Start), 0);
-			Replace(new List<Range> { new Range(location) }, new List<string> { output + Data.DefaultEnding });
-			Selections.Replace(Range.FromIndex(location, output.Length));
+			Replace(new List<Range> { FullRange }, new List<string> { output });
+			Selections.Replace(FullRange);
 		}
 
 		internal void Command_Table_RegionsSelectionsToTable()

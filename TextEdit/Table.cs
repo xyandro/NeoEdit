@@ -25,7 +25,7 @@ namespace NeoEdit.TextEdit
 
 		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
 
-		public enum TableTypeEnum { None, TSV, CSV, Columns }
+		public enum TableType { None, TSV, CSV, Columns }
 
 		List<List<string>> Rows { get; set; }
 		List<string> Headers { get; set; }
@@ -41,7 +41,7 @@ namespace NeoEdit.TextEdit
 			Headers = new List<string>();
 		}
 
-		public Table(string input, TableTypeEnum tableType = TableTypeEnum.None, bool hasHeaders = false) : this(GetInputRows(input, tableType), hasHeaders) { }
+		public Table(string input, TableType tableType = TableType.None, bool hasHeaders = false) : this(GetInputRows(input, tableType), hasHeaders) { }
 
 		public Table(List<List<string>> rows, bool hasHeaders = true)
 		{
@@ -69,34 +69,34 @@ namespace NeoEdit.TextEdit
 						Rows[row][column] = null;
 		}
 
-		public static TableTypeEnum GuessTableType(string input)
+		public static TableType GuessTableType(string input)
 		{
 			var endLine = input.IndexOfAny(new char[] { '\r', '\n' });
 			if (endLine == -1)
 				endLine = input.Length;
 			var firstRow = input.Substring(0, endLine);
 			if (String.IsNullOrWhiteSpace(firstRow))
-				return TableTypeEnum.None;
+				return TableType.None;
 			var tabCount = firstRow.Length - firstRow.Replace("\t", "").Length;
 			var commaCount = firstRow.Length - firstRow.Replace(",", "").Length;
 			var columnSepCount = firstRow.Length - firstRow.Replace("│", "").Length;
 			if ((tabCount >= commaCount) && (tabCount >= columnSepCount))
-				return TableTypeEnum.TSV;
+				return TableType.TSV;
 			if (commaCount >= columnSepCount)
-				return TableTypeEnum.CSV;
-			return TableTypeEnum.Columns;
+				return TableType.CSV;
+			return TableType.Columns;
 		}
 
-		static List<List<string>> GetInputRows(string input, TableTypeEnum tableType)
+		static List<List<string>> GetInputRows(string input, TableType tableType)
 		{
-			if (tableType == TableTypeEnum.None)
+			if (tableType == TableType.None)
 				tableType = GuessTableType(input);
 
 			switch (tableType)
 			{
-				case TableTypeEnum.TSV: return input.SplitTCSV('\t').Select(split => split.ToList()).ToList();
-				case TableTypeEnum.CSV: return input.SplitTCSV(',').Select(split => split.ToList()).ToList();
-				case TableTypeEnum.Columns: return input.SplitByLine().Select(line => line.Split('│').Select(item => item.TrimEnd()).ToList()).ToList();
+				case TableType.TSV: return input.SplitTCSV('\t').Select(split => split.ToList()).ToList();
+				case TableType.CSV: return input.SplitTCSV(',').Select(split => split.ToList()).ToList();
+				case TableType.Columns: return input.SplitByLine().Select(line => line.Split('│').Select(item => item.TrimEnd()).ToList()).ToList();
 				default: throw new ArgumentException("Invalid input type");
 			}
 		}
@@ -116,9 +116,9 @@ namespace NeoEdit.TextEdit
 			return str;
 		}
 
-		public override string ToString() => ToString("\r\n", TableTypeEnum.Columns);
+		public override string ToString() => ToString("\r\n", TableType.Columns);
 
-		public string ToString(string ending, TableTypeEnum tableType = TableTypeEnum.Columns)
+		public string ToString(string ending, TableType tableType = TableType.Columns)
 		{
 			var result = new List<List<string>>();
 			result.Add(Headers.ToList());
@@ -126,9 +126,9 @@ namespace NeoEdit.TextEdit
 
 			switch (tableType)
 			{
-				case TableTypeEnum.TSV: return String.Join("", result.Select(items => String.Join("\t", items.Select(item => ToTCSV(item, '\t'))) + ending));
-				case TableTypeEnum.CSV: return String.Join("", result.Select(items => String.Join(",", items.Select(item => ToTCSV(item, ','))) + ending));
-				case TableTypeEnum.Columns:
+				case TableType.TSV: return String.Join("", result.Select(items => String.Join("\t", items.Select(item => ToTCSV(item, '\t'))) + ending));
+				case TableType.CSV: return String.Join("", result.Select(items => String.Join(",", items.Select(item => ToTCSV(item, ','))) + ending));
+				case TableType.Columns:
 					{
 						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].Length)).ToList();
 						return String.Join("", result.AsParallel().AsOrdered().Select(line => String.Join("│", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + ending));
@@ -164,12 +164,12 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		public Table Aggregate(List<AggregateData> aggregateData, bool fullAggregateOnNoGroups = true)
+		public Table Aggregate(List<AggregateData> aggregateData)
 		{
 			var changeHeaders = true;
 			var groupByColumns = aggregateData.Where(data => data.Aggregation.HasFlag(AggregateType.Group)).Select(data => data.Column).ToList();
 			List<List<List<string>>> groupedRows;
-			if ((!groupByColumns.Any()) && (!fullAggregateOnNoGroups))
+			if (!groupByColumns.Any())
 			{
 				groupedRows = Rows.Select(row => new List<List<string>> { row }).ToList();
 				changeHeaders = false;

@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:dialogs="clr-namespace:NeoEdit.TextEdit.Dialogs"
-	Title="Select Date/Time" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=table}">
+	Title="Aggregate Table" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=table}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -14,24 +14,14 @@
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Input:" Target="{Binding ElementName=inputType}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<CheckBox Grid.Row="0" Grid.Column="1" Content="_Headers" IsChecked="{Binding InputHeaders, ElementName=self}" VerticalAlignment="Center" Focusable="False"/>
-		<ComboBox Grid.Row="0" Grid.Column="2" Name="inputType" ItemsSource="{Binding DataTypes, ElementName=self}" SelectedItem="{Binding InputType, ElementName=self}" VerticalAlignment="Center"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Table:" Target="{Binding ElementName=table}" HorizontalAlignment="Right"/>
+		<dialogs:AggregateTableDisplay Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Width="500" Height="200" x:Name="table" Table="{Binding Table, ElementName=self}" SelectedColumn="{Binding SelectedColumn, ElementName=self}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Output:" Target="{Binding ElementName=outputType}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<CheckBox Grid.Row="1" Grid.Column="1" Content="H_eaders" IsChecked="{Binding OutputHeaders, ElementName=self}" VerticalAlignment="Center" Focusable="False"/>
-		<ComboBox Grid.Row="1" Grid.Column="2" Name="outputType" ItemsSource="{Binding DataTypes, ElementName=self}" SelectedItem="{Binding OutputType, ElementName=self}" VerticalAlignment="Center"/>
-
-		<Label Grid.Row="2" Grid.Column="0" Content="_Table:" Target="{Binding ElementName=table}" HorizontalAlignment="Right"/>
-		<dialogs:AggregateTableDisplay Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="500" Height="200" x:Name="table" Table="{Binding Table, ElementName=self}" SelectedColumn="{Binding SelectedColumn, ElementName=self}"/>
-
-		<GroupBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Header="Controls:">
+		<GroupBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Header="Controls:">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition/>
@@ -70,12 +60,12 @@
 			</Grid>
 		</GroupBox>
 
-		<UniformGrid Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Left" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Left" Rows="1">
 			<Button Click="ResetClick"  Content="_Reset" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>

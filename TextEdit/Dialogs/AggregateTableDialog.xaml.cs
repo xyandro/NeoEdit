@@ -12,58 +12,35 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public Table.TableTypeEnum InputType { get; set; }
-			public bool InputHeaders { get; set; }
-			public Table.TableTypeEnum OutputType { get; set; }
-			public bool OutputHeaders { get; set; }
 			public List<Table.AggregateData> AggregateData { get; set; }
 			public List<Table.SortData> SortData { get; set; }
 		}
 
 		[DepProp]
-		public Table.TableTypeEnum InputType { get { return UIHelper<AggregateTableDialog>.GetPropValue<Table.TableTypeEnum>(this); } set { UIHelper<AggregateTableDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool InputHeaders { get { return UIHelper<AggregateTableDialog>.GetPropValue<bool>(this); } set { UIHelper<AggregateTableDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public Table.TableTypeEnum OutputType { get { return UIHelper<AggregateTableDialog>.GetPropValue<Table.TableTypeEnum>(this); } set { UIHelper<AggregateTableDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool OutputHeaders { get { return UIHelper<AggregateTableDialog>.GetPropValue<bool>(this); } set { UIHelper<AggregateTableDialog>.SetPropValue(this, value); } }
-		[DepProp]
 		public Table Table { get { return UIHelper<AggregateTableDialog>.GetPropValue<Table>(this); } set { UIHelper<AggregateTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public int SelectedColumn { get { return UIHelper<AggregateTableDialog>.GetPropValue<int>(this); } set { UIHelper<AggregateTableDialog>.SetPropValue(this, value); } }
 
-		public List<Table.TableTypeEnum> DataTypes { get; }
 		public List<Table.AggregateData> AggregateData { get; set; }
 		public List<Table.SortData> SortData { get; set; }
 
-		static AggregateTableDialog()
-		{
-			UIHelper<AggregateTableDialog>.Register();
-			UIHelper<AggregateTableDialog>.AddCallback(a => a.InputType, (obj, o, n) => { obj.OutputType = obj.InputType; obj.InitialSetup(); });
-			UIHelper<AggregateTableDialog>.AddCallback(a => a.InputHeaders, (obj, o, n) => { obj.OutputHeaders = obj.InputHeaders; obj.InitialSetup(); });
-		}
+		static AggregateTableDialog() { UIHelper<AggregateTableDialog>.Register(); }
 
-		readonly string example;
-		AggregateTableDialog(string example)
+		readonly Table inputTable;
+		AggregateTableDialog(string input, Table.TableType tableType, bool hasHeaders)
 		{
-			this.example = example;
-			DataTypes = Enum.GetValues(typeof(Table.TableTypeEnum)).Cast<Table.TableTypeEnum>().Where(a => a != Table.TableTypeEnum.None).ToList();
+			inputTable = new Table(input, tableType, hasHeaders);
+			Reset();
 			InitializeComponent();
-
-			InputType = OutputType = Table.GuessTableType(example);
-			InputHeaders = OutputHeaders = false;
 		}
 
-		Table exampleTable;
-		void InitialSetup()
+		void Reset()
 		{
-			exampleTable = new Table(example, InputType, InputHeaders);
 			AggregateData = new List<Table.AggregateData>();
-			for (var column = 0; column < exampleTable.NumColumns; ++column)
+			for (var column = 0; column < inputTable.NumColumns; ++column)
 			{
 				var aggregateData = new Table.AggregateData(column);
-				var firstType = Enumerable.Range(0, exampleTable.NumRows).Select(row => exampleTable[row, column]).Where(value => value != null).Select(value => value.GetType()).FirstOrDefault();
+				var firstType = Enumerable.Range(0, inputTable.NumRows).Select(row => inputTable[row, column]).Where(value => value != null).Select(value => value.GetType()).FirstOrDefault();
 				if (firstType == null)
 					aggregateData.Aggregation = Table.AggregateType.All;
 				else if (firstType.IsNumericType())
@@ -79,10 +56,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			SetupTable();
 		}
 
-		void SetupTable()
-		{
-			Table = exampleTable.Aggregate(AggregateData, false).Sort(SortData);
-		}
+		void SetupTable() => Table = inputTable.Aggregate(AggregateData).Sort(SortData);
 
 		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
 		bool altDown => (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None;
@@ -170,19 +144,19 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void ResetClick(object sender, RoutedEventArgs e)
 		{
-			InitialSetup();
+			Reset();
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputType = InputType, InputHeaders = InputHeaders, OutputType = OutputType, OutputHeaders = OutputHeaders, AggregateData = AggregateData, SortData = SortData };
+			result = new Result { AggregateData = AggregateData, SortData = SortData };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, string example)
+		static public Result Run(Window parent, string input, Table.TableType tableType, bool hasHeaders)
 		{
-			var dialog = new AggregateTableDialog(example) { Owner = parent };
+			var dialog = new AggregateTableDialog(input, tableType, hasHeaders) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

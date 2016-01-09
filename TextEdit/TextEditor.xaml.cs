@@ -346,6 +346,9 @@ namespace NeoEdit.TextEdit
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
+			TableType = Table.GuessTableType(AllText);
+			HasHeaders = true;
+
 			// If encoding can't exactly express bytes mark as modified (only for < 50 MB)
 			if ((!isModified) && ((bytes.Length >> 20) < 50))
 				isModified = !Coder.CanFullyEncode(bytes, CodePage);
