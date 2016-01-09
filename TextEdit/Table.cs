@@ -255,6 +255,13 @@ namespace NeoEdit.TextEdit
 			};
 		}
 
+		public Table Transpose()
+		{
+			var result = new List<List<string>> { Headers };
+			result.AddRange(Rows);
+			return new Table(Enumerable.Range(0, NumColumns).Select(column => Enumerable.Range(0, result.Count).Select(row => result[row][column]).ToList()).ToList(), true);
+		}
+
 		public string this[int row, int column]
 		{
 			get { return Rows[row][column]; }

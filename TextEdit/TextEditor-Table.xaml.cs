@@ -45,5 +45,14 @@ namespace NeoEdit.TextEdit
 			Replace(new List<Range> { FullRange }, new List<string> { output });
 			Selections.Replace(FullRange);
 		}
+
+		internal void Command_Table_Transpose()
+		{
+			var table = new Table(AllText, TableType, true);
+			table = table.Transpose();
+			var output = table.ToString(Data.DefaultEnding, TableType);
+			Replace(new List<Range> { FullRange }, new List<string> { output });
+			Selections.Replace(FullRange);
+		}
 	}
 }
