@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeoEdit.Common.Tables;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Misc;
 
@@ -55,7 +54,7 @@ namespace NeoEdit.TextEdit.Dialogs
 					var text = new TextBlock();
 					if (row == 0)
 					{
-						text.Text = Table.Headers[column] ?? "";
+						text.Text = Table.GetHeader(column);
 						text.Background = Brushes.DarkGray;
 					}
 					else

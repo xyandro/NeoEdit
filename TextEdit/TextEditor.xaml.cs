@@ -23,7 +23,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Common.Tables;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
@@ -340,7 +339,7 @@ namespace NeoEdit.TextEdit
 			if (codePage == Coder.CodePage.AutoByBOM)
 				codePage = Coder.CodePageFromBOM(bytes);
 			var data = Coder.BytesToString(bytes, codePage, true);
-			Replace(new List<Range> { new Range(EndOffset(), BeginOffset()) }, new List<string> { data });
+			Replace(new List<Range> { FullRange }, new List<string> { data });
 			CodePage = codePage;
 			HighlightType = Highlighting.Get(FileName);
 			ContentType = Parser.GetParserType(FileName);
@@ -356,8 +355,10 @@ namespace NeoEdit.TextEdit
 			SetModifiedFlag(isModified);
 		}
 
-		int BeginOffset() => Data.GetOffset(0, 0);
-		int EndOffset() => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
+		int BeginOffset => Data.GetOffset(0, 0);
+		int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
+		Range FullRange => new Range(EndOffset, BeginOffset);
+		string AllText => GetString(FullRange);
 
 		public override bool CanClose(ref Message.OptionsEnum answer)
 		{
@@ -1332,12 +1333,6 @@ namespace NeoEdit.TextEdit
 			FindNext(true, selecting);
 		}
 
-		void SetTableSelection()
-		{
-			if ((Selections.Count == 0) || ((Selections.Count == 1) && (!Selections[0].HasSelection)))
-				Selections.Replace(new Range(BeginOffset(), EndOffset()));
-		}
-
 		internal void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);
 
 		internal GotoDialog.Result Command_Position_Goto_Dialog(GotoType gotoType)
@@ -1370,7 +1365,7 @@ namespace NeoEdit.TextEdit
 			var sels = Selections.ToList();
 
 			if ((sels.Count == 0) && (gotoType == GotoType.Line))
-				sels.Add(new Range(BeginOffset()));
+				sels.Add(new Range(BeginOffset));
 			if (sels.Count == 1)
 				sels = sels.Resize(offsets.Count, sels[0]).ToList();
 			if (offsets.Count == 1)
@@ -2447,7 +2442,7 @@ namespace NeoEdit.TextEdit
 			ValidateConnection();
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
-				selections = new List<Range> { new Range(BeginOffset(), EndOffset()) };
+				selections = new List<Range> { FullRange };
 			var results = selections.Select(range => RunDBSelect(GetString(range))).Where(reader => reader != null).ToList();
 			if (results.Any())
 				tableViewer = Launcher.Static.LaunchDBTableEditor(tableViewer, results);
@@ -2501,7 +2496,7 @@ namespace NeoEdit.TextEdit
 			var ranges = new List<Range>();
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
-				selections = new List<Range> { new Range(BeginOffset(), EndOffset()) };
+				selections = new List<Range> { FullRange };
 			foreach (var selection in selections)
 				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 
@@ -2531,7 +2526,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Select_All() => Selections.Replace(new Range(EndOffset(), BeginOffset()));
+		internal void Command_Select_All() => Selections.Replace(FullRange);
 
 		internal LimitDialog.Result Command_Select_Limit_Dialog() => LimitDialog.Run(WindowParent, Selections.Count);
 
@@ -3113,9 +3108,9 @@ namespace NeoEdit.TextEdit
 				case Key.Home:
 					if (controlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginOffset(), shiftDown)).ToList(); // Have to use MoveCursor for selection
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginOffset, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
-							sels.Add(new Range(BeginOffset()));
+							sels.Add(new Range(BeginOffset));
 						Selections.Replace(sels);
 					}
 					else
@@ -3150,9 +3145,9 @@ namespace NeoEdit.TextEdit
 				case Key.End:
 					if (controlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndOffset(), shiftDown)).ToList(); // Have to use MoveCursor for selection
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndOffset, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
-							sels.Add(new Range(EndOffset()));
+							sels.Add(new Range(EndOffset));
 						Selections.Replace(sels);
 					}
 					else
@@ -3273,7 +3268,7 @@ namespace NeoEdit.TextEdit
 				{
 					++line;
 					if (line >= Data.NumLines)
-						return EndOffset();
+						return EndOffset;
 					index = -1;
 				}
 
@@ -3313,7 +3308,7 @@ namespace NeoEdit.TextEdit
 				{
 					--line;
 					if (line < 0)
-						return BeginOffset();
+						return BeginOffset;
 					index = Data.GetLineLength(line);
 					continue;
 				}
@@ -3346,7 +3341,7 @@ namespace NeoEdit.TextEdit
 
 		Range MoveCursor(Range range, int cursor, bool selecting)
 		{
-			cursor = Math.Max(BeginOffset(), Math.Min(cursor, EndOffset()));
+			cursor = Math.Max(BeginOffset, Math.Min(cursor, EndOffset));
 			if (selecting)
 				if (range.Cursor == cursor)
 					return range;
@@ -3462,7 +3457,7 @@ namespace NeoEdit.TextEdit
 
 			Searches.Clear();
 
-			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { new Range(EndOffset(), BeginOffset()) };
+			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			foreach (var region in regions)
 				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.IncludeEndings, result.RegexGroups, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 		}
@@ -3631,7 +3626,7 @@ namespace NeoEdit.TextEdit
 			return builder.ToString();
 		}
 
-		public override bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset() == EndOffset());
+		public override bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
 
 		internal bool HandleText(string text)
 		{

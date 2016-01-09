@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
-using NeoEdit.Common.Tables;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
@@ -11,18 +10,15 @@ namespace NeoEdit.TextEdit
 	{
 		internal AggregateTableDialog.Result Command_Table_Aggregate_Dialog()
 		{
-			SetTableSelection();
-			return AggregateTableDialog.Run(WindowParent, GetSelectionStrings());
+			return AggregateTableDialog.Run(WindowParent, AllText);
 		}
 
 		internal void Command_Table_Aggregate(AggregateTableDialog.Result result)
 		{
-			SetTableSelection();
-
-			var table = new Table(GetSelectionStrings(), result.InputType, result.InputHeaders);
+			var table = new Table(AllText, result.InputType, result.InputHeaders);
 			table = table.Aggregate(result.AggregateData, false);
 			table = table.Sort(result.SortData);
-			var output = table.ConvertToString(Data.DefaultEnding, result.OutputType, result.OutputHeaders);
+			var output = table.ToString(Data.DefaultEnding, result.OutputType);
 
 			var location = Data.GetOffset(Data.GetOffsetLine(Selections[0].Start), 0);
 			Replace(new List<Range> { new Range(location) }, new List<string> { output + Data.DefaultEnding });

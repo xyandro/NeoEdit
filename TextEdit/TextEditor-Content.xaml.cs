@@ -109,9 +109,8 @@ namespace NeoEdit.TextEdit
 		internal void Command_Content_Reformat()
 		{
 			var root = RootNode();
-			var allRange = new Range(BeginOffset(), EndOffset());
 			var str = Parser.Reformat(root, Data.Data, ContentType);
-			Replace(new List<Range> { allRange }, new List<string> { str });
+			Replace(new List<Range> { FullRange }, new List<string> { str });
 		}
 
 		internal void Command_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Data, range)).ToList());
