@@ -689,7 +689,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Open_Selected: Command_File_Open_Selected(); break;
 				case TextEditCommand.File_OpenWith_Disk: Command_File_OpenWith_Disk(); break;
 				case TextEditCommand.File_OpenWith_HexEditor: Command_File_OpenWith_HexEditor(); break;
-				case TextEditCommand.File_OpenWith_TableEditor: Command_File_OpenWith_TableEditor(); break;
 				case TextEditCommand.File_Save_Save: Command_File_Save_Save(); break;
 				case TextEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
@@ -986,14 +985,6 @@ namespace NeoEdit.TextEdit
 			if (!VerifyCanFullyEncode())
 				return;
 			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
-			WindowParent.Remove(this, true);
-		}
-
-		internal void Command_File_OpenWith_TableEditor()
-		{
-			if (!VerifyCanFullyEncode())
-				return;
-			Launcher.Static.LaunchTableEditor(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
 			WindowParent.Remove(this, true);
 		}
 

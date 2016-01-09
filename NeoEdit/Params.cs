@@ -9,7 +9,6 @@ using NeoEdit.Network;
 using NeoEdit.Processes;
 using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
-using NeoEdit.TableEdit;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
 using NeoEdit.Tools;
@@ -116,19 +115,6 @@ namespace NeoEdit
 	class SystemInfoParam : Param
 	{
 		public override void Execute() => new SystemInfoWindow();
-	}
-
-	class TableEditParam : Param
-	{
-		readonly List<string> FileNames;
-		public TableEditParam(List<string> fileNames) { FileNames = fileNames; }
-		public override void Execute()
-		{
-			if (!FileNames.Any())
-				TableEditTabs.Create();
-			foreach (var fileName in FileNames)
-				TableEditTabs.Create(fileName);
-		}
 	}
 
 	class TextEditParam : Param

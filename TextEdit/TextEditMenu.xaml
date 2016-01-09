@@ -22,7 +22,6 @@
 		<MenuItem Header="Open _With">
 			<textEdit:TextEditMenuItem Header="_Disk" CommandEnum="File_OpenWith_Disk"/>
 			<textEdit:TextEditMenuItem Header="_Hex Editor" CommandEnum="File_OpenWith_HexEditor"/>
-			<textEdit:TextEditMenuItem Header="Ta_ble Editor" CommandEnum="File_OpenWith_TableEditor"/>
 		</MenuItem>
 		<MenuItem Header="_Save">
 			<textEdit:TextEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>

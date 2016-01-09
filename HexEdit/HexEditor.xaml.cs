@@ -570,15 +570,6 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_File_OpenWith_Disk() => Launcher.Static.LaunchDisk(FileName);
 
-		internal void Command_File_OpenWith_TableEditor()
-		{
-			var bytes = Data.GetAllBytes();
-			if (!CanFullyEncode(bytes))
-				return;
-			Launcher.Static.LaunchTableEditor(FileName, bytes, CodePage, IsModified);
-			WindowParent.Remove(this, true);
-		}
-
 		internal void Command_File_OpenWith_TextEditor()
 		{
 			var bytes = Data.GetAllBytes();

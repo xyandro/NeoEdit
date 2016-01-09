@@ -14,7 +14,6 @@
 		</MenuItem>
 		<MenuItem Header="Open _With">
 			<hexEdit:HexEditMenuItem Header="_Disk" CommandEnum="File_OpenWith_Disk"/>
-			<hexEdit:HexEditMenuItem Header="Ta_ble Editor" CommandEnum="File_OpenWith_TableEditor"/>
 			<hexEdit:HexEditMenuItem Header="_Text Editor" CommandEnum="File_OpenWith_TextEditor"/>
 		</MenuItem>
 		<MenuItem Header="_Save">

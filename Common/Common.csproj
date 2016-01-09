@@ -50,9 +50,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Searcher.cs</LastGenOutput>
     </Content>
-    <Compile Include="Tables\Cell.cs" />
-    <Compile Include="Tables\CellRange.cs" />
-    <Compile Include="Tables\Table.cs" />
     <Compile Include="TextData.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />

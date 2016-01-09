@@ -7,9 +7,6 @@ Select readable
 Can't open any window if current directory is invalid (like when running off a network drive)
 In active list add number of selections, allow sort, allow typing to find file
 
-Tables:
-Move to text
-
 Text:
 Continue after error deleting files (perhaps with dialog Yes/No/All)
 Files: Select/etc on svn status (ignore/modified)

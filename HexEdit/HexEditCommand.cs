@@ -11,7 +11,6 @@ namespace NeoEdit.HexEdit
 		File_Open_OpenCopiedCutFiles,
 		File_Open_OpenDump,
 		[KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Alt)] File_OpenWith_Disk,
-		[KeyGesture(Key.B, ModifierKeys.Control | ModifierKeys.Alt)] File_OpenWith_TableEditor,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Alt)] File_OpenWith_TextEditor,
 		[KeyGesture(Key.S, ModifierKeys.Control)] File_Save_Save,
 		File_Save_SaveAs,

@@ -19,7 +19,6 @@ NETWORK        : '-socket' | '-sockets' | '-network'                            
 PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
 REGISTRY       : '-registry'                                                                            ;
 SYSTEMINFO     : '-system' | '-systeminfo'                                                              ;
-TABLEEDIT      : '-table' | '-tables' | '-tableedit' | '-tablesedit' | '-tableeditor' | '-tableseditor' ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
 TOOLS          : '-tool' | '-tools'                                                                     ;
@@ -49,7 +48,6 @@ NETWORK2       : NETWORK       -> type(NETWORK)       ;
 PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
 REGISTRY2      : REGISTRY      -> type(REGISTRY)      ;
 SYSTEMINFO2    : SYSTEMINFO    -> type(SYSTEMINFO)    ;
-TABLEEDIT2     : TABLEEDIT     -> type(TABLEEDIT)     ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;
 TOOLS2         : TOOLS         -> type(TOOLS)         ;

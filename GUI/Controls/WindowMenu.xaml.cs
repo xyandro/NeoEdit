@@ -12,7 +12,6 @@
 		Window_Processes,
 		Window_Registry,
 		Window_SystemInfo,
-		Window_TableEditor,
 		Window_TextEditor,
 		Window_TextViewer,
 		Window_Tools,
