@@ -2420,22 +2420,17 @@ namespace NeoEdit.TextEdit
 			dbConnection = result.DBConnectInfo.GetConnection();
 		}
 
-		DbDataReader RunDBSelect(string commandText)
+		Table RunDBSelect(string commandText)
 		{
-			var command = dbConnection.CreateCommand();
-			try
+			using (var command = dbConnection.CreateCommand())
 			{
 				command.CommandText = commandText;
-				var reader = command.ExecuteReader();
-				if (reader.FieldCount != 0)
-					return reader;
-				command.Dispose();
-				return null;
-			}
-			catch
-			{
-				command.Dispose();
-				throw;
+				using (var reader = command.ExecuteReader())
+				{
+					if (reader.FieldCount == 0)
+						return null;
+					return new Table(reader);
+				}
 			}
 		}
 
@@ -2445,16 +2440,19 @@ namespace NeoEdit.TextEdit
 				throw new Exception("No connection.");
 		}
 
-		object tableViewer;
 		internal void Command_Database_Execute()
 		{
 			ValidateConnection();
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { FullRange };
-			var results = selections.Select(range => RunDBSelect(GetString(range))).Where(reader => reader != null).ToList();
-			if (results.Any())
-				tableViewer = Launcher.Static.LaunchDBTableEditor(tableViewer, results);
+			foreach (var range in selections)
+			{
+				var table = RunDBSelect(GetString(range));
+				if (table == null)
+					continue;
+				OpenTable(table);
+			}
 		}
 
 		internal void Command_Database_Examine_Dialog()

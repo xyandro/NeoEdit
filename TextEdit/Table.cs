@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using NeoEdit.Common;
 
@@ -59,6 +60,14 @@ namespace NeoEdit.TextEdit
 				else
 					Headers = Rows[0].Select((value, index) => $"Column {index + 1}").ToList();
 			}
+		}
+
+		public Table(DbDataReader reader)
+		{
+			Headers = Enumerable.Range(0, reader.FieldCount).Select(column => reader.GetName(column)).ToList();
+			Rows = new List<List<string>>();
+			while (reader.Read())
+				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => value == DBNull.Value ? null : value.ToString()).ToList());
 		}
 
 		void SetNulls()
