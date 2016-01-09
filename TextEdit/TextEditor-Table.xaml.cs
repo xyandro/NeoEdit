@@ -20,6 +20,8 @@ namespace NeoEdit.TextEdit
 			TabsParent.CreateTab(textEditor);
 		}
 
+		internal void Command_Table_Type_Detect() => TableType = Table.GuessTableType(AllText);
+
 		internal void Command_Table_RegionsSelectionsToTable()
 		{
 			if (!Selections.Any())

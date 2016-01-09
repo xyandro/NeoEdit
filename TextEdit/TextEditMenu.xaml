@@ -263,6 +263,7 @@
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
 		<MenuItem Header="_Type">
+			<textEdit:TextEditMenuItem Header="_Detect" CommandEnum="Table_Type_Detect"/>
 			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.None}" FalseValue="{x:Static textEdit:Table+TableType.None}"/>
 			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.Columns}" FalseValue="{x:Static textEdit:Table+TableType.Columns}"/>
 			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.CSV}" FalseValue="{x:Static textEdit:Table+TableType.CSV}"/>

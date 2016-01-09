@@ -29,10 +29,7 @@ Get DLL/EXE version info
 Multiple selections on aggregation should create one table
 Pull directory contents, including sizes/times (useful for diffing, others)
 Diff: If both files are selected, alt-up/down moves 2 diffs
-Add tables
-Table: Reformat
 Table: Transpose
-Table: Type (including detect)
 Verify DB execute closes statements/commands
 Add series (linear, geometric, etc.)
 Save variables for use in expressions (could capture columns of a table)

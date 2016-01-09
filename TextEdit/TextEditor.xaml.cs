@@ -814,6 +814,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
+				case TextEditCommand.Table_Type_Detect: Command_Table_Type_Detect(); break;
 				case TextEditCommand.Table_RegionsSelectionsToTable: Command_Table_RegionsSelectionsToTable(); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;
 				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;

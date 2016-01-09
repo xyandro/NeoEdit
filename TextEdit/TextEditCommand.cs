@@ -144,6 +144,7 @@ namespace NeoEdit.TextEdit
 		DateTime_Now,
 		DateTime_Convert,
 		Table_RegionsSelectionsToTable,
+		Table_Type_Detect,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift)] Table_EditTable,
 		[KeyGesture(Key.G, ModifierKeys.Control)] [KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Shift, false)] Position_Goto_Lines,
 		Position_Goto_Columns,
