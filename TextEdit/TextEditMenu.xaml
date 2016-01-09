@@ -270,8 +270,9 @@
 		</MenuItem>
 		<textEdit:MultiMenuItem Header="_Headers" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HasHeaders" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Aggregate" CommandEnum="Table_Aggregate"/>
 		<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Table_RegionsSelectionsToTable"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Edit Table" CommandEnum="Table_EditTable"/>
 	</MenuItem>
 	<MenuItem Header="_Position">
 		<MenuItem Header="_Goto">

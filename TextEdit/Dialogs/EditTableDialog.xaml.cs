@@ -8,7 +8,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	internal partial class AggregateTableDialog
+	internal partial class EditTableDialog
 	{
 		internal class Result
 		{
@@ -17,17 +17,17 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public Table Table { get { return UIHelper<AggregateTableDialog>.GetPropValue<Table>(this); } set { UIHelper<AggregateTableDialog>.SetPropValue(this, value); } }
+		public Table Table { get { return UIHelper<EditTableDialog>.GetPropValue<Table>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int SelectedColumn { get { return UIHelper<AggregateTableDialog>.GetPropValue<int>(this); } set { UIHelper<AggregateTableDialog>.SetPropValue(this, value); } }
+		public int SelectedColumn { get { return UIHelper<EditTableDialog>.GetPropValue<int>(this); } set { UIHelper<EditTableDialog>.SetPropValue(this, value); } }
 
 		public List<Table.AggregateData> AggregateData { get; set; }
 		public List<Table.SortData> SortData { get; set; }
 
-		static AggregateTableDialog() { UIHelper<AggregateTableDialog>.Register(); }
+		static EditTableDialog() { UIHelper<EditTableDialog>.Register(); }
 
 		readonly Table inputTable;
-		AggregateTableDialog(string input, Table.TableType tableType, bool hasHeaders)
+		EditTableDialog(string input, Table.TableType tableType, bool hasHeaders)
 		{
 			inputTable = new Table(input, tableType, hasHeaders);
 			Reset();
@@ -156,7 +156,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		static public Result Run(Window parent, string input, Table.TableType tableType, bool hasHeaders)
 		{
-			var dialog = new AggregateTableDialog(input, tableType, hasHeaders) { Owner = parent };
+			var dialog = new EditTableDialog(input, tableType, hasHeaders) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

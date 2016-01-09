@@ -624,7 +624,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Text_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
-				case TextEditCommand.Table_Aggregate: dialogResult = Command_Table_Aggregate_Dialog(); break;
+				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
 				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
 				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
@@ -814,8 +814,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
-				case TextEditCommand.Table_Aggregate: Command_Table_Aggregate(dialogResult as AggregateTableDialog.Result); break;
 				case TextEditCommand.Table_RegionsSelectionsToTable: Command_Table_RegionsSelectionsToTable(); break;
+				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;
 				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Columns: Command_Position_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Positions: Command_Position_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;

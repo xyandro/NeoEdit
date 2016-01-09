@@ -8,22 +8,22 @@ using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	partial class AggregateTableDisplay
+	partial class EditTableDisplay
 	{
 		[DepProp]
-		public Table Table { get { return UIHelper<AggregateTableDisplay>.GetPropValue<Table>(this); } set { UIHelper<AggregateTableDisplay>.SetPropValue(this, value); } }
+		public Table Table { get { return UIHelper<EditTableDisplay>.GetPropValue<Table>(this); } set { UIHelper<EditTableDisplay>.SetPropValue(this, value); } }
 		[DepProp]
-		public int SelectedColumn { get { return UIHelper<AggregateTableDisplay>.GetPropValue<int>(this); } set { UIHelper<AggregateTableDisplay>.SetPropValue(this, value); } }
+		public int SelectedColumn { get { return UIHelper<EditTableDisplay>.GetPropValue<int>(this); } set { UIHelper<EditTableDisplay>.SetPropValue(this, value); } }
 
-		static AggregateTableDisplay()
+		static EditTableDisplay()
 		{
-			UIHelper<AggregateTableDisplay>.Register();
-			UIHelper<AggregateTableDisplay>.AddCallback(a => a.Table, (obj, o, n) => obj.SetupTable());
-			UIHelper<AggregateTableDisplay>.AddCallback(a => a.SelectedColumn, (obj, o, n) => obj.SetupSelection());
+			UIHelper<EditTableDisplay>.Register();
+			UIHelper<EditTableDisplay>.AddCallback(a => a.Table, (obj, o, n) => obj.SetupTable());
+			UIHelper<EditTableDisplay>.AddCallback(a => a.SelectedColumn, (obj, o, n) => obj.SetupSelection());
 		}
 
 		readonly Rectangle selection = new Rectangle { Fill = new LinearGradientBrush(Colors.LightBlue, Colors.AliceBlue, 0) };
-		public AggregateTableDisplay()
+		public EditTableDisplay()
 		{
 			InitializeComponent();
 			SelectedColumn = 0;
