@@ -261,14 +261,8 @@
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
-		<MenuItem Header="_Type">
-			<textEdit:TextEditMenuItem Header="_Detect" CommandEnum="Table_Type_Detect"/>
-			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.None}" FalseValue="{x:Static textEdit:Table+TableType.None}"/>
-			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.Columns}" FalseValue="{x:Static textEdit:Table+TableType.Columns}"/>
-			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.CSV}" FalseValue="{x:Static textEdit:Table+TableType.CSV}"/>
-			<textEdit:MultiMenuItem Header="_TSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="TableType" TrueValue="{x:Static textEdit:Table+TableType.TSV}" FalseValue="{x:Static textEdit:Table+TableType.TSV}"/>
-			<textEdit:TextEditMenuItem Header="Con_vert" CommandEnum="Table_Type_Convert"/>
-		</MenuItem>
+		<textEdit:TextEditMenuItem Header="_Detect Type" CommandEnum="Table_DetectType"/>
+		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
 		<textEdit:MultiMenuItem Header="_Headers" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HasHeaders" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Table_RegionsSelectionsToTable"/>

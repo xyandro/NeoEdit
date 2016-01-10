@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Content;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -10,17 +11,17 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public Table.TableType TableType { get; set; }
+			public Parser.ParserType TableType { get; set; }
 		}
 
 		[DepProp]
-		public Table.TableType TableType { get { return UIHelper<ChooseTableTypeDialog>.GetPropValue<Table.TableType>(this); } set { UIHelper<ChooseTableTypeDialog>.SetPropValue(this, value); } }
+		public Parser.ParserType TableType { get { return UIHelper<ChooseTableTypeDialog>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<ChooseTableTypeDialog>.SetPropValue(this, value); } }
 
-		public List<Table.TableType> TableTypes { get; } = Helpers.GetValues<Table.TableType>().Where(type => type != Table.TableType.None).ToList();
+		public List<Parser.ParserType> TableTypes { get; } = Helpers.GetValues<Parser.ParserType>().Where(type => type != Parser.ParserType.None).ToList();
 
 		static ChooseTableTypeDialog() { UIHelper<ChooseTableTypeDialog>.Register(); }
 
-		ChooseTableTypeDialog(Table.TableType tableType)
+		ChooseTableTypeDialog(Parser.ParserType tableType)
 		{
 			InitializeComponent();
 			TableType = tableType;
@@ -33,7 +34,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, Table.TableType tableType)
+		static public Result Run(Window parent, Parser.ParserType tableType)
 		{
 			var dialog = new ChooseTableTypeDialog(tableType) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;

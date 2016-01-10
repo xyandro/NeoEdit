@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.TextEdit.Content;
 
 namespace NeoEdit.TextEdit
 {
@@ -26,8 +27,6 @@ namespace NeoEdit.TextEdit
 
 		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
 
-		public enum TableType { None, TSV, CSV, Columns }
-
 		List<List<string>> Rows { get; set; }
 		List<string> Headers { get; set; }
 
@@ -42,7 +41,7 @@ namespace NeoEdit.TextEdit
 			Headers = new List<string>();
 		}
 
-		public Table(string input, TableType tableType = TableType.None, bool hasHeaders = false) : this(GetInputRows(input, tableType), hasHeaders) { }
+		public Table(string input, Parser.ParserType tableType = Parser.ParserType.None, bool hasHeaders = false) : this(GetInputRows(input, tableType), hasHeaders) { }
 
 		public Table(List<List<string>> rows, bool hasHeaders = true)
 		{
@@ -78,34 +77,34 @@ namespace NeoEdit.TextEdit
 						Rows[row][column] = null;
 		}
 
-		public static TableType GuessTableType(string input)
+		public static Parser.ParserType GuessTableType(string input)
 		{
 			var endLine = input.IndexOfAny(new char[] { '\r', '\n' });
 			if (endLine == -1)
 				endLine = input.Length;
 			var firstRow = input.Substring(0, endLine);
 			if (String.IsNullOrWhiteSpace(firstRow))
-				return TableType.None;
+				return Parser.ParserType.None;
 			var tabCount = firstRow.Length - firstRow.Replace("\t", "").Length;
 			var commaCount = firstRow.Length - firstRow.Replace(",", "").Length;
 			var columnSepCount = firstRow.Length - firstRow.Replace("│", "").Length;
 			if ((tabCount >= commaCount) && (tabCount >= columnSepCount))
-				return TableType.TSV;
+				return Parser.ParserType.TSV;
 			if (commaCount >= columnSepCount)
-				return TableType.CSV;
-			return TableType.Columns;
+				return Parser.ParserType.CSV;
+			return Parser.ParserType.Columns;
 		}
 
-		static List<List<string>> GetInputRows(string input, TableType tableType)
+		static List<List<string>> GetInputRows(string input, Parser.ParserType tableType)
 		{
-			if (tableType == TableType.None)
+			if (tableType == Parser.ParserType.None)
 				tableType = GuessTableType(input);
 
 			switch (tableType)
 			{
-				case TableType.TSV: return input.SplitTCSV('\t').Select(split => split.ToList()).ToList();
-				case TableType.CSV: return input.SplitTCSV(',').Select(split => split.ToList()).ToList();
-				case TableType.Columns: return input.SplitByLine().Select(line => line.Split('│').Select(item => item.TrimEnd()).ToList()).ToList();
+				case Parser.ParserType.TSV: return input.SplitTCSV('\t').Select(split => split.ToList()).ToList();
+				case Parser.ParserType.CSV: return input.SplitTCSV(',').Select(split => split.ToList()).ToList();
+				case Parser.ParserType.Columns: return input.SplitByLine().Select(line => line.Split('│').Select(item => item.TrimEnd()).ToList()).ToList();
 				default: throw new ArgumentException("Invalid input type");
 			}
 		}
@@ -125,9 +124,9 @@ namespace NeoEdit.TextEdit
 			return str;
 		}
 
-		public override string ToString() => ToString("\r\n", TableType.Columns);
+		public override string ToString() => ToString("\r\n", Parser.ParserType.Columns);
 
-		public string ToString(string ending, TableType tableType = TableType.Columns)
+		public string ToString(string ending, Parser.ParserType tableType = Parser.ParserType.Columns)
 		{
 			var result = new List<List<string>>();
 			result.Add(Headers.ToList());
@@ -135,9 +134,9 @@ namespace NeoEdit.TextEdit
 
 			switch (tableType)
 			{
-				case TableType.TSV: return String.Join("", result.Select(items => String.Join("\t", items.Select(item => ToTCSV(item, '\t'))) + ending));
-				case TableType.CSV: return String.Join("", result.Select(items => String.Join(",", items.Select(item => ToTCSV(item, ','))) + ending));
-				case TableType.Columns:
+				case Parser.ParserType.TSV: return String.Join("", result.Select(items => String.Join("\t", items.Select(item => ToTCSV(item, '\t'))) + ending));
+				case Parser.ParserType.CSV: return String.Join("", result.Select(items => String.Join(",", items.Select(item => ToTCSV(item, ','))) + ending));
+				case Parser.ParserType.Columns:
 					{
 						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].Length)).ToList();
 						return String.Join("", result.AsParallel().AsOrdered().Select(line => String.Join("│", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + ending));

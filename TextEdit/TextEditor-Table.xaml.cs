@@ -11,8 +11,6 @@ namespace NeoEdit.TextEdit
 	public partial class TextEditor
 	{
 		[DepProp]
-		public Table.TableType TableType { get { return UIHelper<TextEditor>.GetPropValue<Table.TableType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
 		public bool HasHeaders { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		void OpenTable(Table table)
@@ -23,19 +21,19 @@ namespace NeoEdit.TextEdit
 
 		void SetText(Table table)
 		{
-			var output = table.ToString(Data.DefaultEnding, TableType);
+			var output = table.ToString(Data.DefaultEnding, ContentType);
 			Replace(new List<Range> { FullRange }, new List<string> { output });
 			Selections.Replace(FullRange);
 		}
 
-		internal void Command_Table_Type_Detect() => TableType = Table.GuessTableType(AllText);
+		internal void Command_Table_Type_Detect() => ContentType = Table.GuessTableType(AllText);
 
-		internal ChooseTableTypeDialog.Result Command_Table_Type_Convert_Dialog() => ChooseTableTypeDialog.Run(WindowParent, TableType);
+		internal ChooseTableTypeDialog.Result Command_Table_Type_Convert_Dialog() => ChooseTableTypeDialog.Run(WindowParent, ContentType);
 
 		internal void Command_Table_Type_Convert(ChooseTableTypeDialog.Result result)
 		{
-			var table = new Table(AllText, TableType, HasHeaders);
-			TableType = result.TableType;
+			var table = new Table(AllText, ContentType, HasHeaders);
+			ContentType = result.TableType;
 			SetText(table);
 		}
 
@@ -50,15 +48,15 @@ namespace NeoEdit.TextEdit
 			OpenTable(new Table(rows, false));
 		}
 
-		internal EditTableDialog.Result Command_Table_EditTable_Dialog() => EditTableDialog.Run(WindowParent, new Table(AllText, TableType, HasHeaders));
+		internal EditTableDialog.Result Command_Table_EditTable_Dialog() => EditTableDialog.Run(WindowParent, new Table(AllText, ContentType, HasHeaders));
 
-		internal void Command_Table_EditTable(EditTableDialog.Result result) => SetText(new Table(AllText, TableType, HasHeaders).Aggregate(result.AggregateData).Sort(result.SortData));
+		internal void Command_Table_EditTable(EditTableDialog.Result result) => SetText(new Table(AllText, ContentType, HasHeaders).Aggregate(result.AggregateData).Sort(result.SortData));
 
 		static Table JoinTable;
 		static List<int> JoinColumns;
 		internal void Command_Table_SetJoinSource()
 		{
-			var table = new Table(AllText, TableType, HasHeaders);
+			var table = new Table(AllText, ContentType, HasHeaders);
 			var result = ChooseTableColumnsDialog.Run(WindowParent, table);
 			if (result == null)
 				return;
@@ -75,8 +73,8 @@ namespace NeoEdit.TextEdit
 			if (JoinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			var table = new Table(AllText, TableType, HasHeaders);
-			var result = ChooseTableColumnsDialog.Run(WindowParent, new Table(AllText, TableType, HasHeaders));
+			var table = new Table(AllText, ContentType, HasHeaders);
+			var result = ChooseTableColumnsDialog.Run(WindowParent, new Table(AllText, ContentType, HasHeaders));
 			if (result == null)
 				return;
 			if (JoinColumns.Count != result.Columns.Count)
@@ -89,6 +87,6 @@ namespace NeoEdit.TextEdit
 			SetText(Table.Join(table, JoinTable, result.Columns, JoinColumns, joinTypeResult.JoinType));
 		}
 
-		internal void Command_Table_Transpose() => SetText(new Table(AllText, TableType, true).Transpose());
+		internal void Command_Table_Transpose() => SetText(new Table(AllText, ContentType, true).Transpose());
 	}
 }
