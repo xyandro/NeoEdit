@@ -2164,6 +2164,9 @@ namespace NeoEdit.TextEdit
 			if (DiffTarget == null)
 				return;
 
+			if ((TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget)) && (DiffTarget.Active))
+				return;
+
 			var lines = Selections.AsParallel().AsOrdered().Select(range => GetDiffNextPrevious(range, next)).ToList();
 			for (var pass = 0; pass < 2; ++pass)
 			{
