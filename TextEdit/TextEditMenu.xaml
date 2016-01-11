@@ -250,7 +250,10 @@
 			<textEdit:TextEditMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="S_eries" CommandEnum="Numeric_Series"/>
+		<MenuItem Header="S_eries">
+			<textEdit:TextEditMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
+			<textEdit:TextEditMenuItem Header="_One Based" CommandEnum="Numeric_Series_OneBased"/>
+		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Floor" CommandEnum="Numeric_Floor"/>
 		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
