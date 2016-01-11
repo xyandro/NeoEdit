@@ -24,7 +24,6 @@ Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
 Get DLL/EXE version info
 Pull directory contents, including sizes/times (useful for diffing, others)
-Add series (linear, geometric, etc.)
 Save variables for use in expressions (could capture columns of a table)
 
 View:

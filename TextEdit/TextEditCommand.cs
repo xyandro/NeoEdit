@@ -138,6 +138,8 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.H, ModifierKeys.Control | ModifierKeys.Shift)] Numeric_Hex_FromHex,
 		Numeric_Series_ZeroBased,
 		Numeric_Series_OneBased,
+		Numeric_Series_Linear,
+		Numeric_Series_Geometric,
 		Numeric_Floor,
 		Numeric_Round,
 		Numeric_Ceiling,

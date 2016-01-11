@@ -253,6 +253,8 @@
 		<MenuItem Header="S_eries">
 			<textEdit:TextEditMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
 			<textEdit:TextEditMenuItem Header="_One Based" CommandEnum="Numeric_Series_OneBased"/>
+			<textEdit:TextEditMenuItem Header="_Linear" CommandEnum="Numeric_Series_Linear"/>
+			<textEdit:TextEditMenuItem Header="_Geometric" CommandEnum="Numeric_Series_Geometric"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Floor" CommandEnum="Numeric_Floor"/>

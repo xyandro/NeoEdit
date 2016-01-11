@@ -261,6 +261,13 @@
     <Compile Include="Dialogs\MinMaxValuesDialog.xaml.cs">
       <DependentUpon>MinMaxValuesDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericSeriesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NumericSeriesDialog.xaml.cs">
+      <DependentUpon>NumericSeriesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\PingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

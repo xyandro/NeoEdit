@@ -620,6 +620,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
 				case TextEditCommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(); break;
 				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(); break;
+				case TextEditCommand.Numeric_Series_Linear: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(true); break;
+				case TextEditCommand.Numeric_Series_Geometric: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(false); break;
 				case TextEditCommand.Numeric_Floor: dialogResult = Command_Numeric_Floor_Dialog(); break;
 				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
 				case TextEditCommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(); break;
@@ -813,6 +815,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
 				case TextEditCommand.Numeric_Series_ZeroBased: Command_Numeric_Series_ZeroBased(); break;
 				case TextEditCommand.Numeric_Series_OneBased: Command_Numeric_Series_OneBased(); break;
+				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_Linear(dialogResult as NumericSeriesDialog.Result); break;
+				case TextEditCommand.Numeric_Series_Geometric: Command_Numeric_Series_Geometric(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as FloorRoundCeilingDialog.Result); break;
@@ -1993,6 +1997,44 @@ namespace NeoEdit.TextEdit
 		internal void Command_Numeric_Series_ZeroBased() => ReplaceSelections(Selections.Select((range, index) => index.ToString()).ToList());
 
 		internal void Command_Numeric_Series_OneBased() => ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
+
+		internal NumericSeriesDialog.Result Command_Numeric_Series_LinearGeometric_Dialog(bool linear)
+		{
+			var nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = GetString(range), index = index }).Where(obj => !String.IsNullOrWhiteSpace(obj.str)).Select(obj => Tuple.Create(Double.Parse(obj.str), obj.index)).ToList();
+			if (nonNulls.Count == 0)
+				return NumericSeriesDialog.Run(WindowParent, 1, 1);
+
+			if (nonNulls.Count == 1)
+				return NumericSeriesDialog.Run(WindowParent, 1, (nonNulls[0].Item1 - 1) / nonNulls[0].Item2);
+
+			var starts = new List<double>();
+			var multipliers = new List<double>();
+			for (var ctr1 = 0; ctr1 < nonNulls.Count; ++ctr1)
+				for (var ctr2 = ctr1 + 1; ctr2 < nonNulls.Count; ++ctr2)
+				{
+					double itemMultiplier, itemStart;
+					if (linear)
+					{
+						itemMultiplier = (nonNulls[ctr2].Item1 - nonNulls[ctr1].Item1) / (nonNulls[ctr2].Item2 - nonNulls[ctr1].Item2);
+						itemStart = nonNulls[ctr1].Item1 - itemMultiplier * nonNulls[ctr1].Item2;
+					}
+					else
+					{
+						itemMultiplier = Math.Pow(nonNulls[ctr2].Item1 / nonNulls[ctr1].Item1, 1.0 / (nonNulls[ctr2].Item2 - nonNulls[ctr1].Item2));
+						itemStart = nonNulls[ctr1].Item1 / Math.Pow(itemMultiplier, nonNulls[ctr1].Item2);
+					}
+					starts.Add(itemStart);
+					multipliers.Add(itemMultiplier);
+				}
+
+			var start = starts.Sum() / starts.Count;
+			var multiplier = multipliers.Sum() / multipliers.Count;
+			return NumericSeriesDialog.Run(WindowParent, start, multiplier);
+		}
+
+		internal void Command_Numeric_Series_Linear(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (result.Multiplier * index + result.Start).ToString()).ToList());
+
+		internal void Command_Numeric_Series_Geometric(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (Math.Pow(result.Multiplier, index) * result.Start).ToString()).ToList());
 
 		decimal Floor(decimal number, decimal interval) => Math.Truncate(number / interval) * interval;
 
