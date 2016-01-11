@@ -18,6 +18,7 @@
 		<ListBox Name="options" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding DBConnectInfos, ElementName=self}" DisplayMemberPath="Name" SelectedValue="{Binding DBConnectInfo, ElementName=self}"/>
 		<DockPanel Grid.Row="0" Grid.Column="1">
 			<Button DockPanel.Dock="Top" Click="AddClick" Content="_Add" Focusable="False"/>
+			<Button DockPanel.Dock="Top" Click="CopyClick" Content="_Copy" Focusable="False"/>
 			<Button DockPanel.Dock="Top" Click="EditClick" Content="_Edit" Focusable="False"/>
 			<Button DockPanel.Dock="Top" Click="DeleteClick" Content="_Delete" Focusable="False"/>
 			<Button DockPanel.Dock="Top" Click="MoveUpClick" Content="Move _Up" Focusable="False"/>

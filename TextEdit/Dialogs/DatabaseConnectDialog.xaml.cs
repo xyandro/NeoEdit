@@ -41,6 +41,16 @@ namespace NeoEdit.TextEdit.Dialogs
 				DBConnectInfos.Add(result);
 		}
 
+		void CopyClick(object sender, RoutedEventArgs e)
+		{
+			if (DBConnectInfo == null)
+				return;
+
+			var result = EditDatabaseConnectDialog.Run(Owner, DBConnectInfo);
+			if (result != null)
+				DBConnectInfos.Add(result);
+		}
+
 		void EditClick(object sender, RoutedEventArgs e)
 		{
 			if (DBConnectInfo == null)
