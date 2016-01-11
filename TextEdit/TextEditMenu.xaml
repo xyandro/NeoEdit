@@ -252,6 +252,10 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="S_eries" CommandEnum="Numeric_Series"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Floor" CommandEnum="Numeric_Floor"/>
+		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
+		<textEdit:TextEditMenuItem Header="Ce_iling" CommandEnum="Numeric_Ceiling"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
 		<textEdit:TextEditMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
 		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
