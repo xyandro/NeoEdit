@@ -243,6 +243,8 @@
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="Mi_n" CommandEnum="Numeric_Select_Min"/>
 			<textEdit:TextEditMenuItem Header="Ma_x" CommandEnum="Numeric_Select_Max"/>
+			<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Select_Whole"/>
+			<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Select_Fraction"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Hex">
@@ -259,7 +261,10 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Sc_ale" CommandEnum="Numeric_Scale"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Floor" CommandEnum="Numeric_Floor"/>
+		<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Whole"/>
+		<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
 		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
 		<textEdit:TextEditMenuItem Header="Ce_iling" CommandEnum="Numeric_Ceiling"/>
 		<Separator/>

@@ -811,6 +811,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Copy_Sum: Command_Numeric_Copy_Sum(); break;
 				case TextEditCommand.Numeric_Select_Min: Command_Type_Select_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
+				case TextEditCommand.Numeric_Select_Whole: Command_Numeric_Select_Whole(); break;
+				case TextEditCommand.Numeric_Select_Fraction: Command_Numeric_Select_Fraction(); break;
 				case TextEditCommand.Numeric_Hex_ToHex: Command_Numeric_Hex_ToHex(); break;
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
 				case TextEditCommand.Numeric_Series_ZeroBased: Command_Numeric_Series_ZeroBased(); break;
@@ -818,6 +820,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_Linear(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Series_Geometric: Command_Numeric_Series_Geometric(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Scale: Command_Numeric_Scale(dialogResult as ScaleDialog.Result); break;
+				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;
+				case TextEditCommand.Numeric_Fraction: Command_Numeric_Fraction(); break;
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as FloorRoundCeilingDialog.Result); break;
@@ -1918,6 +1922,30 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Text_Case_Toggle() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToToggled()).ToList());
 
+		internal void Command_Numeric_Select_Whole()
+		{
+			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
+			{
+				var str = GetString(range);
+				var idx = str.IndexOf('.');
+				if (idx == -1)
+					return range;
+				return Range.FromIndex(range.Start, idx);
+			}).ToList());
+		}
+
+		internal void Command_Numeric_Select_Fraction()
+		{
+			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
+			{
+				var str = GetString(range);
+				var idx = str.IndexOf('.');
+				if (idx == -1)
+					return Range.FromIndex(range.End, 0);
+				return new Range(range.Start + idx, range.End);
+			}).ToList());
+		}
+
 		internal void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList());
 
 		internal void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
@@ -2036,6 +2064,28 @@ namespace NeoEdit.TextEdit
 		{
 			var ratio = (result.NewMax - result.NewMin) / (result.PrevMax - result.PrevMin);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((Double.Parse(GetString(range)) - result.PrevMin) * ratio + result.NewMin).ToString()).ToList());
+		}
+
+		internal void Command_Numeric_Whole()
+		{
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str =>
+			{
+				var idx = str.IndexOf('.');
+				if (idx == -1)
+					return str;
+				return str.Substring(0, idx);
+			}).ToList());
+		}
+
+		internal void Command_Numeric_Fraction()
+		{
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str =>
+			{
+				var idx = str.IndexOf('.');
+				if (idx == -1)
+					return "0";
+				return str.Substring(idx);
+			}).ToList());
 		}
 
 		internal FloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
