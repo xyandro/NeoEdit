@@ -107,6 +107,8 @@ namespace NeoEdit.TextEdit
 		Expression_Copy,
 		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Expression_EvaluateSelected,
 		Expression_SelectByExpression,
+		Expression_ClearVariables,
+		Expression_SetVariables,
 		Text_Copy_Length,
 		Text_Copy_Min_Text,
 		Text_Copy_Min_Length,

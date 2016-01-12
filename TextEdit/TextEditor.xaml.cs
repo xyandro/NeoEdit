@@ -158,6 +158,8 @@ namespace NeoEdit.TextEdit
 		public object LocalClipboardData { get; set; }
 		readonly NELocalClipboard clipboard;
 
+		static Dictionary<string, List<object>> variables { get; } = new Dictionary<string, List<object>>();
+
 		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; }
 		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; }
 		Dictionary<string, int> keysHash;
@@ -521,14 +523,10 @@ namespace NeoEdit.TextEdit
 				});
 			}
 
-			// Add any keys/values that match count and aren't already defined
-			if (keysAndValues[0].Count == keysAndValues[1].Count)
-			{
-				var availableVars = new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
-				var keyVars = Enumerable.Range(0, keysAndValues[0].Count).Where(index => !availableVars.Contains(keysAndValues[0][index])).ToDictionary(index => keysAndValues[0][index], index => keysAndValues[1][index]);
-				foreach (var pair in keyVars)
-					parallelDataActions.Add(new HashSet<string> { pair.Key }, (items, addData) => addData(pair.Key, InterpretValues(new List<string> { pair.Value })));
-			}
+			// Add variables that aren't already set
+			foreach (var pair in variables)
+				if (!parallelDataActions.Any(action => action.Key.Contains(pair.Key)))
+					parallelDataActions.Add(new HashSet<string> { pair.Key }, (items, addData) => addData(pair.Key, pair.Value));
 
 			var used = expression != null ? expression.Variables : new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
 			var data = new Dictionary<string, List<object>>();
@@ -614,6 +612,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
+				case TextEditCommand.Expression_SetVariables: dialogResult = Command_Expression_SetVariables_Dialog(); break;
 				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
 				case TextEditCommand.Text_Width: dialogResult = Command_Text_Width_Dialog(); break;
 				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
@@ -784,6 +783,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
 				case TextEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
+				case TextEditCommand.Expression_ClearVariables: Command_Expression_ClearVariables(); break;
+				case TextEditCommand.Expression_SetVariables: Command_Expression_SetVariables(dialogResult as SetVariablesDialog.Result); break;
 				case TextEditCommand.Text_Copy_Length: Command_Text_Copy_Length(); break;
 				case TextEditCommand.Text_Copy_Min_Text: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
 				case TextEditCommand.Text_Copy_Min_Length: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Length); break;
@@ -2766,6 +2767,12 @@ namespace NeoEdit.TextEdit
 			var results = GetExpressionResults<bool>(result.Expression);
 			Selections.Replace(Selections.Where((str, num) => results[num]).ToList());
 		}
+
+		internal void Command_Expression_ClearVariables() => variables.Clear();
+
+		internal SetVariablesDialog.Result Command_Expression_SetVariables_Dialog() => SetVariablesDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault() ?? "");
+
+		internal void Command_Expression_SetVariables(SetVariablesDialog.Result result) => variables[result.VarName] = InterpretValues(GetSelectionStrings());
 
 		internal void Command_Select_Selection_First()
 		{
