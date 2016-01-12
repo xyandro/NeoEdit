@@ -34,7 +34,7 @@
 		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Repeat Items" IsChecked="{Binding Repeat, ElementName=self}" Focusable="False"/>
 
 		<Label Grid.Row="4" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
-		<Label Grid.Row="4" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="4" Grid.Column="1" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding NumResults, ElementName=self, StringFormat=n0}" HorizontalAlignment="Right"/>
 
 		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
