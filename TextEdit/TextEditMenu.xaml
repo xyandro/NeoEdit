@@ -291,6 +291,8 @@
 		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Table_Join"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Tr_anspose" CommandEnum="Table_Transpose"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="Set _Variables" CommandEnum="Table_SetVariables"/>
 	</MenuItem>
 	<MenuItem Header="_Position">
 		<MenuItem Header="_Goto">

@@ -19,6 +19,8 @@ namespace NeoEdit.TextEdit
 			TabsParent.CreateTab(textEditor);
 		}
 
+		Table GetTable() => new Table(AllText, ContentType, HasHeaders);
+
 		void SetText(Table table)
 		{
 			var output = table.ToString(Data.DefaultEnding, ContentType);
@@ -32,7 +34,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Table_Type_Convert(ChooseTableTypeDialog.Result result)
 		{
-			var table = new Table(AllText, ContentType, HasHeaders);
+			var table = GetTable();
 			ContentType = result.TableType;
 			SetText(table);
 		}
@@ -48,15 +50,15 @@ namespace NeoEdit.TextEdit
 			OpenTable(new Table(rows, false));
 		}
 
-		internal EditTableDialog.Result Command_Table_EditTable_Dialog() => EditTableDialog.Run(WindowParent, new Table(AllText, ContentType, HasHeaders));
+		internal EditTableDialog.Result Command_Table_EditTable_Dialog() => EditTableDialog.Run(WindowParent, GetTable());
 
-		internal void Command_Table_EditTable(EditTableDialog.Result result) => SetText(new Table(AllText, ContentType, HasHeaders).Aggregate(result.AggregateData).Sort(result.SortData));
+		internal void Command_Table_EditTable(EditTableDialog.Result result) => SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
 
 		static Table JoinTable;
 		static List<int> JoinColumns;
 		internal void Command_Table_SetJoinSource()
 		{
-			var table = new Table(AllText, ContentType, HasHeaders);
+			var table = GetTable();
 			var result = ChooseTableColumnsDialog.Run(WindowParent, table);
 			if (result == null)
 				return;
@@ -73,8 +75,8 @@ namespace NeoEdit.TextEdit
 			if (JoinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			var table = new Table(AllText, ContentType, HasHeaders);
-			var result = ChooseTableColumnsDialog.Run(WindowParent, new Table(AllText, ContentType, HasHeaders));
+			var table = GetTable();
+			var result = ChooseTableColumnsDialog.Run(WindowParent, table);
 			if (result == null)
 				return;
 			if (JoinColumns.Count != result.Columns.Count)
@@ -88,5 +90,12 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Table_Transpose() => SetText(new Table(AllText, ContentType, true).Transpose());
+
+		internal void Command_Table_SetVariables()
+		{
+			var table = GetTable();
+			for (var column = 0; column < table.NumColumns; ++column)
+				variables[table.GetHeader(column)] = InterpretValues(Enumerable.Range(0, table.NumRows).Select(row => table[row, column]));
+		}
 	}
 }

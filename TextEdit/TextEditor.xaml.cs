@@ -838,6 +838,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_SetJoinSource: Command_Table_SetJoinSource(); break;
 				case TextEditCommand.Table_Join: Command_Table_Join(); break;
 				case TextEditCommand.Table_Transpose: Command_Table_Transpose(); break;
+				case TextEditCommand.Table_SetVariables: Command_Table_SetVariables(); break;
 				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Columns: Command_Position_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Positions: Command_Position_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
