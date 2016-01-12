@@ -140,6 +140,7 @@ namespace NeoEdit.TextEdit
 		Numeric_Series_OneBased,
 		Numeric_Series_Linear,
 		Numeric_Series_Geometric,
+		Numeric_Scale,
 		Numeric_Floor,
 		Numeric_Round,
 		Numeric_Ceiling,

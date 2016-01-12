@@ -257,6 +257,8 @@
 			<textEdit:TextEditMenuItem Header="_Geometric" CommandEnum="Numeric_Series_Geometric"/>
 		</MenuItem>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="Sc_ale" CommandEnum="Numeric_Scale"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Floor" CommandEnum="Numeric_Floor"/>
 		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
 		<textEdit:TextEditMenuItem Header="Ce_iling" CommandEnum="Numeric_Ceiling"/>

@@ -622,6 +622,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(); break;
 				case TextEditCommand.Numeric_Series_Linear: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(true); break;
 				case TextEditCommand.Numeric_Series_Geometric: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(false); break;
+				case TextEditCommand.Numeric_Scale: dialogResult = Command_Numeric_Scale_Dialog(); break;
 				case TextEditCommand.Numeric_Floor: dialogResult = Command_Numeric_Floor_Dialog(); break;
 				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
 				case TextEditCommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(); break;
@@ -817,6 +818,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Series_OneBased: Command_Numeric_Series_OneBased(); break;
 				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_Linear(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Series_Geometric: Command_Numeric_Series_Geometric(dialogResult as NumericSeriesDialog.Result); break;
+				case TextEditCommand.Numeric_Scale: Command_Numeric_Scale(dialogResult as ScaleDialog.Result); break;
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as FloorRoundCeilingDialog.Result); break;
@@ -2007,28 +2009,12 @@ namespace NeoEdit.TextEdit
 			if (nonNulls.Count == 1)
 				return NumericSeriesDialog.Run(WindowParent, 1, (nonNulls[0].Item1 - 1) / nonNulls[0].Item2);
 
-			var starts = new List<double>();
-			var multipliers = new List<double>();
-			for (var ctr1 = 0; ctr1 < nonNulls.Count; ++ctr1)
-				for (var ctr2 = ctr1 + 1; ctr2 < nonNulls.Count; ++ctr2)
-				{
-					double itemMultiplier, itemStart;
-					if (linear)
-					{
-						itemMultiplier = (nonNulls[ctr2].Item1 - nonNulls[ctr1].Item1) / (nonNulls[ctr2].Item2 - nonNulls[ctr1].Item2);
-						itemStart = nonNulls[ctr1].Item1 - itemMultiplier * nonNulls[ctr1].Item2;
-					}
-					else
-					{
-						itemMultiplier = Math.Pow(nonNulls[ctr2].Item1 / nonNulls[ctr1].Item1, 1.0 / (nonNulls[ctr2].Item2 - nonNulls[ctr1].Item2));
-						itemStart = nonNulls[ctr1].Item1 / Math.Pow(itemMultiplier, nonNulls[ctr1].Item2);
-					}
-					starts.Add(itemStart);
-					multipliers.Add(itemMultiplier);
-				}
+			var first = nonNulls.First();
+			var last = nonNulls.Last();
 
-			var start = starts.Sum() / starts.Count;
-			var multiplier = multipliers.Sum() / multipliers.Count;
+			var multiplier = linear ? (last.Item1 - first.Item1) / (last.Item2 - first.Item2) : Math.Pow(last.Item1 / first.Item1, 1.0 / (last.Item2 - first.Item2));
+			var start = linear ? first.Item1 - multiplier * first.Item2 : first.Item1 / Math.Pow(multiplier, first.Item2);
+
 			return NumericSeriesDialog.Run(WindowParent, start, multiplier);
 		}
 
@@ -2043,6 +2029,14 @@ namespace NeoEdit.TextEdit
 			var val = number / interval;
 			var intPart = Math.Truncate(val);
 			return (intPart + (val - intPart != 0m ? 1 : 0)) * interval;
+		}
+
+		internal ScaleDialog.Result Command_Numeric_Scale_Dialog() => ScaleDialog.Run(WindowParent);
+
+		internal void Command_Numeric_Scale(ScaleDialog.Result result)
+		{
+			var ratio = (result.NewMax - result.NewMin) / (result.PrevMax - result.PrevMin);
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((Double.Parse(GetString(range)) - result.PrevMin) * ratio + result.NewMin).ToString()).ToList());
 		}
 
 		internal FloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);

@@ -303,6 +303,13 @@
     <Compile Include="Dialogs\RevRegExDialog.xaml.cs">
       <DependentUpon>RevRegExDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ScaleDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ScaleDialog.xaml.cs">
+      <DependentUpon>ScaleDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ScanPortsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
