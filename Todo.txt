@@ -1,6 +1,5 @@
 All:
 Add command prompt
-Single instance sometimes doesn't open new parameters
 
 Disk:
 Move timestamp (possibly others) from TextEditor
