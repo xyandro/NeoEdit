@@ -625,10 +625,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
 				case TextEditCommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(); break;
 				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(); break;
-				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Text_CombinationsPermutations_Dialog(); break;
+				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
-				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Type_Convert_Dialog(); break;
+				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
 				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
 				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
@@ -827,13 +827,14 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
-				case TextEditCommand.Numeric_CombinationsPermutations: Command_Text_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
+				case TextEditCommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
 				case TextEditCommand.Table_DetectType: Command_Table_Type_Detect(); break;
-				case TextEditCommand.Table_Convert: Command_Table_Type_Convert(dialogResult as ChooseTableTypeDialog.Result); break;
-				case TextEditCommand.Table_RegionsSelectionsToTable: Command_Table_RegionsSelectionsToTable(); break;
+				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as ChooseTableTypeDialog.Result); break;
+				case TextEditCommand.Table_LineSelectionsToTable: Command_Table_LineSelectionsToTable(); break;
+				case TextEditCommand.Table_RegionSelectionsToTable: Command_Table_RegionSelectionsToTable(); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;
 				case TextEditCommand.Table_SetJoinSource: Command_Table_SetJoinSource(); break;
 				case TextEditCommand.Table_Join: Command_Table_Join(); break;
@@ -2343,7 +2344,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Numeric_MinMaxValues(MinMaxValuesDialog.Result result) => ReplaceSelections(String.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !String.IsNullOrEmpty(str))));
 
-		internal CombinationsPermutationsDialog.Result Command_Text_CombinationsPermutations_Dialog()
+		internal CombinationsPermutationsDialog.Result Command_Numeric_CombinationsPermutations_Dialog()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -2351,7 +2352,7 @@ namespace NeoEdit.TextEdit
 			return CombinationsPermutationsDialog.Run(WindowParent);
 		}
 
-		internal void Command_Text_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
+		internal void Command_Numeric_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");

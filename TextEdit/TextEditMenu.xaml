@@ -284,7 +284,8 @@
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
 		<textEdit:MultiMenuItem Header="_Headers" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HasHeaders" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Regions/Selections To Table" CommandEnum="Table_RegionsSelectionsToTable"/>
+		<textEdit:TextEditMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
+		<textEdit:TextEditMenuItem Header="_Region Selections To Table" CommandEnum="Table_RegionSelectionsToTable"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Edit Table" CommandEnum="Table_EditTable"/>
 		<textEdit:TextEditMenuItem Header="_Set Join Source" CommandEnum="Table_SetJoinSource"/>

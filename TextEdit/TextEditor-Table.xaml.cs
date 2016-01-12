@@ -30,16 +30,31 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Table_Type_Detect() => ContentType = Table.GuessTableType(AllText);
 
-		internal ChooseTableTypeDialog.Result Command_Table_Type_Convert_Dialog() => ChooseTableTypeDialog.Run(WindowParent, ContentType);
+		internal ChooseTableTypeDialog.Result Command_Table_Convert_Dialog() => ChooseTableTypeDialog.Run(WindowParent, ContentType);
 
-		internal void Command_Table_Type_Convert(ChooseTableTypeDialog.Result result)
+		internal void Command_Table_Convert(ChooseTableTypeDialog.Result result)
 		{
 			var table = GetTable();
 			ContentType = result.TableType;
 			SetText(table);
 		}
 
-		internal void Command_Table_RegionsSelectionsToTable()
+		internal void Command_Table_LineSelectionsToTable()
+		{
+			if (!Selections.Any())
+				return;
+
+			var lineSets = Selections.AsParallel().AsOrdered().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
+			if (lineSets.Any(range => range.start != range.end))
+				throw new Exception("Cannot have multi-line selections");
+
+			var sels = GetSelectionStrings();
+			var lines = lineSets.Select(range => range.start).ToList();
+			var rows = Enumerable.Range(0, Selections.Count).GroupBy(index => lines[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
+			OpenTable(new Table(rows, false));
+		}
+
+		internal void Command_Table_RegionSelectionsToTable()
 		{
 			if (!Selections.Any())
 				return;
