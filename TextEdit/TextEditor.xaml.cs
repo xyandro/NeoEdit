@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -464,7 +465,7 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		List<object> InterpretValues(IEnumerable<string> strs) => InterpretType<bool>(strs, bool.TryParse) ?? InterpretType<long>(strs, long.TryParse) ?? InterpretType<double>(strs, double.TryParse) ?? strs.Cast<object>().ToList();
+		List<object> InterpretValues(IEnumerable<string> strs) => InterpretType<bool>(strs, bool.TryParse) ?? InterpretType<BigInteger>(strs, BigInteger.TryParse) ?? InterpretType<double>(strs, double.TryParse) ?? strs.Cast<object>().ToList();
 
 		internal Dictionary<string, List<object>> GetExpressionData(int? count = null, NEExpression expression = null)
 		{
