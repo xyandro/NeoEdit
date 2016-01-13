@@ -15,7 +15,8 @@ namespace NeoEdit.TextEdit
 
 		void OpenTable(Table table)
 		{
-			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8);
+			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", TextEdit.Content.Parser.ParserType.Columns), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8);
+			textEditor.ContentType = TextEdit.Content.Parser.ParserType.Columns;
 			TabsParent.CreateTab(textEditor);
 		}
 

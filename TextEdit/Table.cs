@@ -95,6 +95,22 @@ namespace NeoEdit.TextEdit
 			return Parser.ParserType.Columns;
 		}
 
+		static IEnumerable<string> SplitByDoublePipe(string item)
+		{
+			var pos = 0;
+			while (pos < item.Length)
+			{
+				var startIndex = item.IndexOf('║', pos);
+				if (startIndex == -1)
+					break;
+				var endIndex = item.IndexOf('║', startIndex + 1);
+				if (endIndex == -1)
+					endIndex = item.Length;
+				yield return item.Substring(startIndex + 1, endIndex - startIndex - 1);
+				pos = endIndex + 1;
+			}
+		}
+
 		static List<List<string>> GetInputRows(string input, Parser.ParserType tableType)
 		{
 			if (tableType == Parser.ParserType.None)
@@ -104,7 +120,7 @@ namespace NeoEdit.TextEdit
 			{
 				case Parser.ParserType.TSV: return input.SplitTCSV('\t').Select(split => split.ToList()).ToList();
 				case Parser.ParserType.CSV: return input.SplitTCSV(',').Select(split => split.ToList()).ToList();
-				case Parser.ParserType.Columns: return input.SplitByLine().Select(line => line.Split('│').Select(item => item.TrimEnd()).ToList()).ToList();
+				case Parser.ParserType.Columns: return SplitByDoublePipe(input).Select(line => line.Split('│').Select(item => item.Trim()).ToList()).ToList();
 				default: throw new ArgumentException("Invalid input type");
 			}
 		}
@@ -119,7 +135,7 @@ namespace NeoEdit.TextEdit
 
 		public static string ToTCSV(string str, char split)
 		{
-			if (str.IndexOfAny(new char[] { split, '"' }) != -1)
+			if (str.IndexOfAny(new char[] { split, '"', '\r', '\n' }) != -1)
 				return $"\"{str.Replace("\"", "\"\"")}\"";
 			return str;
 		}
@@ -138,8 +154,9 @@ namespace NeoEdit.TextEdit
 				case Parser.ParserType.CSV: return String.Join("", result.Select(items => String.Join(",", items.Select(item => ToTCSV(item, ','))) + ending));
 				case Parser.ParserType.Columns:
 					{
-						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].Length)).ToList();
-						return String.Join("", result.AsParallel().AsOrdered().Select(line => String.Join("│", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', columnWidths[column] - line[column].Length))) + ending));
+						var newLineChars = new char[] { '\r', '\n' };
+						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
+						return String.Join("", result.AsParallel().AsOrdered().Select(line => "║" + String.Join("│", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + "║" + ending));
 					}
 				default: throw new ArgumentException("Invalid output type");
 			}

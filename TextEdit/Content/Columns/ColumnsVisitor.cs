@@ -54,9 +54,8 @@ namespace NeoEdit.TextEdit.Content.Columns
 		}
 
 		public override ParserNode VisitColumns(ColumnsParser.ColumnsContext context) => GetNode(context, ROOT, context.line());
-		public override ParserNode VisitLine(ColumnsParser.LineContext context) => Visit(context.items());
-		public override ParserNode VisitItems(ColumnsParser.ItemsContext context) => GetNode(context, LINE, context.itemws());
-		public override ParserNode VisitItemws(ColumnsParser.ItemwsContext context) => Visit(context.item());
-		public override ParserNode VisitItem(ColumnsParser.ItemContext context) => GetNode(context, ITEM, null);
+		public override ParserNode VisitLine(ColumnsParser.LineContext context) => GetNode(context, LINE, context.item());
+		public override ParserNode VisitItem(ColumnsParser.ItemContext context) => Visit(context.text());
+		public override ParserNode VisitText(ColumnsParser.TextContext context) => GetNode(context, ITEM, null);
 	}
 }

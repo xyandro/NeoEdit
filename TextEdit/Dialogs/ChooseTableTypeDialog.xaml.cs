@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
-using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Content;
 
@@ -17,7 +15,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public Parser.ParserType TableType { get { return UIHelper<ChooseTableTypeDialog>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<ChooseTableTypeDialog>.SetPropValue(this, value); } }
 
-		public List<Parser.ParserType> TableTypes { get; } = Helpers.GetValues<Parser.ParserType>().Where(type => type != Parser.ParserType.None).ToList();
+		public List<Parser.ParserType> TableTypes { get; } = new List<Parser.ParserType> { Parser.ParserType.TSV, Parser.ParserType.CSV, Parser.ParserType.Columns };
 
 		static ChooseTableTypeDialog() { UIHelper<ChooseTableTypeDialog>.Register(); }
 
