@@ -350,7 +350,7 @@ namespace NeoEdit
 			{
 				shared_ptr<vector<shared_ptr<const void>>> result(new vector<shared_ptr<const void>>);
 				for each (auto handle in *handles->Get())
-					if ((int32_t)GetHandle(handle)->UniqueProcessId == pid)
+					if ((int32_t)(intptr_t)GetHandle(handle)->UniqueProcessId == pid)
 						result->push_back(handle);
 				return std::shared_ptr<const HandleList>(new HandleList(result));
 			}
@@ -373,7 +373,7 @@ namespace NeoEdit
 			{
 				map<DWORD, vector<SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX*>> handlesByProcess;
 				for each (auto handle in *handles->Get())
-					handlesByProcess[(DWORD)GetHandle(handle)->UniqueProcessId].push_back(GetHandle(handle));
+					handlesByProcess[(DWORD)(intptr_t)GetHandle(handle)->UniqueProcessId].push_back(GetHandle(handle));
 
 				shared_ptr<vector<shared_ptr<const HandleInfo>>> result(new vector<shared_ptr<const HandleInfo>>());
 
@@ -394,7 +394,7 @@ namespace NeoEdit
 						try { name = (type == L"File") && (GetFileType(dupHandle.get()) == FILE_TYPE_PIPE) ? L"Pipe" : GetLogicalName(dupHandle); } catch (...) { }
 						try { data = GetData(type, dupHandle); } catch (...) { }
 
-						result->push_back(shared_ptr<const HandleInfo>(new HandleInfo((DWORD)handle->UniqueProcessId, handle->HandleValue, type, name, data)));
+						result->push_back(shared_ptr<const HandleInfo>(new HandleInfo((DWORD)(intptr_t)handle->UniqueProcessId, handle->HandleValue, type, name, data)));
 					}
 				}
 

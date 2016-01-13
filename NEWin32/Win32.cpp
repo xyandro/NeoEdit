@@ -36,20 +36,20 @@ void wmain(int argc, wchar_t *argv[])
 
 			auto handleInfo = Win32Lib::GetHandleInfo(handles);
 			for each (auto handle in *handleInfo)
-				printf("PID: %i, Handle: %i, Type: %S, Name: %S, Data %S\n", handle->PID, (intptr_t)handle->Handle, handle->Type.c_str(), handle->Name.c_str(), handle->Data.c_str());
+				printf("PID: %i, Handle: %p, Type: %S, Name: %S, Data %S\n", handle->PID, handle->Handle, handle->Type.c_str(), handle->Name.c_str(), handle->Data.c_str());
 		}
 		else if (params[0] == L"-types")
 		{
 			auto types = Win32Lib::GetHandleTypes();
 			for (decltype(types->size()) ctr = 0; ctr < types->size(); ++ctr)
-				printf("%i: %S\n", ctr, (*types)[ctr].c_str());
+				printf("%lli: %S\n", ctr, (*types)[ctr].c_str());
 		}
 		else
 			throw L"Invalid arguments";
 	}
 	catch (Win32Lib::Win32Exception &e)
 	{
-		printf("Error: %S.\n", e.Message());
+		printf("Error: %S.\n", e.Message().c_str());
 	}
 	catch (...)
 	{
