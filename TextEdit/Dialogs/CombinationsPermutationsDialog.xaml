@@ -15,15 +15,16 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition Height="60"/>
 			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Items:" Target="{Binding ElementName=itemCount}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Items (n):" Target="{Binding ElementName=itemCount}" HorizontalAlignment="Right"/>
 		<guiControls:NumericUpDown Grid.Row="0" Grid.Column="1" Name="itemCount" Value="{Binding ItemCount, ElementName=self}" Minimum="1"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Use:" Target="{Binding ElementName=useCount}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Use (r):" Target="{Binding ElementName=useCount}" HorizontalAlignment="Right"/>
 		<guiControls:NumericUpDown Grid.Row="1" Grid.Column="1" Name="useCount" Value="{Binding UseCount, ElementName=self}" Minimum="1"/>
 
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
@@ -33,10 +34,13 @@
 
 		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Repeat Items" IsChecked="{Binding Repeat, ElementName=self}" Focusable="False"/>
 
-		<Label Grid.Row="4" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="4" Grid.Column="1" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding NumResults, ElementName=self, StringFormat=n0}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="4" Grid.Column="0" Content="Formula:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<StackPanel Grid.Row="4" Grid.Column="1" Name="formula" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<Label Grid.Row="5" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="5" Grid.Column="1" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding NumResults, ElementName=self, StringFormat=n0}" HorizontalAlignment="Right"/>
+
+		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

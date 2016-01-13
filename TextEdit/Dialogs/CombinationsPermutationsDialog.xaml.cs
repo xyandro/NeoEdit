@@ -1,5 +1,7 @@
-﻿using System;
+﻿using System.Numerics;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -29,18 +31,22 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public bool Repeat { get { return UIHelper<CombinationsPermutationsDialog>.GetPropValue<bool>(this); } set { UIHelper<CombinationsPermutationsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public double NumResults { get { return UIHelper<CombinationsPermutationsDialog>.GetPropValue<double>(this); } set { UIHelper<CombinationsPermutationsDialog>.SetPropValue(this, value); } }
+		public BigInteger? NumResults { get { return UIHelper<CombinationsPermutationsDialog>.GetPropValue<BigInteger?>(this); } set { UIHelper<CombinationsPermutationsDialog>.SetPropValue(this, value); } }
 
 		static CombinationsPermutationsDialog()
 		{
 			UIHelper<CombinationsPermutationsDialog>.Register();
-			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.ItemCount, (obj, o, n) => obj.CalculateItems());
-			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.UseCount, (obj, o, n) => obj.CalculateItems());
-			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.Type, (obj, o, n) => obj.CalculateItems());
-			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.Repeat, (obj, o, n) => obj.CalculateItems());
+			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.ItemCount, (obj, o, n) => obj.SetNumResults());
+			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.UseCount, (obj, o, n) => obj.SetNumResults());
+			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.Type, (obj, o, n) => { obj.SetFormula(); obj.SetNumResults(); });
+			UIHelper<CombinationsPermutationsDialog>.AddCallback(a => a.Repeat, (obj, o, n) => { obj.SetFormula(); obj.SetNumResults(); });
 		}
 
-		CombinationsPermutationsDialog() { InitializeComponent(); }
+		CombinationsPermutationsDialog()
+		{
+			InitializeComponent();
+			SetFormula();
+		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
@@ -54,52 +60,84 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static double CalculateFactorial(int dividend, int divisor1, int divisor2 = 1)
+		static BigInteger Factorial(BigInteger number)
 		{
-			if (divisor1 < divisor2)
+			BigInteger result = 1;
+			while (number > 1)
 			{
-				var tmp = divisor1;
-				divisor1 = divisor2;
-				divisor2 = tmp;
+				result *= number;
+				--number;
 			}
-
-			double result = 1;
-			for (var ctr = divisor1 + 1; ctr <= dividend; ++ctr)
-				result *= ctr;
-
-			for (var ctr = 2; ctr <= divisor2; ++ctr)
-				result /= ctr;
-
 			return result;
 		}
 
-		double GetNumResults()
+		void SetFormula()
 		{
-			if ((UseCount > ItemCount) && (!Repeat))
-				return Double.NaN;
+			if (formula == null)
+				return;
+
+			formula.Children.Clear();
 
 			switch (Type)
 			{
 				case CombinationsPermutationsType.Combinations:
 					switch (Repeat)
 					{
-						case true: return CalculateFactorial(ItemCount + UseCount - 1, UseCount, ItemCount - 1);
-						case false: return CalculateFactorial(ItemCount, ItemCount - UseCount, UseCount);
+						case true:
+							formula.Children.Add(new Label { Content = "(n+r-1)!", FontStyle = FontStyles.Italic, HorizontalAlignment = HorizontalAlignment.Center });
+							formula.Children.Add(new Separator());
+							formula.Children.Add(new Label { Content = "r!(n-1)!", FontStyle = FontStyles.Italic, HorizontalAlignment = HorizontalAlignment.Center });
+							break;
+						case false:
+							formula.Children.Add(new Label { Content = "n!", FontStyle = FontStyles.Italic, HorizontalAlignment = HorizontalAlignment.Center });
+							formula.Children.Add(new Separator());
+							formula.Children.Add(new Label { Content = "(n-r)!r!", FontStyle = FontStyles.Italic, HorizontalAlignment = HorizontalAlignment.Center });
+							break;
 					}
 					break;
 				case CombinationsPermutationsType.Permutations:
 					switch (Repeat)
 					{
-						case true: return Math.Pow(ItemCount, UseCount);
-						case false: return CalculateFactorial(ItemCount, ItemCount - UseCount);
+						case true:
+							var tb = new TextBlock();
+							tb.Inlines.Add(new Run("n") { FontStyle = FontStyles.Italic });
+							tb.Inlines.Add(new Run("r") { FontStyle = FontStyles.Italic, BaselineAlignment = BaselineAlignment.Superscript });
+							formula.Children.Add(tb);
+							break;
+						case false:
+							formula.Children.Add(new Label { Content = "n!", FontStyle = FontStyles.Italic, HorizontalAlignment = HorizontalAlignment.Center });
+							formula.Children.Add(new Separator());
+							formula.Children.Add(new Label { Content = "(n-r)!", FontStyle = FontStyles.Italic, HorizontalAlignment = HorizontalAlignment.Center });
+							break;
 					}
 					break;
 			}
-
-			return Double.NaN;
 		}
 
-		void CalculateItems() => NumResults = GetNumResults();
+		void SetNumResults()
+		{
+			NumResults = null;
+			if ((UseCount > ItemCount) && (!Repeat))
+				return;
+
+			switch (Type)
+			{
+				case CombinationsPermutationsType.Combinations:
+					switch (Repeat)
+					{
+						case true: NumResults = Factorial(ItemCount + UseCount - 1) / Factorial(UseCount) / Factorial(ItemCount - 1); break;
+						case false: NumResults = Factorial(ItemCount) / Factorial(ItemCount - UseCount) / Factorial(UseCount); break;
+					}
+					break;
+				case CombinationsPermutationsType.Permutations:
+					switch (Repeat)
+					{
+						case true: NumResults = BigInteger.Pow(ItemCount, UseCount); break;
+						case false: NumResults = Factorial(ItemCount) / Factorial(ItemCount - UseCount); break;
+					}
+					break;
+			}
+		}
 
 		public static Result Run(Window parent)
 		{
