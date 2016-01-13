@@ -11,28 +11,25 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Image Margin="10" Source="/NeoEdit.GUI;component/About/NeoEdit.png" Stretch="None">
+		<Image Margin="15,0,15,15" Source="/NeoEdit.GUI;component/About/NeoEdit.png" Stretch="None">
 			<Image.Effect>
 				<DropShadowEffect BlurRadius="15" ShadowDepth="10"/>
 			</Image.Effect>
 		</Image>
-		<Label Grid.Row="1">
-			<Label.Content>
-				<TextBlock>
-					<TextBlock.Text>
-						<MultiBinding StringFormat="{}{0} {1}&#x0a;{2}">
-							<Binding ElementName="self" Path="Product"/>
-							<Binding ElementName="self" Path="Version"/>
-							<Binding ElementName="self" Path="Copyright"/>
-						</MultiBinding>
-					</TextBlock.Text>
-				</TextBlock>
-			</Label.Content>
-		</Label>
+		<TextBox Grid.Row="1" BorderBrush="Transparent" IsReadOnly="True">
+			<TextBox.Text>
+				<MultiBinding StringFormat="{}{0} {1}">
+					<Binding ElementName="self" Path="Product"/>
+					<Binding ElementName="self" Path="Version"/>
+				</MultiBinding>
+			</TextBox.Text>
+		</TextBox>
+		<TextBox Grid.Row="2" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding Copyright, ElementName=self}"/>
 
-		<Button Grid.Row="2" Width="50" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" Content="Ok" Click="OKClick"/>
+		<Button Grid.Row="3" Width="50" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" Content="Ok" Click="OKClick"/>
 	</Grid>
 
 </Window>
