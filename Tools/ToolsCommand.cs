@@ -7,6 +7,7 @@ namespace NeoEdit.Tools
 	{
 		None,
 		File_Exit,
-		[KeyGesture(Key.N, ModifierKeys.Control)] Tools_NSRLTool
+		[KeyGesture(Key.N, ModifierKeys.Control)] Tools_NSRLTool,
+		[KeyGesture(Key.S, ModifierKeys.Control)] Tools_SpiderTool,
 	}
 }

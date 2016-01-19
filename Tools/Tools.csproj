@@ -46,6 +46,13 @@
     <Compile Include="Dialogs\ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\Spider\SpiderToolDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Spider\SpiderToolDialog.xaml.cs">
+      <DependentUpon>SpiderToolDialog.xaml</DependentUpon>
+    </Compile>
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

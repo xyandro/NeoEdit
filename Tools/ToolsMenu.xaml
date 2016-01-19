@@ -10,6 +10,7 @@
 	</MenuItem>
 	<MenuItem Header="_Tools">
 		<tools:ToolsMenuItem Header="_NSRL Tool" CommandEnum="Tools_NSRLTool"/>
+		<tools:ToolsMenuItem Header="_Spider Tool" CommandEnum="Tools_SpiderTool"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>
