@@ -196,6 +196,7 @@ namespace NeoEdit.TextEdit
 		Content_Select_MaxTopmost,
 		Content_Select_MaxDeepest,
 		Network_Fetch,
+		Network_Fetch_Hex,
 		Network_Lookup_IP,
 		Network_Lookup_HostName,
 		Network_AdaptersInfo,

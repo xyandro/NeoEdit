@@ -873,6 +873,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Select_MaxTopmost: Command_Content_Select_MaxTopmost(); break;
 				case TextEditCommand.Content_Select_MaxDeepest: Command_Content_Select_MaxDeepest(); break;
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
+				case TextEditCommand.Network_Fetch_Hex: Command_Network_Fetch(Coder.CodePage.Hex); break;
 				case TextEditCommand.Network_Lookup_IP: Command_Network_Lookup_IP(); break;
 				case TextEditCommand.Network_Lookup_HostName: Command_Network_Lookup_HostName(); break;
 				case TextEditCommand.Network_AdaptersInfo: Command_Network_AdaptersInfo(); break;
@@ -2206,15 +2207,22 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		async Task<string> GetURL(string url)
+		async Task<string> GetURL(string url, Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			using (var client = new WebClient())
-				return await client.DownloadStringTaskAsync(new Uri(url));
+			{
+				var uri = new Uri(url);
+				if (codePage == Coder.CodePage.None)
+					return await client.DownloadStringTaskAsync(uri);
+
+				var data = await client.DownloadDataTaskAsync(uri);
+				return Coder.BytesToString(data, codePage);
+			}
 		}
 
-		async Task<List<Tuple<string, string, bool>>> GetURLs(List<string> urls)
+		async Task<List<Tuple<string, string, bool>>> GetURLs(List<string> urls, Coder.CodePage codePage = Coder.CodePage.None)
 		{
-			var tasks = urls.Select(url => GetURL(url)).ToList();
+			var tasks = urls.Select(url => GetURL(url, codePage)).ToList();
 			var results = new List<Tuple<string, string, bool>>();
 			for (var ctr = 0; ctr < tasks.Count; ++ctr)
 			{
@@ -2437,10 +2445,10 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels);
 		}
 
-		internal void Command_Network_Fetch()
+		internal void Command_Network_Fetch(Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			var urls = GetSelectionStrings();
-			var results = Task.Run(() => GetURLs(urls).Result).Result;
+			var results = Task.Run(() => GetURLs(urls, codePage).Result).Result;
 			if (results.Any(result => result.Item3))
 				new Message
 				{
