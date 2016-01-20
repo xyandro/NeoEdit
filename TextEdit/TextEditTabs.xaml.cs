@@ -180,9 +180,17 @@ namespace NeoEdit.TextEdit
 
 		void Command_View_SelectTabsWithSelections(bool hasSelections)
 		{
-			ItemTabs.Items.Where(tab => (tab.Active) && (tab.NumSelections == 0 == hasSelections)).ToList().ForEach(tab => tab.Active = false);
-			if (!ItemTabs.TopMost.Active)
-				ItemTabs.TopMost = ItemTabs.Items.FirstOrDefault(tab => tab.Active) ?? ItemTabs.TopMost;
+			var topMost = ItemTabs.TopMost;
+			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.NumSelections != 0 == hasSelections)).ToList();
+			ItemTabs.Items.ToList().ForEach(tab => tab.Active = false);
+
+			if (!active.Any())
+				return;
+
+			if (!active.Contains(topMost))
+				topMost = active.First();
+			ItemTabs.TopMost = topMost;
+			active.ForEach(tab => tab.Active = true);
 		}
 
 		void Command_View_WordList()
