@@ -262,9 +262,9 @@ namespace NeoEdit.Common.Expressions
 
 			var units = factor1.Units * factor2.Units;
 
-			if ((factor2.IsString) && (factor1.IsComplex))
+			if ((factor2.IsString) && (factor1.IsInteger))
 				Swap(ref factor1, ref factor2);
-			if ((factor1.IsString) && (factor2.IsComplex))
+			if ((factor1.IsString) && (factor2.IsInteger))
 			{
 				var str = factor1.GetString;
 				var count = (int)factor2.GetInteger;
@@ -397,10 +397,10 @@ namespace NeoEdit.Common.Expressions
 			if (!addend1.Units.Equals(addend2.Units))
 				addend2 = UnitConvertOp(addend2, addend1.Units);
 
-			if ((addend2.IsCharacter) && (addend1.IsComplex))
+			if ((addend2.IsCharacter) && (addend1.IsInteger))
 				Swap(ref addend1, ref addend2);
-			if ((addend1.IsCharacter) && (addend2.IsComplex))
-				return new ExpressionResult((char)((long)addend1.GetChar + addend2.GetInteger), addend1.Units);
+			if ((addend1.IsCharacter) && (addend2.IsInteger))
+				return new ExpressionResult((char)((int)addend1.GetChar + addend2.GetInteger), addend1.Units);
 
 			if ((addend1.IsString) || (addend2.IsString))
 				return new ExpressionResult(addend1.GetString + addend2.GetString, addend1.Units);
@@ -478,10 +478,10 @@ namespace NeoEdit.Common.Expressions
 			if (!minuend.Units.Equals(subtrahend.Units))
 				subtrahend = UnitConvertOp(subtrahend, minuend.Units);
 
-			if ((subtrahend.IsCharacter) && (minuend.IsComplex))
+			if ((subtrahend.IsCharacter) && (minuend.IsInteger))
 				Swap(ref minuend, ref subtrahend);
-			if ((minuend.IsCharacter) && (subtrahend.IsComplex))
-				return new ExpressionResult((char)((long)minuend.GetChar - subtrahend.GetInteger), minuend.Units);
+			if ((minuend.IsCharacter) && (subtrahend.IsInteger))
+				return new ExpressionResult((char)((int)minuend.GetChar - subtrahend.GetInteger), minuend.Units);
 
 			if ((minuend.IsInteger) && (subtrahend.IsInteger))
 				return new ExpressionResult(minuend.GetInteger - subtrahend.GetInteger, minuend.Units);
