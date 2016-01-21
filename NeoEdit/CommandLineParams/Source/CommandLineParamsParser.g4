@@ -20,7 +20,7 @@ network       : NETWORK ;
 processes     : PROCESSES pid=NUMBER? ;
 registry      : REGISTRY key=param? ;
 systeminfo    : SYSTEMINFO ;
-textedit      : TEXTEDIT texteditfile* ;
+textedit      : TEXTEDIT texteditfile* | texteditfile+ ;
 texteditfile  : file=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? ;
 textview      : TEXTVIEW param* ;
 tools         : TOOLS ;
