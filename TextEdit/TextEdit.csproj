@@ -368,6 +368,7 @@
     </Compile>
     <Compile Include="GotoType.cs" />
     <Compile Include="Highlighting.cs" />
+    <Compile Include="LoremGenerator.cs" />
     <Compile Include="Misc.cs" />
     <None Include="Misc\Words.txt" />
     <EmbeddedResource Include="Misc\Words.txt.gz" />

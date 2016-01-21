@@ -130,6 +130,7 @@ namespace NeoEdit.TextEdit
 		Text_SingleLine,
 		Text_GUID,
 		Text_RandomText,
+		Text_LoremIpsum,
 		Text_ReverseRegEx,
 		Numeric_Copy_Min,
 		Numeric_Copy_Max,

@@ -807,6 +807,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_SingleLine: Command_Text_SingleLine(); break;
 				case TextEditCommand.Text_GUID: Command_Text_GUID(); break;
 				case TextEditCommand.Text_RandomText: Command_Text_RandomText(dialogResult as RandomDataDialog.Result); break;
+				case TextEditCommand.Text_LoremIpsum: Command_Text_LoremIpsum(); break;
 				case TextEditCommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(dialogResult as RevRegExDialog.Result); break;
 				case TextEditCommand.Numeric_Copy_Min: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Max: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
@@ -2348,6 +2349,8 @@ namespace NeoEdit.TextEdit
 			var results = GetExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
+
+		internal void Command_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());
 
 		internal MinMaxValuesDialog.Result Command_Numeric_MinMaxValues_Dialog() => MinMaxValuesDialog.Run(WindowParent);
 
