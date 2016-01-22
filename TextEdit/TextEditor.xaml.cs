@@ -823,6 +823,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_Linear(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Series_Geometric: Command_Numeric_Series_Geometric(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Scale: Command_Numeric_Scale(dialogResult as ScaleDialog.Result); break;
+				case TextEditCommand.Numeric_ForwardSum: Command_Numeric_ForwardReverseSum(true); break;
+				case TextEditCommand.Numeric_ReverseSum: Command_Numeric_ForwardReverseSum(false); break;
 				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;
 				case TextEditCommand.Numeric_Fraction: Command_Numeric_Fraction(); break;
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;
@@ -2070,6 +2072,21 @@ namespace NeoEdit.TextEdit
 		{
 			var ratio = (result.NewMax - result.NewMin) / (result.PrevMax - result.PrevMin);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((Double.Parse(GetString(range)) - result.PrevMin) * ratio + result.NewMin).ToString()).ToList());
+		}
+
+		internal void Command_Numeric_ForwardReverseSum(bool forward)
+		{
+			var numbers = Selections.AsParallel().AsOrdered().Select(range => Double.Parse(GetString(range))).ToList();
+			double total = 0;
+			var start = forward ? 0 : numbers.Count - 1;
+			var end = forward ? numbers.Count : -1;
+			var step = forward ? 1 : -1;
+			for (var ctr = start; ctr != end; ctr += step)
+			{
+				total += numbers[ctr];
+				numbers[ctr] = total;
+			}
+			ReplaceSelections(numbers.Select(num => num.ToString()).ToList());
 		}
 
 		internal void Command_Numeric_Whole()

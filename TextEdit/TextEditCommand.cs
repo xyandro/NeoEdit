@@ -146,6 +146,8 @@ namespace NeoEdit.TextEdit
 		Numeric_Series_Linear,
 		Numeric_Series_Geometric,
 		Numeric_Scale,
+		Numeric_ForwardSum,
+		Numeric_ReverseSum,
 		Numeric_Whole,
 		Numeric_Fraction,
 		Numeric_Floor,

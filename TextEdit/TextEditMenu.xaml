@@ -265,6 +265,9 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Sc_ale" CommandEnum="Numeric_Scale"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="Forwar_d Sum" CommandEnum="Numeric_ForwardSum"/>
+		<textEdit:TextEditMenuItem Header="Re_verse Sum" CommandEnum="Numeric_ReverseSum"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Whole"/>
 		<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction"/>
 		<Separator/>
