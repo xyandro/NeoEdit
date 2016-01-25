@@ -135,6 +135,8 @@ namespace NeoEdit.TextEdit
 		Numeric_Copy_Min,
 		Numeric_Copy_Max,
 		Numeric_Copy_Sum,
+		Numeric_Copy_GCF,
+		Numeric_Copy_LCM,
 		Numeric_Select_Min,
 		Numeric_Select_Max,
 		Numeric_Select_Whole,

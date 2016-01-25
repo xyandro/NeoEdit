@@ -812,6 +812,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Copy_Min: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Max: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Sum: Command_Numeric_Copy_Sum(); break;
+				case TextEditCommand.Numeric_Copy_GCF: Command_Numeric_Copy_GCF(); break;
+				case TextEditCommand.Numeric_Copy_LCM: Command_Numeric_Copy_LCM(); break;
 				case TextEditCommand.Numeric_Select_Min: Command_Type_Select_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Select_Whole: Command_Numeric_Select_Whole(); break;
@@ -2160,6 +2162,50 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Numeric_Copy_Sum() => clipboard.Text = Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum().ToString();
+
+		static BigInteger GCF(BigInteger value1, BigInteger value2)
+		{
+			while (value2 != 0)
+			{
+				var newValue = value1 % value2;
+				value1 = value2;
+				value2 = newValue;
+			}
+
+			return value1;
+		}
+
+		internal void Command_Numeric_Copy_GCF()
+		{
+			if (Selections.Count <= 0)
+				return;
+
+			var nums = Selections.AsParallel().Select(range => BigInteger.Abs(BigInteger.Parse(GetString(range)))).ToList();
+			if (nums.Any(factor => factor == 0))
+				throw new Exception("Factors cannot be 0");
+
+			var gcf = nums[0];
+			for (var ctr = 1; ctr < nums.Count; ++ctr)
+				gcf = GCF(gcf, nums[ctr]);
+
+			clipboard.Text = gcf.ToString();
+		}
+
+		internal void Command_Numeric_Copy_LCM()
+		{
+			if (Selections.Count <= 0)
+				return;
+
+			var nums = Selections.AsParallel().Select(range => BigInteger.Abs(BigInteger.Parse(GetString(range)))).ToList();
+			if (nums.Any(factor => factor == 0))
+				throw new Exception("Factors cannot be 0");
+
+			var lcm = nums[0];
+			for (var ctr = 1; ctr < nums.Count; ++ctr)
+				lcm *= nums[ctr] / GCF(lcm, nums[ctr]);
+
+			clipboard.Text = lcm.ToString();
+		}
 
 		internal void Command_Position_Copy(GotoType gotoType)
 		{

@@ -241,7 +241,11 @@
 		<MenuItem Header="_Copy">
 			<textEdit:TextEditMenuItem Header="Mi_n" CommandEnum="Numeric_Copy_Min"/>
 			<textEdit:TextEditMenuItem Header="Ma_x" CommandEnum="Numeric_Copy_Max"/>
+			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Sum" CommandEnum="Numeric_Copy_Sum"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="_GCF" CommandEnum="Numeric_Copy_GCF"/>
+			<textEdit:TextEditMenuItem Header="_LCM" CommandEnum="Numeric_Copy_LCM"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
