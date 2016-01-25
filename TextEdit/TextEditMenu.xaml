@@ -279,6 +279,8 @@
 		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
 		<textEdit:TextEditMenuItem Header="Ce_iling" CommandEnum="Numeric_Ceiling"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="Fac_tor" CommandEnum="Numeric_Factor"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
 		<textEdit:TextEditMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
 		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>

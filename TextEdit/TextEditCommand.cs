@@ -155,6 +155,7 @@ namespace NeoEdit.TextEdit
 		Numeric_Floor,
 		Numeric_Round,
 		Numeric_Ceiling,
+		Numeric_Factor,
 		Numeric_RandomNumber,
 		Numeric_CombinationsPermutations,
 		Numeric_MinMaxValues,

@@ -832,6 +832,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as FloorRoundCeilingDialog.Result); break;
+				case TextEditCommand.Numeric_Factor: Command_Numeric_Factor(); break;
 				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as MinMaxValuesDialog.Result); break;
@@ -2124,6 +2125,38 @@ namespace NeoEdit.TextEdit
 		internal FloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
 
 		internal void Command_Numeric_Ceiling(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Ceiling(Decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
+
+		string Factor(BigInteger value)
+		{
+			var factors = new List<BigInteger>();
+			if (value < 0)
+			{
+				factors.Add(-1);
+				value = -value;
+			}
+
+			BigInteger factor = 2;
+			while (value > 1)
+			{
+				if (value % factor == 0)
+				{
+					factors.Add(factor);
+					value /= factor;
+					continue;
+				}
+
+				++factor;
+			}
+
+			if (!factors.Any())
+				factors.Add(value);
+
+			factors.Reverse();
+
+			return String.Join("*", factors);
+		}
+
+		internal void Command_Numeric_Factor() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Factor(BigInteger.Parse(GetString(range)))).ToList());
 
 		internal void Command_Edit_CopyDown()
 		{
