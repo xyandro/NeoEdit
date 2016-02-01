@@ -184,6 +184,11 @@
 				<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Operations_Create_Files"/>
 				<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Operations_Create_Directories"/>
 			</MenuItem>
+			<Separator/>
+			<MenuItem Header="R_un Command">
+				<textEdit:TextEditMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel"/>
+				<textEdit:TextEditMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential"/>
+			</MenuItem>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="E_xpression">

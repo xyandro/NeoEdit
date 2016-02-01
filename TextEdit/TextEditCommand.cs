@@ -103,6 +103,8 @@ namespace NeoEdit.TextEdit
 		Files_Operations_OpenDisk,
 		Files_Operations_Create_Files,
 		Files_Operations_Create_Directories,
+		Files_Operations_RunCommand_Parallel,
+		Files_Operations_RunCommand_Sequential,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Expression_Expression,
 		Expression_Copy,
 		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Expression_EvaluateSelected,

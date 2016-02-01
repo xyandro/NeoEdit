@@ -780,6 +780,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
 				case TextEditCommand.Files_Operations_Create_Files: Command_Files_Operations_Create_Files(); break;
 				case TextEditCommand.Files_Operations_Create_Directories: Command_Files_Operations_Create_Directories(); break;
+				case TextEditCommand.Files_Operations_RunCommand_Parallel: Command_Files_Operations_RunCommand_Parallel(); break;
+				case TextEditCommand.Files_Operations_RunCommand_Sequential: Command_Files_Operations_RunCommand_Sequential(); break;
 				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
@@ -1533,6 +1535,36 @@ namespace NeoEdit.TextEdit
 			foreach (var file in files)
 				Directory.CreateDirectory(file);
 		}
+
+		string RunCommand(string arguments)
+		{
+			var output = new StringBuilder();
+			output.AppendLine($"Command: {arguments}");
+
+			var process = new Process
+			{
+				StartInfo = new ProcessStartInfo
+				{
+					FileName = "cmd.exe",
+					Arguments = $"/c \"{arguments}\"",
+					UseShellExecute = false,
+					RedirectStandardOutput = true,
+					RedirectStandardError = true,
+					CreateNoWindow = true,
+				},
+			};
+			process.OutputDataReceived += (s, e) => { if (e.Data != null) output.AppendLine(e.Data); };
+			process.ErrorDataReceived += (s, e) => { if (e.Data != null) output.AppendLine($"Error: {e.Data}"); };
+			process.Start();
+			process.BeginOutputReadLine();
+			process.BeginErrorReadLine();
+			process.WaitForExit();
+			return output.ToString();
+		}
+
+		internal void Command_Files_Operations_RunCommand_Parallel() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => RunCommand(GetString(range))).ToList());
+
+		internal void Command_Files_Operations_RunCommand_Sequential() => ReplaceSelections(GetSelectionStrings().Select(str => RunCommand(str)).ToList());
 
 		internal void Command_Files_Operations_Delete()
 		{
