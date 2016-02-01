@@ -128,11 +128,6 @@
 		<textEdit:TextEditMenuItem Header="Select Non M_atch" CommandEnum="Diff_SelectNonMatch"/>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
-		<MenuItem Header="_Create">
-			<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>
-			<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Create_Directories"/>
-		</MenuItem>
-		<Separator/>
 		<MenuItem Header="_Names">
 			<textEdit:TextEditMenuItem Header="_Simplify" CommandEnum="Files_Names_Simplify"/>
 			<textEdit:TextEditMenuItem Header="Make _Absolute" CommandEnum="Files_Names_MakeAbsolute"/>
@@ -180,9 +175,15 @@
 			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
 			<textEdit:TextEditMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
 			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
+			<Separator/>
 			<textEdit:TextEditMenuItem Header="S_ave Clipboards" CommandEnum="Files_Operations_SaveClipboards"/>
 			<textEdit:TextEditMenuItem Header="D_rag/Drop" CommandEnum="Files_Operations_DragDrop"/>
 			<textEdit:TextEditMenuItem Header="Open D_isk" CommandEnum="Files_Operations_OpenDisk"/>
+			<Separator/>
+			<MenuItem Header="Cr_eate">
+				<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Operations_Create_Files"/>
+				<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Operations_Create_Directories"/>
+			</MenuItem>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="E_xpression">

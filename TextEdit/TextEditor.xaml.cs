@@ -746,8 +746,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_CopyRight: Command_Diff_CopyLeftRight(false); break;
 				case TextEditCommand.Diff_SelectMatch: Command_Diff_SelectMatch(true); break;
 				case TextEditCommand.Diff_SelectNonMatch: Command_Diff_SelectMatch(false); break;
-				case TextEditCommand.Files_Create_Files: Command_Files_Create_Files(); break;
-				case TextEditCommand.Files_Create_Directories: Command_Files_Create_Directories(); break;
 				case TextEditCommand.Files_Names_Simplify: Command_Files_Names_Simplify(); break;
 				case TextEditCommand.Files_Names_MakeAbsolute: Command_Files_Names_MakeAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
 				case TextEditCommand.Files_Names_GetUnique: Command_Files_Names_GetUnique(dialogResult as GetUniqueNamesDialog.Result); break;
@@ -780,6 +778,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_SaveClipboards: Command_Files_Operations_SaveClipboards(); break;
 				case TextEditCommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
 				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
+				case TextEditCommand.Files_Operations_Create_Files: Command_Files_Operations_Create_Files(); break;
+				case TextEditCommand.Files_Operations_Create_Directories: Command_Files_Operations_Create_Directories(); break;
 				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
@@ -1507,7 +1507,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Files_Create_Files()
+		internal void Command_Files_Operations_Create_Files()
 		{
 			var files = GetSelectionStrings();
 			if (files.Any(file => Directory.Exists(file)))
@@ -1527,7 +1527,7 @@ namespace NeoEdit.TextEdit
 			All = Write | Access | Create,
 		}
 
-		internal void Command_Files_Create_Directories()
+		internal void Command_Files_Operations_Create_Directories()
 		{
 			var files = GetSelectionStrings();
 			foreach (var file in files)
