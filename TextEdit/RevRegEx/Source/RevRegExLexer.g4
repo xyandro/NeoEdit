@@ -6,7 +6,7 @@ LPAREN        : '(' ;
 RPAREN        : ')' ;
 PIPE          : '|' ;
 QUESTION      : '?' ;
-CHAR          : '\\' . | ~[-{\[()|?] ;
+CHAR          : '\\' . | ~[{\[()|?] ;
 
 mode REPEAT;
 COUNT         : [0-9]+ ;
