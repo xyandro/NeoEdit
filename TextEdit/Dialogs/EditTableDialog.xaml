@@ -3,22 +3,22 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:dialogs="clr-namespace:NeoEdit.TextEdit.Dialogs"
-	Title="Edit Table" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=table}">
+	Title="Edit Table" Width="600" Height="500" FocusManager.FocusedElement="{Binding ElementName=table}" WindowStyle="SingleBorderWindow">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Table:" Target="{Binding ElementName=table}" HorizontalAlignment="Right"/>
-		<dialogs:EditTableDisplay Grid.Row="0" Grid.Column="1" Width="500" Height="200" x:Name="table" Table="{Binding Table, ElementName=self}" SelectedColumn="{Binding SelectedColumn, ElementName=self}"/>
+		<dialogs:EditTableDisplay Grid.Row="0" Grid.Column="1" x:Name="table" Table="{Binding Table, ElementName=self}" SelectedColumn="{Binding SelectedColumn, ElementName=self}"/>
 
 		<GroupBox Grid.Row="1" Grid.Column="1" Header="Controls:">
 			<Grid>

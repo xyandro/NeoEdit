@@ -1,5 +1,6 @@
 All:
 Add command prompt
+Remove native dlls (add to mixed)
 
 Disk:
 Move timestamp (possibly others) from TextEditor
@@ -24,6 +25,13 @@ Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
 Get DLL/EXE version info
 Pull directory contents, including sizes/times (useful for diffing, others)
+Prompt to change to UTF8 for invalid encoding
+Allow override for copying/moving existing files
+Rev RegEx can't handle - (and possibly other control chars)
+Remove "Headers" option---clunky; add "Add Headers" instead
+Can't convert to table when a non-first column has extra columns
+Add diff buffer (running diff with a maximum of 1024? lines)
+Allow copy to file->directory (doesn't change filename)
 
 View:
 Update as new lines are added

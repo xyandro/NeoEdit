@@ -15,6 +15,11 @@ namespace NeoEdit.GUI.Controls
 		bool result = false;
 		Button CancelButton = null;
 
+		public ModalDialog()
+		{
+			WindowStyle = WindowStyle.ToolWindow;
+		}
+
 		protected new bool DialogResult
 		{
 			get { return result; }
@@ -33,8 +38,6 @@ namespace NeoEdit.GUI.Controls
 
 		public new bool ShowDialog()
 		{
-			WindowStyle = WindowStyle.ToolWindow;
-
 			if (Owner == null)
 				return base.ShowDialog() == true;
 
