@@ -10,9 +10,6 @@ namespace NeoEdit.TextEdit
 {
 	public partial class TextEditor
 	{
-		[DepProp]
-		public bool HasHeaders { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-
 		void OpenTable(Table table)
 		{
 			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", TextEdit.Content.Parser.ParserType.Columns), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8);
@@ -20,7 +17,7 @@ namespace NeoEdit.TextEdit
 			TabsParent.CreateTab(textEditor);
 		}
 
-		Table GetTable() => new Table(AllText, ContentType, HasHeaders);
+		Table GetTable(bool hasHeaders = true) => new Table(AllText, ContentType, hasHeaders);
 
 		void SetText(Table table)
 		{
@@ -39,6 +36,8 @@ namespace NeoEdit.TextEdit
 			ContentType = result.TableType;
 			SetText(table);
 		}
+
+		internal void Command_Table_AddHeaders() => SetText(GetTable(false));
 
 		internal void Command_Table_LineSelectionsToTable()
 		{
@@ -105,7 +104,7 @@ namespace NeoEdit.TextEdit
 			SetText(Table.Join(table, JoinTable, result.Columns, JoinColumns, joinTypeResult.JoinType));
 		}
 
-		internal void Command_Table_Transpose() => SetText(new Table(AllText, ContentType, true).Transpose());
+		internal void Command_Table_Transpose() => SetText(GetTable().Transpose());
 
 		internal void Command_Table_SetVariables()
 		{

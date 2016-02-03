@@ -165,6 +165,7 @@ namespace NeoEdit.TextEdit
 		DateTime_Convert,
 		Table_DetectType,
 		Table_Convert,
+		Table_AddHeaders,
 		Table_LineSelectionsToTable,
 		Table_RegionSelectionsToTable,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift)] Table_EditTable,

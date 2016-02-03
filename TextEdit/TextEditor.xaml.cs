@@ -349,8 +349,6 @@ namespace NeoEdit.TextEdit
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
-			HasHeaders = true;
-
 			// If encoding can't exactly express bytes mark as modified (only for < 50 MB)
 			if ((!isModified) && ((bytes.Length >> 20) < 50))
 				isModified = !Coder.CanFullyEncode(bytes, CodePage);
@@ -848,6 +846,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
 				case TextEditCommand.Table_DetectType: Command_Table_Type_Detect(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as ChooseTableTypeDialog.Result); break;
+				case TextEditCommand.Table_AddHeaders: Command_Table_AddHeaders(); break;
 				case TextEditCommand.Table_LineSelectionsToTable: Command_Table_LineSelectionsToTable(); break;
 				case TextEditCommand.Table_RegionSelectionsToTable: Command_Table_RegionSelectionsToTable(); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;

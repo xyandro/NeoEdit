@@ -26,10 +26,13 @@ Nest macros
 Get DLL/EXE version info
 Pull directory contents, including sizes/times (useful for diffing, others)
 Allow override for copying/moving existing files
-Remove "Headers" option---clunky; add "Add Headers" instead
+Handle NULLs in tables
 Can't convert to table when a non-first column has extra columns
 Add diff buffer (running diff with a maximum of 1024? lines)
 Allow copy to file->directory (doesn't change filename)
+Rename macros 1-? to 6-?
+Improve Join dialog (make one dialog)
+Add(replace?) column based on other columns with expression
 
 View:
 Update as new lines are added

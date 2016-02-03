@@ -298,7 +298,7 @@
 	<MenuItem Header="Ta_ble">
 		<textEdit:TextEditMenuItem Header="_Detect Type" CommandEnum="Table_DetectType"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
-		<textEdit:MultiMenuItem Header="_Headers" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HasHeaders" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
+		<textEdit:TextEditMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
 		<textEdit:TextEditMenuItem Header="_Region Selections To Table" CommandEnum="Table_RegionSelectionsToTable"/>
