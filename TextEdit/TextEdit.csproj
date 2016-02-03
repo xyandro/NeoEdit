@@ -107,20 +107,6 @@
     <Compile Include="Dialogs\ChooseDateTimeDialog.xaml.cs">
       <DependentUpon>ChooseDateTimeDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ChooseJoinTypeDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ChooseJoinTypeDialog.xaml.cs">
-      <DependentUpon>ChooseJoinTypeDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ChooseTableColumnsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ChooseTableColumnsDialog.xaml.cs">
-      <DependentUpon>ChooseTableColumnsDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\ChooseTableTypeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -177,13 +163,6 @@
     <Compile Include="Dialogs\EditTableDialog.xaml.cs">
       <DependentUpon>EditTableDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\EditTableDisplay.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\EditTableDisplay.xaml.cs">
-      <DependentUpon>EditTableDisplay.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\ExamineDatabaseDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -232,6 +211,13 @@
     </Page>
     <Compile Include="Dialogs\HashTextDialog.xaml.cs">
       <DependentUpon>HashTextDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\JoinDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\JoinDialog.xaml.cs">
+      <DependentUpon>JoinDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\LimitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -351,6 +337,13 @@
     </Page>
     <Compile Include="Dialogs\SortDialog.xaml.cs">
       <DependentUpon>SortDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableDisplay.xaml.cs">
+      <DependentUpon>TableDisplay.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\TrimDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

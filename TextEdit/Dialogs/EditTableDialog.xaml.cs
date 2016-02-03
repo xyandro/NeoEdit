@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -62,9 +61,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		bool altDown => (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None;
 		bool shiftDown => (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None;
 
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		void TablePreviewKeyDown(object sender, KeyEventArgs e)
 		{
-			base.OnPreviewKeyDown(e);
 			e.Handled = true;
 			var key = e.Key == Key.System ? e.SystemKey : e.Key;
 			switch (key)
@@ -93,9 +91,6 @@ namespace NeoEdit.TextEdit.Dialogs
 							current.Ascending = !current.Ascending;
 					}
 					break;
-				case Key.Home: SelectedColumn = 0; break;
-				case Key.End: SelectedColumn = Table.NumColumns - 1; break;
-				case Key.Up: case Key.Down: break;
 				case Key.Left:
 					if ((controlDown) || (altDown))
 					{
@@ -107,7 +102,7 @@ namespace NeoEdit.TextEdit.Dialogs
 						}
 					}
 					else
-						--SelectedColumn;
+						e.Handled = false;
 					break;
 				case Key.Right:
 					if ((controlDown) || (altDown))
@@ -120,16 +115,13 @@ namespace NeoEdit.TextEdit.Dialogs
 						}
 					}
 					else
-						++SelectedColumn;
+						e.Handled = false;
 					break;
 				default: e.Handled = false; break;
 			}
 
 			if (e.Handled)
-			{
 				SetupTable();
-				SelectedColumn = Math.Max(0, Math.Min(SelectedColumn, Table.NumColumns - 1));
-			}
 		}
 
 		void SetAggregation(Table.AggregateType type)

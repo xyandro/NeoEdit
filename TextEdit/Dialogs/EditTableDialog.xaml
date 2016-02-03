@@ -18,7 +18,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Table:" Target="{Binding ElementName=table}" HorizontalAlignment="Right"/>
-		<dialogs:EditTableDisplay Grid.Row="0" Grid.Column="1" x:Name="table" Table="{Binding Table, ElementName=self}" SelectedColumn="{Binding SelectedColumn, ElementName=self}"/>
+		<dialogs:TableDisplay Grid.Row="0" Grid.Column="1" x:Name="table" Table="{Binding Table, ElementName=self}" SelectedColumn="{Binding SelectedColumn, ElementName=self}" PreviewKeyDown="TablePreviewKeyDown"/>
 
 		<GroupBox Grid.Row="1" Grid.Column="1" Header="Controls:">
 			<Grid>

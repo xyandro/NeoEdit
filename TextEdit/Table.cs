@@ -25,7 +25,7 @@ namespace NeoEdit.TextEdit
 			CountNonNull,
 		}
 
-		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
+		public enum JoinType { Inner, Left, Full, Right }
 
 		List<List<string>> Rows { get; set; }
 		List<string> Headers { get; set; }
@@ -207,7 +207,7 @@ namespace NeoEdit.TextEdit
 				newHeaders.Add($"{Headers[data.Column]}{((data.Aggregation == AggregateType.None) || (!changeHeaders) ? "" : $" ({data.Aggregation})")}");
 			}
 
-			return new Table()
+			return new Table
 			{
 				Headers = newHeaders,
 				Rows = newRows,
@@ -228,15 +228,15 @@ namespace NeoEdit.TextEdit
 			switch (joinType)
 			{
 				case JoinType.Inner: keys = left.Keys.Where(key => right.ContainsKey(key)).ToList(); break;
-				case JoinType.LeftOuter: keys = left.Keys.ToList(); break;
-				case JoinType.RightOuter: keys = right.Keys.ToList(); break;
-				case JoinType.FullOuter: keys = left.Keys.Concat(right.Keys).Distinct().ToList(); break;
+				case JoinType.Left: keys = left.Keys.ToList(); break;
+				case JoinType.Right: keys = right.Keys.ToList(); break;
+				case JoinType.Full: keys = left.Keys.Concat(right.Keys).Distinct().ToList(); break;
 				default: throw new ArgumentException("Invalid join");
 			}
 
 			var emptyLeft = new List<List<string>> { Enumerable.Repeat(NULL, leftTable.NumColumns).ToList() };
 			var emptyRight = new List<List<string>> { Enumerable.Repeat(NULL, rightTable.NumColumns).ToList() };
-			return new Table()
+			return new Table
 			{
 				Headers = leftTable.Headers.Concat(rightTable.Headers).ToList(),
 				Rows = keys.SelectMany(key => (left.ContainsKey(key) ? left[key] : emptyLeft).SelectMany(leftValue => (right.ContainsKey(key) ? right[key] : emptyRight).Select(rightValue => leftValue.Concat(rightValue).ToList()))).ToList(),
@@ -264,7 +264,7 @@ namespace NeoEdit.TextEdit
 				else
 					ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, data.Column]);
 
-			return new Table()
+			return new Table
 			{
 				Headers = Headers,
 				Rows = ordering.Select(index => Rows[index]).ToList(),

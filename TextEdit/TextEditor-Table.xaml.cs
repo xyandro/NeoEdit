@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
@@ -69,39 +68,23 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Table_EditTable(EditTableDialog.Result result) => SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
 
-		static Table JoinTable;
-		static List<int> JoinColumns;
-		internal void Command_Table_SetJoinSource()
+		static Table joinTable;
+		internal void Command_Table_SetJoinSource() => joinTable = GetTable();
+
+		internal JoinDialog.Result Command_Table_Join_Dialog()
 		{
-			var table = GetTable();
-			var result = ChooseTableColumnsDialog.Run(WindowParent, table);
-			if (result == null)
-				return;
-
-			if (result.Columns.Count == 0)
-				throw new Exception("No columns selected.");
-
-			JoinTable = table;
-			JoinColumns = result.Columns;
-		}
-
-		internal void Command_Table_Join()
-		{
-			if (JoinTable == null)
+			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			var table = GetTable();
-			var result = ChooseTableColumnsDialog.Run(WindowParent, table);
-			if (result == null)
-				return;
-			if (JoinColumns.Count != result.Columns.Count)
-				throw new Exception("Column counts must match.");
+			return JoinDialog.Run(WindowParent, GetTable(), joinTable);
+		}
 
-			var joinTypeResult = ChooseJoinTypeDialog.Run(WindowParent);
-			if (joinTypeResult == null)
-				return;
+		internal void Command_Table_Join(JoinDialog.Result result)
+		{
+			if (joinTable == null)
+				throw new Exception("You must first set a join source.");
 
-			SetText(Table.Join(table, JoinTable, result.Columns, JoinColumns, joinTypeResult.JoinType));
+			SetText(Table.Join(GetTable(), joinTable, result.LeftColumns, result.RightColumns, result.JoinType));
 		}
 
 		internal void Command_Table_Transpose() => SetText(GetTable().Transpose());

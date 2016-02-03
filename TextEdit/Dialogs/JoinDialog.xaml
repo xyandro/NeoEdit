@@ -1,0 +1,89 @@
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.JoinDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
+	xmlns:dialogs="clr-namespace:NeoEdit.TextEdit.Dialogs"
+	Title="Join Tables" SizeToContent="Width" Height="600" FocusManager.FocusedElement="{Binding ElementName=leftTable}" WindowStyle="SingleBorderWindow">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="Left Table:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+		<dialogs:TableDisplay Grid.Row="0" Grid.Column="1" x:Name="leftTable" Table="{Binding LeftTable, ElementName=self}" Selectable="True"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="Right Table:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+		<dialogs:TableDisplay Grid.Row="1" Grid.Column="1" x:Name="rightTable" Table="{Binding LeftTable, ElementName=self}" Selectable="True"/>
+
+		<Label Grid.Row="2" Grid.Column="0" Content="Join Type:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+		<UniformGrid Grid.Row="2" Grid.Column="1" Rows="1" KeyboardNavigation.TabNavigation="Once" KeyboardNavigation.DirectionalNavigation="Contained">
+			<StackPanel Margin="5" Tag="Inner" MouseDown="JoinTypeClick">
+				<Canvas Width="150" Height="100">
+					<Path Fill="CadetBlue">
+						<Path.Data>
+							<CombinedGeometry GeometryCombineMode="Intersect">
+								<CombinedGeometry.Geometry1>
+									<EllipseGeometry Center="50, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry1>
+								<CombinedGeometry.Geometry2>
+									<EllipseGeometry Center="100, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry2>
+							</CombinedGeometry>
+						</Path.Data>
+					</Path>
+					<Ellipse Stroke="Black" Width="100" Height="100"/>
+					<Ellipse Canvas.Left="50" Stroke="Black" Width="100" Height="100"/>
+				</Canvas>
+				<RadioButton Content="_Inner" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Inner}" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Margin="5" Tag="Left" MouseDown="JoinTypeClick">
+				<Canvas Width="150" Height="100">
+					<Ellipse Stroke="Black" Fill="CadetBlue" Width="100" Height="100"/>
+					<Ellipse Canvas.Left="50" Stroke="Black" Width="100" Height="100"/>
+				</Canvas>
+				<RadioButton Content="_Left" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Left}" HorizontalAlignment="Center" Margin="58,0,56,0"/>
+			</StackPanel>
+			<StackPanel Margin="5" Tag="Full" MouseDown="JoinTypeClick">
+				<Canvas Width="150" Height="100">
+					<Path Fill="CadetBlue">
+						<Path.Data>
+							<CombinedGeometry GeometryCombineMode="Union">
+								<CombinedGeometry.Geometry1>
+									<EllipseGeometry Center="50, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry1>
+								<CombinedGeometry.Geometry2>
+									<EllipseGeometry Center="100, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry2>
+							</CombinedGeometry>
+						</Path.Data>
+					</Path>
+					<Ellipse Stroke="Black" Width="100" Height="100"/>
+					<Ellipse Canvas.Left="50" Stroke="Black" Width="100" Height="100"/>
+				</Canvas>
+				<RadioButton Content="_Full" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Full}" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Margin="5" Tag="Right" MouseDown="JoinTypeClick">
+				<Canvas Width="150" Height="100">
+					<Ellipse Canvas.Left="50" Fill="CadetBlue" Stroke="Black" Width="100" Height="100"/>
+					<Ellipse Stroke="Black" Width="100" Height="100"/>
+				</Canvas>
+				<RadioButton Content="_Right" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Right}" HorizontalAlignment="Center"/>
+			</StackPanel>
+		</UniformGrid>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+</guiControls:ModalDialog>
