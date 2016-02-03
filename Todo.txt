@@ -25,7 +25,6 @@ Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
 Get DLL/EXE version info
 Pull directory contents, including sizes/times (useful for diffing, others)
-Prompt to change to UTF8 for invalid encoding
 Allow override for copying/moving existing files
 Rev RegEx can't handle - (and possibly other control chars)
 Remove "Headers" option---clunky; add "Add Headers" instead

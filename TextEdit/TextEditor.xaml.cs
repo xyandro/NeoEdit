@@ -429,14 +429,20 @@ namespace NeoEdit.TextEdit
 
 		bool ConfirmVerifyCanFullyEncode()
 		{
-			return new Message
+			switch (new Message
 			{
 				Title = "Confirm",
-				Text = "The current encoding cannot fully represent this data.  Continue?",
-				Options = Message.OptionsEnum.YesNo,
+				Text = "The current encoding cannot fully represent this data.  Switch to UTF-8?",
+				Options = Message.OptionsEnum.YesNoCancel,
 				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() == Message.OptionsEnum.Yes;
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show())
+			{
+				case Message.OptionsEnum.Yes: CodePage = Coder.CodePage.UTF8; return true;
+				case Message.OptionsEnum.No: return true;
+				case Message.OptionsEnum.Cancel: return false;
+				default: throw new Exception("Invalid response");
+			}
 		}
 
 		bool VerifyCanFullyEncode() => (Data.CanFullyEncode(CodePage)) || (ConfirmVerifyCanFullyEncode());
