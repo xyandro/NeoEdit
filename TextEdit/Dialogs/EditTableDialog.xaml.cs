@@ -73,6 +73,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				case Key.A: SetAggregation(Table.AggregateType.All); break;
 				case Key.D: SetAggregation(Table.AggregateType.Distinct); break;
 				case Key.C: SetAggregation(Table.AggregateType.Count); break;
+				case Key.O: SetAggregation(Table.AggregateType.CountNonNull); break;
 				case Key.S: SetAggregation(Table.AggregateType.Sum); break;
 				case Key.V: SetAggregation(Table.AggregateType.Average); break;
 				case Key.N: SetAggregation(Table.AggregateType.Min); break;

@@ -11,18 +11,18 @@ namespace NeoEdit.TextEdit
 	{
 		const string NULL = "<NULL>";
 
-		[Flags]
 		public enum AggregateType
 		{
-			None = 0,
-			Group = 1,
-			All = 2,
-			Distinct = 4,
-			Min = 8,
-			Max = 16,
-			Sum = 32,
-			Average = 64,
-			Count = 128,
+			None,
+			Group,
+			All,
+			Distinct,
+			Min,
+			Max,
+			Sum,
+			Average,
+			Count,
+			CountNonNull,
 		}
 
 		public enum JoinType { Inner, LeftOuter, RightOuter, FullOuter }
@@ -173,6 +173,7 @@ namespace NeoEdit.TextEdit
 				case AggregateType.Max: return values.Max();
 				case AggregateType.Sum: return values.Select(value => Convert.ToDouble(value)).Sum().ToString();
 				case AggregateType.Count: return values.Count.ToString();
+				case AggregateType.CountNonNull: return values.Where(value => value != NULL).Count().ToString();
 				case AggregateType.Average: return (values.Select(value => Convert.ToDouble(value)).Sum() / values.Count).ToString();
 				default: throw new Exception("Invalid table type");
 			}
@@ -192,7 +193,7 @@ namespace NeoEdit.TextEdit
 		public Table Aggregate(List<AggregateData> aggregateData)
 		{
 			var changeHeaders = true;
-			var groupByColumns = aggregateData.Where(data => data.Aggregation.HasFlag(AggregateType.Group)).Select(data => data.Column).ToList();
+			var groupByColumns = aggregateData.Where(data => data.Aggregation == AggregateType.Group).Select(data => data.Column).ToList();
 			List<List<List<string>>> groupedRows;
 			if (!groupByColumns.Any())
 			{
