@@ -310,22 +310,22 @@ namespace NeoEdit.TextEdit
 
 			switch (command)
 			{
-				case TextEditCommand.Macro_Record_Quick_1: Command_Macro_Record_Quick(1); return;
-				case TextEditCommand.Macro_Record_Quick_2: Command_Macro_Record_Quick(2); return;
-				case TextEditCommand.Macro_Record_Quick_3: Command_Macro_Record_Quick(3); return;
-				case TextEditCommand.Macro_Record_Quick_4: Command_Macro_Record_Quick(4); return;
-				case TextEditCommand.Macro_Record_Quick_5: Command_Macro_Record_Quick(5); return;
 				case TextEditCommand.Macro_Record_Quick_6: Command_Macro_Record_Quick(6); return;
 				case TextEditCommand.Macro_Record_Quick_7: Command_Macro_Record_Quick(7); return;
+				case TextEditCommand.Macro_Record_Quick_8: Command_Macro_Record_Quick(8); return;
+				case TextEditCommand.Macro_Record_Quick_9: Command_Macro_Record_Quick(9); return;
+				case TextEditCommand.Macro_Record_Quick_10: Command_Macro_Record_Quick(10); return;
+				case TextEditCommand.Macro_Record_Quick_11: Command_Macro_Record_Quick(11); return;
+				case TextEditCommand.Macro_Record_Quick_12: Command_Macro_Record_Quick(12); return;
 				case TextEditCommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
 				case TextEditCommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
-				case TextEditCommand.Macro_Play_Quick_1: Command_Macro_Play_Quick(1); return;
-				case TextEditCommand.Macro_Play_Quick_2: Command_Macro_Play_Quick(2); return;
-				case TextEditCommand.Macro_Play_Quick_3: Command_Macro_Play_Quick(3); return;
-				case TextEditCommand.Macro_Play_Quick_4: Command_Macro_Play_Quick(4); return;
-				case TextEditCommand.Macro_Play_Quick_5: Command_Macro_Play_Quick(5); return;
 				case TextEditCommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
 				case TextEditCommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
+				case TextEditCommand.Macro_Play_Quick_8: Command_Macro_Play_Quick(8); return;
+				case TextEditCommand.Macro_Play_Quick_9: Command_Macro_Play_Quick(9); return;
+				case TextEditCommand.Macro_Play_Quick_10: Command_Macro_Play_Quick(10); return;
+				case TextEditCommand.Macro_Play_Quick_11: Command_Macro_Play_Quick(11); return;
+				case TextEditCommand.Macro_Play_Quick_12: Command_Macro_Play_Quick(12); return;
 				case TextEditCommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
 				case TextEditCommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
 				case TextEditCommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
@@ -373,13 +373,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.View_SelectTabsWithSelections: Command_View_SelectTabsWithSelections(true); break;
 				case TextEditCommand.View_SelectTabsWithoutSelections: Command_View_SelectTabsWithSelections(false); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
-				case TextEditCommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
-				case TextEditCommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
-				case TextEditCommand.Macro_Open_Quick_3: Macro_Open_Quick(3); return true;
-				case TextEditCommand.Macro_Open_Quick_4: Macro_Open_Quick(4); return true;
-				case TextEditCommand.Macro_Open_Quick_5: Macro_Open_Quick(5); return true;
 				case TextEditCommand.Macro_Open_Quick_6: Macro_Open_Quick(6); return true;
 				case TextEditCommand.Macro_Open_Quick_7: Macro_Open_Quick(7); return true;
+				case TextEditCommand.Macro_Open_Quick_8: Macro_Open_Quick(8); return true;
+				case TextEditCommand.Macro_Open_Quick_9: Macro_Open_Quick(9); return true;
+				case TextEditCommand.Macro_Open_Quick_10: Macro_Open_Quick(10); return true;
+				case TextEditCommand.Macro_Open_Quick_11: Macro_Open_Quick(11); return true;
+				case TextEditCommand.Macro_Open_Quick_12: Macro_Open_Quick(12); return true;
 				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
 			}
 

@@ -28,7 +28,6 @@ Pull directory contents, including sizes/times (useful for diffing, others)
 Allow override for copying/moving existing files
 Add diff buffer (running diff with a maximum of 1024? lines)
 Allow copy to file->directory (doesn't change filename)
-Rename macros 1-? to 6-?
 Add(replace?) column based on other columns with expression
 Add a common dialog for expressions which shows x results
 Improve previous results (such as previous finds); make static value which uses own backing store
