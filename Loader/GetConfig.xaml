@@ -1,0 +1,60 @@
+﻿<Window x:Class="Loader.GetConfig" x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Loader"
+	Title="Loader Configuration" SizeToContent="WidthAndHeight">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="500"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="X_32 Start:" HorizontalAlignment="Right" Target="{Binding ElementName=x32StartBrowse}"/>
+		<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding X32Start, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
+		<Button Grid.Row="0" Grid.Column="2" Name="x32StartBrowse" Content="Browse" Click="BrowseClick"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="X_64 Start:" HorizontalAlignment="Right" Target="{Binding ElementName=x64StartBrowse}"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding X64Start, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
+		<Button Grid.Row="1" Grid.Column="2" Name="x64StartBrowse" Content="Browse" Click="BrowseClick"/>
+
+		<Label Grid.Row="2" Grid.Column="0" Content="X_32 Path:" HorizontalAlignment="Right" Target="{Binding ElementName=x32PathBrowse}"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding X32Path, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
+		<Button Grid.Row="2" Grid.Column="2" Name="x32PathBrowse" Content="Browse" Click="BrowseClick"/>
+
+		<Label Grid.Row="3" Grid.Column="0" Content="X_64 Path:" HorizontalAlignment="Right" Target="{Binding ElementName=x64PathBrowse}"/>
+		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding X64Path, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
+		<Button Grid.Row="3" Grid.Column="2" Name="x64PathBrowse" Content="Browse" Click="BrowseClick"/>
+
+		<Label Grid.Row="4" Grid.Column="0" Content="_Output:" HorizontalAlignment="Right" Target="{Binding ElementName=outputBrowse}"/>
+		<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Output, UpdateSourceTrigger=PropertyChanged}"/>
+		<Button Grid.Row="4" Grid.Column="2" Name="outputBrowse" Content="Browse" Click="BrowseClick"/>
+
+		<Label Grid.Row="5" Grid.Column="0" Content="_Match:" HorizontalAlignment="Right" Target="{Binding ElementName=match}"/>
+		<TextBox Grid.Row="5" Grid.Column="1" Name="match" Text="{Binding Match, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Label Grid.Row="6" Grid.Column="0" Content="Extract _Action:" HorizontalAlignment="Right" Target="{Binding ElementName=extractAction}"/>
+		<ComboBox Grid.Row="6" Grid.Column="1" Name="extractAction" SelectedItem="{Binding ExtractAction}" VerticalAlignment="Center"/>
+
+		<Label Grid.Row="7" Grid.Column="0" Content="_NGen:" HorizontalAlignment="Right" Target="{Binding ElementName=ngen}"/>
+		<CheckBox Grid.Row="7" Grid.Column="1" Name="ngen" IsChecked="{Binding NGen}" VerticalAlignment="Center"/>
+
+		<UniformGrid Grid.Row="9" Grid.ColumnSpan="3" Rows="1" HorizontalAlignment="Right">
+			<Button IsDefault="True" Content="Ok" Click="OkClick"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,0,10,0"/>
+		</UniformGrid>
+	</Grid>
+</Window>

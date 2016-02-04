@@ -43,6 +43,8 @@ Function Build ()
 	if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
 	Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|x64" /project Loader /out Build-x64.log'
 	if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
+	$proc = Start-Process "bin\Release.AnyCPU\Loader.exe" "Start=..\Release.x86\NeoEdit.exe Start=..\Release.x64\NeoEdit.exe output=NeoEdit.exe ngen=1 extractaction=gui go" -PassThru -Wait
+	if ($proc.ExitCode -ne 0) { Fail("Failed to build.") }
 }
 
 Function CopyLocations ()
@@ -53,8 +55,7 @@ Function CopyLocations ()
 		ForEach ($location in $locations)
 		{
 			if ([string]::IsNullOrEmpty($location)) { continue; }
-			Copy-Item "bin\NeoEdit32.exe" "$location"
-			Copy-Item "bin\NeoEdit64.exe" "$location"
+			Copy-Item "bin\NeoEdit.exe" "$location"
 		}
 	}
 }
@@ -62,14 +63,10 @@ Function CopyLocations ()
 GitClean
 GitUpdate
 Build
-Start-Process "bin\Release.x86\NeoEdit.Loader.exe" -Wait
-Start-Process "bin\Release.x64\NeoEdit.Loader.exe" -Wait
-$bytes32 = [System.IO.File]::ReadAllBytes("bin\Release.x86\NeoEdit.exe")
-$bytes64 = [System.IO.File]::ReadAllBytes("bin\Release.x64\NeoEdit.exe")
+$bytes = [System.IO.File]::ReadAllBytes("bin\Release.AnyCPU\NeoEdit.exe")
 GitClean
 New-Item -ItemType Directory -Force -Path bin
-[System.IO.File]::WriteAllBytes("bin\NeoEdit32.exe", $bytes32)
-[System.IO.File]::WriteAllBytes("bin\NeoEdit64.exe", $bytes64)
+[System.IO.File]::WriteAllBytes("bin\NeoEdit.exe", $bytes)
 CopyLocations
 
 Write-Host("Success!")

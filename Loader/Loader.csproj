@@ -1,28 +1,73 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <ApplicationIcon>$(SolutionDir)Photoshop\NeoEdit.ico</ApplicationIcon>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
-  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{770DFCD1-C149-40E4-B1A1-76D06465A57C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>NeoEdit.Loader</RootNamespace>
-    <AssemblyName>NeoEdit.Loader</AssemblyName>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Loader</RootNamespace>
+    <AssemblyName>Loader</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CopyRetryCount>0</CopyRetryCount>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    <Compile Include="BitDepths.cs" />
+    <Compile Include="Builder.cs" />
+    <Compile Include="Config.cs" />
+    <Page Include="Contents.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Contents.xaml.cs">
+      <DependentUpon>Contents.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ExtractActions.cs" />
+    <Compile Include="Extractor.cs" />
+    <Compile Include="FileTypes.cs" />
+    <Page Include="GetConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="GetConfig.xaml.cs">
+      <DependentUpon>GetConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IconInfo.cs" />
+    <Compile Include="Native.cs" />
+    <Compile Include="PEInfo.cs" />
     <Compile Include="Program.cs" />
-    <AppDesigner Include="Properties\" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Resource.cs" />
+    <Compile Include="ResourceReader.cs" />
+    <Compile Include="ResourceWriter.cs" />
   </ItemGroup>
-  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
