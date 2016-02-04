@@ -31,7 +31,7 @@ namespace NeoEdit.GUI.Controls
 					return;
 				}
 
-				this.result = value;
+				result = value;
 				Close();
 			}
 		}
@@ -48,6 +48,7 @@ namespace NeoEdit.GUI.Controls
 					if (e.Handled)
 						return;
 					Close();
+					e.Handled = true;
 				};
 
 			var parentHwnd = new WindowInteropHelper(Owner).Handle;
@@ -65,7 +66,10 @@ namespace NeoEdit.GUI.Controls
 				if (CancelButton == null)
 					Close();
 				else
+				{
 					CancelButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+					e.Handled = true;
+				}
 			};
 
 			EnableWindow(parentHwnd, false);

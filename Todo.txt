@@ -34,7 +34,6 @@ Add a common dialog for expressions which shows x results
 Improve previous results (such as previous finds); make static value which uses own backing store
 Add Table->Select column which will select all columns any selection is in
 Add actions to existing macro
-Cancelling dialog cancels parents (such as add db)
 Make INSERT and UPDATE queries from tables
 Allow different display name for files (prep for general purpose diff)
 Ignore whitespace (and probably other menu selections) can't be in a macro
