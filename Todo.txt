@@ -1,6 +1,7 @@
 All:
 Add command prompt
 Remove native dlls (add to mixed)
+Add TFS source control
 
 Disk:
 Move timestamp (possibly others) from TextEditor
@@ -33,9 +34,12 @@ Add a common dialog for expressions which shows x results
 Improve previous results (such as previous finds); make static value which uses own backing store
 Add Table->Select column which will select all columns any selection is in
 Add actions to existing macro
-Make INSERT and UPDATE queries from tables
 Allow different display name for files (prep for general purpose diff)
 Ignore whitespace (and probably other menu selections) can't be in a macro
+Add loader index (place in resource #1)
+Add DB query builder
+Copy positions/goto copied positions (useful for applying diff)
+Columns tables use extra wide columns if data has spaces on conversion; editing will remove the extra space
 
 View:
 Update as new lines are added

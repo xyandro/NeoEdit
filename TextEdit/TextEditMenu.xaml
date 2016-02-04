@@ -314,6 +314,7 @@
 		<MenuItem Header="_Database">
 			<textEdit:TextEditMenuItem Header="Generate _INSERTs" CommandEnum="Table_Database_GenerateInserts"/>
 			<textEdit:TextEditMenuItem Header="Generate _UPDATEs" CommandEnum="Table_Database_GenerateUpdates"/>
+			<textEdit:TextEditMenuItem Header="Generate _DELETEs" CommandEnum="Table_Database_GenerateDeletes"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Position">

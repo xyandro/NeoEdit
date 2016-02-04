@@ -191,6 +191,13 @@
     <Compile Include="Dialogs\FloorRoundCeilingDialog.xaml.cs">
       <DependentUpon>FloorRoundCeilingDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\GenerateDeletesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GenerateDeletesDialog.xaml.cs">
+      <DependentUpon>GenerateDeletesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\GenerateInsertsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

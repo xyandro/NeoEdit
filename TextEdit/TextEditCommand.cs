@@ -175,6 +175,7 @@ namespace NeoEdit.TextEdit
 		Table_SetVariables,
 		Table_Database_GenerateInserts,
 		Table_Database_GenerateUpdates,
+		Table_Database_GenerateDeletes,
 		[KeyGesture(Key.G, ModifierKeys.Control)] [KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Shift, false)] Position_Goto_Lines,
 		Position_Goto_Columns,
 		Position_Goto_Positions,

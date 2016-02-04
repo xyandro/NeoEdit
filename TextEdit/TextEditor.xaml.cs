@@ -640,6 +640,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_Join: dialogResult = Command_Table_Join_Dialog(); break;
 				case TextEditCommand.Table_Database_GenerateInserts: dialogResult = Command_Table_Database_GenerateInserts_Dialog(); break;
 				case TextEditCommand.Table_Database_GenerateUpdates: dialogResult = Command_Table_Database_GenerateUpdates_Dialog(); break;
+				case TextEditCommand.Table_Database_GenerateDeletes: dialogResult = Command_Table_Database_GenerateDeletes_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
 				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
 				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
@@ -861,6 +862,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_SetVariables: Command_Table_SetVariables(); break;
 				case TextEditCommand.Table_Database_GenerateInserts: Command_Table_Database_GenerateInserts(dialogResult as GenerateInsertsDialog.Result); break;
 				case TextEditCommand.Table_Database_GenerateUpdates: Command_Table_Database_GenerateUpdates(dialogResult as GenerateUpdatesDialog.Result); break;
+				case TextEditCommand.Table_Database_GenerateDeletes: Command_Table_Database_GenerateDeletes(dialogResult as GenerateDeletesDialog.Result); break;
 				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Columns: Command_Position_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Positions: Command_Position_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
