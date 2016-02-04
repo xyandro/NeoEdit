@@ -393,8 +393,8 @@
 	</MenuItem>
 	<MenuItem Header="D_atabase">
 		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
-		<textEdit:TextEditMenuItem Header="_Execute" CommandEnum="Database_Execute"/>
-		<textEdit:TextEditMenuItem Header="E_xamine" CommandEnum="Database_Examine"/>
+		<textEdit:TextEditMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery"/>
+		<textEdit:TextEditMenuItem Header="_Examine" CommandEnum="Database_Examine"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">

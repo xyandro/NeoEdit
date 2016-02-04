@@ -360,6 +360,8 @@ namespace NeoEdit.TextEdit
 
 		int BeginOffset => Data.GetOffset(0, 0);
 		int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
+		Range BeginRange => new Range(BeginOffset);
+		Range EndRange => new Range(EndOffset);
 		Range FullRange => new Range(EndOffset, BeginOffset);
 		string AllText => GetString(FullRange);
 
@@ -893,7 +895,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_Ping: Command_Network_Ping(dialogResult as PingDialog.Result); break;
 				case TextEditCommand.Network_ScanPorts: Command_Network_ScanPorts(dialogResult as ScanPortsDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
-				case TextEditCommand.Database_Execute: Command_Database_Execute(); break;
+				case TextEditCommand.Database_ExecuteQuery: Command_Database_ExecuteQuery(); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -1399,7 +1401,7 @@ namespace NeoEdit.TextEdit
 			var sels = Selections.ToList();
 
 			if ((sels.Count == 0) && (gotoType == GotoType.Line))
-				sels.Add(new Range(BeginOffset));
+				sels.Add(BeginRange);
 			if (sels.Count == 1)
 				sels = sels.Resize(offsets.Count, sels[0]).ToList();
 			if (offsets.Count == 1)
@@ -2697,7 +2699,7 @@ namespace NeoEdit.TextEdit
 				throw new Exception("No connection.");
 		}
 
-		internal void Command_Database_Execute()
+		internal void Command_Database_ExecuteQuery()
 		{
 			ValidateConnection();
 			var selections = Selections.ToList();
@@ -2707,8 +2709,9 @@ namespace NeoEdit.TextEdit
 			{
 				var table = RunDBSelect(GetString(range));
 				if (table == null)
-					continue;
-				OpenTable(table);
+					Message.Show("Query run successfully.");
+				else
+					OpenTable(table);
 			}
 		}
 
@@ -3380,7 +3383,7 @@ namespace NeoEdit.TextEdit
 					{
 						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginOffset, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
-							sels.Add(new Range(BeginOffset));
+							sels.Add(BeginRange);
 						Selections.Replace(sels);
 					}
 					else
@@ -3417,7 +3420,7 @@ namespace NeoEdit.TextEdit
 					{
 						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndOffset, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
-							sels.Add(new Range(EndOffset));
+							sels.Add(EndRange);
 						Selections.Replace(sels);
 					}
 					else

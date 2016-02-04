@@ -38,8 +38,6 @@ Add actions to existing macro
 Cancelling dialog cancels parents (such as add db)
 Make INSERT and UPDATE queries from tables
 Allow different display name for files (prep for general purpose diff)
-Count DB query result as not modified
-Print "Query run success" on DB query with no results
 Ignore whitespace (and probably other menu selections) can't be in a macro
 
 View:

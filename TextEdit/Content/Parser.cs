@@ -63,6 +63,7 @@ namespace NeoEdit.TextEdit.Content
 				case ".vcxproj":
 				case ".xml":
 				case ".xaml": return ParserType.XML;
+				case ".nec": return ParserType.Columns;
 				default: return ParserType.None;
 			}
 		}

@@ -12,7 +12,7 @@ namespace NeoEdit.TextEdit
 	{
 		void OpenTable(Table table)
 		{
-			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", TextEdit.Content.Parser.ParserType.Columns), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8);
+			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", TextEdit.Content.Parser.ParserType.Columns), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 			textEditor.ContentType = TextEdit.Content.Parser.ParserType.Columns;
 			TabsParent.CreateTab(textEditor);
 		}
@@ -23,7 +23,7 @@ namespace NeoEdit.TextEdit
 		{
 			var output = table.ToString(Data.DefaultEnding, ContentType);
 			Replace(new List<Range> { FullRange }, new List<string> { output });
-			Selections.Replace(FullRange);
+			Selections.Replace(BeginRange);
 		}
 
 		internal void Command_Table_Type_Detect() => ContentType = Table.GuessTableType(AllText);

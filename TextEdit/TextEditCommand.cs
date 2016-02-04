@@ -212,7 +212,7 @@ namespace NeoEdit.TextEdit
 		Network_Ping,
 		Network_ScanPorts,
 		Database_Connect,
-		[KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift)] Database_Execute,
+		[KeyGesture(Key.Q, ModifierKeys.Control)] Database_ExecuteQuery,
 		Database_Examine,
 		[KeyGesture(Key.K, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Keys,
 		[KeyGesture(Key.D1, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Values1,
