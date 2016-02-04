@@ -4,7 +4,7 @@
 	Focusable="True" IsTabStop="True">
 
 	<ScrollViewer Name="scroller" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden" Focusable="False">
-		<Grid Name="tableGrid" Background="LightGray"/>
+		<Grid Name="tableGrid" Background="LightGray" MouseDown="GridMouseDown"/>
 	</ScrollViewer>
 
 </UserControl>

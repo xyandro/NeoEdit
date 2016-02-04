@@ -4,7 +4,7 @@
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	xmlns:dialogs="clr-namespace:NeoEdit.TextEdit.Dialogs"
-	Title="Join Tables" SizeToContent="Width" Height="600" FocusManager.FocusedElement="{Binding ElementName=leftTable}" WindowStyle="SingleBorderWindow">
+	Title="Join Tables" Width="800" Height="600" FocusManager.FocusedElement="{Binding ElementName=leftTable}" WindowStyle="SingleBorderWindow">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>

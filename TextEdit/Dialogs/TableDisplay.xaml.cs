@@ -66,7 +66,26 @@ namespace NeoEdit.TextEdit.Dialogs
 			}
 		}
 
-		protected override void OnMouseDown(MouseButtonEventArgs e) => Focus();
+		protected override void OnMouseDown(MouseButtonEventArgs e)
+		{
+			base.OnMouseDown(e);
+			Focus();
+		}
+
+		void GridMouseDown(object sender, MouseButtonEventArgs e)
+		{
+			var x = e.GetPosition(tableGrid).X;
+			for (var column = 0; column < tableGrid.ColumnDefinitions.Count; ++column)
+			{
+				var width = tableGrid.ColumnDefinitions[column].ActualWidth;
+				if (x < width)
+				{
+					SelectedColumn = column;
+					return;
+				}
+				x -= width;
+			}
+		}
 
 		void SetupTable()
 		{
