@@ -26,13 +26,21 @@ Nest macros
 Get DLL/EXE version info
 Pull directory contents, including sizes/times (useful for diffing, others)
 Allow override for copying/moving existing files
-Handle NULLs in tables
-Can't convert to table when a non-first column has extra columns
 Add diff buffer (running diff with a maximum of 1024? lines)
 Allow copy to file->directory (doesn't change filename)
 Rename macros 1-? to 6-?
 Improve Join dialog (make one dialog)
 Add(replace?) column based on other columns with expression
+Add a common dialog for expressions which shows x results
+Improve previous results (such as previous finds); make static value which uses own backing store
+Add Table->Select column which will select all columns any selection is in
+Add actions to existing macro
+Cancelling dialog cancels parents (such as add db)
+Make INSERT and UPDATE queries from tables
+Allow different display name for files (prep for general purpose diff)
+Count DB query result as not modified
+Print "Query run success" on DB query with no results
+Ignore whitespace (and probably other menu selections) can't be in a macro
 
 View:
 Update as new lines are added

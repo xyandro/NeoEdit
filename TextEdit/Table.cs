@@ -41,24 +41,20 @@ namespace NeoEdit.TextEdit
 			Headers = new List<string>();
 		}
 
-		public Table(string input, Parser.ParserType tableType = Parser.ParserType.None, bool hasHeaders = false) : this(GetInputRows(input, tableType), hasHeaders) { }
+		public Table(string input, Parser.ParserType tableType = Parser.ParserType.None, bool hasHeaders = true) : this(GetInputRows(input, tableType), hasHeaders) { }
 
 		public Table(List<List<string>> rows, bool hasHeaders = true)
 		{
-			Rows = rows;
+			Rows = rows.Select(row => row.Select(value => value ?? NULL).ToList()).ToList();
 			EqualizeColumns();
-			SetNulls();
 
-			if (Rows.Any())
+			if ((Rows.Any()) && (hasHeaders))
 			{
-				if (hasHeaders)
-				{
-					Headers = Rows[0];
-					Rows.RemoveAt(0);
-				}
-				else
-					Headers = Rows[0].Select((value, index) => $"Column {index + 1}").ToList();
+				Headers = Rows[0];
+				Rows.RemoveAt(0);
 			}
+			else
+				Headers = Rows[0].Select((value, index) => $"Column {index + 1}").ToList();
 		}
 
 		public Table(DbDataReader reader)
@@ -66,15 +62,7 @@ namespace NeoEdit.TextEdit
 			Headers = Enumerable.Range(0, reader.FieldCount).Select(column => reader.GetName(column)).ToList();
 			Rows = new List<List<string>>();
 			while (reader.Read())
-				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => value == DBNull.Value ? null : value.ToString()).ToList());
-		}
-
-		void SetNulls()
-		{
-			for (var row = 0; row < Rows.Count; ++row)
-				for (var column = 0; column < Rows[row].Count; ++column)
-					if (Rows[row][column] == NULL)
-						Rows[row][column] = null;
+				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => value == DBNull.Value ? NULL : value.ToString()).ToList());
 		}
 
 		public static Parser.ParserType GuessTableType(string input)
@@ -130,7 +118,7 @@ namespace NeoEdit.TextEdit
 			var numColumns = Rows.Max(row => row.Count);
 			foreach (var row in Rows)
 				while (row.Count < numColumns)
-					row.Add(null);
+					row.Add(NULL);
 		}
 
 		public static string ToTCSV(string str, char split)
@@ -146,7 +134,7 @@ namespace NeoEdit.TextEdit
 		{
 			var result = new List<List<string>>();
 			result.Add(Headers.ToList());
-			result.AddRange(Rows.Select(row => row.Select(item => (item ?? NULL).ToString()).ToList()));
+			result.AddRange(Rows.Select(row => row.Select(item => item.ToString()).ToList()));
 
 			switch (tableType)
 			{
@@ -156,7 +144,7 @@ namespace NeoEdit.TextEdit
 					{
 						var newLineChars = new char[] { '\r', '\n' };
 						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
-						return String.Join("", result.AsParallel().AsOrdered().Select(line => "║" + String.Join("│", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + "║" + ending));
+						return String.Join("", result.AsParallel().AsOrdered().Select(line => "║ " + String.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending));
 					}
 				default: throw new ArgumentException("Invalid output type");
 			}
@@ -226,13 +214,15 @@ namespace NeoEdit.TextEdit
 			};
 		}
 
+		static object JoinValue(string value) => value == NULL ? new object() : value;
+
 		static public Table Join(Table leftTable, Table rightTable, List<int> leftColumns, List<int> rightColumns, JoinType joinType)
 		{
 			if ((leftColumns.Count != rightColumns.Count))
 				throw new ArgumentException("Column counts must match to join");
 
-			var left = leftTable.Rows.GroupBy(row => leftColumns.Select(column => row[column] ?? new object()).ToItemSet()).ToDictionary(group => group.Key, group => group.ToList());
-			var right = rightTable.Rows.GroupBy(row => rightColumns.Select(column => row[column] ?? new object()).ToItemSet()).ToDictionary(group => group.Key, group => group.ToList());
+			var left = leftTable.Rows.GroupBy(row => leftColumns.Select(column => JoinValue(row[column])).ToItemSet()).ToDictionary(group => group.Key, group => group.ToList());
+			var right = rightTable.Rows.GroupBy(row => rightColumns.Select(column => JoinValue(row[column])).ToItemSet()).ToDictionary(group => group.Key, group => group.ToList());
 
 			List<ItemSet<object>> keys;
 			switch (joinType)
@@ -244,8 +234,8 @@ namespace NeoEdit.TextEdit
 				default: throw new ArgumentException("Invalid join");
 			}
 
-			var emptyLeft = new List<List<string>> { Enumerable.Range(0, leftTable.NumColumns).Select(column => default(string)).ToList() };
-			var emptyRight = new List<List<string>> { Enumerable.Range(0, rightTable.NumColumns).Select(column => default(string)).ToList() };
+			var emptyLeft = new List<List<string>> { Enumerable.Repeat(NULL, leftTable.NumColumns).ToList() };
+			var emptyRight = new List<List<string>> { Enumerable.Repeat(NULL, rightTable.NumColumns).ToList() };
 			return new Table()
 			{
 				Headers = leftTable.Headers.Concat(rightTable.Headers).ToList(),
