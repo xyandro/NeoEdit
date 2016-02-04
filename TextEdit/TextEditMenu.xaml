@@ -296,7 +296,7 @@
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
-		<textEdit:TextEditMenuItem Header="_Detect Type" CommandEnum="Table_DetectType"/>
+		<textEdit:TextEditMenuItem Header="De_tect Type" CommandEnum="Table_DetectType"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
 		<textEdit:TextEditMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
 		<Separator/>
@@ -310,6 +310,10 @@
 		<textEdit:TextEditMenuItem Header="Tr_anspose" CommandEnum="Table_Transpose"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Set _Variables" CommandEnum="Table_SetVariables"/>
+		<Separator/>
+		<MenuItem Header="_Database">
+			<textEdit:TextEditMenuItem Header="Generate _INSERTs" CommandEnum="Table_Database_GenerateInserts"/>
+		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Position">
 		<MenuItem Header="_Goto">

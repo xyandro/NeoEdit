@@ -310,8 +310,8 @@ namespace NeoEdit.TextEdit
 
 		public string this[int row, int column]
 		{
-			get { return Rows[row][column]; }
-			set { Rows[row][column] = value; }
+			get { return Rows[row][column] == NULL ? null : Rows[row][column]; }
+			set { Rows[row][column] = value ?? NULL; }
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
@@ -94,6 +95,27 @@ namespace NeoEdit.TextEdit
 			var table = GetTable();
 			for (var column = 0; column < table.NumColumns; ++column)
 				variables[table.GetHeader(column)] = InterpretValues(Enumerable.Range(0, table.NumRows).Select(row => table[row, column]));
+		}
+
+		string GetDBValue(string value) => value?.IsNumeric() != false ? value ?? "NULL" : $"'{value.Replace("'", "''")}'";
+
+		internal GenerateInsertsDialog.Result Command_Table_Database_GenerateInserts_Dialog() => GenerateInsertsDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+
+		internal void Command_Table_Database_GenerateInserts(GenerateInsertsDialog.Result result)
+		{
+			var table = GetTable();
+			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : Data.DefaultEnding)}";
+			var output = Enumerable.Range(0, table.NumRows).Batch(result.BatchSize).Select(batch => string.Join($",{Data.DefaultEnding}", batch.Select(row => $"({string.Join(", ", result.Columns.Select(column => GetDBValue(table[row, column])))})"))).Select(val => $"{header}{val}{Data.DefaultEnding}").ToList();
+			Replace(new List<Range> { FullRange }, new List<string> { string.Join("", output) });
+
+			var offset = 0;
+			var sels = new List<Range>();
+			foreach (var item in output)
+			{
+				sels.Add(Range.FromIndex(offset, item.Length));
+				offset += item.Length;
+			}
+			Selections.Replace(sels);
 		}
 	}
 }

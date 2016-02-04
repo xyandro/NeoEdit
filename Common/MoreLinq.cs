@@ -136,5 +136,27 @@ namespace NeoEdit.Common
 			}
 			return false;
 		}
+
+		public static IEnumerable<IEnumerable<TSource>> Batch<TSource>(this IEnumerable<TSource> source, int batchSize)
+		{
+			List<TSource> batch = null;
+
+			foreach (var item in source)
+			{
+				if (batch == null)
+					batch = new List<TSource>();
+
+				batch.Add(item);
+
+				if (batch.Count == batchSize)
+				{
+					yield return batch;
+					batch = null;
+				}
+			}
+
+			if (batch != null)
+				yield return batch;
+		}
 	}
 }

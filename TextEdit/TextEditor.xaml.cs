@@ -638,6 +638,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
 				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
 				case TextEditCommand.Table_Join: dialogResult = Command_Table_Join_Dialog(); break;
+				case TextEditCommand.Table_Database_GenerateInserts: dialogResult = Command_Table_Database_GenerateInserts_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
 				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
 				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
@@ -857,6 +858,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_Join: Command_Table_Join(dialogResult as JoinDialog.Result); break;
 				case TextEditCommand.Table_Transpose: Command_Table_Transpose(); break;
 				case TextEditCommand.Table_SetVariables: Command_Table_SetVariables(); break;
+				case TextEditCommand.Table_Database_GenerateInserts: Command_Table_Database_GenerateInserts(dialogResult as GenerateInsertsDialog.Result); break;
 				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Columns: Command_Position_Goto(GotoType.Column, shiftDown, dialogResult as GotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Positions: Command_Position_Goto(GotoType.Position, shiftDown, dialogResult as GotoDialog.Result); break;
@@ -2706,14 +2708,19 @@ namespace NeoEdit.TextEdit
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { FullRange };
+			var hasTables = false;
 			foreach (var range in selections)
 			{
 				var table = RunDBSelect(GetString(range));
-				if (table == null)
-					Message.Show("Query run successfully.");
-				else
+				if (table != null)
+				{
 					OpenTable(table);
+					hasTables = true;
+				}
 			}
+
+			if (!hasTables)
+				Message.Show($"Quer{(selections.Count == 1 ? "y" : "ies")} run successfully.");
 		}
 
 		internal void Command_Database_Examine_Dialog()
