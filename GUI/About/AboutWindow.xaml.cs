@@ -19,9 +19,9 @@ namespace NeoEdit.GUI.About
 		{
 			InitializeComponent();
 
-			Product = ((AssemblyProductAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
-			Version = ((AssemblyFileVersionAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
-			Copyright = ((AssemblyCopyrightAttribute)Assembly.GetEntryAssembly().GetCustomAttribute(typeof(AssemblyCopyrightAttribute))).Copyright;
+			Product = ((AssemblyProductAttribute)typeof(AboutWindow).Assembly.GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
+			Version = ((AssemblyFileVersionAttribute)typeof(AboutWindow).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
+			Copyright = ((AssemblyCopyrightAttribute)typeof(AboutWindow).Assembly.GetCustomAttribute(typeof(AssemblyCopyrightAttribute))).Copyright;
 		}
 
 		public static void Run() => new AboutWindow().Show();
