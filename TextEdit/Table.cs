@@ -25,7 +25,17 @@ namespace NeoEdit.TextEdit
 			CountNonNull,
 		}
 
-		public enum JoinType { Inner, Left, Full, Right }
+		public enum JoinType
+		{
+			Inner,
+			Left,
+			Full,
+			Right,
+			Cross,
+			LeftExc,
+			RightExc,
+			FullExc,
+		}
 
 		List<List<string>> Rows { get; set; }
 		List<string> Headers { get; set; }
@@ -216,8 +226,24 @@ namespace NeoEdit.TextEdit
 
 		static object JoinValue(string value) => value == NULL ? new object() : value;
 
+		static IEnumerable<string> CombinedValue(IEnumerable<string> left, IEnumerable<string> right, JoinType joinType)
+		{
+			if (joinType != JoinType.RightExc)
+				foreach (var item in left)
+					yield return item;
+			if (joinType != JoinType.LeftExc)
+				foreach (var item in right)
+					yield return item;
+		}
+
 		static public Table Join(Table leftTable, Table rightTable, List<int> leftColumns, List<int> rightColumns, JoinType joinType)
 		{
+			if (joinType == JoinType.Cross)
+			{
+				leftColumns = new List<int>();
+				rightColumns = new List<int>();
+			}
+
 			if ((leftColumns.Count != rightColumns.Count))
 				throw new ArgumentException("Column counts must match to join");
 
@@ -229,8 +255,12 @@ namespace NeoEdit.TextEdit
 			{
 				case JoinType.Inner: keys = left.Keys.Where(key => right.ContainsKey(key)).ToList(); break;
 				case JoinType.Left: keys = left.Keys.ToList(); break;
+				case JoinType.LeftExc: keys = left.Keys.Where(key => !right.ContainsKey(key)).ToList(); break;
 				case JoinType.Right: keys = right.Keys.ToList(); break;
+				case JoinType.RightExc: keys = right.Keys.Where(key => !left.ContainsKey(key)).ToList(); break;
 				case JoinType.Full: keys = left.Keys.Concat(right.Keys).Distinct().ToList(); break;
+				case JoinType.FullExc: keys = left.Keys.Concat(right.Keys).Distinct().Where(key => (!left.ContainsKey(key)) || (!right.ContainsKey(key))).ToList(); break;
+				case JoinType.Cross: keys = new List<ItemSet<object>> { new ItemSet<object>() }; break;
 				default: throw new ArgumentException("Invalid join");
 			}
 
@@ -238,8 +268,8 @@ namespace NeoEdit.TextEdit
 			var emptyRight = new List<List<string>> { Enumerable.Repeat(NULL, rightTable.NumColumns).ToList() };
 			return new Table
 			{
-				Headers = leftTable.Headers.Concat(rightTable.Headers).ToList(),
-				Rows = keys.SelectMany(key => (left.ContainsKey(key) ? left[key] : emptyLeft).SelectMany(leftValue => (right.ContainsKey(key) ? right[key] : emptyRight).Select(rightValue => leftValue.Concat(rightValue).ToList()))).ToList(),
+				Headers = CombinedValue(leftTable.Headers, rightTable.Headers, joinType).ToList(),
+				Rows = keys.SelectMany(key => (left.ContainsKey(key) ? left[key] : emptyLeft).SelectMany(leftValue => (right.ContainsKey(key) ? right[key] : emptyRight).Select(rightValue => CombinedValue(leftValue, rightValue, joinType).ToList()))).ToList(),
 			};
 		}
 

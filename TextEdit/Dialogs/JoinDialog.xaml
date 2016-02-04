@@ -26,7 +26,7 @@
 		<dialogs:TableDisplay Grid.Row="1" Grid.Column="1" x:Name="rightTable" Table="{Binding LeftTable, ElementName=self}" Selectable="True"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Join Type:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-		<UniformGrid Grid.Row="2" Grid.Column="1" Rows="1" KeyboardNavigation.TabNavigation="Once" KeyboardNavigation.DirectionalNavigation="Contained">
+		<UniformGrid Grid.Row="2" Grid.Column="1" Columns="4" KeyboardNavigation.TabNavigation="Once" KeyboardNavigation.DirectionalNavigation="Contained">
 			<StackPanel Margin="5" Tag="Inner" MouseDown="JoinTypeClick">
 				<Canvas Width="150" Height="100">
 					<Path Fill="CadetBlue">
@@ -78,6 +78,91 @@
 					<Ellipse Stroke="Black" Width="100" Height="100"/>
 				</Canvas>
 				<RadioButton Content="_Right" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Right}" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Margin="5" Tag="Cross" MouseDown="JoinTypeClick">
+				<Canvas Width="150" Height="100">
+					<Path Fill="CadetBlue">
+						<Path.Data>
+							<CombinedGeometry GeometryCombineMode="Union">
+								<CombinedGeometry.Geometry1>
+									<EllipseGeometry Center="50, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry1>
+								<CombinedGeometry.Geometry2>
+									<EllipseGeometry Center="100, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry2>
+							</CombinedGeometry>
+						</Path.Data>
+					</Path>
+					<Ellipse Stroke="Black" Width="100" Height="100"/>
+					<Ellipse Canvas.Left="50" Stroke="Black" Width="100" Height="100"/>
+					<Line X1="30" Y1="30" X2="120" Y2="30" Stroke="Black"/>
+					<Line X1="30" Y1="30" X2="120" Y2="50" Stroke="Black"/>
+					<Line X1="30" Y1="30" X2="120" Y2="70" Stroke="Black"/>
+					<Line X1="30" Y1="50" X2="120" Y2="30" Stroke="Black"/>
+					<Line X1="30" Y1="50" X2="120" Y2="50" Stroke="Black"/>
+					<Line X1="30" Y1="50" X2="120" Y2="70" Stroke="Black"/>
+					<Line X1="30" Y1="70" X2="120" Y2="30" Stroke="Black"/>
+					<Line X1="30" Y1="70" X2="120" Y2="50" Stroke="Black"/>
+					<Line X1="30" Y1="70" X2="120" Y2="70" Stroke="Black"/>
+				</Canvas>
+				<RadioButton Content="_Cross" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Cross}" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Margin="5" Tag="LeftExc" MouseDown="JoinTypeClick">
+				<Canvas Width="150" Height="100">
+					<Path Fill="CadetBlue">
+						<Path.Data>
+							<CombinedGeometry GeometryCombineMode="Exclude">
+								<CombinedGeometry.Geometry1>
+									<EllipseGeometry Center="50, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry1>
+								<CombinedGeometry.Geometry2>
+									<EllipseGeometry Center="100, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry2>
+							</CombinedGeometry>
+						</Path.Data>
+					</Path>
+					<Ellipse Stroke="Black" Width="100" Height="100"/>
+					<Ellipse Canvas.Left="50" Stroke="Black" Width="100" Height="100"/>
+				</Canvas>
+				<RadioButton Content="L_eft Exclusive" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=LeftExc}" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Margin="5" Tag="FullExc" MouseDown="JoinTypeClick">
+				<Canvas Width="150" Height="100">
+					<Path Fill="CadetBlue">
+						<Path.Data>
+							<CombinedGeometry GeometryCombineMode="Xor">
+								<CombinedGeometry.Geometry1>
+									<EllipseGeometry Center="50, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry1>
+								<CombinedGeometry.Geometry2>
+									<EllipseGeometry Center="100, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry2>
+							</CombinedGeometry>
+						</Path.Data>
+					</Path>
+					<Ellipse Stroke="Black" Width="100" Height="100"/>
+					<Ellipse Canvas.Left="50" Stroke="Black" Width="100" Height="100"/>
+				</Canvas>
+				<RadioButton Content="F_ull Exclusive" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=FullExc}" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<StackPanel Margin="5" Tag="RightExc" MouseDown="JoinTypeClick">
+				<Canvas Width="150" Height="100">
+					<Path Fill="CadetBlue">
+						<Path.Data>
+							<CombinedGeometry GeometryCombineMode="Exclude">
+								<CombinedGeometry.Geometry1>
+									<EllipseGeometry Center="100, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry1>
+								<CombinedGeometry.Geometry2>
+									<EllipseGeometry Center="50, 50" RadiusX="50" RadiusY="50"/>
+								</CombinedGeometry.Geometry2>
+							</CombinedGeometry>
+						</Path.Data>
+					</Path>
+					<Ellipse Stroke="Black" Width="100" Height="100"/>
+					<Ellipse Canvas.Left="50" Stroke="Black" Width="100" Height="100"/>
+				</Canvas>
+				<RadioButton Content="Ri_ght Exclusive" GroupName="JoinType" IsChecked="{Binding JoinType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=RightExc}" HorizontalAlignment="Center"/>
 			</StackPanel>
 		</UniformGrid>
 
