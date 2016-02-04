@@ -1078,6 +1078,10 @@ namespace NeoEdit.TextEdit
 		{
 			if (String.IsNullOrEmpty(FileName))
 				return;
+
+			if (!File.Exists(FileName))
+				throw new Exception("This file has been deleted.");
+
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
 				if (new Message
@@ -1588,15 +1592,34 @@ namespace NeoEdit.TextEdit
 				Text = "Are you sure you want to delete these files/directories?",
 				Options = Message.OptionsEnum.YesNo,
 				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() == Message.OptionsEnum.Yes)
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			var files = GetSelectionStrings();
+			var answer = Message.OptionsEnum.None;
+			foreach (var file in files)
 			{
-				var files = GetSelectionStrings();
-				foreach (var file in files)
+				try
 				{
 					if (File.Exists(file))
 						File.Delete(file);
 					if (Directory.Exists(file))
 						Directory.Delete(file, true);
+				}
+				catch (Exception ex)
+				{
+					if (answer != Message.OptionsEnum.YesToAll)
+						answer = new Message
+						{
+							Title = "Confirm",
+							Text = $"An error occurred:\n\n{ex.Message}\n\nContinue?",
+							Options = Message.OptionsEnum.YesNoYesAll,
+							DefaultAccept = Message.OptionsEnum.Yes,
+							DefaultCancel = Message.OptionsEnum.No,
+						}.Show();
+
+					if (answer == Message.OptionsEnum.No)
+						break;
 				}
 			}
 		}
@@ -1925,34 +1948,51 @@ namespace NeoEdit.TextEdit
 			if (strs.Any(pair => (pair.Count != 2) || (pair.Any(item => String.IsNullOrEmpty(item)))))
 				throw new Exception("Format: Source => Destination");
 
-			var sels = strs.Select(pair => new { source = pair[0], dest = pair[1] }).Where(pair => pair.source != pair.dest).ToList();
-			if (sels.Count == 0)
+			var files = strs.Select(pair => new { source = pair[0], dest = pair[1] }).Where(pair => pair.source != pair.dest).ToList();
+			if (files.Count == 0)
 				throw new Exception("Nothing to do!");
 
-			const int invalidCount = 10;
-			var invalid = sels.Select(pair => pair.source).Where(file => !FileOrDirectoryExists(file)).Take(invalidCount);
+			const int InvalidCount = 10;
+			var invalid = files.Select(pair => pair.source).Distinct().Where(file => !FileOrDirectoryExists(file)).Take(InvalidCount).ToList();
 			if (invalid.Any())
-				throw new Exception($"Source file/directory doesn't exist:\n{String.Join("\n", invalid)}");
+				throw new Exception($"Sources don't exist:\n{String.Join("\n", invalid)}");
 
-			invalid = sels.Select(pair => pair.dest).Where(pair => FileOrDirectoryExists(pair)).Take(invalidCount);
+			invalid = files.Select(pair => Path.GetDirectoryName(pair.dest)).Distinct().Where(dir => !Directory.Exists(dir)).Take(InvalidCount).ToList();
 			if (invalid.Any())
-				throw new Exception($"Destination file/directory already exists:\n{String.Join("\n", invalid)}");
+				throw new Exception($"Directories don't exist:\n{String.Join("\n", invalid)}");
 
-			invalid = sels.Select(pair => Path.GetDirectoryName(pair.dest)).Distinct().Where(dir => !Directory.Exists(dir)).Take(invalidCount);
+			// If user specified a file and a directory, assume they want the file (with the same name) in that directory
+			files = files.Select(pair => new { source = pair.source, dest = (File.Exists(pair.source)) && (Directory.Exists(pair.dest)) ? Path.Combine(pair.dest, Path.GetFileName(pair.source)) : pair.dest }).ToList();
+
+			invalid = files.Where(pair => (Directory.Exists(pair.dest)) || ((Directory.Exists(pair.source)) && (File.Exists(pair.dest)))).Select(pair => pair.dest).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
-				throw new Exception($"Directory doesn't exist:\n{String.Join("\n", invalid)}");
+				throw new Exception($"Destinations already exist:\n{String.Join("\n", invalid)}");
 
 			if (new Message
 			{
 				Title = "Confirm",
-				Text = $"Are you sure you want to {(move ? "move" : "copy")} {(sels.Count == 1 ? "this file" : $"these {sels.Count} files")}?",
+				Text = $"Are you sure you want to {(move ? "move" : "copy")} these {files.Count} files/directories?",
 				Options = Message.OptionsEnum.YesNo,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 
-			foreach (var pair in sels)
+			invalid = files.Select(pair => pair.dest).Where(pair => File.Exists(pair)).Distinct().Take(InvalidCount).ToList();
+			if (invalid.Any())
+			{
+				if (new Message
+				{
+					Title = "Confirm",
+					Text = $"Are you sure you want to overwrite these files:\n{String.Join("\n", invalid)}",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() != Message.OptionsEnum.Yes)
+					return;
+			}
+
+			foreach (var pair in files)
 				if (Directory.Exists(pair.source))
 				{
 					if (move)
@@ -1962,6 +2002,9 @@ namespace NeoEdit.TextEdit
 				}
 				else
 				{
+					if (File.Exists(pair.dest))
+						File.Delete(pair.dest);
+
 					if (move)
 						File.Move(pair.source, pair.dest);
 					else

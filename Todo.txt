@@ -10,7 +10,6 @@ Can't open any window if current directory is invalid (like when running off a n
 In active list add number of selections, allow sort, allow typing to find file
 
 Text:
-Continue after error deleting files (perhaps with dialog Yes/No/All)
 Files: Select/etc on svn status (ignore/modified)
 Distinct operations by marked region (series/etc within region)
 Select square (right mouse button)
@@ -26,9 +25,7 @@ Nest macros
 ~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
 Get DLL/EXE version info
 Pull directory contents, including sizes/times (useful for diffing, others)
-Allow override for copying/moving existing files
 Add diff buffer (running diff with a maximum of 1024? lines)
-Allow copy to file->directory (doesn't change filename)
 Add(replace?) column based on other columns with expression
 Add a common dialog for expressions which shows x results
 Improve previous results (such as previous finds); make static value which uses own backing store
