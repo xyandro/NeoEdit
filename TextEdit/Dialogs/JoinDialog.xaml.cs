@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -34,8 +31,6 @@ namespace NeoEdit.TextEdit.Dialogs
 			RightTable = rightTable;
 			JoinType = Table.JoinType.Left;
 		}
-
-		void JoinTypeClick(object sender, MouseButtonEventArgs e) => JoinType = Helpers.ParseEnum<Table.JoinType>((sender as StackPanel)?.Tag as string);
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)

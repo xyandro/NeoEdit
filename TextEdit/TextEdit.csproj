@@ -219,6 +219,13 @@
     <Compile Include="Dialogs\JoinDialog.xaml.cs">
       <DependentUpon>JoinDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\JoinDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\JoinDisplay.xaml.cs">
+      <DependentUpon>JoinDisplay.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\LimitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
