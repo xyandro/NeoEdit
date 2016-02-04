@@ -153,6 +153,7 @@ namespace NeoEdit.TextEdit
 				case Parser.ParserType.Columns:
 					{
 						var newLineChars = new char[] { '\r', '\n' };
+						result = result.Select(row => row.Select(value => value.Trim()).ToList()).ToList();
 						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
 						return String.Join("", result.AsParallel().AsOrdered().Select(line => "║ " + String.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending));
 					}
