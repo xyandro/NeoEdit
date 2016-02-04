@@ -313,6 +313,7 @@
 		<Separator/>
 		<MenuItem Header="_Database">
 			<textEdit:TextEditMenuItem Header="Generate _INSERTs" CommandEnum="Table_Database_GenerateInserts"/>
+			<textEdit:TextEditMenuItem Header="Generate _UPDATEs" CommandEnum="Table_Database_GenerateUpdates"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Position">

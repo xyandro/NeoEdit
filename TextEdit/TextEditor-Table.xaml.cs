@@ -117,5 +117,24 @@ namespace NeoEdit.TextEdit
 			}
 			Selections.Replace(sels);
 		}
+
+		internal GenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog() => GenerateUpdatesDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+
+		internal void Command_Table_Database_GenerateUpdates(GenerateUpdatesDialog.Result result)
+		{
+			var table = GetTable();
+
+			var output = Enumerable.Range(0, table.NumRows).Select(row => $"UPDATE {result.TableName} SET {string.Join(", ", result.Update.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Data.DefaultEnding}").ToList();
+			Replace(new List<Range> { FullRange }, new List<string> { string.Join("", output) });
+
+			var offset = 0;
+			var sels = new List<Range>();
+			foreach (var item in output)
+			{
+				sels.Add(Range.FromIndex(offset, item.Length));
+				offset += item.Length;
+			}
+			Selections.Replace(sels);
+		}
 	}
 }

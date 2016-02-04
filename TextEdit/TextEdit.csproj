@@ -198,6 +198,13 @@
     <Compile Include="Dialogs\GenerateInsertsDialog.xaml.cs">
       <DependentUpon>GenerateInsertsDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\GenerateUpdatesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GenerateUpdatesDialog.xaml.cs">
+      <DependentUpon>GenerateUpdatesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\GetUniqueNamesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
