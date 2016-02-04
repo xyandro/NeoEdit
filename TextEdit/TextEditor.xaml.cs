@@ -583,7 +583,32 @@ namespace NeoEdit.TextEdit
 			if (((Data.NumChars >> 20) < 50) && (!VerifyCanFullyEncode()))
 				return;
 
-			File.WriteAllBytes(fileName, FileEncryptor.Encrypt(Data.GetBytes(CodePage), AESKey));
+			var triedReadOnly = false;
+			while (true)
+			{
+				try
+				{
+					File.WriteAllBytes(fileName, FileEncryptor.Encrypt(Data.GetBytes(CodePage), AESKey));
+					break;
+				}
+				catch (UnauthorizedAccessException)
+				{
+					if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
+						throw;
+
+					if (new Message
+					{
+						Title = "Confirm",
+						Text = "Save failed.  Remove read-only flag?",
+						Options = Message.OptionsEnum.YesNo,
+						DefaultAccept = Message.OptionsEnum.Yes,
+						DefaultCancel = Message.OptionsEnum.No,
+					}.Show() != Message.OptionsEnum.Yes)
+						throw;
+					new FileInfo(fileName).IsReadOnly = false;
+					triedReadOnly = true;
+				}
+			}
 			fileLastWrite = new FileInfo(fileName).LastWriteTime;
 			SetModifiedFlag(false);
 			FileName = fileName;

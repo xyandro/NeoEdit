@@ -17,7 +17,6 @@ Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Allow user to disable undo/redo for faster performance
 Submit forms
-Override readonly, access denied (UAC required?)
 Go back to last selections
 Change tab order when doc closed (match visual studio or something)
 Time zones
