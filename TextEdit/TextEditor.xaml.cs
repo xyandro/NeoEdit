@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Globalization;
@@ -677,6 +678,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
 				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
+				case TextEditCommand.Database_QueryTable: dialogResult = Command_Database_QueryTable_Dialog(); break;
 				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
@@ -928,6 +930,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_ScanPorts: Command_Network_ScanPorts(dialogResult as ScanPortsDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_ExecuteQuery: Command_Database_ExecuteQuery(); break;
+				case TextEditCommand.Database_QueryTable: Command_Database_QueryTable(dialogResult as string); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
@@ -2794,6 +2797,24 @@ namespace NeoEdit.TextEdit
 			if (!hasTables)
 				Message.Show($"Quer{(selections.Count == 1 ? "y" : "ies")} run successfully.");
 		}
+
+		internal string Command_Database_QueryTable_Dialog()
+		{
+			ValidateConnection();
+			var tableSchema = dbConnection.GetSchema("Tables");
+			var tableCatalogColumn = tableSchema.Columns["table_catalog"];
+			var tableSchemaColumn = tableSchema.Columns["table_schema"];
+			var tableNameColumn = tableSchema.Columns["table_name"];
+			List<string> tables;
+			if (dbConnection is MySql.Data.MySqlClient.MySqlConnection)
+				tables = tableSchema.Rows.Cast<DataRow>().Select(row => $"{row[tableSchemaColumn]}.{row[tableNameColumn]}").ToList();
+			else
+				tables = tableSchema.Rows.Cast<DataRow>().Select(row => $"{row[tableCatalogColumn]}.{row[tableSchemaColumn]}.{row[tableNameColumn]}").ToList();
+
+			return QueryTableDialog.Run(WindowParent, tables);
+		}
+
+		internal void Command_Database_QueryTable(string result) => ReplaceSelections(result);
 
 		internal void Command_Database_Examine_Dialog()
 		{

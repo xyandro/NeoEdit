@@ -7,7 +7,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -37,7 +36,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			Loaded += (s, e) => SetupSelection();
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
+
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
 			if ((Table == null) || (Table.NumColumns == 0))
@@ -46,6 +47,20 @@ namespace NeoEdit.TextEdit.Dialogs
 			e.Handled = true;
 			switch (e.Key)
 			{
+				case Key.A:
+					if ((!controlDown) || (!Selectable))
+						e.Handled = false;
+					else
+						for (var ctr = 0; ctr < Table.NumColumns; ++ctr)
+							if (!Selected.Contains(ctr))
+								Selected.Add(ctr);
+					break;
+				case Key.N:
+					if ((!controlDown) || (!Selectable))
+						e.Handled = false;
+					else
+						Selected.Clear();
+					break;
 				case Key.Left: --SelectedColumn; break;
 				case Key.Right: ++SelectedColumn; break;
 				case Key.Home: SelectedColumn = 0; break;
@@ -101,7 +116,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 			for (var row = 0; row <= Table.NumRows; ++row)
 			{
-				tableGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(Font.Size + 2) });
+				tableGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 				for (var column = 0; column < Table.NumColumns; ++column)
 				{
 					var text = new TextBlock { Padding = new Thickness(5, 0, 5, 0) };
@@ -117,6 +132,8 @@ namespace NeoEdit.TextEdit.Dialogs
 					tableGrid.Children.Add(text);
 				}
 			}
+
+			tableGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
 			SetupSelection();
 		}
@@ -139,14 +156,14 @@ namespace NeoEdit.TextEdit.Dialogs
 			var selection = new Rectangle { Fill = new LinearGradientBrush(Colors.LightBlue, Colors.AliceBlue, 0) };
 			tableGrid.Children.Insert(0, selection);
 			Grid.SetColumn(selection, SelectedColumn);
-			Grid.SetRowSpan(selection, Table.NumRows + 1);
+			Grid.SetRowSpan(selection, tableGrid.RowDefinitions.Count);
 
 			foreach (var selected in Selected)
 			{
 				var rect = new Rectangle { Fill = new LinearGradientBrush(Colors.LightGreen, Colors.GreenYellow, 0) { Opacity = .7 } };
 				tableGrid.Children.Insert(1, rect);
 				Grid.SetColumn(rect, selected);
-				Grid.SetRowSpan(rect, Table.NumRows + 1);
+				Grid.SetRowSpan(rect, tableGrid.RowDefinitions.Count);
 			}
 
 			var columnLeft = tableGrid.ColumnDefinitions.Take(SelectedColumn).Sum(columnDef => columnDef.ActualWidth);

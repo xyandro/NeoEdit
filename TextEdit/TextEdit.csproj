@@ -289,6 +289,13 @@
     <Compile Include="Dialogs\PingDialog.xaml.cs">
       <DependentUpon>PingDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\QueryTableDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\QueryTableDialog.xaml.cs">
+      <DependentUpon>QueryTableDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\RandomDataDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -2,7 +2,6 @@ All:
 Add command prompt
 Remove native dlls (add to mixed)
 Add TFS source control
-Enable warnings as errors
 
 Disk:
 Move timestamp (possibly others) from TextEditor
@@ -32,7 +31,6 @@ Improve previous results (such as previous finds); make static value which uses 
 Add Table->Select column which will select all columns any selection is in
 Allow different display name for files (prep for general purpose diff)
 Ignore whitespace (and probably other menu selections) can't be in a macro
-Add DB query builder
 Copy positions/goto copied positions (useful for applying diff)
 Opening new file in diff removes diff
 Fix warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification (https://social.msdn.microsoft.com/Forums/vstudio/en-US/d605bec7-df91-4272-be17-19db7394e0fd/how-to-get-rid-of-warning-lnk4075-ignoring-editandcontinue-due-to-optlbr-specification?forum=vcgeneral)
