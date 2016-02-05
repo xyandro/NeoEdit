@@ -549,6 +549,18 @@
 			<textEdit:TextEditMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
 			<textEdit:TextEditMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
 		</MenuItem>
+		<MenuItem Header="_Append">
+			<MenuItem Header="_Quick">
+				<textEdit:TextEditMenuItem Header="Append _6" CommandEnum="Macro_Append_Quick_6"/>
+				<textEdit:TextEditMenuItem Header="Append _7" CommandEnum="Macro_Append_Quick_7"/>
+				<textEdit:TextEditMenuItem Header="Append _8" CommandEnum="Macro_Append_Quick_8"/>
+				<textEdit:TextEditMenuItem Header="Append _9" CommandEnum="Macro_Append_Quick_9"/>
+				<textEdit:TextEditMenuItem Header="Append 1_0" CommandEnum="Macro_Append_Quick_10"/>
+				<textEdit:TextEditMenuItem Header="Append 1_1" CommandEnum="Macro_Append_Quick_11"/>
+				<textEdit:TextEditMenuItem Header="Append 1_2" CommandEnum="Macro_Append_Quick_12"/>
+			</MenuItem>
+			<textEdit:TextEditMenuItem Header="_Append" CommandEnum="Macro_Append_Append"/>
+		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Play">
 			<MenuItem Header="_Quick">

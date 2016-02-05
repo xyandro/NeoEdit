@@ -209,32 +209,44 @@ namespace NeoEdit.TextEdit
 			AddTextEditor(bytes: data, modified: false);
 		}
 
-		const string quickMacroTemplate = "QuickText{0}.xml";
-		void Macro_Open_Quick(int quickNum) => AddTextEditor(Path.Combine(Macro<TextEditCommand>.MacroDirectory, String.Format(quickMacroTemplate, quickNum)));
+		string QuickMacro(int num) => $"QuickText{num}.xml";
+		void Macro_Open_Quick(int quickNum) => AddTextEditor(Path.Combine(Macro<TextEditCommand>.MacroDirectory, QuickMacro(quickNum)));
 
 		void Command_Macro_Record_Quick(int quickNum)
 		{
 			if (recordingMacro == null)
 				Command_Macro_Record_Record();
 			else
-				Command_Macro_Record_StopRecording(String.Format(quickMacroTemplate, quickNum));
+				Command_Macro_Record_StopRecording(QuickMacro(quickNum));
 		}
 
-		void Command_Macro_Play_Quick(int quickNum) => Macro<TextEditCommand>.Load(String.Format(quickMacroTemplate, quickNum), true).Play(this, playing => macroPlaying = playing);
+		void Command_Macro_Append_Quick(int quickNum)
+		{
+			if (recordingMacro == null)
+				recordingMacro = Macro<TextEditCommand>.Load(QuickMacro(quickNum), true);
+			else
+				Command_Macro_Record_StopRecording(QuickMacro(quickNum));
+		}
+
+		void Command_Macro_Append_Append()
+		{
+			ValidateNoCurrentMacro();
+			recordingMacro = Macro<TextEditCommand>.Load();
+		}
+
+		void Command_Macro_Play_Quick(int quickNum) => Macro<TextEditCommand>.Load(QuickMacro(quickNum), true).Play(this, playing => macroPlaying = playing);
+
+		void ValidateNoCurrentMacro()
+		{
+			if (recordingMacro == null)
+				return;
+
+			throw new Exception("Cannot start recording; recording is already in progess.");
+		}
 
 		void Command_Macro_Record_Record()
 		{
-			if (recordingMacro != null)
-			{
-				new Message
-				{
-					Title = "Error",
-					Text = $"Cannot start recording; recording is already in progess.",
-					Options = Message.OptionsEnum.Ok,
-				}.Show();
-				return;
-			}
-
+			ValidateNoCurrentMacro();
 			recordingMacro = new Macro<TextEditCommand>();
 		}
 
@@ -319,6 +331,14 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Macro_Record_Quick_12: Command_Macro_Record_Quick(12); return;
 				case TextEditCommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
 				case TextEditCommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
+				case TextEditCommand.Macro_Append_Quick_6: Command_Macro_Append_Quick(6); return;
+				case TextEditCommand.Macro_Append_Quick_7: Command_Macro_Append_Quick(7); return;
+				case TextEditCommand.Macro_Append_Quick_8: Command_Macro_Append_Quick(8); return;
+				case TextEditCommand.Macro_Append_Quick_9: Command_Macro_Append_Quick(9); return;
+				case TextEditCommand.Macro_Append_Quick_10: Command_Macro_Append_Quick(10); return;
+				case TextEditCommand.Macro_Append_Quick_11: Command_Macro_Append_Quick(11); return;
+				case TextEditCommand.Macro_Append_Quick_12: Command_Macro_Append_Quick(12); return;
+				case TextEditCommand.Macro_Append_Append: Command_Macro_Append_Append(); return;
 				case TextEditCommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
 				case TextEditCommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
 				case TextEditCommand.Macro_Play_Quick_8: Command_Macro_Play_Quick(8); return;
