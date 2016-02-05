@@ -45,7 +45,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Content="Search for:"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="1" x:Name="findText" Margin="0,0,0,10" Text="{Binding FindText, ElementName=self, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" AutoSuggestionList="{Binding History, ElementName=self}"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="1" x:Name="findText" Margin="0,0,0,10" Text="{Binding FindText, ElementName=self, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" CompletionTag="FindBinary"/>
 
 		<StackPanel Grid.Row="2" Orientation="Horizontal">
 			<Label Content="Show:" Margin="0,0,5,0"/>

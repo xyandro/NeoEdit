@@ -219,6 +219,11 @@ namespace NeoEdit.Common
 			return sb.ToString();
 		}
 
+		public static string CoalesceNullOrEmpty(this string input, params string[] inputs) => new[] { input }.Concat(inputs).FirstOrDefault(str => !string.IsNullOrEmpty(str));
+		public static string CoalesceNullOrEmpty(params string[] inputs) => inputs.FirstOrDefault(str => !string.IsNullOrEmpty(str));
+		public static string CoalesceNullOrWhiteSpace(this string input, params string[] inputs) => string.IsNullOrWhiteSpace(input) ? CoalesceNullOrWhiteSpace(inputs) : input;
+		public static string CoalesceNullOrWhiteSpace(params string[] inputs) => inputs.FirstOrDefault(str => !string.IsNullOrWhiteSpace(str));
+
 		public static string ToSpacedHex(this long input, int len = 16, int spacing = 4)
 		{
 			var format = String.Format(String.Format("{{0:X{0}}}", len), input);

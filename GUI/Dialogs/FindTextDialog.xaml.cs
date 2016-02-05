@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.GUI.Dialogs
@@ -53,13 +53,7 @@ namespace NeoEdit.GUI.Dialogs
 		public bool RemoveMatching { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IncludeEndings { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public ObservableCollection<string> History { get { return UIHelper<FindTextDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public ObservableCollection<string> ReplaceHistory { get { return UIHelper<FindTextDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 
-		readonly static ObservableCollection<string> StaticHistory = new ObservableCollection<string>();
-		readonly static ObservableCollection<string> StaticReplaceHistory = new ObservableCollection<string>();
 		static bool wholeWordsVal, matchCaseVal, isRegexVal, regexGroupsVal, includeEndingsVal;
 
 		static FindTextDialog()
@@ -76,9 +70,7 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			InitializeComponent();
 
-			History = StaticHistory;
-			ReplaceHistory = StaticReplaceHistory;
-			Text = _Text ?? "";
+			Text = _Text.CoalesceNullOrEmpty(text.GetLastSuggestion());
 			Replace = "";
 			SelectionOnly = _SelectionOnly;
 			WholeWords = wholeWordsVal;
@@ -86,9 +78,6 @@ namespace NeoEdit.GUI.Dialogs
 			RegexGroups = regexGroupsVal;
 			IsRegex = isRegexVal;
 			IncludeEndings = includeEndingsVal;
-
-			if ((String.IsNullOrEmpty(Text)) && (History.Count != 0))
-				Text = History[0];
 
 			switch (findType)
 			{
@@ -99,8 +88,7 @@ namespace NeoEdit.GUI.Dialogs
 					replaceLabel.Visibility = replace.Visibility = replaceButton.Visibility = Visibility.Collapsed;
 					break;
 				case FindTextType.Replace:
-					if (ReplaceHistory.Count != 0)
-						Replace = ReplaceHistory[0];
+					Replace = replace.GetLastSuggestion();
 					byGroup.Visibility = find.Visibility = selectAll.Visibility = keepMatching.Visibility = removeMatching.Visibility = Visibility.Collapsed;
 					RegexGroups = false;
 					break;
@@ -137,13 +125,8 @@ namespace NeoEdit.GUI.Dialogs
 			includeEndingsVal = IncludeEndings;
 
 			text = Text;
-			History.Remove(text);
-			History.Insert(0, text);
-			if (!String.IsNullOrEmpty(replace))
-			{
-				ReplaceHistory.Remove(replace);
-				ReplaceHistory.Insert(0, replace);
-			}
+			this.text.AddCurrentSuggestion();
+			this.replace.AddCurrentSuggestion();
 
 			DialogResult = true;
 		}

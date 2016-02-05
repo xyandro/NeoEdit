@@ -55,8 +55,6 @@ namespace NeoEdit.GUI.Dialogs
 		public bool MatchCase { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		ObservableCollection<CodePageCheckBox> EncodingCheckBoxes { get { return UIHelper<FindBinaryDialog>.GetPropValue<ObservableCollection<CodePageCheckBox>>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public ObservableCollection<string> History { get { return UIHelper<FindBinaryDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
 
 		static bool savedShowLE = true;
 		static bool savedShowBE = false;
@@ -64,7 +62,6 @@ namespace NeoEdit.GUI.Dialogs
 		static bool savedShowFloat = false;
 		static bool savedShowStr = true;
 		static bool savedMatchCase = false;
-		readonly static ObservableCollection<string> staticHistory = new ObservableCollection<string>();
 		readonly List<CodePageCheckBox> checkBoxes;
 		readonly static HashSet<Coder.CodePage> defaultCodePages = new HashSet<Coder.CodePage>(Coder.GetNumericCodePages().Concat(new Coder.CodePage[] { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE }));
 		readonly static HashSet<Coder.CodePage> savedCodePages = new HashSet<Coder.CodePage>(defaultCodePages);
@@ -75,7 +72,6 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			InitializeComponent();
 
-			History = staticHistory;
 			EncodingCheckBoxes = new ObservableCollection<CodePageCheckBox>(Coder.GetStringCodePages().Select(codePage => new CodePageCheckBox { CodePage = codePage }));
 			checkBoxes = this.FindLogicalChildren<CodePageCheckBox>().Concat(EncodingCheckBoxes).ToList();
 			codePages.PreviewKeyDown += (s, e) =>
@@ -89,8 +85,7 @@ namespace NeoEdit.GUI.Dialogs
 				}
 			};
 
-			if ((String.IsNullOrEmpty(FindText)) && (History.Count != 0))
-				FindText = History[0];
+			FindText = findText.GetLastSuggestion();
 
 			ShowLE = savedShowLE;
 			ShowBE = savedShowBE;
@@ -136,8 +131,7 @@ namespace NeoEdit.GUI.Dialogs
 
 			result = new Result(FindText, new Searcher(data));
 
-			History.Remove(FindText);
-			History.Insert(0, FindText);
+			findText.AddCurrentSuggestion();
 
 			savedShowLE = ShowLE;
 			savedShowBE = ShowBE;
