@@ -51,7 +51,9 @@ namespace NeoEdit.Common.NEClipboards
 			++ExternalRevision;
 
 			var text = dataObj.GetData(typeof(string)) as string;
-			var strings = new List<string> { text };
+			var strings = new List<string>();
+			if (text != null)
+				strings.Add(text);
 			var isCut = false;
 
 			var dropList = Clipboard.GetFileDropList();
