@@ -3,83 +3,34 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters"
-	Title="Expression" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=expression}">
+	Title="Expression" SizeToContent="Height" Width="1000" FocusManager.FocusedElement="{Binding ElementName=expression}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="400"/>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="400"/>
+			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
 			<RowDefinition Height="10"/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Expression:" Target="{Binding ElementName=expression}"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Name="expression" Width="500" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="GetExpressionDialog"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Examples:"/>
-		<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Example1, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="2" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="2" Grid.Column="3" Name="example1Value" Text="{Binding Example1Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
+		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" DisplayResults="10" NumResults="{Binding NumRows, ElementName=self}" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}" IsValid="{Binding IsValid, ElementName=self}"/>
 
-		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Example2, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="3" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="3" Grid.Column="3" Name="example2Value" Text="{Binding Example2Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Example3, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="4" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="4" Grid.Column="3" Name="example3Value" Text="{Binding Example3Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Example4, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="5" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="5" Grid.Column="3" Name="example4Value" Text="{Binding Example4Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Example5, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="6" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="6" Grid.Column="3" Name="example5Value" Text="{Binding Example5Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Example6, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="7" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="7" Grid.Column="3" Name="example6Value" Text="{Binding Example6Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Example7, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="8" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="8" Grid.Column="3" Name="example7Value" Text="{Binding Example7Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Example8, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="9" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="9" Grid.Column="3" Name="example8Value" Text="{Binding Example8Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<TextBox Grid.Row="10" Grid.Column="1" Text="{Binding Example9, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="10" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="10" Grid.Column="3" Name="example9Value" Text="{Binding Example9Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<TextBox Grid.Row="11" Grid.Column="1" Text="{Binding Example10, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-		<Label Grid.Row="11" Grid.Column="2" Content="->"/>
-		<TextBox Grid.Row="11" Grid.Column="3" Name="example10Value" Text="{Binding Example10Value, ElementName=self, Converter={guiConverters:SingleLineConverter}}" IsEnabled="False"/>
-
-		<UniformGrid Grid.Row="13" Grid.ColumnSpan="4" HorizontalAlignment="Left" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
 			<Button Click="ExpressionHelp" Content="Expression _Help" Padding="10,1"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="13" Grid.ColumnSpan="4" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

@@ -45,6 +45,13 @@
     <Compile Include="Controls\ModalDialog.cs" />
     <Compile Include="Controls\MultiMenuItem.cs" />
     <Compile Include="Controls\NECommand.cs" />
+    <Page Include="Controls\NEExpressionResults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\NEExpressionResults.xaml.cs">
+      <DependentUpon>NEExpressionResults.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NEWindow.cs" />
     <Page Include="Controls\NumericUpDown.xaml">
       <SubType>Designer</SubType>
