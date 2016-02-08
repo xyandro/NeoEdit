@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -42,7 +43,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		public TextLocation Location { get { return UIHelper<WidthDialog>.GetPropValue<TextLocation>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsSelect { get { return UIHelper<WidthDialog>.GetPropValue<bool>(this); } set { UIHelper<WidthDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; }
+		public NEVariables Variables { get; }
 
 		static WidthDialog()
 		{
@@ -51,9 +52,9 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		readonly int minLength, maxLength;
-		WidthDialog(int minLength, int maxLength, bool numeric, bool isSelect, Dictionary<string, List<object>> expressionData)
+		WidthDialog(int minLength, int maxLength, bool numeric, bool isSelect, NEVariables variables)
 		{
-			ExpressionData = expressionData;
+			Variables = variables;
 			InitializeComponent();
 
 			this.minLength = minLength;
@@ -99,9 +100,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, int minLength, int maxLength, bool numeric, bool isSelect, Dictionary<string, List<object>> expressionData)
+		public static Result Run(Window parent, int minLength, int maxLength, bool numeric, bool isSelect, NEVariables variables)
 		{
-			var dialog = new WidthDialog(minLength, maxLength, numeric, isSelect, expressionData) { Owner = parent };
+			var dialog = new WidthDialog(minLength, maxLength, numeric, isSelect, variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -13,13 +14,13 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		[DepProp]
 		public string Expression { get { return UIHelper<GotoDialog>.GetPropValue<string>(this); } set { UIHelper<GotoDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; }
+		public NEVariables Variables { get; }
 
 		static GotoDialog() { UIHelper<GotoDialog>.Register(); }
 
-		GotoDialog(GotoType gotoType, int value, Dictionary<string, List<object>> expressionData)
+		GotoDialog(GotoType gotoType, int value, NEVariables variables)
 		{
-			ExpressionData = expressionData;
+			Variables = variables;
 			InitializeComponent();
 
 			Title = $"Go To {gotoType}";
@@ -35,9 +36,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, GotoType gotoType, int startValue, Dictionary<string, List<object>> expressionData)
+		public static Result Run(Window parent, GotoType gotoType, int startValue, NEVariables variables)
 		{
-			var dialog = new GotoDialog(gotoType, startValue, expressionData) { Owner = parent };
+			var dialog = new GotoDialog(gotoType, startValue, variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

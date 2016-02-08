@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -16,13 +17,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string Expression { get { return UIHelper<RandomDataDialog>.GetPropValue<string>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Chars { get { return UIHelper<RandomDataDialog>.GetPropValue<string>(this); } set { UIHelper<RandomDataDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; }
+		public NEVariables Variables { get; }
 
 		static RandomDataDialog() { UIHelper<RandomDataDialog>.Register(); }
 
-		RandomDataDialog(Dictionary<string, List<object>> expressionData)
+		RandomDataDialog(NEVariables variables)
 		{
-			ExpressionData = expressionData;
+			Variables = variables;
 			InitializeComponent();
 			Chars = "a-zA-Z";
 		}
@@ -40,9 +41,9 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display();
 
-		public static Result Run(Dictionary<string, List<object>> expressionData, Window parent)
+		public static Result Run(NEVariables variables, Window parent)
 		{
-			var dialog = new RandomDataDialog(expressionData) { Owner = parent };
+			var dialog = new RandomDataDialog(variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

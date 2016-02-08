@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -16,13 +17,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string Expression { get { return UIHelper<RepeatDialog>.GetPropValue<string>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool SelectRepetitions { get { return UIHelper<RepeatDialog>.GetPropValue<bool>(this); } set { UIHelper<RepeatDialog>.SetPropValue(this, value); } }
-		public Dictionary<string, List<object>> ExpressionData { get; }
+		public NEVariables Variables { get; }
 
 		static RepeatDialog() { UIHelper<RepeatDialog>.Register(); }
 
-		RepeatDialog(bool selectRepetitions, Dictionary<string, List<object>> expressionData)
+		RepeatDialog(bool selectRepetitions, NEVariables variables)
 		{
-			ExpressionData = expressionData;
+			Variables = variables;
 			InitializeComponent();
 
 			Expression = "1";
@@ -38,9 +39,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, bool selectRepetitions, Dictionary<string, List<object>> expressionData)
+		static public Result Run(Window parent, bool selectRepetitions, NEVariables variables)
 		{
-			var dialog = new RepeatDialog(selectRepetitions, expressionData) { Owner = parent };
+			var dialog = new RepeatDialog(selectRepetitions, variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

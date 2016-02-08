@@ -21,6 +21,9 @@
     <Compile Include="Expressions\ExpressionUnits.cs" />
     <Compile Include="Expressions\ExpressionUnitsConversion.cs" />
     <Compile Include="Expressions\NEExpression.cs" />
+    <Compile Include="Expressions\NEVariable.cs" />
+    <Compile Include="Expressions\NEVariableInitializer.cs" />
+    <Compile Include="Expressions\NEVariables.cs" />
     <Compile Include="Expressions\Parser\ExpressionBaseVisitor.cs" />
     <Compile Include="Expressions\Parser\ExpressionLexer.cs" />
     <Compile Include="Expressions\Parser\ExpressionParser.cs" />

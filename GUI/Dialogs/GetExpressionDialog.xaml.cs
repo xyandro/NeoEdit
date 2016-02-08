@@ -63,16 +63,17 @@ namespace NeoEdit.GUI.Dialogs
 			UIHelper<GetExpressionDialog>.AddCallback(a => a.Expression, (obj, o, n) => obj.EvaluateExamples());
 		}
 
-		readonly Dictionary<string, List<object>> expressionData;
+		readonly NEVariables variables;
 		readonly Action helpDialog;
-		GetExpressionDialog(Dictionary<string, List<object>> expressionData, Action helpDialog)
+		GetExpressionDialog(NEVariables variables, Action helpDialog)
 		{
-			this.expressionData = expressionData;
+			this.variables = variables;
 			this.helpDialog = helpDialog;
 
 			InitializeComponent();
 
-			var list = expressionData["x"];
+			variables.Prepare(new[] { "x" });
+			var list = variables.GetValues("x");
 			Example1 = (list.Count > 0) && (list[0] != null) ? list[0].ToString() : null;
 			Example2 = (list.Count > 1) && (list[1] != null) ? list[1].ToString() : null;
 			Example3 = (list.Count > 2) && (list[2] != null) ? list[2].ToString() : null;
@@ -94,16 +95,17 @@ namespace NeoEdit.GUI.Dialogs
 			try
 			{
 				var expression = new NEExpression(Expression);
-				if (Example1 != null) Example1Value = expression.EvaluateRow(expressionData, 0);
-				if (Example2 != null) Example2Value = expression.EvaluateRow(expressionData, 1);
-				if (Example3 != null) Example3Value = expression.EvaluateRow(expressionData, 2);
-				if (Example4 != null) Example4Value = expression.EvaluateRow(expressionData, 3);
-				if (Example5 != null) Example5Value = expression.EvaluateRow(expressionData, 4);
-				if (Example6 != null) Example6Value = expression.EvaluateRow(expressionData, 5);
-				if (Example7 != null) Example7Value = expression.EvaluateRow(expressionData, 6);
-				if (Example8 != null) Example8Value = expression.EvaluateRow(expressionData, 7);
-				if (Example9 != null) Example9Value = expression.EvaluateRow(expressionData, 8);
-				if (Example10 != null) Example10Value = expression.EvaluateRow(expressionData, 9);
+				var examples = expression.EvaluateRows(variables);
+				if (Example1 != null) Example1Value = examples[0];
+				if (Example2 != null) Example2Value = examples[1];
+				if (Example3 != null) Example3Value = examples[2];
+				if (Example4 != null) Example4Value = examples[3];
+				if (Example5 != null) Example5Value = examples[4];
+				if (Example6 != null) Example6Value = examples[5];
+				if (Example7 != null) Example7Value = examples[6];
+				if (Example8 != null) Example8Value = examples[7];
+				if (Example9 != null) Example9Value = examples[8];
+				if (Example10 != null) Example10Value = examples[9];
 				valid = true;
 			}
 			catch
@@ -137,9 +139,9 @@ namespace NeoEdit.GUI.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, Dictionary<string, List<object>> examples, Action helpDialog = null)
+		static public Result Run(Window parent, NEVariables variables, Action helpDialog = null)
 		{
-			var dialog = new GetExpressionDialog(examples, helpDialog) { Owner = parent };
+			var dialog = new GetExpressionDialog(variables, helpDialog) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

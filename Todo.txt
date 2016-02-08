@@ -34,7 +34,6 @@ Copy positions/goto copied positions (useful for applying diff)
 Opening new file in diff removes diff
 Fix warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification (https://social.msdn.microsoft.com/Forums/vstudio/en-US/d605bec7-df91-4272-be17-19db7394e0fd/how-to-get-rid-of-warning-lnk4075-ignoring-editandcontinue-due-to-optlbr-specification?forum=vcgeneral)
 Refactor macro code
-"1 m/s => simple" != 1.9438444924406 kn
 Expressions: use . and x instead of + and * for strings
 
 View:

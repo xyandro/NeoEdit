@@ -154,18 +154,17 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("3.14159265358979 rad", new NEExpression("acos(-1)").Evaluate().ToString());
 			Assert.AreEqual("180 deg", new NEExpression("acos(-1) => deg").Evaluate().ToString());
 
-			var dict = new Dictionary<string, object>
-			{
-				["x"] = 0xdeadbeef,
-				["y"] = 0x0badf00d,
-				["z"] = 0x0defaced,
-			};
+			var variables = new NEVariables(
+				NEVariable.Constant("x", "", () => 0xdeadbeef),
+				NEVariable.Constant("y", "", () => 0x0badf00d),
+				NEVariable.Constant("z", "", () => 0x0defaced)
+			);
 			var expr = new NEExpression("x - y + [0]");
 			var vars = expr.Variables;
 			Assert.AreEqual(2, vars.Count);
 			Assert.IsTrue(vars.Contains("x"));
 			Assert.IsTrue(vars.Contains("y"));
-			Assert.AreEqual("7816989104", expr.Evaluate(dict, 0xfeedface).ToString());
+			Assert.AreEqual("7816989104", expr.EvaluateRow(variables, 0xfeedface).ToString());
 
 			CheckDates();
 		}

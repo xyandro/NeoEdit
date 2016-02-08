@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.HexEdit.Data;
@@ -104,7 +105,8 @@ namespace NeoEdit.HexEdit.Models
 		{
 			if (!expressions.ContainsKey(expression))
 				expressions[expression] = new NEExpression(expression);
-			return expressions[expression].Evaluate(values).ToString();
+			var variables = new NEVariables(values.Select(value => NEVariable.Constant(value.Key, "", () => value.Value)));
+			return expressions[expression].EvaluateRow(variables).ToString();
 		}
 
 		Dictionary<string, int> nameCounts = new Dictionary<string, int>();

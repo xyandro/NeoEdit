@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -24,11 +23,11 @@ namespace NeoEdit.GUI.Converters
 				throw new ArgumentNullException();
 
 			var expression = value[0] as string;
-			var expressionData = value[1] as Dictionary<string, List<object>>;
-			if ((expression == null) || (expressionData == null))
+			var variables = value[1] as NEVariables;
+			if ((expression == null) || (variables == null))
 				return DependencyProperty.UnsetValue;
 
-			try { return String.Join(", ", new NEExpression(expression).Evaluate(expressionData)); }
+			try { return String.Join(", ", new NEExpression(expression).EvaluateRows(variables)); }
 			catch { return DependencyProperty.UnsetValue; }
 		}
 

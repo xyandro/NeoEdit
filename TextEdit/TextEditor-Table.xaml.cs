@@ -94,7 +94,7 @@ namespace NeoEdit.TextEdit
 		{
 			var table = GetTable();
 			for (var column = 0; column < table.NumColumns; ++column)
-				variables[table.GetHeader(column)] = InterpretValues(Enumerable.Range(0, table.NumRows).Select(row => table[row, column]));
+				variables[table.GetHeader(column)] = Enumerable.Range(0, table.NumRows).Select(row => table[row, column]).ToList();
 		}
 
 		string GetDBValue(string value) => value?.IsNumeric() != false ? value ?? "NULL" : $"'{value.Replace("'", "''")}'";

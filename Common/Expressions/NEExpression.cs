@@ -15,17 +15,17 @@ namespace NeoEdit.Common.Expressions
 		{
 			this.expression = expression;
 
-			var input = new AntlrInputStream(expression);
-			var lexer = new ExpressionLexer(input);
-
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new ExpressionParser(tokens);
-			parser.ErrorHandler = new BailErrorStrategy();
-
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
 			try
 			{
+				var input = new AntlrInputStream(expression);
+				var lexer = new ExpressionLexer(input);
+
+				var tokens = new CommonTokenStream(lexer);
+				var parser = new ExpressionParser(tokens);
+				parser.ErrorHandler = new BailErrorStrategy();
+
+				parser.Interpreter.PredictionMode = PredictionMode.Sll;
+
 				try
 				{
 					tree = parser.expr();
@@ -44,28 +44,37 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
-		public object Evaluate(params object[] values) => Evaluate(default(Dictionary<string, object>), values);
-		public T Evaluate<T>(params object[] values) => (T)Convert.ChangeType(Evaluate(values), typeof(T));
+		internal ExpressionResult InternalEvaluate(NEVariables variables, int row, params object[] values) => new ExpressionEvaluator(expression, variables, row, values).Visit(tree);
 
-		public object EvaluateRow(Dictionary<string, List<object>> dict, int row, params object[] values)
+		public object Evaluate(params object[] values) => EvaluateRow(null, values);
+		public T Evaluate<T>(params object[] values) => EvaluateRow<T>(null, values);
+
+		public object EvaluateRow(NEVariables variables, params object[] values) => EvaluateRows(variables, 1, values)[0];
+		public T EvaluateRow<T>(NEVariables variables, params object[] values) => EvaluateRows<T>(variables, 1, values)[0];
+
+		public List<object> EvaluateRows(NEVariables variables, int? rowCount = null, params object[] values)
 		{
-			var rowDict = dict.ToDictionary(entry => entry.Key, entry => entry.Value.Count > row ? entry.Value[row] : null);
-			return Evaluate(rowDict, values);
+			if (rowCount < 0)
+				throw new ArgumentException($"{nameof(rowCount)} must be positive");
+
+			if (!Variables.Any())
+				return Enumerable.Repeat(InternalEvaluate(null, 0, values).GetResult(), rowCount ?? 1).ToList();
+
+			variables.Prepare(this, rowCount);
+			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => InternalEvaluate(variables, row, values).GetResult()).ToList();
 		}
 
-		public T EvaluateRow<T>(Dictionary<string, List<object>> dict, int row, params object[] values) => (T)Convert.ChangeType(EvaluateRow(dict, row, values), typeof(T));
-		public object Evaluate(Dictionary<string, object> dict, params object[] values) => InternalEvaluate(dict, values).GetResult();
-		internal ExpressionResult InternalEvaluate(Dictionary<string, object> dict, params object[] values) => new ExpressionEvaluator(expression, dict, values).Visit(tree);
-
-		public List<object> Evaluate(Dictionary<string, List<object>> dict, params object[] values)
+		public List<T> EvaluateRows<T>(NEVariables variables, int? rowCount = null, params object[] values)
 		{
-			var count = 1;
-			if (Variables.Any())
-				count = Variables.Max(var => dict[var].Count);
-			return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(row => EvaluateRow(dict, row, values)).ToList();
-		}
+			if (rowCount < 0)
+				throw new ArgumentException($"{nameof(rowCount)} must be positive");
 
-		public List<T> Evaluate<T>(Dictionary<string, List<object>> dict, params object[] values) => Evaluate(dict, values).AsParallel().AsOrdered().Select(val => (T)System.Convert.ChangeType(val, typeof(T))).ToList();
+			if (!Variables.Any())
+				return Enumerable.Repeat((T)Convert.ChangeType(InternalEvaluate(null, 0, values).GetResult(), typeof(T)), rowCount ?? 1).ToList();
+
+			variables.Prepare(this, rowCount);
+			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => (T)Convert.ChangeType(InternalEvaluate(variables, row, values).GetResult(), typeof(T))).ToList();
+		}
 
 		HashSet<string> variables;
 		public HashSet<string> Variables => variables = variables ?? VariableFinder.GetVariables(tree);

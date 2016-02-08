@@ -304,7 +304,7 @@ namespace NeoEdit.TextEdit
 					return;
 
 				if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.EvaluateRow<bool>(ItemTabs.TopMost.GetExpressionData(expression: expression), 0))
+					if (!expression.EvaluateRow<bool>(ItemTabs.TopMost.GetVariables()))
 						return;
 
 				macro.Play(this, playing => macroPlaying = playing, startNext);

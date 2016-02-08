@@ -11,12 +11,14 @@ namespace NeoEdit.Common.Expressions
 	class ExpressionEvaluator : ExpressionBaseVisitor<ExpressionResult>
 	{
 		readonly string expression;
-		readonly Dictionary<string, ExpressionResult> dict;
+		readonly NEVariables variables;
+		readonly int row;
 		readonly List<ExpressionResult> values;
-		internal ExpressionEvaluator(string expression, Dictionary<string, object> dict, params object[] values)
+		internal ExpressionEvaluator(string expression, NEVariables variables, int row, params object[] values)
 		{
 			this.expression = expression;
-			this.dict = dict?.ToDictionary(pair => pair.Key, pair => new ExpressionResult(pair.Value));
+			this.variables = variables;
+			this.row = row;
 			this.values = values?.Select(value => new ExpressionResult(value)).ToList();
 		}
 
@@ -117,7 +119,7 @@ namespace NeoEdit.Common.Expressions
 				case "conjugate": return paramList[0].Conjugate();
 				case "cos": return ExpressionResult.Cos(paramList[0]);
 				case "cosh": return ExpressionResult.Cosh(paramList[0]);
-				case "eval": return new NEExpression(paramList[0].GetString).InternalEvaluate(null);
+				case "eval": return new NEExpression(paramList[0].GetString).InternalEvaluate(null, 0);
 				case "filename": return paramList[0].GetFileName();
 				case "frompolar": return ExpressionResult.FromPolar(paramList[0], paramList[1]);
 				case "fromwords": return paramList[0].FromWords();
@@ -202,7 +204,7 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitInteger(ExpressionParser.IntegerContext context) => new ExpressionResult(BigInteger.Parse(context.val.Text.Replace(",", "")));
 		public override ExpressionResult VisitFloat(ExpressionParser.FloatContext context) => new ExpressionResult(double.Parse(context.val.Text.Replace(",", "")));
 		public override ExpressionResult VisitHex(ExpressionParser.HexContext context) => new ExpressionResult(long.Parse(context.val.Text.Substring(2), NumberStyles.HexNumber));
-		public override ExpressionResult VisitVariable(ExpressionParser.VariableContext context) => dict.ContainsKey(context.val.Text) ? dict[context.val.Text] : null;
+		public override ExpressionResult VisitVariable(ExpressionParser.VariableContext context) => new ExpressionResult(variables.GetValue(context.val.Text, row));
 		public override ExpressionResult VisitUnitExp(ExpressionParser.UnitExpContext context) => ExpressionResult.Exp(Visit(context.base1), new ExpressionResult(int.Parse(context.power.Text)));
 		public override ExpressionResult VisitUnitMult(ExpressionParser.UnitMultContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
 		public override ExpressionResult VisitUnitParen(ExpressionParser.UnitParenContext context) => Visit(context.units());

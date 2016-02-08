@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -29,11 +30,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public long Factor { get { return UIHelper<SetSizeDialog>.GetPropValue<long>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		public Dictionary<string, long> FactorDict { get; }
-		public Dictionary<string, List<object>> ExpressionData { get; }
+		public NEVariables Variables { get; }
 
 		static SetSizeDialog() { UIHelper<SetSizeDialog>.Register(); }
 
-		SetSizeDialog(Dictionary<string, List<object>> expressionData)
+		SetSizeDialog(NEVariables variables)
 		{
 			FactorDict = new Dictionary<string, long>
 			{
@@ -42,7 +43,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				["KB"] = 1 << 10,
 				["bytes"] = 1 << 0,
 			};
-			ExpressionData = expressionData;
+			Variables = variables;
 			InitializeComponent();
 			Type = SizeType.Absolute;
 			Factor = 1;
@@ -55,9 +56,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Dictionary<string, List<object>> expressionData)
+		public static Result Run(Window parent, NEVariables variables)
 		{
-			var dialog = new SetSizeDialog(expressionData) { Owner = parent };
+			var dialog = new SetSizeDialog(variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

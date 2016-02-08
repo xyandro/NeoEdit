@@ -158,5 +158,39 @@ namespace NeoEdit.Common
 			if (batch != null)
 				yield return batch;
 		}
+
+		public static void ForEach<TSource>(this IEnumerable<TSource> source, Action<TSource> action)
+		{
+			foreach (var item in source)
+				action(item);
+		}
+
+		public static List<TResult> ForEach<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> action)
+		{
+			var result = new List<TResult>();
+			foreach (var item in source)
+				result.Add(action(item));
+			return result;
+		}
+
+		public static IEnumerable<TSource> Null<TSource>(this IEnumerable<TSource> source)
+		{
+			foreach (var item in source)
+				if (item == null)
+					yield return item;
+		}
+
+		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource> source)
+		{
+			foreach (var item in source)
+				if (item != null)
+					yield return item;
+		}
+
+		public static void Execute(this IEnumerable<Action> source) => source.ForEach(action => action());
+		public static List<TResult> Execute<TResult>(this IEnumerable<Func<TResult>> source) => source.ForEach(action => action());
+
+		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<TSource> source, TSource defaultValue) where TSource : class => source.Select(val => val ?? defaultValue);
+		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<Nullable<TSource>> source, TSource defaultValue) where TSource : struct => source.Select(val => val ?? defaultValue);
 	}
 }

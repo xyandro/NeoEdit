@@ -24,9 +24,9 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="Value(s):" HorizontalAlignment="Right"/>
 		<Label Grid.Row="1" Grid.Column="1">
 			<Label.Content>
-				<MultiBinding Converter="{guiConverters:NEExpressionResultListConverter}" ConverterParameter="System.Int32">
+				<MultiBinding Converter="{guiConverters:NEExpressionResultListConverter}">
 					<Binding Path="Expression" ElementName="self"/>
-					<Binding Path="ExpressionData" ElementName="self"/>
+					<Binding Path="Variables" ElementName="self"/>
 				</MultiBinding>
 			</Label.Content>
 		</Label>

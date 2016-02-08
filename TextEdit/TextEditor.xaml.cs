@@ -160,7 +160,7 @@ namespace NeoEdit.TextEdit
 		public object LocalClipboardData { get; set; }
 		readonly NELocalClipboard clipboard;
 
-		static Dictionary<string, List<object>> variables { get; } = new Dictionary<string, List<object>>();
+		static Dictionary<string, List<string>> variables { get; } = new Dictionary<string, List<string>>();
 
 		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; }
 		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; }
@@ -458,52 +458,48 @@ namespace NeoEdit.TextEdit
 			return data.Select(a => Coder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
 		}
 
-		delegate bool TryParse<T>(string str, out T value);
-		List<object> InterpretType<T>(IEnumerable<string> strs, TryParse<T> tryParse)
+		internal NEVariables GetVariables()
 		{
-			var result = new List<object>();
-			T value;
-			foreach (var str in strs)
-			{
-				if (!tryParse(str, out value))
-					return null;
-				result.Add(value);
-			}
-			return result;
-		}
-
-		List<object> InterpretValues(IEnumerable<string> strs) => InterpretType<bool>(strs, bool.TryParse) ?? InterpretType<BigInteger>(strs, BigInteger.TryParse) ?? InterpretType<double>(strs, double.TryParse) ?? strs.Cast<object>().ToList();
-
-		internal Dictionary<string, List<object>> GetExpressionData(int? count = null, NEExpression expression = null)
-		{
-			var sels = Selections.Take(count ?? Selections.Count).ToList();
-			var strs = sels.Select(range => GetString(range)).ToList();
-			var keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? (int?)keysHash[str] : null).ToList();
-
 			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
-			var FileName = this.FileName;
-			var Clipboard = clipboard.Strings;
+			var fileName = FileName;
+			var clipboard = this.clipboard.Strings;
 			var keysAndValues = this.keysAndValues;
 
-			var parallelDataActions = new Dictionary<HashSet<string>, Action<HashSet<string>, Action<string, List<object>>>>();
-			parallelDataActions.Add(new HashSet<string> { "f" }, (items, addData) => addData("f", new List<object> { FileName }));
-			parallelDataActions.Add(new HashSet<string> { "x" }, (items, addData) => addData("x", InterpretValues(strs)));
-			parallelDataActions.Add(new HashSet<string> { "xl" }, (items, addData) => addData("xl", strs.Select(str => str.Length).Cast<object>().ToList()));
-			parallelDataActions.Add(new HashSet<string> { "xn" }, (items, addData) => addData("xn", new List<object> { sels.Count }.ToList()));
-			parallelDataActions.Add(new HashSet<string> { "y" }, (items, addData) => addData("y", Enumerable.Range(1, sels.Count).Cast<object>().ToList()));
-			parallelDataActions.Add(new HashSet<string> { "z" }, (items, addData) => addData("z", Enumerable.Range(0, sels.Count).Cast<object>().ToList()));
-			parallelDataActions.Add(new HashSet<string> { "c" }, (items, addData) => addData("c", InterpretValues(Clipboard)));
-			parallelDataActions.Add(new HashSet<string> { "cl" }, (items, addData) => addData("cl", Clipboard.Select(str => str.Length).Cast<object>().ToList()));
-			parallelDataActions.Add(new HashSet<string> { "cn" }, (items, addData) => addData("cn", new List<object> { Clipboard.Count }));
-			parallelDataActions.Add(new HashSet<string> { "line", "col" }, (items, addData) =>
+			var results = new NEVariables();
+
+			var strs = default(List<string>);
+			var initializeStrs = new NEVariableInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
+
+			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
+			results.Add(NEVariable.InterpretEnumerable("x", "Selected text", () => strs, initializeStrs));
+			results.Add(NEVariable.Enumerable("xl", "Selection length", () => strs.Select(str => str.Length), initializeStrs));
+			results.Add(NEVariable.Constant("xn", "Selections count", () => Selections.Count));
+			results.Add(NEVariable.Enumerable("y", "One-based index", () => Enumerable.Range(1, int.MaxValue), infinite: true));
+			results.Add(NEVariable.Enumerable("z", "Zero-based index", () => Enumerable.Range(0, int.MaxValue), infinite: true));
+			if (clipboard.Count == 1)
 			{
-				var lines = sels.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList();
-				if (items.Contains("line"))
-					addData("line", lines.Select(line => line + 1).Cast<object>().ToList());
-				if (items.Contains("col"))
-					addData("col", sels.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.Start, lines[index]) + 1).Cast<object>().ToList());
-			});
-			parallelDataActions.Add(new HashSet<string> { "pos" }, (items, addData) => addData("pos", sels.Select(range => range.Start).Cast<object>().ToList()));
+				results.Add(NEVariable.InterpretConstant("c", "Clipboard string", () => clipboard[0]));
+				results.Add(NEVariable.Constant("cl", "Clipboard string length", () => clipboard[0].Length));
+			}
+			else
+			{
+				results.Add(NEVariable.InterpretEnumerable("c", "Clipboard string", () => clipboard));
+				results.Add(NEVariable.Enumerable("cl", "Clipboard string length", () => clipboard.Select(str => str.Length)));
+			}
+			results.Add(NEVariable.Constant("cn", "Clipboard count", () => clipboard.Count));
+
+			var lines = default(List<int>);
+			var initializeLines = new NEVariableInitializer(() => lines = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList());
+			results.Add(NEVariable.Enumerable("line", "Selection line", () => lines.Select(line => line + 1), initializeLines));
+
+			var cols = default(List<int>);
+			var initializeCols = new NEVariableInitializer(() => cols = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.Start, lines[index]) + 1).ToList(), initializeLines);
+			results.Add(NEVariable.Enumerable("col", "Selection column", () => cols, initializeCols));
+
+			results.Add(NEVariable.Enumerable("pos", "Selection position", () => Selections.Select(range => range.Start)));
+
+			var keyOrdering = default(List<int?>);
+			var initializeKeyOrdering = new NEVariableInitializer(() => keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? (int?)keysHash[str] : null).ToList(), initializeStrs);
 			for (var ctr = 0; ctr <= 9; ++ctr)
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
@@ -513,54 +509,31 @@ namespace NeoEdit.TextEdit
 				var rkvName = $"r{prefix}";
 				var rkvlName = $"r{prefix}l";
 				var rkvnName = $"r{prefix}n";
-				parallelDataActions.Add(new HashSet<string> { rkvName }, (items, addData) => addData(rkvName, InterpretValues(keysAndValues[num])));
-				parallelDataActions.Add(new HashSet<string> { rkvlName }, (items, addData) => addData(rkvlName, keysAndValues[num].Select(str => str.Length).Cast<object>().ToList()));
-				parallelDataActions.Add(new HashSet<string> { rkvnName }, (items, addData) => addData(rkvnName, new List<object> { keysAndValues[num].Count }));
-				parallelDataActions.Add(new HashSet<string> { kvName, kvlName }, (items, addData) =>
+				results.Add(NEVariable.InterpretEnumerable(rkvName, "Raw keys/values", () => keysAndValues[num], initializeKeyOrdering));
+				results.Add(NEVariable.Enumerable(rkvlName, "Raw keys/values length", () => keysAndValues[num].Select(str => str.Length), initializeKeyOrdering));
+				results.Add(NEVariable.Constant(rkvnName, "Raw keys/values count", () => keysAndValues[num].Count, initializeKeyOrdering));
+
+				var values = default(List<string>);
+				var kvInitialize = new NEVariableInitializer(() =>
 				{
-					List<string> values;
 					if (keysAndValues[0].Count == keysAndValues[num].Count)
 						values = keyOrdering.Select(order => order.HasValue ? keysAndValues[num][order.Value] : "").ToList();
 					else
 						values = new List<string>();
-
-					if (items.Contains(kvName))
-						addData(kvName, InterpretValues(values));
-					if (items.Contains(kvlName))
-						addData(kvlName, values.Select(str => str.Length).Cast<object>().ToList());
-				});
+				}, initializeKeyOrdering);
+				results.Add(NEVariable.InterpretEnumerable(kvName, "Keys/values", () => values, kvInitialize));
+				results.Add(NEVariable.Enumerable(kvlName, "Keys/values length", () => values.Select(str => str.Length), kvInitialize));
 			}
 
 			// Add variables that aren't already set
-			foreach (var pair in variables)
-				if (!parallelDataActions.Any(action => action.Key.Contains(pair.Key)))
-					parallelDataActions.Add(new HashSet<string> { pair.Key }, (items, addData) => addData(pair.Key, pair.Value));
+			results.AddRange(variables.Where(pair => !results.Contains(pair.Key)).ForEach(pair => NEVariable.InterpretEnumerable(pair.Key, "User-defined", () => pair.Value)));
 
-			var used = expression != null ? expression.Variables : new HashSet<string>(parallelDataActions.SelectMany(action => action.Key));
-			var data = new Dictionary<string, List<object>>();
-			Parallel.ForEach(parallelDataActions, pair =>
-			{
-				if (pair.Key.Any(key => used.Contains(key)))
-					pair.Value(used, (key, value) =>
-					{
-						lock (data)
-							data[key] = value;
-					});
-			});
-
-			return data;
-		}
-
-		List<T> GetExpressionResults<T>(string expression, bool resizeToSelections = true, bool matchToSelections = true)
-		{
-			var neExpression = new NEExpression(expression);
-			var results = neExpression.Evaluate<T>(GetExpressionData(expression: neExpression));
-			if ((resizeToSelections) && (results.Count == 1))
-				results = results.Resize(Selections.Count, results[0]).ToList();
-			if ((matchToSelections) && (results.Count != Selections.Count))
-				throw new Exception("Expression count doesn't match selection count");
 			return results;
 		}
+
+		List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateRows<T>(GetVariables(), Selections.Count());
+
+		List<T> GetVariableExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateRows<T>(GetVariables());
 
 		void CopyDirectory(string src, string dest)
 		{
@@ -1428,12 +1401,12 @@ namespace NeoEdit.TextEdit
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return GotoDialog.Run(WindowParent, gotoType, startValue, GetExpressionData(count: 10));
+			return GotoDialog.Run(WindowParent, gotoType, startValue, GetVariables());
 		}
 
 		internal void Command_Position_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
 		{
-			var offsets = GetExpressionResults<int>(result.Expression, false, false);
+			var offsets = GetVariableExpressionResults<int>(result.Expression);
 			if (!offsets.Any())
 				return;
 
@@ -1662,11 +1635,11 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Names_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
 
-		internal MakeAbsoluteDialog.Result Command_Files_Names_MakeAbsolute_Dialog() => MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10), true);
+		internal MakeAbsoluteDialog.Result Command_Files_Names_MakeAbsolute_Dialog() => MakeAbsoluteDialog.Run(WindowParent, GetVariables(), true);
 
 		internal void Command_Files_Names_MakeAbsolute(MakeAbsoluteDialog.Result result)
 		{
-			var results = GetExpressionResults<string>(result.Expression);
+			var results = GetFixedExpressionResults<string>(result.Expression);
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == MakeAbsoluteDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
@@ -1839,7 +1812,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal SetSizeDialog.Result Command_Files_Set_Size_Dialog() => SetSizeDialog.Run(WindowParent, GetExpressionData(count: 10));
+		internal SetSizeDialog.Result Command_Files_Set_Size_Dialog() => SetSizeDialog.Run(WindowParent, GetVariables());
 
 		void SetFileSize(string fileName, SetSizeDialog.SizeType type, long value)
 		{
@@ -1869,7 +1842,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Set_Size(SetSizeDialog.Result result)
 		{
-			var results = GetExpressionResults<long>(result.Expression).Select(size => size * result.Factor).ToList();
+			var results = GetFixedExpressionResults<long>(result.Expression).Select(size => size * result.Factor).ToList();
 			for (var ctr = 0; ctr < Selections.Count; ++ctr)
 				SetFileSize(GetString(Selections[ctr]), result.Type, results[ctr]);
 		}
@@ -2101,12 +2074,12 @@ namespace NeoEdit.TextEdit
 			var minLength = Selections.Any() ? Selections.AsParallel().Min(range => range.Length) : 0;
 			var maxLength = Selections.Any() ? Selections.AsParallel().Max(range => range.Length) : 0;
 			var numeric = Selections.Any() ? Selections.AsParallel().All(range => GetString(range).IsNumeric()) : false;
-			return WidthDialog.Run(WindowParent, minLength, maxLength, numeric, false, GetExpressionData(count: 10));
+			return WidthDialog.Run(WindowParent, minLength, maxLength, numeric, false, GetVariables());
 		}
 
 		internal void Command_Text_Width(WidthDialog.Result result)
 		{
-			var results = GetExpressionResults<int>(result.Expression);
+			var results = GetFixedExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, results[index])).ToList());
 		}
 
@@ -2131,17 +2104,17 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		internal GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetExpressionData(10), () => ExpressionHelpDialog.Display());
+		internal GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), () => ExpressionHelpDialog.Display());
 
 		internal void Command_Expression_Expression(GetExpressionDialog.Result result)
 		{
-			var results = GetExpressionResults<string>(result.Expression);
+			var results = GetFixedExpressionResults<string>(result.Expression);
 			ReplaceSelections(results);
 		}
 
 		internal void Command_Expression_Copy(GetExpressionDialog.Result result)
 		{
-			var results = GetExpressionResults<string>(result.Expression);
+			var results = GetVariableExpressionResults<string>(result.Expression);
 			clipboard.Strings = results;
 		}
 
@@ -2377,11 +2350,11 @@ namespace NeoEdit.TextEdit
 			clipboard.Strings = indexes.Select(pos => (pos + 1).ToString()).ToList();
 		}
 
-		internal RepeatDialog.Result Command_Edit_Repeat_Dialog() => RepeatDialog.Run(WindowParent, Selections.Count == 1, GetExpressionData(count: 10));
+		internal RepeatDialog.Result Command_Edit_Repeat_Dialog() => RepeatDialog.Run(WindowParent, Selections.Count == 1, GetVariables());
 
 		internal void Command_Edit_Repeat(RepeatDialog.Result result)
 		{
-			var results = GetExpressionResults<int>(result.Expression);
+			var results = GetFixedExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), results[index])).ToList());
 			if (result.SelectRepetitions)
 			{
@@ -2459,11 +2432,11 @@ namespace NeoEdit.TextEdit
 			return results;
 		}
 
-		internal MakeAbsoluteDialog.Result Command_Edit_URL_Absolute_Dialog() => MakeAbsoluteDialog.Run(WindowParent, GetExpressionData(count: 10), false);
+		internal MakeAbsoluteDialog.Result Command_Edit_URL_Absolute_Dialog() => MakeAbsoluteDialog.Run(WindowParent, GetVariables(), false);
 
 		internal void Command_Edit_URL_Absolute(MakeAbsoluteDialog.Result result)
 		{
-			var results = GetExpressionResults<string>(result.Expression);
+			var results = GetFixedExpressionResults<string>(result.Expression);
 			ReplaceSelections(GetSelectionStrings().Select((str, index) =>
 			{
 				var uri = new Uri(new Uri(results[index]), str);
@@ -2553,13 +2526,13 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Numeric_RandomNumber(RandomNumberDialog.Result result) => ReplaceSelections(Selections.AsParallel().Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
 
-		internal RandomDataDialog.Result Command_Text_RandomText_Dialog() => RandomDataDialog.Run(GetExpressionData(count: 10), WindowParent);
+		internal RandomDataDialog.Result Command_Text_RandomText_Dialog() => RandomDataDialog.Run(GetVariables(), WindowParent);
 
 		string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 
 		internal void Command_Text_RandomText(RandomDataDialog.Result result)
 		{
-			var results = GetExpressionResults<int>(result.Expression);
+			var results = GetFixedExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
@@ -2943,7 +2916,7 @@ namespace NeoEdit.TextEdit
 		{
 			var minLength = Selections.Any() ? Selections.AsParallel().Min(range => range.Length) : 0;
 			var maxLength = Selections.Any() ? Selections.AsParallel().Max(range => range.Length) : 0;
-			return WidthDialog.Run(WindowParent, minLength, maxLength, false, true, GetExpressionData(count: 10));
+			return WidthDialog.Run(WindowParent, minLength, maxLength, false, true, GetVariables());
 		}
 
 		bool WidthMatch(string str, WidthDialog.Result result, int value)
@@ -2960,7 +2933,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Text_Select_ByWidth(WidthDialog.Result result)
 		{
-			var results = GetExpressionResults<int>(result.Expression);
+			var results = GetFixedExpressionResults<int>(result.Expression);
 			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => WidthMatch(GetString(range), result, results[index])).ToList());
 		}
 
@@ -3011,11 +2984,11 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetExpressionData(10), () => ExpressionHelpDialog.Display());
+		internal GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), () => ExpressionHelpDialog.Display());
 
 		internal void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
 		{
-			var results = GetExpressionResults<bool>(result.Expression);
+			var results = GetFixedExpressionResults<bool>(result.Expression);
 			Selections.Replace(Selections.Where((str, num) => results[num]).ToList());
 		}
 
@@ -3023,7 +2996,7 @@ namespace NeoEdit.TextEdit
 
 		internal SetVariablesDialog.Result Command_Expression_SetVariables_Dialog() => SetVariablesDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault() ?? "");
 
-		internal void Command_Expression_SetVariables(SetVariablesDialog.Result result) => variables[result.VarName] = InterpretValues(GetSelectionStrings());
+		internal void Command_Expression_SetVariables(SetVariablesDialog.Result result) => variables[result.VarName] = GetSelectionStrings();
 
 		internal void Command_Select_Selection_First()
 		{
