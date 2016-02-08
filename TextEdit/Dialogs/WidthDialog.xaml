@@ -7,17 +7,17 @@
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Type:" HorizontalAlignment="Right"/>
@@ -29,18 +29,11 @@
 			<RadioButton GroupName="type" Content="Multi_ple" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
 		</StackPanel>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Width:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="WidthDialog"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
-		<Label Grid.Row="2" Grid.Column="1">
-			<Label.Content>
-				<MultiBinding Converter="{guiConverters:NEExpressionResultListConverter}">
-					<Binding Path="Expression" ElementName="self"/>
-					<Binding Path="Variables" ElementName="self"/>
-				</MultiBinding>
-			</Label.Content>
-		</Label>
+		<guiControls:NEExpressionResults Grid.Row="2" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
 		<TextBox Grid.Row="3" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
@@ -66,4 +59,5 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

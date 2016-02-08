@@ -7,19 +7,20 @@
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Type:" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+		<StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
 			<RadioButton GroupName="type" Content="_Absolute" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Absolute}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="_Relative" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Relative}" Margin="0,0,10,0" Focusable="False"/>
 			<RadioButton GroupName="type" Content="_Minimum" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Minimum}" Margin="0,0,10,0" Focusable="False"/>
@@ -27,25 +28,17 @@
 			<RadioButton GroupName="type" Content="Multi_ple" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
 		</StackPanel>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-			<TextBox Name="expression" Width="200" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
-			<ComboBox ItemsSource="{Binding FactorDict, ElementName=self}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Factor, ElementName=self}"/>
-		</StackPanel>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Size:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="SetSizeDialog"/>
+		<ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding FactorDict, ElementName=self}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Factor, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Value(s):" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
-		<Label Grid.Row="2" Grid.Column="1">
-			<Label.Content>
-				<MultiBinding Converter="{guiConverters:NEExpressionResultListConverter}">
-					<Binding Path="Expression" ElementName="self"/>
-					<Binding Path="Variables" ElementName="self"/>
-				</MultiBinding>
-			</Label.Content>
-		</Label>
+		<guiControls:NEExpressionResults Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
@@ -40,6 +39,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Variables = variables;
 			InitializeComponent();
 			CheckType = getType;
+			Expression = "f";
 		}
 
 		void SetIsFile()
@@ -49,14 +49,12 @@ namespace NeoEdit.TextEdit.Dialogs
 
 			try
 			{
-				var neExpression = new NEExpression(Expression);
-				var value = neExpression.EvaluateRow(Variables);
-				var path = value as string;
-				if (path == null)
+				var value = new NEExpression(Expression).EvaluateRow<string>(Variables);
+				if (value == null)
 					return;
-				if (File.Exists(path))
+				if (File.Exists(value))
 					Type = ResultType.File;
-				else if (Directory.Exists(path))
+				else if (Directory.Exists(value))
 					Type = ResultType.Directory;
 			}
 			catch { }

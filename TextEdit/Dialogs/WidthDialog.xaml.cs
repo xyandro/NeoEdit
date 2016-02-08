@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;

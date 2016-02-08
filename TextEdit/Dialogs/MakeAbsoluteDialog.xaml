@@ -3,33 +3,26 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Make Absolute" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=expression}">
+	Title="Make Absolute" SizeToContent="Height" Width="500" FocusManager.FocusedElement="{Binding ElementName=expression}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Filename:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
-		<TextBox Name="expression" Grid.Row="0" Grid.Column="1" Width="400" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Source:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Name="expression" Grid.Row="0" Grid.Column="1" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="MakeAbsoluteDialog"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
-		<Label Grid.Row="1" Grid.Column="1">
-			<Label.Content>
-				<MultiBinding Converter="{guiConverters:NEExpressionResultListConverter}">
-					<Binding Path="Expression" ElementName="self"/>
-					<Binding Path="Variables" ElementName="self"/>
-				</MultiBinding>
-			</Label.Content>
-		</Label>
+		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Type:" HorizontalAlignment="Right" Visibility="{Binding CheckType, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]'}"/>
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Visibility="{Binding CheckType, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]'}">
@@ -42,4 +35,5 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

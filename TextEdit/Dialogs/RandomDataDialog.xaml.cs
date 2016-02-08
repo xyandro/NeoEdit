@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
@@ -26,6 +25,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Variables = variables;
 			InitializeComponent();
 			Chars = "a-zA-Z";
+			Expression = "x";
 		}
 
 		Result result;
