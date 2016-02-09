@@ -9,13 +9,13 @@
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<CheckBox Grid.Row="0" Grid.Column="0" Content="_Read Only" IsThreeState="{Binding ReadOnlyThreeState, ElementName=self}" IsChecked="{Binding ReadOnlyAttr, ElementName=self}" VerticalAlignment="Center"/>
@@ -29,4 +29,5 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

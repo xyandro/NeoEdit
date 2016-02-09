@@ -61,7 +61,7 @@
 			</Grid>
 		</GroupBox>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
 			<Button Click="ResetClick"  Content="_Reset" Padding="10,1"/>
 		</UniformGrid>
 
@@ -70,4 +70,5 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

@@ -4,7 +4,7 @@
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters"
 	xmlns:guiDialogs="clr-namespace:NeoEdit.GUI.Dialogs"
-	Title="Find" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=findText}">
+	Title="Find" SizeToContent="Width" Height="600" FocusManager.FocusedElement="{Binding ElementName=findText}">
 
 	<Window.Resources>
 		<guiConverters:ValidValueConverter x:Key="ValidConv"/>
@@ -40,7 +40,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
@@ -144,15 +144,15 @@
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
 					<RowDefinition/>
-					<RowDefinition/>
-					<RowDefinition/>
+					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
 				<Label Grid.Row="0" Grid.Column="0" Content="_Encodings:" Target="{Binding ElementName=codePages}"/>
 				<CheckBox Grid.Row="0" Grid.Column="1" Content="Match _Case" IsChecked="{Binding MatchCase, ElementName=self}" HorizontalAlignment="Right"/>
 
-				<ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="codePages" ItemsSource="{Binding EncodingCheckBoxes, ElementName=self}" Height="200" BorderBrush="{x:Null}" SelectionMode="Extended">
+				<ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="codePages" ItemsSource="{Binding EncodingCheckBoxes, ElementName=self}" BorderBrush="{x:Null}" SelectionMode="Extended">
 					<ListBox.Style>
 						<Style>
 							<Style.Resources>

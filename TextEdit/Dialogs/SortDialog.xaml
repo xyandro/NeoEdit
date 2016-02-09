@@ -48,4 +48,5 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</StackPanel>
+
 </guiControls:ModalDialog>

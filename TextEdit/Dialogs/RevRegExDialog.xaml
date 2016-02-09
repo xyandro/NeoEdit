@@ -3,22 +3,22 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Reverse RegEx" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=regex}">
+	Title="Reverse RegEx" SizeToContent="Height" Width="800" FocusManager.FocusedElement="{Binding ElementName=regex}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_RegEx:" Target="{Binding ElementName=regex}" HorizontalAlignment="Right"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Width="600" Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="RevRegex"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="RevRegex"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
 		<Label Grid.Row="1" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>
@@ -28,4 +28,5 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

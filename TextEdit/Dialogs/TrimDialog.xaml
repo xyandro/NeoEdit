@@ -3,22 +3,22 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Trim" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=trimChars}">
+	Title="Trim" SizeToContent="Height" Width="400" FocusManager.FocusedElement="{Binding ElementName=trimChars}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Trim _characters:" Target="{Binding ElementName=trimChars}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Name="trimChars" Width="200" HorizontalAlignment="Left" Text="{Binding TrimChars, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<TextBox Grid.Row="0" Grid.Column="1" Name="trimChars" Text="{Binding TrimChars, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Trim Location:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
@@ -37,4 +37,5 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

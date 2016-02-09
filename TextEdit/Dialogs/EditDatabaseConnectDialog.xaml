@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:local="clr-namespace:NeoEdit.TextEdit.Dialogs"
-	Title="Connect to Database" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=name}">
+	Title="Connect to Database" Width="600" Height="400" FocusManager.FocusedElement="{Binding ElementName=name}">
 
 	<Window.Resources>
 		<local:DBParamTemplateSelector x:Key="dbParamTemplateSelectorValue" Default="False"/>
@@ -12,15 +12,15 @@
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
-			<ColumnDefinition Width="800"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
 			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Name:" Target="{Binding ElementName=name}" HorizontalAlignment="Right"/>
@@ -30,7 +30,7 @@
 		<ComboBox Name="type" Grid.Row="1" Grid.Column="1" Text="{Binding Database, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Parameters:" Target="{Binding ElementName=parameters}" HorizontalAlignment="Right"/>
-		<DataGrid Name="parameters" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Params, ElementName=self}" RowHeaderWidth="0" Height="200" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+		<DataGrid Name="parameters" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Params, ElementName=self}" RowHeaderWidth="0" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
 				<DataGridTemplateColumn Header="Value" Width="*" CellTemplateSelector="{StaticResource dbParamTemplateSelectorValue}"/>
@@ -48,4 +48,5 @@
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

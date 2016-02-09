@@ -40,8 +40,8 @@
 		</GroupBox>
 
 		<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Rows="1">
-			<Button Click="OkClick" IsDefault="True" Content="Ok" Margin="0,0,10,0"/>
-			<Button IsCancel="True" Content="Cancel"/>
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</StackPanel>
 </guiControls:ModalDialog>

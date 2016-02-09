@@ -32,4 +32,5 @@
 			<Button IsCancel="True" Content="Cancel" Focusable="False"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>

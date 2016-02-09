@@ -2,18 +2,18 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
-	Title="Examine Database" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=collection}">
+	Title="Examine Database" Width="600" Height="400" FocusManager.FocusedElement="{Binding ElementName=collection}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
-			<ColumnDefinition Width="600"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
-			<RowDefinition Height="400"/>
 			<RowDefinition Height="10"/>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Collection:" Target="{Binding ElementName=collection}" HorizontalAlignment="Right"/>
@@ -40,4 +40,5 @@
 			<Button Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Padding="25,1"/>
 		</UniformGrid>
 	</Grid>
+
 </guiControls:ModalDialog>
