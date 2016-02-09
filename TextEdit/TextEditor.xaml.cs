@@ -2771,6 +2771,8 @@ namespace NeoEdit.TextEdit
 				Message.Show($"Quer{(selections.Count == 1 ? "y" : "ies")} run successfully.");
 		}
 
+		string DBSanitize(string name) => (!String.IsNullOrEmpty(name)) && (!Char.IsLetter(name[0])) ? $"[{name}]" : name;
+
 		internal string Command_Database_QueryTable_Dialog()
 		{
 			ValidateConnection();
@@ -2780,9 +2782,9 @@ namespace NeoEdit.TextEdit
 			var tableNameColumn = tableSchema.Columns["table_name"];
 			List<string> tables;
 			if (dbConnection is MySql.Data.MySqlClient.MySqlConnection)
-				tables = tableSchema.Rows.Cast<DataRow>().Select(row => $"{row[tableSchemaColumn]}.{row[tableNameColumn]}").ToList();
+				tables = tableSchema.Rows.Cast<DataRow>().Select(row => $"{DBSanitize(row[tableSchemaColumn]?.ToString())}.{DBSanitize(row[tableNameColumn]?.ToString())}").ToList();
 			else
-				tables = tableSchema.Rows.Cast<DataRow>().Select(row => $"{row[tableCatalogColumn]}.{row[tableSchemaColumn]}.{row[tableNameColumn]}").ToList();
+				tables = tableSchema.Rows.Cast<DataRow>().Select(row => $"{DBSanitize(row[tableCatalogColumn]?.ToString())}.{DBSanitize(row[tableSchemaColumn]?.ToString())}.{DBSanitize(row[tableNameColumn]?.ToString())}").ToList();
 
 			return QueryTableDialog.Run(WindowParent, tables);
 		}

@@ -17,7 +17,7 @@ namespace NeoEdit.GUI.Controls
 		public string CompletionTag { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<string>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 
 		[DepProp]
-		bool IsDropDownOpen { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		public bool IsDropDownOpen { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
 		ObservableCollection<string> Suggestions { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]

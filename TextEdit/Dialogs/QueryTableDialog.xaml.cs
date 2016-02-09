@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using NeoEdit.GUI.Controls;
 
@@ -10,14 +11,15 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public string Table { get { return UIHelper<QueryTableDialog>.GetPropValue<string>(this); } set { UIHelper<QueryTableDialog>.SetPropValue(this, value); } }
 
-		public List<string> Tables { get; }
-
 		static QueryTableDialog() { UIHelper<QueryTableDialog>.Register(); }
 
-		QueryTableDialog(List<string> tables)
+		readonly HashSet<string> tables;
+		QueryTableDialog(IEnumerable<string> tables)
 		{
-			Tables = tables;
+			this.tables = new HashSet<string>(tables);
 			InitializeComponent();
+			tablesList.AddSuggestions(tables.ToArray());
+			tablesList.IsDropDownOpen = true;
 		}
 
 		string result;
@@ -25,6 +27,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			if (string.IsNullOrWhiteSpace(Table))
 				throw new Exception("No table selected.");
+			if (!tables.Contains(Table))
+				throw new Exception("Invalid table.");
 			result = Table;
 			DialogResult = true;
 		}

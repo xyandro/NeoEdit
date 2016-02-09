@@ -35,6 +35,17 @@ Opening new file in diff removes diff
 Fix warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification (https://social.msdn.microsoft.com/Forums/vstudio/en-US/d605bec7-df91-4272-be17-19db7394e0fd/how-to-get-rid-of-warning-lnk4075-ignoring-editandcontinue-due-to-optlbr-specification?forum=vcgeneral)
 Refactor macro code
 Expressions: use . and x instead of + and * for strings
+Use local clipboards/keys when more than one file selected; remove option to choose?
+QueryBuilder
+When selecting a column make the selection left to right
+Invert selection
+Copy diff whitespace left<->right
+Convert macros to json?
+List to table (when I have a random list I want to group, etc.)
+On limit selections: allow user to choose first selection to keep
+Diff: Use one tab split into two
+Diff: Sync horizontal scrolls (vertical already done)
+Diff: Don't move windows, only do two-pane if two files only
 
 View:
 Update as new lines are added
