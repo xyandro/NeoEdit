@@ -2869,15 +2869,21 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_All() => Selections.Replace(FullRange);
 
-		internal LimitDialog.Result Command_Select_Limit_Dialog() => LimitDialog.Run(WindowParent, Selections.Count);
+		internal LimitDialog.Result Command_Select_Limit_Dialog() => LimitDialog.Run(WindowParent, Selections.Count, GetVariables());
 
 		internal void Command_Select_Limit(LimitDialog.Result result)
 		{
 			if (result.IgnoreBlank)
 				Selections.Replace(Selections.Where(sel => sel.HasSelection).ToList());
-			if (result.SelMult > 1)
-				Selections.Replace(Selections.AsParallel().AsOrdered().Where((sel, index) => index % result.SelMult == 0).ToList());
-			var sels = Math.Min(Selections.Count, result.NumSels);
+
+			var variables = GetVariables();
+
+			var selMult = new NEExpression(result.SelMult).EvaluateRow<int>(variables);
+			var numSels = new NEExpression(result.NumSels).EvaluateRow<int>(variables);
+
+			if (selMult > 1)
+				Selections.Replace(Selections.AsParallel().AsOrdered().Where((sel, index) => index % selMult == 0).ToList());
+			var sels = Math.Min(Selections.Count, numSels);
 			Selections.RemoveRange(sels, Selections.Count - sels);
 		}
 

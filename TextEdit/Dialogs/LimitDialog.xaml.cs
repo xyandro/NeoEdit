@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -7,41 +8,42 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public int SelMult { get; set; }
+			public string SelMult { get; set; }
+			public string NumSels { get; set; }
 			public bool IgnoreBlank { get; set; }
-			public int NumSels { get; set; }
 		}
 
 		[DepProp]
-		public int SelMult { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		public string SelMult { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public string NumSels { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IgnoreBlank { get { return UIHelper<LimitDialog>.GetPropValue<bool>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public int NumSels { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public int MaxSels { get { return UIHelper<LimitDialog>.GetPropValue<int>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+
+		public NEVariables Variables { get; }
 
 		static LimitDialog() { UIHelper<LimitDialog>.Register(); }
 
-		LimitDialog(int maxSels)
+		LimitDialog(int maxSels, NEVariables variables)
 		{
+			Variables = variables;
 			InitializeComponent();
 
-			NumSels = MaxSels = maxSels;
-			SelMult = 1;
+			SelMult = "1";
+			NumSels = maxSels.ToString();
 			IgnoreBlank = false;
 		}
 
 		Result result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { SelMult = SelMult, IgnoreBlank = IgnoreBlank, NumSels = NumSels };
+			result = new Result { SelMult = SelMult, NumSels = NumSels, IgnoreBlank = IgnoreBlank };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, int numSels)
+		public static Result Run(Window parent, int numSels, NEVariables variables)
 		{
-			var dialog = new LimitDialog(numSels) { Owner = parent };
+			var dialog = new LimitDialog(numSels, variables) { Owner = parent };
 			if (!dialog.ShowDialog())
 				return null;
 
