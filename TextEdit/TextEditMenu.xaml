@@ -9,7 +9,6 @@
 
 	<Menu.Resources>
 		<system:Boolean x:Key="True">True</system:Boolean>
-		<system:Boolean x:Key="False">False</system:Boolean>
 	</Menu.Resources>
 
 	<MenuItem Header="_File">
@@ -72,7 +71,7 @@
 			<textEdit:TextEditMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
 			<textEdit:TextEditMenuItem Header="_All Files" CommandEnum="Edit_Paste_AllFiles"/>
 		</MenuItem>
-		<textEdit:MultiMenuItem Header="Loc_al Clipboard" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="UseLocalClipboard" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
+		<textEdit:MultiMenuItem Header="Loc_al Clipboard" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="UseLocalClipboard" MultiValue="{StaticResource True}" CommandEnum="Edit_LocalClipboard"/>
 		<Separator/>
 		<MenuItem Header="_Find">
 			<textEdit:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
@@ -116,8 +115,8 @@
 		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
 		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
-		<textEdit:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreWhitespace" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}" CommandEnum="Diff_IgnoreWhitespace"/>
-		<textEdit:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreCase" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}" CommandEnum="Diff_IgnoreCase"/>
+		<textEdit:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
+		<textEdit:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Diff_Next"/>
 		<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
@@ -333,15 +332,15 @@
 	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
-			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.None}" FalseValue="{x:Static content:Parser+ParserType.None}"/>
-			<textEdit:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.Balanced}" FalseValue="{x:Static content:Parser+ParserType.Balanced}"/>
-			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.Columns}" FalseValue="{x:Static content:Parser+ParserType.Columns}"/>
-			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.CSharp}" FalseValue="{x:Static content:Parser+ParserType.CSharp}"/>
-			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.CSV}" FalseValue="{x:Static content:Parser+ParserType.CSV}"/>
-			<textEdit:MultiMenuItem Header="_HTML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.HTML}" FalseValue="{x:Static content:Parser+ParserType.HTML}"/>
-			<textEdit:MultiMenuItem Header="_JSON" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.JSON}" FalseValue="{x:Static content:Parser+ParserType.JSON}"/>
-			<textEdit:MultiMenuItem Header="_TSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.TSV}" FalseValue="{x:Static content:Parser+ParserType.TSV}"/>
-			<textEdit:MultiMenuItem Header="_XML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" TrueValue="{x:Static content:Parser+ParserType.XML}" FalseValue="{x:Static content:Parser+ParserType.XML}"/>
+			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.None}" CommandEnum="Content_Type_None"/>
+			<textEdit:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
+			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
+			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
+			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
+			<textEdit:MultiMenuItem Header="_HTML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
+			<textEdit:MultiMenuItem Header="_JSON" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
+			<textEdit:MultiMenuItem Header="_TSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
+			<textEdit:MultiMenuItem Header="_XML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.XML}" CommandEnum="Content_Type_XML"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Reformat" CommandEnum="Content_Reformat"/>
@@ -487,7 +486,7 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Misses_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Misses_Values9"/>
 		</MenuItem>
-		<textEdit:MultiMenuItem Header="Shar_e Keys" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ShareKeys" TrueValue="{StaticResource True}" FalseValue="{StaticResource False}"/>
+		<textEdit:MultiMenuItem Header="Shar_e Keys" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ShareKeys" MultiValue="{StaticResource True}" CommandEnum="Keys_ShareKeys"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
@@ -524,9 +523,9 @@
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Highlighting">
-			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.None}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.None}"/>
-			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.CSharp}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.CSharp}"/>
-			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" TrueValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}" FalseValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}"/>
+			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEdit:Highlighting+HighlightingType.None}" CommandEnum="View_Highlighting_None"/>
+			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEdit:Highlighting+HighlightingType.CSharp}" CommandEnum="View_Highlighting_CSharp"/>
+			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}" CommandEnum="View_Highlighting_CPlusPlus"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>

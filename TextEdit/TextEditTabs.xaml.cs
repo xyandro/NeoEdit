@@ -21,7 +21,7 @@ namespace NeoEdit.TextEdit
 	public class Tabs : Tabs<TextEditor, TextEditCommand> { }
 	public class TabsWindow : TabsWindow<TextEditor, TextEditCommand> { }
 
-	public partial class TextEditTabs
+	partial class TextEditTabs
 	{
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
@@ -71,7 +71,7 @@ namespace NeoEdit.TextEdit
 
 		TextEditTabs()
 		{
-			TextEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
@@ -315,7 +315,7 @@ namespace NeoEdit.TextEdit
 		Macro<TextEditCommand> recordingMacro;
 		internal Macro<TextEditCommand> macroPlaying = null;
 
-		internal void RunCommand(TextEditCommand command)
+		internal void RunCommand(TextEditCommand command, bool? multiStatus)
 		{
 			if (macroPlaying != null)
 				return;
@@ -358,9 +358,9 @@ namespace NeoEdit.TextEdit
 				return;
 
 			if (recordingMacro != null)
-				recordingMacro.AddCommand(command, shiftDown, dialogResult);
+				recordingMacro.AddCommand(command, shiftDown, dialogResult, multiStatus);
 
-			HandleCommand(command, shiftDown, dialogResult);
+			HandleCommand(command, shiftDown, dialogResult, multiStatus);
 		}
 
 		internal bool GetDialogResult(TextEditCommand command, out object dialogResult)
@@ -377,7 +377,7 @@ namespace NeoEdit.TextEdit
 			return dialogResult != null;
 		}
 
-		public override bool HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
+		public override bool HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 		{
 			switch (command)
 			{
@@ -404,7 +404,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
-				textEditorItem.HandleCommand(command, shiftDown, dialogResult);
+				textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus);
 
 			return true;
 		}

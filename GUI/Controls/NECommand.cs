@@ -59,6 +59,7 @@ namespace NeoEdit.GUI.Controls
 			public readonly CommandEnumT Command;
 			public readonly string InputGestureText;
 			public readonly List<KeyGestureAttribute> KeyGestures = new List<KeyGestureAttribute>();
+			public bool? MultiStatus;
 
 			public NECommand(CommandEnumT command)
 			{
@@ -70,13 +71,16 @@ namespace NeoEdit.GUI.Controls
 					InputGestureText = KeyGestures.First().GestureText;
 			}
 
-			public void RegisterCommand(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
+			public void RegisterCommand(UIElement window, Action<CommandEnumT, bool?> handler)
 			{
-				window.CommandBindings.Add(new CommandBinding(this, (s, e) => handler(s, e, Command)));
+				window.CommandBindings.Add(new CommandBinding(this, (s, e) => handler(Command, MultiStatus)));
 				foreach (var keyGesture in KeyGestures)
 					window.InputBindings.Add(new KeyBinding(this, new KeyGesture(keyGesture.Key, keyGesture.Modifiers)));
 			}
 		}
+
+		public bool? MultiStatus { get { return neCommand?.MultiStatus; } protected set { if (neCommand != null) neCommand.MultiStatus = value; } }
+		NECommand neCommand { get; set; }
 
 		static NEMenuItem()
 		{
@@ -91,14 +95,14 @@ namespace NeoEdit.GUI.Controls
 			get { return (Command as NECommand).Command; }
 			set
 			{
-				var neCommand = commands[value];
+				neCommand = commands[value];
 				Command = neCommand;
 				InputGestureText = neCommand.InputGestureText;
 			}
 		}
 
 		static Dictionary<CommandEnumT, NECommand> commands;
-		static public void RegisterCommands(UIElement window, Action<object, ExecutedRoutedEventArgs, CommandEnumT> handler)
+		static public void RegisterCommands(UIElement window, Action<CommandEnumT, bool?> handler)
 		{
 			foreach (var command in commands.Values)
 				command.RegisterCommand(window, handler);

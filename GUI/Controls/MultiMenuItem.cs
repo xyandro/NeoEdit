@@ -16,11 +16,9 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public string Property { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<string>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public object TrueValue { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
+		public object MultiValue { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public object FalseValue { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool? MultiChecked { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<bool?>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
+		public bool? MultiChecked { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<bool?>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); MultiStatus = value; } }
 
 		static MultiMenuItem() { UIHelper<MultiMenuItem<ItemType, CommandType>>.Register(); }
 
@@ -28,31 +26,16 @@ namespace NeoEdit.GUI.Controls
 
 		protected override Visual GetVisualChild(int index)
 		{
-			SetMultiChecked();
-			return base.GetVisualChild(index);
-		}
-
-		protected override void OnClick()
-		{
-			var newValue = !MultiChecked ?? true;
-			var property = typeof(ItemType).GetProperty(Property);
-			foreach (var obj in Objects)
-				if (obj.Active)
-					property.SetValue(obj, newValue ? TrueValue : FalseValue);
-			base.OnClick();
-		}
-
-		void SetMultiChecked()
-		{
 			if ((Property == null) || (Objects == null))
-			{
 				MultiChecked = null;
-				return;
+			else
+			{
+				var property = typeof(ItemType).GetProperty(Property);
+				var match = Objects.Where(obj => obj.Active).Select(obj => property.GetValue(obj).Equals(MultiValue)).Distinct().ToList();
+				MultiChecked = match.Count == 1 ? match.First() : default(bool?);
 			}
 
-			var property = typeof(ItemType).GetProperty(Property);
-			var match = Objects.Where(obj => obj.Active).Select(obj => property.GetValue(obj).Equals(TrueValue)).Distinct().ToList();
-			MultiChecked = match.Count == 1 ? (bool?)match.First() : default(bool?);
+			return base.GetVisualChild(index);
 		}
 
 		void SetupStyle()

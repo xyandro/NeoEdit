@@ -13,7 +13,7 @@ namespace NeoEdit.Console
 
 		ConsoleTabs()
 		{
-			ConsoleMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			ConsoleMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);

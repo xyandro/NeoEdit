@@ -61,6 +61,6 @@ namespace NeoEdit.GUI.Controls
 
 		public virtual bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown) => false;
 		public virtual bool HandleText(string text) => false;
-		public virtual bool HandleCommand(CommandType command, bool shiftDown, object dialogResult) => false;
+		public virtual bool HandleCommand(CommandType command, bool shiftDown, object dialogResult, bool? multiStatus) => false;
 	}
 }

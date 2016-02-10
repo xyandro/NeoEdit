@@ -44,12 +44,14 @@ namespace NeoEdit.GUI.Misc
 			public CommandType command { get; }
 			public bool shiftDown { get; }
 			public object dialogResult { get; }
+			public bool? multiStatus { get; }
 
-			public MacroActionCommand(CommandType command, bool shiftDown, object dialogResult)
+			public MacroActionCommand(CommandType command, bool shiftDown, object dialogResult, bool? multiStatus)
 			{
 				this.command = command;
 				this.shiftDown = shiftDown;
 				this.dialogResult = dialogResult;
+				this.multiStatus = multiStatus;
 			}
 		}
 
@@ -70,7 +72,7 @@ namespace NeoEdit.GUI.Misc
 			macroActions.Add(new MacroActionText(text));
 		}
 
-		public void AddCommand(CommandType command, bool shiftDown, object dialogResult) => macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult));
+		public void AddCommand(CommandType command, bool shiftDown, object dialogResult, bool? multiStatus) => macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult, multiStatus));
 
 		public void Play<ItemType>(TabsWindow<ItemType, CommandType> tabs, Action<Macro<CommandType>> setMacroPlaying, Action finished = null) where ItemType : TabsControl<ItemType, CommandType>
 		{
@@ -107,7 +109,7 @@ namespace NeoEdit.GUI.Misc
 					else if (action is MacroActionCommand)
 					{
 						var commandAction = action as MacroActionCommand;
-						tabs.HandleCommand(commandAction.command, commandAction.shiftDown, commandAction.dialogResult);
+						tabs.HandleCommand(commandAction.command, commandAction.shiftDown, commandAction.dialogResult, commandAction.multiStatus);
 					}
 				}
 				catch

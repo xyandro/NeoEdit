@@ -680,11 +680,12 @@ namespace NeoEdit.TextEdit
 			public TextEditCommand Command { get; set; }
 			public bool ShiftDown { get; set; }
 			public object DialogResult { get; set; }
+			public bool? MultiStatus { get; set; }
 		}
 		PreviousStruct previous = null;
 
 		bool timeNext = false;
-		internal void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult)
+		internal void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 		{
 			doDrag = DragType.None;
 
@@ -696,6 +697,7 @@ namespace NeoEdit.TextEdit
 					Command = command,
 					ShiftDown = shiftDown,
 					DialogResult = dialogResult,
+					MultiStatus = multiStatus,
 				};
 			}
 
@@ -727,6 +729,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;
 				case TextEditCommand.Edit_Copy_Cut: Command_Edit_Copy_CutCopy(true); break;
 				case TextEditCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(shiftDown); break;
+				case TextEditCommand.Edit_LocalClipboard: Command_Edit_LocalClipboard(multiStatus); break;
 				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_FindReplace(false, shiftDown, dialogResult as FindTextDialog.Result); break;
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
@@ -748,8 +751,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
 				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
-				case TextEditCommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(); break;
-				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(); break;
+				case TextEditCommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(multiStatus); break;
+				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(multiStatus); break;
 				case TextEditCommand.Diff_Next: Command_Diff_NextPrevious(true); break;
 				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
 				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
@@ -870,6 +873,15 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Position_Copy_Lines: Command_Position_Copy(GotoType.Line); break;
 				case TextEditCommand.Position_Copy_Columns: Command_Position_Copy(GotoType.Column); break;
 				case TextEditCommand.Position_Copy_Positions: Command_Position_Copy(GotoType.Position); break;
+				case TextEditCommand.Content_Type_None: Command_Content_Type(Parser.ParserType.None); break;
+				case TextEditCommand.Content_Type_Balanced: Command_Content_Type(Parser.ParserType.Balanced); break;
+				case TextEditCommand.Content_Type_Columns: Command_Content_Type(Parser.ParserType.Columns); break;
+				case TextEditCommand.Content_Type_CSharp: Command_Content_Type(Parser.ParserType.CSharp); break;
+				case TextEditCommand.Content_Type_CSV: Command_Content_Type(Parser.ParserType.CSV); break;
+				case TextEditCommand.Content_Type_HTML: Command_Content_Type(Parser.ParserType.HTML); break;
+				case TextEditCommand.Content_Type_JSON: Command_Content_Type(Parser.ParserType.JSON); break;
+				case TextEditCommand.Content_Type_TSV: Command_Content_Type(Parser.ParserType.TSV); break;
+				case TextEditCommand.Content_Type_XML: Command_Content_Type(Parser.ParserType.XML); break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
@@ -973,6 +985,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Misses_Values7: Command_Keys_HitsMisses(7, false); break;
 				case TextEditCommand.Keys_Misses_Values8: Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Command_Keys_HitsMisses(9, false); break;
+				case TextEditCommand.Keys_ShareKeys: Command_Keys_ShareKeys(multiStatus); break;
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
 				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
@@ -995,7 +1008,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_ClearRegions: Command_Region_ClearRegions(); break;
 				case TextEditCommand.Region_LimitToSelection: Command_Region_LimitToSelection(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
-				case TextEditCommand.Macro_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult); break;
+				case TextEditCommand.View_Highlighting_None: Command_View_Highlighting(Highlighting.HighlightingType.None); break;
+				case TextEditCommand.View_Highlighting_CSharp: Command_View_Highlighting(Highlighting.HighlightingType.CSharp); break;
+				case TextEditCommand.View_Highlighting_CPlusPlus: Command_View_Highlighting(Highlighting.HighlightingType.CPlusPlus); break;
+				case TextEditCommand.Macro_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
 
@@ -1335,6 +1351,8 @@ namespace NeoEdit.TextEdit
 			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n') + Data.DefaultEnding).ToList();
 			ReplaceOneWithMany(clipboardStrings);
 		}
+
+		internal void Command_Edit_LocalClipboard(bool? multiStatus) => UseLocalClipboard = multiStatus != true;
 
 		internal void Command_Edit_Paste_AllFiles(string str, bool highlight) => ReplaceSelections(Selections.Select(value => str).ToList(), highlight);
 
@@ -2446,9 +2464,17 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Diff_Break() => DiffTarget = null;
 
-		internal void Command_Diff_IgnoreWhitespace() => CalculateDiff();
+		internal void Command_Diff_IgnoreWhitespace(bool? multiStatus)
+		{
+			DiffIgnoreWhitespace = multiStatus != true;
+			CalculateDiff();
+		}
 
-		internal void Command_Diff_IgnoreCase() => CalculateDiff();
+		internal void Command_Diff_IgnoreCase(bool? multiStatus)
+		{
+			DiffIgnoreCase = multiStatus != true;
+			CalculateDiff();
+		}
 
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
@@ -2855,6 +2881,8 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == hits).ToList());
 		}
 
+		internal void Command_Keys_ShareKeys(bool? multiStatus) => ShareKeys = multiStatus != true;
+
 		internal void Command_Region_ToggleRegionsSelections()
 		{
 			if (Selections.Count > 1)
@@ -3074,6 +3102,8 @@ namespace NeoEdit.TextEdit
 		internal void Command_Region_LimitToSelection() => Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
 
 		internal void Command_Region_SelectEnclosingRegion() => Selections.Replace(GetEnclosingRegions());
+
+		internal void Command_View_Highlighting(Highlighting.HighlightingType highlightType) => HighlightType = highlightType;
 
 		int visibleIndex = 0;
 		internal void EnsureVisible(bool highlight = false)

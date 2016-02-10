@@ -11,7 +11,7 @@ namespace NeoEdit.Network
 
 		public NetworkWindow()
 		{
-			NetworkMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			NetworkMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
 			InitializeComponent();
 		}
 

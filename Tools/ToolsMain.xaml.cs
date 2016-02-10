@@ -10,7 +10,7 @@ namespace NeoEdit.Tools
 
 		public ToolsMain()
 		{
-			ToolsMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			ToolsMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
 			InitializeComponent();
 		}
 

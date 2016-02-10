@@ -23,7 +23,7 @@ namespace NeoEdit.HexEdit
 
 		HexEditTabs()
 		{
-			HexEditMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
+			HexEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, shiftDown));
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);

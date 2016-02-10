@@ -18,7 +18,7 @@ namespace NeoEdit.Disk
 
 		DiskTabs()
 		{
-			DiskMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command, shiftDown));
+			DiskMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, shiftDown));
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);

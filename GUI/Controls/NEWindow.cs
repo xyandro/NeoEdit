@@ -8,8 +8,8 @@ namespace NeoEdit.GUI.Controls
 	{
 		public NEWindow()
 		{
-			HelpMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
-			WindowMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			HelpMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
+			WindowMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
 		}
 
 		void RunCommand(HelpCommand command)

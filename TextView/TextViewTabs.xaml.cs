@@ -23,7 +23,7 @@ namespace NeoEdit.TextView
 
 		TextViewTabs()
 		{
-			TextViewMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			TextViewMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
 			InitializeComponent();
 			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);

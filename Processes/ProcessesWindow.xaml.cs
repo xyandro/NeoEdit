@@ -21,7 +21,7 @@ namespace NeoEdit.Processes
 		public ProcessesWindow(int? pid = null)
 		{
 			ProcessManager.WindowCreated();
-			ProcessesMenuItem.RegisterCommands(this, (s, e, command) => RunCommand(command));
+			ProcessesMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
