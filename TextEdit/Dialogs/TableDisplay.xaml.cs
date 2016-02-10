@@ -122,11 +122,11 @@ namespace NeoEdit.TextEdit.Dialogs
 					var text = new TextBlock { Padding = new Thickness(5, 0, 5, 0) };
 					if (row == 0)
 					{
-						text.Text = Table.GetHeader(column);
+						text.Text = Table.GetHeader(column)?.Replace("\r", "").Replace("\n", "").Trim() ?? "";
 						text.Background = Brushes.DarkGray;
 					}
 					else
-						text.Text = Table[row - 1, column];
+						text.Text = Table[row - 1, column]?.Replace("\r", "").Replace("\n", "").Trim() ?? "";
 					Grid.SetRow(text, row);
 					Grid.SetColumn(text, column);
 					tableGrid.Children.Add(text);

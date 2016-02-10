@@ -29,6 +29,8 @@ namespace NeoEdit.TextEdit.Content
 			XML,
 		}
 
+		public static bool IsTableType(this ParserType parserType) => (parserType == ParserType.Columns) || (parserType == ParserType.TSV) || (parserType == ParserType.CSV);
+
 		static public ParserNode Parse(string data, ParserType parserType)
 		{
 			switch (parserType)

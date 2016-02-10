@@ -47,6 +47,8 @@ Diff: Don't move windows, only do two-pane if two files only
 Allow user to choose number of rows/columns in tile view
 Don't allow tab in all autocomplete boxes (just find)
 Check that objects can be deleted (Run "GC", make sure size goes down)
+Ignore line endings (Diff1.txt vs Diff2.txt)
+Add Files->Operations->Explore (Just like file has)
 
 View:
 Update as new lines are added

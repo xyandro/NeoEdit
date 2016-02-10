@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
@@ -12,8 +13,9 @@ namespace NeoEdit.TextEdit
 	{
 		void OpenTable(Table table)
 		{
-			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", TextEdit.Content.Parser.ParserType.Columns), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			textEditor.ContentType = TextEdit.Content.Parser.ParserType.Columns;
+			var contentType = ContentType.IsTableType() ? ContentType : Parser.ParserType.Columns;
+			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			textEditor.ContentType = contentType;
 			TabsParent.CreateTab(textEditor);
 		}
 
