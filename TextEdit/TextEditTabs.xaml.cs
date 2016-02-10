@@ -25,11 +25,11 @@ namespace NeoEdit.TextEdit
 	{
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
-		public static void Create(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false)
+		public static void Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false)
 		{
-			if ((!Helpers.IsDebugBuild) && (filename != null))
+			if ((!Helpers.IsDebugBuild) && (fileName != null))
 			{
-				var fileInfo = new FileInfo(filename);
+				var fileInfo = new FileInfo(fileName);
 				if (fileInfo.Exists)
 				{
 					if (fileInfo.Length > 52428800) // 50 MB
@@ -43,7 +43,7 @@ namespace NeoEdit.TextEdit
 							DefaultCancel = Message.OptionsEnum.Cancel,
 						}.Show())
 						{
-							case Message.OptionsEnum.Yes: Launcher.Static.LaunchTextViewer(filename); return;
+							case Message.OptionsEnum.Yes: Launcher.Static.LaunchTextViewer(fileName); return;
 							case Message.OptionsEnum.No: break;
 							case Message.OptionsEnum.Cancel: return;
 						}
@@ -51,14 +51,14 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			var textEditor = new TextEditor(filename, bytes, codePage, modified, line, column);
+			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, modified, line, column);
 			CreateTab(textEditor, textEditTabs, forceCreate);
 		}
 
-		public static void CreateDiff(string filename1, string filename2)
+		public static void CreateDiff(string fileName1 = null, string displayName1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, int? line2 = null, int? column2 = null)
 		{
-			var textEdit1 = new TextEditor(filename1);
-			var textEdit2 = new TextEditor(filename2);
+			var textEdit1 = new TextEditor(fileName1, displayName1, line: line1 ?? -1, column: column1 ?? -1);
+			var textEdit2 = new TextEditor(fileName2, displayName2, line: line2 ?? -1, column: column2 ?? -1);
 			var textEditTabs = new TextEditTabs();
 			textEditTabs.ItemTabs.Tiles = true;
 			textEditTabs.tabs.CreateTab(textEdit1);
@@ -67,7 +67,7 @@ namespace NeoEdit.TextEdit
 			textEdit1.DiffTarget = textEdit2;
 		}
 
-		public void AddTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null) => Create(filename, bytes, codePage, modified, line, column, this);
+		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, modified, line, column, this);
 
 		TextEditTabs()
 		{

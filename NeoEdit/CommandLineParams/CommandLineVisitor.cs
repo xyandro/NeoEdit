@@ -4,6 +4,7 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using NeoEdit.CommandLineParams.Parser;
+using NeoEdit.Common;
 
 namespace NeoEdit.CommandLineParams
 {
@@ -43,7 +44,7 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitAbout(CommandLineParamsParser.AboutContext context) => new AboutParam();
 		public override object VisitConsole(CommandLineParamsParser.ConsoleContext context) => new ConsoleParam();
 		public override object VisitConsolerunner(CommandLineParamsParser.ConsolerunnerContext context) => new ConsoleRunnerParam(context.param().Select(param => param.GetText()).ToArray());
-		public override object VisitDiff(CommandLineParamsParser.DiffContext context) => new DiffParam(context.file1 == null ? null : context.file1.GetText(), context.file2 == null ? null : context.file2.GetText());
+		public override object VisitDiff(CommandLineParamsParser.DiffContext context) => new DiffParam(context.texteditfile().Select(textEditFile => VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile).Resize(2, null).ToList());
 		public override object VisitDisk(CommandLineParamsParser.DiskContext context) => new DiskParam(context.file == null ? null : context.file.GetText());
 		public override object VisitHandles(CommandLineParamsParser.HandlesContext context) => new HandlesParam(context.pid == null ? default(int?) : int.Parse(context.pid.Text));
 		public override object VisitHexdump(CommandLineParamsParser.HexdumpContext context) => new HexDumpParam(context.param().Select(file => file.GetText()).ToList());
@@ -54,7 +55,7 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitRegistry(CommandLineParamsParser.RegistryContext context) => new RegistryParam(context.key == null ? null : context.key.GetText());
 		public override object VisitSysteminfo(CommandLineParamsParser.SysteminfoContext context) => new SystemInfoParam();
 		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context) => new TextEditParam(context.texteditfile().Select(textEditFile => VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile).ToList());
-		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context) => new TextEditParam.TextEditFile(context.file.GetText(), context.line == null ? default(int?) : int.Parse(context.line.Text), context.column == null ? default(int?) : int.Parse(context.column.Text));
+		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context) => new TextEditParam.TextEditFile(context.file.GetText(), context.display?.GetText(), context.line == null ? default(int?) : int.Parse(context.line.Text), context.column == null ? default(int?) : int.Parse(context.column.Text));
 		public override object VisitTextview(CommandLineParamsParser.TextviewContext context) => new TextViewParam(context.param().Select(file => file.GetText()).ToList());
 		public override object VisitTools(CommandLineParamsParser.ToolsContext context) => new ToolsParam();
 	}

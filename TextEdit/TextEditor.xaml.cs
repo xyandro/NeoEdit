@@ -57,6 +57,8 @@ namespace NeoEdit.TextEdit
 		readonly UndoRedo undoRedo;
 
 		[DepProp]
+		public string DisplayName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public string FileName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsModified { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -173,7 +175,7 @@ namespace NeoEdit.TextEdit
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 
-		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = -1, int column = -1)
+		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = -1, int column = -1)
 		{
 			SetupLocalKeys();
 			clipboard = new NELocalClipboard(this);
@@ -197,7 +199,7 @@ namespace NeoEdit.TextEdit
 			canvasRenderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
 			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 
-			OpenFile(filename, bytes, codePage, modified);
+			OpenFile(fileName, displayName, bytes, codePage, modified);
 			Goto(line, column);
 
 			localCallbacks = UIHelper<TextEditor>.GetLocalCallbacks(this);
@@ -220,7 +222,8 @@ namespace NeoEdit.TextEdit
 
 		void SetupTabLabel()
 		{
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] == null?""[Untitled]"":FileName([0]))+([1]?""*"":"""")+([2]?"" (Diff)"":"""")" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] ?? FileName([1]) ?? ""[Untitled]"")+([2]?""*"":"""")+([3]?"" (Diff)"":"""")" };
+			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.DisplayName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsDiff).Name) { Source = this });
@@ -279,9 +282,10 @@ namespace NeoEdit.TextEdit
 		}
 
 		DateTime fileLastWrite;
-		internal void OpenFile(string filename, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool keepUndo = false)
+		internal void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool keepUndo = false)
 		{
-			FileName = filename;
+			FileName = fileName;
+			DisplayName = displayName;
 			var isModified = modified ?? bytes != null;
 			if (bytes == null)
 			{
@@ -540,7 +544,11 @@ namespace NeoEdit.TextEdit
 			}
 			fileLastWrite = new FileInfo(fileName).LastWriteTime;
 			SetModifiedFlag(false);
-			FileName = fileName;
+			if (FileName != fileName)
+			{
+				FileName = fileName;
+				DisplayName = null;
+			}
 		}
 
 		internal List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => GetString(range)).ToList();
@@ -1007,7 +1015,7 @@ namespace NeoEdit.TextEdit
 			var dialog = new SaveFileDialog
 			{
 				Filter = "All files|*.*",
-				FileName = Path.GetFileName(FileName),
+				FileName = Path.GetFileName(FileName) ?? DisplayName,
 				InitialDirectory = Path.GetDirectoryName(FileName),
 				DefaultExt = "txt",
 			};
@@ -1043,6 +1051,7 @@ namespace NeoEdit.TextEdit
 			File.Delete(fileName);
 			File.Move(FileName, fileName);
 			FileName = fileName;
+			DisplayName = null;
 		}
 
 		internal void Command_File_Refresh()

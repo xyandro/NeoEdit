@@ -13,7 +13,7 @@ namespace NeoEdit.GUI
 		Action<bool> setMinimizeToTrayLauncher;
 
 		Action<bool> consoleLauncher;
-		Action<string, string> diffLauncher;
+		Action diffLauncher;
 		Action<string, IEnumerable<string>, bool> diskLauncher;
 		Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
 		Action<int?> handlesLauncher;
@@ -22,7 +22,7 @@ namespace NeoEdit.GUI
 		Action<int> processHexEditorLauncher;
 		Action<string> registryLauncher;
 		Action systemInfoLauncher;
-		Action<string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
+		Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
 		Action<string, bool> textViewerLauncher;
 		Action toolsLauncher;
 
@@ -31,7 +31,7 @@ namespace NeoEdit.GUI
 			, Action<bool> setMinimizeToTray
 
 			, Action<bool> console
-			, Action<string, string> diff
+			, Action diff
 			, Action<string, IEnumerable<string>, bool> disk
 			, Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor
 			, Action<int?> handles
@@ -40,7 +40,7 @@ namespace NeoEdit.GUI
 			, Action<int> processHexEditor
 			, Action<string> registry
 			, Action systemInfo
-			, Action<string, byte[], Coder.CodePage, bool?, bool> textEditor
+			, Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditor
 			, Action<string, bool> textViewer
 			, Action tools
 		)
@@ -72,82 +72,18 @@ namespace NeoEdit.GUI
 			set { setMinimizeToTrayLauncher(value); }
 		}
 
-		public void LaunchSystemInfo()
-		{
-			if (systemInfoLauncher != null)
-				systemInfoLauncher();
-		}
-
-		public void LaunchTextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool forceCreate = false)
-		{
-			if (textEditorLauncher != null)
-				textEditorLauncher(filename, bytes, codePage, modified, forceCreate);
-		}
-
-		public void LaunchDiff(string filename1 = null, string filename2 = null)
-		{
-			if (diffLauncher != null)
-				diffLauncher(filename1, filename2);
-		}
-
-		public void LaunchTextViewer(string filename = null, bool forceCreate = false)
-		{
-			if (textViewerLauncher != null)
-				textViewerLauncher(filename, forceCreate);
-		}
-
-		public void LaunchTools()
-		{
-			if (toolsLauncher != null)
-				toolsLauncher();
-		}
-
-		public void LaunchHexEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false)
-		{
-			if (fileHexEditorLauncher != null)
-				fileHexEditorLauncher(filename, bytes, codePage, modified, forceCreate);
-		}
-
-		public void LaunchHexEditor(int pid)
-		{
-			if (processHexEditorLauncher != null)
-				processHexEditorLauncher(pid);
-		}
-
-		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false)
-		{
-			if (diskLauncher != null)
-				diskLauncher(path, files, forceCreate);
-		}
-
-		public void LaunchConsole(bool forceCreate = false)
-		{
-			if (consoleLauncher != null)
-				consoleLauncher(forceCreate);
-		}
-
-		public void LaunchNetwork()
-		{
-			if (networkLauncher != null)
-				networkLauncher();
-		}
-
-		public void LaunchProcesses(int? pid = null)
-		{
-			if (processesLauncher != null)
-				processesLauncher(pid);
-		}
-
-		public void LaunchHandles(int? pid = null)
-		{
-			if (handlesLauncher != null)
-				handlesLauncher(pid);
-		}
-
-		public void LaunchRegistry(string key = null)
-		{
-			if (registryLauncher != null)
-				registryLauncher(key);
-		}
+		public void LaunchSystemInfo() => systemInfoLauncher?.Invoke();
+		public void LaunchTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool forceCreate = false) => textEditorLauncher?.Invoke(fileName, displayName, bytes, codePage, modified, forceCreate);
+		public void LaunchDiff() => diffLauncher?.Invoke();
+		public void LaunchTextViewer(string fileName = null, bool forceCreate = false) => textViewerLauncher?.Invoke(fileName, forceCreate);
+		public void LaunchTools() => toolsLauncher?.Invoke();
+		public void LaunchHexEditor(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => fileHexEditorLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
+		public void LaunchHexEditor(int pid) => processHexEditorLauncher?.Invoke(pid);
+		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false) => diskLauncher?.Invoke(path, files, forceCreate);
+		public void LaunchConsole(bool forceCreate = false) => consoleLauncher?.Invoke(forceCreate);
+		public void LaunchNetwork() => networkLauncher?.Invoke();
+		public void LaunchProcesses(int? pid = null) => processesLauncher?.Invoke(pid);
+		public void LaunchHandles(int? pid = null) => handlesLauncher?.Invoke(pid);
+		public void LaunchRegistry(string key = null) => registryLauncher?.Invoke(key);
 	}
 }

@@ -9,7 +9,7 @@ parameter     : LIVE | about | console | consolerunner | diff | disk | handles |
 about         : ABOUT ;
 console       : CONSOLE ;
 consolerunner : CONSOLERUNNER param* ;
-diff          : DIFF file1=param? file2=param? ;
+diff          : DIFF texteditfile? texteditfile? ;
 disk          : DISK file=param? ;
 handles       : HANDLES pid=NUMBER? ;
 hexdump       : HEXDUMP param* ;
@@ -21,7 +21,7 @@ processes     : PROCESSES pid=NUMBER? ;
 registry      : REGISTRY key=param? ;
 systeminfo    : SYSTEMINFO ;
 textedit      : TEXTEDIT texteditfile* | texteditfile+ ;
-texteditfile  : file=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? ;
+texteditfile  : file=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? (DISPLAY EQUALS? display=param)? ;
 textview      : TEXTVIEW param* ;
 tools         : TOOLS ;
 

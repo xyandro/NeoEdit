@@ -46,6 +46,8 @@ namespace NeoEdit.Common.Expressions
 			}
 		}
 
+		bool IsNull => Value == null;
+		bool IsBool => Value is bool;
 		bool IsInteger => (Value is sbyte) || (Value is byte) || (Value is short) || (Value is ushort) || (Value is int) || (Value is uint) || (Value is long) || (Value is ulong) || (Value is BigInteger);
 		bool IsFloat => (IsInteger) || (Value is float) || (Value is double) || (Value is decimal);
 		bool IsComplex => (IsFloat) || (Value is Complex);
@@ -70,7 +72,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (Value == null)
+				if (IsNull)
 					throw new Exception("NULL value");
 				return (bool)Convert.ChangeType(Value, typeof(bool));
 			}
@@ -80,7 +82,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (Value == null)
+				if (IsNull)
 					throw new Exception("NULL value");
 				if (Value is BigInteger)
 					return (BigInteger)Value;
@@ -99,7 +101,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (Value == null)
+				if (IsNull)
 					throw new Exception("NULL value");
 				if (Value is Complex)
 				{
@@ -118,7 +120,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (Value == null)
+				if (IsNull)
 					throw new Exception("NULL value");
 				if (Value is Complex)
 					return (Complex)Value;
@@ -132,7 +134,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (Value == null)
+				if (IsNull)
 					throw new Exception("NULL value");
 				return (char)Convert.ChangeType(Value, typeof(char));
 			}
@@ -142,7 +144,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			get
 			{
-				if (Value == null)
+				if (IsNull)
 					return "";
 				if (Value is Complex)
 				{
@@ -257,7 +259,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator *(ExpressionResult factor1, ExpressionResult factor2)
 		{
-			if ((factor1.Value == null) || (factor2.Value == null))
+			if ((factor1.IsNull) || (factor2.IsNull))
 				throw new Exception("NULL value");
 
 			var units = factor1.Units * factor2.Units;
@@ -285,7 +287,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator /(ExpressionResult dividend, ExpressionResult divisor)
 		{
-			if ((dividend.Value == null) || (divisor.Value == null))
+			if ((dividend.IsNull) || (divisor.IsNull))
 				throw new Exception("NULL value");
 
 			var units = dividend.Units / divisor.Units;
@@ -306,7 +308,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult IntDiv(ExpressionResult dividend, ExpressionResult divisor)
 		{
-			if ((dividend.Value == null) || (divisor.Value == null))
+			if ((dividend.IsNull) || (divisor.IsNull))
 				throw new Exception("NULL value");
 
 			return new ExpressionResult(dividend.GetInteger / divisor.GetInteger, dividend.Units / divisor.Units);
@@ -316,7 +318,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			var units = dividend.Units / divisor.Units;
 
-			if ((dividend.Value == null) || (divisor.Value == null))
+			if ((dividend.IsNull) || (divisor.IsNull))
 				throw new Exception("NULL value");
 
 			if ((dividend.IsInteger) && (divisor.IsInteger))
@@ -327,7 +329,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator +(ExpressionResult addend1, ExpressionResult addend2)
 		{
-			if ((addend1.Value == null) || (addend2.Value == null))
+			if ((addend1.IsNull) || (addend2.IsNull))
 			{
 				if (addend1.IsString)
 					return addend1;
@@ -416,7 +418,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult operator -(ExpressionResult minuend, ExpressionResult subtrahend)
 		{
-			if ((minuend.Value == null) || (subtrahend.Value == null))
+			if ((minuend.IsNull) || (subtrahend.IsNull))
 				throw new Exception("NULL value");
 
 			if (minuend.IsDateTime)
@@ -517,9 +519,9 @@ namespace NeoEdit.Common.Expressions
 				val2 = UnitConvertOp(val2, val1.Units);
 			}
 
-			if ((val1.Value == null) && (val2.Value == null))
+			if ((val1.IsNull) && (val2.IsNull))
 				return new ExpressionResult(true);
-			if ((val1.Value == null) || (val2.Value == null))
+			if ((val1.IsNull) || (val2.IsNull))
 				return new ExpressionResult(false);
 
 			if ((val1.IsInteger) && (val2.IsInteger))
@@ -539,7 +541,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult LessThanOp(ExpressionResult val1, ExpressionResult val2, bool ignoreCase)
 		{
-			if ((val1.Value == null) || (val2.Value == null))
+			if ((val1.IsNull) || (val2.IsNull))
 				throw new Exception("NULL value");
 
 			if (!val1.Units.Equals(val2.Units))
@@ -556,7 +558,7 @@ namespace NeoEdit.Common.Expressions
 
 		public static ExpressionResult GreaterThanOp(ExpressionResult val1, ExpressionResult val2, bool ignoreCase)
 		{
-			if ((val1.Value == null) || (val2.Value == null))
+			if ((val1.IsNull) || (val2.IsNull))
 				throw new Exception("NULL value");
 
 			if (!val1.Units.Equals(val2.Units))
@@ -917,7 +919,7 @@ namespace NeoEdit.Common.Expressions
 		{
 			if (Units.HasUnits)
 				throw new Exception("Can't do FileName with units.");
-			return new ExpressionResult(Path.GetFileName(GetString));
+			return new ExpressionResult(IsNull ? null : Path.GetFileName(GetString));
 		}
 
 		public static ExpressionResult FromPolar(ExpressionResult val1, ExpressionResult val2) => new ExpressionResult(Complex.FromPolarCoordinates(val1.GetFloat, val2.GetFloat), val1.Units);

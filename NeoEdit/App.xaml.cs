@@ -89,17 +89,17 @@ namespace NeoEdit
 				, setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); }
 
 				, console: (forceCreate) => ConsoleTabs.Create(forceCreate: forceCreate)
-				, diff: (filename1, filename2) => TextEditTabs.CreateDiff(filename1, filename2)
+				, diff: () => TextEditTabs.CreateDiff()
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
-				, fileHexEditor: (filename, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(filename, binarydata, encoder, modified, forceCreate)
+				, fileHexEditor: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
 				, handles: (pid) => new HandlesWindow(pid)
 				, network: () => new NetworkWindow()
 				, processes: (pid) => new ProcessesWindow(pid)
 				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
 				, registry: (key) => new RegistryWindow(key)
 				, systemInfo: () => new SystemInfoWindow()
-				, textEditor: (filename, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(filename, bytes, encoding, modified, forceCreate: forceCreate)
-				, textViewer: (filename, forceCreate) => TextViewTabs.Create(filename, forceCreate)
+				, textEditor: (fileName, displayName, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(fileName, displayName, bytes, encoding, modified, forceCreate: forceCreate)
+				, textViewer: (fileName, forceCreate) => TextViewTabs.Create(fileName, forceCreate)
 				, tools: () => new ToolsMain()
 			);
 

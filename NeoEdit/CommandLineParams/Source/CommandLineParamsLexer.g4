@@ -8,6 +8,7 @@ CONSOLE        : '-console'                                                     
 CONSOLERUNNER  : '-consolerunner'                                                                       ;
 DIFF           : '-diff'                                                                                ;
 DISK           : '-disk' | '-disks'                                                                     ;
+DISPLAY        : '-display' | '-displayname' | '-displaytext'                                           ;
 HANDLES        : '-handle' | '-handles'                                                                 ;
 HEXDUMP        : '-binarydump' | '-dump' | '-hexdump'                                                   ;
 HEXEDIT        : '-binary' | '-binaryedit' | '-binaryeditor' | '-hex' | '-hexedit' | '-hexeditor'       ;
@@ -15,7 +16,7 @@ HEXPID         : '-binarypid' | '-hexpid'                                       
 LINE           : '-line'                                                                                ;
 LIVE           : '-live'                                                                                ;
 MULTI          : '-multi'                                                                               ;
-NETWORK        : '-socket' | '-sockets' | '-network'                                                                ;
+NETWORK        : '-socket' | '-sockets' | '-network'                                                    ;
 PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
 REGISTRY       : '-registry'                                                                            ;
 SYSTEMINFO     : '-system' | '-systeminfo'                                                              ;
@@ -37,6 +38,7 @@ CONSOLE2       : CONSOLE       -> type(CONSOLE)       ;
 CONSOLERUNNER2 : CONSOLERUNNER -> type(CONSOLERUNNER) ;
 DIFF2          : DIFF          -> type(DIFF)          ;
 DISK2          : DISK          -> type(DISK)          ;
+DISPLAY2       : DISPLAY       -> type(DISPLAY)       ;
 HANDLES2       : HANDLES       -> type(HANDLES)       ;
 HEXDUMP2       : HEXDUMP       -> type(HEXDUMP)       ;
 HEXEDIT2       : HEXEDIT       -> type(HEXEDIT)       ;
