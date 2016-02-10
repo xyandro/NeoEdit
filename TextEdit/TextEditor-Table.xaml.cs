@@ -11,11 +11,12 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		void OpenTable(Table table)
+		void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : Parser.ParserType.Columns;
 			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 			textEditor.ContentType = contentType;
+			textEditor.DisplayName = name;
 			TabsParent.CreateTab(textEditor);
 		}
 

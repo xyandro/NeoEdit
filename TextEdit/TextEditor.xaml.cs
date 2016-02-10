@@ -2719,8 +2719,9 @@ namespace NeoEdit.TextEdit
 			dbConnection = result.DBConnectInfo.GetConnection();
 		}
 
-		Table RunDBSelect(string commandText)
+		Tuple<string, Table> RunDBSelect(string commandText)
 		{
+			var tableName = Regex.Match(commandText, @"\bFROM\b.*?([\[\]a-z\.]+)", RegexOptions.IgnoreCase).Groups[1].Value.Replace("[", "").Replace("]", "").CoalesceNullOrEmpty();
 			using (var command = dbConnection.CreateCommand())
 			{
 				command.CommandText = commandText;
@@ -2728,7 +2729,7 @@ namespace NeoEdit.TextEdit
 				{
 					if (reader.FieldCount == 0)
 						return null;
-					return new Table(reader);
+					return Tuple.Create(tableName, new Table(reader));
 				}
 			}
 		}
@@ -2751,7 +2752,7 @@ namespace NeoEdit.TextEdit
 				var table = RunDBSelect(GetString(range));
 				if (table != null)
 				{
-					OpenTable(table);
+					OpenTable(table.Item2, table.Item1);
 					hasTables = true;
 				}
 			}
