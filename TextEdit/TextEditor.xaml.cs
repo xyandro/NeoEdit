@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
@@ -38,7 +36,7 @@ namespace NeoEdit.TextEdit
 {
 	public class TabsControl : TabsControl<TextEditor, TextEditCommand> { }
 
-	public partial class TextEditor : IClipboardEnabled
+	partial class TextEditor : IClipboardEnabled
 	{
 		TextData _data = new TextData();
 		TextData Data
@@ -96,10 +94,6 @@ namespace NeoEdit.TextEdit
 		public int yScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string LineEnding { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public ObservableCollection<ObservableCollection<string>> keysAndValues { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollection<ObservableCollection<string>>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool ShareKeys { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int ClipboardCount { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -162,11 +156,6 @@ namespace NeoEdit.TextEdit
 
 		static Dictionary<string, List<string>> variables { get; } = new Dictionary<string, List<string>>();
 
-		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; }
-		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; }
-		Dictionary<string, int> keysHash;
-		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
-		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
@@ -175,25 +164,10 @@ namespace NeoEdit.TextEdit
 			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
-			UIHelper<TextEditor>.AddCallback(a => a.ShareKeys, (obj, o, n) => obj.SetupStaticOrLocalData());
 			UIHelper<TextEditor>.AddCallback(a => a.UseLocalClipboard, (obj, o, n) => obj.SetClipboardCount());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
-
-			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>> { null, null, null, null, null, null, null, null, null, null };
-			staticKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(staticKeysAndValues, staticKeysHash, e);
-			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
-				staticKeysAndValues[ctr] = new ObservableCollection<string>();
-		}
-
-		static void keysAndValues_CollectionChanged(ObservableCollection<ObservableCollection<string>> data, Dictionary<string, int> hash, NotifyCollectionChangedEventArgs e)
-		{
-			if ((e.Action != NotifyCollectionChangedAction.Replace) || (e.NewStartingIndex != 0))
-				return;
-
-			hash.Clear();
-			for (var pos = 0; pos < data[0].Count; ++pos)
-				hash[data[0][pos]] = pos;
+			SetupStaticKeys();
 		}
 
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
@@ -201,10 +175,7 @@ namespace NeoEdit.TextEdit
 
 		public TextEditor(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = -1, int column = -1)
 		{
-			localKeysAndValues = new ObservableCollection<ObservableCollection<string>> { null, null, null, null, null, null, null, null, null, null };
-			localKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(localKeysAndValues, localKeysHash, e);
-			for (var ctr = 0; ctr < localKeysAndValues.Count; ++ctr)
-				localKeysAndValues[ctr] = new ObservableCollection<string>();
+			SetupLocalKeys();
 			clipboard = new NELocalClipboard(this);
 
 			InitializeComponent();
@@ -212,10 +183,8 @@ namespace NeoEdit.TextEdit
 
 			SetupTabLabel();
 
-			ShareKeys = true;
 			UseLocalClipboard = false;
 			NEClipboard.ClipboardChanged += SetClipboardCount;
-			SetupStaticOrLocalData();
 			SetupDropAccept();
 
 			undoRedo = new UndoRedo();
@@ -256,20 +225,6 @@ namespace NeoEdit.TextEdit
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsDiff).Name) { Source = this });
 			SetBinding(UIHelper<TabsControl<TextEditor, TextEditCommand>>.GetProperty(a => a.TabLabel), multiBinding);
-		}
-
-		void SetupStaticOrLocalData()
-		{
-			if (ShareKeys)
-			{
-				keysAndValues = staticKeysAndValues;
-				keysHash = staticKeysHash;
-			}
-			else
-			{
-				keysAndValues = localKeysAndValues;
-				keysHash = localKeysHash;
-			}
 		}
 
 		void SetClipboardCount() => ClipboardCount = clipboard.Strings.Count;
@@ -463,7 +418,7 @@ namespace NeoEdit.TextEdit
 			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
 			var fileName = FileName;
 			var clipboard = this.clipboard.Strings;
-			var keysAndValues = this.keysAndValues;
+			var KeysAndValues = this.KeysAndValues;
 
 			var results = new NEVariables();
 
@@ -509,15 +464,15 @@ namespace NeoEdit.TextEdit
 				var rkvName = $"r{prefix}";
 				var rkvlName = $"r{prefix}l";
 				var rkvnName = $"r{prefix}n";
-				results.Add(NEVariable.InterpretEnumerable(rkvName, "Raw keys/values", () => keysAndValues[num], initializeKeyOrdering));
-				results.Add(NEVariable.Enumerable(rkvlName, "Raw keys/values length", () => keysAndValues[num].Select(str => str.Length), initializeKeyOrdering));
-				results.Add(NEVariable.Constant(rkvnName, "Raw keys/values count", () => keysAndValues[num].Count, initializeKeyOrdering));
+				results.Add(NEVariable.InterpretEnumerable(rkvName, "Raw keys/values", () => KeysAndValues[num], initializeKeyOrdering));
+				results.Add(NEVariable.Enumerable(rkvlName, "Raw keys/values length", () => KeysAndValues[num].Select(str => str.Length), initializeKeyOrdering));
+				results.Add(NEVariable.Constant(rkvnName, "Raw keys/values count", () => KeysAndValues[num].Count, initializeKeyOrdering));
 
 				var values = default(List<string>);
 				var kvInitialize = new NEVariableInitializer(() =>
 				{
-					if (keysAndValues[0].Count == keysAndValues[num].Count)
-						values = keyOrdering.Select(order => order.HasValue ? keysAndValues[num][order.Value] : "").ToList();
+					if (KeysAndValues[0].Count == KeysAndValues[num].Count)
+						values = keyOrdering.Select(order => order.HasValue ? KeysAndValues[num][order.Value] : "").ToList();
 					else
 						values = new List<string>();
 				}, initializeKeyOrdering);
@@ -985,7 +940,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Misses_Values7: Command_Keys_HitsMisses(7, false); break;
 				case TextEditCommand.Keys_Misses_Values8: Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Command_Keys_HitsMisses(9, false); break;
-				case TextEditCommand.Keys_ShareKeys: Command_Keys_ShareKeys(multiStatus); break;
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
 				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
@@ -2822,66 +2776,6 @@ namespace NeoEdit.TextEdit
 			ValidateConnection();
 			ExamineDatabaseDialog.Run(WindowParent, dbConnection);
 		}
-
-		internal void Command_Keys_Set(int index)
-		{
-			// Handles keys as well as values
-			var values = GetSelectionStrings();
-			if ((index == 0) && (values.Distinct().Count() != values.Count))
-				throw new ArgumentException("Cannot have duplicate keys");
-			keysAndValues[index] = new ObservableCollection<string>(values);
-		}
-
-		internal void Command_Keys_Add(int index)
-		{
-			// Handles keys as well as values
-			var values = GetSelectionStrings();
-			if ((index == 0) && (keysAndValues[0].Concat(values).GroupBy(key => key).Any(group => group.Count() > 1)))
-				throw new ArgumentException("Cannot have duplicate keys");
-			foreach (var value in values)
-				keysAndValues[index].Add(value);
-		}
-
-		internal void Command_Keys_Replace(int index)
-		{
-			if (keysAndValues[0].Count != keysAndValues[index].Count)
-				throw new Exception("Keys and values count must match");
-
-			var strs = new List<string>();
-			foreach (var range in Selections)
-			{
-				var str = GetString(range);
-				if (!keysHash.ContainsKey(str))
-					strs.Add(str);
-				else
-					strs.Add(keysAndValues[index][keysHash[str]]);
-			}
-			ReplaceSelections(strs);
-		}
-
-		internal void Command_Keys_Find(int index)
-		{
-			var searcher = new Searcher(keysAndValues[index].ToList(), true);
-			var ranges = new List<Range>();
-			var selections = Selections.ToList();
-			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
-				selections = new List<Range> { FullRange };
-			foreach (var selection in selections)
-				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
-
-			ranges = ranges.OrderBy(range => range.Start).ToList();
-			Selections.Replace(ranges);
-		}
-
-		internal void Command_Keys_Copy(int index) => clipboard.Strings = keysAndValues[index].ToList();
-
-		internal void Command_Keys_HitsMisses(int index, bool hits)
-		{
-			var set = new HashSet<string>(keysAndValues[index]);
-			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == hits).ToList());
-		}
-
-		internal void Command_Keys_ShareKeys(bool? multiStatus) => ShareKeys = multiStatus != true;
 
 		internal void Command_Region_ToggleRegionsSelections()
 		{

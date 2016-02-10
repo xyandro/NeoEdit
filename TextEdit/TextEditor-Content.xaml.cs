@@ -7,7 +7,7 @@ using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
-	public partial class TextEditor
+	partial class TextEditor
 	{
 		struct PreviousContent
 		{

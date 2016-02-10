@@ -141,6 +141,8 @@ namespace NeoEdit.GUI.Controls
 		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
 		bool shiftDown => (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None;
 
+		public int ActiveCount => Items.Count(item => item.Active);
+
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
 			base.OnPreviewKeyDown(e);

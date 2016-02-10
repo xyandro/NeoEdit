@@ -297,7 +297,6 @@ namespace NeoEdit.TextEdit
 		Keys_Misses_Values7,
 		Keys_Misses_Values8,
 		Keys_Misses_Values9,
-		Keys_ShareKeys,
 		[KeyGesture(Key.A, ModifierKeys.Control)] Select_All,
 		Select_Limit,
 		[KeyGesture(Key.L, ModifierKeys.Control)] Select_Lines,

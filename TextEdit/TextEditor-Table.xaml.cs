@@ -8,7 +8,7 @@ using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
-	public partial class TextEditor
+	partial class TextEditor
 	{
 		void OpenTable(Table table)
 		{

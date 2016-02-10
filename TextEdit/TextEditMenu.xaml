@@ -486,7 +486,6 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Misses_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Misses_Values9"/>
 		</MenuItem>
-		<textEdit:MultiMenuItem Header="Shar_e Keys" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ShareKeys" MultiValue="{StaticResource True}" CommandEnum="Keys_ShareKeys"/>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>

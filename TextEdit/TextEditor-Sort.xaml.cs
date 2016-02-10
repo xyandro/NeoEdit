@@ -6,7 +6,7 @@ using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
-	public partial class TextEditor
+	partial class TextEditor
 	{
 		internal enum SortScope { Selections, Lines, Regions }
 		internal enum SortType { String, StringRaw, Numeric, DateTime, Keys, Reverse, Randomize, Length, Frequency }
@@ -97,7 +97,7 @@ namespace NeoEdit.TextEdit
 				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.value), ascending).ToList(); break;
 				case SortType.Keys:
 					{
-						var sort = keysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
+						var sort = KeysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
 						entries = OrderByAscDesc(entries, entry => entry.value, ascending, (value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue)).ToList();
 					}
 					break;

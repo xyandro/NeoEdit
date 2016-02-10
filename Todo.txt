@@ -34,7 +34,7 @@ Opening new file in diff removes diff
 Fix warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification (https://social.msdn.microsoft.com/Forums/vstudio/en-US/d605bec7-df91-4272-be17-19db7394e0fd/how-to-get-rid-of-warning-lnk4075-ignoring-editandcontinue-due-to-optlbr-specification?forum=vcgeneral)
 Refactor macro code
 Expressions: use . and x instead of + and * for strings
-Use local clipboards/keys when more than one file selected; remove option to choose?
+Use local clipboards when more than one file selected; remove option to choose?
 QueryBuilder
 Invert selection
 Copy diff whitespace left<->right
@@ -45,6 +45,8 @@ Diff: Use one tab split into two
 Diff: Sync horizontal scrolls (vertical already done)
 Diff: Don't move windows, only do two-pane if two files only
 Allow user to choose number of rows/columns in tile view
+Don't allow tab in all autocomplete boxes (just find)
+Check that objects can be deleted (Run "GC", make sure size goes down)
 
 View:
 Update as new lines are added

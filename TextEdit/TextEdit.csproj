@@ -438,6 +438,9 @@
     <Compile Include="TextEditor-Content.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextEditor-Keys.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextEditor-Sort.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
