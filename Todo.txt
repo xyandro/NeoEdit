@@ -36,7 +36,6 @@ Refactor macro code
 Expressions: use . and x instead of + and * for strings
 Use local clipboards/keys when more than one file selected; remove option to choose?
 QueryBuilder
-When selecting a column make the selection left to right
 Invert selection
 Copy diff whitespace left<->right
 Convert macros to json?
