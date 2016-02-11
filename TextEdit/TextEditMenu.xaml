@@ -71,7 +71,6 @@
 			<textEdit:TextEditMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
 			<textEdit:TextEditMenuItem Header="_All Files" CommandEnum="Edit_Paste_AllFiles"/>
 		</MenuItem>
-		<textEdit:MultiMenuItem Header="Loc_al Clipboard" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="UseLocalClipboard" MultiValue="{StaticResource True}" CommandEnum="Edit_LocalClipboard"/>
 		<Separator/>
 		<MenuItem Header="_Find">
 			<textEdit:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>

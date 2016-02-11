@@ -35,7 +35,7 @@
     <Compile Include="LCS.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
-    <Compile Include="NEClipboards\INEClipboardEnabled.cs" />
+    <Compile Include="NEClipboards\ClipboardData.cs" />
     <Compile Include="NEClipboards\NEClipboard.cs" />
     <Compile Include="NEClipboards\NELocalClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
@@ -69,6 +69,7 @@
     <Compile Include="UnitTest\UnicodeTest.cs" />
     <Compile Include="UnitTest\UnitTest.cs" />
     <Compile Include="UnitTest\XMLConverterTest.cs" />
+    <Compile Include="WeakList.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

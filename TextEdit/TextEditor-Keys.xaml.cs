@@ -107,7 +107,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(ranges);
 		}
 
-		internal void Command_Keys_Copy(int index) => clipboard.Strings = KeysAndValues[index].ToList();
+		internal void Command_Keys_Copy(int index) => SetClipboardStrings(KeysAndValues[index]);
 
 		internal void Command_Keys_HitsMisses(int index, bool hits)
 		{
