@@ -105,6 +105,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool DiffIgnoreCase { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool DiffIgnoreLineEndings { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool IsDiff { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditor diffTarget;
@@ -716,6 +718,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
 				case TextEditCommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(multiStatus); break;
+				case TextEditCommand.Diff_IgnoreLineEndings: Command_Diff_IgnoreLineEndings(multiStatus); break;
 				case TextEditCommand.Diff_Next: Command_Diff_NextPrevious(true); break;
 				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
 				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
@@ -2439,6 +2442,12 @@ namespace NeoEdit.TextEdit
 			CalculateDiff();
 		}
 
+		internal void Command_Diff_IgnoreLineEndings(bool? multiStatus)
+		{
+			DiffIgnoreLineEndings = multiStatus != true;
+			CalculateDiff();
+		}
+
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
 			var offset = next ? range.End : Math.Max(0, range.Start - 1);
@@ -3779,7 +3788,8 @@ namespace NeoEdit.TextEdit
 
 			diffTarget.DiffIgnoreWhitespace = DiffIgnoreWhitespace;
 			diffTarget.DiffIgnoreCase = DiffIgnoreCase;
-			TextData.CalculateDiff(Data, diffTarget.Data, DiffIgnoreWhitespace, DiffIgnoreCase);
+			diffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
+			TextData.CalculateDiff(Data, diffTarget.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreLineEndings);
 
 			CalculateBoundaries();
 			diffTarget.CalculateBoundaries();

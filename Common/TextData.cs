@@ -217,20 +217,20 @@ namespace NeoEdit.Common
 			return columns;
 		}
 
-		public string GetLine(int line)
+		public string GetLine(int line, bool includeEnding = false)
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return Data.Substring(lineOffset[line], GetLineLength(line));
+			return Data.Substring(lineOffset[line], GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0));
 		}
 
-		public string GetLineColumns(int line)
+		public string GetLineColumns(int line, bool includeEnding = false)
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
 
 			var index = lineOffset[line];
-			var len = GetLineLength(line);
+			var len = GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0);
 			var sb = new StringBuilder();
 			while (len > 0)
 			{
@@ -507,21 +507,22 @@ namespace NeoEdit.Common
 		class DiffData
 		{
 			public string Data;
-			public bool IgnoreWhitespace, IgnoreCase;
+			public bool IgnoreWhitespace, IgnoreCase, IgnoreLineEndings;
 			public List<LCS.MatchType> LineCompare;
 			public List<Tuple<int, int>>[] ColCompare;
 			public Dictionary<int, int> LineMap, LineRevMap;
 
-			public DiffData(string data, bool ignoreWhitespace, bool ignoreCase)
+			public DiffData(string data, bool ignoreWhitespace, bool ignoreCase, bool ignoreLineEndings)
 			{
 				Data = data;
 				IgnoreWhitespace = ignoreWhitespace;
 				IgnoreCase = ignoreCase;
+				IgnoreLineEndings = ignoreLineEndings;
 			}
 		}
 		DiffData diffData;
 
-		static string FormatDiffLine(string line, bool ignoreWhitespace, bool ignoreCase)
+		static string FormatDiffLine(string line, bool ignoreWhitespace, bool ignoreCase, bool ignoreLineEndings)
 		{
 			if (ignoreWhitespace)
 			{
@@ -533,22 +534,24 @@ namespace NeoEdit.Common
 			}
 			if (ignoreCase)
 				line = line.ToLowerInvariant();
+			if (ignoreLineEndings)
+				line = line.Replace("\r", "").Replace("\n", "");
 			return line;
 		}
 
-		public static void CalculateDiff(TextData data0, TextData data1, bool ignoreWhitespace, bool ignoreCase)
+		public static void CalculateDiff(TextData data0, TextData data1, bool ignoreWhitespace, bool ignoreCase, bool ignoreLineEndings)
 		{
-			if ((data0.diffData != null) && (data1.diffData != null) && (data0.diffData.Data == data0.Data) && (data1.diffData.Data == data1.Data) && (data0.diffData.IgnoreWhitespace == ignoreWhitespace) && (data1.diffData.IgnoreWhitespace == ignoreWhitespace) && (data0.diffData.IgnoreCase == ignoreCase) && (data1.diffData.IgnoreCase == ignoreCase))
+			if ((data0.diffData != null) && (data1.diffData != null) && (data0.diffData.Data == data0.Data) && (data1.diffData.Data == data1.Data) && (data0.diffData.IgnoreWhitespace == ignoreWhitespace) && (data1.diffData.IgnoreWhitespace == ignoreWhitespace) && (data0.diffData.IgnoreCase == ignoreCase) && (data1.diffData.IgnoreCase == ignoreCase) && (data0.diffData.IgnoreLineEndings == ignoreLineEndings) && (data1.diffData.IgnoreLineEndings == ignoreLineEndings))
 				return;
 
 			data0.ClearDiff();
 			data1.ClearDiff();
 
-			data0.diffData = new DiffData(data0.Data, ignoreWhitespace, ignoreCase);
-			data1.diffData = new DiffData(data1.Data, ignoreWhitespace, ignoreCase);
+			data0.diffData = new DiffData(data0.Data, ignoreWhitespace, ignoreCase, ignoreLineEndings);
+			data1.diffData = new DiffData(data1.Data, ignoreWhitespace, ignoreCase, ignoreLineEndings);
 
-			var lines0 = Enumerable.Range(0, data0.NumLines).Select(line => data0.GetLine(line)).Select(line => FormatDiffLine(line, ignoreWhitespace, ignoreCase)).ToList();
-			var lines1 = Enumerable.Range(0, data1.NumLines).Select(line => data1.GetLine(line)).Select(line => FormatDiffLine(line, ignoreWhitespace, ignoreCase)).ToList();
+			var lines0 = Enumerable.Range(0, data0.NumLines).Select(line => data0.GetLine(line, true)).Select(line => FormatDiffLine(line, ignoreWhitespace, ignoreCase, ignoreLineEndings)).ToList();
+			var lines1 = Enumerable.Range(0, data1.NumLines).Select(line => data1.GetLine(line, true)).Select(line => FormatDiffLine(line, ignoreWhitespace, ignoreCase, ignoreLineEndings)).ToList();
 			LCS.GetLCS(lines0, lines1, out data0.diffData.LineCompare, out data1.diffData.LineCompare);
 
 			for (var pass = 0; pass < 2; ++pass)
@@ -588,8 +591,8 @@ namespace NeoEdit.Common
 			{
 				if ((data0.diffData.LineCompare[line] == LCS.MatchType.Mismatch) && (data1.diffData.LineCompare[line] == LCS.MatchType.Mismatch))
 				{
-					var line0 = data0.GetLineColumns(line);
-					var line1 = data1.GetLineColumns(line);
+					var line0 = data0.GetLineColumns(line, true);
+					var line1 = data1.GetLineColumns(line, true);
 					List<LCS.MatchType> cols0, cols1;
 					LCS.GetLCS(line0.ToList(), line1.ToList(), out cols0, out cols1);
 

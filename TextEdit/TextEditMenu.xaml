@@ -117,6 +117,7 @@
 		<Separator/>
 		<textEdit:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
 		<textEdit:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
+		<textEdit:MultiMenuItem Header="Ignore Line _Endings" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Diff_Next"/>
 		<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
