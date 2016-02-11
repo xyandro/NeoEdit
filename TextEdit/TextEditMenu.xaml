@@ -530,7 +530,10 @@
 			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}" CommandEnum="View_Highlighting_CPlusPlus"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
+		<textEdit:TextEditMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]==&quot;Full&quot;'}" CommandEnum="View_Full"/>
+		<textEdit:TextEditMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
+		<textEdit:TextEditMenuItem Header="_Custom Grid" CommandEnum="View_CustomGrid"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
 		<textEdit:TextEditMenuItem Header="Select Tabs With _Selections" CommandEnum="View_SelectTabsWithSelections"/>
 		<textEdit:TextEditMenuItem Header="Select Tabs Without S_elections" CommandEnum="View_SelectTabsWithoutSelections"/>

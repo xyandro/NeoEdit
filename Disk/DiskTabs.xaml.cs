@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Disk
 {
@@ -50,6 +51,13 @@ namespace NeoEdit.Disk
 			{
 				case DiskCommand.File_NewTab: Command_File_New(shiftDown); break;
 				case DiskCommand.File_Exit: Close(); break;
+				case DiskCommand.View_Full: ItemTabs.SetLayout(TabsLayout.Full); break;
+				case DiskCommand.View_Grid: ItemTabs.SetLayout(TabsLayout.Grid); break;
+				case DiskCommand.View_CustomGrid:
+					var result = CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
+					if (result != null)
+						ItemTabs.SetLayout(TabsLayout.Grid, result.Columns, result.Rows);
+					break;
 				case DiskCommand.View_List1: Command_View_List(1); break;
 				case DiskCommand.View_List2: Command_View_List(2); break;
 				case DiskCommand.View_List3: Command_View_List(3); break;

@@ -533,7 +533,7 @@ namespace NeoEdit.Common.Expressions
 			if ((val1.IsComplex) && (val2.IsComplex))
 				return new ExpressionResult(val1.GetComplex == val2.GetComplex);
 
-			if ((val1.IsString) && (val2.IsString))
+			if ((val1.IsString) || (val2.IsString))
 				return new ExpressionResult(val1.GetString.Equals(val2.GetString, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
 
 			return new ExpressionResult(val1.Value.Equals(val2.Value));

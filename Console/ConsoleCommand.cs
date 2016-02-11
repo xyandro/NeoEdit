@@ -7,5 +7,8 @@ namespace NeoEdit.Console
 	{
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control, false)] File_New,
+		View_Full,
+		View_Grid,
+		View_CustomGrid,
 	}
 }

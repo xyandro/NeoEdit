@@ -86,6 +86,13 @@
     <Compile Include="Dialogs\AsymmetricKeyDialog.xaml.cs">
       <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\CustomGridDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CustomGridDialog.xaml.cs">
+      <DependentUpon>CustomGridDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\EncodingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

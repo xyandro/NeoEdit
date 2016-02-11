@@ -145,6 +145,13 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.File_Open_OpenCopiedCutFiles: Command_File_Open_OpenCopiedCutFiles(); break;
 				case HexEditCommand.File_Open_OpenDump: Command_File_Open_OpenDump(); break;
 				case HexEditCommand.File_Exit: Close(); break;
+				case HexEditCommand.View_Full: ItemTabs.SetLayout(TabsLayout.Full); break;
+				case HexEditCommand.View_Grid: ItemTabs.SetLayout(TabsLayout.Grid); break;
+				case HexEditCommand.View_CustomGrid:
+					var result = CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
+					if (result != null)
+						ItemTabs.SetLayout(TabsLayout.Grid, result.Columns, result.Rows);
+					break;
 			}
 
 			if (ItemTabs.TopMost == null)

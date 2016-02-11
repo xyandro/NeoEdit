@@ -61,7 +61,7 @@ namespace NeoEdit.TextEdit
 			var textEdit1 = new TextEditor(fileName1, displayName1, line: line1 ?? -1, column: column1 ?? -1);
 			var textEdit2 = new TextEditor(fileName2, displayName2, line: line2 ?? -1, column: column2 ?? -1);
 			var textEditTabs = new TextEditTabs();
-			textEditTabs.ItemTabs.Tiles = true;
+			textEditTabs.ItemTabs.Layout = TabsLayout.Grid;
 			textEditTabs.tabs.CreateTab(textEdit1);
 			textEditTabs.tabs.CreateTab(textEdit2);
 			textEditTabs.ItemTabs.TopMost = textEdit1;
@@ -169,14 +169,14 @@ namespace NeoEdit.TextEdit
 				if (shiftDown)
 				{
 					if (ItemTabs.Items.Count == 2)
-						ItemTabs.Tiles = true;
+						ItemTabs.Layout = TabsLayout.Grid;
 					else
 					{
 						ItemTabs.Items.Remove(diffTargets[0]);
 						ItemTabs.Items.Remove(diffTargets[1]);
 
 						var textEditTabs = new TextEditTabs();
-						textEditTabs.ItemTabs.Tiles = true;
+						textEditTabs.ItemTabs.Layout = TabsLayout.Grid;
 						textEditTabs.tabs.CreateTab(diffTargets[0]);
 						textEditTabs.tabs.CreateTab(diffTargets[1]);
 						textEditTabs.ItemTabs.TopMost = diffTargets[0];
@@ -190,6 +190,10 @@ namespace NeoEdit.TextEdit
 			else
 				throw new Exception("Must have two files active for diff.");
 		}
+
+		CustomGridDialog.Result Command_View_Type_Dialog() => CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
+
+		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => ItemTabs.SetLayout(layout, result?.Columns ?? 0, result?.Rows ?? 0);
 
 		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
 
@@ -385,6 +389,7 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
+				case TextEditCommand.View_CustomGrid: dialogResult = Command_View_Type_Dialog(); break;
 				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro<TextEditCommand>.MacroDirectory); break;
 				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult);
 			}
@@ -404,6 +409,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Copy_AllFiles: Command_Edit_Copy_AllFiles(); break;
 				case TextEditCommand.Edit_Paste_AllFiles: Command_Edit_Paste_AllFiles(); break;
 				case TextEditCommand.Diff_Diff: Command_Diff_Diff(); break;
+				case TextEditCommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;
+				case TextEditCommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
+				case TextEditCommand.View_CustomGrid: Command_View_Type(TabsLayout.Grid, dialogResult as CustomGridDialog.Result); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_SelectTabsWithSelections: Command_View_SelectTabsWithSelections(true); break;
 				case TextEditCommand.View_SelectTabsWithoutSelections: Command_View_SelectTabsWithSelections(false); break;

@@ -109,6 +109,13 @@ namespace NeoEdit.TextView
 				case TextViewCommand.File_Merge: Command_File_Merge(); break;
 				case TextViewCommand.File_Encoding: Command_File_Encoding(); break;
 				case TextViewCommand.File_Exit: Close(); break;
+				case TextViewCommand.View_Full: ItemTabs.SetLayout(TabsLayout.Full); break;
+				case TextViewCommand.View_Grid: ItemTabs.SetLayout(TabsLayout.Grid); break;
+				case TextViewCommand.View_CustomGrid:
+					var result = CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
+					if (result != null)
+						ItemTabs.SetLayout(TabsLayout.Grid, result.Columns, result.Rows);
+					break;
 			}
 
 			if (ItemTabs.TopMost == null)

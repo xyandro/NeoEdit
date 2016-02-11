@@ -8,12 +8,19 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using NeoEdit.Common;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.GUI.Controls
 {
+	public enum TabsLayout
+	{
+		Full,
+		Grid,
+	}
+
 	public class Tabs<ItemType, CommandType> : UserControl where ItemType : TabsControl<ItemType, CommandType>
 	{
 		[DepProp]
@@ -21,7 +28,11 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public ItemType TopMost { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<ItemType>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Tiles { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<bool>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
+		public TabsLayout Layout { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<TabsLayout>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
+		[DepProp]
+		public int Columns { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<int>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
+		[DepProp]
+		public int Rows { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<int>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public double TabsScroll { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
@@ -43,12 +54,19 @@ namespace NeoEdit.GUI.Controls
 			SetupLayout();
 
 			Items = new ObservableCollection<ItemType>();
-			Tiles = false;
+			Layout = TabsLayout.Full;
 			Focusable = true;
 			FocusVisualStyle = null;
 			AllowDrop = true;
 			VerticalAlignment = VerticalAlignment.Stretch;
 			Drop += (s, e) => OnDrop(e, null);
+		}
+
+		public void SetLayout(TabsLayout layout, int columns = 0, int rows = 0)
+		{
+			Layout = layout;
+			Columns = columns;
+			Rows = rows;
 		}
 
 		public ItemType CreateTab(ItemType item)
@@ -265,15 +283,32 @@ namespace NeoEdit.GUI.Controls
 			}
 		}
 
-		class ColumnCountConverter : IValueConverter
+		class ColumnCountConverter : IMultiValueConverter
 		{
-			public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+			public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 			{
-				var count = value as int?;
-				return count.HasValue ? (int)Math.Ceiling(Math.Sqrt(count.Value)) : 1;
+				var count = (int)values[0];
+				var columns = (int)values[1];
+				var rows = (int)values[2];
+
+				return columns != 0 ? columns : rows != 0 ? 0 : (int)Math.Ceiling(Math.Sqrt(count));
 			}
 
-			public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
+			public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
+		}
+
+		class RowCountConverter : IMultiValueConverter
+		{
+			public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+			{
+				var count = (int)values[0];
+				var columns = (int)values[1];
+				var rows = (int)values[2];
+
+				return rows != 0 ? rows : 0;
+			}
+
+			public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
 		}
 
 		FrameworkElementFactory GetTabLabel(bool tiles)
@@ -308,7 +343,7 @@ namespace NeoEdit.GUI.Controls
 		{
 			var style = new Style();
 			{
-				var tabsTemplate = new ControlTemplate();
+				var fullTemplate = new ControlTemplate();
 				{
 					var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
 
@@ -404,15 +439,16 @@ namespace NeoEdit.GUI.Controls
 					}
 					dockPanel.SetValue(Window.BackgroundProperty, Brushes.Gray);
 
-					tabsTemplate.VisualTree = dockPanel;
+					fullTemplate.VisualTree = dockPanel;
 
 				}
 
-				style.Setters.Add(new Setter(AllItemsControl.TemplateProperty, tabsTemplate));
+				style.Setters.Add(new Setter(AllItemsControl.TemplateProperty, fullTemplate));
 			}
 
 			{
-				var tilesTemplate = new ControlTemplate();
+				var gridTemplate = new ControlTemplate();
+
 				{
 					var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
 					itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items).Name) { Source = this });
@@ -437,18 +473,30 @@ namespace NeoEdit.GUI.Controls
 						var itemsPanel = new ItemsPanelTemplate();
 						{
 							var uniformGrid = new FrameworkElementFactory(typeof(UniformGrid));
-							uniformGrid.SetBinding(UniformGrid.ColumnsProperty, new Binding($"{UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items)}.Count") { Source = this, Converter = new ColumnCountConverter() });
+
+							var columnsBinding = new MultiBinding { Converter = new ColumnCountConverter() };
+							columnsBinding.Bindings.Add(new Binding($"{UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items)}.Count") { Source = this });
+							columnsBinding.Bindings.Add(new Binding(nameof(Columns)) { Source = this });
+							columnsBinding.Bindings.Add(new Binding(nameof(Rows)) { Source = this });
+							uniformGrid.SetBinding(UniformGrid.ColumnsProperty, columnsBinding);
+
+							var rowsBinding = new MultiBinding { Converter = new RowCountConverter() };
+							rowsBinding.Bindings.Add(new Binding($"{UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items)}.Count") { Source = this });
+							rowsBinding.Bindings.Add(new Binding(nameof(Columns)) { Source = this });
+							rowsBinding.Bindings.Add(new Binding(nameof(Rows)) { Source = this });
+							uniformGrid.SetBinding(UniformGrid.RowsProperty, rowsBinding);
+
 							uniformGrid.SetValue(UniformGrid.MarginProperty, new Thickness(0, 0, -2, -2));
 							itemsPanel.VisualTree = uniformGrid;
 						}
 						itemsControl.SetValue(AllItemsControl.ItemsPanelProperty, itemsPanel);
 					}
-					tilesTemplate.VisualTree = itemsControl;
+					gridTemplate.VisualTree = itemsControl;
 					itemsControl.SetValue(Window.BackgroundProperty, Brushes.Gray);
 				}
 
-				var dataTrigger = new DataTrigger { Binding = new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Tiles).Name) { Source = this }, Value = true };
-				dataTrigger.Setters.Add(new Setter(AllItemsControl.TemplateProperty, tilesTemplate));
+				var dataTrigger = new DataTrigger { Binding = new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Layout).Name) { Source = this }, Value = TabsLayout.Grid };
+				dataTrigger.Setters.Add(new Setter(AllItemsControl.TemplateProperty, gridTemplate));
 				style.Triggers.Add(dataTrigger);
 			}
 			Style = style;

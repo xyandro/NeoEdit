@@ -3,6 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:disk="clr-namespace:NeoEdit.Disk"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	KeyboardNavigation.TabNavigation="None">
 
 	<MenuItem Header="_File">
@@ -57,7 +58,7 @@
 		<disk:DiskMenuItem Header="R_emove With Children" CommandEnum="Select_RemoveWithChildren"/>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<MenuItem Header="_Columns" ItemsSource="{Binding Converter={disk:ColumnsConverter}}">
+		<MenuItem Header="C_olumns" ItemsSource="{Binding Converter={disk:ColumnsConverter}}">
 			<MenuItem.Style>
 				<Style TargetType="MenuItem">
 					<EventSetter Event="Click" Handler="ToggleColumn"/>
@@ -102,7 +103,10 @@
 				</Style>
 			</MenuItem.Style>
 		</MenuItem>
-		<MenuItem Header="_Tiles" IsCheckable="True" IsChecked="{Binding Parent.ItemTabs.Tiles, ElementName=self}"/>
+		<Separator/>
+		<disk:DiskMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]==&quot;Full&quot;'}" CommandEnum="View_Full"/>
+		<disk:DiskMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
+		<disk:DiskMenuItem Header="_Custom Grid" CommandEnum="View_CustomGrid"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="_Disk Usage" CommandEnum="View_DiskUsage"/>
 		<Separator/>

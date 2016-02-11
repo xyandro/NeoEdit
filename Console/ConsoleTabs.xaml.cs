@@ -1,4 +1,5 @@
 ﻿using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.Console
 {
@@ -24,6 +25,13 @@ namespace NeoEdit.Console
 			switch (command)
 			{
 				case ConsoleCommand.File_New: Create(consoleTabs: this); break;
+				case ConsoleCommand.View_Full: ItemTabs.SetLayout(TabsLayout.Full); break;
+				case ConsoleCommand.View_Grid: ItemTabs.SetLayout(TabsLayout.Grid); break;
+				case ConsoleCommand.View_CustomGrid:
+					var result = CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
+					if (result != null)
+						ItemTabs.SetLayout(TabsLayout.Grid, result.Columns, result.Rows);
+					break;
 			}
 		}
 	}
