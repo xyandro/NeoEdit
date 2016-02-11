@@ -40,7 +40,6 @@ List to table (when I have a random list I want to group, etc.)
 On limit selections: allow user to choose first selection to keep
 Allow user to choose number of rows/columns in tile view
 Check that objects can be deleted (Run "GC", make sure size goes down)
-Add Files->Operations->Explore (Just like file has)
 Make ExpressionResults control faster
 
 View:

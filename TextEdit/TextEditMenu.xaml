@@ -179,8 +179,9 @@
 			<textEdit:TextEditMenuItem Header="S_ave Clipboards" CommandEnum="Files_Operations_SaveClipboards"/>
 			<textEdit:TextEditMenuItem Header="D_rag/Drop" CommandEnum="Files_Operations_DragDrop"/>
 			<textEdit:TextEditMenuItem Header="Open D_isk" CommandEnum="Files_Operations_OpenDisk"/>
+			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
 			<Separator/>
-			<MenuItem Header="Cr_eate">
+			<MenuItem Header="Crea_te">
 				<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Operations_Create_Files"/>
 				<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Operations_Create_Directories"/>
 			</MenuItem>

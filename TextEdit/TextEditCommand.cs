@@ -103,6 +103,7 @@ namespace NeoEdit.TextEdit
 		Files_Operations_SaveClipboards,
 		Files_Operations_DragDrop,
 		Files_Operations_OpenDisk,
+		Files_Operations_Explore,
 		Files_Operations_Create_Files,
 		Files_Operations_Create_Directories,
 		Files_Operations_RunCommand_Parallel,

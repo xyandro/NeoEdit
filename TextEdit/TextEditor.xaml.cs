@@ -760,6 +760,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_SaveClipboards: Command_Files_Operations_SaveClipboards(); break;
 				case TextEditCommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
 				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
+				case TextEditCommand.Files_Operations_Explore: Command_Files_Operations_Explore(); break;
 				case TextEditCommand.Files_Operations_Create_Files: Command_Files_Operations_Create_Files(); break;
 				case TextEditCommand.Files_Operations_Create_Directories: Command_Files_Operations_Create_Directories(); break;
 				case TextEditCommand.Files_Operations_RunCommand_Parallel: Command_Files_Operations_RunCommand_Parallel(); break;
@@ -2001,6 +2002,13 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Files_Operations_OpenDisk() => Launcher.Static.LaunchDisk(files: Selections.Select(range => GetString(range)));
+
+		internal void Command_Files_Operations_Explore()
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Can only explore one file.");
+			Process.Start("explorer.exe", $"/select,\"{GetSelectionStrings()[0]}\"");
+		}
 
 		internal void Command_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());
 
