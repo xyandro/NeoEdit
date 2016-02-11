@@ -51,13 +51,15 @@ namespace NeoEdit.GUI.Controls
 			Drop += (s, e) => OnDrop(e, null);
 		}
 
-		public void CreateTab(ItemType item)
+		public ItemType CreateTab(ItemType item)
 		{
-			if ((!item.Empty()) && (TopMost != null) && (TopMost.Empty()))
-				Items[Items.IndexOf(TopMost)] = item;
+			var replace = (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(ItemType);
+			if (replace != null)
+				Items[Items.IndexOf(replace)] = item;
 			else
 				Items.Add(item);
 			TopMost = item;
+			return replace;
 		}
 
 		public void ShowActiveTabsDialog()

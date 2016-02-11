@@ -52,7 +52,8 @@ namespace NeoEdit.TextEdit
 			}
 
 			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, modified, line, column);
-			CreateTab(textEditor, textEditTabs, forceCreate);
+			var replaced = CreateTab(textEditor, textEditTabs, forceCreate);
+			textEditor.DiffTarget = replaced?.DiffTarget;
 		}
 
 		public static void CreateDiff(string fileName1 = null, string displayName1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, int? line2 = null, int? column2 = null)

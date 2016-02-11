@@ -21,7 +21,7 @@ namespace NeoEdit.GUI.Controls
 		protected bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 		protected bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
-		public static void CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType, CommandType>
+		public static ItemType CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType, CommandType>
 		{
 			if ((classItem == null) && (!forceCreate))
 				classItem = UIHelper<ClassType>.GetNewest();
@@ -31,7 +31,7 @@ namespace NeoEdit.GUI.Controls
 
 			classItem.Activate();
 
-			classItem.ItemTabs.CreateTab(item);
+			return classItem.ItemTabs.CreateTab(item);
 		}
 
 		public void Remove(ItemType item, bool closeIfLast = false)
