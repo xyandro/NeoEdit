@@ -123,7 +123,9 @@ namespace NeoEdit.TextEdit
 				if (diffTarget != null)
 				{
 					diffTarget.IsDiff = false;
+					BindingOperations.ClearBinding(this, UIHelper<TextEditor>.GetProperty(a => a.xScrollValue));
 					BindingOperations.ClearBinding(this, UIHelper<TextEditor>.GetProperty(a => a.yScrollValue));
+					BindingOperations.ClearBinding(diffTarget, UIHelper<TextEditor>.GetProperty(a => a.xScrollValue));
 					BindingOperations.ClearBinding(diffTarget, UIHelper<TextEditor>.GetProperty(a => a.yScrollValue));
 					Data.ClearDiff();
 					diffTarget.Data.ClearDiff();
@@ -138,6 +140,7 @@ namespace NeoEdit.TextEdit
 					value.DiffTarget = null;
 					diffTarget = value;
 					value.diffTarget = this;
+					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.xScrollValue), new Binding(UIHelper<TextEditor>.GetProperty(a => a.xScrollValue).Name) { Source = value, Mode = BindingMode.TwoWay });
 					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue), new Binding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue).Name) { Source = value, Mode = BindingMode.TwoWay });
 					IsDiff = diffTarget.IsDiff = true;
 				}

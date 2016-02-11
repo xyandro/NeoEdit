@@ -41,12 +41,12 @@ Convert macros to json?
 List to table (when I have a random list I want to group, etc.)
 On limit selections: allow user to choose first selection to keep
 Diff: Use one tab split into two
-Diff: Sync horizontal scrolls (vertical already done)
 Diff: Don't move windows, only do two-pane if two files only
 Allow user to choose number of rows/columns in tile view
 Check that objects can be deleted (Run "GC", make sure size goes down)
 Add Files->Operations->Explore (Just like file has)
 Speed up tables (739213 lines = really slow; make TableDisplay virtualized?)
+Make ExpressionResults control faster
 
 View:
 Update as new lines are added
