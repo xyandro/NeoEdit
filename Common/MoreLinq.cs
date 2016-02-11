@@ -192,5 +192,22 @@ namespace NeoEdit.Common
 
 		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<TSource> source, TSource defaultValue) where TSource : class => source.Select(val => val ?? defaultValue);
 		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<Nullable<TSource>> source, TSource defaultValue) where TSource : struct => source.Select(val => val ?? defaultValue);
+
+		public static IEnumerable<TSource> EveryNth<TSource>(this IEnumerable<TSource> source, int n)
+		{
+			if (n < 1)
+				throw new Exception("n must be at least 1");
+
+			var num = 0;
+			foreach (var item in source)
+			{
+				if (num == 0)
+				{
+					yield return item;
+					num = n;
+				}
+				--num;
+			}
+		}
 	}
 }

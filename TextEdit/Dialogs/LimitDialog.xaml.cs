@@ -8,11 +8,14 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
+			public string FirstSel { get; set; }
 			public string SelMult { get; set; }
 			public string NumSels { get; set; }
 			public bool IgnoreBlank { get; set; }
 		}
 
+		[DepProp]
+		public string FirstSel { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string SelMult { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -29,6 +32,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Variables = variables;
 			InitializeComponent();
 
+			FirstSel = "1";
 			SelMult = "1";
 			NumSels = maxSels.ToString();
 			IgnoreBlank = false;
@@ -37,7 +41,10 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { SelMult = SelMult, NumSels = NumSels, IgnoreBlank = IgnoreBlank };
+			firstSel.AddCurrentSuggestion();
+			selMult.AddCurrentSuggestion();
+			numSels.AddCurrentSuggestion();
+			result = new Result { FirstSel = FirstSel, SelMult = SelMult, NumSels = NumSels, IgnoreBlank = IgnoreBlank };
 			DialogResult = true;
 		}
 

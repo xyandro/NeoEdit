@@ -2827,18 +2827,20 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Select_Limit(LimitDialog.Result result)
 		{
-			if (result.IgnoreBlank)
-				Selections.Replace(Selections.Where(sel => sel.HasSelection).ToList());
-
 			var variables = GetVariables();
-
+			var firstSel = new NEExpression(result.FirstSel).EvaluateRow<int>(variables);
 			var selMult = new NEExpression(result.SelMult).EvaluateRow<int>(variables);
 			var numSels = new NEExpression(result.NumSels).EvaluateRow<int>(variables);
 
-			if (selMult > 1)
-				Selections.Replace(Selections.AsParallel().AsOrdered().Where((sel, index) => index % selMult == 0).ToList());
-			var sels = Math.Min(Selections.Count, numSels);
-			Selections.RemoveRange(sels, Selections.Count - sels);
+			IEnumerable<Range> retval = Selections;
+
+			if (result.IgnoreBlank)
+				retval = retval.Where(sel => sel.HasSelection);
+
+			retval = retval.Skip(firstSel - 1);
+			retval = retval.EveryNth(selMult);
+			retval = retval.Take(numSels);
+			Selections.Replace(retval.ToList());
 		}
 
 		internal void Command_Select_Lines()
