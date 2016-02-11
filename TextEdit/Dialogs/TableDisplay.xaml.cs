@@ -20,13 +20,25 @@ namespace NeoEdit.TextEdit.Dialogs
 		public bool Selectable { get { return UIHelper<TableDisplay>.GetPropValue<bool>(this); } set { UIHelper<TableDisplay>.SetPropValue(this, value); } }
 		[DepProp]
 		public ObservableCollection<int> Selected { get { return UIHelper<TableDisplay>.GetPropValue<ObservableCollection<int>>(this); } set { UIHelper<TableDisplay>.SetPropValue(this, value); } }
+		[DepProp]
+		public int YScrollValue { get { return UIHelper<TableDisplay>.GetPropValue<int>(this); } set { UIHelper<TableDisplay>.SetPropValue(this, value); } }
 
+		static readonly double RowHeight;
 		static TableDisplay()
 		{
 			UIHelper<TableDisplay>.Register();
 			UIHelper<TableDisplay>.AddCallback(a => a.Table, (obj, o, n) => obj.SetupTable());
 			UIHelper<TableDisplay>.AddCallback(a => a.SelectedColumn, (obj, o, n) => obj.SetupSelection());
 			UIHelper<TableDisplay>.AddObservableCallback(a => a.Selected, (obj, o, n) => obj.SetupSelection());
+			UIHelper<TableDisplay>.AddCallback(a => a.YScrollValue, (obj, o, n) => obj.SetupTable());
+			RowHeight = CalcRowHeight();
+		}
+
+		static double CalcRowHeight()
+		{
+			var text = new TextBlock { Text = "THE QUICK BROWN FOX JUMPED OVER THE LAZY DOGS the quick brown fox jumped over the lazy dogs" };
+			text.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+			return text.DesiredSize.Height;
 		}
 
 		public TableDisplay()
@@ -34,6 +46,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			InitializeComponent();
 			Selected = new ObservableCollection<int>();
 			Loaded += (s, e) => SetupSelection();
+			xScroller.ScrollChanged += (s, e) => { if (e.ViewportHeightChange != 0) SetupTable(); };
 		}
 
 		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
@@ -108,15 +121,24 @@ namespace NeoEdit.TextEdit.Dialogs
 			tableGrid.ColumnDefinitions.Clear();
 			tableGrid.Children.Clear();
 
-			if (Table == null)
+			if ((Table == null) || (xScroller.ViewportHeight == 0))
 				return;
+
+			var viewportRowsFloor = (int)Math.Floor(xScroller.ViewportHeight / RowHeight);
+			var viewportRowsCeiling = (int)Math.Ceiling(xScroller.ViewportHeight / RowHeight);
+
+			yScroller.Minimum = 0;
+			yScroller.Maximum = Math.Max(0, Table.NumRows - viewportRowsCeiling + 2);
+			yScroller.SmallChange = 1;
+			yScroller.LargeChange = yScroller.ViewportSize = Math.Max(0, viewportRowsFloor - 2);
 
 			for (var column = 0; column < Table.NumColumns; ++column)
 				tableGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-			for (var row = 0; row <= Table.NumRows; ++row)
+			var rows = Math.Min(viewportRowsCeiling, Table.NumRows - YScrollValue + 1);
+			for (var row = 0; row < rows; ++row)
 			{
-				tableGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+				tableGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(RowHeight) });
 				for (var column = 0; column < Table.NumColumns; ++column)
 				{
 					var text = new TextBlock { Padding = new Thickness(5, 0, 5, 0) };
@@ -126,7 +148,7 @@ namespace NeoEdit.TextEdit.Dialogs
 						text.Background = Brushes.DarkGray;
 					}
 					else
-						text.Text = Table[row - 1, column]?.Replace("\r", "").Replace("\n", "").Trim() ?? "";
+						text.Text = Table[row - 1 + YScrollValue, column]?.Replace("\r", "").Replace("\n", "").Trim() ?? "";
 					Grid.SetRow(text, row);
 					Grid.SetColumn(text, column);
 					tableGrid.Children.Add(text);
@@ -140,7 +162,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void SetupSelection()
 		{
-			if ((Table == null) || (Table.NumColumns == 0))
+			if ((Table == null) || (Table.NumColumns == 0) || (xScroller.ViewportHeight == 0))
 				return;
 
 			// Remove old highlighting
@@ -168,7 +190,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 			var columnLeft = tableGrid.ColumnDefinitions.Take(SelectedColumn).Sum(columnDef => columnDef.ActualWidth);
 			var columnRight = columnLeft + tableGrid.ColumnDefinitions[SelectedColumn].ActualWidth;
-			scroller.ScrollToHorizontalOffset(Math.Min(Math.Max(scroller.HorizontalOffset, columnRight - scroller.ViewportWidth), columnLeft));
+			xScroller.ScrollToHorizontalOffset(Math.Min(Math.Max(xScroller.HorizontalOffset, columnRight - xScroller.ViewportWidth), columnLeft));
 
 		}
 	}

@@ -41,7 +41,6 @@ On limit selections: allow user to choose first selection to keep
 Allow user to choose number of rows/columns in tile view
 Check that objects can be deleted (Run "GC", make sure size goes down)
 Add Files->Operations->Explore (Just like file has)
-Speed up tables (739213 lines = really slow; make TableDisplay virtualized?)
 Make ExpressionResults control faster
 
 View:

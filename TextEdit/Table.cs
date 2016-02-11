@@ -111,9 +111,6 @@ namespace NeoEdit.TextEdit
 
 		static List<List<string>> GetInputRows(string input, Parser.ParserType tableType)
 		{
-			if (tableType == Parser.ParserType.None)
-				tableType = GuessTableType(input);
-
 			switch (tableType)
 			{
 				case Parser.ParserType.TSV: return input.SplitTCSV('\t').Select(split => split.ToList()).ToList();
