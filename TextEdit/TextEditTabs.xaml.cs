@@ -165,9 +165,23 @@ namespace NeoEdit.TextEdit
 			var diffTargets = ItemTabs.Items.Count == 2 ? ItemTabs.Items.ToList() : ItemTabs.Items.Where(data => data.Active).ToList();
 			if ((diffTargets.Count == 2) && (diffTargets[0].DiffTarget != diffTargets[1]))
 			{
-				ItemTabs.Items.Move(ItemTabs.Items.IndexOf(diffTargets[0]), 0);
-				ItemTabs.Items.Move(ItemTabs.Items.IndexOf(diffTargets[1]), 1);
-				ItemTabs.Tiles = true;
+				if (shiftDown)
+				{
+					if (ItemTabs.Items.Count == 2)
+						ItemTabs.Tiles = true;
+					else
+					{
+						ItemTabs.Items.Remove(diffTargets[0]);
+						ItemTabs.Items.Remove(diffTargets[1]);
+
+						var textEditTabs = new TextEditTabs();
+						textEditTabs.ItemTabs.Tiles = true;
+						textEditTabs.tabs.CreateTab(diffTargets[0]);
+						textEditTabs.tabs.CreateTab(diffTargets[1]);
+						textEditTabs.ItemTabs.TopMost = diffTargets[0];
+					}
+
+				}
 				diffTargets[0].DiffTarget = diffTargets[1];
 			}
 			else if (diffTargets.Any(item => item.DiffTarget != null))
