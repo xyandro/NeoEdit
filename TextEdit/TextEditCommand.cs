@@ -64,6 +64,7 @@ namespace NeoEdit.TextEdit
 		Diff_Break,
 		Diff_IgnoreWhitespace,
 		Diff_IgnoreCase,
+		Diff_IgnoreNumbers,
 		Diff_IgnoreLineEndings,
 		[KeyGesture(Key.Down, ModifierKeys.Alt)] Diff_Next,
 		[KeyGesture(Key.Up, ModifierKeys.Alt)] Diff_Previous,
