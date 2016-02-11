@@ -22,10 +22,10 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FindText"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FindText"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Name="replaceLabel" Content="Re_place:" Target="{Binding ElementName=replace}"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="replace" Text="{Binding Replace, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FindTextReplace"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="replace" AcceptsTab="True" Text="{Binding Replace, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FindTextReplace"/>
 
 		<CheckBox Grid.Row="2" Grid.Column="1" Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
 		<CheckBox Grid.Row="3" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
