@@ -45,17 +45,17 @@ namespace Loader
 		{
 			var extractor = new Extractor();
 			if (Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location).EndsWith(Extractor.ExtractorSuffix))
-				extractor.RunExtractor(int.Parse(args[0]), args[1]);
+				extractor.RunExtractor(int.Parse(args[0]), args[1], (BitDepths)Enum.Parse(typeof(BitDepths), args[2]));
 			else if ((ResourceReader.Config.ExtractAction != ExtractActions.None) && ((Keyboard.Modifiers.HasFlag(ModifierKeys.Control | ModifierKeys.Shift)) || ((args.Length == 1) && (args[0] == "-extract"))))
 			{
 				switch (ResourceReader.Config.ExtractAction)
 				{
-					case ExtractActions.Extract: extractor.Extract(); break;
+					case ExtractActions.Extract: extractor.Extract(Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32); break;
 					case ExtractActions.GUI:
 						var action = Contents.Run();
-						switch (action)
+						switch (action.Item1)
 						{
-							case ExtractActions.Extract: extractor.Extract(); break;
+							case ExtractActions.Extract: extractor.Extract(action.Item2); break;
 							case ExtractActions.GUI: extractor.RunProgram(); break;
 						}
 						break;

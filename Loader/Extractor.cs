@@ -31,12 +31,12 @@ namespace Loader
 			});
 		}
 
-		public void Extract()
+		public void Extract(BitDepths bitDepth)
 		{
 			var location = typeof(Program).Assembly.Location;
 			var newLocation = Path.Combine(Path.GetDirectoryName(location), Path.GetFileNameWithoutExtension(location) + ExtractorSuffix + Path.GetExtension(location));
 			File.Copy(location, newLocation, true);
-			Process.Start(newLocation, $"{Process.GetCurrentProcess().Id} \"{location}\"");
+			Process.Start(newLocation, $"{Process.GetCurrentProcess().Id} \"{location}\" {bitDepth}");
 		}
 
 		static void WaitForParentExit(int pid) { try { Process.GetProcessById(pid).WaitForExit(); } catch { } }
@@ -68,14 +68,14 @@ namespace Loader
 			});
 		}
 
-		public void RunExtractor(int parentPid, string parentPath)
+		public void RunExtractor(int parentPid, string parentPath, BitDepths bitDepth)
 		{
 			WaitForParentExit(parentPid);
 			File.Delete(parentPath);
 
 			var exeFile = typeof(Program).Assembly.Location;
 			var location = Path.GetDirectoryName(exeFile);
-			foreach (var resource in ResourceReader.Resources)
+			foreach (var resource in ResourceReader.GetResources(bitDepth))
 				resource.WriteToPath(location);
 
 			RunNGen();

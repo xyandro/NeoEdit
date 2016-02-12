@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -9,9 +10,13 @@ namespace Loader
 	{
 		public static DependencyProperty ResourceItemsProperty = DependencyProperty.Register(nameof(ResourceItems), typeof(ObservableCollection<Resource>), typeof(Contents));
 		public static DependencyProperty StartProperty = DependencyProperty.Register(nameof(Start), typeof(string), typeof(Contents));
+		public static DependencyProperty Extract32Property = DependencyProperty.Register(nameof(Extract32), typeof(bool), typeof(Contents));
+		public static DependencyProperty Extract64Property = DependencyProperty.Register(nameof(Extract64), typeof(bool), typeof(Contents));
 
 		public ObservableCollection<Resource> ResourceItems { get { return (ObservableCollection<Resource>)GetValue(ResourceItemsProperty); } set { SetValue(ResourceItemsProperty, value); } }
 		public string Start { get { return (string)GetValue(StartProperty); } set { SetValue(StartProperty, value); } }
+		public bool Extract32 { get { return (bool)GetValue(Extract32Property); } set { SetValue(Extract32Property, value); } }
+		public bool Extract64 { get { return (bool)GetValue(Extract64Property); } set { SetValue(Extract64Property, value); } }
 		public ExtractActions ExtractAction { get; private set; }
 
 		Contents()
@@ -21,6 +26,10 @@ namespace Loader
 			DataContext = this;
 			InitializeComponent();
 			ResourceItems = new ObservableCollection<Resource>(ResourceReader.AllResources);
+			if (Environment.Is64BitProcess)
+				Extract64 = true;
+			else
+				Extract32 = true;
 			Start = ResourceReader.Config.X64Start ?? ResourceReader.Config.X32Start;
 		}
 
@@ -36,12 +45,12 @@ namespace Loader
 			ExtractAction = sender == extractButton ? ExtractActions.Extract : ExtractActions.GUI;
 		}
 
-		public static ExtractActions Run()
+		public static Tuple<ExtractActions, BitDepths> Run()
 		{
 			var dialog = new Contents();
 			if (dialog.ShowDialog() != true)
-				return ExtractActions.None;
-			return dialog.ExtractAction;
+				return null;
+			return Tuple.Create(dialog.ExtractAction, dialog.Extract64 ? BitDepths.x64 : BitDepths.x32);
 		}
 	}
 }
