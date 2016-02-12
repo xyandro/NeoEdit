@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using NeoEdit.Common;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
@@ -39,8 +39,6 @@ namespace NeoEdit.TextEdit
 			return regions;
 		}
 
-		string NumericSort(string str) => Regex.Replace(str, @"\d+", match => new string('0', Math.Max(0, 20 - match.Value.Length)) + match.Value);
-
 		List<Range> GetSortSource(SortScope scope)
 		{
 			List<Range> sortSource = null;
@@ -73,32 +71,28 @@ namespace NeoEdit.TextEdit
 			return sortSource;
 		}
 
-		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, Comparison<TKey> comparer = null)
+		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
 		{
-			if (ascending)
-				return comparer == null ? source.OrderBy(keySelector) : source.OrderBy(keySelector, Comparer<TKey>.Create(comparer));
-			else
-				return comparer == null ? source.OrderByDescending(keySelector) : source.OrderByDescending(keySelector, Comparer<TKey>.Create(comparer));
+			var func = ascending ? (Func<IEnumerable<TSource>, Func<TSource, TKey>, IComparer<TKey>, IOrderedEnumerable<TSource>>)Enumerable.OrderBy : Enumerable.OrderByDescending;
+			return func(source, keySelector, comparer ?? Comparer<TKey>.Default);
 		}
 
 		List<int> GetOrdering(bool withinRegions, SortType type, bool caseSensitive, bool ascending)
 		{
 			var entries = Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
 
-			Comparison<string> stringComparer = null;
-			if (caseSensitive)
-				stringComparer = (entry1, entry2) => String.CompareOrdinal(entry1, entry2);
+			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 
 			switch (type)
 			{
-				case SortType.String: entries = OrderByAscDesc(entries, entry => NumericSort(entry.value), ascending, stringComparer).ToList(); break;
+				case SortType.String: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Helpers.StringNumericComparer(caseSensitive)).ToList(); break;
 				case SortType.StringRaw: entries = OrderByAscDesc(entries, entry => entry.value, ascending, stringComparer).ToList(); break;
 				case SortType.Numeric: entries = OrderByAscDesc(entries, entry => Double.Parse(entry.value), ascending).ToList(); break;
 				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.value), ascending).ToList(); break;
 				case SortType.Keys:
 					{
 						var sort = KeysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
-						entries = OrderByAscDesc(entries, entry => entry.value, ascending, (value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue)).ToList();
+						entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue))).ToList();
 					}
 					break;
 				case SortType.Reverse: entries.Reverse(); break;
@@ -108,8 +102,7 @@ namespace NeoEdit.TextEdit
 				case SortType.Length: entries = OrderByAscDesc(entries, entry => entry.value.Length, ascending).ToList(); break;
 				case SortType.Frequency:
 					{
-						var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-						var frequency = entries.GroupBy(a => a.value, comparer).ToDictionary(a => a.Key, a => a.Count(), comparer);
+						var frequency = entries.GroupBy(a => a.value, stringComparer).ToDictionary(a => a.Key, a => a.Count(), stringComparer);
 						entries = OrderByAscDesc(entries, entry => frequency[entry.value], ascending).ToList();
 					}
 					break;

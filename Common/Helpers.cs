@@ -69,6 +69,43 @@ namespace NeoEdit.Common
 			return Type.GetTypeCode(type) == TypeCode.DateTime;
 		}
 
+		public static int CompareWithNumeric(this string x, string y, bool caseSensitive = true)
+		{
+			var xPos = 0;
+			var yPos = 0;
+			var xLen = x.Length;
+			var yLen = y.Length;
+			while ((xPos < xLen) && (yPos < yLen))
+			{
+				int compare;
+				if ((char.IsDigit(x[xPos])) && (char.IsDigit(y[yPos])))
+				{
+					var xVal = default(long);
+					while ((xPos < xLen) && (char.IsDigit(x[xPos])))
+						xVal = xVal * 10 + (x[xPos++] - '0');
+					var yVal = default(long);
+					while ((yPos < yLen) && (char.IsDigit(y[yPos])))
+						yVal = yVal * 10 + (y[yPos++] - '0');
+					compare = xVal.CompareTo(yVal);
+				}
+				else if (caseSensitive)
+					compare = x[xPos++].CompareTo(y[yPos++]);
+				else
+					compare = char.ToLowerInvariant(x[xPos++]).CompareTo(char.ToLowerInvariant(y[yPos++]));
+
+				if (compare != 0)
+					return compare;
+			}
+
+			var usedChars = (yPos - yLen).CompareTo(xPos - xLen);
+			if (usedChars != 0)
+				return usedChars;
+
+			return yLen.CompareTo(xLen);
+		}
+
+		public static Comparer<string> StringNumericComparer(bool caseSensitive = true) => Comparer<string>.Create((x, y) => x.CompareWithNumeric(y, caseSensitive));
+
 		public static IEnumerable<T> GetValues<T>() => Enum.GetValues(typeof(T)).Cast<T>();
 
 		public static T ParseEnum<T>(string str) => (T)Enum.Parse(typeof(T), str);

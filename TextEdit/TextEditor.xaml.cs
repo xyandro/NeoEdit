@@ -2259,24 +2259,29 @@ namespace NeoEdit.TextEdit
 		internal void Command_Text_Copy_Length() => SetClipboardStrings(Selections.Select(range => range.Length.ToString()));
 
 		internal enum Command_MinMax_Type { String, Numeric, Length }
-		internal void DoCommand_Type_Copy_MinMax<T>(bool min, Func<Range, T> sortBy, Func<Range, string> value)
+		internal Tuple<string, List<Range>> DoCommand_Type_MinMax<Input>(bool min, Func<Range, Input> select, Comparer<Input> sort)
 		{
 			if (!Selections.Any())
 				throw new Exception("No selections");
-			var strs = Selections.AsParallel().AsOrdered().Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
-			var found = min ? strs.First().range : strs.Last().range;
-			SetClipboardText(value(found));
+			var selections = Selections.AsParallel().GroupBy(range => select(range)).OrderBy(group => group.Key, sort);
+			var result = min ? selections.First() : selections.Last();
+			return Tuple.Create(result.Key.ToString(), result.ToList());
 		}
 
-		internal void Command_Type_Copy_MinMax(bool min, Command_MinMax_Type type)
+		internal Tuple<string, List<Range>> Command_Type_Copy_MinMax2(bool min, Command_MinMax_Type type)
 		{
 			switch (type)
 			{
-				case Command_MinMax_Type.String: DoCommand_Type_Copy_MinMax(min, range => GetString(range), range => GetString(range)); break;
-				case Command_MinMax_Type.Numeric: DoCommand_Type_Copy_MinMax(min, range => NumericSort(GetString(range)), range => GetString(range)); break;
-				case Command_MinMax_Type.Length: DoCommand_Type_Copy_MinMax(min, range => range.Length, range => range.Length.ToString()); break;
+				case Command_MinMax_Type.String: return DoCommand_Type_MinMax(min, range => GetString(range), Comparer<string>.Default);
+				case Command_MinMax_Type.Numeric: return DoCommand_Type_MinMax(min, range => GetString(range), Comparer<string>.Create((x, y) => x.CompareWithNumeric(y)));
+				case Command_MinMax_Type.Length: return DoCommand_Type_MinMax(min, range => range.Length, Comparer<int>.Default);
+				default: throw new Exception("Invalid type");
 			}
 		}
+
+		internal void Command_Type_Copy_MinMax(bool min, Command_MinMax_Type type) => SetClipboardText(Command_Type_Copy_MinMax2(min, type).Item1);
+
+		internal void Command_Type_Select_MinMax(bool min, Command_MinMax_Type type) => Selections.Replace(Command_Type_Copy_MinMax2(min, type).Item2);
 
 		internal void Command_Numeric_Copy_Sum() => SetClipboardText(Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum().ToString());
 
@@ -2937,25 +2942,6 @@ namespace NeoEdit.TextEdit
 		{
 			Selections.Replace(Searches);
 			Searches.Clear();
-		}
-
-		void DoCommand_Type_Select_Min<T>(bool min, Func<Range, T> sortBy)
-		{
-			if (!Selections.Any())
-				throw new Exception("No selections");
-			var selections = Selections.AsParallel().AsOrdered().Select(range => new { range = range, sort = sortBy(range) }).OrderBy(obj => obj.sort).ToList();
-			var found = min ? selections.First().sort : selections.Last().sort;
-			Selections.Replace(selections.AsParallel().AsOrdered().Where(obj => obj.sort.Equals(found)).Select(obj => obj.range).ToList());
-		}
-
-		internal void Command_Type_Select_MinMax(bool min, Command_MinMax_Type type)
-		{
-			switch (type)
-			{
-				case Command_MinMax_Type.String: DoCommand_Type_Select_Min(min, range => GetString(range)); break;
-				case Command_MinMax_Type.Numeric: DoCommand_Type_Select_Min(min, range => NumericSort(GetString(range))); break;
-				case Command_MinMax_Type.Length: DoCommand_Type_Select_Min(min, range => range.Length); break;
-			}
 		}
 
 		internal GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count, () => ExpressionHelpDialog.Display());
