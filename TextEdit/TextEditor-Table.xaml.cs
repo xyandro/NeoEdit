@@ -20,10 +20,19 @@ namespace NeoEdit.TextEdit
 			TabsParent.CreateTab(textEditor);
 		}
 
-		Table GetTable(bool hasHeaders = true) => new Table(AllText, ContentType, hasHeaders);
+		Table GetTable(bool hasHeaders = true)
+		{
+			if (ContentType.IsTableType())
+				return new Table(AllText, ContentType, hasHeaders);
+			if (ContentType == Parser.ParserType.None)
+				return new Table(Enumerable.Range(0, Data.NumLines).AsParallel().AsOrdered().Select(line => Data.GetLine(line)).NonNullOrWhiteSpace().Select(str => new List<string> { str }).ToList(), false);
+			throw new Exception("Invalid content type");
+		}
 
 		void SetText(Table table)
 		{
+			if (!ContentType.IsTableType())
+				ContentType = Parser.ParserType.Columns;
 			var output = table.ToString(Data.DefaultEnding, ContentType);
 			Replace(new List<Range> { FullRange }, new List<string> { output });
 			Selections.Replace(BeginRange);

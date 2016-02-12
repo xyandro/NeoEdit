@@ -173,19 +173,13 @@ namespace NeoEdit.Common
 			return result;
 		}
 
-		public static IEnumerable<TSource> Null<TSource>(this IEnumerable<TSource> source)
-		{
-			foreach (var item in source)
-				if (item == null)
-					yield return item;
-		}
+		public static IEnumerable<TSource> Null<TSource>(this IEnumerable<TSource> source) => source.Where(item => item == null);
+		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource> source) => source.Where(item => item != null);
 
-		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource> source)
-		{
-			foreach (var item in source)
-				if (item != null)
-					yield return item;
-		}
+		public static IEnumerable<string> NullOrEmpty(this IEnumerable<string> source) => source.Where(str => string.IsNullOrEmpty(str));
+		public static IEnumerable<string> NullOrWhiteSpace(this IEnumerable<string> source) => source.Where(str => string.IsNullOrWhiteSpace(str));
+		public static IEnumerable<string> NonNullOrEmpty(this IEnumerable<string> source) => source.Where(str => !string.IsNullOrEmpty(str));
+		public static IEnumerable<string> NonNullOrWhiteSpace(this IEnumerable<string> source) => source.Where(str => !string.IsNullOrWhiteSpace(str));
 
 		public static void Execute(this IEnumerable<Action> source) => source.ForEach(action => action());
 		public static List<TResult> Execute<TResult>(this IEnumerable<Func<TResult>> source) => source.ForEach(action => action());

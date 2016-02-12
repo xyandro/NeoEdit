@@ -35,7 +35,6 @@ QueryBuilder
 Invert selection
 Copy diff whitespace left<->right
 Convert macros to json?
-List to table (when I have a random list I want to group, etc.)
 Check that objects can be deleted (Run "GC", make sure size goes down)
 Make ExpressionResults control faster (especially limit screen)
 If user choose rows and columns, scroll extra windows
