@@ -34,9 +34,10 @@ Expressions: use . and x instead of + and * for strings
 QueryBuilder
 Copy diff whitespace left<->right
 Convert macros to json?
-Check that objects can be deleted (Run "GC", make sure size goes down)
 Make ExpressionResults control faster (especially limit screen)
 If user choose rows and columns, scroll extra windows
+Allow user to change zoom
+Fix table sort (handle numbers better)
 
 View:
 Update as new lines are added

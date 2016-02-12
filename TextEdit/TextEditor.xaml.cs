@@ -363,6 +363,7 @@ namespace NeoEdit.TextEdit
 		public override void Closed()
 		{
 			DiffTarget = null;
+			globalKeysChanged -= SetupLocalOrGlobalKeys;
 			base.Closed();
 		}
 
