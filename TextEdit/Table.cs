@@ -284,13 +284,14 @@ namespace NeoEdit.TextEdit
 
 		public Table Sort(List<SortData> sortData)
 		{
+			var comparer = Helpers.StringNumericComparer();
 			var order = Enumerable.Range(0, Rows.Count).ToList();
 			var ordering = order.OrderBy(rowIndex => 0);
 			foreach (var data in sortData)
 				if (data.Ascending)
-					ordering = ordering.ThenBy(rowIndex => this[rowIndex, data.Column]);
+					ordering = ordering.ThenBy(rowIndex => this[rowIndex, data.Column], comparer);
 				else
-					ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, data.Column]);
+					ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, data.Column], comparer);
 
 			return new Table
 			{

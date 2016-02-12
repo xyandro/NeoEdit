@@ -37,7 +37,6 @@ Convert macros to json?
 Make ExpressionResults control faster (especially limit screen)
 If user choose rows and columns, scroll extra windows
 Allow user to change zoom
-Fix table sort (handle numbers better)
 
 View:
 Update as new lines are added
