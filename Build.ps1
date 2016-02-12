@@ -1,3 +1,11 @@
+param ( [int]$bitdepth = 0 )
+
+$bitdepths = @()
+if ($bitdepth -eq 0)
+{ $bitdepths += (32, 64) }
+else
+{ $bitdepths += $bitdepth }
+
 #$debug = 1
 
 Function Fail ($error)
@@ -39,11 +47,21 @@ Function GitUpdate ()
 Function Build ()
 {
 	$devenv = "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.com"
-	Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|x86" /project Loader /out Build-x86.log'
-	if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
-	Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|x64" /project Loader /out Build-x64.log'
-	if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
-	$proc = Start-Process "bin\Release.AnyCPU\Loader.exe" "Start=..\Release.x86\NeoEdit.exe Start=..\Release.x64\NeoEdit.exe output=NeoEdit.exe ngen=1 extractaction=gui go" -PassThru -Wait
+	$args = ""
+	if ($bitdepths -contains 32)
+	{
+		$args += "Start=..\Release.x86\NeoEdit.exe "
+		Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|x86" /project Loader /out Build32.log'
+		if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
+	}
+	if ($bitdepths -contains 64)
+	{
+		$args += "Start=..\Release.x64\NeoEdit.exe "
+		Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|x64" /project Loader /out Build64.log'
+		if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
+	}
+	$args += "output=NeoEdit.exe ngen=1 extractaction=gui go"
+	$proc = Start-Process "bin\Release.AnyCPU\Loader.exe" $args -PassThru -Wait
 	if ($proc.ExitCode -ne 0) { Fail("Failed to build.") }
 }
 
