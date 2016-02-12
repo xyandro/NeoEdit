@@ -32,7 +32,6 @@ Fix warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
 Refactor macro code
 Expressions: use . and x instead of + and * for strings
 QueryBuilder
-Invert selection
 Copy diff whitespace left<->right
 Convert macros to json?
 Check that objects can be deleted (Run "GC", make sure size goes down)

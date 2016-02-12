@@ -959,6 +959,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
 				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
+				case TextEditCommand.Select_Invert: Command_Select_Invert(); break;
 				case TextEditCommand.Select_Empty: Command_Select_Empty(true); break;
 				case TextEditCommand.Select_NonEmpty: Command_Select_Empty(false); break;
 				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
@@ -2861,6 +2862,13 @@ namespace NeoEdit.TextEdit
 					lines.Add(line);
 
 			Selections.Replace(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
+		}
+
+		internal void Command_Select_Invert()
+		{
+			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
+			var end = Selections.Select(sel => sel.Start).Concat(new[] { Data.NumChars });
+			Selections.Replace(Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Data.NumChars))).ToList());
 		}
 
 		internal void Command_Select_Empty(bool include) => Selections.Replace(Selections.Where(range => range.HasSelection != include).ToList());

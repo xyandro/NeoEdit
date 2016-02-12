@@ -492,7 +492,10 @@
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
-		<textEdit:TextEditMenuItem Header="L_ines" CommandEnum="Select_Lines"/>
+		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Invert" CommandEnum="Select_Invert"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
 		<textEdit:TextEditMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
 		<Separator/>
