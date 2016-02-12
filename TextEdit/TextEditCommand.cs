@@ -228,6 +228,7 @@ namespace NeoEdit.TextEdit
 		Network_ScanPorts,
 		Database_Connect,
 		[KeyGesture(Key.Q, ModifierKeys.Control)] Database_ExecuteQuery,
+		Database_UseCurrentWindow,
 		[KeyGesture(Key.Q, ModifierKeys.Control | ModifierKeys.Shift)] Database_QueryTable,
 		Database_Examine,
 		[KeyGesture(Key.K, ModifierKeys.Control | ModifierKeys.Shift)] Keys_Set_Keys,

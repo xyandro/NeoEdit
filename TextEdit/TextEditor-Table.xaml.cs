@@ -31,11 +31,16 @@ namespace NeoEdit.TextEdit
 
 		void SetText(Table table)
 		{
-			if (!ContentType.IsTableType())
-				ContentType = Parser.ParserType.Columns;
-			var output = table.ToString(Data.DefaultEnding, ContentType);
+			var output = GetTableText(table);
 			Replace(new List<Range> { FullRange }, new List<string> { output });
 			Selections.Replace(BeginRange);
+		}
+
+		string GetTableText(Table table)
+		{
+			if (!ContentType.IsTableType())
+				ContentType = Parser.ParserType.Columns;
+			return table.ToString(Data.DefaultEnding, ContentType);
 		}
 
 		internal void Command_Table_Type_Detect() => ContentType = Table.GuessTableType(AllText);

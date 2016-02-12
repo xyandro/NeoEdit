@@ -108,6 +108,8 @@ namespace NeoEdit.TextEdit
 		public bool DiffIgnoreLineEndings { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsDiff { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool UseCurrentWindow { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditor diffTarget;
 		public TextEditor DiffTarget
@@ -887,6 +889,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_ScanPorts: Command_Network_ScanPorts(dialogResult as ScanPortsDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_ExecuteQuery: Command_Database_ExecuteQuery(); break;
+				case TextEditCommand.Database_UseCurrentWindow: Command_Database_UseCurrentWindow(multiStatus); break;
 				case TextEditCommand.Database_QueryTable: Command_Database_QueryTable(dialogResult as string); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
@@ -2776,20 +2779,24 @@ namespace NeoEdit.TextEdit
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { FullRange };
-			var hasTables = false;
-			foreach (var range in selections)
+			var tables = selections.Select(range => RunDBSelect(GetString(range))).ToList();
+			if (!tables.NonNull().Any())
 			{
-				var table = RunDBSelect(GetString(range));
-				if (table != null)
-				{
-					OpenTable(table.Item2, table.Item1);
-					hasTables = true;
-				}
+				Message.Show($"Quer{(selections.Count == 1 ? "y" : "ies")} run successfully.");
+				return;
 			}
 
-			if (!hasTables)
-				Message.Show($"Quer{(selections.Count == 1 ? "y" : "ies")} run successfully.");
+			if (!UseCurrentWindow)
+			{
+				foreach (var table in tables)
+					OpenTable(table.Item2, table.Item1);
+				return;
+			}
+
+			ReplaceSelections(tables.Select(table => table == null ? "Success" : GetTableText(table.Item2)).ToList());
 		}
+
+		internal void Command_Database_UseCurrentWindow(bool? multiStatus) => UseCurrentWindow = multiStatus != true;
 
 		string DBSanitize(string name) => (!String.IsNullOrEmpty(name)) && (!Char.IsLetter(name[0])) ? $"[{name}]" : name;
 
