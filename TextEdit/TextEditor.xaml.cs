@@ -2103,23 +2103,11 @@ namespace NeoEdit.TextEdit
 
 		internal GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count, () => ExpressionHelpDialog.Display());
 
-		internal void Command_Expression_Expression(GetExpressionDialog.Result result)
-		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
-			ReplaceSelections(results);
-		}
+		internal void Command_Expression_Expression(GetExpressionDialog.Result result) => ReplaceSelections(GetFixedExpressionResults<string>(result.Expression));
 
-		internal void Command_Expression_Copy(GetExpressionDialog.Result result)
-		{
-			var results = GetVariableExpressionResults<string>(result.Expression);
-			SetClipboardStrings(results);
-		}
+		internal void Command_Expression_Copy(GetExpressionDialog.Result result) => SetClipboardStrings(GetVariableExpressionResults<string>(result.Expression));
 
-		internal void Command_Expression_EvaluateSelected()
-		{
-			var expression = new NEExpression("Eval([0])");
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => expression.Evaluate(GetString(range)).ToString()).ToList());
-		}
+		internal void Command_Expression_EvaluateSelected() => ReplaceSelections(GetFixedExpressionResults<string>("Eval(x)"));
 
 		internal void Command_Numeric_Series_ZeroBased() => ReplaceSelections(Selections.Select((range, index) => index.ToString()).ToList());
 

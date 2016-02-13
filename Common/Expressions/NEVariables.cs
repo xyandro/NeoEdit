@@ -49,31 +49,38 @@ namespace NeoEdit.Common.Expressions
 			if (missing != null)
 				throw new Exception($"Variable {missing} is undefined");
 
-			RunActions(variables.Select(variable => varDict[variable].Initializer).NonNull().SelectMany(initializer => initializer.AllActions()).Distinct());
-
-			for (var pass = 0; pass < 2; ++pass)
+			lock(this)
 			{
-				var data = variables.Where(variable => (varDict[variable].Infinite) == (pass == 1)).AsParallel().ToDictionary(variable => variable, variable => varDict[variable].Value().Take(rowCount ?? int.MaxValue).ToList());
-				if (!rowCount.HasValue)
-					rowCount = data.Any() ? data.Min(pair => pair.Value.Count) : 1;
-				data.ForEach(pair => varValues[pair.Key] = pair.Value);
+				if ((rowCount.HasValue) && (varValues != null) && (variables.All(variable => (varValues.ContainsKey(variable)) && (varValues[variable].Count >= rowCount))))
+					return RowCount = rowCount.Value;
+
+				RunActions(variables.Select(variable => varDict[variable].Initializer).NonNull().SelectMany(initializer => initializer.AllActions()).Distinct());
+
+				for (var pass = 0; pass < 2; ++pass)
+				{
+					var data = variables.Where(variable => (varDict[variable].Infinite) == (pass == 1)).AsParallel().ToDictionary(variable => variable, variable => varDict[variable].Value().Take(rowCount ?? int.MaxValue).ToList());
+					if (!rowCount.HasValue)
+						rowCount = data.Any() ? data.Min(pair => pair.Value.Count) : 1;
+					data.ForEach(pair => varValues[pair.Key] = pair.Value);
+				}
+
+				var tooFew = variables.FirstOrDefault(variable => varValues[variable].Count < rowCount);
+				if (tooFew != null)
+					throw new Exception($"Variable {tooFew} doesn't have enough values");
+
+				return RowCount = rowCount.Value;
 			}
-
-			var tooFew = variables.FirstOrDefault(variable => varValues[variable].Count < rowCount);
-			if (tooFew != null)
-				throw new Exception($"Variable {tooFew} doesn't have enough values");
-
-			return RowCount = rowCount.Value;
 		}
 
 		public object GetValue(string variable, int rowNum)
 		{
+			Prepare(new[] { variable }, RowCount);
 			if (varValues == null)
 				throw new Exception($"Must call {nameof(Prepare)} first");
 			if (!varValues.ContainsKey(variable))
-				throw new Exception($"Variable ${variable} is undefined");
+				throw new Exception($"Variable {variable} is undefined");
 			if (rowNum >= varValues[variable].Count)
-				throw new Exception($"Variable ${variable} doesn't have enough values");
+				throw new Exception($"Variable {variable} doesn't have enough values");
 			return varValues[variable][rowNum];
 		}
 

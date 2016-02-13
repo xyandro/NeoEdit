@@ -119,7 +119,7 @@ namespace NeoEdit.Common.Expressions
 				case "conjugate": return paramList[0].Conjugate();
 				case "cos": return ExpressionResult.Cos(paramList[0]);
 				case "cosh": return ExpressionResult.Cosh(paramList[0]);
-				case "eval": return new NEExpression(paramList[0].GetString).InternalEvaluate(null, 0);
+				case "eval": return new NEExpression(paramList[0].GetString).InternalEvaluate(variables, row);
 				case "filename": return paramList[0].GetFileName();
 				case "frompolar": return ExpressionResult.FromPolar(paramList[0], paramList[1]);
 				case "fromwords": return paramList[0].FromWords();
