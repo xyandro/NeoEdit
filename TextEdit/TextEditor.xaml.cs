@@ -608,6 +608,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
 				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
+				case TextEditCommand.Table_AddColumn: dialogResult = Command_Table_AddColumn_Dialog(); break;
 				case TextEditCommand.Table_Join: dialogResult = Command_Table_Join_Dialog(); break;
 				case TextEditCommand.Table_Database_GenerateInserts: dialogResult = Command_Table_Database_GenerateInserts_Dialog(); break;
 				case TextEditCommand.Table_Database_GenerateUpdates: dialogResult = Command_Table_Database_GenerateUpdates_Dialog(); break;
@@ -833,6 +834,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_LineSelectionsToTable: Command_Table_LineSelectionsToTable(); break;
 				case TextEditCommand.Table_RegionSelectionsToTable: Command_Table_RegionSelectionsToTable(); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;
+				case TextEditCommand.Table_AddColumn: Command_Table_AddColumn(dialogResult as AddColumnDialog.Result); break;
 				case TextEditCommand.Table_SetJoinSource: Command_Table_SetJoinSource(); break;
 				case TextEditCommand.Table_Join: Command_Table_Join(dialogResult as JoinDialog.Result); break;
 				case TextEditCommand.Table_Transpose: Command_Table_Transpose(); break;

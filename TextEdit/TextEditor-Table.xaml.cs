@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
@@ -85,6 +86,32 @@ namespace NeoEdit.TextEdit
 		internal EditTableDialog.Result Command_Table_EditTable_Dialog() => EditTableDialog.Run(WindowParent, GetTable());
 
 		internal void Command_Table_EditTable(EditTableDialog.Result result) => SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
+
+		NEVariables GetTableVariables(Table table)
+		{
+			var results = GetVariables();
+			for (var column = 0; column < table.NumColumns; ++column)
+			{
+				var col = column; // If we don't copy this the value will be updated and invalid
+				results.Add(new NEVariable(table.GetHeader(column), "Column", () => Enumerable.Range(0, table.NumRows).Select(row => table[row, col])));
+			}
+			return results;
+		}
+
+		internal AddColumnDialog.Result Command_Table_AddColumn_Dialog()
+		{
+			var table = GetTable();
+			return AddColumnDialog.Run(WindowParent, GetTableVariables(table), table.NumRows, () => ExpressionHelpDialog.Display());
+		}
+
+		internal void Command_Table_AddColumn(AddColumnDialog.Result result)
+		{
+			var table = GetTable();
+			var variables = GetTableVariables(table);
+			var results = new NEExpression(result.Expression).EvaluateRows<string>(variables, table.NumRows);
+			table.AddColumn(result.ColumnName, results);
+			SetText(table);
+		}
 
 		static Table joinTable;
 		internal void Command_Table_SetJoinSource() => joinTable = GetTable();

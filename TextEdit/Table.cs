@@ -158,6 +158,14 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		public void AddColumn(string columnName, List<string> results)
+		{
+			if (results.Count != NumRows)
+				throw new ArgumentException("Invalid row count");
+			Headers.Add(columnName);
+			Enumerable.Range(0, NumRows).ForEach(row => Rows[row].Add(results[row] ?? NULL));
+		}
+
 		string GetAggregateValue(AggregateType aggType, List<string> values)
 		{
 			switch (aggType)

@@ -100,6 +100,13 @@
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
     <Compile Include="DBConnectInfo.cs" />
+    <Page Include="Dialogs\AddColumnDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\AddColumnDialog.xaml.cs">
+      <DependentUpon>AddColumnDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ChooseDateTimeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
