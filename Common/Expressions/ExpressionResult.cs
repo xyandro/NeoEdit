@@ -19,6 +19,9 @@ namespace NeoEdit.Common.Expressions
 
 		public ExpressionResult(object value, ExpressionUnits units)
 		{
+			if ((IsString) && (units.HasUnits))
+				throw new Exception("Strings cannot have units");
+
 			Value = value;
 			Units = units;
 
@@ -264,18 +267,6 @@ namespace NeoEdit.Common.Expressions
 
 			var units = factor1.Units * factor2.Units;
 
-			if ((factor2.IsString) && (factor1.IsInteger))
-				Swap(ref factor1, ref factor2);
-			if ((factor1.IsString) && (factor2.IsInteger))
-			{
-				var str = factor1.GetString;
-				var count = (int)factor2.GetInteger;
-				var sb = new StringBuilder(str.Length * count);
-				for (var ctr = 0; ctr < count; ++ctr)
-					sb.Append(str);
-				return new ExpressionResult(sb.ToString(), units);
-			}
-
 			if ((factor1.IsInteger) && (factor2.IsInteger))
 				return new ExpressionResult(factor1.GetInteger * factor2.GetInteger, units);
 
@@ -283,6 +274,22 @@ namespace NeoEdit.Common.Expressions
 				return new ExpressionResult(factor1.GetFloat * factor2.GetFloat, units);
 
 			return new ExpressionResult(factor1.GetComplex * factor2.GetComplex, units);
+		}
+
+		public static ExpressionResult Repeat(ExpressionResult repeat, ExpressionResult count)
+		{
+			if ((repeat.IsNull) || (count.IsNull))
+				throw new Exception("NULL value");
+
+			if (count.Units.HasUnits)
+				throw new Exception("Count cannot have units");
+
+			var str = repeat.GetString;
+			var countInt = (int)count.GetInteger;
+			var sb = new StringBuilder(str.Length * countInt);
+			for (var ctr = 0; ctr < countInt; ++ctr)
+				sb.Append(str);
+			return new ExpressionResult(sb.ToString(), repeat.Units);
 		}
 
 		public static ExpressionResult operator /(ExpressionResult dividend, ExpressionResult divisor)
@@ -330,13 +337,7 @@ namespace NeoEdit.Common.Expressions
 		public static ExpressionResult operator +(ExpressionResult addend1, ExpressionResult addend2)
 		{
 			if ((addend1.IsNull) || (addend2.IsNull))
-			{
-				if (addend1.IsString)
-					return addend1;
-				if (addend2.IsString)
-					return addend2;
 				throw new Exception("NULL value");
-			}
 
 			if ((addend2.IsDateTime) && (!addend1.IsDateTime))
 				Swap(ref addend1, ref addend2);
@@ -404,9 +405,6 @@ namespace NeoEdit.Common.Expressions
 			if ((addend1.IsCharacter) && (addend2.IsInteger))
 				return new ExpressionResult((char)((int)addend1.GetChar + addend2.GetInteger), addend1.Units);
 
-			if ((addend1.IsString) || (addend2.IsString))
-				return new ExpressionResult(addend1.GetString + addend2.GetString, addend1.Units);
-
 			if ((addend1.IsInteger) && (addend2.IsInteger))
 				return new ExpressionResult(addend1.GetInteger + addend2.GetInteger, addend1.Units);
 
@@ -414,6 +412,14 @@ namespace NeoEdit.Common.Expressions
 				return new ExpressionResult(addend1.GetFloat + addend2.GetFloat, addend1.Units);
 
 			return new ExpressionResult(addend1.GetComplex + addend2.GetComplex, addend1.Units);
+		}
+
+		public static ExpressionResult Concat(ExpressionResult addend1, ExpressionResult addend2)
+		{
+			if ((addend1.IsNull) || (addend2.IsNull))
+				return addend1.IsString ? addend1 : addend2;
+
+			return new ExpressionResult(addend1.GetString + addend2.GetString, addend1.Units);
 		}
 
 		public static ExpressionResult operator -(ExpressionResult minuend, ExpressionResult subtrahend)
@@ -627,7 +633,12 @@ namespace NeoEdit.Common.Expressions
 			return value * mult + add;
 		}
 
-		public ExpressionResult SetUnits(ExpressionResult units) => new ExpressionResult(Value, units.Units);
+		public ExpressionResult SetUnits(ExpressionResult units)
+		{
+			if (Units.HasUnits)
+				throw new Exception("Already has units");
+			return new ExpressionResult(Value, units.Units);
+		}
 
 		public ExpressionResult ToWords()
 		{

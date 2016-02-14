@@ -47,14 +47,16 @@ namespace NeoEdit.Common.Expressions
 		{
 			switch (op)
 			{
-				case ".": return ExpressionResult.DotOp(val1, val2);
+				case "..": return ExpressionResult.DotOp(val1, val2);
 				case "^": return ExpressionResult.Exp(val1, val2);
 				case "*": return val1 * val2;
 				case "/": return val1 / val2;
+				case "**": return ExpressionResult.Repeat(val1, val2);
 				case "//": return ExpressionResult.IntDiv(val1, val2);
 				case "%": return val1 % val2;
 				case "+": return val1 + val2;
 				case "-": return val1 - val2;
+				case ".": return ExpressionResult.Concat(val1, val2);
 				case "<<": return ExpressionResult.ShiftLeft(val1, val2);
 				case ">>": return ExpressionResult.ShiftRight(val1, val2);
 				case "<": return ExpressionResult.LessThanOp(val1, val2, false);
@@ -161,6 +163,8 @@ namespace NeoEdit.Common.Expressions
 				case "utcnow": return new ExpressionResult(DateTimeOffset.UtcNow);
 				case "today": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Now.Date, DateTimeKind.Local)));
 				case "utctoday": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc)));
+				case "time": return new ExpressionResult(DateTime.Now.TimeOfDay);
+				case "utctime": return new ExpressionResult(DateTimeOffset.UtcNow.TimeOfDay);
 				default: throw new ArgumentException($"Invalid constant: {constant}");
 			}
 		}

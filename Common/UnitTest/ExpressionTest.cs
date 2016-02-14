@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common.Expressions;
 
@@ -26,7 +25,7 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("5", new NEExpression("4.9 + .1").Evaluate().ToString());
 			Assert.AreEqual("5.2", new NEExpression("5.1 + .1").Evaluate().ToString());
 			Assert.AreEqual("b", new NEExpression("'a' + 1").Evaluate().ToString());
-			Assert.AreEqual("a1", new NEExpression("\"a\" + 1").Evaluate().ToString());
+			Assert.AreEqual("a1", new NEExpression("\"a\" . 1").Evaluate().ToString());
 
 			Assert.AreEqual("0", new NEExpression("2 - 2").Evaluate().ToString());
 			Assert.AreEqual("3.1", new NEExpression("5.1 - 2").Evaluate().ToString());
@@ -37,8 +36,8 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual("10.8", new NEExpression("5.4 * 2").Evaluate().ToString());
 			Assert.AreEqual("10.5", new NEExpression("5 * 2.1").Evaluate().ToString());
-			Assert.AreEqual("okokokok", new NEExpression("\"ok\" * 4").Evaluate().ToString());
-			Assert.AreEqual("oooo", new NEExpression("'o' * 4").Evaluate().ToString());
+			Assert.AreEqual("okokokok", new NEExpression("\"ok\" ** 4").Evaluate().ToString());
+			Assert.AreEqual("oooo", new NEExpression("'o' ** 4").Evaluate().ToString());
 
 			Assert.AreEqual("2.5", new NEExpression("5 / 2").Evaluate().ToString());
 			Assert.AreEqual("2", new NEExpression("5 // 2").Evaluate().ToString());
@@ -76,9 +75,9 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(false, new NEExpression("\"5a\" i!= \"5a\"").Evaluate((object)5));
 			Assert.AreEqual(false, new NEExpression("\"5a\" i!= \"5A\"").Evaluate((object)5));
 
-			Assert.AreEqual("5", new NEExpression("[0].\"value\"").Evaluate(new ExpressionDotTest(5)).ToString());
+			Assert.AreEqual("5", new NEExpression("[0]..\"value\"").Evaluate(new ExpressionDotTest(5)).ToString());
 
-			Assert.AreEqual(typeof(ExpressionDotTest).FullName, new NEExpression("Type([0]).\"FullName\"").Evaluate(new ExpressionDotTest(5)).ToString());
+			Assert.AreEqual(typeof(ExpressionDotTest).FullName, new NEExpression("Type([0])..\"FullName\"").Evaluate(new ExpressionDotTest(5)).ToString());
 
 			Assert.AreEqual(true, new NEExpression("ValidRE([0])").Evaluate(@"\d+"));
 			Assert.AreEqual(false, new NEExpression("ValidRE([0])").Evaluate(@"["));
@@ -89,7 +88,7 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual("5", new NEExpression("([0] || [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString());
 
-			Assert.AreEqual("ICanJoinStrings", new NEExpression("+").Evaluate("I", "Can", null, "Join", "Strings").ToString());
+			Assert.AreEqual("ICanJoinStrings", new NEExpression(".").Evaluate("I", "Can", null, "Join", "Strings").ToString());
 
 			Assert.AreEqual("[0]5+7 is 12", new NEExpression("StrFormat(\"[0]{0}+{1} is {2}\", [0], [1], [0] + [1])").Evaluate(5, 7).ToString());
 

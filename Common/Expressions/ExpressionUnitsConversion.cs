@@ -550,7 +550,7 @@ namespace NeoEdit.Common.Expressions
 			var conversion2 = ExpressionUnitsConversion.GetBaseConversion(units2.IsSI ? conversion1.toUnits : units2.IsSimple ? ExpressionUnitsConversion.GetSimple(conversion1.toUnits) : units2);
 
 			if (!conversion1.toUnits.Equals(conversion2.toUnits))
-				throw new Exception("Cannot convert types");
+				throw new Exception("Cannot convert units");
 
 			return conversion1 / conversion2;
 		}
