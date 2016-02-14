@@ -575,6 +575,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
+				case TextEditCommand.Edit_Color: dialogResult = Command_Edit_Color_Dialog(); break;
 				case TextEditCommand.Edit_Hash: dialogResult = Command_Edit_Hash_Dialog(); break;
 				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
 				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
@@ -715,6 +716,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_URL_Escape: Command_Edit_URL_Escape(); break;
 				case TextEditCommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(); break;
 				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as MakeAbsoluteDialog.Result); break;
+				case TextEditCommand.Edit_Color: Command_Edit_Color(dialogResult as ChooseColorDialog.Result); break;
 				case TextEditCommand.Edit_Hash: Command_Edit_Hash(dialogResult as HashTextDialog.Result); break;
 				case TextEditCommand.Edit_Sort: Command_Edit_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Edit_Convert: Command_Edit_Convert(dialogResult as ConvertDialog.Result); break;
@@ -2435,6 +2437,10 @@ namespace NeoEdit.TextEdit
 				return uri.AbsoluteUri;
 			}).ToList());
 		}
+
+		internal ChooseColorDialog.Result Command_Edit_Color_Dialog() => ChooseColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
+
+		internal void Command_Edit_Color(ChooseColorDialog.Result result) => ReplaceSelections(result.Color);
 
 		internal void Command_Diff_Break() => DiffTarget = null;
 

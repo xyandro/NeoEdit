@@ -97,11 +97,13 @@
 			<textEdit:TextEditMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
 		</MenuItem>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="C_olor" CommandEnum="Edit_Color"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Edit_Hash"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="C_onvert" CommandEnum="Edit_Convert"/>
+		<textEdit:TextEditMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
 		<Separator/>
 		<MenuItem Header="_Bookmarks">
 			<textEdit:TextEditMenuItem Header="_Toggle" CommandEnum="Edit_Bookmarks_Toggle"/>

@@ -52,6 +52,7 @@ namespace NeoEdit.TextEdit
 		Edit_URL_Escape,
 		Edit_URL_Unescape,
 		Edit_URL_Absolute,
+		Edit_Color,
 		Edit_Hash,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Sort,
 		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Convert,
