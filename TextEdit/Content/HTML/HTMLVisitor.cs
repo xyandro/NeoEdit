@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.HTML.Parser;
@@ -13,25 +12,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 	{
 		public static ParserNode Parse(string input)
 		{
-			var inputStream = new CaseInsensitiveInputStream(input);
-			var lexer = new HTMLLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new HTMLParser(tokens);
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-			HTMLParser.DocumentContext tree;
-			try
-			{
-				tree = parser.document();
-			}
-			catch
-			{
-				tokens.Reset();
-				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.document();
-			}
-
+			var tree = ParserHelper.Parse<HTMLLexer, HTMLParser, HTMLParser.DocumentContext>(input, parser => parser.document(), caseSensitive: false);
 			return new HTMLVisitor(input).Visit(tree);
 		}
 

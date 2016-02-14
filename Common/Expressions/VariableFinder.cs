@@ -4,7 +4,7 @@ using NeoEdit.Common.Expressions.Parser;
 
 namespace NeoEdit.Common.Expressions
 {
-	class VariableFinder : ExpressionBaseVisitor<object>
+	class VariableFinder : ExpressionParserBaseVisitor<object>
 	{
 		readonly HashSet<string> variables = new HashSet<string>();
 

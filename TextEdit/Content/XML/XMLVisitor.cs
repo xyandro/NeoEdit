@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.XML.Parser;
 
@@ -12,27 +11,8 @@ namespace NeoEdit.TextEdit.Content.XML
 	{
 		public static ParserNode Parse(string input)
 		{
-			var inputStream = new AntlrInputStream(input);
-			var lexer = new XMLLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new XMLParser(tokens);
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-			XMLParser.DocumentContext tree;
-			try
-			{
-				tree = parser.document();
-			}
-			catch
-			{
-				tokens.Reset();
-				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.document();
-			}
-
-			var visitor = new XMLVisitor(input);
-			return visitor.Visit(tree);
+			var tree = ParserHelper.Parse<XMLLexer, XMLParser, XMLParser.DocumentContext>(input, parser => parser.document());
+			return new XMLVisitor(input).Visit(tree);
 		}
 
 		public static List<string> rFormat(ParserNode node, string input)

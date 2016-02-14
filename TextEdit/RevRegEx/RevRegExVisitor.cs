@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
+using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.RevRegEx.Parser;
 
 namespace NeoEdit.TextEdit.RevRegEx
@@ -10,27 +9,7 @@ namespace NeoEdit.TextEdit.RevRegEx
 	{
 		public static RevRegExData Parse(string input)
 		{
-			var inputStream = new AntlrInputStream(input);
-			var lexer = new RevRegExLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-
-			var parser = new RevRegExParser(tokens);
-			parser.ErrorHandler = new BailErrorStrategy();
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-			RevRegExParser.RevregexContext tree;
-			try
-			{
-				tree = parser.revregex();
-			}
-			catch
-			{
-				tokens.Reset();
-				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.revregex();
-			}
-
+			var tree = ParserHelper.Parse<RevRegExLexer, RevRegExParser, RevRegExParser.RevregexContext>(input, parser => parser.revregex(), true);
 			return new RevRegExVisitor().Visit(tree);
 		}
 

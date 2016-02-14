@@ -1,5 +1,4 @@
 ﻿using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.TCSV.Parser;
 
@@ -9,25 +8,7 @@ namespace NeoEdit.TextEdit.Content.TCSV
 	{
 		public static ParserNode Parse(string input)
 		{
-			var inputStream = new AntlrInputStream(input);
-			var lexer = new TSVLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new TSVParser(tokens);
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-			TSVParser.DocContext tree;
-			try
-			{
-				tree = parser.doc();
-			}
-			catch
-			{
-				tokens.Reset();
-				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.doc();
-			}
-
+			var tree = ParserHelper.Parse<TSVLexer, TSVParser, TSVParser.DocContext>(input, parser => parser.doc());
 			return new TSVVisitor().Visit(tree);
 		}
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.JSON.Parser;
 
@@ -12,25 +11,7 @@ namespace NeoEdit.TextEdit.Content.JSON
 	{
 		public static ParserNode Parse(string input)
 		{
-			var inputStream = new AntlrInputStream(input);
-			var lexer = new JSONLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new JSONParser(tokens);
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-			JSONParser.JsonContext tree;
-			try
-			{
-				tree = parser.json();
-			}
-			catch
-			{
-				tokens.Reset();
-				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.json();
-			}
-
+			var tree = ParserHelper.Parse<JSONLexer, JSONParser, JSONParser.JsonContext>(input, parser => parser.json());
 			return new JSONVisitor().Visit(tree);
 		}
 

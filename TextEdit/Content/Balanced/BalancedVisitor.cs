@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.Balanced.Parser;
 
@@ -9,34 +7,9 @@ namespace NeoEdit.TextEdit.Content.Balanced
 {
 	class BalancedVisitor : BalancedBaseVisitor<ParserNode>
 	{
-		public class BalancedErrorListener : IAntlrErrorListener<IToken>
-		{
-			public void SyntaxError(IRecognizer recognizer, IToken token, int line, int pos, string msg, RecognitionException e) { throw new Exception($"Error: Token mistmatch at position {token.StartIndex}"); }
-		}
-
 		public static ParserNode Parse(string input)
 		{
-			var inputStream = new AntlrInputStream(input);
-			var lexer = new BalancedLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new BalancedParser(tokens);
-			parser.RemoveErrorListeners();
-			parser.AddErrorListener(new BalancedErrorListener());
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-			BalancedParser.BalancedContext tree;
-			try
-			{
-				tree = parser.balanced();
-			}
-			catch
-			{
-				tokens.Reset();
-				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.balanced();
-			}
-
+			var tree = ParserHelper.Parse<BalancedLexer, BalancedParser, BalancedParser.BalancedContext>(input, parser => parser.balanced());
 			return new BalancedVisitor().Visit(tree);
 		}
 

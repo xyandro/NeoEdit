@@ -59,6 +59,7 @@
     <Reference Include="LibGit2Sharp">
       <HintPath>$(SolutionDir)\Lib\LibGit2Sharp.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
       <Private>False</Private>
     </Reference>

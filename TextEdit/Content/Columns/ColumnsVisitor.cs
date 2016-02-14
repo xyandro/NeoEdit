@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.Columns.Parser;
 
@@ -16,27 +15,7 @@ namespace NeoEdit.TextEdit.Content.Columns
 
 		public static ParserNode Parse(string input)
 		{
-			var inputStream = new AntlrInputStream(input);
-			var lexer = new ColumnsLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new ColumnsParser(tokens);
-			parser.RemoveErrorListeners();
-			parser.AddErrorListener(new ColumnsErrorListener());
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-			ColumnsParser.ColumnsContext tree;
-			try
-			{
-				tree = parser.columns();
-			}
-			catch
-			{
-				tokens.Reset();
-				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.columns();
-			}
-
+			var tree = ParserHelper.Parse<ColumnsLexer, ColumnsParser, ColumnsParser.ColumnsContext>(input, parser => parser.columns());
 			return new ColumnsVisitor().Visit(tree);
 		}
 

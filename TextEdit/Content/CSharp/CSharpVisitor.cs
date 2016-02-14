@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
@@ -13,24 +12,7 @@ namespace NeoEdit.TextEdit.Content.CSharp
 	{
 		public static ParserNode Parse(string input)
 		{
-			var inputStream = new AntlrInputStream(input);
-			var lexer = new CSharpLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new CSharpParser(tokens);
-
-			CSharpParser.CsharpContext tree;
-			try
-			{
-				tree = parser.csharp();
-			}
-			catch
-			{
-				tokens.Reset();
-				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
-				tree = parser.csharp();
-			}
-
+			var tree = ParserHelper.Parse<CSharpLexer, CSharpParser, CSharpParser.CsharpContext>(input, parser => parser.csharp());
 			var visitor = new CSharpVisitor(input);
 			visitor.Visit(tree);
 			return visitor.Root;

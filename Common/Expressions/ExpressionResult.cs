@@ -19,11 +19,11 @@ namespace NeoEdit.Common.Expressions
 
 		public ExpressionResult(object value, ExpressionUnits units)
 		{
-			if ((IsString) && (units.HasUnits))
-				throw new Exception("Strings cannot have units");
-
 			Value = value;
 			Units = units;
+
+			if ((IsString) && (Units.HasUnits))
+				throw new Exception("Strings cannot have units");
 
 			if ((Value != null) && (Value.GetType().FullName == "MS.Internal.NamedObject") && (Value.ToString() == "{DependencyProperty.UnsetValue}"))
 				Value = null;

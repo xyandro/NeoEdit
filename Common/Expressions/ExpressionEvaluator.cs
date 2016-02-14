@@ -8,7 +8,7 @@ using NeoEdit.Common.Expressions.Parser;
 
 namespace NeoEdit.Common.Expressions
 {
-	class ExpressionEvaluator : ExpressionBaseVisitor<ExpressionResult>
+	class ExpressionEvaluator : ExpressionParserBaseVisitor<ExpressionResult>
 	{
 		readonly string expression;
 		readonly NEVariables variables;

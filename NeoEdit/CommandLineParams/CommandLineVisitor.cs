@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using NeoEdit.CommandLineParams.Parser;
 using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.CommandLineParams
 {
@@ -12,32 +11,12 @@ namespace NeoEdit.CommandLineParams
 	{
 		public static List<Param> GetCommandLineParams(string input)
 		{
-			var inputStream = new AntlrInputStream(input);
-			var lexer = new CommandLineParamsLexer(inputStream);
-			var tokens = new CommonTokenStream(lexer);
-			var parser = new CommandLineParamsParser(tokens);
-			parser.ErrorHandler = new BailErrorStrategy();
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-			CommandLineParamsParser.ExprContext tree;
 			try
 			{
-				tree = parser.expr();
+				var tree = ParserHelper.Parse<CommandLineParamsLexer, CommandLineParamsParser, CommandLineParamsParser.ExprContext>(input, parser => parser.expr());
+				return new CommandLineVisitor().Visit(tree) as List<Param>;
 			}
-			catch
-			{
-				try
-				{
-					tokens.Reset();
-					parser.Reset();
-					parser.Interpreter.PredictionMode = PredictionMode.Ll;
-					tree = parser.expr();
-				}
-				catch { throw new Exception("Invalid command line"); }
-			}
-
-			var visitor = new CommandLineVisitor();
-			return visitor.Visit(tree) as List<Param>;
+			catch { throw new Exception("Invalid command line"); }
 		}
 
 		public override object VisitExpr(CommandLineParamsParser.ExprContext context) => context.parameter().Select(parameter => VisitParameter(parameter)).Where(param => param != null).Cast<Param>().ToList();

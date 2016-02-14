@@ -15,7 +15,6 @@ Distinct operations by marked region (series/etc within region)
 Select square (right mouse button)
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
-Allow user to disable undo/redo for faster performance
 Submit forms
 Go back to last selections
 Change tab order when doc closed (match visual studio or something)
@@ -25,16 +24,12 @@ Nest macros
 Get DLL/EXE version info
 Pull directory contents, including sizes/times (useful for diffing, others)
 Add diff buffer (running diff with a maximum of 1024? lines)
-Add(replace?) column based on other columns with expression
 Add Table->Select column which will select all columns any selection is in
 Copy positions/goto copied positions (useful for applying diff)
 Fix warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification (https://social.msdn.microsoft.com/Forums/vstudio/en-US/d605bec7-df91-4272-be17-19db7394e0fd/how-to-get-rid-of-warning-lnk4075-ignoring-editandcontinue-due-to-optlbr-specification?forum=vcgeneral)
 Refactor macro code
 QueryBuilder
-Copy diff whitespace left<->right
-Convert macros to json?
-Make ExpressionResults control faster (especially limit screen)
-If user choose rows and columns, scroll extra windows
+If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 
 View:

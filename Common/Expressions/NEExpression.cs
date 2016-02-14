@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Atn;
 using NeoEdit.Common.Expressions.Parser;
+using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Common.Expressions
 {
@@ -11,37 +11,13 @@ namespace NeoEdit.Common.Expressions
 	{
 		readonly string expression;
 		readonly ExpressionParser.ExprContext tree;
+
 		public NEExpression(string expression)
 		{
 			this.expression = expression;
 
-			try
-			{
-				var input = new AntlrInputStream(expression);
-				var lexer = new ExpressionLexer(input);
-
-				var tokens = new CommonTokenStream(lexer);
-				var parser = new ExpressionParser(tokens);
-				parser.ErrorHandler = new BailErrorStrategy();
-
-				parser.Interpreter.PredictionMode = PredictionMode.Sll;
-
-				try
-				{
-					tree = parser.expr();
-				}
-				catch (RecognitionException)
-				{
-					tokens.Reset();
-					parser.Reset();
-					parser.Interpreter.PredictionMode = PredictionMode.Ll;
-					tree = parser.expr();
-				}
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("Invalid expression", ex);
-			}
+			try { tree = ParserHelper.Parse<ExpressionLexer, ExpressionParser, ExpressionParser.ExprContext>(expression, parser => parser.expr(), true); }
+			catch (Exception ex) { throw new Exception("Invalid expression", ex); }
 		}
 
 		internal ExpressionResult InternalEvaluate(NEVariables variables, int row, params object[] values) => new ExpressionEvaluator(expression, variables, row, values).Visit(tree);

@@ -16,23 +16,9 @@ namespace NeoEdit.Common.Parsing
 	{
 		class ErrorListener<T> : IAntlrErrorListener<T>
 		{
-			bool found = false;
 			public void SyntaxError(IRecognizer recognizer, T offendingSymbol, int line, int pos, string msg, RecognitionException e)
 			{
-				int start = 0, end = 0;
-				var token = offendingSymbol as IToken;
-				if (token != null)
-				{
-					start = token.StartIndex;
-					end = token.StopIndex + 1;
-				}
-
-				if (!found)
-				{
-					if (Debugger.IsAttached)
-						Debugger.Break();
-					found = true;
-				}
+				throw new Exception("Failed to parse");
 			}
 		}
 
@@ -61,7 +47,42 @@ namespace NeoEdit.Common.Parsing
 			public void VisitTerminal(ITerminalNode node) { }
 		}
 
-		private static string ToLiteral(string input)
+		public static TreeT Parse<LexerT, ParserT, TreeT>(string input, Func<ParserT, TreeT> parse, bool strict = false, bool caseSensitive = true, string debugPath = null) where TreeT : IParseTree
+		{
+			var inputStream = caseSensitive ? new AntlrInputStream(input) : new CaseInsensitiveInputStream(input);
+			dynamic lexer = Activator.CreateInstance(typeof(LexerT), new[] { inputStream });
+			if (strict)
+			{
+				lexer.RemoveErrorListeners();
+				lexer.AddErrorListener(new ErrorListener<int>());
+			}
+			if (debugPath != null)
+				Save(lexer, Path.Combine(debugPath, "Lexer.txt"));
+
+			var tokens = new CommonTokenStream(lexer);
+			dynamic parser = Activator.CreateInstance(typeof(ParserT), new[] { tokens });
+			if (strict)
+				parser.ErrorHandler = new BailErrorStrategy();
+			parser.Interpreter.PredictionMode = PredictionMode.Sll;
+
+			TreeT tree;
+			try
+			{
+				tree = parse(parser);
+			}
+			catch (RecognitionException)
+			{
+				tokens.Reset();
+				parser.Reset();
+				parser.Interpreter.PredictionMode = PredictionMode.Ll;
+				tree = parse(parser);
+			}
+			if (debugPath != null)
+				Save(tree, input, Path.Combine(debugPath, "Tree.txt"));
+			return tree;
+		}
+
+		static string ToLiteral(string input)
 		{
 			using (var writer = new StringWriter())
 			{
@@ -73,7 +94,7 @@ namespace NeoEdit.Common.Parsing
 			}
 		}
 
-		public static void Save(Lexer lexer, string fileName)
+		static void Save(Lexer lexer, string fileName)
 		{
 			var names = (lexer.GetType().GetField("_SymbolicNames", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null) as string[]).Select(str => str ?? "").ToList();
 			var maxNameLen = names.Max(str => str.Length);
@@ -95,17 +116,11 @@ namespace NeoEdit.Common.Parsing
 			lexer.Reset();
 		}
 
-		public static void Save(IParseTree tree, string input, string fileName)
+		static void Save(IParseTree tree, string input, string fileName)
 		{
 			var listener = new GenericListener(input);
 			new ParseTreeWalker().Walk(listener, tree);
 			listener.Root.Save(fileName);
-		}
-
-		public static void AddErrorListener<Symbol, ATNInterpreter>(Recognizer<Symbol, ATNInterpreter> item) where ATNInterpreter : ATNSimulator
-		{
-			item.RemoveErrorListeners();
-			item.AddErrorListener(new ErrorListener<Symbol>());
 		}
 	}
 }
