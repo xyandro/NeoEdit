@@ -56,13 +56,13 @@ namespace Loader
 						switch (action.Item1)
 						{
 							case ExtractActions.Extract: extractor.Extract(action.Item2); break;
-							case ExtractActions.GUI: extractor.RunProgram(); break;
+							case ExtractActions.GUI: extractor.RunProgram(args); break;
 						}
 						break;
 				}
 			}
 			else
-				extractor.RunProgram();
+				extractor.RunProgram(args);
 		}
 
 		[STAThread]

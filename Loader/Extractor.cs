@@ -103,7 +103,7 @@ namespace Loader
 			return resolved[name] = null;
 		}
 
-		public void RunProgram()
+		public void RunProgram(string[] args)
 		{
 			var start = Environment.Is64BitProcess ? ResourceReader.Config.X64Start : ResourceReader.Config.X32Start;
 			var dllPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), start, "DLLs");
@@ -132,10 +132,10 @@ namespace Loader
 				resource.WriteToPath(dllPath);
 			}
 
-			AppDomain.CurrentDomain.AssemblyResolve += (s, args) => AssemblyResolve(args, dllPath);
+			AppDomain.CurrentDomain.AssemblyResolve += (s, info) => AssemblyResolve(info, dllPath);
 
 			var startTime = DateTime.Now;
-			try { AppDomain.CurrentDomain.ExecuteAssemblyByName(start); }
+			try { AppDomain.CurrentDomain.ExecuteAssemblyByName(start, args); }
 			catch
 			{
 				if ((DateTime.Now - startTime).TotalSeconds < 10)
