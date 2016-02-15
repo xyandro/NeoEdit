@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Loader
 {
@@ -14,27 +15,23 @@ namespace Loader
 
 		public void Dispose() => Native.EndUpdateResource(handle, false);
 
-		public void AddIcon(Icon icon)
+		public void CopyResources(PEInfo info, IEnumerable<IntPtr> types)
 		{
-			var iconInfo = new IconInfo(icon);
-
-			Native.UpdateResource(handle, Native.RT_ICON, (IntPtr)1, 0, iconInfo.IconBytes, iconInfo.IconBytes.Length);
-
-			var groupIcon = new Native.GROUPICON
+			foreach (var type in types)
 			{
-				ResourceType = 1,
-				ImageCount = 1,
-				Width = iconInfo.Width,
-				Height = iconInfo.Height,
-				Planes = iconInfo.Planes,
-				BitsPerPixel = iconInfo.BitsPerPixel,
-				ImageSize = iconInfo.IconBytes.Length,
-				ResourceID = 1,
-			};
-			Native.UpdateResource(handle, Native.RT_GROUP_ICON, (IntPtr)1, 0, ref groupIcon, Native.GROUPICONSIZE);
+				try
+				{
+					var find = $"\\{type}\\";
+					foreach (var res in info.ResourceNames.Where(name => name.StartsWith(find)))
+					{
+						var id = (IntPtr)int.Parse(res.Substring(find.Length));
+						var data = info.GetResource(res);
+						Native.UpdateResource(handle, type, id, 0, data, data.Length);
+					}
+				}
+				catch { }
+			}
 		}
-
-		public void AddVersion(byte[] versionData) => Native.UpdateResource(handle, Native.RT_VERSION, (IntPtr)1, 0, versionData, versionData.Length);
 
 		public void AddBinary(int id, byte[] data) => Native.UpdateResource(handle, Native.RT_RCDATA, (IntPtr)id, 0, data, data.Length);
 	}

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Loader
 {
@@ -11,22 +14,27 @@ namespace Loader
 		public BitDepths PreferBitDepth { get; }
 		public FileTypes FileType { get; }
 		public byte[] Bytes { get; }
+		public IEnumerable<string> ResourceNames => resources.Select(res => res.Item1);
 
+		List<Tuple<string, int, int>> resources = new List<Tuple<string, int, int>>();
 		int? corHeaderFlagsOffset;
+		int pos = 0;
+		public PEInfo(string fileName) : this(File.ReadAllBytes(fileName)) { }
+
 		public PEInfo(byte[] bytes)
 		{
 			Bytes = bytes;
 
-			var pos = 0;
-			var dosHeader = GetStruct<IMAGE_DOS_HEADER>(pos);
+			var dosHeader = GetStruct<IMAGE_DOS_HEADER>();
 			IsPE = dosHeader.isValid;
 			if (!IsPE)
 				return;
-			pos = dosHeader.e_lfanew;
 
 			IMAGE_NT_HEADERS ntHeaders;
-			var ntHeaders32 = GetStruct<IMAGE_NT_HEADERS32>(pos);
-			var ntHeaders64 = GetStruct<IMAGE_NT_HEADERS64>(pos);
+			pos = dosHeader.e_lfanew;
+			var ntHeaders32 = GetStruct<IMAGE_NT_HEADERS32>();
+			pos = dosHeader.e_lfanew;
+			var ntHeaders64 = GetStruct<IMAGE_NT_HEADERS64>();
 			if (ntHeaders32.isValid)
 			{
 				BitDepth = PreferBitDepth = BitDepths.x32;
@@ -40,33 +48,80 @@ namespace Loader
 			else
 				throw new Exception("Invalid file");
 
-			pos += Marshal.SizeOf(ntHeaders);
+			pos = dosHeader.e_lfanew + Marshal.SizeOf(ntHeaders);
 
 			FileType = FileTypes.Native;
-			if ((!ntHeaders.OptionalHeader.CLRRuntimeHeader.HasValue) || (ntHeaders.OptionalHeader.CLRRuntimeHeader.Value.VirtualAddress == 0) || (ntHeaders.OptionalHeader.CLRRuntimeHeader.Value.Size == 0))
-				return;
 
-			var virtualAddress = ntHeaders.OptionalHeader.CLRRuntimeHeader.Value.VirtualAddress;
-			var sections = Enumerable.Range(0, ntHeaders.FileHeader.NumberOfSections).Select(val => pos + val * Marshal.SizeOf<IMAGE_SECTION_HEADER>()).Select(offset => GetStruct<IMAGE_SECTION_HEADER>(offset)).ToList();
-			var section = sections.Single(sec => (virtualAddress >= sec.VirtualAddress) && (virtualAddress < sec.VirtualAddress + sec.SizeOfRawData));
-			pos = virtualAddress - section.VirtualAddress + section.PointerToRawData;
+			var sections = Enumerable.Range(0, ntHeaders.FileHeader.NumberOfSections).Select(offset => GetStruct<IMAGE_SECTION_HEADER>()).ToList();
 
-			corHeaderFlagsOffset = pos + Marshal.OffsetOf<IMAGE_COR20_HEADER>(nameof(IMAGE_COR20_HEADER.Flags)).ToInt32();
-			var corHeader = GetStruct<IMAGE_COR20_HEADER>(pos);
-			if (!corHeader.Flags.HasFlag(IMAGE_COR20_HEADER_FLAGS.ILOnly))
+			const int highBit = 1 << 31;
+			if ((ntHeaders.OptionalHeader.ResourceTable.HasValue) && (ntHeaders.OptionalHeader.ResourceTable.Value.VirtualAddress != 0) && (ntHeaders.OptionalHeader.ResourceTable.Value.Size != 0))
 			{
-				FileType = FileTypes.Mixed;
-				return;
+				var virtualAddress = ntHeaders.OptionalHeader.ResourceTable.Value.VirtualAddress;
+				var section = sections.Single(sec => (virtualAddress >= sec.VirtualAddress) && (virtualAddress < sec.VirtualAddress + sec.SizeOfRawData));
+				var resourceStart = virtualAddress - section.VirtualAddress + section.PointerToRawData;
+				var directoryLocations = new List<Tuple<string, int>> { Tuple.Create("", resourceStart) };
+				for (var directoryLocationIndex = 0; directoryLocationIndex < directoryLocations.Count; ++directoryLocationIndex)
+				{
+					var directoryLocation = directoryLocations[directoryLocationIndex];
+					pos = directoryLocation.Item2;
+					var resDir = GetStruct<IMAGE_RESOURCE_DIRECTORY>();
+					var count = resDir.NumberOfNamedEntries + resDir.NumberOfIdEntries;
+					var entries = Enumerable.Range(0, count).Select(num => GetStruct<IMAGE_RESOURCE_DIRECTORY_ENTRY>());
+					foreach (var entry in entries)
+					{
+						string name;
+						if ((entry.NameId & highBit) != 0)
+						{
+							var offset = (int)(resourceStart + entry.NameId & ~highBit);
+							var len = BitConverter.ToInt16(bytes, offset);
+							name = Encoding.Unicode.GetString(bytes, offset + sizeof(short), len * 2);
+						}
+						else
+							name = entry.NameId.ToString();
+
+						if ((entry.Data & highBit) != 0)
+							directoryLocations.Add(Tuple.Create(directoryLocation.Item1 + @"\" + name, (int)(resourceStart + entry.Data & ~highBit)));
+						else
+						{
+							pos = (int)(resourceStart + entry.Data);
+							var dataEntry = GetStruct<IMAGE_RESOURCE_DATA_ENTRY>();
+							resources.Add(Tuple.Create(directoryLocation.Item1, dataEntry.Data - section.VirtualAddress + section.PointerToRawData, dataEntry.Size));
+						}
+					}
+				}
 			}
 
-			FileType = FileTypes.Managed;
+			if ((ntHeaders.OptionalHeader.CLRRuntimeHeader.HasValue) && (ntHeaders.OptionalHeader.CLRRuntimeHeader.Value.VirtualAddress != 0) && (ntHeaders.OptionalHeader.CLRRuntimeHeader.Value.Size != 0))
+			{
+				var virtualAddress = ntHeaders.OptionalHeader.CLRRuntimeHeader.Value.VirtualAddress;
+				var section = sections.Single(sec => (virtualAddress >= sec.VirtualAddress) && (virtualAddress < sec.VirtualAddress + sec.SizeOfRawData));
+				pos = virtualAddress - section.VirtualAddress + section.PointerToRawData;
 
-			if ((BitDepth != BitDepths.x32) || (corHeader.Flags.HasFlag(IMAGE_COR20_HEADER_FLAGS.x32BitRequired) != corHeader.Flags.HasFlag(IMAGE_COR20_HEADER_FLAGS.x32BitPreferred)))
-				return;
+				corHeaderFlagsOffset = pos + Marshal.OffsetOf<IMAGE_COR20_HEADER>(nameof(IMAGE_COR20_HEADER.Flags)).ToInt32();
+				var corHeader = GetStruct<IMAGE_COR20_HEADER>();
+				if (!corHeader.Flags.HasFlag(IMAGE_COR20_HEADER_FLAGS.ILOnly))
+					FileType = FileTypes.Mixed;
+				else
+				{
+					FileType = FileTypes.Managed;
 
-			BitDepth = BitDepths.Any;
-			if (!corHeader.Flags.HasFlag(IMAGE_COR20_HEADER_FLAGS.x32BitPreferred))
-				PreferBitDepth = BitDepths.x64;
+					if ((BitDepth == BitDepths.x32) && (corHeader.Flags.HasFlag(IMAGE_COR20_HEADER_FLAGS.x32BitRequired) == corHeader.Flags.HasFlag(IMAGE_COR20_HEADER_FLAGS.x32BitPreferred)))
+					{
+						BitDepth = BitDepths.Any;
+						if (!corHeader.Flags.HasFlag(IMAGE_COR20_HEADER_FLAGS.x32BitPreferred))
+							PreferBitDepth = BitDepths.x64;
+					}
+				}
+			}
+		}
+
+		public byte[] GetResource(string name)
+		{
+			var resource = resources.Single(res => res.Item1 == name);
+			var result = new byte[resource.Item3];
+			Array.Copy(Bytes, resource.Item2, result, 0, result.Length);
+			return result;
 		}
 
 		public IMAGE_COR20_HEADER_FLAGS CorFlags
@@ -86,11 +141,12 @@ namespace Loader
 			}
 		}
 
-		T GetStruct<T>(int offset) where T : struct
+		T GetStruct<T>() where T : struct
 		{
 			var handle = GCHandle.Alloc(Bytes, GCHandleType.Pinned);
-			var data = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject() + offset, typeof(T));
+			var data = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject() + pos, typeof(T));
 			handle.Free();
+			pos += Marshal.SizeOf<T>();
 			return data;
 		}
 
@@ -174,6 +230,7 @@ namespace Loader
 
 		interface IMAGE_OPTIONAL_HEADER
 		{
+			IMAGE_DATA_DIRECTORY? ResourceTable { get; }
 			IMAGE_DATA_DIRECTORY? CLRRuntimeHeader { get; }
 		}
 
@@ -227,6 +284,7 @@ namespace Loader
 			public IMAGE_DATA_DIRECTORY CLRRuntimeHeader;
 			public IMAGE_DATA_DIRECTORY Reserved;
 
+			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.ResourceTable { get { return NumberOfRvaAndSizes > 14 ? ResourceTable : default(IMAGE_DATA_DIRECTORY?); } }
 			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.CLRRuntimeHeader { get { return NumberOfRvaAndSizes > 14 ? CLRRuntimeHeader : default(IMAGE_DATA_DIRECTORY?); } }
 		}
 
@@ -279,6 +337,7 @@ namespace Loader
 			public IMAGE_DATA_DIRECTORY CLRRuntimeHeader;
 			public IMAGE_DATA_DIRECTORY Reserved;
 
+			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.ResourceTable { get { return NumberOfRvaAndSizes > 14 ? ResourceTable : default(IMAGE_DATA_DIRECTORY?); } }
 			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.CLRRuntimeHeader { get { return NumberOfRvaAndSizes > 14 ? CLRRuntimeHeader : default(IMAGE_DATA_DIRECTORY?); } }
 		}
 
@@ -419,6 +478,33 @@ namespace Loader
 			NativeEntryPoint = 0x00000010,
 			TrackDebugData = 0x00010000,
 			x32BitPreferred = 0x00020000,
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		struct IMAGE_RESOURCE_DIRECTORY
+		{
+			public int Characteristics;
+			public int TimeDateStamp;
+			public short MajorVersion;
+			public short MinorVersion;
+			public short NumberOfNamedEntries;
+			public short NumberOfIdEntries;
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		struct IMAGE_RESOURCE_DIRECTORY_ENTRY
+		{
+			public uint NameId;
+			public uint Data;
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		struct IMAGE_RESOURCE_DATA_ENTRY
+		{
+			public int Data;
+			public int Size;
+			public int CodePage;
+			public int Reserved;
 		}
 	}
 }

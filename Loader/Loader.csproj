@@ -52,7 +52,6 @@
     <Compile Include="GetConfig.xaml.cs">
       <DependentUpon>GetConfig.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IconInfo.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="PEInfo.cs" />
     <Compile Include="Program.cs" />

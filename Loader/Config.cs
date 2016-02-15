@@ -77,24 +77,24 @@ namespace Loader
 			}
 		}
 
-		public void SetStart(string filename)
+		public void SetStart(string fileName)
 		{
-			var peInfo = new PEInfo(File.ReadAllBytes(filename));
+			var peInfo = new PEInfo(fileName);
 			if (peInfo.BitDepth.HasFlag(BitDepths.x32))
 			{
-				X32Start = Path.GetFileName(filename);
-				X32Path = Path.GetDirectoryName(filename);
+				X32Start = Path.GetFileName(fileName);
+				X32Path = Path.GetDirectoryName(fileName);
 			}
 			if (peInfo.BitDepth.HasFlag(BitDepths.x64))
 			{
-				X64Start = Path.GetFileName(filename);
-				X64Path = Path.GetDirectoryName(filename);
+				X64Start = Path.GetFileName(fileName);
+				X64Path = Path.GetDirectoryName(fileName);
 			}
 
 			var entry = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 			for (var ctr = 1; ; ++ctr)
 			{
-				var output = Path.Combine(entry, Path.GetFileNameWithoutExtension(filename) + (ctr == 1 ? "" : ctr.ToString()) + Path.GetExtension(filename));
+				var output = Path.Combine(entry, Path.GetFileNameWithoutExtension(fileName) + (ctr == 1 ? "" : ctr.ToString()) + Path.GetExtension(fileName));
 				if (File.Exists(output))
 					continue;
 				Output = output;

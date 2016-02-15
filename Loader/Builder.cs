@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -8,20 +7,6 @@ namespace Loader
 {
 	class Builder
 	{
-		static Icon GetIcon(string file)
-		{
-			try { return Icon.ExtractAssociatedIcon(file); }
-			catch { return null; }
-		}
-
-		static byte[] GetVersionData(string file)
-		{
-			var size = Native.GetFileVersionInfoSize(file, IntPtr.Zero);
-			var data = new byte[size];
-			Native.GetFileVersionInfo(file, 0, size, data);
-			return data;
-		}
-
 		static IEnumerable<string> GetFiles(string startPath)
 		{
 			if (!Directory.Exists(startPath))
@@ -65,8 +50,7 @@ namespace Loader
 			using (var nr = new ResourceWriter(config.Output))
 			{
 				var iconAndVersionFile = config.X64StartFull ?? config.X32StartFull;
-				nr.AddIcon(GetIcon(iconAndVersionFile));
-				nr.AddVersion(GetVersionData(iconAndVersionFile));
+				nr.CopyResources(new PEInfo(iconAndVersionFile), new List<IntPtr> { Native.RT_ICON, Native.RT_GROUP_ICON, Native.RT_VERSION });
 
 				var currentID = 1;
 				foreach (var file in files)
