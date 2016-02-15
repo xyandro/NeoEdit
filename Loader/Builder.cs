@@ -42,7 +42,7 @@ namespace Loader
 			if (config.X64Path == null)
 			{
 				var peInfo = new PEInfo(bytes);
-				peInfo.CorFlags |= PEInfo.IMAGE_COR20_HEADER_FLAGS.x32BitRequired;
+				peInfo.CorFlags |= Native.IMAGE_COR20_HEADER_FLAGS.x32BitRequired;
 			}
 
 			File.WriteAllBytes(config.Output, bytes);
