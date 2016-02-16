@@ -297,9 +297,9 @@ namespace NeoEdit.TextEdit
 			var ordering = order.OrderBy(rowIndex => 0);
 			foreach (var data in sortData)
 				if (data.Ascending)
-					ordering = ordering.ThenBy(rowIndex => this[rowIndex, data.Column], comparer);
+					ordering = ordering.ThenBy(rowIndex => this[rowIndex, data.Column] ?? "", comparer);
 				else
-					ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, data.Column], comparer);
+					ordering = ordering.ThenByDescending(rowIndex => this[rowIndex, data.Column] ?? "", comparer);
 
 			return new Table
 			{
