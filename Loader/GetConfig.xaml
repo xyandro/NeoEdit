@@ -49,8 +49,11 @@
 		<Label Grid.Row="6" Grid.Column="0" Content="Extract _Action:" HorizontalAlignment="Right" Target="{Binding ElementName=extractAction}"/>
 		<ComboBox Grid.Row="6" Grid.Column="1" Name="extractAction" SelectedItem="{Binding ExtractAction}" VerticalAlignment="Center"/>
 
-		<Label Grid.Row="7" Grid.Column="0" Content="_NGen:" HorizontalAlignment="Right" Target="{Binding ElementName=ngen}"/>
-		<CheckBox Grid.Row="7" Grid.Column="1" Name="ngen" IsChecked="{Binding NGen}" VerticalAlignment="Center"/>
+		<Label Grid.Row="7" Grid.Column="0" Content="Misc:" HorizontalAlignment="Right"/>
+		<StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+			<CheckBox Content="_NGen" IsChecked="{Binding NGen}" Margin="0,0,10,0"/>
+			<CheckBox Content="_Console" IsChecked="{Binding IsConsole}" Margin="0,0,10,0"/>
+		</StackPanel>
 
 		<UniformGrid Grid.Row="9" Grid.ColumnSpan="3" Rows="1" HorizontalAlignment="Right">
 			<Button IsDefault="True" Content="Ok" Click="OkClick"/>

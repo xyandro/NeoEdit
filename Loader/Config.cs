@@ -22,6 +22,7 @@ namespace Loader
 		Regex match = new Regex(@"\.(exe|dll)$", RegexOptions.IgnoreCase);
 		ExtractActions extractAction = ExtractActions.Extract;
 		bool nGen;
+		bool isConsole;
 		ObservableCollection<Resource> resources = new ObservableCollection<Resource>();
 
 		public string X32Start { get { return x32Start; } private set { SetStrValue(ref x32Start, value); } }
@@ -32,6 +33,7 @@ namespace Loader
 		public string Match { get { return match.ToString(); } set { SetValue(ref match, new Regex(value, RegexOptions.IgnoreCase)); } }
 		public ExtractActions ExtractAction { get { return extractAction; } set { SetValue(ref extractAction, value); } }
 		public bool NGen { get { return nGen; } set { SetValue(ref nGen, value); } }
+		public bool IsConsole { get { return isConsole; } set { SetValue(ref isConsole, value); } }
 		public ObservableCollection<Resource> Resources { get { return resources; } set { SetValue(ref resources, value); } }
 
 		public string X32StartFull => X32Start == null ? null : Path.Combine(X32Path, X32Start);
@@ -90,6 +92,8 @@ namespace Loader
 				X64Start = Path.GetFileName(fileName);
 				X64Path = Path.GetDirectoryName(fileName);
 			}
+
+			IsConsole = peInfo.IsConsole;
 
 			var entry = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 			for (var ctr = 1; ; ++ctr)

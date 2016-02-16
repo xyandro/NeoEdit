@@ -13,11 +13,23 @@ namespace Loader
 		public BitDepths BitDepth { get; }
 		public BitDepths PreferBitDepth { get; }
 		public FileTypes FileType { get; }
+		public bool IsConsole
+		{
+			get { return (Native.SubSystemType)BitConverter.ToUInt16(Bytes, subsystemOffset) == Native.SubSystemType.IMAGE_SUBSYSTEM_WINDOWS_CUI; }
+			set
+			{
+				if (!value)
+					return;
+				var bytes = BitConverter.GetBytes((ushort)Native.SubSystemType.IMAGE_SUBSYSTEM_WINDOWS_CUI);
+				Array.Copy(bytes, 0, Bytes, subsystemOffset, bytes.Length);
+			}
+		}
 		public byte[] Bytes { get; }
 		public IEnumerable<string> ResourceNames => resources.Select(res => res.Item1);
 
 		List<Tuple<string, int, int>> resources = new List<Tuple<string, int, int>>();
 		int? corHeaderFlagsOffset;
+		int subsystemOffset;
 		int pos = 0;
 		public PEInfo(string fileName) : this(File.ReadAllBytes(fileName)) { }
 
@@ -51,6 +63,8 @@ namespace Loader
 			pos = dosHeader.e_lfanew + Marshal.SizeOf(ntHeaders);
 
 			FileType = FileTypes.Native;
+
+			subsystemOffset = dosHeader.e_lfanew + ntHeaders.OptionalHeaderOffset + ntHeaders.OptionalHeader.SubsystemOffset;
 
 			var sections = Enumerable.Range(0, ntHeaders.FileHeader.NumberOfSections).Select(offset => GetStruct<Native.IMAGE_SECTION_HEADER>()).ToList();
 

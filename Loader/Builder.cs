@@ -38,19 +38,20 @@ namespace Loader
 
 			var loader = typeof(Program).Assembly.Location;
 			var bytes = File.ReadAllBytes(loader);
+			var loaderPeInfo = new PEInfo(bytes);
 
 			if (config.X64Path == null)
-			{
-				var peInfo = new PEInfo(bytes);
-				peInfo.CorFlags |= Native.IMAGE_COR20_HEADER_FLAGS.x32BitRequired;
-			}
+				loaderPeInfo.CorFlags |= Native.IMAGE_COR20_HEADER_FLAGS.x32BitRequired;
+
+			if (config.IsConsole)
+				loaderPeInfo.IsConsole = true;
 
 			File.WriteAllBytes(config.Output, bytes);
 
 			using (var nr = new ResourceWriter(config.Output))
 			{
-				var iconAndVersionFile = config.X64StartFull ?? config.X32StartFull;
-				nr.CopyResources(new PEInfo(iconAndVersionFile), new List<IntPtr> { Native.RT_ICON, Native.RT_GROUP_ICON, Native.RT_VERSION });
+				var startFile = config.X64StartFull ?? config.X32StartFull;
+				nr.CopyResources(new PEInfo(startFile), new List<IntPtr> { Native.RT_ICON, Native.RT_GROUP_ICON, Native.RT_VERSION });
 
 				var currentID = 1;
 				foreach (var file in files)

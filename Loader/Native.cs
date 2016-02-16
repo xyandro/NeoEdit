@@ -128,10 +128,12 @@ namespace Loader
 		{
 			IMAGE_FILE_HEADER FileHeader { get; }
 			IMAGE_OPTIONAL_HEADER OptionalHeader { get; }
+			int OptionalHeaderOffset { get; }
 		}
 
 		public interface IMAGE_OPTIONAL_HEADER
 		{
+			int SubsystemOffset { get; }
 			IMAGE_DATA_DIRECTORY? ResourceTable { get; }
 			IMAGE_DATA_DIRECTORY? CLRRuntimeHeader { get; }
 		}
@@ -215,6 +217,7 @@ namespace Loader
 
 			IMAGE_FILE_HEADER IMAGE_NT_HEADERS.FileHeader => FileHeader;
 			IMAGE_OPTIONAL_HEADER IMAGE_NT_HEADERS.OptionalHeader => OptionalHeader;
+			public int OptionalHeaderOffset => Marshal.OffsetOf<IMAGE_NT_HEADERS32>(nameof(OptionalHeader)).ToInt32();
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -230,6 +233,7 @@ namespace Loader
 
 			IMAGE_FILE_HEADER IMAGE_NT_HEADERS.FileHeader => FileHeader;
 			IMAGE_OPTIONAL_HEADER IMAGE_NT_HEADERS.OptionalHeader => OptionalHeader;
+			public int OptionalHeaderOffset => Marshal.OffsetOf<IMAGE_NT_HEADERS64>(nameof(OptionalHeader)).ToInt32();
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -282,8 +286,9 @@ namespace Loader
 			public IMAGE_DATA_DIRECTORY CLRRuntimeHeader;
 			public IMAGE_DATA_DIRECTORY Reserved;
 
-			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.ResourceTable { get { return NumberOfRvaAndSizes > 2 ? ResourceTable : default(IMAGE_DATA_DIRECTORY?); } }
-			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.CLRRuntimeHeader { get { return NumberOfRvaAndSizes > 14 ? CLRRuntimeHeader : default(IMAGE_DATA_DIRECTORY?); } }
+			public int SubsystemOffset => Marshal.OffsetOf<IMAGE_OPTIONAL_HEADER32>(nameof(Subsystem)).ToInt32();
+			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.ResourceTable => NumberOfRvaAndSizes > 2 ? ResourceTable : default(IMAGE_DATA_DIRECTORY?);
+			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.CLRRuntimeHeader => NumberOfRvaAndSizes > 14 ? CLRRuntimeHeader : default(IMAGE_DATA_DIRECTORY?);
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -335,8 +340,9 @@ namespace Loader
 			public IMAGE_DATA_DIRECTORY CLRRuntimeHeader;
 			public IMAGE_DATA_DIRECTORY Reserved;
 
-			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.ResourceTable { get { return NumberOfRvaAndSizes > 2 ? ResourceTable : default(IMAGE_DATA_DIRECTORY?); } }
-			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.CLRRuntimeHeader { get { return NumberOfRvaAndSizes > 14 ? CLRRuntimeHeader : default(IMAGE_DATA_DIRECTORY?); } }
+			public int SubsystemOffset => Marshal.OffsetOf<IMAGE_OPTIONAL_HEADER64>(nameof(Subsystem)).ToInt32();
+			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.ResourceTable => NumberOfRvaAndSizes > 2 ? ResourceTable : default(IMAGE_DATA_DIRECTORY?);
+			IMAGE_DATA_DIRECTORY? IMAGE_OPTIONAL_HEADER.CLRRuntimeHeader => NumberOfRvaAndSizes > 14 ? CLRRuntimeHeader : default(IMAGE_DATA_DIRECTORY?);
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
