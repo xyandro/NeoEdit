@@ -174,6 +174,7 @@ namespace NeoEdit.TextEdit
 		Table_RegionSelectionsToTable,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift)] Table_EditTable,
 		Table_AddColumn,
+		Table_Select_RowsByExpression,
 		[KeyGesture(Key.J, ModifierKeys.Control | ModifierKeys.Shift)] Table_SetJoinSource,
 		[KeyGesture(Key.J, ModifierKeys.Control)] Table_Join,
 		Table_Transpose,

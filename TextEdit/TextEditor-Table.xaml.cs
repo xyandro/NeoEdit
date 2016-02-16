@@ -5,6 +5,7 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -111,6 +112,21 @@ namespace NeoEdit.TextEdit
 			var results = new NEExpression(result.Expression).EvaluateRows<string>(variables, table.NumRows);
 			table.AddColumn(result.ColumnName, results);
 			SetText(table);
+		}
+
+		internal GetExpressionDialog.Result Command_Table_Select_RowsByExpression_Dialog()
+		{
+			var table = GetTable();
+			return GetExpressionDialog.Run(WindowParent, GetTableVariables(table), table.NumRows, () => ExpressionHelpDialog.Display());
+		}
+
+		internal void Command_Table_Select_RowsByExpression(GetExpressionDialog.Result result)
+		{
+			var table = GetTable();
+			var variables = GetTableVariables(table);
+			var results = new NEExpression(result.Expression).EvaluateRows<bool>(variables, table.NumRows);
+			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
+			Selections.Replace(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
 		}
 
 		static Table joinTable;

@@ -309,7 +309,11 @@
 		<textEdit:TextEditMenuItem Header="_Edit Table" CommandEnum="Table_EditTable"/>
 		<textEdit:TextEditMenuItem Header="_Add Column" CommandEnum="Table_AddColumn"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Set Join Source" CommandEnum="Table_SetJoinSource"/>
+		<MenuItem Header="_Select">
+			<textEdit:TextEditMenuItem Header="Rows By _Expression" CommandEnum="Table_Select_RowsByExpression"/>
+		</MenuItem>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="Set J_oin Source" CommandEnum="Table_SetJoinSource"/>
 		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Table_Join"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Tra_nspose" CommandEnum="Table_Transpose"/>
