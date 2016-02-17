@@ -31,9 +31,9 @@ namespace NeoEdit.Disk.VCS
 				var statusList = new Dictionary<VersionControlStatus, IEnumerable<StatusEntry>>();
 				statusList[VersionControlStatus.Ignored] = status.Ignored;
 				statusList[VersionControlStatus.Modified] = status.Modified.Concat(status.Added).Concat(status.Staged);
-				statusList[VersionControlStatus.Unknown] = status.Untracked;
+				statusList[VersionControlStatus.NotTracked] = status.Untracked;
 				statusList.ToList().ForEach(pair => pair.Value.ToList().ForEach(entry => statusCache[System.IO.Path.Combine(repoInfo.WorkingDirectory, entry.FilePath).TrimEnd('\\')] = pair.Key));
-				statusCache[repoInfo.Path.TrimEnd('\\')] = VersionControlStatus.None;
+				statusCache[repoInfo.Path.TrimEnd('\\')] = VersionControlStatus.DoNotTrack;
 			}
 			if (statusCache.ContainsKey(FullName))
 				return statusCache[FullName];

@@ -383,10 +383,10 @@ namespace NeoEdit.Disk
 					if (file.HasChildren)
 					{
 						var add = true;
-						if (result.VCSStatus != VersionControlStatus.All)
+						if ((result.VCSStatus != VersionControlStatus.Unknown) && (result.VCSStatus != VersionControlStatus.All))
 						{
 							file.SetVCSStatus();
-							if ((file.VCSStatus == VersionControlStatus.None) || (file.VCSStatus == VersionControlStatus.Ignored))
+							if ((file.VCSStatus == VersionControlStatus.DoNotTrack) || (file.VCSStatus == VersionControlStatus.Ignored))
 								add = false;
 						}
 
@@ -416,7 +416,7 @@ namespace NeoEdit.Disk
 			if (result.EndDate.HasValue)
 				selected = selected.Where(file => file.WriteTime <= result.EndDate.Value).ToList();
 
-			if (result.VCSStatus != VersionControlStatus.All)
+			if ((result.VCSStatus != VersionControlStatus.Unknown) && (result.VCSStatus != VersionControlStatus.All))
 			{
 				foreach (var file in selected)
 					file.SetVCSStatus();

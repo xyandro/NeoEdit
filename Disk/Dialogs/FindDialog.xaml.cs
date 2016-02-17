@@ -46,7 +46,7 @@ namespace NeoEdit.Disk.Dialogs
 			InitializeComponent();
 			Expression = "*.*";
 			expression.SelectAll();
-			VCSStatus = VersionControlStatus.All;
+			VCSStatus = VersionControlStatus.Unknown;
 		}
 
 		Result result;
@@ -74,23 +74,6 @@ namespace NeoEdit.Disk.Dialogs
 			};
 
 			DialogResult = true;
-		}
-
-		void VCSClick(object sender, RoutedEventArgs e)
-		{
-			if (sender == vcsAll)
-				VCSStatus = VersionControlStatus.All;
-			else if (sender == vcsStandard)
-				VCSStatus = VersionControlStatus.Standard;
-			else if (sender == vcsModified)
-				VCSStatus = VersionControlStatus.Modified;
-			else if (sender == vcsIgnored)
-				VCSStatus = VersionControlStatus.Ignored;
-			else if (sender == vcsUnknown)
-				VCSStatus = VersionControlStatus.Unknown;
-			else if (sender == vcsNone)
-				VCSStatus = VersionControlStatus.None;
-
 		}
 
 		static public Result Run(Window parent)

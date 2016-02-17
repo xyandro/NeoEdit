@@ -6,13 +6,14 @@ namespace NeoEdit.Disk.VCS
 	public enum VersionControlStatus
 	{
 		Unknown = 0,
-		None = 1,
-		Regular = 2,
-		Modified = 4,
-		Ignored = 8,
 
-		Standard = Regular | Modified,
-		All = Regular | Modified | Ignored | None,
+		Regular = 1,
+		Modified = 2,
+		Ignored = 4,
+		NotTracked = 8,
+		DoNotTrack = 16,
+
+		All = Regular | Modified | Ignored | NotTracked | DoNotTrack,
 	}
 
 	public interface IVCSCache
@@ -40,7 +41,7 @@ namespace NeoEdit.Disk.VCS
 				if (result != VersionControlStatus.Unknown)
 					return result;
 			}
-			return VersionControlStatus.Unknown;
+			return VersionControlStatus.NotTracked;
 		}
 
 		public void Clear()

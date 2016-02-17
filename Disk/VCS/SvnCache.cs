@@ -48,7 +48,7 @@ namespace NeoEdit.Disk.VCS
 						case SvnStatus.Modified: svnStatusCache[repository][status.FullPath] = VersionControlStatus.Modified; break;
 						case SvnStatus.Ignored: svnStatusCache[repository][status.FullPath] = VersionControlStatus.Ignored; break;
 						case SvnStatus.None:
-						case SvnStatus.NotVersioned: svnStatusCache[repository][status.FullPath] = VersionControlStatus.Unknown; break;
+						case SvnStatus.NotVersioned: svnStatusCache[repository][status.FullPath] = VersionControlStatus.NotTracked; break;
 						default: svnStatusCache[repository][status.FullPath] = VersionControlStatus.Regular; break;
 					}
 				});
@@ -57,7 +57,7 @@ namespace NeoEdit.Disk.VCS
 			if (svnStatusCache[repository].ContainsKey(FullName))
 				return svnStatusCache[repository][FullName];
 
-			return VersionControlStatus.None;
+			return VersionControlStatus.DoNotTrack;
 		}
 	}
 }
