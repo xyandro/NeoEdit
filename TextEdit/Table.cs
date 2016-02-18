@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 using NeoEdit.TextEdit.Content;
 
 namespace NeoEdit.TextEdit
@@ -67,12 +68,21 @@ namespace NeoEdit.TextEdit
 				Headers = Rows[0].Select((value, index) => $"Column {index + 1}").ToList();
 		}
 
+		string GetDBValue(object value)
+		{
+			if ((value == DBNull.Value) || (value == null))
+				return NULL;
+			if (value is byte[])
+				return Coder.BytesToString(value as byte[], Coder.CodePage.Hex);
+			return value.ToString();
+		}
+
 		public Table(DbDataReader reader)
 		{
 			Headers = Enumerable.Range(0, reader.FieldCount).Select(column => reader.GetName(column)).ToList();
 			Rows = new List<List<string>>();
 			while (reader.Read())
-				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => value == DBNull.Value ? NULL : value.ToString()).ToList());
+				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => GetDBValue(value)).ToList());
 		}
 
 		public static Parser.ParserType GuessTableType(string input)

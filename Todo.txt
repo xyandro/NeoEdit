@@ -31,6 +31,7 @@ Refactor macro code
 QueryBuilder
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
+Write to files (1 expression to choose filename, 1 for content, also allow to choose encoding)
 
 View:
 Update as new lines are added
