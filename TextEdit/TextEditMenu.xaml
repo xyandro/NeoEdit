@@ -186,6 +186,7 @@
 			<MenuItem Header="Crea_te">
 				<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Operations_Create_Files"/>
 				<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Operations_Create_Directories"/>
+				<textEdit:TextEditMenuItem Header="From _Expressions" CommandEnum="Files_Operations_Create_FromExpressions"/>
 			</MenuItem>
 			<Separator/>
 			<MenuItem Header="R_un Command">

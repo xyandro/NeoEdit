@@ -156,6 +156,13 @@
     <Compile Include="Dialogs\CountDialog.xaml.cs">
       <DependentUpon>CountDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\CreateFilesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CreateFilesDialog.xaml.cs">
+      <DependentUpon>CreateFilesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\DatabaseConnectDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

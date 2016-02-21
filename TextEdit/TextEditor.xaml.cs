@@ -588,6 +588,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_AllTimes: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
 				case TextEditCommand.Files_Hash: dialogResult = Command_Files_Hash_Dialog(); break;
+				case TextEditCommand.Files_Operations_Create_FromExpressions: dialogResult = Command_Files_Operations_Create_FromExpressions_Dialog(); break;
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
@@ -771,6 +772,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_Explore: Command_Files_Operations_Explore(); break;
 				case TextEditCommand.Files_Operations_Create_Files: Command_Files_Operations_Create_Files(); break;
 				case TextEditCommand.Files_Operations_Create_Directories: Command_Files_Operations_Create_Directories(); break;
+				case TextEditCommand.Files_Operations_Create_FromExpressions: Command_Files_Operations_Create_FromExpressions(dialogResult as CreateFilesDialog.Result); break;
 				case TextEditCommand.Files_Operations_RunCommand_Parallel: Command_Files_Operations_RunCommand_Parallel(); break;
 				case TextEditCommand.Files_Operations_RunCommand_Sequential: Command_Files_Operations_RunCommand_Sequential(); break;
 				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
@@ -1549,6 +1551,31 @@ namespace NeoEdit.TextEdit
 			var files = GetSelectionStrings();
 			foreach (var file in files)
 				Directory.CreateDirectory(file);
+		}
+
+		internal CreateFilesDialog.Result Command_Files_Operations_Create_FromExpressions_Dialog() => CreateFilesDialog.Run(WindowParent, GetVariables());
+
+		internal void Command_Files_Operations_Create_FromExpressions(CreateFilesDialog.Result result)
+		{
+			var variables = GetVariables();
+
+			var datas = new NEExpression(result.Data).EvaluateRows<string>(variables);
+			if (!datas.Any())
+				throw new Exception("No data");
+
+			var fileNames = new NEExpression(result.FileName).EvaluateRows<string>(variables, datas.Count);
+			if (!fileNames.Any())
+				throw new Exception("No filenames");
+
+			if (fileNames.Count != datas.Count)
+				throw new Exception("File name and data count must match.");
+
+			var outputs = fileNames.Zip(datas, (filename, data) => new { filename, data }).ToList();
+			foreach (var output in outputs)
+			{
+				var bytes = Coder.StringToBytes(output.data, result.CodePage, true);
+				File.WriteAllBytes(output.filename, bytes);
+			}
 		}
 
 		string RunCommand(string arguments)
