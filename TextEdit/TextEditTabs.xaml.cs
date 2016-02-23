@@ -56,15 +56,21 @@ namespace NeoEdit.TextEdit
 			textEditor.DiffTarget = replaced?.DiffTarget;
 		}
 
-		public static void CreateDiff(string fileName1 = null, string displayName1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, int? line2 = null, int? column2 = null)
+		public static TextEditTabs CreateDiff()
 		{
-			var textEdit1 = new TextEditor(fileName1, displayName1, line: line1 ?? -1, column: column1 ?? -1);
-			var textEdit2 = new TextEditor(fileName2, displayName2, line: line2 ?? -1, column: column2 ?? -1);
 			var textEditTabs = new TextEditTabs();
 			textEditTabs.ItemTabs.Layout = TabsLayout.Grid;
-			textEditTabs.tabs.CreateTab(textEdit1);
-			textEditTabs.tabs.CreateTab(textEdit2);
-			textEditTabs.ItemTabs.TopMost = textEdit1;
+			textEditTabs.ItemTabs.Columns = 2;
+			return textEditTabs;
+		}
+
+		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, bool? modified2 = null, int? line2 = null, int? column2 = null)
+		{
+			var textEdit1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1);
+			var textEdit2 = new TextEditor(fileName2, displayName2, bytes2, codePage2, modified2, line2, column2);
+			tabs.CreateTab(textEdit1);
+			tabs.CreateTab(textEdit2);
+			ItemTabs.TopMost = textEdit2;
 			textEdit1.DiffTarget = textEdit2;
 		}
 

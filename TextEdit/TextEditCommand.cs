@@ -61,6 +61,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.F2, ModifierKeys.Control)] [KeyGesture(Key.F2, ModifierKeys.Control | ModifierKeys.Shift, false)] Edit_Bookmarks_Previous,
 		Edit_Bookmarks_Clear,
 		[KeyGesture(Key.D, ModifierKeys.Control)] [KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift)] Diff_Diff,
+		Diff_Selections,
 		Diff_Break,
 		Diff_IgnoreWhitespace,
 		Diff_IgnoreCase,

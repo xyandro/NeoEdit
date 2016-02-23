@@ -180,7 +180,7 @@ namespace NeoEdit.TextEdit
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 
-		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = -1, int column = -1)
+		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int? line = null, int? column = null)
 		{
 			SetupLocalKeys();
 
@@ -281,11 +281,11 @@ namespace NeoEdit.TextEdit
 			IsModified = modifiedChecksum != checksum;
 		}
 
-		internal void Goto(int line, int column)
+		internal void Goto(int? line, int? column)
 		{
-			line = Math.Max(0, Math.Min(line, Data.NumLines) - 1);
-			var index = Data.GetIndexFromColumn(line, Math.Max(0, column - 1), true);
-			Selections.Add(new Range(Data.GetOffset(line, index)));
+			var useLine = Math.Max(0, Math.Min(line ?? 1, Data.NumLines) - 1);
+			var index = Data.GetIndexFromColumn(useLine, Math.Max(0, (column ?? 1) - 1), true);
+			Selections.Add(new Range(Data.GetOffset(useLine, index)));
 
 		}
 
@@ -726,6 +726,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Bookmarks_Next: Command_Edit_Bookmarks_NextPreviousBookmark(true, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
+				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;
 				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
 				case TextEditCommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(multiStatus); break;
@@ -2470,6 +2471,21 @@ namespace NeoEdit.TextEdit
 		internal ChooseColorDialog.Result Command_Edit_Color_Dialog() => ChooseColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
 
 		internal void Command_Edit_Color(ChooseColorDialog.Result result) => ReplaceSelections(result.Color);
+
+		internal void Command_Diff_Selections()
+		{
+			if (!Selections.Any())
+				return;
+
+			if (Selections.Count % 2 != 0)
+				throw new Exception("Must have even number of selections.");
+
+			var codePage = CodePage; // Must save as other threads can't access DependencyProperties
+			var tabs = TextEditTabs.CreateDiff();
+			var batches = Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).Select(batch => batch.ToList()).ToList();
+			foreach (var batch in batches)
+				tabs.AddDiff(bytes1: batch[0], bytes2: batch[1], codePage1: codePage, codePage2: codePage, modified1: false, modified2: false);
+		}
 
 		internal void Command_Diff_Break() => DiffTarget = null;
 

@@ -41,7 +41,7 @@ namespace NeoEdit
 	{
 		readonly List<TextEditParam.TextEditFile> Files;
 		public DiffParam(List<TextEditParam.TextEditFile> files) { Files = files; }
-		public override void Execute() => TextEditTabs.CreateDiff(Files[0]?.FileName, Files[0]?.DisplayName, Files[0]?.Line, Files[0]?.Column, Files[1]?.FileName, Files[1]?.DisplayName, Files[1]?.Line, Files[1]?.Column);
+		public override void Execute() => TextEditTabs.CreateDiff().AddDiff(fileName1: Files[0]?.FileName, displayName1: Files[0]?.DisplayName, line1: Files[0]?.Line, column1: Files[0]?.Column, fileName2: Files[1]?.FileName, displayName2: Files[1]?.DisplayName, line2: Files[1]?.Line, column2: Files[1]?.Column);
 	}
 
 	class DiskParam : Param

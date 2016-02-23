@@ -114,6 +114,7 @@
 	</MenuItem>
 	<MenuItem Header="D_iff">
 		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
+		<textEdit:TextEditMenuItem Header="_Selections" CommandEnum="Diff_Selections"/>
 		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
 		<textEdit:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
