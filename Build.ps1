@@ -48,16 +48,10 @@ Function Build ()
 {
 	$devenv = "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.com"
 	$args = ""
-	if ($bitdepths -contains 32)
+	foreach ($bitdepth in $bitdepths)
 	{
-		$args += "Start=..\Release.x86\NeoEdit.exe "
-		Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|x86" /project Loader /out Build32.log'
-		if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
-	}
-	if ($bitdepths -contains 64)
-	{
-		$args += "Start=..\Release.x64\NeoEdit.exe "
-		Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|x64" /project Loader /out Build64.log'
+		$args += "Start=..\Release.$bitdepth\NeoEdit.exe "
+		Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|$bitdepth" /project Loader /out Build$bitdepth.log'
 		if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
 	}
 	$args += "output=NeoEdit.exe ngen=1 extractaction=gui go"

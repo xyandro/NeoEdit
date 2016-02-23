@@ -6,7 +6,7 @@
     <RootNamespace>NeoEdit.Dependencies</RootNamespace>
     <AssemblyName>NeoEdit.Dependencies</AssemblyName>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <OutputPath>bin\$(Configuration).$(Platform)\</OutputPath>
+    <OutputPath>bin\$(Configuration).$(BitDepth)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <None Include="GitInfo.bat" />
