@@ -42,10 +42,10 @@ e
 
 value
 	: val=PARAM # Param
-	| val=STRING # String
+	| normalstring # String
 	| val=(DATE | DATETIME) # Date
 	| val=TIME # Time
-	| val=CHAR # Char
+	| charval # Char
 	| TRUE # True
 	| FALSE # False
 	| NULL # Null
@@ -63,3 +63,11 @@ units
 	;
 
 unit : val=(CONSTANT | FALSE | METHOD1 | METHOD1VAR | METHOD2 | METHODVAR | NULL | TRUE | VARIABLE) ;
+charval : CHARSTART val=charoptions CHAREND ;
+charoptions : charany | charescape | charunicode ;
+charany : val=CHARANY ;
+charescape : val=CHARESCAPE ;
+charunicode : val=CHARUNICODE ;
+normalstring : STRSTART val=strcontent STREND ;
+strcontent : (strchars | charescape | charunicode)* ;
+strchars : val=STRCHARS ;

@@ -203,5 +203,7 @@ namespace NeoEdit.Common
 				--num;
 			}
 		}
+
+		public static string ToJoinedString<TSource>(this IEnumerable<TSource> source, string separator = "") => string.Join(separator, source);
 	}
 }

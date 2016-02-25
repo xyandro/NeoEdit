@@ -78,7 +78,7 @@ namespace NeoEdit.Common.Parsing
 				tree = parse(parser);
 			}
 			if (debugPath != null)
-				Save(tree, input, Path.Combine(debugPath, "Tree.txt"));
+				Save(tree, input, Path.Combine(debugPath, "Parser.txt"));
 			return tree;
 		}
 

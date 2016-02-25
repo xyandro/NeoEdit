@@ -64,16 +64,16 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("28.5", new NEExpression("(3.6 + 2.1) * 5.0").Evaluate().ToString());
 			Assert.AreEqual("12.1", new NEExpression("[0] + [1]").Evaluate(5.4, 6.7).ToString());
 
-			Assert.AreEqual(true, new NEExpression("[0] is \"Int32\"").Evaluate((object)5));
+			Assert.AreEqual(true, new NEExpression("[0] is \"Int32\"").Evaluate(5));
 
-			Assert.AreEqual(true, new NEExpression("\"5a\" == \"5a\"").Evaluate((object)5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" == \"5A\"").Evaluate((object)5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" i== \"5a\"").Evaluate((object)5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" i== \"5A\"").Evaluate((object)5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" != \"5a\"").Evaluate((object)5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" != \"5A\"").Evaluate((object)5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" i!= \"5a\"").Evaluate((object)5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" i!= \"5A\"").Evaluate((object)5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" == \"5a\"").Evaluate(5));
+			Assert.AreEqual(false, new NEExpression("\"5a\" == \"5A\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" i== \"5a\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" i== \"5A\"").Evaluate(5));
+			Assert.AreEqual(false, new NEExpression("\"5a\" != \"5a\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" != \"5A\"").Evaluate(5));
+			Assert.AreEqual(false, new NEExpression("\"5a\" i!= \"5a\"").Evaluate(5));
+			Assert.AreEqual(false, new NEExpression("\"5a\" i!= \"5A\"").Evaluate(5));
 
 			Assert.AreEqual("5", new NEExpression("[0]..\"value\"").Evaluate(new ExpressionDotTest(5)).ToString());
 
@@ -89,6 +89,10 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("5", new NEExpression("([0] || [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString());
 
 			Assert.AreEqual("ICanJoinStrings", new NEExpression(".").Evaluate("I", "Can", null, "Join", "Strings").ToString());
+
+			Assert.AreEqual("a\\\'\"\0\a\b\f\n\r\t\v\x1\x12\x123\x1234\u1234\U00001234\U0001d161", new NEExpression(@"'a' . '\\' . '\'' . '\""' . '\0' . '\a' . '\b' . '\f' . '\n' . '\r' . '\t' . '\v' . '\x1' . '\x12' . '\x123' . '\x1234' . '\u1234' . '\U00001234' . '\U0001d161'").Evaluate().ToString());
+			Assert.AreEqual("", new NEExpression("\"\"").Evaluate().ToString());
+			Assert.AreEqual(" Slash: \\ Quote: \' Double: \" Null: \0 Alert: \a Backspace: \b Form feed: \f New line: \n Carriage return:\r Tab: \t Vertical quote: \v Hex1: \x1 Hex2: \x12 Hex3: \x123 Hex4: \x1234 Unicode4: \u1234 Unicode8: \U00001234 Unicode8: \U0001d161 ", new NEExpression(@""" Slash: \\ Quote: \' Double: \"" Null: \0 Alert: \a Backspace: \b Form feed: \f New line: \n Carriage return:\r Tab: \t Vertical quote: \v Hex1: \x1 Hex2: \x12 Hex3: \x123 Hex4: \x1234 Unicode4: \u1234 Unicode8: \U00001234 Unicode8: \U0001d161 """).Evaluate().ToString());
 
 			Assert.AreEqual("[0]5+7 is 12", new NEExpression("StrFormat(\"[0]{0}+{1} is {2}\", [0], [1], [0] + [1])").Evaluate(5, 7).ToString());
 

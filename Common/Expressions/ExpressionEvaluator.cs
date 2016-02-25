@@ -161,13 +161,28 @@ namespace NeoEdit.Common.Expressions
 				case "i": return new ExpressionResult(Complex.ImaginaryOne);
 				case "now": return new ExpressionResult(DateTimeOffset.Now);
 				case "utcnow": return new ExpressionResult(DateTimeOffset.UtcNow);
-				case "today": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Now.Date, DateTimeKind.Local)));
-				case "utctoday": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc)));
+				case "date": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Now.Date, DateTimeKind.Local)));
+				case "utcdate": return new ExpressionResult(new DateTimeOffset(DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc)));
 				case "time": return new ExpressionResult(DateTime.Now.TimeOfDay);
 				case "utctime": return new ExpressionResult(DateTimeOffset.UtcNow.TimeOfDay);
 				default: throw new ArgumentException($"Invalid constant: {constant}");
 			}
 		}
+
+		static readonly Dictionary<string, string> escapeChars = new Dictionary<string, string>
+		{
+			[@"\\"] = "\\",
+			[@"\'"] = "\'",
+			[@"\"""] = "\"",
+			[@"\0"] = "\0",
+			[@"\a"] = "\a",
+			[@"\b"] = "\b",
+			[@"\f"] = "\f",
+			[@"\n"] = "\n",
+			[@"\r"] = "\r",
+			[@"\t"] = "\t",
+			[@"\v"] = "\v",
+		};
 
 		public override ExpressionResult VisitShortForm(ExpressionParser.ShortFormContext context) => GetShortForm(context.op.Text);
 		public override ExpressionResult VisitDefaultOpForm(ExpressionParser.DefaultOpFormContext context) => GetShortForm("&&");
@@ -191,7 +206,13 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitUnitConversion(ExpressionParser.UnitConversionContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
 		public override ExpressionResult VisitTernary(ExpressionParser.TernaryContext context) => Visit(context.condition).True ? Visit(context.trueval) : Visit(context.falseval);
 		public override ExpressionResult VisitParam(ExpressionParser.ParamContext context) => values[int.Parse(context.val.Text.Trim('[', ']'))];
-		public override ExpressionResult VisitString(ExpressionParser.StringContext context) => new ExpressionResult(context.val.Text.Substring(1, context.val.Text.Length - 2));
+		public override ExpressionResult VisitCharval(ExpressionParser.CharvalContext context) => Visit(context.val);
+		public override ExpressionResult VisitCharany(ExpressionParser.CharanyContext context) => new ExpressionResult(context.val.Text[0]);
+		public override ExpressionResult VisitCharescape(ExpressionParser.CharescapeContext context) => new ExpressionResult(escapeChars[context.val.Text]);
+		public override ExpressionResult VisitCharunicode(ExpressionParser.CharunicodeContext context) => new ExpressionResult(char.ConvertFromUtf32(Convert.ToInt32(context.val.Text.Substring(2), 16)));
+		public override ExpressionResult VisitNormalstring(ExpressionParser.NormalstringContext context) => Visit(context.val);
+		public override ExpressionResult VisitStrcontent(ExpressionParser.StrcontentContext context) => new ExpressionResult(context.children?.Select(child => Visit(child).GetString).ToJoinedString() ?? "");
+		public override ExpressionResult VisitStrchars(ExpressionParser.StrcharsContext context) => new ExpressionResult(context.val.Text);
 		public override ExpressionResult VisitDate(ExpressionParser.DateContext context) => new ExpressionResult(DateTimeOffset.Parse(context.GetText().Trim('\''), CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces));
 		public override ExpressionResult VisitTime(ExpressionParser.TimeContext context)
 		{
@@ -201,7 +222,6 @@ namespace NeoEdit.Common.Expressions
 				timeSpan += TimeSpan.FromHours(12);
 			return new ExpressionResult(timeSpan);
 		}
-		public override ExpressionResult VisitChar(ExpressionParser.CharContext context) => new ExpressionResult(context.val.Text[1]);
 		public override ExpressionResult VisitTrue(ExpressionParser.TrueContext context) => new ExpressionResult(true);
 		public override ExpressionResult VisitFalse(ExpressionParser.FalseContext context) => new ExpressionResult(false);
 		public override ExpressionResult VisitNull(ExpressionParser.NullContext context) => new ExpressionResult(null);
