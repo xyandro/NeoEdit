@@ -42,7 +42,7 @@ e
 
 value
 	: val=PARAM # Param
-	| (normalstring | verbatimstring) # String
+	| (normalstring | verbatimstring | interpolatedstring) # String
 	| val=(DATE | DATETIME) # Date
 	| val=TIME # Time
 	| charval # Char
@@ -78,3 +78,9 @@ verbatimstring : VSTRSTART val=vstrcontent VSTREND ;
 vstrcontent : (vstrchars | vstrquote)* ;
 vstrchars : val=VSTRCHARS ;
 vstrquote : VSTRQUOTE ;
+
+interpolatedstring : ISTRSTART val=istrcontent ISTREND ;
+istrcontent : (istrchars | charescape | charunicode | istrliteral | istrinter)* ;
+istrchars : val=ISTRCHARS ;
+istrliteral : val=ISTRLITERAL ;
+istrinter : ISTRINTERSTA val=e ISTRINTEREND ;

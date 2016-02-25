@@ -58,6 +58,7 @@ PARAM        : '[' [0-9]+ ']' ;
 CHARSTART    : '\'' -> pushMode(CHARVAL) ;
 STRSTART     : '"' -> pushMode(STRING) ;
 VSTRSTART    : '@"' -> pushMode(VERBATIMSTRING) ;
+ISTRSTART    : '$"' -> pushMode(INTERPOLATEDSTRING) ;
 DATE         : '\'' ([0-9][0-9][0-9][0-9] [-/])? [01]?[0-9] [-/] [0-3]?[0-9] (Z | [-+] [0-2]?[0-9] (':' [0-5]?[0-9])? )? '\'' ;
 TIME         : '\'' '-'? ([0-9]+ ':')? [0-2]?[0-9] ':' [0-5][0-9] (':' [0-5][0-9] ('.' [0-9]+)?)? ([ \t]* (A M | P M))? '\'' ;
 DATETIME     : '\'' [0-9][0-9][0-9][0-9] [-/] [01]?[0-9] [-/] [0-3]?[0-9] [ \tT]+ [0-2]?[0-9] ':' [0-5]?[0-9] (':' [0-5]?[0-9] ('.' [0-9]+)?)? (Z | [-+] [0-2]?[0-9] (':' [0-5]?[0-9])? )? ([ \t]* (A M | P M))? '\'' ;
@@ -69,6 +70,7 @@ FLOAT        : [0-9]* '.'? [0-9]+ ([eE][-+]?[0-9]+)? ;
 HEX          : '0x' [0-9a-fA-F]+ ;
 VARIABLE     : [a-zA-Z][a-zA-Z0-9_]* ;
 WHITESPACE   : [ \n\t\r]+ -> skip ;
+ISTRINTEREND : '}' -> popMode ;
 
 mode CHARVAL;
 CHARANY      : ~[\\'] ;
@@ -86,3 +88,11 @@ mode VERBATIMSTRING;
 VSTRCHARS    : ~["]+ ;
 VSTRQUOTE    : '""' ;
 VSTREND      : '"' -> popMode ;
+
+mode INTERPOLATEDSTRING;
+ISTRCHARS    : ~[\\"{}]+ ;
+ISTRESCAPE   : CHARESCAPE -> type(CHARESCAPE) ;
+ISTRUNICODE  : CHARUNICODE -> type(CHARUNICODE) ;
+ISTRLITERAL  : '{{' | '}}' ;
+ISTRINTERSTA : '{' -> pushMode(DEFAULT_MODE) ;
+ISTREND      : '"' -> popMode ;
