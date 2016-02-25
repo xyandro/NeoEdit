@@ -27,7 +27,7 @@ fragment X   : [Xx] ;
 fragment Y   : [Yy] ;
 fragment Z   : [Zz] ;
 
-DEBUG        : '@' ;
+DEBUG        : '#' ;
 LPAREN       : '(' ;
 RPAREN       : ')' ;
 COMMA        : ',' ;
@@ -57,6 +57,7 @@ CONSTANT     : P I | E | I | N O W | U T C N O W | D A T E | U T C D A T E | T I
 PARAM        : '[' [0-9]+ ']' ;
 CHARSTART    : '\'' -> pushMode(CHARVAL) ;
 STRSTART     : '"' -> pushMode(STRING) ;
+VSTRSTART    : '@"' -> pushMode(VERBATIMSTRING) ;
 DATE         : '\'' ([0-9][0-9][0-9][0-9] [-/])? [01]?[0-9] [-/] [0-3]?[0-9] (Z | [-+] [0-2]?[0-9] (':' [0-5]?[0-9])? )? '\'' ;
 TIME         : '\'' '-'? ([0-9]+ ':')? [0-2]?[0-9] ':' [0-5][0-9] (':' [0-5][0-9] ('.' [0-9]+)?)? ([ \t]* (A M | P M))? '\'' ;
 DATETIME     : '\'' [0-9][0-9][0-9][0-9] [-/] [01]?[0-9] [-/] [0-3]?[0-9] [ \tT]+ [0-2]?[0-9] ':' [0-5]?[0-9] (':' [0-5]?[0-9] ('.' [0-9]+)?)? (Z | [-+] [0-2]?[0-9] (':' [0-5]?[0-9])? )? ([ \t]* (A M | P M))? '\'' ;
@@ -80,3 +81,8 @@ STRCHARS     : ~[\\"]+ ;
 STRESCAPE    : CHARESCAPE -> type(CHARESCAPE) ;
 STRUNICODE   : CHARUNICODE -> type(CHARUNICODE) ;
 STREND       : '"' -> popMode ;
+
+mode VERBATIMSTRING;
+VSTRCHARS    : ~["]+ ;
+VSTRQUOTE    : '""' ;
+VSTREND      : '"' -> popMode ;

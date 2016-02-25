@@ -57,7 +57,7 @@ namespace NeoEdit
 					er = $"{er.Substring(0, idx)} {er.Substring(idx + 6)}";
 					Clipboard.SetText(er, TextDataFormat.Text);
 				}
-				System.Diagnostics.Debugger.Break();
+				Debugger.Break();
 			}
 #endif
 

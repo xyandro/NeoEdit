@@ -213,6 +213,10 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitNormalstring(ExpressionParser.NormalstringContext context) => Visit(context.val);
 		public override ExpressionResult VisitStrcontent(ExpressionParser.StrcontentContext context) => new ExpressionResult(context.children?.Select(child => Visit(child).GetString).ToJoinedString() ?? "");
 		public override ExpressionResult VisitStrchars(ExpressionParser.StrcharsContext context) => new ExpressionResult(context.val.Text);
+		public override ExpressionResult VisitVerbatimstring(ExpressionParser.VerbatimstringContext context) => Visit(context.val);
+		public override ExpressionResult VisitVstrcontent(ExpressionParser.VstrcontentContext context) => new ExpressionResult(context.children?.Select(child => Visit(child).GetString).ToJoinedString() ?? "");
+		public override ExpressionResult VisitVstrchars(ExpressionParser.VstrcharsContext context) => new ExpressionResult(context.val.Text);
+		public override ExpressionResult VisitVstrquote(ExpressionParser.VstrquoteContext context) => new ExpressionResult("\"");
 		public override ExpressionResult VisitDate(ExpressionParser.DateContext context) => new ExpressionResult(DateTimeOffset.Parse(context.GetText().Trim('\''), CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces));
 		public override ExpressionResult VisitTime(ExpressionParser.TimeContext context)
 		{

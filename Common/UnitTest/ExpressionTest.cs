@@ -93,6 +93,8 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("a\\\'\"\0\a\b\f\n\r\t\v\x1\x12\x123\x1234\u1234\U00001234\U0001d161", new NEExpression(@"'a' . '\\' . '\'' . '\""' . '\0' . '\a' . '\b' . '\f' . '\n' . '\r' . '\t' . '\v' . '\x1' . '\x12' . '\x123' . '\x1234' . '\u1234' . '\U00001234' . '\U0001d161'").Evaluate().ToString());
 			Assert.AreEqual("", new NEExpression("\"\"").Evaluate().ToString());
 			Assert.AreEqual(" Slash: \\ Quote: \' Double: \" Null: \0 Alert: \a Backspace: \b Form feed: \f New line: \n Carriage return:\r Tab: \t Vertical quote: \v Hex1: \x1 Hex2: \x12 Hex3: \x123 Hex4: \x1234 Unicode4: \u1234 Unicode8: \U00001234 Unicode8: \U0001d161 ", new NEExpression(@""" Slash: \\ Quote: \' Double: \"" Null: \0 Alert: \a Backspace: \b Form feed: \f New line: \n Carriage return:\r Tab: \t Vertical quote: \v Hex1: \x1 Hex2: \x12 Hex3: \x123 Hex4: \x1234 Unicode4: \u1234 Unicode8: \U00001234 Unicode8: \U0001d161 """).Evaluate().ToString());
+			Assert.AreEqual("", new NEExpression("@\"\"").Evaluate().ToString());
+			Assert.AreEqual(@"This \is "" my string", new NEExpression(@"@""This \is """" my string""").Evaluate().ToString());
 
 			Assert.AreEqual("[0]5+7 is 12", new NEExpression("StrFormat(\"[0]{0}+{1} is {2}\", [0], [1], [0] + [1])").Evaluate(5, 7).ToString());
 
