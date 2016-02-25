@@ -727,6 +727,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
 				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;
+				case TextEditCommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(); break;
 				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
 				case TextEditCommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(multiStatus); break;
@@ -2485,6 +2486,24 @@ namespace NeoEdit.TextEdit
 			var batches = Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).Select(batch => batch.ToList()).ToList();
 			foreach (var batch in batches)
 				tabs.AddDiff(bytes1: batch[0], bytes2: batch[1], codePage1: codePage, codePage2: codePage, modified1: false, modified2: false);
+		}
+
+		internal void Command_Diff_SelectedFiles()
+		{
+			if (!Selections.Any())
+				return;
+
+			if (Selections.Count % 2 != 0)
+				throw new Exception("Must have even number of selections.");
+
+			var files = GetSelectionStrings();
+			if (files.Any(file => !File.Exists(file)))
+				throw new Exception("Selections must be files.");
+
+			var tabs = TextEditTabs.CreateDiff();
+			var batches = files.Batch(2).Select(batch => batch.ToList()).ToList();
+			foreach (var batch in batches)
+				tabs.AddDiff(fileName1: batch[0], fileName2: batch[1]);
 		}
 
 		internal void Command_Diff_Break() => DiffTarget = null;
