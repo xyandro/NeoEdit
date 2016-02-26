@@ -2424,6 +2424,7 @@ namespace NeoEdit.TextEdit
 		{
 			using (var client = new WebClient())
 			{
+                client.Encoding = Encoding.UTF8;
 				var uri = new Uri(url);
 				if (codePage == Coder.CodePage.None)
 					return await client.DownloadStringTaskAsync(uri);
