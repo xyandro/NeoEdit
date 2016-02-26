@@ -205,5 +205,8 @@ namespace NeoEdit.Common
 		}
 
 		public static string ToJoinedString<TSource>(this IEnumerable<TSource> source, string separator = "") => string.Join(separator, source);
+
+		public static bool All(this IEnumerable<bool> source) => source.All(b => b);
+		public static bool Any(this IEnumerable<bool> source) => source.Any(b => b);
 	}
 }
