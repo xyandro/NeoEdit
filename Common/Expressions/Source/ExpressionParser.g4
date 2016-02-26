@@ -62,7 +62,7 @@ units
 	| unit # UnitSimple
 	;
 
-unit : val=(CONSTANT | FALSE | METHOD1 | METHOD1VAR | METHOD2 | METHODVAR | NULL | TRUE | VARIABLE) ;
+unit : val=(CONSTANT | FALSE | METHOD1 | METHOD1VAR | METHOD2 | METHODVAR | NULL | TRUE | VARIABLE | CURRENCY) ;
 
 charval : CHARSTART val=charoptions CHAREND ;
 charoptions : charany | charescape | charunicode ;

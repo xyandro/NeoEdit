@@ -153,6 +153,7 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("1E-06 m^3", new NEExpression("1 mL => SI").Evaluate().ToString());
 			Assert.AreEqual("1000000 s^-1", new NEExpression("1 MHz => SI").Evaluate().ToString());
 			Assert.AreEqual("10 W", new NEExpression("10 J/s => Simple").Evaluate().ToString());
+			Assert.AreEqual("25 $/lessons", new NEExpression("1000$ / 40 lessons").Evaluate().ToString());
 
 			Assert.AreEqual("-1", new NEExpression("cos(pi)").Evaluate().ToString());
 			Assert.AreEqual("-1", new NEExpression("cos(pi rad)").Evaluate().ToString());
