@@ -395,6 +395,8 @@ namespace NeoEdit.Common
 			yield break;
 		}
 
+		static public string RelativeChild(this string parent, string child) => string.IsNullOrEmpty(parent) ? child : new Uri(new Uri(parent), child).LocalPath;
+
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 

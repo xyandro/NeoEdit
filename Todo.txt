@@ -2,6 +2,7 @@ All:
 Add command prompt
 Remove native dlls (add to mixed)
 Add TFS source control
+Copy from exception status
 
 Disk:
 Move timestamp (possibly others) from TextEditor
