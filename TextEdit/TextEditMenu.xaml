@@ -507,6 +507,7 @@
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Invert" CommandEnum="Select_Invert"/>
+		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Select_Join"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
 		<textEdit:TextEditMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>

@@ -310,6 +310,7 @@ namespace NeoEdit.TextEdit
 		Select_Limit,
 		[KeyGesture(Key.L, ModifierKeys.Control)] Select_Lines,
 		Select_Invert,
+		Select_Join,
 		Select_Empty,
 		Select_NonEmpty,
 		Select_Unique,
