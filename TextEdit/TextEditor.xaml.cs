@@ -993,6 +993,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_ClearRegions: Command_Region_ClearRegions(); break;
 				case TextEditCommand.Region_LimitToSelection: Command_Region_LimitToSelection(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
+				case TextEditCommand.Region_CopyEnclosingRegion: Command_Region_CopyEnclosingRegion(); break;
 				case TextEditCommand.View_Highlighting_None: Command_View_Highlighting(Highlighting.HighlightingType.None); break;
 				case TextEditCommand.View_Highlighting_CSharp: Command_View_Highlighting(Highlighting.HighlightingType.CSharp); break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: Command_View_Highlighting(Highlighting.HighlightingType.CPlusPlus); break;
@@ -3093,6 +3094,8 @@ namespace NeoEdit.TextEdit
 		internal void Command_Region_LimitToSelection() => Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
 
 		internal void Command_Region_SelectEnclosingRegion() => Selections.Replace(GetEnclosingRegions());
+
+		internal void Command_Region_CopyEnclosingRegion() => SetClipboardStrings(GetEnclosingRegions().Select(range => GetString(range)).ToList());
 
 		internal void Command_View_Highlighting(Highlighting.HighlightingType highlightType) => HighlightType = highlightType;
 

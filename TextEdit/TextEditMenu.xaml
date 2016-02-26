@@ -536,6 +536,7 @@
 		<textEdit:TextEditMenuItem Header="_Limit To Selection" CommandEnum="Region_LimitToSelection"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Select _Enclosing Region" CommandEnum="Region_SelectEnclosingRegion"/>
+		<textEdit:TextEditMenuItem Header="Copy E_nclosing Region" CommandEnum="Region_CopyEnclosingRegion"/>
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Highlighting">

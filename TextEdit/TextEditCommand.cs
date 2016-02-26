@@ -329,6 +329,7 @@ namespace NeoEdit.TextEdit
 		Region_ClearRegions,
 		Region_LimitToSelection,
 		Region_SelectEnclosingRegion,
+		Region_CopyEnclosingRegion,
 		View_Highlighting_None,
 		View_Highlighting_CSharp,
 		View_Highlighting_CPlusPlus,
