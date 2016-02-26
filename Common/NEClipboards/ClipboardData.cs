@@ -65,24 +65,24 @@ namespace NeoEdit.Common.NEClipboards
 				return null;
 
 			var data = new ClipboardData();
-			data.Text = dataObj.GetData(typeof(string)) as string;
+			data.Text = dataObj.GetData(DataFormats.UnicodeText) as string ?? dataObj.GetData(DataFormats.OemText) as string ?? dataObj.GetData(DataFormats.Text) as string ?? dataObj.GetData(typeof(string)) as string;
 			data.Strings = new List<string>();
 			if (data.Text == null)
 				data.Text = "";
 			else
 				data.Strings.Add(data.Text);
 
-			var dropList = Clipboard.GetFileDropList();
+			var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.ToList();
 			if ((dropList != null) && (dropList.Count != 0))
 			{
-				data.Strings = dropList.Cast<string>().ToList();
+				data.Strings = dropList;
 				var dropEffectStream = dataObj.GetData("Preferred DropEffect");
 				if (dropEffectStream is MemoryStream)
 				{
 					try
 					{
 						var dropEffect = (DragDropEffects)BitConverter.ToInt32(((MemoryStream)dropEffectStream).ToArray(), 0);
-						data.IsCut = (dropEffect & DragDropEffects.Move) != DragDropEffects.None;
+						data.IsCut = dropEffect.HasFlag(DragDropEffects.Move);
 					}
 					catch { }
 				}
@@ -95,7 +95,7 @@ namespace NeoEdit.Common.NEClipboards
 		{
 			var dataObj = new DataObject();
 
-			dataObj.SetText(Text);
+			dataObj.SetText(Text, TextDataFormat.UnicodeText);
 			dataObj.SetData(typeof(NELocalClipboard), PID);
 
 			if (IsCut.HasValue)

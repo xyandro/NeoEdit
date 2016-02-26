@@ -680,7 +680,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_File_Copy_CopyPath() => NEClipboard.CopiedFile = FileName;
 
-		internal void Command_File_Copy_CopyName() => Clipboard.SetText(Path.GetFileName(FileName));
+		internal void Command_File_Copy_CopyName() => NEClipboard.Text = Path.GetFileName(FileName);
 
 		internal void Command_File_Encoding()
 		{
