@@ -9,7 +9,7 @@
   </PropertyGroup>
   <Target Name="CompressWords" Inputs="Misc\Words.txt" Outputs="Misc\Words.txt.gz">
     <Message Text="Compressing word list" Importance="High" />
-    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Misc\Words.txt.gz&quot; &quot;$(ProjectDir)Misc\Words.txt&quot;" />
+    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Misc\Words.txt&quot; &quot;$(ProjectDir)Misc\Words.txt.gz&quot;" />
   </Target>
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs">
     <Message Text="Building Balanced grammar" Importance="High" />

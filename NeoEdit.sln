@@ -13,6 +13,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dependencies", "Dependencies\Dependencies.csproj", "{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disk", "Disk\Disk.csproj", "{839C668B-921C-4A33-91CD-0D8131FFACFC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FACD6EAC-7E0E-4CDD-8B30-CFB66D869116} = {FACD6EAC-7E0E-4CDD-8B30-CFB66D869116}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{53DA8D50-6F45-4663-8101-9DD4BF99096E}"
 EndProject
@@ -51,6 +54,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemInfo", "SystemInfo\SystemInfo.csproj", "{5FC0FBFF-7CE1-4540-9E41-D757D0D9708D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEdit", "TextEdit\TextEdit.csproj", "{9A35AB82-2481-4C44-B51E-66DF7D248EAD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FACD6EAC-7E0E-4CDD-8B30-CFB66D869116} = {FACD6EAC-7E0E-4CDD-8B30-CFB66D869116}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextView", "TextView\TextView.csproj", "{46568E12-8F80-492E-AED8-647C2386C3E9}"
 EndProject

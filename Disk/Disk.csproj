@@ -8,24 +8,24 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <Target Name="MagicFileExe" Inputs="Magic\file.exe" Outputs="Magic\file.exe.gz">
-    <Message Text="Compressing MagicFileExe" Importance="High" />
-    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\file.exe.gz&quot; &quot;$(ProjectDir)Magic\file.exe&quot;" />
+    <Message Text="Compressing Magic\file.exe" Importance="High" />
+    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Magic\file.exe&quot; &quot;$(ProjectDir)Magic\file.exe.gz&quot;" />
   </Target>
   <Target Name="MagicMagicMgc" Inputs="Magic\magic.mgc" Outputs="Magic\magic.mgc.gz">
-    <Message Text="Compressing MagicMagicMgc" Importance="High" />
-    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\magic.mgc.gz&quot; &quot;$(ProjectDir)Magic\magic.mgc&quot;" />
+    <Message Text="Compressing Magic\magic.mgc" Importance="High" />
+    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Magic\magic.mgc&quot; &quot;$(ProjectDir)Magic\magic.mgc.gz&quot;" />
   </Target>
   <Target Name="MagicMagic1Dll" Inputs="Magic\magic1.dll" Outputs="Magic\magic1.dll.gz">
-    <Message Text="Compressing MagicMagic1Dll" Importance="High" />
-    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\magic1.dll.gz&quot; &quot;$(ProjectDir)Magic\magic1.dll&quot;" />
+    <Message Text="Compressing Magic\magic1.dll" Importance="High" />
+    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Magic\magic1.dll&quot; &quot;$(ProjectDir)Magic\magic1.dll.gz&quot;" />
   </Target>
   <Target Name="MagicRegex2Dll" Inputs="Magic\regex2.dll" Outputs="Magic\regex2.dll.gz">
-    <Message Text="Compressing MagicRegex2Dll" Importance="High" />
-    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\regex2.dll.gz&quot; &quot;$(ProjectDir)Magic\regex2.dll&quot;" />
+    <Message Text="Compressing Magic\regex2.dll" Importance="High" />
+    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Magic\regex2.dll&quot; &quot;$(ProjectDir)Magic\regex2.dll.gz&quot;" />
   </Target>
   <Target Name="MagicZlib1Dll" Inputs="Magic\zlib1.dll" Outputs="Magic\zlib1.dll.gz">
-    <Message Text="Compressing MagicZlib1Dll" Importance="High" />
-    <Exec Command="&quot;C:\Program Files\7-Zip\7z.exe&quot; a -mx=9 &quot;$(ProjectDir)Magic\zlib1.dll.gz&quot; &quot;$(ProjectDir)Magic\zlib1.dll&quot;" />
+    <Message Text="Compressing Magic\zlib1.dll" Importance="High" />
+    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Magic\zlib1.dll&quot; &quot;$(ProjectDir)Magic\zlib1.dll.gz&quot;" />
   </Target>
   <ItemGroup>
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
