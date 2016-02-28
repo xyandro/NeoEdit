@@ -55,7 +55,7 @@ namespace NeoEdit
 						er = er.Substring(idx + 4);
 					idx = er.IndexOf(":line ");
 					er = $"{er.Substring(0, idx)} {er.Substring(idx + 6)}";
-					Clipboard.SetText(er, TextDataFormat.UnicodeText);
+					NoDelayClipboard.SetText(er);
 				}
 				Debugger.Break();
 			}

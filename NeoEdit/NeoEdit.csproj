@@ -43,6 +43,7 @@
     <None Include="CommandLineParams\Source\CommandLineParamsLexer.g4" />
     <None Include="CommandLineParams\Source\CommandLineParamsParser.g4" />
     <Compile Include="InstanceManager.cs" />
+    <Compile Include="NoDelayClipboard.cs" />
     <Compile Include="Params.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
