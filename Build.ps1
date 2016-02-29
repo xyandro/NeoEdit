@@ -50,11 +50,11 @@ Function Build ()
 	$args = ""
 	foreach ($bitdepth in $bitdepths)
 	{
-		$args += "Start=..\Release.$bitdepth\NeoEdit.exe "
+		$args += "-Start=..\Release.$bitdepth\NeoEdit.exe "
 		Invoke-Expression '& "$devenv" "NeoEdit.sln" /build "Release|$bitdepth" /project Loader /out Build$bitdepth.log'
 		if ($LASTEXITCODE -ne 0) { Fail("Failed to build.") }
 	}
-	$args += "output=NeoEdit.exe ngen=1 extractaction=gui go"
+	$args += "-output=NeoEdit.exe -ngen=1 -extractaction=gui -go"
 	$proc = Start-Process "bin\Release.AnyCPU\Loader.exe" $args -PassThru -Wait
 	if ($proc.ExitCode -ne 0) { Fail("Failed to build.") }
 }

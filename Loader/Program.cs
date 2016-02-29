@@ -16,22 +16,22 @@ namespace Loader
 			var go = false;
 			foreach (var arg in args)
 			{
-				if (arg.StartsWith("Start=", StringComparison.OrdinalIgnoreCase))
-					config.SetStart(new Uri(new Uri(loader), arg.Substring("Start=".Length)).LocalPath);
-				else if (arg.StartsWith("Path=", StringComparison.OrdinalIgnoreCase))
-					config.SetPath(new Uri(new Uri(loader), arg.Substring("Path=".Length)).LocalPath);
-				else if (arg.StartsWith("Output=", StringComparison.OrdinalIgnoreCase))
-					config.Output = new Uri(new Uri(loader), arg.Substring("Output=".Length)).LocalPath;
-				else if (arg.StartsWith("Match=", StringComparison.OrdinalIgnoreCase))
-					config.Match = arg.Substring("Match=".Length);
-				else if (arg.StartsWith("ExtractAction=", StringComparison.OrdinalIgnoreCase))
-					config.ExtractAction = (ExtractActions)Enum.Parse(typeof(ExtractActions), arg.Substring("ExtractAction=".Length), true);
-				else if (arg.StartsWith("NGen=", StringComparison.OrdinalIgnoreCase))
-					switch (arg.Substring("NGen=".Length).ToLowerInvariant()[0])
+				if (arg.StartsWith("-Start=", StringComparison.OrdinalIgnoreCase))
+					config.SetStart(new Uri(new Uri(loader), arg.Substring("-Start=".Length)).LocalPath);
+				else if (arg.StartsWith("-Path=", StringComparison.OrdinalIgnoreCase))
+					config.SetPath(new Uri(new Uri(loader), arg.Substring("-Path=".Length)).LocalPath);
+				else if (arg.StartsWith("-Output=", StringComparison.OrdinalIgnoreCase))
+					config.Output = new Uri(new Uri(loader), arg.Substring("-Output=".Length)).LocalPath;
+				else if (arg.StartsWith("-Match=", StringComparison.OrdinalIgnoreCase))
+					config.Match = arg.Substring("-Match=".Length);
+				else if (arg.StartsWith("-ExtractAction=", StringComparison.OrdinalIgnoreCase))
+					config.ExtractAction = (ExtractActions)Enum.Parse(typeof(ExtractActions), arg.Substring("-ExtractAction=".Length), true);
+				else if (arg.StartsWith("-NGen=", StringComparison.OrdinalIgnoreCase))
+					switch (arg.Substring("-NGen=".Length).ToLowerInvariant()[0])
 					{
 						case '1': case 'y': case 't': config.NGen = true; break;
 					}
-				else if (arg.Equals("GO", StringComparison.OrdinalIgnoreCase))
+				else if (arg.Equals("-GO", StringComparison.OrdinalIgnoreCase))
 					go = true;
 			}
 
@@ -53,7 +53,7 @@ namespace Loader
 					case ExtractActions.Extract: extractor.Extract(Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32); break;
 					case ExtractActions.GUI:
 						var action = Contents.Run();
-						switch (action.Item1)
+						switch (action?.Item1)
 						{
 							case ExtractActions.Extract: extractor.Extract(action.Item2); break;
 							case ExtractActions.GUI: extractor.RunProgram(args); break;
