@@ -1563,7 +1563,7 @@ namespace NeoEdit.TextEdit
 				Directory.CreateDirectory(file);
 		}
 
-		internal CreateFilesDialog.Result Command_Files_Operations_Create_FromExpressions_Dialog() => CreateFilesDialog.Run(WindowParent, GetVariables());
+		internal CreateFilesDialog.Result Command_Files_Operations_Create_FromExpressions_Dialog() => CreateFilesDialog.Run(WindowParent, GetVariables(), CodePage);
 
 		internal void Command_Files_Operations_Create_FromExpressions(CreateFilesDialog.Result result)
 		{

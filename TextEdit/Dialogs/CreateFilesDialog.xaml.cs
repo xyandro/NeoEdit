@@ -26,12 +26,13 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		static CreateFilesDialog() { UIHelper<CreateFilesDialog>.Register(); }
 
-		CreateFilesDialog(NEVariables variables)
+		CreateFilesDialog(NEVariables variables, Coder.CodePage defaultCodePage)
 		{
 			Variables = variables;
 			InitializeComponent();
 
 			Data = FileName = "x";
+			CodePage = defaultCodePage;
 
 			codePage.ItemsSource = Coder.GetStringCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
 			codePage.SelectedValuePath = "Key";
@@ -47,9 +48,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static Result Run(Window parent, NEVariables variables, Coder.CodePage codePage)
 		{
-			var dialog = new CreateFilesDialog(variables) { Owner = parent };
+			var dialog = new CreateFilesDialog(variables, codePage) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
