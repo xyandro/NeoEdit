@@ -81,11 +81,21 @@ namespace NeoEdit.Common
 				if ((char.IsDigit(x[xPos])) && (char.IsDigit(y[yPos])))
 				{
 					var xVal = default(long);
-					while ((xPos < xLen) && (char.IsDigit(x[xPos])))
-						xVal = xVal * 10 + (x[xPos++] - '0');
+					while (xPos < xLen)
+						if (char.IsDigit(x[xPos]))
+							xVal = xVal * 10 + (x[xPos++] - '0');
+						else if ((xPos + 1 < xLen) && (x[xPos] == ',') && (char.IsDigit(x[xPos + 1])))
+							xPos++;
+						else
+							break;
 					var yVal = default(long);
-					while ((yPos < yLen) && (char.IsDigit(y[yPos])))
-						yVal = yVal * 10 + (y[yPos++] - '0');
+					while (yPos < yLen)
+						if (char.IsDigit(y[yPos]))
+							yVal = yVal * 10 + (y[yPos++] - '0');
+						else if ((yPos + 1 < yLen) && (y[yPos] == ',') && (char.IsDigit(y[yPos + 1])))
+							yPos++;
+						else
+							break;
 					compare = xVal.CompareTo(yVal);
 				}
 				else if (caseSensitive)
