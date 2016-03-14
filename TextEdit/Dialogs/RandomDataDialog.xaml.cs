@@ -36,6 +36,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				return;
 
 			result = new Result { Expression = Expression, Chars = chars };
+			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 

@@ -35,6 +35,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			result = new Result { Expression = Expression, SelectRepetitions = SelectRepetitions };
+			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 

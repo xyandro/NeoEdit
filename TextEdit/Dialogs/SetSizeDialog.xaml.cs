@@ -53,6 +53,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			result = new Result { Type = Type, Expression = Expression, Factor = Factor };
+			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 

@@ -96,6 +96,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (PadChar.Length != 1)
 				return;
 			result = new Result { Type = Type, Expression = Expression, PadChar = PadChar[0], Location = Location };
+			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 

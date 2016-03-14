@@ -45,6 +45,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			result = new Result { Data = Data, FileName = FileName, CodePage = CodePage };
+			data.AddCurrentSuggestion();
+			fileName.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 

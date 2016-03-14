@@ -30,6 +30,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (!tables.Contains(Table))
 				throw new Exception("Invalid table.");
 			result = Table;
+			tablesList.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
