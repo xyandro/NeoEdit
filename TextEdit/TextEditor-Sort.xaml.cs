@@ -13,7 +13,7 @@ namespace NeoEdit.TextEdit
 
 		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 
-		List<Range> GetEnclosingRegions(bool useAllRegions = false)
+		List<Range> GetEnclosingRegions(bool useAllRegions = false, bool mustBeInRegion = true)
 		{
 			var regions = new List<Range>();
 			var currentRegion = 0;
@@ -27,11 +27,15 @@ namespace NeoEdit.TextEdit
 					used = false;
 					++currentRegion;
 				}
-				if ((currentRegion >= Regions.Count) || (selection.Start < Regions[currentRegion].Start) || (selection.End > Regions[currentRegion].End))
+				if ((currentRegion < Regions.Count) && (selection.Start >= Regions[currentRegion].Start) && (selection.End <= Regions[currentRegion].End))
+				{
+					regions.Add(Regions[currentRegion]);
+					used = true;
+				}
+				else if (mustBeInRegion)
 					throw new Exception("No region found.  All selections must be inside a region.");
-
-				regions.Add(Regions[currentRegion]);
-				used = true;
+				else
+					regions.Add(null);
 			}
 			if ((useAllRegions) && (currentRegion != Regions.Count - 1))
 				throw new Exception("Extra regions found.");

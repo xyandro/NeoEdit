@@ -999,6 +999,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_SetFindResults: Command_Region_SetFindResults(); break;
 				case TextEditCommand.Region_ClearRegions: Command_Region_ClearRegions(); break;
 				case TextEditCommand.Region_LimitToSelection: Command_Region_LimitToSelection(); break;
+				case TextEditCommand.Region_WithEnclosingRegion: Command_Region_WithEnclosingRegion(); break;
+				case TextEditCommand.Region_WithoutEnclosingRegion: Command_Region_WithoutEnclosingRegion(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
 				case TextEditCommand.Region_CopyEnclosingRegion: Command_Region_CopyEnclosingRegion(); break;
 				case TextEditCommand.View_Highlighting_None: Command_View_Highlighting(Highlighting.HighlightingType.None); break;
@@ -3117,6 +3119,10 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Region_LimitToSelection() => Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
+
+		internal void Command_Region_WithEnclosingRegion() => Selections.Replace(Selections.Zip(GetEnclosingRegions(mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
+
+		internal void Command_Region_WithoutEnclosingRegion() => Selections.Replace(Selections.Zip(GetEnclosingRegions(mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
 
 		internal void Command_Region_SelectEnclosingRegion() => Selections.Replace(GetEnclosingRegions());
 

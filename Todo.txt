@@ -31,6 +31,8 @@ Refactor macro code
 QueryBuilder
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
+Make alt-space center current selection if it is a multi-line selection
+Switch diff colors for line gaps
 
 View:
 Update as new lines are added
