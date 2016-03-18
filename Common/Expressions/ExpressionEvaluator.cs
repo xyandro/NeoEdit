@@ -222,6 +222,11 @@ namespace NeoEdit.Common.Expressions
 		public override ExpressionResult VisitIstrchars(ExpressionParser.IstrcharsContext context) => new ExpressionResult(context.val.Text);
 		public override ExpressionResult VisitIstrliteral(ExpressionParser.IstrliteralContext context) => new ExpressionResult(context.val.Text[0].ToString());
 		public override ExpressionResult VisitIstrinter(ExpressionParser.IstrinterContext context) => Visit(context.val);
+		public override ExpressionResult VisitVerbatiminterpolatedstring(ExpressionParser.VerbatiminterpolatedstringContext context) => Visit(context.val);
+		public override ExpressionResult VisitVistrcontent(ExpressionParser.VistrcontentContext context) => new ExpressionResult(context.children?.Select(child => Visit(child).GetString).ToJoinedString() ?? "");
+		public override ExpressionResult VisitVistrchars(ExpressionParser.VistrcharsContext context) => new ExpressionResult(context.val.Text);
+		public override ExpressionResult VisitVistrliteral(ExpressionParser.VistrliteralContext context) => new ExpressionResult(context.val.Text[0].ToString());
+		public override ExpressionResult VisitVistrinter(ExpressionParser.VistrinterContext context) => Visit(context.val);
 		public override ExpressionResult VisitDate(ExpressionParser.DateContext context) => new ExpressionResult(DateTimeOffset.Parse(context.GetText().Trim('\''), CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces));
 		public override ExpressionResult VisitTime(ExpressionParser.TimeContext context)
 		{

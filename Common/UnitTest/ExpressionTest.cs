@@ -97,6 +97,10 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(@"This \is "" my string", new NEExpression(@"@""This \is """" my string""").Evaluate().ToString());
 			Assert.AreEqual("", new NEExpression("$\"\"").Evaluate().ToString());
 			Assert.AreEqual("{2 + 2 = 4}\r\n", new NEExpression(@"$""{{\u0032 + 2 = {2 + 2}}}\r\n""").Evaluate().ToString());
+			Assert.AreEqual(@"\n ""{2 + 2} \= 4"" \n", new NEExpression(@"@$""\n """"{{2 + 2}} \= {2 + 2}"""" \n""").Evaluate().ToString());
+			Assert.AreEqual(@"\n ""{2 + 2} \= 4"" \n", new NEExpression(@"$@""\n """"{{2 + 2}} \= {2 + 2}"""" \n""").Evaluate().ToString());
+			Assert.AreEqual("", new NEExpression("@$\"\"").Evaluate().ToString());
+			Assert.AreEqual("", new NEExpression("$@\"\"").Evaluate().ToString());
 
 			Assert.AreEqual("[0]5+7 is 12", new NEExpression("StrFormat(\"[0]{0}+{1} is {2}\", [0], [1], [0] + [1])").Evaluate(5, 7).ToString());
 
