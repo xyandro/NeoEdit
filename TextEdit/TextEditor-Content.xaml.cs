@@ -103,7 +103,7 @@ namespace NeoEdit.TextEdit
 				}
 				last = node;
 			}
-			Selections.Replace(nodes.Select(node => new Range(overlap ? node.Start : node.End, node.Start)).ToList());
+			Selections.Replace(nodes.Select(node => new Range(node.Start, overlap ? node.Start : node.End)).ToList());
 		}
 
 		internal void Command_Content_Type(Parser.ParserType contentType) => ContentType = contentType;
