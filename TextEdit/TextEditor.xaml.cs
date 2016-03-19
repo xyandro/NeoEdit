@@ -3131,7 +3131,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_View_Highlighting(Highlighting.HighlightingType highlightType) => HighlightType = highlightType;
 
 		int visibleIndex = 0;
-		internal void EnsureVisible(bool highlight = false)
+		internal void EnsureVisible(bool center = false)
 		{
 			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
 			if (!Selections.Any())
@@ -3153,12 +3153,17 @@ namespace NeoEdit.TextEdit
 			PositionMax = range.End;
 			ColumnMin = Data.GetColumnFromIndex(lineMin, indexMin) + 1;
 			ColumnMax = Data.GetColumnFromIndex(lineMax, indexMax) + 1;
+
+			if (center)
+			{
+				yScrollValue = (lineMin + lineMax - yScrollViewportFloor) / 2;
+				xScrollValue = (Data.GetColumnFromIndex(lineMin, indexMin) + Data.GetColumnFromIndex(lineMax, indexMax) - xScrollViewportFloor) / 2;
+			}
+
 			var line = Data.GetOffsetLine(range.Cursor);
 			var index = Data.GetOffsetIndex(range.Cursor, line);
-			if (highlight)
-				yScrollValue = line - yScrollViewportFloor / 2;
-			yScrollValue = Math.Min(line, Math.Max(line - yScrollViewportFloor + 1, yScrollValue));
 			var x = Data.GetColumnFromIndex(line, index);
+			yScrollValue = Math.Min(line, Math.Max(line - yScrollViewportFloor + 1, yScrollValue));
 			xScrollValue = Math.Min(x, Math.Max(x - xScrollViewportFloor + 1, xScrollValue));
 		}
 
