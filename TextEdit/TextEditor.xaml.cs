@@ -2146,7 +2146,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		internal GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count, () => ExpressionHelpDialog.Display());
+		internal GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
 		internal void Command_Expression_Expression(GetExpressionDialog.Result result) => ReplaceSelections(GetFixedExpressionResults<string>(result.Expression));
 
@@ -3039,7 +3039,7 @@ namespace NeoEdit.TextEdit
 			Searches.Clear();
 		}
 
-		internal GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count, () => ExpressionHelpDialog.Display());
+		internal GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
 		internal void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
 		{

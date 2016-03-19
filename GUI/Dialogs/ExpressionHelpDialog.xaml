@@ -1,9 +1,8 @@
-﻿<Window Name="self" x:Class="NeoEdit.TextEdit.Dialogs.ExpressionHelpDialog" x:ClassModifier="internal"
+﻿<Window Name="self" x:Class="NeoEdit.GUI.Dialogs.ExpressionHelpDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:system="clr-namespace:System;assembly=mscorlib"
-	xmlns:guiDialogs="clr-namespace:NeoEdit.GUI.Dialogs;assembly=NeoEdit.GUI"
-	Title="Expression Reference" SizeToContent="WidthAndHeight">
+	xmlns:guiDialogs="clr-namespace:NeoEdit.GUI.Dialogs"
+	Title="Expression Reference" SizeToContent="WidthAndHeight" Visibility="Visible">
 
 	<Window.Resources>
 		<DataTemplate x:Key="helpItemTemplate">
@@ -51,36 +50,13 @@
 
 				<guiDialogs:HelpItems Name="Literals" Columns="4" NameWidth="90" DescWidth="150">
 					<guiDialogs:HelpItems.Items>
-						<guiDialogs:HelpItem Name="5" Description="Long"/>
-						<guiDialogs:HelpItem Name="5.5" Description="Double"/>
+						<guiDialogs:HelpItem Name="5" Description="Integer"/>
+						<guiDialogs:HelpItem Name="5.5" Description="Floating Point"/>
 						<guiDialogs:HelpItem Name="false" Description="Boolean"/>
 						<guiDialogs:HelpItem Name="0x12345" Description="Hex"/>
-						<guiDialogs:HelpItem Name="'Test'" Description="String"/>
-					</guiDialogs:HelpItems.Items>
-				</guiDialogs:HelpItems>
-
-				<guiDialogs:HelpItems Name="Variables" Columns="4" NameWidth="90" DescWidth="150">
-					<guiDialogs:HelpItems.Items>
-						<guiDialogs:HelpItem Name="x" Description="Selection"/>
-						<guiDialogs:HelpItem Name="xl" Description="Selection length"/>
-						<guiDialogs:HelpItem Name="xn" Description="Selection count"/>
-						<guiDialogs:HelpItem Name="y" Description="Order (1-based)"/>
-						<guiDialogs:HelpItem Name="c" Description="Clipboard"/>
-						<guiDialogs:HelpItem Name="cl" Description="Clipboard length"/>
-						<guiDialogs:HelpItem Name="cn" Description="Clipboard count"/>
-						<guiDialogs:HelpItem Name="z" Description="Order (0-based)"/>
-						<guiDialogs:HelpItem Name="k / v1-v9" Description="Keys/values"/>
-						<guiDialogs:HelpItem Name="kl / v1l-v9l" Description="Keys/values length"/>
-						<guiDialogs:HelpItem/>
-						<guiDialogs:HelpItem/>
-						<guiDialogs:HelpItem Name="rk / rv1-rv9" Description="Raw keys/values"/>
-						<guiDialogs:HelpItem Name="rkl / rv1l-rv9l" Description="Raw keys/values length"/>
-						<guiDialogs:HelpItem Name="rkn / rv1n-rv9n" Description="Raw keys/values count"/>
-						<guiDialogs:HelpItem/>
-						<guiDialogs:HelpItem Name="line" Description="Selection line"/>
-						<guiDialogs:HelpItem Name="col" Description="Selection column"/>
-						<guiDialogs:HelpItem Name="pos" Description="Selection position"/>
-						<guiDialogs:HelpItem Name="f" Description="File name"/>
+						<guiDialogs:HelpItem Name="&quot;Test&quot;" Description="String"/>
+						<guiDialogs:HelpItem Name="'a'" Description="Character"/>
+						<guiDialogs:HelpItem Name="'2016-03-19T16:36:51.9411322-06:00'" Description="Date/Time"/>
 					</guiDialogs:HelpItems.Items>
 				</guiDialogs:HelpItems>
 
@@ -88,8 +64,8 @@
 					<guiDialogs:HelpItems.Items>
 						<guiDialogs:HelpItem Name="*" Description="Multiply"/>
 						<guiDialogs:HelpItem Name="/" Description="Divide"/>
+						<guiDialogs:HelpItem Name="//" Description="Integer Divide"/>
 						<guiDialogs:HelpItem Name="%" Description="Modulo"/>
-						<guiDialogs:HelpItem/>
 						<guiDialogs:HelpItem Name="+" Description="Add/concat"/>
 						<guiDialogs:HelpItem Name="-" Description="Subtract"/>
 						<guiDialogs:HelpItem/>
@@ -131,7 +107,13 @@
 			</ItemsControl.Items>
 		</ItemsControl>
 
-		<Button Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Margin="0,10,0,0" Padding="20,1" HorizontalAlignment="Right"/>
+		<DockPanel>
+			<UniformGrid Rows="1" Margin="0,10,0,0">
+				<Button Name="ShowVariables" Click="ShowVariablesClick" Padding="5,0" Content="_Variables"/>
+				<Button Click="ShowUnitsClick" Content="_Units"/>
+			</UniformGrid>
+			<Button Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Margin="0,10,0,0" Padding="20,1" HorizontalAlignment="Right"/>
+		</DockPanel>
 	</StackPanel>
 
 </Window>

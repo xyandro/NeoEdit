@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -40,7 +41,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display();
+		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
 		public static Result Run(NEVariables variables, Window parent)
 		{

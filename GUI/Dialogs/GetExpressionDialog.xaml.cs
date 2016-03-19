@@ -23,11 +23,8 @@ namespace NeoEdit.GUI.Dialogs
 
 		static GetExpressionDialog() { UIHelper<GetExpressionDialog>.Register(); }
 
-		readonly Action helpDialog;
-		GetExpressionDialog(NEVariables variables, int numRows, Action helpDialog)
+		GetExpressionDialog(NEVariables variables, int numRows)
 		{
-			this.helpDialog = helpDialog;
-
 			InitializeComponent();
 
 			Expression = "x";
@@ -35,11 +32,7 @@ namespace NeoEdit.GUI.Dialogs
 			NumRows = numRows;
 		}
 
-		void ExpressionHelp(object sender, RoutedEventArgs e)
-		{
-			if (helpDialog != null)
-				helpDialog();
-		}
+		void ExpressionHelp(object sender, RoutedEventArgs e)=> ExpressionHelpDialog.Display(Variables);
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
@@ -52,9 +45,9 @@ namespace NeoEdit.GUI.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables, int numRows, Action helpDialog = null)
+		static public Result Run(Window parent, NEVariables variables, int numRows)
 		{
-			var dialog = new GetExpressionDialog(variables, numRows, helpDialog) { Owner = parent };
+			var dialog = new GetExpressionDialog(variables, numRows) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

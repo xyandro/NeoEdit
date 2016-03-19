@@ -24,9 +24,6 @@ namespace NeoEdit.Common
 			list.RemoveAll(item => remove.Contains(item));
 		}
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 }

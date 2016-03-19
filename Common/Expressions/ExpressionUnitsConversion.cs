@@ -53,6 +53,8 @@ namespace NeoEdit.Common.Expressions
 
 		static Dictionary<string, ExpressionUnitsConversion> conversionConstants = new Dictionary<string, ExpressionUnitsConversion>();
 
+		public static IEnumerable<ExpressionUnitsConversion> GetConversionConstants() => conversionConstants.Values;
+
 		static void AddConversionConstant(string fromUnitStr, ExpressionUnits toUnit, double mult, double add = 0, ConversionConstantAttr attr = ConversionConstantAttr.None)
 		{
 			var fromUnit = new ExpressionUnits(fromUnitStr);

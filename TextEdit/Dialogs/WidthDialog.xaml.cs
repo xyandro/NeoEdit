@@ -3,6 +3,7 @@ using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -88,7 +89,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Location = TextLocation.Start;
 		}
 
-		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display();
+		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)

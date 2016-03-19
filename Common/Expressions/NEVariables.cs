@@ -1,11 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Common.Expressions
 {
-	public class NEVariables
+	public class NEVariables : IEnumerable<NEVariable>
 	{
 		readonly Dictionary<string, NEVariable> varDict = new Dictionary<string, NEVariable>();
 		readonly Dictionary<string, List<object>> varValues = new Dictionary<string, List<object>>();
@@ -49,7 +50,7 @@ namespace NeoEdit.Common.Expressions
 			if (missing != null)
 				throw new Exception($"Variable {missing} is undefined");
 
-			lock(this)
+			lock (this)
 			{
 				if ((rowCount.HasValue) && (varValues != null) && (variables.All(variable => (varValues.ContainsKey(variable)) && (varValues[variable].Count >= rowCount))))
 					return RowCount = rowCount.Value;
@@ -97,5 +98,9 @@ namespace NeoEdit.Common.Expressions
 				throw new Exception($"Must call {nameof(Prepare)} first");
 			return varValues;
 		}
+
+		public IEnumerator<NEVariable> GetEnumerator() => varDict.Values.GetEnumerator();
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 }

@@ -102,7 +102,7 @@ namespace NeoEdit.TextEdit
 		internal AddColumnDialog.Result Command_Table_AddColumn_Dialog()
 		{
 			var table = GetTable();
-			return AddColumnDialog.Run(WindowParent, GetTableVariables(table), table.NumRows, () => ExpressionHelpDialog.Display());
+			return AddColumnDialog.Run(WindowParent, GetTableVariables(table), table.NumRows);
 		}
 
 		internal void Command_Table_AddColumn(AddColumnDialog.Result result)
@@ -117,7 +117,7 @@ namespace NeoEdit.TextEdit
 		internal GetExpressionDialog.Result Command_Table_Select_RowsByExpression_Dialog()
 		{
 			var table = GetTable();
-			return GetExpressionDialog.Run(WindowParent, GetTableVariables(table), table.NumRows, () => ExpressionHelpDialog.Display());
+			return GetExpressionDialog.Run(WindowParent, GetTableVariables(table), table.NumRows);
 		}
 
 		internal void Command_Table_Select_RowsByExpression(GetExpressionDialog.Result result)

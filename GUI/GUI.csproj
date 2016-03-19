@@ -100,6 +100,27 @@
     <Compile Include="Dialogs\EncodingDialog.xaml.cs">
       <DependentUpon>EncodingDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ExpressionHelpDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ExpressionHelpUnitsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpUnitsDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpUnitsDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ExpressionHelpVariablesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpVariablesDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpVariablesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\FindBinaryDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
