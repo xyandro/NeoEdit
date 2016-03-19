@@ -592,38 +592,50 @@ namespace NeoEdit.Common
 			data1.diffData.ColCompare = new List<Tuple<int, int>>[data0.diffData.LineCompare.Count];
 			for (var line = 0; line < data0.diffData.ColCompare.Length; ++line)
 			{
-				if ((data0.diffData.LineCompare[line] == LCS.MatchType.Mismatch) && (data1.diffData.LineCompare[line] == LCS.MatchType.Mismatch))
+				if (data0.diffData.LineCompare[line] == LCS.MatchType.Match)
+					continue;
+
+				if (data0.diffData.LineCompare[line] == LCS.MatchType.Gap)
 				{
-					var line0 = data0.GetLineColumns(line, true);
-					var line1 = data1.GetLineColumns(line, true);
-					List<LCS.MatchType> cols0, cols1;
-					LCS.GetLCS(line0.ToList(), line1.ToList(), out cols0, out cols1);
+					data1.diffData.ColCompare[line] = new List<Tuple<int, int>> { Tuple.Create(0, int.MaxValue) };
+					continue;
+				}
 
-					for (var pass = 0; pass < 2; ++pass)
+				if (data1.diffData.LineCompare[line] == LCS.MatchType.Gap)
+				{
+					data0.diffData.ColCompare[line] = new List<Tuple<int, int>> { Tuple.Create(0, int.MaxValue) };
+					continue;
+				}
+
+				List<LCS.MatchType> cols0, cols1;
+				var line0 = data0.GetLineColumns(line, true);
+				var line1 = data1.GetLineColumns(line, true);
+				LCS.GetLCS(line0.ToList(), line1.ToList(), out cols0, out cols1);
+
+				for (var pass = 0; pass < 2; ++pass)
+				{
+					var diffData = pass == 0 ? data0.diffData : data1.diffData;
+					var cols = pass == 0 ? cols0 : cols1;
+					int? start = null;
+					int pos = 0;
+					diffData.ColCompare[line] = new List<Tuple<int, int>>();
+					for (var ctr = 0; ctr <= cols.Count; ++ctr, ++pos)
 					{
-						var passData = pass == 0 ? data0 : data1;
-						var cols = pass == 0 ? cols0 : cols1;
-						int? start = null;
-						int pos = 0;
-						passData.diffData.ColCompare[line] = new List<Tuple<int, int>>();
-						for (var ctr = 0; ctr <= cols.Count; ++ctr, ++pos)
+						if ((ctr == cols.Count) || (cols[ctr] == LCS.MatchType.Match))
 						{
-							if ((ctr == cols.Count) || (cols[ctr] == LCS.MatchType.Match))
-							{
-								if (start.HasValue)
-									passData.diffData.ColCompare[line].Add(Tuple.Create(start.Value, pos - start.Value));
-								start = null;
-								continue;
-							}
-
-							if (cols[ctr] != LCS.MatchType.Mismatch)
-							{
-								--pos;
-								continue;
-							}
-
-							start = start ?? pos;
+							if (start.HasValue)
+								diffData.ColCompare[line].Add(Tuple.Create(start.Value, pos - start.Value));
+							start = null;
+							continue;
 						}
+
+						if (cols[ctr] != LCS.MatchType.Mismatch)
+						{
+							--pos;
+							continue;
+						}
+
+						start = start ?? pos;
 					}
 				}
 			}

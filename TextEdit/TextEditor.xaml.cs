@@ -3289,15 +3289,8 @@ namespace NeoEdit.TextEdit
 
 			for (var line = startLine; line < endLine; ++line)
 			{
-				var lineDiffStatus = Data.GetLineDiffStatus(line);
-				Brush brush = null;
-				switch (lineDiffStatus)
-				{
-					case LCS.MatchType.Gap: brush = Misc.diffMajorBrush; break;
-					case LCS.MatchType.Mismatch: brush = Misc.diffMinorBrush; break;
-				}
-				if (brush != null)
-					dc.DrawRectangle(brush, null, new Rect(0, y[line], canvas.ActualWidth, Font.lineHeight));
+				if (Data.GetLineDiffStatus(line) != LCS.MatchType.Match)
+					dc.DrawRectangle(Misc.diffMinorBrush, null, new Rect(0, y[line], canvas.ActualWidth, Font.lineHeight));
 
 				foreach (var tuple in Data.GetLineColumnDiffs(line))
 				{
