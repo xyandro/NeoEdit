@@ -34,6 +34,7 @@ Allow user to change zoom
 Make alt-space center current selection if it is a multi-line selection
 Switch diff colors for line gaps
 Expression help: Add units, variables popups
+Can't left/right copy diff mismatch at end of file
 
 View:
 Update as new lines are added

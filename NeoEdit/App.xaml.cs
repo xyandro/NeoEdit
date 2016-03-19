@@ -47,7 +47,7 @@ namespace NeoEdit
 				var inner = ex;
 				while (inner.InnerException != null)
 					inner = inner.InnerException;
-				var er = inner.StackTrace.Split('\r', '\n').FirstOrDefault(a => a.Contains(":line"));
+				var er = inner?.StackTrace?.Split('\r', '\n').FirstOrDefault(a => a.Contains(":line"));
 				if (er != null)
 				{
 					var idx = er.LastIndexOf(" in ");
