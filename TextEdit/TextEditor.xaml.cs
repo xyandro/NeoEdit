@@ -637,6 +637,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
+				case TextEditCommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
 				default: return true;
 			}
 
@@ -987,6 +988,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Command_Select_Duplicates(); break;
 				case TextEditCommand.Select_ByCount: Command_Select_ByCount(dialogResult as CountDialog.Result); break;
+				case TextEditCommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
 				case TextEditCommand.Select_Regions: Command_Select_Regions(); break;
 				case TextEditCommand.Select_FindResults: Command_Select_FindResults(); break;
 				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
@@ -3053,6 +3055,26 @@ namespace NeoEdit.TextEdit
 			strs = strs.Where(tuple => (counts[tuple.Item1] >= result.MinCount) && (counts[tuple.Item1] <= result.MaxCount)).ToList();
 			Selections.Replace(strs.Select(tuple => Selections[tuple.Item2]).ToList());
 		}
+
+		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialog.Result result)
+		{
+			var str = GetString(range);
+			var start = 0;
+			foreach (Match match in result.Regex.Matches(str))
+			{
+				if (match.Index != start)
+					yield return Range.FromIndex(range.Start + start, match.Index - start);
+				if (result.IncludeResults)
+					yield return Range.FromIndex(range.Start + match.Index, match.Length);
+				start = match.Index + match.Length;
+			}
+			if (str.Length != start)
+				yield return Range.FromIndex(range.Start + start, str.Length - start);
+		}
+
+		internal SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(WindowParent);
+
+		internal void Command_Select_Split(SelectSplitDialog.Result result) => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => SelectSplit(range, result)).ToList());
 
 		internal void Command_Select_Regions() => Selections.Replace(Regions);
 

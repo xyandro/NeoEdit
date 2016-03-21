@@ -359,6 +359,13 @@
     <Compile Include="Dialogs\SelectContentAttributeDialog.xaml.cs">
       <DependentUpon>SelectContentAttributeDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\SelectSplitDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\SelectSplitDialog.xaml.cs">
+      <DependentUpon>SelectSplitDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\SetAttributesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -442,13 +449,6 @@
     <Compile Include="TextEditMenu.xaml.cs">
       <DependentUpon>TextEditMenu.xaml</DependentUpon>
     </Compile>
-    <Page Include="TextEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="TextEditor.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Content.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -459,6 +459,13 @@
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Table.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Page Include="TextEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Page Include="TextEditTabs.xaml">

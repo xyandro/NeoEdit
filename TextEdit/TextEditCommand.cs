@@ -317,6 +317,7 @@ namespace NeoEdit.TextEdit
 		Select_Unique,
 		Select_Duplicates,
 		Select_ByCount,
+		Select_Split,
 		Select_Regions,
 		Select_FindResults,
 		[KeyGesture(Key.D0, ModifierKeys.Alt)] Select_Selection_First,
