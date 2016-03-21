@@ -12,7 +12,6 @@ In active list add number of selections, allow sort, allow typing to find file
 Text:
 Files: Select/etc on svn status (ignore/modified)
 Distinct operations by marked region (series/etc within region)
-Select square (right mouse button)
 Select based on type (int, double, datetime, etc)
 Copy counts based on searches
 Submit forms

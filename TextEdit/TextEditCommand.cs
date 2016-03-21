@@ -309,6 +309,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.A, ModifierKeys.Control)] Select_All,
 		Select_Limit,
 		[KeyGesture(Key.L, ModifierKeys.Control)] Select_Lines,
+		Select_Rectangle,
 		Select_Invert,
 		Select_Join,
 		Select_Empty,
