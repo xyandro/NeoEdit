@@ -106,6 +106,8 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(nodes.Select(node => new Range(node.Start, overlap ? node.Start : node.End)).ToList());
 		}
 
+		internal void Command_Content_Type_SetFromExtension() => ContentType = Parser.GetParserType(FileName);
+
 		internal void Command_Content_Type(Parser.ParserType contentType) => ContentType = contentType;
 
 		internal void Command_Content_Reformat()

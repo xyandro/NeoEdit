@@ -192,6 +192,7 @@ namespace NeoEdit.TextEdit
 		Position_Copy_Lines,
 		Position_Copy_Columns,
 		Position_Copy_Positions,
+		Content_Type_SetFromExtension,
 		Content_Type_None,
 		Content_Type_Balanced,
 		Content_Type_Columns,

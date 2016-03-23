@@ -313,7 +313,7 @@ namespace NeoEdit.TextEdit
 			Replace(new List<Range> { FullRange }, new List<string> { data });
 			CodePage = codePage;
 			HighlightType = Highlighting.Get(FileName);
-			ContentType = Parser.GetParserType(FileName);
+			Command_Content_Type_SetFromExtension();
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
@@ -864,6 +864,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Position_Copy_Lines: Command_Position_Copy(GotoType.Line); break;
 				case TextEditCommand.Position_Copy_Columns: Command_Position_Copy(GotoType.Column); break;
 				case TextEditCommand.Position_Copy_Positions: Command_Position_Copy(GotoType.Position); break;
+				case TextEditCommand.Content_Type_SetFromExtension: Command_Content_Type_SetFromExtension(); break;
 				case TextEditCommand.Content_Type_None: Command_Content_Type(Parser.ParserType.None); break;
 				case TextEditCommand.Content_Type_Balanced: Command_Content_Type(Parser.ParserType.Balanced); break;
 				case TextEditCommand.Content_Type_Columns: Command_Content_Type(Parser.ParserType.Columns); break;

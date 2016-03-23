@@ -345,6 +345,7 @@
 	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
+			<textEdit:TextEditMenuItem Header="Set From _Extension" CommandEnum="Content_Type_SetFromExtension"/>
 			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.None}" CommandEnum="Content_Type_None"/>
 			<textEdit:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
 			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
