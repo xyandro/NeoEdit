@@ -993,7 +993,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Regions: Command_Select_Regions(); break;
 				case TextEditCommand.Select_FindResults: Command_Select_FindResults(); break;
 				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
-				case TextEditCommand.Select_Selection_ShowCurrent: Command_Select_Selection_ShowCurrent(); break;
+				case TextEditCommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;
+				case TextEditCommand.Select_Selection_Center: Command_Select_Selection_Center(); break;
 				case TextEditCommand.Select_Selection_Next: Command_Select_Selection_Next(); break;
 				case TextEditCommand.Select_Selection_Previous: Command_Select_Selection_Previous(); break;
 				case TextEditCommand.Select_Selection_Single: Command_Select_Selection_Single(); break;
@@ -3106,7 +3107,9 @@ namespace NeoEdit.TextEdit
 			canvasRenderTimer.Start();
 		}
 
-		internal void Command_Select_Selection_ShowCurrent() => EnsureVisible(true);
+		internal void Command_Select_Selection_CenterVertically() => EnsureVisible(true);
+
+		internal void Command_Select_Selection_Center() => EnsureVisible(true, true);
 
 		internal void Command_Select_Selection_Next()
 		{
@@ -3177,7 +3180,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_View_Highlighting(Highlighting.HighlightingType highlightType) => HighlightType = highlightType;
 
 		int visibleIndex = 0;
-		internal void EnsureVisible(bool center = false)
+		internal void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
 		{
 			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
 			if (!Selections.Any())
@@ -3200,10 +3203,13 @@ namespace NeoEdit.TextEdit
 			ColumnMin = Data.GetColumnFromIndex(lineMin, indexMin) + 1;
 			ColumnMax = Data.GetColumnFromIndex(lineMax, indexMax) + 1;
 
-			if (center)
+			if (centerVertically)
 			{
 				yScrollValue = (lineMin + lineMax - yScrollViewportFloor) / 2;
-				xScrollValue = (Data.GetColumnFromIndex(lineMin, indexMin) + Data.GetColumnFromIndex(lineMax, indexMax) - xScrollViewportFloor) / 2;
+				if (centerHorizontally)
+					xScrollValue = (Data.GetColumnFromIndex(lineMin, indexMin) + Data.GetColumnFromIndex(lineMax, indexMax) - xScrollViewportFloor) / 2;
+				else
+					xScrollValue = 0;
 			}
 
 			var line = Data.GetOffsetLine(range.Cursor);

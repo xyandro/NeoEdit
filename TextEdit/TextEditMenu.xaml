@@ -525,7 +525,8 @@
 		<Separator/>
 		<MenuItem Header="_Selection">
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
-			<textEdit:TextEditMenuItem Header="Show _Current" CommandEnum="Select_Selection_ShowCurrent"/>
+			<textEdit:TextEditMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically"/>
+			<textEdit:TextEditMenuItem Header="_Center" CommandEnum="Select_Selection_Center"/>
 			<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Select_Selection_Next"/>
 			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous"/>
 			<textEdit:TextEditMenuItem Header="_Single" CommandEnum="Select_Selection_Single"/>
