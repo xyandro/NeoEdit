@@ -89,7 +89,7 @@ namespace NeoEdit
 				, setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); }
 
 				, console: (forceCreate) => ConsoleTabs.Create(forceCreate: forceCreate)
-				, diff: () => TextEditTabs.CreateDiff()
+				, diff: () => TextEditTabs.CreateDiff().AddDiff()
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
 				, fileHexEditor: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
 				, handles: (pid) => new HandlesWindow(pid)
