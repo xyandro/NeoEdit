@@ -1,5 +1,3 @@
-using System;
-
 namespace NeoEdit.Common.Expressions
 {
 	public class ExpressionUnit

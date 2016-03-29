@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Antlr4.Runtime;
 using NeoEdit.Common.Expressions.Parser;
 using NeoEdit.Common.Parsing;
 
@@ -20,7 +19,7 @@ namespace NeoEdit.Common.Expressions
 			catch (Exception ex) { throw new Exception("Invalid expression", ex); }
 		}
 
-		internal ExpressionResult InternalEvaluate(NEVariables variables, int row, params object[] values) => new ExpressionEvaluator(expression, variables, row, values).Visit(tree);
+		internal object InternalEvaluate(NEVariables variables, int row, params object[] values) => new ExpressionEvaluator(expression, variables, row, values).Visit(tree);
 
 		public object Evaluate(params object[] values) => EvaluateRow(null, values);
 		public T Evaluate<T>(params object[] values) => EvaluateRow<T>(null, values);
@@ -34,10 +33,10 @@ namespace NeoEdit.Common.Expressions
 				throw new ArgumentException($"{nameof(rowCount)} must be positive");
 
 			if (!Variables.Any())
-				return Enumerable.Repeat(InternalEvaluate(null, 0, values).GetResult(), rowCount ?? 1).ToList();
+				return Enumerable.Repeat(InternalEvaluate(null, 0, values), rowCount ?? 1).ToList();
 
-			variables.Prepare(this, rowCount);
-			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => InternalEvaluate(variables, row, values).GetResult()).ToList();
+			variables?.Prepare(this, rowCount);
+			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => InternalEvaluate(variables, row, values)).ToList();
 		}
 
 		public List<T> EvaluateRows<T>(NEVariables variables, int? rowCount = null, params object[] values)
@@ -46,10 +45,10 @@ namespace NeoEdit.Common.Expressions
 				throw new ArgumentException($"{nameof(rowCount)} must be positive");
 
 			if (!Variables.Any())
-				return Enumerable.Repeat((T)Convert.ChangeType(InternalEvaluate(null, 0, values).GetResult(), typeof(T)), rowCount ?? 1).ToList();
+				return Enumerable.Repeat((T)Convert.ChangeType(InternalEvaluate(null, 0, values), typeof(T)), rowCount ?? 1).ToList();
 
 			variables.Prepare(this, rowCount);
-			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => (T)Convert.ChangeType(InternalEvaluate(variables, row, values).GetResult(), typeof(T))).ToList();
+			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => (T)Convert.ChangeType(InternalEvaluate(variables, row, values), typeof(T))).ToList();
 		}
 
 		HashSet<string> variables;

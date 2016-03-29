@@ -24,20 +24,20 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("5.1", new NEExpression("5 + .1").Evaluate().ToString());
 			Assert.AreEqual("5", new NEExpression("4.9 + .1").Evaluate().ToString());
 			Assert.AreEqual("5.2", new NEExpression("5.1 + .1").Evaluate().ToString());
-			Assert.AreEqual("b", new NEExpression("'a' + 1").Evaluate().ToString());
-			Assert.AreEqual("a1", new NEExpression("\"a\" . 1").Evaluate().ToString());
+			Assert.AreEqual("bcd", new NEExpression("\"abc\" t++ 1").Evaluate().ToString());
+			Assert.AreEqual("a1", new NEExpression("\"a\" t+ 1").Evaluate().ToString());
 
 			Assert.AreEqual("0", new NEExpression("2 - 2").Evaluate().ToString());
 			Assert.AreEqual("3.1", new NEExpression("5.1 - 2").Evaluate().ToString());
 			Assert.AreEqual("4.9", new NEExpression("5 - .1").Evaluate().ToString());
 			Assert.AreEqual("4.8", new NEExpression("4.9 - .1").Evaluate().ToString());
 			Assert.AreEqual("5", new NEExpression("5.1 - .1").Evaluate().ToString());
-			Assert.AreEqual("a", new NEExpression("'b' - 1").Evaluate().ToString());
+			Assert.AreEqual("a", new NEExpression("\"b\" t-- 1").Evaluate().ToString());
 
 			Assert.AreEqual("10.8", new NEExpression("5.4 * 2").Evaluate().ToString());
 			Assert.AreEqual("10.5", new NEExpression("5 * 2.1").Evaluate().ToString());
-			Assert.AreEqual("okokokok", new NEExpression("\"ok\" ** 4").Evaluate().ToString());
-			Assert.AreEqual("oooo", new NEExpression("'o' ** 4").Evaluate().ToString());
+			Assert.AreEqual("okokokok", new NEExpression("\"ok\" t* 4").Evaluate().ToString());
+			Assert.AreEqual("oooo", new NEExpression("\"o\" t* 4").Evaluate().ToString());
 
 			Assert.AreEqual("2.5", new NEExpression("5 / 2").Evaluate().ToString());
 			Assert.AreEqual("2", new NEExpression("5 // 2").Evaluate().ToString());
@@ -66,18 +66,18 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(true, new NEExpression("[0] is \"Int32\"").Evaluate(5));
 
-			Assert.AreEqual(true, new NEExpression("\"5a\" == \"5a\"").Evaluate(5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" == \"5A\"").Evaluate(5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" i== \"5a\"").Evaluate(5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" i== \"5A\"").Evaluate(5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" != \"5a\"").Evaluate(5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" != \"5A\"").Evaluate(5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" i!= \"5a\"").Evaluate(5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" i!= \"5A\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" t== \"5a\"").Evaluate(5));
+			Assert.AreEqual(false, new NEExpression("\"5a\" t== \"5A\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" ti== \"5a\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" ti== \"5A\"").Evaluate(5));
+			Assert.AreEqual(false, new NEExpression("\"5a\" t!= \"5a\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" t!= \"5A\"").Evaluate(5));
+			Assert.AreEqual(false, new NEExpression("\"5a\" ti!= \"5a\"").Evaluate(5));
+			Assert.AreEqual(false, new NEExpression("\"5a\" ti!= \"5A\"").Evaluate(5));
 
-			Assert.AreEqual("5", new NEExpression("[0]..\"value\"").Evaluate(new ExpressionDotTest(5)).ToString());
+			Assert.AreEqual("5", new NEExpression("[0].\"value\"").Evaluate(new ExpressionDotTest(5)).ToString());
 
-			Assert.AreEqual(typeof(ExpressionDotTest).FullName, new NEExpression("Type([0])..\"FullName\"").Evaluate(new ExpressionDotTest(5)).ToString());
+			Assert.AreEqual(typeof(ExpressionDotTest).FullName, new NEExpression("Type([0]).\"FullName\"").Evaluate(new ExpressionDotTest(5)).ToString());
 
 			Assert.AreEqual(true, new NEExpression("ValidRE([0])").Evaluate(@"\d+"));
 			Assert.AreEqual(false, new NEExpression("ValidRE([0])").Evaluate(@"["));
@@ -88,9 +88,9 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual("5", new NEExpression("([0] || [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString());
 
-			Assert.AreEqual("ICanJoinStrings", new NEExpression(".").Evaluate("I", "Can", null, "Join", "Strings").ToString());
+			Assert.AreEqual("ICanJoinStrings", new NEExpression("t+").Evaluate("I", "Can", null, "Join", "Strings").ToString());
 
-			Assert.AreEqual("a\\\'\"\0\a\b\f\n\r\t\v\x1\x12\x123\x1234\u1234\U00001234\U0001d161", new NEExpression(@"'a' . '\\' . '\'' . '\""' . '\0' . '\a' . '\b' . '\f' . '\n' . '\r' . '\t' . '\v' . '\x1' . '\x12' . '\x123' . '\x1234' . '\u1234' . '\U00001234' . '\U0001d161'").Evaluate().ToString());
+			Assert.AreEqual("a\\\'\"\0\a\b\f\n\r\t\v\x1\x12\x123\x1234\u1234\U00001234\U0001d161", new NEExpression(@"""a"" t+ ""\\"" t+ ""\'"" t+ ""\"""" t+ ""\0"" t+ ""\a"" t+ ""\b"" t+ ""\f"" t+ ""\n"" t+ ""\r"" t+ ""\t"" t+ ""\v"" t+ ""\x1"" t+ ""\x12"" t+ ""\x123"" t+ ""\x1234"" t+ ""\u1234"" t+ ""\U00001234"" t+ ""\U0001d161""").Evaluate().ToString());
 			Assert.AreEqual("", new NEExpression("\"\"").Evaluate().ToString());
 			Assert.AreEqual(" Slash: \\ Quote: \' Double: \" Null: \0 Alert: \a Backspace: \b Form feed: \f New line: \n Carriage return:\r Tab: \t Vertical quote: \v Hex1: \x1 Hex2: \x12 Hex3: \x123 Hex4: \x1234 Unicode4: \u1234 Unicode8: \U00001234 Unicode8: \U0001d161 ", new NEExpression(@""" Slash: \\ Quote: \' Double: \"" Null: \0 Alert: \a Backspace: \b Form feed: \f New line: \n Carriage return:\r Tab: \t Vertical quote: \v Hex1: \x1 Hex2: \x12 Hex3: \x123 Hex4: \x1234 Unicode4: \u1234 Unicode8: \U00001234 Unicode8: \U0001d161 """).Evaluate().ToString());
 			Assert.AreEqual("", new NEExpression("@\"\"").Evaluate().ToString());
@@ -121,9 +121,6 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual("3.14159265358979", new NEExpression("pi").Evaluate().ToString());
 			Assert.AreEqual("2.71828182845905", new NEExpression("e").Evaluate().ToString());
-			Assert.AreEqual("i", new NEExpression("i").Evaluate().ToString());
-
-			Assert.AreEqual("-2", new NEExpression("i*2*i").Evaluate().ToString());
 
 			Assert.AreEqual("120", new NEExpression("5!").Evaluate().ToString());
 
@@ -189,119 +186,103 @@ namespace NeoEdit.Common.UnitTest
 			var utcOffset = utcNow.Offset;
 
 			// Check time only formats
-			Assert.AreEqual("'22:45:00'", new NEExpression("'22:45'").Evaluate().ToString());
-			Assert.AreEqual("'22:45:00'", new NEExpression("'10:45pm'").Evaluate().ToString());
-			Assert.AreEqual("'22:45:05'", new NEExpression("'22:45:05'").Evaluate().ToString());
-			Assert.AreEqual("'22:45:05'", new NEExpression("'10:45:05  PM'").Evaluate().ToString());
-			Assert.AreEqual("'22:45:05.1'", new NEExpression("'22:45:05.100'").Evaluate().ToString());
-			Assert.AreEqual("'22:45:05.01'", new NEExpression("'10:45:05.01  PM'").Evaluate().ToString());
-			Assert.AreEqual("'123:22:45:05.01'", new NEExpression("'123:10:45:05.01  PM'").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(now.Year, now.Month, now.Day, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"22:45\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(now.Year, now.Month, now.Day, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"10:45pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(now.Year, now.Month, now.Day, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"22:45:05\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(now.Year, now.Month, now.Day, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"10:45:05  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(now.Year, now.Month, now.Day, 22, 45, 5, 100)).ToString("o")}", new NEExpression("todate(fromdate(\"22:45:05.100\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(now.Year, now.Month, now.Day, 22, 45, 5, 10)).ToString("o")}", new NEExpression("todate(fromdate(\"10:45:05.01  PM\"))").Evaluate().ToString());
 
 			// Check date only formats
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(now.Year, 8, 24)).ToString("o")}'", new NEExpression("'8/24'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24)).ToString("o")}'", new NEExpression("'2014-08-24'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24)).ToString("o")}'", new NEExpression("'2014/8/24'").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(now.Year, 8, 24)).ToString("o")}", new NEExpression("todate(fromdate(\"8/24\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24\"))").Evaluate().ToString());
 
 			// Check date/time only formats
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014-08-24 22:45'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014/8/24 22:45'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014-08-24 10:45pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014/8/24 10:45pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05.100'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05.01  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05.100'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05.01  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014-08-24 22:45-6'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014/8/24 22:45-6'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014-08-24 10:45-6pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014/8/24 10:45-6pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05-6  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05.100-6'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05-6'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05-6  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05.01-6  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05-6'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05.100-6'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05.01-6  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014-08-24 22:45-06'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014/8/24 22:45-06'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014-08-24 10:45-06pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}'", new NEExpression("'2014/8/24 10:45-06pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05-06  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05.100-06'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05-06'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05-06  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05.01-06  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05-06'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05.100-06'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05.01-06  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45-6:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45-6:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45-6:30pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45-6:30pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05-6:30  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05.100-6:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05-6:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05-6:30  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05.01-6:30  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05-6:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05.100-6:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05.01-6:30  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45-06:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45-06:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45-06:30pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45-06:30pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05-06:30  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05.100-06:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05-06:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05-06:30  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05.01-06:30  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05-06:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, partOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05.100-06:30'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, partOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05.01-06:30  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, utcOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45Z'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, utcOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45Z'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, utcOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45Z pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 0, utcOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45Z pm'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, utcOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05Z  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, utcOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05.100Z'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, utcOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05Z'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, utcOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05Z  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, utcOffset).ToString("o")}'", new NEExpression("'2014-08-24 10:45:05.01Z  PM'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, utcOffset).ToString("o")}'", new NEExpression("'2014/8/24 22:45:05Z'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, utcOffset).ToString("o")}'", new NEExpression("'2014-08-24 22:45:05.100Z'").Evaluate().ToString());
-			Assert.AreEqual($"'{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, utcOffset).ToString("o")}'", new NEExpression("'2014/8/24 10:45:05.01Z  PM'").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05.100\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05.01  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05.100\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05.01  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45-6\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45-6\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45-6pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45-6pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05-6  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05.100-6\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05-6\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05-6  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05.01-6  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05-6\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05.100-6\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05.01-6  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45-06\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45-06\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45-06pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 0)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45-06pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05-06  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05.100-06\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05-06\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05-06  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05.01-06  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05-06\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 100)).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05.100-06\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(new DateTime(2014, 8, 24, 22, 45, 5, 10)).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05.01-06  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45-6:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45-6:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45-6:30pm\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45-6:30pm\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05-6:30  PM\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05.100-6:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05-6:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05-6:30  PM\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05.01-6:30  PM\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05-6:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05.100-6:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05.01-6:30  PM\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45-06:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45-06:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45-06:30pm\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45-06:30pm\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05-06:30  PM\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05.100-06:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05-06:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05-06:30  PM\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 10:45:05.01-06:30  PM\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 22:45:05-06:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014-08-24 22:45:05.100-06:30\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, partOffset).ToString("o")}", new NEExpression("todate(fromdate(\"2014/8/24 10:45:05.01-06:30  PM\"), -6.5 hours)").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014-08-24 22:45Z\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014/8/24 22:45Z\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014-08-24 10:45Z pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 0, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014/8/24 10:45Z pm\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014-08-24 10:45:05Z  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014/8/24 22:45:05.100Z\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014-08-24 22:45:05Z\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014/8/24 10:45:05Z  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014-08-24 10:45:05.01Z  PM\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014/8/24 22:45:05Z\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 100, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014-08-24 22:45:05.100Z\"))").Evaluate().ToString());
+			Assert.AreEqual($"{new DateTimeOffset(2014, 8, 24, 22, 45, 5, 10, utcOffset).ToString("o")}", new NEExpression("toutcdate(fromdate(\"2014/8/24 10:45:05.01Z  PM\"))").Evaluate().ToString());
 
 			// Check time math
-			Assert.AreEqual("'22:50:00'", new NEExpression("'12:10' + '10:40'").Evaluate().ToString());
-			Assert.AreEqual("'22:52:00'", new NEExpression("2+'22:50:00'").Evaluate().ToString());
-			Assert.AreEqual("'22:50:05'", new NEExpression("'22:50:00'+5 s").Evaluate().ToString());
-			Assert.AreEqual("'22:50:00.0000001'", new NEExpression("'22:50:00'+100 ns").Evaluate().ToString());
-			Assert.AreEqual("'1:30:00'", new NEExpression("'12:10' - '10:40'").Evaluate().ToString());
-			Assert.AreEqual("'-0:30:00'", new NEExpression("'10:10' - '10:40'").Evaluate().ToString());
-			Assert.AreEqual("'22:50:00'", new NEExpression("'12:10' - '-10:40'").Evaluate().ToString());
-			Assert.AreEqual("'22:50:00'", new NEExpression("'22:52:00'-2").Evaluate().ToString());
-			Assert.AreEqual("'22:50:00'", new NEExpression("'22:50:05'-5 s").Evaluate().ToString());
-			Assert.AreEqual("'22:50:00'", new NEExpression("'22:50:00.0000001'-100 ns").Evaluate().ToString());
+			Assert.AreEqual("90 min", new NEExpression("fromdate(\"12:10\") - fromdate(\"10:40\") => min").Evaluate().ToString());
+			Assert.AreEqual("-0.5 hour", new NEExpression("fromdate(\"10:10\") - fromdate(\"10:40\") => hour").Evaluate().ToString());
 
 			// Check date/time math
-			Assert.AreEqual("'2014-07-31T00:00:00.0000000-06:00'", new NEExpression("1 + '2014/7/30'").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-31T00:00:00.0000000-06:00'", new NEExpression("'2014/7/30' + 1 day").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-30T00:00:00.0000001-06:00'", new NEExpression("'2014/7/30' + 100 ns").Evaluate().ToString());
-			Assert.AreEqual("'2014-08-30T00:00:00.0000000-06:00'", new NEExpression("'2014/7/30' + 1 month").Evaluate().ToString());
-			Assert.AreEqual("'2015-07-30T00:00:00.0000000-06:00'", new NEExpression("'2014/7/30' + 1 yr").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-30T22:50:00.0000000-06:00'", new NEExpression("'2014/7/30' + '22:50'").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-30T00:00:00.0000000-06:00'", new NEExpression("'2014-07-31T00:00:00.0000000-06:00' - 1").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-30T00:00:00.0000000-06:00'", new NEExpression("'2014-07-31T00:00:00.0000000-06:00' - 1 day").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-30T00:00:00.0000000-06:00'", new NEExpression("'2014-07-30T00:00:00.0000001-06:00' - 100 ns").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-30T00:00:00.0000000-06:00'", new NEExpression("'2014-08-30T00:00:00.0000000-06:00' - 1 month").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-30T00:00:00.0000000-06:00'", new NEExpression("'2015-07-30T00:00:00.0000000-06:00' - 1 yr").Evaluate().ToString());
-			Assert.AreEqual("'2014-07-30T00:00:00.0000000-06:00'", new NEExpression("'2014-07-30T22:50:00.0000000-06:00' - '22:50'").Evaluate().ToString());
-			Assert.AreEqual("11 days", new NEExpression("'2014-07-31' - '2014-07-20' => days").Evaluate().ToString());
+			Assert.AreEqual("2014-07-31T00:00:00.0000000-06:00", new NEExpression("todate(1 day + fromdate(\"2014/7/30\"))").Evaluate().ToString());
+			Assert.AreEqual("2014-07-31T00:00:00.0000000-06:00", new NEExpression("todate(fromdate(\"2014/7/30\") + 1 day)").Evaluate().ToString());
+			Assert.AreEqual("2014-07-30T00:00:00.0000001-06:00", new NEExpression("todate(fromdate(\"2014/7/30\") + 100 ns)").Evaluate().ToString());
+			Assert.AreEqual("2014-07-30T00:00:00.0000000-06:00", new NEExpression("todate(fromdate(\"2014-07-31T00:00:00.0000000-06:00\") - 1 day)").Evaluate().ToString());
+			Assert.AreEqual("2014-07-30T00:00:00.0000000-06:00", new NEExpression("todate(fromdate(\"2014-07-30T00:00:00.0000001-06:00\") - 100 ns)").Evaluate().ToString());
+			Assert.AreEqual("11 days", new NEExpression("fromdate(\"2014-07-31\") - fromdate(\"2014-07-20\") => days").Evaluate().ToString());
 		}
 	}
 }

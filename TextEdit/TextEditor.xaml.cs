@@ -225,7 +225,7 @@ namespace NeoEdit.TextEdit
 
 		void SetupTabLabel()
 		{
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] ?? FileName([1]) ?? ""[Untitled]"").([2]?""*"":"""").([3]?"" (Diff)"":"""")" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] ?? FileName([1]) ?? ""[Untitled]"")t+([2]?""*"":"""")t+([3]?"" (Diff)"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.DisplayName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
@@ -439,19 +439,19 @@ namespace NeoEdit.TextEdit
 			var initializeStrs = new NEVariableInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
 
 			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
-			results.Add(NEVariable.InterpretEnumerable("x", "Selected text", () => strs, initializeStrs));
+			results.Add(NEVariable.Enumerable("x", "Selected text", () => strs, initializeStrs));
 			results.Add(NEVariable.Enumerable("xl", "Selection length", () => strs.Select(str => str.Length), initializeStrs));
 			results.Add(NEVariable.Constant("xn", "Selections count", () => Selections.Count));
 			results.Add(NEVariable.Enumerable("y", "One-based index", () => Enumerable.Range(1, int.MaxValue), infinite: true));
 			results.Add(NEVariable.Enumerable("z", "Zero-based index", () => Enumerable.Range(0, int.MaxValue), infinite: true));
 			if (clipboard.Count == 1)
 			{
-				results.Add(NEVariable.InterpretConstant("c", "Clipboard string", () => clipboard[0]));
+				results.Add(NEVariable.Constant("c", "Clipboard string", () => clipboard[0]));
 				results.Add(NEVariable.Constant("cl", "Clipboard string length", () => clipboard[0].Length));
 			}
 			else
 			{
-				results.Add(NEVariable.InterpretEnumerable("c", "Clipboard string", () => clipboard));
+				results.Add(NEVariable.Enumerable("c", "Clipboard string", () => clipboard));
 				results.Add(NEVariable.Enumerable("cl", "Clipboard string length", () => clipboard.Select(str => str.Length)));
 			}
 			results.Add(NEVariable.Constant("cn", "Clipboard count", () => clipboard.Count));
@@ -477,7 +477,7 @@ namespace NeoEdit.TextEdit
 				var rkvName = $"r{prefix}";
 				var rkvlName = $"r{prefix}l";
 				var rkvnName = $"r{prefix}n";
-				results.Add(NEVariable.InterpretEnumerable(rkvName, "Raw keys/values", () => KeysAndValues[num], initializeKeyOrdering));
+				results.Add(NEVariable.Enumerable(rkvName, "Raw keys/values", () => KeysAndValues[num], initializeKeyOrdering));
 				results.Add(NEVariable.Enumerable(rkvlName, "Raw keys/values length", () => KeysAndValues[num].Select(str => str.Length), initializeKeyOrdering));
 				results.Add(NEVariable.Constant(rkvnName, "Raw keys/values count", () => KeysAndValues[num].Count, initializeKeyOrdering));
 
@@ -489,12 +489,12 @@ namespace NeoEdit.TextEdit
 					else
 						values = new List<string>();
 				}, initializeKeyOrdering);
-				results.Add(NEVariable.InterpretEnumerable(kvName, "Keys/values", () => values, kvInitialize));
+				results.Add(NEVariable.Enumerable(kvName, "Keys/values", () => values, kvInitialize));
 				results.Add(NEVariable.Enumerable(kvlName, "Keys/values length", () => values.Select(str => str.Length), kvInitialize));
 			}
 
 			// Add variables that aren't already set
-			results.AddRange(variables.Where(pair => !results.Contains(pair.Key)).ForEach(pair => NEVariable.InterpretEnumerable(pair.Key, "User-defined", () => pair.Value)));
+			results.AddRange(variables.Where(pair => !results.Contains(pair.Key)).ForEach(pair => NEVariable.Enumerable(pair.Key, "User-defined", () => pair.Value)));
 
 			return results;
 		}

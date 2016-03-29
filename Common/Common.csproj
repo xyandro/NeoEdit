@@ -16,7 +16,6 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
-    <Compile Include="Expressions\ExpressionResult.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />
     <Compile Include="Expressions\ExpressionUnits.cs" />
     <Compile Include="Expressions\ExpressionUnitsConversion.cs" />
@@ -24,6 +23,7 @@
     <Compile Include="Expressions\NEVariable.cs" />
     <Compile Include="Expressions\NEVariableInitializer.cs" />
     <Compile Include="Expressions\NEVariables.cs" />
+    <Compile Include="Expressions\NumericValue.cs" />
     <Compile Include="Expressions\Parser\ExpressionLexer.cs" />
     <Compile Include="Expressions\Parser\ExpressionParser.cs" />
     <Compile Include="Expressions\Parser\ExpressionParserBaseVisitor.cs" />

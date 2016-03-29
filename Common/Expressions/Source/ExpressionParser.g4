@@ -11,12 +11,7 @@ form
 	;
 
 e
-	:	(
-			method=METHOD1 LPAREN e RPAREN | 
-			method=METHOD1VAR LPAREN e (COMMA e)* RPAREN | 
-			method=METHOD2 LPAREN e COMMA e RPAREN | 
-			method=METHODVAR LPAREN (e (COMMA e)*)? RPAREN
-		) # Method
+	: method=METHOD LPAREN (e (COMMA e)*)? RPAREN # Method
 	| LPAREN val=e RPAREN # Parens
 	| val1=e unitsVal=units # AddUnits
 	| val1=e op=DOT val2=e # Dot
@@ -43,9 +38,6 @@ e
 value
 	: val=PARAM # Param
 	| (normalstring | verbatimstring | interpolatedstring | verbatiminterpolatedstring) # String
-	| val=(DATE | DATETIME) # Date
-	| val=TIME # Time
-	| charval # Char
 	| TRUE # True
 	| FALSE # False
 	| NULL # Null
@@ -62,17 +54,13 @@ units
 	| unit # UnitSimple
 	;
 
-unit : val=(CONSTANT | FALSE | METHOD1 | METHOD1VAR | METHOD2 | METHODVAR | NULL | TRUE | VARIABLE | CURRENCY) ;
-
-charval : CHARSTART val=charoptions CHAREND ;
-charoptions : charany | charescape | charunicode ;
-charany : val=CHARANY ;
-charescape : val=CHARESCAPE ;
-charunicode : val=CHARUNICODE ;
+unit : val=(CONSTANT | FALSE | METHOD | NULL | TRUE | VARIABLE | CURRENCY) ;
 
 normalstring : STRSTART val=strcontent STREND ;
-strcontent : (strchars | charescape | charunicode)* ;
+strcontent : (strchars | strescape | strunicode)* ;
 strchars : val=STRCHARS ;
+strescape : val=STRESCAPE ;
+strunicode : val=STRUNICODE ;
 
 verbatimstring : VSTRSTART val=vstrcontent VSTREND ;
 vstrcontent : (vstrchars | vstrquote)* ;
@@ -80,7 +68,7 @@ vstrchars : val=VSTRCHARS ;
 vstrquote : VSTRQUOTE ;
 
 interpolatedstring : ISTRSTART val=istrcontent ISTREND ;
-istrcontent : (istrchars | charescape | charunicode | istrliteral | istrinter)* ;
+istrcontent : (istrchars | strescape | strunicode | istrliteral | istrinter)* ;
 istrchars : val=ISTRCHARS ;
 istrliteral : val=ISTRLITERAL ;
 istrinter : ISTRINTERSTA val=e ISTRINTEREND ;

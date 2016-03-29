@@ -7,8 +7,7 @@
 	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
 
 	<Window.Title>
-		<!--A simple Binding doesn't give any title if [0] blank-->
-		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="StrFormat(&quot;{0} - NeoEdit Console&quot;, [0])">
+		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="$&quot;{[0]} - NeoEdit Console&quot;">
 			<Binding Path="ItemTabs.TopMost.Location" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>

@@ -6,7 +6,7 @@
 	Padding="0" BorderThickness="0" HorizontalAlignment="Right">
 
 	<TextBox.Background>
-		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="[0] i== [1] ? &quot;LightBlue&quot; : &quot;Transparent&quot;">
+		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="[0] ti== [1] ? &quot;LightBlue&quot; : &quot;Transparent&quot;">
 			<Binding Path="Text" ElementName="self"/>
 			<Binding Path="HexEditor.FoundText" ElementName="self"/>
 		</MultiBinding>

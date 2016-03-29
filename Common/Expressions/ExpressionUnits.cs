@@ -12,7 +12,7 @@ namespace NeoEdit.Common.Expressions
 
 		public ExpressionUnits() { units = new ReadOnlyCollection<ExpressionUnit>(new List<ExpressionUnit>()); }
 		public ExpressionUnits(ExpressionUnit unit) { units = new ReadOnlyCollection<ExpressionUnit>(new List<ExpressionUnit> { unit }); }
-		public ExpressionUnits(string unit, int exp = 1) { units = new ReadOnlyCollection<ExpressionUnit>(new List<ExpressionUnit> { new ExpressionUnit(unit, exp) }); }
+		public ExpressionUnits(string unit) { units = new ReadOnlyCollection<ExpressionUnit>(new List<ExpressionUnit> { new ExpressionUnit(unit) }); }
 		ExpressionUnits(IEnumerable<ExpressionUnit> units) { this.units = new ReadOnlyCollection<ExpressionUnit>(units.GroupBy(unit => unit.Unit).Select(group => new ExpressionUnit(group.Key, group.Sum(unit => unit.Exp))).Where(unit => unit.Exp != 0).OrderBy(unit => unit.Exp < 0).ThenBy(unit => unit.Unit).ToList()); }
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 		public IEnumerator<ExpressionUnit> GetEnumerator() => units.GetEnumerator();

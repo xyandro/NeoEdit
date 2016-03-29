@@ -25,8 +25,8 @@
 		<textView:TextViewMenuItem Header="_Copy" CommandEnum="Edit_Copy"/>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<textView:TextViewMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]==&quot;Full&quot;'}" CommandEnum="View_Full"/>
-		<textView:TextViewMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
+		<textView:TextViewMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
+		<textView:TextViewMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
 		<textView:TextViewMenuItem Header="_Custom Grid" CommandEnum="View_CustomGrid"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>

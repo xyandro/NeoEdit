@@ -104,8 +104,8 @@
 			</MenuItem.Style>
 		</MenuItem>
 		<Separator/>
-		<disk:DiskMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]==&quot;Full&quot;'}" CommandEnum="View_Full"/>
-		<disk:DiskMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
+		<disk:DiskMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
+		<disk:DiskMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
 		<disk:DiskMenuItem Header="_Custom Grid" CommandEnum="View_CustomGrid"/>
 		<Separator/>
 		<disk:DiskMenuItem Header="_Disk Usage" CommandEnum="View_DiskUsage"/>
