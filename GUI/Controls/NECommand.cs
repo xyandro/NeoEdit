@@ -12,14 +12,14 @@ namespace NeoEdit.GUI.Controls
 	{
 		internal Key Key { get; }
 		internal ModifierKeys Modifiers { get; }
-		internal bool Primary { get; }
+		internal int Order { get; }
 		internal string GestureText { get; }
 
-		public KeyGestureAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None, bool primary = true)
+		public KeyGestureAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None, int order = 1)
 		{
 			Key = key;
 			Modifiers = modifiers;
-			Primary = primary;
+			Order = order;
 			var mods = new List<string>();
 			if ((modifiers & ModifierKeys.Control) != 0)
 				mods.Add("Ctrl");
@@ -66,9 +66,8 @@ namespace NeoEdit.GUI.Controls
 				Command = command;
 
 				var memberInfo = typeof(CommandEnumT).GetMember(command.ToString()).First();
-				KeyGestures = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false).Cast<KeyGestureAttribute>().OrderBy(key => !key.Primary).ToList();
-				if (KeyGestures.Any())
-					InputGestureText = KeyGestures.First().GestureText;
+				KeyGestures = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false).Cast<KeyGestureAttribute>().OrderBy(key => key.Order).ToList();
+				InputGestureText = string.Join(", ", KeyGestures.Select(keyGesture => keyGesture.GestureText));
 			}
 
 			public void RegisterCommand(UIElement window, Action<CommandEnumT, bool?> handler)

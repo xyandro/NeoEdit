@@ -6,7 +6,7 @@ namespace NeoEdit.HexEdit
 	public enum HexEditCommand
 	{
 		None,
-		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, false)] File_New,
+		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New,
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open_Open,
 		File_Open_OpenCopiedCutFiles,
 		File_Open_OpenDump,
@@ -29,10 +29,10 @@ namespace NeoEdit.HexEdit
 		[KeyGesture(Key.X, ModifierKeys.Control)] Edit_Cut,
 		[KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy,
 		[KeyGesture(Key.V, ModifierKeys.Control)] Edit_Paste,
-		[KeyGesture(Key.F, ModifierKeys.Control)] [KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift, false)] Edit_Find_Find,
-		[KeyGesture(Key.F3)] [KeyGesture(Key.F3, ModifierKeys.Shift, false)] Edit_Find_Next,
-		[KeyGesture(Key.F3, ModifierKeys.Control)] [KeyGesture(Key.F3, ModifierKeys.Control | ModifierKeys.Shift, false)] Edit_Find_Previous,
-		[KeyGesture(Key.G, ModifierKeys.Control)] [KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Shift, false)] Edit_Goto,
+		[KeyGesture(Key.F, ModifierKeys.Control)] [KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Find_Find,
+		[KeyGesture(Key.F3)] [KeyGesture(Key.F3, ModifierKeys.Shift, 2)] Edit_Find_Next,
+		[KeyGesture(Key.F3, ModifierKeys.Control)] [KeyGesture(Key.F3, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Find_Previous,
+		[KeyGesture(Key.G, ModifierKeys.Control)] [KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Goto,
 		[KeyGesture(Key.Insert)] Edit_Insert,
 		View_Values,
 		View_Full,

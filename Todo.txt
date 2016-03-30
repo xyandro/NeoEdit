@@ -2,7 +2,6 @@ All:
 Add command prompt
 Remove native dlls (add to mixed)
 Add TFS source control
-Display all shortcut keys
 
 Disk:
 Move timestamp (possibly others) from TextEditor

@@ -6,7 +6,7 @@ namespace NeoEdit.Console
 	public enum ConsoleCommand
 	{
 		None,
-		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control, false)] File_New,
+		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.T, ModifierKeys.Control, 2)] File_New,
 		View_Full,
 		View_Grid,
 		View_CustomGrid,
