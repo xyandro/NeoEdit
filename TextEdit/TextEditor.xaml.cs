@@ -636,6 +636,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Database_QueryTable: dialogResult = Command_Database_QueryTable_Dialog(); break;
 				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
+				case TextEditCommand.Select_Rotate: dialogResult = Command_Select_Rotate_Dialog(); break;
 				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
 				case TextEditCommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
 				default: return true;
@@ -982,6 +983,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
 				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
 				case TextEditCommand.Select_Rectangle: Command_Select_Rectangle(); break;
+				case TextEditCommand.Select_Rotate: Command_Select_Rotate(dialogResult as SelectRotateDialog.Result); break;
 				case TextEditCommand.Select_Invert: Command_Select_Invert(); break;
 				case TextEditCommand.Select_Join: Command_Select_Join(); break;
 				case TextEditCommand.Select_Empty: Command_Select_Empty(true); break;
@@ -2974,6 +2976,24 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Select_Rectangle() => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList());
+
+		internal SelectRotateDialog.Result Command_Select_Rotate_Dialog() => SelectRotateDialog.Run(WindowParent, GetVariables());
+
+		internal void Command_Select_Rotate(SelectRotateDialog.Result result)
+		{
+			var count = new NEExpression(result.Count).EvaluateRow<int>(GetVariables());
+			if (count == 0)
+				return;
+
+			var strs = GetSelectionStrings();
+			if (count < 0)
+				count = -count;
+			else
+				count = strs.Count - count;
+			strs.AddRange(strs.Take(count).ToList());
+			strs.RemoveRange(0, count);
+			ReplaceSelections(strs);
+		}
 
 		internal void Command_Select_Invert()
 		{

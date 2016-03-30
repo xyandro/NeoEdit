@@ -2,6 +2,7 @@ All:
 Add command prompt
 Remove native dlls (add to mixed)
 Add TFS source control
+Display all shortcut keys
 
 Disk:
 Move timestamp (possibly others) from TextEditor
@@ -30,7 +31,6 @@ QueryBuilder
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
-Rotate selections
 
 View:
 Update as new lines are added

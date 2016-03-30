@@ -508,6 +508,8 @@
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
 		<textEdit:TextEditMenuItem Header="Rec_tangle" CommandEnum="Select_Rectangle"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="R_otate" CommandEnum="Select_Rotate"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Invert" CommandEnum="Select_Invert"/>
 		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Select_Join"/>
 		<Separator/>
