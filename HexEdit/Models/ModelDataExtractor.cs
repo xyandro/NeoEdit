@@ -112,7 +112,7 @@ namespace NeoEdit.HexEdit.Models
 		Dictionary<string, int> nameCounts = new Dictionary<string, int>();
 		void SaveResult(ModelAction action, string value, long startByte, int startBit, long endByte, int endBit)
 		{
-			if (String.IsNullOrEmpty(action.SaveName))
+			if (string.IsNullOrEmpty(action.SaveName))
 				return;
 			values[action.SaveName] = value;
 			if (!nameCounts.ContainsKey(action.SaveName))

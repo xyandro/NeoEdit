@@ -49,7 +49,7 @@ namespace NeoEdit.Common.UnitTest
 
 			string result;
 			if (ending != Endings.Mixed)
-				result = String.Join(GetEnding(ending), text);
+				result = string.Join(GetEnding(ending), text);
 			else
 			{
 				result = "";

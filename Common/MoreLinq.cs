@@ -95,7 +95,7 @@ namespace NeoEdit.Common
 					if (!move1)
 						return true;
 
-					if (!Object.Equals(enum1.Current, enum2.Current))
+					if (!Equals(enum1.Current, enum2.Current))
 						return false;
 				}
 			}

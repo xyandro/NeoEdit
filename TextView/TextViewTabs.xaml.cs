@@ -132,7 +132,7 @@ namespace NeoEdit.TextView
 
 		void Add(string fileName)
 		{
-			if (String.IsNullOrEmpty(fileName))
+			if (string.IsNullOrEmpty(fileName))
 				return;
 			Add(new List<string> { fileName });
 		}

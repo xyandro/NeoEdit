@@ -73,7 +73,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				}
 			}
 
-			if (String.IsNullOrEmpty(InputFormat))
+			if (string.IsNullOrEmpty(InputFormat))
 				InputFormat = formats.First();
 			OutputFormat = formats.First();
 		}
@@ -107,7 +107,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				if ((!result.HasValue) && (format == Unix))
 				{
 					double seconds;
-					if (!Double.TryParse(value, out seconds))
+					if (!double.TryParse(value, out seconds))
 						return null;
 					return epoch.AddSeconds(seconds);
 				}
@@ -115,7 +115,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				if ((!result.HasValue) && (format == FileTime))
 				{
 					long fileTimeLong;
-					if (!Int64.TryParse(value, out fileTimeLong))
+					if (!long.TryParse(value, out fileTimeLong))
 						return null;
 					return DateTime.FromFileTimeUtc(fileTimeLong);
 				}
@@ -123,7 +123,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				if ((!result.HasValue) && (format == Excel))
 				{
 					double days;
-					if (!Double.TryParse(value, out days))
+					if (!double.TryParse(value, out days))
 						return null;
 					return excelBase.AddDays(days);
 				}

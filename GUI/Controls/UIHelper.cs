@@ -189,11 +189,11 @@ namespace NeoEdit.GUI.Controls
 			var multipleAccels = headers.Where(header => header.Contains("_")).Where(header => header.Length - header.Replace("_", "").Length > 1).ToList();
 			errors.AddRange(multipleAccels.Select(header => $"{path} -> {header}: Multiple accelerators"));
 
-			var accels = headers.Where(header => header.Contains("_")).ToDictionary(header => header, header => Char.ToUpper(header[header.IndexOf("_") + 1]));
+			var accels = headers.Where(header => header.Contains("_")).ToDictionary(header => header, header => char.ToUpper(header[header.IndexOf("_") + 1]));
 			var accelsUse = accels.Values.GroupBy(key => key).ToDictionary(group => group.Key, group => group.Count());
 
-			var headerAvail = headers.ToDictionary(header => header, header => String.Join("", header.Select(c => Char.ToUpper(c)).Distinct().Where(c => (c != '_') && (Char.IsLetterOrDigit(c))).Where(c => !accelsUse.ContainsKey(c)).ToList()));
-			var allAvail = String.Join("", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Where(c => !accelsUse.ContainsKey(c)).ToList());
+			var headerAvail = headers.ToDictionary(header => header, header => string.Join("", header.Select(c => char.ToUpper(c)).Distinct().Where(c => (c != '_') && (char.IsLetterOrDigit(c))).Where(c => !accelsUse.ContainsKey(c)).ToList()));
+			var allAvail = string.Join("", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Where(c => !accelsUse.ContainsKey(c)).ToList());
 
 			var reusedAccels = accels.Where(pair => accelsUse[pair.Value] > 1).Select(pair => pair.Key).ToList();
 			errors.AddRange(reusedAccels.Select(header => $"{path} -> {header}: Accelerator used multiple times ({headerAvail[header]} / {allAvail} available)"));
@@ -207,7 +207,7 @@ namespace NeoEdit.GUI.Controls
 			var errors = new List<string>();
 			AuditMenu("Menu", menu, errors);
 			if (errors.Any())
-				Message.Show($"Menu errors:\r\n{String.Join("\r\n", errors)}");
+				Message.Show($"Menu errors:\r\n{string.Join("\r\n", errors)}");
 		}
 	}
 }

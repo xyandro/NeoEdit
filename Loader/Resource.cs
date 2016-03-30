@@ -92,7 +92,7 @@ namespace Loader
 
 		public static Resource CreateFromFile(string name, string fullPath, BitDepths bitDepth)
 		{
-			if ((String.IsNullOrWhiteSpace(fullPath)) || (!File.Exists(fullPath)))
+			if ((string.IsNullOrWhiteSpace(fullPath)) || (!File.Exists(fullPath)))
 				return null;
 
 			var data = File.ReadAllBytes(fullPath);

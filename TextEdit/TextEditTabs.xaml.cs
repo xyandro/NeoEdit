@@ -126,7 +126,7 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(filename);
 		}
 
-		void Command_File_Copy_AllPaths() => NEClipboard.CopiedFiles = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !String.IsNullOrEmpty(name)).ToList();
+		void Command_File_Copy_AllPaths() => NEClipboard.CopiedFiles = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !string.IsNullOrEmpty(name)).ToList();
 
 		void Command_File_Open_CopiedCut()
 		{

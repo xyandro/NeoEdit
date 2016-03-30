@@ -1,5 +1,4 @@
-﻿using System;
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 
 namespace NeoEdit.Common.Parsing
 {
@@ -10,8 +9,8 @@ namespace NeoEdit.Common.Parsing
 		public override int La(int i)
 		{
 			var value = base.La(i);
-			if ((value >= Char.MinValue) && (value <= Char.MaxValue))
-				value = Char.ToLower((char)value);
+			if ((value >= char.MinValue) && (value <= char.MaxValue))
+				value = char.ToLower((char)value);
 			return value;
 		}
 	}

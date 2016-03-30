@@ -164,14 +164,14 @@ namespace NeoEdit.Console
 			var entries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
 			var dir = Path.GetDirectoryName(commands[selCommand].Item1);
-			if ((!String.IsNullOrEmpty(dir)) && (Directory.Exists(dir)))
+			if ((!string.IsNullOrEmpty(dir)) && (Directory.Exists(dir)))
 				foreach (var entry in Directory.EnumerateFileSystemEntries(dir))
 					entries[entry] = entry;
 
 			if (selCommand == 0)
 			{
 				var keepExt = new HashSet<string> { ".exe", ".com", ".bat" };
-				var paths = Environment.GetEnvironmentVariable("path").Split(';').Select(path => path.Trim()).Where(path => !String.IsNullOrWhiteSpace(path)).Distinct().ToList();
+				var paths = Environment.GetEnvironmentVariable("path").Split(';').Select(path => path.Trim()).Where(path => !string.IsNullOrWhiteSpace(path)).Distinct().ToList();
 				foreach (var path in paths)
 				{
 					if (!Directory.Exists(path))
@@ -182,7 +182,7 @@ namespace NeoEdit.Console
 						entries[Path.GetFileName(file)] = file;
 				}
 
-				if ((!String.IsNullOrEmpty(Location)) && (Directory.Exists(Location)))
+				if ((!string.IsNullOrEmpty(Location)) && (Directory.Exists(Location)))
 				{
 					foreach (var entry in Directory.EnumerateDirectories(Location))
 						entries[Path.GetFileName(entry)] = entry;
@@ -200,7 +200,7 @@ namespace NeoEdit.Console
 				var len = Math.Min(entry.Key.Length, common.Length);
 				int ctr;
 				for (ctr = 0; ctr < len; ++ctr)
-					if (Char.ToLower(entry.Key[ctr]) != Char.ToLower(common[ctr]))
+					if (char.ToLower(entry.Key[ctr]) != char.ToLower(common[ctr]))
 						break;
 				common = common.Substring(0, ctr);
 			}
@@ -283,7 +283,7 @@ namespace NeoEdit.Console
 			while (index < Command.Length)
 			{
 				var c = Command[index++];
-				if (Char.IsWhiteSpace(c))
+				if (char.IsWhiteSpace(c))
 				{
 					if (current < result.Count)
 						++current;
@@ -313,7 +313,7 @@ namespace NeoEdit.Console
 					index = Math.Min(Command.Length, endIndex);
 				}
 				else
-					add = new String(c, 1);
+					add = new string(c, 1);
 
 				result[current] = new Tuple<string, int, int>(result[current].Item1 + add, result[current].Item2, index - result[current].Item2);
 			}
@@ -387,7 +387,7 @@ namespace NeoEdit.Console
 			using (var proc = new Process())
 			{
 				proc.StartInfo.FileName = name;
-				proc.StartInfo.Arguments = $"-multi -consolerunner {pipeName} {String.Join(" ", commands.Select(command => $"\"{command.Item1.Replace("\"", "\"\"")}\""))}";
+				proc.StartInfo.Arguments = $"-multi -consolerunner {pipeName} {string.Join(" ", commands.Select(command => $"\"{command.Item1.Replace("\"", "\"\"")}\""))}";
 				proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 				proc.Start();
 			}

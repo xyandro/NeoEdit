@@ -58,7 +58,7 @@ namespace NeoEdit.Disk
 		{
 			if (listFiles == null)
 				listFiles = new List<string>();
-			if ((String.IsNullOrEmpty(path)) && (!list.HasValue) && (!listFiles.Any()))
+			if ((string.IsNullOrEmpty(path)) && (!list.HasValue) && (!listFiles.Any()))
 				path = Directory.GetCurrentDirectory();
 
 			filesChangedTimer = new RunOnceTimer(() => FilesChanged());
@@ -582,7 +582,7 @@ namespace NeoEdit.Disk
 			foreach (var item in selected)
 				Selected.Add(item);
 
-			if (selected.All(item => !String.IsNullOrWhiteSpace(item.Hash)))
+			if (selected.All(item => !string.IsNullOrWhiteSpace(item.Hash)))
 				return selected.GroupBy(item => item.Hash).ToDictionary(group => group.Key, group => group.ToList());
 			Command_File_Hash();
 			return selected.GroupBy(item => item.Hash).ToDictionary(group => group.Key, group => group.ToList());

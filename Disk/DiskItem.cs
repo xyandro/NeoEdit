@@ -100,7 +100,7 @@ namespace NeoEdit.Disk
 			WriteTime = CreateTime = AccessTime = null;
 			FileType = DiskItemType.None;
 
-			if ((FileType == DiskItemType.None) && (String.IsNullOrEmpty(FullName)))
+			if ((FileType == DiskItemType.None) && (string.IsNullOrEmpty(FullName)))
 				FileType = DiskItemType.Root;
 
 			if ((FileType == DiskItemType.None) && (FullName.StartsWith(@"\\")) && (Path == ""))
@@ -287,7 +287,7 @@ namespace NeoEdit.Disk
 		public static DiskItem Get(string fullName)
 		{
 			var result = new DiskItem(null);
-			if (String.IsNullOrEmpty(fullName))
+			if (string.IsNullOrEmpty(fullName))
 				return result;
 
 			fullName = DiskItem.Simplify(fullName);

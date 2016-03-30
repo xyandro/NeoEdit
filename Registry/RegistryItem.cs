@@ -26,7 +26,7 @@ namespace NeoEdit.Registry
 		RegistryItem(RegistryKey key, string name, bool isSubKey)
 			: base((key == null ? "" : key.Name + @"\") + name)
 		{
-			Name = String.IsNullOrEmpty(name) ? "(Default)" : name;
+			Name = string.IsNullOrEmpty(name) ? "(Default)" : name;
 			this.isSubKey = isSubKey;
 
 			if (isSubKey)

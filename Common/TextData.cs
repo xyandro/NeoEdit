@@ -495,9 +495,9 @@ namespace NeoEdit.Common
 
 		public void Trim(ref int offset, ref int length)
 		{
-			while ((length > 0) && (Char.IsWhiteSpace(Data[offset + length - 1])))
+			while ((length > 0) && (char.IsWhiteSpace(Data[offset + length - 1])))
 				--length;
-			while ((length > 0) && (Char.IsWhiteSpace(Data[offset])))
+			while ((length > 0) && (char.IsWhiteSpace(Data[offset])))
 			{
 				++offset;
 				--length;
@@ -529,7 +529,7 @@ namespace NeoEdit.Common
 			{
 				var sb = new StringBuilder(line.Length);
 				foreach (var c in line)
-					if (!Char.IsWhiteSpace(c))
+					if (!char.IsWhiteSpace(c))
 						sb.Append(c);
 				line = sb.ToString();
 			}

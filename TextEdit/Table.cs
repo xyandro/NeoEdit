@@ -91,7 +91,7 @@ namespace NeoEdit.TextEdit
 			if (endLine == -1)
 				endLine = input.Length;
 			var firstRow = input.Substring(0, endLine);
-			if (String.IsNullOrWhiteSpace(firstRow))
+			if (string.IsNullOrWhiteSpace(firstRow))
 				return Parser.ParserType.None;
 			var tabCount = firstRow.Length - firstRow.Replace("\t", "").Length;
 			var commaCount = firstRow.Length - firstRow.Replace(",", "").Length;
@@ -155,14 +155,14 @@ namespace NeoEdit.TextEdit
 
 			switch (tableType)
 			{
-				case Parser.ParserType.TSV: return String.Join("", result.Select(items => String.Join("\t", items.Select(item => ToTCSV(item, '\t'))) + ending));
-				case Parser.ParserType.CSV: return String.Join("", result.Select(items => String.Join(",", items.Select(item => ToTCSV(item, ','))) + ending));
+				case Parser.ParserType.TSV: return string.Join("", result.Select(items => string.Join("\t", items.Select(item => ToTCSV(item, '\t'))) + ending));
+				case Parser.ParserType.CSV: return string.Join("", result.Select(items => string.Join(",", items.Select(item => ToTCSV(item, ','))) + ending));
 				case Parser.ParserType.Columns:
 					{
 						var newLineChars = new char[] { '\r', '\n' };
 						result = result.Select(row => row.Select(value => value.Trim()).ToList()).ToList();
 						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
-						return String.Join("", result.AsParallel().AsOrdered().Select(line => "║ " + String.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending));
+						return string.Join("", result.AsParallel().AsOrdered().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending));
 					}
 				default: throw new ArgumentException("Invalid output type");
 			}
@@ -181,8 +181,8 @@ namespace NeoEdit.TextEdit
 			switch (aggType)
 			{
 				case AggregateType.Group: return values.Distinct().Single();
-				case AggregateType.All: return String.Join(", ", values);
-				case AggregateType.Distinct: return String.Join(", ", values.Distinct().OrderBy());
+				case AggregateType.All: return string.Join(", ", values);
+				case AggregateType.Distinct: return string.Join(", ", values.Distinct().OrderBy());
 				case AggregateType.Min: return values.Min();
 				case AggregateType.Max: return values.Max();
 				case AggregateType.Sum: return values.Select(value => Convert.ToDouble(value)).Sum().ToString();

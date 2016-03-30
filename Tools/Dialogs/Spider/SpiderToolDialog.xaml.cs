@@ -22,7 +22,7 @@ namespace NeoEdit.Tools.Dialogs.SpiderTool
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if ((String.IsNullOrWhiteSpace(URL)) || (String.IsNullOrWhiteSpace(OutputPath)))
+			if ((string.IsNullOrWhiteSpace(URL)) || (string.IsNullOrWhiteSpace(OutputPath)))
 				return;
 
 			var url = URL;

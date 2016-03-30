@@ -43,7 +43,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if ((String.IsNullOrWhiteSpace(Macro)) || (String.IsNullOrWhiteSpace(Expression)))
+			if ((string.IsNullOrWhiteSpace(Macro)) || (string.IsNullOrWhiteSpace(Expression)))
 				return;
 			result = new Result { Macro = Macro, Expression = Expression, RepeatType = RepeatType };
 			DialogResult = true;

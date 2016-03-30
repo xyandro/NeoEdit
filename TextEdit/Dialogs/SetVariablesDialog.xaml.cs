@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -26,7 +25,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(VarName))
+			if (string.IsNullOrWhiteSpace(VarName))
 				return;
 
 			result = new Result { VarName = VarName };

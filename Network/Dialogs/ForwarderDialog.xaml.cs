@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Windows;
 using NeoEdit.GUI.Controls;
@@ -34,7 +33,7 @@ namespace NeoEdit.Network.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if ((String.IsNullOrWhiteSpace(SourceHostName)) || (String.IsNullOrWhiteSpace(DestHostName)))
+			if ((string.IsNullOrWhiteSpace(SourceHostName)) || (string.IsNullOrWhiteSpace(DestHostName)))
 				return;
 
 			IPAddress sourceAddress, destAddress;

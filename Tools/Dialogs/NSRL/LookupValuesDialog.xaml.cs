@@ -29,11 +29,11 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrEmpty(NSRLFile))
+			if (string.IsNullOrEmpty(NSRLFile))
 				throw new Exception("NSRL file cannot be empty");
-			if (String.IsNullOrEmpty(IndexFile))
+			if (string.IsNullOrEmpty(IndexFile))
 				throw new Exception("Index file cannot be empty");
-			if (String.IsNullOrEmpty(HashFile))
+			if (string.IsNullOrEmpty(HashFile))
 				throw new Exception("Hash file cannot be empty");
 
 			var len = new FileInfo(NSRLFile).Length;
@@ -80,7 +80,7 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 				return;
 
 			NSRLFile = dialog.FileName;
-			if (String.IsNullOrWhiteSpace(IndexFile))
+			if (string.IsNullOrWhiteSpace(IndexFile))
 				IndexFile = Path.Combine(Path.GetDirectoryName(NSRLFile), Path.GetFileNameWithoutExtension(NSRLFile) + ".idx");
 		}
 

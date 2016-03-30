@@ -36,13 +36,13 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrEmpty(NSRLFile))
+			if (string.IsNullOrEmpty(NSRLFile))
 				throw new Exception("NSRL file cannot be empty");
-			if (String.IsNullOrEmpty(IndexFile))
+			if (string.IsNullOrEmpty(IndexFile))
 				throw new Exception("Index file cannot be empty");
-			if (String.IsNullOrEmpty(RootDir))
+			if (string.IsNullOrEmpty(RootDir))
 				throw new Exception("Root dir cannot be empty");
-			if (String.IsNullOrEmpty(OutputFile))
+			if (string.IsNullOrEmpty(OutputFile))
 				throw new Exception("Output file cannot be empty");
 
 			var nsrlFile = NSRLFile;
@@ -127,7 +127,7 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 			var results = new List<string>();
 			foreach (var item in data)
 			{
-				if (String.IsNullOrEmpty(item.Item2))
+				if (string.IsNullOrEmpty(item.Item2))
 					results.Add($"{item.Item1}: Error: {item.Item3}");
 				else if (hashCache.ContainsKey(item.Item2))
 					results.Add($"{item.Item1}: Found: {item.Item2}, {hashCache[item.Item2]}");
@@ -150,7 +150,7 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 				return;
 
 			NSRLFile = dialog.FileName;
-			if (String.IsNullOrWhiteSpace(IndexFile))
+			if (string.IsNullOrWhiteSpace(IndexFile))
 				IndexFile = Path.Combine(Path.GetDirectoryName(NSRLFile), Path.GetFileNameWithoutExtension(NSRLFile) + ".idx");
 		}
 
@@ -189,7 +189,7 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 				return;
 
 			NSRLFile = dialog.FileName;
-			if (String.IsNullOrWhiteSpace(IndexFile))
+			if (string.IsNullOrWhiteSpace(IndexFile))
 				IndexFile = Path.Combine(Path.GetDirectoryName(NSRLFile), Path.GetFileNameWithoutExtension(NSRLFile) + ".idx");
 		}
 

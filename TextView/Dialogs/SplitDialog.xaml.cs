@@ -112,7 +112,7 @@ namespace NeoEdit.TextView.Dialogs
 				if (new Message
 				{
 					Title = "Confirm",
-					Text = $"The following files already exist:\n\n{String.Join("\n", existing)}\n\nAre you sure you want to overwrite them?",
+					Text = $"The following files already exist:\n\n{string.Join("\n", existing)}\n\nAre you sure you want to overwrite them?",
 					Options = Message.OptionsEnum.YesNoCancel,
 					DefaultAccept = Message.OptionsEnum.No,
 					DefaultCancel = Message.OptionsEnum.Cancel,

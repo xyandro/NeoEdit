@@ -53,7 +53,7 @@ namespace NeoEdit.GUI.Converters
 				return result.ToString();
 			if ((targetType == typeof(bool)) || (targetType == typeof(Visibility)))
 			{
-				TryStringConversion<bool>(ref result, Boolean.TryParse);
+				TryStringConversion<bool>(ref result, bool.TryParse);
 
 				if (!(result is bool))
 					return null;
@@ -65,7 +65,7 @@ namespace NeoEdit.GUI.Converters
 			}
 			if ((targetType == typeof(double)) || (targetType == typeof(Thickness)))
 			{
-				TryStringConversion<double>(ref result, Double.TryParse);
+				TryStringConversion<double>(ref result, double.TryParse);
 				try
 				{
 					var val = System.Convert.ToDouble(result);
@@ -88,11 +88,11 @@ namespace NeoEdit.GUI.Converters
 				if ((result is string) && ((result as string).Equals("Auto", StringComparison.OrdinalIgnoreCase)))
 					return GridLength.Auto;
 
-				TryStringConversion<bool>(ref result, Boolean.TryParse);
+				TryStringConversion<bool>(ref result, bool.TryParse);
 				if (result is bool)
 					return (bool)result ? GridLength.Auto : new GridLength(0);
 
-				TryStringConversion<double>(ref result, Double.TryParse);
+				TryStringConversion<double>(ref result, double.TryParse);
 				try
 				{
 					var val = System.Convert.ToDouble(result);
@@ -109,13 +109,13 @@ namespace NeoEdit.GUI.Converters
 						return Enum.GetValues(type);
 				}
 			}
-			if (targetType == typeof(Int64))
+			if (targetType == typeof(long))
 			{
-				TryStringConversion<Int64>(ref result, Int64.TryParse);
+				TryStringConversion<long>(ref result, long.TryParse);
 				if ((result is string) && ((result as string).StartsWith("0x")))
 				{
-					Int64 value;
-					if (Int64.TryParse((result as string).Substring(2), NumberStyles.HexNumber, null, out value))
+					long value;
+					if (long.TryParse((result as string).Substring(2), NumberStyles.HexNumber, null, out value))
 						result = value;
 				}
 				try { return System.Convert.ToInt64(result); }

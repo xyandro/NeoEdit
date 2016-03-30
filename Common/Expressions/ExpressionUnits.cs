@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -47,11 +46,11 @@ namespace NeoEdit.Common.Expressions
 			else
 				denominatorUnits = denominatorUnits.Select(unit => new ExpressionUnit(unit.Unit, -unit.Exp)).ToList();
 
-			var numeratorStr = String.Join("*", numeratorUnits.Select(unit => unit.ToString()));
-			var denominatorStr = String.Join("*", denominatorUnits.Select(unit => unit.ToString()));
+			var numeratorStr = string.Join("*", numeratorUnits.Select(unit => unit.ToString()));
+			var denominatorStr = string.Join("*", denominatorUnits.Select(unit => unit.ToString()));
 			if (denominatorUnits.Count > 1)
 				denominatorStr = $"({denominatorStr})";
-			if (!String.IsNullOrWhiteSpace(denominatorStr))
+			if (!string.IsNullOrWhiteSpace(denominatorStr))
 				numeratorStr += $"/{denominatorStr}";
 			return numeratorStr;
 		}

@@ -221,7 +221,7 @@ namespace NeoEdit.Common
 					doUpper = nextDoUpper;
 				}
 			}
-			return new String(output);
+			return new string(output);
 		}
 
 		public static unsafe string ToToggled(this string input)
@@ -243,7 +243,7 @@ namespace NeoEdit.Common
 						*outputPtr = c;
 				}
 			}
-			return new String(output);
+			return new string(output);
 		}
 
 		public static bool IsNumeric(this string input)
@@ -252,7 +252,7 @@ namespace NeoEdit.Common
 			if (inputLen == 0)
 				return false;
 			for (var ctr = 0; ctr < inputLen; ++ctr)
-				if (!Char.IsDigit(input[ctr]))
+				if (!char.IsDigit(input[ctr]))
 					return false;
 			return true;
 		}
@@ -261,7 +261,7 @@ namespace NeoEdit.Common
 		{
 			var sb = new StringBuilder();
 			foreach (var c in input)
-				if (!Char.IsWhiteSpace(c))
+				if (!char.IsWhiteSpace(c))
 					sb.Append(c);
 			return sb.ToString();
 		}
@@ -273,7 +273,7 @@ namespace NeoEdit.Common
 
 		public static string ToSpacedHex(this long input, int len = 16, int spacing = 4)
 		{
-			var format = String.Format(String.Format("{{0:X{0}}}", len), input);
+			var format = string.Format(string.Format("{{0:X{0}}}", len), input);
 			for (var space = len - spacing; space > 0; space -= spacing)
 				format = $"{format.Substring(0, space)} {format.Substring(space)}";
 			return format;

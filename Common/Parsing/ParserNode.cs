@@ -255,8 +255,8 @@ namespace NeoEdit.Common.Parsing
 			var parents = new List<ParserNode>();
 			for (var parent = this; parent != null; parent = parent.Parent)
 				parents.Insert(0, parent);
-			var parentTypes = String.Join("->", parents.Select(node => node.Type));
-			var attrs = String.Join(", ", children.Where(child => child.IsAttr).Select(child => ($"{child.start}-{child.end} {child.type} \"{(child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("\"", "\"\"")}\"")));
+			var parentTypes = string.Join("->", parents.Select(node => node.Type));
+			var attrs = string.Join(", ", children.Where(child => child.IsAttr).Select(child => ($"{child.start}-{child.end} {child.type} \"{(child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("\"", "\"\"")}\"")));
 			var result = new List<string> { $"[{start}-{end}: {attrs} Path: \"{parentTypes}\"" };
 			result.AddRange(children.Where(child => !child.IsAttr).SelectMany(child => child.Print()).Select(str => $" {str}"));
 			if (result.Count == 1)
@@ -266,7 +266,7 @@ namespace NeoEdit.Common.Parsing
 			return result;
 		}
 
-		public override string ToString() => String.Join("", Print().Select(str => $"{str}{Environment.NewLine}"));
+		public override string ToString() => string.Join("", Print().Select(str => $"{str}{Environment.NewLine}"));
 
 		public void Save(string outputFile) => File.WriteAllText(outputFile, ToString());
 	}

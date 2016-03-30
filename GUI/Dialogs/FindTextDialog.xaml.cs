@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
@@ -101,7 +100,7 @@ namespace NeoEdit.GUI.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrEmpty(Text))
+			if (string.IsNullOrEmpty(Text))
 				return;
 
 			var text = Text;

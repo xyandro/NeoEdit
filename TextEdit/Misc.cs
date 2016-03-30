@@ -30,7 +30,7 @@ namespace NeoEdit.TextEdit
 
 		static internal string GetCharsFromRegexString(string regex)
 		{
-			if (String.IsNullOrEmpty(regex))
+			if (string.IsNullOrEmpty(regex))
 				return "";
 
 			var sb = new StringBuilder();

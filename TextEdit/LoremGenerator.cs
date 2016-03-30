@@ -46,7 +46,7 @@ namespace NeoEdit.TextEdit
 							throw new Exception("Failed to get more words");
 						var word = words.Current;
 						if (sentence.Length == 0)
-							word = Char.ToUpper(word[0]) + word.Substring(1);
+							word = char.ToUpper(word[0]) + word.Substring(1);
 						sentence.Append(word);
 						++totalWords;
 						++numWords;

@@ -37,7 +37,7 @@ namespace NeoEdit.HexEdit
 
 		internal UndoRedo(Action<bool> _setChanged) { setChanged = _setChanged; }
 
-		internal void SetModified(bool modified = true) => modifiedSteps = modified ? Int32.MinValue / 2 : 0;
+		internal void SetModified(bool modified = true) => modifiedSteps = modified ? int.MinValue / 2 : 0;
 
 		internal void Clear()
 		{
@@ -82,7 +82,7 @@ namespace NeoEdit.HexEdit
 		internal void AddUndo(UndoRedoStep current)
 		{
 			if (modifiedSteps < 0)
-				modifiedSteps = Int32.MinValue / 2; // Never reach 0 again
+				modifiedSteps = int.MinValue / 2; // Never reach 0 again
 
 			redo.Clear();
 

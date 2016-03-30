@@ -49,7 +49,7 @@ namespace NeoEdit.TextEdit.Content
 
 		static public ParserType GetParserType(string fileName)
 		{
-			if (String.IsNullOrEmpty(fileName))
+			if (string.IsNullOrEmpty(fileName))
 				return ParserType.None;
 			switch (Path.GetExtension(fileName).ToLowerInvariant())
 			{

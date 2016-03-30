@@ -32,7 +32,7 @@ namespace NeoEdit.Common.NEClipboards
 		{
 			var data = new ClipboardData();
 			data.Strings = strings.ToList();
-			data.Text = String.Join("\r\n", data.Strings.Select(str => str ?? "<NULL>"));
+			data.Text = string.Join("\r\n", data.Strings.Select(str => str ?? "<NULL>"));
 			data.Objects = data.Strings.Cast<object>().ToList();
 			return data;
 		}
@@ -43,7 +43,7 @@ namespace NeoEdit.Common.NEClipboards
 		{
 			var data = new ClipboardData();
 			data.Strings = fileNames.ToList();
-			data.Text = String.Join(" ", data.Strings.Select(file => String.Format(@"""{0}""", file)));
+			data.Text = string.Join(" ", data.Strings.Select(file => string.Format(@"""{0}""", file)));
 			data.Objects = data.Strings.Cast<object>().ToList();
 			data.IsCut = isCut;
 			return data;
@@ -54,7 +54,7 @@ namespace NeoEdit.Common.NEClipboards
 			var data = new ClipboardData();
 			data.Objects = objects.ToList();
 			data.Strings = data.Objects.Select(obj => (obj ?? "<NULL>").ToString()).ToList();
-			data.Text = text ?? String.Join(" ", data.Strings);
+			data.Text = text ?? string.Join(" ", data.Strings);
 			return data;
 		}
 

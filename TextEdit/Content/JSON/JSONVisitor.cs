@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
 using NeoEdit.Common.Parsing;
@@ -53,7 +52,7 @@ namespace NeoEdit.TextEdit.Content.JSON
 						string childResult = null;
 						if (childResults.All(list => list.Count == 1))
 						{
-							childResult = String.Join("", childResults.Select(str => str[0]));
+							childResult = string.Join("", childResults.Select(str => str[0]));
 							if (childResult.Length > 200)
 								childResult = null;
 						}
@@ -89,7 +88,7 @@ namespace NeoEdit.TextEdit.Content.JSON
 			return result;
 		}
 
-		public static string Format(ParserNode node, string input) => String.Join("", rFormat(node, input).Select(str => $"{str}\r\n"));
+		public static string Format(ParserNode node, string input) => string.Join("", rFormat(node, input).Select(str => $"{str}\r\n"));
 
 		const string DOC = "Doc";
 		const string OBJECT = "Object";

@@ -529,10 +529,10 @@ namespace NeoEdit.Common.Expressions
 		{
 			var repeats = conversionConstants.Values.GroupBy(conv => conv.fromUnits.ToString()).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
 			if (repeats.Any())
-				throw new Exception($"Units repeated: {String.Join(", ", repeats)}");
+				throw new Exception($"Units repeated: {string.Join(", ", repeats)}");
 			var invalidBase = conversionConstants.Values.Where(conv => conv.fromUnits.Equals(conv.toUnits)).Where(conv => (conv.mult != 1) || (conv.add != 0)).Select(conv => conv.fromUnits.Single().Unit).ToList();
 			if (invalidBase.Any())
-				throw new Exception($"Unit has no base: {String.Join(", ", invalidBase)}");
+				throw new Exception($"Unit has no base: {string.Join(", ", invalidBase)}");
 		}
 
 		public static ExpressionUnitsConversion GetBaseConversion(ExpressionUnits units)

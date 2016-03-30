@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -38,7 +37,7 @@ namespace NeoEdit.TextEdit.RevRegEx
 					current[pos] = -1;
 				else
 				{
-					results.Add(String.Concat(current.Select((num, index) => possibilities[index][num])));
+					results.Add(string.Concat(current.Select((num, index) => possibilities[index][num])));
 					--pos;
 				}
 			}
@@ -53,6 +52,6 @@ namespace NeoEdit.TextEdit.RevRegEx
 			return result;
 		}
 
-		public override string ToString() => $"({String.Join("", List.Select(item => item.ToString()))})";
+		public override string ToString() => $"({string.Join("", List.Select(item => item.ToString()))})";
 	}
 }

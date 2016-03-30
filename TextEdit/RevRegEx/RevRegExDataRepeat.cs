@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace NeoEdit.TextEdit.RevRegEx
@@ -35,7 +34,7 @@ namespace NeoEdit.TextEdit.RevRegEx
 					current[pos] = -1;
 
 				if (pos >= Min)
-					results.Add(String.Concat(current.Take(pos).Select(num => possibilities[num])));
+					results.Add(string.Concat(current.Take(pos).Select(num => possibilities[num])));
 
 				if (pos >= current.Count)
 					--pos;

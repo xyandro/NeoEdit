@@ -67,7 +67,7 @@ namespace NeoEdit.Common.Expressions
 			if (Value is double)
 			{
 				var d = (double)Value;
-				if ((!Double.IsInfinity(d)) && (!Double.IsNaN(d)) && (Math.Floor(d) == d))
+				if ((!double.IsInfinity(d)) && (!double.IsNaN(d)) && (Math.Floor(d) == d))
 					Value = new BigInteger(d);
 			}
 		}
@@ -367,7 +367,7 @@ namespace NeoEdit.Common.Expressions
 					}
 
 					double tokenValue;
-					if ((token != null) && (Double.TryParse(token, out tokenValue)))
+					if ((token != null) && (double.TryParse(token, out tokenValue)))
 					{
 						current += tokenValue;
 						continue;

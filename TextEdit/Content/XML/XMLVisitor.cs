@@ -40,7 +40,7 @@ namespace NeoEdit.TextEdit.Content.XML
 
 						var attrs = new List<string> { name.Text };
 						attrs.AddRange(attributes.Select(attr => $"{attr.Type}=\"{input.Substring(attr.Start, attr.Length)}\""));
-						var open = String.Join(" ", attrs);
+						var open = string.Join(" ", attrs);
 
 						var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
 						if (children.Any())
@@ -69,7 +69,7 @@ namespace NeoEdit.TextEdit.Content.XML
 			}
 		}
 
-		public static string Format(ParserNode document, string input) => String.Join("", rFormat(document, input).Select(str => $"{str}\r\n"));
+		public static string Format(ParserNode document, string input) => string.Join("", rFormat(document, input).Select(str => $"{str}\r\n"));
 
 		const string DOCUMENT = "Document";
 		const string COMMENT = "Comment";
@@ -92,9 +92,9 @@ namespace NeoEdit.TextEdit.Content.XML
 				context.GetBounds(out start, out end);
 				if (type == TEXT)
 				{
-					while ((start < end) && (Char.IsWhiteSpace(input[start])))
+					while ((start < end) && (char.IsWhiteSpace(input[start])))
 						++start;
-					while ((end > start) && (Char.IsWhiteSpace(input[end - 1])))
+					while ((end > start) && (char.IsWhiteSpace(input[end - 1])))
 						--end;
 				}
 				if (start != end)

@@ -96,7 +96,7 @@ namespace NeoEdit.HexEdit
 		}
 
 		const int minColumns = 4;
-		const int maxColumns = Int32.MaxValue;
+		const int maxColumns = int.MaxValue;
 
 		int columns = minColumns;
 		long rows;
@@ -252,7 +252,7 @@ namespace NeoEdit.HexEdit
 		void DrawPos(DrawingContext dc, long row)
 		{
 			var y = (row - yScrollValue) * Font.lineHeight;
-			var posText = Font.GetText(String.Format($"{{0:x{xPosColumns}}}", row * columns));
+			var posText = Font.GetText(string.Format($"{{0:x{xPosColumns}}}", row * columns));
 			dc.DrawText(posText, new Point(xPosition, y));
 		}
 
@@ -281,7 +281,7 @@ namespace NeoEdit.HexEdit
 			for (var column = 0; column < useColumns; ++column)
 			{
 				var c = (char)Data[row * columns + column];
-				text.Append((Char.IsControl(c) || c == 0xad) ? '·' : c); // ad = soft hyphen, won't show
+				text.Append((char.IsControl(c) || c == 0xad) ? '·' : c); // ad = soft hyphen, won't show
 			}
 
 			var textText = Font.GetText(text.ToString());
@@ -448,7 +448,7 @@ namespace NeoEdit.HexEdit
 
 		internal bool HandleText(string text)
 		{
-			if (String.IsNullOrEmpty(text))
+			if (string.IsNullOrEmpty(text))
 				return true;
 
 			if (!SelHex)
@@ -457,7 +457,7 @@ namespace NeoEdit.HexEdit
 				return true;
 			}
 
-			var let = Char.ToUpper(text[0]);
+			var let = char.ToUpper(text[0]);
 			byte val;
 			if ((let >= '0') && (let <= '9'))
 				val = (byte)(let - '0');
@@ -615,7 +615,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_File_Operations_Rename()
 		{
-			if (String.IsNullOrEmpty(FileName))
+			if (string.IsNullOrEmpty(FileName))
 			{
 				Command_File_Save_SaveAs();
 				return;
@@ -786,7 +786,7 @@ namespace NeoEdit.HexEdit
 			Data.Refresh();
 			++ChangeCount;
 
-			if ((!Data.CanReload()) || (String.IsNullOrEmpty(FileName)))
+			if ((!Data.CanReload()) || (string.IsNullOrEmpty(FileName)))
 				return;
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{

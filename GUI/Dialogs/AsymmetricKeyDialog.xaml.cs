@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Common.Transform;
 
@@ -49,9 +48,9 @@ namespace NeoEdit.GUI.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrEmpty(key.Text))
+			if (string.IsNullOrEmpty(key.Text))
 				return;
-			if ((signaturePanel.IsVisible) && (String.IsNullOrEmpty(signature.Text)))
+			if ((signaturePanel.IsVisible) && (string.IsNullOrEmpty(signature.Text)))
 				return;
 
 			result = new Result { Key = key.Text, Hash = hash.Text, Signature = signature.Text };
@@ -60,8 +59,8 @@ namespace NeoEdit.GUI.Dialogs
 
 		void GenerateKey(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrEmpty(privateKey.Text))
-				privateKey.Text = Cryptor.GenerateKey(Type, Int32.Parse(keySize.Text));
+			if (string.IsNullOrEmpty(privateKey.Text))
+				privateKey.Text = Cryptor.GenerateKey(Type, int.Parse(keySize.Text));
 			publicKey.Text = Cryptor.GetPublicKey(Type, privateKey.Text);
 			key.Text = IsPublic ? publicKey.Text : privateKey.Text;
 		}

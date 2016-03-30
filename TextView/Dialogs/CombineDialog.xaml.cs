@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -41,7 +40,7 @@ namespace NeoEdit.TextView.Dialogs
 		{
 			if (Files.Count <= 1)
 				return;
-			if (String.IsNullOrEmpty(OutputFile))
+			if (string.IsNullOrEmpty(OutputFile))
 				return;
 
 			if (Files.GroupBy(file => file).Any(group => group.Count() > 1))

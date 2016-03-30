@@ -91,7 +91,7 @@ namespace NeoEdit.TextEdit
 			{
 				case SortType.String: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Helpers.StringNumericComparer(caseSensitive)).ToList(); break;
 				case SortType.StringRaw: entries = OrderByAscDesc(entries, entry => entry.value, ascending, stringComparer).ToList(); break;
-				case SortType.Numeric: entries = OrderByAscDesc(entries, entry => Double.Parse(entry.value), ascending).ToList(); break;
+				case SortType.Numeric: entries = OrderByAscDesc(entries, entry => double.Parse(entry.value), ascending).ToList(); break;
 				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.value), ascending).ToList(); break;
 				case SortType.Keys:
 					{

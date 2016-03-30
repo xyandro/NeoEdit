@@ -23,7 +23,7 @@ namespace NeoEdit.GUI.Misc
 
 		public static byte[] Encrypt(byte[] data, string AESKey)
 		{
-			if (String.IsNullOrEmpty(AESKey))
+			if (string.IsNullOrEmpty(AESKey))
 				return data;
 
 			return EncryptedHeader.Concat(Cryptor.Encrypt(EncryptedValidate.Concat(data).ToArray(), Cryptor.Type.AES, AESKey)).ToArray();
@@ -50,7 +50,7 @@ namespace NeoEdit.GUI.Misc
 
 			bytes = bytes.Skip(EncryptedHeader.Length).ToArray();
 			var key = GetKey();
-			if (String.IsNullOrEmpty(key))
+			if (string.IsNullOrEmpty(key))
 				throw new Exception("Failed to decrypt file");
 
 			var result = Decrypt(bytes, key);

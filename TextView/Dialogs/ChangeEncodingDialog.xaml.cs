@@ -49,7 +49,7 @@ namespace NeoEdit.TextView.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if ((String.IsNullOrEmpty(InputFile)) || (String.IsNullOrEmpty(OutputFile)))
+			if ((string.IsNullOrEmpty(InputFile)) || (string.IsNullOrEmpty(OutputFile)))
 				return;
 			if (InputFile == OutputFile)
 				return;

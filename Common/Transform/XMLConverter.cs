@@ -56,7 +56,7 @@ namespace NeoEdit.Common.Transform
 			for (var ctr = 0; ; ++ctr)
 			{
 				useName = name + (ctr == 0 ? "" : ctr.ToString());
-				if ((!String.IsNullOrWhiteSpace(useName)) && (!reserved.Contains(useName)) && (!found.Contains(useName)))
+				if ((!string.IsNullOrWhiteSpace(useName)) && (!reserved.Contains(useName)) && (!found.Contains(useName)))
 					break;
 			}
 			found.Add(useName);

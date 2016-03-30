@@ -32,7 +32,7 @@ namespace NeoEdit
 			// Server already exists; connect and send command line
 			var pipeClient = new NamedPipeClientStream(".", IPCName, PipeDirection.InOut);
 			pipeClient.Connect();
-			var buf = Coder.StringToBytes(String.Join(" ", args.Skip(1).Select(arg => $"\"{arg.Replace(@"""", @"""""")}\"")), Coder.CodePage.UTF8);
+			var buf = Coder.StringToBytes(string.Join(" ", args.Skip(1).Select(arg => $"\"{arg.Replace(@"""", @"""""")}\"")), Coder.CodePage.UTF8);
 			var size = BitConverter.GetBytes(buf.Length);
 			pipeClient.Write(size, 0, size.Length);
 			pipeClient.Write(buf, 0, buf.Length);

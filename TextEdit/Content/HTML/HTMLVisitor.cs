@@ -50,7 +50,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 
 						var attrs = new List<string> { name };
 						attrs.AddRange(attributes.Select(attr => $"{attr.Type}=\"{input.Substring(attr.Start, attr.Length)}\""));
-						var open = String.Join(" ", attrs);
+						var open = string.Join(" ", attrs);
 
 						var startTag = $"<{open}{(node.HasAttr(SELFCLOSING) ? "/" : "")}>";
 						var endTag = $"</{name}>";
@@ -73,7 +73,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 							joinRight = childData.Item3;
 						}
 
-						childrenOutput = childrenOutput.Where((str, index) => (index == 0) || (!String.IsNullOrWhiteSpace(childrenOutput[index])) || (!String.IsNullOrWhiteSpace(childrenOutput[index - 1]))).ToList();
+						childrenOutput = childrenOutput.Where((str, index) => (index == 0) || (!string.IsNullOrWhiteSpace(childrenOutput[index])) || (!string.IsNullOrWhiteSpace(childrenOutput[index - 1]))).ToList();
 
 						if (childrenOutput.Count <= 1)
 						{
@@ -84,7 +84,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 
 						var output = new List<string> { startTag };
 						output.AddRange(childrenOutput.Select(str => $"\t{str.TrimStart(' ')}"));
-						if (!String.IsNullOrWhiteSpace(endTag))
+						if (!string.IsNullOrWhiteSpace(endTag))
 							output.Add(endTag);
 
 						return Tuple.Create(output, false, false);
@@ -93,12 +93,12 @@ namespace NeoEdit.TextEdit.Content.HTML
 			}
 		}
 
-		public static string Format(ParserNode document, string input) => String.Join("", rFormat(document, input).Item1.Select(str => $"{str.TrimEnd()}\r\n"));
+		public static string Format(ParserNode document, string input) => string.Join("", rFormat(document, input).Item1.Select(str => $"{str.TrimEnd()}\r\n"));
 
 		public static string Comment(TextData data, Range range)
 		{
 			var str = data.GetString(range.Start, range.Length);
-			if (String.IsNullOrWhiteSpace(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return str;
 			return $"<!--{str.Replace("-->", "--><!--")}-->";
 		}
@@ -106,7 +106,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 		public static string Uncomment(TextData data, Range range)
 		{
 			var str = data.GetString(range.Start, range.Length);
-			if ((String.IsNullOrWhiteSpace(str)) || (!str.StartsWith("<!--")) || (!str.EndsWith("-->")))
+			if ((string.IsNullOrWhiteSpace(str)) || (!str.StartsWith("<!--")) || (!str.EndsWith("-->")))
 				return str;
 			return str.Substring(4, str.Length - 7).Replace("--><!--", "-->");
 		}
@@ -136,9 +136,9 @@ namespace NeoEdit.TextEdit.Content.HTML
 				context.GetBounds(out start, out end);
 				if (type == TEXT)
 				{
-					while ((start < end) && (Char.IsWhiteSpace(input[start])))
+					while ((start < end) && (char.IsWhiteSpace(input[start])))
 						++start;
-					while ((end > start) && (Char.IsWhiteSpace(input[end - 1])))
+					while ((end > start) && (char.IsWhiteSpace(input[end - 1])))
 						--end;
 				}
 				if (start != end)
@@ -176,9 +176,9 @@ namespace NeoEdit.TextEdit.Content.HTML
 				context.GetBounds(out start, out end);
 				start = context.body.StartIndex;
 				end = input.LastIndexOf('<', end - 1);
-				while (Char.IsWhiteSpace(input[end - 1]))
+				while (char.IsWhiteSpace(input[end - 1]))
 					--end;
-				while ((start < end) && (Char.IsWhiteSpace(input[start])))
+				while ((start < end) && (char.IsWhiteSpace(input[start])))
 					++start;
 				var type = TEXT;
 				switch (tag.ToLower())
@@ -216,7 +216,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 			int start, end;
 			context.GetBounds(out start, out end);
 			found.End = end;
-			while ((start > 0) && (Char.IsWhiteSpace(input[start - 1])))
+			while ((start > 0) && (char.IsWhiteSpace(input[start - 1])))
 				--start;
 			while (true)
 			{

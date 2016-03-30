@@ -2,7 +2,6 @@
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -112,7 +111,7 @@ namespace NeoEdit.Common.Parsing
 					break;
 				tokenText.Add($"{modes[mode]} {token.StartIndex:00000000}-{token.StopIndex + 1:00000000} ({token.Type:000}) {names[token.Type]} : {ToLiteral(token.Text)}\n");
 			}
-			File.WriteAllText(fileName, String.Join("", tokenText));
+			File.WriteAllText(fileName, string.Join("", tokenText));
 			lexer.Reset();
 		}
 

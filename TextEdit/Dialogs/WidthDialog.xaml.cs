@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
@@ -73,7 +72,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void SetValueParams()
 		{
-			if ((String.IsNullOrWhiteSpace(Expression)) || (Expression.IsNumeric()))
+			if ((string.IsNullOrWhiteSpace(Expression)) || (Expression.IsNumeric()))
 				Expression = (Type == WidthType.Multiple ? 1 : Type == WidthType.Relative ? 0 : Type == WidthType.Minimum ? minLength : maxLength).ToString();
 		}
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NeoEdit.Console
+﻿namespace NeoEdit.Console
 {
 	class Line
 	{
@@ -15,7 +13,7 @@ namespace NeoEdit.Console
 		public LineType Type { get; }
 		public bool Finished { get; }
 
-		public Line(LineType Type) : this(String.Empty, Type, false) { }
+		public Line(LineType Type) : this(string.Empty, Type, false) { }
 		public Line(string Str, LineType Type) : this(Str, Type, false) { }
 
 		Line(string Str, LineType Type, bool Finished)
@@ -27,7 +25,7 @@ namespace NeoEdit.Console
 
 		static public Line operator +(Line line, string str)
 		{
-			if (String.IsNullOrEmpty(str))
+			if (string.IsNullOrEmpty(str))
 				return line;
 			return new Line(line.Str + str, line.Type, line.Finished);
 		}

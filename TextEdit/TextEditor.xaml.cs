@@ -254,7 +254,7 @@ namespace NeoEdit.TextEdit
 
 					var files = fileList.Select(file => file + Data.DefaultEnding).ToList();
 					var offset = Selections.Single().Start;
-					ReplaceSelections(String.Join("", files));
+					ReplaceSelections(string.Join("", files));
 					Selections.Clear();
 					foreach (var str in files)
 					{
@@ -1078,7 +1078,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Operations_Rename()
 		{
-			if (String.IsNullOrEmpty(FileName))
+			if (string.IsNullOrEmpty(FileName))
 			{
 				Command_File_Save_SaveAs();
 				return;
@@ -1096,7 +1096,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Refresh()
 		{
-			if (String.IsNullOrEmpty(FileName))
+			if (string.IsNullOrEmpty(FileName))
 				return;
 
 			if (!File.Exists(FileName))
@@ -1226,7 +1226,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Operations_DragDrop()
 		{
-			if (String.IsNullOrWhiteSpace(FileName))
+			if (string.IsNullOrWhiteSpace(FileName))
 				throw new Exception("No current file.");
 			if (!File.Exists(FileName))
 				throw new Exception("Current file does not exist.");
@@ -1319,7 +1319,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var text = new List<string> { String.Join("", strs) };
+			var text = new List<string> { string.Join("", strs) };
 
 			var offset = Selections.Single().Start;
 			ReplaceSelections(text);
@@ -1459,7 +1459,7 @@ namespace NeoEdit.TextEdit
 		{
 			var strs = GetSelectionStrings();
 			var startPos = strs.Select(str => str.LastIndexOf("(")).ToList();
-			if ((strs.Any(str => String.IsNullOrWhiteSpace(str))) || (startPos.Any(val => val == -1)) || (strs.Any(str => str[str.Length - 1] != ')')))
+			if ((strs.Any(str => string.IsNullOrWhiteSpace(str))) || (startPos.Any(val => val == -1)) || (strs.Any(str => str[str.Length - 1] != ')')))
 				throw new Exception("Format: FileName(Line)");
 			var files = strs.Select((str, index) => str.Substring(0, startPos[index]).Trim()).ToList();
 			var lines = strs.Select((str, index) => int.Parse(str.Substring(startPos[index] + 1, str.Length - startPos[index] - 2))).ToList();
@@ -1697,7 +1697,7 @@ namespace NeoEdit.TextEdit
 			foreach (var fileName in GetSelectionStrings())
 			{
 				var path = Path.GetDirectoryName(fileName);
-				if (!String.IsNullOrEmpty(path))
+				if (!string.IsNullOrEmpty(path))
 					path += @"\";
 				var name = Path.GetFileNameWithoutExtension(fileName);
 				var ext = Path.GetExtension(fileName);
@@ -1710,7 +1710,7 @@ namespace NeoEdit.TextEdit
 						break;
 					var unique = result.UseGUIDs ? Guid.NewGuid().ToString() : num.ToString();
 
-					newFileName = String.Format(format, path, name, unique, ext);
+					newFileName = string.Format(format, path, name, unique, ext);
 				}
 				newNames.Add(newFileName);
 				used.Add(newFileName);
@@ -1988,7 +1988,7 @@ namespace NeoEdit.TextEdit
 		internal void Command_Files_Operations_CopyMove(bool move)
 		{
 			var strs = Selections.Select(range => GetString(range).Split(new string[] { "=>" }, StringSplitOptions.None).Select(str => FileName.RelativeChild(str.Trim())).ToList()).ToList();
-			if (strs.Any(pair => (pair.Count != 2) || (pair.Any(item => String.IsNullOrEmpty(item)))))
+			if (strs.Any(pair => (pair.Count != 2) || (pair.Any(item => string.IsNullOrEmpty(item)))))
 				throw new Exception("Format: Source => Destination");
 
 			var files = strs.Select(pair => new { source = pair[0], dest = pair[1] }).Where(pair => pair.source != pair.dest).ToList();
@@ -1998,18 +1998,18 @@ namespace NeoEdit.TextEdit
 			const int InvalidCount = 10;
 			var invalid = files.Select(pair => pair.source).Distinct().Where(file => !FileOrDirectoryExists(file)).Take(InvalidCount).ToList();
 			if (invalid.Any())
-				throw new Exception($"Sources don't exist:\n{String.Join("\n", invalid)}");
+				throw new Exception($"Sources don't exist:\n{string.Join("\n", invalid)}");
 
 			invalid = files.Select(pair => Path.GetDirectoryName(pair.dest)).Distinct().Where(dir => !Directory.Exists(dir)).Take(InvalidCount).ToList();
 			if (invalid.Any())
-				throw new Exception($"Directories don't exist:\n{String.Join("\n", invalid)}");
+				throw new Exception($"Directories don't exist:\n{string.Join("\n", invalid)}");
 
 			// If user specified a file and a directory, assume they want the file (with the same name) in that directory
 			files = files.Select(pair => new { source = pair.source, dest = (File.Exists(pair.source)) && (Directory.Exists(pair.dest)) ? Path.Combine(pair.dest, Path.GetFileName(pair.source)) : pair.dest }).ToList();
 
 			invalid = files.Where(pair => (Directory.Exists(pair.dest)) || ((Directory.Exists(pair.source)) && (File.Exists(pair.dest)))).Select(pair => pair.dest).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
-				throw new Exception($"Destinations already exist:\n{String.Join("\n", invalid)}");
+				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
 			if (new Message
 			{
@@ -2027,7 +2027,7 @@ namespace NeoEdit.TextEdit
 				if (new Message
 				{
 					Title = "Confirm",
-					Text = $"Are you sure you want to overwrite these files:\n{String.Join("\n", invalid)}",
+					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
 					Options = Message.OptionsEnum.YesNo,
 					DefaultAccept = Message.OptionsEnum.Yes,
 					DefaultCancel = Message.OptionsEnum.No,
@@ -2096,9 +2096,9 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		internal void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Int64.Parse(GetString(range)).ToString("x")).ToList());
+		internal void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => long.Parse(GetString(range)).ToString("x")).ToList());
 
-		internal void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Int64.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
+		internal void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => long.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 
 		internal void Command_DateTime_Now() => ReplaceSelections(DateTime.Now.ToString("O"));
 
@@ -2167,7 +2167,7 @@ namespace NeoEdit.TextEdit
 
 		internal NumericSeriesDialog.Result Command_Numeric_Series_LinearGeometric_Dialog(bool linear)
 		{
-			var nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = GetString(range), index = index }).Where(obj => !String.IsNullOrWhiteSpace(obj.str)).Select(obj => Tuple.Create(Double.Parse(obj.str), obj.index)).ToList();
+			var nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = GetString(range), index = index }).Where(obj => !string.IsNullOrWhiteSpace(obj.str)).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList();
 			if (nonNulls.Count == 0)
 				return NumericSeriesDialog.Run(WindowParent, 1, 1);
 
@@ -2201,12 +2201,12 @@ namespace NeoEdit.TextEdit
 		internal void Command_Numeric_Scale(ScaleDialog.Result result)
 		{
 			var ratio = (result.NewMax - result.NewMin) / (result.PrevMax - result.PrevMin);
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((Double.Parse(GetString(range)) - result.PrevMin) * ratio + result.NewMin).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((double.Parse(GetString(range)) - result.PrevMin) * ratio + result.NewMin).ToString()).ToList());
 		}
 
 		internal void Command_Numeric_ForwardReverseSum(bool forward)
 		{
-			var numbers = Selections.AsParallel().AsOrdered().Select(range => Double.Parse(GetString(range))).ToList();
+			var numbers = Selections.AsParallel().AsOrdered().Select(range => double.Parse(GetString(range))).ToList();
 			double total = 0;
 			var start = forward ? 0 : numbers.Count - 1;
 			var end = forward ? numbers.Count : -1;
@@ -2243,15 +2243,15 @@ namespace NeoEdit.TextEdit
 
 		internal FloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
 
-		internal void Command_Numeric_Floor(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Floor(Decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
+		internal void Command_Numeric_Floor(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Floor(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
 
 		internal FloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
 
-		internal void Command_Numeric_Round(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(Decimal.Parse(GetString(range)) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
+		internal void Command_Numeric_Round(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(decimal.Parse(GetString(range)) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
 
 		internal FloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
 
-		internal void Command_Numeric_Ceiling(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Ceiling(Decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
+		internal void Command_Numeric_Ceiling(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Ceiling(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
 
 		string Factor(BigInteger value)
 		{
@@ -2280,7 +2280,7 @@ namespace NeoEdit.TextEdit
 
 			factors.Reverse();
 
-			return String.Join("*", factors);
+			return string.Join("*", factors);
 		}
 
 		internal void Command_Numeric_Factor() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Factor(BigInteger.Parse(GetString(range)))).ToList());
@@ -2290,7 +2290,7 @@ namespace NeoEdit.TextEdit
 			var strs = GetSelectionStrings();
 			var index = 0;
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
-				if (String.IsNullOrWhiteSpace(strs[ctr]))
+				if (string.IsNullOrWhiteSpace(strs[ctr]))
 					strs[ctr] = strs[index];
 				else
 					index = ctr;
@@ -2326,7 +2326,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Type_Select_MinMax(bool min, Command_MinMax_Type type) => Selections.Replace(Command_Type_Copy_MinMax2(min, type).Item2);
 
-		internal void Command_Numeric_Copy_Sum() => SetClipboardText(Selections.AsParallel().Select(range => Double.Parse(GetString(range))).Sum().ToString());
+		internal void Command_Numeric_Copy_Sum() => SetClipboardText(Selections.AsParallel().Select(range => double.Parse(GetString(range))).Sum().ToString());
 
 		static BigInteger GCF(BigInteger value1, BigInteger value2)
 		{
@@ -2640,7 +2640,7 @@ namespace NeoEdit.TextEdit
 
 		internal MinMaxValuesDialog.Result Command_Numeric_MinMaxValues_Dialog() => MinMaxValuesDialog.Run(WindowParent);
 
-		internal void Command_Numeric_MinMaxValues(MinMaxValuesDialog.Result result) => ReplaceSelections(String.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !String.IsNullOrEmpty(str))));
+		internal void Command_Numeric_MinMaxValues(MinMaxValuesDialog.Result result) => ReplaceSelections(string.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !string.IsNullOrEmpty(str))));
 
 		internal CombinationsPermutationsDialog.Result Command_Numeric_CombinationsPermutations_Dialog()
 		{
@@ -2691,7 +2691,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			ReplaceSelections(String.Join("", output.Select(row => String.Join(" ", row) + Data.DefaultEnding)));
+			ReplaceSelections(string.Join("", output.Select(row => string.Join(" ", row) + Data.DefaultEnding)));
 
 			var start = Selections.Single().Start;
 			var sels = new List<Range>();
@@ -2722,7 +2722,7 @@ namespace NeoEdit.TextEdit
 
 			var data = RevRegEx.RevRegExVisitor.Parse(result.RegEx);
 			var output = data.GetPossibilities().Select(str => str + Data.DefaultEnding).ToList();
-			ReplaceSelections(String.Join("", output));
+			ReplaceSelections(string.Join("", output));
 
 			var start = Selections.Single().Start;
 			var sels = new List<Range>();
@@ -2742,13 +2742,13 @@ namespace NeoEdit.TextEdit
 				new Message
 				{
 					Title = "Error",
-					Text = $"Failed to fetch the URLs:\n{String.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1))}",
+					Text = $"Failed to fetch the URLs:\n{string.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1))}",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		internal void Command_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return String.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		internal void Command_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
 		internal void Command_Network_Lookup_HostName() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
@@ -2775,11 +2775,11 @@ namespace NeoEdit.TextEdit
 					networkInterface.Description,
 					networkInterface.OperationalStatus.ToString(),
 					networkInterface.NetworkInterfaceType.ToString(),
-					String.Join(" / ", props.UnicastAddresses.Select(info=>info.Address)),
+					string.Join(" / ", props.UnicastAddresses.Select(info=>info.Address)),
 				});
 			}
 			var columnLens = data[0].Select((item, column) => data.Max(row => row[column].Length)).ToList();
-			ReplaceOneWithMany(data.Select(row => String.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length))) + Data.DefaultEnding).ToList());
+			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length))) + Data.DefaultEnding).ToList());
 		}
 
 		internal PingDialog.Result Command_Network_Ping_Dialog() => PingDialog.Run(WindowParent);
@@ -2814,7 +2814,7 @@ namespace NeoEdit.TextEdit
 		{
 			var strs = GetSelectionStrings();
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
-			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {String.Join(", ", strResult)}").ToList());
+			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}
 
 		internal DatabaseConnectDialog.Result Command_Database_Connect_Dialog() => DatabaseConnectDialog.Run(WindowParent);
@@ -2876,7 +2876,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Database_UseCurrentWindow(bool? multiStatus) => UseCurrentWindow = multiStatus != true;
 
-		string DBSanitize(string name) => (!String.IsNullOrEmpty(name)) && (!Char.IsLetter(name[0])) ? $"[{name}]" : name;
+		string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
 
 		internal string Command_Database_QueryTable_Dialog()
 		{
@@ -3547,7 +3547,7 @@ namespace NeoEdit.TextEdit
 							else if ((!shiftDown) && (hasSelection))
 								return new Range(range.Start);
 							else if ((index == 0) && (line != 0))
-								return MoveCursor(range, -1, Int32.MaxValue, shiftDown, indexRel: false);
+								return MoveCursor(range, -1, int.MaxValue, shiftDown, indexRel: false);
 							else
 								return MoveCursor(range, 0, -1, shiftDown);
 						}).ToList());
@@ -3605,7 +3605,7 @@ namespace NeoEdit.TextEdit
 							var end = Data.GetLineLength(line);
 							for (first = 0; first < end; ++first)
 							{
-								if (!Char.IsWhiteSpace(Data[line, first]))
+								if (!char.IsWhiteSpace(Data[line, first]))
 									break;
 							}
 							if (first == end)
@@ -3631,7 +3631,7 @@ namespace NeoEdit.TextEdit
 						Selections.Replace(sels);
 					}
 					else
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, Int32.MaxValue, shiftDown, indexRel: false)).ToList());
+						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, int.MaxValue, shiftDown, indexRel: false)).ToList());
 					break;
 				case Key.PageUp:
 					if (controlDown)
@@ -3759,9 +3759,9 @@ namespace NeoEdit.TextEdit
 				else
 				{
 					var c = Data[line, index];
-					if (Char.IsWhiteSpace(c))
+					if (char.IsWhiteSpace(c))
 						current = WordSkipType.Space;
-					else if ((Char.IsLetterOrDigit(c)) || (c == '_'))
+					else if ((char.IsLetterOrDigit(c)) || (c == '_'))
 						current = WordSkipType.Char;
 					else
 						current = WordSkipType.Symbol;
@@ -3803,9 +3803,9 @@ namespace NeoEdit.TextEdit
 				else
 				{
 					var c = Data[line, index];
-					if (Char.IsWhiteSpace(c))
+					if (char.IsWhiteSpace(c))
 						current = WordSkipType.Space;
-					else if ((Char.IsLetterOrDigit(c)) || (Data[line, index] == '_'))
+					else if ((char.IsLetterOrDigit(c)) || (Data[line, index] == '_'))
 						current = WordSkipType.Char;
 					else
 						current = WordSkipType.Symbol;

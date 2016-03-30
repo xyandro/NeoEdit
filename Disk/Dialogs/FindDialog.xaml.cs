@@ -53,7 +53,7 @@ namespace NeoEdit.Disk.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			Regex regex = null;
-			if ((!String.IsNullOrEmpty(Expression)) && (Expression != "*.*"))
+			if ((!string.IsNullOrEmpty(Expression)) && (Expression != "*.*"))
 			{
 				var expr = Expression;
 				if (!IsRegEx)

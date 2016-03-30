@@ -37,7 +37,7 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 				return;
 
 			NSRLFile = dialog.FileName;
-			if (String.IsNullOrWhiteSpace(IndexFile))
+			if (string.IsNullOrWhiteSpace(IndexFile))
 				IndexFile = Path.Combine(Path.GetDirectoryName(NSRLFile), Path.GetFileNameWithoutExtension(NSRLFile) + ".idx");
 		}
 
@@ -104,9 +104,9 @@ namespace NeoEdit.Tools.Dialogs.NSRLTool
 		const string KeyField = "SHA-1";
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrEmpty(NSRLFile))
+			if (string.IsNullOrEmpty(NSRLFile))
 				throw new Exception("NSRL file cannot be empty");
-			if (String.IsNullOrEmpty(IndexFile))
+			if (string.IsNullOrEmpty(IndexFile))
 				throw new Exception("Index file cannot be empty");
 
 			// Copy because they'll be used from another thread

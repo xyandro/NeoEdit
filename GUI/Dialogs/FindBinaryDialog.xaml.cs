@@ -108,7 +108,7 @@ namespace NeoEdit.GUI.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (String.IsNullOrEmpty(FindText))
+			if (string.IsNullOrEmpty(FindText))
 				return;
 
 			var data = new List<Tuple<byte[], bool>>();

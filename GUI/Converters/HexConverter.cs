@@ -24,7 +24,7 @@ namespace NeoEdit.GUI.Converters
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			lastValue = value as string;
-			if (String.IsNullOrEmpty(lastValue))
+			if (string.IsNullOrEmpty(lastValue))
 			{
 				lastValue = null;
 				return null;

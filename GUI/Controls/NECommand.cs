@@ -48,7 +48,7 @@ namespace NeoEdit.GUI.Controls
 				case Key.OemCloseBrackets: mods.Add("]"); break;
 				default: mods.Add(key.ToString()); break;
 			}
-			GestureText = String.Join("+", mods);
+			GestureText = string.Join("+", mods);
 		}
 	}
 
@@ -87,7 +87,7 @@ namespace NeoEdit.GUI.Controls
 			commands = Enum.GetValues(typeof(CommandEnumT)).Cast<CommandEnumT>().ToDictionary(commandEnum => commandEnum, commandEnum => new NECommand(commandEnum));
 			var duplicates = commands.Values.SelectMany(command => command.KeyGestures).GroupBy(keyGesture => keyGesture.GestureText).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
 			if (duplicates.Any())
-				throw new Exception($"Duplicate hotkeys: {String.Join(", ", duplicates)}");
+				throw new Exception($"Duplicate hotkeys: {string.Join(", ", duplicates)}");
 		}
 
 		public CommandEnumT CommandEnum

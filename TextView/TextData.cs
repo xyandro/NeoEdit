@@ -227,7 +227,7 @@ namespace NeoEdit.TextView
 				end = Math.Min(Math.Max(start + 1, end), lineStart.Count - 1);
 				if (start == end)
 					break;
-				result.Add(Tuple.Create(String.Format(format, ++fileNum), lineStart[start], lineStart[end]));
+				result.Add(Tuple.Create(string.Format(format, ++fileNum), lineStart[start], lineStart[end]));
 			}
 			return result;
 		}

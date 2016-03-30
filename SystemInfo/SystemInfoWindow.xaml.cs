@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -60,16 +59,16 @@ namespace NeoEdit.SystemInfo
 				return value.ToString().Trim();
 			}
 
-			public bool HasData() => (!String.IsNullOrWhiteSpace(Name)) || (!String.IsNullOrWhiteSpace(Version)) || (!String.IsNullOrWhiteSpace(Publisher));
+			public bool HasData() => (!string.IsNullOrWhiteSpace(Name)) || (!string.IsNullOrWhiteSpace(Version)) || (!string.IsNullOrWhiteSpace(Publisher));
 
 			public override string ToString()
 			{
 				var result = Name;
-				if (!String.IsNullOrWhiteSpace(BitDepth))
+				if (!string.IsNullOrWhiteSpace(BitDepth))
 					result += $" {BitDepth}";
-				if (!String.IsNullOrWhiteSpace(Version))
+				if (!string.IsNullOrWhiteSpace(Version))
 					result += $" (Version: {Version})";
-				if (!String.IsNullOrWhiteSpace(Publisher))
+				if (!string.IsNullOrWhiteSpace(Publisher))
 					result += $" ({Publisher})";
 				return result;
 			}
@@ -88,7 +87,7 @@ namespace NeoEdit.SystemInfo
 					foreach (var subKeyName in key.GetSubKeyNames())
 						using (var subkey = key.OpenSubKey(subKeyName))
 							programs.Add(new InstalledProgram(subkey, bitDepth.Value));
-			Text = String.Join("", programs.Where(prog => prog.HasData()).OrderBy(prog => prog.Name).Select(prog => $"{prog}\r\n"));
+			Text = string.Join("", programs.Where(prog => prog.HasData()).OrderBy(prog => prog.Name).Select(prog => $"{prog}\r\n"));
 		}
 	}
 }

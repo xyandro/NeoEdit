@@ -81,21 +81,21 @@ namespace NeoEdit.Common.Transform
 			switch (codePage)
 			{
 				case CodePage.Int8: return sbyte.MinValue.ToString();
-				case CodePage.Int16LE: return Int16.MinValue.ToString();
-				case CodePage.Int16BE: return Int16.MinValue.ToString();
-				case CodePage.Int32LE: return Int32.MinValue.ToString();
-				case CodePage.Int32BE: return Int32.MinValue.ToString();
-				case CodePage.Int64LE: return Int64.MinValue.ToString();
-				case CodePage.Int64BE: return Int64.MinValue.ToString();
+				case CodePage.Int16LE: return short.MinValue.ToString();
+				case CodePage.Int16BE: return short.MinValue.ToString();
+				case CodePage.Int32LE: return int.MinValue.ToString();
+				case CodePage.Int32BE: return int.MinValue.ToString();
+				case CodePage.Int64LE: return long.MinValue.ToString();
+				case CodePage.Int64BE: return long.MinValue.ToString();
 				case CodePage.UInt8: return byte.MinValue.ToString();
-				case CodePage.UInt16LE: return UInt16.MinValue.ToString();
-				case CodePage.UInt16BE: return UInt16.MinValue.ToString();
-				case CodePage.UInt32LE: return UInt32.MinValue.ToString();
-				case CodePage.UInt32BE: return UInt32.MinValue.ToString();
-				case CodePage.UInt64LE: return UInt64.MinValue.ToString();
-				case CodePage.UInt64BE: return UInt64.MinValue.ToString();
-				case CodePage.Single: return Single.MinValue.ToString();
-				case CodePage.Double: return Double.MinValue.ToString();
+				case CodePage.UInt16LE: return ushort.MinValue.ToString();
+				case CodePage.UInt16BE: return ushort.MinValue.ToString();
+				case CodePage.UInt32LE: return uint.MinValue.ToString();
+				case CodePage.UInt32BE: return uint.MinValue.ToString();
+				case CodePage.UInt64LE: return ulong.MinValue.ToString();
+				case CodePage.UInt64BE: return ulong.MinValue.ToString();
+				case CodePage.Single: return float.MinValue.ToString();
+				case CodePage.Double: return double.MinValue.ToString();
 				default: throw new Exception("Invalid type");
 			}
 		}
@@ -105,21 +105,21 @@ namespace NeoEdit.Common.Transform
 			switch (codePage)
 			{
 				case CodePage.Int8: return sbyte.MaxValue.ToString();
-				case CodePage.Int16LE: return Int16.MaxValue.ToString();
-				case CodePage.Int16BE: return Int16.MaxValue.ToString();
-				case CodePage.Int32LE: return Int32.MaxValue.ToString();
-				case CodePage.Int32BE: return Int32.MaxValue.ToString();
-				case CodePage.Int64LE: return Int64.MaxValue.ToString();
-				case CodePage.Int64BE: return Int64.MaxValue.ToString();
+				case CodePage.Int16LE: return short.MaxValue.ToString();
+				case CodePage.Int16BE: return short.MaxValue.ToString();
+				case CodePage.Int32LE: return int.MaxValue.ToString();
+				case CodePage.Int32BE: return int.MaxValue.ToString();
+				case CodePage.Int64LE: return long.MaxValue.ToString();
+				case CodePage.Int64BE: return long.MaxValue.ToString();
 				case CodePage.UInt8: return byte.MaxValue.ToString();
-				case CodePage.UInt16LE: return UInt16.MaxValue.ToString();
-				case CodePage.UInt16BE: return UInt16.MaxValue.ToString();
-				case CodePage.UInt32LE: return UInt32.MaxValue.ToString();
-				case CodePage.UInt32BE: return UInt32.MaxValue.ToString();
-				case CodePage.UInt64LE: return UInt64.MaxValue.ToString();
-				case CodePage.UInt64BE: return UInt64.MaxValue.ToString();
-				case CodePage.Single: return Single.MaxValue.ToString();
-				case CodePage.Double: return Double.MaxValue.ToString();
+				case CodePage.UInt16LE: return ushort.MaxValue.ToString();
+				case CodePage.UInt16BE: return ushort.MaxValue.ToString();
+				case CodePage.UInt32LE: return uint.MaxValue.ToString();
+				case CodePage.UInt32BE: return uint.MaxValue.ToString();
+				case CodePage.UInt64LE: return ulong.MaxValue.ToString();
+				case CodePage.UInt64BE: return ulong.MaxValue.ToString();
+				case CodePage.Single: return float.MaxValue.ToString();
+				case CodePage.Double: return double.MaxValue.ToString();
 				default: throw new Exception("Invalid type");
 			}
 		}
@@ -224,7 +224,7 @@ namespace NeoEdit.Common.Transform
 					*outputPtr++ = hexValue[*bytesPtr & 15];
 				}
 			}
-			return new String(output);
+			return new string(output);
 		}
 
 		static unsafe byte[] FromHexString(string input)
@@ -278,7 +278,7 @@ namespace NeoEdit.Common.Transform
 					*outputPtr++ = hexValue[*bytesPtr & 15];
 				}
 			}
-			return new String(output);
+			return new string(output);
 		}
 
 		static unsafe byte[] FromHexRevString(string input)
@@ -329,7 +329,7 @@ namespace NeoEdit.Common.Transform
 					for (byte mult = 0x80; mult != 0; mult >>= 1)
 						*outputPtr++ = (*bytesPtr & mult) == 0 ? '0' : '1';
 			}
-			return new String(output);
+			return new string(output);
 		}
 
 		static unsafe byte[] FromBinaryString(string input)
@@ -365,7 +365,7 @@ namespace NeoEdit.Common.Transform
 					Array.Reverse(current);
 				result.Add(converter(current));
 			}
-			return String.Join(" ", result);
+			return string.Join(" ", result);
 		}
 
 		public static string TryBytesToString(byte[] data, CodePage codePage, bool stripBOM = false)
@@ -380,21 +380,21 @@ namespace NeoEdit.Common.Transform
 				switch (codePage)
 				{
 					case CodePage.Int8: return BytesToNum(data, sizeof(sbyte), bytes => (sbyte)bytes[0], false);
-					case CodePage.Int16LE: return BytesToNum(data, sizeof(Int16), bytes => BitConverter.ToInt16(bytes, 0), false);
-					case CodePage.Int16BE: return BytesToNum(data, sizeof(Int16), bytes => BitConverter.ToInt16(bytes, 0), true);
-					case CodePage.Int32LE: return BytesToNum(data, sizeof(Int32), bytes => BitConverter.ToInt32(bytes, 0), false);
-					case CodePage.Int32BE: return BytesToNum(data, sizeof(Int32), bytes => BitConverter.ToInt32(bytes, 0), true);
-					case CodePage.Int64LE: return BytesToNum(data, sizeof(Int64), bytes => BitConverter.ToInt64(bytes, 0), false);
-					case CodePage.Int64BE: return BytesToNum(data, sizeof(Int64), bytes => BitConverter.ToInt64(bytes, 0), true);
+					case CodePage.Int16LE: return BytesToNum(data, sizeof(short), bytes => BitConverter.ToInt16(bytes, 0), false);
+					case CodePage.Int16BE: return BytesToNum(data, sizeof(short), bytes => BitConverter.ToInt16(bytes, 0), true);
+					case CodePage.Int32LE: return BytesToNum(data, sizeof(int), bytes => BitConverter.ToInt32(bytes, 0), false);
+					case CodePage.Int32BE: return BytesToNum(data, sizeof(int), bytes => BitConverter.ToInt32(bytes, 0), true);
+					case CodePage.Int64LE: return BytesToNum(data, sizeof(long), bytes => BitConverter.ToInt64(bytes, 0), false);
+					case CodePage.Int64BE: return BytesToNum(data, sizeof(long), bytes => BitConverter.ToInt64(bytes, 0), true);
 					case CodePage.UInt8: return BytesToNum(data, sizeof(byte), bytes => bytes[0], false);
-					case CodePage.UInt16LE: return BytesToNum(data, sizeof(UInt16), bytes => BitConverter.ToUInt16(bytes, 0), false);
-					case CodePage.UInt16BE: return BytesToNum(data, sizeof(UInt16), bytes => BitConverter.ToUInt16(bytes, 0), true);
-					case CodePage.UInt32LE: return BytesToNum(data, sizeof(UInt32), bytes => BitConverter.ToUInt32(bytes, 0), false);
-					case CodePage.UInt32BE: return BytesToNum(data, sizeof(UInt32), bytes => BitConverter.ToUInt32(bytes, 0), true);
-					case CodePage.UInt64LE: return BytesToNum(data, sizeof(UInt64), bytes => BitConverter.ToUInt64(bytes, 0), false);
-					case CodePage.UInt64BE: return BytesToNum(data, sizeof(UInt64), bytes => BitConverter.ToUInt64(bytes, 0), true);
-					case CodePage.Single: return BytesToNum(data, sizeof(Single), bytes => BitConverter.ToSingle(bytes, 0), false);
-					case CodePage.Double: return BytesToNum(data, sizeof(Double), bytes => BitConverter.ToDouble(bytes, 0), false);
+					case CodePage.UInt16LE: return BytesToNum(data, sizeof(ushort), bytes => BitConverter.ToUInt16(bytes, 0), false);
+					case CodePage.UInt16BE: return BytesToNum(data, sizeof(ushort), bytes => BitConverter.ToUInt16(bytes, 0), true);
+					case CodePage.UInt32LE: return BytesToNum(data, sizeof(uint), bytes => BitConverter.ToUInt32(bytes, 0), false);
+					case CodePage.UInt32BE: return BytesToNum(data, sizeof(uint), bytes => BitConverter.ToUInt32(bytes, 0), true);
+					case CodePage.UInt64LE: return BytesToNum(data, sizeof(ulong), bytes => BitConverter.ToUInt64(bytes, 0), false);
+					case CodePage.UInt64BE: return BytesToNum(data, sizeof(ulong), bytes => BitConverter.ToUInt64(bytes, 0), true);
+					case CodePage.Single: return BytesToNum(data, sizeof(float), bytes => BitConverter.ToSingle(bytes, 0), false);
+					case CodePage.Double: return BytesToNum(data, sizeof(double), bytes => BitConverter.ToDouble(bytes, 0), false);
 					case CodePage.Base64: return Convert.ToBase64String(data);
 					case CodePage.Hex: return ToHexString(data);
 					case CodePage.HexRev: return ToHexRevString(data);
@@ -429,13 +429,13 @@ namespace NeoEdit.Common.Transform
 			{
 				if ((ctr == 0) && (value[ctr] == '\ufeff'))
 					continue; // Skip BOM
-				else if (Char.IsWhiteSpace(value[ctr]))
+				else if (char.IsWhiteSpace(value[ctr]))
 					continue; // Skip whitespace
 				else if (value[ctr] == '=')
 					padding = true;
 				else if (padding)
 					return null; // No more chars allowed after padding starts
-				else if ((Char.IsLetterOrDigit(value[ctr])) || (value[ctr] == '+') || (value[ctr] == '/'))
+				else if ((char.IsLetterOrDigit(value[ctr])) || (value[ctr] == '+') || (value[ctr] == '/'))
 					base64.Append(value[ctr]);
 				else
 					return null; // Invalid char
@@ -453,7 +453,7 @@ namespace NeoEdit.Common.Transform
 		delegate bool TryParseHandler<T>(string value, out T result);
 		static byte[] NumToBytes<T>(string input, TryParseHandler<T> tryParse, Func<T, byte[]> converter, bool reverse)
 		{
-			var strs = input.Split(',', ' ', '\t', '\r', '\n').Where(str => !String.IsNullOrWhiteSpace(str)).ToList();
+			var strs = input.Split(',', ' ', '\t', '\r', '\n').Where(str => !string.IsNullOrWhiteSpace(str)).ToList();
 			byte[] result = null;
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
 			{
@@ -480,22 +480,22 @@ namespace NeoEdit.Common.Transform
 			{
 				switch (codePage)
 				{
-					case CodePage.Int8: return NumToBytes<sbyte>(value, SByte.TryParse, v => new byte[] { (byte)v }, false);
-					case CodePage.Int16LE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), false);
-					case CodePage.Int16BE: return NumToBytes<Int16>(value, Int16.TryParse, v => BitConverter.GetBytes(v), true);
-					case CodePage.Int32LE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), false);
-					case CodePage.Int32BE: return NumToBytes<Int32>(value, Int32.TryParse, v => BitConverter.GetBytes(v), true);
-					case CodePage.Int64LE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), false);
-					case CodePage.Int64BE: return NumToBytes<Int64>(value, Int64.TryParse, v => BitConverter.GetBytes(v), true);
-					case CodePage.UInt8: return NumToBytes<byte>(value, Byte.TryParse, v => new byte[] { v }, false);
-					case CodePage.UInt16LE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), false);
-					case CodePage.UInt16BE: return NumToBytes<UInt16>(value, UInt16.TryParse, v => BitConverter.GetBytes(v), true);
-					case CodePage.UInt32LE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), false);
-					case CodePage.UInt32BE: return NumToBytes<UInt32>(value, UInt32.TryParse, v => BitConverter.GetBytes(v), true);
-					case CodePage.UInt64LE: return NumToBytes<UInt64>(value, UInt64.TryParse, v => BitConverter.GetBytes(v), false);
-					case CodePage.UInt64BE: return NumToBytes<UInt64>(value, UInt64.TryParse, v => BitConverter.GetBytes(v), true);
-					case CodePage.Single: return NumToBytes<Single>(value, Single.TryParse, v => BitConverter.GetBytes(v), false);
-					case CodePage.Double: return NumToBytes<Double>(value, Double.TryParse, v => BitConverter.GetBytes(v), false);
+					case CodePage.Int8: return NumToBytes<sbyte>(value, sbyte.TryParse, v => new byte[] { (byte)v }, false);
+					case CodePage.Int16LE: return NumToBytes<short>(value, short.TryParse, v => BitConverter.GetBytes(v), false);
+					case CodePage.Int16BE: return NumToBytes<short>(value, short.TryParse, v => BitConverter.GetBytes(v), true);
+					case CodePage.Int32LE: return NumToBytes<int>(value, int.TryParse, v => BitConverter.GetBytes(v), false);
+					case CodePage.Int32BE: return NumToBytes<int>(value, int.TryParse, v => BitConverter.GetBytes(v), true);
+					case CodePage.Int64LE: return NumToBytes<long>(value, long.TryParse, v => BitConverter.GetBytes(v), false);
+					case CodePage.Int64BE: return NumToBytes<long>(value, long.TryParse, v => BitConverter.GetBytes(v), true);
+					case CodePage.UInt8: return NumToBytes<byte>(value, byte.TryParse, v => new byte[] { v }, false);
+					case CodePage.UInt16LE: return NumToBytes<ushort>(value, ushort.TryParse, v => BitConverter.GetBytes(v), false);
+					case CodePage.UInt16BE: return NumToBytes<ushort>(value, ushort.TryParse, v => BitConverter.GetBytes(v), true);
+					case CodePage.UInt32LE: return NumToBytes<uint>(value, uint.TryParse, v => BitConverter.GetBytes(v), false);
+					case CodePage.UInt32BE: return NumToBytes<uint>(value, uint.TryParse, v => BitConverter.GetBytes(v), true);
+					case CodePage.UInt64LE: return NumToBytes<ulong>(value, ulong.TryParse, v => BitConverter.GetBytes(v), false);
+					case CodePage.UInt64BE: return NumToBytes<ulong>(value, ulong.TryParse, v => BitConverter.GetBytes(v), true);
+					case CodePage.Single: return NumToBytes<float>(value, float.TryParse, v => BitConverter.GetBytes(v), false);
+					case CodePage.Double: return NumToBytes<double>(value, double.TryParse, v => BitConverter.GetBytes(v), false);
 					case CodePage.Base64: return GetBase64Bytes(value);
 					case CodePage.Hex: return FromHexString(value);
 					case CodePage.HexRev: return FromHexRevString(value);

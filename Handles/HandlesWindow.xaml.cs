@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace NeoEdit.Handles
 
 			InitializeComponent();
 
-			HandleTypes = Interop.GetHandleTypes().Where(type => !String.IsNullOrEmpty(type)).OrderBy().ToList();
+			HandleTypes = Interop.GetHandleTypes().Where(type => !string.IsNullOrEmpty(type)).OrderBy().ToList();
 			HandleTypes.Insert(0, "");
 
 			foreach (var prop in UIHelper<HandleItem>.GetProperties())
@@ -66,7 +65,7 @@ namespace NeoEdit.Handles
 			var handles = Interop.GetAllHandles();
 			if (pid.HasValue)
 				Interop.GetProcessHandles(handles, pid.Value);
-			if (!String.IsNullOrEmpty(HandleType))
+			if (!string.IsNullOrEmpty(HandleType))
 				Interop.GetTypeHandles(handles, HandleType);
 
 			var handleInfo = Interop.GetHandleInfo(handles);

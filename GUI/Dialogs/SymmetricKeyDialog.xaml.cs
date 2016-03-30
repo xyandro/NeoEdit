@@ -62,7 +62,7 @@ namespace NeoEdit.GUI.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			Generate();
-			if ((String.IsNullOrEmpty(key.Text)) && (!AcceptEmpty))
+			if ((string.IsNullOrEmpty(key.Text)) && (!AcceptEmpty))
 				return;
 
 			result = new Result { Key = key.Text };
@@ -71,10 +71,10 @@ namespace NeoEdit.GUI.Dialogs
 
 		void Generate()
 		{
-			if ((String.IsNullOrEmpty(password.Text)) || (String.IsNullOrEmpty(salt.Text)))
+			if ((string.IsNullOrEmpty(password.Text)) || (string.IsNullOrEmpty(salt.Text)))
 				return;
 
-			key.Text = Cryptor.GetRfc2898Key(password.Text, salt.Text, Int32.Parse(keySize.Text));
+			key.Text = Cryptor.GetRfc2898Key(password.Text, salt.Text, int.Parse(keySize.Text));
 		}
 
 		void GenerateKey(object sender, RoutedEventArgs e) => Generate();

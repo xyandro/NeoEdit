@@ -18,7 +18,7 @@ namespace NeoEdit.GUI.Controls.ItemGridControl
 			if ((value == null) || (parameter == null))
 				return value;
 			if (parameter is string)
-				return String.Format($"{{0:{parameter}}}", value);
+				return string.Format($"{{0:{parameter}}}", value);
 			if (parameter is StringFormatDelegate)
 				return (parameter as StringFormatDelegate)(value);
 			return value;
