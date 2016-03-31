@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using NeoEdit.Common;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -9,7 +11,7 @@ namespace NeoEdit.TextEdit
 	partial class TextEditor
 	{
 		internal enum SortScope { Selections, Lines, Regions }
-		internal enum SortType { String, StringRaw, Numeric, DateTime, Keys, Reverse, Randomize, Length, Frequency }
+		internal enum SortType { String, StringRaw, Hex, Numeric, DateTime, Keys, Reverse, Randomize, Length, Frequency }
 
 		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 
@@ -91,6 +93,7 @@ namespace NeoEdit.TextEdit
 			{
 				case SortType.String: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Helpers.StringNumericComparer(caseSensitive)).ToList(); break;
 				case SortType.StringRaw: entries = OrderByAscDesc(entries, entry => entry.value, ascending, stringComparer).ToList(); break;
+				case SortType.Hex: entries = OrderByAscDesc(entries, entry => BigInteger.Parse("0" + entry.value, NumberStyles.HexNumber), ascending).ToList(); break;
 				case SortType.Numeric: entries = OrderByAscDesc(entries, entry => double.Parse(entry.value), ascending).ToList(); break;
 				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.value), ascending).ToList(); break;
 				case SortType.Keys:
@@ -100,9 +103,7 @@ namespace NeoEdit.TextEdit
 					}
 					break;
 				case SortType.Reverse: entries.Reverse(); break;
-				case SortType.Randomize:
-					entries = entries.OrderBy(entry => random.Next()).ToList();
-					break;
+				case SortType.Randomize: entries = entries.OrderBy(entry => random.Next()).ToList(); break;
 				case SortType.Length: entries = OrderByAscDesc(entries, entry => entry.value.Length, ascending).ToList(); break;
 				case SortType.Frequency:
 					{
