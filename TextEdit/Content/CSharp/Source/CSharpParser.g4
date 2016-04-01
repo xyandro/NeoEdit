@@ -2,91 +2,96 @@ parser grammar CSharpParser;
 
 options { tokenVocab = CSharpLexer; }
 
-csharp : content* EOF ;
-content : block # ContentBlock
-        | expression SEMICOLON # ContentExpression
-        | usingns+ # Usings
-        | NAMESPACE savename block # Namespace
-        | attribute* modifier* type=(CLASS | INTERFACE | STRUCT) savename (COLON savebase (COMMA savebase)*)? generic_constraints block # Class
-        | attribute* modifier* ENUM savename (COLON name)? LBRACE (enumvalue (COMMA enumvalue)* COMMA?)? RBRACE # Enum
-        | attribute* modifier* (name | TILDE)? (savename | OPERATOR (name | operator)) LPAREN methoddeclparams RPAREN (COLON (THIS | BASE) LPAREN expressionlist RPAREN)? generic_constraints (block | expressionbody | SEMICOLON) # Method
-        | attribute* modifier* name THIS LBRACKET methoddeclparams RBRACKET LBRACE ((GET | SET) content)* RBRACE # Indexer
-        | attribute* modifier* DELEGATE name savename LPAREN methoddeclparams RPAREN SEMICOLON # Delegate
-        | attribute* modifier* EVENT name savename (LBRACE ((ADD | REMOVE) block)* RBRACE | SEMICOLON) # Event
-        | attribute* modifier* name savename (expressionbody | LBRACE propertyaccess* RBRACE) # Property
-        | SWITCH LPAREN saveconditionexpression RPAREN LBRACE cases* RBRACE # Switch
-        | YIELD? RETURN expression? SEMICOLON # Return
-        | THROW expression? SEMICOLON # Throw
-        | attribute* modifier* name saveassignedname (COMMA saveassignedname)* SEMICOLON # Declaration
-        | type=IF LPAREN saveconditionexpression RPAREN saveblockcontent (ELSE IF LPAREN saveconditionexpression RPAREN saveblockcontent)* (ELSE saveblockcontent)? # If
-        | IDENTIFIER COLON # Label
-        | GOTO (savename | CASE (expression | DEFAULT)) SEMICOLON # Goto
-        | FIXED LPAREN name name ASSIGN expression RPAREN content # Fixed
-        | (CHECKED | UNCHECKED) block # Checked
-        | USING LPAREN ((savename ASSIGN)? expression | name savename ASSIGN expression (COMMA savename ASSIGN expression)*) RPAREN content # Using
-        | LOCK LPAREN expression RPAREN content # Lock
-        | FOR LPAREN (fordecl (COMMA fordecl)*)? SEMICOLON expressionlist SEMICOLON expressionlist RPAREN content # For
-        | FOREACH LPAREN name name IN saveconditionexpression RPAREN content # Foreach
-        | WHILE LPAREN saveconditionexpression RPAREN content # While
-        | DO content WHILE LPAREN saveconditionexpression RPAREN SEMICOLON # Do
-        | YIELD? BREAK SEMICOLON # Break
-        | CONTINUE SEMICOLON # Continue
-        | TRY saveblock (CATCH (LPAREN name savename? RPAREN)? saveblock)? (FINALLY saveblock)? # Try
-        | LBRACKET globalattrvalue (COMMA globalattrvalue)* RBRACKET # GlobalAttr
-        | savesemicolon # Empty
-        ;
-usingns : USING (name ASSIGN)? savename SEMICOLON ;
-saveblockcontent : saveblock | content ;
-saveconditionexpression : expression ;
-id : IDENTIFIER | ADD | ALIAS | ASCENDING | ASYNC | AWAIT | BY | DESCENDING | EQUALS | FROM | GET | GROUP | INTO | JOIN | LET | ON | ORDERBY | PARTIAL | REMOVE | SELECT | SET | WHERE | YIELD | BASE | THIS | DEFAULT | ASSEMBLY ;
-name : (id DOUBLE_COLON)? id INTERR? MULT? (LT name? (COMMA name?)* GT)? (LBRACKET COMMA* RBRACKET)* (DOT name)* ;
-savename : name ;
-savebase : name ;
-propertyaccess : modifier* (GET | SET) (savesemicolon | saveblock) ;
-savesemicolon : SEMICOLON ;
-cases : ((CASE saveconditionexpression | DEFAULT) COLON)+ content+ ;
-modifier : ABSTRACT | ASYNC | CONST | EXTERN | INTERNAL | NEW | OVERRIDE | PARTIAL | PRIVATE | PROTECTED | PUBLIC | READONLY | SEALED | STATIC | UNSAFE | VIRTUAL | VOLATILE | IMPLICIT | EXPLICIT ;
-attrvalue : ((RETURN | name) COLON)? name (LPAREN expressionlist RPAREN)? ;
-attribute : LBRACKET attrvalue (COMMA attrvalue)* RBRACKET ;
-globalattrvalue : ASSEMBLY COLON name (LPAREN expressionlist RPAREN)? ;
-fordecl : name? name ASSIGN expression ;
-assignedname : name (ASSIGN expression)? ;
-saveassignedname : savename (ASSIGN expression)? ;
-block : LBRACE content* RBRACE ;
-expressionbody : LAMBDA expression SEMICOLON ;
-saveblock : block ;
-enumvalue : attribute* assignedname ;
-generic_constraint : name | CLASS | STRUCT | NEW LPAREN RPAREN ;
-generic_constraints : (WHERE name COLON generic_constraint (COMMA generic_constraint)*)* ;
-methoddeclparam : attribute* (THIS | PARAMS | OUT | REF)* name assignedname ;
-methoddeclparams : (methoddeclparam (COMMA methoddeclparam)*)? ;
-expression : LPAREN expression RPAREN
-           | LPAREN expression RPAREN expression
-           | (name | LPAREN (name? name (COMMA name? name)*)? RPAREN) LAMBDA (expression | block)
-           | unary_operator expression
-           | expression (DEC | INC)
-           | expression binary_operator expression
-           | name
-           | (STACKALLOC | NEW) name? methodcallparams? (LBRACKET expressionlist RBRACKET)* inline?
-           | expression methodcallparams
-           | expression LBRACKET expression (COMMA expression)* RBRACKET
-           | expression INTERR expression COLON expression
-           | AWAIT expression
-           | DELEGATE (LPAREN methoddeclparams RPAREN)? block
-           | (CHECKED | UNCHECKED) LPAREN expression RPAREN
-           | linq
-           | inline
-           | NUMBER | CHARACTER | STR | INTERPOLATED_STR | NULL | TRUE | FALSE
+csharp : topcontent* EOF ;
+topcontent : EXTERN ALIAS identifier SEMICOLON # ExternAlias
+           | USING (type | identifier ASSIGN type) SEMICOLON # UsingNS
+           | NAMESPACE Name=type LBRACE topcontent* RBRACE SEMICOLON? # Namespace
+           | attribute* modifier* NodeType=(CLASS | INTERFACE | STRUCT) Name=type (COLON type (COMMA type)*)? where* LBRACE topcontent* RBRACE SEMICOLON? # Class
+           | attribute* modifier* Return=type (Name=type | THIS LBRACKET paramlist RBRACKET) (LBRACE topcontent* RBRACE (ASSIGN expression SEMICOLON)? | LAMBDA expression SEMICOLON) # Property
+           | attribute* modifier* Name=(GET | SET | ADD | REMOVE) (methodcontent | LAMBDA expression SEMICOLON) # Accessor
+           | attribute* modifier* Return=type? (Name=type | OPERATOR Operator=operator) LPAREN paramlist RPAREN where* (COLON (THIS | BASE) LPAREN expressionlist RPAREN)? (methodcontent | LAMBDA expression SEMICOLON) # Method
+           | attribute* modifier* Return=type vardecl (COMMA vardecl)* SEMICOLON # Field
+           | attribute* modifier* EVENT Return=type Name=type (LBRACE topcontent* RBRACE | (ASSIGN expression)? SEMICOLON)? # Event
+           | attribute* modifier* ENUM Name=identifier (COLON Return=type)? LBRACE enumvalue (COMMA enumvalue)* COMMA? RBRACE SEMICOLON? # Enum
+           | attribute # GlobalAttribute // Keep this last so it doesn't grab attributes that should be assigned to other items
            ;
-expressionlist: (expression (COMMA expression)*)? ;
-unary_operator : DEC | INC | MULT | BANG | MINUS | PLUS | TILDE | AND ;
-binary_operator : AS | IS | AND | OR | XOR | DIV | GT | LT | MINUS | LAND | EQ | GE | LE | LEFT_SHIFT | GT GT | NE | LOR | MOD | PLUS | MULT | DOT | PTR | ASSIGN | PLUS_ASSIGN | AND_ASSIGN | DIV_ASSIGN | LEFT_SHIFT_ASSIGN | GT GE | MOD_ASSIGN | MULT_ASSIGN | OR_ASSIGN | MINUS_ASSIGN | XOR_ASSIGN | COALESCE ;
-operator : unary_operator | binary_operator ;
-inline : LBRACE expressionlist COMMA? RBRACE ;
-methodcallparam : OUT? REF? (name COLON)? expression ;
-methodcallparams : LPAREN (methodcallparam (COMMA methodcallparam)*)? RPAREN ;
+methodcontent : modifier* Return=type vardecl (COMMA vardecl)* SEMICOLON # Variable
+              | Name=identifier COLON # GotoLabel
+              | LBRACE methodcontent* RBRACE # Block
+              | expression SEMICOLON # ContentExpression
+              | IF LPAREN Condition=expression RPAREN methodcontent (ELSE IF LPAREN expression RPAREN methodcontent)* (ELSE methodcontent)? # If
+              | WHILE LPAREN Condition=expression RPAREN methodcontent # While
+              | DO methodcontent WHILE LPAREN Condition=expression RPAREN SEMICOLON # Do
+              | FOR LPAREN forinitializer? SEMICOLON expression? SEMICOLON foriterator? RPAREN methodcontent # For
+              | FOREACH LPAREN Return=type Variable=identifier IN List=expression RPAREN methodcontent # Foreach
+              | SWITCH LPAREN Switch=expression RPAREN LBRACE switchcase* RBRACE # Switch
+              | GOTO gotodestination SEMICOLON # Goto
+              | Type=(CHECKED | UNCHECKED) methodcontent # Checked
+              | UNSAFE methodcontent # Unsafe
+              | LOCK LPAREN expression RPAREN methodcontent # Lock
+              | Type=(USING | FIXED) LPAREN (Return=type vardecl (COMMA vardecl)* | expression) RPAREN methodcontent # Using
+              | TRY methodcontent (CATCH (LPAREN type identifier? RPAREN)? methodcontent)* (FINALLY methodcontent)? # Try
+              | YIELD? BREAK SEMICOLON # Break
+              | CONTINUE SEMICOLON # Continue
+              | YIELD? RETURN expression? SEMICOLON # Return
+              | THROW expression? SEMICOLON # Throw
+              | SEMICOLON # Empty
+              ;
+operator : type | AND | BANG | DEC | DIV | EQ | FALSE | GE | GT | GT GT | INC | LE | LEFT_SHIFT | LT | MINUS | MOD | MULT | NE | OR | PLUS | TILDE | TRUE | XOR ;
+modifier : ABSTRACT | ASYNC | CONST | DELEGATE | EXPLICIT | EXTERN | FIXED | IMPLICIT | INTERNAL | NEW | OVERRIDE | PARTIAL | PRIVATE | PROTECTED | PUBLIC | READONLY | SEALED | STATIC | UNSAFE | VIRTUAL | VOLATILE ;
+
+enumvalue : attribute* Name=identifier (ASSIGN expression)? ;
+forinitializer : (type? vardecl (COMMA vardecl)*) ;
+foriterator : expression (COMMA expression)* ;
+vardecl : Name=type (ASSIGN initialize)? ;
+switchcase : ((CASE expression | DEFAULT) COLON)* methodcontent+ ;
+gotodestination : (identifier | CASE expression | DEFAULT) ;
+
+identifier : IDENTIFIER | ADD | ALIAS | ASCENDING | ASSEMBLY | ASYNC | AWAIT | BY | DESCENDING | EQUALS | FIELD | FROM | GET | GROUP | INTO | JOIN | LET | METHOD | MODULE | ON | ORDERBY | PARAM | PARTIAL | PROPERTY | REMOVE | SELECT | SET | TYPE | WHERE | YIELD | THIS | BASE ;
+typepart : identifier (LT generic_type (COMMA generic_type)* GT)? ;
+type : (identifier DOUBLE_COLON)? TILDE? typepart (DOT typepart)* unnamed_type ;
+unnamed_type : (INTERR | MULT)? (LBRACKET NUMBER? (COMMA NUMBER?)* RBRACKET)* ;
+generic_type : attribute* (IN | OUT | REF)* type? ;
+
+initialize : expression | LBRACE initialize_list RBRACE | LBRACKET expression RBRACKET ASSIGN expression ;
+initialize_list : (initialize (COMMA initialize)* COMMA?)? ;
+
+methodparamslist : (methodparam (COMMA methodparam)*)? ;
+methodparam : (identifier COLON)? (IN | OUT | REF)? expression ;
+expressionlist : (expression (COMMA expression)*)? ;
+expression : identifier # ExpressionIdentifier
+           | expression (AND | AND_ASSIGN | ASSIGN | DIV | DIV_ASSIGN | INTERR? DOT | EQ | GE | GT | GT GE | GT GT | LAND | LE | LEFT_SHIFT | LEFT_SHIFT_ASSIGN | LOR | LT | MINUS | MINUS_ASSIGN | MOD | MOD_ASSIGN | MULT | MULT_ASSIGN | NE | OR | OR_ASSIGN | PLUS | PLUS_ASSIGN | PTR | XOR | XOR_ASSIGN) expression # ExpressionBinaryOp
+           | expression INTERR expression COLON expression # ExpressionTernaryOp
+           | (INC | DEC | PLUS | MINUS | BANG | TILDE | AND | MULT) expression # ExpressionUnary
+           | expression (INC | DEC) # ExpressionUnary
+           | expression LBRACKET expression (COMMA expression)* RBRACKET # ExpressionArray
+           | (NEW | STACKALLOC) (type | unnamed_type) ((LPAREN expressionlist RPAREN) | (LBRACE initialize_list RBRACE))* # ExpressionNew
+           | (CHECKED | UNCHECKED) LPAREN expression RPAREN # ExpressionChecked
+           | expression (AS | IS) type # ExpressionCheckType
+           | expression COALESCE expression # ExpressionCoalesce
+           | LPAREN type RPAREN expression # ExpressionCast
+           | LPAREN expression RPAREN # ExpressionParens
+           | type # ExpressionType
+           | AWAIT expression # ExpressionAwait
+           | expression LPAREN methodparamslist RPAREN # ExpressionMethodCall
+           | DELEGATE (LPAREN paramlist RPAREN)? methodcontent # ExpressionDelegate
+           | ASYNC? (identifier | LPAREN (type? identifier (COMMA type? identifier)*)? RPAREN) LAMBDA (expression | methodcontent) # ExpressionLambda
+           | TYPEOF LPAREN type RPAREN # ExpressionTypeOf
+           | DEFAULT LPAREN type RPAREN # ExpressionDefault
+           | linq # ExpressionLinq
+           | (STR | CHARACTER | NUMBER | TRUE | FALSE | NULL) # ExpressionLiteral
+           ;
+
+param : attribute* (IN | OUT | REF | PARAMS | THIS)? type Name=identifier (ASSIGN expression)? ;
+paramlist : (param (COMMA param)*)? | ARGLIST ;
+
+attrvalue : type (LPAREN expressionlist RPAREN)? ;
+attribute : LBRACKET ((ASSEMBLY | EVENT | FIELD | METHOD | MODULE | PARAM | PROPERTY | RETURN | TYPE | TYPEVAR) COLON)? attrvalue (COMMA attrvalue)* RBRACKET ;
+
+wherelimit : (type | CLASS | STRUCT | NEW LPAREN RPAREN) ;
+where : WHERE identifier COLON wherelimit (COMMA wherelimit)* ;
 
 linq : linq_from linq_body ;
-linq_from : FROM name? name IN expression ;
-linq_body : (linq_from | LET name ASSIGN expression | WHERE expression | JOIN name? name IN expression ON expression EQUALS expression (INTO name)? | ORDERBY linq_order (COMMA linq_order)*)* (SELECT expression | GROUP expression BY expression) (INTO name linq_body)? ;
+linq_from : FROM type? identifier IN expression ;
+linq_body : (linq_from | LET identifier ASSIGN expression | WHERE expression | JOIN type? identifier IN expression ON expression EQUALS expression (INTO identifier)? | ORDERBY linq_order (COMMA linq_order)*)* (SELECT expression | GROUP expression BY expression) (INTO identifier linq_body)? ;
 linq_order : expression (ASCENDING | DESCENDING)? ;

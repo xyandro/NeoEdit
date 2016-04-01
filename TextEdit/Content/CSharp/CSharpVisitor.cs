@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
@@ -60,25 +62,6 @@ namespace NeoEdit.TextEdit.Content.CSharp
 			return result;
 		}
 
-		const string ROOT = "Root";
-		const string BASE = "Base";
-		const string BLOCK = "Block";
-		const string CASES = "Cases";
-		const string CONDITION = "Condition";
-		const string DECLARATION = "Declaration";
-		const string EMPTY = "Empty";
-		const string EXPRESSION = "Expression";
-		const string GLOBALATTR = "GlobalAttr";
-		const string INDEXER = "Indexer";
-		const string LABEL = "Label";
-		const string METHOD = "Method";
-		const string MODIFIER = "Modifier";
-		const string NAME = "Name";
-		const string PROPERTY = "Property";
-		const string USINGS = "Usings";
-		const string METHODPARAM = "MethodParam";
-
-
 		readonly ParserNode Root;
 		ParserNode Parent => stack.Peek();
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
@@ -86,24 +69,32 @@ namespace NeoEdit.TextEdit.Content.CSharp
 		CSharpVisitor(string input)
 		{
 			this.input = input;
-			stack.Push(Root = new ParserNode { Type = ROOT, Start = 0, End = input.Length });
+			stack.Push(Root = new ParserNode { Type = "Root", Start = 0, End = input.Length });
 		}
 
-		ParserNode AddNode(ParserRuleContext context, params object[] useTypes)
+		ParserNode AddNode(ParserRuleContext context, Dictionary<string, object> attributes)
 		{
 			var node = new ParserNode { Parent = Parent, LocationParserRule = context };
 
-			foreach (var useType in useTypes)
+			foreach (var pair in attributes)
 			{
-				var type = useType as string;
-				if (type != null)
-					node.Type = type;
-				var token = useType as IToken;
-				if (token != null)
-					node.AddAttr(ParserNode.TYPE, input, token);
-				var terminalNode = useType as ITerminalNode;
-				if (terminalNode != null)
-					node.AddAttr(ParserNode.TYPE, input, terminalNode);
+				if (pair.Value == null)
+				{ }
+				else if (pair.Value is string)
+					node.AddAttr(pair.Key, pair.Value as string);
+				else if (pair.Value is IToken)
+					node.AddAttr(pair.Key, input, pair.Value as IToken);
+				else if (pair.Value is ITerminalNode)
+					node.AddAttr(pair.Key, input, pair.Value as ITerminalNode);
+				else if (pair.Value is ParserRuleContext)
+					node.AddAttr(pair.Key, input, pair.Value as ParserRuleContext);
+				else if (pair.Value is IEnumerable<ParserRuleContext>)
+				{
+					foreach (var value in pair.Value as IEnumerable<ParserRuleContext>)
+						node.AddAttr(pair.Key, input, value as ParserRuleContext);
+				}
+				else
+					throw new Exception($"Unknown attribute: {pair.Key}");
 			}
 
 			stack.Push(node);
@@ -119,59 +110,195 @@ namespace NeoEdit.TextEdit.Content.CSharp
 			return null;
 		}
 
-		public override object VisitSaveblock(CSharpParser.SaveblockContext context) => AddNode(context, BLOCK);
-		public override object VisitContentExpression(CSharpParser.ContentExpressionContext context) => AddNode(context, EXPRESSION);
-		public override object VisitNamespace(CSharpParser.NamespaceContext context) => AddNode(context, context.NAMESPACE());
-		public override object VisitClass(CSharpParser.ClassContext context) => AddNode(context, context.CLASS());
-		public override object VisitEnum(CSharpParser.EnumContext context) => AddNode(context, context.ENUM());
-		public override object VisitMethod(CSharpParser.MethodContext context) => AddNode(context, METHOD);
-		public override object VisitIndexer(CSharpParser.IndexerContext context) => AddNode(context, INDEXER);
-		public override object VisitDelegate(CSharpParser.DelegateContext context) => AddNode(context, context.DELEGATE());
-		public override object VisitEvent(CSharpParser.EventContext context) => AddNode(context, context.EVENT());
-		public override object VisitProperty(CSharpParser.PropertyContext context) => AddNode(context, PROPERTY);
-		public override object VisitSwitch(CSharpParser.SwitchContext context) => AddNode(context, context.SWITCH());
-		public override object VisitReturn(CSharpParser.ReturnContext context) => AddNode(context, context.RETURN());
-		public override object VisitThrow(CSharpParser.ThrowContext context) => AddNode(context, context.THROW());
-		public override object VisitDeclaration(CSharpParser.DeclarationContext context) => AddNode(context, DECLARATION);
-		public override object VisitIf(CSharpParser.IfContext context) => AddNode(context, context.type);
-		public override object VisitLabel(CSharpParser.LabelContext context) => AddNode(context, LABEL);
-		public override object VisitGoto(CSharpParser.GotoContext context) => AddNode(context, context.GOTO());
-		public override object VisitFixed(CSharpParser.FixedContext context) => AddNode(context, context.FIXED());
-		public override object VisitChecked(CSharpParser.CheckedContext context) => AddNode(context, context.CHECKED() ?? context.UNCHECKED());
-		public override object VisitUsing(CSharpParser.UsingContext context) => AddNode(context, context.USING());
-		public override object VisitLock(CSharpParser.LockContext context) => AddNode(context, context.LOCK());
-		public override object VisitFor(CSharpParser.ForContext context) => AddNode(context, context.FOR());
-		public override object VisitForeach(CSharpParser.ForeachContext context) => AddNode(context, context.FOREACH());
-		public override object VisitWhile(CSharpParser.WhileContext context) => AddNode(context, context.WHILE());
-		public override object VisitDo(CSharpParser.DoContext context) => AddNode(context, context.DO());
-		public override object VisitBreak(CSharpParser.BreakContext context) => AddNode(context, context.BREAK());
-		public override object VisitContinue(CSharpParser.ContinueContext context) => AddNode(context, context.CONTINUE());
-		public override object VisitTry(CSharpParser.TryContext context) => AddNode(context, context.TRY());
-		public override object VisitGlobalAttr(CSharpParser.GlobalAttrContext context) => AddNode(context, GLOBALATTR);
-		public override object VisitUsingns(CSharpParser.UsingnsContext context) => AddNode(context, context.USING());
-		public override object VisitPropertyaccess(CSharpParser.PropertyaccessContext context) => AddNode(context, context.GET() ?? context.SET());
-		public override object VisitSavesemicolon(CSharpParser.SavesemicolonContext context) => AddNode(context, EMPTY);
-		public override object VisitCases(CSharpParser.CasesContext context) => AddNode(context, CASES);
-		public override object VisitMethodcallparam(CSharpParser.MethodcallparamContext context) => AddNode(context, METHODPARAM);
-
-		public override object VisitSavename(CSharpParser.SavenameContext context) => AddAttribute(NAME, context);
-		public override object VisitSavebase(CSharpParser.SavebaseContext context) => AddAttribute(BASE, context);
-		public override object VisitModifier(CSharpParser.ModifierContext context) => AddAttribute(MODIFIER, context);
-		public override object VisitSaveconditionexpression(CSharpParser.SaveconditionexpressionContext context) => AddAttribute(CONDITION, context);
-
-		public override object VisitUsings(CSharpParser.UsingsContext context)
+		public override object VisitExternAlias([NotNull] CSharpParser.ExternAliasContext context) => AddNode(context, new Dictionary<string, object>
 		{
-			var node = AddNode(context, USINGS);
-
-			// Remove "USINGS" node if there's only one child
-			var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
-			if (children.Count == 1)
-			{
-				var child = children.Single();
-				child.Parent = node.Parent;
-				node.Parent = null;
-			}
-			return node;
-		}
+			["Type"] = "ExternAlias",
+		});
+		public override object VisitUsingNS([NotNull] CSharpParser.UsingNSContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "UsingNS",
+		});
+		public override object VisitNamespace([NotNull] CSharpParser.NamespaceContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Namespace",
+			["Name"] = context.Name,
+		});
+		public override object VisitClass([NotNull] CSharpParser.ClassContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = context.NodeType.Text.ToProper(),
+			["Name"] = context.Name,
+			["Base"] = context.type().Where(type => type != context.Name),
+			["Attribute"] = context.attribute(),
+			["Modifier"] = context.modifier(),
+			["Where"] = context.where(),
+		});
+		public override object VisitProperty([NotNull] CSharpParser.PropertyContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Property",
+			["Name"] = (object)context.Name ?? context.THIS(),
+			["Return"] = context.Return,
+			["Attribute"] = context.attribute(),
+			["Modifier"] = context.modifier(),
+		});
+		public override object VisitAccessor([NotNull] CSharpParser.AccessorContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Accessor",
+			["Name"] = context.Name,
+			["Attribute"] = context.attribute(),
+			["Modifier"] = context.modifier(),
+		});
+		public override object VisitMethod([NotNull] CSharpParser.MethodContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Method",
+			["Name"] = (object)context.Name ?? context.Operator,
+			["Return"] = context.Return,
+			["Attribute"] = context.attribute(),
+			["Modifier"] = context.modifier(),
+			["Where"] = context.where(),
+			["Param"] = context.paramlist().param(),
+			["ParamName"] = context.paramlist().param().Select(param => param.Name),
+		});
+		public override object VisitField([NotNull] CSharpParser.FieldContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Field",
+			["Name"] = context.vardecl().Select(vardecl => vardecl.type()),
+			["Return"] = context.Return,
+			["Attribute"] = context.attribute(),
+			["Modifier"] = context.modifier(),
+		});
+		public override object VisitEvent([NotNull] CSharpParser.EventContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Event",
+			["Name"] = context.Name,
+			["Return"] = context.Return,
+			["Attribute"] = context.attribute(),
+			["Modifier"] = context.modifier(),
+		});
+		public override object VisitEnum([NotNull] CSharpParser.EnumContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Enum",
+			["Name"] = context.Name,
+			["Return"] = context.Return,
+			["Attribute"] = context.attribute(),
+			["Modifier"] = context.modifier(),
+		});
+		public override object VisitEnumvalue([NotNull] CSharpParser.EnumvalueContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "EnumValue",
+			["Name"] = context.Name,
+			["Attribute"] = context.attribute(),
+		});
+		public override object VisitGlobalAttribute([NotNull] CSharpParser.GlobalAttributeContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "GlobalAttribute",
+		});
+		public override object VisitVariable([NotNull] CSharpParser.VariableContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Variable",
+			["Name"] = context.vardecl().Select(vardecl => vardecl.Name),
+			["Return"] = context.Return,
+			["Modifier"] = context.modifier(),
+		});
+		public override object VisitGotoLabel([NotNull] CSharpParser.GotoLabelContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "GotoLabel",
+			["Name"] = context.Name,
+		});
+		public override object VisitBlock([NotNull] CSharpParser.BlockContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Block",
+		});
+		public override object VisitContentExpression([NotNull] CSharpParser.ContentExpressionContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Expression",
+		});
+		public override object VisitIf([NotNull] CSharpParser.IfContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "If",
+			["Condition"] = context.Condition,
+		});
+		public override object VisitWhile([NotNull] CSharpParser.WhileContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "While",
+			["Condition"] = context.Condition,
+		});
+		public override object VisitDo([NotNull] CSharpParser.DoContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Do",
+			["Condition"] = context.Condition,
+		});
+		public override object VisitFor([NotNull] CSharpParser.ForContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "For",
+			["Initializer"] = context.forinitializer(),
+			["Condition"] = context.expression(),
+			["Iterator"] = context.foriterator(),
+			["Variable"] = context.forinitializer()?.vardecl(),
+			["VariableName"] = context.forinitializer()?.vardecl().Select(vardecl => vardecl.Name),
+		});
+		public override object VisitForeach([NotNull] CSharpParser.ForeachContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "ForEach",
+			["Return"] = context.Return,
+			["Variable"] = context.Variable,
+			["List"] = context.List,
+		});
+		public override object VisitSwitch([NotNull] CSharpParser.SwitchContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Switch",
+			["Switch"] = context.Switch,
+		});
+		public override object VisitSwitchcase([NotNull] CSharpParser.SwitchcaseContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "SwitchCase",
+			["Condition"] = context.expression(),
+		});
+		public override object VisitGoto([NotNull] CSharpParser.GotoContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Goto",
+			["Destination"] = context.gotodestination(),
+		});
+		public override object VisitChecked([NotNull] CSharpParser.CheckedContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = context.Type.Text.ToProper(),
+		});
+		public override object VisitUnsafe([NotNull] CSharpParser.UnsafeContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Unsafe",
+		});
+		public override object VisitLock([NotNull] CSharpParser.LockContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Lock",
+			["Lock"] = context.expression(),
+		});
+		public override object VisitUsing([NotNull] CSharpParser.UsingContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = context.Type.Text.ToProper(),
+			["Return"] = context.Return,
+			["Variable"] = context.vardecl(),
+			["VariableName"] = context.vardecl().Select(vardecl => vardecl.Name),
+			["Expression"] = context.expression(),
+		});
+		public override object VisitTry([NotNull] CSharpParser.TryContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Try",
+		});
+		public override object VisitBreak([NotNull] CSharpParser.BreakContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Break",
+		});
+		public override object VisitContinue([NotNull] CSharpParser.ContinueContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Continue",
+		});
+		public override object VisitReturn([NotNull] CSharpParser.ReturnContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Return",
+			["Return"] = context.expression(),
+		});
+		public override object VisitEmpty([NotNull] CSharpParser.EmptyContext context) => AddNode(context, new Dictionary<string, object>
+		{
+			["Type"] = "Empty",
+		});
 	}
 }
