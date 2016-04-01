@@ -695,6 +695,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
 				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
+				case TextEditCommand.File_Operations_CommandPrompt: Command_File_Operations_CommandPrompt(); break;
 				case TextEditCommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
 				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
@@ -780,6 +781,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
 				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
 				case TextEditCommand.Files_Operations_Explore: Command_Files_Operations_Explore(); break;
+				case TextEditCommand.Files_Operations_CommandPrompt: Command_Files_Operations_CommandPrompt(); break;
 				case TextEditCommand.Files_Operations_Create_Files: Command_Files_Operations_Create_Files(); break;
 				case TextEditCommand.Files_Operations_Create_Directories: Command_Files_Operations_Create_Directories(); break;
 				case TextEditCommand.Files_Operations_Create_FromExpressions: Command_Files_Operations_Create_FromExpressions(dialogResult as CreateFilesDialog.Result); break;
@@ -1224,6 +1226,8 @@ namespace NeoEdit.TextEdit
 		internal void Command_File_Copy_Name() => SetClipboardText(Path.GetFileName(FileName));
 
 		internal void Command_File_Operations_Explore() => Process.Start("explorer.exe", $"/select,\"{FileName}\"");
+
+		internal void Command_File_Operations_CommandPrompt() => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(FileName) });
 
 		internal void Command_File_Operations_DragDrop()
 		{
@@ -2063,6 +2067,14 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count != 1)
 				throw new Exception("Can only explore one file.");
 			Process.Start("explorer.exe", $"/select,\"{RelativeSelectedFiles()[0]}\"");
+		}
+
+		internal void Command_Files_Operations_CommandPrompt()
+		{
+			var dirs = RelativeSelectedFiles().Select(path => File.Exists(path) ? Path.GetDirectoryName(path) : path).Distinct().ToList();
+			if (dirs.Count != 1)
+				throw new Exception("Too many file locations.");
+			Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = dirs[0] });
 		}
 
 		internal void Command_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());
