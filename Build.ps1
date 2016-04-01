@@ -41,7 +41,8 @@ Function GitClean ()
 Function GitUpdate ()
 {
 	git checkout master
-	git pull
+	git remote update
+	git reset --hard origin/master
 }
 
 Function Build ()
