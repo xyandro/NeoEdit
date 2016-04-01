@@ -357,13 +357,14 @@
 			<textEdit:MultiMenuItem Header="_XML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.XML}" CommandEnum="Content_Type_XML"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Reformat" CommandEnum="Content_Reformat"/>
+		<textEdit:TextEditMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Co_mment" CommandEnum="Content_Comment"/>
 		<textEdit:TextEditMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="Cu_rrent" CommandEnum="Content_Current"/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
 		<textEdit:TextEditMenuItem Header="Ancest_or" CommandEnum="Content_Ancestor"/>
 		<MenuItem Header="_Attributes">

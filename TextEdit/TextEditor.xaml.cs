@@ -879,6 +879,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
 				case TextEditCommand.Content_TogglePosition: Command_Content_TogglePosition(shiftDown); break;
+				case TextEditCommand.Content_Current: Command_Content_Current(); break;
 				case TextEditCommand.Content_Parent: Command_Content_Parent(); break;
 				case TextEditCommand.Content_Ancestor: Command_Content_List(ParserNode.ParserNodeListType.Parents, findAttr: dialogResult as FindContentAttributeDialog.Result); break;
 				case TextEditCommand.Content_Attributes_Attributes: Command_Content_List(ParserNode.ParserNodeListType.Attributes); break;

@@ -29,21 +29,14 @@ namespace NeoEdit.TextEdit
 
 		List<ParserNode> GetSelectionNodes()
 		{
-			var doc = RootNode();
+			var nodes = RootNode().GetAllNodes().Where(node => (node.HasLocation) && (!node.IsAttr)).ToList();
 			var fullLocation = new Dictionary<int, Dictionary<int, ParserNode>>();
 			var startLocation = new Dictionary<int, ParserNode>();
-			var nodes = doc.GetAllNodes().Where(node => node.HasLocation).ToList();
 			foreach (var node in nodes)
 			{
-				if (!node.HasLocation)
-					continue;
-
 				if (!fullLocation.ContainsKey(node.Start))
 					fullLocation[node.Start] = new Dictionary<int, ParserNode>();
 				fullLocation[node.Start][node.End] = node;
-
-				if (node.IsAttr)
-					continue;
 
 				startLocation[node.Start] = node;
 			}
@@ -57,15 +50,7 @@ namespace NeoEdit.TextEdit
 				else if (startLocation.ContainsKey(range.Cursor))
 					found = startLocation[range.Cursor];
 				else
-				{
-					var inRangeNodes = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).ToList();
-					if (inRangeNodes.Any())
-					{
-						var maxDepth = inRangeNodes.Max(node => node.Depth);
-						inRangeNodes = inRangeNodes.Where(node => node.Depth == maxDepth).ToList();
-						found = inRangeNodes.LastOrDefault();
-					}
-				}
+					found = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).OrderBy(node => node.Depth).LastOrDefault();
 				if (found == null)
 					throw new Exception("No node found");
 				result.Add(found);
@@ -75,15 +60,16 @@ namespace NeoEdit.TextEdit
 
 		List<ParserNode> ContentGetList(ParserNode node, ParserNode.ParserNodeListType list, bool first, FindContentAttributeDialog.Result findAttr)
 		{
-			var nodes = node.List(list).Where(child => child.HasLocation).ToList();
+			var nodes = node.List(list).Where(child => child.HasLocation);
 
 			if (findAttr != null)
-				nodes = nodes.Where(child => child.HasAttr(findAttr.Attribute, findAttr.Regex, findAttr.Invert)).ToList();
+				nodes = nodes.Where(child => child.HasAttr(findAttr.Attribute, findAttr.Regex, findAttr.Invert));
 
 			if (first)
-				nodes = nodes.Take(1).ToList();
+				nodes = nodes.Take(1);
 
-			return nodes;
+			var nodeList = nodes.ToList();
+			return nodeList.Any() ? nodeList : new List<ParserNode> { node };
 		}
 
 		void ContentReplaceSelections(List<ParserNode> nodes)
@@ -127,6 +113,8 @@ namespace NeoEdit.TextEdit
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All(b => b);
 			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
+
+		internal void Command_Content_Current() => ContentReplaceSelections(GetSelectionNodes().ToList());
 
 		internal void Command_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node).Distinct().ToList());
 

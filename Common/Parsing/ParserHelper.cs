@@ -17,7 +17,7 @@ namespace NeoEdit.Common.Parsing
 		{
 			public void SyntaxError(IRecognizer recognizer, T offendingSymbol, int line, int pos, string msg, RecognitionException e)
 			{
-				throw new Exception("Failed to parse");
+				throw new Exception($"Failed to parse at line {line} pos {pos}: {msg}");
 			}
 		}
 
@@ -46,10 +46,10 @@ namespace NeoEdit.Common.Parsing
 			public void VisitTerminal(ITerminalNode node) { }
 		}
 
-		public static TreeT Parse<LexerT, ParserT, TreeT>(string input, Func<ParserT, TreeT> parse, bool strict = false, bool caseSensitive = true, string debugPath = null) where TreeT : IParseTree
+		public static TreeT Parse<LexerT, ParserT, TreeT>(string input, Func<ParserT, TreeT> parse, bool strict = false, bool caseSensitive = true, string debugPath = null) where LexerT : Lexer where ParserT : Parser where TreeT : IParseTree
 		{
 			var inputStream = caseSensitive ? new AntlrInputStream(input) : new CaseInsensitiveInputStream(input);
-			dynamic lexer = Activator.CreateInstance(typeof(LexerT), new[] { inputStream });
+			var lexer = (Lexer)Activator.CreateInstance(typeof(LexerT), new[] { inputStream });
 			if (strict)
 			{
 				lexer.RemoveErrorListeners();
@@ -59,9 +59,12 @@ namespace NeoEdit.Common.Parsing
 				Save(lexer, Path.Combine(debugPath, "Lexer.txt"));
 
 			var tokens = new CommonTokenStream(lexer);
-			dynamic parser = Activator.CreateInstance(typeof(ParserT), new[] { tokens });
+			var parser = (ParserT)Activator.CreateInstance(typeof(ParserT), new[] { tokens });
 			if (strict)
-				parser.ErrorHandler = new BailErrorStrategy();
+			{
+				parser.RemoveErrorListeners();
+				parser.AddErrorListener(new ErrorListener<IToken>());
+			}
 			parser.Interpreter.PredictionMode = PredictionMode.Sll;
 
 			TreeT tree;
