@@ -148,7 +148,13 @@ namespace NeoEdit.Common.Parsing
 			}
 		}
 
-		public IEnumerable<string> GetAttrTypes() => List(ParserNodeListType.Attributes).Select(attr => attr.Type);
+		public IEnumerable<string> GetAttrTypes(bool withLocation = false)
+		{
+			var attrs = List(ParserNodeListType.Attributes);
+			if (withLocation)
+				attrs = attrs.Where(attr => attr.HasLocation);
+			return attrs.Select(attr => attr.Type);
+		}
 
 		public ParserNode GetAttr(string type) => GetAttrs(type, true).FirstOrDefault();
 

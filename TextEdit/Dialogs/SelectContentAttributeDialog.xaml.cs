@@ -27,7 +27,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		SelectContentAttributeDialog(List<ParserNode> nodes)
 		{
 			InitializeComponent();
-			Attributes = Parser.GetAvailableAttrs(nodes);
+			Attributes = Parser.GetAvailableAttrs(nodes, true);
 			Attribute = Attributes.FirstOrDefault();
 		}
 
