@@ -22,7 +22,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Attribute:" Target="{Binding ElementName=attribute}" HorizontalAlignment="Right"/>
-		<ComboBox Grid.Row="0" Grid.Column="1" Name="attribute" ItemsSource="{Binding Attributes, ElementName=self}" SelectedItem="{Binding Attribute, ElementName=self}"/>
+		<ComboBox Grid.Row="0" Grid.Column="1" Name="attribute" ItemsSource="{Binding Attributes, ElementName=self}" Text="{Binding Attribute, ElementName=self, UpdateSourceTrigger=PropertyChanged}" IsEditable="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Text:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
 		<ComboBox Grid.Row="1" Grid.Column="1" Name="text" ItemsSource="{Binding Values, ElementName=self}" Text="{Binding Value, ElementName=self, UpdateSourceTrigger=PropertyChanged}" IsEditable="True"/>
