@@ -9,22 +9,19 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		struct PreviousContent
-		{
-			public string Data;
-			public Parser.ParserType Type;
-			public ParserNode Root;
-		}
-		PreviousContent previousContent;
+		CacheValue previousData = new CacheValue();
+		Parser.ParserType previousType;
+		ParserNode previousRoot;
+
 		ParserNode RootNode()
 		{
-			if ((previousContent.Data != Data.Data) || (previousContent.Type != ContentType))
+			if ((!previousData.Match(Data.Data)) || (previousType != ContentType))
 			{
-				previousContent.Root = Parser.Parse(Data.Data, ContentType);
-				previousContent.Data = Data.Data;
-				previousContent.Type = ContentType;
+				previousRoot = Parser.Parse(Data.Data, ContentType);
+				previousData.SetValue(Data.Data);
+				previousType = ContentType;
 			}
-			return previousContent.Root;
+			return previousRoot;
 		}
 
 		List<ParserNode> GetSelectionNodes()

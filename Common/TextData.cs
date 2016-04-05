@@ -29,7 +29,6 @@ namespace NeoEdit.Common
 		public int NumChars => Data.Length;
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
-		public string UTF8MD5 => Hasher.Get(Coder.StringToBytes(Data, Coder.CodePage.UTF8), Hasher.Type.MD5);
 
 		public TextData(string data = "")
 		{

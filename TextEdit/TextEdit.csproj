@@ -47,6 +47,7 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CacheValue.cs" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />

@@ -267,18 +267,17 @@ namespace NeoEdit.TextEdit
 			};
 		}
 
-		string modifiedChecksum;
+		CacheValue modifiedChecksum = new CacheValue();
 		void SetModifiedFlag(bool? newValue = null)
 		{
-			var checksum = Data.UTF8MD5;
 			if (newValue.HasValue)
 			{
 				if (newValue == false)
-					modifiedChecksum = checksum;
+					modifiedChecksum.SetValue(Data.Data);
 				else
-					modifiedChecksum = "INVALIDMD5"; // Invalid MD5: Nothing will match, file will be perpetually modified
+					modifiedChecksum.Invalidate(); // Nothing will match, file will be perpetually modified
 			}
-			IsModified = modifiedChecksum != checksum;
+			IsModified = !modifiedChecksum.Match(Data.Data);
 		}
 
 		internal void Goto(int? line, int? column)
