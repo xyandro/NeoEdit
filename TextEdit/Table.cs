@@ -135,7 +135,7 @@ namespace NeoEdit.TextEdit
 			var numColumns = Rows.Max(row => row.Count);
 			foreach (var row in Rows)
 				while (row.Count < numColumns)
-					row.Add(NULL);
+					row.Add("");
 		}
 
 		public static string ToTCSV(string str, char split)
