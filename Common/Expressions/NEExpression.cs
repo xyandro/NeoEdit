@@ -39,16 +39,23 @@ namespace NeoEdit.Common.Expressions
 			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => InternalEvaluate(variables, row, values)).ToList();
 		}
 
+		T ChangeType<T>(object value)
+		{
+			if (typeof(T) == typeof(string))
+				return (T)(object)value.ToString();
+			return (T)Convert.ChangeType(value, typeof(T));
+		}
+
 		public List<T> EvaluateRows<T>(NEVariables variables, int? rowCount = null, params object[] values)
 		{
 			if (rowCount < 0)
 				throw new ArgumentException($"{nameof(rowCount)} must be positive");
 
 			if (!Variables.Any())
-				return Enumerable.Repeat((T)Convert.ChangeType(InternalEvaluate(null, 0, values), typeof(T)), rowCount ?? 1).ToList();
+				return Enumerable.Repeat(ChangeType<T>(InternalEvaluate(null, 0, values)), rowCount ?? 1).ToList();
 
 			variables.Prepare(this, rowCount);
-			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => (T)Convert.ChangeType(InternalEvaluate(variables, row, values), typeof(T))).ToList();
+			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => ChangeType<T>(InternalEvaluate(variables, row, values))).ToList();
 		}
 
 		HashSet<string> variables;
