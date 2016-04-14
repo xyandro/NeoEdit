@@ -154,6 +154,7 @@ namespace NeoEdit.TextEdit
 		Numeric_Select_Fraction,
 		[KeyGesture(Key.H, ModifierKeys.Control)] Numeric_Hex_ToHex,
 		[KeyGesture(Key.H, ModifierKeys.Control | ModifierKeys.Shift)] Numeric_Hex_FromHex,
+		Numeric_ConvertBase,
 		Numeric_Series_ZeroBased,
 		Numeric_Series_OneBased,
 		Numeric_Series_Linear,

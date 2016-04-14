@@ -603,6 +603,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
 				case TextEditCommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(); break;
 				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(); break;
+				case TextEditCommand.Numeric_ConvertBase: dialogResult = Command_Numeric_ConvertBase_Dialog(); break;
 				case TextEditCommand.Numeric_Series_Linear: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(true); break;
 				case TextEditCommand.Numeric_Series_Geometric: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(false); break;
 				case TextEditCommand.Numeric_Scale: dialogResult = Command_Numeric_Scale_Dialog(); break;
@@ -826,6 +827,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Select_Fraction: Command_Numeric_Select_Fraction(); break;
 				case TextEditCommand.Numeric_Hex_ToHex: Command_Numeric_Hex_ToHex(); break;
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
+				case TextEditCommand.Numeric_ConvertBase: Command_Numeric_ConvertBase(dialogResult as ConvertBaseDialog.Result); break;
 				case TextEditCommand.Numeric_Series_ZeroBased: Command_Numeric_Series_ZeroBased(); break;
 				case TextEditCommand.Numeric_Series_OneBased: Command_Numeric_Series_OneBased(); break;
 				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_Linear(dialogResult as NumericSeriesDialog.Result); break;
@@ -2111,6 +2113,24 @@ namespace NeoEdit.TextEdit
 		internal void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => long.Parse(GetString(range)).ToString("x")).ToList());
 
 		internal void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => long.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
+
+		private string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
+		{
+			BigInteger value = 0;
+			for (var ctr = 0; ctr < str.Length; ++ctr)
+				value = value * inputSet.Count + inputSet[str[ctr]];
+			var output = new LinkedList<char>();
+			while (value != 0)
+			{
+				output.AddFirst(outputSet[(int)(value % outputSet.Count)]);
+				value /= outputSet.Count;
+			}
+			return new string(output.ToArray());
+		}
+
+		internal ConvertBaseDialog.Result Command_Numeric_ConvertBase_Dialog() => ConvertBaseDialog.Run(WindowParent);
+
+		internal void Command_Numeric_ConvertBase(ConvertBaseDialog.Result result) => ReplaceSelections(GetSelectionStrings().Select(str => ConvertBase(str, result.InputSet, result.OutputSet)).ToList());
 
 		internal void Command_DateTime_Now() => ReplaceSelections(DateTime.Now.ToString("O"));
 

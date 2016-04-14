@@ -273,6 +273,7 @@
 			<textEdit:TextEditMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
 			<textEdit:TextEditMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
 		</MenuItem>
+		<textEdit:TextEditMenuItem Header="Convert _Base" CommandEnum="Numeric_ConvertBase"/>
 		<Separator/>
 		<MenuItem Header="S_eries">
 			<textEdit:TextEditMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
