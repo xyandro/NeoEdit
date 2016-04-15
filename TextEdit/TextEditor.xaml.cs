@@ -415,15 +415,6 @@ namespace NeoEdit.TextEdit
 
 		bool VerifyCanFullyEncode() => (Data.CanFullyEncode(CodePage)) || (ConfirmVerifyCanFullyEncode());
 		bool VerifyCanFullyEncode(List<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
-		bool VerifyCanFullyEncode(List<byte[]> data, Coder.CodePage codePage) => (data.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
-
-		Coder.CodePage DetectUnicode(List<byte[]> data)
-		{
-			if (data.Count == 0)
-				return Coder.CodePage.Default;
-
-			return data.Select(a => Coder.GuessUnicodeEncoding(a)).GroupBy(a => a).OrderByDescending(a => a.Count()).First().Key;
-		}
 
 		internal NEVariables GetVariables()
 		{

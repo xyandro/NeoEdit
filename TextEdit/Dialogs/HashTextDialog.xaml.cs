@@ -28,7 +28,7 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			InitializeComponent();
 
-			codePage.ItemsSource = Coder.GetStringCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
+			codePage.ItemsSource = Coder.GetAllCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
 			codePage.SelectedValuePath = "Key";
 			codePage.DisplayMemberPath = "Value";
 

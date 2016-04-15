@@ -266,6 +266,22 @@ namespace NeoEdit.Common
 			return sb.ToString();
 		}
 
+		public static string ConvertWhitespaceToSpaces(this string input)
+		{
+			var last = false;
+			var sb = new StringBuilder();
+			foreach (var c in input)
+			{
+				var isWhiteSpace = char.IsWhiteSpace(c);
+				if (!isWhiteSpace)
+					sb.Append(c);
+				else if (!last)
+					sb.Append(' ');
+				last = isWhiteSpace;
+			}
+			return sb.ToString();
+		}
+
 		public static string CoalesceNullOrEmpty(this string input, params string[] inputs) => new[] { input }.Concat(inputs).FirstOrDefault(str => !string.IsNullOrEmpty(str));
 		public static string CoalesceNullOrEmpty(params string[] inputs) => inputs.FirstOrDefault(str => !string.IsNullOrEmpty(str));
 		public static string CoalesceNullOrWhiteSpace(this string input, params string[] inputs) => string.IsNullOrWhiteSpace(input) ? CoalesceNullOrWhiteSpace(inputs) : input;

@@ -521,6 +521,10 @@ namespace NeoEdit.Common.Transform
 			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Binary) || (codePage == CodePage.Base64)))
 				str1 = str1.StripWhitespace();
 
+			// Numeric formats separate with spaces
+			if ((str1 != null) && (!IsStr(codePage)))
+				str1 = str1.ConvertWhitespaceToSpaces().Trim();
+
 			var bytes = TryStringToBytes(str1, codePage);
 			if (bytes == null)
 				return false;

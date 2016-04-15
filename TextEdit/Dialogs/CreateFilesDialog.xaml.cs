@@ -35,7 +35,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Data = FileName = "x";
 			CodePage = defaultCodePage;
 
-			codePage.ItemsSource = Coder.GetStringCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
+			codePage.ItemsSource = Coder.GetAllCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
 			codePage.SelectedValuePath = "Key";
 			codePage.DisplayMemberPath = "Value";
 		}
