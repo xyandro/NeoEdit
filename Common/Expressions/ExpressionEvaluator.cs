@@ -237,6 +237,7 @@ namespace NeoEdit.Common.Expressions
 				case "cos": return GetNumeric(paramList[0]).Cos();
 				case "date": return new NumericValue(new DateTimeOffset(DateTime.Now.Date, DateTimeOffset.Now.Offset).UtcTicks, "ticks");
 				case "eval": return new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row);
+				case "factor": return GetNumeric(paramList[0]).Factor();
 				case "filename": return GetFileName(GetString(paramList[0]));
 				case "fromdate": return FromDate(GetString(paramList[0]));
 				case "fromwords": return NumericValue.FromWords(GetString(paramList[0]));

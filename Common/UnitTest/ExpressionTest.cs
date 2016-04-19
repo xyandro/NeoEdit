@@ -163,6 +163,9 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("3.14159265358979 rad", new NEExpression("acos(-1)").Evaluate().ToString());
 			Assert.AreEqual("180 deg", new NEExpression("acos(-1) => deg").Evaluate().ToString());
 
+			Assert.AreEqual("0", new NEExpression("factor(0)").Evaluate().ToString());
+			Assert.AreEqual("-1*2*2*3*5*7*11", new NEExpression("factor(-4620)").Evaluate().ToString());
+
 			var variables = new NEVariables(
 				NEVariable.Constant("x", "", () => 0xdeadbeef),
 				NEVariable.Constant("y", "", () => 0x0badf00d),

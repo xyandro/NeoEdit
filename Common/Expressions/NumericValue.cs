@@ -514,6 +514,37 @@ namespace NeoEdit.Common.Expressions
 			return $"{num / gcf}/{den / gcf}";
 		}
 
+		public string Factor()
+		{
+			if (Units.HasUnits)
+				throw new Exception("Input cannot have units");
+
+			var num = GetInteger;
+			if (num == 0)
+				return "0";
+
+			var factors = new List<BigInteger>();
+			if (num < 0)
+			{
+				num = -num;
+				factors.Add(-1);
+			}
+			var factor = new BigInteger(2);
+			while (num > 1)
+			{
+				var val = num / factor;
+				if (val * factor != num)
+				{
+					++factor;
+					continue;
+				}
+				factors.Add(factor);
+				num = val;
+			}
+
+			return string.Join("*", factors);
+		}
+
 		public NumericValue Sin() => new NumericValue(Math.Sin(ToRad().GetFloat));
 
 		public NumericValue Cos() => new NumericValue(Math.Cos(ToRad().GetFloat));
