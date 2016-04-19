@@ -985,6 +985,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_NonEmpty: Command_Select_Empty(false); break;
 				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Command_Select_Duplicates(); break;
+				case TextEditCommand.Select_RepeatedLines: Command_Select_RepeatedLines(); break;
 				case TextEditCommand.Select_ByCount: Command_Select_ByCount(dialogResult as CountDialog.Result); break;
 				case TextEditCommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
 				case TextEditCommand.Select_Regions: Command_Select_Regions(); break;
@@ -3084,6 +3085,41 @@ namespace NeoEdit.TextEdit
 		internal void Command_Select_Unique() => Selections.Replace(Selections.AsParallel().AsOrdered().Distinct(range => GetString(range)).ToList());
 
 		internal void Command_Select_Duplicates() => Selections.Replace(Selections.AsParallel().AsOrdered().GroupBy(range => GetString(range)).SelectMany(list => list.Skip(1)).ToList());
+
+		int GetRepetitionScore(List<string> data, int lines)
+		{
+			var count = data.Count / lines;
+			if (count * lines != data.Count)
+				return 0;
+
+			var score = 0;
+			for (var repetition = 1; repetition < count; ++repetition)
+			{
+				var repetitionIndex = repetition * lines;
+				for (var index = 0; index < lines; ++index)
+				{
+					List<LCS.MatchType> output1, output2;
+					LCS.GetLCS(data[index], data[repetitionIndex + index], out output1, out output2);
+					score += output1.Count(match => match == LCS.MatchType.Match);
+				}
+			}
+			return score;
+		}
+
+		IEnumerable<Range> FindRepetitions(Range inputRange)
+		{
+			var startLine = Data.GetOffsetLine(inputRange.Start);
+			var endLine = Data.GetOffsetLine(inputRange.End);
+			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, Data.GetOffset(line, 0)), Math.Min(inputRange.End, Data.GetOffset(line, Data.GetLineLength(line))))).ToList();
+			if ((lineRanges.Count >= 2) && (!lineRanges[lineRanges.Count - 1].HasSelection))
+				lineRanges.RemoveAt(lineRanges.Count - 1);
+			var lineStrs = lineRanges.Select(range => GetString(range)).ToList();
+			var lines = Enumerable.Range(1, lineStrs.Count).MaxBy(x => GetRepetitionScore(lineStrs, x));
+			for (var ctr = 0; ctr < lineRanges.Count; ctr += lines)
+				yield return new Range(lineRanges[ctr + lines - 1].End, lineRanges[ctr].Start);
+		}
+
+		internal void Command_Select_RepeatedLines() => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(range)).ToList());
 
 		internal CountDialog.Result Command_Select_ByCount_Dialog() => CountDialog.Run(WindowParent);
 

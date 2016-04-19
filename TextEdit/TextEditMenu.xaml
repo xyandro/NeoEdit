@@ -510,7 +510,7 @@
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
-		<textEdit:TextEditMenuItem Header="Rec_tangle" CommandEnum="Select_Rectangle"/>
+		<textEdit:TextEditMenuItem Header="Rectan_gle" CommandEnum="Select_Rectangle"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="R_otate" CommandEnum="Select_Rotate"/>
 		<Separator/>
@@ -522,9 +522,10 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
 		<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>
+		<textEdit:TextEditMenuItem Header="Re_peated Lines" CommandEnum="Select_RepeatedLines"/>
 		<textEdit:TextEditMenuItem Header="By _Count" CommandEnum="Select_ByCount"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="S_plit" CommandEnum="Select_Split"/>
+		<textEdit:TextEditMenuItem Header="Spli_t" CommandEnum="Select_Split"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Regions" CommandEnum="Select_Regions"/>
 		<textEdit:TextEditMenuItem Header="_Find Results" CommandEnum="Select_FindResults"/>

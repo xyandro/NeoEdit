@@ -208,5 +208,54 @@ namespace NeoEdit.Common
 
 		public static bool All(this IEnumerable<bool> source) => source.All(b => b);
 		public static bool Any(this IEnumerable<bool> source) => source.Any(b => b);
+
+		public static Tuple<TSource, TValue> MinByTuple<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable
+		{
+			var minItem = default(TSource);
+			var minValue = default(TValue);
+			bool hasMin = false;
+
+			foreach (var item in source)
+			{
+				var value = selector(item);
+				if ((!hasMin) || (value.CompareTo(minValue) < 0))
+				{
+					minItem = item;
+					minValue = value;
+				}
+				hasMin = true;
+			}
+
+			if (!hasMin)
+				throw new Exception("No elements in list");
+
+			return Tuple.Create(minItem, minValue);
+		}
+
+		public static Tuple<TSource, TValue> MaxByTuple<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable
+		{
+			var maxItem = default(TSource);
+			var maxValue = default(TValue);
+			bool hasMax = false;
+
+			foreach (var item in source)
+			{
+				var value = selector(item);
+				if ((!hasMax) || (value.CompareTo(maxValue) > 0))
+				{
+					maxItem = item;
+					maxValue = value;
+				}
+				hasMax = true;
+			}
+
+			if (!hasMax)
+				throw new Exception("No elements in list");
+
+			return Tuple.Create(maxItem, maxValue);
+		}
+
+		public static TSource MinBy<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable => MinByTuple(source, selector).Item1;
+		public static TSource MaxBy<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable => MaxByTuple(source, selector).Item1;
 	}
 }

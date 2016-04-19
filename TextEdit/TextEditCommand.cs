@@ -322,6 +322,7 @@ namespace NeoEdit.TextEdit
 		Select_NonEmpty,
 		Select_Unique,
 		Select_Duplicates,
+		Select_RepeatedLines,
 		Select_ByCount,
 		Select_Split,
 		Select_Regions,
