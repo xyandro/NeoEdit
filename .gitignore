@@ -7,6 +7,7 @@
 *.suo
 *.tmp_proj
 *.user
+*.VC.db
 bin
 ipch
 obj
