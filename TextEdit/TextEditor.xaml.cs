@@ -4039,9 +4039,6 @@ namespace NeoEdit.TextEdit
 
 		void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
-			if (!ranges.Any())
-				return;
-
 			if (strs == null)
 				strs = Enumerable.Repeat("", ranges.Count).ToList();
 
@@ -4059,10 +4056,6 @@ namespace NeoEdit.TextEdit
 				undoText.Add(GetString(ranges[ctr]));
 				change = undoRange.Highlight - ranges[ctr].End;
 			}
-
-			// Abort if no changes
-			if (!Enumerable.Range(0, ranges.Count).Any(ctr => undoText[ctr] != strs[ctr]))
-				return;
 
 			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText, tryJoinUndo);
 			switch (replaceType)
