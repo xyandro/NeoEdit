@@ -2102,9 +2102,9 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		internal void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => long.Parse(GetString(range)).ToString("x")).ToList());
+		internal void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(GetString(range)).ToString("x")).ToList());
 
-		internal void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => long.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
+		internal void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 
 		private string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
 		{
