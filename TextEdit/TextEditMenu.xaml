@@ -508,6 +508,8 @@
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
+		<textEdit:TextEditMenuItem Header="Not_hing" CommandEnum="Select_Nothing"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
 		<textEdit:TextEditMenuItem Header="Rectan_gle" CommandEnum="Select_Rectangle"/>

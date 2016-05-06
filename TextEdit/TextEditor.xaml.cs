@@ -975,6 +975,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Misses_Values8: Command_Keys_HitsMisses(8, false); break;
 				case TextEditCommand.Keys_Misses_Values9: Command_Keys_HitsMisses(9, false); break;
 				case TextEditCommand.Select_All: Command_Select_All(); break;
+				case TextEditCommand.Select_Nothing: Command_Select_Nothing(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
 				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
 				case TextEditCommand.Select_Rectangle: Command_Select_Rectangle(); break;
@@ -2941,6 +2942,8 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Select_All() => Selections.Replace(FullRange);
+
+		internal void Command_Select_Nothing() => Selections.Clear();
 
 		internal LimitDialog.Result Command_Select_Limit_Dialog() => LimitDialog.Run(WindowParent, Selections.Count, GetVariables());
 
