@@ -250,6 +250,7 @@
 		<textEdit:TextEditMenuItem Header="_Random Text" CommandEnum="Text_RandomText"/>
 		<textEdit:TextEditMenuItem Header="L_orem Ipsum" CommandEnum="Text_LoremIpsum"/>
 		<textEdit:TextEditMenuItem Header="Reverse R_egEx" CommandEnum="Text_ReverseRegEx"/>
+		<textEdit:TextEditMenuItem Header="First _Distinct" CommandEnum="Text_FirstDistinct"/>
 	</MenuItem>
 	<MenuItem Header="_Numeric">
 		<MenuItem Header="_Copy">

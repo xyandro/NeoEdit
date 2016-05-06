@@ -143,6 +143,7 @@ namespace NeoEdit.TextEdit
 		Text_RandomText,
 		Text_LoremIpsum,
 		Text_ReverseRegEx,
+		Text_FirstDistinct,
 		Numeric_Copy_Min,
 		Numeric_Copy_Max,
 		Numeric_Copy_Sum,

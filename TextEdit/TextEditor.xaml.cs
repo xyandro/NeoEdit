@@ -807,6 +807,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_RandomText: Command_Text_RandomText(dialogResult as RandomDataDialog.Result); break;
 				case TextEditCommand.Text_LoremIpsum: Command_Text_LoremIpsum(); break;
 				case TextEditCommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(dialogResult as RevRegExDialog.Result); break;
+				case TextEditCommand.Text_FirstDistinct: Command_Text_FirstDistinct(); break;
 				case TextEditCommand.Numeric_Copy_Min: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Max: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Copy_Sum: Command_Numeric_Copy_Sum(); break;
@@ -2757,6 +2758,55 @@ namespace NeoEdit.TextEdit
 				start += str.Length;
 			}
 			Selections.Replace(sels);
+		}
+
+		internal void Command_Text_FirstDistinct()
+		{
+			var strs = GetSelectionStrings();
+			var onChar = new int[strs.Count];
+			var current = 0;
+			onChar[0] = -1;
+			var best = default(int[]);
+			var bestCount = int.MaxValue;
+
+			while (current >= 0)
+			{
+				++onChar[current];
+				if (onChar[current] >= strs[current].Length)
+				{
+					--current;
+					continue;
+				}
+
+				if (onChar.Take(current + 1).Sum() >= bestCount)
+				{
+					--current;
+					continue;
+				}
+
+				if (Enumerable.Range(0, current).Any(index => strs[index][onChar[index]] == strs[current][onChar[current]]))
+					continue;
+
+				++current;
+				if (current == strs.Count)
+				{
+					// Found combination!
+					var count = onChar.Sum();
+					if (count < bestCount)
+					{
+						bestCount = count;
+						best = onChar.ToArray();
+					}
+					--current;
+				}
+				else
+					onChar[current] = -1;
+			}
+
+			if (best == null)
+				throw new ArgumentException("No distinct combinations available");
+
+			Selections.Replace(Selections.Select((range, index) => Range.FromIndex(range.Start + best[index], 1)).ToList());
 		}
 
 		internal void Command_Network_Fetch(Coder.CodePage codePage = Coder.CodePage.None)
