@@ -39,7 +39,7 @@ namespace NeoEdit.TextEdit
 				else
 					regions.Add(null);
 			}
-			if ((useAllRegions) && (currentRegion != Regions.Count - 1))
+			if ((Selections.Any()) && (useAllRegions) && (currentRegion != Regions.Count - 1))
 				throw new Exception("Extra regions found.");
 
 			return regions;
