@@ -257,5 +257,19 @@ namespace NeoEdit.Common
 
 		public static TSource MinBy<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable => MinByTuple(source, selector).Item1;
 		public static TSource MaxBy<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable => MaxByTuple(source, selector).Item1;
+
+		public static IEnumerable<Tuple<TSource, TSource>> WithPrev<TSource>(this IEnumerable<TSource> source)
+		{
+			var first = true;
+			var last = default(TSource);
+			foreach (var item in source)
+			{
+				if (!first)
+					yield return Tuple.Create(last, item);
+
+				last = item;
+				first = false;
+			}
+		}
 	}
 }

@@ -158,8 +158,9 @@ namespace NeoEdit.GUI.Controls
 				item.Closed();
 		}
 
-		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
-		bool shiftDown => (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None;
+		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
+		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
 
 		public int ActiveCount => Items.Count(item => item.Active);
 
@@ -167,7 +168,7 @@ namespace NeoEdit.GUI.Controls
 		{
 			base.OnPreviewKeyDown(e);
 
-			if (controlDown)
+			if ((controlDown) && (!altDown))
 			{
 				e.Handled = true;
 				switch (e.Key)

@@ -371,34 +371,36 @@
 		<textEdit:TextEditMenuItem Header="Cu_rrent" CommandEnum="Content_Current"/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
 		<textEdit:TextEditMenuItem Header="Ancest_or" CommandEnum="Content_Ancestor"/>
-		<MenuItem Header="_Attributes">
-			<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Content_Attributes_Attributes"/>
-			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Attributes_First"/>
-			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Attributes_ByAttribute"/>
-		</MenuItem>
+		<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Content_Attributes"/>
 		<MenuItem Header="_Children">
 			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
 			<textEdit:TextEditMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Children_First"/>
-			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Children_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_Attribute" CommandEnum="Content_Children_Attribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
 			<textEdit:TextEditMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
-			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Descendants_ByAttribute"/>
+			<textEdit:TextEditMenuItem Header="_Attribute" CommandEnum="Content_Descendants_Attribute"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Content_Next"/>
-		<textEdit:TextEditMenuItem Header="Pr_evious" CommandEnum="Content_Previous"/>
+		<MenuItem Header="_Navigate">
+			<textEdit:TextEditMenuItem Header="_Up" CommandEnum="Content_Navigate_Up"/>
+			<textEdit:TextEditMenuItem Header="_Down" CommandEnum="Content_Navigate_Down"/>
+			<textEdit:TextEditMenuItem Header="_Left" CommandEnum="Content_Navigate_Left"/>
+			<textEdit:TextEditMenuItem Header="_Right" CommandEnum="Content_Navigate_Right"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="_Home" CommandEnum="Content_Navigate_Home"/>
+			<textEdit:TextEditMenuItem Header="_End" CommandEnum="Content_Navigate_End"/>
+			<textEdit:TextEditMenuItem Header="P_gUp" CommandEnum="Content_Navigate_PgUp"/>
+			<textEdit:TextEditMenuItem Header="PgD_n" CommandEnum="Content_Navigate_PgDn"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
+			<textEdit:TextEditMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
+		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="_By Attribute" CommandEnum="Content_Select_ByAttribute"/>
-			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Topmost" CommandEnum="Content_Select_Topmost"/>
-			<textEdit:TextEditMenuItem Header="_Deepest" CommandEnum="Content_Select_Deepest"/>
-			<Separator/>
-			<textEdit:TextEditMenuItem Header="Max To_pmost" CommandEnum="Content_Select_MaxTopmost"/>
-			<textEdit:TextEditMenuItem Header="Max Deepe_st" CommandEnum="Content_Select_MaxDeepest"/>
+			<textEdit:TextEditMenuItem Header="_Attribute" CommandEnum="Content_Select_Attribute"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">

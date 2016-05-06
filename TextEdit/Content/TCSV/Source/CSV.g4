@@ -1,8 +1,8 @@
 grammar CSV;
 
-doc    : (row CR? LF)* row? EOF ;
-row    : field (SPLIT field)* ;
-field  : STRING? ;
+root : (row CR? LF)* row? EOF ;
+row  : cell (SPLIT cell)* ;
+cell : STRING? ;
 
 SPLIT  : ',' ;
 CR     : '\r' ;

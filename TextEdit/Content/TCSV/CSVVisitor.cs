@@ -8,24 +8,24 @@ namespace NeoEdit.TextEdit.Content.TCSV
 	{
 		public static ParserNode Parse(string input)
 		{
-			var tree = ParserHelper.Parse<CSVLexer, CSVParser, CSVParser.DocContext>(input, parser => parser.doc());
+			var tree = ParserHelper.Parse<CSVLexer, CSVParser, CSVParser.RootContext>(input, parser => parser.root());
 			return new CSVVisitor().Visit(tree);
 		}
 
-		const string PAGE = "Page";
+		const string ROOT = "Root";
 		const string ROW = "Row";
-		const string FIELD = "Field";
+		const string CELL = "Cell";
 
-		ParserNode GetNode(ParserRuleContext context, string type)
+		ParserNode GetNode(ParserRuleContext context, string type, ParserNode.ParserNavigationTypeEnum parserNavigationType)
 		{
 			int start, end;
 			context.GetBounds(out start, out end);
-			return new ParserNode { Type = type, Start = start, End = end };
+			return new ParserNode { Type = type, Start = start, End = end, ParserNavigationType = parserNavigationType };
 		}
 
-		public override ParserNode VisitDoc(CSVParser.DocContext context)
+		public override ParserNode VisitRoot(CSVParser.RootContext context)
 		{
-			var node = GetNode(context, PAGE);
+			var node = GetNode(context, ROOT, ParserNode.ParserNavigationTypeEnum.FirstChild);
 			foreach (var row in context.row())
 			{
 				var rowNode = Visit(row);
@@ -38,14 +38,14 @@ namespace NeoEdit.TextEdit.Content.TCSV
 
 		public override ParserNode VisitRow(CSVParser.RowContext context)
 		{
-			var node = GetNode(context, ROW);
+			var node = GetNode(context, ROW, ParserNode.ParserNavigationTypeEnum.FirstChild);
 			if (node.Start == node.End)
 				return null;
-			foreach (var field in context.field())
-				Visit(field).Parent = node;
+			foreach (var cell in context.cell())
+				Visit(cell).Parent = node;
 			return node;
 		}
 
-		public override ParserNode VisitField(CSVParser.FieldContext context) => GetNode(context, FIELD);
+		public override ParserNode VisitCell(CSVParser.CellContext context) => GetNode(context, CELL, ParserNode.ParserNavigationTypeEnum.Cell);
 	}
 }

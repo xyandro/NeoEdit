@@ -1,11 +1,11 @@
 grammar Columns;
 
-columns : (line WS?)* EOF;
-line    : DOUBLE item (SINGLE item)* DOUBLE ;
-item    : WS? text WS? ;
-text    : DATA (WS DATA)* | ;
+root : (row WS?)* EOF;
+row  : DOUBLE cell (SINGLE cell)* DOUBLE ;
+cell : WS? text WS? ;
+text : TEXT (WS TEXT)* | ;
 
-DATA    : ~[\t \u2502\u2551\r\n]+ ;
-WS      : [\t \r\n]+ ;
-SINGLE  : '\u2502' ;
-DOUBLE  : '\u2551' ;
+TEXT   : ~[\t \u2502\u2551\r\n]+ ;
+WS     : [\t \r\n]+ ;
+SINGLE : '\u2502' ;
+DOUBLE : '\u2551' ;

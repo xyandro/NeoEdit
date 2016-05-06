@@ -22,7 +22,7 @@ namespace NeoEdit.TextEdit.Content.XML
 				case DOCUMENT:
 					{
 						var result = new List<string>();
-						var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
+						var children = node.Children().ToList();
 						foreach (var child in children)
 							result.AddRange(rFormat(child, input));
 						return result;
@@ -34,7 +34,7 @@ namespace NeoEdit.TextEdit.Content.XML
 					{
 						var result = new List<string>();
 
-						var attributes = node.List(ParserNode.ParserNodeListType.Attributes).Where(attr => attr.HasLocation).ToList();
+						var attributes = node.Attributes(true).ToList();
 						var name = attributes.Where(attr => attr.Type == NAME).Single();
 						attributes = attributes.Where(attr => attr != name).ToList(); ;
 
@@ -42,7 +42,7 @@ namespace NeoEdit.TextEdit.Content.XML
 						attrs.AddRange(attributes.Select(attr => $"{attr.Type}=\"{input.Substring(attr.Start, attr.Length)}\""));
 						var open = string.Join(" ", attrs);
 
-						var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
+						var children = node.Children().ToList();
 						if (children.Any())
 						{
 							result.Add($"<{open}>");

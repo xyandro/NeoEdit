@@ -25,7 +25,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 				case DOCUMENT:
 					{
 						var result = new List<string>();
-						var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
+						var children = node.Children().ToList();
 						foreach (var child in children)
 							result.AddRange(rFormat(child, input).Item1);
 						return Tuple.Create(result, false, false);
@@ -43,7 +43,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 					{
 						var result = new List<string>();
 
-						var attributes = node.List(ParserNode.ParserNodeListType.Attributes).Where(attr => attr.HasLocation).ToList();
+						var attributes = node.Attributes(true).ToList();
 						var nameTag = attributes.Where(attr => attr.Type == NAME).Single();
 						var name = nameTag.Text;
 						attributes = attributes.Where(attr => attr != nameTag).ToList(); ;
@@ -59,7 +59,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 							return Tuple.Create(new List<string> { startTag }, joinLeftSet.Contains(name), joinRightSet.Contains(name));
 
 						var childrenOutput = new List<string>();
-						var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
+						var children = node.Children().ToList();
 						var joinRight = false;
 						foreach (var child in children)
 						{

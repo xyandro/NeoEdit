@@ -18,7 +18,7 @@ namespace NeoEdit.TextEdit.Content.JSON
 		{
 			var result = new List<string>();
 			var type = node.Type;
-			var children = node.List(ParserNode.ParserNodeListType.Children).ToList();
+			var children = node.Children().ToList();
 			switch (type)
 			{
 				case DOC:

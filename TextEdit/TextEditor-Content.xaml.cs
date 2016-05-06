@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
@@ -26,7 +27,7 @@ namespace NeoEdit.TextEdit
 
 		List<ParserNode> GetSelectionNodes()
 		{
-			var nodes = RootNode().GetAllNodes().Where(node => (node.HasLocation) && (!node.IsAttr)).ToList();
+			var nodes = RootNode().GetAllNodes();
 			var fullLocation = new Dictionary<int, Dictionary<int, ParserNode>>();
 			var startLocation = new Dictionary<int, ParserNode>();
 			foreach (var node in nodes)
@@ -55,37 +56,10 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		List<ParserNode> ContentGetList(ParserNode node, ParserNode.ParserNodeListType list, bool first, FindContentAttributeDialog.Result findAttr)
+		void ContentReplaceSelections(IEnumerable<ParserBase> nodes)
 		{
-			var nodes = node.List(list).Where(child => child.HasLocation);
-
-			if (findAttr != null)
-				nodes = nodes.Where(child => child.HasAttr(findAttr.Attribute, findAttr.Regex, findAttr.Invert));
-
-			if (first)
-				nodes = nodes.Take(1);
-
-			var nodeList = nodes.ToList();
-			return nodeList.Any() ? nodeList : new List<ParserNode> { node };
-		}
-
-		void ContentReplaceSelections(List<ParserNode> nodes)
-		{
-			nodes = nodes.Distinct().OrderBy(node => node.Start).ToList();
-			var overlap = false;
-			ParserNode last = null;
-			foreach (var node in nodes)
-			{
-				if (last != null)
-				{
-					if (node.Start < last.End)
-					{
-						overlap = true;
-						break;
-					}
-				}
-				last = node;
-			}
+			nodes = nodes.Where(node => node != null).Distinct().OrderBy(node => node.Start).ToList();
+			var overlap = nodes.WithPrev().Any(tuple => tuple.Item2.start < tuple.Item1.end);
 			Selections.Replace(nodes.Select(node => new Range(node.Start, overlap ? node.Start : node.End)).ToList());
 		}
 
@@ -107,82 +81,46 @@ namespace NeoEdit.TextEdit
 		internal void Command_Content_TogglePosition(bool shiftDown)
 		{
 			var nodes = GetSelectionNodes();
-			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All(b => b);
+			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All();
 			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
 
-		internal void Command_Content_Current() => ContentReplaceSelections(GetSelectionNodes().ToList());
+		internal void Command_Content_Current() => ContentReplaceSelections(GetSelectionNodes());
 
-		internal void Command_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node).Distinct().ToList());
+		internal void Command_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
-		internal FindContentAttributeDialog.Result Command_Content_FindByAttribute_Dialog(ParserNode.ParserNodeListType list) => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.List(list)).Distinct().ToList());
+		internal FindContentAttributeDialog.Result Command_Content_Ancestor_Dialog() => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
-		internal void Command_Content_List(ParserNode.ParserNodeListType list, bool first = false, FindContentAttributeDialog.Result findAttr = null) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => ContentGetList(node, list, first, findAttr)).ToList());
+		internal void Command_Content_Ancestor(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		internal void Command_Content_NextPrevious(bool next)
-		{
-			var offset = next ? 1 : -1;
-			var nodes = GetSelectionNodes();
-			ContentReplaceSelections(nodes.Select(node =>
-			{
-				if (node.Parent == null)
-					return node;
+		internal SelectContentAttributeDialog.Result Command_Content_Attributes_Dialog() => SelectContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
 
-				var children = node.Parent.List(ParserNode.ParserNodeListType.Children | ParserNode.ParserNodeListType.Attributes).Where(child => child.HasLocation).ToList();
-				if (!children.Any())
-					return node;
+		internal void Command_Content_Attributes(SelectContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 
-				var index = children.IndexOf(node);
-				if (index == -1)
-					return node;
+		internal void Command_Content_Children_Children() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()));
 
-				var found = index;
-				do
-				{
-					found += offset;
-					if (found < 0)
-						found = children.Count - 1;
-					if (found >= children.Count)
-						found = 0;
-					if (children[found].IsAttr == node.IsAttr)
-						break;
-				} while (index != found);
-				return children[found];
-			}).ToList());
-		}
+		internal void Command_Content_Children_SelfAndChildren() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndChildren()));
 
-		internal void Command_Content_Select_ByAttribute(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(node => node.HasAttr(result.Attribute, result.Regex, result.Invert)).ToList());
+		internal void Command_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
-		internal void Command_Content_Select_Topmost()
-		{
-			var nodes = GetSelectionNodes();
-			var descendants = new HashSet<ParserNode>(nodes.SelectMany(node => node.List(ParserNode.ParserNodeListType.Descendants)));
-			Selections.Replace(Selections.Where((range, index) => !descendants.Contains(nodes[index])).ToList());
-		}
+		internal FindContentAttributeDialog.Result Command_Content_Children_Attribute_Dialog() => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
-		internal void Command_Content_Select_Deepest()
-		{
-			var nodes = GetSelectionNodes();
-			var parents = new HashSet<ParserNode>(nodes.SelectMany(node => node.List(ParserNode.ParserNodeListType.Parents)));
-			Selections.Replace(Selections.Where((range, index) => !parents.Contains(nodes[index])).ToList());
-		}
+		internal void Command_Content_Children_Attribute(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		internal void Command_Content_Select_MaxTopmost()
-		{
-			var nodes = GetSelectionNodes();
-			var targetDepth = nodes.Min(node => node.Depth);
-			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
-		}
+		internal void Command_Content_Descendants_Descendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()));
 
-		internal void Command_Content_Select_MaxDeepest()
-		{
-			var nodes = GetSelectionNodes();
-			var targetDepth = nodes.Max(node => node.Depth);
-			Selections.Replace(Selections.Where((range, index) => nodes[index].Depth == targetDepth).ToList());
-		}
+		internal void Command_Content_Descendants_SelfAndDescendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndDescendants()));
 
-		internal SelectContentAttributeDialog.Result Command_Content_Attributes_ByAttribute_Dialog() => SelectContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
+		internal void Command_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
-		internal void Command_Content_Attributes_ByAttribute(SelectContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)).ToList());
+		internal FindContentAttributeDialog.Result Command_Content_Descendants_Attribute_Dialog() => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+
+		internal void Command_Content_Descendants_Attribute(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+
+		internal void Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown)));
+
+		internal FindContentAttributeDialog.Result Command_Content_Select_Attribute_Dialog() => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
+
+		internal void Command_Content_Select_Attribute(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 	}
 }

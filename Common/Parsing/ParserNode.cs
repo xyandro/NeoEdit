@@ -8,11 +8,30 @@ using Antlr4.Runtime.Tree;
 
 namespace NeoEdit.Common.Parsing
 {
-	public class ParserNode
+	public class ParserNode : ParserBase
 	{
-		public const string TYPE = "Type";
+		public enum ParserNavigationDirectionEnum
+		{
+			Up,
+			Down,
+			Left,
+			Right,
+			Row,
+			Column,
+			Home,
+			End,
+			PgUp,
+			PgDn,
+		}
 
-		public ParserNode(bool isAttr = false) { IsAttr = isAttr; }
+		public enum ParserNavigationTypeEnum
+		{
+			Regular,
+			FirstChild,
+			Cell,
+		}
+
+		public const string TYPE = "Type";
 
 		ParserNode parent;
 		public ParserNode Parent
@@ -29,9 +48,6 @@ namespace NeoEdit.Common.Parsing
 
 				if (value != null)
 				{
-					if (value.IsAttr)
-						throw new Exception("Attributes cannot have children");
-
 					parent = value;
 					Depth = parent.Depth + 1;
 					parent.children.Add(this);
@@ -39,128 +55,212 @@ namespace NeoEdit.Common.Parsing
 			}
 		}
 
-		public readonly bool IsAttr;
-
-		int? start, end;
-		public int Start { get { return start.Value; } set { start = value; } }
-		public int End { get { return end.Value; } set { end = value; } }
-		public int Length => End - Start;
-		public bool HasLocation => (start.HasValue) && (end.HasValue);
-
-		public ParserRuleContext LocationParserRule
-		{
-			set
-			{
-				int lStart, lEnd;
-				value.GetBounds(out lStart, out lEnd);
-				start = lStart;
-				end = lEnd;
-			}
-		}
-
-		public ITerminalNode LocationTerminalNode
-		{
-			set
-			{
-				int lStart, lEnd;
-				value.GetBounds(out lStart, out lEnd);
-				start = lStart;
-				end = lEnd;
-			}
-		}
-
-		string type;
 		public string Type
 		{
-			get { return IsAttr ? type : GetAttrText(TYPE); }
-			set
-			{
-				if (IsAttr)
-					type = value;
-				else
-					SetAttr(TYPE, value);
-			}
+			get { return GetAttrText(TYPE); }
+			set { SetAttr(TYPE, value); }
 		}
 		public string Text { get; set; }
 		public int Depth { get; set; }
 
-		readonly List<ParserNode> children = new List<ParserNode>();
+		public ParserNavigationTypeEnum ParserNavigationType { get; set; } = ParserNavigationTypeEnum.Regular;
 
-		[Flags]
-		public enum ParserNodeListType
-		{
-			None = 0,
-			Self = 1,
-			Parents = 2,
-			Attributes = 4,
-			Children = 8,
-			Descendants = Children | 16,
-			SelfAndChildren = Self | Children,
-			SelfAttributesAndChildren = Self | Attributes | Children,
-			SelfAndDescendants = Self | Descendants,
-			SelfAttributesAndDescendants = Self | Attributes | Descendants,
-			SelfAndParents = Self | Parents,
-		}
+		readonly List<ParserNode> children = new List<ParserNode>();
+		internal readonly List<ParserAttribute> attributes = new List<ParserAttribute>();
 
 		public List<ParserNode> GetAllNodes()
 		{
 			var result = new List<ParserNode> { this };
 			for (var ctr = 0; ctr < result.Count; ++ctr)
-			{
-				foreach (var child in result[ctr].children)
-					result.Add(child);
-			}
+				result.AddRange(result[ctr].children);
 			return result;
 		}
 
-		public IEnumerable<ParserNode> List(ParserNodeListType list)
+		public IEnumerable<ParserNode> Parents()
 		{
-			if (list.HasFlag(ParserNodeListType.Self))
-			{
-				yield return this;
-				list &= ~ParserNodeListType.Self;
-			}
+			for (var node = parent; node != null; node = node.parent)
+				yield return node;
+		}
 
-			if ((list.HasFlag(ParserNodeListType.Parents)) && (Parent != null))
-			{
-				for (var parent = Parent; parent != null; parent = parent.Parent)
-					yield return parent;
-				list &= ~ParserNodeListType.Parents;
-			}
+		public IEnumerable<ParserNode> Children() => children;
 
-			if (list == ParserNodeListType.None)
-				yield break;
+		public IEnumerable<ParserNode> SelfAndChildren()
+		{
+			yield return this;
+			foreach (var child in children)
+				yield return child;
+		}
 
+		public IEnumerable<ParserNode> Descendants()
+		{
 			foreach (var child in children)
 			{
-				if ((child.IsAttr) && (!list.HasFlag(ParserNodeListType.Attributes)))
-					continue;
-				if ((!child.IsAttr) && (!list.HasFlag(ParserNodeListType.Children)))
-					continue;
-
 				yield return child;
-
-				if (list.HasFlag(ParserNodeListType.Descendants))
-				{
-					foreach (var childChild in child.List(list))
-						yield return childChild;
-				}
+				foreach (var descendant in child.Descendants())
+					yield return descendant;
 			}
 		}
 
-		public IEnumerable<string> GetAttrTypes(bool withLocation = false)
+		public IEnumerable<ParserNode> SelfAndDescendants()
 		{
-			var attrs = List(ParserNodeListType.Attributes);
-			if (withLocation)
-				attrs = attrs.Where(attr => attr.HasLocation);
-			return attrs.Select(attr => attr.Type);
+			yield return this;
+			foreach (var descendant in Descendants())
+				yield return descendant;
 		}
 
-		public ParserNode GetAttr(string type) => GetAttrs(type, true).FirstOrDefault();
-
-		public IEnumerable<ParserNode> GetAttrs(string type, bool firstOnly = false)
+		IEnumerable<ParserNode> NavigateRegular(ParserNavigationDirectionEnum direction, bool shiftDown)
 		{
-			var result = List(ParserNodeListType.Attributes).Where(attr => attr.Type == type);
+			switch (direction)
+			{
+				case ParserNavigationDirectionEnum.Up:
+				case ParserNavigationDirectionEnum.Down:
+					{
+						if (shiftDown)
+							yield return this;
+
+						var index = parent?.children.IndexOf(this);
+						if ((index == -1) || (index == null))
+						{
+							yield return this;
+							yield break;
+						}
+						var offset = direction == ParserNavigationDirectionEnum.Up ? -1 : 1;
+						index = Math.Max(0, Math.Min(index.Value + offset, parent.children.Count - 1));
+						yield return parent.children[index.Value];
+					}
+					break;
+				case ParserNavigationDirectionEnum.Left:
+					yield return parent == null ? this : parent;
+					break;
+				case ParserNavigationDirectionEnum.Right:
+					if (!children.Any())
+						yield return this;
+					foreach (var child in children)
+					{
+						yield return child;
+						if (!shiftDown)
+							break;
+					}
+					break;
+				case ParserNavigationDirectionEnum.Row:
+				case ParserNavigationDirectionEnum.Column:
+					if (parent == null)
+					{
+						yield return this;
+						break;
+					}
+					foreach (var child in parent.children)
+						yield return child;
+					break;
+				case ParserNavigationDirectionEnum.Home:
+				case ParserNavigationDirectionEnum.PgUp:
+					{
+						if (parent == null)
+						{
+							yield return this;
+							yield break;
+						}
+						var index = parent.children.IndexOf(this);
+						if (!shiftDown)
+							yield return parent.children.First();
+						else
+							foreach (var child in parent.children.Take(index + 1))
+								yield return child;
+					}
+					break;
+				case ParserNavigationDirectionEnum.End:
+				case ParserNavigationDirectionEnum.PgDn:
+					{
+						if (parent == null)
+						{
+							yield return this;
+							yield break;
+						}
+						var index = parent.children.IndexOf(this);
+						if (!shiftDown)
+							yield return parent.children.Last();
+						else
+							foreach (var child in parent.children.Skip(index))
+								yield return child;
+					}
+					break;
+				default: yield return this; break;
+			}
+		}
+
+		IEnumerable<ParserNode> NavigateFirstChild()
+		{
+			var item = this;
+			while (item.ParserNavigationType == ParserNavigationTypeEnum.FirstChild)
+				item = item.children[0];
+			yield return item;
+		}
+
+		IEnumerable<ParserNode> NavigateCell(ParserNavigationDirectionEnum direction, bool shiftDown)
+		{
+			var startColumn = parent.children.IndexOf(this);
+			var startRow = parent.parent.children.IndexOf(parent);
+			var endColumn = startColumn;
+			var endRow = startRow;
+
+			switch (direction)
+			{
+				case ParserNavigationDirectionEnum.Up: endRow -= 1; break;
+				case ParserNavigationDirectionEnum.Down: endRow += 1; break;
+				case ParserNavigationDirectionEnum.Left: endColumn -= 1; break;
+				case ParserNavigationDirectionEnum.Right: endColumn += 1; break;
+				case ParserNavigationDirectionEnum.Home: endColumn = 0; break;
+				case ParserNavigationDirectionEnum.End: endColumn = int.MaxValue; break;
+				case ParserNavigationDirectionEnum.PgUp: endRow = 0; break;
+				case ParserNavigationDirectionEnum.PgDn: endRow = int.MaxValue; break;
+				case ParserNavigationDirectionEnum.Row: startColumn = 0; endColumn = int.MaxValue; break;
+				case ParserNavigationDirectionEnum.Column: startRow = 0; endRow = int.MaxValue; break;
+			}
+
+			if (!shiftDown)
+			{
+				var row = Math.Max(0, Math.Min(endRow, parent.parent.children.Count - 1));
+				var column = Math.Max(0, Math.Min(endColumn, parent.parent.children[row].children.Count - 1));
+				yield return parent.parent.children[row].children[column];
+				yield break;
+			}
+
+			var minRow = Math.Max(0, Math.Min(startRow, endRow));
+			var minColumn = Math.Max(0, Math.Min(startColumn, endColumn));
+			var maxRow = Math.Min(parent.parent.children.Count - 1, Math.Max(startRow, endRow));
+			var maxColumn = Math.Max(startColumn, endColumn); // Can't force any upper bound; different rows could have different numbers of columns
+
+			for (var row = minRow; row <= maxRow; ++row)
+				for (var column = minColumn; column <= Math.Min(parent.parent.children[row].children.Count - 1, maxColumn); ++column)
+					yield return parent.parent.children[row].children[column];
+		}
+
+		public IEnumerable<ParserNode> Navigate(ParserNavigationDirectionEnum direction, bool shiftDown)
+		{
+			switch (ParserNavigationType)
+			{
+				case ParserNavigationTypeEnum.Regular: return NavigateRegular(direction, shiftDown);
+				case ParserNavigationTypeEnum.FirstChild: return NavigateFirstChild();
+				case ParserNavigationTypeEnum.Cell: return NavigateCell(direction, shiftDown);
+				default: throw new ArgumentException($"Invalid {nameof(ParserNavigationType)}");
+			}
+		}
+
+		public IEnumerable<ParserAttribute> Attributes(bool withLocation = false)
+		{
+			var attrs = attributes as IEnumerable<ParserAttribute>;
+			if (withLocation)
+				attrs = attrs.Where(attr => attr.HasLocation);
+			return attrs;
+		}
+
+		public IEnumerable<string> GetAttrTypes(bool withLocation = false) => Attributes(withLocation).Select(attr => attr.Type);
+
+		public ParserAttribute GetAttr(string type) => GetAttrs(type, true).FirstOrDefault();
+
+		public IEnumerable<ParserAttribute> GetAttrs(string type, bool firstOnly = false)
+		{
+			var result = Attributes().Where(attr => attr.Type == type);
 			if (firstOnly)
 				result = result.Take(1);
 			return result;
@@ -170,12 +270,7 @@ namespace NeoEdit.Common.Parsing
 
 		public IEnumerable<string> GetAttrsText(string type, bool firstOnly = false) => GetAttrs(type, firstOnly).Select(attr => attr.Text);
 
-		void RemoveAttr(string type)
-		{
-			var toRemove = GetAttrs(type).ToList();
-			foreach (var item in toRemove)
-				children.Remove(item);
-		}
+		void RemoveAttr(string type) => attributes.RemoveAll(attr => attr.Type == type);
 
 		void SetAttrNode(string type, string value, int? start, int? end)
 		{
@@ -202,7 +297,7 @@ namespace NeoEdit.Common.Parsing
 			SetAttrNode(type, text, start, end);
 		}
 
-		void AddAttrNode(string type, string value, int? start, int? end) => new ParserNode(true) { Type = type, Parent = this, Text = value, start = start, end = end };
+		void AddAttrNode(string type, string value, int? start, int? end) => new ParserAttribute { Type = type, Parent = this, Text = value, start = start, end = end };
 		public void AddAttr(string type, string value) => AddAttrNode(type, value, null, null);
 		public void AddAttr(string type, int start, int end) => AddAttrNode(type, null, start, end);
 		public void AddAttr(string type, string value, int start, int end) => AddAttrNode(type, value, start, end);
@@ -262,9 +357,9 @@ namespace NeoEdit.Common.Parsing
 			for (var parent = this; parent != null; parent = parent.Parent)
 				parents.Insert(0, parent);
 			var parentTypes = string.Join("->", parents.Select(node => node.Type));
-			var attrs = string.Join(", ", children.Where(child => child.IsAttr).Select(child => ($"{child.start}-{child.end} {child.type} \"{(child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("\"", "\"\"")}\"")));
+			var attrs = string.Join(", ", attributes.Select(child => ($"{child.start}-{child.end} {child.Type} \"{(child.Text ?? "").Replace("\r", "").Replace("\n", "").Replace("\"", "\"\"")}\"")));
 			var result = new List<string> { $"[{start}-{end}: {attrs} Path: \"{parentTypes}\"" };
-			result.AddRange(children.Where(child => !child.IsAttr).SelectMany(child => child.Print()).Select(str => $" {str}"));
+			result.AddRange(children.SelectMany(child => child.Print()).Select(str => $" {str}"));
 			if (result.Count == 1)
 				result[0] += "]";
 			else

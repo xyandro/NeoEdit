@@ -8,33 +8,28 @@ namespace NeoEdit.TextEdit.Content.Columns
 {
 	class ColumnsVisitor : ColumnsBaseVisitor<ParserNode>
 	{
-		public class ColumnsErrorListener : IAntlrErrorListener<IToken>
-		{
-			public void SyntaxError(IRecognizer recognizer, IToken token, int line, int pos, string msg, RecognitionException e) { throw new Exception($"Error: Token mistmatch at position {token.StartIndex}"); }
-		}
-
 		public static ParserNode Parse(string input)
 		{
-			var tree = ParserHelper.Parse<ColumnsLexer, ColumnsParser, ColumnsParser.ColumnsContext>(input, parser => parser.columns());
+			var tree = ParserHelper.Parse<ColumnsLexer, ColumnsParser, ColumnsParser.RootContext>(input, parser => parser.root());
 			return new ColumnsVisitor().Visit(tree);
 		}
 
 		const string ROOT = "Root";
-		const string LINE = "Line";
-		const string ITEM = "Item";
+		const string ROW = "Row";
+		const string CELL = "Cell";
 
-		ParserNode GetNode(ParserRuleContext context, string type, IEnumerable<ParserRuleContext> nodes)
+		ParserNode GetNode(ParserRuleContext context, string type, IEnumerable<ParserRuleContext> nodes, ParserNode.ParserNavigationTypeEnum parserNavigationType)
 		{
-			var node = new ParserNode { Type = type, LocationParserRule = context };
+			var node = new ParserNode { Type = type, LocationParserRule = context, ParserNavigationType = parserNavigationType };
 			if (nodes != null)
 				foreach (var child in nodes)
 					Visit(child).Parent = node;
 			return node;
 		}
 
-		public override ParserNode VisitColumns(ColumnsParser.ColumnsContext context) => GetNode(context, ROOT, context.line());
-		public override ParserNode VisitLine(ColumnsParser.LineContext context) => GetNode(context, LINE, context.item());
-		public override ParserNode VisitItem(ColumnsParser.ItemContext context) => Visit(context.text());
-		public override ParserNode VisitText(ColumnsParser.TextContext context) => GetNode(context, ITEM, null);
+		public override ParserNode VisitRoot(ColumnsParser.RootContext context) => GetNode(context, ROOT, context.row(), ParserNode.ParserNavigationTypeEnum.FirstChild);
+		public override ParserNode VisitRow(ColumnsParser.RowContext context) => GetNode(context, ROW, context.cell(), ParserNode.ParserNavigationTypeEnum.FirstChild);
+		public override ParserNode VisitCell(ColumnsParser.CellContext context) => Visit(context.text());
+		public override ParserNode VisitText(ColumnsParser.TextContext context) => GetNode(context, CELL, null, ParserNode.ParserNavigationTypeEnum.Cell);
 	}
 }
