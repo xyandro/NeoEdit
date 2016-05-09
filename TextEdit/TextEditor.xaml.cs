@@ -1994,7 +1994,7 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Files_Select_Roots(bool include)
 		{
-			var sels = Selections.Select(range => new { range = range, str = GetString(range).ToLower().Replace(@"\\", @"\").TrimEnd('\\') }).ToList();
+			var sels = Selections.Select(range => new { range = range, str = GetString(range).ToLower().Replace(@"\\", @"\").TrimEnd('\\') + @"\" }).ToList();
 			var files = sels.Select(obj => obj.str).Distinct().OrderBy().ToList();
 			var roots = new HashSet<string>();
 			string root = null;
@@ -2004,7 +2004,7 @@ namespace NeoEdit.TextEdit
 					continue;
 
 				roots.Add(file);
-				root = file + @"\";
+				root = file;
 			}
 
 			Selections.Replace(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
