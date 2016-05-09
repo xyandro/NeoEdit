@@ -754,6 +754,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_CreateTime: Command_Files_Set_Time(TextEditor.TimestampType.Create, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_AllTimes: Command_Files_Set_Time(TextEditor.TimestampType.All, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as SetAttributesDialog.Result); break;
+				case TextEditCommand.Files_Directory_GetChildren: Command_Files_Directory_GetChildrenDescendants(false); break;
+				case TextEditCommand.Files_Directory_GetDescendants: Command_Files_Directory_GetChildrenDescendants(true); break;
 				case TextEditCommand.Files_Select_Name_Directory: Command_Files_Select_Name(TextEditor.GetPathType.Directory); break;
 				case TextEditCommand.Files_Select_Name_Name: Command_Files_Select_Name(TextEditor.GetPathType.FileName); break;
 				case TextEditCommand.Files_Select_Name_FileNamewoExtension: Command_Files_Select_Name(TextEditor.GetPathType.FileNameWoExtension); break;
@@ -1953,6 +1955,31 @@ namespace NeoEdit.TextEdit
 			}
 			foreach (var file in Selections.Select(range => GetString(range)))
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
+		}
+
+		List<string> GetDirectoryContents(string dir, bool recursive)
+		{
+			var dirs = new List<string> { dir };
+			var results = new List<string>();
+			for (var ctr = 0; ctr < dirs.Count; ++ctr)
+			{
+				var subDirs = Directory.GetDirectories(dirs[ctr]);
+				dirs.AddRange(subDirs);
+				results.AddRange(subDirs);
+				results.AddRange(Directory.GetFiles(dirs[ctr]));
+				if (!recursive)
+					break;
+			}
+			return results;
+		}
+
+		internal void Command_Files_Directory_GetChildrenDescendants(bool recursive)
+		{
+			var dirs = RelativeSelectedFiles();
+			if (dirs.Any(dir => !Directory.Exists(dir)))
+				throw new ArgumentException("Path must be of existing directories");
+
+			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive))).ToList());
 		}
 
 		internal void Command_Files_Select_Name(GetPathType type) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());

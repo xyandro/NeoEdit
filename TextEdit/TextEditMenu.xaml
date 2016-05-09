@@ -156,6 +156,11 @@
 			<textEdit:TextEditMenuItem Header="A_ttributes" CommandEnum="Files_Set_Attributes"/>
 		</MenuItem>
 		<Separator/>
+		<MenuItem Header="_Directory">
+			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Files_Directory_GetChildren"/>
+			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Files_Directory_GetDescendants"/>
+		</MenuItem>
+		<Separator/>
 		<MenuItem Header="_Select">
 			<MenuItem Header="_Name">
 				<textEdit:TextEditMenuItem Header="_Directory" CommandEnum="Files_Select_Name_Directory"/>

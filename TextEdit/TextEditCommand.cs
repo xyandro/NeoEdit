@@ -90,6 +90,8 @@ namespace NeoEdit.TextEdit
 		Files_Set_CreateTime,
 		Files_Set_AllTimes,
 		Files_Set_Attributes,
+		Files_Directory_GetChildren,
+		Files_Directory_GetDescendants,
 		Files_Select_Name_Directory,
 		Files_Select_Name_Name,
 		Files_Select_Name_FileNamewoExtension,
