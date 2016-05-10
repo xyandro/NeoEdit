@@ -2133,9 +2133,9 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		internal void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(GetString(range)).ToString("x")).ToList());
+		internal void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(GetString(range)).ToString("x").TrimStart('0')).ToList());
 
-		internal void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(GetString(range), NumberStyles.HexNumber).ToString()).ToList());
+		internal void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse("0" + GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 
 		private string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
 		{
@@ -2143,7 +2143,7 @@ namespace NeoEdit.TextEdit
 			for (var ctr = 0; ctr < str.Length; ++ctr)
 				value = value * inputSet.Count + inputSet[str[ctr]];
 			var output = new LinkedList<char>();
-			while (value != 0)
+			while ((value != 0) || (output.Count == 0))
 			{
 				output.AddFirst(outputSet[(int)(value % outputSet.Count)]);
 				value /= outputSet.Count;
