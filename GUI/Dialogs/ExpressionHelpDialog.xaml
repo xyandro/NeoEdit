@@ -59,6 +59,7 @@
 						<guiDialogs:HelpItem Name="$&quot;{2+2}&quot;" Description="Interpolated string"/>
 						<guiDialogs:HelpItem Name="@$&quot;C:\{2+2}&quot;" Description="Verbatim interpolated string"/>
 						<guiDialogs:HelpItem Name="x" Description="Variable"/>
+						<guiDialogs:HelpItem Name="[x]" Description="Variable List"/>
 					</guiDialogs:HelpItems.Items>
 				</guiDialogs:HelpItems>
 
@@ -111,8 +112,8 @@
 
 				<guiDialogs:HelpItems Name="Numeric Functions" Columns="4" NameWidth="80" DescWidth="160">
 					<guiDialogs:HelpItems.Items>
-						<guiDialogs:HelpItem Name="min(x)" Description="Minimum"/>
-						<guiDialogs:HelpItem Name="max(x)" Description="Maximum"/>
+						<guiDialogs:HelpItem Name="nummin(...)" Description="Minimum"/>
+						<guiDialogs:HelpItem Name="nummax(...)" Description="Maximum"/>
 						<guiDialogs:HelpItem Name="abs(x)" Description="Absolute value"/>
 						<guiDialogs:HelpItem Name="reciprocal(x)" Description="1/x"/>
 						<guiDialogs:HelpItem Name="gcf(x)" Description="Greatest common factor"/>
@@ -156,6 +157,25 @@
 						<guiDialogs:HelpItem Name="ti&lt;=" Description="Less/equal (case insensitive)"/>
 						<guiDialogs:HelpItem Name="ti&gt;" Description="Greater than (case insensitive)"/>
 						<guiDialogs:HelpItem Name="ti&gt;=" Description="Greater/equal (case insensitive)"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+				<guiDialogs:HelpItems Name="String Functions" Columns="4" NameWidth="80" DescWidth="160">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="strmin(...)" Description="Minimum"/>
+						<guiDialogs:HelpItem Name="strmax(...)" Description="Maximum"/>
+						<guiDialogs:HelpItem Name="len(x)" Description="Length"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+				<guiDialogs:HelpItems Name="List Functions" Columns="4" NameWidth="80" DescWidth="160">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="nummin(x)" Description="Numeric minimum"/>
+						<guiDialogs:HelpItem Name="nummax(x)" Description="Numeric maximum"/>
+						<guiDialogs:HelpItem Name="strmin(x)" Description="String minimum"/>
+						<guiDialogs:HelpItem Name="strmax(x)" Description="String maximum"/>
+						<guiDialogs:HelpItem Name="sum(x)" Description="Sum"/>
+						<guiDialogs:HelpItem Name="count(x)" Description="Count"/>
 					</guiDialogs:HelpItems.Items>
 				</guiDialogs:HelpItems>
 

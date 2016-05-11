@@ -115,10 +115,9 @@ namespace NeoEdit.GUI.Controls
 			{
 				var expression = new NEExpression(Expression);
 				variables = new List<string>(expression.Variables);
-				var showResults = !NumResults.HasValue ? default(int?) : Math.Min(NumResults.Value, DisplayResults);
-				var resultCount = Math.Min(Variables.Prepare(expression.Variables, showResults), DisplayResults);
+				var resultCount = Math.Min(NumResults ?? Variables.ResultCount(expression.Variables) ?? 1, DisplayResults);
 				results = expression.EvaluateRows<string>(Variables, resultCount).Coalesce("").ToList();
-				varValues = Variables.GetAllValues().ToDictionary(pair => pair.Key, pair => pair.Value.Select(value => value?.ToString() ?? "").ToList());
+				varValues = variables.ToDictionary(variable => variable, variable => Variables.GetValues(variable, resultCount).Select(val => val?.ToString()).ToList());
 				IsValid = true;
 				ErrorMessage = null;
 			}

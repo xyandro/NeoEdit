@@ -57,6 +57,15 @@ namespace NeoEdit.Common.Expressions
 			throw new Exception("Invalid boolean format");
 		}
 
+		List<object> GetList(object val)
+		{
+			if (val == null)
+				return new List<object>();
+			if (val is List<object>)
+				return val as List<object>;
+			return new List<object> { val };
+		}
+
 		object UnaryOp(string op, object val)
 		{
 			switch (op)
@@ -162,6 +171,14 @@ namespace NeoEdit.Common.Expressions
 			if ((context.DEBUG() != null) && (Debugger.IsAttached))
 				Debugger.Break();
 			var value = Visit(context.form());
+			if (value is List<object>)
+			{
+				var list = value as List<object>;
+				if (list.Count == 1)
+					value = list[0];
+				else
+					value = string.Join(",", list);
+			}
 			if (value is NumericValue)
 				value = (value as NumericValue).GetResult();
 			if (value is BigInteger)
@@ -235,6 +252,7 @@ namespace NeoEdit.Common.Expressions
 				case "asin": return GetNumeric(paramList[0]).Asin();
 				case "atan": return GetNumeric(paramList[0]).Atan();
 				case "cos": return GetNumeric(paramList[0]).Cos();
+				case "count": return GetList(paramList[0]).Count;
 				case "date": return new NumericValue(new DateTimeOffset(DateTime.Now.Date, DateTimeOffset.Now.Offset).UtcTicks, "ticks");
 				case "eval": return new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row);
 				case "factor": return GetNumeric(paramList[0]).Factor();
@@ -243,17 +261,21 @@ namespace NeoEdit.Common.Expressions
 				case "fromwords": return NumericValue.FromWords(GetString(paramList[0]));
 				case "gcf": return NumericValue.GCF(paramList.Select(val => GetNumeric(val)).ToList());
 				case "lcm": return NumericValue.LCM(paramList.Select(val => GetNumeric(val)).ToList());
+				case "len": return GetString(paramList[0]).Length;
 				case "ln": return GetNumeric(paramList[0]).Ln();
 				case "log": return paramList.Count == 1 ? GetNumeric(paramList[0]).Log() : GetNumeric(paramList[0]).Log(GetNumeric(paramList[2]));
-				case "max": return paramList.Select(val => GetNumeric(val)).Max();
-				case "min": return paramList.Select(val => GetNumeric(val)).Min();
 				case "now": return new NumericValue(DateTimeOffset.Now.UtcTicks, "ticks");
+				case "nummax": return paramList.SelectMany(val => GetList(val)).Select(val => GetNumeric(val)).Max();
+				case "nummin": return paramList.SelectMany(val => GetList(val)).Select(val => GetNumeric(val)).Min();
 				case "reciprocal": return GetNumeric(paramList[0]).Reciprocal();
 				case "reduce": return NumericValue.Reduce(GetNumeric(paramList[0]), GetNumeric(paramList[1]));
 				case "root": return GetNumeric(paramList[0]).Root(GetNumeric(paramList[1]));
 				case "sin": return GetNumeric(paramList[0]).Sin();
 				case "sqrt": return GetNumeric(paramList[0]).Root(GetNumeric(2));
 				case "strformat": return string.Format(GetString(paramList[0]), paramList.Skip(1).ToArray());
+				case "strmax": return paramList.SelectMany(val => GetList(val)).Select(val => GetString(val)).Max();
+				case "strmin": return paramList.SelectMany(val => GetList(val)).Select(val => GetString(val)).Min();
+				case "sum": return NumericValue.Sum(paramList.SelectMany(val => GetList(val)).Select(val => GetNumeric(val)));
 				case "tan": return GetNumeric(paramList[0]).Tan();
 				case "todate": return ToDate(GetNumeric(paramList[0]), paramList.Count > 1 ? GetNumeric(paramList[1]) : null);
 				case "toutcdate": return ToDate(GetNumeric(paramList[0]), new NumericValue(0, "ticks"));
@@ -313,6 +335,7 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitUnitConversion(ExpressionParser.UnitConversionContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
 		public override object VisitTernary(ExpressionParser.TernaryContext context) => GetBoolean(Visit(context.condition)) ? Visit(context.trueval) : Visit(context.falseval);
 		public override object VisitParam(ExpressionParser.ParamContext context) => values[int.Parse(context.val.Text.Trim('[', ']'))];
+		public override object VisitVarParam(ExpressionParser.VarParamContext context) => variables.GetValues(context.val.Text.Trim('[', ']'));
 		public override object VisitNormalstring(ExpressionParser.NormalstringContext context) => Visit(context.val);
 		public override object VisitStrcontent(ExpressionParser.StrcontentContext context) => context.children?.Select(child => GetString(Visit(child))).ToJoinedString() ?? "";
 		public override object VisitStrchars(ExpressionParser.StrcharsContext context) => context.val.Text;

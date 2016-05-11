@@ -105,7 +105,7 @@ namespace NeoEdit.HexEdit.Models
 		{
 			if (!expressions.ContainsKey(expression))
 				expressions[expression] = new NEExpression(expression);
-			var variables = new NEVariables(values.Select(value => NEVariable.Constant(value.Key, "", () => value.Value)));
+			var variables = new NEVariables(values.Select(value => NEVariable.Constant(value.Key, "", value.Value)));
 			return expressions[expression].EvaluateRow(variables).ToString();
 		}
 

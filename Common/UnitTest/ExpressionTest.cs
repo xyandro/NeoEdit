@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common.Expressions;
 
@@ -119,6 +120,8 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("2", new NEExpression("Min(3,4,2)").Evaluate().ToString());
 			Assert.AreEqual("4", new NEExpression("Max(3,4,2)").Evaluate().ToString());
 
+			Assert.AreEqual("16", new NEExpression("len(\"1125899906842624\")").Evaluate().ToString());
+
 			Assert.AreEqual("3.14159265358979", new NEExpression("pi").Evaluate().ToString());
 			Assert.AreEqual("2.71828182845905", new NEExpression("e").Evaluate().ToString());
 
@@ -166,17 +169,25 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("0", new NEExpression("factor(0)").Evaluate().ToString());
 			Assert.AreEqual("-1*2*2*3*5*7*11", new NEExpression("factor(-4620)").Evaluate().ToString());
 
-			var variables = new NEVariables(
-				NEVariable.Constant("x", "", () => 0xdeadbeef),
-				NEVariable.Constant("y", "", () => 0x0badf00d),
-				NEVariable.Constant("z", "", () => 0x0defaced)
+			var miscVars = new NEVariables(
+				NEVariable.Constant("x", "", 0xdeadbeef),
+				NEVariable.Constant("y", "", 0x0badf00d),
+				NEVariable.Constant("z", "", 0x0defaced)
 			);
 			var expr = new NEExpression("x - y + [0]");
 			var vars = expr.Variables;
 			Assert.AreEqual(2, vars.Count);
 			Assert.IsTrue(vars.Contains("x"));
 			Assert.IsTrue(vars.Contains("y"));
-			Assert.AreEqual("7816989104", expr.EvaluateRow(variables, 0xfeedface).ToString());
+			Assert.AreEqual("7816989104", expr.EvaluateRow(miscVars, 0xfeedface).ToString());
+
+			var listVars = new NEVariables(NEVariable.List("y", "", () => new List<string> { "12", "-13.1", "-13", "9", "0.0001" }));
+			Assert.AreEqual("5", new NEExpression("count([y])").EvaluateRow(listVars).ToString());
+			Assert.AreEqual("-13.1", new NEExpression("nummin([y])").EvaluateRow(listVars).ToString());
+			Assert.AreEqual("12", new NEExpression("nummax([y])").EvaluateRow(listVars).ToString());
+			Assert.AreEqual("0.0001", new NEExpression("strmin([y])").EvaluateRow(listVars).ToString());
+			Assert.AreEqual("9", new NEExpression("strmax([y])").EvaluateRow(listVars).ToString());
+			Assert.AreEqual("-5.0999", new NEExpression("sum([y])").EvaluateRow(listVars).ToString());
 
 			CheckDates();
 		}

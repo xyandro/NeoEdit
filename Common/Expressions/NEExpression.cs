@@ -31,12 +31,8 @@ namespace NeoEdit.Common.Expressions
 		{
 			if (rowCount < 0)
 				throw new ArgumentException($"{nameof(rowCount)} must be positive");
-
-			if (!Variables.Any())
-				return Enumerable.Repeat(InternalEvaluate(null, 0, values), rowCount ?? 1).ToList();
-
-			variables?.Prepare(this, rowCount);
-			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => InternalEvaluate(variables, row, values)).ToList();
+			var count = rowCount ?? variables.ResultCount(Variables) ?? 1;
+			return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(row => InternalEvaluate(variables, row, values)).ToList();
 		}
 
 		T ChangeType<T>(object value)
@@ -50,12 +46,8 @@ namespace NeoEdit.Common.Expressions
 		{
 			if (rowCount < 0)
 				throw new ArgumentException($"{nameof(rowCount)} must be positive");
-
-			if (!Variables.Any())
-				return Enumerable.Repeat(ChangeType<T>(InternalEvaluate(null, 0, values)), rowCount ?? 1).ToList();
-
-			variables.Prepare(this, rowCount);
-			return Enumerable.Range(0, variables.RowCount).AsParallel().AsOrdered().Select(row => ChangeType<T>(InternalEvaluate(variables, row, values))).ToList();
+			var count = rowCount ?? variables.ResultCount(Variables) ?? 1;
+			return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(row => ChangeType<T>(InternalEvaluate(variables, row, values))).ToList();
 		}
 
 		HashSet<string> variables;

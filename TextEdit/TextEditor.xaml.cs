@@ -425,66 +425,54 @@ namespace NeoEdit.TextEdit
 
 			var results = new NEVariables();
 
+			results.Add(NEVariable.Constant("f", "Filename", fileName));
+
 			var strs = default(List<string>);
-			var initializeStrs = new NEVariableInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
+			var initializeStrs = new NEVariableListInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
+			results.Add(NEVariable.List("x", "Selected text", () => strs, initializeStrs));
+			results.Add(NEVariable.Constant("xn", "Selections count", Selections.Count));
 
-			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
-			results.Add(NEVariable.Enumerable("x", "Selected text", () => strs, initializeStrs));
-			results.Add(NEVariable.Enumerable("xl", "Selection length", () => strs.Select(str => str.Length), initializeStrs));
-			results.Add(NEVariable.Constant("xn", "Selections count", () => Selections.Count));
-			results.Add(NEVariable.Enumerable("y", "One-based index", () => Enumerable.Range(1, int.MaxValue), infinite: true));
-			results.Add(NEVariable.Enumerable("z", "Zero-based index", () => Enumerable.Range(0, int.MaxValue), infinite: true));
+			var regions = default(List<string>);
+			var initializeRegions = new NEVariableListInitializer(() => regions = Regions.Select(range => GetString(range)).ToList());
+			results.Add(NEVariable.List("r", "Region text", () => regions, initializeRegions));
+
+			results.Add(NEVariable.Series("y", "One-based index", index => index + 1));
+			results.Add(NEVariable.Series("z", "Zero-based index", index => index));
+
 			if (clipboard.Count == 1)
-			{
-				results.Add(NEVariable.Constant("c", "Clipboard string", () => clipboard[0]));
-				results.Add(NEVariable.Constant("cl", "Clipboard string length", () => clipboard[0].Length));
-			}
+				results.Add(NEVariable.Constant("c", "Clipboard string", clipboard[0]));
 			else
-			{
-				results.Add(NEVariable.Enumerable("c", "Clipboard string", () => clipboard));
-				results.Add(NEVariable.Enumerable("cl", "Clipboard string length", () => clipboard.Select(str => str.Length)));
-			}
-			results.Add(NEVariable.Constant("cn", "Clipboard count", () => clipboard.Count));
+				results.Add(NEVariable.List("c", "Clipboard string", () => clipboard));
 
-			var lines = default(List<int>);
-			var initializeLines = new NEVariableInitializer(() => lines = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start)).ToList());
-			results.Add(NEVariable.Enumerable("line", "Selection line", () => lines.Select(line => line + 1), initializeLines));
+			var lineStarts = default(List<int>);
+			var initializeLineStarts = new NEVariableListInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start) + 1).ToList());
+			results.Add(NEVariable.List("line", "Selection line start", () => lineStarts, initializeLineStarts));
+			var lineEnds = default(List<int>);
+			var initializeLineEnds = new NEVariableListInitializer(() => lineEnds = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.End) + 1).ToList());
+			results.Add(NEVariable.List("lineend", "Selection line end", () => lineEnds, initializeLineEnds));
 
-			var cols = default(List<int>);
-			var initializeCols = new NEVariableInitializer(() => cols = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.Start, lines[index]) + 1).ToList(), initializeLines);
-			results.Add(NEVariable.Enumerable("col", "Selection column", () => cols, initializeCols));
+			var colStarts = default(List<int>);
+			var initializeColStarts = new NEVariableListInitializer(() => colStarts = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
+			results.Add(NEVariable.List("col", "Selection column start", () => colStarts, initializeColStarts));
+			var colEnds = default(List<int>);
+			var initializeColEnds = new NEVariableListInitializer(() => colEnds = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
+			results.Add(NEVariable.List("colend", "Selection column end", () => colEnds, initializeColEnds));
 
-			results.Add(NEVariable.Enumerable("pos", "Selection position", () => Selections.Select(range => range.Start)));
+			var posStarts = default(List<int>);
+			var initializePosStarts = new NEVariableListInitializer(() => posStarts = Selections.Select(range => range.Start).ToList());
+			results.Add(NEVariable.List("pos", "Selection position start", () => posStarts, initializePosStarts));
+			var posEnds = default(List<int>);
+			var initializePosEnds = new NEVariableListInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
+			results.Add(NEVariable.List("posend", "Selection position end", () => posEnds, initializePosEnds));
 
-			var keyOrdering = default(List<int?>);
-			var initializeKeyOrdering = new NEVariableInitializer(() => keyOrdering = strs.Select(str => keysHash.ContainsKey(str) ? (int?)keysHash[str] : null).ToList(), initializeStrs);
 			for (var ctr = 0; ctr <= 9; ++ctr)
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
-				var prefix = ctr == 0 ? "k" : $"v{ctr}";
-				var kvName = prefix;
-				var kvlName = $"{prefix}l";
-				var rkvName = $"r{prefix}";
-				var rkvlName = $"r{prefix}l";
-				var rkvnName = $"r{prefix}n";
-				results.Add(NEVariable.Enumerable(rkvName, "Raw keys/values", () => KeysAndValues[num], initializeKeyOrdering));
-				results.Add(NEVariable.Enumerable(rkvlName, "Raw keys/values length", () => KeysAndValues[num].Select(str => str.Length), initializeKeyOrdering));
-				results.Add(NEVariable.Constant(rkvnName, "Raw keys/values count", () => KeysAndValues[num].Count, initializeKeyOrdering));
-
-				var values = default(List<string>);
-				var kvInitialize = new NEVariableInitializer(() =>
-				{
-					if (KeysAndValues[0].Count == KeysAndValues[num].Count)
-						values = keyOrdering.Select(order => order.HasValue ? KeysAndValues[num][order.Value] : "").ToList();
-					else
-						values = new List<string>();
-				}, initializeKeyOrdering);
-				results.Add(NEVariable.Enumerable(kvName, "Keys/values", () => values, kvInitialize));
-				results.Add(NEVariable.Enumerable(kvlName, "Keys/values length", () => values.Select(str => str.Length), kvInitialize));
+				results.Add(NEVariable.List(ctr == 0 ? "k" : $"v{ctr}", "Keys/values", () => KeysAndValues[num]));
 			}
 
 			// Add variables that aren't already set
-			results.AddRange(variables.Where(pair => !results.Contains(pair.Key)).ForEach(pair => NEVariable.Enumerable(pair.Key, "User-defined", () => pair.Value)));
+			results.AddRange(variables.Where(pair => !results.Contains(pair.Key)).ForEach(pair => NEVariable.List(pair.Key, "User-defined", () => pair.Value)));
 
 			return results;
 		}
