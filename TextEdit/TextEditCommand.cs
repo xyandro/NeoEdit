@@ -107,7 +107,6 @@ namespace NeoEdit.TextEdit
 		Files_Operations_Copy,
 		Files_Operations_Move,
 		Files_Operations_Delete,
-		Files_Operations_SaveClipboards,
 		Files_Operations_DragDrop,
 		Files_Operations_OpenDisk,
 		Files_Operations_Explore,

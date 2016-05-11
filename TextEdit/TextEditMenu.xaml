@@ -188,7 +188,6 @@
 			<textEdit:TextEditMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
 			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="S_ave Clipboards" CommandEnum="Files_Operations_SaveClipboards"/>
 			<textEdit:TextEditMenuItem Header="D_rag/Drop" CommandEnum="Files_Operations_DragDrop"/>
 			<textEdit:TextEditMenuItem Header="Open D_isk" CommandEnum="Files_Operations_OpenDisk"/>
 			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>

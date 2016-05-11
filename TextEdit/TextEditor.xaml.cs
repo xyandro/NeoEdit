@@ -772,7 +772,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(false); break;
 				case TextEditCommand.Files_Operations_Move: Command_Files_Operations_CopyMove(true); break;
 				case TextEditCommand.Files_Operations_Delete: Command_Files_Operations_Delete(); break;
-				case TextEditCommand.Files_Operations_SaveClipboards: Command_Files_Operations_SaveClipboards(); break;
 				case TextEditCommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
 				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
 				case TextEditCommand.Files_Operations_Explore: Command_Files_Operations_Explore(); break;
@@ -1536,20 +1535,6 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
-
-		internal void Command_Files_Operations_SaveClipboards()
-		{
-			var clipboardStrings = clipboard.Strings;
-			if (clipboardStrings.Count != Selections.Count)
-				throw new Exception("Clipboard count must match selection count.");
-
-			for (var ctr = 0; ctr < clipboardStrings.Count; ++ctr)
-			{
-				var fileName = GetString(Selections[ctr]);
-				var data = clipboardStrings[ctr];
-				File.WriteAllText(fileName, data, Coder.GetEncoding(CodePage));
-			}
-		}
 
 		internal void Command_Files_Operations_Create_Files()
 		{
