@@ -11,7 +11,7 @@ namespace NeoEdit.TextEdit
 	partial class TextEditor
 	{
 		internal enum SortScope { Selections, Lines, Regions }
-		internal enum SortType { String, StringRaw, Length, Integer, Float, Hex, DateTime, Keys, Reverse, Randomize, Frequency }
+		internal enum SortType { Smart, String, Length, Integer, Float, Hex, DateTime, Keys, Reverse, Randomize, Frequency }
 
 		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 
@@ -91,8 +91,8 @@ namespace NeoEdit.TextEdit
 
 			switch (type)
 			{
-				case SortType.String: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Helpers.StringNumericComparer(caseSensitive)).ToList(); break;
-				case SortType.StringRaw: entries = OrderByAscDesc(entries, entry => entry.value, ascending, stringComparer).ToList(); break;
+				case SortType.Smart: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Helpers.StringNumericComparer(caseSensitive)).ToList(); break;
+				case SortType.String: entries = OrderByAscDesc(entries, entry => entry.value, ascending, stringComparer).ToList(); break;
 				case SortType.Length: entries = OrderByAscDesc(entries, entry => entry.value.Length, ascending).ToList(); break;
 				case SortType.Integer: entries = OrderByAscDesc(entries, entry => BigInteger.Parse(entry.value), ascending).ToList(); break;
 				case SortType.Float: entries = OrderByAscDesc(entries, entry => double.Parse(entry.value), ascending).ToList(); break;

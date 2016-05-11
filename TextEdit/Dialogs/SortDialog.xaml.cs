@@ -36,7 +36,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			InitializeComponent();
 
 			SortScope = TextEditor.SortScope.Selections;
-			SortType = TextEditor.SortType.String;
+			SortType = TextEditor.SortType.Smart;
 			ascending.IsChecked = true;
 		}
 

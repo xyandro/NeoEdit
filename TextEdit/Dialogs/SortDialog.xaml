@@ -21,16 +21,16 @@
 		<GroupBox Header="How to sort it:">
 			<StackPanel>
 				<UniformGrid Columns="3">
+					<RadioButton GroupName="sortType" Content="S_mart" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Smart}"/>
 					<RadioButton GroupName="sortType" Content="S_tring" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=String}"/>
-					<RadioButton GroupName="sortType" Content="Str_ing (Raw)" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=StringRaw}"/>
 					<RadioButton GroupName="sortType" Content="Len_gth" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Length}"/>
-					<RadioButton GroupName="sortType" Content="I_nteger" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Integer}"/>
+					<RadioButton GroupName="sortType" Content="_Integer" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Integer}"/>
 					<RadioButton GroupName="sortType" Content="Fl_oat" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Float}"/>
 					<RadioButton GroupName="sortType" Content="_Hex" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Hex}"/>
 					<RadioButton GroupName="sortType" Content="Dat_e/Time" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=DateTime}"/>
 					<RadioButton GroupName="sortType" Content="_Keys" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Keys}"/>
 					<RadioButton GroupName="sortType" Content="Re_verse" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Reverse}"/>
-					<RadioButton GroupName="sortType" Content="Rando_mize" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Randomize}"/>
+					<RadioButton GroupName="sortType" Content="Ra_ndomize" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Randomize}"/>
 					<RadioButton GroupName="sortType" Content="_Frequency" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Frequency}"/>
 				</UniformGrid>
 
