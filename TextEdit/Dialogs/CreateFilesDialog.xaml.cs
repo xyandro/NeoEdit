@@ -11,15 +11,15 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public string Data { get; set; }
 			public string FileName { get; set; }
+			public string Data { get; set; }
 			public Coder.CodePage CodePage { get; set; }
 		}
 
 		[DepProp]
-		public string Data { get { return UIHelper<CreateFilesDialog>.GetPropValue<string>(this); } set { UIHelper<CreateFilesDialog>.SetPropValue(this, value); } }
-		[DepProp]
 		public string FileName { get { return UIHelper<CreateFilesDialog>.GetPropValue<string>(this); } set { UIHelper<CreateFilesDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public string Data { get { return UIHelper<CreateFilesDialog>.GetPropValue<string>(this); } set { UIHelper<CreateFilesDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<CreateFilesDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<CreateFilesDialog>.SetPropValue(this, value); } }
 
@@ -32,7 +32,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			Variables = variables;
 			InitializeComponent();
 
-			Data = FileName = "x";
+			FileName = Data = "x";
 			CodePage = defaultCodePage;
 
 			codePage.ItemsSource = Coder.GetAllCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
@@ -45,7 +45,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Data = Data, FileName = FileName, CodePage = CodePage };
+			result = new Result { FileName = FileName, Data = Data, CodePage = CodePage };
 			data.AddCurrentSuggestion();
 			fileName.AddCurrentSuggestion();
 			DialogResult = true;

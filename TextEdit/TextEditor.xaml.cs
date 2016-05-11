@@ -584,8 +584,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_AllTimes: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
 				case TextEditCommand.Files_Insert: dialogResult = Command_Files_Insert_Dialog(); break;
+				case TextEditCommand.Files_Create_FromExpressions: dialogResult = Command_Files_Create_FromExpressions_Dialog(); break;
 				case TextEditCommand.Files_Hash: dialogResult = Command_Files_Hash_Dialog(); break;
-				case TextEditCommand.Files_Operations_Create_FromExpressions: dialogResult = Command_Files_Operations_Create_FromExpressions_Dialog(); break;
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
@@ -758,6 +758,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Directory_GetChildren: Command_Files_Directory_GetChildrenDescendants(false); break;
 				case TextEditCommand.Files_Directory_GetDescendants: Command_Files_Directory_GetChildrenDescendants(true); break;
 				case TextEditCommand.Files_Insert: Command_Files_Insert(dialogResult as InsertFilesDialog.Result); break;
+				case TextEditCommand.Files_Create_Files: Command_Files_Create_Files(); break;
+				case TextEditCommand.Files_Create_Directories: Command_Files_Create_Directories(); break;
+				case TextEditCommand.Files_Create_FromExpressions: Command_Files_Create_FromExpressions(dialogResult as CreateFilesDialog.Result); break;
 				case TextEditCommand.Files_Select_Name_Directory: Command_Files_Select_Name(TextEditor.GetPathType.Directory); break;
 				case TextEditCommand.Files_Select_Name_Name: Command_Files_Select_Name(TextEditor.GetPathType.FileName); break;
 				case TextEditCommand.Files_Select_Name_FileNamewoExtension: Command_Files_Select_Name(TextEditor.GetPathType.FileNameWoExtension); break;
@@ -776,9 +779,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
 				case TextEditCommand.Files_Operations_Explore: Command_Files_Operations_Explore(); break;
 				case TextEditCommand.Files_Operations_CommandPrompt: Command_Files_Operations_CommandPrompt(); break;
-				case TextEditCommand.Files_Operations_Create_Files: Command_Files_Operations_Create_Files(); break;
-				case TextEditCommand.Files_Operations_Create_Directories: Command_Files_Operations_Create_Directories(); break;
-				case TextEditCommand.Files_Operations_Create_FromExpressions: Command_Files_Operations_Create_FromExpressions(dialogResult as CreateFilesDialog.Result); break;
 				case TextEditCommand.Files_Operations_RunCommand_Parallel: Command_Files_Operations_RunCommand_Parallel(); break;
 				case TextEditCommand.Files_Operations_RunCommand_Sequential: Command_Files_Operations_RunCommand_Sequential(); break;
 				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
@@ -1536,58 +1536,6 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		internal void Command_Files_Operations_Create_Files()
-		{
-			var files = RelativeSelectedFiles();
-			if (files.Any(file => Directory.Exists(file)))
-				throw new Exception("Directory already exists");
-			files = files.Where(file => !File.Exists(file)).ToList();
-			var data = new byte[0];
-			foreach (var file in files)
-				File.WriteAllBytes(file, data);
-		}
-
-		[Flags]
-		internal enum TimestampType
-		{
-			Write = 1,
-			Access = 2,
-			Create = 4,
-			All = Write | Access | Create,
-		}
-
-		internal void Command_Files_Operations_Create_Directories()
-		{
-			var files = RelativeSelectedFiles();
-			foreach (var file in files)
-				Directory.CreateDirectory(file);
-		}
-
-		internal CreateFilesDialog.Result Command_Files_Operations_Create_FromExpressions_Dialog() => CreateFilesDialog.Run(WindowParent, GetVariables(), CodePage);
-
-		internal void Command_Files_Operations_Create_FromExpressions(CreateFilesDialog.Result result)
-		{
-			var variables = GetVariables();
-
-			var datas = new NEExpression(result.Data).EvaluateRows<string>(variables);
-			if (!datas.Any())
-				throw new Exception("No data");
-
-			var fileNames = new NEExpression(result.FileName).EvaluateRows<string>(variables, datas.Count);
-			if (!fileNames.Any())
-				throw new Exception("No filenames");
-
-			if (fileNames.Count != datas.Count)
-				throw new Exception("File name and data count must match.");
-
-			var outputs = fileNames.Zip(datas, (filename, data) => new { filename, data }).ToList();
-			foreach (var output in outputs)
-			{
-				var bytes = Coder.StringToBytes(output.data, result.CodePage, true);
-				File.WriteAllBytes(output.filename, bytes);
-			}
-		}
-
 		string RunCommand(string arguments)
 		{
 			var output = new StringBuilder();
@@ -1880,6 +1828,15 @@ namespace NeoEdit.TextEdit
 				SetFileSize(GetString(Selections[ctr]), result.Type, results[ctr]);
 		}
 
+		[Flags]
+		internal enum TimestampType
+		{
+			Write = 1,
+			Access = 2,
+			Create = 4,
+			All = Write | Access | Create,
+		}
+
 		internal ChooseDateTimeDialog.Result Command_Files_Set_Time_Dialog() => ChooseDateTimeDialog.Run(WindowParent, DateTime.Now);
 
 		internal void Command_Files_Set_Time(TimestampType type, ChooseDateTimeDialog.Result result)
@@ -1972,6 +1929,49 @@ namespace NeoEdit.TextEdit
 		internal InsertFilesDialog.Result Command_Files_Insert_Dialog() => InsertFilesDialog.Run(WindowParent);
 
 		internal void Command_Files_Insert(InsertFilesDialog.Result result) => ReplaceSelections(GetSelectionStrings().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
+
+		internal void Command_Files_Create_Files()
+		{
+			var files = RelativeSelectedFiles();
+			if (files.Any(file => Directory.Exists(file)))
+				throw new Exception("Directory already exists");
+			files = files.Where(file => !File.Exists(file)).ToList();
+			var data = new byte[0];
+			foreach (var file in files)
+				File.WriteAllBytes(file, data);
+		}
+
+		internal void Command_Files_Create_Directories()
+		{
+			var files = RelativeSelectedFiles();
+			foreach (var file in files)
+				Directory.CreateDirectory(file);
+		}
+
+		internal CreateFilesDialog.Result Command_Files_Create_FromExpressions_Dialog() => CreateFilesDialog.Run(WindowParent, GetVariables(), CodePage);
+
+		internal void Command_Files_Create_FromExpressions(CreateFilesDialog.Result result)
+		{
+			var variables = GetVariables();
+
+			var datas = new NEExpression(result.Data).EvaluateRows<string>(variables);
+			if (!datas.Any())
+				throw new Exception("No data");
+
+			var fileNames = new NEExpression(result.FileName).EvaluateRows<string>(variables, datas.Count);
+			if (!fileNames.Any())
+				throw new Exception("No filenames");
+
+			if (fileNames.Count != datas.Count)
+				throw new Exception("File name and data count must match.");
+
+			var outputs = fileNames.Zip(datas, (filename, data) => new { filename, data }).ToList();
+			foreach (var output in outputs)
+			{
+				var bytes = Coder.StringToBytes(output.data, result.CodePage, true);
+				File.WriteAllBytes(output.filename, bytes);
+			}
+		}
 
 		internal void Command_Files_Select_Name(GetPathType type) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());
 

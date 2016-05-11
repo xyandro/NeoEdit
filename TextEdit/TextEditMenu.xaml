@@ -162,6 +162,11 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Insert" CommandEnum="Files_Insert"/>
+		<MenuItem Header="_Create">
+			<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>
+			<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Create_Directories"/>
+			<textEdit:TextEditMenuItem Header="From _Expressions" CommandEnum="Files_Create_FromExpressions"/>
+		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<MenuItem Header="_Name">
@@ -192,12 +197,6 @@
 			<textEdit:TextEditMenuItem Header="Open D_isk" CommandEnum="Files_Operations_OpenDisk"/>
 			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
 			<textEdit:TextEditMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt"/>
-			<Separator/>
-			<MenuItem Header="Crea_te">
-				<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Operations_Create_Files"/>
-				<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Operations_Create_Directories"/>
-				<textEdit:TextEditMenuItem Header="From _Expressions" CommandEnum="Files_Operations_Create_FromExpressions"/>
-			</MenuItem>
 			<Separator/>
 			<MenuItem Header="R_un Command">
 				<textEdit:TextEditMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel"/>
