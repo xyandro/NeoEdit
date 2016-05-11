@@ -191,7 +191,7 @@ namespace NeoEdit.Common.Parsing
 		IEnumerable<ParserNode> NavigateFirstChild()
 		{
 			var item = this;
-			while (item.ParserNavigationType == ParserNavigationTypeEnum.FirstChild)
+			while ((item.ParserNavigationType == ParserNavigationTypeEnum.FirstChild) && (item.children.Count != 0))
 				item = item.children[0];
 			yield return item;
 		}

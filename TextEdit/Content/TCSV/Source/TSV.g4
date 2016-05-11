@@ -1,6 +1,6 @@
 grammar TSV;
 
-root : (row CR? LF)* row? EOF ;
+root : (row CR? LF)* row EOF ;
 row  : cell (SPLIT cell)* ;
 cell : STRING? ;
 
