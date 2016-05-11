@@ -255,6 +255,13 @@
     <Compile Include="Dialogs\HashTextDialog.xaml.cs">
       <DependentUpon>HashTextDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\InsertFilesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\InsertFilesDialog.xaml.cs">
+      <DependentUpon>InsertFilesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\JoinDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

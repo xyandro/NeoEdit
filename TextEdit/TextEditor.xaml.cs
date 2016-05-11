@@ -583,6 +583,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_CreateTime: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_AllTimes: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
+				case TextEditCommand.Files_Insert: dialogResult = Command_Files_Insert_Dialog(); break;
 				case TextEditCommand.Files_Hash: dialogResult = Command_Files_Hash_Dialog(); break;
 				case TextEditCommand.Files_Operations_Create_FromExpressions: dialogResult = Command_Files_Operations_Create_FromExpressions_Dialog(); break;
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
@@ -756,6 +757,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as SetAttributesDialog.Result); break;
 				case TextEditCommand.Files_Directory_GetChildren: Command_Files_Directory_GetChildrenDescendants(false); break;
 				case TextEditCommand.Files_Directory_GetDescendants: Command_Files_Directory_GetChildrenDescendants(true); break;
+				case TextEditCommand.Files_Insert: Command_Files_Insert(dialogResult as InsertFilesDialog.Result); break;
 				case TextEditCommand.Files_Select_Name_Directory: Command_Files_Select_Name(TextEditor.GetPathType.Directory); break;
 				case TextEditCommand.Files_Select_Name_Name: Command_Files_Select_Name(TextEditor.GetPathType.FileName); break;
 				case TextEditCommand.Files_Select_Name_FileNamewoExtension: Command_Files_Select_Name(TextEditor.GetPathType.FileNameWoExtension); break;
@@ -1981,6 +1983,10 @@ namespace NeoEdit.TextEdit
 
 			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive))).ToList());
 		}
+
+		internal InsertFilesDialog.Result Command_Files_Insert_Dialog() => InsertFilesDialog.Run(WindowParent);
+
+		internal void Command_Files_Insert(InsertFilesDialog.Result result) => ReplaceSelections(GetSelectionStrings().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
 
 		internal void Command_Files_Select_Name(GetPathType type) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());
 

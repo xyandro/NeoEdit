@@ -161,6 +161,8 @@
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Files_Directory_GetDescendants"/>
 		</MenuItem>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Insert" CommandEnum="Files_Insert"/>
+		<Separator/>
 		<MenuItem Header="_Select">
 			<MenuItem Header="_Name">
 				<textEdit:TextEditMenuItem Header="_Directory" CommandEnum="Files_Select_Name_Directory"/>
