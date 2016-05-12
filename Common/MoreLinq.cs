@@ -271,5 +271,7 @@ namespace NeoEdit.Common
 				first = false;
 			}
 		}
+
+		public static IEnumerable<TSource> SelectMany<TSource>(this IEnumerable<IEnumerable<TSource>> source) => source.SelectMany(items => items);
 	}
 }

@@ -65,7 +65,7 @@
 		<Separator/>
 		<MenuItem Header="_Copy">
 			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
-			<textEdit:TextEditMenuItem Header="_All Files" CommandEnum="Edit_Copy_AllFiles"/>
+			<textEdit:TextEditMenuItem Header="_All Clipboards" CommandEnum="Edit_Copy_AllClipboards"/>
 			<textEdit:TextEditMenuItem Header="C_ut" CommandEnum="Edit_Copy_Cut"/>
 		</MenuItem>
 		<MenuItem Header="_Paste">

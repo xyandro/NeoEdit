@@ -148,14 +148,7 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(file);
 		}
 
-		void Command_Edit_Copy_AllFiles()
-		{
-			var data = new List<string>();
-			foreach (var textEditorData in ItemTabs.Items)
-				if (textEditorData.Active)
-					data.AddRange(textEditorData.GetSelectionStrings());
-			NEClipboard.Strings = data;
-		}
+		void Command_Edit_Copy_AllClipboards() => NEClipboard.Strings = ItemTabs.Items.Where(textEditor => textEditor.Active).Select(textEditor => textEditor.clipboard.Strings).Distinct().SelectMany().ToList();
 
 		void Command_Edit_Paste_AllFiles()
 		{
@@ -412,7 +405,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
 				case TextEditCommand.File_Copy_AllPaths: Command_File_Copy_AllPaths(); break;
 				case TextEditCommand.File_Exit: Close(); break;
-				case TextEditCommand.Edit_Copy_AllFiles: Command_Edit_Copy_AllFiles(); break;
+				case TextEditCommand.Edit_Copy_AllClipboards: Command_Edit_Copy_AllClipboards(); break;
 				case TextEditCommand.Edit_Paste_AllFiles: Command_Edit_Paste_AllFiles(); break;
 				case TextEditCommand.Diff_Diff: Command_Diff_Diff(); break;
 				case TextEditCommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;

@@ -160,7 +160,7 @@ namespace NeoEdit.TextEdit
 
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
-		readonly NELocalClipboard clipboard = new NELocalClipboard();
+		internal readonly NELocalClipboard clipboard = new NELocalClipboard();
 
 		static Dictionary<string, List<string>> variables { get; } = new Dictionary<string, List<string>>();
 

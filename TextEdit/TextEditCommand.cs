@@ -36,7 +36,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,
 		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,
 		[KeyGesture(Key.C, ModifierKeys.Control)] Edit_Copy_Copy,
-		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Edit_Copy_AllFiles,
+		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Edit_Copy_AllClipboards,
 		[KeyGesture(Key.X, ModifierKeys.Control)] Edit_Copy_Cut,
 		[KeyGesture(Key.V, ModifierKeys.Control)] [KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Paste_Paste,
 		[KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Edit_Paste_AllFiles,
