@@ -81,6 +81,7 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Copy _Down" CommandEnum="Edit_CopyDown"/>
+		<textEdit:TextEditMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
 		<Separator/>
@@ -521,8 +522,6 @@
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
 		<textEdit:TextEditMenuItem Header="Rectan_gle" CommandEnum="Select_Rectangle"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="R_otate" CommandEnum="Select_Rotate"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Invert" CommandEnum="Select_Invert"/>
 		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Select_Join"/>

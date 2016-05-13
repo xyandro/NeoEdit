@@ -353,6 +353,13 @@
     <Compile Include="Dialogs\RevRegExDialog.xaml.cs">
       <DependentUpon>RevRegExDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\RotateDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\RotateDialog.xaml.cs">
+      <DependentUpon>RotateDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ScaleDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -373,13 +380,6 @@
     </Page>
     <Compile Include="Dialogs\SelectContentAttributeDialog.xaml.cs">
       <DependentUpon>SelectContentAttributeDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\SelectRotateDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\SelectRotateDialog.xaml.cs">
-      <DependentUpon>SelectRotateDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\SelectSplitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

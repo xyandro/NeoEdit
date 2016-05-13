@@ -4,7 +4,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	internal partial class SelectRotateDialog
+	internal partial class RotateDialog
 	{
 		internal class Result
 		{
@@ -12,13 +12,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string Count { get { return UIHelper<SelectRotateDialog>.GetPropValue<string>(this); } set { UIHelper<SelectRotateDialog>.SetPropValue(this, value); } }
+		public string Count { get { return UIHelper<RotateDialog>.GetPropValue<string>(this); } set { UIHelper<RotateDialog>.SetPropValue(this, value); } }
 
 		public NEVariables Variables { get; }
 
-		static SelectRotateDialog() { UIHelper<SelectRotateDialog>.Register(); }
+		static RotateDialog() { UIHelper<RotateDialog>.Register(); }
 
-		SelectRotateDialog(NEVariables variables)
+		RotateDialog(NEVariables variables)
 		{
 			Variables = variables;
 			InitializeComponent();
@@ -35,7 +35,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		public static Result Run(Window parent, NEVariables variables)
 		{
-			var dialog = new SelectRotateDialog(variables) { Owner = parent };
+			var dialog = new RotateDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())
 				return null;
 

@@ -557,6 +557,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
+				case TextEditCommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
 				case TextEditCommand.Edit_Color: dialogResult = Command_Edit_Color_Dialog(); break;
@@ -616,7 +617,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Database_QueryTable: dialogResult = Command_Database_QueryTable_Dialog(); break;
 				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
-				case TextEditCommand.Select_Rotate: dialogResult = Command_Select_Rotate_Dialog(); break;
 				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
 				case TextEditCommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
 				default: return true;
@@ -699,6 +699,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
+				case TextEditCommand.Edit_Rotate: Command_Edit_Rotate(dialogResult as RotateDialog.Result); break;
 				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
 				case TextEditCommand.Edit_Markup_Escape: Command_Edit_Markup_Escape(); break;
 				case TextEditCommand.Edit_Markup_Unescape: Command_Edit_Markup_Unescape(); break;
@@ -973,7 +974,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
 				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
 				case TextEditCommand.Select_Rectangle: Command_Select_Rectangle(); break;
-				case TextEditCommand.Select_Rotate: Command_Select_Rotate(dialogResult as SelectRotateDialog.Result); break;
 				case TextEditCommand.Select_Invert: Command_Select_Invert(); break;
 				case TextEditCommand.Select_Join: Command_Select_Join(); break;
 				case TextEditCommand.Select_Empty: Command_Select_Empty(true); break;
@@ -2426,6 +2426,24 @@ namespace NeoEdit.TextEdit
 			SetClipboardStrings(indexes.Select(pos => (pos + 1).ToString()));
 		}
 
+		internal RotateDialog.Result Command_Edit_Rotate_Dialog() => RotateDialog.Run(WindowParent, GetVariables());
+
+		internal void Command_Edit_Rotate(RotateDialog.Result result)
+		{
+			var count = new NEExpression(result.Count).EvaluateRow<int>(GetVariables());
+			if (count == 0)
+				return;
+
+			var strs = GetSelectionStrings();
+			if (count < 0)
+				count = -count;
+			else
+				count = strs.Count - count;
+			strs.AddRange(strs.Take(count).ToList());
+			strs.RemoveRange(0, count);
+			ReplaceSelections(strs);
+		}
+
 		internal RepeatDialog.Result Command_Edit_Repeat_Dialog() => RepeatDialog.Run(WindowParent, Selections.Count == 1, GetVariables());
 
 		internal void Command_Edit_Repeat(RepeatDialog.Result result)
@@ -3061,24 +3079,6 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Select_Rectangle() => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList());
-
-		internal SelectRotateDialog.Result Command_Select_Rotate_Dialog() => SelectRotateDialog.Run(WindowParent, GetVariables());
-
-		internal void Command_Select_Rotate(SelectRotateDialog.Result result)
-		{
-			var count = new NEExpression(result.Count).EvaluateRow<int>(GetVariables());
-			if (count == 0)
-				return;
-
-			var strs = GetSelectionStrings();
-			if (count < 0)
-				count = -count;
-			else
-				count = strs.Count - count;
-			strs.AddRange(strs.Take(count).ToList());
-			strs.RemoveRange(0, count);
-			ReplaceSelections(strs);
-		}
 
 		internal void Command_Select_Invert()
 		{
