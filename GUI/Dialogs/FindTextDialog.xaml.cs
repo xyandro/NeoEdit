@@ -28,7 +28,7 @@ namespace NeoEdit.GUI.Dialogs
 			public bool SelectionOnly { get; set; }
 			public bool KeepMatching { get; set; }
 			public bool RemoveMatching { get; set; }
-			public bool IncludeEndings { get; set; }
+			public bool MultiLine { get; set; }
 			public GetRegExResultType ResultType { get; set; }
 		}
 
@@ -51,9 +51,9 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		public bool RemoveMatching { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IncludeEndings { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
+		public bool MultiLine { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 
-		static bool wholeWordsVal, matchCaseVal, isRegexVal, regexGroupsVal, includeEndingsVal;
+		static bool wholeWordsVal, matchCaseVal, isRegexVal, regexGroupsVal, multiLineVal;
 
 		static FindTextDialog()
 		{
@@ -76,7 +76,7 @@ namespace NeoEdit.GUI.Dialogs
 			MatchCase = matchCaseVal;
 			RegexGroups = regexGroupsVal;
 			IsRegex = isRegexVal;
-			IncludeEndings = includeEndingsVal;
+			MultiLine = multiLineVal;
 
 			switch (findType)
 			{
@@ -115,13 +115,13 @@ namespace NeoEdit.GUI.Dialogs
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
-			result = new Result { Regex = new Regex(text, options), Replace = replace, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, IncludeEndings = IncludeEndings, ResultType = sender == selectAll ? GetRegExResultType.All : GetRegExResultType.Next };
+			result = new Result { Regex = new Regex(text, options), Replace = replace, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, MultiLine = MultiLine, ResultType = sender == selectAll ? GetRegExResultType.All : GetRegExResultType.Next };
 
 			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
 			isRegexVal = IsRegex;
 			regexGroupsVal = RegexGroups;
-			includeEndingsVal = IncludeEndings;
+			multiLineVal = MultiLine;
 
 			text = Text;
 			this.text.AddCurrentSuggestion();

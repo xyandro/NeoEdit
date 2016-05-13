@@ -453,14 +453,14 @@ namespace NeoEdit.Common
 			return -1;
 		}
 
-		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool includeEndings, bool regexGroups, bool firstOnly)
+		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool multiLine, bool regexGroups, bool firstOnly)
 		{
 			var result = new List<Tuple<int, int>>();
 			var endOffset = offset + length;
 			while (offset < endOffset)
 			{
 				var nextOffset = endOffset;
-				if (!includeEndings)
+				if (!multiLine)
 				{
 					var line = GetOffsetLine(offset);
 					length = Math.Min(lineOffset[line] + GetLineLength(line), endOffset) - offset;

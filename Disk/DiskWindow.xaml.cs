@@ -475,7 +475,7 @@ namespace NeoEdit.Disk
 
 			var data = new TextData(Coder.BytesToString(File.ReadAllBytes(file.FullName), Common.Transform.Coder.CodePage.AutoByBOM, true));
 			var start = data.GetOffset(0, 0);
-			return data.RegexMatches(search.Regex, start, data.NumChars - start, search.IncludeEndings, false, true).Any();
+			return data.RegexMatches(search.Regex, start, data.NumChars - start, search.MultiLine, false, true).Any();
 		}
 
 		internal void Command_Edit_FindBinary()

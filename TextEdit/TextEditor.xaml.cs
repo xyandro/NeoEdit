@@ -4059,7 +4059,7 @@ namespace NeoEdit.TextEdit
 
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			foreach (var region in regions)
-				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.IncludeEndings, result.RegexGroups, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 		}
 
 		string GetString(Range range) => Data.GetString(range.Start, range.Length);

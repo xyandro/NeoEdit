@@ -40,7 +40,7 @@
 			<CheckBox Name="keepMatching" Content="_Keep matches" IsChecked="{Binding KeepMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Name="removeMatching" Content="Remo_ve matches" IsChecked="{Binding RemoveMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 		</StackPanel>
-		<CheckBox Grid.Row="6" Grid.Column="1" Name="includeLineEndings" Content="_Include line endings" IsChecked="{Binding IncludeEndings, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="6" Grid.Column="1" Content="_Multi-line" IsChecked="{Binding MultiLine, ElementName=self}" Focusable="False"/>
 
 		<Button Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
 
