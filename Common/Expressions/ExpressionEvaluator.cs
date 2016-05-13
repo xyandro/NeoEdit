@@ -170,7 +170,11 @@ namespace NeoEdit.Common.Expressions
 		{
 			if ((context.DEBUG() != null) && (Debugger.IsAttached))
 				Debugger.Break();
-			var value = Visit(context.form());
+			return Simplify(Visit(context.form()));
+		}
+
+		static object Simplify(object value)
+		{
 			if (value is List<object>)
 			{
 				var list = value as List<object>;
@@ -272,7 +276,7 @@ namespace NeoEdit.Common.Expressions
 				case "root": return GetNumeric(paramList[0]).Root(GetNumeric(paramList[1]));
 				case "sin": return GetNumeric(paramList[0]).Sin();
 				case "sqrt": return GetNumeric(paramList[0]).Root(GetNumeric(2));
-				case "strformat": return string.Format(GetString(paramList[0]), paramList.Skip(1).ToArray());
+				case "strformat": return string.Format(GetString(paramList[0]), paramList.Skip(1).Select(val => Simplify(val)).ToArray());
 				case "strmax": return paramList.SelectMany(val => GetList(val)).Select(val => GetString(val)).Max();
 				case "strmin": return paramList.SelectMany(val => GetList(val)).Select(val => GetString(val)).Min();
 				case "sum": return NumericValue.Sum(paramList.SelectMany(val => GetList(val)).Select(val => GetNumeric(val)));
