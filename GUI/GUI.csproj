@@ -14,6 +14,9 @@
     <Resource Include="$(SolutionDir)\Photoshop\NeoEdit.png">
       <Link>About\NeoEdit.png</Link>
     </Resource>
+    <EmbeddedResource Include="..\License.txt">
+      <Link>License\License.txt</Link>
+    </EmbeddedResource>
     <Page Include="About\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -172,6 +175,13 @@
       <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Launcher.cs" />
+    <Page Include="License\LicenseWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="License\LicenseWindow.xaml.cs">
+      <DependentUpon>LicenseWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Misc\FileEncryptor.cs" />
     <Compile Include="Misc\Font.cs" />
     <Compile Include="Misc\KeySet.cs" />
@@ -194,4 +204,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y "$(SolutionDir)License.txt" "$(OutDir)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

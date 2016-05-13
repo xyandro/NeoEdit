@@ -3,7 +3,6 @@ Add command prompt
 Remove native dlls (add to mixed)
 Add TFS source control
 Don't select both files when starting in diff mode with shift down
-Add license
 
 Disk:
 Move timestamp (possibly others) from TextEditor
@@ -31,6 +30,7 @@ QueryBuilder
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
+Find dialog: rename "include line endings" to "multiline"
 
 View:
 Update as new lines are added

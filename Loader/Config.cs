@@ -19,7 +19,7 @@ namespace Loader
 		string x32Path;
 		string x64Path;
 		string output;
-		Regex match = new Regex(@"\.(exe|dll)$", RegexOptions.IgnoreCase);
+		Regex match = new Regex(@"\.(exe|dll|txt)$", RegexOptions.IgnoreCase);
 		ExtractActions extractAction = ExtractActions.Extract;
 		bool nGen;
 		bool isConsole;
