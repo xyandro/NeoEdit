@@ -3032,11 +3032,11 @@ namespace NeoEdit.TextEdit
 
 			IEnumerable<Range> retval = Selections;
 
-			if (result.IgnoreBlank)
-				retval = retval.Where(sel => sel.HasSelection);
-
 			retval = retval.Skip(firstSel - 1);
-			retval = retval.EveryNth(selMult);
+			if (result.JoinSels)
+				retval = retval.Batch(selMult).Select(batch => new Range(batch.Last().End, batch.First().Start));
+			else
+				retval = retval.EveryNth(selMult);
 			retval = retval.Take(numSels);
 			Selections.Replace(retval.ToList());
 		}

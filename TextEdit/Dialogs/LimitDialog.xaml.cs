@@ -11,7 +11,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			public string FirstSel { get; set; }
 			public string SelMult { get; set; }
 			public string NumSels { get; set; }
-			public bool IgnoreBlank { get; set; }
+			public bool JoinSels { get; set; }
 		}
 
 		[DepProp]
@@ -21,7 +21,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public string NumSels { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IgnoreBlank { get { return UIHelper<LimitDialog>.GetPropValue<bool>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		public bool JoinSels { get { return UIHelper<LimitDialog>.GetPropValue<bool>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 
 		public NEVariables Variables { get; }
 
@@ -35,7 +35,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			FirstSel = "1";
 			SelMult = "1";
 			NumSels = maxSels.ToString();
-			IgnoreBlank = false;
+			JoinSels = false;
 		}
 
 		Result result = null;
@@ -44,7 +44,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			firstSel.AddCurrentSuggestion();
 			selMult.AddCurrentSuggestion();
 			numSels.AddCurrentSuggestion();
-			result = new Result { FirstSel = FirstSel, SelMult = SelMult, NumSels = NumSels, IgnoreBlank = IgnoreBlank };
+			result = new Result { FirstSel = FirstSel, SelMult = SelMult, NumSels = NumSels, JoinSels = JoinSels };
 			DialogResult = true;
 		}
 
