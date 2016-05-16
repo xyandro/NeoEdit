@@ -116,7 +116,7 @@
 	</MenuItem>
 	<MenuItem Header="D_iff">
 		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
-		<textEdit:TextEditMenuItem Header="_Selections" CommandEnum="Diff_Selections"/>
+		<textEdit:TextEditMenuItem Header="Selec_tions" CommandEnum="Diff_Selections"/>
 		<textEdit:TextEditMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles"/>
 		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
@@ -130,8 +130,10 @@
 		<textEdit:TextEditMenuItem Header="Copy _Left" CommandEnum="Diff_CopyLeft"/>
 		<textEdit:TextEditMenuItem Header="Copy _Right" CommandEnum="Diff_CopyRight"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Select _Match" CommandEnum="Diff_SelectMatch"/>
-		<textEdit:TextEditMenuItem Header="Select Non M_atch" CommandEnum="Diff_SelectNonMatch"/>
+		<MenuItem Header="_Select">
+			<textEdit:TextEditMenuItem Header="_Match" CommandEnum="Diff_Select_Match"/>
+			<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff"/>
+		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<MenuItem Header="_Names">

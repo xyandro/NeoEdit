@@ -727,8 +727,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
 				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
 				case TextEditCommand.Diff_CopyRight: Command_Diff_CopyLeftRight(false); break;
-				case TextEditCommand.Diff_SelectMatch: Command_Diff_SelectMatch(true); break;
-				case TextEditCommand.Diff_SelectNonMatch: Command_Diff_SelectMatch(false); break;
+				case TextEditCommand.Diff_Select_Match: Command_Diff_Select_MatchDiff(true); break;
+				case TextEditCommand.Diff_Select_Diff: Command_Diff_Select_MatchDiff(false); break;
 				case TextEditCommand.Files_Names_Simplify: Command_Files_Names_Simplify(); break;
 				case TextEditCommand.Files_Names_MakeAbsolute: Command_Files_Names_MakeAbsolute(dialogResult as MakeAbsoluteDialog.Result); break;
 				case TextEditCommand.Files_Names_GetUnique: Command_Files_Names_GetUnique(dialogResult as GetUniqueNamesDialog.Result); break;
@@ -2664,7 +2664,7 @@ namespace NeoEdit.TextEdit
 				right.ReplaceSelections(left.GetSelectionStrings());
 		}
 
-		internal void Command_Diff_SelectMatch(bool matching)
+		internal void Command_Diff_Select_MatchDiff(bool matching)
 		{
 			if (DiffTarget == null)
 				return;
