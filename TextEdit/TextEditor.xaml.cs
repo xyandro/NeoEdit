@@ -425,8 +425,6 @@ namespace NeoEdit.TextEdit
 
 			var results = new NEVariables();
 
-			results.Add(NEVariable.Constant("f", "Filename", fileName));
-
 			var strs = default(List<string>);
 			var initializeStrs = new NEVariableListInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
 			results.Add(NEVariable.List("x", "Selected text", () => strs, initializeStrs));
@@ -443,6 +441,8 @@ namespace NeoEdit.TextEdit
 				results.Add(NEVariable.Constant("c", "Clipboard string", clipboard[0]));
 			else
 				results.Add(NEVariable.List("c", "Clipboard string", () => clipboard));
+
+			results.Add(NEVariable.Constant("f", "Filename", fileName));
 
 			var lineStarts = default(List<int>);
 			var initializeLineStarts = new NEVariableListInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start) + 1).ToList());
@@ -468,7 +468,7 @@ namespace NeoEdit.TextEdit
 			for (var ctr = 0; ctr <= 9; ++ctr)
 			{
 				var num = ctr; // If we don't copy this the threads get the wrong value
-				results.Add(NEVariable.List(ctr == 0 ? "k" : $"v{ctr}", "Keys/values", () => KeysAndValues[num]));
+				results.Add(NEVariable.List(ctr == 0 ? "k" : $"v{ctr}", ctr == 0 ? "Keys" : $"Values {ctr}", () => KeysAndValues[num]));
 			}
 
 			// Add variables that aren't already set

@@ -1,9 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NeoEdit.Common.Expressions
 {
-	public class NEVariables
+	public class NEVariables : IEnumerable<NEVariable>
 	{
 		readonly Dictionary<string, NEVariable> varDict = new Dictionary<string, NEVariable>();
 
@@ -26,5 +27,10 @@ namespace NeoEdit.Common.Expressions
 		public List<object> GetValues(string variable, int rowCount) => Enumerable.Range(0, rowCount).Select(row => varDict[variable].GetValue(row)).ToList();
 
 		public int? ResultCount(HashSet<string> variables) => variables.Min(variable => varDict[variable].Count());
+
+		//Class implements ienumerable so it can be the source of the variable help dialog
+		public IEnumerator<NEVariable> GetEnumerator() => varDict.Values.GetEnumerator();
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 }
