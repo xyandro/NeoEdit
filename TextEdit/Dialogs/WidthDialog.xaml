@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
-	Title="Width" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=expression}">
+	Title="Width" SizeToContent="Height" Width="500" FocusManager.FocusedElement="{Binding ElementName=expression}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
@@ -15,46 +15,36 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Type:" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-			<RadioButton GroupName="type" Content="_Absolute" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Absolute}" Margin="0,0,10,0" Focusable="False"/>
-			<RadioButton GroupName="type" Content="_Relative" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Relative}" Margin="0,0,10,0" Focusable="False" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
-			<RadioButton GroupName="type" Content="_Minimum" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Minimum}" Margin="0,0,10,0" Focusable="False"/>
-			<RadioButton GroupName="type" Content="Ma_ximum" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Maximum}" Margin="0,0,10,0" Focusable="False"/>
-			<RadioButton GroupName="type" Content="Multi_ple" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Multiple}" Margin="0,0,10,0" Focusable="False"/>
-		</StackPanel>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Width:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="WidthDialog"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Width:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="WidthDialog"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
+		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
-		<guiControls:NEExpressionResults Grid.Row="2" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
 
-		<Label Grid.Row="3" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
-		<TextBox Grid.Row="3" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
-
-		<Label Grid.Row="4" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
-		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}">
+		<Label Grid.Row="3" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}"/>
+		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}">
 			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 			<RadioButton GroupName="location" Content="M_iddle" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}">
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1" Visibility="{Binding IsSelect, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='![0]'}">
 			<Button Content="_Numeric" Padding="10,1" Click="NumericClick" Focusable="False"/>
 			<Button Content="S_tring" Padding="10,1" Click="StringClick" Focusable="False"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" Rows="1">
 			<Button Content="Expression _Help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

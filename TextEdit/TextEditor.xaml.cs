@@ -2158,10 +2158,8 @@ namespace NeoEdit.TextEdit
 
 		internal WidthDialog.Result Command_Text_Width_Dialog()
 		{
-			var minLength = Selections.Any() ? Selections.AsParallel().Min(range => range.Length) : 0;
-			var maxLength = Selections.Any() ? Selections.AsParallel().Max(range => range.Length) : 0;
 			var numeric = Selections.Any() ? Selections.AsParallel().All(range => GetString(range).IsNumeric()) : false;
-			return WidthDialog.Run(WindowParent, minLength, maxLength, numeric, false, GetVariables());
+			return WidthDialog.Run(WindowParent, numeric, false, GetVariables());
 		}
 
 		internal void Command_Text_Width(WidthDialog.Result result)
@@ -3122,29 +3120,12 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Text_Select_Trim() => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range)).ToList());
 
-		internal WidthDialog.Result Command_Text_Select_ByWidth_Dialog()
-		{
-			var minLength = Selections.Any() ? Selections.AsParallel().Min(range => range.Length) : 0;
-			var maxLength = Selections.Any() ? Selections.AsParallel().Max(range => range.Length) : 0;
-			return WidthDialog.Run(WindowParent, minLength, maxLength, false, true, GetVariables());
-		}
-
-		bool WidthMatch(string str, WidthDialog.Result result, int value)
-		{
-			switch (result.Type)
-			{
-				case WidthDialog.WidthType.Absolute: return str.Length == value;
-				case WidthDialog.WidthType.Minimum: return str.Length >= value;
-				case WidthDialog.WidthType.Maximum: return str.Length <= value;
-				case WidthDialog.WidthType.Multiple: return str.Length % value == 0;
-				default: throw new ArgumentException("Invalid width type");
-			}
-		}
+		internal WidthDialog.Result Command_Text_Select_ByWidth_Dialog() => WidthDialog.Run(WindowParent, false, true, GetVariables());
 
 		internal void Command_Text_Select_ByWidth(WidthDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<int>(result.Expression);
-			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => WidthMatch(GetString(range), result, results[index])).ToList());
+			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
 		}
 
 		internal void Command_Select_Unique() => Selections.Replace(Selections.AsParallel().AsOrdered().Distinct(range => GetString(range)).ToList());
@@ -4180,33 +4161,22 @@ namespace NeoEdit.TextEdit
 
 		string SetWidth(string str, WidthDialog.Result result, int value)
 		{
-			int length;
-			switch (result.Type)
-			{
-				case WidthDialog.WidthType.Absolute: length = value; break;
-				case WidthDialog.WidthType.Relative: length = Math.Max(0, str.Length + value); break;
-				case WidthDialog.WidthType.Minimum: length = Math.Max(str.Length, value); break;
-				case WidthDialog.WidthType.Maximum: length = Math.Min(str.Length, value); break;
-				case WidthDialog.WidthType.Multiple: length = str.Length + value - 1 - (str.Length + value - 1) % value; break;
-				default: throw new ArgumentException("Invalid width type");
-			}
-
-			if (str.Length == length)
+			if (str.Length == value)
 				return str;
 
-			if (str.Length > length)
+			if (str.Length > value)
 			{
 				switch (result.Location)
 				{
-					case WidthDialog.TextLocation.Start: return str.Substring(0, length);
-					case WidthDialog.TextLocation.Middle: return str.Substring((str.Length - length + 1) / 2, length);
-					case WidthDialog.TextLocation.End: return str.Substring(str.Length - length);
+					case WidthDialog.TextLocation.Start: return str.Substring(0, value);
+					case WidthDialog.TextLocation.Middle: return str.Substring((str.Length - value + 1) / 2, value);
+					case WidthDialog.TextLocation.End: return str.Substring(str.Length - value);
 					default: throw new ArgumentException("Invalid");
 				}
 			}
 			else
 			{
-				var len = length - str.Length;
+				var len = value - str.Length;
 				switch (result.Location)
 				{
 					case WidthDialog.TextLocation.Start: return str + new string(result.PadChar, len);
