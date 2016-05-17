@@ -75,8 +75,17 @@ namespace NeoEdit.TextEdit
 				KeysAndValues[index].Add(value);
 		}
 
+		internal void Command_Keys_Remove(int index)
+		{
+			// Handles keys as well as values
+			var values = GetSelectionStrings().Distinct().ToList();
+			foreach (var value in values)
+				KeysAndValues[index].Remove(value);
+		}
+
 		internal void Command_Keys_Replace(int index)
 		{
+			// Handles keys as well as values
 			if (KeysAndValues[0].Count != KeysAndValues[index].Count)
 				throw new Exception("Keys and values count must match");
 

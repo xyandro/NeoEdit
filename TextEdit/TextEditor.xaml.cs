@@ -927,6 +927,16 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Add_Values7: Command_Keys_Add(7); break;
 				case TextEditCommand.Keys_Add_Values8: Command_Keys_Add(8); break;
 				case TextEditCommand.Keys_Add_Values9: Command_Keys_Add(9); break;
+				case TextEditCommand.Keys_Remove_Keys: Command_Keys_Remove(0); break;
+				case TextEditCommand.Keys_Remove_Values1: Command_Keys_Remove(1); break;
+				case TextEditCommand.Keys_Remove_Values2: Command_Keys_Remove(2); break;
+				case TextEditCommand.Keys_Remove_Values3: Command_Keys_Remove(3); break;
+				case TextEditCommand.Keys_Remove_Values4: Command_Keys_Remove(4); break;
+				case TextEditCommand.Keys_Remove_Values5: Command_Keys_Remove(5); break;
+				case TextEditCommand.Keys_Remove_Values6: Command_Keys_Remove(6); break;
+				case TextEditCommand.Keys_Remove_Values7: Command_Keys_Remove(7); break;
+				case TextEditCommand.Keys_Remove_Values8: Command_Keys_Remove(8); break;
+				case TextEditCommand.Keys_Remove_Values9: Command_Keys_Remove(9); break;
 				case TextEditCommand.Keys_Replace_Values1: Command_Keys_Replace(1); break;
 				case TextEditCommand.Keys_Replace_Values2: Command_Keys_Replace(2); break;
 				case TextEditCommand.Keys_Replace_Values3: Command_Keys_Replace(3); break;
