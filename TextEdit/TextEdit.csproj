@@ -206,6 +206,13 @@
     <Compile Include="Dialogs\FindContentAttributeDialog.xaml.cs">
       <DependentUpon>FindContentAttributeDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FindTextDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FindTextDialog.xaml.cs">
+      <DependentUpon>FindTextDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\FloorRoundCeilingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

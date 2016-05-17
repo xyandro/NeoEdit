@@ -2,8 +2,9 @@
 using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 
-namespace NeoEdit.GUI.Dialogs
+namespace NeoEdit.TextEdit.Dialogs
 {
 	partial class FindTextDialog
 	{

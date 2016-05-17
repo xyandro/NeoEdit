@@ -499,7 +499,7 @@ namespace NeoEdit.Disk
 		{
 			if (Selected.Count == 0)
 				return;
-			var search = FindTextDialog.Run(WindowParent, FindTextDialog.FindTextType.Single);
+			var search = FindTextDialog.Run(WindowParent);
 			if (search == null)
 				return;
 

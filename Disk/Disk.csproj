@@ -47,6 +47,13 @@
     <Compile Include="Dialogs\FindDialog.xaml.cs">
       <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FindTextDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FindTextDialog.xaml.cs">
+      <DependentUpon>FindTextDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\RenameDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
