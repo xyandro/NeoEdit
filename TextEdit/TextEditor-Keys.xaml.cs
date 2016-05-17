@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Data;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
@@ -91,28 +90,6 @@ namespace NeoEdit.TextEdit
 					strs.Add(KeysAndValues[index][keysHash[str]]);
 			}
 			ReplaceSelections(strs);
-		}
-
-		internal void Command_Keys_Find(int index)
-		{
-			var searcher = new Searcher(KeysAndValues[index].ToList(), true);
-			var ranges = new List<Range>();
-			var selections = Selections.ToList();
-			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
-				selections = new List<Range> { FullRange };
-			foreach (var selection in selections)
-				ranges.AddRange(Data.StringMatches(searcher, selection.Start, selection.Length).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
-
-			ranges = ranges.OrderBy(range => range.Start).ToList();
-			Selections.Replace(ranges);
-		}
-
-		internal void Command_Keys_Copy(int index) => SetClipboardStrings(KeysAndValues[index]);
-
-		internal void Command_Keys_HitsMisses(int index, bool hits)
-		{
-			var set = new HashSet<string>(KeysAndValues[index]);
-			Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == hits).ToList());
 		}
 	}
 }

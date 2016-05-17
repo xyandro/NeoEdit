@@ -466,54 +466,6 @@
 			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8"/>
 			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9"/>
 		</MenuItem>
-		<MenuItem Header="_Find">
-			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Find_Keys"/>
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Find_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Find_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Find_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Find_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Find_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Find_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Find_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Find_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Find_Values9"/>
-		</MenuItem>
-		<MenuItem Header="_Copy">
-			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Copy_Keys"/>
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Copy_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Copy_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Copy_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Copy_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Copy_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Copy_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Copy_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Copy_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Copy_Values9"/>
-		</MenuItem>
-		<MenuItem Header="_Hits">
-			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Hits_Keys"/>
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Hits_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Hits_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Hits_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Hits_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Hits_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Hits_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Hits_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Hits_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Hits_Values9"/>
-		</MenuItem>
-		<MenuItem Header="_Misses">
-			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Misses_Keys"/>
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Misses_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Misses_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Misses_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Misses_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Misses_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Misses_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Misses_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Misses_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Misses_Values9"/>
-		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
