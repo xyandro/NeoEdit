@@ -1785,39 +1785,37 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		internal SetSizeDialog.Result Command_Files_Set_Size_Dialog() => SetSizeDialog.Run(WindowParent, GetVariables());
+		internal SetSizeDialog.Result Command_Files_Set_Size_Dialog()
+		{
+			var vars = GetVariables();
+			var sizes = RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
+			vars.Add(NEVariable.List("size", "File size", () => sizes));
+			return SetSizeDialog.Run(WindowParent, vars);
+		}
 
-		void SetFileSize(string fileName, SetSizeDialog.SizeType type, long value)
+		void SetFileSize(string fileName, long value)
 		{
 			var fileInfo = new FileInfo(fileName);
 			if (!fileInfo.Exists)
 				throw new Exception($"File doesn't exist: {fileName}");
 
-			long length;
-			switch (type)
-			{
-				case SetSizeDialog.SizeType.Absolute: length = value; break;
-				case SetSizeDialog.SizeType.Relative: length = fileInfo.Length + value; break;
-				case SetSizeDialog.SizeType.Minimum: length = Math.Max(fileInfo.Length, value); break;
-				case SetSizeDialog.SizeType.Maximum: length = Math.Min(fileInfo.Length, value); break;
-				case SetSizeDialog.SizeType.Multiple: length = fileInfo.Length + value - 1 - (fileInfo.Length + value - 1) % value; break;
-				default: throw new ArgumentException("Invalid width type");
-			}
+			value = Math.Max(0, value);
 
-			length = Math.Max(0, length);
-
-			if (fileInfo.Length == length)
+			if (fileInfo.Length == value)
 				return;
 
 			using (var file = File.Open(fileName, FileMode.Open))
-				file.SetLength(length);
+				file.SetLength(value);
 		}
 
 		internal void Command_Files_Set_Size(SetSizeDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<long>(result.Expression).Select(size => size * result.Factor).ToList();
-			for (var ctr = 0; ctr < Selections.Count; ++ctr)
-				SetFileSize(GetString(Selections[ctr]), result.Type, results[ctr]);
+			var vars = GetVariables();
+			var files = RelativeSelectedFiles();
+			var sizes = files.AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
+			vars.Add(NEVariable.List("size", "File size", () => sizes));
+			var results = new NEExpression(result.Expression).EvaluateRows<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
+			files.Zip(results, (file, size) => new { file, size }).AsParallel().ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
 		[Flags]

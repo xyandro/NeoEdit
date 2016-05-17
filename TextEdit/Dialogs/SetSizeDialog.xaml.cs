@@ -2,29 +2,18 @@
 using System.Windows;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
 	internal partial class SetSizeDialog
 	{
-		public enum SizeType
-		{
-			Absolute,
-			Relative,
-			Minimum,
-			Maximum,
-			Multiple,
-		}
-
 		internal class Result
 		{
-			public SizeType Type { get; set; }
 			public string Expression { get; set; }
 			public long Factor { get; set; }
 		}
 
-		[DepProp]
-		public SizeType Type { get { return UIHelper<SetSizeDialog>.GetPropValue<SizeType>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Expression { get { return UIHelper<SetSizeDialog>.GetPropValue<string>(this); } set { UIHelper<SetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -45,17 +34,19 @@ namespace NeoEdit.TextEdit.Dialogs
 			};
 			Variables = variables;
 			InitializeComponent();
-			Type = SizeType.Absolute;
+			Expression = "size";
 			Factor = 1;
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Type = Type, Expression = Expression, Factor = Factor };
+			result = new Result { Expression = Expression, Factor = Factor };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
+
+		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
 		public static Result Run(Window parent, NEVariables variables)
 		{
