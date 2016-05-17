@@ -32,11 +32,12 @@
 		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 			<CheckBox Content="by _group" Name="byGroup" IsChecked="{Binding RegexGroups, ElementName=self}" Focusable="False" Margin="5,0,0,0" VerticalAlignment="Center"/>
-			<Button Content="_Escape" Click="Escape" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,0"/>
-			<Button Content="_Unescape" Click="Unescape" Focusable="False" VerticalAlignment="Center"/>
+			<Button Content="Escape" Click="Escape" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,0"/>
+			<Button Content="Unescape" Click="Unescape" Focusable="False" VerticalAlignment="Center"/>
 		</StackPanel>
 		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Name="selectionOnly" Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False"/>
+			<CheckBox Name="entireSelection" Content="_Entire selection" IsChecked="{Binding EntireSelection, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Name="keepMatching" Content="_Keep matches" IsChecked="{Binding KeepMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Name="removeMatching" Content="Remo_ve matches" IsChecked="{Binding RemoveMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 		</StackPanel>

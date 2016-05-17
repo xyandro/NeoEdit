@@ -26,6 +26,7 @@ namespace NeoEdit.GUI.Dialogs
 			public string Replace { get; set; }
 			public bool RegexGroups { get; set; }
 			public bool SelectionOnly { get; set; }
+			public bool EntireSelection { get; set; }
 			public bool KeepMatching { get; set; }
 			public bool RemoveMatching { get; set; }
 			public bool MultiLine { get; set; }
@@ -47,6 +48,8 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		public bool SelectionOnly { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool EntireSelection { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool KeepMatching { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool RemoveMatching { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
@@ -60,7 +63,8 @@ namespace NeoEdit.GUI.Dialogs
 			UIHelper<FindTextDialog>.Register();
 			UIHelper<FindTextDialog>.AddCallback(a => a.IsRegex, (obj, o, n) => { if (!obj.IsRegex) obj.RegexGroups = false; });
 			UIHelper<FindTextDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) => { if (obj.RegexGroups) obj.IsRegex = true; });
-			UIHelper<FindTextDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.KeepMatching = obj.RemoveMatching = false; });
+			UIHelper<FindTextDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.EntireSelection = obj.KeepMatching = obj.RemoveMatching = false; });
+			UIHelper<FindTextDialog>.AddCallback(a => a.EntireSelection, (obj, o, n) => { if (obj.EntireSelection) obj.SelectionOnly = true; });
 			UIHelper<FindTextDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) => { if (obj.KeepMatching) { obj.SelectionOnly = true; obj.RemoveMatching = false; } });
 			UIHelper<FindTextDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
 		}
@@ -69,7 +73,7 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			InitializeComponent();
 
-			Text = _Text.CoalesceNullOrEmpty(text.GetLastSuggestion());
+			Text = _Text.CoalesceNullOrEmpty(text.GetLastSuggestion(), "");
 			Replace = "";
 			SelectionOnly = _SelectionOnly;
 			WholeWords = wholeWordsVal;
@@ -81,7 +85,7 @@ namespace NeoEdit.GUI.Dialogs
 			switch (findType)
 			{
 				case FindTextType.Single:
-					byGroup.Visibility = selectionOnly.Visibility = keepMatching.Visibility = removeMatching.Visibility = selectAll.Visibility = Visibility.Collapsed;
+					byGroup.Visibility = selectionOnly.Visibility = entireSelection.Visibility = keepMatching.Visibility = removeMatching.Visibility = selectAll.Visibility = Visibility.Collapsed;
 					goto case FindTextType.Selections;
 				case FindTextType.Selections:
 					replaceLabel.Visibility = replace.Visibility = replaceButton.Visibility = Visibility.Collapsed;
@@ -112,6 +116,8 @@ namespace NeoEdit.GUI.Dialogs
 			}
 			if (WholeWords)
 				text = $"\\b{text}\\b";
+			if (EntireSelection)
+				text = $"\\A{text}\\Z";
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
