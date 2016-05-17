@@ -206,12 +206,12 @@
     <Compile Include="Dialogs\FindContentAttributeDialog.xaml.cs">
       <DependentUpon>FindContentAttributeDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\FindTextDialog.xaml">
+    <Page Include="Dialogs\FindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\FindTextDialog.xaml.cs">
-      <DependentUpon>FindTextDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\FindDialog.xaml.cs">
+      <DependentUpon>FindDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\FloorRoundCeilingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -352,6 +352,13 @@
     </Page>
     <Compile Include="Dialogs\RepeatDialog.xaml.cs">
       <DependentUpon>RepeatDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ReplaceDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ReplaceDialog.xaml.cs">
+      <DependentUpon>ReplaceDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\RevRegExDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

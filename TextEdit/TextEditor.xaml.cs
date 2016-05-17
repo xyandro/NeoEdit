@@ -560,8 +560,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
 				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
-				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_FindReplace_Dialog(false); break;
-				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_FindReplace_Dialog(true); break;
+				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
+				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
 				case TextEditCommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
@@ -699,10 +699,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;
 				case TextEditCommand.Edit_Copy_Cut: Command_Edit_Copy_CutCopy(true); break;
 				case TextEditCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(shiftDown); break;
-				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_FindReplace(false, shiftDown, dialogResult as FindTextDialog.Result); break;
+				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_Find(shiftDown, dialogResult as FindDialog.Result); break;
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
-				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_FindReplace(true, shiftDown, dialogResult as FindTextDialog.Result); break;
+				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_Replace(dialogResult as ReplaceDialog.Result); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Rotate: Command_Edit_Rotate(dialogResult as RotateDialog.Result); break;
 				case TextEditCommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as RepeatDialog.Result); break;
@@ -1352,10 +1352,10 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_Edit_Paste_AllFiles(string str, bool highlight) => ReplaceSelections(Selections.Select(value => str).ToList(), highlight);
 
-		internal FindTextDialog.Result Command_Edit_Find_FindReplace_Dialog(bool isReplace)
+		internal FindDialog.Result Command_Edit_Find_Find_Dialog()
 		{
 			string text = null;
-			var selectionOnly = Selections.AsParallel().AsOrdered().Any(range => range.HasSelection);
+			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
 
 			if (Selections.Count == 1)
 			{
@@ -1367,10 +1367,10 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return FindTextDialog.Run(WindowParent, isReplace ? FindTextDialog.FindTextType.Replace : FindTextDialog.FindTextType.Selections, text, selectionOnly);
+			return FindDialog.Run(WindowParent, text, selectionOnly);
 		}
 
-		internal void Command_Edit_Find_FindReplace(bool replace, bool selecting, FindTextDialog.Result result)
+		internal void Command_Edit_Find_Find(bool selecting, FindDialog.Result result)
 		{
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
@@ -1379,23 +1379,44 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
-			RunSearch(result);
+			RunSearch(result.Regex, result.SelectionOnly, result.MultiLine, result.RegexGroups);
 
-			if ((replace) || (result.ResultType == FindTextDialog.GetRegExResultType.All))
+			if (result.All)
 			{
 				Selections.Replace(Searches);
 				Searches.Clear();
-
-				if (replace)
-					ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => result.Regex.Replace(GetString(range), result.Replace)).ToList());
-
-				return;
 			}
-
-			FindNext(true, selecting);
+			else
+				FindNext(true, selecting);
 		}
 
 		internal void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);
+
+		internal ReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
+		{
+			string text = null;
+			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
+
+			if (Selections.Count == 1)
+			{
+				var sel = Selections.Single();
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
+				{
+					selectionOnly = false;
+					text = GetString(sel);
+				}
+			}
+
+			return ReplaceDialog.Run(WindowParent, text, selectionOnly);
+		}
+
+		internal void Command_Edit_Find_Replace(ReplaceDialog.Result result)
+		{
+			RunSearch(result.Regex, result.SelectionOnly, result.MultiLine, false);
+			Selections.Replace(Searches);
+			Searches.Clear();
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => result.Regex.Replace(GetString(range), result.Replace)).ToList());
+		}
 
 		internal GotoDialog.Result Command_Position_Goto_Dialog(GotoType gotoType)
 		{
@@ -4033,16 +4054,16 @@ namespace NeoEdit.TextEdit
 			e.Handled = true;
 		}
 
-		void RunSearch(FindTextDialog.Result result)
+		void RunSearch(Regex regex, bool selectionOnly, bool multiLine, bool regexGroups)
 		{
-			if ((result == null) || (result.Regex == null))
+			if (regex == null)
 				return;
 
 			Searches.Clear();
 
-			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+			var regions = selectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			foreach (var region in regions)
-				Searches.AddRange(Data.RegexMatches(result.Regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+				Searches.AddRange(Data.RegexMatches(regex, region.Start, region.Length, multiLine, regexGroups, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
 		}
 
 		string GetString(Range range) => Data.GetString(range.Start, range.Length);
