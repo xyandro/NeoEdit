@@ -265,7 +265,7 @@ namespace NeoEdit.Common.Expressions
 				case "fromwords": return NumericValue.FromWords(GetString(paramList[0]));
 				case "gcf": return NumericValue.GCF(paramList.Select(val => GetNumeric(val)).ToList());
 				case "lcm": return NumericValue.LCM(paramList.Select(val => GetNumeric(val)).ToList());
-				case "len": return GetString(paramList[0]).Length;
+				case "len": return paramList.SelectMany(param => GetList(param)).Select(param => GetString(param).Length).Cast<object>().ToList();
 				case "ln": return GetNumeric(paramList[0]).Ln();
 				case "log": return paramList.Count == 1 ? GetNumeric(paramList[0]).Log() : GetNumeric(paramList[0]).Log(GetNumeric(paramList[2]));
 				case "now": return new NumericValue(DateTimeOffset.Now.UtcTicks, "ticks");
