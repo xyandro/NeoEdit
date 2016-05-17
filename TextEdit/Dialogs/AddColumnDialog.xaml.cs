@@ -2,6 +2,7 @@
 using System.Windows;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -26,11 +27,8 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		static AddColumnDialog() { UIHelper<AddColumnDialog>.Register(); }
 
-		readonly Action helpDialog;
-		AddColumnDialog(NEVariables variables, int numRows, Action helpDialog)
+		AddColumnDialog(NEVariables variables, int numRows)
 		{
-			this.helpDialog = helpDialog;
-
 			InitializeComponent();
 
 			Expression = "y";
@@ -38,11 +36,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			NumRows = numRows;
 		}
 
-		void ExpressionHelp(object sender, RoutedEventArgs e)
-		{
-			if (helpDialog != null)
-				helpDialog();
-		}
+		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
@@ -56,9 +50,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables, int numRows, Action helpDialog = null)
+		static public Result Run(Window parent, NEVariables variables, int numRows)
 		{
-			var dialog = new AddColumnDialog(variables, numRows, helpDialog) { Owner = parent };
+			var dialog = new AddColumnDialog(variables, numRows) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
