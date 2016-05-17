@@ -8,7 +8,7 @@ namespace NeoEdit.Common
 	{
 		public enum MatchType { Match, Mismatch, Gap }
 
-		static void CalculateDiff<Type>(List<Type> list1, List<Type> list2, out List<MatchType> result1, out List<MatchType> result2)
+		static void CalculateDiff<T>(List<T> list1, List<T> list2, out List<MatchType> result1, out List<MatchType> result2)
 		{
 			// Calculate matrix using lists in reverse order so matching stays at start of string
 			var lenArray = new short[list1.Count + 1, list2.Count + 1];
@@ -53,9 +53,11 @@ namespace NeoEdit.Common
 
 		public static void GetLCS<Type>(IEnumerable<Type> input1, IEnumerable<Type> input2, out List<MatchType> output1, out List<MatchType> output2)
 		{
+			const int BufSize = 2048;
+			const int BreakMatchCount = 10;
+
 			output1 = new List<MatchType>();
 			output2 = new List<MatchType>();
-			const int BufSize = 1024;
 			var enum1 = input1.GetEnumerator();
 			var enum2 = input2.GetEnumerator();
 			var list1 = new List<Type>();
@@ -74,15 +76,34 @@ namespace NeoEdit.Common
 
 				CalculateDiff(list1, list2, out result1, out result2);
 
-				var keep = result1.FindLastIndex(val => val == MatchType.Match) + 1;
-				if ((keep == 0) || (!list1Working) || (!list2Working))
-					keep = result1.Count;
+				var keep = result1.Count;
+				if ((list1Working) || ((list2Working)))
+				{
+					var lastNonMatch = keep;
+					while (keep > 0)
+					{
+						--keep;
+						if (result1[keep] != MatchType.Match)
+						{
+							lastNonMatch = keep;
+							continue;
+						}
+
+						if (lastNonMatch - keep >= BreakMatchCount)
+						{
+							keep = lastNonMatch;
+							break;
+						}
+					}
+					if (keep == 0)
+						keep = result1.Count;
+				}
 
 				output1.AddRange(result1.Take(keep));
 				output2.AddRange(result2.Take(keep));
 
-				list1.RemoveRange(0, list1.Count - result1.Skip(keep).Count(val => val != MatchType.Gap));
-				list2.RemoveRange(0, list2.Count - result2.Skip(keep).Count(val => val != MatchType.Gap));
+				list1.RemoveRange(0, result1.Take(keep).Count(val => val != MatchType.Gap));
+				list2.RemoveRange(0, result2.Take(keep).Count(val => val != MatchType.Gap));
 			}
 		}
 	}
