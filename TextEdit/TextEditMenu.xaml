@@ -371,28 +371,29 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Co_mment" CommandEnum="Content_Comment"/>
+		<textEdit:TextEditMenuItem Header="C_omment" CommandEnum="Content_Comment"/>
 		<textEdit:TextEditMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Cu_rrent" CommandEnum="Content_Current"/>
 		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
-		<textEdit:TextEditMenuItem Header="Ancest_or" CommandEnum="Content_Ancestor"/>
+		<textEdit:TextEditMenuItem Header="A_ncestor" CommandEnum="Content_Ancestor"/>
 		<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Content_Attributes"/>
+		<textEdit:TextEditMenuItem Header="_With Attribute" CommandEnum="Content_WithAttribute"/>
 		<MenuItem Header="_Children">
 			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
 			<textEdit:TextEditMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Children_First"/>
-			<textEdit:TextEditMenuItem Header="_Attribute" CommandEnum="Content_Children_Attribute"/>
+			<textEdit:TextEditMenuItem Header="_With Attribute" CommandEnum="Content_Children_WithAttribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
 			<textEdit:TextEditMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
-			<textEdit:TextEditMenuItem Header="_Attribute" CommandEnum="Content_Descendants_Attribute"/>
+			<textEdit:TextEditMenuItem Header="_With Attribute" CommandEnum="Content_Descendants_WithAttribute"/>
 		</MenuItem>
-		<MenuItem Header="_Navigate">
+		<MenuItem Header="Na_vigate">
 			<textEdit:TextEditMenuItem Header="_Up" CommandEnum="Content_Navigate_Up"/>
 			<textEdit:TextEditMenuItem Header="_Down" CommandEnum="Content_Navigate_Down"/>
 			<textEdit:TextEditMenuItem Header="_Left" CommandEnum="Content_Navigate_Left"/>
@@ -405,10 +406,6 @@
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
 			<textEdit:TextEditMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
-		</MenuItem>
-		<Separator/>
-		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="_Attribute" CommandEnum="Content_Select_Attribute"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">

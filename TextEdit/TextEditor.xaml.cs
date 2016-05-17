@@ -613,9 +613,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
 				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_Ancestor_Dialog(); break;
 				case TextEditCommand.Content_Attributes: dialogResult = Command_Content_Attributes_Dialog(); break;
-				case TextEditCommand.Content_Children_Attribute: dialogResult = Command_Content_Children_Attribute_Dialog(); break;
-				case TextEditCommand.Content_Descendants_Attribute: dialogResult = Command_Content_Descendants_Attribute_Dialog(); break;
-				case TextEditCommand.Content_Select_Attribute: dialogResult = Command_Content_Select_Attribute_Dialog(); break;
+				case TextEditCommand.Content_WithAttribute: dialogResult = Command_Content_WithAttribute_Dialog(); break;
+				case TextEditCommand.Content_Children_WithAttribute: dialogResult = Command_Content_Children_WithAttribute_Dialog(); break;
+				case TextEditCommand.Content_Descendants_WithAttribute: dialogResult = Command_Content_Descendants_WithAttribute_Dialog(); break;
 				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
 				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
@@ -875,14 +875,15 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Parent: Command_Content_Parent(); break;
 				case TextEditCommand.Content_Ancestor: Command_Content_Ancestor(dialogResult as FindContentAttributeDialog.Result); break;
 				case TextEditCommand.Content_Attributes: Command_Content_Attributes(dialogResult as SelectContentAttributeDialog.Result); break;
+				case TextEditCommand.Content_WithAttribute: Command_Content_WithAttribute(dialogResult as FindContentAttributeDialog.Result); break;
 				case TextEditCommand.Content_Children_Children: Command_Content_Children_Children(); break;
 				case TextEditCommand.Content_Children_SelfAndChildren: Command_Content_Children_SelfAndChildren(); break;
 				case TextEditCommand.Content_Children_First: Command_Content_Children_First(); break;
-				case TextEditCommand.Content_Children_Attribute: Command_Content_Children_Attribute(dialogResult as FindContentAttributeDialog.Result); break;
+				case TextEditCommand.Content_Children_WithAttribute: Command_Content_Children_WithAttribute(dialogResult as FindContentAttributeDialog.Result); break;
 				case TextEditCommand.Content_Descendants_Descendants: Command_Content_Descendants_Descendants(); break;
 				case TextEditCommand.Content_Descendants_SelfAndDescendants: Command_Content_Descendants_SelfAndDescendants(); break;
 				case TextEditCommand.Content_Descendants_First: Command_Content_Descendants_First(); break;
-				case TextEditCommand.Content_Descendants_Attribute: Command_Content_Descendants_Attribute(dialogResult as FindContentAttributeDialog.Result); break;
+				case TextEditCommand.Content_Descendants_WithAttribute: Command_Content_Descendants_WithAttribute(dialogResult as FindContentAttributeDialog.Result); break;
 				case TextEditCommand.Content_Navigate_Up: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Up, shiftDown); break;
 				case TextEditCommand.Content_Navigate_Down: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Down, shiftDown); break;
 				case TextEditCommand.Content_Navigate_Left: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Left, shiftDown); break;
@@ -893,7 +894,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Navigate_PgDn: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.PgDn, shiftDown); break;
 				case TextEditCommand.Content_Navigate_Row: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Row, true); break;
 				case TextEditCommand.Content_Navigate_Column: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Column, true); break;
-				case TextEditCommand.Content_Select_Attribute: Command_Content_Select_Attribute(dialogResult as FindContentAttributeDialog.Result); break;
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
 				case TextEditCommand.Network_Fetch_Hex: Command_Network_Fetch(Coder.CodePage.Hex); break;
 				case TextEditCommand.Network_Lookup_IP: Command_Network_Lookup_IP(); break;
