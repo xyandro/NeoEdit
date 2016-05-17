@@ -342,6 +342,16 @@ namespace NeoEdit.Common.Expressions
 			return resultStr;
 		}
 
+		public static NumericValue Multiple(NumericValue number, NumericValue multiple)
+		{
+			number = GetSameUnits(number, multiple);
+
+			if ((number.IsInteger) && (multiple.IsInteger))
+				return new NumericValue((number.GetInteger + multiple.GetInteger - 1) / multiple.GetInteger * multiple.GetInteger, multiple.Units);
+
+			return new NumericValue(Math.Ceiling(number.GetFloat / multiple.GetFloat) * multiple.GetFloat, multiple.Units);
+		}
+
 		public static NumericValue FromWords(string words)
 		{
 			var ones = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", null, "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };

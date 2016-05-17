@@ -124,6 +124,12 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("16,3,4", new NEExpression("len(\"1125899906842624\", 123, \"Test\")").Evaluate().ToString());
 			Assert.AreEqual("3", new NEExpression("min(len(\"1125899906842624\", 123, \"Test\"))").Evaluate().ToString());
 
+			Assert.AreEqual("8", new NEExpression("multiple(8,8)").Evaluate().ToString());
+			Assert.AreEqual("16", new NEExpression("multiple(9,8)").Evaluate().ToString());
+			Assert.AreEqual("8.4", new NEExpression("multiple(1.1,8.4)").Evaluate().ToString());
+			Assert.AreEqual("16.8", new NEExpression("multiple(9.5,8.4)").Evaluate().ToString());
+			Assert.AreEqual("3 foot", new NEExpression("multiple(30 in,1 foot)").Evaluate().ToString());
+
 			Assert.AreEqual("3.14159265358979", new NEExpression("pi").Evaluate().ToString());
 			Assert.AreEqual("2.71828182845905", new NEExpression("e").Evaluate().ToString());
 
