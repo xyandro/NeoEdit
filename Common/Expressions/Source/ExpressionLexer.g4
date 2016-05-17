@@ -31,7 +31,7 @@ DEBUG         : '#' ;
 LPAREN        : '(' ;
 RPAREN        : ')' ;
 COMMA         : ',' ;
-METHOD        : A B S | A C O S | A S I N | A T A N | C O S | C O U N T | D A T E | E V A L | F A C T O R | F I L E N A M E | F R O M D A T E | F R O M W O R D S | G C F | L C M | L E N | L N | L O G | N O W | N U M M A X | N U M M I N | R E C I P R O C A L | R E D U C E | R O O T | S I N | S Q R T | S T R F O R M A T | S T R M A X | S T R M I N | S U M | T A N | T O D A T E | T O U T C D A T E | T O W O R D S | T Y P E | U T C D A T E | V A L I D R E ;
+METHOD        : A B S | A C O S | A S I N | A T A N | C O S | C O U N T | D A T E | E V A L | F A C T O R | F I L E N A M E | F R O M D A T E | F R O M W O R D S | G C F | L C M | L E N | L N | L O G | M A X | M I N | N O W | R E C I P R O C A L | R E D U C E | R O O T | S I N | S Q R T | S T R F O R M A T | S T R M A X | S T R M I N | S U M | T A N | T O D A T E | T O U T C D A T E | T O W O R D S | T Y P E | U T C D A T E | V A L I D R E ;
 BANG          : '!' ;
 EXPOP         : '^' ;
 MULTOP        : [*/%] | '//' | 't*' ;

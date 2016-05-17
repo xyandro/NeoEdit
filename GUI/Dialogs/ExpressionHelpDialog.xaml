@@ -112,8 +112,8 @@
 
 				<guiDialogs:HelpItems Name="Numeric Functions" Columns="4" NameWidth="80" DescWidth="160">
 					<guiDialogs:HelpItems.Items>
-						<guiDialogs:HelpItem Name="nummin(...)" Description="Minimum"/>
-						<guiDialogs:HelpItem Name="nummax(...)" Description="Maximum"/>
+						<guiDialogs:HelpItem Name="min(...)" Description="Minimum"/>
+						<guiDialogs:HelpItem Name="max(...)" Description="Maximum"/>
 						<guiDialogs:HelpItem Name="abs(x)" Description="Absolute value"/>
 						<guiDialogs:HelpItem Name="reciprocal(x)" Description="1/x"/>
 						<guiDialogs:HelpItem Name="gcf(x)" Description="Greatest common factor"/>
@@ -170,8 +170,8 @@
 
 				<guiDialogs:HelpItems Name="List Functions" Columns="4" NameWidth="80" DescWidth="160">
 					<guiDialogs:HelpItems.Items>
-						<guiDialogs:HelpItem Name="nummin(x)" Description="Numeric minimum"/>
-						<guiDialogs:HelpItem Name="nummax(x)" Description="Numeric maximum"/>
+						<guiDialogs:HelpItem Name="min(x)" Description="Numeric minimum"/>
+						<guiDialogs:HelpItem Name="max(x)" Description="Numeric maximum"/>
 						<guiDialogs:HelpItem Name="strmin(x)" Description="String minimum"/>
 						<guiDialogs:HelpItem Name="strmax(x)" Description="String maximum"/>
 						<guiDialogs:HelpItem Name="sum(x)" Description="Sum"/>

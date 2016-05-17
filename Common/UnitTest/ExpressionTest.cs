@@ -183,8 +183,8 @@ namespace NeoEdit.Common.UnitTest
 
 			var listVars = new NEVariables(NEVariable.List("y", "", () => new List<string> { "12", "-13.1", "-13", "9", "0.0001" }));
 			Assert.AreEqual("5", new NEExpression("count([y])").EvaluateRow(listVars).ToString());
-			Assert.AreEqual("-13.1", new NEExpression("nummin([y])").EvaluateRow(listVars).ToString());
-			Assert.AreEqual("12", new NEExpression("nummax([y])").EvaluateRow(listVars).ToString());
+			Assert.AreEqual("-13.1", new NEExpression("min([y])").EvaluateRow(listVars).ToString());
+			Assert.AreEqual("12", new NEExpression("max([y])").EvaluateRow(listVars).ToString());
 			Assert.AreEqual("0.0001", new NEExpression("strmin([y])").EvaluateRow(listVars).ToString());
 			Assert.AreEqual("9", new NEExpression("strmax([y])").EvaluateRow(listVars).ToString());
 			Assert.AreEqual("-5.0999", new NEExpression("sum([y])").EvaluateRow(listVars).ToString());
