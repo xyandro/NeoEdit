@@ -288,10 +288,21 @@ namespace NeoEdit.TextEdit
 
 		}
 
+		void SetFileName(string fileName)
+		{
+			if (FileName == fileName)
+				return;
+
+			FileName = fileName;
+			ContentType = Parser.GetParserType(FileName);
+			HighlightType = Highlighting.Get(FileName);
+			DisplayName = null;
+		}
+
 		DateTime fileLastWrite;
 		internal void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool keepUndo = false)
 		{
-			FileName = fileName;
+			SetFileName(fileName);
 			DisplayName = displayName;
 			var isModified = modified ?? bytes != null;
 			if (bytes == null)
@@ -311,8 +322,6 @@ namespace NeoEdit.TextEdit
 			var data = Coder.BytesToString(bytes, codePage, true);
 			Replace(new List<Range> { FullRange }, new List<string> { data });
 			CodePage = codePage;
-			HighlightType = Highlighting.Get(FileName);
-			Command_Content_Type_SetFromExtension();
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
@@ -531,11 +540,7 @@ namespace NeoEdit.TextEdit
 			}
 			fileLastWrite = new FileInfo(fileName).LastWriteTime;
 			SetModifiedFlag(false);
-			if (FileName != fileName)
-			{
-				FileName = fileName;
-				DisplayName = null;
-			}
+			SetFileName(fileName);
 		}
 
 		internal List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => GetString(range)).ToList();
@@ -1081,8 +1086,7 @@ namespace NeoEdit.TextEdit
 
 			File.Delete(fileName);
 			File.Move(FileName, fileName);
-			FileName = fileName;
-			DisplayName = null;
+			SetFileName(fileName);
 		}
 
 		internal void Command_File_Refresh()
