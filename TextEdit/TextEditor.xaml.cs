@@ -561,6 +561,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
 				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
+				case TextEditCommand.Edit_Find_MultiFind: dialogResult = Command_Edit_Find_MultiFind_Dialog(); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
 				case TextEditCommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
@@ -702,6 +703,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_Find(shiftDown, dialogResult as FindDialog.Result); break;
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
+				case TextEditCommand.Edit_Find_MultiFind: Command_Edit_Find_MultiFind(dialogResult as MultiFindDialog.Result); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_Replace(dialogResult as ReplaceDialog.Result); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Rotate: Command_Edit_Rotate(dialogResult as RotateDialog.Result); break;
@@ -1374,8 +1376,7 @@ namespace NeoEdit.TextEdit
 		{
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
-				var keep = result.KeepMatching;
-				Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => result.Regex.IsMatch(GetString(range)) == keep).ToList());
+				Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => result.Regex.IsMatch(GetString(range)) == result.KeepMatching).ToList());
 				return;
 			}
 
@@ -1391,6 +1392,32 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);
+
+		internal MultiFindDialog.Result Command_Edit_Find_MultiFind_Dialog() => MultiFindDialog.Run(WindowParent, GetVariables(), Selections.AsParallel().Any(range => range.HasSelection));
+
+		internal void Command_Edit_Find_MultiFind(MultiFindDialog.Result result)
+		{
+			var text = $"(?:{string.Join("|", GetVariableExpressionResults<string>(result.Text).Select(value => $"(?:{(result.IsRegex ? value : Regex.Escape(value))})"))})";
+			if (result.WholeWords)
+				text = $"\\b{text}\\b";
+			if (result.EntireSelection)
+				text = $"\\A{text}\\Z";
+			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
+			if (!result.MatchCase)
+				options |= RegexOptions.IgnoreCase;
+			var regex = new Regex(text, options);
+
+			if ((result.KeepMatching) || (result.RemoveMatching))
+			{
+				Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(GetString(range)) == result.KeepMatching).ToList());
+				return;
+			}
+
+			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+			Selections.Clear();
+			foreach (var region in regions)
+				Selections.AddRange(Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+		}
 
 		internal ReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
 		{
