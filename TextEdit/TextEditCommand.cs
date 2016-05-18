@@ -213,7 +213,7 @@ namespace NeoEdit.TextEdit
 		Content_Comment,
 		Content_Uncomment,
 		[KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Content_TogglePosition,
-		[KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control | ModifierKeys.Alt)] Content_Current,
+		[KeyGesture(Key.Enter, ModifierKeys.Control | ModifierKeys.Alt)] Content_Current,
 		Content_Parent,
 		Content_Ancestor,
 		Content_Attributes,

@@ -31,7 +31,6 @@ If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
 Regions: Set/Add/Remove
-Change Ctrl+Alt+[ to Ctrl+Alt+Enter
 
 View:
 Update as new lines are added
