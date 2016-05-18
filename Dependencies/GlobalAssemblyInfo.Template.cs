@@ -14,5 +14,5 @@ using System.Windows;
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 [assembly: NeutralResourcesLanguageAttribute("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 
-[assembly: AssemblyVersion("2.1.1.%NUMREVS%")]
-[assembly: AssemblyFileVersion("2.1.1.%NUMREVS%")]
+[assembly: AssemblyVersion("2.1.2.%NUMREVS%")]
+[assembly: AssemblyFileVersion("2.1.2.%NUMREVS%")]
