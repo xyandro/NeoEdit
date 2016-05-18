@@ -35,7 +35,7 @@ namespace NeoEdit.TextEdit.Content.XML
 						var result = new List<string>();
 
 						var attributes = node.Attributes(true).ToList();
-						var name = attributes.Where(attr => attr.Type == NAME).Single();
+						var name = attributes.Where(attr => attr.Type == TAG).Single();
 						attributes = attributes.Where(attr => attr != name).ToList(); ;
 
 						var attrs = new List<string> { name.Text };
@@ -76,7 +76,7 @@ namespace NeoEdit.TextEdit.Content.XML
 		const string MISC = "Misc";
 		const string TEXT = "Text";
 		const string ELEMENT = "Element";
-		const string NAME = "Name";
+		const string TAG = "Tag";
 
 		ParserNode Parent => stack.FirstOrDefault();
 		readonly Stack<ParserNode> stack = new Stack<ParserNode>();
@@ -126,7 +126,7 @@ namespace NeoEdit.TextEdit.Content.XML
 
 		public override ParserNode VisitTagname(XMLParser.TagnameContext context)
 		{
-			Parent.AddAttr(NAME, input, context);
+			Parent.AddAttr(TAG, input, context);
 			return base.VisitTagname(context);
 		}
 	}

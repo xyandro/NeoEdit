@@ -44,7 +44,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 						var result = new List<string>();
 
 						var attributes = node.Attributes(true).ToList();
-						var nameTag = attributes.Where(attr => attr.Type == NAME).Single();
+						var nameTag = attributes.Where(attr => attr.Type == TAG).Single();
 						var name = nameTag.Text;
 						attributes = attributes.Where(attr => attr != nameTag).ToList(); ;
 
@@ -118,7 +118,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 		const string SCRIPT = "Script";
 		const string STYLE = "Style";
 		const string ELEMENT = "Element";
-		const string NAME = "Name";
+		const string TAG = "Tag";
 		const string SELFCLOSING = "SelfClosing";
 		const string ISVOID = "IsVoid";
 
@@ -171,7 +171,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 				var start = context.tag.StartIndex + 1; ;
 				var end = context.tag.StopIndex + 1;
 				var tag = input.Substring(start, end - start);
-				node.AddAttr(NAME, tag, start, end);
+				node.AddAttr(TAG, tag, start, end);
 
 				context.GetBounds(out start, out end);
 				start = context.body.StartIndex;
@@ -209,7 +209,7 @@ namespace NeoEdit.TextEdit.Content.HTML
 				return null;
 
 			var current = context.name.Text;
-			var found = stack.FirstOrDefault(node => node.GetAttrText(NAME) == current);
+			var found = stack.FirstOrDefault(node => node.GetAttrText(TAG) == current);
 			if (found == null)
 				return null;
 
@@ -249,13 +249,13 @@ namespace NeoEdit.TextEdit.Content.HTML
 
 		public override ParserNode VisitTagname(HTMLParser.TagnameContext context)
 		{
-			Parent.AddAttr(NAME, input, context);
+			Parent.AddAttr(TAG, input, context);
 			return base.VisitTagname(context);
 		}
 
 		public override ParserNode VisitVoidname(HTMLParser.VoidnameContext context)
 		{
-			Parent.AddAttr(NAME, input, context);
+			Parent.AddAttr(TAG, input, context);
 			Parent.AddAttr(ISVOID, "True");
 			return base.VisitVoidname(context);
 		}
