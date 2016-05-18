@@ -43,6 +43,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.F, ModifierKeys.Control)] [KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Find_Find,
 		[KeyGesture(Key.F3)] [KeyGesture(Key.F3, ModifierKeys.Shift, 2)] Edit_Find_Next,
 		[KeyGesture(Key.F3, ModifierKeys.Control)] [KeyGesture(Key.F3, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Find_Previous,
+		[KeyGesture(Key.M, ModifierKeys.Control)] Edit_Find_MassFind,
 		Edit_Find_Replace,
 		Edit_CopyDown,
 		Edit_Rotate,

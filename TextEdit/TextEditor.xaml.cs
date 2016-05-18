@@ -561,6 +561,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
 				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
+				case TextEditCommand.Edit_Find_MassFind: dialogResult = Command_Edit_Find_MassFind_Dialog(); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
 				case TextEditCommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
@@ -702,6 +703,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_Find(shiftDown, dialogResult as FindDialog.Result); break;
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
+				case TextEditCommand.Edit_Find_MassFind: Command_Edit_Find_MassFind(dialogResult as MassFindDialog.Result); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_Replace(dialogResult as ReplaceDialog.Result); break;
 				case TextEditCommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case TextEditCommand.Edit_Rotate: Command_Edit_Rotate(dialogResult as RotateDialog.Result); break;
@@ -1365,6 +1367,41 @@ namespace NeoEdit.TextEdit
 		}
 
 		internal void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);
+
+		internal MassFindDialog.Result Command_Edit_Find_MassFind_Dialog()
+		{
+			string text = null;
+			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
+
+			if (Selections.Count == 1)
+			{
+				var sel = Selections.Single();
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
+				{
+					selectionOnly = false;
+					text = GetString(sel);
+				}
+			}
+
+			return MassFindDialog.Run(WindowParent, text, selectionOnly, GetVariables());
+		}
+
+		internal void Command_Edit_Find_MassFind(MassFindDialog.Result result)
+		{
+			var texts = GetVariableExpressionResults<string>(result.Text);
+
+			if ((result.KeepMatching) || (result.RemoveMatching))
+			{
+				var set = new HashSet<string>(texts, result.MatchCase ? (IEqualityComparer<string>)EqualityComparer<string>.Default : StringComparer.OrdinalIgnoreCase);
+				Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == result.KeepMatching).ToList());
+				return;
+			}
+
+			var searcher = new Searcher(texts, result.MatchCase);
+			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			Selections.Replace(ranges);
+		}
 
 		internal ReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
 		{

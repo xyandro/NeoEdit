@@ -77,6 +77,7 @@
 			<textEdit:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
 			<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
 			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
+			<textEdit:TextEditMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind"/>
 			<textEdit:TextEditMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
 		</MenuItem>
 		<Separator/>

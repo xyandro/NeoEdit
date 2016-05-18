@@ -304,6 +304,13 @@
     <Compile Include="Dialogs\MakeAbsoluteDialog.xaml.cs">
       <DependentUpon>MakeAbsoluteDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\MassFindDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\MassFindDialog.xaml.cs">
+      <DependentUpon>MassFindDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\MinMaxValuesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -31,7 +31,6 @@ If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
 Make first distinct able to ignore case, spaces, etc.
-Mass find
 
 View:
 Update as new lines are added
