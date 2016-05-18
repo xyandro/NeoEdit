@@ -28,8 +28,20 @@ namespace NeoEdit.Common.Expressions
 
 		object RemoveUnset(object val) => (val == null) || (val.GetType().FullName != "MS.Internal.NamedObject") || (val.ToString() != "{DependencyProperty.UnsetValue}") ? val : null;
 
+		object ResolveList(object val)
+		{
+			if (val is List<object>)
+			{
+				var list = val as List<object>;
+				if (list.Count == 1)
+					val = list[0];
+			}
+			return val;
+		}
+
 		NumericValue GetNumeric(object val)
 		{
+			val = ResolveList(val);
 			if (val is NumericValue)
 				return val as NumericValue;
 			return new NumericValue(val);
@@ -37,6 +49,7 @@ namespace NeoEdit.Common.Expressions
 
 		string GetString(object val)
 		{
+			val = ResolveList(val);
 			if (val == null)
 				return "";
 			if (val is string)
@@ -46,6 +59,7 @@ namespace NeoEdit.Common.Expressions
 
 		bool GetBoolean(object val)
 		{
+			val = ResolveList(val);
 			if (val == null)
 				return false;
 			if (val is bool)
