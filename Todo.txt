@@ -30,8 +30,8 @@ QueryBuilder
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
-Ctrl+Alt+L: Select whole lines (extent content selection to cover entire lines)
 Make first distinct able to ignore case, spaces, etc.
+Mass find
 
 View:
 Update as new lines are added

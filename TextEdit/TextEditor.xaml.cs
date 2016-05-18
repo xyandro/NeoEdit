@@ -939,6 +939,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Nothing: Command_Select_Nothing(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
 				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
+				case TextEditCommand.Select_WholeLines: Command_Select_WholeLines(); break;
 				case TextEditCommand.Select_Rectangle: Command_Select_Rectangle(); break;
 				case TextEditCommand.Select_Invert: Command_Select_Invert(); break;
 				case TextEditCommand.Select_Join: Command_Select_Join(); break;
@@ -3000,6 +3001,8 @@ namespace NeoEdit.TextEdit
 
 			Selections.Replace(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
 		}
+
+		internal void Command_Select_WholeLines() => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(Data.GetOffset(Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) + 1, 0), Data.GetOffset(Data.GetOffsetLine(range.Start), 0))).ToList());
 
 		IEnumerable<Range> SelectRectangle(Range range)
 		{

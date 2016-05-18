@@ -463,6 +463,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
+		<textEdit:TextEditMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
 		<textEdit:TextEditMenuItem Header="Rectan_gle" CommandEnum="Select_Rectangle"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Invert" CommandEnum="Select_Invert"/>
