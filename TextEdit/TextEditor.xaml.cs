@@ -781,11 +781,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_ClearVariables: Command_Expression_ClearVariables(); break;
 				case TextEditCommand.Expression_SetVariables: Command_Expression_SetVariables(dialogResult as SetVariablesDialog.Result); break;
-				case TextEditCommand.Text_Copy_Length: Command_Text_Copy_Length(); break;
-				case TextEditCommand.Text_Copy_Min_Text: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
-				case TextEditCommand.Text_Copy_Min_Length: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Length); break;
-				case TextEditCommand.Text_Copy_Max_Text: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.String); break;
-				case TextEditCommand.Text_Copy_Max_Length: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Length); break;
 				case TextEditCommand.Text_Select_Trim: Command_Text_Select_Trim(); break;
 				case TextEditCommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as WidthDialog.Result); break;
 				case TextEditCommand.Text_Select_Min_Text: Command_Type_Select_MinMax(true, TextEditor.Command_MinMax_Type.String); break;
@@ -805,11 +800,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_LoremIpsum: Command_Text_LoremIpsum(); break;
 				case TextEditCommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(dialogResult as RevRegExDialog.Result); break;
 				case TextEditCommand.Text_FirstDistinct: Command_Text_FirstDistinct(); break;
-				case TextEditCommand.Numeric_Copy_Min: Command_Type_Copy_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
-				case TextEditCommand.Numeric_Copy_Max: Command_Type_Copy_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
-				case TextEditCommand.Numeric_Copy_Sum: Command_Numeric_Copy_Sum(); break;
-				case TextEditCommand.Numeric_Copy_GCF: Command_Numeric_Copy_GCF(); break;
-				case TextEditCommand.Numeric_Copy_LCM: Command_Numeric_Copy_LCM(); break;
 				case TextEditCommand.Numeric_Select_Min: Command_Type_Select_MinMax(true, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.Command_MinMax_Type.Numeric); break;
 				case TextEditCommand.Numeric_Select_Whole: Command_Numeric_Select_Whole(); break;
@@ -2338,78 +2328,28 @@ namespace NeoEdit.TextEdit
 
 		internal void Command_File_Copy_Count() => SetClipboardText(Selections.Count.ToString());
 
-		internal void Command_Text_Copy_Length() => SetClipboardStrings(Selections.Select(range => range.Length.ToString()));
-
 		internal enum Command_MinMax_Type { String, Numeric, Length }
-		internal Tuple<string, List<Range>> DoCommand_Type_MinMax<Input>(bool min, Func<Range, Input> select, Comparer<Input> sort)
+		internal List<Range> FindMinMax<Input>(bool min, Func<Range, Input> select, Comparer<Input> sort)
 		{
 			if (!Selections.Any())
 				throw new Exception("No selections");
 			var selections = Selections.AsParallel().GroupBy(range => select(range)).OrderBy(group => group.Key, sort);
 			var result = min ? selections.First() : selections.Last();
-			return Tuple.Create(result.Key.ToString(), result.ToList());
+			return result.ToList();
 		}
 
-		internal Tuple<string, List<Range>> Command_Type_Copy_MinMax2(bool min, Command_MinMax_Type type)
+		internal List<Range> FindMinMax(bool min, Command_MinMax_Type type)
 		{
 			switch (type)
 			{
-				case Command_MinMax_Type.String: return DoCommand_Type_MinMax(min, range => GetString(range), Comparer<string>.Default);
-				case Command_MinMax_Type.Numeric: return DoCommand_Type_MinMax(min, range => GetString(range), Comparer<string>.Create((x, y) => x.CompareWithNumeric(y)));
-				case Command_MinMax_Type.Length: return DoCommand_Type_MinMax(min, range => range.Length, Comparer<int>.Default);
+				case Command_MinMax_Type.String: return FindMinMax(min, range => GetString(range), Comparer<string>.Default);
+				case Command_MinMax_Type.Numeric: return FindMinMax(min, range => GetString(range), Comparer<string>.Create((x, y) => x.CompareWithNumeric(y)));
+				case Command_MinMax_Type.Length: return FindMinMax(min, range => range.Length, Comparer<int>.Default);
 				default: throw new Exception("Invalid type");
 			}
 		}
 
-		internal void Command_Type_Copy_MinMax(bool min, Command_MinMax_Type type) => SetClipboardText(Command_Type_Copy_MinMax2(min, type).Item1);
-
-		internal void Command_Type_Select_MinMax(bool min, Command_MinMax_Type type) => Selections.Replace(Command_Type_Copy_MinMax2(min, type).Item2);
-
-		internal void Command_Numeric_Copy_Sum() => SetClipboardText(Selections.AsParallel().Select(range => double.Parse(GetString(range))).Sum().ToString());
-
-		static BigInteger GCF(BigInteger value1, BigInteger value2)
-		{
-			while (value2 != 0)
-			{
-				var newValue = value1 % value2;
-				value1 = value2;
-				value2 = newValue;
-			}
-
-			return value1;
-		}
-
-		internal void Command_Numeric_Copy_GCF()
-		{
-			if (Selections.Count <= 0)
-				return;
-
-			var nums = Selections.AsParallel().Select(range => BigInteger.Abs(BigInteger.Parse(GetString(range)))).ToList();
-			if (nums.Any(factor => factor == 0))
-				throw new Exception("Factors cannot be 0");
-
-			var gcf = nums[0];
-			for (var ctr = 1; ctr < nums.Count; ++ctr)
-				gcf = GCF(gcf, nums[ctr]);
-
-			SetClipboardText(gcf.ToString());
-		}
-
-		internal void Command_Numeric_Copy_LCM()
-		{
-			if (Selections.Count <= 0)
-				return;
-
-			var nums = Selections.AsParallel().Select(range => BigInteger.Abs(BigInteger.Parse(GetString(range)))).ToList();
-			if (nums.Any(factor => factor == 0))
-				throw new Exception("Factors cannot be 0");
-
-			var lcm = nums[0];
-			for (var ctr = 1; ctr < nums.Count; ++ctr)
-				lcm *= nums[ctr] / GCF(lcm, nums[ctr]);
-
-			SetClipboardText(lcm.ToString());
-		}
+		internal void Command_Type_Select_MinMax(bool min, Command_MinMax_Type type) => Selections.Replace(FindMinMax(min, type));
 
 		internal void Command_Position_Copy(GotoType gotoType)
 		{
