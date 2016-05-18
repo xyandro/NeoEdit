@@ -967,11 +967,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Selection_Previous: Command_Select_Selection_Previous(); break;
 				case TextEditCommand.Select_Selection_Single: Command_Select_Selection_Single(); break;
 				case TextEditCommand.Select_Selection_Remove: Command_Select_Selection_Remove(); break;
-				case TextEditCommand.Region_ToggleRegionsSelections: Command_Region_ToggleRegionsSelections(); break;
-				case TextEditCommand.Region_SetSelection: Command_Region_SetSelection(); break;
-				case TextEditCommand.Region_SetFindResults: Command_Region_SetFindResults(); break;
-				case TextEditCommand.Region_ClearRegions: Command_Region_ClearRegions(); break;
-				case TextEditCommand.Region_LimitToSelection: Command_Region_LimitToSelection(); break;
+				case TextEditCommand.Region_SetSelections: Command_Region_SetSelections(); break;
+				case TextEditCommand.Region_AddSelections: Command_Region_AddSelections(); break;
+				case TextEditCommand.Region_RemoveSelections: Command_Region_RemoveSelections(); break;
+				case TextEditCommand.Region_LimitToSelections: Command_Region_LimitToSelections(); break;
 				case TextEditCommand.Region_WithEnclosingRegion: Command_Region_WithEnclosingRegion(); break;
 				case TextEditCommand.Region_WithoutEnclosingRegion: Command_Region_WithoutEnclosingRegion(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
@@ -3009,20 +3008,6 @@ namespace NeoEdit.TextEdit
 			ExamineDatabaseDialog.Run(WindowParent, dbConnection);
 		}
 
-		internal void Command_Region_ToggleRegionsSelections()
-		{
-			if (Selections.Count > 1)
-			{
-				Regions.AddRange(Selections);
-				Selections.Replace(Selections[visibleIndex]);
-			}
-			else if (Regions.Count != 0)
-			{
-				Selections.Replace(Regions);
-				Regions.Clear();
-			}
-		}
-
 		internal void Command_Select_All() => Selections.Replace(FullRange);
 
 		internal void Command_Select_Nothing() => Selections.Clear();
@@ -3274,15 +3259,11 @@ namespace NeoEdit.TextEdit
 			Selections.RemoveAt(visibleIndex);
 		}
 
-		internal void Command_Region_SetSelection() => Regions.AddRange(Selections);
+		internal void Command_Region_SetSelections() => Regions.Replace(Selections);
 
-		internal void Command_Region_SetFindResults()
-		{
-			Regions.AddRange(Searches);
-			Searches.Clear();
-		}
+		internal void Command_Region_AddSelections() => Regions.AddRange(Selections);
 
-		internal void Command_Region_ClearRegions()
+		internal void Command_Region_RemoveSelections()
 		{
 			if (!Selections.Any(range => range.HasSelection))
 				Regions.Clear();
@@ -3296,7 +3277,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		internal void Command_Region_LimitToSelection() => Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
+		internal void Command_Region_LimitToSelections() => Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
 
 		internal void Command_Region_WithEnclosingRegion() => Selections.Replace(Selections.Zip(GetEnclosingRegions(mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
 

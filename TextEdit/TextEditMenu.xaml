@@ -513,12 +513,10 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Region">
-		<textEdit:TextEditMenuItem Header="Toggle Regions_/Selections" CommandEnum="Region_ToggleRegionsSelections"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="Set _Selection" CommandEnum="Region_SetSelection"/>
-		<textEdit:TextEditMenuItem Header="Set _Find Results" CommandEnum="Region_SetFindResults"/>
-		<textEdit:TextEditMenuItem Header="_Clear Regions" CommandEnum="Region_ClearRegions"/>
-		<textEdit:TextEditMenuItem Header="_Limit To Selection" CommandEnum="Region_LimitToSelection"/>
+		<textEdit:TextEditMenuItem Header="_Set Selections" CommandEnum="Region_SetSelections"/>
+		<textEdit:TextEditMenuItem Header="_Add Selections" CommandEnum="Region_AddSelections"/>
+		<textEdit:TextEditMenuItem Header="_Remove Selections" CommandEnum="Region_RemoveSelections"/>
+		<textEdit:TextEditMenuItem Header="_Limit To Selections" CommandEnum="Region_LimitToSelections"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_With Enclosing Region" CommandEnum="Region_WithEnclosingRegion"/>
 		<textEdit:TextEditMenuItem Header="W_ithout Enclosing Region" CommandEnum="Region_WithoutEnclosingRegion"/>

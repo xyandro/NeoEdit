@@ -30,7 +30,6 @@ QueryBuilder
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
-Regions: Set/Add/Remove
 
 View:
 Update as new lines are added
