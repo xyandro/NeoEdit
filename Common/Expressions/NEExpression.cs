@@ -31,6 +31,8 @@ namespace NeoEdit.Common.Expressions
 
 		T ChangeType<T>(object value)
 		{
+			if (value == null)
+				return default(T);
 			if (typeof(T) == typeof(object))
 				return (T)value;
 			if (typeof(T) == typeof(string))
@@ -40,13 +42,17 @@ namespace NeoEdit.Common.Expressions
 
 		public List<T> EvaluateRows<T>(NEVariables variables, int? rowCount = null, params object[] values)
 		{
-			if (rowCount < 0)
-				throw new ArgumentException($"{nameof(rowCount)} must be positive");
-			var count = rowCount ?? variables.ResultCount(Variables) ?? 1;
-			Func<int, T> action = row => ChangeType<T>(InternalEvaluate(variables, row, values));
-			if (count == 1)
-				return new List<T> { action(0) };
-			return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(action).ToList();
+			try
+			{
+				if (rowCount < 0)
+					throw new ArgumentException($"{nameof(rowCount)} must be positive");
+				var count = rowCount ?? variables.ResultCount(Variables) ?? 1;
+				Func<int, T> action = row => ChangeType<T>(InternalEvaluate(variables, row, values));
+				if (count == 1)
+					return new List<T> { action(0) };
+				return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(action).ToList();
+			}
+			catch (AggregateException ex) { throw ex.InnerException ?? ex; }
 		}
 
 		HashSet<string> variables;

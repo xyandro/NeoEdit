@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,20 @@ namespace NeoEdit.Common.Expressions
 
 		public bool Contains(string variable) => varDict.ContainsKey(variable);
 
-		public object GetValue(string variable, int rowNum) => varDict[variable].GetValue(rowNum);
+		NEVariable GetVariable(string variable)
+		{
+			if (!varDict.ContainsKey(variable))
+				throw new ArgumentException($"Variable {variable} doesn't exist");
+			return varDict[variable];
+		}
 
-		public List<object> GetValues(string variable) => varDict[variable].GetValues();
+		public object GetValue(string variable, int rowNum) => GetVariable(variable).GetValue(rowNum);
 
-		public List<object> GetValues(string variable, int rowCount) => Enumerable.Range(0, rowCount).Select(row => varDict[variable].GetValue(row)).ToList();
+		public List<object> GetValues(string variable) => GetVariable(variable).GetValues();
 
-		public int? ResultCount(HashSet<string> variables) => variables.Min(variable => varDict[variable].Count());
+		public List<object> GetValues(string variable, int rowCount) => Enumerable.Range(0, rowCount).Select(row => GetVariable(variable).GetValue(row)).ToList();
+
+		public int? ResultCount(HashSet<string> variables) => variables.Min(variable => GetVariable(variable).Count());
 
 		//Class implements ienumerable so it can be the source of the variable help dialog
 		public IEnumerator<NEVariable> GetEnumerator() => varDict.Values.GetEnumerator();

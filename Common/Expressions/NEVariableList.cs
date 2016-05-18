@@ -26,6 +26,8 @@ namespace NeoEdit.Common.Expressions
 		public override object GetValue(int index)
 		{
 			Setup();
+			if (index >= list.Count)
+				throw new ArgumentException($"Not enough values for variable {Name}");
 			return list[index];
 		}
 
