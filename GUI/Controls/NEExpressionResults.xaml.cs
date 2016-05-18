@@ -21,7 +21,7 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public int? NumResults { get { return UIHelper<NEExpressionResults>.GetPropValue<int?>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 		[DepProp]
-		public int DisplayResults { get { return UIHelper<NEExpressionResults>.GetPropValue<int>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
+		public int MaxResults { get { return UIHelper<NEExpressionResults>.GetPropValue<int>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 		[DepProp(BindsTwoWayByDefault = true)]
 		public bool IsValid { get { return UIHelper<NEExpressionResults>.GetPropValue<bool>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,11 +34,11 @@ namespace NeoEdit.GUI.Controls
 		static NEExpressionResults()
 		{
 			UIHelper<NEExpressionResults>.Register();
-			UIHelper<NEExpressionResults>.AddCallback(a => a.Expression, (obj, o, n) => obj.UpdateChildren());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.Variables, (obj, o, n) => obj.UpdateChildren());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.NumResults, (obj, o, n) => obj.UpdateChildren());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.DisplayResults, (obj, o, n) => obj.UpdateChildren());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.MultiRow, (obj, o, n) => obj.UpdateChildren());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.Expression, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.Variables, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.NumResults, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.MaxResults, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.MultiRow, (obj, o, n) => obj.Invalidate());
 			RowHeight = CalcRowHeight();
 		}
 
@@ -52,18 +52,25 @@ namespace NeoEdit.GUI.Controls
 		public NEExpressionResults()
 		{
 			InitializeComponent();
-			DisplayResults = 10;
-			SizeChanged += (s, e) =>
-			{
-				var displayResults = CountFromHeight;
-				if (DisplayResults == displayResults)
-					UpdateChildren();
-				else
-					DisplayResults = displayResults;
-			};
+			MaxResults = 10;
 		}
 
-		int CountFromHeight => MultiRow ? Math.Max(0, (int)((ActualHeight - Spacing * 2) / RowHeight - 1)) : DisplayResults;
+		void Invalidate()
+		{
+			InvalidateMeasure();
+			UpdateChildren();
+		}
+
+		protected override Size MeasureOverride(Size constraint)
+		{
+			base.MeasureOverride(constraint);
+			try
+			{
+				var resultCount = MultiRow ? Math.Min(NumResults ?? Variables.ResultCount(new NEExpression(Expression).Variables) ?? 1, MaxResults) + 1 : 1;
+				return new Size(0, resultCount * RowHeight + Spacing * 2);
+			}
+			catch { return RenderSize; }
+		}
 
 		void AddChild(UIElement element, int row, int column, int rowSpan = 1, int columnSpan = 1, int? index = null)
 		{
@@ -73,7 +80,7 @@ namespace NeoEdit.GUI.Controls
 			Grid.SetRow(element, row);
 			Grid.SetColumnSpan(element, columnSpan);
 			Grid.SetRowSpan(element, rowSpan);
-			grid.Children.Insert(index ?? grid.Children.Count, element);
+			Children.Insert(index ?? Children.Count, element);
 		}
 
 		FrameworkElement GetTextBlock(string text, Brush background = null) => new TextBlock { Text = text ?? "ERROR", Foreground = text == null ? Brushes.DarkRed : Brushes.Black, Background = background };
@@ -104,6 +111,12 @@ namespace NeoEdit.GUI.Controls
 			Shrink7 = 128,
 		}
 
+		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+		{
+			base.OnRenderSizeChanged(sizeInfo);
+			UpdateChildren();
+		}
+
 		readonly Brush BackColor = Brushes.LightGray;
 		const int Spacing = 2;
 		void UpdateChildren()
@@ -111,11 +124,12 @@ namespace NeoEdit.GUI.Controls
 			List<string> variables;
 			List<string> results;
 			Dictionary<string, List<string>> varValues;
+			var useResults = MultiRow ? Math.Max(0, (int)((ActualHeight - Spacing * 2) / RowHeight - 1)) : MaxResults;
 			try
 			{
 				var expression = new NEExpression(Expression);
 				variables = new List<string>(expression.Variables);
-				var resultCount = Math.Min(NumResults ?? Variables.ResultCount(expression.Variables) ?? 1, DisplayResults);
+				var resultCount = Math.Min(NumResults ?? Variables.ResultCount(expression.Variables) ?? 1, useResults);
 				results = expression.EvaluateRows<string>(Variables, resultCount).Coalesce("").ToList();
 				varValues = variables.ToDictionary(variable => variable, variable => Variables.GetValues(variable, resultCount).Select(val => val?.ToString()).ToList());
 				IsValid = true;
@@ -123,18 +137,18 @@ namespace NeoEdit.GUI.Controls
 			}
 			catch (Exception ex)
 			{
-				results = MultiRow ? Enumerable.Repeat(default(string), DisplayResults).ToList() : new List<string>();
+				results = MultiRow ? Enumerable.Repeat(default(string), useResults).ToList() : new List<string>();
 				variables = new List<string>();
 				varValues = new Dictionary<string, List<string>>();
 				IsValid = false;
 				ErrorMessage = ex.Message;
-				if ((grid.Children.Count != 0) || (ActualHeight == 0) || (ActualWidth == 0))
+				if ((Children.Count != 0) || (ActualHeight == 0) || (ActualWidth == 0))
 					return;
 			}
 
-			grid.Children.Clear();
-			grid.ColumnDefinitions.Clear();
-			grid.RowDefinitions.Clear();
+			Children.Clear();
+			ColumnDefinitions.Clear();
+			RowDefinitions.Clear();
 
 			Func<WidthType, int, Tuple<WidthType, List<FrameworkElement>>> GetLine = (widthType, numRows) => Tuple.Create(widthType, Enumerable.Range(0, numRows).Select(row => new Rectangle { Width = Spacing, Fill = BackColor }).Cast<FrameworkElement>().ToList());
 
@@ -219,22 +233,22 @@ namespace NeoEdit.GUI.Controls
 			}
 
 			var rows = columns[0].Item2.Count;
-			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(Spacing) });
+			RowDefinitions.Add(new RowDefinition { Height = new GridLength(Spacing) });
 			for (var row = 0; row < rows; ++row)
-				grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(RowHeight) });
-			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(Spacing) });
+				RowDefinitions.Add(new RowDefinition { Height = new GridLength(RowHeight) });
+			RowDefinitions.Add(new RowDefinition { Height = new GridLength(Spacing) });
 
 			for (var column = 0; column < columns.Count; ++column)
 			{
-				grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength((double)widths[column] / precision) });
+				ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength((double)widths[column] / precision) });
 				for (var row = 0; row < rows; ++row)
 					AddChild(columns[column].Item2[row], row + 1, column);
 			}
 
-			AddChild(new Rectangle { Fill = BackColor, Height = Spacing }, 0, 0, columnSpan: grid.ColumnDefinitions.Count);
-			AddChild(new Rectangle { Fill = BackColor, Height = Spacing }, grid.RowDefinitions.Count - 1, 0, columnSpan: grid.ColumnDefinitions.Count);
+			AddChild(new Rectangle { Fill = BackColor, Height = Spacing }, 0, 0, columnSpan: ColumnDefinitions.Count);
+			AddChild(new Rectangle { Fill = BackColor, Height = Spacing }, RowDefinitions.Count - 1, 0, columnSpan: ColumnDefinitions.Count);
 
-			GetErrorControls().ForEach(control => AddChild(control, 0, 0, grid.RowDefinitions.Count, grid.ColumnDefinitions.Count));
+			GetErrorControls().ForEach(control => AddChild(control, 0, 0, RowDefinitions.Count, ColumnDefinitions.Count));
 		}
 	}
 }

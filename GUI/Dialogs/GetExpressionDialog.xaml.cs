@@ -17,13 +17,13 @@ namespace NeoEdit.GUI.Dialogs
 		[DepProp]
 		public NEVariables Variables { get { return UIHelper<GetExpressionDialog>.GetPropValue<NEVariables>(this); } set { UIHelper<GetExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int NumRows { get { return UIHelper<GetExpressionDialog>.GetPropValue<int>(this); } set { UIHelper<GetExpressionDialog>.SetPropValue(this, value); } }
+		public int? NumRows { get { return UIHelper<GetExpressionDialog>.GetPropValue<int?>(this); } set { UIHelper<GetExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsValid { get { return UIHelper<GetExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<GetExpressionDialog>.SetPropValue(this, value); } }
 
 		static GetExpressionDialog() { UIHelper<GetExpressionDialog>.Register(); }
 
-		GetExpressionDialog(NEVariables variables, int numRows)
+		GetExpressionDialog(NEVariables variables, int? numRows)
 		{
 			InitializeComponent();
 
@@ -32,7 +32,7 @@ namespace NeoEdit.GUI.Dialogs
 			NumRows = numRows;
 		}
 
-		void ExpressionHelp(object sender, RoutedEventArgs e)=> ExpressionHelpDialog.Display(Variables);
+		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
@@ -45,7 +45,7 @@ namespace NeoEdit.GUI.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables, int numRows)
+		static public Result Run(Window parent, NEVariables variables, int? numRows = null)
 		{
 			var dialog = new GetExpressionDialog(variables, numRows) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;

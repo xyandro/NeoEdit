@@ -24,7 +24,7 @@
 		<guiControls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="AddColumnDialogExpression"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
-		<guiControls:NEExpressionResults Grid.Row="2" Grid.Column="1" MultiRow="True" DisplayResults="10" NumResults="{Binding NumRows, ElementName=self}" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}" IsValid="{Binding IsValid, ElementName=self}"/>
+		<guiControls:NEExpressionResults Grid.Row="2" Grid.Column="1" MultiRow="True" NumResults="{Binding NumRows, ElementName=self}" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}" IsValid="{Binding IsValid, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
 			<Button Click="ExpressionHelp" Content="Expression _Help" Padding="10,1"/>
