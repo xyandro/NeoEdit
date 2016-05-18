@@ -806,6 +806,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Select_Fraction: Command_Numeric_Select_Fraction(); break;
 				case TextEditCommand.Numeric_Hex_ToHex: Command_Numeric_Hex_ToHex(); break;
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
+				case TextEditCommand.Numeric_Sum: Command_Numeric_Sum(); break;
 				case TextEditCommand.Numeric_ConvertBase: Command_Numeric_ConvertBase(dialogResult as ConvertBaseDialog.Result); break;
 				case TextEditCommand.Numeric_Series_ZeroBased: Command_Numeric_Series_ZeroBased(); break;
 				case TextEditCommand.Numeric_Series_OneBased: Command_Numeric_Series_OneBased(); break;
@@ -2123,6 +2124,17 @@ namespace NeoEdit.TextEdit
 				value /= outputSet.Count;
 			}
 			return new string(output.ToArray());
+		}
+
+		internal void Command_Numeric_Sum()
+		{
+			var result = Selections.Where(range => !range.HasSelection).ToList();
+			if (result.Count != 1)
+				throw new Exception("Must have one empty selection to get the result");
+
+			var sum = Selections.AsParallel().Where(range => range.HasSelection).Select(range => double.Parse(GetString(range))).Sum();
+			Selections.Replace(result);
+			ReplaceSelections(sum.ToString());
 		}
 
 		internal ConvertBaseDialog.Result Command_Numeric_ConvertBase_Dialog() => ConvertBaseDialog.Run(WindowParent);

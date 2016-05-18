@@ -260,6 +260,7 @@
 			<textEdit:TextEditMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
 			<textEdit:TextEditMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
 		</MenuItem>
+		<textEdit:TextEditMenuItem Header="S_um" CommandEnum="Numeric_Sum"/>
 		<textEdit:TextEditMenuItem Header="Convert _Base" CommandEnum="Numeric_ConvertBase"/>
 		<Separator/>
 		<MenuItem Header="S_eries">
@@ -271,20 +272,20 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Sc_ale" CommandEnum="Numeric_Scale"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Forwar_d Sum" CommandEnum="Numeric_ForwardSum"/>
+		<textEdit:TextEditMenuItem Header="F_orward Sum" CommandEnum="Numeric_ForwardSum"/>
 		<textEdit:TextEditMenuItem Header="Re_verse Sum" CommandEnum="Numeric_ReverseSum"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Whole"/>
 		<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
-		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
+		<textEdit:TextEditMenuItem Header="Rou_nd" CommandEnum="Numeric_Round"/>
 		<textEdit:TextEditMenuItem Header="Ce_iling" CommandEnum="Numeric_Ceiling"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Fac_tor" CommandEnum="Numeric_Factor"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
-		<textEdit:TextEditMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
+		<textEdit:TextEditMenuItem Header="_Combinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
 		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
 	</MenuItem>
 	<MenuItem Header="_Date/Time">
