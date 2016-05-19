@@ -307,6 +307,7 @@ namespace NeoEdit.TextEdit
 		Region_AddSelections,
 		Region_RemoveSelections,
 		Region_LimitToSelections,
+		Region_Clear,
 		Region_WithEnclosingRegion,
 		Region_WithoutEnclosingRegion,
 		Region_SelectEnclosingRegion,

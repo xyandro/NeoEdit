@@ -1066,6 +1066,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_AddSelections: Command_Region_AddSelections(); break;
 				case TextEditCommand.Region_RemoveSelections: Command_Region_RemoveSelections(); break;
 				case TextEditCommand.Region_LimitToSelections: Command_Region_LimitToSelections(); break;
+				case TextEditCommand.Region_Clear: Command_Region_Clear(); break;
 				case TextEditCommand.Region_WithEnclosingRegion: Command_Region_WithEnclosingRegion(); break;
 				case TextEditCommand.Region_WithoutEnclosingRegion: Command_Region_WithoutEnclosingRegion(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;

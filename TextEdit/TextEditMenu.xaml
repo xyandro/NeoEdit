@@ -499,6 +499,8 @@
 		<textEdit:TextEditMenuItem Header="_Remove Selections" CommandEnum="Region_RemoveSelections"/>
 		<textEdit:TextEditMenuItem Header="_Limit To Selections" CommandEnum="Region_LimitToSelections"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Region_Clear"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_With Enclosing Region" CommandEnum="Region_WithEnclosingRegion"/>
 		<textEdit:TextEditMenuItem Header="W_ithout Enclosing Region" CommandEnum="Region_WithoutEnclosingRegion"/>
 		<Separator/>
