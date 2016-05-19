@@ -59,7 +59,7 @@
 						<guiDialogs:HelpItem Name="$&quot;{2+2}&quot;" Description="Interpolated string"/>
 						<guiDialogs:HelpItem Name="@$&quot;C:\{2+2}&quot;" Description="Verbatim interpolated string"/>
 						<guiDialogs:HelpItem Name="x" Description="Variable"/>
-						<guiDialogs:HelpItem Name="[x]" Description="Variable List"/>
+						<guiDialogs:HelpItem Name="[x]" Description="Variable list"/>
 					</guiDialogs:HelpItems.Items>
 				</guiDialogs:HelpItems>
 
@@ -197,6 +197,7 @@
 						<guiDialogs:HelpItem Name="Type(x)" Description="Get type"/>
 						<guiDialogs:HelpItem Name="ValidRE(x)" Description="Check whether RegEx is valid"/>
 						<guiDialogs:HelpItem Name="Eval(x)" Description="Evalulate expression"/>
+						<guiDialogs:HelpItem Name="ValidEval(x)" Description="Check whether expression is valid"/>
 						<guiDialogs:HelpItem Name="FileName(x)" Description="Get filename from path"/>
 						<guiDialogs:HelpItem Name="StrFormat(&quot;Value: {0}&quot;, x)" Description="Format string"/>
 						<guiDialogs:HelpItem Name="ToWords(x)" Description="Number to text"/>

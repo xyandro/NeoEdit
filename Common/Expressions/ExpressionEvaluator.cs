@@ -301,6 +301,7 @@ namespace NeoEdit.Common.Expressions
 				case "towords": return GetNumeric(paramList[0]).ToWords();
 				case "type": return paramList[0].GetType();
 				case "utcdate": return new NumericValue(DateTimeOffset.Now.UtcDateTime.Date.Ticks, "ticks");
+				case "valideval": try { new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row); return true; } catch { return false; }
 				case "validre": return ValidRE(GetString(paramList[0]));
 				default: throw new ArgumentException($"Invalid method: {method}");
 			}

@@ -67,14 +67,14 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(true, new NEExpression("[0] is \"Int32\"").Evaluate(5));
 
-			Assert.AreEqual(true, new NEExpression("\"5a\" t== \"5a\"").Evaluate(5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" t== \"5A\"").Evaluate(5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" ti== \"5a\"").Evaluate(5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" ti== \"5A\"").Evaluate(5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" t!= \"5a\"").Evaluate(5));
-			Assert.AreEqual(true, new NEExpression("\"5a\" t!= \"5A\"").Evaluate(5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" ti!= \"5a\"").Evaluate(5));
-			Assert.AreEqual(false, new NEExpression("\"5a\" ti!= \"5A\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("\"5a\" t== \"5a\"").Evaluate());
+			Assert.AreEqual(false, new NEExpression("\"5a\" t== \"5A\"").Evaluate());
+			Assert.AreEqual(true, new NEExpression("\"5a\" ti== \"5a\"").Evaluate());
+			Assert.AreEqual(true, new NEExpression("\"5a\" ti== \"5A\"").Evaluate());
+			Assert.AreEqual(false, new NEExpression("\"5a\" t!= \"5a\"").Evaluate());
+			Assert.AreEqual(true, new NEExpression("\"5a\" t!= \"5A\"").Evaluate());
+			Assert.AreEqual(false, new NEExpression("\"5a\" ti!= \"5a\"").Evaluate());
+			Assert.AreEqual(false, new NEExpression("\"5a\" ti!= \"5A\"").Evaluate());
 
 			Assert.AreEqual("5", new NEExpression("[0].\"value\"").Evaluate(new ExpressionDotTest(5)).ToString());
 
@@ -176,6 +176,9 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual("0", new NEExpression("factor(0)").Evaluate().ToString());
 			Assert.AreEqual("-1*2*2*3*5*7*11", new NEExpression("factor(-4620)").Evaluate().ToString());
+
+			Assert.AreEqual(true, new NEExpression("valideval(\"(5+2)\")").Evaluate());
+			Assert.AreEqual(false, new NEExpression("valideval(\"(5+)2\")").Evaluate());
 
 			var miscVars = new NEVariables(
 				NEVariable.Constant("x", "", 0xdeadbeef),
