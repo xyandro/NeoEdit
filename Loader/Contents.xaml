@@ -33,6 +33,7 @@
 					<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
 					<GridViewColumn Header="File Type" DisplayMemberBinding="{Binding FileType}"/>
 					<GridViewColumn Header="Bit Depth" DisplayMemberBinding="{Binding BitDepth}"/>
+					<GridViewColumn Header="Version" DisplayMemberBinding="{Binding Version}"/>
 					<GridViewColumn Header="Compressed Size">
 						<GridViewColumn.CellTemplate>
 							<DataTemplate>
@@ -47,6 +48,7 @@
 							</DataTemplate>
 						</GridViewColumn.CellTemplate>
 					</GridViewColumn>
+					<GridViewColumn Header="SHA1" DisplayMemberBinding="{Binding SHA1}"/>
 				</GridView>
 			</ListView.View>
 		</ListView>

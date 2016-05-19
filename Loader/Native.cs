@@ -389,5 +389,25 @@ namespace Loader
 
 			public string Section => new string(Name).TrimEnd('\0');
 		}
+
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+		public struct VS_VERSION_INFO
+		{
+			public ushort Size;
+			public short ValueDataSize;
+			public short ValueType;
+			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+			public string ValueID;
+			public short Padding;
+			public uint Signature;
+			public int VersionData;
+			public ushort Version2;
+			public ushort Version1;
+			public ushort Version4;
+			public ushort Version3;
+
+			public bool IsValid => (ValueDataSize == 52) && (ValueType == 0) && (ValueID == "VS_VERSION_INFO") && (Signature == 0xfeef04bd) && (VersionData == 0x00010000);
+			public string Version => $"{Version1}.{Version2}.{Version3}.{Version4}";
+		}
 	}
 }

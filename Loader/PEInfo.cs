@@ -13,6 +13,7 @@ namespace Loader
 		public BitDepths BitDepth { get; }
 		public BitDepths PreferBitDepth { get; }
 		public FileTypes FileType { get; }
+		public string Version { get; }
 		public bool IsConsole
 		{
 			get { return (Native.SubSystemType)BitConverter.ToUInt16(Bytes, subsystemOffset) == Native.SubSystemType.IMAGE_SUBSYSTEM_WINDOWS_CUI; }
@@ -36,6 +37,7 @@ namespace Loader
 		public PEInfo(byte[] bytes)
 		{
 			Bytes = bytes;
+			Version = "";
 
 			var dosHeader = GetStruct<Native.IMAGE_DOS_HEADER>();
 			IsPE = dosHeader.isValid;
@@ -104,6 +106,16 @@ namespace Loader
 						}
 					}
 				}
+			}
+
+			var versionResource = resources.Where(res => res.Item1.StartsWith($"\\{Native.RT_VERSION}\\")).FirstOrDefault();
+			if (versionResource != null)
+			{
+				pos = versionResource.Item2;
+				var res = GetResource(versionResource.Item1);
+				var vsVersionInfo = GetStruct<Native.VS_VERSION_INFO>();
+				if (vsVersionInfo.IsValid)
+					Version = vsVersionInfo.Version;
 			}
 
 			if ((ntHeaders.OptionalHeader.CLRRuntimeHeader.HasValue) && (ntHeaders.OptionalHeader.CLRRuntimeHeader.Value.VirtualAddress != 0) && (ntHeaders.OptionalHeader.CLRRuntimeHeader.Value.Size != 0))
