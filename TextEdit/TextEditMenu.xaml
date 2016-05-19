@@ -34,7 +34,7 @@
 			<textEdit:TextEditMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop"/>
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
-		<textEdit:TextEditMenuItem Header="Re_fresh" CommandEnum="File_Refresh"/>
+		<textEdit:TextEditMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
 		<textEdit:TextEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<MenuItem Header="_Insert">
@@ -231,7 +231,7 @@
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="C_ase">
+		<MenuItem Header="_Case">
 			<textEdit:TextEditMenuItem Header="_Upper" CommandEnum="Text_Case_Upper"/>
 			<textEdit:TextEditMenuItem Header="_Lower" CommandEnum="Text_Case_Lower"/>
 			<textEdit:TextEditMenuItem Header="_Proper" CommandEnum="Text_Case_Proper"/>
@@ -381,8 +381,8 @@
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Home" CommandEnum="Content_Navigate_Home"/>
 			<textEdit:TextEditMenuItem Header="_End" CommandEnum="Content_Navigate_End"/>
-			<textEdit:TextEditMenuItem Header="P_gUp" CommandEnum="Content_Navigate_PgUp"/>
-			<textEdit:TextEditMenuItem Header="PgD_n" CommandEnum="Content_Navigate_PgDn"/>
+			<textEdit:TextEditMenuItem Header="_PgUp" CommandEnum="Content_Navigate_PgUp"/>
+			<textEdit:TextEditMenuItem Header="P_gDn" CommandEnum="Content_Navigate_PgDn"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
 			<textEdit:TextEditMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
@@ -460,7 +460,7 @@
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
-		<textEdit:TextEditMenuItem Header="Not_hing" CommandEnum="Select_Nothing"/>
+		<textEdit:TextEditMenuItem Header="N_othing" CommandEnum="Select_Nothing"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
