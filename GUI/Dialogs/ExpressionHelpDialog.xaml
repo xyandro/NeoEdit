@@ -162,8 +162,8 @@
 
 				<guiDialogs:HelpItems Name="String Functions" Columns="4" NameWidth="80" DescWidth="160">
 					<guiDialogs:HelpItems.Items>
-						<guiDialogs:HelpItem Name="strmin(...)" Description="Minimum"/>
-						<guiDialogs:HelpItem Name="strmax(...)" Description="Maximum"/>
+						<guiDialogs:HelpItem Name="tmin(...)" Description="Minimum"/>
+						<guiDialogs:HelpItem Name="tmax(...)" Description="Maximum"/>
 						<guiDialogs:HelpItem Name="len(x)" Description="Length"/>
 					</guiDialogs:HelpItems.Items>
 				</guiDialogs:HelpItems>
@@ -172,8 +172,8 @@
 					<guiDialogs:HelpItems.Items>
 						<guiDialogs:HelpItem Name="min(x)" Description="Numeric minimum"/>
 						<guiDialogs:HelpItem Name="max(x)" Description="Numeric maximum"/>
-						<guiDialogs:HelpItem Name="strmin(x)" Description="String minimum"/>
-						<guiDialogs:HelpItem Name="strmax(x)" Description="String maximum"/>
+						<guiDialogs:HelpItem Name="tmin(x)" Description="String minimum"/>
+						<guiDialogs:HelpItem Name="tmax(x)" Description="String maximum"/>
 						<guiDialogs:HelpItem Name="sum(x)" Description="Sum"/>
 						<guiDialogs:HelpItem Name="count(x)" Description="Count"/>
 					</guiDialogs:HelpItems.Items>
