@@ -11,6 +11,7 @@ namespace NeoEdit.TextEdit
 	partial class TextEditor
 	{
 		delegate void GlobalKeysChangedDelegate();
+
 		static GlobalKeysChangedDelegate globalKeysChanged;
 		static bool globalKeys = true;
 		public static bool GlobalKeys { get { return globalKeys; } set { globalKeys = value; globalKeysChanged?.Invoke(); } }
@@ -24,12 +25,14 @@ namespace NeoEdit.TextEdit
 		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
 		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
 
-		static void SetupStaticKeys()
+		static void keysAndValues_CollectionChanged(ObservableCollection<ObservableCollection<string>> data, Dictionary<string, int> hash, NotifyCollectionChangedEventArgs e)
 		{
-			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>> { null, null, null, null, null, null, null, null, null, null };
-			staticKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(staticKeysAndValues, staticKeysHash, e);
-			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
-				staticKeysAndValues[ctr] = new ObservableCollection<string>();
+			if ((e.Action != NotifyCollectionChangedAction.Replace) || (e.NewStartingIndex != 0))
+				return;
+
+			hash.Clear();
+			for (var pos = 0; pos < data[0].Count; ++pos)
+				hash[data[0][pos]] = pos;
 		}
 
 		void SetupLocalKeys()
@@ -45,17 +48,15 @@ namespace NeoEdit.TextEdit
 
 		void SetupLocalOrGlobalKeys() => KeysAndValues = GlobalKeys ? staticKeysAndValues : localKeysAndValues;
 
-		static void keysAndValues_CollectionChanged(ObservableCollection<ObservableCollection<string>> data, Dictionary<string, int> hash, NotifyCollectionChangedEventArgs e)
+		static void SetupStaticKeys()
 		{
-			if ((e.Action != NotifyCollectionChangedAction.Replace) || (e.NewStartingIndex != 0))
-				return;
-
-			hash.Clear();
-			for (var pos = 0; pos < data[0].Count; ++pos)
-				hash[data[0][pos]] = pos;
+			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>> { null, null, null, null, null, null, null, null, null, null };
+			staticKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(staticKeysAndValues, staticKeysHash, e);
+			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
+				staticKeysAndValues[ctr] = new ObservableCollection<string>();
 		}
 
-		internal void Command_Keys_Set(int index)
+		void Command_Keys_Set(int index)
 		{
 			GlobalKeys = TabsParent.ActiveCount == 1;
 			// Handles keys as well as values
@@ -65,7 +66,7 @@ namespace NeoEdit.TextEdit
 			KeysAndValues[index] = new ObservableCollection<string>(values);
 		}
 
-		internal void Command_Keys_Add(int index)
+		void Command_Keys_Add(int index)
 		{
 			// Handles keys as well as values
 			var values = GetSelectionStrings();
@@ -75,7 +76,7 @@ namespace NeoEdit.TextEdit
 				KeysAndValues[index].Add(value);
 		}
 
-		internal void Command_Keys_Remove(int index)
+		void Command_Keys_Remove(int index)
 		{
 			// Handles keys as well as values
 			var values = GetSelectionStrings().Distinct().ToList();
@@ -83,7 +84,7 @@ namespace NeoEdit.TextEdit
 				KeysAndValues[index].Remove(value);
 		}
 
-		internal void Command_Keys_Replace(int index)
+		void Command_Keys_Replace(int index)
 		{
 			// Handles keys as well as values
 			if (KeysAndValues[0].Count != KeysAndValues[index].Count)
