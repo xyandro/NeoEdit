@@ -47,6 +47,19 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public static IEnumerable<TSource> Duplicate<TSource, TData>(this IEnumerable<TSource> source, Func<TSource, TData> selector)
+		{
+			var seen = new HashSet<TData>();
+			foreach (var item in source)
+			{
+				var data = selector(item);
+				if (seen.Contains(data))
+					yield return item;
+				else
+					seen.Add(data);
+			}
+		}
+
 		public static bool InOrder<TSource>(this IEnumerable<TSource> source, bool ascending = true, bool equal = false) where TSource : IComparable
 		{
 			var prev = default(TSource);
