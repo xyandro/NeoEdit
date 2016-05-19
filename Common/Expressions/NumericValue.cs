@@ -352,6 +352,9 @@ namespace NeoEdit.Common.Expressions
 			return new NumericValue(Math.Ceiling(number.GetFloat / multiple.GetFloat) * multiple.GetFloat, multiple.Units);
 		}
 
+		static ThreadSafeRandom random = new ThreadSafeRandom();
+		public static NumericValue Random(NumericValue minValue, NumericValue maxValue) => new NumericValue(random.Next((int)minValue.GetInteger, (int)maxValue.GetInteger + 1));
+
 		public static NumericValue FromWords(string words)
 		{
 			var ones = new List<string> { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", null, "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };

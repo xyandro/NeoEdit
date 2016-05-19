@@ -286,6 +286,7 @@ namespace NeoEdit.Common.Expressions
 				case "min": return paramList.SelectMany(param => GetList(param)).Select(param => GetNumeric(param)).Min();
 				case "multiple": return NumericValue.Multiple(GetNumeric(paramList[0]), GetNumeric(paramList[1]));
 				case "now": return new NumericValue(DateTimeOffset.Now.UtcTicks, "ticks");
+				case "random": return NumericValue.Random(GetNumeric(paramList[0]), GetNumeric(paramList[1]));
 				case "reciprocal": return GetNumeric(paramList[0]).Reciprocal();
 				case "reduce": return NumericValue.Reduce(GetNumeric(paramList[0]), GetNumeric(paramList[1]));
 				case "root": return GetNumeric(paramList[0]).Root(GetNumeric(paramList[1]));

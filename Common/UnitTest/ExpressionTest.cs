@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 
 namespace NeoEdit.Common.UnitTest
@@ -179,6 +181,9 @@ namespace NeoEdit.Common.UnitTest
 
 			Assert.AreEqual(true, new NEExpression("valideval(\"(5+2)\")").Evaluate());
 			Assert.AreEqual(false, new NEExpression("valideval(\"(5+)2\")").Evaluate());
+
+			var values = new NEExpression("random(2,10)").EvaluateRows<int>(null, 1000).Distinct().OrderBy().ToList();
+			Assert.IsTrue(values.Count == 9);
 
 			var miscVars = new NEVariables(
 				NEVariable.Constant("x", "", 0xdeadbeef),
