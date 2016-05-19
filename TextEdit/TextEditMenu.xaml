@@ -497,6 +497,7 @@
 		<textEdit:TextEditMenuItem Header="_Set Selections" CommandEnum="Region_SetSelections"/>
 		<textEdit:TextEditMenuItem Header="_Add Selections" CommandEnum="Region_AddSelections"/>
 		<textEdit:TextEditMenuItem Header="_Remove Selections" CommandEnum="Region_RemoveSelections"/>
+		<textEdit:TextEditMenuItem Header="Re_place Selections" CommandEnum="Region_ReplaceSelections"/>
 		<textEdit:TextEditMenuItem Header="_Limit To Selections" CommandEnum="Region_LimitToSelections"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Region_Clear"/>
