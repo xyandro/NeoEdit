@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Linq;
-using NeoEdit.Common;
+﻿using System.Linq;
 
 namespace NeoEdit.TextEdit
 {
@@ -10,19 +8,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Region_AddSelections() => Regions.AddRange(Selections);
 
-		void Command_Region_RemoveSelections()
-		{
-			if (!Selections.Any(range => range.HasSelection))
-				Regions.Clear();
-			else
-			{
-				foreach (var selection in Selections)
-				{
-					var toRemove = Regions.Where(region => (region.Start >= selection.Start) && (region.End <= selection.End)).ToList();
-					toRemove.ForEach(region => Regions.Remove(region));
-				}
-			}
-		}
+		void Command_Region_RemoveSelections() => Regions.Replace(Regions.Where(region => Selections.All(selection => (region.End <= selection.Start) || (region.Start >= selection.End))).ToList());
 
 		void Command_Region_LimitToSelections() => Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
 
