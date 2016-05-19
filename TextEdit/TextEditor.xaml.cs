@@ -713,6 +713,7 @@ namespace NeoEdit.TextEdit
 				results.Add(NEVariable.Constant("c", "Clipboard string", clipboard[0]));
 			else
 				results.Add(NEVariable.List("c", "Clipboard string", () => clipboard));
+			results.Add(NEVariable.Constant("cn", "Clipboard count", clipboard.Count));
 
 			results.Add(NEVariable.Constant("f", "Filename", fileName));
 
