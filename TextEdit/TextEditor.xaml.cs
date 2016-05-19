@@ -553,6 +553,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
 				case TextEditCommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(); break;
 				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(); break;
+				case TextEditCommand.Text_FirstDistinct: dialogResult = Command_Text_FirstDistinct_Dialog(); break;
 				case TextEditCommand.Numeric_ConvertBase: dialogResult = Command_Numeric_ConvertBase_Dialog(); break;
 				case TextEditCommand.Numeric_Series_Linear: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(true); break;
 				case TextEditCommand.Numeric_Series_Geometric: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(false); break;
@@ -902,7 +903,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_RandomText: Command_Text_RandomText(dialogResult as RandomDataDialog.Result); break;
 				case TextEditCommand.Text_LoremIpsum: Command_Text_LoremIpsum(); break;
 				case TextEditCommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(dialogResult as RevRegExDialog.Result); break;
-				case TextEditCommand.Text_FirstDistinct: Command_Text_FirstDistinct(); break;
+				case TextEditCommand.Text_FirstDistinct: Command_Text_FirstDistinct(dialogResult as FirstDistinctDialog.Result); break;
 				case TextEditCommand.Numeric_Select_Min: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Numeric); break;
 				case TextEditCommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.Numeric); break;
 				case TextEditCommand.Numeric_Select_Whole: Command_Numeric_Select_Whole(); break;

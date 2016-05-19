@@ -140,47 +140,69 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels);
 		}
 
-		void Command_Text_FirstDistinct()
+		FirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog() => FirstDistinctDialog.Run(WindowParent);
+
+		void Command_Text_FirstDistinct(FirstDistinctDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).ToList();
+			var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
+
 			var onChar = new int[strs.Count];
 			var current = 0;
 			onChar[0] = -1;
 			var best = default(int[]);
-			var bestCount = int.MaxValue;
+			var bestScore = int.MaxValue;
+			var used = new HashSet<char>();
+			var currentScore = 0;
+			var score = new int[strs.Count + 1];
+			var moveBack = false;
 
-			while (current >= 0)
+			while (true)
 			{
+				if (moveBack)
+				{
+					currentScore -= score[current];
+					score[current] = 0;
+					--current;
+					if (current < 0)
+						break;
+					used.Remove(strs[current][onChar[current]]);
+					moveBack = false;
+				}
+
 				++onChar[current];
-				if (onChar[current] >= strs[current].Length)
+				if ((onChar[current] >= strs[current].Length) || (currentScore - 1 >= bestScore))
 				{
-					--current;
+					moveBack = true;
 					continue;
 				}
 
-				if (onChar.Take(current + 1).Sum() >= bestCount)
-				{
-					--current;
+				var ch = strs[current][onChar[current]];
+				if (!valid.Contains(ch))
 					continue;
-				}
 
-				if (Enumerable.Range(0, current).Any(index => strs[index][onChar[index]] == strs[current][onChar[current]]))
+				++score[current];
+				++currentScore;
+
+				if (used.Contains(ch))
 					continue;
+
+				used.Add(ch);
 
 				++current;
 				if (current == strs.Count)
 				{
 					// Found combination!
-					var count = onChar.Sum();
-					if (count < bestCount)
+					if (currentScore < bestScore)
 					{
-						bestCount = count;
+						bestScore = currentScore;
 						best = onChar.ToArray();
 					}
-					--current;
+					moveBack = true;
+					continue;
 				}
-				else
-					onChar[current] = -1;
+
+				onChar[current] = -1;
 			}
 
 			if (best == null)
