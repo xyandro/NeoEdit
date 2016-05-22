@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,8 +70,11 @@ namespace NeoEdit.Common
 			return Type.GetTypeCode(type) == TypeCode.DateTime;
 		}
 
-		public static int CompareWithNumeric(this string x, string y, bool caseSensitive = true)
+		public static int SmartCompare(this string x, string y, bool caseSensitive = true)
 		{
+			if (x == y)
+				return 0;
+
 			var xPos = 0;
 			var yPos = 0;
 			var xLen = x.Length;
@@ -80,7 +84,7 @@ namespace NeoEdit.Common
 				int compare;
 				if ((char.IsDigit(x[xPos])) && (char.IsDigit(y[yPos])))
 				{
-					var xVal = default(long);
+					var xVal = default(BigInteger);
 					while (xPos < xLen)
 						if (char.IsDigit(x[xPos]))
 							xVal = xVal * 10 + (x[xPos++] - '0');
@@ -88,7 +92,7 @@ namespace NeoEdit.Common
 							xPos++;
 						else
 							break;
-					var yVal = default(long);
+					var yVal = default(BigInteger);
 					while (yPos < yLen)
 						if (char.IsDigit(y[yPos]))
 							yVal = yVal * 10 + (y[yPos++] - '0');
@@ -114,7 +118,7 @@ namespace NeoEdit.Common
 			return yLen.CompareTo(xLen);
 		}
 
-		public static Comparer<string> StringNumericComparer(bool caseSensitive = true) => Comparer<string>.Create((x, y) => x.CompareWithNumeric(y, caseSensitive));
+		public static Comparer<string> SmartComparer(bool caseSensitive = true) => Comparer<string>.Create((x, y) => x.SmartCompare(y, caseSensitive));
 
 		public static IEnumerable<T> GetValues<T>() => Enum.GetValues(typeof(T)).Cast<T>();
 

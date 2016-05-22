@@ -497,7 +497,7 @@ namespace NeoEdit.TextEdit
 			switch (type)
 			{
 				case FindMinMaxType.String: return FindMinMax(min, range => GetString(range), Comparer<string>.Default);
-				case FindMinMaxType.Numeric: return FindMinMax(min, range => GetString(range), Comparer<string>.Create((x, y) => x.CompareWithNumeric(y)));
+				case FindMinMaxType.Numeric: return FindMinMax(min, range => GetString(range), Comparer<string>.Create((x, y) => x.SmartCompare(y)));
 				case FindMinMaxType.Length: return FindMinMax(min, range => range.Length, Comparer<int>.Default);
 				default: throw new Exception("Invalid type");
 			}

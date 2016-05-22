@@ -302,7 +302,7 @@ namespace NeoEdit.TextEdit
 
 		public Table Sort(List<SortData> sortData)
 		{
-			var comparer = Helpers.StringNumericComparer();
+			var comparer = Helpers.SmartComparer();
 			var order = Enumerable.Range(0, Rows.Count).ToList();
 			var ordering = order.OrderBy(rowIndex => 0);
 			foreach (var data in sortData)

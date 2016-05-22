@@ -72,7 +72,7 @@ namespace NeoEdit.Common.NEClipboards
 			else
 				data.Strings.Add(data.Text);
 
-			var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.ToList();
+			var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.OrderBy(Helpers.SmartComparer(false)).ToList();
 			if ((dropList != null) && (dropList.Count != 0))
 			{
 				data.Strings = dropList;

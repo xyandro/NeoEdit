@@ -110,7 +110,7 @@ namespace NeoEdit.TextEdit
 
 			switch (type)
 			{
-				case SortType.Smart: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Helpers.StringNumericComparer(caseSensitive)).ToList(); break;
+				case SortType.Smart: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Helpers.SmartComparer(caseSensitive)).ToList(); break;
 				case SortType.String: entries = OrderByAscDesc(entries, entry => entry.value, ascending, stringComparer).ToList(); break;
 				case SortType.Length: entries = OrderByAscDesc(entries, entry => entry.value.Length, ascending).ToList(); break;
 				case SortType.Integer: entries = OrderByAscDesc(entries, entry => BigInteger.Parse(entry.value), ascending).ToList(); break;
