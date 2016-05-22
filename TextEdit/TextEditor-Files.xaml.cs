@@ -454,43 +454,52 @@ namespace NeoEdit.TextEdit
 
 		void Command_Files_Hash(HashDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Hasher.Get(file, result.HashType)).ToList());
 
-		void Command_Files_Operations_CopyMove(bool move)
-		{
-			var strs = Selections.Select(range => GetString(range).Split(new string[] { "=>" }, StringSplitOptions.None).Select(str => FileName.RelativeChild(str.Trim())).ToList()).ToList();
-			if (strs.Any(pair => (pair.Count != 2) || (pair.Any(item => string.IsNullOrEmpty(item)))))
-				throw new Exception("Format: Source => Destination");
+		CopyMoveFilesDialog.Result Command_Files_Operations_CopyMove_Dialog(bool move) => CopyMoveFilesDialog.Run(WindowParent, GetVariables(), move);
 
-			var files = strs.Select(pair => new { source = pair[0], dest = pair[1] }).Where(pair => pair.source != pair.dest).ToList();
-			if (files.Count == 0)
-				throw new Exception("Nothing to do!");
+		void Command_Files_Operations_CopyMove(CopyMoveFilesDialog.Result result, bool move)
+		{
+			var variables = GetVariables();
+
+			var oldFileNameExpression = new NEExpression(result.OldFileName);
+			var newFileNameExpression = new NEExpression(result.NewFileName);
+
+			var oldFileNameNameCount = variables.ResultCount(oldFileNameExpression.Variables);
+			var newFileNameCount = variables.ResultCount(newFileNameExpression.Variables);
+
+			var resultCount = oldFileNameNameCount ?? newFileNameCount ?? 1;
+			if (resultCount != (newFileNameCount ?? oldFileNameNameCount ?? 1))
+				throw new Exception("Result counts must match");
+
+			var oldFileNames = oldFileNameExpression.EvaluateRows<string>(variables, resultCount);
+			var newFileNames = newFileNameExpression.EvaluateRows<string>(variables, resultCount);
 
 			const int InvalidCount = 10;
-			var invalid = files.Select(pair => pair.source).Distinct().Where(file => !FileOrDirectoryExists(file)).Take(InvalidCount).ToList();
+			var invalid = oldFileNames.Distinct().Where(name => !FileOrDirectoryExists(name)).Take(InvalidCount).ToList();
 			if (invalid.Any())
 				throw new Exception($"Sources don't exist:\n{string.Join("\n", invalid)}");
 
-			invalid = files.Select(pair => Path.GetDirectoryName(pair.dest)).Distinct().Where(dir => !Directory.Exists(dir)).Take(InvalidCount).ToList();
+			invalid = newFileNames.Select(name => Path.GetDirectoryName(name)).Distinct().Where(dir => !Directory.Exists(dir)).Take(InvalidCount).ToList();
 			if (invalid.Any())
 				throw new Exception($"Directories don't exist:\n{string.Join("\n", invalid)}");
 
 			// If user specified a file and a directory, assume they want the file (with the same name) in that directory
-			files = files.Select(pair => new { source = pair.source, dest = (File.Exists(pair.source)) && (Directory.Exists(pair.dest)) ? Path.Combine(pair.dest, Path.GetFileName(pair.source)) : pair.dest }).ToList();
+			newFileNames = newFileNames.Zip(oldFileNames, (newFileName, oldFileName) => (File.Exists(oldFileName)) && (Directory.Exists(newFileName)) ? Path.Combine(newFileName, Path.GetFileName(oldFileName)) : newFileName).ToList();
 
-			invalid = files.Where(pair => (Directory.Exists(pair.dest)) || ((Directory.Exists(pair.source)) && (File.Exists(pair.dest)))).Select(pair => pair.dest).Distinct().Take(InvalidCount).ToList();
+			invalid = oldFileNames.Zip(newFileNames, (oldFileName, newFileName) => new { oldFileName, newFileName }).Where(obj => (Directory.Exists(obj.newFileName)) || ((Directory.Exists(obj.oldFileName)) && (File.Exists(obj.newFileName)))).Select(pair => pair.newFileName).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
 			if (new Message
 			{
 				Title = "Confirm",
-				Text = $"Are you sure you want to {(move ? "move" : "copy")} these {files.Count} files/directories?",
+				Text = $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?",
 				Options = Message.OptionsEnum.YesNo,
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 
-			invalid = files.Select(pair => pair.dest).Where(pair => File.Exists(pair)).Distinct().Take(InvalidCount).ToList();
+			invalid = newFileNames.Where(pair => File.Exists(pair)).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
 				if (new Message
@@ -504,23 +513,23 @@ namespace NeoEdit.TextEdit
 					return;
 			}
 
-			foreach (var pair in files)
-				if (Directory.Exists(pair.source))
+			for (var ctr = 0; ctr < oldFileNames.Count; ++ctr)
+				if (Directory.Exists(oldFileNames[ctr]))
 				{
 					if (move)
-						Directory.Move(pair.source, pair.dest);
+						Directory.Move(oldFileNames[ctr], newFileNames[ctr]);
 					else
-						CopyDirectory(pair.source, pair.dest);
+						CopyDirectory(oldFileNames[ctr], newFileNames[ctr]);
 				}
 				else
 				{
-					if (File.Exists(pair.dest))
-						File.Delete(pair.dest);
+					if (File.Exists(newFileNames[ctr]))
+						File.Delete(newFileNames[ctr]);
 
 					if (move)
-						File.Move(pair.source, pair.dest);
+						File.Move(oldFileNames[ctr], newFileNames[ctr]);
 					else
-						File.Copy(pair.source, pair.dest);
+						File.Copy(oldFileNames[ctr], newFileNames[ctr]);
 				}
 		}
 
