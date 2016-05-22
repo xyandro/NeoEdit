@@ -409,23 +409,19 @@ namespace NeoEdit.TextEdit
 		{
 			var variables = GetVariables();
 
-			var datas = new NEExpression(result.Data).EvaluateRows<string>(variables);
-			if (!datas.Any())
-				throw new Exception("No data");
+			var filenameExpression = new NEExpression(result.FileName);
+			var dataExpression = new NEExpression(result.Data);
 
-			var fileNames = new NEExpression(result.FileName).EvaluateRows<string>(variables, datas.Count);
-			if (!fileNames.Any())
-				throw new Exception("No filenames");
+			var filenameCount = variables.ResultCount(filenameExpression.Variables);
+			var dataCount = variables.ResultCount(dataExpression.Variables);
+			var resultCount = filenameCount ?? dataCount ?? 1;
+			if (resultCount != (dataCount ?? filenameCount ?? 1))
+				throw new Exception("Data and filename counts must match");
 
-			if (fileNames.Count != datas.Count)
-				throw new Exception("File name and data count must match.");
-
-			var outputs = fileNames.Zip(datas, (filename, data) => new { filename, data }).ToList();
-			foreach (var output in outputs)
-			{
-				var bytes = Coder.StringToBytes(output.data, result.CodePage, true);
-				File.WriteAllBytes(output.filename, bytes);
-			}
+			var filename = filenameExpression.EvaluateRows<string>(variables, resultCount);
+			var data = dataExpression.EvaluateRows<string>(variables, resultCount);
+			for (var ctr = 0; ctr < data.Count; ++ctr)
+				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
 		}
 
 		void Command_Files_Select_Name(GetPathType type) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());

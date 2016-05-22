@@ -31,6 +31,8 @@ If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
 Alt+Up in diff only selects half of diff
+Copy->Copy All Clipboards doesn't seem to work when some files have no selections
+View->Tabs with selections doesn't work when there are lots of tabs
 
 View:
 Update as new lines are added
