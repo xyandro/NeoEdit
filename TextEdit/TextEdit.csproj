@@ -136,6 +136,13 @@
     <Compile Include="Dialogs\CombinationsPermutationsDialog.xaml.cs">
       <DependentUpon>CombinationsPermutationsDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\CompressDataDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CompressDataDialog.xaml.cs">
+      <DependentUpon>CompressDataDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ConvertBaseDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -57,6 +57,8 @@ namespace NeoEdit.TextEdit
 		Edit_URL_Absolute,
 		Edit_Color,
 		Edit_Data_Hash,
+		Edit_Data_Compress,
+		Edit_Data_Decompress,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Sort,
 		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Convert,
 		[KeyGesture(Key.F2, ModifierKeys.Alt)] Edit_Bookmarks_Toggle,

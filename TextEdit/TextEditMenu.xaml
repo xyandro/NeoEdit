@@ -104,6 +104,8 @@
 		<Separator/>
 		<MenuItem Header="_Data">
 			<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
+			<textEdit:TextEditMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress"/>
+			<textEdit:TextEditMenuItem Header="_Decompress" CommandEnum="Edit_Data_Decompress"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>

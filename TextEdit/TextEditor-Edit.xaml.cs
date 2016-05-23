@@ -443,6 +443,28 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
+		CompressDataDialog.Result Command_Edit_Data_Compress_Dialog() => CompressDataDialog.Run(WindowParent, CodePage, true);
+
+		void Command_Edit_Data_Compress(CompressDataDialog.Result result)
+		{
+			var strs = GetSelectionStrings();
+			if (!VerifyCanFullyEncode(strs, result.InputCodePage))
+				return;
+
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Coder.BytesToString(Compressor.Compress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType), result.OutputCodePage)).ToList());
+		}
+
+		CompressDataDialog.Result Command_Edit_Data_Decompress_Dialog() => CompressDataDialog.Run(WindowParent, CodePage, false);
+
+		void Command_Edit_Data_Decompress(CompressDataDialog.Result result)
+		{
+			var strs = GetSelectionStrings();
+			if (!VerifyCanFullyEncode(strs, result.InputCodePage))
+				return;
+
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Coder.BytesToString(Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType), result.OutputCodePage)).ToList());
+		}
+
 		SortDialog.Result Command_Edit_Sort_Dialog() => SortDialog.Run(WindowParent);
 
 		void Command_Edit_Sort(SortDialog.Result result)
