@@ -6,7 +6,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	partial class HashTextDialog
+	partial class HashDataDialog
 	{
 		public class Result
 		{
@@ -16,15 +16,15 @@ namespace NeoEdit.GUI.Dialogs
 		}
 
 		[DepProp]
-		Coder.CodePage CodePage { get { return UIHelper<HashTextDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<HashTextDialog>.SetPropValue(this, value); } }
+		Coder.CodePage CodePage { get { return UIHelper<HashDataDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<HashDataDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		Hasher.Type HashType { get { return UIHelper<HashTextDialog>.GetPropValue<Hasher.Type>(this); } set { UIHelper<HashTextDialog>.SetPropValue(this, value); } }
+		Hasher.Type HashType { get { return UIHelper<HashDataDialog>.GetPropValue<Hasher.Type>(this); } set { UIHelper<HashDataDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		byte[] HMACKey { get { return UIHelper<HashTextDialog>.GetPropValue<byte[]>(this); } set { UIHelper<HashTextDialog>.SetPropValue(this, value); } }
+		byte[] HMACKey { get { return UIHelper<HashDataDialog>.GetPropValue<byte[]>(this); } set { UIHelper<HashDataDialog>.SetPropValue(this, value); } }
 
-		static HashTextDialog() { UIHelper<HashTextDialog>.Register(); }
+		static HashDataDialog() { UIHelper<HashDataDialog>.Register(); }
 
-		HashTextDialog(Coder.CodePage _codePage)
+		HashDataDialog(Coder.CodePage _codePage)
 		{
 			InitializeComponent();
 
@@ -46,7 +46,7 @@ namespace NeoEdit.GUI.Dialogs
 
 		public static Result Run(Window parent, Coder.CodePage codePage)
 		{
-			var dialog = new HashTextDialog(codePage) { Owner = parent };
+			var dialog = new HashDataDialog(codePage) { Owner = parent };
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}

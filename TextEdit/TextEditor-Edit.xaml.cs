@@ -432,9 +432,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Color(ChooseColorDialog.Result result) => ReplaceSelections(result.Color);
 
-		HashTextDialog.Result Command_Edit_Hash_Dialog() => HashTextDialog.Run(WindowParent, CodePage);
+		HashDataDialog.Result Command_Edit_Data_Hash_Dialog() => HashDataDialog.Run(WindowParent, CodePage);
 
-		void Command_Edit_Hash(HashTextDialog.Result result)
+		void Command_Edit_Data_Hash(HashDataDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!VerifyCanFullyEncode(strs, result.CodePage))

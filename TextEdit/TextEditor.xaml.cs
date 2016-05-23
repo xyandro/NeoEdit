@@ -530,7 +530,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
 				case TextEditCommand.Edit_Color: dialogResult = Command_Edit_Color_Dialog(); break;
-				case TextEditCommand.Edit_Hash: dialogResult = Command_Edit_Hash_Dialog(); break;
+				case TextEditCommand.Edit_Data_Hash: dialogResult = Command_Edit_Data_Hash_Dialog(); break;
 				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
 				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
 				case TextEditCommand.Files_Names_MakeAbsolute: dialogResult = Command_Files_Names_MakeAbsolute_Dialog(); break;
@@ -821,7 +821,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(); break;
 				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as MakeAbsoluteDialog.Result); break;
 				case TextEditCommand.Edit_Color: Command_Edit_Color(dialogResult as ChooseColorDialog.Result); break;
-				case TextEditCommand.Edit_Hash: Command_Edit_Hash(dialogResult as HashTextDialog.Result); break;
+				case TextEditCommand.Edit_Data_Hash: Command_Edit_Data_Hash(dialogResult as HashDataDialog.Result); break;
 				case TextEditCommand.Edit_Sort: Command_Edit_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Edit_Convert: Command_Edit_Convert(dialogResult as ConvertDialog.Result); break;
 				case TextEditCommand.Edit_Bookmarks_Toggle: Command_Edit_Bookmarks_Toggle(); break;

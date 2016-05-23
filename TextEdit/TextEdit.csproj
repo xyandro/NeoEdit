@@ -269,12 +269,12 @@
     <Compile Include="Dialogs\GotoDialog.xaml.cs">
       <DependentUpon>GotoDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\HashTextDialog.xaml">
+    <Page Include="Dialogs\HashDataDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\HashTextDialog.xaml.cs">
-      <DependentUpon>HashTextDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\HashDataDialog.xaml.cs">
+      <DependentUpon>HashDataDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\InsertFilesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

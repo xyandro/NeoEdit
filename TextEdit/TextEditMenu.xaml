@@ -81,7 +81,7 @@
 			<textEdit:TextEditMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Copy _Down" CommandEnum="Edit_CopyDown"/>
+		<textEdit:TextEditMenuItem Header="Copy Do_wn" CommandEnum="Edit_CopyDown"/>
 		<textEdit:TextEditMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
@@ -102,7 +102,9 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="C_olor" CommandEnum="Edit_Color"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Edit_Hash"/>
+		<MenuItem Header="_Data">
+			<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
+		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
 		<Separator/>
