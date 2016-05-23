@@ -187,7 +187,8 @@ namespace NeoEdit.Common
 		}
 
 		public static IEnumerable<TSource> Null<TSource>(this IEnumerable<TSource> source) => source.Where(item => item == null);
-		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource> source) => source.Where(item => item != null);
+		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource> source) where TSource : class => source.Where(item => item != null);
+		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<Nullable<TSource>> source) where TSource : struct => source.Where(item => item.HasValue).Select(item => item.Value);
 
 		public static IEnumerable<string> NullOrEmpty(this IEnumerable<string> source) => source.Where(str => string.IsNullOrEmpty(str));
 		public static IEnumerable<string> NullOrWhiteSpace(this IEnumerable<string> source) => source.Where(str => string.IsNullOrWhiteSpace(str));

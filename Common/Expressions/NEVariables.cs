@@ -34,7 +34,17 @@ namespace NeoEdit.Common.Expressions
 
 		public List<object> GetValues(string variable, int rowCount) => Enumerable.Range(0, rowCount).Select(row => GetVariable(variable).GetValue(row)).ToList();
 
-		public int? ResultCount(HashSet<string> variables) => variables.Min(variable => GetVariable(variable).Count());
+		public int ResultCount(params IEnumerable<string>[] variableLists)
+		{
+			var mins = variableLists.Select(list => list.Min(variable => GetVariable(variable).Count())).NonNull().Distinct().ToList();
+			if (!mins.Any())
+				return 1;
+			if (mins.Count > 1)
+				throw new Exception("Expressions must have the same numbers of results");
+			return mins.Single();
+		}
+
+		public int ResultCount(params NEExpression[] expressions) => ResultCount(expressions.Select(expression => expression.Variables).ToArray());
 
 		//Class implements ienumerable so it can be the source of the variable help dialog
 		public IEnumerator<NEVariable> GetEnumerator() => varDict.Values.GetEnumerator();

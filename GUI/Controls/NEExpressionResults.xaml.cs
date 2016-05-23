@@ -66,7 +66,7 @@ namespace NeoEdit.GUI.Controls
 			base.MeasureOverride(constraint);
 			try
 			{
-				var resultCount = MultiRow ? Math.Min(NumResults ?? Variables.ResultCount(new NEExpression(Expression).Variables) ?? 1, MaxResults) + 1 : 1;
+				var resultCount = MultiRow ? Math.Min(NumResults ?? Variables.ResultCount(new NEExpression(Expression)), MaxResults) + 1 : 1;
 				return new Size(0, resultCount * RowHeight + Spacing * 2);
 			}
 			catch { return RenderSize; }
@@ -129,7 +129,7 @@ namespace NeoEdit.GUI.Controls
 			{
 				var expression = new NEExpression(Expression);
 				variables = new List<string>(expression.Variables);
-				var resultCount = Math.Min(NumResults ?? Variables.ResultCount(expression.Variables) ?? 1, useResults);
+				var resultCount = Math.Min(NumResults ?? Variables.ResultCount(expression), useResults);
 				results = expression.EvaluateRows<string>(Variables, resultCount).Coalesce("").ToList();
 				varValues = variables.ToDictionary(variable => variable, variable => Variables.GetValues(variable, resultCount).Select(val => val?.ToString()).ToList());
 				IsValid = true;

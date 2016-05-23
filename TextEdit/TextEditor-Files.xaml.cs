@@ -411,12 +411,7 @@ namespace NeoEdit.TextEdit
 
 			var filenameExpression = new NEExpression(result.FileName);
 			var dataExpression = new NEExpression(result.Data);
-
-			var filenameCount = variables.ResultCount(filenameExpression.Variables);
-			var dataCount = variables.ResultCount(dataExpression.Variables);
-			var resultCount = filenameCount ?? dataCount ?? 1;
-			if (resultCount != (dataCount ?? filenameCount ?? 1))
-				throw new Exception("Data and filename counts must match");
+			var resultCount = variables.ResultCount(filenameExpression, dataExpression);
 
 			var filename = filenameExpression.EvaluateRows<string>(variables, resultCount);
 			var data = dataExpression.EvaluateRows<string>(variables, resultCount);
@@ -462,13 +457,7 @@ namespace NeoEdit.TextEdit
 
 			var oldFileNameExpression = new NEExpression(result.OldFileName);
 			var newFileNameExpression = new NEExpression(result.NewFileName);
-
-			var oldFileNameNameCount = variables.ResultCount(oldFileNameExpression.Variables);
-			var newFileNameCount = variables.ResultCount(newFileNameExpression.Variables);
-
-			var resultCount = oldFileNameNameCount ?? newFileNameCount ?? 1;
-			if (resultCount != (newFileNameCount ?? oldFileNameNameCount ?? 1))
-				throw new Exception("Result counts must match");
+			var resultCount = variables.ResultCount(oldFileNameExpression, newFileNameExpression);
 
 			var oldFileNames = oldFileNameExpression.EvaluateRows<string>(variables, resultCount);
 			var newFileNames = newFileNameExpression.EvaluateRows<string>(variables, resultCount);

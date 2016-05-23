@@ -46,7 +46,7 @@ namespace NeoEdit.Common.Expressions
 			{
 				if (rowCount < 0)
 					throw new ArgumentException($"{nameof(rowCount)} must be positive");
-				var count = rowCount ?? variables.ResultCount(Variables) ?? 1;
+				var count = rowCount ?? variables.ResultCount(Variables);
 				Func<int, T> action = row => ChangeType<T>(InternalEvaluate(variables, row, values));
 				if (count == 1)
 					return new List<T> { action(0) };
