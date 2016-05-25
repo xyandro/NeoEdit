@@ -311,6 +311,13 @@
     <Compile Include="Dialogs\LimitDialog.xaml.cs">
       <DependentUpon>LimitDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\LineEndingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\LineEndingsDialog.xaml.cs">
+      <DependentUpon>LineEndingsDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\MacroRepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -53,6 +53,7 @@
 		<MenuItem Header="_Encoding">
 			<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding_Encoding"/>
 			<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_Encoding_ReopenWithEncoding"/>
+			<textEdit:TextEditMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>

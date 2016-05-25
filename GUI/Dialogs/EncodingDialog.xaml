@@ -13,7 +13,6 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -25,10 +24,7 @@
 		<Label Grid.Row="1" Grid.Column="1" Content="{Binding DetectedStr, ElementName=self}"/>
 		<Button Grid.Row="1" Grid.Column="2" Name="setDetected" Content="_Set" Click="SetDetected" Padding="10,0" VerticalAlignment="Center"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_Line Endings:" Target="{Binding ElementName=lineEndings}" HorizontalAlignment="Right"/>
-		<ComboBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Name="lineEndings" SelectedValue="{Binding LineEndings, ElementName=self}"/>
-
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

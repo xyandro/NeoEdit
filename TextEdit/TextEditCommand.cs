@@ -31,6 +31,7 @@ namespace NeoEdit.TextEdit
 		File_Copy_Count,
 		File_Encoding_Encoding,
 		File_Encoding_ReopenWithEncoding,
+		File_Encoding_LineEndings,
 		File_Encryption,
 		File_Exit,
 		[KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,

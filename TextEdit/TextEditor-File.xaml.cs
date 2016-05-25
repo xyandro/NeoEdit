@@ -9,6 +9,7 @@ using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
@@ -227,27 +228,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_File_Copy_Count() => SetClipboardText(Selections.Count.ToString());
 
-		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage, lineEndings: LineEnding ?? "");
+		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
 
-		void Command_File_Encoding_Encoding(EncodingDialog.Result result)
-		{
-			CodePage = result.CodePage;
-
-			if (result.LineEndings != "")
-			{
-				var lines = Data.NumLines;
-				var sel = new List<Range>();
-				for (var line = 0; line < lines; ++line)
-				{
-					var current = Data.GetEnding(line);
-					if ((current.Length == 0) || (current == result.LineEndings))
-						continue;
-					var start = Data.GetOffset(line, Data.GetLineLength(line));
-					sel.Add(Range.FromIndex(start, current.Length));
-				}
-				Replace(sel, sel.Select(str => result.LineEndings).ToList());
-			}
-		}
+		void Command_File_Encoding_Encoding(EncodingDialog.Result result) => CodePage = result.CodePage;
 
 		EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
 
@@ -267,6 +250,23 @@ namespace NeoEdit.TextEdit
 			}
 
 			OpenFile(FileName, codePage: result.CodePage);
+		}
+
+		LineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog() => LineEndingsDialog.Run(WindowParent, LineEnding ?? "");
+
+		void Command_File_Encoding_LineEndings(LineEndingsDialog.Result result)
+		{
+			var lines = Data.NumLines;
+			var sel = new List<Range>();
+			for (var line = 0; line < lines; ++line)
+			{
+				var current = Data.GetEnding(line);
+				if ((current.Length == 0) || (current == result.LineEndings))
+					continue;
+				var start = Data.GetOffset(line, Data.GetLineLength(line));
+				sel.Add(Range.FromIndex(start, current.Length));
+			}
+			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
 		string Command_File_Encryption_Dialog() => FileEncryptor.GetKey(WindowParent);

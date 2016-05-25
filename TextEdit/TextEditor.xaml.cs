@@ -522,6 +522,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
+				case TextEditCommand.File_Encoding_LineEndings: dialogResult = Command_File_Encoding_LineEndings_Dialog(); break;
 				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
 				case TextEditCommand.Edit_Find_MassFind: dialogResult = Command_Edit_Find_MassFind_Dialog(); break;
@@ -801,6 +802,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Copy_Count: Command_File_Copy_Count(); break;
 				case TextEditCommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.File_Encoding_LineEndings: Command_File_Encoding_LineEndings(dialogResult as LineEndingsDialog.Result); break;
 				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
 				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
