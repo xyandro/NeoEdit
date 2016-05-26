@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.NEClipboards;
@@ -221,6 +222,7 @@ namespace NeoEdit.TextEdit
 		DragType doDrag = DragType.None;
 		CacheValue modifiedChecksum = new CacheValue();
 		PreviousStruct previous = null;
+		FileSystemWatcher watcher = null;
 
 		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int? line = null, int? column = null)
 		{
@@ -1753,7 +1755,11 @@ namespace NeoEdit.TextEdit
 			{
 				try
 				{
+					if (watcher != null)
+						watcher.EnableRaisingEvents = false;
 					File.WriteAllBytes(fileName, FileEncryptor.Encrypt(Data.GetBytes(CodePage), AESKey));
+					if (watcher != null)
+						watcher.EnableRaisingEvents = true;
 					break;
 				}
 				catch (UnauthorizedAccessException)
@@ -1816,10 +1822,39 @@ namespace NeoEdit.TextEdit
 			if (FileName == fileName)
 				return;
 
+			if (watcher != null)
+			{
+				watcher.Dispose();
+				watcher = null;
+			}
+
 			FileName = fileName;
 			ContentType = Parser.GetParserType(FileName);
 			HighlightType = Highlighting.Get(FileName);
 			DisplayName = null;
+
+			if (File.Exists(FileName))
+			{
+				watcher = new FileSystemWatcher
+				{
+					Path = Path.GetDirectoryName(FileName),
+					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime,
+					Filter = Path.GetFileName(FileName),
+				};
+				watcher.Changed += (s1, e1) =>
+				{
+					watcher.EnableRaisingEvents = false;
+					var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, Dispatcher);
+					timer.Tick += (s2, e2) =>
+					{
+						timer.Stop();
+						Command_File_Refresh();
+						watcher.EnableRaisingEvents = true;
+					};
+					timer.Start();
+				};
+				watcher.EnableRaisingEvents = true;
+			}
 		}
 
 		void SetModifiedFlag(bool? newValue = null)

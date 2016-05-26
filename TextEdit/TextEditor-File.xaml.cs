@@ -149,6 +149,7 @@ namespace NeoEdit.TextEdit
 					Options = Message.OptionsEnum.YesNo,
 					DefaultAccept = Message.OptionsEnum.Yes,
 					DefaultCancel = Message.OptionsEnum.No,
+					Owner = WindowParent,
 				}.Show() == Message.OptionsEnum.Yes)
 					Command_File_Revert();
 			}

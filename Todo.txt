@@ -33,6 +33,7 @@ Convert to columns based on text position (for non-delimited tables)
 Alt+Up in diff only selects half of diff
 Copy->Copy All Clipboards doesn't seem to work when some files have no selections
 View->Tabs with selections doesn't work when there are lots of tabs
+Add ability to wait until program close (since inline diff tools wait for the program to exit; could remove -multi flag and share a diff window)
 
 View:
 Update as new lines are added
