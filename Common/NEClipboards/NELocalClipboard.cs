@@ -47,11 +47,11 @@ namespace NeoEdit.Common.NEClipboards
 				data.SetSystem();
 		}
 
-		public void SetText(string text, bool global = true) => Save(this, ClipboardData.CreateText(text), global);
-		public void SetStrings(IEnumerable<string> strings, bool global = true) => Save(this, ClipboardData.CreateStrings(strings), global);
-		public void SetFile(string fileName, bool isCut, bool global = true) => Save(this, ClipboardData.CreateFile(fileName, isCut), global);
-		public void SetFiles(IEnumerable<string> fileNames, bool isCut, bool global = true) => Save(this, ClipboardData.CreateFiles(fileNames, isCut), global);
-		public void SetObjects(IEnumerable<object> objects, string text = null, bool global = true) => Save(this, ClipboardData.CreateObjects(objects, text), global);
+		public void SetText(string text, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateText(text), global, setClipboard);
+		public void SetStrings(IEnumerable<string> strings, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateStrings(strings), global, setClipboard);
+		public void SetFile(string fileName, bool isCut, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateFile(fileName, isCut), global, setClipboard);
+		public void SetFiles(IEnumerable<string> fileNames, bool isCut, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateFiles(fileNames, isCut), global, setClipboard);
+		public void SetObjects(IEnumerable<object> objects, string text = null, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateObjects(objects, text), global, setClipboard);
 
 		public string Text => localClipboard.Text;
 		public List<string> Strings => localClipboard.Strings;

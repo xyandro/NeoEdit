@@ -1809,13 +1809,13 @@ namespace NeoEdit.TextEdit
 
 		void SetClipboardCount() => ClipboardCount = clipboard.Strings.Count;
 
-		void SetClipboardFile(string fileName, bool isCut = false) => clipboard.SetFile(fileName, isCut, TabsParent.ActiveCount == 1);
+		void SetClipboardFile(string fileName, bool isCut = false) => clipboard.SetFile(fileName, isCut, TabsParent.ActiveCount == 1, TabsParent.TopMost == this);
 
-		void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => clipboard.SetFiles(fileNames, isCut, TabsParent.ActiveCount == 1);
+		void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => clipboard.SetFiles(fileNames, isCut, TabsParent.ActiveCount == 1, TabsParent.TopMost == this);
 
-		void SetClipboardStrings(IEnumerable<string> strs) => clipboard.SetStrings(strs, TabsParent.ActiveCount == 1);
+		void SetClipboardStrings(IEnumerable<string> strs) => clipboard.SetStrings(strs, TabsParent.ActiveCount == 1, TabsParent.TopMost == this);
 
-		void SetClipboardText(string text) => clipboard.SetText(text, TabsParent.ActiveCount == 1);
+		void SetClipboardText(string text) => clipboard.SetText(text, TabsParent.ActiveCount == 1, TabsParent.TopMost == this);
 
 		void SetFileName(string fileName)
 		{
