@@ -254,15 +254,15 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return FindDialog.Run(WindowParent, text, selectionOnly, GetVariables());
+			return FindDialog.Run(WindowParent, text, selectionOnly);
 		}
 
 		void Command_Edit_Find_Find(bool selecting, FindDialog.Result result)
 		{
-			var texts = result.IsExpression ? GetVariableExpressionResults<string>(result.Text).OrderByDescending(str => str.Length).ToList() : new List<string> { result.Text };
+			var text = result.Text;
 			if (!result.IsRegex)
-				texts = texts.Select(value => Regex.Escape(value)).ToList();
-			var text = $"(?:{string.Join("|", texts.Select(value => $"(?:{value})"))})";
+				text = Regex.Escape(text);
+			text = $"(?:{text})";
 			if (result.WholeWords)
 				text = $"\\b{text}\\b";
 			if (result.EntireSelection)

@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 
@@ -15,7 +14,6 @@ namespace NeoEdit.TextEdit.Dialogs
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
 			public bool MultiLine { get; set; }
-			public bool IsExpression { get; set; }
 			public bool IsRegex { get; set; }
 			public bool RegexGroups { get; set; }
 			public bool SelectionOnly { get; set; }
@@ -32,8 +30,6 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsExpression { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } set { UIHelper<FindDialog>.SetPropValue(this, value); } }
-		[DepProp]
 		public bool IsRegex { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool RegexGroups { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } set { UIHelper<FindDialog>.SetPropValue(this, value); } }
@@ -47,10 +43,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		public bool RemoveMatching { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool MultiLine { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } set { UIHelper<FindDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public NEVariables Variables { get { return UIHelper<FindDialog>.GetPropValue<NEVariables>(this); } set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 
-		static bool wholeWordsVal, matchCaseVal, multiLineVal, isExpressionVal, isRegexVal, regexGroupsVal, entireSelectionVal, keepMatchingVal, removeMatchingVal;
+		static bool wholeWordsVal, matchCaseVal, multiLineVal, isRegexVal, regexGroupsVal, entireSelectionVal, keepMatchingVal, removeMatchingVal;
 
 		static FindDialog()
 		{
@@ -63,7 +57,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<FindDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
 		}
 
-		FindDialog(string text, bool selectionOnly, NEVariables variables)
+		FindDialog(string text, bool selectionOnly)
 		{
 			InitializeComponent();
 
@@ -71,14 +65,12 @@ namespace NeoEdit.TextEdit.Dialogs
 			WholeWords = wholeWordsVal;
 			MatchCase = matchCaseVal;
 			MultiLine = multiLineVal;
-			IsExpression = isExpressionVal;
 			IsRegex = isRegexVal;
 			RegexGroups = regexGroupsVal;
 			EntireSelection = entireSelectionVal;
 			KeepMatching = keepMatchingVal;
 			RemoveMatching = removeMatchingVal;
 			SelectionOnly = selectionOnly;
-			Variables = variables;
 		}
 
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
@@ -90,12 +82,11 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsExpression = IsExpression, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, MultiLine = MultiLine, All = sender == selectAll };
+			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, MultiLine = MultiLine, All = sender == selectAll };
 
 			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
 			multiLineVal = MultiLine;
-			isExpressionVal = IsExpression;
 			isRegexVal = IsRegex;
 			regexGroupsVal = RegexGroups;
 			entireSelectionVal = EntireSelection;
@@ -109,11 +100,11 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = MultiLine = IsExpression = IsRegex = RegexGroups = EntireSelection = KeepMatching = RemoveMatching = false;
+		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = MultiLine = IsRegex = RegexGroups = EntireSelection = KeepMatching = RemoveMatching = false;
 
-		static public Result Run(Window parent, string text, bool selectionOnly, NEVariables variables)
+		static public Result Run(Window parent, string text, bool selectionOnly)
 		{
-			var dialog = new FindDialog(text, selectionOnly, variables) { Owner = parent };
+			var dialog = new FindDialog(text, selectionOnly) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
