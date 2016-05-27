@@ -28,6 +28,14 @@ namespace NeoEdit.GUI.Controls
 		public bool MultiRow { get { return UIHelper<NEExpressionResults>.GetPropValue<bool>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 		[DepProp]
 		public string ErrorMessage { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
+		[DepProp]
+		public string CountExpression1 { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
+		[DepProp]
+		public string CountExpression2 { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
+		[DepProp]
+		public string CountExpression3 { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
+		[DepProp]
+		public string CountExpression4 { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 
 		static readonly double RowHeight;
 
@@ -39,6 +47,10 @@ namespace NeoEdit.GUI.Controls
 			UIHelper<NEExpressionResults>.AddCallback(a => a.NumResults, (obj, o, n) => obj.Invalidate());
 			UIHelper<NEExpressionResults>.AddCallback(a => a.MaxResults, (obj, o, n) => obj.Invalidate());
 			UIHelper<NEExpressionResults>.AddCallback(a => a.MultiRow, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression1, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression2, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression3, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression4, (obj, o, n) => obj.Invalidate());
 			RowHeight = CalcRowHeight();
 		}
 
@@ -61,12 +73,14 @@ namespace NeoEdit.GUI.Controls
 			UpdateChildren();
 		}
 
+		int ResultCount => Variables.ResultCount(new List<string> { Expression, CountExpression1, CountExpression2, CountExpression3, CountExpression4 }.NonNullOrWhiteSpace().Select(expr => new NEExpression(expr)).ToArray());
+
 		protected override Size MeasureOverride(Size constraint)
 		{
 			base.MeasureOverride(constraint);
 			try
 			{
-				var resultCount = MultiRow ? Math.Min(NumResults ?? Variables.ResultCount(new NEExpression(Expression)), MaxResults) + 1 : 1;
+				var resultCount = MultiRow ? Math.Min(NumResults ?? ResultCount, MaxResults) + 1 : 1;
 				return new Size(0, resultCount * RowHeight + Spacing * 2);
 			}
 			catch { return RenderSize; }
@@ -129,7 +143,7 @@ namespace NeoEdit.GUI.Controls
 			{
 				var expression = new NEExpression(Expression);
 				variables = new List<string>(expression.Variables);
-				var resultCount = Math.Min(NumResults ?? Variables.ResultCount(expression), useResults);
+				var resultCount = Math.Min(NumResults ?? ResultCount, useResults);
 				results = expression.EvaluateRows<string>(Variables, resultCount).Coalesce("").ToList();
 				varValues = variables.ToDictionary(variable => variable, variable => Variables.GetValues(variable, resultCount).Select(val => val?.ToString()).ToList());
 				IsValid = true;
