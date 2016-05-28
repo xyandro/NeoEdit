@@ -27,11 +27,6 @@
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
-			<Button Content="_Numeric" Padding="10,1" Click="NumericClick"/>
-			<Button Content="S_tring" Padding="10,1" Click="StringClick"/>
-		</UniformGrid>
-
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>

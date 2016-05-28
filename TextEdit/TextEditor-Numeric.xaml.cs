@@ -18,6 +18,22 @@ namespace NeoEdit.TextEdit
 			return (intPart + (val - intPart != 0m ? 1 : 0)) * interval;
 		}
 
+		string TrimNumeric(string number)
+		{
+			var whole = number;
+			var fraction = "";
+			var point = number.IndexOf('.');
+			if (point != -1)
+			{
+				whole = number.Substring(0, point);
+				fraction = number.Substring(point);
+			}
+			number = whole.TrimStart('0', ' ', '\r', '\n', '\t').TrimEnd(' ', '\r', '\n', '\t') + fraction.TrimEnd('0', '.', ' ', '\r', '\n', '\t');
+			if (number.Length == 0)
+				number = "0";
+			return number;
+		}
+
 		private string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
 		{
 			BigInteger value = 0;
@@ -157,6 +173,8 @@ namespace NeoEdit.TextEdit
 		FloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
 
 		void Command_Numeric_Round(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(decimal.Parse(GetString(range)) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
+
+		void Command_Numeric_Trim() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => TrimNumeric(GetString(range))).ToList());
 
 		void Command_Numeric_Factor() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Factor(BigInteger.Parse(GetString(range)))).ToList());
 

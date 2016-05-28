@@ -935,6 +935,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
+				case TextEditCommand.Numeric_Trim: Command_Numeric_Trim(); break;
 				case TextEditCommand.Numeric_Factor: Command_Numeric_Factor(); break;
 				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;

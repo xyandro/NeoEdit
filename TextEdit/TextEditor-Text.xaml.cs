@@ -91,11 +91,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, results[index])).ToList());
 		}
 
-		TrimDialog.Result Command_Text_Trim_Dialog()
-		{
-			var numeric = Selections.AsParallel().All(range => GetString(range).IsNumeric());
-			return TrimDialog.Run(WindowParent, numeric);
-		}
+		TrimDialog.Result Command_Text_Trim_Dialog() => TrimDialog.Run(WindowParent);
 
 		void Command_Text_Trim(TrimDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(GetString(str), result)).ToList());
 
