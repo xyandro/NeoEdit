@@ -566,8 +566,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Series_Geometric: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(false); break;
 				case TextEditCommand.Numeric_Scale: dialogResult = Command_Numeric_Scale_Dialog(); break;
 				case TextEditCommand.Numeric_Floor: dialogResult = Command_Numeric_Floor_Dialog(); break;
-				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
 				case TextEditCommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(); break;
+				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
 				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(); break;
 				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
@@ -933,8 +933,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;
 				case TextEditCommand.Numeric_Fraction: Command_Numeric_Fraction(); break;
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;
-				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as FloorRoundCeilingDialog.Result); break;
+				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Factor: Command_Numeric_Factor(); break;
 				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
 				case TextEditCommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(dialogResult as CombinationsPermutationsDialog.Result); break;

@@ -150,13 +150,13 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Floor(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Floor(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
 
-		FloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
-
-		void Command_Numeric_Round(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(decimal.Parse(GetString(range)) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
-
 		FloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
 
 		void Command_Numeric_Ceiling(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Ceiling(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
+
+		FloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
+
+		void Command_Numeric_Round(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(decimal.Parse(GetString(range)) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
 
 		void Command_Numeric_Factor() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Factor(BigInteger.Parse(GetString(range)))).ToList());
 
