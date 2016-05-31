@@ -227,6 +227,8 @@ namespace NeoEdit.TextEdit
 
 		void Command_File_Copy_Name() => SetClipboardText(Path.GetFileName(FileName));
 
+		void Command_File_Copy_DisplayName() => SetClipboardText(DisplayName ?? Path.GetFileName(FileName));
+
 		void Command_File_Copy_Count() => SetClipboardText(Selections.Count.ToString());
 
 		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);

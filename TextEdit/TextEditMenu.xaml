@@ -46,6 +46,7 @@
 		<MenuItem Header="_Copy">
 			<textEdit:TextEditMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
 			<textEdit:TextEditMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
+			<textEdit:TextEditMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName"/>
 			<textEdit:TextEditMenuItem Header="_All Paths" CommandEnum="File_Copy_AllPaths"/>
 			<textEdit:TextEditMenuItem Header="_Count" CommandEnum="File_Copy_Count"/>
 		</MenuItem>

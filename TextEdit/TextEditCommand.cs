@@ -27,6 +27,7 @@ namespace NeoEdit.TextEdit
 		File_Insert_Selected,
 		File_Copy_Path,
 		File_Copy_Name,
+		File_Copy_DisplayName,
 		File_Copy_AllPaths,
 		File_Copy_Count,
 		File_Encoding_Encoding,
