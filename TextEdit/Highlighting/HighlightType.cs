@@ -5,5 +5,6 @@
 		None,
 		CSharp,
 		CPlusPlus,
+		Markup,
 	}
 }

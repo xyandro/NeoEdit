@@ -16,6 +16,13 @@ namespace NeoEdit.TextEdit.Highlighting
 				case ".cs": return HighlightType.CSharp;
 				case ".c":
 				case ".cpp": return HighlightType.CPlusPlus;
+				case ".htm":
+				case ".html":
+				case ".csproj":
+				case ".vbproj":
+				case ".vcxproj":
+				case ".xml":
+				case ".xaml": return HighlightType.Markup;
 				default: return HighlightType.None;
 			}
 		}
@@ -27,6 +34,7 @@ namespace NeoEdit.TextEdit.Highlighting
 				case HighlightType.None: return new HighlightNone();
 				case HighlightType.CSharp: return new HighlightCSharp();
 				case HighlightType.CPlusPlus: return new HighlightCPlusPlus();
+				case HighlightType.Markup: return new HighlightMarkup();
 			}
 			return null;
 		}

@@ -1090,6 +1090,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.View_Highlighting_None: Command_View_Highlighting(HighlightType.None); break;
 				case TextEditCommand.View_Highlighting_CSharp: Command_View_Highlighting(HighlightType.CSharp); break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: Command_View_Highlighting(HighlightType.CPlusPlus); break;
+				case TextEditCommand.View_Highlighting_Markup: Command_View_Highlighting(HighlightType.Markup); break;
 				case TextEditCommand.Macro_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}

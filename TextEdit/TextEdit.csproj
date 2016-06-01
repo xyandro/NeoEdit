@@ -490,6 +490,7 @@
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
     <Compile Include="Highlighting\HighlightCSharp.cs" />
+    <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightNone.cs" />
     <Compile Include="Highlighting\HighlightType.cs" />
     <Compile Include="LoremGenerator.cs" />
