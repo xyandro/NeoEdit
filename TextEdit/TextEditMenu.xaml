@@ -5,7 +5,8 @@
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	xmlns:system="clr-namespace:System;assembly=mscorlib"
-	xmlns:textEdit="clr-namespace:NeoEdit.TextEdit">
+	xmlns:textEdit="clr-namespace:NeoEdit.TextEdit"
+	xmlns:textEditHighlighting="clr-namespace:NeoEdit.TextEdit.Highlighting">
 
 	<Menu.Resources>
 		<system:Boolean x:Key="True">True</system:Boolean>
@@ -517,9 +518,9 @@
 	</MenuItem>
 	<MenuItem Header="_View">
 		<MenuItem Header="_Highlighting">
-			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEdit:Highlighting+HighlightingType.None}" CommandEnum="View_Highlighting_None"/>
-			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEdit:Highlighting+HighlightingType.CSharp}" CommandEnum="View_Highlighting_CSharp"/>
-			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEdit:Highlighting+HighlightingType.CPlusPlus}" CommandEnum="View_Highlighting_CPlusPlus"/>
+			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEditHighlighting:HighlightType.None}" CommandEnum="View_Highlighting_None"/>
+			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEditHighlighting:HighlightType.CSharp}" CommandEnum="View_Highlighting_CSharp"/>
+			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEditHighlighting:HighlightType.CPlusPlus}" CommandEnum="View_Highlighting_CPlusPlus"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Full&quot;'}" CommandEnum="View_Full"/>

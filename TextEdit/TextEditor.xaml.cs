@@ -22,6 +22,7 @@ using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
+using NeoEdit.TextEdit.Highlighting;
 
 namespace NeoEdit.TextEdit
 {
@@ -103,7 +104,7 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool IsModified { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public Highlighting.HighlightingType HighlightType { get { return UIHelper<TextEditor>.GetPropValue<Highlighting.HighlightingType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public HighlightType HighlightType { get { return UIHelper<TextEditor>.GetPropValue<HighlightType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public Parser.ParserType ContentType { get { return UIHelper<TextEditor>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -1086,9 +1087,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_WithoutEnclosingRegion: Command_Region_WithoutEnclosingRegion(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
 				case TextEditCommand.Region_CopyEnclosingRegion: Command_Region_CopyEnclosingRegion(); break;
-				case TextEditCommand.View_Highlighting_None: Command_View_Highlighting(Highlighting.HighlightingType.None); break;
-				case TextEditCommand.View_Highlighting_CSharp: Command_View_Highlighting(Highlighting.HighlightingType.CSharp); break;
-				case TextEditCommand.View_Highlighting_CPlusPlus: Command_View_Highlighting(Highlighting.HighlightingType.CPlusPlus); break;
+				case TextEditCommand.View_Highlighting_None: Command_View_Highlighting(HighlightType.None); break;
+				case TextEditCommand.View_Highlighting_CSharp: Command_View_Highlighting(HighlightType.CSharp); break;
+				case TextEditCommand.View_Highlighting_CPlusPlus: Command_View_Highlighting(HighlightType.CPlusPlus); break;
 				case TextEditCommand.Macro_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
@@ -1582,7 +1583,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			var highlightDictionary = Highlighting.Get(HighlightType).GetDictionary();
+			var highlightDictionary = Highlight.Get(HighlightType).GetDictionary();
 
 			for (var line = startLine; line < endLine; ++line)
 			{
@@ -1832,7 +1833,7 @@ namespace NeoEdit.TextEdit
 
 			FileName = fileName;
 			ContentType = Parser.GetParserType(FileName);
-			HighlightType = Highlighting.Get(FileName);
+			HighlightType = Highlight.Get(FileName);
 			DisplayName = null;
 
 			if (File.Exists(FileName))

@@ -487,7 +487,11 @@
       <DependentUpon>WidthDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="GotoType.cs" />
-    <Compile Include="Highlighting.cs" />
+    <Compile Include="Highlighting\Highlight.cs" />
+    <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
+    <Compile Include="Highlighting\HighlightCSharp.cs" />
+    <Compile Include="Highlighting\HighlightNone.cs" />
+    <Compile Include="Highlighting\HighlightType.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Misc.cs" />
     <None Include="Misc\Words.txt" />

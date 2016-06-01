@@ -1,7 +1,9 @@
-﻿namespace NeoEdit.TextEdit
+﻿using NeoEdit.TextEdit.Highlighting;
+
+namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		void Command_View_Highlighting(Highlighting.HighlightingType highlightType) => HighlightType = highlightType;
+		void Command_View_Highlighting(HighlightType highlightType) => HighlightType = highlightType;
 	}
 }
