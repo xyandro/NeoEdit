@@ -519,6 +519,7 @@
 	<MenuItem Header="_View">
 		<MenuItem Header="_Highlighting">
 			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEditHighlighting:HighlightType.None}" CommandEnum="View_Highlighting_None"/>
+			<textEdit:MultiMenuItem Header="_Columns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEditHighlighting:HighlightType.Columns}" CommandEnum="View_Highlighting_Columns"/>
 			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEditHighlighting:HighlightType.CSharp}" CommandEnum="View_Highlighting_CSharp"/>
 			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEditHighlighting:HighlightType.CPlusPlus}" CommandEnum="View_Highlighting_CPlusPlus"/>
 			<textEdit:MultiMenuItem Header="_Markup" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightType" MultiValue="{x:Static textEditHighlighting:HighlightType.Markup}" CommandEnum="View_Highlighting_Markup"/>

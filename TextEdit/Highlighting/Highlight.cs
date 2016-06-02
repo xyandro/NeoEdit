@@ -13,6 +13,7 @@ namespace NeoEdit.TextEdit.Highlighting
 				return HighlightType.None;
 			switch (Path.GetExtension(filename).ToLowerInvariant())
 			{
+				case ".nec": return HighlightType.Columns;
 				case ".cs": return HighlightType.CSharp;
 				case ".c":
 				case ".cpp": return HighlightType.CPlusPlus;
@@ -32,6 +33,7 @@ namespace NeoEdit.TextEdit.Highlighting
 			switch (type)
 			{
 				case HighlightType.None: return new HighlightNone();
+				case HighlightType.Columns: return new HighlightColumns();
 				case HighlightType.CSharp: return new HighlightCSharp();
 				case HighlightType.CPlusPlus: return new HighlightCPlusPlus();
 				case HighlightType.Markup: return new HighlightMarkup();

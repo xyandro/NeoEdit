@@ -1088,6 +1088,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
 				case TextEditCommand.Region_CopyEnclosingRegion: Command_Region_CopyEnclosingRegion(); break;
 				case TextEditCommand.View_Highlighting_None: Command_View_Highlighting(HighlightType.None); break;
+				case TextEditCommand.View_Highlighting_Columns: Command_View_Highlighting(HighlightType.Columns); break;
 				case TextEditCommand.View_Highlighting_CSharp: Command_View_Highlighting(HighlightType.CSharp); break;
 				case TextEditCommand.View_Highlighting_CPlusPlus: Command_View_Highlighting(HighlightType.CPlusPlus); break;
 				case TextEditCommand.View_Highlighting_Markup: Command_View_Highlighting(HighlightType.Markup); break;

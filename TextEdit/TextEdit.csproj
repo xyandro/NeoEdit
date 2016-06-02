@@ -488,6 +488,7 @@
     </Compile>
     <Compile Include="GotoType.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
+    <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
     <Compile Include="Highlighting\HighlightCSharp.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
