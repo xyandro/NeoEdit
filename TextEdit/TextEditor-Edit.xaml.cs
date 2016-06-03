@@ -247,7 +247,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = GetString(sel);
@@ -300,7 +300,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = GetString(sel);
@@ -335,7 +335,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Highlight)) && (sel.Length < 1000))
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = GetString(sel);
@@ -485,8 +485,8 @@ namespace NeoEdit.TextEdit
 			for (var ctr = 0; ctr < newSelections.Count; ++ctr)
 			{
 				var orderCtr = ordering[ctr];
-				newSelections[orderCtr] = new Range(newSelections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newSelections[orderCtr].Highlight - regions[orderCtr].Start + regions[ctr].Start + add);
-				newRegions[orderCtr] = new Range(newRegions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newRegions[orderCtr].Highlight - regions[orderCtr].Start + regions[ctr].Start + add);
+				newSelections[orderCtr] = new Range(newSelections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newSelections[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add);
+				newRegions[orderCtr] = new Range(newRegions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newRegions[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add);
 				add += orderedRegionText[ctr].Length - regions[ctr].Length;
 			}
 			newSelections = ordering.Select(num => newSelections[num]).ToList();

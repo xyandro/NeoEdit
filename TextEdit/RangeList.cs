@@ -136,7 +136,7 @@ namespace NeoEdit.TextEdit
 					{
 						if ((range == null) || (last.End <= range.Start))
 							result.Add(last);
-						else if (last.Cursor < last.Highlight)
+						else if (last.Cursor < last.Anchor)
 							result.Add(new Range(last.Start, range.Start));
 						else
 							result.Add(new Range(range.Start, last.Start));
@@ -247,7 +247,7 @@ namespace NeoEdit.TextEdit
 					current = Array.IndexOf(translateMap.Item1, this[ctr].Start, current);
 					var startPos = current;
 					current = Array.IndexOf(translateMap.Item1, this[ctr].End, current);
-					if (this[ctr].Cursor < this[ctr].Highlight)
+					if (this[ctr].Cursor < this[ctr].Anchor)
 						list.Add(new Range(translateMap.Item2[startPos], translateMap.Item2[current]));
 					else
 						list.Add(new Range(translateMap.Item2[current], translateMap.Item2[startPos]));

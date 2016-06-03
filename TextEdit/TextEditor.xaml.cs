@@ -280,9 +280,9 @@ namespace NeoEdit.TextEdit
 			foreach (var range in Selections.ToList())
 			{
 				var cursorLine = Data.GetOffsetLine(range.Cursor);
-				var highlightLine = Data.GetOffsetLine(range.Highlight);
+				var highlightLine = Data.GetOffsetLine(range.Anchor);
 				var cursorIndex = Data.GetOffsetIndex(range.Cursor, cursorLine);
-				var highlightIndex = Data.GetOffsetIndex(range.Highlight, highlightLine);
+				var highlightIndex = Data.GetOffsetIndex(range.Anchor, highlightLine);
 
 				cursorLine = Math.Max(0, Math.Min(cursorLine + 1, Data.NumLines - 1));
 				highlightLine = Math.Max(0, Math.Min(highlightLine + 1, Data.NumLines - 1));
@@ -1164,7 +1164,7 @@ namespace NeoEdit.TextEdit
 								offset = Data.GetOffset(line, index);
 							}
 
-							return new Range(offset, range.Highlight);
+							return new Range(offset, range.Anchor);
 						}).Where(range => range != null).ToList(), null);
 					}
 					break;
@@ -1346,7 +1346,7 @@ namespace NeoEdit.TextEdit
 					if (controlDown)
 					{
 						if (Selections.Any())
-							Selections.Replace(Selections.Select(range => new Range(range.Highlight, range.Cursor)).ToList());
+							Selections.Replace(Selections.Select(range => new Range(range.Anchor, range.Cursor)).ToList());
 						else
 						{
 							var line = Math.Min(yScrollValue, Data.NumLines - 1);
@@ -1416,9 +1416,9 @@ namespace NeoEdit.TextEdit
 				if (range.Cursor == cursor)
 					return range;
 				else
-					return new Range(cursor, range.Highlight);
+					return new Range(cursor, range.Anchor);
 
-			if ((range.Cursor == cursor) && (range.Highlight == cursor))
+			if ((range.Cursor == cursor) && (range.Anchor == cursor))
 				return range;
 			return new Range(cursor);
 		}
@@ -1696,7 +1696,7 @@ namespace NeoEdit.TextEdit
 				var undoRange = new Range(ranges[ctr].Start + change, ranges[ctr].Start + strs[ctr].Length + change);
 				undoRanges.Add(undoRange);
 				undoText.Add(GetString(ranges[ctr]));
-				change = undoRange.Highlight - ranges[ctr].End;
+				change = undoRange.Anchor - ranges[ctr].End;
 			}
 
 			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText, tryJoinUndo);
