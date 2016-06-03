@@ -1073,6 +1073,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
 				case TextEditCommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;
 				case TextEditCommand.Select_Selection_Center: Command_Select_Selection_Center(); break;
+				case TextEditCommand.Select_Selection_ToggleAnchor: Command_Select_Selection_ToggleAnchor(); break;
 				case TextEditCommand.Select_Selection_Next: Command_Select_Selection_Next(); break;
 				case TextEditCommand.Select_Selection_Previous: Command_Select_Selection_Previous(); break;
 				case TextEditCommand.Select_Selection_Single: Command_Select_Selection_Single(); break;
@@ -1338,20 +1339,6 @@ namespace NeoEdit.TextEdit
 
 							return MoveCursor(range, newPos, shiftDown);
 						}).ToList());
-					}
-					else
-						ret = false;
-					break;
-				case Key.Space:
-					if (controlDown)
-					{
-						if (Selections.Any())
-							Selections.Replace(Selections.Select(range => new Range(range.Anchor, range.Cursor)).ToList());
-						else
-						{
-							var line = Math.Min(yScrollValue, Data.NumLines - 1);
-							Selections.Replace(new Range(Data.GetOffset(line, 0)));
-						}
 					}
 					else
 						ret = false;

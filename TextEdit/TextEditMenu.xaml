@@ -495,6 +495,7 @@
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
 			<textEdit:TextEditMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically"/>
 			<textEdit:TextEditMenuItem Header="_Center" CommandEnum="Select_Selection_Center"/>
+			<textEdit:TextEditMenuItem Header="_Toggle Anchor" CommandEnum="Select_Selection_ToggleAnchor"/>
 			<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Select_Selection_Next"/>
 			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous"/>
 			<textEdit:TextEditMenuItem Header="_Single" CommandEnum="Select_Selection_Single"/>

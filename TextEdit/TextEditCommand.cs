@@ -304,6 +304,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.D0, ModifierKeys.Alt)] Select_Selection_First,
 		[KeyGesture(Key.Space, ModifierKeys.Alt)] Select_Selection_CenterVertically,
 		[KeyGesture(Key.Space, ModifierKeys.Alt | ModifierKeys.Shift)] Select_Selection_Center,
+		[KeyGesture(Key.Space, ModifierKeys.Control)] Select_Selection_ToggleAnchor,
 		[KeyGesture(Key.OemPlus, ModifierKeys.Alt)] Select_Selection_Next,
 		[KeyGesture(Key.OemMinus, ModifierKeys.Alt)] Select_Selection_Previous,
 		[KeyGesture(Key.Enter, ModifierKeys.Alt)] Select_Selection_Single,

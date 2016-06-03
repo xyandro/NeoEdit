@@ -197,6 +197,8 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Selection_Center() => EnsureVisible(true, true);
 
+		void Command_Select_Selection_ToggleAnchor() => Selections.Replace(Selections.Select(range => new Range(range.Anchor, range.Cursor)).ToList());
+
 		void Command_Select_Selection_Next()
 		{
 			++visibleIndex;
