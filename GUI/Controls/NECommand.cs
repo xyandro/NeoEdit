@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Common;
 
 namespace NeoEdit.GUI.Controls
 {
@@ -67,6 +68,8 @@ namespace NeoEdit.GUI.Controls
 
 				var memberInfo = typeof(CommandEnumT).GetMember(command.ToString()).First();
 				KeyGestures = memberInfo.GetCustomAttributes(typeof(KeyGestureAttribute), false).Cast<KeyGestureAttribute>().OrderBy(key => key.Order).ToList();
+				if (KeyGestures.Duplicate(gesture => gesture.Order).Any())
+					throw new Exception($"Duplicate order for command {command}");
 				InputGestureText = string.Join(", ", KeyGestures.Select(keyGesture => keyGesture.GestureText));
 			}
 
