@@ -294,6 +294,7 @@ namespace NeoEdit.TextEdit
 		Select_Join,
 		Select_Empty,
 		Select_NonEmpty,
+		[KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control)] [KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Shift, 2)] Select_ToggleOpenClose,
 		Select_Unique,
 		Select_Duplicates,
 		Select_RepeatedLines,

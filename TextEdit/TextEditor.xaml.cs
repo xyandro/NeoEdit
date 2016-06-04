@@ -1063,6 +1063,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Join: Command_Select_Join(); break;
 				case TextEditCommand.Select_Empty: Command_Select_Empty(true); break;
 				case TextEditCommand.Select_NonEmpty: Command_Select_Empty(false); break;
+				case TextEditCommand.Select_ToggleOpenClose: Command_Select_ToggleOpenClose(shiftDown); break;
 				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Command_Select_Duplicates(); break;
 				case TextEditCommand.Select_RepeatedLines: Command_Select_RepeatedLines(); break;
@@ -1327,21 +1328,6 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Enter:
 					HandleText(Data.DefaultEnding);
-					break;
-				case Key.OemCloseBrackets:
-					if (controlDown)
-					{
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
-						{
-							var newPos = Data.GetOppositeBracket(range.Cursor);
-							if (newPos == -1)
-								return range;
-
-							return MoveCursor(range, newPos, shiftDown);
-						}).ToList());
-					}
-					else
-						ret = false;
 					break;
 				default: ret = false; break;
 			}

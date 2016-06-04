@@ -468,7 +468,7 @@
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
-		<textEdit:TextEditMenuItem Header="N_othing" CommandEnum="Select_Nothing"/>
+		<textEdit:TextEditMenuItem Header="Not_hing" CommandEnum="Select_Nothing"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
@@ -480,6 +480,8 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
 		<textEdit:TextEditMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="T_oggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
 		<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>

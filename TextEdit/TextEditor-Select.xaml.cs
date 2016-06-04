@@ -152,6 +152,18 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Empty(bool include) => Selections.Replace(Selections.Where(range => range.HasSelection != include).ToList());
 
+		void Command_Select_ToggleOpenClose(bool shiftDown)
+		{
+			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
+			{
+				var newPos = Data.GetOppositeBracket(range.Cursor);
+				if (newPos == -1)
+					return range;
+
+				return MoveCursor(range, newPos, shiftDown);
+			}).ToList());
+		}
+
 		void Command_Select_Unique() => Selections.Replace(Selections.AsParallel().AsOrdered().Distinct(range => GetString(range)).ToList());
 
 		void Command_Select_Duplicates() => Selections.Replace(Selections.AsParallel().AsOrdered().Duplicate(range => GetString(range)).ToList());
