@@ -19,8 +19,8 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="_Start:" Target="{Binding ElementName=start}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Name="start" Text="{Binding Start, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Multiplier:" Target="{Binding ElementName=multiplier}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="multiplier" Text="{Binding Multiplier, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="1" Grid.Column="0" Name="incrementLabel" Content="_Increment:" Target="{Binding ElementName=increment}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Name="increment" Text="{Binding Increment, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -97,25 +98,24 @@ namespace NeoEdit.TextEdit
 
 		NumericSeriesDialog.Result Command_Numeric_Series_LinearGeometric_Dialog(bool linear)
 		{
-			var nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = GetString(range), index = index }).Where(obj => !string.IsNullOrWhiteSpace(obj.str)).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList();
+			var nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = GetString(range), index = index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList();
 			if (nonNulls.Count == 0)
-				return NumericSeriesDialog.Run(WindowParent, 1, 1);
-
+				return NumericSeriesDialog.Run(WindowParent, linear, 1, 1);
 			if (nonNulls.Count == 1)
-				return NumericSeriesDialog.Run(WindowParent, 1, (nonNulls[0].Item1 - 1) / nonNulls[0].Item2);
+				return NumericSeriesDialog.Run(WindowParent, linear, nonNulls[0].Item1, 1);
 
 			var first = nonNulls.First();
 			var last = nonNulls.Last();
 
-			var multiplier = linear ? (last.Item1 - first.Item1) / (last.Item2 - first.Item2) : Math.Pow(last.Item1 / first.Item1, 1.0 / (last.Item2 - first.Item2));
-			var start = linear ? first.Item1 - multiplier * first.Item2 : first.Item1 / Math.Pow(multiplier, first.Item2);
+			var increment = linear ? (last.Item1 - first.Item1) / (last.Item2 - first.Item2) : Math.Pow(last.Item1 / first.Item1, 1.0 / (last.Item2 - first.Item2));
+			var start = linear ? first.Item1 - increment * first.Item2 : first.Item1 / Math.Pow(increment, first.Item2);
 
-			return NumericSeriesDialog.Run(WindowParent, start, multiplier);
+			return NumericSeriesDialog.Run(WindowParent, linear, start, increment);
 		}
 
-		void Command_Numeric_Series_Linear(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (result.Multiplier * index + result.Start).ToString()).ToList());
+		void Command_Numeric_Series_Linear(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (result.Increment * index + result.Start).ToString()).ToList());
 
-		void Command_Numeric_Series_Geometric(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (Math.Pow(result.Multiplier, index) * result.Start).ToString()).ToList());
+		void Command_Numeric_Series_Geometric(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (Math.Pow(result.Increment, index) * result.Start).ToString()).ToList());
 
 		ScaleDialog.Result Command_Numeric_Scale_Dialog() => ScaleDialog.Run(WindowParent);
 

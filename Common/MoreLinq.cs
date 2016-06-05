@@ -191,9 +191,13 @@ namespace NeoEdit.Common
 		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<Nullable<TSource>> source) where TSource : struct => source.Where(item => item.HasValue).Select(item => item.Value);
 
 		public static IEnumerable<string> NullOrEmpty(this IEnumerable<string> source) => source.Where(str => string.IsNullOrEmpty(str));
+		public static IEnumerable<TSource> NullOrEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource, string> selector) => source.Where(obj => string.IsNullOrEmpty(selector(obj)));
 		public static IEnumerable<string> NullOrWhiteSpace(this IEnumerable<string> source) => source.Where(str => string.IsNullOrWhiteSpace(str));
+		public static IEnumerable<TSource> NullOrWhiteSpace<TSource>(this IEnumerable<TSource> source, Func<TSource, string> selector) => source.Where(obj => string.IsNullOrWhiteSpace(selector(obj)));
 		public static IEnumerable<string> NonNullOrEmpty(this IEnumerable<string> source) => source.Where(str => !string.IsNullOrEmpty(str));
+		public static IEnumerable<TSource> NonNullOrEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource, string> selector) => source.Where(obj => !string.IsNullOrEmpty(selector(obj)));
 		public static IEnumerable<string> NonNullOrWhiteSpace(this IEnumerable<string> source) => source.Where(str => !string.IsNullOrWhiteSpace(str));
+		public static IEnumerable<TSource> NonNullOrWhiteSpace<TSource>(this IEnumerable<TSource> source, Func<TSource, string> selector) => source.Where(obj => !string.IsNullOrWhiteSpace(selector(obj)));
 
 		public static void Execute(this IEnumerable<Action> source) => source.ForEach(action => action());
 		public static List<TResult> Execute<TResult>(this IEnumerable<Func<TResult>> source) => source.ForEach(action => action());
