@@ -95,7 +95,7 @@ namespace NeoEdit.TextEdit
 				return Parser.ParserType.None;
 			var tabCount = firstRow.Length - firstRow.Replace("\t", "").Length;
 			var commaCount = firstRow.Length - firstRow.Replace(",", "").Length;
-			var columnSepCount = firstRow.Length - firstRow.Replace("│", "").Length;
+			var columnSepCount = firstRow.Length - firstRow.Replace("│", "").Replace("║", "").Length;
 			if ((tabCount >= commaCount) && (tabCount >= columnSepCount))
 				return Parser.ParserType.TSV;
 			if (commaCount >= columnSepCount)
