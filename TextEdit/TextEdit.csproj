@@ -502,6 +502,7 @@
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
     <Compile Include="Highlighting\HighlightCSharp.cs" />
+    <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Misc.cs" />

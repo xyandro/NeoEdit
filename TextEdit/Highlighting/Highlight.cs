@@ -15,6 +15,7 @@ namespace NeoEdit.TextEdit.Highlighting
 				case Parser.ParserType.CPlusPlus: return new HighlightCPlusPlus();
 				case Parser.ParserType.CSharp: return new HighlightCSharp();
 				case Parser.ParserType.HTML: case Parser.ParserType.XML: return new HighlightMarkup();
+				case Parser.ParserType.JSON: return new HighlightJSON();
 				default: return null;
 			}
 		}
