@@ -948,6 +948,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_RegionSelectionsToTable: Command_Table_RegionSelectionsToTable(); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;
 				case TextEditCommand.Table_AddHeaders: Command_Table_AddHeaders(); break;
+				case TextEditCommand.Table_AddRow: Command_Table_AddRow(); break;
 				case TextEditCommand.Table_AddColumn: Command_Table_AddColumn(dialogResult as AddColumnDialog.Result); break;
 				case TextEditCommand.Table_Select_RowsByExpression: Command_Table_Select_RowsByExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Table_SetJoinSource: Command_Table_SetJoinSource(); break;

@@ -168,6 +168,8 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		internal void AddRow() => Rows.Add(Headers.Select(header => "").ToList());
+
 		public void AddColumn(string columnName, List<string> results)
 		{
 			if (results.Count != NumRows)

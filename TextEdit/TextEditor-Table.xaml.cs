@@ -112,6 +112,13 @@ namespace NeoEdit.TextEdit
 
 		void Command_Table_AddHeaders() => SetText(GetTable(false));
 
+		void Command_Table_AddRow()
+		{
+			var table = GetTable();
+			table.AddRow();
+			SetText(table);
+		}
+
 		void Command_Table_AddColumn(AddColumnDialog.Result result)
 		{
 			var table = GetTable();

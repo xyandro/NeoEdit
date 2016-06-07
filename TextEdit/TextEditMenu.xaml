@@ -302,14 +302,15 @@
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
-		<textEdit:TextEditMenuItem Header="De_tect Type" CommandEnum="Table_DetectType"/>
+		<textEdit:TextEditMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
-		<textEdit:TextEditMenuItem Header="_Region Selections To Table" CommandEnum="Table_RegionSelectionsToTable"/>
+		<textEdit:TextEditMenuItem Header="Re_gion Selections To Table" CommandEnum="Table_RegionSelectionsToTable"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Edit Table" CommandEnum="Table_EditTable"/>
+		<textEdit:TextEditMenuItem Header="Ed_it Table" CommandEnum="Table_EditTable"/>
 		<textEdit:TextEditMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
+		<textEdit:TextEditMenuItem Header="Add _Row" CommandEnum="Table_AddRow"/>
 		<textEdit:TextEditMenuItem Header="_Add Column" CommandEnum="Table_AddColumn"/>
 		<Separator/>
 		<MenuItem Header="_Select">
@@ -319,7 +320,7 @@
 		<textEdit:TextEditMenuItem Header="Set J_oin Source" CommandEnum="Table_SetJoinSource"/>
 		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Table_Join"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Tra_nspose" CommandEnum="Table_Transpose"/>
+		<textEdit:TextEditMenuItem Header="_Transpose" CommandEnum="Table_Transpose"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Set _Variables" CommandEnum="Table_SetVariables"/>
 		<Separator/>
