@@ -6,6 +6,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.Balanced;
 using NeoEdit.TextEdit.Content.Columns;
+using NeoEdit.TextEdit.Content.CPlusPlus;
 using NeoEdit.TextEdit.Content.CSharp;
 using NeoEdit.TextEdit.Content.HTML;
 using NeoEdit.TextEdit.Content.JSON;
@@ -21,6 +22,7 @@ namespace NeoEdit.TextEdit.Content
 			None,
 			Balanced,
 			Columns,
+			CPlusPlus,
 			CSharp,
 			CSV,
 			HTML,
@@ -37,6 +39,7 @@ namespace NeoEdit.TextEdit.Content
 			{
 				case ParserType.Balanced: return BalancedVisitor.Parse(data);
 				case ParserType.Columns: return ColumnsVisitor.Parse(data);
+				case ParserType.CPlusPlus: return CPlusPlusVisitor.Parse(data);
 				case ParserType.CSharp: return CSharpVisitor.Parse(data);
 				case ParserType.CSV: return CSVVisitor.Parse(data);
 				case ParserType.HTML: return HTMLVisitor.Parse(data);
@@ -53,19 +56,14 @@ namespace NeoEdit.TextEdit.Content
 				return ParserType.None;
 			switch (Path.GetExtension(fileName).ToLowerInvariant())
 			{
+				case ".nec": return ParserType.Columns;
+				case ".c": case ".cpp": return ParserType.CPlusPlus;
 				case ".cs": return ParserType.CSharp;
 				case ".csv": return ParserType.CSV;
-				case ".htm":
-				case ".html": return ParserType.HTML;
-				case ".jsn":
-				case ".json": return ParserType.JSON;
+				case ".htm": case ".html": return ParserType.HTML;
+				case ".jsn": case ".json": return ParserType.JSON;
 				case ".tsv": return ParserType.TSV;
-				case ".csproj":
-				case ".vbproj":
-				case ".vcxproj":
-				case ".xml":
-				case ".xaml": return ParserType.XML;
-				case ".nec": return ParserType.Columns;
+				case ".csproj": case ".vbproj": case ".vcxproj": case ".xml": case ".xaml": return ParserType.XML;
 				default: return ParserType.None;
 			}
 		}

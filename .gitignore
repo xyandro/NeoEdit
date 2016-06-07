@@ -27,6 +27,7 @@ TestResults
 /NeoEdit/CommandLineParams/Parser
 /TextEdit/Content/Balanced/Parser
 /TextEdit/Content/Columns/Parser
+/TextEdit/Content/CPlusPlus/Parser
 /TextEdit/Content/CSharp/Parser
 /TextEdit/Content/HTML/Parser
 /TextEdit/Content/JSON/Parser

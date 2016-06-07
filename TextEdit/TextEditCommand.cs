@@ -200,6 +200,7 @@ namespace NeoEdit.TextEdit
 		Content_Type_None,
 		Content_Type_Balanced,
 		Content_Type_Columns,
+		Content_Type_CPlusPlus,
 		Content_Type_CSharp,
 		Content_Type_CSV,
 		Content_Type_HTML,

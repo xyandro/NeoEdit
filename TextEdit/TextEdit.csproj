@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="CompressWords;BuildBalanced;BuildColumns;BuildCSharp;BuildJSON;BuildHTML;BuildTCSV;BuildXML;BuildRevRegEx;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="CompressWords;BuildBalanced;BuildColumns;BuildCPlusPlus;BuildCSharp;BuildHTML;BuildJSON;BuildRevRegEx;BuildTCSV;BuildXML;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{9A35AB82-2481-4C44-B51E-66DF7D248EAD}</ProjectGuid>
@@ -19,6 +19,10 @@
     <Message Text="Building Columns grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.Columns.Parser -o &quot;$(ProjectDir)Content\Columns\Parser&quot; &quot;$(ProjectDir)Content\Columns\Source\Columns.g4&quot;" />
   </Target>
+  <Target Name="BuildCPlusPlus" Inputs="Content\CPlusPlus\Source\CPlusPlusLexer.g4;Content\CPlusPlus\Source\CPlusPlusParser.g4" Outputs="Content\CPlusPlus\Parser\CPlusPlusParserBaseVisitor.cs;Content\CPlusPlus\Parser\CPlusPlusParserVisitor.cs;Content\CPlusPlus\Parser\CPlusPlusLexer.cs;Content\CPlusPlus\Parser\CPlusPlusParser.cs">
+    <Message Text="Building CPlusPlus grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.CPlusPlus.Parser -o &quot;$(ProjectDir)Content\CPlusPlus\Parser&quot; &quot;$(ProjectDir)Content\CPlusPlus\Source\CPlusPlusLexer.g4&quot; &quot;$(ProjectDir)Content\CPlusPlus\Source\CPlusPlusParser.g4&quot;" />
+  </Target>
   <Target Name="BuildCSharp" Inputs="Content\CSharp\Source\CSharpLexer.g4;Content\CSharp\Source\CSharpParser.g4" Outputs="Content\CSharp\Parser\CSharpParserBaseVisitor.cs;Content\CSharp\Parser\CSharpParserVisitor.cs;Content\CSharp\Parser\CSharpLexer.cs;Content\CSharp\Parser\CSharpParser.cs">
     <Message Text="Building CSharp grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.CSharp.Parser -o &quot;$(ProjectDir)Content\CSharp\Parser&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpLexer.g4&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpParser.g4&quot;" />
@@ -31,6 +35,10 @@
     <Message Text="Building JSON grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.JSON.Parser -o &quot;$(ProjectDir)Content\JSON\Parser&quot; &quot;$(ProjectDir)Content\JSON\Source\JSON.g4&quot;" />
   </Target>
+  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs">
+    <Message Text="Building RevRegEx grammar" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
+  </Target>
   <Target Name="BuildTCSV" Inputs="Content\TCSV\Source\CSV.g4;Content\TCSV\Source\TSV.g4" Outputs="Content\TCSV\Parser\CSVBaseVisitor.cs;Content\TCSV\Parser\CSVLexer.cs;Content\TCSV\Parser\CSVParser.cs;Content\TCSV\Parser\CSVVisitor.cs;Content\TCSV\Parser\TSVBaseVisitor.cs;Content\TCSV\Parser\TSVLexer.cs;Content\TCSV\Parser\TSVParser.cs;Content\TCSV\Parser\TSVVisitor.cs">
     <Message Text="Building TCSV grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.TCSV.Parser -o &quot;$(ProjectDir)Content\TCSV\Parser&quot; &quot;$(ProjectDir)Content\TCSV\Source\CSV.g4&quot; &quot;$(ProjectDir)Content\TCSV\Source\TSV.g4&quot;" />
@@ -38,10 +46,6 @@
   <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs">
     <Message Text="Building XML grammar" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
-  </Target>
-  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs">
-    <Message Text="Building RevRegEx grammar" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
   </Target>
   <ItemGroup>
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
@@ -60,6 +64,13 @@
     <Compile Include="Content\Columns\Parser\ColumnsParser.cs" />
     <Compile Include="Content\Columns\Parser\ColumnsVisitor.cs" />
     <None Include="Content\Columns\Source\Columns.g4" />
+    <Compile Include="Content\CPlusPlus\CPlusPlusVisitor.cs" />
+    <Compile Include="Content\CPlusPlus\Parser\CPlusPlusLexer.cs" />
+    <Compile Include="Content\CPlusPlus\Parser\CPlusPlusParser.cs" />
+    <Compile Include="Content\CPlusPlus\Parser\CPlusPlusParserBaseVisitor.cs" />
+    <Compile Include="Content\CPlusPlus\Parser\CPlusPlusParserVisitor.cs" />
+    <None Include="Content\CPlusPlus\Source\CPlusPlusLexer.g4" />
+    <None Include="Content\CPlusPlus\Source\CPlusPlusParser.g4" />
     <Compile Include="Content\CSharp\CSharpVisitor.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpLexer.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParser.cs" />

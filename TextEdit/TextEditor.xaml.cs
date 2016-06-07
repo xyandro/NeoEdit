@@ -970,6 +970,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Type_None: Command_Content_Type(Parser.ParserType.None); break;
 				case TextEditCommand.Content_Type_Balanced: Command_Content_Type(Parser.ParserType.Balanced); break;
 				case TextEditCommand.Content_Type_Columns: Command_Content_Type(Parser.ParserType.Columns); break;
+				case TextEditCommand.Content_Type_CPlusPlus: Command_Content_Type(Parser.ParserType.CPlusPlus); break;
 				case TextEditCommand.Content_Type_CSharp: Command_Content_Type(Parser.ParserType.CSharp); break;
 				case TextEditCommand.Content_Type_CSV: Command_Content_Type(Parser.ParserType.CSV); break;
 				case TextEditCommand.Content_Type_HTML: Command_Content_Type(Parser.ParserType.HTML); break;
