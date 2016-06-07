@@ -944,10 +944,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
 				case TextEditCommand.Table_DetectType: Command_Table_Type_Detect(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as ChooseTableTypeDialog.Result); break;
-				case TextEditCommand.Table_AddHeaders: Command_Table_AddHeaders(); break;
 				case TextEditCommand.Table_LineSelectionsToTable: Command_Table_LineSelectionsToTable(); break;
 				case TextEditCommand.Table_RegionSelectionsToTable: Command_Table_RegionSelectionsToTable(); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;
+				case TextEditCommand.Table_AddHeaders: Command_Table_AddHeaders(); break;
 				case TextEditCommand.Table_AddColumn: Command_Table_AddColumn(dialogResult as AddColumnDialog.Result); break;
 				case TextEditCommand.Table_Select_RowsByExpression: Command_Table_Select_RowsByExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Table_SetJoinSource: Command_Table_SetJoinSource(); break;

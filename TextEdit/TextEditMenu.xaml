@@ -304,12 +304,12 @@
 	<MenuItem Header="Ta_ble">
 		<textEdit:TextEditMenuItem Header="De_tect Type" CommandEnum="Table_DetectType"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
-		<textEdit:TextEditMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
 		<textEdit:TextEditMenuItem Header="_Region Selections To Table" CommandEnum="Table_RegionSelectionsToTable"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Edit Table" CommandEnum="Table_EditTable"/>
+		<textEdit:TextEditMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
 		<textEdit:TextEditMenuItem Header="_Add Column" CommandEnum="Table_AddColumn"/>
 		<Separator/>
 		<MenuItem Header="_Select">

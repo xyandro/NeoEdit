@@ -74,8 +74,6 @@ namespace NeoEdit.TextEdit
 			SetText(table);
 		}
 
-		void Command_Table_AddHeaders() => SetText(GetTable(false));
-
 		void Command_Table_LineSelectionsToTable()
 		{
 			if (!Selections.Any())
@@ -111,6 +109,8 @@ namespace NeoEdit.TextEdit
 			var table = GetTable();
 			return AddColumnDialog.Run(WindowParent, GetTableVariables(table), table.NumRows);
 		}
+
+		void Command_Table_AddHeaders() => SetText(GetTable(false));
 
 		void Command_Table_AddColumn(AddColumnDialog.Result result)
 		{
