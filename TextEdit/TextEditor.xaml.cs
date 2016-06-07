@@ -104,8 +104,6 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool IsModified { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public HighlightType HighlightType { get { return UIHelper<TextEditor>.GetPropValue<HighlightType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
 		public Parser.ParserType ContentType { get { return UIHelper<TextEditor>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -204,7 +202,7 @@ namespace NeoEdit.TextEdit
 			UIHelper<TextEditor>.Register();
 			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => { obj.canvasRenderTimer.Start(); obj.bookmarkRenderTimer.Start(); });
-			UIHelper<TextEditor>.AddCallback(a => a.HighlightType, (obj, o, n) => obj.canvasRenderTimer.Start());
+			UIHelper<TextEditor>.AddCallback(a => a.ContentType, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
@@ -1090,11 +1088,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_WithoutEnclosingRegion: Command_Region_WithoutEnclosingRegion(); break;
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
 				case TextEditCommand.Region_CopyEnclosingRegion: Command_Region_CopyEnclosingRegion(); break;
-				case TextEditCommand.View_Highlighting_None: Command_View_Highlighting(HighlightType.None); break;
-				case TextEditCommand.View_Highlighting_Columns: Command_View_Highlighting(HighlightType.Columns); break;
-				case TextEditCommand.View_Highlighting_CSharp: Command_View_Highlighting(HighlightType.CSharp); break;
-				case TextEditCommand.View_Highlighting_CPlusPlus: Command_View_Highlighting(HighlightType.CPlusPlus); break;
-				case TextEditCommand.View_Highlighting_Markup: Command_View_Highlighting(HighlightType.Markup); break;
 				case TextEditCommand.Macro_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
@@ -1560,7 +1553,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			var highlightDictionary = Highlight.Get(HighlightType).GetDictionary();
+			var highlightDictionary = Highlight.Get(ContentType)?.GetDictionary();
 
 			for (var line = startLine; line < endLine; ++line)
 			{
@@ -1580,11 +1573,14 @@ namespace NeoEdit.TextEdit
 					continue;
 
 				var highlight = new List<Tuple<Brush, int, int>>();
-				foreach (var entry in highlightDictionary)
+				if (highlightDictionary != null)
 				{
-					var matches = entry.Key.Matches(str);
-					foreach (Match match in matches)
-						highlight.Add(new Tuple<Brush, int, int>(entry.Value, match.Index, match.Length));
+					foreach (var entry in highlightDictionary)
+					{
+						var matches = entry.Key.Matches(str);
+						foreach (Match match in matches)
+							highlight.Add(new Tuple<Brush, int, int>(entry.Value, match.Index, match.Length));
+					}
 				}
 
 				str = str.Substring(startColumn, Math.Min(endColumn, str.Length) - startColumn);
@@ -1810,7 +1806,6 @@ namespace NeoEdit.TextEdit
 
 			FileName = fileName;
 			ContentType = Parser.GetParserType(FileName);
-			HighlightType = Highlight.Get(FileName);
 			DisplayName = null;
 
 			if (File.Exists(FileName))

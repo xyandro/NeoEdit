@@ -503,8 +503,6 @@
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
     <Compile Include="Highlighting\HighlightCSharp.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
-    <Compile Include="Highlighting\HighlightNone.cs" />
-    <Compile Include="Highlighting\HighlightType.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Misc.cs" />
     <None Include="Misc\Words.txt" />
@@ -583,9 +581,6 @@
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Text.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-View.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Page Include="TextEditor.xaml">
