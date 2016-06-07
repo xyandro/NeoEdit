@@ -79,9 +79,12 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Sum()
 		{
-			var result = Selections.Where(range => !range.HasSelection).ToList();
-			if (result.Count != 1)
-				throw new Exception("Must have one empty selection to get the result");
+			if (!Selections.Any())
+				return;
+
+			var result = Selections.Where(range => !range.HasSelection).FirstOrDefault();
+			if (result == null)
+				result = Selections[Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1))];
 
 			var sum = Selections.AsParallel().Where(range => range.HasSelection).Select(range => double.Parse(GetString(range))).Sum();
 			Selections.Replace(result);
