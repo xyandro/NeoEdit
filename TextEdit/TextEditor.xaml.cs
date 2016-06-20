@@ -395,10 +395,20 @@ namespace NeoEdit.TextEdit
 			return false;
 		}
 
+		void ClearWatcher()
+		{
+			if (watcher != null)
+			{
+				watcher.Dispose();
+				watcher = null;
+			}
+		}
+
 		public override void Closed()
 		{
 			DiffTarget = null;
 			globalKeysChanged -= SetupLocalOrGlobalKeys;
+			ClearWatcher();
 			base.Closed();
 		}
 
@@ -1799,11 +1809,7 @@ namespace NeoEdit.TextEdit
 			if (FileName == fileName)
 				return;
 
-			if (watcher != null)
-			{
-				watcher.Dispose();
-				watcher = null;
-			}
+			ClearWatcher();
 
 			FileName = fileName;
 			ContentType = Parser.GetParserType(FileName);
