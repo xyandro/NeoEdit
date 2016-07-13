@@ -19,6 +19,7 @@ namespace NeoEdit.TextEdit
 		{
 			using (var client = new WebClient())
 			{
+				client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)";
 				client.Encoding = Encoding.UTF8;
 				var uri = new Uri(url);
 				if (codePage == Coder.CodePage.None)
