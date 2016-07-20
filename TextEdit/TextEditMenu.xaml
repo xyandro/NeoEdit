@@ -529,8 +529,10 @@
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
 		<textEdit:TextEditMenuItem Header="Select Tabs With _Selections" CommandEnum="View_SelectTabsWithSelections"/>
 		<textEdit:TextEditMenuItem Header="Select Tabs Without S_elections" CommandEnum="View_SelectTabsWithoutSelections"/>
+		<textEdit:TextEditMenuItem Header="Close Tabs _With Selections" CommandEnum="View_CloseTabsWithSelections"/>
+		<textEdit:TextEditMenuItem Header="Close Tabs With_out Selections" CommandEnum="View_CloseTabsWithoutSelections"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
+		<textEdit:TextEditMenuItem Header="Wo_rd List" CommandEnum="View_WordList"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">

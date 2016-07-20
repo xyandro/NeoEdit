@@ -328,6 +328,8 @@ namespace NeoEdit.TextEdit
 		View_ActiveTabs,
 		View_SelectTabsWithSelections,
 		View_SelectTabsWithoutSelections,
+		View_CloseTabsWithSelections,
+		View_CloseTabsWithoutSelections,
 		View_WordList,
 		[KeyGesture(Key.F6, ModifierKeys.Control | ModifierKeys.Shift)] Macro_Record_Quick_6,
 		[KeyGesture(Key.F7, ModifierKeys.Control | ModifierKeys.Shift)] Macro_Record_Quick_7,
