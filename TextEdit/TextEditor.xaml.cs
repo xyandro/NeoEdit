@@ -1588,9 +1588,12 @@ namespace NeoEdit.TextEdit
 				{
 					foreach (var entry in highlightDictionary)
 					{
-						var matches = entry.Key.Matches(str);
+						var start = Math.Max(startColumn - 500, 0);
+						var count = Math.Min(endColumn - startColumn + 500, str.Length - start);
+						var highlightStr = str.Substring(start, count);
+						var matches = entry.Key.Matches(highlightStr);
 						foreach (Match match in matches)
-							highlight.Add(new Tuple<Brush, int, int>(entry.Value, match.Index, match.Length));
+							highlight.Add(new Tuple<Brush, int, int>(entry.Value, match.Index + start, match.Length));
 					}
 				}
 
