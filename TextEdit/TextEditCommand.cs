@@ -322,6 +322,7 @@ namespace NeoEdit.TextEdit
 		Region_WithoutEnclosingRegion,
 		Region_SelectEnclosingRegion,
 		Region_CopyEnclosingRegion,
+		Region_CopyEnclosingRegionIndex,
 		View_Full,
 		View_Grid,
 		View_CustomGrid,

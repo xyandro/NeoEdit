@@ -23,5 +23,7 @@ namespace NeoEdit.TextEdit
 		void Command_Region_SelectEnclosingRegion() => Selections.Replace(GetEnclosingRegions());
 
 		void Command_Region_CopyEnclosingRegion() => SetClipboardStrings(GetEnclosingRegions().Select(range => GetString(range)).ToList());
+
+		void Command_Region_CopyEnclosingRegionIndex() => SetClipboardStrings(GetEnclosingRegions().Select(region => (Regions.IndexOf(region) + 1).ToString()).ToList());
 	}
 }

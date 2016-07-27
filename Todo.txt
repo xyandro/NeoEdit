@@ -43,7 +43,6 @@ Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
 Ignore case in diff is remembered after diff ends
 Add Diff->Reset to clear ignore whitespace/number/case/etc.
-Allow copy of region indexes (useful for multiple selections in the same region)
 
 View:
 Update as new lines are added
