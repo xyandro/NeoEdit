@@ -91,6 +91,12 @@ namespace NeoEdit.TextEdit
 			CalculateDiff();
 		}
 
+		void Command_Diff_Reset()
+		{
+			DiffIgnoreWhitespace = DiffIgnoreCase = DiffIgnoreNumbers = DiffIgnoreLineEndings = false;
+			CalculateDiff();
+		}
+
 		void Command_Diff_NextPrevious(bool next)
 		{
 			if (DiffTarget == null)

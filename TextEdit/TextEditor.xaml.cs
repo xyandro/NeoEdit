@@ -853,6 +853,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreNumbers: Command_Diff_IgnoreNumbers(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreLineEndings: Command_Diff_IgnoreLineEndings(multiStatus); break;
+				case TextEditCommand.Diff_Reset: Command_Diff_Reset(); break;
 				case TextEditCommand.Diff_Next: Command_Diff_NextPrevious(true); break;
 				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false); break;
 				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
