@@ -218,6 +218,7 @@ namespace NeoEdit.TextEdit
 		public readonly NELocalClipboard clipboard = new NELocalClipboard();
 		DateTime fileLastWrite;
 		int visibleIndex = 0;
+		int mouseClickCount = 0;
 		DragType doDrag = DragType.None;
 		CacheValue modifiedChecksum = new CacheValue();
 		PreviousStruct previous = null;
@@ -1369,7 +1370,24 @@ namespace NeoEdit.TextEdit
 				if (mouseRange != null)
 				{
 					Selections.Remove(mouseRange);
-					Selections.Add(MoveCursor(mouseRange, offset, true));
+					var anchor = mouseRange.Anchor;
+					if (clickCount != 1)
+					{
+						if (offset < anchor)
+							offset = GetPrevWord(offset + 1);
+						else
+							offset = GetNextWord(offset);
+
+						if ((mouseRange.Cursor <= anchor) != (offset <= anchor))
+						{
+							if (offset <= anchor)
+								anchor = GetNextWord(anchor);
+							else
+								anchor = GetPrevWord(anchor);
+						}
+					}
+
+					Selections.Add(new Range(offset, anchor));
 					visibleIndex = Selections.Count - 1;
 				}
 				return;
@@ -1458,6 +1476,7 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
+			mouseClickCount = e.ClickCount;
 			MouseHandler(e.GetPosition(canvas), e.ClickCount, (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None);
 			canvas.CaptureMouse();
 			e.Handled = true;
@@ -1474,7 +1493,7 @@ namespace NeoEdit.TextEdit
 			if (!canvas.IsMouseCaptured)
 				return;
 
-			MouseHandler(e.GetPosition(canvas), 0, true);
+			MouseHandler(e.GetPosition(canvas), mouseClickCount, true);
 			e.Handled = true;
 		}
 
