@@ -8,7 +8,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Region_AddSelections() => Regions.AddRange(Selections);
 
-		void Command_Region_RemoveSelections() => Regions.Replace(Regions.Where(region => Selections.All(selection => (region.End <= selection.Start) || (region.Start >= selection.End))).ToList());
+		void Command_Region_RemoveSelections() => Regions.Replace(Regions.Where(region => Selections.All(selection => ((region.Start != selection.Start) || (region.End != selection.End)) && ((region.End <= selection.Start) || (region.Start >= selection.End)))).ToList());
 
 		void Command_Region_ReplaceSelections() => Regions.Replace(Regions.Where(region => Selections.All(selection => (region.End <= selection.Start) || (region.Start >= selection.End))).Concat(Selections).ToList());
 
