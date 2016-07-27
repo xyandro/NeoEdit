@@ -279,14 +279,25 @@ namespace NeoEdit.TextEdit
 			}
 
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false)).ToList();
 
-			if (result.All)
-				Selections.Replace(sels);
-			else
+			if (result.Type == FindDialog.ResultType.CopyCount)
 			{
-				Searches.Replace(sels);
-				FindNext(true, selecting);
+				SetClipboardStrings(resultsByRegion.Select(list => list.Count.ToString()));
+				return;
+			}
+
+			var results = resultsByRegion.SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+
+			switch (result.Type)
+			{
+				case FindDialog.ResultType.Find:
+					Searches.Replace(results);
+					FindNext(true, selecting);
+					break;
+				case FindDialog.ResultType.SelectAll:
+					Selections.Replace(results);
+					break;
 			}
 		}
 

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
@@ -8,6 +9,14 @@ namespace NeoEdit.TextEdit.Dialogs
 {
 	partial class FindDialog
 	{
+		public enum ResultType
+		{
+			None,
+			CopyCount,
+			Find,
+			SelectAll,
+		}
+
 		public class Result
 		{
 			public string Text { get; set; }
@@ -20,7 +29,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			public bool EntireSelection { get; set; }
 			public bool KeepMatching { get; set; }
 			public bool RemoveMatching { get; set; }
-			public bool All { get; set; }
+			public ResultType Type { get; set; }
 		}
 
 		[DepProp]
@@ -82,7 +91,15 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, MultiLine = MultiLine, All = sender == selectAll };
+			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, MultiLine = MultiLine };
+			if (sender == copyCount)
+				result.Type = ResultType.CopyCount;
+			else if (sender == find)
+				result.Type = ResultType.Find;
+			else if (sender == selectAll)
+				result.Type = ResultType.SelectAll;
+			else
+				throw new Exception("Invalid search type");
 
 			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
