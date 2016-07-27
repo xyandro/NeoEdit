@@ -1402,7 +1402,7 @@ namespace NeoEdit.TextEdit
 			{
 				if (mouseRange != null)
 					Selections.Remove(mouseRange);
-				Selections.Add(new Range(GetNextWord(offset), GetPrevWord(offset + 1)));
+				Selections.Add(new Range(GetNextWord(offset), GetPrevWord(Math.Min(offset + 1, EndOffset))));
 			}
 			visibleIndex = Selections.Count - 1;
 		}
