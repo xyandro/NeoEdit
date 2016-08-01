@@ -31,8 +31,6 @@ If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
 Alt+Up in diff only selects half of diff
-Copy->Copy All Clipboards doesn't seem to work when some files have no selections (when in full screen and file has never been on screen)
-View->Tabs with selections doesn't work when there are lots of tabs (when in full screen and file has never been on screen)
 Add ability to wait until program close (since inline diff tools wait for the program to exit; could remove -multi flag and share a diff window)
 Only show file changed dialog when window is active and selected
 Add multi-file status bar (shows how many (active? files|selections|etc.)

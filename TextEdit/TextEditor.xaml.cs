@@ -195,6 +195,8 @@ namespace NeoEdit.TextEdit
 		int yScrollViewportFloor => (int)Math.Floor(yScroll.ViewportSize);
 		int yScrollViewportCeiling => (int)Math.Ceiling(yScroll.ViewportSize);
 
+		public bool HasSelections => Selections.Any();
+
 		static Dictionary<string, List<string>> variables { get; } = new Dictionary<string, List<string>>();
 
 		static TextEditor()

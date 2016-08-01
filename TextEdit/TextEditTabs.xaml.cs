@@ -199,7 +199,7 @@ namespace NeoEdit.TextEdit
 		void Command_View_SelectTabsWithSelections(bool hasSelections)
 		{
 			var topMost = ItemTabs.TopMost;
-			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.NumSelections != 0 == hasSelections)).ToList();
+			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
 			ItemTabs.Items.ToList().ForEach(tab => tab.Active = false);
 
 			if (!active.Any())
@@ -211,7 +211,21 @@ namespace NeoEdit.TextEdit
 			active.ForEach(tab => tab.Active = true);
 		}
 
-		void Command_View_CloseTabsWithSelections(bool hasSelections) => ItemTabs.Items.Where(tab => (tab.Active) && (tab.NumSelections != 0 == hasSelections)).ToList().ForEach(tab => ItemTabs.Items.Remove(tab));
+		void Command_View_CloseTabsWithSelections(bool hasSelections)
+		{
+			var topMost = ItemTabs.TopMost;
+			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
+
+			ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList().ForEach(tab => ItemTabs.Items.Remove(tab));
+
+			if (!active.Any())
+				return;
+
+			if (!active.Contains(topMost))
+				topMost = active.First();
+			ItemTabs.TopMost = topMost;
+			active.ForEach(tab => tab.Active = true);
+		}
 
 		void Command_View_WordList()
 		{
