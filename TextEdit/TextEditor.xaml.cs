@@ -104,6 +104,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool IsModified { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool AutoRefresh { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public Parser.ParserType ContentType { get { return UIHelper<TextEditor>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -232,6 +234,7 @@ namespace NeoEdit.TextEdit
 
 			InitializeComponent();
 			bookmarks.Width = Font.lineHeight;
+			AutoRefresh = true;
 
 			SetupTabLabel();
 
@@ -807,6 +810,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
 				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
+				case TextEditCommand.File_AutoRefresh: Command_File_AutoRefresh(multiStatus); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(); break;
 				case TextEditCommand.File_Insert_Files: Command_File_Insert_Files(); break;
 				case TextEditCommand.File_Insert_CopiedCut: Command_File_Insert_CopiedCut(); break;
@@ -1835,34 +1839,41 @@ namespace NeoEdit.TextEdit
 			if (FileName == fileName)
 				return;
 
-			ClearWatcher();
-
 			FileName = fileName;
 			ContentType = Parser.GetParserType(FileName);
 			DisplayName = null;
 
-			if (File.Exists(FileName))
+			SetAutoRefresh();
+		}
+
+		void SetAutoRefresh(bool? value = null)
+		{
+			ClearWatcher();
+
+			if (value.HasValue)
+				AutoRefresh = value.Value;
+			if ((!AutoRefresh) || (!File.Exists(FileName)))
+				return;
+
+			watcher = new FileSystemWatcher
 			{
-				watcher = new FileSystemWatcher
+				Path = Path.GetDirectoryName(FileName),
+				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime,
+				Filter = Path.GetFileName(FileName),
+			};
+			watcher.Changed += (s1, e1) =>
+			{
+				watcher.EnableRaisingEvents = false;
+				var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, Dispatcher);
+				timer.Tick += (s2, e2) =>
 				{
-					Path = Path.GetDirectoryName(FileName),
-					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime,
-					Filter = Path.GetFileName(FileName),
+					timer.Stop();
+					Command_File_Refresh();
+					watcher.EnableRaisingEvents = true;
 				};
-				watcher.Changed += (s1, e1) =>
-				{
-					watcher.EnableRaisingEvents = false;
-					var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, Dispatcher);
-					timer.Tick += (s2, e2) =>
-					{
-						timer.Stop();
-						Command_File_Refresh();
-						watcher.EnableRaisingEvents = true;
-					};
-					timer.Start();
-				};
-				watcher.EnableRaisingEvents = true;
-			}
+				timer.Start();
+			};
+			watcher.EnableRaisingEvents = true;
 		}
 
 		void SetModifiedFlag(bool? newValue = null)

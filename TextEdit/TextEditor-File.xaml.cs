@@ -155,6 +155,8 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		void Command_File_AutoRefresh(bool? multiStatus) => SetAutoRefresh(multiStatus != true);
+
 		void Command_File_Revert()
 		{
 			if (IsModified)

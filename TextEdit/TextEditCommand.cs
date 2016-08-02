@@ -21,6 +21,7 @@ namespace NeoEdit.TextEdit
 		File_Operations_DragDrop,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F5)] File_Refresh,
+		[KeyGesture(Key.F5, ModifierKeys.Control)] File_AutoRefresh,
 		File_Revert,
 		File_Insert_Files,
 		File_Insert_CopiedCut,

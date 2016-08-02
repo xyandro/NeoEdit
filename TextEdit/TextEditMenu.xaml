@@ -36,6 +36,7 @@
 		</MenuItem>
 		<textEdit:TextEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<textEdit:TextEditMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
+		<textEdit:MultiMenuItem Header="_Auto Refresh" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
 		<textEdit:TextEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<MenuItem Header="_Insert">
