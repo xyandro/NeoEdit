@@ -317,7 +317,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Shift)] Region_SetSelections,
 		Region_AddSelections,
 		Region_RemoveSelections,
-		Region_ReplaceSelections,
+		[KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Region_ReplaceSelections,
 		Region_LimitToSelections,
 		Region_Clear,
 		Region_WithEnclosingRegion,
