@@ -176,6 +176,16 @@ namespace NeoEdit.GUI.Controls
 					case Key.PageUp: MovePrev(); break;
 					case Key.PageDown: MoveNext(); break;
 					case Key.Tab: MoveTabOrder(); break;
+					case Key.D1: MoveToTab(0); break;
+					case Key.D2: MoveToTab(1); break;
+					case Key.D3: MoveToTab(2); break;
+					case Key.D4: MoveToTab(3); break;
+					case Key.D5: MoveToTab(4); break;
+					case Key.D6: MoveToTab(5); break;
+					case Key.D7: MoveToTab(6); break;
+					case Key.D8: MoveToTab(7); break;
+					case Key.D9: MoveToTab(8); break;
+					case Key.D0: MoveToTab(9); break;
 					default: e.Handled = false; break;
 				}
 			}
@@ -216,6 +226,12 @@ namespace NeoEdit.GUI.Controls
 			if (current == -1)
 				current = ordering.Count - 1;
 			TopMost = ordering[current];
+		}
+
+		void MoveToTab(int index)
+		{
+			if (index < Items.Count)
+				TopMost = Items[index];
 		}
 
 		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
