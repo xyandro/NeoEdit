@@ -12,39 +12,39 @@
     <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Misc\Words.txt&quot; &quot;$(ProjectDir)Misc\Words.txt.gz&quot;" />
   </Target>
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs">
-    <Message Text="Building Balanced grammar" Importance="High" />
+    <Message Text="Building Balanced parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.Balanced.Parser -o &quot;$(ProjectDir)Content\Balanced\Parser&quot; &quot;$(ProjectDir)Content\Balanced\Source\Balanced.g4&quot;" />
   </Target>
   <Target Name="BuildColumns" Inputs="Content\Columns\Source\Columns.g4" Outputs="Content\Columns\Parser\ColumnsBaseVisitor.cs;Content\Columns\Parser\ColumnsLexer.cs;Content\Columns\Parser\ColumnsParser.cs;Content\Columns\Parser\ColumnsVisitor.cs">
-    <Message Text="Building Columns grammar" Importance="High" />
+    <Message Text="Building Columns parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.Columns.Parser -o &quot;$(ProjectDir)Content\Columns\Parser&quot; &quot;$(ProjectDir)Content\Columns\Source\Columns.g4&quot;" />
   </Target>
   <Target Name="BuildCPlusPlus" Inputs="Content\CPlusPlus\Source\CPlusPlusLexer.g4;Content\CPlusPlus\Source\CPlusPlusParser.g4" Outputs="Content\CPlusPlus\Parser\CPlusPlusParserBaseVisitor.cs;Content\CPlusPlus\Parser\CPlusPlusParserVisitor.cs;Content\CPlusPlus\Parser\CPlusPlusLexer.cs;Content\CPlusPlus\Parser\CPlusPlusParser.cs">
-    <Message Text="Building CPlusPlus grammar" Importance="High" />
+    <Message Text="Building CPlusPlus parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.CPlusPlus.Parser -o &quot;$(ProjectDir)Content\CPlusPlus\Parser&quot; &quot;$(ProjectDir)Content\CPlusPlus\Source\CPlusPlusLexer.g4&quot; &quot;$(ProjectDir)Content\CPlusPlus\Source\CPlusPlusParser.g4&quot;" />
   </Target>
   <Target Name="BuildCSharp" Inputs="Content\CSharp\Source\CSharpLexer.g4;Content\CSharp\Source\CSharpParser.g4" Outputs="Content\CSharp\Parser\CSharpParserBaseVisitor.cs;Content\CSharp\Parser\CSharpParserVisitor.cs;Content\CSharp\Parser\CSharpLexer.cs;Content\CSharp\Parser\CSharpParser.cs">
-    <Message Text="Building CSharp grammar" Importance="High" />
+    <Message Text="Building CSharp parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.CSharp.Parser -o &quot;$(ProjectDir)Content\CSharp\Parser&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpLexer.g4&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpParser.g4&quot;" />
   </Target>
   <Target Name="BuildHTML" Inputs="Content\HTML\Source\HTMLLexer.g4;Content\HTML\Source\HTMLParser.g4" Outputs="Content\HTML\Parser\HTMLLexer.cs;Content\HTML\Parser\HTMLParser.cs;Content\HTML\Parser\HTMLParserBaseVisitor.cs;Content\HTML\Parser\HTMLParserVisitor.cs">
-    <Message Text="Building HTML grammar" Importance="High" />
+    <Message Text="Building HTML parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.HTML.Parser -o &quot;$(ProjectDir)Content\HTML\Parser&quot; &quot;$(ProjectDir)Content\HTML\Source\HTMLLexer.g4&quot; &quot;$(ProjectDir)Content\HTML\Source\HTMLParser.g4&quot;" />
   </Target>
   <Target Name="BuildJSON" Inputs="Content\JSON\Source\JSON.g4" Outputs="Content\JSON\Parser\JSONBaseVisitor.cs;Content\JSON\Parser\JSONLexer.cs;Content\JSON\Parser\JSONParser.cs;Content\JSON\Parser\JSONVisitor.cs">
-    <Message Text="Building JSON grammar" Importance="High" />
+    <Message Text="Building JSON parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.JSON.Parser -o &quot;$(ProjectDir)Content\JSON\Parser&quot; &quot;$(ProjectDir)Content\JSON\Source\JSON.g4&quot;" />
   </Target>
   <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs">
-    <Message Text="Building RevRegEx grammar" Importance="High" />
+    <Message Text="Building RevRegEx parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
   </Target>
   <Target Name="BuildTCSV" Inputs="Content\TCSV\Source\CSV.g4;Content\TCSV\Source\TSV.g4" Outputs="Content\TCSV\Parser\CSVBaseVisitor.cs;Content\TCSV\Parser\CSVLexer.cs;Content\TCSV\Parser\CSVParser.cs;Content\TCSV\Parser\CSVVisitor.cs;Content\TCSV\Parser\TSVBaseVisitor.cs;Content\TCSV\Parser\TSVLexer.cs;Content\TCSV\Parser\TSVParser.cs;Content\TCSV\Parser\TSVVisitor.cs">
-    <Message Text="Building TCSV grammar" Importance="High" />
+    <Message Text="Building TCSV parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.TCSV.Parser -o &quot;$(ProjectDir)Content\TCSV\Parser&quot; &quot;$(ProjectDir)Content\TCSV\Source\CSV.g4&quot; &quot;$(ProjectDir)Content\TCSV\Source\TSV.g4&quot;" />
   </Target>
   <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs">
-    <Message Text="Building XML grammar" Importance="High" />
+    <Message Text="Building XML parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
   </Target>
   <ItemGroup>

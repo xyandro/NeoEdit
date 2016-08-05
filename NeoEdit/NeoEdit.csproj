@@ -10,7 +10,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <Target Name="BuildCommandLineParams" Inputs="CommandLineParams\Source\CommandLineParamsLexer.g4;CommandLineParams\Source\CommandLineParamsParser.g4" Outputs="CommandLineParams\Parser\CommandLineParamsLexer.cs;CommandLineParams\Parser\CommandLineParamsParser.cs;CommandLineParams\Parser\CommandLineParamsParserBaseVisitor.cs;CommandLineParams\Parser\CommandLineParamsParserVisitor.cs">
-    <Message Text="Building CommandLineParams grammar" Importance="High" />
+    <Message Text="Building CommandLineParams parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.CommandLineParams.Parser&quot; -o &quot;$(ProjectDir)CommandLineParams\Parser&quot; &quot;$(ProjectDir)CommandLineParams\Source\CommandLineParamsLexer.g4&quot; &quot;$(ProjectDir)CommandLineParams\Source\CommandLineParamsParser.g4&quot;" />
   </Target>
   <PropertyGroup>
