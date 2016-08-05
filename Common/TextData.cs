@@ -463,8 +463,8 @@ namespace NeoEdit.Common
 				if (!multiLine)
 				{
 					var line = GetOffsetLine(offset);
-					length = Math.Min(lineOffset[line] + GetLineLength(line), endOffset) - offset;
-					nextOffset = Math.Min(endOffset, offset + length + GetEndingLength(line));
+					length = Math.Max(0, Math.Min(lineOffset[line] + GetLineLength(line), endOffset) - offset); // Could have been negative if selection encompasses half of \r\n line break
+					nextOffset = Math.Min(endOffset, lineOffset[line + 1]);
 				}
 
 				var matches = regex.Matches(Data.Substring(offset, length)).Cast<Match>();
