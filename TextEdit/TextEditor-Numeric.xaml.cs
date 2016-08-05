@@ -84,7 +84,7 @@ namespace NeoEdit.TextEdit
 
 			var result = Selections.Where(range => !range.HasSelection).FirstOrDefault();
 			if (result == null)
-				result = Selections[Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1))];
+				result = Selections[Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1))];
 
 			var sum = Selections.AsParallel().Where(range => range.HasSelection).Select(range => double.Parse(GetString(range))).Sum();
 			Selections.Replace(result);

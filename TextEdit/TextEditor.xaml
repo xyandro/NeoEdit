@@ -103,10 +103,17 @@
 			<Separator/>
 
 			<StatusBarItem>
-				<TextBlock Text="Selections"/>
+				<TextBlock Text="Selection"/>
 			</StatusBarItem>
 			<StatusBarItem>
-				<TextBlock Text="{Binding NumSelections, ElementName=self, StringFormat=n0}" MinWidth="50"/>
+				<TextBlock MinWidth="50">
+					<TextBlock.Text>
+						<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="{}StrFormat(&quot;{0:n0}/{1:n0}&quot;, [0] + 1, [1])">
+							<Binding Path="CurrentSelection" ElementName="self"/>
+							<Binding Path="NumSelections" ElementName="self"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
 			</StatusBarItem>
 
 			<Separator/>

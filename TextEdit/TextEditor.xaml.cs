@@ -128,6 +128,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public int? PositionMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
+		public int CurrentSelection { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int NumRegions { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -221,7 +223,6 @@ namespace NeoEdit.TextEdit
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		public readonly NELocalClipboard clipboard = new NELocalClipboard();
 		DateTime fileLastWrite;
-		int visibleIndex = 0;
 		int mouseClickCount = 0;
 		DragType doDrag = DragType.None;
 		CacheValue modifiedChecksum = new CacheValue();
@@ -440,14 +441,14 @@ namespace NeoEdit.TextEdit
 
 		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
 		{
-			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
+			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
 			if (!Selections.Any())
 			{
 				LineMin = LineMax = IndexMin = IndexMax = PositionMin = PositionMax = ColumnMin = ColumnMax = null;
 				return;
 			}
 
-			var range = Selections[visibleIndex];
+			var range = Selections[CurrentSelection];
 			var lineMin = Data.GetOffsetLine(range.Start);
 			var lineMax = Data.GetOffsetLine(range.End);
 			var indexMin = Data.GetOffsetIndex(range.Start, lineMin);
@@ -1369,7 +1370,7 @@ namespace NeoEdit.TextEdit
 			var column = Math.Max(0, Math.Min(Data.GetLineColumnsLength(line), (int)(mousePos.X / Font.charWidth) + xScrollValue));
 			var index = Data.GetIndexFromColumn(line, column, true);
 			var offset = Data.GetOffset(line, index);
-			var mouseRange = visibleIndex < Selections.Count ? Selections[visibleIndex] : null;
+			var mouseRange = CurrentSelection < Selections.Count ? Selections[CurrentSelection] : null;
 
 			if (selecting)
 			{
@@ -1394,7 +1395,7 @@ namespace NeoEdit.TextEdit
 					}
 
 					Selections.Add(new Range(offset, anchor));
-					visibleIndex = Selections.Count - 1;
+					CurrentSelection = Selections.Count - 1;
 				}
 				return;
 			}
@@ -1410,7 +1411,7 @@ namespace NeoEdit.TextEdit
 					Selections.Remove(mouseRange);
 				Selections.Add(new Range(GetNextWord(offset), GetPrevWord(Math.Min(offset + 1, EndOffset))));
 			}
-			visibleIndex = Selections.Count - 1;
+			CurrentSelection = Selections.Count - 1;
 		}
 
 		Range MoveCursor(Range range, int cursor, bool selecting)
@@ -1531,7 +1532,7 @@ namespace NeoEdit.TextEdit
 			var endIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, endColumn, true));
 			var y = lines.ToDictionary(line => line, line => (line - startLine) * Font.lineHeight);
 			var cursorLineDone = new HashSet<int>();
-			var visibleCursor = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
+			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 
 			foreach (var entry in brushes)
 			{
@@ -1811,13 +1812,13 @@ namespace NeoEdit.TextEdit
 
 		void SelectionsInvalidated()
 		{
-			var visible = (visibleIndex >= 0) && (visibleIndex < Selections.Count) ? Selections[visibleIndex] : null;
+			var visible = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 			Selections.DeOverlap();
 			if (visible != null)
 			{
-				visibleIndex = Selections.FindIndex(range => (range.Start == visible.Start) && (range.End == visible.End));
-				if (visibleIndex < 0)
-					visibleIndex = 0;
+				CurrentSelection = Selections.FindIndex(range => (range.Start == visible.Start) && (range.End == visible.End));
+				if (CurrentSelection < 0)
+					CurrentSelection = 0;
 			}
 
 			EnsureVisible();

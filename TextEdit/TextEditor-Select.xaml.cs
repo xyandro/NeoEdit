@@ -200,7 +200,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Selection_First()
 		{
-			visibleIndex = 0;
+			CurrentSelection = 0;
 			EnsureVisible(true);
 			canvasRenderTimer.Start();
 		}
@@ -213,18 +213,18 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Selection_Next()
 		{
-			++visibleIndex;
-			if (visibleIndex >= Selections.Count)
-				visibleIndex = 0;
+			++CurrentSelection;
+			if (CurrentSelection >= Selections.Count)
+				CurrentSelection = 0;
 			EnsureVisible(true);
 			canvasRenderTimer.Start();
 		}
 
 		void Command_Select_Selection_Previous()
 		{
-			--visibleIndex;
-			if (visibleIndex < 0)
-				visibleIndex = Selections.Count - 1;
+			--CurrentSelection;
+			if (CurrentSelection < 0)
+				CurrentSelection = Selections.Count - 1;
 			EnsureVisible(true);
 			canvasRenderTimer.Start();
 		}
@@ -233,16 +233,16 @@ namespace NeoEdit.TextEdit
 		{
 			if (!Selections.Any())
 				return;
-			visibleIndex = Math.Max(0, Math.Min(visibleIndex, Selections.Count - 1));
-			Selections.Replace(Selections[visibleIndex]);
-			visibleIndex = 0;
+			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
+			Selections.Replace(Selections[CurrentSelection]);
+			CurrentSelection = 0;
 		}
 
 		void Command_Select_Selection_Remove()
 		{
 			if (!Selections.Any())
 				return;
-			Selections.RemoveAt(visibleIndex);
+			Selections.RemoveAt(CurrentSelection);
 		}
 	}
 }
