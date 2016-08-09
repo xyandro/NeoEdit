@@ -1936,7 +1936,7 @@ namespace NeoEdit.TextEdit
 				return false;
 			if (strs.Any(str => str.IndexOfAny(Path.GetInvalidPathChars()) != -1))
 				return false;
-			if (strs.Any(str => !drives.Any(drive => str.StartsWith(drive))))
+			if (strs.Any(str => !drives.Any(drive => str.StartsWith(drive, StringComparison.OrdinalIgnoreCase))))
 				return false;
 			if (strs.Any(str => !FileOrDirectoryExists(str)))
 				return false;
