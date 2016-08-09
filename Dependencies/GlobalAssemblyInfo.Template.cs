@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(false)]
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
-[assembly: NeutralResourcesLanguageAttribute("en-US", UltimateResourceFallbackLocation.MainAssembly)]
+[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 
 [assembly: AssemblyVersion("2.1.2.%NUMREVS%")]
 [assembly: AssemblyFileVersion("2.1.2.%NUMREVS%")]

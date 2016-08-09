@@ -159,6 +159,11 @@
 			<textEdit:TextEditMenuItem Header="_Access Time" CommandEnum="Files_Get_AccessTime"/>
 			<textEdit:TextEditMenuItem Header="_Create Time" CommandEnum="Files_Get_CreateTime"/>
 			<textEdit:TextEditMenuItem Header="A_ttributes" CommandEnum="Files_Get_Attributes"/>
+			<MenuItem Header="_Version">
+				<textEdit:TextEditMenuItem Header="_File" CommandEnum="Files_Get_Version_File"/>
+				<textEdit:TextEditMenuItem Header="_Product" CommandEnum="Files_Get_Version_Product"/>
+				<textEdit:TextEditMenuItem Header="_Assembly" CommandEnum="Files_Get_Version_Assembly"/>
+			</MenuItem>
 		</MenuItem>
 		<MenuItem Header="S_et">
 			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>

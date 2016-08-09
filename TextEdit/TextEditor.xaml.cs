@@ -877,6 +877,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Get_AccessTime: Command_Files_Get_AccessTime(); break;
 				case TextEditCommand.Files_Get_CreateTime: Command_Files_Get_CreateTime(); break;
 				case TextEditCommand.Files_Get_Attributes: Command_Files_Get_Attributes(); break;
+				case TextEditCommand.Files_Get_Version_File: Command_Files_Get_Version_File(); break;
+				case TextEditCommand.Files_Get_Version_Product: Command_Files_Get_Version_Product(); break;
+				case TextEditCommand.Files_Get_Version_Assembly: Command_Files_Get_Version_Assembly(); break;
 				case TextEditCommand.Files_Set_Size: Command_Files_Set_Size(dialogResult as SetSizeDialog.Result); break;
 				case TextEditCommand.Files_Set_WriteTime: Command_Files_Set_Time(TextEditor.TimestampType.Write, dialogResult as ChooseDateTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_AccessTime: Command_Files_Set_Time(TextEditor.TimestampType.Access, dialogResult as ChooseDateTimeDialog.Result); break;
