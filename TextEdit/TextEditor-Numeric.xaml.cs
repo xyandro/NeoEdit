@@ -143,6 +143,22 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(numbers.Select(num => num.ToString()).ToList());
 		}
 
+		void Command_Numeric_AddSubtractClipboard(bool add)
+		{
+			if (Selections.Count == 0)
+				return;
+
+			var clipboardStrings = clipboard.Strings;
+			if ((clipboardStrings.Count == 1) && (Selections.Count != 1))
+				clipboardStrings = Selections.Select(str => clipboardStrings[0]).ToList();
+
+			if (Selections.Count != clipboardStrings.Count())
+				throw new Exception("Must have either one or equal number of clipboards.");
+
+			var mult = add ? 1 : -1;
+			ReplaceSelections(Selections.Zip(clipboardStrings, (sel, clip) => new { sel, clip }).AsParallel().AsOrdered().Select(obj => (double.Parse(GetString(obj.sel)) + double.Parse(obj.clip) * mult).ToString()).ToList());
+		}
+
 		void Command_Numeric_Whole()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str =>
