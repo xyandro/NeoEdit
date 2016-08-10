@@ -943,13 +943,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Select_Fraction: Command_Numeric_Select_Fraction(); break;
 				case TextEditCommand.Numeric_Hex_ToHex: Command_Numeric_Hex_ToHex(); break;
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
-				case TextEditCommand.Numeric_Sum: Command_Numeric_Sum(); break;
 				case TextEditCommand.Numeric_ConvertBase: Command_Numeric_ConvertBase(dialogResult as ConvertBaseDialog.Result); break;
 				case TextEditCommand.Numeric_Series_ZeroBased: Command_Numeric_Series_ZeroBased(); break;
 				case TextEditCommand.Numeric_Series_OneBased: Command_Numeric_Series_OneBased(); break;
 				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_Linear(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Series_Geometric: Command_Numeric_Series_Geometric(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Scale: Command_Numeric_Scale(dialogResult as ScaleDialog.Result); break;
+				case TextEditCommand.Numeric_Sum: Command_Numeric_Sum(); break;
 				case TextEditCommand.Numeric_ForwardSum: Command_Numeric_ForwardReverseSum(true); break;
 				case TextEditCommand.Numeric_ReverseSum: Command_Numeric_ForwardReverseSum(false); break;
 				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;

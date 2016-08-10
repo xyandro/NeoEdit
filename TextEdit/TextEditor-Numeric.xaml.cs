@@ -77,20 +77,6 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse("0" + GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 
-		void Command_Numeric_Sum()
-		{
-			if (!Selections.Any())
-				return;
-
-			var result = Selections.Where(range => !range.HasSelection).FirstOrDefault();
-			if (result == null)
-				result = Selections[Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1))];
-
-			var sum = Selections.AsParallel().Where(range => range.HasSelection).Select(range => double.Parse(GetString(range))).Sum();
-			Selections.Replace(result);
-			ReplaceSelections(sum.ToString());
-		}
-
 		ConvertBaseDialog.Result Command_Numeric_ConvertBase_Dialog() => ConvertBaseDialog.Run(WindowParent);
 
 		void Command_Numeric_ConvertBase(ConvertBaseDialog.Result result) => ReplaceSelections(GetSelectionStrings().Select(str => ConvertBase(str, result.InputSet, result.OutputSet)).ToList());
@@ -126,6 +112,20 @@ namespace NeoEdit.TextEdit
 		{
 			var ratio = (result.NewMax - result.NewMin) / (result.PrevMax - result.PrevMin);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((double.Parse(GetString(range)) - result.PrevMin) * ratio + result.NewMin).ToString()).ToList());
+		}
+
+		void Command_Numeric_Sum()
+		{
+			if (!Selections.Any())
+				return;
+
+			var result = Selections.Where(range => !range.HasSelection).FirstOrDefault();
+			if (result == null)
+				result = Selections[Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1))];
+
+			var sum = Selections.AsParallel().Where(range => range.HasSelection).Select(range => double.Parse(GetString(range))).Sum();
+			Selections.Replace(result);
+			ReplaceSelections(sum.ToString());
 		}
 
 		void Command_Numeric_ForwardReverseSum(bool forward)

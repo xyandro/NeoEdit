@@ -275,7 +275,6 @@
 			<textEdit:TextEditMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
 			<textEdit:TextEditMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="S_um" CommandEnum="Numeric_Sum"/>
 		<textEdit:TextEditMenuItem Header="Convert _Base" CommandEnum="Numeric_ConvertBase"/>
 		<Separator/>
 		<MenuItem Header="S_eries">
@@ -287,6 +286,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="S_cale" CommandEnum="Numeric_Scale"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="S_um" CommandEnum="Numeric_Sum"/>
 		<textEdit:TextEditMenuItem Header="F_orward Sum" CommandEnum="Numeric_ForwardSum"/>
 		<textEdit:TextEditMenuItem Header="Re_verse Sum" CommandEnum="Numeric_ReverseSum"/>
 		<Separator/>
