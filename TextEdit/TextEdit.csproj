@@ -515,6 +515,7 @@
     <Compile Include="Highlighting\HighlightCSharp.cs" />
     <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
+    <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Misc.cs" />
     <None Include="Misc\Words.txt" />
