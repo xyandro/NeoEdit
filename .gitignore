@@ -31,6 +31,7 @@ TestResults
 /TextEdit/Content/CSharp/Parser
 /TextEdit/Content/HTML/Parser
 /TextEdit/Content/JSON/Parser
+/TextEdit/Content/SQL/Parser
 /TextEdit/Content/TCSV/Parser
 /TextEdit/Content/XML/Parser
 /TextEdit/Misc/Words.txt.gz

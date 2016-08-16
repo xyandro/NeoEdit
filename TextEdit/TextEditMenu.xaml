@@ -365,6 +365,7 @@
 			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
 			<textEdit:MultiMenuItem Header="_HTML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
 			<textEdit:MultiMenuItem Header="_JSON" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
+			<textEdit:MultiMenuItem Header="_SQL" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
 			<textEdit:MultiMenuItem Header="_TSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
 			<textEdit:MultiMenuItem Header="_XML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.XML}" CommandEnum="Content_Type_XML"/>
 		</MenuItem>

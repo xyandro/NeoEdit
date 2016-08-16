@@ -10,6 +10,7 @@ using NeoEdit.TextEdit.Content.CPlusPlus;
 using NeoEdit.TextEdit.Content.CSharp;
 using NeoEdit.TextEdit.Content.HTML;
 using NeoEdit.TextEdit.Content.JSON;
+using NeoEdit.TextEdit.Content.SQL;
 using NeoEdit.TextEdit.Content.TCSV;
 using NeoEdit.TextEdit.Content.XML;
 
@@ -27,6 +28,7 @@ namespace NeoEdit.TextEdit.Content
 			CSV,
 			HTML,
 			JSON,
+			SQL,
 			TSV,
 			XML,
 		}
@@ -44,6 +46,7 @@ namespace NeoEdit.TextEdit.Content
 				case ParserType.CSV: return CSVVisitor.Parse(data);
 				case ParserType.HTML: return HTMLVisitor.Parse(data);
 				case ParserType.JSON: return JSONVisitor.Parse(data);
+				case ParserType.SQL: return SQLVisitor.Parse(data);
 				case ParserType.TSV: return TSVVisitor.Parse(data);
 				case ParserType.XML: return XMLVisitor.Parse(data);
 				default: throw new ArgumentException("Unable to parse this type");
@@ -62,6 +65,7 @@ namespace NeoEdit.TextEdit.Content
 				case ".csv": return ParserType.CSV;
 				case ".htm": case ".html": return ParserType.HTML;
 				case ".jsn": case ".json": return ParserType.JSON;
+				case ".sql": return ParserType.SQL;
 				case ".tsv": return ParserType.TSV;
 				case ".csproj": case ".vbproj": case ".vcxproj": case ".xml": case ".xaml": return ParserType.XML;
 				default: return ParserType.None;
