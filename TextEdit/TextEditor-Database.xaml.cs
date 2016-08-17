@@ -5,9 +5,10 @@ using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Dialogs;
+using NeoEdit.TextEdit.QueryBuilding;
+using NeoEdit.TextEdit.QueryBuilding.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
@@ -75,23 +76,21 @@ namespace NeoEdit.TextEdit
 
 		void Command_Database_UseCurrentWindow(bool? multiStatus) => UseCurrentWindow = multiStatus != true;
 
-		string Command_Database_QueryTable_Dialog()
+		string Command_Database_QueryBuilder_Dialog()
 		{
+			if (Selections.Count != 1)
+				throw new Exception("Must run QueryBuilder with one selection");
 			ValidateConnection();
-			var tableSchema = dbConnection.GetSchema("Tables");
-			var tableCatalogColumn = tableSchema.Columns["table_catalog"];
-			var tableSchemaColumn = tableSchema.Columns["table_schema"];
-			var tableNameColumn = tableSchema.Columns["table_name"];
-			List<string> tables;
-			if (dbConnection is MySql.Data.MySqlClient.MySqlConnection)
-				tables = tableSchema.Rows.Cast<DataRow>().Select(row => $"{DBSanitize(row[tableSchemaColumn]?.ToString())}.{DBSanitize(row[tableNameColumn]?.ToString())}").ToList();
-			else
-				tables = tableSchema.Rows.Cast<DataRow>().Select(row => $"{DBSanitize(row[tableCatalogColumn]?.ToString())}.{DBSanitize(row[tableSchemaColumn]?.ToString())}.{DBSanitize(row[tableNameColumn]?.ToString())}").ToList();
 
-			return QueryTableDialog.Run(WindowParent, tables);
+			var tables = dbConnection.GetSchema("columns").Rows.OfType<DataRow>().GroupBy(row => row["table_name"]?.ToString()).Where(group => group.Key != null).Select(group => new TableSelect(group.Key, group.Select(row => row["column_name"]?.ToString()).NonNull().ToList())).ToList();
+			var selectQuery = QuerySelect.FromStr(GetString(Selections[0]), tables);
+			var querySelect = QueryBuilderDialog.Run(WindowParent, tables, selectQuery);
+			if (querySelect == null)
+				return null;
+			return string.Join("", querySelect.QueryLines.Select(str => $"{str}{Data.DefaultEnding}"));
 		}
 
-		void Command_Database_QueryTable(string result) => ReplaceSelections(result);
+		void Command_Database_QueryBuilder(string result) => ReplaceSelections(result);
 
 		void Command_Database_Examine_Dialog()
 		{

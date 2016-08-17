@@ -1,0 +1,161 @@
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.QueryBuilding.Dialogs.QueryBuilderDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	Title="QueryBuilder" WindowStyle="SingleBorderWindow"  WindowState="Maximized">
+
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+
+		<Button Grid.Row="0" Grid.Column="0" Content="_Count:" Click="OnCountClick"/>
+		<TextBox Grid.Row="0" Grid.Column="1" Name="count" Text="{Binding Count, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Button Grid.Row="1" Grid.Column="0" Content="_Select:" Click="OnSelectClick"/>
+		<ListView Grid.Row="1" Grid.Column="1" Name="select" ItemsSource="{Binding Selects, ElementName=self}">
+			<ListView.ItemContainerStyle>
+				<Style TargetType="ListViewItem">
+					<Setter Property="VerticalContentAlignment" Value="Top"/>
+				</Style>
+			</ListView.ItemContainerStyle>
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="Expr">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Expr, UpdateSourceTrigger=PropertyChanged}" MinWidth="150"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Alias">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Alias, UpdateSourceTrigger=PropertyChanged}" MinWidth="150"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Delete">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<Button Content="Delete" Tag="{Binding}" Click="DeleteSelect"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+		</ListView>
+
+		<Button Grid.Row="2" Grid.Column="0" Content="_From:" Click="OnFromClick"/>
+		<ListView Grid.Row="2" Grid.Column="1" Name="from" ItemsSource="{Binding From, ElementName=self}">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="Type">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox SelectedItem="{Binding Type}" ItemsSource="{Binding JoinTypes, ElementName=self}"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Table" DisplayMemberBinding="{Binding Table.Query}"/>
+					<GridViewColumn Header="Alias">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Alias, UpdateSourceTrigger=PropertyChanged}" MinWidth="150"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Condition">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Condition, UpdateSourceTrigger=PropertyChanged}" MinWidth="300"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Delete">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<Button Content="Delete" Tag="{Binding}" Click="DeleteFrom"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+		</ListView>
+
+		<Button Grid.Row="3" Grid.Column="0" Content="_Where:" Click="OnWhereClick"/>
+		<TextBox Grid.Row="3" Grid.Column="1" Name="where" Text="{Binding Where, ElementName=self, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>
+
+		<Button Grid.Row="4" Grid.Column="0" Content="_Group By:" Click="OnGroupByClick"/>
+		<ListView Grid.Row="4" Grid.Column="1" Name="groupBy" ItemsSource="{Binding GroupBy, ElementName=self}">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="Column">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Item, UpdateSourceTrigger=PropertyChanged}" MinWidth="300"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Delete">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<Button Content="Delete" Tag="{Binding}" Click="DeleteGroupBy"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+		</ListView>
+
+		<Button Grid.Row="5" Grid.Column="0" Content="_Having:" Click="OnHavingClick"/>
+		<TextBox Grid.Row="5" Grid.Column="1" Name="having" Text="{Binding Having, ElementName=self, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>
+
+		<Button Grid.Row="6" Grid.Column="0" Content="O_rder By:" Click="OnOrderByClick"/>
+		<ListView Grid.Row="6" Grid.Column="1" Name="orderBy" ItemsSource="{Binding OrderBy, ElementName=self}">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="Expr">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Expr, UpdateSourceTrigger=PropertyChanged}" MinWidth="300"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Direction">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox SelectedItem="{Binding Direction}" ItemsSource="{Binding Directions, ElementName=self}"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Delete">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<Button Content="Delete" Tag="{Binding}" Click="DeleteOrderBy"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+		</ListView>
+
+		<UniformGrid Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" Content="_Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</guiControls:ModalDialog>

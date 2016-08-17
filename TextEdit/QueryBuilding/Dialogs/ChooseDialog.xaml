@@ -1,0 +1,27 @@
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.QueryBuilding.Dialogs.ChooseDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	Title="Choose Item" SizeToContent="Height" Width="500" FocusManager.FocusedElement="{Binding ElementName=itemsList}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_Item:" Target="{Binding ElementName=itemsList}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Name="itemsList" Text="{Binding Item, ElementName=self, UpdateSourceTrigger=PropertyChanged}" SuppressNavigation="False" UpcaseTracking="True"/>
+
+		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</guiControls:ModalDialog>

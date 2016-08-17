@@ -3,6 +3,7 @@ parser grammar SQLParser;
 options { tokenVocab = SQLLexer; }
 
 document           : stmt* EOF ;
+selectentry        : select? EOF ;
 
 stmt               : (ddl | tsql | trans | cursor | query) SEMICOLON? ;
 

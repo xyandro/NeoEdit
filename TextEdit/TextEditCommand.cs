@@ -254,7 +254,7 @@ namespace NeoEdit.TextEdit
 		Database_Connect,
 		[KeyGesture(Key.Q, ModifierKeys.Control)] Database_ExecuteQuery,
 		Database_UseCurrentWindow,
-		[KeyGesture(Key.Q, ModifierKeys.Control | ModifierKeys.Shift)] Database_QueryTable,
+		[KeyGesture(Key.Q, ModifierKeys.Control | ModifierKeys.Shift)] Database_QueryBuilder,
 		Database_Examine,
 		[KeyGesture(Key.K, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Keys_Set_Keys,
 		[KeyGesture(Key.D1, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Keys_Set_Values1,

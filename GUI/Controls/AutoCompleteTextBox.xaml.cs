@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -19,6 +20,10 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public bool IsDropDownOpen { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool SuppressNavigation { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool UpcaseTracking { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		[DepProp]
 		ObservableCollection<string> Suggestions { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
 		int SuggestedIndex { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<int>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
@@ -34,6 +39,7 @@ namespace NeoEdit.GUI.Controls
 		public AutoCompleteTextBox()
 		{
 			InitializeComponent();
+			SuppressNavigation = true;
 			Suggestions = new ObservableCollection<string>();
 			TextChanged += (s, e) => SetSuggestions();
 			SelectionChanged += (s, e) => SetSuggestions();
@@ -45,35 +51,34 @@ namespace NeoEdit.GUI.Controls
 
 		static Dictionary<string, List<string>> SuggestionLists = new Dictionary<string, List<string>>();
 
-		static List<string> GetSuggestionList(string completionTag)
+		List<string> localSuggestionList = new List<string>();
+		List<string> SuggestionList
 		{
-			if (string.IsNullOrEmpty(completionTag))
-				return null;
-			if (!SuggestionLists.ContainsKey(completionTag))
-				SuggestionLists[completionTag] = new List<string>();
-			return SuggestionLists[completionTag];
+			get
+			{
+				if (string.IsNullOrEmpty(CompletionTag))
+					return localSuggestionList;
+				if (!SuggestionLists.ContainsKey(CompletionTag))
+					SuggestionLists[CompletionTag] = new List<string>();
+				return SuggestionLists[CompletionTag];
+			}
 		}
 
-		List<string> SuggestionList => GetSuggestionList(CompletionTag);
-
-		public static void AddAllSuggestions(string completionTag, params string[] suggestions)
+		public void AddSuggestions(params string[] suggestions)
 		{
-			var list = GetSuggestionList(completionTag);
+			var list = SuggestionList;
 			list?.RemoveAll(str => suggestions.Any(suggestion => str.Equals(suggestion, StringComparison.OrdinalIgnoreCase)));
 			list?.InsertRange(0, suggestions.Where(val => !string.IsNullOrEmpty(val)));
 		}
-
-		public void AddSuggestions(params string[] suggestions) => AddAllSuggestions(CompletionTag, suggestions);
 		public void AddCurrentSuggestion() => AddSuggestions(Text);
 
-		public static string GetLastSuggestion(string completionTag) => GetSuggestionList(completionTag)?.FirstOrDefault();
-		public string GetLastSuggestion() => GetLastSuggestion(CompletionTag);
+		public string GetLastSuggestion() => SuggestionList.FirstOrDefault();
 
 		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 
 		void HandleKey(object sender, KeyEventArgs e)
 		{
-			if ((e.Key == Key.Down) && (!IsDropDownOpen) && (SuggestionList != null))
+			if ((e.Key == Key.Down) && (!IsDropDownOpen))
 			{
 				IsDropDownOpen = true;
 				SetSuggestions();
@@ -101,8 +106,16 @@ namespace NeoEdit.GUI.Controls
 						break;
 					case Key.Down: ++suggestedIndex; break;
 					case Key.Up: --suggestedIndex; break;
-					case Key.Escape: IsDropDownOpen = false; break;
-					case Key.Enter: AcceptSuggestion(SuggestedValue); break;
+					case Key.Escape:
+						IsDropDownOpen = false;
+						if (!SuppressNavigation)
+							e.Handled = false;
+						break;
+					case Key.Enter:
+						AcceptSuggestion(SuggestedValue);
+						if (!SuppressNavigation)
+							e.Handled = false;
+						break;
 					default: e.Handled = false; break;
 				}
 
@@ -122,6 +135,15 @@ namespace NeoEdit.GUI.Controls
 			IsDropDownOpen = false;
 		}
 
+		bool HasStr(string str, string find)
+		{
+			if (str.IndexOf(find, StringComparison.InvariantCultureIgnoreCase) != -1)
+				return true;
+			if ((UpcaseTracking) && (Regex.Replace(str, "[^0-9A-Z_.]", "").IndexOf(find, StringComparison.InvariantCultureIgnoreCase) != -1))
+				return true;
+			return false;
+		}
+
 		void SetSuggestions()
 		{
 			if (!IsDropDownOpen)
@@ -130,7 +152,8 @@ namespace NeoEdit.GUI.Controls
 			Suggestions.Clear();
 
 			var find = SelectedText == Text ? "" : SelectedText.CoalesceNullOrEmpty(Text) ?? "";
-			foreach (string suggestion in SuggestionList.Where(str => str.IndexOf(find, StringComparison.InvariantCultureIgnoreCase) != -1))
+			var ucFind = Regex.Replace(find, "[^A-Z]", "");
+			foreach (string suggestion in SuggestionList.Where(str => HasStr(str, find)))
 				Suggestions.Add(suggestion);
 
 			if (!Suggestions.Any())
