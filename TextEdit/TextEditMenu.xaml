@@ -14,6 +14,7 @@
 
 	<MenuItem Header="_File">
 		<textEdit:TextEditMenuItem Header="_New" CommandEnum="File_New"/>
+		<textEdit:TextEditMenuItem Header="New _From Selections" CommandEnum="File_NewFromSelections"/>
 		<MenuItem Header="_Open">
 			<textEdit:TextEditMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
 			<textEdit:TextEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>

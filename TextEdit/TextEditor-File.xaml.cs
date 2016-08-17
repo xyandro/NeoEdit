@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Win32;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Dialogs;
@@ -51,6 +52,8 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count == fileNames.Count())
 				ReplaceSelections(strs);
 		}
+
+		void Command_File_NewFromSelections() => GetSelectionStrings().ForEach((str, index) => TextEditTabs.Create(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
 
 		void Command_File_Open_Selected()
 		{

@@ -178,11 +178,27 @@ namespace NeoEdit.Common
 				action(item);
 		}
 
+		public static void ForEach<TSource>(this IEnumerable<TSource> source, Action<TSource, int> action)
+		{
+			var ctr = 0;
+			foreach (var item in source)
+				action(item, ctr++);
+		}
+
 		public static List<TResult> ForEach<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> action)
 		{
 			var result = new List<TResult>();
 			foreach (var item in source)
 				result.Add(action(item));
+			return result;
+		}
+
+		public static List<TResult> ForEach<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, int, TResult> action)
+		{
+			var ctr = 0;
+			var result = new List<TResult>();
+			foreach (var item in source)
+				result.Add(action(item, ctr++));
 			return result;
 		}
 

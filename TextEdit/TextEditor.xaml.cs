@@ -799,6 +799,7 @@ namespace NeoEdit.TextEdit
 
 			switch (command)
 			{
+				case TextEditCommand.File_NewFromSelections: Command_File_NewFromSelections(); break;
 				case TextEditCommand.File_Open_Selected: Command_File_Open_Selected(); break;
 				case TextEditCommand.File_OpenWith_Disk: Command_File_OpenWith_Disk(); break;
 				case TextEditCommand.File_OpenWith_HexEditor: Command_File_OpenWith_HexEditor(); break;
