@@ -2,7 +2,6 @@ All:
 Add command prompt
 Remove native dlls (add to mixed)
 Add TFS source control
-Don't select both files when starting in diff mode with shift down (if shift is down when starting toggle it up)
 Visual Studio plug-in for integration
 
 Disk:
