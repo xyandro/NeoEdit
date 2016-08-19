@@ -46,23 +46,42 @@ namespace Loader
 			var extractor = new Extractor();
 			if (Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location).EndsWith(Extractor.ExtractorSuffix))
 				extractor.RunExtractor(int.Parse(args[0]), args[1], (BitDepths)Enum.Parse(typeof(BitDepths), args[2]));
-			else if ((ResourceReader.Config.ExtractAction != ExtractActions.None) && ((Keyboard.Modifiers.HasFlag(ModifierKeys.Control | ModifierKeys.Shift)) || ((args.Length == 1) && (args[0] == "-extract"))))
+			else if ((ResourceReader.Config.ExtractAction != ExtractActions.None) && ((Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Down)) || ((args.Length == 1) && (args[0] == "-extract"))))
 			{
-				switch (ResourceReader.Config.ExtractAction)
+				var action = ResourceReader.Config.ExtractAction;
+				var bitDepth = Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32;
+				if (action == ExtractActions.GUI)
 				{
-					case ExtractActions.Extract: extractor.Extract(Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32); break;
-					case ExtractActions.GUI:
-						var action = Contents.Run();
-						switch (action?.Item1)
-						{
-							case ExtractActions.Extract: extractor.Extract(action.Item2); break;
-							case ExtractActions.GUI: extractor.RunProgram(args); break;
-						}
-						break;
+					var result = Contents.Run();
+					action = result?.Item1 ?? ExtractActions.None;
+					bitDepth = result?.Item2 ?? bitDepth;
+				}
+
+				ClearCapsLock();
+
+				switch (action)
+				{
+					case ExtractActions.Extract: extractor.Extract(bitDepth); break;
+					case ExtractActions.GUI: extractor.RunProgram(args); break;
 				}
 			}
 			else
 				extractor.RunProgram(args);
+		}
+
+		static void ClearCapsLock()
+		{
+			if (!Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Toggled))
+				return;
+
+			var inputs = new Native.INPUT[]
+			{
+				new Native.INPUT { type = Native.InputType.KEYBOARD, ki = new Native.INPUT.KEYBDINPUT { wVk = Native.VirtualKeyShort.CAPSLOCK, dwFlags = Native.KEYEVENTF.KEYUP } },
+				new Native.INPUT { type = Native.InputType.KEYBOARD, ki = new Native.INPUT.KEYBDINPUT { wVk = Native.VirtualKeyShort.CAPSLOCK, dwFlags = Native.KEYEVENTF.NONE } },
+				new Native.INPUT { type = Native.InputType.KEYBOARD, ki = new Native.INPUT.KEYBDINPUT { wVk = Native.VirtualKeyShort.CAPSLOCK, dwFlags = Native.KEYEVENTF.KEYUP } },
+			};
+
+			Native.SendInput(inputs.Length, inputs, Native.INPUT.Size);
 		}
 
 		[STAThread]
@@ -77,7 +96,7 @@ namespace Loader
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.StackTrace, ex.Message);
+				MessageBox.Show($"{ex.Message}\n\nStack trace:\n{ex.StackTrace}", "Error");
 				Environment.Exit(1);
 			}
 		}

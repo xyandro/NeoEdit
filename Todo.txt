@@ -2,7 +2,7 @@ All:
 Add command prompt
 Remove native dlls (add to mixed)
 Add TFS source control
-Don't select both files when starting in diff mode with shift down
+Don't select both files when starting in diff mode with shift down (if shift is down when starting toggle it up)
 Visual Studio plug-in for integration
 
 Disk:
@@ -36,6 +36,7 @@ Add multi-file status bar (shows how many (active? files|selections|etc.)
 Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
 Numeric->Select->Numbers
+Allow selecting a screen location (with zoom)
 
 View:
 Update as new lines are added
