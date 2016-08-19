@@ -1082,8 +1082,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Nothing: Command_Select_Nothing(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as LimitDialog.Result); break;
-				case TextEditCommand.Select_Lines: Command_Select_Lines(); break;
-				case TextEditCommand.Select_WholeLines: Command_Select_WholeLines(); break;
+				case TextEditCommand.Select_Lines: Command_Select_Lines(false); break;
+				case TextEditCommand.Select_WholeLines: Command_Select_Lines(true); break;
 				case TextEditCommand.Select_Rectangle: Command_Select_Rectangle(); break;
 				case TextEditCommand.Select_Invert: Command_Select_Invert(); break;
 				case TextEditCommand.Select_Join: Command_Select_Join(); break;

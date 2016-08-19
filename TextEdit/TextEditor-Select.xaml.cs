@@ -105,7 +105,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(retval.ToList());
 		}
 
-		void Command_Select_Lines()
+		void Command_Select_Lines(bool includeEndings)
 		{
 			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
@@ -119,10 +119,8 @@ namespace NeoEdit.TextEdit
 				if (hasLine[line])
 					lines.Add(line);
 
-			Selections.Replace(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
+			Selections.Replace(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line) + (includeEndings ? Data.GetEndingLength(line) : 0))).ToList());
 		}
-
-		void Command_Select_WholeLines() => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(Data.GetOffset(Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) + 1, 0), Data.GetOffset(Data.GetOffsetLine(range.Start), 0))).ToList());
 
 		void Command_Select_Rectangle() => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList());
 
