@@ -18,7 +18,7 @@ namespace NeoEdit.TextEdit
 
 		string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
 
-		Tuple<string, Table> RunDBSelect(string commandText)
+		IEnumerable<Tuple<string, Table>> RunDBSelect(string commandText)
 		{
 			var tableName = Regex.Match(commandText, @"\bFROM\b.*?([\[\]a-z\.]+)", RegexOptions.IgnoreCase).Groups[1].Value.Replace("[", "").Replace("]", "").CoalesceNullOrEmpty();
 			using (var command = dbConnection.CreateCommand())
@@ -26,9 +26,13 @@ namespace NeoEdit.TextEdit
 				command.CommandText = commandText;
 				using (var reader = command.ExecuteReader())
 				{
-					if (reader.FieldCount == 0)
-						return null;
-					return Tuple.Create(tableName, new Table(reader));
+					while (true)
+					{
+						if (reader.FieldCount != 0)
+							yield return Tuple.Create(tableName, new Table(reader));
+						if (!reader.NextResult())
+							break;
+					}
 				}
 			}
 		}
@@ -57,7 +61,7 @@ namespace NeoEdit.TextEdit
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { FullRange };
-			var tables = selections.Select(range => RunDBSelect(GetString(range))).ToList();
+			var tables = selections.SelectMany(range => RunDBSelect(GetString(range))).ToList();
 			if (!tables.NonNull().Any())
 			{
 				Message.Show($"Quer{(selections.Count == 1 ? "y" : "ies")} run successfully.");
