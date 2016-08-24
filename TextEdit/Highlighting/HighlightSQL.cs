@@ -11,7 +11,7 @@ namespace NeoEdit.TextEdit.Highlighting
 		static Regex keyWordsRE = new Regex(string.Join("|", keyWords.Select(word => string.Format(@"\b{0}\b", word))), RegexOptions.IgnoreCase);
 		static Brush keywordsBrush = new SolidColorBrush(Color.FromRgb(0, 0, 255));
 
-		static Regex stringRE = new Regex(@"N?'([^']+|'')*'");
+		static Regex stringRE = new Regex(@"N?'([^']|'')*'");
 		static Brush stringBrush = new SolidColorBrush(Color.FromRgb(163, 21, 21));
 
 		static Regex commentRE = new Regex("--.*?$");
