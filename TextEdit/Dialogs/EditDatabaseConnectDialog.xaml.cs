@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.Common;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Markup;
+using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
@@ -14,20 +17,31 @@ namespace NeoEdit.TextEdit.Dialogs
 {
 	internal partial class EditDatabaseConnectDialog
 	{
-		public class DBParam
+		public class DBParam : DependencyObject
 		{
+			public DBConnectInfo.DBType DBType { get; }
 			public string Name { get; }
-			public object Value { get; set; }
-			public object Default { get; set; }
+			[DepProp]
+			public object Value { get { return UIHelper<DBParam>.GetPropValue<object>(this); } private set { UIHelper<DBParam>.SetPropValue(this, value); } }
+			public object Original { get; }
+			public object Default { get; }
 			public Type Type { get; }
+			public bool IsDefault => (Value == Default) || ((Value != null) && (Default != null) && (Value.Equals(Default)));
 
-			public DBParam(string name, object value, object _default, Type type)
+			static DBParam() { UIHelper<DBParam>.Register(); }
+
+			public DBParam(DBConnectInfo.DBType dbType, PropertyInfo prop, DbConnectionStringBuilder values, DbConnectionStringBuilder defaults)
 			{
-				Name = name;
-				Value = value;
-				Default = _default;
-				Type = type;
+				DBType = dbType;
+				Name = prop.Name;
+				try { Original = prop.GetValue(values); } catch { }
+				try { Default = prop.GetValue(defaults); } catch { }
+				Value = Original;
+				Type = prop.PropertyType;
 			}
+
+			public void ResetOriginal() => Value = Original;
+			public void ResetDefault() => Value = Default;
 
 			public override string ToString() => $"{Name} = {Value}";
 		}
@@ -35,14 +49,14 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public string ConnectionName { get { return UIHelper<EditDatabaseConnectDialog>.GetPropValue<string>(this); } set { UIHelper<EditDatabaseConnectDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public DBConnectInfo.DBType Database { get { return UIHelper<EditDatabaseConnectDialog>.GetPropValue<DBConnectInfo.DBType>(this); } set { UIHelper<EditDatabaseConnectDialog>.SetPropValue(this, value); } }
+		public DBConnectInfo.DBType DBType { get { return UIHelper<EditDatabaseConnectDialog>.GetPropValue<DBConnectInfo.DBType>(this); } set { UIHelper<EditDatabaseConnectDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public ObservableCollection<DBParam> Params { get { return UIHelper<EditDatabaseConnectDialog>.GetPropValue<ObservableCollection<DBParam>>(this); } set { UIHelper<EditDatabaseConnectDialog>.SetPropValue(this, value); } }
+		public string ConnStr { get { return UIHelper<EditDatabaseConnectDialog>.GetPropValue<string>(this); } set { UIHelper<EditDatabaseConnectDialog>.SetPropValue(this, value); } }
 
 		static EditDatabaseConnectDialog()
 		{
 			UIHelper<EditDatabaseConnectDialog>.Register();
-			UIHelper<EditDatabaseConnectDialog>.AddCallback(a => a.Database, (obj, o, n) => obj.SetParams(new DBConnectInfo { Type = obj.Database }));
+			UIHelper<EditDatabaseConnectDialog>.AddCallback(a => a.DBType, (obj, o, n) => obj.ConnStr = "");
 		}
 
 		EditDatabaseConnectDialog(DBConnectInfo dbConnectInfo)
@@ -50,53 +64,20 @@ namespace NeoEdit.TextEdit.Dialogs
 			InitializeComponent();
 			type.ItemsSource = Enum.GetValues(typeof(DBConnectInfo.DBType)).Cast<DBConnectInfo.DBType>().Where(item => item != DBConnectInfo.DBType.None).ToList();
 			ConnectionName = dbConnectInfo.Name;
-			Database = dbConnectInfo.Type;
-			SetParams(dbConnectInfo);
+			DBType = dbConnectInfo.Type;
+			ConnStr = dbConnectInfo.ConnectionString;
 		}
 
-		void SetParams(DBConnectInfo dbConnectInfo)
-		{
-			if (dbConnectInfo.Type == DBConnectInfo.DBType.None)
-			{
-				Params = new ObservableCollection<DBParam>();
-				return;
-			}
-			var itemBuilder = dbConnectInfo.ConnectionStringBuilder;
-			var defaultBuilder = new DBConnectInfo { Type = Database }.ConnectionStringBuilder;
-			var baseProps = new HashSet<string>(typeof(DbConnectionStringBuilder).GetProperties().Select(prop => prop.Name));
-			var props = itemBuilder.GetType().GetProperties().Where(prop => !baseProps.Contains(prop.Name)).Where(prop => prop.CanWrite).Where(prop => prop.GetIndexParameters().Length == 0).ToDictionary(prop => prop.Name);
-			Params = new ObservableCollection<DBParam>(props.Values.Select(prop =>
-			{
-				object itemValue = null, defaultValue = null;
-				try { itemValue = prop.GetValue(itemBuilder); } catch { }
-				try { defaultValue = prop.GetValue(defaultBuilder); } catch { }
-				return new DBParam(prop.Name, itemValue, defaultValue, prop.PropertyType);
-			}).OrderBy(dbParam => (dbParam.Value ?? "").Equals(dbParam.Default ?? "")));
-		}
-
-		DBConnectInfo Result
-		{
-			get
-			{
-				var result = new DBConnectInfo { Name = ConnectionName, Type = Database };
-				var builder = result.ConnectionStringBuilder;
-				var props = builder.GetType().GetProperties().ToDictionary(prop => prop.Name);
-				foreach (var dbParam in Params)
-					if (!(dbParam.Value ?? "").Equals(dbParam.Default ?? ""))
-						props[dbParam.Name].SetValue(builder, dbParam.Value);
-				result.ConnectionStringBuilder = builder;
-				return result;
-			}
-		}
+		DBConnectInfo GetResult() => new DBConnectInfo { Name = ConnectionName, Type = DBType, ConnectionString = ConnStr };
 
 		void CreateClick(object sender, RoutedEventArgs e)
 		{
-			Result.CreateDatabase();
+			GetResult().CreateDatabase();
 
 			new Message
 			{
 				Title = "Information",
-				Text = Result.Test() ?? "Database created.",
+				Text = GetResult().Test() ?? "Database created.",
 				Options = Message.OptionsEnum.Ok,
 				DefaultAccept = Message.OptionsEnum.Ok,
 				DefaultCancel = Message.OptionsEnum.Ok,
@@ -108,11 +89,35 @@ namespace NeoEdit.TextEdit.Dialogs
 			new Message
 			{
 				Title = "Information",
-				Text = Result.Test() ?? "Connection successful.",
+				Text = GetResult().Test() ?? "Connection successful.",
 				Options = Message.OptionsEnum.Ok,
 				DefaultAccept = Message.OptionsEnum.Ok,
 				DefaultCancel = Message.OptionsEnum.Ok,
 			}.Show();
+		}
+
+		void ResetOriginalClick(object sender, RoutedEventArgs e)
+		{
+			var tag = (sender as Button).Tag;
+			var dbParams = new List<DBParam>();
+			if (tag is DBParam)
+				dbParams.Add(tag as DBParam);
+			else
+				dbParams.AddRange(parameters.Items.OfType<DBParam>());
+			dbParams.ForEach(dbParam => dbParam.ResetOriginal());
+			BindingOperations.GetMultiBindingExpression(parameters, DataGrid.ItemsSourceProperty).UpdateSource();
+		}
+
+		void ResetDefaultClick(object sender, RoutedEventArgs e)
+		{
+			var tag = (sender as Button).Tag;
+			var dbParams = new List<DBParam>();
+			if (tag is DBParam)
+				dbParams.Add(tag as DBParam);
+			else
+				dbParams.AddRange(parameters.Items.OfType<DBParam>());
+			dbParams.ForEach(dbParam => dbParam.ResetDefault());
+			BindingOperations.GetMultiBindingExpression(parameters, DataGrid.ItemsSourceProperty).UpdateSource();
 		}
 
 		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
@@ -120,13 +125,14 @@ namespace NeoEdit.TextEdit.Dialogs
 		public static DBConnectInfo Run(Window parent, DBConnectInfo dbConnectInfo)
 		{
 			var dialog = new EditDatabaseConnectDialog(dbConnectInfo) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.Result : null;
+			return dialog.ShowDialog() ? dialog.GetResult() : null;
 		}
 	}
 
 	class DBParamTemplateSelector : DataTemplateSelector
 	{
-		public bool Default { get; set; }
+		public string Path { get; set; }
+		public bool ReadOnly { get; set; }
 
 		public override DataTemplate SelectTemplate(object item, DependencyObject container)
 		{
@@ -134,47 +140,94 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (dbParam == null)
 				return base.SelectTemplate(item, container);
 
-			var binding = new Binding(Default ? "Default" : "Value") { UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged };
+			Binding binding;
 
+			if (ReadOnly)
+				binding = new Binding(Path) { Mode = BindingMode.OneWay };
+			else
+				binding = new Binding(Path) { UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, NotifyOnSourceUpdated = true };
+
+			FrameworkElementFactory factory;
 			if (dbParam.Type == typeof(bool))
 			{
-				var checkbox = new FrameworkElementFactory(typeof(CheckBox));
-				checkbox.SetValue(CheckBox.IsEnabledProperty, !Default);
-				checkbox.SetBinding(CheckBox.IsCheckedProperty, binding);
-				return new DataTemplate { VisualTree = checkbox };
+				factory = new FrameworkElementFactory(typeof(CheckBox));
+				factory.SetBinding(CheckBox.IsCheckedProperty, binding);
 			}
-			if ((dbParam.Type == typeof(string)) || (dbParam.Type == typeof(int)) || (dbParam.Type == typeof(int?)) || (dbParam.Type == typeof(uint)) || (dbParam.Type == typeof(byte[])))
+			else if ((dbParam.Type == typeof(string)) || (dbParam.Type == typeof(int)) || (dbParam.Type == typeof(int?)) || (dbParam.Type == typeof(uint)) || (dbParam.Type == typeof(byte[])))
 			{
-				var textbox = new FrameworkElementFactory(typeof(TextBox));
-				textbox.SetValue(TextBox.IsReadOnlyProperty, Default);
-				textbox.SetValue(TextBox.BorderThicknessProperty, new Thickness(0));
+				factory = new FrameworkElementFactory(typeof(TextBox));
+				factory.SetValue(TextBox.IsReadOnlyProperty, ReadOnly);
+				factory.SetValue(TextBox.BorderThicknessProperty, new Thickness(0));
 				if (dbParam.Type == typeof(byte[]))
 					binding.Converter = new HexConverter();
-				textbox.SetBinding(TextBox.TextProperty, binding);
-				return new DataTemplate { VisualTree = textbox };
+				factory.SetBinding(TextBox.TextProperty, binding);
 			}
-			if (dbParam.Type.IsEnum)
+			else if (dbParam.Type.IsEnum)
 			{
-				var combobox = new FrameworkElementFactory(typeof(ComboBox));
-				combobox.SetValue(ComboBox.IsEnabledProperty, !Default);
-				combobox.SetBinding(ComboBox.SelectedValueProperty, binding);
+				factory = new FrameworkElementFactory(typeof(ComboBox));
+				factory.SetBinding(ComboBox.SelectedValueProperty, binding);
 				var values = Enum.GetValues(dbParam.Type).Cast<object>().Distinct().ToDictionary(value => value.ToString(), value => value);
 				if (!values.ContainsValue(dbParam.Default))
 					values["<NONE>"] = dbParam.Default;
-				combobox.SetValue(ComboBox.ItemsSourceProperty, values);
-				combobox.SetValue(ComboBox.DisplayMemberPathProperty, "Key");
-				combobox.SetValue(ComboBox.SelectedValuePathProperty, "Value");
-				return new DataTemplate { VisualTree = combobox };
+				factory.SetValue(ComboBox.ItemsSourceProperty, values);
+				factory.SetValue(ComboBox.DisplayMemberPathProperty, "Key");
+				factory.SetValue(ComboBox.SelectedValuePathProperty, "Value");
 			}
-			if (dbParam.Type == typeof(object))
+			else if (dbParam.Type == typeof(object))
 			{
-				var label = new FrameworkElementFactory(typeof(Label));
-				label.SetValue(Label.IsEnabledProperty, !Default);
-				label.SetBinding(Label.ContentProperty, binding);
-				return new DataTemplate { VisualTree = label };
+				factory = new FrameworkElementFactory(typeof(Label));
+				factory.SetBinding(Label.ContentProperty, binding);
 			}
+			else
+				return base.SelectTemplate(item, container);
 
-			return base.SelectTemplate(item, container);
+			factory.AddHandler(Binding.SourceUpdatedEvent, new EventHandler<DataTransferEventArgs>(ValueChanged));
+			factory.SetValue(UIElement.IsEnabledProperty, !ReadOnly);
+			return new DataTemplate { VisualTree = factory };
+		}
+
+		void ValueChanged(object sender, DataTransferEventArgs e)
+		{
+			var dataGrid = UIHelper.FindParent<DataGrid>(sender as FrameworkElement);
+			if (dataGrid == null)
+				return;
+
+			BindingOperations.GetMultiBindingExpression(dataGrid, DataGrid.ItemsSourceProperty).UpdateSource();
+		}
+	}
+
+	class ConnStrToListConverter : MarkupExtension, IMultiValueConverter
+	{
+		ConnStrToListConverter converter;
+		public override object ProvideValue(IServiceProvider serviceProvider) => converter = converter ?? new ConnStrToListConverter();
+
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+		{
+			if ((values[0] == null) || (values[1] == null) || (!(values[0] is DBConnectInfo.DBType)) || ((DBConnectInfo.DBType)values[0] == DBConnectInfo.DBType.None) || (!(values[1] is string)))
+				return DependencyProperty.UnsetValue;
+
+			var dbType = (DBConnectInfo.DBType)values[0];
+			var connStr = values[1] as string;
+
+			try
+			{
+				var builder = new DBConnectInfo { Type = dbType, ConnectionString = connStr }.GetBuilder();
+				var defaults = new DBConnectInfo { Type = dbType }.GetBuilder();
+				var baseProps = new HashSet<string>(typeof(DbConnectionStringBuilder).GetProperties().Select(prop => prop.Name));
+				var props = builder.GetType().GetProperties().Where(prop => !baseProps.Contains(prop.Name)).Where(prop => prop.CanWrite).Where(prop => prop.GetIndexParameters().Length == 0).ToList();
+				return props.Select(prop => new EditDatabaseConnectDialog.DBParam(dbType, prop, builder, defaults)).OrderBy(dbParam => dbParam.IsDefault).ToList();
+			}
+			catch { return DependencyProperty.UnsetValue; }
+		}
+
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+		{
+			var list = value as IEnumerable<EditDatabaseConnectDialog.DBParam>;
+			var type = list.Select(dbParam => dbParam.DBType).FirstOrDefault();
+			var builder = new DBConnectInfo { Type = type }.GetBuilder();
+			var props = builder.GetType().GetProperties().ToDictionary(prop => prop.Name);
+			list.Where(dbParam => !dbParam.IsDefault).ForEach(dbParam => props[dbParam.Name].SetValue(builder, dbParam.Value));
+			return new object[] { type, builder.ToString() };
 		}
 	}
 }

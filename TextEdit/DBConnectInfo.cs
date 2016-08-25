@@ -28,30 +28,27 @@ namespace NeoEdit.TextEdit
 			get { return Coder.BytesToString(Cryptor.Decrypt(Coder.StringToBytes(connectionString, Coder.CodePage.Base64), Cryptor.Type.RSAAES, encryptionKey), Coder.CodePage.UTF8); }
 			set { connectionString = Coder.BytesToString(Cryptor.Encrypt(Coder.StringToBytes(value, Coder.CodePage.UTF8), Cryptor.Type.RSAAES, encryptionKey), Coder.CodePage.Base64); }
 		}
-		public DbConnectionStringBuilder ConnectionStringBuilder
-		{
-			get
-			{
-				switch (Type)
-				{
-					case DBType.MSSQL: return new SqlConnectionStringBuilder(ConnectionString);
-					case DBType.MySQL: return new MySqlConnectionStringBuilder(ConnectionString);
-					case DBType.SQLCE: return new SqlCeConnectionStringBuilder(ConnectionString);
-					case DBType.SQLite: return new SQLiteConnectionStringBuilder(ConnectionString);
-					default: throw new ArgumentException("Invalid database type");
-				}
-			}
-			set { ConnectionString = value.ConnectionString; }
-		}
 
 		public DBConnectInfo() { ConnectionString = ""; }
+
+		public DbConnectionStringBuilder GetBuilder()
+		{
+			switch (Type)
+			{
+				case DBType.MSSQL: return new SqlConnectionStringBuilder(ConnectionString);
+				case DBType.MySQL: return new MySqlConnectionStringBuilder(ConnectionString);
+				case DBType.SQLCE: return new SqlCeConnectionStringBuilder(ConnectionString);
+				case DBType.SQLite: return new SQLiteConnectionStringBuilder(ConnectionString);
+				default: throw new ArgumentException("Invalid database type");
+			}
+		}
 
 		public void CreateDatabase()
 		{
 			switch (Type)
 			{
 				case DBType.SQLCE: using (var engine = new SqlCeEngine(ConnectionString)) engine.CreateDatabase(); break;
-				case DBType.SQLite: SQLiteConnection.CreateFile((ConnectionStringBuilder as SqlConnectionStringBuilder).DataSource); break;
+				case DBType.SQLite: SQLiteConnection.CreateFile((GetBuilder() as SQLiteConnectionStringBuilder).DataSource); break;
 				default: throw new ArgumentException("Can't create database");
 			}
 		}
