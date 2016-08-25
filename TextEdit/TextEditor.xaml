@@ -158,6 +158,15 @@
 				</TextBlock>
 			</StatusBarItem>
 
+			<Separator/>
+
+			<StatusBarItem>
+				<TextBlock Text="Database"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding DBName, ElementName=self}"/>
+			</StatusBarItem>
+
 			<StatusBarItem>
 				<!--Sometimes the last one doesn't display-->
 				<TextBlock/>

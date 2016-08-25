@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Dialogs;
 using NeoEdit.TextEdit.QueryBuilding;
@@ -14,6 +15,9 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		[DepProp]
+		public string DBName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+
 		DbConnection dbConnection;
 
 		string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
@@ -53,6 +57,7 @@ namespace NeoEdit.TextEdit
 				dbConnection = null;
 			}
 			dbConnection = result.DBConnectInfo.GetConnection();
+			DBName = result.DBConnectInfo.Name;
 		}
 
 		void Command_Database_ExecuteQuery()
@@ -61,6 +66,7 @@ namespace NeoEdit.TextEdit
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { FullRange };
+			// Not in parallel because prior selections may affect later ones
 			var tables = selections.SelectMany(range => RunDBSelect(GetString(range))).ToList();
 			if (!tables.NonNull().Any())
 			{
