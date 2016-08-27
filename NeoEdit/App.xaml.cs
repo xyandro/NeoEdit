@@ -16,7 +16,6 @@ using NeoEdit.Processes;
 using NeoEdit.SystemInfo;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
-using NeoEdit.Tools;
 
 namespace NeoEdit
 {
@@ -98,7 +97,6 @@ namespace NeoEdit
 				, systemInfo: () => new SystemInfoWindow()
 				, textEditor: (fileName, displayName, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(fileName, displayName, bytes, encoding, modified, forceCreate: forceCreate)
 				, textViewer: (fileName, forceCreate) => TextViewTabs.Create(fileName, forceCreate)
-				, tools: () => new ToolsMain()
 			);
 
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

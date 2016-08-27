@@ -13,7 +13,6 @@
 		Window_SystemInfo,
 		Window_TextEditor,
 		Window_TextViewer,
-		Window_Tools,
 	}
 
 	class WindowMenuItem : NEMenuItem<WindowCommand> { }

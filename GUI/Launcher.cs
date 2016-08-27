@@ -23,7 +23,6 @@ namespace NeoEdit.GUI
 		Action systemInfoLauncher;
 		Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
 		Action<string, bool> textViewerLauncher;
-		Action toolsLauncher;
 
 		public static void Initialize(
 			Func<bool> getMinimizeToTray
@@ -40,7 +39,6 @@ namespace NeoEdit.GUI
 			, Action systemInfo
 			, Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditor
 			, Action<string, bool> textViewer
-			, Action tools
 		)
 		{
 			launcher = new Launcher
@@ -59,7 +57,6 @@ namespace NeoEdit.GUI
 				systemInfoLauncher = systemInfo,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
-				toolsLauncher = tools,
 			};
 		}
 
@@ -73,7 +70,6 @@ namespace NeoEdit.GUI
 		public void LaunchTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool forceCreate = false) => textEditorLauncher?.Invoke(fileName, displayName, bytes, codePage, modified, forceCreate);
 		public void LaunchDiff() => diffLauncher?.Invoke();
 		public void LaunchTextViewer(string fileName = null, bool forceCreate = false) => textViewerLauncher?.Invoke(fileName, forceCreate);
-		public void LaunchTools() => toolsLauncher?.Invoke();
 		public void LaunchHexEditor(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => fileHexEditorLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
 		public void LaunchHexEditor(int pid) => processHexEditorLauncher?.Invoke(pid);
 		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false) => diskLauncher?.Invoke(path, files, forceCreate);

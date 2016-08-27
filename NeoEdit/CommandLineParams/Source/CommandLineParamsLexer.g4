@@ -21,7 +21,6 @@ PROCESSES      : '-pid' | '-process' | '-processes'                             
 SYSTEMINFO     : '-system' | '-systeminfo'                                                              ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
-TOOLS          : '-tool' | '-tools'                                                                     ;
 
 EQUALS         : '=' ;
 NUMBER         : [0-9]+ ;
@@ -50,7 +49,6 @@ PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
 SYSTEMINFO2    : SYSTEMINFO    -> type(SYSTEMINFO)    ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;
-TOOLS2         : TOOLS         -> type(TOOLS)         ;
 
 EQUALS2        : EQUALS        -> type(EQUALS)        ;
 NUMBER2        : NUMBER        -> type(NUMBER)        ;
