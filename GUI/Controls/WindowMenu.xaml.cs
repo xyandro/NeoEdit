@@ -10,7 +10,6 @@
 		Window_HexEditor,
 		Window_Network,
 		Window_Processes,
-		Window_SystemInfo,
 		Window_TextEditor,
 		Window_TextViewer,
 	}

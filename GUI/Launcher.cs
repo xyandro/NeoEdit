@@ -20,7 +20,6 @@ namespace NeoEdit.GUI
 		Action networkLauncher;
 		Action<int?> processesLauncher;
 		Action<int> processHexEditorLauncher;
-		Action systemInfoLauncher;
 		Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
 		Action<string, bool> textViewerLauncher;
 
@@ -36,7 +35,6 @@ namespace NeoEdit.GUI
 			, Action network
 			, Action<int?> processes
 			, Action<int> processHexEditor
-			, Action systemInfo
 			, Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditor
 			, Action<string, bool> textViewer
 		)
@@ -54,7 +52,6 @@ namespace NeoEdit.GUI
 				networkLauncher = network,
 				processesLauncher = processes,
 				processHexEditorLauncher = processHexEditor,
-				systemInfoLauncher = systemInfo,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
 			};
@@ -66,7 +63,6 @@ namespace NeoEdit.GUI
 			set { setMinimizeToTrayLauncher(value); }
 		}
 
-		public void LaunchSystemInfo() => systemInfoLauncher?.Invoke();
 		public void LaunchTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool forceCreate = false) => textEditorLauncher?.Invoke(fileName, displayName, bytes, codePage, modified, forceCreate);
 		public void LaunchDiff() => diffLauncher?.Invoke();
 		public void LaunchTextViewer(string fileName = null, bool forceCreate = false) => textViewerLauncher?.Invoke(fileName, forceCreate);

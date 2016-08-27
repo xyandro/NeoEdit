@@ -11,7 +11,6 @@
 	<guiControls:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>
 	<guiControls:WindowMenuItem Header="_Network" CommandEnum="Window_Network"/>
 	<guiControls:WindowMenuItem Header="_Processes" CommandEnum="Window_Processes"/>
-	<guiControls:WindowMenuItem Header="_System Info" CommandEnum="Window_SystemInfo"/>
 	<guiControls:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>
 	<guiControls:WindowMenuItem Header="Text _Viewer" CommandEnum="Window_TextViewer"/>
 
