@@ -13,7 +13,6 @@ using NeoEdit.Handles;
 using NeoEdit.HexEdit;
 using NeoEdit.Network;
 using NeoEdit.Processes;
-using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
@@ -96,7 +95,6 @@ namespace NeoEdit
 				, network: () => new NetworkWindow()
 				, processes: (pid) => new ProcessesWindow(pid)
 				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
-				, registry: (key) => new RegistryWindow(key)
 				, systemInfo: () => new SystemInfoWindow()
 				, textEditor: (fileName, displayName, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(fileName, displayName, bytes, encoding, modified, forceCreate: forceCreate)
 				, textViewer: (fileName, forceCreate) => TextViewTabs.Create(fileName, forceCreate)

@@ -18,7 +18,6 @@ LIVE           : '-live'                                                        
 MULTI          : '-multi'                                                                               ;
 NETWORK        : '-socket' | '-sockets' | '-network'                                                    ;
 PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
-REGISTRY       : '-registry'                                                                            ;
 SYSTEMINFO     : '-system' | '-systeminfo'                                                              ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
@@ -48,7 +47,6 @@ LIVE2          : LIVE          -> type(LIVE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;
 NETWORK2       : NETWORK       -> type(NETWORK)       ;
 PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
-REGISTRY2      : REGISTRY      -> type(REGISTRY)      ;
 SYSTEMINFO2    : SYSTEMINFO    -> type(SYSTEMINFO)    ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;

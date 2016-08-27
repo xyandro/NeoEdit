@@ -20,7 +20,6 @@ namespace NeoEdit.GUI
 		Action networkLauncher;
 		Action<int?> processesLauncher;
 		Action<int> processHexEditorLauncher;
-		Action<string> registryLauncher;
 		Action systemInfoLauncher;
 		Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
 		Action<string, bool> textViewerLauncher;
@@ -38,7 +37,6 @@ namespace NeoEdit.GUI
 			, Action network
 			, Action<int?> processes
 			, Action<int> processHexEditor
-			, Action<string> registry
 			, Action systemInfo
 			, Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditor
 			, Action<string, bool> textViewer
@@ -58,7 +56,6 @@ namespace NeoEdit.GUI
 				networkLauncher = network,
 				processesLauncher = processes,
 				processHexEditorLauncher = processHexEditor,
-				registryLauncher = registry,
 				systemInfoLauncher = systemInfo,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
@@ -84,6 +81,5 @@ namespace NeoEdit.GUI
 		public void LaunchNetwork() => networkLauncher?.Invoke();
 		public void LaunchProcesses(int? pid = null) => processesLauncher?.Invoke(pid);
 		public void LaunchHandles(int? pid = null) => handlesLauncher?.Invoke(pid);
-		public void LaunchRegistry(string key = null) => registryLauncher?.Invoke(key);
 	}
 }

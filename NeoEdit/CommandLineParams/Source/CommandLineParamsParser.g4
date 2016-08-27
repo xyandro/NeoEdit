@@ -4,7 +4,7 @@ options { tokenVocab = CommandLineParamsLexer; }
 
 expr          : parameter* EOF ;
 
-parameter     : LIVE | about | console | consolerunner | diff | disk | handles | hexdump | hexedit | hexpid | multi | network | processes | registry | systeminfo | textedit | textview | tools ;
+parameter     : LIVE | about | console | consolerunner | diff | disk | handles | hexdump | hexedit | hexpid | multi | network | processes | systeminfo | textedit | textview | tools ;
 
 about         : ABOUT ;
 console       : CONSOLE ;
@@ -18,7 +18,6 @@ hexpid        : HEXPID NUMBER* ;
 multi         : MULTI ;
 network       : NETWORK ;
 processes     : PROCESSES pid=NUMBER? ;
-registry      : REGISTRY key=param? ;
 systeminfo    : SYSTEMINFO ;
 textedit      : TEXTEDIT texteditfile* | texteditfile+ ;
 texteditfile  : file=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? (DISPLAY EQUALS? display=param)? ;

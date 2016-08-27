@@ -7,7 +7,6 @@ using NeoEdit.Handles;
 using NeoEdit.HexEdit;
 using NeoEdit.Network;
 using NeoEdit.Processes;
-using NeoEdit.Registry;
 using NeoEdit.SystemInfo;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
@@ -103,13 +102,6 @@ namespace NeoEdit
 		readonly int? PID;
 		public ProcessesParam(int? pid) { PID = pid; }
 		public override void Execute() => new ProcessesWindow(PID);
-	}
-
-	class RegistryParam : Param
-	{
-		readonly string Key;
-		public RegistryParam(string key) { Key = key; }
-		public override void Execute() => new RegistryWindow(Key);
 	}
 
 	class SystemInfoParam : Param

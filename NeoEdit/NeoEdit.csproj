@@ -92,10 +92,6 @@
       <Project>{c65dd007-a448-49f5-b813-372c53d374c3}</Project>
       <Name>Processes</Name>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)\Registry\Registry.csproj">
-      <Project>{0193411f-e627-4418-8942-f669c19b90f4}</Project>
-      <Name>Registry</Name>
-    </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\SystemInfo\SystemInfo.csproj">
       <Project>{5fc0fbff-7ce1-4540-9e41-d757d0d9708d}</Project>
       <Name>SystemInfo</Name>
