@@ -199,7 +199,8 @@ namespace NeoEdit.GUI.Controls
 			errors.AddRange(reusedAccels.Select(header => $"{path} -> {header}: Accelerator used multiple times ({headerAvail[header]} / {allAvail} available)"));
 
 			var noAccel = headers.Where(header => !header.Contains("_")).ToList();
-			errors.AddRange(noAccel.Select(header => $"{path} -> {header}: No accelerator ({headerAvail[header]} / {allAvail} available)"));
+			if (noAccel.Count != headers.Count)
+				errors.AddRange(noAccel.Select(header => $"{path} -> {header}: No accelerator ({headerAvail[header]} / {allAvail} available)"));
 		}
 
 		public static void AuditMenu(Menu menu)

@@ -1,0 +1,53 @@
+﻿using System.Windows.Input;
+using NeoEdit.GUI.Controls;
+
+namespace NeoEdit.ImageEdit
+{
+	public enum ImageEditCommand
+	{
+		None,
+		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New,
+		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open_Open,
+		[KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Alt)] File_Open_CopiedCut,
+		[KeyGesture(Key.S, ModifierKeys.Control)] File_Save_Save,
+		File_Save_SaveAs,
+		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
+		[KeyGesture(Key.P, ModifierKeys.Control)] Edit_Copy_Position,
+		[KeyGesture(Key.L, ModifierKeys.Control)] Edit_Copy_Color,
+		Image_Size,
+		Image_Format_Rgb24,
+		Image_Format_Rgb48,
+		Image_Format_Rgba64,
+		Image_Format_Prgba64,
+		Image_Format_Rgb128Float,
+		Image_Format_Rgba128Float,
+		Image_Format_Prgba128Float,
+		Image_Format_Bgr555,
+		Image_Format_Bgr565,
+		Image_Format_Bgr24,
+		Image_Format_Bgr32,
+		Image_Format_Bgr101010,
+		Image_Format_Bgra32,
+		Image_Format_Pbgra32,
+		Image_Format_Cmyk32,
+		Image_Format_BlackWhite,
+		Image_Format_Indexed1,
+		Image_Format_Indexed2,
+		Image_Format_Indexed4,
+		Image_Format_Indexed8,
+		Image_Format_Gray2,
+		Image_Format_Gray4,
+		Image_Format_Gray8,
+		Image_Format_Gray16,
+		Image_Format_Gray32Float,
+		[KeyGesture(Key.E, ModifierKeys.Control)] View_Zoom_Center,
+		[KeyGesture(Key.D0, ModifierKeys.Control | ModifierKeys.Alt)] View_Zoom_Fit,
+		[KeyGesture(Key.D1, ModifierKeys.Control | ModifierKeys.Alt)] View_Zoom_100Percent,
+		[KeyGesture(Key.Up, ModifierKeys.Control)] View_Zoom_ZoomIn,
+		[KeyGesture(Key.Down, ModifierKeys.Control)] View_Zoom_ZoomOut,
+		View_Full,
+		View_Grid,
+		View_CustomGrid,
+		View_ActiveTabs,
+	}
+}

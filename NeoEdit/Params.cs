@@ -4,6 +4,7 @@ using NeoEdit.Disk;
 using NeoEdit.GUI.About;
 using NeoEdit.Handles;
 using NeoEdit.HexEdit;
+using NeoEdit.ImageEdit;
 using NeoEdit.Network;
 using NeoEdit.Processes;
 using NeoEdit.TextEdit;
@@ -74,6 +75,19 @@ namespace NeoEdit
 		{
 			foreach (var pid in PIDs)
 				HexEditTabs.CreateFromProcess(pid);
+		}
+	}
+
+	class ImageEditParam : Param
+	{
+		readonly List<string> Files;
+		public ImageEditParam(List<string> files) { Files = files; }
+		public override void Execute()
+		{
+			if (!Files.Any())
+				ImageEditTabs.Create();
+			foreach (var file in Files)
+				ImageEditTabs.Create(file);
 		}
 	}
 

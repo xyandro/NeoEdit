@@ -33,6 +33,7 @@ namespace NeoEdit.GUI.Controls
 				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(forceCreate: true); break;
 				case WindowCommand.Window_Handles: Launcher.Static.LaunchHandles(); break;
 				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditor(forceCreate: true); break;
+				case WindowCommand.Window_ImageEditor: Launcher.Static.LaunchImageEditor(); break;
 				case WindowCommand.Window_Network: Launcher.Static.LaunchNetwork(); break;
 				case WindowCommand.Window_Processes: Launcher.Static.LaunchProcesses(); break;
 				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditor(forceCreate: true); break;
