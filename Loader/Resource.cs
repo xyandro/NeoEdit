@@ -119,12 +119,9 @@ namespace Loader
 
 		public static Resource CreateFromSerializedHeader(byte[] data) => new Resource { SerializedHeader = data };
 
-		public void WriteToPath(string path)
-		{
-			var outputFile = Path.Combine(path, Name);
-			File.WriteAllBytes(outputFile, UncompressedData);
-			File.SetLastWriteTimeUtc(outputFile, WriteTime);
-		}
+		public void WriteToPath(string path) => File.WriteAllBytes(Path.Combine(path, Name), UncompressedData);
+
+		public void SetDate(string path) => File.SetLastWriteTimeUtc(Path.Combine(path, Name), WriteTime);
 
 		static public bool DataMatch(Resource x32Res, Resource x64Res)
 		{

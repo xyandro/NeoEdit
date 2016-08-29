@@ -10,8 +10,6 @@ namespace Loader
 {
 	class Extractor
 	{
-		public const string ExtractorSuffix = ".Extractor";
-
 		static void DeleteDelayed(string path)
 		{
 			string command;
@@ -34,9 +32,9 @@ namespace Loader
 		public void Extract(BitDepths bitDepth)
 		{
 			var location = typeof(Program).Assembly.Location;
-			var newLocation = Path.Combine(Path.GetDirectoryName(location), Path.GetFileNameWithoutExtension(location) + ExtractorSuffix + Path.GetExtension(location));
+			var newLocation = Path.Combine(Path.GetDirectoryName(location), $"{Path.GetFileNameWithoutExtension(location)}.Extractor{Path.GetExtension(location)}");
 			File.Copy(location, newLocation, true);
-			Process.Start(newLocation, $"{Process.GetCurrentProcess().Id} \"{location}\" {bitDepth}");
+			Process.Start(newLocation, $"-extractor {bitDepth} {Process.GetCurrentProcess().Id} \"{location}\"");
 		}
 
 		static void WaitForParentExit(int pid) { try { Process.GetProcessById(pid).WaitForExit(); } catch { } }
@@ -68,15 +66,19 @@ namespace Loader
 			});
 		}
 
-		public void RunExtractor(int parentPid, string parentPath, BitDepths bitDepth)
+		public void RunExtractor(BitDepths bitDepth, int? parentPid, string parentPath)
 		{
-			WaitForParentExit(parentPid);
-			File.Delete(parentPath);
+			if (parentPid.HasValue)
+				WaitForParentExit(parentPid.Value);
+			if (!string.IsNullOrEmpty(parentPath))
+				File.Delete(parentPath);
 
 			var exeFile = typeof(Program).Assembly.Location;
 			var location = Path.GetDirectoryName(exeFile);
 			foreach (var resource in ResourceReader.GetResources(bitDepth))
 				resource.WriteToPath(location);
+			foreach (var resource in ResourceReader.GetResources(bitDepth))
+				resource.SetDate(location);
 
 			RunNGen();
 
