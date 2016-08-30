@@ -6,7 +6,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.Balanced;
 using NeoEdit.TextEdit.Content.Columns;
-using NeoEdit.TextEdit.Content.CPlusPlus;
 using NeoEdit.TextEdit.Content.CSharp;
 using NeoEdit.TextEdit.Content.HTML;
 using NeoEdit.TextEdit.Content.JSON;
@@ -41,7 +40,6 @@ namespace NeoEdit.TextEdit.Content
 			{
 				case ParserType.Balanced: return BalancedVisitor.Parse(data);
 				case ParserType.Columns: return ColumnsVisitor.Parse(data);
-				case ParserType.CPlusPlus: return CPlusPlusVisitor.Parse(data);
 				case ParserType.CSharp: return CSharpVisitor.Parse(data);
 				case ParserType.CSV: return CSVVisitor.Parse(data);
 				case ParserType.HTML: return HTMLVisitor.Parse(data);
