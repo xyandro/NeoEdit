@@ -452,31 +452,30 @@ namespace NeoEdit.TextView
 					if (inCodePage == outCodePage)
 						throw new Exception("File already has that encoding.");
 
-					var inNativeCodePage = NativeEncoding(inCodePage);
-					var outNativeCodePage = NativeEncoding(outCodePage);
-
 					long position = Coder.PreambleSize(inCodePage);
 					var size = input.Length;
 					using (var output = File.Create(outputFile))
 					{
 						var bom = Coder.StringToBytes("", outCodePage, true);
 						output.Write(bom, 0, bom.Length);
-						var inputData = new byte[65536];
-						var outputData = new byte[inputData.Length * 5]; // Should be big enough to hold any resulting output
+						var decoder = Coder.GetEncoding(inCodePage).GetDecoder();
+						var encoder = Coder.GetEncoding(outCodePage).GetEncoder();
+						var chars = new char[65536];
+						var bytes = new byte[chars.Length * 5]; // Should be big enough to hold any resulting output
 						while (position < size)
 						{
 							if (cancel())
 								return;
 
-							var block = (int)Math.Min(inputData.Length, size - position);
-							Read(input, position, block, inputData);
+							var inByteCount = (int)Math.Min(chars.Length, size - position);
+							TextData.Read(input, position, inByteCount, bytes);
 
-							int inUsed, outUsed;
-							Win32.Interop.ConvertEncoding(inputData, block, inNativeCodePage, outputData, outNativeCodePage, out inUsed, out outUsed);
+							var numChars = decoder.GetChars(bytes, 0, inByteCount, chars, 0);
+							var outByteCount = encoder.GetBytes(chars, 0, numChars, bytes, 0, false);
 
-							output.Write(outputData, 0, outUsed);
+							output.Write(bytes, 0, outByteCount);
 
-							position += inUsed;
+							position += inByteCount;
 							progress(0, position, size);
 						}
 					}
