@@ -68,25 +68,13 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-#pragma warning( push )
-#pragma warning( disable : 4305)
-#pragma warning( disable : 4309)
-
-		template <typename type> System::Collections::Generic::List<int64_t> ^GetLinesTemplate(Interop::GetLinesEncoding encoding, cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
+		template <typename type> List<int64_t> ^GetLinesTemplate(cli::array<uint8_t>^ data, int %lineLength, int %maxLine, bool bigEndian, type mask, type value)
 		{
-			bool bigEndian = (encoding == Interop::GetLinesEncoding::UTF16BE) || (encoding == Interop::GetLinesEncoding::UTF32BE);
 			type cr = !bigEndian ? 0x0d : sizeof(type) == 2 ? 0x0d00 : 0x0d000000;
 			type lf = !bigEndian ? 0x0a : sizeof(type) == 2 ? 0x0a00 : 0x0a000000;
 			type tab = !bigEndian ? 0x09 : sizeof(type) == 2 ? 0x0900 : 0x09000000;
-			type mask = 0, value = 0;
-			switch (encoding)
-			{
-			case NeoEdit::Win32::Interop::GetLinesEncoding::UTF8: mask = 0xc0; value = 0x80; break;
-			case NeoEdit::Win32::Interop::GetLinesEncoding::UTF16LE: mask = 0xfc00; value = 0xdc00; break;
-			case NeoEdit::Win32::Interop::GetLinesEncoding::UTF16BE: mask = 0x00fc; value = 0x00dc; break;
-			}
 
-			auto lineStart = gcnew System::Collections::Generic::List<int64_t>();
+			auto lineStart = gcnew List<int64_t>();
 			auto size = data->Length / sizeof(type);
 			if (size == 0)
 				return lineStart;
@@ -116,25 +104,35 @@ namespace NeoEdit
 			}
 			return lineStart;
 		}
-#pragma warning( pop ) 
 
-		System::Collections::Generic::List<int64_t> ^Interop::GetLines(GetLinesEncoding encoding, cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
+		List<int64_t> ^Interop::GetLinesDefault(cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
 		{
-			try
-			{
-				switch (encoding)
-				{
-				case GetLinesEncoding::Default: return GetLinesTemplate<uint8_t>(encoding, data, lineLength, maxLine);
-				case GetLinesEncoding::UTF8: return GetLinesTemplate<uint8_t>(encoding, data, lineLength, maxLine);
-				case GetLinesEncoding::UTF16LE: return GetLinesTemplate<uint16_t>(encoding, data, lineLength, maxLine);
-				case GetLinesEncoding::UTF16BE: return GetLinesTemplate<uint16_t>(encoding, data, lineLength, maxLine);
-				case GetLinesEncoding::UTF32LE: return GetLinesTemplate<uint32_t>(encoding, data, lineLength, maxLine);
-				case GetLinesEncoding::UTF32BE: return GetLinesTemplate<uint32_t>(encoding, data, lineLength, maxLine);
-				default: throw gcnew System::Exception("Invalid argument type");
-				}
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-			return nullptr;
+			return GetLinesTemplate<uint8_t>(data, lineLength, maxLine, false, 0, 0);
+		}
+
+		List<int64_t> ^Interop::GetLinesUTF8(cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
+		{
+			return GetLinesTemplate<uint8_t>(data, lineLength, maxLine, false, 0xc0, 0xc0);
+		}
+
+		List<int64_t> ^Interop::GetLinesUTF16LE(cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
+		{
+			return GetLinesTemplate<uint16_t>(data, lineLength, maxLine, false, 0xfc00, 0xfc00);
+		}
+
+		List<int64_t> ^Interop::GetLinesUTF16BE(cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
+		{
+			return GetLinesTemplate<uint16_t>(data, lineLength, maxLine, true, 0x00fc, 0x00fc);
+		}
+
+		List<int64_t> ^Interop::GetLinesUTF32LE(cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
+		{
+			return GetLinesTemplate<uint32_t>(data, lineLength, maxLine, false, 0, 0);
+		}
+
+		List<int64_t> ^Interop::GetLinesUTF32BE(cli::array<uint8_t>^ data, int %lineLength, int %maxLine)
+		{
+			return GetLinesTemplate<uint32_t>(data, lineLength, maxLine, true, 0, 0);
 		}
 	}
 }

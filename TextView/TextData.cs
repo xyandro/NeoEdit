@@ -80,10 +80,7 @@ namespace NeoEdit.TextView
 			var result = true;
 
 			long position = Coder.PreambleSize(codePage);
-			var charSize = Coder.CharSize(codePage);
-			var bigEndian = (codePage == Coder.CodePage.UTF16BE) || (codePage == Coder.CodePage.UTF32BE);
 			int lineLength = 0, maxLine = 0;
-			var getLinesEncoding = NativeEncoding(codePage);
 
 			var block = new byte[65536];
 
@@ -100,7 +97,16 @@ namespace NeoEdit.TextView
 					block = new byte[Size - position];
 				Read(position, block.Length, block);
 
-				lineStart.AddRange(Win32.Interop.GetLines(getLinesEncoding, block, ref lineLength, ref maxLine).Select(offset => offset + position));
+				switch (codePage)
+				{
+					case Coder.CodePage.Default: lineStart.AddRange(Win32.Interop.GetLinesDefault(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
+					case Coder.CodePage.UTF8: lineStart.AddRange(Win32.Interop.GetLinesUTF8(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
+					case Coder.CodePage.UTF16LE: lineStart.AddRange(Win32.Interop.GetLinesUTF16LE(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
+					case Coder.CodePage.UTF16BE: lineStart.AddRange(Win32.Interop.GetLinesUTF16BE(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
+					case Coder.CodePage.UTF32LE: lineStart.AddRange(Win32.Interop.GetLinesUTF32LE(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
+					case Coder.CodePage.UTF32BE: lineStart.AddRange(Win32.Interop.GetLinesUTF32BE(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
+				}
+
 				position += block.Length;
 				if ((position != Size) && (lineStart.Last() == position))
 				{
@@ -119,20 +125,6 @@ namespace NeoEdit.TextView
 			NumLines = lineStart.Count - 1;
 			NumColumns = maxLine;
 			return result;
-		}
-
-		static Win32.Interop.GetLinesEncoding NativeEncoding(Coder.CodePage codePage)
-		{
-			switch (codePage)
-			{
-				case Coder.CodePage.Default: return Win32.Interop.GetLinesEncoding.Default;
-				case Coder.CodePage.UTF8: return Win32.Interop.GetLinesEncoding.UTF8;
-				case Coder.CodePage.UTF16LE: return Win32.Interop.GetLinesEncoding.UTF16LE;
-				case Coder.CodePage.UTF16BE: return Win32.Interop.GetLinesEncoding.UTF16BE;
-				case Coder.CodePage.UTF32LE: return Win32.Interop.GetLinesEncoding.UTF32LE;
-				case Coder.CodePage.UTF32BE: return Win32.Interop.GetLinesEncoding.UTF32BE;
-				default: throw new ArgumentException("Invalid encoding");
-			}
 		}
 
 		static byte[] Read(FileStream file, long position, int size, byte[] buffer = null)
