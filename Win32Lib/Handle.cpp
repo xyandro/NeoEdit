@@ -411,39 +411,6 @@ namespace NeoEdit
 					result->push_back(name);
 				return result;
 			}
-
-			uintptr_t Handle::GetSharedMemorySize(int32_t pid, void *handle)
-			{
-				auto process = OpenProcess(pid);
-				auto dupHandle = DuplicateHandle(process, handle);
-				return GetSizeOfMap(dupHandle);
-			}
-
-			void Handle::ReadSharedMemory(int32_t pid, void *handle, uintptr_t index, uint8_t *bytes, uint32_t numBytes)
-			{
-				auto process = OpenProcess(pid);
-				auto dupHandle = DuplicateHandle(process, handle);
-
-				auto ptr = (uint8_t*)MapViewOfFile(dupHandle.get(), FILE_MAP_READ, 0, 0, 0);
-				if (ptr == nullptr)
-					Win32Exception::Throw();
-				shared_ptr<const void> ptrDeleter(ptr, UnmapViewOfFile);
-
-				memcpy(bytes, ptr + index, numBytes);
-			}
-
-			void Handle::WriteSharedMemory(int32_t pid, void *handle, uintptr_t index, const uint8_t *bytes, uint32_t numBytes)
-			{
-				auto process = OpenProcess(pid);
-				auto dupHandle = DuplicateHandle(process, handle);
-
-				auto ptr = (uint8_t*)MapViewOfFile(dupHandle.get(), FILE_MAP_WRITE, 0, 0, 0);
-				if (ptr == nullptr)
-					Win32Exception::Throw();
-				shared_ptr<const void> ptrDeleter(ptr, UnmapViewOfFile);
-
-				memcpy(ptr + index, bytes, numBytes);
-			}
 		}
 	}
 }

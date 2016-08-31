@@ -16,9 +16,6 @@ namespace NeoEdit
 			static void GetProcessHandles(HandleList ^handles, int pid);
 			static System::Collections::Generic::List<HandleInfo^> ^GetHandleInfo(HandleList ^handles);
 			static System::Collections::Generic::List<System::String^> ^GetHandleTypes();
-			static int64_t GetSharedMemorySize(int pid, System::IntPtr handle);
-			static void ReadSharedMemory(int pid, System::IntPtr handle, int64_t index, cli::array<uint8_t> ^bytes, int bytesIndex, int numBytes);
-			static void WriteSharedMemory(int pid, System::IntPtr handle, int64_t index, cli::array<uint8_t> ^bytes);
 
 			enum class GetLinesEncoding
 			{

@@ -6,6 +6,26 @@ namespace NeoEdit.HexEdit
 {
 	class Win32
 	{
+		public class SafeMapHandle : SafeHandleZeroOrMinusOneIsInvalid
+		{
+			public SafeMapHandle() : base(true) { }
+			protected override bool ReleaseHandle()
+			{
+				Win32.UnmapViewOfFile(handle);
+				return true;
+			}
+		}
+
+		[Flags]
+		public enum FileMapAccess : uint
+		{
+			FileMapCopy = 0x0001,
+			FileMapWrite = 0x0002,
+			FileMapRead = 0x0004,
+			FileMapAllAccess = 0x001f,
+			FileMapExecute = 0x0020,
+		}
+
 		[Flags]
 		public enum ProcessAccessFlags : uint
 		{
@@ -38,6 +58,7 @@ namespace NeoEdit.HexEdit
 			static public int Size => Marshal.SizeOf<MEMORY_BASIC_INFORMATION>();
 		}
 
+		public const int DUPLICATE_SAME_ACCESS = 0x00000002;
 		public const int ERROR_INVALID_PARAMETER = 87;
 		public const int MEM_COMMIT = 0x1000;
 		public const int MEM_MAPPED = 0x40000;
@@ -54,13 +75,26 @@ namespace NeoEdit.HexEdit
 		public static int LastError => Marshal.GetLastWin32Error();
 
 		[DllImport("kernel32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool DuplicateHandle(SafeProcessHandle hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out SafeProcessHandle lpTargetHandle, int dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwOptions);
+		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern bool FlushInstructionCache(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr dwSize);
+		[DllImport("kernel32.dll", SetLastError = true)]
+		public static extern IntPtr GetCurrentProcess();
+		[DllImport("kernel32.dll", SetLastError = true)]
+		public static extern SafeMapHandle MapViewOfFile(IntPtr hFileMappingObject, FileMapAccess dwDesiredAccess, UInt32 dwFileOffsetHigh, UInt32 dwFileOffsetLow, IntPtr dwNumberOfBytesToMap);
+		[DllImport("msvcrt.dll", SetLastError = false)]
+		public static unsafe extern void* memcpy(byte* dest, byte* src, int count);
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern SafeProcessHandle OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int dwSize, out IntPtr lpNumberOfBytesRead);
 		[DllImport("kernel32.dll", SetLastError = true)]
+		public static extern bool UnmapViewOfFile(IntPtr lpBaseAddress);
+		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, int flNewProtect, out int lpflOldProtect);
+		[DllImport("kernel32.dll")]
+		public static extern IntPtr VirtualQuery(IntPtr lpAddress, out MEMORY_BASIC_INFORMATION lpBuffer, IntPtr dwLength);
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern int VirtualQueryEx(IntPtr hProcess, IntPtr lpAddress, out MEMORY_BASIC_INFORMATION lpBuffer, int dwLength);
 		[DllImport("kernel32.dll", SetLastError = true)]

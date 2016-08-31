@@ -69,35 +69,6 @@ namespace NeoEdit
 			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
 		}
 
-		int64_t Interop::GetSharedMemorySize(int pid, IntPtr handle)
-		{
-			try
-			{
-				return Win32Lib::GetSharedMemorySize(pid, (HANDLE)handle);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		void Interop::ReadSharedMemory(int pid, IntPtr handle, int64_t index, cli::array<uint8_t> ^bytes, int bytesIndex, int numBytes)
-		{
-			try
-			{
-				pin_ptr<uint8_t> bytesPtr = &bytes[bytesIndex];
-				return Win32Lib::ReadSharedMemory(pid, (HANDLE)handle, (uintptr_t)index, bytesPtr, numBytes);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		void Interop::WriteSharedMemory(int pid, IntPtr handle, int64_t index, cli::array<uint8_t> ^bytes)
-		{
-			try
-			{
-				pin_ptr<uint8_t> bytesPtr = &bytes[0];
-				return Win32Lib::WriteSharedMemory(pid, (HANDLE)handle, (uintptr_t)index, bytesPtr, bytes->Length);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
 #pragma warning( push )
 #pragma warning( disable : 4305)
 #pragma warning( disable : 4309)
