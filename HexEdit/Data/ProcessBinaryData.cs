@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.Win32.SafeHandles;
 using NeoEdit.Common;
 using NeoEdit.GUI.Dialogs;
-using NeoEdit.Win32;
 
 namespace NeoEdit.HexEdit.Data
 {
@@ -37,7 +38,7 @@ namespace NeoEdit.HexEdit.Data
 
 			using (Suspend())
 			using (Open())
-				Length = (long)Interop.GetProcessMemoryLength(handle);
+				Length = GetProcessMemoryLength();
 		}
 
 		int suspendCount = 0;
@@ -57,14 +58,16 @@ namespace NeoEdit.HexEdit.Data
 			Process.GetProcessById(pid).Resume();
 		}
 
-		Handle handle;
+		SafeProcessHandle handle;
 		int openCount = 0;
 		void OpenProcess()
 		{
 			if (openCount++ != 0)
 				return;
 
-			handle = Interop.OpenReadMemoryProcess(pid);
+			handle = Win32.OpenProcess(Win32.ProcessAccessFlags.QueryInformation | Win32.ProcessAccessFlags.VirtualMemoryRead | Win32.ProcessAccessFlags.VirtualMemoryWrite | Win32.ProcessAccessFlags.VirtualMemoryOperation, false, pid);
+			if (handle.IsInvalid)
+				throw new Win32Exception();
 		}
 
 		void CloseProcess()
@@ -75,7 +78,7 @@ namespace NeoEdit.HexEdit.Data
 			handle.Dispose();
 		}
 
-		protected override void VirtRead(long index, out byte[] block, out long blockStart, out long blockEnd)
+		protected override unsafe void VirtRead(long index, out byte[] block, out long blockStart, out long blockEnd)
 		{
 			using (Suspend())
 			using (Open())
@@ -83,18 +86,18 @@ namespace NeoEdit.HexEdit.Data
 				block = null;
 				blockStart = blockEnd = index;
 
-				var queryInfo = Interop.VirtualQuery(handle, index);
+				var queryInfo = VirtualQuery(index);
 				if (queryInfo == null)
 				{
 					blockEnd = Length;
 					return;
 				}
 
-				blockEnd = queryInfo.EndAddress.ToInt64();
+				blockEnd = queryInfo.EndAddress;
 
 				if ((!queryInfo.Committed) || ((queryInfo.Mapped) && queryInfo.NoAccess))
 				{
-					blockStart = queryInfo.StartAddress.ToInt64();
+					blockStart = queryInfo.StartAddress;
 					return;
 				}
 
@@ -102,8 +105,13 @@ namespace NeoEdit.HexEdit.Data
 
 				block = new byte[blockEnd - blockStart];
 
-				using (Interop.SetProtect(handle, queryInfo, false))
-					Interop.ReadProcessMemory(handle, index, block, (int)(index - blockStart), (int)(blockEnd - index));
+				using (SetProtect(queryInfo, false))
+					fixed (byte* ptr = block)
+					{
+						IntPtr read;
+						if (!Win32.ReadProcessMemory(handle.DangerousGetHandle(), (IntPtr)index, (IntPtr)(ptr + index - blockStart), (int)(blockEnd - index), out read))
+							throw new Win32Exception();
+					}
 			}
 		}
 
@@ -121,15 +129,19 @@ namespace NeoEdit.HexEdit.Data
 			{
 				while (bytes.Length > 0)
 				{
-					var queryInfo = Interop.VirtualQuery(handle, index);
+					var queryInfo = VirtualQuery(index);
 					if ((queryInfo == null) || (!queryInfo.Committed))
 						throw new Exception("Cannot write to this memory");
 
-					var end = queryInfo.EndAddress.ToInt64();
+					var end = queryInfo.EndAddress;
 					var numBytes = (int)Math.Min(bytes.Length, end - index);
 
-					using (Interop.SetProtect(handle, queryInfo, true))
-						Interop.WriteProcessMemory(handle, index, bytes, numBytes);
+					using (SetProtect(queryInfo, true))
+					{
+						IntPtr written;
+						if (!Win32.WriteProcessMemory(handle.DangerousGetHandle(), (IntPtr)index, bytes, numBytes, out written))
+							throw new Win32Exception();
+					}
 
 					index += numBytes;
 					Array.Copy(bytes, numBytes, bytes, 0, bytes.Length - numBytes);
@@ -187,6 +199,70 @@ namespace NeoEdit.HexEdit.Data
 					index = blockEnd;
 				}
 			}
+		}
+
+		long GetProcessMemoryLength()
+		{
+			long index = 0;
+			while (true)
+			{
+				var result = VirtualQuery(index);
+				if (result == null)
+					return index;
+				index = result.EndAddress;
+			}
+		}
+
+		VirtualQueryInfo VirtualQuery(long index)
+		{
+			var max = UIntPtr.Size == 4 ? uint.MaxValue : ulong.MaxValue;
+			if ((ulong)index >= max)
+				return null;
+
+			Win32.MEMORY_BASIC_INFORMATION memInfo;
+			if (Win32.VirtualQueryEx(handle.DangerousGetHandle(), (IntPtr)index, out memInfo, Win32.MEMORY_BASIC_INFORMATION.Size) == 0)
+			{
+				if (Win32.LastError != Win32.ERROR_INVALID_PARAMETER)
+					throw new Win32Exception();
+				return null;
+			}
+
+			var info = new VirtualQueryInfo();
+			info.Committed = (memInfo.State & Win32.MEM_COMMIT) != 0;
+			info.Mapped = (memInfo.Type & Win32.MEM_MAPPED) != 0;
+			info.NoAccess = (memInfo.Protect & Win32.PAGE_NOACCESS) != 0;
+			info.StartAddress = memInfo.BaseAddress.ToInt64();
+			info.RegionSize = (long)Math.Min((ulong)memInfo.RegionSize.ToInt64(), max - (ulong)memInfo.BaseAddress.ToInt64());
+			info.EndAddress = memInfo.BaseAddress.ToInt64() + info.RegionSize;
+			info.Protect = memInfo.Protect;
+			return info;
+		}
+
+		Protect SetProtect(VirtualQueryInfo info, bool write)
+		{
+			var protect = info.Protect;
+
+			if (!info.Mapped) // Can't change protection on mapped memory
+			{
+				if ((protect & Win32.PAGE_GUARD) != 0)
+					protect ^= Win32.PAGE_GUARD;
+				var extra = protect & ~(Win32.PAGE_GUARD - 1);
+				if (write)
+				{
+					if ((protect & (Win32.PAGE_EXECUTE | Win32.PAGE_EXECUTE_READ | Win32.PAGE_EXECUTE_WRITECOPY)) != 0)
+						protect = Win32.PAGE_EXECUTE_READWRITE;
+					if ((protect & (Win32.PAGE_NOACCESS | Win32.PAGE_READONLY | Win32.PAGE_WRITECOPY)) != 0)
+						protect = Win32.PAGE_READWRITE;
+				}
+				else
+				{
+					if ((protect & Win32.PAGE_NOACCESS) != 0)
+						protect = Win32.PAGE_READONLY;
+				}
+				protect |= extra;
+			}
+
+			return new Protect(handle, info, protect);
 		}
 	}
 }

@@ -1,18 +1,10 @@
 #include "stdafx.h"
 #include "Win32Lib.h"
 
-#include "Process.h"
 #include "Handle.h"
 
 namespace NeoEdit
 {
-	std::shared_ptr<void> (*Win32Lib::OpenReadMemoryProcess)(int32_t pid) = Win32LibNS::Processes::Process::OpenReadMemoryProcess;
-	uintptr_t (*Win32Lib::GetProcessMemoryLength)(std::shared_ptr<void>) = Win32LibNS::Processes::Process::GetProcessMemoryLength;
-	std::shared_ptr<const Win32Lib::VirtualQueryInfo> (*Win32Lib::VirtualQuery)(std::shared_ptr<void> handle, const uint8_t *index) = Win32LibNS::Processes::Process::VirtualQuery;
-	std::shared_ptr<const Win32Lib::Protect> (*Win32Lib::SetProtect)(std::shared_ptr<void> handle, std::shared_ptr<const VirtualQueryInfo> info, bool write) = Win32LibNS::Processes::Process::SetProtect;
-	void (*Win32Lib::ReadProcessMemory)(std::shared_ptr<void> handle, const uint8_t *index, uint8_t *bytes, uint32_t numBytes) = Win32LibNS::Processes::Process::ReadProcessMemory;
-	void (*Win32Lib::WriteProcessMemory)(std::shared_ptr<void> handle, uint8_t *index, const uint8_t *bytes, uint32_t numBytes) = Win32LibNS::Processes::Process::WriteProcessMemory;
-
 	std::shared_ptr<const Win32Lib::HandleList> (*Win32Lib::GetAllHandles)() = Win32LibNS::Handles::Handle::GetAllHandles;
 	std::shared_ptr<const Win32Lib::HandleList> (*Win32Lib::GetTypeHandles)(std::shared_ptr<const Win32Lib::HandleList> handles, std::wstring type) = Win32LibNS::Handles::Handle::GetTypeHandles;
 	std::shared_ptr<const Win32Lib::HandleList> (*Win32Lib::GetProcessHandles)(std::shared_ptr<const Win32Lib::HandleList> handles, int32_t pid) = Win32LibNS::Handles::Handle::GetProcessHandles;

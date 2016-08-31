@@ -13,15 +13,10 @@
     <ClInclude Include="HandleInfo.h" />
     <ClCompile Include="HandleList.cpp" />
     <ClInclude Include="HandleList.h" />
-    <ClCompile Include="Process.cpp" />
-    <ClInclude Include="Process.h" />
-    <ClCompile Include="Protect.cpp" />
-    <ClInclude Include="Protect.h" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="VirtualQueryInfo.h" />
     <ClCompile Include="Win32Exception.cpp" />
     <ClInclude Include="Win32Exception.h" />
     <ClCompile Include="Win32Lib.cpp" />

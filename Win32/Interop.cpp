@@ -14,65 +14,6 @@ namespace NeoEdit
 {
 	namespace Win32
 	{
-		Handle ^Interop::OpenReadMemoryProcess(int pid)
-		{
-			try
-			{
-				return gcnew Handle(Win32Lib::OpenReadMemoryProcess(pid));
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		int64_t Interop::GetProcessMemoryLength(Handle ^handle)
-		{
-			try
-			{
-				return Win32Lib::GetProcessMemoryLength(handle->Get());
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		VirtualQueryInfo ^Interop::VirtualQuery(Handle ^handle, int64_t index)
-		{
-			try
-			{
-				auto result = Win32Lib::VirtualQuery(handle->Get(), (uint8_t*)index);
-				if (result == nullptr)
-					return nullptr;
-				return gcnew VirtualQueryInfo(result);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		Protect ^Interop::SetProtect(Handle ^handle, VirtualQueryInfo ^info, bool write)
-		{
-			try
-			{
-				return gcnew Protect(Win32Lib::SetProtect(handle->Get(), info->Get(), write));
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		void Interop::ReadProcessMemory(Handle ^handle, int64_t index, cli::array<uint8_t> ^bytes, int bytesIndex, int numBytes)
-		{
-			try
-			{
-				pin_ptr<uint8_t> ptr = &bytes[bytesIndex];
-				return Win32Lib::ReadProcessMemory(handle->Get(), (uint8_t*)index, ptr, numBytes);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		void Interop::WriteProcessMemory(Handle ^handle, int64_t index, cli::array<uint8_t> ^bytes, int numBytes)
-		{
-			try
-			{
-				pin_ptr<uint8_t> ptr = &bytes[0];
-				return Win32Lib::WriteProcessMemory(handle->Get(), (uint8_t*)index, ptr, numBytes);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
 		HandleList ^Interop::GetAllHandles()
 		{
 			try

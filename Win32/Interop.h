@@ -3,8 +3,6 @@
 #include "HandleInfo.h"
 #include "HandleList.h"
 #include "Handle.h"
-#include "Protect.h"
-#include "VirtualQueryInfo.h"
 
 namespace NeoEdit
 {
@@ -13,12 +11,6 @@ namespace NeoEdit
 		public ref class Interop
 		{
 		public:
-			static Handle ^OpenReadMemoryProcess(int pid);
-			static int64_t GetProcessMemoryLength(Handle ^handle);
-			static VirtualQueryInfo ^VirtualQuery(Handle ^handle, int64_t index);
-			static Protect ^SetProtect(Handle ^handle, VirtualQueryInfo ^info, bool write);
-			static void ReadProcessMemory(Handle ^handle, int64_t index, cli::array<uint8_t> ^bytes, int bytesIndex, int numBytes);
-			static void WriteProcessMemory(Handle ^handle, int64_t index, cli::array<uint8_t> ^bytes, int numBytes);
 			static HandleList ^GetAllHandles();
 			static void GetTypeHandles(HandleList ^handles, System::String ^type);
 			static void GetProcessHandles(HandleList ^handles, int pid);

@@ -37,15 +37,6 @@
     <ClInclude Include="Interop.h">
       <Filter>Interop</Filter>
     </ClInclude>
-    <Filter Include="Protect">
-      <UniqueIdentifier>{eeedbedb-8295-441a-8f2f-f88a55b93f4c}</UniqueIdentifier>
-    </Filter>
-    <ClCompile Include="Protect.cpp">
-      <Filter>Protect</Filter>
-    </ClCompile>
-    <ClInclude Include="Protect.h">
-      <Filter>Protect</Filter>
-    </ClInclude>
     <Filter Include="Resource">
       <UniqueIdentifier>{fd3c58d5-5ec3-4cba-b3dd-3c6b9071ed26}</UniqueIdentifier>
     </Filter>
@@ -63,15 +54,6 @@
     </ClCompile>
     <ClInclude Include="stdafx.h">
       <Filter>stdafx</Filter>
-    </ClInclude>
-    <Filter Include="VirtualQueryInfo">
-      <UniqueIdentifier>{743ae5e2-3dfc-4840-80fe-5bfa196392e7}</UniqueIdentifier>
-    </Filter>
-    <ClCompile Include="VirtualQueryInfo.cpp">
-      <Filter>VirtualQueryInfo</Filter>
-    </ClCompile>
-    <ClInclude Include="VirtualQueryInfo.h">
-      <Filter>VirtualQueryInfo</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

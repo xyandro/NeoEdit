@@ -6,6 +6,7 @@
     <RootNamespace>NeoEdit.HexEdit</RootNamespace>
     <AssemblyName>NeoEdit.HexEdit</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
@@ -122,7 +123,10 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Protect.cs" />
     <Compile Include="UndoRedo.cs" />
+    <Compile Include="VirtualQueryInfo.cs" />
+    <Compile Include="Win32.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Common\Common.csproj">
