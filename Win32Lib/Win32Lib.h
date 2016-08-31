@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "HandleList.h"
 #include "HandleInfo.h"
 #include "Protect.h"
@@ -18,8 +16,6 @@ namespace NeoEdit
 		typedef Win32LibNS::Processes::VirtualQueryInfo VirtualQueryInfo;
 		typedef Win32LibNS::Win32Exception Win32Exception;
 
-		static void (*SuspendProcess)(int32_t pid);
-		static void (*ResumeProcess)(int32_t pid);
 		static std::shared_ptr<void> (*OpenReadMemoryProcess)(int32_t pid);
 		static uintptr_t (*GetProcessMemoryLength)(std::shared_ptr<void>);
 		static std::shared_ptr<const VirtualQueryInfo> (*VirtualQuery)(std::shared_ptr<void> handle, const uint8_t *index);

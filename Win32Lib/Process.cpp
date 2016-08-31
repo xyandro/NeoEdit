@@ -2,41 +2,10 @@
 #include "Process.h"
 
 #include <Windows.h>
-#include <TlHelp32.h>
-#include <unordered_set>
 
 #include "Win32Exception.h"
 
 using namespace std;
-
-namespace
-{
-	shared_ptr<const unordered_set<int32_t>> GetThreadIDs(int32_t pid)
-	{
-		shared_ptr<unordered_set<int32_t>> threadSet(new unordered_set<int32_t>);
-
-		HANDLE toolHelp = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-		if (toolHelp == INVALID_HANDLE_VALUE)
-			NeoEdit::Win32LibNS::Win32Exception::Throw();
-		shared_ptr<const void> toolHelpDeleter(toolHelp, CloseHandle);
-
-		THREADENTRY32 te;
-		te.dwSize = sizeof(te);
-		if (!Thread32First(toolHelp, &te))
-			return threadSet;
-
-		do
-		{
-			if (te.th32OwnerProcessID != pid)
-				continue;
-
-			threadSet->insert(te.th32ThreadID);
-		}
-		while (Thread32Next(toolHelp, &te));
-
-		return threadSet;
-	}
-}
 
 namespace NeoEdit
 {
@@ -44,53 +13,6 @@ namespace NeoEdit
 	{
 		namespace Processes
 		{
-			void Process::SuspendProcess(int32_t pid)
-			{
-				unordered_set<int32_t> suspended;
-
-				// Keep going until we get them all; more might pop up as we're working
-				while (true)
-				{
-					auto found = false;
-
-					auto threadSet = GetThreadIDs(pid);
-					for each (auto threadId in *threadSet)
-					{
-						if (suspended.find(threadId) != suspended.end())
-							continue;
-
-						found = true;
-						suspended.insert(threadId);
-
-						auto threadHandle = OpenThread(THREAD_SUSPEND_RESUME, FALSE, threadId);
-						if (threadHandle == nullptr)
-							Win32Exception::Throw();
-						shared_ptr<const void> threadHandleDeleter(threadHandle, CloseHandle);
-
-						if (SuspendThread(threadHandle) == -1)
-							Win32Exception::Throw();
-					}
-
-					if (!found)
-						break;
-				}
-			}
-
-			void Process::ResumeProcess(int32_t pid)
-			{
-				auto threadSet = GetThreadIDs(pid);
-				for each (auto threadId in *threadSet)
-				{
-					auto threadHandle = OpenThread(THREAD_SUSPEND_RESUME, FALSE, threadId);
-					if (threadHandle == nullptr)
-						Win32Exception::Throw();
-					shared_ptr<const void> threadHandleDeleter(threadHandle, CloseHandle);
-
-					if (ResumeThread(threadHandle) == -1)
-						Win32Exception::Throw();
-				}
-			}
-
 			shared_ptr<void> Process::OpenReadMemoryProcess(int32_t pid)
 			{
 				auto handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION, false, pid);

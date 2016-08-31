@@ -13,8 +13,6 @@ namespace NeoEdit
 		public ref class Interop
 		{
 		public:
-			static void SuspendProcess(int pid);
-			static void ResumeProcess(int pid);
 			static Handle ^OpenReadMemoryProcess(int pid);
 			static int64_t GetProcessMemoryLength(Handle ^handle);
 			static VirtualQueryInfo ^VirtualQuery(Handle ^handle, int64_t index);

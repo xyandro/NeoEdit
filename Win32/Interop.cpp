@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Interop.h"
 
+#include <msclr\marshal_cppstd.h>
+
 using namespace std;
 using namespace System;
 using namespace System::ComponentModel;
@@ -12,24 +14,6 @@ namespace NeoEdit
 {
 	namespace Win32
 	{
-		void Interop::SuspendProcess(int pid)
-		{
-			try
-			{
-				return Win32Lib::SuspendProcess(pid);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		void Interop::ResumeProcess(int pid)
-		{
-			try
-			{
-				return Win32Lib::ResumeProcess(pid);
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
 		Handle ^Interop::OpenReadMemoryProcess(int pid)
 		{
 			try

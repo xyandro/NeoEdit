@@ -1,11 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using NeoEdit.Common;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Controls.ItemGridControl;
 using NeoEdit.GUI.Dialogs;
-using NeoEdit.Win32;
 
 namespace NeoEdit.Processes
 {
@@ -68,11 +68,11 @@ namespace NeoEdit.Processes
 					break;
 				case ProcessesCommand.Process_Suspend:
 					foreach (ProcessItem selected in processes.Selected)
-						Interop.SuspendProcess(selected.PID);
+						Process.GetProcessById(selected.PID).Suspend();
 					break;
 				case ProcessesCommand.Process_Resume:
 					foreach (ProcessItem selected in processes.Selected)
-						Interop.ResumeProcess(selected.PID);
+						Process.GetProcessById(selected.PID).Resume();
 					break;
 				case ProcessesCommand.Process_Kill:
 					if (processes.Selected.Count != 0)

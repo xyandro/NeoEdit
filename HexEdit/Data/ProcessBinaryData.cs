@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using NeoEdit.Common;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Win32;
 
@@ -44,7 +46,7 @@ namespace NeoEdit.HexEdit.Data
 			if (suspendCount++ != 0)
 				return;
 
-			Interop.SuspendProcess(pid);
+			Process.GetProcessById(pid).Suspend();
 		}
 
 		void ResumeProcess()
@@ -52,7 +54,7 @@ namespace NeoEdit.HexEdit.Data
 			if (--suspendCount != 0)
 				return;
 
-			Interop.ResumeProcess(pid);
+			Process.GetProcessById(pid).Resume();
 		}
 
 		Handle handle;

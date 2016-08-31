@@ -3,8 +3,6 @@
 
 #include <Windows.h>
 
-#include "Win32Lib.h"
-
 using namespace std;
 
 namespace NeoEdit
