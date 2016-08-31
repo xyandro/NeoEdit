@@ -12,7 +12,6 @@ namespace NeoEdit.GUI
 		Func<bool> getMinimizeToTrayLauncher;
 		Action<bool> setMinimizeToTrayLauncher;
 
-		Action<bool> consoleLauncher;
 		Action diffLauncher;
 		Action<string, IEnumerable<string>, bool> diskLauncher;
 		Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
@@ -27,7 +26,6 @@ namespace NeoEdit.GUI
 			Func<bool> getMinimizeToTray
 			, Action<bool> setMinimizeToTray
 
-			, Action<bool> console
 			, Action diff
 			, Action<string, IEnumerable<string>, bool> disk
 			, Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor
@@ -44,7 +42,6 @@ namespace NeoEdit.GUI
 				getMinimizeToTrayLauncher = getMinimizeToTray,
 				setMinimizeToTrayLauncher = setMinimizeToTray,
 
-				consoleLauncher = console,
 				diffLauncher = diff,
 				diskLauncher = disk,
 				fileHexEditorLauncher = fileHexEditor,
@@ -69,7 +66,6 @@ namespace NeoEdit.GUI
 		public void LaunchHexEditor(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => fileHexEditorLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
 		public void LaunchHexEditor(int pid) => processHexEditorLauncher?.Invoke(pid);
 		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false) => diskLauncher?.Invoke(path, files, forceCreate);
-		public void LaunchConsole(bool forceCreate = false) => consoleLauncher?.Invoke(forceCreate);
 		public void LaunchNetwork() => networkLauncher?.Invoke();
 		public void LaunchProcesses(int? pid = null) => processesLauncher?.Invoke(pid);
 		public void LaunchHandles(int? pid = null) => handlesLauncher?.Invoke(pid);

@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.Console;
 using NeoEdit.Disk;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
@@ -85,7 +84,6 @@ namespace NeoEdit
 				getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray
 				, setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); }
 
-				, console: (forceCreate) => ConsoleTabs.Create(forceCreate: forceCreate)
 				, diff: () => TextEditTabs.CreateDiff().AddDiff()
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
 				, fileHexEditor: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)

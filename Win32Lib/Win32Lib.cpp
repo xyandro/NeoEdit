@@ -3,7 +3,6 @@
 
 #include "Process.h"
 #include "Handle.h"
-#include "Window.h"
 
 namespace NeoEdit
 {
@@ -24,7 +23,4 @@ namespace NeoEdit
 	uintptr_t (*Win32Lib::GetSharedMemorySize)(int32_t pid, void *intHandle) = Win32LibNS::Handles::Handle::GetSharedMemorySize;
 	void (*Win32Lib::ReadSharedMemory)(int32_t pid, void *handle, uintptr_t index, uint8_t *bytes, uint32_t numBytes) = Win32LibNS::Handles::Handle::ReadSharedMemory;
 	void (*Win32Lib::WriteSharedMemory)(int32_t pid, void *handle, uintptr_t index, const uint8_t *bytes, uint32_t numBytes) = Win32LibNS::Handles::Handle::WriteSharedMemory;
-
-	intptr_t (*Win32Lib::AllocConsole)() = Win32LibNS::Window::AllocConsole;
-	void (*Win32Lib::SendChar)(intptr_t handle, unsigned char ch) = Win32LibNS::Window::SendChar;
 }

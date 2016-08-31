@@ -4,8 +4,6 @@ STARTSTR       : '"' -> skip, pushMode(STR) ;
 
 ABOUT          : '-about'                                                                               ;
 COLUMN         : '-col' | '-column'                                                                     ;
-CONSOLE        : '-console'                                                                             ;
-CONSOLERUNNER  : '-consolerunner'                                                                       ;
 DIFF           : '-diff'                                                                                ;
 DISK           : '-disk' | '-disks'                                                                     ;
 DISPLAY        : '-display' | '-displayname' | '-displaytext'                                           ;
@@ -31,8 +29,6 @@ mode STR;
 
 ABOUT2         : ABOUT         -> type(ABOUT)         ;
 COLUMN2        : COLUMN        -> type(COLUMN)        ;
-CONSOLE2       : CONSOLE       -> type(CONSOLE)       ;
-CONSOLERUNNER2 : CONSOLERUNNER -> type(CONSOLERUNNER) ;
 DIFF2          : DIFF          -> type(DIFF)          ;
 DISK2          : DISK          -> type(DISK)          ;
 DISPLAY2       : DISPLAY       -> type(DISPLAY)       ;

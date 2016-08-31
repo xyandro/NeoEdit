@@ -82,14 +82,5 @@
     <ClInclude Include="Win32Lib.h">
       <Filter>Win32Lib</Filter>
     </ClInclude>
-    <Filter Include="Window">
-      <UniqueIdentifier>{c0cf5dc0-d777-4d38-bc6a-9140b37e06df}</UniqueIdentifier>
-    </Filter>
-    <ClCompile Include="Window.cpp">
-      <Filter>Window</Filter>
-    </ClCompile>
-    <ClInclude Include="Window.h">
-      <Filter>Window</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

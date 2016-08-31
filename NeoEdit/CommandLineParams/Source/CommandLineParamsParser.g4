@@ -4,11 +4,9 @@ options { tokenVocab = CommandLineParamsLexer; }
 
 expr          : parameter* EOF ;
 
-parameter     : LIVE | about | console | consolerunner | diff | disk | handles | hexdump | hexedit | hexpid | multi | network | processes | textedit | textview ;
+parameter     : LIVE | about | diff | disk | handles | hexdump | hexedit | hexpid | multi | network | processes | textedit | textview ;
 
 about         : ABOUT ;
-console       : CONSOLE ;
-consolerunner : CONSOLERUNNER param* ;
 diff          : DIFF texteditfile? texteditfile? ;
 disk          : DISK file=param? ;
 handles       : HANDLES pid=NUMBER? ;

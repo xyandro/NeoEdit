@@ -29,7 +29,6 @@ namespace NeoEdit.GUI.Controls
 		{
 			switch (command)
 			{
-				case WindowCommand.Window_Console: Launcher.Static.LaunchConsole(forceCreate: true); break;
 				case WindowCommand.Window_Diff: Launcher.Static.LaunchDiff(); break;
 				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(forceCreate: true); break;
 				case WindowCommand.Window_Handles: Launcher.Static.LaunchHandles(); break;

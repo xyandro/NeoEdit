@@ -35,8 +35,5 @@ namespace NeoEdit
 		static uintptr_t (*GetSharedMemorySize)(int32_t pid, void *handle);
 		static void (*ReadSharedMemory)(int32_t pid, void *handle, uintptr_t index, uint8_t *bytes, uint32_t numBytes);
 		static void (*WriteSharedMemory)(int32_t pid, void *handle, uintptr_t index, const uint8_t *bytes, uint32_t numBytes);
-
-		static intptr_t (*AllocConsole)();
-		static void (*SendChar)(intptr_t handle, unsigned char ch);
 	};
 }

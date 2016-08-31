@@ -3,7 +3,6 @@
 	enum WindowCommand
 	{
 		None,
-		Window_Console,
 		Window_Diff,
 		Window_Disk,
 		Window_Handles,

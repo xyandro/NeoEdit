@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Console;
 using NeoEdit.Disk;
 using NeoEdit.GUI.About;
 using NeoEdit.Handles;
@@ -20,18 +19,6 @@ namespace NeoEdit
 	class AboutParam : Param
 	{
 		public override void Execute() => AboutWindow.Run();
-	}
-
-	class ConsoleParam : Param
-	{
-		public override void Execute() => ConsoleTabs.Create();
-	}
-
-	class ConsoleRunnerParam : Param
-	{
-		readonly string[] ParamList;
-		public ConsoleRunnerParam(string[] paramList) { ParamList = paramList; }
-		public override void Execute() => new Console.ConsoleRunner(ParamList);
 	}
 
 	class DiffParam : Param

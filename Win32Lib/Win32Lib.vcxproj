@@ -26,8 +26,6 @@
     <ClInclude Include="Win32Exception.h" />
     <ClCompile Include="Win32Lib.cpp" />
     <ClInclude Include="Win32Lib.h" />
-    <ClCompile Include="Window.cpp" />
-    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).vcxproj2.props" />
 </Project>
