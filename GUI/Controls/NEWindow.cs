@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Input;
 
 namespace NeoEdit.GUI.Controls
 {
 	public class NEWindow : Window
 	{
+		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+
 		public NEWindow()
 		{
 			HelpMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
@@ -36,6 +39,9 @@ namespace NeoEdit.GUI.Controls
 				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditor(forceCreate: true); break;
 				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(forceCreate: true); break;
 			}
+
+			if (shiftDown)
+				Close();
 		}
 
 		public static bool MinimizeToTray
