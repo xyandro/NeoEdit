@@ -385,6 +385,9 @@ namespace NeoEdit
 
 					for each (auto handle in entry.second)
 					{
+						if ((handle->ObjectTypeIndex < 0) || (handle->ObjectTypeIndex >= typeNames.size()))
+							continue;
+
 						auto dupHandle = DuplicateHandle(processHandle, handle->HandleValue, false);
 						if (!dupHandle)
 							continue;
