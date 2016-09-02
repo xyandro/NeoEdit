@@ -1,6 +1,5 @@
 All:
 Add command prompt
-Remove native dlls (add to mixed)
 Add TFS source control
 Visual Studio plug-in for integration
 
@@ -23,7 +22,6 @@ Nest macros
 Get DLL/EXE version info
 Pull directory contents, including sizes/times (useful for diffing, others)
 Copy positions/goto copied positions (useful for applying diff)
-Fix warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification (https://social.msdn.microsoft.com/Forums/vstudio/en-US/d605bec7-df91-4272-be17-19db7394e0fd/how-to-get-rid-of-warning-lnk4075-ignoring-editandcontinue-due-to-optlbr-specification?forum=vcgeneral)
 Refactor macro code
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
