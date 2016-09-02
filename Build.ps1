@@ -33,7 +33,7 @@ Function GitClean ()
 
 		if (($fail) -and (!$debug)) { Fail("Invalid files present") }
 
-		$status -Match '^!!' -Replace '^!!\s+' -NotMatch '^(Locations.txt|NeoEdit.exe)$' | rm -recurse -force
+		$status -Match '^!!' -Replace '^!!\s+' -NotMatch '^NeoEdit\.exe$' | rm -recurse -force
 		if (!$?) { Fail("Failed to delete files.") }
 	}
 }
@@ -47,6 +47,8 @@ Function GitUpdate ()
 
 Function Build ()
 {
+	$start = [System.DateTime]::Now
+
 	$devenv = "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.com"
 	$args = ""
 	foreach ($bitdepth in $bitdepths)
@@ -58,19 +60,11 @@ Function Build ()
 	$args += "-output=NeoEdit.exe -ngen=1 -extractaction=gui -go"
 	$proc = Start-Process "bin\Release.AnyCPU\Loader.exe" $args -PassThru -Wait
 	if ($proc.ExitCode -ne 0) { Fail("Failed to build.") }
-}
 
-Function CopyLocations ()
-{
-	if (Test-Path "Locations.txt")
-	{
-		$locations = Get-Content "Locations.txt"
-		ForEach ($location in $locations)
-		{
-			if ([string]::IsNullOrEmpty($location)) { continue; }
-			Copy-Item "bin\NeoEdit.exe" "$location"
-		}
-	}
+	$end = [System.DateTime]::Now
+	$elapsed = ($end - $start).TotalSeconds
+
+	Write-Host("Build time: $elapsed seconds.")
 }
 
 GitClean
@@ -80,6 +74,5 @@ $bytes = [System.IO.File]::ReadAllBytes("bin\Release.AnyCPU\NeoEdit.exe")
 GitClean
 New-Item -ItemType Directory -Force -Path bin
 [System.IO.File]::WriteAllBytes("bin\NeoEdit.exe", $bytes)
-CopyLocations
 
 Write-Host("Success!")
