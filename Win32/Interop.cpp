@@ -1,73 +1,12 @@
 #include "stdafx.h"
 #include "Interop.h"
 
-#include <msclr\marshal_cppstd.h>
-
-using namespace std;
-using namespace System;
-using namespace System::ComponentModel;
 using namespace System::Collections::Generic;
-using namespace msclr::interop;
 
 namespace NeoEdit
 {
 	namespace Win32
 	{
-		HandleList ^Interop::GetAllHandles()
-		{
-			try
-			{
-				return gcnew HandleList(Win32Lib::GetAllHandles());
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		void Interop::GetTypeHandles(HandleList ^handles, System::String ^type)
-		{
-			try
-			{
-				handles->Set(Win32Lib::GetTypeHandles(handles->Get(), marshal_as<wstring>(type)));
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		void Interop::GetProcessHandles(HandleList ^handles, int pid)
-		{
-			try
-			{
-				handles->Set(Win32Lib::GetProcessHandles(handles->Get(), pid));
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		List<HandleInfo^> ^Interop::GetHandleInfo(HandleList ^handles)
-		{
-			try
-			{
-				auto handleInfo = Win32Lib::GetHandleInfo(handles->Get());
-				handles->Set(nullptr);
-
-				auto result = gcnew List<HandleInfo^>();
-				for each (auto handle in *handleInfo)
-					result->Add(gcnew HandleInfo(handle));
-				return result;
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
-		List<String^> ^Interop::GetHandleTypes()
-		{
-			try
-			{
-				auto types = Win32Lib::GetHandleTypes();
-				auto result = gcnew List < String^ > ;
-				for each (auto name in *types)
-					result->Add(gcnew String(name.c_str()));
-				return result;
-			}
-			catch (Win32Lib::Win32Exception &ex) { throw gcnew Win32Exception(gcnew String(ex.Message().c_str())); }
-		}
-
 		template <typename type> List<int64_t> ^GetLinesTemplate(cli::array<uint8_t>^ data, int %lineLength, int %maxLine, bool bigEndian, type mask, type value)
 		{
 			type cr = !bigEndian ? 0x0d : sizeof(type) == 2 ? 0x0d00 : 0x0d000000;

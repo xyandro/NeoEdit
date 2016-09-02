@@ -7,7 +7,6 @@ using NeoEdit.Common;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Controls.ItemGridControl;
-using NeoEdit.Win32;
 
 namespace NeoEdit.Handles
 {
@@ -41,7 +40,7 @@ namespace NeoEdit.Handles
 
 			InitializeComponent();
 
-			HandleTypes = Interop.GetHandleTypes().Where(type => !string.IsNullOrEmpty(type)).OrderBy().ToList();
+			HandleTypes = HandleHelper.HandleTypes.Where(type => !string.IsNullOrEmpty(type)).OrderBy().ToList();
 			HandleTypes.Insert(0, "");
 
 			foreach (var prop in UIHelper<HandleItem>.GetProperties())
@@ -62,14 +61,14 @@ namespace NeoEdit.Handles
 			else
 				SubTitle = "All handles";
 
-			var handles = Interop.GetAllHandles();
+			var handles = HandleHelper.GetAllHandles();
 			if (pid.HasValue)
-				Interop.GetProcessHandles(handles, pid.Value);
+				handles = HandleHelper.GetProcessHandles(handles, pid.Value);
 			if (!string.IsNullOrEmpty(HandleType))
-				Interop.GetTypeHandles(handles, HandleType);
+				handles = HandleHelper.GetTypeHandles(handles, HandleType);
 
-			var handleInfo = Interop.GetHandleInfo(handles);
-			Handles = new ObservableCollection<HandleItem>(handleInfo.Select(info => new HandleItem(info)));
+			var handleInfo = HandleHelper.GetHandleItem(handles);
+			Handles = new ObservableCollection<HandleItem>(handleInfo);
 		}
 
 		void Command_Executed(object sender, ExecutedRoutedEventArgs e)

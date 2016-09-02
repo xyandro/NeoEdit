@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{1C928016-0E00-4125-80A5-458B82F1EC0D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -30,16 +30,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-4
 	ProjectSection(SolutionItems) = preProject
 		NeoEdit.csproj.props = NeoEdit.csproj.props
 		NeoEdit.csproj2.props = NeoEdit.csproj2.props
-		NeoEdit.vcxproj.props = NeoEdit.vcxproj.props
-		NeoEdit.vcxproj2.props = NeoEdit.vcxproj2.props
 		Todo.txt = Todo.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit", "NeoEdit\NeoEdit.csproj", "{DB80FD39-0222-4591-B224-833259BAC943}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "Network\Network.csproj", "{64B9F21B-A7FE-4CF9-B764-948505DACE60}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NEWin32", "NEWin32\NEWin32.vcxproj", "{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Processes", "Processes\Processes.csproj", "{C65DD007-A448-49F5-B813-372C53D374C3}"
 EndProject
@@ -55,8 +51,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextView", "TextView\TextView.csproj", "{46568E12-8F80-492E-AED8-647C2386C3E9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32", "Win32\Win32.vcxproj", "{95A660DC-FBFE-4560-A433-0B024494B213}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Lib", "Win32Lib\Win32Lib.vcxproj", "{785C1014-852F-4EC1-A2D6-CDB52880B7AD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC} = {454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}
 	EndProjectSection
@@ -141,14 +135,6 @@ Global
 		{64B9F21B-A7FE-4CF9-B764-948505DACE60}.Release|32.Build.0 = Release|x86
 		{64B9F21B-A7FE-4CF9-B764-948505DACE60}.Release|64.ActiveCfg = Release|x64
 		{64B9F21B-A7FE-4CF9-B764-948505DACE60}.Release|64.Build.0 = Release|x64
-		{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}.Debug|32.ActiveCfg = Debug|Win32
-		{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}.Debug|32.Build.0 = Debug|Win32
-		{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}.Debug|64.ActiveCfg = Debug|x64
-		{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}.Debug|64.Build.0 = Debug|x64
-		{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}.Release|32.ActiveCfg = Release|Win32
-		{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}.Release|32.Build.0 = Release|Win32
-		{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}.Release|64.ActiveCfg = Release|x64
-		{FCC193B6-3B3A-4EC5-9586-E22E38D61D99}.Release|64.Build.0 = Release|x64
 		{C65DD007-A448-49F5-B813-372C53D374C3}.Debug|32.ActiveCfg = Debug|x86
 		{C65DD007-A448-49F5-B813-372C53D374C3}.Debug|32.Build.0 = Debug|x86
 		{C65DD007-A448-49F5-B813-372C53D374C3}.Debug|64.ActiveCfg = Debug|x64
@@ -197,14 +183,6 @@ Global
 		{95A660DC-FBFE-4560-A433-0B024494B213}.Release|32.Build.0 = Release|Win32
 		{95A660DC-FBFE-4560-A433-0B024494B213}.Release|64.ActiveCfg = Release|x64
 		{95A660DC-FBFE-4560-A433-0B024494B213}.Release|64.Build.0 = Release|x64
-		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Debug|32.ActiveCfg = Debug|Win32
-		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Debug|32.Build.0 = Debug|Win32
-		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Debug|64.ActiveCfg = Debug|x64
-		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Debug|64.Build.0 = Debug|x64
-		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Release|32.ActiveCfg = Release|Win32
-		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Release|32.Build.0 = Release|Win32
-		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Release|64.ActiveCfg = Release|x64
-		{785C1014-852F-4EC1-A2D6-CDB52880B7AD}.Release|64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

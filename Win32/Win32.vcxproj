@@ -8,12 +8,6 @@
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="Handle.cpp" />
-    <ClInclude Include="Handle.h" />
-    <ClCompile Include="HandleInfo.cpp" />
-    <ClInclude Include="HandleInfo.h" />
-    <ClCompile Include="HandleList.cpp" />
-    <ClInclude Include="HandleList.h" />
     <ClCompile Include="Interop.cpp" />
     <ClInclude Include="Interop.h" />
     <ClInclude Include="Resource.h" />
@@ -25,9 +19,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <ProjectReference Include="$(SolutionDir)\Win32Lib\Win32Lib.vcxproj">
-      <Project>{785c1014-852f-4ec1-a2d6-cdb52880b7ad}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).vcxproj2.props" />
 </Project>

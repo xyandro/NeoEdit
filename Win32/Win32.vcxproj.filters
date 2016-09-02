@@ -1,33 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Handle">
-      <UniqueIdentifier>{a85cb97b-ef22-4375-8bb9-ea101c9fdc8a}</UniqueIdentifier>
-    </Filter>
-    <ClCompile Include="Handle.cpp">
-      <Filter>Handle</Filter>
-    </ClCompile>
-    <ClInclude Include="Handle.h">
-      <Filter>Handle</Filter>
-    </ClInclude>
-    <Filter Include="HandleInfo">
-      <UniqueIdentifier>{2ee2eeff-5dd7-4d26-a2a3-0b47a79dd5bc}</UniqueIdentifier>
-    </Filter>
-    <ClCompile Include="HandleInfo.cpp">
-      <Filter>HandleInfo</Filter>
-    </ClCompile>
-    <ClInclude Include="HandleInfo.h">
-      <Filter>HandleInfo</Filter>
-    </ClInclude>
-    <Filter Include="HandleList">
-      <UniqueIdentifier>{36c7837a-144b-493f-92a8-7868661ca961}</UniqueIdentifier>
-    </Filter>
-    <ClCompile Include="HandleList.cpp">
-      <Filter>HandleList</Filter>
-    </ClCompile>
-    <ClInclude Include="HandleList.h">
-      <Filter>HandleList</Filter>
-    </ClInclude>
     <Filter Include="Interop">
       <UniqueIdentifier>{9db29e1e-275f-4279-918f-4a8ea4c95d4d}</UniqueIdentifier>
     </Filter>
