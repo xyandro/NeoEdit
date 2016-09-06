@@ -942,6 +942,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.Numeric); break;
 				case TextEditCommand.Numeric_Select_Whole: Command_Numeric_Select_Whole(); break;
 				case TextEditCommand.Numeric_Select_Fraction: Command_Numeric_Select_Fraction(); break;
+				case TextEditCommand.Numeric_Select_Integer: Command_Numeric_Select_Integer(); break;
+				case TextEditCommand.Numeric_Select_Float: Command_Numeric_Select_Float(); break;
+				case TextEditCommand.Numeric_Select_Hex: Command_Numeric_Select_Hex(); break;
 				case TextEditCommand.Numeric_Hex_ToHex: Command_Numeric_Hex_ToHex(); break;
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
 				case TextEditCommand.Numeric_ConvertBase: Command_Numeric_ConvertBase(dialogResult as ConvertBaseDialog.Result); break;

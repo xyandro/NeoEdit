@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.TextEdit.Dialogs;
@@ -35,7 +36,7 @@ namespace NeoEdit.TextEdit
 			return number;
 		}
 
-		private string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
+		string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
 		{
 			BigInteger value = 0;
 			for (var ctr = 0; ctr < str.Length; ++ctr)
@@ -47,6 +48,13 @@ namespace NeoEdit.TextEdit
 				value /= outputSet.Count;
 			}
 			return new string(output.ToArray());
+		}
+
+		void SelectRegEx(string pattern)
+		{
+			var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+			var results = Selections.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, false, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			Selections.Replace(results);
 		}
 
 		void Command_Numeric_Select_Whole()
@@ -72,6 +80,12 @@ namespace NeoEdit.TextEdit
 				return new Range(range.Start + idx, range.End);
 			}).ToList());
 		}
+
+		void Command_Numeric_Select_Integer() => SelectRegEx("[0-9]+");
+
+		void Command_Numeric_Select_Float() => SelectRegEx(@"\d*\.?\d+(e[-+]?\d+)?");
+
+		void Command_Numeric_Select_Hex() => SelectRegEx("[0-9a-f]+");
 
 		void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(GetString(range)).ToString("x").TrimStart('0')).ToList());
 

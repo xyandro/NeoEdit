@@ -270,6 +270,9 @@
 			<textEdit:TextEditMenuItem Header="Ma_x" CommandEnum="Numeric_Select_Max"/>
 			<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Select_Whole"/>
 			<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Select_Fraction"/>
+			<textEdit:TextEditMenuItem Header="_Integer" CommandEnum="Numeric_Select_Integer"/>
+			<textEdit:TextEditMenuItem Header="F_loat" CommandEnum="Numeric_Select_Float"/>
+			<textEdit:TextEditMenuItem Header="_Hex" CommandEnum="Numeric_Select_Hex"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="He_x">

@@ -1,28 +1,14 @@
 All:
-Add command prompt
 Add TFS source control
-Visual Studio plug-in for integration
+Allow selecting a screen location (with zoom)
 
 Disk:
 Move timestamp (possibly others) from TextEditor
 Select readable
-Can't open any window if current directory is invalid (like when running off a network drive)
 In active list add number of selections, allow sort, allow typing to find file
 
 Text:
-Files: Select/etc on svn status (ignore/modified)
-Distinct operations by marked region (series/etc within region)
-Select based on type (int, double, datetime, etc)
-Submit forms
-Go back to last selections
-Change tab order when doc closed (match visual studio or something)
-Time zones
-Nest macros
-~ in .cs confuses parser ([KeyGesture(Key.Down, ModifierKeys.Alt, commandSet: (int)~TextEditCommandSet.Content)] Diff_Next,)
-Get DLL/EXE version info
-Pull directory contents, including sizes/times (useful for diffing, others)
 Copy positions/goto copied positions (useful for applying diff)
-Refactor macro code
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
 Convert to columns based on text position (for non-delimited tables)
@@ -32,8 +18,6 @@ Only show file changed dialog when window is active and selected
 Add multi-file status bar (shows how many (active? files|selections|etc.)
 Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
-Numeric->Select->Numbers
-Allow selecting a screen location (with zoom)
 
 View:
 Update as new lines are added
