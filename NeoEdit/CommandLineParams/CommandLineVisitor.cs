@@ -13,10 +13,10 @@ namespace NeoEdit.CommandLineParams
 		{
 			try
 			{
-				var tree = ParserHelper.Parse<CommandLineParamsLexer, CommandLineParamsParser, CommandLineParamsParser.ExprContext>(input, parser => parser.expr());
+				var tree = ParserHelper.Parse<CommandLineParamsLexer, CommandLineParamsParser, CommandLineParamsParser.ExprContext>(input, parser => parser.expr(), true);
 				return new CommandLineVisitor().Visit(tree) as List<Param>;
 			}
-			catch { throw new Exception("Invalid command line"); }
+			catch (ParserException ex) { throw new Exception($"Invalid command line at position {ex.Pos}: {ex.Msg}"); }
 		}
 
 		public override object VisitExpr(CommandLineParamsParser.ExprContext context) => context.parameter().Select(parameter => VisitParameter(parameter)).Where(param => param != null).Cast<Param>().ToList();

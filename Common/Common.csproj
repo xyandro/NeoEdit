@@ -46,6 +46,7 @@
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
     <Compile Include="Parsing\ParserAttribute.cs" />
     <Compile Include="Parsing\ParserBase.cs" />
+    <Compile Include="Parsing\ParserException.cs" />
     <Compile Include="Parsing\ParserExtensions.cs" />
     <Compile Include="Parsing\ParserHelper.cs" />
     <Compile Include="Parsing\ParserNode.cs" />

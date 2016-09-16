@@ -17,7 +17,7 @@ namespace NeoEdit.Common.Parsing
 		{
 			public void SyntaxError(IRecognizer recognizer, T offendingSymbol, int line, int pos, string msg, RecognitionException e)
 			{
-				throw new Exception($"Failed to parse at line {line} pos {pos}: {msg}");
+				throw new ParserException(line, pos, msg, e);
 			}
 		}
 
