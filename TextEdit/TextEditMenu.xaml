@@ -429,8 +429,7 @@
 	<MenuItem Header="D_atabase">
 		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
 		<textEdit:TextEditMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery"/>
-		<textEdit:MultiMenuItem Header="_Use Current Window" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="UseCurrentWindow" MultiValue="{StaticResource True}" CommandEnum="Database_UseCurrentWindow"/>
-		<textEdit:TextEditMenuItem Header="Que_ry Builder" CommandEnum="Database_QueryBuilder"/>
+		<textEdit:TextEditMenuItem Header="Q_uery Builder" CommandEnum="Database_QueryBuilder"/>
 		<textEdit:TextEditMenuItem Header="_Examine" CommandEnum="Database_Examine"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">

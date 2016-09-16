@@ -151,8 +151,6 @@ namespace NeoEdit.TextEdit
 		public bool DiffIgnoreLineEndings { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsDiff { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool UseCurrentWindow { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditor diffTarget;
 		public TextEditor DiffTarget
@@ -1041,7 +1039,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_ScanPorts: Command_Network_ScanPorts(dialogResult as ScanPortsDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_ExecuteQuery: Command_Database_ExecuteQuery(); break;
-				case TextEditCommand.Database_UseCurrentWindow: Command_Database_UseCurrentWindow(multiStatus); break;
 				case TextEditCommand.Database_QueryBuilder: Command_Database_QueryBuilder(dialogResult as string); break;
 				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;

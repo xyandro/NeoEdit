@@ -1,6 +1,7 @@
 All:
 Add TFS source control
 Allow selecting a screen location (with zoom)
+Active windows: can move to top, bottom, up, down, etc.
 
 Disk:
 Move timestamp (possibly others) from TextEditor

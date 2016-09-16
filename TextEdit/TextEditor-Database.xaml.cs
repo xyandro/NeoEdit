@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Dialogs;
 using NeoEdit.TextEdit.QueryBuilding;
 using NeoEdit.TextEdit.QueryBuilding.Dialogs;
@@ -15,6 +14,13 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		class QueryResult
+		{
+			public Exception Exception { get; set; }
+			public string TableName { get; set; }
+			public Table Table { get; set; }
+		}
+
 		[DepProp]
 		public string DBName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
@@ -22,23 +28,29 @@ namespace NeoEdit.TextEdit
 
 		string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
 
-		IEnumerable<Tuple<string, Table>> RunDBSelect(string commandText)
+		List<QueryResult> RunDBSelect(string commandText)
 		{
-			var tableName = Regex.Match(commandText, @"\bFROM\b.*?([\[\]a-z\.]+)", RegexOptions.IgnoreCase).Groups[1].Value.Replace("[", "").Replace("]", "").CoalesceNullOrEmpty();
-			using (var command = dbConnection.CreateCommand())
+			try
 			{
-				command.CommandText = commandText;
-				using (var reader = command.ExecuteReader())
+				var result = new List<QueryResult>();
+				var tableName = Regex.Match(commandText, @"\bFROM\b.*?([\[\]a-z\.]+)", RegexOptions.IgnoreCase).Groups[1].Value.Replace("[", "").Replace("]", "").CoalesceNullOrEmpty();
+				using (var command = dbConnection.CreateCommand())
 				{
-					while (true)
+					command.CommandText = commandText;
+					using (var reader = command.ExecuteReader())
 					{
-						if (reader.FieldCount != 0)
-							yield return Tuple.Create(tableName, new Table(reader));
-						if (!reader.NextResult())
-							break;
+						while (true)
+						{
+							if (reader.FieldCount != 0)
+								result.Add(new QueryResult { TableName = tableName, Table = new Table(reader) });
+							if (!reader.NextResult())
+								break;
+						}
 					}
 				}
+				return result;
 			}
+			catch (Exception ex) { return new List<QueryResult> { new QueryResult { Exception = ex } }; }
 		}
 
 		void ValidateConnection()
@@ -66,25 +78,21 @@ namespace NeoEdit.TextEdit
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { FullRange };
+			var strs = GetSelectionStrings();
 			// Not in parallel because prior selections may affect later ones
-			var tables = selections.SelectMany(range => RunDBSelect(GetString(range))).ToList();
-			if (!tables.NonNull().Any())
+			var results = selections.Select((range, index) => RunDBSelect(strs[index])).ToList();
+
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
 			{
-				Message.Show($"Quer{(selections.Count == 1 ? "y" : "ies")} run successfully.");
-				return;
+				var exception = results[ctr].Select(result => result.Exception).NonNull().FirstOrDefault();
+				strs[ctr] += $": {(exception == null ? "Success" : $"{exception.Message}")}";
+
+				foreach (var table in results[ctr].Where(table => table.Table != null))
+					OpenTable(table.Table, table.TableName);
 			}
 
-			if (!UseCurrentWindow)
-			{
-				foreach (var table in tables)
-					OpenTable(table.Item2, table.Item1);
-				return;
-			}
-
-			ReplaceSelections(tables.Select(table => table == null ? "Success" : GetTableText(table.Item2)).ToList());
+			ReplaceSelections(strs);
 		}
-
-		void Command_Database_UseCurrentWindow(bool? multiStatus) => UseCurrentWindow = multiStatus != true;
 
 		string Command_Database_QueryBuilder_Dialog()
 		{
