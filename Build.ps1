@@ -41,7 +41,7 @@ Function GitClean ()
 Function GitUpdate ()
 {
 	git checkout master
-	git remote update
+	git fetch origin master
 	git reset --hard origin/master
 }
 
