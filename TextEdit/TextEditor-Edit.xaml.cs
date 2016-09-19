@@ -19,7 +19,7 @@ namespace NeoEdit.TextEdit
 	partial class TextEditor
 	{
 		public enum SortScope { Selections, Lines, Regions }
-		public enum SortType { Smart, String, Length, Integer, Float, Hex, DateTime, Keys, Reverse, Randomize, Frequency }
+		public enum SortType { Smart, String, Length, Integer, Float, Hex, DateTime, Keys, Clipboard, Reverse, Randomize, Frequency }
 
 		void FindNext(bool forward, bool selecting)
 		{
@@ -120,6 +120,12 @@ namespace NeoEdit.TextEdit
 				case SortType.Keys:
 					{
 						var sort = KeysAndValues[0].Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
+						entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue))).ToList();
+					}
+					break;
+				case SortType.Clipboard:
+					{
+						var sort = clipboard.Strings.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
 						entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue))).ToList();
 					}
 					break;

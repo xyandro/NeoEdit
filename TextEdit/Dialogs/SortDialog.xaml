@@ -29,6 +29,7 @@
 					<RadioButton GroupName="sortType" Content="_Hex" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Hex}"/>
 					<RadioButton GroupName="sortType" Content="Dat_e/Time" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=DateTime}"/>
 					<RadioButton GroupName="sortType" Content="_Keys" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Keys}"/>
+					<RadioButton GroupName="sortType" Content="Cli_pboard" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Clipboard}"/>
 					<RadioButton GroupName="sortType" Content="Re_verse" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Reverse}"/>
 					<RadioButton GroupName="sortType" Content="Ra_ndomize" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Randomize}"/>
 					<RadioButton GroupName="sortType" Content="_Frequency" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Frequency}"/>
