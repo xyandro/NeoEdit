@@ -307,5 +307,16 @@ namespace NeoEdit.Common
 		}
 
 		public static IEnumerable<TSource> SelectMany<TSource>(this IEnumerable<IEnumerable<TSource>> source) => source.SelectMany(items => items);
+
+		public static IEnumerable<TResult> TrySelect<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector, TResult defValue)
+		{
+			foreach (var value in source)
+			{
+				var result = defValue;
+				try { result = selector(value); } catch { }
+				yield return result;
+			}
+		}
+
 	}
 }

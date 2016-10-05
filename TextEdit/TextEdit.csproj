@@ -364,6 +364,13 @@
     <Compile Include="Dialogs\NumericSeriesDialog.xaml.cs">
       <DependentUpon>NumericSeriesDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\OnDropDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\OnDropDialog.xaml.cs">
+      <DependentUpon>OnDropDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\PingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
