@@ -1741,19 +1741,20 @@ namespace NeoEdit.TextEdit
 			CalculateBoundaries();
 		}
 
-		void ReplaceOneWithMany(List<string> strs)
+		void ReplaceOneWithMany(List<string> strs, bool addNewLines = false)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var text = new List<string> { string.Join("", strs) };
-
+			var ending = addNewLines ? Data.DefaultEnding : "";
+			if (addNewLines)
+				strs = strs.Select(str => str + ending).ToList();
 			var offset = Selections.Single().Start;
-			ReplaceSelections(text);
+			ReplaceSelections(string.Join("", strs));
 			Selections.Clear();
 			foreach (var str in strs)
 			{
-				Selections.Add(Range.FromIndex(offset, str.Length - Data.DefaultEnding.Length));
+				Selections.Add(Range.FromIndex(offset, str.Length - ending.Length));
 				offset += str.Length;
 			}
 		}

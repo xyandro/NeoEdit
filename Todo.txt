@@ -18,6 +18,7 @@ Only show file changed dialog when window is active and selected
 Add multi-file status bar (shows how many (active? files|selections|etc.)
 Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
+Repeat selections when pasting a multiple of the clipboard
 
 View:
 Update as new lines are added

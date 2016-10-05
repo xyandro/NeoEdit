@@ -241,8 +241,8 @@ namespace NeoEdit.TextEdit
 				return;
 			}
 
-			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n') + Data.DefaultEnding).ToList();
-			ReplaceOneWithMany(clipboardStrings);
+			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n')).ToList();
+			ReplaceOneWithMany(clipboardStrings, true);
 		}
 
 		FindDialog.Result Command_Edit_Find_Find_Dialog()

@@ -100,7 +100,7 @@ namespace NeoEdit.TextEdit
 				});
 			}
 			var columnLens = data[0].Select((item, column) => data.Max(row => row[column].Length)).ToList();
-			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length))) + Data.DefaultEnding).ToList());
+			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
 		PingDialog.Result Command_Network_Ping_Dialog() => PingDialog.Run(WindowParent);
