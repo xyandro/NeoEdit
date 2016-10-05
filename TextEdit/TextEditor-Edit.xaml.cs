@@ -226,23 +226,24 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Paste_Paste(bool highlight)
 		{
 			var clipboardStrings = clipboard.Strings;
-			if (clipboardStrings.Count == 0)
+			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 
-			if (clipboardStrings.Count == 1)
-				clipboardStrings = Selections.Select(str => clipboardStrings[0]).ToList();
+			if (clipboardStrings.Count == 0)
+				throw new Exception("Nothing on clipboard!");
 
-			if ((Selections.Count != 1) && (Selections.Count != clipboardStrings.Count()))
-				throw new Exception("Must have either one or equal number of selections.");
-
-			if (Selections.Count == clipboardStrings.Count)
+			if ((Selections.Count == 1) && (clipboardStrings.Count > 1))
 			{
-				ReplaceSelections(clipboardStrings, highlight);
+				ReplaceOneWithMany(clipboardStrings.Select(str => str.TrimEnd('\r', '\n')).ToList(), true);
 				return;
 			}
 
-			clipboardStrings = clipboardStrings.Select(str => str.TrimEnd('\r', '\n')).ToList();
-			ReplaceOneWithMany(clipboardStrings, true);
+			var repeat = Selections.Count / clipboardStrings.Count;
+			if (repeat * clipboardStrings.Count != Selections.Count)
+				throw new Exception("Number of selections must be a multiple of number of clipboards.");
+
+			clipboardStrings = clipboardStrings.SelectMany(str => Enumerable.Repeat(str, repeat)).ToList();
+			ReplaceSelections(clipboardStrings, highlight);
 		}
 
 		FindDialog.Result Command_Edit_Find_Find_Dialog()
