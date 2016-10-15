@@ -226,7 +226,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			var type = list.Select(dbParam => dbParam.DBType).FirstOrDefault();
 			var builder = new DBConnectInfo { Type = type }.GetBuilder();
 			var props = builder.GetType().GetProperties().ToDictionary(prop => prop.Name);
-			list.Where(dbParam => !dbParam.IsDefault).ForEach(dbParam => props[dbParam.Name].SetValue(builder, dbParam.Value));
+			list.Where(dbParam => !dbParam.IsDefault).ForEach(dbParam => props[dbParam.Name].SetValue(builder, System.Convert.ChangeType(dbParam.Value, props[dbParam.Name].PropertyType)));
 			return new object[] { type, builder.ToString() };
 		}
 	}
