@@ -277,11 +277,22 @@ namespace NeoEdit.Disk
 
 		public long DiskUsage()
 		{
-			var items = new List<DiskItem> { this };
-			for (var ctr = 0; ctr < items.Count; ++ctr)
-				if (items[ctr].HasChildren)
-					items.AddRange(items[ctr].GetChildren());
-			return items.Sum(item => item.Size.HasValue ? item.Size.Value : 0);
+			long size = 0;
+			var items = new Queue<DiskItem>();
+			items.Enqueue(this);
+			while (items.Count != 0)
+			{
+				var item = items.Dequeue();
+				size += item.Size ?? 0;
+				if (item.HasChildren)
+					try
+					{
+						foreach (var child in item.GetChildren())
+							items.Enqueue(child);
+					}
+					catch { }
+			}
+			return size;
 		}
 
 		public static DiskItem Get(string fullName)
