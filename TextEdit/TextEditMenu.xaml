@@ -550,7 +550,7 @@
 			<textEdit:TextEditMenuItem Header="Close Tabs With_out Selections" CommandEnum="View_CloseTabsWithoutSelections"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
+		<MenuItem Header="_Escape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.EscapeClearsSelections), Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">

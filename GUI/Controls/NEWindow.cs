@@ -43,6 +43,22 @@ namespace NeoEdit.GUI.Controls
 				Close();
 		}
 
+		public static bool EscapeClearsSelections
+		{
+			get
+			{
+				return Launcher.Static.EscapeClearsSelections;
+			}
+			set
+			{
+				Launcher.Static.EscapeClearsSelections = value;
+				escapeClearsSelectionsChanged?.Invoke(null, new EventArgs());
+			}
+		}
+
+		static EventHandler escapeClearsSelectionsChanged;
+		public static event EventHandler EscapeClearsSelectionsChanged { add { escapeClearsSelectionsChanged += value; } remove { escapeClearsSelectionsChanged -= value; } }
+
 		public static bool MinimizeToTray
 		{
 			get
@@ -52,8 +68,7 @@ namespace NeoEdit.GUI.Controls
 			set
 			{
 				Launcher.Static.MinimizeToTray = value;
-				if (minimizeToTrayChanged != null)
-					minimizeToTrayChanged(null, new EventArgs());
+				minimizeToTrayChanged?.Invoke(null, new EventArgs());
 			}
 		}
 

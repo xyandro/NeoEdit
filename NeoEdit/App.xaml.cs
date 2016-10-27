@@ -81,7 +81,9 @@ namespace NeoEdit
 		public App()
 		{
 			NeoEdit.GUI.Launcher.Initialize(
-				getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray
+				getEscapeClearsSelections: () => NeoEdit.Properties.Settings.Default.EscapeClearsSelections
+				, setEscapeClearsSelections: value => { NeoEdit.Properties.Settings.Default.EscapeClearsSelections = value; NeoEdit.Properties.Settings.Default.Save(); }
+				, getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray
 				, setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); }
 
 				, diff: () => TextEditTabs.CreateDiff().AddDiff()

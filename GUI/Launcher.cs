@@ -9,6 +9,8 @@ namespace NeoEdit.GUI
 		static Launcher launcher;
 		public static Launcher Static => launcher;
 
+		Func<bool> getEscapeClearsSelectionsLauncher;
+		Action<bool> setEscapeClearsSelectionsLauncher;
 		Func<bool> getMinimizeToTrayLauncher;
 		Action<bool> setMinimizeToTrayLauncher;
 
@@ -23,7 +25,9 @@ namespace NeoEdit.GUI
 		Action<string, bool> textViewerLauncher;
 
 		public static void Initialize(
-			Func<bool> getMinimizeToTray
+			Func<bool> getEscapeClearsSelections
+			, Action<bool> setEscapeClearsSelections
+			, Func<bool> getMinimizeToTray
 			, Action<bool> setMinimizeToTray
 
 			, Action diff
@@ -39,6 +43,8 @@ namespace NeoEdit.GUI
 		{
 			launcher = new Launcher
 			{
+				getEscapeClearsSelectionsLauncher = getEscapeClearsSelections,
+				setEscapeClearsSelectionsLauncher = setEscapeClearsSelections,
 				getMinimizeToTrayLauncher = getMinimizeToTray,
 				setMinimizeToTrayLauncher = setMinimizeToTray,
 
@@ -52,6 +58,12 @@ namespace NeoEdit.GUI
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
 			};
+		}
+
+		public bool EscapeClearsSelections
+		{
+			get { return getEscapeClearsSelectionsLauncher(); }
+			set { setEscapeClearsSelectionsLauncher(value); }
 		}
 
 		public bool MinimizeToTray

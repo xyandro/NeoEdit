@@ -22,6 +22,18 @@ namespace NeoEdit.Properties {
                 return defaultInstance;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EscapeClearsSelections {
+            get {
+                return ((bool)(this["EscapeClearsSelections"]));
+            }
+            set {
+                this["EscapeClearsSelections"] = value;
+            }
+        }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

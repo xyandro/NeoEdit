@@ -1198,11 +1198,14 @@ namespace NeoEdit.TextEdit
 				case Key.Escape:
 					Searches.Clear();
 					doDrag = DragType.None;
-					Command_Select_Selection_Single();
-					if (!Selections.Any())
+					if (NEWindow.EscapeClearsSelections)
 					{
-						var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
-						Selections.Replace(new Range(pos));
+						Command_Select_Selection_Single();
+						if (!Selections.Any())
+						{
+							var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
+							Selections.Replace(new Range(pos));
+						}
 					}
 					break;
 				case Key.Left:
