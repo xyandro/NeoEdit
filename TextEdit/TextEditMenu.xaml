@@ -538,15 +538,19 @@
 	<MenuItem Header="_View">
 		<textEdit:TextEditMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
 		<textEdit:TextEditMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
-		<textEdit:TextEditMenuItem Header="_Custom Grid" CommandEnum="View_CustomGrid"/>
+		<textEdit:TextEditMenuItem Header="C_ustom Grid" CommandEnum="View_CustomGrid"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
-		<textEdit:TextEditMenuItem Header="Select Tabs With _Selections" CommandEnum="View_SelectTabsWithSelections"/>
-		<textEdit:TextEditMenuItem Header="Select Tabs Without S_elections" CommandEnum="View_SelectTabsWithoutSelections"/>
-		<textEdit:TextEditMenuItem Header="Close Tabs _With Selections" CommandEnum="View_CloseTabsWithSelections"/>
-		<textEdit:TextEditMenuItem Header="Close Tabs With_out Selections" CommandEnum="View_CloseTabsWithoutSelections"/>
+		<MenuItem Header="_Select">
+			<textEdit:TextEditMenuItem Header="Select Tabs _With Selections" CommandEnum="View_SelectTabsWithSelections"/>
+			<textEdit:TextEditMenuItem Header="Select Tabs With_out Selections" CommandEnum="View_SelectTabsWithoutSelections"/>
+		</MenuItem>
+		<MenuItem Header="_Close">
+			<textEdit:TextEditMenuItem Header="Close Tabs _With Selections" CommandEnum="View_CloseTabsWithSelections"/>
+			<textEdit:TextEditMenuItem Header="Close Tabs With_out Selections" CommandEnum="View_CloseTabsWithoutSelections"/>
+		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Wo_rd List" CommandEnum="View_WordList"/>
+		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">

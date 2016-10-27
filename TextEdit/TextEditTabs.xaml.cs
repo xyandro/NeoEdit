@@ -216,7 +216,10 @@ namespace NeoEdit.TextEdit
 			var topMost = ItemTabs.TopMost;
 			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
 
-			ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList().ForEach(tab => ItemTabs.Items.Remove(tab));
+			var closeTabs = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
+			if (!closeTabs.All(tab => tab.CanClose()))
+				return;
+			closeTabs.ForEach(tab => Remove(tab));
 
 			if (!active.Any())
 				return;
