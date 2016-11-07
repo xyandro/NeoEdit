@@ -66,6 +66,14 @@ namespace NeoEdit.ImageEdit
 			foreach (var file in files)
 				AddImageEditor(file);
 		}
+
+		void Command_Edit_Paste()
+		{
+			var image = NEClipboard.Image;
+			if (image != null)
+				CreateTab(new ImageEditor(null, image), this);
+		}
+
 		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => ItemTabs.SetLayout(layout, result?.Columns ?? 0, result?.Rows ?? 0);
 
 		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
@@ -101,6 +109,7 @@ namespace NeoEdit.ImageEdit
 				case ImageEditCommand.File_New: Create(imageEditTabs: this, forceCreate: shiftDown); break;
 				case ImageEditCommand.File_Open_Open: Command_File_Open_Open(); break;
 				case ImageEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
+				case ImageEditCommand.Edit_Paste: Command_Edit_Paste(); break;
 				case ImageEditCommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;
 				case ImageEditCommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
 				case ImageEditCommand.View_CustomGrid: Command_View_Type(TabsLayout.Grid, dialogResult as CustomGridDialog.Result); break;

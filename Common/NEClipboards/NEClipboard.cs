@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 namespace NeoEdit.Common.NEClipboards
 {
@@ -15,5 +16,6 @@ namespace NeoEdit.Common.NEClipboards
 		public static IEnumerable<string> CopiedFiles { set { clipboard.GlobalCopiedFiles = value; } }
 		public static IEnumerable<string> CutFiles { set { clipboard.GlobalCutFiles = value; } }
 		public static List<object> Objects { get { return clipboard.Objects; } set { clipboard.GlobalObjects = value; } }
+		public static BitmapSource Image { get { return clipboard.Image; } set { clipboard.GlobalImage = value; } }
 	}
 }

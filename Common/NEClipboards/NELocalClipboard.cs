@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Windows.Media.Imaging;
 
 namespace NeoEdit.Common.NEClipboards
 {
@@ -52,10 +53,12 @@ namespace NeoEdit.Common.NEClipboards
 		public void SetFile(string fileName, bool isCut, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateFile(fileName, isCut), global, setClipboard);
 		public void SetFiles(IEnumerable<string> fileNames, bool isCut, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateFiles(fileNames, isCut), global, setClipboard);
 		public void SetObjects(IEnumerable<object> objects, string text = null, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateObjects(objects, text), global, setClipboard);
+		public void SetImage(BitmapSource image, bool global = true, bool setClipboard = true) => Save(this, ClipboardData.CreateImage(image), global, setClipboard);
 
 		public string Text => localClipboard.Text;
 		public List<string> Strings => localClipboard.Strings;
 		public List<object> Objects => localClipboard.Objects;
+		public BitmapSource Image => localClipboard.Image;
 
 		public string LocalText { set { SetText(value, false); } }
 		public IEnumerable<string> LocalStrings { set { SetStrings(value, false); } }
@@ -71,5 +74,6 @@ namespace NeoEdit.Common.NEClipboards
 		public IEnumerable<string> GlobalCopiedFiles { set { SetFiles(value, false, true); } }
 		public IEnumerable<string> GlobalCutFiles { set { SetFiles(value, true, true); } }
 		public IEnumerable<object> GlobalObjects { set { SetObjects(value, global: true); } }
+		public BitmapSource GlobalImage { set { SetImage(value, global: true); } }
 	}
 }

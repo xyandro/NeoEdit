@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace NeoEdit.Common.NEClipboards
 {
@@ -15,6 +16,7 @@ namespace NeoEdit.Common.NEClipboards
 		public string Text { get; private set; } = "";
 		public List<string> Strings { get; private set; } = new List<string>();
 		public List<object> Objects { get; private set; } = new List<object>();
+		public BitmapSource Image { get; private set; } = null;
 		public bool? IsCut { get; private set; } = null;
 
 		public ClipboardData() { }
@@ -58,6 +60,13 @@ namespace NeoEdit.Common.NEClipboards
 			return data;
 		}
 
+		public static ClipboardData CreateImage(BitmapSource image)
+		{
+			var data = new ClipboardData();
+			data.Image = image;
+			return data;
+		}
+
 		public static ClipboardData GetSystem()
 		{
 			var dataObj = Clipboard.GetDataObject();
@@ -71,6 +80,8 @@ namespace NeoEdit.Common.NEClipboards
 				data.Text = "";
 			else
 				data.Strings.Add(data.Text);
+
+			data.Image = dataObj.GetData(DataFormats.Bitmap, true) as BitmapSource;
 
 			var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.OrderBy(Helpers.SmartComparer(false)).ToList();
 			if ((dropList != null) && (dropList.Count != 0))
@@ -105,6 +116,9 @@ namespace NeoEdit.Common.NEClipboards
 				dataObj.SetFileDropList(dropList);
 				dataObj.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(IsCut == true ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
 			}
+
+			if (Image != null)
+				dataObj.SetImage(Image);
 
 			Clipboard.SetDataObject(dataObj, true);
 		}

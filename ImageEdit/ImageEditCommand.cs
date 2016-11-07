@@ -14,6 +14,7 @@ namespace NeoEdit.ImageEdit
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.P, ModifierKeys.Control)] Edit_Copy_Position,
 		[KeyGesture(Key.L, ModifierKeys.Control)] Edit_Copy_Color,
+		[KeyGesture(Key.V, ModifierKeys.Control)] Edit_Paste,
 		Image_Size,
 		Image_Format_Rgb24,
 		Image_Format_Rgb48,

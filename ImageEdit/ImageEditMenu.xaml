@@ -23,6 +23,7 @@
 			<imageEdit:ImageEditMenuItem Header="_Position" CommandEnum="Edit_Copy_Position"/>
 			<imageEdit:ImageEditMenuItem Header="_Color" CommandEnum="Edit_Copy_Color"/>
 		</MenuItem>
+		<imageEdit:ImageEditMenuItem Header="_Paste" CommandEnum="Edit_Paste"/>
 	</MenuItem>
 	<MenuItem Header="_Image">
 		<imageEdit:ImageEditMenuItem Header="_Size" CommandEnum="Image_Size"/>

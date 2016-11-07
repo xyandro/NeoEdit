@@ -50,7 +50,7 @@ namespace NeoEdit.ImageEdit
 			UIHelper<ImageEditor>.AddCallback(x => x.Image, (obj, o, n) => obj.Format = n.Format);
 		}
 
-		ImageEditor(string fileName, BitmapSource image)
+		public ImageEditor(string fileName, BitmapSource image)
 		{
 			InitializeComponent();
 			FileName = fileName;
