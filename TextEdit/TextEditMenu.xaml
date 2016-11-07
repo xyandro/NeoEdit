@@ -123,6 +123,8 @@
 			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Edit_Bookmarks_Previous"/>
 			<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Edit_Bookmarks_Clear"/>
 		</MenuItem>
+		<Separator/>
+		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.EscapeClearsSelections), Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="D_iff">
 		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
@@ -549,8 +551,6 @@
 			<textEdit:TextEditMenuItem Header="Close Tabs _With Selections" CommandEnum="View_CloseTabsWithSelections"/>
 			<textEdit:TextEditMenuItem Header="Close Tabs With_out Selections" CommandEnum="View_CloseTabsWithoutSelections"/>
 		</MenuItem>
-		<Separator/>
-		<MenuItem Header="_Escape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.EscapeClearsSelections), Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
