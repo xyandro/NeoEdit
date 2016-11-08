@@ -36,19 +36,23 @@ namespace NeoEdit.TextEdit
 				File.Copy(srcFiles[ctr], destFiles[ctr]);
 		}
 
-		List<string> GetDirectoryContents(string dir, bool recursive)
+		List<string> GetDirectoryContents(string dir, bool recursive, List<Exception> errors)
 		{
 			var dirs = new List<string> { dir };
 			var results = new List<string>();
-			for (var ctr = 0; ctr < dirs.Count; ++ctr)
+			try
 			{
-				var subDirs = Directory.GetDirectories(dirs[ctr]);
-				dirs.AddRange(subDirs);
-				results.AddRange(subDirs);
-				results.AddRange(Directory.GetFiles(dirs[ctr]));
-				if (!recursive)
-					break;
+				for (var ctr = 0; ctr < dirs.Count; ++ctr)
+				{
+					var subDirs = Directory.GetDirectories(dirs[ctr]);
+					dirs.AddRange(subDirs);
+					results.AddRange(subDirs);
+					results.AddRange(Directory.GetFiles(dirs[ctr]));
+					if (!recursive)
+						break;
+				}
 			}
+			catch (Exception ex) { errors.Add(ex); }
 			return results;
 		}
 
@@ -385,7 +389,10 @@ namespace NeoEdit.TextEdit
 			if (dirs.Any(dir => !Directory.Exists(dir)))
 				throw new ArgumentException("Path must be of existing directories");
 
-			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive))).ToList());
+			var errors = new List<Exception>();
+			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
+			if (errors.Any())
+				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors.Select(ex => ex.Message))}", "Error", WindowParent);
 		}
 
 		InsertFilesDialog.Result Command_Files_Insert_Dialog() => InsertFilesDialog.Run(WindowParent);
