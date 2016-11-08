@@ -380,7 +380,7 @@ namespace NeoEdit.TextEdit
 				return true;
 
 			if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-				answer = new Message
+				answer = new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -422,7 +422,7 @@ namespace NeoEdit.TextEdit
 
 		bool ConfirmVerifyCanFullyEncode()
 		{
-			switch (new Message
+			switch (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "The current encoding cannot fully represent this data.  Switch to UTF-8?",
@@ -1129,7 +1129,7 @@ namespace NeoEdit.TextEdit
 			if ((command != TextEditCommand.Macro_TimeNextAction) && (timeNext))
 			{
 				timeNext = false;
-				new Message
+				new Message(WindowParent)
 				{
 					Title = "Timer",
 					Text = $"Elapsed time: {elapsed:n} ms",
@@ -1815,7 +1815,7 @@ namespace NeoEdit.TextEdit
 					if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
 						throw;
 
-					if (new Message
+					if (new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "Save failed.  Remove read-only flag?",

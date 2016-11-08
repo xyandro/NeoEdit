@@ -45,7 +45,7 @@ namespace NeoEdit.TextView.Dialogs
 
 			if (Files.GroupBy(file => file).Any(group => group.Count() > 1))
 			{
-				if (new Message
+				if (new Message(this)
 				{
 					Title = "Confirm",
 					Text = "Some files are in the list more than once.  Continue anyway?",

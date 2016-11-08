@@ -43,7 +43,7 @@ namespace NeoEdit.GUI.Dialogs
 
 		void RandomizeSalt(object sender, RoutedEventArgs e)
 		{
-			if (new Message
+			if (new Message(this)
 			{
 				Title = "Please confirm",
 				Text = "This value and the password together are required to generate the key.  Are you sure you want to change it?",

@@ -109,7 +109,7 @@ namespace NeoEdit.TextView.Dialogs
 			var existing = splitData.Select(tuple => tuple.Item1).Where(file => File.Exists(file));
 			if (existing.Any())
 			{
-				if (new Message
+				if (new Message(this)
 				{
 					Title = "Confirm",
 					Text = $"The following files already exist:\n\n{string.Join("\n", existing)}\n\nAre you sure you want to overwrite them?",

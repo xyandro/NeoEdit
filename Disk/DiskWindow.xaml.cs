@@ -278,7 +278,7 @@ namespace NeoEdit.Disk
 			if (Selected.Count == 0)
 				return;
 
-			if (new Message
+			if (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "Are you sure you want to delete these items?",

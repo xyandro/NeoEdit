@@ -485,7 +485,7 @@ namespace NeoEdit.TextEdit
 			if (invalid.Any())
 				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
-			if (new Message
+			if (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?",
@@ -498,7 +498,7 @@ namespace NeoEdit.TextEdit
 			invalid = newFileNames.Where(pair => File.Exists(pair)).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (new Message
+				if (new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
@@ -531,7 +531,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Files_Operations_Delete()
 		{
-			if (new Message
+			if (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "Are you sure you want to delete these files/directories?",
@@ -554,7 +554,7 @@ namespace NeoEdit.TextEdit
 				catch (Exception ex)
 				{
 					if (answer != Message.OptionsEnum.YesToAll)
-						answer = new Message
+						answer = new Message(WindowParent)
 						{
 							Title = "Confirm",
 							Text = $"An error occurred:\n\n{ex.Message}\n\nContinue?",

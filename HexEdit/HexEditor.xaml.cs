@@ -169,7 +169,7 @@ namespace NeoEdit.HexEdit
 			if (!IsModified)
 				return true;
 
-			switch (new Message
+			switch (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "Do you want to save changes?",
@@ -543,7 +543,7 @@ namespace NeoEdit.HexEdit
 			if (Insert)
 				return true;
 
-			new Message
+			new Message(WindowParent)
 			{
 				Title = "Error",
 				Text = "This operation can only be performed in insert mode.",
@@ -558,7 +558,7 @@ namespace NeoEdit.HexEdit
 			if (Coder.CanFullyEncode(bytes, CodePage))
 				return true;
 
-			return new Message
+			return new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = $"The current encoding cannot represent all bytes.  Continue anyway?",
@@ -635,7 +635,7 @@ namespace NeoEdit.HexEdit
 			if (FileName == null)
 				throw new Exception("No filename.");
 
-			if (new Message
+			if (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "Are you sure you want to delete this file?",
@@ -657,7 +657,7 @@ namespace NeoEdit.HexEdit
 
 			if (IsModified)
 			{
-				if (new Message
+				if (new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "You have unsaved changes.  Are you sure you want to reload?",
@@ -790,7 +790,7 @@ namespace NeoEdit.HexEdit
 				return;
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
-				if (new Message
+				if (new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "This file has been updated on disk.  Reload?",
@@ -808,7 +808,7 @@ namespace NeoEdit.HexEdit
 				SelectAll();
 
 			var data = Data.GetSubset(SelStart, Length);
-			new Message
+			new Message(WindowParent)
 			{
 				Title = "Result",
 				Text = Hasher.Get(data, type),
@@ -877,7 +877,7 @@ namespace NeoEdit.HexEdit
 			else
 				text = "ERROR: Signature DOES NOT match.";
 
-			new Message
+			new Message(WindowParent)
 			{
 				Title = "Signature:",
 				Text = text,
@@ -966,7 +966,7 @@ namespace NeoEdit.HexEdit
 
 				if (((forward) && (index <= 0)) || ((!forward) && (index >= Data.Length)))
 				{
-					new Message
+					new Message(WindowParent)
 					{
 						Title = "Info",
 						Text = "Not found.",
@@ -977,7 +977,7 @@ namespace NeoEdit.HexEdit
 
 				if (forward)
 				{
-					if (new Message
+					if (new Message(WindowParent)
 					{
 						Title = "Info",
 						Text = "Not found.  Search from beginning?",
@@ -992,7 +992,7 @@ namespace NeoEdit.HexEdit
 				}
 				else
 				{
-					if (new Message
+					if (new Message(WindowParent)
 					{
 						Title = "Info",
 						Text = "Not found.  Search from end?",

@@ -53,9 +53,9 @@ namespace NeoEdit.GUI.Dialogs
 			return Answer;
 		}
 
-		public static void Show(string text, string title = null)
+		public static void Show(string text, string title = null, Window owner = null)
 		{
-			new Message
+			new Message(owner)
 			{
 				Text = text,
 				Title = title ?? "Info",
@@ -78,10 +78,11 @@ namespace NeoEdit.GUI.Dialogs
 			UIHelper<Message>.AddCallback(a => a.DefaultCancel, (obj, o, n) => obj.SetupButtons());
 		}
 
-		public Message()
+		public Message(Window owner = null)
 		{
 			InitializeComponent();
 
+			Owner = owner;
 			Answer = DefaultCancel;
 
 			Loaded += (s, e) => SetupButtons();

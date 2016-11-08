@@ -32,7 +32,7 @@ namespace NeoEdit.Disk.Dialogs
 		{
 			if ((File.Exists(FullName)) || (Directory.Exists(FullName)))
 			{
-				Message.Show("A file or directory already exists at that location.");
+				Message.Show("A file or directory already exists at that location.", "Error", this);
 				return;
 			}
 

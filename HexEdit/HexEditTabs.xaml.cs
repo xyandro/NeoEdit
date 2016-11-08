@@ -83,7 +83,7 @@ namespace NeoEdit.HexEdit
 		{
 			var files = NEClipboard.Strings;
 
-			if ((files.Count > 5) && (new Message
+			if ((files.Count > 5) && (new Message(this)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",

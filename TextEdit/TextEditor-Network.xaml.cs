@@ -60,7 +60,7 @@ namespace NeoEdit.TextEdit
 			var urls = GetSelectionStrings();
 			var results = Task.Run(() => GetURLs(urls, codePage).Result).Result;
 			if (results.Any(result => result.Item3))
-				new Message
+				new Message(WindowParent)
 				{
 					Title = "Error",
 					Text = $"Failed to fetch the URLs:\n{string.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1))}",

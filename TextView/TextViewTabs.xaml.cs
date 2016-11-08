@@ -56,7 +56,7 @@ namespace NeoEdit.TextView
 			if (files.Count == 0)
 				return;
 
-			if ((files.Count > 5) && (new Message
+			if ((files.Count > 5) && (new Message(this)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",
@@ -148,7 +148,7 @@ namespace NeoEdit.TextView
 				if (cancelled)
 				{
 					var end = DateTime.Now;
-					if (((end - start).TotalSeconds < 10) || (new Message
+					if (((end - start).TotalSeconds < 10) || (new Message(this)
 					{
 						Title = "Confirm",
 						Text = "File processing cancelled.  Open the processed portion?",

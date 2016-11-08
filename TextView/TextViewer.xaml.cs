@@ -102,7 +102,7 @@ namespace NeoEdit.TextView
 			var estimate = data.GetSizeEstimate(selStartLine, Math.Min(selEndLine + 1, data.NumLines));
 			if (estimate >= 524288)
 			{
-				if (new Message
+				if (new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = $"The data you are attempting to copy is roughly {estimate:n0} bytes.  Are you sure you want to do this?",

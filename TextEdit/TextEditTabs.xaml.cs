@@ -132,7 +132,7 @@ namespace NeoEdit.TextEdit
 		{
 			var files = NEClipboard.Strings;
 
-			if ((files.Count > 5) && (new Message
+			if ((files.Count > 5) && (new Message(this)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",
@@ -291,7 +291,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (recordingMacro == null)
 			{
-				new Message
+				new Message(this)
 				{
 					Title = "Error",
 					Text = $"Cannot stop recording; recording not in progess.",

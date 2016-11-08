@@ -109,7 +109,7 @@ namespace NeoEdit.TextEdit
 			if (FileName == null)
 				throw new Exception("No filename.");
 
-			if (new Message
+			if (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "Are you sure you want to delete this file?",
@@ -145,14 +145,13 @@ namespace NeoEdit.TextEdit
 
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
-				if (new Message
+				if (new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "This file has been updated on disk.  Reload?",
 					Options = Message.OptionsEnum.YesNo,
 					DefaultAccept = Message.OptionsEnum.Yes,
 					DefaultCancel = Message.OptionsEnum.No,
-					Owner = WindowParent,
 				}.Show() == Message.OptionsEnum.Yes)
 					Command_File_Revert();
 			}
@@ -164,7 +163,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (IsModified)
 			{
-				if (new Message
+				if (new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "You have unsaved changes.  Are you sure you want to reload?",
@@ -182,7 +181,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (Selections.Count != 1)
 			{
-				new Message
+				new Message(WindowParent)
 				{
 					Title = "Error",
 					Text = "Must have one selection.",
@@ -200,7 +199,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (Selections.Count != 1)
 			{
-				new Message
+				new Message(WindowParent)
 				{
 					Title = "Error",
 					Text = "Must have one selection.",
@@ -213,7 +212,7 @@ namespace NeoEdit.TextEdit
 			if (files.Count == 0)
 				return;
 
-			if ((files.Count > 5) && (new Message
+			if ((files.Count > 5) && (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to insert these {files.Count} files?",
@@ -246,7 +245,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (IsModified)
 			{
-				if (new Message
+				if (new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "You have unsaved changes.  Are you sure you want to reload?",

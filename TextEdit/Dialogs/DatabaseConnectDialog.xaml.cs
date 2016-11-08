@@ -66,7 +66,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (DBConnectInfo == null)
 				return;
 
-			if (new Message
+			if (new Message(this)
 			{
 				Title = "Confirm",
 				Text = "Delete this entry?",
@@ -105,7 +105,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (DBConnectInfo == null)
 				return;
 
-			new Message
+			new Message(this)
 			{
 				Title = "Information",
 				Text = DBConnectInfo.Test() ?? "Connection successful.",

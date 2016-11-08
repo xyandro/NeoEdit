@@ -74,7 +74,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			GetResult().CreateDatabase();
 
-			new Message
+			new Message(this)
 			{
 				Title = "Information",
 				Text = GetResult().Test() ?? "Database created.",
@@ -86,7 +86,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void TestClick(object sender, RoutedEventArgs e)
 		{
-			new Message
+			new Message(this)
 			{
 				Title = "Information",
 				Text = GetResult().Test() ?? "Connection successful.",

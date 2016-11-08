@@ -77,7 +77,7 @@ namespace NeoEdit.Processes
 				case ProcessesCommand.Process_Kill:
 					if (processes.Selected.Count != 0)
 					{
-						if (new Message
+						if (new Message(this)
 						{
 							Text = "Are you sure you want to kill these processes?",
 							Options = Message.OptionsEnum.YesNo,

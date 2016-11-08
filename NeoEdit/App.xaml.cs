@@ -18,7 +18,7 @@ using NeoEdit.TextView;
 
 namespace NeoEdit
 {
-	partial class App : Application
+	partial class App
 	{
 		protected override void OnStartup(StartupEventArgs e)
 		{
@@ -28,8 +28,8 @@ namespace NeoEdit
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
 			CreateWindowsFromArgs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")));
 			ShutdownMode = ShutdownMode.OnLastWindowClose;
-			if (Application.Current.Windows.Count == 0)
-				Application.Current.Shutdown();
+			if (Current.Windows.Count == 0)
+				Current.Shutdown();
 		}
 
 		void ShowExceptionMessage(Exception ex)
@@ -37,7 +37,10 @@ namespace NeoEdit
 			var message = "";
 			for (var ex2 = ex; ex2 != null; ex2 = ex2.InnerException)
 				message += $"{ex2.Message}\n";
-			Message.Show(message, "Error");
+
+			var window = Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
+			Message.Show(message, "Error", window);
+
 #if DEBUG
 			if ((Debugger.IsAttached) && ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None))
 			{
