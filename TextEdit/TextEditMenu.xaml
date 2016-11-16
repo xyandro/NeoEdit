@@ -551,6 +551,8 @@
 		<MenuItem Header="_Close">
 			<textEdit:TextEditMenuItem Header="Tabs _With Selections" CommandEnum="View_Close_TabsWithSelections"/>
 			<textEdit:TextEditMenuItem Header="Tabs With_out Selections" CommandEnum="View_Close_TabsWithoutSelections"/>
+			<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_Close_ActiveTabs"/>
+			<textEdit:TextEditMenuItem Header="_Inactive Tabs" CommandEnum="View_Close_InactiveTabs"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Macro">
