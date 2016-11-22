@@ -84,6 +84,7 @@
 			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
 			<textEdit:TextEditMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind"/>
 			<textEdit:TextEditMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
+			<textEdit:TextEditMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Copy Do_wn" CommandEnum="Edit_CopyDown"/>

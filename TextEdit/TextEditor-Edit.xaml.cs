@@ -371,6 +371,8 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => result.Regex.Replace(GetString(range), result.Replace)).ToList());
 		}
 
+		void Command_Edit_Find_ClearSearchResults() => Searches.Clear();
+
 		void Command_Edit_CopyDown()
 		{
 			var strs = GetSelectionStrings();
