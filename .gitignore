@@ -28,6 +28,7 @@ TestResults
 /TextEdit/Content/Columns/Parser
 /TextEdit/Content/CPlusPlus/Parser
 /TextEdit/Content/CSharp/Parser
+/TextEdit/Content/ExactColumns/Parser
 /TextEdit/Content/HTML/Parser
 /TextEdit/Content/JSON/Parser
 /TextEdit/Content/SQL/Parser

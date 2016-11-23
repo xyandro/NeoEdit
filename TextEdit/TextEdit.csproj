@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="CompressWords;BuildBalanced;BuildColumns;BuildCSharp;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="CompressWords;BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{9A35AB82-2481-4C44-B51E-66DF7D248EAD}</ProjectGuid>
@@ -22,6 +22,10 @@
   <Target Name="BuildCSharp" Inputs="Content\CSharp\Source\CSharpLexer.g4;Content\CSharp\Source\CSharpParser.g4" Outputs="Content\CSharp\Parser\CSharpParserBaseVisitor.cs;Content\CSharp\Parser\CSharpParserVisitor.cs;Content\CSharp\Parser\CSharpLexer.cs;Content\CSharp\Parser\CSharpParser.cs">
     <Message Text="Building CSharp parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.CSharp.Parser -o &quot;$(ProjectDir)Content\CSharp\Parser&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpLexer.g4&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpParser.g4&quot;" />
+  </Target>
+  <Target Name="BuildExactColumns" Inputs="Content\ExactColumns\Source\ExactColumns.g4" Outputs="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs;Content\ExactColumns\Parser\ExactColumnsLexer.cs;Content\ExactColumns\Parser\ExactColumnsParser.cs;Content\ExactColumns\Parser\ExactColumnsVisitor.cs">
+    <Message Text="Building ExactColumns parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.ExactColumns.Parser -o &quot;$(ProjectDir)Content\ExactColumns\Parser&quot; &quot;$(ProjectDir)Content\ExactColumns\Source\ExactColumns.g4&quot;" />
   </Target>
   <Target Name="BuildHTML" Inputs="Content\HTML\Source\HTMLLexer.g4;Content\HTML\Source\HTMLParser.g4" Outputs="Content\HTML\Parser\HTMLLexer.cs;Content\HTML\Parser\HTMLParser.cs;Content\HTML\Parser\HTMLParserBaseVisitor.cs;Content\HTML\Parser\HTMLParserVisitor.cs">
     <Message Text="Building HTML parser" Importance="High" />
@@ -71,6 +75,12 @@
     <Compile Include="Content\CSharp\Parser\CSharpParserVisitor.cs" />
     <None Include="Content\CSharp\Source\CSharpLexer.g4" />
     <None Include="Content\CSharp\Source\CSharpParser.g4" />
+    <Compile Include="Content\ExactColumns\ExactColumnsVisitor.cs" />
+    <Compile Include="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs" />
+    <Compile Include="Content\ExactColumns\Parser\ExactColumnsLexer.cs" />
+    <Compile Include="Content\ExactColumns\Parser\ExactColumnsParser.cs" />
+    <Compile Include="Content\ExactColumns\Parser\ExactColumnsVisitor.cs" />
+    <None Include="Content\ExactColumns\Source\ExactColumns.g4" />
     <Compile Include="Content\HTML\HTMLVisitor.cs" />
     <Compile Include="Content\HTML\Parser\HTMLLexer.cs" />
     <Compile Include="Content\HTML\Parser\HTMLParser.cs" />

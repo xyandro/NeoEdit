@@ -119,6 +119,14 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		static string TrimExactColumns(string item)
+		{
+			item = item.Trim();
+			if ((item.Length >= 2) && (item.StartsWith(@"""")) && (item.EndsWith(@"""")))
+				item = item.Substring(1, item.Length - 2).Replace(@"""""", @"""");
+			return item;
+		}
+
 		static List<List<string>> GetInputRows(string input, Parser.ParserType tableType)
 		{
 			switch (tableType)
@@ -126,6 +134,7 @@ namespace NeoEdit.TextEdit
 				case Parser.ParserType.TSV: return input.SplitTCSV('\t').Select(split => split.ToList()).ToList();
 				case Parser.ParserType.CSV: return input.SplitTCSV(',').Select(split => split.ToList()).ToList();
 				case Parser.ParserType.Columns: return SplitByDoublePipe(input).Select(line => line.Split('│').Select(item => item.Trim()).ToList()).ToList();
+				case Parser.ParserType.ExactColumns: return SplitByDoublePipe(input).Select(line => line.Split('│').Select(item => TrimExactColumns(item)).ToList()).ToList();
 				default: throw new ArgumentException("Invalid input type");
 			}
 		}
@@ -161,6 +170,13 @@ namespace NeoEdit.TextEdit
 					{
 						var newLineChars = new char[] { '\r', '\n' };
 						result = result.Select(row => row.Select(value => value.Trim()).ToList()).ToList();
+						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
+						return string.Join("", result.AsParallel().AsOrdered().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending));
+					}
+				case Parser.ParserType.ExactColumns:
+					{
+						var newLineChars = new char[] { '\r', '\n' };
+						result = result.Select(row => row.Select(value => $@"""{value.Replace(@"""", @"""""")}""").ToList()).ToList();
 						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
 						return string.Join("", result.AsParallel().AsOrdered().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending));
 					}

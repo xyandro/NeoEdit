@@ -1003,6 +1003,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Type_CPlusPlus: Command_Content_Type(Parser.ParserType.CPlusPlus); break;
 				case TextEditCommand.Content_Type_CSharp: Command_Content_Type(Parser.ParserType.CSharp); break;
 				case TextEditCommand.Content_Type_CSV: Command_Content_Type(Parser.ParserType.CSV); break;
+				case TextEditCommand.Content_Type_ExactColumns: Command_Content_Type(Parser.ParserType.ExactColumns); break;
 				case TextEditCommand.Content_Type_HTML: Command_Content_Type(Parser.ParserType.HTML); break;
 				case TextEditCommand.Content_Type_JSON: Command_Content_Type(Parser.ParserType.JSON); break;
 				case TextEditCommand.Content_Type_SQL: Command_Content_Type(Parser.ParserType.SQL); break;

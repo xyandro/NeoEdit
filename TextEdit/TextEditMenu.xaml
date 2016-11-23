@@ -362,13 +362,14 @@
 	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
-			<textEdit:TextEditMenuItem Header="Set From _Extension" CommandEnum="Content_Type_SetFromExtension"/>
+			<textEdit:TextEditMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
 			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.None}" CommandEnum="Content_Type_None"/>
 			<textEdit:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
 			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
 			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
 			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
 			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
+			<textEdit:MultiMenuItem Header="_Exact Columns" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
 			<textEdit:MultiMenuItem Header="_HTML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
 			<textEdit:MultiMenuItem Header="_JSON" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
 			<textEdit:MultiMenuItem Header="_SQL" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.SQL}" CommandEnum="Content_Type_SQL"/>

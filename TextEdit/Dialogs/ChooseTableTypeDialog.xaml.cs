@@ -15,7 +15,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public Parser.ParserType TableType { get { return UIHelper<ChooseTableTypeDialog>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<ChooseTableTypeDialog>.SetPropValue(this, value); } }
 
-		public List<Parser.ParserType> TableTypes { get; } = new List<Parser.ParserType> { Parser.ParserType.TSV, Parser.ParserType.CSV, Parser.ParserType.Columns };
+		public List<Parser.ParserType> TableTypes { get; } = new List<Parser.ParserType> { Parser.ParserType.TSV, Parser.ParserType.CSV, Parser.ParserType.Columns, Parser.ParserType.ExactColumns };
 
 		static ChooseTableTypeDialog() { UIHelper<ChooseTableTypeDialog>.Register(); }
 

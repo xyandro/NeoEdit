@@ -11,7 +11,7 @@ namespace NeoEdit.TextEdit.Highlighting
 		{
 			switch (type)
 			{
-				case Parser.ParserType.Columns: return new HighlightColumns();
+				case Parser.ParserType.Columns: case Parser.ParserType.ExactColumns: return new HighlightColumns();
 				case Parser.ParserType.CPlusPlus: return new HighlightCPlusPlus();
 				case Parser.ParserType.CSharp: return new HighlightCSharp();
 				case Parser.ParserType.HTML: case Parser.ParserType.XML: return new HighlightMarkup();

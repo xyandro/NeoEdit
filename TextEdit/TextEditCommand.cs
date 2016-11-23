@@ -216,6 +216,7 @@ namespace NeoEdit.TextEdit
 		Content_Type_CPlusPlus,
 		Content_Type_CSharp,
 		Content_Type_CSV,
+		Content_Type_ExactColumns,
 		Content_Type_HTML,
 		Content_Type_JSON,
 		Content_Type_SQL,

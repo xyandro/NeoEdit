@@ -7,6 +7,7 @@ using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.Balanced;
 using NeoEdit.TextEdit.Content.Columns;
 using NeoEdit.TextEdit.Content.CSharp;
+using NeoEdit.TextEdit.Content.ExactColumns;
 using NeoEdit.TextEdit.Content.HTML;
 using NeoEdit.TextEdit.Content.JSON;
 using NeoEdit.TextEdit.Content.SQL;
@@ -25,6 +26,7 @@ namespace NeoEdit.TextEdit.Content
 			CPlusPlus,
 			CSharp,
 			CSV,
+			ExactColumns,
 			HTML,
 			JSON,
 			SQL,
@@ -32,7 +34,7 @@ namespace NeoEdit.TextEdit.Content
 			XML,
 		}
 
-		public static bool IsTableType(this ParserType parserType) => (parserType == ParserType.Columns) || (parserType == ParserType.TSV) || (parserType == ParserType.CSV);
+		public static bool IsTableType(this ParserType parserType) => (parserType == ParserType.Columns) || (parserType == ParserType.ExactColumns) || (parserType == ParserType.TSV) || (parserType == ParserType.CSV);
 
 		static public ParserNode Parse(string data, ParserType parserType)
 		{
@@ -42,6 +44,7 @@ namespace NeoEdit.TextEdit.Content
 				case ParserType.Columns: return ColumnsVisitor.Parse(data);
 				case ParserType.CSharp: return CSharpVisitor.Parse(data);
 				case ParserType.CSV: return CSVVisitor.Parse(data);
+				case ParserType.ExactColumns: return ExactColumnsVisitor.Parse(data);
 				case ParserType.HTML: return HTMLVisitor.Parse(data);
 				case ParserType.JSON: return JSONVisitor.Parse(data);
 				case ParserType.SQL: return SQLVisitor.Parse(data);
