@@ -213,10 +213,21 @@ namespace NeoEdit.TextEdit
 
 		void Command_View_CloseTabsWithSelections(bool hasSelections)
 		{
+			var topMost = ItemTabs.TopMost;
+			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
+
 			var closeTabs = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
 			if (!closeTabs.All(tab => tab.CanClose()))
 				return;
 			closeTabs.ForEach(tab => Remove(tab));
+
+			if (!active.Any())
+				return;
+
+			if (!active.Contains(topMost))
+				topMost = active.First();
+			ItemTabs.TopMost = topMost;
+			active.ForEach(tab => tab.Active = true);
 		}
 
 		void Command_View_Close_ActiveTabs(bool active)
