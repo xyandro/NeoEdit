@@ -38,11 +38,11 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		Range TrimRange(Range range)
+		Range TrimRange(Range range, TrimDialog.Result result)
 		{
 			var index = range.Start;
 			var length = range.Length;
-			Data.Trim(ref index, ref length);
+			Data.Trim(ref index, ref length, result.TrimChars, result.Start, result.End);
 			if ((index == range.Start) && (length == range.Length))
 				return range;
 			return Range.FromIndex(index, length);
@@ -65,7 +65,9 @@ namespace NeoEdit.TextEdit
 			return str.Substring(start, end - start);
 		}
 
-		void Command_Text_Select_Trim() => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range)).ToList());
+		TrimDialog.Result Command_Text_Select_Trim_Dialog() => TrimDialog.Run(WindowParent);
+
+		void Command_Text_Select_Trim(TrimDialog.Result result) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList());
 
 		WidthDialog.Result Command_Text_Select_ByWidth_Dialog() => WidthDialog.Run(WindowParent, false, true, GetVariables());
 

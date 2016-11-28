@@ -572,6 +572,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
 				case TextEditCommand.Expression_SetVariables: dialogResult = Command_Expression_SetVariables_Dialog(); break;
+				case TextEditCommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(); break;
 				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
 				case TextEditCommand.Text_Width: dialogResult = Command_Text_Width_Dialog(); break;
 				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
@@ -921,7 +922,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_ClearVariables: Command_Expression_ClearVariables(); break;
 				case TextEditCommand.Expression_SetVariables: Command_Expression_SetVariables(dialogResult as SetVariablesDialog.Result); break;
-				case TextEditCommand.Text_Select_Trim: Command_Text_Select_Trim(); break;
+				case TextEditCommand.Text_Select_Trim: Command_Text_Select_Trim(dialogResult as TrimDialog.Result); break;
 				case TextEditCommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as WidthDialog.Result); break;
 				case TextEditCommand.Text_Select_Min_Text: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.String); break;
 				case TextEditCommand.Text_Select_Min_Length: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Length); break;

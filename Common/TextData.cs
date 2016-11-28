@@ -492,14 +492,20 @@ namespace NeoEdit.Common
 			return searcher.Find(Data, offset, length);
 		}
 
-		public void Trim(ref int offset, ref int length)
+		public void Trim(ref int offset, ref int length, HashSet<char> chars, bool start, bool end)
 		{
-			while ((length > 0) && (char.IsWhiteSpace(Data[offset + length - 1])))
-				--length;
-			while ((length > 0) && (char.IsWhiteSpace(Data[offset])))
+			if (end)
 			{
-				++offset;
-				--length;
+				while ((length > 0) && (chars.Contains(Data[offset + length - 1])))
+					--length;
+			}
+			if (start)
+			{
+				while ((length > 0) && (chars.Contains(Data[offset])))
+				{
+					++offset;
+					--length;
+				}
 			}
 		}
 
