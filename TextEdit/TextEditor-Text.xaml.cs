@@ -50,13 +50,19 @@ namespace NeoEdit.TextEdit
 
 		string TrimString(string str, TrimDialog.Result result)
 		{
-			switch (result.Location)
+			var start = 0;
+			var end = str.Length;
+			if (result.Start)
 			{
-				case TrimDialog.TrimLocation.Start: return str.TrimStart(result.TrimChars);
-				case TrimDialog.TrimLocation.Both: return str.Trim(result.TrimChars);
-				case TrimDialog.TrimLocation.End: return str.TrimEnd(result.TrimChars);
-				default: throw new Exception("Invalid location");
+				while ((start < end) && (result.TrimChars.Contains(str[start])))
+					++start;
 			}
+			if (result.End)
+			{
+				while ((start < end) && (result.TrimChars.Contains(str[end - 1])))
+					--end;
+			}
+			return str.Substring(start, end - start);
 		}
 
 		void Command_Text_Select_Trim() => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range)).ToList());

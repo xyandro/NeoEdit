@@ -13,11 +13,12 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Trim _characters:" Target="{Binding ElementName=trimChars}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Trim c_haracters:" Target="{Binding ElementName=trimChars}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Name="trimChars" Text="{Binding TrimChars, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Trim Location:" HorizontalAlignment="Right"/>
@@ -27,7 +28,9 @@
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<CheckBox Grid.Row="2" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
