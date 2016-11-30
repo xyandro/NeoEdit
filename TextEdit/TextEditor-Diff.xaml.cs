@@ -11,24 +11,35 @@ namespace NeoEdit.TextEdit
 	{
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
-			var offset = next ? range.End : Math.Max(0, range.Start - 1);
-			var line = Data.GetOffsetLine(offset);
-			var delta = next ? 1 : -1;
-			int? start = null;
-			while (true)
+			if (next)
 			{
-				line += delta;
-				if ((line < 0) || (line >= Data.NumLines) || ((start.HasValue) && (Data.GetLineDiffStatus(line) == LCS.MatchType.Match)))
-				{
-					line = Math.Max(-1, Math.Min(line, Data.NumLines - 1));
-					if (!start.HasValue)
-						start = line;
-					if (next)
-						return Tuple.Create(start.Value, line);
-					return Tuple.Create(line + 1, start.Value + 1);
-				}
-				if ((!start.HasValue) && (Data.GetLineDiffStatus(line) != LCS.MatchType.Match))
-					start = line;
+				var endLine = Data.GetOffsetLine(range.End);
+
+				while ((endLine < Data.NumLines) && (Data.GetLineDiffStatus(endLine) == LCS.MatchType.Match))
+					++endLine;
+				while ((endLine < Data.NumLines) && (Data.GetLineDiffStatus(endLine) != LCS.MatchType.Match))
+					++endLine;
+
+				var startLine = endLine;
+				while ((startLine > 0) && (Data.GetLineDiffStatus(startLine - 1) != LCS.MatchType.Match))
+					--startLine;
+
+				return Tuple.Create(startLine, endLine);
+			}
+			else
+			{
+				var startLine = Data.GetOffsetLine(Math.Max(0, range.Start - 1));
+
+				while ((startLine > 0) && (Data.GetLineDiffStatus(startLine) == LCS.MatchType.Match))
+					--startLine;
+				while ((startLine > 0) && (Data.GetLineDiffStatus(startLine - 1) != LCS.MatchType.Match))
+					--startLine;
+
+				var endLine = startLine;
+				while ((endLine < Data.NumLines) && (Data.GetLineDiffStatus(endLine) != LCS.MatchType.Match))
+					++endLine;
+
+				return Tuple.Create(startLine, endLine);
 			}
 		}
 
@@ -109,7 +120,7 @@ namespace NeoEdit.TextEdit
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				var target = pass == 0 ? this : DiffTarget;
-				target.Selections.Replace(lines.Select(tuple => new Range(target.Data.GetOffset(tuple.Item1, 0), target.Data.GetOffset(tuple.Item2, 0))).ToList());
+				target.Selections.Replace(lines.Select(tuple => new Range(target.Data.GetOffset(tuple.Item2, 0, true), target.Data.GetOffset(tuple.Item1, 0, true))).ToList());
 			}
 		}
 

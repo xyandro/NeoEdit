@@ -261,8 +261,11 @@ namespace NeoEdit.Common
 			return Data.Substring(endingOffset[line], GetEndingLength(line));
 		}
 
-		public int GetOffset(int line, int index)
+		public int GetOffset(int line, int index, bool allowJustPastEnd = false)
 		{
+			if ((allowJustPastEnd) && (line == NumLines) && (index == 0))
+				return Data.Length;
+
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
 			if ((index < 0) || (index > GetLineLength(line) + 1))
