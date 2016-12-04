@@ -108,7 +108,7 @@ namespace NeoEdit.TextEdit
 			CalculateDiff();
 		}
 
-		void Command_Diff_NextPrevious(bool next)
+		void Command_Diff_NextPrevious(bool next, bool shiftDown)
 		{
 			if (DiffTarget == null)
 				return;
@@ -120,7 +120,10 @@ namespace NeoEdit.TextEdit
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				var target = pass == 0 ? this : DiffTarget;
-				target.Selections.Replace(lines.Select(tuple => new Range(target.Data.GetOffset(tuple.Item2, 0, true), target.Data.GetOffset(tuple.Item1, 0, true))).ToList());
+				var sels = lines.Select(tuple => new Range(target.Data.GetOffset(tuple.Item2, 0, true), target.Data.GetOffset(tuple.Item1, 0, true))).ToList();
+				if (shiftDown)
+					sels.AddRange(target.Selections);
+				target.Selections.Replace(sels);
 			}
 		}
 
