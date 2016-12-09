@@ -4,7 +4,7 @@ using System.Windows;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 
-namespace NeoEdit.GUI.Dialogs
+namespace NeoEdit.TextEdit.Dialogs
 {
 	partial class CompressDataDialog
 	{

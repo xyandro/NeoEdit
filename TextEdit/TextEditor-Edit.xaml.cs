@@ -11,7 +11,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
