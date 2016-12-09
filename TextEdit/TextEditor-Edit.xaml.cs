@@ -234,7 +234,7 @@ namespace NeoEdit.TextEdit
 
 			if ((Selections.Count == 1) && (clipboardStrings.Count > 1))
 			{
-				ReplaceOneWithMany(clipboardStrings.Select(str => str.TrimEnd('\r', '\n')).ToList(), true);
+				ReplaceOneWithMany(clipboardStrings, true);
 				return;
 			}
 
