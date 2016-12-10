@@ -13,13 +13,7 @@ namespace NeoEdit.GUI.Misc
 		readonly static byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
 		readonly static byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
 
-		public static string GetKey(Window windowParent = null)
-		{
-			var result = SymmetricKeyDialog.Run(windowParent, Cryptor.Type.AES, true);
-			if (result == null)
-				return null;
-			return result.Key;
-		}
+		public static string GetKey(Window windowParent = null) => CryptorKeyDialog.Run(windowParent, Cryptor.Type.AES, true);
 
 		public static byte[] Encrypt(byte[] data, string AESKey)
 		{

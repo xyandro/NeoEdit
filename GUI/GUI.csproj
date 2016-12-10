@@ -82,12 +82,12 @@
     <Compile Include="Converters\SingleLineConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
     <Compile Include="Dialogs\ActiveTabsDialog.cs" />
-    <Page Include="Dialogs\AsymmetricKeyDialog.xaml">
+    <Page Include="Dialogs\CryptorKeyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\AsymmetricKeyDialog.xaml.cs">
-      <DependentUpon>AsymmetricKeyDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\CryptorKeyDialog.xaml.cs">
+      <DependentUpon>CryptorKeyDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\CustomGridDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -102,6 +102,13 @@
     </Page>
     <Compile Include="Dialogs\EncodingDialog.xaml.cs">
       <DependentUpon>EncodingDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\EncryptDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EncryptDialog.xaml.cs">
+      <DependentUpon>EncryptDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\ExpressionHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -160,12 +167,12 @@
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\SymmetricKeyDialog.xaml">
+    <Page Include="Dialogs\SignVerifyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\SymmetricKeyDialog.xaml.cs">
-      <DependentUpon>SymmetricKeyDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\SignVerifyDialog.xaml.cs">
+      <DependentUpon>SignVerifyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Launcher.cs" />
     <Page Include="License\LicenseWindow.xaml">

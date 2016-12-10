@@ -830,40 +830,29 @@ namespace NeoEdit.HexEdit
 				Replace(Compressor.Decompress(Data.GetSubset(SelStart, SelEnd - SelStart), type));
 		}
 
-		internal void Command_Data_Encrypt(bool isEncrypt, Cryptor.Type type)
+		internal void Command_Data_Encrypt(Cryptor.Type type, bool encrypt)
 		{
 			if (!VerifyInsert())
 				return;
 
-			string key;
-			if (type.IsSymmetric())
-			{
-				var result = SymmetricKeyDialog.Run(WindowParent, type);
-				if (result == null)
-					return;
-				key = result.Key;
-			}
-			else
-			{
-				var result = AsymmetricKeyDialog.Run(WindowParent, type, isEncrypt, isEncrypt);
-				if (result == null)
-					return;
-				key = result.Key;
-			}
+			var result = EncryptDialog.Run(WindowParent, type, encrypt);
+			if (result == null)
+				return;
+			var key = result.Key;
 
 			if (Length == 0)
 				SelectAll();
 
-			if (isEncrypt)
+			if (encrypt)
 				Replace(Cryptor.Encrypt(Data.GetSubset(SelStart, SelEnd - SelStart), type, key));
 			else
 				Replace(Cryptor.Decrypt(Data.GetSubset(SelStart, SelEnd - SelStart), type, key));
 		}
 
-		internal void Command_Data_Sign(bool sign, Cryptor.Type type)
+		internal void Command_Data_Sign(Cryptor.Type type, bool sign)
 		{
-			var keyResult = AsymmetricKeyDialog.Run(WindowParent, type, !sign, sign, true, !sign);
-			if (keyResult == null)
+			var result = SignVerifyDialog.Run(WindowParent, type, sign);
+			if (result == null)
 				return;
 
 			if (Length == 0)
@@ -871,8 +860,8 @@ namespace NeoEdit.HexEdit
 
 			string text;
 			if (sign)
-				text = Cryptor.Sign(Data.GetSubset(SelStart, SelEnd - SelStart), type, keyResult.Key, keyResult.Hash);
-			else if (Cryptor.Verify(Data.GetSubset(SelStart, SelEnd - SelStart), type, keyResult.Key, keyResult.Hash, keyResult.Signature))
+				text = Cryptor.Sign(Data.GetSubset(SelStart, SelEnd - SelStart), type, result.Key, result.Hash);
+			else if (Cryptor.Verify(Data.GetSubset(SelStart, SelEnd - SelStart), type, result.Key, result.Hash, result.Signature))
 				text = "Matched.";
 			else
 				text = "ERROR: Signature DOES NOT match.";
