@@ -20,16 +20,9 @@ namespace NeoEdit.Common.Transform
 			RSAAES,
 		}
 
-		static Type BaseType(Type type)
-		{
-			if (type == Type.RSAAES)
-				return Type.RSA;
-			return type;
-		}
-
 		public static bool IsSymmetric(this Type type)
 		{
-			switch (BaseType(type))
+			switch (type)
 			{
 				case Type.AES:
 				case Type.DES:
@@ -37,6 +30,7 @@ namespace NeoEdit.Common.Transform
 					return true;
 				case Type.RSA:
 				case Type.DSA:
+				case Type.RSAAES:
 					return false;
 			}
 			throw new Exception("Invalid query");
@@ -57,7 +51,7 @@ namespace NeoEdit.Common.Transform
 		{
 			switch (type)
 			{
-				case Type.RSA: return new RSACryptoServiceProvider();
+				case Type.RSA: case Type.RSAAES: return new RSACryptoServiceProvider();
 				case Type.DSA: return new DSACryptoServiceProvider();
 				default: throw new Exception("Not an asymmetric type");
 			}
@@ -126,8 +120,6 @@ namespace NeoEdit.Common.Transform
 
 		public static string GenerateKey(Type type, int keySize)
 		{
-			type = BaseType(type);
-
 			if (IsSymmetric(type))
 			{
 				var alg = GetSymmetricAlgorithm(type);
@@ -149,7 +141,6 @@ namespace NeoEdit.Common.Transform
 			if (type.IsSymmetric())
 				return privKey;
 
-			type = BaseType(type);
 			var alg = GetAsymmetricAlgorithm(type);
 			alg.FromXmlString(privKey);
 			return alg.ToXmlString(false);
@@ -157,18 +148,15 @@ namespace NeoEdit.Common.Transform
 
 		public static void GetKeySizeInfo(Type type, out IEnumerable<int> keySizes, out int defaultKeySize)
 		{
-			type = BaseType(type);
 			KeySizes[] legalKeySizes;
 			if (IsSymmetric(type))
 			{
-				type = BaseType(type);
 				var alg = GetSymmetricAlgorithm(type);
 				defaultKeySize = alg.KeySize;
 				legalKeySizes = alg.LegalKeySizes;
 			}
 			else
 			{
-				type = BaseType(type);
 				var alg = GetAsymmetricAlgorithm(type);
 				defaultKeySize = alg.KeySize;
 				legalKeySizes = alg.LegalKeySizes;
@@ -228,7 +216,7 @@ namespace NeoEdit.Common.Transform
 			switch (type)
 			{
 				case Type.RSA: return new List<string> { "SHA1", "SHA256", "SHA512", "MD5" };
-				case Type.DSA: return new List<string> { "SHA1" };
+				case Type.DSA: return new List<string> { "None" };
 				default: return new List<string>();
 			}
 		}
@@ -242,6 +230,23 @@ namespace NeoEdit.Common.Transform
 			{
 				case Type.RSA: return Convert.ToBase64String((alg as RSACryptoServiceProvider).SignData(data, hash));
 				case Type.DSA: return Convert.ToBase64String((alg as DSACryptoServiceProvider).SignData(data));
+			}
+
+			throw new Exception("Unable to sign");
+		}
+
+		public static string Sign(string fileName, Type type, string privKey, string hash)
+		{
+			var alg = GetAsymmetricAlgorithm(type);
+			alg.FromXmlString(privKey);
+
+			using (var stream = File.OpenRead(fileName))
+			{
+				switch (type)
+				{
+					case Type.RSA: return Convert.ToBase64String((alg as RSACryptoServiceProvider).SignData(stream, hash));
+					case Type.DSA: return Convert.ToBase64String((alg as DSACryptoServiceProvider).SignData(stream));
+				}
 			}
 
 			throw new Exception("Unable to sign");

@@ -153,7 +153,7 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
-		<MenuItem Header="_Names">
+		<MenuItem Header="N_ames">
 			<textEdit:TextEditMenuItem Header="_Simplify" CommandEnum="Files_Names_Simplify"/>
 			<textEdit:TextEditMenuItem Header="Make _Absolute" CommandEnum="Files_Names_MakeAbsolute"/>
 			<textEdit:TextEditMenuItem Header="Get _Unique" CommandEnum="Files_Names_GetUnique"/>
@@ -186,7 +186,7 @@
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Files_Directory_GetDescendants"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Insert" CommandEnum="Files_Insert"/>
+		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
 		<MenuItem Header="_Create">
 			<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>
 			<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Create_Directories"/>
@@ -212,6 +212,7 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Files_Hash"/>
+		<textEdit:TextEditMenuItem Header="S_ign" CommandEnum="Files_Sign"/>
 		<Separator/>
 		<MenuItem Header="O_perations">
 			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>

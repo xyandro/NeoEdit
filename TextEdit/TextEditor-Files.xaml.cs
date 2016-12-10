@@ -463,6 +463,10 @@ namespace NeoEdit.TextEdit
 
 		void Command_Files_Hash(HashDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Hasher.Get(file, result.HashType)).ToList());
 
+		SignFilesDialog.Result Command_Files_Sign_Dialog() => SignFilesDialog.Run(WindowParent);
+
+		void Command_Files_Sign(SignFilesDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
+
 		CopyMoveFilesDialog.Result Command_Files_Operations_CopyMove_Dialog(bool move) => CopyMoveFilesDialog.Run(WindowParent, GetVariables(), move);
 
 		void Command_Files_Operations_CopyMove(CopyMoveFilesDialog.Result result, bool move)

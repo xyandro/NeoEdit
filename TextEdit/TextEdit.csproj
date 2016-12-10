@@ -493,6 +493,13 @@
     <Compile Include="Dialogs\SignDataDialog.xaml.cs">
       <DependentUpon>SignDataDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\SignFilesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\SignFilesDialog.xaml.cs">
+      <DependentUpon>SignFilesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\SortDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

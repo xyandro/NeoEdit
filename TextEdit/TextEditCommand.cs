@@ -123,6 +123,7 @@ namespace NeoEdit.TextEdit
 		Files_Select_Roots,
 		Files_Select_NonRoots,
 		Files_Hash,
+		Files_Sign,
 		Files_Operations_Copy,
 		Files_Operations_Move,
 		Files_Operations_Delete,

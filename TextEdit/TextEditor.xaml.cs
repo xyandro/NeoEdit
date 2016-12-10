@@ -569,6 +569,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Insert: dialogResult = Command_Files_Insert_Dialog(); break;
 				case TextEditCommand.Files_Create_FromExpressions: dialogResult = Command_Files_Create_FromExpressions_Dialog(); break;
 				case TextEditCommand.Files_Hash: dialogResult = Command_Files_Hash_Dialog(); break;
+				case TextEditCommand.Files_Sign: dialogResult = Command_Files_Sign_Dialog(); break;
 				case TextEditCommand.Files_Operations_Copy: dialogResult = Command_Files_Operations_CopyMove_Dialog(false); break;
 				case TextEditCommand.Files_Operations_Move: dialogResult = Command_Files_Operations_CopyMove_Dialog(true); break;
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
@@ -913,6 +914,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Select_Roots: Command_Files_Select_Roots(true); break;
 				case TextEditCommand.Files_Select_NonRoots: Command_Files_Select_Roots(false); break;
 				case TextEditCommand.Files_Hash: Command_Files_Hash(dialogResult as HashDialog.Result); break;
+				case TextEditCommand.Files_Sign: Command_Files_Sign(dialogResult as SignFilesDialog.Result); break;
 				case TextEditCommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(dialogResult as CopyMoveFilesDialog.Result, false); break;
 				case TextEditCommand.Files_Operations_Move: Command_Files_Operations_CopyMove(dialogResult as CopyMoveFilesDialog.Result, true); break;
 				case TextEditCommand.Files_Operations_Delete: Command_Files_Operations_Delete(); break;
