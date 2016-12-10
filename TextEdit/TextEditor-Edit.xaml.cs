@@ -484,6 +484,28 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Coder.BytesToString(Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType), result.OutputCodePage)).ToList());
 		}
 
+		EncryptDataDialog.Result Command_Edit_Data_Encrypt_Dialog() => EncryptDataDialog.Run(WindowParent, CodePage, true);
+
+		void Command_Edit_Data_Encrypt(EncryptDataDialog.Result result)
+		{
+			var strs = GetSelectionStrings();
+			if (!VerifyCanFullyEncode(strs, result.InputCodePage))
+				return;
+
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Coder.BytesToString(Cryptor.Encrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key), result.OutputCodePage)).ToList());
+		}
+
+		EncryptDataDialog.Result Command_Edit_Data_Decrypt_Dialog() => EncryptDataDialog.Run(WindowParent, CodePage, false);
+
+		void Command_Edit_Data_Decrypt(EncryptDataDialog.Result result)
+		{
+			var strs = GetSelectionStrings();
+			if (!VerifyCanFullyEncode(strs, result.InputCodePage))
+				return;
+
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Coder.BytesToString(Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key), result.OutputCodePage)).ToList());
+		}
+
 		SortDialog.Result Command_Edit_Sort_Dialog() => SortDialog.Run(WindowParent);
 
 		void Command_Edit_Sort(SortDialog.Result result)

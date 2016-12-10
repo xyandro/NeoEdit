@@ -64,6 +64,8 @@ namespace NeoEdit.TextEdit
 		Edit_Data_Hash,
 		Edit_Data_Compress,
 		Edit_Data_Decompress,
+		Edit_Data_Encrypt,
+		Edit_Data_Decrypt,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Sort,
 		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Convert,
 		[KeyGesture(Key.F2, ModifierKeys.Alt)] Edit_Bookmarks_Toggle,

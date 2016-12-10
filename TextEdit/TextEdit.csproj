@@ -227,6 +227,13 @@
     <Compile Include="Dialogs\EditTableDialog.xaml.cs">
       <DependentUpon>EditTableDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\EncryptDataDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EncryptDataDialog.xaml.cs">
+      <DependentUpon>EncryptDataDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ExamineDatabaseDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

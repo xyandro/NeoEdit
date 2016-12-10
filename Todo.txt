@@ -19,7 +19,6 @@ Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
 Diff: Specify characters to ignore
 Tutorial
-Encrypt/decrypt
 Move tabs with selections to start of active tabs list
 Make search history results remember status of checkboxes
 Diff: Copy begin/end whitespace
