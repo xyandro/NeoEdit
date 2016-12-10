@@ -20,7 +20,6 @@ Selecting the already selected file without shift down should deselect the other
 Diff: Specify characters to ignore
 Tutorial
 Move tabs with selections to start of active tabs list
-Make search history results remember status of checkboxes
 Diff: Copy begin/end whitespace
 Don't reset DisplayText on revert
 Diff: Highlight tabs vs. spaces

@@ -14,6 +14,17 @@ namespace NeoEdit.GUI.Controls
 {
 	partial class AutoCompleteTextBox
 	{
+		public delegate void OnAcceptSuggestionDelegate(string text, object data);
+		public event OnAcceptSuggestionDelegate OnAcceptSuggestion;
+
+		class Suggestion
+		{
+			public string Text { get; set; }
+			public object Data { get; set; }
+
+			public override string ToString() => Text;
+		}
+
 		[DepProp]
 		public string CompletionTag { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<string>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 
@@ -24,11 +35,11 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public bool UpcaseTracking { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
-		ObservableCollection<string> Suggestions { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		ObservableCollection<Suggestion> Suggestions { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<ObservableCollection<Suggestion>>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
 		int SuggestedIndex { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<int>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
-		string SuggestedValue { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<string>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		Suggestion SuggestedValue { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<Suggestion>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 
 		static AutoCompleteTextBox()
 		{
@@ -40,7 +51,7 @@ namespace NeoEdit.GUI.Controls
 		{
 			InitializeComponent();
 			SuppressNavigation = true;
-			Suggestions = new ObservableCollection<string>();
+			Suggestions = new ObservableCollection<Suggestion>();
 			TextChanged += (s, e) => SetSuggestions();
 			SelectionChanged += (s, e) => SetSuggestions();
 			LostKeyboardFocus += (s, e) => IsDropDownOpen = false;
@@ -49,30 +60,36 @@ namespace NeoEdit.GUI.Controls
 
 		ListBox listbox => Template.FindName("PART_ListBox", this) as ListBox;
 
-		static Dictionary<string, List<string>> SuggestionLists = new Dictionary<string, List<string>>();
+		static Dictionary<string, List<Suggestion>> SuggestionLists = new Dictionary<string, List<Suggestion>>();
 
-		List<string> localSuggestionList = new List<string>();
-		List<string> SuggestionList
+		List<Suggestion> localSuggestionList = new List<Suggestion>();
+		List<Suggestion> SuggestionList
 		{
 			get
 			{
 				if (string.IsNullOrEmpty(CompletionTag))
 					return localSuggestionList;
 				if (!SuggestionLists.ContainsKey(CompletionTag))
-					SuggestionLists[CompletionTag] = new List<string>();
+					SuggestionLists[CompletionTag] = new List<Suggestion>();
 				return SuggestionLists[CompletionTag];
 			}
 		}
 
-		public void AddSuggestions(params string[] suggestions)
-		{
-			var list = SuggestionList;
-			list?.RemoveAll(str => suggestions.Any(suggestion => str.Equals(suggestion, StringComparison.OrdinalIgnoreCase)));
-			list?.InsertRange(0, suggestions.Where(val => !string.IsNullOrEmpty(val)));
-		}
-		public void AddCurrentSuggestion() => AddSuggestions(Text);
+		public void AddSuggestions(params string[] suggestions) => AddSuggestions(suggestions.Select(text => new Suggestion { Text = text }).ToArray());
 
-		public string GetLastSuggestion() => SuggestionList.FirstOrDefault();
+		public void AddSuggestions(params Tuple<string, object>[] suggestions) => AddSuggestions(suggestions.Select(tuple => new Suggestion { Text = tuple.Item1, Data = tuple.Item2 }).ToArray());
+
+		void AddSuggestions(params Suggestion[] suggestions)
+		{
+			var newSuggestions = suggestions.Where(x => !string.IsNullOrEmpty(x.Text)).ToList();
+			SuggestionList.RemoveAll(suggestion => newSuggestions.Any(newSuggestion => suggestion.Text.Equals(newSuggestion.Text, StringComparison.OrdinalIgnoreCase)));
+			SuggestionList.InsertRange(0, newSuggestions);
+		}
+
+		public void AddCurrentSuggestion(object data = null) => AddSuggestions(new Suggestion { Text = Text, Data = data });
+
+		public string GetLastSuggestion() => SuggestionList.FirstOrDefault()?.Text;
+		public object GetLastSuggestionData() => SuggestionList.FirstOrDefault()?.Data;
 
 		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 
@@ -120,17 +137,18 @@ namespace NeoEdit.GUI.Controls
 				}
 
 				suggestedIndex = Math.Max(0, Math.Min(suggestedIndex, Suggestions.Count - 1));
-				if ((e.Handled) && (SuggestedIndex != suggestedIndex))
+				if (SuggestedIndex != suggestedIndex)
 					SuggestedIndex = suggestedIndex;
 			}
 		}
 
-		void AcceptSuggestion(string suggestion)
+		void AcceptSuggestion(Suggestion suggestion)
 		{
 			if (suggestion != null)
 			{
-				Text = suggestion;
+				Text = suggestion.Text;
 				SelectAll();
+				OnAcceptSuggestion?.Invoke(suggestion.Text, suggestion.Data);
 			}
 			IsDropDownOpen = false;
 		}
@@ -153,22 +171,21 @@ namespace NeoEdit.GUI.Controls
 
 			var find = SelectedText == Text ? "" : SelectedText.CoalesceNullOrEmpty(Text) ?? "";
 			var ucFind = Regex.Replace(find, "[^A-Z]", "");
-			foreach (string suggestion in SuggestionList.Where(str => HasStr(str, find)))
+			foreach (var suggestion in SuggestionList.Where(x => HasStr(x.Text, find)))
 				Suggestions.Add(suggestion);
 
 			if (!Suggestions.Any())
 				Suggestions.Add(null);
 
-			SuggestedIndex = Suggestions.Indexes(str => str?.StartsWith(Text, StringComparison.InvariantCultureIgnoreCase) == true).FirstOrDefault();
+			SuggestedIndex = Suggestions.Indexes(str => str.Text.StartsWith(Text, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 		}
 
-		void OnSuggestionClick(object sender, MouseButtonEventArgs e) => AcceptSuggestion((sender as ListBoxItem).Content as string);
+		void OnSuggestionClick(object sender, MouseButtonEventArgs e) => AcceptSuggestion((sender as ListBoxItem).Content as Suggestion);
 	}
 
 	class NullItemConverter : MarkupExtension, IValueConverter
 	{
-		static NullItemConverter converter;
-		public override object ProvideValue(IServiceProvider serviceProvider) => converter = converter ?? new NullItemConverter();
+		public override object ProvideValue(IServiceProvider serviceProvider) => this;
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value ?? "<No suggestions>";
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
 

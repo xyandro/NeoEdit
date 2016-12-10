@@ -9,6 +9,18 @@ namespace NeoEdit.TextEdit.Dialogs
 {
 	partial class FindDialog
 	{
+		class CheckBoxStatus
+		{
+			public bool WholeWords { get; set; }
+			public bool MatchCase { get; set; }
+			public bool MultiLine { get; set; }
+			public bool IsRegex { get; set; }
+			public bool RegexGroups { get; set; }
+			public bool EntireSelection { get; set; }
+			public bool KeepMatching { get; set; }
+			public bool RemoveMatching { get; set; }
+		}
+
 		public enum ResultType
 		{
 			None,
@@ -53,8 +65,6 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public bool MultiLine { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 
-		static bool wholeWordsVal, matchCaseVal, multiLineVal, isRegexVal, regexGroupsVal, entireSelectionVal, keepMatchingVal, removeMatchingVal;
-
 		static FindDialog()
 		{
 			UIHelper<FindDialog>.Register();
@@ -70,17 +80,42 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			InitializeComponent();
 
-			Text = text.CoalesceNullOrEmpty(this.text.GetLastSuggestion(), "");
-			WholeWords = wholeWordsVal;
-			MatchCase = matchCaseVal;
-			MultiLine = multiLineVal;
-			IsRegex = isRegexVal;
-			RegexGroups = regexGroupsVal;
-			EntireSelection = entireSelectionVal;
-			KeepMatching = keepMatchingVal;
-			RemoveMatching = removeMatchingVal;
 			SelectionOnly = selectionOnly;
+			Text = text.CoalesceNullOrEmpty(this.text.GetLastSuggestion(), "");
+			SetCheckBoxStatus(this.text.GetLastSuggestionData() as CheckBoxStatus);
 		}
+
+		CheckBoxStatus GetCheckBoxStatus()
+		{
+			return new CheckBoxStatus
+			{
+				WholeWords = WholeWords,
+				MatchCase = MatchCase,
+				MultiLine = MultiLine,
+				IsRegex = IsRegex,
+				RegexGroups = RegexGroups,
+				EntireSelection = EntireSelection,
+				KeepMatching = KeepMatching,
+				RemoveMatching = RemoveMatching,
+			};
+		}
+
+		void SetCheckBoxStatus(CheckBoxStatus checkBoxStatus)
+		{
+			if (checkBoxStatus == null)
+				return;
+
+			WholeWords = checkBoxStatus.WholeWords;
+			MatchCase = checkBoxStatus.MatchCase;
+			MultiLine = checkBoxStatus.MultiLine;
+			IsRegex = checkBoxStatus.IsRegex;
+			RegexGroups = checkBoxStatus.RegexGroups;
+			EntireSelection = checkBoxStatus.EntireSelection;
+			KeepMatching = checkBoxStatus.KeepMatching;
+			RemoveMatching = checkBoxStatus.RemoveMatching;
+		}
+
+		void OnAcceptSuggestion(string text, object data) => SetCheckBoxStatus(data as CheckBoxStatus);
 
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
 		void Unescape(object sender, RoutedEventArgs e) => Text = Regex.Unescape(Text);
@@ -101,16 +136,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			else
 				throw new Exception("Invalid search type");
 
-			wholeWordsVal = WholeWords;
-			matchCaseVal = MatchCase;
-			multiLineVal = MultiLine;
-			isRegexVal = IsRegex;
-			regexGroupsVal = RegexGroups;
-			entireSelectionVal = EntireSelection;
-			keepMatchingVal = KeepMatching;
-			removeMatchingVal = RemoveMatching;
-
-			text.AddCurrentSuggestion();
+			text.AddCurrentSuggestion(GetCheckBoxStatus());
 
 			DialogResult = true;
 		}
