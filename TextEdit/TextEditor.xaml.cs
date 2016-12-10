@@ -555,6 +555,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Data_Decompress: dialogResult = Command_Edit_Data_Decompress_Dialog(); break;
 				case TextEditCommand.Edit_Data_Encrypt: dialogResult = Command_Edit_Data_Encrypt_Dialog(); break;
 				case TextEditCommand.Edit_Data_Decrypt: dialogResult = Command_Edit_Data_Decrypt_Dialog(); break;
+				case TextEditCommand.Edit_Data_Sign: dialogResult = Command_Edit_Data_Sign_Dialog(); break;
 				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
 				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
 				case TextEditCommand.Files_Names_MakeAbsolute: dialogResult = Command_Files_Names_MakeAbsolute_Dialog(); break;
@@ -856,6 +857,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Data_Decompress: Command_Edit_Data_Decompress(dialogResult as CompressDataDialog.Result); break;
 				case TextEditCommand.Edit_Data_Encrypt: Command_Edit_Data_Encrypt(dialogResult as EncryptDataDialog.Result); break;
 				case TextEditCommand.Edit_Data_Decrypt: Command_Edit_Data_Decrypt(dialogResult as EncryptDataDialog.Result); break;
+				case TextEditCommand.Edit_Data_Sign: Command_Edit_Data_Sign(dialogResult as SignDataDialog.Result); break;
 				case TextEditCommand.Edit_Sort: Command_Edit_Sort(dialogResult as SortDialog.Result); break;
 				case TextEditCommand.Edit_Convert: Command_Edit_Convert(dialogResult as ConvertDialog.Result); break;
 				case TextEditCommand.Edit_Bookmarks_Toggle: Command_Edit_Bookmarks_Toggle(); break;

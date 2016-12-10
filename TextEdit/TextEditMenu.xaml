@@ -114,6 +114,7 @@
 			<textEdit:TextEditMenuItem Header="_Decompress" CommandEnum="Edit_Data_Decompress"/>
 			<textEdit:TextEditMenuItem Header="E_ncrypt" CommandEnum="Edit_Data_Encrypt"/>
 			<textEdit:TextEditMenuItem Header="D_ecrypt" CommandEnum="Edit_Data_Decrypt"/>
+			<textEdit:TextEditMenuItem Header="_Sign" CommandEnum="Edit_Data_Sign"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>

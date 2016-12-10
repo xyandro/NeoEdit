@@ -506,6 +506,17 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Coder.BytesToString(Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key), result.OutputCodePage)).ToList());
 		}
 
+		SignDataDialog.Result Command_Edit_Data_Sign_Dialog() => SignDataDialog.Run(WindowParent, CodePage);
+
+		void Command_Edit_Data_Sign(SignDataDialog.Result result)
+		{
+			var strs = GetSelectionStrings();
+			if (!VerifyCanFullyEncode(strs, result.CodePage))
+				return;
+
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
+		}
+
 		SortDialog.Result Command_Edit_Sort_Dialog() => SortDialog.Run(WindowParent);
 
 		void Command_Edit_Sort(SortDialog.Result result)
