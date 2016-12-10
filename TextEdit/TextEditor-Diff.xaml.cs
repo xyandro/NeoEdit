@@ -9,6 +9,21 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		void DoRangesDiff(RangeList ranges)
+		{
+			if (!ranges.Any())
+				return;
+
+			if (ranges.Count % 2 != 0)
+				throw new Exception("Must have even number of items.");
+
+			var codePage = CodePage; // Must save as other threads can't access DependencyProperties
+			var tabs = TextEditTabs.CreateDiff();
+			var batches = ranges.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).Select(batch => batch.ToList()).ToList();
+			foreach (var batch in batches)
+				tabs.AddDiff(bytes1: batch[0], bytes2: batch[1], codePage1: codePage, codePage2: codePage, modified1: false, modified2: false);
+		}
+
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
 			if (next)
@@ -43,20 +58,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		void Command_Diff_Selections()
-		{
-			if (!Selections.Any())
-				return;
-
-			if (Selections.Count % 2 != 0)
-				throw new Exception("Must have even number of selections.");
-
-			var codePage = CodePage; // Must save as other threads can't access DependencyProperties
-			var tabs = TextEditTabs.CreateDiff();
-			var batches = Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).Select(batch => batch.ToList()).ToList();
-			foreach (var batch in batches)
-				tabs.AddDiff(bytes1: batch[0], bytes2: batch[1], codePage1: codePage, codePage2: codePage, modified1: false, modified2: false);
-		}
+		void Command_Diff_Selections() => DoRangesDiff(Selections);
 
 		void Command_Diff_SelectedFiles()
 		{
@@ -75,6 +77,8 @@ namespace NeoEdit.TextEdit
 			foreach (var batch in batches)
 				tabs.AddDiff(fileName1: batch[0], fileName2: batch[1]);
 		}
+
+		void Command_Diff_Regions() => DoRangesDiff(Regions);
 
 		void Command_Diff_Break() => DiffTarget = null;
 

@@ -867,6 +867,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
 				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;
 				case TextEditCommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(); break;
+				case TextEditCommand.Diff_Regions: Command_Diff_Regions(); break;
 				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
 				case TextEditCommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(multiStatus); break;
