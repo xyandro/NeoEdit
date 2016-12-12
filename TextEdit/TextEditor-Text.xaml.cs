@@ -148,71 +148,82 @@ namespace NeoEdit.TextEdit
 
 		void Command_Text_FirstDistinct(FirstDistinctDialog.Result result)
 		{
-			var strs = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).ToList();
-			var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
-
-			var onChar = new int[strs.Count];
-			var current = 0;
-			onChar[0] = -1;
-			var best = default(int[]);
-			var bestScore = int.MaxValue;
-			var used = new HashSet<char>();
-			var currentScore = 0;
-			var score = new int[strs.Count + 1];
-			var moveBack = false;
-
-			while (true)
+			var opResult = ProgressDialog.Run(WindowParent, "Finding characters...", (cancelled, progress) =>
 			{
-				if (moveBack)
+				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
+				var data = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();
+				var chars = data.Select(tuple => tuple.Item3.Select(index => tuple.Item1[index]).ToList()).ToList();
+
+				var onChar = new int[chars.Count];
+				var current = 0;
+				onChar[0] = -1;
+				var best = default(int[]);
+				var bestScore = int.MaxValue;
+				var used = new HashSet<char>();
+				var currentScore = 0;
+				var score = new int[chars.Count + 1];
+				var moveBack = false;
+
+				while (true)
 				{
-					currentScore -= score[current];
-					score[current] = 0;
-					--current;
-					if (current < 0)
+					if (cancelled())
 						break;
-					used.Remove(strs[current][onChar[current]]);
-					moveBack = false;
-				}
 
-				++onChar[current];
-				if ((onChar[current] >= strs[current].Length) || (currentScore - 1 >= bestScore))
-				{
-					moveBack = true;
-					continue;
-				}
-
-				var ch = strs[current][onChar[current]];
-				if (!valid.Contains(ch))
-					continue;
-
-				++score[current];
-				++currentScore;
-
-				if (used.Contains(ch))
-					continue;
-
-				used.Add(ch);
-
-				++current;
-				if (current == strs.Count)
-				{
-					// Found combination!
-					if (currentScore < bestScore)
+					if (moveBack)
 					{
-						bestScore = currentScore;
-						best = onChar.ToArray();
+						currentScore -= score[current];
+						score[current] = 0;
+						--current;
+						if (current < 0)
+							break;
+						used.Remove(chars[current][onChar[current]]);
+						moveBack = false;
 					}
-					moveBack = true;
-					continue;
+
+					++onChar[current];
+					if ((onChar[current] >= chars[current].Count) || (currentScore >= bestScore))
+					{
+						moveBack = true;
+						continue;
+					}
+
+					var ch = chars[current][onChar[current]];
+					++score[current];
+					++currentScore;
+
+					if (used.Contains(ch))
+						continue;
+
+					used.Add(ch);
+
+					++current;
+					if (current == chars.Count)
+					{
+						// Found combination!
+						if (currentScore < bestScore)
+						{
+							bestScore = currentScore;
+							best = onChar.ToArray();
+						}
+						moveBack = true;
+						continue;
+					}
+
+					onChar[current] = -1;
 				}
 
-				onChar[current] = -1;
-			}
+				if (best == null)
+					throw new ArgumentException("No distinct combinations available");
 
-			if (best == null)
-				throw new ArgumentException("No distinct combinations available");
+				var map = new int[data.Count];
+				for (var ctr = 0; ctr < data.Count; ++ctr)
+					map[data[ctr].Item2] = ctr;
 
-			Selections.Replace(Selections.Select((range, index) => Range.FromIndex(range.Start + best[index], 1)).ToList());
+				return Selections.Select((range, index) => Range.FromIndex(range.Start + data[map[index]].Item3[best[map[index]]], 1)).ToList();
+			}) as List<Range>;
+
+			if (opResult != null)
+				Selections.Replace(opResult);
 		}
 	}
 }

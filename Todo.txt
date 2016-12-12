@@ -23,7 +23,6 @@ Diff: Copy begin/end whitespace
 Don't reset DisplayText on revert
 Diff: Highlight tabs vs. spaces
 Diff: Try to keep text grouped together (available vs. Math.Max(available, 0) to see problem)
-Allow cancelling "First Distinct" when it takes a long time
 
 View:
 Update as new lines are added
