@@ -514,6 +514,13 @@
     <Compile Include="Dialogs\TableDisplay.xaml.cs">
       <DependentUpon>TableDisplay.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\TextToTableDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TextToTableDialog.xaml.cs">
+      <DependentUpon>TextToTableDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\TrimDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

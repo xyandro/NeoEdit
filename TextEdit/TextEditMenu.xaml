@@ -326,6 +326,7 @@
 		<textEdit:TextEditMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="Te_xt to Table" CommandEnum="Table_TextToTable"/>
 		<textEdit:TextEditMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
 		<textEdit:TextEditMenuItem Header="Re_gion Selections To Table" CommandEnum="Table_RegionSelectionsToTable"/>
 		<Separator/>

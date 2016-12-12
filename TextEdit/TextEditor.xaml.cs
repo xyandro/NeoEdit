@@ -595,6 +595,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
+				case TextEditCommand.Table_TextToTable: dialogResult = Command_Table_TextToTable_Dialog(); break;
 				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
 				case TextEditCommand.Table_AddColumn: dialogResult = Command_Table_AddColumn_Dialog(); break;
 				case TextEditCommand.Table_Select_RowsByExpression: dialogResult = Command_Table_Select_RowsByExpression_Dialog(); break;
@@ -984,6 +985,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as ConvertDateTimeDialog.Result); break;
 				case TextEditCommand.Table_DetectType: Command_Table_Type_Detect(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as ChooseTableTypeDialog.Result); break;
+				case TextEditCommand.Table_TextToTable: Command_Table_TextToTable(dialogResult as TextToTableDialog.Result); break;
 				case TextEditCommand.Table_LineSelectionsToTable: Command_Table_LineSelectionsToTable(); break;
 				case TextEditCommand.Table_RegionSelectionsToTable: Command_Table_RegionSelectionsToTable(); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as EditTableDialog.Result); break;

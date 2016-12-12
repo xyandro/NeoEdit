@@ -74,6 +74,30 @@ namespace NeoEdit.TextEdit
 			SetText(table);
 		}
 
+		TextToTableDialog.Result Command_Table_TextToTable_Dialog()
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection");
+			if (!Selections[0].HasSelection)
+				throw new Exception("Must have data selected");
+
+			return TextToTableDialog.Run(WindowParent, GetSelectionStrings().Single());
+		}
+
+		void Command_Table_TextToTable(TextToTableDialog.Result result)
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection");
+			if (!Selections[0].HasSelection)
+				throw new Exception("Must have data selected");
+
+			var columns = new List<Tuple<int, int>>();
+			for (var ctr = 0; ctr < result.LineBreaks.Count - 1; ++ctr)
+				columns.Add(Tuple.Create(result.LineBreaks[ctr], result.LineBreaks[ctr + 1]));
+			var rows = GetSelectionStrings().Single().Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).NonNullOrEmpty().Select(line => columns.Select(col => line.Substring(Math.Min(line.Length, col.Item1), Math.Min(line.Length, col.Item2) - Math.Min(line.Length, col.Item1)).Trim()).ToList()).ToList();
+			OpenTable(new Table(rows));
+		}
+
 		void Command_Table_LineSelectionsToTable()
 		{
 			if (!Selections.Any())

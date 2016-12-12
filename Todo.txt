@@ -11,7 +11,6 @@ Text:
 Copy positions/goto copied positions (useful for applying diff)
 If user chooses rows and columns, scroll extra windows
 Allow user to change zoom
-Convert to columns based on text position (for non-delimited tables)
 Add ability to wait until program close (since inline diff tools wait for the program to exit; could remove -multi flag and share a diff window)
 Only show file changed dialog when window is active and selected
 Add multi-file status bar (shows how many (active? files|selections|etc.)
@@ -24,6 +23,7 @@ Diff: Copy begin/end whitespace
 Don't reset DisplayText on revert
 Diff: Highlight tabs vs. spaces
 Diff: Try to keep text grouped together (available vs. Math.Max(available, 0) to see problem)
+Allow cancelling "First Distinct" when it takes a long time
 
 View:
 Update as new lines are added
