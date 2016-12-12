@@ -9,11 +9,6 @@ namespace NeoEdit.GUI
 		static Launcher launcher;
 		public static Launcher Static => launcher;
 
-		Func<bool> getEscapeClearsSelectionsLauncher;
-		Action<bool> setEscapeClearsSelectionsLauncher;
-		Func<bool> getMinimizeToTrayLauncher;
-		Action<bool> setMinimizeToTrayLauncher;
-
 		Action diffLauncher;
 		Action<string, IEnumerable<string>, bool> diskLauncher;
 		Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditorLauncher;
@@ -26,12 +21,7 @@ namespace NeoEdit.GUI
 		Action<string, bool> textViewerLauncher;
 
 		public static void Initialize(
-			Func<bool> getEscapeClearsSelections
-			, Action<bool> setEscapeClearsSelections
-			, Func<bool> getMinimizeToTray
-			, Action<bool> setMinimizeToTray
-
-			, Action diff
+			Action diff
 			, Action<string, IEnumerable<string>, bool> disk
 			, Action<string, byte[], Coder.CodePage, bool, bool> fileHexEditor
 			, Action<int?> handles
@@ -45,11 +35,6 @@ namespace NeoEdit.GUI
 		{
 			launcher = new Launcher
 			{
-				getEscapeClearsSelectionsLauncher = getEscapeClearsSelections,
-				setEscapeClearsSelectionsLauncher = setEscapeClearsSelections,
-				getMinimizeToTrayLauncher = getMinimizeToTray,
-				setMinimizeToTrayLauncher = setMinimizeToTray,
-
 				diffLauncher = diff,
 				diskLauncher = disk,
 				fileHexEditorLauncher = fileHexEditor,
@@ -61,18 +46,6 @@ namespace NeoEdit.GUI
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
 			};
-		}
-
-		public bool EscapeClearsSelections
-		{
-			get { return getEscapeClearsSelectionsLauncher(); }
-			set { setEscapeClearsSelectionsLauncher(value); }
-		}
-
-		public bool MinimizeToTray
-		{
-			get { return getMinimizeToTrayLauncher(); }
-			set { setMinimizeToTrayLauncher(value); }
 		}
 
 		public void LaunchDiff() => diffLauncher?.Invoke();

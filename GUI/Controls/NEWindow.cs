@@ -1,13 +1,44 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Linq;
+using NeoEdit.Common;
 
 namespace NeoEdit.GUI.Controls
 {
 	public class NEWindow : Window
 	{
 		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+
+		static readonly string settingsFile = Path.Combine(Helpers.NeoEditAppData, "Settings.xml");
+
+		static NEWindow()
+		{
+			if (!File.Exists(settingsFile))
+				return;
+
+			try
+			{
+				var xml = XElement.Load(settingsFile);
+				try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
+				try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
+			}
+			catch { }
+		}
+
+		static void SaveSettings()
+		{
+			try
+			{
+				var xml = new XElement("Settings");
+				xml.Add(new XElement(nameof(MinimizeToTray), minimizeToTray));
+				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
+				xml.Save(settingsFile);
+			}
+			catch { }
+		}
 
 		public NEWindow()
 		{
@@ -44,15 +75,14 @@ namespace NeoEdit.GUI.Controls
 				Close();
 		}
 
+		static bool escapeClearsSelections = true;
 		public static bool EscapeClearsSelections
 		{
-			get
-			{
-				return Launcher.Static.EscapeClearsSelections;
-			}
+			get { return escapeClearsSelections; }
 			set
 			{
-				Launcher.Static.EscapeClearsSelections = value;
+				escapeClearsSelections = value;
+				SaveSettings();
 				escapeClearsSelectionsChanged?.Invoke(null, new EventArgs());
 			}
 		}
@@ -60,15 +90,14 @@ namespace NeoEdit.GUI.Controls
 		static EventHandler escapeClearsSelectionsChanged;
 		public static event EventHandler EscapeClearsSelectionsChanged { add { escapeClearsSelectionsChanged += value; } remove { escapeClearsSelectionsChanged -= value; } }
 
+		static bool minimizeToTray = false;
 		public static bool MinimizeToTray
 		{
-			get
-			{
-				return Launcher.Static.MinimizeToTray;
-			}
+			get { return minimizeToTray; }
 			set
 			{
-				Launcher.Static.MinimizeToTray = value;
+				minimizeToTray = value;
+				SaveSettings();
 				minimizeToTrayChanged?.Invoke(null, new EventArgs());
 			}
 		}

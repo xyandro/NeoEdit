@@ -85,12 +85,7 @@ namespace NeoEdit
 		public App()
 		{
 			NeoEdit.GUI.Launcher.Initialize(
-				getEscapeClearsSelections: () => NeoEdit.Properties.Settings.Default.EscapeClearsSelections
-				, setEscapeClearsSelections: value => { NeoEdit.Properties.Settings.Default.EscapeClearsSelections = value; NeoEdit.Properties.Settings.Default.Save(); }
-				, getMinimizeToTray: () => NeoEdit.Properties.Settings.Default.MinimizeToTray
-				, setMinimizeToTray: value => { NeoEdit.Properties.Settings.Default.MinimizeToTray = value; NeoEdit.Properties.Settings.Default.Save(); }
-
-				, diff: () => TextEditTabs.CreateDiff().AddDiff()
+				diff: () => TextEditTabs.CreateDiff().AddDiff()
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
 				, fileHexEditor: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
 				, handles: (pid) => new HandlesWindow(pid)
