@@ -174,7 +174,7 @@ namespace NeoEdit.TextEdit
 					return;
 			}
 
-			OpenFile(FileName, keepUndo: true);
+			OpenFile(FileName, DisplayName, keepUndo: true);
 		}
 
 		void Command_File_Insert_Files()
