@@ -1638,14 +1638,27 @@ namespace NeoEdit.TextEdit
 			for (var line = startLine; line < endLine; ++line)
 			{
 				if (Data.GetLineDiffStatus(line) != LCS.MatchType.Match)
+				{
 					dc.DrawRectangle(Misc.diffMinorBrush, null, new Rect(0, y[line], canvas.ActualWidth, Font.FontSize));
 
-				foreach (var tuple in Data.GetLineColumnDiffs(line))
-				{
-					var start = Math.Max(0, tuple.Item1 - startColumn);
-					var len = tuple.Item2 + Math.Min(0, tuple.Item1 - startColumn);
-					if (len > 0)
-						dc.DrawRectangle(Misc.diffMajorBrush, null, new Rect(Font.CharWidth * start, y[line], len * Font.CharWidth, Font.FontSize));
+					var map = Data.GetLineColumnMap(line, true);
+					foreach (var tuple in Data.GetLineColumnDiffs(line))
+					{
+						var start = tuple.Item1;
+						if (start != int.MaxValue)
+							start = map[start];
+						start = Math.Max(0, start - startColumn);
+
+						var end = tuple.Item2;
+						if (end != int.MaxValue)
+							end = map[end];
+						end = Math.Max(0, end - startColumn);
+
+						var startX = Math.Max(0, start * Font.CharWidth);
+						var endX = Math.Min(ActualWidth, end * Font.CharWidth);
+						if (endX > startX)
+							dc.DrawRectangle(Misc.diffMajorBrush, null, new Rect(startX, y[line], endX - startX, Font.FontSize));
+					}
 				}
 
 				var str = Data.GetLineColumns(line);

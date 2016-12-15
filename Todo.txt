@@ -19,7 +19,6 @@ Diff: Specify characters to ignore
 Tutorial
 Move tabs with selections to start of active tabs list
 Diff: Copy begin/end whitespace
-Diff: Highlight tabs vs. spaces
 Diff: Try to keep text grouped together (available vs. Math.Max(available, 0) to see problem)
 Print
 

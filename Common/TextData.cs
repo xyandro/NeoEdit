@@ -254,6 +254,30 @@ namespace NeoEdit.Common
 			return sb.ToString();
 		}
 
+		public List<int> GetLineColumnMap(int line, bool includeEnding = false)
+		{
+			if ((line < 0) || (line >= NumLines))
+				throw new IndexOutOfRangeException();
+
+			var result = new List<int>();
+			var index = lineOffset[line];
+			var len = GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0);
+			var outPos = 0;
+			while (len > 0)
+			{
+				result.Add(outPos);
+				if (Data[index] == '\t')
+					outPos = (outPos / tabStop + 1) * tabStop;
+				else
+					++outPos;
+				++index;
+				--len;
+			}
+			result.Add(outPos);
+
+			return result;
+		}
+
 		public string GetEnding(int line)
 		{
 			if ((line < 0) || (line >= NumLines))
@@ -615,9 +639,9 @@ namespace NeoEdit.Common
 					continue;
 				}
 
+				var line0 = data0.GetLine(line, true);
+				var line1 = data1.GetLine(line, true);
 				List<LCS.MatchType> cols0, cols1;
-				var line0 = data0.GetLineColumns(line, true);
-				var line1 = data1.GetLineColumns(line, true);
 				LCS.GetLCS(line0.ToList(), line1.ToList(), out cols0, out cols1);
 
 				for (var pass = 0; pass < 2; ++pass)
@@ -632,7 +656,7 @@ namespace NeoEdit.Common
 						if ((ctr == cols.Count) || (cols[ctr] == LCS.MatchType.Match))
 						{
 							if (start.HasValue)
-								diffData.ColCompare[line].Add(Tuple.Create(start.Value, pos - start.Value));
+								diffData.ColCompare[line].Add(Tuple.Create(start.Value, pos));
 							start = null;
 							continue;
 						}
