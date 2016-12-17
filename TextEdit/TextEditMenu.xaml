@@ -562,6 +562,8 @@
 			<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_Close_ActiveTabs"/>
 			<textEdit:TextEditMenuItem Header="_Inactive Tabs" CommandEnum="View_Close_InactiveTabs"/>
 		</MenuItem>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
