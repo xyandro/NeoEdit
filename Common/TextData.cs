@@ -555,23 +555,36 @@ namespace NeoEdit.Common
 		}
 		DiffData diffData;
 
-		static string FormatDiffLine(string line, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
+		static Tuple<string, List<int>> FormatDiffLine(string line, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
 		{
-			if (ignoreWhitespace)
+			var map = new List<int>();
+			var sb = new StringBuilder(line.Length);
+			var inNumber = false;
+			for (var ctr = 0; ctr < line.Length; ++ctr)
 			{
-				var sb = new StringBuilder(line.Length);
-				foreach (var c in line)
-					if (!char.IsWhiteSpace(c))
-						sb.Append(c);
-				line = sb.ToString();
+				var ch = line[ctr];
+				if (!char.IsDigit(ch))
+					inNumber = false;
+				if ((ignoreWhitespace) && (char.IsWhiteSpace(ch)) && (ch != '\r') && (ch != '\n'))
+					continue;
+				if (ignoreCase)
+					ch = char.ToLowerInvariant(ch);
+				if ((ignoreNumbers) && (char.IsDigit(ch)))
+				{
+					if (inNumber)
+						continue;
+					inNumber = true;
+					ch = '0';
+				}
+				if ((ignoreLineEndings) && ((ch == '\r') || (ch == '\n')))
+					continue;
+
+				map.Add(ctr);
+				sb.Append(ch);
 			}
-			if (ignoreCase)
-				line = line.ToLowerInvariant();
-			if (ignoreNumbers)
-				line = Regex.Replace(line, @"\d+", "0");
-			if (ignoreLineEndings)
-				line = line.Replace("\r", "").Replace("\n", "");
-			return line;
+			map.Add(line.Length);
+
+			return Tuple.Create(sb.ToString(), map);
 		}
 
 		public static void CalculateDiff(TextData textData0, TextData textData1, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
@@ -581,16 +594,17 @@ namespace NeoEdit.Common
 
 			var textData = new TextData[] { textData0, textData1 };
 			var lines = new List<string>[2];
-			var formattedLines = new List<string>[2];
+			var map = new List<List<int>>[2];
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				textData[pass].ClearDiff();
 				textData[pass].diffData = new DiffData(textData[pass].Data, ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings);
-				lines[pass] = Enumerable.Range(0, textData[pass].NumLines).Select(line => textData[pass].GetLine(line, true)).ToList();
-				formattedLines[pass] = lines[pass].Select(line => FormatDiffLine(line, ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings)).ToList();
+				var formatDiffLine = Enumerable.Range(0, textData[pass].NumLines).Select(line => FormatDiffLine(textData[pass].GetLine(line, true), ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings)).ToList();
+				lines[pass] = formatDiffLine.Select(val => val.Item1).ToList();
+				map[pass] = formatDiffLine.Select(val => val.Item2).ToList();
 			}
 
-			var linesLCS = LCS.GetLCS(formattedLines[0], formattedLines[1]);
+			var linesLCS = LCS.GetLCS(lines[0], lines[1]);
 
 			for (var pass = 0; pass < 2; ++pass)
 			{
@@ -651,7 +665,7 @@ namespace NeoEdit.Common
 						if ((ctr == colsLCS.Count) || (colsLCS[ctr].IsMatch))
 						{
 							if (start.HasValue)
-								textData[pass].diffData.ColCompare[line].Add(Tuple.Create(start.Value, pos));
+								textData[pass].diffData.ColCompare[line].Add(Tuple.Create(map[pass][curLine[pass]][start.Value], map[pass][curLine[pass]][pos]));
 							start = null;
 							continue;
 						}
