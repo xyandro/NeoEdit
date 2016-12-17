@@ -33,15 +33,8 @@ namespace NeoEdit.TextEdit
 
 			var score = 0;
 			for (var repetition = 1; repetition < count; ++repetition)
-			{
-				var repetitionIndex = repetition * lines;
 				for (var index = 0; index < lines; ++index)
-				{
-					List<LCS.MatchType> output1, output2;
-					LCS.GetLCS(data[index], data[repetitionIndex + index], out output1, out output2);
-					score += output1.Count(match => match == LCS.MatchType.Match);
-				}
-			}
+					score += LCS.GetLCS(data[index], data[repetition * lines + index]).Count(val => val[0] == LCS.MatchType.Match);
 			return score;
 		}
 

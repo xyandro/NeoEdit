@@ -6,84 +6,85 @@ namespace NeoEdit.Common
 {
 	public static class LCS
 	{
-		public enum MatchType { Match, Mismatch, Gap }
-
-		static void CalculateDiff<T>(List<T> list1, List<T> list2, out List<MatchType> result1, out List<MatchType> result2)
+		public class LCSResult
 		{
-			// Calculate matrix using lists in reverse order so matching stays at start of string
-			var lenArray = new short[list1.Count + 1, list2.Count + 1];
-			for (var list1Pos = 1; list1Pos <= list1.Count; ++list1Pos)
-				for (var list2Pos = 1; list2Pos <= list2.Count; ++list2Pos)
-					lenArray[list1Pos, list2Pos] = list1[list1.Count - list1Pos].Equals(list2[list2.Count - list2Pos]) ? (short)(lenArray[list1Pos - 1, list2Pos - 1] + 1) : Math.Max(lenArray[list1Pos - 1, list2Pos], lenArray[list1Pos, list2Pos - 1]);
+			public MatchType Match0 { get; }
+			public MatchType Match1 { get; }
 
-			result1 = new List<MatchType>();
-			result2 = new List<MatchType>();
-			var pos1 = list1.Count;
-			var pos2 = list2.Count;
-			while ((pos1 != 0) || (pos2 != 0))
+			public LCSResult(MatchType match0, MatchType match1)
 			{
-				if ((pos1 != 0) && (pos2 != 0) && (list1[list1.Count - pos1].Equals(list2[list2.Count - pos2])))
-				{
-					result1.Add(MatchType.Match);
-					result2.Add(MatchType.Match);
-					--pos1;
-					--pos2;
-				}
-				else if ((pos1 != 0) && ((pos2 == 0) || (lenArray[pos1 - 1, pos2] > lenArray[pos1, pos2 - 1])))
-				{
-					result1.Add(MatchType.Mismatch);
-					result2.Add(MatchType.Gap);
-					--pos1;
-				}
-				else if ((pos2 != 0) && ((pos1 == 0) || (lenArray[pos1, pos2 - 1] > lenArray[pos1 - 1, pos2])))
-				{
-					result1.Add(MatchType.Gap);
-					result2.Add(MatchType.Mismatch);
-					--pos2;
-				}
-				else
-				{
-					result1.Add(MatchType.Mismatch);
-					result2.Add(MatchType.Mismatch);
-					--pos1;
-					--pos2;
-				}
+				Match0 = match0;
+				Match1 = match1;
 			}
+
+			public MatchType this[int index] => index == 0 ? Match0 : Match1;
+			public override string ToString() => $"{Match0}/{Match1}";
+			public bool IsMatch => Match0 == MatchType.Match;
 		}
 
-		public static void GetLCS<Type>(IEnumerable<Type> input1, IEnumerable<Type> input2, out List<MatchType> output1, out List<MatchType> output2)
+		public enum MatchType { Match, Mismatch, Gap }
+
+		static List<LCSResult> CalculateDiff<T>(List<T> list0, List<T> list1)
+		{
+			// Calculate matrix using lists in reverse order so matching stays at start of string
+			var lenArray = new short[list0.Count + 1, list1.Count + 1];
+			for (var list0Pos = 1; list0Pos <= list0.Count; ++list0Pos)
+				for (var list1Pos = 1; list1Pos <= list1.Count; ++list1Pos)
+					lenArray[list0Pos, list1Pos] = list0[list0.Count - list0Pos].Equals(list1[list1.Count - list1Pos]) ? (short)(lenArray[list0Pos - 1, list1Pos - 1] + 1) : Math.Max(lenArray[list0Pos - 1, list1Pos], lenArray[list0Pos, list1Pos - 1]);
+
+			var result = new List<LCSResult>();
+			var pos0 = list0.Count;
+			var pos1 = list1.Count;
+			while ((pos0 != 0) || (pos1 != 0))
+			{
+				if ((pos0 != 0) && (pos1 != 0) && (list0[list0.Count - pos0].Equals(list1[list1.Count - pos1])))
+					result.Add(new LCSResult(MatchType.Match, MatchType.Match));
+				else if ((pos0 != 0) && ((pos1 == 0) || (lenArray[pos0 - 1, pos1] > lenArray[pos0, pos1 - 1])))
+					result.Add(new LCSResult(MatchType.Mismatch, MatchType.Gap));
+				else if ((pos1 != 0) && ((pos0 == 0) || (lenArray[pos0, pos1 - 1] > lenArray[pos0 - 1, pos1])))
+					result.Add(new LCSResult(MatchType.Gap, MatchType.Mismatch));
+				else
+					result.Add(new LCSResult(MatchType.Mismatch, MatchType.Mismatch));
+
+				if (result[result.Count - 1].Match0 != MatchType.Gap)
+					--pos0;
+				if (result[result.Count - 1].Match1 != MatchType.Gap)
+					--pos1;
+			}
+			return result;
+		}
+
+		public static List<LCSResult> GetLCS<T>(IEnumerable<T> input0, IEnumerable<T> input1)
 		{
 			const int BufSize = 2048;
 			const int BreakMatchCount = 10;
 
-			output1 = new List<MatchType>();
-			output2 = new List<MatchType>();
+			var result = new List<LCSResult>();
+			var enum0 = input0.GetEnumerator();
 			var enum1 = input1.GetEnumerator();
-			var enum2 = input2.GetEnumerator();
-			var list1 = new List<Type>();
-			var list2 = new List<Type>();
+			var list0 = new List<T>();
+			var list1 = new List<T>();
+			var list0Working = true;
 			var list1Working = true;
-			var list2Working = true;
-			List<MatchType> result1, result2;
-			while ((list1Working) || (list2Working))
+			while ((list0Working) || (list1Working))
 			{
+				while ((list0Working) && (list0.Count < BufSize))
+					if (list0Working = enum0.MoveNext())
+						list0.Add(enum0.Current);
 				while ((list1Working) && (list1.Count < BufSize))
 					if (list1Working = enum1.MoveNext())
 						list1.Add(enum1.Current);
-				while ((list2Working) && (list2.Count < BufSize))
-					if (list2Working = enum2.MoveNext())
-						list2.Add(enum2.Current);
 
-				CalculateDiff(list1, list2, out result1, out result2);
+				var diffResult = CalculateDiff(list0, list1);
 
-				var keep = result1.Count;
-				if ((list1Working) || ((list2Working)))
+				var keep = diffResult.Count;
+				if ((list0Working) || ((list1Working)))
 				{
 					var lastNonMatch = keep;
 					while (keep > 0)
 					{
 						--keep;
-						if (result1[keep] != MatchType.Match)
+						if (diffResult[keep][0] != MatchType.Match)
 						{
 							lastNonMatch = keep;
 							continue;
@@ -96,15 +97,16 @@ namespace NeoEdit.Common
 						}
 					}
 					if (keep == 0)
-						keep = result1.Count;
+						keep = diffResult.Count;
 				}
 
-				output1.AddRange(result1.Take(keep));
-				output2.AddRange(result2.Take(keep));
+				result.AddRange(diffResult.Take(keep));
 
-				list1.RemoveRange(0, result1.Take(keep).Count(val => val != MatchType.Gap));
-				list2.RemoveRange(0, result2.Take(keep).Count(val => val != MatchType.Gap));
+				list0.RemoveRange(0, diffResult.Take(keep).Count(val => val.Match0 != MatchType.Gap));
+				list1.RemoveRange(0, diffResult.Take(keep).Count(val => val.Match1 != MatchType.Gap));
 			}
+
+			return result;
 		}
 	}
 }

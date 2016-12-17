@@ -1637,7 +1637,7 @@ namespace NeoEdit.TextEdit
 
 			for (var line = startLine; line < endLine; ++line)
 			{
-				if (Data.GetLineDiffStatus(line) != LCS.MatchType.Match)
+				if (!Data.GetLineDiffMatches(line))
 				{
 					dc.DrawRectangle(Misc.diffMinorBrush, null, new Rect(0, y[line], canvas.ActualWidth, Font.FontSize));
 

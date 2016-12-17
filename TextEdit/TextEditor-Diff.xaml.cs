@@ -30,13 +30,13 @@ namespace NeoEdit.TextEdit
 			{
 				var endLine = Data.GetOffsetLine(range.End);
 
-				while ((endLine < Data.NumLines) && (Data.GetLineDiffStatus(endLine) == LCS.MatchType.Match))
+				while ((endLine < Data.NumLines) && (Data.GetLineDiffMatches(endLine)))
 					++endLine;
-				while ((endLine < Data.NumLines) && (Data.GetLineDiffStatus(endLine) != LCS.MatchType.Match))
+				while ((endLine < Data.NumLines) && (!Data.GetLineDiffMatches(endLine)))
 					++endLine;
 
 				var startLine = endLine;
-				while ((startLine > 0) && (Data.GetLineDiffStatus(startLine - 1) != LCS.MatchType.Match))
+				while ((startLine > 0) && (!Data.GetLineDiffMatches(startLine - 1)))
 					--startLine;
 
 				return Tuple.Create(startLine, endLine);
@@ -45,13 +45,13 @@ namespace NeoEdit.TextEdit
 			{
 				var startLine = Data.GetOffsetLine(Math.Max(0, range.Start - 1));
 
-				while ((startLine > 0) && (Data.GetLineDiffStatus(startLine) == LCS.MatchType.Match))
+				while ((startLine > 0) && (Data.GetLineDiffMatches(startLine)))
 					--startLine;
-				while ((startLine > 0) && (Data.GetLineDiffStatus(startLine - 1) != LCS.MatchType.Match))
+				while ((startLine > 0) && (!Data.GetLineDiffMatches(startLine - 1)))
 					--startLine;
 
 				var endLine = startLine;
-				while ((endLine < Data.NumLines) && (Data.GetLineDiffStatus(endLine) != LCS.MatchType.Match))
+				while ((endLine < Data.NumLines) && (!Data.GetLineDiffMatches(endLine)))
 					++endLine;
 
 				return Tuple.Create(startLine, endLine);
