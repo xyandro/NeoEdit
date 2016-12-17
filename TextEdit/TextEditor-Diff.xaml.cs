@@ -125,7 +125,7 @@ namespace NeoEdit.TextEdit
 		void Command_Diff_NextPrevious(bool next, bool shiftDown)
 		{
 			if (DiffTarget == null)
-				return;
+				throw new Exception("Diff not in progress");
 
 			if ((TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget)) && (DiffTarget.Active))
 				return;
@@ -144,7 +144,7 @@ namespace NeoEdit.TextEdit
 		void Command_Diff_CopyLeftRight(bool moveLeft)
 		{
 			if (DiffTarget == null)
-				return;
+				throw new Exception("Diff not in progress");
 
 			TextEditor left, right;
 			if (TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget))
@@ -164,10 +164,22 @@ namespace NeoEdit.TextEdit
 				right.ReplaceSelections(left.GetSelectionStrings());
 		}
 
+		FixWhitespaceDialog.Result Command_Diff_FixWhitespace_Dialog() => FixWhitespaceDialog.Run(WindowParent);
+
+		void Command_Diff_FixWhitespace(FixWhitespaceDialog.Result result)
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
+
+			var fixes = TextData.GetWhitespaceFixes(DiffTarget.Data, Data, result.LineStartTabStop, DiffIgnoreCase, DiffIgnoreNumbers, diffIgnoreCharacters);
+			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
+			ReplaceSelections(fixes.Item2);
+		}
+
 		void Command_Diff_Select_MatchDiff(bool matching)
 		{
 			if (DiffTarget == null)
-				return;
+				throw new Exception("Diff not in progress");
 
 			Selections.Replace(Data.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)));
 		}

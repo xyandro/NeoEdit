@@ -540,16 +540,18 @@ namespace NeoEdit.Common
 		{
 			public readonly bool IgnoreWhitespace, IgnoreCase, IgnoreNumbers, IgnoreLineEndings;
 			public readonly string IgnoreCharacters;
+			public readonly int LineStartTabStop;
 
 			readonly HashSet<char> IgnoreCharactersHash;
 
-			public DiffParams(bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings, string ignoreCharacters)
+			public DiffParams(bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings, string ignoreCharacters, int lineStartTabStop = 0)
 			{
 				IgnoreWhitespace = ignoreWhitespace;
 				IgnoreCase = ignoreCase;
 				IgnoreNumbers = ignoreNumbers;
 				IgnoreLineEndings = ignoreLineEndings;
 				IgnoreCharacters = ignoreCharacters;
+				LineStartTabStop = lineStartTabStop;
 
 				IgnoreCharactersHash = new HashSet<char>(IgnoreCharacters ?? "");
 			}
@@ -559,9 +561,23 @@ namespace NeoEdit.Common
 				var map = new List<int>();
 				var sb = new StringBuilder(line.Length);
 				var inNumber = false;
+				var lineStart = LineStartTabStop != 0;
 				for (var ctr = 0; ctr < line.Length; ++ctr)
 				{
 					var ch = line[ctr];
+
+					if ((lineStart) && ((!char.IsWhiteSpace(ch)) || (ch == '\r') || (ch == '\n')))
+						lineStart = false;
+					if (lineStart)
+					{
+						var str = ch.ToString();
+						if (str == "\t")
+							str = new string(' ', LineStartTabStop - sb.Length % LineStartTabStop);
+						map.Add(ctr);
+						sb.Append(str);
+						continue;
+					}
+
 					if (!char.IsDigit(ch))
 						inNumber = false;
 					if (IgnoreCharactersHash.Contains(ch))
@@ -724,6 +740,99 @@ namespace NeoEdit.Common
 				}
 
 			diffData = null;
+		}
+
+		static public Tuple<List<Tuple<int, int>>, List<string>> GetWhitespaceFixes(TextData src, TextData dest, int lineStartTabStop, bool ignoreCase, bool ignoreNumbers, string ignoreCharacters)
+		{
+			var textData = new TextData[] { src, dest };
+			var lineMap = new Dictionary<int, int>[2];
+			var lines = new List<string>[2];
+			var textLines = new List<string>[2];
+			var diffParams = new DiffParams(true, ignoreCase, ignoreNumbers, true, ignoreCharacters, lineStartTabStop);
+			for (var pass = 0; pass < 2; ++pass)
+			{
+				lineMap[pass] = Enumerable.Range(0, textData[pass].NumLines).Indexes(line => textData[pass].diffData?.LineCompare[line] != LCS.MatchType.Gap).Select((index1, index2) => new { index1, index2 }).ToDictionary(obj => obj.index2, obj => obj.index1);
+				lines[pass] = lineMap[pass].Values.Select(line => textData[pass].GetLine(line, true)).ToList();
+				textLines[pass] = lines[pass].Select(line => diffParams.FormatLine(line).Item1).ToList();
+			}
+
+			var linesLCS = LCS.GetLCS(textLines[0], textLines[1], str => !string.IsNullOrWhiteSpace(str));
+
+			var ranges = new List<Tuple<int, int>>();
+			var strs = new List<string>();
+			var curLine = new int[] { -1, -1 };
+			diffParams = new DiffParams(false, ignoreCase, ignoreNumbers, src.OnlyEnding != null, ignoreCharacters);
+			for (var line = 0; line < linesLCS.Count; ++line)
+			{
+				var mappedCurLine = new int[2];
+				for (var pass = 0; pass < 2; ++pass)
+					if (linesLCS[line][pass] != LCS.MatchType.Gap)
+					{
+						++curLine[pass];
+						mappedCurLine[pass] = lineMap[pass][curLine[pass]];
+					}
+
+				if (linesLCS[line].IsMatch)
+				{
+					var colLines = new string[2];
+					var map = new List<int>[2];
+					for (var pass = 0; pass < 2; ++pass)
+					{
+						var formatDiffLine = diffParams.FormatLine(lines[pass][curLine[pass]]);
+						colLines[pass] = formatDiffLine.Item1;
+						map[pass] = formatDiffLine.Item2;
+					}
+
+					if (colLines[0] != colLines[1])
+					{
+						var colsLCS = LCS.GetLCS(colLines[0], colLines[1]);
+						for (var pass = 0; pass < 2; ++pass)
+						{
+							var start = default(int?);
+							var pos = -1;
+							for (var ctr = 0; ctr <= colsLCS.Count; ++ctr)
+							{
+								if ((ctr == colsLCS.Count) || (colsLCS[ctr][pass] != LCS.MatchType.Gap))
+									++pos;
+
+								if ((ctr == colsLCS.Count) || (colsLCS[ctr].IsMatch))
+								{
+									if (start.HasValue)
+									{
+										var lineOffset = textData[pass].GetOffset(mappedCurLine[pass], 0);
+										var begin = lineOffset + map[pass][start.Value];
+										var end = lineOffset + map[pass][pos];
+										if (pass == 0)
+											strs.Add(textData[pass].GetString(begin, end - begin));
+										else
+											ranges.Add(Tuple.Create(begin, end));
+										start = null;
+									}
+									continue;
+								}
+
+								start = start ?? pos + (colsLCS[ctr][pass] == LCS.MatchType.Gap ? 1 : 0);
+							}
+						}
+					}
+				}
+
+				if ((src.OnlyEnding != null) && (linesLCS[line][1] != LCS.MatchType.Gap))
+				{
+					var endingStart = dest.endingOffset[mappedCurLine[1]];
+					var endingEnd = dest.lineOffset[mappedCurLine[1] + 1];
+					if (endingStart == endingEnd)
+						continue;
+
+					if (dest.Data.Substring(endingStart, endingEnd - endingStart) != src.OnlyEnding)
+					{
+						ranges.Add(Tuple.Create(endingStart, endingEnd));
+						strs.Add(src.OnlyEnding);
+					}
+				}
+			}
+
+			return Tuple.Create(ranges, strs);
 		}
 
 		public int GetDiffLine(int line) => (diffData == null) || (line >= diffData.LineMap.Count) ? line : diffData.LineMap[line];

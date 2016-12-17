@@ -17,8 +17,8 @@ Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
 Tutorial
 Move tabs with selections to start of active tabs list
-Diff: Copy begin/end whitespace
 Print
+Expression "line" is wrong in diff mode
 
 View:
 Update as new lines are added

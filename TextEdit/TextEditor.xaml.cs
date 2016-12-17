@@ -583,6 +583,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
 				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
 				case TextEditCommand.Diff_IgnoreCharacters: dialogResult = Command_Diff_IgnoreCharacters_Dialog(); break;
+				case TextEditCommand.Diff_FixWhitespace: dialogResult = Command_Diff_FixWhitespace_Dialog(); break;
 				case TextEditCommand.Files_Names_MakeAbsolute: dialogResult = Command_Files_Names_MakeAbsolute_Dialog(); break;
 				case TextEditCommand.Files_Names_GetUnique: dialogResult = Command_Files_Names_GetUnique_Dialog(); break;
 				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
@@ -905,6 +906,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false, shiftDown); break;
 				case TextEditCommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
 				case TextEditCommand.Diff_CopyRight: Command_Diff_CopyLeftRight(false); break;
+				case TextEditCommand.Diff_FixWhitespace: Command_Diff_FixWhitespace(dialogResult as FixWhitespaceDialog.Result); break;
 				case TextEditCommand.Diff_Select_Match: Command_Diff_Select_MatchDiff(true); break;
 				case TextEditCommand.Diff_Select_Diff: Command_Diff_Select_MatchDiff(false); break;
 				case TextEditCommand.Files_Names_Simplify: Command_Files_Names_Simplify(); break;
