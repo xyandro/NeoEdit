@@ -8,33 +8,31 @@ namespace NeoEdit.GUI.Misc
 {
 	public static class Font
 	{
-		public static readonly double charWidth;
-		public static readonly double lineHeight;
-
-		static readonly FontFamily fontFamily;
-		static readonly Typeface typeface;
-		static readonly double fontSize;
+		public delegate void FontSizeChangedDelegate(double newSize);
+		public static event FontSizeChangedDelegate FontSizeChanged;
+		public static FontFamily FontFamily { get; }
+		public static Typeface Typeface { get; }
+		static double fontSize;
+		public static double CharWidth { get; private set; }
+		public static double FontSize
+		{
+			get { return fontSize; }
+			set
+			{
+				fontSize = value;
+				var formattedText = GetText("0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()");
+				CharWidth = formattedText.Width / "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()".Length;
+				FontSizeChanged?.Invoke(fontSize);
+			}
+		}
 
 		static Font()
 		{
-			fontFamily = new FontFamily(new Uri("pack://application:,,,/NeoEdit.GUI;component/"), "./Resources/#DejaVu Sans Mono");
-			typeface = fontFamily.GetTypefaces().First();
-			fontSize = 14;
-			lineHeight = fontSize;
-
-			var example = "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()";
-			var formattedText = new FormattedText(example, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
-			charWidth = formattedText.Width / example.Length;
+			FontFamily = new FontFamily(new Uri("pack://application:,,,/NeoEdit.GUI;component/"), "./Resources/#DejaVu Sans Mono");
+			Typeface = FontFamily.GetTypefaces().First();
+			FontSize = 14;
 		}
 
-		public static FontFamily FontFamily => fontFamily;
-		public static double Size => fontSize;
-
-		public static FormattedText GetText(string str, Brush brush = null)
-		{
-			if (brush == null)
-				brush = Brushes.Black;
-			return new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, brush);
-		}
+		public static FormattedText GetText(string str) => new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, FontSize, Brushes.Black);
 	}
 }

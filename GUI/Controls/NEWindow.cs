@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 using NeoEdit.Common;
+using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.GUI.Controls
 {
@@ -16,16 +17,19 @@ namespace NeoEdit.GUI.Controls
 
 		static NEWindow()
 		{
-			if (!File.Exists(settingsFile))
-				return;
-
-			try
+			if (File.Exists(settingsFile))
 			{
-				var xml = XElement.Load(settingsFile);
-				try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
-				try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
+				try
+				{
+					var xml = XElement.Load(settingsFile);
+					try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
+					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
+					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
+				}
+				catch { }
 			}
-			catch { }
+
+			Font.FontSizeChanged += newSize => SaveSettings();
 		}
 
 		static void SaveSettings()
@@ -35,6 +39,7 @@ namespace NeoEdit.GUI.Controls
 				var xml = new XElement("Settings");
 				xml.Add(new XElement(nameof(MinimizeToTray), minimizeToTray));
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
+				xml.Add(new XElement(nameof(Font.FontSize), Font.FontSize));
 				xml.Save(settingsFile);
 			}
 			catch { }

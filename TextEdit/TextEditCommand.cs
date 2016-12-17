@@ -346,6 +346,7 @@ namespace NeoEdit.TextEdit
 		View_Grid,
 		View_CustomGrid,
 		View_ActiveTabs,
+		View_FontSize,
 		View_Select_TabsWithSelections,
 		View_Select_TabsWithoutSelections,
 		View_Close_TabsWithSelections,

@@ -232,7 +232,6 @@ namespace NeoEdit.TextEdit
 			SetupLocalKeys();
 
 			InitializeComponent();
-			bookmarks.Width = Font.lineHeight;
 			AutoRefresh = true;
 
 			SetupTabLabel();
@@ -272,6 +271,15 @@ namespace NeoEdit.TextEdit
 				EnsureVisible();
 				canvasRenderTimer.Start();
 			};
+
+			FontSizeChanged(Font.FontSize);
+			Font.FontSizeChanged += FontSizeChanged;
+		}
+
+		void FontSizeChanged(double fontSize)
+		{
+			bookmarks.Width = fontSize;
+			CalculateBoundaries();
 		}
 
 		int BeginOffset => Data.GetOffset(0, 0);
@@ -340,14 +348,14 @@ namespace NeoEdit.TextEdit
 			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
 				return;
 
-			xScroll.ViewportSize = canvas.ActualWidth / Font.charWidth;
+			xScroll.ViewportSize = canvas.ActualWidth / Font.CharWidth;
 			xScroll.Minimum = 0;
 			xScroll.Maximum = Data.MaxColumn - xScrollViewportFloor;
 			xScroll.SmallChange = 1;
 			xScroll.LargeChange = Math.Max(0, xScroll.ViewportSize - 1);
 			xScrollValue = xScrollValue;
 
-			yScroll.ViewportSize = canvas.ActualHeight / Font.lineHeight;
+			yScroll.ViewportSize = canvas.ActualHeight / Font.FontSize;
 			yScroll.Minimum = 0;
 			yScroll.Maximum = Data.NumLines - yScrollViewportFloor;
 			yScroll.SmallChange = 1;
@@ -1399,8 +1407,8 @@ namespace NeoEdit.TextEdit
 
 		void MouseHandler(Point mousePos, int clickCount, bool selecting)
 		{
-			var line = Math.Max(0, Math.Min(Data.NumLines - 1, (int)(mousePos.Y / Font.lineHeight) + yScrollValue));
-			var column = Math.Max(0, Math.Min(Data.GetLineColumnsLength(line), (int)(mousePos.X / Font.charWidth) + xScrollValue));
+			var line = Math.Max(0, Math.Min(Data.NumLines - 1, (int)(mousePos.Y / Font.FontSize) + yScrollValue));
+			var column = Math.Max(0, Math.Min(Data.GetLineColumnsLength(line), (int)(mousePos.X / Font.CharWidth) + xScrollValue));
 			var index = Data.GetIndexFromColumn(line, column, true);
 			var offset = Data.GetOffset(line, index);
 			var mouseRange = CurrentSelection < Selections.Count ? Selections[CurrentSelection] : null;
@@ -1491,9 +1499,9 @@ namespace NeoEdit.TextEdit
 				if (!Bookmarks.Any(range => range.Start == offset))
 					continue;
 
-				var y = (line - startLine) * Font.lineHeight;
+				var y = (line - startLine) * Font.FontSize;
 
-				dc.DrawRoundedRectangle(Brushes.CadetBlue, new Pen(Brushes.Black, 1), new Rect(1, y + 1, Font.lineHeight - 2, Font.lineHeight - 2), 2, 2);
+				dc.DrawRoundedRectangle(Brushes.CadetBlue, new Pen(Brushes.Black, 1), new Rect(1, y + 1, Font.FontSize - 2, Font.FontSize - 2), 2, 2);
 			}
 		}
 
@@ -1563,7 +1571,7 @@ namespace NeoEdit.TextEdit
 			var screenEnd = lineRanges.Last().Value.End + 1;
 			var startIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, startColumn, true));
 			var endIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, endColumn, true));
-			var y = lines.ToDictionary(line => line, line => (line - startLine) * Font.lineHeight);
+			var y = lines.ToDictionary(line => line, line => (line - startLine) * Font.FontSize);
 			var cursorLineDone = new HashSet<int>();
 			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 
@@ -1585,11 +1593,11 @@ namespace NeoEdit.TextEdit
 					if ((entry.Item1 == Selections) && (!hasSelection) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
 						if (range == visibleCursor)
-							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.lineHeight));
+							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.FontSize));
 
 						if (!cursorLineDone.Contains(cursorLine))
 						{
-							dc.DrawRectangle(Misc.cursorBrush, Misc.cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.lineHeight));
+							dc.DrawRectangle(Misc.cursorBrush, Misc.cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.FontSize));
 							cursorLineDone.Add(cursorLine);
 						}
 
@@ -1597,7 +1605,7 @@ namespace NeoEdit.TextEdit
 						if ((cursor >= startIndexes[cursorLine]) && (cursor <= endIndexes[cursorLine]))
 						{
 							cursor = Data.GetColumnFromIndex(cursorLine, cursor);
-							dc.DrawRectangle(Brushes.Black, null, new Rect((cursor - startColumn) * Font.charWidth - 1, y[cursorLine], 2, Font.lineHeight));
+							dc.DrawRectangle(Brushes.Black, null, new Rect((cursor - startColumn) * Font.CharWidth - 1, y[cursorLine], 2, Font.FontSize));
 						}
 					}
 
@@ -1620,7 +1628,7 @@ namespace NeoEdit.TextEdit
 
 						var steps = range == visibleCursor ? 2 : 1;
 						for (var ctr = 0; ctr < steps; ++ctr)
-							dc.DrawRectangle(entry.Item2, null, new Rect(start * Font.charWidth, y[line], width * Font.charWidth + 1, Font.lineHeight));
+							dc.DrawRectangle(entry.Item2, null, new Rect(start * Font.CharWidth, y[line], width * Font.CharWidth + 1, Font.FontSize));
 					}
 				}
 			}
@@ -1630,14 +1638,14 @@ namespace NeoEdit.TextEdit
 			for (var line = startLine; line < endLine; ++line)
 			{
 				if (Data.GetLineDiffStatus(line) != LCS.MatchType.Match)
-					dc.DrawRectangle(Misc.diffMinorBrush, null, new Rect(0, y[line], canvas.ActualWidth, Font.lineHeight));
+					dc.DrawRectangle(Misc.diffMinorBrush, null, new Rect(0, y[line], canvas.ActualWidth, Font.FontSize));
 
 				foreach (var tuple in Data.GetLineColumnDiffs(line))
 				{
 					var start = Math.Max(0, tuple.Item1 - startColumn);
 					var len = tuple.Item2 + Math.Min(0, tuple.Item1 - startColumn);
 					if (len > 0)
-						dc.DrawRectangle(Misc.diffMajorBrush, null, new Rect(Font.charWidth * start, y[line], len * Font.charWidth, Font.lineHeight));
+						dc.DrawRectangle(Misc.diffMajorBrush, null, new Rect(Font.CharWidth * start, y[line], len * Font.CharWidth, Font.FontSize));
 				}
 
 				var str = Data.GetLineColumns(line);

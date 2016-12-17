@@ -552,6 +552,8 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="F_ont Size" CommandEnum="View_FontSize"/>
+		<Separator/>
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="Tabs _With Selections" CommandEnum="View_Select_TabsWithSelections"/>
 			<textEdit:TextEditMenuItem Header="Tabs With_out Selections" CommandEnum="View_Select_TabsWithoutSelections"/>

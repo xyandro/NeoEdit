@@ -80,19 +80,19 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			canvas.Children.Clear();
 			var numChars = lines.Max(line => line.Length);
-			canvas.Width = numChars * Font.charWidth + border * 2;
-			canvas.Height = lines.Count * Font.lineHeight + border * 2;
+			canvas.Width = numChars * Font.CharWidth + border * 2;
+			canvas.Height = lines.Count * Font.FontSize + border * 2;
 			for (var line = 0; line < lines.Count; ++line)
 			{
-				var textBlock = new TextBlock { Text = lines[line], FontFamily = Font.FontFamily, FontSize = Font.Size };
+				var textBlock = new TextBlock { Text = lines[line], FontFamily = Font.FontFamily, FontSize = Font.FontSize };
 				Canvas.SetLeft(textBlock, border);
-				Canvas.SetTop(textBlock, line * Font.lineHeight + border);
+				Canvas.SetTop(textBlock, line * Font.FontSize + border);
 				canvas.Children.Add(textBlock);
 			}
 
 			foreach (var lineBreak in lineBreaks)
 			{
-				var x = lineBreak * Font.charWidth + border;
+				var x = lineBreak * Font.CharWidth + border;
 				var line = new Line { X1 = x, Y1 = 0, X2 = x, Y2 = canvas.Height, Stroke = Brushes.Black };
 				canvas.Children.Add(line);
 			}
@@ -100,7 +100,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void OnCanvasClick(object sender, MouseButtonEventArgs e)
 		{
-			var pos = (int)((e.GetPosition(canvas).X - border) / Font.charWidth + 0.5);
+			var pos = (int)((e.GetPosition(canvas).X - border) / Font.CharWidth + 0.5);
 			if (lineBreaks.Contains(pos))
 				lineBreaks.Remove(pos);
 			else

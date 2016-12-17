@@ -80,6 +80,8 @@ namespace NeoEdit.TextView
 			canvas.Render += OnCanvasRender;
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
+
+			Font.FontSizeChanged += newSize => { CalculateBoundaries(); canvas.InvalidateVisual(); };
 		}
 
 		public void Dispose() => data.Dispose();
@@ -166,7 +168,7 @@ namespace NeoEdit.TextView
 
 			for (var line = startLine; line < endLine; ++line)
 			{
-				var y = (line - startLine) * Font.lineHeight;
+				var y = (line - startLine) * Font.FontSize;
 
 				if ((line >= selStartLine) && (line <= selEndLine))
 				{
@@ -177,14 +179,14 @@ namespace NeoEdit.TextView
 					endCol = Math.Max(0, Math.Min(xScrollViewportCeiling, endCol - xScrollValue));
 
 					if (startCol != endCol)
-						dc.DrawRectangle(Misc.selectionBrush, null, new Rect(startCol * Font.charWidth, y, (endCol - startCol) * Font.charWidth, Font.lineHeight));
+						dc.DrawRectangle(Misc.selectionBrush, null, new Rect(startCol * Font.CharWidth, y, (endCol - startCol) * Font.CharWidth, Font.FontSize));
 				}
 
 				if (selCursorLine == line)
 				{
 					var column = selCursorColumn - xScrollValue;
 					if ((column >= 0) && (column < xScrollViewportCeiling))
-						dc.DrawRectangle(Brushes.Black, null, new Rect(column * Font.charWidth, y, 2, Font.lineHeight));
+						dc.DrawRectangle(Brushes.Black, null, new Rect(column * Font.CharWidth, y, 2, Font.FontSize));
 				}
 
 				if (line - startLine >= lines.Count)
@@ -273,14 +275,14 @@ namespace NeoEdit.TextView
 			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
 				return;
 
-			xScroll.ViewportSize = canvas.ActualWidth / Font.charWidth;
+			xScroll.ViewportSize = canvas.ActualWidth / Font.CharWidth;
 			xScroll.Minimum = 0;
 			xScroll.Maximum = data.NumColumns - xScrollViewportFloor + 1;
 			xScroll.SmallChange = 1;
 			xScroll.LargeChange = Math.Max(0, xScroll.ViewportSize - 1);
 			xScrollValue = xScrollValue;
 
-			yScroll.ViewportSize = canvas.ActualHeight / Font.lineHeight;
+			yScroll.ViewportSize = canvas.ActualHeight / Font.FontSize;
 			yScroll.Minimum = 0;
 			yScroll.Maximum = data.NumLines - yScrollViewportFloor + 1;
 			yScroll.SmallChange = 1;

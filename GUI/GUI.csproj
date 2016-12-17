@@ -138,6 +138,13 @@
     <Compile Include="Dialogs\FindBinaryDialog.xaml.cs">
       <DependentUpon>FindBinaryDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FontSizeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FontSizeDialog.xaml.cs">
+      <DependentUpon>FontSizeDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\GetExpressionDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

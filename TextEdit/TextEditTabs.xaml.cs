@@ -196,6 +196,8 @@ namespace NeoEdit.TextEdit
 
 		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
 
+		void Command_View_FontSize() => FontSizeDialog.Run(this);
+
 		void Command_View_SelectTabsWithSelections(bool hasSelections)
 		{
 			var topMost = ItemTabs.TopMost;
@@ -439,6 +441,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
 				case TextEditCommand.View_CustomGrid: Command_View_Type(TabsLayout.Grid, dialogResult as CustomGridDialog.Result); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
+				case TextEditCommand.View_FontSize: Command_View_FontSize(); break;
 				case TextEditCommand.View_Select_TabsWithSelections: Command_View_SelectTabsWithSelections(true); break;
 				case TextEditCommand.View_Select_TabsWithoutSelections: Command_View_SelectTabsWithSelections(false); break;
 				case TextEditCommand.View_Close_TabsWithSelections: Command_View_CloseTabsWithSelections(true); break;
