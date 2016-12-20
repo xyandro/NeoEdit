@@ -1126,8 +1126,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;
 				case TextEditCommand.Select_Selection_Center: Command_Select_Selection_Center(); break;
 				case TextEditCommand.Select_Selection_ToggleAnchor: Command_Select_Selection_ToggleAnchor(); break;
-				case TextEditCommand.Select_Selection_Next: Command_Select_Selection_Next(); break;
-				case TextEditCommand.Select_Selection_Previous: Command_Select_Selection_Previous(); break;
+				case TextEditCommand.Select_Selection_Next: Command_Select_Selection_NextPrevious(true); break;
+				case TextEditCommand.Select_Selection_Previous: Command_Select_Selection_NextPrevious(false); break;
 				case TextEditCommand.Select_Selection_Single: Command_Select_Selection_Single(); break;
 				case TextEditCommand.Select_Selection_Remove: Command_Select_Selection_Remove(); break;
 				case TextEditCommand.Region_SetSelections: Command_Region_SetSelections(); break;

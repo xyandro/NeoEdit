@@ -199,7 +199,7 @@ namespace NeoEdit.TextEdit
 		void Command_Select_Selection_First()
 		{
 			CurrentSelection = 0;
-			EnsureVisible(true);
+			EnsureVisible();
 			canvasRenderTimer.Start();
 		}
 
@@ -209,21 +209,15 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Selection_ToggleAnchor() => Selections.Replace(Selections.Select(range => new Range(range.Anchor, range.Cursor)).ToList());
 
-		void Command_Select_Selection_Next()
+		void Command_Select_Selection_NextPrevious(bool next)
 		{
-			++CurrentSelection;
-			if (CurrentSelection >= Selections.Count)
-				CurrentSelection = 0;
-			EnsureVisible(true);
-			canvasRenderTimer.Start();
-		}
-
-		void Command_Select_Selection_Previous()
-		{
-			--CurrentSelection;
+			var offset = next ? 1 : -1;
+			CurrentSelection += offset;
 			if (CurrentSelection < 0)
 				CurrentSelection = Selections.Count - 1;
-			EnsureVisible(true);
+			if (CurrentSelection >= Selections.Count)
+				CurrentSelection = 0;
+			EnsureVisible();
 			canvasRenderTimer.Start();
 		}
 
