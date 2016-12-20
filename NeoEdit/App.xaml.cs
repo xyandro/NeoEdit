@@ -91,16 +91,17 @@ namespace NeoEdit
 		{
 			NeoEdit.GUI.Launcher.Initialize(
 				about: () => AboutDialog.Run()
-				, diff: () => TextEditTabs.CreateDiff().AddDiff()
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
-				, fileHexEditor: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
-				, handles: (pid) => new HandlesWindow(pid)
+				, handles: pid => new HandlesWindow(pid)
+				, hexEditorDump: (fileName, forceCreate) => HexEditTabs.CreateFromDump(fileName, forceCreate)
+				, hexEditorFile: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
+				, hexEditorProcess: pid => HexEditTabs.CreateFromProcess(pid)
 				, imageEditor: fileName => ImageEditTabs.Create(fileName)
 				, license: () => LicenseDialog.Run()
 				, network: () => new NetworkWindow()
-				, processes: (pid) => new ProcessesWindow(pid)
-				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)
-				, textEditor: (fileName, displayName, bytes, encoding, modified, forceCreate) => TextEditTabs.Create(fileName, displayName, bytes, encoding, modified, forceCreate: forceCreate)
+				, processes: pid => new ProcessesWindow(pid)
+				, textEditorDiff: (fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2) => TextEditTabs.CreateDiff().AddDiff(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2)
+				, textEditorFile: (fileName, displayName, bytes, encoding, modified, line, column, forceCreate) => TextEditTabs.Create(fileName, displayName, bytes, encoding, modified, line ?? 1, column ?? 1, forceCreate: forceCreate)
 				, textViewer: (fileName, forceCreate) => TextViewTabs.Create(fileName, forceCreate)
 				, update: () => Update()
 			);

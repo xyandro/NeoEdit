@@ -66,14 +66,14 @@ namespace NeoEdit.GUI.Controls
 		{
 			switch (command)
 			{
-				case WindowCommand.Window_Diff: Launcher.Static.LaunchDiff(); break;
+				case WindowCommand.Window_Diff: Launcher.Static.LaunchTextEditorDiff(); break;
 				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(forceCreate: true); break;
 				case WindowCommand.Window_Handles: Launcher.Static.LaunchHandles(); break;
-				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditor(forceCreate: true); break;
+				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditorFile(forceCreate: true); break;
 				case WindowCommand.Window_ImageEditor: Launcher.Static.LaunchImageEditor(); break;
 				case WindowCommand.Window_Network: Launcher.Static.LaunchNetwork(); break;
 				case WindowCommand.Window_Processes: Launcher.Static.LaunchProcesses(); break;
-				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditor(forceCreate: true); break;
+				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditorFile(forceCreate: true); break;
 				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(forceCreate: true); break;
 			}
 

@@ -60,7 +60,7 @@ namespace NeoEdit.Processes
 					break;
 				case ProcessesCommand.View_Memory:
 					foreach (ProcessItem selected in processes.Selected)
-						Launcher.Static.LaunchHexEditor(selected.PID);
+						Launcher.Static.LaunchHexEditorProcess(selected.PID);
 					break;
 				case ProcessesCommand.View_Modules:
 					foreach (ProcessItem selected in processes.Selected)

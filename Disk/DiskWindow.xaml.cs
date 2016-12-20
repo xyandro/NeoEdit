@@ -528,13 +528,13 @@ namespace NeoEdit.Disk
 		internal void Command_Edit_TextEdit()
 		{
 			foreach (var file in Selected)
-				Launcher.Static.LaunchTextEditor(file.FullName);
+				Launcher.Static.LaunchTextEditorFile(file.FullName);
 		}
 
 		internal void Command_Edit_HexEdit()
 		{
 			foreach (var file in Selected)
-				Launcher.Static.LaunchHexEditor(file.FullName);
+				Launcher.Static.LaunchHexEditorFile(file.FullName);
 		}
 
 		internal void Command_Select_All()

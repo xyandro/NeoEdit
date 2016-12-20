@@ -1,14 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Dialogs;
-using NeoEdit.Disk;
-using NeoEdit.Handles;
-using NeoEdit.HexEdit;
-using NeoEdit.ImageEdit;
-using NeoEdit.Network;
-using NeoEdit.Processes;
-using NeoEdit.TextEdit;
-using NeoEdit.TextView;
+using NeoEdit.GUI;
 
 namespace NeoEdit
 {
@@ -19,28 +11,28 @@ namespace NeoEdit
 
 	class AboutParam : Param
 	{
-		public override void Execute() => AboutDialog.Run();
+		public override void Execute() => Launcher.Static.LaunchAbout();
 	}
 
 	class DiffParam : Param
 	{
 		readonly List<TextEditParam.TextEditFile> Files;
 		public DiffParam(List<TextEditParam.TextEditFile> files) { Files = files; }
-		public override void Execute() => TextEditTabs.CreateDiff().AddDiff(fileName1: Files[0]?.FileName, displayName1: Files[0]?.DisplayName, line1: Files[0]?.Line, column1: Files[0]?.Column, fileName2: Files[1]?.FileName, displayName2: Files[1]?.DisplayName, line2: Files[1]?.Line, column2: Files[1]?.Column);
+		public override void Execute() => Launcher.Static.LaunchTextEditorDiff(fileName1: Files[0]?.FileName, displayName1: Files[0]?.DisplayName, line1: Files[0]?.Line, column1: Files[0]?.Column, fileName2: Files[1]?.FileName, displayName2: Files[1]?.DisplayName, line2: Files[1]?.Line, column2: Files[1]?.Column);
 	}
 
 	class DiskParam : Param
 	{
 		readonly string Location;
 		public DiskParam(string location) { Location = location; }
-		public override void Execute() => DiskTabs.Create(Location);
+		public override void Execute() => Launcher.Static.LaunchDisk(Location);
 	}
 
 	class HandlesParam : Param
 	{
 		readonly int? PID;
 		public HandlesParam(int? pid) { PID = pid; }
-		public override void Execute() => new HandlesWindow(PID);
+		public override void Execute() => Launcher.Static.LaunchHandles(PID);
 	}
 
 	class HexDumpParam : Param
@@ -50,7 +42,7 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			foreach (var file in Files)
-				HexEditTabs.CreateFromDump(file);
+				Launcher.Static.LaunchHexEditorDump(file);
 		}
 	}
 
@@ -61,9 +53,9 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			if (!Files.Any())
-				HexEditTabs.CreateFromFile();
+				Launcher.Static.LaunchHexEditorFile();
 			foreach (var file in Files)
-				HexEditTabs.CreateFromFile(file);
+				Launcher.Static.LaunchHexEditorFile(file);
 		}
 	}
 
@@ -74,7 +66,7 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			foreach (var pid in PIDs)
-				HexEditTabs.CreateFromProcess(pid);
+				Launcher.Static.LaunchHexEditorProcess(pid);
 		}
 	}
 
@@ -85,27 +77,27 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			if (!Files.Any())
-				ImageEditTabs.Create();
+				Launcher.Static.LaunchImageEditor();
 			foreach (var file in Files)
-				ImageEditTabs.Create(file);
+				Launcher.Static.LaunchImageEditor(file);
 		}
 	}
 
 	class LicenseParam : Param
 	{
-		public override void Execute() => LicenseDialog.Run();
+		public override void Execute() => Launcher.Static.LaunchLicense();
 	}
 
 	class NetworkParam : Param
 	{
-		public override void Execute() => new NetworkWindow();
+		public override void Execute() => Launcher.Static.LaunchNetwork();
 	}
 
 	class ProcessesParam : Param
 	{
 		readonly int? PID;
 		public ProcessesParam(int? pid) { PID = pid; }
-		public override void Execute() => new ProcessesWindow(PID);
+		public override void Execute() => Launcher.Static.LaunchProcesses(PID);
 	}
 
 	class TextEditParam : Param
@@ -131,9 +123,9 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			if (!Files.Any())
-				TextEditTabs.Create();
+				Launcher.Static.LaunchTextEditorFile();
 			foreach (var file in Files)
-				TextEditTabs.Create(file.FileName, file.DisplayName, line: file.Line, column: file.Column);
+				Launcher.Static.LaunchTextEditorFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column);
 		}
 	}
 
@@ -144,9 +136,9 @@ namespace NeoEdit
 		public override void Execute()
 		{
 			if (!Files.Any())
-				TextViewTabs.Create();
+				Launcher.Static.LaunchTextViewer();
 			foreach (var file in Files)
-				TextViewTabs.Create(file);
+				Launcher.Static.LaunchTextViewer(file);
 		}
 	}
 }

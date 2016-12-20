@@ -577,7 +577,7 @@ namespace NeoEdit.HexEdit
 			var bytes = Data.GetAllBytes();
 			if (!CanFullyEncode(bytes))
 				return;
-			Launcher.Static.LaunchTextEditor(FileName, null, bytes, CodePage, IsModified);
+			Launcher.Static.LaunchTextEditorFile(FileName, null, bytes, CodePage, IsModified);
 			WindowParent.Remove(this, true);
 		}
 
