@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using NeoEdit.GUI.Controls;
 
-namespace NeoEdit.TextEdit.Dialogs
+namespace NeoEdit.GUI.Dialogs
 {
 	partial class ProgressDialog
 	{
@@ -35,6 +36,13 @@ namespace NeoEdit.TextEdit.Dialogs
 			worker.RunWorkerAsync();
 		}
 
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			base.OnPreviewKeyDown(e);
+			if (e.Key == Key.Escape)
+				worker.CancelAsync();
+		}
+
 		void OnCancel(object sender, RoutedEventArgs e) => worker.CancelAsync();
 
 		static public object Run(Window parent, string text, Func<Func<bool>, Action<int>, object> action)
@@ -43,5 +51,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			dialog.ShowDialog();
 			return dialog.result;
 		}
+
+		static public void Run(Window parent, string text, Action<Func<bool>, Action<int>> action) => Run(parent, text, (cancelled, progress) => { action(cancelled, progress); return null; });
 	}
 }

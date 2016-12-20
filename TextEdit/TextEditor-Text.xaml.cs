@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
+using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
