@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using NeoEdit.Dialogs;
 using NeoEdit.Disk;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
@@ -85,11 +86,13 @@ namespace NeoEdit
 		public App()
 		{
 			NeoEdit.GUI.Launcher.Initialize(
-				diff: () => TextEditTabs.CreateDiff().AddDiff()
+				about: () => AboutDialog.Run()
+				, diff: () => TextEditTabs.CreateDiff().AddDiff()
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
 				, fileHexEditor: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
 				, handles: (pid) => new HandlesWindow(pid)
 				, imageEditor: fileName => ImageEditTabs.Create(fileName)
+				, license: () => LicenseDialog.Run()
 				, network: () => new NetworkWindow()
 				, processes: (pid) => new ProcessesWindow(pid)
 				, processHexEditor: (pid) => HexEditTabs.CreateFromProcess(pid)

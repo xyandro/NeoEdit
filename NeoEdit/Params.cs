@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Dialogs;
 using NeoEdit.Disk;
-using NeoEdit.GUI.About;
 using NeoEdit.Handles;
 using NeoEdit.HexEdit;
 using NeoEdit.ImageEdit;
@@ -19,7 +19,7 @@ namespace NeoEdit
 
 	class AboutParam : Param
 	{
-		public override void Execute() => AboutWindow.Run();
+		public override void Execute() => AboutDialog.Run();
 	}
 
 	class DiffParam : Param
@@ -89,6 +89,11 @@ namespace NeoEdit
 			foreach (var file in Files)
 				ImageEditTabs.Create(file);
 		}
+	}
+
+	class LicenseParam : Param
+	{
+		public override void Execute() => LicenseDialog.Run();
 	}
 
 	class NetworkParam : Param

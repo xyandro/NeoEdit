@@ -55,8 +55,8 @@ namespace NeoEdit.GUI.Controls
 		{
 			switch (command)
 			{
-				case HelpCommand.Help_About: About.AboutWindow.Run(); break;
-				case HelpCommand.Help_License: About.LicenseWindow.Run(); break;
+				case HelpCommand.Help_About: Launcher.Static.LaunchAbout(); break;
+				case HelpCommand.Help_License: Launcher.Static.LaunchLicense(); break;
 				case HelpCommand.Help_RunGC: GC.Collect(); break;
 			}
 		}

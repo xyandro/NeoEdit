@@ -28,6 +28,7 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitHexedit(CommandLineParamsParser.HexeditContext context) => new HexEditParam(context.param().Select(file => file.GetText()).ToList());
 		public override object VisitHexpid(CommandLineParamsParser.HexpidContext context) => new HexPidParam(context.NUMBER().Select(pid => int.Parse(pid.GetText())).ToList());
 		public override object VisitImageedit(CommandLineParamsParser.ImageeditContext context) => new ImageEditParam(context.param().Select(file => file.GetText()).ToList());
+		public override object VisitLicense(CommandLineParamsParser.LicenseContext context) => new LicenseParam();
 		public override object VisitNetwork(CommandLineParamsParser.NetworkContext context) => new NetworkParam();
 		public override object VisitProcesses(CommandLineParamsParser.ProcessesContext context) => new ProcessesParam(context.pid == null ? default(int?) : int.Parse(context.pid.Text));
 		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context) => new TextEditParam(context.texteditfile().Select(textEditFile => VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile).ToList());

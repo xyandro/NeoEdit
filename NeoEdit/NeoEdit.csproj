@@ -23,8 +23,14 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <EmbeddedResource Include="$(SolutionDir)\License.txt">
+      <Link>Dialogs\License.txt</Link>
+    </EmbeddedResource>
     <Resource Include="$(SolutionDir)\Photoshop\NeoEdit.ico">
       <Link>NeoEdit.ico</Link>
+    </Resource>
+    <Resource Include="$(SolutionDir)\Photoshop\NeoEdit.png">
+      <Link>Dialogs\NeoEdit.png</Link>
     </Resource>
     <None Include="App.config" />
     <ApplicationDefinition Include="App.xaml">
@@ -42,6 +48,20 @@
     <Compile Include="CommandLineParams\Parser\CommandLineParamsParserVisitor.cs" />
     <None Include="CommandLineParams\Source\CommandLineParamsLexer.g4" />
     <None Include="CommandLineParams\Source\CommandLineParamsParser.g4" />
+    <Page Include="Dialogs\AboutDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\LicenseDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\LicenseDialog.xaml.cs">
+      <DependentUpon>LicenseDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InstanceManager.cs" />
     <Compile Include="NoDelayClipboard.cs" />
     <Compile Include="Params.cs" />
