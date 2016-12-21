@@ -166,10 +166,20 @@ namespace NeoEdit.TextEdit
 				if (diffTarget != null)
 				{
 					diffTarget.IsDiff = false;
+
+					var thisXScrollValue = xScrollValue;
+					var thisYScrollValue = Data.GetDiffLine(yScrollValue);
+					var targetXScrollValue = diffTarget.xScrollValue;
+					var targetYScrollValue = diffTarget.Data.GetDiffLine(diffTarget.yScrollValue);
 					BindingOperations.ClearBinding(this, UIHelper<TextEditor>.GetProperty(a => a.xScrollValue));
 					BindingOperations.ClearBinding(this, UIHelper<TextEditor>.GetProperty(a => a.yScrollValue));
 					BindingOperations.ClearBinding(diffTarget, UIHelper<TextEditor>.GetProperty(a => a.xScrollValue));
 					BindingOperations.ClearBinding(diffTarget, UIHelper<TextEditor>.GetProperty(a => a.yScrollValue));
+					xScrollValue = thisXScrollValue;
+					yScrollValue = thisYScrollValue;
+					diffTarget.xScrollValue = targetXScrollValue;
+					diffTarget.yScrollValue = targetYScrollValue;
+
 					Data.ClearDiff();
 					diffTarget.Data.ClearDiff();
 					CalculateBoundaries();
@@ -183,12 +193,16 @@ namespace NeoEdit.TextEdit
 					value.DiffTarget = null;
 					diffTarget = value;
 					value.diffTarget = this;
+
+					var diffXScrollValue = diffTarget.xScrollValue;
+					var diffYScrollValue = diffTarget.yScrollValue;
 					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.xScrollValue), new Binding(UIHelper<TextEditor>.GetProperty(a => a.xScrollValue).Name) { Source = value, Mode = BindingMode.TwoWay });
 					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue), new Binding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue).Name) { Source = value, Mode = BindingMode.TwoWay });
 					IsDiff = diffTarget.IsDiff = true;
+					CalculateDiff();
+					xScrollValue = diffXScrollValue;
+					yScrollValue = diffTarget.Data.GetNonDiffLine(diffYScrollValue);
 				}
-
-				CalculateDiff();
 			}
 		}
 
