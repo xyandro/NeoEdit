@@ -24,37 +24,91 @@ namespace NeoEdit.Common
 
 		public enum MatchType { Match, Mismatch, Gap }
 
-		static List<LCSResult> CalculateDiff<T>(List<T> list0, List<T> list1)
+		static List<LCSResult> CalculateDiff<T>(List<T> list0, List<T> list1, Func<T, bool> keepTogether = null)
 		{
-			// Calculate matrix using lists in reverse order so matching stays at start of string
-			var lenArray = new short[list0.Count + 1, list1.Count + 1];
+			const int ValueBase = 0x00020000;
+			const int CountBase = 0x00000004;
+			const int Type = 0x00000003;
+			const int Gap0 = 1;
+			const int Gap1 = 0;
+			const int Match = 2;
+			const int MatchSeq = 3;
+
+			var lenArray = new int[list0.Count + 1, list1.Count + 1];
+			for (var list0Pos = 1; list0Pos <= list0.Count; ++list0Pos)
+				lenArray[list0Pos, 0] = Gap1;
+			for (var list1Pos = 1; list1Pos <= list1.Count; ++list1Pos)
+				lenArray[0, list1Pos] = Gap0;
+			lenArray[0, 0] = Match;
 			for (var list0Pos = 1; list0Pos <= list0.Count; ++list0Pos)
 				for (var list1Pos = 1; list1Pos <= list1.Count; ++list1Pos)
-					lenArray[list0Pos, list1Pos] = list0[list0.Count - list0Pos].Equals(list1[list1.Count - list1Pos]) ? (short)(lenArray[list0Pos - 1, list1Pos - 1] + 1) : Math.Max(lenArray[list0Pos - 1, list1Pos], lenArray[list0Pos, list1Pos - 1]);
+				{
+					var gap0Val = (lenArray[list0Pos, list1Pos - 1] & ~Type) | Gap0;
+					var gap1Val = (lenArray[list0Pos - 1, list1Pos] & ~Type) | Gap1;
+					var max = Math.Max(gap0Val, gap1Val);
+
+					var item0 = list0[list0Pos - 1];
+					var item1 = list1[list1Pos - 1];
+					if (item0.Equals(item1))
+					{
+						var matchVal = (lenArray[list0Pos - 1, list1Pos - 1] & ~Type) + ValueBase;
+						if ((keepTogether == null) || (keepTogether(item0)))
+						{
+							matchVal |= MatchSeq;
+							if ((lenArray[list0Pos - 1, list1Pos - 1] & Type) == MatchSeq)
+								matchVal += CountBase;
+						}
+						else
+							matchVal |= Match;
+						max = Math.Max(max, matchVal);
+					}
+
+					lenArray[list0Pos, list1Pos] = max;
+				}
 
 			var result = new List<LCSResult>();
 			var pos0 = list0.Count;
 			var pos1 = list1.Count;
 			while ((pos0 != 0) || (pos1 != 0))
 			{
-				if ((pos0 != 0) && (pos1 != 0) && (list0[list0.Count - pos0].Equals(list1[list1.Count - pos1])))
-					result.Add(new LCSResult(MatchType.Match, MatchType.Match));
-				else if ((pos0 != 0) && ((pos1 == 0) || (lenArray[pos0 - 1, pos1] > lenArray[pos0, pos1 - 1])))
-					result.Add(new LCSResult(MatchType.Mismatch, MatchType.Gap));
-				else if ((pos1 != 0) && ((pos0 == 0) || (lenArray[pos0, pos1 - 1] > lenArray[pos0 - 1, pos1])))
-					result.Add(new LCSResult(MatchType.Gap, MatchType.Mismatch));
-				else
-					result.Add(new LCSResult(MatchType.Mismatch, MatchType.Mismatch));
+				switch (lenArray[pos0, pos1] & Type)
+				{
+					case Match: case MatchSeq: result.Add(new LCSResult(MatchType.Match, MatchType.Match)); break;
+					case Gap0: result.Add(new LCSResult(MatchType.Gap, MatchType.Mismatch)); break;
+					case Gap1: result.Add(new LCSResult(MatchType.Mismatch, MatchType.Gap)); break;
+				}
 
 				if (result[result.Count - 1].Match0 != MatchType.Gap)
 					--pos0;
 				if (result[result.Count - 1].Match1 != MatchType.Gap)
 					--pos1;
 			}
+			result.Reverse();
+
+			var gap1Pos = 0;
+			while (true)
+			{
+				gap1Pos = result.FindIndex(gap1Pos, r => r.Match1 == MatchType.Gap);
+				if (gap1Pos == -1)
+					break;
+				var gap0Pos = result.FindIndex(gap1Pos, r => r.Match1 != MatchType.Gap);
+				if ((gap0Pos == -1) || (gap0Pos >= result.Count) || (result[gap0Pos].Match0 != MatchType.Gap))
+				{
+					++gap1Pos;
+					continue;
+				}
+				var final = result.FindIndex(gap0Pos, r => r.Match0 != MatchType.Gap);
+				if (final == -1)
+					final = result.Count;
+				var mismatchCount = Math.Min(final - gap0Pos, gap0Pos - gap1Pos);
+				Enumerable.Range(gap1Pos, mismatchCount).ForEach(index => result[index] = new LCSResult(MatchType.Mismatch, MatchType.Mismatch));
+				result.RemoveRange(gap0Pos, mismatchCount);
+				gap1Pos = final - mismatchCount;
+			}
 			return result;
 		}
 
-		public static List<LCSResult> GetLCS<T>(IEnumerable<T> input0, IEnumerable<T> input1)
+		public static List<LCSResult> GetLCS<T>(IEnumerable<T> input0, IEnumerable<T> input1, Func<T, bool> keepTogether = null)
 		{
 			const int BufSize = 2048;
 			const int BreakMatchCount = 10;
@@ -75,7 +129,7 @@ namespace NeoEdit.Common
 					if (list1Working = enum1.MoveNext())
 						list1.Add(enum1.Current);
 
-				var diffResult = CalculateDiff(list0, list1);
+				var diffResult = CalculateDiff(list0, list1, keepTogether);
 
 				var keep = diffResult.Count;
 				if ((list0Working) || ((list1Working)))
@@ -102,8 +156,8 @@ namespace NeoEdit.Common
 
 				result.AddRange(diffResult.Take(keep));
 
-				list0.RemoveRange(0, diffResult.Take(keep).Count(val => val.Match0 != MatchType.Gap));
-				list1.RemoveRange(0, diffResult.Take(keep).Count(val => val.Match1 != MatchType.Gap));
+				list0.RemoveRange(0, diffResult.Take(keep).Count(val => val[0] != MatchType.Gap));
+				list1.RemoveRange(0, diffResult.Take(keep).Count(val => val[1] != MatchType.Gap));
 			}
 
 			return result;

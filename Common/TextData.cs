@@ -604,7 +604,7 @@ namespace NeoEdit.Common
 				map[pass] = formatDiffLine.Select(val => val.Item2).ToList();
 			}
 
-			var linesLCS = LCS.GetLCS(lines[0], lines[1]);
+			var linesLCS = LCS.GetLCS(lines[0], lines[1], str => !string.IsNullOrWhiteSpace(str));
 
 			for (var pass = 0; pass < 2; ++pass)
 			{
@@ -650,7 +650,7 @@ namespace NeoEdit.Common
 				if (skip)
 					continue;
 
-				var colsLCS = LCS.GetLCS(lines[0][curLine[0]], lines[1][curLine[1]]);
+				var colsLCS = LCS.GetLCS(lines[0][curLine[0]], lines[1][curLine[1]], ch => char.IsLetterOrDigit(ch));
 
 				for (var pass = 0; pass < 2; ++pass)
 				{
